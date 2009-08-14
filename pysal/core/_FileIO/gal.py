@@ -10,6 +10,9 @@ class GalReader(FileIO.FileIO):
         FileIO.FileIO.__init__(self,*args,**kwargs)
         self.file = open(self.dataPath, self.mode)
 
+    def read(self, n=-1):
+        return self._read()
+
     def _read(self):
         if self.pos > 0:
             raise StopIteration
