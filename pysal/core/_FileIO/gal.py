@@ -7,7 +7,7 @@ class GalReader(FileIO.FileIO):
     MODES = ['r']
 
     def __init__(self,*args,**kwargs):
-        pysal.FileIO.__init__(self,*args,**kwargs)
+        FileIO.FileIO.__init__(self,*args,**kwargs)
         self.file = open(self.dataPath, self.mode)
 
     def _read(self):
@@ -31,7 +31,7 @@ class GalReader(FileIO.FileIO):
             neighbors[id]=neighbors_i
             original_ids.append(id)
         original_neighbors=neighbors
-        zo=zero_offset(neighbors,weights,original_ids)
+        zo=self.__zero_offset(neighbors,weights,original_ids)
         neighbors=zo['new_neighbors']
         original_ids=zo['old_ids']
         ids = zo['new_ids']
@@ -42,11 +42,11 @@ class GalReader(FileIO.FileIO):
         d['weights'] = weights
         d['neighbors'] =neighbors
         d['original_neighbors'] = original_neighbors
-        d['new_ids'] = new_ids
-        d['original_ids'] = old_ids
+        d['new_ids'] = ids
+        d['original_ids'] = original_ids
 
         self.pos += 1 
-        return pysal.weights.weights.W(d)
+        return W(d)
 
     def close(self):
         self.file.close()
