@@ -34,7 +34,7 @@ class FileIO_MetaCls(type):
         if name != 'FileIO' and name != 'DataTable':
             if "FORMATS" in dict and "MODES" in dict:
                 #print "Registering %s with FileIO.\n\tFormats: %r\n\tModes: %r"%(name,dict['FORMATS'],dict['MODES'])
-                FileIO.register(cls,dict['FORMATS'],dict['MODES'])
+                FileIO._register(cls,dict['FORMATS'],dict['MODES'])
             else:
                 raise TypeError, "FileIO subclasses must have FORMATS and MODES defined"
         return cls
@@ -81,7 +81,7 @@ class FileIO(object): #should be a type?
         ext = os.path.splitext(dataPath)[1]
         return ext.replace('.','')
     @classmethod
-    def register(cls,parser,formats,modes):
+    def _register(cls,parser,formats,modes):
         """ This method is called automatically via the MetaClass of FileIO subclasses
             This should be private, but that hides it from the MetaClass
         """

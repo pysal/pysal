@@ -1,4 +1,5 @@
 import pysal.core.FileIO as FileIO
+from pysal.weights.weights import W
 
 
 class GwtReader(FileIO.FileIO):
@@ -7,9 +8,16 @@ class GwtReader(FileIO.FileIO):
     MODES = ['r']
 
     def __init__(self,*args,**kwargs):
-        pysal.FileIO.__init__(self,*args,**kwargs)
+        FileIO.FileIO.__init__(self,*args,**kwargs)
         self.file = open(self.dataPath,self.mode)
 
+    def read(self,n=-1):
+        return self._read()
+
+    def seek(self,pos):
+        if pos == 0:
+            self.file.seek(0)
+            self.pos = 0
     def _read(self):
         if self.pos > 0:
             raise StopIteration
@@ -39,15 +47,15 @@ class GwtReader(FileIO.FileIO):
         self.n=len(weights)
         self.weights=zo['new_weights']
         d = {}
-        d['weights'] = self.gwt.weights
-        d['neighbors'] = self.gwt.neighbors
+        d['weights'] = self.weights
+        d['neighbors'] = self.neighbors
 
         self.pos += 1
-        return pysal.weights.weights.W(d)
+        return W(d)
 
     def close(self):
         self.file.close()
-        pysal.core.FileIO.close(self)
+        FileIO.FileIO.close(self)
 
     @staticmethod
     def __zero_offset(neighbors,weights,original_ids=None):

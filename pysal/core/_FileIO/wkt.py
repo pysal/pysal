@@ -1,4 +1,5 @@
 import pysal.core.FileIO as FileIO
+from pysal import cg
 import re
 
 
@@ -16,7 +17,7 @@ class WKTReader(FileIO.FileIO):
     MODES = ['r']
     FORMATS = ['wkt']
     def __init__(self,*args,**kwargs):
-        pysal.core.FileIO.__init__(self,*args,**kwargs)
+        FileIO.FileIO.__init__(self,*args,**kwargs)
         self.__idx = {}
         self.__pos = 0
         self.__open()
@@ -26,7 +27,7 @@ class WKTReader(FileIO.FileIO):
         self.dataObj = open(self.dataPath,self.mode)
         self.wkt = WKTParser()
     def _read(self):
-        pysal.core.FileIO._complain_ifclosed(self.closed)
+        FileIO.FileIO._complain_ifclosed(self.closed)
         if self.__pos not in self.__idx:
             self.__idx[self.__pos] = self.dataObj.tell()
         line = self.dataObj.readline()
@@ -40,7 +41,7 @@ class WKTReader(FileIO.FileIO):
             self.seek(0)
             return None
     def seek(self,n):
-        pysal.core.FileIO.seek(self,n)
+        FileIO.FileIO.seek(self,n)
         pos = self.pos
         if pos in self.__idx:
             self.dataObj.seek(self.__idx[pos])
@@ -55,7 +56,7 @@ class WKTReader(FileIO.FileIO):
             self.dataObj.seek(self.__idx[pos])
     def close(self):
         self.dataObj.close()
-        pysal.core.FileIO.close(self)
+        FileIO.FileIO.close(self)
         
 
 class WKTParser:
@@ -76,18 +77,18 @@ class WKTParser:
         p['polygon'] = self.Polygon
     def Point(self,geoStr):
         coords = self.regExes['spaces'].split(geoStr.strip())
-        return pysal.Point(coords[0],coords[1])
+        return cg.Point((coords[0],coords[1]))
     def LineString(self,geoStr):
         points = geoStr.strip().split(',')
         points = map(self.Point,points)
-        return pysal.LineString(points)
+        return cg.Chain(points)
     def Polygon(self,geoStr):
         rings = self.regExes['parenComma'].split(geoStr.strip())
         for i,ring in enumerate(rings):
             ring = self.regExes['trimParens'].match(ring).groups()[0]
-            ring = self.LineString(ring)
+            ring = self.LineString(ring).vertices
             rings[i] = ring
-        return pysal.Polygon(rings)
+        return cg.Polygon(rings)
     def fromWKT(self,wkt):
         matches = self.regExes['typeStr'].match(wkt)
         if matches:

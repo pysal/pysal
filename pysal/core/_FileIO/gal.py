@@ -13,6 +13,11 @@ class GalReader(FileIO.FileIO):
     def read(self, n=-1):
         return self._read()
 
+    def seek(self, pos):
+        if pos == 0:
+            self.file.seek(0)
+            self.pos = 0
+
     def _read(self):
         if self.pos > 0:
             raise StopIteration
