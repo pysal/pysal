@@ -8,7 +8,7 @@ class DataTable(FileIO.FileIO):
         def __init__(self,parent):
             self.p = parent
         def __repr__(self):
-            return "keys: "+self.p._header.__repr__()
+            return "keys: "+self.p.header.__repr__()
         def __getitem__(self,key):
             return self.p._get_col(key)
         def __setitem__(self,key,val):
@@ -26,10 +26,10 @@ class DataTable(FileIO.FileIO):
     def _get_col(self,key):
         """ returns the column vector
         """
-        if not self._header:
+        if not self.header:
             raise AttributeError,'Please set the header'
-        if key in self._header:
-            return self[:,self._header.index(key)]
+        if key in self.header:
+            return self[:,self.header.index(key)]
         else:
             raise AttributeError,'Field: %s does not exist in header'%key
     def __getitem__(self,key):

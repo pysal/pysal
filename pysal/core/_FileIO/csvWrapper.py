@@ -21,9 +21,9 @@ class csvWrapper(Tables.DataTable):
             self.dataObj = csv.reader(self.fileObj)
             data = list(self.dataObj)
             if self._determineHeader(data):
-                self._header = data.pop(0)
+                self.header = data.pop(0)
             else:
-                self._header = ['field_%d'%i for i in range(len(data[0]))]
+                self.header = ['field_%d'%i for i in range(len(data[0]))]
             self._spec = self._determineSpec(data)
             self.data = data
             self.fileObj.close()
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     import pysal
     file_name = '../../examples/stl_hom.csv'
     f = pysal.open(file_name,'r')
-    print f._header
+    print f.header
     print f._spec
     for row in f:
         print row
