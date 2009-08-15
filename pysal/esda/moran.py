@@ -6,12 +6,10 @@ Author(s):
     Serge Rey srey@asu.edu
 
 
-
-Not to be used without permission of the author(s).
 """
 import numpy as num
 import scipy.stats as stats
-import  math
+import math
 import unittest
 
 PERMUTATIONS=999
@@ -75,6 +73,20 @@ class Moran:
         p_z_sim: p-value based on standard normal approximation from
         permutations
 
+    Example:
+        >>> import pysal
+        >>> w=pysal.open("../examples/stl.gal").read()
+        >>> f=pysal.open("../examples/stl_hom.txt")
+        >>> y=num.array(f.by_col['HR8893'])
+        >>> mi=Moran(y,w)
+        >>> mi.I
+        0.24365582621771661
+        >>> mi.EI
+        -0.012987012987012988
+        >>> mi.p_norm
+        0.00052730423329256173
+        >>> 
+        
     """
     def __init__(self,y,w,transformation="W",permutations=PERMUTATIONS):
         self.y=y
@@ -123,8 +135,6 @@ class Moran:
                 - (k*((n*n-n)*s1-2*n*s2+6*s02)))
         self.VI_rand = vi
         self.seI_rand = vi**(1/2.)
-
-
 
 
     def __calc(self,z):
@@ -324,9 +334,6 @@ class Moran_Local:
             self.z_sim = (self.Is-self.EI_sim)/self.seI_sim
             self.p_z_sim=stats.norm.pdf(self.z_sim)
 
-
-
-
     def __calc(self,z):
         zl=self.w.lag(z)
         num=self.z * zl
@@ -375,4 +382,13 @@ class __TestMoran(unittest.TestCase):
         self.assertEquals(v,'0.9322')
 
 if __name__ == '__main__':
+    import unittest
+    import doctest
+    import moran
+    suite = unittest.TestSuite()
+    for mod in [moran]:
+        suite.addTest(doctest.DocTestSuite(mod))
+        runner = unittest.TextTestRunner()
+        runner.run(suite)
+    # regular unittest
     unittest.main()
