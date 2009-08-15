@@ -1,12 +1,15 @@
-"""weights.py: class for spatial weights manipulation
+"""
+Spatial weights for PySAL
 
 """
+
+__author__  = "Sergio J. Rey <srey@asu.edu> "
+
 import unittest
 import numpy as num
 import numpy.linalg as la
 import time
 import math
-import RtreeWeights
 import pysal
 import copy
 
@@ -470,46 +473,6 @@ class Wd(dict):
             for neighbor in d[key]:
                 w[key][neighbor] = 1
         return w
-
-def rook(geo):
-    if issubclass(type(geo),basestring):
-        geoObj = pysal.open(geo)
-    elif issubclass(type(geo),pysal.FileIO):
-        geo.seek(0)
-        geoObj = geo
-    else:
-        raise TypeError, "Argument must be a FileIO handler or connection string"
-    w = RtreeWeights.ContWeights(geoObj,RtreeWeights.ROOK)
-    w.create()
-    d={}
-    neighbors={}
-    weights={}
-    for key in w.w:
-        weights[key]=[1]*len(w.w[key])
-        neighbors[key]=list(w.w[key])
-    d['neighbors']=neighbors
-    d['weights']=weights
-    return W(d)
-
-def queen(geo):
-    if issubclass(type(geo),basestring):
-        geoObj = pysal.open(geo)
-    elif issubclass(type(geo),pysal.FileIO):
-        geo.seek(0)
-        geoObj = geo
-    else:
-        raise TypeError, "Argument must be a FileIO handler or connection string"
-    w = RtreeWeights.ContWeights(geoObj,RtreeWeights.QUEEN)
-    w.create()
-    d={}
-    neighbors={}
-    weights={}
-    for key in w.w:
-        weights[key]=[1]*len(w.w[key])
-        neighbors[key]=list(w.w[key])
-    d['neighbors']=neighbors
-    d['weights']=weights
-    return W(d)
         
 def lat2gal(nrows=5,ncols=5,rook=True, file=None):
     """Create a GAL structure for a regular lattice.

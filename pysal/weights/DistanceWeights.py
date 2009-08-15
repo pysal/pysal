@@ -3,7 +3,6 @@ Distance Based Spatial Weights for PySAL
 
 
 
-Not to be used without permission of the author(s).
 """
 
 __author__  = "Sergio J. Rey <srey@asu.edu> "
