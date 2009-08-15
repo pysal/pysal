@@ -79,7 +79,20 @@ class FileIO(object): #should be a type?
     def getType(dataPath):
         """Parse the dataPath and return the data type"""
         ext = os.path.splitext(dataPath)[1]
-        return ext.replace('.','')
+        ext = ext.replace('.','')
+        if ext == 'txt':
+            f = open(dataPath,'r')
+            l1 = f.readline()
+            l2 = f.readline()
+            try:
+                n,k = l1.split(',')
+                n,k = int(n),int(k)
+                fields = l2.split(',')
+                assert len(fields) == k
+                return 'geoda_txt'
+            except:
+                return ext
+        return ext
     @classmethod
     def _register(cls,parser,formats,modes):
         """ This method is called automatically via the MetaClass of FileIO subclasses
@@ -139,7 +152,7 @@ class FileIO(object): #should be a type?
         self.closed = False
         self.by_row = self.by_row(self)
         self._spec = []
-        self._header = []
+        self.header = []
         self.__joins = []
     def __getIds(self):
         return self.__ids
@@ -189,10 +202,10 @@ class FileIO(object): #should be a type?
             raise ValueError, "I/O operation on closed file"
     def cast(self,key,typ):
         """cast key as typ"""
-        if key in self._header:
+        if key in self.header:
             try:
                 assert hasattr(typ,'__call__')
-                self._spec[self._header.index(key)] = typ
+                self._spec[self.header.index(key)] = typ
             except AssertionError:
                 raise TypeError,'Cast Objects must be callable'
         else:
