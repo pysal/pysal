@@ -70,7 +70,8 @@ class csvWrapper(Tables.DataTable):
         else:
             return None
 if __name__ == '__main__':
-    file_name = '../../data/stl_hom.csv'
+    import pysal
+    file_name = '../../examples/stl_hom.csv'
     f = pysal.open(file_name,'r')
     print f._header
     print f._spec
