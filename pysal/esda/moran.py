@@ -358,12 +358,11 @@ class __TestMoran(unittest.TestCase):
         f="%6.4f"%mi.I
         self.assertEquals(f,"0.2068")
 
-    """
     def test_local(self):
-        from pysal.core._FileIO.file_io import load,read_GAL
-        w=read_GAL("../data/desmith.gal")
-        variables=load("../data/desmith.txt",file_type="geoda_txt")
-        y=variables.get_variable('z')
+        import pysal
+        w=pysal.open("../examples/desmith.gal").read()
+        f=pysal.open("../examples/desmith.txt")
+        y=num.array(f.by_col['z'])
         lm=Moran_Local(y,w,transformation="W",permutations=0)
         v="%6.4f"%lm.Is[2]
         self.assertEquals(v,"-0.1335")
@@ -371,16 +370,9 @@ class __TestMoran(unittest.TestCase):
         self.assertEquals(q,[4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
 
     def test_mvI(self):
-        from pysal.core._FileIO.file_io import load,read_GAL
-        self.w=read_GAL("../data/stl.GAL")
-        variables=load("../data/stl_hom.txt",file_type="geoda_txt")
-        y1=variables.get_variable('HR8893')
-        y2=variables.get_variable('HR8488')
-        self.variables=variables
-        mv=Moran_BV(y1,y2,self.w)
+        mv=Moran_BV(self.y1,self.y2,self.w)
         v="%6.4f"%mv.I
         self.assertEquals(v,'0.9322')
-    """
 
 if __name__ == '__main__':
     unittest.main()
