@@ -4,10 +4,10 @@ QUEEN = 1
 ROOK = 2
 
 Q_TARGET_MEM_SIZE = 5 * 1024 * 1024 #5mb
-class PolyQ(dict):
+class _PolyQ(dict):
     def __init__(self):
         dict.__init__(self)
-        self.size = 20 # user the first 20 object to calc the average Size.
+        self.size = 20 # use the first 20 objects to calculate the average Size.
         self.ids = []
     def __checkSize(self):
         """ Use the objects in the Q to calculate the average size of the objects
@@ -34,18 +34,20 @@ class ContWeights:
         self.geoObj = geoObj
         self.joinType = joinType
         self.w = {}
-        self.Q = PolyQ()
+        self.Q = _PolyQ()
     def create(self):
         for poly in self.geoObj:
             self.append(poly)
     def append(self,poly):
         self.Q.add(poly)
-        for id in self.index.intersection(poly.bbox):
+        b = poly.bounding_box
+        bbox = [b.left,b.lower,b.right,b.upper]
+        for id in self.index.intersection(bbox):
             if self.check(id,poly) >= self.joinType:
                 self.setW(id,poly.id)
         if poly.id not in self.w: #add the null cases
             self.w[poly.id] = set()
-        self.index.add(poly.bbox.id,poly.bbox)
+        self.index.add(poly.id,bbox)
     def setW(self,id0,id1):
         "updates the W matrix seting two polygon's as neighbors"
         w = self.w
@@ -61,9 +63,7 @@ class ContWeights:
             poly0 = self.Q[id0]
         else:
             poly0 = self.geoObj.get(id0)
-        #poly1 = self.geoObj.get(id1)
-        common = set(poly0).intersection(set(poly1))
-        #common = poly0.intersection(poly1)
+        common = set(poly0.vertices).intersection(set(poly1.vertices))
         if len(common) > 1:
             #double check rook
             return ROOK
@@ -75,8 +75,7 @@ class ContWeights:
 if __name__=='__main__':
     #from pysal import GeoIO
     import pysal
-    shp = pysal.open('examples/usCounties/usa.shp','r')
-    #shp = GeoIO.GeoIO('examples/usCounties/co99_d00.shp')
+    shp = pysal.open('../examples/10740.shp','r')
     w = ContWeights(shp,QUEEN)
     import time
     import cProfile
