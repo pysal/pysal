@@ -20,7 +20,7 @@ def bbcommon(bb,bbother):
             chflag = 1
     return chflag
 
-class ContiguityWeights:
+class ContiguityWeights_binning:
     """ """
     def __init__(self, shpFileObject, wttype):
         self.shpFileObject=shpFileObject
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     import time
     fname="../examples/10740.shp"
     t0 = time.time()
-    c=ContiguityWeights(pysal.open(fname), QUEEN)
+    c=ContiguityWeights_binning(pysal.open(fname), QUEEN)
     t1 = time.time()
     print "using "+str(fname)
     print "time elapsed for ... using bins: " + str(t1-t0)

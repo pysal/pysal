@@ -28,13 +28,14 @@ class _PolyQ(dict):
                     del self[self.ids.pop(0)]
             self[poly.id] = poly
             self.ids.append(poly.id)
-class ContWeights:
+class ContiguityWeights_rtree:
     def __init__(self,geoObj,joinType=ROOK):
         self.index = rtree.Rtree()
         self.geoObj = geoObj
         self.joinType = joinType
         self.w = {}
         self.Q = _PolyQ()
+        self.create()
     def create(self):
         for poly in self.geoObj:
             self.append(poly)
@@ -76,11 +77,10 @@ if __name__=='__main__':
     #from pysal import GeoIO
     import pysal
     shp = pysal.open('../examples/10740.shp','r')
-    w = ContWeights(shp,QUEEN)
+    w = ContiguityWeights_rtree(shp,QUEEN)
     import time
     import cProfile
     t0 = time.time()
     #cProfile.run('w.create()')
-    w.create()
     t1 = time.time()
     print "Completed in: ",t1-t0,"seconds"
