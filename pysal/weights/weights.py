@@ -35,6 +35,7 @@ class W(object):
         for key in data:
             d['weights'][key] = [1] * len(data[key])
             d['neighbors'][key] = list(data[key])
+            d['neighbors'][key].sort()
         def __zero_offset(neighbors,weights,original_ids=None):
             if not original_ids:
                 original_ids=neighbors.keys()
@@ -174,6 +175,8 @@ class W(object):
         self.transformations={}
         self.weights=data['weights']
         self.neighbors=data['neighbors']
+        self.new_ids=None
+        self.old_ids=None
         if 'new_ids' in data:
             self.new_ids=data['new_ids']
         if 'original_ids' in data:
