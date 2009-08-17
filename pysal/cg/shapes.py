@@ -1666,6 +1666,15 @@ class Rectangle:
         self.right = float(right)
         self.upper = float(upper)
 
+    def __getitem__(self,key):
+        """
+        >>> r = Rectangle(-4, 3, 10, 17)
+        >>> r[:]
+        [-4.0, 3.0, 10.0, 17.0]
+        """
+        l = [self.left,self.lower,self.right,self.upper]
+        return l.__getitem__(key)
+
     def set_centroid(self, new_center):
         """
         Moves the rectangle center to a new specified point.

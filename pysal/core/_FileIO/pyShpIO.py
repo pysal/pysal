@@ -24,6 +24,8 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
         else: return 0
     def __open(self):
         self.dataObj = shp_file(self.dataPath)
+        self.header = self.dataObj.header
+        self.bbox = self.dataObj.bbox
         try:
             self.type = STRING_TO_TYPE[self.dataObj.type()]
         except KeyError:
