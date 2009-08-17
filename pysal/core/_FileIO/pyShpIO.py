@@ -38,7 +38,6 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
                 self.type = 'POINTM'
             if len(shape) == 4:
                 self.type = 'POINTZ'
-        print self.type
         self.dataObj = shp_file(self.dataPath,'w',self.type)
         self.write = self.__writer
         self.write(shape)
@@ -83,7 +82,6 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
         except IndexError:
             return None
         self.pos+=1
-        print self.pos
         if self.dataObj.type() == 'POINT':
             shp = self.type((rec['X'],rec['Y']))
             shp.id = self.pos # shp IDs start at 1.
