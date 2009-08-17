@@ -81,10 +81,13 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
         try:
             rec = self.dataObj.get_shape(self.pos)
         except IndexError:
-            raise StopIteration
+            return None
         self.pos+=1
+        print self.pos
         if self.dataObj.type() == 'POINT':
-            return self.type((rec['X'],rec['Y']))
+            shp = self.type((rec['X'],rec['Y']))
+            shp.id = self.pos # shp IDs start at 1.
+            return shp
         else:
             if rec['NumParts'] > 1:
                 partsIndex = list(rec['Parts Index'])
@@ -102,7 +105,9 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
                     
             else:
                 vertices = rec['Vertices']
-            return self.type(vertices)
+            shp = self.type(vertices)
+            shp.id = self.pos # shp IDs start at 1.
+            return shp
         
     def close(self):
         self.dataObj.close()

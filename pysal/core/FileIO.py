@@ -245,9 +245,9 @@ class FileIO(object): #should be a type?
         """
         prevPos = self.tell()
         self.seek(n)
-        shp = self._read_joins()
+        obj = self._read_joins()
         self.seek(prevPos)
-        return shp
+        return obj
     def seek(self,n):
         """ Seek the FileObj to the beginning of the n'th record, 
             if ids are set, seeks to the beginning of the record at id, n"""
