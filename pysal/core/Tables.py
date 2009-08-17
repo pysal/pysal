@@ -66,7 +66,7 @@ class DataTable(FileIO.FileIO):
             self.seek(row_start)
             data = [self.next() for i in range(row_start,row_stop,row_step)]
         else:
-            self.seek(rows)
+            self.seek( slice(rows).indices(len(self))[1] )
             data = [self.next()]
         if cols is not None:
             if isinstance(cols,slice):

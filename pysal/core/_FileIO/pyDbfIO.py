@@ -30,7 +30,7 @@ class DBF(pysal.core.Tables.DataTable):
             self.record_size = record_size
             self.record_fmt = fmt
             self.pos = 0
-            self.header = [fInfo[1] for fInfo in self.field_info[1:]]
+            self.header = [fInfo[0] for fInfo in self.field_info[1:]]
             field_spec = []
             for fname,ftype,flen,fpre in self.field_info[1:]:
                 field_spec.append((ftype,flen,fpre))
