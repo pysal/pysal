@@ -43,8 +43,9 @@ Function comment format:
 __author__  = "Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow"
 __credits__ = "Copyright (c) 2005-2009 Sergio J. Rey"
 
-import math
 import doctest
+import math
+import random
 import unittest
 
 class Point(object):
@@ -1183,7 +1184,7 @@ class Polygon(object):
         def loc_in_polygon(loc, vertices):
             vert_y_set = set([v[1] for v in vertices])
             while loc[1] in vert_y_set:
-                loc = (loc[0], loc[1] + 1e-200) # Perturb the location very slightly
+                loc = (loc[0], loc[1] + -1e-14 + random.random()*2e-14) # Perturb the location very slightly
             
             inters = 0
             for i in xrange(-1, len(vertices)-1):
@@ -1198,13 +1199,23 @@ class Polygon(object):
             """
             Returns a list of the vertices in clockwise order.
             """
-            for i in xrange(1, len(vertices)-1):
-                if collinear_pts(vertices[i-1], vertices[i], vertices[i+1]):
+            def remove_duplicates(vertices):
+                clean = []
+                prev = None
+                for i in xrange(len(vertices)):
+                    if vertices[i] != prev:
+                        clean.append(vertices[i])
+                    prev = vertices[i]
+                return clean
+
+            nondup_verts = remove_duplicates(vertices) # Non-duplicate pts 
+            for i in xrange(1, len(nondup_verts)-1):
+                if collinear_pts(nondup_verts[i-1], nondup_verts[i], nondup_verts[i+1]):
                     continue
-                tri = Triangle(vertices[i-1], vertices[i], vertices[i+1])
-                if len(filter(lambda v: tri.contains(v), vertices)) == 0:
+                tri = Triangle(nondup_verts[i-1], nondup_verts[i], nondup_verts[i+1])
+                if len(filter(lambda v: tri.contains(v), nondup_verts)) == 0:
                     in_tri_pt = ((tri.v1[0] + tri.v2[0] +tri.v3[0])/3.0, (tri.v1[1] + tri.v2[1] + tri.v3[1])/3.0)
-                    if loc_in_polygon(in_tri_pt, vertices):
+                    if loc_in_polygon(in_tri_pt, nondup_verts):
                         if tri.cw:
                             return vertices
                         else:
