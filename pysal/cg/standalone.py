@@ -234,44 +234,29 @@ def get_polygon_point_intersect(poly, pt):
     >>> pt2 = Point((2, 2))
     >>> get_polygon_point_intersect(poly, pt2)
     """
-    def pt_lies_on_part_boundary(vertices):
+    def pt_lies_on_part_boundary(pt, vertices):
         return filter(lambda i: get_segment_point_dist(LineSegment(vertices[i], vertices[i+1]), pt)[0] == 0,
                       xrange(-1, len(vertices)-1)) != []
 
-    def pt_in_part(vertices):
-        if pt in vertices: # If location is on a vertex
-            return True
-        else: # If location is not on a vertex
-            def intersects(v0, v1, v2): # v1 -> v2 is clockwise
-                ip = get_segments_intersect(LineSegment(v1, v2), LineSegment((min([pt[0], v1[0], v2[0]]) - 1, pt[1]), pt))
-                if ip == None:
-                    return False
-                if ip not in [v1, v2]: # Regular old intersection
-                    return True
-                if v1[1] == v2[1]: # Horizontal edge
-                    return False
-                if ip == v2: # Defer to next segment call
-                    return False
-                # ip == v1
-                if v2[1] < v1[1]:
-                    if v1[1] <= v0[1]:
-                        return True
-                    return False
-                else:
-                    if v1[1] > v0[1]:
-                        return True
-                    return False
-
-            return len(filter(lambda i: intersects(vertices[i-1], vertices[i], vertices[i+1]),
-                              xrange(-1, len(vertices)-1))) % 2 == 1
-
+    def pt_in_part(pt, vertices):
+        vert_y_set = set([v[1] for v in vertices])
+        while pt[1] in vert_y_set:
+            pt = (pt[0], pt[1] + -1e-14 + random.random()*2e-14) # Perturb the location very slightly
+        inters = 0
+        for i in xrange(-1, len(vertices)-1):
+            v1 = vertices[i]
+            v2 = vertices[i+1]
+            if get_segments_intersect(LineSegment(v1, v2), LineSegment((min([pt[0], v1[0], v2[0]]) - 1, pt[1]), pt)) != None:
+                inters += 1
+        return inters % 2 == 1
+    
     if poly._holes != [[]]:
         raise NotImplementedError, 'Cannot compute containment for polygon with holes'
     if get_rectangle_point_intersect(poly.bounding_box, pt) == None: # Weed out points that aren't even close
         return None
-    if filter(pt_lies_on_part_boundary, poly._vertices) != []:
+    if filter(lambda verts: pt_lies_on_part_boundary(pt, verts), poly._vertices) != []:
         return pt
-    if filter(pt_in_part, poly._vertices) != []:
+    if filter(lambda verts: pt_in_part(pt, verts), poly._vertices) != []:
         return pt
     return None
     
