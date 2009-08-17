@@ -1133,6 +1133,7 @@ class Polygon(object):
 
     Attributes:
     vertices -- the vertices of the Polygon in clockwise order
+    len -- the number of verticies (not including holes)
     perimeter -- the geometric length of the perimeter of the Polygon
     bounding_box -- the bounding box of the polygon
     area -- the area enclosed by the polygon
@@ -1245,7 +1246,28 @@ class Polygon(object):
         self._bounding_box = None
         self._area = None
         self._centroid = None
+        self._len = None
+    def __len__(self):
+        return self.len
 
+    @property
+    def len(self):
+        """
+        Returns the number of vertices in the polygon. Does not include holes.
+
+        len -> int
+
+        Example:
+        >>> p1 = Polygon([Point((0, 0)), Point((0, 1)), Point((1, 1)), Point((1, 0))])
+        >>> p1.len
+        4
+        >>> len(p1)
+        4
+        """
+        if self._len == None:
+            self._len = len(self.vertices)
+        return self._len
+    
     @property
     def vertices(self):
         """
