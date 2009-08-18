@@ -1177,7 +1177,7 @@ class Polygon(object):
             # Inclusive...hoping this is an ok assumption
             # Also have a little margin built in for rounding errors...
             # tendancy is towards intersection
-            intersect_exists = -1e-10 <= x <= 1+1e-10 and -1e-10 <= y <= 1 + 1e-10
+            intersect_exists = x == 0 and y == 0
             if not intersect_exists:
                 return None
             return (p1[0] + x*(p2[0] - p1[0]), p1[1] + x*(p2[1] - p1[1]))
