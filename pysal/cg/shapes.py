@@ -1158,40 +1158,26 @@ class Polygon(object):
             return ((p2[0] - p1[0])*(p3[1] - p1[1]) - 
                     (p2[1] - p1[1])*(p3[0] - p1[0]) == 0)
 
-        def segments_intersect(p1,p2,p3,p4):
-            a = p2[0] - p1[0]
-            b = p3[0] - p4[0]
-            c = p2[1] - p1[1]
-            d = p3[1] - p4[1]
-            det = float(a*d - b*c)
-            if det == 0:
-                return None
-            a_inv = d/det
-            b_inv = -b/det
-            c_inv = -c/det
-            d_inv = a/det
-            m = p3[0] - p1[0]
-            n = p3[1] - p1[1]
-            x = a_inv*m + b_inv*n
-            y = c_inv*m + d_inv*n
-            # Inclusive...hoping this is an ok assumption
-            # Also have a little margin built in for rounding errors...
-            # tendancy is towards intersection
-            intersect_exists = x == 0 and y == 0
-            if not intersect_exists:
-                return None
-            return (p1[0] + x*(p2[0] - p1[0]), p1[1] + x*(p2[1] - p1[1]))
+        def neg_ray_intersect(p1, p2, p3):
+            # Returns whether a ray in the negative-x direction from p3 intersects the segment between 
+            if not min(p1[1], p2[1]) <= p3[1] <= max(p1[1], p2[1]):
+                return False
+            if p1[1] > p2[1]:
+                vec1 = (p2[0] - p1[0], p2[1] - p1[1])
+            else:
+                vec1 = (p1[0] - p2[0], p1[1] - p2[1])
+            vec2 = (p3[0] - p1[0], p3[1] - p1[1])
+            return vec1[0]*vec2[1] - vec2[0]*vec1[1] >= 0
 
         def loc_in_polygon(loc, vertices):
             vert_y_set = set([v[1] for v in vertices])
             while loc[1] in vert_y_set:
                 loc = (loc[0], loc[1] + -1e-14 + random.random()*2e-14) # Perturb the location very slightly
-            
             inters = 0
             for i in xrange(-1, len(vertices)-1):
                 v1 = vertices[i]
                 v2 = vertices[i+1]
-                if segments_intersect(v1, v2, (min([loc[0], v1[0], v2[0]]) - 1, loc[1]), loc) != None:
+                if neg_ray_intersect(v1, v2, loc):
                     inters += 1
 
             return inters % 2 == 1
