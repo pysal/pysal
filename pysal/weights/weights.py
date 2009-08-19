@@ -186,6 +186,28 @@ class W(object):
         self.characteristics()
         self._transform=None
         
+    def __getitem__(self,key):
+        """
+        Allow a dictionary like interaction with the weights class.
+
+        Example
+        >>> import ContiguityWeights
+        >>> w = ContiguityWeights.rook('../examples/10740.shp')
+        >>> w[1]
+        {2: 1, 102: 1, 86: 1, 5: 1, 6: 1}
+        >>> w = lat2gal()
+        >>> w[1]
+        {0: 1, 2: 1, 6: 1}
+        >>> w[0]
+        {1: 1, 5: 1}
+        """
+        if self.old_ids:
+            idx = self.old_ids[key]
+            neighbors = [self.new_ids[i] for i in self.neighbors[idx]]
+            w = self.weights[idx]
+            return dict(zip(neighbors,w))
+        else:
+            return dict(zip(self.neighbors[key],self.weights[key]))
     def get_transform(self):
         return self._transform
 
