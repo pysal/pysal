@@ -291,7 +291,15 @@ class W(object):
         """properties of W needed for various autocorrelation tests and some
         summary characteristics.
         
-        note: does not handle islands (explicitly) (yet)
+        >>> import ContiguityWeights
+        >>> w = ContiguityWeights.rook('../examples/10740.shp')
+        >>> w[1]
+        {2: 1, 102: 1, 86: 1, 5: 1, 6: 1}
+        >>> w.islands
+        [164]
+        >>> w[164]
+        {}
+
         """
        
         s0=s1=s2=0.0
@@ -337,6 +345,11 @@ class W(object):
             self.asymmetric=1
         else:
             self.asymmetric=0
+        islands = [i for i,c in enumerate(self.cardinalities) if c==0]
+        if self.new_ids:
+            self.islands = [ self.new_ids[i] for i in islands]
+        else:
+            self.islands=islands
 
     def asymmetry(self,nonzero=True):
         """Checks for w_{i,j} == w_{j,i} forall w_{i,j}!=0
