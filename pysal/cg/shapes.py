@@ -47,6 +47,7 @@ import doctest
 import math
 import random
 import unittest
+import standalone
 
 class Point(object):
     """
@@ -969,164 +970,6 @@ class _TestChain(unittest.TestCase):
                     [Point((-5, -5)), Point((-5, 0)), Point((0, 0)), Point((0, 0))]]
         self.assertEquals(Chain(vertices).len, 6 + 10) 
 
-class Triangle:
-    """
-    Representation of a triangle. 
-    The representation is valuable for its numerical stability.
-
-    Attributes:
-    v1 -- a vertex of the triangle (number 2-tuple)
-    v2 -- a vertex of the triangle (number 2-tuple)
-    v3 -- a vertex of the triangle (number 2-tuple)
-    """
-
-    def __init__(self, v1, v2, v3):
-        """
-        Create a triangle with the specified vertices.
-
-        Test tag: <tc>#is#Triangle.__init__</tc>
-
-        __init__((number, number), (number, number), (number, number)) -> Triangle
-
-        Arguments:
-        v1 -- a vertex of the triangle
-        v2 -- a vertex of the triangle
-        v3 -- a vertex of the triangle
-
-        Example:
-        >>> t = Triangle(Point((0, 0)), Point((1, 0)), Point((0, 1)))
-        """
-        cross_prod = ((v2[0] - v1[0])*(v3[1] - v1[1]) - 
-                      (v2[1] - v1[1])*(v3[0] - v1[0]))
-        if cross_prod == 0:
-            raise ArithmeticError, 'Triangle vertices cannot be collinear.'
-        self.v1 = v1
-        self.v2 = v2
-        self.v3 = v3
-
-    @property
-    def cw(self):
-        """
-        Test tag: <tc>#is#Triangle.cw</tc>
- 
-        Returns whether the vertices of the triangle are in clockwise order.
-
-        cw() -> bool
-
-        Example:
-        >>> Triangle(Point((0, 0)), Point((0, 1)), Point((1, 0))).cw
-        True
-        >>> Triangle(Point((0, 0)), Point((1, 0)), Point((0, 1))).cw
-        False
-        """
-        cross_prod = ((self.v2[0] - self.v1[0])*(self.v3[1] - self.v1[1]) -
-                      (self.v2[1] - self.v1[1])*(self.v3[0] - self.v1[0]))
-        if cross_prod > 0:
-            return False
-        else:
-            return True
-
-    def contains(self, pt):
-        """
-        Returns whether a location lies inside or outside the triangle.
-
-        Test tag: <tc>#is#Triangle.contains</tc>
-
-        contains(Point) -> bool
-
-        Arguments:
-        loc -- a location which lies inside or outside the triangle
-
-        Example:
-        >>> Triangle(Point((0, 0)), Point((1, 0)), Point((0, 1))).contains(Point((2, 2)))
-        False
-        >>> Triangle(Point((0, 0)), Point((1, 0)), Point((0, 1))).contains(Point((0.1, 0.1)))
-        True
-        """
-        if self.cw:
-            v1 = self.v1
-            v2 = self.v2
-            v3 = self.v3
-        else:
-            v1 = self.v1
-            v2 = self.v3
-            v3 = self.v2
-        tvec1 = (v2[0] - v1[0], v2[1] - v1[1])
-        tvec2 = (v3[0] - v2[0], v3[1] - v2[1])
-        tvec3 = (v1[0] - v3[0], v1[1] - v3[1])
-        lvec1 = (pt[0] - v1[0], pt[1] - v1[1])
-        lvec2 = (pt[0] - v2[0], pt[1] - v2[1])
-        lvec3 = (pt[0] - v3[0], pt[1] - v3[1])
-        cross_prod1 = lvec1[0]*tvec1[1] - lvec1[1]*tvec1[0]
-        cross_prod2 = lvec2[0]*tvec2[1] - lvec2[1]*tvec2[0]
-        cross_prod3 = lvec3[0]*tvec3[1] - lvec3[1]*tvec3[0]
-        return cross_prod1 > 0 and cross_prod2 > 0 and cross_prod3 > 0
-
-class _TestTriangle(unittest.TestCase):
-
-    def test___init__1(self):
-        """
-        Test exception thrown correctly.
-
-        Test tag: <tc>#tests#Triangle.__init__</tc>
-        """
-        try:
-            t = Triangle(Point((0, 0)), Point((1, 0)), Point((2, 0)))
-        except ArithmeticError:
-            pass
-        else:
-            self.fail()
-
-        try:
-            t = Triangle(Point((0, 0)), Point((2, 0)), Point((1, 0)))
-        except ArithmeticError:
-            pass
-        else:
-            self.fail()
-
-        try:
-            t = Triangle(Point((0, 1)), Point((0, 2)), Point((0, 3)))
-        except ArithmeticError:
-            pass
-        else:
-            self.fail()
-
-        try:
-            t = Triangle(Point((1, 1)), Point((3, 3)), Point((-2, -2)))
-        except ArithmeticError:
-            pass
-        else:
-            self.fail()
-
-        def test_cw1(self):
-            """
-            Basic testing and tests for 'extreme' triangles.
- 
-            Test tag: <tc>#tests#Triangle.cw</tc>
-            """
-            self.assertFalse(Triangle(Point((1, 1)), Point((2, 1)), Point((1, 2))).cw)
-            self.assertTrue(Triangle(Point((0, 0)), Point((0, -1)), Point((-1, -1))).cw)
-            self.assertTrue(Triangle(Point((0, 0)), Point((0, -.00000001)), Point((-1000000, -1))).cw)
-            self.assertFalse(Triangle(Point((0, 0)), Point((0.00000001, 0)), Point((0.000001, 10000000))).cw)
-
-        def test_contains1(self):
-            """
-            Testing for 'close calls', i.e. numerical stability.                
-
-            Test tag: <tc>#tests#Triangle.contains</tc>
-            """
-            t = Triangle(Point((0, 0)), Point((1, 0)), Point((0.5, 1)))
-
-            self.assertTrue(t.contains(Point((0.5, 0.0000000001))))
-            self.assertTrue(t.contains(Point((0.5, 0.999999999))))
-            self.assertTrue(t.contains(Point((0.25, 0.499999999))))
-            self.assertTrue(t.contains(Point((0.75, 0.499999999))))
-
-            self.assertFalse(t.contains(Point((0.5, -0.0000000001))))
-            self.assertFalse(t.contains(Point((0.5, 1.00000000001))))
-            self.assertFalse(t.contains(Point((0.25, 0.5000000001))))
-            self.assertFalse(t.contains(Point((0.75, 0.5000000001))))
-
 class Polygon(object):
     """
     Geometric representation of polygon objects.
@@ -1154,65 +997,11 @@ class Polygon(object):
         Example:
         >>> p1 = Polygon([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))])
         """
-        def collinear_pts(p1, p2, p3):
-            return ((p2[0] - p1[0])*(p3[1] - p1[1]) - 
-                    (p2[1] - p1[1])*(p3[0] - p1[0]) == 0)
-
-        def neg_ray_intersect(p1, p2, p3):
-            # Returns whether a ray in the negative-x direction from p3 intersects the segment between 
-            if not min(p1[1], p2[1]) <= p3[1] <= max(p1[1], p2[1]):
-                return False
-            if p1[1] > p2[1]:
-                vec1 = (p2[0] - p1[0], p2[1] - p1[1])
+        def clockwise(part):
+            if standalone.is_clockwise(part):
+                return part[:] 
             else:
-                vec1 = (p1[0] - p2[0], p1[1] - p2[1])
-            vec2 = (p3[0] - p1[0], p3[1] - p1[1])
-            return vec1[0]*vec2[1] - vec2[0]*vec1[1] >= 0
-
-        def loc_in_polygon(loc, vertices):
-            vert_y_set = set([v[1] for v in vertices])
-            while loc[1] in vert_y_set:
-                loc = (loc[0], loc[1] + -1e-14 + random.random()*2e-14) # Perturb the location very slightly
-            inters = 0
-            for i in xrange(-1, len(vertices)-1):
-                v1 = vertices[i]
-                v2 = vertices[i+1]
-                if neg_ray_intersect(v1, v2, loc):
-                    inters += 1
-
-            return inters % 2 == 1
-
-        def clockwise(vertices):
-            """
-            Returns a list of the vertices in clockwise order.
-            """
-            def remove_duplicates(vertices):
-                clean = []
-                prev = None
-                for i in xrange(len(vertices)):
-                    if vertices[i] != prev:
-                        clean.append(vertices[i])
-                    prev = vertices[i]
-                return clean
-
-            nondup_verts = remove_duplicates(vertices) # Non-duplicate pts 
-            for i in xrange(1, len(nondup_verts)-1):
-                if collinear_pts(nondup_verts[i-1], nondup_verts[i], nondup_verts[i+1]):
-                    continue
-                tri = Triangle(nondup_verts[i-1], nondup_verts[i], nondup_verts[i+1])
-                if len(filter(lambda v: tri.contains(v), nondup_verts)) == 0:
-                    in_tri_pt = ((tri.v1[0] + tri.v2[0] +tri.v3[0])/3.0, (tri.v1[1] + tri.v2[1] + tri.v3[1])/3.0)
-                    if loc_in_polygon(in_tri_pt, nondup_verts):
-                        if tri.cw:
-                            return vertices
-                        else:
-                            return vertices[::-1]
-                    else:
-                        if tri.cw:
-                            return vertices[::-1]
-                        else:
-                            return vertices
-            raise ArithmeticError, 'Polygon vertices are all collinear'
+                return part[::-1]
 
         if isinstance(vertices[0], list):
             self._vertices = [clockwise(part) for part in vertices]

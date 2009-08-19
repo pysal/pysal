@@ -238,25 +238,13 @@ def get_polygon_point_intersect(poly, pt):
         return filter(lambda i: get_segment_point_dist(LineSegment(vertices[i], vertices[i+1]), pt)[0] == 0,
                       xrange(-1, len(vertices)-1)) != []
 
-    def pt_in_part(pt, vertices):
-        vert_y_set = set([v[1] for v in vertices])
-        while pt[1] in vert_y_set:
-            pt = (pt[0], pt[1] + -1e-14 + random.random()*2e-14) # Perturb the location very slightly
-        inters = 0
-        for i in xrange(-1, len(vertices)-1):
-            v1 = vertices[i]
-            v2 = vertices[i+1]
-            if get_segments_intersect(LineSegment(v1, v2), LineSegment((min([pt[0], v1[0], v2[0]]) - 1, pt[1]), pt)) != None:
-                inters += 1
-        return inters % 2 == 1
-    
     if poly._holes != [[]]:
         raise NotImplementedError, 'Cannot compute containment for polygon with holes'
     if get_rectangle_point_intersect(poly.bounding_box, pt) == None: # Weed out points that aren't even close
         return None
     if filter(lambda verts: pt_lies_on_part_boundary(pt, verts), poly._vertices) != []:
         return pt
-    if filter(lambda verts: pt_in_part(pt, verts), poly._vertices) != []:
+    if filter(lambda verts: _point_in_vertices(pt, verts), poly._vertices) != []:
         return pt
     return None
     
@@ -473,6 +461,126 @@ def convex_hull(points):
             stack.pop(-2) 
    
     return stack 
+
+def is_clockwise(vertices):
+    """
+    Returns whether a list of points describing a polygon are clockwise or counterclockwise.
+ 
+    is_clockwise(Point list) -> bool
+
+    Example:
+    >>> is_clockwise([Point((0, 0)), Point((10, 0)), Point((0, 10))])
+    False
+    >>> is_clockwise([Point((0, 0)), Point((0, 10)), Point((10, 0))])
+    True
+    """
+
+    class Triangle:
+
+        def __init__(self, v1, v2, v3):
+            cross_prod = ((v2[0] - v1[0])*(v3[1] - v1[1]) -
+                          (v2[1] - v1[1])*(v3[0] - v1[0]))
+            if cross_prod == 0:
+                raise ArithmeticError, 'Triangle vertices cannot be collinear.'
+            self.v1 = v1
+            self.v2 = v2
+            self.v3 = v3
+
+        @property
+        def cw(self):
+            cross_prod = ((self.v2[0] - self.v1[0])*(self.v3[1] - self.v1[1]) -
+                          (self.v2[1] - self.v1[1])*(self.v3[0] - self.v1[0]))
+            if cross_prod > 0:
+                return False
+            else:
+                return True
+
+        def contains(self, pt):
+            if self.cw:
+                v1 = self.v1
+                v2 = self.v2
+                v3 = self.v3
+            else:
+                v1 = self.v1
+                v2 = self.v3
+                v3 = self.v2
+            tvec1 = (v2[0] - v1[0], v2[1] - v1[1])
+            tvec2 = (v3[0] - v2[0], v3[1] - v2[1])
+            tvec3 = (v1[0] - v3[0], v1[1] - v3[1])
+            lvec1 = (pt[0] - v1[0], pt[1] - v1[1])
+            lvec2 = (pt[0] - v2[0], pt[1] - v2[1])
+            lvec3 = (pt[0] - v3[0], pt[1] - v3[1])
+            cross_prod1 = lvec1[0]*tvec1[1] - lvec1[1]*tvec1[0]
+            cross_prod2 = lvec2[0]*tvec2[1] - lvec2[1]*tvec2[0]
+            cross_prod3 = lvec3[0]*tvec3[1] - lvec3[1]*tvec3[0]
+            return cross_prod1 > 0 and cross_prod2 > 0 and cross_prod3 > 0
+
+    def collinear_pts(p1, p2, p3):
+        return ((p2[0] - p1[0])*(p3[1] - p1[1]) - (p2[1] - p1[1])*(p3[0] - p1[0]) == 0)
+
+    def remove_duplicates(vertices):
+        clean = []
+        prev = None
+        for i in xrange(len(vertices)):
+            if vertices[i] != prev:
+                clean.append(vertices[i])
+            prev = vertices[i]
+        return clean
+
+    nondup_verts = remove_duplicates(vertices) # Non-duplicate pts 
+    for i in xrange(1, len(nondup_verts)-1):
+        if collinear_pts(nondup_verts[i-1], nondup_verts[i], nondup_verts[i+1]):
+            continue
+        tri = Triangle(nondup_verts[i-1], nondup_verts[i], nondup_verts[i+1])
+        if len(filter(lambda v: tri.contains(v), nondup_verts)) == 0:
+            in_tri_pt = ((tri.v1[0] + tri.v2[0] +tri.v3[0])/3.0, (tri.v1[1] + tri.v2[1] + tri.v3[1])/3.0)
+            if _point_in_vertices(in_tri_pt, nondup_verts):
+                if tri.cw:
+                    return True
+                else:
+                    return False
+            else:
+                if tri.cw:
+                    return False
+                else:
+                    return True
+    raise ArithmeticError, 'Polygon vertices are all collinear'
+
+def _point_in_vertices(pt, vertices):
+    """
+    HELPER METHOD. DO NOT CALL.  
+
+    Returns whether a point is contained in a polygon specified by a sequence of vertices.
+
+    _point_in_vertices(Point, Point list) -> bool
+
+    Example:
+    >>> _point_in_vertices(Point((1, 1)), [Point((0, 0)), Point((10, 0)), Point((0, 10))])
+    True
+    """
+
+    def neg_ray_intersect(p1, p2, p3):
+        # Returns whether a ray in the negative-x direction from p3 intersects the segment between 
+        if not min(p1[1], p2[1]) <= p3[1] <= max(p1[1], p2[1]):
+            return False
+        if p1[1] > p2[1]:
+            vec1 = (p2[0] - p1[0], p2[1] - p1[1])
+        else:
+            vec1 = (p1[0] - p2[0], p1[1] - p2[1])
+        vec2 = (p3[0] - p1[0], p3[1] - p1[1])
+        return vec1[0]*vec2[1] - vec2[0]*vec1[1] >= 0
+ 
+    vert_y_set = set([v[1] for v in vertices])
+    while pt[1] in vert_y_set:
+        pt = (pt[0], pt[1] + -1e-14 + random.random()*2e-14) # Perturb the location very slightly
+    inters = 0
+    for i in xrange(-1, len(vertices)-1):
+        v1 = vertices[i]
+        v2 = vertices[i+1]
+        if neg_ray_intersect(v1, v2, pt):
+            inters += 1
+
+    return inters % 2 == 1
 
 def _test():
     import doctest
