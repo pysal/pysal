@@ -468,83 +468,52 @@ def is_clockwise(vertices):
  
     is_clockwise(Point list) -> bool
 
+    Notes:
+        Clockwise area test ported from GDAL/OGR:
+        http://trac.osgeo.org/gdal/browser/branches/1.5/gdal/ogr/ogrlinearring.cpp?rev=16127#L334
+
+        Original License Text....
+            * Project:  OpenGIS Simple Features Reference Implementation
+            * Purpose:  The OGRLinearRing geometry class.
+            * Author:   Frank Warmerdam, warmerdam@pobox.com
+            *
+            ******************************************************************************
+            * Copyright (c) 1999, Frank Warmerdam
+            *
+            * Permission is hereby granted, free of charge, to any person obtaining a
+            * copy of this software and associated documentation files (the "Software"),
+            * to deal in the Software without restriction, including without limitation
+            * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+            * and/or sell copies of the Software, and to permit persons to whom the
+            * Software is furnished to do so, subject to the following conditions:
+            *
+            * The above copyright notice and this permission notice shall be included
+            * in all copies or substantial portions of the Software.
+            *
+            * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+            * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+            * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+            * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+            * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+            * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+            * DEALINGS IN THE SOFTWARE.
+            ****************************************************************************/
     Example:
     >>> is_clockwise([Point((0, 0)), Point((10, 0)), Point((0, 10))])
     False
     >>> is_clockwise([Point((0, 0)), Point((0, 10)), Point((10, 0))])
     True
+    >>> v = [(-106.57798, 35.174143999999998), (-106.583412, 35.174141999999996), (-106.58417999999999, 35.174143000000001), (-106.58377999999999, 35.175542999999998), (-106.58287999999999, 35.180543), (-106.58263099999999, 35.181455), (-106.58257999999999, 35.181643000000001), (-106.58198299999999, 35.184615000000001), (-106.58148, 35.187242999999995), (-106.58127999999999, 35.188243), (-106.58138, 35.188243), (-106.58108, 35.189442999999997), (-106.58104, 35.189644000000001), (-106.58028, 35.193442999999995), (-106.580029, 35.194541000000001), (-106.57974399999999, 35.195785999999998), (-106.579475, 35.196961999999999), (-106.57922699999999, 35.198042999999998), (-106.578397, 35.201665999999996), (-106.57827999999999, 35.201642999999997), (-106.57737999999999, 35.201642999999997), (-106.57697999999999, 35.201543000000001), (-106.56436599999999, 35.200311999999997), (-106.56058, 35.199942999999998), (-106.56048, 35.197342999999996), (-106.56048, 35.195842999999996), (-106.56048, 35.194342999999996), (-106.56048, 35.193142999999999), (-106.56048, 35.191873999999999), (-106.56048, 35.191742999999995), (-106.56048, 35.190242999999995), (-106.56037999999999, 35.188642999999999), (-106.56037999999999, 35.187242999999995), (-106.56037999999999, 35.186842999999996), (-106.56037999999999, 35.186552999999996), (-106.56037999999999, 35.185842999999998), (-106.56037999999999, 35.184443000000002), (-106.56037999999999, 35.182943000000002), (-106.56037999999999, 35.181342999999998), (-106.56037999999999, 35.180433000000001), (-106.56037999999999, 35.179943000000002), (-106.56037999999999, 35.178542999999998), (-106.56037999999999, 35.177790999999999), (-106.56037999999999, 35.177143999999998), (-106.56037999999999, 35.175643999999998), (-106.56037999999999, 35.174444000000001), (-106.56037999999999, 35.174043999999995), (-106.560526, 35.174043999999995), (-106.56478, 35.174043999999995), (-106.56627999999999, 35.174143999999998), (-106.566541, 35.174144999999996), (-106.569023, 35.174157000000001), (-106.56917199999999, 35.174157999999998), (-106.56938, 35.174143999999998), (-106.57061499999999, 35.174143999999998), (-106.57097999999999, 35.174143999999998), (-106.57679999999999, 35.174143999999998), (-106.57798, 35.174143999999998)]
+    >>> is_clockwise(v)
+    True
     """
-
-    class Triangle:
-
-        def __init__(self, v1, v2, v3):
-            cross_prod = ((v2[0] - v1[0])*(v3[1] - v1[1]) -
-                          (v2[1] - v1[1])*(v3[0] - v1[0]))
-            if cross_prod == 0:
-                raise ArithmeticError, 'Triangle vertices cannot be collinear.'
-            self.v1 = v1
-            self.v2 = v2
-            self.v3 = v3
-
-        @property
-        def cw(self):
-            cross_prod = ((self.v2[0] - self.v1[0])*(self.v3[1] - self.v1[1]) -
-                          (self.v2[1] - self.v1[1])*(self.v3[0] - self.v1[0]))
-            if cross_prod > 0:
-                return False
-            else:
-                return True
-
-        def contains(self, pt):
-            if self.cw:
-                v1 = self.v1
-                v2 = self.v2
-                v3 = self.v3
-            else:
-                v1 = self.v1
-                v2 = self.v3
-                v3 = self.v2
-            tvec1 = (v2[0] - v1[0], v2[1] - v1[1])
-            tvec2 = (v3[0] - v2[0], v3[1] - v2[1])
-            tvec3 = (v1[0] - v3[0], v1[1] - v3[1])
-            lvec1 = (pt[0] - v1[0], pt[1] - v1[1])
-            lvec2 = (pt[0] - v2[0], pt[1] - v2[1])
-            lvec3 = (pt[0] - v3[0], pt[1] - v3[1])
-            cross_prod1 = lvec1[0]*tvec1[1] - lvec1[1]*tvec1[0]
-            cross_prod2 = lvec2[0]*tvec2[1] - lvec2[1]*tvec2[0]
-            cross_prod3 = lvec3[0]*tvec3[1] - lvec3[1]*tvec3[0]
-            return cross_prod1 > 0 and cross_prod2 > 0 and cross_prod3 > 0
-
-    def collinear_pts(p1, p2, p3):
-        return ((p2[0] - p1[0])*(p3[1] - p1[1]) - (p2[1] - p1[1])*(p3[0] - p1[0]) == 0)
-
-    def remove_duplicates(vertices):
-        clean = []
-        prev = None
-        for i in xrange(len(vertices)):
-            if vertices[i] != prev:
-                clean.append(vertices[i])
-            prev = vertices[i]
-        return clean
-
-    nondup_verts = remove_duplicates(vertices) # Non-duplicate pts 
-    for i in xrange(1, len(nondup_verts)-1):
-        if collinear_pts(nondup_verts[i-1], nondup_verts[i], nondup_verts[i+1]):
-            continue
-        tri = Triangle(nondup_verts[i-1], nondup_verts[i], nondup_verts[i+1])
-        if len(filter(lambda v: tri.contains(v), nondup_verts)) == 0:
-            in_tri_pt = ((tri.v1[0] + tri.v2[0] +tri.v3[0])/3.0, (tri.v1[1] + tri.v2[1] + tri.v3[1])/3.0)
-            if _point_in_vertices(in_tri_pt, nondup_verts):
-                if tri.cw:
-                    return True
-                else:
-                    return False
-            else:
-                if tri.cw:
-                    return False
-                else:
-                    return True
-    raise ArithmeticError, 'Polygon vertices are all collinear'
+    if len(vertices) < 2:
+        return True
+    dfSum = 0.0
+    for i in xrange(0,len(vertices)-1):
+        dfSum += vertices[i][0] * vertices[i+1][1] - vertices[i][1] * vertices[i+1][0]
+    dfSum += vertices[-1][0] * vertices[0][1] - vertices[-1][1] * vertices[0][0]
+    return dfSum < 0.0
 
 def _point_in_vertices(pt, vertices):
     """
@@ -584,7 +553,7 @@ def _point_in_vertices(pt, vertices):
 
 def _test():
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
 
 if __name__ == '__main__':
     _test()
