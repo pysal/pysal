@@ -166,13 +166,12 @@ class DBF(pysal.core.Tables.DataTable):
             self.f.seek(POS)
 
 if __name__ == '__main__':
-    file_name = "../../weights/examples/usCounties/usa.dbf"
+    file_name = "../../examples/10740.dbf"
     f=pysal.open(file_name,'r')
     newDB = pysal.open('copy.dbf','w')
     newDB.header = f.header
     newDB.field_spec = f.field_spec
     print f.header
-    print f.spec
     for row in f:
         print row
         newDB.write(row)
@@ -182,6 +181,3 @@ if __name__ == '__main__':
     print "HEADER: ", copy.header == f.header
     print "SPEC: ", copy.field_spec == f.field_spec
     print "DATA: ",list(copy) == list(f)
-
-
-
