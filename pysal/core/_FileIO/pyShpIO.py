@@ -1,8 +1,21 @@
-""" This module wraps Andrew's wrapper around Shapelib """
+"""
+PySAL ShapeFile Reader and Writer based on pure python shapefile module.
+
+Authors:
+Charles R Schmidt <Charles.R.Schmidt@asu.edu>
+
+Not to be used without permission of the authors. 
+"""
+
+__author__ = "Charles R. Schmidt"
+__credits__ = "Copyright (c) 2009 Charles R. Schmidt"
+
 import pysal
 import pysal.core.FileIO as FileIO
 from _pyShpIO import shp_file
 import pysal.cg as cg
+from warnings import warn
+import unittest
 
 STRING_TO_TYPE = {'POLYGON':cg.Polygon,'POINT':cg.Point,'POINTM':cg.Point,'POINTZ':cg.Point,'ARC':cg.Chain}
 TYPE_TO_STRING = {cg.Polygon:'POLYGON',cg.Point:'POINT',cg.Chain:'ARC'} #build the reverse map
@@ -10,6 +23,32 @@ for key,value in STRING_TO_TYPE.iteritems():
     TYPE_TO_STRING[value] = key
 
 class PurePyShpWrapper(pysal.core.FileIO.FileIO):
+    """
+    FileIO handeler for ESRI ShapeFiles.
+
+    Attributes:
+    FORMATS -- list -- A list of support file extensions.
+    MODES -- list -- A list of support file modes.
+
+    Notes:
+    This class wraps _pyShpIO's shp_file class with the PySAL FileIO API. shp_file can be used without PySAL.
+
+    Example:
+    >>> import tempfile
+    >>> f = tempfile.NamedTemporaryFile(suffix='.shp',delete=False); fname = f.name; f.close()
+    >>> import pysal
+    >>> i = pysal.open('../../examples/10740.shp','r')
+    >>> o = pysal.open(fname,'w')
+    >>> for shp in i:
+    ...     o.write(shp)
+    >>> o.close()
+    >>> open('../../examples/10740.shp','rb').read() == open(fname,'rb').read()
+    True
+    >>> open('../../examples/10740.shx','rb').read() == open(fname[:-1]+'x','rb').read()
+    True
+    >>> import os
+    >>> os.remove(fname); os.remove(fname.replace('.shp','.shx'))
+    """
     FORMATS = ['shp','shx']
     MODES = ['w','r','wb','rb']
     def __init__(self,*args,**kwargs):
@@ -102,9 +141,13 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
                     return self.type(vertices,holes)
                 else:
                     vertices = parts
-                    
             else:
                 vertices = rec['Vertices']
+                if not pysal.cg.is_clockwise(vertices):
+                    ### SHAPEFILE WARNING: Polygon %d topology has been fixed. (ccw -> cw)
+                    warn("SHAPEFILE WARNING: Polygon %d topology has been fixed. (ccw -> cw)"%(self.pos),RuntimeWarning)
+                    print "SHAPEFILE WARNING: Polygon %d topology has been fixed. (ccw -> cw)"%(self.pos)
+                    
             shp = self.type(vertices)
             shp.id = self.pos # shp IDs start at 1.
             return shp
@@ -112,3 +155,12 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
     def close(self):
         self.dataObj.close()
         FileIO.FileIO.close(self)
+
+
+def _test():
+    import doctest
+    doctest.testmod(verbose=True)
+    unittest.main()
+
+if __name__=='__main__':
+    _test()
