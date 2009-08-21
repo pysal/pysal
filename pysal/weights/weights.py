@@ -563,7 +563,7 @@ class Wd(dict):
                 w[key][neighbor] = 1
         return w
         
-def lat2gal(nrows=5,ncols=5,rook=True, file=None):
+def lat2gal(nrows=5,ncols=5,rook=True):
     """Create a GAL structure for a regular lattice.
 
     Arguments:
@@ -665,4 +665,6 @@ if __name__ == "__main__":
             runner.run(suite)
     # regular unittest
     unittest.main()
+
+
 
