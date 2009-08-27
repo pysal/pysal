@@ -11,6 +11,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+    PySAL <intro>
     File Input-Ouput <fileio>
     Spatial Weights  <weights>
 
