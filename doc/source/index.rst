@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 2
 
     File Input-Ouput <fileio>
+    Spatial Weights  <weights>
 
 Indices and tables
 ==================
