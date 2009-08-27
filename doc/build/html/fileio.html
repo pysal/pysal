@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>An Overview of the FileIO system in PySAL. &mdash; pysal v1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pysal v1.0 documentation" href="index.html" />
+    <link rel="prev" title="Welcome to pysal’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to pysal’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pysal v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="an-overview-of-the-fileio-system-in-pysal">
+<h1>An Overview of the FileIO system in PySAL.<a class="headerlink" href="#an-overview-of-the-fileio-system-in-pysal" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>PySAL contains a new file input-output API that should be used for all file IO operations. The goal is to abstract file handling and return native PySAL data types when reading from known file types. A list of known extensions can be found by issuing the following command.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pysal</span><span class="o">.</span><span class="n">open</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+<span class="go">PySAL File I/O understands the following file extensions:</span>
+<span class="go">Ext: &#39;.shp&#39;, Modes: [&#39;r&#39;, &#39;wb&#39;, &#39;w&#39;, &#39;rb&#39;]</span>
+<span class="go">Ext: &#39;.shx&#39;, Modes: [&#39;r&#39;, &#39;wb&#39;, &#39;w&#39;, &#39;rb&#39;]</span>
+<span class="go">Ext: &#39;.geoda_txt&#39;, Modes: [&#39;r&#39;]</span>
+<span class="go">Ext: &#39;.dbf&#39;, Modes: [&#39;r&#39;, &#39;w&#39;]</span>
+<span class="go">Ext: &#39;.gwt&#39;, Modes: [&#39;r&#39;]</span>
+<span class="go">Ext: &#39;.gal&#39;, Modes: [&#39;r&#39;]</span>
+<span class="go">Ext: &#39;.csv&#39;, Modes: [&#39;r&#39;]</span>
+<span class="go">Ext: &#39;.wkt&#39;, Modes: [&#39;r&#39;]</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>Note that in some cases the FileIO module will peek instead your file to determine it&#8217;s type. For example &#8220;geoda_txt&#8221; is just a unique scheme for &#8220;.txt&#8221; files, so when opening a &#8220;.txt&#8221; pysal will peek inside the file to determine it if has the necessary header information and dispatch accordingly. In the event that pysal does not understand your file IO operations will be dispatched to python&#8217;s internal open.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="shapefiles">
+<h3>Shapefiles<a class="headerlink" href="#shapefiles" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shp</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;10740.shp&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shp</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="go">&lt;pysal.cg.shapes.Polygon object at 0xd01e50&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">shp</span><span class="p">)</span>
+<span class="go">195</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shp</span><span class="p">)</span><span class="o">-</span><span class="mf">1</span><span class="p">)</span><span class="o">.</span><span class="n">id</span>
+<span class="go">195</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">shp</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">polys</span><span class="p">)</span>
+<span class="go">195</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dbf-files">
+<h3>DBF Files<a class="headerlink" href="#dbf-files" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;10740.dbf&#39;</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">header</span>
+<span class="go">[&#39;GIST_ID&#39;, &#39;FIPSSTCO&#39;, &#39;TRT2000&#39;, &#39;STFID&#39;, &#39;TRACTID&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">field_spec</span>
+<span class="go">[(&#39;N&#39;, 8, 0), (&#39;C&#39;, 5, 0), (&#39;C&#39;, 6, 0), (&#39;C&#39;, 11, 0), (&#39;C&#39;, 10, 0)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="go">[1, &#39;35001&#39;, &#39;000107&#39;, &#39;35001000107&#39;, &#39;1.07&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span>
+<span class="go">[[1, &#39;35001&#39;, &#39;000107&#39;, &#39;35001000107&#39;, &#39;1.07&#39;]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="p">[</span><span class="mf">0</span><span class="p">:</span><span class="mf">3</span><span class="p">]</span>
+<span class="go">[[1, &#39;35001&#39;, &#39;000107&#39;, &#39;35001000107&#39;, &#39;1.07&#39;], [2, &#39;35001&#39;, &#39;000108&#39;, &#39;35001000108&#39;, &#39;1.08&#39;], [3, &#39;35001&#39;, &#39;000109&#39;, &#39;35001000109&#39;, &#39;1.09&#39;]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="p">[</span><span class="mf">0</span><span class="p">:</span><span class="mf">5</span><span class="p">,</span><span class="mf">1</span><span class="p">]</span>
+<span class="go">[&#39;35001&#39;, &#39;35001&#39;, &#39;35001&#39;, &#39;35001&#39;, &#39;35001&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="p">[</span><span class="mf">0</span><span class="p">:</span><span class="mf">5</span><span class="p">,</span><span class="mf">0</span><span class="p">:</span><span class="mf">2</span><span class="p">]</span>
+<span class="go">[[1, &#39;35001&#39;], [2, &#39;35001&#39;], [3, &#39;35001&#39;], [4, &#39;35001&#39;], [5, &#39;35001&#39;]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="p">[</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span><span class="o">-</span><span class="mf">1</span><span class="p">]</span>
+<span class="go">[&#39;9712&#39;]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="csv-files">
+<h3>CSV Files<a class="headerlink" href="#csv-files" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&#39;stl_hom.csv&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">header</span>
+<span class="go">[&#39;WKT&#39;, &#39;NAME&#39;, &#39;STATE_NAME&#39;, &#39;STATE_FIPS&#39;, &#39;CNTY_FIPS&#39;, &#39;FIPS&#39;, &#39;FIPSNO&#39;, &#39;HR7984&#39;, &#39;HR8488&#39;, &#39;HR8893&#39;, &#39;HC7984&#39;, &#39;HC8488&#39;, &#39;HC8893&#39;, &#39;PO7984&#39;, &#39;PO8488&#39;, &#39;PO8893&#39;, &#39;PE77&#39;, &#39;PE82&#39;, &#39;PE87&#39;, &#39;RDAC80&#39;, &#39;RDAC85&#39;, &#39;RDAC90&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span>
+<span class="go">[[&#39;POLYGON ((-89.585220336914062 39.978794097900391,-89.581146240234375 40.094867706298828,-89.603988647460938 40.095306396484375,-89.60589599609375 40.136119842529297,-89.6103515625 40.3251953125,-89.269027709960938 40.329566955566406,-89.268562316894531 40.285579681396484,-89.154655456542969 40.285774230957031,-89.152763366699219 40.054969787597656,-89.151618957519531 39.919403076171875,-89.224777221679688 39.918678283691406,-89.411857604980469 39.918041229248047,-89.412437438964844 39.931644439697266,-89.495201110839844 39.933486938476562,-89.4927978515625 39.980186462402344,-89.585220336914062 39.978794097900391))&#39;, &#39;Logan&#39;, &#39;Illinois&#39;, 17, 107, 17107, 17107, 2.1154280000000001, 1.2907219999999999, 1.624458, 4, 2, 3, 189087, 154952, 184677, 5.1043200000000004, 6.5957800000000004, 5.8329510000000004, -0.99125600000000003, -0.94026500000000002, -0.84500500000000001]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fromWKT</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">_FileIO</span><span class="o">.</span><span class="n">wkt</span><span class="o">.</span><span class="n">WKTParser</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s">&#39;WKT&#39;</span><span class="p">,</span><span class="n">fromWKT</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span>
+<span class="go">[[&lt;pysal.cg.shapes.Polygon object at 0xd048b0&gt;, &#39;Logan&#39;, &#39;Illinois&#39;, 17, 107, 17107, 17107, 2.1154280000000001, 1.2907219999999999, 1.624458, 4, 2, 3, 189087, 154952, 184677, 5.1043200000000004, 6.5957800000000004, 5.8329510000000004, -0.99125600000000003, -0.94026500000000002, -0.84500500000000001]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polys</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s">&#39;WKT&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysal.cg</span> <span class="kn">import</span> <span class="n">standalone</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">standalone</span><span class="o">.</span><span class="n">get_bounding_box</span><span class="p">(</span><span class="n">polys</span><span class="p">)[:]</span>
+<span class="go">[-92.700675964355469, 36.881809234619141, -87.916572570800781, 40.329566955566406]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="">An Overview of the FileIO system in PySAL.</a><ul>
+<li><a class="reference external" href="#introduction">Introduction</a></li>
+<li><a class="reference external" href="#examples">Examples</a><ul>
+<li><a class="reference external" href="#shapefiles">Shapefiles</a></li>
+<li><a class="reference external" href="#dbf-files">DBF Files</a></li>
+<li><a class="reference external" href="#csv-files">CSV Files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="index.html"
+                                  title="previous chapter">Welcome to pysal&#8217;s documentation!</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/fileio.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to pysal’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">pysal v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Serge Rey.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.2.
+    </div>
+  </body>
+</html>
