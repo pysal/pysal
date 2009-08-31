@@ -5,13 +5,20 @@
 
 Welcome to pysal's documentation!
 =================================
+ .. image:: _figures/pysalgraph.png
+
+PySAL is a cross-platform library of spatial analysis functions written in
+Python. It combines the development efforts on `PySpace
+<http://geodacenter.asu.edu/pysal>`_ and `STARS
+<http://regionalanalysislab.org/index.php/Main/STARS>`_ - Space Time Analysis
+of Regional Systems. 
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
-    PySAL <intro>
+    Background <intro>
     File Input-Ouput <fileio>
     Spatial Weights  <weights>
 

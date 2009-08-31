@@ -50,6 +50,9 @@ matrix constructed for a 5 by 5 lattice::
 Distance Based Weights
 ======================
 
+General distance weights
+------------------------
+
 Weights based on distance between spatial objects can be constructed. Here we
 create a simple 5 by 5 grid of observations and generate inverse distance
 weights::
@@ -78,3 +81,27 @@ weights::
     Out[16]: 0.95999999999999996
 
     In [17]: 
+
+Nearest neighbor weights
+------------------------
+
+Simple contiguity matrices based on nearest neighbor relations can also be
+defined. In the following example we create three different weights objects
+for k-nearest neighbors with k from 2 to 4::
+
+        >>> c=5
+        >>> nf=num.indices((c,c)).flatten()
+        >>> data=num.array(zip(nf[0:c*c],nf[c*c::]))
+        >>> wid=pysal.weights.InverseDistance(data)
+        >>> wid_ns=pysal.weights.InverseDistance(data,row_standardize=False)
+        >>> wid.weights[0][0:3]
+        [0.0, 0.21689522769159933, 0.054223806922899832]
+        >>> wid_ns.weights[0][0:3]
+        [0.0, 1.0, 0.25]
+        >>> from pysal.weights import NearestNeighbors as nn
+        >>> nnw=[ nn(data,k) for k in range(2,5)]
+        >>> for k,nnwk in enumerate(nnw):
+              print k+2,nnwk.neighbors[0]
+        2 [1, 5]
+        3 [1, 5, 6]
+        4 [1, 5, 6, 2]
