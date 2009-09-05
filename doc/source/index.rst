@@ -21,6 +21,7 @@ Contents:
     Background <intro>
     File Input-Ouput <fileio>
     Spatial Weights  <weights>
+    Example Data <examples>
 
 Indices and tables
 ==================
