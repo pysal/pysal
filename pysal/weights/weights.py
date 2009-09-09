@@ -408,14 +408,21 @@ class W(object):
         
             for each observation we store the shortest order between it and
             each of the the other observations.
+        >>> w5=lat2gal()
+        >>> w5_shimbel=w5.shimbel()
+        >>> w5_shimbel[0][24]
+        8
+        >>> w5_shimbel[0][0:4]
+        [-1, 1, 2, 3]
         """
 
         info={}
-        for i in xrange(self.n):
+        ids=self.neighbors.keys()
+        for id in ids:
             s=[0]*self.n
-            s[i]=-1
-            for j in self.neighbors[i]:
-                s[j]=1
+            s[ids.index(id)]=-1
+            for j in self.neighbors[id]:
+                s[ids.index(j)]=1
             k=1
             flag=s.count(0)
             while flag:
@@ -426,11 +433,12 @@ class W(object):
                     p=neighbor
                     next_neighbors=self.neighbors[p]
                     for neighbor in next_neighbors:
-                        if s[neighbor]==0:
-                            s[neighbor]=knext
+                        nid=ids.index(neighbor)
+                        if s[nid]==0:
+                            s[nid]=knext
                 k=knext
                 flag=s.count(0)
-            info[i]=s
+            info[id]=s
         return info
 
 
@@ -450,25 +458,28 @@ class W(object):
             work in progress
 
         """
+        ids=self.neighbors.keys()
         info={}
-        for i in xrange(self.n):
+        for id in ids:
             s=[0]*self.n
-            s[i]=-1
-            for j in self.neighbors[i]:
-                s[j]=1
+            s[ids.index(id)]=-1
+            for j in self.neighbors[id]:
+                s[ids.index(j)]=1
             k=1
             while k < kmax:
-                p=-1
                 knext=k+1
-                for j in range(s.count(k)):
-                    neighbor=s.index(k,p+1)
-                    p=neighbor
-                    next_neighbors=self.neighbors[p]
-                    for neighbor in next_neighbors:
-                        if s[neighbor]==0:
-                            s[neighbor]=knext
+                if s.count(k):
+                    # get neighbors of order k
+                    js=[ids[j] for j,val in enumerate(s) if val==k]
+                    # get first order neighbors for order k neighbors
+                    for j in js:
+                        next_neighbors=self.neighbors[j]
+                        for neighbor in next_neighbors:
+                            nid=ids.index(neighbor)
+                            if s[nid]==0:
+                                s[nid]=knext
                 k=knext
-            info[i]=s
+            info[id]=s
         return info
 
     def higher_order(self,k=3):
@@ -487,6 +498,17 @@ class W(object):
         >>> w5_8th_order=w5.higher_order(8)
         >>> w5_8th_order.neighbors[0]
         [24]
+        >>> import ContiguityWeights
+        >>> w=ContiguityWeights.rook('../examples/10740.shp')
+        >>> w2=w.higher_order(2)
+        >>> w[1]
+        {2: 1, 102: 1, 86: 1, 5: 1, 6: 1}
+        >>> w2[1]
+        {147: 1, 3: 1, 4: 1, 101: 1, 7: 1, 40: 1, 41: 1, 10: 1, 103: 1, 104: 1, 19: 1, 84: 1, 85: 1, 100: 1, 91: 1, 92: 1, 94: 1}
+        >>> w[147]
+        {163: 1, 100L: 1, 165: 1, 102L: 1, 140L: 1, 145L: 1, 146L: 1, 148: 1, 85L: 1}
+        >>> w[85]
+        {96: 1, 102: 1, 140: 1, 147: 1, 86: 1, 94: 1}
         >>> 
 
         """
@@ -494,15 +516,12 @@ class W(object):
         info=self.order(k)
         data={}
         ids=info.keys()
-        ids.sort()
-        n=len(ids)
-        rn=range(n)
         neighbors={}
         weights={}
-        for i in ids:
-            nids=[j for j,order in enumerate(info[i]) if order==k]
-            neighbors[i]=nids
-            weights[i]=[1]*len(nids)
+        for id in ids:
+            nids=[ids[j] for j,order in enumerate(info[id]) if order==k]
+            neighbors[id]=nids
+            weights[id]=[1]*len(nids)
         data['weights']=weights
         data['neighbors']=neighbors
         return W(data)
