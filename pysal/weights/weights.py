@@ -63,8 +63,7 @@ class W(object):
                 asymmetric: Flag for any asymmetries (see
                 method asymmetry for details), false if none.
 
-                cardinalities: list of cardinalities (number of neighbors for
-                each observation)
+                cardinalities: dictionary of cardinalities 
 
                 islands: list of ids that have no neighbors
 
@@ -267,11 +266,11 @@ class W(object):
        
         s0=s1=s2=0.0
         n=len(self.weights)
-        col_sum=[0.0]*n
-        row_sum=[0.0]*n
-        cardinalities=[0]*n
+        col_sum={}
+        row_sum={}
+        cardinalities={}
         nonzero=0
-        for i in self.weights:
+        for i in self.weights.keys():
             neighbors_i=self.neighbors[i]
             cardinalities[i]=len(neighbors_i)
             w_i=self.weights[i]
@@ -286,17 +285,21 @@ class W(object):
                     ij=neighbors_i.index(j)
                     wij=w_i[ij]
                 v=wij+wji
+                if i not in col_sum:
+                    col_sum[i]=0
+                    row_sum[i]=0
                 col_sum[i]+=wji
                 row_sum[i]+=wij
                 s1+=v*v
                 s0+=wij
                 nonzero+=1
         s1/=2.0
-        s2=sum([(col_sum[i]+row_sum[i])**2 for i in xrange(n)])
+        s2=sum([(col_sum[i]+row_sum[i])**2 for i in col_sum.keys()])
         self.s2=s2
         self.s1=s1
         self.s0=s0
         self.cardinalities=cardinalities
+        cardinalities = cardinalities.values()
         self.max_neighbors=max(cardinalities)
         self.min_neighbors=min(cardinalities)
         self.sd=num.std(cardinalities)
@@ -308,11 +311,8 @@ class W(object):
             self.asymmetric=1
         else:
             self.asymmetric=0
-        islands = [i for i,c in enumerate(self.cardinalities) if c==0]
-        if self.new_ids:
-            self.islands = [ self.new_ids[i] for i in islands]
-        else:
-            self.islands=islands
+        islands = [i for i,c in self.cardinalities.items() if c==0]
+        self.islands=islands
 
     def asymmetry(self,nonzero=True):
         """Checks for w_{i,j} == w_{j,i} forall w_{i,j}!=0
