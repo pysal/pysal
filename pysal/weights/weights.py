@@ -58,7 +58,7 @@ class W(object):
 
 
 
-            Attributes:
+                        Attributes:
 
                 asymmetric: Flag for any asymmetries (see
                 method asymmetry for details), false if none.
@@ -128,8 +128,6 @@ class W(object):
                 shimbel: finds the shimbel matrix for the first order
                 contiguity matrix
 
-                transpose: returns transpose as a W object
-
 
 
         """
@@ -139,10 +137,6 @@ class W(object):
         self.neighbors=data['neighbors']
         self.new_ids=None
         self.old_ids=None
-        if 'new_ids' in data:
-            self.new_ids=data['new_ids']
-        if 'original_ids' in data:
-            self.old_ids=data['original_ids']
         self.transformations['O']=self.weights #original weights
         self.islands=[]
         self.characteristics()
@@ -261,7 +255,18 @@ class W(object):
         [164]
         >>> w[164]
         {}
-
+        >>> w.nonzero
+        1002
+        >>> w.n
+        195
+        >>> w.s0
+        1002.0
+        >>> w.s1
+        2004.0
+        >>> w.s2
+        23528
+        >>> w.sd
+        1.9391533157164347
         """
        
         s0=s1=s2=0.0
@@ -340,7 +345,17 @@ class W(object):
             >>> w.transform='w'
             >>> w.asymmetry(nonzero=False)
             [((0, 1), (1, 0)), ((0, 2), (2, 0)), ((0, 3), (3, 0)), ((1, 0), (0, 1)), ((1, 2), (2, 1)), ((1, 3), (3, 1)), ((2, 0), (0, 2)), ((2, 1), (1, 2)), ((3, 0), (0, 3)), ((3, 1), (1, 3))]
+            >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
+            >>> weights={'first':[1],'second':[1,1],'third':[1]}
+            >>> data={'neighbors':neighbors,'weights':weights}
+            >>> w=W(data)
+            >>> w.weights['third'].append(1)
+            >>> w.neighbors['third'].append('fourth')
+            >>> w.asymmetry()
+            [(('third', 'fourth'), ())]
+
         """
+
 
         asymmetries=[]
         for i,neighbors in self.neighbors.iteritems():
@@ -356,41 +371,37 @@ class W(object):
         return asymmetries
 
 
-    def lag(self,y):
-        "spatial lag"
-        yl=num.zeros(y.shape)
-        for i in self.weights:
-            neighbors=self.neighbors[i]
-            wijs=self.weights[i]
-            z=zip(neighbors,wijs)
-            yl[i]= sum([y[j]*w for j,w in z])
-        return yl
-
     def full(self):
-        "returns weights a full nxn numpy array"
-        w=num.zeros([self.n,self.n],dtype=float)
-        for i in self.neighbors:
-            n_i=self.neighbors[i]
-            w_i=self.weights[i]
-            for j,wij in zip(n_i,w_i):
-                w[i,j]=wij
-        return w
+        """generate a full numpy array
 
-    def transpose(self):
-        """returns transpose as a W object
+        returns a tuple with first element being the full numpy array and
+        second element keys being the ids associated with each row in the
+        array.
+
+
+
+        >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
+        >>> weights={'first':[1],'second':[1,1],'third':[1]}
+        >>> data={'neighbors':neighbors,'weights':weights}
+        >>> w=W(data)
+        >>> wf,ids=w.full()
+        >>> wf
+        array([[ 0.,  1.,  1.],
+               [ 1.,  0.,  0.],
+               [ 1.,  0.,  0.]])
+        >>> ids
+        ['second', 'third', 'first']
         """
-        
-        weights={}
-        neighbors={}
-        for id in xrange(self.n):
-            for j,neighbor in enumerate(self.neighbors[id]):
-                if neighbor not in neighbors:
-                    neighbors[neighbor]=[]
-                    weights[neighbor]=[]
-                neighbors[neighbor].append(id)
-                weights[neighbor].append(self.weights[id][j])
-        data={'neighbors':neighbors, 'weights':weights}
-        return W(data)
+        w=num.zeros([self.n,self.n],dtype=float)
+        keys=self.neighbors.keys()
+        for i,key in enumerate(keys):
+            n_i=self.neighbors[key]
+            w_i=self.weights[key]
+            for j,wij in zip(n_i,w_i):
+                c=keys.index(j)
+                w[i,c]=wij
+        return (w,keys)
+
 
     def shimbel(self):
         """find the shmibel matrix for the first order contiguity matrix.
@@ -597,7 +608,7 @@ class __TestWeights(unittest.TestCase):
 
     def test_full(self):
         w=lat2gal(50,50)
-        wf=w.full()
+        wf=w.full()[0]
         self.assertEquals(w.s0,9800.0)
         self.assertEquals(sum(sum(wf)),9800.0)
         self.assertEquals(w.neighbors[401],[351, 400, 451, 402])
