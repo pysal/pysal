@@ -27,49 +27,12 @@ class W(object):
         """ creates a new instance of W based on a Dictionary of Sets data structure...
             d = {'a':set(['b','c','d']),'b':set([...]),...}
             returns a new instance of the class, can be called directly
-
-            87% of the code below is just dealing with zero offsets!
-            http://code.google.com/p/pysal/issues/detail?id=11
         """
         d = {'neighbors':{},'weights':{}}
         for key in data:
             d['weights'][key] = [1] * len(data[key])
             d['neighbors'][key] = list(data[key])
             d['neighbors'][key].sort()
-        def __zero_offset(neighbors,weights,original_ids=None):
-            if not original_ids:
-                original_ids=neighbors.keys()
-            old_weights=weights
-            new_weights={}
-            new_ids={}
-            old_ids={}
-            new_neighbors={}
-            for i in original_ids:
-                new_i=original_ids.index(i)
-                new_ids[new_i]=i
-                old_ids[i]=new_i
-                neighbors_i=neighbors[i]
-                new_neighbors_i=[original_ids.index(j) for j in neighbors_i]
-                new_neighbors[new_i]=new_neighbors_i
-                new_weights[new_i]=weights[i]
-            info={}
-            info['new_ids']=new_ids
-            info['old_ids']=old_ids
-            info['new_neighbors']=new_neighbors
-            info['new_weights']=new_weights
-            return info
-        zo=__zero_offset(d['neighbors'],d['weights'])
-        neighbors=zo['new_neighbors']
-        original_ids=zo['old_ids']
-        ids = zo['new_ids']
-        weights=zo['new_weights']
-        original_weights=weights
-        n=len(weights)
-        d = {}
-        d['weights'] = weights
-        d['neighbors'] =neighbors
-        d['new_ids'] = ids 
-        d['original_ids'] = original_ids
         return cls(d)
 
 
