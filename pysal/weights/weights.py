@@ -128,8 +128,14 @@ class W(object):
                 shimbel: finds the shimbel matrix for the first order
                 contiguity matrix
 
+            Example:
 
-
+                >>> neighbors={0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
+                >>> weights={0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
+                >>> data={'neighbors':neighbors,'weights':weights}
+                >>> w=W(data)
+                >>> w.pct_nonzero
+                0.29629629629629628
         """
 
         self.transformations={}
@@ -165,6 +171,20 @@ class W(object):
         else:
             return dict(zip(self.neighbors[key],self.weights[key]))
     def get_transform(self):
+        """
+            Example:
+                >>> w=lat2gal()
+                >>> w.weights[0]
+                [1, 1]
+                >>> w.transform
+                >>> w.transform='w'
+                >>> w.weights[0]
+                [0.5, 0.5]
+                >>> w.transform='b'
+                >>> w.weights[0]
+                [1, 1]
+                >>> 
+        """
         return self._transform
 
     def set_transform(self, value="B"):
@@ -176,6 +196,19 @@ class W(object):
                 D: Double-standardization (global sum=1)
                 V: Variance stabilizing
                 O: Restore original transformation (from instantiation)
+
+            Example:
+                >>> w=lat2gal()
+                >>> w.weights[0]
+                [1, 1]
+                >>> w.transform
+                >>> w.transform='w'
+                >>> w.weights[0]
+                [0.5, 0.5]
+                >>> w.transform='b'
+                >>> w.weights[0]
+                [1, 1]
+                >>> 
         """
         value=value.upper()
         self._transform = value
@@ -379,18 +412,18 @@ class W(object):
         array.
 
 
-
-        >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
-        >>> weights={'first':[1],'second':[1,1],'third':[1]}
-        >>> data={'neighbors':neighbors,'weights':weights}
-        >>> w=W(data)
-        >>> wf,ids=w.full()
-        >>> wf
-        array([[ 0.,  1.,  1.],
-               [ 1.,  0.,  0.],
-               [ 1.,  0.,  0.]])
-        >>> ids
-        ['second', 'third', 'first']
+        Example:
+            >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
+            >>> weights={'first':[1],'second':[1,1],'third':[1]}
+            >>> data={'neighbors':neighbors,'weights':weights}
+            >>> w=W(data)
+            >>> wf,ids=w.full()
+            >>> wf
+            array([[ 0.,  1.,  1.],
+                   [ 1.,  0.,  0.],
+                   [ 1.,  0.,  0.]])
+            >>> ids
+            ['second', 'third', 'first']
         """
         w=num.zeros([self.n,self.n],dtype=float)
         keys=self.neighbors.keys()
@@ -454,9 +487,13 @@ class W(object):
         contiguity for the observations in the list (ordered 0 to n-1). a
         negative 1 appears in the ith position
 
-        Note:
-            work in progress
-
+        Example:
+            >>> import ContiguityWeights
+            >>> w=ContiguityWeights.rook('../examples/10740.shp')
+            >>> w3=w.order()
+            >>> w3[1][0:5]
+            [-1, 1, 2, 2, 1]
+            >>> 
         """
         ids=self.neighbors.keys()
         info={}
@@ -487,29 +524,29 @@ class W(object):
         
         
         Implements the algorithm in Anselin and Smirnov (1996)
-        Example Usage:
 
-        >>> w5=lat2gal()
-        >>> w5_shimbel=w5.shimbel()
-        >>> w5_shimbel[0][24]
-        8
-        >>> w5_shimbel[0][0:4]
-        [-1, 1, 2, 3]
-        >>> w5_8th_order=w5.higher_order(8)
-        >>> w5_8th_order.neighbors[0]
-        [24]
-        >>> import ContiguityWeights
-        >>> w=ContiguityWeights.rook('../examples/10740.shp')
-        >>> w2=w.higher_order(2)
-        >>> w[1]
-        {2: 1, 102: 1, 86: 1, 5: 1, 6: 1}
-        >>> w2[1]
-        {147: 1, 3: 1, 4: 1, 101: 1, 7: 1, 40: 1, 41: 1, 10: 1, 103: 1, 104: 1, 19: 1, 84: 1, 85: 1, 100: 1, 91: 1, 92: 1, 94: 1}
-        >>> w[147]
-        {163: 1, 100L: 1, 165: 1, 102L: 1, 140L: 1, 145L: 1, 146L: 1, 148: 1, 85L: 1}
-        >>> w[85]
-        {96: 1, 102: 1, 140: 1, 147: 1, 86: 1, 94: 1}
-        >>> 
+        Example:
+            >>> w5=lat2gal()
+            >>> w5_shimbel=w5.shimbel()
+            >>> w5_shimbel[0][24]
+            8
+            >>> w5_shimbel[0][0:4]
+            [-1, 1, 2, 3]
+            >>> w5_8th_order=w5.higher_order(8)
+            >>> w5_8th_order.neighbors[0]
+            [24]
+            >>> import ContiguityWeights
+            >>> w=ContiguityWeights.rook('../examples/10740.shp')
+            >>> w2=w.higher_order(2)
+            >>> w[1]
+            {2: 1, 102: 1, 86: 1, 5: 1, 6: 1}
+            >>> w2[1]
+            {147: 1, 3: 1, 4: 1, 101: 1, 7: 1, 40: 1, 41: 1, 10: 1, 103: 1, 104: 1, 19: 1, 84: 1, 85: 1, 100: 1, 91: 1, 92: 1, 94: 1}
+            >>> w[147]
+            {163: 1, 100L: 1, 165: 1, 102L: 1, 140L: 1, 145L: 1, 146L: 1, 148: 1, 85L: 1}
+            >>> w[85]
+            {96: 1, 102: 1, 140: 1, 147: 1, 86: 1, 94: 1}
+            >>> 
 
         """
 
@@ -571,6 +608,16 @@ def lat2gal(nrows=5,ncols=5,rook=True):
     Notes:
         Observations are row ordered: first k observations are in row 0, next
         k in row 1, and so on.
+
+    Example:
+        >>> w9=lat2gal(3,3)
+        >>> w9.pct_nonzero
+        0.29629629629629628
+        >>> w9[0]
+        {1: 1, 3: 1}
+        >>> w9[3]
+        {0: 1, 4: 1, 6: 1}
+        >>> 
     """
 
     n=nrows*ncols
