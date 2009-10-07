@@ -402,8 +402,6 @@ class Equal_Interval(Map_Classifier):
         cuts=num.arange(min_y+width,max_y+width,width)
         cuts[-1]=max_y
         bins=cuts.copy()
-        yb=bin(y,cuts)
-        self.yb=yb
         self.bins=bins
 
 class Percentiles(Map_Classifier):
@@ -535,16 +533,11 @@ class Box_Plot(Map_Classifier):
         bins.insert(0,left_fence)
         self.bins=num.array(bins)
         self.k=len(pct)
-        #self.yb,self.counts=bin1d(y,self.bins)
-        #self.counts=[sum(self.yb==b)[0] for b in range(len(self.bins))]
 
     def _classify(self):
         Map_Classifier._classify(self)
         self.low_outlier_ids=num.nonzero(self.yb==0)[0]
         self.high_outlier_ids=num.nonzero(self.yb==5)[0]
-
-
-
 
 
 class Quantiles(Map_Classifier):
@@ -642,7 +635,6 @@ class Std_Mean(Map_Classifier):
         y_max=y.max()
         if cuts[-1] < y_max:
             cuts.append(y_max)
-        yb=bin(y,cuts)
         self.bins=num.array(cuts)
         self.k=len(cuts)
 
@@ -707,7 +699,6 @@ class Maximum_Breaks(Map_Classifier):
                 mp.append(cp[0])
         mp.append(xs[-1])
         mp.sort()
-        yb=bin(y,mp)
         self.bins=num.array(mp)
 
 
@@ -854,8 +845,6 @@ class Fisher_Jenks(Map_Classifier):
                 adcms.pop(split+2)
             k=len(classes)
             it+=1
-
-
         self.bins=[ x[b[-1]] for b in classes]
         self.bins.sort()
 
@@ -916,12 +905,12 @@ class Jenks_Caspall(Map_Classifier):
         # start with quantiles
         q=quantile(x,k)
         solving=True
-        xb=bin(x,q)
+        xb,cnts=bin1d(x,q)
         #class means
         if x.ndim==1:
             x.shape=(x.size,1)
         n,k=x.shape
-        xm=[ num.median(x[xb==i]) for i in sci.unique(xb)]
+        xm=[ num.median(x[xb==i]) for i in num.unique(xb)]
         xb0=xb.copy()
         q=xm
         it=0
@@ -970,16 +959,21 @@ class Jenks_Caspall_Forced(Map_Classifier):
         >>> jcf.k
         5
         >>> jcf.bins
-        array([  1.34000000e+00,   5.90000000e+00,   1.67000000e+01,
-                 5.06500000e+01,   4.11145000e+03])
+        array([[  1.34000000e+00],
+               [  5.90000000e+00],
+               [  1.67000000e+01],
+               [  5.06500000e+01],
+               [  4.11145000e+03]])
         >>> jcf.counts
         array([12, 12, 13,  9, 12])
         >>> jcf4=Jenks_Caspall_Forced(cal,k=4)
         >>> jcf4.k
         4
         >>> jcf4.bins
-        array([  2.51000000e+00,   8.70000000e+00,   3.66800000e+01,
-                 4.11145000e+03])
+        array([[  2.51000000e+00],
+               [  8.70000000e+00],
+               [  3.66800000e+01],
+               [  4.11145000e+03]])
         >>> jcf4.counts
         array([15, 14, 14, 15])
         >>> 
@@ -994,12 +988,12 @@ class Jenks_Caspall_Forced(Map_Classifier):
         k=self.k
         q=quantile(x,k)
         solving=True
-        xb=bin(x,q)
+        xb,cnt=bin1d(x,q)
         #class means
         if x.ndim==1:
             x.shape=(x.size,1)
         n,tmp=x.shape
-        xm=[ x[xb==i].mean() for i in sci.unique(xb)]
+        xm=[ x[xb==i].mean() for i in num.unique(xb)]
         xb0=xb.copy()
         q=xm
         xbar=num.array([ xm[xbi] for xbi in xb])
@@ -1116,9 +1110,7 @@ class User_Defined(Map_Classifier):
         self.name='User Defined'
 
     def _set_bins(self):
-        y=self.y
-        yb=bin(y,self.bins.copy())
-        self.yb=yb
+        pass
 
 
 
@@ -1158,7 +1150,7 @@ class Max_P(Map_Classifier):
         x=self.y.copy()
         k=self.k
         q=quantile(x,k)
-        xb=bin(x,q)
+        xb=bin1d(x,q)
         if x.ndim==1:
             x.shape=(x.size,1)
         n,tmp=x.shape
