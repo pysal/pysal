@@ -32,6 +32,7 @@ import scipy.stats as stats
 import pysal
 import scipy as sci
 import copy
+import sys
 
 K=5 # default number of classes in any map scheme with this as an argument
 
@@ -190,6 +191,55 @@ def bin(y,bins):
         b[num.nonzero(y<=c)]=i
     return b
 
+
+def bin1d(x,bins):
+    """place values of a 1-d array into bins and determine counts of values in
+    each bin
+
+    Parameters
+    ----------
+    y : 1-d array 
+        values to bin
+    bins : array (k,1)
+        upper bounds of each bin (monotonic)
+
+    Returns
+    -------
+    tuple(binIds,counts)
+
+    binIds: 1-d array of integer bin Ids
+
+    counts: number of elements of x falling in each bin
+
+
+    Examples
+    --------
+    >>> x=num.arange(100,dtype='float')
+    >>> bins=[25,74,100]
+    >>> binIds,counts=bin1d(x,bins)
+    >>> binIds
+    array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+           0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+           1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+           1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+           2, 2, 2, 2, 2, 2, 2, 2])
+    >>> counts
+    array([26, 49, 25])
+    """
+    left=[-sys.maxint]
+    left.extend(bins[0:-1])
+    right=bins
+    cuts=zip(left,right)
+    k=len(bins)
+    binIds=num.zeros(x.shape,dtype='int')
+    while cuts:
+        k-=1
+        l,r=cuts.pop(-1)
+        binIds+=(x>l)*(x<=r)*k
+    counts=num.bincount(binIds)
+    return (binIds,counts)
+
+
 def load_example():
     """Helper function for doc tests"""
     import pysal
@@ -204,13 +254,17 @@ class Map_Classifier:
         self.name='Map Classifier'
         self.y=y
         self._classify()
+
+    def summary(self):
         yb=self.yb
         self.classes=[num.nonzero(yb==c)[0].tolist() for c in range(self.k)]
         self.tss=self.get_tss()
         self.adcm=self.get_adcm()
 
     def _classify(self):
-        print 'override in subclass'
+        self._set_bins()
+        self.yb,self.counts=bin1d(self.y,self.bins)
+
     def __str__(self):
         st=self.table_string()
         return st
@@ -445,7 +499,7 @@ class Box_Plot(Map_Classifier):
     array([ -7.24325000e+01,   2.56750000e+00,   9.36500000e+00,
              3.95300000e+01,   1.14530000e+02,   4.11145000e+03])
     >>> bp.counts
-    [0, 15, 14, 14, 7, 8]
+    array([ 0, 15, 14, 14,  7,  8])
     >>> bp.high_outlier_ids
     array([ 0,  6, 18, 29, 33, 37, 40, 42])
     >>> cal[bp.high_outlier_ids]
@@ -468,7 +522,8 @@ class Box_Plot(Map_Classifier):
         self.hinge=hinge
         Map_Classifier.__init__(self,y)
         self.name='Box Plot'
-    def _classify(self):
+
+    def _set_bins(self):
         y=self.y
         pct=[25,50,75,100]
         bins=[stats.scoreatpercentile(y,p) for p in pct]
@@ -484,8 +539,11 @@ class Box_Plot(Map_Classifier):
         bins.insert(0,left_fence)
         self.bins=num.array(bins)
         self.k=len(pct)
-        self.yb=bin(y,self.bins)
-        self.counts=[sum(self.yb==b)[0] for b in range(len(self.bins))]
+        #self.yb,self.counts=bin1d(y,self.bins)
+        #self.counts=[sum(self.yb==b)[0] for b in range(len(self.bins))]
+
+    def _classify(self):
+        Map_Classifier._classify(self)
         self.low_outlier_ids=num.nonzero(self.yb==0)[0]
         self.high_outlier_ids=num.nonzero(self.yb==5)[0]
 
@@ -740,6 +798,7 @@ class Fisher_Jenks(Map_Classifier):
 
         >>> cal=load_example()
         >>> fj=Fisher_Jenks(cal)
+        >>> fj.summary()
         >>> fj.adcm
         832.8900000000001
         >>> fj.bins
