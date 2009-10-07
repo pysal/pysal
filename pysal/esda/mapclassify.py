@@ -392,7 +392,7 @@ class Equal_Interval(Map_Classifier):
         Map_Classifier.__init__(self,y)
         self.name='Equal Interval'
 
-    def _classify(self):
+    def _set_bins(self):
         y=self.y
         k=self.k
         max_y=max(y)
@@ -405,7 +405,6 @@ class Equal_Interval(Map_Classifier):
         yb=bin(y,cuts)
         self.yb=yb
         self.bins=bins
-        self.counts= num.array([sum(yb==b)[0] for b in range(k)])
 
 class Percentiles(Map_Classifier):
     """Percentiles Map Classification
@@ -434,12 +433,12 @@ class Percentiles(Map_Classifier):
     array([  1.35700000e-01,   5.53000000e-01,   9.36500000e+00,
              2.13914000e+02,   2.17994800e+03,   4.11145000e+03])
     >>> p.counts
-    [1, 5, 23, 23, 5, 1]
+    array([ 1,  5, 23, 23,  5,  1])
     >>> p2=Percentiles(cal,pct=[50,100])
     >>> p2.bins
     array([    9.365,  4111.45 ])
     >>> p2.counts
-    [29, 29]
+    array([29, 29])
     >>> 
     """
 
@@ -447,13 +446,10 @@ class Percentiles(Map_Classifier):
         self.pct=pct
         Map_Classifier.__init__(self,y)
         self.name='Percentiles'
-    def _classify(self):
+    def _set_bins(self):
         y=self.y
         pct=self.pct
         self.bins=num.array([stats.scoreatpercentile(y,p) for p in pct])
-        self.k=len(pct)
-        self.yb=bin(y,self.bins)
-        self.counts=[sum(self.yb==b)[0] for b in range(len(self.bins))]
 
 class Box_Plot(Map_Classifier):
     """Box_Plot Map Classification
@@ -578,7 +574,7 @@ class Quantiles(Map_Classifier):
     array([  1.46400000e+00,   5.79800000e+00,   1.32780000e+01,
              5.46160000e+01,   4.11145000e+03])
     >>> q.counts
-    [12, 11, 12, 11, 12]
+    array([12, 11, 12, 11, 12])
     >>> 
     """
 
@@ -586,12 +582,11 @@ class Quantiles(Map_Classifier):
         self.k=k
         Map_Classifier.__init__(self,y)
         self.name='Quantiles'
-    def _classify(self):
+
+    def _set_bins(self):
         y=self.y
         k=self.k
         self.bins=quantile(y,k=k)
-        self.yb=bin(y,self.bins)
-        self.counts=[sum(self.yb==b)[0] for b in range(len(self.bins))]
 
 class Std_Mean(Map_Classifier):
     """Standard Deviation and Mean  Map Classification
@@ -623,14 +618,14 @@ class Std_Mean(Map_Classifier):
     array([ -957.89645741,  -415.98417698,   667.84038388,  1209.75266431,
             4111.45      ])
     >>> st.counts
-    [0, 0, 56, 1, 1]
+    array([ 0,  0, 56,  1,  1])
     >>> 
     >>> st3=Std_Mean(cal,multiples=[-3,-1.5,1.5,3])
     >>> st3.bins
     array([-1499.80873784,  -686.9403172 ,   938.79652409,  1751.66494474,
             4111.45      ])
     >>> st3.counts
-    [0, 0, 57, 0, 1]
+    array([ 0,  0, 57,  0,  1])
     >>> 
         
     """
@@ -639,7 +634,7 @@ class Std_Mean(Map_Classifier):
         Map_Classifier.__init__(self,y)
         self.name='Std_Mean'
 
-    def _classify(self):
+    def _set_bins(self):
         y=self.y
         s=y.std()
         m=y.mean()
@@ -648,10 +643,9 @@ class Std_Mean(Map_Classifier):
         if cuts[-1] < y_max:
             cuts.append(y_max)
         yb=bin(y,cuts)
-        self.counts=[sum(yb==b)[0] for b in range(len(cuts))]
         self.bins=num.array(cuts)
-        self.yb=yb
         self.k=len(cuts)
+
 
 
 class Maximum_Breaks(Map_Classifier):
@@ -690,7 +684,8 @@ class Maximum_Breaks(Map_Classifier):
         self.mindiff=mindiff
         Map_Classifier.__init__(self,y)
         self.name='Maximum_Breaks'
-    def _classify(self):
+
+    def _set_bins(self):
         xs=self.y.copy()
         y=self.y.copy()
         k=self.k
@@ -714,8 +709,6 @@ class Maximum_Breaks(Map_Classifier):
         mp.sort()
         yb=bin(y,mp)
         self.bins=num.array(mp)
-        self.yb=yb
-        self.counts=num.array([sum(yb==b)[0] for b in range(len(mp))])
 
 
 class Natural_Breaks(Map_Classifier):
@@ -754,7 +747,7 @@ class Natural_Breaks(Map_Classifier):
         self.k=k
         Map_Classifier.__init__(self,y)
         self.name='Natural_Breaks'
-    def _classify(self):
+    def _set_bins(self):
         x=self.y.copy()
         k=self.k
         seeds=num.random.permutation(x)[0:k]
@@ -785,9 +778,8 @@ class Natural_Breaks(Map_Classifier):
         #print classes
         cuts=[x[c0==c].max() for c in classes]
         self.bins=num.array(cuts)
-        self.yb=c1
-        self.counts= num.array([sum(c1==b) for b in range(len(cuts))])
         self.iterations=it
+
 
 
 class Fisher_Jenks(Map_Classifier):
@@ -813,7 +805,7 @@ class Fisher_Jenks(Map_Classifier):
         self.k=k
         Map_Classifier.__init__(self,y)
 
-    def _classify(self):
+    def _set_bins(self):
         # build diameter matrix
         d={}
         n=self.y.shape[0]
@@ -866,9 +858,7 @@ class Fisher_Jenks(Map_Classifier):
 
         self.bins=[ x[b[-1]] for b in classes]
         self.bins.sort()
-        cuts=self.bins[:]
-        self.yb=bin(self.y,cuts)
-        self.counts=num.array([sum(self.yb==b)[0] for b in range(self.k)])
+
 
 
     def two_part(self,interval):
@@ -920,7 +910,7 @@ class Jenks_Caspall(Map_Classifier):
         Map_Classifier.__init__(self,y)
         self.name="Jenks_Caspall"
 
-    def _classify(self):
+    def _set_bins(self):
         x=self.y.copy()
         k=self.k
         # start with quantiles
@@ -950,9 +940,9 @@ class Jenks_Caspall(Map_Classifier):
             q=[num.median(x[xb==i]) for i in rk]
         cuts=[max(x[xb==i]) for i in sci.unique(xb)]
         self.bins=num.array(cuts)
-        self.yb=xb
-        self.counts= num.array([sum(xb==b)[0] for b in range(len(cuts))])
         self.iterations=it
+
+
 
 
 class Jenks_Caspall_Forced(Map_Classifier):
@@ -999,7 +989,7 @@ class Jenks_Caspall_Forced(Map_Classifier):
         Map_Classifier.__init__(self,y)
         self.name="Jenks_Caspall_Forced"
 
-    def _classify(self):
+    def _set_bins(self):
         x=self.y.copy()
         k=self.k
         q=quantile(x,k)
@@ -1086,9 +1076,8 @@ class Jenks_Caspall_Forced(Map_Classifier):
             it+=1
         cuts=[max(x[xb==i]) for i in sci.unique(xb)]
         self.bins=num.array(cuts)
-        self.yb=xb
-        self.counts=num.array([sum(xb==b)[0] for b in range(len(cuts))])
         self.iterations=it
+
 
 class User_Defined(Map_Classifier):
     """User Specified Binning
@@ -1126,12 +1115,10 @@ class User_Defined(Map_Classifier):
         Map_Classifier.__init__(self,y)
         self.name='User Defined'
 
-    def _classify(self):
+    def _set_bins(self):
         y=self.y
         yb=bin(y,self.bins.copy())
         self.yb=yb
-        self.k=len(self.bins)
-        self.counts=num.array([sum(yb==b)[0] for b in range(self.k)])
 
 
 
@@ -1167,7 +1154,7 @@ class Max_P(Map_Classifier):
         Map_Classifier.__init__(self,y)
         self.name="Max_P"
 
-    def _classify(self):
+    def _set_bins(self):
         x=self.y.copy()
         k=self.k
         q=quantile(x,k)
@@ -1272,9 +1259,6 @@ class Max_P(Map_Classifier):
         xs=self.y.copy()
         xs.sort()
         self.bins=[xs[cl][-1] for cl in classes]
-        self.yb=num.array([num.nonzero(self.bins>=y)[0][0] for y in self.y])
-        self.counts=[len(cl) for cl in classes]
-        self.k=k
 
 
     def _ss(self,class_def):
