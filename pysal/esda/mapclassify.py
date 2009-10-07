@@ -1150,7 +1150,6 @@ class Max_P(Map_Classifier):
         x=self.y.copy()
         k=self.k
         q=quantile(x,k)
-        xb=bin1d(x,q)
         if x.ndim==1:
             x.shape=(x.size,1)
         n,tmp=x.shape
