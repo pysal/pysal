@@ -442,8 +442,8 @@ class Box_Plot(Map_Classifier):
     >>> cal=load_example()
     >>> bp=Box_Plot(cal)
     >>> bp.bins
-    array([ -1.09932500e+02,   2.56750000e+00,   9.36500000e+00,
-             3.95300000e+01,   1.52030000e+02,   4.11145000e+03])
+    array([ -7.24325000e+01,   2.56750000e+00,   9.36500000e+00,
+             3.95300000e+01,   1.14530000e+02,   4.11145000e+03])
     >>> bp.counts
     [0, 15, 14, 14, 7, 8]
     >>> bp.high_outlier_ids
@@ -451,12 +451,9 @@ class Box_Plot(Map_Classifier):
     >>> cal[bp.high_outlier_ids]
     array([  329.92,   181.27,   370.5 ,   722.85,   192.05,  4111.45,
              317.11,   264.93])
-    >>> x=num.arange(100)
-    >>> bx=Box_Plot(x)
+    >>> bx=Box_Plot(num.arange(100))
     >>> bx.bins
-    array([ -87.75,   24.75,   49.5 ,   74.25,  186.75])
-    >>> bx.high_outlier_ids
-    array([], dtype=int32)
+    array([ -50.25,   24.75,   49.5 ,   74.25,  149.25])
     """
 
     def __init__(self, y, hinge=1.5):
@@ -475,7 +472,7 @@ class Box_Plot(Map_Classifier):
         y=self.y
         pct=[25,50,75,100]
         bins=[stats.scoreatpercentile(y,p) for p in pct]
-        iqr=pct[-1]-pct[0]
+        iqr=pct[-2]-pct[0]
         self.iqr=iqr
         pivot=self.hinge*iqr
         left_fence=bins[0]-pivot
