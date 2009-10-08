@@ -24,6 +24,9 @@ User_Defined
 
 To Do:
     additional documentation
+    optimize the following
+        Jenks_Caspall_Forced
+        Fisher_Jenks
 """
 __author__ = "Sergio J. Rey"
 __credits__= "Copyright (c) 2009 Sergio J. Rey"
@@ -945,7 +948,7 @@ class Jenks_Caspall_Sampled(Map_Classifier):
         k: number of classes required
 
         pct: the percentage of n that should form the sample. If pct is
-        specified such that n*pct < 1000, then pct = 1000/n
+        specified such that n*pct > 1000, then pct = 1000/n
 
     Attributes:
         yb: bin ids for observations (numpy array n x 1). Each value is the id
@@ -1017,8 +1020,6 @@ class Jenks_Caspall_Sampled(Map_Classifier):
         self.iterations=jc.iterations
 
 
-
-    
 
 
 class Jenks_Caspall_Forced(Map_Classifier):
