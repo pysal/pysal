@@ -889,8 +889,11 @@ class Jenks_Caspall(Map_Classifier):
         >>> cal=load_example()
         >>> jc=Jenks_Caspall(cal,k=5)
         >>> jc.bins
-        array([  1.81000000e+00,   7.60000000e+00,   2.98200000e+01,
-                 1.81270000e+02,   4.11145000e+03])
+        array([[  1.81000000e+00],
+               [  7.60000000e+00],
+               [  2.98200000e+01],
+               [  1.81270000e+02],
+               [  4.11145000e+03]])
         >>> jc.counts
         array([14, 13, 14, 10,  7])
     """
@@ -916,22 +919,44 @@ class Jenks_Caspall(Map_Classifier):
         it=0
         rk=range(self.k)
         while solving:
-            xb=num.zeros((n,1),int)
-            for i,xi in enumerate(x):
-                d=num.abs([xi-qi for qi in q])
-                xb[i]=num.nonzero(d==min(d))[0][0]
-
+            xb=num.zeros(xb0.shape,int)
+            d=abs(x-q)
+            xb=d.argmin(axis=1)
             if (xb0==xb).all():
                 solving=False
             else:
                 xb0=xb
             it+=1
-            q=[num.median(x[xb==i]) for i in rk]
+            q=num.array([num.median(x[xb==i]) for i in rk])
         cuts=[max(x[xb==i]) for i in sci.unique(xb)]
         self.bins=num.array(cuts)
         self.iterations=it
 
 
+class Jenks_Caspall_Sampled(Map_Classifier):
+
+    def __init__(self,y,k=K,pct=0.10):
+        self.k=k
+        n=y.size
+        if pct*n > 1000:
+            pct = 1000./n
+        ids=num.random.random_integers(0,n-1,n*pct)
+        yr=y[ids]
+        yr[0]=max(y) # make sure we have the upper bound
+        self.original_y=y
+        self.pct=pct
+        self.yr=yr
+        self.yr_n=yr.size
+        Map_Classifier.__init__(self,yr)
+        self.yb,self.counts=bin1d(y,self.bins)
+
+    def _set_bins(self):
+        jc=Jenks_Caspall(self.y,self.k)
+        self.bins=jc.bins
+
+
+
+    
 
 
 class Jenks_Caspall_Forced(Map_Classifier):
