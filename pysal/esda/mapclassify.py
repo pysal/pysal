@@ -12,8 +12,9 @@ Equal_Interval
 Fisher_Jenks
 Jenks_Caspall
 Jenks_Caspall_Forced
-Maximum_Breaks
+Jenks_Caspall_Sampled
 Max_P
+Maximum_Breaks
 Natural_Breaks
 Quantiles
 Percentiles
@@ -934,6 +935,66 @@ class Jenks_Caspall(Map_Classifier):
 
 
 class Jenks_Caspall_Sampled(Map_Classifier):
+    """Jenks Caspall Map Classification using a random sample
+
+
+    Arguments:
+
+        y: attribute to classify (numpy array n x 1)
+
+        k: number of classes required
+
+        pct: the percentage of n that should form the sample. If pct is
+        specified such that n*pct < 1000, then pct = 1000/n
+
+    Attributes:
+        yb: bin ids for observations (numpy array n x 1). Each value is the id
+        of the class the observation belongs to.
+
+        bins: the upper bounds of each class (numpy array k x 1)
+
+        k: the number of classes
+
+        counts: the number of observations falling in each class (numpy array k x 1)
+
+ 
+    Example Usage:
+
+        >>> cal=load_example()
+        >>> x=num.random.random(100000)
+        >>> jc=Jenks_Caspall(x)
+        >>> jcs=Jenks_Caspall_Sampled(x)
+        >>> jc.bins
+        array([[ 0.19770952],
+               [ 0.39695769],
+               [ 0.59588617],
+               [ 0.79716865],
+               [ 0.99999425]])
+        >>> jcs.bins
+        array([[ 0.18877882],
+               [ 0.39341638],
+               [ 0.6028286 ],
+               [ 0.80070925],
+               [ 0.99999425]])
+        >>> jc.counts
+        array([19804, 20005, 19925, 20178, 20088])
+        >>> jcs.counts
+        array([18922, 20521, 20980, 19826, 19751])
+        >>> 
+        # not for testing since we get different times on different hardware
+        # just included for documentation of likely speed gains
+        #>>> t1=time.time();jc=Jenks_Caspall(x);t2=time.time()
+        #>>> t1s=time.time();jcs=Jenks_Caspall_Sampled(x);t2s=time.time()
+        #>>> t2-t1;t2s-t1s
+        #1.8292930126190186
+        #0.061631917953491211
+
+    Notes:
+        This is intended for large n problems. The logic is to apply
+        Jenks_Caspall to a random subset of the y space and then bin the
+        complete vector y on the bins obtained from the subset. This would
+        trade off some "accuracy" for a gain in speed.
+    """
 
     def __init__(self,y,k=K,pct=0.10):
         self.k=k
@@ -953,6 +1014,7 @@ class Jenks_Caspall_Sampled(Map_Classifier):
     def _set_bins(self):
         jc=Jenks_Caspall(self.y,self.k)
         self.bins=jc.bins
+        self.iterations=jc.iterations
 
 
 
