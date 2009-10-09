@@ -771,7 +771,7 @@ class Natural_Breaks(Map_Classifier):
             it+=1
         classes=sci.unique(c1)
         #print classes
-        cuts=[x[c0==c].max() for c in classes]
+        cuts=[x[c1==c].max() for c in classes]
         self.bins=num.array(cuts)
         self.iterations=it
 
