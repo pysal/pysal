@@ -101,6 +101,12 @@ class W(object):
                 weights. key is observation id, value is list of transformed
                 weights in order of neighbor ids (see neighbors).
 
+                Private attributes
+
+                _idx: index for iterator
+                _id_order: order of ids for iterator
+                _transform: weights transformation
+
                 
 
             Methods:
@@ -141,12 +147,14 @@ class W(object):
         self.transformations={}
         self.weights=data['weights']
         self.neighbors=data['neighbors']
-        self.new_ids=None
-        self.old_ids=None
         self.transformations['O']=self.weights #original weights
         self.islands=[]
         self.characteristics()
         self._transform=None
+        self._id_order=self.neighbors.keys()
+        self._idx=0
+        self.n=len(self.neighbors)
+        self.n_1=self.n-1
         
     def __getitem__(self,key):
         """
@@ -163,13 +171,116 @@ class W(object):
         >>> w[0]
         {1: 1, 5: 1}
         """
-        if self.old_ids:
-            idx = self.old_ids[key]
-            neighbors = [self.new_ids[i] for i in self.neighbors[idx]]
-            w = self.weights[idx]
-            return dict(zip(neighbors,w))
+        return dict(zip(self.neighbors[key],self.weights[key]))
+
+
+    def keys(self):
+
+        return self.neighbors.keys()
+
+    def __iter__(self):
+        """Support iteration over weights
+
+
+        Example:
+        >>> w=lat2gal(3,3)
+        >>> for i,wi in enumerate(w):
+        ...     print i,wi
+        ...     
+        0 {1: 1, 3: 1}
+        1 {0: 1, 2: 1, 4: 1}
+        2 {1: 1, 5: 1}
+        3 {0: 1, 4: 1, 6: 1}
+        4 {1: 1, 3: 1, 5: 1, 7: 1}
+        5 {8: 1, 2: 1, 4: 1}
+        6 {3: 1, 7: 1}
+        7 {8: 1, 4: 1, 6: 1}
+        8 {5: 1, 7: 1}
+        >>> 
+        """
+        return self
+
+    def next(self):
+        if self._idx >= len(self._id_order):
+            raise StopIteration
+        value = self.__getitem__(self._id_order[self._idx])
+        self._idx+=1
+        return value
+
+
+    def set_id_order(self, ordered_ids):
+
+        if set(self._id_order) == set(ordered_ids):
+            self._id_order=ordered_ids
         else:
-            return dict(zip(self.neighbors[key],self.weights[key]))
+            print 'assignment not aligned with W ids'
+
+    def get_id_order(self):
+        """returns the ids for the observations in the order in which they
+        would be encountered if iterating over the weights."""
+        return self._id_order
+
+    id_order=property(get_id_order, set_id_order)
+
+    def refresh(self):
+        # move iterator back to beginning
+        self._idx=0
+
+    def lag(self,y):
+        """Calculates the spatial lag for the variable y
+
+
+        Argument:
+
+            y -  numpy array (n,)
+
+        Returns:
+
+            yl -  numpy array (n,) for the spatial lag.
+
+
+        Assumes id_order in weights is aligned with order in y. User can
+        reorder W (as in example below) or reorder y
+
+        Example:
+        >>> w=lat2gal(3,3)
+        >>> y=num.arange(9)
+        >>> yl=w.lag(y)
+        >>> yl
+        array([ 4,  6,  6, 10, 16, 14, 10, 18, 12])
+        >>> w.transform='w'
+        >>> yl=w.lag(y)
+        >>> yl
+        array([1, 1, 2, 3, 2, 3, 4, 5, 5])
+        >>> 
+        >>> y=num.arange(4)
+        >>> w=lat2gal(1,4)
+        >>> yl=w.lag(y)
+        >>> yl
+        array([1, 2, 4, 2])
+        >>> y
+        array([0, 1, 2, 3])
+        >>> y[0]=2
+        >>> y[2]=0
+        >>> y
+        array([2, 1, 0, 3])
+        >>> w.id_order=[2,1,0,3]
+        >>> yl1=w.lag(y)
+        >>> yl1
+        array([4, 2, 1, 2])
+        """
+        if self.n !=len(y):
+            print 'w and argument not conformable'
+            return 0
+        else:
+            self.refresh()
+            yl=num.zeros(y.shape,y.dtype)
+            for i,wi in enumerate(self):
+                for j,wij in wi.items():
+                    yl[i]+=wij*y[self.id_order[j]]
+            return yl
+
+
     def get_transform(self):
         """
             Example:
@@ -562,6 +673,10 @@ class W(object):
         data['weights']=weights
         data['neighbors']=neighbors
         return W(data)
+
+
+
+
 
 
 class Wd(dict):
