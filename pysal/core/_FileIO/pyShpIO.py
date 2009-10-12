@@ -125,7 +125,10 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
         self.pos+=1
         if self.dataObj.type() == 'POINT':
             shp = self.type((rec['X'],rec['Y']))
-            shp.id = self.pos # shp IDs start at 1.
+            if self.ids:
+                shp.id = self.rIds[self.pos-1] # shp IDs start at 1.
+            else:
+                shp.id = self.pos # shp IDs start at 1.
             return shp
         else:
             if rec['NumParts'] > 1:
@@ -149,7 +152,11 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
                     print "SHAPEFILE WARNING: Polygon %d topology has been fixed. (ccw -> cw)"%(self.pos)
                     
             shp = self.type(vertices)
-            shp.id = self.pos # shp IDs start at 1.
+            if self.ids:
+                shp.id = self.rIds[self.pos-1] # shp IDs start at 1.
+            else:
+                shp.id = self.pos # shp IDs start at 1.
+            return shp
             return shp
         
     def close(self):
