@@ -13,10 +13,6 @@ import math
 import pysal
 import copy
 
-from numpy import array
-# constants for weight file type
-weightFtypes = ['gal','gwt']
-weightTypes = ['raw','binary','invdistance','triangle','epanech','bisquare']
 # constant for precision
 DELTA = 0.0000001
 
@@ -144,6 +140,11 @@ class W(object):
                 0.29629629629629628
         """
 
+        if 'weights' not in data:
+            weights=dict([(i,[1]*len(wi)) for i,wi in data.items()])
+            neighbors=data
+            data={'neighbors':neighbors,'weights':weights}
+
         self.transformations={}
         self.weights=data['weights']
         self.neighbors=data['neighbors']
@@ -209,9 +210,33 @@ class W(object):
 
 
     def set_id_order(self, ordered_ids):
+        """reorder the ids in w
+
+
+        Example:
+            >>> neighbors={'a': ['b'],'b':['a','c'],'c':['b','d'], 'd':['c']}
+            >>> w=W(neighbors)
+            >>> y=num.array([0,10,100,1000])
+            >>> w.id_order=['a','b','c','d']
+            >>> yl=w.lag(y)
+            >>> y
+            array([   0,   10,  100, 1000])
+            >>> yl
+            array([  10,  100, 1010,  100])
+            >>> y1=y[[1,0,3,2]]
+            >>> y1
+            array([  10,    0, 1000,  100])
+            >>> w.id_order=['b','a','d','c']
+            >>> y1l=w.lag(y1)
+            >>> y1l
+            array([ 100,   10,  100, 1010])
+            >>> 
+        """
+
 
         if set(self._id_order) == set(ordered_ids):
             self._id_order=ordered_ids
+            self.refresh()
         else:
             print 'assignment not aligned with W ids'
 
@@ -277,7 +302,8 @@ class W(object):
             yl=num.zeros(y.shape,y.dtype)
             for i,wi in enumerate(self):
                 for j,wij in wi.items():
-                    yl[i]+=wij*y[self.id_order[j]]
+                    #yl[i]+=wij*y[self.id_order[j]]
+                    yl[i]+=wij*y[self.id_order.index(j)]
             return yl
 
 
