@@ -80,7 +80,7 @@ class Moran:
         >>> y=num.array(f.by_col['HR8893'])
         >>> mi=Moran(y,w)
         >>> mi.I
-        0.24365582621771661
+        0.24365582621771659
         >>> mi.EI
         -0.012987012987012988
         >>> mi.p_norm
