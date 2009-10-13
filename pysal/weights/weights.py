@@ -36,6 +36,7 @@ class W(object):
     def __init__(self,data):
         """
             Arguments:
+
                 data: dictionary with two entries
                     neighbors: list of neighbors
                     weights: list of weights
@@ -53,8 +54,7 @@ class W(object):
                     binary.
 
 
-
-                        Attributes:
+            Attributes:
 
                 asymmetric: Flag for any asymmetries (see
                 method asymmetry for details), false if none.
@@ -130,6 +130,7 @@ class W(object):
                 shimbel: finds the shimbel matrix for the first order
                 contiguity matrix
 
+
             Example:
 
                 >>> neighbors={0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
@@ -175,15 +176,24 @@ class W(object):
         return dict(zip(self.neighbors[key],self.weights[key]))
 
 
-    def keys(self):
-
-        return self.neighbors.keys()
-
     def __iter__(self):
         """Support iteration over weights
 
 
         Example:
+        >>> w=lat2gal(3,3)
+        >>> for wi in w:
+        ...     print wi
+        ...     
+        {1: 1, 3: 1}
+        {0: 1, 2: 1, 4: 1}
+        {1: 1, 5: 1}
+        {0: 1, 4: 1, 6: 1}
+        {1: 1, 3: 1, 5: 1, 7: 1}
+        {8: 1, 2: 1, 4: 1}
+        {3: 1, 7: 1}
+        {8: 1, 4: 1, 6: 1}
+        {5: 1, 7: 1}
         >>> w=lat2gal(3,3)
         >>> for i,wi in enumerate(w):
         ...     print i,wi
@@ -248,7 +258,36 @@ class W(object):
     id_order=property(get_id_order, set_id_order)
 
     def refresh(self):
-        # move iterator back to beginning
+        """move iterator back to beginning
+
+
+        Example:
+
+            >>> from weights import *
+            >>> w=lat2gal(2,2)
+            >>> for wi in w:
+            ...     print wi
+            ...     
+            {1: 1, 2: 1}
+            {0: 1, 3: 1}
+            {0: 1, 3: 1}
+            {1: 1, 2: 1}
+            >>> for wi in w:
+            ...     print wi
+            ...     
+            >>> w.refresh()
+            >>> for wi in w:
+            ...     print wi
+            ...     
+            {1: 1, 2: 1}
+            {0: 1, 3: 1}
+            {0: 1, 3: 1}
+            {1: 1, 2: 1}
+            >>> 
+            
+
+
+        """
         self._idx=0
 
     def lag(self,y):
@@ -295,14 +334,13 @@ class W(object):
         array([4, 2, 1, 2])
         """
         if self.n !=len(y):
-            print 'w and argument not conformable'
+            print 'w.lag(y):  w and y not conformable'
             return 0
         else:
             self.refresh()
             yl=num.zeros(y.shape,y.dtype)
             for i,wi in enumerate(self):
                 for j,wij in wi.items():
-                    #yl[i]+=wij*y[self.id_order[j]]
                     yl[i]+=wij*y[self.id_order.index(j)]
             return yl
 
@@ -680,7 +718,7 @@ class W(object):
             >>> w2[1]
             {147: 1, 3: 1, 4: 1, 101: 1, 7: 1, 40: 1, 41: 1, 10: 1, 103: 1, 104: 1, 19: 1, 84: 1, 85: 1, 100: 1, 91: 1, 92: 1, 94: 1}
             >>> w[147]
-            {163: 1, 100L: 1, 165: 1, 102L: 1, 140L: 1, 145L: 1, 146L: 1, 148: 1, 85L: 1}
+            {163: 1, 100: 1, 165: 1, 102: 1, 140: 1, 145: 1, 146: 1, 148: 1, 85: 1}
             >>> w[85]
             {96: 1, 102: 1, 140: 1, 147: 1, 86: 1, 94: 1}
             >>> 
@@ -700,40 +738,6 @@ class W(object):
         data['neighbors']=neighbors
         return W(data)
 
-
-
-
-
-
-class Wd(dict):
-    """ A basic Weights data structure """
-    @classmethod
-    def fromDictSets(cls,d):
-        """ populates Wd from a dictionary of Sets
-            d = {'a':set(['b','c','d']),'b':set([...]),...}
-            returns a new instance of the class, can be called directly
-        """
-        w = cls()
-        for key in d:
-            if key not in w:
-                w[key] = {}
-            for neighbor in d[key]:
-                w[key][neighbor] = 1
-        return w
-    @classmethod
-    def fromDictLists(cls,d):
-        """ populates Wd from a dictionary of Sets
-            d = {'a':['b','c','d'],'b':[...],...}
-            returns a new instance of the class, can be called directly
-        """
-        w = cls()
-        for key in d:
-            if key not in w:
-                w[key] = {}
-            for neighbor in d[key]:
-                w[key][neighbor] = 1
-        return w
-        
 def lat2gal(nrows=5,ncols=5,rook=True):
     """Create a GAL structure for a regular lattice.
 
