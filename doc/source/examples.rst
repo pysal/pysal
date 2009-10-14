@@ -57,10 +57,23 @@ Files included:
 shp_test
 ========
 
-Charlie or andrew?
+Sample Shapefiles used only for testing purposes. Three examples are include each example include a ".shp" Shapefile, ".shx" Shapefile Index, ".dbf" DBase file, and a ".prj" ESRI Projection file.
 
+Examples include:
+
+ * Point: Example of an ESRI Shapefile of Type 1 (Point).
+ * Line: Example of an ESRI Shapefile of Type 3 (Line).
+ * Polygon: Example of an ESRI Shapefile of Type 5 (Polygon).
 
 stl_hom
 =======
 
-Charlie or andrew?
+Homicides and selected socio-economic characteristics for counties surrounding St Louis, MO. Data aggregated for three time periods: 1979-84 (steady decline in homicides), 1984-88 (stable period), and 1988-93 (steady increase in homicides). Source: S. Messner, L. Anselin, D. Hawkins, G. Deane, S. Tolnay, R. Baller (2000). An Atlas of the Spatial Patterning of County-Level Homicide, 1960-1990. Pittsburgh, PA, National Consortium on Violence Research (NCOVR).
+
+Files include:
+
+ * stl_hom.html: Metadata
+ * stl_hom.txt: Serge? (used in esda/moran.py)
+ * stl_hom.wkt: A Well-Known-Text representation of the geometry.
+ * stl_hom.csv: attribute data and WKT geometry.
+

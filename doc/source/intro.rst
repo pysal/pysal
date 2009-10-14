@@ -1,6 +1,8 @@
-******************************************************************
-PySAL: Open Source Python Library for Spatial Analytical Functions
-******************************************************************
+.. _library-intro:
+
+**********
+Background
+**********
 
  .. image:: _figures/pysalgraph.png
 

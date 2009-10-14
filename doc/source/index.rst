@@ -3,8 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to pysal's documentation!
-=================================
+******************************************************************
+PySAL: Open Source Python Library for Spatial Analytical Functions
+******************************************************************
+
  .. image:: _figures/pysalgraph.png
 
 PySAL is a cross-platform library of spatial analysis functions written in
@@ -16,12 +18,11 @@ of Regional Systems.
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
 
     Background <intro>
-    File Input-Ouput <fileio>
-    Spatial Weights  <weights>
-    Example Data <examples>
+    library
+    tutorials
 
 Indices and tables
 ==================
