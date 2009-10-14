@@ -1,6 +1,6 @@
 
 """
-Thei Inequality metrics for PySAL
+Theil Inequality metrics for PySAL
 ----------------------------------------------------------------------
 AUTHOR(S):  Sergio J. Rey sjrey@users.sourceforge.net
 ----------------------------------------------------------------------
@@ -39,6 +39,20 @@ class Theil:
     """
 
     def __init__(self,y):
+
+        """
+        Arguments:
+
+            y - (n,t) or (n, ) array with n taken as the observations across which
+            inequality is calculated
+
+                If y is (n,) then a scalar inequality value is determined. If
+                y is (n,t) then an array of inequality values are determined,
+                one value for each column in y.
+
+        
+        """
+
         n = len(y)
         y = y + SMALL * (y==0)
         yt = y.sum(axis=0)
@@ -54,6 +68,30 @@ class TheilD:
     observations into exhaustive and mutually exclusive groups """
     def __init__(self,y, partition):
 
+        """
+        Arguments:
+
+            y - (n,t) or (n, ) array with n taken as the observations across which
+            inequality is calculated
+
+                If y is (n,) then a scalar inequality value is determined. If
+                y is (n,t) then an array of inequality values are determined,
+                one value for each column in y.
+
+            partition - (n, ) array with elements indicating which partition
+            each observation belongs to. These are assumed to be exhaustive.
+
+
+        Attributes:
+
+            T - global inequality
+            bg - between group inequality
+            wg - within group inequality
+
+                Depending on the shape of y these attributes are either
+                scalars or arrays.
+        """
+
         groups=num.unique(partition)
         T=Theil(y).T
         ytot=y.sum(axis=0)
@@ -63,7 +101,10 @@ class TheilD:
         mm=num.dot
 
         #group shares
-        sg=mm(gtot,num.diag(1./ytot))
+        try:
+            sg=mm(gtot,num.diag(1./ytot))
+        except:
+            sg=gtot/ytot
         ng=num.array([sum(partition==gid) for gid in groups])
         n=y.shape[0]
         # between group inequality
@@ -72,6 +113,8 @@ class TheilD:
         self.T=T
         self.bg=bg
         self.wg=T-bg
+
+
 
 
 
