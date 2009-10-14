@@ -44,6 +44,7 @@ class ContiguityWeights_rtree:
         b = poly.bounding_box
         bbox = [b.left,b.lower,b.right,b.upper]
         for id in self.index.intersection(bbox):
+            id = int(id)
             if self.check(id,poly) >= self.joinType:
                 self.setW(id,poly.id)
         if poly.id not in self.w: #add the null cases
@@ -74,13 +75,10 @@ class ContiguityWeights_rtree:
             return False
 
 if __name__=='__main__':
-    #from pysal import GeoIO
     import pysal
+    import time
+    t0 = time.time()
     shp = pysal.open('../examples/10740.shp','r')
     w = ContiguityWeights_rtree(shp,QUEEN)
-    import time
-    import cProfile
-    t0 = time.time()
-    #cProfile.run('w.create()')
     t1 = time.time()
     print "Completed in: ",t1-t0,"seconds"
