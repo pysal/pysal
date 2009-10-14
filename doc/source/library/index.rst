@@ -1,7 +1,14 @@
-"""
+#################
+Library Reference
+#################
+
+:Release: |version|
+:Date: |today|
+
 Python Spatial Analysis Library
 ===============================
 
+The Python Spatial Analysis Library consists of several sub-packages each addressing a different area of spatial analysis.  In addition to these sub-packages PySAL includes some general utilities used across all modules.
 
 Documentation
 -------------
@@ -9,6 +16,16 @@ PySAL documentation is available in two forms: python docstrings and a html webp
 
 Available sub-packages
 ----------------------
+.. toctree::
+    :maxdepth: 2
+
+    cg/index
+    esda/index
+
+core
+esda
+examples
+weights
 
 cg
     Basic data structures and tools for Computational Geometry
@@ -23,20 +40,7 @@ weights
 
 Utilities
 ---------
-`fileio`_
+fileio
     Tool for file input and output, supports many well known file formats
 __version__
     PySAL version string
-"""
-import cg
-import core
-import esda
-import weights
-
-import pysal.core.FileIO # Load IO metaclass
-import pysal.core._FileIO # Load IO inheritors
-
-#Assign pysal.open to dispatcher
-
-open = pysal.core.FileIO.FileIO
-__version__ = '1.0.0rc1'

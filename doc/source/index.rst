@@ -21,7 +21,7 @@ Contents:
     :maxdepth: 2
 
     Background <intro>
-    library
+    library/index
     tutorials
 
 Indices and tables

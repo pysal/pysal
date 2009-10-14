@@ -1,6 +1,4 @@
 """
-Computational geometry code for PySAL: Python Spatial Analysis Library.
-
 Authors:
 Sergio Rey <srey@asu.edu>
 Xinyue Ye <xinyue.ye@gmail.com>
@@ -11,7 +9,6 @@ Not to be used without permission of the authors.
 
 Style Guide, Follow:
 http://www.python.org/dev/peps/pep-0008/
-
 
 Class comment format:
 
@@ -472,7 +469,8 @@ def is_clockwise(vertices):
         Clockwise area test ported from GDAL/OGR:
         http://trac.osgeo.org/gdal/browser/branches/1.5/gdal/ogr/ogrlinearring.cpp?rev=16127#L334
 
-        Original License Text....
+        Original License Text::
+
             * Project:  OpenGIS Simple Features Reference Implementation
             * Purpose:  The OGRLinearRing geometry class.
             * Author:   Frank Warmerdam, warmerdam@pobox.com
@@ -498,6 +496,7 @@ def is_clockwise(vertices):
             * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
             * DEALINGS IN THE SOFTWARE.
             ****************************************************************************/
+
     Example:
     >>> is_clockwise([Point((0, 0)), Point((10, 0)), Point((0, 10))])
     False
