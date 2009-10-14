@@ -66,7 +66,10 @@ class FileIO(object): #should be a type?
     __metaclass__ = FileIO_MetaCls
     __registry = {} # {'shp':{'r':[OGRshpReader,pysalShpReader]}}
     def __new__(cls,dataPath='',mode='r'):
-        """Intercepts the instantiation of FileIO and dispatches to the correct handler"""
+        """
+        Intercepts the instantiation of FileIO and dispatches to the correct handler
+        If no suitable handler is found a python file object is returned.
+        """
         if cls is FileIO:
             try:
                 newCls = object.__new__(cls.__registry[cls.getType(dataPath)][mode][0])

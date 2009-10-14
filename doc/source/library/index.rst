@@ -21,6 +21,7 @@ Available sub-packages
 
     cg/index
     esda/index
+    open
 
 core
 esda
@@ -40,7 +41,7 @@ weights
 
 Utilities
 ---------
-fileio
+open
     Tool for file input and output, supports many well known file formats
 __version__
     PySAL version string
