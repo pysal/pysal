@@ -441,7 +441,8 @@ class Percentiles(Map_Classifier):
     array([    9.365,  4111.45 ])
     >>> p2.counts
     array([29, 29])
-    >>> 
+    >>> p2.k
+    2
     """
 
     def __init__(self,y,pct=[1,10,50,90,99,100]):
@@ -452,6 +453,7 @@ class Percentiles(Map_Classifier):
         y=self.y
         pct=self.pct
         self.bins=num.array([stats.scoreatpercentile(y,p) for p in pct])
+        self.k=len(self.bins)
 
 class Box_Plot(Map_Classifier):
     """Box_Plot Map Classification
