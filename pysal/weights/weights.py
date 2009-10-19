@@ -34,104 +34,110 @@ class W(object):
 
 
     def __init__(self,data):
-        """
-            Arguments:
+        """Construct a spatial weights object
 
-                data: dictionary with two entries
-                    neighbors: list of neighbors
-                    weights: list of weights
+        Parameters
+        ==========
 
-                    such that:
+        data: dictionary with two entries
+            neighbors: list of neighbors
+            weights: list of weights
 
-                    neighbors[1]=[2,4]
-                    weights[1]=[w_{1,2}, w_{1,4}]
-                    .
-                    .
-                    neighbors[4]=[1,7,10]
-                    weights[4]=[w_{4,1}, w_{4,7}, w_{4,10}]
+            such that:
 
-                    and w_{i,j} are the weights which can be general or
-                    binary.
+            neighbors[1]=[2,4]
+            weights[1]=[w_{1,2}, w_{1,4}]
+            .
+            .
+            neighbors[4]=[1,7,10]
+            weights[4]=[w_{4,1}, w_{4,7}, w_{4,10}]
+
+            and w_{i,j} are the weights which can be general or
+            binary.
 
 
-            Attributes:
+        Attributes:
+        ===========
 
-                asymmetric: Flag for any asymmetries (see
-                method asymmetry for details), false if none.
+        asymmetric: Flag for any asymmetries (see
+        method asymmetry for details), false if none.
 
-                cardinalities: dictionary of cardinalities 
+        cardinalities: dictionary of cardinalities 
 
-                islands: list of ids that have no neighbors
+        islands: list of ids that have no neighbors
 
-                max_neighbors: maximum cardinality (int)
+        max_neighbors: maximum cardinality (int)
 
-                min_neighbors: minimum cardinality (int)
+        min_neighbors: minimum cardinality (int)
 
-                mean_neighbors: average cardinality (float)
+        mean_neighbors: average cardinality (float)
 
-                n: number of observations (int)
+        n: number of observations (int)
 
-                neighbors: dictionary of neighbor ids. key is observation id
-                and value is list of neighboring observation ids, with position
-                corresponding to the same position in weights (see weights)
+        neighbors: dictionary of neighbor ids. key is observation id
+        and value is list of neighboring observation ids, with position
+        corresponding to the same position in weights (see weights)
 
-                nonzero: number of nonzero weights
+        nonzero: number of nonzero weights
 
-                pct_nonzero: percentage of all weights that are nonzero
+        pct_nonzero: percentage of all weights that are nonzero
 
-                s0: sum of all weights 
+        s0: sum of all weights 
 
-                s1: trace of ww
+        s1: trace of ww
 
-                s2: trace of w'w
+        s2: trace of w'w
 
-                sd: standard deviation of number of neighbors (float)
+        sd: standard deviation of number of neighbors (float)
 
-                transform: property for weights transformation. can be used to
-                get and set weights transformation. 
+        transform: property for weights transformation. can be used to
+        get and set weights transformation. 
 
-                transformations: dictionary of transformed weights. key is
-                transformation type, value are weights
+        transformations: dictionary of transformed weights. key is
+        transformation type, value are weights
 
-                weights: dictionary of currently specified transformed
-                weights. key is observation id, value is list of transformed
-                weights in order of neighbor ids (see neighbors).
+        weights: dictionary of currently specified transformed
+        weights. key is observation id, value is list of transformed
+        weights in order of neighbor ids (see neighbors).
 
-                Private attributes
+        Private attributes
+        ------------------
 
-                _idx: index for iterator
-                _id_order: order of ids for iterator
-                _transform: weights transformation
+        _idx: index for iterator
+        _id_order: order of ids for iterator
+        _transform: weights transformation
 
                 
 
-            Methods:
+        Methods:
+        ========
 
-                asymmetry: checks if there are any asymmetries in the weights.
-                The default is to check for non-zero symmetries only, but
-                stricter value symmetries can also be checked.
+        asymmetry: checks if there are any asymmetries in the weights.
+        The default is to check for non-zero symmetries only, but
+        stricter value symmetries can also be checked.
 
-                characteristics: calculates summary properties of the weights
+        characteristics: calculates summary properties of the weights
 
-                full: returns a full nxn numpy array
+        full: returns a full nxn numpy array
 
-                higher_order: returns the higher order (k) contiguity matrix
+        higher_order: returns the higher order (k) contiguity matrix
 
-                lag: calculate spatial lag of an array
+        lag: calculate spatial lag of an array
 
-                order: determines the non-redundant order of contiguity for
-                i,j up to a given level of contiguity
+        order: determines the non-redundant order of contiguity for
+        i,j up to a given level of contiguity
 
-                set_transform: transform the weights.  Options include "B": binary,
-                "W": row-standardized (row sum to 1), "D": doubly-standardized
-                (global sum to 1), "V": variance stabilizing, 
-                "O": original weights
+        set_transform: transform the weights.  Options include "B": binary,
+        "W": row-standardized (row sum to 1), "D": doubly-standardized
+        (global sum to 1), "V": variance stabilizing, 
+        "O": original weights
 
-                shimbel: finds the shimbel matrix for the first order
-                contiguity matrix
+        shimbel: finds the shimbel matrix for the first order
+        contiguity matrix
 
 
-            Example:
+        Example:
+        ========
 
                 >>> neighbors={0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
                 >>> weights={0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
@@ -307,6 +313,7 @@ class W(object):
         reorder W (as in example below) or reorder y
 
         Example:
+
         >>> w=lat2gal(3,3)
         >>> y=num.arange(9)
         >>> yl=w.lag(y)
@@ -742,19 +749,23 @@ def lat2gal(nrows=5,ncols=5,rook=True):
     """Create a GAL structure for a regular lattice.
 
     Arguments:
+
         nrows = number of rows
         ncols = number of columns
         rook = boolean for type of matrix. Default is rook. For queen set
         rook=False
 
     Returns:
+
         w = instance of spatial weights class W
 
     Notes:
+
         Observations are row ordered: first k observations are in row 0, next
         k in row 1, and so on.
 
     Example:
+
         >>> w9=lat2gal(3,3)
         >>> w9.pct_nonzero
         0.29629629629629628

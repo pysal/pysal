@@ -13,24 +13,17 @@ OVERVIEW
 Classes:
     Theil            Theils T Inequality Measure
     TheilD           Spatial (or other) Decomposition of T
-
-    to add
     TheilDSim        Inference on TheilD based on permutations
-
 
 Notes:
 
     Currently this reproduces results from Rey and Sastre (2009).
 
     Porting over STARS code to move away from Numeric to numpy
-
-    Work in progress
-
-
 """
 
 import numpy as num
-SMALL = 0.0000001
+SMALL = num.finfo('float').tiny
 
 class Theil:
     """Computes aggregate Theil measure of inequality
@@ -41,7 +34,7 @@ class Theil:
     def __init__(self,y):
 
         """
-        Arguments:
+        Parameters:
 
             y - (n,t) or (n, ) array with n taken as the observations across which
             inequality is calculated
@@ -54,7 +47,7 @@ class Theil:
         """
 
         n = len(y)
-        y = y + SMALL * (y==0)
+        y = y + SMALL * (y==0) # can't have 0 values
         yt = y.sum(axis=0)
         s = y/(yt*1.0)
         lns = num.log(n*s)
@@ -69,7 +62,7 @@ class TheilD:
     def __init__(self,y, partition):
 
         """
-        Arguments:
+        Parameters:
 
             y - (n,t) or (n, ) array with n taken as the observations across which
             inequality is calculated
@@ -115,6 +108,59 @@ class TheilD:
         self.wg=T-bg
 
 
+
+class TheilDSim:
+    """Random permutation based inference on Theil Deocomposition.
+    
+           """
+    def __init__(self,y, partition, n_perm=99):
+        """
+        Parameters:
+        ===========
+
+            y - (n,t) or (n, ) array with n taken as the observations across which
+            inequality is calculated
+
+                If y is (n,) then a scalar inequality value is determined. If
+                y is (n,t) then an array of inequality values are determined,
+                one value for each column in y.
+
+            partition - (n, ) array with elements indicating which partition
+            each observation belongs to. These are assumed to be exhaustive.
+
+            n_perm - number of permutations to use.
+
+
+        Attributes:
+        ===========
+
+            observed - TheilD instance for the observed data. 
+
+            bg - array (n_perm+1,t) between group inequality
+
+            bg_pvalue - array (t,1) p-value for the between group measure.
+            Measures the percentage of the realized values that were greater
+            than or equal to the observed bg value. Includes the observed
+            value.
+
+            wg - array (size=n_perm+1) within group inequality
+                Depending on the shape of y, 1 or 2-dimensional
+        """
+
+        observed=TheilD(y, partition)
+        bg_ct=observed.bg==observed.bg # already have one extreme value
+        bg_ct=bg_ct*1.0
+        results=[observed]
+        for perm in range(n_perm):
+            yp=num.random.permutation(y)
+            t=TheilD(yp,partition)
+            bg_ct+=(1.0*t.bg>=observed.bg)
+            results.append(t)
+        self.results=results
+        self.T=observed.T
+        self.bg_pvalue=bg_ct/(n_perm*1.0 + 1)
+        self.bg=num.array([r.bg for r in results])
+        self.wg=num.array([r.wg for r in results])
 
 
 
@@ -170,13 +216,9 @@ if __name__ == '__main__':
     
     partition=data['hanson98']
     y=ymat
-    ytot=y.sum(axis=0)
-    gtot=[y[partition==gid].sum(axis=0) for gid in num.unique(partition)]
-    mm=num.dot
-    sg=mm(gtot,num.diag(1./ytot))
-    ng=num.array([sum(partition==gid) for gid in num.unique(partition)])
-    n=y.shape[0]
-    bg=num.multiply(sg,num.log(mm(num.diag(n*1./ng),sg))).sum(axis=0)
     tall=TheilD(ymat,data['hanson98'])
+    bgs=TheilDSim(ymat,partition)
+
+    bgs1=TheilDSim(ymat[:,0],partition)
 
 

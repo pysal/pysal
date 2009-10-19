@@ -5,7 +5,6 @@ Moran's I Spatial Autocorrelation Statistics
 Author(s):
     Serge Rey srey@asu.edu
 
-
 """
 import numpy as num
 import scipy.stats as stats
