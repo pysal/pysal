@@ -1,0 +1,88 @@
+Installation Notes for PySAL
+
+
+Dependencies:
+=============================================================================
+Python 2.5+
+
+Numpy
+
+Scipy
+
+spatialindex 1.3.0 (Rtree dependency)
+http://trac.gispython.org/spatialindex
+license: lgpl
+
+Rtree:
+url: http://pypi.python.org/pypi/Rtree/0.4.1 
+license: lgpl
+
+
+Mac OS X Notes
+=============================================================================
+(charlie add here)
+
+
+Linux Notes
+=============================================================================
+On Ubuntu (Jaunty Jackalope) install requires a patch of spatial index,
+patch is at: http://trac.gispython.org/spatialindex/attachment/ticket/11/gcc43.diff
+
+then apply the patch in the parent directory of spatial index as follows:
+
+	patch -p0 < gcc43.diff
+
+You also need the python-dev package installed: apt-get install python-dev
+
+If you want to work on a local development copy (and not do a system level
+install of pysal, do the following)
+
+cd $pysalroot
+python setup.py build
+cp build/lib.linux-i686-2.6/pysal/core/_shp.so pysal/core/.
+
+And, also see below on setting the PYTHONPATH environment variable.
+
+On Ubuntu (Hardy Heron) install is fairly straightforward. Python-dev has to
+be installed and the dynamic library path set.
+
+Windows XP Notes
+=============================================================================
+To create the Windows installer...
+Build the module on a Windows machine (python setup.py build --compiler=COMPILEROFCHOICE).
+Generate the installer from the build (python setup.py bdist_wininst).
+
+For COMPILEROFCHOICE, mingw32 seems to work well.  Install MinGW and make sure c:\mingw\bin is in your PATH (environmental variables in system properties).
+
+
+In order to build and install spatialindex, the same compiler used to build
+the Python in question has to be available. Not having VC++7 available, sjr
+set up cygwin and used its gcc compiler to build a new python and successfully
+compile spatialindex and rtree.
+
+Numpy and scipy still need to be built under this platform.  Finally Tk and
+TCL have to be built and Python redone in order to have Tkinter available.
+Unfortunately Tk and TCL require the MS VC++7 compiler so we are dead in the
+water here.
+
+
+Developer Notes
+=============================================================================
+If you wish to work on pysal without installing it as a site-package then the
+following setp is necessary
+ 
+Add a path to the trunk in your PYTHONPATH environment variable. On Mac OS
+this can be done in your .bashrc file:
+
+export PYTHONPATH="PATHTO/pysal/trunk"
+
+where PATHTO is where you pulled the svn down to.
+
+License
+=============================================================================
+BSD
+
+
+
+
+
