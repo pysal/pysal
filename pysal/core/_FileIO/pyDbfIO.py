@@ -4,10 +4,34 @@ import struct
 import itertools
 
 class DBF(pysal.core.Tables.DataTable):
-    """ """
+    """
+    PySAL DBF Reader/Writer
+    
+    This DBF handler implements the PySAL DataTable interface.
+
+    Attributes:
+    header -- list -- A list of field names.
+    field_spec -- list -- A list of field specs.
+
+    Heeader:
+        The header is a python list of strings.  Each string is a field name and field name must not be longer than 10 characters.
+        Eg.
+        ['field1','field2','field3']
+    Field Spec:
+        The field_spec describes the data types of each field. It is comprised of a list of tuples, each tuple describing a field.
+        The format for the tuples is ("Type",len,precision).  Valid Types are 'C' for characters, 'L' for bool, 'D' for data, 'N' or 'F' for number.
+        [('C',20,0),('N',20,10),('L',1,0)]
+    """
     FORMATS = ['dbf']
     MODES = ['r','w']
     def __init__(self,*args,**kwargs):
+        """
+        Initializes an instance of the pysal's DBF handler.
+
+        Arguments:
+        dataPath -- str -- Path to file, including file.
+        mode -- str -- 'r' or 'w'
+        """
         pysal.core.Tables.DataTable.__init__(self,*args,**kwargs)
         if self.mode == 'r':
             self.f = f = open(self.dataPath,'rb')
@@ -84,23 +108,6 @@ class DBF(pysal.core.Tables.DataTable):
             return rec
         else:
             return None
-    def list_dbf(self):
-        if self.mode != 'r': raise IOError, "Invalid operation, Cannot read from a file opened in 'w' mode."
-        dbf=self.f
-        print "%d records, %d fields" % (dbf.record_count(), dbf.field_count())
-        format = ""
-        for i in range(dbf.field_count()):
-            type, name, len, decc = dbf.field_info(i)
-            print type,name,len,decc
-            if type == 0: #string
-                format = format + " %%(%s)%ds" % (name, len)
-            elif type == 1: #int
-                format = format + " %%(%s)%dd" % (name, len)
-            elif type == 2: #float
-                format = format + " %%(%s)%dg" % (name, len)
-        print format
-        for i in range(dbf.record_count()):
-            print format % dbf.read_record(i)
     def write(self,obj):
         self._complain_ifclosed(self.closed)
         if self.mode != 'w': raise IOError, "Invalid operation, Cannot write to a file opened in 'r' mode."
