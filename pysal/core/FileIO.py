@@ -278,10 +278,18 @@ class FileIO(object): #should be a type?
         elif n==0:
             return None
         else:
-            return [self._read_joins() for i in xrange(n)]
+            result = []
+            for i in range(0,n):
+                try:
+                    result.append(self._read_joins())
+                except StopIteration:
+                    break
+            return result
     def _read_joins(self):
         pos = self.tell()
         row = self._read()
+        if not row:
+            raise StopIteration
         row = self._cast(row)
         if row:
             if self.__joins and type(row)!=list:
