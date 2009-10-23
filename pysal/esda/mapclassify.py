@@ -4,23 +4,21 @@ A module of classification schemes for choropleth mapping
 Authors:
     Sergio Rey <srey@asu.edu>
 
-
 Map Classifiers Supported:
 
-Box_Plot
-Equal_Interval
-Fisher_Jenks
-Jenks_Caspall
-Jenks_Caspall_Forced
-Jenks_Caspall_Sampled
-Max_P
-Maximum_Breaks
-Natural_Breaks
-Quantiles
-Percentiles
-Std_Mean
-User_Defined
-
+    Box_Plot
+    Equal_Interval
+    Fisher_Jenks
+    Jenks_Caspall
+    Jenks_Caspall_Forced
+    Jenks_Caspall_Sampled
+    Max_P
+    Maximum_Breaks
+    Natural_Breaks
+    Quantiles
+    Percentiles
+    Std_Mean
+    User_Defined
 
 To Do:
     additional documentation
@@ -195,7 +193,6 @@ def bin(y,bins):
         b[num.nonzero(y<=c)]=i
     return b
 
-
 def bin1d(x,bins):
     """place values of a 1-d array into bins and determine counts of values in
     each bin
@@ -214,7 +211,6 @@ def bin1d(x,bins):
     binIds: 1-d array of integer bin Ids
 
     counts: number of elements of x falling in each bin
-
 
     Examples
     --------
@@ -242,7 +238,6 @@ def bin1d(x,bins):
         binIds+=(x>l)*(x<=r)*k
     counts=num.bincount(binIds)
     return (binIds,counts)
-
 
 def load_example():
     """Helper function for doc tests"""
@@ -300,7 +295,6 @@ class Map_Classifier:
             adcm+=sum(ycd)
         return adcm
 
-
     def table_string(self,width=12,decimal=3):
         fmt=".%df"%decimal
         fmt="%"+fmt
@@ -346,7 +340,6 @@ class Map_Classifier:
         table.insert(1," ")
         table="\n".join(table)
         return table
-
 
 class Equal_Interval(Map_Classifier):
     """Equal Interval Classification 
@@ -411,7 +404,6 @@ class Equal_Interval(Map_Classifier):
 class Percentiles(Map_Classifier):
     """Percentiles Map Classification
 
-
     Arguments:
         y: attribute to classify (numpy array n x 1)
         pct: percentiles default=[1,10,50,90,99,100]
@@ -425,7 +417,6 @@ class Percentiles(Map_Classifier):
         k: the number of classes
 
         counts: the number of observations falling in each class (numpy array k x 1)
-
 
     Examples
     --------
@@ -490,7 +481,6 @@ class Box_Plot(Map_Classifier):
     [1] If q[2]+hinge*IQR > max(y) there will only be 5 classes and no high outliers,
         otherwise, there will be 6 classes and at least one high outlier.
 
-
     Examples 
     --------
     >>> cal=load_example()
@@ -545,7 +535,6 @@ class Box_Plot(Map_Classifier):
         self.low_outlier_ids=num.nonzero(self.yb==0)[0]
         self.high_outlier_ids=num.nonzero(self.yb==5)[0]
 
-
 class Quantiles(Map_Classifier):
     """Quantile Map Classification
 
@@ -563,7 +552,6 @@ class Quantiles(Map_Classifier):
         k: the number of classes
 
         counts: the number of observations falling in each class (numpy array k x 1)
-
 
     Examples
     --------
@@ -588,7 +576,7 @@ class Quantiles(Map_Classifier):
         self.bins=quantile(y,k=k)
 
 class Std_Mean(Map_Classifier):
-    """Standard Deviation and Mean  Map Classification
+    """Standard Deviation and Mean Map Classification
 
     Arguments:
         y: attribute to classify (numpy array n x 1)
@@ -605,7 +593,6 @@ class Std_Mean(Map_Classifier):
         k: the number of classes
 
         counts: the number of observations falling in each class (numpy array k x 1)
-
 
     Examples
     --------
@@ -626,7 +613,6 @@ class Std_Mean(Map_Classifier):
     >>> st3.counts
     array([ 0,  0, 57,  0,  1])
     >>> 
-        
     """
     def __init__(self,y,multiples=[-2,-1,1,2]):
         self.multiples=multiples
@@ -643,8 +629,6 @@ class Std_Mean(Map_Classifier):
             cuts.append(y_max)
         self.bins=num.array(cuts)
         self.k=len(cuts)
-
-
 
 class Maximum_Breaks(Map_Classifier):
     """Maximum Breaks  Map Classification
@@ -663,7 +647,6 @@ class Maximum_Breaks(Map_Classifier):
         k: the number of classes
 
         counts: the number of observations falling in each class (numpy array k x 1)
-
 
     Examples
     --------
@@ -707,9 +690,8 @@ class Maximum_Breaks(Map_Classifier):
         mp.sort()
         self.bins=num.array(mp)
 
-
 class Natural_Breaks(Map_Classifier):
-    """Natural Breaks  Map Classification
+    """Natural Breaks Map Classification
 
     Arguments:
         y: attribute to classify (numpy array n x 1)
@@ -727,7 +709,6 @@ class Natural_Breaks(Map_Classifier):
 
         yb: bin ids for observations (numpy array n x 1). Each value is the id
         of the class the observation belongs to.
-
 
     Examples
     --------
@@ -777,8 +758,6 @@ class Natural_Breaks(Map_Classifier):
         self.bins=num.array(cuts)
         self.iterations=it
 
-
-
 class Fisher_Jenks(Map_Classifier):
     """Fisher Jenks optimal classifier
 
@@ -797,7 +776,6 @@ class Fisher_Jenks(Map_Classifier):
         >>> 
     """
 
-
     def __init__(self,y,k=K):
         self.k=k
         Map_Classifier.__init__(self,y)
@@ -814,7 +792,6 @@ class Fisher_Jenks(Map_Classifier):
                 c=x[range(i,j+1)]
                 cm=num.median(c)
                 d[i,j]=sum(abs(c-cm))
-
         self.d=d
         dmin=sum([d[key] for key in d])
         self._maxd=dmin.copy()
@@ -832,10 +809,9 @@ class Fisher_Jenks(Map_Classifier):
         while k < self.k:
             splits={}
             delta=0
-
             for i,interval in enumerate(classes):
                 if interval[1]>interval[0]:
-                    p,p_adcm=self.two_part(interval)
+                    p,p_adcm=self._two_part(interval)
                     p_delta=adcms[i]-p_adcm
                     splits[i]=[p,p_adcm]
                     if p_delta > delta:
@@ -854,9 +830,7 @@ class Fisher_Jenks(Map_Classifier):
         self.bins=[ x[b[-1]] for b in classes]
         self.bins.sort()
 
-
-
-    def two_part(self,interval):
+    def _two_part(self,interval):
         """find the best two-partition between start and end"""
         start,end=interval
         d=self.d
@@ -868,7 +842,6 @@ class Fisher_Jenks(Map_Classifier):
                 best=[left,right]
                 tmin=t
         return (best,t)
-
 
 class Jenks_Caspall(Map_Classifier):
     """Jenks Caspall  Map Classification
@@ -938,10 +911,8 @@ class Jenks_Caspall(Map_Classifier):
         self.bins=num.array(cuts)
         self.iterations=it
 
-
 class Jenks_Caspall_Sampled(Map_Classifier):
     """Jenks Caspall Map Classification using a random sample
-
 
     Arguments:
 
@@ -962,7 +933,6 @@ class Jenks_Caspall_Sampled(Map_Classifier):
 
         counts: the number of observations falling in each class (numpy array k x 1)
 
- 
     Example Usage:
 
         >>> cal=load_example()
@@ -1021,9 +991,6 @@ class Jenks_Caspall_Sampled(Map_Classifier):
         self.bins=jc.bins
         self.iterations=jc.iterations
 
-
-
-
 class Jenks_Caspall_Forced(Map_Classifier):
     """Jenks Caspall  Map Classification with forced movements
    
@@ -1042,7 +1009,6 @@ class Jenks_Caspall_Forced(Map_Classifier):
 
         counts: the number of observations falling in each class (numpy array k x 1)
 
- 
     Example Usage:
         >>> cal=load_example()
         >>> jcf=Jenks_Caspall_Forced(cal,k=5)
@@ -1162,10 +1128,8 @@ class Jenks_Caspall_Forced(Map_Classifier):
         self.bins=num.array(cuts)
         self.iterations=it
 
-
 class User_Defined(Map_Classifier):
     """User Specified Binning
-    
 
     Notes:
         If upper bound of user bins does not exceed max(y) we append an
@@ -1202,8 +1166,6 @@ class User_Defined(Map_Classifier):
     def _set_bins(self):
         pass
 
-
-
 class Max_P(Map_Classifier):
     """Max_P Map Classification
     
@@ -1225,7 +1187,6 @@ class Max_P(Map_Classifier):
         k: the number of classes
 
         counts: the number of observations falling in each class (numpy array k x 1)
-
  
     Examples
     --------
@@ -1244,7 +1205,6 @@ class Max_P(Map_Classifier):
             x.shape=(x.size,1)
         n,tmp=x.shape
         x.sort(axis=0)
-
         # find best of initial solutions
         solution=0
         best_tss=x.var()*x.shape[0]
@@ -1294,8 +1254,6 @@ class Max_P(Map_Classifier):
         for r,cl in enumerate(classes):
             for a in cl:
                 a2c[a]=r
-
-
         swapping=True
         it=0
         while swapping:
@@ -1330,17 +1288,12 @@ class Max_P(Map_Classifier):
                                 a2c[a]=id
                     if not n_moves:
                         growing=False
-
-
                 total_moves+=n_moves
-
             if not total_moves:
                 swapping=False
-
         xs=self.y.copy()
         xs.sort()
         self.bins=[xs[cl][-1] for cl in classes]
-
 
     def _ss(self,class_def):
         """calculates sum of squares for a class"""
@@ -1366,11 +1319,9 @@ class Max_P(Map_Classifier):
         else:
             return True
 
-
 def _fit(y,classes):
     """Calculate the total sum of squares for a vector y classified into
     classes
-
 
     Argument:
     y -- array -- variable to be classified
@@ -1392,6 +1343,3 @@ def _test():
 
 if __name__ == '__main__':
     _test()
-
-
-

@@ -1,16 +1,11 @@
-
 """
 Max p regionalization
 
-Form the maximum number (p) of regions given a set of n areas and a floor
+Heuristically form the maximum number (p) of regions given a set of n areas and a floor
 constraint.
 
 Author(s):
     Serge Rey srey@asu.edu
-
-
-Not to be used without permission of the author(s).
-
 
 To Do:
     - add shape constraint
@@ -28,7 +23,9 @@ LARGE=10**6
 MAX_ATTEMPTS=100
 
 class Maxp:
-    """Maximum number of regions given a threshold constraint"""
+    """Try to find the maximum number of regions for a set of areas such that
+    each region combines continguous areas that satisfy a given threshold
+    constraint."""
     def __init__(self,w,z,floor,floor_variable,verbose=False,initial=100):
         """
         Arguments:
@@ -37,7 +34,6 @@ class Maxp:
 
             z: n*m matrix of observations on m attributes across n areas. This
             is used to calculate intra-regional homogeneity
-
 
             floor: a minimum bound for a variable that has to be obtained
             in each region
@@ -65,14 +61,27 @@ class Maxp:
 
             total_moves: number of moves into internal regions
 
-
-
         Methods:
             objective_function:
                 calculates the value of the objective function given a current
                 solution
 
-
+        Example:
+        >>> import random
+        >>> import numpy as num
+        >>> random.seed(100)
+        >>> num.random.seed(100)
+        >>> w=pysal.weights.weights.lat2gal(10,10)
+        >>> z=num.random.random_sample((w.n,2))
+        >>> p=num.random.random(w.n)*100
+        >>> p=num.ones((w.n,1),float)
+        >>> floor=3
+        >>> solution=Maxp(w,z,floor,floor_variable=p,initial=100)
+        >>> solution.p
+        27
+        >>> solution.regions[0]
+        [54, 44, 34, 33, 23]
+        >>> 
         """
     
         self.w=w
@@ -80,14 +89,15 @@ class Maxp:
         self.floor=floor
         self.floor_variable=floor_variable
         self.verbose=verbose
-
         self.initial_solution()
         best_val=self.objective_function()
         self.current_regions=copy.copy(self.regions)
         self.current_area2region=copy.copy(self.area2region)
+        self.initial_wss=[]
         for i in range(initial):
             self.initial_solution()
             val=self.objective_function()
+            self.initial_wss.append(val)
             if self.verbose:
                 print 'initial solution: ',i, val,best_val
             if val < best_val:
@@ -96,10 +106,10 @@ class Maxp:
                 best_val=val
         self.regions=copy.copy(self.current_regions)
         self.area2region=self.current_area2region
-
         self.swap()
 
     def initial_solution(self):
+        self.p=0
         solving=True
         attempts=0
         while solving and attempts<=MAX_ATTEMPTS:
@@ -166,11 +176,12 @@ class Maxp:
                 self.regions=regions
                 self.area2region=a2r
                 solving=False
+                self.p=len(regions)
             else:
                 if attempts==MAX_ATTEMPTS:
                     print 'No initial solution found'
+                    self.p=0
                 attempts+=1
-
 
     def swap(self):
         swapping=True
@@ -257,14 +268,12 @@ class Maxp:
                 print 'moves_made: ',moves_made
                 print 'objective function: ',self.objective_function()
 
-
     def check_floor(self,region):                
         cv=sum(self.floor_variable[region])
         if cv >= self.floor:
             return True
         else:
             return False
-
 
     def objective_function(self,solution=None):
         # solution is a list of lists of region ids [[1,7,2],[0,4,3],...] such
@@ -279,6 +288,26 @@ class Maxp:
             wss+=sum(num.transpose(var))*len(region)
         return wss
 
+    def inference(self,nperm=99):
+        # compare the within sum of squares for the solution against nperm
+        # solutions where areas are randomly assigned to regions
+        ids=num.arange(self.w.n)
+        regs=self.regions
+        wsss=num.zeros(nperm+1)
+        self.wss=self.objective_function()
+        cv=1
+        c=1
+        for solution in range(nperm):
+            ids=num.random.permutation(ids)
+            r=[ids[reg] for reg in regs]
+            wss=self.objective_function(r)
+            wsss[c]=wss
+            if wss<=self.wss:
+                cv+=1
+            c+=1
+        self.pvalue=cv/(1.+nperm)
+        self.wss_perm=wsss
+        self.wss_perm[0]=self.wss
         
 def check_contiguity(w,neighbors,leaver):
     d={}
@@ -308,6 +337,7 @@ class Graph(object):
         self.edges={}
         self.cluster_lookup={}
         self.no_link={}
+
     def add_edge(self,n1,n2,w):
         self.nodes.add(n1)
         self.nodes.add(n2)
@@ -323,7 +353,6 @@ class Graph(object):
             for node in connected:
                 if node in nodes:
                     nodes.remove(node)
-
             subgraph=Graph()
             subgraph.nodes = connected
             subgraph.no_link = self.no_link
@@ -348,21 +377,11 @@ class Graph(object):
             visited=visited.union(y)
         return aux, visited
 
-         
+# tests
+
+def _test():
+    import doctest
+    doctest.testmod()
+
 if __name__ == '__main__':
-    na=10
-    w=pysal.weights.weights.lat2gal(na,na)
-    z=range(w.n)
-    random.seed(100)
-    num.random.seed(100)
-    z=num.random.random_sample((w.n,2))
-    p=num.random.random(w.n)*100
-    p=num.ones((w.n,1),float)
-    floor=3
-    solution=Maxp(w,z,floor,floor_variable=p,verbose=True,initial=10)
-    solution2=Maxp(w,z,floor=50,floor_variable=p,verbose=True,initial=10)
-    solution10=Maxp(w,z,floor=10,floor_variable=p,verbose=True,initial=10)
-
-
-
-
+    _test()

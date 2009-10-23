@@ -31,6 +31,9 @@ __version__
 import cg
 import core
 import esda
+import inequality
+import markov
+import region
 import weights
 
 import pysal.core.FileIO # Load IO metaclass
