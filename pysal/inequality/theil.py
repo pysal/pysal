@@ -90,19 +90,27 @@ class TheilD:
         ytot=y.sum(axis=0)
 
         #group totals
-        gtot=[y[partition==gid].sum(axis=0) for gid in groups]
+        gtot=num.array([y[partition==gid].sum(axis=0) for gid in groups])
         mm=num.dot
 
+        """
         #group shares
         try:
             sg=mm(gtot,num.diag(1./ytot))
         except:
             sg=gtot/ytot
+            sg.shape=(sg.size,1)
+        """
+        if ytot.size==1: # y is 1-d
+            sg=gtot/ytot
+            sg.shape=(sg.size,1)
+        else:
+            sg=mm(gtot,num.diag(1./ytot))
         ng=num.array([sum(partition==gid) for gid in groups])
+        ng.shape=(ng.size,) # ensure ng is 1-d
         n=y.shape[0]
         # between group inequality
         bg=num.multiply(sg,num.log(mm(num.diag(n*1./ng),sg))).sum(axis=0)
-        
         self.T=T
         self.bg=bg
         self.wg=T-bg
@@ -110,7 +118,7 @@ class TheilD:
 
 
 class TheilDSim:
-    """Random permutation based inference on Theil Deocomposition.
+    """Random permutation based inference on Theil Decomposition.
     
            """
     def __init__(self,y, partition, n_perm=99):
