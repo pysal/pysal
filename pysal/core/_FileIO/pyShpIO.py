@@ -101,8 +101,8 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
             rec['BBOX Xmax'] = shape.bounding_box.right
             rec['BBOX Ymax'] = shape.bounding_box.upper
             if self.type == 'POLYGON':
-                rec['NumParts'] = len(shape.parts) + len(shape.holes)
-                holes = [hole[::-1] for hole in shape.holes]
+                holes = [hole[::-1] for hole in shape.holes if hole] #holes should be in CCW order
+                rec['NumParts'] = len(shape.parts) + len(holes)
                 all_parts = shape.parts+holes
             else:
                 rec['NumParts'] = len(shape.parts)
