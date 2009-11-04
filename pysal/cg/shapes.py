@@ -1067,9 +1067,9 @@ class Polygon(object):
         Example:
         >>> p = Polygon([Point((0, 0)), Point((10, 0)), Point((10, 10)), Point((0, 10))], [Point((1, 2)), Point((2, 2)), Point((2, 1)), Point((1, 1))])
         >>> len(p.holes)
-        4
+        1
         """
-        return sum([part for part in self._holes], [])
+        return [[v for v in part] for part in self._holes]
 
     @property
     def parts(self):
@@ -1319,9 +1319,9 @@ class _TestPolygon(unittest.TestCase):
         """
         p = Polygon([Point((0, 0)), Point((10, 0)), Point((10, 10)), Point((0, 10))],
                     holes=[Point((2, 2)), Point((4, 2)), Point((4, 4)), Point((2, 4))]) 
-        self.assertEquals(len(p.holes), 4)
+        self.assertEquals(len(p.holes), 1)
         e_holes = [Point((2, 2)), Point((2, 4)), Point((4, 4)), Point((4, 2))] 
-        self.assertTrue(p.holes in [e_holes, [e_holes[-1]] + e_holes[:3], e_holes[-2:] + e_holes[:2], e_holes[-3:] + [e_holes[0]]])
+        self.assertTrue(p.holes[0] in [e_holes, [e_holes[-1]] + e_holes[:3], e_holes[-2:] + e_holes[:2], e_holes[-3:] + [e_holes[0]]])
 
     def test_holes2(self):
         """
@@ -1333,7 +1333,7 @@ class _TestPolygon(unittest.TestCase):
                     holes=[[Point((2, 2)), Point((4, 2)), Point((4, 4)), Point((2, 4))],
                            [Point((6, 6)), Point((6, 8)), Point((8, 8)), Point((8, 6))]]) 
         holes = p.holes
-        self.assertEquals(len(holes), 8)
+        self.assertEquals(len(holes), 2)
 
     def test_parts1(self):
         """
