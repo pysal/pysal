@@ -1,4 +1,5 @@
 import numpy as num
+import numpy.linalg as la
 class Markov:
     """Classic Markov transition matrices"""
     def __init__(self,trans,classes=[]):
@@ -15,6 +16,10 @@ class Markov:
         matrix([[ 0.25      ,  0.5       ,  0.25      ],
                 [ 0.33333333,  0.        ,  0.66666667],
                 [ 0.33333333,  0.33333333,  0.33333333]])
+        >>> m.steady_state
+        matrix([[ 0.30769231],
+                [ 0.28846154],
+                [ 0.40384615]])
         """
 
         if classes:
@@ -43,6 +48,16 @@ class Markov:
         row_sum=transitions.sum(axis=1)
         p=num.dot(num.diag(1/(row_sum+(row_sum==0))),transitions)
         self.p=num.matrix(p)
+
+        # steady_state vector 
+
+        v,d=la.eig(num.transpose(self.p))
+        # for a regular P maximum eigenvalue will be 1
+        mv=max(v)
+        # find its position
+        i=v.tolist().index(mv)
+        # normalize eigenvector corresponding to the eigenvalue 1
+        self.steady_state= d[:,i]/sum(d[:,i])
 
                 
 def _test():
