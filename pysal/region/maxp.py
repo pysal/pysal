@@ -310,6 +310,45 @@ class Maxp:
         self.wss_perm[0]=self.wss
         
 def check_contiguity(w,neighbors,leaver):
+    """Check if contiguity is maintained if leaver is removed from neighbors
+
+
+    Parameters
+    ==========
+
+    w: spatial weights object
+        simple contiguity based weights
+
+    neighbors: list
+        nodes that are to be checked if they form a single connected component
+
+    leaver: id
+        a member of neighbors to check for removal
+
+
+    Returns
+    =======
+
+    True: if removing id from leaver does not break contiguity of remaing set
+        in neighbors
+
+    False: if removing id from neighbors breaks contiguity
+
+    Example
+    =======
+
+    >>> from pysal.weights import lat2gal
+    >>> w=lat2gal()
+    >>> check_contiguity(w,[0,1,2,3,4],4)
+    True
+    >>> check_contiguity(w,[0,1,2,3,4],3)
+    False
+    >>> check_contiguity(w,[0,1,2,3,4],0)
+    True
+    >>> check_contiguity(w,[0,1,2,3,4],1)
+    False
+    >>> 
+    """
     d={}
     g=Graph()
     for i in neighbors:
