@@ -317,7 +317,7 @@ class Azp:
             print sum(self.floor_variable[region]),self.floor
 
 
-        
+         
 def check_contiguity(w,neighbors,leaver):
     d={}
     g=Graph()
@@ -346,6 +346,7 @@ class Graph(object):
         self.edges={}
         self.cluster_lookup={}
         self.no_link={}
+
     def add_edge(self,n1,n2,w):
         self.nodes.add(n1)
         self.nodes.add(n2)
@@ -361,7 +362,6 @@ class Graph(object):
             for node in connected:
                 if node in nodes:
                     nodes.remove(node)
-
             subgraph=Graph()
             subgraph.nodes = connected
             subgraph.no_link = self.no_link
@@ -386,7 +386,7 @@ class Graph(object):
             visited=visited.union(y)
         return aux, visited
 
-            
+           
 
 if __name__ == '__main__':
 
