@@ -22,11 +22,8 @@ Available sub-packages
     cg/index
     esda/index
     open
+    weights/index
 
-core
-esda
-examples
-weights
 
 cg
     Basic data structures and tools for Computational Geometry
