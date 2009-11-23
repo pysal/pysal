@@ -14,6 +14,8 @@ cg
     Basic data structures and tools for Computational Geometry
 core
     Basic functions used by several sub-packages
+econometrics
+    Spatial econometrics
 esda
     Tools for Exploratory Spatial Data Analysis
 examples
@@ -30,6 +32,7 @@ __version__
 """
 import cg
 import core
+import econometrics
 import esda
 import inequality
 import markov
