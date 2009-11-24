@@ -10,6 +10,7 @@ import scipy.stats as stats
 import numpy.linalg as la
 import pysal
 
+
 def Jarque_Bera(y):
     """
     Jarque Bera test for Normality
@@ -20,7 +21,7 @@ def Jarque_Bera(y):
         variable to test for normality
 
     Returns
-    -------
+    ------- 
     results : dict
         jb : float
             value of the statistic
@@ -44,8 +45,15 @@ def Jarque_Bera(y):
 class Ols:
     """
     Ordinary Least Squares Estimation.
-    
-    
+
+    Parameters
+    ----------
+    y : array
+        dependent variable
+    X : array
+        explanatory variables (including constant as first column)
+
+     
     Attributes
     ----------
     tss : float
@@ -81,40 +89,27 @@ class Ols:
     r2a : float
         adjusted r2
 
-    
+    Examples
+    --------
+    >>> db=pysal.open("../examples/columbus.dbf","r")
+    >>> var_names=db.header
+    >>> data=num.array(db[:])
+    >>> y=data[:,var_names.index("CRIME")]
+    >>> X=data[:,[var_names.index(v) for v in ["INC","HOVAL"]]]
+    >>> X=num.hstack((num.ones((db.n_records,1)),X))
+    >>> ols=Ols(y,X)
+    >>> ols.b
+    array([ 68.6189611 ,  -1.59731083,  -0.27393148])
+    >>> ols.t
+    array([ 14.49037314,  -4.78049619,  -2.65440864])
+    >>> ols.r2
+    0.55240404083742323
+    >>> ols.r2a
+    0.53294334696078938
+    >>> ols.sig2
+    130.75853773444271
     """
     def __init__(self, y, X):
-        """
-
-        Parameters
-        ----------
-        y : array
-            dependent variable
-        X : array
-            explanatory variables (including constant as first column)
-
-
-        Examples
-        --------
-
-        >>> db=pysal.open("../examples/columbus.dbf","r")
-        >>> var_names=db.header
-        >>> data=num.array(db[:])
-        >>> y=data[:,var_names.index("CRIME")]
-        >>> X=data[:,[var_names.index(v) for v in ["INC","HOVAL"]]]
-        >>> X=num.hstack((num.ones((db.n_records,1)),X))
-        >>> ols=Ols(y,X)
-        >>> ols.b
-        array([ 68.6189611 ,  -1.59731083,  -0.27393148])
-        >>> ols.t
-        array([ 14.49037314,  -4.78049619,  -2.65440864])
-        >>> ols.r2
-        0.55240404083742323
-        >>> ols.r2a
-        0.53294334696078938
-        >>> ols.sig2
-        130.75853773444271
-        """
         XT=num.transpose(X)
         xx=num.dot(XT,X)
         ixx=la.inv(xx)
