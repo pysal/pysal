@@ -21,6 +21,7 @@ Available sub-packages
 
     cg/index
     esda/index
+    econometrics/index
     open
     weights/index
 
@@ -29,6 +30,8 @@ cg
     Basic data structures and tools for Computational Geometry
 core
     Basic functions used by several sub-packages
+econometrics
+    Spatial econometrics
 esda
     Tools for Exploratory Spatial Data Analysis
 examples
