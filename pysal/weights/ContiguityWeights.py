@@ -1,4 +1,6 @@
 import pysal
+import numpy as num
+import scipy as sci
 try:
     from _contW_rtree import ContiguityWeights_rtree as ContiguityWeights
 except ImportError:
@@ -22,6 +24,19 @@ def _make_weights(geo,wt_type):
         raise TypeError, "Argument must be a FileIO handler or connection string"
     w = ContiguityWeights(geoObj,wt_type)
     return pysal.weights.W.fromBinary(w.w)
+
+def regime_weights(regimes):
+    region_ids=list(set(regimes))
+    regimes=num.array(regimes)
+    regions=[num.nonzero(regimes==region)[0] for region in region_ids]
+    neighbors={}
+    weights={}
+    for region in regions:
+        for i in region:
+            neighbors[i]=[j for j in region if j!=i]
+            weights[i]=[1]*len(neighbors[i])
+
+    return (neighbors,weights)
 
 if __name__ == '__main__':
     r = rook('../examples/10740.shp')

@@ -238,14 +238,14 @@ class W(object):
             >>> y
             array([   0,   10,  100, 1000])
             >>> yl
-            array([  10,  100, 1010,  100])
+            array([   10.,   100.,  1010.,   100.])
             >>> y1=y[[1,0,3,2]]
             >>> y1
             array([  10,    0, 1000,  100])
             >>> w.id_order=['b','a','d','c']
             >>> y1l=w.lag(y1)
             >>> y1l
-            array([ 100,   10,  100, 1010])
+            array([  100.,    10.,   100.,  1010.])
             >>> 
         """
 
@@ -318,34 +318,15 @@ class W(object):
         >>> y=num.arange(9)
         >>> yl=w.lag(y)
         >>> yl
-        array([ 4,  6,  6, 10, 16, 14, 10, 18, 12])
+        array([  4.,   6.,   6.,  10.,  16.,  14.,  10.,  18.,  12.])
         >>> w.transform='w'
-        >>> yl=w.lag(y)
-        >>> yl
-        array([1, 1, 2, 3, 2, 3, 4, 5, 5])
-        >>> 
-        >>> y=num.arange(4)
-        >>> w=lat2gal(1,4)
-        >>> yl=w.lag(y)
-        >>> yl
-        array([1, 2, 4, 2])
-        >>> y
-        array([0, 1, 2, 3])
-        >>> y[0]=2
-        >>> y[2]=0
-        >>> y
-        array([2, 1, 0, 3])
-        >>> w.id_order=[2,1,0,3]
-        >>> yl1=w.lag(y)
-        >>> yl1
-        array([4, 2, 1, 2])
         """
         if self.n !=len(y):
             print 'w.lag(y):  w and y not conformable'
             return 0
         else:
             self.refresh()
-            yl=num.zeros(y.shape,y.dtype)
+            yl=num.zeros(y.shape,'float')
             for i,wi in enumerate(self):
                 for j,wij in wi.items():
                     yl[i]+=wij*y[self.id_order.index(j)]
@@ -815,7 +796,69 @@ def lat2gal(nrows=5,ncols=5,rook=True):
     d['weights']=weights
     return W(d)
 
-    
+def regime_weights(regimes):
+    """Construct spatial weights for regime neighbors.
+
+    Block contiguity structures are relevant when defining neighbor relations
+    based on membership in a regime. For example, all counties belonging to
+    the same state could be defined as neighbors.
+
+    Arguments
+    =========
+    regimes - list or array
+           ids of which regime an observation belongs to
+
+    Returns
+    =======
+
+    W - spatial weights instance
+
+    Example
+    =======
+    >>> regimes=num.ones(25)
+    >>> regimes[range(10,20)]=2
+    >>> regimes[range(21,25)]=3
+    >>> regimes
+    array([ 1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  2.,  2.,  2.,
+            2.,  2.,  2.,  2.,  2.,  2.,  2.,  1.,  3.,  3.,  3.,  3.])
+    >>> w=regime_weights(regimes)
+    >>> w.weights[0]
+    [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    >>> w.neighbors[0]
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 20]
+    >>> y=num.arange(25)
+    >>> w.lag(y)
+    array([  65.,   64.,   63.,   62.,   61.,   60.,   59.,   58.,   57.,
+             56.,  135.,  134.,  133.,  132.,  131.,  130.,  129.,  128.,
+            127.,  126.,   45.,   69.,   68.,   67.,   66.])
+    >>> w.transform='w'
+    >>> w.lag(y)
+    array([  6.5       ,   6.4       ,   6.3       ,   6.2       ,
+             6.1       ,   6.        ,   5.9       ,   5.8       ,
+             5.7       ,   5.6       ,  15.        ,  14.88888889,
+            14.77777778,  14.66666667,  14.55555556,  14.44444444,
+            14.33333333,  14.22222222,  14.11111111,  14.        ,
+             4.5       ,  23.        ,  22.66666667,  22.33333333,  22.        ])
+    >>> regimes=['n','n','s','s','e','e','w','w','e']
+    >>> n=len(regimes)
+    >>> w=regime_weights(regimes)
+    >>> w.neighbors
+    {0: [1], 1: [0], 2: [3], 3: [2], 4: [5, 8], 5: [4, 8], 6: [7], 7: [6], 8: [4, 5]}
+    >>> y=num.arange(n)
+    >>> w.lag(y)
+    array([  1.,   0.,   3.,   2.,  13.,  12.,   7.,   6.,   9.])
+    """ 
+    region_ids=list(set(regimes))
+    regimes=num.array(regimes)
+    regions=[num.nonzero(regimes==region)[0] for region in region_ids]
+    neighbors={}
+    weights={}
+    for region in regions:
+        for i in region:
+            neighbors[i]=[j for j in region if j!=i]
+            weights[i]=[1.]*len(neighbors[i])
+
+    return W({'neighbors':neighbors,'weights':weights})
 
 class __TestWeights(unittest.TestCase):
 
