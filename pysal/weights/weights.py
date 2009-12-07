@@ -798,16 +798,6 @@ def lat2gal(nrows=5,ncols=5,rook=True):
 
 def regime_weights(regimes):
     """Construct spatial weights for regime neighbors.
-    """ 
-    region_ids=list(set(regimes))
-    regimes=num.array(regimes)
-    regions=[num.nonzero(regimes==region)[0] for region in region_ids]
-    neighbors={}
-    weights={}
-    for region in regions:
-        for i in region:
-            neighbors[i]=[j for j in region if j!=i]
-            weights[i]=[1]*len(neighbors[i])
 
     Block contiguity structures are relevant when defining neighbor relations
     based on membership in a regime. For example, all counties belonging to
@@ -859,16 +849,53 @@ def regime_weights(regimes):
     array([  1.,   0.,   3.,   2.,  13.,  12.,   7.,   6.,   9.])
     """ 
     region_ids=list(set(regimes))
-    regimes=num.array(regimes)
-    regions=[num.nonzero(regimes==region)[0] for region in region_ids]
+    regime=num.array(regimes)
     neighbors={}
     weights={}
+    ids=num.arange(len(regimes))
+    regions=[ids[regime==region] for region in region_ids]
+    n=len(regimes)
+    neighbors={}
+    for i in xrange(n):
+        neighbors[i]=[]
     for region in regions:
-        for i in region:
-            neighbors[i]=[j for j in region if j!=i]
-            weights[i]=[1.]*len(neighbors[i])
-
+        for i,j in comb(region.tolist(),2):
+            neighbors[i].append(j)
+            neighbors[j].append(i)
+    weights={}
+    for i,nn in neighbors.items():
+        weights[i]=[1.]*len(nn)
     return W({'neighbors':neighbors,'weights':weights})
+
+
+
+def comb(items, n=None):
+    """Combinations of size n taken from items
+
+
+    Arguments
+    =========
+
+    items : sequence
+
+    n : integer
+        size of combinations to take from items
+
+    Returns
+    =======
+
+    generator of combinations of size n taken from items
+    """
+    if n is None:
+        n=len(items)
+    for i in range(len(items)):
+        v=items[i:i+1]
+        if n==1:
+            yield v
+        else:
+            rest = items[i+1:]
+            for c in comb(rest, n-1):
+                yield v + c
 
 class __TestWeights(unittest.TestCase):
 
