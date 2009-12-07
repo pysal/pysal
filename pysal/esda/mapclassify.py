@@ -253,6 +253,7 @@ class Map_Classifier:
         self.name='Map Classifier'
         self.y=y
         self._classify()
+        self.summary()
 
     def summary(self):
         yb=self.yb

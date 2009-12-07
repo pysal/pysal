@@ -798,6 +798,16 @@ def lat2gal(nrows=5,ncols=5,rook=True):
 
 def regime_weights(regimes):
     """Construct spatial weights for regime neighbors.
+    """ 
+    region_ids=list(set(regimes))
+    regimes=num.array(regimes)
+    regions=[num.nonzero(regimes==region)[0] for region in region_ids]
+    neighbors={}
+    weights={}
+    for region in regions:
+        for i in region:
+            neighbors[i]=[j for j in region if j!=i]
+            weights[i]=[1]*len(neighbors[i])
 
     Block contiguity structures are relevant when defining neighbor relations
     based on membership in a regime. For example, all counties belonging to
