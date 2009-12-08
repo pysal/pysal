@@ -855,7 +855,6 @@ def regime_weights(regimes):
     ids=num.arange(len(regimes))
     regions=[ids[regime==region] for region in region_ids]
     n=len(regimes)
-    neighbors={}
     for i in xrange(n):
         neighbors[i]=[]
     for region in regions:
@@ -867,11 +866,8 @@ def regime_weights(regimes):
         weights[i]=[1.]*len(nn)
     return W({'neighbors':neighbors,'weights':weights})
 
-
-
 def comb(items, n=None):
     """Combinations of size n taken from items
-
 
     Arguments
     =========
