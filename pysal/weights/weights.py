@@ -37,9 +37,9 @@ class W(object):
         """Construct a spatial weights object
 
         Parameters
-        ==========
+        ----------
 
-        data: dictionary with two entries
+        data : dictionary with two entries
             neighbors: list of neighbors
             weights: list of weights
 
@@ -56,47 +56,48 @@ class W(object):
             binary.
 
 
-        Attributes:
-        ===========
 
-        asymmetric: Flag for any asymmetries (see
+        Attributes
+        ----------
+
+        asymmetric : Flag for any asymmetries (see
         method asymmetry for details), false if none.
 
-        cardinalities: dictionary of cardinalities 
+        cardinalities : dictionary of cardinalities 
 
-        islands: list of ids that have no neighbors
+        islands : list of ids that have no neighbors
 
-        max_neighbors: maximum cardinality (int)
+        max_neighbors : maximum cardinality (int)
 
-        min_neighbors: minimum cardinality (int)
+        min_neighbors : minimum cardinality (int)
 
-        mean_neighbors: average cardinality (float)
+        mean_neighbors : average cardinality (float)
 
-        n: number of observations (int)
+        n : number of observations (int)
 
         neighbors: dictionary of neighbor ids. key is observation id
         and value is list of neighboring observation ids, with position
         corresponding to the same position in weights (see weights)
 
-        nonzero: number of nonzero weights
+        nonzero : number of nonzero weights
 
-        pct_nonzero: percentage of all weights that are nonzero
+        pct_nonzero : percentage of all weights that are nonzero
 
-        s0: sum of all weights 
+        s0 : sum of all weights 
 
-        s1: trace of ww
+        s1 : trace of ww
 
-        s2: trace of w'w
+        s2 : trace of w'w
 
-        sd: standard deviation of number of neighbors (float)
+        sd : standard deviation of number of neighbors (float)
 
-        transform: property for weights transformation. can be used to
+        transform : property for weights transformation. can be used to
         get and set weights transformation. 
 
-        transformations: dictionary of transformed weights. key is
+        transformations : dictionary of transformed weights. key is
         transformation type, value are weights
 
-        weights: dictionary of currently specified transformed
+        weights : dictionary of currently specified transformed
         weights. key is observation id, value is list of transformed
         weights in order of neighbor ids (see neighbors).
 
@@ -937,6 +938,3 @@ if __name__ == "__main__":
             runner.run(suite)
     # regular unittest
     unittest.main()
-
-
-
