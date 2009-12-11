@@ -24,4 +24,3 @@ for mod in get_modules(pysal):
         print "No Tests in module: ",mod
 runner = unittest.TextTestRunner()
 runner.run(suite)
-
