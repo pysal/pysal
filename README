@@ -5,9 +5,9 @@ Dependencies:
 =============================================================================
 Python 2.5+
 
-Numpy
+Numpy 1.3+
 
-Scipy
+Scipy 0.7+
 
 spatialindex 1.3.0 (Rtree dependency)
 http://trac.gispython.org/spatialindex
