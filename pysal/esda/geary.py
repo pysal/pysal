@@ -20,6 +20,9 @@ class Geary:
 
         w: weight instance assumed to be aligned with y
 
+        observation_ids: sequence of ids for observations associated with
+        indices in y
+
         transformation: weights transformation, default is row-standardized
         "W". Other options include "B": binary, "D": doubly-standardized, "U":
             untransformed (general weights), "V": variance-stabilizing.
@@ -78,12 +81,16 @@ class Geary:
         0.00076052983736881971
         >>> 
     """
-    def __init__(self,y,w,transformation="B",permutations=PERMUTATIONS):
+    def __init__(self,y,w,observation_ids=[],transformation="B",permutations=PERMUTATIONS):
         self.n=len(y)
         self.y=y
         w.transform=transformation
         self.w=w
         self.permutations=permutations
+        if observation_ids:
+            self.observation_ids=observation_ids
+        else:
+            self.observation_ids=range(len(y))
         self.__moments()
         xn=xrange(len(y))
         self.xn=xn
@@ -139,9 +146,10 @@ class Geary:
         y2=y**2
         for i in self.w.weights:
             neighbors=self.w.neighbors[i]
+            neighbors=[self.observation_ids.index(ni) for ni in neighbors]
             wijs=self.w.weights[i]
             z=zip(neighbors,wijs)
-            ys[i] = sum([wij*(y2[i] - 2*y[i]*y[j] + y2[j]) for j,wij in z])
+            ys[self.observation_ids.index(i)] = sum([wij*(y2[i] - 2*y[i]*y[j] + y2[j]) for j,wij in z])
         a= (self.n-1)* sum(ys)
         return a/self.den
 
