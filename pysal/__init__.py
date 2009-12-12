@@ -46,3 +46,5 @@ import pysal.core._FileIO # Load IO inheritors
 
 open = pysal.core.FileIO.FileIO
 __version__ = '1.0.0rc1'
+
+

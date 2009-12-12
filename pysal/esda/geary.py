@@ -8,10 +8,7 @@ Author(s):
 
 
 """
-import numpy as num
-import scipy.stats as stats
-import  math
-import unittest
+from pysal.common import *
 
 PERMUTATIONS=999
 
@@ -73,7 +70,7 @@ class Geary:
         >>> import pysal
         >>> w=pysal.open("../examples/book.gal").read()
         >>> f=pysal.open("../examples/book.txt")
-        >>> y=num.array(f.by_col['y'])
+        >>> y=np.array(f.by_col['y'])
         >>> c=Geary(y,w,permutations=0)
         >>> c.C
         0.33281733746130032
@@ -105,12 +102,12 @@ class Geary:
 
         
         if permutations:
-            sim=[self.__calc(num.random.permutation(self.y)) \
+            sim=[self.__calc(np.random.permutation(self.y)) \
                  for i in xrange(permutations)]
             self.sim=sim
             self.p_sim =(sum(sim>=self.C)+1)/(permutations+1.)
             self.EC_sim=sum(sim)/permutations
-            self.seC_sim=num.array(sim).std()
+            self.seC_sim=np.array(sim).std()
             self.VC_sim=self.seC_sim**2
             self.z_sim = (self.C - self.EC_sim)/self.seC_sim
             self.p_z_sim = stats.norm.pdf(self.z_sim)
@@ -138,7 +135,7 @@ class Geary:
 
     
     def __calc(self,y):
-        ys=num.zeros(y.shape)
+        ys=np.zeros(y.shape)
         y2=y**2
         for i in self.w.weights:
             neighbors=self.w.neighbors[i]
@@ -158,7 +155,7 @@ class __TestC(unittest.TestCase):
         import pysal
         w=pysal.open("../examples/book.gal").read()
         f=pysal.open("../examples/book.txt")
-        y=num.array(f.by_col['y'])
+        y=np.array(f.by_col['y'])
         c=Geary(y,w,permutations=0)
         v="%6.5f"%c.C
         self.assertEquals(v,'0.33282')

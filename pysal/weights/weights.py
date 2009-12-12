@@ -5,13 +5,7 @@ Spatial weights for PySAL
 
 __author__  = "Sergio J. Rey <srey@asu.edu> "
 
-import unittest
-import numpy as num
-import numpy.linalg as la
-import time
-import math
-import pysal
-import copy
+from pysal.common import *
 
 # constant for precision
 DELTA = 0.0000001
@@ -233,7 +227,7 @@ class W(object):
         Example:
             >>> neighbors={'a': ['b'],'b':['a','c'],'c':['b','d'], 'd':['c']}
             >>> w=W(neighbors)
-            >>> y=num.array([0,10,100,1000])
+            >>> y=np.array([0,10,100,1000])
             >>> w.id_order=['a','b','c','d']
             >>> yl=w.lag(y)
             >>> y
@@ -316,7 +310,7 @@ class W(object):
         Example:
 
         >>> w=lat2gal(3,3)
-        >>> y=num.arange(9)
+        >>> y=np.arange(9)
         >>> yl=w.lag(y)
         >>> yl
         array([  4.,   6.,   6.,  10.,  16.,  14.,  10.,  18.,  12.])
@@ -327,7 +321,7 @@ class W(object):
             return 0
         else:
             self.refresh()
-            yl=num.zeros(y.shape,'float')
+            yl=np.zeros(y.shape,'float')
             for i,wi in enumerate(self):
                 for j,wij in wi.items():
                     yl[i]+=wij*y[self.id_order.index(j)]
@@ -504,7 +498,7 @@ class W(object):
         cardinalities = cardinalities.values()
         self.max_neighbors=max(cardinalities)
         self.min_neighbors=min(cardinalities)
-        self.sd=num.std(cardinalities)
+        self.sd=np.std(cardinalities)
         self.mean_neighbors=sum(cardinalities)/(n*1.)
         self.n=n
         self.pct_nonzero=nonzero/(1.0*n*n)
@@ -589,7 +583,7 @@ class W(object):
             >>> ids
             ['second', 'third', 'first']
         """
-        w=num.zeros([self.n,self.n],dtype=float)
+        w=np.zeros([self.n,self.n],dtype=float)
         keys=self.neighbors.keys()
         for i,key in enumerate(keys):
             n_i=self.neighbors[key]
@@ -816,7 +810,7 @@ def regime_weights(regimes):
 
     Example
     =======
-    >>> regimes=num.ones(25)
+    >>> regimes=np.ones(25)
     >>> regimes[range(10,20)]=2
     >>> regimes[range(21,25)]=3
     >>> regimes
@@ -827,7 +821,7 @@ def regime_weights(regimes):
     [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
     >>> w.neighbors[0]
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 20]
-    >>> y=num.arange(25)
+    >>> y=np.arange(25)
     >>> w.lag(y)
     array([  65.,   64.,   63.,   62.,   61.,   60.,   59.,   58.,   57.,
              56.,  135.,  134.,  133.,  132.,  131.,  130.,  129.,  128.,
@@ -845,15 +839,15 @@ def regime_weights(regimes):
     >>> w=regime_weights(regimes)
     >>> w.neighbors
     {0: [1], 1: [0], 2: [3], 3: [2], 4: [5, 8], 5: [4, 8], 6: [7], 7: [6], 8: [4, 5]}
-    >>> y=num.arange(n)
+    >>> y=np.arange(n)
     >>> w.lag(y)
     array([  1.,   0.,   3.,   2.,  13.,  12.,   7.,   6.,   9.])
     """ 
     region_ids=list(set(regimes))
-    regime=num.array(regimes)
+    regime=np.array(regimes)
     neighbors={}
     weights={}
-    ids=num.arange(len(regimes))
+    ids=np.arange(len(regimes))
     regions=[ids[regime==region] for region in region_ids]
     n=len(regimes)
     for i in xrange(n):

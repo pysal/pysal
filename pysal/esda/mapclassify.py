@@ -29,12 +29,7 @@ To Do:
 __author__ = "Sergio J. Rey"
 __credits__= "Copyright (c) 2009 Sergio J. Rey"
 
-import numpy as num
-import scipy.stats as stats
-import pysal
-import scipy as sci
-import copy
-import sys
+from pysal.common import *
 
 K=5 # default number of classes in any map scheme with this as an argument
 
@@ -55,7 +50,7 @@ def quantile(y,k=4):
 
     Examples
     --------
-    >>> x=num.arange(1000)
+    >>> x=np.arange(1000)
     >>> quantile(x)
     array([ 249.75,  499.5 ,  749.25,  999.  ])
     >>> quantile(x,k=3)
@@ -63,10 +58,10 @@ def quantile(y,k=4):
     >>> 
     """
     w=100./k
-    p=num.arange(w,100+w,w)
+    p=np.arange(w,100+w,w)
     if p[-1] > 100.0:
         p[-1]=100.0
-    return num.array([stats.scoreatpercentile(y,pct) for pct in p])
+    return np.array([stats.scoreatpercentile(y,pct) for pct in p])
 
 def binC(y,bins):
     """Bin categorical/qualitative data
@@ -85,8 +80,8 @@ def binC(y,bins):
 
     Examples
     --------
-    >>> num.random.seed(1)
-    >>> x=num.random.randint(2,8,(10,3))
+    >>> np.random.seed(1)
+    >>> x=np.random.randint(2,8,(10,3))
     >>> bins=range(2,8)
     >>> x
     array([[7, 5, 6],
@@ -114,14 +109,14 @@ def binC(y,bins):
     >>> 
     """
 
-    if num.rank(y) == 1:
+    if np.rank(y) == 1:
         k=1
-        n=num.shape(y)[0]
+        n=np.shape(y)[0]
     else:
-        n,k=num.shape(y)
-    b=num.zeros((n,k),dtype='int')
+        n,k=np.shape(y)
+    b=np.zeros((n,k),dtype='int')
     for i,bin in enumerate(bins):
-        b[num.nonzero(y==bin)]=i
+        b[np.nonzero(y==bin)]=i
 
     # check for non-binned items and print a warning if needed
     vals=set(y.flatten())
@@ -149,8 +144,8 @@ def bin(y,bins):
 
     Examples
     --------
-    >>> num.random.seed(1)
-    >>> x=num.random.randint(2,20,(10,3))
+    >>> np.random.seed(1)
+    >>> x=np.random.randint(2,20,(10,3))
     >>> bins=[10,15,20]
     >>> b=bin(x,bins)
     >>> x
@@ -177,12 +172,12 @@ def bin(y,bins):
            [0, 0, 2]])
     >>> 
     """
-    if num.rank(y) == 1:
+    if np.rank(y) == 1:
         k=1
-        n=num.shape(y)[0]
+        n=np.shape(y)[0]
     else:
-        n,k=num.shape(y)
-    b=num.zeros((n,k),dtype='int')
+        n,k=np.shape(y)
+    b=np.zeros((n,k),dtype='int')
     i=len(bins)
     if type(bins)!= list:
         bins=bins.tolist()
@@ -190,7 +185,7 @@ def bin(y,bins):
     while binsc:
         i-=1
         c=binsc.pop(-1)
-        b[num.nonzero(y<=c)]=i
+        b[np.nonzero(y<=c)]=i
     return b
 
 def bin1d(x,bins):
@@ -214,7 +209,7 @@ def bin1d(x,bins):
 
     Examples
     --------
-    >>> x=num.arange(100,dtype='float')
+    >>> x=np.arange(100,dtype='float')
     >>> bins=[25,74,100]
     >>> binIds,counts=bin1d(x,bins)
     >>> binIds
@@ -231,20 +226,20 @@ def bin1d(x,bins):
     right=bins
     cuts=zip(left,right)
     k=len(bins)
-    binIds=num.zeros(x.shape,dtype='int')
+    binIds=np.zeros(x.shape,dtype='int')
     while cuts:
         k-=1
         l,r=cuts.pop(-1)
         binIds+=(x>l)*(x<=r)*k
-    counts=num.bincount(binIds)
+    counts=np.bincount(binIds)
     return (binIds,counts)
 
 def load_example():
     """Helper function for doc tests"""
     import pysal
-    num.random.seed(10)
+    np.random.seed(10)
     dat=pysal.open('../examples/calempdensity.csv')
-    cal=num.array([record[-1] for record in dat])
+    cal=np.array([record[-1] for record in dat])
     return cal
 
 class Map_Classifier:
@@ -257,7 +252,7 @@ class Map_Classifier:
 
     def summary(self):
         yb=self.yb
-        self.classes=[num.nonzero(yb==c)[0].tolist() for c in range(self.k)]
+        self.classes=[np.nonzero(yb==c)[0].tolist() for c in range(self.k)]
         self.tss=self.get_tss()
         self.adcm=self.get_adcm()
 
@@ -291,8 +286,8 @@ class Map_Classifier:
         adcm=0
         for class_def in self.classes:
             yc=self.y[class_def]
-            yc_med=num.median(yc)
-            ycd=num.abs(yc-yc_med)
+            yc_med=np.median(yc)
+            ycd=np.abs(yc-yc_med)
             adcm+=sum(ycd)
         return adcm
 
@@ -397,7 +392,7 @@ class Equal_Interval(Map_Classifier):
         min_y=min(y)
         rg=max_y-min_y
         width=rg*1./k
-        cuts=num.arange(min_y+width,max_y+width,width)
+        cuts=np.arange(min_y+width,max_y+width,width)
         cuts[-1]=max_y
         bins=cuts.copy()
         self.bins=bins
@@ -444,7 +439,7 @@ class Percentiles(Map_Classifier):
     def _set_bins(self):
         y=self.y
         pct=self.pct
-        self.bins=num.array([stats.scoreatpercentile(y,p) for p in pct])
+        self.bins=np.array([stats.scoreatpercentile(y,p) for p in pct])
         self.k=len(self.bins)
 
 class Box_Plot(Map_Classifier):
@@ -496,7 +491,7 @@ class Box_Plot(Map_Classifier):
     >>> cal[bp.high_outlier_ids]
     array([  329.92,   181.27,   370.5 ,   722.85,   192.05,  4111.45,
              317.11,   264.93])
-    >>> bx=Box_Plot(num.arange(100))
+    >>> bx=Box_Plot(np.arange(100))
     >>> bx.bins
     array([ -50.25,   24.75,   49.5 ,   74.25,  149.25])
     """
@@ -528,13 +523,13 @@ class Box_Plot(Map_Classifier):
         else:
             bins[-1]=right_fence
         bins.insert(0,left_fence)
-        self.bins=num.array(bins)
+        self.bins=np.array(bins)
         self.k=len(pct)
 
     def _classify(self):
         Map_Classifier._classify(self)
-        self.low_outlier_ids=num.nonzero(self.yb==0)[0]
-        self.high_outlier_ids=num.nonzero(self.yb==5)[0]
+        self.low_outlier_ids=np.nonzero(self.yb==0)[0]
+        self.high_outlier_ids=np.nonzero(self.yb==5)[0]
 
 class Quantiles(Map_Classifier):
     """Quantile Map Classification
@@ -628,7 +623,7 @@ class Std_Mean(Map_Classifier):
         y_max=y.max()
         if cuts[-1] < y_max:
             cuts.append(y_max)
-        self.bins=num.array(cuts)
+        self.bins=np.array(cuts)
         self.k=len(cuts)
 
 class Maximum_Breaks(Map_Classifier):
@@ -674,22 +669,22 @@ class Maximum_Breaks(Map_Classifier):
         xs.sort()
         min_diff=self.mindiff
         d=xs[1:]-xs[:-1]
-        diffs=d[num.nonzero(d>min_diff)]
-        diffs=sci.unique(diffs)
+        diffs=d[np.nonzero(d>min_diff)]
+        diffs=sp.unique(diffs)
         k1=k-1
         if len(diffs) > k1:
             diffs=diffs[-k1:]
         mp=[]
         self.cids=[]
         for diff in diffs:
-            ids=num.nonzero(d==diff)
+            ids=np.nonzero(d==diff)
             for id in ids:
                 self.cids.append(id[0])
                 cp=((xs[id]+xs[id+1])/2.)
                 mp.append(cp[0])
         mp.append(xs[-1])
         mp.sort()
-        self.bins=num.array(mp)
+        self.bins=np.array(mp)
 
 class Natural_Breaks(Map_Classifier):
     """Natural Breaks Map Classification
@@ -729,22 +724,22 @@ class Natural_Breaks(Map_Classifier):
     def _set_bins(self):
         x=self.y.copy()
         k=self.k
-        seeds=num.random.permutation(x)[0:k]
+        seeds=np.random.permutation(x)[0:k]
         seeds.sort()
         mean0=seeds.copy()
         x.shape=(x.size,1)
-        d=num.abs(x-mean0)
-        nz=num.nonzero
-        c0=num.array([nz(row==row.min())[0][0] for row in d])
+        d=np.abs(x-mean0)
+        nz=np.nonzero
+        c0=np.array([nz(row==row.min())[0][0] for row in d])
         solving=True
         it=0
         while solving:
-            classes=sci.unique(c0)
+            classes=sp.unique(c0)
             mean1=[x[c0==c].mean() for c in classes]
-            d=num.abs(x-mean1)
-            c1=num.array([nz(row==row.min())[0][0] for row in d])
+            d=np.abs(x-mean1)
+            c1=np.array([nz(row==row.min())[0][0] for row in d])
             diff=c1==c0
-            test=sci.unique(c0)
+            test=sp.unique(c0)
             if diff.all():
                 solving=False
             elif len(test) < k:
@@ -753,10 +748,10 @@ class Natural_Breaks(Map_Classifier):
             else:
                 c0=c1
             it+=1
-        classes=sci.unique(c1)
+        classes=sp.unique(c1)
         #print classes
         cuts=[x[c1==c].max() for c in classes]
-        self.bins=num.array(cuts)
+        self.bins=np.array(cuts)
         self.iterations=it
 
 class Fisher_Jenks(Map_Classifier):
@@ -791,7 +786,7 @@ class Fisher_Jenks(Map_Classifier):
             d[i,i]=0.0
             for j in range(i+1,n):
                 c=x[range(i,j+1)]
-                cm=num.median(c)
+                cm=np.median(c)
                 d[i,j]=sum(abs(c-cm))
         self.d=d
         dmin=sum([d[key] for key in d])
@@ -801,7 +796,7 @@ class Fisher_Jenks(Map_Classifier):
         end=n
         interval=0,n-1
         classes=[interval]
-        med=num.median(x)
+        med=np.median(x)
         adcms=[sum([abs(xi-med) for xi in x])]
         adcm=sum(adcms)
         self.d[interval]=adcm
@@ -893,13 +888,13 @@ class Jenks_Caspall(Map_Classifier):
         if x.ndim==1:
             x.shape=(x.size,1)
         n,k=x.shape
-        xm=[ num.median(x[xb==i]) for i in num.unique(xb)]
+        xm=[ np.median(x[xb==i]) for i in np.unique(xb)]
         xb0=xb.copy()
         q=xm
         it=0
         rk=range(self.k)
         while solving:
-            xb=num.zeros(xb0.shape,int)
+            xb=np.zeros(xb0.shape,int)
             d=abs(x-q)
             xb=d.argmin(axis=1)
             if (xb0==xb).all():
@@ -907,9 +902,9 @@ class Jenks_Caspall(Map_Classifier):
             else:
                 xb0=xb
             it+=1
-            q=num.array([num.median(x[xb==i]) for i in rk])
-        cuts=[max(x[xb==i]) for i in sci.unique(xb)]
-        self.bins=num.array(cuts)
+            q=np.array([np.median(x[xb==i]) for i in rk])
+        cuts=[max(x[xb==i]) for i in sp.unique(xb)]
+        self.bins=np.array(cuts)
         self.iterations=it
 
 class Jenks_Caspall_Sampled(Map_Classifier):
@@ -937,7 +932,7 @@ class Jenks_Caspall_Sampled(Map_Classifier):
     Example Usage:
 
         >>> cal=load_example()
-        >>> x=num.random.random(100000)
+        >>> x=np.random.random(100000)
         >>> jc=Jenks_Caspall(x)
         >>> jcs=Jenks_Caspall_Sampled(x)
         >>> jc.bins
@@ -977,7 +972,7 @@ class Jenks_Caspall_Sampled(Map_Classifier):
         n=y.size
         if pct*n > 1000:
             pct = 1000./n
-        ids=num.random.random_integers(0,n-1,n*pct)
+        ids=np.random.random_integers(0,n-1,n*pct)
         yr=y[ids]
         yr[0]=max(y) # make sure we have the upper bound
         self.original_y=y
@@ -1050,10 +1045,10 @@ class Jenks_Caspall_Forced(Map_Classifier):
         if x.ndim==1:
             x.shape=(x.size,1)
         n,tmp=x.shape
-        xm=[ x[xb==i].mean() for i in num.unique(xb)]
+        xm=[ x[xb==i].mean() for i in np.unique(xb)]
         xb0=xb.copy()
         q=xm
-        xbar=num.array([ xm[xbi] for xbi in xb])
+        xbar=np.array([ xm[xbi] for xbi in xb])
         xbar.shape=(n,1)
         ss=x-xbar
         ss*=ss
@@ -1066,7 +1061,7 @@ class Jenks_Caspall_Forced(Map_Classifier):
             # try upward moves first
             moving_up=True
             while moving_up:
-                class_ids=sci.unique(xb)
+                class_ids=sp.unique(xb)
                 nk=[sum(xb==j) for j in class_ids]
                 candidates=nk[:-1]
                 i=0
@@ -1074,12 +1069,12 @@ class Jenks_Caspall_Forced(Map_Classifier):
                 while candidates: 
                     nki=candidates.pop(0)
                     if nki>1:
-                        ids=num.nonzero(xb==class_ids[i])
+                        ids=np.nonzero(xb==class_ids[i])
                         mover=max(ids[0])
                         tmp=xb.copy()
                         tmp[mover]=xb[mover]+1
-                        tm=[ x[tmp==j].mean() for j in sci.unique(tmp)]
-                        txbar=num.array([ tm[xbi] for xbi in tmp])
+                        tm=[ x[tmp==j].mean() for j in sp.unique(tmp)]
+                        txbar=np.array([ tm[xbi] for xbi in tmp])
                         txbar.shape=(n,1)
                         tss=x-txbar
                         tss*=tss
@@ -1094,7 +1089,7 @@ class Jenks_Caspall_Forced(Map_Classifier):
                     moving_up=False
             moving_down=True
             while moving_down:
-                class_ids=sci.unique(xb)
+                class_ids=sp.unique(xb)
                 nk=[sum(xb==j) for j in class_ids]
                 candidates=nk[1:]
                 i=1
@@ -1102,14 +1097,14 @@ class Jenks_Caspall_Forced(Map_Classifier):
                 while candidates:
                     nki=candidates.pop(0)
                     if nki>1:
-                        ids=num.nonzero(xb==class_ids[i])
+                        ids=np.nonzero(xb==class_ids[i])
                         mover=min(ids[0])
                         mover_class=xb[mover]
                         target_class=mover_class-1
                         tmp=xb.copy()
                         tmp[mover]=target_class
-                        tm=[ x[tmp==j].mean() for j in sci.unique(tmp)]
-                        txbar=num.array([ tm[xbi] for xbi in tmp])
+                        tm=[ x[tmp==j].mean() for j in sp.unique(tmp)]
+                        txbar=np.array([ tm[xbi] for xbi in tmp])
                         txbar.shape=(n,1)
                         tss=x-txbar
                         tss*=tss
@@ -1125,8 +1120,8 @@ class Jenks_Caspall_Forced(Map_Classifier):
             if not up_moves and not down_moves:
                 solving=False
             it+=1
-        cuts=[max(x[xb==i]) for i in sci.unique(xb)]
-        self.bins=num.array(cuts)
+        cuts=[max(x[xb==i]) for i in sp.unique(xb)]
+        self.bins=np.array(cuts)
         self.iterations=it
 
 class User_Defined(Map_Classifier):
@@ -1159,7 +1154,7 @@ class User_Defined(Map_Classifier):
         if bins[-1] < max(y):
             bins.append(max(y))
         self.k=len(bins)
-        self.bins=num.array(bins)
+        self.bins=np.array(bins)
         self.y=y
         Map_Classifier.__init__(self,y)
         self.name='User Defined'
@@ -1209,11 +1204,11 @@ class Max_P(Map_Classifier):
         # find best of initial solutions
         solution=0
         best_tss=x.var()*x.shape[0]
-        tss_all=num.zeros((self.initial,1))
+        tss_all=np.zeros((self.initial,1))
         while solution < self.initial:
             remaining=range(n)
-            seeds=[num.nonzero(di==min(di))[0][0] for di in [num.abs(x-qi) for qi in q]]
-            rseeds=num.random.permutation(range(k)).tolist()
+            seeds=[np.nonzero(di==min(di))[0][0] for di in [np.abs(x-qi) for qi in q]]
+            rseeds=np.random.permutation(range(k)).tolist()
             tmp=[ remaining.remove(seed) for seed in seeds]
             self.classes=classes=[]
             tmp=[ classes.append([seed]) for seed in seeds ]
@@ -1258,7 +1253,7 @@ class Max_P(Map_Classifier):
         swapping=True
         it=0
         while swapping:
-            rseeds=num.random.permutation(range(k)).tolist()
+            rseeds=np.random.permutation(range(k)).tolist()
             total_moves=0
             while rseeds:
                 id=rseeds.pop()

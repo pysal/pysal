@@ -1,6 +1,5 @@
 import pysal
-import numpy as num
-import scipy as sci
+
 try:
     from _contW_rtree import ContiguityWeights_rtree as ContiguityWeights
 except ImportError:

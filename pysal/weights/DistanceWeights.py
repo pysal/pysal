@@ -9,10 +9,7 @@ __author__  = "Sergio J. Rey <srey@asu.edu> "
 
 
 from pysal.weights import W
-from scipy.spatial import distance_matrix
-from scipy.spatial import KDTree
-import numpy
-
+from pysal.common import *
 
 class InverseDistance(W):
     """Creates spatial weights based on inverse distance """
@@ -34,10 +31,10 @@ class InverseDistance(W):
             (default) False if not
 
         Example Usage:
-            >>> x,y=numpy.indices((5,5))
+            >>> x,y=np.indices((5,5))
             >>> x.shape=(25,1)
             >>> y.shape=(25,1)
-            >>> data=numpy.hstack([x,y])
+            >>> data=np.hstack([x,y])
             >>> wid=InverseDistance(data)
             >>> wid_ns=InverseDistance(data,row_standardize=False)
             >>> wid.weights[0][0:3]
@@ -56,18 +53,18 @@ class InverseDistance(W):
     def _distance(self):
         dmat=distance_matrix(self.data,self.data,self.p)
         n,k=dmat.shape
-        imat=numpy.identity(n)
+        imat=np.identity(n)
         self.dmat=(dmat+imat)**(-self.p) - imat
         self.n=n
 
     def _distance_to_W(self):
         neighbors={}
         weights={}
-        ids=numpy.arange(self.n)
+        ids=np.arange(self.n)
         
         for i,row in enumerate(self.dmat):
             weights[i]=row.tolist()
-            neighbors[i]=numpy.nonzero(ids!=0)[0].tolist()
+            neighbors[i]=np.nonzero(ids!=0)[0].tolist()
 
         return {"neighbors":neighbors,"weights":weights}
         
@@ -92,10 +89,10 @@ class NearestNeighbors(W):
 
 
         Example Usage:
-            >>> x,y=numpy.indices((5,5))
+            >>> x,y=np.indices((5,5))
             >>> x.shape=(25,1)
             >>> y.shape=(25,1)
-            >>> data=numpy.hstack([x,y])
+            >>> data=np.hstack([x,y])
             >>> wnn2=NearestNeighbors(data,k=2)
             >>> wnn4=NearestNeighbors(data,k=4)
             >>> wnn4.neighbors[0]

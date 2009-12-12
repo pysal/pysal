@@ -12,11 +12,9 @@ To Do:
     - parallelize
     
 """
-import random
 import pysal
-import numpy as num
-import copy
 from components import check_contiguity
+from pysal.common import *
 
 LARGE=10**6
 MAX_ATTEMPTS=100
@@ -69,11 +67,11 @@ class Maxp:
         >>> import random
         >>> import numpy as num
         >>> random.seed(100)
-        >>> num.random.seed(100)
+        >>> np.random.seed(100)
         >>> w=pysal.weights.weights.lat2gal(10,10)
-        >>> z=num.random.random_sample((w.n,2))
-        >>> p=num.random.random(w.n)*100
-        >>> p=num.ones((w.n,1),float)
+        >>> z=np.random.random_sample((w.n,2))
+        >>> p=np.random.random(w.n)*100
+        >>> p=np.ones((w.n,1),float)
         >>> floor=3
         >>> solution=Maxp(w,z,floor,floor_variable=p,initial=100)
         >>> solution.p
@@ -194,7 +192,7 @@ class Maxp:
         while swapping:
             moves_made=0
             regionIds=[r for r in nr if changed_regions[r]] 
-            num.random.permutation(regionIds)
+            np.random.permutation(regionIds)
             changed_regions=[0]*self.k
             swap_iteration+=1
             for seed in regionIds:
@@ -222,7 +220,7 @@ class Maxp:
                         local_swapping=False
                     else:
                         nc=len(candidates)
-                        moves=num.zeros([nc,1],float)
+                        moves=np.zeros([nc,1],float)
                         best=None
                         cv=0.0
                         for area in candidates:
@@ -284,20 +282,20 @@ class Maxp:
         for region in solution:
             m=self.z[region,:]
             var=m.var(axis=0)
-            wss+=sum(num.transpose(var))*len(region)
+            wss+=sum(np.transpose(var))*len(region)
         return wss
 
     def inference(self,nperm=99):
         # compare the within sum of squares for the solution against nperm
         # solutions where areas are randomly assigned to regions
-        ids=num.arange(self.w.n)
+        ids=np.arange(self.w.n)
         regs=self.regions
-        wsss=num.zeros(nperm+1)
+        wsss=np.zeros(nperm+1)
         self.wss=self.objective_function()
         cv=1
         c=1
         for solution in range(nperm):
-            ids=num.random.permutation(ids)
+            ids=np.random.permutation(ids)
             r=[ids[reg] for reg in regs]
             wss=self.objective_function(r)
             wsss[c]=wss

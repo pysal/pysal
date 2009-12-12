@@ -5,10 +5,7 @@ Classic (a-spatial) Econometric  methods for PySAL
 
 __author__  = "Sergio J. Rey <srey@asu.edu>"
 
-import numpy as num
-import scipy.stats as stats
-import numpy.linalg as la
-import pysal
+from pysal.common import *
 
 
 def Jarque_Bera(y):
@@ -33,7 +30,7 @@ def Jarque_Bera(y):
     y3=sum(yd**3)
     y2=sum(yd*2)
     n=len(y)
-    s=num.sqrt(y2)
+    s=np.sqrt(y2)
     S=(1/n)*(y3/(s**3))
     K=(1/n)*(sum(yd**4)/(s**4))
     jb=(n/6)*(S**2 + ((K-3)** 2)/4)
@@ -91,12 +88,13 @@ class Ols:
 
     Examples
     --------
+    >>> import pysal
     >>> db=pysal.open("../examples/columbus.dbf","r")
     >>> var_names=db.header
-    >>> data=num.array(db[:])
+    >>> data=np.array(db[:])
     >>> y=data[:,var_names.index("CRIME")]
     >>> X=data[:,[var_names.index(v) for v in ["INC","HOVAL"]]]
-    >>> X=num.hstack((num.ones((db.n_records,1)),X))
+    >>> X=np.hstack((np.ones((db.n_records,1)),X))
     >>> ols=Ols(y,X)
     >>> ols.b
     array([ 68.6189611 ,  -1.59731083,  -0.27393148])
@@ -110,19 +108,19 @@ class Ols:
     130.75853773444271
     """
     def __init__(self, y, X):
-        XT=num.transpose(X)
-        xx=num.dot(XT,X)
+        XT=np.transpose(X)
+        xx=np.dot(XT,X)
         ixx=la.inv(xx)
-        ixxx=num.dot(ixx,XT)
-        b=num.dot(ixxx,y)
-        yhat=num.dot(X,b)
+        ixxx=np.dot(ixx,XT)
+        b=np.dot(ixxx,y)
+        yhat=np.dot(X,b)
         e=y-yhat
         n,k=X.shape
         dof=n-k
-        ess=num.dot(num.transpose(e),e)
+        ess=np.dot(np.transpose(e),e)
         sig2=ess/dof
         yd=y-y.mean()
-        tss=num.dot(num.transpose(yd),yd)
+        tss=np.dot(np.transpose(yd),yd)
         self.tss=tss
         self.sig2=sig2
         self.sig2ml=ess/n
@@ -135,7 +133,7 @@ class Ols:
         self.b=b
         self.ixx=ixx
         self.bvcv=sig2*ixx
-        self.bse=num.sqrt(num.diag(self.bvcv))
+        self.bse=np.sqrt(np.diag(self.bvcv))
         self.t=b/self.bse
         self.r2=1.0-ess/tss
         self.r2a=1.-(1-self.r2)*(n-1)/(n-k)
