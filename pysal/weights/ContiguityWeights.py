@@ -9,6 +9,19 @@ except ImportError:
 QUEEN = 1
 ROOK = 2
 
+def rook_from_shapefile(filename,id_variable):
+    """ Arguments:
+            filename: path to shapefile
+            id_variable: Field name for the unique ID.
+    """
+    pass
+def queen_from_shapefile(filename,id_variable):
+    """ Arguments:
+            filename: path to shapefile
+            id_variable: Field name for the unique ID.
+    """
+    pass
+
 def queen(geo):
     return _make_weights(geo,QUEEN)
 def rook(geo):

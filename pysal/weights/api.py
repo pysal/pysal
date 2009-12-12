@@ -1,9 +1,9 @@
 from pysal import weights
 # should give us everything we need to do weights
 
-w_rook,ids=weights.rook_from_shapefile("file.shp", id_variable_name)
+w_rook,observation_ids=weights.rook_from_shapefile("file.shp", id_variable_name)
 
-w_queen=weights.queen_from_shapefile('file.shp', id_variable_name)
+w_queen,observation_ids=weights.queen_from_shapefile('file.shp', id_variable_name)
 
 w_regime=weights.regime(regime_variable, observation_ids)
 
