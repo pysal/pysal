@@ -6,6 +6,7 @@ try:
     import numpy.linalg as la
 except:
     print 'numpy 0.3+ is required'
+    raise
 
 try:
     import scipy as sp
@@ -14,6 +15,7 @@ try:
     from scipy.spatial import KDTree
 except:
     print 'scipy 0.7+ is required'
+    raise
 
 
 import copy
