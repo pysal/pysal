@@ -5,7 +5,7 @@ try:
     import numpy as np
     import numpy.linalg as la
 except:
-    print 'numpy 0.3 is required'
+    print 'numpy 1.3 is required'
     raise
 
 try:
