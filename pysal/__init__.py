@@ -27,8 +27,6 @@ Utilities
 ---------
 `fileio`_
     Tool for file input and output, supports many well known file formats
-__version__
-    PySAL version string
 """
 import cg
 import core
@@ -45,6 +43,5 @@ import pysal.core._FileIO # Load IO inheritors
 #Assign pysal.open to dispatcher
 
 open = pysal.core.FileIO.FileIO
-__version__ = '1.0.0rc1'
 
 
