@@ -20,10 +20,10 @@ def Jarque_Bera(y):
     Returns
     ------- 
     results : dict
-        jb : float
-            value of the statistic
-        pvalue: float
-            probability value for a chi-2 with 2 dof
+    jb : float
+        value of the statistic
+    pvalue : float
+        probability value for a chi-2 with 2 dof
     """
 
     yd=y-y.mean()
@@ -40,11 +40,11 @@ def Jarque_Bera(y):
 
 
 class Ols:
-    """
-    Ordinary Least Squares Estimation.
+    r"""Ordinary Least Squares Estimation.
 
     Parameters
     ----------
+
     y : array
         dependent variable
     X : array
@@ -53,6 +53,7 @@ class Ols:
      
     Attributes
     ----------
+
     tss : float
         Total sum of squares of dependent variable
     sig2 : float
