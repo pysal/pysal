@@ -18,9 +18,6 @@ class Moran:
 
         w: weight instance assumed to be aligned with y
 
-        observation_ids: sequence of ids for observations associated with
-        indices in y
-
         transformation: weights transformation, default is row-standardized
         "W". Other options include "B": binary, "D": doubly-standardized, "U":
             untransformed (general weights), "V": variance-stabilizing.
@@ -79,7 +76,7 @@ class Moran:
         >>> y=np.array(f.by_col['HR8893'])
         >>> mi=Moran(y,w)
         >>> mi.I
-        0.24365582621771661
+        0.24365582621771659
         >>> mi.EI
         -0.012987012987012988
         >>> mi.p_norm
@@ -87,21 +84,18 @@ class Moran:
         >>> 
         
     """
-    def __init__(self,y,w,observation_ids=[],transformation="W",permutations=PERMUTATIONS):
+    def __init__(self,y,w,transformation="W",permutations=PERMUTATIONS):
         self.y=y
         w.transform=transformation
         self.w=w
         self.permutations=permutations
-        if observation_ids:
-            self.observation_ids=observation_ids
-        else:
-            self.observation_ids=range(len(y))
         self.__moments()
         self.I = self.__calc(self.z)
         self.z_norm = (self.I - self.EI)/self.seI_norm
         self.p_norm = stats.norm.pdf(self.z_norm)
         self.z_rand = (self.I - self.EI)/self.seI_rand
         self.p_rand = stats.norm.pdf(self.z_rand)
+
 
         if permutations:
             sim=[self.__calc(np.random.permutation(self.z)) \
@@ -140,7 +134,7 @@ class Moran:
 
 
     def __calc(self,z):
-        zl=self.w.lag(z,self.observation_ids)
+        zl=self.w.lag(z)
         self.inum=sum(self.z*zl)
         return self.n/self.w.s0 * sum(self.z*zl)/self.z2ss
 
@@ -155,9 +149,6 @@ class Moran_BV:
         y2: n*1 array 
 
         w: weight instance assumed to be aligned with y
-
-        observation_ids: sequence of ids for observations associated with
-        indices in y
 
         transformation: weights transformation, default is row-standardized
         "W". Other options include "B": binary, "D": doubly-standardized, "U":
@@ -198,7 +189,7 @@ class Moran_BV:
         Inference is only based on permutations as analytical results are
         none too reliable.
     """
-    def __init__(self,y1,y2,w,observation_ids=[],transformation="W",permutations=PERMUTATIONS):
+    def __init__(self,y1,y2,w,transformation="W",permutations=PERMUTATIONS):
         self.y1=y1
         self.y2=y2
         self.w=w
@@ -208,10 +199,6 @@ class Moran_BV:
         self.z12ss=sum(z1*z1)
         z2=y2-y2.mean()
         z2/=y2.std()
-        if observation_ids:
-            self.observation_ids=observation_ids
-        else:
-            self.observation_ids=range(len(y1))
         self.I=self.__calc(z2)
         if permutations:
             nrp=np.random.permutation
@@ -226,13 +213,13 @@ class Moran_BV:
 
 
     def __calc(self,z2):
-        z2l=self.w.lag(z2,self.observation_ids)
+        z2l=self.w.lag(z2)
         self.inum=sum(self.z1,z2l)
         return sum(self.z1*z2l)/self.z12ss
 
 
 
-def Moran_BV_matrix(variables,w,observation_ids=[],permutations=0):
+def Moran_BV_matrix(variables,w,permutations=0):
     """Bivariate Moran Matrix
 
     Calculates bivariate Moran between all pairs of a set of variables.
@@ -270,9 +257,6 @@ class Moran_Local:
         y: n*1 array
 
         w: weight instance assumed to be aligned with y
-
-        observation_ids: sequence of ids for observations associated with
-        indices in y
 
         transformation: weights transformation, default is row-standardized
         "W". Other options include "B": binary, "D": doubly-standardized, "U":
@@ -316,17 +300,13 @@ class Moran_Local:
         same direction than original I statistic  for the focal observation.
 
     """
-    def __init__(self,y,w,observation_ids=[],transformation="W",permutations=PERMUTATIONS):
+    def __init__(self,y,w,transformation="W",permutations=PERMUTATIONS):
         self.y=y
         z=y-y.mean()
         z/=y.std()
         self.z=z
         w.transform=transformation
         self.w=w
-        if observation_ids:
-            self.observation_ids=observation_ids
-        else:
-            self.observation_ids=range(len(y))
         self.permutations=permutations
         self.den=sum(z*z)
         self.Is = self.__calc(self.z)
@@ -351,12 +331,12 @@ class Moran_Local:
             self.p_z_sim=stats.norm.pdf(self.z_sim)
 
     def __calc(self,z):
-        zl=self.w.lag(z,self.observation_ids)
+        zl=self.w.lag(z)
         num=self.z * zl
         return (len(zl)-1)*self.z*zl/self.den
     
     def __quads(self):
-        zl=self.w.lag(self.z,self.observation_ids)
+        zl=self.w.lag(self.z)
         zp=self.z>0
         lp=zl>0
         pp=zp*lp
