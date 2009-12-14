@@ -608,8 +608,8 @@ class PolygonLocator:
         polygons -- a list of polygons to index
 
         Example:
-        >>> p1 = Polygon(points=[Point((0, 1)), Point((4, 5)), Point((5, 1))])
-        >>> p2 = Polygon(points=[Point((3, 9)), Point((6, 7)), Point((1, 1))])
+        >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
+        >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
         >>> pl = PolygonLocator([p1, p2])
         >>> isinstance(pl, PolygonLocator)
         True
@@ -626,8 +626,8 @@ class PolygonLocator:
         query_point -- a point to find the nearest indexed polygon to
 
         Example:
-        >>> p1 = Polygon(points=[Point((0, 1)), Point((4, 5)), Point((5, 1))])
-        >>> p2 = Polygon(points=[Point((3, 9)), Point((6, 7)), Point((1, 1))])
+        >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
+        >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
         >>> pl = PolygonLocator([p1, p2])
         >>> n = pl.nearest(Point((-1, 1)))
         >>> str(min(n.vertices()))
@@ -645,8 +645,8 @@ class PolygonLocator:
         region_rect -- the rectangular range to find indexed polygons in
 
         Example:
-        >>> p1 = Polygon(points=[Point((0, 1)), Point((4, 5)), Point((5, 1))])
-        >>> p2 = Polygon(points=[Point((3, 9)), Point((6, 7)), Point((1, 1))])
+        >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
+        >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
         >>> pl = PolygonLocator([p1, p2])
         >>> n = pl.region(Rectangle(0, 0, 4, 10))
         >>> len(n)
@@ -665,8 +665,8 @@ class PolygonLocator:
         r -- the maximum distance to find indexed polygon from the origin point
 
         Example:
-        >>> p1 = Polygon(points=[Point((0, 1)), Point((4, 5)), Point((5, 1))])
-        >>> p2 = Polygon(points=[Point((3, 9)), Point((6, 7)), Point((1, 1))])
+        >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
+        >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
         >>> pl = PolygonLocator([p1, p2])
         >>> len(pl.proximity(Point((0, 0)), 2))
         2
