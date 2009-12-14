@@ -32,13 +32,15 @@ import doctest
 
 # module imports
 import pysal.esda.moran, pysal.esda.geary
+import pysal.esda.mapclassify
 import pysal.econometrics.classic
 import pysal.weights.weights, pysal.weights.ContiguityWeights
 import pysal.weights.DistanceWeights
 
 
 #add modules to include in tests
-mods='esda.moran','esda.geary', 'econometrics.classic', \
+mods='esda.moran','esda.geary', 'esda.mapclassify', \
+        'econometrics.classic', \
         'weights.weights','weights.DistanceWeights', \
         'weights.ContiguityWeights'
 mods = [ "pysal."+ mod for mod in mods]
