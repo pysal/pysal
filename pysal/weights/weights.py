@@ -227,6 +227,20 @@ class W(object):
         Example:
             >>> neighbors={'a': ['b'],'b':['a','c'],'c':['b','d'], 'd':['c']}
             >>> w=W(neighbors)
+            >>> y=np.array([0,10,100,1000])
+            >>> w.id_order=['a','b','c','d']
+            >>> yl=w.lag(y)
+            >>> y
+            array([   0,   10,  100, 1000])
+            >>> yl
+            array([   10.,   100.,  1010.,   100.])
+            >>> y1=y[[1,0,3,2]]
+            >>> y1
+            array([  10,    0, 1000,  100])
+            >>> w.id_order=['b','a','d','c']
+            >>> y1l=w.lag(y1)
+            >>> y1l
+            array([  100.,    10.,   100.,  1010.])
             >>> 
         """
 
@@ -277,16 +291,13 @@ class W(object):
         """
         self._idx=0
 
-    def lag(self, y, observation_ids):
+    def lag(self,y):
         """Calculates the spatial lag for the variable y
 
 
         Argument:
 
             y -  numpy array (n,)
-
-            observation_ids - array of ids to match positions in y with proper
-            elements of W
 
         Returns:
 
@@ -298,41 +309,24 @@ class W(object):
 
         Example:
 
-        >>> neighbors={'a': ['b'],'b':['a','c'],'c':['b','d'], 'd':['c']}
-        >>> w=W(neighbors)
-        >>> y=np.array([0,10,100,1000])
-        >>> y
-        array([   0,   10,  100, 1000])
-        >>> observation_ids=['a','b','c','d']
-        >>> yl=w.lag(y,observation_ids)
+        >>> w=lat2gal(3,3)
+        >>> y=np.arange(9)
+        >>> yl=w.lag(y)
         >>> yl
-        array([   10.,   100.,  1010.,   100.])
-        >>> y1=y[[1,0,3,2]]
-        >>> y1
-        array([  10,    0, 1000,  100])
-        >>> observation_ids=['b','a','d','c']
-        >>> y1l=w.lag(y1,observation_ids)
-        >>> y1l
-        array([  100.,    10.,   100.,  1010.])
+        array([  4.,   6.,   6.,  10.,  16.,  14.,  10.,  18.,  12.])
+        >>> w.transform='w'
         """
-        # check if observation_ids are in keys and values of weights
-        oids=set(observation_ids)
-        ks=set(self.weights.keys())
-        ws=set()
-        for neighbors in self.neighbors.values():
-            ws|=set(neighbors)
-        if ws!=oids or ks!=oids:
-            print 'observation_ids not aligned with weight ids'
-            return 0
         if self.n !=len(y):
             print 'w.lag(y):  w and y not conformable'
             return 0
         else:
+            self.refresh()
             yl=np.zeros(y.shape,'float')
-            for i,id in enumerate(observation_ids):
-                for j,nid  in enumerate(self.neighbors[id]):
-                    yl[i]+=y[observation_ids.index(nid)]*self.weights[id][j]
+            for i,wi in enumerate(self):
+                for j,wij in wi.items():
+                    yl[i]+=wij*y[self.id_order.index(j)]
             return yl
+
 
     def get_transform(self):
         """
@@ -828,13 +822,12 @@ def regime_weights(regimes):
     >>> w.neighbors[0]
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 20]
     >>> y=np.arange(25)
-    >>> observation_ids=range(25)
-    >>> w.lag(y,observation_ids)
+    >>> w.lag(y)
     array([  65.,   64.,   63.,   62.,   61.,   60.,   59.,   58.,   57.,
              56.,  135.,  134.,  133.,  132.,  131.,  130.,  129.,  128.,
             127.,  126.,   45.,   69.,   68.,   67.,   66.])
     >>> w.transform='w'
-    >>> w.lag(y,observation_ids)
+    >>> w.lag(y)
     array([  6.5       ,   6.4       ,   6.3       ,   6.2       ,
              6.1       ,   6.        ,   5.9       ,   5.8       ,
              5.7       ,   5.6       ,  15.        ,  14.88888889,
@@ -847,8 +840,7 @@ def regime_weights(regimes):
     >>> w.neighbors
     {0: [1], 1: [0], 2: [3], 3: [2], 4: [5, 8], 5: [4, 8], 6: [7], 7: [6], 8: [4, 5]}
     >>> y=np.arange(n)
-    >>> observation_ids=range(len(regimes))
-    >>> w.lag(y,observation_ids)
+    >>> w.lag(y)
     array([  1.,   0.,   3.,   2.,  13.,  12.,   7.,   6.,   9.])
     """ 
     region_ids=list(set(regimes))
