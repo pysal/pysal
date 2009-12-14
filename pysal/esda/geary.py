@@ -145,33 +145,10 @@ class Geary:
         a= (self.n-1)* sum(ys)
         return a/self.den
 
-    
-class __TestC(unittest.TestCase):
-
-    def setUp(self):
-        pass
-
-    def test_C(self):
-        import pysal
-        w=pysal.open("../examples/book.gal").read()
-        f=pysal.open("../examples/book.txt")
-        y=np.array(f.by_col['y'])
-        c=Geary(y,w,permutations=0)
-        v="%6.5f"%c.C
-        self.assertEquals(v,'0.33282')
-
 
 
 if __name__ == '__main__':
-    import unittest
     import doctest
-    import geary
-    suite = unittest.TestSuite()
-    for mod in [geary]:
-        suite.addTest(doctest.DocTestSuite(mod))
-        runner = unittest.TextTestRunner()
-        runner.run(suite)
-    # regular unittest
-    unittest.main()
+    doctest.testmod()
 
 

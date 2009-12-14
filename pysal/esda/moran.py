@@ -8,6 +8,8 @@ Author(s):
 """
 from pysal.common import *
 
+from spatial_lag import lag as slag
+
 PERMUTATIONS=999
 
 class Moran:
@@ -72,6 +74,7 @@ class Moran:
     Example:
         >>> import pysal
         >>> w=pysal.open("../examples/stl.gal").read()
+        >>> w.id_order=range(78)
         >>> f=pysal.open("../examples/stl_hom.txt")
         >>> y=np.array(f.by_col['HR8893'])
         >>> mi=Moran(y,w)
@@ -134,7 +137,7 @@ class Moran:
 
 
     def __calc(self,z):
-        zl=self.w.lag(z)
+        zl=slag(z,self.w)
         self.inum=sum(self.z*zl)
         return self.n/self.w.s0 * sum(self.z*zl)/self.z2ss
 
@@ -213,7 +216,7 @@ class Moran_BV:
 
 
     def __calc(self,z2):
-        z2l=self.w.lag(z2)
+        z2l=slag(z2,self.w)
         self.inum=sum(self.z1,z2l)
         return sum(self.z1*z2l)/self.z12ss
 
@@ -299,6 +302,19 @@ class Moran_Local:
         extreme is considered being further away from the origin and in the
         same direction than original I statistic  for the focal observation.
 
+    Example
+    -------
+    >>> import pysal
+    >>> w=pysal.open("../examples/desmith.gal").read()
+    >>> w.id_order=range(w.n)
+    >>> f=pysal.open("../examples/desmith.txt")
+    >>> y=np.array(f.by_col['z'])
+    >>> lm=Moran_Local(y,w,transformation="W",permutations=0)
+    >>> lm.q
+    array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
+    >>> lm.Is
+    array([-0.11409277, -0.19940543, -0.13351408, -0.51770383,  0.48095009,
+            0.12208113,  1.19148298, -0.58144305,  0.07101383,  0.34314301])
     """
     def __init__(self,y,w,transformation="W",permutations=PERMUTATIONS):
         self.y=y
@@ -331,12 +347,12 @@ class Moran_Local:
             self.p_z_sim=stats.norm.pdf(self.z_sim)
 
     def __calc(self,z):
-        zl=self.w.lag(z)
+        zl=slag(z,self.w)
         num=self.z * zl
         return (len(zl)-1)*self.z*zl/self.den
     
     def __quads(self):
-        zl=self.w.lag(self.z)
+        zl=slag(self.z,self.w)
         zp=self.z>0
         lp=zl>0
         pp=zp*lp
@@ -352,6 +368,7 @@ class __TestMoran(unittest.TestCase):
     def setUp(self):
         import pysal
         self.w=pysal.open("../examples/stl.gal").read()
+        self.w.id_order=range(78)
         f=pysal.open("../examples/stl_hom.txt")
         self.y1=np.array(f.by_col['HR8893'])
         self.y2=np.array(f.by_col['HR8488'])
@@ -364,6 +381,7 @@ class __TestMoran(unittest.TestCase):
     def test_local(self):
         import pysal
         w=pysal.open("../examples/desmith.gal").read()
+        w.id_order=range(w.n)
         f=pysal.open("../examples/desmith.txt")
         y=np.array(f.by_col['z'])
         lm=Moran_Local(y,w,transformation="W",permutations=0)
@@ -378,13 +396,5 @@ class __TestMoran(unittest.TestCase):
         self.assertEquals(v,'0.9322')
 
 if __name__ == '__main__':
-    import unittest
     import doctest
-    import moran
-    suite = unittest.TestSuite()
-    for mod in [moran]:
-        suite.addTest(doctest.DocTestSuite(mod))
-        runner = unittest.TextTestRunner()
-        runner.run(suite)
-    # regular unittest
-    unittest.main()
+    doctest.testmod()

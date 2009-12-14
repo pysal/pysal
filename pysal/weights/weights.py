@@ -20,7 +20,7 @@ class W(object):
         """
         d = {'neighbors':{},'weights':{}}
         for key in data:
-            d['weights'][key] = [1] * len(data[key])
+            d['weights'][key] = [1.] * len(data[key])
             d['neighbors'][key] = list(data[key])
             d['neighbors'][key].sort()
         return cls(d)
@@ -58,6 +58,11 @@ class W(object):
         method asymmetry for details), false if none.
 
         cardinalities : dictionary of cardinalities 
+
+        id_order : list , order of observations when iterating over weights
+
+        id_order_set : binary, True if id_order has been set by user, False
+        (default)
 
         islands : list of ids that have no neighbors
 
@@ -100,6 +105,7 @@ class W(object):
 
         _idx: index for iterator
         _id_order: order of ids for iterator
+        _id_order_set: sentinel to determine if user has set id_order
         _transform: weights transformation
 
                 
@@ -117,8 +123,6 @@ class W(object):
 
         higher_order: returns the higher order (k) contiguity matrix
 
-        lag: calculate spatial lag of an array
-
         order: determines the non-redundant order of contiguity for
         i,j up to a given level of contiguity
 
@@ -134,12 +138,12 @@ class W(object):
         Example:
         ========
 
-                >>> neighbors={0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
-                >>> weights={0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
-                >>> data={'neighbors':neighbors,'weights':weights}
-                >>> w=W(data)
-                >>> w.pct_nonzero
-                0.29629629629629628
+        >>> neighbors={0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
+        >>> weights={0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
+        >>> data={'neighbors':neighbors,'weights':weights}
+        >>> w=W(data)
+        >>> w.pct_nonzero
+        0.29629629629629628
         """
 
         if 'weights' not in data:
@@ -155,6 +159,7 @@ class W(object):
         self.characteristics()
         self._transform=None
         self._id_order=self.neighbors.keys()
+        self._id_order_set=False
         self._idx=0
         self.n=len(self.neighbors)
         self.n_1=self.n-1
@@ -167,12 +172,12 @@ class W(object):
         >>> import ContiguityWeights
         >>> w = ContiguityWeights.rook('../examples/10740.shp')
         >>> w[1]
-        {2: 1, 102: 1, 86: 1, 5: 1, 6: 1}
+        {2: 1.0, 102: 1.0, 86: 1.0, 5: 1.0, 6: 1.0}
         >>> w = lat2gal()
         >>> w[1]
-        {0: 1, 2: 1, 6: 1}
+        {0: 1.0, 2: 1.0, 6: 1.0}
         >>> w[0]
-        {1: 1, 5: 1}
+        {1: 1.0, 5: 1.0}
         """
         return dict(zip(self.neighbors[key],self.weights[key]))
 
@@ -180,40 +185,27 @@ class W(object):
     def __iter__(self):
         """Support iteration over weights
 
-
         Example:
-        >>> w=lat2gal(3,3)
-        >>> for wi in w:
-        ...     print wi
-        ...     
-        {1: 1, 3: 1}
-        {0: 1, 2: 1, 4: 1}
-        {1: 1, 5: 1}
-        {0: 1, 4: 1, 6: 1}
-        {1: 1, 3: 1, 5: 1, 7: 1}
-        {8: 1, 2: 1, 4: 1}
-        {3: 1, 7: 1}
-        {8: 1, 4: 1, 6: 1}
-        {5: 1, 7: 1}
         >>> w=lat2gal(3,3)
         >>> for i,wi in enumerate(w):
         ...     print i,wi
         ...     
-        0 {1: 1, 3: 1}
-        1 {0: 1, 2: 1, 4: 1}
-        2 {1: 1, 5: 1}
-        3 {0: 1, 4: 1, 6: 1}
-        4 {1: 1, 3: 1, 5: 1, 7: 1}
-        5 {8: 1, 2: 1, 4: 1}
-        6 {3: 1, 7: 1}
-        7 {8: 1, 4: 1, 6: 1}
-        8 {5: 1, 7: 1}
+        0 {1: 1.0, 3: 1.0}
+        1 {0: 1.0, 2: 1.0, 4: 1.0}
+        2 {1: 1.0, 5: 1.0}
+        3 {0: 1.0, 4: 1.0, 6: 1.0}
+        4 {1: 1.0, 3: 1.0, 5: 1.0, 7: 1.0}
+        5 {8: 1.0, 2: 1.0, 4: 1.0}
+        6 {3: 1.0, 7: 1.0}
+        7 {8: 1.0, 4: 1.0, 6: 1.0}
+        8 {5: 1.0, 7: 1.0}
         >>> 
         """
         return self
 
     def next(self):
         if self._idx >= len(self._id_order):
+            self._idx=0
             raise StopIteration
         value = self.__getitem__(self._id_order[self._idx])
         self._idx+=1
@@ -223,33 +215,76 @@ class W(object):
     def set_id_order(self, ordered_ids):
         """reorder the ids in w
 
-
         Example:
-            >>> neighbors={'a': ['b'],'b':['a','c'],'c':['b','d'], 'd':['c']}
-            >>> w=W(neighbors)
-            >>> y=np.array([0,10,100,1000])
-            >>> w.id_order=['a','b','c','d']
-            >>> yl=w.lag(y)
-            >>> y
-            array([   0,   10,  100, 1000])
-            >>> yl
-            array([   10.,   100.,  1010.,   100.])
-            >>> y1=y[[1,0,3,2]]
-            >>> y1
-            array([  10,    0, 1000,  100])
-            >>> w.id_order=['b','a','d','c']
-            >>> y1l=w.lag(y1)
-            >>> y1l
-            array([  100.,    10.,   100.,  1010.])
-            >>> 
+            >>> w=lat2gal()
+            >>> w.id_order
+            [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+            >>> for wi in w:
+            ...     print wi
+            ...     
+            {1: 1.0, 5: 1.0}
+            {0: 1.0, 2: 1.0, 6: 1.0}
+            {1: 1.0, 3: 1.0, 7: 1.0}
+            {8: 1.0, 2: 1.0, 4: 1.0}
+            {9: 1.0, 3: 1.0}
+            {0: 1.0, 10: 1.0, 6: 1.0}
+            {1: 1.0, 11: 1.0, 5: 1.0, 7: 1.0}
+            {8: 1.0, 2: 1.0, 12: 1.0, 6: 1.0}
+            {9: 1.0, 3: 1.0, 13: 1.0, 7: 1.0}
+            {8: 1.0, 4: 1.0, 14: 1.0}
+            {11: 1.0, 5: 1.0, 15: 1.0}
+            {16: 1.0, 10: 1.0, 12: 1.0, 6: 1.0}
+            {17: 1.0, 11: 1.0, 13: 1.0, 7: 1.0}
+            {8: 1.0, 18: 1.0, 12: 1.0, 14: 1.0}
+            {9: 1.0, 19: 1.0, 13: 1.0}
+            {16: 1.0, 10: 1.0, 20: 1.0}
+            {17: 1.0, 11: 1.0, 21: 1.0, 15: 1.0}
+            {16: 1.0, 18: 1.0, 12: 1.0, 22: 1.0}
+            {17: 1.0, 19: 1.0, 13: 1.0, 23: 1.0}
+            {24: 1.0, 18: 1.0, 14: 1.0}
+            {21: 1.0, 15: 1.0}
+            {16: 1.0, 20: 1.0, 22: 1.0}
+            {17: 1.0, 21: 1.0, 23: 1.0}
+            {24: 1.0, 18: 1.0, 22: 1.0}
+            {19: 1.0, 23: 1.0}
+            >>> w.id_order=range(24,-1,-1)
+            >>> for wi in w:
+            ...     print wi
+            ...     
+            {19: 1.0, 23: 1.0}
+            {24: 1.0, 18: 1.0, 22: 1.0}
+            {17: 1.0, 21: 1.0, 23: 1.0}
+            {16: 1.0, 20: 1.0, 22: 1.0}
+            {21: 1.0, 15: 1.0}
+            {24: 1.0, 18: 1.0, 14: 1.0}
+            {17: 1.0, 19: 1.0, 13: 1.0, 23: 1.0}
+            {16: 1.0, 18: 1.0, 12: 1.0, 22: 1.0}
+            {17: 1.0, 11: 1.0, 21: 1.0, 15: 1.0}
+            {16: 1.0, 10: 1.0, 20: 1.0}
+            {9: 1.0, 19: 1.0, 13: 1.0}
+            {8: 1.0, 18: 1.0, 12: 1.0, 14: 1.0}
+            {17: 1.0, 11: 1.0, 13: 1.0, 7: 1.0}
+            {16: 1.0, 10: 1.0, 12: 1.0, 6: 1.0}
+            {11: 1.0, 5: 1.0, 15: 1.0}
+            {8: 1.0, 4: 1.0, 14: 1.0}
+            {9: 1.0, 3: 1.0, 13: 1.0, 7: 1.0}
+            {8: 1.0, 2: 1.0, 12: 1.0, 6: 1.0}
+            {1: 1.0, 11: 1.0, 5: 1.0, 7: 1.0}
+            {0: 1.0, 10: 1.0, 6: 1.0}
+            {9: 1.0, 3: 1.0}
+            {8: 1.0, 2: 1.0, 4: 1.0}
+            {1: 1.0, 3: 1.0, 7: 1.0}
+            {0: 1.0, 2: 1.0, 6: 1.0}
+            {1: 1.0, 5: 1.0}
         """
 
 
         if set(self._id_order) == set(ordered_ids):
             self._id_order=ordered_ids
-            self.refresh()
+            self._idx=0
+            self._id_order_set=True
         else:
-            print 'assignment not aligned with W ids'
+            raise Exception, 'ordered_ids do not aligned with W ids'
 
     def get_id_order(self):
         """returns the ids for the observations in the order in which they
@@ -258,74 +293,22 @@ class W(object):
 
     id_order=property(get_id_order, set_id_order)
 
-    def refresh(self):
-        """move iterator back to beginning
+    def get_id_order_set(self):
+        """returns True if user has set id_order, False if not.
 
-
-        Example:
-
-            >>> from weights import *
-            >>> w=lat2gal(2,2)
-            >>> for wi in w:
-            ...     print wi
-            ...     
-            {1: 1, 2: 1}
-            {0: 1, 3: 1}
-            {0: 1, 3: 1}
-            {1: 1, 2: 1}
-            >>> for wi in w:
-            ...     print wi
-            ...     
-            >>> w.refresh()
-            >>> for wi in w:
-            ...     print wi
-            ...     
-            {1: 1, 2: 1}
-            {0: 1, 3: 1}
-            {0: 1, 3: 1}
-            {1: 1, 2: 1}
-            >>> 
-            
-
-
+        Example
+        >>> w=lat2gal()
+        >>> w.id_order_set
+        False
+        >>> w.id_order=range(24,-1,-1)
+        >>> w.id_order_set
+        True
         """
-        self._idx=0
-
-    def lag(self,y):
-        """Calculates the spatial lag for the variable y
 
 
-        Argument:
+        return self._id_order_set
 
-            y -  numpy array (n,)
-
-        Returns:
-
-            yl -  numpy array (n,) for the spatial lag.
-
-
-        Assumes id_order in weights is aligned with order in y. User can
-        reorder W (as in example below) or reorder y
-
-        Example:
-
-        >>> w=lat2gal(3,3)
-        >>> y=np.arange(9)
-        >>> yl=w.lag(y)
-        >>> yl
-        array([  4.,   6.,   6.,  10.,  16.,  14.,  10.,  18.,  12.])
-        >>> w.transform='w'
-        """
-        if self.n !=len(y):
-            print 'w.lag(y):  w and y not conformable'
-            return 0
-        else:
-            self.refresh()
-            yl=np.zeros(y.shape,'float')
-            for i,wi in enumerate(self):
-                for j,wij in wi.items():
-                    yl[i]+=wij*y[self.id_order.index(j)]
-            return yl
+    id_order_set=property(get_id_order_set)
 
 
     def get_transform(self):
@@ -333,14 +316,14 @@ class W(object):
             Example:
                 >>> w=lat2gal()
                 >>> w.weights[0]
-                [1, 1]
+                [1.0, 1.0]
                 >>> w.transform
                 >>> w.transform='w'
                 >>> w.weights[0]
                 [0.5, 0.5]
                 >>> w.transform='b'
                 >>> w.weights[0]
-                [1, 1]
+                [1.0, 1.0]
                 >>> 
         """
         return self._transform
@@ -358,14 +341,14 @@ class W(object):
             Example:
                 >>> w=lat2gal()
                 >>> w.weights[0]
-                [1, 1]
+                [1.0, 1.0]
                 >>> w.transform
                 >>> w.transform='w'
                 >>> w.weights[0]
                 [0.5, 0.5]
                 >>> w.transform='b'
                 >>> w.weights[0]
-                [1, 1]
+                [1.0, 1.0]
                 >>> 
         """
         value=value.upper()
@@ -402,7 +385,7 @@ class W(object):
                 weights={}
                 for i in self.weights:
                     wijs = self.weights[i]
-                    weights[i]=[1 for wij in wijs]
+                    weights[i]=[1.0 for wij in wijs]
                 self.transformations[value]=weights
                 self.weights=weights
                 self.characteristics()
@@ -441,7 +424,7 @@ class W(object):
         >>> import ContiguityWeights
         >>> w = ContiguityWeights.rook('../examples/10740.shp')
         >>> w[1]
-        {2: 1, 102: 1, 86: 1, 5: 1, 6: 1}
+        {2: 1.0, 102: 1.0, 86: 1.0, 5: 1.0, 6: 1.0}
         >>> w.islands
         [164]
         >>> w[164]
@@ -455,7 +438,7 @@ class W(object):
         >>> w.s1
         2004.0
         >>> w.s2
-        23528
+        23528.0
         >>> w.sd
         1.9391533157164347
         """
@@ -697,13 +680,13 @@ class W(object):
             >>> w=ContiguityWeights.rook('../examples/10740.shp')
             >>> w2=w.higher_order(2)
             >>> w[1]
-            {2: 1, 102: 1, 86: 1, 5: 1, 6: 1}
+            {2: 1.0, 102: 1.0, 86: 1.0, 5: 1.0, 6: 1.0}
             >>> w2[1]
-            {147: 1, 3: 1, 4: 1, 101: 1, 7: 1, 40: 1, 41: 1, 10: 1, 103: 1, 104: 1, 19: 1, 84: 1, 85: 1, 100: 1, 91: 1, 92: 1, 94: 1}
+            {147: 1.0, 3: 1.0, 4: 1.0, 101: 1.0, 7: 1.0, 40: 1.0, 41: 1.0, 10: 1.0, 103: 1.0, 104: 1.0, 19: 1.0, 84: 1.0, 85: 1.0, 100: 1.0, 91: 1.0, 92: 1.0, 94: 1.0}
             >>> w[147]
-            {163: 1, 100: 1, 165: 1, 102: 1, 140: 1, 145: 1, 146: 1, 148: 1, 85: 1}
+            {163: 1.0, 100: 1.0, 165: 1.0, 102: 1.0, 140: 1.0, 145: 1.0, 146: 1.0, 148: 1.0, 85: 1.0}
             >>> w[85]
-            {96: 1, 102: 1, 140: 1, 147: 1, 86: 1, 94: 1}
+            {96: 1.0, 102: 1.0, 140: 1.0, 147: 1.0, 86: 1.0, 94: 1.0}
             >>> 
 
         """
@@ -716,10 +699,11 @@ class W(object):
         for id in ids:
             nids=[ids[j] for j,order in enumerate(info[id]) if order==k]
             neighbors[id]=nids
-            weights[id]=[1]*len(nids)
+            weights[id]=[1.0]*len(nids)
         data['weights']=weights
         data['neighbors']=neighbors
         return W(data)
+
 
 def lat2gal(nrows=5,ncols=5,rook=True):
     """Create a GAL structure for a regular lattice.
@@ -746,9 +730,9 @@ def lat2gal(nrows=5,ncols=5,rook=True):
         >>> w9.pct_nonzero
         0.29629629629629628
         >>> w9[0]
-        {1: 1, 3: 1}
+        {1: 1.0, 3: 1.0}
         >>> w9[3]
-        {0: 1, 4: 1, 6: 1}
+        {0: 1.0, 4: 1.0, 6: 1.0}
         >>> 
     """
 
@@ -786,7 +770,7 @@ def lat2gal(nrows=5,ncols=5,rook=True):
     neighbors={}
     weights={}
     for key in w:
-        weights[key]=[1]*len(w[key])
+        weights[key]=[1.]*len(w[key])
     d['neighbors']=w
     d['weights']=weights
     return W(d)
@@ -821,27 +805,11 @@ def regime_weights(regimes):
     [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
     >>> w.neighbors[0]
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 20]
-    >>> y=np.arange(25)
-    >>> w.lag(y)
-    array([  65.,   64.,   63.,   62.,   61.,   60.,   59.,   58.,   57.,
-             56.,  135.,  134.,  133.,  132.,  131.,  130.,  129.,  128.,
-            127.,  126.,   45.,   69.,   68.,   67.,   66.])
-    >>> w.transform='w'
-    >>> w.lag(y)
-    array([  6.5       ,   6.4       ,   6.3       ,   6.2       ,
-             6.1       ,   6.        ,   5.9       ,   5.8       ,
-             5.7       ,   5.6       ,  15.        ,  14.88888889,
-            14.77777778,  14.66666667,  14.55555556,  14.44444444,
-            14.33333333,  14.22222222,  14.11111111,  14.        ,
-             4.5       ,  23.        ,  22.66666667,  22.33333333,  22.        ])
     >>> regimes=['n','n','s','s','e','e','w','w','e']
     >>> n=len(regimes)
     >>> w=regime_weights(regimes)
     >>> w.neighbors
     {0: [1], 1: [0], 2: [3], 3: [2], 4: [5, 8], 5: [4, 8], 6: [7], 7: [6], 8: [4, 5]}
-    >>> y=np.arange(n)
-    >>> w.lag(y)
-    array([  1.,   0.,   3.,   2.,  13.,  12.,   7.,   6.,   9.])
     """ 
     region_ids=list(set(regimes))
     regime=np.array(regimes)
@@ -888,47 +856,8 @@ def comb(items, n=None):
             for c in comb(rest, n-1):
                 yield v + c
 
-class __TestWeights(unittest.TestCase):
-
-    def setUp(self):
-        pass
-
-    def test_lat2gal(self):
-        w=lat2gal(10,10)
-        self.assertEquals(w.s0,360.0)
-        self.assertEquals(w.s1,720.0)
-        self.assertEquals(w.s2,5312.0)
-
-    def test_full(self):
-        w=lat2gal(50,50)
-        wf=w.full()[0]
-        self.assertEquals(w.s0,9800.0)
-        self.assertEquals(sum(sum(wf)),9800.0)
-        self.assertEquals(w.neighbors[401],[351, 400, 451, 402])
-        j=[351, 400, 451, 402]
-        self.assertEquals(wf[401,j].tolist(),[1.0, 1.0, 1.0, 1.0])
-        j=[i+1 for i in j]
-        self.assertEquals(wf[401,j].tolist(),[0.0, 0.0, 0.0, 0.0])
-
-    def test_higher_order(self):
-        w5=lat2gal()
-        w5_shimbel=w5.shimbel()
-        self.assertEquals(w5_shimbel[0][24],8)
-        self.assertEquals(w5_shimbel[0][0:4],[-1, 1, 2, 3])
-        w5_8th_order=w5.higher_order(8)
-        self.assertEquals( w5_8th_order.neighbors[0],[24])
     
 if __name__ == "__main__":
 
-    import unittest
     import doctest
-    import weights
-
-    # use unittest to test doctests
-    suite = unittest.TestSuite()
-    for mod in [weights]:
-            suite.addTest(doctest.DocTestSuite(mod))
-            runner = unittest.TextTestRunner()
-            runner.run(suite)
-    # regular unittest
-    unittest.main()
+    doctest.testmod()
