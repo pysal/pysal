@@ -304,17 +304,17 @@ class Moran_Local:
 
     Example
     -------
-    >>> import pysal
-    >>> w=pysal.open("../examples/desmith.gal").read()
-    >>> w.id_order=range(w.n)
-    >>> f=pysal.open("../examples/desmith.txt")
-    >>> y=np.array(f.by_col['z'])
-    >>> lm=Moran_Local(y,w,transformation="W",permutations=0)
-    >>> lm.q
-    array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
-    >>> lm.Is
-    array([-0.11409277, -0.19940543, -0.13351408, -0.51770383,  0.48095009,
-            0.12208113,  1.19148298, -0.58144305,  0.07101383,  0.34314301])
+        >>> import pysal
+        >>> w=pysal.open("../examples/desmith.gal").read()
+        >>> w.id_order=range(w.n)
+        >>> f=pysal.open("../examples/desmith.txt")
+        >>> y=np.array(f.by_col['z'])
+        >>> lm=Moran_Local(y,w,transformation="W",permutations=0)
+        >>> lm.q
+        array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
+        >>> lm.Is
+        array([-0.11409277, -0.19940543, -0.13351408, -0.51770383,  0.48095009,
+                0.12208113,  1.19148298, -0.58144305,  0.07101383,  0.34314301])
     """
     def __init__(self,y,w,transformation="W",permutations=PERMUTATIONS):
         self.y=y

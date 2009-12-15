@@ -11,7 +11,32 @@ from pysal.common import *
 DELTA = 0.0000001
 
 class W(object):
-    """Spatial weights"""
+    """Spatial weights
+
+        Parameters
+        ==========
+
+        data : dictionary with two entries
+            neighbors : dictionary with ids as keys list of neighbors as
+            values
+
+            weights : dictionary with ids as keys list of weights as values
+
+            such that:
+
+            neighbors[1]=[2,4]
+            weights[1]=[w_{1,2}, w_{1,4}]
+            .
+            .
+            neighbors[4]=[1,7,10]
+            weights[4]=[w_{4,1}, w_{4,7}, w_{4,10}]
+
+            and w_{i,j} are the weights which can be general or
+            binary.
+
+
+    
+    """
     @classmethod
     def fromBinary(cls,data):
         """ creates a new instance of W based on a Dictionary of Sets data structure...
@@ -31,7 +56,7 @@ class W(object):
         """Construct a spatial weights object
 
         Parameters
-        ----------
+        ==========
 
         data : dictionary with two entries
             neighbors: list of neighbors
@@ -52,7 +77,7 @@ class W(object):
 
 
         Attributes
-        ----------
+        ==========
 
         asymmetric : Flag for any asymmetries (see
         method asymmetry for details), false if none.
@@ -213,9 +238,26 @@ class W(object):
 
 
     def set_id_order(self, ordered_ids):
-        """reorder the ids in w
+        """Set the iteration order in w.
+
+        W can be iterated over. On construction the iteration order is set to
+        the order of the keys in the w.weights dictionary. If a specific order
+        is required it can be set with this method.
+
+        Parameters
+        ==========
+
+        ordered_ids : sequence of ids
+
+        Notes
+        =====
+
+        ordered_ids is checked against the ids implied by the keys in
+        w.weights. If they are not equivalent sets an exception is raised and
+        the iteration order is not changed.
 
         Example:
+
             >>> w=lat2gal()
             >>> w.id_order
             [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]

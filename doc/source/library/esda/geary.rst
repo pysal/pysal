@@ -1,11 +1,10 @@
-:mod:`esda.geary` --- Computational geometry code for PySAL: Python Spatial Analysis Library
-==========================================================================================
+:mod:`esda.geary` --- Geary's C statistics for spatial autocorrelation
+======================================================================
 
-The :mod:`esda.geary` module provides several modules for Computation geometery.
 
 .. versionadded:: 1.0
 
 .. automodule:: pysal.esda.geary
-    :synopsis: Computational geometry code for PySAL: Python Spatial Analysis Library
+    :synopsis: Global measures of autocorrelation based on Geary's C 
     :members:
 

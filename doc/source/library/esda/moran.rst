@@ -1,11 +1,9 @@
-:mod:`esda.moran` --- Computational geometry code for PySAL: Python Spatial Analysis Library
-==========================================================================================
-
-The :mod:`esda.moran` module provides several modules for Computation geometery.
+:mod:`esda.moran` --- Moran's I global and local measures of spatial autocorrelation
+====================================================================================
 
 .. versionadded:: 1.0
 
 .. automodule:: pysal.esda.moran
-    :synopsis: Computational geometry code for PySAL: Python Spatial Analysis Library
+    :synopsis: Moran's I global and local measures of spatial autocorrelation 
     :members:
 
