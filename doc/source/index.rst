@@ -1,33 +1,31 @@
 .. pysal documentation master file, created by
    sphinx-quickstart on Wed Aug 26 19:58:20 2009.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
-******************************************************************
-PySAL: Open Source Python Library for Spatial Analytical Functions
-******************************************************************
-
- .. image:: _figures/pysalgraph.png
+*******
+Welcome
+*******
 
 PySAL is a cross-platform library of spatial analysis functions written in
-Python. It combines the development efforts on `PySpace
-<http://geodacenter.asu.edu/pysal>`_ and `STARS
-<http://regionalanalysislab.org/index.php/Main/STARS>`_ - Space Time Analysis
-of Regional Systems. 
+Python. It is intended to support the development of high level applications
+for spatial analysis.
 
-Contents:
+On this site you will find :doc:`user level documentation </users/index>` as well as 
+:doc:`developer documentation </developers/index>`.
 
-.. toctree::
-    :maxdepth: 2
 
-    Background <intro>
-    tutorials
-    library/index
+****
+News
+****
 
-Indices and tables
-==================
+(2009-12-14) New Website for PySAL!
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+(2009-11-03) National Institute of Justice funding.
+
+
+*******
+Funding
+*******
+
+National Institute of Justice `Grant <http://geoplan.asu.edu/NIJ_grant>`_.
+
 
