@@ -1,0 +1,28 @@
+{% extends "!layout.html" %}
+
+
+{% block rootrellink %}
+        <li><a href="{{ pathto('index') }}">home</a>|&nbsp;</li>
+        <li><a href="{{ pathto('search') }}">search</a>|&nbsp;</li>
+       <li><a href="{{ pathto('contents') }}">documentation </a> &raquo;</li>
+{% endblock %}
+
+
+{% block relbar1 %}
+<div id="header">
+<table width="100%">
+<tr>
+	<td style= "background-color: white; text-align: left; vertical-align:middle">
+	<a href="{{ pathto('index') }}"><img src="{{
+pathto("_static/pysalsmall.png", 1) }}" border="0" alt="pysal"/></a>
+</td>
+</tr>
+</table>
+</div>
+{{ super() }}
+{% endblock %}
+
+{# put the sidebar before the body #}
+{% block sidebar1 %}{{ sidebar() }}{% endblock %}
+{% block sidebar2 %}{% endblock %}
+
