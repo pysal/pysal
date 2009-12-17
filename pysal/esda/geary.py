@@ -5,8 +5,6 @@ Geary's C statistic for spatial autocorrelation
 Author(s):
     Serge Rey srey@asu.edu
 
-
-
 """
 from pysal.common import *
 
@@ -15,68 +13,70 @@ PERMUTATIONS=999
 class Geary:
     """Global Geary C Autocorrelation statistic
     
-    Arguments:
-        y: n*1 array
+    Parameters
+    ----------
+    y              : array
+    w              : W
+                     spatial weights 
+    transformation : string
+                     weights transformation, default is row-standardized
+                     "R". Other options include "B": binary, "D":
+                         doubly-standardized, "U": untransformed (general
+                         weights), "V": variance-stabilizing.
+    permutations   : int
+                     number of random permutations for calculation of
+                     pseudo-p_values
 
-        w: weight instance assumed to be aligned with y
+    Attributes
+    ----------
+    y              : array
+                     original variable
+    w              : W
+                     spatial weights
+    permutations   : int
+                     number of permutations
+    C              : float
+                     value of statistic
+    EC             : float
+                     expected value
+    VC             : float
+                     variance of G under normality assumption
+    z_norm         : float
+                     z-statistic for C under normality assumption
+    z_rand         : float
+                     z-statistic for C under randomization assumption
+    p_norm         : float
+                     p-value under normality assumption (one-tailed)
+    p_rand         : float
+                     p-value under randomization assumption (one-tailed)
+    sim            : array (if permutations!=0)
+                     vector of I values for permutated samples
+    p_sim          : float (if permutations!=0)
+                     p-value based on permutations
+    EC_sim         : float (if permutations!=0)
+                     average value of C from permutations
+    VC_sim         : float (if permutations!=0)
+                     variance of C from permutations
+    seC_sim        : float (if permutations!=0)
+                     standard deviation of C under permutations.
+    z_sim          : float (if permutations!=0)
+                     standardized C based on permutations
+    p_z_sim        : float (if permutations!=0)
+                     p-value based on standard normal approximation from
+                     permutations
 
-        transformation: weights transformation, default is row-standardized
-        "W". Other options include "B": binary, "D": doubly-standardized, "U":
-            untransformed (general weights), "V": variance-stabilizing.
-
-        permutations: number of random permutations for calculation of
-        pseudo-p_values
-
-
-    Attributes:
-        y: original variable
-
-        w: original w object
-
-        permutation: number of permutations
-
-        C: value of statistic
-
-        EC: expected value
-        
-        VC: variance of G under normality assumption
-
-        z_norm: z-statistic for C under normality assumption
-
-        z_rand: z-statistic for C under randomization assumption
-
-        p_norm: p-value under normality assumption (one-tailed)
-
-        p_rand: p-value under randomization assumption (one-tailed)
-
-
-        (if permutations>0)
-        sim: vector of I values for permutated samples
-
-        p_sim: p-value based on permutations
-
-        EC_sim: average value of C from permutations
-
-        VC_sim: variance of C from permutations
-
-        seC_sim: standard deviation of C under permutations.
-
-        z_sim: standardized C based on permutations
-
-        p_z_sim: p-value based on standard normal approximation from
-        permutations
-
-    Example:
-        >>> import pysal
-        >>> w=pysal.open("../examples/book.gal").read()
-        >>> f=pysal.open("../examples/book.txt")
-        >>> y=np.array(f.by_col['y'])
-        >>> c=Geary(y,w,permutations=0)
-        >>> c.C
-        0.33281733746130032
-        >>> c.p_norm
-        0.00076052983736881971
-        >>> 
+    Examples
+    --------
+    >>> import pysal
+    >>> w=pysal.open("../examples/book.gal").read()
+    >>> f=pysal.open("../examples/book.txt")
+    >>> y=np.array(f.by_col['y'])
+    >>> c=Geary(y,w,permutations=0)
+    >>> c.C
+    0.33281733746130032
+    >>> c.p_norm
+    0.00076052983736881971
+    >>> 
     """
     def __init__(self,y,w,transformation="B",permutations=PERMUTATIONS):
         self.n=len(y)
@@ -99,8 +99,6 @@ class Geary:
         self.p_norm = stats.norm.pdf(self.z_norm)
         self.p_rand = stats.norm.pdf(self.z_rand)
 
-
-        
         if permutations:
             sim=[self.__calc(np.random.permutation(self.y)) \
                  for i in xrange(permutations)]
@@ -137,9 +135,9 @@ class Geary:
     def __calc(self,y):
         ys=np.zeros(y.shape)
         y2=y**2
-        for i in self.w.weights:
-            neighbors=self.w.neighbors[i]
-            wijs=self.w.weights[i]
+        for i,i0 in enumerate(self.w.id_order):
+            neighbors=self.w.neighbors_0[i0]
+            wijs=self.w.weights[i0]
             z=zip(neighbors,wijs)
             ys[i] = sum([wij*(y2[i] - 2*y[i]*y[j] + y2[j]) for j,wij in z])
         a= (self.n-1)* sum(ys)

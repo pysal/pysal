@@ -47,7 +47,7 @@ class InverseDistance(W):
         self._distance()
         W.__init__(self,self._distance_to_W())
         if row_standardize:
-            self.transform="W"
+            self.transform="r"
 
 
     def _distance(self):

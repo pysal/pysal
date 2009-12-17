@@ -23,7 +23,7 @@ class GalIO(FileIO.FileIO):
             raise StopIteration
         weights={}
         neighbors={}
-        original_ids=[]
+        ids=[]
         # handle case where more than n is specified in first line
         header=self.file.readline().strip().split()
         header_n= len(header)
@@ -31,27 +31,28 @@ class GalIO(FileIO.FileIO):
         if header_n > 1:
             n=int(header[1])
         w={}
-        for i in range (1,n+1):
+        for i in range (n):
             id,n_neighbors=self.file.readline().strip().split()
             n_neighbors = int(n_neighbors)
             neighbors_i = self.file.readline().strip().split()
             weights[id]=[1]*n_neighbors
             neighbors[id]=neighbors_i
-            original_ids.append(id)
-        original_neighbors=neighbors
-        zo=self.__zero_offset(neighbors,weights,original_ids)
-        neighbors=zo['new_neighbors']
-        original_ids=zo['old_ids']
-        ids = zo['new_ids']
-        weights=zo['new_weights']
-        original_weights=weights
-        n=len(weights)
+            ids.append(id)
+        #original_neighbors=neighbors
+        #zo=self.__zero_offset(neighbors,weights,original_ids)
+        #neighbors=zo['new_neighbors']
+        #original_ids=zo['old_ids']
+        #ids = zo['new_ids']
+        #weights=zo['new_weights']
+        #original_weights=weights
+        #n=len(weights)
         d = {}
+        d['ids']=ids
         d['weights'] = weights
-        d['neighbors'] =neighbors
-        d['original_neighbors'] = original_neighbors
-        d['new_ids'] = ids
-        d['original_ids'] = original_ids
+        d['neighbors'] = neighbors
+        #d['original_neighbors'] = original_neighbors
+        #d['new_ids'] = ids
+        #d['original_ids'] = original_ids
 
         self.pos += 1 
         return W(d)

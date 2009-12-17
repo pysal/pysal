@@ -7,87 +7,89 @@ Author(s):
 
 """
 from pysal.common import *
+from pysal.weights.spatial_lag import lag as slag
 
-from spatial_lag import lag as slag
 
 PERMUTATIONS=999
 
 class Moran:
     """Moran's I Global Autocorrelation Statistic
     
-    Arguments:
-        y: n*1 array
+    Parameters
+    ----------
 
-        w: weight instance assumed to be aligned with y
+    y               : array
+    w               : W
+                      spatial weights instance
+    transformation  : string 
+                      weights transformation, default is row-standardized "r".
+                      Other options include "B": binary, "D":
+                          doubly-standardized, "U": untransformed (general
+                          weights), "V": variance-stabilizing.
+    permutations    : int
+                      number of random permutations for calculation of pseudo-p_values
 
-        transformation: weights transformation, default is row-standardized
-        "W". Other options include "B": binary, "D": doubly-standardized, "U":
-            untransformed (general weights), "V": variance-stabilizing.
 
-        permutations: number of random permutations for calculation of
-        pseudo-p_values
+    Attributes
+    ----------
+    y            : array
+                   original variable
+    w            : W
+                   original w object
+    permutations : int
+                   number of permutations
+    I            : float
+                   value of Moran's I
+    EI           : float
+                   expected value under normality assumption
+    VI_norm      : float
+                   variance of I under normality assumption
+    seI_norm     : float
+                   standard deviation of I under normality assumption
+    z_norm       : float
+                   z-value of I under normality assumption
+    p_norm       : float
+                   p-value of I under normality assumption (1-tailed)
+    VI_rand      : float
+                   variance of I under randomization assumption
+    seI_rand     : float
+                   standard deviation of I under randomization assumption
+    z_rand       : float
+                   z-value of I under randomization assumption
+    p_rand       : float
+                   p-value of I under randomization assumption (1-tailed)
+    sim          : array (if permutations>0)
+                   vector of I values for permutated samples
+    p_sim        : array (if permutations>0)
+                   p-value based on permutations
+    EI_sim       : float (if permutations>0)
+                   average value of I from permutations
+    VI_sim       : float (if permutations>0)
+                   variance of I from permutations
+    seI_sim      : float (if permutations>0)
+                   standard deviation of I under permutations.
+    z_sim        : float (if permutations>0)
+                   standardized I based on permutations
+    p_z_sim      : float (if permutations>0)
+                   p-value based on standard normal approximation from
 
-
-    Attributes:
-        y: original variable
-
-        w: original w object
-
-        permutation: number of permutations
-
-        I: value of Moran's I
-
-        EI: expected value under normality assumption
-
-        VI_norm: variance of I under normality assumption
-
-        seI_norm: standard deviation of I under normality assumption
-
-        z_norm: z-value of I under normality assumption
-
-        p_norm: p-value of I under normality assumption (1-tailed)
-
-        VI_rand: variance of I under randomization assumption
-
-        seI_rand: standard deviation of I under randomization assumption
-
-        z_rand: z-value of I under randomization assumption
-
-        p_rand: p-value of I under randomization assumption (1-tailed)
-
-        (if permutations>0)
-        sim: vector of I values for permutated samples
-
-        p_sim: p-value based on permutations
-
-        EI_sim: average value of I from permutations
-
-        VI_sim: variance of I from permutations
-
-        seI_sim: standard deviation of I under permutations.
-
-        z_sim: standardized I based on permutations
-
-        p_z_sim: p-value based on standard normal approximation from
-        permutations
-
-    Example:
-        >>> import pysal
-        >>> w=pysal.open("../examples/stl.gal").read()
-        >>> w.id_order=range(78)
-        >>> f=pysal.open("../examples/stl_hom.txt")
-        >>> y=np.array(f.by_col['HR8893'])
-        >>> mi=Moran(y,w)
-        >>> mi.I
-        0.24365582621771659
-        >>> mi.EI
-        -0.012987012987012988
-        >>> mi.p_norm
-        0.00052730423329256173
-        >>> 
+    Examples
+    --------
+    >>> import pysal
+    >>> w=pysal.open("../examples/stl.gal").read()
+    >>> f=pysal.open("../examples/stl_hom.txt")
+    >>> y=np.array(f.by_col['HR8893'])
+    >>> mi=Moran(y,w)
+    >>> mi.I
+    0.24365582621771661
+    >>> mi.EI
+    -0.012987012987012988
+    >>> mi.p_norm
+    0.00052730423329256173
+    >>> 
         
     """
-    def __init__(self,y,w,transformation="W",permutations=PERMUTATIONS):
+    def __init__(self,y,w,transformation="r",permutations=PERMUTATIONS):
         self.y=y
         w.transform=transformation
         self.w=w
@@ -137,7 +139,7 @@ class Moran:
 
 
     def __calc(self,z):
-        zl=slag(z,self.w)
+        zl=slag(self.w,z)
         self.inum=sum(self.z*zl)
         return self.n/self.w.s0 * sum(self.z*zl)/self.z2ss
 
@@ -154,7 +156,7 @@ class Moran_BV:
         w: weight instance assumed to be aligned with y
 
         transformation: weights transformation, default is row-standardized
-        "W". Other options include "B": binary, "D": doubly-standardized, "U":
+        "r". Other options include "B": binary, "D": doubly-standardized, "U":
             untransformed (general weights), "V": variance-stabilizing.
 
         permutations: number of random permutations for calculation of
@@ -192,7 +194,7 @@ class Moran_BV:
         Inference is only based on permutations as analytical results are
         none too reliable.
     """
-    def __init__(self,y1,y2,w,transformation="W",permutations=PERMUTATIONS):
+    def __init__(self,y1,y2,w,transformation="r",permutations=PERMUTATIONS):
         self.y1=y1
         self.y2=y2
         self.w=w
@@ -216,7 +218,7 @@ class Moran_BV:
 
 
     def __calc(self,z2):
-        z2l=slag(z2,self.w)
+        z2l=slag(self.w,z2)
         self.inum=sum(self.z1,z2l)
         return sum(self.z1*z2l)/self.z12ss
 
@@ -262,7 +264,7 @@ class Moran_Local:
         w: weight instance assumed to be aligned with y
 
         transformation: weights transformation, default is row-standardized
-        "W". Other options include "B": binary, "D": doubly-standardized, "U":
+        "r". Other options include "B": binary, "D": doubly-standardized, "U":
             untransformed (general weights), "V": variance-stabilizing.
 
         permutations: number of random permutations for calculation of
@@ -302,21 +304,20 @@ class Moran_Local:
         extreme is considered being further away from the origin and in the
         same direction than original I statistic  for the focal observation.
 
-    Example
-    -------
+    Examples
+    --------
         >>> import pysal
         >>> w=pysal.open("../examples/desmith.gal").read()
-        >>> w.id_order=range(w.n)
         >>> f=pysal.open("../examples/desmith.txt")
         >>> y=np.array(f.by_col['z'])
-        >>> lm=Moran_Local(y,w,transformation="W",permutations=0)
+        >>> lm=Moran_Local(y,w,transformation="r",permutations=0)
         >>> lm.q
         array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
         >>> lm.Is
         array([-0.11409277, -0.19940543, -0.13351408, -0.51770383,  0.48095009,
                 0.12208113,  1.19148298, -0.58144305,  0.07101383,  0.34314301])
     """
-    def __init__(self,y,w,transformation="W",permutations=PERMUTATIONS):
+    def __init__(self,y,w,transformation="r",permutations=PERMUTATIONS):
         self.y=y
         z=y-y.mean()
         z/=y.std()
@@ -347,12 +348,12 @@ class Moran_Local:
             self.p_z_sim=stats.norm.pdf(self.z_sim)
 
     def __calc(self,z):
-        zl=slag(z,self.w)
+        zl=slag(self.w,z)
         num=self.z * zl
         return (len(zl)-1)*self.z*zl/self.den
     
     def __quads(self):
-        zl=slag(self.z,self.w)
+        zl=slag(self.w,self.z)
         zp=self.z>0
         lp=zl>0
         pp=zp*lp
@@ -361,39 +362,6 @@ class Moran_Local:
         pn=zp*(1-lp)
         self.q=1*pp+2*np+3*nn+4*pn
 
-
-# tests
-class __TestMoran(unittest.TestCase):
-
-    def setUp(self):
-        import pysal
-        self.w=pysal.open("../examples/stl.gal").read()
-        self.w.id_order=range(78)
-        f=pysal.open("../examples/stl_hom.txt")
-        self.y1=np.array(f.by_col['HR8893'])
-        self.y2=np.array(f.by_col['HR8488'])
-
-    def test_I(self):
-        mi=Moran(self.y2,self.w)
-        f="%6.4f"%mi.I
-        self.assertEquals(f,"0.2068")
-
-    def test_local(self):
-        import pysal
-        w=pysal.open("../examples/desmith.gal").read()
-        w.id_order=range(w.n)
-        f=pysal.open("../examples/desmith.txt")
-        y=np.array(f.by_col['z'])
-        lm=Moran_Local(y,w,transformation="W",permutations=0)
-        v="%6.4f"%lm.Is[2]
-        self.assertEquals(v,"-0.1335")
-        q=lm.q.tolist()
-        self.assertEquals(q,[4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
-
-    def test_mvI(self):
-        mv=Moran_BV(self.y1,self.y2,self.w)
-        v="%6.4f"%mv.I
-        self.assertEquals(v,'0.9322')
 
 if __name__ == '__main__':
     import doctest

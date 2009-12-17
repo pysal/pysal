@@ -35,14 +35,14 @@ import pysal.esda.moran, pysal.esda.geary
 import pysal.esda.mapclassify
 import pysal.econometrics.classic
 import pysal.weights.weights, pysal.weights.ContiguityWeights
-import pysal.weights.DistanceWeights
+import pysal.weights.DistanceWeights, pysal.weights.spatial_lag
 
 
 #add modules to include in tests
 mods='esda.moran','esda.geary', 'esda.mapclassify', \
         'econometrics.classic', \
         'weights.weights','weights.DistanceWeights', \
-        'weights.ContiguityWeights'
+        'weights.ContiguityWeights','weights.spatial_lag'
 mods = [ "pysal."+ mod for mod in mods]
 suite = unittest.TestSuite()
 for mod in mods:

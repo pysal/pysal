@@ -13,29 +13,95 @@ DELTA = 0.0000001
 class W(object):
     """Spatial weights
 
-        Parameters
-        ==========
-
-        data : dictionary with two entries
-            neighbors : dictionary with ids as keys list of neighbors as
-            values
-
-            weights : dictionary with ids as keys list of weights as values
-
-            such that:
-
-            neighbors[1]=[2,4]
-            weights[1]=[w_{1,2}, w_{1,4}]
-            .
-            .
-            neighbors[4]=[1,7,10]
-            weights[4]=[w_{4,1}, w_{4,7}, w_{4,10}]
-
-            and w_{i,j} are the weights which can be general or
-            binary.
+    Parameters
+    ----------
+    data           : dictionary
+                     three entries (ids, neighbors, weights)
+                      ids       : list
+                                   sequence of ids for units. This determines the
+                                   order of iteration over the weights
+                      neighbors : dictionary 
+                                      ids as keys list of neighbors as values;
+                      weights   : dictionary
+                                  ids as keys list of weights as
 
 
-    
+    Attributes
+    ----------
+
+    asymmetric      : binary
+                      True if weights are asymmetric, False if not
+    cardinalities   : dictionary 
+                      number of neighbors for each observation 
+    id_order        : list
+                      order of observations when iterating over weights
+    id_order_set    : binary
+                      True if id_order has been set by user, False (default)
+    islands         : list
+                      ids that have no neighbors
+    max_neighbors   : int
+                      maximum cardinality 
+    min_neighbors   : int 
+                      minimum cardinality 
+    mean_neighbors  : float
+                      average cardinality 
+    n               : int
+                      number of observations (int)
+    neighbors       : dictionary
+                      neighbor ids. key is observation id and value is list of neighboring observation 
+                      ids with position corresponding to the same position in weights (see weights)
+    neighbors_0     : dictionary
+                      zero offset neighbor ids. key is observation id and
+                      value is a list of 0-offset indexes for the
+                      neighbors (used to ensure alignment with in calculating lags)
+    nonzero         : int
+                      number of nonzero weights
+    pct_nonzero     : float
+                      percentage of all weights that are nonzero
+    s0              : float
+                      sum of all weights 
+    s1              : float
+                      trace of ww
+    s2              : float
+                      trace of w'w
+    sd              : float
+                      standard deviation of number of neighbors 
+    transform       : string
+                      property for weights transformation. can be used to get and set weights transformation. 
+    transformations : dictionary
+                      transformed weights. key is transformation type, value are weights
+    weights         : dictionary
+                      key is observation id, value is list of transformed
+                      weights in order of neighbor ids (see neighbors).
+    _idx            : int
+                      index for iterator
+    _id_order       : list
+                      order of ids for iterator
+    _id_order_set   : binary
+                      sentinel to determine if user has set id_order
+    _transform      : string
+                      weights transformation
+
+
+    Examples
+    --------
+
+    >>> neighbors={0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
+    >>> weights={0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
+    >>> data={'neighbors':neighbors,'weights':weights}
+    >>> w=W(data)
+    >>> w.pct_nonzero
+    0.29629629629629628
+
+    Read from external gal file
+
+    >>> import pysal
+    >>> w=pysal.open("../examples/stl.gal").read()
+    >>> w.n
+    78
+    >>> w.pct_nonzero
+    0.065417488494411577
+
     """
     @classmethod
     def fromBinary(cls,data):
@@ -53,142 +119,28 @@ class W(object):
 
 
     def __init__(self,data):
-        """Construct a spatial weights object
+        """see class docstring"""
+        
 
-        Parameters
-        ==========
-
-        data : dictionary with two entries
-            neighbors: list of neighbors
-            weights: list of weights
-
-            such that:
-
-            neighbors[1]=[2,4]
-            weights[1]=[w_{1,2}, w_{1,4}]
-            .
-            .
-            neighbors[4]=[1,7,10]
-            weights[4]=[w_{4,1}, w_{4,7}, w_{4,10}]
-
-            and w_{i,j} are the weights which can be general or
-            binary.
-
-
-
-        Attributes
-        ==========
-
-        asymmetric : Flag for any asymmetries (see
-        method asymmetry for details), false if none.
-
-        cardinalities : dictionary of cardinalities 
-
-        id_order : list , order of observations when iterating over weights
-
-        id_order_set : binary, True if id_order has been set by user, False
-        (default)
-
-        islands : list of ids that have no neighbors
-
-        max_neighbors : maximum cardinality (int)
-
-        min_neighbors : minimum cardinality (int)
-
-        mean_neighbors : average cardinality (float)
-
-        n : number of observations (int)
-
-        neighbors: dictionary of neighbor ids. key is observation id
-        and value is list of neighboring observation ids, with position
-        corresponding to the same position in weights (see weights)
-
-        nonzero : number of nonzero weights
-
-        pct_nonzero : percentage of all weights that are nonzero
-
-        s0 : sum of all weights 
-
-        s1 : trace of ww
-
-        s2 : trace of w'w
-
-        sd : standard deviation of number of neighbors (float)
-
-        transform : property for weights transformation. can be used to
-        get and set weights transformation. 
-
-        transformations : dictionary of transformed weights. key is
-        transformation type, value are weights
-
-        weights : dictionary of currently specified transformed
-        weights. key is observation id, value is list of transformed
-        weights in order of neighbor ids (see neighbors).
-
-        Private attributes
-        ------------------
-
-        _idx: index for iterator
-        _id_order: order of ids for iterator
-        _id_order_set: sentinel to determine if user has set id_order
-        _transform: weights transformation
-
-                
-
-        Methods:
-        ========
-
-        asymmetry: checks if there are any asymmetries in the weights.
-        The default is to check for non-zero symmetries only, but
-        stricter value symmetries can also be checked.
-
-        characteristics: calculates summary properties of the weights
-
-        full: returns a full nxn numpy array
-
-        higher_order: returns the higher order (k) contiguity matrix
-
-        order: determines the non-redundant order of contiguity for
-        i,j up to a given level of contiguity
-
-        set_transform: transform the weights.  Options include "B": binary,
-        "W": row-standardized (row sum to 1), "D": doubly-standardized
-        (global sum to 1), "V": variance stabilizing, 
-        "O": original weights
-
-        shimbel: finds the shimbel matrix for the first order
-        contiguity matrix
-
-
-        Example:
-        ========
-
-        >>> neighbors={0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
-        >>> weights={0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
-        >>> data={'neighbors':neighbors,'weights':weights}
-        >>> w=W(data)
-        >>> w.pct_nonzero
-        0.29629629629629628
-        """
-
-        if 'weights' not in data:
-            weights=dict([(i,[1]*len(wi)) for i,wi in data.items()])
-            neighbors=data
-            data={'neighbors':neighbors,'weights':weights}
-
+        
         self.transformations={}
         self.weights=data['weights']
         self.neighbors=data['neighbors']
         self.transformations['O']=self.weights #original weights
         self.islands=[]
-        self.characteristics()
-        self._transform=None
         self._id_order=self.neighbors.keys()
-        self._id_order_set=False
+        if 'ids' in data:
+            self._id_order=data['ids']
+            self._id_order_set=True
+        else:
+            self._id_order_set=False
+        self._zero_offset()
         self._idx=0
         self.n=len(self.neighbors)
         self.n_1=self.n-1
-        
+        self._characteristics()
+        self._transform=None
+
     def __getitem__(self,key):
         """
         Allow a dictionary like interaction with the weights class.
@@ -258,66 +210,19 @@ class W(object):
 
         Example:
 
-            >>> w=lat2gal()
-            >>> w.id_order
-            [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
-            >>> for wi in w:
-            ...     print wi
+            >>> w=lat2gal(3,3)
+            >>> for i,wi in enumerate(w):
+            ...     print i,wi
             ...     
-            {1: 1.0, 5: 1.0}
-            {0: 1.0, 2: 1.0, 6: 1.0}
-            {1: 1.0, 3: 1.0, 7: 1.0}
-            {8: 1.0, 2: 1.0, 4: 1.0}
-            {9: 1.0, 3: 1.0}
-            {0: 1.0, 10: 1.0, 6: 1.0}
-            {1: 1.0, 11: 1.0, 5: 1.0, 7: 1.0}
-            {8: 1.0, 2: 1.0, 12: 1.0, 6: 1.0}
-            {9: 1.0, 3: 1.0, 13: 1.0, 7: 1.0}
-            {8: 1.0, 4: 1.0, 14: 1.0}
-            {11: 1.0, 5: 1.0, 15: 1.0}
-            {16: 1.0, 10: 1.0, 12: 1.0, 6: 1.0}
-            {17: 1.0, 11: 1.0, 13: 1.0, 7: 1.0}
-            {8: 1.0, 18: 1.0, 12: 1.0, 14: 1.0}
-            {9: 1.0, 19: 1.0, 13: 1.0}
-            {16: 1.0, 10: 1.0, 20: 1.0}
-            {17: 1.0, 11: 1.0, 21: 1.0, 15: 1.0}
-            {16: 1.0, 18: 1.0, 12: 1.0, 22: 1.0}
-            {17: 1.0, 19: 1.0, 13: 1.0, 23: 1.0}
-            {24: 1.0, 18: 1.0, 14: 1.0}
-            {21: 1.0, 15: 1.0}
-            {16: 1.0, 20: 1.0, 22: 1.0}
-            {17: 1.0, 21: 1.0, 23: 1.0}
-            {24: 1.0, 18: 1.0, 22: 1.0}
-            {19: 1.0, 23: 1.0}
-            >>> w.id_order=range(24,-1,-1)
-            >>> for wi in w:
-            ...     print wi
-            ...     
-            {19: 1.0, 23: 1.0}
-            {24: 1.0, 18: 1.0, 22: 1.0}
-            {17: 1.0, 21: 1.0, 23: 1.0}
-            {16: 1.0, 20: 1.0, 22: 1.0}
-            {21: 1.0, 15: 1.0}
-            {24: 1.0, 18: 1.0, 14: 1.0}
-            {17: 1.0, 19: 1.0, 13: 1.0, 23: 1.0}
-            {16: 1.0, 18: 1.0, 12: 1.0, 22: 1.0}
-            {17: 1.0, 11: 1.0, 21: 1.0, 15: 1.0}
-            {16: 1.0, 10: 1.0, 20: 1.0}
-            {9: 1.0, 19: 1.0, 13: 1.0}
-            {8: 1.0, 18: 1.0, 12: 1.0, 14: 1.0}
-            {17: 1.0, 11: 1.0, 13: 1.0, 7: 1.0}
-            {16: 1.0, 10: 1.0, 12: 1.0, 6: 1.0}
-            {11: 1.0, 5: 1.0, 15: 1.0}
-            {8: 1.0, 4: 1.0, 14: 1.0}
-            {9: 1.0, 3: 1.0, 13: 1.0, 7: 1.0}
-            {8: 1.0, 2: 1.0, 12: 1.0, 6: 1.0}
-            {1: 1.0, 11: 1.0, 5: 1.0, 7: 1.0}
-            {0: 1.0, 10: 1.0, 6: 1.0}
-            {9: 1.0, 3: 1.0}
-            {8: 1.0, 2: 1.0, 4: 1.0}
-            {1: 1.0, 3: 1.0, 7: 1.0}
-            {0: 1.0, 2: 1.0, 6: 1.0}
-            {1: 1.0, 5: 1.0}
+            0 {1: 1.0, 3: 1.0}
+            1 {0: 1.0, 2: 1.0, 4: 1.0}
+            2 {1: 1.0, 5: 1.0}
+            3 {0: 1.0, 4: 1.0, 6: 1.0}
+            4 {1: 1.0, 3: 1.0, 5: 1.0, 7: 1.0}
+            5 {8: 1.0, 2: 1.0, 4: 1.0}
+            6 {3: 1.0, 7: 1.0}
+            7 {8: 1.0, 4: 1.0, 6: 1.0}
+            8 {5: 1.0, 7: 1.0}
         """
 
 
@@ -325,6 +230,8 @@ class W(object):
             self._id_order=ordered_ids
             self._idx=0
             self._id_order_set=True
+            self.neighbor_0_ids={}
+            self._zero_offset()
         else:
             raise Exception, 'ordered_ids do not aligned with W ids'
 
@@ -341,17 +248,18 @@ class W(object):
         Example
         >>> w=lat2gal()
         >>> w.id_order_set
-        False
-        >>> w.id_order=range(24,-1,-1)
-        >>> w.id_order_set
         True
         """
-
-
         return self._id_order_set
 
     id_order_set=property(get_id_order_set)
 
+
+    def _zero_offset(self):
+        """creates attribute to map neighbor ids from  id_order to zero offset"""
+        self.neighbors_0={}
+        for id in self.neighbors:
+            self.neighbors_0[id]=[self._id_order.index(neigh) for neigh in self.neighbors[id]]
 
     def get_transform(self):
         """
@@ -360,7 +268,7 @@ class W(object):
                 >>> w.weights[0]
                 [1.0, 1.0]
                 >>> w.transform
-                >>> w.transform='w'
+                >>> w.transform='r'
                 >>> w.weights[0]
                 [0.5, 0.5]
                 >>> w.transform='b'
@@ -375,7 +283,7 @@ class W(object):
         
             Supported transformations include:
                 B: Binary 
-                W: Row-standardization (global sum=n)
+                R: Row-standardization (global sum=n)
                 D: Double-standardization (global sum=1)
                 V: Variance stabilizing
                 O: Restore original transformation (from instantiation)
@@ -385,7 +293,7 @@ class W(object):
                 >>> w.weights[0]
                 [1.0, 1.0]
                 >>> w.transform
-                >>> w.transform='w'
+                >>> w.transform='r'
                 >>> w.weights[0]
                 [0.5, 0.5]
                 >>> w.transform='b'
@@ -397,9 +305,9 @@ class W(object):
         self._transform = value
         if self.transformations.has_key(value):
             self.weights=self.transformations[value]
-            self.characteristics()
+            self._characteristics()
         else:
-            if value == "W": 
+            if value == "R": 
                 # row standardized weights
                 weights={}
                 for i in self.weights:
@@ -408,11 +316,11 @@ class W(object):
                     weights[i]=[wij/row_sum for wij in wijs]
                 self.transformations[value]=weights
                 self.weights=weights
-                self.characteristics()
+                self._characteristics()
             elif value == "D":
                 # doubly-standardized weights
                 # update current chars before doing global sum
-                self.characteristics()
+                self._characteristics()
                 s0=self.s0
                 ws=1.0/s0
                 weights={}
@@ -421,7 +329,7 @@ class W(object):
                     weights[i]=[wij*ws for wij in wijs]
                 self.transformations[value]=weights
                 self.weights=weights
-                self.characteristics()
+                self._characteristics()
             elif value == "B":
                 # binary transformation
                 weights={}
@@ -430,7 +338,7 @@ class W(object):
                     weights[i]=[1.0 for wij in wijs]
                 self.transformations[value]=weights
                 self.weights=weights
-                self.characteristics()
+                self._characteristics()
             elif value == "V":
                 # variance stabilizing
                 weights={}
@@ -447,7 +355,7 @@ class W(object):
                 for i in self.weights:
                     weights[i] = [ w*nQ for w in s[i]]
                 self.weights=weights
-                self.characteristics()
+                self._characteristics()
             elif value =="O":
                 # put weights back to original transformation
                 weights={}
@@ -459,8 +367,8 @@ class W(object):
     transform = property(get_transform, set_transform)
     
 
-    def characteristics(self):
-        """properties of W needed for various autocorrelation tests and some
+    def _characteristics(self):
+        """Calculates properties of W needed for various autocorrelation tests and some
         summary characteristics.
         
         >>> import ContiguityWeights
@@ -491,7 +399,7 @@ class W(object):
         row_sum={}
         cardinalities={}
         nonzero=0
-        for i in self.weights.keys():
+        for i in self._id_order:
             neighbors_i=self.neighbors[i]
             cardinalities[i]=len(neighbors_i)
             w_i=self.weights[i]
@@ -558,7 +466,7 @@ class W(object):
             >>> neighbors[1].insert(0,0)
             >>> w.asymmetry()
             []
-            >>> w.transform='w'
+            >>> w.transform='r'
             >>> w.asymmetry(nonzero=False)
             [((0, 1), (1, 0)), ((0, 2), (2, 0)), ((0, 3), (3, 0)), ((1, 0), (0, 1)), ((1, 2), (2, 1)), ((1, 3), (3, 1)), ((2, 0), (0, 2)), ((2, 1), (1, 2)), ((3, 0), (0, 3)), ((3, 1), (1, 3))]
             >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
@@ -703,33 +611,35 @@ class W(object):
         return info
 
     def higher_order(self,k=3):
-        """Return contiguity weights object of order k (default k=3)
+        """Contiguity weights object of order k 
+
         
         
         Implements the algorithm in Anselin and Smirnov (1996)
 
-        Example:
-            >>> w5=lat2gal()
-            >>> w5_shimbel=w5.shimbel()
-            >>> w5_shimbel[0][24]
-            8
-            >>> w5_shimbel[0][0:4]
-            [-1, 1, 2, 3]
-            >>> w5_8th_order=w5.higher_order(8)
-            >>> w5_8th_order.neighbors[0]
-            [24]
-            >>> import ContiguityWeights
-            >>> w=ContiguityWeights.rook('../examples/10740.shp')
-            >>> w2=w.higher_order(2)
-            >>> w[1]
-            {2: 1.0, 102: 1.0, 86: 1.0, 5: 1.0, 6: 1.0}
-            >>> w2[1]
-            {147: 1.0, 3: 1.0, 4: 1.0, 101: 1.0, 7: 1.0, 40: 1.0, 41: 1.0, 10: 1.0, 103: 1.0, 104: 1.0, 19: 1.0, 84: 1.0, 85: 1.0, 100: 1.0, 91: 1.0, 92: 1.0, 94: 1.0}
-            >>> w[147]
-            {163: 1.0, 100: 1.0, 165: 1.0, 102: 1.0, 140: 1.0, 145: 1.0, 146: 1.0, 148: 1.0, 85: 1.0}
-            >>> w[85]
-            {96: 1.0, 102: 1.0, 140: 1.0, 147: 1.0, 86: 1.0, 94: 1.0}
-            >>> 
+        Examples
+        --------
+        >>> w5=lat2gal()
+        >>> w5_shimbel=w5.shimbel()
+        >>> w5_shimbel[0][24]
+        8
+        >>> w5_shimbel[0][0:4]
+        [-1, 1, 2, 3]
+        >>> w5_8th_order=w5.higher_order(8)
+        >>> w5_8th_order.neighbors[0]
+        [24]
+        >>> import ContiguityWeights
+        >>> w=ContiguityWeights.rook('../examples/10740.shp')
+        >>> w2=w.higher_order(2)
+        >>> w[1]
+        {2: 1.0, 102: 1.0, 86: 1.0, 5: 1.0, 6: 1.0}
+        >>> w2[1]
+        {147: 1.0, 3: 1.0, 4: 1.0, 101: 1.0, 7: 1.0, 40: 1.0, 41: 1.0, 10: 1.0, 103: 1.0, 104: 1.0, 19: 1.0, 84: 1.0, 85: 1.0, 100: 1.0, 91: 1.0, 92: 1.0, 94: 1.0}
+        >>> w[147]
+        {163: 1.0, 100: 1.0, 165: 1.0, 102: 1.0, 140: 1.0, 145: 1.0, 146: 1.0, 148: 1.0, 85: 1.0}
+        >>> w[85]
+        {96: 1.0, 102: 1.0, 140: 1.0, 147: 1.0, 86: 1.0, 94: 1.0}
+        >>> 
 
         """
 
@@ -750,32 +660,38 @@ class W(object):
 def lat2gal(nrows=5,ncols=5,rook=True):
     """Create a GAL structure for a regular lattice.
 
-    Arguments:
+    Parameters
+    ----------
 
-        nrows = number of rows
-        ncols = number of columns
-        rook = boolean for type of matrix. Default is rook. For queen set
-        rook=False
+    nrows : int
+            number of rows
+    ncols : int
+            number of columns
+    rook  : boolean
+            type of matrix. Default is rook. For queen, rook =False
 
-    Returns:
+    Returns
+    -------
 
-        w = instance of spatial weights class W
+    w : W
+        instance of spatial weights class W
 
-    Notes:
+    Notes
+    -----
 
-        Observations are row ordered: first k observations are in row 0, next
-        k in row 1, and so on.
+    Observations are row ordered: first k observations are in row 0, next k in row 1, and so on.
 
-    Example:
+    Examples
+    --------
 
-        >>> w9=lat2gal(3,3)
-        >>> w9.pct_nonzero
-        0.29629629629629628
-        >>> w9[0]
-        {1: 1.0, 3: 1.0}
-        >>> w9[3]
-        {0: 1.0, 4: 1.0, 6: 1.0}
-        >>> 
+    >>> w9=lat2gal(3,3)
+    >>> w9.pct_nonzero
+    0.29629629629629628
+    >>> w9[0]
+    {1: 1.0, 3: 1.0}
+    >>> w9[3]
+    {0: 1.0, 4: 1.0, 6: 1.0}
+    >>> 
     """
 
     n=nrows*ncols
@@ -815,6 +731,7 @@ def lat2gal(nrows=5,ncols=5,rook=True):
         weights[key]=[1.]*len(w[key])
     d['neighbors']=w
     d['weights']=weights
+    d['ids']=range(n)
     return W(d)
 
 def regime_weights(regimes):
@@ -824,18 +741,19 @@ def regime_weights(regimes):
     based on membership in a regime. For example, all counties belonging to
     the same state could be defined as neighbors.
 
-    Arguments
-    =========
-    regimes - list or array
+    Parameters
+    ----------
+    regimes : list or array
            ids of which regime an observation belongs to
 
     Returns
-    =======
+    -------
 
-    W - spatial weights instance
+    W : spatial weights instance
 
-    Example
-    =======
+    Examples
+    --------
+    
     >>> regimes=np.ones(25)
     >>> regimes[range(10,20)]=2
     >>> regimes[range(21,25)]=3
@@ -875,17 +793,29 @@ def comb(items, n=None):
     """Combinations of size n taken from items
 
     Arguments
-    =========
+    ---------
 
     items : sequence
-
-    n : integer
-        size of combinations to take from items
+    n     : integer
+            size of combinations to take from items
 
     Returns
-    =======
-
+    -------
     generator of combinations of size n taken from items
+
+    Examples
+    --------
+    >>> x=range(4)
+    >>> for c in comb(x,2):
+    ...     print c
+    ...     
+    [0, 1]
+    [0, 2]
+    [0, 3]
+    [1, 2]
+    [1, 3]
+    [2, 3]
+    
     """
     if n is None:
         n=len(items)
