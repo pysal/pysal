@@ -21,11 +21,6 @@ class Moran:
     y               : array
     w               : W
                       spatial weights instance
-    transformation  : string 
-                      weights transformation, default is row-standardized "r".
-                      Other options include "B": binary, "D":
-                          doubly-standardized, "U": untransformed (general
-                          weights), "V": variance-stabilizing.
     permutations    : int
                       number of random permutations for calculation of pseudo-p_values
 
@@ -148,66 +143,78 @@ class Moran_BV:
     
  
     
-    Arguments:
-        y1: n*1 array
-
-        y2: n*1 array 
-
-        w: weight instance assumed to be aligned with y
-
-        transformation: weights transformation, default is row-standardized
-        "r". Other options include "B": binary, "D": doubly-standardized, "U":
-            untransformed (general weights), "V": variance-stabilizing.
-
-        permutations: number of random permutations for calculation of
-        pseudo-p_values
-
-
-    Attributes:
-        y: original variable
-
-        w: original w object
-
-        permutation: number of permutations
-
-        I: value of Moran's I
+    Parameters
+    ----------
+    x               : array
+                      x-axis variable
+    y               : array
+                      (wy will be on y axis)
+    w               : W
+                      weight instance assumed to be aligned with y
+    transformation  : string
+                      weights transformation, default is row-standardized "r".
+                      Other options include "B": binary, "D":
+                          doubly-standardized, "U": untransformed (general
+                          weights), "V": variance-stabilizing.
+    permutations    : int
+                      number of random permutations for calculation of pseudo-p_values
 
 
-        (if permutations>0)
-        sim: vector of I values for permutated samples
+    Attributes
+    ----------
+    zx            : array
+                    original x variable standardized by mean and std
+    zy            : array
+                    original y variable standardized by mean and std
+    w             : W 
+                    original w object
+    permutation   : int
+                    number of permutations
+    I             : float
+                    value of bivariate Moran's I
+    sim           : array (if permutations>0)
+                    vector of I values for permutated samples
+    p_sim         : float (if permutations>0)
+                    p-value based on permutations
+    EI_sim        : array (if permutations>0)
+                    average value of I from permutations
+    VI_sim        : array (if permutations>0)
+                    variance of I from permutations
+    seI_sim       : array (if permutations>0)
+                    standard deviation of I under permutations.
+    z_sim         : array (if permutations>0)
+                    standardized I based on permutations
+    p_z_sim       : float  (if permutations>0)
+                    p-value based on standard normal approximation from
+                    permutations
 
-        p_sim: p-value based on permutations
+    Notes
+    -----
 
-        EI_sim: average value of I from permutations
+    Inference is only based on permutations as analytical results are none too reliable.
 
-        VI_sim: variance of I from permutations
-
-        seI_sim: standard deviation of I under permutations.
-
-        z_sim: standardized I based on permutations
-
-        p_z_sim: p-value based on standard normal approximation from
-        permutations
-
-
-    Notes:
-        Inference is only based on permutations as analytical results are
-        none too reliable.
+    Examples
+    --------
+    >>> import pysal
+    >>> f=pysal.open("../examples/sids2.dbf")
+    >>> SIDR74=np.array(f.by_col['SIDR74'])
+    >>> SIDR79=np.array(f.by_col['SIDR79'])
+    >>> w=pysal.open("../examples/sids2.gal").read()
+    >>> mbi=Moran_BV(SIDR79,SIDR74,w)
+    >>> mbi.I
+    0.1561319616962504
     """
-    def __init__(self,y1,y2,w,transformation="r",permutations=PERMUTATIONS):
-        self.y1=y1
-        self.y2=y2
+    def __init__(self,x,y,w,transformation="r",permutations=PERMUTATIONS):
+        zy=(y-y.mean())/y.std(ddof=1)
+        zx=(x-x.mean())/x.std(ddof=1)
+        self.zx=zx
+        self.zy=zy
+        w.transform=transformation
         self.w=w
-        z1=y1-y1.mean()
-        z1/=y1.std()
-        self.z1=z1
-        self.z12ss=sum(z1*z1)
-        z2=y2-y2.mean()
-        z2/=y2.std()
-        self.I=self.__calc(z2)
+        self.I=self.__calc(zy)
         if permutations:
             nrp=np.random.permutation
-            sim=[self.__calc(nrp(z2)) for i in xrange(permutations)]
+            sim=[self.__calc(nrp(zy)) for i in xrange(permutations)]
             self.sim=sim
             self.p_sim=(sum(sim >= self.I)+1.)/(permutations+1.)
             self.EI_sim = sum(sim)/permutations
@@ -216,29 +223,60 @@ class Moran_BV:
             self.z_sim=(self.I - self.EI_sim)/self.seI_sim
             self.p_z_sim=stats.norm.pdf(self.z_sim)
 
+    def __calc(self,zy):
+        wzy=slag(self.w,zy)
+        self.num=sum(self.zx*wzy)
+        self.den=sum(zy*zy)
+        return self.num/self.den
 
-    def __calc(self,z2):
-        z2l=slag(self.w,z2)
-        self.inum=sum(self.z1,z2l)
-        return sum(self.z1*z2l)/self.z12ss
 
 
-
-def Moran_BV_matrix(variables,w,permutations=0):
+def Moran_BV_matrix(variables,w,permutations=0,varnames=None):
     """Bivariate Moran Matrix
 
     Calculates bivariate Moran between all pairs of a set of variables.
 
-    Arguments:
-        variables: a list of variables (arrays)
+    Parameters
+    ----------
+    variables    : list 
+                   sequence of variables 
+    w            : W
+                   a spatial weights object
+    permutations : int
+                   number of permutations
+    varnames     : list
+                   strings for variable names. If specified runtime summary is
+                   printed
 
-        w: a spatial weights object
+    Returns
+    -------
+    results      : dictionary
+                   (i,j) is the key for the pair of variables, values are the
+                   Moran_BV object.
 
-        permutations: number of permutations
-
-    Returns:
-        results: a dictionary with the key having the ids for the pair of
-        variables, values are the Moran_BV object.
+    Examples
+    --------
+    >>> import pysal
+    >>> f=pysal.open("../examples/sids2.dbf")
+    >>> varnames=['SIDR74','SIDR79','NWR74','NWR79']
+    >>> vars=[np.array(f.by_col[var]) for var in varnames]
+    >>> w=pysal.open("../examples/sids2.gal").read()
+    >>> res=Moran_BV_matrix(vars,w,varnames=varnames)
+               x           wy        I
+          SIDR74       SIDR79    0.194
+          SIDR79       SIDR74    0.156
+          SIDR74        NWR74    0.384
+           NWR74       SIDR74    0.375
+          SIDR74        NWR79    0.388
+           NWR79       SIDR74    0.377
+          SIDR79        NWR74    0.116
+           NWR74       SIDR79    0.103
+          SIDR79        NWR79    0.122
+           NWR79       SIDR79    0.110
+           NWR74        NWR79    0.735
+           NWR79        NWR74    0.737
+    >>> 
+    
 
     """
 
@@ -249,8 +287,15 @@ def Moran_BV_matrix(variables,w,permutations=0):
         for j in range(i+1,k):
             y1=variables[i]
             y2=variables[j]
-            results[i,j]=Moran_BV(y1,y2,w,permutations)
-            results[j,i]=Moran_BV(y2,y1,w,permutations)
+            results[i,j]=Moran_BV(y1,y2,w,permutations=permutations)
+            results[j,i]=Moran_BV(y2,y1,w,permutations=permutations)
+    if varnames:
+        fmt="%12s %12s %8.3f"
+        print "%12s %12s %8s"%('x','wy','I')
+        for i in rk:
+            for j in range(i+1,k):
+                print fmt%(varnames[i],varnames[j],results[i,j].I)
+                print fmt%(varnames[j],varnames[i],results[j,i].I)
     return results
 
 

@@ -24,7 +24,33 @@ def queen_from_shapefile(filename,id_variable):
 def queen(geo):
     return _make_weights(geo,QUEEN)
 def rook(geo):
+    """rook W instance from a geo object
+
+    Examples
+    --------
+    >>> w=shp_to_rook("../examples/10740.shp")
+    >>> w.n
+    195
+    >>> w.pct_nonzero
+    0.026351084812623275
+    >>> 
+    """
     return _make_weights(geo,ROOK)
+
+def shp_to_rook(shape_file):
+    """generate a rook contiguity matrix from a shapefile
+    
+    Examples
+    --------
+    >>> w=shp_to_rook("../examples/10740.shp")
+    >>> w.n
+    195
+    >>> w.pct_nonzero
+    0.026351084812623275
+    >>> 
+    
+    """
+    return rook(shape_file)
 
 def _make_weights(geo,wt_type):
     if issubclass(type(geo),basestring):
@@ -39,8 +65,8 @@ def _make_weights(geo,wt_type):
 
 
 if __name__ == '__main__':
-    r = rook('../examples/10740.shp')
-    q = queen('../examples/10740.shp')
+    import doctest
+    doctest.testmod()
 
     
 
