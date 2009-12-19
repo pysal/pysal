@@ -22,6 +22,8 @@ Available sub-packages
     cg/index
     esda/index
     econometrics/index
+    inequality/index
+    mobility/index
     open
     weights/index
 
@@ -36,6 +38,10 @@ esda
     Tools for Exploratory Spatial Data Analysis
 examples
     Example data sets used by several sub-packages for examples and testing
+inequality
+    Regional inequality and inequality decompositions
+mobility
+    Spatial dynamics and related statistics
 weights
     Tools for creating and manipulating weights
 

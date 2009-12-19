@@ -33,7 +33,9 @@ import doctest
 # module imports
 import pysal.esda.moran, pysal.esda.geary
 import pysal.esda.mapclassify
+import pysal.inequality.theil
 import pysal.econometrics.classic
+import pysal.mobility.rank
 import pysal.weights.weights, pysal.weights.ContiguityWeights
 import pysal.weights.DistanceWeights, pysal.weights.spatial_lag
 
@@ -41,6 +43,7 @@ import pysal.weights.DistanceWeights, pysal.weights.spatial_lag
 #add modules to include in tests
 mods='esda.moran','esda.geary', 'esda.mapclassify', \
         'econometrics.classic', \
+        'inequality.theil','mobility.rank', \
         'weights.weights','weights.DistanceWeights', \
         'weights.ContiguityWeights','weights.spatial_lag'
 mods = [ "pysal."+ mod for mod in mods]
