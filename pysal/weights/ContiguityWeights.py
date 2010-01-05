@@ -22,6 +22,18 @@ def queen_from_shapefile(filename,id_variable):
     pass
 
 def queen(geo):
+    """queen W instance from a geo object
+
+    Examples
+    --------
+
+    Replicate OpenGeoDa
+
+    >>> w=queen('../examples/Chicago77.shp')
+    >>> w.histogram
+    [(1, 1), (2, 3), (3, 8), (4, 16), (5, 15), (6, 20), (7, 9), (8, 4), (9, 1)]
+    """
+
     return _make_weights(geo,QUEEN)
 def rook(geo):
     """rook W instance from a geo object
