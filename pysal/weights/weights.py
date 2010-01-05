@@ -33,6 +33,9 @@ class W(object):
                       True if weights are asymmetric, False if not
     cardinalities   : dictionary 
                       number of neighbors for each observation 
+    histogram       : list of tuples
+                      neighbor histogram (number of neighbors, number of
+                      observations with that many neighbors)
     id_order        : list
                       order of observations when iterating over weights
     id_order_set    : binary
@@ -391,6 +394,8 @@ class W(object):
         23528.0
         >>> w.sd
         1.9391533157164347
+        >>> w.histogram
+        [(0, 1), (1, 1), (2, 4), (3, 20), (4, 57), (5, 44), (6, 36), (7, 15), (8, 7), (9, 1), (10, 6), (11, 0), (12, 2), (13, 0), (14, 0), (15, 1)]
         """
        
         s0=s1=s2=0.0
@@ -442,6 +447,9 @@ class W(object):
             self.asymmetric=0
         islands = [i for i,c in self.cardinalities.items() if c==0]
         self.islands=islands
+        # connectivity histogram
+        ct,bin=np.histogram(cardinalities,range(self.min_neighbors,self.max_neighbors+2))
+        self.histogram=zip(bin,ct)
 
     def asymmetry(self,nonzero=True):
         """Checks for w_{i,j} == w_{j,i} forall w_{i,j}!=0
