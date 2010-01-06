@@ -31,7 +31,7 @@ def queen(geo):
 
     >>> w=queen('../examples/Chicago77.shp')
     >>> w.histogram
-    [(1, 1), (2, 3), (3, 8), (4, 16), (5, 15), (6, 20), (7, 9), (8, 4), (9, 1)]
+    [(1, 1), (2, 3), (3, 7), (4, 17), (5, 14), (6, 20), (7, 9), (8, 5), (9, 1)]
     """
 
     return _make_weights(geo,QUEEN)

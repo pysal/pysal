@@ -38,21 +38,10 @@ class GalIO(FileIO.FileIO):
             weights[id]=[1]*n_neighbors
             neighbors[id]=neighbors_i
             ids.append(id)
-        #original_neighbors=neighbors
-        #zo=self.__zero_offset(neighbors,weights,original_ids)
-        #neighbors=zo['new_neighbors']
-        #original_ids=zo['old_ids']
-        #ids = zo['new_ids']
-        #weights=zo['new_weights']
-        #original_weights=weights
-        #n=len(weights)
         d = {}
         d['ids']=ids
         d['weights'] = weights
         d['neighbors'] = neighbors
-        #d['original_neighbors'] = original_neighbors
-        #d['new_ids'] = ids
-        #d['original_ids'] = original_ids
 
         self.pos += 1 
         return W(d)
@@ -81,29 +70,6 @@ class GalIO(FileIO.FileIO):
         self.file.close()
         FileIO.FileIO.close(self)
 
-    @staticmethod
-    def __zero_offset(neighbors,weights,original_ids=None):
-        if not original_ids:
-            original_ids=neighbors.keys()
-        old_weights=weights
-        new_weights={}
-        new_ids={}
-        old_ids={}
-        new_neighbors={}
-        for i in original_ids:
-            new_i=original_ids.index(i)
-            new_ids[new_i]=i
-            old_ids[i]=new_i
-            neighbors_i=neighbors[i]
-            new_neighbors_i=[original_ids.index(j) for j in neighbors_i]
-            new_neighbors[new_i]=new_neighbors_i
-            new_weights[new_i]=weights[i]
-        info={}
-        info['new_ids']=new_ids
-        info['old_ids']=old_ids
-        info['new_neighbors']=new_neighbors
-        info['new_weights']=new_weights
-        return info
 
 
 
