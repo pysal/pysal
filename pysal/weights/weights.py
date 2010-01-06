@@ -1,5 +1,5 @@
 """
-Spatial weights for PySAL
+Spatial Weights
 
 """
 
