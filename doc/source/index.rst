@@ -17,7 +17,7 @@ On this site you will find :doc:`user level documentation </users/index>` as wel
 News
 ****
 
-(2009-12-14) New Website for PySAL!
+(2010-01-6) New Website for PySAL!
 
 (2009-11-03) National Institute of Justice funding.
 

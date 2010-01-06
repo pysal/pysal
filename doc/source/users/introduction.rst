@@ -27,17 +27,18 @@ focused on enhancements the applications.
 
 This recognition also came at a time when Python was starting to make major in
 road in geographic information systems as represented by projects such as the
-Python Cartographic Library, shapely, ESRI's adoption of Python as a scripting
-language and XX, among others. At the same time there was a dearth of Python
+`Python Cartographic Library <http://zmapserver.sourceforge.net/PCL/>`_, `Shapely
+<http://trac.gispython.org/lab/wiki/Shapely>`_
+and ESRI's adoption of Python as a scripting
+language, among others. At the same time there was a dearth of Python
 modules for spatial statistics, spatial econometrics, location modeling and
 other areas of spatial analysis, and the role for PySAL was then expanded
 beyond its support of STARS and PySpace to provide a library of core spatial
 analytical functions that could support the next generation of spatial
 analysis applications.. 
 
-As of 2008 the new home for PySAL is the GeoDa Center for Geospatial Analysis
-and Computation at Arizona State University where both Anselin and Rey are now
-located.
+As of 2008 the new home for PySAL is the `GeoDa Center for Geospatial Analysis
+and Computation <http://geodacenter.asu.edu/>`_ at Arizona State University.
 
 
 

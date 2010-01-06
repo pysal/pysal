@@ -10,6 +10,9 @@ Python Spatial Analysis Library
 
 The Python Spatial Analysis Library consists of several sub-packages each addressing a different area of spatial analysis.  In addition to these sub-packages PySAL includes some general utilities used across all modules.
 
+Note that this documentation is underdevelopment and is thus not fully
+complete. 
+
 Documentation
 -------------
 PySAL documentation is available in two forms: python docstrings and a html webpage at http://pysal.org/
@@ -28,22 +31,6 @@ Available sub-packages
     weights/index
 
 
-cg
-    Basic data structures and tools for Computational Geometry
-core
-    Basic functions used by several sub-packages
-econometrics
-    Spatial econometrics
-esda
-    Tools for Exploratory Spatial Data Analysis
-examples
-    Example data sets used by several sub-packages for examples and testing
-inequality
-    Regional inequality and inequality decompositions
-mobility
-    Spatial dynamics and related statistics
-weights
-    Tools for creating and manipulating weights
 
 Utilities
 ---------

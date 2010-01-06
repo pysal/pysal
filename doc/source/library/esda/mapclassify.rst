@@ -1,10 +1,11 @@
-:mod:`esda.mapclassify` --- Computational geometry code for PySAL: Python Spatial Analysis Library
+:mod:`esda.mapclassify` --- Map classifiers
 ==================================================================================================
 
-The :mod:`esda.mapclassify` module provides several modules for Computation geometery.
+The :mod:`esda.mapclassify` module provides several modules for choropleth
+mapping classification
 
 .. versionadded:: 1.0
 
 .. automodule:: pysal.esda.mapclassify
-    :synopsis: Computational geometry code for PySAL: Python Spatial Analysis Library
+    :synopsis: choropleth classifiers
 

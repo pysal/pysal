@@ -1,11 +1,12 @@
-:mod:`esda.geary` --- Computational geometry code for PySAL: Python Spatial Analysis Library
-==========================================================================================
+:mod:`weights.DistanceWeights` --- Distance based Spatial Weights
+=================================================================
 
-The :mod:`esda.geary` module provides several modules for Computation geometery.
+The :mod:`weights.DistanceWeights` module provides for spatial weights defined
+on distance relationships.
 
 .. versionadded:: 1.0
 
 .. automodule:: pysal.esda.geary
-    :synopsis: Computational geometry code for PySAL: Python Spatial Analysis Library
+    :synopsis: 
     :members:
 
