@@ -1,8 +1,9 @@
 """
 Distance Based Spatial Weights for PySAL
 
-All the classes here extend the spatial W class by defining the weights based
-on various distance functions. See weights.py for further information on W.
+All the classes here extend the spatial :class:`pysal.weights.weights.W` class by defining the weights based
+on various distance functions. See :mod:`pysal.weights.weights` for further
+information.
 """
 
 __author__  = "Sergio J. Rey <srey@asu.edu> "
@@ -205,9 +206,8 @@ class Kernel(W):
                   bandwidth. For fixed bandwidth, the maximum knn distance is
                   used to set the bandwidth. For adaptive bandwidths, the knn
                   distance for each observation is used.
-    function    : string
+    function    : string {'triangular','uniform','quadratic','quartic','gaussian'}
                   kernel function
-                  ['triangular','uniform','quadratic','quartic',gaussian']
     eps         : float
                   adjustment to ensure knn distance range is closed on the
                   knnth observations

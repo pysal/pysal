@@ -16,19 +16,14 @@ class W(object):
     Parameters
     ----------
     data           : dictionary
-                     three entries (ids, neighbors, weights)
-                      ids       : list (optional)
-                                   sequence of ids for units. This determines the
-                                   order of iteration over the weights
-                      neighbors : dictionary 
-                                      ids as keys list of neighbors as values;
-                      weights   : dictionary
-                                  ids as keys list of weights as
+                     data={ids:['a','b','c'], \
+                     'neighbors:'{'a':['b'],'b':['a','c'],'c':['b']}, \
+                     'weights':{'a':[1],'b':[1,1],'c':[1]}}
 
+                     Note, the ids element is optional
 
     Attributes
     ----------
-
     asymmetric      : binary
                       True if weights are asymmetric, False if not
     cardinalities   : dictionary 
@@ -49,14 +44,13 @@ class W(object):
     mean_neighbors  : float
                       average cardinality 
     n               : int
-                      number of observations (int)
+                      number of observations 
     neighbors       : dictionary
-                      neighbor ids. key is observation id and value is list of neighboring observation 
-                      ids with position corresponding to the same position in weights (see weights)
+                      {id:[id1,id2]}, key is id, value is list of neighboring
+                      ids
     neighbors_0     : dictionary
-                      zero offset neighbor ids. key is observation id and
-                      value is a list of 0-offset indexes for the
-                      neighbors (used to ensure alignment with in calculating lags)
+                      like neighbors but with zero offset ids, used for
+                      alignment in calculating spatial lag
     nonzero         : int
                       number of nonzero weights
     pct_nonzero     : float
@@ -70,21 +64,12 @@ class W(object):
     sd              : float
                       standard deviation of number of neighbors 
     transform       : string
-                      property for weights transformation. can be used to get and set weights transformation. 
+                      property for weights transformation, can be used to get and set weights transformation 
     transformations : dictionary
-                      transformed weights. key is transformation type, value are weights
+                      transformed weights, key is transformation type, value are weights
     weights         : dictionary
                       key is observation id, value is list of transformed
-                      weights in order of neighbor ids (see neighbors).
-    _idx            : int
-                      index for iterator
-    _id_order       : list
-                      order of ids for iterator
-    _id_order_set   : binary
-                      sentinel to determine if user has set id_order
-    _transform      : string
-                      weights transformation
-
+                      weights in order of neighbor ids (see neighbors)
 
     Examples
     --------

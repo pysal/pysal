@@ -9,4 +9,3 @@ on distance relationships.
 .. automodule:: pysal.weights.DistanceWeights
     :synopsis: 
     :members:
-
