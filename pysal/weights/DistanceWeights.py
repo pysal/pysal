@@ -196,18 +196,53 @@ class Kernel(W):
                   n observations on k characteristics used to measure
                   distances between the n objects
     bandwidth   : float or array-like (optional)
-                  the bandwidth for kernel. If bandwidth is a float then the
-                  bandwidth if taken as the same across all observations.
+                  the bandwidth :math:`h_i` for the kernel. 
     fixed       : binary
-                  whether bandwidth is to be fixed across all observations
-                  (default) or should be adaptive
+                  If true then :math:`h_i=h \\forall i`. If false then
+                  bandwidth is adaptive across observations.
     k           : int
                   the number of nearest neighbors to use for determining
-                  bandwidth. For fixed bandwidth, the maximum knn distance is
-                  used to set the bandwidth. For adaptive bandwidths, the knn
-                  distance for each observation is used.
+                  bandwidth. For fixed bandwidth, :math:`h_i=max(dknn) \\forall i`
+                  where :math:`dknn` is a vector of k-nearest neighbor
+                  distances (the distance to the kth nearest neighbor for each
+                  observation).  For adaptive bandwidths, :math:`h_i=dknn_i`
     function    : string {'triangular','uniform','quadratic','quartic','gaussian'}
-                  kernel function
+                  kernel function defined as follows with 
+
+                  .. math::
+
+                      z_{i,j} = d_{i,j}/h_i
+
+                  triangular 
+
+                  .. math::
+
+                      K(z) = (1 - |z|) \ if |z| \le 1
+
+                  uniform 
+
+                  .. math::
+
+                      K(z) = |z| \ if |z| \le 1
+
+                  quadratic 
+
+                  .. math::
+
+                      K(z) = (3/4)(1-z^2) \ if |z| \le 1
+
+                  quartic
+
+                  .. math::
+
+                      K(z) = (15/16)(1-z^2)^2 \ if |z| \le 1
+                 
+                  gaussian
+
+                  .. math::
+
+                      K(z) = (2\pi)^{(-1/2)} exp(-z^2 / 2)
+
     eps         : float
                   adjustment to ensure knn distance range is closed on the
                   knnth observations
