@@ -6,7 +6,7 @@ on distance relationships.
 
 .. versionadded:: 1.0
 
-.. automodule:: pysal.esda.geary
+.. automodule:: pysal.weights.DistanceWeights
     :synopsis: 
     :members:
 

@@ -17,7 +17,7 @@ class W(object):
     ----------
     data           : dictionary
                      three entries (ids, neighbors, weights)
-                      ids       : list
+                      ids       : list (optional)
                                    sequence of ids for units. This determines the
                                    order of iteration over the weights
                       neighbors : dictionary 

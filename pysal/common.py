@@ -13,6 +13,7 @@ try:
     import scipy.stats as stats
     from scipy.spatial import distance_matrix
     from scipy.spatial import KDTree
+    from scipy.spatial.distance import pdist,cdist
 except:
     print 'scipy 0.7+ is required'
     raise
