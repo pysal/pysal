@@ -6,7 +6,7 @@ Classic (a-spatial) Econometric  methods for PySAL
 __author__  = "Sergio J. Rey <srey@asu.edu>"
 
 from pysal.common import *
-
+import math as math
 
 def Jarque_Bera(y):
     """
@@ -86,6 +86,8 @@ class Ols:
         coefficient of determination
     r2a : float
         adjusted r2
+    lik : float
+        log-likelihood       
 
     Examples
     --------
@@ -107,6 +109,8 @@ class Ols:
     0.53294334696078938
     >>> ols.sig2
     130.75853773444271
+    >>> ols.lik
+    -187.3772388121491
     """
     def __init__(self, y, X):
         XT=np.transpose(X)
@@ -138,7 +142,7 @@ class Ols:
         self.t=b/self.bse
         self.r2=1.0-ess/tss
         self.r2a=1.-(1-self.r2)*(n-1)/(n-k)
-
+        self.lik = -0.5*(n*(np.log(2*math.pi))+n*np.log(ess/n)+(ess/(ess/n)))
 
 def _test():
     import doctest
