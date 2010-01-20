@@ -9,7 +9,7 @@ setup(name = 'pysal',
       description = 'PySAL: Python Spatial Analysis Library',
       author = 'Luc Anselin, Serge Rey, Charles Schmidt, Andrew Winslow',
       url = 'http://pysal.org/',
-      version = version
+      version = version,
       packages = ['pysal', 
                   'pysal.cg',
                   'pysal.core', 
