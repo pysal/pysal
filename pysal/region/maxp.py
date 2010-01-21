@@ -305,7 +305,69 @@ class Maxp:
         self.pvalue=cv/(1.+nperm)
         self.wss_perm=wsss
         self.wss_perm[0]=self.wss
-        
+
+    def cinference(self,nperm=99,maxiter=100):
+        # compare within sum of squares to conditional randomization that
+        # respects contiguity cardinality distribution
+        ns=0
+        wss=np.zeros(nperm+1)
+        regs=self.regions
+        nregs=len(regs)
+        w=copy.copy(self.w)
+        n=w.n
+        solutions=[]
+        iter=0
+        maxiter=nperm*maxiter
+        while ns < nperm and iter<maxiter:
+            solving=1
+            nr=0
+            candidates=range(self.w.n)
+            seeds=np.random.permutation(n)[0:nregs]
+            cards=[len(reg) for reg in self.regions]
+            solution=[]
+            regions=[]
+            for seed in seeds:
+                regions.append([seed])
+                candidates.remove(seed)
+            building=True
+            flags=[1]*nregs
+            while sum(flags):
+                for r,region in enumerate(regions):
+                    if flags[r]:
+                        nr=len(region)
+                        if nr in cards:
+                            # done building this region
+                            cards.remove(nr)
+                            flags[r]=0
+                        else:
+                            # add a neighbor
+                            neighbors=[]
+                            for j in region:
+                                neighbors.extend([ni for ni in w.neighbors[j] if ni in candidates])
+                            if neighbors:
+                                j=neighbors[0]
+                                region.append(j)
+                                candidates.remove(j)
+                            else:
+                                flags=[0]*nregs
+                if not candidates:
+                    t=[region.sort() for region in regions]
+                    regions.sort()
+                    if regions not in solutions:
+                        solutions.append(regions)
+                        ns+=1
+            iter+=1
+        self.csolutions=solutions
+        self.citer=iter
+        ids=np.arange(self.w.n)
+        cwss=1
+        self.wss=self.objective_function()
+        for solution in solutions:
+            wss=self.objective_function(solution)
+            if wss<=self.wss:
+                cwss+=1
+        self.cpvalue=cwss*1. /( 1+len(solutions))
+
 
 # tests
 
