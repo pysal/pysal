@@ -20,6 +20,8 @@ esda
     Tools for Exploratory Spatial Data Analysis
 examples
     Example data sets used by several sub-packages for examples and testing
+region
+    Regionalization algorithms and spatially constrained clustering
 weights
     Tools for creating and manipulating weights
 
@@ -30,18 +32,25 @@ Utilities
 """
 import cg
 import core
-import econometrics
-import esda
-import inequality
-import markov
-import region
-import weights
-
 import pysal.core.FileIO # Load IO metaclass
 import pysal.core._FileIO # Load IO inheritors
+
+from common import *
 
 #Assign pysal.open to dispatcher
 
 open = pysal.core.FileIO.FileIO
 
+# toplevel imports to be explicit
 
+from esda.geary import Geary
+from esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local
+from econometrics import Jarque_Bera,Ols
+from inequality.theil import Theil,TheilD,TheilDSim
+from markov.markov import Markov
+from markov.ergodic import steady_state
+from mobility.rank import Theta,SpatialTau
+from region.maxp import Maxp
+from weights.weights import W,lat2gal,regime_weights,comb
+from weights.ContiguityWeights import rook_from_shapefile, queen_from_shapefile
+from weights.DistanceWeights import InverseDistance,NearestNeighbors,DistanceBand,Kernel
