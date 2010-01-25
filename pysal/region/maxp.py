@@ -6,6 +6,7 @@ constraint.
 
 Author(s):
     Serge Rey srey@asu.edu
+    David Folch dfolch@asu.edu
 
 To Do:
     - add shape constraint

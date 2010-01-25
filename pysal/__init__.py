@@ -44,7 +44,13 @@ open = pysal.core.FileIO.FileIO
 # toplevel imports to be explicit
 
 from esda.geary import Geary
+from esda.mapclassify import quantile,binC,bin,bin1d,Equal_Interval
+from esda.mapclassify import Box_Plot,Quantiles,Std_Mean,Maximum_Breaks
+from esda.mapclassify import Natural_Breaks, Fisher_Jenks, Jenks_Caspall
+from esda.mapclassify import Jenks_Caspall_Sampled,Jenks_Caspall_Forced
+from esda.mapclassify import User_Defined,Max_P
 from esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local
+from esda.spatial_lag import lag, lag_array
 from econometrics import Jarque_Bera,Ols
 from inequality.theil import Theil,TheilD,TheilDSim
 from markov.markov import Markov

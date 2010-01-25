@@ -33,6 +33,7 @@ import doctest
 # module imports
 import pysal.esda.moran, pysal.esda.geary
 import pysal.esda.mapclassify
+import pysal.esda.spatial_lag
 import pysal.inequality.theil
 import pysal.econometrics.classic
 import pysal.region.maxp
@@ -43,6 +44,7 @@ import pysal.weights.DistanceWeights, pysal.weights.spatial_lag
 
 #add modules to include in tests
 mods='esda.moran','esda.geary', 'esda.mapclassify', \
+        'esda.spatial_lag', \
         'econometrics.classic', \
         'inequality.theil','mobility.rank', \
         'region.maxp', \
