@@ -614,7 +614,8 @@ class PolygonLocator:
         >>> isinstance(pl, PolygonLocator)
         True
         """
-        pass
+        self._locator=polygons
+        #pass
 
     def nearest(self, query_point):
         """
@@ -652,7 +653,15 @@ class PolygonLocator:
         >>> len(n)
         2
         """
-        pass
+        n=self._locator
+        for polygon in n:
+            points=polygon.vertices
+            pl = BruteForcePointLocator(points)
+            pts = pl.region(region_rect)
+            if len(pts)==0:
+                n.remove(polygon)
+        return n
+        #pass
 
     def proximity(self, origin, r):
         """
