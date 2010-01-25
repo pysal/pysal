@@ -7,24 +7,27 @@ Author    Serge Rey <sjsrey@gmail.com>,
           Xinyue Ye <xinyue.ye@gmail.com>
 Status    Draft
 Created   18-Jan-2010
-Updated   18-Jan-2010
+Updated   24-Jan-2010
 ========  =================================
 
 
 Abstract
 ========
 
-The spatial dynamics module combines a number of previously developed and
-to-be-developed classes for the analysis of spatial dynamics. It will
-include classes for the following statistics for spatial dynamics, Markov,
-spatial Markov, rank mobility, spatial rank mobility, space-time LISA.
+With the increasing availability of spatial longitudinal data sets there
+is an growing demand for exploratory methods that integrate both the
+spatial and temporal dimensions of the data. The spatial dynamics
+module combines a number of previously developed and to-be-developed
+classes for the analysis of spatial dynamics. It will include classes
+for the following statistics for spatial dynamics, Markov, spatial
+Markov, rank mobility, spatial rank mobility, space-time LISA.
 
 Motivation
 ==========
 
 Rather than having each of the spatial dynamics as separate modules in
 PySAL, it makes sense to move them all within the same module. This would
-facilitate common signatures for constructors and  similar forms of data
+facilitate common signatures for constructors and similar forms of data
 structures for space-time analysis (and generation of results).
 
 The module would implement some of the ideas for extending LISA statistics
@@ -40,11 +43,26 @@ We suggest adding the module ``pysal.spatialdynamics`` which in turn would
 encompass the following modules:
 
 * rank mobility
-* spatial rank mobility
-* Markov
-* Spatial Markov
-* Space-Time LISA
+  rank concordance (relative mobility or internal mixing) 
+  Kendall's index
+  
+* spatial rank mobility 
+  add a spatial dimension into rank mobility
+  investigate the extent to which the relative mobility is spatially dependent 
 
+* Markov 
+  empirical transition probability matrix (mobility across class)
+  Shorrock's index
+  
+* Spatial Markov
+  add a spatial dimension (regional conditioning) into classic Markov models
+  a trace statistic from a modified Markov transition matrix
+  investigate the extent to which the inter-class mobility are spatially dependent
+  
+* Space-Time LISA 
+  extends LISA measures to integrate the time dimension
+  combined with cg (computational geometry) module to develop comparative
+measurements
 
 References
 ==========
