@@ -44,11 +44,13 @@ class Maxp:
 
         Attributes:
 
+            feasible: boolean identifying if a solution was found
+
+            attempts: number of initial feasible solutions found
+
             area2region: mapping of areas to regions, dictionary with key being area
             id, value being region id, with region id index of region in
             regions.
-
-            attempts: number of initial attempts to find a feasible solution
 
             regions: sequence of region membership. List of lists of region
             definitions
@@ -65,7 +67,7 @@ class Maxp:
 
         Example:
         >>> import random
-        >>> import numpy as num
+        >>> import numpy as np
         >>> random.seed(100)
         >>> np.random.seed(100)
         >>> w=pysal.weights.weights.lat2gal(10,10)
@@ -75,9 +77,9 @@ class Maxp:
         >>> floor=3
         >>> solution=Maxp(w,z,floor,floor_variable=p,initial=100)
         >>> solution.p
-        27
+        29
         >>> solution.regions[0]
-        [54, 44, 34, 33, 23]
+        [99, 89, 79]
         >>> 
         """
     
@@ -87,23 +89,30 @@ class Maxp:
         self.floor_variable=floor_variable
         self.verbose=verbose
         self.initial_solution()
-        best_val=self.objective_function()
-        self.current_regions=copy.copy(self.regions)
-        self.current_area2region=copy.copy(self.area2region)
-        self.initial_wss=[]
-        for i in range(initial):
-            self.initial_solution()
-            val=self.objective_function()
-            self.initial_wss.append(val)
-            if self.verbose:
-                print 'initial solution: ',i, val,best_val
-            if val < best_val:
-                self.current_regions=copy.copy(self.regions)
-                self.current_area2region=copy.copy(self.area2region)
-                best_val=val
-        self.regions=copy.copy(self.current_regions)
-        self.area2region=self.current_area2region
-        self.swap()
+        if not self.p:
+            self.feasible = False
+        else:
+            self.feasible = True 
+            best_val=self.objective_function()
+            self.current_regions=copy.copy(self.regions)
+            self.current_area2region=copy.copy(self.area2region)
+            self.initial_wss=[]
+            self.attempts=0
+            for i in range(initial):
+                self.initial_solution()
+                if self.p:
+                    val=self.objective_function()
+                    self.initial_wss.append(val)
+                    if self.verbose:
+                        print 'initial solution: ',i, val,best_val
+                    if val < best_val:
+                        self.current_regions=copy.copy(self.regions)
+                        self.current_area2region=copy.copy(self.area2region)
+                        best_val=val
+                    self.attempts += 1
+            self.regions=copy.copy(self.current_regions)
+            self.area2region=self.current_area2region
+            self.swap()
 
     def initial_solution(self):
         self.p=0
@@ -112,7 +121,7 @@ class Maxp:
         while solving and attempts<=MAX_ATTEMPTS:
             regions=[]
             enclaves=[]
-            candidates=range(self.w.n)
+            candidates=copy.copy(self.w.id_order)
             while candidates:
                 id=random.randint(0,len(candidates)-1)
                 seed=candidates.pop(id)
@@ -120,33 +129,44 @@ class Maxp:
                 region=[seed]
                 building_region=True
                 while building_region:
-                    potential=[] 
-                    for area in region:
-                        neighbors=self.w.neighbors[area]
-                        neighbors=[neigh for neigh in neighbors if neigh in candidates]
-                        neighbors=[neigh for neigh in neighbors if neigh not in region]
-                    if neighbors:
-                        # add first neighbor
-                        region.append(neighbors[0])
-                        #  remove it from candidates
-                        candidates.remove(neighbors[0])
-                        # check if floor is satisfied
-                        if self.check_floor(region):
-                            regions.append(region)
-                            building_region=False
-                    else:
-                        #print 'enclave'
-                        #print region
-                        enclaves.extend(region)
+                    # check if floor is satisfied
+                    if self.check_floor(region):
+                        regions.append(region)
                         building_region=False
+                    else:
+                        potential=[] 
+                        for area in region:
+                            neighbors=self.w.neighbors[area]
+                            neighbors=[neigh for neigh in neighbors if neigh in candidates]
+                            neighbors=[neigh for neigh in neighbors if neigh not in region]
+                            neighbors=[neigh for neigh in neighbors if neigh not in potential]
+                            potential.extend(neighbors)
+                        if potential:
+                            # add a random neighbor
+                            neigID=random.randint(0,len(potential)-1)
+                            neigAdd=potential.pop(neigID)
+                            region.append(neigAdd)
+                            # remove it from candidates
+                            candidates.remove(neigAdd)
+                        else:
+                            #print 'enclave'
+                            #print region
+                            enclaves.extend(region)
+                            building_region=False
+            # check to see if any regions were made before going to enclave stage
+            if regions:
+                feasible=True
+            else:
+                attempts+=1
+                break
             self.enclaves=enclaves[:]
             a2r={}
             for r,region in enumerate(regions):
                 for area in region:
                     a2r[area]=r
-            repeat_enclave=[]
-            feasible=True
-            while enclaves:
+            encCount=len(enclaves)
+            encAttempts=0
+            while enclaves and encAttempts!=encCount:
                 enclave=enclaves.pop(0)
                 neighbors=self.w.neighbors[enclave]
                 neighbors=[neighbor for neighbor in neighbors if neighbor not in enclaves]
@@ -156,23 +176,24 @@ class Maxp:
                     if region not in candidates:
                         candidates.append(region)
                 if candidates:
-                    # add first candidate to region
-                    rid=candidates[0]
+                    # add enclave to random region
+                    regID=random.randint(0,len(candidates)-1)
+                    rid=candidates[regID]
                     regions[rid].append(enclave)
                     a2r[enclave]=rid
+                    # structure to loop over enclaves until no more joining is possible
+                    encCount=len(enclaves)
+                    encAttempts=0
+                    feasible=True
                 else:
                     # put back on que, no contiguous regions yet
-                    if enclave in repeat_enclave:
-                        enclaves=[]
-                        feasible=False
-                    else:
-                        enclaves.append(enclave)
-                        repeat_enclave.append(enclave)
+                    enclaves.append(enclave)
+                    encAttempts+=1
+                    feasible=False
             if feasible:
                 solving=False
                 self.regions=regions
                 self.area2region=a2r
-                solving=False
                 self.p=len(regions)
             else:
                 if attempts==MAX_ATTEMPTS:
@@ -266,7 +287,8 @@ class Maxp:
                 print 'objective function: ',self.objective_function()
 
     def check_floor(self,region):                
-        cv=sum(self.floor_variable[region])
+        selectionIDs = [self.w.id_order.index(i) for i in region]
+        cv=sum(self.floor_variable[selectionIDs])
         if cv >= self.floor:
             return True
         else:
@@ -280,7 +302,8 @@ class Maxp:
             solution=self.regions
         wss=0
         for region in solution:
-            m=self.z[region,:]
+            selectionIDs = [self.w.id_order.index(i) for i in region]
+            m=self.z[selectionIDs,:]
             var=m.var(axis=0)
             wss+=sum(np.transpose(var))*len(region)
         return wss
