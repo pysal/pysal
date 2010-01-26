@@ -50,7 +50,6 @@ from esda.mapclassify import Natural_Breaks, Fisher_Jenks, Jenks_Caspall
 from esda.mapclassify import Jenks_Caspall_Sampled,Jenks_Caspall_Forced
 from esda.mapclassify import User_Defined,Max_P
 from esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local
-from esda.spatial_lag import lag, lag_array
 from econometrics import Jarque_Bera,Ols
 from inequality.theil import Theil,TheilD,TheilDSim
 from markov.markov import Markov
@@ -61,3 +60,4 @@ from weights.weights import W,lat2gal,regime_weights,comb
 from weights.ContiguityWeights import rook as shp_to_rook
 from weights.ContiguityWeights import queen as shp_to_queen
 from weights.DistanceWeights import InverseDistance,NearestNeighbors,DistanceBand,Kernel
+from weights.spatial_lag import lag, lag_array

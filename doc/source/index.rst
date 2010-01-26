@@ -19,13 +19,12 @@ News
 
 (2010-01-6) New Website for PySAL!
 
-(2009-11-03) National Institute of Justice funding.
+(2009-11-03) `National Institute of Justice funding <http://geoplan.asu.edu/node/3855>`_
 
 
 *******
 Funding
 *******
 
-National Institute of Justice `Grant <http://geoplan.asu.edu/NIJ_grant>`_.
-
+National Institute of Justice `Grant <http://geoplan.asu.edu/node/3855>`_
 
