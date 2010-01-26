@@ -100,8 +100,8 @@ class ContiguityWeights_binning:
             else:
                 iVerts=polygonCache[polyId]
             potentialNeighbors=pw[polyId]
-            if polyId+1 not in w:
-                w[polyId+1]=set()
+            if polyId not in w:
+                w[polyId]=set()
             for j in potentialNeighbors:
                 if j not in polygonCache:
                     polygonCache[j]=set(shpFileObject.get(j).vertices)
@@ -113,10 +113,10 @@ class ContiguityWeights_binning:
                     if self.wttype == QUEEN:
                         join = True
                 if join:
-                    w[polyId+1].add(j+1)
-                    if j+1 not in w:
-                        w[j+1]=set()
-                    w[j+1].add(polyId+1)
+                    w[polyId].add(j)
+                    if j not in w:
+                        w[j]=set()
+                    w[j].add(polyId)
 
             del polygonCache[polyId]
         self.w=w

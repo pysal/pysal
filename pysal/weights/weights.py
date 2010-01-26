@@ -121,6 +121,7 @@ class W(object):
             self._id_order=data['ids']
             self._id_order_set=True
         else:
+            self._id_order.sort()
             self._id_order_set=False
         self._zero_offset()
         self._idx=0

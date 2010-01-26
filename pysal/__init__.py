@@ -58,5 +58,6 @@ from markov.ergodic import steady_state
 from mobility.rank import Theta,SpatialTau
 from region.maxp import Maxp
 from weights.weights import W,lat2gal,regime_weights,comb
-from weights.ContiguityWeights import rook_from_shapefile, queen_from_shapefile
+from weights.ContiguityWeights import rook as shp_to_rook
+from weights.ContiguityWeights import queen as shp_to_queen
 from weights.DistanceWeights import InverseDistance,NearestNeighbors,DistanceBand,Kernel
