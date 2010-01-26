@@ -7,7 +7,7 @@ Author(s):
 """
 from pysal.common import *
 from scipy.stats.mstats import rankdata
-from scipy.stats import erfc
+from scipy.special import erfc
 
 class Theta:
     """Regime mobility measure
