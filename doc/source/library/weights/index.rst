@@ -6,3 +6,4 @@
     weights
     ContiguityWeights
     DistanceWeights
+    spatial_lag
