@@ -37,7 +37,8 @@ class ContiguityWeights_rtree:
         self.Q = _PolyQ()
         self.create()
     def create(self):
-        for poly in self.geoObj:
+        for id,poly in enumerate(self.geoObj):
+            poly.id = id
             self.append(poly)
     def append(self,poly):
         self.Q.add(poly)
