@@ -1,5 +1,5 @@
-.. automodule:: pysal.cg
-    :synopsis: Computational geometry code for PySAL: Python Spatial Analysis Library
+:mod:`pysal.cg` --- Computational Geometry
+==========================================
 
 .. toctree::
 
@@ -7,4 +7,4 @@
     locators
     standalone
 
-
+.. automodule:: pysal.cg

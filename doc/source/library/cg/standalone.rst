@@ -1,7 +1,7 @@
-:mod:`cg.standalone` --- Computational geometry code for PySAL: Python Spatial Analysis Library
-===============================================================================================
+:mod:`cg.standalone` --- Standalone
+===================================
 
-The :mod:`cg.standalone` module provides several modules for Computation geometery.
+The :mod:`cg.standalone` module provides ...
 
 .. versionadded:: 1.0
 

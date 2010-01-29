@@ -1,5 +1,5 @@
-.. automodule:: pysal.esda
-    :synopsis: Exploratory Spatial Data Analysis Tools for PySAL
+:mod:`pysal.esda` --- Exploratory Spatial Data Analysis
+=========================================================
 
 .. toctree::
 

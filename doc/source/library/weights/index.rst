@@ -1,5 +1,5 @@
-.. automodule:: pysal.weights
-    :synopsis: Spatial Weights for PySAL
+:mod:`pysal.weights` --- Spatial Weights
+==========================================
 
 .. toctree::
 

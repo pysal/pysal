@@ -1,7 +1,7 @@
-:mod:`cg.locators` --- Computational geometry code for PySAL: Python Spatial Analysis Library
-=============================================================================================
+:mod:`cg.locators` --- Locators
+===============================
 
-The :mod:`cg.locators` module provides several modules for Computation geometery.
+The :mod:`cg.locators` module provides ....
 
 .. versionadded:: 1.0
 

@@ -1,11 +1,10 @@
-:mod:`cg.shapes` --- Computational geometry code for PySAL: Python Spatial Analysis Library
-===========================================================================================
+:mod:`cg.shapes` --- Shapes 
+===========================
 
-The :mod:`cg.shapes` module provides several modules for Computation geometery.
+The :mod:`cg.shapes` module provides basic data structures.
 
 .. versionadded:: 1.0
 
 .. automodule:: pysal.cg.shapes
-    :synopsis: Computational geometry code for PySAL: Python Spatial Analysis Library
     :members:
 

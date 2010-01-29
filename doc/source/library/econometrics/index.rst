@@ -1,6 +1,7 @@
-.. automodule:: pysal.econometrics
-    :synopsis: Spatial econometrics
+:mod:`pysal.econometrics` --- Spatial econometrics
+====================================================
 
 .. toctree::
 
     classic
+

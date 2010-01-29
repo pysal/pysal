@@ -1,4 +1,4 @@
-:mod:`FileIO` -- PySAL FileIO: Module for reading and writing various file types in a Pythonic way
+:mod:`pysal.FileIO` --- PySAL FileIO: Module for reading and writing various file types in a Pythonic way
 ==================================================================================================
 
 .. module:: FileIO
@@ -12,7 +12,7 @@ The PySAL FileIO system abstracts the details of file reading and writing.  All 
 
 Module Contents
 ---------------
-The :mod:`FileIO` module define the following public function:
+The :mod:`pysal.FileIO` module define the following public function:
 
 .. function:: open(connectionString, mode='r')
    

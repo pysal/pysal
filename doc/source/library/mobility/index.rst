@@ -1,6 +1,5 @@
-.. automodule:: pysal.mobility
-    :synopsis: measurement of sptial dynamics
-
+:mod:`pysal.mobility` --- Spatial Dynamics and Mobility
+=========================================================
 .. toctree::
 
     rank

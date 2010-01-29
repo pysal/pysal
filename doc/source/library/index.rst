@@ -1,3 +1,5 @@
+.. _library-index
+
 #################
 Library Reference
 #################
@@ -27,8 +29,9 @@ Available sub-packages
     econometrics/index
     inequality/index
     mobility/index
-    open
     weights/index
+
+    open
 
 
 

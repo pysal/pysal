@@ -1,5 +1,5 @@
-:mod:`econometrics.classic` --- Classic (aspatial) econometrics  for PySAL: Python Spatial Analysis Library
-===========================================================================================================
+:mod:`econometrics.classic` --- Classic (aspatial) econometrics
+===============================================================
 
 The :mod:`econometrics.classic.` module provides for classic econometric estimators and model diagnostics 
 
