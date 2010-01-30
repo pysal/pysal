@@ -25,7 +25,8 @@ add or check-in files under  `build` since they are dynamically built.
 
 
 Changes added to the `svn repository <http://code.google.com/p/pysal/>`_
-will be propogated to `pysal.org <http://pysal.org>`_ on an hourly basis.
+will be propogated to `pysal.org <http://pysal.org>`_ on an hourly basis
+(at 32 minutes after the hour to be exact).
 
 
 
