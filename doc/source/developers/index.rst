@@ -1,6 +1,6 @@
-===============
-Developer Guide
-===============
+================
+Developer Guides
+================
 
 
 .. toctree::
@@ -8,4 +8,5 @@ Developer Guide
 
    guidelines
    pep/index.rst
+   docs/index.rst
 
