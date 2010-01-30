@@ -61,8 +61,7 @@ encompass the following modules:
   
 * Space-Time LISA 
   extends LISA measures to integrate the time dimension
-  combined with cg (computational geometry) module to develop comparative
-measurements
+  combined with cg (computational geometry) module to develop comparative measurements
 
 References
 ==========
