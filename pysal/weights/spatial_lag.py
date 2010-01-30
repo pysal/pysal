@@ -21,8 +21,11 @@ def lag(w,y):
     wy : np.ndarray
          values for the spatial lag
 
-    Since it is general it does some checking to either determine if the y and
-    w have been aligned.
+    Notes
+    -----
+
+    Because the weights and attribute data may be from different sources
+    we have to ensure that the ordering of y and w has been aligned.
 
     For use in a simulation context, the more optimized lag functions should
     be called directly since alignment of y and w can be assumed and the
