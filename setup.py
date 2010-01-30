@@ -22,7 +22,6 @@ setup(name = 'pysal',
                   'pysal.mobility',
                   'pysal.region',
                   'pysal.weights'],
-      ext_modules = [Extension('pysal.core._FileIO.pyshp._shp', ['pysal/core/_FileIO/pyshp/_shp.c'])],
       package_data = {'pysal':['examples/shp_test/*','examples/*.*','examples/README']},
       requires = ['scipy']
      )
