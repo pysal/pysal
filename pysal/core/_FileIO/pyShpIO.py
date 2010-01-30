@@ -10,8 +10,8 @@ Not to be used without permission of the authors.
 __author__ = "Charles R. Schmidt"
 __credits__ = "Copyright (c) 2009 Charles R. Schmidt"
 
-import pysal
-import pysal.core.FileIO as FileIO
+#import pysal
+import pysal.core.FileIO #as FileIO
 from _pyShpIO import shp_file
 import pysal.cg as cg
 from warnings import warn
@@ -156,7 +156,7 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
         
     def close(self):
         self.dataObj.close()
-        FileIO.FileIO.close(self)
+        pysal.core.FileIO.FileIO.close(self)
 
 
 def _test():

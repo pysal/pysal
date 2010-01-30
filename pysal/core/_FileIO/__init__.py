@@ -1,9 +1,6 @@
 import gwt
 import gal
-try:
-    import shpLib
-except:
-    import pyShpIO
+import pyShpIO
 import wkt
 import geoda_txt
 import csvWrapper

@@ -1,4 +1,4 @@
-import pysal
+import pysal.core.Tables
 import datetime
 import struct
 import itertools
@@ -173,6 +173,7 @@ class DBF(pysal.core.Tables.DataTable):
             self.f.seek(POS)
 
 if __name__ == '__main__':
+    import pysal
     file_name = "../../examples/10740.dbf"
     f=pysal.open(file_name,'r')
     newDB = pysal.open('copy.dbf','w')
