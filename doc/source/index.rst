@@ -5,13 +5,12 @@
 Welcome
 *******
 
-PySAL is a cross-platform library of spatial analysis functions written in
+PySAL is an `open source <http://code.google.com/p/pysal/>`_  cross-platform library of spatial analysis functions written in
 Python. It is intended to support the development of high level applications
 for spatial analysis.
 
 On this site you will find :doc:`user level documentation </users/index>` as well as 
 :doc:`developer documentation </developers/index>`.
-
 
 ****
 News
