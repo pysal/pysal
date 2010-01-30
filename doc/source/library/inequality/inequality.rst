@@ -1,5 +1,5 @@
 :mod:`inequality` --- Spatial Inequality for  PySAL: Python Spatial Analysis Library
-=================================================================================
+====================================================================================
 
 The :mod:`inequality` module provides the core Spatial Weights class.
 

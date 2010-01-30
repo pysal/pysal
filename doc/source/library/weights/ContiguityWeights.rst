@@ -5,7 +5,7 @@ The :mod:`weights.ContiguityWeights.` module provides for the construction and m
 
 .. versionadded:: 1.0
 
-.. automodule:: pysal.weights.Contiguityweights
+.. automodule:: pysal.weights.ContiguityWeights
     :synopsis:  Spatial weights for PySAL: Python Spatial Analysis Library
     :members:
 
