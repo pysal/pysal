@@ -52,12 +52,16 @@ mods = [ "pysal."+ mod for mod in mods]
 suite = unittest.TestSuite()
 for mod in mods:
     suite.addTest(doctest.DocTestSuite(mod))
-
-# Test imports
-import test_cont_weights
-suite.addTest(test_cont_weights.suite)
-import test_fileIO
-suite.addTest(test_fileIO.suite)
-
 runner = unittest.TextTestRunner()
 runner.run(suite)
+
+# Test imports
+try:
+    import test_cont_weights
+    suite.addTest(test_cont_weights.suite)
+    import test_fileIO
+    suite.addTest(test_fileIO.suite)
+    runner = unittest.TextTestRunner()
+    runner.run(suite)
+except:
+    print 'rtree not installed'
