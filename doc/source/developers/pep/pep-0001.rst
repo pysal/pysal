@@ -55,7 +55,7 @@ encompass the following modules:
   Shorrock's index
   
 * Spatial Markov
-  add a spatial dimension (regional conditioning) into classic Markov models
+  adds a spatial dimension (regional conditioning) into classic Markov models
   a trace statistic from a modified Markov transition matrix
   investigate the extent to which the inter-class mobility are spatially dependent
   
