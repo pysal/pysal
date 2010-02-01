@@ -28,6 +28,8 @@ Available sub-packages
     esda/index
     econometrics/index
     inequality/index
+    markov/index
+    region/index
     mobility/index
     weights/index
 

@@ -55,7 +55,7 @@ from inequality.theil import Theil,TheilD,TheilDSim
 from markov.markov import Markov
 from markov.ergodic import steady_state
 from mobility.rank import Theta,SpatialTau
-from region.maxp import Maxp
+from region.maxp import Maxp,Maxp_LISA
 from weights.weights import W,lat2gal,regime_weights,comb
 from weights.ContiguityWeights import rook as shp_to_rook
 from weights.ContiguityWeights import queen as shp_to_queen

@@ -8,10 +8,6 @@ Author(s):
     Serge Rey srey@asu.edu
     David Folch dfolch@asu.edu
 
-To Do:
-    - add shape constraint
-    - parallelize
-    
 """
 import pysal
 from components import check_contiguity
@@ -23,72 +19,75 @@ MAX_ATTEMPTS=100
 class Maxp:
     """Try to find the maximum number of regions for a set of areas such that
     each region combines continguous areas that satisfy a given threshold
-    constraint."""
-    def __init__(self,w,z,floor,floor_variable,verbose=False,initial=100):
-        """
-        Arguments:
+    constraint.
+    
+    
+    Parameters
+    ----------
+ 
+    w               : W
+                      spatial weights object
 
-            w: spatial weights object
+    z               : array
+                      n*m array of observations on m attributes across n
+                      areas. This is used to calculate intra-regional
+                      homogeneity
+    floor           : int
+                      a minimum bound for a variable that has to be
+                      obtained in each region
+    floor_variable  : array
+                      n*1 vector of observations on variable for the floor
+    initial         : int number of initial solutions to generate
 
-            z: n*m matrix of observations on m attributes across n areas. This
-            is used to calculate intra-regional homogeneity
+    verbose         : binary
+                      if true debugging information is printed
 
-            floor: a minimum bound for a variable that has to be obtained
-            in each region
+    seeds           : list
+                      ids of observations to form initial seeds. If
+                      len(ids) is less than the number of observations, the
+                      complementary ids are added to the end of seeds. Thus
+                      the specified seeds get priority in the solution
+     
+    Attributes
+    ----------
 
-            floor_variable: n*1 vector of observations on variable for the
-            floor
+    area2region     : dict
+                      mapping of areas to region. key is area id, value is
+                      region id
+    regions         : list
+                      list of lists of regions (each list has the ids of areas
+                      in that region)
+    swap_iterations : int
+                      number of swap iterations
+    total_moves     : int
+                      number of moves into internal regions
 
-            initial: number of initial solutions to generate
-
-            verbose: if true debugging information is printed
-
-        Attributes:
-
-            feasible: boolean identifying if a solution was found
-
-            attempts: number of initial feasible solutions found
-
-            area2region: mapping of areas to regions, dictionary with key being area
-            id, value being region id, with region id index of region in
-            regions.
-
-            regions: sequence of region membership. List of lists of region
-            definitions
-
-            swap_iterations: number of swap iterations (passes through
-            complete set of regions to do edge swapping)
-
-            total_moves: number of moves into internal regions
-
-        Methods:
-            objective_function:
-                calculates the value of the objective function given a current
-                solution
-
-        Example:
-        >>> import random
-        >>> import numpy as np
-        >>> random.seed(100)
-        >>> np.random.seed(100)
-        >>> w=pysal.weights.weights.lat2gal(10,10)
-        >>> z=np.random.random_sample((w.n,2))
-        >>> p=np.random.random(w.n)*100
-        >>> p=np.ones((w.n,1),float)
-        >>> floor=3
-        >>> solution=Maxp(w,z,floor,floor_variable=p,initial=100)
-        >>> solution.p
-        29
-        >>> solution.regions[0]
-        [99, 89, 79]
-        >>> 
-        """
+    Example:
+    >>> import random
+    >>> import numpy as np
+    >>> random.seed(100)
+    >>> np.random.seed(100)
+    >>> w=pysal.weights.weights.lat2gal(10,10)
+    >>> z=np.random.random_sample((w.n,2))
+    >>> p=np.random.random(w.n)*100
+    >>> p=np.ones((w.n,1),float)
+    >>> floor=3
+    >>> solution=Maxp(w,z,floor,floor_variable=p,initial=100)
+    >>> solution.p
+    30
+    >>> solution.regions[0]
+    [49, 39, 29]
+    >>> 
+    """
+    def __init__(self,w,z,floor,floor_variable,
+                verbose=False,initial=100,seeds=[]):
     
         self.w=w
         self.z=z
         self.floor=floor
         self.floor_variable=floor_variable
         self.verbose=verbose
+        self.seeds=seeds
         self.initial_solution()
         if not self.p:
             self.feasible = False
@@ -122,10 +121,17 @@ class Maxp:
         while solving and attempts<=MAX_ATTEMPTS:
             regions=[]
             enclaves=[]
-            candidates=copy.copy(self.w.id_order)
+            if not self.seeds:
+                candidates=copy.copy(self.w.id_order)
+                candidates=np.random.permutation(candidates)
+                candidates=candidates.tolist()
+            else:
+                seeds = copy.copy(self.seeds)
+                nonseeds=[ i for i in self.w.id_order if i not in seeds]
+                candidates=seeds
+                candidates.extend(nonseeds)
             while candidates:
-                id=random.randint(0,len(candidates)-1)
-                seed=candidates.pop(id)
+                seed=candidates.pop(0)
                 # try to grow it till threshold constraint is satisfied
                 region=[seed]
                 building_region=True
@@ -391,6 +397,81 @@ class Maxp:
             if wss<=self.wss:
                 cwss+=1
         self.cpvalue=cwss*1. /( 1+len(solutions))
+
+
+
+class Maxp_LISA:
+    """Max-p regionalization using LISA seeds
+
+    Parameters
+    ---------
+
+    w              : W
+                     spatial weights object
+    z              : array
+                     nxk array of n observations on k variables used to
+                     measure similarity between areas within the regions.
+    y              : array
+                     nx1 array used to calculate the LISA statistics and
+                     to set the intial seed order
+    floor          : float
+                     value that each region must obtain on floor_variable
+    floor_variable : array
+                     nx1 array of values for regional floor threshold
+    initial        : int
+                     number of initial feasible solutions to generate
+                     prior to swapping
+    
+    Attributes
+    ----------
+
+    area2region     : dict
+                      mapping of areas to region. key is area id, value is
+                      region id
+    regions         : list
+                      list of lists of regions (each list has the ids of areas
+                      in that region)
+    swap_iterations : int
+                      number of swap iterations
+    total_moves     : int
+                      number of moves into internal regions
+
+    
+    Notes
+    -----
+
+    We sort the observations based on the value of the LISAs. This
+    ordering then gives the priority for seeds forming the p regions. The
+    initial priority seeds are not guaranteed to be separated in the final
+    solution.
+
+    Example
+    -------
+    >>> np.random.seed(100)
+    >>> w=pysal.lat2gal(10,10)
+    >>> z=np.random.random_sample((w.n,2))
+    >>> y=np.arange(w.n)
+    >>> p=np.ones((w.n,1),float)
+    >>> mpl=Maxp_LISA(w,z,y,floor=3,floor_variable=p)
+    >>> mpl.regions[0]
+    [98, 88, 78]
+    """
+    def __init__(self,w,z,y,floor,floor_variable,initial=100):
+
+        lis=pysal.Moran_Local(y,w)
+        ids=np.argsort(lis.Is)
+        ids=ids[range(w.n-1,-1,-1)]
+        ids=ids.tolist()
+        mp=pysal.Maxp(w,z,floor=floor,floor_variable=floor_variable,
+                      initial=initial,seeds=ids)
+        
+        self.feasible=mp.feasible
+        self.attempts=mp.attempts
+        self.area2region=mp.area2region
+        self.regions=mp.regions
+        self.swap_iterations=mp.swap_iterations
+        self.total_moves=mp.total_moves
+
 
 
 # tests
