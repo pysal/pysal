@@ -57,7 +57,7 @@ Note: replace the command `open` by that of a text editor if you are in Linux
 (`gedit` for instance, if you are in Ubuntu).
 Now add the following line at the end of the text file:
 
-    export PYTHONPATH=${PYTHONPATH}:"/path_to_desired/folder/pysal/"
+    export PYTHONPATH=${PYTHONPATH}:"/path_to_desired/folder/pysal-read-only/"
 
 Save and quit the file. Source the bash profile again:
 
@@ -120,7 +120,7 @@ where XX corresponds to the version of the Python distribution you are using
 Add to the file the following text:
 
  import sys
- sys.path.append("C:/PySALsvn")
+ sys.path.append("C:/PySALsvn/pysal-read-only")
  
 Save and close the window.
 
