@@ -54,8 +54,12 @@ for mod in mods:
     suite.addTest(doctest.DocTestSuite(mod))
 
 # Test imports
-import test_cont_weights
-suite.addTest(test_cont_weights.suite)
+try:
+    import rtree
+    import test_cont_weights
+    suite.addTest(test_cont_weights.suite)
+except ImportError:
+    print "Cannot test rtree contiguity weights, rtree not installed"
 import test_fileIO
 suite.addTest(test_fileIO.suite)
 
