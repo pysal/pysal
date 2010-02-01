@@ -99,7 +99,7 @@ class TheilD:
         mm=num.dot
 
         if ytot.size==1: # y is 1-d
-            sg=gtot/ytot
+            sg=gtot/(ytot*1.)
             sg.shape=(sg.size,1)
         else:
             sg=mm(gtot,num.diag(1./ytot))
