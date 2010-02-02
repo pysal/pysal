@@ -29,8 +29,8 @@ Available sub-packages
     econometrics/index
     inequality/index
     markov/index
-    region/index
     mobility/index
+    region/index
     weights/index
 
     open

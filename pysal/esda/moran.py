@@ -19,6 +19,7 @@ class Moran:
     ----------
 
     y               : array
+                      variable measured across n spatial units
     w               : W
                       spatial weights instance
     permutations    : int

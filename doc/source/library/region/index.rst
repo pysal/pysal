@@ -1,9 +1,7 @@
-:mod:`region.maxp` --- Spatially constrained clustering
-====================================================================================
+:mod:`pysal.region` --- Spatially constrained clustering
+=============================================================
 
-.. versionadded:: 1.0
+.. toctree::
 
-.. automodule:: pysal.region.maxp
-    :synopsis: maxp and maxp based on LISA seeds
-    :members:
 
+   maxp

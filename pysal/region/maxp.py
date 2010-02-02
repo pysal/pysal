@@ -62,7 +62,9 @@ class Maxp:
     total_moves     : int
                       number of moves into internal regions
 
-    Example:
+    Examples
+    --------
+
     >>> import random
     >>> import numpy as np
     >>> random.seed(100)
@@ -78,6 +80,7 @@ class Maxp:
     >>> solution.regions[0]
     [49, 39, 29]
     >>> 
+
     """
     def __init__(self,w,z,floor,floor_variable,
                 verbose=False,initial=100,seeds=[]):
@@ -404,7 +407,7 @@ class Maxp_LISA:
     """Max-p regionalization using LISA seeds
 
     Parameters
-    ---------
+    ----------
 
     w              : W
                      spatial weights object
@@ -445,8 +448,9 @@ class Maxp_LISA:
     initial priority seeds are not guaranteed to be separated in the final
     solution.
 
-    Example
-    -------
+    Examples
+    --------
+
     >>> np.random.seed(100)
     >>> w=pysal.lat2gal(10,10)
     >>> z=np.random.random_sample((w.n,2))
@@ -455,6 +459,7 @@ class Maxp_LISA:
     >>> mpl=Maxp_LISA(w,z,y,floor=3,floor_variable=p)
     >>> mpl.regions[0]
     [98, 88, 78]
+
     """
     def __init__(self,w,z,y,floor,floor_variable,initial=100):
 
