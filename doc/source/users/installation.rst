@@ -16,7 +16,7 @@ installed on you machine.
 --------
 
 * Python 2.5 or later
-* Numpy 1.2 or later
+* Numpy 1.3 or later
 * Scipy 0.7 or later
 
 -Optional but recommended
