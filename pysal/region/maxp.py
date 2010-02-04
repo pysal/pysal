@@ -452,13 +452,14 @@ class Maxp_LISA:
     --------
 
     >>> np.random.seed(100)
+    >>> random.seed(100)
     >>> w=pysal.lat2gal(10,10)
     >>> z=np.random.random_sample((w.n,2))
     >>> y=np.arange(w.n)
     >>> p=np.ones((w.n,1),float)
     >>> mpl=Maxp_LISA(w,z,y,floor=3,floor_variable=p)
     >>> mpl.regions[0]
-    [98, 88, 78]
+    [98, 97, 96]
 
     """
     def __init__(self,w,z,y,floor,floor_variable,initial=100):
