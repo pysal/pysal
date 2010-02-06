@@ -12,6 +12,7 @@ Author(s):
 import pysal
 from components import check_contiguity
 from pysal.common import *
+from pysal.region import randomregion as RR
 
 LARGE=10**6
 MAX_ATTEMPTS=100
@@ -27,7 +28,7 @@ class Maxp:
  
     w               : W
                       spatial weights object
-
+                    
     z               : array
                       n*m array of observations on m attributes across n
                       areas. This is used to calculate intra-regional
@@ -319,89 +320,133 @@ class Maxp:
         return wss
 
     def inference(self,nperm=99):
-        # compare the within sum of squares for the solution against nperm
-        # solutions where areas are randomly assigned to regions
-        ids=np.arange(self.w.n)
-        regs=self.regions
+        """Compare the within sum of squares for the solution against
+        simulated solutions where areas are randomly assigned to regions that
+        maintain the cardinality of the original solution.
+
+        Parameters
+        ----------
+
+        nperm       : int
+                      number of random permutations for calculation of 
+                      pseudo-p_values
+
+        Attributes
+        ----------
+        
+        pvalue      : float
+                      pseudo p_value
+
+        Examples
+        --------
+        
+        >>> import random
+        >>> import numpy as np
+        >>> random.seed(100)
+        >>> np.random.seed(100)
+        >>> w=pysal.weights.weights.lat2gal(5,5)
+        >>> z=np.random.random_sample((w.n,2))
+        >>> p=np.random.random(w.n)*100
+        >>> p=np.ones((w.n,1),float)
+        >>> floor=3
+        >>> solution=Maxp(w,z,floor,floor_variable=p,initial=100)
+        >>> solution.inference(nperm=9)
+        >>> solution.pvalue
+        0.29999999999999999
+
+        """
+        ids=self.w.id_order
+        num_regions=len(self.regions)
         wsss=np.zeros(nperm+1)
         self.wss=self.objective_function()
+        cards=[len(i) for i in self.regions]
+        sim_solutions=RR.Random_Regions(ids,num_regions, \
+                    cardinality=cards,permutations=nperm)
         cv=1
         c=1
-        for solution in range(nperm):
-            ids=np.random.permutation(ids)
-            r=[ids[reg] for reg in regs]
-            wss=self.objective_function(r)
+        for solution in sim_solutions.solutions_feas:
+            wss=self.objective_function(solution.regions)
             wsss[c]=wss
             if wss<=self.wss:
                 cv+=1
             c+=1
-        self.pvalue=cv/(1.+nperm)
+        self.pvalue=cv/(1.+len(sim_solutions.solutions_feas))
         self.wss_perm=wsss
         self.wss_perm[0]=self.wss
+            
+    def cinference(self,nperm=99,maxiter=1000):
+        """Compare the within sum of squares for the solution against
+        conditional simulated solutions where areas are randomly assigned to
+        regions that maintain the cardinality of the original solution and
+        respect contiguity relationships.
 
-    def cinference(self,nperm=99,maxiter=100):
-        # compare within sum of squares to conditional randomization that
-        # respects contiguity cardinality distribution
-        ns=0
-        wss=np.zeros(nperm+1)
-        regs=self.regions
-        nregs=len(regs)
-        w=copy.copy(self.w)
-        n=w.n
-        solutions=[]
-        iter=0
-        maxiter=nperm*maxiter
-        while ns < nperm and iter<maxiter:
-            solving=1
-            nr=0
-            candidates=range(self.w.n)
-            seeds=np.random.permutation(n)[0:nregs]
-            cards=[len(reg) for reg in self.regions]
-            solution=[]
-            regions=[]
-            for seed in seeds:
-                regions.append([seed])
-                candidates.remove(seed)
-            building=True
-            flags=[1]*nregs
-            while sum(flags):
-                for r,region in enumerate(regions):
-                    if flags[r]:
-                        nr=len(region)
-                        if nr in cards:
-                            # done building this region
-                            cards.remove(nr)
-                            flags[r]=0
-                        else:
-                            # add a neighbor
-                            neighbors=[]
-                            for j in region:
-                                neighbors.extend([ni for ni in w.neighbors[j] if ni in candidates])
-                            if neighbors:
-                                j=neighbors[0]
-                                region.append(j)
-                                candidates.remove(j)
-                            else:
-                                flags=[0]*nregs
-                if not candidates:
-                    t=[region.sort() for region in regions]
-                    regions.sort()
-                    if regions not in solutions:
-                        solutions.append(regions)
-                        ns+=1
-            iter+=1
-        self.csolutions=solutions
-        self.citer=iter
-        ids=np.arange(self.w.n)
-        cwss=1
-        self.wss=self.objective_function()
-        for solution in solutions:
-            wss=self.objective_function(solution)
-            if wss<=self.wss:
-                cwss+=1
-        self.cpvalue=cwss*1. /( 1+len(solutions))
+        Parameters
+        ----------
 
+        nperm       : int
+                      number of random permutations for calculation of 
+                      pseudo-p_values
 
+        maxiter     : int
+                      maximum number of attempts to find each permutation
+
+        Attributes
+        ----------
+        
+        pvalue      : float
+                      pseudo p_value
+
+        feas_sols   : int
+                      number of feasible solutions found
+
+        Notes
+        -----
+
+        it is possible for the number of feasible solutions (feas_sols) to be
+        less than the number of permutations requested (nperm); an exception
+        is raised if this occurs.
+
+        Examples
+        --------
+        
+        >>> import random
+        >>> import numpy as np
+        >>> random.seed(100)
+        >>> np.random.seed(100)
+        >>> w=pysal.weights.weights.lat2gal(5,5)
+        >>> z=np.random.random_sample((w.n,2))
+        >>> p=np.random.random(w.n)*100
+        >>> p=np.ones((w.n,1),float)
+        >>> floor=3
+        >>> solution=Maxp(w,z,floor,floor_variable=p,initial=100)
+        >>> solution.cinference(nperm=9, maxiter=100)
+        >>> solution.cpvalue
+        0.10000000000000001
+
+        """
+        ids=self.w.id_order
+        num_regions=len(self.regions)
+        wsss=np.zeros(nperm+1)
+        self.cwss=self.objective_function()
+        cards=[len(i) for i in self.regions]
+        sim_solutions=RR.Random_Regions(ids,num_regions, \
+                    cardinality=cards, contiguity=self.w, \
+                    maxiter=maxiter, permutations=nperm)
+        self.cfeas_sols=len(sim_solutions.solutions_feas) 
+        if self.cfeas_sols<nperm:
+            raise Exception, 'not enough feasible solutions found'
+        cv=1
+        c=1
+        for solution in sim_solutions.solutions_feas:
+            wss=self.objective_function(solution.regions)
+            wsss[c]=wss
+            if wss<=self.cwss:
+                cv+=1
+            c+=1
+        self.cpvalue=cv/(1.+self.cfeas_sols)
+        self.cwss_perm=wsss
+        self.cwss_perm[0]=self.cwss
+            
 
 class Maxp_LISA:
     """Max-p regionalization using LISA seeds
@@ -451,6 +496,8 @@ class Maxp_LISA:
     Examples
     --------
 
+    >>> import random
+    >>> import numpy as np
     >>> np.random.seed(100)
     >>> random.seed(100)
     >>> w=pysal.lat2gal(10,10)
