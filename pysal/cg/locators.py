@@ -617,26 +617,33 @@ class PolygonLocator:
         self._locator=polygons
         #pass
 
-    def nearest(self, query_point):
-        """
-        Returns the nearest polygon indexed to a query point.
- 
-        nearest(Polygon) -> Polygon
+   def nearest(self, query_point, rule='vertex'):
+       """
+       Returns the nearest polygon indexed to a query point based on
+       various rules.
 
-        Arguments:
-        query_point -- a point to find the nearest indexed polygon to
+       nearest(Polygon) -> Polygon
 
-        Example:
-        >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
-        >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
-        >>> pl = PolygonLocator([p1, p2])
-        >>> n = pl.nearest(Point((-1, 1)))
-        >>> str(min(n.vertices()))
-        (0.0, 1.0)
-        """
-        pass
+       Arguments:
+       query_point -- a point to find the nearest indexed polygon to
 
-    def region(self, region_rect):
+       rule  -- representative point for polygon in nearest query.
+                vertex -- measures distance between vertices and query_point
+                centroid -- measures distance between centroid and
+                query_point
+                edge   -- measures the distance between edges and query_point
+
+       Example:
+       >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
+       >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
+       >>> pl = PolygonLocator([p1, p2])
+       >>> n = pl.nearest(Point((-1, 1)))
+       >>> str(min(n.vertices()))
+       (0.0, 1.0)
+       """
+       pass
+
+def region(self, region_rect):
         """
         Returns the indexed polygons located inside a rectangular query region.
  
@@ -663,9 +670,10 @@ class PolygonLocator:
         return n
         #pass
 
-    def proximity(self, origin, r):
+    def proximity(self, origin, r, rule='vertex'):
         """
-        Returns the indexed polygons located within some distance of an origin point.
+        Returns the indexed polygons located within some distance of an
+        origin point based on various rules.
  
         proximity(Polygon, number) -> Polygon list
 
