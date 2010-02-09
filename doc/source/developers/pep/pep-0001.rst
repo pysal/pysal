@@ -7,9 +7,8 @@ Author    Serge Rey <sjsrey@gmail.com>,
           Xinyue Ye <xinyue.ye@gmail.com>
 Status    Draft
 Created   18-Jan-2010
-Updated   24-Jan-2010
+Updated   09-Feb-2010
 ========  =================================
-
 
 Abstract
 ========
@@ -47,8 +46,9 @@ encompass the following modules:
   Kendall's index
   
 * spatial rank mobility 
-  add a spatial dimension into rank mobility
-  investigate the extent to which the relative mobility is spatially dependent 
+  add a spatial dimension into rank mobility investigate the extent to
+  which the relative mobility is spatially dependent 
+  use various types of spatial weight matrix
 
 * Markov 
   empirical transition probability matrix (mobility across class)

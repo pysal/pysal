@@ -679,6 +679,12 @@ class PolygonLocator:
         origin -- the point to find indexed polygons near
         r -- the maximum distance to find indexed polygon from the origin point
 
+       rule  -- representative point for polygon in nearest query.
+                vertex -- measures distance between vertices and query_point
+                centroid -- measures distance between centroid and
+                query_point
+                edge   -- measures the distance between edges and query_point
+
         Example:
         >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
         >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
@@ -693,8 +699,4 @@ def _test():
     doctest.testmod()
 
 if __name__ == '__main__':
-    _test()
-
-
-
-
+    _test() 
