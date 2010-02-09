@@ -35,7 +35,7 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
 
     Example:
     >>> import tempfile
-    >>> f = tempfile.NamedTemporaryFile(suffix='.shp',delete=False); fname = f.name; f.close()
+    >>> f = tempfile.NamedTemporaryFile(suffix='.shp'); fname = f.name; f.close()
     >>> import pysal
     >>> i = pysal.open('../../examples/10740.shp','r')
     >>> o = pysal.open(fname,'w')
