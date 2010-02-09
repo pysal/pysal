@@ -99,7 +99,7 @@ class PurePyDbf_Tester(unittest.TestCase):
         self.dbObj.seek(32)
         self.assertEquals(self.dbObj.next(),db32)
     def test_write(self):
-        f = tempfile.NamedTemporaryFile(suffix='.dbf',delete=False); fname = f.name; f.close()
+        f = tempfile.NamedTemporaryFile(suffix='.dbf'); fname = f.name; f.close()
         self.dbfcopy = fname
         self.out = pysal.core._FileIO.pyDbfIO.DBF(fname,'w')
         self.dbObj.seek(0)
@@ -127,7 +127,7 @@ class PurePyShp_Tester(unittest.TestCase):
         test_file = '../examples/10740.shp'
         self.test_file = test_file
         self.shpObj = pysal.core._FileIO.pyShpIO.PurePyShpWrapper(test_file,'r')
-        f = tempfile.NamedTemporaryFile(suffix='.shp',delete=False); shpcopy = f.name; f.close()
+        f = tempfile.NamedTemporaryFile(suffix='.shp'); shpcopy = f.name; f.close()
         self.shpcopy = shpcopy
         self.shxcopy = shpcopy.replace('.shp','.shx')
     def test_len(self):
