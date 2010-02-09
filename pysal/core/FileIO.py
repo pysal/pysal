@@ -52,11 +52,11 @@ class FileIO(object): #should be a type?
         .__new__ parses the filename to determine the fileType
         next, .__registry and checked for that type.
         Each type supports one or more modes ['r','w','a',etc]
-        If we support the type and mode, an instande of the appropriate handler
+        If we support the type and mode, an instance of the appropriate handler
           is created and returned.
 
         All handlers must inherit from this class, and by doing so are automatically
-          added to the .__registry and are forced to conform to the prescibed API.
+          added to the .__registry and are forced to conform to the prescribed API.
         The metaclass takes cares of the registration by parsing the class definition.
 
         It doesn't make much sense to treat weights in the same way as shapefiles and dbfs,
@@ -156,7 +156,6 @@ class FileIO(object): #should be a type?
         self.by_row = self.by_row(self)
         self._spec = []
         self.header = []
-        self.__joins = []
     def __getIds(self):
         return self.__ids
     def __setIds(self,ids):
@@ -189,12 +188,6 @@ class FileIO(object): #should be a type?
     @property
     def rIds(self):
         return self.__rIds
-    def join(self,right):
-        self.__joins.append(right)
-    def joins(self):
-        return self.__joins
-    def removeJoin(self,i):
-        self.__joins.pop(i)
     def __iter__(self):
         self.seek(0)
         return self
@@ -237,7 +230,7 @@ class FileIO(object): #should be a type?
     def next(self):
         """A FileIO object is its own iterator, see StringIO"""
         self._complain_ifclosed(self.closed)
-        r = self._read_joins()
+        r = self.__read()
         if not r:
             raise StopIteration
         return r
@@ -253,7 +246,7 @@ class FileIO(object): #should be a type?
         """
         prevPos = self.tell()
         self.seek(n)
-        obj = self._read_joins()
+        obj = self.__read()
         self.seek(prevPos)
         return obj
     def seek(self,n):
@@ -276,7 +269,7 @@ class FileIO(object): #should be a type?
             result = []
             while 1:
                 try:
-                    result.append(self._read_joins())
+                    result.append(self.__read())
                 except StopIteration:
                     break
             return result
@@ -286,31 +279,20 @@ class FileIO(object): #should be a type?
             result = []
             for i in range(0,n):
                 try:
-                    result.append(self._read_joins())
+                    result.append(self.__read())
                 except StopIteration:
                     break
             return result
-    def _read_joins(self):
-        pos = self.tell()
+    def __read(self):
+        """ Gets one row from the file handler, and if necessary casts it's objects """
         row = self._read()
         if not row:
             raise StopIteration
         row = self._cast(row)
-        if row:
-            if self.__joins and type(row)!=list:
-                row = [row]
-            if self.ids:
-                pos = self.rIds[pos]
-            for join in self.__joins:
-                right = join.by_row[pos]
-                if type(right) == list:
-                    row.extend(right)
-                else:
-                    row.append(right)
         return row
     def _read(self):
-        """ Must be implemented by subclasses supoprt 'r'
-            subclasses should increament .pos
+        """ Must be implemented by subclasses that support 'r'
+            subclasses should increment .pos
             and redefine this doc string
         """
         self._complain_ifclosed(self.closed)
@@ -322,8 +304,8 @@ class FileIO(object): #should be a type?
         self._complain_ifclosed(self.closed)
         raise NotImplementedError
     def write(self,obj):
-        """ Must be implemented by subclasses supoprt 'w'
-            subclasses should increament .pos
+        """ Must be implemented by subclasses that support 'w'
+            subclasses should increment .pos
             subclasses should also check if obj is an instance of type(list)
             and redefine this doc string
         """
