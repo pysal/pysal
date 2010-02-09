@@ -12,7 +12,6 @@ Not to be used without permission of the authors.
 Style Guide, Follow:
 http://www.python.org/dev/peps/pep-0008/
 
-
 Class comment format:
 
     Brief class description.
@@ -22,7 +21,6 @@ Class comment format:
     attr 2 -- type -- description of attr 2
 
     Extras (notes, references, examples, doctest, etc.)
-
 
 Function comment format:
 
@@ -617,7 +615,7 @@ class PolygonLocator:
         self._locator=polygons
         #pass
 
-   def nearest(self, query_point, rule='vertex'):
+    def nearest(self, query_point, rule='vertex'):
        """
        Returns the nearest polygon indexed to a query point based on
        various rules.
@@ -643,7 +641,7 @@ class PolygonLocator:
        """
        pass
 
-def region(self, region_rect):
+    def region(self, region_rect):
         """
         Returns the indexed polygons located inside a rectangular query region.
  
@@ -689,7 +687,6 @@ def region(self, region_rect):
         2
         """
         pass
-
 
 def _test():
     import doctest
