@@ -206,11 +206,16 @@ class FileIO(object): #should be a type?
     def cast(self,key,typ):
         """cast key as typ"""
         if key in self.header:
-            try:
-                assert hasattr(typ,'__call__')
-                self._spec[self.header.index(key)] = typ
-            except AssertionError:
-                raise TypeError,'Cast Objects must be callable'
+            if not self._spec:
+                self._spec = [lambda x:x for key in self.header]
+            if typ == None:
+                self._spec[self.header.index(key)] = lambda x:x
+            else:
+                try:
+                    assert hasattr(typ,'__call__')
+                    self._spec[self.header.index(key)] = typ
+                except AssertionError:
+                    raise TypeError,'Cast Objects must be callable'
         else:
             raise KeyError, "%s"%key
     def _cast(self,row):
