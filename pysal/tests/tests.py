@@ -36,6 +36,7 @@ import pysal.esda.mapclassify
 import pysal.inequality.theil
 import pysal.econometrics.classic
 import pysal.region.maxp
+import pysal.region.randomregion
 import pysal.mobility.rank
 import pysal.weights.weights, pysal.weights.ContiguityWeights
 import pysal.weights.DistanceWeights, pysal.weights.spatial_lag
@@ -45,7 +46,7 @@ import pysal.weights.DistanceWeights, pysal.weights.spatial_lag
 mods='esda.moran','esda.geary', 'esda.mapclassify', \
         'econometrics.classic', \
         'inequality.theil','mobility.rank', \
-        'region.maxp', \
+        'region.maxp', 'region.randomregion', \
         'weights.weights','weights.DistanceWeights', \
         'weights.ContiguityWeights','weights.spatial_lag'
 mods = [ "pysal."+ mod for mod in mods]
