@@ -15,18 +15,23 @@ installed on you machine.
 -Required
 --------
 
-* Python 2.5 or later
-* Numpy 1.3 or later
-* Scipy 0.7 or later
+* `Python <http://www.python.org/>`_ 2.5 or later
+* `Numpy <http://numpy.scipy.org/>`_ 1.3 or later
+* `Scipy <http://www.scipy.org/>`_ 0.7 or later
+
+Dependencies to build documentation:
+
+* `Sphinx <http://sphinx.pocoo.org/>`_
+* `numpydoc <http://pypi.python.org/pypi/numpydoc/0.2>`_  extension to Sphinx (NOT included in EPD)
 
 -Optional but recommended
 ------------------------
 
-* iPython
-* rtree
+* `iPython <http://ipython.scipy.org/moin/Download>`_
+* `rtree <http://pypi.python.org/pypi/Rtree>`_ (NOT included in EPD)
 
--Enthought Python Distribution
------------------------------
+-Enthought Python Distribution (EPD)
+------------------------------------
 Instead of installing them one by one, you can get all the required
 dependencies as well as iPython and a whole bunch of other Python packages by
 easily installing the `Enthought
@@ -39,7 +44,7 @@ As PySAL is currently in alpha stage, we are not yet preparing binary
 releases. Users can grab the source code from our subversion repository using
 the following command:
 
--Linux and Mac OS X (and most '*'Nix machines)
+-Linux and Mac OS X (and most *nix machines)
 ---------------------------------------------
 
 To download the code, open up a terminal (`/Applications/Utilities/Terminal`)

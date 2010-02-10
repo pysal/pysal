@@ -8,12 +8,17 @@ installed on you machine.
  * Numpy 1.3 
  * Scipy 0.7 or later
 
+Dependencies to build documentation:
+
+* Sphinx
+* numpydoc extension to Sphinx (NOT included in EPD)
+
 ==Optional but recommended==
 
  * iPython
- * rtree
+ * rtree (NOT included in EPD)
 
-==Enthought Python Distribution==
+==Enthought Python Distribution (EPD)==
 
 Instead of installing them one by one, you can get all the required
 dependencies as well as iPython and a whole bunch of other Python packages by
