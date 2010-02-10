@@ -41,18 +41,18 @@ class Random_Regions:
                       ignored)
 
     maxiter         : int
-                      maximum number attempts at finding a feasible solution
-                      (only affects contiguity constrained regions) 
+                      maximum number attempts (for each permutation) at finding 
+                      a feasible solution (only affects contiguity constrained 
+                      regions) 
 
     permutations    : int
-                      number Random_Region instances to generate
-                      
+                      number of Random_Region instances to generate
 
     Attributes
     ----------
 
     solutions       : list
-                      list of length permutations containing all Random_Region 
+                      list of length permutations containing all Random_Region
                       instances generated
 
     solutions_feas  : list
@@ -169,11 +169,11 @@ class Random_Region:
 
     Attributes
     ----------
-            
+
     feasible        : boolean
                       if True then solution was found
-            
-    regions         : list: 
+
+    regions         : list 
                       list of lists of regions (each list has the ids of areas
                       in that region)
 
