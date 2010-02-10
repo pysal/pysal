@@ -1,0 +1,56 @@
+***************************************
+PEP 0002 Residential Segregation Module
+***************************************
+
+========  =================================
+Author    David C. Folch <david.folch@asu.edu>
+          Serge Rey <srey@asu.edu>
+Status    Draft
+Created   10-Feb-2010
+Updated   
+========  =================================
+
+
+Abstract
+========
+
+The segregation module combines a number of previously developed and
+to-be-developed measures for the analysis of residential segregation. It will
+include classes for two-group and multi-group aspatial (classic) segregation
+indices along with their spatialized counterparts.  Local segregation indices
+will also be included.
+
+
+Motivation
+==========
+
+The study of residential segregation continues to be a popular field in
+empirical social science and public policy development.  While some of the
+classic measures are relatively simple to implement, the spatial versions are
+not nearly as straightforward for the average user.  Furthermore, there does
+not appear to be a Python implementation of residential segregation measures
+currently available.  There is a standalone C#.Net GUI implementation
+(http://www.ucs.inrs.ca/inc/Groupes/LASER/Segregation.zip) containing many of
+the measures to be implanted via this PEP but this is Windows only and I could
+not get it to run easily (it is not open source but the author sent me the
+code). 
+
+It has been noted that there is no one-size-fits-all segregation index;
+however, some are clearly more popular than others.  This module would bring
+together a wide variety of measures to allow users to easily compare the
+results from different indices.  
+
+
+Reference Implementation
+========================
+
+We suggest adding the module ``pysal.segregation`` which in turn would
+encompass the following modules:
+
+* globalSeg
+* localSeg
+
+
+References
+==========
+
