@@ -2,7 +2,7 @@ import pysal
 
 try:
     from _contW_rtree import ContiguityWeights_rtree as ContiguityWeights
-except ImportError:
+except:
     from _contW_binning import ContiguityWeights_binning as ContiguityWeights
 
 QUEEN = 1
