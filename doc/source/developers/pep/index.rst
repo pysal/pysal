@@ -6,4 +6,5 @@ PySAL Enhancement Proposals (PEP)
    :maxdepth: 1 
 
    pep-0001
+   pep-0002
 
