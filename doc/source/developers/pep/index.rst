@@ -7,4 +7,5 @@ PySAL Enhancement Proposals (PEP)
 
    pep-0001
    pep-0002
+   pep-0003
 
