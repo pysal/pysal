@@ -7,7 +7,7 @@ Xinyue Ye <xinyue.ye@gmail.com>
 Charles R. Schmidt <Charles.R.Schmidt@asu.edu>
 Andrew Winslow <Andrew.Winslow@asu.edu>
 
-Not to be used without permission of the authors. 
+ 
 
 Style Guide, Follow:
 http://www.python.org/dev/peps/pep-0008/

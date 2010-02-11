@@ -4,7 +4,7 @@ PySAL ShapeFile Reader and Writer based on pure python shapefile module.
 Authors:
 Charles R Schmidt <Charles.R.Schmidt@asu.edu>
 
-Not to be used without permission of the authors. 
+ 
 """
 
 __author__ = "Charles R. Schmidt"
