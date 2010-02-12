@@ -63,6 +63,8 @@ except ImportError:
     print "Cannot test rtree contiguity weights, rtree not installed"
 import test_fileIO
 suite.addTest(test_fileIO.suite)
+import test_cg_shapes
+suite.addTest(test_cg_shapes.suite)
 
 runner = unittest.TextTestRunner()
 runner.run(suite)
