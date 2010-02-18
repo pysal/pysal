@@ -2,8 +2,7 @@
 Geary's C statistic for spatial autocorrelation
 
 
-Author(s):
-    Serge Rey srey@asu.edu
+Author(s): Serge Rey srey@asu.edu
 
 """
 from pysal.common import *

@@ -31,7 +31,7 @@ import unittest
 import doctest
 
 # module imports
-import pysal.esda.moran, pysal.esda.geary
+import pysal.esda.moran, pysal.esda.geary, pysal.esda.join_counts
 import pysal.esda.mapclassify
 import pysal.inequality.theil
 import pysal.econometrics.classic

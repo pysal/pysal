@@ -44,6 +44,7 @@ open = pysal.core.FileIO.FileIO
 # toplevel imports to be explicit
 
 from esda.geary import Geary
+from esda.join_counts import Join_Counts
 from esda.mapclassify import quantile,binC,bin,bin1d,Equal_Interval
 from esda.mapclassify import Box_Plot,Quantiles,Std_Mean,Maximum_Breaks
 from esda.mapclassify import Natural_Breaks, Fisher_Jenks, Jenks_Caspall

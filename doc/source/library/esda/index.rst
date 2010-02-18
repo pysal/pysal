@@ -3,6 +3,7 @@
 
 .. toctree::
 
+    join_counts
     mapclassify
     geary
     moran
