@@ -14,6 +14,7 @@ http://geodacenter.asu.edu
 import unittest
 from struct import calcsize,unpack,pack
 from cStringIO import StringIO
+from itertools import izip,islice
 #SHAPEFILE Globals
 HEADERSTRUCT = (\
     ('File Code','i','>'),\
@@ -476,7 +477,10 @@ class PolyLine:
         contentStruct = (('Parts Index','%di'%record['NumParts'],'<'),\
                          ('Vertices','%dd'%(2*record['NumPoints']),'<'))
         record.update(_unpackDict(contentStruct,dat))
-        record['Vertices'] = [(record['Vertices'][i],record['Vertices'][i+1]) for i in xrange(0,record['NumPoints']*2,2)]
+        #record['Vertices'] = [(record['Vertices'][i],record['Vertices'][i+1]) for i in xrange(0,record['NumPoints']*2,2)]
+        verts = record['Vertices']
+        #Next line is equivalent to: zip(verts[::2],verts[1::2])
+        record['Vertices'] = list(izip( islice(verts,0,None,2), islice(verts,1,None,2) ))
         if not record['Parts Index']:
             record['Parts Index'] = [0]
         return record
