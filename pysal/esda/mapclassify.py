@@ -597,14 +597,14 @@ class Std_Mean(Map_Classifier):
     >>> st.k
     5
     >>> st.bins
-    array([ -957.89645741,  -415.98417698,   667.84038388,  1209.75266431,
+    array([ -967.36235382,  -420.71712519,   672.57333208,  1219.21856072,
             4111.45      ])
     >>> st.counts
     array([ 0,  0, 56,  1,  1])
     >>> 
     >>> st3=Std_Mean(cal,multiples=[-3,-1.5,1.5,3])
     >>> st3.bins
-    array([-1499.80873784,  -686.9403172 ,   938.79652409,  1751.66494474,
+    array([-1514.00758246,  -694.03973951,   945.8959464 ,  1765.86378936,
             4111.45      ])
     >>> st3.counts
     array([ 0,  0, 57,  0,  1])
@@ -617,7 +617,7 @@ class Std_Mean(Map_Classifier):
 
     def _set_bins(self):
         y=self.y
-        s=y.std()
+        s=y.std(ddof=1)
         m=y.mean()
         cuts=[m+s*w for w in self.multiples]
         y_max=y.max()
