@@ -4,7 +4,7 @@
 User Guide
 **********
 
- .. image:: _figures/pysalgraph.png
+ .. image:: _static/pysalgraph.png
 
 PySAL is a cross-platform library of spatial analysis functions written in
 Python. It combines the development efforts on `PySpace
