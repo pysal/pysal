@@ -32,7 +32,7 @@ class ContiguityWeights_binning:
         shpFileObject=self.shpFileObject
 
         if shpFileObject.type!=pysal.cg.Polygon:
-            return false
+            return False
 
         shapebox = shpFileObject.bbox      # bounding box
 
