@@ -54,8 +54,18 @@ def lag(w,y):
     >>> lag(w,y)
     array([ 1.,  2.,  1.])
 
+    The alingment can be arbitrary
+
+    >>> w.id_order=['b','c','a']
+    >>> y = np.array([1,2,0])
+    >>> lag(w,y)
+    array([ 2.,  1.,  1.])
+
+
     Or pass ids in on initial construction of W
 
+    >>> w.id_order=['a','b','c']
+    >>> y = np.array([0,1,2])
     >>> w=W({'weights':weights,'neighbors':neighbors,'ids':['a','b','c']})
     >>> lag(w,y)
     array([ 1.,  2.,  1.])
@@ -99,7 +109,7 @@ def lag_array(w,y):
     """
     wy=np.zeros(y.shape,np.float)
     for i,id in enumerate(w.id_order):
-        wy[i]=np.dot(w.weights[id],y[w.neighbors_0[id]])
+        wy[i]=np.dot(w.weights[id],y[w.neighbor_offsets[id]])
     return wy 
 
 

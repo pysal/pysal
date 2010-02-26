@@ -116,14 +116,15 @@ class W(object):
         self.neighbors=data['neighbors']
         self.transformations['O']=self.weights #original weights
         self.islands=[]
-        self._id_order=self.neighbors.keys()
         if 'ids' in data:
             self._id_order=data['ids']
             self._id_order_set=True
         else:
+            self._id_order=self.neighbors.keys()
             self._id_order.sort()
             self._id_order_set=False
-        self._zero_offset()
+        #self._zero_offset()
+        self.__neighbors_0 = False
         self._idx=0
         self.n=len(self.neighbors)
         self.n_1=self.n-1
@@ -178,11 +179,11 @@ class W(object):
         return value
 
 
-    def set_id_order(self, ordered_ids):
+    def __set_id_order(self, ordered_ids):
         """Set the iteration order in w.
 
         W can be iterated over. On construction the iteration order is set to
-        the order of the keys in the w.weights dictionary. If a specific order
+        the lexicgraphic order of the keys in the w.weights dictionary. If a specific order
         is required it can be set with this method.
 
         Parameters
@@ -220,18 +221,20 @@ class W(object):
             self._idx=0
             self._id_order_set=True
             self.neighbor_0_ids={}
-            self._zero_offset()
+            self.__neighbors_0 = False
+            #self._zero_offset()
         else:
-            raise Exception, 'ordered_ids do not aligned with W ids'
+            raise Exception, 'ordered_ids do not align with W ids'
 
-    def get_id_order(self):
+    def __get_id_order(self):
         """returns the ids for the observations in the order in which they
         would be encountered if iterating over the weights."""
         return self._id_order
 
-    id_order=property(get_id_order, set_id_order)
+    id_order=property(__get_id_order, __set_id_order)
 
-    def get_id_order_set(self):
+    @property
+    def id_order_set(self):
         """returns True if user has set id_order, False if not.
 
         Example
@@ -241,14 +244,32 @@ class W(object):
         """
         return self._id_order_set
 
-    id_order_set=property(get_id_order_set)
 
+    @property
+    def neighbor_offsets(self):
+        """
+        Given the current id_order, 
+            neighbor_offsets[id] is the offsets of the id's neighrbors in id_order
 
-    def _zero_offset(self):
-        """creates attribute to map neighbor ids from  id_order to zero offset"""
-        self.neighbors_0={}
-        for id in self.neighbors:
-            self.neighbors_0[id]=[self._id_order.index(neigh) for neigh in self.neighbors[id]]
+        Example:
+        >>> neighbors={'c': ['b'], 'b': ['c', 'a'], 'a': ['b']}
+        >>> weights ={'c': [1.0], 'b': [1.0, 1.0], 'a': [1.0]}
+        >>> w=W({'weights':weights,'neighbors':neighbors})
+        >>> w.id_order = ['a','b','c']
+        >>> w.neighbor_offsets['b']
+        [2, 0]
+        >>> w.id_order = ['b','a','c']
+        >>> w.neighbor_offsets['b']
+        [2, 1]
+        """
+        if self.__neighbors_0:
+            return self.__neighbors_0
+        else:
+            self.__neighbors_0={}
+            for id in self.neighbors:
+                self.__neighbors_0[id]=[self._id_order.index(neigh) for neigh in self.neighbors[id]]
+            return self.__neighbors_0
+
 
     def get_transform(self):
         """

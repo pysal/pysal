@@ -135,7 +135,7 @@ class Geary:
         ys=np.zeros(y.shape)
         y2=y**2
         for i,i0 in enumerate(self.w.id_order):
-            neighbors=self.w.neighbors_0[i0]
+            neighbors=self.w.neighbor_offsets[i0]
             wijs=self.w.weights[i0]
             z=zip(neighbors,wijs)
             ys[i] = sum([wij*(y2[i] - 2*y[i]*y[j] + y2[j]) for j,wij in z])
