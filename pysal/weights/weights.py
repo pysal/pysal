@@ -672,18 +672,22 @@ class W(object):
         return W(data)
 
 
-def lat2gal(nrows=5,ncols=5,rook=True):
+def lat2gal(nrows=5,ncols=5,rook=True,id_type='int'):
     """Create a GAL structure for a regular lattice.
 
     Parameters
     ----------
 
-    nrows : int
-            number of rows
-    ncols : int
-            number of columns
-    rook  : boolean
-            type of matrix. Default is rook. For queen, rook =False
+    nrows   : int
+              number of rows
+    ncols   : int
+              number of columns
+    rook    : boolean
+              type of matrix. Default is rook. For queen, rook =False
+    id_type : string
+              string defining the type of IDs to use in the final W object;
+              options are 'int' (0, 1, 2 ...; default), 'float' (0.0,
+              1.0, 2.0, ...) and 'string' ('id0', 'id1', 'id2', ...)
 
     Returns
     -------
@@ -744,9 +748,25 @@ def lat2gal(nrows=5,ncols=5,rook=True):
     weights={}
     for key in w:
         weights[key]=[1.]*len(w[key])
+    ids = range(n)
+    if id_type=='string':
+        ids = ['id'+str(i) for i in ids]
+    elif id_type=='float':
+        ids = [i*1. for i in ids]
+    if id_type=='string' or id_type=='float':
+        id_dict = dict(zip(range(n), ids))
+        alt_w = {}
+        alt_weights = {}
+        for i in w:
+            values = [id_dict[j] for j in w[i]]
+            key = id_dict[i]
+            alt_w[key] = values
+            alt_weights[key] = weights[i]
+        w = alt_w
+        weights = alt_weights
     d['neighbors']=w
     d['weights']=weights
-    d['ids']=range(n)
+    d['ids']=ids
     return W(d)
 
 def regime_weights(regimes):
