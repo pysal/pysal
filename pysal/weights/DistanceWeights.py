@@ -48,7 +48,7 @@ class InverseDistance(W):
         self.data=data
         self.p=p
         self._distance()
-        W.__init__(self,self._distance_to_W())
+        W.__init__(self,*self._distance_to_W())
         if row_standardize:
             self.transform="r"
 
@@ -69,7 +69,7 @@ class InverseDistance(W):
             weights[i]=row.tolist()
             neighbors[i]=np.nonzero(ids!=0)[0].tolist()
 
-        return {"neighbors":neighbors,"weights":weights}
+        return neighbors,weights
         
 
 
@@ -116,7 +116,8 @@ class NearestNeighbors(W):
         self.k=k
         self.p=p
         self._distance()
-        W.__init__(self,self._distance_to_W())
+        neighbors,weights = self._distance_to_W()
+        W.__init__(self,neighbors,weights)
 
 
     def _distance(self):
@@ -132,7 +133,7 @@ class NearestNeighbors(W):
             i=row[0]
             neighbors[i]=row[1:].tolist()
             weights[i]=[1]*len(neighbors[i])
-        return {"neighbors":neighbors,"weights":weights}
+        return neighbors,weights
 
 class DistanceBand(W):
     """Creates contiguity matrix based on distance band
@@ -167,7 +168,7 @@ class DistanceBand(W):
         self.p=p
         self.threshold=threshold
         self._distance()
-        W.__init__(self,self._distance_to_W())
+        W.__init__(self,*self._distance_to_W())
 
 
     def _distance(self):
@@ -182,7 +183,7 @@ class DistanceBand(W):
             ns=[ni for ni in neighbors if ni!=i]
             allneighbors[i]=ns
             weights[i]=[1]*len(ns)
-        return {"neighbors":allneighbors,"weights":weights}
+        return allneighbors,weights
 
 
 class Kernel(W):
@@ -339,7 +340,7 @@ class Kernel(W):
             self._set_bw()
 
         self._eval_kernel()
-        W.__init__(self,self._k_to_W())
+        W.__init__(self,*self._k_to_W())
 
     def _k_to_W(self):
         allneighbors={}
@@ -347,7 +348,7 @@ class Kernel(W):
         for i,neighbors in enumerate(self.kernel):
             allneighbors[i]=self.neigh[i]
             weights[i]=self.kernel[i].tolist()
-        return {"neighbors":allneighbors,"weights":weights}
+        return allneighbors,weights
 
     def _set_bw(self):
         dmat,neigh=self.kdt.query(self.data,k=self.k)

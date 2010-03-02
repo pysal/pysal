@@ -46,12 +46,9 @@ class GwtReader(FileIO.FileIO):
         self.ids = zo['new_ids']
         self.n=len(weights)
         self.weights=zo['new_weights']
-        d = {}
-        d['weights'] = self.weights
-        d['neighbors'] = self.neighbors
 
         self.pos += 1
-        return W(d)
+        return W(neighbors,weights)
 
     def close(self):
         self.file.close()

@@ -122,6 +122,26 @@ class PurePyDbf_Tester(unittest.TestCase):
         copy.close()
         os.remove(self.dbfcopy)
     
+class GalIO_Tester(unittest.TestCase):
+    def setUp(self):
+        self.test_file = '../examples/10740.shp'
+        self.w = pysal.shp_to_queen(self.test_file)
+    def test_write(self):
+        out = pysal.open('tst.gal','w')
+        out.write(self.w)
+        out.close()
+    def test_write_strs(self):
+        err = False
+        data={'neighbors':{'apples are good':['bananas'],'bananas':['apples are good','carrots'],'carrots':['bananas']},'weights':{'apples are good':[1],'bananas':[1,1],'carrots':[1]}}
+        w = pysal.weights.weights.W(data['neighbors'],data['weights'])
+        out = pysal.open('tst_alpha.gal','w')
+        try:
+            out.write(w)
+        except ValueError:
+            err = True
+        self.assertEquals(err,True)
+        out.close()
+        
 class PurePyShp_Tester(unittest.TestCase):
     def setUp(self):
         test_file = '../examples/10740.shp'
@@ -193,6 +213,8 @@ B = unittest.TestLoader().loadTestsFromTestCase(PurePyDbf_Tester)
 suite.addTest(B)
 C = unittest.TestLoader().loadTestsFromTestCase(csv_Tester)
 suite.addTest(C)
+#D = unittest.TestLoader().loadTestsFromTestCase(GalIO_Tester)
+#suite.addTest(D)
 
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()

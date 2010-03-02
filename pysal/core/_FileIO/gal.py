@@ -38,13 +38,9 @@ class GalIO(FileIO.FileIO):
             weights[id]=[1]*n_neighbors
             neighbors[id]=neighbors_i
             ids.append(id)
-        d = {}
-        d['ids']=ids
-        d['weights'] = weights
-        d['neighbors'] = neighbors
 
         self.pos += 1 
-        return W(d)
+        return W(neighbors,weights,ids)
 
     def write(self,obj):
         """ .write(weightsObject)
@@ -53,15 +49,14 @@ class GalIO(FileIO.FileIO):
         """
         self._complain_ifclosed(self.closed)
         if issubclass(type(obj),W):
-            self.file.write('%d\n'%(obj.n))
-            if obj.old_ids: #back to real ids
-                IDS = obj.old_ids #back to real ids
-            else: 
-                IDS = obj.neighbors.keys()
+            IDS = obj.id_order
             for id in IDS:
-                neighbors = obj.neighbors[obj.old_ids[id]]
-                neighbors = [obj.new_ids[i] for i in neighbors] #go back to real ids
-                self.file.write('%d %d\n'%(id,len(neighbors)))
+                if type(id) != int:
+                    raise ValueError("GAL file support only integer IDs only. ID: \"%r\" is not of type int."%id)
+            self.file.write('%d\n'%(obj.n))
+            for id in IDS:
+                neighbors = obj.neighbors[id]
+                self.file.write('%s %d\n'%(id,len(neighbors)))
                 self.file.write(' '.join(map(str,neighbors))+'\n')
             self.pos += 1
         else:

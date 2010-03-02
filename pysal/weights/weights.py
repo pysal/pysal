@@ -15,12 +15,19 @@ class W(object):
 
     Parameters
     ----------
-    data           : dictionary
-                     data={ids:['a','b','c'], \
-                     'neighbors:'{'a':['b'],'b':['a','c'],'c':['b']}, \
-                     'weights':{'a':[1],'b':[1,1],'c':[1]}}
-
-                     Note, the ids element is optional
+    neighbors       : dictionary
+                      key is region ID, value is a list of neighbor IDS
+                      Example:  {'a':['b'],'b':['a','c'],'c':['b']}
+    weights = None  : dictionary
+                      key is region ID, value is a list of edge weights
+                      If not supplied all edge wegiths are assumed to have a weight of 1.
+                      Example: {'a':[0.5],'b':[0.5,1.5],'c':[1.5]}
+    id_order = None : list 
+                      An ordered list of ids, 
+                        defines the order of observations when iterating over W
+                        if not set, lexigraphical ordering is used to iterate and
+                        the id_order_set property will return False.
+                      This can be set after creation by setting the 'id_order' property.
 
     Attributes
     ----------
@@ -76,8 +83,7 @@ class W(object):
 
     >>> neighbors={0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
     >>> weights={0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
-    >>> data={'neighbors':neighbors,'weights':weights}
-    >>> w=W(data)
+    >>> w=W(neighbors,weights)
     >>> w.pct_nonzero
     0.29629629629629628
 
@@ -97,33 +103,32 @@ class W(object):
             d = {'a':set(['b','c','d']),'b':set([...]),...}
             returns a new instance of the class, can be called directly
         """
-        d = {'neighbors':{},'weights':{}}
+        neighbors={}
+        weights={}
         for key in data:
-            d['weights'][key] = [1.] * len(data[key])
-            d['neighbors'][key] = list(data[key])
-            d['neighbors'][key].sort()
-        return cls(d)
+            weights[key] = [1.] * len(data[key])
+            neighbors[key] = list(data[key])
+            neighbors[key].sort()
+        return cls(neighbors,weights)
 
-
-
-    def __init__(self,data):
+    def __init__(self,neighbors,weights=None,id_order=None):
         """see class docstring"""
-        
-
-        
         self.transformations={}
-        self.weights=data['weights']
-        self.neighbors=data['neighbors']
+        self.neighbors=neighbors
+        if weights == None:
+            weights = {}
+            for key in weights:
+                weights[key] = [1 for nb in neighbors[key]]
+        self.weights=weights
         self.transformations['O']=self.weights #original weights
         self.islands=[]
-        if 'ids' in data:
-            self._id_order=data['ids']
-            self._id_order_set=True
-        else:
+        if id_order == None:
             self._id_order=self.neighbors.keys()
             self._id_order.sort()
             self._id_order_set=False
-        #self._zero_offset()
+        else:
+            self._id_order=id_order
+            self._id_order_set=True
         self.__neighbors_0 = False
         self._idx=0
         self.n=len(self.neighbors)
@@ -254,7 +259,7 @@ class W(object):
         Example:
         >>> neighbors={'c': ['b'], 'b': ['c', 'a'], 'a': ['b']}
         >>> weights ={'c': [1.0], 'b': [1.0, 1.0], 'a': [1.0]}
-        >>> w=W({'weights':weights,'neighbors':neighbors})
+        >>> w=W(neighbors,weights)
         >>> w.id_order = ['a','b','c']
         >>> w.neighbor_offsets['b']
         [2, 0]
@@ -473,8 +478,7 @@ class W(object):
         Example Usage:
             >>> neighbors={0:[1,2,3], 1:[1,2,3], 2:[0,1], 3:[0,1]}
             >>> weights={0:[1,1,1], 1:[1,1,1], 2:[1,1], 3:[1,1]}
-            >>> data={'neighbors':neighbors,'weights':weights}
-            >>> w=W(data)
+            >>> w=W(neighbors,weights)
             >>> w.asymmetry()
             [((0, 1), ())]
             >>> weights[1].append(1)
@@ -486,8 +490,7 @@ class W(object):
             [((0, 1), (1, 0)), ((0, 2), (2, 0)), ((0, 3), (3, 0)), ((1, 0), (0, 1)), ((1, 2), (2, 1)), ((1, 3), (3, 1)), ((2, 0), (0, 2)), ((2, 1), (1, 2)), ((3, 0), (0, 3)), ((3, 1), (1, 3))]
             >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
             >>> weights={'first':[1],'second':[1,1],'third':[1]}
-            >>> data={'neighbors':neighbors,'weights':weights}
-            >>> w=W(data)
+            >>> w=W(neighbors,weights)
             >>> w.weights['third'].append(1)
             >>> w.neighbors['third'].append('fourth')
             >>> w.asymmetry()
@@ -521,8 +524,7 @@ class W(object):
         Example:
             >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
             >>> weights={'first':[1],'second':[1,1],'third':[1]}
-            >>> data={'neighbors':neighbors,'weights':weights}
-            >>> w=W(data)
+            >>> w=W(neighbors,weights)
             >>> wf,ids=w.full()
             >>> wf
             array([[ 0.,  1.,  1.],
@@ -659,7 +661,6 @@ class W(object):
         """
 
         info=self.order(k)
-        data={}
         ids=info.keys()
         neighbors={}
         weights={}
@@ -667,9 +668,7 @@ class W(object):
             nids=[ids[j] for j,order in enumerate(info[id]) if order==k]
             neighbors[id]=nids
             weights[id]=[1.0]*len(nids)
-        data['weights']=weights
-        data['neighbors']=neighbors
-        return W(data)
+        return W(neighbors,weights)
 
 
 def lat2gal(nrows=5,ncols=5,rook=True,id_type='int'):
@@ -743,7 +742,6 @@ def lat2gal(nrows=5,ncols=5,rook=True,id_type='int'):
                 w[i]=w.get(i,[])+[r]
                 w[r]=w.get(r,[])+[i]
 
-    d={}
     neighbors={}
     weights={}
     for key in w:
@@ -764,10 +762,7 @@ def lat2gal(nrows=5,ncols=5,rook=True,id_type='int'):
             alt_weights[key] = weights[i]
         w = alt_w
         weights = alt_weights
-    d['neighbors']=w
-    d['weights']=weights
-    d['ids']=ids
-    return W(d)
+    return W(w,weights,ids)
 
 def regime_weights(regimes):
     """Construct spatial weights for regime neighbors.
@@ -822,7 +817,7 @@ def regime_weights(regimes):
     weights={}
     for i,nn in neighbors.items():
         weights[i]=[1.]*len(nn)
-    return W({'neighbors':neighbors,'weights':weights})
+    return W(neighbors,weights)
 
 def comb(items, n=None):
     """Combinations of size n taken from items

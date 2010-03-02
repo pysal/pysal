@@ -36,7 +36,7 @@ def lag(w,y):
     >>> from pysal.weights.weights import *
     >>> neighbors={'c': ['b'], 'b': ['c', 'a'], 'a': ['b']}
     >>> weights ={'c': [1.0], 'b': [1.0, 1.0], 'a': [1.0]}
-    >>> w=W({'weights':weights,'neighbors':neighbors})
+    >>> w=W(neighbors,weights)
     >>> y=np.arange(3)
 
     y and W are not yet aligned
@@ -66,7 +66,7 @@ def lag(w,y):
 
     >>> w.id_order=['a','b','c']
     >>> y = np.array([0,1,2])
-    >>> w=W({'weights':weights,'neighbors':neighbors,'ids':['a','b','c']})
+    >>> w=W(neighbors,weights,['a','b','c'])
     >>> lag(w,y)
     array([ 1.,  2.,  1.])
     """
