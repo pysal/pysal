@@ -31,52 +31,52 @@ class W(object):
 
     Attributes
     ----------
-    asymmetric      : binary
-                      True if weights are asymmetric, False if not
-    cardinalities   : dictionary 
-                      number of neighbors for each observation 
-    histogram       : list of tuples
-                      neighbor histogram (number of neighbors, number of
-                      observations with that many neighbors)
-    id_order        : list
-                      order of observations when iterating over weights
-    id_order_set    : binary
-                      True if id_order has been set by user, False (default)
-    islands         : list
-                      ids that have no neighbors
-    max_neighbors   : int
-                      maximum cardinality 
-    min_neighbors   : int 
-                      minimum cardinality 
-    mean_neighbors  : float
-                      average cardinality 
-    n               : int
-                      number of observations 
-    neighbors       : dictionary
-                      {id:[id1,id2]}, key is id, value is list of neighboring
-                      ids
-    neighbors_0     : dictionary
-                      like neighbors but with zero offset ids, used for
-                      alignment in calculating spatial lag
-    nonzero         : int
-                      number of nonzero weights
-    pct_nonzero     : float
-                      percentage of all weights that are nonzero
-    s0              : float
-                      sum of all weights 
-    s1              : float
-                      trace of ww
-    s2              : float
-                      trace of w'w
-    sd              : float
-                      standard deviation of number of neighbors 
-    transform       : string
-                      property for weights transformation, can be used to get and set weights transformation 
-    transformations : dictionary
-                      transformed weights, key is transformation type, value are weights
-    weights         : dictionary
-                      key is observation id, value is list of transformed
-                      weights in order of neighbor ids (see neighbors)
+    asymmetric        : binary
+                        True if weights are asymmetric, False if not
+    cardinalities     : dictionary 
+                        number of neighbors for each observation 
+    histogram         : list of tuples
+                        neighbor histogram (number of neighbors, number of
+                        observations with that many neighbors)
+    id_order          : list
+                        order of observations when iterating over weights
+    id_order_set      : binary
+                        True if id_order has been set by user, False (default)
+    islands           : list
+                        ids that have no neighbors
+    max_neighbors     : int
+                        maximum cardinality 
+    min_neighbors     : int 
+                        minimum cardinality 
+    mean_neighbors    : float
+                        average cardinality 
+    n                 : int
+                        number of observations 
+    neighbors         : dictionary
+                        {id:[id1,id2]}, key is id, value is list of neighboring
+                        ids
+    neighbor_offsets  : dictionary
+                        like neighbors but with zero offset ids, used for
+                        alignment in calculating spatial lag
+    nonzero           : int
+                        number of nonzero weights
+    pct_nonzero       : float
+                        percentage of all weights that are nonzero
+    s0                : float
+                        sum of all weights 
+    s1                : float
+                        trace of ww
+    s2                : float
+                        trace of w'w
+    sd                : float
+                        standard deviation of number of neighbors 
+    transform         : string
+                        property for weights transformation, can be used to get and set weights transformation 
+    transformations   : dictionary
+                        transformed weights, key is transformation type, value are weights
+    weights           : dictionary
+                        key is observation id, value is list of transformed
+                        weights in order of neighbor ids (see neighbors)
 
     Examples
     --------
@@ -95,6 +95,14 @@ class W(object):
     78
     >>> w.pct_nonzero
     0.065417488494411577
+
+    Set weights implicitly 
+
+    >>> neighbors={0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
+    >>> w=W(neighbors)
+    >>> w.pct_nonzero
+    0.29629629629629628
+
 
     """
     @classmethod
@@ -115,9 +123,9 @@ class W(object):
         """see class docstring"""
         self.transformations={}
         self.neighbors=neighbors
-        if weights == None:
+        if not weights:
             weights = {}
-            for key in weights:
+            for key in neighbors:
                 weights[key] = [1 for nb in neighbors[key]]
         self.weights=weights
         self.transformations['O']=self.weights #original weights

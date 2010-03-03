@@ -498,8 +498,8 @@ class Maxp_LISA:
 
     >>> import random
     >>> import numpy as np
-    >>> np.random.seed(100)
     >>> random.seed(100)
+    >>> np.random.seed(100)
     >>> w=pysal.lat2gal(10,10)
     >>> z=np.random.random_sample((w.n,2))
     >>> y=np.arange(w.n)
