@@ -40,6 +40,7 @@ import pysal.region.randomregion
 import pysal.mobility.rank
 import pysal.weights.weights, pysal.weights.ContiguityWeights
 import pysal.weights.DistanceWeights, pysal.weights.spatial_lag
+import pysal.weights.Contiguity, pysal.weights.util
 
 
 #add modules to include in tests
@@ -48,7 +49,9 @@ mods='esda.moran','esda.geary', 'esda.mapclassify', \
         'inequality.theil','mobility.rank', \
         'region.maxp', 'region.randomregion', \
         'weights.weights','weights.DistanceWeights', \
-        'weights.ContiguityWeights','weights.spatial_lag'
+        'weights.ContiguityWeights','weights.spatial_lag', \
+        'weights.Contiguity', 'weights.util'
+
 mods = [ "pysal."+ mod for mod in mods]
 suite = unittest.TestSuite()
 for mod in mods:

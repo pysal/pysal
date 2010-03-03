@@ -126,7 +126,7 @@ class W(object):
         if not weights:
             weights = {}
             for key in neighbors:
-                weights[key] = [1 for nb in neighbors[key]]
+                weights[key] = [1.] * len(neighbors[key])
         self.weights=weights
         self.transformations['O']=self.weights #original weights
         self.islands=[]
