@@ -16,10 +16,9 @@ installed on you machine.
 
 *Optional, bundled installation:* 
 
-Using the `Enthought Python Distribution (EPD) <http://www.enthought.com/products/epd.php>`_, instead of installing dependencies 
-one by one, you can get all the required 
-dependencies as well as iPython and a whole bunch of other Python packages by
-installing the package downloadable `here <http://www.enthought.com/products/edudownload.php>`_. Free for academics only.
+With the `Enthought Python Distribution (EPD) <http://www.enthought.com/products/epd.php>`_, 
+you will install all of PySAL's required dependencies, as well as iPython and a lot more, rather than installing dependencies one by one.
+The package is free for academics, and downloadable `here <http://www.enthought.com/products/edudownload.php>`_. 
 
 *Required for PySAL:*
 

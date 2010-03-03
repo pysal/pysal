@@ -5,36 +5,6 @@ Xinyue Ye <xinyue.ye@gmail.com>
 Charles Schmidt <Charles.Schmidt@asu.edu>
 Andrew Winslow <Andrew.Winslow@asu.edu>
 
- 
-
-Style Guide, Follow:
-http://www.python.org/dev/peps/pep-0008/
-
-Class comment format:
-
-    Brief class description.
-
-    Attributes:
-    attr 1 -- type -- description of attr 1
-    attr 2 -- type -- description of attr 2
-
-    Extras (notes, references, examples, doctest, etc.)
-
-
-Function comment format:
-
-    Brief function description.
-
-    function(arg 1 type, arg 2 type, keyword=keyword arg 3 type) -> return type
-
-    Argument:
-    arg 1 -- description of arg 1
-    arg 2 -- description of arg 2
-
-    Keyword Arguments:
-    arg 3 -- description of arg 3
-
-    Extras (notes, references, examples, doctest, etc.)
 """
 
 __author__  = "Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow"
@@ -47,14 +17,15 @@ from shapes import *
 
 def get_bounding_box(items):
     """
-    Returns the bounding box of a collection of points, rectangles and polygons.
 
-    bounding_box(Point/Rectangle/Polygon list) -> Rectangle
+    Parameters
+    ----------
 
-    Arguments:
-    items -- a collection of items to compute a bounding box for
+    Attributes
+    ----------
 
-    Example:
+    Examples
+    --------
     >>> bb = get_bounding_box([Point((-1, 5)), Rectangle(0, 6, 11, 12)])
     >>> bb.left
     -1.0
@@ -65,6 +36,7 @@ def get_bounding_box(items):
     >>> bb.upper
     12.0
     """
+
     def left(o):
         if hasattr(o, 'bounding_box'): # Polygon, Ellipse
             return o.bounding_box.left
@@ -100,19 +72,24 @@ def get_bounding_box(items):
     return Rectangle(min(map(left, items)), min(map(lower, items)), max(map(right, items)), max(map(upper, items))) 
 
 def get_angle_between(ray1, ray2):
-    """
-    Returns the angle formed between a pair of rays which share an origin
-
+    """ Returns the angle formed between a pair of rays which share an origin
     get_angle_between(Ray, Ray) -> number
 
-    Arguments:
-    ray1 -- a ray forming the beginning of the angle measured
-    ray2 -- a ray forming the end of the angle measured
+    Parameters
+    ----------
+    ray1        : a ray forming the beginning of the angle measured
+    ray2        : a ray forming the end of the angle measured
 
-    Example:
+
+    Attributes
+    ----------
+
+    Examples
+    --------
     >>> get_angle_between(Ray(Point((0, 0)), Point((1, 0))), Ray(Point((0, 0)), Point((1, 0)))) 
     0.0
     """
+
     if ray1.o != ray2.o:
         raise ValueError, 'Rays must have the same origin.'
     vec1 = (ray1.p[0] - ray1.o[0], ray1.p[1] - ray1.o[1])
@@ -129,17 +106,23 @@ def is_collinear(p1, p2, p3):
 
     is_collinear(Point, Point, Point) -> bool
 
-    Arguments:
-    p1 -- a point (Point)
-    p2 -- another point (Point)
-    p3 -- yet another point (Point)
+    Parameters
+    ----------
+    p1 : a point (Point)
+    p2 : another point (Point)
+    p3 : yet another point (Point)
 
-    Example:
+    Attributes
+    ----------
+
+    Examples
+    --------
     >>> is_collinear(Point((0, 0)), Point((1, 1)), Point((5, 5)))
     True
     >>> is_collinear(Point((0, 0)), Point((1, 1)), Point((5, 0)))
     False
     """
+
     return ((p2[0]-p1[0])*(p3[1]-p1[1]) - (p2[1]-p1[1])*(p3[0]-p1[0]) == 0)
 
 def get_segments_intersect(seg1, seg2):
@@ -148,11 +131,16 @@ def get_segments_intersect(seg1, seg2):
 
     get_segments_intersect(LineSegment, LineSegment) -> Point
 
-    Arguments:
-    seg1 -- a segment to check intersection for
-    seg2 -- a segment to check intersection for
+    Parameters
+    ----------
+    seg1 : a segment to check intersection for
+    seg2 : a segment to check intersection for
 
-    Example:
+    Attributes
+    ----------
+
+    Examples
+    --------
     >>> seg1 = LineSegment(Point((0, 0)), Point((0, 10)))
     >>> seg2 = LineSegment(Point((-5, 5)), Point((5, 5)))
     >>> i = get_segments_intersect(seg1, seg2)
@@ -163,6 +151,7 @@ def get_segments_intersect(seg1, seg2):
     >>> seg3 = LineSegment(Point((100, 100)), Point((100, 101)))
     >>> i = get_segments_intersect(seg2, seg3)
     """
+
     p1 = seg1.p1
     p2 = seg1.p2
     p3 = seg2.p1
@@ -193,11 +182,16 @@ def get_segment_point_intersect(seg, pt):
 
     get_segment_point_intersect(LineSegment, Point) -> Point
 
-    Arguments:
-    seg -- a segment to check intersection for
-    pt -- a point to check intersection for
+    Parameters
+    ----------
+    seg : a segment to check intersection for
+    pt  : a point to check intersection for
 
-    Example:
+    Attributes
+    ----------
+
+    Examples
+    --------
     >>> seg = LineSegment(Point((0, 0)), Point((0, 10)))
     >>> pt = Point((0, 5))
     >>> i = get_segment_point_intersect(seg, pt)
@@ -218,11 +212,16 @@ def get_polygon_point_intersect(poly, pt):
 
     get_polygon_point_intersect(Polygon, Point) -> Point
 
-    Arguments:
-    poly -- a polygon to check intersection for
-    pt -- a point to check intersection for
+    Parameters
+    ----------
+    poly : a polygon to check intersection for
+    pt   : a point to check intersection for
 
-    Example:
+    Attributes
+    ----------
+
+    Examples
+    --------
     >>> poly = Polygon([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))])
     >>> pt = Point((0.5, 0.5))
     >>> i = get_polygon_point_intersect(poly, pt)
@@ -251,11 +250,16 @@ def get_rectangle_point_intersect(rect, pt):
 
     get_rectangle_point_intersect(Rectangle, Point) -> Point
 
-    Arguments:
-    rect -- a rectangle to check intersection for
-    pt -- a point to check intersection for
+    Parameters
+    ----------
+    rect : a rectangle to check intersection for
+    pt   : a point to check intersection for
 
-    Example:
+    Attributes
+    ----------
+
+    Examples
+    --------
     >>> rect = Rectangle(0, 0, 5, 5)
     >>> pt = Point((1, 1))
     >>> i = get_rectangle_point_intersect(rect, pt)
@@ -274,11 +278,17 @@ def get_ray_segment_intersect(ray, seg):
 
     get_ray_segment_intersect(Ray, Point) -> Point or LineSegment
 
-    Arguments:
-    ray -- a ray to check intersection for
-    seg -- a line segment to check intersection for
+    Parameters
+    ----------
 
-    Example:
+    ray : a ray to check intersection for
+    seg : a line segment to check intersection for
+
+    Attributes
+    ----------
+
+    Examples
+    --------
     >>> ray = Ray(Point((0, 0)), Point((0, 1)))
     >>> seg = LineSegment(Point((-1, 10)), Point((1, 10)))
     >>> i = get_ray_segment_intersect(ray, seg)
@@ -302,11 +312,16 @@ def get_polygon_point_dist(poly, pt):
 
     get_polygon_point_dist(Polygon, Point) -> number
 
-    Arguments:
-    poly -- a polygon to compute distance from
-    pt -- a point to compute distance from
+    Parameters
+    ----------
+    poly : a polygon to compute distance from
+    pt   : a point to compute distance from
 
-    Example:
+    Attributes
+    ----------
+
+    Examples
+    --------
     >>> poly = Polygon([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))])
     >>> pt = Point((2, 0.5))
     >>> get_polygon_point_dist(poly, pt)
@@ -329,11 +344,16 @@ def get_points_dist(pt1, pt2):
 
     get_points_dist(Point, Point) -> number
 
-    Arguments:
-    pt1 -- a point
-    pt2 -- the other point
+    Parameters
+    ----------
+    pt1 : a point
+    pt2 : the other point
+
+    Attributes
+    ----------
    
-    Example:
+    Examples
+    --------
     >>> get_points_dist(Point((4, 4)), Point((4, 8)))
     4.0
     >>> get_points_dist(Point((0, 0)), Point((0, 0)))
@@ -348,11 +368,16 @@ def get_segment_point_dist(seg, pt):
 
     get_segment_point_dist(LineSegment, Point) -> (number, number)
 
-    Arguments:
-    seg -- a line segment to compute distance from
-    pt -- a point to compute distance from
+    Parameters
+    ----------
+    seg  : a line segment to compute distance from
+    pt   : a point to compute distance from
 
-    Example:
+    Attributes
+    ----------
+
+    Examples
+    --------
     >>> seg = LineSegment(Point((0, 0)), Point((10, 0)))
     >>> pt = Point((5, 5))
     >>> get_segment_point_dist(seg, pt)
@@ -404,12 +429,17 @@ def get_point_at_angle_and_dist(ray, angle, dist):
 
     get_point_at_angle_and_dist(Ray, number, number) -> Point
 
-    Arguments:
-    ray -- the ray which the angle and distance are relative to
-    angle -- the angle relative to the ray at which the point is located
-    dist -- the distance from the ray origin at which the point is located
+    Parameters
+    ----------
+    ray   : the ray which the angle and distance are relative to
+    angle : the angle relative to the ray at which the point is located
+    dist  : the distance from the ray origin at which the point is located
 
-    Example:
+    Attributes
+    ----------
+
+    Examples
+    --------
     >>> ray = Ray(Point((0, 0)), Point((1, 0)))
     >>> pt = get_point_at_angle_and_dist(ray, math.pi, 1.0)
     >>> isinstance(pt, Point)
@@ -430,10 +460,15 @@ def convex_hull(points):
 
     convex_hull(Point list) -> Polygon
 
-    Arguments:
-    points -- a list of points to compute the convex hull for
+    Parameters
+    ----------
+    points : a list of points to compute the convex hull for
 
-    Example:
+    Attributes
+    ----------
+
+    Examples
+    --------
     >>> points = [Point((0, 0)), Point((4, 4)), Point((4, 0)), Point((3, 1))]
     >>> convex_hull(points)
     [(0.0, 0.0), (4.0, 0.0), (4.0, 4.0)]
@@ -497,7 +532,14 @@ def is_clockwise(vertices):
             * DEALINGS IN THE SOFTWARE.
             ****************************************************************************/
 
-    Example:
+    Parameters
+    ----------
+
+    Attributes
+    ----------
+
+    Examples
+    --------
     >>> is_clockwise([Point((0, 0)), Point((10, 0)), Point((0, 10))])
     False
     >>> is_clockwise([Point((0, 0)), Point((0, 10)), Point((10, 0))])
@@ -522,7 +564,14 @@ def _point_in_vertices(pt, vertices):
 
     _point_in_vertices(Point, Point list) -> bool
 
-    Example:
+    Parameters
+    ----------
+
+    Attributes
+    ----------
+
+    Examples
+    --------
     >>> _point_in_vertices(Point((1, 1)), [Point((0, 0)), Point((10, 0)), Point((0, 10))])
     True
     """
