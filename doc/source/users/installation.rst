@@ -11,6 +11,31 @@ are listed first to get you off on the right foot.
 DEPENDENCIES
 ************
 
+.. graphviz::
+    
+    digraph G {
+        compound=true;
+        subgraph cluster0 {
+            pySAL_Dependencies -> Required;
+            pySAL_Dependencies -> Optional;
+            Required -> Python;
+            Required -> Numpy;
+            Required -> SciPy;
+            Optional -> rtree;
+            Optional -> ipython;
+            Optional -> Sphinx;
+            Sphinx -> numpydoc;
+            } 
+            subgraph cluster1 {
+
+            Python ->  Enthought;
+            Numpy ->   Enthought;
+            SciPy ->   Enthought;
+            ipython -> Enthought;
+            }
+    }
+
+
 Before installing PySAL, make sure the following libraries are properly
 installed on you machine.
 
