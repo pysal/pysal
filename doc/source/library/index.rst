@@ -1,7 +1,7 @@
 .. _library-index
 
 #################
-Library Reference
+API Reference
 #################
 
 :Release: |version|

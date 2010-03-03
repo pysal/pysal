@@ -1,6 +1,13 @@
-*********************************
-Welcome to PySAL's documentation!
-*********************************
+
+
+Overview
+========
+
+.. htmlonly::
+    
+    :Release: |version|
+    :Date: |today|
+
 
 .. toctree::
     :maxdepth: 2
