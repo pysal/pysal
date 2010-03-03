@@ -1,51 +1,54 @@
 .. _installation
 
-============
+############
 Installation
-============
+############
 
-This page provides instructions on how to install PySAL. Required dependencies
-are also listed.
+This page provides instructions on how to install PySAL. Dependencies
+are listed first to get you off on the right foot.
 
-Dependencies
-============
+************
+DEPENDENCIES
+************
+
 Before installing PySAL, make sure the following libraries are properly
 installed on you machine.
 
--Required
---------
+*Optional, bundled installation:* 
+
+Using the `Enthought Python Distribution (EPD) <http://www.enthought.com/products/epd.php>`_, instead of installing dependencies 
+one by one, you can get all the required 
+dependencies as well as iPython and a whole bunch of other Python packages by
+installing the package downloadable `here <http://www.enthought.com/products/edudownload.php>`_. Free for academics only.
+
+*Required for PySAL:*
 
 * `Python <http://www.python.org/>`_ 2.5 or later
 * `Numpy <http://numpy.scipy.org/>`_ 1.3 or later
 * `Scipy <http://www.scipy.org/>`_ 0.7 or later
 
-Dependencies to build documentation:
+*Required to compile the documentation (optional):*
 
 * `Sphinx <http://sphinx.pocoo.org/>`_
 * `numpydoc <http://pypi.python.org/pypi/numpydoc/0.2>`_  extension to Sphinx (NOT included in EPD)
 
--Optional but recommended
-------------------------
+*Optional, recommended additions:*
 
 * `iPython <http://ipython.scipy.org/moin/Download>`_
 * `rtree <http://pypi.python.org/pypi/Rtree>`_ (NOT included in EPD)
 
--Enthought Python Distribution (EPD)
-------------------------------------
-Instead of installing them one by one, you can get all the required
-dependencies as well as iPython and a whole bunch of other Python packages by
-easily installing the `Enthought
-Python Distribution <http://www.enthought.com/products/epd.php>`_, available free of charge for Academics. Download it `here <http://www.enthought.com/products/edudownload.php>`_.
 
-Installing from source code
-===========================
+
+************************
+SOURCE CODE INSTALLATION
+************************
 
 As PySAL is currently in alpha stage, we are not yet preparing binary
 releases. Users can grab the source code from our subversion repository using
-the following command:
+the following instructions, depending on the operating system:
 
--Linux and Mac OS X (and most *nix machines)
----------------------------------------------
+Linux and Mac OS X (and most \*nix machines)
+=============================================
 
 To download the code, open up a terminal (`/Applications/Utilities/Terminal`)
 and move to the directory where you wish to download PySAL by typing:
@@ -83,9 +86,8 @@ Save and quit the file. Source the bash profile again:
 You are all set!!! Now you can open up a fresh python session and start
 enjoying PySAL, you should be able to do (within a python session):
 ::
- In [1]: import pysal
-
- In [2]: pysal.open.check()
+ >>> import pysal
+ >>> pysal.open.check()
  PySAL File I/O understands the following file extensions:
  Ext: '.shp', Modes: ['r', 'wb', 'w', 'rb']
  Ext: '.shx', Modes: ['r', 'wb', 'w', 'rb']
@@ -95,10 +97,11 @@ enjoying PySAL, you should be able to do (within a python session):
  Ext: '.gal', Modes: ['r', 'w']
  Ext: '.csv', Modes: ['r']
  Ext: '.wkt', Modes: ['r']
- In [3]: 
- 
--Windows
--------
+ >>> 
+
+
+Windows
+========
 
 To be able to use PySAL, you will need a SVN client that allows you to access,
 download and update the code from our repository. We recommend to use
