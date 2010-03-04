@@ -46,7 +46,6 @@ __credits__ = "Copyright (c) 2005-2009 Sergio J. Rey"
 import doctest
 import math
 import random
-import standalone
 
 class Point(object):
     """
@@ -1059,6 +1058,8 @@ class Rectangle:
 
 def _test():
     doctest.testmod()
+
+import standalone
 
 if __name__ == '__main__':
     _test()
