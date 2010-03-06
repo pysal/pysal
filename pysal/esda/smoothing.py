@@ -317,8 +317,11 @@ class Headbanging_Triples:
     2 [(39, 22), (1, 9), (39, 17)]
     3 [(16, 6), (19, 6), (20, 6)]
     4 [(5, 15), (27, 15), (35, 15)]
-    >>> for k, item in s_ht2.extra.items(): print k, item
-    72 [(89, 77), 0.33752594627711291, 0.30270661746964805]
+    >>> extrapolated = s_ht2.extra[72]
+    >>> extrapolated[0]
+    (89, 77)
+    >>> round(extrapolated[1],5), round(extrapolated[2],6)
+    (0.33753, 0.302707)
     """
     def __init__(self, data, w, t=3, angle=135.0, edgecor=False):
         if not w.k or w.k < 3:
