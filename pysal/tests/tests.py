@@ -41,7 +41,7 @@ import pysal.mobility.rank
 import pysal.weights.weights, pysal.weights.ContiguityWeights
 import pysal.weights.DistanceWeights, pysal.weights.spatial_lag
 import pysal.weights.Contiguity, pysal.weights.util
-
+import pysal.esda.smoothing
 
 #add modules to include in tests
 mods='esda.moran','esda.geary', 'esda.mapclassify', \
@@ -50,7 +50,8 @@ mods='esda.moran','esda.geary', 'esda.mapclassify', \
         'region.maxp', 'region.randomregion', \
         'weights.weights','weights.DistanceWeights', \
         'weights.ContiguityWeights','weights.spatial_lag', \
-        'weights.Contiguity', 'weights.util'
+        'weights.Contiguity', 'weights.util', \
+        'esda.smoothing'
 
 mods = [ "pysal."+ mod for mod in mods]
 suite = unittest.TestSuite()
@@ -68,6 +69,8 @@ import test_fileIO
 suite.addTest(test_fileIO.suite)
 import test_cg_shapes
 suite.addTest(test_cg_shapes.suite)
+import test_smoothing
+suite.addTest(test_smoothing.suite)
 
 runner = unittest.TextTestRunner()
 runner.run(suite)
