@@ -6,38 +6,6 @@ Sergio Rey <srey@asu.edu>
 Xinyue Ye <xinyue.ye@gmail.com>
 Charles R. Schmidt <Charles.R.Schmidt@asu.edu>
 Andrew Winslow <Andrew.Winslow@asu.edu>
-
- 
-
-Style Guide, Follow:
-http://www.python.org/dev/peps/pep-0008/
-
-
-Class comment format:
-
-    Brief class description.
-
-    Attributes:
-    attr 1 -- type -- description of attr 1
-    attr 2 -- type -- description of attr 2
-
-    Extras (notes, references, examples, doctest, etc.)
-
-
-Function comment format:
-
-    Brief function description.
-
-    function(arg 1 type, arg 2 type, keyword=keyword arg 3 type) -> return type
-
-    Argument:
-    arg 1 -- description of arg 1
-    arg 2 -- description of arg 2
-
-    Keyword Arguments:
-    arg 3 -- description of arg 3
-
-    Extras (notes, references, examples, doctest, etc.)
 """
 
 __author__  = "Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow"
@@ -51,7 +19,8 @@ class Point(object):
     """
     Geometric class for point objects.
 
-    Attributes:
+    Attributes
+    ----------
     None
     """
     def __init__(self, loc):
@@ -63,10 +32,15 @@ class Point(object):
         Test tag: <tc>#is#Point.__init__</tc>    
         Test tag: <tc>#tests#Point.__init__</tc>    
  
-        Arguments:
-        loc -- tuple location (number x-tuple, x > 1) 
+        Parameters
+        ----------
+        loc : tuple location (number x-tuple, x > 1) 
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> p = Point((1, 3)) 
         """
         self.__loc = tuple(map(float, loc))
@@ -77,10 +51,15 @@ class Point(object):
 
         __eq__(x) -> bool
 
-        Arguments:
-        other -- an object to test equality against
+        Parameters
+        ----------
+        other : an object to test equality against
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> Point((0,1)) == Point((0,1))
         True
         >>> Point((0,1)) == Point((1,1))
@@ -97,10 +76,15 @@ class Point(object):
 
         __ne__(x) -> bool
 
-        Arguments:
-        other -- an object to test equality against
+        Parameters
+        ----------
+        other : an object to test equality against
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> Point((0,1)) != Point((0,1))
         False
         >>> Point((0,1)) != Point((1,1))
@@ -117,10 +101,15 @@ class Point(object):
 
         x.__hash__() -> hash(x)
 
-        Arguments:
+        Parameters
+        ----------
         None
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> hash(Point((0,1))) == hash(Point((0,1)))
         True
         >>> hash(Point((0,1))) == hash(Point((1,1)))
@@ -134,10 +123,15 @@ class Point(object):
 
         x.__getitem__(i) -> x[i]
 
-        Arguments:
-        i -- index of the desired dimension.
+        Parameters
+        ----------
+        i : index of the desired dimension.
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> p = Point((5.5,4.3))
         >>> p[0] == 5.5
         True
@@ -152,11 +146,16 @@ class Point(object):
 
         x.__getitem__(i,j) -> x[i:j]
 
-        Arguments:
-        i -- index to start slice
-        j -- index to end slice (excluded).
+        Parameters
+        ----------
+        i : index to start slice
+        j : index to end slice (excluded).
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> p = Point((3,6,2))
         >>> p[:2] == (3,6)
         True
@@ -171,10 +170,15 @@ class Point(object):
 
         __len__() -> int
 
-        Arguments:
+        Parameters
+        ----------
         None
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> len(Point((1,2)))
         2
         """
@@ -186,10 +190,15 @@ class Point(object):
 
         __repr__() -> string
         
-        Arguments:
+        Parameters
+        ----------
         None
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> Point((0,1))
         (0.0, 1.0)
         """
@@ -204,7 +213,11 @@ class Point(object):
         Test tag: <tc>#is#Point.__str__</tc>    
         Test tag: <tc>#tests#Point.__str__</tc>    
  
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> p = Point((1, 3))
         >>> str(p)
         '(1.0, 3.0)'
@@ -232,11 +245,16 @@ class LineSegment:
         Test tag: <tc>#is#LineSegment.__init__</tc>
         Test tag: <tc>#tests#LineSegment.__init__</tc>
 
-        Arguments:
-        start_pt -- point where segment begins
-        end_pt -- point where segment ends
+        Parameters
+        ----------
+        start_pt : point where segment begins
+        end_pt   : point where segment ends
  
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> ls = LineSegment(Point((1, 2)), Point((5, 6)))
         """
         self._p1 = start_pt
@@ -252,7 +270,11 @@ class LineSegment:
 
         _reset_props() -> None
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> ls = LineSegment(Point((1, 2)), Point((5, 6)))
         >>> ls._reset_props()
         """ 
@@ -268,7 +290,11 @@ class LineSegment:
 
         _get_p1() -> Point
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> ls = LineSegment(Point((1, 2)), Point((5, 6)))
         >>> r = ls._get_p1() 
         >>> r == Point((1, 2))
@@ -284,7 +310,11 @@ class LineSegment:
 
         _set_p1(Point) -> Point
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> ls = LineSegment(Point((1, 2)), Point((5, 6)))
         >>> r = ls._set_p1(Point((3, -1)))
         >>> r == Point((3.0, -1.0))
@@ -304,7 +334,11 @@ class LineSegment:
 
         _get_p2() -> Point
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> ls = LineSegment(Point((1, 2)), Point((5, 6)))
         >>> r = ls._get_p2() 
         >>> r == Point((5, 6))
@@ -320,7 +354,11 @@ class LineSegment:
 
         _set_p2(Point) -> Point
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> ls = LineSegment(Point((1, 2)), Point((5, 6)))
         >>> r = ls._set_p2(Point((3, -1)))
         >>> r == Point((3.0, -1.0))
@@ -341,10 +379,15 @@ class LineSegment:
         Test tag: <tc>#is#LineSegment.is_ccw</tc>
         Test tag: <tc>#tests#LineSegment.is_ccw</tc>
 
-        Arguments:
-        pt -- point lying ccw or cw of a segment
+        Parameters
+        ----------
+        pt : point lying ccw or cw of a segment
  
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> ls = LineSegment(Point((0, 0)), Point((5, 0)))
         >>> ls.is_ccw(Point((2, 2)))
         True
@@ -364,10 +407,15 @@ class LineSegment:
         Test tag: <tc>#is#LineSegment.is_cw</tc>
         Test tag: <tc>#tests#LineSegment.is_cw</tc>
 
-        Arguments:
-        pt -- point lying ccw or cw of a segment
+        Parameters
+        ----------
+        pt : point lying ccw or cw of a segment
  
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> ls = LineSegment(Point((0, 0)), Point((5, 0)))
         >>> ls.is_cw(Point((2, 2)))
         False
@@ -387,7 +435,11 @@ class LineSegment:
         Test tag: <tc>#is#LineSegment.get_swap</tc>
         Test tag: <tc>#tests#LineSegment.get_swap</tc>
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> ls = LineSegment(Point((1, 2)), Point((5, 6)))
         >>> swap = ls.get_swap()
         >>> swap.p1[0]
@@ -411,7 +463,11 @@ class LineSegment:
  
         bounding_box -> Rectangle
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> ls = LineSegment(Point((1, 2)), Point((5, 6)))
         >>> ls.bounding_box.left
         1.0
@@ -438,7 +494,11 @@ class LineSegment:
  
         len() -> number
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> ls = LineSegment(Point((2, 2)), Point((5, 2)))
         >>> ls.len
         3.0
@@ -457,7 +517,11 @@ class LineSegment:
  
         line() -> Line
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> ls = LineSegment(Point((2, 2)), Point((3, 3)))
         >>> l = ls.line
         >>> l.m
@@ -496,11 +560,16 @@ class Line:
         Test tag: <tc>#is#Line.__init__</tc>
         Test tag: <tc>#tests#Line.__init__</tc>
  
-        Arguments:
-        m -- the slope of the line
-        b -- the y-intercept of the line
+        Parameters
+        ----------
+        m : the slope of the line
+        b : the y-intercept of the line
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> ls = Line(1, 0)
         >>> ls.m
         1
@@ -518,10 +587,15 @@ class Line:
  
         y(number) -> number
 
-        Arguments:
-        x -- the x-value to compute y at
+        Parameters
+        ----------
+        x : the x-value to compute y at
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> l = Line(1, 0)
         >>> l.y(1)
         1
@@ -545,11 +619,16 @@ class Ray:
  
         __init__(Point, Point) -> Ray
 
-        Arguments:
-        origin -- the point where the ray originates
-        second_p -- the second point specifying the ray (not the origin) 
+        Parameters
+        ----------
+        origin   : the point where the ray originates
+        second_p : the second point specifying the ray (not the origin) 
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> l = Ray(Point((0, 0)), Point((1, 0)))
         >>> str(l.o)
         '(0.0, 0.0)'
@@ -575,10 +654,15 @@ class Chain(object):
  
         __init__(Point list or list of Point lists) -> Chain
 
-        Arguments:
-        vertices -- list -- Point list or list of Point lists.
+        Parameters
+        ----------
+        vertices : list -- Point list or list of Point lists.
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> c = Chain([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((2, 1))])
         """ 
         if isinstance(vertices[0], list):
@@ -596,7 +680,11 @@ class Chain(object):
 
         _reset_props() -> None
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> ls = Chain([Point((1, 2)), Point((5, 6))])
         >>> ls._reset_props()
         """ 
@@ -610,7 +698,11 @@ class Chain(object):
 
         vertices -> Point list
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> c = Chain([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((2, 1))])
         >>> verts = c.vertices
         >>> len(verts) 
@@ -625,7 +717,11 @@ class Chain(object):
         
         parts -> Point list
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> c = Chain([[Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))],[Point((2,1)),Point((2,2)),Point((1,2)),Point((1,1))]])
         >>> len(c.parts)
         2
@@ -639,7 +735,11 @@ class Chain(object):
  
         bounding_box -> Rectangle 
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> c = Chain([Point((0, 0)), Point((2, 0)), Point((2, 1)), Point((0, 1))])
         >>> c.bounding_box.left
         0.0
@@ -663,7 +763,11 @@ class Chain(object):
  
         len -> number
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> c = Chain([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((2, 1))])
         >>> c.len
         3.0
@@ -700,12 +804,16 @@ class Polygon(object):
  
         __init__(Point list or list of Point lists, holes list ) -> Polygon
 
-        Arguments:
-        vertices -- list -- a list of vertices or a list of lists of vertices.
-        Keyword Arguments:
-        holes -- list -- a list of sub-polygons to be considered as holes.
+        Parameters
+        ----------
+        vertices : list -- a list of vertices or a list of lists of vertices.
+        holes    : list -- a list of sub-polygons to be considered as holes.
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> p1 = Polygon([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))])
         """
         def clockwise(part):
@@ -743,7 +851,11 @@ class Polygon(object):
 
         len -> int
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> p1 = Polygon([Point((0, 0)), Point((0, 1)), Point((1, 1)), Point((1, 0))])
         >>> p1.len
         4
@@ -761,7 +873,11 @@ class Polygon(object):
 
         vertices -> Point list
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> p1 = Polygon([Point((0, 0)), Point((0, 1)), Point((1, 1)), Point((1, 0))])
         >>> len(p1.vertices)
         4
@@ -775,7 +891,11 @@ class Polygon(object):
         
         holes -> Point list
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> p = Polygon([Point((0, 0)), Point((10, 0)), Point((10, 10)), Point((0, 10))], [Point((1, 2)), Point((2, 2)), Point((2, 1)), Point((1, 1))])
         >>> len(p.holes)
         1
@@ -789,7 +909,14 @@ class Polygon(object):
         
         parts -> Point list
 
-        Example:
+        Attributes
+        ----------
+
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> p = Polygon([[Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))], [Point((2,1)),Point((2,2)),Point((1,2)),Point((1,1))]])
         >>> len(p.parts)
         2
@@ -803,7 +930,11 @@ class Polygon(object):
  
         perimeter() -> number
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> p = Polygon([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))])
         >>> p.perimeter
         4.0
@@ -826,7 +957,11 @@ class Polygon(object):
  
         bounding_box -> Rectangle 
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> p = Polygon([Point((0, 0)), Point((2, 0)), Point((2, 1)), Point((0, 1))])
         >>> p.bounding_box.left
         0.0
@@ -850,7 +985,11 @@ class Polygon(object):
  
         area -> number
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> p = Polygon([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))])
         >>> p.area
         1.0
@@ -877,7 +1016,11 @@ class Polygon(object):
  
         centroid -> Point
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> p = Polygon([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))])
         >>> cent = p.centroid
         >>> str(cent)
@@ -927,13 +1070,18 @@ class Rectangle:
  
         __init__(number, number, number, number) -> Rectangle
 
-        Arguments:
-        left -- the minimum x-value of the rectangle
-        lower -- the minimum y-value of the rectangle
-        right -- the maximum x-value of the rectangle
-        upper -- the maximum y-value of the rectangle
+        Parameters
+        ----------
+        left  : the minimum x-value of the rectangle
+        lower : the minimum y-value of the rectangle
+        right : the maximum x-value of the rectangle
+        upper : the maximum y-value of the rectangle
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> r = Rectangle(-4, 3, 10, 17)
         >>> r.left #minx
         -4.0
@@ -966,10 +1114,15 @@ class Rectangle:
  
         set_centroid(Point) -> Point
 
-        Arguments:
-        new_center -- the new location of the centroid of the polygon
+        Parameters
+        ----------
+        new_center : the new location of the centroid of the polygon
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> r = Rectangle(0, 0, 4, 4)
         >>> r.set_centroid(Point((4, 4)))
         >>> r.left
@@ -993,10 +1146,15 @@ class Rectangle:
  
         set_scale(number) -> number
 
-        Arguments:
-        scale -- the ratio of the new scale to the old scale (e.g. 1.0 is current size)
+        Parameters
+        ----------
+        scale : the ratio of the new scale to the old scale (e.g. 1.0 is current size)
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> r = Rectangle(0, 0, 4, 4)
         >>> r.set_scale(2)
         >>> r.left
@@ -1021,7 +1179,11 @@ class Rectangle:
  
         area -> number
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> r = Rectangle(0, 0, 4, 4)
         >>> r.area
         16.0
@@ -1035,7 +1197,11 @@ class Rectangle:
  
         width -> number
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> r = Rectangle(0, 0, 4, 4)
         >>> r.width
         4.0
@@ -1049,7 +1215,8 @@ class Rectangle:
  
         height -> number
 
-        Example:
+        Examples
+        --------
         >>> r = Rectangle(0, 0, 4, 4)
         >>> r.height
         4.0
