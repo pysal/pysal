@@ -60,8 +60,6 @@ def w_union(w1, w2):
             neighbors[i] = list(add_neigh)
         else:
             neighbors[i] = copy.copy(w2.neighbors[i])
-    #delete the following line once the W API is changed to take arguments
-    neighbors = _dict_helper(neighbors)
     return PW.W(neighbors)
 
 
@@ -129,8 +127,6 @@ def w_intersection(w1, w2, w_shape='w1'):
         else:
             neighbors[i] = []
 
-    #delete the following line once the W API is changed to take arguments
-    neighbors = _dict_helper(neighbors)
     return PW.W(neighbors)
 
 
@@ -217,8 +213,6 @@ def w_difference(w1, w2, w_shape='w1', constrained=True):
         for i in constrained_keys:
             neighbors[i] = list(set(neighbors[i]).intersection(constrained_keys))
 
-    #delete the following line once the W API is changed to take arguments
-    neighbors = _dict_helper(neighbors)
     return PW.W(neighbors)
 
 
@@ -303,8 +297,6 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
         for i in constrained_keys:
             neighbors[i] = list(set(neighbors[i]).intersection(constrained_keys))
 
-    #delete the following line once the W API is changed to take arguments
-    neighbors = _dict_helper(neighbors)
     return PW.W(neighbors)
 
 
@@ -352,22 +344,9 @@ def w_subset(w1, ids):
         else:
             neighbors[i] = []
 
-    #delete the following line once the W API is changed to take arguments
-    neighbors = _dict_helper(neighbors)
     return PW.W(neighbors)
 
     
-def _dict_helper(neighbors):
-    """
-    This is a helper function that should be deleted once W objects can take
-    arguments instead of dictionaries.
-    """
-    weights = {}
-    for i in neighbors:
-        weights[i] = [1.0] * len(neighbors[i])
-    return {'neighbors':neighbors, 'weights':weights}
-    
-
 def _test():
     import doctest
     doctest.testmod()

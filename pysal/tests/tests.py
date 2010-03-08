@@ -41,6 +41,7 @@ import pysal.mobility.rank
 import pysal.weights.weights, pysal.weights.ContiguityWeights
 import pysal.weights.DistanceWeights, pysal.weights.spatial_lag
 import pysal.weights.Contiguity, pysal.weights.util
+import pysal.weights.Wsets
 import pysal.esda.smoothing
 
 #add modules to include in tests
@@ -51,7 +52,7 @@ mods='esda.moran','esda.geary', 'esda.mapclassify', \
         'weights.weights','weights.DistanceWeights', \
         'weights.ContiguityWeights','weights.spatial_lag', \
         'weights.Contiguity', 'weights.util', \
-        'esda.smoothing'
+        'weights.Wsets', 'esda.smoothing'
 
 mods = [ "pysal."+ mod for mod in mods]
 suite = unittest.TestSuite()
