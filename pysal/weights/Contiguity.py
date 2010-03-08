@@ -1,3 +1,10 @@
+"""
+Contiguity based spatial weights
+
+Author(s):
+    Serge Rey srey@asu.edu
+"""
+
 import pysal
 try:
     from _contW_rtree import ContiguityWeights_rtree as ContiguityWeights

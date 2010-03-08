@@ -7,6 +7,10 @@ Author(s):
 
 """
 from Contiguity import buildContiguity
+from Distance import knnW
+import numpy as np
+
+
 
 def queen_from_shapefile(shapefile):
     """
@@ -89,6 +93,78 @@ def bishop_from_shapefile(shapefile):
     """
 
     raise NotImplementedError
+
+
+# Distance based weights
+def knnW_from_array(array,k=2,p=2,ids=None):
+    """
+    Nearest neighbor weights from a numpy array
+
+    Parameters
+    ----------
+
+    data       : array (n,k)
+                 attribute data, n observations on m attributes
+    k          : int
+                 number of nearest neighbors
+    p          : float
+                 Minkowski p-norm distance metric parameter:
+                 1<=p<=infinity
+                 2: Euclidean distance
+                 1: Manhattan distance
+    ids        : list
+                 identifiers to attach to each observation
+    Returns
+    -------
+
+    w         : W instance
+                Weights object with binary weights
+
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> x,y=np.indices((5,5))
+    >>> x.shape=(25,1)
+    >>> y.shape=(25,1)
+    >>> data=np.hstack([x,y])
+    >>> wnn2=knnW_from_array(data,k=2)
+    >>> wnn4=knnW_from_array(data,k=4)
+    >>> wnn4.neighbors[0]
+    [1, 5, 6, 2]
+    >>> wnn4.neighbors[5]
+    [0, 6, 10, 1]
+    >>> wnn2.neighbors[0]
+    [1, 5]
+    >>> wnn2.neighbors[5]
+    [0, 6]
+    >>> wnn2.pct_nonzero
+    0.080000000000000002
+    >>> wnn4.pct_nonzero
+    0.16
+    >>> wnn4=knnW_from_array(data,k=4)
+    >>> wnn4.neighbors[0]
+    [1, 5, 6, 2]
+    >>> wnn4=knnW_from_array(data,k=4)
+    >>> wnn3e=knnW(data,p=2,k=3)
+    >>> wnn3e.neighbors[0]
+    [1, 5, 6]
+    >>> wnn3m=knnW(data,p=1,k=3)
+    >>> wnn3m.neighbors[0]
+    [1, 5, 2]
+
+
+    Notes
+    -----
+
+    Ties between neighbors of equal distance are arbitrarily broken.
+
+    See Also
+    --------
+    pysal.weights.W
+    """
+    return knnW(array,k=k,p=p,ids=ids)
+
 
 if __name__ == "__main__":
 
