@@ -52,12 +52,10 @@ class Random_Regions:
     ----------
 
     solutions       : list
-                      list of length permutations containing all Random_Region
-                      instances generated
+                      list of length permutations containing all Random_Region instances generated
 
     solutions_feas  : list
-                      list of the Random_Region instances that resulted in
-                      feasible solutions
+                      list of the Random_Region instances that resulted in feasible solutions
 
     Examples
     --------

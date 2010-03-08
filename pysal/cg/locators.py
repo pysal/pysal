@@ -7,35 +7,6 @@ Xinyue Ye <xinyue.ye@gmail.com>
 Charles Schmidt <Charles.Schmidt@asu.edu>
 Andrew Winslow <Andrew.Winslow@asu.edu>
 
- 
-
-Style Guide, Follow:
-http://www.python.org/dev/peps/pep-0008/
-
-Class comment format:
-
-    Brief class description.
-
-    Attributes:
-    attr 1 -- type -- description of attr 1
-    attr 2 -- type -- description of attr 2
-
-    Extras (notes, references, examples, doctest, etc.)
-
-Function comment format:
-
-    Brief function description.
-
-    function(arg 1 type, arg 2 type, keyword=keyword arg 3 type) -> return type
-
-    Argument:
-    arg 1 -- description of arg 1
-    arg 2 -- description of arg 2
-
-    Keyword Arguments:
-    arg 3 -- description of arg 3
-
-    Extras (notes, references, examples, doctest, etc.)
 """
 
 __author__  = "Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow"
@@ -128,14 +99,20 @@ class IntervalTree:
 
     def __init__(self, intervals):
         """
+        __init__((number, number, x) list) -> IntervalTree
         Returns an interval tree containing specified intervals.
 
-        __init__((number, number, x) list) -> IntervalTree
+        Parameters
+        ----------
+        intervals : a list of (lower, upper, item) elements to build the interval tree 
 
-        Arguments:
-        intervals -- a list of (lower, upper, item) elements to build the interval tree with
+        Attributes
+        ----------
 
-        Example:
+
+        Examples
+        --------
+
         >>> intervals = [(-1, 2, 'A'), (5, 9, 'B'), (3, 6, 'C')]
         >>> it = IntervalTree(intervals)
         >>> isinstance(it, IntervalTree)
@@ -165,10 +142,17 @@ class IntervalTree:
 
         query((number, number) or number) -> x list
 
-        Arguments:
-        q -- a value or interval to find intervals intersecting
+        Parameters
+        ----------
 
-        Example:
+        q : a value or interval to find intervals intersecting
+
+        Attributes
+        ----------
+
+        Examples
+        --------
+
         >>> intervals = [(-1, 2, 'A'), (5, 9, 'B'), (3, 6, 'C')]
         >>> it = IntervalTree(intervals)
         >>> it.query((7, 14))
@@ -258,11 +242,14 @@ class Grid:
 
         __init__(Rectangle, number) -> Grid 
 
-        Arguments:
-        bounds -- the area for the grid to encompass
-        resolution -- the diameter of each bin 
+        Parameters
+        ----------
+        bounds      : the area for the grid to encompass
+        resolution  : the diameter of each bin 
 
-        Example:
+        Examples
+        --------
+        TODO: complete this doctest
         >>> g = Grid(Rectangle(0, 0, 10, 10), 1)
         """
         if resolution == 0:
@@ -298,9 +285,16 @@ class Grid:
 
         add(x, Point) -> x
 
-        Arguments:
+        Parameters
+        ----------
         item -- the item to insert into the grid
         pt -- the location to insert the item at
+
+        Attributes
+        ----------
+
+        Examples
+        --------
 
         >>> g = Grid(Rectangle(0, 0, 10, 10), 1)
         >>> g.add('A', Point((4.2, 8.7)))
@@ -321,9 +315,16 @@ class Grid:
 
         remove(x, Point) -> x
 
-        Arguments:
+        Parameters
+        ----------
         item -- the item to remove from the grid
         pt -- the location the item was added at
+
+        Attributes
+        ----------
+
+        Examples
+        --------
 
         >>> g = Grid(Rectangle(0, 0, 10, 10), 1)
         >>> g.add('A', Point((4.2, 8.7)))
@@ -345,9 +346,16 @@ class Grid:
 
         bounds(Rectangle) -> x list
 
-        Arguments:
-        item -- the item to remove from the grid
-        pt -- the location the item was added at
+        Parameters
+        ----------
+        item     : the item to remove from the grid
+        pt       : the location the item was added at
+
+        Attributes
+        ----------
+
+        Examples
+        --------
 
         >>> g = Grid(Rectangle(0, 0, 10, 10), 1)
         >>> g.add('A', Point((1.0, 1.0)))
@@ -378,10 +386,16 @@ class Grid:
 
         proximity(Point, number) -> x list
 
-        Arguments:
-        pt -- the location to search around
-        r -- the distance to search around the point
+        Parameters
+        ----------
+        pt : the location to search around
+        r  : the distance to search around the point
 
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> g = Grid(Rectangle(0, 0, 10, 10), 1)
         >>> g.add('A', Point((1.0, 1.0)))
         'A'
@@ -409,9 +423,15 @@ class Grid:
 
         nearest(Point) -> x 
 
-        Arguments:
-        pt -- the location to search near
+        Parameters
+        ----------
+        pt : the location to search near
 
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> g = Grid(Rectangle(0, 0, 10, 10), 1)
         >>> g.add('A', Point((1.0, 1.0)))
         'A'
@@ -450,10 +470,15 @@ class BruteForcePointLocator:
 
         __init__(Point list) -> BruteForcePointLocator
 
-        Arguments:
-        points -- a list of points to index (Point list)
+        Parameters
+        ----------
+        points : a list of points to index (Point list)
+
+        Attributes
+        ----------
        
-        Example:
+        Examples
+        --------
         >>> pl = BruteForcePointLocator([Point((0, 0)), Point((5, 0)), Point((0, 10))])
         """
         self._points = points
@@ -464,9 +489,15 @@ class BruteForcePointLocator:
  
         nearest(Point) -> Point
 
-        Arguments:
-        query_point -- a point to find the nearest indexed point to
+        Parameters
+        ----------
+        query_point : a point to find the nearest indexed point to
 
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> points = [Point((0, 0)), Point((1, 6)), Point((5.4, 1.4))]
         >>> pl = BruteForcePointLocator(points)
         >>> n = pl.nearest(Point((1, 1)))
@@ -481,10 +512,15 @@ class BruteForcePointLocator:
  
         region(Rectangle) -> Point list
 
-        Arguments:
-        region_rect -- the rectangular range to find indexed points in
+        Parameters
+        ----------
+        region_rect : the rectangular range to find indexed points in
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> points = [Point((0, 0)), Point((1, 6)), Point((5.4, 1.4))]
         >>> pl = BruteForcePointLocator(points)
         >>> pts = pl.region(Rectangle(-1, -1, 10, 10))
@@ -499,11 +535,16 @@ class BruteForcePointLocator:
  
         proximity(Point, number) -> Point list
 
-        Arguments:
-        origin -- the point to find indexed points near
-        r -- the maximum distance to find indexed point from the origin point
+        Parameters
+        ----------
+        origin  : the point to find indexed points near
+        r       : the maximum distance to find indexed point from the origin point
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> points = [Point((0, 0)), Point((1, 6)), Point((5.4, 1.4))]
         >>> pl = BruteForcePointLocator(points)
         >>> neighs = pl.proximity(Point((1, 0)), 2)
@@ -528,10 +569,15 @@ class PointLocator:
 
         __init__(Point list) -> PointLocator
   
-        Arguments:
-        points -- a list of points to index
+        Parameters
+        ----------
+        points : a list of points to index
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> points = [Point((0, 0)), Point((1, 6)), Point((5.4, 1.4))]
         >>> pl = PointLocator(points)
         """
@@ -543,10 +589,15 @@ class PointLocator:
  
         nearest(Point) -> Point
 
-        Arguments:
-        query_point -- a point to find the nearest indexed point to
+        Parameters
+        ----------
+        query_point : a point to find the nearest indexed point to
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> points = [Point((0, 0)), Point((1, 6)), Point((5.4, 1.4))]
         >>> pl = PointLocator(points)
         >>> n = pl.nearest(Point((1, 1)))
@@ -561,10 +612,15 @@ class PointLocator:
  
         region(Rectangle) -> Point list
 
-        Arguments:
-        region_rect -- the rectangular range to find indexed points in
+        Parameters
+        ----------
+        region_rect : the rectangular range to find indexed points in
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> points = [Point((0, 0)), Point((1, 6)), Point((5.4, 1.4))]
         >>> pl = PointLocator(points)
         >>> pts = pl.region(Rectangle(-1, -1, 10, 10))
@@ -579,11 +635,16 @@ class PointLocator:
  
         proximity(Point, number) -> Point list
 
-        Arguments:
-        origin -- the point to find indexed points near
-        r -- the maximum distance to find indexed point from the origin point
+        Parameters
+        ----------
+        origin  : the point to find indexed points near
+        r       : the maximum distance to find indexed point from the origin point
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> points = [Point((0, 0)), Point((1, 6)), Point((5.4, 1.4))]
         >>> pl = PointLocator(points)
         >>> len(pl.proximity(Point((1, 0)), 2))
@@ -602,10 +663,15 @@ class PolygonLocator:
 
         __init__(Polygon list) -> PolygonLocator
   
-        Arguments:
-        polygons -- a list of polygons to index
+        Parameters
+        ----------
+        polygons : a list of polygons to index
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
         >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
         >>> pl = PolygonLocator([p1, p2])
@@ -622,16 +688,21 @@ class PolygonLocator:
 
        nearest(Polygon) -> Polygon
 
-       Arguments:
-       query_point -- a point to find the nearest indexed polygon to
+       Parameters
+       ----------
+       query_point  : a point to find the nearest indexed polygon to
 
-       rule  -- representative point for polygon in nearest query.
+       rule         : representative point for polygon in nearest query.
                 vertex -- measures distance between vertices and query_point
                 centroid -- measures distance between centroid and
                 query_point
                 edge   -- measures the distance between edges and query_point
 
-       Example:
+       Attributes
+       ----------
+
+       Examples
+       --------
        >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
        >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
        >>> pl = PolygonLocator([p1, p2])
@@ -647,10 +718,15 @@ class PolygonLocator:
  
         region(Rectangle) -> Polygon list
 
-        Arguments:
-        region_rect -- the rectangular range to find indexed polygons in
+        Parameters
+        ----------
+        region_rect  : the rectangular range to find indexed polygons in
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
         >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
         >>> pl = PolygonLocator([p1, p2])
@@ -675,17 +751,22 @@ class PolygonLocator:
  
         proximity(Polygon, number) -> Polygon list
 
-        Arguments:
-        origin -- the point to find indexed polygons near
-        r -- the maximum distance to find indexed polygon from the origin point
+        Parameters
+        ----------
+        origin  : the point to find indexed polygons near
+        r       : the maximum distance to find indexed polygon from the origin point
 
-       rule  -- representative point for polygon in nearest query.
+       rule     : representative point for polygon in nearest query.
                 vertex -- measures distance between vertices and query_point
                 centroid -- measures distance between centroid and
                 query_point
                 edge   -- measures the distance between edges and query_point
 
-        Example:
+        Attributes
+        ----------
+
+        Examples
+        --------
         >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
         >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
         >>> pl = PolygonLocator([p1, p2])
