@@ -1,6 +1,6 @@
 """
 Convenience functions for the construction of spatial weights based on
-contiguity criteria
+contiguity and distance criteria
 
 Author(s):
     Serge Rey srey@asu.edu
@@ -96,6 +96,7 @@ def bishop_from_shapefile(shapefile):
 
 
 # Distance based weights
+
 def knnW_from_array(array,k=2,p=2,ids=None):
     """
     Nearest neighbor weights from a numpy array
@@ -165,6 +166,70 @@ def knnW_from_array(array,k=2,p=2,ids=None):
     """
     return knnW(array,k=k,p=p,ids=ids)
 
+def knnW_from_shapefile(shapefile,k=2,p=2,ids=None):
+    """
+    Nearest neighbor weights from a shapefile
+
+    Parameters
+    ----------
+
+    shapefile  : string
+                 shapefile name with shp suffix
+    k          : int
+                 number of nearest neighbors
+    p          : float
+                 Minkowski p-norm distance metric parameter:
+                 1<=p<=infinity
+                 2: Euclidean distance
+                 1: Manhattan distance
+    ids        : list
+                 identifiers to attach to each observation
+    Returns
+    -------
+
+    w         : W instance
+                Weights object with binary weights
+
+
+    Examples
+    --------
+
+    Polygon shapefile
+
+    >>> wc=knnW_from_shapefile('../examples/columbus.shp')
+    >>> wc.pct_nonzero
+    0.040816326530612242
+    >>> wc3=knnW_from_shapefile('../examples/columbus.shp',k=3)
+    >>> wc3.weights[0]
+    [1, 1, 1]
+    >>> wc3.neighbors[0]
+    [2, 1, 3]
+    >>> wc.neighbors[0]
+    [2, 1]
+
+    Point shapefile
+
+    >>> w=knnW_from_shapefile('../examples/juvenile.shp')
+    >>> w.pct_nonzero
+    0.011904761904761904
+    >>> w1=knnW_from_shapefile('../examples/juvenile.shp',k=1)
+    >>> w1.pct_nonzero
+    0.0059523809523809521
+    >>> 
+
+    Notes
+    -----
+
+    Supports polygon or point shapefiles
+
+    Ties between neighbors of equal distance are arbitrarily broken.
+
+
+    See Also
+    --------
+    pysal.weights.W
+    """
+    return knnW(shapefile,k=k,p=p,ids=ids)
 
 if __name__ == "__main__":
 
