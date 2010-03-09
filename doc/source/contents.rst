@@ -1,9 +1,8 @@
-
+.. _contents:
 
 Overview
 ========
 
-.. htmlonly::
     
     :Release: |version|
     :Date: |today|

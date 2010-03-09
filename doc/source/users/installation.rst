@@ -1,4 +1,4 @@
-.. _installation
+.. _installation:
 
 ############
 Installation
@@ -76,12 +76,12 @@ Linux and Mac OS X (and most \*nix machines)
 
 To download the code, open up a terminal (`/Applications/Utilities/Terminal`)
 and move to the directory where you wish to download PySAL by typing:
-::
-    cd /path_to_desired/folder
+
+``cd /path_to_desired/folder``
 
 Once there, type the following command:
-::
-    svn checkout http://pysal.googlecode.com/svn/trunk/ pysal-read-only
+
+``svn checkout http://pysal.googlecode.com/svn/trunk/ pysal-read-only``
 
 **Note**: mind there must be a space between 'trunk/' and 'pysal-read-only'.
 
@@ -94,22 +94,22 @@ rather than properly install it as a package. You can do this by adding the
 PySAL folder to the Python path. Open the bash profile (if it doesn't already
 exist, just create a new text file in the home directory and name it
 ``.bash_profile``) by typing in the terminal:
-::
-    open ~/.bash_profile
+
+``open ~/.bash_profile``
 
 **Note**: replace the command ``open`` by that of a text editor if you are in Linux
 (``gedit`` for instance, if you are in Ubuntu).
 Now add the following line at the end of the text file:
-::
-    export PYTHONPATH=${PYTHONPATH}:"/path_to_desired/folder/pysal-read-only/"
+
+``export PYTHONPATH=${PYTHONPATH}:"/path_to_desired/folder/pysal-read-only/"``
 
 Save and quit the file. Source the bash profile again:
-::
-    source ~/.bash_profile
+
+``source ~/.bash_profile``
 
 You are all set!!! Now you can open up a fresh python session and start
 enjoying PySAL, you should be able to do (within a python session):
-::
+
  >>> import pysal
  >>> pysal.open.check()
  PySAL File I/O understands the following file extensions:
@@ -135,15 +135,15 @@ install. The following instructions assume you are using it.
 First, create a folder where you want to store PySAL's code. For the sake of this
 example, we will name it ``PySALsvn`` and put it in the root folder, so the
 path is:
-:: 
- C:\PySALsvn
+ 
+``C:\PySALsvn``
 
 Right-click on the folder with the mouse and then click on 'SVN checkout'.
 The 'Checkout directory should be filled with the path to your folder
 (``C:\PySALsvn`` in this case). Copy and paste on the 'URL of repository'
 space the following link:
-::
- http://pysal.googlecode.com/svn/trunk/ pysal-read-only
+
+``http://pysal.googlecode.com/svn/trunk/ pysal-read-only``
 
 **Note**: mind there must be a space between 'trunk/' and 'pysal-read-only'.
 
@@ -156,33 +156,33 @@ will use a very simple one that only implies creating a simple text file.
 Open a text editor and create a file called ``sitecustomize.py`` located in the
 Site Packages folder of you Python distribution, so the path looks more or
 less like this one:
-:: 
- C:\PythonXX\Lib\site-packages\sitecustomize.py
+ 
+``C:\PythonXX\Lib\site-packages\sitecustomize.py``
 
 where XX corresponds to the version of the Python distribution you are using
 (25 for 2.5, for example).
 
 Add to the file the following text:
-::
- import sys
- sys.path.append("C:/PySALsvn/pysal-read-only")
+
+``import sys
+sys.path.append("C:/PySALsvn/pysal-read-only")``
  
 Save and close the window.
 
 You are all set!!! Now you should be able to do the following on a Python
 interactive session (on IDLE, for instance):
-::
- >>> import pysal
- >>> pysal.open.check()
- PySAL File I/O understands the following file extensions:
- Ext: '.shp', Modes: ['r', 'wb', 'w', 'rb']
- Ext: '.shx', Modes: ['r', 'wb', 'w', 'rb']
- Ext: '.geoda_txt', Modes: ['r']
- Ext: '.dbf', Modes: ['r', 'w']
- Ext: '.gwt', Modes: ['r']
- Ext: '.gal', Modes: ['r', 'w']
- Ext: '.csv', Modes: ['r']
- Ext: '.wkt', Modes: ['r']
- >>>
+
+>>> import pysal
+>>> pysal.open.check()
+PySAL File I/O understands the following file extensions:
+Ext: '.shp', Modes: ['r', 'wb', 'w', 'rb']
+Ext: '.shx', Modes: ['r', 'wb', 'w', 'rb']
+Ext: '.geoda_txt', Modes: ['r']
+Ext: '.dbf', Modes: ['r', 'w']
+Ext: '.gwt', Modes: ['r']
+Ext: '.gal', Modes: ['r', 'w']
+Ext: '.csv', Modes: ['r']
+Ext: '.wkt', Modes: ['r']
+>>>
 
 

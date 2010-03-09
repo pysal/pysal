@@ -12,7 +12,7 @@ Python Spatial Analysis Library
 
 The Python Spatial Analysis Library consists of several sub-packages each addressing a different area of spatial analysis.  In addition to these sub-packages PySAL includes some general utilities used across all modules.
 
-Note that this documentation is underdevelopment and is thus not fully
+Note that this documentation is under development and is thus not fully
 complete. 
 
 Documentation
@@ -22,7 +22,7 @@ PySAL documentation is available in two forms: python docstrings and a html webp
 Available sub-packages
 ----------------------
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     cg/index
     esda/index

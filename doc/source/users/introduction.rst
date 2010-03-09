@@ -1,4 +1,4 @@
-.. _introduction
+.. _introduction:
 
 ============
 Introduction
@@ -9,12 +9,12 @@ As PySAL is an open source project, much of the initial effort has been
 focused on developing the core source code. As such, time for preparing user
 documentation has been rather sparse. This situation should change in the
 coming months as we are in the process of adding a number of short
-:doc:`tutorials </tutorials>`
+:doc:`tutorials <tutorials/index>`
 that show users how to work with PySAL code for their analyses.
 
-=======
 History
-=======
+*******
+
 PySAL grew out of a collaborative effort between Luc Anselin's group
 previously located at the University of Illinois, Champaign-Urbana, and Serge
 Rey who was at San Diego State University.  It was born out of a recognition that
@@ -46,9 +46,8 @@ and Computation <http://geodacenter.asu.edu/>`_ at Arizona State University.
 
 
 
-=================================
 Research Papers and Presentations
-=================================
+*********************************
 
     * Rey, Sergio J. and Luc Anselin. (2009) `PySAL: A Python Library for Spatial Analysis and Geocomputation <http://www.archive.org/details/scipy09_day2_10-Serge_Rey>`_. (Movie) Python for Scientific Computing. Caltech, Pasadena, CA August 2009.
     * Rey, Sergio J. (2009). `Show Me the Code: Spatial Analysis and Open Source <http://www.springerlink.com/content/91u84l471h043282/>`_. *Journal of Geographical Systems* 11: 191-2007.

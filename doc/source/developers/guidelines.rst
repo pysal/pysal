@@ -1,8 +1,21 @@
-.. _guidelies:
+.. _guidelines:
 
-***********************
+==========
+Guidelines
+==========
+
+PySAL is adopting many of the conventions in the larger scientific computing
+in Python community and we ask that any one interested in joining the project
+please review the following documents:
+
+ * `Documentation standards <http://projects.scipy.org/numpy/wiki/CodingStyleGuidelines>`_
+ * `Coding guidelines <http://www.python.org/dev/peps/pep-0008/>`_
+ * :doc:`Testing guidelines <testing>`
+
+
+-----------------------
 Open Source Development
-***********************
+-----------------------
 
 PySAL is an open source project and we invite any interested user who wants to
 contribute to the project to contact one of the
@@ -14,22 +27,11 @@ documents for background information:
    <http://www.kegel.com/academy/opensource.html>`_
 
 
-**********
-Guidelines
-**********
-
-PySAL is adopting many of the conventions in the larger scientific computing
-in Python community and we ask that any one interested in joining the project
-please review the following documents:
-
- * `Documentation standards <http://projects.scipy.org/numpy/wiki/CodingStyleGuidelines>`_
- * `Coding guidelines <http://www.python.org/dev/peps/pep-0008/>`_
- * :doc:`Testing guidelines </developers/testing>`
 
 
-***********
+-----------------------
 Source Code
-***********
+-----------------------
 
 
 PySAL uses `Google Code <http://code.google.com>`_ and subversion for our
@@ -53,17 +55,17 @@ googlecode.com password.
 You can setup PySAL for local development following the :doc:`installation instructions </users/installation>`.
 
 
-************************
+------------------------
 Development Mailing List
-************************
+------------------------
 
 Development discussions take place on `pysal-dev
 <http://groups.google.com/group/pysal-dev>`_.
 
 
-****************
+-----------------------
 Release Schedule
-****************
+-----------------------
 
 PySAL development follows a six-month release schedule that is aligned with
 the academic calendar.
@@ -102,9 +104,9 @@ Start      End        Phase             Notes
 ========   ========   ================= ====================================================
 
 
-**********
+-----------------------
 Governance
-**********
+-----------------------
 
 PySAL is organized around the Benevolent Dictator for Life (BDFL) model of project management.
 The BDFL is responsible for overall project management and direction. Developers have a critical role in shaping that
@@ -117,9 +119,9 @@ BDFL        Project Director        Commit, Voting, Veto, Developer Approval/Man
 Developer   Development             Commit, Voting
 =========   ================        ===================================================
 
-***************
+-----------------------
 Voting and PEPs
-***************
+-----------------------
 
 During the initial phase of a release cycle, new functionality for PySAL should be described in a PySAL Enhancment
 Proposal (PEP). These should follow the

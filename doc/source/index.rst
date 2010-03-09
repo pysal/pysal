@@ -5,6 +5,7 @@
 Welcome
 *******
 
+
 PySAL is an `open source <http://code.google.com/p/pysal/>`_  cross-platform library of spatial analysis functions written in
 Python. It is intended to support the development of high level applications
 for spatial analysis.
@@ -27,3 +28,11 @@ Funding
 
 National Institute of Justice `Grant <http://geoplan.asu.edu/node/3855>`_
 
+********
+Contents
+********
+
+.. toctree::
+    :maxdepth: 2
+
+    contents
