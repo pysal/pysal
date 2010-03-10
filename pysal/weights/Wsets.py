@@ -131,8 +131,9 @@ def w_intersection(w1, w2, w_shape='w1'):
 
 
 def w_difference(w1, w2, w_shape='w1', constrained=True):
-    """Returns a binary weights object, w, that includes all the neighbor pairs
-    in w1 that are not in w2.
+    """Returns a binary weights object, w, that includes only neighbor pairs
+    in w1 that are not in w2. The w_shape and constrained parameters
+    determine which pairs in w1 that are not in w2 are returned.
 
     Parameters
     ----------
@@ -217,8 +218,9 @@ def w_difference(w1, w2, w_shape='w1', constrained=True):
 
 
 def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
-    """Returns a binary weights object, w, that includes all the neighbor pairs
-    that are not shared by w1 and w2. 
+    """Returns a binary weights object, w, that includes only neighbor pairs
+    that are not shared by w1 and w2. The w_shape and constrained parameters
+    determine which pairs that are not shared by w1 and w2 are returned.
 
     Parameters
     ----------
