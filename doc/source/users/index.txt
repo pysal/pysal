@@ -8,4 +8,4 @@ User Guide
 
    introduction
    installation
-   tutorials/index.rst
+   tutorials/index

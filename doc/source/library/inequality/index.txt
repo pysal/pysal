@@ -4,4 +4,3 @@
 .. toctree::
 
     theil
-    inequality

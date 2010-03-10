@@ -12,5 +12,5 @@ Overview
     :maxdepth: 2
 
     library/index
-    users/index.rst
-    developers/index.rst
+    users/index
+    developers/index
