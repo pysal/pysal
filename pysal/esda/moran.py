@@ -146,17 +146,17 @@ class Moran_BV:
     
     Parameters
     ----------
-    x               : array
-                      x-axis variable
-    y               : array
-                      (wy will be on y axis)
-    w               : W
-                      weight instance assumed to be aligned with y
+    x : array
+        x-axis variable
+    y : array
+        (wy will be on y axis)
+    w : W
+        weight instance assumed to be aligned with y
     transformation  : string
                       weights transformation, default is row-standardized "r".
                       Other options include "B": binary, "D":
-                          doubly-standardized, "U": untransformed (general
-                          weights), "V": variance-stabilizing.
+                      doubly-standardized, "U": untransformed (general weights),
+                      "V": variance-stabilizing.
     permutations    : int
                       number of random permutations for calculation of pseudo-p_values
 
@@ -304,64 +304,71 @@ class Moran_Local:
     """Local Moran Statistics
 
 
-    Arguments:
-        y: n*1 array
+    Parameters
+    ----------
+    y : n*1 array
 
-        w: weight instance assumed to be aligned with y
+    w : weight instance assumed to be aligned with y
 
-        transformation: weights transformation, default is row-standardized
-        "r". Other options include "B": binary, "D": doubly-standardized, "U":
-            untransformed (general weights), "V": variance-stabilizing.
+    transformation : string
+                     weights transformation, default is row-standardized "r".
+                     Other options include "B": binary, "D":
+                     doubly-standardized, "U": untransformed (general weights),
+                     "V": variance-stabilizing.
 
-        permutations: number of random permutations for calculation of
-        pseudo-p_values
+    permutations   : number of random permutations for calculation of pseudo-p_values
 
 
-    Attributes:
-        y: original variable
+    Attributes
+    ----------
 
-        w: original w object
+    y            : array
+                   original variable
+    w            : W
+                   original w object
+    permutations : int
+                   number of random permutations for calculation of pseudo-p_values
+    I            : float
+                   value of Moran's I
+    q            : array (if permutations>0)
+                   values indicate quadrat location 1 HH, 2 LH, 3 LL, 4 HL 
+    sim          : array (if permutations>0)
+                   vector of I values for permutated samples
+    p_sim        : array (if permutations>0)
+                   p-value based on permutations
+    EI_sim       : float (if permutations>0)
+                   average value of I from permutations
+    VI_sim       : float (if permutations>0)
+                   variance of I from permutations
+    seI_sim      : float (if permutations>0)
+                   standard deviation of I under permutations.
+    z_sim        : float (if permutations>0)
+                   standardized I based on permutations
+    p_z_sim      : float (if permutations>0)
+                   p-value based on standard normal approximation from
+                   permutations
 
-        permutation: number of permutations
-
-        Is: values of Moran's I
-
-        q: array of values indicated quadrat location: 1 HH, 2 LH, 3 LL, 4 HL
-
-        (if permutations>0)
-        sim: vector of I values for permutated samples
-
-        p_sim: p-value based on permutations
-
-        EI_sim: average values of I from permutations
-
-        VI_sim: variance of I from permutations
-
-        seI_sim: standard deviation of I under permutations.
-
-        z_sim: standardized I based on permutations
-
-        p_z_sim: p-value based on standard normal approximation from
-        permutations.
-        
-        
-        Note: p-values are one sided - where side is based on the
-        original I value for each observation (in self.Is). In other words
-        extreme is considered being further away from the origin and in the
-        same direction than original I statistic  for the focal observation.
+    *Note* 
+        p-values are one sided - where side is based on the original I value
+        for each observation (in self.Is). In other words extreme is considered
+        being further away from the origin and in the same direction than original I
+        statistic  for the focal observation.
+    
 
     Examples
     --------
-        >>> import pysal
-        >>> w=pysal.open("../examples/desmith.gal").read()
-        >>> f=pysal.open("../examples/desmith.txt")
-        >>> y=np.array(f.by_col['z'])
-        >>> lm=Moran_Local(y,w,transformation="r",permutations=0)
-        >>> lm.q
-        array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
-        >>> lm.Is
-        array([-0.11409277, -0.19940543, -0.13351408, -0.51770383,  0.48095009,
-                0.12208113,  1.19148298, -0.58144305,  0.07101383,  0.34314301])
+    >>> import pysal
+    >>> w=pysal.open("../examples/desmith.gal").read()
+    >>> f=pysal.open("../examples/desmith.txt")
+    >>> y=np.array(f.by_col['z'])
+    >>> lm=Moran_Local(y,w,transformation="r",permutations=0)
+    >>> lm.q
+    array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
+    >>> lm.Is
+    array([-0.11409277, -0.19940543, -0.13351408, -0.51770383,  0.48095009,
+            0.12208113,  1.19148298, -0.58144305,  0.07101383,  0.34314301])
+    >>>
+
     """
     def __init__(self,y,w,transformation="r",permutations=PERMUTATIONS):
         self.y=y

@@ -557,12 +557,17 @@ class W(object):
         
             for each observation we store the shortest order between it and
             each of the the other observations.
+
+        Examples
+        --------
         >>> w5=lat2gal()
         >>> w5_shimbel=w5.shimbel()
         >>> w5_shimbel[0][24]
         8
         >>> w5_shimbel[0][0:4]
         [-1, 1, 2, 3]
+        >>>
+
         """
 
         info={}
