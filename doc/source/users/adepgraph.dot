@@ -1,0 +1,26 @@
+/*
+*@command = dot -Tpng adepgraph.dot -o depgraph.png
+*If dot is ever installed on the buildbox, this can be drawn inline by the
+*sphinx graphviz extension, via ..graphviz:
+*
+*/
+
+    digraph G {
+        bgcolor = grey
+        Enthought [shape = box; fontcolor = blue]
+        Required [fontcolor = red]
+        Optional [fontcolor = blue]
+
+            Required -> Python [color=red];
+            Required -> Numpy [color=red];
+            Required -> SciPy [color=red];
+            Optional -> ipython[color=blue];
+            Optional -> rtree [color=blue];
+            Optional -> Sphinx [color=blue];
+            Sphinx -> numpydoc [color=red];
+
+            Python ->  Enthought [color=blue];
+            Numpy ->   Enthought [color=blue];
+            SciPy ->   Enthought [color=blue];
+            ipython -> Enthought [color=blue];
+            }
