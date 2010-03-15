@@ -369,6 +369,15 @@ class DistanceBand(W):
     >>> w=DistanceBand(points,threshold=11.2,binary=False,alpha=-2.)
     >>> w.weights[0]
     [0.01, 0.0079999999999999984]
+
+
+    Notes
+    -----
+
+    this was initially implemented running scipy 0.8.0dev (in epd 6.1).
+    earlier versions of scipy (0.7.0) have a logic bug in scipy/sparse/dok.py
+    so serge changed line 221 of that file on sal-dev to fix the logic bug
+
     """
     def __init__(self,data,threshold,p=2,alpha=-1.0,binary=True):
         
