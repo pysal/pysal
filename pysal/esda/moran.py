@@ -367,8 +367,11 @@ class Moran_Local:
     >>> lm.Is
     array([-0.11409277, -0.19940543, -0.13351408, -0.51770383,  0.48095009,
             0.12208113,  1.19148298, -0.58144305,  0.07101383,  0.34314301])
-    >>>
-
+    >>> import numpy as np
+    >>> np.random.seed(100)
+    >>> lm=pysal.Moran_Local(y,w,transformation="r",permutations=99)
+    >>> lm.p_sim
+    array([ 0.33,  0.32,  0.39,  0.01,  0.15,  0.56,  0.01,  0.12,  0.59,  0.43])
     """
     def __init__(self,y,w,transformation="r",permutations=PERMUTATIONS):
         self.y=y
@@ -382,13 +385,12 @@ class Moran_Local:
         self.Is = self.__calc(self.z)
         self.__quads()
         n=len(y)
+        self.n=n
         if permutations:
-            sim=[self.__calc(np.random.permutation(self.z)) \
-                 for i in xrange(permutations)]
-            self.sim=sim
+            self.__crand()
             pos=self.Is>0
             neg=self.Is<=0
-            sim=np.array(sim)
+            sim=np.transpose(self.rlisas)
             above=sim >= self.Is
             below=sim <= self.Is
             p=pos*above + neg*below
@@ -402,8 +404,35 @@ class Moran_Local:
 
     def __calc(self,z):
         zl=slag(self.w,z)
-        num=self.z * zl
         return (len(zl)-1)*self.z*zl/self.den
+
+    def __crand(self):
+        """
+        conditional randomization
+
+        for observation i with ni neighbors, the candidate set cannot include
+        i (we don't want i being a neighbor of i). we have to sample without
+        replacement from a set of ids that doesn't include i. numpy doesn't
+        directly support sampling wo replacement and it is expensive to
+        implement this. instead we omit i from the original ids, permutate the
+        ids and take the first ni elements of the permutated ids as the
+        neighbors to i in each randomization.
+
+        """
+        z=self.z
+        lisas=np.zeros((self.n,self.permutations))
+        n_1=self.n-1
+        rid=range(n_1)
+        prange=range(self.permutations)
+        rids=np.array([np.random.permutation(rid) for i in prange])
+        ids=np.arange(self.w.n)
+        w=self.w.weights
+        wc=self.w.cardinalities
+        ido=self.w.id_order
+        for i in range(self.w.n):
+            idsi=ids[ids!=i]
+            lisas[i]=[sum(w[ido[i]]*z[idsi[rid[0:wc[ido[i]]]]]) for rid in rids]
+        self.rlisas=(n_1/self.den)*lisas
     
     def __quads(self):
         zl=slag(self.w,self.z)
