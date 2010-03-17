@@ -60,4 +60,4 @@ from region.maxp import Maxp,Maxp_LISA
 from weights.weights import W,lat2gal,regime_weights,comb
 from weights.DistanceWeights import InverseDistance,NearestNeighbors,DistanceBand,Kernel
 from weights.spatial_lag import lag, lag_array
-from weights.util import *
+from weights.user import *
