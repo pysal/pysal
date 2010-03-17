@@ -15,34 +15,46 @@ import pysal
 
 
 class Markov:
-    """Classic Markov transition matrices"""
+    """Classic Markov transition matrices
+
+    Parameters
+    ----------
+    trans       : array (n,t) where each row represents the different states
+                  of each observation, being the columns the time
+                  periods
+    classes     : array (k) with all the classes (bins) of the matrix
+
+    Attrinutes
+    ----------
+    p           : transition matrix
+    steady_state: steady state
+
+    Examples:
+    ---------
+    >>> c=np.array([['b','a','c'],['c','c','a'],['c','b','c'],['a','a','b'],['a','b','c']])
+    >>> m=Markov(c)
+    >>> m.classes
+    array(['a', 'b', 'c'], 
+          dtype='|S1')
+    >>> m.p
+    matrix([[ 0.25      ,  0.5       ,  0.25      ],
+            [ 0.33333333,  0.        ,  0.66666667],
+            [ 0.33333333,  0.33333333,  0.33333333]])
+    >>> m.steady_state
+    matrix([[ 0.30769231],
+            [ 0.28846154],
+            [ 0.40384615]])
+
+    """
     def __init__(self,trans,classes=[]):
-        """
-        Examples:
-        ---------
-
-        >>> c=np.array([['b','a','c'],['c','c','a'],['c','b','c'],['a','a','b'],['a','b','c']])
-        >>> m=Markov(c)
-        >>> m.classes
-        array(['a', 'b', 'c'], 
-              dtype='|S1')
-        >>> m.p
-        matrix([[ 0.25      ,  0.5       ,  0.25      ],
-                [ 0.33333333,  0.        ,  0.66666667],
-                [ 0.33333333,  0.33333333,  0.33333333]])
-        >>> m.steady_state
-        matrix([[ 0.30769231],
-                [ 0.28846154],
-                [ 0.40384615]])
-        """
-
-        if classes:
+        if len(classes):
             self.classes=classes
         else:
             self.classes=np.unique1d(trans)
 
-        n,k=trans.shape
-        js=range(k-1)
+        n,t=trans.shape
+        k=len(self.classes)
+        js=range(t-1)
 
         classIds=self.classes.tolist()
         transitions=np.zeros((k,k))
