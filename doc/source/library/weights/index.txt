@@ -4,6 +4,7 @@
 .. toctree::
 
     weights
-    ContiguityWeights
-    DistanceWeights
+    Contiguity
+    Distance
     spatial_lag
+    user
