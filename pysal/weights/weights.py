@@ -11,7 +11,8 @@ from pysal.common import *
 DELTA = 0.0000001
 
 class W(object):
-    """Spatial weights
+    """
+    Spatial weights
 
     Parameters
     ----------
@@ -148,11 +149,12 @@ class W(object):
         """
         Allow a dictionary like interaction with the weights class.
 
-        Example
-        >>> import ContiguityWeights
-        >>> w = ContiguityWeights.rook('../examples/10740.shp')
+        Examples
+        --------
+        >>> from Contiguity import buildContiguity
+        >>> w=buildContiguity('../examples/10740.shp',criteria='rook')
         >>> w[0]
-        {1: 1.0, 101: 1.0, 4: 1.0, 5: 1.0, 85: 1.0}
+        {1: 1.0, 4: 1.0, 101: 1.0, 85: 1.0, 5: 1.0}
         >>> w = lat2W()
         >>> w[1]
         {0: 1.0, 2: 1.0, 6: 1.0}
@@ -163,9 +165,11 @@ class W(object):
 
 
     def __iter__(self):
-        """Support iteration over weights
+        """
+        Support iteration over weights
 
-        Example:
+        Examples
+        --------
         >>> w=lat2W(3,3)
         >>> for i,wi in enumerate(w):
         ...     print i,wi
@@ -193,39 +197,42 @@ class W(object):
 
 
     def __set_id_order(self, ordered_ids):
-        """Set the iteration order in w.
+        """
+        Set the iteration order in w.
 
         W can be iterated over. On construction the iteration order is set to
         the lexicgraphic order of the keys in the w.weights dictionary. If a specific order
         is required it can be set with this method.
 
         Parameters
-        ==========
+        ----------
 
-        ordered_ids : sequence of ids
+        ordered_ids : sequence
+                      identifiers for observations in specified order
 
         Notes
-        =====
+        -----
 
         ordered_ids is checked against the ids implied by the keys in
         w.weights. If they are not equivalent sets an exception is raised and
         the iteration order is not changed.
 
-        Example:
+        Examples
+        --------
 
-            >>> w=lat2W(3,3)
-            >>> for i,wi in enumerate(w):
-            ...     print i,wi
-            ...     
-            0 {1: 1.0, 3: 1.0}
-            1 {0: 1.0, 2: 1.0, 4: 1.0}
-            2 {1: 1.0, 5: 1.0}
-            3 {0: 1.0, 4: 1.0, 6: 1.0}
-            4 {1: 1.0, 3: 1.0, 5: 1.0, 7: 1.0}
-            5 {8: 1.0, 2: 1.0, 4: 1.0}
-            6 {3: 1.0, 7: 1.0}
-            7 {8: 1.0, 4: 1.0, 6: 1.0}
-            8 {5: 1.0, 7: 1.0}
+        >>> w=lat2W(3,3)
+        >>> for i,wi in enumerate(w):
+        ...     print i,wi
+        ...     
+        0 {1: 1.0, 3: 1.0}
+        1 {0: 1.0, 2: 1.0, 4: 1.0}
+        2 {1: 1.0, 5: 1.0}
+        3 {0: 1.0, 4: 1.0, 6: 1.0}
+        4 {1: 1.0, 3: 1.0, 5: 1.0, 7: 1.0}
+        5 {8: 1.0, 2: 1.0, 4: 1.0}
+        6 {3: 1.0, 7: 1.0}
+        7 {8: 1.0, 4: 1.0, 6: 1.0}
+        8 {5: 1.0, 7: 1.0}
         """
 
 
@@ -261,10 +268,12 @@ class W(object):
     @property
     def neighbor_offsets(self):
         """
-        Given the current id_order, 
-            neighbor_offsets[id] is the offsets of the id's neighrbors in id_order
+        Given the current id_order, neighbor_offsets[id] is the offsets of the
+        id's neighrbors in id_order
 
-        Example:
+        Examples
+        --------
+
         >>> neighbors={'c': ['b'], 'b': ['c', 'a'], 'a': ['b']}
         >>> weights ={'c': [1.0], 'b': [1.0, 1.0], 'a': [1.0]}
         >>> w=W(neighbors,weights)
@@ -286,43 +295,53 @@ class W(object):
 
     def get_transform(self):
         """
-            Example:
-                >>> w=lat2W()
-                >>> w.weights[0]
-                [1.0, 1.0]
-                >>> w.transform
-                >>> w.transform='r'
-                >>> w.weights[0]
-                [0.5, 0.5]
-                >>> w.transform='b'
-                >>> w.weights[0]
-                [1.0, 1.0]
-                >>> 
+        Getter for transform property
+
+        Returns
+        -------
+        transformation : string (or none)
+
+        Examples
+        --------
+        >>> w=lat2W()
+        >>> w.weights[0]
+        [1.0, 1.0]
+        >>> w.transform
+        >>> w.transform='r'
+        >>> w.weights[0]
+        [0.5, 0.5]
+        >>> w.transform='b'
+        >>> w.weights[0]
+        [1.0, 1.0]
+        >>> 
         """
         return self._transform
 
     def set_transform(self, value="B"):
-        """Transformations of weights.
-        
-            Supported transformations include:
-                B: Binary 
-                R: Row-standardization (global sum=n)
-                D: Double-standardization (global sum=1)
-                V: Variance stabilizing
-                O: Restore original transformation (from instantiation)
+        """
+        Transformations of weights.
 
-            Example:
-                >>> w=lat2W()
-                >>> w.weights[0]
-                [1.0, 1.0]
-                >>> w.transform
-                >>> w.transform='r'
-                >>> w.weights[0]
-                [0.5, 0.5]
-                >>> w.transform='b'
-                >>> w.weights[0]
-                [1.0, 1.0]
-                >>> 
+        Parameters
+        ----------
+        transform : string
+                    B: Binary 
+                    R: Row-standardization (global sum=n)
+                    D: Double-standardization (global sum=1)
+                    V: Variance stabilizing
+                    O: Restore original transformation (from instantiation)
+        Examples
+        --------
+        >>> w=lat2W()
+        >>> w.weights[0]
+        [1.0, 1.0]
+        >>> w.transform
+        >>> w.transform='r'
+        >>> w.weights[0]
+        [0.5, 0.5]
+        >>> w.transform='b'
+        >>> w.weights[0]
+        [1.0, 1.0]
+        >>> 
         """
         value=value.upper()
         self._transform = value
@@ -391,11 +410,12 @@ class W(object):
     
 
     def _characteristics(self):
-        """Calculates properties of W needed for various autocorrelation tests and some
+        """
+        Calculates properties of W needed for various autocorrelation tests and some
         summary characteristics.
         
-        >>> import ContiguityWeights
-        >>> w = ContiguityWeights.rook('../examples/10740.shp')
+        >>> from Contiguity import buildContiguity
+        >>> w=buildContiguity('../examples/10740.shp',criteria='rook')
         >>> w[1]
         {0: 1.0, 2: 1.0, 83: 1.0, 4: 1.0}
         >>> w.islands
@@ -472,37 +492,45 @@ class W(object):
         self.histogram=zip(bin,ct)
 
     def asymmetry(self,nonzero=True):
-        """Checks for w_{i,j} == w_{j,i} forall w_{i,j}!=0
+        """
+        Checks for w_{i,j} == w_{j,i} forall w_{i,j}!=0
 
-        Arguments:
-            nonzero: (binary) flag to check only that the elements are both
-            nonzero. If False, strict equality check is carried out
+        Parameters
+        ----------
+        nonzero   : binary
+                    flag to check only that the elements are both nonzero.
+                    If False, strict equality check is carried out
 
-        Returns:
-            asymmetries: a list of 2-tuples with (i,j),(j,i) pairs that are
-            asymmetric. If 2-tuple is missing an element then the asymmetry is
-            due to a missing weight rather than strict inequality.
+        Returns
+        -------
+        asymmetries : list 
+                       2-tuples with (i,j),(j,i) pairs that are
+                       asymmetric. If 2-tuple is missing an element then
+                       the asymmetry is due to a missing weight rather
+                       than strict inequality.
 
-        Example Usage:
-            >>> neighbors={0:[1,2,3], 1:[1,2,3], 2:[0,1], 3:[0,1]}
-            >>> weights={0:[1,1,1], 1:[1,1,1], 2:[1,1], 3:[1,1]}
-            >>> w=W(neighbors,weights)
-            >>> w.asymmetry()
-            [((0, 1), ())]
-            >>> weights[1].append(1)
-            >>> neighbors[1].insert(0,0)
-            >>> w.asymmetry()
-            []
-            >>> w.transform='r'
-            >>> w.asymmetry(nonzero=False)
-            [((0, 1), (1, 0)), ((0, 2), (2, 0)), ((0, 3), (3, 0)), ((1, 0), (0, 1)), ((1, 2), (2, 1)), ((1, 3), (3, 1)), ((2, 0), (0, 2)), ((2, 1), (1, 2)), ((3, 0), (0, 3)), ((3, 1), (1, 3))]
-            >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
-            >>> weights={'first':[1],'second':[1,1],'third':[1]}
-            >>> w=W(neighbors,weights)
-            >>> w.weights['third'].append(1)
-            >>> w.neighbors['third'].append('fourth')
-            >>> w.asymmetry()
-            [(('third', 'fourth'), ())]
+        Examples
+        --------
+
+        >>> neighbors={0:[1,2,3], 1:[1,2,3], 2:[0,1], 3:[0,1]}
+        >>> weights={0:[1,1,1], 1:[1,1,1], 2:[1,1], 3:[1,1]}
+        >>> w=W(neighbors,weights)
+        >>> w.asymmetry()
+        [((0, 1), ())]
+        >>> weights[1].append(1)
+        >>> neighbors[1].insert(0,0)
+        >>> w.asymmetry()
+        []
+        >>> w.transform='r'
+        >>> w.asymmetry(nonzero=False)
+        [((0, 1), (1, 0)), ((0, 2), (2, 0)), ((0, 3), (3, 0)), ((1, 0), (0, 1)), ((1, 2), (2, 1)), ((1, 3), (3, 1)), ((2, 0), (0, 2)), ((2, 1), (1, 2)), ((3, 0), (0, 3)), ((3, 1), (1, 3))]
+        >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
+        >>> weights={'first':[1],'second':[1,1],'third':[1]}
+        >>> w=W(neighbors,weights)
+        >>> w.weights['third'].append(1)
+        >>> w.neighbors['third'].append('fourth')
+        >>> w.asymmetry()
+        [(('third', 'fourth'), ())]
 
         """
 
@@ -522,33 +550,49 @@ class W(object):
 
 
     def full(self):
-        """generate a full numpy array
+        """
+        Generate a full numpy array
 
-        returns a tuple with first element being the full numpy array and
-        second element keys being the ids associated with each row in the
-        array.
+        Returns
+        -------
+
+        implicit : tuple
+                   first element being the full numpy array and second element
+                   keys being the ids associated with each row in the array.
 
 
-        Example:
-            >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
-            >>> weights={'first':[1],'second':[1,1],'third':[1]}
-            >>> w=W(neighbors,weights)
-            >>> wf,ids=w.full()
-            >>> wf
-            array([[ 0.,  1.,  1.],
-                   [ 1.,  0.,  0.],
-                   [ 1.,  0.,  0.]])
-            >>> ids
-            ['second', 'third', 'first']
+
+        Examples
+        --------
+
+        >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
+        >>> weights={'first':[1],'second':[1,1],'third':[1]}
+        >>> w=W(neighbors,weights)
+        >>> wf,ids=w.full()
+        >>> wf
+        array([[ 0.,  1.,  1.],
+               [ 1.,  0.,  0.],
+               [ 1.,  0.,  0.]])
+        >>> ids
+        ['second', 'third', 'first']
+
+        See also
+        --------
+        full
         """
         return full(self)
 
 
     def shimbel(self):
-        """find the shmibel matrix for the first order contiguity matrix.
+        """
+        Find the Shmibel matrix for the first order contiguity matrix.
         
-            for each observation we store the shortest order between it and
-            each of the the other observations.
+        Returns
+        -------
+
+        implicit : list of lists
+                   one list for each observation which stores the shortest
+                   order between it and each of the the other observations.
 
         Examples
         --------
@@ -560,37 +604,80 @@ class W(object):
         [-1, 1, 2, 3]
         >>>
 
+        See Also
+        --------
+        shimbel
+
         """
         return shimbel(self)
 
 
     def order(self,kmax=3):
-        """Determine the non-redundant order of contiguity up to a specific
+        """
+        Determine the non-redundant order of contiguity up to a specific
         order.
 
-        Implements the algorithm in Anselin and Smirnov (1996)
+        Parameters
+        ----------
 
-        currently returns a dictionary of lists with each entry having the
-        observation id as the key and the value is a list of order of
-        contiguity for the observations in the list (ordered 0 to n-1). a
-        negative 1 appears in the ith position
+        kmax    : int
+                  maximum order of contiguity
 
-        Example:
-            >>> import ContiguityWeights
-            >>> w=ContiguityWeights.rook('../examples/10740.shp')
-            >>> w3=w.order()
-            >>> w3[1][0:5]
-            [1, -1, 1, 2, 1]
-            >>> 
+        Returns
+        -------
+
+        implicit : dict
+                   observation id is the key, value is a list of contiguity
+                   orders with a negative 1 in the ith position
+
+
+        Notes
+        -----
+        Implements the algorithm in Anselin and Smirnov (1996) [1]_
+
+
+        Example
+        -------
+        >>> import ContiguityWeights
+        >>> w=ContiguityWeights.rook('../examples/10740.shp')
+        >>> w3=w.order()
+        >>> w3[1][0:5]
+        [1, -1, 1, 2, 1]
+
+        References
+        ----------
+        .. [1] Anselin, L. and O. Smirnov (1996) "Efficient algorithms for
+           constructing proper higher order spatial lag operators. Journal of
+           Regional Science, 36, 67-89. 
+
+        See also
+        --------
+        order
+
         """
         return order(self,kmax)
 
 
     def higher_order(self,k=3):
-        """Contiguity weights object of order k 
+        """
+        Contiguity weights object of order k 
 
-        
-        Implements the algorithm in Anselin and Smirnov (1996)
+        Parameters
+        ----------
+
+        k     : int
+                order of contiguity
+
+        Returns
+        -------
+
+        implicit : W
+                   spatial weights object 
+
+
+        Notes
+        -----
+        Implements the algorithm in Anselin and Smirnov (1996) [1]_
 
         Examples
         --------
@@ -616,6 +703,15 @@ class W(object):
         {0: 1.0, 101: 1.0, 83: 1.0, 84: 1.0, 90: 1.0, 91: 1.0, 93: 1.0}
         >>> 
 
+        References
+        ----------
+        .. [1] Anselin, L. and O. Smirnov (1996) "Efficient algorithms for
+           constructing proper higher order spatial lag operators. Journal of
+           Regional Science, 36, 67-89. 
+
+        See also
+        --------
+        higher_order
         """
         return higher_order(self,k)
 
@@ -623,7 +719,8 @@ class W(object):
 # helper functions
 
 def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
-    """Create a W object for a regular lattice.
+    """
+    Create a W object for a regular lattice.
 
     Parameters
     ----------
@@ -716,7 +813,8 @@ def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
     return W(w,weights,ids)
 
 def regime_weights(regimes):
-    """Construct spatial weights for regime neighbors.
+    """
+    Construct spatial weights for regime neighbors.
 
     Block contiguity structures are relevant when defining neighbor relations
     based on membership in a regime. For example, all counties belonging to
@@ -771,10 +869,11 @@ def regime_weights(regimes):
     return W(neighbors,weights)
 
 def comb(items, n=None):
-    """Combinations of size n taken from items
+    """
+    Combinations of size n taken from items
 
-    Arguments
-    ---------
+    Parameters
+    ----------
 
     items : sequence
     n     : integer
@@ -782,7 +881,9 @@ def comb(items, n=None):
 
     Returns
     -------
-    generator of combinations of size n taken from items
+
+    implicit : generator
+               combinations of size n taken from items
 
     Examples
     --------
@@ -809,9 +910,47 @@ def comb(items, n=None):
             for c in comb(rest, n-1):
                 yield v + c
 
+def order(w,kmax=3):
+    """
+    Determine the non-redundant order of contiguity up to a specific
+    order.
+
+    Parameters
+    ----------
+
+    w       : W
+              spatial weights object
+
+    kmax    : int
+              maximum order of contiguity
+
+    Returns
+    -------
+
+    info : dictionary
+           observation id is the key, value is a list of contiguity
+           orders with a negative 1 in the ith position
+
+    Notes
+    -----
+    Implements the algorithm in Anselin and Smirnov (1996) [1]_
 
 
-def order(w,kmax=2):
+    Example
+    -------
+    >>> from Contiguity import buildContiguity
+    >>> w=buildContiguity('../examples/10740.shp',criteria='rook')
+    >>> w3=order(w,kmax=3)
+    >>> w3[1][0:5]
+    [1, -1, 1, 2, 1]
+
+    References
+    ----------
+    .. [1] Anselin, L. and O. Smirnov (1996) "Efficient algorithms for
+       constructing proper higher order spatial lag operators. Journal of
+       Regional Science, 36, 67-89. 
+
+    """
     ids=w.neighbors.keys()
     info={}
     for id in ids:
@@ -837,7 +976,49 @@ def order(w,kmax=2):
     return info
 
 def higher_order(w,order=2):
+    """
+    Contiguity weights object of order k 
 
+    Parameters
+    ----------
+
+    w     : W
+            spatial weights object
+    order : int
+            order of contiguity
+
+    Returns
+    -------
+
+    implicit : W
+               spatial weights object 
+
+
+    Notes
+    -----
+    Implements the algorithm in Anselin and Smirnov (1996) [1]_
+
+    Examples
+    --------
+    >>> w10=lat2W(10,10)
+    >>> w10_2=higher_order(w10,2)
+    >>> w10_2[0]
+    {2: 1.0, 11: 1.0, 20: 1.0}
+    >>> w5=lat2W()
+    >>> w5[0]
+    {1: 1.0, 5: 1.0}
+    >>> w5[1]
+    {0: 1.0, 2: 1.0, 6: 1.0}
+    >>> w5_2=higher_order(w5,2)
+    >>> w5_2[0]
+    {2: 1.0, 10: 1.0, 6: 1.0}
+
+    References
+    ----------
+    .. [1] Anselin, L. and O. Smirnov (1996) "Efficient algorithms for
+       constructing proper higher order spatial lag operators. Journal of
+       Regional Science, 36, 67-89. 
+    """
     info=w.order(order)
     ids=info.keys()
     neighbors={}
@@ -849,6 +1030,30 @@ def higher_order(w,order=2):
     return W(neighbors,weights)
 
 def shimbel(w):
+    """
+    Find the Shmibel matrix for first order contiguity matrix.
+
+    Parameters
+    ----------
+    w     : W
+            spatial weights object
+    Returns
+    -------
+
+    info  : list of lists
+            one list for each observation which stores the shortest
+            order between it and each of the the other observations.
+
+    Examples
+    --------
+    >>> w5=lat2W()
+    >>> w5_shimbel=shimbel(w5)
+    >>> w5_shimbel[0][24]
+    8
+    >>> w5_shimbel[0][0:4]
+    [-1, 1, 2, 3]
+    >>>
+    """
     info={}
     ids=w.neighbors.keys()
     for id in ids:
@@ -875,6 +1080,35 @@ def shimbel(w):
     return info
 
 def full(w):
+    """
+    Generate a full numpy array
+
+    Parameters
+    ----------
+    w        : W
+               spatial weights object
+
+    Returns
+    -------
+
+    implicit : tuple
+               first element being the full numpy array and second element
+               keys being the ids associated with each row in the array.
+
+    Examples
+    --------
+
+    >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
+    >>> weights={'first':[1],'second':[1,1],'third':[1]}
+    >>> w=W(neighbors,weights)
+    >>> wf,ids=full(w)
+    >>> wf
+    array([[ 0.,  1.,  1.],
+           [ 1.,  0.,  0.],
+           [ 1.,  0.,  0.]])
+    >>> ids
+    ['second', 'third', 'first']
+    """
     wfull=np.zeros([w.n,w.n],dtype=float)
     keys=w.neighbors.keys()
     for i,key in enumerate(keys):
