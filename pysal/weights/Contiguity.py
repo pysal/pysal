@@ -18,8 +18,8 @@ def buildContiguity(source,criterion="rook",ids=None):
     """
     Build contiguity weights from a source
 
-    Arguments
-    ---------
+    Parameters
+    ----------
 
     source     : multitype 
                  polygon shapefile

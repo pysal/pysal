@@ -636,8 +636,8 @@ class W(object):
         Implements the algorithm in Anselin and Smirnov (1996) [1]_
 
 
-        Example
-        -------
+        Examples
+        --------
         >>> import ContiguityWeights
         >>> w=ContiguityWeights.rook('../examples/10740.shp')
         >>> w3=w.order()
