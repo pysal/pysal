@@ -1,11 +1,9 @@
-:mod:`esda.mapclassify` --- Map classifiers
-==================================================================================================
-
-The :mod:`esda.mapclassify` module provides several modules for choropleth
-mapping classification
+:mod:`esda.mapclassify` --- Choropleth map classification
+=========================================================
 
 .. versionadded:: 1.0
 
 .. automodule:: pysal.esda.mapclassify
-    :synopsis: choropleth classifiers
+    :synopsis: Choropleth map classification
+    :members:
 
