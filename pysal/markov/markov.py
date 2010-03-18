@@ -50,7 +50,7 @@ class Markov:
         if len(classes):
             self.classes=classes
         else:
-            self.classes=np.unique1d(trans)
+            self.classes=np.unique(trans)
 
         n,t=trans.shape
         k=len(self.classes)
@@ -62,7 +62,7 @@ class Markov:
             state_1=state_0+1
             state_0=trans[:,state_0]
             state_1=trans[:,state_1]
-            initial=np.unique1d(state_0)
+            initial=np.unique(state_0)
             for i in initial:
                 ending=state_1[state_0==i]
                 uending=np.unique(ending)
