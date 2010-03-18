@@ -3,9 +3,10 @@
 
 .. toctree::
 
+    geary
     join_counts
     mapclassify
-    geary
     moran
+    smoothing
 
 

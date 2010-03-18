@@ -70,7 +70,7 @@ class Maxp:
     >>> import numpy as np
     >>> random.seed(100)
     >>> np.random.seed(100)
-    >>> w=pysal.weights.weights.lat2W(10,10)
+    >>> w=pysal.lat2W(10,10)
     >>> z=np.random.random_sample((w.n,2))
     >>> p=np.random.random(w.n)*100
     >>> p=np.ones((w.n,1),float)

@@ -6,25 +6,20 @@ Authors:
 
 Map Classifiers Supported:
 
-    Box_Plot
-    Equal_Interval
-    Fisher_Jenks
-    Jenks_Caspall
-    Jenks_Caspall_Forced
-    Jenks_Caspall_Sampled
-    Max_P
-    Maximum_Breaks
-    Natural_Breaks
-    Quantiles
-    Percentiles
-    Std_Mean
-    User_Defined
+* Box_Plot
+* Equal_Interval
+* Fisher_Jenks
+* Jenks_Caspall
+* Jenks_Caspall_Forced
+* Jenks_Caspall_Sampled
+* Max_P
+* Maximum_Breaks
+* Natural_Breaks
+* Quantiles
+* Percentiles
+* Std_Mean
+* User_Defined
 
-To Do:
-    additional documentation
-    optimize the following
-        Jenks_Caspall_Forced
-        Fisher_Jenks
 """
 __author__ = "Sergio J. Rey"
 __credits__= "Copyright (c) 2009 Sergio J. Rey"
@@ -45,8 +40,8 @@ def quantile(y,k=4):
 
     Returns
     -------
-      : array (n,1)
-      quantile values 
+    implicit  : array (n,1)
+                quantile values 
 
     Examples
     --------
@@ -340,10 +335,12 @@ class Map_Classifier:
 class Equal_Interval(Map_Classifier):
     """Equal Interval Classification 
 
-    Intervals defined to have equal width.
-
-        bins[j] = min(y)+w*(j+1)
-        with w=(max(y)-min(j))/k
+    Parameters
+    ----------
+    y : array (n,1)
+        values to classify
+    k : int
+        number of classes required
 
     Attributes
     ----------
@@ -369,16 +366,23 @@ class Equal_Interval(Map_Classifier):
     >>> ei.bins
     array([  822.394,  1644.658,  2466.922,  3289.186,  4111.45 ])
     >>> 
+
+
+    Notes
+    -----
+    Intervals defined to have equal width:
+
+    .. math::
+
+        bins_j = min(y)+w*(j+1)
+
+    with :math:`w=\\frac{max(y)-min(j)}{k}`
     """
 
     def __init__(self,y,k=K):
         """
-        Arguments
-        ---------
-        y : array (n,1)
-            values to classify
-        k : int
-            number of classes required
+        see class docstring
+        
         """
 
         self.k=k
@@ -398,21 +402,31 @@ class Equal_Interval(Map_Classifier):
         self.bins=bins
 
 class Percentiles(Map_Classifier):
-    """Percentiles Map Classification
+    """
+    Percentiles Map Classification
 
-    Arguments:
-        y: attribute to classify (numpy array n x 1)
-        pct: percentiles default=[1,10,50,90,99,100]
+    Parameters
+    ----------
 
-    Attributes:
-        yb: bin ids for observations (numpy array n x 1). Each value is the id
-        of the class the observation belongs to.
+    y    : array
+           attribute to classify 
+    pct  : array
+           percentiles default=[1,10,50,90,99,100]
 
-        bins: the upper bounds of each class (numpy array k x 1)
+    Attributes
+    ----------
+    yb     : array
+             bin ids for observations (numpy array n x 1). Each value is the id
+             of the class the observation belongs to.
 
-        k: the number of classes
+    bins   : array
+             the upper bounds of each class (numpy array k x 1)
 
-        counts: the number of observations falling in each class (numpy array k x 1)
+    k      : int
+             the number of classes
+
+    counts : int
+             the number of observations falling in each class (numpy array k x 1)
 
     Examples
     --------
@@ -443,17 +457,16 @@ class Percentiles(Map_Classifier):
         self.k=len(self.bins)
 
 class Box_Plot(Map_Classifier):
-    """Box_Plot Map Classification
+    """
+    Box_Plot Map Classification
         
-        bins[0] = q[0]-hinge*IQR
-        bins[1] = q[0]
-        bins[2] = q[1]
-        bins[3] = q[2]
-        bins[4] = q[2]+hinge*IQR
-        bins[5] = inf  (see Notes)
-
-        where q is an array of the first three quartiles of y and
-        IQR=q[2]-q[0]
+   
+    Parameters
+    ----------
+    y     : array
+            attribute to classify 
+    hinge : float
+            multiplier for IQR 
 
     Attributes
     ----------
@@ -474,7 +487,21 @@ class Box_Plot(Map_Classifier):
 
     Notes
     -----
-    [1] If q[2]+hinge*IQR > max(y) there will only be 5 classes and no high outliers,
+    
+    The bins are set as follows::
+
+        bins[0] = q[0]-hinge*IQR
+        bins[1] = q[0]
+        bins[2] = q[1]
+        bins[3] = q[2]
+        bins[4] = q[2]+hinge*IQR
+        bins[5] = inf  (see Notes)
+
+    where q is an array of the first three quartiles of y and
+    IQR=q[2]-q[0]
+
+
+    If q[2]+hinge*IQR > max(y) there will only be 5 classes and no high outliers,
         otherwise, there will be 6 classes and at least one high outlier.
 
     Examples 

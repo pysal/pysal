@@ -1,4 +1,3 @@
-#! /usr/bin/python
 """
 Apply smoothing to rate computation
 
@@ -7,6 +6,7 @@ Apply smoothing to rate computation
 Author(s):
     Myunghwa Hwang mhwang4@gmail.com
     Luc Anselin luc.anselin@asu.edu
+    Serge Rey srey@asu.edu
 
 """
 import pysal
@@ -265,7 +265,8 @@ class Headbanging_Triples:
     ----------
     data	: array (n, 2)
     		  numpy array of x, y coordinates
-    w		: NearestNeighbors weights instance
+    w		: spatial weights instance
+    k       : integer number of nearest neighbors
     t		: integer
     		  the number of triples
     angle	: integer between 0 and 180
@@ -285,14 +286,14 @@ class Headbanging_Triples:
 
     Examples
     --------
-    >>> from pysal.weights.DistanceWeights import NearestNeighbors
+    >>> from pysal import knnW
     >>> stl_db = pysal.open('../examples/stl_hom.csv','r')
     >>> fromWKT = pysal.core._FileIO.wkt.WKTParser()
     >>> stl_db.cast('WKT',fromWKT)
     >>> d = np.array([i.centroid for i in stl_db[:,0]])
-    >>> w = NearestNeighbors(d,k=5)
+    >>> w = knnW(d,k=5)
     >>> if not w.id_order_set: w.id_order = w.id_order
-    >>> ht = Headbanging_Triples(d,w)
+    >>> ht = Headbanging_Triples(d,w,k=5)
     >>> for k, item in ht.triples.items()[:5]: print k, item
     0 [(5, 6), (10, 6)]
     1 [(4, 7), (4, 14), (9, 7)]
@@ -301,16 +302,16 @@ class Headbanging_Triples:
     4 [(8, 1), (12, 1), (8, 9)]
     >>> sids = pysal.open('../examples/sids2.shp','r')
     >>> sids_d = np.array([i.centroid for i in sids])
-    >>> sids_w = NearestNeighbors(sids_d,k=5)
+    >>> sids_w = knnW(sids_d,k=5)
     >>> if not sids_w.id_order_set: sids_w.id_order = sids_w.id_order
-    >>> s_ht = Headbanging_Triples(sids_d,sids_w)
+    >>> s_ht = Headbanging_Triples(sids_d,sids_w,k=5)
     >>> for k, item in s_ht.triples.items()[:5]: print k, item
     0 [(1, 18), (1, 21), (1, 33)]
     1 [(2, 40), (2, 22), (22, 40)]
     2 [(39, 22), (1, 9), (39, 17)]
     3 [(16, 6), (19, 6), (20, 6)]
     4 [(5, 15), (27, 15), (35, 15)]
-    >>> s_ht2 = Headbanging_Triples(sids_d,sids_w,edgecor=True)
+    >>> s_ht2 = Headbanging_Triples(sids_d,sids_w,k=5,edgecor=True)
     >>> for k, item in s_ht2.triples.items()[:5]: print k, item
     0 [(1, 18), (1, 21), (1, 33)]
     1 [(2, 40), (2, 22), (22, 40)]
@@ -323,9 +324,9 @@ class Headbanging_Triples:
     >>> round(extrapolated[1],5), round(extrapolated[2],6)
     (0.33753, 0.302707)
     """
-    def __init__(self, data, w, t=3, angle=135.0, edgecor=False):
-        if not w.k or w.k < 3:
-	    raise ValueError("w should be NeareastNeighbors instance & the number of neighbors should be more than 3.")
+    def __init__(self, data, w, k=5, t=3, angle=135.0, edgecor=False):
+        if k < 3:
+	         raise ValueError("w should be NeareastNeighbors instance & the number of neighbors should be more than 3.")
         if not w.id_order_set:
             raise ValueError("w id_order must be set to align with the order of data")
         self.triples, points = {}, {}
@@ -401,12 +402,12 @@ class Headbanging_Median_Rate:
    
     Examples
     --------
-    >>> from pysal.weights.DistanceWeights import NearestNeighbors
+    >>> from pysal import knnW
     >>> sids = pysal.open('../examples/sids2.shp', 'r')
     >>> sids_d = np.array([i.centroid for i in sids])
-    >>> sids_w = NearestNeighbors(sids_d,k=5)
+    >>> sids_w = knnW(sids_d,k=5)
     >>> if not sids_w.id_order_set: sids_w.id_order = sids_w.id_order
-    >>> s_ht = Headbanging_Triples(sids_d,sids_w)
+    >>> s_ht = Headbanging_Triples(sids_d,sids_w,k=5)
     >>> sids_db = pysal.open('../examples/sids2.dbf', 'r')
     >>> s_e, s_b = np.array(sids_db[:,9]), np.array(sids_db[:,8])
     >>> sids_hb_r = Headbanging_Median_Rate(s_e,s_b,s_ht)

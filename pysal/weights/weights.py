@@ -638,8 +638,8 @@ class W(object):
 
         Examples
         --------
-        >>> import ContiguityWeights
-        >>> w=ContiguityWeights.rook('../examples/10740.shp')
+        >>> from Contiguity import buildContiguity
+        >>> w=buildContiguity('../examples/10740.shp',criterion='rook')
         >>> w3=w.order()
         >>> w3[1][0:5]
         [1, -1, 1, 2, 1]

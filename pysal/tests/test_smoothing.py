@@ -1,7 +1,7 @@
 import unittest
 import pysal
 from pysal.esda import smoothing as sm
-from pysal.weights.DistanceWeights import NearestNeighbors
+from pysal import knnW
 import numpy as np
 
 class Flatten_Tester(unittest.TestCase):
@@ -68,7 +68,7 @@ class HT_Tester(unittest.TestCase):
     def setUp(self):
         sids = pysal.open('../examples/sids2.shp', 'r')
         self.d = np.array([i.centroid for i in sids])
-        self.w = NearestNeighbors(self.d, k=5)
+        self.w = knnW(self.d, k=5)
         if not self.w.id_order_set: self.w.id_order = self.w.id_order
         sids_db = pysal.open('../examples/sids2.dbf', 'r')
         self.b, self.e = np.array(sids_db[:,8]), np.array(sids_db[:,9])

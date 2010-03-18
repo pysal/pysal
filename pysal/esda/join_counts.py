@@ -63,7 +63,7 @@ class Join_Counts:
     Replicate example from anselin and rey
 
     >>> import numpy as np
-    >>> w=pysal.lat2gal(4,4)
+    >>> w=pysal.lat2W(4,4)
     >>> y=np.ones(16)
     >>> y[0:8]=0
     >>> jc=Join_Counts(y,w)

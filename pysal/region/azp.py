@@ -85,7 +85,7 @@ class Azp:
         Example
         =======
 
-        >>> w=pysal.weights.weights.lat2gal()
+        >>> w=pysal.lat2W()
         >>> z=range(w.n)
         >>> num.random.seed(10)
         >>> z=num.random.random_sample((w.n,2))
