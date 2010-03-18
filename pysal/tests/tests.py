@@ -40,7 +40,7 @@ import pysal.region.randomregion
 import pysal.mobility.rank
 import pysal.weights.weights, pysal.weights.ContiguityWeights
 import pysal.weights.DistanceWeights, pysal.weights.spatial_lag
-import pysal.weights.Contiguity, pysal.weights.Distance, pysal.weights.util
+import pysal.weights.Contiguity, pysal.weights.Distance, pysal.weights.user
 import pysal.weights.Wsets
 import pysal.esda.smoothing
 
@@ -51,7 +51,7 @@ mods='esda.moran','esda.geary', 'esda.mapclassify', \
         'region.maxp', 'region.randomregion', \
         'weights.weights','weights.DistanceWeights', \
         'weights.ContiguityWeights','weights.spatial_lag', \
-        'weights.Contiguity', 'weights.Distance', 'weights.util', \
+        'weights.Contiguity', 'weights.Distance', 'weights.user', \
         'weights.Wsets', 'esda.smoothing'
 
 mods = [ "pysal."+ mod for mod in mods]

@@ -57,7 +57,7 @@ from markov.markov import Markov
 from markov.ergodic import steady_state
 from mobility.rank import Theta,SpatialTau
 from region.maxp import Maxp,Maxp_LISA
-from weights.weights import W,lat2gal,regime_weights,comb
+from weights.weights import W,lat2W,regime_weights,comb
 from weights.DistanceWeights import InverseDistance,NearestNeighbors,DistanceBand,Kernel
 from weights.spatial_lag import lag, lag_array
 from weights.user import *

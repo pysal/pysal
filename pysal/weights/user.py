@@ -7,10 +7,8 @@ Author(s):
 
 """
 from Contiguity import buildContiguity
-from Distance import knnW
-from Distance import Kernel,DistanceBand
+from Distance import knnW, Kernel, DistanceBand
 import numpy as np
-
 
 
 def queen_from_shapefile(shapefile):
@@ -21,7 +19,7 @@ def queen_from_shapefile(shapefile):
     ----------
 
     shapefile : string
-                name of shapefile including suffix.
+                name of polygon shapefile including suffix.
 
     Returns
     -------
@@ -57,7 +55,7 @@ def rook_from_shapefile(shapefile):
     ----------
 
     shapefile : string
-                 name of shapefile including suffix.
+                name of polygon shapefile including suffix.
 
     Returns
     -------
@@ -238,10 +236,6 @@ def threshold_binaryW_from_array(array,threshold,p=2):
                  1<=p<=infinity
                  2: Euclidean distance
                  1: Manhattan distance
-    alpha      : float 
-                 distance decay parameter for weight (default -1.0)
-                 if alpha is positive the weights will not decline with
-                 distance. If binary is True, alpha is ignored 
 
     Returns
     -------
@@ -283,9 +277,6 @@ def threshold_continuousW_from_array(array,threshold,p=2,
                  1<=p<=infinity
                  2: Euclidean distance
                  1: Manhattan distance
-    binary     : binary
-                 If true w_{ij}=1 if d_{i,j}<=threshold, otherwise w_{i,j}=0
-                 If false wij=dij^{alpha}
     alpha      : float 
                  distance decay parameter for weight (default -1.0)
                  if alpha is positive the weights will not decline with
@@ -320,7 +311,6 @@ def threshold_continuousW_from_array(array,threshold,p=2,
 
     w=DistanceBand(array,threshold=threshold,p=p,alpha=alpha,binary=False)
     return w
-
 
 
 # Kernel Weights

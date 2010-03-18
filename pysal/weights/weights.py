@@ -153,7 +153,7 @@ class W(object):
         >>> w = ContiguityWeights.rook('../examples/10740.shp')
         >>> w[0]
         {1: 1.0, 101: 1.0, 4: 1.0, 5: 1.0, 85: 1.0}
-        >>> w = lat2gal()
+        >>> w = lat2W()
         >>> w[1]
         {0: 1.0, 2: 1.0, 6: 1.0}
         >>> w[0]
@@ -166,7 +166,7 @@ class W(object):
         """Support iteration over weights
 
         Example:
-        >>> w=lat2gal(3,3)
+        >>> w=lat2W(3,3)
         >>> for i,wi in enumerate(w):
         ...     print i,wi
         ...     
@@ -213,7 +213,7 @@ class W(object):
 
         Example:
 
-            >>> w=lat2gal(3,3)
+            >>> w=lat2W(3,3)
             >>> for i,wi in enumerate(w):
             ...     print i,wi
             ...     
@@ -251,7 +251,7 @@ class W(object):
         """returns True if user has set id_order, False if not.
 
         Example
-        >>> w=lat2gal()
+        >>> w=lat2W()
         >>> w.id_order_set
         True
         """
@@ -287,7 +287,7 @@ class W(object):
     def get_transform(self):
         """
             Example:
-                >>> w=lat2gal()
+                >>> w=lat2W()
                 >>> w.weights[0]
                 [1.0, 1.0]
                 >>> w.transform
@@ -312,7 +312,7 @@ class W(object):
                 O: Restore original transformation (from instantiation)
 
             Example:
-                >>> w=lat2gal()
+                >>> w=lat2W()
                 >>> w.weights[0]
                 [1.0, 1.0]
                 >>> w.transform
@@ -541,15 +541,7 @@ class W(object):
             >>> ids
             ['second', 'third', 'first']
         """
-        w=np.zeros([self.n,self.n],dtype=float)
-        keys=self.neighbors.keys()
-        for i,key in enumerate(keys):
-            n_i=self.neighbors[key]
-            w_i=self.weights[key]
-            for j,wij in zip(n_i,w_i):
-                c=keys.index(j)
-                w[i,c]=wij
-        return (w,keys)
+        return full(self)
 
 
     def shimbel(self):
@@ -560,7 +552,7 @@ class W(object):
 
         Examples
         --------
-        >>> w5=lat2gal()
+        >>> w5=lat2W()
         >>> w5_shimbel=w5.shimbel()
         >>> w5_shimbel[0][24]
         8
@@ -569,32 +561,7 @@ class W(object):
         >>>
 
         """
-
-        info={}
-        ids=self.neighbors.keys()
-        for id in ids:
-            s=[0]*self.n
-            s[ids.index(id)]=-1
-            for j in self.neighbors[id]:
-                s[ids.index(j)]=1
-            k=1
-            flag=s.count(0)
-            while flag:
-                p=-1
-                knext=k+1
-                for j in range(s.count(k)):
-                    neighbor=s.index(k,p+1)
-                    p=neighbor
-                    next_neighbors=self.neighbors[p]
-                    for neighbor in next_neighbors:
-                        nid=ids.index(neighbor)
-                        if s[nid]==0:
-                            s[nid]=knext
-                k=knext
-                flag=s.count(0)
-            info[id]=s
-        return info
-
+        return shimbel(self)
 
 
     def order(self,kmax=3):
@@ -616,40 +583,18 @@ class W(object):
             [1, -1, 1, 2, 1]
             >>> 
         """
-        ids=self.neighbors.keys()
-        info={}
-        for id in ids:
-            s=[0]*self.n
-            s[ids.index(id)]=-1
-            for j in self.neighbors[id]:
-                s[ids.index(j)]=1
-            k=1
-            while k < kmax:
-                knext=k+1
-                if s.count(k):
-                    # get neighbors of order k
-                    js=[ids[j] for j,val in enumerate(s) if val==k]
-                    # get first order neighbors for order k neighbors
-                    for j in js:
-                        next_neighbors=self.neighbors[j]
-                        for neighbor in next_neighbors:
-                            nid=ids.index(neighbor)
-                            if s[nid]==0:
-                                s[nid]=knext
-                k=knext
-            info[id]=s
-        return info
+        return order(self,kmax)
+
 
     def higher_order(self,k=3):
         """Contiguity weights object of order k 
 
         
-        
         Implements the algorithm in Anselin and Smirnov (1996)
 
         Examples
         --------
-        >>> w5=lat2gal()
+        >>> w5=lat2W()
         >>> w5_shimbel=w5.shimbel()
         >>> w5_shimbel[0][24]
         8
@@ -658,8 +603,8 @@ class W(object):
         >>> w5_8th_order=w5.higher_order(8)
         >>> w5_8th_order.neighbors[0]
         [24]
-        >>> import ContiguityWeights
-        >>> w=ContiguityWeights.rook('../examples/10740.shp')
+        >>> from Contiguity import buildContiguity
+        >>> w=buildContiguity('../examples/10740.shp',criteria='rook')
         >>> w2=w.higher_order(2)
         >>> w[1]
         {0: 1.0, 2: 1.0, 83: 1.0, 4: 1.0}
@@ -672,20 +617,13 @@ class W(object):
         >>> 
 
         """
-
-        info=self.order(k)
-        ids=info.keys()
-        neighbors={}
-        weights={}
-        for id in ids:
-            nids=[ids[j] for j,order in enumerate(info[id]) if order==k]
-            neighbors[id]=nids
-            weights[id]=[1.0]*len(nids)
-        return W(neighbors,weights)
+        return higher_order(self,k)
 
 
-def lat2gal(nrows=5,ncols=5,rook=True,id_type='int'):
-    """Create a GAL structure for a regular lattice.
+# helper functions
+
+def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
+    """Create a W object for a regular lattice.
 
     Parameters
     ----------
@@ -715,7 +653,7 @@ def lat2gal(nrows=5,ncols=5,rook=True,id_type='int'):
     Examples
     --------
 
-    >>> w9=lat2gal(3,3)
+    >>> w9=lat2W(3,3)
     >>> w9.pct_nonzero
     0.29629629629629628
     >>> w9[0]
@@ -871,7 +809,82 @@ def comb(items, n=None):
             for c in comb(rest, n-1):
                 yield v + c
 
-    
+
+
+def order(w,kmax=2):
+    ids=w.neighbors.keys()
+    info={}
+    for id in ids:
+        s=[0]*w.n
+        s[ids.index(id)]=-1
+        for j in w.neighbors[id]:
+            s[ids.index(j)]=1
+        k=1
+        while k < kmax:
+            knext=k+1
+            if s.count(k):
+                # get neighbors of order k
+                js=[ids[j] for j,val in enumerate(s) if val==k]
+                # get first order neighbors for order k neighbors
+                for j in js:
+                    next_neighbors=w.neighbors[j]
+                    for neighbor in next_neighbors:
+                        nid=ids.index(neighbor)
+                        if s[nid]==0:
+                            s[nid]=knext
+            k=knext
+        info[id]=s
+    return info
+
+def higher_order(w,order=2):
+
+    info=w.order(order)
+    ids=info.keys()
+    neighbors={}
+    weights={}
+    for id in ids:
+        nids=[ids[j] for j,k in enumerate(info[id]) if order==k]
+        neighbors[id]=nids
+        weights[id]=[1.0]*len(nids)
+    return W(neighbors,weights)
+
+def shimbel(w):
+    info={}
+    ids=w.neighbors.keys()
+    for id in ids:
+        s=[0]*w.n
+        s[ids.index(id)]=-1
+        for j in w.neighbors[id]:
+            s[ids.index(j)]=1
+        k=1
+        flag=s.count(0)
+        while flag:
+            p=-1
+            knext=k+1
+            for j in range(s.count(k)):
+                neighbor=s.index(k,p+1)
+                p=neighbor
+                next_neighbors=w.neighbors[p]
+                for neighbor in next_neighbors:
+                    nid=ids.index(neighbor)
+                    if s[nid]==0:
+                        s[nid]=knext
+            k=knext
+            flag=s.count(0)
+        info[id]=s
+    return info
+
+def full(w):
+    wfull=np.zeros([w.n,w.n],dtype=float)
+    keys=w.neighbors.keys()
+    for i,key in enumerate(keys):
+        n_i=w.neighbors[key]
+        w_i=w.weights[key]
+        for j,wij in zip(n_i,w_i):
+            c=keys.index(j)
+            wfull[i,c]=wij
+    return (wfull,keys)
+   
 if __name__ == "__main__":
 
     import doctest

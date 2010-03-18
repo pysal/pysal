@@ -16,7 +16,7 @@ WT_TYPE={'rook':2,'queen':1} # for _contW_Binning
 
 def buildContiguity(source,criteria="rook",ids=None):
     """
-    Build  contiguity weights from a source
+    Build contiguity weights from a source
 
     Arguments
     ---------
@@ -58,7 +58,7 @@ def buildContiguity(source,criteria="rook",ids=None):
 
     See Also
     --------
-    pysal.weights.W #need to fix sphinx links
+    pysal.weights.W # need to fix sphinx links
 
     """
     
