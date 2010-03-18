@@ -302,9 +302,8 @@ def threshold_continuousW_from_array(array,threshold,p=2,
     gravity weights
 
     >>> wid2=threshold_continuousW_from_array(points,11.2,alpha=-2.0)
-    >>> wid.weights[0]
-    [0.10000000000000001, 0.089442719099991588]
-    >>> 
+    >>> wid2.weights[0]
+    [0.01, 0.0079999999999999984]
 
 
     """
