@@ -14,7 +14,7 @@ except:
 
 WT_TYPE={'rook':2,'queen':1} # for _contW_Binning
 
-def buildContiguity(source,criteria="rook",ids=None):
+def buildContiguity(source,criterion="rook",ids=None):
     """
     Build contiguity weights from a source
 
@@ -24,7 +24,7 @@ def buildContiguity(source,criteria="rook",ids=None):
     source     : multitype 
                  polygon shapefile
 
-    criteria   : string
+    criterion   : string
                  contiguity criterion ("rook","queen")
 
     ids        : list
@@ -43,10 +43,10 @@ def buildContiguity(source,criteria="rook",ids=None):
     >>> w = buildContiguity('../examples/10740.shp')
     >>> w[0]
     {1: 1.0, 4: 1.0, 101: 1.0, 85: 1.0, 5: 1.0}
-    >>> w = buildContiguity('../examples/10740.shp',criteria='queen')
+    >>> w = buildContiguity('../examples/10740.shp',criterion='queen')
     >>> w.pct_nonzero
     0.031926364234056544
-    >>> w = buildContiguity('../examples/10740.shp',criteria='rook')
+    >>> w = buildContiguity('../examples/10740.shp',criterion='rook')
     >>> w.pct_nonzero
     0.026351084812623275
 
@@ -62,7 +62,7 @@ def buildContiguity(source,criteria="rook",ids=None):
 
     """
     
-    wt_type=WT_TYPE[criteria.lower()]
+    wt_type=WT_TYPE[criterion.lower()]
     geo=source
     if issubclass(type(geo),basestring):
         geoObj = pysal.open(geo)

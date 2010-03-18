@@ -45,7 +45,7 @@ def queen_from_shapefile(shapefile):
 
     pysal.weights.W
     """
-    return buildContiguity(shapefile,criteria='queen')
+    return buildContiguity(shapefile,criterion='queen')
 
 def rook_from_shapefile(shapefile):
     """
@@ -80,7 +80,7 @@ def rook_from_shapefile(shapefile):
 
     pysal.weights.W
     """
-    return buildContiguity(shapefile,criteria='rook')
+    return buildContiguity(shapefile,criterion='rook')
 
 
 
@@ -505,7 +505,6 @@ def adaptive_kernelW(points, bandwidths=None, function='triangular', k=2):
            [ 18.02775818]])
     """
     return Kernel(points, bandwidth=bandwidths,fixed=False, function=function)
-
 
 if __name__ == "__main__":
 

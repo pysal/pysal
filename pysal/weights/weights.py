@@ -152,7 +152,7 @@ class W(object):
         Examples
         --------
         >>> from Contiguity import buildContiguity
-        >>> w=buildContiguity('../examples/10740.shp',criteria='rook')
+        >>> w=buildContiguity('../examples/10740.shp',criterion='rook')
         >>> w[0]
         {1: 1.0, 4: 1.0, 101: 1.0, 85: 1.0, 5: 1.0}
         >>> w = lat2W()
@@ -415,7 +415,7 @@ class W(object):
         summary characteristics.
         
         >>> from Contiguity import buildContiguity
-        >>> w=buildContiguity('../examples/10740.shp',criteria='rook')
+        >>> w=buildContiguity('../examples/10740.shp',criterion='rook')
         >>> w[1]
         {0: 1.0, 2: 1.0, 83: 1.0, 4: 1.0}
         >>> w.islands
@@ -691,7 +691,7 @@ class W(object):
         >>> w5_8th_order.neighbors[0]
         [24]
         >>> from Contiguity import buildContiguity
-        >>> w=buildContiguity('../examples/10740.shp',criteria='rook')
+        >>> w=buildContiguity('../examples/10740.shp',criterion='rook')
         >>> w2=w.higher_order(2)
         >>> w[1]
         {0: 1.0, 2: 1.0, 83: 1.0, 4: 1.0}
@@ -939,7 +939,7 @@ def order(w,kmax=3):
     Example
     -------
     >>> from Contiguity import buildContiguity
-    >>> w=buildContiguity('../examples/10740.shp',criteria='rook')
+    >>> w=buildContiguity('../examples/10740.shp',criterion='rook')
     >>> w3=order(w,kmax=3)
     >>> w3[1][0:5]
     [1, -1, 1, 2, 1]
