@@ -19,10 +19,11 @@ class Markov:
 
     Parameters
     ----------
-    trans       : array (n,t) where each row represents the different states
-                  of each observation, being the columns the time
-                  periods
-    classes     : array (k) with all the classes (bins) of the matrix
+    trans       : array (n,t) 
+                  One row per observation, one column per state of each
+                  observation, with as many columns as time periods
+    classes     : array (k) 
+                  All different classes (bins) of the matrix
 
     Attrinutes
     ----------
