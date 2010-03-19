@@ -8,3 +8,4 @@
     Distance
     spatial_lag
     user
+    Wsets
