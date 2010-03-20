@@ -371,10 +371,13 @@ class Moran_Local:
     >>> np.random.seed(100)
     >>> lm=pysal.Moran_Local(y,w,transformation="r",permutations=99)
     >>> lm.p_sim
-    array([ 0.33,  0.32,  0.39,  0.01,  0.15,  0.56,  0.01,  0.12,  0.59,  0.43])
+    array([ 0.21,  0.23,  0.39,  0.22,  0.04,  0.07,  0.01,  0.29,  0.26,  0.17])
     """
     def __init__(self,y,w,transformation="r",permutations=PERMUTATIONS):
         self.y=y
+        n=len(y)
+        self.n=n
+        self.n_1=n-1
         z=y-y.mean()
         z/=y.std()
         self.z=z
@@ -382,10 +385,8 @@ class Moran_Local:
         self.w=w
         self.permutations=permutations
         self.den=sum(z*z)
-        self.Is = self.__calc(self.z)
+        self.Is = self.calc(self.w,self.z)
         self.__quads()
-        n=len(y)
-        self.n=n
         if permutations:
             self.__crand()
             pos=self.Is>0
@@ -402,9 +403,10 @@ class Moran_Local:
             self.z_sim = (self.Is-self.EI_sim)/self.seI_sim
             self.p_z_sim=stats.norm.pdf(self.z_sim)
 
-    def __calc(self,z):
-        zl=slag(self.w,z)
-        return (len(zl)-1)*self.z*zl/self.den
+    def calc(self,w,z):
+        zl=slag(w,z)
+        return self.n_1*self.z*zl/self.den
+
 
     def __crand(self):
         """
@@ -431,7 +433,7 @@ class Moran_Local:
         ido=self.w.id_order
         for i in range(self.w.n):
             idsi=ids[ids!=i]
-            lisas[i]=[sum(w[ido[i]]*z[idsi[rid[0:wc[ido[i]]]]]) for rid in rids]
+            lisas[i]=[z[i]*sum(w[ido[i]]*z[idsi[rid[0:wc[ido[i]]]]]) for rid in rids]
         self.rlisas=(n_1/self.den)*lisas
     
     def __quads(self):
