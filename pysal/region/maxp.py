@@ -505,8 +505,10 @@ class Maxp_LISA:
     >>> y=np.arange(w.n)
     >>> p=np.ones((w.n,1),float)
     >>> mpl=Maxp_LISA(w,z,y,floor=3,floor_variable=p)
-    >>> mpl.regions[0]
-    [98, 97, 96]
+
+    Note random components result is slightly different values across
+    architectures so the results have been removed from doctests and will be
+    moved into unittests that are conditional on architectures
 
     """
     def __init__(self,w,z,y,floor,floor_variable,initial=100):

@@ -364,14 +364,11 @@ class Moran_Local:
     >>> lm=Moran_Local(y,w,transformation="r",permutations=0)
     >>> lm.q
     array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
-    >>> lm.Is
-    array([-0.11409277, -0.19940543, -0.13351408, -0.51770383,  0.48095009,
-            0.12208113,  1.19148298, -0.58144305,  0.07101383,  0.34314301])
-    >>> import numpy as np
-    >>> np.random.seed(100)
-    >>> lm=pysal.Moran_Local(y,w,transformation="r",permutations=99)
-    >>> lm.p_sim
-    array([ 0.21,  0.23,  0.39,  0.22,  0.04,  0.07,  0.01,  0.29,  0.26,  0.17])
+
+
+    Note random components result is slightly different values across
+    architectures so the results have been removed from doctests and will be
+    moved into unittests that are conditional on architectures
     """
     def __init__(self,y,w,transformation="r",permutations=PERMUTATIONS):
         self.y=y
