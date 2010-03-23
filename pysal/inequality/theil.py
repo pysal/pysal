@@ -11,6 +11,10 @@ SMALL = num.finfo('float').tiny
 class Theil:
     """Classic Theil measure of inequality
 
+        .. math::
+
+            T = \sum_{i=1}^n \left( \\frac{y_i}{\sum_{i=1}^n y_i} \ln \left[ N \\frac{y_i}{\sum_{i=1}^n y_i}\\right] \\right)
+
     Parameters
     ----------
     y   : array (n,t) or (n,)
@@ -19,11 +23,18 @@ class Theil:
           determined. If y is (n,t) then an array of inequality values are
           determined, one value for each column in y.
 
+
     Attributes
     ----------
 
-    T   : array (n,t) or (n,)
+    T   : array (t,) or (1,)
           Theil's T for each column of y
+
+
+    Notes
+    -----
+    This computation involves natural logs. To prevent ln[0] from occurring, a
+    small value is added to each element of y before beginning the computation.
 
     Examples
     --------
