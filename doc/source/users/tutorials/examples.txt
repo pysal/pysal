@@ -77,3 +77,14 @@ Files include:
  * stl_hom.wkt: A Well-Known-Text representation of the geometry.
  * stl_hom.csv: attribute data and WKT geometry.
 
+Virginia
+========
+
+Virginia Counties Shapefile.
+
+Files include:
+
+  * virginia.shp: Shapefile
+  * virginia.shx: shapefile index
+  * virginia.dbf: shapefile data
+  * virginia.prj: shapefile projection
