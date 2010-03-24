@@ -6,30 +6,37 @@ Author(s):
     Serge Rey srey@asu.edu
 
 """
+import os
+import pysal
 from Contiguity import buildContiguity
 from Distance import knnW, Kernel, DistanceBand
 import numpy as np
 
 
-def queen_from_shapefile(shapefile):
+def queen_from_shapefile(shapefile,idVariable=None):
     """
     Queen contiguity weights from a polygon shapefile
 
     Parameters
     ----------
 
-    shapefile : string
-                name of polygon shapefile including suffix.
+    shapefile   : string
+                  name of polygon shapefile including suffix.
+    idVariable  : string
+                  name of a column in the shapefile's DBF to use for ids.
 
     Returns
     -------
 
-    w          : W
-                 instance of spatial weights
+    w            : W
+                   instance of spatial weights
 
     Examples
     --------
     >>> wq=queen_from_shapefile("../examples/columbus.shp")
+    >>> wq.pct_nonzero
+    0.098292378175760101
+    >>> wq=queen_from_shapefile("../examples/columbus.shp","POLYID")
     >>> wq.pct_nonzero
     0.098292378175760101
 
@@ -45,6 +52,18 @@ def queen_from_shapefile(shapefile):
 
     pysal.weights.W
     """
+    if idVariable:
+        try:
+            dbname = os.path.splitext(shapefile)[0]+'.dbf'
+            db = pysal.open(dbname)
+            var = db.by_col[idVariable]
+            return buildContiguity(shapefile,criterion='queen',ids=var)
+        except IOError:
+            msg = 'The shapefile "%s" appears to be missing its DBF File. The DBF file "%s" could not be found'%(shapefile,dbname)
+            raise IOError, msg
+        except AttributeError:
+            msg = 'The variable "%s" was not found in the DBF file.  The DBF contains the following variables: %s'%(idVariable,', '.join(db.header))
+            raise KeyError, msg
     return buildContiguity(shapefile,criterion='queen')
 
 def rook_from_shapefile(shapefile):
