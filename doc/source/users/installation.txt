@@ -116,9 +116,9 @@ path is:
 ``C:\PySALsvn``
 
 Right-click on the folder with the mouse and then click on 'SVN checkout'.
-The 'Checkout directory should be filled with the path to your folder
-(``C:\PySALsvn`` in this case). Copy and paste on the 'URL of repository'
-space the following link:
+A dialog will appear. The 'Checkout Directory' refers to the path to your folder
+(``C:\PySALsvn`` in this case). Copy and paste into the 'URL of repository'
+textbox, the following link:
 
 ``http://pysal.googlecode.com/svn/trunk/ pysal-read-only``
 
@@ -139,14 +139,15 @@ less like this one:
 where XX corresponds to the version of the Python distribution you are using
 (25 for 2.5, for example).
 
-Add to the file the following text:
+Add to the file the following two lines of text:
 
-``import sys
-sys.path.append("C:/PySALsvn/pysal-read-only")``
+``import sys``
+
+``sys.path.append("C:/PySALsvn/pysal-read-only")``
  
-Save and close the window.
+Save and close the file.
 
-You are all set!!! Now you should be able to do the following on a Python
+You are all set!!! Now you should be able to do the following in a Python
 interactive session (on IDLE, for instance):
 
 >>> import pysal

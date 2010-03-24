@@ -49,8 +49,8 @@ def queen_from_shapefile(shapefile,idVariable=None):
 
     See Also
     --------
+    :doc:`weights`
 
-    pysal.weights.W
     """
     if idVariable:
         try:
@@ -96,8 +96,8 @@ def rook_from_shapefile(shapefile):
 
     See Also
     --------
+    :doc:`weights`
 
-    pysal.weights.W
     """
     return buildContiguity(shapefile,criterion='rook')
 
@@ -170,7 +170,8 @@ def knnW_from_array(array,k=2,p=2,ids=None):
 
     See Also
     --------
-    pysal.weights.W
+    :doc:`weights`
+
     """
     return knnW(array,k=k,p=p,ids=ids)
 
@@ -235,7 +236,8 @@ def knnW_from_shapefile(shapefile,k=2,p=2,ids=None):
 
     See Also
     --------
-    pysal.weights.W
+    :doc:`weights`
+
     """
     return knnW(shapefile,k=k,p=p,ids=ids)
 
