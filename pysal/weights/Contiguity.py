@@ -49,7 +49,10 @@ def buildContiguity(source,criterion="rook",ids=None):
     >>> w = buildContiguity('../examples/10740.shp',criterion='rook')
     >>> w.pct_nonzero
     0.026351084812623275
-
+    >>> fips = pysal.open('../examples/10740.dbf').by_col('STFID')
+    >>> w = buildContiguity('../examples/10740.shp',ids=fips)
+    >>> w['35001000107']
+    {'35001003805': 1.0, '35001003721': 1.0, '35001000111': 1.0, '35001000112': 1.0, '35001000108': 1.0}
 
     Notes
     -----
@@ -74,8 +77,12 @@ def buildContiguity(source,criterion="rook",ids=None):
     neighbor_data = ContiguityWeights(geoObj,wt_type).w
     neighbors={}
     weights={}
-    for key in neighbor_data:
-        neighbors[key] = list(neighbor_data[key])
+    if ids:
+        for key in neighbor_data:
+            neighbors[ids[key]] = [ids[x] for x in neighbor_data[key]]
+    else:
+        for key in neighbor_data:
+            neighbors[key] = list(neighbor_data[key])
     return pysal.weights.W(neighbors,id_order=ids)
 
     
