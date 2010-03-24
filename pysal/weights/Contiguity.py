@@ -79,7 +79,12 @@ def buildContiguity(source,criterion="rook",ids=None):
     weights={}
     if ids:
         for key in neighbor_data:
-            neighbors[ids[key]] = [ids[x] for x in neighbor_data[key]]
+            id = ids[key]
+            if id not in neighbors:
+                neighbors[id] = set()
+            neighbors[id].update([ids[x] for x in neighbor_data[key]])
+        for key in neighbors:
+            neighbors[key] = list(neighbors[key])
     else:
         for key in neighbor_data:
             neighbors[key] = list(neighbor_data[key])
