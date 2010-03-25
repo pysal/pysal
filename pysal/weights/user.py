@@ -123,6 +123,7 @@ def knnW_from_array(array,k=2,p=2,ids=None):
                  1: Manhattan distance
     ids        : list
                  identifiers to attach to each observation
+
     Returns
     -------
 
@@ -193,6 +194,7 @@ def knnW_from_shapefile(shapefile,k=2,p=2,ids=None):
                  1: Manhattan distance
     ids        : list
                  identifiers to attach to each observation
+
     Returns
     -------
 
@@ -229,7 +231,10 @@ def knnW_from_shapefile(shapefile,k=2,p=2,ids=None):
     Notes
     -----
 
-    Supports polygon or point shapefiles
+    Supports polygon or point shapefiles. For polygon shapefiles, distance is
+    based on polygon centroids. Distances are defined using coordinates in
+    shapefile which are assumed to be projected and not geographical
+    coordinates.
 
     Ties between neighbors of equal distance are arbitrarily broken.
 
@@ -262,7 +267,7 @@ def threshold_binaryW_from_array(array,threshold,p=2):
     -------
 
     w         : W instance
-                Weights object with continuous weights
+                Weights object with binary weights
 
 
 
@@ -301,7 +306,7 @@ def threshold_continuousW_from_array(array,threshold,p=2,
     alpha      : float 
                  distance decay parameter for weight (default -1.0)
                  if alpha is positive the weights will not decline with
-                 distance. If binary is True, alpha is ignored 
+                 distance. 
 
     Returns
     -------
@@ -388,6 +393,11 @@ def kernelW(points,k=2,function='triangular'):
 
                       K(z) = (2\pi)^{(-1/2)} exp(-z^2 / 2)
 
+    Returns
+    -------
+
+    w            : W
+                   instance of spatial weights
 
     Examples
     --------
@@ -437,7 +447,9 @@ def adaptive_kernelW(points, bandwidths=None, function='triangular', k=2):
                   adaptive bandwidth
     k           : int
                   the number of nearest neighbors to use for determining
-                  bandwidth  :math:`h_i=dknn_i`
+                  bandwidth  :math:`h_i=dknn_i` where :math:`dknn_i` is the
+                  distance to the :math:`k_{th}` nearest neighbor to
+                  :math:`i`.
     function    : string {'triangular','uniform','quadratic','quartic','gaussian'}
                   kernel function defined as follows with 
 
@@ -474,6 +486,12 @@ def adaptive_kernelW(points, bandwidths=None, function='triangular', k=2):
                   .. math::
 
                       K(z) = (2\pi)^{(-1/2)} exp(-z^2 / 2)
+
+    Returns
+    -------
+
+    w            : W
+                   instance of spatial weights
 
 
     Examples
