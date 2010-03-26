@@ -864,7 +864,7 @@ class Polygon(object):
     @property
     def len(self):
         """
-        Returns the number of vertices in the polygon. Does not include holes.
+        Returns the number of vertices in the polygon.
 
         len -> int
 

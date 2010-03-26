@@ -67,10 +67,19 @@ class ContiguityWeights_rtree:
         else:
             poly0 = self.geoObj.get(id0)
         common = set(poly0.vertices).intersection(set(poly1.vertices))
-        if len(common) > 1:
+        if len(common) > 1 and self.joinType==ROOK:
             #double check rook
-            return ROOK
-        elif len(common) == 1:
+            for vert in common:
+                idx = poly0.vertices.index(vert)
+                IDX = poly1.vertices.index(vert)
+                try:
+                    if poly0.vertices[idx] == poly1.vertices[IDX+1] or poly0.vertices[idx] == poly1.vertices[IDX-1]\
+                    or poly0.vertices[idx+1] == poly1.vertices[IDX] or poly0.vertices[idx-1] == poly1.vertices[IDX]:
+                        return ROOK
+                except IndexError:
+                    pass
+            return False
+        elif len(common) > 0:
             return QUEEN
         else:
             return False

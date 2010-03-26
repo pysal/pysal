@@ -108,8 +108,20 @@ class ContiguityWeights_binning:
                 common = iVerts.intersection(polygonCache[j])
                 join = False
                 if len(common) > 1: #ROOK
-                    join = True
-                elif len(common) == 1: #QUEEN
+                    #double check rook
+                    poly0 = shpFileObject.get(polyId)
+                    poly1 = shpFileObject.get(j)
+                    for vert in common:
+                        idx = poly0.vertices.index(vert)
+                        IDX = poly1.vertices.index(vert)
+                        try:
+                            if poly0.vertices[idx] == poly1.vertices[IDX+1] or poly0.vertices[idx] == poly1.vertices[IDX-1]\
+                            or poly0.vertices[idx+1] == poly1.vertices[IDX] or poly0.vertices[idx-1] == poly1.vertices[IDX]:
+                                join = True
+                                break
+                        except IndexError:
+                            pass
+                if len(common) > 0: #QUEEN
                     if self.wttype == QUEEN:
                         join = True
                 if join:
