@@ -73,8 +73,8 @@ class ContiguityWeights_rtree:
                 idx = poly0.vertices.index(vert)
                 IDX = poly1.vertices.index(vert)
                 try:
-                    if poly0.vertices[idx] == poly1.vertices[IDX+1] or poly0.vertices[idx] == poly1.vertices[IDX-1]\
-                    or poly0.vertices[idx+1] == poly1.vertices[IDX] or poly0.vertices[idx-1] == poly1.vertices[IDX]:
+                    if poly0.vertices[idx+1] == poly1.vertices[IDX+1] or poly0.vertices[idx+1] == poly1.vertices[IDX-1]\
+                    or poly0.vertices[idx-1] == poly1.vertices[IDX+1] or poly0.vertices[idx-1] == poly1.vertices[IDX-1]:
                         return ROOK
                 except IndexError:
                     pass
