@@ -260,7 +260,24 @@ class LineSegment:
         self._p1 = start_pt
         self._p2 = end_pt
         self._reset_props()
+    def __eq__(self,other):
+        """
+        Returns true if self and other are the same line segment
 
+        Examples
+        ________
+        >>> l1 = LineSegment(Point((1, 2)), Point((5, 6)))
+        >>> l2 = LineSegment(Point((5, 6)), Point((1, 2)))
+        >>> l1 == l2
+        True
+        >>> l2 == l1
+        True
+        """
+        if (other.p1 == self._p1 and other.p2 == self._p2):
+            return True
+        elif (other.p2 == self._p1 and other.p1 == self._p2):
+            return True
+        return False
     def _reset_props(self):
         """
         HELPER METHOD. DO NOT CALL.
@@ -791,7 +808,7 @@ class Polygon(object):
 
     Attributes:
     vertices -- the vertices of the Polygon in clockwise order
-    len -- the number of verticies (not including holes)
+    len -- the number of verticies including holes
     perimeter -- the geometric length of the perimeter of the Polygon
     bounding_box -- the bounding box of the polygon
     area -- the area enclosed by the polygon
