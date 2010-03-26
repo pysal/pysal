@@ -133,7 +133,7 @@ class GalIO_Tester(unittest.TestCase):
     def test_write_strs(self):
         err = False
         data={'neighbors':{'apples are good':['bananas'],'bananas':['apples are good','carrots'],'carrots':['bananas']},'weights':{'apples are good':[1],'bananas':[1,1],'carrots':[1]}}
-        w = pysal.weights.weights.W(data['neighbors'],data['weights'])
+        w = pysal.weights.W(data['neighbors'],data['weights'])
         out = pysal.open('tst_alpha.gal','w')
         try:
             out.write(w)

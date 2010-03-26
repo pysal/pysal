@@ -33,7 +33,7 @@ def lag(w,y):
 
     Examples
     --------
-    >>> from pysal.weights.weights import *
+    >>> from pysal.weights import *
     >>> neighbors={'c': ['b'], 'b': ['c', 'a'], 'a': ['b']}
     >>> weights ={'c': [1.0], 'b': [1.0, 1.0], 'a': [1.0]}
     >>> w=W(neighbors,weights)
@@ -97,7 +97,7 @@ def lag_array(w,y):
 
     Examples
     --------
-    >>> from pysal.weights.weights import *
+    >>> from pysal.weights import *
     >>> w=lat2W(3,3)
     >>> y=np.arange(9)
     >>> w.transform='r'
@@ -114,7 +114,7 @@ def lag_array(w,y):
 
 
 def _timeing(order=20,iters=100,methods=(lag_array)):
-    from pysal.weights.weights import lat2W
+    from pysal.weights import lat2W
     import time
     w=lat2W(order,order)
     y=np.arange(order*order)

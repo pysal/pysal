@@ -49,7 +49,7 @@ mods='esda.moran','esda.geary', 'esda.mapclassify', \
         'econometrics.classic', \
         'inequality.theil','mobility.rank', \
         'region.maxp', 'region.randomregion', \
-        'weights.weights', \
+        'weights', \
         'weights.spatial_lag', \
         'weights.Contiguity', 'weights.Distance', 'weights.user', \
         'weights.Wsets', 'esda.smoothing'

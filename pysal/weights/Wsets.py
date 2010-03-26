@@ -39,8 +39,8 @@ def w_union(w1, w2):
     Examples
     --------
 
-    >>> w1 = PW.weights.lat2W(4,4)
-    >>> w2 = PW.weights.lat2W(6,4)
+    >>> w1 = PW.lat2W(4,4)
+    >>> w2 = PW.lat2W(6,4)
     >>> w = w_union(w1, w2)
     >>> w1[0] == w[0]
     True
@@ -96,8 +96,8 @@ def w_intersection(w1, w2, w_shape='w1'):
     Examples
     --------
 
-    >>> w1 = PW.weights.lat2W(4,4)
-    >>> w2 = PW.weights.lat2W(6,4)
+    >>> w1 = PW.lat2W(4,4)
+    >>> w2 = PW.lat2W(6,4)
     >>> w = w_intersection(w1, w2)
     >>> w1[0] == w[0]
     True
@@ -170,8 +170,8 @@ def w_difference(w1, w2, w_shape='w1', constrained=True):
     Examples
     --------
 
-    >>> w1 = PW.weights.lat2W(4,4,rook=False)
-    >>> w2 = PW.weights.lat2W(4,4,rook=True)
+    >>> w1 = PW.lat2W(4,4,rook=False)
+    >>> w2 = PW.lat2W(4,4,rook=True)
     >>> w = w_difference(w1, w2, constrained=False)
     >>> w1[0] == w[0]
     False
@@ -256,8 +256,8 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
     Examples
     --------
 
-    >>> w1 = PW.weights.lat2W(4,4,rook=False)
-    >>> w2 = PW.weights.lat2W(6,4,rook=True)
+    >>> w1 = PW.lat2W(4,4,rook=False)
+    >>> w2 = PW.lat2W(6,4,rook=True)
     >>> w = w_symmetric_difference(w1, w2, constrained=False)
     >>> w1[0] == w[0]
     False
@@ -325,7 +325,7 @@ def w_subset(w1, ids):
     Examples
     --------
 
-    >>> w1 = PW.weights.lat2W(6,4)
+    >>> w1 = PW.lat2W(6,4)
     >>> ids = range(16)
     >>> w = w_subset(w1, ids)
     >>> w1[0] == w[0]

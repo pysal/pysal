@@ -1,5 +1,5 @@
 import pysal.core.FileIO as FileIO
-from pysal.weights.weights import W
+from pysal.weights import W
 
 
 class GwtReader(FileIO.FileIO):

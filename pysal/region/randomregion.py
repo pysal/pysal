@@ -182,7 +182,7 @@ class Random_Region:
     >>> import numpy as np
     >>> nregs = 13
     >>> cards = range(2,14) + [10]
-    >>> w = pysal.weights.weights.lat2W(10,10,rook=False)
+    >>> w = pysal.weights.lat2W(10,10,rook=False)
     >>> ids = w.id_order
     >>>
     >>> # unconstrained
