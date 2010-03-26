@@ -882,7 +882,7 @@ class Polygon(object):
         >>> len(p1.vertices)
         4
         """
-        return sum([part for part in self._vertices], [])
+        return sum([part for part in self._vertices], []) + sum([part for part in self._holes], [])
 
     @property
     def holes(self):

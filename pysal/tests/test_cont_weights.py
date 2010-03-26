@@ -7,7 +7,7 @@ class _TestContiguityWeights(unittest.TestCase):
     def setUp(self):
         """ Setup the rtree and binning contiguity weights"""
 
-        shpObj = pysal.open('../examples/10740.shp','r')
+        shpObj = pysal.open('../examples/virginia.shp','r')
         self.rtreeW = ContiguityWeights_rtree(shpObj,QUEEN)
         shpObj.seek(0)
         self.binningW = ContiguityWeights_binning(shpObj,QUEEN)
@@ -18,6 +18,18 @@ class _TestContiguityWeights(unittest.TestCase):
         self.assert_(isinstance(self.binningW,ContiguityWeights_binning))
     def test_w_content(self):
         self.assertEqual(self.rtreeW.w, self.binningW.w)
+    def test_nested_polygons(self):
+        # load queen gal file created using Open Geoda.
+        geodaW = pysal.open('../examples/virginia.gal','r').read()
+        # build matching W with pysal
+        pysalW = pysal.queen_from_shapefile('../examples/virginia.shp','POLY_ID')
+        # compare output.
+        for key in geodaW.neighbors:
+            geoda_neighbors = map(int,geodaW.neighbors[key])
+            pysal_neighbors = pysalW.neighbors[int(key)]
+            geoda_neighbors.sort()
+            pysal_neighbors.sort()
+            self.assertEqual(geoda_neighbors,pysal_neighbors)
 
 suite = unittest.TestLoader().loadTestsFromTestCase(_TestContiguityWeights)
 
