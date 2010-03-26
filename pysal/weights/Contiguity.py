@@ -64,6 +64,8 @@ def buildContiguity(source,criterion="rook",ids=None):
     pysal.weights.W # need to fix sphinx links
 
     """
+    if ids and len(ids) != len(set(ids)):
+        raise ValueError, "The argument to the ids parameter contains duplicate entries."
     
     wt_type=WT_TYPE[criterion.lower()]
     geo=source
