@@ -66,7 +66,7 @@ def queen_from_shapefile(shapefile,idVariable=None):
             raise KeyError, msg
     return buildContiguity(shapefile,criterion='queen')
 
-def rook_from_shapefile(shapefile):
+def rook_from_shapefile(shapefile,idVariable=None):
     """
     Rook contiguity weights from a polygon shapefile
 
@@ -99,6 +99,18 @@ def rook_from_shapefile(shapefile):
     :class:`pysal.weights.W`
 
     """
+    if idVariable:
+        try:
+            dbname = os.path.splitext(shapefile)[0]+'.dbf'
+            db = pysal.open(dbname)
+            var = db.by_col[idVariable]
+            return buildContiguity(shapefile,criterion='rook',ids=var)
+        except IOError:
+            msg = 'The shapefile "%s" appears to be missing its DBF File. The DBF file "%s" could not be found'%(shapefile,dbname)
+            raise IOError, msg
+        except AttributeError:
+            msg = 'The variable "%s" was not found in the DBF file.  The DBF contains the following variables: %s'%(idVariable,', '.join(db.header))
+            raise KeyError, msg
     return buildContiguity(shapefile,criterion='rook')
 
 
