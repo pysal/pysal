@@ -403,6 +403,64 @@ def full(w):
             c=keys.index(j)
             wfull[i,c]=wij
     return (wfull,keys)
+
+def remap_ids(w, old2new, id_order=[]):
+    """
+    Remaps the IDs in a spatial weights object
+
+    Parameters
+    ----------
+    w        : W
+               Spatial weights object
+
+    old2new  : dictionary
+               Dictionary where the keys are the IDs in w (i.e. "old IDs") and
+               the values are the IDs to replace them (i.e. "new IDs")
+
+    id_order : list
+               An ordered list of new IDs, which defines the order of observations when 
+               iterating over W. If not set then the id_order in w will be
+               used.
+
+    Returns
+    -------
+
+    implicit : W
+               Spatial weights object with new IDs
+    
+    Examples
+    --------
+    >>> w = lat2W(3,2)
+    >>> w.id_order
+    [0, 1, 2, 3, 4, 5]
+    >>> w.neighbors[0]
+    [2, 1]
+    >>> old_to_new = {0:'a', 1:'b', 2:'c', 3:'d', 4:'e', 5:'f'}
+    >>> w_new = remap_ids(w, old_to_new)
+    >>> w_new.id_order
+    ['a', 'b', 'c', 'd', 'e', 'f']
+    >>> w_new.neighbors['a']
+    ['c', 'b']
+
+    """
+    if not isinstance(w, W):
+        raise Exception, "w must be a spatial weights object"
+    new_neigh = {}
+    new_weights = {}
+    for key, value in w.neighbors.iteritems():
+        new_values = [old2new[i] for i in value]
+        new_key = old2new[key]
+        new_neigh[new_key] = new_values
+        new_weights[new_key] = copy.copy(w.weights[key])
+    if id_order:
+        return W(new_neigh, new_weights, id_order)
+    else:
+        if w.id_order:
+            id_order = [old2new[i] for i in w.id_order]
+            return W(new_neigh, new_weights, id_order)
+        else:
+            return W(new_neigh, new_weights)
+
    
 if __name__ == "__main__":
 
