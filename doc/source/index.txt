@@ -26,7 +26,9 @@ News
 Funding
 *******
 
-National Institute of Justice `Grant <http://geoplan.asu.edu/node/3855>`_
+National Institute of Justice `Flexible Geospatial Visual Analytics and Simulation Technologies to Enhance Criminal Justice Decision Support Systems <http://geoplan.asu.edu/node/3855>`_
+
+National Institutes of Health `Geospatial Factors and Impacts: Measurement and Use (R01CA126858-02) <http://geodacenter.asu.edu/rti>`_
 
 ********
 Contents
