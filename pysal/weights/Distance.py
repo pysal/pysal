@@ -84,7 +84,6 @@ def knnW(source,k=2,p=2,ids=None):
     --------
     pysal.weights.W
     """
-
     # handle source
     if type(source).__name__=='ndarray':
         data=source

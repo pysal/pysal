@@ -113,19 +113,6 @@ def lag_array(w,y):
     return wy 
 
 
-def _timeing(order=20,iters=100,methods=(lag_array)):
-    from pysal.weights import lat2W
-    import time
-    w=lat2W(order,order)
-    y=np.arange(order*order)
-    for method in methods:
-        t1=time.time()
-        for i in range(iters):
-            wy=method(w,y)
-        t2=time.time()
-        print method,t2-t1
-
-
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
