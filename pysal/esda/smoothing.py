@@ -169,8 +169,8 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
     >>> b = np.array([1000, 1000, 1100, 900, 1000, 900, 1100, 900])
     >>> s = np.array([1000, 900, 1000, 900, 1000, 900, 1000, 900])
     >>> n = 2
-    >>> direct_age_standardization(e, b, s, n)
-    [(0.011872009569377989, 0.0096024536583589407, 0.014524239231252834), (0.013325358851674639, 0.010885716722454275, 0.016152540338941465)]
+    >>> [i[0] for i in direct_age_standardization(e, b, s, n)]
+    [0.011872009569377989, 0.013325358851674639]
     """
     age_weight = (1.0 / b) * (s * 1.0 / sum(s))
     adjusted_r = sum_by_n(e, age_weight, n)
