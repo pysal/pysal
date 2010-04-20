@@ -16,6 +16,7 @@ from pysal.cg import get_angle_between, get_points_dist, get_segment_point_dist
 from pysal.cg import get_point_at_angle_and_dist, convex_hull
 from pysal.common import np
 from pysal.weights.spatial_lag import lag as slag
+from scipy.stats import gamma, chi2
 
 def flatten(l,unique=True):
     """flatten a list of lists
@@ -76,6 +77,152 @@ def weighted_median(d, w):
         return np.sort(d)[median_inx:median_inx + 2].mean()
     return np.sort(d)[median_inx]
 
+def sum_by_n(d, w, n):
+    """A utility function to summarize a data array into n values 
+       after weighting the array with another weight array w
+   
+    Parameters
+    ----------
+    d          : array(t, 1)
+                 numerical values
+    w          : array(t, 1)
+                 numerical values for weighting
+    n          : integer
+                 the number of groups 
+                 t = c*n (c is a constant)
+
+    Returns
+    -------
+               : array(n, 1)
+                 an array with summarized values
+
+    Examples
+    --------
+    >>> d = np.array([10, 9, 20, 30])
+    >>> w = np.array([0.5, 0.1, 0.3, 0.8])
+    >>> n = 2
+    >>> sum_by_n(d, w, n)
+    array([  5.9,  30. ])
+    """
+    t = len(d)
+    h = t / n
+    d = d * w
+    return np.array([sum(d[i: i + h]) for i in range(0, t, h)])
+
+def crude_age_standardization(e, b, n):
+    """A utility function to compute rate through crude age standardization
+
+    Parameters
+    ----------
+    e          : array(n*2*h, 1)
+                 event variable measured for each gender/age group across n spatial units
+    b          : array(n*2*h, 1)
+                 population at risk variable measured for each gender/age group across n spatial units
+    n          : integer
+                 the number of spatial units 
+
+    Note
+    ----
+    e and b are arranged in the same order
+
+    Returns
+    -------
+               : array(n, 1)
+                 age standardized rate
+
+    Examples:
+    >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
+    >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
+    >>> n = 2
+    >>> crude_age_standardization(e, b, n)
+    array([ 0.12025316,  0.13164557])
+    """
+    r = e * 1.0 / b
+    age_weight = b * 1.0 / sum(b)
+    return sum_by_n(r, age_weight, n)
+
+def direct_age_standardization(e, b, s, n, alpha=0.05):
+    """A utility function to compute rate through direct age standardization
+
+    Parameters
+    ----------
+    e          : array(n*2*h, 1)
+                 event variable measured for each gender/age group across n spatial units
+    b          : array(n*2*h, 1)
+                 population at risk variable measured for each gender/age group across n spatial units
+    s          : array(n*2*h, 1)
+                 standard million population for each gender/age group across n spatial units
+    n          : integer
+                 the number of spatial units 
+
+    Note
+    ----
+    e, b, and s are arranged in the same order
+
+    Returns
+    -------
+               : array(n, 1)
+                 age standardized rate
+
+    Examples:
+    >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
+    >>> b = np.array([1000, 1000, 1100, 900, 1000, 900, 1100, 900])
+    >>> s = np.array([1000, 900, 1000, 900, 1000, 900, 1000, 900])
+    >>> n = 2
+    >>> direct_age_standardization(e, b, s, n)
+    [(0.011872009569377989, 0.0096024536583589407, 0.014524239231252834), (0.013325358851674639, 0.010885716722454275, 0.016152540338941465)]
+    """
+    age_weight = (1.0 / b) * (s * 1.0 / sum(s))
+    adjusted_r = sum_by_n(e, age_weight, n)
+    var_estimate = sum_by_n(e, np.square(age_weight), n)
+    g_a = np.square(adjusted_r) / var_estimate 
+    g_b = var_estimate / adjusted_r
+    k = [age_weight[i:i + len(b)/n].max() for i in range(0, len(b), len(b)/n)]
+    g_a_k = np.square(adjusted_r + k)/(var_estimate + np.square(k))
+    g_b_k = (var_estimate + np.square(k)) / (adjusted_r + k)
+    summed_b = sum_by_n(b, np.ones(len(b)), n)
+    res = []
+    for i in range(len(adjusted_r)):
+        if adjusted_r[i] == 0:
+            upper = 0.5*chi2(1 - 0.5*alpha)
+            lower = 0.0
+        else:
+            lower = gamma.ppf(0.5*alpha, g_a[i], scale=g_b[i])  
+            upper = gamma.ppf(1 - 0.5 * alpha, g_a_k[i], scale=g_b_k[i]) 
+        res.append((adjusted_r[i], lower, upper))
+    return res
+
+def indirect_age_standardization(b, r, n):
+    """A utility function to compute rate through indirect age standardization
+
+    Parameters
+    ----------
+    b          : array(n*2*h, 1)
+                 population at risk variable measured for each gender/age group across n spatial units
+    r          : array(n*2*h, 1)
+                 reference rates for each gender/age group across n spatial units
+    n          : integer
+                 the number of spatial units 
+
+    Note
+    ----
+    e and r are arranged in the same order
+
+    Returns
+    -------
+               : array(n, 1)
+                 age standardized rate
+
+    Examples:
+    >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
+    >>> r = np.array([0.3, 0.2, 0.22, 0.31, 0.29, 0.15, 0.33, 0.2])
+    >>> n = 2
+    >>> indirect_age_standardization(b, r, n)
+    array([ 0.12924051,  0.12253165])
+    """
+    age_weight = b * 1.0 / sum(b)
+    return sum_by_n(r, age_weight, n)
+    
 class Excess_Risk:
     """Excess Risk
 
@@ -179,6 +326,46 @@ class Spatial_Rate:
 	    w.transform = 'b'
             w_e, w_b = slag(w, e), slag(w, b)
 	    self.r = (e + w_e) / (b + w_b)
+
+class Disk_Smoother:
+    """Locally weighted averages or disk smoothing
+
+    Parameters
+    ----------
+    e           : array (n, 1)
+                  event variable measured across n spatial units
+    b           : array (n, 1)
+                  population at risk variable measured across n spatial units
+    w           : spatial weights matrix
+
+    Attributes
+    ----------
+    r           : array (n, 1)
+                  rate values from disk smoothing
+
+    Examples
+    --------
+    >>> stl = pysal.open('../examples/stl_hom.csv', 'r')
+    >>> stl_e, stl_b = np.array(stl[:,10]), np.array(stl[:,13])
+    >>> stl_w = pysal.open('../examples/stl.gal', 'r').read()
+    >>> if not stl_w.id_order: stl_w.id_order = range(1,len(stl) + 1)
+    >>> sr = Disk_Smoother(stl_e,stl_b,stl_w)
+    >>> sr.r[:10]
+    array([  4.56502262e-05,   3.44027685e-05,   3.38280487e-05,
+             4.78530468e-05,   3.12278573e-05,   2.22596997e-05,
+             2.67074856e-05,   2.36924573e-05,   3.48801587e-05,
+             3.09511832e-05])
+    """
+
+    def __init__(self, e, b, w):
+        if not w.id_order_set:
+            raise ValueError("w id_order must be set to align with the order of e and b")
+        else:
+            r = e * 1.0 / b
+            weight_sum = []
+            for i in w.id_order:
+                weight_sum.append(sum(w.weights[i]))
+            self.r = slag(w, r) / np.array(weight_sum)
 
 class Spatial_Median_Rate:
     """Spatial Median Rate Smoothing
