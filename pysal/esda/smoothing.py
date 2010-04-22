@@ -10,7 +10,7 @@ Author(s):
 
 """
 import pysal
-from pysal.weights import comb
+from pysal.weights import comb, Kernel
 from pysal.cg import Point, Ray, LineSegment
 from pysal.cg import get_angle_between, get_points_dist, get_segment_point_dist
 from pysal.cg import get_point_at_angle_and_dist, convex_hull
@@ -290,6 +290,46 @@ class Empirical_Bayes:
 	weight = r_var / ( r_var + r_mean / b)
 	self.r = weight * rate + (1.0 - weight) * r_mean
 
+class Spatial_Empirical_Bayes: 
+    """Spatial Empirical Bayes Smoothing
+
+    Parameters
+    ----------
+    e		: array (n, 1)
+    		  event variable measured across n spatial units
+    b		: array (n, 1)
+    		  population at risk variable measured across n spatial units
+    w           : spatial weights instance
+
+    Attributes
+    ----------
+    r		: array (n, 1)
+		  rate values from Empirical Bayes Smoothing
+
+    Examples
+    --------
+    >>> stl = pysal.open('../examples/stl_hom.csv', 'r')
+    >>> stl_e, stl_b = np.array(stl[:,10]), np.array(stl[:,13])
+    >>> stl_w = pysal.open('../examples/stl.gal', 'r').read()
+    >>> if not stl_w.id_order_set: stl_w.id_order = range(1,len(stl) + 1)
+    >>> s_eb = Spatial_Empirical_Bayes(stl_e, stl_b, stl_w)
+    >>> s_eb.r[:10]
+    array([  1.61803355e-05,   4.48446462e-05,   4.00778159e-05,
+             1.33238426e-05,   7.15436608e-05,   3.59076166e-05,
+             5.92033928e-05,   1.64426287e-05,   2.90029677e-05,
+             2.47922054e-05])
+    """
+    def __init__(self, e, b, w):
+        if not w.id_order_set:
+            raise ValueError("w id_order must be set to align with the order of e an b")
+        r_mean = Spatial_Rate(e, b, w).r
+        rate = e * 1.0 / b
+        r_var_left = Spatial_Rate(np.square(rate - r_mean)*b, b, w).r
+        r_var_right = r_mean /((slag(w, b) + b)/len(e))
+	r_var = r_var_left - r_var_right
+	weight = r_var / ( r_var + r_mean / b)
+	self.r = weight * rate + (1.0 - weight) * r_mean
+
 class Spatial_Rate:
     """Spatial Rate Smoothing
 
@@ -311,7 +351,7 @@ class Spatial_Rate:
     >>> stl = pysal.open('../examples/stl_hom.csv', 'r')
     >>> stl_e, stl_b = np.array(stl[:,10]), np.array(stl[:,13])
     >>> stl_w = pysal.open('../examples/stl.gal', 'r').read()
-    >>> if not stl_w.id_order: stl_w.id_order = range(1,len(stl) + 1)
+    >>> if not stl_w.id_order_set: stl_w.id_order = range(1,len(stl) + 1)
     >>> sr = Spatial_Rate(stl_e,stl_b,stl_w)
     >>> sr.r[:10]
     array([  4.59326407e-05,   3.62437513e-05,   4.98677081e-05,
@@ -326,6 +366,95 @@ class Spatial_Rate:
 	    w.transform = 'b'
             w_e, w_b = slag(w, e), slag(w, b)
 	    self.r = (e + w_e) / (b + w_b)
+
+class Kernel_Smoother:
+    """Kernal smoothing
+
+    Parameters
+    ----------
+    e		: array (n, 1)
+    		  event variable measured across n spatial units
+    b		: array (n, 1)
+    		  population at risk variable measured across n spatial units
+    w		: Kernel weights instance
+
+    Attributes
+    ----------
+    r		: array (n, 1)
+		  rate values from spatial rate smoothing
+
+    Examples
+    --------
+    >>> e = np.array([10, 1, 3, 4, 2, 5])
+    >>> b = np.array([100, 15, 20, 20, 80, 90])
+    >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+    >>> kw=Kernel(points)
+    >>> if not kw.id_order_set: kw.id_order = range(0,len(points))
+    >>> kr = Kernel_Smoother(e, b, kw)
+    >>> kr.r
+    array([ 0.10292145,  0.08329288,  0.10382523,  0.11576292,  0.03937128,
+            0.05133276])
+    """
+    def __init__(self, e, b, w):
+        if type(w) != Kernel:
+            raise Error('w must be an instance of Kernel weights')
+	if not w.id_order_set:
+            raise ValueError("w id_order must be set to align with the order of e and b")
+        else:
+            w_e, w_b = slag(w, e), slag(w, b)
+            kernel_z_0 = {'triangular': 1, 'uniform': 0, 
+                          'quadratic': 3./4, 'quartic': 15./16, 
+                          'gaussian': (np.pi*2)**(-0.5)}
+            c = kernel_z_0[w.function]
+	    self.r = (c*e + w_e) / (c*b + w_b)
+
+class Age_Adjusted_Smoother:
+    """Age-adjusted rate smoothing
+
+    Parameters
+    ----------
+    e		: array (n*2*h, 1)
+    		  event variable measured for each age group and gender across n spatial units
+    b		: array (n*2*h, 1)
+    		  population at risk variable measured for each age group and gender across n spatial units
+    w		: spatial weights instance
+    s           : array (n*2*h, 1)
+                  standard million population for each age group and gender across n spatial units
+
+    Attributes
+    ----------
+    r		: array (n, 1)
+		  rate values from spatial rate smoothing
+
+    Note
+    ----
+    Weights used to smooth age-specific events and populations are simple binary weights
+
+    Examples
+    --------
+    >>> e = np.array([10, 8, 1, 4, 3, 5, 4, 3, 2, 1, 5, 3])
+    >>> b = np.array([100, 90, 15, 30, 25, 20, 30, 20, 80, 80, 90, 60])
+    >>> s = np.array([98, 88, 15, 29, 20, 23, 33, 25, 76, 80, 89, 66])
+    >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+    >>> kw=Kernel(points)
+    >>> if not kw.id_order_set: kw.id_order = range(0,len(points))
+    >>> ar = Age_Adjusted_Smoother(e, b, kw, s)
+    >>> ar.r
+    array([ 0.03047742,  0.00582165,  0.00431344,  0.00623238,  0.01689289,
+            0.01212227])
+    """
+    def __init__(self, e, b, w, s, alpha=0.05):
+        t = len(e)
+        h = t / w.n
+	w.transform = 'b'
+        e_n, b_n = [], []
+        for i in range(h):
+            e_n.append(slag(w, e[i::h]).tolist())
+            b_n.append(slag(w, b[i::h]).tolist())
+        e_n = np.array(e_n).reshape((1,t),order='F')[0]
+        b_n = np.array(b_n).reshape((1,t),order='F')[0]
+        r = direct_age_standardization(e_n, b_n, s, w.n, alpha=alpha)
+        self.r = np.array([i[0] for i in r])
 
 class Disk_Smoother:
     """Locally weighted averages or disk smoothing
@@ -348,7 +477,7 @@ class Disk_Smoother:
     >>> stl = pysal.open('../examples/stl_hom.csv', 'r')
     >>> stl_e, stl_b = np.array(stl[:,10]), np.array(stl[:,13])
     >>> stl_w = pysal.open('../examples/stl.gal', 'r').read()
-    >>> if not stl_w.id_order: stl_w.id_order = range(1,len(stl) + 1)
+    >>> if not stl_w.id_order_set: stl_w.id_order = range(1,len(stl) + 1)
     >>> sr = Disk_Smoother(stl_e,stl_b,stl_w)
     >>> sr.r[:10]
     array([  4.56502262e-05,   3.44027685e-05,   3.38280487e-05,
@@ -395,7 +524,7 @@ class Spatial_Median_Rate:
     >>> stl = pysal.open('../examples/stl_hom.csv', 'r')
     >>> stl_e, stl_b = np.array(stl[:,10]), np.array(stl[:,13])
     >>> stl_w = pysal.open('../examples/stl.gal', 'r').read()
-    >>> if not stl_w.id_order: stl_w.id_order = range(1,len(stl) + 1)
+    >>> if not stl_w.id_order_set: stl_w.id_order = range(1,len(stl) + 1)
     >>> smr0 = Spatial_Median_Rate(stl_e,stl_b,stl_w)
     >>> smr0.r[:10]
     array([  3.96047383e-05,   3.55386859e-05,   3.28308921e-05,
