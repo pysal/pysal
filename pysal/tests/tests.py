@@ -72,6 +72,10 @@ import test_cg_shapes
 suite.addTest(test_cg_shapes.suite)
 import test_smoothing
 suite.addTest(test_smoothing.suite)
+import test_dist_weights
+suite.addTest(test_dist_weights.suite)
+import test_weights
+suite.addTest(test_weights.suite)
 
 runner = unittest.TextTestRunner()
 runner.run(suite)
