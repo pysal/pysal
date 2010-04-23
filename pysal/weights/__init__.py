@@ -108,20 +108,6 @@ class W(object):
 
 
     """
-    @classmethod
-    def fromBinary(cls,data):
-        """ creates a new instance of W based on a Dictionary of Sets data structure...
-            d = {'a':set(['b','c','d']),'b':set([...]),...}
-            returns a new instance of the class, can be called directly
-        """
-        neighbors={}
-        weights={}
-        for key in data:
-            weights[key] = [1.] * len(data[key])
-            neighbors[key] = list(data[key])
-            neighbors[key].sort()
-        return cls(neighbors,weights)
-
     def __init__(self,neighbors,weights=None,id_order=None):
         """see class docstring"""
         self.transformations={}

@@ -15,7 +15,7 @@ def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
     ncols   : int
               number of columns
     rook    : boolean
-              type of matrix. Default is rook. For queen, rook =False
+              type of contiguity. Default is rook. For queen, rook =False
     id_type : string
               string defining the type of IDs to use in the final W object;
               options are 'int' (0, 1, 2 ...; default), 'float' (0.0,
