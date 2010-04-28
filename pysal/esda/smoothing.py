@@ -16,7 +16,7 @@ from pysal.cg import get_angle_between, get_points_dist, get_segment_point_dist
 from pysal.cg import get_point_at_angle_and_dist, convex_hull
 from pysal.common import np, KDTree
 from pysal.weights.spatial_lag import lag as slag
-from scipy.stats import gamma, chi2
+from scipy.stats import gamma, norm, chi2
 
 def flatten(l,unique=True):
     """flatten a list of lists
@@ -114,10 +114,10 @@ def crude_age_standardization(e, b, n):
 
     Parameters
     ----------
-    e          : array(n*2*h, 1)
-                 event variable measured for each gender/age group across n spatial units
-    b          : array(n*2*h, 1)
-                 population at risk variable measured for each gender/age group across n spatial units
+    e          : array(n*h, 1)
+                 event variable measured for each age group across n spatial units
+    b          : array(n*h, 1)
+                 population at risk variable measured for each age group across n spatial units
     n          : integer
                  the number of spatial units 
 
@@ -135,10 +135,11 @@ def crude_age_standardization(e, b, n):
     >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
     >>> n = 2
     >>> crude_age_standardization(e, b, n)
-    array([ 0.12025316,  0.13164557])
+    array([ 0.2375    ,  0.26666667])
     """
     r = e * 1.0 / b
-    age_weight = b * 1.0 / sum(b)
+    b_by_n = sum_by_n(b, 1.0, n)
+    age_weight = b * 1.0 / b_by_n.repeat(len(e)/n)
     return sum_by_n(r, age_weight, n)
 
 def direct_age_standardization(e, b, s, n, alpha=0.05):
@@ -146,14 +147,16 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
 
     Parameters
     ----------
-    e          : array(n*2*h, 1)
-                 event variable measured for each gender/age group across n spatial units
-    b          : array(n*2*h, 1)
-                 population at risk variable measured for each gender/age group across n spatial units
-    s          : array(n*2*h, 1)
-                 standard million population for each gender/age group across n spatial units
+    e          : array(n*h, 1)
+                 event variable measured for each age group across n spatial units
+    b          : array(n*h, 1)
+                 population at risk variable measured for each age group across n spatial units
+    s          : array(n*h, 1)
+                 standard million population for each age group across n spatial units
     n          : integer
-                 the number of spatial units 
+                 the number of spatial units
+    alpha      : float
+                 significance level for confidence interval 
 
     Note
     ----
@@ -161,8 +164,8 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
 
     Returns
     -------
-               : array(n, 1)
-                 age standardized rate
+               : a list of n tuples; a tuple has a rate and its lower and upper limits
+                 age standardized rates and confidence intervals
 
     Examples:
     >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
@@ -170,9 +173,9 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
     >>> s = np.array([1000, 900, 1000, 900, 1000, 900, 1000, 900])
     >>> n = 2
     >>> [i[0] for i in direct_age_standardization(e, b, s, n)]
-    [0.011872009569377989, 0.013325358851674639]
+    [0.023744019138755977, 0.026650717703349279]
     """
-    age_weight = (1.0 / b) * (s * 1.0 / sum(s))
+    age_weight = (1.0 / b) * (s * 1.0 / sum_by_n(s, 1.0, n).repeat(len(s)/n))
     adjusted_r = sum_by_n(e, age_weight, n)
     var_estimate = sum_by_n(e, np.square(age_weight), n)
     g_a = np.square(adjusted_r) / var_estimate 
@@ -180,7 +183,7 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
     k = [age_weight[i:i + len(b)/n].max() for i in range(0, len(b), len(b)/n)]
     g_a_k = np.square(adjusted_r + k)/(var_estimate + np.square(k))
     g_b_k = (var_estimate + np.square(k)) / (adjusted_r + k)
-    summed_b = sum_by_n(b, np.ones(len(b)), n)
+    summed_b = sum_by_n(b, 1.0, n)
     res = []
     for i in range(len(adjusted_r)):
         if adjusted_r[i] == 0:
@@ -192,36 +195,66 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
         res.append((adjusted_r[i], lower, upper))
     return res
 
-def indirect_age_standardization(b, r, n):
+def indirect_age_standardization(e, b, s_e, s_b, n, alpha=0.5):
     """A utility function to compute rate through indirect age standardization
 
     Parameters
     ----------
-    b          : array(n*2*h, 1)
-                 population at risk variable measured for each gender/age group across n spatial units
-    r          : array(n*2*h, 1)
-                 reference rates for each gender/age group across n spatial units
+    e          : array(n*h, 1)
+                 event variable measured for each age group across n spatial units
+    b          : array(n*h, 1)
+                 population at risk variable measured for each age group across n spatial units
+    s_e        : array(n*h, 1)
+                 event variable measured for each age group across n spatial units in a standard million
+    s_b        : array(n*h, 1)
+                 population variable measured for each age group across n spatial units in a standard million
     n          : integer
-                 the number of spatial units 
+                 the number of spatial units
+    alpha      : float
+                 significance level for confidence interval
 
     Note
     ----
-    e and r are arranged in the same order
+    e, b, s_e, and s_b are arranged in the same order
 
     Returns
     -------
-               : array(n, 1)
+               : a list of n tuples; a tuple has a rate and its lower and upper limits
                  age standardized rate
 
+    References
+    ---------- 
+    For the approximated estimation of confidence intervals for 
+    indirectly adjusted rates, refer to the following:
+    Julious, S. A., J. Nicholl, and S. George (2001) "Why do we continue to use 
+    standardized mortality ratios for small area comparisons?" Journal of Public 
+    Health Medicine, 23 (1): 40-46
+
     Examples:
+    >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
     >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
-    >>> r = np.array([0.3, 0.2, 0.22, 0.31, 0.29, 0.15, 0.33, 0.2])
+    >>> s_e = np.array([100, 45, 120, 100, 50, 30, 200, 80])
+    >>> s_b = np.array([1000, 900, 1000, 900, 1000, 900, 1000, 900])
     >>> n = 2
-    >>> indirect_age_standardization(b, r, n)
-    array([ 0.12924051,  0.12253165])
+    >>> [i[0] for i in indirect_age_standardization(e, b, s_e, s_b, n)]
+    [0.23723821989528798, 0.2610803324099723]
     """
-    age_weight = b * 1.0 / sum(b)
-    return sum_by_n(r, age_weight, n)
+    s_r = s_e * 1.0 / s_b
+    e_by_n = sum_by_n(e, 1.0, n)
+    expected = sum_by_n(b, s_r, n)
+    smr = e_by_n * 1.0 / expected
+    s_r_all = sum(s_e) * 1.0 / sum(s_b)
+    adjusted_r = s_r_all * smr
+
+    log_smr = np.log(smr)
+    log_smr_sd = 1.0 / np.sqrt(e_by_n)
+    norm_thres = norm.ppf(1-0.5*alpha)
+    log_smr_lower = log_smr - norm_thres*log_smr_sd
+    log_smr_upper = log_smr + norm_thres*log_smr_sd
+    smr_lower = np.exp(log_smr_lower)*s_r_all
+    smr_upper = np.exp(log_smr_upper)*s_r_all
+    res = zip(adjusted_r, smr_lower, smr_upper)
+    return res
     
 class Excess_Risk:
     """Excess Risk
@@ -440,8 +473,8 @@ class Age_Adjusted_Smoother:
     >>> if not kw.id_order_set: kw.id_order = range(0,len(points))
     >>> ar = Age_Adjusted_Smoother(e, b, kw, s)
     >>> ar.r
-    array([ 0.03047742,  0.00582165,  0.00431344,  0.00623238,  0.01689289,
-            0.01212227])
+    array([ 0.10519625,  0.08494318,  0.06440072,  0.06898604,  0.06952076,
+            0.05020968])
     """
     def __init__(self, e, b, w, s, alpha=0.05):
         t = len(e)
