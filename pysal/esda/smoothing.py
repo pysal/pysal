@@ -446,13 +446,13 @@ class Age_Adjusted_Smoother:
 
     Parameters
     ----------
-    e		: array (n*2*h, 1)
-    		  event variable measured for each age group and gender across n spatial units
-    b		: array (n*2*h, 1)
-    		  population at risk variable measured for each age group and gender across n spatial units
+    e		: array (n*h, 1)
+    		  event variable measured for each age group across n spatial units
+    b		: array (n*h, 1)
+    		  population at risk variable measured for each age group across n spatial units
     w		: spatial weights instance
-    s           : array (n*2*h, 1)
-                  standard million population for each age group and gender across n spatial units
+    s           : array (n*h, 1)
+                  standard million population for each age group across n spatial units
 
     Attributes
     ----------
