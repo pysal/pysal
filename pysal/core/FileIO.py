@@ -315,4 +315,3 @@ class FileIO(object): #should be a type?
     def flush(self):
         self._complain_ifclosed(self.closed)
         raise NotImplementedError
-

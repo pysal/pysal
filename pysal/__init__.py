@@ -32,14 +32,8 @@ Utilities
 """
 import cg
 import core
-import pysal.core.FileIO # Load IO metaclass
-import pysal.core._FileIO # Load IO inheritors
 
 from common import *
-
-#Assign pysal.open to dispatcher
-
-open = pysal.core.FileIO.FileIO
 
 # toplevel imports to be explicit
 
@@ -62,3 +56,8 @@ from weights.Distance import knnW, Kernel, DistanceBand
 from weights.Contiguity import buildContiguity
 from weights.spatial_lag import lag, lag_array
 from weights.user import *
+
+# Load the IOHandlers
+import core.IOHandlers
+# Assign pysal.open to dispatcher
+open = core.FileIO.FileIO

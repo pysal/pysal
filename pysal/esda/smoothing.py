@@ -641,7 +641,7 @@ class Spatial_Filtering:
     Examples
     --------
     >>> stl = pysal.open('../examples/stl_hom.csv', 'r')
-    >>> fromWKT = pysal.core._FileIO.wkt.WKTParser()
+    >>> fromWKT = pysal.core.IOHandlers.wkt.WKTParser()
     >>> stl.cast('WKT',fromWKT)
     >>> d = np.array([i.centroid for i in stl[:,0]])
     >>> stl_e, stl_b = np.array(stl[:,10]), np.array(stl[:,13])
@@ -716,7 +716,7 @@ class Headbanging_Triples:
     --------
     >>> from pysal import knnW
     >>> stl_db = pysal.open('../examples/stl_hom.csv','r')
-    >>> fromWKT = pysal.core._FileIO.wkt.WKTParser()
+    >>> fromWKT = pysal.core.IOHandlers.wkt.WKTParser()
     >>> stl_db.cast('WKT',fromWKT)
     >>> d = np.array([i.centroid for i in stl_db[:,0]])
     >>> w = knnW(d,k=5)

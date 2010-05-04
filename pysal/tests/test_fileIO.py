@@ -1,14 +1,12 @@
 import unittest
 import pysal
-#import pysal.core._FileIO.pyShpIO
-#import pysal.core._FileIO.pyDbfIO
 import tempfile
 import os
 
 class csv_Tester(unittest.TestCase):
     def setUp(self):
         self.test_file = test_file = '../examples/stl_hom.csv'
-        self.obj = pysal.core._FileIO.csvWrapper.csvWrapper(test_file,'r')
+        self.obj = pysal.core.IOHandlers.csvWrapper.csvWrapper(test_file,'r')
     def test_len(self):
         self.assertEquals(len(self.obj),78)
     def test_tell(self):
@@ -36,7 +34,7 @@ class csv_Tester(unittest.TestCase):
         for rowA,rowB in zip(objs,objsB):
             self.assertEquals(rowA,rowB)
     def test_casting(self):
-        self.obj.cast('WKT',pysal.core._FileIO.wkt.WKTParser())
+        self.obj.cast('WKT',pysal.core.IOHandlers.wkt.WKTParser())
         verts = [(-89.585220336914062,39.978794097900391),(-89.581146240234375,40.094867706298828),(-89.603988647460938,40.095306396484375),(-89.60589599609375,40.136119842529297),(-89.6103515625,40.3251953125),(-89.269027709960938,40.329566955566406),(-89.268562316894531,40.285579681396484),(-89.154655456542969,40.285774230957031),(-89.152763366699219,40.054969787597656),(-89.151618957519531,39.919403076171875),(-89.224777221679688,39.918678283691406),(-89.411857604980469,39.918041229248047),(-89.412437438964844,39.931644439697266),(-89.495201110839844,39.933486938476562),(-89.4927978515625,39.980186462402344),(-89.585220336914062,39.978794097900391)]
         for i,pt in enumerate(self.obj.next()[0].vertices):
             self.assertEquals(pt[:],verts[i])
@@ -55,7 +53,7 @@ class csv_Tester(unittest.TestCase):
 class PurePyDbf_Tester(unittest.TestCase):
     def setUp(self):
         self.test_file = test_file = '../examples/10740.dbf'
-        self.dbObj = pysal.core._FileIO.pyDbfIO.DBF(test_file,'r')
+        self.dbObj = pysal.core.IOHandlers.pyDbfIO.DBF(test_file,'r')
     def test_len(self):
         self.assertEquals(len(self.dbObj),195)
     def test_tell(self):
@@ -101,7 +99,7 @@ class PurePyDbf_Tester(unittest.TestCase):
     def test_write(self):
         f = tempfile.NamedTemporaryFile(suffix='.dbf'); fname = f.name; f.close()
         self.dbfcopy = fname
-        self.out = pysal.core._FileIO.pyDbfIO.DBF(fname,'w')
+        self.out = pysal.core.IOHandlers.pyDbfIO.DBF(fname,'w')
         self.dbObj.seek(0)
         self.out.header  = self.dbObj.header
         self.out.field_spec  = self.dbObj.field_spec
@@ -146,7 +144,7 @@ class PurePyShp_Tester(unittest.TestCase):
     def setUp(self):
         test_file = '../examples/10740.shp'
         self.test_file = test_file
-        self.shpObj = pysal.core._FileIO.pyShpIO.PurePyShpWrapper(test_file,'r')
+        self.shpObj = pysal.core.IOHandlers.pyShpIO.PurePyShpWrapper(test_file,'r')
         f = tempfile.NamedTemporaryFile(suffix='.shp'); shpcopy = f.name; f.close()
         self.shpcopy = shpcopy
         self.shxcopy = shpcopy.replace('.shp','.shx')
@@ -189,7 +187,7 @@ class PurePyShp_Tester(unittest.TestCase):
         self.shpObj.seek(32)
         self.assertEquals(self.shpObj.read(1)[0].vertices,shp32.vertices)
     def test_write(self):
-        out = pysal.core._FileIO.pyShpIO.PurePyShpWrapper(self.shpcopy,'w')
+        out = pysal.core.IOHandlers.pyShpIO.PurePyShpWrapper(self.shpcopy,'w')
         self.shpObj.seek(0)
         for shp in self.shpObj:
             out.write(shp)
