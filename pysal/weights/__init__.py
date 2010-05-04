@@ -128,10 +128,98 @@ class W(object):
             self._id_order_set=True
         self.__neighbors_0 = False
         self._idx=0
-        self.n=len(self.neighbors)
-        self.n_1=self.n-1
-        self._characteristics()
+        self._n=None
         self._transform=None
+        self._characteristics=None
+        self._s0=None
+        self._s1=None
+        self._s2=None
+        self._pct_nonzero=None
+
+
+    @property
+    def n(self):
+        self._n=len(self.neighbors)
+        return self._n
+
+    @property
+    def s0(self):
+        if not self._s0:
+            self.characteristics
+        return self._s0
+
+    @property
+    def s1(self):
+        if not self._s1:
+            self.characteristics
+        return self._s1
+
+    @property
+    def s2(self):
+        if not self._s2:
+            self.characteristics
+        return self._s2
+    @property
+    def pct_nonzero(self):
+        if not self._pct_nonzero:
+            self.characteristics
+        return self._pct_nonzero
+
+
+    @property
+    def characteristics(self):
+        s0=s1=s2=0.0
+        n=len(self.weights)
+        col_sum={}
+        row_sum={}
+        cardinalities={}
+        nonzero=0
+        for i in self._id_order:
+            neighbors_i=self.neighbors[i]
+            cardinalities[i]=len(neighbors_i)
+            w_i=self.weights[i]
+            for j in neighbors_i:
+                wij=wji=0
+                w_j=self.weights[j]
+                neighbors_j=self.neighbors[j]
+                if i in neighbors_j:
+                    ji=neighbors_j.index(i)
+                    wji=w_j[ji]
+                if j in neighbors_i:
+                    ij=neighbors_i.index(j)
+                    wij=w_i[ij]
+                v=wij+wji
+                if i not in col_sum:
+                    col_sum[i]=0
+                    row_sum[i]=0
+                col_sum[i]+=wji
+                row_sum[i]+=wij
+                s1+=v*v
+                s0+=wij
+                nonzero+=1
+        s1/=2.0
+        s2=sum([(col_sum[i]+row_sum[i])**2 for i in col_sum.keys()])
+        self._s2=s2
+        self._s1=s1
+        self._s0=s0
+        self.cardinalities=cardinalities
+        cardinalities = cardinalities.values()
+        self.max_neighbors=max(cardinalities)
+        self.min_neighbors=min(cardinalities)
+        self.sd=np.std(cardinalities)
+        self.mean_neighbors=sum(cardinalities)/(n*1.)
+        self._pct_nonzero=nonzero/(1.0*n*n)
+        self.nonzero=nonzero
+        if self.asymmetry():
+            self.asymmetric=1
+        else:
+            self.asymmetric=0
+        islands = [i for i,c in self.cardinalities.items() if c==0]
+        self.islands=islands
+        # connectivity histogram
+        ct,bin=np.histogram(cardinalities,range(self.min_neighbors,self.max_neighbors+2))
+        self.histogram=zip(bin,ct)
+
 
     def __getitem__(self,key):
         """
@@ -338,7 +426,7 @@ class W(object):
         self._transform = value
         if self.transformations.has_key(value):
             self.weights=self.transformations[value]
-            self._characteristics()
+            self.characteristics
         else:
             if value == "R": 
                 # row standardized weights
@@ -349,11 +437,11 @@ class W(object):
                     weights[i]=[wij/row_sum for wij in wijs]
                 self.transformations[value]=weights
                 self.weights=weights
-                self._characteristics()
+                self.characteristics
             elif value == "D":
                 # doubly-standardized weights
                 # update current chars before doing global sum
-                self._characteristics()
+                self.characteristics
                 s0=self.s0
                 ws=1.0/s0
                 weights={}
@@ -362,7 +450,7 @@ class W(object):
                     weights[i]=[wij*ws for wij in wijs]
                 self.transformations[value]=weights
                 self.weights=weights
-                self._characteristics()
+                self.characteristics
             elif value == "B":
                 # binary transformation
                 weights={}
@@ -371,7 +459,7 @@ class W(object):
                     weights[i]=[1.0 for wij in wijs]
                 self.transformations[value]=weights
                 self.weights=weights
-                self._characteristics()
+                self.characteristics
             elif value == "V":
                 # variance stabilizing
                 weights={}
@@ -388,7 +476,7 @@ class W(object):
                 for i in self.weights:
                     weights[i] = [ w*nQ for w in s[i]]
                 self.weights=weights
-                self._characteristics()
+                self.characteristics
             elif value =="O":
                 # put weights back to original transformation
                 weights={}
@@ -399,88 +487,6 @@ class W(object):
 
     transform = property(get_transform, set_transform)
     
-
-    def _characteristics(self):
-        """
-        Calculates properties of W needed for various autocorrelation tests and some
-        summary characteristics.
-        
-        >>> from Contiguity import buildContiguity
-        >>> w=buildContiguity(pysal.open('../examples/10740.shp'),criterion='rook')
-        >>> w[1]
-        {0: 1.0, 2: 1.0, 83: 1.0, 4: 1.0}
-        >>> w.islands
-        [163]
-        >>> w[163]
-        {}
-        >>> w.nonzero
-        1002
-        >>> w.n
-        195
-        >>> w.s0
-        1002.0
-        >>> w.s1
-        2004.0
-        >>> w.s2
-        23528.0
-        >>> w.sd
-        1.9391533157164347
-        >>> w.histogram
-        [(0, 1), (1, 1), (2, 4), (3, 20), (4, 57), (5, 44), (6, 36), (7, 15), (8, 7), (9, 1), (10, 6), (11, 0), (12, 2), (13, 0), (14, 0), (15, 1)]
-        """
-       
-        s0=s1=s2=0.0
-        n=len(self.weights)
-        col_sum={}
-        row_sum={}
-        cardinalities={}
-        nonzero=0
-        for i in self._id_order:
-            neighbors_i=self.neighbors[i]
-            cardinalities[i]=len(neighbors_i)
-            w_i=self.weights[i]
-            for j in neighbors_i:
-                wij=wji=0
-                w_j=self.weights[j]
-                neighbors_j=self.neighbors[j]
-                if i in neighbors_j:
-                    ji=neighbors_j.index(i)
-                    wji=w_j[ji]
-                if j in neighbors_i:
-                    ij=neighbors_i.index(j)
-                    wij=w_i[ij]
-                v=wij+wji
-                if i not in col_sum:
-                    col_sum[i]=0
-                    row_sum[i]=0
-                col_sum[i]+=wji
-                row_sum[i]+=wij
-                s1+=v*v
-                s0+=wij
-                nonzero+=1
-        s1/=2.0
-        s2=sum([(col_sum[i]+row_sum[i])**2 for i in col_sum.keys()])
-        self.s2=s2
-        self.s1=s1
-        self.s0=s0
-        self.cardinalities=cardinalities
-        cardinalities = cardinalities.values()
-        self.max_neighbors=max(cardinalities)
-        self.min_neighbors=min(cardinalities)
-        self.sd=np.std(cardinalities)
-        self.mean_neighbors=sum(cardinalities)/(n*1.)
-        self.n=n
-        self.pct_nonzero=nonzero/(1.0*n*n)
-        self.nonzero=nonzero
-        if self.asymmetry():
-            self.asymmetric=1
-        else:
-            self.asymmetric=0
-        islands = [i for i,c in self.cardinalities.items() if c==0]
-        self.islands=islands
-        # connectivity histogram
-        ct,bin=np.histogram(cardinalities,range(self.min_neighbors,self.max_neighbors+2))
-        self.histogram=zip(bin,ct)
 
     def asymmetry(self,nonzero=True):
         """

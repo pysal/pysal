@@ -115,6 +115,7 @@ def lag_array(w,y):
     for i,id in enumerate(w.id_order):
         wy[i]=np.dot(w.weights[id],y[w.neighbor_offsets[id]])
     return wy 
+
 def lag_sparse(w,y):
     return w.sparseW*y
 

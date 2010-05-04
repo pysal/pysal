@@ -259,7 +259,6 @@ def knnW_from_shapefile(shapefile,k=2,p=2,ids=None):
 
     f=pysal.open(shapefile)
     shapes=f.read()
-    #if type(shapes[0]).__name__=='Polygon':
     if f.type.__name__=='Polygon':
         data=np.array([shape.centroid for shape in shapes])
     elif f.type.__name__=='Point':

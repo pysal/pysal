@@ -28,8 +28,13 @@ class WS:
         self.ids=ids
 
 
-class WVirtual(dict):
-    """"""
+
+
+class VirtualNeighbors(dict):
+    """
+    Virtual dictionary for maintining neighbor  attributes for
+    large lattices
+    """
     def __init__(self,nrows,ncols,contiguity='rook'):
         dict.__init__(self)
         self.nrows=nrows
@@ -50,6 +55,50 @@ class WVirtual(dict):
     def keys(self):
         return xrange(self.n)
 
+class VirtualWeights(dict):
+    """
+    Virtual dictionary for maintining weight attributes for
+    large lattices
+    """
+    def __init__(self,nrows,ncols,contiguity='rook'):
+        dict.__init__(self)
+        self.nrows=nrows
+        self.ncols=ncols
+        self.n=nrows*ncols
+        self.contiguity=contiguity
+        self._left=0
+        self.n=nrows*ncols
+        self._calc=_rook
+        if contiguity=='queen':
+            self._calc=_queen
+        self.weights=self
+
+    def __getitem__(self,key):
+        if (key>=0) and (key < self.n):
+            n=self._calc(key,self.nrows,self.ncols)
+            return np.ones_like(n)
+        else:
+            raise KeyError
+    def keys(self):
+        return xrange(self.n)
+
+
+
+class WVirtual(W):
+    """"""
+    def __init__(self,nrows,ncols,contiguity='rook'):
+        self.nrows=nrows
+        self.ncols=ncols
+        self.n=nrows*ncols
+        self.contiguity=contiguity
+        self.weights=VirtualWeights(nrows,ncols,contiguity)
+        self.neighbors=VirtualNeighbors(nrows,ncols,contiguity)
+        #W.__init__(self,neighbors,weights,id_order=neighbors.keys())
+
+
+    def _characteristics(self):
+        print 'characteristics'
+        pass
 
 def _rook(i,nrows,ncols):
     
@@ -92,14 +141,6 @@ def _queen(i,nrows,ncols):
     ws=[nw,ne,sw,se,north,south,east,west]
     return np.array([neigh for neigh in ws if neigh!=None])
 
-
-def lat2Wv(nrows=5,ncols=5,rook=True):
-    n=nrows*ncols
-    neigh={}
-    if rook:
-        for i in xrange(n):
-            neigh[i]=_rook(i,nrows,ncols)
-    return W(neigh)
 
 
 
