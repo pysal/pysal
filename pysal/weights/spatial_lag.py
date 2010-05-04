@@ -1,6 +1,10 @@
 """
 spatial lag operations
 
+
+we need to dump the indexing scheme and have the user set y's order before
+calling lag. too expensive.
+
 """
 
 from pysal.common import *
@@ -111,7 +115,8 @@ def lag_array(w,y):
     for i,id in enumerate(w.id_order):
         wy[i]=np.dot(w.weights[id],y[w.neighbor_offsets[id]])
     return wy 
-
+def lag_sparse(w,y):
+    return w.sparseW*y
 
 if __name__ == '__main__':
     import doctest
