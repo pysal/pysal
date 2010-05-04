@@ -256,7 +256,15 @@ def knnW_from_shapefile(shapefile,k=2,p=2,ids=None):
     :class:`pysal.weights.W`
 
     """
-    return knnW(shapefile,k=k,p=p,ids=ids)
+
+    f=pysal.open(shapefile)
+    shapes=f.read()
+    #if type(shapes[0]).__name__=='Polygon':
+    if f.type.__name__=='Polygon':
+        data=np.array([shape.centroid for shape in shapes])
+    elif f.type.__name__=='Point':
+         data=np.array([shape for shape in shapes])
+    return knnW(data,k=k,p=p,ids=ids)
 
 def threshold_binaryW_from_array(array,threshold,p=2):
     """

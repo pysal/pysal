@@ -10,14 +10,14 @@ import pysal
 from pysal.common import *
 from pysal.weights import W
 
-def knnW(source,k=2,p=2,ids=None):
+def knnW(point_array,k=2,p=2,ids=None):
     """
     Creates contiguity matrix based on k nearest neighbors
     
     Parameters
     ----------
 
-    source     : multitype
+    point_array     : multitype
                  np.array  n observations on m attributes
     k          : int
                  number of nearest neighbors
@@ -63,20 +63,9 @@ def knnW(source,k=2,p=2,ids=None):
     >>> wnn3m.neighbors[0]
     [1, 5, 2]
 
-    Point Shapefile
-
-    >>> w=knnW('../examples/juvenile.shp')
-    >>> w.pct_nonzero
-    0.011904761904761904
-    >>> w1=knnW('../examples/juvenile.shp',k=1)
-    >>> w1.pct_nonzero
-    0.0059523809523809521
-    >>> 
 
     Notes
     -----
-
-    Will be extended to support different source types.
 
     Ties between neighbors of equal distance are arbitrarily broken.
 
@@ -84,21 +73,11 @@ def knnW(source,k=2,p=2,ids=None):
     --------
     pysal.weights.W
     """
-    # handle source
-    if type(source).__name__=='ndarray':
-        data=source
-    elif type(source)==type('string'):
-        # assuming shapefile name
-        sf=pysal.open(source)
-        shapes=sf.read()
-        if type(shapes[0]).__name__=='Polygon':
-            data=np.array([shape.centroid for shape in shapes])
-        elif type(shapes[0]).__name__=='Point':
-            data=np.array([shape for shape in shapes])
-        else:
-            print 'Unsupported source type'
+    # handle point_array
+    if type(point_array).__name__=='ndarray':
+        data=point_array
     else:
-        print 'Unsupported source type'
+        print 'Unsupported  type'
 
     # calculate
     kd=KDTree(data)
