@@ -1,0 +1,15 @@
+:mod:`IOHandlers.pyDbfIO` --- DBF Plugin for PySAL's FileIO System
+==================================================================
+
+The :mod:`IOHandlers.pyDbfIO` DBF Plugin for PySAL's FileIO System
+
+.. versionadded:: 1.0
+
+.. automodule:: pysal.core.IOHandlers.pyDbfIO
+    :synopsis: DBF Plugin for PySAL's FileIO System
+    :members:
+    :undoc-members:
+    :inherited-members:
+
+
+

@@ -1,0 +1,8 @@
+:mod:`pysal.core` --- Core Data Structures and IO
+=================================================
+
+.. toctree::
+
+    FileIO
+    Tables
+    IOHandlers/index

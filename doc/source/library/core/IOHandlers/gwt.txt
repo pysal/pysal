@@ -1,0 +1,13 @@
+:mod:`IOHandlers.gwt` --- GWT Plugin for PySAL's FileIO System
+==============================================================
+
+.. versionadded:: 1.0
+
+.. automodule:: pysal.core.IOHandlers.gwt
+    :synopsis: GWT Plugin for PySAL's FileIO System
+    :members:
+    :undoc-members:
+    :inherited-members:
+
+
+

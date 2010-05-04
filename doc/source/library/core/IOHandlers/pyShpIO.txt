@@ -1,0 +1,15 @@
+:mod:`IOHandlers.pyShpIO` --- Shapefile Plugin for PySAL's FileIO System
+========================================================================
+
+The :mod:`IOHandlers.pyShpIO` Shapefile Plugin for PySAL's FileIO System
+
+.. versionadded:: 1.0
+
+.. automodule:: pysal.core.IOHandlers.pyShpIO
+    :synopsis: Shapefile Plugin for PySAL's FileIO System
+    :members:
+    :undoc-members:
+    :inherited-members:
+
+
+

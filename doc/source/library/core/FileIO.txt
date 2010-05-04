@@ -1,0 +1,14 @@
+:mod:`FileIO` --- File Input/Output System for PySAL: Python Spatial Analysis Library
+=====================================================================================
+
+The :mod:`FileIO` File Input/Output System for PySAL
+
+.. versionadded:: 1.0
+
+.. automodule:: pysal.core.FileIO
+    :synopsis: File Input/Output System for PySAL
+    :members:
+    :inherited-members:
+
+
+

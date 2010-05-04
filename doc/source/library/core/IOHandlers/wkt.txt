@@ -1,0 +1,13 @@
+:mod:`IOHandlers.wkt` --- Well Known Text (geometry) Plugin for PySAL's FileIO System
+============================================================================================
+
+.. versionadded:: 1.0
+
+.. automodule:: pysal.core.IOHandlers.wkt
+    :synopsis: Well Known Text (geometry) Plugin for PySAL's FileIO System
+    :members:
+    :undoc-members:
+    :inherited-members:
+
+
+

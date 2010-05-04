@@ -24,6 +24,7 @@ Available sub-packages
 .. toctree::
     :maxdepth: 1
 
+    core/index
     cg/index
     esda/index
     econometrics/index
