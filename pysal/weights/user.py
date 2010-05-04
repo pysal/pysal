@@ -57,14 +57,14 @@ def queen_from_shapefile(shapefile,idVariable=None):
             dbname = os.path.splitext(shapefile)[0]+'.dbf'
             db = pysal.open(dbname)
             var = db.by_col[idVariable]
-            return buildContiguity(shapefile,criterion='queen',ids=var)
+            return buildContiguity(pysal.open(shapefile),criterion='queen',ids=var)
         except IOError:
             msg = 'The shapefile "%s" appears to be missing its DBF File. The DBF file "%s" could not be found'%(shapefile,dbname)
             raise IOError, msg
         except AttributeError:
             msg = 'The variable "%s" was not found in the DBF file.  The DBF contains the following variables: %s'%(idVariable,', '.join(db.header))
             raise KeyError, msg
-    return buildContiguity(shapefile,criterion='queen')
+    return buildContiguity(pysal.open(shapefile),criterion='queen')
 
 def rook_from_shapefile(shapefile,idVariable=None):
     """
@@ -104,14 +104,14 @@ def rook_from_shapefile(shapefile,idVariable=None):
             dbname = os.path.splitext(shapefile)[0]+'.dbf'
             db = pysal.open(dbname)
             var = db.by_col[idVariable]
-            return buildContiguity(shapefile,criterion='rook',ids=var)
+            return buildContiguity(pysal.open(shapefile),criterion='rook',ids=var)
         except IOError:
             msg = 'The shapefile "%s" appears to be missing its DBF File. The DBF file "%s" could not be found'%(shapefile,dbname)
             raise IOError, msg
         except AttributeError:
             msg = 'The variable "%s" was not found in the DBF file.  The DBF contains the following variables: %s'%(idVariable,', '.join(db.header))
             raise KeyError, msg
-    return buildContiguity(shapefile,criterion='rook')
+    return buildContiguity(pysal.open(shapefile),criterion='rook')
 
 
 

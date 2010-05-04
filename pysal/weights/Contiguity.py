@@ -6,6 +6,7 @@ Author(s):
 """
 
 import pysal
+from warnings import warn
 try:
     from _contW_rtree import ContiguityWeights_rtree as ContiguityWeights
 except:
@@ -14,17 +15,17 @@ except:
 
 WT_TYPE={'rook':2,'queen':1} # for _contW_Binning
 
-def buildContiguity(source,criterion="rook",ids=None):
+def buildContiguity(polygons,criterion="rook",ids=None):
     """
     Build contiguity weights from a source
 
     Parameters
     ----------
 
-    source     : multitype 
-                 polygon shapefile
+    polygons   : an instance of a pysal geo file handler
+                 Any thing returned by pysal.open that is explicitly polygons
 
-    criterion   : string
+    criterion  : string
                  contiguity criterion ("rook","queen")
 
     ids        : list
@@ -40,17 +41,17 @@ def buildContiguity(source,criterion="rook",ids=None):
 
     Examples
     -------
-    >>> w = buildContiguity('../examples/10740.shp')
+    >>> w = buildContiguity(pysal.open('../examples/10740.shp','r'))
     >>> w[0]
     {1: 1.0, 4: 1.0, 101: 1.0, 85: 1.0, 5: 1.0}
-    >>> w = buildContiguity('../examples/10740.shp',criterion='queen')
+    >>> w = buildContiguity(pysal.open('../examples/10740.shp','r'),criterion='queen')
     >>> w.pct_nonzero
     0.031926364234056544
-    >>> w = buildContiguity('../examples/10740.shp',criterion='rook')
+    >>> w = buildContiguity(pysal.open('../examples/10740.shp','r'),criterion='rook')
     >>> w.pct_nonzero
     0.026351084812623275
     >>> fips = pysal.open('../examples/10740.dbf').by_col('STFID')
-    >>> w = buildContiguity('../examples/10740.shp',ids=fips)
+    >>> w = buildContiguity(pysal.open('../examples/10740.shp','r'),ids=fips)
     >>> w['35001000107']
     {'35001003805': 1.0, '35001003721': 1.0, '35001000111': 1.0, '35001000112': 1.0, '35001000108': 1.0}
 
@@ -68,11 +69,9 @@ def buildContiguity(source,criterion="rook",ids=None):
         raise ValueError, "The argument to the ids parameter contains duplicate entries."
     
     wt_type=WT_TYPE[criterion.lower()]
-    geo=source
-    if issubclass(type(geo),basestring):
-        geoObj = pysal.open(geo)
-    elif issubclass(type(geo),pysal.open):
-        geo.seek(0)
+    geo=polygons
+    if issubclass(type(geo),pysal.open):
+        geo.seek(0) # Make sure we read from the beinging of the file.
         geoObj = geo
     else:
         raise TypeError, "Argument must be a FileIO handler or connection string"

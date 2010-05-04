@@ -1,3 +1,4 @@
+import pysal
 from pysal.common import *
 from pysal.weights import W
 import numpy as np
@@ -323,7 +324,7 @@ def order(w,kmax=3):
     Example
     -------
     >>> from Contiguity import buildContiguity
-    >>> w=buildContiguity('../examples/10740.shp',criterion='rook')
+    >>> w=buildContiguity(pysal.open('../examples/10740.shp'),criterion='rook')
     >>> w3=order(w,kmax=3)
     >>> w3[1][0:5]
     [1, -1, 1, 2, 1]
