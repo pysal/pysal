@@ -173,16 +173,19 @@ class W(object):
         8 {5: 1.0, 7: 1.0}
         >>> 
         """
-        return self
-
-    def next(self):
-        if self._idx >= len(self._id_order):
-            self._idx=0
-            raise StopIteration
-        value = self.__getitem__(self._id_order[self._idx])
-        self._idx+=1
-        return value
-
+        class _W_iter:
+            def __init__(self,w):
+                self.w = w
+                self.n = len(w._id_order)
+                self._idx = 0
+            def next(self):
+                if self._idx >= self.n:
+                    self._idx=0
+                    raise StopIteration
+                value = self.w.__getitem__(self.w._id_order[self._idx])
+                self._idx+=1
+                return value
+        return _W_iter(self)
 
     def __set_id_order(self, ordered_ids):
         """
