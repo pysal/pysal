@@ -135,6 +135,8 @@ class W(object):
         self._s1=None
         self._s2=None
         self._pct_nonzero=None
+        self._cardinalities=None
+        self._max_neighbors=None
 
 
     @property
@@ -164,6 +166,20 @@ class W(object):
         if not self._pct_nonzero:
             self.characteristics
         return self._pct_nonzero
+
+    @property
+    def cardinalities(self):
+        if not self._cardinalities:
+            self.characteristics
+        return self._cardinalities
+
+    @property
+    def max_neighbors(self):
+        if not self._max_neighbors:
+            self.characteristics
+        return self._max_neighbors
+
+
 
 
     @property
@@ -202,9 +218,9 @@ class W(object):
         self._s2=s2
         self._s1=s1
         self._s0=s0
-        self.cardinalities=cardinalities
+        self._cardinalities=cardinalities
         cardinalities = cardinalities.values()
-        self.max_neighbors=max(cardinalities)
+        self._max_neighbors=max(cardinalities)
         self.min_neighbors=min(cardinalities)
         self.sd=np.std(cardinalities)
         self.mean_neighbors=sum(cardinalities)/(n*1.)
