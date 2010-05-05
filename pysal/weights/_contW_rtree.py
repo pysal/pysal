@@ -3,7 +3,7 @@ import rtree
 QUEEN = 1
 ROOK = 2
 
-Q_TARGET_MEM_SIZE = 5 * 1024 * 1024 #5mb
+Q_TARGET_MEM_SIZE = 250 * 1024 * 1024 #250mb
 class _PolyQ(dict):
     def __init__(self):
         dict.__init__(self)
@@ -13,13 +13,9 @@ class _PolyQ(dict):
         """ Use the objects in the Q to calculate the average size of the objects
             Adjust Q.size to hold Q_TARGET_MEM_SIZE/avgSize object
             This is as many average size object that fit into Q_TARGET_MEM_SIZE """
-        size = sum(map(len,self.values())) * 2 * 8 # *(2 doubles/point) * (8 bytes/double)
-        if size < Q_TARGET_MEM_SIZE:
-            avgSize = size/float(len(self))
-            self.size = Q_TARGET_MEM_SIZE/avgSize
-            return False #make the Q larger
-        else:
-            return True #continue with purge
+        if len(self.ids) > 50:
+            return True
+        return False
         
     def add(self,poly):
         if poly.id not in self:
@@ -35,7 +31,11 @@ class ContiguityWeights_rtree:
         self.joinType = joinType
         self.w = {}
         self.Q = _PolyQ()
+        self.cache_hits = 0
+        self.cache_misses = 0
         self.create()
+        #print "Misses: ",self.cache_misses
+        #print "Hits: ",self.cache_hits
     def create(self):
         for id,poly in enumerate(self.geoObj):
             poly.id = id
@@ -63,9 +63,13 @@ class ContiguityWeights_rtree:
     def check(self,id0,poly1):
         "Check's if two polygon's are neighbors"
         if id0 in self.Q:
+            self.cache_hits+=1
             poly0 = self.Q[id0]
         else:
+            self.cache_misses+=1
             poly0 = self.geoObj.get(id0)
+            poly0.id = id0
+            self.Q.add(poly0)
         common = set(poly0.vertices).intersection(set(poly1.vertices))
         if len(common) > 1 and self.joinType==ROOK:
             #double check rook

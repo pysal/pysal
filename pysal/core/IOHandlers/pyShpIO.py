@@ -140,7 +140,7 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
                 else:
                     vertices = parts
                     shp = self.type(vertices)
-            else:
+            elif rec['NumParts'] == 1:
                 vertices = rec['Vertices']
                 if not pysal.cg.is_clockwise(vertices):
                     ### SHAPEFILE WARNING: Polygon %d topology has been fixed. (ccw -> cw)
@@ -148,6 +148,8 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
                     print "SHAPEFILE WARNING: Polygon %d topology has been fixed. (ccw -> cw)"%(self.pos)
                     
                 shp = self.type(vertices)
+            else:
+                raise ValueError, "Polygon %d has zero parts"%self.pos
         if self.ids:
             shp.id = self.rIds[self.pos-1] # shp IDs start at 1.
         else:
