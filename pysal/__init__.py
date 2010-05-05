@@ -22,6 +22,8 @@ examples
     Example data sets used by several sub-packages for examples and testing
 region
     Regionalization algorithms and spatially constrained clustering
+spatial_dynamics
+    Space-time exploratory methods and clustering
 weights
     Tools for creating and manipulating weights
 
@@ -47,9 +49,9 @@ from esda.mapclassify import User_Defined,Max_P
 from esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local
 from econometrics import Jarque_Bera,Ols
 from inequality.theil import Theil,TheilD,TheilDSim
-from spatial_dyanmics.markov import Markov
-from spatial_dyanmics.ergodic import steady_state
-from spatial_dyanmics.rank import Theta,SpatialTau
+from spatial_dynamics.markov.markov import Markov
+from spatial_dynamics.markov.ergodic import steady_state
+from spatial_dynamics.mobility.rank import Theta,SpatialTau
 from region.maxp import Maxp,Maxp_LISA
 from weights import W,lat2W,regime_weights,comb,full,shimbel,order,higher_order
 from weights.Distance import knnW, Kernel, DistanceBand

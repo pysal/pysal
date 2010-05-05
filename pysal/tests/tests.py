@@ -37,7 +37,7 @@ import pysal.inequality.theil
 import pysal.econometrics.classic
 import pysal.region.maxp
 import pysal.region.randomregion
-import pysal.mobility.rank
+import pysal.spatial_dynamics.mobility.rank
 import pysal.weights.spatial_lag, pysal.weights.util
 import pysal.weights.Contiguity, pysal.weights.Distance, pysal.weights.user
 import pysal.weights.Wsets
@@ -47,7 +47,8 @@ import pysal.esda.smoothing
 mods='esda.moran','esda.geary', 'esda.mapclassify', \
         'esda.join_counts', \
         'econometrics.classic', \
-        'inequality.theil','mobility.rank', \
+        'spatial_dynamics.mobility.rank', \
+        'inequality.theil', \
         'region.maxp', 'region.randomregion', \
         'weights', \
         'weights.spatial_lag', 'weights.util', \
