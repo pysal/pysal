@@ -118,7 +118,6 @@ class W(object):
                 weights[key] = [1.] * len(neighbors[key])
         self.weights=weights
         self.transformations['O']=self.weights #original weights
-        self.islands=[]
         if id_order == None:
             self._id_order=self.neighbors.keys()
             self._id_order.sort()
@@ -137,6 +136,13 @@ class W(object):
         self._pct_nonzero=None
         self._cardinalities=None
         self._max_neighbors=None
+        self._mean_neighbors=None
+        self._min_neighbors=None
+        self._nonzero=None
+        self._sd=None
+        self._asymmetries=None
+        self._islands=None
+        self._histogram=None
 
 
     @property
@@ -180,6 +186,57 @@ class W(object):
         return self._max_neighbors
 
 
+    @property
+    def mean_neighbors(self):
+        if not self._mean_neighbors:
+            self.characteristics
+        return self._mean_neighbors
+
+
+    @property
+    def mean_neighbors(self):
+        if not self._mean_neighbors:
+            self.characteristics
+        return self._mean_neighbors
+
+    @property
+    def min_neighbors(self):
+        if not self._min_neighbors:
+            self.characteristics
+        return self._min_neighbors
+
+
+    @property
+    def nonzero(self):
+        if not self._nonzero:
+            self.characteristics
+        return self._nonzero
+
+    @property
+    def sd(self):
+        if not self._sd:
+            self.characteristics
+        return self._sd
+
+    @property
+    def asymmetries(self):
+        if not self._asymmetries:
+            self._asymmetries=self.asymmetry()
+        return self._asymmetries
+
+    @property
+    def islands(self):
+        if not self._islands:
+            self.characteristics
+        return self._islands
+
+
+    @property
+    def histogram(self):
+        if not self._histogram:
+            self.characteristics
+        return self._histogram
+
 
 
     @property
@@ -221,20 +278,16 @@ class W(object):
         self._cardinalities=cardinalities
         cardinalities = cardinalities.values()
         self._max_neighbors=max(cardinalities)
-        self.min_neighbors=min(cardinalities)
-        self.sd=np.std(cardinalities)
-        self.mean_neighbors=sum(cardinalities)/(n*1.)
+        self._mean_neighbors=sum(cardinalities)/(n*1.)
+        self._min_neighbors=min(cardinalities)
+        self._sd=np.std(cardinalities)
         self._pct_nonzero=nonzero/(1.0*n*n)
-        self.nonzero=nonzero
-        if self.asymmetry():
-            self.asymmetric=1
-        else:
-            self.asymmetric=0
-        islands = [i for i,c in self.cardinalities.items() if c==0]
-        self.islands=islands
+        self._nonzero=nonzero
+        self._asymmetries=self.asymmetry()
+        self._islands = [i for i,c in self._cardinalities.items() if c==0]
         # connectivity histogram
-        ct,bin=np.histogram(cardinalities,range(self.min_neighbors,self.max_neighbors+2))
-        self.histogram=zip(bin,ct)
+        ct,bin=np.histogram(cardinalities,range(self._min_neighbors,self._max_neighbors+2))
+        self._histogram=zip(bin,ct)
 
 
     def __getitem__(self,key):
