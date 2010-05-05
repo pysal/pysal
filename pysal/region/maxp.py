@@ -3,12 +3,11 @@ Max p regionalization
 
 Heuristically form the maximum number (p) of regions given a set of n areas and a floor
 constraint.
-
-Author(s):
-    Serge Rey srey@asu.edu
-    David Folch dfolch@asu.edu
-
 """
+
+__author__ = "Serge Rey <srey@asu.edu>, David Folch <david.folch@asu.edu>"
+
+
 import pysal
 from components import check_contiguity
 from pysal.common import *

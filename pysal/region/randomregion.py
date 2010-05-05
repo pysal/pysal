@@ -3,13 +3,11 @@ Generate random regions
 
 Randomly form regions given various types of constraints on cardinality and
 composition.
+"""
 
-Author(s):
-    David Folch dfolch@asu.edu
-    Serge Rey srey@asu.edu
+__author__ = "David Folch dfolch@asu.edu, Serge Rey srey@asu.edu"
 
     
-"""
 import pysal
 from pysal.common import *
 
