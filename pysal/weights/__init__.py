@@ -232,11 +232,17 @@ class W(object):
             self.characteristics
         return self._islands
 
-    @property
-    def sparse(self):
+    def _get_sparse(self):
+        """
+        get - a Scipy sparse matrix of the weights.
+        set - the type of sparse matric needed.
+        """
         if not self._sparse:
             self._build_sparse()
         return self._sparse
+    def _set_sparse(self,value):
+        self._sparse = value
+    sparse = property(_get_sparse,_set_sparse)
 
     @property
     def histogram(self):
