@@ -2,7 +2,47 @@ import pysal.core.FileIO as FileIO
 from pysal.weights import W
   
 class GalIO(FileIO.FileIO):
+    """
+    Opens, reads, and writes file objects in GAL format.
 
+    Authors
+    -------
+    Charles Schmidt <Charles.R.Schmidt@asu.edu>
+
+    Parameters
+    ----------
+
+
+    Returns
+    -------
+
+
+    Notes
+    -----
+
+
+    Examples
+    --------
+
+    Let's try to open a GAL with pysal:
+    >>> 
+    >>> 
+    >>> 
+    >>> 
+
+    Let's try to read a GAL with pysal:
+    >>> 
+    >>> 
+    >>> 
+    >>> 
+
+    Let's try to write a GAL with pysal:
+    >>> 
+    >>> 
+    >>> 
+    >>> 
+
+    """
     FORMATS = ['gal']
     MODES = ['r','w']
 
