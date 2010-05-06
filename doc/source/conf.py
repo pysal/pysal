@@ -200,3 +200,6 @@ latex_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'http://docs.python.org/': None}
+
+#numpydoc option
+numpydoc_show_class_members = True
