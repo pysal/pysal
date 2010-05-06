@@ -3,6 +3,7 @@ from pysal.common import *
 from pysal.weights import W
 import numpy as np
 from scipy import sparse,float32
+import gc
 
 __all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 'full']
 
@@ -143,7 +144,6 @@ def _queen(i,nrows,ncols):
 
 
 
-
 def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
     """
     Create a W object for a regular lattice.
@@ -185,14 +185,14 @@ def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
     {0: 1.0, 4: 1.0, 6: 1.0}
     >>> 
     """
-
+    gc.disable()
     n=nrows*ncols
     r1=nrows-1
     c1=ncols-1
     rid=[ i/ncols for i in xrange(n) ]
     cid=[ i%ncols for i in xrange(n) ]
     w={}
-    
+    r=below=0
     for i in xrange(n-1):
         if rid[i]<r1:
             below=rid[i]+1
@@ -236,6 +236,7 @@ def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
             alt_weights[key] = weights[i]
         w = alt_w
         weights = alt_weights
+    gc.enable()
     return W(w,weights,ids)
 
 def regime_weights(regimes):
