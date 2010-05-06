@@ -8,6 +8,7 @@ __all__ = ['W']
 __author__  = "Sergio J. Rey <srey@asu.edu> "
 #from weights import *
 from pysal.common import *
+from scipy import sparse, float32
 
 # constant for precision
 DELTA = 0.0000001
@@ -26,11 +27,11 @@ class W(object):
                       If not supplied all edge wegiths are assumed to have a weight of 1.
                       Example: {'a':[0.5],'b':[0.5,1.5],'c':[1.5]}
     id_order = None : list 
-                      An ordered list of ids, 
-                        defines the order of observations when iterating over W
-                        if not set, lexigraphical ordering is used to iterate and
-                        the id_order_set property will return False.
-                      This can be set after creation by setting the 'id_order' property.
+                      An ordered list of ids, defines the order of
+                      observations when iterating over W if not set,
+                      lexicographical ordering is used to iterate and the
+                      id_order_set property will return False.  This can be
+                      set after creation by setting the 'id_order' property.
 
     Attributes
     ----------
@@ -143,6 +144,7 @@ class W(object):
         self._asymmetries=None
         self._islands=None
         self._histogram=None
+        self._sparse=None
 
 
     @property
@@ -230,6 +232,11 @@ class W(object):
             self.characteristics
         return self._islands
 
+    @property
+    def sparse(self):
+        if not self._sparse:
+            self._build_sparse()
+        return self._sparse
 
     @property
     def histogram(self):
@@ -288,6 +295,16 @@ class W(object):
         # connectivity histogram
         ct,bin=np.histogram(cardinalities,range(self._min_neighbors,self._max_neighbors+2))
         self._histogram=zip(bin,ct)
+
+    def _build_sparse(self):
+        self._n=len(self.weights)
+        n=self._n
+        self._sparse=sparse.lil_matrix((n,n),dtype=float32)
+        for id in self.id_order:
+            # have map id to i
+            i=self.id_order.index(id)
+            self._sparse[i,self.neighbor_offsets[id]]=self.weights[id]
+
 
 
     def __getitem__(self,key):
@@ -477,6 +494,7 @@ class W(object):
                     D: Double-standardization (global sum=1)
                     V: Variance stabilizing
                     O: Restore original transformation (from instantiation)
+
         Examples
         --------
         >>> w=lat2W()
