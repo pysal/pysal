@@ -2,6 +2,8 @@
 setup.py for PySAL package.
 """
 
+#import distribute_setup
+#distribute_setup.use_setuptools()
 from distutils.core import setup, Extension
 from pysal.version import version
 
@@ -18,7 +20,10 @@ setup(name = 'pysal',
                   'pysal.esda', 
                   'pysal.inequality',
                   'pysal.spatial_dynamics',
+                  'pysal.spatial_dynamics.markov',
+                  'pysal.spatial_dynamics.mobility',
                   'pysal.region',
+                  'pysal.tests',
                   'pysal.weights'],
       package_data = {'pysal':['examples/shp_test/*','examples/*.*','examples/README']},
       requires = ['scipy']
