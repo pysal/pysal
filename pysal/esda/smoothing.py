@@ -9,6 +9,9 @@ Author(s):
     Serge Rey srey@asu.edu
 
 """
+
+__author__ = "Myunghwa Hwang <mhwang4@gmail.com>, Luc Anselin <luc.anselin@asu.edu>, Serge Rey <srey@asu.edu"
+
 import pysal
 from pysal.weights import comb, Kernel
 from pysal.cg import Point, Ray, LineSegment
