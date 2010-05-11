@@ -1,0 +1,8 @@
+:mod:`spatial_dynamics.mobility.rank` -- Rank and spatial rank mobility measures
+=================================================================================
+
+.. versionadded:: 1.0
+
+.. automodule:: pysal.spatial_dynamics.mobility.rank
+    :synopsis: 
+    :members:

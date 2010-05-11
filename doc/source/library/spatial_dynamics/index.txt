@@ -1,0 +1,8 @@
+:mod:`pysal.spatial_dynamics` --- Spatial Dynamics
+=========================================================
+.. toctree::
+
+    markov/index.txt
+    mobility/index.txt
+
+.. automodule:: pysal.spatial_dynamics

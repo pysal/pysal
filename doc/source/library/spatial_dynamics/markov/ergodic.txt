@@ -1,0 +1,8 @@
+:mod:`spatial_dynamics.markov.ergodic` -- 
+===========================================================
+
+.. versionadded:: 1.0
+
+.. automodule:: pysal.spatial_dynamics.markov.ergodic
+    :synopsis: Returns the steady state probability vector for a regular Markov transition matrix P
+    :members:
