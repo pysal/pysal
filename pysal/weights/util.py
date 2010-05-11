@@ -3,7 +3,7 @@ from pysal.common import *
 from pysal.weights import W
 import numpy as np
 from scipy import sparse,float32
-import gc
+import os, gc
 
 __all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 'full']
 
@@ -27,9 +27,6 @@ class WS:
             w[i,ni]=[1]*len(ni)
         self.w=w.tocsc()
         self.ids=ids
-
-
-
 
 class VirtualNeighbors(dict):
     """
@@ -82,8 +79,6 @@ class VirtualWeights(dict):
             raise KeyError
     def keys(self):
         return xrange(self.n)
-
-
 
 class WVirtual(W):
     """"""
@@ -602,6 +597,41 @@ def remap_ids(w, old2new, id_order=[]):
             return W(new_neigh, new_weights, id_order)
         else:
             return W(new_neigh, new_weights)
+
+def get_ids(shapefile, idVariable):
+    """ 
+    Gets the IDs from the DBF file that moves with a given shape file
+
+    Parameters
+    ----------
+    shapefile    : string
+                   name of a shape file including suffix
+    idVariable   : string 
+                   name of a column in the shapefile's DBF to use for ids
+
+    Returns      
+    -------
+    ids          : list
+                   a list of IDs
+
+    Examples
+    --------
+    >>> polyids = get_ids("../examples/columbus.shp", "POLYID")      
+    >>> polyids[:5]
+    [1, 2, 3, 4, 5]
+    """
+
+    try:
+        dbname = os.path.splitext(shapefile)[0] + '.dbf'
+        db = pysal.open(dbname)
+        var = db.by_col[idVariable]
+        return var
+    except IOError:
+        msg = 'The shapefile "%s" appears to be missing its DBF file. The DBF file "%s" could not be found.' % (shapefile, dbname)
+        raise IOError, msg
+    except AttributeError:
+        msg = 'The variable "%s" was not found in the DBF file. The DBF contains the following variables: %s.' % (idVariable, ','.join(db.header))
+        raise KeyError, msg
 
    
 if __name__ == "__main__":

@@ -10,6 +10,7 @@ import os
 import pysal
 from Contiguity import buildContiguity
 from Distance import knnW, Kernel, DistanceBand
+from util import get_ids
 import numpy as np
 
 
@@ -53,17 +54,8 @@ def queen_from_shapefile(shapefile,idVariable=None):
 
     """
     if idVariable:
-        try:
-            dbname = os.path.splitext(shapefile)[0]+'.dbf'
-            db = pysal.open(dbname)
-            var = db.by_col[idVariable]
-            return buildContiguity(pysal.open(shapefile),criterion='queen',ids=var)
-        except IOError:
-            msg = 'The shapefile "%s" appears to be missing its DBF File. The DBF file "%s" could not be found'%(shapefile,dbname)
-            raise IOError, msg
-        except AttributeError:
-            msg = 'The variable "%s" was not found in the DBF file.  The DBF contains the following variables: %s'%(idVariable,', '.join(db.header))
-            raise KeyError, msg
+        ids = get_ids(shapefile, idVariable)
+	return buildContiguity(pysal.open(shapefile),criterion='queen',ids=ids)
     return buildContiguity(pysal.open(shapefile),criterion='queen')
 
 def rook_from_shapefile(shapefile,idVariable=None):
@@ -84,7 +76,7 @@ def rook_from_shapefile(shapefile,idVariable=None):
 
     Examples
     --------
-    >>> wr=rook_from_shapefile("../examples/columbus.shp")
+    >>> wr=rook_from_shapefile("../examples/columbus.shp", "POLYID")
     >>> wr.pct_nonzero
     0.083298625572678045
 
@@ -100,17 +92,8 @@ def rook_from_shapefile(shapefile,idVariable=None):
 
     """
     if idVariable:
-        try:
-            dbname = os.path.splitext(shapefile)[0]+'.dbf'
-            db = pysal.open(dbname)
-            var = db.by_col[idVariable]
-            return buildContiguity(pysal.open(shapefile),criterion='rook',ids=var)
-        except IOError:
-            msg = 'The shapefile "%s" appears to be missing its DBF File. The DBF file "%s" could not be found'%(shapefile,dbname)
-            raise IOError, msg
-        except AttributeError:
-            msg = 'The variable "%s" was not found in the DBF file.  The DBF contains the following variables: %s'%(idVariable,', '.join(db.header))
-            raise KeyError, msg
+        ids = get_ids(shapefile, idVariable)
+        return buildContiguity(pysal.open(shapefile),criterion='rook',ids=ids)
     return buildContiguity(pysal.open(shapefile),criterion='rook')
 
 
@@ -188,7 +171,7 @@ def knnW_from_array(array,k=2,p=2,ids=None):
     """
     return knnW(array,k=k,p=p,ids=ids)
 
-def knnW_from_shapefile(shapefile,k=2,p=2,ids=None):
+def knnW_from_shapefile(shapefile,k=2,p=2,idVariable=None):
     """
     Nearest neighbor weights from a shapefile
 
@@ -204,8 +187,8 @@ def knnW_from_shapefile(shapefile,k=2,p=2,ids=None):
                  1<=p<=infinity
                  2: Euclidean distance
                  1: Manhattan distance
-    ids        : list
-                 identifiers to attach to each observation
+    idVariable : string
+                 name of a column in the shapefile's DBF to use for ids
 
     Returns
     -------
@@ -222,7 +205,7 @@ def knnW_from_shapefile(shapefile,k=2,p=2,ids=None):
     >>> wc=knnW_from_shapefile('../examples/columbus.shp')
     >>> wc.pct_nonzero
     0.040816326530612242
-    >>> wc3=knnW_from_shapefile('../examples/columbus.shp',k=3)
+    >>> wc3=knnW_from_shapefile('../examples/columbus.shp',k=3,idVariable="POLYID")
     >>> wc3.weights[0]
     [1, 1, 1]
     >>> wc3.neighbors[0]
@@ -262,8 +245,11 @@ def knnW_from_shapefile(shapefile,k=2,p=2,ids=None):
     if f.type.__name__=='Polygon':
         data=np.array([shape.centroid for shape in shapes])
     elif f.type.__name__=='Point':
-         data=np.array([shape for shape in shapes])
-    return knnW(data,k=k,p=p,ids=ids)
+        data=np.array([shape for shape in shapes])
+    if idVariable:
+        ids = get_ids(shapefile, idVariable)
+        return knnW(data,k=k,p=p,ids=ids)
+    return knnW(data,k=k,p=p)
 
 def threshold_binaryW_from_array(array,threshold,p=2):
     """
