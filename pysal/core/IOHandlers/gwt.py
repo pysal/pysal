@@ -2,10 +2,10 @@ import pysal.core.FileIO as FileIO
 from pysal.weights import W
 
 
-class GwtReader(FileIO.FileIO):
+class GwtIO(FileIO.FileIO):
 
     FORMATS = ['gwt']
-    MODES = ['r']
+    MODES = ['r', 'w']
 
     def __init__(self,*args,**kwargs):
         FileIO.FileIO.__init__(self,*args,**kwargs)
@@ -49,6 +49,23 @@ class GwtReader(FileIO.FileIO):
 
         self.pos += 1
         return W(neighbors,weights)
+
+    def write(self, obj):
+        """.write(weightsObject)
+        write a weights object to the opened file
+        """
+        self._complain_ifclosed(self.closed)
+        if issubclass(type(obj),W):
+            IDS = obj.id_order
+            header = '%s %i %s %s\n' % ('', obj.n, '', '')
+            self.file.write(header)
+            for id in IDS:
+                neighbors = zip(obj.neighbors[id], obj.weights[id])
+                for neighbor, weight in neighbors:
+                    self.file.write('%s %s %d\n' % (id, neighbor, weight))
+                    self.pos += 1
+        else:
+            raise TypeError, "Expected a pysal weights object, got: %s" % (type(obj))
 
     def close(self):
         self.file.close()

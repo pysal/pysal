@@ -206,10 +206,10 @@ def knnW_from_shapefile(shapefile,k=2,p=2,idVariable=None):
     >>> wc.pct_nonzero
     0.040816326530612242
     >>> wc3=knnW_from_shapefile('../examples/columbus.shp',k=3,idVariable="POLYID")
-    >>> wc3.weights[0]
+    >>> wc3.weights[1]
     [1, 1, 1]
-    >>> wc3.neighbors[0]
-    [2, 1, 3]
+    >>> wc3.neighbors[1]
+    [3, 2, 4]
     >>> wc.neighbors[0]
     [2, 1]
 
@@ -309,7 +309,7 @@ def threshold_binaryW_from_shapefile(shapefile,threshold,p=2,idVariable=None):
     Examples
     --------
     >>> w = threshold_binaryW_from_shapefile('../examples/columbus.shp',0.62,idVariable="POLYID")
-    >>> w.weights[0]
+    >>> w.weights[1]
     [1, 1]
     """
     data = get_points_array_from_shapefile(shapefile)
@@ -404,7 +404,7 @@ def threshold_continuousW_from_shapefile(shapefile,threshold,p=2,
     Examples
     --------
     >>> w = threshold_continuousW_from_shapefile('../examples/columbus.shp',0.62,idVariable="POLYID")
-    >>> w.weights[0]
+    >>> w.weights[1]
     [1.6702346893743276, 1.7250729841938044]
     """
     data = get_points_array_from_shapefile(shapefile)
@@ -568,7 +568,7 @@ def kernelW_from_shapefile(shapefile,k=2,function='triangular',idVariable=None):
     Examples
     --------
     >>> kw = kernelW_from_shapefile('../examples/columbus.shp',idVariable='POLYID')
-    >>> kw.weights[0]
+    >>> kw.weights[1]
     [0.20524787824004365, 0.0070787731484506233, 1.0, 0.23051223027663015]
     >>> kw.bandwidth[:3]
     array([[ 0.75333961],

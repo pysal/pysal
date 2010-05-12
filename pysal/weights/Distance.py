@@ -85,9 +85,13 @@ def knnW(point_array,k=2,p=2,ids=None):
     info=nnq[1]
     neighbors={}
     weights={}
-    for i,row in enumerate(info):
-        neighbors[i]=row[1:].tolist()
-        weights[i]=[1]*len(neighbors[i])
+    if ids:
+        idset = np.array(ids)
+    else:
+        idset = np.arange(len(info))
+    for i, row in enumerate(info):
+	neighbors[idset[i]] = list(idset[row[1:].tolist()])
+	weights[idset[i]] = [1]*len(neighbors[idset[i]])
 
     return pysal.weights.W(neighbors,weights=weights,id_order=ids)
 
@@ -246,14 +250,18 @@ class Kernel(W):
             self._set_bw()
 
         self._eval_kernel()
-        W.__init__(self,*self._k_to_W(),id_order=ids)
+        W.__init__(self,*self._k_to_W(ids),id_order=ids)
 
-    def _k_to_W(self):
+    def _k_to_W(self, ids=None):
         allneighbors={}
         weights={}
-        for i,neighbors in enumerate(self.kernel):
-            allneighbors[i]=self.neigh[i]
-            weights[i]=self.kernel[i].tolist()
+        if ids:
+            ids = np.array(ids)
+        else:
+            ids = np.arange(len(self.data))
+        for i, neighbors in enumerate(self.kernel):
+            allneighbors[ids[i]] = list(ids[self.neigh[i]])
+            weights[ids[i]] = self.kernel[i].tolist()
         return allneighbors,weights
 
     def _set_bw(self):
@@ -365,7 +373,7 @@ class DistanceBand(W):
         self.binary=binary
         self.alpha=alpha
         self._band()
-        W.__init__(self,*self._distance_to_W(),id_order=ids)
+        W.__init__(self,*self._distance_to_W(ids),id_order=ids)
 
 
     def _band(self):
@@ -377,20 +385,24 @@ class DistanceBand(W):
         ns=[kd.query_ball_point(point,self.threshold) for point in self.data]
         self._nmat=ns
 
-    def _distance_to_W(self):
+    def _distance_to_W(self,ids=None):
         allneighbors={}
         weights={}
+        if ids:
+            ids = np.array(ids)
+        else:
+            ids = np.arange(len(self._nmat))
         if self.binary:
             for i,neighbors in enumerate(self._nmat):
                 ns=[ni for ni in neighbors if ni!=i]
-                allneighbors[i]=ns
-                weights[i]=[1]*len(ns)
+                allneighbors[ids[i]]=list(ids[ns])
+                weights[ids[i]]=[1]*len(ns)
         else:
             self.dmat=self.kd.sparse_distance_matrix(self.kd,max_distance=self.threshold)
             for i,neighbors in enumerate(self._nmat):
                 ns=[ni for ni in neighbors if ni!=i]
-                allneighbors[i]=ns
-                weights[i]=[self.dmat[(i,j)]**self.alpha for j in ns]
+                allneighbors[ids[i]]=list(ids[ns])
+                weights[ids[i]]=[self.dmat[(i,j)]**self.alpha for j in ns]
         return allneighbors,weights
 
 
