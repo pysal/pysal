@@ -228,7 +228,7 @@ class Kernel(W):
            [ 18.02775818]])
     """
     def __init__(self,data,bandwidth=None,fixed=True,k=2,
-                 function='triangular',eps=1.0000001):
+                 function='triangular',eps=1.0000001,ids=None):
         self.data=data
         self.k=k+1 
         self.function=function.lower()
@@ -246,7 +246,7 @@ class Kernel(W):
             self._set_bw()
 
         self._eval_kernel()
-        W.__init__(self,*self._k_to_W())
+        W.__init__(self,*self._k_to_W(),id_order=ids)
 
     def _k_to_W(self):
         allneighbors={}
@@ -357,7 +357,7 @@ class DistanceBand(W):
     so serge changed line 221 of that file on sal-dev to fix the logic bug
 
     """
-    def __init__(self,data,threshold,p=2,alpha=-1.0,binary=True):
+    def __init__(self,data,threshold,p=2,alpha=-1.0,binary=True,ids=None):
         
         self.data=data
         self.p=p
@@ -365,7 +365,7 @@ class DistanceBand(W):
         self.binary=binary
         self.alpha=alpha
         self._band()
-        W.__init__(self,*self._distance_to_W())
+        W.__init__(self,*self._distance_to_W(),id_order=ids)
 
 
     def _band(self):

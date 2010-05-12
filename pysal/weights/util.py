@@ -633,6 +633,50 @@ def get_ids(shapefile, idVariable):
         msg = 'The variable "%s" was not found in the DBF file. The DBF contains the following variables: %s.' % (idVariable, ','.join(db.header))
         raise KeyError, msg
 
+def get_points_array_from_shapefile(shapefile):
+    """
+    Gets a data array of x and y coordinates from a given shape file
+
+    Parameters
+    ----------
+    shapefile     : string
+                    name of a shape file including suffix
+    
+    Returns
+    -------
+    points        : array (n,2)
+                    a data array of x and y coordinates
+
+    Note
+    ----
+    If the given shape file includes polygons, 
+    this function returns x and y coordinates of the polygons' centroids
+
+    Examples
+    --------
+    Point shapefile
+    >>> xy = get_points_array_from_shapefile('../examples/juvenile.shp')
+    >>> xy[:3]
+    array([[ 94.,  93.],
+           [ 80.,  95.],
+           [ 79.,  90.]])
+
+    Polygon shapefile
+    >>> xy = get_points_array_from_shapefile('../examples/columbus.shp')
+    >>> xy[:3]
+    array([[  8.82721847,  14.36907602],
+           [  8.33265837,  14.03162401],
+           [  9.01226541,  13.81971908]])
+    """
+
+    f = pysal.open(shapefile)
+    shapes = f.read()
+    if f.type.__name__ == 'Polygon':
+        data = np.array([shape.centroid for shape in shapes])
+        return data
+    elif f.type.__name__ == 'Point':
+        data = np.array([shape for shape in shapes])
+        return data
    
 if __name__ == "__main__":
 

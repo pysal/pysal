@@ -10,7 +10,7 @@ import os
 import pysal
 from Contiguity import buildContiguity
 from Distance import knnW, Kernel, DistanceBand
-from util import get_ids
+from util import get_ids, get_points_array_from_shapefile
 import numpy as np
 
 
@@ -240,12 +240,7 @@ def knnW_from_shapefile(shapefile,k=2,p=2,idVariable=None):
 
     """
 
-    f=pysal.open(shapefile)
-    shapes=f.read()
-    if f.type.__name__=='Polygon':
-        data=np.array([shape.centroid for shape in shapes])
-    elif f.type.__name__=='Point':
-        data=np.array([shape for shape in shapes])
+    data = get_points_array_from_shapefile(shapefile)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
         return knnW(data,k=k,p=p,ids=ids)
@@ -274,8 +269,6 @@ def threshold_binaryW_from_array(array,threshold,p=2):
     w         : W instance
                 Weights object with binary weights
 
-
-
     Examples
     --------
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
@@ -288,6 +281,42 @@ def threshold_binaryW_from_array(array,threshold,p=2):
     """
     return DistanceBand(array,threshold=threshold,p=p)
 
+def threshold_binaryW_from_shapefile(shapefile,threshold,p=2,idVariable=None):
+    """
+    Threshold distance based binary weights from a shapefile
+
+    Parameters
+    ----------
+
+    shapefile  : string
+                 shapefile name with shp suffix
+    threshold  : float
+                 distance band
+    p          : float
+                 Minkowski p-norm distance metric parameter:
+                 1<=p<=infinity
+                 2: Euclidean distance
+                 1: Manhattan distance
+    idVariable : string
+                 name of a column in the shapefile's DBF to use for ids
+
+    Returns
+    -------
+
+    w         : W instance
+                Weights object with binary weights
+
+    Examples
+    --------
+    >>> w = threshold_binaryW_from_shapefile('../examples/columbus.shp',0.62,idVariable="POLYID")
+    >>> w.weights[0]
+    [1, 1]
+    """
+    data = get_points_array_from_shapefile(shapefile)
+    if idVariable:
+        ids = get_ids(shapefile,idVariable)
+        return DistanceBand(data,threshold=threshold,p=p,ids=ids)
+    return threshold_binaryW_from_array(data,threshold,p=p)
 
 def threshold_continuousW_from_array(array,threshold,p=2,
                                      alpha=-1):
@@ -342,6 +371,47 @@ def threshold_continuousW_from_array(array,threshold,p=2,
     w=DistanceBand(array,threshold=threshold,p=p,alpha=alpha,binary=False)
     return w
 
+def threshold_continuousW_from_shapefile(shapefile,threshold,p=2,
+                                         alpha=-1,idVariable=None):
+    """
+    Threshold distance based continuous weights from a shapefile
+
+    Parameters
+    ----------
+
+    shapefile  : string
+                 shapefile name with shp suffix
+    threshold  : float
+                 distance band
+    p          : float
+                 Minkowski p-norm distance metric parameter:
+                 1<=p<=infinity
+                 2: Euclidean distance
+                 1: Manhattan distance
+    alpha      : float 
+                 distance decay parameter for weight (default -1.0)
+                 if alpha is positive the weights will not decline with
+                 distance. 
+    idVariable : string
+                 name of a column in the shapefile's DBF to use for ids
+
+    Returns
+    -------
+
+    w         : W instance
+                Weights object with continuous weights
+
+    Examples
+    --------
+    >>> w = threshold_continuousW_from_shapefile('../examples/columbus.shp',0.62,idVariable="POLYID")
+    >>> w.weights[0]
+    [1.6702346893743276, 1.7250729841938044]
+    """
+    data = get_points_array_from_shapefile(shapefile)
+    if idVariable:
+        ids = get_ids(shapefile,idVariable)
+        return DistanceBand(data,threshold=threshold,p=p,alpha=alpha,binary=False,ids=ids)
+    return threshold_continuousW_from_array(data,threshold,p=p,alpha=alpha)
 
 # Kernel Weights
 
@@ -435,7 +505,83 @@ def kernelW(points,k=2,function='triangular'):
     """
     return Kernel(points,function=function,k=k)
 
-def adaptive_kernelW(points, bandwidths=None, function='triangular', k=2):
+def kernelW_from_shapefile(shapefile,k=2,function='triangular',idVariable=None):
+    """
+    Kernel based weights
+ 
+    Parameters
+    ----------
+
+    shapefile   : string
+                  shapefile name with shp suffix
+    k           : int
+                  the number of nearest neighbors to use for determining
+                  bandwidth. Bandwidth taken as :math:`h_i=max(dknn) \\forall i`
+                  where :math:`dknn` is a vector of k-nearest neighbor
+                  distances (the distance to the kth nearest neighbor for each
+                  observation).  
+    function    : string {'triangular','uniform','quadratic','quartic','gaussian'}
+                  kernel function defined as follows with 
+
+                  .. math::
+
+                      z_{i,j} = d_{i,j}/h_i
+
+                  triangular 
+
+                  .. math::
+
+                      K(z) = (1 - |z|) \ if |z| \le 1
+
+                  uniform 
+
+                  .. math::
+
+                      K(z) = |z| \ if |z| \le 1
+
+                  quadratic 
+
+                  .. math::
+
+                      K(z) = (3/4)(1-z^2) \ if |z| \le 1
+
+                  quartic
+
+                  .. math::
+
+                      K(z) = (15/16)(1-z^2)^2 \ if |z| \le 1
+                 
+                  gaussian
+
+                  .. math::
+
+                      K(z) = (2\pi)^{(-1/2)} exp(-z^2 / 2)
+    idVariable   : string
+                   name of a column in the shapefile's DBF to use for ids
+
+    Returns
+    -------
+
+    w            : W
+                   instance of spatial weights
+
+    Examples
+    --------
+    >>> kw = kernelW_from_shapefile('../examples/columbus.shp',idVariable='POLYID')
+    >>> kw.weights[0]
+    [0.20524787824004365, 0.0070787731484506233, 1.0, 0.23051223027663015]
+    >>> kw.bandwidth[:3]
+    array([[ 0.75333961],
+           [ 0.75333961],
+           [ 0.75333961]])
+    """
+    points = get_points_array_from_shapefile(shapefile)
+    if idVariable:
+        ids = get_ids(shapefile,idVariable)
+        return Kernel(points,function=function,k=k,ids=ids)
+    return kernelW(points,k=k,function=function)
+
+def adaptive_kernelW(points, bandwidths=None, function='triangular'):
     """
     Kernel weights with adaptive bandwidths
 
@@ -450,11 +596,6 @@ def adaptive_kernelW(points, bandwidths=None, function='triangular', k=2):
                   the bandwidth :math:`h_i` for the kernel. 
                   if no bandwidth is specified k is used to determine the
                   adaptive bandwidth
-    k           : int
-                  the number of nearest neighbors to use for determining
-                  bandwidth  :math:`h_i=dknn_i` where :math:`dknn_i` is the
-                  distance to the :math:`k_{th}` nearest neighbor to
-                  :math:`i`.
     function    : string {'triangular','uniform','quadratic','quartic','gaussian'}
                   kernel function defined as follows with 
 
@@ -548,6 +689,83 @@ def adaptive_kernelW(points, bandwidths=None, function='triangular', k=2):
            [ 18.02775818]])
     """
     return Kernel(points, bandwidth=bandwidths,fixed=False, function=function)
+
+def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, function='triangular', 
+                                    idVariable=None):
+    """
+    Kernel weights with adaptive bandwidths
+ 
+    Parameters
+    ----------
+
+    shapefile   : string
+                  shapefile name with shp suffix
+    bandwidths  : float or array-like (optional)
+                  the bandwidth :math:`h_i` for the kernel. 
+                  if no bandwidth is specified k is used to determine the
+                  adaptive bandwidth
+    function    : string {'triangular','uniform','quadratic','quartic','gaussian'}
+                  kernel function defined as follows with 
+
+                  .. math::
+
+                      z_{i,j} = d_{i,j}/h_i
+
+                  triangular 
+
+                  .. math::
+
+                      K(z) = (1 - |z|) \ if |z| \le 1
+
+                  uniform 
+
+                  .. math::
+
+                      K(z) = |z| \ if |z| \le 1
+
+                  quadratic 
+
+                  .. math::
+
+                      K(z) = (3/4)(1-z^2) \ if |z| \le 1
+
+                  quartic
+
+                  .. math::
+
+                      K(z) = (15/16)(1-z^2)^2 \ if |z| \le 1
+                 
+                  gaussian
+
+                  .. math::
+
+                      K(z) = (2\pi)^{(-1/2)} exp(-z^2 / 2)
+    idVariable   : string
+                   name of a column in the shapefile's DBF to use for ids
+
+    Returns
+    -------
+
+    w            : W
+                   instance of spatial weights
+
+
+    Examples
+    --------
+    >>> bw = [0.2,0.45,0.7]
+    >>> kwa = adaptive_kernelW_from_shapefile('../examples/columbus.shp',bandwidths=bw)
+    >>> kwa.weights[0]
+    [1.0]
+    >>> kwa.bandwidth
+    array([[ 0.2 ],
+           [ 0.45],
+           [ 0.7 ]])
+    """
+    points = get_points_array_from_shapefile(shapefile)
+    if idVariable:
+        ids = get_ids(shapefile, idVariable)
+        return Kernel(points,bandwidth=bandwidths,fixed=False,function=function,ids=ids)
+    return adaptive_kernelW(points,bandwidths=bandwidths,function=function)
 
 if __name__ == "__main__":
 
