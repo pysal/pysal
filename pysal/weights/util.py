@@ -681,7 +681,7 @@ def get_points_array_from_shapefile(shapefile):
 
 def min_threshold_distance(data):
     """
-    Get the minimum nearest neighbor distance
+    Get the maximum nearest neighbor distance
 
     Parameters
     ----------
@@ -692,7 +692,7 @@ def min_threshold_distance(data):
     Returns
     -------
     nnd    : float
-             minimum nearest neighbor distance between the n observations
+             maximum nearest neighbor distance between the n observations
     
     Examples
     --------
@@ -708,7 +708,7 @@ def min_threshold_distance(data):
 
     kd=KDTree(data)
     nn=kd.query(data,k=2,p=2)
-    nnd=nn[0].min(axis=0)[1]
+    nnd=nn[0].max(axis=0)[1]
     return nnd
 
    
