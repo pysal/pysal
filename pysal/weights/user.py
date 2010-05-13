@@ -787,7 +787,7 @@ def min_threshold_dist_from_shapefile(shapefile):
     --------
     >>> md = min_threshold_dist_from_shapefile('../examples/columbus.shp')
     >>> md
-    0.12762758669004387
+    0.61886415807685413
     """
     points = get_points_array_from_shapefile(shapefile)
     return min_threshold_distance(points)
