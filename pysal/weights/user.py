@@ -10,7 +10,7 @@ import os
 import pysal
 from Contiguity import buildContiguity
 from Distance import knnW, Kernel, DistanceBand
-from util import get_ids, get_points_array_from_shapefile
+from util import get_ids, get_points_array_from_shapefile, min_threshold_distance
 import numpy as np
 
 
@@ -766,6 +766,31 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, function='triang
         ids = get_ids(shapefile, idVariable)
         return Kernel(points,bandwidth=bandwidths,fixed=False,function=function,ids=ids)
     return adaptive_kernelW(points,bandwidths=bandwidths,function=function)
+
+def min_threshold_dist_from_shapefile(shapefile):
+    """
+    Kernel weights with adaptive bandwidths
+ 
+    Parameters
+    ----------
+
+    shapefile   : string
+                  shapefile name with shp suffix
+
+    Returns
+    -------
+    d            : float
+                   minimum nearest neighbor distance between the n observations
+
+
+    Examples
+    --------
+    >>> md = min_threshold_dist_from_shapefile('../examples/columbus.shp')
+    >>> md
+    0.12762758669004387
+    """
+    points = get_points_array_from_shapefile(shapefile)
+    return min_threshold_distance(points)
 
 if __name__ == "__main__":
 
