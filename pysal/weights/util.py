@@ -3,6 +3,7 @@ from pysal.common import *
 from pysal.weights import W
 import numpy as np
 from scipy import sparse,float32
+from scipy.spatial import KDTree
 import os, gc
 
 __all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 'full']
@@ -677,6 +678,39 @@ def get_points_array_from_shapefile(shapefile):
     elif f.type.__name__ == 'Point':
         data = np.array([shape for shape in shapes])
         return data
+
+def min_threshold_distance(data):
+    """
+    Get the minimum nearest neighbor distance
+
+    Parameters
+    ----------
+
+    data    : array (n,k)
+              n observations on k attributes
+
+    Returns
+    -------
+    nnd    : float
+             minimum nearest neighbor distance between the n observations
+    
+    Examples
+    --------
+
+    >>> x,y=np.indices((5,5))
+    >>> x.shape=(25,1)
+    >>> y.shape=(25,1)
+    >>> data=np.hstack([x,y])
+    >>> min_threshold_distance(data)
+    1.0
+
+    """
+
+    kd=KDTree(data)
+    nn=kd.query(data,k=2,p=2)
+    nnd=nn[0].min(axis=0)[1]
+    return nnd
+
    
 if __name__ == "__main__":
 

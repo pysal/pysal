@@ -9,6 +9,7 @@ __author__  = "Sergio J. Rey <srey@asu.edu> "
 #from weights import *
 from pysal.common import *
 from scipy import sparse, float32
+import gc
 
 # constant for precision
 DELTA = 0.0000001
@@ -126,11 +127,17 @@ class W(object):
         else:
             self._id_order=id_order
             self._id_order_set=True
+        self._reset()
+
+    def _reset(self):
+        """
+        Reset properties
+        """
         self.__neighbors_0 = False
+        self._id2i=None
         self._idx=0
         self._n=None
         self._transform=None
-        self._characteristics=None
         self._s0=None
         self._s1=None
         self._s2=None
@@ -144,8 +151,15 @@ class W(object):
         self._asymmetries=None
         self._islands=None
         self._histogram=None
-        self._sparse=None
+        #self._sparse=None
 
+    @property
+    def id2i(self):
+        if not self._id2i:
+            self._id2i={}
+            for id,i in enumerate(self._id_order):
+                self._id2i[id]=i
+        return self._id2i
 
     @property
     def n(self):
@@ -155,69 +169,69 @@ class W(object):
     @property
     def s0(self):
         if not self._s0:
-            self.characteristics
+            self.characteristics()
         return self._s0
 
     @property
     def s1(self):
         if not self._s1:
-            self.characteristics
+            self.characteristics()
         return self._s1
 
     @property
     def s2(self):
         if not self._s2:
-            self.characteristics
+            self.characteristics()
         return self._s2
     @property
     def pct_nonzero(self):
         if not self._pct_nonzero:
-            self.characteristics
+            self.characteristics()
         return self._pct_nonzero
 
     @property
     def cardinalities(self):
         if not self._cardinalities:
-            self.characteristics
+            self.characteristics()
         return self._cardinalities
 
     @property
     def max_neighbors(self):
         if not self._max_neighbors:
-            self.characteristics
+            self.characteristics()
         return self._max_neighbors
 
 
     @property
     def mean_neighbors(self):
         if not self._mean_neighbors:
-            self.characteristics
+            self.characteristics()
         return self._mean_neighbors
 
 
     @property
     def mean_neighbors(self):
         if not self._mean_neighbors:
-            self.characteristics
+            self.characteristics()
         return self._mean_neighbors
 
     @property
     def min_neighbors(self):
         if not self._min_neighbors:
-            self.characteristics
+            self.characteristics()
         return self._min_neighbors
 
 
     @property
     def nonzero(self):
         if not self._nonzero:
-            self.characteristics
+            self.characteristics()
         return self._nonzero
 
     @property
     def sd(self):
         if not self._sd:
-            self.characteristics
+            self.characteristics()
         return self._sd
 
     @property
@@ -229,30 +243,42 @@ class W(object):
     @property
     def islands(self):
         if not self._islands:
-            self.characteristics
+            self.characteristics()
         return self._islands
 
     def _get_sparse(self):
         """
         get - a Scipy sparse matrix of the weights.
-        set - the type of sparse matric needed.
+        set - setter for sparce using csr form
         """
-        if not self._sparse:
-            self._build_sparse()
+        if not hasattr(self,"_sparse"):
+            self._set_sparse()
         return self._sparse
-    def _set_sparse(self,value):
-        self._sparse = value
+
+    def _set_sparse(self):
+        self._n=len(self.weights)
+        n=self._n
+        self._sparse=sparse.lil_matrix((n,n),dtype=float32)
+        gc.disable()
+        i=0
+        for id in self.id_order:
+            # have map id to i
+            i=self.id_order.index(id)
+            self._sparse[i,self.neighbor_offsets[id]]=self.weights[id]
+        self._sparse=self._sparse.tocsr()
+        gc.enable()
+
     sparse = property(_get_sparse,_set_sparse)
+
 
     @property
     def histogram(self):
         if not self._histogram:
-            self.characteristics
+            self.characteristics()
         return self._histogram
 
 
 
-    @property
     def characteristics(self):
         s0=s1=s2=0.0
         n=len(self.weights)
@@ -301,16 +327,6 @@ class W(object):
         # connectivity histogram
         ct,bin=np.histogram(cardinalities,range(self._min_neighbors,self._max_neighbors+2))
         self._histogram=zip(bin,ct)
-
-    def _build_sparse(self):
-        self._n=len(self.weights)
-        n=self._n
-        self._sparse=sparse.lil_matrix((n,n),dtype=float32)
-        for id in self.id_order:
-            # have map id to i
-            i=self.id_order.index(id)
-            self._sparse[i,self.neighbor_offsets[id]]=self.weights[id]
-
 
 
     def __getitem__(self,key):
@@ -519,7 +535,7 @@ class W(object):
         self._transform = value
         if self.transformations.has_key(value):
             self.weights=self.transformations[value]
-            self.characteristics
+            self._reset()
         else:
             if value == "R": 
                 # row standardized weights
@@ -530,11 +546,11 @@ class W(object):
                     weights[i]=[wij/row_sum for wij in wijs]
                 self.transformations[value]=weights
                 self.weights=weights
-                self.characteristics
+                self._reset()
             elif value == "D":
                 # doubly-standardized weights
                 # update current chars before doing global sum
-                self.characteristics
+                self._reset()
                 s0=self.s0
                 ws=1.0/s0
                 weights={}
@@ -543,7 +559,7 @@ class W(object):
                     weights[i]=[wij*ws for wij in wijs]
                 self.transformations[value]=weights
                 self.weights=weights
-                self.characteristics
+                self._reset()
             elif value == "B":
                 # binary transformation
                 weights={}
@@ -552,7 +568,7 @@ class W(object):
                     weights[i]=[1.0 for wij in wijs]
                 self.transformations[value]=weights
                 self.weights=weights
-                self.characteristics
+                self._reset()
             elif value == "V":
                 # variance stabilizing
                 weights={}
@@ -569,12 +585,13 @@ class W(object):
                 for i in self.weights:
                     weights[i] = [ w*nQ for w in s[i]]
                 self.weights=weights
-                self.characteristics
+                self.reset()
             elif value =="O":
                 # put weights back to original transformation
                 weights={}
                 original=self.transformations[value]
                 self.weights=original
+                self._reset()
             else:
                 print 'unsupported weights transformation'
 
