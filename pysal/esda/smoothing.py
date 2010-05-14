@@ -350,10 +350,10 @@ class Spatial_Empirical_Bayes:
     >>> if not stl_w.id_order_set: stl_w.id_order = range(1,len(stl) + 1)
     >>> s_eb = Spatial_Empirical_Bayes(stl_e, stl_b, stl_w)
     >>> s_eb.r[:10]
-    array([  1.61803355e-05,   4.48446462e-05,   4.00778159e-05,
-             1.33238426e-05,   7.15436608e-05,   3.59076166e-05,
-             5.92033928e-05,   1.64426287e-05,   2.90029677e-05,
-             2.47922054e-05])
+    array([  3.56169432e-05,   3.43474199e-06,   4.79149944e-05,
+             4.39065103e-05,   3.65290387e-05,   3.68940334e-05,
+             5.57391186e-05,   3.14512416e-05,   3.50622895e-05,
+             3.56604301e-05])
     """
     def __init__(self, e, b, w):
         if not w.id_order_set:
@@ -361,7 +361,8 @@ class Spatial_Empirical_Bayes:
         r_mean = Spatial_Rate(e, b, w).r
         rate = e * 1.0 / b
         r_var_left = Spatial_Rate(np.square(rate - r_mean)*b, b, w).r
-        r_var_right = r_mean /((slag(w, b) + b)/len(e))
+        ngh_num = np.array([w.cardinalities[i] + 1 for i in w.id_order])
+        r_var_right = r_mean /((slag(w, b) + b)/ngh_num)
 	r_var = r_var_left - r_var_right
 	weight = r_var / ( r_var + r_mean / b)
 	self.r = weight * rate + (1.0 - weight) * r_mean
