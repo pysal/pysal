@@ -5,7 +5,7 @@ Set-like manipulation of weights matrices.
 __author__ = "Sergio J. Rey <srey@asu.edu>, Charles Schmidt <Charles.R.Schmidt@asu.edu>, David Folch <david.folch@asu.edu>"
 
 
-from pysal import weights as PW
+import pysal
 from pysal.common import *
 
 
@@ -36,9 +36,9 @@ def w_union(w1, w2):
 
     Examples
     --------
-
-    >>> w1 = PW.lat2W(4,4)
-    >>> w2 = PW.lat2W(6,4)
+    >>> import pysal
+    >>> w1 = pysal.lat2W(4,4)
+    >>> w2 = pysal.lat2W(6,4)
     >>> w = w_union(w1, w2)
     >>> w1[0] == w[0]
     True
@@ -58,7 +58,7 @@ def w_union(w1, w2):
             neighbors[i] = list(add_neigh)
         else:
             neighbors[i] = copy.copy(w2.neighbors[i])
-    return PW.W(neighbors)
+    return pysal.W(neighbors)
 
 
 def w_intersection(w1, w2, w_shape='w1'):
@@ -93,9 +93,9 @@ def w_intersection(w1, w2, w_shape='w1'):
 
     Examples
     --------
-
-    >>> w1 = PW.lat2W(4,4)
-    >>> w2 = PW.lat2W(6,4)
+    >>> import pysal
+    >>> w1 = pysal.lat2W(4,4)
+    >>> w2 = pysal.lat2W(6,4)
     >>> w = w_intersection(w1, w2)
     >>> w1[0] == w[0]
     True
@@ -125,7 +125,7 @@ def w_intersection(w1, w2, w_shape='w1'):
         else:
             neighbors[i] = []
 
-    return PW.W(neighbors)
+    return pysal.W(neighbors)
 
 
 def w_difference(w1, w2, w_shape='w1', constrained=True):
@@ -167,9 +167,9 @@ def w_difference(w1, w2, w_shape='w1', constrained=True):
 
     Examples
     --------
-
-    >>> w1 = PW.lat2W(4,4,rook=False)
-    >>> w2 = PW.lat2W(4,4,rook=True)
+    >>> import pysal
+    >>> w1 = pysal.lat2W(4,4,rook=False)
+    >>> w2 = pysal.lat2W(4,4,rook=True)
     >>> w = w_difference(w1, w2, constrained=False)
     >>> w1[0] == w[0]
     False
@@ -212,7 +212,7 @@ def w_difference(w1, w2, w_shape='w1', constrained=True):
         for i in constrained_keys:
             neighbors[i] = list(set(neighbors[i]).intersection(constrained_keys))
 
-    return PW.W(neighbors)
+    return pysal.W(neighbors)
 
 
 def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
@@ -253,9 +253,9 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
 
     Examples
     --------
-
-    >>> w1 = PW.lat2W(4,4,rook=False)
-    >>> w2 = PW.lat2W(6,4,rook=True)
+    >>> import pysal
+    >>> w1 = pysal.lat2W(4,4,rook=False)
+    >>> w2 = pysal.lat2W(6,4,rook=True)
     >>> w = w_symmetric_difference(w1, w2, constrained=False)
     >>> w1[0] == w[0]
     False
@@ -297,7 +297,7 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
         for i in constrained_keys:
             neighbors[i] = list(set(neighbors[i]).intersection(constrained_keys))
 
-    return PW.W(neighbors)
+    return pysal.W(neighbors)
 
 
 def w_subset(w1, ids):
@@ -322,8 +322,8 @@ def w_subset(w1, ids):
 
     Examples
     --------
-
-    >>> w1 = PW.lat2W(6,4)
+    >>> import pysal
+    >>> w1 = pysal.lat2W(6,4)
     >>> ids = range(16)
     >>> w = w_subset(w1, ids)
     >>> w1[0] == w[0]
@@ -344,7 +344,7 @@ def w_subset(w1, ids):
         else:
             neighbors[i] = []
 
-    return PW.W(neighbors)
+    return pysal.W(neighbors)
 
     
 def _test():

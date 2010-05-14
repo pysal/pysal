@@ -830,8 +830,7 @@ from Distance import *
 from Contiguity import *
 from user import *
 from spatial_lag import *
-
-
+import Wsets
 
 
 if __name__ == "__main__":
