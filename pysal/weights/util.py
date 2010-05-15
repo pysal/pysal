@@ -526,14 +526,16 @@ def full(w):
     >>> w=W(neighbors,weights)
     >>> wf,ids=full(w)
     >>> wf
-    array([[ 0.,  1.,  1.],
-           [ 1.,  0.,  0.],
-           [ 1.,  0.,  0.]])
+    array([[ 0.,  1.,  0.],
+           [ 1.,  0.,  1.],
+           [ 0.,  1.,  0.]])
     >>> ids
-    ['second', 'third', 'first']
+    ['first', 'second', 'third']
     """
     wfull=np.zeros([w.n,w.n],dtype=float)
     keys=w.neighbors.keys()
+    if w.id_order:
+        keys=w.id_order
     for i,key in enumerate(keys):
         n_i=w.neighbors[key]
         w_i=w.weights[key]

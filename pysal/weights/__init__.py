@@ -677,11 +677,11 @@ class W(object):
         >>> w=W(neighbors,weights)
         >>> wf,ids=w.full()
         >>> wf
-        array([[ 0.,  1.,  1.],
-               [ 1.,  0.,  0.],
-               [ 1.,  0.,  0.]])
+        array([[ 0.,  1.,  0.],
+               [ 1.,  0.,  1.],
+               [ 0.,  1.,  0.]])
         >>> ids
-        ['second', 'third', 'first']
+        ['first', 'second', 'third']
 
         See also
         --------
