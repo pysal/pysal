@@ -117,7 +117,44 @@ def lag_array(w,y):
     return wy 
 
 def lag_sparse(w,y):
-    return w.sparseW*y
+    """
+    Spatial lag using sparse attribute of W
+
+    Parameters
+    ----------
+
+    w : W
+        weights object
+    y : array
+        variable to take the lag of
+
+    Returns
+    -------
+
+    wy : np.ndarray of numeric values for the spatial lag
+
+
+    Examples
+    --------
+    >>> import pysal
+    >>> w=pysal.lat2W(3,3)
+    >>> y=np.arange(9)
+    >>> yl=lag_sparse(w,y)
+    >>> yl
+    array([  4.,   6.,   6.,  10.,  16.,  14.,  10.,  18.,  12.])
+    >>> w.transform='r'
+    >>> yl=lag_sparse(w,y)
+    >>> yl
+    array([ 2.        ,  2.00000006,  3.        ,  3.33333343,  4.        ,
+            4.66666681,  5.        ,  6.00000018,  6.        ])
+    >>> w.transform='b'
+    >>> yl=lag_sparse(w,y)
+    >>> yl
+    array([  4.,   6.,   6.,  10.,  16.,  14.,  10.,  18.,  12.])
+    >>> 
+    """
+
+    return w.sparse*y
 
 if __name__ == '__main__':
     import doctest

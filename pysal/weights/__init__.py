@@ -151,7 +151,23 @@ class W(object):
         self._asymmetries=None
         self._islands=None
         self._histogram=None
+        self._sparse_set=False
         #self._sparse=None
+
+    @property
+    def sparse(self):
+        if not self._sparse_set:
+            self._n=len(self.weights)
+            self._sparse=sparse.lil_matrix((self._n,self._n),dtype=float32)
+            gc.disable()
+            i=0
+            for id in self.id_order:
+                i=self.id_order.index(id)
+                self._sparse[i,self.neighbor_offsets[id]]=self.weights[id]
+            self._sparse=self._sparse.tocsr()
+            gc.enable
+            self.sparse_set=True
+        return self._sparse
 
     @property
     def id2i(self):
@@ -245,30 +261,6 @@ class W(object):
         if not self._islands:
             self.characteristics()
         return self._islands
-
-    def _get_sparse(self):
-        """
-        get - a Scipy sparse matrix of the weights.
-        set - setter for sparce using csr form
-        """
-        if not hasattr(self,"_sparse"):
-            self._set_sparse()
-        return self._sparse
-
-    def _set_sparse(self):
-        self._n=len(self.weights)
-        n=self._n
-        self._sparse=sparse.lil_matrix((n,n),dtype=float32)
-        gc.disable()
-        i=0
-        for id in self.id_order:
-            # have map id to i
-            i=self.id_order.index(id)
-            self._sparse[i,self.neighbor_offsets[id]]=self.weights[id]
-        self._sparse=self._sparse.tocsr()
-        gc.enable()
-
-    sparse = property(_get_sparse,_set_sparse)
 
 
     @property
