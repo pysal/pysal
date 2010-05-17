@@ -152,6 +152,7 @@ class W(object):
         self._islands=None
         self._histogram=None
         self._sparse_set=False
+        self._sparse=None
         #self._sparse=None
 
     @property
@@ -165,8 +166,8 @@ class W(object):
                 i=self.id_order.index(id)
                 self._sparse[i,self.neighbor_offsets[id]]=self.weights[id]
             self._sparse=self._sparse.tocsr()
-            gc.enable
-            self.sparse_set=True
+            gc.enable()
+            self._sparse_set=True
         return self._sparse
 
     @property
