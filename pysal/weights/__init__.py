@@ -128,6 +128,8 @@ class W(object):
             self._id_order=id_order
             self._id_order_set=True
         self._reset()
+        self._sparse=self._build_sparse()
+        self._sparse_set=True
 
     def _reset(self):
         """
@@ -153,22 +155,58 @@ class W(object):
         self._histogram=None
         self._sparse_set=False
         self._sparse=None
-        #self._sparse=None
 
     @property
     def sparse(self):
         if not self._sparse_set:
-            self._n=len(self.weights)
-            self._sparse=sparse.lil_matrix((self._n,self._n),dtype=float32)
-            gc.disable()
-            i=0
-            for id in self.id_order:
-                i=self.id_order.index(id)
-                self._sparse[i,self.neighbor_offsets[id]]=self.weights[id]
-            self._sparse=self._sparse.tocsr()
-            gc.enable()
+            #self._n=len(self.weights)
+            #self._sparse=sparse.lil_matrix((self._n,self._n),dtype=float32)
+            #gc.disable()
+            #i=0
+            #for id in self.id_order:
+            #    i=self.id_order.index(id)
+            #    self._sparse[i,self.neighbor_offsets[id]]=self.weights[id]
+            #self._sparse=self._sparse.tocsr()
+            #gc.enable()
+            self._sparse=self._build_sparse()
             self._sparse_set=True
         return self._sparse
+
+    def _build_sparse(self):
+        """
+        localizing this for optimization
+        """
+        #self._n=len(self.weights)
+        #sp=sparse.lil_matrix((self._n,self._n),dtype=float32)
+        #gc.disable()
+        #i=0
+        #for id in self.id_order:
+        #    i=self.id_order.index(id)
+        #    print id,i,self.weights[id],self.neighbor_offsets[id]
+        #    sp[i,self.neighbor_offsets[id]]=self.weights[id]
+        #gc.enable()
+        #sp=sp.tocsr()
+        p=0
+        indptr=[p]
+        indices=[]
+        data=[]
+        ni=[]
+        gc.disable()
+        for id in self.id_order:
+            c=self.cardinalities[id]
+            p+=c
+            indptr.extend([p])
+            ni=self.neighbor_offsets[id]
+            ni.sort()
+            indices.extend(ni)
+            data.extend(self.weights[id])
+        gc.enable()
+        data=np.array(data)
+        indices=np.array(indices)
+        indptr=np.array(indptr)
+        s=sparse.csr_matrix((data,indices,indptr),shape=(self.n,self.n),dtype=float32)
+        return s
+
 
     @property
     def id2i(self):
