@@ -152,6 +152,26 @@ def lag_sparse(w,y):
     >>> yl
     array([  4.,   6.,   6.,  10.,  16.,  14.,  10.,  18.,  12.])
     >>> 
+
+
+    Notes
+    -----
+
+    Speed ups will be machine specific so we dont run the doctest here, but
+    the following should give you an idea of the relative speed boosts:
+
+    import time
+    w=pysal.lat2W(100,100)
+    y=np.arange(100**2)
+    import spatial_lag
+    import time
+    t1=time.time();spatial_lag.lag_array(w,y);time.time()-t1
+    array([   101.,    103.,    106., ...,  29891.,  29894.,  19897.])
+    0.31401681900024414
+    t1=time.time();spatial_lag.lag_sparse(w,y);time.time()-t1
+    array([   101.,    103.,    106., ...,  29891.,  29894.,  19897.])
+    0.0014200210571289062
+    
     """
 
     return w.sparse*y
