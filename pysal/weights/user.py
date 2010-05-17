@@ -752,14 +752,13 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, function='triang
 
     Examples
     --------
-    >>> bw = [0.2,0.45,0.7]
-    >>> kwa = adaptive_kernelW_from_shapefile('../examples/columbus.shp',bandwidths=bw)
+    >>> kwa = adaptive_kernelW_from_shapefile('../examples/columbus.shp')
     >>> kwa.weights[0]
-    [1.0]
-    >>> kwa.bandwidth
-    array([[ 0.2 ],
-           [ 0.45],
-           [ 0.7 ]])
+    [9.9999990066379496e-08, 1.0, 0.031789067677363891]
+    >>> kwa.bandwidth[:3]
+    array([[ 0.59871832],
+           [ 0.59871832],
+           [ 0.56095647]])
     """
     points = get_points_array_from_shapefile(shapefile)
     if idVariable:

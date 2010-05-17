@@ -260,8 +260,12 @@ class Kernel(W):
         else:
             ids = np.arange(len(self.data))
         for i, neighbors in enumerate(self.kernel):
-            allneighbors[ids[i]] = list(ids[self.neigh[i]])
-            weights[ids[i]] = self.kernel[i].tolist()
+            if len(self.neigh[i]) == 0:
+                allneighbors[ids[i]] = []
+		weights[ids[i]] = []
+            else:    
+                allneighbors[ids[i]] = list(ids[self.neigh[i]])
+		weights[ids[i]] = self.kernel[i].tolist()
         return allneighbors,weights
 
     def _set_bw(self):
