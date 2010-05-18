@@ -78,24 +78,36 @@ class VirtualWeights(dict):
             return np.ones_like(n)
         else:
             raise KeyError
+
     def keys(self):
         return xrange(self.n)
 
-class WVirtual(W):
+
+
+
+
+
+class WVirtual:
     """"""
     def __init__(self,nrows,ncols,contiguity='rook'):
         self.nrows=nrows
         self.ncols=ncols
-        self.n=nrows*ncols
         self.contiguity=contiguity
         self.weights=VirtualWeights(nrows,ncols,contiguity)
         self.neighbors=VirtualNeighbors(nrows,ncols,contiguity)
-        #W.__init__(self,neighbors,weights,id_order=neighbors.keys())
+        n=nrows*ncols
+        self.n=n
 
 
-    def _characteristics(self):
-        print 'characteristics'
-        pass
+    def lag(self,y,row_standardize=False):
+        yl=np.zeros_like(y)
+        for i in self.neighbors.keys():
+            yl[i]=np.dot(y[self.neighbors[i]],self.weights[i]).sum()
+            if row_standardize:
+                yl[i]=yl[i]/(self.weights[i].sum()*1.)
+        return yl
+
+
 
 def _rook(i,nrows,ncols):
     
@@ -492,7 +504,7 @@ def shimbel(w):
             for j in range(s.count(k)):
                 neighbor=s.index(k,p+1)
                 p=neighbor
-                next_neighbors=w.neighbors[p]
+                next_neighbors=w.neighbors[ids[p]]
                 for neighbor in next_neighbors:
                     nid=ids.index(neighbor)
                     if s[nid]==0:

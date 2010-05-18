@@ -159,15 +159,6 @@ class W(object):
     @property
     def sparse(self):
         if not self._sparse_set:
-            #self._n=len(self.weights)
-            #self._sparse=sparse.lil_matrix((self._n,self._n),dtype=float32)
-            #gc.disable()
-            #i=0
-            #for id in self.id_order:
-            #    i=self.id_order.index(id)
-            #    self._sparse[i,self.neighbor_offsets[id]]=self.weights[id]
-            #self._sparse=self._sparse.tocsr()
-            #gc.enable()
             self._sparse=self._build_sparse()
             self._sparse_set=True
         return self._sparse
@@ -176,16 +167,6 @@ class W(object):
         """
         localizing this for optimization
         """
-        #self._n=len(self.weights)
-        #sp=sparse.lil_matrix((self._n,self._n),dtype=float32)
-        #gc.disable()
-        #i=0
-        #for id in self.id_order:
-        #    i=self.id_order.index(id)
-        #    print id,i,self.weights[id],self.neighbor_offsets[id]
-        #    sp[i,self.neighbor_offsets[id]]=self.weights[id]
-        #gc.enable()
-        #sp=sp.tocsr()
         
         row=[]
         col=[]
@@ -541,7 +522,7 @@ class W(object):
 
         Parameters
         ----------
-        transform : string
+        transform : string (not case sensitive)
                     B: Binary 
                     R: Row-standardization (global sum=n)
                     D: Double-standardization (global sum=1)
