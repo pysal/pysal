@@ -10,7 +10,6 @@ __author__  = "Sergio J. Rey <srey@asu.edu> "
 from pysal.common import *
 from scipy import sparse, float32
 import gc
-import collections as COL
 
 # constant for precision
 DELTA = 0.0000001
