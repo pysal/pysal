@@ -490,7 +490,7 @@ def shimbel(w):
     >>>
     """
     info={}
-    ids=w.neighbors.keys()
+    ids=w.id_order
     for id in ids:
         s=[0]*w.n
         s[ids.index(id)]=-1
