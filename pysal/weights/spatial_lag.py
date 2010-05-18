@@ -145,8 +145,8 @@ def lag_sparse(w,y):
     >>> w.transform='r'
     >>> yl=lag_sparse(w,y)
     >>> yl
-    array([ 2.        ,  2.00000006,  3.        ,  3.33333343,  4.        ,
-            4.66666681,  5.        ,  6.00000018,  6.        ])
+    array([ 2.        ,  2.        ,  3.        ,  3.33333333,  4.        ,
+            4.66666667,  5.        ,  6.        ,  6.        ])
     >>> w.transform='b'
     >>> yl=lag_sparse(w,y)
     >>> yl

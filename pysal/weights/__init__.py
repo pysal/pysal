@@ -10,6 +10,7 @@ __author__  = "Sergio J. Rey <srey@asu.edu> "
 from pysal.common import *
 from scipy import sparse, float32
 import gc
+import collections as COL
 
 # constant for precision
 DELTA = 0.0000001
@@ -186,33 +187,31 @@ class W(object):
         #    sp[i,self.neighbor_offsets[id]]=self.weights[id]
         #gc.enable()
         #sp=sp.tocsr()
-        p=0
-        indptr=[p]
-        indices=[]
+        
+        row=[]
+        col=[]
         data=[]
-        ni=[]
         gc.disable()
-        for id in self.id_order:
-            c=self.cardinalities[id]
-            p+=c
-            indptr.extend([p])
-            ni=self.neighbor_offsets[id]
-            ni.sort()
-            indices.extend(ni)
+        id2i=self.id2i
+        for id, neigh_list in self.neighbor_offsets.iteritems():
+            card=self.cardinalities[id]
+            row.extend([id2i[id]]*card)
+            col.extend(neigh_list)
             data.extend(self.weights[id])
         gc.enable()
+        row=np.array(row)
+        col=np.array(col)
         data=np.array(data)
-        indices=np.array(indices)
-        indptr=np.array(indptr)
-        s=sparse.csr_matrix((data,indices,indptr),shape=(self.n,self.n),dtype=float32)
+        s=sparse.csr_matrix((data,(row,col)), shape=(self.n, self.n))
         return s
-
 
     @property
     def id2i(self):
+        """Dictionary where the key is an ID and the value is that ID's
+        index in W.id_order."""
         if not self._id2i:
             self._id2i={}
-            for id,i in enumerate(self._id_order):
+            for i,id in enumerate(self._id_order):
                 self._id2i[id]=i
         return self._id2i
 
@@ -460,6 +459,7 @@ class W(object):
             self._id_order_set=True
             self.neighbor_0_ids={}
             self.__neighbors_0 = False
+            self._id2i=False
             #self._zero_offset()
         else:
             raise Exception, 'ordered_ids do not align with W ids'
@@ -506,8 +506,9 @@ class W(object):
             return self.__neighbors_0
         else:
             self.__neighbors_0={}
-            for id in self.neighbors:
-                self.__neighbors_0[id]=[self._id_order.index(neigh) for neigh in self.neighbors[id]]
+            id2i=self.id2i
+            for id, neigh_list in self.neighbors.iteritems():
+                self.__neighbors_0[id]=[id2i[neigh] for neigh in neigh_list] 
             return self.__neighbors_0
 
 
