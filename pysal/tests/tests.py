@@ -38,6 +38,7 @@ import pysal.econometrics.classic
 import pysal.region.maxp
 import pysal.region.randomregion
 import pysal.spatial_dynamics.mobility.rank
+import pysal.spatial_dynamics.markov.ergodic
 import pysal.weights.spatial_lag, pysal.weights.util
 import pysal.weights.Contiguity, pysal.weights.Distance, pysal.weights.user
 import pysal.weights.Wsets
@@ -53,7 +54,8 @@ mods='esda.moran','esda.geary', 'esda.mapclassify', \
         'weights', \
         'weights.spatial_lag', 'weights.util', \
         'weights.Contiguity', 'weights.Distance', 'weights.user', \
-        'weights.Wsets', 'esda.smoothing'
+        'weights.Wsets', 'esda.smoothing', \
+        'spatial_dynamics.markov.ergodic'
 
 mods = [ "pysal."+ mod for mod in mods]
 suite = unittest.TestSuite()
