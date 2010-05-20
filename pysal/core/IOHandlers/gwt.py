@@ -57,7 +57,7 @@ class GwtIO(FileIO.FileIO):
         self._complain_ifclosed(self.closed)
         if issubclass(type(obj),W):
             IDS = obj.id_order
-            header = '%s %i %s %s\n' % ('', obj.n, '', '')
+            header = '%s %i %s %s\n' % ('0', obj.n, 'Unknown', 'Unknown')
             self.file.write(header)
             for id in IDS:
                 neighbors = zip(obj.neighbors[id], obj.weights[id])
