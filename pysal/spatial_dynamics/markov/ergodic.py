@@ -29,12 +29,24 @@ def steady_state(P):
 
     Examples
     --------
+    Taken from Kemeny and Snell. [1]_ Land of Oz example where the states are
+    Rain, Nice and Snow - so there is 25 percent chance that if it
+    rained in Oz today, it will snow tomorrow, while if it snowed today in
+    Oz there is a 50 percent chance of snow again tomorrow and a 25
+    percent chance of a nice day (nice, like when the witch with the monkeys
+    is melting).
+
     >>> import numpy as np
     >>> p=np.matrix([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])
     >>> steady_state(p)
     matrix([[ 0.4],
             [ 0.2],
             [ 0.4]])
+
+    Thus, the long run distribution for Oz is to have 40 percent of the
+    days classified as Rain, 20 percent as Nice, and 40 percent as Snow
+    (states are mutually exclusive).
+
     """
 
     v,d=la.eig(np.transpose(P))
@@ -68,12 +80,7 @@ def fmpt(P):
     Examples
     --------
     
-    Taken from Kemeny and Snell. Land of Oz example where the states are
-    Rain, Nice and Snow - so there is 25 percent chance that if it
-    rained in Oz today, it will snow tomorrow, while if it snowed today in
-    Oz there is a 50 percent chance of snow again tomorrow and a 25
-    percent chance of a nice day (nice, like when the witch with the monkeys
-    is melting).
+    
 
     >>> import numpy as np
     >>> p=np.matrix([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])
@@ -82,6 +89,13 @@ def fmpt(P):
     matrix([[ 0.        ,  4.        ,  3.33333333],
             [ 2.66666667,  0.        ,  2.66666667],
             [ 3.33333333,  4.        ,  0.        ]])
+
+
+    Thus, if it is raining today in Oz we can expect a nice day to come
+    along in another 4 days, on average, and snow to hit in 3.33 days. If
+    it is nice today in Oz, we would experience a change in the weather
+    (either rain or snow) in 2.67 days from today. (That wicked witch can
+    only die once so I reckon that is the ultimate absorbing state).
     
     Notes
     -----
