@@ -250,7 +250,8 @@ class Kernel(W):
             self._set_bw()
 
         self._eval_kernel()
-        W.__init__(self,*self._k_to_W(ids),id_order=ids)
+        neighbors, weights = self._k_to_W(ids)
+        W.__init__(self,neighbors,weights,ids)
 
     def _k_to_W(self, ids=None):
         allneighbors={}
@@ -370,47 +371,54 @@ class DistanceBand(W):
 
     """
     def __init__(self,data,threshold,p=2,alpha=-1.0,binary=True,ids=None):
-        
-        self.data=data
-        self.p=p
-        self.threshold=threshold
-        self.binary=binary
-        self.alpha=alpha
-        self._band()
-        W.__init__(self,*self._distance_to_W(ids),id_order=ids)
 
+	self.data=data
+	self.p=p
+	self.threshold=threshold
+	self.binary=binary
+	self.alpha=alpha
+	self._band()
+	neighbors, weights = self._distance_to_W(ids)
+	W.__init__(self,neighbors,weights,ids)
 
     def _band(self):
-        """
-        find all pairs within threshold
-        """
-        kd=KDTree(self.data)
-        self.kd=kd
-        ns=[kd.query_ball_point(point,self.threshold) for point in self.data]
-        self._nmat=ns
+	""" 
+	find all pairs within threshold
+	"""
+	kd=KDTree(self.data)
+	self.kd=kd
+	ns=[kd.query_ball_point(point,self.threshold) for point in self.data]
+	self._nmat=ns
 
     def _distance_to_W(self,ids=None):
-        allneighbors={}
-        weights={}
-        if ids:
-            ids = np.array(ids)
-        else:
-            ids = np.arange(len(self._nmat))
-        if self.binary:
-            for i,neighbors in enumerate(self._nmat):
-                ns=[ni for ni in neighbors if ni!=i]
-                allneighbors[ids[i]]=list(ids[ns])
-                weights[ids[i]]=[1]*len(ns)
-        else:
-            self.dmat=self.kd.sparse_distance_matrix(self.kd,max_distance=self.threshold)
-            for i,neighbors in enumerate(self._nmat):
-                ns=[ni for ni in neighbors if ni!=i]
-                allneighbors[ids[i]]=list(ids[ns])
-                weights[ids[i]]=[self.dmat[(i,j)]**self.alpha for j in ns]
-        return allneighbors,weights
-
-
-
+	allneighbors={}
+	weights={}
+	if ids:
+	    ids = np.array(ids)
+	else:
+	    ids = np.arange(len(self._nmat))
+	if self.binary:
+	    for i,neighbors in enumerate(self._nmat):
+		ns=[ni for ni in neighbors if ni!=i]
+		neigh = list(ids[ns])
+		if len(neigh) == 0:
+		    allneighbors[ids[i]] = []
+		    weights[ids[i]] = []
+		else:        
+		    allneighbors[ids[i]] = neigh
+		    weights[ids[i]] = [1]*len(ns)
+	else:
+	    self.dmat=self.kd.sparse_distance_matrix(self.kd,max_distance=self.threshold)
+	    for i,neighbors in enumerate(self._nmat):
+		ns=[ni for ni in neighbors if ni!=i]
+		neigh = list(ids[ns])
+		if len(neigh) == 0:
+		    allneighbors[ids[i]] = []
+		    weights[ids[i]] = []
+		else:        
+		    allneighbors[ids[i]] = neigh
+		    weights[ids[i]] = [self.dmat[(i,j)]**self.alpha for j in ns] 
+	return allneighbors,weights
 
 if __name__ == "__main__":
 
