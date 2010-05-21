@@ -7,7 +7,7 @@ Author(s):
 
 """
 from pysal.common import *
-from pysal.weights.spatial_lag import lag as slag
+from pysal.weights.spatial_lag import lag_spatial as slag
 
 
 PERMUTATIONS=999
@@ -203,7 +203,7 @@ class Moran_BV:
     >>> w=pysal.open("../examples/sids2.gal").read()
     >>> mbi=Moran_BV(SIDR79,SIDR74,w)
     >>> mbi.I
-    0.1561319616962504
+    0.15613196169625043
     """
     def __init__(self,x,y,w,transformation="r",permutations=PERMUTATIONS):
         zy=(y-y.mean())/y.std(ddof=1)

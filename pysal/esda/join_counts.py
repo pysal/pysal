@@ -90,13 +90,13 @@ class Join_Counts:
         self.w=w
         self.y=y
         b=sum(y)
-        bb=pysal.lag(w,y)
+        bb=pysal.lag_spatial(w,y)
         self.B=b
         self.W=w.n-b
         self.J=w.s0/2.
         self.bb=sum(y*bb)/2.
         yw=1-y;
-        ww=pysal.lag(w,yw)
+        ww=pysal.lag_spatial(w,yw)
         self.ww=sum(yw*ww)/2.
         self.bw=self.J-(self.ww+self.bb)
         pb= (self.B/w.n)

@@ -61,8 +61,8 @@ class W(object):
                         {id:[id1,id2]}, key is id, value is list of neighboring
                         ids
     neighbor_offsets  : dictionary
-                        like neighbors but with zero offset ids, used for
-                        alignment in calculating spatial lag
+                        like neighbors but the value is a list of zero offset
+                        ids
     nonzero           : int
                         number of nonzero weights
     pct_nonzero       : float
@@ -440,6 +440,8 @@ class W(object):
             self.neighbor_0_ids={}
             self.__neighbors_0 = False
             self._id2i=False
+            self._sparse_set=False
+            self._sparse=None
             #self._zero_offset()
         else:
             raise Exception, 'ordered_ids do not align with W ids'

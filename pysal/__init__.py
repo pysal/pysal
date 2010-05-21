@@ -56,7 +56,7 @@ from region.maxp import Maxp,Maxp_LISA
 from weights import W,lat2W,regime_weights,comb,full,shimbel,order,higher_order
 from weights.Distance import knnW, Kernel, DistanceBand
 from weights.Contiguity import buildContiguity
-from weights.spatial_lag import lag, lag_array
+from weights.spatial_lag import lag_spatial
 from weights.user import *
 
 # Load the IOHandlers

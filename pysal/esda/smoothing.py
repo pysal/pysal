@@ -18,7 +18,7 @@ from pysal.cg import Point, Ray, LineSegment
 from pysal.cg import get_angle_between, get_points_dist, get_segment_point_dist
 from pysal.cg import get_point_at_angle_and_dist, convex_hull
 from pysal.common import np, KDTree
-from pysal.weights.spatial_lag import lag as slag
+from pysal.weights.spatial_lag import lag_spatial as slag
 from scipy.stats import gamma, norm, chi2
 
 def flatten(l,unique=True):
