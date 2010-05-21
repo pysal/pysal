@@ -599,7 +599,7 @@ class W(object):
                 for i in self.weights:
                     weights[i] = [ w*nQ for w in s[i]]
                 self.weights=weights
-                self.reset()
+                self._reset()
             elif value =="O":
                 # put weights back to original transformation
                 weights={}
