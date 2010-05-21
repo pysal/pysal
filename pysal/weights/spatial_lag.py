@@ -3,6 +3,7 @@ spatial lag operations
 """
 __authors__ = "Serge Rey <srey@asu.edu>, David C. Folch <david.folch@asu.edu>"
 
+from pysal.common import *
 
 
 def lag_spatial(w,y):
