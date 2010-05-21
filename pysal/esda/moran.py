@@ -202,8 +202,8 @@ class Moran_BV:
     >>> SIDR79=np.array(f.by_col['SIDR79'])
     >>> w=pysal.open("../examples/sids2.gal").read()
     >>> mbi=Moran_BV(SIDR79,SIDR74,w)
-    >>> mbi.I
-    0.15613196169625043
+    >>> print mbi.I
+    0.156131961696
     """
     def __init__(self,x,y,w,transformation="r",permutations=PERMUTATIONS):
         zy=(y-y.mean())/y.std(ddof=1)
