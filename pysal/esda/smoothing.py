@@ -350,22 +350,30 @@ class Spatial_Empirical_Bayes:
     >>> if not stl_w.id_order_set: stl_w.id_order = range(1,len(stl) + 1)
     >>> s_eb = Spatial_Empirical_Bayes(stl_e, stl_b, stl_w)
     >>> s_eb.r[:10]
-    array([  3.56169432e-05,   3.43474199e-06,   4.79149944e-05,
-             4.39065103e-05,   3.65290387e-05,   3.68940334e-05,
-             5.57391186e-05,   3.14512416e-05,   3.50622895e-05,
-             3.56604301e-05])
+    array([  4.01485749e-05,   3.62437513e-05,   4.93034844e-05,
+             5.09387329e-05,   3.72735210e-05,   3.69333797e-05,
+             5.40245456e-05,   2.99806055e-05,   3.73034109e-05,
+             3.47270722e-05])
     """
     def __init__(self, e, b, w):
         if not w.id_order_set:
             raise ValueError("w id_order must be set to align with the order of e an b")
         r_mean = Spatial_Rate(e, b, w).r
         rate = e * 1.0 / b
-        r_var_left = Spatial_Rate(np.square(rate - r_mean)*b, b, w).r
-        ngh_num = np.array([w.cardinalities[i] + 1 for i in w.id_order])
-        r_var_right = r_mean /((slag(w, b) + b)/ngh_num)
+        r_var_left = np.ones(len(e))*1.
+        ngh_num = np.ones(len(e))
+        bi = slag(w, b) + b
+        for i, idv in enumerate(w.id_order):
+            ngh = w[idv].keys() + [idv]
+            nghi = [w.id2i[k] for k in ngh]
+            ngh_num[i] = len(nghi)
+            v = sum(np.square(rate[nghi] - r_mean[i])*b[nghi])
+            r_var_left[i] = v
+        r_var_left = r_var_left / bi
+        r_var_right = r_mean /(bi/ngh_num)
 	r_var = r_var_left - r_var_right
-	weight = r_var / ( r_var + r_mean / b)
-	self.r = weight * rate + (1.0 - weight) * r_mean
+        r_var[r_var < 0] = 0.0
+        self.r = r_mean + (rate - r_mean)*(r_var/(r_var + (r_mean/b)))
 
 class Spatial_Rate:
     """Spatial Rate Smoothing
@@ -403,6 +411,7 @@ class Spatial_Rate:
 	    w.transform = 'b'
             w_e, w_b = slag(w, e), slag(w, b)
 	    self.r = (e + w_e) / (b + w_b)
+            w.transform = 'o'
 
 class Kernel_Smoother:
     """Kernal smoothing
@@ -492,6 +501,7 @@ class Age_Adjusted_Smoother:
         b_n = np.array(b_n).reshape((1,t),order='F')[0]
         r = direct_age_standardization(e_n, b_n, s, w.n, alpha=alpha)
         self.r = np.array([i[0] for i in r])
+        w.transform = 'o'
 
 class Disk_Smoother:
     """Locally weighted averages or disk smoothing
