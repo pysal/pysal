@@ -76,6 +76,7 @@ def fmpt(P):
     M    : matrix (kxk)
            elements are the expected value for the number of intervals
            required for  a chain starting in state i to first enter state j
+           If i=j then this is the recurrence time.
 
     Examples
     --------
@@ -86,19 +87,19 @@ def fmpt(P):
     >>> p=np.matrix([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])
     >>> fm=fmpt(p)
     >>> fm
-    matrix([[ 0.        ,  4.        ,  3.33333333],
-            [ 2.66666667,  0.        ,  2.66666667],
-            [ 3.33333333,  4.        ,  0.        ]])
+    matrix([[ 2.5       ,  4.        ,  3.33333333],
+            [ 2.66666667,  5.        ,  2.66666667],
+            [ 3.33333333,  4.        ,  2.5       ]])
 
 
     Thus, if it is raining today in Oz we can expect a nice day to come
-    along in another 4 days, on average, and snow to hit in 3.33 days. If
-    it is nice today in Oz, we would experience a change in the weather
-    (either rain or snow) in 2.67 days from today. (That wicked witch can
-    only die once so I reckon that is the ultimate absorbing state).
+    along in another 4 days, on average, and snow to hit in 3.33 days. We can
+    expect another rainy day in 2.5 days. If it is nice today in Oz, we would
+    experience a change in the weather (either rain or snow) in 2.67 days from
+    today. (That wicked witch can only die once so I reckon that is the
+    ultimate absorbing state).
     
-    Notes
-    -----
+    Notes -----
 
     Uses formulation (and examples on p. 218) in Kemeny and Snell (1976) [1]_
 
@@ -112,11 +113,70 @@ def fmpt(P):
     n,k=A.shape
     I=np.identity(k)
     Z=la.inv(I-P+A)
-    M=np.zeros_like(Z)
-    for i in range(k):
-        for j in range(k):
-            M[i,j]=(Z[j,j]-Z[i,j])/A[j,j]
-    return M 
+    E=np.ones_like(Z)
+    D=np.diag(1./np.diag(A))
+    Zdg=np.diag(np.diag(Z))
+    M=(I-Z+E*Zdg)*D
+    return M
+
+
+
+def var_fmpt(P):
+    """
+    Variances of first mean passage times for an ergodic transition
+    probability matrix
+
+    Parameters
+    ----------
+
+    P    : matrix (kxk)
+           an ergodic Markov transition probability matrix
+
+    Returns
+    -------
+
+    implic : matrix (kxk)
+             elements are the variances for the number of intervals
+             required for  a chain starting in state i to first enter state j
+
+    Examples
+    --------
+
+    >>> import numpy as np
+    >>> p=np.matrix([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])
+    >>> vfm=var_fmpt(p)
+    >>> vfm
+    matrix([[  5.58333333,  12.        ,   6.88888889],
+            [  6.22222222,  12.        ,   6.22222222],
+            [  6.88888889,  12.        ,   5.58333333]])
+
+
+    
+    Notes
+    -----
+
+    Uses formulation (and examples on p. 83) in Kemeny and Snell (1976) [1]_
+
+    References
+    ----------
+    
+    .. [1] Kemeny, John, G. and J. Laurie Snell (1976) Finite Markov
+       Chains. Springer-Verlag. Berlin
+
+    """
+    A=P**1000
+    n,k=A.shape
+    I=np.identity(k)
+    Z=la.inv(I-P+A)
+    E=np.ones_like(Z)
+    D=np.diag(1./np.diag(A))
+    Zdg=np.diag(np.diag(Z))
+    M=(I-Z+E*Zdg)*D
+    ZM=Z*M
+    ZMdg=np.diag(np.diag(ZM))
+    W=M*(2*Zdg*D-I)+2*(ZM-E*ZMdg)
+    return W-np.multiply(M,M)
+
 
 def _test():
     import doctest
