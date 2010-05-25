@@ -56,13 +56,12 @@ class GwtIO(FileIO.FileIO):
         """
         self._complain_ifclosed(self.closed)
         if issubclass(type(obj),W):
-            IDS = obj.id_order
             header = '%s %i %s %s\n' % ('0', obj.n, 'Unknown', 'Unknown')
             self.file.write(header)
-            for id in IDS:
+            for id in obj.id_order:
                 neighbors = zip(obj.neighbors[id], obj.weights[id])
                 for neighbor, weight in neighbors:
-                    self.file.write('%s %s %6G\n' % (id, neighbor, weight))
+                    self.file.write('%s %s %6G\n' % (str(id), str(neighbor), weight))
                     self.pos += 1
         else:
             raise TypeError, "Expected a pysal weights object, got: %s" % (type(obj))
