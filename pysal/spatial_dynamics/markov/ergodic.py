@@ -109,8 +109,12 @@ def fmpt(P):
     .. [1] Kemeny, John, G. and J. Laurie Snell (1976) Finite Markov
        Chains. Springer-Verlag. Berlin
     """
-    A=P**1000
-    n,k=A.shape
+    A=np.zeros_like(P)
+    ss=steady_state(P)
+    k=ss.shape[0]
+    for i in range(k):
+        A[:,i]=ss
+    A=A.transpose()
     I=np.identity(k)
     Z=la.inv(I-P+A)
     E=np.ones_like(Z)
@@ -118,6 +122,7 @@ def fmpt(P):
     Zdg=np.diag(np.diag(Z))
     M=(I-Z+E*Zdg)*D
     return M
+
 
 
 
