@@ -73,8 +73,8 @@ class Geary:
     >>> c=Geary(y,w,permutations=0)
     >>> c.C
     0.33281733746130032
-    >>> c.p_norm
-    0.00040151853759384792
+    >>> print "%.8f"%c.p_norm
+    0.00040152
     >>> 
     """
     def __init__(self,y,w,transformation="B",permutations=PERMUTATIONS):
