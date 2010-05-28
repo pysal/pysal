@@ -120,6 +120,7 @@ class W(object):
                 weights[key] = [1.] * len(neighbors[key])
         self.weights=weights
         self.transformations['O']=self.weights #original weights
+        self.transform='O'
         if id_order == None:
             self._id_order=self.neighbors.keys()
             self._id_order.sort()
@@ -139,7 +140,6 @@ class W(object):
         self._id2i=None
         self._idx=0
         self._n=None
-        self._transform=None
         self._s0=None
         self._s1=None
         self._s2=None
@@ -508,6 +508,7 @@ class W(object):
         >>> w.weights[0]
         [1.0, 1.0]
         >>> w.transform
+        'O'
         >>> w.transform='r'
         >>> w.weights[0]
         [0.5, 0.5]
@@ -537,6 +538,7 @@ class W(object):
         >>> w.weights[0]
         [1.0, 1.0]
         >>> w.transform
+        'O'
         >>> w.transform='r'
         >>> w.weights[0]
         [0.5, 0.5]
