@@ -6,7 +6,6 @@
 
 __all__ = ['W']
 __author__  = "Sergio J. Rey <srey@asu.edu> "
-#from weights import *
 from pysal.common import *
 from scipy import sparse, float32
 import gc
@@ -614,62 +613,42 @@ class W(object):
     transform = property(get_transform, set_transform)
     
 
-    def asymmetry(self,nonzero=True):
+    def asymmetry(self):
         """
-        Checks for w_{i,j} == w_{j,i} forall w_{i,j}!=0
-
-        Parameters
-        ----------
-        nonzero   : binary
-                    flag to check only that the elements are both nonzero.
-                    If False, strict equality check is carried out
+        Checks for w_{i,j} == w_{j,i} forall i,j
 
         Returns
         -------
         asymmetries : list 
-                       2-tuples with (i,j),(j,i) pairs that are
-                       asymmetric. If 2-tuple is missing an element then
-                       the asymmetry is due to a missing weight rather
-                       than strict inequality.
+                      empty if no asymmetries are found
+                      if asymmetries, first list is row indices, second
+                      list is column indices of missing elements
 
         Examples
         --------
 
+        >>> w=lat2W(3,3)
+        >>> w.asymmetry()
+        []
+        >>> w.transform='r'
+        >>> w.asymmetry()
+        (array([1, 3, 0, 2, 4, 1, 5, 0, 4, 6, 1, 3, 5, 7, 2, 4, 8, 3, 7, 4, 6, 8, 5,
+               7]), array([0, 0, 1, 1, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 7, 7, 7, 8,
+               8]))
         >>> neighbors={0:[1,2,3], 1:[1,2,3], 2:[0,1], 3:[0,1]}
         >>> weights={0:[1,1,1], 1:[1,1,1], 2:[1,1], 3:[1,1]}
         >>> w=W(neighbors,weights)
         >>> w.asymmetry()
-        [((0, 1), ())]
-        >>> weights[1].append(1)
-        >>> neighbors[1].insert(0,0)
-        >>> w.asymmetry()
-        []
-        >>> w.transform='r'
-        >>> w.asymmetry(nonzero=False)
-        [((0, 1), (1, 0)), ((0, 2), (2, 0)), ((0, 3), (3, 0)), ((1, 0), (0, 1)), ((1, 2), (2, 1)), ((1, 3), (3, 1)), ((2, 0), (0, 2)), ((2, 1), (1, 2)), ((3, 0), (0, 3)), ((3, 1), (1, 3))]
-        >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
-        >>> weights={'first':[1],'second':[1,1],'third':[1]}
-        >>> w=W(neighbors,weights)
-        >>> w.weights['third'].append(1)
-        >>> w.neighbors['third'].append('fourth')
-        >>> w.asymmetry()
-        [(('third', 'fourth'), ())]
+        (array([1, 0]), array([0, 1]))
 
         """
 
-
-        asymmetries=[]
-        for i,neighbors in self.neighbors.iteritems():
-            for pos,j in enumerate(neighbors):
-                wij=self.weights[i][pos]
-                try:
-                    wji=self.weights[j][self.neighbors[j].index(i)]
-                    if not nonzero and wij!=wji:
-                        asymmetries.append(((i,j),(j,i)))
-                except:
-                    asymmetries.append(((i,j),()))
-
-        return asymmetries
+        wd=self.sparse.transpose()-self.sparse
+        ids=np.nonzero(wd)
+        if len(ids[0])==0:
+            return []
+        else:
+            return ids
 
 
     def full(self):
