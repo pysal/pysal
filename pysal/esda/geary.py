@@ -74,7 +74,7 @@ class Geary:
     >>> c.C
     0.33281733746130032
     >>> c.p_norm
-    0.00076052983736881971
+    0.00040151853759384792
     >>> 
     """
     def __init__(self,y,w,transformation="B",permutations=PERMUTATIONS):
@@ -95,8 +95,8 @@ class Geary:
         self.EC=1.0
         self.z_norm=de/self.seC_norm
         self.z_rand=de/self.seC_rand
-        self.p_norm = stats.norm.pdf(self.z_norm)
-        self.p_rand = stats.norm.pdf(self.z_rand)
+        self.p_norm = 2.0*(1-stats.norm.cdf(np.abs(self.z_norm)))
+        self.p_rand = 2.0*(1-stats.norm.cdf(np.abs(self.z_rand)))
 
         if permutations:
             sim=[self.__calc(np.random.permutation(self.y)) \
@@ -107,7 +107,7 @@ class Geary:
             self.seC_sim=np.array(sim).std()
             self.VC_sim=self.seC_sim**2
             self.z_sim = (self.C - self.EC_sim)/self.seC_sim
-            self.p_z_sim = stats.norm.pdf(self.z_sim)
+            self.p_z_sim = 2.0*(1-stats.norm.cdf(np.abs(self.z_sim)))
 
     def __moments(self):
         y=self.y

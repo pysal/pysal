@@ -164,7 +164,7 @@ class W(object):
 
     def _build_sparse(self):
         """
-        localizing this for optimization
+        construct the sparse attribute
         """
         
         row=[]
@@ -397,7 +397,7 @@ class W(object):
         Set the iteration order in w.
 
         W can be iterated over. On construction the iteration order is set to
-        the lexicgraphic order of the keys in the w.weights dictionary. If a specific order
+        the lexicographic order of the keys in the w.weights dictionary. If a specific order
         is required it can be set with this method.
 
         Parameters
@@ -429,9 +429,27 @@ class W(object):
         6 {3: 1.0, 7: 1.0}
         7 {8: 1.0, 4: 1.0, 6: 1.0}
         8 {5: 1.0, 7: 1.0}
+
+        >>> w.id_order
+        [0, 1, 2, 3, 4, 5, 6, 7, 8]
+        >>> w.id_order=range(8,-1,-1)
+        >>> w.id_order
+        [8, 7, 6, 5, 4, 3, 2, 1, 0]
+        >>> for i,w_i in enumerate(w):
+        ...     print i,w_i
+        ...     
+        0 {5: 1.0, 7: 1.0}
+        1 {8: 1.0, 4: 1.0, 6: 1.0}
+        2 {3: 1.0, 7: 1.0}
+        3 {8: 1.0, 2: 1.0, 4: 1.0}
+        4 {1: 1.0, 3: 1.0, 5: 1.0, 7: 1.0}
+        5 {0: 1.0, 4: 1.0, 6: 1.0}
+        6 {1: 1.0, 5: 1.0}
+        7 {0: 1.0, 2: 1.0, 4: 1.0}
+        8 {1: 1.0, 3: 1.0}
+        >>> 
+        
         """
-
-
         if set(self._id_order) == set(ordered_ids):
             self._id_order=ordered_ids
             self._idx=0
@@ -622,7 +640,7 @@ class W(object):
         asymmetries : list 
                       empty if no asymmetries are found
                       if asymmetries, first list is row indices, second
-                      list is column indices of missing elements
+                      list is column indices of asymmetric cells
 
         Examples
         --------

@@ -81,7 +81,7 @@ class Moran:
     >>> mi.EI
     -0.012987012987012988
     >>> mi.p_norm
-    0.00052730423329256173
+    0.00027147862770937614
     >>> 
         
     """
@@ -93,9 +93,9 @@ class Moran:
         self.__moments()
         self.I = self.__calc(self.z)
         self.z_norm = (self.I - self.EI)/self.seI_norm
-        self.p_norm = stats.norm.pdf(self.z_norm)
+        self.p_norm = 2.0*(1-stats.norm.cdf(np.abs(self.z_norm)))
         self.z_rand = (self.I - self.EI)/self.seI_rand
-        self.p_rand = stats.norm.pdf(self.z_rand)
+        self.p_rand = 2.0*(1-stats.norm.cdf(np.abs(self.z_rand)))
 
 
         if permutations:
@@ -107,7 +107,7 @@ class Moran:
             self.seI_sim = np.array(sim).std()
             self.VI_sim = self.seI_sim**2
             self.z_sim=(self.I - self.EI_sim)/self.seI_sim
-            self.p_z_sim=stats.norm.pdf(self.z_sim)
+            self.p_z_sim=2.0*(1-stats.norm.cdf(np.abs(self.z_sim)))
 
     def __moments(self):
         self.n=len(self.y)

@@ -253,7 +253,8 @@ def regime_weights(regimes):
 
     Block contiguity structures are relevant when defining neighbor relations
     based on membership in a regime. For example, all counties belonging to
-    the same state could be defined as neighbors.
+    the same state could be defined as neighbors, in an analysis of all
+    counties in the US.
 
     Parameters
     ----------
@@ -464,6 +465,7 @@ def higher_order(w,order=2):
         weights[id]=[1.0]*len(nids)
     return W(neighbors,weights)
 
+
 def shimbel(w):
     """
     Find the Shmibel matrix for first order contiguity matrix.
@@ -513,6 +515,7 @@ def shimbel(w):
             flag=s.count(0)
         info[id]=s
     return info
+
 
 def full(w):
     """
