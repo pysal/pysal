@@ -51,7 +51,7 @@ def w_union(w1, w2):
     >>>
 
     """
-    neighbors = copy.copy(w1.neighbors)
+    neighbors = dict(w1.neighbors.items())
     for i in w2.neighbors:
         if i in neighbors:
             add_neigh = set(neighbors[i]).union(set(w2.neighbors[i]))

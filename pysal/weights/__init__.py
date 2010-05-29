@@ -10,6 +10,7 @@ from pysal.common import *
 from scipy import sparse, float32
 import gc
 
+
 # constant for precision
 DELTA = 0.0000001
 
@@ -56,7 +57,7 @@ class W(object):
                         average cardinality 
     n                 : int
                         number of observations 
-    neighbors         : dictionary
+    neighbors         : dictionary (Read Only)
                         {id:[id1,id2]}, key is id, value is list of neighboring
                         ids
     neighbor_offsets  : dictionary
@@ -78,7 +79,7 @@ class W(object):
                         property for weights transformation, can be used to get and set weights transformation 
     transformations   : dictionary
                         transformed weights, key is transformation type, value are weights
-    weights           : dictionary
+    weights           : dictionary (Read Only)
                         key is observation id, value is list of transformed
                         weights in order of neighbor ids (see neighbors)
 
@@ -112,12 +113,12 @@ class W(object):
     def __init__(self,neighbors,weights=None,id_order=None):
         """see class docstring"""
         self.transformations={}
-        self.neighbors=neighbors
+        self.neighbors=ROD(neighbors)
         if not weights:
             weights = {}
             for key in neighbors:
                 weights[key] = [1.] * len(neighbors[key])
-        self.weights=weights
+        self.weights=ROD(weights)
         self.transformations['O']=self.weights #original weights
         self.transform='O'
         if id_order == None:
@@ -577,6 +578,7 @@ class W(object):
                     wijs = self.weights[i]
                     row_sum=sum(wijs)*1.0
                     weights[i]=[wij/row_sum for wij in wijs]
+                weights=ROD(weights)
                 self.transformations[value]=weights
                 self.weights=weights
                 self._reset()
@@ -590,6 +592,7 @@ class W(object):
                 for i in self.weights:
                     wijs = self.weights[i]
                     weights[i]=[wij*ws for wij in wijs]
+                weights=ROD(weights)
                 self.transformations[value]=weights
                 self.weights=weights
                 self._reset()
@@ -599,6 +602,7 @@ class W(object):
                 for i in self.weights:
                     wijs = self.weights[i]
                     weights[i]=[1.0 for wij in wijs]
+                weights=ROD(weights)
                 self.transformations[value]=weights
                 self.weights=weights
                 self._reset()
@@ -617,6 +621,8 @@ class W(object):
                 nQ=self.n/Q
                 for i in self.weights:
                     weights[i] = [ w*nQ for w in s[i]]
+                weights=ROD(weights)
+                self.transformations[value]=weights
                 self.weights=weights
                 self._reset()
             elif value =="O":

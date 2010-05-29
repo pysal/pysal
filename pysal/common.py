@@ -18,6 +18,14 @@ except:
     print 'scipy 0.7+ is required'
     raise
 
+class ROD(dict):
+    """
+    Read Only Dictionary
+    """
+    def __setitem__(self,*args):
+        raise TypeError, "'Read Only Dictionary (ROD)' object does not support item assignment"
+
+
 
 import copy
 import math

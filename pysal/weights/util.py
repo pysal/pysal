@@ -8,6 +8,8 @@ import os, gc
 
 __all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 'full']
 
+
+
 class WS:
     """ """
     def __init__(self,nrows,ncols):
