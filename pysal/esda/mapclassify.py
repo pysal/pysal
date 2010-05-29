@@ -24,6 +24,8 @@ Map Classifiers Supported:
 __author__ = "Sergio J. Rey"
 __credits__= "Copyright (c) 2009 Sergio J. Rey"
 
+__all__=['quantile','Equal_Interval','Percentiles','Box_Plot','Quantiles',
+         'Std_Mean','User_Defined']
 from pysal.common import *
 
 K=5 # default number of classes in any map scheme with this as an argument

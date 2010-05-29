@@ -9,6 +9,8 @@ Author(s):
 from pysal.common import *
 from pysal.weights.spatial_lag import lag_spatial as slag
 
+__all__=["Moran","Moran_Local","Moran_BV","Moran_BV_matrix"]
+
 
 PERMUTATIONS=999
 

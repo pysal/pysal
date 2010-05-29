@@ -13,22 +13,30 @@ import numpy as np
 import numpy.linalg as la
 import pysal
 
+__all__=["Markov","LISA_Markov"]
+
 
 class Markov:
     """Classic Markov transition matrices
 
     Parameters
     ----------
-    class_ids   : array (n,t) 
-                  One row per observation, one column per state of each
-                  observation, with as many columns as time periods
-    classes     : array (k) 
-                  All different classes (bins) of the matrix
+    class_ids    : array (n,t) 
+                   One row per observation, one column per state of each
+                   observation, with as many columns as time periods
+    classes      : array (k) 
+                   All different classes (bins) of the matrix
 
     Attributes
     ----------
-    p           : transition matrix
-    steady_state: steady state
+    p            : matrix (k,k)
+                   transition probility matrix
+
+    steady_state : matrix (k,1)
+                   ergodic distribution
+
+    transitions  : matrix (k,k)
+                   count of transitions between each state i and j
 
     Examples:
     ---------
@@ -46,6 +54,51 @@ class Markov:
             [ 0.28846154],
             [ 0.40384615]])
 
+    # US nominal per capita income 48 states 81 years 1929-2009
+    >>> f=pysal.open("../../examples/usjoin.csv")
+    >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
+
+    # set classes to quintiles for each year
+    >>> q5=np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
+    >>> m=Markov(q5)
+    >>> m.transitions
+    array([[ 729.,   71.,    1.,    0.,    0.],
+           [  72.,  567.,   80.,    3.,    0.],
+           [   0.,   81.,  631.,   86.,    2.],
+           [   0.,    3.,   86.,  573.,   56.],
+           [   0.,    0.,    1.,   57.,  741.]])
+    >>> m.p
+    matrix([[ 0.91011236,  0.0886392 ,  0.00124844,  0.        ,  0.        ],
+            [ 0.09972299,  0.78531856,  0.11080332,  0.00415512,  0.        ],
+            [ 0.        ,  0.10125   ,  0.78875   ,  0.1075    ,  0.0025    ],
+            [ 0.        ,  0.00417827,  0.11977716,  0.79805014,  0.07799443],
+            [ 0.        ,  0.        ,  0.00125156,  0.07133917,  0.92740926]])
+    >>> m.steady_state
+    matrix([[ 0.20774716],
+            [ 0.18725774],
+            [ 0.20740537],
+            [ 0.18821787],
+            [ 0.20937187]])
+
+    # Relative incomes
+    >>> pci=pci.transpose()
+    >>> rpci=pci/(pci.mean(axis=0))
+    >>> rq=pysal.Quantiles(rpci.flatten()).yb
+    >>> rq.shape=(48,81)
+    >>> mq=Markov(rq)
+    >>> mq.transitions
+    array([[ 707.,   58.,    7.,    1.,    0.],
+           [  50.,  629.,   80.,    1.,    1.],
+           [   4.,   79.,  610.,   73.,    2.],
+           [   0.,    7.,   72.,  650.,   37.],
+           [   0.,    0.,    0.,   48.,  724.]])
+    >>> mq.steady_state
+    matrix([[ 0.17957376],
+            [ 0.21631443],
+            [ 0.21499942],
+            [ 0.21134662],
+            [ 0.17776576]])
+    
     """
     def __init__(self,class_ids,classes=[]):
         if len(classes):
@@ -86,10 +139,61 @@ class Markov:
         self.steady_state= d[:,i]/sum(d[:,i])
 
 class LISA_Markov(Markov):
-    """Markov for Local Indicators of Spatial Association"""
+    """
+    Markov for Local Indicators of Spatial Association
+    
+    Parameters
+    ----------
+
+    y  : array (n,t)
+         n cross-sectional units observed over t time periods
+
+    w  : weights instance
+
+    Attributes
+    ----------
+    classes      : array (4,1)
+                   1=HH,2=LH,3=LL,4=HL (own,lag)
+    p            : matrix (k,k)
+                   transition probility matrix
+
+    steady_state : matrix (k,1)
+                   ergodic distribution
+
+    transitions  : matrix (k,k)
+                   count of transitions between each state i and j
+
+    Examples:
+    ---------
+ 
+    >>> import numpy as np
+    >>> f=pysal.open("../../examples/usjoin.csv")
+    >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
+    >>> w=pysal.open("../../examples/states48.gal").read()
+    >>> lm=LISA_Markov(pci,w)
+    >>> lm.classes
+    array([1, 2, 3, 4])
+    >>> lm.steady_state
+    matrix([[ 0.31122083+0.j],
+            [ 0.14496933+0.j],
+            [ 0.37728447+0.j],
+            [ 0.16652538+0.j]])
+    >>> lm.transitions
+    array([[ 495.,   47.,  384.,  244.],
+           [ 180.,   83.,  178.,  115.],
+           [ 334.,  321.,  661.,  190.],
+           [ 169.,  105.,  218.,   83.]])
+    >>> lm.p
+    matrix([[ 0.42307692,  0.04017094,  0.32820513,  0.20854701],
+            [ 0.32374101,  0.14928058,  0.32014388,  0.20683453],
+            [ 0.22177955,  0.21314741,  0.43891102,  0.12616202],
+            [ 0.29391304,  0.1826087 ,  0.37913043,  0.14434783]])
+    
+    """
     def __init__(self,y,w):
-        q=pysal.Local_Moran(y,w).q
-        classes=range(1,5) # no guarantee all 4 quadrants are visited
+        y=y.transpose()
+        q=np.array([pysal.Moran_Local(yi,w,permutations=0).q for yi in y])
+        classes=np.arange(1,5) # no guarantee all 4 quadrants are visited
         Markov.__init__(self,q,classes)
 
 def mobility(pmat):
