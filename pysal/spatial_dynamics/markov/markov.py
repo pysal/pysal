@@ -13,11 +13,12 @@ import numpy.linalg as la
 import pysal
 import ergodic
 
-__all__=["Markov","LISA_Markov"]
+__all__=["Markov","LISA_Markov","Spatial_Markov"]
 
 
 class Markov:
-    """Classic Markov transition matrices
+    """
+    Classic Markov transition matrices
 
     Parameters
     ----------
@@ -197,7 +198,8 @@ class Spatial_Markov:
     >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
     >>> pci=pci.transpose()
 
-    # relative incomes with simple contiguity 
+    relative incomes with simple contiguity 
+
     >>> rpci=pci/(pci.mean(axis=0))
     >>> w=pysal.open("../../examples/states48.gal").read()
     >>> sm=Spatial_Markov(rpci,w)
@@ -221,10 +223,10 @@ class Spatial_Markov:
      [ 0.03097345  0.13274336  0.60619469  0.2300885 ]
      [ 0.00844595  0.02533784  0.11655405  0.84966216]]
 
-    # The probability of a poor state remaining poor is 0.865 if their
-    # hneighbors are poor, 0.693 if their neighbors are in the second
-    # quartile, 0.688 if they are in the third quartile and 0.417 if their
-    # neighbors are in the fourth quartile.
+    The probability of a poor state remaining poor is 0.865 if their
+    neighbors are poor, 0.693 if their neighbors are in the second
+    quartile, 0.688 if they are in the third quartile and 0.417 if their
+    neighbors are in the fourth quartile.
 
     >>> sm.ss
     array([[ 0.58782316,  0.23273848,  0.09829031,  0.08114805],
@@ -232,10 +234,10 @@ class Spatial_Markov:
            [ 0.11354596,  0.18984682,  0.43300937,  0.26359785],
            [ 0.05725753,  0.17605819,  0.27575718,  0.4909271 ]])
 
-    # The long run distribution for states with poor (rich) neighbors has
-    # 0.588 (0.057) of the values in the first quartile, 0.233 (0.176) in
-    # the second quartile, 0.0.98 (0.276) in the third and 0.081 (0.491)
-    # in the fourth quartile.
+    The long run distribution for states with poor (rich) neighbors has
+    0.588 (0.057) of the values in the first quartile, 0.233 (0.176) in
+    the second quartile, 0.0.98 (0.276) in the third and 0.081 (0.491)
+    in the fourth quartile.
 
     >>> for f in sm.F:
     ...     print f
@@ -257,13 +259,13 @@ class Spatial_Markov:
      [ 33.51796573  12.45863896   3.6263788    6.27099237]
      [ 37.24599226  16.50692747   7.80544747   2.0369623 ]]
 
-    # States with incomes in the first quartile with neighbors in the
-    # first quartile return to the first quartile after 1.701 years, after
-    # leaving the first quartile. They enter the fourth quartile after
-    # 44.98 years after leaving the first quartile, on average
-    # Poor states within neighbors in the fourth quartile return to the
-    # first quartile, on average, after 17.47 years, and would enter the
-    # fourth quartile after 10.08 years.
+    States with incomes in the first quartile with neighbors in the
+    first quartile return to the first quartile after 1.701 years, after
+    leaving the first quartile. They enter the fourth quartile after
+    44.98 years after leaving the first quartile, on average
+    Poor states within neighbors in the fourth quartile return to the
+    first quartile, on average, after 17.47 years, and would enter the
+    fourth quartile after 10.08 years.
 
     References
     ----------
@@ -309,11 +311,6 @@ class Spatial_Markov:
         # add tests based on multinomial differences, classic against each of
         # the conditional transition matrices
             
-
-
-
-
-
 
 class LISA_Markov(Markov):
     """
