@@ -2,7 +2,6 @@
 Markov based methods for PySAL
 
 
-
 To do:
 
     add mobility measures 
@@ -12,6 +11,7 @@ To do:
 import numpy as np
 import numpy.linalg as la
 import pysal
+import ergodic
 
 __all__=["Markov","LISA_Markov"]
 
@@ -137,6 +137,183 @@ class Markov:
         i=v.tolist().index(mv)
         # normalize eigenvector corresponding to the eigenvalue 1
         self.steady_state= d[:,i]/sum(d[:,i])
+
+class Spatial_Markov:
+    """
+    Markov transitions conditioned on the value of the spatial lag
+    
+    Parameters
+    ----------
+
+    y            : array (n,t) 
+                   One row per observation, one column per state of each
+                   observation, with as many columns as time periods
+
+    w            : spatial weights object
+
+    k            : integer
+                   number of classes (quantiles)
+
+    Attributes
+    ----------
+    p            : matrix (k,k)
+                   transition probability matrix for a-spatial Markov
+
+    s            : matrix (k,1)
+                   ergodic distribution for a-spatial Markov
+
+    transitions  : matrix (k,k)
+                   counts of transitions between each state i and j
+                   for a-spatial Markov
+
+    T            : matrix (k,k,k)
+                   counts of transitions for each conditional Markov
+                   T[0] is the matrix of transitions for observations with
+                   lags in the 0th quantile, T[k-1] is the transitions for
+                   the observations with lags in the k-1th
+
+    P            : matrix(k,k,k)
+                   transition probability matrix for spatial Markov
+                   first dimension is the conditioned on the lag
+
+
+    S            : matrix(k,k)
+                   steady state distributions for spatial Markov
+                   each row is a conditional steady_state
+
+    F            : matrix(k,k,k)
+                   first mean passage times
+                   first dimension is conditioned on the lag
+
+
+    Notes
+    -----
+    Based on  Rey (2001) [1]_
+
+    
+    Examples
+    --------
+    >>> f=pysal.open("../../examples/usjoin.csv")
+    >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
+    >>> pci=pci.transpose()
+
+    # relative incomes with simple contiguity 
+    >>> rpci=pci/(pci.mean(axis=0))
+    >>> w=pysal.open("../../examples/states48.gal").read()
+    >>> sm=Spatial_Markov(rpci,w)
+    >>> for p in sm.P:
+    ...     print p
+    ...     
+    [[ 0.86470588  0.11764706  0.01323529  0.00441176]
+     [ 0.29901961  0.57843137  0.10294118  0.01960784]
+     [ 0.0483871   0.24193548  0.48387097  0.22580645]
+     [ 0.06382979  0.06382979  0.23404255  0.63829787]]
+    [[ 0.69339623  0.27830189  0.02358491  0.00471698]
+     [ 0.11872146  0.74429224  0.12785388  0.00913242]
+     [ 0.02803738  0.21962617  0.62149533  0.13084112]
+     [ 0.          0.03296703  0.21978022  0.74725275]]
+    [[ 0.68831169  0.23376623  0.06493506  0.01298701]
+     [ 0.17619048  0.54285714  0.26190476  0.01904762]
+     [ 0.0044843   0.12780269  0.71524664  0.15246637]
+     [ 0.          0.01860465  0.25116279  0.73023256]]
+    [[ 0.41666667  0.5         0.08333333  0.        ]
+     [ 0.11764706  0.55882353  0.26470588  0.05882353]
+     [ 0.03097345  0.13274336  0.60619469  0.2300885 ]
+     [ 0.00844595  0.02533784  0.11655405  0.84966216]]
+
+    # The probability of a poor state remaining poor is 0.865 if their
+    # hneighbors are poor, 0.693 if their neighbors are in the second
+    # quartile, 0.688 if they are in the third quartile and 0.417 if their
+    # neighbors are in the fourth quartile.
+
+    >>> sm.ss
+    array([[ 0.58782316,  0.23273848,  0.09829031,  0.08114805],
+           [ 0.18806096,  0.4290554 ,  0.23975543,  0.14312821],
+           [ 0.11354596,  0.18984682,  0.43300937,  0.26359785],
+           [ 0.05725753,  0.17605819,  0.27575718,  0.4909271 ]])
+
+    # The long run distribution for states with poor (rich) neighbors has
+    # 0.588 (0.057) of the values in the first quartile, 0.233 (0.176) in
+    # the second quartile, 0.0.98 (0.276) in the third and 0.081 (0.491)
+    # in the fourth quartile.
+
+    >>> for f in sm.F:
+    ...     print f
+    ...     
+    [[  1.70119192   8.28618421  26.83809207  44.98041833]
+     [  4.73193953   4.29666806  21.93735075  40.40440826]
+     [  7.99329754   6.36567982  10.17394282  25.09398059]
+     [  8.77188773   8.34594298  11.37213697  12.3231546 ]]
+    [[  5.31742481   3.87717709  12.20466959  32.58128415]
+     [ 13.63327366   2.33070133   9.76395664  30.37914291]
+     [ 17.9223053    6.14355367   4.17091708  22.68280767]
+     [ 21.31938813   9.29874233   5.2300813    6.98674266]]
+    [[  8.80700651   6.11889551   7.23710729  15.86674881]
+     [ 22.35790647   5.26740443   5.14604327  14.07786188]
+     [ 32.61629382  11.15262368   2.30941887  10.08009153]
+     [ 35.61571538  14.09037377   4.06179609   3.79365763]]
+    [[ 17.46495301   3.49409128   5.89710333  10.0826972 ]
+     [ 27.3435784    5.67994031   4.87995388   8.71798134]
+     [ 33.51796573  12.45863896   3.6263788    6.27099237]
+     [ 37.24599226  16.50692747   7.80544747   2.0369623 ]]
+
+    # States with incomes in the first quartile with neighbors in the
+    # first quartile return to the first quartile after 1.701 years, after
+    # leaving the first quartile. They enter the fourth quartile after
+    # 44.98 years after leaving the first quartile, on average
+    # Poor states within neighbors in the fourth quartile return to the
+    # first quartile, on average, after 17.47 years, and would enter the
+    # fourth quartile after 10.08 years.
+
+    References
+    ----------
+    .. [1] Rey, S.J. 2001. "Spatial empirics for economic growth
+       and convergence", 34 Geographical Analysis, 33, 195-214.
+    
+    """
+    def __init__(self,y,w,k=4):
+
+        classes=np.array([pysal.Quantiles(yi,k=k).yb for yi in y])
+        classic=Markov(classes)
+        self.aspatial=classic
+        self.classes=classes
+
+        # lag markov
+        l_y=pysal.lag_spatial(w,y)
+        l_classes=np.array([pysal.Quantiles(yi,k=k).yb for yi in l_y])
+        l_classic=Markov(l_classes)
+        self.lag_markov=l_classic
+        self.l_classes=l_classes
+
+        T=np.zeros((k,k,k))
+        n,t=y.shape
+        for t1 in range(t-1):
+            t2=t1+1
+            for i in range(n):
+                T[l_classes[i,t1],classes[i,t1],classes[i,t2]]+=1
+        self.T=T
+
+        P=np.zeros_like(T)
+        F=np.zeros_like(T) # fmpt
+        ss=np.zeros_like(T[0])
+        for i,mat in enumerate(T):
+            p_i=np.matrix(np.diag(1./mat.sum(axis=1))*np.matrix(mat))
+            ss[i]=ergodic.steady_state(p_i).transpose()
+            F[i]=ergodic.fmpt(p_i)
+            P[i]=p_i
+        self.P=P
+        self.ss=ss
+        self.F=F
+        self.T=T
+
+        # add tests based on multinomial differences, classic against each of
+        # the conditional transition matrices
+            
+
+
+
+
+
 
 class LISA_Markov(Markov):
     """
