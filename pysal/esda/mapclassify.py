@@ -67,7 +67,7 @@ def binC(y,bins):
     ----------
     y : array (n,q)
         categorical values
-    bins : -- array (k,1)
+    bins :  array (k,1)
         unique values associated with each bin 
 
     Return
@@ -346,16 +346,17 @@ class Equal_Interval(Map_Classifier):
 
     Attributes
     ----------
-    yb : array (n,1) 
-        bin ids for observations. Each value is the id of the class the observation belongs to.
-        yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j]
-        yb[i] = 0  otherwise
-    bins : array (k,1)
-        the upper bounds of each class 
-    k : int
-        the number of classes
-    counts : array (k,1)
-        the number of observations falling in each class 
+
+    yb      : array (n,1)
+              bin ids for observations,
+              each value is the id of the class the observation belongs to
+              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
+    bins    : array (k,1)
+              the upper bounds of each class 
+    k       : int
+              the number of classes
+    counts  : array (k,1)
+              the number of observations falling in each class
 
     Examples
     --------
@@ -418,7 +419,8 @@ class Percentiles(Map_Classifier):
     Attributes
     ----------
     yb     : array
-             bin ids for observations (numpy array n x 1). Each value is the id
+             bin ids for observations (numpy array n x 1)
+             Each value is the id
              of the class the observation belongs to.
 
     bins   : array
@@ -473,7 +475,8 @@ class Box_Plot(Map_Classifier):
     Attributes
     ----------
     yb : array (n,1) 
-        bin ids for observations. Each value is the id of the class the observation belongs to.
+        bin ids for observations 
+        Each value is the id of the class the observation belongs to
         yb[i] = j  for j>=1 if  bins[j-1] < y[i] <= bins[j]
         yb[i] = 0  otherwise
     bins : array (n,1)
@@ -569,8 +572,8 @@ class Quantiles(Map_Classifier):
         k: number of classes required
 
     Attributes:
-        yb: bin ids for observations (numpy array n x 1). Each value is the id
-        of the class the observation belongs to.
+        yb: bin ids for observations (numpy array n x 1)
+        Each value is the id of the class the observation belongs to
 
         bins: the upper bounds of each class (numpy array k x 1)
 
@@ -664,8 +667,8 @@ class Maximum_Breaks(Map_Classifier):
         k: number of classes required
 
     Attributes:
-        yb: bin ids for observations (numpy array n x 1). Each value is the id
-        of the class the observation belongs to.
+        yb: bin ids for observations (numpy array n x 1)
+            Each value is the id of the class the observation belongs to
 
         bins: the upper bounds of each class (numpy array k x 1)
 
@@ -732,8 +735,8 @@ class Natural_Breaks(Map_Classifier):
 
         k: the number of classes
 
-        yb: bin ids for observations (numpy array n x 1). Each value is the id
-        of the class the observation belongs to.
+        yb: bin ids for observations (numpy array n x 1)
+            Each value is the id of the class the observation belongs to
 
     Examples
     --------
@@ -885,8 +888,8 @@ class Jenks_Caspall(Map_Classifier):
 
         k: the number of classes
 
-        yb: bin ids for observations (numpy array n x 1). Each value is the id
-        of the class the observation belongs to.
+        yb: bin ids for observations (numpy array n x 1)
+            Each value is the id of the class the observation belongs to
 
         Examples
         --------
@@ -945,12 +948,12 @@ class Jenks_Caspall_Sampled(Map_Classifier):
 
         k: number of classes required
 
-        pct: the percentage of n that should form the sample. If pct is
-        specified such that n*pct > 1000, then pct = 1000/n
+        pct: the percentage of n that should form the sample
+             If pct is specified such that n*pct > 1000, then pct = 1000/n
 
     Attributes:
-        yb: bin ids for observations (numpy array n x 1). Each value is the id
-        of the class the observation belongs to.
+        yb: bin ids for observations (numpy array n x 1)
+            Each value is the id of the class the observation belongs to
 
         bins: the upper bounds of each class (numpy array k x 1)
 
@@ -981,6 +984,7 @@ class Jenks_Caspall_Sampled(Map_Classifier):
         >>> jcs.counts
         array([18922, 20521, 20980, 19826, 19751])
         >>> 
+
         # not for testing since we get different times on different hardware
         # just included for documentation of likely speed gains
         #>>> t1=time.time();jc=Jenks_Caspall(x);t2=time.time()
@@ -1204,8 +1208,8 @@ class Max_P(Map_Classifier):
         initial: number of initial solutions to use prior to swapping
 
     Attributes:
-        yb: bin ids for observations (numpy array n x 1). Each value is the id
-        of the class the observation belongs to.
+        yb: bin ids for observations (numpy array n x 1)
+            Each value is the id of the class the observation belongs to
 
         bins: the upper bounds of each class (numpy array k x 1)
 
