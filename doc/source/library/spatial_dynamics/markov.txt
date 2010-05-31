@@ -1,5 +1,5 @@
-:mod:`spatial_dynamics.markov.markov` -- Classic Markov transition matrices
-===========================================================================
+:mod:`spatial_dynamics.markov` -- Markov based methods
+======================================================
 
 .. versionadded:: 1.0
 
