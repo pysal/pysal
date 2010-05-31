@@ -20,7 +20,7 @@ class Markov:
     Parameters
     ----------
     class_ids    : array (n,t) 
-                   One row per observation, one column per state of each
+                   One row per observation, one column recording the state of each
                    observation, with as many columns as time periods
     classes      : array (k) 
                    All different classes (bins) of the matrix
@@ -36,8 +36,8 @@ class Markov:
     transitions  : matrix (k,k)
                    count of transitions between each state i and j
 
-    Examples:
-    ---------
+    Examples
+    --------
     >>> c=np.array([['b','a','c'],['c','c','a'],['c','b','c'],['a','a','b'],['a','b','c']])
     >>> m=Markov(c)
     >>> m.classes
@@ -52,11 +52,13 @@ class Markov:
             [ 0.28846154],
             [ 0.40384615]])
 
-    # US nominal per capita income 48 states 81 years 1929-2009
+    US nominal per capita income 48 states 81 years 1929-2009
+
     >>> f=pysal.open("../examples/usjoin.csv")
     >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
 
-    # set classes to quintiles for each year
+    set classes to quintiles for each year
+
     >>> q5=np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
     >>> m=Markov(q5)
     >>> m.transitions
@@ -78,7 +80,8 @@ class Markov:
             [ 0.18821787],
             [ 0.20937187]])
 
-    # Relative incomes
+    Relative incomes
+
     >>> pci=pci.transpose()
     >>> rpci=pci/(pci.mean(axis=0))
     >>> rq=pysal.Quantiles(rpci.flatten()).yb
@@ -160,58 +163,45 @@ class Spatial_Markov:
     ----------
     p               : matrix (k,k)
                       transition probability matrix for a-spatial Markov
-
     s               : matrix (k,1)
                       ergodic distribution for a-spatial Markov
-
     transitions     : matrix (k,k)
                       counts of transitions between each state i and j
                       for a-spatial Markov
-
     T               : matrix (k,k,k)
                       counts of transitions for each conditional Markov
                       T[0] is the matrix of transitions for observations with
                       lags in the 0th quantile, T[k-1] is the transitions for
                       the observations with lags in the k-1th
-
     P               : matrix(k,k,k)
                       transition probability matrix for spatial Markov
                       first dimension is the conditioned on the lag
-
-
     S               : matrix(k,k)
                       steady state distributions for spatial Markov
                       each row is a conditional steady_state
-
     F               : matrix(k,k,k)
                       first mean passage times
                       first dimension is conditioned on the lag
-
     shtest          : list (k elements)
                       each element of the list is a tuple for a multinomial
                       difference test between the steady state distribution from
                       a conditional distribution versus the overall steady state
-                      distribution. First element of the tuple is the chi2 value,
-                      second its p-value and the third the degrees of freedom.
-
+                      distribution, first element of the tuple is the chi2 value,
+                      second its p-value and the third the degrees of freedom
     chi2            : list (k elements)
                       each element of the list is a tuple for a chi-squared test
                       of the difference between the conditional transition
-                      matrix against the overall transition matrix. First
+                      matrix against the overall transition matrix, first
                       element of the tuple is the chi2 value, second its
-                      p-value and the third the degrees of freedom. 
-
+                      p-value and the third the degrees of freedom 
     x2              : float
                       sum of the chi2 values for each of the conditional tests
                       (see chi2 above)
-
     x2_pvalue       : float (if permutations>0)
                       pseudo p-value for x2 based on random spatial permutations
-                      of the rows of the original transitions. 
-
+                      of the rows of the original transitions 
     x2_realizations : array (permutations,1)
                       the values of x2 for the random permutations 
-
 
     Notes
     -----
@@ -228,9 +218,6 @@ class Spatial_Markov:
     >>> f=pysal.open("../examples/usjoin.csv")
     >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
     >>> pci=pci.transpose()
-
-    relative incomes with simple contiguity 
-
     >>> rpci=pci/(pci.mean(axis=0))
     >>> w=pysal.open("../examples/states48.gal").read()
     >>> sm=Spatial_Markov(rpci,w)
@@ -312,6 +299,7 @@ class Spatial_Markov:
 
     References
     ----------
+
     .. [1] Rey, S.J. 2001. "Spatial empirics for economic growth
        and convergence", 34 Geographical Analysis, 33, 195-214.
     
@@ -463,8 +451,9 @@ def chi2(T1,T2):
     implicit : tuple (3 elements)
                (chi2 value, pvalue, degrees of freedom)
 
-    Example
-    -------
+    Examples
+    --------
+
     >>> f=pysal.open("../examples/usjoin.csv")
     >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
     >>> rpci=pci/(pci.mean(axis=0))
@@ -544,8 +533,8 @@ class LISA_Markov(Markov):
     transitions  : matrix (k,k)
                    count of transitions between each state i and j
 
-    Examples:
-    ---------
+    Examples
+    --------
  
     >>> import numpy as np
     >>> f=pysal.open("../examples/usjoin.csv")
