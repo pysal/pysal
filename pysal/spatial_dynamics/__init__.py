@@ -1,9 +1,12 @@
 """
-:mod:`spatial_dynamics` -- Spatial Dynamics
-"""
-__author__ = "Sergio J. Rey <srey@asu.edu>, Xinyue Ye"
+:mod:`spatial_dynamics` --- Spatial Dynamics and Mobility
+=========================================================
 
-__all__=[]
-import markov
-import mobility
+"""
+
+from markov import *
+from rank import *
+
+__all__ = filter(lambda s:not s.startswith("_"),dir())
+
 
