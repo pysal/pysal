@@ -1,8 +1,0 @@
-:mod:`pysal.spatial_dynamics.markov` --- Spatial Dynamics
-=========================================================
-.. toctree::
-
-    markov
-    ergodic
-
-

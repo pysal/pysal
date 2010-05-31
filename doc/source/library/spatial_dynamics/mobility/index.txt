@@ -1,7 +1,0 @@
-:mod:`pysal.spatial_dynamics.mobility` --- Spatial Dynamics
-=========================================================
-.. toctree::
-
-    rank
-
-

@@ -3,6 +3,6 @@
 
 .. versionadded:: 1.0
 
-.. automodule:: pysal.spatial_dynamics.markov.markov
+.. automodule:: pysal.spatial_dynamics.markov
     :synopsis: 
     :members:
