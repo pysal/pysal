@@ -14,8 +14,6 @@ cg
     Basic data structures and tools for Computational Geometry
 core
     Basic functions used by several sub-packages
-econometrics
-    Spatial econometrics
 esda
     Tools for Exploratory Spatial Data Analysis
 examples
@@ -49,6 +47,8 @@ from esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local
 from econometrics import Jarque_Bera,Ols
 from inequality.theil import Theil,TheilD,TheilDSim
 from region.maxp import Maxp,Maxp_LISA
+from spatial_dynamics import Markov, Spatial_Markov, LISA_Markov, SpatialTau, Theta
+from spatial_dynamics import ergodic
 from weights import W,lat2W,regime_weights,comb,full,shimbel,order,higher_order
 from weights.Distance import knnW, Kernel, DistanceBand
 from weights.Contiguity import buildContiguity

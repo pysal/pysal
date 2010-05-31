@@ -6,9 +6,9 @@ __author__= "Sergio J. Rey <srey@asu.edu"
 
 import numpy as np
 import numpy.linalg as la
-import pysal
 import ergodic
 from scipy import stats
+import pysal
 
 __all__=["Markov","LISA_Markov","Spatial_Markov"]
 
@@ -53,7 +53,7 @@ class Markov:
             [ 0.40384615]])
 
     US nominal per capita income 48 states 81 years 1929-2009
-
+    >>> import pysal
     >>> f=pysal.open("../examples/usjoin.csv")
     >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
 
@@ -215,6 +215,7 @@ class Spatial_Markov:
     
     Examples
     --------
+    >>> import pysal
     >>> f=pysal.open("../examples/usjoin.csv")
     >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
     >>> pci=pci.transpose()
@@ -454,6 +455,7 @@ def chi2(T1,T2):
     Examples
     --------
 
+    >>> import pysal
     >>> f=pysal.open("../examples/usjoin.csv")
     >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
     >>> rpci=pci/(pci.mean(axis=0))

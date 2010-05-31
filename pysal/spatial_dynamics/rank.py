@@ -9,6 +9,8 @@ from pysal.common import *
 from scipy.stats.mstats import rankdata
 from scipy.special import erfc
 
+__all__=['Theta','SpatialTau']
+
 class Theta:
     """Regime mobility measure
 
