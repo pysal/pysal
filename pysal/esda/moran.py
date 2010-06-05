@@ -199,6 +199,8 @@ class Moran_BV:
     Examples
     --------
     >>> import pysal
+    >>> import numpy as np
+    >>> np.random.seed(10)
     >>> f=pysal.open("../examples/sids2.dbf")
     >>> SIDR74=np.array(f.by_col['SIDR74'])
     >>> SIDR79=np.array(f.by_col['SIDR79'])
@@ -206,6 +208,10 @@ class Moran_BV:
     >>> mbi=Moran_BV(SIDR79,SIDR74,w)
     >>> print mbi.I
     0.156131961696
+    >>> mbi.p_z_sim
+    0.0028373234843530604
+    
+    
     """
     def __init__(self,x,y,w,transformation="r",permutations=PERMUTATIONS):
         zy=(y-y.mean())/y.std(ddof=1)
@@ -369,7 +375,7 @@ class Moran_Local:
     >>> lm.q
     array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
     >>> lm.p_z_sim[0]
-    0.39891320168884037
+    0.99036648060872201
 
 
     Note random components result is slightly different values across
@@ -404,7 +410,7 @@ class Moran_Local:
             self.seI_sim = sim.std()
             self.VI_sim = self.seI_sim * self.seI_sim
             self.z_sim = (self.Is-self.EI_sim)/self.seI_sim
-            self.p_z_sim=stats.norm.pdf(self.z_sim)
+            self.p_z_sim=2.0*(1-stats.norm.cdf(np.abs(self.z_sim)))
 
     def calc(self,w,z):
         zl=slag(w,z)
