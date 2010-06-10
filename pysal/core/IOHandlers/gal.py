@@ -90,13 +90,10 @@ class GalIO(FileIO.FileIO):
         self._complain_ifclosed(self.closed)
         if issubclass(type(obj),W):
             IDS = obj.id_order
-            for id in IDS:
-                if type(id) != int:
-                    raise ValueError("GAL file support only integer IDs only. ID: \"%r\" is not of type int."%id)
             self.file.write('%d\n'%(obj.n))
             for id in IDS:
                 neighbors = obj.neighbors[id]
-                self.file.write('%s %d\n'%(id,len(neighbors)))
+                self.file.write('%s %d\n'%(str(id),len(neighbors)))
                 self.file.write(' '.join(map(str,neighbors))+'\n')
             self.pos += 1
         else:
