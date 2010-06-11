@@ -374,8 +374,8 @@ def order(w,kmax=3):
     Implements the algorithm in Anselin and Smirnov (1996) [1]_
 
 
-    Example
-    -------
+    Examples
+    --------
     >>> from Contiguity import buildContiguity
     >>> w=buildContiguity(pysal.open('../examples/10740.shp'),criterion='rook')
     >>> w3=order(w,kmax=3)
@@ -667,8 +667,8 @@ def get_points_array_from_shapefile(shapefile):
     points        : array (n,2)
                     a data array of x and y coordinates
 
-    Note
-    ----
+    Notes
+    -----
     If the given shape file includes polygons, 
     this function returns x and y coordinates of the polygons' centroids
 
