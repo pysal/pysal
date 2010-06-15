@@ -53,6 +53,7 @@ class Markov:
             [ 0.40384615]])
 
     US nominal per capita income 48 states 81 years 1929-2009
+
     >>> import pysal
     >>> f=pysal.open("../examples/usjoin.csv")
     >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
@@ -159,6 +160,11 @@ class Spatial_Markov:
                       number of permutations (default=0) for use in randomization
                       based inference
 
+    fixed           : boolean
+                      If true, quantiles are taken over the entire n*t
+                      pooled series. If false, quantiles are taken each
+                      time period over n.
+
     Attributes
     ----------
     p               : matrix (k,k)
@@ -254,7 +260,7 @@ class Spatial_Markov:
     
 
     The probability of a poor state remaining poor is 0.963 if their
-    neighbors are in the 1st quintile and 0.0.798 if their neighbors are
+    neighbors are in the 1st quintile and 0.798 if their neighbors are
     in the 2nd quintile. The probability of a rich economy remaining
     rich is 0.977 if their neighbors are in the 5th quintile, but if their
     neights are in the 4th quintile this drops to 0.903.
@@ -267,9 +273,9 @@ class Spatial_Markov:
            [ 0.01776781,  0.19964349,  0.19009833,  0.25524697,  0.3372434 ]])
 
     The long run distribution for states with poor (rich) neighbors has
-    0.435 (0.018) of the values in the first quartile, 0.263 (0.200) in
-    the second quartile, 0.204 (0.190) in the third, 0.0684 (0.255) in the
-    fourth and 0.029 (0.337) in the fifth
+    0.435 (0.018) of the values in the first quintile, 0.263 (0.200) in
+    the second quintile, 0.204 (0.190) in the third, 0.0684 (0.255) in the
+    fourth and 0.029 (0.337) in the fifth quintile.
 
     >>> for f in sm.F:
     ...     print f
