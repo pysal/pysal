@@ -221,81 +221,105 @@ class Spatial_Markov:
     >>> pci=pci.transpose()
     >>> rpci=pci/(pci.mean(axis=0))
     >>> w=pysal.open("../examples/states48.gal").read()
-    >>> sm=Spatial_Markov(rpci,w)
+    >>> w.transform='r'
+    >>> sm=Spatial_Markov(rpci,w,fixed=True,k=5)
     >>> for p in sm.P:
     ...     print p
     ...     
-    [[ 0.86470588  0.11764706  0.01323529  0.00441176]
-     [ 0.29901961  0.57843137  0.10294118  0.01960784]
-     [ 0.0483871   0.24193548  0.48387097  0.22580645]
-     [ 0.06382979  0.06382979  0.23404255  0.63829787]]
-    [[ 0.69339623  0.27830189  0.02358491  0.00471698]
-     [ 0.11872146  0.74429224  0.12785388  0.00913242]
-     [ 0.02803738  0.21962617  0.62149533  0.13084112]
-     [ 0.          0.03296703  0.21978022  0.74725275]]
-    [[ 0.68831169  0.23376623  0.06493506  0.01298701]
-     [ 0.17619048  0.54285714  0.26190476  0.01904762]
-     [ 0.0044843   0.12780269  0.71524664  0.15246637]
-     [ 0.          0.01860465  0.25116279  0.73023256]]
-    [[ 0.41666667  0.5         0.08333333  0.        ]
-     [ 0.11764706  0.55882353  0.26470588  0.05882353]
-     [ 0.03097345  0.13274336  0.60619469  0.2300885 ]
-     [ 0.00844595  0.02533784  0.11655405  0.84966216]]
+    [[ 0.96341463  0.0304878   0.00609756  0.          0.        ]
+     [ 0.06040268  0.83221477  0.10738255  0.          0.        ]
+     [ 0.          0.14        0.74        0.12        0.        ]
+     [ 0.          0.03571429  0.32142857  0.57142857  0.07142857]
+     [ 0.          0.          0.          0.16666667  0.83333333]]
+    [[ 0.79831933  0.16806723  0.03361345  0.          0.        ]
+     [ 0.0754717   0.88207547  0.04245283  0.          0.        ]
+     [ 0.00537634  0.06989247  0.8655914   0.05913978  0.        ]
+     [ 0.          0.          0.06372549  0.90196078  0.03431373]
+     [ 0.          0.          0.          0.19444444  0.80555556]]
+    [[ 0.84693878  0.15306122  0.          0.          0.        ]
+     [ 0.08133971  0.78947368  0.1291866   0.          0.        ]
+     [ 0.00518135  0.0984456   0.79274611  0.0984456   0.00518135]
+     [ 0.          0.          0.09411765  0.87058824  0.03529412]
+     [ 0.          0.          0.          0.10204082  0.89795918]]
+    [[ 0.8852459   0.09836066  0.          0.01639344  0.        ]
+     [ 0.03875969  0.81395349  0.13953488  0.          0.00775194]
+     [ 0.0049505   0.09405941  0.77722772  0.11881188  0.0049505 ]
+     [ 0.          0.02339181  0.12865497  0.75438596  0.09356725]
+     [ 0.          0.          0.          0.09661836  0.90338164]]
+    [[ 0.33333333  0.66666667  0.          0.          0.        ]
+     [ 0.0483871   0.77419355  0.16129032  0.01612903  0.        ]
+     [ 0.01149425  0.16091954  0.74712644  0.08045977  0.        ]
+     [ 0.          0.01036269  0.06217617  0.89637306  0.03108808]
+     [ 0.          0.          0.          0.02352941  0.97647059]]
+    
 
-    The probability of a poor state remaining poor is 0.865 if their
-    neighbors are poor, 0.693 if their neighbors are in the second
-    quartile, 0.688 if they are in the third quartile and 0.417 if their
-    neighbors are in the fourth quartile.
+    The probability of a poor state remaining poor is 0.963 if their
+    neighbors are in the 1st quintile and 0.0.798 if their neighbors are
+    in the 2nd quintile. The probability of a rich economy remaining
+    rich is 0.977 if their neighbors are in the 5th quintile, but if their
+    neights are in the 4th quintile this drops to 0.903.
 
     >>> sm.S
-    array([[ 0.58782316,  0.23273848,  0.09829031,  0.08114805],
-           [ 0.18806096,  0.4290554 ,  0.23975543,  0.14312821],
-           [ 0.11354596,  0.18984682,  0.43300937,  0.26359785],
-           [ 0.05725753,  0.17605819,  0.27575718,  0.4909271 ]])
+    array([[ 0.43509425,  0.2635327 ,  0.20363044,  0.06841983,  0.02932278],
+           [ 0.13391287,  0.33993305,  0.25153036,  0.23343016,  0.04119356],
+           [ 0.12124869,  0.21137444,  0.2635101 ,  0.29013417,  0.1137326 ],
+           [ 0.0776413 ,  0.19748806,  0.25352636,  0.22480415,  0.24654013],
+           [ 0.01776781,  0.19964349,  0.19009833,  0.25524697,  0.3372434 ]])
 
     The long run distribution for states with poor (rich) neighbors has
-    0.588 (0.057) of the values in the first quartile, 0.233 (0.176) in
-    the second quartile, 0.0.98 (0.276) in the third and 0.081 (0.491)
-    in the fourth quartile.
+    0.435 (0.018) of the values in the first quartile, 0.263 (0.200) in
+    the second quartile, 0.204 (0.190) in the third, 0.0684 (0.255) in the
+    fourth and 0.029 (0.337) in the fifth
 
     >>> for f in sm.F:
     ...     print f
     ...     
-    [[  1.70119192   8.28618421  26.83809207  44.98041833]
-     [  4.73193953   4.29666806  21.93735075  40.40440826]
-     [  7.99329754   6.36567982  10.17394282  25.09398059]
-     [  8.77188773   8.34594298  11.37213697  12.3231546 ]]
-    [[  5.31742481   3.87717709  12.20466959  32.58128415]
-     [ 13.63327366   2.33070133   9.76395664  30.37914291]
-     [ 17.9223053    6.14355367   4.17091708  22.68280767]
-     [ 21.31938813   9.29874233   5.2300813    6.98674266]]
-    [[  8.80700651   6.11889551   7.23710729  15.86674881]
-     [ 22.35790647   5.26740443   5.14604327  14.07786188]
-     [ 32.61629382  11.15262368   2.30941887  10.08009153]
-     [ 35.61571538  14.09037377   4.06179609   3.79365763]]
-    [[ 17.46495301   3.49409128   5.89710333  10.0826972 ]
-     [ 27.3435784    5.67994031   4.87995388   8.71798134]
-     [ 33.51796573  12.45863896   3.6263788    6.27099237]
-     [ 37.24599226  16.50692747   7.80544747   2.0369623 ]]
+    [[   2.29835259   28.95614035   46.14285714   80.80952381  279.42857143]
+     [  33.86549708    3.79459555   22.57142857   57.23809524  255.85714286]
+     [  43.60233918    9.73684211    4.91085714   34.66666667  233.28571429]
+     [  46.62865497   12.76315789    6.25714286   14.61564626  198.61904762]
+     [  52.62865497   18.76315789   12.25714286    6.           34.1031746 ]]
+    [[   7.46754205    9.70574606   25.76785714   74.53116883  194.23446197]
+     [  27.76691978    2.94175577   24.97142857   73.73474026  193.4380334 ]
+     [  53.57477715   28.48447637    3.97566318   48.76331169  168.46660482]
+     [  72.03631562   46.94601483   18.46153846    4.28393653  119.70329314]
+     [  77.17917276   52.08887197   23.6043956     5.14285714   24.27564033]]
+    [[   8.24751154    6.53333333   18.38765432   40.70864198  112.76732026]
+     [  47.35040872    4.73094099   11.85432099   34.17530864  106.23398693]
+     [  69.42288828   24.76666667    3.794921     22.32098765   94.37966594]
+     [  83.72288828   39.06666667   14.3           3.44668119   76.36702977]
+     [  93.52288828   48.86666667   24.1           9.8           8.79255406]]
+    [[  12.87974382   13.34847151   19.83446328   28.47257282   55.82395142]
+     [  99.46114206    5.06359731   10.54545198   23.05133495   49.68944423]
+     [ 117.76777159   23.03735526    3.94436301   15.0843986    43.57927247]
+     [ 127.89752089   32.4393006    14.56853107    4.44831643   31.63099455]
+     [ 138.24752089   42.7893006    24.91853107   10.35          4.05613474]]
+    [[  56.2815534     1.5          10.57236842   27.02173913  110.54347826]
+     [  82.9223301     5.00892857    9.07236842   25.52173913  109.04347826]
+     [  97.17718447   19.53125       5.26043557   21.42391304  104.94565217]
+     [ 127.1407767    48.74107143   33.29605263    3.91777427   83.52173913]
+     [ 169.6407767    91.24107143   75.79605263   42.5           2.96521739]]
 
-    States with incomes in the first quartile with neighbors in the
-    first quartile return to the first quartile after 1.701 years, after
-    leaving the first quartile. They enter the fourth quartile after
-    44.98 years after leaving the first quartile, on average
-    Poor states within neighbors in the fourth quartile return to the
-    first quartile, on average, after 17.47 years, and would enter the
-    fourth quartile after 10.08 years.
+    States with incomes in the first quintile with neighbors in the
+    first quintile return to the first quartile after 2.298 years, after
+    leaving the first quintile. They enter the fourth quintile after
+    80.810 years after leaving the first quintile, on average.
+    Poor states within neighbors in the fourth quintile return to the
+    first quintile, on average, after 12.88 years, and would enter the
+    fourth quintile after 28.473 years.
 
     >>> np.matrix(sm.chi2)
-    matrix([[  7.47473379e+01,   1.77258208e-12,   9.00000000e+00],
-            [  4.91436080e+01,   1.56002980e-07,   9.00000000e+00],
-            [  5.08533214e+01,   7.44152525e-08,   9.00000000e+00],
-            [  5.91760137e+01,   1.93183514e-09,   9.00000000e+00]])
+    matrix([[  4.06139105e+01,   6.32961385e-04,   1.60000000e+01],
+            [  5.55485793e+01,   2.88879565e-06,   1.60000000e+01],
+            [  1.77772638e+01,   3.37100315e-01,   1.60000000e+01],
+            [  4.00925436e+01,   7.54729084e-04,   1.60000000e+01],
+            [  4.68588786e+01,   7.16364084e-05,   1.60000000e+01]])
     >>> np.matrix(sm.shtest)
-    matrix([[ 653.13717927,    0.        ,    3.        ],
-            [ 180.21432922,    0.        ,    3.        ],
-            [ 210.29814143,    0.        ,    3.        ],
-            [ 390.321644  ,    0.        ,    3.        ]])
+    matrix([[  4.61209613e+02,   0.00000000e+00,   4.00000000e+00],
+            [  1.48140694e+02,   0.00000000e+00,   4.00000000e+00],
+            [  6.33129261e+01,   5.83089133e-13,   4.00000000e+00],
+            [  7.22778509e+01,   7.54951657e-15,   4.00000000e+00],
+            [  2.32659201e+02,   0.00000000e+00,   4.00000000e+00]])
     
 
     References
@@ -305,10 +329,21 @@ class Spatial_Markov:
        and convergence", 34 Geographical Analysis, 33, 195-214.
     
     """
-    def __init__(self,y,w,k=4,permutations=0):
+    def __init__(self,y,w,k=4,permutations=0,fixed=False):
 
         self.y=y
-        classes=np.array([pysal.Quantiles(yi,k=k).yb for yi in y])
+        rows,cols=y.shape
+        self.cols=cols
+        npm=np.matrix
+        npa=np.array
+        self.fixed=fixed
+        if fixed:
+            yf=y.flatten()
+            yb=pysal.Quantiles(yf,k=k).yb
+            yb.shape=(rows,cols)
+            classes=yb
+        else:
+            classes=npa([pysal.Quantiles(y[:,i],k=k).yb for i in np.arange(cols)]).transpose()
         classic=Markov(classes)
         self.classes=classes
         self.p=classic.p
@@ -343,11 +378,16 @@ class Spatial_Markov:
 
     def _calc(self,y,w,classes,k):
         # lag markov
-        l_y=pysal.lag_spatial(w,y)
-        l_classes=np.array([pysal.Quantiles(yi,k=k).yb for yi in l_y])
+        ly=pysal.lag_spatial(w,y)
+        npm=np.matrix
+        npa=np.array
+        if self.fixed:
+            l_classes=pysal.Quantiles(ly.flatten(),k=k).yb
+            l_classes.shape=ly.shape
+        else:
+            l_classes=npa([pysal.Quantiles(ly[:,i],k=k).yb for i in np.arange(self.cols)])
+            l_classes=l_classes.transpose()
         l_classic=Markov(l_classes)
-        #self.lag_markov=l_classic
-        #self.l_classes=l_classes
 
         T=np.zeros((k,k,k))
         n,t=y.shape
@@ -355,7 +395,6 @@ class Spatial_Markov:
             t2=t1+1
             for i in range(n):
                 T[l_classes[i,t1],classes[i,t1],classes[i,t2]]+=1
-        #self.T=T
 
         P=np.zeros_like(T)
         F=np.zeros_like(T) # fmpt
@@ -363,12 +402,11 @@ class Spatial_Markov:
         for i,mat in enumerate(T):
             p_i=np.matrix(np.diag(1./mat.sum(axis=1))*np.matrix(mat))
             ss[i]=ergodic.steady_state(p_i).transpose()
-            F[i]=ergodic.fmpt(p_i)
+            try:
+                F[i]=ergodic.fmpt(p_i)
+            except:
+                print "Singlular fmpt matrix for class ",i
             P[i]=p_i
-        #self.P=P
-        #self.ss=ss
-        #self.F=F
-        #self.T=T
         return T,P,ss,F
 
     def _mn_test(self):
@@ -460,21 +498,22 @@ def chi2(T1,T2):
     >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
     >>> rpci=pci/(pci.mean(axis=0))
     >>> w=pysal.open("../examples/states48.gal").read()
-    >>> sm=Spatial_Markov(rpci,w)
+    >>> w.transform='r'
+    >>> sm=Spatial_Markov(rpci,w,fixed=True)
     >>> T1=sm.T[0]
     >>> T1
-    array([[ 588.,   80.,    9.,    3.],
-           [  61.,  118.,   21.,    4.],
-           [   3.,   15.,   30.,   14.],
-           [   3.,    3.,   11.,   30.]])
+    array([[ 562.,   22.,    1.,    0.],
+           [  12.,  201.,   22.,    0.],
+           [   0.,   17.,   97.,    4.],
+           [   0.,    0.,    3.,   19.]])
     >>> T2=sm.transitions
     >>> T2
-    array([[ 798.,  169.,   21.,    5.],
-           [ 162.,  615.,  159.,   18.],
-           [  18.,  149.,  619.,  162.],
-           [   8.,   25.,  154.,  758.]])
+    array([[ 884.,   77.,    4.,    0.],
+           [  68.,  794.,   87.,    3.],
+           [   1.,   92.,  815.,   51.],
+           [   1.,    0.,   60.,  903.]])
     >>> chi2(T1,T2)
-    (74.747337857974742, 1.7725820811165249e-12, 9)
+    (23.422628044813656, 0.0053137895983268457, 9)
     
                 
     Notes
