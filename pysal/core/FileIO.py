@@ -83,6 +83,7 @@ class FileIO(object): #should be a type?
         """Parse the dataPath and return the data type"""
         ext = os.path.splitext(dataPath)[1]
         ext = ext.replace('.','')
+        ext = ext.lower()
         if ext == 'txt':
             f = open(dataPath,'r')
             l1 = f.readline()
