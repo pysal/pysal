@@ -34,7 +34,6 @@ import doctest
 import pysal.esda.moran, pysal.esda.geary, pysal.esda.join_counts
 import pysal.esda.mapclassify
 import pysal.inequality.theil
-import pysal.econometrics.classic
 import pysal.region.maxp
 import pysal.region.randomregion
 import pysal.spatial_dynamics.rank
@@ -48,7 +47,6 @@ import pysal.esda.smoothing
 #add modules to include in tests
 mods='esda.moran','esda.geary', 'esda.mapclassify', \
         'esda.join_counts', \
-        'econometrics.classic', \
         'spatial_dynamics.rank', \
         'inequality.theil', \
         'region.maxp', 'region.randomregion', \

@@ -27,7 +27,6 @@ Available sub-packages
     core/index
     cg/index
     esda/index
-    econometrics/index
     inequality/index
     spatial_dynamics/index
     region/index
