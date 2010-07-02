@@ -40,6 +40,12 @@ class W(object):
                         True if weights are asymmetric, False if not
     cardinalities     : dictionary 
                         number of neighbors for each observation 
+    diagWW            : array
+                        diagonal elements of WW
+    diagWtW           : array
+                        diagonal elements of W'W
+    diagWtW_WW        : array
+                        diagonal elements of WW+W'W
     histogram         : list of tuples
                         neighbor histogram (number of neighbors, number of
                         observations with that many neighbors)
@@ -68,17 +74,23 @@ class W(object):
     pct_nonzero       : float
                         percentage of all weights that are nonzero
     s0                : float
-                        sum of all weights 
+                        s0=\sum_i \sum_j w_{i,j}
     s1                : float
-                        trace of ww
+                        s1=1/2 \sum_i \sum_j (w_{i,j} + w_{j,i})^2
     s2                : float
-                        trace of w'w
+                        s2=\sum_j (\sum_i w_{i,j} + \sum_i w_{j,i})^2
     sd                : float
                         standard deviation of number of neighbors 
     transform         : string
                         property for weights transformation, can be used to get and set weights transformation 
     transformations   : dictionary
                         transformed weights, key is transformation type, value are weights
+    trcWW             : float
+                        trace of WW
+    trcWtW            : float
+                        trace of W'W
+    trcWtW_WW         : float
+                        trace of WW+W'W
     weights           : dictionary (Read Only)
                         key is observation id, value is list of transformed
                         weights in order of neighbor ids (see neighbors)
@@ -107,6 +119,17 @@ class W(object):
     >>> w=W(neighbors)
     >>> w.pct_nonzero
     0.29629629629629628
+    >>> w=lat2W(100,100)
+    >>> w.trcW2
+    39600.0
+    >>> w.trcWtW
+    39600.0
+    >>> w.transform='r'
+    >>> w.trcW2
+    2530.7222222222586
+    >>> w.trcWtW
+    2533.6666666666774
+    >>> 
 
 
     """
@@ -143,6 +166,17 @@ class W(object):
         self._s0=None
         self._s1=None
         self._s2=None
+        self._s2array=None
+        self._s2array_set=False
+        self._diagW2=None
+        self._diagW2_set=False
+        self._diagWtW_set=False
+        self._diagWtW=None
+        self._diagWtW_WW_set=False
+        self._diagWtW_WW=False
+        self._trcW2=None
+        self._trcWtW=None
+        self._trcWtW_WW=None
         self._pct_nonzero=None
         self._cardinalities=None
         self._max_neighbors=None
@@ -193,6 +227,7 @@ class W(object):
             self._id2i={}
             for i,id in enumerate(self._id_order):
                 self._id2i[id]=i
+            self._id2i=ROD(self._id2i)
         return self._id2i
 
     @property
@@ -203,69 +238,119 @@ class W(object):
     @property
     def s0(self):
         if not self._s0:
-            self.characteristics()
+            self._s0=self.sparse.sum()
         return self._s0
 
     @property
     def s1(self):
         if not self._s1:
-            self.characteristics()
+            t=self.sparse.transpose()
+            t=t+self.sparse
+            t2=t.multiply(t) # element-wise square
+            self._s1=t2.sum()/2.
         return self._s1
+
+    @property
+    def s2array(self):
+        if not self._s2array_set:
+            s=self._sparse
+            self._s2array= np.array(s.sum(1)+s.sum(0).transpose())**2
+            self._s2array_set=True
+        return self._s2array
 
     @property
     def s2(self):
         if not self._s2:
-            self.characteristics()
+            self._s2=self.s2array.sum()
         return self._s2
+
+    @property
+    def trcW2(self):
+        if not self._trcW2:
+            self._trcW2=self.diagW2.sum()
+        return self._trcW2
+
+    @property
+    def diagW2(self):
+        if not self._diagW2_set:
+            self._diagW2=(self.sparse*self.sparse).diagonal()
+            self._diagW2_set=True
+        return self._diagW2
+
+    @property
+    def diagWtW(self):
+        if not self._diagWtW_set:
+            self._diagWtW=(self.sparse.transpose()*self.sparse).diagonal()
+            self._diagWtW_set=True
+        return self._diagWtW
+
+    @property 
+    def trcWtW(self):
+        if not self._trcWtW:
+            self._trcWtW=self.diagWtW.sum()
+        return self._trcWtW
+
+    @property
+    def diagWtW_WW(self):
+        if not self._diagWtW_WW_set:
+            wt=self.sparse.transpose()
+            w=self.sparse
+            self._diagWtW_WW=(wt*w+w*w).diagonal()
+            self._diagWtW_WW_set=True
+        return self._diagWtW_WW
+
+    @property
+    def trcWtW_WW(self):
+        if not self._trcWtW_WW:
+            self._trcWtW_WW=self.diagWtW_WW.sum()
+        return self._trcWtW_WW
+
     @property
     def pct_nonzero(self):
         if not self._pct_nonzero:
-            self.characteristics()
+            self._pct_nonzero=self._sparse.nnz/(1.*self._n**2)
         return self._pct_nonzero
 
     @property
     def cardinalities(self):
         if not self._cardinalities:
-            self.characteristics()
+            c={}
+            for i in self._id_order:
+                c[i]=len(self.neighbors[i])
+            self._cardinalities=c
         return self._cardinalities
 
     @property
     def max_neighbors(self):
         if not self._max_neighbors:
-            self.characteristics()
+            self._max_neighbors=max(self._cardinalties.values())
         return self._max_neighbors
 
 
     @property
     def mean_neighbors(self):
         if not self._mean_neighbors:
-            self.characteristics()
+            self._mean_neighbors=sum((self._cardinalties.values())/(self._n*1.))
         return self._mean_neighbors
 
-
-    @property
-    def mean_neighbors(self):
-        if not self._mean_neighbors:
-            self.characteristics()
-        return self._mean_neighbors
 
     @property
     def min_neighbors(self):
         if not self._min_neighbors:
-            self.characteristics()
+            self._min_neighbors=min(self._cardinalties.values())
         return self._min_neighbors
 
 
     @property
     def nonzero(self):
         if not self._nonzero:
-            self.characteristics()
+            self._nonzer=self._sparse.nnz
         return self._nonzero
 
     @property
     def sd(self):
         if not self._sd:
-            self.characteristics()
+            self.sd=np.std(self._cardinalities.values())
         return self._sd
 
     @property
@@ -277,66 +362,16 @@ class W(object):
     @property
     def islands(self):
         if not self._islands:
-            self.characteristics()
+            self._islands = [i for i,c in self._cardinalities.items() if c==0]
         return self._islands
 
 
     @property
     def histogram(self):
         if not self._histogram:
-            self.characteristics()
+            ct,bin=np.histogram(cardinalities,range(self._min_neighbors,self._max_neighbors+2))
+            self._histogram=zip(bin,ct)
         return self._histogram
-
-
-
-    def characteristics(self):
-        s0=s1=s2=0.0
-        n=len(self.weights)
-        col_sum={}
-        row_sum={}
-        cardinalities={}
-        nonzero=0
-        for i in self._id_order:
-            neighbors_i=self.neighbors[i]
-            cardinalities[i]=len(neighbors_i)
-            w_i=self.weights[i]
-            for j in neighbors_i:
-                wij=wji=0
-                w_j=self.weights[j]
-                neighbors_j=self.neighbors[j]
-                if i in neighbors_j:
-                    ji=neighbors_j.index(i)
-                    wji=w_j[ji]
-                if j in neighbors_i:
-                    ij=neighbors_i.index(j)
-                    wij=w_i[ij]
-                v=wij+wji
-                if i not in col_sum:
-                    col_sum[i]=0
-                    row_sum[i]=0
-                col_sum[i]+=wji
-                row_sum[i]+=wij
-                s1+=v*v
-                s0+=wij
-                nonzero+=1
-        s1/=2.0
-        s2=sum([(col_sum[i]+row_sum[i])**2 for i in col_sum.keys()])
-        self._s2=s2
-        self._s1=s1
-        self._s0=s0
-        self._cardinalities=cardinalities
-        cardinalities = cardinalities.values()
-        self._max_neighbors=max(cardinalities)
-        self._mean_neighbors=sum(cardinalities)/(n*1.)
-        self._min_neighbors=min(cardinalities)
-        self._sd=np.std(cardinalities)
-        self._pct_nonzero=nonzero/(1.0*n*n)
-        self._nonzero=nonzero
-        self._asymmetries=self.asymmetry()
-        self._islands = [i for i,c in self._cardinalities.items() if c==0]
-        # connectivity histogram
-        ct,bin=np.histogram(cardinalities,range(self._min_neighbors,self._max_neighbors+2))
-        self._histogram=zip(bin,ct)
 
 
     def __getitem__(self,key):
