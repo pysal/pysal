@@ -53,12 +53,25 @@ def quantile(y,k=4):
     >>> quantile(x,k=3)
     array([ 333.,  666.,  999.])
     >>> 
+
+    Note that if there are enough ties that the quantile values repeat, we
+    collapse to psuedo quantiles in which case the number of classes will be
+    less than k
+
+    >>> x=[1.0]*100
+    >>> x.extend([3.0]*40)
+    >>> len(x)
+    140
+    >>> y=np.array(x)
+    >>> quantile(y)
+    array([ 1.,  3.])
     """
     w=100./k
     p=np.arange(w,100+w,w)
     if p[-1] > 100.0:
         p[-1]=100.0
-    return np.array([stats.scoreatpercentile(y,pct) for pct in p])
+    q=np.array([stats.scoreatpercentile(y,pct) for pct in p])
+    return np.unique(q)
 
 def binC(y,bins):
     """Bin categorical/qualitative data
