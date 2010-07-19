@@ -401,7 +401,7 @@ class Equal_Interval(Map_Classifier):
         width=rg*1./k
         cuts=np.arange(min_y+width,max_y+width,width)
         if len(cuts) > self.k: # handle overshooting
-            cuts=cuts[0:-2]
+            cuts=cuts[0:k]
         cuts[-1]=max_y
         bins=cuts.copy()
         self.bins=bins
