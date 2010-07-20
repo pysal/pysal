@@ -1,6 +1,5 @@
-include *.txt README
+include *.txt 
 include doc/build/latex/pysal.pdf
-include pysal/examples/*.*
-include pysal/examples/shp_test/*.*
+recursive-include pysal/examples/*.*
 recursive-include pysal/*.py
 
