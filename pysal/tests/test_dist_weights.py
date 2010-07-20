@@ -5,7 +5,6 @@ import numpy as np
 
 class _TestDistanceWeights(unittest.TestCase):
     def setUp(self):
-        """ Setup the rtree and binning contiguity weights"""
         self.polyShp = '../examples/columbus.shp'
         self.points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
 

@@ -84,8 +84,18 @@ class Moran:
     -0.012987012987012988
     >>> mi.p_norm
     0.00027147862770937614
-    >>> 
-        
+
+    SIDS example replicating OpenGeoda
+
+    >>> w=pysal.open("../examples/sids2.gal").read()
+    >>> f=pysal.open("../examples/sids2.dbf")
+    >>> SIDR=np.array(f.by_col("SIDR74"))
+    >>> mi=pysal.Moran(SIDR,w)
+    >>> mi.I
+    0.24772519320480135
+    >>> mi.p_norm
+    0.0001158330781489969
+    
     """
     def __init__(self,y,w,transformation="r",permutations=PERMUTATIONS):
         self.y=y

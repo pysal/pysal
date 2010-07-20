@@ -132,6 +132,12 @@ class W(object):
     >>> 
 
 
+    Cardinality Histogram
+    >>> w=pysal.rook_from_shapefile("../examples/sacramentot2.shp")
+    >>> w.histogram
+    [(1, 1), (2, 6), (3, 33), (4, 106), (5, 114), (6, 70), (7, 35), (8, 17), (9, 9), (10, 4), (11, 4), (12, 3), (13, 0), (14, 1)]
+    >>> 
+    
     """
     def __init__(self,neighbors,weights=None,id_order=None):
         """see class docstring"""
@@ -323,21 +329,21 @@ class W(object):
     @property
     def max_neighbors(self):
         if not self._max_neighbors:
-            self._max_neighbors=max(self._cardinalties.values())
+            self._max_neighbors=max(self._cardinalities.values())
         return self._max_neighbors
 
 
     @property
     def mean_neighbors(self):
         if not self._mean_neighbors:
-            self._mean_neighbors=sum((self._cardinalties.values())/(self._n*1.))
+            self._mean_neighbors=sum((self._cardinalities.values())/(self._n*1.))
         return self._mean_neighbors
 
 
     @property
     def min_neighbors(self):
         if not self._min_neighbors:
-            self._min_neighbors=min(self._cardinalties.values())
+            self._min_neighbors=min(self._cardinalities.values())
         return self._min_neighbors
 
 
@@ -369,7 +375,7 @@ class W(object):
     @property
     def histogram(self):
         if not self._histogram:
-            ct,bin=np.histogram(cardinalities,range(self._min_neighbors,self._max_neighbors+2))
+            ct,bin=np.histogram(self._cardinalities.values(),range(self.min_neighbors,self.max_neighbors+2))
             self._histogram=zip(bin,ct)
         return self._histogram
 

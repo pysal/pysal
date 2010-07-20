@@ -55,7 +55,7 @@ def quantile(y,k=4):
     >>> 
 
     Note that if there are enough ties that the quantile values repeat, we
-    collapse to psuedo quantiles in which case the number of classes will be
+    collapse to pseudo quantiles in which case the number of classes will be
     less than k
 
     >>> x=[1.0]*100
