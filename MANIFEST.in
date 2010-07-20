@@ -1,0 +1,4 @@
+include *.txt README
+include doc/build/latex/pysal.pdf
+recursive-include pysal/*.py
+

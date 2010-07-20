@@ -11,7 +11,6 @@ are listed first to get you off on the right foot.
 DEPENDENCIES
 ************
 
-
 Before installing PySAL, make sure the following libraries are properly
 installed on you machine.
 

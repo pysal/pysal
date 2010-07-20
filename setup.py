@@ -10,6 +10,7 @@ from pysal.version import version
 setup(name = 'pysal',
       description = 'PySAL: Python Spatial Analysis Library',
       author = 'Luc Anselin, Serge Rey, Charles Schmidt, Andrew Winslow',
+      author_email = 'srey@asu.edu',
       url = 'http://pysal.org/',
       version = version,
       packages = ['pysal', 
