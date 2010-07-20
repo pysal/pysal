@@ -16,9 +16,9 @@ Mark McCann
 Serge Rey
 Charels Schmidt
 Philip Stephens
+Bohumil Svoma
 Andrew Winslow
 Xinyue Ye
-
 
 Funding from the following sources has supported PySAL development:
 
