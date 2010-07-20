@@ -91,8 +91,8 @@ class Moran:
     >>> f=pysal.open("../examples/sids2.dbf")
     >>> SIDR=np.array(f.by_col("SIDR74"))
     >>> mi=pysal.Moran(SIDR,w)
-    >>> mi.I
-    0.24772519320480135
+    >>> "%6.4f"%mi.I
+    '0.2477'
     >>> mi.p_norm
     0.0001158330781489969
     
