@@ -12,7 +12,7 @@ matrices of three different types:
  * Distance Based Weights
  * General Weights
 
- 
+These different types of weights matrices are implemented as instances of the PySAL weights class. 
 
 Contiguity Based Weights
 ========================
@@ -23,6 +23,9 @@ matrix constructed for a 5 by 5 lattice::
     >>> import pysal
     >>>
     >>> w=pysal.lat2W(5,5)
+
+The w object has a number of attributes::
+
     >>> w.n
     25
     >>> w.pct_nonzero
@@ -35,6 +38,25 @@ matrix constructed for a 5 by 5 lattice::
     [0, 10, 6]
     >>> w.histogram
     [(2, 4), (3, 12), (4, 9)]
+
+The histogram attribute is a set of tuples indicating the cardinality of the neighbor relations. In this case we see that there are 4 units that have 2 neighbors (corner cells), 12 units with 3 neighbors (edge cells), and 9 units with 4 neighbors (internal cells).
+
+Contiguity weights can also be generated directly from shapefiles::
+
+    >>> w=pysal.rook_from_shapefile("examples/columbus.shp")
+    >>> w.n
+    49
+    >>> w.pct_nonzero
+    0.083298625572678045
+    >>> w.histogram
+    [(2, 7), (3, 10), (4, 17), (5, 8), (6, 3), (7, 3), (8, 0), (9, 1)]
+    >>> w=pysal.queen_from_shapefile("examples/columbus.shp")
+    >>> w.pct_nonzero
+    0.098292378175760101
+    >>> w.histogram
+    [(2, 5), (3, 9), (4, 12), (5, 5), (6, 9), (7, 3), (8, 4), (9, 1), (10, 1)]
+    
+
 
 Distance Based Weights
 ======================
