@@ -36,15 +36,11 @@ class W(object):
 
     Attributes
     ----------
-
     asymmetric        : binary
                         True if weights are asymmetric, False if not
-    cardinalities     : dictionary 
-                        number of neighbors for each observation 
-    diagWW            : array
-                        diagonal elements of WW
-    diagWtW           : array
-                        diagonal elements of W'W
+    cardinalities     
+    diagW2
+    diagWtW           
     diagWtW_WW        : array
                         diagonal elements of WW+W'W
     histogram         : list of tuples
@@ -74,22 +70,17 @@ class W(object):
                         number of nonzero weights
     pct_nonzero       : float
                         percentage of all weights that are nonzero
-    s0                : float
-                        s0=\sum_i \sum_j w_{i,j}
-    s1                : float
-                        s1=1/2 \sum_i \sum_j (w_{i,j} + w_{j,i})^2
-    s2                : float
-                        s2=\sum_j (\sum_i w_{i,j} + \sum_i w_{j,i})^2
+    s0
+    s1                
+    s2                
     sd                : float
                         standard deviation of number of neighbors 
+    sparse
     transform         : string
                         property for weights transformation, can be used to get and set weights transformation 
     transformations   : dictionary
                         transformed weights, key is transformation type, value are weights
-    trcWW             : float
-                        trace of WW
-    trcWtW            : float
-                        trace of W'W
+    trcWtW            
     trcWtW_WW         : float
                         trace of WW+W'W
     weights           : dictionary (Read Only)
@@ -200,6 +191,9 @@ class W(object):
 
     @property
     def sparse(self):
+        """
+        Sparse representation of weights
+        """
         if not self._sparse_set:
             self._sparse=self._build_sparse()
             self._sparse_set=True
@@ -229,8 +223,10 @@ class W(object):
 
     @property
     def id2i(self):
-        """Dictionary where the key is an ID and the value is that ID's
-        index in W.id_order."""
+        """
+        Dictionary where the key is an ID and the value is that ID's
+        index in W.id_order.
+        """
         if not self._id2i:
             self._id2i={}
             for i,id in enumerate(self._id_order):
@@ -245,12 +241,28 @@ class W(object):
 
     @property
     def s0(self):
+        """
+        float
+
+        .. math::
+
+               s0=\sum_i \sum_j w_{i,j}
+
+        """
         if not self._s0:
             self._s0=self.sparse.sum()
         return self._s0
 
     @property
     def s1(self):
+        """
+        float
+
+        .. math::
+
+               s1=1/2 \sum_i \sum_j (w_{i,j} + w_{j,i})^2
+
+        """
         if not self._s1:
             t=self.sparse.transpose()
             t=t+self.sparse
@@ -260,6 +272,15 @@ class W(object):
 
     @property
     def s2array(self):
+        """
+        individual elements comprising s2
+
+
+        See Also
+        --------
+        s2
+
+        """
         if not self._s2array_set:
             s=self._sparse
             self._s2array= np.array(s.sum(1)+s.sum(0).transpose())**2
@@ -268,18 +289,44 @@ class W(object):
 
     @property
     def s2(self):
+        """
+        float
+
+
+        .. math::
+
+                s2=\sum_j (\sum_i w_{i,j} + \sum_i w_{j,i})^2
+
+        """
         if not self._s2:
             self._s2=self.s2array.sum()
         return self._s2
 
     @property
     def trcW2(self):
+        """
+        Trace of :math:`WW`
+
+        See Also
+        --------
+        diagW2
+
+        """
         if not self._trcW2:
             self._trcW2=self.diagW2.sum()
         return self._trcW2
 
+
     @property
     def diagW2(self):
+        """
+        Diagonal of :math:`WW` : array
+
+        See Also
+        --------
+        trcW2
+
+        """
         if not self._diagW2_set:
             self._diagW2=(self.sparse*self.sparse).diagonal()
             self._diagW2_set=True
@@ -287,6 +334,14 @@ class W(object):
 
     @property
     def diagWtW(self):
+        """
+        Diagonal of :math:`W^{'}W`  : array
+
+        See Also
+        --------
+        trcWtW
+
+        """
         if not self._diagWtW_set:
             self._diagWtW=(self.sparse.transpose()*self.sparse).diagonal()
             self._diagWtW_set=True
@@ -294,6 +349,15 @@ class W(object):
 
     @property 
     def trcWtW(self):
+        """
+        Trace of :math:`W^{'}W`  : float
+
+        See Also
+        --------
+        diagWtW
+
+        """
+
         if not self._trcWtW:
             self._trcWtW=self.diagWtW.sum()
         return self._trcWtW
@@ -321,6 +385,9 @@ class W(object):
 
     @property
     def cardinalities(self):
+        """
+        number of neighbors for each observation : dict
+        """
         if not self._cardinalities:
             c={}
             for i in self._id_order:
@@ -357,9 +424,14 @@ class W(object):
 
     @property
     def sd(self):
+        """
+        standard deviation of cardinalities : float
+        """
+
         if not self._sd:
-            self.sd=np.std(self._cardinalities.values())
+            self._sd=np.std(self.cardinalities.values())
         return self._sd
+
 
     @property
     def asymmetries(self):
@@ -377,7 +449,7 @@ class W(object):
     @property
     def histogram(self):
         if not self._histogram:
-            ct,bin=np.histogram(self._cardinalities.values(),range(self.min_neighbors,self.max_neighbors+2))
+            ct,bin=np.histogram(self.cardinalities.values(),range(self.min_neighbors,self.max_neighbors+2))
             self._histogram=zip(bin,ct)
         return self._histogram
 
