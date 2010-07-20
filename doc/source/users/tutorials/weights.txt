@@ -20,32 +20,21 @@ Contiguity Based Weights
 To illustrate the general weights object, we start with a simple contiguity
 matrix constructed for a 5 by 5 lattice::
 
-    serge@jessica:~/Research/p/PySAL/src/google/pysal/pysal$ ipython
-    Python 2.5.2 (r252:60911, Jul 22 2009, 15:35:03) 
-    Type "copyright", "credits" or "license" for more information.
-
-    IPython 0.9.1 -- An enhanced Interactive Python.
-    ?         -> Introduction and overview of IPython's features.
-    %quickref -> Quick reference.
-    help      -> Python's own help system.
-    object?   -> Details about 'object'. ?object also works, ?? prints more.
-
-    In [1]: import pysal
-
-    In [2]: w=pysal.weights.lat2gal(5,5)
-
-    In [3]: w.n
-    Out[3]: 25
-
-    In [4]: w.pct_nonzero
-    Out[4]: 0.128
-
-    In [5]: w.weights[0]
-    Out[5]: [1, 1]
-
-    In [6]: w.neighbors[0]
-    Out[6]: [5, 1]
-
+    >>> import pysal
+    >>>
+    >>> w=pysal.lat2W(5,5)
+    >>> w.n
+    25
+    >>> w.pct_nonzero
+    0.128
+    >>> w.weights[0]
+    [1.0, 1.0]
+    >>> w.neighbors[0]
+    [5, 1]
+    >>> w.neighbors[5]
+    [0, 10, 6]
+    >>> w.histogram
+    [(2, 4), (3, 12), (4, 9)]
 
 Distance Based Weights
 ======================
