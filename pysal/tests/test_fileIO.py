@@ -196,10 +196,15 @@ class PurePyShp_Tester(unittest.TestCase):
         orig = open(self.test_file,'rb')
         copy = open(self.shpcopy,'rb')
         self.assertEquals(orig.read(),copy.read())
+        orig.close()
+        copy.close()
 
         oshx = open(self.test_file.replace('.shp','.shx'),'rb')
         cshx = open(self.shxcopy,'rb')
         self.assertEquals(oshx.read(),cshx.read())
+        oshx.close()
+        cshx.close()
+
         os.remove(self.shpcopy)
         os.remove(self.shxcopy)
 
