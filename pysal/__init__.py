@@ -48,7 +48,7 @@ from inequality.theil import Theil,TheilD,TheilDSim
 from region.maxp import Maxp,Maxp_LISA
 from spatial_dynamics import Markov, Spatial_Markov, LISA_Markov, SpatialTau, Theta
 from spatial_dynamics import ergodic
-from weights import W,lat2W,regime_weights,comb,full,shimbel,order,higher_order
+from weights import W,lat2W,regime_weights,comb,full,shimbel,order,higher_order,remap_ids
 from weights.Distance import knnW, Kernel, DistanceBand
 from weights.Contiguity import buildContiguity
 from weights.spatial_lag import lag_spatial

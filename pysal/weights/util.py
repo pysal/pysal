@@ -6,7 +6,8 @@ from scipy import sparse,float32
 from scipy.spatial import KDTree
 import os, gc
 
-__all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 'full']
+__all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 
+           'remap_ids','full']
 
 
 
@@ -186,6 +187,7 @@ def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
     Examples
     --------
 
+    >>> from pysal import lat2W
     >>> w9=lat2W(3,3)
     >>> w9.pct_nonzero
     0.29629629629629628
@@ -270,7 +272,8 @@ def regime_weights(regimes):
 
     Examples
     --------
-    
+    >>> from pysal import regime_weights 
+    >>> import numpy as np
     >>> regimes=np.ones(25)
     >>> regimes[range(10,20)]=2
     >>> regimes[range(21,25)]=3
@@ -376,8 +379,8 @@ def order(w,kmax=3):
 
     Examples
     --------
-    >>> from Contiguity import buildContiguity
-    >>> w=buildContiguity(pysal.open('../examples/10740.shp'),criterion='rook')
+    >>> from pysal import rook_from_shapefile as rfs
+    >>> w=rfs('../examples/10740.shp')
     >>> w3=order(w,kmax=3)
     >>> w3[1][0:5]
     [1, -1, 1, 2, 1]
@@ -438,6 +441,7 @@ def higher_order(w,order=2):
 
     Examples
     --------
+    >>> from pysal import lat2W, higher_order
     >>> w10=lat2W(10,10)
     >>> w10_2=higher_order(w10,2)
     >>> w10_2[0]
@@ -485,6 +489,7 @@ def shimbel(w):
 
     Examples
     --------
+    >>> from pysal import lat2W, shimbel
     >>> w5=lat2W()
     >>> w5_shimbel=shimbel(w5)
     >>> w5_shimbel[0][24]
@@ -537,7 +542,7 @@ def full(w):
 
     Examples
     --------
-
+    >>> from pysal import W, full
     >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
     >>> weights={'first':[1],'second':[1,1],'third':[1]}
     >>> w=W(neighbors,weights)
@@ -587,6 +592,7 @@ def remap_ids(w, old2new, id_order=[]):
     
     Examples
     --------
+    >>> from pysal import lat2W, remap_ids
     >>> w = lat2W(3,2)
     >>> w.id_order
     [0, 1, 2, 3, 4, 5]
@@ -636,6 +642,7 @@ def get_ids(shapefile, idVariable):
 
     Examples
     --------
+    >>> from pysal import get_ids
     >>> polyids = get_ids("../examples/columbus.shp", "POLYID")      
     >>> polyids[:5]
     [1, 2, 3, 4, 5]
@@ -675,6 +682,7 @@ def get_points_array_from_shapefile(shapefile):
     Examples
     --------
     Point shapefile
+    >>> from pysal import get_points_array_from_shapefile
     >>> xy = get_points_array_from_shapefile('../examples/juvenile.shp')
     >>> xy[:3]
     array([[ 94.,  93.],
@@ -715,7 +723,8 @@ def min_threshold_distance(data):
     
     Examples
     --------
-
+    >>> from pysal import min_threshold_distance
+    >>> import numpy as np
     >>> x,y=np.indices((5,5))
     >>> x.shape=(25,1)
     >>> y.shape=(25,1)

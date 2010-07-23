@@ -85,7 +85,7 @@ class W(object):
 
     Examples
     --------
-
+    >>> from pysal import W
     >>> neighbors={0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
     >>> weights={0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
     >>> w=W(neighbors,weights)
@@ -445,8 +445,8 @@ class W(object):
 
         Examples
         --------
-        >>> from Contiguity import buildContiguity
-        >>> w=buildContiguity(pysal.open('../examples/10740.shp'),criterion='rook')
+        >>> from pysal import rook_from_shapefile as rfs
+        >>> w=rfs('../examples/10740.shp')
         >>> w[0]
         {1: 1.0, 4: 1.0, 101: 1.0, 85: 1.0, 5: 1.0}
         >>> w = lat2W()
@@ -464,6 +464,7 @@ class W(object):
 
         Examples
         --------
+        >>> import pysal
         >>> w=pysal.lat2W(3,3)
         >>> for i,wi in enumerate(w):
         ...     print i,wi
@@ -517,7 +518,8 @@ class W(object):
         Examples
         --------
 
-        >>> w=lat2W(3,3)
+        >>> import pysal
+        >>> w=pysal.lat2W(3,3)
         >>> for i,wi in enumerate(w):
         ...     print i,wi
         ...     
@@ -570,7 +572,9 @@ class W(object):
     def id_order_set(self):
         """returns True if user has set id_order, False if not.
 
-        Example
+        Examples
+        --------
+        >>> from pysal import lat2W
         >>> w=lat2W()
         >>> w.id_order_set
         True
@@ -586,7 +590,7 @@ class W(object):
 
         Examples
         --------
-
+        >>> from pysal import W
         >>> neighbors={'c': ['b'], 'b': ['c', 'a'], 'a': ['b']}
         >>> weights ={'c': [1.0], 'b': [1.0, 1.0], 'a': [1.0]}
         >>> w=W(neighbors,weights)
@@ -616,6 +620,7 @@ class W(object):
 
         Examples
         --------
+        >>> from pysal import lat2W
         >>> w=lat2W()
         >>> w.weights[0]
         [1.0, 1.0]
@@ -646,6 +651,7 @@ class W(object):
 
         Examples
         --------
+        >>> from pysal import lat2W
         >>> w=lat2W()
         >>> w.weights[0]
         [1.0, 1.0]
@@ -745,6 +751,7 @@ class W(object):
         Examples
         --------
 
+        >>> from pysal import lat2W
         >>> w=lat2W(3,3)
         >>> w.asymmetry()
         []
@@ -784,7 +791,7 @@ class W(object):
 
         Examples
         --------
-
+        >>> from pysal import W
         >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
         >>> weights={'first':[1],'second':[1,1],'third':[1]}
         >>> w=W(neighbors,weights)
@@ -816,6 +823,7 @@ class W(object):
 
         Examples
         --------
+        >>> from pysal import lat2W
         >>> w5=lat2W()
         >>> w5_shimbel=w5.shimbel()
         >>> w5_shimbel[0][24]
@@ -858,8 +866,8 @@ class W(object):
 
         Examples
         --------
-        >>> from Contiguity import buildContiguity
-        >>> w=buildContiguity(pysal.open('../examples/10740.shp'),criterion='rook')
+        >>> from pysal import rook_from_shapefile as rfs
+        >>> w=rfs('../examples/10740.shp')
         >>> w3=w.order()
         >>> w3[1][0:5]
         [1, -1, 1, 2, 1]
@@ -901,6 +909,7 @@ class W(object):
 
         Examples
         --------
+        >>> from pysal import lat2W
         >>> w5=lat2W()
         >>> w5_shimbel=w5.shimbel()
         >>> w5_shimbel[0][24]
@@ -910,8 +919,8 @@ class W(object):
         >>> w5_8th_order=w5.higher_order(8)
         >>> w5_8th_order.neighbors[0]
         [24]
-        >>> from Contiguity import buildContiguity
-        >>> w=buildContiguity(pysal.open('../examples/10740.shp'),criterion='rook')
+        >>> from pysal import rook_from_shapefile as rfs
+        >>> w=rfs('../examples/10740.shp')
         >>> w2=w.higher_order(2)
         >>> w[1]
         {0: 1.0, 2: 1.0, 83: 1.0, 4: 1.0}
