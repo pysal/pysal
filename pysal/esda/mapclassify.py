@@ -811,6 +811,15 @@ class Natural_Breaks(Map_Classifier):
     >>> nb.bins
     [1.8100000000000001, 7.5999999999999996, 29.82, 181.27000000000001, 4111.4499999999998]
     
+    Notes
+    -----
+    There is a tradeoff here between speed and consistency of the classification
+    If you want more speed, set initial to a smaller value (0 
+    would result in the best speed, if you want more consistent classes in 
+    multiple runs of Natural_Breaks on the same data, set initial to a higer 
+    value.
+     
+
     """
     def __init__(self,y,k=K,initial=100):
         self.k=k
