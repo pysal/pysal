@@ -42,7 +42,7 @@ from esda.mapclassify import quantile,binC,bin,bin1d,Equal_Interval,Percentiles
 from esda.mapclassify import Box_Plot,Quantiles,Std_Mean,Maximum_Breaks
 from esda.mapclassify import Natural_Breaks, Fisher_Jenks, Jenks_Caspall
 from esda.mapclassify import Jenks_Caspall_Sampled,Jenks_Caspall_Forced
-from esda.mapclassify import User_Defined,Max_P
+from esda.mapclassify import User_Defined,Max_P_Classifier
 from esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local
 from inequality.theil import Theil,TheilD,TheilDSim
 from region.maxp import Maxp,Maxp_LISA

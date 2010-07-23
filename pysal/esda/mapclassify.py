@@ -622,22 +622,30 @@ class Box_Plot(Map_Classifier):
         self.high_outlier_ids=np.nonzero(self.yb==5)[0]
 
 class Quantiles(Map_Classifier):
-    """Quantile Map Classification
+    """
+    Quantile Map Classification
 
-    Arguments:
-        y: attribute to classify (numpy array n x 1)
+    Parameters
+    ----------
+    y : array (n,1)
+        values to classify
+    k : int
+        number of classes required
 
-        k: number of classes required
+    Attributes
+    ----------
 
-    Attributes:
-        yb: bin ids for observations (numpy array n x 1)
-        Each value is the id of the class the observation belongs to
+    yb      : array (n,1)
+              bin ids for observations,
+              each value is the id of the class the observation belongs to
+              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
+    bins    : array (k,1)
+              the upper bounds of each class 
+    k       : int
+              the number of classes
+    counts  : array (k,1)
+              the number of observations falling in each class
 
-        bins: the upper bounds of each class (numpy array k x 1)
-
-        k: the number of classes
-
-        counts: the number of observations falling in each class (numpy array k x 1)
 
     Examples
     --------
@@ -662,23 +670,31 @@ class Quantiles(Map_Classifier):
         self.bins=quantile(y,k=k)
 
 class Std_Mean(Map_Classifier):
-    """Standard Deviation and Mean Map Classification
+    """
+    Standard Deviation and Mean Map Classification
 
-    Arguments:
-        y: attribute to classify (numpy array n x 1)
+    Parameters
+    ----------
+    y         : array (n,1)
+                values to classify
+    multiples : array
+                the multiples of the standard deviation to add/subtract from
+                the sample mean to define the bins, default=[-2,-1,1,2]
 
-        multiples: the multiples of the standard deviation to add/subtract
-        from the sample mean to define the bins, default=[-2,-1,1,2]
+    Attributes
+    ----------
 
-    Attributes:
-        yb: bin ids for observations (numpy array n x 1). Each value is the id
-        of the class the observation belongs to.
+    yb      : array (n,1)
+              bin ids for observations,
+              each value is the id of the class the observation belongs to
+              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
+    bins    : array (k,1)
+              the upper bounds of each class 
+    k       : int
+              the number of classes
+    counts  : array (k,1)
+              the number of observations falling in each class
 
-        bins: the upper bounds of each class (numpy array k x 1)
-
-        k: the number of classes
-
-        counts: the number of observations falling in each class (numpy array k x 1)
 
     Examples
     --------
@@ -699,6 +715,7 @@ class Std_Mean(Map_Classifier):
     >>> st3.counts
     array([ 0,  0, 57,  0,  1])
     >>> 
+
     """
     def __init__(self,y,multiples=[-2,-1,1,2]):
         self.multiples=multiples
