@@ -1,9 +1,6 @@
 """
 A module of classification schemes for choropleth mapping
 
-Authors:
-    Sergio Rey <srey@asu.edu>
-
 Map Classifiers Supported:
 
 * Box_Plot
@@ -22,7 +19,7 @@ Map Classifiers Supported:
 
 """
 __author__ = "Sergio J. Rey"
-__credits__= "Copyright (c) 2009 Sergio J. Rey"
+__credits__= "Copyright (c) 2009-10 Sergio J. Rey"
 
 __all__=['quantile','Equal_Interval','Percentiles','Box_Plot','Quantiles',
          'Std_Mean','User_Defined']
@@ -31,7 +28,8 @@ from pysal.common import *
 K=5 # default number of classes in any map scheme with this as an argument
 
 def quantile(y,k=4):
-    """Calculates the quantiles for an array
+    """
+    Calculates the quantiles for an array
 
     Parameters
     ----------
@@ -74,7 +72,8 @@ def quantile(y,k=4):
     return np.unique(q)
 
 def binC(y,bins):
-    """Bin categorical/qualitative data
+    """
+    Bin categorical/qualitative data
 
     Parameters
     ----------
@@ -138,7 +137,8 @@ def binC(y,bins):
     return b
 
 def bin(y,bins):
-    """bin interval/ratio data
+    """
+    bin interval/ratio data
 
     Parameters
     ----------
@@ -199,7 +199,8 @@ def bin(y,bins):
     return b
 
 def bin1d(x,bins):
-    """place values of a 1-d array into bins and determine counts of values in
+    """
+    place values of a 1-d array into bins and determine counts of values in
     each bin
 
     Parameters
@@ -245,7 +246,8 @@ def bin1d(x,bins):
     return (binIds,counts)
 
 def load_example():
-    """Helper function for doc tests"""
+    """
+    Helper function for doc tests"""
     import pysal
     np.random.seed(10)
     dat=pysal.open('../examples/calempdensity.csv')
@@ -296,7 +298,8 @@ def natural_breaks(values,k=5,itmax=100):
 
 
 class Map_Classifier:
-    """Abstract class for all map classifications """
+    """
+    Abstract class for all map classifications """
     def __init__(self,y):
         self.name='Map Classifier'
         self.y=y
@@ -308,6 +311,7 @@ class Map_Classifier:
         self.classes=[np.nonzero(yb==c)[0].tolist() for c in range(self.k)]
         self.tss=self.get_tss()
         self.adcm=self.get_adcm()
+        self.gadf=self.get_gadf()
 
     def _classify(self):
         self._set_bins()
@@ -343,6 +347,15 @@ class Map_Classifier:
             ycd=np.abs(yc-yc_med)
             adcm+=sum(ycd)
         return adcm
+
+    def get_gadf(self):
+        """
+        Goodness of absolute deviation of fit
+        """
+        adam=(np.abs(self.y-np.median(self.y))).sum()
+        gadf=1-self.adcm/adam 
+        return gadf
+
 
     def table_string(self,width=12,decimal=3):
         fmt=".%df"%decimal
@@ -391,7 +404,8 @@ class Map_Classifier:
         return table
 
 class Equal_Interval(Map_Classifier):
-    """Equal Interval Classification 
+    """
+    Equal Interval Classification 
 
     Parameters
     ----------
@@ -912,6 +926,7 @@ class Fisher_Jenks(Map_Classifier):
     def __init__(self,y,k=K):
         self.k=k
         Map_Classifier.__init__(self,y)
+        self.name="Fisher_Jenks"
 
     def _set_bins(self):
         # build diameter matrix
@@ -1137,6 +1152,7 @@ class Jenks_Caspall_Sampled(Map_Classifier):
         self.yr_n=yr.size
         Map_Classifier.__init__(self,yr)
         self.yb,self.counts=bin1d(y,self.bins)
+        self.name="Jenks_Caspall_Sampled"
 
     def _set_bins(self):
         jc=Jenks_Caspall(self.y,self.k)
@@ -1531,6 +1547,149 @@ def _fit(y,classes):
         css*=css
         tss+=sum(css)
     return tss
+
+kmethods={}
+kmethods["Quantiles"]=Quantiles
+kmethods["Fisher_Jenks"]=Fisher_Jenks
+kmethods['Natural_Breaks']=Natural_Breaks
+kmethods['Maximum_Breaks']=Maximum_Breaks
+
+def gadf(y,method="Quantiles",maxk=15,pct=0.8):
+    """
+    Evaluate the Goodness of Absolute Deviation Fit of a Classifier
+    Finds the minimum value of k for which gadf>pct
+
+    Parameters
+    ----------
+
+    y      : array (nx1)
+             values to be classified 
+    method : string
+             Name of classifier ["Quantiles,"Fisher_Jenks","Maximum_Breaks",
+             "Natural_Breaks"]
+    maxk   : int
+             maximum value of k to evaluate
+    pct    : float
+             The percentage of GADF to exceed 
+
+
+    Returns
+    -------
+    
+    implicit : tuple
+               first value is k, second value is instance of classifier at k,
+               third is the pct obtained
+
+
+    Examples
+    --------
+    >>> cal=load_example()
+    >>> qgadf=gadf(cal)
+    >>> qgadf[0]
+    15
+    >>> qgadf[-1]
+    0.37402575909092828
+
+    Quantiles fail to exceed 0.80 before 15 classes. If we lower the bar to
+    0.2 we see quintiles as a result
+
+    >>> qgadf2=gadf(cal,pct=0.2)
+    >>> qgadf2[0]
+    5
+    >>> qgadf2[-1]
+    0.21710231966462412
+    >>> 
+    
+    Notes
+    -----
+
+    The GADF is defined as:
+
+        .. math::
+
+            GADF = 1 - \sum_c \sum_{i in c} |y_i - y_{c,med}|  / \sum_i |y_i - y_{med}|
+        
+        where :math:`y_{med}` is the global median and :math:`y_{c,med}` is
+        the median for class :math:`c`.
+
+    See Also
+    --------
+    K_classifiers
+    """
+
+    y=np.array(y)
+    adam=(np.abs(y-np.median(y))).sum()
+    for k in range(2,maxk+1):
+        cl=kmethods[method](y,k)
+        gadf=1-cl.adcm/adam
+        if gadf > pct:
+            break
+    return (k,cl,gadf)
+
+class K_classifiers:
+    """
+    Evaluate all k-classifers and pick optimal based on k and GADF
+
+    Parameters
+    ----------
+    y      : array (nx1)
+             values to be classified 
+    pct    : float
+             The percentage of GADF to exceed where
+
+
+    Attributes
+    ----------
+
+    best   :  instance of Map_Classifier
+              the optimal classifer
+
+    results : dictionary
+              keys are classifier names, values are the Map_Classifier
+              instances with the best pct for each classifer
+    
+    Examples
+    --------
+
+    >>> cal=load_example()
+    >>> ks=K_classifiers(cal)
+    >>> ks.best.name
+    'Fisher_Jenks'
+    >>> ks.best.k
+    4
+    >>> ks.best.gadf
+    0.84810327199081048
+    >>> 
+    
+    Notes
+    -----
+    This can be used to suggest a classification scheme.
+
+    See Also
+    --------
+    gadf
+
+    """
+    def __init__(self,y,pct=0.8):
+        results={}
+        c=0
+        best=gadf(y,"Fisher_Jenks",maxk=len(y)-1,pct=pct)
+        pct0=best[0]
+        k0=best[-1]
+        keys=kmethods.keys()
+        keys.remove("Fisher_Jenks")
+        results["Fisher_Jenks"]=best
+        for method in keys:
+            results[method]=gadf(y,method,maxk=len(y)-1,pct=pct)
+            k1=results[method][0]
+            pct1=results[method][-1]
+            if (k1 < k0) or (k1==k0 and pct0<pct1):
+                best=results[method]
+                k0=k1
+                pct0=pct1
+        self.results=results
+        self.best=best[1]
+
 
 def _test():
     import doctest
