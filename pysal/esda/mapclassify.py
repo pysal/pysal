@@ -717,22 +717,30 @@ class Std_Mean(Map_Classifier):
         self.k=len(cuts)
 
 class Maximum_Breaks(Map_Classifier):
-    """Maximum Breaks  Map Classification
+    """
+    Maximum Breaks Map Classification
 
-    Arguments:
-        y: attribute to classify (numpy array n x 1)
+    Parameters
+    ----------
+    y  : array (n x 1)
+         values to classify
 
-        k: number of classes required
+    k  : int
+         number of classes required
 
-    Attributes:
-        yb: bin ids for observations (numpy array n x 1)
-            Each value is the id of the class the observation belongs to
+    Attributes
+    ----------
+    yb : array (nx1)
+         bin ids for observations. Each value is the id of the class the observation belongs to
 
-        bins: the upper bounds of each class (numpy array k x 1)
+    bins : array (kx1)
+           the upper bounds of each class 
 
-        k: the number of classes
+    k    : int
+           the number of classes
 
-        counts: the number of observations falling in each class (numpy array k x 1)
+    counts : array (kx1) 
+             the number of observations falling in each class (numpy array k x 1)
 
     Examples
     --------
@@ -777,28 +785,31 @@ class Maximum_Breaks(Map_Classifier):
         self.bins=np.array(mp)
 
 class Natural_Breaks(Map_Classifier):
-    """Natural Breaks Map Classification
+    """
+    Natural Breaks Map Classification
 
-    Arguments:
-        y: attribute to classify (numpy array n x 1)
+    Parameters
+    ----------
+    y       : array (n,1)
+              values to classify
+    k       : int
+              number of classes required
+    initial : int (default=100)
+              number of initial solutions to generate
 
-        k: number of classes required
+    Attributes
+    ----------
 
-        initial : int
-                  number of initial solutions to generate
-         
-
-    Attributes:
-        bins: the upper bounds of each class (numpy array k x 1)
-
-        counts: the number of observations falling in each class (numpy array k x 1)
-
-        iterations: number of iterations
-
-        k: the number of classes
-
-        yb: bin ids for observations (numpy array n x 1)
-            Each value is the id of the class the observation belongs to
+    yb      : array (n,1)
+              bin ids for observations,
+              each value is the id of the class the observation belongs to
+              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
+    bins    : array (k,1)
+              the upper bounds of each class 
+    k       : int
+              the number of classes
+    counts  : array (k,1)
+              the number of observations falling in each class
 
     Examples
     --------
@@ -841,21 +852,44 @@ class Natural_Breaks(Map_Classifier):
         self.iterations=res0[-2]
 
 class Fisher_Jenks(Map_Classifier):
-    """Fisher Jenks optimal classifier
+    """
+    Fisher Jenks optimal classifier
+
+    Parameters
+    ----------
+    y : array (n,1)
+        values to classify
+    k : int
+        number of classes required
+
+    Attributes
+    ----------
+
+    yb      : array (n,1)
+              bin ids for observations,
+              each value is the id of the class the observation belongs to
+              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
+    bins    : array (k,1)
+              the upper bounds of each class 
+    k       : int
+              the number of classes
+    counts  : array (k,1)
+              the number of observations falling in each class
+
 
     Examples
     --------
 
-        >>> cal=load_example()
-        >>> fj=Fisher_Jenks(cal)
-        >>> fj.summary()
-        >>> fj.adcm
-        832.8900000000001
-        >>> fj.bins
-        [110.73999999999999, 192.05000000000001, 370.5, 722.85000000000002, 4111.4499999999998]
-        >>> fj.counts
-        array([50,  2,  4,  1,  1])
-        >>> 
+    >>> cal=load_example()
+    >>> fj=Fisher_Jenks(cal)
+    >>> fj.summary()
+    >>> fj.adcm
+    832.8900000000001
+    >>> fj.bins
+    [110.73999999999999, 192.05000000000001, 370.5, 722.85000000000002, 4111.4499999999998]
+    >>> fj.counts
+    array([50,  2,  4,  1,  1])
+    >>> 
     """
 
     def __init__(self,y,k=K):
@@ -926,37 +960,44 @@ class Fisher_Jenks(Map_Classifier):
         return (best,t)
 
 class Jenks_Caspall(Map_Classifier):
-    """Jenks Caspall  Map Classification
+    """
+    Jenks Caspall  Map Classification
     
-    Arguments:
-        y: attribute to classify (numpy array n x 1)
+    Parameters
+    ----------
+    y : array (n,1)
+        values to classify
+    k : int
+        number of classes required
 
-        k: number of classes required
+    Attributes
+    ----------
 
-    Attributes:
-        bins: the upper bounds of each class (numpy array k x 1)
+    yb      : array (n,1)
+              bin ids for observations,
+              each value is the id of the class the observation belongs to
+              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
+    bins    : array (k,1)
+              the upper bounds of each class 
+    k       : int
+              the number of classes
+    counts  : array (k,1)
+              the number of observations falling in each class
 
-        counts: the number of observations falling in each class (numpy array k x 1)
 
-        iterations: number of iterations
+    Examples
+    --------
+    >>> cal=load_example()
+    >>> jc=Jenks_Caspall(cal,k=5)
+    >>> jc.bins
+    array([[  1.81000000e+00],
+           [  7.60000000e+00],
+           [  2.98200000e+01],
+           [  1.81270000e+02],
+           [  4.11145000e+03]])
+    >>> jc.counts
+    array([14, 13, 14, 10,  7])
 
-        k: the number of classes
-
-        yb: bin ids for observations (numpy array n x 1)
-            Each value is the id of the class the observation belongs to
-
-        Examples
-        --------
-        >>> cal=load_example()
-        >>> jc=Jenks_Caspall(cal,k=5)
-        >>> jc.bins
-        array([[  1.81000000e+00],
-               [  7.60000000e+00],
-               [  2.98200000e+01],
-               [  1.81270000e+02],
-               [  4.11145000e+03]])
-        >>> jc.counts
-        array([14, 13, 14, 10,  7])
     """
     def __init__(self,y,k=K):
         self.k=k
@@ -994,64 +1035,75 @@ class Jenks_Caspall(Map_Classifier):
         self.iterations=it
 
 class Jenks_Caspall_Sampled(Map_Classifier):
-    """Jenks Caspall Map Classification using a random sample
+    """
+    Jenks Caspall Map Classification using a random sample
 
-    Arguments:
+    Parameters
+    ----------
+    y    : array (n,1)
+           values to classify
+    k    : int
+           number of classes required
 
-        y: attribute to classify (numpy array n x 1)
+    pct  : float
+           The percentage of n that should form the sample
+           If pct is specified such that n*pct > 1000, then pct = 1000./n
 
-        k: number of classes required
+    Attributes
+    ----------
 
-        pct: the percentage of n that should form the sample
-             If pct is specified such that n*pct > 1000, then pct = 1000/n
+    yb      : array (n,1)
+              bin ids for observations,
+              each value is the id of the class the observation belongs to
+              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
+    bins    : array (k,1)
+              the upper bounds of each class 
+    k       : int
+              the number of classes
+    counts  : array (k,1)
+              the number of observations falling in each class
 
-    Attributes:
-        yb: bin ids for observations (numpy array n x 1)
-            Each value is the id of the class the observation belongs to
 
-        bins: the upper bounds of each class (numpy array k x 1)
+    Examples
+    --------
 
-        k: the number of classes
+    >>> cal=load_example()
+    >>> x=np.random.random(100000)
+    >>> jc=Jenks_Caspall(x)
+    >>> jcs=Jenks_Caspall_Sampled(x)
+    >>> jc.bins
+    array([[ 0.19770952],
+           [ 0.39695769],
+           [ 0.59588617],
+           [ 0.79716865],
+           [ 0.99999425]])
+    >>> jcs.bins
+    array([[ 0.18877882],
+           [ 0.39341638],
+           [ 0.6028286 ],
+           [ 0.80070925],
+           [ 0.99999425]])
+    >>> jc.counts
+    array([19804, 20005, 19925, 20178, 20088])
+    >>> jcs.counts
+    array([18922, 20521, 20980, 19826, 19751])
+    >>> 
 
-        counts: the number of observations falling in each class (numpy array k x 1)
+    # not for testing since we get different times on different hardware
+    # just included for documentation of likely speed gains
+    #>>> t1=time.time();jc=Jenks_Caspall(x);t2=time.time()
+    #>>> t1s=time.time();jcs=Jenks_Caspall_Sampled(x);t2s=time.time()
+    #>>> t2-t1;t2s-t1s
+    #1.8292930126190186
+    #0.061631917953491211
 
-    Example Usage:
+    Notes
+    -----
+    This is intended for large n problems. The logic is to apply
+    Jenks_Caspall to a random subset of the y space and then bin the
+    complete vector y on the bins obtained from the subset. This would
+    trade off some "accuracy" for a gain in speed.
 
-        >>> cal=load_example()
-        >>> x=np.random.random(100000)
-        >>> jc=Jenks_Caspall(x)
-        >>> jcs=Jenks_Caspall_Sampled(x)
-        >>> jc.bins
-        array([[ 0.19770952],
-               [ 0.39695769],
-               [ 0.59588617],
-               [ 0.79716865],
-               [ 0.99999425]])
-        >>> jcs.bins
-        array([[ 0.18877882],
-               [ 0.39341638],
-               [ 0.6028286 ],
-               [ 0.80070925],
-               [ 0.99999425]])
-        >>> jc.counts
-        array([19804, 20005, 19925, 20178, 20088])
-        >>> jcs.counts
-        array([18922, 20521, 20980, 19826, 19751])
-        >>> 
-
-        # not for testing since we get different times on different hardware
-        # just included for documentation of likely speed gains
-        #>>> t1=time.time();jc=Jenks_Caspall(x);t2=time.time()
-        #>>> t1s=time.time();jcs=Jenks_Caspall_Sampled(x);t2s=time.time()
-        #>>> t2-t1;t2s-t1s
-        #1.8292930126190186
-        #0.061631917953491211
-
-    Notes:
-        This is intended for large n problems. The logic is to apply
-        Jenks_Caspall to a random subset of the y space and then bin the
-        complete vector y on the bins obtained from the subset. This would
-        trade off some "accuracy" for a gain in speed.
     """
 
     def __init__(self,y,k=K,pct=0.10):
@@ -1075,47 +1127,57 @@ class Jenks_Caspall_Sampled(Map_Classifier):
         self.iterations=jc.iterations
 
 class Jenks_Caspall_Forced(Map_Classifier):
-    """Jenks Caspall  Map Classification with forced movements
-   
-    Arguments:
-        y: attribute to classify (numpy array n x 1)
+    """
+    
+    Jenks Caspall  Map Classification with forced movements
 
-        k: number of classes required
+    Parameters
+    ----------
+    y : array (n,1)
+        values to classify
+    k : int
+        number of classes required
 
-    Attributes:
-        yb: bin ids for observations (numpy array n x 1). Each value is the id
-        of the class the observation belongs to.
+    Attributes
+    ----------
 
-        bins: the upper bounds of each class (numpy array k x 1)
+    yb      : array (n,1)
+              bin ids for observations,
+              each value is the id of the class the observation belongs to
+              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
+    bins    : array (k,1)
+              the upper bounds of each class 
+    k       : int
+              the number of classes
+    counts  : array (k,1)
+              the number of observations falling in each class
 
-        k: the number of classes
 
-        counts: the number of observations falling in each class (numpy array k x 1)
-
-    Example Usage:
-        >>> cal=load_example()
-        >>> jcf=Jenks_Caspall_Forced(cal,k=5)
-        >>> jcf.k
-        5
-        >>> jcf.bins
-        array([[  1.34000000e+00],
-               [  5.90000000e+00],
-               [  1.67000000e+01],
-               [  5.06500000e+01],
-               [  4.11145000e+03]])
-        >>> jcf.counts
-        array([12, 12, 13,  9, 12])
-        >>> jcf4=Jenks_Caspall_Forced(cal,k=4)
-        >>> jcf4.k
-        4
-        >>> jcf4.bins
-        array([[  2.51000000e+00],
-               [  8.70000000e+00],
-               [  3.66800000e+01],
-               [  4.11145000e+03]])
-        >>> jcf4.counts
-        array([15, 14, 14, 15])
-        >>> 
+    Examples
+    --------
+    >>> cal=load_example()
+    >>> jcf=Jenks_Caspall_Forced(cal,k=5)
+    >>> jcf.k
+    5
+    >>> jcf.bins
+    array([[  1.34000000e+00],
+           [  5.90000000e+00],
+           [  1.67000000e+01],
+           [  5.06500000e+01],
+           [  4.11145000e+03]])
+    >>> jcf.counts
+    array([12, 12, 13,  9, 12])
+    >>> jcf4=Jenks_Caspall_Forced(cal,k=4)
+    >>> jcf4.k
+    4
+    >>> jcf4.bins
+    array([[  2.51000000e+00],
+           [  8.70000000e+00],
+           [  3.66800000e+01],
+           [  4.11145000e+03]])
+    >>> jcf4.counts
+    array([15, 14, 14, 15])
+    >>> 
     """
     def __init__(self,y,k=K):
         self.k=k
@@ -1212,11 +1274,31 @@ class Jenks_Caspall_Forced(Map_Classifier):
         self.iterations=it
 
 class User_Defined(Map_Classifier):
-    """User Specified Binning
+    """
+    User Specified Binning
 
-    Notes:
-        If upper bound of user bins does not exceed max(y) we append an
-        additional bin.
+
+    Parameters
+    ----------
+    y    : array (n,1)
+           values to classify
+    bins : array (k,1)
+           upper bounds of classes (have to be monotically increasing)
+
+    Attributes
+    ----------
+
+    yb      : array (n,1)
+              bin ids for observations,
+              each value is the id of the class the observation belongs to
+              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
+    bins    : array (k,1)
+              the upper bounds of each class 
+    k       : int
+              the number of classes
+    counts  : array (k,1)
+              the number of observations falling in each class
+
 
     Examples
     --------
@@ -1236,7 +1318,15 @@ class User_Defined(Map_Classifier):
     >>> ud.counts
     array([37,  4, 17])
     >>> 
+
+
+    Notes
+    -----
+    If upper bound of user bins does not exceed max(y) we append an
+    additional bin.
+
     """
+
     def __init__(self,y,bins):
         if bins[-1] < max(y):
             bins.append(max(y))
@@ -1249,30 +1339,35 @@ class User_Defined(Map_Classifier):
     def _set_bins(self):
         pass
 
-class Max_P(Map_Classifier):
-    """Max_P Map Classification
+class Max_P_Classifier(Map_Classifier):
+    """
+    Max_P Map Classification
     
     Based on Max_p regionalization algorithm
 
-    Arguments:
-        y: attribute to classify (numpy array n x 1)
+    Parameters
+    ----------
+    y       : array (n,1)
+              values to classify
+    k       : int
+              number of classes required
+    initial : int
+              number of initial solutions to use prior to swapping
 
-        k: number of classes required
+    Attributes
+    ----------
 
-        initial: number of initial solutions to use prior to swapping
+    yb      : array (n,1)
+              bin ids for observations,
+              each value is the id of the class the observation belongs to
+              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
+    bins    : array (k,1)
+              the upper bounds of each class 
+    k       : int
+              the number of classes
+    counts  : array (k,1)
+              the number of observations falling in each class
 
-    Attributes:
-        yb: bin ids for observations (numpy array n x 1)
-            Each value is the id of the class the observation belongs to
-
-        bins: the upper bounds of each class (numpy array k x 1)
-
-        k: the number of classes
-
-        counts: the number of observations falling in each class (numpy array k x 1)
- 
-    Examples
-    --------
     """
     def __init__(self,y,k=K,initial=1000):
         self.k=k
