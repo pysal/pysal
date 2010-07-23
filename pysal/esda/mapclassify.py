@@ -252,6 +252,49 @@ def load_example():
     cal=np.array([record[-1] for record in dat])
     return cal
 
+def natural_breaks(values,k=5,itmax=100):
+    """
+    natural breaks helper function
+    """
+    values=np.array(values)
+    n=len(values)
+    uv=np.unique(values)
+    if len(uv) < k:
+        print 'not enough unique values in array to form k classes'
+    sids=np.random.permutation(range(len(uv)))[0:k]
+    seeds=uv[sids]
+    seeds.sort()
+    diffs=abs(np.matrix([values - seed for seed in seeds]))
+    c0=diffs.argmin(axis=0)
+    c0=np.array(c0)[0]
+    solving=True
+    solved=False
+    rk=range(k)
+    it=0
+    while solving:
+        # get centroids of clusters
+        seeds=[np.median(values[c0==c]) for c in rk]
+        seeds.sort()
+        # for each value find closest centroid
+        diffs=abs(np.matrix([values - seed for seed in seeds]))
+        # assign value to that centroid
+        c1=diffs.argmin(axis=0)
+        c1=np.array(c1)[0]
+        #compare new classids to previous
+        d=abs(c1-c0)
+        if d.sum()==0:
+            solving=False
+            solved=True
+        else:
+            c0=c1
+        it+=1
+        if it==itmax:
+            solving=False
+    class_ids=c1
+    cuts=[max(values[c1==c]) for c in rk]
+    return sids,seeds,diffs,class_ids,solved,it,cuts
+
+
 class Map_Classifier:
     """Abstract class for all map classifications """
     def __init__(self,y):
@@ -760,46 +803,22 @@ class Natural_Breaks(Map_Classifier):
     >>> nb.k
     5
     >>> nb.counts
-    array([41,  9,  6,  1,  1])
+    array([14, 13, 14, 10,  7])
     >>> nb.bins
-    array([   29.82,   110.74,   370.5 ,   722.85,  4111.45])
+    [1.8100000000000001, 7.5999999999999996, 29.82, 181.27000000000001, 4111.4499999999998]
+    
     """
     def __init__(self,y,k=K):
         self.k=k
         Map_Classifier.__init__(self,y)
         self.name='Natural_Breaks'
     def _set_bins(self):
+
         x=self.y.copy()
         k=self.k
-        seeds=np.random.permutation(x)[0:k]
-        seeds.sort()
-        mean0=seeds.copy()
-        x.shape=(x.size,1)
-        d=np.abs(x-mean0)
-        nz=np.nonzero
-        c0=np.array([nz(row==row.min())[0][0] for row in d])
-        solving=True
-        it=0
-        while solving:
-            classes=sp.unique(c0)
-            mean1=[x[c0==c].mean() for c in classes]
-            d=np.abs(x-mean1)
-            c1=np.array([nz(row==row.min())[0][0] for row in d])
-            diff=c1==c0
-            test=sp.unique(c0)
-            if diff.all():
-                solving=False
-            elif len(test) < k:
-                #classes have merged so stop
-                solving=False
-            else:
-                c0=c1
-            it+=1
-        classes=sp.unique(c1)
-        #print classes
-        cuts=[x[c1==c].max() for c in classes]
-        self.bins=np.array(cuts)
-        self.iterations=it
+        res=natural_breaks(x,k)
+        self.bins=res[-1]
+        self.iterations=res[-2]
 
 class Fisher_Jenks(Map_Classifier):
     """Fisher Jenks optimal classifier
