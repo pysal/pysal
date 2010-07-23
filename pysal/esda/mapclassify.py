@@ -784,6 +784,10 @@ class Natural_Breaks(Map_Classifier):
 
         k: number of classes required
 
+        initial : int
+                  number of initial solutions to generate
+         
+
     Attributes:
         bins: the upper bounds of each class (numpy array k x 1)
 
@@ -808,17 +812,24 @@ class Natural_Breaks(Map_Classifier):
     [1.8100000000000001, 7.5999999999999996, 29.82, 181.27000000000001, 4111.4499999999998]
     
     """
-    def __init__(self,y,k=K):
+    def __init__(self,y,k=K,initial=100):
         self.k=k
+        self.initial=initial
         Map_Classifier.__init__(self,y)
         self.name='Natural_Breaks'
     def _set_bins(self):
 
         x=self.y.copy()
         k=self.k
-        res=natural_breaks(x,k)
-        self.bins=res[-1]
-        self.iterations=res[-2]
+        res0=natural_breaks(x,k)
+        fit=res0[2].sum()
+        for i in xrange(self.initial):
+            res=natural_breaks(x,k)
+            fit_i=res[2].sum()
+            if fit_i< fit:
+                res0=res
+        self.bins=res0[-1]
+        self.iterations=res0[-2]
 
 class Fisher_Jenks(Map_Classifier):
     """Fisher Jenks optimal classifier
