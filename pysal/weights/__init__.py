@@ -10,10 +10,6 @@ from pysal.common import *
 from scipy import sparse, float32
 import gc
 
-
-# constant for precision
-DELTA = 0.0000001
-
 class W(object):
     """
     Spatial weights
@@ -151,52 +147,23 @@ class W(object):
             self._id_order=id_order
             self._id_order_set=True
         self._reset()
-        self._sparse=self._build_sparse()
-        self._sparse_set=True
+        self._n=len(self.weights)
+
 
     def _reset(self):
         """
         Reset properties
         """
-        self.__neighbors_0 = False
-        self._id2i=None
-        self._idx=0
-        self._n=None
-        self._s0=None
-        self._s1=None
-        self._s2=None
-        self._s2array=None
-        self._s2array_set=False
-        self._diagW2=None
-        self._diagW2_set=False
-        self._diagWtW_set=False
-        self._diagWtW=None
-        self._diagWtW_WW_set=False
-        self._diagWtW_WW=False
-        self._trcW2=None
-        self._trcWtW=None
-        self._trcWtW_WW=None
-        self._pct_nonzero=None
-        self._cardinalities=None
-        self._max_neighbors=None
-        self._mean_neighbors=None
-        self._min_neighbors=None
-        self._nonzero=None
-        self._sd=None
-        self._asymmetries=None
-        self._islands=None
-        self._histogram=None
-        self._sparse_set=False
-        self._sparse=None
+        self._cache={}
 
     @property
     def sparse(self):
         """
         Sparse representation of weights
         """
-        if not self._sparse_set:
+        if 'sparse' not in self._cache:
             self._sparse=self._build_sparse()
-            self._sparse_set=True
+            self._cache['sparse']=self._sparse
         return self._sparse
 
     def _build_sparse(self):
@@ -227,17 +194,21 @@ class W(object):
         Dictionary where the key is an ID and the value is that ID's
         index in W.id_order.
         """
-        if not self._id2i:
+        if 'id2i' not in self._cache:
             self._id2i={}
             for i,id in enumerate(self._id_order):
                 self._id2i[id]=i
             self._id2i=ROD(self._id2i)
+            self._cache['id2i']=self._id2i
         return self._id2i
 
     @property
     def n(self):
-        self._n=len(self.neighbors)
+        if "n" not in self._cache:
+            self._n=len(self.neighbors)
+            self._cache['n']=self._n
         return self._n
+
 
     @property
     def s0(self):
@@ -249,8 +220,9 @@ class W(object):
                s0=\sum_i \sum_j w_{i,j}
 
         """
-        if not self._s0:
+        if 's0' not in self._cache:
             self._s0=self.sparse.sum()
+            self._cache['s0']=self._s0
         return self._s0
 
     @property
@@ -263,11 +235,12 @@ class W(object):
                s1=1/2 \sum_i \sum_j (w_{i,j} + w_{j,i})^2
 
         """
-        if not self._s1:
+        if 's1' not in self._cache:
             t=self.sparse.transpose()
             t=t+self.sparse
             t2=t.multiply(t) # element-wise square
             self._s1=t2.sum()/2.
+            self._cache['s1']=self._s1
         return self._s1
 
     @property
@@ -281,10 +254,10 @@ class W(object):
         s2
 
         """
-        if not self._s2array_set:
+        if 's2array' not in self._cache:
             s=self._sparse
             self._s2array= np.array(s.sum(1)+s.sum(0).transpose())**2
-            self._s2array_set=True
+            self._cache['s2array']=self._s2array
         return self._s2array
 
     @property
@@ -298,8 +271,9 @@ class W(object):
                 s2=\sum_j (\sum_i w_{i,j} + \sum_i w_{j,i})^2
 
         """
-        if not self._s2:
+        if 's2' not in self._cache:
             self._s2=self.s2array.sum()
+            self._cache['s2']=self._s2
         return self._s2
 
     @property
@@ -312,8 +286,9 @@ class W(object):
         diagW2
 
         """
-        if not self._trcW2:
+        if 'trcW2' not in self._cache:
             self._trcW2=self.diagW2.sum()
+            self._cache['trcw2']=self._trcW2
         return self._trcW2
 
 
@@ -327,9 +302,9 @@ class W(object):
         trcW2
 
         """
-        if not self._diagW2_set:
+        if 'diagw2' not in self._cache:
             self._diagW2=(self.sparse*self.sparse).diagonal()
-            self._diagW2_set=True
+            self._cache['diagW2']=self._diagW2
         return self._diagW2
 
     @property
@@ -342,9 +317,9 @@ class W(object):
         trcWtW
 
         """
-        if not self._diagWtW_set:
+        if 'diagWtW' not in self._cache:
             self._diagWtW=(self.sparse.transpose()*self.sparse).diagonal()
-            self._diagWtW_set=True
+            self._cache['diagWtW']=self._diagWtW
         return self._diagWtW
 
     @property 
@@ -357,30 +332,32 @@ class W(object):
         diagWtW
 
         """
-
-        if not self._trcWtW:
+        if 'trcWtW' not in self._cache:
             self._trcWtW=self.diagWtW.sum()
+            self._cache['trcWtW']=self._trcWtW
         return self._trcWtW
 
     @property
     def diagWtW_WW(self):
-        if not self._diagWtW_WW_set:
+        if 'diagWtW_WW' not in self._cache:
             wt=self.sparse.transpose()
             w=self.sparse
             self._diagWtW_WW=(wt*w+w*w).diagonal()
-            self._diagWtW_WW_set=True
+            self._cache['diagWtW_WW']=self._diagWtW_WW
         return self._diagWtW_WW
 
     @property
     def trcWtW_WW(self):
-        if not self._trcWtW_WW:
+        if 'trcWtW_WW' not in self._cache:
             self._trcWtW_WW=self.diagWtW_WW.sum()
+            self._cache['trcWtW_WW']=self._trcWtW_WW
         return self._trcWtW_WW
 
     @property
     def pct_nonzero(self):
-        if not self._pct_nonzero:
-            self._pct_nonzero=self._sparse.nnz/(1.*self._n**2)
+        if 'pct_nonzero' not in self._cache:
+            self._pct_nonzero=self.sparse.nnz/(1.*self._n**2)
+            self._cache['pct_nonzero']=self._pct_nonzero
         return self._pct_nonzero
 
     @property
@@ -388,38 +365,43 @@ class W(object):
         """
         number of neighbors for each observation : dict
         """
-        if not self._cardinalities:
+        if 'cardinalities' not in self._cache:
             c={}
             for i in self._id_order:
                 c[i]=len(self.neighbors[i])
             self._cardinalities=c
+            self._cache['cardinalities']=self._cardinalities
         return self._cardinalities
 
     @property
     def max_neighbors(self):
-        if not self._max_neighbors:
-            self._max_neighbors=max(self._cardinalities.values())
+        if 'max_neighbors' not in self._cache:
+            self._max_neighbors=max(self.cardinalities.values())
+            self._cache['max_neighbors']=self._max_neighbors
         return self._max_neighbors
 
 
     @property
     def mean_neighbors(self):
-        if not self._mean_neighbors:
-            self._mean_neighbors=sum((self._cardinalities.values())/(self._n*1.))
+        if 'max_neighbors' not in self._cache:
+            self._mean_neighbors=np.mean(self.cardinalities.values())
+            self._cache['max_neighbors']=self._max_neighbors
         return self._mean_neighbors
 
 
     @property
     def min_neighbors(self):
-        if not self._min_neighbors:
-            self._min_neighbors=min(self._cardinalities.values())
+        if 'min_neighbors' not in self._cache:
+            self._min_neighbors=min(self.cardinalities.values())
+            self._cache['min_neighbors']=self._min_neighbors
         return self._min_neighbors
 
 
     @property
     def nonzero(self):
-        if not self._nonzero:
-            self._nonzer=self._sparse.nnz
+        if 'nonzero' not in self._cache:
+            self._nonzero=self._sparse.nnz
+            self._cache['nonzero']=self._nonzero
         return self._nonzero
 
     @property
@@ -427,30 +409,33 @@ class W(object):
         """
         standard deviation of cardinalities : float
         """
-
-        if not self._sd:
+        if 'sd' not in self._cache:
             self._sd=np.std(self.cardinalities.values())
+            self._cache['sd']=self._sd
         return self._sd
 
 
     @property
     def asymmetries(self):
-        if not self._asymmetries:
+        if 'asymmetries' not in self._cache:
             self._asymmetries=self.asymmetry()
+            self._cache['asymmetries']=self._asymmetries
         return self._asymmetries
 
     @property
     def islands(self):
-        if not self._islands:
-            self._islands = [i for i,c in self._cardinalities.items() if c==0]
+        if 'islands' not in self._cache:
+            self._islands = [i for i,c in self.cardinalities.items() if c==0]
+            self._cache['islands']=self._islands
         return self._islands
 
 
     @property
     def histogram(self):
-        if not self._histogram:
+        if 'histogram' not in self._cache:
             ct,bin=np.histogram(self.cardinalities.values(),range(self.min_neighbors,self.max_neighbors+2))
             self._histogram=zip(bin,ct)
+            self._cache['histogram']=self._histogram
         return self._histogram
 
 
@@ -479,7 +464,7 @@ class W(object):
 
         Examples
         --------
-        >>> w=lat2W(3,3)
+        >>> w=pysal.lat2W(3,3)
         >>> for i,wi in enumerate(w):
         ...     print i,wi
         ...     
@@ -570,12 +555,7 @@ class W(object):
             self._id_order=ordered_ids
             self._idx=0
             self._id_order_set=True
-            self.neighbor_0_ids={}
-            self.__neighbors_0 = False
-            self._id2i=False
-            self._sparse_set=False
-            self._sparse=None
-            #self._zero_offset()
+            self._reset()
         else:
             raise Exception, 'ordered_ids do not align with W ids'
 
@@ -617,14 +597,13 @@ class W(object):
         >>> w.neighbor_offsets['b']
         [2, 1]
         """
-        if self.__neighbors_0:
-            return self.__neighbors_0
-        else:
+        if "neighbors_0" not in self._cache:
             self.__neighbors_0={}
             id2i=self.id2i
             for id, neigh_list in self.neighbors.iteritems():
                 self.__neighbors_0[id]=[id2i[neigh] for neigh in neigh_list] 
-            return self.__neighbors_0
+            self._cache['neighbors_0']=self.__neighbors_0
+        return self.__neighbors_0
 
 
     def get_transform(self):
