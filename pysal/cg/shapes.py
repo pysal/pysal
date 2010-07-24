@@ -1,11 +1,6 @@
 """
 Computational geometry code for PySAL: Python Spatial Analysis Library.
 
-Authors:
-Sergio Rey <srey@asu.edu>
-Xinyue Ye <xinyue.ye@gmail.com>
-Charles R. Schmidt <Charles.R.Schmidt@asu.edu>
-Andrew Winslow <Andrew.Winslow@asu.edu>
 """
 
 __author__  = "Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow"

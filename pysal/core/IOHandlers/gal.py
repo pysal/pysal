@@ -1,13 +1,12 @@
 import pysal.core.FileIO as FileIO
 from pysal.weights import W
-  
+
+__author__='Charles Schmidt <Charles.R.Schmidt@asu.edu>'
+
 class GalIO(FileIO.FileIO):
     """
     Opens, reads, and writes file objects in GAL format.
 
-    Authors
-    -------
-    Charles Schmidt <Charles.R.Schmidt@asu.edu>
 
     Parameters
     ----------

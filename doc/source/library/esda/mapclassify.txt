@@ -58,3 +58,4 @@ API
 .. automodule:: pysal.esda.mapclassify
     :synopsis: Choropleth map classification
     :members:
+    :inherited-members:

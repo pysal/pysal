@@ -54,8 +54,8 @@ def weighted_median(d, w):
     w          : array (n, 1)
                  variable on which d's medain will be decided
 
-    Note
-    ----
+    Notes
+    -----
     d and w are arranged in the same order 
 
     Returns
@@ -124,8 +124,8 @@ def crude_age_standardization(e, b, n):
     n          : integer
                  the number of spatial units 
 
-    Note
-    ----
+    Notes
+    -----
     e and b are arranged in the same order
 
     Returns
@@ -161,8 +161,8 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
     alpha      : float
                  significance level for confidence interval 
 
-    Note
-    ----
+    Notes
+    -----
     e, b, and s are arranged in the same order
 
     Returns
@@ -216,8 +216,8 @@ def indirect_age_standardization(e, b, s_e, s_b, n, alpha=0.5):
     alpha      : float
                  significance level for confidence interval
 
-    Note
-    ----
+    Notes
+    -----
     e, b, s_e, and s_b are arranged in the same order
 
     Returns
@@ -464,16 +464,16 @@ class Age_Adjusted_Smoother:
     b		: array (n*h, 1)
     		  population at risk variable measured for each age group across n spatial units
     w		: spatial weights instance
-    s           : array (n*h, 1)
-                  standard million population for each age group across n spatial units
+    s       : array (n*h, 1)
+              standard million population for each age group across n spatial units
 
     Attributes
     ----------
     r		: array (n, 1)
 		  rate values from spatial rate smoothing
 
-    Note
-    ----
+    Notes
+    -----
     Weights used to smooth age-specific events and populations are simple binary weights
 
     Examples
@@ -648,8 +648,8 @@ class Spatial_Filtering:
     r		: array (x_grid*y_grid, 1)
 		  rate values for grid points
 
-    Note
-    ----
+    Notes
+    -----
     No tool is provided to find an optimal value for r or pop.
 
     Examples

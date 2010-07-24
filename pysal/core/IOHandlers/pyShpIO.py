@@ -1,9 +1,5 @@
 """
 PySAL ShapeFile Reader and Writer based on pure python shapefile module.
-
-Authors:
-Charles R Schmidt <Charles.R.Schmidt@asu.edu>
-
  
 """
 

@@ -4,7 +4,7 @@ A module of classification schemes for choropleth mapping.
 __author__ = "Sergio J. Rey"
 __credits__= "Copyright (c) 2009-10 Sergio J. Rey"
 
-__all__=['quantile','Box_Plot','Equal_Interval','Fisher_Jenks',
+__all__=['quantile','Map_Classifier','Box_Plot','Equal_Interval','Fisher_Jenks',
          'Jenks_Caspall','Jenks_Caspall_Forced','Jenks_Caspall_Sampled',
          'Max_P_Classifier','Maximum_Breaks','Natural_Breaks',
          'Quantiles','Percentiles', 'Std_Mean','User_Defined',
@@ -291,9 +291,9 @@ class Map_Classifier:
         self.name='Map Classifier'
         self.y=y
         self._classify()
-        self.summary()
+        self._summary()
 
-    def summary(self):
+    def _summary(self):
         yb=self.yb
         self.classes=[np.nonzero(yb==c)[0].tolist() for c in range(self.k)]
         self.tss=self.get_tss()
@@ -305,16 +305,18 @@ class Map_Classifier:
         self.yb,self.counts=bin1d(self.y,self.bins)
 
     def __str__(self):
-        st=self.table_string()
+        st=self._table_string()
         return st
 
     def __repr__(self):
         return self.table_string()
 
     def get_tss(self):
-        """Total sum of squares around class means
+        """
+        Total sum of squares around class means
 
-        Returns sum of squares over all class means"""
+        Returns sum of squares over all class means
+        """
         tss=0
         for class_def in self.classes:
             yc=self.y[class_def]
@@ -324,9 +326,13 @@ class Map_Classifier:
         return tss
 
     def get_adcm(self):
-        """Absolute deviation around class means
+        """
+        Absolute deviation around class means (ADCM).
 
-        Returns sum of ADCM over all classes"""
+        Calculates the absolute deviations of each observation about its class mean as a measure of fit for the classification metho.
+        
+        Returns sum of ADCM over all classes
+        """
         adcm=0
         for class_def in self.classes:
             yc=self.y[class_def]
@@ -344,7 +350,7 @@ class Map_Classifier:
         return gadf
 
 
-    def table_string(self,width=12,decimal=3):
+    def _table_string(self,width=12,decimal=3):
         fmt=".%df"%decimal
         fmt="%"+fmt
         largest=max([ len(fmt%i) for i in self.bins])
@@ -618,8 +624,7 @@ class Box_Plot(Map_Classifier):
         self.high_outlier_ids=np.nonzero(self.yb==5)[0]
 
 class Quantiles(Map_Classifier):
-    """
-    Quantile Map Classification
+    """Quantile Map Classification
 
     Parameters
     ----------
@@ -889,7 +894,6 @@ class Fisher_Jenks(Map_Classifier):
 
     >>> cal=load_example()
     >>> fj=Fisher_Jenks(cal)
-    >>> fj.summary()
     >>> fj.adcm
     832.8900000000001
     >>> fj.bins

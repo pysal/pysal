@@ -366,11 +366,12 @@ class Moran_Local:
                    p-value based on standard normal approximation from
                    permutations
 
-    *Note* 
-        p-values are one sided - where side is based on the original I value
-        for each observation (in self.Is). In other words extreme is considered
-        being further away from the origin and in the same direction than original I
-        statistic  for the focal observation.
+    Notes 
+    -----
+    p-values are one sided - where side is based on the original I value
+    for each observation (in self.Is). In other words extreme is considered
+    being further away from the origin and in the same direction than original I
+    statistic  for the focal observation.
     
 
     Examples

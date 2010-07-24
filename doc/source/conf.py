@@ -41,7 +41,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pysal'
-copyright = u'2009, Sergio Rey'
+copyright = u'2009-10, Sergio Rey'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

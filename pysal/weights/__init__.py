@@ -117,19 +117,15 @@ class W(object):
     2530.7222222222586
     >>> w.trcWtW
     2533.6666666666774
-    >>> 
-
 
     Cardinality Histogram
 
     >>> w=pysal.rook_from_shapefile("../examples/sacramentot2.shp")
     >>> w.histogram
     [(1, 1), (2, 6), (3, 33), (4, 106), (5, 114), (6, 70), (7, 35), (8, 17), (9, 9), (10, 4), (11, 4), (12, 3), (13, 0), (14, 1)]
-    >>> 
-    
+
     """
     def __init__(self,neighbors,weights=None,id_order=None):
-        """see class docstring"""
         self.transformations={}
         self.neighbors=ROD(neighbors)
         if not weights:

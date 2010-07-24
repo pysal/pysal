@@ -1,16 +1,13 @@
 """
 Geary's C statistic for spatial autocorrelation
-
-
-Author(s): Serge Rey srey@asu.edu
-
 """
 from pysal.common import *
 
 PERMUTATIONS=999
 
 class Geary:
-    """Global Geary C Autocorrelation statistic
+    """
+    Global Geary C Autocorrelation statistic
     
     Parameters
     ----------
@@ -20,8 +17,8 @@ class Geary:
     transformation : string
                      weights transformation, default is row-standardized
                      "R". Other options include "B": binary, "D":
-                         doubly-standardized, "U": untransformed (general
-                         weights), "V": variance-stabilizing.
+                     doubly-standardized, "U": untransformed (general
+                     weights), "V": variance-stabilizing.
     permutations   : int
                      number of random permutations for calculation of
                      pseudo-p_values

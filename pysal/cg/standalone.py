@@ -1,9 +1,5 @@
 """
-Authors:
-Sergio Rey <srey@asu.edu>
-Xinyue Ye <xinyue.ye@gmail.com>
-Charles Schmidt <Charles.Schmidt@asu.edu>
-Andrew Winslow <Andrew.Winslow@asu.edu>
+Helper functions for computational geometry in PySAL
 
 """
 
