@@ -222,13 +222,30 @@ class Point(object):
 class LineSegment:
     """
     Geometric representation of line segment objects.
+    ...
 
-    Attributes:
-    p1 -- starting point (Point)
-    p2 -- ending point (Point)
-    bounding_box -- the bounding box of the segment (number 4-tuple)
-    len -- the length of the segment (number)
-    line -- the line on which the segment lies (Line)
+    Parameters
+    ----------
+
+    start_pt     : Point 
+                   Point where segment begins
+    end_pt       : Point 
+                   Point where segment ends
+
+    Attributes
+    ----------
+
+    p1              : Point
+                      Starting point
+    p2              : Point
+                      Ending point
+    bounding_box    : tuple
+                      The bounding box of the segment (number 4-tuple)
+    len             : float
+                      The length of the segment
+    line            : Line
+                      The line on which the segment lies
+
     """
  
     def __init__(self, start_pt, end_pt):
@@ -240,11 +257,7 @@ class LineSegment:
         Test tag: <tc>#is#LineSegment.__init__</tc>
         Test tag: <tc>#tests#LineSegment.__init__</tc>
 
-        Parameters
-        ----------
-        start_pt : point where segment begins
-        end_pt   : point where segment ends
- 
+
         Attributes
         ----------
 
@@ -558,9 +571,13 @@ class Line:
     """
     Geometric representation of line objects.
 
-    Attributes:
-    m -- slope (number)
-    b -- y-intercept (number)
+    Attributes
+    ----------
+    m       : float
+              slope
+    b       : float
+              y-intercept
+
     """
 
     def __init__(self, m, b):
@@ -620,9 +637,13 @@ class Ray:
     """
     Geometric representation of ray objects.
 
-    Attributes:
-    o -- origin (point where ray originates)
-    p -- second point on the ray (not point where ray originates)
+    Attributes
+    ----------
+
+    o       : Point
+              Origin (point where ray originates)
+    p       : Point
+              Second point on the ray (not point where ray originates)
     """
 
     def __init__(self, origin, second_p):
@@ -655,9 +676,14 @@ class Chain(object):
     """
     Geometric representation of a chain, also known as a polyline.
 
-    Attributes:
-    vertices -- a Point list of the vertices of the chain in order.
-    len -- the geometric length of the chain.
+    Attributes
+    ----------
+
+    vertices    : list
+                  List of Points of the vertices of the chain in order.
+    len         : float
+                  The geometric length of the chain.
+
     """
 
     def __init__(self, vertices):
@@ -801,13 +827,22 @@ class Polygon(object):
     """
     Geometric representation of polygon objects.
 
-    Attributes:
-    vertices -- the vertices of the Polygon in clockwise order
-    len -- the number of verticies including holes
-    perimeter -- the geometric length of the perimeter of the Polygon
-    bounding_box -- the bounding box of the polygon
-    area -- the area enclosed by the polygon
-    centroid -- the 'center of gravity', i.e. the mean point of the polygon.
+    Attributes
+    ----------
+
+    vertices        : list
+                      List of Points with the vertices of the Polygon in
+                      clockwise order
+    len             : int
+                      Number of verticies including holes
+    perimeter       : float
+                      Geometric length of the perimeter of the Polygon
+    bounding_box    : Rectangle
+                      Bounding box of the polygon
+    area            : float
+                      Area enclosed by the polygon
+    centroid        : tuple
+                      The 'center of gravity', i.e. the mean point of the polygon.
     """
 
     def __init__(self, vertices, holes=None):
@@ -1069,11 +1104,17 @@ class Rectangle:
     """
     Geometric representation of rectangle objects.
 
-    Attributes:
-    left -- the minimum x-value of the rectangle
-    lower -- the minimum y-value of the rectangle
-    right -- the maximum x-value of the rectangle
-    upper -- the maximum y-value of the rectangle
+    Attributes
+    ----------
+    
+    left    : float
+              Minimum x-value of the rectangle
+    lower   : float
+              Minimum y-value of the rectangle
+    right   : float
+              Maximum x-value of the rectangle
+    upper   : float
+              Maximum y-value of the rectangle
     """
 
     def __init__(self, left, lower, right, upper):

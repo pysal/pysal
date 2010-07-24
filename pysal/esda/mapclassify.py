@@ -1050,14 +1050,14 @@ class Jenks_Caspall_Sampled(Map_Classifier):
 
     Parameters
     ----------
-    y    : array (n,1)
-           values to classify
-    k    : int
-           number of classes required
 
-    pct  : float
-           The percentage of n that should form the sample
-           If pct is specified such that n*pct > 1000, then pct = 1000./n
+    y       : array (n,1)
+              values to classify
+    k       : int
+              number of classes required
+    pct     : float
+              The percentage of n that should form the sample
+              If pct is specified such that n*pct > 1000, then pct = 1000./n
 
     Attributes
     ----------

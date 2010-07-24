@@ -22,14 +22,21 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
     """
     FileIO handeler for ESRI ShapeFiles.
 
-    Attributes:
-    FORMATS -- list -- A list of support file extensions.
-    MODES -- list -- A list of support file modes.
-
     Notes:
-    This class wraps _pyShpIO's shp_file class with the PySAL FileIO API. shp_file can be used without PySAL.
+    This class wraps _pyShpIO's shp_file class with the PySAL FileIO API.
+    shp_file can be used without PySAL.
 
-    Example:
+    Attributes
+    ----------
+
+    Formats     : list
+                  A list of support file extensions
+    Modes       : list
+                  A list of support file modes
+
+    Examples
+    --------
+
     >>> import tempfile
     >>> f = tempfile.NamedTemporaryFile(suffix='.shp'); fname = f.name; f.close()
     >>> import pysal
@@ -44,6 +51,7 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
     True
     >>> import os
     >>> os.remove(fname); os.remove(fname.replace('.shp','.shx'))
+
     """
     FORMATS = ['shp','shx']
     MODES = ['w','r','wb','rb']

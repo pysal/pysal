@@ -9,18 +9,30 @@ class DBF(pysal.core.Tables.DataTable):
     
     This DBF handler implements the PySAL DataTable interface.
 
-    Attributes:
-    header -- list -- A list of field names.
-    field_spec -- list -- A list of field specs.
+    Attributes
+    ----------
 
-    Heeader:
-        The header is a python list of strings.  Each string is a field name and field name must not be longer than 10 characters.
-        Eg.
-        ['field1','field2','field3']
-    Field Spec:
-        The field_spec describes the data types of each field. It is comprised of a list of tuples, each tuple describing a field.
-        The format for the tuples is ("Type",len,precision).  Valid Types are 'C' for characters, 'L' for bool, 'D' for data, 'N' or 'F' for number.
-        [('C',20,0),('N',20,10),('L',1,0)]
+    header      : list
+                  A list of field names. The header is a python list of
+                  strings.  Each string is a field name and field name must
+                  not be longer than 10 characters. 
+    field_spec  : list
+                  A list describing the data types of each field. It is
+                  comprised of a list of tuples, each tuple describing a
+                  field. The format for the tuples is ("Type",len,precision).
+                  Valid Types are 'C' for characters, 'L' for bool, 'D' for
+                  data, 'N' or 'F' for number.
+
+    Examples
+    --------
+
+    >>> import pysal
+    >>> dbf = pysal.open('../../examples/juvenile.dbf', 'r')
+    >>> dbf.header
+    ['ID', 'X', 'Y']
+    >>> dbf.field_spec
+    [('N', 9, 0), ('N', 9, 0), ('N', 9, 0)]
+
     """
     FORMATS = ['dbf']
     MODES = ['r','w']
