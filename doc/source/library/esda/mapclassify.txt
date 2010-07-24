@@ -3,7 +3,58 @@
 
 .. versionadded:: 1.0
 
+For an array :math:`y` of :math:`n` values, a map classifier places each value
+:math:`y_i` into one of :math:`k` mutually exclusive and exhaustive classes.
+Each classifer defines the classes based on different criteria, but in all
+cases the following hold for the classifiers in PySAL:
+
+    .. math::
+
+          C_j^l < y_i \le C_j^u \  \forall  i \in C_j
+
+where :math:`C_j` denotes class :math:`j` which has lower bound :math:`C_j^l` and upper bound :math:`C_j^u`.
+
+
+    
+
+=========================
+Map Classifiers Supported
+=========================
+
+* :class:`~pysal.esda.mapclassify.Box_Plot`
+* :class:`~pysal.esda.mapclassify.Equal_Interval`
+* :class:`~pysal.esda.mapclassify.Fisher_Jenks`
+* :class:`~pysal.esda.mapclassify.Jenks_Caspall`
+* :class:`~pysal.esda.mapclassify.Jenks_Caspall_Forced`
+* :class:`~pysal.esda.mapclassify.Jenks_Caspall_Sampled`
+* :class:`~pysal.esda.mapclassify.Max_P_Classifier`
+* :class:`~pysal.esda.mapclassify.Maximum_Breaks`
+* :class:`~pysal.esda.mapclassify.Natural_Breaks`
+* :class:`~pysal.esda.mapclassify.Quantiles`
+* :class:`~pysal.esda.mapclassify.Percentiles`
+* :class:`~pysal.esda.mapclassify.Std_Mean`
+* :class:`~pysal.esda.mapclassify.User_Defined`
+
+=========
+Utilities
+=========
+
+In addition to the classifiers, there are several utility functions that can be used to evaluate the properties of a specific classifier for different parameter values, or for automatic selection of a classifier and number of classes.
+
+* :func:`~pysal.esda.mapclassify.gadf`
+* :class:`~pysal.esda.mapclassify.K_classifiers`
+
+==========
+References
+==========
+
+Slocum, T.A., R.B. McMaster, F.C. Kessler and H.H. Howard (2009) *Thematic Cartography and Geovisualization*. Pearson Prentice Hall, Upper Saddle River.
+
+
+===
+API
+===
+
 .. automodule:: pysal.esda.mapclassify
     :synopsis: Choropleth map classification
     :members:
-

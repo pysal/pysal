@@ -1,28 +1,15 @@
 """
-A module of classification schemes for choropleth mapping
-
-Map Classifiers Supported:
-
-* Box_Plot
-* Equal_Interval
-* Fisher_Jenks
-* Jenks_Caspall
-* Jenks_Caspall_Forced
-* Jenks_Caspall_Sampled
-* Max_P
-* Maximum_Breaks
-* Natural_Breaks
-* Quantiles
-* Percentiles
-* Std_Mean
-* User_Defined
-
+A module of classification schemes for choropleth mapping.
 """
 __author__ = "Sergio J. Rey"
 __credits__= "Copyright (c) 2009-10 Sergio J. Rey"
 
-__all__=['quantile','Equal_Interval','Percentiles','Box_Plot','Quantiles',
-         'Std_Mean','User_Defined']
+__all__=['quantile','Box_Plot','Equal_Interval','Fisher_Jenks',
+         'Jenks_Caspall','Jenks_Caspall_Forced','Jenks_Caspall_Sampled',
+         'Max_P_Classifier','Maximum_Breaks','Natural_Breaks',
+         'Quantiles','Percentiles', 'Std_Mean','User_Defined',
+         'gadf','K_classifiers']
+
 from pysal.common import *
 
 K=5 # default number of classes in any map scheme with this as an argument
@@ -492,8 +479,6 @@ class Percentiles(Map_Classifier):
     ----------
     yb     : array
              bin ids for observations (numpy array n x 1)
-             Each value is the id
-             of the class the observation belongs to.
 
     bins   : array
              the upper bounds of each class (numpy array k x 1)
@@ -547,10 +532,7 @@ class Box_Plot(Map_Classifier):
     Attributes
     ----------
     yb : array (n,1) 
-        bin ids for observations 
-        Each value is the id of the class the observation belongs to
-        yb[i] = j  for j>=1 if  bins[j-1] < y[i] <= bins[j]
-        yb[i] = 0  otherwise
+        bin ids for observations
     bins : array (n,1)
         the upper bounds of each class  (monotonic)
     k : int
@@ -700,8 +682,6 @@ class Std_Mean(Map_Classifier):
 
     yb      : array (n,1)
               bin ids for observations,
-              each value is the id of the class the observation belongs to
-              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
     bins    : array (k,1)
               the upper bounds of each class 
     k       : int
@@ -762,7 +742,7 @@ class Maximum_Breaks(Map_Classifier):
     Attributes
     ----------
     yb : array (nx1)
-         bin ids for observations. Each value is the id of the class the observation belongs to
+         bin ids for observations
 
     bins : array (kx1)
            the upper bounds of each class 
@@ -833,8 +813,6 @@ class Natural_Breaks(Map_Classifier):
 
     yb      : array (n,1)
               bin ids for observations,
-              each value is the id of the class the observation belongs to
-              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
     bins    : array (k,1)
               the upper bounds of each class 
     k       : int
@@ -897,9 +875,7 @@ class Fisher_Jenks(Map_Classifier):
     ----------
 
     yb      : array (n,1)
-              bin ids for observations,
-              each value is the id of the class the observation belongs to
-              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
+              bin ids for observations
     bins    : array (k,1)
               the upper bounds of each class 
     k       : int
@@ -1007,8 +983,6 @@ class Jenks_Caspall(Map_Classifier):
 
     yb      : array (n,1)
               bin ids for observations,
-              each value is the id of the class the observation belongs to
-              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
     bins    : array (k,1)
               the upper bounds of each class 
     k       : int
@@ -1086,8 +1060,6 @@ class Jenks_Caspall_Sampled(Map_Classifier):
 
     yb      : array (n,1)
               bin ids for observations,
-              each value is the id of the class the observation belongs to
-              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
     bins    : array (k,1)
               the upper bounds of each class 
     k       : int
@@ -1176,8 +1148,6 @@ class Jenks_Caspall_Forced(Map_Classifier):
 
     yb      : array (n,1)
               bin ids for observations,
-              each value is the id of the class the observation belongs to
-              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
     bins    : array (k,1)
               the upper bounds of each class 
     k       : int
@@ -1323,8 +1293,6 @@ class User_Defined(Map_Classifier):
 
     yb      : array (n,1)
               bin ids for observations,
-              each value is the id of the class the observation belongs to
-              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
     bins    : array (k,1)
               the upper bounds of each class 
     k       : int
@@ -1392,8 +1360,6 @@ class Max_P_Classifier(Map_Classifier):
 
     yb      : array (n,1)
               bin ids for observations,
-              each value is the id of the class the observation belongs to
-              yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
     bins    : array (k,1)
               the upper bounds of each class 
     k       : int
@@ -1607,7 +1573,7 @@ def gadf(y,method="Quantiles",maxk=15,pct=0.8):
 
         .. math::
 
-            GADF = 1 - \sum_c \sum_{i in c} |y_i - y_{c,med}|  / \sum_i |y_i - y_{med}|
+            GADF = 1 - \sum_c \sum_{i \in c} |y_i - y_{c,med}|  / \sum_i |y_i - y_{med}|
         
         where :math:`y_{med}` is the global median and :math:`y_{c,med}` is
         the median for class :math:`c`.
@@ -1635,18 +1601,15 @@ class K_classifiers:
     y      : array (nx1)
              values to be classified 
     pct    : float
-             The percentage of GADF to exceed where
+             The percentage of GADF to exceed 
 
 
     Attributes
     ----------
-
     best   :  instance of Map_Classifier
               the optimal classifer
-
     results : dictionary
-              keys are classifier names, values are the Map_Classifier
-              instances with the best pct for each classifer
+              keys are classifier names, values are the Map_Classifier instances with the best pct for each classifer
     
     Examples
     --------
