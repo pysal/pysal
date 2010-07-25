@@ -1,13 +1,34 @@
 import pysal.core.Tables as Tables
 
 class GeoDaTxtReader(Tables.DataTable):
-    """GeoDa Text File Export Format"""
-
+    """GeoDa Text File Export Format
+    """
     __doc__= Tables.DataTable.__doc__
     FORMATS = ['geoda_txt']
     MODES = ['r']
 
+
+
     def __init__(self,*args,**kwargs):
+        """
+        Examples
+        --------
+        >>> import pysal
+        >>> f = pysal.open('../../examples/stl_hom.txt','r')
+        >>> f
+        DataTable: ../../examples/stl_hom.txt
+        >>> f.header
+        ['FIPSNO', 'HR8488', 'HR8893', 'HC8488']
+        >>> len(f)
+        78
+        >>> f.dat[0]
+        ['17107', '1.290722', '1.624458', '2']
+        >>> f.dat[-1]
+        ['29223', '0', '8.451537', '0']
+        >>> f._spec
+        [<type 'int'>, <type 'float'>, <type 'float'>, <type 'int'>]
+
+        """
         Tables.DataTable.__init__(self,*args,**kwargs)
         self.__idx={}
         self.__len=None
@@ -68,3 +89,11 @@ class GeoDaTxtReader(Tables.DataTable):
             else:
                 spec.append(str)
         return spec
+
+def _test():
+    import doctest, unittest
+    doctest.testmod(verbose=True)
+    unittest.main()
+
+if __name__=='__main__':
+    _test()

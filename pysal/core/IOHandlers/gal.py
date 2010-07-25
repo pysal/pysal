@@ -34,7 +34,7 @@ class GalIO(FileIO.FileIO):
     >>> wnew =  pysal.open(fname,'r').read()
     >>> wnew.pct_nonzero == w.pct_nonzero
     True
-    >>> #os.remove(fname)
+    >>> os.remove(fname)
 
     """
     FORMATS = ['gal']

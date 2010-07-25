@@ -22,7 +22,8 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
     """
     FileIO handeler for ESRI ShapeFiles.
 
-    Notes:
+    Notes
+    -----
     This class wraps _pyShpIO's shp_file class with the PySAL FileIO API.
     shp_file can be used without PySAL.
 
