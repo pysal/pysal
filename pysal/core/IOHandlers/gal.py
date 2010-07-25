@@ -23,23 +23,18 @@ class GalIO(FileIO.FileIO):
     Examples
     --------
 
-    Let's try to open a GAL with pysal:
-    >>> 
-    >>> 
-    >>> 
-    >>> 
-
-    Let's try to read a GAL with pysal:
-    >>> 
-    >>> 
-    >>> 
-    >>> 
-
-    Let's try to write a GAL with pysal:
-    >>> 
-    >>> 
-    >>> 
-    >>> 
+    >>> import tempfile, pysal, os
+    >>> w = pysal.open('../../examples/sids2.gal','r').read()
+    >>> f = tempfile.NamedTemporaryFile(suffix='.gal')
+    >>> fname = f.name
+    >>> f.close()
+    >>> o = pysal.open(fname,'w')
+    >>> o.write(w)
+    >>> o.close()
+    >>> wnew =  pysal.open(fname,'r').read()
+    >>> wnew.pct_nonzero == w.pct_nonzero
+    True
+    >>> #os.remove(fname)
 
     """
     FORMATS = ['gal']
@@ -58,6 +53,15 @@ class GalIO(FileIO.FileIO):
             self.pos = 0
 
     def _read(self):
+        """
+        Parameters
+        ----------
+        reads in a GalIO object
+
+        Returns
+        -------
+        returns a W object
+        """
         if self.pos > 0:
             raise StopIteration
         weights={}
@@ -82,9 +86,18 @@ class GalIO(FileIO.FileIO):
         return W(neighbors,weights,ids)
 
     def write(self,obj):
-        """ .write(weightsObject)
+        """ 
 
-        write a weights object to the opened file.
+        Parameters
+        ----------
+        .write(weightsObject)
+        accepts a weights object
+
+        Returns
+        ------
+
+        a GAL file
+        write a weights object to the opened GAL file.
         """
         self._complain_ifclosed(self.closed)
         if issubclass(type(obj),W):
@@ -97,11 +110,18 @@ class GalIO(FileIO.FileIO):
             self.pos += 1
         else:
             raise TypeError,"Expected a pysal weights object, got: %s"%(type(obj))
+
     def close(self):
         self.file.close()
         FileIO.FileIO.close(self)
 
+def _test():
+    import doctest, unittest
+    doctest.testmod(verbose=True)
+    unittest.main()
 
+if __name__=='__main__':
+    _test()
 
 
 
