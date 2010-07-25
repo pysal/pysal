@@ -309,7 +309,7 @@ class Map_Classifier:
         return st
 
     def __repr__(self):
-        return self.table_string()
+        return self._table_string()
 
     def get_tss(self):
         """
