@@ -9,6 +9,21 @@ class csvWrapper(Tables.DataTable):
     MODES = ['r']
 
     def __init__(self,*args,**kwargs):
+        """
+
+        Examples
+        --------
+        >>> import pysal
+        >>> file_name = '../../examples/stl_hom.csv'
+        >>> f = pysal.open(file_name,'r')
+        >>> y = f.read()
+        >>> f.header
+        ['WKT', 'NAME', 'STATE_NAME', 'STATE_FIPS', 'CNTY_FIPS', 'FIPS', 'FIPSNO', 'HR7984', 'HR8488', 'HR8893', 'HC7984', 'HC8488', 'HC8893', 'PO7984', 'PO8488', 'PO8893', 'PE77', 'PE82', 'PE87', 'RDAC80', 'RDAC85', 'RDAC90']
+        >>> f._spec
+        [<type 'str'>, <type 'str'>, <type 'str'>, <type 'int'>, <type 'int'>, <type 'int'>, <type 'int'>, <type 'float'>, <type 'float'>, <type 'float'>, <type 'int'>, <type 'int'>, <type 'int'>, <type 'int'>, <type 'int'>, <type 'int'>, <type 'float'>, <type 'float'>, <type 'float'>, <type 'float'>, <type 'float'>, <type 'float'>]
+
+
+        """
         Tables.DataTable.__init__(self,*args,**kwargs)
         self.__idx = {}
         self.__len = None
@@ -69,13 +84,12 @@ class csvWrapper(Tables.DataTable):
             return row
         else:
             return None
+
+def _test():
+    import doctest, unittest
+    doctest.testmod(verbose=True)
+    unittest.main()
+
 if __name__ == '__main__':
-    import pysal
-    file_name = '../../examples/stl_hom.csv'
-    f = pysal.open(file_name,'r')
-    print f.header
-    print f._spec
-    for row in f:
-        print row
-        
+    _test() 
         
