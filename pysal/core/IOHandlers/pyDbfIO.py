@@ -3,6 +3,8 @@ import datetime
 import struct
 import itertools
 
+__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+
 class DBF(pysal.core.Tables.DataTable):
     """
     PySAL DBF Reader/Writer

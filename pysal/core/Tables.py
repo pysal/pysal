@@ -1,6 +1,8 @@
 __all__ = ['DataTable','DataRow']
 import FileIO
 
+__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+
 class DataTable(FileIO.FileIO):
     """ DataTable provides additional functionality to FileIO for data table file tables
         FileIO Handlers the provide data tables should subclass this instead of FileIO """

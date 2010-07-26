@@ -3,6 +3,8 @@ import rtree
 QUEEN = 1
 ROOK = 2
 
+__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+
 Q_TARGET_MEM_SIZE = 250 * 1024 * 1024 #250mb
 class _PolyQ(dict):
     def __init__(self):

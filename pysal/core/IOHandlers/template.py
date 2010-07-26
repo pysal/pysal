@@ -3,6 +3,9 @@
     These are working readers/writers that parse '.foo' and '.bar' files
 
 """
+
+__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+
 import pysal
 
 # Always subclass FileIO

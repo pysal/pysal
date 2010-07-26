@@ -20,6 +20,9 @@
         >>> ring = poly[0]
         >>> pt = ring[0]
 """
+
+__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+
 __all__ = ['FileIO']
 import os.path
 from warnings import warn

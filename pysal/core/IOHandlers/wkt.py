@@ -2,6 +2,7 @@ import pysal.core.FileIO as FileIO
 from pysal import cg
 import re
 
+__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
 
 #####################################################################
 ## ToDo: Add Well-Known-Binary support...

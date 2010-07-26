@@ -3,7 +3,7 @@ PySAL ShapeFile Reader and Writer based on pure python shapefile module.
  
 """
 
-__author__ = "Charles R. Schmidt"
+__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
 __credits__ = "Copyright (c) 2009 Charles R. Schmidt"
 
 #import pysal
