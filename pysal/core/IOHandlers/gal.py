@@ -41,6 +41,7 @@ class GalIO(FileIO.FileIO):
     MODES = ['r','w']
 
     def __init__(self,*args,**kwargs):
+        self._typ = str
         FileIO.FileIO.__init__(self,*args,**kwargs)
         self.file = open(self.dataPath, self.mode)
 
@@ -51,6 +52,14 @@ class GalIO(FileIO.FileIO):
         if pos == 0:
             self.file.seek(0)
             self.pos = 0
+    def _get_data_type(self):
+        return self._typ
+    def _set_data_type(self,typ):
+        if callable(typ):
+            self._typ = typ
+        else:
+            raise TypeError, "Expecting a callable"
+    data_type = property(fset=_set_data_type,fget=_get_data_type)
 
     def _read(self):
         """
@@ -64,7 +73,6 @@ class GalIO(FileIO.FileIO):
         """
         if self.pos > 0:
             raise StopIteration
-        weights={}
         neighbors={}
         ids=[]
         # handle case where more than n is specified in first line
@@ -74,16 +82,17 @@ class GalIO(FileIO.FileIO):
         if header_n > 1:
             n=int(header[1])
         w={}
+        typ = self.data_type
         for i in range (n):
             id,n_neighbors=self.file.readline().strip().split()
+            id = typ(id)
             n_neighbors = int(n_neighbors)
-            neighbors_i = self.file.readline().strip().split()
-            weights[id]=[1]*n_neighbors
+            neighbors_i = map(typ,self.file.readline().strip().split())
             neighbors[id]=neighbors_i
             ids.append(id)
 
         self.pos += 1 
-        return W(neighbors,weights,ids)
+        return W(neighbors,id_order=ids)
 
     def write(self,obj):
         """ 

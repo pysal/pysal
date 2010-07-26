@@ -55,7 +55,7 @@ def queen_from_shapefile(shapefile,idVariable=None):
     """
     if idVariable:
         ids = get_ids(shapefile, idVariable)
-	return buildContiguity(pysal.open(shapefile),criterion='queen',ids=ids)
+        return buildContiguity(pysal.open(shapefile),criterion='queen',ids=ids)
     return buildContiguity(pysal.open(shapefile),criterion='queen')
 
 def rook_from_shapefile(shapefile,idVariable=None):
