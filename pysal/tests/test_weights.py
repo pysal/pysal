@@ -14,6 +14,14 @@ class _TestWeights(unittest.TestCase):
         w = pysal.rook_from_shapefile(self.polyShp)
         for i,j in zip(w,w):
             self.assertEquals(i,j)
+    def test_rod(self):
+        """ Make sure we can't write to the Read-Only Dictionary """
+        self.assert_(os.path.exists(self.pointShp))
+        w = pysal.rook_from_shapefile(self.polyShp)
+        def set_rod():
+            w.id2i[0] = 1
+        self.assertRaises(TypeError,set_rod)
+        
         
     def test_B(self):
         """ All methods names that begin with 'test' will be executed as a test case """
