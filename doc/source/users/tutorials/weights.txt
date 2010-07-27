@@ -17,7 +17,7 @@ matrices across three three different general types:
  * Distance Based Weights
  * Kernel Weights
 
-These different types of weights matrices are implemented as instances of the PySAL weights class 
+These different types of weights are implemented as instances of the PySAL weights class 
 :class:`~pysal.weights.W`. 
 
 In what follows, we provide a high level overview of spatial weights in PySAL, starting with the three different types of weights, followed by
@@ -30,7 +30,7 @@ Contiguity Based Weights
 ------------------------
 
 To illustrate the general weights object, we start with a simple contiguity
-matrix constructed for a 5 by 5 lattice::
+matrix constructed for a 5 by 5 lattice (composed of 25 spatial units)::
 
     >>> import pysal
     >>>
@@ -58,12 +58,12 @@ value so such a representation would not be efficient. Instead, the key
 attributes used to store contiguity relations in W are the neighbors and
 weights attributes. Both are special cases [#]_ of Python dictionaries where the key
 is the id for a spatial unit and the value is a Python list of neighbor ids or
-weight values. For example, in the example above we see that the observation
+weight values. In the example above we see that the observation
 with id 0 (Python is zero-offset) has two neighbors with ids [5, 1] each of
 which have equal weights of 1.0.
 
 The histogram attribute is a set of tuples indicating the cardinality of the
-neighbor relations. In this case we see that there are 4 units that have 2
+neighbor relations. In this case we have a regular lattice, so there are 4 units that have 2
 neighbors (corner cells), 12 units with 3 neighbors (edge cells), and 9 units
 with 4 neighbors (internal cells).
 
@@ -116,8 +116,8 @@ weights.
 k-nearest neighbor weights
 --------------------------
 
-The k-nearest neighbors to each observation are
-specified as the neighbor set for each observation. For example we could use the the centroids of our
+The neighbors for a given observations can be defined using a k-nearest neighbor criterion.
+For example we could use the the centroids of our
 5x5 lattice as point locations to measure the distances:
 
 	>>> import numpy as np
@@ -144,18 +144,18 @@ Distance band weights
 
 Knn weights ensure that all observations have the same number of neighbors.  [#]_
 An alternative distance based set of weights relies on distance bands or
-cut-offs to define the neighbor set for each spatial unit as those other units
+thresholds to define the neighbor set for each spatial unit as those other units
 falling within a threshold distance of the focal unit:
 
-	>>> wthres=pysal.threshold_binaryW_from_array(data,2)
-	>>> wthres.neighbors[0]
+	>>> wthresh=pysal.threshold_binaryW_from_array(data,2)
+	>>> wthresh.neighbors[0]
 	[1, 2, 5, 6, 10]
-	>>> wthres=pysal.threshold_binaryW_from_array(data,2.0)
-	>>> wthres.neighbors[1]
+	>>> wthresh=pysal.threshold_binaryW_from_array(data,2.0)
+	>>> wthresh.neighbors[1]
 	[0, 2, 5, 6, 7, 11, 3]
-	>>> wthres.weights[0]
+	>>> wthresh.weights[0]
 	[1, 1, 1, 1, 1]
-	>>> wthres.weights[1]
+	>>> wthresh.weights[1]
 	[1, 1, 1, 1, 1, 1, 1]
 	>>> 
 
@@ -165,10 +165,10 @@ knn weights.
 
 Distance band weights can be generate for shapefiles as well as arrays of points. First, the 
 minimum nearest neighbor distance should be determined so that each unit is assured of at least one 
-neighbors:
+neighbor:
 
-    >>> thres=pysal.min_threshold_dist_from_shapefile("examples/columbus.shp")
-    >>> thres
+    >>> thresh=pysal.min_threshold_dist_from_shapefile("examples/columbus.shp")
+    >>> thresh
     0.61886415807685413
 
 with this threshold in hand, the distance band weights are obtained as:
@@ -295,7 +295,7 @@ A Closer look at W
 
 Although the three different types of spatial weights illustrated above cover a wide array of approaches
 towards specifying spatial relations, they all share common attributes from the base W class in PySAL. Here 
-we take a close look at some of the more useful properties of this class.
+we take a closer look at some of the more useful properties of this class.
 
 Weight Transformations
 ----------------------
@@ -337,7 +337,6 @@ More details on other transformations that are supported in W can be found in
 :class:`pysal.weights.W`. 
 
 
- 
 W related functions
 ===================
 
@@ -404,7 +403,7 @@ Spatial Lag
 
 The final function related to spatial weights that we illustrate here is used to construct a new variable called the spatial lag. The spatial
 lag is a function of the attribute values observed at neighboring locations. For example, if we continue with our regular 3x3 lattice and
-create a an attribute variable y:
+create an attribute variable y:
 
     >>> import numpy as np
     >>> y=np.arange(w.n)
@@ -433,6 +432,63 @@ and then recalculate the lag, it takes the form of a weighted average of the nei
             4.66666667,  5.        ,  6.        ,  6.        ])
 
 
+One important consideration in calculating the spatial lag is that the ordering
+of the values in y aligns with the underling order in W.  In cases where the
+source for your attribute data is different from the one to construct your
+weights you may need to reorder your y values accordingly.  To check if this is
+the case you can find the order in W as follows:
+
+    >>> w.id_order
+    [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
+In this case the lag_spatial function assumes that the first value in the y
+attribute corresponds to unit 0 in the lattice (northwest cell), while the last
+value in y would correspond to unit 8 (southeast cell). In other words, for the
+value of the spatial lag to be valid the number of elements in y must match w.n
+and the orderings must be aligned. 
+
+Fortunately, for the common use case where both the attribute and weights information come from a
+shapefile (and its dbf), PySAL handles the alignment automatically: [#]_
+
+    >>> w=pysal.rook_from_shapefile("examples/columbus.shp")
+    >>> f=pysal.open("examples/columbus.dbf")
+    >>> f.header
+    ['AREA', 'PERIMETER', 'COLUMBUS_', 'COLUMBUS_I', 'POLYID', 'NEIG', 'HOVAL', 'INC', 'CRIME', 'OPEN', 'PLUMB', 'DISCBD', 'X', 'Y', 'NSA', 'NSB', 'EW', 'CP', 'THOUS', 'NEIGNO']
+    >>> y=np.array(f.by_col['INC'])
+    >>> w.transform='r'
+   >>> y
+    array([ 19.531   ,  21.232   ,  15.956   ,   4.477   ,  11.252   ,
+            16.028999,   8.438   ,  11.337   ,  17.586   ,  13.598   ,
+             7.467   ,  10.048   ,   9.549   ,   9.963   ,   9.873   ,
+             7.625   ,   9.798   ,  13.185   ,  11.618   ,  31.07    ,
+            10.655   ,  11.709   ,  21.155001,  14.236   ,   8.461   ,
+             8.085   ,  10.822   ,   7.856   ,   8.681   ,  13.906   ,
+            16.940001,  18.941999,   9.918   ,  14.948   ,  12.814   ,
+            18.739   ,  17.017   ,  11.107   ,  18.476999,  29.833   ,
+            22.207001,  25.872999,  13.38    ,  16.961   ,  14.135   ,
+            18.323999,  18.950001,  11.813   ,  18.796   ])
+    >>> yl=pysal.lag_spatial(w,y)
+    >>> yl
+    array([ 18.594     ,  13.32133333,  14.123     ,  14.94425   ,
+            11.817857  ,  14.419     ,  10.283     ,   8.3364    ,
+            11.7576665 ,  19.48466667,  10.0655    ,   9.1882    ,
+             9.483     ,  10.07716667,  11.231     ,  10.46185714,
+            21.94100033,  10.8605    ,  12.46133333,  15.39877778,
+            14.36333333,  15.0838    ,  19.93666633,  10.90833333,
+             9.7       ,  11.403     ,  15.13825   ,  10.448     ,
+            11.81      ,  12.64725   ,  16.8435    ,  26.0662505 ,
+            15.6405    ,  18.05175   ,  15.3824    ,  18.9123996 ,
+            12.2418    ,  12.76675   ,  18.5314995 ,  22.79225025,
+            22.575     ,  16.8435    ,  14.2066    ,  14.20075   ,
+            15.2515    ,  18.6079995 ,  26.0200005 ,  15.818     ,  14.303     ])
+    
+    >>> w.id_order
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48]
+
+
+
+
+
 
 .. 
 .. WSets
@@ -447,6 +503,6 @@ and then recalculate the lag, it takes the form of a weighted average of the nei
 
 .. [#] The dictionaries for the weights and value attributes in W are read-only in.
 .. [#] Ties at the k-nn distance band are randomly broken to ensure each observation has exactly k neighbors.
-
+.. [#] The ordering exploits the one-to-one relation between a record in the DBF file and the shape in the shapefile.
 	
 	
