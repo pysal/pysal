@@ -6,6 +6,6 @@ User Guide
 .. toctree::
    :maxdepth: 1
 
-   introduction
-   installation
-   tutorials/index
+   What is PySAL? <introduction>
+   Intalling PySAL <installation>
+   Getting Started with PySAL <tutorials/index>

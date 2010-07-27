@@ -4,14 +4,6 @@
 Introduction
 ============
 
-
-As PySAL is an open source project, much of the initial effort has been
-focused on developing the core source code. As such, time for preparing user
-documentation has been rather sparse. This situation should change in the
-coming months as we are in the process of adding a number of short
-:doc:`tutorials <tutorials/index>`
-that show users how to work with PySAL code for their analyses.
-
 History
 *******
 
@@ -23,7 +15,7 @@ the respective projects at the two institutions,  `PySpace
 <http://regionalanalysislab.org/index.php/Main/STARS>`_ - Space Time Analysis
 of Regional Systems (Rey), could benefit from a shared analytical core, since
 this would limit code duplication and free up additional developer time to
-focused on enhancements the applications.
+focused on enhancements of the respective applications.
 
 This recognition also came at a time when Python was starting to make major in
 road in geographic information systems as represented by projects such as the
@@ -37,13 +29,33 @@ beyond its support of STARS and PySpace to provide a library of core spatial
 analytical functions that could support the next generation of spatial
 analysis applications.. 
 
-As of 2008 the new home for PySAL is the `GeoDa Center for Geospatial Analysis
+In 2008 the home for PySAL moved to the `GeoDa Center for Geospatial Analysis
 and Computation <http://geodacenter.asu.edu/>`_ at Arizona State University.
 
+Scope
+*****
 
+It is important to underscore what PySAL is, and is not, designed to do. First
+and foremost, PySAL is a **library** in the fullest sense of the word.
+Developers looking for a suite of spatial analytical methods that they can
+incorporate into application development should feel at home using PySAL.
+Spatial analysts who may be carrying out research projects requiring customized
+scripting, extensive simulation analysis, or those seeking to advance the state
+of the art in spatial analysis should also find PySAL to be a useful
+foundation for their work.
 
-
-
+End users looking for a user friendly graphical user interface for spatial
+analysis should not turn to PySAL directly. Instead, we would direct them to
+projects like STARS and pySPace (see above) which wrap PySAL functionality in
+GUIs.  At the same time, we expect that with developments such 
+as the Python based plug-in architectures for `QGIS
+<http://www.qgis.org/wiki/Python_Plugin_Repositories>`_, 
+`GRASS <http://grass.osgeo.org/wiki/GRASS_and_Python>`_, 
+and the toolbox
+extensions for `ArcGIS
+<http://training.esri.com/gateway/index.cfm?fa=catalog.courseDetail&CourseID=50089911_9.X>`_,
+that end user access to PySAL functionality will be widening in
+the near future.
 
 
 Research Papers and Presentations
