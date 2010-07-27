@@ -15,7 +15,7 @@ matrices across three three different general types:
 
  * Contiguity Based Weights
  * Distance Based Weights
- * General Weights
+ * Kernel Weights
 
 These different types of weights matrices are implemented as instances of the PySAL weights class 
 :class:`~pysal.weights.W`. 
@@ -51,9 +51,26 @@ The w object has a number of attributes::
     >>> w.histogram
     [(2, 4), (3, 12), (4, 9)]
 
-The histogram attribute is a set of tuples indicating the cardinality of the neighbor relations. In this case we see that there are 4 units that have 2 neighbors (corner cells), 12 units with 3 neighbors (edge cells), and 9 units with 4 neighbors (internal cells).
+n is the number of spatial units, so conceptually we could be thinking that the
+weights are stored in a 25x25 matrix. However, as the second attribute
+(pct_nonzero) indicates, many of the elements of this matrix would be 0 in
+value so such a representation would not be efficient. Instead, the key
+attributes used to store contiguity relations in W are the neighbors and
+weights attributes. Both are special cases [#]_ of Python dictionaries where the key
+is the id for a spatial unit and the value is a Python list of neighbor ids or
+weight values. For example, in the example above we see that the observation
+with id 0 (Python is zero-offset) has two neighbors with ids [5, 1] each of
+which have equal weights of 1.0.
 
-In the above example, the default criterion for contiguity on the lattice was that of the rook which takes as neighbors any pair of cells that share an edge. Alternatively, we could have used the queen criterion to include the vertices of the lattice to define contiguities:
+The histogram attribute is a set of tuples indicating the cardinality of the
+neighbor relations. In this case we see that there are 4 units that have 2
+neighbors (corner cells), 12 units with 3 neighbors (edge cells), and 9 units
+with 4 neighbors (internal cells).
+
+In the above example, the default criterion for contiguity on the lattice was
+that of the rook which takes as neighbors any pair of cells that share an edge.
+Alternatively, we could have used the queen criterion to include the vertices
+of the lattice to define contiguities:
 
 	>>> wq=pysal.lat2W(rook=False)
 	>>> wq.neighbors[0]
@@ -146,6 +163,25 @@ As can be seen in the above example, the number of neighbors is likely to vary
 across observations with distance band weights in contrast to what holds for
 knn weights.
 
+Distance band weights can be generate for shapefiles as well as arrays of points. First, the 
+minimum nearest neighbor distance should be determined so that each unit is assured of at least one 
+neighbors:
+
+    >>> thres=pysal.min_threshold_dist_from_shapefile("examples/columbus.shp")
+    >>> thres
+    0.61886415807685413
+
+with this threshold in hand, the distance band weights are obtained as:
+
+    >>> wt=pysal.threshold_binaryW_from_shapefile("examples/columbus.shp",thres)
+    >>> wt.min_neighbors
+    1
+    >>> wt.histogram
+    [(1, 4), (2, 8), (3, 6), (4, 2), (5, 5), (6, 8), (7, 6), (8, 2), (9, 6), (10, 1), (11, 1)]
+    >>> wt.neighbors[0]
+    [1, 2]
+    >>> wt.neighbors[1]
+    [3, 0]
 
 Distance band weights can also be specified to take on continuous values rather
 than binary, with the values set to the inverse distance separating each pair
@@ -253,27 +289,151 @@ Finally, the kernel function could be changed (with endogenous adaptive bandwidt
 More details on kernel weights can be found in 
 :class:`~pysal.weights.Distance.Kernel`. 
 
-..
-.. A Closer look at W
-.. ==================
-.. 
-.. provide a summary of the key functions
-.. 
-.. transformations
-.. 
-.. 
-.. W related functions
-.. ===================
-.. 
-.. 
-.. shimbel
-.. 
-.. order
-.. 
-.. full
-.. asymetry
-.. islands
-.. spatial lag
+
+A Closer look at W
+==================
+
+Although the three different types of spatial weights illustrated above cover a wide array of approaches
+towards specifying spatial relations, they all share common attributes from the base W class in PySAL. Here 
+we take a close look at some of the more useful properties of this class.
+
+Weight Transformations
+----------------------
+
+Often there is a need to apply a transformation to the spatial weights, such as in the case of row standardization.
+Here each value in the row of the spatial weights matrix is rescaled to sum to one:
+
+.. math::
+   
+     ws_{i,j} = w_{i,j}/ \sum_j w_{i,j}
+
+This and other weights transformations in PySAL are supported by the transform property of the W class. To see this 
+let's build a simple contiguity object for the Columbus data set:
+
+    >>> w=pysal.rook_from_shapefile("examples/columbus.shp")
+    >>> w.weights[0]
+    [1.0, 1.0]
+
+We can row standardize this by setting the transform property:
+
+    >>> w.transform='r'
+    >>> w.weights[0]
+    [0.5, 0.5]
+
+If the original weights (unstandardized) are required, the transform property can be reset:
+
+    >>> w.transform='o'
+    >>> w.weights[0]
+    [1.0, 1.0]
+ 
+Behind the scenes the transform property is updating all other characteristics of the spatial weights that are a function of the
+values and these standardization operations, freeing the user from having to keep these other attributes updated. To determine the current
+value of the transformation, simply query this attrbute:
+
+    >>> w.transform
+    'O'
+
+More details on other transformations that are supported in W can be found in
+:class:`pysal.weights.W`. 
+
+
+ 
+W related functions
+===================
+
+Generating a full array
+-----------------------
+As the underlying data structure of the weights in W is based on a sparse representation, there may be a need to work with the full numpy array.
+This is supported through the full method of W:
+
+    >>> wf=w.full()
+    >>> len(wf)
+    2
+
+The first element of the return from w.full is the numpy array:
+    
+    >>> wf[0].shape
+    (49, 49)
+
+while the second element contains the ids for the row (column) ordering of the array:
+
+    >>> wf[1][0:5]
+    >>> wf[1][0:5]
+    [0, 1, 2, 3, 4]
+
+If only the array is required, a simple Python slice can be used:
+
+    >>> wf = w.full()[0]
+    
+
+Shimbel Matrices
+----------------
+The Shimbel matrix for a set of n objects contains the shortest path distance separating each pair of units.
+This has wide use in spatial analysis for solving different types of clustering and optimization problems. Calling the shimbel
+method of a W object generates this information:
+
+    >>> w=pysal.lat2W(3,3)
+    >>> ws=w.shimbel()
+    >>> ws[0]
+    [-1, 1, 2, 1, 2, 3, 2, 3, 4]
+
+Thus we see that observation 0 (the north east cell of our 3x3 lattice) is a first order neighbor to observations 1 and 3, second order
+neighbor to observations 2, 4, and 6, a third order neighbor to 5, and 7, and a fourth order neighbor to observation 8 (the extreme south east 
+cell in the lattice). The position of the -1 simply denotes the focal unit.
+
+Higher Order Contiguity Weights
+-------------------------------
+
+Closely related to the shortest path distances is the concept of a spatial weight based on a particular order of contiguity. For example, we could
+define the second order contiguity relations using:
+
+    >>> w2=w.higher_order(2)
+    >>> w2.neighbors[0]
+    [2, 4, 6]
+
+or a fourth order set of weights:
+
+    >>> w4=w.higher_order(4)
+    >>> w4.neighbors[0]
+    [8]
+
+In both cases a new instance of the W object is returned with the weights and neighbors defined using the particular order of contiguity.
+
+Spatial Lag
+-----------
+
+The final function related to spatial weights that we illustrate here is used to construct a new variable called the spatial lag. The spatial
+lag is a function of the attribute values observed at neighboring locations. For example, if we continue with our regular 3x3 lattice and
+create a an attribute variable y:
+
+    >>> import numpy as np
+    >>> y=np.arange(w.n)
+    >>> y
+    array([0, 1, 2, 3, 4, 5, 6, 7, 8])
+
+then the spatial lag can be constructed with:
+    
+    >>> yl=pysal.lag_spatial(w,y)
+    >>> yl
+    array([  4.,   6.,   6.,  10.,  16.,  14.,  10.,  18.,  12.])
+
+Mathematically, the spatial lag is a weighted sum of neighboring attribute values
+
+.. math::
+    
+    yl_i = \sum_j w_{i,j} y_j
+
+In the example above, the weights were binary, based on the rook criterion. If we row standardize our W object first
+and then recalculate the lag, it takes the form of a weighted average of the neighboring attribute values:
+
+    >>> w.transform='r'
+    >>> ylr=pysal.lag_spatial(w,y)
+    >>> ylr
+    array([ 2.        ,  2.        ,  3.        ,  3.33333333,  4.        ,
+            4.66666667,  5.        ,  6.        ,  6.        ])
+
+
+
 .. 
 .. WSets
 .. =====
@@ -285,6 +445,7 @@ More details on kernel weights can be found in
 
 .. rubric:: Footnotes
 
+.. [#] The dictionaries for the weights and value attributes in W are read-only in.
 .. [#] Ties at the k-nn distance band are randomly broken to ensure each observation has exactly k neighbors.
 
 	
