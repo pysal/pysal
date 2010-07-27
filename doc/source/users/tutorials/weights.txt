@@ -1,21 +1,33 @@
-******************************************
+***************
 Spatial Weights
-******************************************
+***************
 
 Introduction
 ============
 
+Spatial weights are central components of many areas of spatial analysis. In
+general terms, for a spatial data set composed of n locations (points, areal
+units, network edges, etc), the spatial weights matrix expresses the potential
+for interaction between observations at each pair i,j of locations. There is a rich
+variety of ways to specify the structure of these weights, and
 PySAL supports the creation, manipulation and analysis of spatial weights
-matrices of three different types:
+matrices across three three different general types:
 
  * Contiguity Based Weights
  * Distance Based Weights
  * General Weights
 
-These different types of weights matrices are implemented as instances of the PySAL weights class. 
+These different types of weights matrices are implemented as instances of the PySAL weights class 
+:class:`~pysal.weights.W`. 
+
+In what follows, we provide a high level overview of spatial weights in PySAL, starting with the three different types of weights, followed by
+a closer look at the properties of the W class and some related functions.
+
+PySAL Spatial Weight Types
+==========================
 
 Contiguity Based Weights
-========================
+------------------------
 
 To illustrate the general weights object, we start with a simple contiguity
 matrix constructed for a 5 by 5 lattice::
@@ -41,7 +53,23 @@ The w object has a number of attributes::
 
 The histogram attribute is a set of tuples indicating the cardinality of the neighbor relations. In this case we see that there are 4 units that have 2 neighbors (corner cells), 12 units with 3 neighbors (edge cells), and 9 units with 4 neighbors (internal cells).
 
-Contiguity weights can also be generated directly from shapefiles::
+In the above example, the default criterion for contiguity on the lattice was that of the rook which takes as neighbors any pair of cells that share an edge. Alternatively, we could have used the queen criterion to include the vertices of the lattice to define contiguities:
+
+	>>> wq=pysal.lat2W(rook=False)
+	>>> wq.neighbors[0]
+	[5, 1, 6]
+	>>> 
+
+.. (Illustrate bishop using functionality in WSets)
+
+
+The lat2W function is particularly useful in setting up simulation experiments
+requiring a regular grid. For empirical research, a common use case is to have
+a shapefile, which is a nontopological vector data structure, and a need
+to carry out some form of spatial analysis that requires spatial weights. Since
+topology is not stored in the underlying file there is a need to construct
+the spatial weights prior to carrying out the analysis. In PySAL spatial
+weights can be obtained directly from shapefiles:
 
     >>> w=pysal.rook_from_shapefile("examples/columbus.shp")
     >>> w.n
@@ -50,6 +78,9 @@ Contiguity weights can also be generated directly from shapefiles::
     0.083298625572678045
     >>> w.histogram
     [(2, 7), (3, 10), (4, 17), (5, 8), (6, 3), (7, 3), (8, 0), (9, 1)]
+
+If queen, rather than rook, contiguity is required then the following would work:
+
     >>> w=pysal.queen_from_shapefile("examples/columbus.shp")
     >>> w.pct_nonzero
     0.098292378175760101
@@ -59,60 +90,199 @@ Contiguity weights can also be generated directly from shapefiles::
 
 
 Distance Based Weights
-======================
+----------------------
 
-General distance weights
-------------------------
+In addition to using contiguity to define  neighbor relations, more general
+functions of the distance separating observations can be used to specify the
+weights.
 
-Weights based on distance between spatial objects can be constructed. Here we
-create a simple 5 by 5 grid of observations and generate inverse distance
-weights::
+k-nearest neighbor weights
+--------------------------
 
-    In [7]: import numpy
+The k-nearest neighbors to each observation are
+specified as the neighbor set for each observation. For example we could use the the centroids of our
+5x5 lattice as point locations to measure the distances:
 
-    In [8]: x,y=numpy.indices((5,5))
+	>>> import numpy as np
+	>>> data=np.array([ord.flatten() for ord in np.indices((5,5))]).transpose()
 
-    In [9]: x.shape=(25,1)
+then define the knn set as:
 
-    In [10]: y.shape=(25,1)
+	>>> wknn3=pysal.knn(data,k=3)
+	>>> wknn3.neighbors[0]
+	[1, 5, 6]
+	>>> wknn3.s0
+	75
+	>>> w4=pysal.knnW(data,k=4)
+	>>> w4.neighbors[0]
+	[1, 5, 6, 2]
+	>>> w4.s0
+	100
+	>>> w4.weights[0]
+	[1, 1, 1, 1]
 
-    In [11]: data=numpy.hstack([x,y])
 
-    In [12]: wid=pysal.weights.InverseDistance(data)
+Distance band weights
+---------------------
 
-    In [13]: wid_ns=pysal.weights.InverseDistance(data,row_standardize=False)
+Knn weights ensure that all observations have the same number of neighbors.  [#]_
+An alternative distance based set of weights relies on distance bands or
+cut-offs to define the neighbor set for each spatial unit as those other units
+falling within a threshold distance of the focal unit:
 
-    In [14]: wid.weights[0][0:3]
-    Out[14]: [0.0, 0.21689522769159933, 0.054223806922899832]
+	>>> wthres=pysal.threshold_binaryW_from_array(data,2)
+	>>> wthres.neighbors[0]
+	[1, 2, 5, 6, 10]
+	>>> wthres=pysal.threshold_binaryW_from_array(data,2.0)
+	>>> wthres.neighbors[1]
+	[0, 2, 5, 6, 7, 11, 3]
+	>>> wthres.weights[0]
+	[1, 1, 1, 1, 1]
+	>>> wthres.weights[1]
+	[1, 1, 1, 1, 1, 1, 1]
+	>>> 
 
-    In [15]: wid_ns.weights[0][0:3]
-    Out[15]: [0.0, 1.0, 0.25]
+As can be seen in the above example, the number of neighbors is likely to vary
+across observations with distance band weights in contrast to what holds for
+knn weights.
 
-    In [16]: wid.pct_nonzero
-    Out[16]: 0.95999999999999996
 
-    In [17]: 
+Distance band weights can also be specified to take on continuous values rather
+than binary, with the values set to the inverse distance separating each pair
+within a given threshold distance. We illustrate this with a small set of 6
+points:
 
-Nearest neighbor weights
-------------------------
+    >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+    >>> wid=pysal.threshold_continuousW_from_array(points,11.2)
+    >>> wid.weights[0]
+    [0.10000000000000001, 0.089442719099991588]
 
-Simple contiguity matrices based on nearest neighbor relations can also be
-defined. In the following example we create three different weights objects
-for k-nearest neighbors with k from 2 to 4::
+If we change the distance decay exponent to -2.0 the result is so called gravity weights;
 
-        >>> c=5
-        >>> nf=num.indices((c,c)).flatten()
-        >>> data=num.array(zip(nf[0:c*c],nf[c*c::]))
-        >>> wid=pysal.weights.InverseDistance(data)
-        >>> wid_ns=pysal.weights.InverseDistance(data,row_standardize=False)
-        >>> wid.weights[0][0:3]
-        [0.0, 0.21689522769159933, 0.054223806922899832]
-        >>> wid_ns.weights[0][0:3]
-        [0.0, 1.0, 0.25]
-        >>> from pysal.weights import NearestNeighbors as nn
-        >>> nnw=[ nn(data,k) for k in range(2,5)]
-        >>> for k,nnwk in enumerate(nnw):
-              print k+2,nnwk.neighbors[0]
-        2 [1, 5]
-        3 [1, 5, 6]
-        4 [1, 5, 6, 2]
+    >>> wid2=pysal.threshold_continuousW_from_array(points,11.2,alpha=-2.0)
+    >>> wid2.weights[0]
+    [0.01, 0.0079999999999999984]
+
+
+Kernel Weights
+--------------
+
+A combination of distance based thresholds together with a continuous valued weight is supported through kernel weights:
+
+    >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+    >>> kw=pysal.Kernel(points)
+    >>> kw.weights[0]
+    [1.0, 0.50000004999999503, 0.44098306152674649]
+    >>> kw.neighbors[0]
+    [0, 1, 3]
+    >>> kw.bandwidth
+    array([[ 20.000002],
+           [ 20.000002],
+           [ 20.000002],
+           [ 20.000002],
+           [ 20.000002],
+           [ 20.000002]])
+
+
+The bandwith attribute plays the role of the distance threshold with kernel
+weights, while the form of the kernel function determines the distance decay in
+the derived continuous weights. In the above example, the bandwidth is set to
+the default value and fixed across the observations. The user could specify
+a different value for a fixed bandwidth:
+
+    >>> kw15=pysal.Kernel(points,bandwidth=15.0)
+    >>> kw15[0]
+    {0: 1.0, 1: 0.33333333333333337, 3: 0.2546440075000701}
+    >>> kw15.neighbors[0]
+    [0, 1, 3]
+    >>> kw15.bandwidth
+    array([[ 15.],
+           [ 15.],
+           [ 15.],
+           [ 15.],
+           [ 15.],
+           [ 15.]])
+
+which results in fewer neighbors for the first unit.  Adaptive bandwidths (i.e., different bandwiths
+for each unit) can also be user specified:
+
+    >>> bw=[25.0,15.0,25.0,16.0,14.5,25.0]
+    >>> kwa=pysal.Kernel(points,bandwidth=bw)
+    >>> kwa.weights[0]
+    [1.0, 0.59999999999999998, 0.55278640450004202, 0.10557280900008403]
+    >>> kwa.neighbors[0]
+    [0, 1, 3, 4]
+    >>> kwa.bandwidth
+    array([[ 25. ],
+           [ 15. ],
+           [ 25. ],
+           [ 16. ],
+           [ 14.5],
+           [ 25. ]])
+
+Alternatively the adaptive bandwidths could endogenous:
+
+    >>> kwea=pysal.Kernel(points,fixed=False)
+    >>> kwea.weights[0]
+    [1.0, 0.10557289844279438, 9.9999990066379496e-08]
+    >>> kwea.neighbors[0]
+    [0, 1, 3]
+    >>> kwea.bandwidth
+    array([[ 11.18034101],
+           [ 11.18034101],
+           [ 20.000002  ],
+           [ 11.18034101],
+           [ 14.14213704],
+           [ 18.02775818]])
+
+Finally, the kernel function could be changed (with endogenous adaptive bandwidths):
+
+    >>> kweag=pysal.Kernel(points,fixed=False,function='gaussian')
+    >>> kweag.weights[0]
+    [0.3989422804014327, 0.26741902915776961, 0.24197074871621341]
+    >>> kweag.bandwidth
+    array([[ 11.18034101],
+           [ 11.18034101],
+           [ 20.000002  ],
+           [ 11.18034101],
+           [ 14.14213704],
+           [ 18.02775818]])
+
+
+More details on kernel weights can be found in 
+:class:`~pysal.weights.Distance.Kernel`. 
+
+..
+.. A Closer look at W
+.. ==================
+.. 
+.. provide a summary of the key functions
+.. 
+.. transformations
+.. 
+.. 
+.. W related functions
+.. ===================
+.. 
+.. spatial lag
+.. 
+.. shimbel
+.. 
+.. order
+.. 
+.. full
+.. 
+.. WSets
+.. =====
+.. 
+.. add discussion of WSets here
+
+
+
+
+.. rubric:: Footnotes
+
+.. [#] Ties at the k-nn distance band are randomly broken to ensure each observation has exactly k neighbors.
+
+	
+	

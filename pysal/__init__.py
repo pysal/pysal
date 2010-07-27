@@ -36,6 +36,7 @@ import core
 from common import *
 
 # toplevel imports to be explicit
+from esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local
 from esda.geary import Geary
 from esda.join_counts import Join_Counts
 from esda.mapclassify import quantile,binC,bin,bin1d,Equal_Interval,Percentiles

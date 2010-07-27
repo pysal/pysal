@@ -248,8 +248,6 @@ class Moran_BV:
         self.den=sum(zy*zy)
         return self.num/self.den
 
-
-
 def Moran_BV_matrix(variables,w,permutations=0,varnames=None):
     """Bivariate Moran Matrix
 
@@ -316,7 +314,6 @@ def Moran_BV_matrix(variables,w,permutations=0,varnames=None):
                 print fmt%(varnames[i],varnames[j],results[i,j].I)
                 print fmt%(varnames[j],varnames[i],results[j,i].I)
     return results
-
 
 class Moran_Local:
     """Local Moran Statistics
