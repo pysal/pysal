@@ -70,7 +70,7 @@ class NP_Mixture_Smoother(object):
     >>> b = np.array([100, 150, 80, 200])
     >>> mixture = NP_Mixture_Smoother(e,b)
     >>> mixture.r
-    array([ 0.10981759,  0.03445251,  0.11017844,  0.11018045])
+    array([ 0.10982267,  0.03445525,  0.11018393,  0.11018593])
     >>> mixture.category
     array([1, 0, 1, 1])
     """
@@ -90,186 +90,186 @@ class NP_Mixture_Smoother(object):
         self.r, self.category = self.getRateEstimates()
 
     def getSeed(self):
-	self.raw_r = self.e * 1.0 / self.b
-	r_max, r_min = self.raw_r.max(), self.raw_r.min()
-	r_diff = r_max - r_min
-	step = r_diff/(self.k-1) 
-	grid = np.arange(r_min, r_max+step, step)
-	p = np.ones(self.k)*1./self.k
-	return p, grid
+        self.raw_r = self.e * 1.0 / self.b
+        r_max, r_min = self.raw_r.max(), self.raw_r.min()
+        r_diff = r_max - r_min
+        step = r_diff/(self.k-1) 
+        grid = np.arange(r_min, r_max+step, step)
+        p = np.ones(self.k)*1./self.k
+        return p, grid
 
     def getMixedProb(self,grid):
-	mix = np.zeros((self.n,self.k))
-	for i in range(self.n):
-	    for j in range(self.k):
-		mix[i,j] = poisson.pmf(self.e[i], self.b[i]*grid[j])
-	return mix
+        mix = np.zeros((self.n,self.k))
+        for i in range(self.n):
+            for j in range(self.k):
+                mix[i,j] = poisson.pmf(self.e[i], self.b[i]*grid[j])
+        return mix
 
     def getGradient(self, mix, p):
-	mix_p = mix * p
-	mix_den = mix_p.sum(axis=1)
-	obs_id = mix_den > 1.E-13
-	for i in range(self.k):
-	    mix_p[:,i] = (1./len(mix_den))*mix[:,i] / mix_den
-	gradient = []
-	for i in range(self.k):
-	    gradient.append(mix_p[:,i][obs_id].sum())
-	return np.array(gradient), mix_den
+        mix_p = mix * p
+        mix_den = mix_p.sum(axis=1)
+        obs_id = mix_den > 1.E-13
+        for i in range(self.k):
+            mix_p[:,i] = (1./len(mix_den))*mix[:,i] / mix_den
+        gradient = []
+        for i in range(self.k):
+            gradient.append(mix_p[:,i][obs_id].sum())
+        return np.array(gradient), mix_den
 
     def getMaxGradient(self, gradient):
-	grad_max = gradient.max()
-	grad_max_inx = gradient.argmax()
-	if grad_max <= 0:
-	    return (0, 1)
-	return (grad_max, grad_max_inx)
+        grad_max = gradient.max()
+        grad_max_inx = gradient.argmax()
+        if grad_max <= 0:
+            return (0, 1)
+        return (grad_max, grad_max_inx)
 
     def getMinGradient(self, gradient, p):
-	p_fil = p > 1.E-8
-	grad_fil = gradient[p_fil]
-	grad_min = grad_fil.min()
-	grad_min_inx = np.where(p_fil)[0][grad_fil.argmin()]
-	if grad_min >= 1.E+7:
-	    return (1.E+7, 1)
-	return (grad_min, grad_min_inx)
+        p_fil = p > 1.E-8
+        grad_fil = gradient[p_fil]
+        grad_min = grad_fil.min()
+        grad_min_inx = np.where(p_fil)[0][grad_fil.argmin()]
+        if grad_min >= 1.E+7:
+            return (1.E+7, 1)
+        return (grad_min, grad_min_inx)
 
     def getStepsize(self, mix_den, ht):
-	mix_den_fil = np.fabs(mix_den) > 1.E-7
-	a = ht[mix_den_fil] / mix_den[mix_den_fil]
-	b = 1.0 + a
-	b_fil = np.fabs(b) > 1.E-7
+        mix_den_fil = np.fabs(mix_den) > 1.E-7
+        a = ht[mix_den_fil] / mix_den[mix_den_fil]
+        b = 1.0 + a
+        b_fil = np.fabs(b) > 1.E-7
         w = self.w
-	sl = w*ht[b_fil] / b[b_fil]
-	s11 = sl.sum()
-	s0 = (w*ht).sum()
+        sl = w*ht[b_fil] / b[b_fil]
+        s11 = sl.sum()
+        s0 = (w*ht).sum()
 
-	step, oldstep = 0., 0.
-	for i in range(50):
-	    grad1, grad2 = 0., 0.
-	    for j in range(self.n):
-		a = mix_den[j] + step*ht[j]
-		if math.fabs(a) > 1.E-7:
-		    b = ht[j] / a
-		    grad1 = grad1 + w*b
-		    grad2 = grad2 - w*b*b
-	    if math.fabs(grad2) > 1.E-10:
-		step = step - grad1 / grad2
-	    if oldstep > 1.0 and step > oldstep:
-		step = 1.
-		break
-	    if grad1 < 1.E-7:
-		break
-	    oldstep = step
-	if step > 1.0:
-	    return 1.0
-	return step
+        step, oldstep = 0., 0.
+        for i in range(50):
+            grad1, grad2 = 0., 0.
+            for j in range(self.n):
+                a = mix_den[j] + step*ht[j]
+            if math.fabs(a) > 1.E-7:
+                b = ht[j] / a
+                grad1 = grad1 + w*b
+                grad2 = grad2 - w*b*b
+            if math.fabs(grad2) > 1.E-10:
+                step = step - grad1 / grad2
+            if oldstep > 1.0 and step > oldstep:
+                step = 1.
+                break
+            if grad1 < 1.E-7:
+                break
+            oldstep = step
+        if step > 1.0:
+            return 1.0
+        return step
 
     def vem(self, mix, p, grid):
-	res = {}
-	for it in range(self.numiter):
-	    grad, mix_den = self.getGradient(mix, p)
-	    grad_max, grad_max_inx = self.getMaxGradient(grad)
-	    grad_min, grad_min_inx = self.getMinGradient(grad, p)
-	    ht = (mix[:,grad_max_inx] - mix[:,grad_min_inx]) * p[grad_min_inx]
-	    st = self.getStepsize(mix_den, ht)
-	    xs = st * p[grad_min_inx]
-	    p[grad_min_inx] = p[grad_min_inx] - xs
-	    p[grad_max_inx] = p[grad_max_inx] + xs
-	    if (grad_max - 1.0) < self.acc or it == (self.numiter - 1):
-		res = {'k':self.k, 'accuracy': grad_max - 1.0, 'p': p, 'grid':grid, 'gradient': grad, 'mix_den': mix_den}
-		break
-	return res 
+        res = {}
+        for it in range(self.numiter):
+            grad, mix_den = self.getGradient(mix, p)
+            grad_max, grad_max_inx = self.getMaxGradient(grad)
+            grad_min, grad_min_inx = self.getMinGradient(grad, p)
+            ht = (mix[:,grad_max_inx] - mix[:,grad_min_inx]) * p[grad_min_inx]
+            st = self.getStepsize(mix_den, ht)
+            xs = st * p[grad_min_inx]
+            p[grad_min_inx] = p[grad_min_inx] - xs
+            p[grad_max_inx] = p[grad_max_inx] + xs
+            if (grad_max - 1.0) < self.acc or it == (self.numiter - 1):
+                res = {'k':self.k, 'accuracy': grad_max - 1.0, 'p': p, 'grid':grid, 'gradient': grad, 'mix_den': mix_den}
+                break
+        return res 
 
     def update(self, p, grid):
-	p_inx = p > 1.E-3
-	new_p = p[p_inx]
-	new_grid = grid[p_inx]
-	self.k = len(new_p)
-	return new_p, new_grid
+        p_inx = p > 1.E-3
+        new_p = p[p_inx]
+        new_grid = grid[p_inx]
+        self.k = len(new_p)
+        return new_p, new_grid
 
     def em(self, nstep, grid, p):
-	l = self.k - 1
+        l = self.k - 1
         w, n, e, b = self.w, self.n, self.e, self.b
-	if self.k == 1:
-	    s11 = (w*b/np.ones(n)).sum()
-	    s12 = (w*e/np.ones(n)).sum()
-	    grid[l] = s11/s12
-	    p[l] = 1.
-	    mix = self.getMixedProb(grid)
-	    grad, mix_den = self.getGradient(mix, p)
-	    grad_max, grad_max_inx = self.getMaxGradient(grad)
-	    return {'accuracy': math.fabs(grad_max - 1), 'k':self.k, 'p':p, 'grid': grid, 'gradient': grad, 'mix_den':mix_den}
-	else:
-	    res = {}
-	    for counter in range(nstep):
-		mix = self.getMixedProb(grid)
-		grad, mix_den = self.getGradient(mix, p)
-		p = p*grad
-		su = p[:-1].sum()
-		p[l] = 1. - su
-		for j in range(self.k):
-		    mix_den_fil = mix_den > 1.E-10
-		    f_len = len(mix_den_fil)
-		    s11 = (w*e[mix_den_fil]/np.ones(f_len)*mix[mix_den_fil,j]/mix_den[mix_den_fil]).sum()
-		    s12 = (w*b[mix_den_fil]*(mix[mix_den_fil,j]/np.ones(f_len))/mix_den[mix_den_fil]).sum()
-		    if s12 > 1.E-12:
-			grid[j] = s11/s12
-		grad_max, grad_max_inx = self.getMaxGradient(grad)
-		res = {'accuracy': math.fabs(grad_max - 1.), 'step': counter + 1, 'k': self.k, 'p':p, 'grid':grid, 'gradient':grad, 'mix_den':mix_den}
-		if res['accuracy'] < self.acc and counter > 10:
-		    break;
-	    return res  
+        if self.k == 1:
+            s11 = (w*b/np.ones(n)).sum()
+            s12 = (w*e/np.ones(n)).sum()
+            grid[l] = s11/s12
+            p[l] = 1.
+            mix = self.getMixedProb(grid)
+            grad, mix_den = self.getGradient(mix, p)
+            grad_max, grad_max_inx = self.getMaxGradient(grad)
+            return {'accuracy': math.fabs(grad_max - 1), 'k':self.k, 'p':p, 'grid': grid, 'gradient': grad, 'mix_den':mix_den}
+        else:
+            res = {}
+            for counter in range(nstep):
+                mix = self.getMixedProb(grid)
+                grad, mix_den = self.getGradient(mix, p)
+                p = p*grad
+                su = p[:-1].sum()
+                p[l] = 1. - su
+                for j in range(self.k):
+                    mix_den_fil = mix_den > 1.E-10
+                    f_len = len(mix_den_fil)
+                    s11 = (w*e[mix_den_fil]/np.ones(f_len)*mix[mix_den_fil,j]/mix_den[mix_den_fil]).sum()
+                    s12 = (w*b[mix_den_fil]*(mix[mix_den_fil,j]/np.ones(f_len))/mix_den[mix_den_fil]).sum()
+                    if s12 > 1.E-12:
+                        grid[j] = s11/s12
+                grad_max, grad_max_inx = self.getMaxGradient(grad)
+                res = {'accuracy': math.fabs(grad_max - 1.), 'step': counter + 1, 'k': self.k, 'p':p, 'grid':grid, 'gradient':grad, 'mix_den':mix_den}
+                if res['accuracy'] < self.acc and counter > 10:
+                    break;
+        return res  
 
     def getLikelihood(self, mix_den):
-	mix_den_fil = mix_den > 0
-	r = np.log(mix_den[mix_den_fil]).sum()
-	return r    
-		    
+        mix_den_fil = mix_den > 0
+        r = np.log(mix_den[mix_den_fil]).sum()
+        return r    
+            
     def combine(self, res):
-	p, grid, k = res['p'], res['grid'], self.k
-	diff = np.fabs(grid[:-1] - grid[1:])
-	bp_seeds = (diff >= self.limit).nonzero()[0] + 1
-	if k - len(bp_seeds) > 1:
-	    bp = [0]
-	    if len(bp_seeds) == 1:
-		bp.append(bp_seeds[0])
-		bp.append(k-1)
-	    else:
-		if bp_seeds[1] - bp_seeds[0] > 1:
-		    bp.append(bp_seeds[0])
-		for i in range(1, len(bp_seeds)):
-		    if bp_seeds[i] - bp_seeds[i-1] > 1:
-			bp.append(a[i])
-	    new_grid, new_p = [], []
-	    for i in range(len(bp)-1):
-		new_grid.append(grid[bp[i]])
-		new_p.append(p[bp[i]:bp[i+1]].sum())
-	    self.k = new_k = len(new_p)
-	    new_grid, new_p = np.array(new_grid), np.array(new_p)
-	    mix = self.getMixedProb(new_grid)    
-	    grad, mix_den = self.getGradient(mix, new_p)
-	    res = self.em(1,new_grid,new_p)
-	    if res is not None:
-		res['likelihood'] = self.getLikelihood(mix_den)
-	return res
+        p, grid, k = res['p'], res['grid'], self.k
+        diff = np.fabs(grid[:-1] - grid[1:])
+        bp_seeds = (diff >= self.limit).nonzero()[0] + 1
+        if k - len(bp_seeds) > 1:
+            bp = [0]
+            if len(bp_seeds) == 1:
+                bp.append(bp_seeds[0])
+                bp.append(k-1)
+            else:
+                if bp_seeds[1] - bp_seeds[0] > 1:
+                    bp.append(bp_seeds[0])
+                for i in range(1, len(bp_seeds)):
+                    if bp_seeds[i] - bp_seeds[i-1] > 1:
+                        bp.append(a[i])
+            new_grid, new_p = [], []
+            for i in range(len(bp)-1):
+                new_grid.append(grid[bp[i]])
+                new_p.append(p[bp[i]:bp[i+1]].sum())
+            self.k = new_k = len(new_p)
+            new_grid, new_p = np.array(new_grid), np.array(new_p)
+            mix = self.getMixedProb(new_grid)    
+            grad, mix_den = self.getGradient(mix, new_p)
+            res = self.em(1,new_grid,new_p)
+            if res is not None:
+                res['likelihood'] = self.getLikelihood(mix_den)
+        return res
 
     def mixalg(self):
         e, b, k, n = self.e, self.b, self.k, self.n
-	p, grid = self.getSeed()
-	mix = self.getMixedProb(grid)
-	vem_res = self.vem(mix,p,grid)
-	p, grid, k = vem_res['p'], vem_res['grid'], vem_res['k']
-	n_p, n_g  = self.update(p,grid)
-	em_res = self.em(self.numiter,n_g,n_p)
-	com_res = self.combine(em_res)
-	return com_res
+        p, grid = self.getSeed()
+        mix = self.getMixedProb(grid)
+        vem_res = self.vem(mix,p,grid)
+        p, grid, k = vem_res['p'], vem_res['grid'], vem_res['k']
+        n_p, n_g  = self.update(p,grid)
+        em_res = self.em(self.numiter,n_g,n_p)
+        com_res = self.combine(em_res)
+        return com_res
 
     def getRateEstimates(self):
-	mix = self.getMixedProb(self.t)
-	mix_p = mix*self.p
-	denom = mix_p.sum(axis=1)
-	categ = (mix_p / denom.reshape((self.n, 1))).argmax(axis=1)
-	r = (self.t*mix_p).sum(axis=1)/denom
-	return r, categ
+        mix = self.getMixedProb(self.t)
+        mix_p = mix*self.p
+        denom = mix_p.sum(axis=1)
+        categ = (mix_p / denom.reshape((self.n, 1))).argmax(axis=1)
+        r = (self.t*mix_p).sum(axis=1)/denom
+        return r, categ
 
 if __name__ == '__main__':
     import doctest
