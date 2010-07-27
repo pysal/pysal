@@ -133,7 +133,8 @@ def crude_age_standardization(e, b, n):
                : array(n, 1)
                  age standardized rate
 
-    Examples:
+    Examples
+    --------
     >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
     >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
     >>> n = 2
@@ -170,7 +171,8 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
                : a list of n tuples; a tuple has a rate and its lower and upper limits
                  age standardized rates and confidence intervals
 
-    Examples:
+    Examples
+    --------
     >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
     >>> b = np.array([1000, 1000, 1100, 900, 1000, 900, 1100, 900])
     >>> s = np.array([1000, 900, 1000, 900, 1000, 900, 1000, 900])
@@ -233,7 +235,8 @@ def indirect_age_standardization(e, b, s_e, s_b, n, alpha=0.5):
     standardized mortality ratios for small area comparisons?" Journal of Public 
     Health Medicine, 23 (1): 40-46
 
-    Examples:
+    Examples
+    --------
     >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
     >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
     >>> s_e = np.array([100, 45, 120, 100, 50, 30, 200, 80])
@@ -264,15 +267,15 @@ class Excess_Risk:
 
     Parameters
     ----------
-    e		: array (n, 1)
-    		  event variable measured across n spatial units
-    b		: array (n, 1)
-    		  population at risk variable measured across n spatial units
+    e           : array (n, 1)
+                  event variable measured across n spatial units
+    b           : array (n, 1)
+                  population at risk variable measured across n spatial units
 
     Attributes
     ----------
-    r		: array (n, 1)
-		  execess risk values
+    r           : array (n, 1)
+                  execess risk values
 
     Examples
     --------
@@ -286,22 +289,22 @@ class Excess_Risk:
     """
     def __init__(self, e, b):
         r_mean = e.sum() * 1.0 / b.sum()
-	self.r = e * 1.0 / (b * r_mean)
+        self.r = e * 1.0 / (b * r_mean)
 
 class Empirical_Bayes: 
     """Aspatial Empirical Bayes Smoothing
 
     Parameters
     ----------
-    e		: array (n, 1)
-    		  event variable measured across n spatial units
-    b		: array (n, 1)
-    		  population at risk variable measured across n spatial units
+    e           : array (n, 1)
+                  event variable measured across n spatial units
+    b           : array (n, 1)
+                  population at risk variable measured across n spatial units
 
     Attributes
     ----------
-    r		: array (n, 1)
-		  rate values from Empirical Bayes Smoothing
+    r           : array (n, 1)
+                  rate values from Empirical Bayes Smoothing
 
     Examples
     --------
@@ -311,36 +314,36 @@ class Empirical_Bayes:
     >>> eb.r[:10]
     array([  2.36718950e-05,   4.54539167e-05,   4.78114019e-05,
              2.76907146e-05,   6.58989323e-05,   3.66494122e-05,
-	     5.79952721e-05,   2.03064590e-05,   3.31152999e-05,
-	     3.02748380e-05])
+             5.79952721e-05,   2.03064590e-05,   3.31152999e-05,
+             3.02748380e-05])
     >>>
     """
     def __init__(self, e, b):
-	e_sum, b_sum = e.sum() * 1.0, b.sum() * 1.0
+        e_sum, b_sum = e.sum() * 1.0, b.sum() * 1.0
         r_mean = e_sum / b_sum
-	rate = e * 1.0 / b
-	r_variat = rate - r_mean
-	r_var_left = (b * r_variat * r_variat).sum() * 1.0 / b_sum
-	r_var_right = r_mean * 1.0 / b.mean() 
-	r_var = r_var_left - r_var_right
-	weight = r_var / ( r_var + r_mean / b)
-	self.r = weight * rate + (1.0 - weight) * r_mean
+        rate = e * 1.0 / b
+        r_variat = rate - r_mean
+        r_var_left = (b * r_variat * r_variat).sum() * 1.0 / b_sum
+        r_var_right = r_mean * 1.0 / b.mean() 
+        r_var = r_var_left - r_var_right
+        weight = r_var / ( r_var + r_mean / b)
+        self.r = weight * rate + (1.0 - weight) * r_mean
 
 class Spatial_Empirical_Bayes: 
     """Spatial Empirical Bayes Smoothing
 
     Parameters
     ----------
-    e		: array (n, 1)
-    		  event variable measured across n spatial units
-    b		: array (n, 1)
-    		  population at risk variable measured across n spatial units
+    e           : array (n, 1)
+                  event variable measured across n spatial units
+    b           : array (n, 1)
+                  population at risk variable measured across n spatial units
     w           : spatial weights instance
 
     Attributes
     ----------
-    r		: array (n, 1)
-		  rate values from Empirical Bayes Smoothing
+    r           : array (n, 1)
+                  rate values from Empirical Bayes Smoothing
 
     Examples
     --------
@@ -371,7 +374,7 @@ class Spatial_Empirical_Bayes:
             r_var_left[i] = v
         r_var_left = r_var_left / bi
         r_var_right = r_mean /(bi/ngh_num)
-	r_var = r_var_left - r_var_right
+        r_var = r_var_left - r_var_right
         r_var[r_var < 0] = 0.0
         self.r = r_mean + (rate - r_mean)*(r_var/(r_var + (r_mean/b)))
 
@@ -380,16 +383,16 @@ class Spatial_Rate:
 
     Parameters
     ----------
-    e		: array (n, 1)
-    		  event variable measured across n spatial units
-    b		: array (n, 1)
-    		  population at risk variable measured across n spatial units
-    w		: spatial weights instance
+    e           : array (n, 1)
+                  event variable measured across n spatial units
+    b           : array (n, 1)
+                  population at risk variable measured across n spatial units
+    w           : spatial weights instance
 
     Attributes
     ----------
-    r		: array (n, 1)
-		  rate values from spatial rate smoothing
+    r           : array (n, 1)
+                  rate values from spatial rate smoothing
 
     Examples
     --------
@@ -401,16 +404,16 @@ class Spatial_Rate:
     >>> sr.r[:10]
     array([  4.59326407e-05,   3.62437513e-05,   4.98677081e-05,
              5.09387329e-05,   3.72735210e-05,   4.01073093e-05,
-	     3.79372794e-05,   3.27019246e-05,   4.26204928e-05,
+             3.79372794e-05,   3.27019246e-05,   4.26204928e-05,
              3.47270722e-05])
     """
     def __init__(self, e, b, w):
-	if not w.id_order_set:
+        if not w.id_order_set:
             raise ValueError("w id_order must be set to align with the order of e and b")
         else:
-	    w.transform = 'b'
+            w.transform = 'b'
             w_e, w_b = slag(w, e), slag(w, b)
-	    self.r = (e + w_e) / (b + w_b)
+            self.r = (e + w_e) / (b + w_b)
             w.transform = 'o'
 
 class Kernel_Smoother:
@@ -418,16 +421,16 @@ class Kernel_Smoother:
 
     Parameters
     ----------
-    e		: array (n, 1)
-    		  event variable measured across n spatial units
-    b		: array (n, 1)
-    		  population at risk variable measured across n spatial units
-    w		: Kernel weights instance
+    e           : array (n, 1)
+                  event variable measured across n spatial units
+    b           : array (n, 1)
+                  population at risk variable measured across n spatial units
+    w           : Kernel weights instance
 
     Attributes
     ----------
-    r		: array (n, 1)
-		  rate values from spatial rate smoothing
+    r           : array (n, 1)
+                  rate values from spatial rate smoothing
 
     Examples
     --------
@@ -444,7 +447,7 @@ class Kernel_Smoother:
     def __init__(self, e, b, w):
         if type(w) != Kernel:
             raise Error('w must be an instance of Kernel weights')
-	if not w.id_order_set:
+        if not w.id_order_set:
             raise ValueError("w id_order must be set to align with the order of e and b")
         else:
             w_e, w_b = slag(w, e), slag(w, b)
@@ -452,25 +455,25 @@ class Kernel_Smoother:
                           'quadratic': 3./4, 'quartic': 15./16, 
                           'gaussian': (np.pi*2)**(-0.5)}
             c = kernel_z_0[w.function]
-	    self.r = (c*e + w_e) / (c*b + w_b)
+            self.r = (c*e + w_e) / (c*b + w_b)
 
 class Age_Adjusted_Smoother:
     """Age-adjusted rate smoothing
 
     Parameters
     ----------
-    e		: array (n*h, 1)
-    		  event variable measured for each age group across n spatial units
-    b		: array (n*h, 1)
-    		  population at risk variable measured for each age group across n spatial units
-    w		: spatial weights instance
-    s       : array (n*h, 1)
-              standard million population for each age group across n spatial units
+    e           : array (n*h, 1)
+                  event variable measured for each age group across n spatial units
+    b           : array (n*h, 1)
+                  population at risk variable measured for each age group across n spatial units
+    w           : spatial weights instance
+    s           : array (n*h, 1)
+                  standard million population for each age group across n spatial units
 
     Attributes
     ----------
-    r		: array (n, 1)
-		  rate values from spatial rate smoothing
+    r           : array (n, 1)
+                  rate values from spatial rate smoothing
 
     Notes
     -----
@@ -492,7 +495,7 @@ class Age_Adjusted_Smoother:
     def __init__(self, e, b, w, s, alpha=0.05):
         t = len(e)
         h = t / w.n
-	w.transform = 'b'
+        w.transform = 'b'
         e_n, b_n = [], []
         for i in range(h):
             e_n.append(slag(w, e[i::h]).tolist())
@@ -548,23 +551,23 @@ class Spatial_Median_Rate:
 
     Parameters
     ----------
-    e		: array (n, 1)
-    		  event variable measured across n spatial units
-    b		: array (n, 1)
-    		  population at risk variable measured across n spatial units
-    w		: spatial weights instance
-    aw		: array (n, 1) 
-    		  auxiliary weight variable measured across n spatial units
-    iteration	: integer 
-    		  the number of interations
+    e           : array (n, 1)
+                  event variable measured across n spatial units
+    b           : array (n, 1)
+                  population at risk variable measured across n spatial units
+    w           : spatial weights instance
+    aw          : array (n, 1) 
+                  auxiliary weight variable measured across n spatial units
+    iteration   : integer 
+                  the number of interations
 
     Attributes
     ----------
-    r		: array (n, 1)
-		  rate values from spatial median rate smoothing
+    r           : array (n, 1)
+                  rate values from spatial median rate smoothing
     w           : spatial weights instance
     aw          : array (n, 1) 
-	          auxiliary weight variable measured across n spatial units
+                  auxiliary weight variable measured across n spatial units
 
     Examples
     --------
@@ -599,27 +602,27 @@ class Spatial_Median_Rate:
     >>>
     """
     def __init__(self, e, b, w, aw=None, iteration=1):
-	if not w.id_order_set:
+        if not w.id_order_set:
             raise ValueError("w id_order must be set to align with the order of e and b")
-	self.r = e * 1.0 / b
-	self.aw, self.w = aw, w
-	while iteration:
-	    self.__search_median()
-	    iteration -= 1
-    
+        self.r = e * 1.0 / b
+        self.aw, self.w = aw, w
+        while iteration:
+            self.__search_median()
+            iteration -= 1
+
     def __search_median(self):
-	r, aw, w = self.r, self.aw, self.w
+        r, aw, w = self.r, self.aw, self.w
         new_r = [] 
-	if self.aw == None:
-	    for i, id in enumerate(w.id_order):
-		r_disk = np.append(r[i], r[w.neighbor_offsets[id]])
+        if self.aw == None:
+            for i, id in enumerate(w.id_order):
+                r_disk = np.append(r[i], r[w.neighbor_offsets[id]])
                 new_r.append(np.median(r_disk))
-    	else:
-	    for i, id in enumerate(w.id_order):
-	        id_d = [i] + list(w.neighbor_offsets[id])
+        else:
+            for i, id in enumerate(w.id_order):
+                id_d = [i] + list(w.neighbor_offsets[id])
                 aw_d, r_d = aw[id_d], r[id_d]
                 new_r.append(weighted_median(r_d,aw_d))
-	self.r = np.array(new_r)
+        self.r = np.array(new_r)
 
 class Spatial_Filtering:
     """Spatial Filtering
@@ -628,25 +631,25 @@ class Spatial_Filtering:
     ----------
     data        : array (n, 2)
                   x, y coordinates
-    e		: array (n, 1)
-    		  event variable measured across n spatial units
-    b		: array (n, 1)
-    		  population at risk variable measured across n spatial units
+    e           : array (n, 1)
+                  event variable measured across n spatial units
+    b           : array (n, 1)
+                  population at risk variable measured across n spatial units
     x_grid      : integer
                   the number of cells on x axis
     y_grid      : integer
                   the number of cells on y axis
-    r		: float
+    r           : float
                   fixed radius of a moving window
-    pop		: integer
-    		  population threshold to create adaptive moving windows
+    pop         : integer
+                  population threshold to create adaptive moving windows
 
     Attributes
     ----------
     grid        : array (x_grid*y_grid, 2)
                   x, y coordinates for grid points
-    r		: array (x_grid*y_grid, 1)
-		  rate values for grid points
+    r           : array (x_grid*y_grid, 1)
+                  rate values for grid points
 
     Notes
     -----
@@ -705,21 +708,21 @@ class Headbanging_Triples:
 
     Parameters
     ----------
-    data	: array (n, 2)
-    		  numpy array of x, y coordinates
-    w		: spatial weights instance
-    k       : integer number of nearest neighbors
-    t		: integer
-    		  the number of triples
-    angle	: integer between 0 and 180
-    		  the angle criterium for a set of triples
-    edgecorr	: boolean 
-    		  whether or not correction for edge points is made
+    data        : array (n, 2)
+                  numpy array of x, y coordinates
+    w           : spatial weights instance
+    k           : integer number of nearest neighbors
+    t           : integer
+                  the number of triples
+    angle       : integer between 0 and 180
+                  the angle criterium for a set of triples
+    edgecorr    : boolean 
+                  whether or not correction for edge points is made
     
     Attributes
     ----------
-    triples	: dictionary
-    		  key is observation record id, value is a list of lists of triple ids
+    triples     : dictionary
+                  key is observation record id, value is a list of lists of triple ids
     extra       : dictionary
                   key is observation record id, value is a list of the following:
                   tuple of original triple observations 
@@ -768,7 +771,7 @@ class Headbanging_Triples:
     """
     def __init__(self, data, w, k=5, t=3, angle=135.0, edgecor=False):
         if k < 3:
-	         raise ValueError("w should be NeareastNeighbors instance & the number of neighbors should be more than 3.")
+            raise ValueError("w should be NeareastNeighbors instance & the number of neighbors should be more than 3.")
         if not w.id_order_set:
             raise ValueError("w id_order must be set to align with the order of data")
         self.triples, points = {}, {}
@@ -784,7 +787,7 @@ class Headbanging_Triples:
                 if ang > angle or (ang < 0.0 and ang + 360 > angle):
                     tr[tuple(c)] = (p2, p3)
             if len(tr) > t:
-		for c in tr.keys():
+                for c in tr.keys():
                     p2, p3 = tr[c]
                     tr_dis.append((get_segment_point_dist(LineSegment(p2,p3), pnt),c))
                 tr_dis = sorted(tr_dis)[:t]
@@ -827,20 +830,20 @@ class Headbanging_Median_Rate:
 
     Parameters
     ----------
-    e		: array (n, 1)
-    		  event variable measured across n spatial units
-    b		: array (n, 1)
-    		  population at risk variable measured across n spatial units
-    t		: Headbanging_Triples instance
-    aw		: array (n, 1)
-    		  auxilliary weight variable measured across n spatial units
-    iteration 	: integer
-    		  the number of iterations
+    e           : array (n, 1)
+                  event variable measured across n spatial units
+    b           : array (n, 1)
+                  population at risk variable measured across n spatial units
+    t           : Headbanging_Triples instance
+    aw          : array (n, 1)
+                  auxilliary weight variable measured across n spatial units
+    iteration   : integer
+                  the number of iterations
 
     Attributes
     ----------
-    r		: array (n, 1)
-    		  rate values from headbaning median smoothing
+    r           : array (n, 1)
+                  rate values from headbaning median smoothing
    
     Examples
     --------
@@ -881,7 +884,7 @@ class Headbanging_Median_Rate:
             if not weighted: return r, trp_r[0], trp_r[-1]
             else:
                 trp_aw = self.aw[trp]
-            	extra_w = trp_aw[0] + (trp_aw[0] - trp_aw[-1])*(extra[id][-1]*1.0/extra[id][1])
+                extra_w = trp_aw[0] + (trp_aw[0] - trp_aw[-1])*(extra[id][-1]*1.0/extra[id][1])
                 return r, trp_r[0], trp_r[-1], self.aw[id], trp_aw[0] + extra_w
         if not weighted:
             lowest, highest = [], []
