@@ -8,8 +8,23 @@ class GwtIO(FileIO.FileIO):
     MODES = ['r', 'w']
 
     def __init__(self,*args,**kwargs):
+        self._varName = 'Unknown'
+        self._shpName = 'Unknown'
         FileIO.FileIO.__init__(self,*args,**kwargs)
         self.file = open(self.dataPath,self.mode)
+
+    def _set_varName(self,val):
+        if issubclass(type(val),basestring):
+            self._varName=val
+    def _get_varName(self):
+        return self._varName
+    varName = property(fget=_get_varName,fset=_set_varName)
+    def _set_shpName(self,val):
+        if issubclass(type(val),basestring):
+            self._shpName=val
+    def _get_shpName(self):
+        return self._shpName
+    shpName = property(fget=_get_shpName,fset=_set_shpName)
 
     def read(self,n=-1):
         return self._read()
@@ -56,7 +71,7 @@ class GwtIO(FileIO.FileIO):
         """
         self._complain_ifclosed(self.closed)
         if issubclass(type(obj),W):
-            header = '%s %i %s %s\n' % ('0', obj.n, 'Unknown', 'Unknown')
+            header = '%s %i %s %s\n' % ('0', obj.n, self.shpName, self.varName)
             self.file.write(header)
             for id in obj.id_order:
                 neighbors = zip(obj.neighbors[id], obj.weights[id])
