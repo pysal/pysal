@@ -11,6 +11,6 @@ Overview
 .. toctree::
     :maxdepth: 2
 
-    library/index
     users/index
     developers/index
+    library/index

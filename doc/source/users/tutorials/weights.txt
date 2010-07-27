@@ -167,7 +167,8 @@ If we change the distance decay exponent to -2.0 the result is so called gravity
 Kernel Weights
 --------------
 
-A combination of distance based thresholds together with a continuous valued weight is supported through kernel weights:
+A combination of distance based thresholds together with  continuously valued
+weights is supported through kernel weights:
 
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
     >>> kw=pysal.Kernel(points)
@@ -220,7 +221,7 @@ for each unit) can also be user specified:
            [ 14.5],
            [ 25. ]])
 
-Alternatively the adaptive bandwidths could endogenous:
+Alternatively the adaptive bandwidths could be defined endogenously:
 
     >>> kwea=pysal.Kernel(points,fixed=False)
     >>> kwea.weights[0]
@@ -264,13 +265,15 @@ More details on kernel weights can be found in
 .. W related functions
 .. ===================
 .. 
-.. spatial lag
 .. 
 .. shimbel
 .. 
 .. order
 .. 
 .. full
+.. asymetry
+.. islands
+.. spatial lag
 .. 
 .. WSets
 .. =====
