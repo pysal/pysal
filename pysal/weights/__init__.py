@@ -381,7 +381,7 @@ class W(object):
     def mean_neighbors(self):
         if 'max_neighbors' not in self._cache:
             self._mean_neighbors=np.mean(self.cardinalities.values())
-            self._cache['max_neighbors']=self._max_neighbors
+            self._cache['mean_neighbors']=self._mean_neighbors
         return self._mean_neighbors
 
 
