@@ -227,14 +227,6 @@ def indirect_age_standardization(e, b, s_e, s_b, n, alpha=0.5):
                : a list of n tuples; a tuple has a rate and its lower and upper limits
                  age standardized rate
 
-    References
-    ---------- 
-    For the approximated estimation of confidence intervals for 
-    indirectly adjusted rates, refer to the following:
-    Julious, S. A., J. Nicholl, and S. George (2001) "Why do we continue to use 
-    standardized mortality ratios for small area comparisons?" Journal of Public 
-    Health Medicine, 23 (1): 40-46
-
     Examples
     --------
     >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
@@ -441,8 +433,8 @@ class Kernel_Smoother:
     >>> if not kw.id_order_set: kw.id_order = range(0,len(points))
     >>> kr = Kernel_Smoother(e, b, kw)
     >>> kr.r
-    array([ 0.10292145,  0.08329288,  0.10382523,  0.11576292,  0.03937128,
-            0.05133276])
+    array([ 0.10543301,  0.0858573 ,  0.08256196,  0.09884584,  0.04756872,
+            0.04845298])
     """
     def __init__(self, e, b, w):
         if type(w) != Kernel:
@@ -451,11 +443,7 @@ class Kernel_Smoother:
             raise ValueError("w id_order must be set to align with the order of e and b")
         else:
             w_e, w_b = slag(w, e), slag(w, b)
-            kernel_z_0 = {'triangular': 1, 'uniform': 0, 
-                          'quadratic': 3./4, 'quartic': 15./16, 
-                          'gaussian': (np.pi*2)**(-0.5)}
-            c = kernel_z_0[w.function]
-            self.r = (c*e + w_e) / (c*b + w_b)
+            self.r = w_e / w_b
 
 class Age_Adjusted_Smoother:
     """Age-adjusted rate smoothing

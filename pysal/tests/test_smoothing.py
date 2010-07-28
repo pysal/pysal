@@ -26,6 +26,25 @@ class WMean_Tester(unittest.TestCase):
         self.assertEquals(out1, 4)
         self.assertEquals(out2, 3.5)
 
+class AgeStd_Tester(unittest.TestCase):
+    def setUp(self):
+        self.e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
+        self.b = np.array([1000, 1000, 1100, 900, 1000, 900, 1100, 900])
+        self.s_e = np.array([100, 45, 120, 100, 50, 30, 200, 80])
+        self.s_b = s = np.array([1000, 900, 1000, 900, 1000, 900, 1000, 900])
+        self.n = 2
+
+    def test_age_standardizations(self):
+        crude = sm.crude_age_standardization(self.e, self.b, self.n).round(8)
+        direct = np.array(sm.direct_age_standardization(self.e, self.b, self.s_b, self.n)).round(8)
+        indirect = np.array(sm.indirect_age_standardization(self.e, self.b, self.s_e, self.s_b, self.n)).round(8)
+        crude_exp = np.array([0.02375000, 0.02666667])
+        direct_exp = np.array([[0.02374402,0.01920491,0.02904848],[0.02665072,0.02177143,0.03230508]])
+        indirect_exp = np.array([[0.02372382, 0.02213762, 0.02542368], [0.02610803, 0.02443713, 0.02789318]])
+        self.assertEquals(list(crude), list(crude_exp))
+        self.assertEquals(list(direct.flatten()), list(direct_exp.flatten()))
+        self.assertEquals(list(indirect.flatten()), list(indirect_exp.flatten()))
+
 class SRate_Tester(unittest.TestCase):
     def setUp(self):
         sids = pysal.open('../examples/sids2.dbf', 'r')
@@ -84,9 +103,43 @@ class HT_Tester(unittest.TestCase):
         for i in htr.r:
             self.assertTrue(i is not None)
 
+class Kernel_AgeAdj_SM_Tester(unittest.TestCase):
+    def setUp(self):
+        self.e = np.array([10, 1, 3, 4, 2, 5])
+        self.b = np.array([100, 15, 20, 20, 80, 90])
+        self.e1 = np.array([10, 8, 1, 4, 3, 5, 4, 3, 2, 1, 5, 3])
+        self.b1 = np.array([100, 90, 15, 30, 25, 20, 30, 20, 80, 80, 90, 60])
+        self.s = np.array([98, 88, 15, 29, 20, 23, 33, 25, 76, 80, 89, 66])
+        self.points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+        self.kw= pysal.weights.Kernel(self.points)
+        if not self.kw.id_order_set: 
+            self.kw.id_order = range(0,len(self.points))
+
+    def test_kerenel(self):
+        kr = sm.Kernel_Smoother(self.e, self.b, self.kw)
+        exp = [ 0.10543301,  0.0858573 ,  0.08256196,  0.09884584,  0.04756872, 0.04845298]
+        self.assertEquals(list(kr.r.round(8)), exp)
+
+    def test_age_adj(self):
+        ar = sm.Age_Adjusted_Smoother(self.e1, self.b1, self.kw, self.s)
+        exp = [ 0.10519625,  0.08494318,  0.06440072,  0.06898604,  0.06952076, 0.05020968]
+        self.assertEquals(list(ar.r.round(8)), exp)
+
+    def test_disk(self):
+        self.kw.transform = 'b'
+        exp = [0.12222222000000001, 0.10833333, 0.08055556, 0.08944444, 0.09944444, 0.09351852]
+        disk = sm.Disk_Smoother(self.e, self.b, self.kw)
+        self.assertEqual(list(disk.r.round(8)), exp)
+
+    def test_spatial_filtering(self):
+        points = np.array(self.points)
+        sf = sm.Spatial_Filtering(points, self.e, self.b, 2, 2, r=15)
+        exp = [0.11111111, 0.11111111,  0.08510638,  0.05853659]
+        self.assertEqual(list(sf.r.round(8)), exp)
 
 suite = unittest.TestSuite()
-test_classes = [Flatten_Tester, WMean_Tester, SRate_Tester, HT_Tester]
+test_classes = [Flatten_Tester, WMean_Tester, AgeStd_Tester, SRate_Tester, HT_Tester, 
+        Kernel_AgeAdj_SM_Tester]
 for i in test_classes:
     a = unittest.TestLoader().loadTestsFromTestCase(i)
     suite.addTest(a)
