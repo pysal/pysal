@@ -11,7 +11,7 @@ units, network edges, etc), the spatial weights matrix expresses the potential
 for interaction between observations at each pair i,j of locations. There is a rich
 variety of ways to specify the structure of these weights, and
 PySAL supports the creation, manipulation and analysis of spatial weights
-matrices across three three different general types:
+matrices across three different general types:
 
  * Contiguity Based Weights
  * Distance Based Weights
@@ -21,7 +21,7 @@ These different types of weights are implemented as instances of the PySAL weigh
 :class:`~pysal.weights.W`. 
 
 In what follows, we provide a high level overview of spatial weights in PySAL, starting with the three different types of weights, followed by
-a closer look at the properties of the W class and some related functions.
+a closer look at the properties of the W class and some related functions.[#]_
 
 PySAL Spatial Weight Types
 ==========================
@@ -125,7 +125,7 @@ For example we could use the the centroids of our
 
 then define the knn set as:
 
-	>>> wknn3=pysal.knn(data,k=3)
+	>>> wknn3=pysal.knnW(data,k=3)
 	>>> wknn3.neighbors[0]
 	[1, 5, 6]
 	>>> wknn3.s0
@@ -150,7 +150,6 @@ falling within a threshold distance of the focal unit:
 	>>> wthresh=pysal.threshold_binaryW_from_array(data,2)
 	>>> wthresh.neighbors[0]
 	[1, 2, 5, 6, 10]
-	>>> wthresh=pysal.threshold_binaryW_from_array(data,2.0)
 	>>> wthresh.neighbors[1]
 	[0, 2, 5, 6, 7, 11, 3]
 	>>> wthresh.weights[0]
@@ -163,7 +162,7 @@ As can be seen in the above example, the number of neighbors is likely to vary
 across observations with distance band weights in contrast to what holds for
 knn weights.
 
-Distance band weights can be generate for shapefiles as well as arrays of points. First, the 
+Distance band weights can be generated for shapefiles as well as arrays of points. First, the 
 minimum nearest neighbor distance should be determined so that each unit is assured of at least one 
 neighbor:
 
@@ -173,7 +172,7 @@ neighbor:
 
 with this threshold in hand, the distance band weights are obtained as:
 
-    >>> wt=pysal.threshold_binaryW_from_shapefile("examples/columbus.shp",thres)
+    >>> wt=pysal.threshold_binaryW_from_shapefile("examples/columbus.shp",thresh)
     >>> wt.min_neighbors
     1
     >>> wt.histogram
@@ -501,6 +500,7 @@ shapefile (and its dbf), PySAL handles the alignment automatically: [#]_
 
 .. rubric:: Footnotes
 
+.. [#] Although this tutorial provides an introduction to the functionality of the PySAL weights class, it is not exhaustive. Complete documentation for the class and associated functions can be found by accessing the help from within a Python interpreter. 
 .. [#] The dictionaries for the weights and value attributes in W are read-only in.
 .. [#] Ties at the k-nn distance band are randomly broken to ensure each observation has exactly k neighbors.
 .. [#] The ordering exploits the one-to-one relation between a record in the DBF file and the shape in the shapefile.
