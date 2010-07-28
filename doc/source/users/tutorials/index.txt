@@ -6,7 +6,8 @@ Tutorials
 
 .. toctree::
    :maxdepth: 2
-
+   
+   Introduction <intro>
    File Input and Output <fileio>
    Spatial Weights <weights>
    Sample Datasets <examples>

@@ -17,16 +17,15 @@ of Regional Systems (Rey), could benefit from a shared analytical core, since
 this would limit code duplication and free up additional developer time to
 focused on enhancements of the respective applications.
 
-This recognition also came at a time when Python was starting to make major in
-road in geographic information systems as represented by projects such as the
-`Python Cartographic Library <http://zmapserver.sourceforge.net/PCL/>`_, `Shapely
-<http://trac.gispython.org/lab/wiki/Shapely>`_
-and ESRI's adoption of Python as a scripting
-language, among others. At the same time there was a dearth of Python
-modules for spatial statistics, spatial econometrics, location modeling and
-other areas of spatial analysis, and the role for PySAL was then expanded
-beyond its support of STARS and PySpace to provide a library of core spatial
-analytical functions that could support the next generation of spatial
+This recognition also came at a time when Python was starting to make major
+inroads in geographic information systems as represented by projects such as
+the `Python Cartographic Library <http://zmapserver.sourceforge.net/PCL/>`_,
+`Shapely <http://trac.gispython.org/lab/wiki/Shapely>`_ and ESRI's adoption of
+Python as a scripting language, among others. At the same time there was a
+dearth of Python modules for spatial statistics, spatial econometrics, location
+modeling and other areas of spatial analysis, and the role for PySAL was then
+expanded beyond its support of STARS and PySpace to provide a library of core
+spatial analytical functions that could support the next generation of spatial
 analysis applications.. 
 
 In 2008 the home for PySAL moved to the `GeoDa Center for Geospatial Analysis
@@ -46,7 +45,7 @@ foundation for their work.
 
 End users looking for a user friendly graphical user interface for spatial
 analysis should not turn to PySAL directly. Instead, we would direct them to
-projects like STARS and pySPace (see above) which wrap PySAL functionality in
+projects like STARS and PySpace (see above) which wrap PySAL functionality in
 GUIs.  At the same time, we expect that with developments such 
 as the Python based plug-in architectures for `QGIS
 <http://www.qgis.org/wiki/Python_Plugin_Repositories>`_, 
