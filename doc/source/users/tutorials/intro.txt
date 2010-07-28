@@ -5,7 +5,7 @@ Introduction
 Assumptions
 ===========
 
-The tutorials presented here are design to illustrate a selection of the
+The tutorials presented here are designed to illustrate a selection of the
 functionality in PySAL. The reader is **assumed to have working knowledge
 of the particular spatial analytical methods** illustrated. Background on
 spatial analysis can be found in the references cited in the tutorials.
@@ -91,19 +91,7 @@ which brings up::
 	 |  ----------
 	 |  asymmetric        : binary
 	 |                      True if weights are asymmetric, False if not
-	 |  cardinalities     
-	 |  diagW2
-	 |  diagWtW           
-	 |  diagWtW_WW        : array
-	 |                      diagonal elements of WW+W'W
-	 |  histogram         : list of tuples
-	 |                      neighbor histogram (number of neighbors, number of
-	 |                      observations with that many neighbors)
-	 |  id_order          : list
-	 |                      order of observations when iterating over weights
-	 |  id_order_set      : binary
-	 |                      True if id_order has been set by user, False (default)
-	 |  islands           : list
+	 
 
 Note that the help is truncated at the bottom of the terminal window and more contents can be seen by scrolling (hit any key).
 	
