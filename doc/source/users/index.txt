@@ -7,5 +7,5 @@ User Guide
    :maxdepth: 1
 
    What is PySAL? <introduction>
-   Intalling PySAL <installation>
+   Installing PySAL <installation>
    Getting Started with PySAL <tutorials/index>
