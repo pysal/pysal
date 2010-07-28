@@ -503,8 +503,8 @@ shapefile (and its dbf), PySAL handles the alignment automatically: [#]_
 
 .. [#] Although this tutorial provides an introduction to the functionality of the PySAL weights class, it is not exhaustive. Complete documentation for the class and associated functions can be found by accessing the help from within a Python interpreter. 
 .. [#] The dictionaries for the weights and value attributes in W are read-only.
-.. [#] If the shapefile contains geographical coordinates these distance calculations will be misleading and the user should first project their coordinates using a GIS.
 .. [#] Ties at the k-nn distance band are randomly broken to ensure each observation has exactly k neighbors.
+.. [#] If the shapefile contains geographical coordinates these distance calculations will be misleading and the user should first project their coordinates using a GIS.
 .. [#] The ordering exploits the one-to-one relation between a record in the DBF file and the shape in the shapefile.
 	
 	
