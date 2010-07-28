@@ -74,7 +74,7 @@ class Geary:
     0.00040152
     >>> 
     """
-    def __init__(self,y,w,transformation="B",permutations=PERMUTATIONS):
+    def __init__(self,y,w,transformation="B",permutations=0):
         self.n=len(y)
         self.y=y
         w.transform=transformation
@@ -99,7 +99,7 @@ class Geary:
             sim=[self.__calc(np.random.permutation(self.y)) \
                  for i in xrange(permutations)]
             self.sim=sim
-            self.p_sim =(sum(sim>=self.C)+1)/(permutations+1.)
+            self.p_sim =1.-(sum(sim>=self.C)+1)/(permutations+1.)
             self.EC_sim=sum(sim)/permutations
             self.seC_sim=np.array(sim).std()
             self.VC_sim=self.seC_sim**2

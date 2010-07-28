@@ -10,4 +10,5 @@ Tutorials
    Introduction <intro>
    File Input and Output <fileio>
    Spatial Weights <weights>
+   Spatial Autocorrelation <autocorrelation>
    Sample Datasets <examples>
