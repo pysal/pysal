@@ -11,4 +11,9 @@ Tutorials
    File Input and Output <fileio>
    Spatial Weights <weights>
    Spatial Autocorrelation <autocorrelation>
+   Spatial Smoothing
+   Spatial Dynamics
+   Spatial Inequality
+   Map Classifiers
+   Regionalization
    Sample Datasets <examples>
