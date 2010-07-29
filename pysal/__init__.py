@@ -55,6 +55,8 @@ from weights.Distance import knnW, Kernel, DistanceBand
 from weights.Contiguity import buildContiguity
 from weights.spatial_lag import lag_spatial
 from weights.user import *
+from weights.Wsets import w_union, w_intersection, w_difference
+from weights.Wsets import w_symmetric_difference, w_subset
 
 # Load the IOHandlers
 import core.IOHandlers

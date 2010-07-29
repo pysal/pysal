@@ -78,8 +78,15 @@ of the lattice to define contiguities:
 	[5, 1, 6]
 	>>> 
 
-.. (Illustrate bishop using functionality in WSets)
+The bishop criterion, which designates pairs of cells as neighbors if they share
+only a vertex, is yet a third alternative for contiguity weights. A bishop matrix
+can be computed as the difference between the rook and queen cases.
 
+        >>> wr=pysal.lat2W(5,5)
+        >>> wq=pysal.lat2W(5,5,rook=False)
+        >>> wb=pysal.w_difference(wq, wr,constrained=False)
+        >>> wb.neighbors[0]
+        [6]
 
 The lat2W function is particularly useful in setting up simulation experiments
 requiring a regular grid. For empirical research, a common use case is to have
@@ -491,12 +498,174 @@ shapefile (and its dbf), PySAL handles the alignment automatically: [#]_
 
 
 .. 
-.. WSets
-.. =====
-.. 
-.. add discussion of WSets here
+WSets
+=====
 
+PySAL offers set-like manipulation of spatial weights matrices. While a W is
+more complex than a set, the two objects have a number of commonalities
+allowing for traditional set operations to have similar functionality on a W.
+Conceptually, we treat each neighbor pair as an element of a set, and then
+return the appropriate pairs based on the operation invoked (e.g. union,
+intersection, etc.).  A key distinction between a set and a W is that a W
+must keep track of the universe of possible pairs, even those that do not
+result in a neighbor relationship.  
 
+PySAL follows the naming conventions for Python sets, but adds optional flags
+allowing the user to control the shape of the weights object returned.  At
+this time, all the functions discussed in this section return a binary W no
+matter the weights objects passed in.
+
+Union
+-----
+
+The union of two weights objects returns a binary weights object, W, that
+includes all neighbor pairs that exist in either weights object.  This
+function can be used to simply join together two weights objects, say one for
+Arizona counties and another for California counties.  It can also be used 
+to join two weights objects that overlap as in the example below. 
+
+    >>> w1 = pysal.lat2W(4,4)
+    >>> w2 = pysal.lat2W(6,4)
+    >>> w = pysal.w_union(w1, w2)
+    >>> w1[0] == w[0]
+    True
+    >>> w1.neighbors[15]
+    [11, 14]
+    >>> w2.neighbors[15]
+    [11, 14, 19]
+    >>> w.neighbors[15]
+    [19, 11, 14]
+
+Intersection
+------------
+
+The intersection of two weights objects returns a binary weights object, W,
+that includes only those neighbor pairs that exist in both weights objects.
+Unlike the union case, where all pairs in either matrix are returned, the
+intersection only returns a subset of the pairs.  This leaves open the
+question of the shape of the weights matrix to return.  For example, you have
+one weights matrix of census tracts for City A and second matrix of tracts for
+Utility Company B's service area, and want to find the W for the tracts that
+overlap.  Depending on the research question, you may want the returned W to
+have the same dimensions as City A's weights matrix, the same as the utility
+company's weights matrix, a new dimensionality based on all the census tracts
+in either matrix or with the dimensionality of just those tracts in the
+overlapping area. All of these options are available via the w_shape parameter
+and the order that the matrices are passed to the function.  The following
+example uses the all case:
+
+    >>> w1 = pysal.lat2W(4,4)
+    >>> w2 = pysal.lat2W(6,4)
+    >>> w = pysal.w_intersection(w1, w2, 'all')
+    >>> w1[0] == w[0]
+    True
+    >>> w1.neighbors[15]
+    [11, 14]
+    >>> w2.neighbors[15]
+    [11, 14, 19]
+    >>> w.neighbors[15]
+    [11, 14]
+    >>> w2.neighbors[16]
+    [12, 17, 20]
+    >>> w.neighbors[16]
+    []
+
+Difference
+----------
+
+The difference of two weights objects returns a binary weights object, W, that
+includes only neighbor pairs from the first object that are not in the second.
+Similar to the intersection function, the user must select the shape of the
+weights object returned using the w_shape parameter.  The user must also
+consider the constrained parameter which controls whether the observations and
+the neighbor pairs are differenced or just the neighbor pairs are differenced.
+If you were to apply the difference function to our city and utility company
+example from the intersection section above, you must decide whether or not
+pairs that exist along the border of the regions should be considered
+different or not.  It boils down to whether the tracts should be differenced
+first and then the differenced pairs identified (constrained=True), or if the
+differenced pairs should be identified based on the sets of pairs in the
+original weights matrices (constrained=False).  In the example below we
+difference weights matrices from regions with partial overlap.
+
+    >>> w1 = pysal.lat2W(6,4)
+    >>> w2 = pysal.lat2W(4,4)
+    >>> w1.neighbors[15]
+    [11, 14, 19]
+    >>> w2.neighbors[15]
+    [11, 14]
+    >>> w = pysal.w_difference(w1, w2, w_shape='w1', constrained=False)
+    >>> w.neighbors[15]
+    [19]
+    >>> w.neighbors[19]
+    [15, 18, 23]
+    >>> w = pysal.w_difference(w1, w2, w_shape='min', constrained=False)
+    >>> 15 in w.neighbors
+    False
+    >>> w.neighbors[19]
+    [15, 18, 23]
+    >>> w = pysal.w_difference(w1, w2, w_shape='w1', constrained=True)
+    >>> w.neighbors[15]
+    []
+    >>> w.neighbors[19]
+    [18, 23]
+    >>> w = pysal.w_difference(w1, w2, w_shape='min', constrained=True)
+    >>> 15 in w.neighbors
+    False
+    >>> w.neighbors[19]
+    [18, 23]
+
+Symmetric Difference
+-------------------
+
+Symmetric difference of two weights objects returns a binary weights object,
+W, that includes only neighbor pairs that are not shared by either matrix.
+This function offers options similar to those in the difference function
+described above.
+
+    >>> w1 = pysal.lat2W(6,4)
+    >>> w2 = pysal.lat2W(2,4)
+    >>> w_lower = pysal.w_difference(w1, w2, w_shape='min', constrained=True)
+    >>> w_upper = pysal.lat2W(4,4)
+    >>> w = pysal.w_symmetric_difference(w_lower, w_upper, 'all', False)
+    >>> w_lower.id_order
+    [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+    >>> w_upper.id_order
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    >>> w.id_order
+    [0, 1, 2, 3, 4, 5, 6, 7, 16, 17, 18, 19, 20, 21, 22, 23]
+    >>> w.neighbors[11]
+    [7]
+    >>> w = pysal.w_symmetric_difference(w_lower, w_upper, 'min', False)
+    >>> 11 in w.neighbors
+    False
+    >>> w = pysal.w_symmetric_difference(w_lower, w_upper, 'all', True)
+    >>> w.neighbors[11]
+    []
+    >>> w = pysal.w_symmetric_difference(w_lower, w_upper, 'min', True)
+    >>> 11 in w.neighbors
+    False
+
+Subset
+------
+
+Subset of a weights object returns a binary weights object, W, that includes
+only those observations provided by the user.  It also can be used to add
+islands to a previously existing weights object.
+
+    >>> w1 = pysal.lat2W(6,4)
+    >>> w1.id_order
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+    >>> ids = range(16)
+    >>> w = pysal.w_subset(w1, ids)
+    >>> w.id_order
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    >>> w1[0] == w[0]
+    True
+    >>> w1.neighbors[15]
+    [11, 14, 19]
+    >>> w.neighbors[15]
+    [11, 14]
 
 
 .. rubric:: Footnotes

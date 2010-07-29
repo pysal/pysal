@@ -204,7 +204,7 @@ def w_difference(w1, w2, w_shape='w1', constrained=True):
         else:
             neighbors[i] = []
 
-    if constrained and w_shape != 'min':
+    if constrained or w_shape == 'min':
         constrained_keys = set(w1.neighbors.keys()).difference(set(w2.neighbors.keys()))
         island_keys = set(neighbors.keys()).difference(constrained_keys)
         for i in island_keys:
@@ -289,7 +289,7 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
         else:
             neighbors[i] = []
 
-    if constrained and w_shape != 'min':
+    if constrained or w_shape == 'min':
         constrained_keys = set(w1.neighbors.keys()).difference(set(w2.neighbors.keys()))
         island_keys = set(neighbors.keys()).difference(constrained_keys)
         for i in island_keys:
