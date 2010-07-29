@@ -3,6 +3,8 @@
 Spatial Weights
 ***************
 
+.. contents::
+
 Introduction
 ============
 
@@ -616,7 +618,7 @@ difference weights matrices from regions with partial overlap.
     [18, 23]
 
 Symmetric Difference
--------------------
+--------------------
 
 Symmetric difference of two weights objects returns a binary weights object,
 W, that includes only neighbor pairs that are not shared by either matrix.

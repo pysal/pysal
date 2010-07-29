@@ -4,6 +4,8 @@
 An Overview of the FileIO system in PySAL.
 ******************************************
 
+.. contents::
+
 Introduction
 ============
 
