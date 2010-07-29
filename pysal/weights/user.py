@@ -2,10 +2,9 @@
 Convenience functions for the construction of spatial weights based on
 contiguity and distance criteria
 
-Author(s):
-    Serge Rey srey@asu.edu
-
 """
+
+__author__  = "Sergio J. Rey <srey@asu.edu> "
 import os
 import pysal
 from Contiguity import buildContiguity

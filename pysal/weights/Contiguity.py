@@ -1,9 +1,8 @@
 """
 Contiguity based spatial weights
-
-Author(s):
-    Serge Rey srey@asu.edu
 """
+
+__author__  = "Sergio J. Rey <srey@asu.edu> "
 
 import pysal
 from warnings import warn
