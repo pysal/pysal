@@ -12,7 +12,7 @@ particular type of spatial dynamics. More specifically, the focus is on
 longitudinal spatial data, or observations on fixed areal units over
 multiple time periods. Examples could include, time series of voting
 patterns in US Presidential elections, time series of remotely sensing
-images, labor market dynamics, regional business cyclles, among many
+images, labor market dynamics, regional business cycles, among many
 others.  
 
 Two broad sets of spatial dynamics methods are implemented. The first are
@@ -24,7 +24,7 @@ Markov Based Methods
 The Markov based methods include classic Markov chains and extensions of
 these approaches to deal with spatially referenced data. In what follows
 we illustrate the functionality of these Markov methods. Readers
-interested in the methological foundations of these approaches are
+interested in the methodological foundations of these approaches are
 directed to [#]_.
 
 Classic Markov
@@ -98,8 +98,8 @@ The first row of the array is the per capita income for the first year:
                 741,  460,  673,  675])
         
 In order to apply the classic Markov approach to this series, we first
-have to discritize the distribution by defining our classes. There are
-many ways to do this, but here we will use the quintiles for eacy annual
+have to discretize the distribution by defining our classes. There are
+many ways to do this, but here we will use the quintiles for each annual
 income distribution to define the classes:
 
         >>> q5=np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
@@ -117,7 +117,7 @@ this class that has multiple attributes, the one we are extracting in the
 first line is yb - the class id for each observation. The second thing to
 note is the transpose operator which gets our resulting array q5 in the
 proper structure required for use of Markov. Thus we see that the first
-spatial unit (Alambama with an income of 323) fell in the first quintile
+spatial unit (Alabama with an income of 323) fell in the first quintile
 in 1929, while the last unit (Wyoming with an income of 675) fell in the
 fourth quintile. [#]_
 
@@ -175,7 +175,7 @@ mean passage time:
                    51.60953369],
                 [  98.41295543,   56.36521038
 
-thus, for a state with income in the first quintile, it takes on average
+Thus, for a state with income in the first quintile, it takes on average
 11.5 years for it to first enter the second quintile, 29.6 to get to the
 third quintile, 53.4 years to enter the fourth, and 103.6 years to reach
 the richest quintile.
@@ -188,7 +188,7 @@ Thus far we have treated all the spatial units as independent to estimate
 the transition probabilities. This hides a number of implicit assumptions.
 First, the transition dynamics are assumed to hold for all units and for
 all time periods. Second, interactions between the transitions of
-individual units are igonred. In other words regional context may be
+individual units are ignored. In other words regional context may be
 important to understand regional income dynamics, but the classic Markov
 approach is silent on this issue.
 
@@ -267,7 +267,7 @@ The probability of a poor state remaining poor is 0.963 if their
 neighbors are in the 1st quintile and 0.798 if their neighbors are
 in the 2nd quintile. The probability of a rich economy remaining
 rich is 0.977 if their neighbors are in the 5th quintile, but if their
-neights are in the 4th quintile this drops to 0.903.
+neighbors are in the 4th quintile this drops to 0.903.
 
 We can also explore the different steady state distributions implied by
 these different transition probabilities:
@@ -332,7 +332,7 @@ alternative approach to spatial dynamics is to consider the joint
 transitions of an observation and its spatial lag in the distribution.
 By exploiting the form of the static :ref:`LISA <lisa>` and embedding it
 in a dynamic context we develop the LISA Markov in which the states of the
-chain are defined as the four quadrants in the Moran scatterplot.
+chain are defined as the four quadrants in the Moran scatter plot.
 Continuing on with our US example:
 
     >>> import numpy as np
@@ -380,7 +380,7 @@ autocorrelation). [#]_ Finally the first mean passage time for the LISAs is:
            [ 3.96484993,  6.32688949,  2.65051994,  6.13860548],
            [ 3.68603107,  6.62662485,  2.8242759 ,  6.00509057]])
 
-which exhibits the tendancy for short passage times into quadrants 1 and 3
+which exhibits the tendency for short passage times into quadrants 1 and 3
 relative to 2 and 4, irrespective of the position of the LISA at the
 beginning of the period.
 
