@@ -181,6 +181,8 @@ the cumulative probability of the observed value in the empirical distribution.
 Local Autocorrelation
 =====================
 
+.. _lisa:
+
 Local Indicators of Spatial Association
 ---------------------------------------
 

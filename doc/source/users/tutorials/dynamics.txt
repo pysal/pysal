@@ -1,0 +1,469 @@
+################
+Spatial Dynamics
+################
+
+.. contents::
+
+Introduction
+============
+
+PySAL implements a number of exploratory approaches to analyze a
+particular type of spatial dynamics. More specifically, the focus is on
+longitudinal spatial data, or observations on fixed areal units over
+multiple time periods. Examples could include, time series of voting
+patterns in US Presidential elections, time series of remotely sensing
+images, labor market dynamics, regional business cyclles, among many
+others.  
+
+Two broad sets of spatial dynamics methods are implemented. The first are
+Markov based methods, while the second are based on Rank dynamics.
+
+Markov Based Methods
+====================
+
+The Markov based methods include classic Markov chains and extensions of
+these approaches to deal with spatially referenced data. In what follows
+we illustrate the functionality of these Markov methods. Readers
+interested in the methological foundations of these approaches are
+directed to [#]_.
+
+Classic Markov
+--------------
+
+We start with a look at a simple example of classic Markov methods
+implemented in PySAL. A Markov chain may be in one of :math:`k` different
+states at any point in time. These states are exhaustive and mutually
+exclusive. For example, if one had a time series of remote sensing images
+used to develop land use classifications, then the states could be defined
+as the specific land use classes and interest would center on the
+transitions in and out of different classes for each pixel. 
+
+For example, let's construct a small artificial chain consisting of 3 states
+(a,b,c) and 5 different pixels at three different points in time:
+        
+        >>> import pysal
+        >>> import numpy as np
+        >>> c=np.array([['b','a','c'],['c','c','a'],['c','b','c'],['a','a','b'],['a','b','c']])
+        >>> c
+        array([['b', 'a', 'c'],
+               ['c', 'c', 'a'],
+               ['c', 'b', 'c'],
+               ['a', 'a', 'b'],
+               ['a', 'b', 'c']], 
+              dtype='|S1')
+        
+So the first pixel was in class 'b' in period 1, class 'a' in period 2,
+and class 'c' in period 3. We can summarize the overall transition
+dynamics for the set of pixels by treating it as a Markov chain:
+
+        >>> m=pysal.Markov(c)
+        >>> m.classes
+        array(['a', 'b', 'c'], 
+              dtype='|S1')
+
+The Markov instance m has an attribute classes extracted from the chain -
+the assumption is that the observations are on the rows of the input and
+the different points in time on the columns. In addition to extracting the
+classes as an attribute, our Markov instance will also have a transitions
+matrix:
+
+        >>> m.transitions
+        array([[ 1.,  2.,  1.],
+               [ 1.,  0.,  2.],
+               [ 1.,  1.,  1.]])
+
+indicating that of the four pixels that began a transition interval in
+class 'a', 1 remained in that class, 2 transitioned to class 'b' and 1
+transitioned to class 'c'. 
+
+This simple example illustrates the basic creation of a Markov instance,
+but the small sample size makes it unrealistic for the more advanced
+features of this approach.  For a larger example, we will look at an
+application of Markov methods to understanding regional income dynamics in
+the US. Here we will load in data on per capita income observed annually
+from 1929 to 2010 for the lower 48 US states:
+
+        >>> f=pysal.open("../examples/usjoin.csv")
+        >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
+        >>> pci.shape
+        (81, 48)
+
+The first row of the array is the per capita income for the first year:
+
+        >>> pci[0,:]
+        array([ 323,  600,  310,  991,  634, 1024, 1032,  518,  347,  507,  948,
+                607,  581,  532,  393,  414,  601,  768,  906,  790,  599,  286,
+                621,  592,  596,  868,  686,  918,  410, 1152,  332,  382,  771,
+                455,  668,  772,  874,  271,  426,  378,  479,  551,  634,  434,
+                741,  460,  673,  675])
+        
+In order to apply the classic Markov approach to this series, we first
+have to discritize the distribution by defining our classes. There are
+many ways to do this, but here we will use the quintiles for eacy annual
+income distribution to define the classes:
+
+        >>> q5=np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
+        >>> q5.shape
+        (48, 81)
+        >>> q5[:,0]
+        array([0, 2, 0, 4, 2, 4, 4, 1, 0, 1, 4, 2, 2, 1, 0, 1, 2, 3, 4, 4, 2, 0, 2,
+               2, 2, 4, 3, 4, 0, 4, 0, 0, 3, 1, 3, 3, 4, 0, 1, 0, 1, 2, 2, 1, 3, 1,
+               3, 3])
+ 
+A number of things need to be noted here. First, we are relying on the
+classification methods in PySAL for defining our quintiles. The class
+Quantiles uses quintiles as the default and will create an instance of
+this class that has multiple attributes, the one we are extracting in the
+first line is yb - the class id for each observation. The second thing to
+note is the transpose operator which gets our resulting array q5 in the
+proper structure required for use of Markov. Thus we see that the first
+spatial unit (Alambama with an income of 323) fell in the first quintile
+in 1929, while the last unit (Wyoming with an income of 675) fell in the
+fourth quintile. [#]_
+
+So now we have a time series for each state of its quintile membership.
+For example, Colorado's quintile time series is:
+
+        >>> q5[4,:]
+        array([2, 3, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 3, 2, 3, 2, 3,
+               3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 3, 3, 3, 3, 3, 3,
+               3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4,
+               4, 4, 4, 4, 4, 3, 3, 3, 4, 3, 3, 3])
+
+indicating that it has occupied the 3rd, 4th and 5th quintiles in the
+distribution at different points in time. To summarize the transition
+dynamics for all units, we instantiate a Markov object:
+
+        >>> m5=pysal.Markov(q5)
+        >>> m5.transitions
+        array([[ 729.,   71.,    1.,    0.,    0.],
+               [  72.,  567.,   80.,    3.,    0.],
+               [   0.,   81.,  631.,   86.,    2.],
+               [   0.,    3.,   86.,  573.,   56.],
+               [   0.,    0.,    1.,   57.,  741.]])
+
+Assuming we can treat these transitions as a first order Markov chain, we can estimate
+the transition probabilities:
+
+        >>> m5.p
+        matrix([[ 0.91011236,  0.0886392 ,  0.00124844,  0.        ,  0.        ],
+                [ 0.09972299,  0.78531856,  0.11080332,  0.00415512,  0.        ],
+                [ 0.        ,  0.10125   ,  0.78875   ,  0.1075    ,  0.0025    ],
+                [ 0.        ,  0.00417827,  0.11977716,  0.79805014,  0.07799443],
+                [ 0.        ,  0.        ,  0.00125156,  0.07133917,  0.92740926]])
+
+as well as the long run steady state distribution:
+
+        >>> m5.steady_state
+        matrix([[ 0.20774716],
+                [ 0.18725774],
+                [ 0.20740537],
+                [ 0.18821787],
+                [ 0.20937187]])
+
+With the transition probability matrix in hand, we can estimate the first
+mean passage time:
+
+        >>> pysal.ergodic.fmpt(m5.p)
+        matrix([[   4.81354357,   11.50292712,   29.60921231,   53.38594954,
+                  103.59816743],
+                [  42.04774505,    5.34023324,   18.74455332,   42.50023268,
+                   92.71316899],
+                [  69.25849753,   27.21075248,    4.82147603,   25.27184624,
+                   75.43305672],
+                [  84.90689329,   42.85914824,   17.18082642,    5.31299186,
+                   51.60953369],
+                [  98.41295543,   56.36521038
+
+thus, for a state with income in the first quintile, it takes on average
+11.5 years for it to first enter the second quintile, 29.6 to get to the
+third quintile, 53.4 years to enter the fourth, and 103.6 years to reach
+the richest quintile.
+
+
+Spatial Markov
+--------------
+
+Thus far we have treated all the spatial units as independent to estimate
+the transition probabilities. This hides a number of implicit assumptions.
+First, the transition dynamics are assumed to hold for all units and for
+all time periods. Second, interactions between the transitions of
+individual units are igonred. In other words regional context may be
+important to understand regional income dynamics, but the classic Markov
+approach is silent on this issue.
+
+PySAL includes a number of spatially explicit extensions to the Markov
+framework. The first is the spatial Markov class that we illustrate here.
+We first are going to transform the income series to relative incomes (by
+standardizing by the mean each period):
+
+    >>> import pysal
+    >>> f=pysal.open("../examples/usjoin.csv")
+    >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
+    >>> pci=pci.transpose()
+    >>> rpci=pci/(pci.mean(axis=0))
+
+
+Next, we require a spatial weights object, and here we will create one
+from an external GAL file:
+
+    >>> w=pysal.open("../examples/states48.gal").read()
+    >>> w.transform='r'
+
+Finally, we create an instance of the Spatial Markov class using 5 states
+for the chain:
+
+    >>> sm=pysal.Spatial_Markov(rpci,w,fixed=True,k=5)
+
+Here we are keeping the quintiles fixed, meaning the data are pooled over
+space and time and the quintiles calculated for the pooled data. This is
+why we first transformed the data to relative incomes.  We can next
+examine the global transition probability matrix for relative incomes:
+
+    >>> sm.p
+    matrix([[ 0.91461837,  0.07503234,  0.00905563,  0.00129366,  0.        ],
+            [ 0.06570302,  0.82654402,  0.10512484,  0.00131406,  0.00131406],
+            [ 0.00520833,  0.10286458,  0.79427083,  0.09505208,  0.00260417],
+            [ 0.        ,  0.00913838,  0.09399478,  0.84856397,  0.04830287],
+            [ 0.        ,  0.        ,  0.        ,  0.06217617,  0.93782383]])
+
+The Spatial Markov allows us to compare the global transition dynamics to
+those conditioned on regional context. More specifically, the transition
+dynamics are split across economies who have spatial lags in different
+quintiles at the beginning of the year. In our example we have 5 classes,
+so 5 different conditioned transition probability matrices are estimated:
+ 
+    >>> for p in sm.P:
+    ...     print p
+    ...     
+    [[ 0.96341463  0.0304878   0.00609756  0.          0.        ]
+     [ 0.06040268  0.83221477  0.10738255  0.          0.        ]
+     [ 0.          0.14        0.74        0.12        0.        ]
+     [ 0.          0.03571429  0.32142857  0.57142857  0.07142857]
+     [ 0.          0.          0.          0.16666667  0.83333333]]
+    [[ 0.79831933  0.16806723  0.03361345  0.          0.        ]
+     [ 0.0754717   0.88207547  0.04245283  0.          0.        ]
+     [ 0.00537634  0.06989247  0.8655914   0.05913978  0.        ]
+     [ 0.          0.          0.06372549  0.90196078  0.03431373]
+     [ 0.          0.          0.          0.19444444  0.80555556]]
+    [[ 0.84693878  0.15306122  0.          0.          0.        ]
+     [ 0.08133971  0.78947368  0.1291866   0.          0.        ]
+     [ 0.00518135  0.0984456   0.79274611  0.0984456   0.00518135]
+     [ 0.          0.          0.09411765  0.87058824  0.03529412]
+     [ 0.          0.          0.          0.10204082  0.89795918]]
+    [[ 0.8852459   0.09836066  0.          0.01639344  0.        ]
+     [ 0.03875969  0.81395349  0.13953488  0.          0.00775194]
+     [ 0.0049505   0.09405941  0.77722772  0.11881188  0.0049505 ]
+     [ 0.          0.02339181  0.12865497  0.75438596  0.09356725]
+     [ 0.          0.          0.          0.09661836  0.90338164]]
+    [[ 0.33333333  0.66666667  0.          0.          0.        ]
+     [ 0.0483871   0.77419355  0.16129032  0.01612903  0.        ]
+     [ 0.01149425  0.16091954  0.74712644  0.08045977  0.        ]
+     [ 0.          0.01036269  0.06217617  0.89637306  0.03108808]
+     [ 0.          0.          0.          0.02352941  0.97647059]]
+    
+
+The probability of a poor state remaining poor is 0.963 if their
+neighbors are in the 1st quintile and 0.798 if their neighbors are
+in the 2nd quintile. The probability of a rich economy remaining
+rich is 0.977 if their neighbors are in the 5th quintile, but if their
+neights are in the 4th quintile this drops to 0.903.
+
+We can also explore the different steady state distributions implied by
+these different transition probabilities:
+
+    >>> sm.S
+    array([[ 0.43509425,  0.2635327 ,  0.20363044,  0.06841983,  0.02932278],
+           [ 0.13391287,  0.33993305,  0.25153036,  0.23343016,  0.04119356],
+           [ 0.12124869,  0.21137444,  0.2635101 ,  0.29013417,  0.1137326 ],
+           [ 0.0776413 ,  0.19748806,  0.25352636,  0.22480415,  0.24654013],
+           [ 0.01776781,  0.19964349,  0.19009833,  0.25524697,  0.3372434 ]])
+
+The long run distribution for states with poor (rich) neighbors has
+0.435 (0.018) of the values in the first quintile, 0.263 (0.200) in
+the second quintile, 0.204 (0.190) in the third, 0.0684 (0.255) in the
+fourth and 0.029 (0.337) in the fifth quintile. And, finally the first mean
+passage times:
+
+    >>> for f in sm.F:
+    ...     print f
+    ...     
+    [[   2.29835259   28.95614035   46.14285714   80.80952381  279.42857143]
+     [  33.86549708    3.79459555   22.57142857   57.23809524  255.85714286]
+     [  43.60233918    9.73684211    4.91085714   34.66666667  233.28571429]
+     [  46.62865497   12.76315789    6.25714286   14.61564626  198.61904762]
+     [  52.62865497   18.76315789   12.25714286    6.           34.1031746 ]]
+    [[   7.46754205    9.70574606   25.76785714   74.53116883  194.23446197]
+     [  27.76691978    2.94175577   24.97142857   73.73474026  193.4380334 ]
+     [  53.57477715   28.48447637    3.97566318   48.76331169  168.46660482]
+     [  72.03631562   46.94601483   18.46153846    4.28393653  119.70329314]
+     [  77.17917276   52.08887197   23.6043956     5.14285714   24.27564033]]
+    [[   8.24751154    6.53333333   18.38765432   40.70864198  112.76732026]
+     [  47.35040872    4.73094099   11.85432099   34.17530864  106.23398693]
+     [  69.42288828   24.76666667    3.794921     22.32098765   94.37966594]
+     [  83.72288828   39.06666667   14.3           3.44668119   76.36702977]
+     [  93.52288828   48.86666667   24.1           9.8           8.79255406]]
+    [[  12.87974382   13.34847151   19.83446328   28.47257282   55.82395142]
+     [  99.46114206    5.06359731   10.54545198   23.05133495   49.68944423]
+     [ 117.76777159   23.03735526    3.94436301   15.0843986    43.57927247]
+     [ 127.89752089   32.4393006    14.56853107    4.44831643   31.63099455]
+     [ 138.24752089   42.7893006    24.91853107   10.35          4.05613474]]
+    [[  56.2815534     1.5          10.57236842   27.02173913  110.54347826]
+     [  82.9223301     5.00892857    9.07236842   25.52173913  109.04347826]
+     [  97.17718447   19.53125       5.26043557   21.42391304  104.94565217]
+     [ 127.1407767    48.74107143   33.29605263    3.91777427   83.52173913]
+     [ 169.6407767    91.24107143   75.79605263   42.5           2.96521739]]
+
+States with incomes in the first quintile with neighbors in the
+first quintile return to the first quintile after 2.298 years, after
+leaving the first quintile. They enter the fourth quintile 
+80.810 years after leaving the first quintile, on average.
+Poor states within neighbors in the fourth quintile return to the
+first quintile, on average, after 12.88 years, and would enter the
+fourth quintile after 28.473 years.
+
+
+LISA Markov
+-----------
+
+The Spatial Markov conditions the transitions on the value of the spatial
+lag for an observation at the beginning of the transition period. An
+alternative approach to spatial dynamics is to consider the joint
+transitions of an observation and its spatial lag in the distribution.
+By exploiting the form of the static :ref:`LISA <lisa>` and embedding it
+in a dynamic context we develop the LISA Markov in which the states of the
+chain are defined as the four quadrants in the Moran scatterplot.
+Continuing on with our US example:
+
+    >>> import numpy as np
+    >>> f=pysal.open("../examples/usjoin.csv")
+    >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
+    >>> w=pysal.open("../examples/states48.gal").read()
+    >>> lm=pysal.LISA_Markov(pci,w)
+    >>> lm.classes
+    array([1, 2, 3, 4])
+
+The LISA transitions are:
+
+    >>> lm.transitions
+    array([[ 495.,   47.,  384.,  244.],
+           [ 180.,   83.,  178.,  115.],
+           [ 334.,  321.,  661.,  190.],
+           [ 169.,  105.,  218.,   83.]])
+
+and the estimated transition probability matrix is:
+
+    >>> lm.p
+    matrix([[ 0.42307692,  0.04017094,  0.32820513,  0.20854701],
+            [ 0.32374101,  0.14928058,  0.32014388,  0.20683453],
+            [ 0.22177955,  0.21314741,  0.43891102,  0.12616202],
+            [ 0.29391304,  0.1826087 ,  0.37913043,  0.14434783]])
+
+The diagonal elements indicate the staying probabilities and we see that
+there is greater mobility for observations in quadrants 2 and 4 than 1 and
+2.
+
+The implied long run steady state distribution of the chain is
+
+    >>> lm.steady_state
+    matrix([[ 0.31122083+0.j],
+            [ 0.14496933+0.j],
+            [ 0.37728447+0.j],
+            [ 0.16652538+0.j]])
+
+again reflecting the dominance of quadrants 1 and 3 (positive
+autocorrelation). [#]_ Finally the first mean passage time for the LISAs is:
+
+   >>> pysal.ergodic.fmpt(lm.p)
+   matrix([[ 3.21315259,  7.72803263,  2.96241347,  5.6170544 ],
+           [ 3.56371429,  6.8980109 ,  2.98948447,  5.62313228],
+           [ 3.96484993,  6.32688949,  2.65051994,  6.13860548],
+           [ 3.68603107,  6.62662485,  2.8242759 ,  6.00509057]])
+
+which exhibits the tendancy for short passage times into quadrants 1 and 3
+relative to 2 and 4, irrespective of the position of the LISA at the
+beginning of the period.
+
+Rank Based Methods
+==================
+
+The second set of spatial dynamic methods in PySAL are based on rank
+correlations and spatial extensions of the classic rank statistics.
+
+Spatial Rank Correlation
+------------------------
+
+Kendall's :math:`\tau` is based on a comparison of the number of pairs of :math:`n`
+observations that have concordant ranks between two variables. For spatial
+dynamics in PySAL, the two variables in question are the values of an attribute
+measured at two points in time over :math:`n` spatial units. This classic
+measure of rank correlation indicates how much relative stability there
+would be in the map pattern between the two periods.
+
+The spatial :math:`\tau` Tau decomposes these pairs into those that are
+spatial neighbors and those that are not, and examines whether the rank
+correlation is different between the two sets. [4]_ To illustrate this we
+turn to the case of regional incomes in Mexico over the 1940 to 2010
+period:
+
+    >>> import pysal
+    >>> f=pysal.open("../examples/mexico.csv")
+    >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
+    >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
+
+We also introduce the concept of regime weights that defines the neighbor
+set as those spatial units belonging to the same region. In this example
+the variable "esquivel99" represents a categorical classification of
+Mexican states in to regions:
+
+    >>> regime=np.array(f.by_col['esquivel99'])
+    >>> w=pysal.weights.regime_weights(regime)
+    >>> np.random.seed(10)
+    >>> res=[pysal.SpatialTau(y[:,i],y[:,i+1],w,99) for i in range(6)]
+    >>> for r in res:
+    ...     "%8.3f %8.3f %8.3f"%(r.wnc,r.ev_wnc,r.p_rand_wnc)
+    ...     
+    '  44.000   52.354    0.000'
+    '  47.000   53.576    0.006'
+    '  52.000   55.747    0.031'
+    '  54.000   55.556    0.212'
+    '  53.000   53.384    0.436'
+    '  57.000   57.566    0.390'
+
+
+Rank Decomposition
+------------------
+
+For sequence of time periods :math:`\theta` measures the extent to which rank
+changes for a variable measured over :math:`n` locations are in the same direction
+within mutually exclusive and exhaustive partitions (regimes) of the
+:math:`n` locations.
+
+Theta is defined as the sum of the absolute sum of rank changes within
+the regimes over the sum of all absolute rank changes. [4]_
+
+    >>> import pysal
+    >>> f=pysal.open("../examples/mexico.csv")
+    >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
+    >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
+    >>> regime=np.array(f.by_col['esquivel99'])
+    >>> np.random.seed(10)
+    >>> t=pysal.Theta(y,regime,999)
+    >>> t.theta
+    array([[ 0.41538462,  0.28070175,  0.61363636,  0.62222222,  0.33333333,
+             0.47222222]])
+    >>> t.pvalue_left
+    array([ 0.307,  0.077,  0.823,  0.552,  0.045,  0.735])
+
+
+.. rubric:: Footnotes
+
+.. [#] Rey, S.J. 2001. "Spatial empirics for economic growth
+       and convergence", 34 Geographical Analysis, 33, 195-214.
+.. [#] The states are ordered alphabetically.
+.. [#] The complex values of the steady state distribution arise from
+       complex eigenvalues in the transition probability matrix which may indicate
+       cyclicality in the chain.
+.. [4] Rey, S.J. (2004) "Spatial dependence in the evolution of regional
+       income distributions," in A. Getis, J. Mur and H.Zoeller (eds). Spatial Econometrics and Spatial
+       Statistics. Palgrave, London, pp. 194-213.
