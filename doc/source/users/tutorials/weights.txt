@@ -28,6 +28,18 @@ a closer look at the properties of the W class and some related functions. [#]_
 
 PySAL Spatial Weight Types
 ==========================
+PySAL weights are handled in objects of the :class:`pysal.weights.W`. The
+conceptual idea of spatial weights is that of a nxn matrix in which the
+diagonal elements (:math:`w_ii`) are set to zero by definition and the rest of
+the cells (:math:`w_ij`) capture the potential of interaction. However, these
+matrices tend to be fairly sparse (i.e. many cells contain zeros) and hence a
+full nxn array would not be an efficient representation. PySAL employs a
+different way of storing that is structured in two main dictionaries [#]_ :
+neighbors which, for each observation (key) contains a list of the other ones 
+(value) with potential for interaction (:math:`w_ij \noteq 0`); and weights, 
+which contains the weight values for each of those observations (in the same 
+order). This way, large datasets can be stored when keeping the full matrix 
+would not be possible because of memory.
 
 Contiguity Based Weights
 ------------------------
@@ -55,13 +67,10 @@ The w object has a number of attributes::
     [(2, 4), (3, 12), (4, 9)]
 
 n is the number of spatial units, so conceptually we could be thinking that the
-weights are stored in a 25x25 matrix. However, as the second attribute
-(pct_nonzero) indicates, many of the elements of this matrix would be 0 in
-value so such a representation would not be efficient. Instead, the key
+weights are stored in a 25x25 matrix. The second attribute
+(pct_nonzero) shows the sparseness of the matrix. The key
 attributes used to store contiguity relations in W are the neighbors and
-weights attributes. Both are special cases [#]_ of Python dictionaries where the key
-is the id for a spatial unit and the value is a Python list of neighbor ids or
-weight values. In the example above we see that the observation
+weights attributes. In the example above we see that the observation
 with id 0 (Python is zero-offset) has two neighbors with ids [5, 1] each of
 which have equal weights of 1.0.
 
@@ -122,6 +131,10 @@ Distance Based Weights
 In addition to using contiguity to define  neighbor relations, more general
 functions of the distance separating observations can be used to specify the
 weights.
+
+Please note that distance calculations are coded for a flat surface, so you
+will need to have your shapefile projected in advance for the output to be
+correct.
 
 k-nearest neighbor weights
 --------------------------
@@ -232,9 +245,10 @@ weights is supported through kernel weights:
 
 The bandwith attribute plays the role of the distance threshold with kernel
 weights, while the form of the kernel function determines the distance decay in
-the derived continuous weights. In the above example, the bandwidth is set to
-the default value and fixed across the observations. The user could specify
-a different value for a fixed bandwidth:
+the derived continuous weights (the following are available:
+'triangular','uniform','quadratic','quartic','gaussian'). In the above example,
+the bandwidth is set to the default value and fixed across the observations.
+The user could specify a different value for a fixed bandwidth:
 
     >>> kw15=pysal.Kernel(points,bandwidth=15.0)
     >>> kw15[0]
@@ -306,6 +320,27 @@ Although the three different types of spatial weights illustrated above cover a 
 towards specifying spatial relations, they all share common attributes from the base W class in PySAL. Here 
 we take a closer look at some of the more useful properties of this class.
 
+Attributes of W
+-----------------------------
+W objects come with a whole bunch of useful attributes that may help you when
+dealing with spatial weights matrices. To see a list of all of them, same as
+with any other Python object, type::
+
+    >>> import pysal
+    >>> help(pysal.W)
+
+If you want to be more specific and learn, for example, about the attribute
+`s0`, then type::
+
+    >>> help(pysal.W.s0)
+    Help on property:
+
+        float
+            
+        .. math::
+                
+            s0=\sum_i \sum_j w_{i,j}
+
 Weight Transformations
 ----------------------
 
@@ -328,6 +363,12 @@ We can row standardize this by setting the transform property:
     >>> w.transform='r'
     >>> w.weights[0]
     [0.5, 0.5]
+
+Supported transformations are the following:
+    
+    * '`b`': binary.
+    * '`r`': row standardization.
+    * '`v`': variance stabilizing.
 
 If the original weights (unstandardized) are required, the transform property can be reset:
 
