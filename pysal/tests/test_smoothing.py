@@ -40,7 +40,7 @@ class AgeStd_Tester(unittest.TestCase):
         indirect = np.array(sm.indirect_age_standardization(self.e, self.b, self.s_e, self.s_b, self.n)).round(8)
         crude_exp = np.array([0.02375000, 0.02666667])
         direct_exp = np.array([[0.02374402,0.01920491,0.02904848],[0.02665072,0.02177143,0.03230508]])
-        indirect_exp = np.array([[0.02372382, 0.02213762, 0.02542368], [0.02610803, 0.02443713, 0.02789318]])
+        indirect_exp = np.array([[0.02372382, 0.01940230, 0.02900789], [0.02610803, .02154304, 0.03164035]])
         self.assertEquals(list(crude), list(crude_exp))
         self.assertEquals(list(direct.flatten()), list(direct_exp.flatten()))
         self.assertEquals(list(indirect.flatten()), list(indirect_exp.flatten()))

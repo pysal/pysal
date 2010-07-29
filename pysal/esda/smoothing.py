@@ -200,7 +200,7 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
         res.append((adjusted_r[i], lower, upper))
     return res
 
-def indirect_age_standardization(e, b, s_e, s_b, n, alpha=0.5):
+def indirect_age_standardization(e, b, s_e, s_b, n, alpha=0.05):
     """A utility function to compute rate through indirect age standardization
 
     Parameters
