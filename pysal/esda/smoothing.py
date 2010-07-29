@@ -617,6 +617,8 @@ class Spatial_Filtering:
 
     Parameters
     ----------
+    bbox        : a list of two lists where each list is a pair of coordinates
+                  a bounding box for the entire n spatial units
     data        : array (n, 2)
                   x, y coordinates
     e           : array (n, 1)
@@ -649,27 +651,29 @@ class Spatial_Filtering:
     >>> fromWKT = pysal.core.IOHandlers.wkt.WKTParser()
     >>> stl.cast('WKT',fromWKT)
     >>> d = np.array([i.centroid for i in stl[:,0]])
+    >>> bbox = [[-92.700676, 36.881809], [-87.916573, 40.3295669]]
     >>> stl_e, stl_b = np.array(stl[:,10]), np.array(stl[:,13])
-    >>> sf_0 = Spatial_Filtering(d,stl_e,stl_b,10,10,r=1.2)
+    >>> sf_0 = Spatial_Filtering(bbox,d,stl_e,stl_b,10,10,r=2)
     >>> sf_0.r[:10]
-    array([  4.31059908e-05,   4.14823646e-05,   4.35788566e-05,
-             4.22393245e-05,   4.28605971e-05,   3.86280076e-05,
-             3.59741429e-05,   3.86953455e-05,   3.80696800e-05,
-             3.79517204e-05])
-    >>> sf = Spatial_Filtering(d,stl_e,stl_b,10,10,pop=600000)
+    array([  4.23561763e-05,   4.45290850e-05,   4.56456221e-05,
+             4.49133384e-05,   4.39671835e-05,   4.44903042e-05,
+             4.19845497e-05,   4.11936548e-05,   3.93463504e-05,
+             4.04376345e-05])
+    >>> sf = Spatial_Filtering(bbox,d,stl_e,stl_b,10,10,pop=600000)
     >>> sf.r.shape
     (100,)
     >>> sf.r[:10]
-    array([ 0.00010236,  0.00010236,  0.00010236,  0.00010236,  0.00010236,
-            0.00010236,  0.00010236,  0.00010236,  0.00010236,  0.00010236])
+    array([  3.73728738e-05,   4.04456300e-05,   4.04456300e-05,
+             3.81035327e-05,   4.54831940e-05,   4.54831940e-05,
+             3.75658628e-05,   3.75658628e-05,   3.75658628e-05,
+             3.75658628e-05])
     """
 
-    def __init__(self, data, e, b, x_grid, y_grid, r=None, pop=None):
+    def __init__(self, bbox, data, e, b, x_grid, y_grid, r=None, pop=None):
         data_tree = KDTree(data)
-        bbox = zip(data.min(axis=0), data.max(axis=0))
-        x_range = bbox[0][1] - bbox[0][0]
-        y_range = bbox[1][1] - bbox[1][0]
-        x, y = np.mgrid[bbox[0][0]:bbox[0][1]:x_range/x_grid, bbox[1][0]:bbox[1][1]:y_range/y_grid]
+        x_range = bbox[1][0]- bbox[0][0]
+        y_range = bbox[1][1] - bbox[0][1]
+        x, y = np.mgrid[bbox[0][0]:bbox[1][0]:x_range/x_grid, bbox[0][1]:bbox[1][1]:y_range/y_grid]
         self.grid = zip(x.ravel(), y.ravel())
         self.r = []
         if r is None and pop is None:
@@ -688,7 +692,7 @@ class Spatial_Filtering:
                 if len(e_n_f) == 0:
                     e_n_f = e_n[[0]]
                     b_n_f = b_n[[0]]
-                self.r.append(e_n[-1]*1.0 / b_n[-1])
+                self.r.append(e_n_f[-1]*1.0 / b_n_f[-1])
         self.r = np.array(self.r)  
                 
 class Headbanging_Triples:

@@ -133,8 +133,10 @@ class Kernel_AgeAdj_SM_Tester(unittest.TestCase):
 
     def test_spatial_filtering(self):
         points = np.array(self.points)
-        sf = sm.Spatial_Filtering(points, self.e, self.b, 2, 2, r=15)
-        exp = [0.11111111, 0.11111111,  0.08510638,  0.05853659]
+        bbox = [[0,0],[45,45]]
+        sf = sm.Spatial_Filtering(bbox, points, self.e, self.b, 2, 2, r=30)
+        exp = [0.11111111, 0.11111111, 0.20000000000000001, 0.085106379999999995, 
+         0.076923080000000005, 0.05789474, 0.052173909999999997, 0.066666669999999997, 0.04117647]
         self.assertEqual(list(sf.r.round(8)), exp)
 
 suite = unittest.TestSuite()
