@@ -12,6 +12,7 @@ Dani Arribas
 David C. Folch
 Myunghwa Hwang
 Julia Koschinsky
+Nicholas Malizia
 Mark McCann
 Serge Rey
 Charels Schmidt
