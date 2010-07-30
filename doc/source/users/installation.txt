@@ -201,7 +201,14 @@ Known Installation Problems
 Troubleshooting
 ---------------
 
-If you experience problems when building, installing, or testing PySAL, ask for help on the OpenSpace list or browse the archives of the pysal-dev google group. 
+If you experience problems when building, installing, or testing PySAL, ask for
+help on the
+`OpenSpace <http://geodacenter.asu.edu/support/community>`_ 
+list or
+browse the archives of the
+`pysal-dev <http://groups.google.com/group/pysal-dev?pli=1>`_ 
+google group. 
+
 Please include the output of the following commands in your message:
 
 1) Platform information::

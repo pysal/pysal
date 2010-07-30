@@ -94,5 +94,5 @@ which brings up::
 	 |                      True if weights are asymmetric, False if not
 	 
 
-Note that the help is truncated at the bottom of the terminal window and more contents can be seen by scrolling (hit any key).
+Note that the help is truncated at the bottom of the terminal window and more of the contents can be seen by scrolling (hit any key).
 	

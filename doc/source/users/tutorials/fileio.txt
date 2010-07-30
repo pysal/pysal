@@ -23,7 +23,12 @@ Ext: '.csv', Modes: ['r']
 Ext: '.wkt', Modes: ['r']
 >>>
 
-Note that in some cases the FileIO module will peek instead your file to determine it's type. For example "geoda_txt" is just a unique scheme for ".txt" files, so when opening a ".txt" pysal will peek inside the file to determine it if has the necessary header information and dispatch accordingly. In the event that pysal does not understand your file IO operations will be dispatched to python's internal open.
+Note that in some cases the FileIO module will peek inside your file to
+determine its type. For example "geoda_txt" is just a unique scheme for ".txt"
+files, so when opening a ".txt" pysal will peek inside the file to determine it
+if has the necessary header information and dispatch accordingly. In the event
+that pysal does not understand your file IO operations will be dispatched to
+python's internal open.
 
 Examples
 ========

@@ -42,6 +42,7 @@ order). This way, large datasets can be stored when keeping the full matrix
 would not be possible because of memory.
 
 .. _contiguity:
+
 Contiguity Based Weights
 ------------------------
 
@@ -92,7 +93,7 @@ of the lattice to define contiguities:
 
 The bishop criterion, which designates pairs of cells as neighbors if they share
 only a vertex, is yet a third alternative for contiguity weights. A bishop matrix
-can be computed as the :ref:`difference <difference>` between the rook and queen cases.
+can be computed as the :ref:`difference` between the rook and queen cases.
 
 The lat2W function is particularly useful in setting up simulation experiments
 requiring a regular grid. For empirical research, a common use case is to have
@@ -373,7 +374,7 @@ If the original weights (unstandardized) are required, the transform property ca
  
 Behind the scenes the transform property is updating all other characteristics of the spatial weights that are a function of the
 values and these standardization operations, freeing the user from having to keep these other attributes updated. To determine the current
-value of the transformation, simply query this attrbute:
+value of the transformation, simply query this attribute:
 
     >>> w.transform
     'O'
@@ -478,7 +479,7 @@ and then recalculate the lag, it takes the form of a weighted average of the nei
 
 
 One important consideration in calculating the spatial lag is that the ordering
-of the values in y aligns with the underling order in W.  In cases where the
+of the values in y aligns with the underlying order in W.  In cases where the
 source for your attribute data is different from the one to construct your
 weights you may need to reorder your y values accordingly.  To check if this is
 the case you can find the order in W as follows:
@@ -608,7 +609,8 @@ example uses the all case:
     >>> w.neighbors[16]
     []
 
-.. _difference::
+.. _difference:
+
 Difference
 ----------
 
@@ -654,8 +656,9 @@ difference weights matrices from regions with partial overlap.
     >>> w.neighbors[19]
     [18, 23]
 
-The difference function can be used construct a bishop :ref:`contiguity weights
-matrix <contiguity>` by differencing a queen and rook matrix.
+The difference function can be used to construct a bishop
+:ref:`contiguity weights matrix <contiguity>` 
+by differencing a queen and rook matrix.
 
         >>> wr=pysal.lat2W(5,5)
         >>> wq=pysal.lat2W(5,5,rook=False)
