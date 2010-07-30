@@ -434,7 +434,7 @@ Mexican states into regions:
 Rank Decomposition
 ------------------
 
-For sequence of time periods :math:`\theta` measures the extent to which rank
+For a sequence of time periods, :math:`\theta` measures the extent to which rank
 changes for a variable measured over :math:`n` locations are in the same direction
 within mutually exclusive and exhaustive partitions (regimes) of the
 :math:`n` locations.
