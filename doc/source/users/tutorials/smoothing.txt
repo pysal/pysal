@@ -57,6 +57,9 @@ that correspond to event counts and population values, respectively.
 
 Each set of numbers should include n by h elements where n and h are the number of areal units
 and the number of age groups. In the above example there are two regions with 4 age groups.
+Age groups are identical across regions. The first four elements in b represent the populations of 4 age 
+groups in the first region, and the last four elements the populations of the same age groups in the second 
+region. 
 
 To apply the crude age standardization, we need to make the following function call:
 
@@ -71,7 +74,7 @@ are about 0.24 and 0.27, respectively.
 Direct Age Standardization
 --------------------------
 
-Direct age standardization is a  variation of the crude age standardization.
+Direct age standardization is a variation of the crude age standardization.
 While crude age standardization uses the ratios of each age group in the observed population,
 direct age standardization weights age-specific rates by the ratios of each age group in a reference 
 population. This reference population, the so-called standard million, is another required 
@@ -194,7 +197,7 @@ In this example the population values correspond to the numbers of live births d
 
 Now we need to find triples for each observation. To support the search of triples, PySAL 
 provides a class called Headbanging_Triples. This class requires an array of point observations, 
-a spatial weights matrix, and the number of triples as its arguments:
+a spatial weights object, and the number of triples as its arguments:
 
     >>> from pysal import knnW
     >>> sids = pysal.open('../examples/sids2.shp', 'r')
@@ -203,7 +206,7 @@ a spatial weights matrix, and the number of triples as its arguments:
     >>> if not sids_w.id_order_set: sids_w.id_order = sids_w.id_order
     >>> triples = sm.Headbanging_Triples(sids_d,sids_w,k=5)
 
-The second line in the example above shows how to extract centroids of polygons. 
+The second line in the above example shows how to extract centroids of polygons. 
 In this example we define 5 neighbors for each observation by using nearest neighbors criteria.
 In the last line we define the maximum number of triples to be found as 5.
 
@@ -226,7 +229,7 @@ Non-parametric Smoothing
 Non-parametric smoothing methods compute rates without making any assumptions of distributional 
 properties of rate estimates. A representative method in this approach is spatial filtering. 
 PySAL provides the most simplistic form of spatial filtering where a user-specified grid is imposed 
-on the data set and a moving window with fixed or adaptive radius visits each vertex of the grid to 
+on the data set and a moving window withi a fixed or adaptive radius visits each vertex of the grid to 
 compute the rate at the vertex. Using the previous SIDS example, we can use Spatial_Filtering class:
 
     >>> bbox = [sids.bbox[:2], sids.bbox[2:]]
@@ -284,7 +287,7 @@ by using a kernel spatial weights instance in place of a general spatial weights
 
 Age-adjusted rate smoother is another non-parametric smoother that PySAL provides.
 This smoother applies direct age standardization while computing spatial rates. 
-To illustrate the age-adjusted rate smoother, we creates a new set of event counts and population values 
+To illustrate the age-adjusted rate smoother, we create a new set of event counts and population values 
 as well as a new kernel weights object.
 
     >>> e = np.array([10, 8, 1, 4, 3, 5, 4, 3, 2, 1, 5, 3])
@@ -294,8 +297,8 @@ as well as a new kernel weights object.
     >>> kw=Kernel(points)
     >>> if not kw.id_order_set: kw.id_order = range(0,len(points))
 
-In the example above we created 6 observations each of which has two age groups. To apply age-adjusted 
-rate smoothing, we use Age_Adjusted_Smoother class as follows:
+In the above example we created 6 observations each of which has two age groups. To apply age-adjusted 
+rate smoothing, we use the Age_Adjusted_Smoother class as follows:
 
     >>> rate = sm.Age_Adjusted_Smoother(e, b, kw, s)
     >>> rate.r
@@ -315,7 +318,7 @@ As a reference PySAL provides a method for a-spatial Empirical Bayes smoothing:
     array([ 0.09080775,  0.09252352,  0.12332267,  0.10753624,  0.03301368,
             0.05934766])
 
-In the first line of the example above we aggregate the event counts and population values by observation.
+In the first line of the above example we aggregate the event counts and population values by observation.
 Next we applied the Empirical_Bayes class to the aggregated counts and population values.
 
 A spatial Empirical Bayes smoother is also implemented in PySAL. This method requires an additional 
