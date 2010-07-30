@@ -9,7 +9,7 @@ from pysal.version import version
 
 setup(name = 'pysal',
       description = 'PySAL: Python Spatial Analysis Library',
-      long_description = open('INSTALL.txt'),
+      #long_description = open('INSTALL.txt'),
       author = 'Luc Anselin, Serge Rey, Charles Schmidt, Andrew Winslow',
       author_email = 'srey@asu.edu',
       maintainer = 'Phil Stephens',
@@ -33,8 +33,7 @@ setup(name = 'pysal',
 
       requires = ['scipy'],
 
-      classifiers=[
-          'Development Status :: 4 - Beta',
+      classifiers=['Development Status :: 4 - Beta',
           'Environment :: Console',
           'Intended Audience :: Science/Research',
           'Intended Audience :: Education',
@@ -42,7 +41,4 @@ setup(name = 'pysal',
           'License :: OSI Approved :: BSD License',
           'Operating System :: OS Independent',
           'Programming Language :: Python',
-          'Topic :: Scientific/Engineering :: GIS',
-          ]
-
-     )
+          'Topic :: Scientific/Engineering :: GIS',])
