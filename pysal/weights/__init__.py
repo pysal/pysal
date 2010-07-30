@@ -30,59 +30,6 @@ class W(object):
                       id_order_set property will return False.  This can be
                       set after creation by setting the 'id_order' property.
 
-    Attributes
-    ----------
-    asymmetric        : binary
-                        True if weights are asymmetric, False if not
-    cardinalities     
-    diagW2
-    diagWtW           
-    diagWtW_WW        : array
-                        diagonal elements of WW+W'W
-    histogram         : list of tuples
-                        neighbor histogram (number of neighbors, number of
-                        observations with that many neighbors)
-    id_order          : list
-                        order of observations when iterating over weights
-    id_order_set      : binary
-                        True if id_order has been set by user, False (default)
-    islands           : list
-                        ids that have no neighbors
-    max_neighbors     : int
-                        maximum cardinality 
-    min_neighbors     : int 
-                        minimum cardinality 
-    mean_neighbors    : float
-                        average cardinality 
-    n                 : int
-                        number of observations 
-    neighbors         : dictionary (Read Only)
-                        {id:[id1,id2]}, key is id, value is list of neighboring
-                        ids
-    neighbor_offsets  : dictionary
-                        like neighbors but the value is a list of zero offset
-                        ids
-    nonzero           : int
-                        number of nonzero weights
-    pct_nonzero       : float
-                        percentage of all weights that are nonzero
-    s0
-    s1                
-    s2                
-    sd                : float
-                        standard deviation of number of neighbors 
-    sparse
-    transform         : string
-                        property for weights transformation, can be used to get and set weights transformation 
-    transformations   : dictionary
-                        transformed weights, key is transformation type, value are weights
-    trcWtW            
-    trcWtW_WW         : float
-                        trace of WW+W'W
-    weights           : dictionary (Read Only)
-                        key is observation id, value is list of transformed
-                        weights in order of neighbor ids (see neighbors)
-
     Examples
     --------
     >>> from pysal import W
