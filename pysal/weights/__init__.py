@@ -30,6 +30,41 @@ class W(object):
                       id_order_set property will return False.  This can be
                       set after creation by setting the 'id_order' property.
 
+    Attributes
+    ----------
+
+    asymmetries
+    cardinalities
+    diagW2
+    diagWtW
+    diagWtW_WW
+    histogram
+    id2i            
+    id_order
+    id_order_set
+    islands
+    max_neighbors
+    mean_neighbors
+    min_neighbors
+    n               
+    neighbor_offsets
+    nonzero
+    pct_nonzero
+    s0              
+    s1              
+    s2
+    s2array
+    sd
+    sparse          
+    trcW2
+    trcWtW
+    trcWtW_WW
+    transform
+
+                    
+
+                      
+
     Examples
     --------
     >>> from pysal import W
@@ -102,7 +137,10 @@ class W(object):
     @property
     def sparse(self):
         """
-        Sparse representation of weights
+        Sparse matrix object
+
+        For any matrix manipulations required for w, w.sparse should be
+        used. This is based on scipy.sparse. 
         """
         if 'sparse' not in self._cache:
             self._sparse=self._build_sparse()
@@ -147,6 +185,9 @@ class W(object):
 
     @property
     def n(self):
+        """
+        number of units
+        """
         if "n" not in self._cache:
             self._n=len(self.neighbors)
             self._cache['n']=self._n
@@ -282,6 +323,9 @@ class W(object):
 
     @property
     def diagWtW_WW(self):
+        """
+        diagonal of :math:`W^{'}W + WW`
+        """
         if 'diagWtW_WW' not in self._cache:
             wt=self.sparse.transpose()
             w=self.sparse
@@ -291,6 +335,9 @@ class W(object):
 
     @property
     def trcWtW_WW(self):
+        """
+        trace of :math:`W^{'}W + WW`
+        """
         if 'trcWtW_WW' not in self._cache:
             self._trcWtW_WW=self.diagWtW_WW.sum()
             self._cache['trcWtW_WW']=self._trcWtW_WW
@@ -298,6 +345,9 @@ class W(object):
 
     @property
     def pct_nonzero(self):
+        """
+        percentage of nonzero weights
+        """
         if 'pct_nonzero' not in self._cache:
             self._pct_nonzero=self.sparse.nnz/(1.*self._n**2)
             self._cache['pct_nonzero']=self._pct_nonzero
@@ -318,6 +368,9 @@ class W(object):
 
     @property
     def max_neighbors(self):
+        """
+        largest number of neighbors
+        """
         if 'max_neighbors' not in self._cache:
             self._max_neighbors=max(self.cardinalities.values())
             self._cache['max_neighbors']=self._max_neighbors
@@ -326,6 +379,9 @@ class W(object):
 
     @property
     def mean_neighbors(self):
+        """
+        average number of neighbors
+        """
         if 'max_neighbors' not in self._cache:
             self._mean_neighbors=np.mean(self.cardinalities.values())
             self._cache['mean_neighbors']=self._mean_neighbors
@@ -334,6 +390,9 @@ class W(object):
 
     @property
     def min_neighbors(self):
+        """
+        minimum number of neighbors
+        """
         if 'min_neighbors' not in self._cache:
             self._min_neighbors=min(self.cardinalities.values())
             self._cache['min_neighbors']=self._min_neighbors
@@ -342,6 +401,9 @@ class W(object):
 
     @property
     def nonzero(self):
+        """
+        number of nonzero weights
+        """
         if 'nonzero' not in self._cache:
             self._nonzero=self._sparse.nnz
             self._cache['nonzero']=self._nonzero
@@ -350,7 +412,7 @@ class W(object):
     @property
     def sd(self):
         """
-        standard deviation of cardinalities : float
+        standard deviation of number of neighbors : float
         """
         if 'sd' not in self._cache:
             self._sd=np.std(self.cardinalities.values())
@@ -360,6 +422,9 @@ class W(object):
 
     @property
     def asymmetries(self):
+        """
+        list of id pairs with asymmetric weights
+        """
         if 'asymmetries' not in self._cache:
             self._asymmetries=self.asymmetry()
             self._cache['asymmetries']=self._asymmetries
@@ -367,6 +432,9 @@ class W(object):
 
     @property
     def islands(self):
+        """
+        list of ids without any neighbors
+        """
         if 'islands' not in self._cache:
             self._islands = [i for i,c in self.cardinalities.items() if c==0]
             self._cache['islands']=self._islands
@@ -375,6 +443,10 @@ class W(object):
 
     @property
     def histogram(self):
+        """
+        cardinality histogram as a dictionary, key is the id, value is the
+        number of neighbors for that unit
+        """
         if 'histogram' not in self._cache:
             ct,bin=np.histogram(self.cardinalities.values(),range(self.min_neighbors,self.max_neighbors+2))
             self._histogram=zip(bin,ct)
