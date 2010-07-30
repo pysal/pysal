@@ -41,7 +41,7 @@ Moran's I measures the global spatial autocorrelation in an attribute :math:`y` 
 
         I = n/S_0  \sum_{i}\sum_j z_i w_{i,j} z_j / \sum_i z_i z_i
 
-where :math:`w_{i,j}` is a spatial :doc:`weight <weights>`, :math:`z_i = y_i - \bar{y}`, and :math:`S_0=\sum_i\sum_j w_{i,j}`.  We illustrate the use of Moran's I with a case study of homicide rates a group of 78 counties surrounding St. Louis over the period 1988-93. [#]_
+where :math:`w_{i,j}` is a spatial :doc:`weight <weights>`, :math:`z_i = y_i - \bar{y}`, and :math:`S_0=\sum_i\sum_j w_{i,j}`.  We illustrate the use of Moran's I with a case study of homicide rates for a group of 78 counties surrounding St. Louis over the period 1988-93. [#]_
 We start with the usual imports:
 
         >>> import pysal

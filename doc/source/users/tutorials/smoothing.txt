@@ -19,12 +19,12 @@ areas tend to have higher variance.
 
 A variety of spatial smoothing methods have been suggested to address this problem by aggregating
 the counts and population values for the areas neighboring an observation and
-using these new measurements for its rate compuation.  PySAL provides a range
+using these new measurements for its rate computation.  PySAL provides a range
 of smoothing techniques that exploit different types of moving windows and
 non-parametric weighting schemes as well as the Empirical Bayesian principle.
 In addition, PySAL offers several methods for calculating age-standardized
 rates, since age standardization is critical in estimating rates of some events
-where the probability of an event occurrence is differenct across different age
+where the probability of an event occurrence is different across different age
 groups.
 
 In what follows, we overview the methods for age standardization and spatial smoothing 
@@ -35,7 +35,7 @@ Age Standardization in PySAL
 
 Raw rates, counts divided by populations values, are based on an implicit assumption 
 that the risk of an event is constant over all age/sex categories in the population. 
-For many phenomona, however, the risk is not uniform and often highly correlated with age. 
+For many phenomena, however, the risk is not uniform and often highly correlated with age. 
 To take this into account explicitly, the risks for individual age categories can be estimated 
 separately and averaged to produce a representative value for an area. 
 
@@ -75,7 +75,7 @@ Direct age standardization is a  variation of the crude age standardization.
 While crude age standardization uses the ratios of each age group in the observed population,
 direct age standardization weights age-specific rates by the ratios of each age group in a reference 
 population. This reference population, the so-called standard million, is another required 
-argument in the PySAL implmentation of direct age standardization:
+argument in the PySAL implementation of direct age standardization:
 
     >>> s = np.array([100, 90, 100, 90, 100, 90, 100, 90])
     >>> rate = sm.direct_age_standardization(e, b, s, 2, alpha=0.05)
@@ -118,9 +118,9 @@ observation and its neighbors. The first method adopting this approach is the so
 weighted averages or disk smoother. In this method a rate for each observation is replaced 
 by an average of rates for its neighbors. A :ref:`spatial weights object
 <weights>` is used to specify the neighborhood relationships among
-observstions. To obtain locally weighted averages of the homocide rates in the
+observations. To obtain locally weighted averages of the homicide rates in the
 counties surrounding St. Louis during 1979-84, we first read the corresponding
-data table and extract data values for the homocide counts (the 11th column)
+data table and extract data values for the homicide counts (the 11th column)
 and total population (the 13th column):
 
     >>> import pysal
@@ -133,7 +133,7 @@ and ensure that the order of observations in the weights object is the same as t
     >>> w = pysal.open('../examples/stl.gal', 'r').read()
     >>> if not w.id_order_set: w.id_order = range(1,len(stl) + 1)
 
-Now we calculate locally weighted averages of the homocide rates.
+Now we calculate locally weighted averages of the homicide rates.
 
     >>> rate = sm.Disk_Smoother(e, b, w)
     >>> rate.r
@@ -143,7 +143,7 @@ Now we calculate locally weighted averages of the homocide rates.
              5.29577710e-05,   5.51034691e-05,   4.65160450e-05,
              5.32513363e-05,   3.86199097e-05,   1.92952422e-05])
 
-A varition of locally weighted averages is to use median instead of mean.
+A variation of locally weighted averages is to use median instead of mean.
 In other words, the rate for an observation can be replaced by the median of the rates of its neighbors.
 This method is called locally weighted median and can be applied in the following way:
 
@@ -156,7 +156,7 @@ This method is called locally weighted median and can be applied in the followin
              4.82535850e-05,   5.51831429e-05,   2.99877050e-05])
 
 In this method the procedure to find local medians can be iterated until no further change occurs. 
-The resulting local medians is called iteratively resmoothed medians.
+The resulting local medians are called iteratively resmoothed medians.
 
     >>> rate = sm.Spatial_Median_Rate(e, b, w, iteration=10)
     >>> rate.r
@@ -168,7 +168,7 @@ The resulting local medians is called iteratively resmoothed medians.
 
 The pure local medians can also be replaced by a weighted median. To obtain weighted medians, 
 we need to create an array of weights. For example, we can use the total population of the counties 
-as auxillary weights:
+as auxiliary weights:
 
     >>> rate = sm.Spatial_Median_Rate(e, b, w, aw=b)
     >>> rate.r
@@ -217,13 +217,13 @@ Now we use the triples to compute the headbanging median rates:
             0.00221541,  0.00354767,  0.00259903,  0.00392952,  0.00207125,
             0.00392952,  0.00229253,  0.00392952,  0.00229253,  0.00229253])
 
-As in the locally weighted medians, we can use a set of auxilliary weights and resmooth the medians 
+As in the locally weighted medians, we can use a set of auxiliary weights and resmooth the medians 
 iteratively.
 
-Non-parameteric Smoothing
--------------------------
+Non-parametric Smoothing
+------------------------
 
-Non-parameteric smoothing methods compute rates without making any assumptions of distributional 
+Non-parametric smoothing methods compute rates without making any assumptions of distributional 
 properties of rate estimates. A representative method in this approach is spatial filtering. 
 PySAL provides the most simplistic form of spatial filtering where a user-specified grid is imposed 
 on the data set and a moving window with fixed or adaptive radius visits each vertex of the grid to 
@@ -238,12 +238,12 @@ compute the rate at the vertex. Using the previous SIDS example, we can use Spat
             0.00240216,  0.00237389,  0.00240641,  0.00242211,  0.0024854 ,
             0.00255477,  0.00266573,  0.00288918,  0.0028991 ,  0.00293492])
 
-The first and second arguments of the Spatial_Filtering class are a mininum bounding box containing the 
+The first and second arguments of the Spatial_Filtering class are a minimum bounding box containing the 
 observations and a set of centroids representing the observations.
 Be careful that the bounding box is NOT the bounding box of the centroids.
 The fifth and sixth arguments are to specify the numbers of grid cells along x and y axes.
 The last argument, r, is to define the radius of the moving window. When this parameter is set,
-a fixed radius is applied to all grid vertices. To make the size of moving window variale,
+a fixed radius is applied to all grid vertices. To make the size of moving window variable,
 we can specify the minimum number of population in the moving window without specifying r:
 
     >>> rate = sm.Spatial_Filtering(bbox, sids_d, e, b, 10, 10, pop=10000)
@@ -282,7 +282,7 @@ by using a kernel spatial weights instance in place of a general spatial weights
             0.00221017,  0.00328485,  0.00257988,  0.00370461,  0.0020566 ,
             0.00378135,  0.00240358,  0.00432019,  0.00227857,  0.00251648])
 
-Age-adjusted rate smoother is another non-parameteric smoother that PySAL provides.
+Age-adjusted rate smoother is another non-parametric smoother that PySAL provides.
 This smoother applies direct age standardization while computing spatial rates. 
 To illustrate the age-adjusted rate smoother, we creates a new set of event counts and population values 
 as well as a new kernel weights object.
@@ -305,9 +305,9 @@ rate smoothing, we use Age_Adjusted_Smoother class as follows:
 Empirical Bayes Smoothers
 -------------------------
 
-The last group of smoothing methods that PySAL supports is based upon the Baysian principle. These methods adjust 
+The last group of smoothing methods that PySAL supports is based upon the Bayesian principle. These methods adjust 
 a raw rate by taking into account information in the other raw rates. 
-As a reference PySAL provides a method for aspatial Empirical Bayes smoothing:
+As a reference PySAL provides a method for a-spatial Empirical Bayes smoothing:
 
     >>> e, b = sm.sum_by_n(e, np.ones(12), 6), sm.sum_by_n(b, np.ones(12), 6)
     >>> rate = sm.Empirical_Bayes(e, b)
@@ -316,7 +316,7 @@ As a reference PySAL provides a method for aspatial Empirical Bayes smoothing:
             0.05934766])
 
 In the first line of the example above we aggregate the event counts and population values by observation.
-Next we applied the Empirical_Bayes class to the aggregated countes and population values.
+Next we applied the Empirical_Bayes class to the aggregated counts and population values.
 
 A spatial Empirical Bayes smoother is also implemented in PySAL. This method requires an additional 
 argument, i.e., a spatial weights object. We continue to reuse the kernel spatial weights object we built before.
@@ -341,5 +341,9 @@ An example for the class usage is as follows:
 .. rubric:: Footnotes
 
 .. [#] Although this tutorial provides an introduction to the PySAL implementations for spatial smoothing, it is not exhaustive. Complete documentation for the implementations can be found by accessing the help from within a Python interpreter. 
-.. [#] For the details of triple selection and headbanging smoothing please refer to Anselin, L., Lozano, N., and Koschinsky, J. (2006). "Rate Transformations and Smoothing". GeoDa Center Research Report.
+.. [#] For the details of triple selection and headbanging smoothing please
+       refer to Anselin, L., Lozano, N., and Koschinsky, J. (2006). "`Rate
+       Transformations and Smoothing
+       <http://geodacenter.asu.edu/pdf/smoothing_06.pdf>`_". GeoDa Center
+       Research Report.
 

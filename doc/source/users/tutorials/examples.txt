@@ -57,7 +57,7 @@ Files included:
 shp_test
 ========
 
-Sample Shapefiles used only for testing purposes. Three examples are include each example include a ".shp" Shapefile, ".shx" Shapefile Index, ".dbf" DBase file, and a ".prj" ESRI Projection file.
+Sample Shapefiles used only for testing purposes. Each example include a ".shp" Shapefile, ".shx" Shapefile Index, ".dbf" DBase file, and a ".prj" ESRI Projection file.
 
 Examples include:
 
@@ -73,7 +73,7 @@ Homicides and selected socio-economic characteristics for counties surrounding S
 Files include:
 
  * stl_hom.html: Metadata
- * stl_hom.txt: Serge? (used in esda/moran.py)
+ * stl_hom.txt: txt file with attribute data
  * stl_hom.wkt: A Well-Known-Text representation of the geometry.
  * stl_hom.csv: attribute data and WKT geometry.
 

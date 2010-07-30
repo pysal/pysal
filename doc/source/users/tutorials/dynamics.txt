@@ -10,8 +10,8 @@ Introduction
 PySAL implements a number of exploratory approaches to analyze a
 particular type of spatial dynamics. More specifically, the focus is on
 longitudinal spatial data, or observations on fixed areal units over
-multiple time periods. Examples could include, time series of voting
-patterns in US Presidential elections, time series of remotely sensing
+multiple time periods. Examples could include time series of voting
+patterns in US Presidential elections, time series of remote sensing
 images, labor market dynamics, regional business cycles, among many
 others.  
 
@@ -61,7 +61,7 @@ dynamics for the set of pixels by treating it as a Markov chain:
         array(['a', 'b', 'c'], 
               dtype='|S1')
 
-The Markov instance m has an attribute classes extracted from the chain -
+The Markov instance m has an attribute class extracted from the chain -
 the assumption is that the observations are on the rows of the input and
 the different points in time on the columns. In addition to extracting the
 classes as an attribute, our Markov instance will also have a transitions
@@ -195,7 +195,7 @@ approach is silent on this issue.
 PySAL includes a number of spatially explicit extensions to the Markov
 framework. The first is the spatial Markov class that we illustrate here.
 We first are going to transform the income series to relative incomes (by
-standardizing by the mean each period):
+standardizing by each period by the mean):
 
     >>> import pysal
     >>> f=pysal.open("../examples/usjoin.csv")
@@ -414,7 +414,7 @@ period:
 We also introduce the concept of regime weights that defines the neighbor
 set as those spatial units belonging to the same region. In this example
 the variable "esquivel99" represents a categorical classification of
-Mexican states in to regions:
+Mexican states into regions:
 
     >>> regime=np.array(f.by_col['esquivel99'])
     >>> w=pysal.weights.regime_weights(regime)
@@ -458,12 +458,16 @@ the regimes over the sum of all absolute rank changes. [4]_
 
 .. rubric:: Footnotes
 
-.. [#] Rey, S.J. 2001. "Spatial empirics for economic growth
-       and convergence", 34 Geographical Analysis, 33, 195-214.
+.. [#] Rey, S.J. 2001.
+       "`Spatial empirics for economic growth and convergence
+       <http://findarticles.com/p/articles/mi_hb4740/is_3_33/ai_n28858625/>`_",
+       34 Geographical Analysis, 33, 195-214.
 .. [#] The states are ordered alphabetically.
 .. [#] The complex values of the steady state distribution arise from
        complex eigenvalues in the transition probability matrix which may indicate
        cyclicality in the chain.
-.. [4] Rey, S.J. (2004) "Spatial dependence in the evolution of regional
-       income distributions," in A. Getis, J. Mur and H.Zoeller (eds). Spatial Econometrics and Spatial
+.. [4] Rey, S.J. (2004) "`Spatial dependence in the evolution of regional
+       income distributions
+       <http://econpapers.repec.org/paper/wpawuwpur/0105001.htm>`_,"
+       in A. Getis, J. Mur and H.Zoeller (eds). Spatial Econometrics and Spatial
        Statistics. Palgrave, London, pp. 194-213.
