@@ -398,9 +398,9 @@ observations that have concordant ranks between two variables. For spatial
 dynamics in PySAL, the two variables in question are the values of an attribute
 measured at two points in time over :math:`n` spatial units. This classic
 measure of rank correlation indicates how much relative stability there
-would be in the map pattern between the two periods.
+has been in the map pattern over the two periods.
 
-The spatial :math:`\tau` Tau decomposes these pairs into those that are
+The spatial :math:`\tau` decomposes these pairs into those that are
 spatial neighbors and those that are not, and examines whether the rank
 correlation is different between the two sets. [4]_ To illustrate this we
 turn to the case of regional incomes in Mexico over the 1940 to 2010

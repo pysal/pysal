@@ -34,11 +34,14 @@ National Science Foundation `An Exploratory Space-Time Data Analysis Toolit for 
 
 National Science Foundation `Hedonic Models of Location Decisions with Applications to Geospatial Microdata (0852261) <http://www.nsf.gov/awardsearch/showAward.do?AwardNumber=0852261>`_
 
-********
-Contents
-********
+
+
+*************
+Documentation
+*************
 
 .. toctree::
     :maxdepth: 2
 
     contents
+

@@ -1,13 +1,13 @@
 .. _users-tutorials:
 
-Tutorials
-=========
+Getting Started with PySAL
+==========================
 
 
 .. toctree::
    :maxdepth: 2
    
-   Introduction <intro>
+   Introduction to the Tutorials <intro>
    File Input and Output <fileio>
    Spatial Weights <weights>
    Spatial Autocorrelation <autocorrelation>

@@ -1,15 +1,14 @@
-############
-Introduction
-############
+#############################
+Introduction to the Tutorials
+#############################
 
-.. contents::
 
 Assumptions
 ===========
 
 The tutorials presented here are designed to illustrate a selection of the
-functionality in PySAL. The reader is **assumed to have working knowledge
-of the particular spatial analytical methods** illustrated. Background on
+functionality in PySAL. The reader is **assumed to have working knowledge of
+the particular spatial analytical methods** illustrated. Background on
 spatial analysis can be found in the references cited in the tutorials.
 
 It is also assumed that the reader has already :doc:`installed PySAL <../installation>`.
