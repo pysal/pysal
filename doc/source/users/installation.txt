@@ -195,11 +195,17 @@ interactive session (on IDLE, for instance)::
  >>>
 
 
-Known Installation Problems
-===========================
+Known Issues
+============
+
+weights.DistanceBand failing
+----------------------------
+
+This occurs due to a bug in scipy.sparse prior to version 0.8. If you are running such a version see `Issue 73 <http://code.google.com/p/pysal/issues/detail?id=73&sort=milestone>`_ for a fix.
+
 
 Troubleshooting
----------------
+===============
 
 If you experience problems when building, installing, or testing PySAL, ask for
 help on the
