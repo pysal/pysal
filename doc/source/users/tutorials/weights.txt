@@ -644,7 +644,7 @@ difference weights matrices from regions with partial overlap.
     >>> 15 in w.neighbors
     False
     >>> w.neighbors[19]
-    [15, 18, 23]
+    [18, 23]
     >>> w = pysal.w_difference(w1, w2, w_shape='w1', constrained=True)
     >>> w.neighbors[15]
     []
@@ -685,12 +685,14 @@ described above.
     >>> w_upper.id_order
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     >>> w.id_order
-    [0, 1, 2, 3, 4, 5, 6, 7, 16, 17, 18, 19, 20, 21, 22, 23]
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
     >>> w.neighbors[11]
     [7]
     >>> w = pysal.w_symmetric_difference(w_lower, w_upper, 'min', False)
     >>> 11 in w.neighbors
     False
+    >>> w.id_order
+    [0, 1, 2, 3, 4, 5, 6, 7, 16, 17, 18, 19, 20, 21, 22, 23]
     >>> w = pysal.w_symmetric_difference(w_lower, w_upper, 'all', True)
     >>> w.neighbors[11]
     []
