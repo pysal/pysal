@@ -10,7 +10,7 @@ Introduction
 
 Spatial weights are central components of many areas of spatial analysis. In
 general terms, for a spatial data set composed of n locations (points, areal
-units, network edges, etc), the spatial weights matrix expresses the potential
+units, network edges, etc.), the spatial weights matrix expresses the potential
 for interaction between observations at each pair i,j of locations. There is a rich
 variety of ways to specify the structure of these weights, and
 PySAL supports the creation, manipulation and analysis of spatial weights
@@ -238,7 +238,7 @@ weights is supported through kernel weights:
            [ 20.000002]])
 
 
-The bandwith attribute plays the role of the distance threshold with kernel
+The bandwidth attribute plays the role of the distance threshold with kernel
 weights, while the form of the kernel function determines the distance decay in
 the derived continuous weights (the following are available:
 'triangular','uniform','quadratic','quartic','gaussian'). In the above example,
@@ -258,7 +258,7 @@ The user could specify a different value for a fixed bandwidth:
            [ 15.],
            [ 15.]])
 
-which results in fewer neighbors for the first unit.  Adaptive bandwidths (i.e., different bandwiths
+which results in fewer neighbors for the first unit.  Adaptive bandwidths (i.e., different bandwidths
 for each unit) can also be user specified:
 
     >>> bw=[25.0,15.0,25.0,16.0,14.5,25.0]
@@ -608,7 +608,7 @@ example uses the all case:
     >>> w.neighbors[16]
     []
 
-.. _difference:
+.. _difference::
 Difference
 ----------
 
