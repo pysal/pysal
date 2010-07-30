@@ -12,8 +12,8 @@ Tutorials
    Spatial Weights <weights>
    Spatial Autocorrelation <autocorrelation>
    Spatial Smoothing
+   Regionalization <region>
    Spatial Dynamics <dynamics>
    Spatial Inequality
    Map Classifiers
-   Regionalization
    Sample Datasets <examples>

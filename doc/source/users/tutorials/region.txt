@@ -1,0 +1,164 @@
+..
+***************
+Regionalization
+***************
+
+Introduction
+============
+
+PySAL offers a number of tools for the construction of regions.  For the
+purposes of this section, a "region" is a group of "areas," and there are
+generally multiple regions in a particular dataset.  At this time, PySAL
+offers the max-p regionalization algorithm and tools for constructing random
+regions.
+
+max-p
+=====
+
+Most regionalization algorithms require the user to define a priori the number
+of regions to be built (e.g. k-means clustering). The max-p algorithm [2]_
+determines the number of regions (p) endogenously based on a set of areas, a
+matrix of attributes on each area and a floor constraint.  The floor
+constraint defines the minimum bound that a variable must reach for each
+region; for example, a constraint might be the minimum population each region
+must have.  max-p further enforces a contiguity constraint on the areas within
+regions.
+
+    >>> import random
+    >>> import numpy as np
+    >>> random.seed(100)
+    >>> np.random.seed(100)
+    >>> w=pysal.lat2W(10,10)
+    >>> z=np.random.random_sample((w.n,2))
+    >>> p=np.random.random(w.n)*100
+    >>> p=np.ones((w.n,1),float)
+    >>> floor=3
+    >>> solution=pysal.Maxp(w,z,floor,floor_variable=p,initial=100)
+    >>> solution.p
+    30
+    >>> solution.regions[0]
+    [49, 39, 29]
+
+Two forms of inference are provided for the solution of the max-p algorithm.
+The first compares the within sum of squares for the solution against
+simulated solutions where areas are randomly assigned to regions that maintain
+the cardinality of the original solution (Maxp.inference). The second is the
+same as the first, except an additional contiguity constraint is enforced on
+the random regions (Maxp.cinference).
+
+    >>> import random
+    >>> import numpy as np
+    >>> random.seed(100)
+    >>> np.random.seed(100)
+    >>> w=pysal.weights.lat2W(5,5)
+    >>> z=np.random.random_sample((w.n,2))
+    >>> p=np.random.random(w.n)*100
+    >>> p=np.ones((w.n,1),float)
+    >>> floor=3
+    >>> solution=pysal.Maxp(w,z,floor,floor_variable=p,initial=100)
+    >>> solution.inference(nperm=9)
+    >>> solution.pvalue
+    0.29999999999999999
+    >>> solution.cinference(nperm=9, maxiter=100)
+    >>> solution.cpvalue
+    0.10000000000000001
+
+A final option in the max-p family uses the result from :ref:`local Moran's I
+<lisa>` to provide initial seeds to the max-p algorithm.  The observations are
+sorted based on the value of the local Moran's I, which gives the priority for
+seeds forming the p regions. The initial priority seeds are not guaranteed to
+be separated in the final solution.
+
+    >>> import random
+    >>> import numpy as np
+    >>> random.seed(100)
+    >>> np.random.seed(100)
+    >>> w=pysal.lat2W(10,10)
+    >>> z=np.random.random_sample((w.n,2))
+    >>> y=np.arange(w.n)
+    >>> p=np.ones((w.n,1),float)
+    >>> mpl=Maxp_LISA(w,z,y,floor=3,floor_variable=p)
+
+Random Regions
+==============
+
+PySAL offers functionality to generate random regions based user defined
+constraints.  There are three optional parameters to constrain the
+regionalization: number of regions, cardinality and contiguity.  The default
+case simply takes a list of area IDs and randomly selects the number of
+regions and then allocates areas to each region.  The user can also pass a
+vector of integers to the cardinality parameter to designate the number of
+areas to randomly assign to each region.  The contiguity parameter takes a
+:ref:`spatial weights matrix <weights>` and uses that to ensure that each
+region is made up of spatially contiguous areas.  When the contiguity
+constraint is enforced, it is possible to arrive at infeasible solutions; the
+maxiter parameter can be set to make multiple attempts to find a feasible
+solution.  The following examples show some of the possible combinations of
+constraints.
+
+    >>> import random
+    >>> import numpy as np
+    >>> import pysal
+    >>> from pysal.region import Random_Region
+    >>> nregs = 13
+    >>> cards = range(2,14) + [10]
+    >>> w = pysal.lat2W(10,10,rook=False)
+    >>> ids = w.id_order
+    >>>
+    >>> # unconstrained
+    >>> random.seed(10)
+    >>> np.random.seed(10)
+    >>> t0 = Random_Region(ids)
+    >>> t0.regions[0]
+    [19, 14, 43, 37, 66, 3, 79, 41, 38, 68, 2, 1, 60]
+    >>> # cardinality and contiguity constrained (num_regions implied)
+    >>> random.seed(60)
+    >>> np.random.seed(60)
+    >>> t1 = pysal.region.Random_Region(ids, num_regions=nregs, cardinality=cards, contiguity=w)
+    >>> t1.regions[0]
+    [7, 18, 29, 17, 38, 48, 19, 28, 39, 37, 47, 36, 57]
+    >>> # cardinality constrained (num_regions implied)
+    >>> random.seed(100)
+    >>> np.random.seed(100)
+    >>> t2 = Random_Region(ids, num_regions=nregs, cardinality=cards)
+    >>> t2.regions[0]
+    [37, 62]
+    >>> # number of regions and contiguity constrained
+    >>> random.seed(100)
+    >>> np.random.seed(100)
+    >>> t3 = Random_Region(ids, num_regions=nregs, contiguity=w)
+    >>> t3.regions[1]
+    [79, 68, 57, 89, 47, 98, 36, 56, 69, 58, 78, 26, 48]
+    >>> # cardinality and contiguity constrained
+    >>> random.seed(60)
+    >>> np.random.seed(60)
+    >>> t4 = Random_Region(ids, cardinality=cards, contiguity=w)
+    >>> t4.regions[0]
+    [7, 18, 29, 17, 38, 48, 19, 28, 39, 37, 47, 36, 57]
+    >>> # number of regions constrained
+    >>> random.seed(100)
+    >>> np.random.seed(100)
+    >>> t5 = Random_Region(ids, num_regions=nregs)
+    >>> t5.regions[0]
+    [37, 62, 26, 41, 35, 25, 36]
+    >>> # cardinality constrained
+    >>> random.seed(100)
+    >>> np.random.seed(100)
+    >>> t6 = Random_Region(ids, cardinality=cards)
+    >>> t6.regions[0]
+    [37, 62]
+    >>> # contiguity constrained
+    >>> random.seed(100)
+    >>> np.random.seed(100)
+    >>> t7 = Random_Region(ids, contiguity=w)
+    >>> t7.regions[0]
+    [37, 27, 38, 29]
+    >>>
+
+
+
+.. rubric:: Footnotes
+
+.. [#] Although this tutorial provides an introduction to the functionality of the PySAL weights class, it is not exhaustive. Complete documentation for the class and associated functions can be found by accessing the help from within a Python interpreter. 
+.. [#] Duque, J. C., L. Anselin and S. J. Rey. 2010. "The max-p region problem" (under review)
+	

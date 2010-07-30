@@ -5,3 +5,4 @@
 """
 
 from maxp import *
+from randomregion import *

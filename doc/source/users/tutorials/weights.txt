@@ -1,4 +1,4 @@
-..
+.. _weights:
 ***************
 Spatial Weights
 ***************
@@ -41,6 +41,7 @@ which contains the weight values for each of those observations (in the same
 order). This way, large datasets can be stored when keeping the full matrix 
 would not be possible because of memory.
 
+.. _contiguity:
 Contiguity Based Weights
 ------------------------
 
@@ -91,13 +92,7 @@ of the lattice to define contiguities:
 
 The bishop criterion, which designates pairs of cells as neighbors if they share
 only a vertex, is yet a third alternative for contiguity weights. A bishop matrix
-can be computed as the difference between the rook and queen cases.
-
-        >>> wr=pysal.lat2W(5,5)
-        >>> wq=pysal.lat2W(5,5,rook=False)
-        >>> wb=pysal.w_difference(wq, wr,constrained=False)
-        >>> wb.neighbors[0]
-        [6]
+can be computed as the :ref:`difference <difference>` between the rook and queen cases.
 
 The lat2W function is particularly useful in setting up simulation experiments
 requiring a regular grid. For empirical research, a common use case is to have
@@ -506,7 +501,7 @@ shapefile (and its dbf), PySAL handles the alignment automatically: [#]_
     ['AREA', 'PERIMETER', 'COLUMBUS_', 'COLUMBUS_I', 'POLYID', 'NEIG', 'HOVAL', 'INC', 'CRIME', 'OPEN', 'PLUMB', 'DISCBD', 'X', 'Y', 'NSA', 'NSB', 'EW', 'CP', 'THOUS', 'NEIGNO']
     >>> y=np.array(f.by_col['INC'])
     >>> w.transform='r'
-   >>> y
+    >>> y
     array([ 19.531   ,  21.232   ,  15.956   ,   4.477   ,  11.252   ,
             16.028999,   8.438   ,  11.337   ,  17.586   ,  13.598   ,
              7.467   ,  10.048   ,   9.549   ,   9.963   ,   9.873   ,
@@ -613,6 +608,7 @@ example uses the all case:
     >>> w.neighbors[16]
     []
 
+.. _difference:
 Difference
 ----------
 
@@ -657,6 +653,16 @@ difference weights matrices from regions with partial overlap.
     False
     >>> w.neighbors[19]
     [18, 23]
+
+The difference function can be used construct a bishop :ref:`contiguity weights
+matrix <contiguity>` by differencing a queen and rook matrix.
+
+        >>> wr=pysal.lat2W(5,5)
+        >>> wq=pysal.lat2W(5,5,rook=False)
+        >>> wb=pysal.w_difference(wq, wr,constrained=False)
+        >>> wb.neighbors[0]
+        [6]
+
 
 Symmetric Difference
 --------------------
