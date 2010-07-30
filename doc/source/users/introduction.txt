@@ -61,8 +61,8 @@ the near future.
 
 Research Papers and Presentations
 *********************************
-
+    * Rey, Sergio J. and Luc Anselin. (2010) `PySAL: A Python Library of
+      Spatial Analytical Methods. <http://books.google.com/books?hl=en&lr=&id=c0EP_6eYsjAC&oi=fnd&pg=PA174&dq=pysal&ots=JzI8vk8D4T&sig=J6FEAnbG5Wzw2nn2-0nfj4B6c3Q#v=onepage&q=pysal&f=false>`_ In M. Fischer and A. Getis (eds.) Handbook of Applied Spatial Analysis: Software Tools, Methods and Applications. Springer, Berlin. .
     * Rey, Sergio J. and Luc Anselin. (2009) `PySAL: A Python Library for Spatial Analysis and Geocomputation <http://www.archive.org/details/scipy09_day2_10-Serge_Rey>`_. (Movie) Python for Scientific Computing. Caltech, Pasadena, CA August 2009.
     * Rey, Sergio J. (2009). `Show Me the Code: Spatial Analysis and Open Source <http://www.springerlink.com/content/91u84l471h043282/>`_. *Journal of Geographical Systems* 11: 191-2007.
-    * Rey, Sergio J. and Luc Anselin. (2007) PySAL: A Python Library of Spatial Analytical Methods. The Review of Regional Studies. 37(1): 5-27.
     * Rey, S.J., Anselin, L., & M. Hwang. (2008). Dynamic Manipulation of Spatial Weights Using Web Services. GeoDa Center Working Paper 2008-12.
