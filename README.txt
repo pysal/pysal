@@ -57,9 +57,6 @@ Currently PySAL consists of the following files and directories:
   pysal/
     Contains PySAL __init__.py and the directories of PySAL modules.
 
-  doc/
-    Contains sources to build PySAL documentation
-
 PySAL modules
 +++++++++++++
 
