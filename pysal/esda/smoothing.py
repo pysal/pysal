@@ -1,13 +1,5 @@
 """
 Apply smoothing to rate computation
-
-[Longer Description]
-
-Author(s):
-    Myunghwa Hwang mhwang4@gmail.com
-    Luc Anselin luc.anselin@asu.edu
-    Serge Rey srey@asu.edu
-
 """
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>, Luc Anselin <luc.anselin@asu.edu>, Serge Rey <srey@asu.edu"

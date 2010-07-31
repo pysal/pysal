@@ -4,11 +4,6 @@ to specify the prior distribution of risks
 
 This module is a python translation of mixlag function 
 in CAMAN R package that is originally written by Peter Schlattmann. 
-
-Author(s):
-    Myunghwa Hwang mhwang4@gmail.com,
-    Luc Anselin luc.anselin@asu.edu
-    Serge Rey srey@asu.edu
 """
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>, Luc Anselin <luc.anselin@asu.edu>, Serge Rey <srey@asu.edu"

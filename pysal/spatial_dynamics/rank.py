@@ -1,10 +1,7 @@
 """
 Rank and spatial rank mobility measures
-
-Author(s):
-    Serge Rey srey@asu.edu
-
 """
+__author__  = "Sergio J. Rey <srey@asu.edu> "
 from pysal.common import *
 from scipy.stats.mstats import rankdata
 from scipy.special import erfc
@@ -12,7 +9,8 @@ from scipy.special import erfc
 __all__=['Theta','SpatialTau']
 
 class Theta:
-    """Regime mobility measure
+    """
+    Regime mobility measure
 
     For sequence of time periods Theta measures the extent to which rank
     changes for a variable measured over n locations are in the same direction
@@ -112,7 +110,8 @@ class Theta:
         return np.array(sum(within)/self.total)
 
 class SpatialTau:
-    """Spatial version of Kendall's rank correlation statistic
+    """
+    Spatial version of Kendall's rank correlation statistic
 
     Kendall's Tau is based on a comparison of the number of pairs of n
     observations that have concordant ranks between two variables. The spatial

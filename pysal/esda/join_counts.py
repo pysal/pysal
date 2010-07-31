@@ -1,13 +1,12 @@
 """
 Spatial autocorrelation for binary attributes
 
-Author(s):
-    Serge Rey srey@asu.edu
 """
 
 import pysal
 import numpy as np
 
+__author__  = "Sergio J. Rey <srey@asu.edu> "
 
 class Join_Counts:
     """Binary Join Counts

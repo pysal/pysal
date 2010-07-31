@@ -1,6 +1,7 @@
 """
 Geary's C statistic for spatial autocorrelation
 """
+__author__  = "Sergio J. Rey <srey@asu.edu> "
 from pysal.common import *
 
 PERMUTATIONS=999
