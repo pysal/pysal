@@ -121,7 +121,7 @@ which generates::
          |                 p-value of I under randomization assumption (1-tailed)
          |  sim          : array (if permutations>0)
         
-we see that we can base the inference not on the normality assumption, but instead use random spatial permutations of the values on the spatial units to generate a reference distribution for I under the null:
+we see that we can base the inference not only on the normality assumption, but also on random permutations of the values on the spatial units to generate a reference distribution for I under the null:
 
         >>> mir=pysal.Moran(y,w,permutations=9999)
 
@@ -192,7 +192,7 @@ PySAL implements Local Indicators of Spatial Association (LISAs) for Moran's I:
 
         I_i =  \sum_j z_i w_{i,j} z_j / \sum_i z_i z_i
 
-which results in :math:`n` values of local spatial autocorrelation - 1 for each spatial unit. Continuing on with the St. Louis example, the LISA statistics are obtained with:
+which results in :math:`n` values of local spatial autocorrelation, 1 for each spatial unit. Continuing on with the St. Louis example, the LISA statistics are obtained with:
 
         >>> lm=pysal.Moran_Local(y,w)
         >>> lm.n
