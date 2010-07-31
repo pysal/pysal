@@ -39,7 +39,7 @@ neighbors which, for each observation (key) contains a list of the other ones
 (value) with potential for interaction (:math:`w_{ij} \neq 0`); and weights, 
 which contains the weight values for each of those observations (in the same 
 order). This way, large datasets can be stored when keeping the full matrix 
-would not be possible because of memory.
+would not be possible because of memory constraints.
 
 .. _contiguity:
 
