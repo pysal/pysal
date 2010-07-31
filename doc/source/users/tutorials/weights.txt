@@ -50,7 +50,6 @@ To illustrate the general weights object, we start with a simple contiguity
 matrix constructed for a 5 by 5 lattice (composed of 25 spatial units)::
 
     >>> import pysal
-    >>>
     >>> w=pysal.lat2W(5,5)
 
 The w object has a number of attributes::
@@ -403,7 +402,6 @@ The first element of the return from w.full is the numpy array:
 while the second element contains the ids for the row (column) ordering of the array:
 
     >>> wf[1][0:5]
-    >>> wf[1][0:5]
     [0, 1, 2, 3, 4]
 
 If only the array is required, a simple Python slice can be used:
@@ -477,6 +475,7 @@ and then recalculate the lag, it takes the form of a weighted average of the nei
     array([ 2.        ,  2.        ,  3.        ,  3.33333333,  4.        ,
             4.66666667,  5.        ,  6.        ,  6.        ])
 
+.. _id_order:
 
 One important consideration in calculating the spatial lag is that the ordering
 of the values in y aligns with the underlying order in W.  In cases where the

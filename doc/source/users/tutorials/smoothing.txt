@@ -131,7 +131,7 @@ and total population (the 13th column):
     >>> e, b = np.array(stl[:,10]), np.array(stl[:,13])
 
 We then read the spatial weights file defining neighborhood relationships among the counties 
-and ensure that the order of observations in the weights object is the same as that in the data table.
+and ensure that the :ref:`order <id_order>` of observations in the weights object is the same as that in the data table. 
 
     >>> w = pysal.open('../examples/stl.gal', 'r').read()
     >>> if not w.id_order_set: w.id_order = range(1,len(stl) + 1)

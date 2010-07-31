@@ -173,7 +173,8 @@ mean passage time:
                    75.43305672],
                 [  84.90689329,   42.85914824,   17.18082642,    5.31299186,
                    51.60953369],
-                [  98.41295543,   56.36521038
+                [  98.41295543,   56.36521038,   30.66046735,   14.21158356,
+                    4.77619083]])
 
 Thus, for a state with income in the first quintile, it takes on average
 11.5 years for it to first enter the second quintile, 29.6 to get to the
