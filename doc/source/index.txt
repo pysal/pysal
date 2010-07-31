@@ -11,12 +11,14 @@ Python. It is intended to support the development of high level applications
 for spatial analysis.
 
 On this site you will find :doc:`user level documentation </users/index>` as well as 
-:doc:`developer documentation </developers/index>`.
+:doc:`developer documentation </developers/index>` and
+:doc:`downloads </users/installation>`.
 
 
 ****
 News
 ****
+(2010-07-31) :doc:`PySAL 1.0.0 released </users/installation>`
 
 (2010-01-6) New Website for PySAL!
 
