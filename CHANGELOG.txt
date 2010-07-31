@@ -1,1 +1,1 @@
-v<1.0.0>, <date> -- Initial release.
+v<1.0.0>, 2010-07-01 -- Initial release.
