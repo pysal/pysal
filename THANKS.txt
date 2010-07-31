@@ -15,7 +15,7 @@ Julia Koschinsky
 Nicholas Malizia
 Mark McCann
 Serge Rey
-Charels Schmidt
+Charles R. Schmidt
 Philip Stephens
 Bohumil Svoma
 Andrew Winslow
