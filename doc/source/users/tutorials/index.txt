@@ -14,6 +14,5 @@ Getting Started with PySAL
    Spatial Smoothing <smoothing>
    Regionalization <region>
    Spatial Dynamics <dynamics>
-   Spatial Inequality
-   Map Classifiers
+   Next Steps <next>
    Sample Datasets <examples>
