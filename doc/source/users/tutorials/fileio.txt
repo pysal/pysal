@@ -87,3 +87,55 @@ CSV Files
 >>> from pysal.cg import standalone
 >>> standalone.get_bounding_box(polys)[:]
 [-92.700675964355469, 36.881809234619141, -87.916572570800781, 40.329566955566406]
+
+
+GAL Binary Weights Files
+------------------------
+
+To write a GAL file...
+
+>>> import pysal
+>>> w = pysal.queen_from_shapefile('virginia.shp',idVariable='FIPS')
+>>> w.n
+136
+>>> gal = pysal.open('virginia_queen.gal','w')
+>>> gal.write(w)
+>>> gal.close()
+
+To read a GAL file...
+
+>>> import pysal
+>>> gal = pysal.open('virginia_queen.gal','r')
+>>> w = gal.read()
+>>> gal.close()
+>>> w.n
+136
+
+
+GWT Weights Files
+-----------------
+
+To write a GWT file...
+
+>>> import pysal
+>>> w = pysal.queen_from_shapefile('virginia.shp',idVariable='FIPS')
+>>> w.s0
+586.0
+>>> w.transform = 'R' # Row-standardization (global sum=n)
+>>> w.s0
+136.00000000000023
+>>> gwt = pysal.open('virginia_queen_rs.gwt','w')
+>>> # Set the header information...
+>>> gwt.shpName = 'virginia'
+>>> gwt.varName = 'FIPS'
+>>> gwt.write(w)
+>>> gwt.close()
+
+To read a GWT file...
+
+>>> import pysal
+>>> gwt = pysal.open('virginia_queen_rs.gwt','r')
+>>> w = gwt.read()
+>>> gwt.close()
+>>> w.s0
+136.00002110000037
