@@ -10,4 +10,5 @@ Developer Guide
    testing
    pep/index
    docs/index
+   release
 

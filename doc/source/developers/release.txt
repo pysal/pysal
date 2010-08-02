@@ -1,0 +1,87 @@
+***********************
+PySAL Release Managment
+***********************
+
+Preparing a release
+###################
+
+One individual developer will be assigned as the release manager and will be
+responsible for building, testing, and uploading the releases.
+
+Building the release
+====================
+
+A clean svn co of the trunk should be done on the machine used to build the release.
+
+Source Distributions
+^^^^^^^^^^^^^^^^^^^^
+
+The work of specifying files and folders to include in a pysal source
+distribution has been done. These things are specified in setup.py and
+MANIFEST.in. To build a new source package, run::
+
+  >>> python setup.py sdist --formats=gztar,zip 
+
+to generate two source distributions.  A good reference is http://docs.python.org/distutils/sourcedist.html
+
+Binary Distributions
+^^^^^^^^^^^^^^^^^^^^
+
+Making a Windows binary, with a not-so-shabby installer, is not too difficult
+as long as we rely on the user to provide the package dependencies. Run:
+
+   >>> python setup.py bdist_wininst
+   
+to generate a Windows graphical installer on either OS X or Windows. On Windows
+only, the option exists to use the Microsoft Installer format MSI, which is
+prettier but allows the user to install the package in the wrong place. For a
+look at that, on Windows run:
+
+   >>> python setup.py bdist --formats=msi.
+
+To make a Mac OS X graphical installer, first install 'bdist_mpkg' from the
+Python Package Index using::
+
+    easy_install bdist_mpkg
+
+or::
+
+    pip install bdist_mpkg.
+
+Then run::
+
+    bdist_mpkg setup.py build. 
+
+
+Post-release svn changes
+########################
+Two-dot verions of PySAL are released twice a year. Using the example of
+release 1.0, we outline plans for updating the repository and bug fixes here.
+
+When 1.0 is released we do the following:
+
+     * create a tag 1.0
+     * create a branch 1.0
+     * bump the trunk up to version 1.1
+
+Development on 1.1 happens in trunk. Code in tag 1.0 is never changed.  Bugs in
+1.0 that are reported by users or developers are fixed in branch 1.0 and in
+trunk, if relevant. It could be that trunk had moved on so that the bug is no
+longer in the trunk code (functionality may have been dropped or refactored for
+example).
+
+In the event that bug fixes are substantial between 1.0 and the release of 1.1,
+we could do a release out of branch 1.0. This would be tagged as 1.0.1. Since
+it is a tag, code in there never gets changed, but bug fixes in the 1.0.x
+series continue to be made in branch 1.0.
+
+Bug fixes for 1.0 are handled until 2.0 is released (one year).  We may want to
+have one developer oversee the bug fix process for a particular release. 
+
+So to summarize our major versions two-dot:  1.0, 1.1, 2.0, 2.1, etc. These are
+released every six months at the end of a release cycle. Bug fix releases for a
+major release are three-dot: 2.0.1, 2.0.2, etc,  and are released during a
+release cycle.
+
+Developers wanting to explore major new initiatives are encouraged to make
+experimental branches for that work and not use trunk.
