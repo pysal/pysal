@@ -76,50 +76,44 @@ Grab either of the source distributions and decompress to your selected destinat
 Development version from Subversion (SVN)
 -----------------------------------------
 
-Users and developers can grab the source code from our subversion repository using
-the following instructions, depending on the operating system:
+Users and developers can grab the source code from our Subversion repository using
+an svn client and the following instructions:
 
 GNU/Linux and Mac OS X 
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Use the command::
+Open a command shell, navigate to a convenient location on your hard drive, and
+type::
 
  svn checkout http://pysal.googlecode.com/svn/trunk/ pysal
 
 
-This will create a folder called 'pysal' containing all the source
-code. This will allow you to easily update any change
-that is made to the code by the developer team by running::
+This will create a folder called 'pysal' containing the source
+code in trunk. This will allow you to easily update any change
+to the developer code base by running::
 
  svn update
 
-Since PySAL is in active and
-intense development, a lot of these changes are often introduced. For this
-reason it is preferable to 'tell' Python to look for PySAL in that folder
+Since PySAL is in active development, changes are made frequently. For that
+reason, we recommend you 'tell' Python to look for PySAL in that folder
 rather than properly install it as a package. You can do this by adding the
-PySAL folder to the Python path. 
+PySAL folder to the PYTHONPATH, a UNIX environment variable. 
+To do that, create or edit your command shell profile (.bash_profile if using
+BASH) and add the following line, substituting where appropriate::
 
-To do that, open the bash profile (if it doesn't already
-exist, just create a new text file in the home directory and name it
-``.bash_profile``) by typing in the terminal::
-
- open ~/.bash_profile
-
-**Note**: replace the command ``open`` by that of a text editor if you are in Linux
-(``gedit`` for instance, if you are in Ubuntu).
-Now add the following line at the end of the text file::
 
  export PYTHONPATH=${PYTHONPATH}:"/path_to_desired/folder/pysal/"
 
-Save and quit the file. Source the bash profile again::
+Save and quit the file, then source it as follows::
 
  source ~/.bash_profile
 
-You are all set!!! Now you can open up a fresh python session and start
-enjoying PySAL, you should be able to do (within a python session)::
+You are all set. To test your setup, start a Python session and type::
 
- >>> import pysal
- >>> pysal.open.check()
+ >>> import pysal; pysal.open.check()
+
+Your terminal should reply with the following::
+
  PySAL File I/O understands the following file extensions:
  Ext: '.shp', Modes: ['r', 'wb', 'w', 'rb']
  Ext: '.shx', Modes: ['r', 'wb', 'w', 'rb']
@@ -135,50 +129,50 @@ enjoying PySAL, you should be able to do (within a python session)::
 Windows
 ~~~~~~~~
 
-To be able to use PySAL, you will need a SVN client that allows you to access,
-download and update the code from our repository. We recommend to use
-`TortoiseSVN <http://tortoisesvn.tigris.org/>`_, which is free and very easy to
+To use PySAL, you will need an svn client that allows you to access and 
+update the code from our repository. We recommend 
+`TortoiseSVN <http://tortoisesvn.tigris.org/>`_, which is free and easy to
 install. The following instructions assume you are using it.
 
 First, create a folder where you want to store PySAL's code. For the sake of this
 example, we will name it ``PySALsvn`` and put it in the root folder, so the
-path is:
+path is::
  
-``C:\PySALsvn``
+ C:\PySALsvn
 
-Right-click on the folder with the mouse and then click on 'SVN checkout'.
+Right-click that folder and select 'SVN checkout'.
 A dialog will appear. The 'Checkout Directory' refers to the path to your folder
-(``C:\PySALsvn`` in this case). Copy and paste into the 'URL of repository'
-textbox, the following link::
+(``C:\PySALsvn`` in this case). For the 'URL of repository'
+textbox, copy and paste the following link::
 
  http://pysal.googlecode.com/svn/trunk/
 
 Once you click 'OK', a folder called 'pysal-read-only' will be created under
 ``C:\PySALsvn`` and  all the code will be downloaded to your computer.
 
-Now you have to tell Python to 'look for' PySAL in that folder whenever you
-import it in a Python session. There are several ways to do this, here we
-will use a very simple one that only implies creating a simple text file.
-Open a text editor and create a file called ``sitecustomize.py`` located in the
-Site Packages folder of you Python distribution, so the path looks more or
-less like this one:
+Now tell Python where to find PySAL.  There are several ways to do this. Here we
+will use a simple one that requires you to create a text file
+called ``sitecustomize.py`` in the
+``site-packages`` folder of your Python distribution. That path looks more or
+less like this::
  
-``C:\PythonXX\Lib\site-packages\sitecustomize.py``
+ C:\PythonXX\Lib\site-packages\sitecustomize.py
 
-where XX corresponds to the version of the Python distribution you are using
+,where XX corresponds to the version of the Python distribution you are using
 (25 for 2.5, for example).
 
-Add to the file the following two lines of text::
+Edit ``sitecustomize.py`` with the following two lines of text::
 
  import sys
  sys.path.append("C:/PySALsvn/pysal-read-only")
  
 Save and close the file.
-You are all set!!! Now you should be able to do the following in a Python
-interactive session (on IDLE, for instance)::
+You are all set.  To test your setup, start a Python session and type::
 
- >>> import pysal
- >>> pysal.open.check()
+ >>> import pysal; pysal.open.check()
+
+Your terminal should reply with the following::
+
  PySAL File I/O understands the following file extensions:
  Ext: '.shp', Modes: ['r', 'wb', 'w', 'rb']
  Ext: '.shx', Modes: ['r', 'wb', 'w', 'rb']
@@ -188,7 +182,8 @@ interactive session (on IDLE, for instance)::
  Ext: '.gal', Modes: ['r', 'w']
  Ext: '.csv', Modes: ['r']
  Ext: '.wkt', Modes: ['r']
- >>>
+ >>> 
+
 
 
 Known Issues
