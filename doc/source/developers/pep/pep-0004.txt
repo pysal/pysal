@@ -1,0 +1,56 @@
+*********************************
+PEP 0004 Geographically Nested Inequality based on the Geary Statistic
+*********************************
+
+========  =================================
+Author    Boris Dev <boris.dev@gmail.com>
+          Charles Schmidt <schmidtc@gmail.com>
+Status    Draft
+Created   9-Aug-2010
+Updated   
+========  =================================
+
+
+Abstract
+========
+
+ 
+I propose to extend the Geary statistic to describe inequality
+patterns between people in the same geographic zones. Geographically nested
+associations can be represented with a spatial weights matrix defined jointly
+using both geographic and social positions. The key class in the proposed
+geographically nested inequality module would sub-class from class
+``pysal.esda.geary`` with 2 extensions: 1) as an additional argument, an array
+of regimes to represent social space; and 2) for the output, spatially nested
+randomizations will be performed for pseudo-significance tests.  
+
+Motivation
+==========
+
+Geographically nested measures may reveal inequality patterns that are masked
+by conventional aggregate approaches. Aggregate human inequality statistics
+summarize the size of the gaps in variables such as mortality rate or income
+level between different different groups of people. A geographically nested
+measure is computed using only a pairwise subset of the values defined by
+common location in the same geographic zone.  For example, this type of
+measure was proposed in my dissertation to assess changes in income inequality
+between nearby blocks of different school attendance zones or different racial
+neighborhoods within the same cities. Since there are no standard statistical
+packages to do this sort of analysis, currently such a pairwise approach to
+inequality analysis across many geographic zones is tedious for researchers
+who are non-hackers. Since it will take advantage of the currently existing
+``pysal.esda.geary`` and ``pysal.weights.regime_weights()``, the proposed
+module should be readable for hackers. 
+  
+Reference Implementation
+========================
+
+I suggest adding the module ``pysal.inequality.nested``.
+
+
+References
+==========
+
+[Dev2010] Dev, B. (2010) "Assessing Inequality using Geographic Income Distributions: Spatial Data Analysis of States,
+Neighborhoods, and School Attendance Zones" http://dl.dropbox.com/u/408103/dissertation.pdf.
+
