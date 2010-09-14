@@ -1,10 +1,18 @@
 ****************************
 Building PySAL Documentation
 ****************************
-
-PySAL documentation is built using `Sphinx <http://sphinx.pocoo.org/>`_.
-We also use the `numpydoc <http://pypi.python.org/pypi/numpydoc/0.2>`_ extension to Sphinx which customizes the markup
-of the docstrings of the PySAL modules.
+ 
+PySAL documentation is built using `Sphinx <http://pypi.python.org/pypi/Sphinx/1.0.3>`_.
+We also use the `numpydoc <http://pypi.python.org/pypi/numpydoc/0.3.1>`_ extension to Sphinx which customizes the markup
+of the docstrings of the PySAL modules. 
+For those intent on building the documentation at this time, due to changes
+brought about by upgrading to Sphinx v1.0.3, you will need SciPy's latest
+numpydoc extension. Download their source code. In the doc directory you will
+find a setup.py file inside the sphinxext directory. That setup.py will install
+just the latest Sphinx extensions into your current python site-packages
+directory. It is advised that you first remove any numpydoc folders in
+site-packages first, upgrade your Sphinx version, then install the new numpydoc
+extension.
 
 The source for the docs is in `trunk/doc`. Building the documentation is
 done as follows (assuming
