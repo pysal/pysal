@@ -311,8 +311,8 @@ def choynowski(e, b, n, threshold=None):
     >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
     >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
     >>> n = 2
-    >>> choynowski(e, b, n)
-    array([ 2.48691099,  2.73684211])
+    >>> print choynowski(e, b, n)
+    [ 0.30437751  0.26054837]
     """
     e_by_n = sum_by_n(e, 1.0, n)
     b_by_n = sum_by_n(b, 1.0, n)
