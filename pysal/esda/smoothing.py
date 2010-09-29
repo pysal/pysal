@@ -11,7 +11,7 @@ from pysal.cg import get_angle_between, get_points_dist, get_segment_point_dist
 from pysal.cg import get_point_at_angle_and_dist, convex_hull
 from pysal.common import np, KDTree
 from pysal.weights.spatial_lag import lag_spatial as slag
-from scipy.stats import gamma, norm, chi2
+from scipy.stats import gamma, norm, chi2, poisson
 
 def flatten(l,unique=True):
     """flatten a list of lists
@@ -229,13 +229,11 @@ def indirect_age_standardization(e, b, s_e, s_b, n, alpha=0.05):
     >>> [i[0] for i in indirect_age_standardization(e, b, s_e, s_b, n)]
     [0.23723821989528798, 0.2610803324099723]
     """
-    s_r = s_e * 1.0 / s_b
-    e_by_n = sum_by_n(e, 1.0, n)
-    expected = sum_by_n(b, s_r, n)
-    smr = e_by_n * 1.0 / expected
-    s_r_all = sum(s_e) * 1.0 / sum(s_b)
+    smr = standardized_mortality_ratio(e, b, s_e, s_b, n)
+    s_r_all = sum(s_e * 1.0) / sum(s_b * 1.0)
     adjusted_r = s_r_all * smr
 
+    e_by_n = sum_by_n(e, 1.0, n)
     log_smr = np.log(smr)
     log_smr_sd = 1.0 / np.sqrt(e_by_n)
     norm_thres = norm.ppf(1-0.5*alpha)
@@ -246,6 +244,91 @@ def indirect_age_standardization(e, b, s_e, s_b, n, alpha=0.05):
     res = zip(adjusted_r, smr_lower, smr_upper)
     return res
     
+def standardized_mortality_ratio(e, b, s_e, s_b, n):
+    """A utility function to compute standardized mortality ratio (SMR).
+
+    Parameters
+    ----------
+    e          : array(n*h, 1)
+                 event variable measured for each age group across n spatial units
+    b          : array(n*h, 1)
+                 population at risk variable measured for each age group across n spatial units
+    s_e        : array(n*h, 1)
+                 event variable measured for each age group across n spatial units in a standard million
+    s_b        : array(n*h, 1)
+                 population variable measured for each age group across n spatial units in a standard million
+    n          : integer
+                 the number of spatial units
+
+    Notes
+    -----
+    e, b, s_e, and s_b are arranged in the same order
+
+    Returns
+    -------
+               : array (nx1)
+
+    Examples
+    --------
+    >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
+    >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
+    >>> s_e = np.array([100, 45, 120, 100, 50, 30, 200, 80])
+    >>> s_b = np.array([1000, 900, 1000, 900, 1000, 900, 1000, 900])
+    >>> n = 2
+    >>> standardized_mortality_ratio(e, b, s_e, s_b, n)
+    array([ 2.48691099,  2.73684211])
+    """
+    s_r = s_e * 1.0 / s_b
+    e_by_n = sum_by_n(e, 1.0, n)
+    expected = sum_by_n(b, s_r, n)
+    smr = e_by_n * 1.0 / expected
+    return smr
+
+def choynowski(e, b, n, threshold=None):
+    """Choynowski map probabilities. 
+
+    Parameters
+    ----------
+    e          : array(n*h, 1)
+                 event variable measured for each age group across n spatial units
+    b          : array(n*h, 1)
+                 population at risk variable measured for each age group across n spatial units
+    n          : integer
+                 the number of spatial units
+    threshold  : float
+                 Returns zero for any p-value greater than threshold
+
+    Notes
+    -----
+    e and b are arranged in the same order
+
+    Returns
+    -------
+               : array (nx1)
+
+    Examples
+    --------
+    >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
+    >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
+    >>> n = 2
+    >>> choynowski(e, b, n)
+    array([ 2.48691099,  2.73684211])
+    """
+    e_by_n = sum_by_n(e, 1.0, n)
+    b_by_n = sum_by_n(b, 1.0, n)
+    r_by_n = sum(e_by_n) * 1.0 / sum(b_by_n)
+    expected = r_by_n * b_by_n
+    p = []
+    for index, i in enumerate(e_by_n):
+        p_i = poisson.cdf(i, expected[index])
+        if i <= expected[index]:
+            p.append(p_i)
+        else:
+            p.append(1 - p_i)
+    if threshold:
+        p = [i if i<threshold else 0.0 for i in p]
+    return np.array(p) 
+
 class Excess_Risk:
     """Excess Risk
 
