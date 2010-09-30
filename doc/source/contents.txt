@@ -9,8 +9,8 @@ PySAL Documentation
 
 
 .. toctree::
-    :maxdepth: 2
+   :maxdepth: 1
 
-    users/index
-    developers/index
-    library/index
+   users/index
+   developers/index
+   library/index

@@ -2,10 +2,8 @@
 ==========================================
 
 .. toctree::
+    :maxdepth: 1
+    :glob:
 
-    weights
-    Contiguity
-    Distance
-    spatial_lag
-    user
-    Wsets
+    *
+    

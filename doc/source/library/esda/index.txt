@@ -2,11 +2,8 @@
 =========================================================
 
 .. toctree::
+    :maxdepth: 1
+    :glob:
 
-    geary
-    join_counts
-    mapclassify
-    moran
-    smoothing
-
+    *
 

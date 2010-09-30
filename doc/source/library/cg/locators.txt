@@ -9,7 +9,6 @@ The :mod:`cg.locators` module provides ....
 .. automodule:: pysal.cg.locators
     :synopsis: Computational geometry code for PySAL: Python Spatial Analysis Library
     :members:
+    :inherited-members:
+    :undoc-members:
 
-.. literalinclude:: locators.py
-   :language: python
-   :linenos:

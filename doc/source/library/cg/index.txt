@@ -2,9 +2,9 @@
 ==========================================
 
 .. toctree::
+    :maxdepth: 1
+    :glob:
 
-    shapes
-    locators
-    standalone
+    *
 
-.. automodule:: pysal.cg
+

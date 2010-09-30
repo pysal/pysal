@@ -18,15 +18,17 @@ PySAL documentation is available in two forms: Python docstrings and a html webp
 
 Available sub-packages
 ----------------------
+
 .. toctree::
     :maxdepth: 1
+    :glob:
 
-    core/index
     cg/index
     esda/index
+    core/index
     inequality/index
-    spatial_dynamics/index
     region/index
+    spatial_dynamics/index
     weights/index
 
     open

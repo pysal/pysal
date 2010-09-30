@@ -1,4 +1,4 @@
-:mod:`weights` --- Spatial weights matrices for PySAL: Python Spatial Analysis Library
+:mod:`pysal.weights` --- Spatial weights matrices for PySAL: Python Spatial Analysis Library
 ======================================================================================
 
 The :mod:`weights` Spatial weights for PySAL
@@ -9,6 +9,7 @@ The :mod:`weights` Spatial weights for PySAL
     :synopsis: Spatial weights for PySAL
     :members:
     :inherited-members:
+    :undoc-members:
 
 
 

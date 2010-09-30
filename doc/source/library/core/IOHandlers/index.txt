@@ -1,12 +1,9 @@
-:mod:`pysal.core.IOHandles` --- Input Output Handlers for PySAL's FileIO System
+:mod:`pysal.core.IOHandlers` --- Input Output Handlers for PySAL's FileIO System
 ===============================================================================
 
 .. toctree::
+    :maxdepth: 1
+    :glob:
 
-    csvWrapper
-    gal
-    geoda_txt
-    gwt
-    pyDbfIO
-    pyShpIO
-    wkt
+    *
+

@@ -1,8 +1,10 @@
 :mod:`pysal.spatial_dynamics` --- Spatial Dynamics
 ==================================================
-.. toctree::
 
-    markov
-    ergodic
-    rank
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    *
+
 
