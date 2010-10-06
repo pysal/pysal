@@ -56,8 +56,8 @@ A fix is to do the following::
 	    easy_install -U sphinx
 
 	2. Upgrade to the latest numpydoc extension from the scipy source:
-
-		cd code/scipy/doc/sphinxext/
+                svn co http://svn.scipy.org/svn/scipy/trunk scipy
+		cd scipy/scipy/doc/sphinxext/
 		svn update
 		python setup.py install
 
