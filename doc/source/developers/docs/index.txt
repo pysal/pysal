@@ -37,5 +37,28 @@ will be propogated to `pysal.org <http://pysal.org>`_ on an hourly basis
 (at 32 minutes after the hour to be exact).
 
 
+Issues
+======
+
+If you run into the following error::
+
+	Exception occurred:
+	 File
+	 "/Library/Python/2.6/site-packages/numpydoc-0.3.1-py2.6.egg/numpydoc/numpydoc.py",
+	 line 136, in get_directive
+	    raise RuntimeError("No directive named '%s' found" % name)
+	    RuntimeError: No directive named 'function' found
+
+A fix is to do the following::
+
+	1. Upgrade sphinx to 1.0.4.
+
+	    easy_install -U sphinx
+
+	2. Upgrade to the latest numpydoc extension from the scipy source:
+
+		cd code/scipy/doc/sphinxext/
+		svn update
+		python setup.py install
 
 
