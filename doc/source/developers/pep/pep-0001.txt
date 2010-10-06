@@ -5,7 +5,7 @@ PEP 0001 Spatial Dynamics Module
 ========  =================================
 Author    Serge Rey <sjsrey@gmail.com>,
           Xinyue Ye <xinyue.ye@gmail.com>
-Status    Draft
+Status    Approved 1.0
 Created   18-Jan-2010
 Updated   09-Feb-2010
 ========  =================================

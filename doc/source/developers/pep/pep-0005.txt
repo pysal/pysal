@@ -1,0 +1,56 @@
+*************************************************
+PEP 0005 Space Time Event Clustering Module
+*************************************************
+
+========  ======================================
+Author    Nicholas Malizia <nmalizia@gmail.com>,
+          Serge Rey <sjsrey@gmail.com>
+Status    Draft
+Created   13-Jul-2010
+Updated   06-Oct-2010
+========  ======================================
+
+Abstract
+========
+
+The space-time event clustering module will be an addition (in the form of a sub-module) to the spatial dynamics module. The purpose of this module will be to house all methods concerned with identifying clusters within spatio-temporal event data. The module will include classes for the major methods for spatio-temporal event clustering, including: the Knox, Mantel, Jacquez k Nearest Neighbors, and the Space-Time K Function. Although these methods are tests of global spatio-temporal clustering, it is our aim to eventually extend this module to include to-be-developed methods for local spatio-temporal clustering. 
+
+Motivation
+==========
+
+While the methods of the parent module are concerned with the dynamics of aggregate lattice-based data, the methods encompassed in this sub-module will focus on exploring the dynamics of individual events. The methods suggested here have historically been utilized by researchers looking for clusters of events in the fields of epidemiology and criminology. Currently, the methods presented here are not widely implemented in an open source context. Although the Knox, Mantel, and Jacquez methods are available in the commercial, GUI-based software ClusterSeer, they do not appear to be implemented in an open-source context. Also, as they are implemented in ClusterSeer, the methods are not scriptable [1]_. The Space-Time K function, however, is available in an open-source context in the ``splancs`` package for R [2]_. The combination of these methods in this module would be a unique, scriptable, open-source resource for researchers interested in spatio-temporal interaction of event-based data. 
+
+Reference Implementation
+========================
+
+We suggest adding the module ``pysal.spatialdynamics.events`` which in turn would encompass the following modules:
+
+* Knox
+The Knox test for space-time interaction sets critical distances in space and time; if the data are clustered, numerous pairs of events will be located within both of these critical distances and the test statistic will be large [3]_. Significance will be established using a Monte Carlo method. This means that either the time stamp or location of the events is scrambled and the statistic is calculated again. This procedure is permuted to generate a distribution of statistics (for the null hypothesis of spatio-temporal randomness) which is used to establish the pseudo-significance of the observed test statistic. Options will be given to specify a range of critical distances for the space and time scales.
+
+* Mantel
+Akin to the Knox test in its simplicity, the Mantel test keeps the distance information discarded by the Knox test. The Mantel statistic is calculated by summing the product of the distances between all the pairs of events [4]_. Again, significance will be determined through a Monte Carlo approach. 
+
+* Jacquez
+This test tallies the number of event pairs that are within k-nearest neighbors of each other in *both* space and time. Significance of this count is established using a Monte Carlo permutation method [5]_. Again, the permutation is done by randomizing either the time or location of the events and then running the statistic again. The test should be implemented with the additional descriptives as suggested by [6]_.
+
+* SpaceTimeK
+The space-time K function takes the K function which has been used to detect clustering in spatial point patterns and expands it to the realm of spatio-temporal data. Essentially, the method calculates K functions in space and time independently and then compares the product of these functions with a K function which takes both dimensions of space and time into account from the start [7]_. Significance is established through Monte Carlo methods and the construction of confidence envelopes.
+
+References
+==========
+
+.. [1] G. Jacquez, D. Greiling, H. Durbeck, L. Estberg, E. Do, A. Long, and B. Rommel. ClusterSeer User Guide 2: Software for Identifying Disease Clusters. Ann Arbor, MI: TerraSeer Press, 2002.
+
+.. [2] B. Rowlingson and P. Diggle. splancs: Spatial and Space-Time Point Pattern Analysis. R Package. Version 2.01-25, 2009.
+
+.. [3] E. Knox. The detection of space-time interactions. Journal of the Royal Statistical Society. Series C (Applied Statistics), 13(1):25–30, 1964.
+
+.. [4] N. Mantel. The detection of disease clustering and a generalized regression approach. Cancer Research, 27(2):209–220, 1967.
+
+.. [5] G. Jacquez. A k nearest neighbour test for space-time interaction. Statistics in Medicine, 15(18):1935– 1949, 1996.
+
+.. [6] E. Mack and N. Malizia. Enhancing the results of the Jacquez *k* Nearest Neighbor test for space-time interaction. *In Preparation*
+
+.. [7] P. Diggle, A. Chetwynd, R. Haggkvist, and S. Morris. Second-order analysis of space-time clustering. Statistical Methods in Medical Research, 4(2):124, 1995.
+

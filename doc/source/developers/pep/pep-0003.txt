@@ -6,7 +6,7 @@ PEP 0003 Spatial Smoothing Module
 Author    Myunghwa Hwang <mhwang4@gmail.com>
           Luc Anselin <luc.anselin@asu.edu>
           Serge Rey <srey@asu.edu>
-Status    Draft
+Status    Approved 1.0
 Created   11-Feb-2010
 Updated   
 ========  =================================
