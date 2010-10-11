@@ -1,0 +1,60 @@
+**********************************
+PEP 0006 Kernel Density Estimation
+**********************************
+
+========  ======================================
+Author    Serge Rey <sjsrey@gmail.com>
+          Charles Schmidt <schmidtc@gmail.com>
+ 
+Status    Draft
+Created   11-Oct-2010
+Updated   11-Oct-2010
+========  ======================================
+
+Abstract
+========
+
+The kernel density estimation module will provide a uniform interface to a set
+of kernel density estimation (KDE) methods. Currently KDE is used in various places
+within PySAL
+(e.g., :class:`~pysal.weights.Distance.Kernel`,
+:class:`~pysal.esda.smoothing.Kernel_Smoother`) as well as in STARS and
+various projects within the GeoDA Center, but these implementations were done
+separately. This module would centralize KDE within PySAL as well as extend
+the suite of KDE methods and related measures available in PySAL.
+
+Motivation
+==========
+
+KDE is widely used throughout spatial analysis, from estimation of process
+intensity in point pattern analysis, deriving spatial weights, geographically
+weighted regression, rate smoothing, to hot spot detection, among others. 
+
+
+Reference Implementation
+========================
+
+
+Since KDE would be used throughout existing (and likely future) modules in
+PySAL, it makes sense to implement it as a top level module in PySAL.
+
+Core KDE methods that would be implemented include:
+
+   * triangular
+   * uniform
+   * quadratic
+   * quartic
+   * gaussian
+
+Additional classes and methods to deal with KDE on restricted spaces would
+also be implemented.
+
+A unified KDE api would be developed for use of the module.
+
+Computational optimization would form a significant component of the effort
+for this PEP.
+
+References
+==========
+
+in progress
