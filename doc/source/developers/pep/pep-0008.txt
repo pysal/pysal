@@ -1,0 +1,51 @@
+**************************************************
+PEP 0008 Spatial Database Module
+**************************************************
+
+========  =======================================
+Author    Phil Stephens <phil.stphns@gmail.com>,
+          Serge Rey <sjsrey@gmail.com>
+Status    Draft
+Created   09-Sep-2010
+Updated   13-Oct-2010
+========  =======================================
+
+Abstract
+========
+
+A spatial database module will extend PySAL's FileIO module to spatial database software conforming to the Open Geospatial Consortium (OGC) ``Simple Features for SQL`` (SFSQL) specification [1]_, allowing PySAL users to read, write, dump, load, and perform geographic queries on spatial database software.
+
+Motivation
+==========
+
+PySAL 1.0 reads and writes computational geometry via the Shapefile data
+structure, a long-time industry standard. Users with mission-critical, large databases,
+however, may store and retrieve their data more efficiently and more reliably using Relational
+Database technologies. In addition to the reliability, redundancy, and
+robustness of the database transaction model, spatially-indexed databases permit
+rapid and efficient queries on the geometric relations between objects in the database [1]_.
+The ability to perform geometry management in PySAL will expand the
+utility of the library.
+
+Reference Implementation
+========================
+
+We suggest adding the module ``PySAL.core.spTables``. 
+spTables.py will subclass Tables.py, adding support for accessing spatial databases. 
+We propose to employ a proven implementation of a Python
+Object Relational Mapper (ORM) layer by using SQLAlchemy [2]_ and GeoAlchemy [3]_, MIT-licensed software that
+provides a database-agnostic SQL layer for several different databases and
+spatial database extensions 
+including PostgreSQL/PostGIS, Oracle Spatial, Spatialite, MS SQL Server, MySQL Spatial, and others.
+These lightweight libraries manage database connections, transactions, and SQL
+Expression translation .
+
+References
+==========
+
+.. [1] OpenGeo (2010) `Spatial Database Tips and Tricks <http://workshops.opengeo.org/postgis-spatialdbtips/introduction.html>`_.   Accessed September 9, 2010.  
+
+.. [2] SQLAlchemy (2010) `SQLAlchemy 0.6.5 Documentation <http://www.sqlalchemy.org/docs/orm/index.html>`_.  Accessed October 4, 2010.
+
+.. [3] GeoAlchemy (2010) `GeoAlchemy 0.4.1 Documentation <http://geoalchemy.org/index.html>`_. Accessed October 4, 2010.
+
