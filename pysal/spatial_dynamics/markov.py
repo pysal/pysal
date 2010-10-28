@@ -574,12 +574,31 @@ class LISA_Markov(Markov):
                    1=HH,2=LH,3=LL,4=HL (own,lag)
     p            : matrix (k,k)
                    transition probility matrix
-
     steady_state : matrix (k,1)
                    ergodic distribution
-
     transitions  : matrix (k,k)
                    count of transitions between each state i and j
+    move_types   : matrix (n,t-1)
+                   integer values indicating which type of LISA transition
+                   occurred (q1 is quadrant in period 1, q2 is quadrant in
+                   period 2)
+                   q1   q2   move_type
+                   1    1    1
+                   2    1    2
+                   3    1    3
+                   4    1    4
+                   1    2    5
+                   2    2    6
+                   3    2    7
+                   4    2    8
+                   1    3    9
+                   2    3    10
+                   3    3    11
+                   4    3    12
+                   1    4    13
+                   2    4    14
+                   3    4    15
+                   4    4    16
 
     Examples
     --------
@@ -592,28 +611,58 @@ class LISA_Markov(Markov):
     >>> lm.classes
     array([1, 2, 3, 4])
     >>> lm.steady_state
-    matrix([[ 0.31122083+0.j],
-            [ 0.14496933+0.j],
-            [ 0.37728447+0.j],
-            [ 0.16652538+0.j]])
+    matrix([[ 0.28561505],
+            [ 0.14190226],
+            [ 0.40493672],
+            [ 0.16754598]])
     >>> lm.transitions
-    array([[ 495.,   47.,  384.,  244.],
-           [ 180.,   83.,  178.,  115.],
-           [ 334.,  321.,  661.,  190.],
-           [ 169.,  105.,  218.,   83.]])
+    array([[  1.08700000e+03,   4.40000000e+01,   4.00000000e+00,
+              3.40000000e+01],
+           [  4.10000000e+01,   4.70000000e+02,   3.60000000e+01,
+              1.00000000e+00],
+           [  5.00000000e+00,   3.40000000e+01,   1.42200000e+03,
+              3.90000000e+01],
+           [  3.00000000e+01,   1.00000000e+00,   4.00000000e+01,
+              5.52000000e+02]])
     >>> lm.p
-    matrix([[ 0.42307692,  0.04017094,  0.32820513,  0.20854701],
-            [ 0.32374101,  0.14928058,  0.32014388,  0.20683453],
-            [ 0.22177955,  0.21314741,  0.43891102,  0.12616202],
-            [ 0.29391304,  0.1826087 ,  0.37913043,  0.14434783]])
-    
+    matrix([[ 0.92985458,  0.03763901,  0.00342173,  0.02908469],
+            [ 0.07481752,  0.85766423,  0.06569343,  0.00182482],
+            [ 0.00333333,  0.02266667,  0.948     ,  0.026     ],
+            [ 0.04815409,  0.00160514,  0.06420546,  0.88603531]])
+    >>> lm.move_types
+    array([[ 11.,  11.,  11., ...,  11.,  11.,  11.],
+           [  6.,   6.,   6., ...,   6.,   7.,  11.],
+           [ 11.,  11.,  11., ...,  11.,  11.,  11.],
+           ..., 
+           [  6.,   6.,   6., ...,   6.,   6.,   6.],
+           [  1.,   1.,   1., ...,   6.,   6.,   6.],
+           [ 16.,  16.,  16., ...,  16.,  16.,  16.]])
     
     """
     def __init__(self,y,w):
         y=y.transpose()
         q=np.array([pysal.Moran_Local(yi,w,permutations=0).q for yi in y])
+        q=q.transpose()
         classes=np.arange(1,5) # no guarantee all 4 quadrants are visited
         Markov.__init__(self,q,classes)
+        self.q=q
+        tt={}
+        c=1
+        n,k=q.shape
+        k-=1
+        for i in range(1,5):
+            for j in range(1,5):
+                tt[i,j]=c
+                c+=1
+        move_types=np.zeros((n,k))
+        for t in range(k):
+            origin=q[:,t]
+            dest=q[:,t+1]
+            for r in range(n):
+                move_types[r,t]=tt[origin[r],dest[r]]
+        self.move_types=move_types
+
+
 
 
 def prais(pmat):
