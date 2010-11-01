@@ -57,7 +57,7 @@ A fix is to do the following::
 
 	2. Upgrade to the latest numpydoc extension from the scipy source:
                 svn co http://svn.scipy.org/svn/scipy/trunk scipy
-		cd scipy/scipy/doc/sphinxext/
+		cd scipy/doc/sphinxext/
 		svn update
 		python setup.py install
 

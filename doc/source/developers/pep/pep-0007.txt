@@ -5,7 +5,7 @@ PEP 0007 Spatial Econometrics
 ========  ======================================
 Author    Luc Anselin <luc.anselin@asu.edu>
           Serge Rey <sjsrey@gmail.com>,David Folch <dfolch@asu.edu>,Daniel Arribas-Bel <daniel.arribas.bel@gmail.com>,Pedro Amaral <pvmda2@cam.ac.uk>,Nicholas Malizia <nmalizia@gmail.com>,Ran Wei <rwei5@asu.edu>,Jing Yao <jyao13@asu.edu>,Elizabeth Mack <Elizabeth.A.Mack@asu.edu>
-Status    Draft
+Status    Approved 1.1
 Created   12-Oct-2010
 Updated   12-Oct-2010
 ========  ======================================
