@@ -306,13 +306,18 @@ def choynowski(e, b, n, threshold=None):
     -------
                : array (nx1)
 
+    References
+    ----------
+    [1] M. Choynowski. 1959. Maps based on probabilities. Journal of the
+        American Statistical Association, 54, 385-388.
+    
     Examples
     --------
     >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
     >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
     >>> n = 2
     >>> print choynowski(e, b, n)
-    [ 0.30437751  0.26054837]
+    [ 0.30437751  0.29367033]
     """
     e_by_n = sum_by_n(e, 1.0, n)
     b_by_n = sum_by_n(b, 1.0, n)
@@ -320,11 +325,10 @@ def choynowski(e, b, n, threshold=None):
     expected = r_by_n * b_by_n
     p = []
     for index, i in enumerate(e_by_n):
-        p_i = poisson.cdf(i, expected[index])
         if i <= expected[index]:
-            p.append(p_i)
+            p.append(poisson.cdf(i, expected[index]))
         else:
-            p.append(1 - p_i)
+            p.append(1 - poisson.cdf(i-1, expected[index]))
     if threshold:
         p = [i if i<threshold else 0.0 for i in p]
     return np.array(p) 
