@@ -34,6 +34,21 @@ class _TestContiguityWeights(unittest.TestCase):
             pysalb_neighbors.sort()
             self.assertEqual(geoda_neighbors,pysalr_neighbors)
             self.assertEqual(geoda_neighbors,pysalb_neighbors)
+    def test_true_rook2(self):
+        # load queen gal file created using Open Geoda.
+        geodaW = pysal.open('../examples/stl_hom_rook.gal','r').read()
+        # build matching W with pysal
+        pysalWr,pysalWb = self.build_W('../examples/stl_hom.shp',ROOK,'POLY_ID_OG')
+        # compare output.
+        for key in geodaW.neighbors:
+            geoda_neighbors = map(int,geodaW.neighbors[key])
+            pysalr_neighbors = pysalWr.neighbors[int(key)]
+            pysalb_neighbors = pysalWb.neighbors[int(key)]
+            geoda_neighbors.sort()
+            pysalr_neighbors.sort()
+            pysalb_neighbors.sort()
+            self.assertEqual(geoda_neighbors,pysalr_neighbors)
+            self.assertEqual(geoda_neighbors,pysalb_neighbors)
     def test_true_rook(self):
         # load queen gal file created using Open Geoda.
         geodaW = pysal.open('../examples/rook31.gal','r').read()
