@@ -1,4 +1,5 @@
 import rtree
+from pysal.cg.standalone import get_shared_segments
 #Order by Degree of connectivity, i.e. rook is more connected then queen.
 QUEEN = 1
 ROOK = 2
@@ -75,16 +76,19 @@ class ContiguityWeights_rtree:
         common = set(poly0.vertices).intersection(set(poly1.vertices))
         if len(common) > 1 and self.joinType==ROOK:
             #double check rook
-            for vert in common:
-                idx = poly0.vertices.index(vert)
-                IDX = poly1.vertices.index(vert)
-                try:
-                    if poly0.vertices[idx+1] == poly1.vertices[IDX+1] or poly0.vertices[idx+1] == poly1.vertices[IDX-1]\
-                    or poly0.vertices[idx-1] == poly1.vertices[IDX+1] or poly0.vertices[idx-1] == poly1.vertices[IDX-1]:
-                        return ROOK
-                except IndexError:
-                    pass
+            if get_shared_segments(poly0,poly1,True):
+                return ROOK
             return False
+            #for vert in common:
+            #    idx = poly0.vertices.index(vert)
+            #    IDX = poly1.vertices.index(vert)
+            #    try:
+            #        if poly0.vertices[idx+1] == poly1.vertices[IDX+1] or poly0.vertices[idx+1] == poly1.vertices[IDX-1]\
+            #        or poly0.vertices[idx-1] == poly1.vertices[IDX+1] or poly0.vertices[idx-1] == poly1.vertices[IDX-1]:
+            #            return ROOK
+            #    except IndexError:
+            #        pass
+            #return False
         elif len(common) > 0:
             return QUEEN
         else:

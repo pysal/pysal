@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import math
 import pysal
+from pysal.cg.standalone import get_shared_segments
 
 # delta to get buckets right
 DELTA = 0.000001
@@ -111,16 +112,18 @@ class ContiguityWeights_binning:
                     #double check rook
                     poly0 = shpFileObject.get(polyId)
                     poly1 = shpFileObject.get(j)
-                    for vert in common:
-                        idx = poly0.vertices.index(vert)
-                        IDX = poly1.vertices.index(vert)
-                        try:
-                            if poly0.vertices[idx+1] == poly1.vertices[IDX+1] or poly0.vertices[idx+1] == poly1.vertices[IDX-1]\
-                            or poly0.vertices[idx-1] == poly1.vertices[IDX+1] or poly0.vertices[idx-1] == poly1.vertices[IDX-1]:
-                                join = True
-                                break
-                        except IndexError:
-                            pass
+                    if get_shared_segments(poly0,poly1,True):
+                        join = True
+                    #for vert in common:
+                    #    idx = poly0.vertices.index(vert)
+                    #    IDX = poly1.vertices.index(vert)
+                    #    try:
+                    #        if poly0.vertices[idx+1] == poly1.vertices[IDX+1] or poly0.vertices[idx+1] == poly1.vertices[IDX-1]\
+                    #        or poly0.vertices[idx-1] == poly1.vertices[IDX+1] or poly0.vertices[idx-1] == poly1.vertices[IDX-1]:
+                    #            join = True
+                    #            break
+                    #    except IndexError:
+                    #        pass
                 if len(common) > 0: #QUEEN
                     if self.wttype == QUEEN:
                         join = True

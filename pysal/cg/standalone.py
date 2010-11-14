@@ -564,6 +564,28 @@ def _point_in_vertices(pt, vertices):
 
     return inters % 2 == 1
 
+def get_shared_segments(poly1,poly2,bool_ret=False):
+    segmentsA = []
+    partsA = poly1.parts
+    for part in poly1.parts+[p for p in poly1.holes if p]:
+        if part[0] != part[-1]: #not closed
+            part = part[:]+part[0:1]
+        segmentsA.extend([LineSegment(a,b) for a,b in zip(part,part[1:])])
+    segmentsB = []
+    for part in poly2.parts+[p for p in poly2.holes if p]:
+        if part[0] != part[-1]: #not closed
+            part = part[:]+part[0:1]
+        segmentsB.extend([LineSegment(a,b) for a,b in zip(part,part[1:])])
+    ret = []
+    for seg in segmentsB:
+        if seg in segmentsA:
+            ret.append(seg)
+            if bool_ret:
+                return True
+    return ret
+    
+
+
 def _test():
     import doctest
     doctest.testmod(verbose=True)
