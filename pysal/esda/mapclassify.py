@@ -248,8 +248,11 @@ def natural_breaks(values,k=5,itmax=100):
     values=np.array(values)
     n=len(values)
     uv=np.unique(values)
-    if len(uv) < k:
-        print 'not enough unique values in array to form k classes'
+    uvk=len(uv)
+    if  uvk < k:
+        print 'Warning: Not enough unique values in array to form k classes'
+        print "Warning: setting k to %d"%uvk
+        k=uvk
     sids=np.random.permutation(range(len(uv)))[0:k]
     seeds=uv[sids]
     seeds.sort()
@@ -835,6 +838,16 @@ class Natural_Breaks(Map_Classifier):
     array([14, 13, 14, 10,  7])
     >>> nb.bins
     [1.8100000000000001, 7.5999999999999996, 29.82, 181.27000000000001, 4111.4499999999998]
+    >>> x=np.array([1]*50)
+    >>> x[-1]=20
+    >>> nb=Natural_Breaks(x,k=5,initial=0)
+    Warning: Not enough unique values in array to form k classes
+    Warning: setting k to 2
+    >>> nb.bins
+    [1, 20]
+    >>> nb.counts
+    array([49,  1])
+    
     
     Notes
     -----
@@ -863,6 +876,7 @@ class Natural_Breaks(Map_Classifier):
             if fit_i< fit:
                 res0=res
         self.bins=res0[-1]
+        self.k=len(self.bins)
         self.iterations=res0[-2]
 
 class Fisher_Jenks(Map_Classifier):
