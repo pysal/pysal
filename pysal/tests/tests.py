@@ -39,6 +39,7 @@ import pysal.region.randomregion
 import pysal.spatial_dynamics.rank
 import pysal.spatial_dynamics.markov
 import pysal.spatial_dynamics.ergodic
+import pysal.spatial_dynamics.directional
 import pysal.weights.spatial_lag, pysal.weights.util
 import pysal.weights.Contiguity, pysal.weights.Distance, pysal.weights.user
 import pysal.weights.Wsets
@@ -55,7 +56,8 @@ mods='esda.moran','esda.geary', 'esda.mapclassify', \
         'weights.Contiguity', 'weights.Distance', 'weights.user', \
         'weights.Wsets', 'esda.smoothing', \
         'spatial_dynamics.markov', \
-        'spatial_dynamics.ergodic' 
+        'spatial_dynamics.ergodic' , \
+        'spatial_dynamics.directional'
 
 mods = [ "pysal."+ mod for mod in mods]
 suite = unittest.TestSuite()
