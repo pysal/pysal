@@ -37,6 +37,15 @@ class SpaceTimeEvents:
                       n x 2 array of the temporal coordinates (t,1) for the
                       events, the second column is a vector of ones
 
+    Examples
+    --------
+    >>> import numpy as np
+    >>> import pysal
+    >>> path = "../examples/burkitt"
+    >>> events = SpaceTimeEvents(path,'T')
+    >>> events.n
+    188
+
     """
     def __init__(self,path,time_col):
         shp = pysal.open(path + '.shp')
@@ -104,16 +113,22 @@ def knox(events,delta,tau,permutations=99,t='NONE'):
     pvalue          : float
                       pseudo p-value associated with the statistic
 
-
     References
     ----------
     .. [1] E. Knox. 1964. The detection of space-time interactions. Journal
        of the Royal Statistical Society. Series C (Applied Statistics),
        13(1):25-30.
 
-
     Examples
     --------
+    >>> import numpy as np
+    >>> import pysal
+    >>> path = "../examples/burkitt"
+    >>> events = SpaceTimeEvents(path,'T')
+    >>> result = knox(events,delta=20,tau=5,permutations=99)
+    >>> print("%6.0f"%result['stat'])
+    12
+
     """
     n = events.n
     x = events.x
@@ -205,6 +220,14 @@ def mantel_z(events,permutations=99,t='NONE'):
 
     Examples
     --------
+    >>> import numpy as np
+    >>> import pysal
+    >>> path = "../examples/burkitt"
+    >>> events = SpaceTimeEvents(path,'T')
+    >>> result = mantel_r(events,99)
+    >>> print("%12.6f"%result['stat'])
+    1402377993.417254
+
     """
     n = events.n
     space = events.space
@@ -283,11 +306,20 @@ def mantel_r(events,permutations=99,t='NONE'):
     pvalue          : float
                       pseudo p-value associated with the statistic
 
-
     Reference
     ---------
     .. [2] N. Mantel. 1967. The detection of disease clustering and a
     generalized regression approach. Cancer Research, 27(2):209-220.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> import pysal
+    >>> path = "../examples/burkitt"
+    >>> events = SpaceTimeEvents(path,'T')
+    >>> result = mantel_r(events,99)
+    >>> print("%6.6f"%r['stat'])
+    0.014154
 
     """
     n = events.n
@@ -383,6 +415,14 @@ def jacquez(events,k,permutations=99,time='NONE',space='NONE'):
 
     Examples
     --------
+    >>> import numpy as np
+    >>> import pysal
+    >>> path = "../examples/burkitt"
+    >>> events = SpaceTimeEvents(path,'T')
+    >>> result = jacquez(events,k=3,permutations=99)
+    >>> print("%6.0f"%result['stat'])
+    13
+
     """    
     n = events.n
     t = events.t
@@ -443,12 +483,23 @@ def knn(coordinates,k):
     k               : integer
                       number of nearest neighbors to report
 
-
     Returns
     -------
     neighbors       : dictionary
                       keys refer to the point id and the entries refer to
                       the ids for the point's k nearest neighbors
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> import pysal
+    >>> path = "../examples/burkitt"
+    >>> events = SpaceTimeEvents(path,'T')
+    >>> coords = events.space
+    >>> result = knn(coords,3)
+    >>> result[0]
+    [11, 68, 70]
+
     """
     # calculate the distance matrix
     x = coordinates[:,0]
@@ -507,6 +558,21 @@ def getlower(matrix):
     lowvec          : numpy array
                       the lower half of the distance matrix flattened into
                       a vector of length n*(n-1)/2
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> import pysal
+    >>> test = np.array([[0,1,2,3],[1,0,1,2],[2,1,0,1],[4,2,1,0]])
+    >>> lower = getlower(test)
+    >>> lower
+    array([[1],
+           [2],
+           [1],
+           [4],
+           [2],
+           [1]])
+    
     """
     n = matrix.shape[0]
     lowerlist = []
@@ -516,7 +582,7 @@ def getlower(matrix):
                 lowerlist.append(matrix[i,j])
 
     veclen = n*(n-1)/2
-    lowvec = np.reshape(timelist,(veclen,1))
+    lowvec = np.reshape(lowerlist,(veclen,1))
 
     return lowvec
 
