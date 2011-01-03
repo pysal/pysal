@@ -63,7 +63,9 @@ def rose(Y,w,k=8,permutations=0):
     k: int
        number of circular sectors in rose diagram
 
-
+    permutations: int
+       number of random spatial permutations for calculation of pseudo
+       p-values
     Returns 
     -------
 
