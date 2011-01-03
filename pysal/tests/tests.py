@@ -1,27 +1,54 @@
 """
-PySAL Unit Testing
+Integration testing for PySAL
 
-Prior to commiting any changes to the trunk, said changes should be checked
-against the rest of the local copy of the trunk by running::
+Each package in PySAL shall have a tests directory. Within this directory shall
+be one test_module.py file for each module.py in the package.
 
-    python tests.py
+Note
+----
 
-If all tests pass, changes have not broken the current trunk and can be
-committed. Commits that introduce breakage should only be done in cases where
-other developers are notified and the breakage raises important issues for
-discussion.
-
-
-Notes
------
-Unit tests should be added for all modules in pysal.
-
-To deal with relative paths in the doctests a symlink must first be made from
-within the `tests` directory as follows::
-
-     ln -s ../examples .
+End of this file will eventually be depreciated and removed as it was the 1.0
+testing scheme which will be replaced with this file.
 
 """
+
+import os
+import unittest
+
+path="../"
+skip=[".svn","tests"]
+
+
+# test for existence of test_*.py in mod/tests
+
+runners=[]
+missing=[]
+
+for root,subfolders,files in os.walk(path):
+    for ignore in skip:
+        if ignore in subfolders:
+            subfolders.remove(ignore)
+    mods=[fname for fname in files if fname.endswith(".py")]
+    tests=[os.path.join(root,"tests","test_"+mod) for mod in mods]
+    for test in tests:
+        if os.path.exists(test):
+            runners.append(test)
+        else:
+            missing.append(test)
+
+import time
+t1=time.time()
+for test in runners:
+    execfile(test)
+t2=time.time()
+print t2-t1
+
+print "Untested methods"
+for missed in missing:
+    print missed
+
+
+print "Running old_tests"
 
 __author__ = "Sergio J. Rey <srey@asu.edu>"
 
