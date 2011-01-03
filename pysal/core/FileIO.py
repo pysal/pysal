@@ -81,6 +81,8 @@ class FileIO(object): #should be a type?
             return newCls
         else:
             return object.__new__(cls)
+    def __del__(self):
+        self.close()
     @staticmethod
     def getType(dataPath):
         """Parse the dataPath and return the data type"""
