@@ -35,17 +35,3 @@ All public classes and functions should include examples in their docstrings. Th
 #. Tests to ensure code behavior is aligned with the documentation
 
 Doctests will be executed when buidling PySAL documentation with Sphinx.
-
-
-
-Notes
-=====
-When writing any unittests that pull examples from `pysal/examples` be sure that
-the path is relative to the `pysal/tests` directory.
-
-For example, if a test in `pysal/esda/tests/test_moran.py` uses data from
-`pysal/examples/filename` the appropriate path in the `test_moran.py` file should be
-`path="../examples/filename"` not `path="../../examples/filename"` since the
-system wide tests are run from within `pysal/tests`
-
-
