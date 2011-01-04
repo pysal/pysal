@@ -37,12 +37,19 @@ for root,subfolders,files in os.walk(path):
             missing.append(test)
 
 import time
+cwd=os.path.abspath(".")
 t1=time.time()
-for test in runners:
-    print "Unit testing: ",test
-    execfile(test)
+for _test in runners:
+    print "Unit testing: ",_test
+    pth,file=os.path.split(_test)
+    apth=os.path.abspath(pth)
+    print pth,file,apth
+    os.chdir(apth)
+    execfile(file)
+    os.chdir(cwd)
 t2=time.time()
 print t2-t1
+os.chdir(cwd)
 
 print "Untested methods"
 for missed in missing:
