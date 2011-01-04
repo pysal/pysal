@@ -594,8 +594,48 @@ def min_threshold_distance(data):
     nnd=nn[0].max(axis=0)[1]
     return nnd
 
-   
+def sparse_lattice(nrows=3,ncols=5,criterion="rook",id_type='int'):
+    n = nrows*ncols
+    diagonals = []
+    offsets = []
+    if criterion == "rook" or criterion == "queen":
+        d = np.ones((1,n))
+        for i in range(ncols-1,n,ncols):
+            d[0,i] = 0
+        diagonals.append(d)
+        offsets.append(-1)
+
+        d = np.ones((1,n))
+        diagonals.append(d)
+        offsets.append(-ncols)
+
+    if criterion == "queen" or criterion == "bishop":
+        d = np.ones((1,n))
+        for i in range(0,n,ncols):
+            d[0,i] = 0
+        diagonals.append(d)
+        offsets.append(-(ncols-1))
+
+        d = np.ones((1,n))
+        for i in range(ncols-1,n,ncols):
+            d[0,i] = 0
+        diagonals.append(d)
+        offsets.append(-(ncols+1))
+    data = np.concatenate(diagonals)
+    offsets = np.array(offsets)
+    m = sparse.dia_matrix((data,offsets),shape=(n,n),dtype=np.int8)
+    m = m+m.T
+    return m
+        
+        
 if __name__ == "__main__":
 
     import doctest
     doctest.testmod()
+
+    from pysal import lat2W
+
+    assert (lat2W(5,5).sparse.todense() == sparse_lattice(5,5).todense()).all()
+    assert (lat2W(5,3).sparse.todense() == sparse_lattice(5,3).todense()).all()
+    assert (lat2W(5,3,rook=False).sparse.todense() == sparse_lattice(5,3,'queen').todense()).all()
+    assert (lat2W(50,50,rook=False).sparse.todense() == sparse_lattice(50,50,'queen').todense()).all()
