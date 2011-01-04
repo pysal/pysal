@@ -271,25 +271,30 @@ def Moran_BV_matrix(variables,w,permutations=0,varnames=None):
     Examples
     --------
     >>> import pysal
+
+    open dbf
+
     >>> f=pysal.open("../examples/sids2.dbf")
+
+    pull of selected variables from dbf and create numpy arrays for each
+
     >>> varnames=['SIDR74','SIDR79','NWR74','NWR79']
     >>> vars=[np.array(f.by_col[var]) for var in varnames]
+
+    create a contiguity matrix from an external gal file
+
     >>> w=pysal.open("../examples/sids2.gal").read()
+
+    create an instance of Moran_BV_matrix
+
     >>> res=Moran_BV_matrix(vars,w,varnames=varnames)
-               x           wy        I
-          SIDR74       SIDR79    0.194
-          SIDR79       SIDR74    0.156
-          SIDR74        NWR74    0.384
-           NWR74       SIDR74    0.375
-          SIDR74        NWR79    0.388
-           NWR79       SIDR74    0.377
-          SIDR79        NWR74    0.116
-           NWR74       SIDR79    0.103
-          SIDR79        NWR79    0.122
-           NWR79       SIDR79    0.110
-           NWR74        NWR79    0.735
-           NWR79        NWR74    0.737
-    >>> 
+
+    check values
+
+    >>> res[(0,1)].I
+    0.19362610652874668
+    >>> res[(3,0)].I
+    0.37701382542927858
     
 
     """
@@ -303,13 +308,6 @@ def Moran_BV_matrix(variables,w,permutations=0,varnames=None):
             y2=variables[j]
             results[i,j]=Moran_BV(y1,y2,w,permutations=permutations)
             results[j,i]=Moran_BV(y2,y1,w,permutations=permutations)
-    if varnames:
-        fmt="%12s %12s %8.3f"
-        print "%12s %12s %8s"%('x','wy','I')
-        for i in rk:
-            for j in range(i+1,k):
-                print fmt%(varnames[i],varnames[j],results[i,j].I)
-                print fmt%(varnames[j],varnames[i],results[j,i].I)
     return results
 
 class Moran_Local:

@@ -39,6 +39,7 @@ for root,subfolders,files in os.walk(path):
 import time
 t1=time.time()
 for test in runners:
+    print "Unit testing: ",test
     execfile(test)
 t2=time.time()
 print t2-t1
