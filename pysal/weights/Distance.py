@@ -8,6 +8,79 @@ import pysal
 from pysal.common import *
 from pysal.weights import W
 
+def knnApproxW(point_array,k=2,p=2,ids=None):
+    """
+    Approximate k nearest neighbors
+
+
+    k will grow to accommodate ties. In other words k_i may vary over i.
+
+    
+    Parameters
+    ----------
+
+    point_array     : multitype
+                 np.array  n observations on m attributes
+    k          : int
+                 minimum number of nearest neighbors
+    p          : float
+                 Minkowski p-norm distance metric parameter:
+                 1<=p<=infinity
+                 2: Euclidean distance
+                 1: Manhattan distance
+    ids        : list
+                 identifiers to attach to each observation
+    Returns
+    -------
+
+    w         : W instance
+                Weights object with binary weights
+
+
+
+
+    Examples
+    --------
+    >>> x,y=np.indices((5,5))
+    >>> x.shape=(25,1)
+    >>> y.shape=(25,1)
+    >>> data=np.hstack([x,y])
+    >>> w=knnApproxW(data)
+    >>> w.neighbors
+    {0: [1, 5], 1: [0, 2, 6], 2: [1, 7, 3], 3: [4, 8], 4: [3, 9], 5: [0, 6, 10], 6: [1, 5, 7, 11], 7: [2, 6, 12, 8], 8: [3, 9, 13], 9: [4, 8, 14], 10: [5, 11, 15], 11: [6, 10, 12, 16], 12: [7, 11, 13, 17], 13: [8, 14, 18], 14: [9, 13, 19], 15: [16, 20], 16: [15, 17, 21], 17: [16, 18, 22], 18: [17, 19, 23], 19: [18, 24], 20: [15, 21], 21: [16, 20, 22], 22: [17, 21, 23], 23: [18, 22, 24], 24: [19, 23]}
+    """
+    
+
+
+    # handle point_array
+    if type(point_array).__name__=='ndarray':
+        data=point_array
+    else:
+        print 'Unsupported  type'
+
+    # calculate
+    kd=KDTree(data)
+    distances=kd.query(data,k=k+1,p=p)[0][:,-1].flatten()
+    zd=zip(distances,data)
+    info=[kd.query_ball_point(point,dist) for dist,point in zd]
+    for i,row in enumerate(info):
+        row.remove(i)
+        info[i]=row
+
+    neighbors={}
+    weights={}
+    if ids:
+        idset = np.array(ids)
+    else:
+        idset = np.arange(len(info))
+    for i, row in enumerate(info):
+        neighbors[idset[i]] = list(idset[row])
+        weights[idset[i]] = [1]*len(neighbors[idset[i]])
+
+    return pysal.weights.W(neighbors,weights=weights,id_order=ids)
+
+
+
 def knnW(point_array,k=2,p=2,ids=None):
     """
     Creates contiguity matrix based on k nearest neighbors
