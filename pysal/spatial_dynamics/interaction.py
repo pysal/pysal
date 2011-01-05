@@ -586,3 +586,6 @@ def getlower(matrix):
 
     return lowvec
 
+
+
+

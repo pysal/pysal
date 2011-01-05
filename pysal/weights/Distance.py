@@ -530,7 +530,7 @@ class Distance:
     
     
     """
-    def __init__(self,x,y=None):
+    def __init__(self,x,y='NONE'):
 
         n=x.shape[0]
         M=np.ones((n,n))
@@ -539,7 +539,7 @@ class Distance:
         dx=xM-xM.T
         dx2=dx**2   
         d=dx2
-        if y.any():
+        if y!='NONE':
             yM=y*M
             dy=yM-yM.T
             dy2=dy**2
