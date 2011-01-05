@@ -6,7 +6,7 @@ composition.
 """
 
 __author__ = "David Folch dfolch@asu.edu, Serge Rey srey@asu.edu"
-
+__all__=["Random_Regions","Random_Region"]
     
 import pysal
 from pysal.common import *

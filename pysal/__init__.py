@@ -33,7 +33,6 @@ Utilities
 import cg
 import core
 
-from common import *
 from version import version
 
 # toplevel imports to be explicit

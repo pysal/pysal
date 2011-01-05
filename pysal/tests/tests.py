@@ -23,6 +23,7 @@ skip=[".svn","tests"]
 
 runners=[]
 missing=[]
+missing_all=[]
 
 for root,subfolders,files in os.walk(path):
     for ignore in skip:
@@ -35,6 +36,10 @@ for root,subfolders,files in os.walk(path):
             runners.append(test)
         else:
             missing.append(test)
+    for mod in mods:
+        mod = os.path.join(root,mod)
+        if "__all__" not in open(mod,'r').read():
+            missing_all.append(mod)
 
 import time
 cwd=os.path.abspath(".")
@@ -54,7 +59,9 @@ os.chdir(cwd)
 print "Untested methods"
 for missed in missing:
     print missed
-
+print "Modules Missing __all__"
+for missed in missing_all:
+    print "__all__ is not defined in",missed
 
 print "Running old_tests"
 
