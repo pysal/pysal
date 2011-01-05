@@ -19,12 +19,9 @@ class _TestContiguityWeights(unittest.TestCase):
         # compare output.
         for key in geodaW.neighbors:
             geoda_neighbors = map(int,geodaW.neighbors[key])
-            pysalr_neighbors = pysalWr.neighbors[int(key)]
             pysalb_neighbors = pysalWb.neighbors[int(key)]
             geoda_neighbors.sort()
-            pysalr_neighbors.sort()
             pysalb_neighbors.sort()
-            self.assertEqual(geoda_neighbors,pysalr_neighbors)
             self.assertEqual(geoda_neighbors,pysalb_neighbors)
     def test_true_rook(self):
         # load queen gal file created using Open Geoda.
