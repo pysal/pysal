@@ -3,10 +3,11 @@ Set-like manipulation of weights matrices.
 """
 
 __author__ = "Sergio J. Rey <srey@asu.edu>, Charles Schmidt <Charles.R.Schmidt@asu.edu>, David Folch <david.folch@asu.edu>"
-
+__all__ = ['w_union', 'w_intersection', 'w_difference',
+'w_symmetric_difference', 'w_subset']
 
 import pysal
-from pysal.common import *
+from pysal.common import copy
 
 
 def w_union(w1, w2):
@@ -348,6 +349,7 @@ def w_subset(w1, ids):
 
     
 def _test():
+    """"TEST"""
     import doctest
     doctest.testmod()
 
