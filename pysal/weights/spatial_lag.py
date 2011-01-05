@@ -4,8 +4,7 @@ spatial lag operations
 __authors__ = "Serge Rey <srey@asu.edu>, David C. Folch <david.folch@asu.edu>"
 __all__ = ['lag_spatial']
 
-
-def lag_spatial(w,y):
+def lag_spatial(w, y):
     """
     Spatial lag operator. If w is row standardized, returns the average of
     each observation's neighbors; if not, returns the weighted sum of each 
@@ -30,6 +29,7 @@ def lag_spatial(w,y):
     Examples
     --------
     >>> import pysal
+    >>> import numpy as np
     >>> neighbors={'c': ['b'], 'b': ['c', 'a'], 'a': ['b']}
     >>> weights ={'c': [1.0], 'b': [1.0, 1.0], 'a': [1.0]}
     >>> id_order=['a','b','c']
