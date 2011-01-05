@@ -24,6 +24,8 @@ skip=[".svn","tests"]
 runners=[]
 missing=[]
 missing_all=[]
+expectedUnits={}
+missingUnits={}
 
 for root,subfolders,files in os.walk(path):
     for ignore in skip:
@@ -31,16 +33,31 @@ for root,subfolders,files in os.walk(path):
             subfolders.remove(ignore)
     mods=[fname for fname in files if fname.endswith(".py")]
     tests=[os.path.join(root,"tests","test_"+mod) for mod in mods]
+    for mod,testMod in zip(mods,tests):
+        mod = os.path.join(root,mod)
+        if testMod not in expectedUnits:
+            expectedUnits[testMod] = []
+        if "__all__" not in open(mod,'r').read():
+            missing_all.append(mod)
+        else:
+            lines = [l for l in open(mod,'r') if "__all__" in l]
+            if len(lines) > 1:
+                print "Ambiguous __all__ in",mod
+            else:
+                l = lines[0].split('[')[1].strip().replace(']','').replace('"','').replace("'","")
+                for x in l.split(','):
+                    expectedUnits[testMod].append("test_"+x)
     for test in tests:
         if os.path.exists(test):
             runners.append(test)
+            txt = open(test,'r').read()
+            missingUnits[test] = []
+            for unit in expectedUnits[test]:
+                if unit not in txt:
+                    missingUnits[test].append(unit)
         else:
             missing.append(test)
-    for mod in mods:
-        mod = os.path.join(root,mod)
-        if "__all__" not in open(mod,'r').read():
-            missing_all.append(mod)
-
+        
 import time
 cwd=os.path.abspath(".")
 t1=time.time()
@@ -62,7 +79,9 @@ for missed in missing:
 print "Modules Missing __all__"
 for missed in missing_all:
     print "__all__ is not defined in",missed
-
+for key in missingUnits:
+    if missingUnits[key]:
+        print key," is missing expected test(s): ",','.join(missingUnits[key])
 print "Running old_tests"
 
 __author__ = "Sergio J. Rey <srey@asu.edu>"
