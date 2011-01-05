@@ -3,18 +3,18 @@ Contiguity based spatial weights
 """
 
 __author__  = "Sergio J. Rey <srey@asu.edu> "
+__all__ = ['buildContiguity']
 
 import pysal
-from warnings import warn
 try:
     from _contW_rtree import ContiguityWeights_rtree as ContiguityWeights
 except:
     from _contW_binning import ContiguityWeights_binning as ContiguityWeights
 
 
-WT_TYPE={'rook':2,'queen':1} # for _contW_Binning
+WT_TYPE = {'rook':2,'queen':1} # for _contW_Binning
 
-def buildContiguity(polygons,criterion="rook",ids=None):
+def buildContiguity(polygons, criterion="rook", ids=None):
     """
     Build contiguity weights from a source
 
@@ -67,28 +67,28 @@ def buildContiguity(polygons,criterion="rook",ids=None):
     if ids and len(ids) != len(set(ids)):
         raise ValueError, "The argument to the ids parameter contains duplicate entries."
     
-    wt_type=WT_TYPE[criterion.lower()]
-    geo=polygons
-    if issubclass(type(geo),pysal.open):
+    wt_type = WT_TYPE[criterion.lower()]
+    geo = polygons
+    if issubclass(type(geo), pysal.open):
         geo.seek(0) # Make sure we read from the beinging of the file.
         geoObj = geo
     else:
         raise TypeError, "Argument must be a FileIO handler or connection string"
-    neighbor_data = ContiguityWeights(geoObj,wt_type).w
-    neighbors={}
-    weights={}
+    neighbor_data = ContiguityWeights(geoObj, wt_type).w
+    neighbors = {}
+    #weights={}
     if ids:
         for key in neighbor_data:
-            id = ids[key]
-            if id not in neighbors:
-                neighbors[id] = set()
-            neighbors[id].update([ids[x] for x in neighbor_data[key]])
+            ida = ids[key]
+            if ida not in neighbors:
+                neighbors[ida] = set()
+            neighbors[ida].update([ids[x] for x in neighbor_data[key]])
         for key in neighbors:
             neighbors[key] = list(neighbors[key])
     else:
         for key in neighbor_data:
             neighbors[key] = list(neighbor_data[key])
-    return pysal.weights.W(neighbors,id_order=ids)
+    return pysal.weights.W(neighbors, id_order=ids)
 
     
 if __name__ == "__main__":
