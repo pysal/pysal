@@ -3,6 +3,22 @@ import numpy as np
 
 def shuffle_matrix(X,ids):
     """
+    Random permutation of rows and columns of a matrix
+
+    Arguments
+    ---------
+
+    X   : array (k,k)
+          array to be permutated
+    ids : range (k,)
+
+    Returns
+    -------
+
+    X   : array (k,k)
+          with rows and columns randomly shuffled
+
+          
     >>> X=np.arange(16)
     >>> X.shape=(4,4)
     >>> np.random.seed(10)
