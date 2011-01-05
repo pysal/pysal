@@ -11,15 +11,14 @@ __all__ = ['queen_from_shapefile', 'rook_from_shapefile',
 'threshold_continuousW_from_shapefile', 'kernelW',
 'kernelW_from_shapefile', 'adaptive_kernelW',
 'adaptive_kernelW_from_shapefile', 'min_threshold_dist_from_shapefile']
-import os
+
 import pysal
 from Contiguity import buildContiguity
 from Distance import knnW, Kernel, DistanceBand
 from util import get_ids, get_points_array_from_shapefile, min_threshold_distance
-import numpy as np
 
 
-def queen_from_shapefile(shapefile,idVariable=None):
+def queen_from_shapefile(shapefile, idVariable=None):
     """
     Queen contiguity weights from a polygon shapefile
 
@@ -60,10 +59,10 @@ def queen_from_shapefile(shapefile,idVariable=None):
     """
     if idVariable:
         ids = get_ids(shapefile, idVariable)
-        return buildContiguity(pysal.open(shapefile),criterion='queen',ids=ids)
-    return buildContiguity(pysal.open(shapefile),criterion='queen')
+        return buildContiguity(pysal.open(shapefile), criterion='queen', ids=ids)
+    return buildContiguity(pysal.open(shapefile), criterion='queen')
 
-def rook_from_shapefile(shapefile,idVariable=None):
+def rook_from_shapefile(shapefile, idVariable=None):
     """
     Rook contiguity weights from a polygon shapefile
 
@@ -98,14 +97,14 @@ def rook_from_shapefile(shapefile,idVariable=None):
     """
     if idVariable:
         ids = get_ids(shapefile, idVariable)
-        return buildContiguity(pysal.open(shapefile),criterion='rook',ids=ids)
-    return buildContiguity(pysal.open(shapefile),criterion='rook')
+        return buildContiguity(pysal.open(shapefile), criterion='rook', ids=ids)
+    return buildContiguity(pysal.open(shapefile), criterion='rook')
 
 
 
 # Distance based weights
 
-def knnW_from_array(array,k=2,p=2,ids=None):
+def knnW_from_array(array, k=2, p=2, ids=None):
     """
     Nearest neighbor weights from a numpy array
 
