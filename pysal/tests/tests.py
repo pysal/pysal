@@ -90,12 +90,6 @@ import unittest
 
 suite = unittest.TestSuite()
 # Test imports
-try:
-    import rtree
-    import test_cont_weights
-    suite.addTest(test_cont_weights.suite)
-except ImportError:
-    print "Cannot test rtree contiguity weights, rtree not installed"
 import test_fileIO
 suite.addTest(test_fileIO.suite)
 import test_cg_shapes
