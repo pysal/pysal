@@ -4,9 +4,8 @@ Methods for identifying space-time interaction in spatio-temporal event data.
 __author__  = "Nicholas Malizia <nmalizia@asu.edu> "
 import pysal
 from pysal.common import *
-from pysal.weights import Distance
-from pysal.esda.util import shuffle_matrix
-
+import pysal.weights.Distance as Distance
+import pysal.spatial_dynamics.util as util
 
 
 class SpaceTimeEvents:
@@ -134,20 +133,20 @@ def knox(events,delta,tau,permutations=99,t='NONE'):
 
     """
     n = events.n
-    x = events.x
-    y = events.y
+    s = events.space
     t = events.t
 
-    # calculate the spatial distance
-    sdistmat = Distance(x,y).d
+    # calculate the spatial and temporal distance matrices for the events
+    sdistmat = Distance.distance_matrix(s)   
+    tdistmat = Distance.distance_matrix(t)
+
+    # identify events within thresholds
     spacmat = np.zeros((n,n))
     for i in range(n):
         for j in range(n):
             if sdistmat[i,j] < delta:
                 spacmat[i,j] = 1
 
-    # calculate the temporal distance matrix for the events
-    tdistmat = Distance(t).d
     timemat = np.zeros((n,n))
     for i in range(n):
         for j in range(n):
@@ -159,16 +158,16 @@ def knox(events,delta,tau,permutations=99,t='NONE'):
     stat = (knoxmat.sum()-n)/2
 
     # return results (if no inference)
-    if permutations=='NONE': return stat
+    if permutations==0: return stat
     distribution=[]
 
     # loop for generating a random distribution to assess significance
     for p in range(permutations):
-        trand = shuffle_matrix(tdistmat,range(n))
+        rtdistmat = util.shuffle_matrix(tdistmat,range(n))
         timemat = np.zeros((n,n))
         for i in range(n):
             for j in range(n):
-                if trand[i,j] < tau:
+                if rtdistmat[i,j] < tau:
                     timemat[i,j] = 1
         knoxmat = timemat*spacmat
         k = (knoxmat.sum()-n)/2
@@ -226,26 +225,25 @@ def mantel(events,permutations=99,sconstant=0.0,spower=1.0,tconstant=0.0,tpower=
 
     """
     n = events.n
-    x = events.x
-    y = events.y
+    s = events.space
     t = events.t
 
     # calculate the spatial and temporal distance matrices for the events
-    distmat = (Distance(x,y).d + sconstant)**spower
-    timemat = (Distance(t).d + tconstant)**tpower
+    distmat = Distance.distance_matrix(s)   
+    timemat = Distance.distance_matrix(t)
 
-    # calculate the standardized statistic
-    timevec = getlower(timemat)
-    distvec = getlower(distmat)
+    # calculate the transformed standardized statistic
+    timevec = (getlower(timemat)+tconstant)**tpower
+    distvec = (getlower(distmat)+sconstant)**spower
     stat = stats.pearsonr(timevec,distvec)[0].sum()
 
     # return the results (if no inference)
-    if permutations=='NONE': return stat
+    if permutations==0: return stat
 
     # loop for generating a random distribution to assess significance
     dist=[]
     for i in range(permutations):
-        trand = shuffle_matrix(timemat,range(n))
+        trand = util.shuffle_matrix(timemat,range(n))
         timevec = getlower(trand)
         m = stats.pearsonr(timevec,distvec)[0].sum()
         dist.append(m)
@@ -256,12 +254,12 @@ def mantel(events,permutations=99,sconstant=0.0,spower=1.0,tconstant=0.0,tpower=
     pvalue = stats.t.sf(t,permutations+1)
 
     # report the results
-    mantel_result ={'stat':stat, 'pvalue':pvalue}
+    mantel_result = {'stat':stat, 'pvalue':pvalue}
     return mantel_result
 
 
 
-def jacquez(events,k,permutations=99,time='NONE',space='NONE'):
+def jacquez(events,k,permutations=99):
     """
     Jacquez k nearest neighbors test for spatio-temporal interaction. [3]_
 
@@ -315,8 +313,8 @@ def jacquez(events,k,permutations=99,time='NONE',space='NONE'):
     space = events.space
 
     # calculate the nearest neighbors in space and time separately
-    knnt = knnW(time,k)
-    knns = knnW(space,k)
+    knnt = Distance.knnW(time,k)
+    knns = Distance.knnW(space,k)
 
     nnt = knnt.neighbors
     nns = knns.neighbors
@@ -334,14 +332,14 @@ def jacquez(events,k,permutations=99,time='NONE',space='NONE'):
     stat = knn_sum
 
     # return the results (if no inference)
-    if permutations=='NONE': return stat
+    if permutations==0: return stat
 
     # loop for generating a random distribution to assess significance
     dist=[]
     j = 0
     for p in range(permutations):
         trand = np.random.permutation(time)
-        knnt = knnW(trand,k)
+        knnt = Distance.knnW(trand,k)
         nnt = knnt.neighbors
         for i in range(n):
             t_neighbors = nnt[i]
