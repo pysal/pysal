@@ -128,8 +128,8 @@ def knox(events,delta,tau,permutations=99,t='NONE'):
     >>> path = "../examples/burkitt"
     >>> events = SpaceTimeEvents(path,'T')
     >>> result = knox(events,delta=20,tau=5,permutations=99)
-    >>> print("%6.0f"%result['stat'])
-    12
+    >>> print result['stat']
+    13.0
 
     """
     n = events.n
@@ -141,17 +141,13 @@ def knox(events,delta,tau,permutations=99,t='NONE'):
     tdistmat = Distance.distance_matrix(t)
 
     # identify events within thresholds
-    spacmat = np.zeros((n,n))
-    for i in range(n):
-        for j in range(n):
-            if sdistmat[i,j] < delta:
-                spacmat[i,j] = 1
+    spacmat = np.ones((n,n))
+    test = sdistmat <= delta
+    spacmat = spacmat * test
 
-    timemat = np.zeros((n,n))
-    for i in range(n):
-        for j in range(n):
-            if tdistmat[i,j] < tau:
-                timemat[i,j] = 1
+    timemat = np.ones((n,n))
+    test = tdistmat <= tau
+    timemat = timemat * test
 
     # calculate the statistic
     knoxmat = timemat*spacmat
@@ -219,8 +215,8 @@ def mantel(events,permutations=99,sconstant=0.0,spower=1.0,tconstant=0.0,tpower=
     >>> import pysal
     >>> path = "../examples/burkitt"
     >>> events = SpaceTimeEvents(path,'T')
-    >>> result = mantel_r(events,99)
-    >>> print("%6.6f"%r['stat'])
+    >>> result = mantel(events,99)
+    >>> print("%6.6f"%result['stat'])
     0.014154
 
     """
@@ -233,8 +229,8 @@ def mantel(events,permutations=99,sconstant=0.0,spower=1.0,tconstant=0.0,tpower=
     timemat = Distance.distance_matrix(t)
 
     # calculate the transformed standardized statistic
-    timevec = (util.getlower(timemat)+tconstant)**tpower
-    distvec = (util.getlower(distmat)+sconstant)**spower
+    timevec = (util.get_lower(timemat)+tconstant)**tpower
+    distvec = (util.get_lower(distmat)+sconstant)**spower
     stat = stats.pearsonr(timevec,distvec)[0].sum()
 
     # return the results (if no inference)
@@ -244,7 +240,7 @@ def mantel(events,permutations=99,sconstant=0.0,spower=1.0,tconstant=0.0,tpower=
     dist=[]
     for i in range(permutations):
         trand = util.shuffle_matrix(timemat,range(n))
-        timevec = getlower(trand)
+        timevec = util.get_lower(trand)
         m = stats.pearsonr(timevec,distvec)[0].sum()
         dist.append(m)
 
@@ -304,7 +300,7 @@ def jacquez(events,k,permutations=99):
     >>> path = "../examples/burkitt"
     >>> events = SpaceTimeEvents(path,'T')
     >>> result = jacquez(events,k=3,permutations=99)
-    >>> print("%6.0f"%result['stat'])
+    >>> print result['stat']
     13
 
     """    
@@ -359,3 +355,11 @@ def jacquez(events,k,permutations=99):
     # report the results
     jacquez_result ={'stat':stat, 'pvalue':pvalue}
     return jacquez_result
+
+
+
+if __name__ == '__main__':
+
+    import doctest
+    doctest.testmod()
+

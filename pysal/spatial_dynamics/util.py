@@ -33,7 +33,7 @@ def shuffle_matrix(X,ids):
     return X[ids,:][:,ids]
 
 
-def getlower(matrix):
+def get_lower(matrix):
     """
     Flattens the lower part of an n x n matrix into an n(n-1)/2 x 1 vector.
     
@@ -55,7 +55,7 @@ def getlower(matrix):
     >>> import numpy as np
     >>> import pysal
     >>> test = np.array([[0,1,2,3],[1,0,1,2],[2,1,0,1],[4,2,1,0]])
-    >>> lower = getlower(test)
+    >>> lower = get_lower(test)
     >>> lower
     array([[1],
            [2],
