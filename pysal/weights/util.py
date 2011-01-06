@@ -7,7 +7,7 @@ from scipy.spatial import KDTree
 import os, gc
 
 __all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 
-           'remap_ids','full']
+           'remap_ids','full','get_ids', 'min_threshold_distance']
 
 
 def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
@@ -497,7 +497,7 @@ def get_ids(shapefile, idVariable):
 
     Examples
     --------
-    >>> from pysal import get_ids
+    >>> from pysal.weights.util import get_ids
     >>> polyids = get_ids("../examples/columbus.shp", "POLYID")      
     >>> polyids[:5]
     [1, 2, 3, 4, 5]
@@ -537,7 +537,7 @@ def get_points_array_from_shapefile(shapefile):
     Examples
     --------
     Point shapefile
-    >>> from pysal import get_points_array_from_shapefile
+    >>> from pysal.weights.util import get_points_array_from_shapefile
     >>> xy = get_points_array_from_shapefile('../examples/juvenile.shp')
     >>> xy[:3]
     array([[ 94.,  93.],
@@ -578,7 +578,7 @@ def min_threshold_distance(data):
     
     Examples
     --------
-    >>> from pysal import min_threshold_distance
+    >>> from pysal.weights.util import min_threshold_distance
     >>> import numpy as np
     >>> x,y=np.indices((5,5))
     >>> x.shape=(25,1)
