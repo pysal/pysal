@@ -8,6 +8,8 @@ import pysal
 from pysal.common import *
 from pysal.weights import W
 
+from scipy import sparse
+
 def knnApproxW(point_array,k=2,p=2,ids=None):
     """
     Approximate k nearest neighbors
@@ -549,12 +551,59 @@ class Distance:
 
 
 
+def sp_distance(X):
+ 
+    try:
+        dim=X.ndim
+    except:
+        X=np.array(X)
+        dim=X.ndim
 
+    if dim ==0:
+        X.shape=(len(X),1)
 
-        
+    n,k=X.shape
+    data=[]
+    row=[]
+    col=[]
+    rdata=[]
+    D=sparse.csr_matrix((n,n))
+    for l in range(k):
 
+        for i in range(n-1):
+            data.extend(X[i+1:,l])
+            rdata.extend((X[i,l]*np.ones((1,n-i-1))).tolist()[0])
+            row.extend([i]*(n-i-1))
+            col.extend(range(i+1,n))
+        L=sparse.csr_matrix((data,(row,col)),shape=(n,n))
+        R=sparse.csr_matrix((rdata,(row,col)),shape=(n,n))
+        dlr=L-R
+        D=D+dlr.multiply(dlr)
+    return D
 
 if __name__ == "__main__":
 
     import doctest
     doctest.testmod()
+
+    
+    
+    x=np.arange(1,5)
+
+    n=len(x)
+    data=[]
+    row=[]
+    col=[]
+    rdata=[]
+
+    for i in range(n-1):
+        data.extend(x[i+1:])
+        
+        rdata.extend((x[i]*np.ones((1,n-i-1))).tolist()[0]
+)
+        row.extend([i]*(n-i-1))
+        col.extend(range(i+1,n))
+    L=sparse.csr_matrix((data,(row,col)),shape=(n,n))
+    R=sparse.csr_matrix((rdata,(row,col)),shape=(n,n))
+    dlr=L-R
+    D=dlr.multiply(dlr)
