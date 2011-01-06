@@ -3,11 +3,12 @@ Set-like manipulation of weights matrices.
 """
 
 __author__ = "Sergio J. Rey <srey@asu.edu>, Charles Schmidt <Charles.R.Schmidt@asu.edu>, David Folch <david.folch@asu.edu>"
-__all__ = ['w_union', 'w_intersection', 'w_difference',
-'w_symmetric_difference', 'w_subset']
 
 import pysal
-from pysal.common import copy
+import copy
+
+# to comply with PEP 8, place __all__ after imports
+__all__ = ['w_union', 'w_intersection', 'w_difference', 'w_symmetric_difference', 'w_subset']
 
 
 def w_union(w1, w2):
