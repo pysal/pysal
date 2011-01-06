@@ -33,6 +33,52 @@ def shuffle_matrix(X,ids):
     return X[ids,:][:,ids]
 
 
+def getlower(matrix):
+    """
+    Flattens the lower part of an n x n matrix into an n(n-1)/2 x 1 vector.
+    
+    Parameters
+    ----------
+
+    matrix          : numpy array
+                      a distance matrix (n x n)
+
+    Returns
+    -------
+
+    lowvec          : numpy array
+                      the lower half of the distance matrix flattened into
+                      a vector of length n*(n-1)/2
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> import pysal
+    >>> test = np.array([[0,1,2,3],[1,0,1,2],[2,1,0,1],[4,2,1,0]])
+    >>> lower = getlower(test)
+    >>> lower
+    array([[1],
+           [2],
+           [1],
+           [4],
+           [2],
+           [1]])
+    
+    """
+    n = matrix.shape[0]
+    lowerlist = []
+    for i in range(n):
+        for j in range(n):
+            if i>j:
+                lowerlist.append(matrix[i,j])
+
+    veclen = n*(n-1)/2
+    lowvec = np.reshape(lowerlist,(veclen,1))
+
+    return lowvec
+
+
+
 if __name__ == '__main__':
 
     import doctest
