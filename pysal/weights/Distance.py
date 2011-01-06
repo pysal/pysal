@@ -499,11 +499,22 @@ class DistanceBand(W):
                     weights[ids[i]] = [self.dmat[(i,j)]**self.alpha for j in ns] 
         return allneighbors,weights
 
-def distance_matrix(X):
+def distance_matrix(X,p=2.0):
     """
     Distance Matrices
 
     XXX Needs optimization/integration with other weights in pysal
+    
+    Parameters
+    ----------
+    X           : An, n by k numpy.ndarray
+                    Where n is number of observations
+                    k is number of dimmensions (2 for x,y)
+    p          : float
+                 Minkowski p-norm distance metric parameter:
+                 1<=p<=infinity
+                 2: Euclidean distance
+                 1: Manhattan distance
 
     Example
     -------
@@ -543,9 +554,11 @@ def distance_matrix(X):
         x = X[:,col]
         xM=x*M
         dx=xM-xM.T
-        dx2=dx**2   
+        if p%2 != 0:
+            dx = np.abs(dx)
+        dx2=dx**p   
         D+=dx2
-    D=D**0.5
+    D=D**(1.0/p)
     return D
 
 if __name__ == "__main__":
