@@ -499,7 +499,7 @@ class DistanceBand(W):
                     weights[ids[i]] = [self.dmat[(i,j)]**self.alpha for j in ns] 
         return allneighbors,weights
 
-class Distance:
+def distance_matrix(X):
     """
     Distance Matrices
 
@@ -508,8 +508,9 @@ class Distance:
     Example
     -------
     >>> x,y=[r.flatten() for r in np.indices((3,3))]
-    >>> d=Distance(x,y)
-    >>> d.d
+    >>> data = np.array([x,y]).T
+    >>> d=distance_matrix(data)
+    >>> np.array(d)
     array([[ 0.        ,  1.        ,  2.        ,  1.        ,  1.41421356,
              2.23606798,  2.        ,  2.23606798,  2.82842712],
            [ 1.        ,  0.        ,  1.        ,  1.41421356,  1.        ,
@@ -529,29 +530,75 @@ class Distance:
            [ 2.82842712,  2.23606798,  2.        ,  2.23606798,  1.41421356,
              1.        ,  2.        ,  1.        ,  0.        ]])
     >>> 
-    
-    
     """
-    def __init__(self,x,y='NONE'):
+    if X.ndim == 1:
+        X.shape = (X.shape[0],1)
+    if X.ndim > 2:
+        raise TypeError,"wtf?"
+    n, k = X.shape
 
-        n=x.shape[0]
-        M=np.ones((n,n))
-
+    M=np.ones((n,n))
+    D=np.zeros((n,n))
+    for col in range(k):
+        x = X[:,col]
         xM=x*M
         dx=xM-xM.T
         dx2=dx**2   
-        d=dx2
-        if y!='NONE':
-            yM=y*M
-            dy=yM-yM.T
-            dy2=dy**2
-            d=(dx2+dy2)
-        d=d**0.5
-        self.d=d
+        D+=dx2
+    D=D**0.5
+    return D
+def distance_matrix2(X):
+    """
+    Distance Matrices useing Sparse Matricies
 
+    XXX Needs optimization/integration with other weights in pysal
 
+    Example
+    -------
+    >>> x,y=[r.flatten() for r in np.indices((3,3))]
+    >>> data = np.array([x,y]).T
+    >>> d=distance_matrix2(data)
+    >>> np.array(d)
+    array([[ 0.        ,  1.        ,  2.        ,  1.        ,  1.41421356,
+             2.23606798,  2.        ,  2.23606798,  2.82842712],
+           [ 1.        ,  0.        ,  1.        ,  1.41421356,  1.        ,
+             1.41421356,  2.23606798,  2.        ,  2.23606798],
+           [ 2.        ,  1.        ,  0.        ,  2.23606798,  1.41421356,
+             1.        ,  2.82842712,  2.23606798,  2.        ],
+           [ 1.        ,  1.41421356,  2.23606798,  0.        ,  1.        ,
+             2.        ,  1.        ,  1.41421356,  2.23606798],
+           [ 1.41421356,  1.        ,  1.41421356,  1.        ,  0.        ,
+             1.        ,  1.41421356,  1.        ,  1.41421356],
+           [ 2.23606798,  1.41421356,  1.        ,  2.        ,  1.        ,
+             0.        ,  2.23606798,  1.41421356,  1.        ],
+           [ 2.        ,  2.23606798,  2.82842712,  1.        ,  1.41421356,
+             2.23606798,  0.        ,  1.        ,  2.        ],
+           [ 2.23606798,  2.        ,  2.23606798,  1.41421356,  1.        ,
+             1.41421356,  1.        ,  0.        ,  1.        ],
+           [ 2.82842712,  2.23606798,  2.        ,  2.23606798,  1.41421356,
+             1.        ,  2.        ,  1.        ,  0.        ]])
+    >>> 
+    """
+    if X.ndim == 1:
+        X.shape = (X.shape[0],1)
+    if X.ndim > 2:
+        raise TypeError,"wtf?"
+    n, k = X.shape
+    
+    M = np.ones((n,n),dtype=np.uint8)
+    M = sparse.triu(M).astype(np.float64)
+    D=sparse.csr_matrix((n,n))
+    for col in range(k):
+        x = sparse.spdiags([X[:,col]],[0],n,n)
+        left = M*x
+        right = x*M
+        d = left-right
+        d = d.multiply(d)
+        D = D+d
 
-def sp_distance(X):
+    D = np.power(D.todense(),0.5)
+    return D+D.T
+def sp_distance_bak(X):
  
     try:
         dim=X.ndim
@@ -569,7 +616,6 @@ def sp_distance(X):
     rdata=[]
     D=sparse.csr_matrix((n,n))
     for l in range(k):
-
         for i in range(n-1):
             data.extend(X[i+1:,l])
             rdata.extend((X[i,l]*np.ones((1,n-i-1))).tolist()[0])
