@@ -1,5 +1,9 @@
+"""
+Utilities for the spatial dynamics module. 
+"""
 import numpy as np
 
+__all__=['shuffle_matrix','get_lower']
 
 def shuffle_matrix(X,ids):
     """
@@ -80,5 +84,5 @@ def get_lower(matrix):
 if __name__ == '__main__':
 
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
 
