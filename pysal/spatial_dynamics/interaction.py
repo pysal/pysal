@@ -3,10 +3,13 @@ Methods for identifying space-time interaction in spatio-temporal event
 data.
 """
 __author__  = "Nicholas Malizia <nmalizia@asu.edu> "
+
 import pysal
 from pysal.common import *
 import pysal.weights.Distance as Distance
 import pysal.spatial_dynamics.util as util
+
+__all__=['SpaceTimeEvents','knox','mantel','jacquez']
 
 
 class SpaceTimeEvents:
@@ -44,8 +47,18 @@ class SpaceTimeEvents:
     --------
     >>> import numpy as np
     >>> import pysal
+
+    Read in the example data.    
+
     >>> path = "../examples/burkitt"
+
+    Create an instance of SpaceTimeEvents from a shapefile, where temporal
+    information is stored in a column named "T". 
+
     >>> events = SpaceTimeEvents(path,'T')
+
+    See how many events are in the instance. 
+
     >>> events.n
     188
 
@@ -126,9 +139,18 @@ def knox(events, delta, tau, permutations=99):
     --------
     >>> import numpy as np
     >>> import pysal
+
+    Read in the example data and create an instance of SpaceTimeEvents.
+
     >>> path = "../examples/burkitt"
     >>> events = SpaceTimeEvents(path,'T')
-    >>> result = knox(events,delta=20,tau=5,permutations=99)
+
+    Run the Knox test with a distance and time thresholds of 20 and 5.
+
+    >>> result = knox(events,delta=20,tau=5,permutations=9)
+
+    Print the results.
+
     >>> print result['stat']
     13.0
 
@@ -180,7 +202,8 @@ def knox(events, delta, tau, permutations=99):
     return knox_result
 
 
-def mantel(events, permutations=99, sconstant=0.0, spower=1.0, tconstant=0.0, tpower=1.0):
+
+def mantel(events, permutations=99, scon=0.0, spow=1.0, tcon=0.0, tpow=1.0):
     """
     Standardized Mantel test for spatio-temporal interaction. [2]_
 
@@ -214,9 +237,18 @@ def mantel(events, permutations=99, sconstant=0.0, spower=1.0, tconstant=0.0, tp
     --------
     >>> import numpy as np
     >>> import pysal
+
+    Read in the example data and create an instance of SpaceTimeEvents.
+
     >>> path = "../examples/burkitt"
     >>> events = SpaceTimeEvents(path,'T')
-    >>> result = mantel(events,99)
+
+    Run the standardized Mantel test without a constant or transformation.
+
+    >>> result = mantel(events, 9, scon=0.0, spow=1.0, tcon=0.0, tpow=1.0)
+
+    Print the results.
+
     >>> print("%6.6f"%result['stat'])
     0.014154
 
@@ -230,8 +262,8 @@ def mantel(events, permutations=99, sconstant=0.0, spower=1.0, tconstant=0.0, tp
     timemat = Distance.distance_matrix(t)
 
     # calculate the transformed standardized statistic
-    timevec = (util.get_lower(timemat)+tconstant)**tpower
-    distvec = (util.get_lower(distmat)+sconstant)**spower
+    timevec = (util.get_lower(timemat)+tcon)**tpow
+    distvec = (util.get_lower(distmat)+scon)**spow
     stat = stats.pearsonr(timevec,distvec)[0].sum()
 
     # return the results (if no inference)
@@ -241,7 +273,7 @@ def mantel(events, permutations=99, sconstant=0.0, spower=1.0, tconstant=0.0, tp
     dist=[]
     for i in range(permutations):
         trand = util.shuffle_matrix(timemat,range(n))
-        timevec = util.get_lower(trand)
+        timevec = (util.get_lower(trand)+tcon)**tpow
         m = stats.pearsonr(timevec,distvec)[0].sum()
         dist.append(m)
 
@@ -298,9 +330,15 @@ def jacquez(events, k, permutations=99):
     --------
     >>> import numpy as np
     >>> import pysal
+
+    Read in the example data and create an instance of SpaceTimeEvents.
+    
     >>> path = "../examples/burkitt"
     >>> events = SpaceTimeEvents(path,'T')
-    >>> result = jacquez(events,k=3,permutations=99)
+
+    Run the Jacquez test and report the resulting statistic. 
+
+    >>> result = jacquez(events,k=3,permutations=9)
     >>> print result['stat']
     13
 
