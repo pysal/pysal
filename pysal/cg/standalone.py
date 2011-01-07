@@ -12,6 +12,8 @@ import copy
 from shapes import *
 from itertools import islice
 
+__all__ = ['bbcommon', 'get_bounding_box', 'get_angle_between', 'is_collinear', 'get_segments_intersect', 'get_segment_point_intersect', 'get_polygon_point_intersect', 'get_rectangle_point_intersect', 'get_ray_segment_intersect', 'get_rectangle_rectangle_intersection', 'get_polygon_point_dist', 'get_points_dist', 'get_segment_point_dist', 'get_point_at_angle_and_dist', 'convex_hull', 'is_clockwise', 'point_touches_rectangle', 'get_shared_segments']
+
 def bbcommon(bb,bbother):
     """ Old Stars method for bounding box overlap testing 
         Also defined in pysal.weights._cont_binning
@@ -725,7 +727,6 @@ def get_shared_segments(poly1,poly2,bool_ret=False):
 
 
 def _test():
-    import doctest
     doctest.testmod(verbose=True)
 
 if __name__ == '__main__':

@@ -8,7 +8,9 @@ __credits__ = "Copyright (c) 2005-2009 Sergio J. Rey"
 
 import doctest
 import math
-import random
+
+__all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon',
+'Rectangle']
 
 class Point(object):
     """
@@ -1277,9 +1279,9 @@ class Rectangle:
         return self.upper - self.lower
 
 def _test():
-    doctest.testmod()
+    doctest.testmod(verbose=True)
 
-import standalone
+import standalone   #moving this to top breaks unit tests !
 
 if __name__ == '__main__':
     _test()
