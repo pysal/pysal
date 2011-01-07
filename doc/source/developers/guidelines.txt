@@ -90,20 +90,17 @@ Start      End        Phase             Notes
 1/31/11     1/31/11   Release           Official release  of 1.1
 ========   ========   ================= ====================================================
 
-2.0 Cycle
+1.2 Cycle
 =========
 
 ======= ========   ================= ====================================================
 Start   End        Phase             Notes
 ======= ========   ================= ====================================================
-2/1/11  4/17/11    Module Proposals  Developers draft PEPs and prototype
-4/17/11 4/30/11    Module Selection  Developers discuss candidate PEPS, BDFL calls vote
-5/1/11   5/1/11    Module Approval   BDFL announces final approval
-5/2/11  6/30/11    Development       Implementation and testing of approved modules
+2/1/11  3/1/11     Module Proposals  Developers draft PEPs and prototype
+3/1/11  3/7/11     Module Selection  Developers discuss candidate PEPS, BDFL calls vote
+3/7/11   3/7/11    Module Approval   BDFL announces final approval
+3/8/11  6/30/11    Development       Implementation and testing of approved modules
 7/1/11   7/1/11    Code Freeze       APIs fixed, bug and testing changes only
-7/2/11   7/8/11    RC 1              Release candidate 1 
-7/9/11  7/15/11    RC 2              Release candidate 2
-7/16/11 7/22/11    RC 3              Release candidate 3
 7/23/11 7/30/11    Release Prep      Final builds, updating svn 
 7/31/11 7/31/11    Release           Official release of 2.0
 ======= ========   ================= ====================================================

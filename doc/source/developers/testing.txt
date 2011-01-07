@@ -35,3 +35,20 @@ All public classes and functions should include examples in their docstrings. Th
 #. Tests to ensure code behavior is aligned with the documentation
 
 Doctests will be executed when buidling PySAL documentation with Sphinx.
+
+
+Developers *should* run tests manually before committing any changes that
+may potentially effect usability. Developers can run doctests (docstring
+tests) manually from the command line in two ways: one, if the module
+includes doctest code (see below), ::
+
+    def _test():
+        import doctest
+        doctest.testmod(verbose=True)
+
+developers can run the "main" of the file
+(python modname.py) and see the docstring results, as long as the call to
+testmod includes the verbose flag. Two, developers can see the doctest
+results for modules without a test function by running::
+
+ python -m doctest -v modname.py
