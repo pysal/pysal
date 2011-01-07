@@ -44,7 +44,7 @@ for root,subfolders,files in os.walk(path):
             if len(lines) > 1:
                 print "Ambiguous __all__ in",mod
             else:
-                l = lines[0].split('[')[1].strip().replace(']','').replace('"','').replace("'","")
+                l = lines[0].split('[')[1].strip().replace(']','').replace('"','').replace("'","").replace(' ','')
                 for x in l.split(','):
                     expectedUnits[testMod].append("test_"+x)
     for test in tests:
