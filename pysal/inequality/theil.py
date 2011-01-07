@@ -1,11 +1,12 @@
 """Theil Inequality metrics 
 
-Author(s):
-    Serge Rey srey@asu.edu
 """
+__author__ = "Sergio J. Rey <srey@asu.edu> "
 
 from pysal.common import *
 import numpy as num
+__all__ = ['Theil', 'TheilD', 'TheilDSim']
+
 SMALL = num.finfo('float').tiny
 
 class Theil:
@@ -203,6 +204,6 @@ class TheilDSim:
 
 if __name__ == '__main__':
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
 
 
