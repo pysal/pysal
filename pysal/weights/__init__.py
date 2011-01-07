@@ -779,9 +779,11 @@ class W(object):
         >>> neighbors={0:[1,2,3], 1:[1,2,3], 2:[0,1], 3:[0,1]}
         >>> weights={0:[1,1,1], 1:[1,1,1], 2:[1,1], 3:[1,1]}
         >>> w=W(neighbors,weights)
-        >>> w.asymmetry()
-        (array([1, 0]), array([0, 1]))
-
+        >>> result = w.asymmetry()
+        >>> print result[0]
+        [1 0]
+        >>> print result[1]
+        [0 1]
         """
 
         wd=self.sparse.transpose()-self.sparse
