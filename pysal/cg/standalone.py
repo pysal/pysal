@@ -10,6 +10,23 @@ import doctest
 import math
 import copy
 from shapes import *
+from itertools import islice
+
+def bbcommon(bb,bbother):
+    """ Old Stars method for bounding box overlap testing 
+        Also defined in pysal.weights._cont_binning
+
+    >>> b0 = [0,0,10,10]
+    >>> b1 = [10,0,20,10]
+    >>> bbcommon(b0,b1)
+    1
+    """
+    chflag = 0 
+    if not ((bbother[2] < bb[0]) or (bbother[0] > bb[2])):
+        if not ((bbother[3] < bb[1]) or (bbother[1] > bb[3])):
+            chflag = 1 
+    return chflag
+
 
 def get_bounding_box(items):
     """
@@ -302,6 +319,51 @@ def get_ray_segment_intersect(ray, seg):
                                         ray.o[1] + ratio*(ray.p[1] - ray.o[1]))))
     return get_segments_intersect(seg, ray_seg)
 
+def get_rectangle_rectangle_intersection(r0,r1,checkOverlap=True):
+    """
+    Returns the intersection between two rectangles.
+
+    Note: Algorithm assumes the rectangles overlap.
+          checkOverlap=False should be used with extreme caution.
+
+    get_rectangle_rectangle_intersection(r0, r1) -> Rectangle
+
+    Parameters
+    ----------
+    r0   : a Rectangle
+    r1   : a Rectangle
+
+    Attributes
+    ----------
+
+    Examples
+    --------
+    >>> r0 = Rectangle(0,4,6,9)
+    >>> r1 = Rectangle(4,0,9,7)
+    >>> ri = get_rectangle_rectangle_intersection(r0,r1)
+    >>> ri[:]
+    [4.0, 4.0, 6.0, 7.0]
+    >>> r0 = Rectangle(0,0,4,4)
+    >>> r1 = Rectangle(2,1,6,3)
+    >>> ri = get_rectangle_rectangle_intersection(r0,r1)
+    >>> ri[:]
+    [2.0, 1.0, 4.0, 3.0]
+    >>> r0 = Rectangle(0,0,4,4)
+    >>> r1 = Rectangle(2,1,3,2)
+    >>> ri = get_rectangle_rectangle_intersection(r0,r1)
+    >>> ri[:] == r1[:]
+    True
+    """
+    if checkOverlap:
+        if not bbcommon(r0,r1):
+            raise ValueError, "Rectangles do not intersect"
+    left = max(r0.left,r1.left)
+    lower = max(r0.lower,r1.lower)
+    right = min(r0.right,r1.right)
+    upper = min(r0.upper,r1.upper)
+
+    return Rectangle(left,lower,right,upper)
+    
 def get_polygon_point_dist(poly, pt):
     """
     Returns the distance between a polygon and point.
@@ -564,25 +626,101 @@ def _point_in_vertices(pt, vertices):
 
     return inters % 2 == 1
 
+def point_touches_rectangle(point, rect):
+    """
+    Returns True if the point is in the rectangle or touches it's boundary.
+
+    point_touches_rectangle(point, rect) -> bool
+
+    Parameters
+    ----------
+    point : Point or Tuple
+    rect  : Rectangle
+
+    Examples
+    --------
+    >>> rect = Rectangle(0,0,10,10)
+    >>> a = Point((5,5))
+    >>> b = Point((10,5))
+    >>> c = Point((11,11))
+    >>> point_touches_rectangle(a,rect)
+    1
+    >>> point_touches_rectangle(b,rect)
+    1
+    >>> point_touches_rectangle(c,rect)
+    0
+    """
+    chflag = 0
+    if point[0] >= rect.left and point[0] <= rect.right:
+        if point[1] >= rect.lower and point[1] <= rect.upper:
+            chflag = 1
+    return chflag
 def get_shared_segments(poly1,poly2,bool_ret=False):
-    segmentsA = []
+    """
+    Returns the line segments in common to both polygons.
+
+    get_shared_segments(poly1, poly2) -> list
+
+    Parameters
+    ----------
+    poly1   : a Polygon
+    poly1   : a Polygon
+
+    Attributes
+    ----------
+
+    Examples
+    --------
+    """
+    #get_rectangle_rectangle_intersection inlined for speed.
+    r0 = poly1.bounding_box
+    r1 = poly2.bounding_box
+    wLeft = max(r0.left,r1.left)
+    wLower = max(r0.lower,r1.lower)
+    wRight = min(r0.right,r1.right)
+    wUpper = min(r0.upper,r1.upper)
+    
+    segmentsA = set()
+    common = set()
     partsA = poly1.parts
     for part in poly1.parts+[p for p in poly1.holes if p]:
         if part[0] != part[-1]: #not closed
             part = part[:]+part[0:1]
-        segmentsA.extend([LineSegment(a,b) for a,b in zip(part,part[1:])])
-    segmentsB = []
+        a = part[0]
+        for b in islice(part,1,None):
+            # inlining point_touches_rectangle for speed
+            x,y = a
+            if x >= wLeft and x <= wRight:
+                if y >= wLower and y <= wUpper:
+                    if a > b:
+                        segmentsA.add((b,a))
+                    else:
+                        segmentsA.add((a,b))
+            a = b
     for part in poly2.parts+[p for p in poly2.holes if p]:
         if part[0] != part[-1]: #not closed
             part = part[:]+part[0:1]
-        segmentsB.extend([LineSegment(a,b) for a,b in zip(part,part[1:])])
-    ret = []
-    for seg in segmentsB:
-        if seg in segmentsA:
-            ret.append(seg)
-            if bool_ret:
-                return True
-    return ret
+        a = part[0]
+        for b in islice(part,1,None):
+            # inlining point_touches_rectangle for speed
+            x,y = a
+            if x >= wLeft and x <= wRight:
+                if y >= wLower and y <= wUpper:
+                    if a > b:
+                        seg = (b,a)
+                    else:
+                        seg = (a,b)
+                    if seg in segmentsA:
+                        common.add(seg)
+                        if bool_ret:
+                            return True
+            a = b
+    if bool_ret:
+        if len(common) > 0:
+            return True
+        else:
+            return False
+    return common
     
 
 
@@ -592,7 +730,3 @@ def _test():
 
 if __name__ == '__main__':
     _test()
-
-
-
-

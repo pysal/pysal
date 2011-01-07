@@ -795,6 +795,36 @@ def min_threshold_dist_from_shapefile(shapefile):
     points = get_points_array_from_shapefile(shapefile)
     return min_threshold_distance(points)
 
+def build_lattice_shapefile(nrows, ncols, outFileName):
+    """
+    Build a lattice shapefile with nrows rows and ncols cols
+
+    Parameters
+    ----------
+
+    nrows       : int
+                  Number of rows
+    ncols       : int
+                  Number of cols
+    outFileName : str
+                  shapefile name with shp suffix
+
+    Returns
+    -------
+    None
+    """
+    if not outFileName.endswith('.shp'):
+        raise ValueError, "outFileName must end with .shp"
+    o = pysal.open(outFileName,'w')
+    for i in xrange(nrows):
+        for j in xrange(ncols):
+            ll = i,j
+            ul = i,j+1
+            ur = i+1,j+1
+            lr = i+1,j
+            o.write(pysal.cg.Polygon([ll,ul,ur,lr,ll]))
+    o.close()
+
 if __name__ == "__main__":
 
     import doctest
