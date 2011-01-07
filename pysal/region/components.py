@@ -5,6 +5,8 @@ __author__  = "Sergio J. Rey <srey@asu.edu> "
 
 import sys
 from operator import gt, lt
+
+__all__ = ["check_contiguity"]
         
 def check_contiguity(w,neighbors,leaver):
     """Check if contiguity is maintained if leaver is removed from neighbors

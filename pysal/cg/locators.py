@@ -11,6 +11,8 @@ import doctest
 from standalone import *
 from shapes import *
 
+__all__ = ["IntervalTree", "Grid", "BruteForcePointLocator", "PointLocator", "PolygonLocator"]
+
 class IntervalTree:
     """
     Representation of an interval tree. An interval tree is a data structure which is used to

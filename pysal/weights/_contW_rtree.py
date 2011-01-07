@@ -5,6 +5,7 @@ QUEEN = 1
 ROOK = 2
 
 __author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+__all__ = ["QUEEN","ROOK","ContiguityWeights_rtree"]
 
 Q_TARGET_MEM_SIZE = 250 * 1024 * 1024 #250mb
 class _PolyQ(dict):

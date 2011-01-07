@@ -10,6 +10,8 @@ from pysal.weights import W
 
 from scipy import sparse
 
+__all__ = ["knnApproxW", "knnW", "distance_matrix", "Kernel", "DistanceBand"]
+
 def knnApproxW(point_array,k=2,p=2,ids=None):
     """
     Approximate k nearest neighbors

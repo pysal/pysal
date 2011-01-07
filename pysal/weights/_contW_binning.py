@@ -3,6 +3,10 @@ import math
 import pysal
 from pysal.cg.standalone import get_shared_segments
 
+__author__  = "Sergio J. Rey <srey@asu.edu> "
+__all__ = ["QUEEN","ROOK","ContiguityWeights_binning"]
+
+
 # delta to get buckets right
 DELTA = 0.000001
 

@@ -7,7 +7,7 @@ __author__ = "Sergio J. Rey <srey@asu.edu>, Charles Schmidt <Charles.R.Schmidt@a
 import pysal
 import copy
 
-# to comply with PEP 8, place __all__ after imports
+# to comply with PEP 8, place ..all.. after imports
 __all__ = ['w_union', 'w_intersection', 'w_difference', 'w_symmetric_difference', 'w_subset']
 
 

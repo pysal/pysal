@@ -13,6 +13,8 @@ from components import check_contiguity
 from pysal.common import *
 from pysal.region import randomregion as RR
 
+__all__ = ["Maxp","Maxp_LISA"]
+
 LARGE=10**6
 MAX_ATTEMPTS=100
 
