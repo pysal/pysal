@@ -5,20 +5,19 @@ def shuffle_matrix(X,ids):
     """
     Random permutation of rows and columns of a matrix
 
-    Arguments
-    ---------
-
+    Parameters
+    ----------
     X   : array (k,k)
           array to be permutated
     ids : range (k,)
 
     Returns
     -------
-
     X   : array (k,k)
           with rows and columns randomly shuffled
 
-          
+    Examples
+    --------
     >>> X=np.arange(16)
     >>> X.shape=(4,4)
     >>> np.random.seed(10)
@@ -33,19 +32,18 @@ def shuffle_matrix(X,ids):
     return X[ids,:][:,ids]
 
 
+
 def get_lower(matrix):
     """
-    Flattens the lower part of an n x n matrix into an n(n-1)/2 x 1 vector.
+    Flattens the lower part of an n x n matrix into an n*(n-1)/2 x 1 vector.
     
     Parameters
     ----------
-
     matrix          : numpy array
                       a distance matrix (n x n)
 
     Returns
     -------
-
     lowvec          : numpy array
                       the lower half of the distance matrix flattened into
                       a vector of length n*(n-1)/2
