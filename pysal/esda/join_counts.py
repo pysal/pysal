@@ -2,11 +2,12 @@
 Spatial autocorrelation for binary attributes
 
 """
+__author__  = "Sergio J. Rey <srey@asu.edu> "
 
 import pysal
 import numpy as np
 
-__author__  = "Sergio J. Rey <srey@asu.edu> "
+__all__ = ['Join_Counts']
 
 class Join_Counts:
     """Binary Join Counts
@@ -120,9 +121,12 @@ class Join_Counts:
         self.zww=(self.ww-self.Eww)/np.sqrt(self.Vww)
         self.zbw=(self.bw-self.Ebw)/np.sqrt(self.Vbw)
         
+def _test():
+    import doctest
+    doctest.testmod(verbose=True)
 
 
 
 if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
+    _test()
+

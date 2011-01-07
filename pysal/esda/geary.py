@@ -3,6 +3,7 @@ Geary's C statistic for spatial autocorrelation
 """
 __author__  = "Sergio J. Rey <srey@asu.edu> "
 from pysal.common import *
+__all__ = ['Geary']
 
 PERMUTATIONS=999
 
@@ -140,10 +141,9 @@ class Geary:
         a= (self.n-1)* sum(ys)
         return a/self.den
 
-
+def _test():
+    import doctest
+    doctest.testmod(verbose=True)
 
 if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
-
-
+    _test()

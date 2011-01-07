@@ -11,6 +11,7 @@ __author__ = "Myunghwa Hwang <mhwang4@gmail.com>, Luc Anselin <luc.anselin@asu.e
 import numpy as np
 from scipy.stats import poisson
 import math
+__all__ = ['NP_Mixture_Smoother']
 
 class NP_Mixture_Smoother(object):
     """Empirical Bayesian Rate Smoother Using Mixture Prior Distributions
@@ -268,5 +269,5 @@ class NP_Mixture_Smoother(object):
 
 if __name__ == '__main__':
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
 

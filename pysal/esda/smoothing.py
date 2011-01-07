@@ -13,6 +13,13 @@ from pysal.common import np, KDTree
 from pysal.weights.spatial_lag import lag_spatial as slag
 from scipy.stats import gamma, norm, chi2, poisson
 
+__all__ = ['Excess_Risk', 'Empirical_Bayes', 'Spatial_Empirical_Bayes',
+'Spatial_Rate', 'Kernel_Smoother', 'Age_Adjusted_Smoother', 'Disk_Smoother',
+'Spatial_Median_Rate', 'Spatial_Filtering', 'Headbanging_Triples',
+'Headbanging_Median_Rate', 'flatten', 'weighted_median', 'sum_by_n',
+'crude_age_standardization', 'direct_age_standardization',
+'indirect_age_standardization', 'standardized_mortality_ratio', 'choynowski']
+
 def flatten(l,unique=True):
     """flatten a list of lists
 
@@ -999,6 +1006,9 @@ class Headbanging_Median_Rate:
             new_r.append(self.__get_median_from_screens(screens))
         self.r = np.array(new_r)
 
-if __name__ == '__main__':
+def _test():
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
+
+if __name__ == '__main__':
+    _test()
