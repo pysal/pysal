@@ -29,16 +29,26 @@ class Moran_BV_matrix_Tester(unittest.TestCase):
         vars=[np.array(f.by_col[var]) for var in varnames]
         self.vars=vars
         self.w=pysal.open("../../examples/sids2.gal").read()
-    def test_Moran_BV_Matrix(self):
+    def test_Moran_BV_matrix(self):
         res=moran.Moran_BV_matrix(self.vars,self.w,varnames=self.names)
         self.assertAlmostEquals(res[(0,1)].I,0.19362610652874668)
         self.assertAlmostEquals(res[(3,0)].I,0.37701382542927858)
+        
+class Moran_Local_Tester(unittest.TestCase):
+    def setUp(self):
+        self.w = pysal.open("../../examples/desmith.gal").read()
+        f = pysal.open("../../examples/desmith.txt")
+        self.y = np.array(f.by_col['z'])
+    def test_Moran_Local(self):
+        lm = Moran_Local(self.y, self.w, transformation="r", permutations=99)
+        self.assertAlmostEquals(lm.q, array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3]))
+        self.assertAlmostEquals(lm.p_z_sim[0], 0.99036648060872201 )
         
 
 
 
 suite = unittest.TestSuite()
-test_classes = [Moran_Tester,Moran_BV_matrix_Tester]
+test_classes = [Moran_Tester,Moran_BV_matrix_Tester, Moran_Local_Tester ]
 for i in test_classes:
     a = unittest.TestLoader().loadTestsFromTestCase(i)
     suite.addTest(a)
