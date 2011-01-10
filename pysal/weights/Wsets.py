@@ -350,9 +350,9 @@ def w_subset(w1, ids):
 
     
 def _test():
-    """"TEST"""
+    """Doc test"""
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
 
 if __name__ == '__main__':
     _test()

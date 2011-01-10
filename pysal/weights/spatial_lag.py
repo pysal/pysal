@@ -60,6 +60,11 @@ def lag_spatial(w, y):
     """
     return w.sparse*y
 
-if __name__ == '__main__':
+def _test():
+    """Doc test"""
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
+
+
+if __name__ == '__main__':
+    _test()

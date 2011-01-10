@@ -825,7 +825,9 @@ def build_lattice_shapefile(nrows, ncols, outFileName):
             o.write(pysal.cg.Polygon([ll,ul,ur,lr,ll]))
     o.close()
 
-if __name__ == "__main__":
-
+def _test():
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
+
+if __name__ == "__main__":
+    _test()

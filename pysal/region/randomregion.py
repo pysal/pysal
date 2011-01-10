@@ -489,7 +489,7 @@ class Random_Region:
 
 def _test():
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
 
 if __name__ == '__main__':
     _test()

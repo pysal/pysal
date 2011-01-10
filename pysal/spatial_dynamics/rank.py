@@ -320,8 +320,11 @@ class SpatialTau:
         results['p_tau_diff']=p_tau_diff
         return results
 
+def _test():
+    import doctest
+    doctest.testmod(verbose=True)
+
 
 if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
+    _test()
 

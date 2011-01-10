@@ -628,11 +628,13 @@ def lat2SW(nrows=3,ncols=5,criterion="rook",id_type='int'):
     return m
         
         
-if __name__ == "__main__":
-
+def _test():
+    """Doc test"""
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
 
+if __name__ == "__main__":
+    _test()
     from pysal import lat2W
 
     assert (lat2W(5,5).sparse.todense() == lat2SW(5,5).todense()).all()

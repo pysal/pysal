@@ -486,12 +486,14 @@ def distance_matrix(X,p=2.0):
     D=D**(1.0/p)
     return D
 
-if __name__ == "__main__":
 
+def _test():
+    """Doc test"""
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
 
-    
+if __name__ == "__main__":
+    _test()
     
     x=np.arange(1,5)
 

@@ -148,7 +148,7 @@ def rose(Y,w,k=8,permutations=0):
 
 def _test():
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
 
 if __name__ == '__main__':
     _test()

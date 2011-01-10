@@ -395,11 +395,12 @@ def jacquez(events, k, permutations=99):
     jacquez_result ={'stat':stat, 'pvalue':pvalue}
     return jacquez_result
 
-
+def _test():
+    import doctest
+    doctest.testmod(verbose=True)
 
 if __name__ == '__main__':
+    _test()
 
-    import doctest
-    doctest.testmod()
 
 

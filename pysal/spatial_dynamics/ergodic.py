@@ -187,7 +187,7 @@ def var_fmpt(P):
 
 def _test():
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
 
 if __name__ == '__main__':
     _test()
