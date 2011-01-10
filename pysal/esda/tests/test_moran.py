@@ -36,13 +36,15 @@ class Moran_BV_matrix_Tester(unittest.TestCase):
         
 class Moran_Local_Tester(unittest.TestCase):
     def setUp(self):
+        np.random.seed(10)
         self.w = pysal.open("../../examples/desmith.gal").read()
         f = pysal.open("../../examples/desmith.txt")
         self.y = np.array(f.by_col['z'])
     def test_Moran_Local(self):
-        lm = Moran_Local(self.y, self.w, transformation="r", permutations=99)
-        self.assertAlmostEquals(lm.q, array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3]))
+        lm = moran.Moran_Local(self.y, self.w, transformation="r", permutations=99)
+        self.assertAlmostEquals(lm.z_sim[0], -0.01207411940840397 )
         self.assertAlmostEquals(lm.p_z_sim[0], 0.99036648060872201 )
+        self.assertAlmostEquals(lm.VI_sim, 0.23519675087018393 )
         
 
 

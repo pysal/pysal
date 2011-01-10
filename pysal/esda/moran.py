@@ -370,6 +370,7 @@ class Moran_Local:
     --------
     >>> import pysal
     >>> import numpy as np
+    >>> from pysal.esda import moran
     >>> np.random.seed(10)
     >>> w=pysal.open("../examples/desmith.gal").read()
     >>> f=pysal.open("../examples/desmith.txt")
@@ -461,4 +462,4 @@ class Moran_Local:
 
 if __name__ == '__main__':
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
