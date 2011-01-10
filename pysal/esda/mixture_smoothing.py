@@ -62,6 +62,9 @@ class NP_Mixture_Smoother(object):
 
     Examples
     --------
+    >>> import pysal
+    >>> import numpy as np
+    >>> from pysal.esda.mixture_smoothing import NP_Mixture_Smoother
     >>> e = np.array([10, 5, 12, 20])
     >>> b = np.array([100, 150, 80, 200])
     >>> mixture = NP_Mixture_Smoother(e,b)
@@ -69,6 +72,13 @@ class NP_Mixture_Smoother(object):
     array([ 0.10982267,  0.03445525,  0.11018393,  0.11018593])
     >>> mixture.category
     array([1, 0, 1, 1])
+    >>> mixture.getSeed()
+    (array([ 0.5,  0.5]), array([ 0.03333333,  0.15      ]))
+    >>> mixture.mixalg()
+    {'mix_den': array([ 0.,  0.,  0.,  0.]), 'gradient': array([ 0.]), 'k': 1, 'p': array([ 1.]), 'grid': array([ 11.27659574]), 'accuracy': 1.0}
+    >>> mixture.getRateEstimates()
+    (array([ 0.0911574,  0.0911574,  0.0911574,  0.0911574]), array([1, 1, 1, 1]))
+    
     """
 
     def __init__(self,e,b,k=50,acc=1.E-7,numiter=5000,limit=0.01):
