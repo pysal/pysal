@@ -62,6 +62,17 @@ class SpaceTimeEvents:
     >>> events.n
     188
 
+    Check the spatial coordinates of the first event. 
+
+    >>> events.space[0]
+    array([ 300.,  302.])
+
+    Check the time of the first event.
+
+    >>> events.t[0]
+    array([413])
+    
+
     """
     def __init__(self, path, time_col):
         shp = pysal.open(path + '.shp')
