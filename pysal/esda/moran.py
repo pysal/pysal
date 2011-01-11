@@ -459,7 +459,9 @@ class Moran_Local:
         pn=zp*(1-lp)
         self.q=1*pp+2*np+3*nn+4*pn
 
-
-if __name__ == '__main__':
+def _test():
     import doctest
     doctest.testmod(verbose=True)
+    
+if __name__ == '__main__':
+    _test()
