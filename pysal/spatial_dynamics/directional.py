@@ -10,7 +10,7 @@ __all__=['rose','load_directional']
 import numpy as np
 import pysal
 
-def load_directional():
+def load_directional(fpath=None,gpath=None):
     """
     Constructing data for illustration of directional LISA analytics
 
@@ -18,7 +18,10 @@ def load_directional():
     per capita income normalized to the national average. For further details
     see  Rey, Murray, and Anselin (2011) [1]_
     """
-    f=open("../examples/spi_download.csv",'r')
+    if fpath == None:
+        f=open("../examples/spi_download.csv",'r')
+    else:
+        f=open(fpath,'r')
     lines=f.readlines()
     f.close()
     lines=[line.strip().split(",") for line in lines]
@@ -42,7 +45,10 @@ def load_directional():
     us=data[0]
     years=np.arange(1969,2009)
     rel=states/(us*1.)
-    gal=pysal.open('../examples/states48.gal')
+    if gpath == None:
+        gal=pysal.open('../examples/states48.gal')
+    else:
+        gal=pysal.open(gpath)
     w=gal.read()
     w.transform='r'
     Y=rel[:,[0,-1]]
