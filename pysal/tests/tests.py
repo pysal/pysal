@@ -62,7 +62,7 @@ for root, subfolders, files in os.walk(path):
 cwd = os.path.abspath(".")
 #t1 = time.time()
 for _test in runners:
-    #print "Unit testing: ", _test
+    print "Unit testing: ", _test
     pth, fname = os.path.split(_test)
     apth = os.path.abspath(pth)
     #print pth, fname, apth
