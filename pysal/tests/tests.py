@@ -73,15 +73,30 @@ for _test in runners:
 #print t2-t1
 os.chdir(cwd)
 
-print "Untested methods"
+print "----------------------------------------"
+print ''
+print "Missing Test Modules:"
+print ''
 for missed in missing:
     print missed
-print "Modules Missing __all__"
+print ''
+print "----------------------------------------"
+print ''
+print "Modules Missing __all__:"
+print ''
 for missed in missing_all:
     print "__all__ is not defined in", missed
+print ''
+print "----------------------------------------"
+print ''
+print "Untested Methods:"
+print ''
 for key in missingUnits:
     if missingUnits[key]:
         print key, " is missing expected test(s): ",','.join(missingUnits[key])
+print ''
+print "----------------------------------------"
+print ''
 print "Running doc_tests"
 
 __author__ = "Sergio J. Rey <srey@asu.edu>"
