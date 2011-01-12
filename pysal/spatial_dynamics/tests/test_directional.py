@@ -16,12 +16,12 @@ class Rose_Tester(unittest.TestCase):
         exp = [0., 1.57079633, 3.14159265, 4.71238898, 6.28318531]
         obs = list(r4['cuts'])
         for i in range(k+1):
-            self.assertAlmostEquals(exp[i],obs[i],8)
+            self.assertAlmostEqual(exp[i],obs[i],8)
         self.assertEquals(list(r4['counts']), [32,  5,  9,  2])
         exp = [0.02, 1., 0.001, 1.]
         obs = list(r4['pvalues'])
         for i in range(k):
-            self.assertAlmostEquals(exp[i],obs[i],3)
+            self.assertAlmostEqual(exp[i],obs[i],3)
 
 
 suite = unittest.TestSuite()
