@@ -44,8 +44,8 @@ for root, subfolders, files in os.walk(path):
             if len(lines) > 1:
                 print "Ambiguous __all__ in", mod
             else:
-                l = lines[0].split('[')[1].strip().replace(']', '').replace('"', '').replace("'", "").replace(' ', '')
-                for x in l.split(', '):
+                l = lines[0].split('[')[1].strip().replace(']','').replace('"','').replace("'","").replace(' ','')
+                for x in l.split(','):
                     expectedUnits[testMod].append("test_"+x)
     for test in tests:
         if os.path.exists(test):
@@ -74,14 +74,14 @@ for _test in runners:
 os.chdir(cwd)
 
 print "Untested methods"
-#for missed in missing:
-    #print missed
+for missed in missing:
+    print missed
 print "Modules Missing __all__"
 for missed in missing_all:
     print "__all__ is not defined in", missed
 for key in missingUnits:
     if missingUnits[key]:
-        print key, " is missing expected test(s): ", ', '.join(missingUnits[key])
+        print key, " is missing expected test(s): ",','.join(missingUnits[key])
 print "Running doc_tests"
 
 __author__ = "Sergio J. Rey <srey@asu.edu>"
