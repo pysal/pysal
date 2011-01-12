@@ -15,42 +15,42 @@ testing scheme which will be replaced with this file.
 import os
 import unittest
 
-path="../"
-skip=[".svn","tests"]
+path = "../"
+skip = [".svn", "tests"]
 
 
 # test for existence of test_*.py in mod/tests
 
-runners=[]
-missing=[]
-missing_all=[]
-expectedUnits={}
-missingUnits={}
+runners = []
+missing = []
+missing_all = []
+expectedUnits = {}
+missingUnits = {}
 
-for root,subfolders,files in os.walk(path):
+for root, subfolders, files in os.walk(path):
     for ignore in skip:
         if ignore in subfolders:
             subfolders.remove(ignore)
-    mods=[fname for fname in files if fname.endswith(".py")]
-    tests=[os.path.join(root,"tests","test_"+mod) for mod in mods]
-    for mod,testMod in zip(mods,tests):
-        mod = os.path.join(root,mod)
+    mods = [fname for fname in files if fname.endswith(".py")]
+    tests = [os.path.join(root, "tests", "test_"+mod) for mod in mods]
+    for mod, testMod in zip(mods, tests):
+        mod = os.path.join(root, mod)
         if testMod not in expectedUnits:
             expectedUnits[testMod] = []
-        if "__all__" not in open(mod,'r').read():
+        if "__all__" not in open(mod, 'r').read():
             missing_all.append(mod)
         else:
-            lines = [l for l in open(mod,'r') if "__all__" in l]
+            lines = [l for l in open(mod, 'r') if "__all__" in l]
             if len(lines) > 1:
-                print "Ambiguous __all__ in",mod
+                print "Ambiguous __all__ in", mod
             else:
-                l = lines[0].split('[')[1].strip().replace(']','').replace('"','').replace("'","").replace(' ','')
-                for x in l.split(','):
+                l = lines[0].split('[')[1].strip().replace(']', '').replace('"', '').replace("'", "").replace(' ', '')
+                for x in l.split(', '):
                     expectedUnits[testMod].append("test_"+x)
     for test in tests:
         if os.path.exists(test):
             runners.append(test)
-            txt = open(test,'r').read()
+            txt = open(test, 'r').read()
             missingUnits[test] = []
             for unit in expectedUnits[test]:
                 if unit not in txt:
@@ -58,31 +58,31 @@ for root,subfolders,files in os.walk(path):
         else:
             missing.append(test)
         
-import time
-cwd=os.path.abspath(".")
-t1=time.time()
+#import time
+cwd = os.path.abspath(".")
+#t1 = time.time()
 for _test in runners:
-    print "Unit testing: ",_test
-    pth,file=os.path.split(_test)
-    apth=os.path.abspath(pth)
-    print pth,file,apth
+    #print "Unit testing: ", _test
+    pth, fname = os.path.split(_test)
+    apth = os.path.abspath(pth)
+    #print pth, fname, apth
     os.chdir(apth)
-    execfile(file)
+    execfile(fname)
     os.chdir(cwd)
-t2=time.time()
-print t2-t1
+#t2 = time.time()
+#print t2-t1
 os.chdir(cwd)
 
 print "Untested methods"
-for missed in missing:
-    print missed
+#for missed in missing:
+    #print missed
 print "Modules Missing __all__"
 for missed in missing_all:
-    print "__all__ is not defined in",missed
+    print "__all__ is not defined in", missed
 for key in missingUnits:
     if missingUnits[key]:
-        print key," is missing expected test(s): ",','.join(missingUnits[key])
-print "Running old_tests"
+        print key, " is missing expected test(s): ", ', '.join(missingUnits[key])
+print "Running doc_tests"
 
 __author__ = "Sergio J. Rey <srey@asu.edu>"
 
@@ -99,3 +99,4 @@ suite.addTest(test_weights.suite)
 
 runner = unittest.TextTestRunner()
 runner.run(suite)
+
