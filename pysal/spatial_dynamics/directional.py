@@ -59,12 +59,18 @@ def rose(Y,w,k=8,permutations=0):
     includes per capita income normalized to the national average. For
     further details see Rey, Murray, and Anselin (2011) [1]_
 
+    Load comma delimited data file in and convert to a numpy array
+
     >>> f=open("../examples/spi_download.csv",'r')
     >>> lines=f.readlines()
     >>> f.close()
     >>> lines=[line.strip().split(",") for line in lines]
     >>> names=[line[2] for line in lines[1:-5]]
     >>> data=np.array([map(int,line[3:]) for line in lines[1:-5]])
+
+    Bottom of the file has regional data which we don't need for this example
+    so we will subset only those records that match a state name
+
     >>> sids=range(60)
     >>> out=['"United States 3/"',
     ...      '"Alaska 3/"',
@@ -83,19 +89,54 @@ def rose(Y,w,k=8,permutations=0):
     >>> states=data[sids,:]
     >>> us=data[0]
     >>> years=np.arange(1969,2009)
+
+    Now we convert state incomes to express them relative to the national
+    average
+
     >>> rel=states/(us*1.)
+
+    Create our contiguity matrix from an external GAL file and row standardize
+    the resulting weights
+
     >>> gal=pysal.open('../examples/states48.gal')
     >>> w=gal.read()
     >>> w.transform='r'
+
+    Take the first and last year of our income data as the interval to do the
+    directional directional analysis
+
     >>> Y=rel[:,[0,-1]]
+
+    Set the random seed generator which is used in the permutation based
+    inference for the rose diagram so that we can replicate our example
+    results
+
     >>> np.random.seed(100)
+
+    Call the rose function to construct the directional histogram for the
+    dynamic LISA statistics. We will use four circular sectors for our
+    histogram
+
     >>> r4=rose(Y,w,k=4,permutations=999)
+
+    What are the cut-offs for our histogram - in radians
+
     >>> r4['cuts']
     array([ 0.        ,  1.57079633,  3.14159265,  4.71238898,  6.28318531])
+
+    How many vectors fell in each sector
+
     >>> r4['counts']
     array([32,  5,  9,  2])
+
+    What are the pseudo-pvalues for these counts based on 999 random spatial
+    permutations of the state income data
+
     >>> r4['pvalues']
     array([ 0.02 ,  1.   ,  0.001,  1.   ])
+
+    Repeat the exercise but now for 8 rather than 4 sectors
+
     >>> r8=rose(Y,w,permutations=999)
     >>> r8['counts']
     array([19, 13,  3,  2,  7,  2,  1,  1])
