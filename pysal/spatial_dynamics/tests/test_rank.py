@@ -4,7 +4,6 @@ from pysal.spatial_dynamics import rank
 import numpy as np
 
 
-
 class Theta_Tester(unittest.TestCase):
     def setUp(self):
         f=pysal.open("../../examples/mexico.csv")
@@ -48,7 +47,6 @@ class SpatialTau_Tester(unittest.TestCase):
             self.assertAlmostEqual(exp_wnc[i],obs[i].wnc,3)
             self.assertAlmostEqual(exp_evwnc[i],obs[i].ev_wnc,3)
             self.assertAlmostEqual(exp_prandwnc[i],obs[i].p_rand_wnc,3)
-
 
 
 suite = unittest.TestSuite()

@@ -5,54 +5,11 @@ Directional Analysis of Dynamic LISAs
 
 __author__= "Sergio J. Rey <srey@asu.edu"
 
-__all__=['rose','load_directional']
+__all__=['rose']
 
 import numpy as np
 import pysal
 
-def load_directional(fpath=None,gpath=None):
-    """
-    Constructing data for illustration of directional LISA analytics
-
-    Data is for the 48 lower US states over the period 1969-2009 and includes
-    per capita income normalized to the national average. For further details
-    see  Rey, Murray, and Anselin (2011) [1]_
-    """
-    if fpath == None:
-        f=open("../examples/spi_download.csv",'r')
-    else:
-        f=open(fpath,'r')
-    lines=f.readlines()
-    f.close()
-    lines=[line.strip().split(",") for line in lines]
-    names=[line[2] for line in lines[1:-5]]
-    data=np.array([map(int,line[3:]) for line in lines[1:-5]])
-    sids=range(60)
-    out=['"United States 3/"','"Alaska 3/"',
-         '"District of Columbia"',
-         '"Hawaii 3/"',
-         '"New England"',
-     '"Mideast"',
-     '"Great Lakes"',
-     '"Plains"',
-     '"Southeast"',
-     '"Southwest"',
-     '"Rocky Mountain"',
-     '"Far West 3/"']
-    snames=[name for name in names if name not in out]
-    sids=[names.index(name) for name in snames]
-    states=data[sids,:]
-    us=data[0]
-    years=np.arange(1969,2009)
-    rel=states/(us*1.)
-    if gpath == None:
-        gal=pysal.open('../examples/states48.gal')
-    else:
-        gal=pysal.open(gpath)
-    w=gal.read()
-    w.transform='r'
-    Y=rel[:,[0,-1]]
-    return (Y,w)
 
 def rose(Y,w,k=8,permutations=0):
     """
@@ -72,22 +29,23 @@ def rose(Y,w,k=8,permutations=0):
     permutations: int
        number of random spatial permutations for calculation of pseudo
        p-values
+
     Returns 
     -------
 
     results: dictionary (keys defined below)
 
-           counts:  array (k,1)
-                    number of vectors with angular movement falling in each sector
+    counts:  array (k,1)
+        number of vectors with angular movement falling in each sector
 
-           cuts: array (k,1)
-                intervals defining circular sectors (in radians)
+    cuts: array (k,1)
+        intervals defining circular sectors (in radians)
 
-           random_counts: array (permutations,k)
-                counts from random permutations
+    random_counts: array (permutations,k)
+        counts from random permutations
 
-           pvalues: array (kx1)
-                one sided (upper tail) pvalues for observed counts
+    pvalues: array (kx1)
+        one sided (upper tail) pvalues for observed counts
                
     Notes
     -----
@@ -95,7 +53,41 @@ def rose(Y,w,k=8,permutations=0):
 
     Examples
     --------
-    >>> Y,w=load_directional()
+
+    Constructing data for illustration of directional LISA analytics.
+    Data is for the 48 lower US states over the period 1969-2009 and
+    includes per capita income normalized to the national average. For
+    further details see Rey, Murray, and Anselin (2011) [1]_
+
+    >>> f=open("../examples/spi_download.csv",'r')
+    >>> lines=f.readlines()
+    >>> f.close()
+    >>> lines=[line.strip().split(",") for line in lines]
+    >>> names=[line[2] for line in lines[1:-5]]
+    >>> data=np.array([map(int,line[3:]) for line in lines[1:-5]])
+    >>> sids=range(60)
+    >>> out=['"United States 3/"',
+    ...      '"Alaska 3/"',
+    ...      '"District of Columbia"',
+    ...      '"Hawaii 3/"',
+    ...      '"New England"',
+    ...      '"Mideast"',
+    ...      '"Great Lakes"',
+    ...      '"Plains"',
+    ...      '"Southeast"',
+    ...      '"Southwest"',
+    ...      '"Rocky Mountain"',
+    ...      '"Far West 3/"']
+    >>> snames=[name for name in names if name not in out]
+    >>> sids=[names.index(name) for name in snames]
+    >>> states=data[sids,:]
+    >>> us=data[0]
+    >>> years=np.arange(1969,2009)
+    >>> rel=states/(us*1.)
+    >>> gal=pysal.open('../examples/states48.gal')
+    >>> w=gal.read()
+    >>> w.transform='r'
+    >>> Y=rel[:,[0,-1]]
     >>> np.random.seed(100)
     >>> r4=rose(Y,w,k=4,permutations=999)
     >>> r4['cuts']
@@ -113,9 +105,9 @@ def rose(Y,w,k=8,permutations=0):
     References
     ----------
 
-    .. [1] Rey, S.J., A.T. Murray and L. Anselin. 2011. "Visualizing regional
-    income distribution dynamics." Letters in Spatial and Resource Sciences.
-    In Press.
+    .. [1] Rey, S.J., A.T. Murray and L. Anselin. 2011. "Visualizing
+    regional income distribution dynamics." Letters in Spatial and Resource
+    Sciences. In Press.
 
     """
     results={}

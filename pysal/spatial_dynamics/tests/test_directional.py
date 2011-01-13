@@ -6,9 +6,35 @@ import numpy as np
 
 class Rose_Tester(unittest.TestCase):
     def setUp(self):
-        result = directional.load_directional(fpath="../../examples/spi_download.csv",gpath="../../examples/states48.gal")
-        self.Y = result[0]
-        self.w = result[1]
+        f=open("../../examples/spi_download.csv",'r')
+        lines=f.readlines()
+        f.close()
+        lines=[line.strip().split(",") for line in lines]
+        names=[line[2] for line in lines[1:-5]]
+        data=np.array([map(int,line[3:]) for line in lines[1:-5]])
+        sids=range(60)
+        out=['"United States 3/"',
+             '"Alaska 3/"',
+             '"District of Columbia"',
+             '"Hawaii 3/"',
+             '"New England"',
+             '"Mideast"',
+             '"Great Lakes"',
+             '"Plains"',
+             '"Southeast"',
+             '"Southwest"',
+             '"Rocky Mountain"',
+             '"Far West 3/"']
+        snames=[name for name in names if name not in out]
+        sids=[names.index(name) for name in snames]
+        states=data[sids,:]
+        us=data[0]
+        years=np.arange(1969,2009)
+        rel=states/(us*1.)
+        gal=pysal.open('../../examples/states48.gal')
+        self.w=gal.read()
+        self.w.transform='r'
+        self.Y=rel[:,[0,-1]]
     def test_rose(self):
         k = 4
         np.random.seed(100)
