@@ -21,3 +21,13 @@ class Join_Counts_Tester(unittest.TestCase):
         self.assertAlmostEquals(jc.Vbw, 6.0)
         self.assertAlmostEquals(np.sqrt(jc.Vbw), 2.4494897427831779 )
 
+suite = unittest.TestSuite()
+test_classes = [Join_Counts_Tester ]
+for i in test_classes:
+    a = unittest.TestLoader().loadTestsFromTestCase(i)
+    suite.addTest(a)
+
+if __name__ == '__main__':
+    runner = unittest.TextTestRunner()
+    runner.run(suite)
+
