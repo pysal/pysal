@@ -11,6 +11,14 @@ class _TestContiguityWeights(unittest.TestCase):
         shpObj.close()
     def test_w_type(self):
         self.assert_(isinstance(self.binningW,ContiguityWeights_binning))
+    def test_QUEEN(self):
+        self.assertEqual(QUEEN,1)
+    def test_ROOK(self):
+        self.assertEqual(ROOK,2)
+    def test_ContiguityWeights_binning(self):
+        self.assert_(hasattr(self.binningW,'w'))
+        self.assert_(issubclass(dict,type(self.binningW.w)))
+        self.assertEqual(len(self.binningW.w), 136)
     def test_nested_polygons(self):
         # load queen gal file created using Open Geoda.
         geodaW = pysal.open('../../examples/virginia.gal','r').read()

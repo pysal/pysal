@@ -17,6 +17,14 @@ class _TestRtreeContiguityWeights(unittest.TestCase):
         shpObj.close()
     def test_w_type(self):
         self.assert_(isinstance(self.rtreeW,ContiguityWeights_rtree))
+    def test_QUEEN(self):
+        self.assertEqual(QUEEN,1)
+    def test_ROOK(self):
+        self.assertEqual(ROOK,2)
+    def test_ContiguityWeights_rtree(self):
+        self.assert_(hasattr(self.rtreeW,'w'))
+        self.assert_(issubclass(dict,type(self.rtreeW.w)))
+        self.assertEqual(len(self.rtreeW.w), 136)
     def test_nested_polygons(self):
         # load queen gal file created using Open Geoda.
         geodaW = pysal.open('../../examples/virginia.gal','r').read()
