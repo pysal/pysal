@@ -45,7 +45,6 @@ from esda.mapclassify import Natural_Breaks, Fisher_Jenks, Jenks_Caspall
 from esda.mapclassify import Jenks_Caspall_Sampled,Jenks_Caspall_Forced
 from esda.mapclassify import User_Defined,Max_P_Classifier,gadf
 from esda.mapclassify import K_classifiers
-from esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local
 from inequality.theil import Theil,TheilD,TheilDSim
 from region.maxp import Maxp,Maxp_LISA
 from spatial_dynamics import Markov, Spatial_Markov, LISA_Markov, SpatialTau, Theta

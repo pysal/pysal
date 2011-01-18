@@ -5,7 +5,7 @@ import os
 
 class csv_Tester(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = '../examples/stl_hom.csv'
+        self.test_file = test_file = '../../examples/stl_hom.csv'
         self.obj = pysal.core.IOHandlers.csvWrapper.csvWrapper(test_file,'r')
     def test_len(self):
         self.assertEquals(len(self.obj),78)
@@ -52,7 +52,7 @@ class csv_Tester(unittest.TestCase):
 
 class PurePyDbf_Tester(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = '../examples/10740.dbf'
+        self.test_file = test_file = '../../examples/10740.dbf'
         self.dbObj = pysal.core.IOHandlers.pyDbfIO.DBF(test_file,'r')
     def test_len(self):
         self.assertEquals(len(self.dbObj),195)
@@ -122,7 +122,7 @@ class PurePyDbf_Tester(unittest.TestCase):
     
 class GalIO_Tester(unittest.TestCase):
     def setUp(self):
-        self.test_file = '../examples/10740.shp'
+        self.test_file = '../../examples/10740.shp'
         self.w = pysal.shp_to_queen(self.test_file)
     def test_write(self):
         out = pysal.open('tst.gal','w')
@@ -142,7 +142,7 @@ class GalIO_Tester(unittest.TestCase):
         
 class PurePyShp_Tester(unittest.TestCase):
     def setUp(self):
-        test_file = '../examples/10740.shp'
+        test_file = '../../examples/10740.shp'
         self.test_file = test_file
         self.shpObj = pysal.core.IOHandlers.pyShpIO.PurePyShpWrapper(test_file,'r')
         f = tempfile.NamedTemporaryFile(suffix='.shp'); shpcopy = f.name; f.close()
