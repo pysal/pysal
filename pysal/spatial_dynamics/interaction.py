@@ -48,12 +48,16 @@ class SpaceTimeEvents:
     >>> import numpy as np
     >>> import pysal
 
-    Read in the example data.    
+    Read in the example shapefile data, ensuring to omit the file
+    extension. In order to successfully create the event data the .dbf file
+    associated with the shapefile should have a column of values that are a
+    timestamp for the events. There should be a numerical value (not a
+    date) in every field.       
 
     >>> path = "../examples/burkitt"
 
-    Create an instance of SpaceTimeEvents from a shapefile, where temporal
-    information is stored in a column named "T". 
+    Create an instance of SpaceTimeEvents from a shapefile, where the
+    temporal information is stored in a column named "T". 
 
     >>> events = SpaceTimeEvents(path,'T')
 
@@ -126,9 +130,6 @@ def knox(events, delta, tau, permutations=99):
     permutations    : int
                       the number of permutations used to establish pseudo-
                       significance (default is 99)
-    t               : array
-                      n x 1 array (optional) of the temporal coordinates
-                      for the events as produced by SpaceTimeEvents
 
     Returns
     -------
@@ -156,14 +157,33 @@ def knox(events, delta, tau, permutations=99):
     >>> path = "../examples/burkitt"
     >>> events = SpaceTimeEvents(path,'T')
 
-    Run the Knox test with a distance and time thresholds of 20 and 5.
+    Set the random seed generator. This is used by the permutation based
+    inference to replicate the pseudo-significance of our example results -
+    the end-user will normally omit this step.
 
-    >>> result = knox(events,delta=20,tau=5,permutations=9)
+    >>> np.random.seed(100)
 
-    Print the results.
+    Run the Knox test with distance and time thresholds of 20 and 5,
+    respectively. This counts the events that are closer than 20 units in
+    space, and 5 units in time.  
 
-    >>> print result['stat']
+    >>> result = knox(events,delta=20,tau=5,permutations=99)
+
+    Next, we examine the results. First, we call the statistic from the
+    results results dictionary. This reports that there are 13 events close
+    in both space and time, according to our threshold definitions. 
+
+    >>> print(result['stat'])
     13.0
+
+    Next, we look at the pseudo-significance of this value, calculated by
+    permuting the timestamps and rerunning the statistics. In this case,
+    the results indicate there may be spatio-temporal interaction between
+    the events.
+
+    >>> print("%2.8f"%result['pvalue'])
+    0.04102287
+
 
     """
     n = events.n
@@ -224,10 +244,16 @@ def mantel(events, permutations=99, scon=0.0, spow=1.0, tcon=0.0, tpow=1.0):
                       an output instance from the class SpaceTimeEvents
     permutations    : int
                       the number of permutations used to establish pseudo-
-                      significance (default is 99)                 
-    t               : array
-                      n x 1 array (optional) of the temporal coordinates
-                      for the events as produced by SpaceTimeEvents
+                      significance (default is 99) 
+    scon            : float
+                      constant added to spatial distances
+    spow            : float
+                      value for power transformation for spatial distances
+    tcon            : float
+                      constant added to temporal distances
+    tpow            : float
+                      value for power transformation for temporal distances
+
 
     Returns
     -------
@@ -254,14 +280,34 @@ def mantel(events, permutations=99, scon=0.0, spow=1.0, tcon=0.0, tpow=1.0):
     >>> path = "../examples/burkitt"
     >>> events = SpaceTimeEvents(path,'T')
 
-    Run the standardized Mantel test without a constant or transformation.
+    Set the random seed generator. This is used by the permutation based
+    inference to replicate the pseudo-significance of our example results -
+    the end-user will normally omit this step.
 
-    >>> result = mantel(events, 9, scon=0.0, spow=1.0, tcon=0.0, tpow=1.0)
+    >>> np.random.seed(100)
 
-    Print the results.
+    The standardized Mantel test is a measure of matrix correlation between
+    the spatial and temporal distance matrices of the event dataset. The
+    following example runs the standardized Mantel test without a constant
+    or transformation; however, as recommended by Mantel (1967) [2]_, these
+    should be added by the user. This can be done by adjusting the constant
+    and power parameters. 
+
+    >>> result = mantel(events, 99, scon=0.0, spow=1.0, tcon=0.0, tpow=1.0)
+
+    Next, we examine the result of the test. 
 
     >>> print("%6.6f"%result['stat'])
     0.014154
+
+    Finally, we look at the pseudo-significance of this value, calculated by
+    permuting the timestamps and rerunning the statistic for each of the 99
+    permuatations. According to these parameters, the results do not
+    indicate spatio-temporal interaction between the events.
+
+    >>> print("%2.8f"%result['pvalue'])
+    0.27370865
+
 
     """
     n = events.n
@@ -312,12 +358,6 @@ def jacquez(events, k, permutations=99):
     permutations    : int
                       the number of permutations used to establish pseudo-
                       significance (default is 99)
-    time            : array
-                      n x 2 array (optional) of the temporal coordinates
-                      for the events as produced by SpaceTimeEvents
-    space           : array
-                      n x 2 array (optional) of the spatial coordinates for
-                      the events as produced by SpaceTimeEvents
 
     Returns
     -------
@@ -347,9 +387,15 @@ def jacquez(events, k, permutations=99):
     >>> path = "../examples/burkitt"
     >>> events = SpaceTimeEvents(path,'T')
 
-    Run the Jacquez test and report the resulting statistic. 
+    The Jacquez test counts the number of events that are k nearest
+    neighbors in both time and space. The following runs the Jacquez test
+    on the example data and reports the resulting statistic. In this case,
+    there are 13 instances where events are nearest neighbors in both space
+    and time. The significance of this can be assessed by calling the p-
+    value from the results dictionary, as shown in the Knox and Mantel
+    examples. 
 
-    >>> result = jacquez(events,k=3,permutations=9)
+    >>> result = jacquez(events,k=3,permutations=99)
     >>> print result['stat']
     13
 
