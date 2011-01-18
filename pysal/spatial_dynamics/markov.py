@@ -7,11 +7,11 @@ __author__= "Sergio J. Rey <srey@asu.edu"
 
 import numpy as np
 import numpy.linalg as la
-import ergodic
+from ergodic import fmpt, steady_state
 from scipy import stats
 import pysal
 
-__all__=["Markov","LISA_Markov","Spatial_Markov"]
+__all__=["Markov","LISA_Markov","Spatial_Markov", "fmpt", "steady_state"]
 
 
 class Markov:

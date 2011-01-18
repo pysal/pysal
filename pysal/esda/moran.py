@@ -207,14 +207,33 @@ class Moran_BV:
     --------
     >>> import pysal
     >>> import numpy as np
+
+    Set random number generator seed so we can replicate the example
+
     >>> np.random.seed(10)
+
+    Open the sudden infant death dbf file and read in rates for 74 and 79
+    converting each to a numpy array
+
     >>> f = pysal.open("../examples/sids2.dbf")
     >>> SIDR74 = np.array(f.by_col['SIDR74'])
     >>> SIDR79 = np.array(f.by_col['SIDR79'])
+
+    Read a GAL file and construct our spatial weights object
+
     >>> w = pysal.open("../examples/sids2.gal").read()
+
+    Create an instance of Moran_BV
+
     >>> mbi = Moran_BV(SIDR79,  SIDR74,  w)
+
+    What is the bivariate Moran's I value
+
     >>> print mbi.I
     0.156131961696
+
+    Based on 999 permutations, what is the p-value of our statistic
+
     >>> mbi.p_z_sim
     0.0028373234843530604
     
