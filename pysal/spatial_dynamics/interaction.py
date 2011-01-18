@@ -7,7 +7,7 @@ __author__  = "Nicholas Malizia <nmalizia@asu.edu> "
 import pysal
 from pysal.common import *
 import pysal.weights.Distance as Distance
-import pysal.spatial_dynamics.util as util
+import util
 
 __all__=['SpaceTimeEvents','knox','mantel','jacquez']
 
