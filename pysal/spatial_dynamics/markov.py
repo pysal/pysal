@@ -408,9 +408,9 @@ class Spatial_Markov:
         ss=np.zeros_like(T[0])
         for i,mat in enumerate(T):
             p_i=np.matrix(np.diag(1./mat.sum(axis=1))*np.matrix(mat))
-            ss[i]=ergodic.steady_state(p_i).transpose()
+            ss[i]=steady_state(p_i).transpose()
             try:
-                F[i]=ergodic.fmpt(p_i)
+                F[i]=fmpt(p_i)
             except:
                 print "Singlular fmpt matrix for class ",i
             P[i]=p_i
