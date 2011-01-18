@@ -3,6 +3,6 @@
 
 .. versionadded:: 1.1
 
-.. automodule:: pysal.spatial_dynamics.interactions
+.. automodule:: pysal.spatial_dynamics.interaction
     :synopsis: 
     :members:
