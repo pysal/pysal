@@ -63,7 +63,7 @@ import core.IOHandlers
 # Assign pysal.open to dispatcher
 open = core.FileIO.FileIO
 
-__all__=[]
-import esda,weights
-__all__+=esda.__all__
-__all__+=weights.__all__
+#__all__=[]
+#import esda,weights
+#__all__+=esda.__all__
+#__all__+=weights.__all__

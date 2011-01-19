@@ -115,7 +115,9 @@ suite = unittest.TestSuite()
 #import test_cg_shapes
 #suite.addTest(test_cg_shapes.suite)
 import test_weights
+import test_NameSpace
 suite.addTest(test_weights.suite)
+suite.addTest(test_NameSpace.suite)
 
 runner = unittest.TextTestRunner()
 runner.run(suite)

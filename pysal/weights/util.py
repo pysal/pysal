@@ -1,6 +1,6 @@
 import pysal
 from pysal.common import *
-from pysal.weights import W
+import pysal.weights
 import numpy as np
 from scipy import sparse,float32
 from scipy.spatial import KDTree
@@ -104,7 +104,7 @@ def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
         w = alt_w
         weights = alt_weights
     gc.enable()
-    return W(w,weights,ids)
+    return pysal.weights.W(w,weights,ids)
 
 def regime_weights(regimes):
     """
@@ -162,7 +162,7 @@ def regime_weights(regimes):
     weights={}
     for i,nn in neighbors.items():
         weights[i]=[1.]*len(nn)
-    return W(neighbors,weights)
+    return pysal.weights.W(neighbors,weights)
 
 def comb(items, n=None):
     """
@@ -324,7 +324,7 @@ def higher_order(w,order=2):
         nids=[ids[j] for j,k in enumerate(info[id]) if order==k]
         neighbors[id]=nids
         weights[id]=[1.0]*len(nids)
-    return W(neighbors,weights)
+    return pysal.weights.W(neighbors,weights)
 
 
 def shimbel(w):
@@ -471,13 +471,13 @@ def remap_ids(w, old2new, id_order=[]):
         new_neigh[new_key] = new_values
         new_weights[new_key] = copy.copy(w.weights[key])
     if id_order:
-        return W(new_neigh, new_weights, id_order)
+        return pysal.weights.W(new_neigh, new_weights, id_order)
     else:
         if w.id_order:
             id_order = [old2new[i] for i in w.id_order]
-            return W(new_neigh, new_weights, id_order)
+            return pysal.weights.W(new_neigh, new_weights, id_order)
         else:
-            return W(new_neigh, new_weights)
+            return pysal.weights.W(new_neigh, new_weights)
 
 def get_ids(shapefile, idVariable):
     """ 
