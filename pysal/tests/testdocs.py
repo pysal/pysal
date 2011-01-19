@@ -44,6 +44,7 @@ import pysal.weights.spatial_lag, pysal.weights.util
 import pysal.weights.Contiguity, pysal.weights.Distance, pysal.weights.user
 import pysal.weights.Wsets
 import pysal.esda.smoothing
+import pysal.cg.locators
 
 #add modules to include in tests
 mods='esda.moran','esda.geary', 'esda.mapclassify', \
@@ -57,7 +58,8 @@ mods='esda.moran','esda.geary', 'esda.mapclassify', \
         'weights.Wsets', 'esda.smoothing', \
         'spatial_dynamics.markov', \
         'spatial_dynamics.ergodic' , \
-        'spatial_dynamics.directional'
+        'spatial_dynamics.directional', \
+        'cg.locators'
 
 mods = [ "pysal."+ mod for mod in mods]
 suite = unittest.TestSuite()

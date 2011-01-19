@@ -83,6 +83,14 @@ class _TestDistanceWeights(unittest.TestCase):
         w=pysal.threshold_continuousW_from_shapefile(self.polyShp,0.62,idVariable="POLYID")
         self.assertEqual(w.weights[1], [1.6702346893743276,
                                         1.7250729841938044])
+    def test_DistanceBand(self):
+        """ see issue #126 """
+        polygons = pysal.open("../../examples/lattice10x10.shp","r").read()
+        points = [poly.centroid for poly in polygons]
+        w = pysal.DistanceBand(points,1)
+        w2 = pysal.rook_from_shapefile("../../examples/lattice10x10.shp")
+        for k in range(w.n):
+            self.assertEqual(w[k],w2[k])
 
     def test_distance_matrix(self):
         dist = pysal.weights.distance_matrix(np.array(self.points))

@@ -43,7 +43,7 @@ for root, subfolders, files in os.walk(path):
             missing_all.append(mod)
         else:
             lines = [l for l in open(mod, 'r') if "__all__" in l]
-            if len(lines) > 1:
+            if len(lines) > 1 or ']' not in lines[0]:
                 print "Ambiguous __all__ in", mod
             else:
                 l = lines[0].split('[')[1].strip().replace(']','').replace('"','').replace("'","").replace(' ','')
