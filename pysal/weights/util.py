@@ -461,7 +461,7 @@ def remap_ids(w, old2new, id_order=[]):
     ['c', 'b']
 
     """
-    if not isinstance(w, W):
+    if not isinstance(w, pysal.weights.W):
         raise Exception, "w must be a spatial weights object"
     new_neigh = {}
     new_weights = {}
