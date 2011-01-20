@@ -99,6 +99,7 @@ print ''
 for key in missingUnits:
     if missingUnits[key]:
         print key, " is missing expected test(s): ",','.join(missingUnits[key])
+        print
 print ''
 print "----------------------------------------"
 print ''
