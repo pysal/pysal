@@ -1,5 +1,8 @@
 import pysal.core.Tables as Tables
 
+__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+__all__ = ['GeoDaTxtReader']
+
 class GeoDaTxtReader(Tables.DataTable):
     """GeoDa Text File Export Format
     """

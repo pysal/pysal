@@ -3,7 +3,7 @@ from pysal import cg
 import re
 
 __author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
-__all__ = []
+__all__ = ['WKTReader', 'WKTParser']
 #####################################################################
 ## ToDo: Add Well-Known-Binary support...
 ##       * WKB spec:

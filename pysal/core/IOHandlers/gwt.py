@@ -1,6 +1,8 @@
 import pysal.core.FileIO as FileIO
 from pysal.weights import W
 
+__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+__all__ = ["GwtIO"]
 
 class GwtIO(FileIO.FileIO):
 

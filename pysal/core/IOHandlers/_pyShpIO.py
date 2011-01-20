@@ -18,6 +18,11 @@ import unittest
 from struct import calcsize,unpack,pack
 from cStringIO import StringIO
 from itertools import izip,islice
+
+__all__ = ['shp_file', 'shx_file', 'NullShape', 'Point', 'PolyLine', 'Polygon', 'Multipoint', 'PointZ', 'PolyLineZ', 'PolygonZ', 'MultiPointZ', 'PointM', 'PolyLineM', 'PolygonM', 'MultiPointM', 'MultiPatch']
+
+
+
 #SHAPEFILE Globals
 HEADERSTRUCT = (\
     ('File Code','i','>'),\

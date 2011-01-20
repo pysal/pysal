@@ -4,6 +4,7 @@ import struct
 import itertools
 
 __author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+__all__ = ['DBF']
 
 class DBF(pysal.core.Tables.DataTable):
     """

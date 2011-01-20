@@ -4,9 +4,10 @@
 
 """
 
-__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
-
 import pysal
+__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+__all__ = ['TemplateWriter', 'TemplateReaderWriter']
+
 
 # Always subclass FileIO
 class TemplateWriter(pysal.core.FileIO):
