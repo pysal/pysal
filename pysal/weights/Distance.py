@@ -375,6 +375,16 @@ class DistanceBand(W):
 
     """
     def __init__(self,data,threshold,p=2,alpha=-1.0,binary=True,ids=None):
+        """
+        Casting to floats is a work around for a bug in scipy.spatial.  See detail in pysal issue #126
+        """
+        if not issubclass(type(data),np.ndarray):
+            try:
+                data = np.array(data)
+            except:
+                raise ValueError, "Could not make array from data"
+        if data.dtype.kind != 'f':
+            data = data.astype(float)
 
         self.data=data
         self.p=p
