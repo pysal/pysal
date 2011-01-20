@@ -9,12 +9,7 @@ import os, gc
 
 class _Testutil(unittest.TestCase):
     def setUp(self):
-        self.neighbors={'c': ['b'], 'b': ['c', 'a'], 'a': ['b']}
-        self.weights ={'c': [1.0], 'b': [1.0, 1.0], 'a': [1.0]}
-        self.id_order=['a','b','c']
-        self.weights ={'c': [1.0], 'b': [1.0, 1.0], 'a': [1.0]}
-        self.w=pysal.W(self.neighbors,self.weights,self.id_order)
-        self.y = np.array([0,1,2])
+        self.w = pysal.rook_from_shapefile('../../examples/10740.shp')
 
     def test_lat2W(self):
         w9=pysal.lat2W(3,3)
@@ -42,18 +37,83 @@ class _Testutil(unittest.TestCase):
        
     def test_comb(self):
         x = range(4)
-        c = comb(x, 2)
+        l = []
+        for i in pysal.comb(x,2):
+            l.append(i)
+        lo = [[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]]
+        self.assertEquals(l, lo)
 
-        for c in comb(x,2):
-            print c
-        ...     
-        [0, 1]
-        [0, 2]
-        [0, 3]
-        [1, 2]
-        [1, 3]
-        [2, 3]
-        
+    def test_order(self):
+        w3 = pysal.order(self.w, kmax=3)
+        w3105 = [1, -1, 1, 2, 1]
+        self.assertEquals(w3105, w3[1][0:5])
+ 
+    def test_higher_order(self):
+        w10 = pysal.lat2W(10,10)
+        w10_2 = pysal.higher_order(w10,2)
+        w10_20 = {2: 1.0, 11: 1.0, 20: 1.0}
+        self.assertEquals(w10_20, w10_2[0])
+        w5 = pysal.lat2W()
+        w50 = {1: 1.0, 5: 1.0}
+        self.assertEquals(w50, w5[0])
+        w51 = {0: 1.0, 2: 1.0, 6: 1.0}
+        self.assertEquals(w51, w5[1])
+        w5_2 = pysal.higher_order(w5,2)
+        w5_20 = {2: 1.0, 10: 1.0, 6: 1.0}
+        self.assertEquals(w5_20, w5_2[0])
+
+    def test_shimbel(self):
+        w5 = pysal.lat2W()
+        w5_shimbel = pysal.shimbel(w5)
+        w5_shimbel024 = 8
+        self.assertEquals(w5_shimbel024, w5_shimbel[0][24])
+        w5_shimbel004 = [-1, 1, 2, 3]
+        self.assertEquals(w5_shimbel004, w5_shimbel[0][0:4])
+
+    def test_full(self):
+        neighbors={'first':['second'],'second':['first','third'],'third':['second']}
+        weights={'first':[1],'second':[1,1],'third':[1]}
+        w = pysal.W(neighbors,weights)
+        wf,ids = pysal.full(w)
+        wfo = np.array([[ 0.,  1.,  0.], [ 1.,  0.,  1.], [ 0.,  1.,  0.]])
+        np.testing.assert_array_almost_equal(wfo, wf, decimal=8)
+        idso = ['first', 'second', 'third']
+        self.assertEquals(idso, ids)
+
+    def test_remap_ids(self):
+        w = pysal.lat2W(3,2)
+        wid_order = [0, 1, 2, 3, 4, 5]
+        self.assertEquals(wid_order, w.id_order)
+        wneighbors0 = [2, 1]
+        self.assertEquals(wneighbors0, w.neighbors[0])
+        old_to_new = {0:'a', 1:'b', 2:'c', 3:'d', 4:'e', 5:'f'}
+        w_new = pysal.remap_ids(w, old_to_new)
+        w_newid_order = ['a', 'b', 'c', 'd', 'e', 'f']
+        self.assertEquals(w_newid_order, w_new.id_order)
+        w_newdneighborsa = ['c', 'b']
+        self.assertEquals(w_newdneighborsa, w_new.neighbors['a'])
+
+    def test_get_ids(self):
+        polyids = pysal.weights.util.get_ids("../../examples/columbus.shp", "POLYID")      
+        polyids5 = [1, 2, 3, 4, 5]
+        self.assertEquals(polyids5, polyids[:5])
+
+    def test_get_points_array_from_shapefile(self):
+        xy = pysal.weights.util.get_points_array_from_shapefile('../../examples/juvenile.shp')
+        xy3 = np.array([[ 94.,  93.], [ 80.,  95.], [ 79.,  90.]])
+        np.testing.assert_array_almost_equal(xy3, xy[:3], decimal=8)
+        xy = pysal.weights.util.get_points_array_from_shapefile('../../examples/columbus.shp')
+        xy3 = np.array([[  8.82721847,  14.36907602], [  8.33265837,  14.03162401], [  9.01226541,  13.81971908]])
+        np.testing.assert_array_almost_equal(xy3, xy[:3], decimal=8)
+
+    def test_min_threshold_distance(self):
+        x,y=np.indices((5,5))
+        x.shape=(25,1)
+        y.shape=(25,1)
+        data=np.hstack([x,y])
+        mint = 1.0
+        self.assertEquals(mint, pysal.weights.util.min_threshold_distance(data))
+
 suite = unittest.TestLoader().loadTestsFromTestCase(_Testutil)
 
 if __name__ == '__main__':
