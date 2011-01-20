@@ -729,7 +729,7 @@ class Spatial_Filtering:
     Examples
     --------
     >>> stl = pysal.open('../examples/stl_hom.csv', 'r')
-    >>> fromWKT = pysal.core.IOHandlers.wkt.WKTParser()
+    >>> fromWKT = pysal.core.util.WKTParser()
     >>> stl.cast('WKT',fromWKT)
     >>> d = np.array([i.centroid for i in stl[:,0]])
     >>> bbox = [[-92.700676, 36.881809], [-87.916573, 40.3295669]]
@@ -806,7 +806,7 @@ class Headbanging_Triples:
     --------
     >>> from pysal import knnW
     >>> stl_db = pysal.open('../examples/stl_hom.csv','r')
-    >>> fromWKT = pysal.core.IOHandlers.wkt.WKTParser()
+    >>> fromWKT = pysal.core.util.WKTParser()
     >>> stl_db.cast('WKT',fromWKT)
     >>> d = np.array([i.centroid for i in stl_db[:,0]])
     >>> w = knnW(d,k=5)

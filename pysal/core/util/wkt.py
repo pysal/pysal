@@ -64,7 +64,7 @@ class WKTParser:
     See local doctest output for the items not tested...
 
     """
-    regExes = { 'typeStr': re.compile('^\s*(\w+)\s*\(\s*(.*)\s*\)\s*$'),
+    regExes = { 'typeStr': re.compile('^\s*([\w\s]+)\s*\(\s*(.*)\s*\)\s*$'),
         'spaces': re.compile('\s+'),
         'parenComma': re.compile('\)\s*,\s*\('),
         'doubleParenComma': re.compile('\)\s*\)\s*,\s*\(\s*\('),  # can't use {2} here
@@ -92,7 +92,7 @@ class WKTParser:
         matches = self.regExes['typeStr'].match(wkt)
         if matches:
             geoType,geoStr = matches.groups()
-            geoType = geoType.lower()
+            geoType = geoType.lower().strip()
             try:
                 return self.parsers[geoType](geoStr)
             except KeyError:
