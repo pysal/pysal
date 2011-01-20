@@ -1,4 +1,4 @@
-from pysal.cg import Point,LineSegment,Line,Ray,Chain,Rectangle
+from pysal.cg import Point,LineSegment,Line,Ray,Chain,Rectangle,Polygon
 import doctest
 import unittest
 
@@ -627,17 +627,18 @@ class _TestRectangle(unittest.TestCase):
         r = Rectangle(5, 5, 5, 10) # Zero width
         self.assertEquals(r.width, 0)
 
-suite = unittest.TestSuite()
-suite.addTest(doctest.DocTestSuite('pysal.cg.shapes'))
-A = unittest.TestLoader().loadTestsFromTestCase(_TestPoint)
-B = unittest.TestLoader().loadTestsFromTestCase(_TestLineSegment)
-C = unittest.TestLoader().loadTestsFromTestCase(_TestLine)
-D = unittest.TestLoader().loadTestsFromTestCase(_TestRay)
-E = unittest.TestLoader().loadTestsFromTestCase(_TestChain)
-F = unittest.TestLoader().loadTestsFromTestCase(_TestPolygon)
-G = unittest.TestLoader().loadTestsFromTestCase(_TestRectangle)
-suite.addTests([A,B,C,D,E,D,G])
+#suite = unittest.TestSuite()
+#suite.addTest(doctest.DocTestSuite('pysal.cg.shapes'))
+#A = unittest.TestLoader().loadTestsFromTestCase(_TestPoint)
+#B = unittest.TestLoader().loadTestsFromTestCase(_TestLineSegment)
+#C = unittest.TestLoader().loadTestsFromTestCase(_TestLine)
+#D = unittest.TestLoader().loadTestsFromTestCase(_TestRay)
+#E = unittest.TestLoader().loadTestsFromTestCase(_TestChain)
+#F = unittest.TestLoader().loadTestsFromTestCase(_TestPolygon)
+#G = unittest.TestLoader().loadTestsFromTestCase(_TestRectangle)
+#suite.addTests([A,B,C,D,E,D,G])
 
 if __name__ == '__main__':
-    runner = unittest.TextTestRunner()
-    runner.run(suite)
+    unittest.main()
+    #runner = unittest.TextTestRunner()
+    #runner.run(suite)

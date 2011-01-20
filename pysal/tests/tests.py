@@ -72,7 +72,7 @@ for _test in runners:
     apth = os.path.abspath(pth)
     #print pth, fname, apth
     os.chdir(apth)
-    execfile(fname)
+    os.system("python %s"%fname)
     os.chdir(cwd)
 #t2 = time.time()
 #print t2-t1
@@ -109,14 +109,7 @@ __author__ = "Sergio J. Rey <srey@asu.edu>"
 import unittest
 
 suite = unittest.TestSuite()
-# Test imports
-#import test_fileIO
-#suite.addTest(test_fileIO.suite)
-#import test_cg_shapes
-#suite.addTest(test_cg_shapes.suite)
-import test_weights
 import test_NameSpace
-suite.addTest(test_weights.suite)
 suite.addTest(test_NameSpace.suite)
 
 runner = unittest.TextTestRunner()
