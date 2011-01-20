@@ -85,10 +85,18 @@ class _TestDistanceWeights(unittest.TestCase):
                                         1.7250729841938044])
     def test_DistanceBand(self):
         """ see issue #126 """
+        w = pysal.rook_from_shapefile("../../examples/lattice10x10.shp")
         polygons = pysal.open("../../examples/lattice10x10.shp","r").read()
-        points = [poly.centroid for poly in polygons]
-        w = pysal.DistanceBand(points,1)
-        w2 = pysal.rook_from_shapefile("../../examples/lattice10x10.shp")
+        points1 = [poly.centroid for poly in polygons]
+        w1 = pysal.DistanceBand(points1,1)
+        for k in range(w.n):
+            self.assertEqual(w[k],w1[k])
+    def test_DistanceBand_ints(self):
+        """ see issue #126 """
+        w = pysal.rook_from_shapefile("../../examples/lattice10x10.shp")
+        polygons = pysal.open("../../examples/lattice10x10.shp","r").read()
+        points2 = [tuple(map(int,poly.vertices[0])) for poly in polygons]
+        w2 = pysal.DistanceBand(points2,1)
         for k in range(w.n):
             self.assertEqual(w[k],w2[k])
 

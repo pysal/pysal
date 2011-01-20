@@ -4,11 +4,7 @@ A module of classification schemes for choropleth mapping.
 __author__ = "Sergio J. Rey"
 __credits__= "Copyright (c) 2009-10 Sergio J. Rey"
 
-__all__=['quantile','Map_Classifier','Box_Plot','Equal_Interval','Fisher_Jenks',
-         'Jenks_Caspall','Jenks_Caspall_Forced','Jenks_Caspall_Sampled',
-         'Max_P_Classifier','Maximum_Breaks','Natural_Breaks',
-         'Quantiles','Percentiles', 'Std_Mean','User_Defined',
-         'gadf','K_classifiers']
+__all__=['quantile','Map_Classifier','Box_Plot','Equal_Interval','Fisher_Jenks', 'Jenks_Caspall','Jenks_Caspall_Forced','Jenks_Caspall_Sampled', 'Max_P_Classifier','Maximum_Breaks','Natural_Breaks', 'Quantiles','Percentiles', 'Std_Mean','User_Defined', 'gadf','K_classifiers']
 
 from pysal.common import *
 

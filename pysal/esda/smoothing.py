@@ -13,12 +13,7 @@ from pysal.common import np, KDTree
 from pysal.weights.spatial_lag import lag_spatial as slag
 from scipy.stats import gamma, norm, chi2, poisson
 
-__all__ = ['Excess_Risk', 'Empirical_Bayes', 'Spatial_Empirical_Bayes',
-'Spatial_Rate', 'Kernel_Smoother', 'Age_Adjusted_Smoother', 'Disk_Smoother',
-'Spatial_Median_Rate', 'Spatial_Filtering', 'Headbanging_Triples',
-'Headbanging_Median_Rate', 'flatten', 'weighted_median', 'sum_by_n',
-'crude_age_standardization', 'direct_age_standardization',
-'indirect_age_standardization', 'standardized_mortality_ratio', 'choynowski']
+__all__ = ['Excess_Risk', 'Empirical_Bayes', 'Spatial_Empirical_Bayes', 'Spatial_Rate', 'Kernel_Smoother', 'Age_Adjusted_Smoother', 'Disk_Smoother', 'Spatial_Median_Rate', 'Spatial_Filtering', 'Headbanging_Triples', 'Headbanging_Median_Rate', 'flatten', 'weighted_median', 'sum_by_n', 'crude_age_standardization', 'direct_age_standardization', 'indirect_age_standardization', 'standardized_mortality_ratio', 'choynowski']
 
 def flatten(l,unique=True):
     """flatten a list of lists

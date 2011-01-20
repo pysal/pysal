@@ -54,9 +54,9 @@ from weights import W,lat2W,regime_weights,comb,full,shimbel,order,higher_order,
 from weights.Distance import knnW, Kernel, DistanceBand
 from weights.Contiguity import buildContiguity
 from weights.spatial_lag import lag_spatial
-from weights.user import *
 from weights.Wsets import w_union, w_intersection, w_difference
 from weights.Wsets import w_symmetric_difference, w_subset
+from weights.user import queen_from_shapefile, rook_from_shapefile, knnW_from_array,knnW_from_shapefile, threshold_binaryW_from_array, threshold_binaryW_from_shapefile, threshold_continuousW_from_array, threshold_continuousW_from_shapefile, kernelW, kernelW_from_shapefile, adaptive_kernelW, adaptive_kernelW_from_shapefile, min_threshold_dist_from_shapefile
 
 # Load the IOHandlers
 import core.IOHandlers

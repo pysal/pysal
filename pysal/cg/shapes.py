@@ -9,8 +9,7 @@ __credits__ = "Copyright (c) 2005-2009 Sergio J. Rey"
 import doctest
 import math
 
-__all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon',
-'Rectangle']
+__all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon', 'Rectangle']
 
 class Point(object):
     """
