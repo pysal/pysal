@@ -9,7 +9,7 @@ __all__ = ['PurePyShpWrapper']
 
 #import pysal
 import pysal.core.FileIO #as FileIO
-from pysal.core.util._pyShpIO import shp_file
+from pysal.core.util import shp_file
 import pysal.cg as cg
 from warnings import warn
 import unittest
