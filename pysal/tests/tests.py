@@ -13,6 +13,7 @@ testing scheme which will be replaced with this file.
 """
 
 import os
+import sys
 import unittest
 
 path = "../"
@@ -72,7 +73,7 @@ for _test in runners:
     apth = os.path.abspath(pth)
     #print pth, fname, apth
     os.chdir(apth)
-    os.system("python %s"%fname)
+    os.system("%s %s"%(sys.executable,fname))
     os.chdir(cwd)
 #t2 = time.time()
 #print t2-t1
