@@ -6,7 +6,7 @@ from scipy import sparse,float32
 from scipy.spatial import KDTree
 import os, gc
 
-__all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 'remap_ids','full','get_ids', 'min_threshold_distance']
+__all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 'remap_ids','full','get_ids', 'min_threshold_distance','lat2SW']
 
 
 def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
