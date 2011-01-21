@@ -10,7 +10,7 @@ from pysal.weights import W
 
 from scipy import sparse
 
-__all__ = ["knnW", "distance_matrix", "Kernel", "DistanceBand"]
+__all__ = ["knnW", "Kernel", "DistanceBand"]
 
 def knnW(point_array,k=2,p=2,ids=None):
     """
@@ -433,69 +433,6 @@ class DistanceBand(W):
                     allneighbors[ids[i]] = neigh
                     weights[ids[i]] = [self.dmat[(i,j)]**self.alpha for j in ns] 
         return allneighbors,weights
-
-def distance_matrix(X,p=2.0):
-    """
-    Distance Matrices
-
-    XXX Needs optimization/integration with other weights in pysal
-    
-    Parameters
-    ----------
-    X           : An, n by k numpy.ndarray
-                    Where n is number of observations
-                    k is number of dimmensions (2 for x,y)
-    p          : float
-                 Minkowski p-norm distance metric parameter:
-                 1<=p<=infinity
-                 2: Euclidean distance
-                 1: Manhattan distance
-
-    Example
-    -------
-    >>> x,y=[r.flatten() for r in np.indices((3,3))]
-    >>> data = np.array([x,y]).T
-    >>> d=distance_matrix(data)
-    >>> np.array(d)
-    array([[ 0.        ,  1.        ,  2.        ,  1.        ,  1.41421356,
-             2.23606798,  2.        ,  2.23606798,  2.82842712],
-           [ 1.        ,  0.        ,  1.        ,  1.41421356,  1.        ,
-             1.41421356,  2.23606798,  2.        ,  2.23606798],
-           [ 2.        ,  1.        ,  0.        ,  2.23606798,  1.41421356,
-             1.        ,  2.82842712,  2.23606798,  2.        ],
-           [ 1.        ,  1.41421356,  2.23606798,  0.        ,  1.        ,
-             2.        ,  1.        ,  1.41421356,  2.23606798],
-           [ 1.41421356,  1.        ,  1.41421356,  1.        ,  0.        ,
-             1.        ,  1.41421356,  1.        ,  1.41421356],
-           [ 2.23606798,  1.41421356,  1.        ,  2.        ,  1.        ,
-             0.        ,  2.23606798,  1.41421356,  1.        ],
-           [ 2.        ,  2.23606798,  2.82842712,  1.        ,  1.41421356,
-             2.23606798,  0.        ,  1.        ,  2.        ],
-           [ 2.23606798,  2.        ,  2.23606798,  1.41421356,  1.        ,
-             1.41421356,  1.        ,  0.        ,  1.        ],
-           [ 2.82842712,  2.23606798,  2.        ,  2.23606798,  1.41421356,
-             1.        ,  2.        ,  1.        ,  0.        ]])
-    >>> 
-    """
-    if X.ndim == 1:
-        X.shape = (X.shape[0],1)
-    if X.ndim > 2:
-        raise TypeError,"wtf?"
-    n, k = X.shape
-
-    M=np.ones((n,n))
-    D=np.zeros((n,n))
-    for col in range(k):
-        x = X[:,col]
-        xM=x*M
-        dx=xM-xM.T
-        if p%2 != 0:
-            dx = np.abs(dx)
-        dx2=dx**p   
-        D+=dx2
-    D=D**(1.0/p)
-    return D
-
 
 def _test():
     """Doc test"""

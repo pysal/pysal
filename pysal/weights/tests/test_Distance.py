@@ -100,18 +100,6 @@ class _TestDistanceWeights(unittest.TestCase):
         for k in range(w.n):
             self.assertEqual(w[k],w2[k])
 
-    def test_distance_matrix(self):
-        dist = pysal.weights.distance_matrix(np.array(self.points))
-        points = self.points
-        for i in range(0,len(self.points)):
-            for j in range(i,len(self.points)):
-                x,y = points[i]
-                X,Y = points[j]
-                d = ((x-X)**2+(y-Y)**2)**(0.5)
-                self.assertEqual(dist[i,j],d)
-
-      
-
 
 suite = unittest.TestLoader().loadTestsFromTestCase(_TestDistanceWeights)
 

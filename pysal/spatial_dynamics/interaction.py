@@ -7,6 +7,7 @@ __author__  = "Nicholas Malizia <nmalizia@asu.edu> "
 import pysal
 from pysal.common import *
 import pysal.weights.Distance as Distance
+from pysal import cg
 import util
 
 __all__=['SpaceTimeEvents','knox','mantel','jacquez']
@@ -191,8 +192,8 @@ def knox(events, delta, tau, permutations=99):
     t = events.t
 
     # calculate the spatial and temporal distance matrices for the events
-    sdistmat = Distance.distance_matrix(s)   
-    tdistmat = Distance.distance_matrix(t)
+    sdistmat = cg.distance_matrix(s)   
+    tdistmat = cg.distance_matrix(t)
 
     # identify events within thresholds
     spacmat = np.ones((n,n))
@@ -315,8 +316,8 @@ def mantel(events, permutations=99, scon=0.0, spow=1.0, tcon=0.0, tpow=1.0):
     t = events.t
 
     # calculate the spatial and temporal distance matrices for the events
-    distmat = Distance.distance_matrix(s)   
-    timemat = Distance.distance_matrix(t)
+    distmat = cg.distance_matrix(s)   
+    timemat = cg.distance_matrix(t)
 
     # calculate the transformed standardized statistic
     timevec = (util.get_lower(timemat)+tcon)**tpow

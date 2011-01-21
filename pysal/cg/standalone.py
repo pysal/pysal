@@ -11,8 +11,9 @@ import math
 import copy
 from shapes import *
 from itertools import islice
+from pysal.common import *
 
-__all__ = ['bbcommon', 'get_bounding_box', 'get_angle_between', 'is_collinear', 'get_segments_intersect', 'get_segment_point_intersect', 'get_polygon_point_intersect', 'get_rectangle_point_intersect', 'get_ray_segment_intersect', 'get_rectangle_rectangle_intersection', 'get_polygon_point_dist', 'get_points_dist', 'get_segment_point_dist', 'get_point_at_angle_and_dist', 'convex_hull', 'is_clockwise', 'point_touches_rectangle', 'get_shared_segments']
+__all__ = ['bbcommon', 'get_bounding_box', 'get_angle_between', 'is_collinear', 'get_segments_intersect', 'get_segment_point_intersect', 'get_polygon_point_intersect', 'get_rectangle_point_intersect', 'get_ray_segment_intersect', 'get_rectangle_rectangle_intersection', 'get_polygon_point_dist', 'get_points_dist', 'get_segment_point_dist', 'get_point_at_angle_and_dist', 'convex_hull', 'is_clockwise', 'point_touches_rectangle', 'get_shared_segments', 'distance_matrix']
 
 def bbcommon(bb,bbother):
     """ Old Stars method for bounding box overlap testing 
@@ -723,8 +724,68 @@ def get_shared_segments(poly1,poly2,bool_ret=False):
         else:
             return False
     return common
-    
 
+def distance_matrix(X,p=2.0):
+    """
+    Distance Matrices
+
+    XXX Needs optimization/integration with other weights in pysal
+    
+    Parameters
+    ----------
+    X           : An, n by k numpy.ndarray
+                    Where n is number of observations
+                    k is number of dimmensions (2 for x,y)
+    p          : float
+                 Minkowski p-norm distance metric parameter:
+                 1<=p<=infinity
+                 2: Euclidean distance
+                 1: Manhattan distance
+
+    Example
+    -------
+    >>> x,y=[r.flatten() for r in np.indices((3,3))]
+    >>> data = np.array([x,y]).T
+    >>> d=distance_matrix(data)
+    >>> np.array(d)
+    array([[ 0.        ,  1.        ,  2.        ,  1.        ,  1.41421356,
+             2.23606798,  2.        ,  2.23606798,  2.82842712],
+           [ 1.        ,  0.        ,  1.        ,  1.41421356,  1.        ,
+             1.41421356,  2.23606798,  2.        ,  2.23606798],
+           [ 2.        ,  1.        ,  0.        ,  2.23606798,  1.41421356,
+             1.        ,  2.82842712,  2.23606798,  2.        ],
+           [ 1.        ,  1.41421356,  2.23606798,  0.        ,  1.        ,
+             2.        ,  1.        ,  1.41421356,  2.23606798],
+           [ 1.41421356,  1.        ,  1.41421356,  1.        ,  0.        ,
+             1.        ,  1.41421356,  1.        ,  1.41421356],
+           [ 2.23606798,  1.41421356,  1.        ,  2.        ,  1.        ,
+             0.        ,  2.23606798,  1.41421356,  1.        ],
+           [ 2.        ,  2.23606798,  2.82842712,  1.        ,  1.41421356,
+             2.23606798,  0.        ,  1.        ,  2.        ],
+           [ 2.23606798,  2.        ,  2.23606798,  1.41421356,  1.        ,
+             1.41421356,  1.        ,  0.        ,  1.        ],
+           [ 2.82842712,  2.23606798,  2.        ,  2.23606798,  1.41421356,
+             1.        ,  2.        ,  1.        ,  0.        ]])
+    >>> 
+    """
+    if X.ndim == 1:
+        X.shape = (X.shape[0],1)
+    if X.ndim > 2:
+        raise TypeError,"wtf?"
+    n, k = X.shape
+
+    M=np.ones((n,n))
+    D=np.zeros((n,n))
+    for col in range(k):
+        x = X[:,col]
+        xM=x*M
+        dx=xM-xM.T
+        if p%2 != 0:
+            dx = np.abs(dx)
+        dx2=dx**p   
+        D+=dx2
+    D=D**(1.0/p)
+    return D
 
 def _test():
     doctest.testmod(verbose=True)
