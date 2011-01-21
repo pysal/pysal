@@ -1,6 +1,6 @@
 import unittest
 from cStringIO import StringIO
-from pysal.core.util.shapefile import noneMax, noneMin, shp_file, shx_file, NullShape, Point, PolyLine
+from pysal.core.util.shapefile import noneMax, noneMin, shp_file, shx_file, NullShape, Point, PolyLine, MultiPoint, PointZ, PolyLineZ, PolygonZ, MultiPointZ, PointM, PolyLineM, PolygonM, MultiPointM, MultiPatch
 import os
 
 class TestNoneMax(unittest.TestCase):
@@ -167,53 +167,50 @@ class TestPolyLine(unittest.TestCase):
 
 class TestMultiPoint(unittest.TestCase):
     def test___init__(self):
-        # multi_point = MultiPoint()
-        assert False # TODO: implement your test here
+        self.failUnlessRaises(NotImplementedError, MultiPoint)
 
 class TestPointZ(unittest.TestCase):
     def test___init__(self):
-        # point_z = PointZ()
-        assert False # TODO: implement your test here
+        self.failUnlessRaises(NotImplementedError, PointZ)
 
 class TestPolyLineZ(unittest.TestCase):
     def test___init__(self):
-        # poly_line_z = PolyLineZ()
-        assert False # TODO: implement your test here
+        self.failUnlessRaises(NotImplementedError, PolyLineZ)
 
 class TestPolygonZ(unittest.TestCase):
     def test___init__(self):
+        self.failUnlessRaises(NotImplementedError, PolygonZ)
         # polygon_z = PolygonZ()
-        assert False # TODO: implement your test here
 
 class TestMultiPointZ(unittest.TestCase):
     def test___init__(self):
+        self.failUnlessRaises(NotImplementedError, MultiPointZ)
         # multi_point_z = MultiPointZ()
-        assert False # TODO: implement your test here
 
 class TestPointM(unittest.TestCase):
     def test___init__(self):
+        self.failUnlessRaises(NotImplementedError, PointM)
         # point_m = PointM()
-        assert False # TODO: implement your test here
 
 class TestPolyLineM(unittest.TestCase):
     def test___init__(self):
+        self.failUnlessRaises(NotImplementedError, PolyLineM)
         # poly_line_m = PolyLineM()
-        assert False # TODO: implement your test here
 
 class TestPolygonM(unittest.TestCase):
     def test___init__(self):
+        self.failUnlessRaises(NotImplementedError, PolygonM)
         # polygon_m = PolygonM()
-        assert False # TODO: implement your test here
 
 class TestMultiPointM(unittest.TestCase):
     def test___init__(self):
+        self.failUnlessRaises(NotImplementedError, MultiPointM)
         # multi_point_m = MultiPointM()
-        assert False # TODO: implement your test here
 
 class TestMultiPatch(unittest.TestCase):
     def test___init__(self):
+        self.failUnlessRaises(NotImplementedError, MultiPatch)
         # multi_patch = MultiPatch()
-        assert False # TODO: implement your test here
 
 if __name__ == '__main__':
     unittest.main()
