@@ -15,7 +15,7 @@ class TestNoneMin(unittest.TestCase):
         self.assertEqual(1, noneMin(None, 1))
         self.assertEqual(None, noneMin(None, None))
 
-class TestShpFile(unittest.TestCase):
+class test_shp_file(unittest.TestCase):
     def test___init__(self):
         shp = shp_file('../../../examples/10740.shp')
         assert shp.header == {'BBOX Xmax': -105.29012, 'BBOX Ymax': 36.219799000000002, 'BBOX Mmax': 0.0, 'BBOX Zmin': 0.0, 'BBOX Mmin': 0.0, 'File Code': 9994, 'BBOX Ymin': 34.259672000000002, 'BBOX Xmin': -107.62651, 'Unused': (0, 0, 0, 0, 0), 'Version': 1000, 'BBOX Zmax': 0.0, 'Shape Type': 5, 'File Length': 260534}
@@ -91,7 +91,7 @@ class TestShpFile(unittest.TestCase):
         shp = shp_file('../../../examples/shp_test/Line.shp')
         self.assertEqual("ARC", shp.type())
 
-class TestShxFile(unittest.TestCase):
+class test_shx_file(unittest.TestCase):
     def test___init__(self):
         shx = shx_file('../../../examples/shp_test/Point')
         assert isinstance(shx,shx_file)
