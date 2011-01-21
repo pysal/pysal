@@ -49,7 +49,7 @@ class _Testuser(unittest.TestCase):
         w1=pysal.knnW_from_shapefile('../../examples/juvenile.shp',k=1)
         self.assertAlmostEquals(w1.pct_nonzero, 0.0059523809523809521)
 
-    def test_threshold_binarW_from_array(self):
+    def test_threshold_binaryW_from_array(self):
         points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
         w= pysal.threshold_binaryW_from_array(points,threshold=11.2)
         self.assertEquals(w.weights, {0: [1, 1], 1: [1, 1], 2: [], 3: [1, 1],
@@ -63,7 +63,7 @@ class _Testuser(unittest.TestCase):
         self.assertEquals(w.weights[1], [1, 1])
         
 
-    def test_threshold_continousW_from_array(self):
+    def test_threshold_continuousW_from_array(self):
         points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
         wid = pysal.threshold_continuousW_from_array(points,11.2)
         self.assertEquals(wid.weights[0], [0.10000000000000001,
@@ -88,6 +88,10 @@ class _Testuser(unittest.TestCase):
                                                      [ 20.000002],
                                                      [ 20.000002],
                                                      [ 20.000002]]))
+    def test_min_threshold_dist_from_shapefile(self):
+        f ='../../examples/columbus.shp'
+        min_d = pysal.min_threshold_dist_from_shapefile(f)
+        self.assertAlmostEquals(min_d, 0.61886415807685413)
 
     def test_kernelW_from_shapefile(self):
         kw = pysal.kernelW_from_shapefile('../../examples/columbus.shp',idVariable='POLYID')
@@ -119,6 +123,24 @@ class _Testuser(unittest.TestCase):
                                                        [ 11.18034101],
                                                        [ 14.14213704],
                                                        [ 18.02775818]]))
+
+    def test_adaptive_kernelW_from_shapefile(self):
+        kwa = pysal.adaptive_kernelW_from_shapefile('../../examples/columbus.shp')
+        self.assertEquals(kwa.weights[0], [9.9999990066379496e-08,
+                                           1.0, 0.031789067677363891])
+        np.testing.assert_array_almost_equal(kwa.bandwidth[:3],
+                                             np.array([[ 0.59871832],
+                                                       [ 0.59871832],
+                                                       [ 0.56095647]])) 
+
+
+
+    def test_build_lattice_shapefile(self):
+        of = "lattice.shp"
+        pysal.build_lattice_shapefile(20, 20, of)
+        w = pysal.rook_from_shapefile(of)
+        self.assertEquals(w.n, 400)
+
 
 suite = unittest.TestLoader().loadTestsFromTestCase(_Testuser)
 
