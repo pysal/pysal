@@ -62,20 +62,48 @@ class NP_Mixture_Smoother(object):
 
     Examples
     --------
+
+    importing pysal, numpy, and NP_Mixture_Smoother
+
     >>> import pysal
     >>> import numpy as np
     >>> from pysal.esda.mixture_smoothing import NP_Mixture_Smoother
+
+    creating an arrary including event values
+
     >>> e = np.array([10, 5, 12, 20])
+
+    creating an array including population-at-risk values
+
     >>> b = np.array([100, 150, 80, 200])
+
+    applying non-parametric mixture smoothing to e and b
+
     >>> mixture = NP_Mixture_Smoother(e,b)
+
+    extracting the smoothed rates through the property r of the NP_Mixture_Smoother instance
+
     >>> mixture.r
     array([ 0.10982267,  0.03445525,  0.11018393,  0.11018593])
+
+    Checking the subpopulations to which each observation belongs 
+
     >>> mixture.category
     array([1, 0, 1, 1])
+
+    computing an initial set of prior distributions for the subpopulations    
+
     >>> mixture.getSeed()
     (array([ 0.5,  0.5]), array([ 0.03333333,  0.15      ]))
+
+
+    applying the mixture algorithm
+
     >>> mixture.mixalg()
     {'mix_den': array([ 0.,  0.,  0.,  0.]), 'gradient': array([ 0.]), 'k': 1, 'p': array([ 1.]), 'grid': array([ 11.27659574]), 'accuracy': 1.0}
+
+    estimating empirical Bayesian smoothed rates 
+
     >>> mixture.getRateEstimates()
     (array([ 0.0911574,  0.0911574,  0.0911574,  0.0911574]), array([1, 1, 1, 1]))
     
