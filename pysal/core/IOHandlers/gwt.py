@@ -1,5 +1,8 @@
+import pysal
+import os.path
 import pysal.core.FileIO as FileIO
 from pysal.weights import W
+from warnings import warn
 
 __author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
 __all__ = ["GwtIO"]
@@ -40,6 +43,24 @@ class GwtIO(FileIO.FileIO):
             raise StopIteration
 
         flag,n,shp,id_var = self.file.readline().strip().split()
+        self.shpName = shp
+        self.varName = id_var
+        id_order = None
+        id_type = str
+        try:
+            base = os.path.split(self.dataPath)[0]
+            dbf = os.path.join(base,self.shpName.replace('.shp','')+'.dbf')
+            if os.path.exists(dbf):
+                db = pysal.open(dbf,'r')
+                if id_var in db.header:
+                    id_order = db.by_col(id_var)
+                    id_type = type(id_order[0])
+                else:
+                    warn("ID_VAR:'%s' was in in the DBF header, proceeding with unordered string ids."%(id_var), RuntimeWarning)
+            else:
+                warn("DBF relating to GWT was not found, proceeding with unordered string ids.", RuntimeWarning)
+        except:
+            warn("Exception occurred will reading DBF, proceeding with unordered string ids.", RuntimeWarning)
         self.flag=flag
         self.n=n
         self.shp=shp
@@ -48,24 +69,17 @@ class GwtIO(FileIO.FileIO):
         neighbors={}
         for line in self.file.readlines():
             i,j,w=line.strip().split()
-            #i=int(i)
-            #j=int(j)
+            i=id_type(i)
+            j=id_type(j)
             w=float(w)
             if i not in weights:
                 weights[i]=[]
                 neighbors[i]=[]
             weights[i].append(w)
             neighbors[i].append(j)
-        self.original_neighbors=neighbors
-        zo=self.__zero_offset(neighbors,weights)
-        self.neighbors=zo['new_neighbors']
-        self.original_ids=zo['old_ids']
-        self.ids = zo['new_ids']
-        self.n=len(weights)
-        self.weights=zo['new_weights']
 
         self.pos += 1
-        return W(neighbors,weights)
+        return W(neighbors,weights,id_order)
 
     def write(self, obj):
         """.write(weightsObject)
