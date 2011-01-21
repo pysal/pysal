@@ -104,7 +104,7 @@ for key in missingUnits:
 print ''
 print "----------------------------------------"
 print ''
-print "Running doc_tests"
+print "Running old tests"
 
 __author__ = "Sergio J. Rey <srey@asu.edu>"
 
