@@ -11,6 +11,7 @@ import math
 import copy
 from shapes import *
 from itertools import islice
+import scipy.spatial
 from pysal.common import *
 
 __all__ = ['bbcommon', 'get_bounding_box', 'get_angle_between', 'is_collinear', 'get_segments_intersect', 'get_segment_point_intersect', 'get_polygon_point_intersect', 'get_rectangle_point_intersect', 'get_ray_segment_intersect', 'get_rectangle_rectangle_intersection', 'get_polygon_point_dist', 'get_points_dist', 'get_segment_point_dist', 'get_point_at_angle_and_dist', 'convex_hull', 'is_clockwise', 'point_touches_rectangle', 'get_shared_segments', 'distance_matrix']
@@ -725,7 +726,7 @@ def get_shared_segments(poly1,poly2,bool_ret=False):
             return False
     return common
 
-def distance_matrix(X,p=2.0):
+def distance_matrix(X,p=2.0,threshold=5e7):
     """
     Distance Matrices
 
@@ -733,14 +734,17 @@ def distance_matrix(X,p=2.0):
     
     Parameters
     ----------
-    X           : An, n by k numpy.ndarray
+    X          : An, n by k numpy.ndarray
                     Where n is number of observations
                     k is number of dimmensions (2 for x,y)
     p          : float
-                 Minkowski p-norm distance metric parameter:
-                 1<=p<=infinity
-                 2: Euclidean distance
-                 1: Manhattan distance
+                    Minkowski p-norm distance metric parameter:
+                    1<=p<=infinity
+                    2: Euclidean distance
+                    1: Manhattan distance
+    threshold  : positive integer
+                    If (n**2)*32 > threshold use scipy.spatial.distance_matrix instead
+                    of working in ram, this is roughly the ammount of ram (in bytes) that will be used.
 
     Example
     -------
@@ -774,18 +778,21 @@ def distance_matrix(X,p=2.0):
         raise TypeError,"wtf?"
     n, k = X.shape
 
-    M=np.ones((n,n))
-    D=np.zeros((n,n))
-    for col in range(k):
-        x = X[:,col]
-        xM=x*M
-        dx=xM-xM.T
-        if p%2 != 0:
-            dx = np.abs(dx)
-        dx2=dx**p   
-        D+=dx2
-    D=D**(1.0/p)
-    return D
+    if (n**2)*32 > threshold:
+        return scipy.spatial.distance_matrix(X,X,p)
+    else:
+        M=np.ones((n,n))
+        D=np.zeros((n,n))
+        for col in range(k):
+            x = X[:,col]
+            xM=x*M
+            dx=xM-xM.T
+            if p%2 != 0:
+                dx = np.abs(dx)
+            dx2=dx**p   
+            D+=dx2
+        D=D**(1.0/p)
+        return D
 
 def _test():
     doctest.testmod(verbose=True)
