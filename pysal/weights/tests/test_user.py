@@ -89,7 +89,37 @@ class _Testuser(unittest.TestCase):
                                                      [ 20.000002],
                                                      [ 20.000002]]))
 
+    def test_kernelW_from_shapefile(self):
+        kw = pysal.kernelW_from_shapefile('../../examples/columbus.shp',idVariable='POLYID')
+        self.assertEquals(kw.weights[1], [0.20524787824004365,
+                                          0.0070787731484506233, 1.0,
+                                          0.23051223027663015])
+        np.testing.assert_array_almost_equal(kw.bandwidth[:3], np.array([[ 0.75333961], [ 0.75333961],
+                                                   [ 0.75333961]]))
         
+    def test_adaptive_kernelW(self):
+        points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+        bw=[25.0,15.0,25.0,16.0,14.5,25.0]
+        kwa=pysal.adaptive_kernelW(points,bandwidths=bw)
+        self.assertEqual(kwa.weights[0], [1.0, 0.59999999999999998,
+                                          0.55278640450004202,
+                                          0.10557280900008403])
+        self.assertEqual(kwa.neighbors[0], [0, 1, 3, 4])
+        np.testing.assert_array_almost_equal(kwa.bandwidth,
+                                             np.array([[ 25. ], [ 15. ], [ 25. ],
+                                                      [ 16. ], [ 14.5], [ 25.  ]]))
+
+        kweag=pysal.adaptive_kernelW(points,function='gaussian')
+        self.assertEqual(kweag.weights[0], [0.3989422804014327, 0.26741902915776961,
+                                            0.24197074871621341])
+        np.testing.assert_array_almost_equal(kweag.bandwidth,
+                                             np.array([[ 11.18034101],
+                                                       [ 11.18034101],
+                                                       [ 20.000002  ],
+                                                       [ 11.18034101],
+                                                       [ 14.14213704],
+                                                       [ 18.02775818]]))
+
 suite = unittest.TestLoader().loadTestsFromTestCase(_Testuser)
 
 if __name__ == '__main__':
