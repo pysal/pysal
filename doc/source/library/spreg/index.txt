@@ -1,0 +1,9 @@
+:mod:`pysal.spreg` --- Spatial Regression
+=========================================================
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    *
+

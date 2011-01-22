@@ -60,4 +60,5 @@ A fix is to do the following::
 		svn update
 		python setup.py install
 
-
+We've added the Sphinx extension 'viewcode.' Displaying the option to view code
+inline requires at least one properly formatted docstring in your module.

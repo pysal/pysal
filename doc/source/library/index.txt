@@ -30,6 +30,7 @@ Available sub-packages
     region/index
     spatial_dynamics/index
     weights/index
+    spreg/index
 
     open
 
