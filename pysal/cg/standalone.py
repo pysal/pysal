@@ -139,14 +139,15 @@ def is_collinear(p1, p2, p3):
     >>> is_collinear(Point((0, 0)), Point((1, 1)), Point((5, 0)))
     False
     """
+    eps = np.finfo(type(p1[0])).eps
 
-    return ((p2[0]-p1[0])*(p3[1]-p1[1]) - (p2[1]-p1[1])*(p3[0]-p1[0]) == 0)
+    return (abs((p2[0]-p1[0])*(p3[1]-p1[1]) - (p2[1]-p1[1])*(p3[0]-p1[0])) < eps)
 
 def get_segments_intersect(seg1, seg2):
     """
     Returns the intersection of two segments.
 
-    get_segments_intersect(LineSegment, LineSegment) -> Point
+    get_segments_intersect(LineSegment, LineSegment) -> Point or LineSegment
 
     Parameters
     ----------
@@ -330,7 +331,7 @@ def get_rectangle_rectangle_intersection(r0,r1,checkOverlap=True):
     Note: Algorithm assumes the rectangles overlap.
           checkOverlap=False should be used with extreme caution.
 
-    get_rectangle_rectangle_intersection(r0, r1) -> Rectangle
+    get_rectangle_rectangle_intersection(r0, r1) -> Rectangle, Segment, Point or None
 
     Parameters
     ----------
@@ -360,11 +361,19 @@ def get_rectangle_rectangle_intersection(r0,r1,checkOverlap=True):
     """
     if checkOverlap:
         if not bbcommon(r0,r1):
-            raise ValueError, "Rectangles do not intersect"
+            #raise ValueError, "Rectangles do not intersect"
+            return None
     left = max(r0.left,r1.left)
     lower = max(r0.lower,r1.lower)
     right = min(r0.right,r1.right)
     upper = min(r0.upper,r1.upper)
+
+    if upper == lower and left == right:
+        return Point((left,lower))
+    elif upper == lower:
+        return LineSegment(Point((left,lower)), Point((right,lower)))
+    elif left == right:
+        return LineSegment(Point((left,lower)), Point((left,upper)))
 
     return Rectangle(left,lower,right,upper)
     

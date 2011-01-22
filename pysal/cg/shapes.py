@@ -1153,6 +1153,11 @@ class Rectangle:
         self.right = float(right)
         self.upper = float(upper)
 
+    def __eq__(self,other):
+        if other:
+            return self[:] == other[:]
+        return False
+
     def __getitem__(self,key):
         """
         >>> r = Rectangle(-4, 3, 10, 17)
