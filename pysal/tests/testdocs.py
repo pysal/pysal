@@ -59,7 +59,9 @@ mods='esda.moran','esda.geary', 'esda.mapclassify', \
         'spatial_dynamics.markov', \
         'spatial_dynamics.ergodic' , \
         'spatial_dynamics.directional', \
-        'cg.locators'
+        'cg.locators', \
+        'spreg.ols', 'spreg.diagnostics', 'spreg.diagnostics_sp', \
+        'spreg.user_output' 
 
 mods = [ "pysal."+ mod for mod in mods]
 suite = unittest.TestSuite()
