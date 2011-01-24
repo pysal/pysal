@@ -3,7 +3,7 @@ import pysal
 import tempfile
 import os
 
-class csv_Tester(unittest.TestCase):
+class test_csvWrapper(unittest.TestCase):
     def setUp(self):
         self.test_file = test_file = '../../../examples/stl_hom.csv'
         self.obj = pysal.core.IOHandlers.csvWrapper.csvWrapper(test_file,'r')

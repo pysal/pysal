@@ -3,7 +3,7 @@ import pysal
 import tempfile
 import os
 
-class PurePyDbf_Tester(unittest.TestCase):
+class test_DBF(unittest.TestCase):
     def setUp(self):
         self.test_file = test_file = '../../../examples/10740.dbf'
         self.dbObj = pysal.core.IOHandlers.pyDbfIO.DBF(test_file,'r')
