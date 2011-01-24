@@ -9,34 +9,6 @@ class GalIO(FileIO.FileIO):
     Opens, reads, and writes file objects in GAL format.
 
 
-    Parameters
-    ----------
-
-
-    Returns
-    -------
-
-
-    Notes
-    -----
-
-
-    Examples
-    --------
-
-    >>> import tempfile, pysal, os
-    >>> w = pysal.open('../../examples/sids2.gal','r').read()
-    >>> f = tempfile.NamedTemporaryFile(suffix='.gal')
-    >>> fname = f.name
-    >>> f.close()
-    >>> o = pysal.open(fname,'w')
-    >>> o.write(w)
-    >>> o.close()
-    >>> wnew =  pysal.open(fname,'r').read()
-    >>> wnew.pct_nonzero == w.pct_nonzero
-    True
-    >>> os.remove(fname)
-
     """
     FORMATS = ['gal']
     MODES = ['r','w']
@@ -71,6 +43,24 @@ class GalIO(FileIO.FileIO):
         Returns
         -------
         returns a W object
+
+        Examples
+        --------
+
+        >>> import tempfile, pysal, os
+
+        Read in a file GAL file 
+
+        >>> testfile = pysal.open('../../examples/sids2.gal','r')
+
+        Return a W object
+
+        >>> w = testfile.read()
+        >>> w.n == 100
+        True
+        >>> w.sd == 1.5151237573214935
+        True
+
         """
         if self.pos > 0:
             raise StopIteration
@@ -108,6 +98,47 @@ class GalIO(FileIO.FileIO):
 
         a GAL file
         write a weights object to the opened GAL file.
+
+        Examples
+        --------
+
+        >>> import tempfile, pysal, os
+        >>> testfile = pysal.open('../../examples/sids2.gal','r')
+        >>> w = testfile.read()
+
+        Create a temporary file for this example
+
+        >>> f = tempfile.NamedTemporaryFile(suffix='.gal')
+
+        Reassign to new var
+
+        >>> fname = f.name
+
+        Close the temporary named file
+
+        >>> f.close()
+
+        Open the new file in write mode
+
+        >>> o = pysal.open(fname,'w')
+
+        Write the Weights object into the open file
+
+        >>> o.write(w)
+        >>> o.close()
+
+        Read in the newly created gal file
+
+        >>> wnew =  pysal.open(fname,'r').read()
+
+        Compare values from old to new
+
+        >>> wnew.pct_nonzero == w.pct_nonzero
+        True
+
+        Clean up temporary file created for this example
+
+        >>> os.remove(fname)
         """
         self._complain_ifclosed(self.closed)
         if issubclass(type(obj),W):
