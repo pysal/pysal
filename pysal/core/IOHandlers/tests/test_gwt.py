@@ -1,7 +1,7 @@
 import unittest
 
 
-class TestGwtIO(unittest.TestCase):
+class test_GwtIO(unittest.TestCase):
     def test___init__(self):
         # gwt_i_o = GwtIO(*args, **kwargs)
         assert False # TODO: implement your test here

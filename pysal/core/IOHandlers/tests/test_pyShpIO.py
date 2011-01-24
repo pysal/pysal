@@ -3,7 +3,7 @@ import pysal
 import tempfile
 import os
 
-class PurePyShp_Tester(unittest.TestCase):
+class test_PurePyShpWrapper(unittest.TestCase):
     def setUp(self):
         test_file = '../../../examples/10740.shp'
         self.test_file = test_file
