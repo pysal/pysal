@@ -14,6 +14,9 @@ from itertools import islice
 import scipy.spatial
 from pysal.common import *
 
+EPSILON_SCALER = 3
+
+
 __all__ = ['bbcommon', 'get_bounding_box', 'get_angle_between', 'is_collinear', 'get_segments_intersect', 'get_segment_point_intersect', 'get_polygon_point_intersect', 'get_rectangle_point_intersect', 'get_ray_segment_intersect', 'get_rectangle_rectangle_intersection', 'get_polygon_point_dist', 'get_points_dist', 'get_segment_point_dist', 'get_point_at_angle_and_dist', 'convex_hull', 'is_clockwise', 'point_touches_rectangle', 'get_shared_segments', 'distance_matrix']
 
 def bbcommon(bb,bbother):
@@ -141,7 +144,7 @@ def is_collinear(p1, p2, p3):
     """
     eps = np.finfo(type(p1[0])).eps
 
-    return (abs((p2[0]-p1[0])*(p3[1]-p1[1]) - (p2[1]-p1[1])*(p3[0]-p1[0])) < eps)
+    return (abs((p2[0]-p1[0])*(p3[1]-p1[1]) - (p2[1]-p1[1])*(p3[0]-p1[0])) < EPSILON_SCALER*eps)
 
 def get_segments_intersect(seg1, seg2):
     """
@@ -180,6 +183,24 @@ def get_segments_intersect(seg1, seg2):
     d = p3[1] - p4[1]
     det = float(a*d - b*c)
     if det == 0:
+        if seg1 == seg2:
+            return LineSegment(seg1.p1,seg1.p2)
+        else:
+            a = get_segment_point_intersect(seg2,seg1.p1)
+            b = get_segment_point_intersect(seg2,seg1.p2)
+            c = get_segment_point_intersect(seg1,seg2.p1)
+            d = get_segment_point_intersect(seg1,seg2.p2)
+        
+            if a and b: #seg1 in seg2
+                return LineSegment(seg1.p1,seg1.p2)
+            if c and d: #seg2 in seg1
+                return LineSegment(seg2.p1,seg2.p2)
+            if (a or b) and (c or d):
+                p1 = a if a else b
+                p2 = c if c else d
+                return LineSegment(p1,p2)
+                
+            
         return None
     a_inv = d/det
     b_inv = -b/det
@@ -218,9 +239,17 @@ def get_segment_point_intersect(seg, pt):
     >>> pt2 = Point((5, 5))
     >>> get_segment_point_intersect(seg, pt2)  
     """
+    eps = np.finfo(type(pt[0])).eps
+
+    if is_collinear(pt,seg.p1,seg.p2):
+        if get_segment_point_dist(seg,pt)[0] < EPSILON_SCALER*eps:
+            return pt
+        else:
+            return None
+
     vec1 = (pt[0] - seg.p1[0], pt[1] - seg.p1[1])
     vec2 = (seg.p2[0] - seg.p1[0], seg.p2[1] - seg.p1[1])
-    if (vec1[0]*vec2[1] - vec1[1]*vec2[0]) == 0:
+    if abs(vec1[0]*vec2[1] - vec1[1]*vec2[0]) < eps:
         return pt
     return None 
 

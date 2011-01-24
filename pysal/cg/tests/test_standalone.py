@@ -98,6 +98,14 @@ class TestIsCollinear(unittest.TestCase):
         The points are collinear.
         """
         self.assertEqual(True, is_collinear(Point((0.1, 0.2)), Point((0.2, 0.3)), Point((0.3, 0.4))))
+    def test_is_collinear_random(self):
+        for i in range(10):
+            a,b,c = np.random.random(3)*10**(i)
+            self.assertEqual(True, is_collinear(Point((a,a)), Point((b,b)), Point((c,c))))
+    def test_is_collinear_random2(self):
+        for i in range(1000):
+            a,b,c = np.random.random(3)
+            self.assertEqual(True, is_collinear(Point((a,a)), Point((b,b)), Point((c,c))))
 
 class TestGetSegmentsIntersect(unittest.TestCase):
     def test_get_segments_intersect(self):
@@ -124,10 +132,14 @@ class TestGetSegmentsIntersect(unittest.TestCase):
         seg1 = LineSegment(Point((0.1, 0.1)), Point((0.6, 0.6)))
         seg2 = LineSegment(Point((0.3, 0.3)), Point((0.9, 0.9)))
         expected = LineSegment(Point((0.3, 0.3)), Point((0.6, 0.6)))
-        self.assertEqual(seg1, get_segments_intersect(seg1, seg2))
+        self.assertEqual(expected, get_segments_intersect(seg1, seg2))
     def test_get_segments_intersect_same(self):
         seg1 = LineSegment(Point((-5, 5)), Point((5, 5)))
         self.assertEqual(seg1, get_segments_intersect(seg1, seg1))
+    def test_get_segments_intersect_nested(self):
+        seg1 = LineSegment(Point((0.1, 0.1)), Point((0.9, 0.9)))
+        seg2 = LineSegment(Point((0.3, 0.3)), Point((0.6, 0.6)))
+        self.assertEqual(seg2, get_segments_intersect(seg1, seg2))
 
 class TestGetSegmentPointIntersect(unittest.TestCase):
     def test_get_segment_point_intersect(self):
@@ -150,6 +162,23 @@ class TestGetSegmentPointIntersect(unittest.TestCase):
         seg = LineSegment(Point((0, 0)), Point((0, 10)))
         pt = Point((5, 5))
         self.assertEqual(None, get_segment_point_intersect(seg, pt))
+    def test_get_segment_point_intersect_no_intersect_collinear(self):
+        seg = LineSegment(Point((0, 0)), Point((0, 10)))
+        pt = Point((0, 20))
+        self.assertEqual(None, get_segment_point_intersect(seg, pt))
+    def test_get_segment_point_intersect_floats(self):
+        seg = LineSegment(Point((0.3, 0.3)), Point((.9, .9)))
+        pt = Point((.5, .5))
+        self.assertEqual(pt, get_segment_point_intersect(seg, pt))
+    def test_get_segment_point_intersect_floats(self):
+        seg = LineSegment(Point((0.0, 0.0)), Point((2.7071067811865475, 2.7071067811865475)))
+        pt = Point((1.0, 1.0))
+        self.assertEqual(pt, get_segment_point_intersect(seg, pt))
+    def test_get_segment_point_intersect_floats_no_intersect(self):
+        seg = LineSegment(Point((0.3, 0.3)), Point((.9, .9)))
+        pt = Point((.1, .1))
+        self.assertEqual(None, get_segment_point_intersect(seg, pt))
+        
 
 class TestGetPolygonPointIntersect(unittest.TestCase):
     def test_get_polygon_point_intersect(self):

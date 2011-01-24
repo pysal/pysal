@@ -282,6 +282,8 @@ class LineSegment:
         >>> l2 == l1
         True
         """
+        if not isinstance(other,self.__class__):
+            return False
         if (other.p1 == self._p1 and other.p2 == self._p2):
             return True
         elif (other.p2 == self._p1 and other.p1 == self._p2):
