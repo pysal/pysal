@@ -470,6 +470,8 @@ def full2W(m, ids=None):
 
 
     '''
+    if m.shape[0] != m.shape[1]:
+        raise ValueError, 'Your array is not squared'
     neighbors = {}
     weights = {}
     for i, row in enumerate(m):
