@@ -27,9 +27,10 @@ class test_GalIO(unittest.TestCase):
         self.assertEqual(w.s1, 924.0 )
 
     def test_seek(self):
-        # gal_i_o = GalIO(*args, **kwargs)
-        # self.assertEqual(expected, gal_i_o.seek(pos))
-        assert False # TODO: implement your test here
+        self.test_read()
+        self.failUnlessRaises(StopIteration, self.obj.read)
+        self.obj.seek(0)
+        self.test_read()
 
     def test_write(self):
         w = self.obj.read()

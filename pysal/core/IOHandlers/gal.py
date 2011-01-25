@@ -19,6 +19,7 @@ class GalIO(FileIO.FileIO):
         self.file = open(self.dataPath, self.mode)
 
     def read(self, n=-1):
+        self._complain_ifclosed(self.closed)
         return self._read()
 
     def seek(self, pos):

@@ -112,6 +112,7 @@ class test_shx_file(unittest.TestCase):
         new_shx = open('test.shx','rb').read()
         expected_shx = open('../../../examples/shp_test/Point.shx','rb').read()
         assert new_shx == expected_shx
+        os.remove('test.shx')
 
     def test_close(self):
         shx = shx_file('../../../examples/shp_test/Point')
