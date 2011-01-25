@@ -11,7 +11,7 @@ from ergodic import fmpt, steady_state
 from scipy import stats
 import pysal
 
-__all__=["Markov","LISA_Markov","Spatial_Markov", "fmpt", "steady_state"]
+__all__=["Markov","LISA_Markov","Spatial_Markov" ]
 
 
 class Markov:
