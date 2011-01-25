@@ -4,10 +4,10 @@
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 
 from pysal.common import *
-import numpy as num
+import numpy as np
 __all__ = ['Theil', 'TheilD', 'TheilDSim']
 
-SMALL = num.finfo('float').tiny
+SMALL = np.finfo('float').tiny
 
 class Theil:
     """Classic Theil measure of inequality
@@ -56,7 +56,7 @@ class Theil:
         y = y + SMALL * (y==0) # can't have 0 values
         yt = y.sum(axis=0)
         s = y/(yt*1.0)
-        lns = num.log(n*s)
+        lns = np.log(n*s)
         slns = s*lns
         t=sum(slns)
         self.T = t
@@ -102,24 +102,24 @@ class TheilD:
             0.07547525,  0.0702496 ])
    """
     def __init__(self,y, partition):
-        groups=num.unique(partition)
+        groups=np.unique(partition)
         T=Theil(y).T
         ytot=y.sum(axis=0)
 
         #group totals
-        gtot=num.array([y[partition==gid].sum(axis=0) for gid in groups])
-        mm=num.dot
+        gtot=np.array([y[partition==gid].sum(axis=0) for gid in groups])
+        mm=np.dot
 
         if ytot.size==1: # y is 1-d
             sg=gtot/(ytot*1.)
             sg.shape=(sg.size,1)
         else:
-            sg=mm(gtot,num.diag(1./ytot))
-        ng=num.array([sum(partition==gid) for gid in groups])
+            sg=mm(gtot,np.diag(1./ytot))
+        ng=np.array([sum(partition==gid) for gid in groups])
         ng.shape=(ng.size,) # ensure ng is 1-d
         n=y.shape[0]
         # between group inequality
-        bg=num.multiply(sg,num.log(mm(num.diag(n*1./ng),sg))).sum(axis=0)
+        bg=np.multiply(sg,np.log(mm(np.diag(n*1./ng),sg))).sum(axis=0)
         self.T=T
         self.bg=bg
         self.wg=T-bg
@@ -192,15 +192,15 @@ class TheilDSim:
         bg_ct=bg_ct*1.0
         results=[observed]
         for perm in range(permutations):
-            yp=num.random.permutation(y)
+            yp=np.random.permutation(y)
             t=TheilD(yp,partition)
             bg_ct+=(1.0*t.bg>=observed.bg)
             results.append(t)
         self.results=results
         self.T=observed.T
         self.bg_pvalue=bg_ct/(permutations*1.0 + 1)
-        self.bg=num.array([r.bg for r in results])
-        self.wg=num.array([r.wg for r in results])
+        self.bg=np.array([r.bg for r in results])
+        self.wg=np.array([r.wg for r in results])
 
 if __name__ == '__main__':
     import doctest
