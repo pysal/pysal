@@ -713,6 +713,14 @@ def get_shared_segments(poly1,poly2,bool_ret=False):
 
     Examples
     --------
+    >>> x = [0, 0, 1, 1]
+    >>> y = [0, 1, 1, 0]
+    >>> poly1 = Polygon( map(Point,zip(x,y)) )
+    >>> x = [a+1 for a in x]
+    >>> poly2 = Polygon( map(Point,zip(x,y)) )
+    >>> get_shared_segments(poly1, poly2, bool_ret=True)
+    True
+
     """
     #get_rectangle_rectangle_intersection inlined for speed.
     r0 = poly1.bounding_box

@@ -427,7 +427,7 @@ class TestGetSharedSegments(unittest.TestCase):
         poly1 = Polygon( map(Point,zip(x,y)) )
         x = [a+1 for a in x]
         poly2 = Polygon( map(Point,zip(x,y)) )
-        self.assertEqual(True, get_shared_segments(poly1, poly2, bool_ret=True))
+        self.failUnless(True, get_shared_segments(poly1, poly2, bool_ret=True))
     def test_get_shared_segments_non_bool(self):
         x = [0, 0, 1, 1]
         y = [0, 1, 1, 0]
