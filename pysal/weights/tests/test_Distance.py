@@ -29,7 +29,7 @@ class _TestDistanceWeights(unittest.TestCase):
         self.assertEqual(wc3.weights[1],[1, 1, 1])
         self.assertEqual(wc3.neighbors[1], [ 3, 2, 4])
 
-    def test_kernel(self):
+    def test_Kernel(self):
         kw=pysal.Kernel(self.points)
         self.assertEqual(kw.weights[0], [1.0, 0.50000004999999503, 0.44098306152674649])
         kw15=pysal.Kernel(self.points,bandwidth=15.0)

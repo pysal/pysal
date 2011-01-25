@@ -2,7 +2,7 @@ from pysal.cg import Point,LineSegment,Line,Ray,Chain,Rectangle,Polygon
 import doctest
 import unittest
 
-class _TestPoint(unittest.TestCase):
+class test_Point(unittest.TestCase):
 
     def test___init__1(self):
         """
@@ -23,7 +23,7 @@ class _TestPoint(unittest.TestCase):
             p = Point(l)
             self.assertEquals(str(p), str((float(l[0]), float(l[1])))) # Recast to floats like point does       
 
-class _TestLineSegment(unittest.TestCase):
+class test_LineSegment(unittest.TestCase):
 
     def test_is_ccw1(self):
         """
@@ -184,7 +184,7 @@ class _TestLineSegment(unittest.TestCase):
         ls  = LineSegment(Point((0, 0)), Point((0, 0)))
         self.assertEquals(ls.line, None)
      
-class _TestLine(unittest.TestCase):
+class test_Line(unittest.TestCase):
 
     def test___init__1(self):
         """
@@ -216,7 +216,7 @@ class _TestLine(unittest.TestCase):
         self.assertEquals(l.y(-1e600), 1e600)
         self.assertEquals(l.y(1e600), -1e600)
 
-class _TestRay(unittest.TestCase):
+class test_Ray(unittest.TestCase):
 
     def test___init__1(self):
         """
@@ -227,7 +227,7 @@ class _TestRay(unittest.TestCase):
         r = Ray(Point((0, 0)), Point((1, 1)))
         r = Ray(Point((8, -3)), Point((-5, 9)))
 
-class _TestChain(unittest.TestCase):
+class test_Chain(unittest.TestCase):
 
     def test___init__1(self):
         """
@@ -290,7 +290,7 @@ class _TestChain(unittest.TestCase):
                     [Point((-5, -5)), Point((-5, 0)), Point((0, 0)), Point((0, 0))]]
         self.assertEquals(Chain(vertices).len, 6 + 10) 
 
-class _TestPolygon(unittest.TestCase):
+class test_Polygon(unittest.TestCase):
 
     def test___init__1(self):
         """
@@ -491,7 +491,7 @@ class _TestPolygon(unittest.TestCase):
         self.assertEquals(len(p.vertices), 8)
      
 
-class _TestRectangle(unittest.TestCase):
+class test_Rectangle(unittest.TestCase):
 
     def test___init__1(self):
         """
