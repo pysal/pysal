@@ -11,20 +11,30 @@ utilize both modes.
 Integration Testing
 ===================
 
-Each package shall have a directory `tests` in which unit tests scripts for
+Each package shall have a directory `tests` in which unit test scripts for
 each module in the package directory are required. 
-
 For example, in the directory `pysal/esda` the module `moran.py` requires a
 unittest script named `test_moran.py`. This path for this script needs to be
 `pysal/esda/tests/test_moran.py`.
 
 To ensure that any changes made to one package/module do not introduce breakage in the wider project, developers should run the
 package wide test script in `tests/tests.py <http://code.google.com/p/pysal/source/browse/trunk/pysal/tests/tests.py>`_ before making any commits.
-
 This script will run any existing unit tests as well as identify packages
 missing any tests.
-
 The trunk should most always be in a state where all tests are passed.
+
+A useful development
+companion is the package `pythoscope <http://pythoscope.org>`_. It scans
+package folders and produces test script stubs for your modules that fail until
+you write the tests -- a pesky but useful trait. Using pythoscope in the most
+basic way requires just two simple command line calls::
+ 
+ pythoscope --init
+
+ pythoscope <my_module>.py
+
+One caveat: pythoscope does not name your test classes in a PySAL-friendly way
+so you'll have to rename each test class after the test scripts are generated.
 
 Docstrings and Doctests
 =======================
@@ -34,7 +44,7 @@ All public classes and functions should include examples in their docstrings. Th
 #. Documentation for users
 #. Tests to ensure code behavior is aligned with the documentation
 
-Doctests will be executed when buidling PySAL documentation with Sphinx.
+Doctests will be executed when building PySAL documentation with Sphinx.
 
 
 Developers *should* run tests manually before committing any changes that
