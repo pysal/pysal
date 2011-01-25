@@ -731,7 +731,7 @@ def get_shared_segments(poly1,poly2,bool_ret=False):
     wUpper = min(r0.upper,r1.upper)
     
     segmentsA = set()
-    common = set()
+    common = list()
     partsA = poly1.parts
     for part in poly1.parts+[p for p in poly1.holes if p]:
         if part[0] != part[-1]: #not closed
@@ -761,7 +761,7 @@ def get_shared_segments(poly1,poly2,bool_ret=False):
                     else:
                         seg = (a,b)
                     if seg in segmentsA:
-                        common.add(seg)
+                        common.append(LineSegment(*seg))
                         if bool_ret:
                             return True
             a = b
