@@ -66,7 +66,7 @@ class GeoDaTxtReader(Tables.DataTable):
             raise None
 
     def close(self):
-        self.file.close()
+        self.fileObj.close()
         Tables.DataTable.close(self)
 
     @staticmethod
