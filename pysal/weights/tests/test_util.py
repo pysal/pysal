@@ -80,6 +80,19 @@ class _Testutil(unittest.TestCase):
         idso = ['first', 'second', 'third']
         self.assertEquals(idso, ids)
 
+    def test_w_from_matrix(self):
+        a = np.zeros((4, 4))
+        for i in range(len(a)):
+            for j in range(len(a[i])):
+                if i!=j:
+                    a[i, j] = np.random.random(1)
+        w = pysal.weights.util.w_from_matrix(a)
+        w.full()[0] == a
+        np.testing.assert_array_almost_equal(w.full()[0], a)
+        ids = ['myID0', 'myID1', 'myID2', 'myID3']
+        w = pysal.weights.util.w_from_matrix(a, ids=ids)
+        np.testing.assert_array_almost_equal(w.full()[0], a)
+
     def test_remap_ids(self):
         w = pysal.lat2W(3,2)
         wid_order = [0, 1, 2, 3, 4, 5]
