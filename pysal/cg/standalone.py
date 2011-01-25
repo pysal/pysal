@@ -706,7 +706,7 @@ def get_shared_segments(poly1,poly2,bool_ret=False):
     Parameters
     ----------
     poly1   : a Polygon
-    poly1   : a Polygon
+    poly2   : a Polygon
 
     Attributes
     ----------

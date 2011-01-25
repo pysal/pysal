@@ -422,8 +422,20 @@ class TestPointTouchesRectangle(unittest.TestCase):
 
 class TestGetSharedSegments(unittest.TestCase):
     def test_get_shared_segments(self):
-        # self.assertEqual(expected, get_shared_segments(poly1, poly2, bool_ret))
-        assert False # TODO: implement your test here
+        x = [0, 0, 1, 1]
+        y = [0, 1, 1, 0]
+        poly1 = Polygon( map(Point,zip(x,y)) )
+        x = [a+1 for a in x]
+        poly2 = Polygon( map(Point,zip(x,y)) )
+        self.assertEqual(True, get_shared_segments(poly1, poly2, bool_ret=True))
+    def test_get_shared_segments_non_bool(self):
+        x = [0, 0, 1, 1]
+        y = [0, 1, 1, 0]
+        poly1 = Polygon( map(Point,zip(x,y)) )
+        x = [a+1 for a in x]
+        poly2 = Polygon( map(Point,zip(x,y)) )
+        expected = [tuple(poly1.vertices[2:])]
+        self.assertEqual(expected, list(get_shared_segments(poly1, poly2)))
 
 class TestDistanceMatrix(unittest.TestCase):
     def test_distance_matrix(self):
