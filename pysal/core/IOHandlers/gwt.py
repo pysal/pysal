@@ -39,6 +39,34 @@ class GwtIO(FileIO.FileIO):
             self.file.seek(0)
             self.pos = 0
     def _read(self):
+        """Reads .gwt file
+        Returns a pysal.weights.weights.W object
+
+        Examples
+        --------
+
+        Type 'dir(f)' at the interpreter to see what methods are supported.
+        Open .gwt file and read it into a pysal weights object
+
+        >>> f = pysal.open('../../examples/juvenile.gwt','r').read()
+
+        Get the number of observations from the header
+
+        >>> f.n
+        168
+
+        Get the mean number of neighbors
+
+        >>> f.mean_neighbors
+        16.678571428571427
+
+        Get neighbor distances for a single observation
+
+        >>> f[1]
+        {2: 14.1421356}
+
+
+        """
         if self.pos > 0:
             raise StopIteration
 
@@ -82,8 +110,59 @@ class GwtIO(FileIO.FileIO):
         return W(neighbors,weights,id_order)
 
     def write(self, obj):
-        """.write(weightsObject)
-        write a weights object to the opened file
+        """ 
+
+        Parameters
+        ----------
+        .write(weightsObject)
+        accepts a weights object
+
+        Returns
+        ------
+
+        a GWT file
+        write a weights object to the opened GWT file.
+
+        Examples
+        --------
+
+        >>> import tempfile, pysal, os
+        >>> testfile = pysal.open('../../examples/juvenile.gwt','r')
+        >>> w = testfile.read()
+
+        Create a temporary file for this example
+
+        >>> f = tempfile.NamedTemporaryFile(suffix='.gwt')
+
+        Reassign to new var
+
+        >>> fname = f.name
+
+        Close the temporary named file
+
+        >>> f.close()
+
+        Open the new file in write mode
+
+        >>> o = pysal.open(fname,'w')
+
+        Write the Weights object into the open file
+
+        >>> o.write(w)
+        >>> o.close()
+
+        Read in the newly created gwt file
+
+        >>> wnew =  pysal.open(fname,'r').read()
+
+        Compare values from old to new
+
+        >>> wnew.pct_nonzero == w.pct_nonzero
+        True
+
+        Clean up temporary file created for this example
+
+        >>> os.remove(fname)
         """
         self._complain_ifclosed(self.closed)
         if issubclass(type(obj),W):
@@ -125,4 +204,6 @@ class GwtIO(FileIO.FileIO):
         info['new_weights']=new_weights
         return info
 
-
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod(verbose=True)
