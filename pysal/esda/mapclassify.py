@@ -324,6 +324,11 @@ class Map_Classifier:
             tss+=sum(css)
         return tss
 
+    def _set_bins(self):
+        pass
+
+
+
     def get_adcm(self):
         """
         Absolute deviation around class means (ADCM).
