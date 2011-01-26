@@ -578,18 +578,19 @@ class Box_Plot(Map_Classifier):
     >>> cal=load_example()
     >>> bp=Box_Plot(cal)
     >>> bp.bins
-    array([ -7.24325000e+01,   2.56750000e+00,   9.36500000e+00,
-             3.95300000e+01,   1.14530000e+02,   4.11145000e+03])
+    array([ -5.28762500e+01,   2.56750000e+00,   9.36500000e+00,
+             3.95300000e+01,   9.49737500e+01,   4.11145000e+03])
     >>> bp.counts
-    array([ 0, 15, 14, 14,  7,  8])
+    array([ 0, 15, 14, 14,  6,  9])
     >>> bp.high_outlier_ids
-    array([ 0,  6, 18, 29, 33, 37, 40, 42])
+    array([ 0,  6, 18, 29, 33, 36, 37, 40, 42])
     >>> cal[bp.high_outlier_ids]
-    array([  329.92,   181.27,   370.5 ,   722.85,   192.05,  4111.45,
-             317.11,   264.93])
+    array([  329.92,   181.27,   370.5 ,   722.85,   192.05,   110.74,
+            4111.45,   317.11,   264.93])
     >>> bx=Box_Plot(np.arange(100))
     >>> bx.bins
-    array([ -50.25,   24.75,   49.5 ,   74.25,  149.25])
+    array([ -49.5 ,   24.75,   49.5 ,   74.25,  148.5 ])
+
     """
 
     def __init__(self, y, hinge=1.5):
@@ -609,7 +610,7 @@ class Box_Plot(Map_Classifier):
         y=self.y
         pct=[25,50,75,100]
         bins=[stats.scoreatpercentile(y,p) for p in pct]
-        iqr=pct[-2]-pct[0]
+        iqr=bins[-2]-bins[0]
         self.iqr=iqr
         pivot=self.hinge*iqr
         left_fence=bins[0]-pivot
@@ -831,6 +832,8 @@ class Natural_Breaks(Map_Classifier):
 
     Examples
     --------
+    >>> import numpy as np
+    >>> np.random.seed(10)
     >>> cal=load_example()
     >>> nb=Natural_Breaks(cal,k=5)
     >>> nb.k
