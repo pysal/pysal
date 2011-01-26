@@ -6,47 +6,116 @@ import numpy as np
 class test_Markov(unittest.TestCase):
     def test___init__(self):
         # markov = Markov(class_ids, classes)
-        assert False # TODO: implement your test here
+         import pysal
+         f=pysal.open("../../examples/usjoin.csv")
+         pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
+         q5=np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
+         m=pysal.Markov(q5)
+         expected = np.array([[ 729.,   71.,    1.,    0.,    0.],
+               [  72.,  567.,   80.,    3.,    0.],
+               [   0.,   81.,  631.,   86.,    2.],
+               [   0.,    3.,   86.,  573.,   56.],
+               [   0.,    0.,    1.,   57.,  741.]])
+         np.testing.assert_array_equal(m.transitions, expected)
+         expected = np.matrix([[ 0.91011236,  0.0886392 ,
+             0.00124844,  0.        ,  0.        ],
+            [ 0.09972299,  0.78531856,  0.11080332,  0.00415512,  0.        ],
+            [ 0.        ,  0.10125   ,  0.78875   ,  0.1075    ,  0.0025    ],
+            [ 0.        ,  0.00417827,  0.11977716,  0.79805014,  0.07799443],
+            [ 0.        ,  0.        ,  0.00125156,  0.07133917,  0.92740926]])
+         np.testing.assert_array_almost_equal(m.p.getA(), expected.getA())
+         expected = np.matrix([[ 0.20774716],
+            [ 0.18725774],
+            [ 0.20740537],
+            [ 0.18821787],
+            [ 0.20937187]]).getA()
+         np.testing.assert_array_almost_equal(m.steady_state.getA(), expected)
+
 
 class test_Spatial_Markov(unittest.TestCase):
     def test___init__(self):
-        # spatial__markov = Spatial_Markov(y, w, k, permutations, fixed)
-        assert False # TODO: implement your test here
+        import pysal
+        f=pysal.open("../../examples/usjoin.csv")
+        pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
+        pci=pci.transpose()
+        rpci=pci/(pci.mean(axis=0))
+        w=pysal.open("../../examples/states48.gal").read()
+        w.transform='r'
+        sm = pysal.Spatial_Markov(rpci,w,fixed=True,k=5)
+        S =  np.array([[ 0.43509425,  0.2635327 ,  0.20363044,  0.06841983,  0.02932278],
+            [ 0.13391287,  0.33993305,  0.25153036,  0.23343016,  0.04119356],
+            [ 0.12124869,  0.21137444,  0.2635101 ,  0.29013417,  0.1137326 ],
+            [ 0.0776413 ,  0.19748806,  0.25352636,  0.22480415,  0.24654013],
+            [ 0.01776781,  0.19964349,  0.19009833,  0.25524697,  0.3372434 ]])
+        np.testing.assert_array_almost_equal(S, sm.S)
+
+
 
 class test_chi2(unittest.TestCase):
     def test_chi2(self):
-        # self.assertEqual(expected, chi2(T1, T2))
-        assert False # TODO: implement your test here
+        import pysal
+        f=pysal.open("../../examples/usjoin.csv")
+        pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
+        pci=pci.transpose()
+        rpci=pci/(pci.mean(axis=0))
+        w=pysal.open("../../examples/states48.gal").read()
+        w.transform='r'
+        sm = pysal.Spatial_Markov(rpci,w,fixed=True,k=5)
+        chi = np.matrix([[  4.06139105e+01,   6.32961385e-04,   1.60000000e+01],
+            [  5.55485793e+01,   2.88879565e-06,   1.60000000e+01],
+            [  1.77772638e+01,   3.37100315e-01,   1.60000000e+01],
+            [  4.00925436e+01,   7.54729084e-04,   1.60000000e+01],
+            [  4.68588786e+01,   7.16364084e-05,   1.60000000e+01]]).getA()
+        obs = np.matrix(sm.chi2).getA()
+        np.testing.assert_array_almost_equal(obs, chi)
+        obs = np.matrix(
+            [[  4.61209613e+02,   0.00000000e+00,   4.00000000e+00],
+            [  1.48140694e+02,   0.00000000e+00,   4.00000000e+00],
+            [  6.33129261e+01,   5.83089133e-13,   4.00000000e+00],
+            [  7.22778509e+01,   7.54951657e-15,   4.00000000e+00],
+            [  2.32659201e+02,   0.00000000e+00,   4.00000000e+00]])
+        np.testing.assert_array_almost_equal(obs.getA(),
+                np.matrix(sm.shtest).getA())
+
 
 class test_LISA_Markov(unittest.TestCase):
     def test___init__(self):
-        # l_is_a__markov = LISA_Markov(y, w)
-        assert False # TODO: implement your test here
-
-class test_prais(unittest.TestCase):
-    def test_prais(self):
-        # self.assertEqual(expected, prais(pmat))
-        assert False # TODO: implement your test here
-
-class test_shorrock(unittest.TestCase):
-    def test_shorrock(self):
-        # self.assertEqual(expected, shorrock(pmat))
-        assert False # TODO: implement your test here
-
-class test_directional(unittest.TestCase):
-    def test_directional(self):
-        # self.assertEqual(expected, directional(pmat))
-        assert False # TODO: implement your test here
-
-class test_homogeneity(unittest.TestCase):
-    def test_homogeneity(self):
-        # self.assertEqual(expected, homogeneity(classids, colIds))
-        assert False # TODO: implement your test here
-
-class test_path_probabilities(unittest.TestCase):
-    def test_path_probabilities(self):
-        # self.assertEqual(expected, path_probabilities(class_ids, classes))
-        assert False # TODO: implement your test here
+        import numpy as np
+        f=pysal.open("../../examples/usjoin.csv")
+        pci=np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
+        w=pysal.open("../../examples/states48.gal").read()
+        lm=pysal.LISA_Markov(pci,w)
+        obs = np.array([1, 2, 3, 4])
+        np.testing.assert_array_almost_equal(obs, lm.classes)
+        """
+        >>> lm.steady_state
+        matrix([[ 0.28561505],
+                [ 0.14190226],
+                [ 0.40493672],
+                [ 0.16754598]])
+        >>> lm.transitions
+        array([[  1.08700000e+03,   4.40000000e+01,   4.00000000e+00,
+                  3.40000000e+01],
+               [  4.10000000e+01,   4.70000000e+02,   3.60000000e+01,
+                  1.00000000e+00],
+               [  5.00000000e+00,   3.40000000e+01,   1.42200000e+03,
+                  3.90000000e+01],
+               [  3.00000000e+01,   1.00000000e+00,   4.00000000e+01,
+                  5.52000000e+02]])
+        >>> lm.p
+        matrix([[ 0.92985458,  0.03763901,  0.00342173,  0.02908469],
+                [ 0.07481752,  0.85766423,  0.06569343,  0.00182482],
+                [ 0.00333333,  0.02266667,  0.948     ,  0.026     ],
+                [ 0.04815409,  0.00160514,  0.06420546,  0.88603531]])
+        >>> lm.move_types
+        array([[ 11.,  11.,  11., ...,  11.,  11.,  11.],
+               [  6.,   6.,   6., ...,   6.,   7.,  11.],
+               [ 11.,  11.,  11., ...,  11.,  11.,  11.],
+               ..., 
+               [  6.,   6.,   6., ...,   6.,   6.,   6.],
+               [  1.,   1.,   1., ...,   6.,   6.,   6.],
+               [ 16.,  16.,  16., ...,  16.,  16.,  16.]])
+        """ 
 
 if __name__ == '__main__':
     unittest.main()
