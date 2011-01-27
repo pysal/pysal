@@ -89,11 +89,11 @@ class Maxp:
     >>> z=np.random.random_sample((w.n,2))
     >>> p=np.ones((w.n,1),float)
     >>> floor=3
-    >>> solution=pysal.regions.Maxp(w,z,floor,floor_variable=p,initial=100)
+    >>> solution=pysal.region.Maxp(w,z,floor,floor_variable=p,initial=100)
     >>> solution.p
-    30
+    29
     >>> solution.regions[0]
-    [49, 39, 29]
+    [4, 14, 5, 24, 3]
     >>> 
 
     """
@@ -543,7 +543,7 @@ class Maxp_LISA:
 
     >>> w=pysal.lat2W(10,10)
     >>> z=np.random.random_sample((w.n,2))
-    >>> p=np.ones((w.n,1),float)
+    >>> p=np.ones(w.n)
     >>> mpl=Maxp_LISA(w,z,p,floor=3,floor_variable=p)
 
     Note random components result is slightly different values across
