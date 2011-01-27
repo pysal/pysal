@@ -1389,6 +1389,16 @@ class Max_P_Classifier(Map_Classifier):
     counts  : array (k,1)
               the number of observations falling in each class
 
+    Examples
+    --------
+    >>> import pysal
+    >>> cal = pysal.esda.mapclassify.load_example()
+    >>> mp = pysal.Max_P_Classifier(cal)
+    >>> mp.bins
+    [8.6999999999999993, 16.699999999999999, 20.469999999999999, 66.260000000000005, 4111.4499999999998]
+    >>> mp.counts    
+    array([29,  8,  1, 10, 10])
+
     """
     def __init__(self,y,k=K,initial=1000):
         self.k=k
