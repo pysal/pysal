@@ -28,10 +28,14 @@ class test_GwtIO(unittest.TestCase):
 
     def test_write(self):
         w = self.obj.read()
-        f = tempfile.NamedTemporaryFile(suffix='.gwt')
+        f = tempfile.NamedTemporaryFile(suffix='.gwt',dir="../../../examples")
         fname = f.name
         f.close()
         o = pysal.open(fname,'w')
+        #copy the shapefile and ID variable names from the old gwt.
+        # this is only available after the read() method has been called.
+        o.shpName = self.obj.shpName
+        o.varName = self.obj.varName
         o.write(w)
         o.close()
         wnew =  pysal.open(fname,'r').read()
