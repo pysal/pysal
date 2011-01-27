@@ -23,3 +23,5 @@ class MS_Tester(unittest.TestCase):
             0.0911574,  0.0911574]), array([1, 1, 1, 1])))
 
         
+if __name__=="__main__":
+    unittest.main()

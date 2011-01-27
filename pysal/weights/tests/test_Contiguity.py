@@ -20,4 +20,5 @@ class TestContiguity(unittest.TestCase):
             1.0, '35001000111': 1.0, '35001000112': 1.0, '35001000108': 1.0})
 
 
-
+if __name__ == "__main__":
+    unittest.main()
