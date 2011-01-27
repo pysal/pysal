@@ -16,6 +16,22 @@ class _Testutil(unittest.TestCase):
         self.assertEquals(w9.pct_nonzero, 0.29629629629629628)
         self.assertEquals(w9[0], {1: 1.0, 3: 1.0})
         self.assertEquals(w9[3], {0: 1.0, 4: 1.0, 6: 1.0})
+    def test_lat2SW(self):
+        w9=pysal.weights.lat2SW(3,3)
+        rows,cols = w9.shape
+        n = rows*cols
+        pct_nonzero = w9.nnz / float(n)
+        self.assertEquals(pct_nonzero, 0.29629629629629628)
+        data = w9.todense().tolist()
+        self.assertEquals(data[0], [0, 1, 0, 1, 0, 0, 0, 0, 0])
+        self.assertEquals(data[1], [1, 0, 1, 0, 1, 0, 0, 0, 0])
+        self.assertEquals(data[2], [0, 1, 0, 0, 0, 1, 0, 0, 0])
+        self.assertEquals(data[3], [1, 0, 0, 0, 1, 0, 1, 0, 0])
+        self.assertEquals(data[4], [0, 1, 0, 1, 0, 1, 0, 1, 0])
+        self.assertEquals(data[5], [0, 0, 1, 0, 1, 0, 0, 0, 1])
+        self.assertEquals(data[6], [0, 0, 0, 1, 0, 0, 0, 1, 0])
+        self.assertEquals(data[7], [0, 0, 0, 0, 1, 0, 1, 0, 1])
+        self.assertEquals(data[8], [0, 0, 0, 0, 0, 1, 0, 1, 0])
 
     def test_regime_weights(self):
         regimes=np.ones(25)

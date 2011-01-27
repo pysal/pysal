@@ -593,11 +593,42 @@ def min_threshold_distance(data):
     nnd=nn[0].max(axis=0)[1]
     return nnd
 
+def lat2SW(nrows=3,ncols=5,criterion="rook"):
+    """
+    Create a sparse W matrix for a regular lattice.
 
+    Parameters
+    ----------
 
+    nrows   : int
+              number of rows
+    ncols   : int
+              number of columns
+    rook    : "rook", "queen", or "bishop"
+              type of contiguity. Default is rook.
 
-def lat2SW(nrows=3,ncols=5,criterion="rook",id_type='int'):
-    
+    Returns
+    -------
+
+    w : scipy.sparse.dia_matrix
+        instance of a scipy sparse matrix
+
+    Notes
+    -----
+
+    Observations are row ordered: first k observations are in row 0, next k in row 1, and so on.
+    This method directly creates the W matrix using the strucuture of the contiguity type.
+
+    Examples
+    --------
+
+    >>> from pysal import weights
+    >>> w9=weights.lat2SW(3,3)
+    >>> w9[0,1]
+    1
+    >>> w9[3,6]
+    1
+    """
     n = nrows*ncols
     diagonals = []
     offsets = []
