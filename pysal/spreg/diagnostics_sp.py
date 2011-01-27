@@ -65,21 +65,62 @@ class LMtests:
     >>> import numpy as np
     >>> import pysal
     >>> from ols import OLS
+
+    Open the csv file to access the data for analysis
+
     >>> csv = pysal.open('../examples/columbus.dbf','r')
+
+    Pull out from the csv the files we need ('HOVAL' as dependent as well as
+    'INC' and 'CRIME' as independent) and directly transform them into nx1 and
+    nx2 arrays, respectively
+
     >>> y = np.array([csv.by_col('HOVAL')]).T
     >>> x = np.array([csv.by_col('INC'), csv.by_col('CRIME')]).T
+
+    Create the weights object from existing .gal file
+
     >>> w = pysal.open('../examples/columbus.gal', 'r').read()
+
+    Row-standardize the weight object (not required although desirable in some
+    cases)
+
     >>> w.transform='r'
+
+    Run an OLS regression
+
     >>> ols = OLS(y, x)
+
+    Run all the LM tests in the residuals. These diagnostics test for the
+    presence of remaining spatial autocorrelation in the residuals of an OLS
+    model and give indication about the type of spatial model. There are five
+    types: presence of a spatial lag model (simple and robust version),
+    presence of a spatial error model (simple and robust version) and joint presence
+    of both a spatial lag as well as a spatial error model. 
+
     >>> lms = LMtests(ols, w)
+
+    LM error test (rounded to 6 decimals)
+
     >>> np.around(lms.lme, decimals=6)
     array([ 3.097094,  0.078432])
+
+    LM lag test (rounded to 6 decimals)
+
     >>> np.around(lms.lml, decimals=6)
     array([ 0.981552,  0.321816])
+
+    Robust LM error test (rounded to 6 decimals)
+
     >>> np.around(lms.rlme, decimals=6)
     array([ 3.209187,  0.073226])
+
+    Robust LM lag test (rounded to 6 decimals)
+
     >>> np.around(lms.rlml, decimals=6)
     array([ 1.093645,  0.295665])
+
+    LM SARMA test (rounded to 6 decimals)
+
     >>> np.around(lms.sarma, decimals=6)
     array([ 4.190739,  0.123025])
     """
@@ -130,21 +171,63 @@ class MoranRes:
     >>> import numpy as np
     >>> import pysal
     >>> from ols import OLS
+
+    Open the csv file to access the data for analysis
+
     >>> csv = pysal.open('../examples/columbus.dbf','r')
+
+    Pull out from the csv the files we need ('HOVAL' as dependent as well as
+    'INC' and 'CRIME' as independent) and directly transform them into nx1 and
+    nx2 arrays, respectively
+
     >>> y = np.array([csv.by_col('HOVAL')]).T
     >>> x = np.array([csv.by_col('INC'), csv.by_col('CRIME')]).T
+
+    Create the weights object from existing .gal file
+
     >>> w = pysal.open('../examples/columbus.gal', 'r').read()
+
+    Row-standardize the weight object (not required although desirable in some
+    cases)
+
     >>> w.transform='r'
+
+    Run an OLS regression
+
     >>> ols = OLS(y, x)
+
+    Run Moran's I test for residual spatial autocorrelation in an OLS model.
+    This computes the traditional statistic applying a correction in the
+    expectation and variance to account for the fact it comes from residuals
+    instead of an independent variable
+
     >>> m = MoranRes(ols, w, z=True)
+
+    Value of the Moran's I statistic rounded to 6 decimals
+
     >>> np.around(m.I, decimals=6)
     0.17130999999999999
+
+    Value of the Moran's I expectation rounded to 6 decimals
+
     >>> np.around(m.eI, decimals=6)
     -0.034522999999999998
+
+    Value of the Moran's I variance rounded to 6 decimals
+
     >>> np.around(m.vI, decimals=6)
     0.0081300000000000001
+
+    Value of the Moran's I standardized value rounded to 6 decimals. This is
+    distributed as a standard Normal(0, 1)
+
     >>> np.around(m.zI, decimals=6)
     2.2827389999999999
+
+    P-value of the standardized Moran's I value (z) rounded to 6 decimals
+
+    >>> np.around(m.p_norm, decimals=6)
+    0.022446000000000001
     """
     def __init__(self, ols, w, z=False):
         cache = spDcache(ols, w)
@@ -156,7 +239,7 @@ class MoranRes:
 
 class spDcache:
     """
-    Class to compute reusable pieces in the spatial diagnostics module
+    Helper class to compute reusable pieces in the spatial diagnostics module
     ...
 
     Parameters
