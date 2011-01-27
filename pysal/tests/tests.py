@@ -21,7 +21,7 @@ skip = [".svn", "tests"]
 
 
 # test for existence of test_*.py in mod/tests
-not_testing = ['common.py', 'version.py', '__init__.py' ]
+not_testing = ['common.py', 'version.py', '__init__.py', 'template.py' ]
 runners = []
 missing = []
 missing_all = []
