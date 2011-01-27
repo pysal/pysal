@@ -20,7 +20,7 @@ MAX_ATTEMPTS=100
 
 class Maxp:
     """Try to find the maximum number of regions for a set of areas such that
-    each region combines continguous areas that satisfy a given threshold
+    each region combines contiguous areas that satisfy a given threshold
     constraint.
     
     
@@ -39,11 +39,10 @@ class Maxp:
                       obtained in each region
     floor_variable  : array
                       n*1 vector of observations on variable for the floor
-    initial         : int number of initial solutions to generate
-
+    initial         : int 
+                      number of initial solutions to generate
     verbose         : binary
                       if true debugging information is printed
-
     seeds           : list
                       ids of observations to form initial seeds. If
                       len(ids) is less than the number of observations, the
@@ -59,6 +58,8 @@ class Maxp:
     regions         : list
                       list of lists of regions (each list has the ids of areas
                       in that region)
+    p               : int
+                      number of regions
     swap_iterations : int
                       number of swap iterations
     total_moves     : int
@@ -67,16 +68,28 @@ class Maxp:
     Examples
     --------
 
+    Setup imports and set seeds for random number generators to insure the
+    results are identical for each run.
+
     >>> import random
     >>> import numpy as np
+    >>> import pysal
     >>> random.seed(100)
     >>> np.random.seed(100)
+    
+    Setup a spatial weights matrix describing the connectivity of a square
+    community with 100 areas.  Generate two random data attributes for each area
+    in the community (a 100x2 array) called z. p is the data vector used to
+    compute the floor for a region, and floor is the floor value; in this case
+    p is simply a vector of ones and the floor is set to three. This means
+    that each region will contain at least three areas.  In other cases the
+    floor may be computed based on a minimum population count for example.
+
     >>> w=pysal.lat2W(10,10)
     >>> z=np.random.random_sample((w.n,2))
-    >>> p=np.random.random(w.n)*100
     >>> p=np.ones((w.n,1),float)
     >>> floor=3
-    >>> solution=Maxp(w,z,floor,floor_variable=p,initial=100)
+    >>> solution=pysal.regions.Maxp(w,z,floor,floor_variable=p,initial=100)
     >>> solution.p
     30
     >>> solution.regions[0]
@@ -341,8 +354,11 @@ class Maxp:
         Examples
         --------
         
+        Setup is the same as shown above.
+
         >>> import random
         >>> import numpy as np
+        >>> import pysal
         >>> random.seed(100)
         >>> np.random.seed(100)
         >>> w=pysal.weights.lat2W(5,5)
@@ -350,7 +366,11 @@ class Maxp:
         >>> p=np.random.random(w.n)*100
         >>> p=np.ones((w.n,1),float)
         >>> floor=3
-        >>> solution=Maxp(w,z,floor,floor_variable=p,initial=100)
+        >>> solution=pysal.region.Maxp(w,z,floor,floor_variable=p,initial=100)
+
+        Set nperm to 9 meaning that 9 random regions are computed and used for
+        the computation of a pseudo-p-value for the actual Max-p solution.
+
         >>> solution.inference(nperm=9)
         >>> solution.pvalue
         0.29999999999999999
@@ -410,8 +430,11 @@ class Maxp:
         Examples
         --------
         
+        Setup is the same as shown above.
+
         >>> import random
         >>> import numpy as np
+        >>> import pysal
         >>> random.seed(100)
         >>> np.random.seed(100)
         >>> w=pysal.weights.lat2W(5,5)
@@ -419,7 +442,11 @@ class Maxp:
         >>> p=np.random.random(w.n)*100
         >>> p=np.ones((w.n,1),float)
         >>> floor=3
-        >>> solution=Maxp(w,z,floor,floor_variable=p,initial=100)
+        >>> solution=pysal.region.Maxp(w,z,floor,floor_variable=p,initial=100)
+
+        Set nperm to 9 meaning that 9 random regions are computed and used for
+        the computation of a pseudo-p-value for the actual Max-p solution.
+
         >>> solution.cinference(nperm=9, maxiter=100)
         >>> solution.cpvalue
         0.10000000000000001
@@ -497,15 +524,27 @@ class Maxp_LISA:
     Examples
     --------
 
+    Setup imports and set seeds for random number generators to insure the
+    results are identical for each run.
+
     >>> import random
     >>> import numpy as np
+    >>> import pysal
     >>> random.seed(100)
     >>> np.random.seed(100)
+
+    Setup a spatial weights matrix describing the connectivity of a square
+    community with 100 areas.  Generate two random data attributes for each area
+    in the community (a 100x2 array) called z. p is the data vector used to
+    compute the floor for a region, and floor is the floor value; in this case
+    p is simply a vector of ones and the floor is set to three. This means
+    that each region will contain at least three areas.  In other cases the
+    floor may be computed based on a minimum population count for example.
+
     >>> w=pysal.lat2W(10,10)
     >>> z=np.random.random_sample((w.n,2))
-    >>> y=np.arange(w.n)
     >>> p=np.ones((w.n,1),float)
-    >>> mpl=Maxp_LISA(w,z,y,floor=3,floor_variable=p)
+    >>> mpl=Maxp_LISA(w,z,p,floor=3,floor_variable=p)
 
     Note random components result is slightly different values across
     architectures so the results have been removed from doctests and will be

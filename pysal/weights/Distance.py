@@ -14,13 +14,15 @@ __all__ = ["knnW", "Kernel", "DistanceBand"]
 
 def knnW(point_array,k=2,p=2,ids=None):
     """
-    Creates contiguity matrix based on k nearest neighbors
+    Creates nearest neighbor weights matrix based on k nearest 
+    neighbors.
     
     Parameters
     ----------
 
-    point_array     : multitype
-                 np.array  n observations on m attributes
+    point_array : multitype
+                 n observations on m attributes (only numpy arrays
+                 supported at this time)
     k          : int
                  number of nearest neighbors
     p          : float

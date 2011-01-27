@@ -7,7 +7,6 @@ __author__ = "Sergio J. Rey <srey@asu.edu>, Charles Schmidt <Charles.R.Schmidt@a
 import pysal
 import copy
 
-# to comply with PEP 8, place ..all.. after imports
 __all__ = ['w_union', 'w_intersection', 'w_difference', 'w_symmetric_difference', 'w_subset']
 
 
@@ -41,7 +40,7 @@ def w_union(w1, w2):
     >>> import pysal
     >>> w1 = pysal.lat2W(4,4)
     >>> w2 = pysal.lat2W(6,4)
-    >>> w = w_union(w1, w2)
+    >>> w = pysal.weights.w_union(w1, w2)
     >>> w1[0] == w[0]
     True
     >>> w1.neighbors[15]
@@ -98,7 +97,7 @@ def w_intersection(w1, w2, w_shape='w1'):
     >>> import pysal
     >>> w1 = pysal.lat2W(4,4)
     >>> w2 = pysal.lat2W(6,4)
-    >>> w = w_intersection(w1, w2)
+    >>> w = pysal.weights.w_intersection(w1, w2)
     >>> w1[0] == w[0]
     True
     >>> w1.neighbors[15]
@@ -172,7 +171,7 @@ def w_difference(w1, w2, w_shape='w1', constrained=True):
     >>> import pysal
     >>> w1 = pysal.lat2W(4,4,rook=False)
     >>> w2 = pysal.lat2W(4,4,rook=True)
-    >>> w = w_difference(w1, w2, constrained=False)
+    >>> w = pysal.weights.w_difference(w1, w2, constrained=False)
     >>> w1[0] == w[0]
     False
     >>> w1.neighbors[15]
@@ -258,7 +257,7 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
     >>> import pysal
     >>> w1 = pysal.lat2W(4,4,rook=False)
     >>> w2 = pysal.lat2W(6,4,rook=True)
-    >>> w = w_symmetric_difference(w1, w2, constrained=False)
+    >>> w = pysal.weights.w_symmetric_difference(w1, w2, constrained=False)
     >>> w1[0] == w[0]
     False
     >>> w1.neighbors[15]
@@ -327,7 +326,7 @@ def w_subset(w1, ids):
     >>> import pysal
     >>> w1 = pysal.lat2W(6,4)
     >>> ids = range(16)
-    >>> w = w_subset(w1, ids)
+    >>> w = pysal.weights.w_subset(w1, ids)
     >>> w1[0] == w[0]
     True
     >>> w1.neighbors[15]

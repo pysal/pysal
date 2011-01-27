@@ -6,10 +6,13 @@ composition.
 """
 
 __author__ = "David Folch dfolch@asu.edu, Serge Rey srey@asu.edu"
-__all__=["Random_Regions","Random_Region"]
     
 import pysal
 from pysal.common import *
+
+__all__=["Random_Regions","Random_Region"]
+
+
 
 class Random_Regions:
     """Generate a list of Random_Region instances.
@@ -66,62 +69,79 @@ class Random_Regions:
     Examples
     --------
 
+    Setup the data
+
     >>> import random
     >>> import numpy as np
+    >>> import pysal
     >>> nregs = 13
     >>> cards = range(2,14) + [10]
     >>> w = pysal.lat2W(10,10,rook=False)
     >>> ids = w.id_order
-    >>>
-    >>> # unconstrained
+
+    Unconstrained
+    
     >>> random.seed(10)
     >>> np.random.seed(10)
-    >>> t0 = Random_Regions(ids, permutations=2)
+    >>> t0 = pysal.region.Random_Regions(ids, permutations=2)
     >>> t0.solutions[0].regions[0]
     [19, 14, 43, 37, 66, 3, 79, 41, 38, 68, 2, 1, 60]
-    >>> # cardinality and contiguity constrained (num_regions implied)
+    
+    Cardinality and contiguity constrained (num_regions implied)
+
     >>> random.seed(60)
     >>> np.random.seed(60)
-    >>> t1 = Random_Regions(ids, num_regions=nregs, cardinality=cards, contiguity=w, permutations=2)
+    >>> t1 = pysal.region.Random_Regions(ids, num_regions=nregs, cardinality=cards, contiguity=w, permutations=2)
     >>> t1.solutions[0].regions[0]
     [88, 97, 98, 89, 99, 86, 78, 59, 49, 69, 68, 79, 77]
-    >>> # cardinality constrained (num_regions implied)
+    
+    Cardinality constrained (num_regions implied)
+    
     >>> random.seed(100)
     >>> np.random.seed(100)
-    >>> t2 = Random_Regions(ids, num_regions=nregs, cardinality=cards, permutations=2)
+    >>> t2 = pysal.region.Random_Regions(ids, num_regions=nregs, cardinality=cards, permutations=2)
     >>> t2.solutions[0].regions[0]
     [37, 62]
-    >>> # number of regions and contiguity constrained
+    
+    Number of regions and contiguity constrained
+
     >>> random.seed(100)
     >>> np.random.seed(100)
-    >>> t3 = Random_Regions(ids, num_regions=nregs, contiguity=w, permutations=2)
+    >>> t3 = pysal.region.Random_Regions(ids, num_regions=nregs, contiguity=w, permutations=2)
     >>> t3.solutions[0].regions[1]
     [71, 72, 70, 93, 51, 91, 85, 74, 63, 73, 61, 62, 82]
-    >>> # cardinality and contiguity constrained
+    
+    Cardinality and contiguity constrained
+
     >>> random.seed(60)
     >>> np.random.seed(60)
-    >>> t4 = Random_Regions(ids, cardinality=cards, contiguity=w, permutations=2)
+    >>> t4 = pysal.region.Random_Regions(ids, cardinality=cards, contiguity=w, permutations=2)
     >>> t4.solutions[0].regions[0]
     [88, 97, 98, 89, 99, 86, 78, 59, 49, 69, 68, 79, 77]
-    >>> # number of regions constrained
+    
+    Number of regions constrained
+
     >>> random.seed(100)
     >>> np.random.seed(100)
-    >>> t5 = Random_Regions(ids, num_regions=nregs, permutations=2)
+    >>> t5 = pysal.region.Random_Regions(ids, num_regions=nregs, permutations=2)
     >>> t5.solutions[0].regions[0]
     [37, 62, 26, 41, 35, 25, 36]
-    >>> # cardinality constrained
+    
+    Cardinality constrained
+
     >>> random.seed(100)
     >>> np.random.seed(100)
-    >>> t6 = Random_Regions(ids, cardinality=cards, permutations=2)
+    >>> t6 = pysal.region.Random_Regions(ids, cardinality=cards, permutations=2)
     >>> t6.solutions[0].regions[0]
     [37, 62]
-    >>> # contiguity constrained
+    
+    Contiguity constrained
+
     >>> random.seed(100)
     >>> np.random.seed(100)
-    >>> t7 = Random_Regions(ids, contiguity=w, permutations=2)
+    >>> t7 = pysal.region.Random_Regions(ids, contiguity=w, permutations=2)
     >>> t7.solutions[0].regions[1]
     [62, 52, 51, 50]
-    >>>
 
     """
     def __init__(self, area_ids, num_regions=None, cardinality=None, contiguity=None,\
@@ -191,62 +211,79 @@ class Random_Region:
     Examples
     --------
 
+    Setup the data
+
     >>> import random
     >>> import numpy as np
+    >>> import pysal
     >>> nregs = 13
     >>> cards = range(2,14) + [10]
     >>> w = pysal.weights.lat2W(10,10,rook=False)
     >>> ids = w.id_order
-    >>>
-    >>> # unconstrained
+
+    Unconstrained
+
     >>> random.seed(10)
     >>> np.random.seed(10)
-    >>> t0 = Random_Region(ids)
+    >>> t0 = pysal.region.Random_Region(ids)
     >>> t0.regions[0]
     [19, 14, 43, 37, 66, 3, 79, 41, 38, 68, 2, 1, 60]
-    >>> # cardinality and contiguity constrained (num_regions implied)
+    
+    Cardinality and contiguity constrained (num_regions implied)
+
     >>> random.seed(60)
     >>> np.random.seed(60)
-    >>> t1 = Random_Region(ids, num_regions=nregs, cardinality=cards, contiguity=w)
+    >>> t1 = pysal.region.Random_Region(ids, num_regions=nregs, cardinality=cards, contiguity=w)
     >>> t1.regions[0]
     [88, 97, 98, 89, 99, 86, 78, 59, 49, 69, 68, 79, 77]
-    >>> # cardinality constrained (num_regions implied)
+    
+    Cardinality constrained (num_regions implied)
+    
     >>> random.seed(100)
     >>> np.random.seed(100)
-    >>> t2 = Random_Region(ids, num_regions=nregs, cardinality=cards)
+    >>> t2 = pysal.region.Random_Region(ids, num_regions=nregs, cardinality=cards)
     >>> t2.regions[0]
     [37, 62]
-    >>> # number of regions and contiguity constrained
+    
+    Number of regions and contiguity constrained
+    
     >>> random.seed(100)
     >>> np.random.seed(100)
-    >>> t3 = Random_Region(ids, num_regions=nregs, contiguity=w)
+    >>> t3 = pysal.region.Random_Region(ids, num_regions=nregs, contiguity=w)
     >>> t3.regions[1]
     [71, 72, 70, 93, 51, 91, 85, 74, 63, 73, 61, 62, 82]
-    >>> # cardinality and contiguity constrained
+    
+    Cardinality and contiguity constrained
+    
     >>> random.seed(60)
     >>> np.random.seed(60)
-    >>> t4 = Random_Region(ids, cardinality=cards, contiguity=w)
+    >>> t4 = pysal.region.Random_Region(ids, cardinality=cards, contiguity=w)
     >>> t4.regions[0]
     [88, 97, 98, 89, 99, 86, 78, 59, 49, 69, 68, 79, 77]
-    >>> # number of regions constrained
+    
+    Number of regions constrained
+    
     >>> random.seed(100)
     >>> np.random.seed(100)
-    >>> t5 = Random_Region(ids, num_regions=nregs)
+    >>> t5 = pysal.region.Random_Region(ids, num_regions=nregs)
     >>> t5.regions[0]
     [37, 62, 26, 41, 35, 25, 36]
-    >>> # cardinality constrained
+    
+    Cardinality constrained
+    
     >>> random.seed(100)
     >>> np.random.seed(100)
-    >>> t6 = Random_Region(ids, cardinality=cards)
+    >>> t6 = pysal.region.Random_Region(ids, cardinality=cards)
     >>> t6.regions[0]
     [37, 62]
-    >>> # contiguity constrained
+    
+    Contiguity constrained
+    
     >>> random.seed(100)
     >>> np.random.seed(100)
-    >>> t7 = Random_Region(ids, contiguity=w)
+    >>> t7 = pysal.region.Random_Region(ids, contiguity=w)
     >>> t7.regions[0]
     [37, 27, 36, 17]
-    >>>
 
     """
     def __init__(self, area_ids, num_regions=None, cardinality=None, contiguity=None,\
