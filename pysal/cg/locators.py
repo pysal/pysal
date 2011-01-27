@@ -674,38 +674,37 @@ class PolygonLocator:
         True
         """
         self._locator=polygons
-        #pass
 
     def nearest(self, query_point, rule='vertex'):
-       """
-       Returns the nearest polygon indexed to a query point based on
-       various rules.
-
-       nearest(Polygon) -> Polygon
-
-       Parameters
-       ----------
-       query_point  : a point to find the nearest indexed polygon to
-
-       rule         : representative point for polygon in nearest query.
-                vertex -- measures distance between vertices and query_point
-                centroid -- measures distance between centroid and
-                query_point
-                edge   -- measures the distance between edges and query_point
-
-       Attributes
-       ----------
-
-       Examples
-       --------
-       >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
-       >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
-       >>> pl = PolygonLocator([p1, p2])
-       >>> n = pl.nearest(Point((-1, 1)))
-       >>> str(min(n.vertices()))
-       (0.0, 1.0)
-       """
-       pass
+        """
+        Returns the nearest polygon indexed to a query point based on
+        various rules.
+  
+        nearest(Polygon) -> Polygon
+  
+        Parameters
+        ----------
+        query_point  : a point to find the nearest indexed polygon to
+  
+        rule         : representative point for polygon in nearest query.
+                 vertex -- measures distance between vertices and query_point
+                 centroid -- measures distance between centroid and
+                 query_point
+                 edge   -- measures the distance between edges and query_point
+  
+        Attributes
+        ----------
+  
+        Examples
+        --------
+        >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
+        >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
+        >>> pl = PolygonLocator([p1, p2])
+        >>> try: n = pl.nearest(Point((-1, 1)))
+        ... except NotImplementedError: print "future test: str(min(n.vertices())) == (0.0, 1.0)"
+        future test: str(min(n.vertices())) == (0.0, 1.0)
+        """
+        raise NotImplementedError
 
     def region(self, region_rect):
         """
@@ -737,7 +736,6 @@ class PolygonLocator:
             if len(pts)==0:
                 n.remove(polygon)
         return n
-        #pass
 
     def proximity(self, origin, r, rule='vertex'):
         """
@@ -765,10 +763,13 @@ class PolygonLocator:
         >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
         >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
         >>> pl = PolygonLocator([p1, p2])
-        >>> len(pl.proximity(Point((0, 0)), 2))
-        2
+        >>> try:
+        ...     len(pl.proximity(Point((0, 0)), 2))
+        ... except NotImplementedError: 
+        ...     print "future test: len(pl.proximity(Point((0, 0)), 2)) == 2"
+        future test: len(pl.proximity(Point((0, 0)), 2)) == 2
         """
-        pass
+        raise NotImplementedError
 
 def _test():
     import doctest
