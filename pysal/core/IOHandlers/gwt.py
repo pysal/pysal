@@ -31,9 +31,9 @@ class GwtIO(FileIO.FileIO):
         return self._shpName
     shpName = property(fget=_get_shpName,fset=_set_shpName)
 
-    def read(self,n=-1):
+    def read(self, n=-1):
+        self._complain_ifclosed(self.closed)
         return self._read()
-
     def seek(self,pos):
         if pos == 0:
             self.file.seek(0)

@@ -15,6 +15,36 @@ __all__ = ['WKTReader']
 
 
 class WKTReader(FileIO.FileIO):
+    """
+    Parameters
+    ----------
+    Reads Well-Known Text
+    Returns a list of PySAL Polygon objects
+
+    Examples
+    --------
+    Read in WKT-formatted file
+    
+    >>> import pysal
+    >>> f = pysal.open('../../examples/stl_hom.wkt', 'r')
+
+    Convert wkt to pysal polygons
+
+    >>> polys = f.read()
+
+    Check length
+
+    >>> len(polys)
+    78
+
+    Return centroid of polygon at index 1
+
+    >>> polys[1].centroid
+    (-91.195784694307363, 39.990883050220845)
+
+    Type dir(polys[1]) at the python interpreter to get a list of supported methods
+
+    """
     MODES = ['r']
     FORMATS = ['wkt']
     def __init__(self,*args,**kwargs):

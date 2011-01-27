@@ -1,24 +1,30 @@
 import unittest
+import pysal
+from pysal.core.IOHandlers.wkt import WKTReader
 
 class test_WKTReader(unittest.TestCase):
-    def test___init__(self):
-        # w_kt_reader = WKTReader(*args, **kwargs)
-        assert False # TODO: implement your test here
+    def setUp(self):
+        self.test_file = test_file = '../../../examples/stl_hom.wkt'
+        self.obj = WKTReader(test_file, 'r')
 
     def test_close(self):
+        f = self.obj
+        f.close()
+        self.failUnlessRaises(ValueError, f.read)
         # w_kt_reader = WKTReader(*args, **kwargs)
         # self.assertEqual(expected, w_kt_reader.close())
-        assert False # TODO: implement your test here
 
     def test_open(self):
-        # w_kt_reader = WKTReader(*args, **kwargs)
-        # self.assertEqual(expected, w_kt_reader.open())
-        assert False # TODO: implement your test here
+        f = self.obj
+        expected = ['wkt']
+        self.assertEqual(expected, f.FORMATS) 
 
-    def test_seek(self):
-        # w_kt_reader = WKTReader(*args, **kwargs)
-        # self.assertEqual(expected, w_kt_reader.seek(n))
-        assert False # TODO: implement your test here
+    def test__read(self):
+        polys = self.obj.read()
+        self.assertEqual(78, len(polys))
+        self.assertEqual((-91.195784694307363, 39.990883050220845),
+                polys[1].centroid)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -9,9 +9,6 @@ class test_GwtIO(unittest.TestCase):
         self.test_file = test_file = '../../../examples/juvenile.gwt'
         self.obj = GwtIO(test_file, 'r')
 
-    def test___init__(self):
-        self.assertEqual(self.obj._typ, str)
-
     def test_close(self):
         f = self.obj
         f.close()
