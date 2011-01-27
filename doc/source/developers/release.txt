@@ -55,32 +55,49 @@ Then run::
 
 Post-release svn changes
 ########################
-Two-dot verions of PySAL are released twice a year. Using the example of
-release 1.0, we outline plans for updating the repository and bug fixes here.
+Two-dot versions of PySAL are released twice a year. Using the example of
+release X.0, we outline plans for updating the repository and bug fixes here.
 
-When 1.0 is released we do the following:
+When X.0 is released we do the following:
 
-     * create a tag 1.0
-     * create a branch 1.0
-     * bump the trunk up to version 1.1
+  * Code related changes
+     * ensure all tests pass
+     * update the change log
+     * edit manifest.in
+     * thanks
+     * update setup.py prior to build
+     * create a tag X.0::
 
-Development on 1.1 happens in trunk. Code in tag 1.0 is never changed.  Bugs in
-1.0 that are reported by users or developers are fixed in branch 1.0 and in
+	svn copy https://pysal.googlecode.com/svn/trunk \
+        http://pysal.googlecode.com/svn/tags/X.0 -m "Release X.0"
+
+     * bump the trunk up to version X.1 by editing `version.py`
+     * build release for X.0 out of tag X.0
+     * update the release on http://pypi.python.org
+     * upload releases to code.google.com/p/pysal/downloads
+  * Web site related changes
+     * edit documentation links on http://code.google.com/p/pysal/ (which as
+       of 1.1 will be the landing page for pysal.org)
+  * Documentation related changes
+     * create new release directory on documentation server
+     * edit cronjob on peloton to rsync to new release directory
+     * edit contents.rst to include *New in this release*
+
+
+Development on X.1 happens in trunk. Code in tag X.0 is never changed.  Bugs in
+X.0 that are reported by users or developers are fixed in branch X.0 and in
 trunk, if relevant. It could be that trunk had moved on so that the bug is no
 longer in the trunk code (functionality may have been dropped or refactored for
 example).
 
-In the event that bug fixes are substantial between 1.0 and the release of 1.1,
-we could do a release out of branch 1.0. This would be tagged as 1.0.1. Since
-it is a tag, code in there never gets changed, but bug fixes in the 1.0.x
-series continue to be made in branch 1.0.
+In the event that bug fixes are substantial between X.0 and the release of X.1,
+we could do a release out of branch X.0. This would be tagged as X.0.X. Since
+it is a tag, code in there never gets changed, but bug fixes in the X.0.x
+series continue to be made in branch X.0.
 
-Bug fixes for 1.0 are handled until 2.0 is released (one year).  We may want to
-have one developer oversee the bug fix process for a particular release. 
-
-So to summarize our major versions two-dot:  1.0, 1.1, 2.0, 2.1, etc. These are
+So to summarize our major versions two-dot:  X.0, X.1, X.2, X.3, etc. These are
 released every six months at the end of a release cycle. Bug fix releases for a
-major release are three-dot: 2.0.1, 2.0.2, etc,  and are released during a
+major release are three-dot: X.0.1, X.0.2, etc,  and are released during a
 release cycle.
 
 Developers wanting to explore major new initiatives are encouraged to make
