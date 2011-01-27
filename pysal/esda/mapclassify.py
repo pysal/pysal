@@ -333,7 +333,7 @@ class Map_Classifier:
         """
         Absolute deviation around class means (ADCM).
 
-        Calculates the absolute deviations of each observation about its class mean as a measure of fit for the classification metho.
+        Calculates the absolute deviations of each observation about its class mean as a measure of fit for the classification method.
         
         Returns sum of ADCM over all classes
         """

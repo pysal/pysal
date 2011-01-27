@@ -593,7 +593,34 @@ def min_threshold_distance(data):
     nnd=nn[0].max(axis=0)[1]
     return nnd
 
+def W_from_sparse_matrix(sp):
+    """
+    Create a W object from a sparse matrix
+
+    Parameters
+    ----------
+    sp: sparse matrix
+
+    Returns
+    -------
+    w:  spatial weights object
+
+    """
+
+
+
+
 def lat2SW(nrows=3,ncols=5,criterion="rook",id_type='int'):
+    """
+    create a new function in util called, "W_from_sprase_matrix"
+    changed lat2W to something like....
+    def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
+         return W_from_sparse_matrix(lat2SW(nrow,ncols))
+    but handle id_type corrently.
+
+    This way we can keep lat2SW untouched, so if people only need the sparse.
+    """
+    
     n = nrows*ncols
     diagonals = []
     offsets = []
