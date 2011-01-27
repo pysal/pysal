@@ -53,7 +53,7 @@ for root, subfolders, files in os.walk(path):
     for test in tests:
         if os.path.exists(test):
             txt = open(test, 'r').read()
-            if txt:
+            if txt and "__main__" in txt:
                 runners.append(test)
                 missingUnits[test] = []
                 for unit in expectedUnits[test]:
