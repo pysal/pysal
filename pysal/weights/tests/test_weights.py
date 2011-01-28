@@ -151,77 +151,72 @@ class TestW(unittest.TestCase):
 
         self.assertEqual(self.w3x3.neighbor_offsets, d)
 
-    """
     def test_nonzero(self):
-        # w = W(neighbors, weights, id_order)
-        # self.assertEqual(expected, w.nonzero())
-        assert False # TODO: implement your test here
+        self.assertEquals(self.w3x3.nonzero, 24)
 
     def test_order(self):
-        # w = W(neighbors, weights, id_order)
-        # self.assertEqual(expected, w.order(kmax))
-        assert False # TODO: implement your test here
+        w = pysal.lat2W(3,3)
+        o = {0: [-1, 1, 2, 1, 2, 3, 2, 3, 0],
+          1: [1, -1, 1, 2, 1, 2, 3, 2, 3],
+          2: [2, 1, -1, 3, 2, 1, 0, 3, 2],
+          3: [1, 2, 3, -1, 1, 2, 1, 2, 3],
+          4: [2, 1, 2, 1, -1, 1, 2, 1, 2],
+          5: [3, 2, 1, 2, 1, -1, 3, 2, 1],
+          6: [2, 3, 0, 1, 2, 3, -1, 1, 2],
+          7: [3, 2, 3, 2, 1, 2, 1, -1, 1],
+          8: [0, 3, 2, 3, 2, 1, 2, 1, -1]}
+        self.assertEquals(w.order(), o)
 
     def test_pct_nonzero(self):
-        # w = W(neighbors, weights, id_order)
-        # self.assertEqual(expected, w.pct_nonzero())
-        assert False # TODO: implement your test here
+        self.assertEqual(self.w3x3.pct_nonzero,  0.29629629629629628)
 
     def test_s0(self):
-        # w = W(neighbors, weights, id_order)
-        # self.assertEqual(expected, w.s0())
-        assert False # TODO: implement your test here
+        self.assertEqual(self.w3x3.s0, 24.0)
 
     def test_s1(self):
-        # w = W(neighbors, weights, id_order)
-        # self.assertEqual(expected, w.s1())
-        assert False # TODO: implement your test here
+        self.assertEqual(self.w3x3.s1, 48.0)
 
     def test_s2(self):
-        # w = W(neighbors, weights, id_order)
-        # self.assertEqual(expected, w.s2())
-        assert False # TODO: implement your test here
+        self.assertEqual(self.w3x3.s2, 272.0)
 
     def test_s2array(self):
-        # w = W(neighbors, weights, id_order)
-        # self.assertEqual(expected, w.s2array())
-        assert False # TODO: implement your test here
+        s2a = np.array([[ 16.], [ 36.], [ 16.], [ 36.],
+                        [ 64.], [ 36.], [ 16.], [ 36.], [ 16.]])
+        NPTA3E(self.w3x3.s2array, s2a)
 
     def test_sd(self):
-        # w = W(neighbors, weights, id_order)
-        # self.assertEqual(expected, w.sd())
-        assert False # TODO: implement your test here
+        self.assertEquals(self.w3x3.sd, 0.66666666666666663)
 
     def test_set_transform(self):
-        # w = W(neighbors, weights, id_order)
-        # self.assertEqual(expected, w.set_transform(value))
-        assert False # TODO: implement your test here
+        w = pysal.lat2W(2,2)
+        self.assertEqual(w.transform, 'O')
+        self.assertEquals(w.weights[0], [1.0, 1.0])
+        w.transform = 'r'
+        self.assertEquals(w.weights[0], [0.5, 0.5])
 
     def test_shimbel(self):
-        # w = W(neighbors, weights, id_order)
-        # self.assertEqual(expected, w.shimbel())
-        assert False # TODO: implement your test here
+        d = {0: [-1, 1, 2, 1, 2, 3, 2, 3, 4],
+              1: [1, -1, 1, 2, 1, 2, 3, 2, 3],
+              2: [2, 1, -1, 3, 2, 1, 4, 3, 2],
+              3: [1, 2, 3, -1, 1, 2, 1, 2, 3],
+              4: [2, 1, 2, 1, -1, 1, 2, 1, 2],
+              5: [3, 2, 1, 2, 1, -1, 3, 2, 1],
+              6: [2, 3, 4, 1, 2, 3, -1, 1, 2],
+              7: [3, 2, 3, 2, 1, 2, 1, -1, 1],
+              8: [4, 3, 2, 3, 2, 1, 2, 1, -1]}
+        self.assertEquals(self.w3x3.shimbel(), d)
 
     def test_sparse(self):
-        # w = W(neighbors, weights, id_order)
-        # self.assertEqual(expected, w.sparse())
-        assert False # TODO: implement your test here
+        self.assertEqual(self.w3x3.sparse.nnz, 24)
 
     def test_trcW2(self):
-        # w = W(neighbors, weights, id_order)
-        # self.assertEqual(expected, w.trcW2())
-        assert False # TODO: implement your test here
+        self.assertEqual(self.w3x3.trcW2, 24.)
 
     def test_trcWtW(self):
-        # w = W(neighbors, weights, id_order)
-        # self.assertEqual(expected, w.trcWtW())
-        assert False # TODO: implement your test here
+        self.assertEqual(self.w3x3.trcWtW, 24.)
 
     def test_trcWtW_WW(self):
-        # w = W(neighbors, weights, id_order)
-        # self.assertEqual(expected, w.trcWtW_WW())
-        assert False # TODO: implement your test here
-    """
+        self.assertEqual(self.w3x3.trcWtW_WW, 48.)
 
 if __name__ == '__main__':
     unittest.main()

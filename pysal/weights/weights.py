@@ -234,7 +234,7 @@ class W(object):
 
         """
         if 's2array' not in self._cache:
-            s=self._sparse
+            s=self.sparse
             self._s2array= np.array(s.sum(1)+s.sum(0).transpose())**2
             self._cache['s2array']=self._s2array
         return self._s2array
@@ -400,7 +400,7 @@ class W(object):
         number of nonzero weights
         """
         if 'nonzero' not in self._cache:
-            self._nonzero=self._sparse.nnz
+            self._nonzero=self.sparse.nnz
             self._cache['nonzero']=self._nonzero
         return self._nonzero
 
