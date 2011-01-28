@@ -1,5 +1,3 @@
-
-
 import os
 import unittest
 import pysal
@@ -140,6 +138,8 @@ class _Testuser(unittest.TestCase):
         pysal.build_lattice_shapefile(20, 20, of)
         w = pysal.rook_from_shapefile(of)
         self.assertEquals(w.n, 400)
+        os.remove('lattice.shp')
+        os.remove('lattice.shx')
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(_Testuser)
