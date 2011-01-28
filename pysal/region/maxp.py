@@ -354,7 +354,7 @@ class Maxp:
         Examples
         --------
         
-        Setup is the same as shown above.
+        Setup is the same as shown above except using a 5x5 community.
 
         >>> import random
         >>> import numpy as np
@@ -363,17 +363,18 @@ class Maxp:
         >>> np.random.seed(100)
         >>> w=pysal.weights.lat2W(5,5)
         >>> z=np.random.random_sample((w.n,2))
-        >>> p=np.random.random(w.n)*100
         >>> p=np.ones((w.n,1),float)
         >>> floor=3
         >>> solution=pysal.region.Maxp(w,z,floor,floor_variable=p,initial=100)
 
         Set nperm to 9 meaning that 9 random regions are computed and used for
-        the computation of a pseudo-p-value for the actual Max-p solution.
+        the computation of a pseudo-p-value for the actual Max-p solution. In
+        empirical work this would typically be set much higher, e.g. 999 or
+        9999.
 
         >>> solution.inference(nperm=9)
         >>> solution.pvalue
-        0.29999999999999999
+        0.20000000000000001
 
         """
         ids=self.w.id_order
@@ -430,7 +431,7 @@ class Maxp:
         Examples
         --------
         
-        Setup is the same as shown above.
+        Setup is the same as shown above except using a 5x5 community.
 
         >>> import random
         >>> import numpy as np
@@ -439,13 +440,14 @@ class Maxp:
         >>> np.random.seed(100)
         >>> w=pysal.weights.lat2W(5,5)
         >>> z=np.random.random_sample((w.n,2))
-        >>> p=np.random.random(w.n)*100
         >>> p=np.ones((w.n,1),float)
         >>> floor=3
         >>> solution=pysal.region.Maxp(w,z,floor,floor_variable=p,initial=100)
 
         Set nperm to 9 meaning that 9 random regions are computed and used for
-        the computation of a pseudo-p-value for the actual Max-p solution.
+        the computation of a pseudo-p-value for the actual Max-p solution. In
+        empirical work this would typically be set much higher, e.g. 999 or
+        9999.
 
         >>> solution.cinference(nperm=9, maxiter=100)
         >>> solution.cpvalue
@@ -476,7 +478,7 @@ class Maxp:
         self.cwss_perm[0]=self.cwss
             
 
-class Maxp_LISA:
+class Maxp_LISA(Maxp):
     """Max-p regionalization using LISA seeds
 
     Parameters
@@ -544,11 +546,11 @@ class Maxp_LISA:
     >>> w=pysal.lat2W(10,10)
     >>> z=np.random.random_sample((w.n,2))
     >>> p=np.ones(w.n)
-    >>> mpl=Maxp_LISA(w,z,p,floor=3,floor_variable=p)
-
-    Note random components result is slightly different values across
-    architectures so the results have been removed from doctests and will be
-    moved into unittests that are conditional on architectures
+    >>> mpl=pysal.region.Maxp_LISA(w,z,p,floor=3,floor_variable=p)
+    >>> mpl.p
+    30
+    >>> mpl.regions[0]
+    [99, 89, 98]
 
     """
     def __init__(self,w,z,y,floor,floor_variable,initial=100):
@@ -557,20 +559,11 @@ class Maxp_LISA:
         ids=np.argsort(lis.Is)
         ids=ids[range(w.n-1,-1,-1)]
         ids=ids.tolist()
-        mp=pysal.Maxp(w,z,floor=floor,floor_variable=floor_variable,
+        mp=Maxp.__init__(self,w,z,floor=floor,floor_variable=floor_variable,
                       initial=initial,seeds=ids)
-        
-        self.feasible=mp.feasible
-        self.attempts=mp.attempts
-        self.area2region=mp.area2region
-        self.regions=mp.regions
-        self.swap_iterations=mp.swap_iterations
-        self.total_moves=mp.total_moves
-
 
 
 # tests
-
 def _test():
     import doctest
     doctest.testmod(verbose=True)
