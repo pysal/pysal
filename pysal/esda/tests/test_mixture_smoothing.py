@@ -12,15 +12,24 @@ class MS_Tester(unittest.TestCase):
     def test_NP_Mixture_Smoother(self):
         """Test the main class"""
         mix = m_s.NP_Mixture_Smoother(self.e, self.b)
-        self.failUnless(mix.r, array([ 0.10982267,  0.03445525,  0.11018393, 0.11018593]))
-        self.failUnless(mix.category, array([1, 0, 1, 1]))
-        self.failUnless(mix.getSeed(), (array([ 0.5,  0.5]), array([ 0.03333333,
-            0.15      ])))
-        self.failUnless(mix.mixalg(), {'mix_den': array([ 0.,  0.,  0.,  0.]),
-            'gradient': array([ 0.]), 'k': 1, 'p': array([ 1.]), 'grid': array([
-                11.27659574]), 'accuracy': 1.0})
-        self.failUnless(mix.getRateEstimates(), (array([ 0.0911574,  0.0911574,
-            0.0911574,  0.0911574]), array([1, 1, 1, 1])))
+        np.testing.assert_array_almost_equal(mix.r, np.array([ 0.10982267,  0.03445525,  0.11018393, 0.11018593]))
+        np.testing.assert_array_almost_equal(mix.category, np.array([1, 0, 1, 1]))
+        #self.failUnless(mix.getSeed(), (np.array([ 0.5,  0.5]), np.array([ 0.03333333,
+        #    0.15      ])))
+        left, right = mix.getSeed()
+        np.testing.assert_array_almost_equal(left, np.array([ 0.5, 0.5]))
+        np.testing.assert_array_almost_equal(right, np.array([ 0.03333333,     0.15      ]))
+        d = mix.mixalg()
+        np.testing.assert_array_almost_equal(d['mix_den'], np.array([ 0., 0., 0., 0.]))
+        np.testing.assert_array_almost_equal(d['gradient'], np.array([ 0.]))
+        np.testing.assert_array_almost_equal(d['p'], np.array([ 1.]))
+        np.testing.assert_array_almost_equal(d['grid'], np.array([11.27659574]))
+        self.assertEqual(d['k'], 1)
+        self.assertEqual(d['accuracy'], 1.0)
+        left, right = mix.getRateEstimates()
+        np.testing.assert_array_almost_equal(left, np.array([ 0.0911574,  0.0911574,
+            0.0911574,  0.0911574]))
+        np.testing.assert_array_almost_equal(right, np.array([1, 1, 1, 1]))
 
         
 if __name__=="__main__":
