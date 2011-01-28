@@ -12,7 +12,7 @@ __all__ = []
 
 class DiagnosticBuilder:
     """
-    Dispatch appropriate diagnostics to various regression types. This is is
+    Dispatch appropriate diagnostics to various regression types. This is
     generally inherited by a regression class.
 
     Parameters

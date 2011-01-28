@@ -7,8 +7,9 @@ Since then many people have contributed to PySAL, both in code development,
 suggestions, and financial support.  Below is a partial list.  If you've
 been left off, please email the "PySAL Developers List" <pysal-dev@googlegroups.com>
 
+Pedro Amaral
 Luc Anselin
-Dani Arribas
+Daniel Arribas-Bel
 David C. Folch
 Myunghwa Hwang
 Julia Koschinsky
@@ -18,7 +19,9 @@ Serge Rey
 Charles R. Schmidt
 Philip Stephens
 Bohumil Svoma
+Ran Wei
 Andrew Winslow
+Jing Yao
 Xinyue Ye
 
 Funding from the following sources has supported PySAL development:
