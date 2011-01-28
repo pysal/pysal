@@ -24,8 +24,8 @@ MANIFEST.in. To build a new source package, run::
 
 to generate two source distributions.  A good reference is http://docs.python.org/distutils/sourcedist.html
 
-Binary Distributions
-^^^^^^^^^^^^^^^^^^^^
+Binary Installer for Windows 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Making a Windows binary, with a not-so-shabby installer, is not too difficult
 as long as we rely on the user to provide the package dependencies. Run:
@@ -37,20 +37,23 @@ only, the option exists to use the Microsoft Installer format MSI, which is
 prettier but allows the user to install the package in the wrong place. For a
 look at that, on Windows run:
 
-   >>> python setup.py bdist --formats=msi.
+   >>> python setup.py bdist --formats=msi
+
+
+Binary Installer for OS X 
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To make a Mac OS X graphical installer, first install 'bdist_mpkg' from the
-Python Package Index using::
+Python Package Index using easy_install or pip or downloading the source
+code. Once it is installed, run ::
 
-    easy_install bdist_mpkg
+    >>> bdist_mpkg setup.py build 
 
-or::
-
-    pip install bdist_mpkg.
-
-Then run::
-
-    bdist_mpkg setup.py build. 
+to build the .mpkg package installer in the dist/ directory.
+Next, we convert the .mpkg into a disk image suitable for redistribution by
+placing it in its own folder ('pysal4mac' in this example), then running the command::
+ 
+    >>> hdiutil create -fs HFS+ -srcfolder pysal4mac/ pysal4mac.dmg
 
 
 Post-release svn changes

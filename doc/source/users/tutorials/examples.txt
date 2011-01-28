@@ -61,6 +61,7 @@ Cardiff juvenile delinquent residences.
 * juvenile.html: documentation
 * juvenile.shp: shapefile
 * juvenile.shx: spatial index
+* juvenile.gwt: spatial weights in GWT format
 
 mexico
 ======
