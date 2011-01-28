@@ -2,6 +2,8 @@ import pysal.core.Tables
 import datetime
 import struct
 import itertools
+from warnings import warn
+import pysal 
 
 __author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
 __all__ = ['DBF']
@@ -99,7 +101,8 @@ class DBF(pysal.core.Tables.DataTable):
             if typ == 'N':
                 value = value.replace('\0', '').lstrip()
                 if value == '': 
-                    value = 0 
+                    value = pysal.MISSINGVALUE 
+                    warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
                 elif deci:
                     value = float(value)
                 else:
@@ -109,7 +112,9 @@ class DBF(pysal.core.Tables.DataTable):
                     y, m, d = int(value[:4]), int(value[4:6]), int(value[6:8])
                     value = datetime.date(y, m, d)
                 except ValueError:
-                    value = datetime.date.min#NULL Date: See issue 114
+                    #value = datetime.date.min#NULL Date: See issue 114
+                    value = pysal.MISSINGVALUE 
+                    warn("Missing Value Found, setting date to pysal.MISSINGVALUE", RuntimeWarning)
             elif typ == 'L':
                 value = (value in 'YyTt' and 'T') or (value in 'NnFf' and 'F') or '?' 
             elif typ == 'F':

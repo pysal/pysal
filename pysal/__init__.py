@@ -68,3 +68,6 @@ open = core.FileIO.FileIO
 #import esda,weights
 #__all__+=esda.__all__
 #__all__+=weights.__all__
+
+# Constants
+MISSINGVALUE = None # used by fileIO to flag missing values.

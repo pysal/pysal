@@ -26,6 +26,7 @@ __author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
 __all__ = ['FileIO']
 import os.path
 from warnings import warn
+import pysal
 
 class FileIO_MetaCls(type):
     """ This Meta Class is instantiated when the class is first defined.
@@ -221,14 +222,16 @@ class FileIO(object): #should be a type?
         if self._spec and row:
             try:
                 return [f(v) for f,v in zip(self._spec,row)]
-            except TypeError:
+            except ValueError:
                 r = []
                 for f,v in zip(self._spec,row):
                     try:
+                        if not v and f != str:
+                            raise ValueError
                         r.append(f(v))
-                    except TypeError:
-                        warn("Value '%r' could not be cast to %s, values set to '0'"%(v,str(f)),RuntimeWarning)
-                        r.append(f(0))
+                    except ValueError:
+                        warn("Value '%r' could not be cast to %s, value set to pysal.MISSINGVALUE"%(v,str(f)),RuntimeWarning)
+                        r.append(pysal.MISSINGVALUE)
                 return r
 
         else:
