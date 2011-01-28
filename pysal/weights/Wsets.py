@@ -35,8 +35,13 @@ def w_union(w1, w2):
     from w1 and w2.
 
 
-    Examples
+    Examples 
     --------
+
+    Construct rook weights matrices for two regions, one is 4x4 (16 areas)
+    and the other is 6x4 (24 areas). A union of these two weights matrices
+    results in the new weights matrix matching the larger one.
+
     >>> import pysal
     >>> w1 = pysal.lat2W(4,4)
     >>> w2 = pysal.lat2W(6,4)
@@ -94,6 +99,11 @@ def w_intersection(w1, w2, w_shape='w1'):
 
     Examples
     --------
+
+    Construct rook weights matrices for two regions, one is 4x4 (16 areas)
+    and the other is 6x4 (24 areas). An intersection of these two weights
+    matrices results in the new weights matrix matching the smaller one.
+
     >>> import pysal
     >>> w1 = pysal.lat2W(4,4)
     >>> w2 = pysal.lat2W(6,4)
@@ -168,6 +178,14 @@ def w_difference(w1, w2, w_shape='w1', constrained=True):
 
     Examples
     --------
+
+    Construct rook (w2) and queen (w1) weights matrices for two 4x4 regions
+    (16 areas). A queen matrix has all the joins a rook matrix does plus joins
+    between areas that share a corner. The new matrix formed by the difference
+    of rook from queen contains only join at corners (typically called a
+    bishop matrix). Note that the difference of queen from rook would result
+    in a weights matrix with no joins.
+
     >>> import pysal
     >>> w1 = pysal.lat2W(4,4,rook=False)
     >>> w2 = pysal.lat2W(4,4,rook=True)
@@ -254,6 +272,13 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
 
     Examples
     --------
+
+    Construct queen weights matrix for a 4x4 (16 areas) region (w1) and a rook
+    matrix for a 6x4 (24 areas) region (w2). The symmetric difference of these
+    two matrices (with w_shape set to 'all' and constrained set to False)
+    contains the corner joins in the overlap area, all the joins in the
+    non-overlap area.
+
     >>> import pysal
     >>> w1 = pysal.lat2W(4,4,rook=False)
     >>> w2 = pysal.lat2W(6,4,rook=True)
@@ -323,6 +348,13 @@ def w_subset(w1, ids):
 
     Examples
     --------
+
+    Construct a rook weights matrix for a 6x4 region (24 areas). By default
+    PySAL assigns integer IDs to the areas in a region. By passing in a list
+    of integers from 0 to 15, the first 16 areas are extracted from the
+    previous weights matrix, and only those joins relevant to the new region
+    are retained.
+
     >>> import pysal
     >>> w1 = pysal.lat2W(6,4)
     >>> ids = range(16)
