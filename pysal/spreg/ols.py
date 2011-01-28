@@ -333,8 +333,10 @@ class OLS(BaseOLS, USER.DiagnosticBuilder):
     array([[ 46.42818268],
            [  0.62898397],
            [ -0.48488854]])
-    >>> ols.t_stat
-    [(3.5194843705144025, 0.00098667666039779366), (1.1736736462012534, 0.24656693263430027), (-2.6544086427177254, 0.010874504909753672)]
+    >>> print ols.t_stat[2][0]
+    -2.65440864272
+    >>> print ols.t_stat[2][1]
+    0.0108745049098
     >>> ols.r2
     0.34951437785126105
     >>> print ols.summary
@@ -399,8 +401,12 @@ class OLS(BaseOLS, USER.DiagnosticBuilder):
     array([[ 46.42818268],
            [  0.62898397],
            [ -0.48488854]])
-    >>> ols.moran_res
-    (0.20373540937971005, 2.5918045220787072, 0.0095474003125092105)
+    >>> print ols.moran_res[0]
+    0.20373540938
+    >>> print ols.moran_res[1]
+    2.59180452208
+    >>> print ols.moran_res[2]
+    0.00954740031251
 
     """
     def __init__(self, y, x, w=None, constant=True, name_y=None, name_x=None,\
