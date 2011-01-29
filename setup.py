@@ -39,7 +39,8 @@ setup(name = 'pysal',
                 'pysal.weights.tests'],
       
 
-      package_data = {'pysal':['examples/shp_test/*','examples/*.*','examples/README']},
+      #package_data = {'pysal':['examples/shp_test/*','examples/*.*','examples/README']},
+      package_data = {'doc': ['build/latex/pysal.pdf'], 'pysal':['examples/shp_test/*','examples/*.*','examples/README']},
 
       requires = ['scipy'],
 

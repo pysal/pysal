@@ -1,9 +1,15 @@
-# pysal cross-platform distribution builder script
-'''
-#uncomment next to build fresh PDF of docs
-#cd doc/;make latex;cd build/latex;make all-pdf;cd ../../../
-'''
+'''pysal cross-platform distribution builder script'''
 import os, sys
+
+# make docs PDF
+os.chdir('doc')
+os.system('make clean')
+os.system('make latex')
+os.chdir('build/latex')
+os.system('make all-pdf')
+os.chdir('../../../')
+
+#build source and binaries
 if sys.platform == 'darwin':
     os.system('python setup.py sdist --formats=gztar,zip')
     os.system('python setup.py bdist --formats=wininst')
