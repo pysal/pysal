@@ -58,7 +58,7 @@ If you'd rather install source code, grab the zipfile (ends with *.zip*) and dow
 Instructions for Mac OS X
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Grab the OS X installer (ends with *.mpkg*) and download to your computer. Double-click to launch the installer and follow the simple wizard. This installer places PySAL into the active Python version on your system (the version that comes up when you type *python* into a terminal). 
+Grab the OS X installer (ends with *.dmg*) and download to your computer. Double-click to launch the installer and follow the simple wizard. This installer places PySAL into the active Python version on your system (the version that comes up when you type *python* into a terminal). 
 
 
 If you'd rather install source code, grab the tarball (ends with *.tar.gz*) and download to your computer. Decompress the file to a convenient location on your hard drive. Open a terminal and navigate to the decompressed PySAL folder. Type::
@@ -129,10 +129,13 @@ Your terminal should reply with the following::
 Windows
 ~~~~~~~~
 
-To use PySAL, you will need an svn client that allows you to access and 
+To keep up to date with PySAL development, you will need an SVN client that allows you to access and 
 update the code from our repository. We recommend 
 `TortoiseSVN <http://tortoisesvn.tigris.org/>`_, which is free and easy to
-install. The following instructions assume you are using it.
+install. The following instructions assume you are using it. There are two basic
+steps. One, checkout a copy of the source code to your local drive. Two, adjust
+your PYTHONPATH environment variable so that Python looks for PySAL where you
+have downloaded it.
 
 First, create a folder where you want to store PySAL's code. For the sake of this
 example, we will name it ``PySALsvn`` and put it in the root folder, so the
@@ -140,10 +143,14 @@ path is::
  
  C:\PySALsvn
 
-Right-click that folder and select 'SVN checkout'.
-A dialog will appear. The 'Checkout Directory' refers to the path to your folder
-(``C:\PySALsvn`` in this case). For the 'URL of repository'
-textbox, copy and paste the following link::
+If for some reason you do not have access to the root directory, you can place
+the PySAL source code anywhere. Adjust your paths as appropriate for the rest of
+these instructions.
+
+Right-click your PySAL folder and select 'SVN checkout' under the Tortoise menu.
+A dialog will appear. The 'Checkout Directory' refers to the path to your PySAL folder
+(``C:\PySALsvn`` in this case). Copy and paste the following link into the 'URL
+of repository' textbox::
 
  http://pysal.googlecode.com/svn/trunk/
 
@@ -160,7 +167,6 @@ less like this::
 
 ,where XX corresponds to the version of the Python distribution you are using
 (25 for 2.5, for example).
-
 Edit ``sitecustomize.py`` with the following two lines of text::
 
  import sys
