@@ -1,2 +1,37 @@
 v<1.1.0>, 2011-01-31
+
+	* pysal/core/FileIO.py, pysal/core/IOHandlers/pyDbfIO.py: Added missing value support to FileIO. Warnings will be issued when missing values are found and the value will be set to pysal.MISSINGVALUE, currently None, but the user can change it as needed.
+
+	* pysal/spreg/: Added Spatial Regression module, spreg, and tests.  Added non-spatial diagnostic tests for OLS regression. 
+
+	* pysal/core/IOHandlers/gwt.py: Fixing bottle neck in gwt reader, adding support for GeoDa Style ID's and DBF id_order.
+
+	* pysal/cg/standalone.py: adding, distance_matrix, full distance matrix calculation using sparse matrices
+
+	* pysal/core/util: Moved "converters" into core.util, allows them to be used independently of FileIO.
+
+	* pysal/weights/Distance.py: Adding work around for bug in scipy spatial, see pysal issue #126
+
+	* pysal/weights/user.py: Added build_lattice_shapefile in weights.user, which writes an ncol by nrow grid to a shapefile.
+
+	* pysal/weights/Distance.py: fixed coincident point problem in knnW and made sure it returns k neighbors
+
+	* pysal/spatial_dynamics/interaction.py: Added a suite of spatio-temporal interaction tests including the Knox, Mantel, and Jacquez tests. 
+
+	* pysal/weights/util.py: Added lat2SW, allows to create a sparse W matrix for a regular lattice.
+
+	* pysal/tests/tests.py: - new 1.1 integration testing scheme.
+
+	* pysal/esda/interaction.py: added standardized Mantel test and improved readability.
+
+	* pysal/spatial_dynamics/directional.py: - adding directional LISA analytics
+
+	* pysal/esda/mapclassify.py: Natural_Breaks will lower k for data with fewer than k unique values, prints warning.
+
+	* pysal/region/randomregion.py: improvements to spatially constrained random region algorithm
+
+	* pysal/esda/smoothing.py: Adding choynowski probabilities and SMR to smoothing.py
+
+	* doc/source/developers/release.txt: - updating release cycle - release management
+
 v<1.0.0>, 2010-07-31 -- Initial release.
