@@ -36,15 +36,33 @@ def f_stat(reg):
     >>> import pysal
     >>> import diagnostics
     >>> from ols import BaseOLS as OLS
+
+    Read the DBF associated with the Columbus data. 
+
     >>> db = pysal.open("../examples/columbus.dbf","r")
+
+    Create the dependent variable vector. 
+
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
+
+    Create the matrix of independent variables. 
+
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
+
+    Run an OLS regression.    
+
     >>> reg = OLS(y,X)
+
+    Calculate the F-statistic for the regression. 
+
     >>> testresult = diagnostics.f_stat(reg)
+
+    Print the results tuple, including the statistic and its significance.
+
     >>> print("%12.12f"%testresult[0],"%12.12f"%testresult[1])
     ('28.385629224695', '0.000000009341')
 
@@ -95,16 +113,33 @@ def t_stat(reg, z_stat=False):
     >>> import pysal
     >>> import diagnostics
     >>> from ols import BaseOLS as OLS
+
+    Read the DBF associated with the Columbus data.
+
     >>> db = pysal.open("../examples/columbus.dbf","r")
+
+    Create the dependent variable vector. 
+
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
+
+    Create the matrix of independent variables. 
+
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
+
+    Run an OLS regression. 
+
     >>> reg = OLS(y,X)
-    >>> # t-stat for OLS
+    
+    Calculate t-statistics for the regression coefficients. 
+    
     >>> testresult = diagnostics.t_stat(reg)
+
+    Print the tuples that contain the t-statistics and their significances.
+
     >>> print("%12.12f"%testresult[0][0], "%12.12f"%testresult[0][1], "%12.12f"%testresult[1][0], "%12.12f"%testresult[1][1], "%12.12f"%testresult[2][0], "%12.12f"%testresult[2][1])
     ('14.490373143689', '0.000000000000', '-4.780496191297', '0.000018289595', '-2.654408642718', '0.010874504910')
     """ 
@@ -152,15 +187,33 @@ def r2(reg):
     >>> import pysal
     >>> import diagnostics
     >>> from ols import BaseOLS as OLS
+
+    Read the DBF associated with the Columbus data.
+    
     >>> db = pysal.open("../examples/columbus.dbf","r")
+
+    Create the dependent variable vector.
+
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
+
+    Create the matrix of independent variables. 
+
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
+
+    Run an OLS regression. 
+
     >>> reg = OLS(y,X)
+
+    Calculate the R^2 value for the regression. 
+
     >>> testresult = diagnostics.r2(reg)
+
+    Print the result. 
+
     >>> testresult
     0.55240404083742334
     
@@ -201,15 +254,32 @@ def ar2(reg):
     >>> import pysal
     >>> import diagnostics
     >>> from ols import BaseOLS as OLS
+
+    Read the DBF associated with the Columbus data.
+
     >>> db = pysal.open("../examples/columbus.dbf","r")
+
+    Create the dependent variable vector. 
+
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
+
+    Create the matrix of independent variables. 
+
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
+
+    Run an OLS regression. 
+
     >>> reg = OLS(y,X)
+
+    Calculate the adjusted R^2 value for the regression. 
     >>> testresult = diagnostics.ar2(reg)
+
+    Print the result. 
+
     >>> testresult
     0.5329433469607896
 
@@ -246,15 +316,33 @@ def se_betas(reg):
     >>> import pysal
     >>> import diagnostics
     >>> from ols import BaseOLS as OLS
+
+    Read the DBF associated with the Columbus data. 
+
     >>> db = pysal.open("../examples/columbus.dbf","r")
+
+    Create the dependent variable vector.
+
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
+
+    Create the matrix of independent variables. 
+
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
+
+    Run an OLS regression. 
+
     >>> reg = OLS(y,X)
+
+    Calculate the standard errors of the regression coefficients. 
+
     >>> testresult = diagnostics.se_betas(reg)
+
+    Print the vector of standard errors. 
+
     >>> testresult
     array([ 4.73548613,  0.33413076,  0.10319868])
     
@@ -291,15 +379,33 @@ def log_likelihood(reg):
     >>> import pysal
     >>> import diagnostics
     >>> from ols import BaseOLS as OLS
+
+    Read the DBF associated with the Columbus data. 
+    
     >>> db = pysal.open("../examples/columbus.dbf","r")
+
+    Create the dependent variable vector. 
+
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
+
+    Create the matrix of independent variables. 
+
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
+
+    Run an OLS regression.
+
     >>> reg = OLS(y,X)
+
+    Calculate the log-likelihood for the regression. 
+
     >>> testresult = diagnostics.log_likelihood(reg)
+
+    Print the result. 
+
     >>> testresult
     -187.3772388121491
 
@@ -313,7 +419,7 @@ def log_likelihood(reg):
 
 def akaike(reg):
     """
-    Calculates the Akaike Information Criterion
+    Calculates the Akaike Information Criterion.
 
     Parameters
     ----------
@@ -337,15 +443,33 @@ def akaike(reg):
     >>> import pysal
     >>> import diagnostics
     >>> from ols import BaseOLS as OLS
+
+    Read the DBF associated with the Columbus data.
+
     >>> db = pysal.open("../examples/columbus.dbf","r")
+
+    Create the dependent variable vector. 
+
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
+
+    Create the matrix of independent variables. 
+
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
+
+    Run an OLS regression.
+
     >>> reg = OLS(y,X)
+
+    Calculate the Akaike Information Criterion (AIC). 
+
     >>> testresult = diagnostics.akaike(reg)
+
+    Print the result. 
+
     >>> testresult
     380.7544776242982
 
@@ -360,7 +484,7 @@ def akaike(reg):
 
 def schwarz(reg):
     """
-    Calculates the Schwarz Information Criterion
+    Calculates the Schwarz Information Criterion.
 
     Parameters
     ----------
@@ -384,22 +508,40 @@ def schwarz(reg):
     >>> import pysal
     >>> import diagnostics
     >>> from ols import BaseOLS as OLS
+
+    Read the DBF associated with the Columbus data.
+
     >>> db = pysal.open("../examples/columbus.dbf","r")
+
+    Create the dependent variable vector. 
+
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
+
+    Create the matrix of independent variables. 
+
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
+
+    Run an OLS regression.
+
     >>> reg = OLS(y,X)
+
+    Calculate the Schwarz Information Criterion. 
+
     >>> testresult = diagnostics.schwarz(reg)
+
+    Print the results. 
+
     >>> testresult
     386.42993851863008
 
     """
-    n = reg.n       # (scalar) number of observations
-    k = reg.k       # (scalar) number of ind. variables (including constant)
-    utu = reg.utu   # (scalar) residual sum of squares
+    n = reg.n      # (scalar) number of observations
+    k = reg.k      # (scalar) number of ind. variables (including constant)
+    utu = reg.utu  # (scalar) residual sum of squares
     sc_result = k*np.log(n) + n*(np.log((2*np.pi*utu)/n)+1)
     return sc_result
 
@@ -408,7 +550,7 @@ def schwarz(reg):
 def condition_index(reg):
     """
     Calculates the multicollinearity condition index according to Belsey,
-    Kuh and Welsh (1980)
+    Kuh and Welsh (1980).
 
     Parameters
     ----------
@@ -423,8 +565,8 @@ def condition_index(reg):
 
     References
     ----------
-    .. [1] D. Belsley, E. Kuh, and R. Welsch. 1980. Regression Diagnostics. 
-       New York: Wiley.
+    .. [1] D. Belsley, E. Kuh, and R. Welsch. 1980. Regression
+       Diagnostics. New York: Wiley.
 
     Examples
     --------
@@ -432,15 +574,33 @@ def condition_index(reg):
     >>> import pysal
     >>> import diagnostics
     >>> from ols import BaseOLS as OLS
+
+    Read the DBF associated with the Columbus data.
+
     >>> db = pysal.open("../examples/columbus.dbf","r")
+
+    Create the dependent variable vector. 
+
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
+
+    Create the matrix of independent variables. 
+
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
+
+    Run an OLS regression.
+
     >>> reg = OLS(y,X)
+
+    Calculate the condition index to check for multicollinearity.
+
     >>> testresult = diagnostics.condition_index(reg)
+
+    Print the result.
+
     >>> print("%12.12f"%testresult)
     6.541827751444
 
@@ -471,7 +631,7 @@ def jarque_bera(reg):
                       contains the statistic (jb) for the Jarque-Bera test
                       and the associated p-value (p-value)
     df              : integer
-                      degrees of freedom associated with the test (always 2)
+                      degrees of freedom for the test (always 2)
     jb              : float
                       value of the test statistic
     pvalue          : float
@@ -490,19 +650,43 @@ def jarque_bera(reg):
     >>> import pysal
     >>> import diagnostics
     >>> from ols import BaseOLS as OLS
+
+    Read the DBF associated with the Columbus data.
+
     >>> db = pysal.open("../examples/columbus.dbf","r")
+
+    Create the dependent variable vector. 
+
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
+
+    Create the matrix of independent variables. 
+
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
+
+    Run an OLS regression.
+
     >>> reg = OLS(y,X)
+
+    Calculate the Jarque-Bera test for normality of residuals.
+
     >>> testresult = diagnostics.jarque_bera(reg)
+
+    Print the degrees of freedom for the test.
+
     >>> testresult['df']
     2
+
+    Print the test statistic. 
+
     >>> print("%12.12f"%testresult['jb'])
     1.835752520076
+
+    Print the associated p-value.
+
     >>> print("%12.12f"%testresult['pvalue'])
     0.399366291249
 
@@ -527,7 +711,7 @@ def jarque_bera(reg):
 def breusch_pagan(reg):
     """
     Calculates the Breusch-Pagan test statistic to check for
-    heteroskedasticity. 
+    heteroscedasticity. 
 
     Parameters
     ----------
@@ -537,8 +721,8 @@ def breusch_pagan(reg):
     Returns
     -------
     bp_result       : dictionary
-                      contains the statistic (bp) for the Breusch-Pagan test
-                      and the associated p-value (p-value)
+                      contains the statistic (bp) for the test and the
+                      associated p-value (p-value)
     bp              : float
                       scalar value for the Breusch-Pagan test statistic.
     df              : integer
@@ -560,19 +744,43 @@ def breusch_pagan(reg):
     >>> import pysal
     >>> import diagnostics
     >>> from ols import BaseOLS as OLS
+
+    Read the DBF associated with the Columbus data.
+
     >>> db = pysal.open("../examples/columbus.dbf","r")
+
+    Create the dependent variable vector. 
+
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
+
+    Create the matrix of independent variables. 
+
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
+
+    Run an OLS regression.
+
     >>> reg = OLS(y,X)
+
+    Calculate the Breusch-Pagan test for heteroscedasticity.
+
     >>> testresult = diagnostics.breusch_pagan(reg)
+
+    Print the degrees of freedom for the test.
+
     >>> testresult['df']
     2
+
+    Print the test statistic.
+
     >>> print("%12.12f"%testresult['bp'])
     10.012849713094
+
+    Print the associated p-value. 
+
     >>> print("%12.12f"%testresult['pvalue'])
     0.006694795426
 
@@ -615,7 +823,7 @@ def breusch_pagan(reg):
 
 def white(reg):
     """
-    Calculates the White test to check for heteroskedasticity. 
+    Calculates the White test to check for heteroscedasticity. 
 
     Parameters
     ----------
@@ -641,9 +849,9 @@ def white(reg):
     
     References
     ----------
-    .. [1] H. White. 1980. A heteroskedasticity-consistent covariance matrix
-       estimator and a direct test for heteroskdasticity. Econometrica.
-       48(4) 817-838. 
+    .. [1] H. White. 1980. A heteroscedasticity-consistent covariance
+       matrix estimator and a direct test for heteroskdasticity.
+       Econometrica. 48(4) 817-838. 
 
 
     Examples
@@ -652,19 +860,43 @@ def white(reg):
     >>> import pysal
     >>> import diagnostics
     >>> from ols import BaseOLS as OLS
+
+    Read the DBF associated with the Columbus data.
+
     >>> db = pysal.open("../examples/columbus.dbf","r")
+
+    Create the dependent variable vector. 
+
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
+
+    Create the matrix of independent variables. 
+
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
+
+    Run an OLS regression.
+
     >>> reg = OLS(y,X)
+
+    Calculate the White test for heteroscedasticity.
+    
     >>> testresult = diagnostics.white(reg)
+
+    Print the degrees of freedom for the test.
+
     >>> testresult['df']
     5
+
+    Print the test statistic.
+
     >>> print("%12.12f"%testresult['wh'])
     19.946008239903
+
+    Print the associated p-value. 
+
     >>> print("%12.12f"%testresult['pvalue'])
     0.001279222817
 
@@ -683,7 +915,7 @@ def white(reg):
     # Check for multicollinearity in the X matrix
     ci = condition_index(reg)
     if ci > 30:
-        white_result = "N/A"
+        white_result = "Not computed due to multicollinearity."
         return white_result
 
     # Compute cross-products of the regression variables
@@ -698,8 +930,8 @@ def white(reg):
         v = X[:,i]**2
         A.append(v)
 
-    # Convert to an array with the proper dimensions and append the original
-    # non-binary variables
+    # Convert to an array with the proper dimensions and append the
+    # original non-binary variables
     A = np.array(A).T
     A = np.hstack((X,A))
     n,k = A.shape
@@ -718,8 +950,8 @@ def white(reg):
     uniqueomit = set(omitcolumn)
     omitcolumn = list(uniqueomit)
 
-    # Now the identified columns must be removed (done in reverse to prevent
-    # renumbering)
+    # Now the identified columns must be removed (done in reverse to
+    # prevent renumbering)
     omitcolumn.reverse()
     for c in omitcolumn:
         A = np.delete(A,c,1)
@@ -740,7 +972,7 @@ def white(reg):
 def koenker_bassett(reg):
     """
     Calculates the Koenker-Bassett test statistic to check for
-    heteroskedasticity. 
+    heteroscedasticity. 
 
     Parameters
     ----------
@@ -775,19 +1007,43 @@ def koenker_bassett(reg):
     >>> import pysal
     >>> import diagnostics
     >>> from ols import BaseOLS as OLS
+
+    Read the DBF associated with the Columbus data.
+
     >>> db = pysal.open("../examples/columbus.dbf","r")
+
+    Create the dependent variable vector. 
+
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
+
+    Create the matrix of independent variables. 
+
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
+
+    Run an OLS regression.
+
     >>> reg = OLS(y,X)
+
+    Calculate the Koenker-Bassett test for heteroscedasticity.
+
     >>> testresult = diagnostics.koenker_bassett(reg)
+
+    Print the degrees of freedom for the test.
+
     >>> testresult['df']
     2
+
+    Print the test statistic.
+
     >>> print("%12.12f"%testresult['kb'])
     7.216564472188
+
+    Print the associated p-value. 
+
     >>> print("%12.12f"%testresult['pvalue'])
     0.027098355486
 
@@ -863,21 +1119,47 @@ def vif(reg):
     >>> import pysal
     >>> import diagnostics
     >>> from ols import BaseOLS as OLS
+
+    Read the DBF associated with the Columbus data.
+
     >>> db = pysal.open("../examples/columbus.dbf","r")
+
+    Create the dependent variable vector. 
+
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
+
+    Create the matrix of independent variables. 
+
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
+
+    Run an OLS regression.
+
     >>> reg = OLS(y,X)
+
+    Calculate the variance inflation factor (VIF). 
     >>> testresult = diagnostics.vif(reg)
+
+    Select the tuple for the income variable. 
+    
     >>> incvif = testresult[1]
+
+    Print the VIF for income. 
+
     >>> print("%12.12f"%incvif[0])
     1.333117497189
+
+    Print the tolerance for income. 
+
     >>> print("%12.12f"%incvif[1])
     0.750121427487
-    >>> hovalvif = testresult[1]
+
+    Repeat for the home value variable. 
+
+    >>> hovalvif = testresult[2]
     >>> print("%12.12f"%hovalvif[0])
     1.333117497189
     >>> print("%12.12f"%hovalvif[1])
