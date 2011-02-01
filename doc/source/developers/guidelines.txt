@@ -93,14 +93,13 @@ Start   End        Phase             Notes
 ========   ========   ================= ====================================================
 Start      End        Phase             Notes
 ========   ========   ================= ====================================================
-8/1/11  8/14/11    Module Proposals  Developers draft PEPs and prototype
-8/15/11 8/15/11    Developer vote    All developers vote on PEPs 
-8/16/11 8/16/11    Module Approval   BDFL announces final approval
-8/17/11 12/30/11   Development       Implementation and testing of approved modules
-1/1/12   1/1/12    Code Freeze       APIs fixed, bug and testing changes only
-1/23/12 1/30/12    Release Prep      Test release builds, updating svn 
-1/31/12 1/31/12    Release           Official release of 1.2
-
+8/1/11      8/14/11   Module Proposals  Developers draft PEPs and prototype
+8/15/11     8/15/11   Developer vote    All developers vote on PEPs 
+8/16/11     8/16/11   Module Approval   BDFL announces final approval
+8/17/11    12/30/11   Development       Implementation and testing of approved modules
+1/1/12       1/1/12   Code Freeze       APIs fixed, bug and testing changes only
+1/23/12     1/30/12   Release Prep      Test release builds, updating svn 
+1/31/12     1/31/12   Release           Official release of 1.2
 ========   ========   ================= ====================================================
 
 
