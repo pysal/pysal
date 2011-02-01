@@ -77,6 +77,9 @@ When X.0 is released we do the following:
      * bump the trunk up to version X.1 by editing `version.py`
      * build release for X.0 out of tag X.0
      * update the release on http://pypi.python.org
+       * go to http://pypi.python.org/pypi?:action=submit_form
+       * pick option 2 to upload the PKG-INFO from top level pysal directory
+         in a release tarball
      * upload releases to code.google.com/p/pysal/downloads
   * Web site related changes
      * edit documentation links on http://code.google.com/p/pysal/ (which as
