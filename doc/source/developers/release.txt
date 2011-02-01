@@ -1,6 +1,8 @@
-***********************
-PySAL Release Managment
-***********************
+************************
+PySAL Release Management
+************************
+
+.. contents::
 
 Preparing a release
 ###################
@@ -8,13 +10,11 @@ Preparing a release
 One individual developer will be assigned as the release manager and will be
 responsible for building and testing the releases.
 
-Pre-Release Activities
+Pre-Build Activities
 ======================
 
-Prior to the release there are a number of actions to take. 
+Prior to the build, there are a number of actions to take. 
 
-
-  * Code related changes
      * ensure all tests pass
      * update the change log
      * update thanks 
@@ -27,38 +27,23 @@ Prior to the release there are a number of actions to take.
 	svn copy https://pysal.googlecode.com/svn/trunk \
         http://pysal.googlecode.com/svn/tags/X.0 -m "Release X.0"
 
-     * bump the trunk up to version X.1 by editing `version.py`
-     * build release for X.0 out of tag X.0
-     * update the release on http://pypi.python.org
-     * upload releases to code.google.com/p/pysal/downloads
-  * Web site related changes
-     * edit documentation links on http://code.google.com/p/pysal/ (which as
-       of 1.1 will be the landing page for pysal.org)
-  * Documentation related changes
-     * create new release directory on documentation server
-     * edit cronjob on peloton to rsync to new release directory
+     * Build release for X.0 out of tag X.0 following instructions below
 
-Post-release Activities
+Post-build Activities
 =======================
 
-When X.0 is released we do the following:
-
-  *Download Management
-    * update the release on http://pypi.python.org
-      * go to http://pypi.python.org/pypi?:action=submit_form
-      * pick option 2 to upload the PKG-INFO from top level pysal directory in a release tarball
-    * upload releases to code.google.com/p/pysal/downloads
-  * Web site related changes
-     * edit documentation links on http://code.google.com/p/pysal/ (which as
-       of 1.1 will be the landing page for pysal.org)
-  * Documentation related changes
-     * after the Tag and final docs build, bump the docs version from x.x
-       to x.x+1dev by editing doc/source/conf.py in two places.
-     * create new release directory on documentation server
-     * edit cronjob on peloton to rsync to new release directory
+  * bump the trunk up to version X.1 by editing `version.py`
+  * update the release on http://pypi.python.org:
+     * go to http://pypi.python.org/pypi?:action=submit_form
+     * pick option 2 to upload the PKG-INFO from top level pysal directory in a release tarball
+  * upload releases to code.google.com/p/pysal/downloads
+  * edit documentation links on http://code.google.com/p/pysal/ (which as of 1.1 will be the landing page for pysal.org)
+  * after the Tag and final docs build, bump the docs version from x.x to x.x+1dev by editing doc/source/conf.py in two places.
+  * create new release directory on documentation server
+  * edit cronjob on peloton to rsync to new release directory
 
 Building the release
-###################
+####################
 
 A clean checkout of the trunk should be done on each machine used to build the
 release, after the Tag.
