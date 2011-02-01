@@ -1,5 +1,5 @@
-:mod:`pysal.spreg` --- Spatial Regression
-=========================================================
+:mod:`pysal.spreg` --- Regression and Diagnostics
+=================================================
 
 .. toctree::
     :maxdepth: 1

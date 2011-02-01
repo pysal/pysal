@@ -6,69 +6,22 @@ Preparing a release
 ###################
 
 One individual developer will be assigned as the release manager and will be
-responsible for building, testing, and uploading the releases.
+responsible for building and testing the releases.
 
-Building the release
-====================
+Pre-Release Activities
+======================
 
-A clean svn co of the trunk should be done on the machine used to build the release.
+Prior to the release there are a number of actions to take. 
 
-Source Distributions
-^^^^^^^^^^^^^^^^^^^^
-
-The work of specifying files and folders to include in a pysal source
-distribution has been done. These things are specified in setup.py and
-MANIFEST.in. To build a new source package, run::
-
-  >>> python setup.py sdist --formats=gztar,zip 
-
-to generate two source distributions.  A good reference is http://docs.python.org/distutils/sourcedist.html
-
-Binary Installer for Windows 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Making a Windows binary, with a not-so-shabby installer, is not too difficult
-as long as we rely on the user to provide the package dependencies. Run:
-
-   >>> python setup.py bdist_wininst
-   
-to generate a Windows graphical installer on either OS X or Windows. On Windows
-only, the option exists to use the Microsoft Installer format MSI, which is
-prettier but allows the user to install the package in the wrong place. For a
-look at that, on Windows run:
-
-   >>> python setup.py bdist --formats=msi
-
-
-Binary Installer for OS X 
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-To make a Mac OS X graphical installer, first install 'bdist_mpkg' from the
-Python Package Index using easy_install or pip or downloading the source
-code. Once it is installed, run ::
-
-    >>> bdist_mpkg setup.py build 
-
-to build the .mpkg package installer in the dist/ directory.
-Next, we convert the .mpkg into a disk image suitable for redistribution by
-placing it in its own folder ('pysal4mac' in this example), then running the command::
- 
-    >>> hdiutil create -fs HFS+ -srcfolder pysal4mac/ pysal4mac.dmg
-
-
-Post-release svn changes
-########################
-Two-dot versions of PySAL are released twice a year. Using the example of
-release X.0, we outline plans for updating the repository and bug fixes here.
-
-When X.0 is released we do the following:
 
   * Code related changes
      * ensure all tests pass
      * update the change log
-     * edit manifest.in
-     * thanks
-     * update setup.py prior to build
+     * update thanks 
+     * update setup.py to add new modules or remove old ones
+     * edit trunk/pysal/doc/source/contents.txt to include *New in this release*
+     * prior to the Tag and final docs build, bump the docs version from x.xdev
+       to x.x by editing doc/source/conf.py in two places.
      * create a tag X.0::
 
 	svn copy https://pysal.googlecode.com/svn/trunk \
@@ -77,9 +30,6 @@ When X.0 is released we do the following:
      * bump the trunk up to version X.1 by editing `version.py`
      * build release for X.0 out of tag X.0
      * update the release on http://pypi.python.org
-       * go to http://pypi.python.org/pypi?:action=submit_form
-       * pick option 2 to upload the PKG-INFO from top level pysal directory
-         in a release tarball
      * upload releases to code.google.com/p/pysal/downloads
   * Web site related changes
      * edit documentation links on http://code.google.com/p/pysal/ (which as
@@ -87,8 +37,91 @@ When X.0 is released we do the following:
   * Documentation related changes
      * create new release directory on documentation server
      * edit cronjob on peloton to rsync to new release directory
-     * edit contents.rst to include *New in this release*
 
+Post-release Activities
+=======================
+
+When X.0 is released we do the following:
+
+  *Download Management
+    * update the release on http://pypi.python.org
+      * go to http://pypi.python.org/pypi?:action=submit_form
+      * pick option 2 to upload the PKG-INFO from top level pysal directory in a release tarball
+    * upload releases to code.google.com/p/pysal/downloads
+  * Web site related changes
+     * edit documentation links on http://code.google.com/p/pysal/ (which as
+       of 1.1 will be the landing page for pysal.org)
+  * Documentation related changes
+     * after the Tag and final docs build, bump the docs version from x.x
+       to x.x+1dev by editing doc/source/conf.py in two places.
+     * create new release directory on documentation server
+     * edit cronjob on peloton to rsync to new release directory
+
+Building the release
+###################
+
+A clean checkout of the trunk should be done on each machine used to build the
+release, after the Tag.
+
+Source Distributions
+====================
+
+The specification of files and folders to include in all pysal 
+distributions is handled in setup.py and
+MANIFEST.in. To build a new source package, run::
+
+  >>> python setup.py sdist --formats=gztar,zip 
+
+to generate two source distributions.  A good reference is http://docs.python.org/distutils/sourcedist.html
+
+Binary Installers for Windows 
+=============================
+
+Making a Windows binary installer for XP or 7 should be done on a Windows XP machine.
+To build an installer, run:: 
+
+   >>> python setup.py bdist_wininst
+   
+You may also build a Microsoft Installer formatted MSI, which is
+prettier but allows the user to install the package in the wrong place. For a
+look at that, run:
+
+   >>> python setup.py bdist --formats=msi
+
+
+Binary Installer for OS X 
+=============================
+
+To make a Mac OS X graphical installer, first install 'bdist_mpkg' from the
+Python Package Index using easy_install or pip or downloading the source
+code. Once it is installed, run ::
+
+    >>> bdist_mpkg setup.py build 
+
+to build the .mpkg/ package installer in the dist/ directory.
+The .mpkg/ will need to be modified to install pysal to the correct
+location. Edit pysal*.mpkg/Contents/Info.plist, replacing the path under
+*IFRequirementDicts* with a generic System path such as
+/Library/Frameworks/Python.framework/Versions/Current/lib/python2.6/site-packages.
+This will check that directory exists before installing. Note that
+Version/Current/lib/python2.6 is a work-around to support both system python and
+EPD. 
+
+Next find and edit pysal*.mpkg/Contents/Packages/pysal*.pkg/Contents/Info.plist. Change the value
+after *IFPkgFlagDefaultLocation* to point to
+/Library/Frameworks/Python.framework/Versions/Current/lib/python2.6/site-packages.
+
+Finally, convert the .mpkg/ into a disk image suitable for redistribution by
+running the command::
+ 
+    >>> hdiutil create -fs HFS+ -srcfolder <pysal*>.mpkg/ <pysal*>.dmg
+
+
+Post-release SVN Changes
+========================
+
+Two-dot versions of PySAL are released twice a year. Using the example of
+release X.0, we outline plans for updating the repository and bug fixes here.
 
 Development on X.1 happens in trunk. Code in tag X.0 is never changed.  Bugs in
 X.0 that are reported by users or developers are fixed in branch X.0 and in

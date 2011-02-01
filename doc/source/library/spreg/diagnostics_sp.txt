@@ -1,12 +1,12 @@
 :mod:`spreg.diagnostics_sp` --- Diagnostics_spatial
-===============================
+====================================================
 
-The :mod:`spreg.diagnostics_sp` module provides ....
+The :mod:`spreg.diagnostics_sp` module provides spatial diagnostic tests.
 
-.. versionadded:: 0.1
+.. versionadded:: 1.1
 
 
 .. automodule:: pysal.spreg.diagnostics_sp
-    :synopsis: Diagnostic code for spReg: Python Spatial Regression Analysis Library
+    :synopsis: Code for spreg spatial diagnostics
     :members:
 

@@ -1,12 +1,12 @@
 :mod:`spreg.ols` --- Ordinary Least Squares
-===============================
+============================================
 
-The :mod:`spreg.ols` module provides ....
+The :mod:`spreg.ols` module provides OLS regression.
 
-.. versionadded:: 0.1
+.. versionadded:: 1.1
 
 
 .. automodule:: pysal.spreg.ols
-    :synopsis: Diagnostic code for spReg: Python Spatial Regression Analysis Library
+    :synopsis: Code for spreg OLS regression
     :members:
 
