@@ -1,9 +1,7 @@
 """
 Markov based methods for spatial dynamics
-
 """
-__author__= "Sergio J. Rey <srey@asu.edu"
-
+__author__ =  "Sergio J. Rey <srey@asu.edu"
 
 import numpy as np
 import numpy.linalg as la
@@ -11,8 +9,45 @@ from ergodic import fmpt, steady_state
 from scipy import stats
 import pysal
 
-__all__=["Markov","LISA_Markov","Spatial_Markov" ]
+__all__ = ["Markov", "LISA_Markov", "Spatial_Markov" ]
 
+# TT predefine LISA transitions
+# TT[i,j] is the transition type from i to j
+# i = quadrant in period 0
+# j = quadrant in period 1
+# uses one offset so first row and col of TT are ignored 
+TT = np.zeros((5, 5), int)
+c = 1
+for i in range(1, 5):
+    for j in range(1, 5):
+        TT[i, j] = c
+        c += 1
+
+# MOVE_TYPES is a dictionary that returns the move type of a LISA transition
+# filtered on the significance of the LISA end points
+# True indicates significant LISA in a particular period
+# e.g. a key of (1, 3, True, False) indicates a significant LISA located in
+# quadrant 1 in period 0 moved to quadrant 3 in period 1 but was not
+# significant in quadrant 3.
+
+MOVE_TYPES = {}
+c = 1
+for i in range(1, 5):
+    for j in range(1, 5):
+        key = (i, j, True, True)
+        MOVE_TYPES[key] = c
+        c += 1
+    for j in range(1, 5):
+        key = (i, j, False, True)
+        MOVE_TYPES[key] = c
+    c += 1
+for i in range(1, 5):
+    for j in range(1, 5):
+        key = (i, j, True, False)
+        MOVE_TYPES[key] = c
+        key = (i, j, False, False)
+        MOVE_TYPES[key] = 25
+    c += 1
 
 class Markov:
     """
@@ -20,7 +55,7 @@ class Markov:
 
     Parameters
     ----------
-    class_ids    : array (n,t) 
+    class_ids    : array (n, t) 
                    One row per observation, one column recording the state of each
                    observation, with as many columns as time periods
     classes      : array (k) 
@@ -28,19 +63,19 @@ class Markov:
 
     Attributes
     ----------
-    p            : matrix (k,k)
+    p            : matrix (k, k)
                    transition probability matrix
 
-    steady_state : matrix (k,1)
+    steady_state : matrix (k, 1)
                    ergodic distribution
 
-    transitions  : matrix (k,k)
+    transitions  : matrix (k, k)
                    count of transitions between each state i and j
 
     Examples
     --------
-    >>> c=np.array([['b','a','c'],['c','c','a'],['c','b','c'],['a','a','b'],['a','b','c']])
-    >>> m=Markov(c)
+    >>> c = np.array([['b','a','c'],['c','c','a'],['c','b','c'],['a','a','b'],['a','b','c']])
+    >>> m = Markov(c)
     >>> m.classes
     array(['a', 'b', 'c'], 
           dtype='|S1')
@@ -56,13 +91,13 @@ class Markov:
     US nominal per capita income 48 states 81 years 1929-2009
 
     >>> import pysal
-    >>> f=pysal.open("../examples/usjoin.csv")
-    >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
+    >>> f = pysal.open("../examples/usjoin.csv")
+    >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)])
 
     set classes to quintiles for each year
 
-    >>> q5=np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
-    >>> m=Markov(q5)
+    >>> q5 = np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
+    >>> m = Markov(q5)
     >>> m.transitions
     array([[ 729.,   71.,    1.,    0.,    0.],
            [  72.,  567.,   80.,    3.,    0.],
@@ -84,11 +119,11 @@ class Markov:
 
     Relative incomes
 
-    >>> pci=pci.transpose()
-    >>> rpci=pci/(pci.mean(axis=0))
-    >>> rq=pysal.Quantiles(rpci.flatten()).yb
-    >>> rq.shape=(48,81)
-    >>> mq=Markov(rq)
+    >>> pci = pci.transpose()
+    >>> rpci = pci/(pci.mean(axis=0))
+    >>> rq = pysal.Quantiles(rpci.flatten()).yb
+    >>> rq.shape = (48,81)
+    >>> mq = Markov(rq)
     >>> mq.transitions
     array([[ 707.,   58.,    7.,    1.,    0.],
            [  50.,  629.,   80.,    1.,    1.],
@@ -103,43 +138,43 @@ class Markov:
             [ 0.17776576]])
     
     """
-    def __init__(self,class_ids,classes=[]):
+    def __init__(self, class_ids, classes=[]):
         if len(classes):
-            self.classes=classes
+            self.classes = classes
         else:
-            self.classes=np.unique(class_ids)
+            self.classes = np.unique(class_ids)
 
-        n,t=class_ids.shape
-        k=len(self.classes)
-        js=range(t-1)
+        n, t = class_ids.shape
+        k = len(self.classes)
+        js = range(t-1)
 
-        classIds=self.classes.tolist()
+        classIds = self.classes.tolist()
         transitions=np.zeros((k,k))
         for state_0 in js:
-            state_1=state_0+1
-            state_0=class_ids[:,state_0]
-            state_1=class_ids[:,state_1]
-            initial=np.unique(state_0)
+            state_1 = state_0+1
+            state_0 = class_ids[:,state_0]
+            state_1 = class_ids[:,state_1]
+            initial = np.unique(state_0)
             for i in initial:
-                ending=state_1[state_0==i]
-                uending=np.unique(ending)
-                row=classIds.index(i)
+                ending = state_1[state_0 == i]
+                uending = np.unique(ending)
+                row = classIds.index(i)
                 for j in uending:
-                    col=classIds.index(j)
-                    transitions[row,col]+=sum(ending==j)
-        self.transitions=transitions
-        row_sum=transitions.sum(axis=1)
-        p=np.dot(np.diag(1/(row_sum+(row_sum==0))),transitions)
-        self.p=np.matrix(p)
+                    col = classIds.index(j)
+                    transitions[row, col] += sum(ending == j)
+        self.transitions = transitions
+        row_sum = transitions.sum(axis=1)
+        p = np.dot(np.diag(1/(row_sum+(row_sum == 0))), transitions)
+        self.p = np.matrix(p)
 
         # steady_state vector 
-        v,d=la.eig(np.transpose(self.p))
+        v, d = la.eig(np.transpose(self.p))
         # for a regular P maximum eigenvalue will be 1
-        mv=max(v)
+        mv = max(v)
         # find its position
-        i=v.tolist().index(mv)
+        i = v.tolist().index(mv)
         # normalize eigenvector corresponding to the eigenvalue 1
-        self.steady_state= d[:,i]/sum(d[:,i])
+        self.steady_state =  d[:,i]/sum(d[:,i])
 
 class Spatial_Markov:
     """
@@ -168,25 +203,25 @@ class Spatial_Markov:
 
     Attributes
     ----------
-    p               : matrix (k,k)
+    p               : matrix (k, k)
                       transition probability matrix for a-spatial Markov
-    s               : matrix (k,1)
+    s               : matrix (k, 1)
                       ergodic distribution for a-spatial Markov
-    transitions     : matrix (k,k)
+    transitions     : matrix (k, k)
                       counts of transitions between each state i and j
                       for a-spatial Markov
-    T               : matrix (k,k,k)
+    T               : matrix (k, k, k)
                       counts of transitions for each conditional Markov
                       T[0] is the matrix of transitions for observations with
                       lags in the 0th quantile, T[k-1] is the transitions for
                       the observations with lags in the k-1th
-    P               : matrix(k,k,k)
+    P               : matrix(k, k, k)
                       transition probability matrix for spatial Markov
                       first dimension is the conditioned on the lag
-    S               : matrix(k,k)
+    S               : matrix(k, k)
                       steady state distributions for spatial Markov
                       each row is a conditional steady_state
-    F               : matrix(k,k,k)
+    F               : matrix(k, k, k)
                       first mean passage times
                       first dimension is conditioned on the lag
     shtest          : list (k elements)
@@ -223,13 +258,13 @@ class Spatial_Markov:
     Examples
     --------
     >>> import pysal
-    >>> f=pysal.open("../examples/usjoin.csv")
-    >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
-    >>> pci=pci.transpose()
-    >>> rpci=pci/(pci.mean(axis=0))
-    >>> w=pysal.open("../examples/states48.gal").read()
-    >>> w.transform='r'
-    >>> sm=Spatial_Markov(rpci,w,fixed=True,k=5)
+    >>> f = pysal.open("../examples/usjoin.csv")
+    >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)])
+    >>> pci = pci.transpose()
+    >>> rpci = pci/(pci.mean(axis=0))
+    >>> w = pysal.open("../examples/states48.gal").read()
+    >>> w.transform = 'r'
+    >>> sm = Spatial_Markov(rpci, w, fixed=True, k=5)
     >>> for p in sm.P:
     ...     print p
     ...     
@@ -336,111 +371,108 @@ class Spatial_Markov:
        and convergence", 34 Geographical Analysis, 33, 195-214.
     
     """
-    def __init__(self,y,w,k=4,permutations=0,fixed=False):
+    def __init__(self, y, w, k=4, permutations=0, fixed=False):
 
-        self.y=y
-        rows,cols=y.shape
-        self.cols=cols
-        npm=np.matrix
-        npa=np.array
-        self.fixed=fixed
+        self.y = y
+        rows,cols = y.shape
+        self.cols = cols
+        npm = np.matrix
+        npa = np.array
+        self.fixed = fixed
         if fixed:
-            yf=y.flatten()
-            yb=pysal.Quantiles(yf,k=k).yb
-            yb.shape=(rows,cols)
-            classes=yb
+            yf = y.flatten()
+            yb = pysal.Quantiles(yf, k=k).yb
+            yb.shape = (rows, cols)
+            classes = yb
         else:
-            classes=npa([pysal.Quantiles(y[:,i],k=k).yb for i in np.arange(cols)]).transpose()
-        classic=Markov(classes)
-        self.classes=classes
-        self.p=classic.p
-        self.s=classic.steady_state
-        self.transitions=classic.transitions
-        T,P,ss,F=self._calc(y,w,classes,k=k)
-        self.T=T
-        self.P=P
-        self.S=ss
-        self.F=F
-        self.shtest=self._mn_test()
-        self.chi2=self._chi2_test()
-        self.x2=sum([c[0] for c in self.chi2])
+            classes = npa([pysal.Quantiles(y[:,i],k=k).yb for i in np.arange(cols)]).transpose()
+        classic = Markov(classes)
+        self.classes = classes
+        self.p = classic.p
+        self.s = classic.steady_state
+        self.transitions = classic.transitions
+        T, P, ss, F = self._calc(y, w, classes, k=k)
+        self.T = T
+        self.P = P
+        self.S = ss
+        self.F = F
+        self.shtest = self._mn_test()
+        self.chi2 = self._chi2_test()
+        self.x2 = sum([c[0] for c in self.chi2])
 
         if permutations:
-            nrp=np.random.permutation
-            rp=range(permutations)
-            counter=0
-            x2_realizations=np.zeros((permutations,1))
-            x2ss=[]
+            nrp = np.random.permutation
+            rp = range(permutations)
+            counter = 0
+            x2_realizations = np.zeros((permutations, 1))
+            x2ss = []
             for perm in range(permutations):
-                T,P,ss,F=self._calc(nrp(y),w,classes,k=k)
-                x2=[chi2(T[i],self.transitions)[0] for i in range(k)]
-                x2s=sum(x2)
-                x2_realizations[perm]=x2s
-                if x2s>=self.x2:
-                    counter+=1
+                T, P, ss, F = self._calc(nrp(y), w, classes, k=k)
+                x2 = [chi2(T[i],self.transitions)[0] for i in range(k)]
+                x2s = sum(x2)
+                x2_realizations[perm] = x2s
+                if x2s >= self.x2:
+                    counter += 1
+            self.x2_pvalue = (counter+1.0)/(permutations+1.)
+            self.x2_realizations = x2_realizations
 
-            self.x2_pvalue=(counter+1.0)/(permutations+1.)
-            self.x2_realizations=x2_realizations
 
-
-    def _calc(self,y,w,classes,k):
+    def _calc(self, y, w, classes, k):
         # lag markov
-        ly=pysal.lag_spatial(w,y)
-        npm=np.matrix
-        npa=np.array
+        ly = pysal.lag_spatial(w, y)
+        npm = np.matrix
+        npa = np.array
         if self.fixed:
-            l_classes=pysal.Quantiles(ly.flatten(),k=k).yb
-            l_classes.shape=ly.shape
+            l_classes = pysal.Quantiles(ly.flatten(), k=k).yb
+            l_classes.shape = ly.shape
         else:
-            l_classes=npa([pysal.Quantiles(ly[:,i],k=k).yb for i in np.arange(self.cols)])
-            l_classes=l_classes.transpose()
-        l_classic=Markov(l_classes)
-
-        T=np.zeros((k,k,k))
-        n,t=y.shape
+            l_classes = npa([pysal.Quantiles(ly[:,i],k=k).yb for i in np.arange(self.cols)])
+            l_classes = l_classes.transpose()
+        l_classic = Markov(l_classes)
+        T = np.zeros((k, k, k))
+        n, t = y.shape
         for t1 in range(t-1):
-            t2=t1+1
+            t2 = t1 + 1
             for i in range(n):
-                T[l_classes[i,t1],classes[i,t1],classes[i,t2]]+=1
+                T[l_classes[i, t1], classes[i, t1], classes[i, t2]] += 1
 
-        P=np.zeros_like(T)
-        F=np.zeros_like(T) # fmpt
-        ss=np.zeros_like(T[0])
-        for i,mat in enumerate(T):
-            p_i=np.matrix(np.diag(1./mat.sum(axis=1))*np.matrix(mat))
-            ss[i]=steady_state(p_i).transpose()
+        P = np.zeros_like(T)
+        F = np.zeros_like(T) # fmpt
+        ss = np.zeros_like(T[0])
+        for i, mat in enumerate(T):
+            p_i = np.matrix(np.diag(1./mat.sum(axis=1))*np.matrix(mat))
+            ss[i] = steady_state(p_i).transpose()
             try:
-                F[i]=fmpt(p_i)
+                F[i] = fmpt(p_i)
             except:
                 print "Singlular fmpt matrix for class ",i
-            P[i]=p_i
-        return T,P,ss,F
+            P[i] = p_i
+        return T, P, ss, F
 
     def _mn_test(self):
         """
         helper to calculate tests of differences between steady state
         distributions from the conditional and overall distributions.
         """
-        n,t=self.y.shape
-        nt=n*(t-1)
-        n0,n1,n2=self.T.shape
-        rn=range(n0)
-        mat=[self._ssmnp_test(self.s,self.S[i],self.T[i].sum()) for i in rn]
+        n, t = self.y.shape
+        nt =  n * (t - 1)
+        n0, n1, n2 = self.T.shape
+        rn = range(n0)
+        mat = [self._ssmnp_test(self.s, self.S[i], self.T[i].sum()) for i in rn]
         return mat
 
 
-    def _ssmnp_test(self,p1,p2,nt):
+    def _ssmnp_test(self, p1, p2, nt):
         """
-        Steady state multinomial difference probability test
-
+        Steady state multinomial probability difference test
 
         Arguments
         ---------
 
-        p1       :  array (k,1)
+        p1       :  array (k, 1)
                     first steady state probability distribution
 
-        p1       :  array (k,1)
+        p1       :  array (k, 1)
                     second steady state probability distribution
 
         nt       :  int
@@ -454,15 +486,15 @@ class Spatial_Markov:
                    (chi2 value, pvalue, degrees of freedom)
 
         """
-        p1=np.array(p1)
-        k,c=p1.shape
-        p1.shape=(k,)
-        o=nt*p2
-        e=nt*p1
-        d=np.multiply((o-e),(o-e))
-        d=d/e
-        chi2=d.sum()
-        pvalue=1-stats.chi2.cdf(chi2,k-1)
+        p1 = np.array(p1)
+        k, c = p1.shape
+        p1.shape = (k, )
+        o = nt * p2
+        e = nt * p1
+        d = np.multiply((o - e), (o - e))
+        d = d/e
+        chi2 = d.sum()
+        pvalue = 1-stats.chi2.cdf(chi2, k-1)
         return (chi2,pvalue,k-1)
 
     def _chi2_test(self):
@@ -470,23 +502,23 @@ class Spatial_Markov:
         helper to calculate tests of differences between the conditional
         transition matrices and the overall transitions matrix.
         """
-        n,t=self.y.shape
-        n0,n1,n2=self.T.shape
-        rn=range(n0)
-        mat=[chi2(self.T[i],self.transitions) for i in rn]
+        n, t = self.y.shape
+        n0, n1, n2 = self.T.shape
+        rn = range(n0)
+        mat = [chi2(self.T[i], self.transitions) for i in rn]
         return mat
 
-def chi2(T1,T2):
+def chi2(T1, T2):
     """
     chi-squared test of difference between two transition matrices.
 
     Parameters
     ----------
 
-    T1   : matrix (k,k)
+    T1   : matrix (k, k)
            matrix of transitions (counts)
 
-    T2   : matrix (k,k)
+    T2   : matrix (k, k)
            matrix of transitions (counts) to use to form the probabilities
            under the null
 
@@ -501,19 +533,19 @@ def chi2(T1,T2):
     --------
 
     >>> import pysal
-    >>> f=pysal.open("../examples/usjoin.csv")
-    >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
-    >>> rpci=pci/(pci.mean(axis=0))
-    >>> w=pysal.open("../examples/states48.gal").read()
+    >>> f = pysal.open("../examples/usjoin.csv")
+    >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
+    >>> rpci = pci/(pci.mean(axis=0))
+    >>> w = pysal.open("../examples/states48.gal").read()
     >>> w.transform='r'
-    >>> sm=Spatial_Markov(rpci,w,fixed=True)
-    >>> T1=sm.T[0]
+    >>> sm = Spatial_Markov(rpci, w, fixed=True)
+    >>> T1 = sm.T[0]
     >>> T1
     array([[ 562.,   22.,    1.,    0.],
            [  12.,  201.,   22.,    0.],
            [   0.,   17.,   97.,    4.],
            [   0.,    0.,    3.,   19.]])
-    >>> T2=sm.transitions
+    >>> T2 = sm.transitions
     >>> T2
     array([[ 884.,   77.,    4.,    0.],
            [  68.,  794.,   87.,    3.],
@@ -522,7 +554,6 @@ def chi2(T1,T2):
     >>> chi2(T1,T2)
     (23.422628044813656, 0.0053137895983268457, 9)
     
-                
     Notes
     -----
 
@@ -532,29 +563,28 @@ def chi2(T1,T2):
     while the expected transitions are formed as:
         .. math::
 
-            E_{i,j}= \sum_j T1_{i,j} * T2_{i,j}/\sum_j T2_{i,j}
+            E_{i,j} = \sum_j T1_{i,j} * T2_{i,j}/\sum_j T2_{i,j}
 
     Degrees of freedom corrected for any rows in either T1 or T2 that have
     zero total transitions.
     """
-    rs2=T2.sum(axis=1)
-    rs1=T1.sum(axis=1)
-    rs2nz=rs2>0
-    rs1nz=rs1>0
-    dof1=sum(rs1nz)
-    dof2=sum(rs2nz)
-    rs2=rs2+rs2nz
-    dof=(dof1-1)*(dof2-1)
-
-    p=np.diag(1/rs2)*np.matrix(T2)
-    E=np.diag(rs1)*np.matrix(p)
-    num=T1-E
-    num=np.multiply(num,num)
-    E=E+(E==0)
-    chi2=num/E
-    chi2=chi2.sum()
-    pvalue=1-stats.chi2.cdf(chi2,dof)
-    return chi2,pvalue,dof
+    rs2 = T2.sum(axis=1)
+    rs1 = T1.sum(axis=1)
+    rs2nz = rs2>0
+    rs1nz = rs1>0
+    dof1 = sum(rs1nz)
+    dof2 = sum(rs2nz)
+    rs2 = rs2 + rs2nz
+    dof = (dof1-1) * (dof2-1)
+    p = np.diag(1/rs2) * np.matrix(T2)
+    E = np.diag(rs1) * np.matrix(p)
+    num = T1 - E
+    num = np.multiply(num, num)
+    E = E + (E==0)
+    chi2 = num/E
+    chi2 = chi2.sum()
+    pvalue = 1-stats.chi2.cdf(chi2, dof)
+    return chi2, pvalue, dof
 
 class LISA_Markov(Markov):
     """
@@ -568,17 +598,25 @@ class LISA_Markov(Markov):
 
     w  : weights instance
 
+    permutations : int
+                   number of permutations used to determine LISA significance
+                   default = 0
+
+    significance_level : float
+                         significance level for filtering significant LISA end
+                         points in a transition
+                         default = 0.05
     Attributes
     ----------
-    classes      : array (4,1)
-                   1=HH,2=LH,3=LL,4=HL (own,lag)
-    p            : matrix (k,k)
+    classes      : array (4, 1)
+                   1=HH, 2=LH, 3=LL, 4=HL (own, lag)
+    p            : matrix (k, k)
                    transition probility matrix
-    steady_state : matrix (k,1)
+    steady_state : matrix (k, 1)
                    ergodic distribution
-    transitions  : matrix (k,k)
+    transitions  : matrix (k, k)
                    count of transitions between each state i and j
-    move_types   : matrix (n,t-1)
+    move_types   : matrix (n, t-1)
                    integer values indicating which type of LISA transition
                    occurred (q1 is quadrant in period 1, q2 is quadrant in
                    period 2)
@@ -599,15 +637,45 @@ class LISA_Markov(Markov):
                    2    4    14
                    3    4    15
                    4    4    16
+    significant_moves    : (if permutations > 0)
+                           matrix (n, t-1)
+                           integer values indicating the type and significance of a LISA
+                           transition. Nonsignificant LISAs are represented as n
+                           q1   q2   move_type 
+                           1    1    1       
+                           2    1    2
+                           3    1    3
+                           4    1    4
+                           n    1    5
+                           1    2    6
+                           2    2    7
+                           3    2    8
+                           4    2    9
+                           n    2    10
+                           1    3    11
+                           2    3    12
+                           3    3    13
+                           4    3    14
+                           n    3    15
+                           1    4    16
+                           2    4    17
+                           3    4    18
+                           4    4    19
+                           n    5    20
+                           1    n    21
+                           2    n    22
+                           3    n    23
+                           4    n    24
+                           n    n    25
 
     Examples
     --------
  
     >>> import numpy as np
-    >>> f=pysal.open("../examples/usjoin.csv")
-    >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
-    >>> w=pysal.open("../examples/states48.gal").read()
-    >>> lm=LISA_Markov(pci,w)
+    >>> f = pysal.open("../examples/usjoin.csv")
+    >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
+    >>> w = pysal.open("../examples/states48.gal").read()
+    >>> lm = LISA_Markov(pci,w)
     >>> lm.classes
     array([1, 2, 3, 4])
     >>> lm.steady_state
@@ -630,48 +698,65 @@ class LISA_Markov(Markov):
             [ 0.00333333,  0.02266667,  0.948     ,  0.026     ],
             [ 0.04815409,  0.00160514,  0.06420546,  0.88603531]])
     >>> lm.move_types
-    array([[ 11.,  11.,  11., ...,  11.,  11.,  11.],
-           [  6.,   6.,   6., ...,   6.,   7.,  11.],
-           [ 11.,  11.,  11., ...,  11.,  11.,  11.],
+    array([[11, 11, 11, ..., 11, 11, 11],
+           [ 6,  6,  6, ...,  6,  7, 11],
+           [11, 11, 11, ..., 11, 11, 11],
            ..., 
-           [  6.,   6.,   6., ...,   6.,   6.,   6.],
-           [  1.,   1.,   1., ...,   6.,   6.,   6.],
-           [ 16.,  16.,  16., ...,  16.,  16.,  16.]])
-    
+           [ 6,  6,  6, ...,  6,  6,  6],
+           [ 1,  1,  1, ...,  6,  6,  6],
+           [16, 16, 16, ..., 16, 16, 16]])
+
+    Now consider only moves with one, or both, of the LISA end points being
+    significant
+
+    >>> np.random.seed(10)
+    >>> lm_random = pysal.LISA_Markov(pci, w, permutations=99)
+    >>> lm_random.significant_moves[:,0]
+    array([13, 25, 13, 25, 25,  1,  1, 13, 13, 25, 25, 25, 25, 25, 25, 13, 25,
+           25,  1, 25, 25, 13, 25, 25, 25, 25, 25,  1, 25,  1, 13, 25, 25, 25,
+           25,  1,  1, 13, 25, 13, 13, 25,  1, 13, 25, 25, 25, 25])
     """
-    def __init__(self,y,w):
-        y=y.transpose()
-        q=np.array([pysal.Moran_Local(yi,w,permutations=0).q for yi in y])
-        q=q.transpose()
-        classes=np.arange(1,5) # no guarantee all 4 quadrants are visited
-        Markov.__init__(self,q,classes)
-        self.q=q
-        tt={}
-        c=1
-        n,k=q.shape
-        k-=1
-        for i in range(1,5):
-            for j in range(1,5):
-                tt[i,j]=c
-                c+=1
-        move_types=np.zeros((n,k))
+    def __init__(self, y, w, permutations=0, 
+            significance_level=0.05):
+        y = y.transpose()
+        pml = pysal.Moran_Local
+
+        #################################################################
+        # have to optimize conditional spatial permutations over a
+        # time series - this is a place holder for the foreclosure paper
+        ml = [ pml(yi, w, permutations=permutations) for yi in y]
+        #################################################################
+
+        q = np.array([ mli.q for mli in ml]).transpose()
+        classes = np.arange(1,5) # no guarantee all 4 quadrants are visited
+        Markov.__init__(self, q, classes)
+        self.q = q
+        n, k = q.shape
+        k -= 1
+        move_types = np.zeros((n, k), int)
+        sm = np.zeros((n, k), int)
+        if permutations > 0:
+            p = np.array([ mli.p_sim for mli in ml]).transpose()
+            self.p = p
+            pb = p <= significance_level
+        else:
+            pb = np.zeros_like(y.T)
         for t in range(k):
-            origin=q[:,t]
-            dest=q[:,t+1]
+            origin = q[:, t]
+            dest = q[:, t+1]
+            p_origin = pb[:, t]
+            p_dest = pb[:, t]
             for r in range(n):
-                move_types[r,t]=tt[origin[r],dest[r]]
+                move_types[r, t] = TT[origin[r], dest[r]]
+                key = (origin[r], dest[r], p_origin[r], p_dest[r])
+                sm[r, t] = MOVE_TYPES[key]
+        if permutations > 0:
+            self.significant_moves = sm       
         self.move_types=move_types
 
-
-
-               
 def _test():
     import doctest
     doctest.testmod(verbose=True)
 
 if __name__ == '__main__':
     _test()
-
-
-
-
