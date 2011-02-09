@@ -17,8 +17,8 @@ class Geary:
     w              : W
                      spatial weights 
     transformation : string
-                     weights transformation, default is row-standardized
-                     "R". Other options include "B": binary, "D":
+                     weights transformation, default is binary.
+                     Other options include "R": row-standardized, "D":
                      doubly-standardized, "U": untransformed (general
                      weights), "V": variance-stabilizing.
     permutations   : int
