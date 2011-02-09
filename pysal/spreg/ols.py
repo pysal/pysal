@@ -375,8 +375,8 @@ class OLS(BaseOLS, USER.DiagnosticBuilder):
     DIAGNOSTICS FOR HETEROSKEDASTICITY
     RANDOM COEFFICIENTS
     TEST                  DF          VALUE            PROB
-    Breusch-Pagan test     2           4.468300        0.1070831
-    Koenker-Bassett test   2           1.758901        0.4150110
+    Breusch-Pagan test     2           5.766791        0.0559445
+    Koenker-Bassett test   2           2.270038        0.3214160
     SPECIFICATION ROBUST TEST
     TEST                  DF          VALUE            PROB
     White                  5           2.906067        0.7144648
