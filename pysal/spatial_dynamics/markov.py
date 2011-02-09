@@ -713,8 +713,9 @@ class LISA_Markov(Markov):
     >>> lm_random = pysal.LISA_Markov(pci, w, permutations=99)
     >>> lm_random.significant_moves[:,0]
     array([13, 25, 13, 25, 25,  1,  1, 25, 13, 25, 25, 25, 25, 25, 25, 13, 25,
-              25,  1, 25, 25, 13, 25, 25, 25, 25, 25,  1, 25,  1, 13, 25, 25, 25,
-              25, 25,  1, 13, 25, 13, 25, 25, 25, 25, 25, 25, 25, 25])
+           25,  1, 25, 25, 13, 25, 25, 25, 25, 25,  1, 25,  1, 13, 25, 25, 25,
+           25, 25,  1, 13, 25, 13, 25, 25, 25, 25, 25, 25, 25, 25])
+
     """
     def __init__(self, y, w, permutations=0, 
             significance_level=0.05):
