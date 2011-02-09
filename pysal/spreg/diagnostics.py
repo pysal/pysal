@@ -708,7 +708,7 @@ def jarque_bera(reg):
 
 
 
-def breusch_pagan(reg):
+def breusch_pagan(reg, z=None):
     """
     Calculates the Breusch-Pagan test statistic to check for
     heteroscedasticity. 
@@ -716,7 +716,15 @@ def breusch_pagan(reg):
     Parameters
     ----------
     reg             : regression object
-                      output instance from a regression model 
+                      output instance from a regression model
+    z               : array
+                      optional input for specifying an alternative set of
+                      variables (Z) to explain the observed variance. By
+                      default this is a matrix of the squared explanatory
+                      variables (X**2) with a constant added to the first
+                      column if not already present. In the default case,
+                      the explanatory variables are squared to eliminate
+                      negative values. 
 
     Returns
     -------
@@ -724,7 +732,7 @@ def breusch_pagan(reg):
                       contains the statistic (bp) for the test and the
                       associated p-value (p-value)
     bp              : float
-                      scalar value for the Breusch-Pagan test statistic.
+                      scalar value for the Breusch-Pagan test statistic
     df              : integer
                       degrees of freedom associated with the test (k)
     pvalue          : float
@@ -777,32 +785,62 @@ def breusch_pagan(reg):
     Print the test statistic.
 
     >>> print("%12.12f"%testresult['bp'])
-    10.012849713094
+    7.900441675960
 
     Print the associated p-value. 
 
     >>> print("%12.12f"%testresult['pvalue'])
-    0.006694795426
+    0.019250450075
 
     """
     e2 = reg.u**2
     e = reg.u
     n = reg.n
-    x = reg.x
     k = reg.k
     ete = reg.utu
-    constant = constant_check(x)
 
     den = ete/n
     g = e2/den - 1.0
 
-    if constant == False: 
-        z = np.hstack((np.ones((n,1)),x))
-        df = k
+    if z == None:
+        x = reg.x
+        constant = constant_check(x)
+        if constant == False: 
+            z = np.hstack((np.ones((n,1)),x))**2
+        else:
+            z = x**2
     else:
-        z = x
-        df = k-1
+        constant = constant_check(z)
+        if constant == False: 
+            z = np.hstack((np.ones((n,1)),z))
 
+    n,p = z.shape
+
+    # Check to identify any duplicate columns in Z
+    omitcolumn = []
+    for i in range(p):
+        current = z[:,i]
+        for j in range(p):
+            check = z[:,j]
+            if i < j:
+                test = abs(current - check).sum()
+                if test == 0:
+                    omitcolumn.append(j)
+
+    uniqueomit = set(omitcolumn)
+    omitcolumn = list(uniqueomit)
+
+    # Now the identified columns must be removed (done in reverse to
+    # prevent renumbering)
+    omitcolumn.sort()
+    omitcolumn.reverse()
+    for c in omitcolumn:
+        z = np.delete(z,c,1)
+    n,p = z.shape
+
+    df = p-1
+
+    # Now that the variables are prepared, we calculate the statistic
     zt = np.transpose(z)
     gt = np.transpose(g)
     gtz = np.dot(gt,z)
@@ -952,6 +990,7 @@ def white(reg):
 
     # Now the identified columns must be removed (done in reverse to
     # prevent renumbering)
+    omitcolumn.sort()
     omitcolumn.reverse()
     for c in omitcolumn:
         A = np.delete(A,c,1)
@@ -969,7 +1008,7 @@ def white(reg):
 
 
 
-def koenker_bassett(reg):
+def koenker_bassett(reg, z=None):
     """
     Calculates the Koenker-Bassett test statistic to check for
     heteroscedasticity. 
@@ -978,6 +1017,14 @@ def koenker_bassett(reg):
     ----------
     reg             : regression output
                       output from an instance of a regression class
+    z               : array
+                      optional input for specifying an alternative set of
+                      variables (Z) to explain the observed variance. By
+                      default this is a matrix of the squared explanatory
+                      variables (X**2) with a constant added to the first
+                      column if not already present. In the default case,
+                      the explanatory variables are squared to eliminate
+                      negative values. 
 
     Returns
     -------
@@ -1040,12 +1087,12 @@ def koenker_bassett(reg):
     Print the test statistic.
 
     >>> print("%12.12f"%testresult['kb'])
-    7.216564472188
+    5.694087931707
 
     Print the associated p-value. 
 
     >>> print("%12.12f"%testresult['pvalue'])
-    0.027098355486
+    0.058015563638
 
     """
     # The notation here matches that of Greene (2003).
@@ -1062,13 +1109,43 @@ def koenker_bassett(reg):
     g = u-ubari
     v = (1.0/n)*np.sum((u-ubar)**2)
 
-    # This is required because the first column of z must be a constant.
-    if constant == False: 
-        z = np.hstack((np.ones((n,1)),x))
-        df = k
+    if z == None:
+        x = reg.x
+        constant = constant_check(x)
+        if constant == False: 
+            z = np.hstack((np.ones((n,1)),x))**2
+        else:
+            z = x**2
     else:
-        z = x
-        df = k-1
+        constant = constant_check(z)
+        if constant == False: 
+            z = np.hstack((np.ones((n,1)),z))
+
+    n,p = z.shape
+
+    # Check to identify any duplicate columns in Z
+    omitcolumn = []
+    for i in range(p):
+        current = z[:,i]
+        for j in range(p):
+            check = z[:,j]
+            if i < j:
+                test = abs(current - check).sum()
+                if test == 0:
+                    omitcolumn.append(j)
+
+    uniqueomit = set(omitcolumn)
+    omitcolumn = list(uniqueomit)
+
+    # Now the identified columns must be removed (done in reverse to
+    # prevent renumbering)
+    omitcolumn.sort()
+    omitcolumn.reverse()
+    for c in omitcolumn:
+        z = np.delete(z,c,1)
+    n,p = z.shape
+
+    df = p-1
 
     # Conduct the auxiliary regression.
     zt = np.transpose(z)

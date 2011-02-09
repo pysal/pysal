@@ -98,7 +98,7 @@ class JarqueBera_Tester(unittest.TestCase):
 class BreuschPagan_Tester(unittest.TestCase):
     def test_breusch_pagan(self):
         obs = diagnostics.breusch_pagan(reg)
-        exp = {'df':2, 'bp':10.012849713094, 'pvalue':0.006694795426}
+        exp = {'df':2, 'bp':7.900441675960, 'pvalue':0.019250450075}
         self.assertEquals(obs['df'],exp['df'])
         self.assertAlmostEquals(obs['bp'],exp['bp'])
         self.assertAlmostEquals(obs['pvalue'],exp['pvalue'])
@@ -116,7 +116,7 @@ class White_Tester(unittest.TestCase):
 class KoenkerBassett_Tester(unittest.TestCase):
     def test_koenker_bassett(self):
         obs = diagnostics.koenker_bassett(reg)
-        exp = {'df':2, 'kb':7.216564472188, 'pvalue':0.027098355486}
+        exp = {'df':2, 'kb':5.694087931707, 'pvalue':0.058015563638}
         self.assertEquals(obs['df'],exp['df'])
         self.assertAlmostEquals(obs['kb'],exp['kb'])
         self.assertAlmostEquals(obs['pvalue'],exp['pvalue'])
