@@ -603,7 +603,7 @@ class LISA_Markov(Markov):
                    default = 0
 
     significance_level : float
-                         significance level for filtering significant LISA end
+                         significance level (two-sided) for filtering significant LISA end
                          points in a transition
                          default = 0.05
     Attributes
@@ -735,8 +735,9 @@ class LISA_Markov(Markov):
         k -= 1
         move_types = np.zeros((n, k), int)
         sm = np.zeros((n, k), int)
+        self.significance_level = significance_level
         if permutations > 0:
-            p = np.array([ mli.p_sim for mli in ml]).transpose()
+            p = np.array([ mli.p_z_sim for mli in ml]).transpose()
             self.p = p
             pb = p <= significance_level
         else:

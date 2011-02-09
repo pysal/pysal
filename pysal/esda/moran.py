@@ -379,10 +379,12 @@ class Moran_Local:
 
     Notes 
     -----
-    p-values are one sided - where side is based on the original I value
+    p_sim values are one sided - where side is based on the original I value
     for each observation (in self.Is). In other words extreme is considered
     being further away from the origin and in the same direction than original I
-    statistic  for the focal observation.
+    statistic for the focal observation.
+
+    p_z_sim values are two sided since absolute value of z_sim is used
     
 
     Examples
