@@ -637,6 +637,10 @@ class LISA_Markov(Markov):
                    2    4    14
                    3    4    15
                    4    4    16
+    p_values     : (if permuations > 0)
+                   matrix (n, t)
+                   LISA p-values for each end point
+
     significant_moves    : (if permutations > 0)
                            matrix (n, t-1)
                            integer values indicating the type and significance of a LISA
@@ -739,7 +743,7 @@ class LISA_Markov(Markov):
         self.significance_level = significance_level
         if permutations > 0:
             p = np.array([ mli.p_z_sim for mli in ml]).transpose()
-            self.p = p
+            self.p_values = p
             pb = p <= significance_level
         else:
             pb = np.zeros_like(y.T)
