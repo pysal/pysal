@@ -608,14 +608,17 @@ class LISA_Markov(Markov):
                          default = 0.05
     Attributes
     ----------
+    chi_2        : tuple (3 elements)
+                   chi square test statistic
+                   p-value
+                   degrees of freedom
+                   for test that dynamics of y are independent of dynamics of
+                       wy
     classes      : array (4, 1)
                    1=HH, 2=LH, 3=LL, 4=HL (own, lag)
-    p            : matrix (k, k)
-                   transition probility matrix
-    steady_state : matrix (k, 1)
-                   ergodic distribution
-    transitions  : matrix (k, k)
-                   count of transitions between each state i and j
+    expected_t   : array (4, 4)
+                   expected number of transitions under the null that dynamics
+                   of y are independent of dynamics of wy
     move_types   : matrix (n, t-1)
                    integer values indicating which type of LISA transition
                    occurred (q1 is quadrant in period 1, q2 is quadrant in
@@ -637,40 +640,45 @@ class LISA_Markov(Markov):
                    2    4    14
                    3    4    15
                    4    4    16
-    p_values     : (if permuations > 0)
+    p            : matrix (k, k)
+                   transition probability matrix
+    p_values     : (if permutations > 0)
                    matrix (n, t)
                    LISA p-values for each end point
-
     significant_moves    : (if permutations > 0)
-                           matrix (n, t-1)
-                           integer values indicating the type and significance of a LISA
-                           transition. Nonsignificant LISAs are represented as n
-                           q1   q2   move_type 
-                           1    1    1       
-                           2    1    2
-                           3    1    3
-                           4    1    4
-                           n    1    5
-                           1    2    6
-                           2    2    7
-                           3    2    8
-                           4    2    9
-                           n    2    10
-                           1    3    11
-                           2    3    12
-                           3    3    13
-                           4    3    14
-                           n    3    15
-                           1    4    16
-                           2    4    17
-                           3    4    18
-                           4    4    19
-                           n    5    20
-                           1    n    21
-                           2    n    22
-                           3    n    23
-                           4    n    24
-                           n    n    25
+                       matrix (n, t-1)
+                       integer values indicating the type and significance of a LISA
+                       transition. Nonsignificant LISAs are represented as n
+                       q1   q2   move_type 
+                       1    1    1       
+                       2    1    2
+                       3    1    3
+                       4    1    4
+                       n    1    5
+                       1    2    6
+                       2    2    7
+                       3    2    8
+                       4    2    9
+                       n    2    10
+                       1    3    11
+                       2    3    12
+                       3    3    13
+                       4    3    14
+                       n    3    15
+                       1    4    16
+                       2    4    17
+                       3    4    18
+                       4    4    19
+                       n    5    20
+                       1    n    21
+                       2    n    22
+                       3    n    23
+                       4    n    24
+                       n    n    25
+    steady_state : matrix (k, 1)
+                   ergodic distribution
+    transitions  : matrix (4, 4)
+                   count of transitions between each state i and j
 
     Examples
     --------
@@ -720,6 +728,35 @@ class LISA_Markov(Markov):
            25,  1, 25, 25, 13, 25, 25, 25, 25, 25,  1, 25,  1, 13, 25, 25, 25,
            25, 25,  1, 13, 25, 13, 25, 25, 25, 25, 25, 25, 25, 25])
 
+    Test whether the moves of y are independent of the moves of wy
+
+    >>> lm.chi_2
+    (28645.587708342005, 0.0, 9)
+
+    Actual transitions of LISAs
+
+    >>> lm.transitions
+    array([[  1.08700000e+03,   4.40000000e+01,   4.00000000e+00,
+              3.40000000e+01],
+           [  4.10000000e+01,   4.70000000e+02,   3.60000000e+01,
+              1.00000000e+00],
+           [  5.00000000e+00,   3.40000000e+01,   1.42200000e+03,
+              3.90000000e+01],
+           [  3.00000000e+01,   1.00000000e+00,   4.00000000e+01,
+              5.52000000e+02]])
+
+    Expected transitions of LISAs under the null y and wy are moving
+    independently of one another
+
+    >>> lm.expected_t
+    array([[  1.12328098e+03,   1.15377356e+01,   3.47522158e-01,
+              3.41812865e+01],
+           [  3.50272664e+00,   5.28473882e+02,   1.59178880e+01,
+              1.60233918e+01],
+           [  1.53878082e-01,   2.32163556e+01,   1.46690710e+03,
+              1.47662977e+03],
+           [  9.67166213e+00,   9.74121200e+00,   6.15490790e+02,
+              1.22658713e+03]])
     """
     def __init__(self, y, w, permutations=0, 
             significance_level=0.05):
@@ -759,6 +796,34 @@ class LISA_Markov(Markov):
         if permutations > 0:
             self.significant_moves = sm       
         self.move_types=move_types
+
+        # null of own and lag moves being independent
+
+        ybar = y.mean(axis=0)
+        r = y/ybar
+        ylag = np.array([ pysal.lag_spatial(w, yt) for yt in y])
+        rlag = ylag/ybar
+        rc = r < 1.
+        rlagc = rlag < 1.
+        markov_y = pysal.Markov(rc)
+        markov_ylag = pysal.Markov(rlagc)
+        A = np.matrix( [[1, 0, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
+            [0, 1, 0, 1]] )
+
+        kp = A * np.kron(markov_y.p, markov_ylag.p) * A.T
+        trans = self.transitions.sum(axis=1)
+        t1 = np.diag(trans) * kp
+        t2 = self.transitions
+        t1 = t1.getA()
+        self.chi_2 = pysal.spatial_dynamics.markov.chi2(t1, t2)
+        self.expected_t = t1
+
+
+
+
+
 
 def _test():
     import doctest
