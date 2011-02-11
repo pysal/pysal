@@ -1155,6 +1155,19 @@ class Rectangle:
         self.right = float(right)
         self.upper = float(upper)
 
+    def __nonzero__(self):
+        """
+        ___nonzero__ is used "to implement truth value testing and the built-in operation bool()" -- http://docs.python.org/reference/datamodel.html
+
+        Rectangles will evaluate to Flase if they have Zero Area.
+        >>> r = Rectangle(0,0,0,0)
+        >>> bool(r)
+        False
+        >>> r = Rectangle(0,0,1,1)
+        >>> bool(r)
+        True
+        """
+        return bool(self.area)
     def __eq__(self,other):
         if other:
             return self[:] == other[:]
