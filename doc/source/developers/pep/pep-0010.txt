@@ -1,5 +1,5 @@
 *******************************
-PEP 0019 Add pure Python rtree
+PEP 0010 Add pure Python rtree
 *******************************
 
 ========  ============================
@@ -21,7 +21,7 @@ applications built with PySAL that requiring brushing and linking.
 Motivation
 ==========
 
-As of 1.1 PySAL checks if the external library ([Rtree]) is installed. If it
+As of 1.1 PySAL checks if the external library ([Rtree]_) is installed. If it
 is not, then an internal binning algorithm is used to determine contiguity
 relations in shapefiles for the construction of certain spatial weights.  A
 pure Python implementation of Rtrees may provide for improved cross-platform
@@ -34,7 +34,7 @@ other interactions requiring spatial indices for object selection.
 Reference Implementation
 ========================
 
-A pure Python implementation of Rtrees has recently been implemented ([pyrtree]) and
+A pure Python implementation of Rtrees has recently been implemented ([pyrtree]_) and
 is undergoing testing for possible inclusion in PySAL. It appears that this
 module can be integrated into PySAL with modest effort.
 
