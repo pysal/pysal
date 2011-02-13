@@ -15,7 +15,7 @@ Abstract
 A pure Python implementation of an Rtree will be developed for use in the
 construction of spatial weights matrices based on contiguity relations in
 shapefiles as well as supporting a spatial index that can be used by GUI based
-applications built with PySAL that requiring brushing and linking.
+applications built with PySAL requiring brushing and linking.
 
 
 Motivation
