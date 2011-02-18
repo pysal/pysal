@@ -3,11 +3,12 @@ Computational geometry code for PySAL: Python Spatial Analysis Library.
 """
 
 __author__  = "Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow"
-__credits__ = "Copyright (c) 2005-2009 Sergio J. Rey"
+__credits__ = "Copyright (c) 2005-2011 Sergio J. Rey"
 
 import math
 import copy
 import doctest
+from rtree import *
 from standalone import *
 from shapes import *
 
@@ -673,8 +674,163 @@ class PolygonLocator:
         >>> isinstance(pl, PolygonLocator)
         True
         """
-        self._locator=polygons
 
+        self._locator=polygons
+        # create and rtree
+        self._rtree = RTree()
+        for polygon in polygons:
+            x = polygon.bounding_box.left
+            y = polygon.bounding_box.lower
+            X = polygon.bounding_box.right
+            Y = polygon.bounding_box.upper
+            self._rtree.insert(polygon, Rect(x, y, X, Y))
+
+    def inside(self, query_rectangle):
+        """
+        Returns polygons that are inside query_rectangle
+
+        Attributes
+        ----------
+
+        Examples
+        --------
+
+        >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
+        >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
+        >>> p3 = Polygon([Point((7, 1)), Point((8, 7)), Point((9, 1))])
+        >>> pl = PolygonLocator([p1, p2, p3])
+        >>> qr = Rectangle(0, 0, 5, 5)
+        >>> res = pl.inside( qr )
+        >>> len(res)
+        1
+        >>> qr = Rectangle(3, 7, 5, 8)
+        >>> res = pl.inside( qr )
+        >>> len(res)
+        0
+        >>> qr = Rectangle(10, 10, 12, 12)
+        >>> res = pl.inside( qr )
+        >>> len(res)
+        0
+        >>> qr = Rectangle(0, 0, 12, 12)
+        >>> res = pl.inside( qr )
+        >>> len(res)
+        3
+
+        Notes
+        -----
+
+        inside means the intersection of the query rectangle and a
+        polygon is not empty and is equal to the area of the polygon
+        """
+        left = query_rectangle.left
+        right = query_rectangle.right
+        upper = query_rectangle.upper
+        lower = query_rectangle.lower
+
+        # rtree rect
+        qr = Rect(left, lower, right, upper)
+        # bb overlaps
+        res = [ r.leaf_obj() for r in self._rtree.query_rect(qr) \
+                if r.is_leaf()]
+
+        qp = Polygon([ Point((left, lower)), Point((right,lower)),
+            Point((right, upper)), Point((left, upper))])
+        ip = []
+        GPPI = get_polygon_point_intersect
+        for poly in res:
+            flag = True
+            lower = poly.bounding_box.lower
+            right = poly.bounding_box.right
+            upper = poly.bounding_box.upper
+            left = poly.bounding_box.left
+            p1 = Point((left, lower))
+            p2 = Point((right, upper))
+            if GPPI(qp, p1) and GPPI(qp, p2):
+                ip.append(poly)
+        return ip
+
+
+    def overlapping(self, query_rectangle):
+        """
+        Returns polygons that overlap query_rectangle
+
+        Examples
+        --------
+
+        >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
+        >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
+        >>> p3 = Polygon([Point((7, 1)), Point((8, 7)), Point((9, 1))])
+        >>> pl = PolygonLocator([p1, p2, p3])
+        >>> qr = Rectangle(0, 0, 5, 5)
+        >>> res = pl.overlapping( qr )
+        >>> len(res)
+        2
+        >>> qr = Rectangle(3, 7, 5, 8)
+        >>> res = pl.overlapping( qr )
+        >>> len(res)
+        1
+        >>> qr = Rectangle(10, 10, 12, 12)
+        >>> res = pl.overlapping( qr )
+        >>> len(res)
+        0
+        >>> qr = Rectangle(0, 0, 12, 12)
+        >>> res = pl.overlapping( qr )
+        >>> len(res)
+        3
+
+        Notes
+        -----
+
+
+        overlapping means the intersection of the query rectangle and a
+        polygon is not empty and is no larger than the area of the polygon
+        """
+        left = query_rectangle.left
+        right = query_rectangle.right
+        upper = query_rectangle.upper
+        lower = query_rectangle.lower
+
+        # rtree rect
+        qr = Rect(left, lower, right, upper)
+
+        # bb overlaps
+        res = [ r.leaf_obj() for r in self._rtree.query_rect(qr) \
+                if r.is_leaf()]
+
+        qp = Polygon([ Point((left, lower)), Point((right,lower)),
+            Point((right, upper)), Point((left, upper))])
+        op = []
+        # check if query corners are in a polygon
+        cres = copy.copy(res)
+        for poly in cres:
+            verts = copy.copy(qp.vertices)
+            flag = True
+            while flag:
+                if verts:
+                    v = verts.pop()
+                    if get_polygon_point_intersect(poly, v):
+                        op.append(poly)
+                        res.remove(poly)
+                        flag = False
+                else:
+                    flag = False
+        # for remaining polygons check if any vertices are in the query rect
+        cres = copy.copy(res)
+        for poly in cres:
+            flag = True
+            verts = copy.copy(poly.vertices)
+            while flag:
+                if verts:
+                    v = verts.pop()
+                    if get_polygon_point_intersect(qp, v):
+                        op.append(poly)
+                        res.remove(poly)
+                        flag = False
+                else:
+                    flag = False
+        return op
+        
+        
     def nearest(self, query_point, rule='vertex'):
         """
         Returns the nearest polygon indexed to a query point based on
