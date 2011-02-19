@@ -641,6 +641,7 @@ class LISA_Markov(Markov):
                    2    4    14
                    3    4    15
                    4    4    16
+
     p            : matrix (k, k)
                    transition probability matrix
     p_values     : (if permutations > 0)
@@ -676,6 +677,7 @@ class LISA_Markov(Markov):
                        3    n    23
                        4    n    24
                        n    n    25
+
     steady_state : matrix (k, 1)
                    ergodic distribution
     transitions  : matrix (4, 4)
