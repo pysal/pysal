@@ -118,7 +118,12 @@ class DBF(pysal.core.Tables.DataTable):
             elif typ == 'L':
                 value = (value in 'YyTt' and 'T') or (value in 'NnFf' and 'F') or '?' 
             elif typ == 'F':
-                value = float(value)
+                value = value.replace('\0', '').lstrip()
+                if value == '': 
+                    value = pysal.MISSINGVALUE 
+                    warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
+                else:
+                    value = float(value)
             if isinstance(value, str):
                 value = value.rstrip()
             result.append(value)
