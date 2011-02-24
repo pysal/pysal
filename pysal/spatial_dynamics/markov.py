@@ -177,6 +177,15 @@ class Markov:
         # normalize eigenvector corresponding to the eigenvalue 1
         self.steady_state =  d[:,i]/sum(d[:,i])
 
+
+        
+
+
+
+
+
+
+
 class Spatial_Markov:
     """
     Markov transitions conditioned on the value of the spatial lag
@@ -239,8 +248,16 @@ class Spatial_Markov:
                       p-value and the third the degrees of freedom 
     x2              : float
                       sum of the chi2 values for each of the conditional tests
+                      has an asymptotic chi2 distribution with k(k-1)(k-1)
+                      degrees of freedom under the null that transition
+                      probabilities are spatially homogeneous
                       (see chi2 above)
-    x2_pvalue       : float (if permutations>0)
+    x2_dof          : int
+                      degrees of freedom for homogeneity test
+    x2_pvalue       : float
+                      pvalue for homogeneity test based on analytic
+                      distribution
+    x2_rpvalue       : float (if permutations>0)
                       pseudo p-value for x2 based on random spatial permutations
                       of the rows of the original transitions 
     x2_realizations : array (permutations,1)
@@ -294,13 +311,21 @@ class Spatial_Markov:
      [ 0.01149425  0.16091954  0.74712644  0.08045977  0.        ]
      [ 0.          0.01036269  0.06217617  0.89637306  0.03108808]
      [ 0.          0.          0.          0.02352941  0.97647059]]
-    
-
+ 
     The probability of a poor state remaining poor is 0.963 if their
     neighbors are in the 1st quintile and 0.798 if their neighbors are
     in the 2nd quintile. The probability of a rich economy remaining
     rich is 0.977 if their neighbors are in the 5th quintile, but if their
-    neights are in the 4th quintile this drops to 0.903.
+    neighbors are in the 4th quintile this drops to 0.903.
+   
+    Test if the transitional dynamics are homogeneous across the lag classes
+
+    >>> sm.x2
+    200.8911757045552
+    >>> sm.x2_dof
+    80
+    >>> sm.x2_pvalue
+    2.2487567363782546e-12
 
     >>> sm.S
     array([[ 0.43509425,  0.2635327 ,  0.20363044,  0.06841983,  0.02932278],
@@ -400,6 +425,9 @@ class Spatial_Markov:
         self.shtest = self._mn_test()
         self.chi2 = self._chi2_test()
         self.x2 = sum([c[0] for c in self.chi2])
+        dof = k * (k-1) * (k-1)
+        self.x2_pvalue = 1 - stats.chi2.cdf(self.x2, dof) 
+        self.x2_dof = dof
 
         if permutations:
             nrp = np.random.permutation
@@ -414,7 +442,7 @@ class Spatial_Markov:
                 x2_realizations[perm] = x2s
                 if x2s >= self.x2:
                     counter += 1
-            self.x2_pvalue = (counter+1.0)/(permutations+1.)
+            self.x2_rpvalue = (counter+1.0)/(permutations+1.)
             self.x2_realizations = x2_realizations
 
 
