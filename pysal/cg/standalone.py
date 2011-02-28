@@ -281,15 +281,22 @@ def get_polygon_point_intersect(poly, pt):
         return filter(lambda i: get_segment_point_dist(LineSegment(vertices[i], vertices[i+1]), pt)[0] == 0,
                       xrange(-1, len(vertices)-1)) != []
 
-    if poly._holes != [[]]:
-        raise NotImplementedError, 'Cannot compute containment for polygon with holes'
+    ret = None
     if get_rectangle_point_intersect(poly.bounding_box, pt) == None: # Weed out points that aren't even close
-        return None
+        ret = None
     if filter(lambda verts: pt_lies_on_part_boundary(pt, verts), poly._vertices) != []:
-        return pt
+        ret = pt
     if filter(lambda verts: _point_in_vertices(pt, verts), poly._vertices) != []:
-        return pt
-    return None
+        ret = pt
+    if poly._holes != [[]]:
+        if filter(lambda verts: pt_lies_on_part_boundary(pt, verts), poly.holes) != []:
+            # pt lies on boundary of hole.
+            pass
+        if filter(lambda verts: _point_in_vertices(pt, verts), poly.holes) != []:
+            # pt lines inside a hole.
+            ret = None
+        #raise NotImplementedError, 'Cannot compute containment for polygon with holes'
+    return ret
     
 def get_rectangle_point_intersect(rect, pt):
     """
