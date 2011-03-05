@@ -786,6 +786,14 @@ class PolygonLocator:
         >>> res = pl.overlapping( qr )
         >>> len(res)
         3
+        >>> qr = Rectangle(8, 3, 9, 4)
+        >>> p1 = Polygon([Point((2, 1)), Point((2, 3)), Point((4, 3)), Point((4,1))])
+        >>> p2 = Polygon([Point((7, 1)), Point((7, 5)), Point((10, 5)), Point((10, 1))])
+        >>> pl = PolygonLocator([p1, p2])
+        >>> res = pl.overlapping(qr)
+        >>> len(res)
+        1
+
 
         Notes
         -----
@@ -802,10 +810,28 @@ class PolygonLocator:
         # rtree rect
         qr = Rect(left, lower, right, upper)
 
+
         # bb overlaps
         res = [ r.leaf_obj() for r in self._rtree.query_rect(qr) \
                 if r.is_leaf()]
         # have to check for polygon overlap using segment intersection
+
+        # add polys whose bb contains at least one of the corners of the query
+        # rectangle
+
+        sw = (left, lower)
+        se = (right, lower)
+        ne = (right, upper)
+        nw = (left, upper)
+        pnts = [ sw, se, ne, nw]
+        cs = []
+        for pnt in pnts:
+            c = [ r.leaf_obj() for r in self._rtree.query_point( pnt ) if r.is_leaf() ]
+            cs.extend(c)
+
+        cs = list(set(cs))
+                    
+
 
         overlapping = []
 
@@ -855,7 +881,26 @@ class PolygonLocator:
                 elif get_segments_intersect(edge, upper_edge):
                     overlapping.append(polygon)
                     break
-        return overlapping 
+        # check remaining for explicit containment of the bounding rectangle
+        # cs has candidates for this check
+        sw = Point(sw)
+        se = Point(se)
+        ne = Point(ne)
+        nw = Point(nw)
+        for polygon in cs:
+            if get_polygon_point_intersect(polygon, sw):
+                overlapping.append(polygon)
+                break
+            elif get_polygon_point_intersect(polygon, se):
+                overlapping.append(polygon)
+                break
+            elif get_polygon_point_intersect(polygon, ne):
+                overlapping.append(polygon)
+                break
+            elif get_polygon_point_intersect(polygon, nw):
+                overlapping.append(polygon)
+                break
+        return list(set(overlapping))
         
         
     def nearest(self, query_point, rule='vertex'):

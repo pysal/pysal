@@ -35,7 +35,7 @@ class Pyrtree_Tester(unittest.TestCase):
         self.assertEqual(res, [0, 1, 10, 11])
 
         # vertices are shared by all coincident rectangles
-        res = [r.leaf_obj() for r in t.query_point( (20, 20) ) if r.is_leaf() ]
+        res = [r.leaf_obj() for r in t.query_point( (20.0, 20.0) ) if r.is_leaf() ]
         self.assertEqual(len(res), 4)
 
         res = [r.leaf_obj() for r in t.query_point( (21, 20) ) if r.is_leaf() ]
