@@ -838,7 +838,7 @@ class PolygonLocator:
             if vertices[-1] != vertices[0]:
                 vertices.append(vertices[0]) # put on closed cartographic form
             nv = len(vertices)
-            for i in range(nv):
+            for i in range(nv-1):
                 head = vertices[i]
                 tail = vertices[i+1]
                 edge = LineSegment(head, tail)
