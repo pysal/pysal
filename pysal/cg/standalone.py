@@ -283,10 +283,10 @@ def get_polygon_point_intersect(poly, pt):
 
     ret = None
     if get_rectangle_point_intersect(poly.bounding_box, pt) == None: # Weed out points that aren't even close
-        ret = None
-    if filter(lambda verts: pt_lies_on_part_boundary(pt, verts), poly._vertices) != []:
+        return None
+    elif filter(lambda verts: pt_lies_on_part_boundary(pt, verts), poly._vertices) != []:
         ret = pt
-    if filter(lambda verts: _point_in_vertices(pt, verts), poly._vertices) != []:
+    elif filter(lambda verts: _point_in_vertices(pt, verts), poly._vertices) != []:
         ret = pt
     if poly._holes != [[]]:
         if filter(lambda verts: pt_lies_on_part_boundary(pt, verts), poly.holes) != []:
