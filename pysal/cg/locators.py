@@ -805,8 +805,57 @@ class PolygonLocator:
         # bb overlaps
         res = [ r.leaf_obj() for r in self._rtree.query_rect(qr) \
                 if r.is_leaf()]
+        # have to check for polygon overlap using segment intersection
 
-        return res 
+        overlapping = []
+
+        # first find polygons with at least one vertex inside query rectangle
+        remaining = copy.copy(res)
+        for polygon in res:
+            vertices = polygon.vertices
+            for vertex in vertices:
+                xb = vertex[0] >= left
+                xb *= vertex[0] < right
+                yb = vertex[1] >= lower
+                yb *= vertex[1] < upper
+                if xb*yb:
+                    overlapping.append(polygon)
+                    remaining.remove(polygon)
+                    break
+
+        # for remaining polys in bb overlap check if vertex chains intersect
+        # segments of the query rectangle
+        left_edge = LineSegment(Point((left, lower)), Point((left,
+            upper)))
+        right_edge = LineSegment(Point((right, lower)), Point((right,
+            upper)))
+        lower_edge = LineSegment(Point((left, lower)), Point((right,
+            lower)))
+        upper_edge = LineSegment(Point((left, upper)), Point((right,
+            upper)))
+        for polygon in remaining:
+            vertices = copy.copy(polygon.vertices)
+            if vertices[-1] != vertices[0]:
+                vertices.append(vertices[0]) # put on closed cartographic form
+            nv = len(vertices)
+            for i in range(nv):
+                head = vertices[i]
+                tail = vertices[i+1]
+                edge = LineSegment(head, tail)
+                li = get_segments_intersect(edge, left_edge)
+                if li:
+                    overlapping.append(polygon)
+                    break
+                elif get_segments_intersect(edge, right_edge):
+                    overlapping.append(polygon)
+                    break
+                elif get_segments_intersect(edge, lower_edge):
+                    overlapping.append(polygon)
+                    break
+                elif get_segments_intersect(edge, upper_edge):
+                    overlapping.append(polygon)
+                    break
+        return overlapping 
         
         
     def nearest(self, query_point, rule='vertex'):
