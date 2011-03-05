@@ -12,6 +12,22 @@ class PolygonLocator_Tester(unittest.TestCase):
         self.polygons = [p1, p2, p3]
         self.pl = PolygonLocator(self.polygons)
 
+        pt = Point
+        pg = Polygon
+        polys = []
+        for i in range(5):
+            l = i * 10
+            r = l + 10
+            b = 10
+            t = 20
+            sw = pt((l,b))
+            se = pt((r,b))
+            ne = pt((r,t))
+            nw = pt((l,t))
+            polys.append(pg([sw, se, ne, nw]))
+        self.pl2 = PolygonLocator(polys)
+
+
     def test_PolygonLocator(self):
        qr = Rectangle(3, 7, 5, 8)
        res = self.pl.inside( qr )
@@ -33,6 +49,10 @@ class PolygonLocator_Tester(unittest.TestCase):
        qr = Rectangle(8, 3, 10, 10)
        res = self.pl.overlapping( qr )
        self.assertEqual(len(res), 1)
+
+       qr = Rectangle(2, 12, 35, 15)
+       res = self.pl2.overlapping( qr)
+       self.assertEqual(len(res), 4)
 
 suite = unittest.TestSuite()
 test_classes = [ PolygonLocator_Tester ]

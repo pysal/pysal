@@ -49,6 +49,12 @@ class Pyrtree_Tester(unittest.TestCase):
         res = [r.leaf_obj() for r in t.query_point( (-12, 21) ) if r.is_leaf() ]
         self.assertEqual(len(res), 0)
 
+        qr = Rect(5,6, 65, 7)
+
+        res = [r.leaf_obj() for r in t.query_rect( (qr) ) if r.is_leaf() ]
+        self.assertEqual(len(res), 4)
+
+
 suite = unittest.TestSuite()
 test_classes = [ Pyrtree_Tester ]
 for i in test_classes:

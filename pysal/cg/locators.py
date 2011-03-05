@@ -624,6 +624,15 @@ class PointLocator:
         3
         """
         return self._locator.region(region_rect)
+
+    def polygon(self, polygon):
+        """
+        Returns the indexed points located inside a polygon
+        """
+
+        # get points in polygon bounding box
+
+        # for points in bounding box, check for inclusion in polygon
    
     def proximity(self, origin, r):
         """
@@ -752,7 +761,7 @@ class PolygonLocator:
 
     def overlapping(self, query_rectangle):
         """
-        Returns polygons that overlap query_rectangle
+        Returns list of polygons that overlap query_rectangle
 
         Examples
         --------
@@ -797,38 +806,7 @@ class PolygonLocator:
         res = [ r.leaf_obj() for r in self._rtree.query_rect(qr) \
                 if r.is_leaf()]
 
-        qp = Polygon([ Point((left, lower)), Point((right,lower)),
-            Point((right, upper)), Point((left, upper))])
-        op = []
-        # check if query corners are in a polygon
-        cres = copy.copy(res)
-        for poly in cres:
-            verts = copy.copy(qp.vertices)
-            flag = True
-            while flag:
-                if verts:
-                    v = verts.pop()
-                    if get_polygon_point_intersect(poly, v):
-                        op.append(poly)
-                        res.remove(poly)
-                        flag = False
-                else:
-                    flag = False
-        # for remaining polygons check if any vertices are in the query rect
-        cres = copy.copy(res)
-        for poly in cres:
-            flag = True
-            verts = copy.copy(poly.vertices)
-            while flag:
-                if verts:
-                    v = verts.pop()
-                    if get_polygon_point_intersect(qp, v):
-                        op.append(poly)
-                        res.remove(poly)
-                        flag = False
-                else:
-                    flag = False
-        return op
+        return res 
         
         
     def nearest(self, query_point, rule='vertex'):
