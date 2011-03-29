@@ -104,9 +104,17 @@ class DBF(pysal.core.Tables.DataTable):
                     value = pysal.MISSINGVALUE 
                     warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
                 elif deci:
-                    value = float(value)
+                    try:
+                        value = float(value)
+                    except ValueError:
+                        value = pysal.MISSINGVALUE
+                        warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
                 else:
-                    value = int(value)
+                    try:
+                        value = int(value)
+                    except ValueError:
+                        value = pysal.MISSINGVALUE
+                        warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
             elif typ == 'D':
                 try:
                     y, m, d = int(value[:4]), int(value[4:6]), int(value[6:8])

@@ -624,6 +624,7 @@ class PointLocator:
         3
         """
         return self._locator.region(region_rect)
+    overlapping = region
 
     def polygon(self, polygon):
         """
