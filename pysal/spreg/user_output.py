@@ -227,10 +227,14 @@ def set_name_yend(name_yend, yend):
     name_yend   : list of strings
                   
     """
-    if not name_yend:
-        name_yend = ['endogenous_'+str(i+1) for i in range(len(yend[0]))]
-    return name_yend
-    
+    if yend != None:
+        if not name_yend:
+            return ['endogenous_'+str(i+1) for i in range(len(yend[0]))]
+        else:
+            return name_yend
+    else:
+        return []
+
 def set_name_q(name_q, q):
     """Set the external instrument names in regression; return generic name if user
     provides no explicit name."
@@ -249,9 +253,13 @@ def set_name_q(name_q, q):
     name_q      : list of strings
                   
     """
-    if not name_q:
-        name_q = ['instrument_'+str(i+1) for i in range(len(q[0]))]
-    return name_q
+    if q != None:
+        if not name_q:
+            return ['instrument_'+str(i+1) for i in range(len(q[0]))]
+        else:
+            return name_q
+    else:
+        return []
 
 def set_name_yend_sp(name_y):
     """Set the spatial lag name in regression; return generic name if user
@@ -491,7 +499,10 @@ def check_arrays(*arrays):
     rows = []
     for i in arrays:
         if not issubclass(type(i), np.ndarray):
-            raise Exception, "all input data must be numpy arrays"
+            if i == None:
+                break
+            else:
+                raise Exception, "all input data must be numpy arrays"
         shape = i.shape
         if len(shape) > 2:
             raise Exception, "all input arrays must have exactly two dimensions"
