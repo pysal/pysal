@@ -10,7 +10,7 @@ from scipy import stats
 import pysal
 from operator import gt
 
-__all__ = ["Markov", "LISA_Markov", "Spatial_Markov" ]
+__all__ = ["Markov", "LISA_Markov", "Spatial_Markov", "kullback" ]
 
 # TT predefine LISA transitions
 # TT[i,j] is the transition type from i to j
@@ -1005,6 +1005,116 @@ class LISA_Markov(Markov):
 
 
 
+def kullback(F):
+    """
+    Kullback information based test of Markov Homogeneity
+
+    Parameters
+    ----------
+    F: array (s, r, k)
+       Values are transitions (not probabilities) for 
+       s strata
+       r initial states
+       k terminal states
+
+    
+    Returns
+    -------
+
+    Results: Dictionary (key: value)
+
+        Conditional homogeneity: (float) test statistic for homogeneity of
+        transition probabilities across strata
+
+        Conditional homogeneity pvalue: (float) p-value for test statistic
+
+        Conditional homogeneity dof: (int) degrees of freedom
+
+
+    Notes
+    -----
+
+    Based on  Kullback, Kupperman and Ku (1962) [2]_
+    
+
+    Example below is taken from Table 9.2 of [2]_
+
+
+
+    Example
+    -------
+
+    >>> s1 = np.array([
+    ...         [ 22, 11, 24,  2,  2,  7],
+    ...         [ 5, 23, 15,  3, 42,  6],
+    ...         [ 4, 21, 190, 25, 20, 34],
+    ...         [0, 2, 14, 56, 14, 28],
+    ...         [32, 15, 20, 10, 56, 14],
+    ...         [5, 22, 31, 18, 13, 134] 
+    ...     ])
+    >>> s2 = np.array([
+    ...     [3, 6, 9, 3, 0, 8],
+    ...     [1, 9, 3, 12, 27, 5],
+    ...     [2, 9, 208, 32, 5, 18],
+    ...     [0, 14, 32, 108, 40, 40],
+    ...     [22, 14, 9, 26, 224, 14],
+    ...     [1, 5, 13, 53, 13, 116]
+    ...     ])
+    >>> 
+    >>> F = np.array([s1, s2])
+    >>> res = kullback(F)
+    >>> res['Conditional homogeneity']
+    160.96060031170782
+    >>> res['Conditional homogeneity dof']
+    30
+    >>> res['Conditional homogeneity pvalue']
+    0.0
+
+
+    References
+    ----------
+
+    .. [2] Kullback, S. Kupperman, M. and H.H. Ku. (1962) "Tests for
+       contigency tables and Markov chains", Technometrics: 4, 573--608.
+
+    """
+
+    F1 = F==0
+    F1 = F + F1
+    FLF = F * np.log(F1)
+    T1 = 2 * FLF.sum()
+
+    FdJK = F.sum(axis=0)
+    FdJK1 = FdJK + (FdJK==0)
+    FdJKLFdJK = FdJK * np.log(FdJK1)
+    T2 = 2 * FdJKLFdJK.sum()
+
+    FdJd = F.sum(axis=0).sum(axis=1)
+    FdJd1 = FdJd + (FdJd==0)
+    T3 = 2 * (FdJd * np.log( FdJd1 )).sum()
+
+    FIJd = F[:,:].sum(axis=1)
+    FIJd1 = FIJd + (FIJd==0)
+    T4 = 2 * (FIJd * np.log(FIJd1)).sum()
+
+    FIdd = F.sum(axis=1).sum(axis=1)
+    T5 = 2 * (FIdd * np.log(FIdd)).sum()
+
+    T6 =  F.sum()
+    T6 = 2 * T6 * np.log(T6)
+
+    s,r,r1 = F.shape
+    jhom = T6 + T4 - T5 - T3
+    jdof = ( s - 1 ) * ( r - 1 )
+    chom = T1 - T4 - T2 + T3
+    cdof = r * ( s - 1 ) * ( r - 1 )
+    jkhom = T6 + T1 - T5 - T2
+    jkdof = ( s - 1) * ( r * r - 1)
+    results = {}
+    results['Conditional homogeneity'] = chom
+    results['Conditional homogeneity dof'] = cdof
+    results['Conditional homogeneity pvalue'] = 1 - stats.chi2.cdf(chom, cdof)
+    return results
 
 
 def _test():

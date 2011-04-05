@@ -117,6 +117,35 @@ class test_LISA_Markov(unittest.TestCase):
                [ 16.,  16.,  16., ...,  16.,  16.,  16.]])
         """ 
 
+class test_kullback(unittest.TestCase):
+    def test___init__(self):
+        import numpy as np
+        s1 = np.array([
+               [ 22, 11, 24,  2,  2,  7],
+               [ 5, 23, 15,  3, 42,  6],
+               [ 4, 21, 190, 25, 20, 34],
+               [0, 2, 14, 56, 14, 28],
+               [32, 15, 20, 10, 56, 14],
+               [5, 22, 31, 18, 13, 134] 
+           ])
+        s2 = np.array([
+            [3, 6, 9, 3, 0, 8],
+            [1, 9, 3, 12, 27, 5],
+            [2, 9, 208, 32, 5, 18],
+            [0, 14, 32, 108, 40, 40],
+            [22, 14, 9, 26, 224, 14],
+            [1, 5, 13, 53, 13, 116]
+            ])
+        
+        F = np.array([s1, s2])
+        res = markov.kullback(F)
+        np.testing.assert_array_almost_equal(160.96060031170782,
+            res['Conditional homogeneity'])
+        np.testing.assert_array_almost_equal(30,
+            res['Conditional homogeneity dof'])
+        np.testing.assert_array_almost_equal(0.0,
+            res['Conditional homogeneity pvalue'])
+
 if __name__ == '__main__':
     unittest.main()
 
