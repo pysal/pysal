@@ -1011,11 +1011,11 @@ def kullback(F):
 
     Parameters
     ----------
-    F: array (s, r, k)
+    F: array (s, r, r)
        Values are transitions (not probabilities) for 
        s strata
        r initial states
-       k terminal states
+       r terminal states 
 
     
     Returns
@@ -1028,7 +1028,7 @@ def kullback(F):
 
         Conditional homogeneity pvalue: (float) p-value for test statistic
 
-        Conditional homogeneity dof: (int) degrees of freedom
+        Conditional homogeneity dof: (int) degrees of freedom =  r(s-1)(s-1)
 
 
     Notes
