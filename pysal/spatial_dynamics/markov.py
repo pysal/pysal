@@ -1028,7 +1028,7 @@ def kullback(F):
 
         Conditional homogeneity pvalue: (float) p-value for test statistic
 
-        Conditional homogeneity dof: (int) degrees of freedom =  r(s-1)(s-1)
+        Conditional homogeneity dof: (int) degrees of freedom =  r(s-1)(r-1)
 
 
     Notes
@@ -1104,12 +1104,8 @@ def kullback(F):
     T6 = 2 * T6 * np.log(T6)
 
     s,r,r1 = F.shape
-    jhom = T6 + T4 - T5 - T3
-    jdof = ( s - 1 ) * ( r - 1 )
     chom = T1 - T4 - T2 + T3
     cdof = r * ( s - 1 ) * ( r - 1 )
-    jkhom = T6 + T1 - T5 - T2
-    jkdof = ( s - 1) * ( r * r - 1)
     results = {}
     results['Conditional homogeneity'] = chom
     results['Conditional homogeneity dof'] = cdof
