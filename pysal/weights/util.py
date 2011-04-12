@@ -105,27 +105,9 @@ def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
     gc.enable()
     return pysal.weights.W(w,weights,ids)
 
+
 def regime_weights(regimes):
     """
-    Construct spatial weights for regime neighbors.
-
-    Block contiguity structures are relevant when defining neighbor relations
-    based on membership in a regime. For example, all counties belonging to
-    the same state could be defined as neighbors, in an analysis of all
-    counties in the US.
-
-    Parameters
-    ----------
-    regimes : list or array
-           ids of which regime an observation belongs to
-
-    Returns
-    -------
-
-    W : spatial weights instance
-
-    Examples
-    --------
     >>> from pysal import regime_weights 
     >>> import numpy as np
     >>> regimes=np.ones(25)
@@ -145,23 +127,16 @@ def regime_weights(regimes):
     >>> w.neighbors
     {0: [1], 1: [0], 2: [3], 3: [2], 4: [5, 8], 5: [4, 8], 6: [7], 7: [6], 8: [4, 5]}
     """ 
-    region_ids=list(set(regimes))
-    regime=np.array(regimes)
-    neighbors={}
-    weights={}
-    ids=np.arange(len(regimes))
-    regions=[ids[regime==region] for region in region_ids]
-    n=len(regimes)
-    for i in xrange(n):
-        neighbors[i]=[]
-    for region in regions:
-        for i,j in comb(region.tolist(),2):
-            neighbors[i].append(j)
-            neighbors[j].append(i)
-    weights={}
-    for i,nn in neighbors.items():
-        weights[i]=[1.]*len(nn)
-    return pysal.weights.W(neighbors,weights)
+    rids = np.unique(regimes)
+    neighbors = {}
+    NPNZ = np.nonzero
+    regimes = np.array(regimes)
+    for rid in rids:
+        members = NPNZ(regimes==rid)[0]
+        for member in members:
+            neighbors[member] = members[NPNZ(members!=member)[0]].tolist()
+    return pysal.weights.W(neighbors)
+
 
 def comb(items, n=None):
     """
