@@ -23,6 +23,8 @@ class ROD(dict):
     """
     def __setitem__(self,*args):
         raise TypeError, "'Read Only Dictionary (ROD)' object does not support item assignment"
+    def __copy__(self):
+        return ROD(self.copy())
 
 
 
