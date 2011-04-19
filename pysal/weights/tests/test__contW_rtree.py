@@ -3,7 +3,7 @@ import unittest
 import pysal
 OK_TO_RUN = True
 try:
-    import rtree
+    #import rtree
     from pysal.weights._contW_rtree import ContiguityWeights_rtree,QUEEN,ROOK
 except ImportError:
     OK_TO_RUN = False

@@ -1,4 +1,4 @@
-import rtree
+import pysal.cg.rtree as rtree
 from pysal.cg.standalone import get_shared_segments
 #Order by Degree of connectivity, i.e. rook is more connected then queen.
 QUEEN = 1
@@ -102,4 +102,4 @@ if __name__=='__main__':
     shp = pysal.open('../examples/10740.shp','r')
     w = ContiguityWeights_rtree(shp,QUEEN)
     t1 = time.time()
-    print "Completed in: ",t1-t0,"seconds"
+    print "Completed in: ",t1-t0,"seconds using rtree"

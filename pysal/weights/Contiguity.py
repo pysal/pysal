@@ -6,10 +6,7 @@ __author__  = "Sergio J. Rey <srey@asu.edu> "
 __all__ = ['buildContiguity']
 
 import pysal
-try:
-    from _contW_rtree import ContiguityWeights_rtree as ContiguityWeights
-except:
-    from _contW_binning import ContiguityWeights_binning as ContiguityWeights
+from _contW_rtree import ContiguityWeights_rtree as ContiguityWeights
 
 
 WT_TYPE = {'rook':2,'queen':1} # for _contW_Binning

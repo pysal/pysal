@@ -108,6 +108,26 @@ def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
 
 def regime_weights(regimes):
     """
+    Construct spatial weights for regime neighbors.		
+        
+    Block contiguity structures are relevant when defining neighbor relations		
+    based on membership in a regime. For example, all counties belonging to		
+    the same state could be defined as neighbors, in an analysis of all		
+    counties in the US.		
+        
+    Parameters		
+    ----------		
+    regimes : list or array		
+           ids of which regime an observation belongs to		
+        
+    Returns		
+    -------		
+        
+    W : spatial weights instance		
+        
+    Examples		
+    --------
+    
     >>> from pysal import regime_weights 
     >>> import numpy as np
     >>> regimes=np.ones(25)

@@ -12,10 +12,11 @@ see doc/ref/r-tree-clustering-split-algo.pdf
 
 __author__  = "Sergio J. Rey"
 
-__all__ = ['RTree', 'Rect']
+__all__ = ['RTree', 'Rect', 'Rtree']
 
 MAXCHILDREN=10
 MAX_KMEANS=5
+BUFFER = 0.0000001
 import math, random, sys
 import time
 import array
@@ -144,6 +145,10 @@ def union_all(kids):
     assert(False ==  cur.swapped_x)
     return cur
 
+def Rtree():
+    return RTree()
+
+
 class RTree(object):
     def __init__(self):
         self.count = 0
@@ -186,6 +191,44 @@ class RTree(object):
         for x in self.cursor.query_point(p): yield x
     def walk(self,pred):
         return self.cursor.walk(pred)
+    def intersection(self, boundingbox):
+        """
+        replicate c rtree method
+
+        Returns
+        -------
+
+        ids : list
+              list of object ids whose bounding boxes intersect with query
+              bounding box
+
+        """
+        # grow the bounding box slightly to handle coincident edges
+
+        bb = boundingbox
+        bb[0] = bb[0] - BUFFER
+        bb[1] = bb[1] - BUFFER
+        bb[2] = bb[2] + BUFFER
+        bb[3] = bb[3] + BUFFER
+
+        qr = Rect(bb[0], bb[1], bb[2], bb[3])
+        return [ r.leaf_obj() for r in self.query_rect(qr) if r.is_leaf() ]
+
+
+    def add(self, id, boundingbox):
+        """
+        replicate c rtree method
+
+        Arguments
+        ---------
+
+        id: object id
+
+        boundingbox: list 
+                   bounding box [minx, miny, maxx, maxy]
+        """
+        bb = boundingbox
+        self.cursor.insert(id, Rect(bb[0], bb[1], bb[2], bb[3]))
 
 class _NodeCursor(object):
     @classmethod
