@@ -1,3 +1,4 @@
+#pylint: disable-msg=C0103, C0301
 """
 Pure Python implementation of RTree spatial index
 
@@ -14,10 +15,10 @@ __author__  = "Sergio J. Rey"
 
 __all__ = ['RTree', 'Rect', 'Rtree']
 
-MAXCHILDREN=10
-MAX_KMEANS=5
+MAXCHILDREN = 10
+MAX_KMEANS = 5
 BUFFER = 0.0000001
-import math, random, sys
+import math, random 
 import time
 import array
 
@@ -30,9 +31,9 @@ class Rect(object):
      implicitly via swaps in the order of minx/y and maxx/y.)
     """
 
-    __slots__ = ("x","y","xx","yy", "swapped_x", "swapped_y")
+    __slots__ = ("x", "y", "xx", "yy", "swapped_x", "swapped_y")
 
-    def __init__(self, minx,miny,maxx,maxy):
+    def __init__(self, minx, miny, maxx, maxy):
         self.swapped_x = (maxx < minx)
         self.swapped_y = (maxy < miny)
         self.x = minx
@@ -40,11 +41,11 @@ class Rect(object):
         self.xx = maxx
         self.yy = maxy
 
-        if self.swapped_x: self.x,self.xx = maxx,minx
-        if self.swapped_y: self.y,self.yy = maxy,miny
+        if self.swapped_x: self.x, self.xx = maxx, minx
+        if self.swapped_y: self.y, self.yy = maxy, miny
 
     def coords(self):
-        return self.x,self.y,self.xx,self.yy
+        return self.x, self.y, self.xx, self.yy
 
 
     def overlap(self, orect):
@@ -71,38 +72,38 @@ class Rect(object):
     def extent(self):
         x = self.x
         y = self.y
-        return (x,y,self.xx-x,self.yy-y)
+        return (x, y, self.xx - x, self.yy - y)
 
     def grow(self, amt):
         a = amt * 0.5
-        return Rect(self.x-a,self.y-a,self.xx+a,self.yy+a)
+        return Rect(self.x - a, self.y - a, self.xx + a, self.yy + a)
 
-    def intersect(self,o):
+    def intersect(self, o):
         if self is NullRect: return NullRect
         if o is NullRect: return NullRect
 
-        nx,ny = max(self.x,o.x),max(self.y,o.y)
-        nx2,ny2 = min(self.xx,o.xx),min(self.yy,o.yy)
-        w,h = nx2-nx, ny2-ny
+        nx, ny = max(self.x, o.x), max(self.y, o.y)
+        nx2, ny2 = min(self.xx, o.xx), min(self.yy, o.yy)
+        w, h = nx2 - nx, ny2 - ny
 
         if w <= 0 or h <= 0: return NullRect
 
-        return Rect(nx,ny,nx2,ny2)
+        return Rect(nx, ny, nx2, ny2)
 
 
-    def does_contain(self,o):
-        return self.does_containpoint( (o.x,o.y) ) and self.does_containpoint( (o.xx,o.yy) )
+    def does_contain(self, o):
+        return self.does_containpoint( (o.x, o.y) ) and self.does_containpoint( (o.xx, o.yy) )
 
-    def does_intersect(self,o):
+    def does_intersect(self, o):
         return (self.intersect(o).area() > 0)
 
-    def does_containpoint(self,p):
-        x,y = p
+    def does_containpoint(self, p):
+        x, y = p
         return (x >= self.x and x <= self.xx and y >= self.y and y <= self.yy)
 
-    def union(self,o):
-        if o is NullRect: return Rect(self.x,self.y,self.xx,self.yy)
-        if self is NullRect: return Rect(o.x,o.y,o.xx,o.yy)
+    def union(self, o):
+        if o is NullRect: return Rect(self.x, self.y, self.xx, self.yy)
+        if self is NullRect: return Rect(o.x, o.y, o.xx, o.yy)
         
         x = self.x
         y = self.y
@@ -118,24 +119,24 @@ class Rect(object):
         nx2 = xx if xx > oxx else oxx
         ny2 = yy if yy > oyy else oyy
 
-        res = Rect(nx,ny,nx2,ny2)
+        res = Rect(nx, ny, nx2, ny2)
 
         return res
         
-    def union_point(self,o):
-        x,y = o
-        return self.union(Rect(x,y,x,y))
+    def union_point(self, o):
+        x, y = o
+        return self.union(Rect(x, y, x, y))
 
     def diagonal_sq(self):
         if self is NullRect: return 0
         w = self.xx - self.x
         h = self.yy - self.y
-        return w*w + h*h
+        return w * w + h * h
     
     def diagonal(self):
         return math.sqrt(self.diagonal_sq())
 
-NullRect = Rect(0.0,0.0,0.0,0.0)
+NullRect = Rect(0.0, 0.0, 0.0, 0.0)
 NullRect.swapped_x = False
 NullRect.swapped_y = False
 
@@ -177,19 +178,19 @@ class RTree(object):
         self.cursor = _NodeCursor.create(self, NullRect)
 
     def _ensure_pool(self, idx):
-        if len(self.rect_pool) < (4*idx):
-            self.rect_pool.extend([0,0,0,0] * idx)
-            self.node_pool.extend([0,0] * idx)
+        if len(self.rect_pool) < (4 * idx):
+            self.rect_pool.extend([0, 0, 0, 0] * idx)
+            self.node_pool.extend([0, 0] * idx)
 
-    def insert(self,o, orect):
-        self.cursor.insert(o,orect)
+    def insert(self, o, orect):
+        self.cursor.insert(o, orect)
         assert(self.cursor.index == 0)
 
     def query_rect(self, r):
         for x in self.cursor.query_rect(r): yield x
     def query_point(self, p):
         for x in self.cursor.query_point(p): yield x
-    def walk(self,pred):
+    def walk(self, pred):
         return self.cursor.walk(pred)
     def intersection(self, boundingbox):
         """
@@ -240,7 +241,7 @@ class _NodeCursor(object):
         #rooto.node_pool.extend([0,0])
         #rooto.rect_pool.extend([0,0,0,0])
 
-        retv = _NodeCursor(rooto,idx,rect,0,0)
+        retv = _NodeCursor(rooto, idx, rect, 0, 0)
 
         retv._save_back()
         return retv
@@ -248,16 +249,16 @@ class _NodeCursor(object):
     @classmethod
     def create_with_children(cls, children, rooto):
         rect = union_all([c for c in children])
-        nr = Rect(rect.x,rect.y,rect.xx,rect.yy)
+        nr = Rect(rect.x, rect.y, rect.xx, rect.yy)
         assert(not rect.swapped_x)
-        nc = _NodeCursor.create(rooto,rect)
+        nc = _NodeCursor.create(rooto, rect)
         nc._set_children(children)
         assert(not nc.is_leaf())
         return nc
 
     @classmethod
     def create_leaf(cls, rooto, leaf_obj, leaf_rect):
-        rect = Rect(leaf_rect.x,leaf_rect.y,leaf_rect.xx,leaf_rect.yy)
+        rect = Rect(leaf_rect.x, leaf_rect.y, leaf_rect.xx, leaf_rect.yy)
         rect.swapped_x = True # Mark as leaf by setting the xswap flag.
         res = _NodeCursor.create(rooto, rect)
         idx = res.index
@@ -270,7 +271,7 @@ class _NodeCursor(object):
         assert(res.is_leaf())
         return res
 
-    __slots__ = ("root","npool","rpool","index","rect","next_sibling","first_child")
+    __slots__ = ("root", "npool", "rpool", "index", "rect", "next_sibling", "first_child")
 
     def __init__(self, rooto, index, rect, first_child, next_sibling):
         self.root = rooto
@@ -292,13 +293,13 @@ class _NodeCursor(object):
 
     def query_rect(self, r):
         """ Return things that intersect with 'r'. """
-        def p(o,x): return r.does_intersect(o.rect)
+        def p(o, x): return r.does_intersect(o.rect)
         for rr in self.walk(p):
             yield rr
 
-    def query_point(self,point):
+    def query_point(self, point):
         """ Query by a point """
-        def p(o,x): return o.rect.does_containpoint(point)
+        def p(o, x): return o.rect.does_containpoint(point)
             
         for rr in self.walk(p):
             yield rr
@@ -315,14 +316,14 @@ class _NodeCursor(object):
         nodei = index * 2
         rp = self.rpool
         x = rp[recti]
-        y = rp[recti+1]
-        xx = rp[recti+2]
-        yy = rp[recti+3]
+        y = rp[recti + 1]
+        xx = rp[recti + 2]
+        yy = rp[recti + 3]
 
         if (x == 0.0 and y == 0.0 and xx == 0.0 and yy == 0.0): 
             self.rect = NullRect
         else:
-            self.rect = Rect(x,y,xx,yy)
+            self.rect = Rect(x, y, xx, yy)
 
         self.next_sibling = self.npool[nodei]
         self.first_child = self.npool[nodei + 1]
@@ -341,7 +342,7 @@ class _NodeCursor(object):
     
     def get_first_child(self):
         fc = self.first_child
-        c = _NodeCursor(self.root,0,NullRect,0,0)
+        c = _NodeCursor(self.root, 0, NullRect, 0, 0)
         c._become(self.first_child)
         return c
 
@@ -358,9 +359,9 @@ class _NodeCursor(object):
             self.rect.write_raw_coords(rp, recti)
         else: 
             rp[recti] = 0
-            rp[recti+1] = 0
-            rp[recti+2] = 0
-            rp[recti+3] = 0
+            rp[recti + 1] = 0
+            rp[recti + 2] = 0
+            rp[recti + 3] = 0
 
         self.npool[nodei] = self.next_sibling
         self.npool[nodei + 1] = self.first_child
@@ -378,7 +379,7 @@ class _NodeCursor(object):
         while True:
             if self.holds_leaves():
                 self.rect = self.rect.union(leafrect)
-                self._insert_child(_NodeCursor.create_leaf(self.root,leafo,leafrect))
+                self._insert_child(_NodeCursor.create_leaf(self.root, leafo, leafrect))
 
                 self._balance()
                 
@@ -394,8 +395,8 @@ class _NodeCursor(object):
                 child = None
                 minarea = -1.0
                 for c in self.children():
-                    x,y,xx,yy = c.rect.coords()
-                    lx,ly,lxx,lyy = leafrect.coords()
+                    x, y, xx, yy = c.rect.coords()
+                    lx, ly, lxx, lyy = leafrect.coords()
                     nx = x if x < lx else lx
                     nxx = xx if xx > lxx else lxx
                     ny = y if y < ly else ly
@@ -423,10 +424,10 @@ class _NodeCursor(object):
 
         memo = {}
 
-        clusterings = [ k_means_cluster(self.root,k,s_children) for k in range(2,MAX_KMEANS) ]
-        score,bestcluster = max( [ (silhouette_coeff(c,memo),c) for c in clusterings ])
+        clusterings = [ k_means_cluster(self.root, k, s_children) for k in range(2, MAX_KMEANS) ]
+        score, bestcluster = max( [ (silhouette_coeff(c, memo), c) for c in clusterings ])
 
-        nodes = [ _NodeCursor.create_with_children(c,self.root) for c in bestcluster if len(c) > 0]
+        nodes = [ _NodeCursor.create_with_children(c, self.root) for c in bestcluster if len(c) > 0]
 
         self._set_children(nodes)
         
@@ -489,8 +490,8 @@ def avg_diagonals(node, onodes, memo_tab):
     sv = 0.0
     diag = 0.0
     for onode in onodes:
-        k1 = (nidx,onode.index)
-        k2 = (onode.index,nidx)
+        k1 = (nidx, onode.index)
+        k2 = (onode.index, nidx)
         if k1 in memo_tab: 
             diag = memo_tab[k1]
         elif k2 in memo_tab:
@@ -506,7 +507,7 @@ def avg_diagonals(node, onodes, memo_tab):
 def silhouette_w(node, cluster, next_closest_cluster, memo):
     ndist = avg_diagonals(node, cluster, memo)
     sdist = avg_diagonals(node, next_closest_cluster, memo)
-    return (sdist - ndist) / max(sdist,ndist)
+    return (sdist - ndist) / max(sdist, ndist)
 
 def silhouette_coeff(clustering, memo_tab):
     # special case for a clustering of 1.0
@@ -516,30 +517,30 @@ def silhouette_coeff(clustering, memo_tab):
     for cluster in clustering:
         others = [ c for c in clustering if c is not cluster ]
         others_cntr = [ center_of_gravity(c) for c in others ]
-        ws = [ silhouette_w(node,cluster,others[closest(others_cntr,node)], memo_tab) for node in cluster ]
+        ws = [ silhouette_w(node, cluster, others[closest(others_cntr, node)], memo_tab) for node in cluster ]
         cluster_coeff = sum(ws) / len(ws)
         coeffs.append(cluster_coeff)
     return sum(coeffs) / len(coeffs)
 
 def center_of_gravity(nodes):
     totarea = 0.0
-    xs,ys = 0,0
+    xs, ys = 0, 0
     for n in nodes:
         if n.rect is not NullRect:
-            x,y,w,h = n.rect.extent()
-            a = w*h
+            x, y, w, h = n.rect.extent()
+            a = w * h
             xs = xs + (a * (x + (0.5 * w)))
             ys = ys + (a * (y + (0.5 * h)))
             totarea = totarea + a
     return (xs / totarea), (ys / totarea)
 
 def closest(centroids, node):
-    x,y = center_of_gravity([node])
+    x, y = center_of_gravity([node])
     dist = -1
     ridx = -1
 
-    for (i,(xx,yy)) in enumerate(centroids):
-        dsq = ((xx-x) ** 2) + ((yy-y) ** 2)
+    for (i, (xx, yy)) in enumerate(centroids):
+        dsq = (( xx - x ) ** 2) + (( yy - y ) ** 2)
         if -1 == dist or dsq < dist:
             dist = dsq
             ridx = i
