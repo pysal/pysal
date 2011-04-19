@@ -10,6 +10,19 @@ from math import sqrt
 
 __all__ = [ "f_stat", "t_stat", "r2", "ar2", "se_betas", "log_likelihood", "akaike", "schwarz", "condition_index", "jarque_bera", "breusch_pagan", "white", "koenker_bassett", "vif" ]
 
+# test setup
+import numpy as np
+from ols import BaseOLS as OLS
+db = pysal.open("../examples/columbus.dbf","r")
+y = np.array(db.by_col("CRIME"))
+y = np.reshape(y, (49,1))
+X = []
+X.append(db.by_col("INC"))
+X.append(db.by_col("HOVAL"))
+X = np.array(X).T
+reg = OLS(y,X)
+# end test setup
+
 def f_stat(reg):
     """
     Calculates the f-statistic and associated p-value of the regression.
