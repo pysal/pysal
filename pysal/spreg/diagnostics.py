@@ -81,9 +81,6 @@ def f_stat(reg):
 
 
 
-
-
-
 def t_stat(reg, z_stat=False):
     """
     Calculates the t-statistics (or z-statistics) and associated p-values.
@@ -133,7 +130,6 @@ def t_stat(reg, z_stat=False):
         else:
             ts_result.append((t, stats.t.sf(abs(t),n-k)*2))
     return ts_result
-
 
 
 
@@ -734,7 +730,6 @@ def white(reg):
 
 
 
-
 def koenker_bassett(reg, z=None):
     """
     Calculates the Koenker-Bassett test statistic to check for
@@ -868,6 +863,7 @@ def koenker_bassett(reg, z=None):
     return kb_result
 
 
+
 def vif(reg):
     """
     Calculates the variance inflation factor for each independent variable.
@@ -985,7 +981,7 @@ def _test():
 if __name__ == '__main__':
     import numpy as np
     import pysal
-    import diagnostics
+    from pysal.spreg import diagnostics
     from ols import BaseOLS as OLS
     db = pysal.open("../examples/columbus.dbf","r")
     y = np.array(db.by_col("CRIME"))
