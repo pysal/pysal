@@ -429,8 +429,8 @@ def jacquez(events, k, permutations=99):
 
     # loop for generating a random distribution to assess significance
     dist=[]
-    j = 0
     for p in range(permutations):
+        j = 0
         trand = np.random.permutation(time)
         knnt = Distance.knnW(trand,k)
         nnt = knnt.neighbors
