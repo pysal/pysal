@@ -18,7 +18,14 @@ class GalIO(FileIO.FileIO):
         FileIO.FileIO.__init__(self,*args,**kwargs)
         self.file = open(self.dataPath, self.mode)
 
-    def read(self, n=-1):
+    def read(self, n=-1, sparse=False):
+        """
+
+        sparse: boolean
+               If true return scipy sparse object
+               If false return pysal w object
+        """
+        self._sparse = sparse
         self._complain_ifclosed(self.closed)
         return self._read()
 
@@ -43,7 +50,7 @@ class GalIO(FileIO.FileIO):
 
         Returns
         -------
-        returns a W object
+        returns a W object 
 
         Examples
         --------
@@ -61,30 +68,76 @@ class GalIO(FileIO.FileIO):
         True
         >>> w.sd == 1.5151237573214935
         True
+        >>> testfile = pysal.open("../../examples/sids2.gal",'r')
 
+        Return a sparse matrix for the w information
+
+        >>> wsp, ids = testfile.read(sparse=True)
+        >>> wsp.nnz
+        462
+        
         """
-        if self.pos > 0:
-            raise StopIteration
-        neighbors={}
-        ids=[]
-        # handle case where more than n is specified in first line
-        header=self.file.readline().strip().split()
-        header_n= len(header)
-        n=int(header[0])
-        if header_n > 1:
-            n=int(header[1])
-        w={}
-        typ = self.data_type
-        for i in range (n):
-            id,n_neighbors=self.file.readline().strip().split()
-            id = typ(id)
-            n_neighbors = int(n_neighbors)
-            neighbors_i = map(typ,self.file.readline().strip().split())
-            neighbors[id]=neighbors_i
-            ids.append(id)
+        if self._sparse:
+            if self.pos > 0:
+                raise StopIteration
 
-        self.pos += 1 
-        return W(neighbors,id_order=ids)
+            header = self.file.readline().strip().split()
+            header_n = len(header)
+            n = int(header[0])
+            if header_n > 1:
+                n = int(header[1])
+            ids = []
+            idsappend = ids.append
+            row = []
+            extend = row.extend    # avoid dot in loops
+            col = []
+            append = col.append
+            counter = 0
+            typ = self.data_type
+            for i in xrange(n):
+                id, n_neighbors = self.file.readline().strip().split()
+                id = typ(id)
+                n_neighbors = int(n_neighbors)
+                neighbors_i = map(typ,self.file.readline().strip().split())
+                nn = len(neighbors_i)
+                extend([id]*nn)
+                counter += nn
+                for id_neigh in neighbors_i:
+                    append(id_neigh)
+                idsappend(id)
+            self.pos += 1 
+            from scipy import sparse
+            import numpy as np
+            row = np.array(row)
+            col = np.array(col)
+            data = np.ones(counter)
+            ids = np.unique(row)
+            row = np.array([ np.where(ids==j)[0] for j in row]).flatten()
+            col = np.array([ np.where(ids==j)[0] for j in col]).flatten()
+
+            return (sparse.csr_matrix((data,(row,col)), shape=(n, n)), ids)
+        else:
+            if self.pos > 0:
+                raise StopIteration
+            neighbors={}
+            ids=[]
+            # handle case where more than n is specified in first line
+            header=self.file.readline().strip().split()
+            header_n= len(header)
+            n=int(header[0])
+            if header_n > 1:
+                n=int(header[1])
+            w={}
+            typ = self.data_type
+            for i in range (n):
+                id,n_neighbors=self.file.readline().strip().split()
+                id = typ(id)
+                n_neighbors = int(n_neighbors)
+                neighbors_i = map(typ,self.file.readline().strip().split())
+                neighbors[id]=neighbors_i
+                ids.append(id)
+            self.pos += 1 
+            return W(neighbors,id_order=ids)
 
     def write(self,obj):
         """ 
