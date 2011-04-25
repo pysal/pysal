@@ -299,17 +299,21 @@ class Kernel(W):
             # use local max knn distance
             self.bandwidth=dmat.max(axis=1)*self.eps
             self.bandwidth.shape=(self.bandwidth.size,1)
+            # identify knn neighbors for each point
+            nnq=self.kdt.query(self.data,k=self.k)
+            self.neigh=nnq[1]
 
     def _eval_kernel(self):
         # get points within bandwidth distance of each point
-        kdtq=self.kdt.query_ball_point
-        neighbors=[kdtq(self.data,r=bwi[0])[i] for i,bwi in enumerate(self.bandwidth)]
-        self.neigh=neighbors
+        if not hasattr(self, 'neigh'):
+            kdtq=self.kdt.query_ball_point
+            neighbors=[kdtq(self.data,r=bwi[0])[i] for i,bwi in enumerate(self.bandwidth)]
+            self.neigh=neighbors
         # get distances for neighbors
         data=np.array(self.data)
         bw=self.bandwidth
         z=[]
-        for i,nids in enumerate(neighbors):
+        for i,nids in enumerate(self.neigh):
             di=data[np.array([0,i])]
             ni=data[nids]
             zi=cdist(di,ni)[1]/bw[i]

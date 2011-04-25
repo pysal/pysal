@@ -124,8 +124,8 @@ class _Testuser(unittest.TestCase):
 
     def test_adaptive_kernelW_from_shapefile(self):
         kwa = pysal.adaptive_kernelW_from_shapefile('../../examples/columbus.shp')
-        self.assertEquals(kwa.weights[0], [9.9999990066379496e-08,
-                                           1.0, 0.031789067677363891])
+        self.assertEquals(kwa.weights[0], [1.0, 0.031789067677363891,
+                                           9.9999990066379496e-08])
         np.testing.assert_array_almost_equal(kwa.bandwidth[:3],
                                              np.array([[ 0.59871832],
                                                        [ 0.59871832],

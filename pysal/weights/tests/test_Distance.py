@@ -69,8 +69,8 @@ class _TestDistanceWeights(unittest.TestCase):
                                          0.0070787731484506233, 1.0,
                                          0.23051223027663015])
         kwa=pysal.adaptive_kernelW_from_shapefile(self.polyShp)
-        self.assertEqual(kwa.weights[0], [9.9999990066379496e-08, 1.0,
-                                          0.031789067677363891])
+        self.assertEqual(kwa.weights[0], [1.0, 0.031789067677363891,
+                                           9.9999990066379496e-08])
 
     def test_threshold(self):
         md = pysal.min_threshold_dist_from_shapefile(self.polyShp)
