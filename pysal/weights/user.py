@@ -797,7 +797,7 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, function='triang
     --------
     >>> kwa = adaptive_kernelW_from_shapefile('../examples/columbus.shp')
     >>> kwa.weights[0]
-    [9.9999990066379496e-08, 1.0, 0.031789067677363891]
+    [1.0, 0.031789067677363891, 9.9999990066379496e-08]
     >>> kwa.bandwidth[:3]
     array([[ 0.59871832],
            [ 0.59871832],
