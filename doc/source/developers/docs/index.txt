@@ -48,21 +48,16 @@ If you run into the following error::
 	    raise RuntimeError("No directive named '%s' found" % name)
 	    RuntimeError: No directive named 'function' found
 
-A fix is to do the following::
+A fix is to do the following:
 
-	1. Upgrade sphinx to 1.0.4.
+    1. Upgrade sphinx to 1.0.4::
 
-	    pip install -U sphinx
+        pip install -U sphinx
 
-    2. Upgrade numpydoc
+    2. Upgrade to the latest numpydoc extension from the Python Package Index::
 
         pip install -U numpydoc
 
-	3. Optionally: Upgrade to the latest numpydoc extension from the scipy source:
-                svn co http://svn.scipy.org/svn/scipy/trunk scipy
-		cd scipy/doc/sphinxext/
-		svn update
-		python setup.py install
 
 We've added the Sphinx extension 'viewcode.' Displaying the option to view code
 inline requires at least one properly formatted docstring in your module.
