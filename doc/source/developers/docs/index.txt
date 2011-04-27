@@ -52,9 +52,13 @@ A fix is to do the following::
 
 	1. Upgrade sphinx to 1.0.4.
 
-	    easy_install -U sphinx
+	    pip install -U sphinx
 
-	2. Upgrade to the latest numpydoc extension from the scipy source:
+    2. Upgrade numpydoc
+
+        pip install -U numpydoc
+
+	3. Optionally: Upgrade to the latest numpydoc extension from the scipy source:
                 svn co http://svn.scipy.org/svn/scipy/trunk scipy
 		cd scipy/doc/sphinxext/
 		svn update
