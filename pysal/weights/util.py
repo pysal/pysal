@@ -657,6 +657,21 @@ def lat2SW(nrows=3,ncols=5,criterion="rook"):
     return m
         
         
+def write_gal(file, k=10):
+    f = open(file, 'w')
+    n = k * k
+    f.write("0 %d"%n)
+    for i in xrange(n):
+        row = i / k
+        col = i % k
+        neighs = [ i - i, i + 1, i - k , i + k ]
+        neighs = [j for j in neighs if j >= 0 and j < n]
+        f.write("\n%d %d\n"%(i, len(neighs)))
+        f.write(" ".join(map(str, neighs)))
+    f.close()
+
+
+
 def _test():
     """Doc test"""
     import doctest

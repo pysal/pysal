@@ -489,6 +489,16 @@ class test_Polygon(unittest.TestCase):
         p = Polygon([[Point((0, 0)), Point((10, 0)), Point((10, 10)), Point((0, 10))],
                      [Point((30, 30)), Point((40, 30)), Point((40, 40)), Point((30, 40))]]) 
         self.assertEquals(len(p.vertices), 8)
+
+    def test_contains_point(self):
+         p = Polygon([Point((0, 0)), Point((10, 0)), Point((10, 10)), Point((0, 10))], [Point((1, 2)), Point((2, 2)), Point((2, 1)), Point((1, 1))])
+         self.assertEquals(p.contains_point((1,1)), 1)
+         self.assertEquals(p.contains_point((2,2)), 0)
+         self.assertEquals(p.contains_point((5,5)), 1)
+         self.assertEquals(p.contains_point((10,10)), 1)
+
+
+        
      
 
 class test_Rectangle(unittest.TestCase):
@@ -626,6 +636,8 @@ class test_Rectangle(unittest.TestCase):
         """
         r = Rectangle(5, 5, 5, 10) # Zero width
         self.assertEquals(r.width, 0)
+
+
 
 #suite = unittest.TestSuite()
 #suite.addTest(doctest.DocTestSuite('pysal.cg.shapes'))

@@ -935,6 +935,7 @@ class PolygonLocator:
         """
         raise NotImplementedError
 
+
     def region(self, region_rect):
         """
         Returns the indexed polygons located inside a rectangular query region.
@@ -965,6 +966,46 @@ class PolygonLocator:
             if len(pts)==0:
                 n.remove(polygon)
         return n
+
+    def contains_point(self, point):
+        """
+        Returns polygons that contain point
+
+
+        Parameters
+        ----------
+        point: point (x,y)
+
+        Returns
+        -------
+        list of polygons containing point
+
+        Examples
+        --------
+        >>> p1 = Polygon([Point((0,0)), Point((6,0)), Point((4,4))])
+        >>> p2 = Polygon([Point((1,2)), Point((4,0)), Point((4,4))])
+        >>> p2.contains_point((3,2))
+        1
+        >>> p1.contains_point((2,2))
+        1
+        >>> p2.contains_point((2,2))
+        1
+        >>> pl = PolygonLocator([p1, p2])
+        >>> len(pl.contains_point((2,2)))
+        2
+        >>> len(pl.contains_point((1,1)))
+        1
+        >>> p1.centroid
+        (3.3333333333333335, 1.3333333333333333)
+        >>> pl.contains_point((1,1))[0].centroid
+        (3.3333333333333335, 1.3333333333333333)
+        
+        """
+        # bbounding box containment
+        res = [r.leaf_obj() for r in self._rtree.query_point(point) \
+                if r.is_leaf() ]
+        # explicit containment check for candidate polygons needed
+        return [ poly for poly in res if poly.contains_point(point)]
 
     def proximity(self, origin, r, rule='vertex'):
         """

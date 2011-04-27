@@ -1103,6 +1103,59 @@ class Polygon(object):
         return (sum([c[0]*(a/tot_area) for c,a in part_centroids_areas]),
                 sum([c[1]*(a/tot_area) for c,a in part_centroids_areas]))
 
+    def contains_point(self, point):
+        """
+        Test if polygon contains point
+
+        Examples
+        --------
+        >>> p = Polygon([Point((0,0)), Point((4,0)), Point((4,5)), Point((2,3)), Point((0,5))])
+        >>> p.contains_point((3,3))
+        1
+        >>> p.contains_point((0,5))
+        0
+        >>> p.contains_point((2,3))
+        1
+        >>> p.contains_point((4,5))
+        1
+        >>> p.contains_point((4,0))
+        0
+        >>> 
+
+        Handles holes
+
+        >>> p = Polygon([Point((0, 0)), Point((10, 0)), Point((10, 10)), Point((0, 10))], [Point((1, 2)), Point((2, 2)), Point((2, 1)), Point((1, 1))])
+        >>> p.contains_point((1.0,1.0))
+        1
+        >>> p.contains_point((2.0,2.0))
+        0
+        >>> p.contains_point((10,10))
+        1
+        >>> 
+        
+
+        Notes
+        -----
+        Follows the rule that a four-corner point is inside the southwest
+        polygon and outside the other three polygons
+        """
+
+        # ray from point to just outside left edge of bb
+        left = self.bounding_box.left - 0.000001
+        y = point[1]
+        right = point[0]
+        cn = 0
+        verts = self.vertices
+        for i in xrange(-1, len(self.vertices)-1):
+            if (verts[i][1] < y)+(verts[i+1][1] < y) == 1:  
+                # test for left
+                if(verts[i][0]>left)and(verts[i+1]>left):
+                    if(verts[i][0]<right)+(verts[i+1][0]<right):
+                        cn += 1
+        return cn%2
+
+
+
 class Rectangle:
     """
     Geometric representation of rectangle objects.
