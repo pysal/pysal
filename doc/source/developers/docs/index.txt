@@ -2,17 +2,12 @@
 Building PySAL Documentation
 ****************************
  
-PySAL documentation is built using `Sphinx <http://pypi.python.org/pypi/Sphinx/1.0.3>`_.
-We also use the `numpydoc <http://pypi.python.org/pypi/numpydoc/0.3.1>`_ extension to Sphinx which customizes the markup
-of the docstrings of the PySAL modules. 
-For those intent on building the documentation at this time, due to changes
-brought about by upgrading to Sphinx v1.0.3, you will need SciPy's latest
-numpydoc extension. Download their source code. In the doc directory you will
-find a setup.py file inside the sphinxext directory. That setup.py will install
-just the latest Sphinx extensions into your current python site-packages
-directory. It is advised that you first remove any numpydoc folders in
-site-packages first, upgrade your Sphinx version, then install the new numpydoc
-extension.
+PySAL documentation is built using `Sphinx
+<http://pypi.python.org/pypi/Sphinx/1.0.7>`_ and the `numpydoc <http://pypi.python.org/pypi/numpydoc/0.4>`_
+extension to Sphinx, which formats PySAL's docstrings. 
+Both modules are available at the
+Python Package Index, and can be downloaded and installed from the command line
+using *pip* or *easy_install*.
 
 The source for the docs is in `trunk/doc`. Building the documentation is
 done as follows (assuming
@@ -28,13 +23,15 @@ To see the results in a browser open `build/html/index.html`. To make
 changes, edit (or add) the relevant files in `source` and rebuild the
 docs. Consult the `Sphinx markup guide <http://sphinx.pocoo.org/contents.html>`_ for details on the syntax and structure of the files in `source`.
 
-Once you are happy with your changes, check-in the `source` files, do not
+Once you are happy with your changes, check-in the `source` files. Do not
 add or check-in files under  `build` since they are dynamically built.
 
 
 Changes added to the `svn repository <http://code.google.com/p/pysal/>`_
 will be propogated to `pysal.org <http://pysal.org>`_ on a daily basis.
 
+PySAL makes use of the built-in Sphinx extension *viewcode*. To use it,
+your module requires at least one properly formatted docstring.
 
 Issues
 ======
@@ -50,7 +47,7 @@ If you run into the following error::
 
 A fix is to do the following:
 
-    1. Upgrade sphinx to 1.0.4::
+    1. From the Python Package Index, upgrade to the latest Sphinx::
 
         pip install -U sphinx
 
@@ -59,5 +56,3 @@ A fix is to do the following:
         pip install -U numpydoc
 
 
-We've added the Sphinx extension 'viewcode.' Displaying the option to view code
-inline requires at least one properly formatted docstring in your module.
