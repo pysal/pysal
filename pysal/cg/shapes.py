@@ -1149,10 +1149,10 @@ class Polygon(object):
         for i in xrange(-1, len(self.vertices)-1):
             if (verts[i][1] < y)+(verts[i+1][1] < y) == 1:  
                 # test for left
-                if(verts[i][0]>left)and(verts[i+1]>left):
+                if(verts[i][0]>left)and(verts[i+1][0]>left):
                     if(verts[i][0]<right)+(verts[i+1][0]<right):
                         cn += 1
-        return cn%2
+        return cn % 2
 
 
 

@@ -984,8 +984,6 @@ class PolygonLocator:
         --------
         >>> p1 = Polygon([Point((0,0)), Point((6,0)), Point((4,4))])
         >>> p2 = Polygon([Point((1,2)), Point((4,0)), Point((4,4))])
-        >>> p2.contains_point((3,2))
-        1
         >>> p1.contains_point((2,2))
         1
         >>> p2.contains_point((2,2))
@@ -993,6 +991,10 @@ class PolygonLocator:
         >>> pl = PolygonLocator([p1, p2])
         >>> len(pl.contains_point((2,2)))
         2
+        >>> p2.contains_point((1,1))
+        0
+        >>> p1.contains_point((1,1))
+        1
         >>> len(pl.contains_point((1,1)))
         1
         >>> p1.centroid
