@@ -492,10 +492,11 @@ class test_Polygon(unittest.TestCase):
 
     def test_contains_point(self):
          p = Polygon([Point((0, 0)), Point((10, 0)), Point((10, 10)), Point((0, 10))], [Point((1, 2)), Point((2, 2)), Point((2, 1)), Point((1, 1))])
-         self.assertEquals(p.contains_point((1,1)), 1)
-         self.assertEquals(p.contains_point((2,2)), 0)
+         self.assertEquals(p.contains_point((0,0)), 1)
+         self.assertEquals(p.contains_point((1,1)), 0)
+         self.assertEquals(p.contains_point((2,2)), 1)
          self.assertEquals(p.contains_point((5,5)), 1)
-         self.assertEquals(p.contains_point((10,10)), 1)
+         self.assertEquals(p.contains_point((10,10)), 0)
 
 
         
