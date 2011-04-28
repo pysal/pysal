@@ -206,7 +206,7 @@ class RTree(object):
         """
         # grow the bounding box slightly to handle coincident edges
 
-        bb = boundingbox
+        bb = boundingbox[:]
         bb[0] = bb[0] - BUFFER
         bb[1] = bb[1] - BUFFER
         bb[2] = bb[2] + BUFFER

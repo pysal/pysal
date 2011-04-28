@@ -632,6 +632,44 @@ def is_clockwise(vertices):
     area += ax*by - ay*bx
     return area < 0.0
 
+def ccw(vertices):
+    """
+    Returns whether a list of points is counterclockwise
+
+    >>> ccw([Point((0, 0)), Point((10, 0)), Point((0, 10))])
+    True
+    >>> ccw([Point((0, 0)), Point((0, 10)), Point((10, 0))])
+    False
+    """
+
+    if is_clockwise(vertices):
+        return False
+    else:
+        return True
+
+def seg_intersect(a,b,c,d):
+    """
+    Tests if two segments (a,b) (c,d) intersect
+
+    >>> a = Point((0,1))
+    >>> b = Point((0,10))
+    >>> c = Point((-2,5))
+    >>> d = Point((2,5))
+    >>> e = Point((-3,5))
+    >>> seg_intersect(a, b, c, d)
+    True
+    >>> seg_intersect(a, b, c, e)
+    False
+    """
+    if ccw([a, c, d]) == ccw([b, c, d]):
+        return False
+    elif ccw([a, b, c]) == ccw([a, b, d]):
+        return False
+    else:
+        return True
+
+
+
 def _point_in_vertices(pt, vertices):
     """
     HELPER METHOD. DO NOT CALL.  
