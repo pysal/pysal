@@ -38,6 +38,30 @@ class GwtIO(FileIO.FileIO):
         if pos == 0:
             self.file.seek(0)
             self.pos = 0
+
+    def _readlines(self, id_type):
+        """
+        Reads the main body of gwt-like weights files 
+        into two dictionaries containing weights and neighbors.
+        This code part is repeatedly used for many weight file formats.
+        Header lines, however, are different from format to format. 
+        So, for code reusability, this part is separated out from 
+        _read function by Myunghwa Hwang.
+        """
+        weights={}
+        neighbors={}
+        for line in self.file.readlines():
+            i,j,w=line.strip().split()
+            i=id_type(i)
+            j=id_type(j)
+            w=float(w)
+            if i not in weights:
+                weights[i]=[]
+                neighbors[i]=[]
+            weights[i].append(w)
+            neighbors[i].append(j)
+        return weights, neighbors        
+
     def _read(self):
         """Reads .gwt file
         Returns a pysal.weights.weights.W object
@@ -93,21 +117,24 @@ class GwtIO(FileIO.FileIO):
         self.n=n
         self.shp=shp
         self.id_var=id_var
-        weights={}
-        neighbors={}
-        for line in self.file.readlines():
-            i,j,w=line.strip().split()
-            i=id_type(i)
-            j=id_type(j)
-            w=float(w)
-            if i not in weights:
-                weights[i]=[]
-                neighbors[i]=[]
-            weights[i].append(w)
-            neighbors[i].append(j)
+        weights, neighbors = self._readlines(id_type)
 
         self.pos += 1
         return W(neighbors,weights,id_order)
+
+    def _writelines(self, obj):
+        """
+        Writes  the main body of gwt-like weights files. 
+        This code part is repeatedly used for many weight file formats.
+        Header lines, however, are different from format to format. 
+        So, for code reusability, this part is separated out from 
+        write function by Myunghwa Hwang.
+        """
+        for id in obj.id_order:
+            neighbors = zip(obj.neighbors[id], obj.weights[id])
+            for neighbor, weight in neighbors:
+                self.file.write('%s %s %6G\n' % (str(id), str(neighbor), weight))
+                self.pos += 1
 
     def write(self, obj):
         """ 
@@ -168,11 +195,8 @@ class GwtIO(FileIO.FileIO):
         if issubclass(type(obj),W):
             header = '%s %i %s %s\n' % ('0', obj.n, self.shpName, self.varName)
             self.file.write(header)
-            for id in obj.id_order:
-                neighbors = zip(obj.neighbors[id], obj.weights[id])
-                for neighbor, weight in neighbors:
-                    self.file.write('%s %s %6G\n' % (str(id), str(neighbor), weight))
-                    self.pos += 1
+            self._writelines(obj)
+
         else:
             raise TypeError, "Expected a pysal weights object, got: %s" % (type(obj))
 

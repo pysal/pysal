@@ -63,18 +63,7 @@ class DatIO(gwt.GwtIO):
             raise StopIteration
 
         id_type = float
-        weights={}
-        neighbors={}
-        for line in self.file.readlines():
-            i,j,w=line.strip().split()
-            i=id_type(i)
-            j=id_type(j)
-            w=float(w)
-            if i not in weights:
-                weights[i]=[]
-                neighbors[i]=[]
-            weights[i].append(w)
-            neighbors[i].append(j)
+        weights, neighbors = self._readlines(id_type)
 
         self.pos += 1
         return W(neighbors,weights)
@@ -136,11 +125,7 @@ class DatIO(gwt.GwtIO):
         """
         self._complain_ifclosed(self.closed)
         if issubclass(type(obj),W):
-            for id in obj.id_order:
-                neighbors = zip(obj.neighbors[id], obj.weights[id])
-                for neighbor, weight in neighbors:
-                    self.file.write('%s %s %6G\n' % (str(id), str(neighbor), weight))
-                    self.pos += 1
+            self._writelines(obj)
         else:
             raise TypeError, "Expected a pysal weights object, got: %s" % (type(obj))
 
