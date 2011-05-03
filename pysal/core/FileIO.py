@@ -90,18 +90,31 @@ class FileIO(object): #should be a type?
         ext = os.path.splitext(dataPath)[1]
         ext = ext.replace('.','')
         ext = ext.lower()
-        if ext == 'txt':
+        if ext == 'txt' or ext == '':
+            if not os.path.exists(dataPath):
+                if ext == '':
+                    ext = 'arcgis_text'
+                return ext
             f = open(dataPath,'r')
             l1 = f.readline()
             l2 = f.readline()
-            try:
-                n,k = l1.split(',')
-                n,k = int(n),int(k)
-                fields = l2.split(',')
-                assert len(fields) == k
-                return 'geoda_txt'
-            except:
-                return ext
+            if ext == 'txt':
+                try:
+                    n,k = l1.split(',')
+                    n,k = int(n),int(k)
+                    fields = l2.split(',')
+                    assert len(fields) == k
+                    return 'geoda_txt'
+                except:
+                    return ext
+            else:
+                try:
+                    header = l1.strip().split(',')
+                    fields = l2.strip().split()
+                    assert len(header) == 1 and len(fields) == 3
+                    return 'arcgis_text'
+                except:
+                    warn('This file format is not supported.')
         return ext
     @classmethod
     def _register(cls,parser,formats,modes):

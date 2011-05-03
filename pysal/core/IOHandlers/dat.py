@@ -38,7 +38,7 @@ class DatIO(gwt.GwtIO):
         --------
 
         Type 'dir(w)' at the interpreter to see what methods are supported.
-        Open .gwt file and read it into a pysal weights object
+        Open .dat file and read it into a pysal weights object
 
         >>> w = pysal.open('../../examples/wmat.dat','r').read()
 
@@ -110,7 +110,7 @@ class DatIO(gwt.GwtIO):
         >>> o.write(w)
         >>> o.close()
 
-        Read in the newly created gwt file
+        Read in the newly created dat file
 
         >>> wnew =  pysal.open(fname,'r').read()
 
