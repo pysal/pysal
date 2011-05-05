@@ -25,6 +25,7 @@ __author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
 
 __all__ = ['FileIO']
 import os.path
+import struct
 from warnings import warn
 import pysal
 
@@ -76,7 +77,7 @@ class FileIO(object): #should be a type?
         """
         if cls is FileIO:
             try:
-                newCls = object.__new__(cls.__registry[cls.getType(dataPath)][mode][0])
+                newCls = object.__new__(cls.__registry[cls.getType(dataPath, mode)][mode][0])
             except KeyError:
                 return open(dataPath,mode)
             return newCls
@@ -85,7 +86,7 @@ class FileIO(object): #should be a type?
     def __del__(self):
         self.close()
     @staticmethod
-    def getType(dataPath):
+    def getType(dataPath, mode):
         """Parse the dataPath and return the data type"""
         ext = os.path.splitext(dataPath)[1]
         ext = ext.replace('.','')
@@ -115,6 +116,8 @@ class FileIO(object): #should be a type?
                     return 'arcgis_text'
                 except:
                     warn('This file format is not supported.')
+        if ext == 'dbf' and (mode == 'rw' or mode == 'ww'):
+            return 'arcgis_dbf' 
         return ext
     @classmethod
     def _register(cls,parser,formats,modes):
