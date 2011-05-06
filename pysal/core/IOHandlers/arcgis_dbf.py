@@ -16,13 +16,17 @@ class ArcGISDbfIO(FileIO.FileIO):
     This format is the same as the general dbf format, 
     but the structure of the weights dbf file is fixed unlike other dbf files.
 
-    The ArcGIS dbf file includes four data columns.
-    The first column seems meaningless and will be ignored in PySAL 
+    The ArcGIS dbf file is assumed to have three or four data columns.
+    When the file has four columns,
+    the first column is meaningless and will be ignored in PySAL 
     during both file reading and file writing. 
-    The second column holds origin IDs and its column name should be the name of 
+    The next three columns hold origin IDs, destinations IDs, and weight values. 
+    When the file has three columns,
+    it is assumed that only these data columns exist in the stated order.
+    The name for the orgin IDs column should be the name of 
     ID variable in the original source data table. 
-    The third column holds destination IDs and its name is NID.
-    The fourth colum holds weight values and its name is WEIGHT.
+    The names for the destination IDs and weight values columns are NID 
+    and WEIGHT, respectively.
 
     An exemplary structure of an ArcGIS dbf file is as follows:
     [Line 1]    Field1    RECORD_ID    NID    WEIGHT
