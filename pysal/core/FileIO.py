@@ -92,9 +92,11 @@ class FileIO(object): #should be a type?
         ext = ext.replace('.','')
         ext = ext.lower()
         if ext == 'txt' or ext == '':
+            if mode in ['rg', 'wg']:
+                return 'geobugs_text'
             if not os.path.exists(dataPath):
-                if ext == '':
-                    ext = 'arcgis_text'
+                if ext == '' and mode == 'r':
+                    return 'arcgis_text'
                 return ext
             f = open(dataPath,'r')
             l1 = f.readline()
