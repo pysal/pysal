@@ -624,7 +624,7 @@ def kernelW_from_shapefile(shapefile,k=2,function='triangular',idVariable=None):
         return Kernel(points,function=function,k=k,ids=ids)
     return kernelW(points,k=k,function=function)
 
-def adaptive_kernelW(points, bandwidths=None, function='triangular'):
+def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular'):
     """
     Kernel weights with adaptive bandwidths
 
@@ -639,6 +639,12 @@ def adaptive_kernelW(points, bandwidths=None, function='triangular'):
                   the bandwidth :math:`h_i` for the kernel. 
                   if no bandwidth is specified k is used to determine the
                   adaptive bandwidth
+    k           : int
+                  the number of nearest neighbors to use for determining
+                  bandwidth. For fixed bandwidth, :math:`h_i=max(dknn) \\forall i`
+                  where :math:`dknn` is a vector of k-nearest neighbor
+                  distances (the distance to the kth nearest neighbor for each
+                  observation).  For adaptive bandwidths, :math:`h_i=dknn_i`
     function    : string {'triangular','uniform','quadratic','quartic','gaussian'}
                   kernel function defined as follows with 
 
@@ -731,9 +737,9 @@ def adaptive_kernelW(points, bandwidths=None, function='triangular'):
            [ 14.14213704],
            [ 18.02775818]])
     """
-    return Kernel(points, bandwidth=bandwidths,fixed=False, function=function)
+    return Kernel(points, bandwidth=bandwidths,fixed=False, k=k, function=function)
 
-def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, function='triangular', 
+def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='triangular', 
                                     idVariable=None):
     """
     Kernel weights with adaptive bandwidths
@@ -747,6 +753,12 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, function='triang
                   the bandwidth :math:`h_i` for the kernel. 
                   if no bandwidth is specified k is used to determine the
                   adaptive bandwidth
+    k           : int
+                  the number of nearest neighbors to use for determining
+                  bandwidth. For fixed bandwidth, :math:`h_i=max(dknn) \\forall i`
+                  where :math:`dknn` is a vector of k-nearest neighbor
+                  distances (the distance to the kth nearest neighbor for each
+                  observation).  For adaptive bandwidths, :math:`h_i=dknn_i`
     function    : string {'triangular','uniform','quadratic','quartic','gaussian'}
                   kernel function defined as follows with 
 
@@ -806,8 +818,8 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, function='triang
     points = get_points_array_from_shapefile(shapefile)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
-        return Kernel(points,bandwidth=bandwidths,fixed=False,function=function,ids=ids)
-    return adaptive_kernelW(points,bandwidths=bandwidths,function=function)
+        return Kernel(points,bandwidth=bandwidths,fixed=False,k=k,function=function,ids=ids)
+    return adaptive_kernelW(points,bandwidths=bandwidths,k=k,function=function)
 
 def min_threshold_dist_from_shapefile(shapefile):
     """
