@@ -550,10 +550,10 @@ def get_points_array_from_shapefile(shapefile):
     shapes = f.read()
     if f.type.__name__ == 'Polygon':
         data = np.array([shape.centroid for shape in shapes])
-        return data
     elif f.type.__name__ == 'Point':
         data = np.array([shape for shape in shapes])
-        return data
+    f.close()
+    return data
 
 def min_threshold_distance(data):
     """
