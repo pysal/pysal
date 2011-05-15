@@ -501,6 +501,7 @@ def get_ids(shapefile, idVariable):
         dbname = os.path.splitext(shapefile)[0] + '.dbf'
         db = pysal.open(dbname)
         var = db.by_col[idVariable]
+        db.close()
         return var
     except IOError:
         msg = 'The shapefile "%s" appears to be missing its DBF file. The DBF file "%s" could not be found.' % (shapefile, dbname)

@@ -52,10 +52,14 @@ def queen_from_shapefile(shapefile, idVariable=None):
     :class:`pysal.weights.W`
 
     """
+    shp = pysal.open(shapefile)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
-        return buildContiguity(pysal.open(shapefile), criterion='queen', ids=ids)
-    return buildContiguity(pysal.open(shapefile), criterion='queen')
+    else:
+        ids = None
+    w = buildContiguity(shp, criterion='queen', ids=ids)
+    shp.close()
+    return w
 
 def rook_from_shapefile(shapefile, idVariable=None):
     """
@@ -90,10 +94,14 @@ def rook_from_shapefile(shapefile, idVariable=None):
     :class:`pysal.weights.W`
 
     """
+    shp = pysal.open(shapefile)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
-        return buildContiguity(pysal.open(shapefile), criterion='rook', ids=ids)
-    return buildContiguity(pysal.open(shapefile), criterion='rook')
+    else:
+        ids = None
+    w = buildContiguity(shp, criterion='rook', ids=ids)
+    shp.close()
+    return w
 
 
 def spw_from_gal(galfile):
