@@ -114,7 +114,6 @@ class ArcGISSwmIO(FileIO.FileIO):
                 neighbors[origin]  = list(fromstring(self.file.read(4*no_nghs), '<i'))
                 weights[origin] = list(fromstring(self.file.read(8*no_nghs), '<d'))
                 w_sum = list(fromstring(self.file.read(8), '<d'))[0]
-                assert sum(weights[origin]) == w_sum
 
         self.pos += 1
         return W(neighbors,weights)
