@@ -96,10 +96,8 @@ class FileIO(object): #should be a type?
                 return 'geobugs_text'
             if mode in ['rs', 'ws']:
                 return 'stata_text'
-            if not os.path.exists(dataPath):
-                if ext == '' and mode == 'r':
-                    return 'arcgis_text'
-                return ext
+            if ext == '':
+                return 'arcgis_text'
             f = open(dataPath,'r')
             l1 = f.readline()
             l2 = f.readline()

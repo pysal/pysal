@@ -4,7 +4,7 @@ from pysal.core.IOHandlers.dat import DatIO
 import tempfile
 import os
 
-class test_GwtIO(unittest.TestCase):
+class test_DatIO(unittest.TestCase):
     def setUp(self):
         self.test_file = test_file = '../../../examples/wmat.dat'
         self.obj = DatIO(test_file, 'r')
