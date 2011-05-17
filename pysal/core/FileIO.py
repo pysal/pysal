@@ -94,6 +94,8 @@ class FileIO(object): #should be a type?
         if ext == 'txt' or ext == '':
             if mode in ['rg', 'wg']:
                 return 'geobugs_text'
+            if mode in ['rs', 'ws']:
+                return 'stata_text'
             if not os.path.exists(dataPath):
                 if ext == '' and mode == 'r':
                     return 'arcgis_text'
