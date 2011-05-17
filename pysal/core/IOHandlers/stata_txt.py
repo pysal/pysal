@@ -113,7 +113,7 @@ class StataTextIO(FileIO.FileIO):
         line1 = self.file.readline().strip()
         obs_01 = line1.split(' ')
         matrix_form = False
-        if len(obs_01) == 1 or int(obs_01[1]) != 0:
+        if len(obs_01) == 1 or float(obs_01[1]) != 0.0:
             def line2wgt(line):
                 row = [int(i) for i in line.strip().split(' ')]       
                 return row[0], row[1:], [1.0]*len(row[1:])

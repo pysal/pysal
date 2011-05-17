@@ -43,7 +43,10 @@ class test_StataTextIO(unittest.TestCase):
             fname = f.name
             f.close()
             o = pysal.open(fname,'ws')
-            o.write(w)
+            if obj == self.obj_sparse:
+                o.write(w)
+            else:
+                o.write(w, matrix_form=True)
             o.close()
             wnew =  pysal.open(fname,'rs').read()
             self.assertEqual( wnew.pct_nonzero, w.pct_nonzero)
