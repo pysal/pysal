@@ -144,7 +144,9 @@ class NP_Mixture_Smoother(object):
         mix_den = mix_p.sum(axis=1)
         obs_id = mix_den > 1.E-13
         for i in range(self.k):
-            mix_p[:,i] = (1./len(mix_den))*mix[:,i] / mix_den
+            mix_den_len = len(mix_den)
+            if (mix_den > 1.E-13).sum() == mix_den_len:
+                mix_p[:,i] = (1./mix_den_len)*mix[:,i] / mix_den
         gradient = []
         for i in range(self.k):
             gradient.append(mix_p[:,i][obs_id].sum())
