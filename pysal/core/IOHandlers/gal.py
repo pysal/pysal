@@ -72,8 +72,8 @@ class GalIO(FileIO.FileIO):
 
         Return a sparse matrix for the w information
 
-        >>> wsp, ids = testfile.read(sparse=True)
-        >>> wsp.nnz
+        >>> wsp = testfile.read(sparse=True)
+        >>> wsp.sparse.nnz
         462
         
         """
@@ -114,8 +114,9 @@ class GalIO(FileIO.FileIO):
             ids = np.unique(row)
             row = np.array([ np.where(ids==j)[0] for j in row]).flatten()
             col = np.array([ np.where(ids==j)[0] for j in col]).flatten()
+            sparse = sparse.csr_matrix((data,(row,col)), shape=(n, n))
+            return WSP(sparse)
 
-            return (sparse.csr_matrix((data,(row,col)), shape=(n, n)), ids)
         else:
             if self.pos > 0:
                 raise StopIteration

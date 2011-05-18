@@ -1,7 +1,7 @@
 __all__ = ['W', 'WSP']
 __author__  = "Sergio J. Rey <srey@asu.edu> "
 from pysal.common import *
-from scipy import sparse
+import scipy.sparse
 import gc
 import util
 
@@ -161,7 +161,7 @@ class W(object):
         row=np.array(row)
         col=np.array(col)
         data=np.array(data)
-        s=sparse.csr_matrix((data,(row,col)), shape=(self.n, self.n))
+        s=scipy.sparse.csr_matrix((data,(row,col)), shape=(self.n, self.n))
         return s
 
     @property
@@ -965,17 +965,8 @@ class WSP(object):
     Parameters
     ----------
 
-    n: int
-       number of observations
-
-    rows: list
-       row indices for nonzero weights
-
-    cols: list
-       column indices for nonzero weights
-
-    weights: list (optional)
-       value of weights
+    sparse  : scipy sparse object
+              NxN object from scipy.sparse
 
 
     Examples
@@ -983,17 +974,12 @@ class WSP(object):
 
     From GAL information
 
-    >>> w = WSP(4, [0, 1, 1, 2, 2, 3], [1, 0, 2, 1, 3, 3])
-    >>> w.s0
-    6.0
-    >>> w.trcWtW_WW
-    11.0
-    >>> w.n
-    4
-
-    With weights specified
-
-    >>> w = WSP(4, [0, 1, 1, 2, 2, 3], [1, 0, 2, 1, 3, 3], weights = [1, 0.75, 0.25, 0.9, 0.1, 1])
+    >>> import scipy.sparse
+    >>> rows = [0, 1, 1, 2, 2, 3]
+    >>> cols = [1, 0, 2, 1, 3, 3]
+    >>> weights =  [1, 0.75, 0.25, 0.9, 0.1, 1]
+    >>> sparse = scipy.sparse.csr_matrix((weights, (rows, cols)), shape=(4,4))
+    >>> w = WSP(sparse)
     >>> w.s0
     4.0
     >>> w.trcWtW_WW
@@ -1003,11 +989,14 @@ class WSP(object):
 
     
     """
-    def __init__(self, n, row, col, weights = []):
-        if not weights:
-            weights = np.ones(len(row))
-        self.sparse = sparse.csr_matrix((weights, (row,col)), shape = (n,n))
-        self.n = n
+    def __init__(self, sparse):
+        if not scipy.sparse.issparse(sparse):
+            raise ValueError, "must pass a scipy sparse object"
+        rows, cols = sparse.shape
+        if rows != cols:
+            raise ValueError, "Weights object must be square"
+        self.sparse = sparse.tocsr()
+        self.n = sparse.shape[0]
         self._cache = {}
 
     @property
