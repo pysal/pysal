@@ -1,4 +1,4 @@
-__all__ = ['W']
+__all__ = ['W', 'WSP']
 __author__  = "Sergio J. Rey <srey@asu.edu> "
 from pysal.common import *
 from scipy import sparse
@@ -957,6 +957,97 @@ class W(object):
         higher_order
         """
         return util.higher_order(self,k)
+
+class WSP(object):
+    """
+    Thin W class for spreg
+
+    Parameters
+    ----------
+
+    n: int
+       number of observations
+
+    rows: list
+       row indices for nonzero weights
+
+    cols: list
+       column indices for nonzero weights
+
+    weights: list (optional)
+       value of weights
+
+
+    Examples
+    --------
+
+    From GAL information
+
+    >>> w = WSP(4, [0, 1, 1, 2, 2, 3], [1, 0, 2, 1, 3, 3])
+    >>> w.s0
+    6.0
+    >>> w.trcWtW_WW
+    11.0
+    >>> w.n
+    4
+
+    With weights specified
+
+    >>> w = WSP(4, [0, 1, 1, 2, 2, 3], [1, 0, 2, 1, 3, 3], weights = [1, 0.75, 0.25, 0.9, 0.1, 1])
+    >>> w.s0
+    4.0
+    >>> w.trcWtW_WW
+    6.3949999999999996
+    >>> w.n
+    4
+
+    
+    """
+    def __init__(self, n, row, col, weights = []):
+        if not weights:
+            weights = np.ones(len(row))
+        self.sparse = sparse.csr_matrix((weights, (row,col)), shape = (n,n))
+        self.n = n
+        self._cache = {}
+
+    @property
+    def s0(self):
+        """
+        float
+
+        .. math::
+
+               s0=\sum_i \sum_j w_{i,j}
+
+        """
+        if 's0' not in self._cache:
+            self._s0=self.sparse.sum()
+            self._cache['s0']=self._s0
+        return self._s0
+
+
+    @property
+    def trcWtW_WW(self):
+        """
+        trace of :math:`W^{'}W + WW`
+        """
+        if 'trcWtW_WW' not in self._cache:
+            self._trcWtW_WW=self.diagWtW_WW.sum()
+            self._cache['trcWtW_WW']=self._trcWtW_WW
+        return self._trcWtW_WW
+
+    @property
+    def diagWtW_WW(self):
+        """
+        diagonal of :math:`W^{'}W + WW`
+        """
+        if 'diagWtW_WW' not in self._cache:
+            wt=self.sparse.transpose()
+            w=self.sparse
+            self._diagWtW_WW=(wt*w+w*w).diagonal()
+            self._cache['diagWtW_WW']=self._diagWtW_WW
+        return self._diagWtW_WW
+
 
 if __name__ == "__main__":
 
