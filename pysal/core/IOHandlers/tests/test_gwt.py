@@ -18,7 +18,7 @@ class test_GwtIO(unittest.TestCase):
         w = self.obj.read()
         self.assertEqual(168, w.n)
         self.assertEqual(16.678571428571427, w.mean_neighbors)
-        self.assertEqual([14.1421356], w[1].values())
+        self.assertEqual([1.0], w[1].values())
 
     def test_seek(self):
         self.test_read()
