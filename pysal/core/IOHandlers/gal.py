@@ -1,5 +1,5 @@
 import pysal.core.FileIO as FileIO
-from pysal.weights import W
+from pysal.weights import W, WSP
 
 __author__='Charles R Schmidt <Charles.R.Schmidt@asu.edu>'
 __all__ =  ['GalIO']
