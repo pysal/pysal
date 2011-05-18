@@ -337,8 +337,8 @@ class OLS(BaseOLS, USER.DiagnosticBuilder):
     -2.65440864272
     >>> print ols.t_stat[2][1]
     0.0108745049098
-    >>> ols.r2
-    0.34951437785126105
+    >>> print ols.r2
+    0.349514377851
     >>> print ols.summary
     REGRESSION
     ----------
