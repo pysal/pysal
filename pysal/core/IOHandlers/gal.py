@@ -1,5 +1,7 @@
 import pysal.core.FileIO as FileIO
 from pysal.weights import W, WSP
+from scipy import sparse
+import numpy as np
 
 __author__='Charles R Schmidt <Charles.R.Schmidt@asu.edu>'
 __all__ =  ['GalIO']
@@ -106,16 +108,14 @@ class GalIO(FileIO.FileIO):
                     append(id_neigh)
                 idsappend(id)
             self.pos += 1 
-            from scipy import sparse
-            import numpy as np
             row = np.array(row)
             col = np.array(col)
             data = np.ones(counter)
             ids = np.unique(row)
             row = np.array([ np.where(ids==j)[0] for j in row]).flatten()
             col = np.array([ np.where(ids==j)[0] for j in col]).flatten()
-            sparse = sparse.csr_matrix((data,(row,col)), shape=(n, n))
-            return WSP(sparse)
+            spmat = sparse.csr_matrix((data,(row,col)), shape=(n, n))
+            return WSP(spmat)
 
         else:
             if self.pos > 0:

@@ -108,7 +108,7 @@ class GwtIO(FileIO.FileIO):
                     id_order = db.by_col(id_var)
                     id_type = type(id_order[0])
                 else:
-                    warn("ID_VAR:'%s' was in in the DBF header, proceeding with unordered string ids."%(id_var), RuntimeWarning)
+                    warn("ID_VAR:'%s' was not in the DBF header, proceeding with unordered string ids."%(id_var), RuntimeWarning)
             else:
                 warn("DBF relating to GWT was not found, proceeding with unordered string ids.", RuntimeWarning)
         except:

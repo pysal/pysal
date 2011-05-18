@@ -13,7 +13,7 @@ from Distance import knnW, Kernel, DistanceBand
 from util import get_ids, get_points_array_from_shapefile, min_threshold_distance
 
 
-def queen_from_shapefile(shapefile, idVariable=None):
+def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
     """
     Queen contiguity weights from a polygon shapefile
 
@@ -24,7 +24,9 @@ def queen_from_shapefile(shapefile, idVariable=None):
                   name of polygon shapefile including suffix.
     idVariable  : string
                   name of a column in the shapefile's DBF to use for ids.
-
+    sparse    : boolean
+                If True return WSP instance
+                If False return W instance
     Returns
     -------
 
@@ -39,6 +41,10 @@ def queen_from_shapefile(shapefile, idVariable=None):
     >>> wq=queen_from_shapefile("../examples/columbus.shp","POLYID")
     >>> wq.pct_nonzero
     0.098292378175760101
+    >>> wq=queen_from_shapefile("../examples/columbus.shp", sparse=True)
+    >>> wq.sparse.nnz *1. / wq.n**2
+    0.098292378175760101
+
 
 
     Notes
@@ -59,9 +65,12 @@ def queen_from_shapefile(shapefile, idVariable=None):
         ids = None
     w = buildContiguity(shp, criterion='queen', ids=ids)
     shp.close()
+
+    if sparse:
+        w = pysal.weights.WSP(w.sparse)
     return w
 
-def rook_from_shapefile(shapefile, idVariable=None):
+def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
     """
     Rook contiguity weights from a polygon shapefile
 
@@ -70,6 +79,9 @@ def rook_from_shapefile(shapefile, idVariable=None):
 
     shapefile : string
                 name of polygon shapefile including suffix.
+    sparse    : boolean
+                If True return WSP instance
+                If False return W instance
 
     Returns
     -------
@@ -81,6 +93,9 @@ def rook_from_shapefile(shapefile, idVariable=None):
     --------
     >>> wr=rook_from_shapefile("../examples/columbus.shp", "POLYID")
     >>> wr.pct_nonzero
+    0.083298625572678045
+    >>> wr=rook_from_shapefile("../examples/columbus.shp", sparse=True)
+    >>> wr.sparse.nnz *1. / wr.n**2
     0.083298625572678045
 
     Notes
@@ -101,6 +116,8 @@ def rook_from_shapefile(shapefile, idVariable=None):
         ids = None
     w = buildContiguity(shp, criterion='rook', ids=ids)
     shp.close()
+    if sparse:
+        w = pysal.weights.WSP(w.sparse)
     return w
 
 
@@ -125,26 +142,9 @@ def spw_from_gal(galfile):
     Examples
     --------
 
-    >>> spw, ids = pysal.weights.user.spw_from_gal("../examples/sids2.gal")
-    >>> spw.nnz
+    >>> spw = pysal.weights.user.spw_from_gal("../examples/sids2.gal")
+    >>> spw.sparse.nnz
     462
-    >>> ids
-    array(['37001', '37003', '37005', '37007', '37009', '37011', '37013',
-           '37015', '37017', '37019', '37021', '37023', '37025', '37027',
-           '37029', '37031', '37033', '37035', '37037', '37039', '37041',
-           '37043', '37045', '37047', '37049', '37051', '37053', '37055',
-           '37057', '37059', '37061', '37063', '37065', '37067', '37069',
-           '37071', '37073', '37075', '37077', '37079', '37081', '37083',
-           '37085', '37087', '37089', '37091', '37093', '37095', '37097',
-           '37099', '37101', '37103', '37105', '37107', '37109', '37111',
-           '37113', '37115', '37117', '37119', '37121', '37123', '37125',
-           '37127', '37129', '37131', '37133', '37135', '37137', '37139',
-           '37141', '37143', '37145', '37147', '37149', '37151', '37153',
-           '37155', '37157', '37159', '37161', '37163', '37165', '37167',
-           '37169', '37171', '37173', '37175', '37177', '37179', '37181',
-           '37183', '37185', '37187', '37189', '37191', '37193', '37195',
-           '37197', '37199'], 
-          dtype='|S5')
     """
 
     return pysal.open(galfile,'r').read(sparse=True)
