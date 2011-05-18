@@ -178,7 +178,7 @@ class DBF(pysal.core.Tables.DataTable):
             self.flush()
             # End of file
             self.f.write('\x1A')
-            self.f.close()
+        self.f.close()
         pysal.core.Tables.DataTable.close(self)
     def _firstWrite(self,obj):
         if not self.header: raise IOError, "No header, DBF files require a header."
