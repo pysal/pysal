@@ -70,14 +70,15 @@ class FileIO(object): #should be a type?
     """
     __metaclass__ = FileIO_MetaCls
     __registry = {} # {'shp':{'r':[OGRshpReader,pysalShpReader]}}
-    def __new__(cls,dataPath='',mode='r'):
+    def __new__(cls,dataPath='',mode='r',dataFormat=None):
         """
         Intercepts the instantiation of FileIO and dispatches to the correct handler
         If no suitable handler is found a python file object is returned.
         """
         if cls is FileIO:
             try:
-                newCls = object.__new__(cls.__registry[cls.getType(dataPath, mode)][mode][0])
+                newCls = object.__new__(cls.__registry[cls.getType(dataPath,\
+                    mode, dataFormat)][mode][0])
             except KeyError:
                 return open(dataPath,mode)
             return newCls
@@ -86,11 +87,14 @@ class FileIO(object): #should be a type?
     def __del__(self):
         self.close()
     @staticmethod
-    def getType(dataPath, mode):
+    def getType(dataPath, mode, dataFormat=None):
         """Parse the dataPath and return the data type"""
-        ext = os.path.splitext(dataPath)[1]
-        ext = ext.replace('.','')
-        ext = ext.lower()
+        if dataFormat:
+            ext = dataFormat
+        else:
+            ext = os.path.splitext(dataPath)[1]
+            ext = ext.replace('.','')
+            ext = ext.lower()
         if ext == 'txt' or ext == '':
             if mode in ['rg', 'wg']:
                 return 'geobugs_text'

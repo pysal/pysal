@@ -120,7 +120,10 @@ class GwtIO(FileIO.FileIO):
         weights, neighbors = self._readlines(id_type)
 
         self.pos += 1
-        return W(neighbors,weights,id_order)
+        w = W(neighbors,weights,id_order)
+        w.transform = 'b'
+        warn("Weights have been converted to binary. To retrieve original values use w.transform='o'", RuntimeWarning)
+        return w
 
     def _writelines(self, obj):
         """
