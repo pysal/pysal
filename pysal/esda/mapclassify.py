@@ -318,10 +318,11 @@ class Map_Classifier:
         """
         tss=0
         for class_def in self.classes:
-            yc=self.y[class_def]
-            css=yc-yc.mean()
-            css*=css
-            tss+=sum(css)
+            if len(class_def) > 0:
+                yc=self.y[class_def]
+                css=yc-yc.mean()
+                css*=css
+                tss+=sum(css)
         return tss
 
     def _set_bins(self):
@@ -331,18 +332,20 @@ class Map_Classifier:
 
     def get_adcm(self):
         """
-        Absolute deviation around class means (ADCM).
+        Absolute deviation around class median (ADCM).
 
-        Calculates the absolute deviations of each observation about its class mean as a measure of fit for the classification method.
+        Calculates the absolute deviations of each observation about its class
+        median as a measure of fit for the classification method.
         
         Returns sum of ADCM over all classes
         """
         adcm=0
         for class_def in self.classes:
-            yc=self.y[class_def]
-            yc_med=np.median(yc)
-            ycd=np.abs(yc-yc_med)
-            adcm+=sum(ycd)
+            if len(class_def) > 0:
+                yc=self.y[class_def]
+                yc_med=np.median(yc)
+                ycd=np.abs(yc-yc_med)
+                adcm+=sum(ycd)
         return adcm
 
     def get_gadf(self):
