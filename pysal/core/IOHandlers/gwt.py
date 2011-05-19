@@ -10,7 +10,7 @@ __all__ = ["GwtIO"]
 class GwtIO(FileIO.FileIO):
 
     FORMATS = ['gwt']
-    MODES = ['r', 'w']
+    MODES = ['r']
 
     def __init__(self,*args,**kwargs):
         self._varName = 'Unknown'
