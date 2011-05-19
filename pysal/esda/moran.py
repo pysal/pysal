@@ -398,7 +398,7 @@ class Moran_Local:
     >>> y = np.array(f.by_col['z'])
     >>> lm = Moran_Local(y, w, transformation = "r", permutations = 99)
     >>> lm.q
-    array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3], dtype=int8)
+    array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
     >>> lm.p_z_sim[0]
     0.99036648060872201
 
@@ -413,7 +413,7 @@ class Moran_Local:
         self.n = n
         self.n_1 = n-1
         z = y-y.mean()
-        z /= y.std()
+        z =  z / y.std()
         self.z = z
         w.transform=transformation
         self.w=w
