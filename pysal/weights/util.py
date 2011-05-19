@@ -6,7 +6,7 @@ from scipy import sparse,float32
 from scipy.spatial import KDTree
 import os, gc
 
-__all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 'remap_ids','full','get_ids', 'min_threshold_distance','lat2SW']
+__all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 'remap_ids','full2W' ,'full','get_ids', 'min_threshold_distance','lat2SW']
 
 
 def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
@@ -414,6 +414,74 @@ def full(w):
             c=keys.index(j)
             wfull[i,c]=wij
     return (wfull,keys)
+    
+
+def full2W(m, ids=None):
+    '''
+    Create a PySAL W object from a full array
+    ...
+
+    Arguments
+    ---------
+    m       : array
+              nxn array with the full weights matrix
+    ids     : list
+              User ids assumed to be aligned with m
+
+    Returns
+    -------
+    w       : W
+              PySAL weights object
+
+    Examples
+    --------
+    >>> import pysal as ps
+    >>> import numpy as np
+
+    Create an array of zeros
+    >>> a = np.zeros((4, 4))
+
+    For loop to fill it with random numbers
+    >>> for i in range(len(a)):
+    ...     for j in range(len(a[i])):
+    ...         if i!=j:
+    ...             a[i, j] = np.random.random(1)
+
+    Create W object
+    >>> w = ps.weights.util.full2W(a)
+    >>> w.full()[0] == a
+    array([[ True,  True,  True,  True],
+           [ True,  True,  True,  True],
+           [ True,  True,  True,  True],
+           [ True,  True,  True,  True]], dtype=bool)
+
+    Create list of user ids
+    >>> ids = ['myID0', 'myID1', 'myID2', 'myID3']
+    >>> w = ps.weights.util.full2W(a, ids=ids)
+    >>> w.full()[0] == a
+    array([[ True,  True,  True,  True],
+           [ True,  True,  True,  True],
+           [ True,  True,  True,  True],
+           [ True,  True,  True,  True]], dtype=bool)
+
+
+    '''
+    if m.shape[0] != m.shape[1]:
+        raise ValueError, 'Your array is not squared'
+    neighbors, weights = {}, {}
+    for i in xrange(m.shape[0]):
+    #for i, row in enumerate(m):
+        row = m[i]
+        if ids:
+            i = ids[i]
+        ngh = list(row.nonzero()[0])
+        weights[i] = list(row[ngh])
+        ngh = list(ngh)
+        if ids:
+            ngh = [ids[j] for j in ngh]
+        neighbors[i] = ngh
+    return pysal.W(neighbors, weights, id_order=ids)
+    
 
 def remap_ids(w, old2new, id_order=[]):
     """
