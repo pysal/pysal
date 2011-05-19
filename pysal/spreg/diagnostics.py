@@ -1256,10 +1256,13 @@ def vif(reg):
         mean_y = aux.mean_y
         utu = aux.utu
         ss_tot = sum((y-mean_y)**2)
-        r2aux = 1-utu/ss_tot
-        tolj = 1 - r2aux
-        vifj = 1 / tolj
-        resj = (vifj,tolj)
+        if ss_tot == 0:
+            resj = pysal.MISSINGVALUE
+        else:
+            r2aux = 1-utu/ss_tot
+            tolj = 1 - r2aux
+            vifj = 1 / tolj
+            resj = (vifj,tolj)
         vif_result.append(resj)
     return vif_result
 
