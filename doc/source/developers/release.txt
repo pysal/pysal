@@ -17,7 +17,10 @@ Prior to the build, there are a number of actions to take.
 
      * ensure all tests pass
      * update the change log
-     * update thanks 
+
+       ** use svn2cl to generate the entire project history. Then prepend just the most important changes to the file CHANGELOG.txt.
+
+     * update THANKS.txt 
      * update setup.py to add new modules or remove old ones
      * edit trunk/pysal/doc/source/contents.txt to include *New in this release*
      * prior to the Tag and final docs build, bump the docs version from x.xdev
