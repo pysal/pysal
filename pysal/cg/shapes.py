@@ -8,6 +8,7 @@ __credits__ = "Copyright (c) 2005-2009 Sergio J. Rey"
 
 import doctest
 import math
+from warnings import warn
 
 __all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon', 'Rectangle']
 
@@ -1066,8 +1067,10 @@ class Polygon(object):
  
         centroid -> Point
 
-        Attributes
-        ----------
+        Notes
+        -----
+        The centroid return by this method is the geometric centroid.  The currently implementation ignors any holes found in the polygon, 
+        a warning will be issued if holes are encountered.  This is a known issue, ticket #138 on google code.
 
         Examples
         --------
@@ -1097,7 +1100,8 @@ class Polygon(object):
             return ((x_center, y_center), area)
 
         if self._holes != [[]]:
-            raise NotImplementedError, 'Cannot compute centroid for polygon with holes'
+            #raise NotImplementedError, 'Cannot compute centroid for polygon with holes'
+            warn("Polygon contains holes which are ignored when computing centroid.",RuntimeWarning)
         part_centroids_areas = [part_centroid_area(vertices) for vertices in self._vertices]
         tot_area = sum([a for c,a in part_centroids_areas])
         return (sum([c[0]*(a/tot_area) for c,a in part_centroids_areas]),
