@@ -460,14 +460,16 @@ class Moran_Local:
         n_1=self.n-1
         rid=range(n_1)
         prange=range(self.permutations)
-        rids=np.array([np.random.permutation(rid) for i in prange])
+        k = self.w.max_neighbors + 1
+        rids=np.array([np.random.permutation(rid)[0:k] for i in prange])
         ids=np.arange(self.w.n)
-        w=self.w.weights
-        wc=self.w.cardinalities
         ido=self.w.id_order
+        w = [ self.w.weights[ido[i]] for i in ids ]
+        wc = [ self.w.cardinalities[ido[i]] for i in ids ]
+ 
         for i in range(self.w.n):
             idsi=ids[ids!=i]
-            lisas[i]=[z[i]*sum(w[ido[i]]*z[idsi[rid[0:wc[ido[i]]]]]) for rid in rids]
+            lisas[i]=[z[i]*sum(w[i]*z[idsi[rid[0:wc[i]]]]) for rid in rids]
         self.rlisas=(n_1/self.den)*lisas
     
     def __quads(self):
