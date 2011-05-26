@@ -95,13 +95,7 @@ class FileIO(object): #should be a type?
             ext = os.path.splitext(dataPath)[1]
             ext = ext.replace('.','')
             ext = ext.lower()
-        if ext == 'txt' or ext == '':
-            if mode in ['rg', 'wg']:
-                return 'geobugs_text'
-            if mode in ['rs', 'ws']:
-                return 'stata_text'
-            if ext == '':
-                return 'arcgis_text'
+        if ext == 'txt':
             f = open(dataPath,'r')
             l1 = f.readline()
             l2 = f.readline()
@@ -114,16 +108,6 @@ class FileIO(object): #should be a type?
                     return 'geoda_txt'
                 except:
                     return ext
-            else:
-                try:
-                    header = l1.strip().split(',')
-                    fields = l2.strip().split()
-                    assert len(header) == 1 and len(fields) == 3
-                    return 'arcgis_text'
-                except:
-                    warn('This file format is not supported.')
-        if ext == 'dbf' and (mode == 'rw' or mode == 'ww'):
-            return 'arcgis_dbf' 
         return ext
     @classmethod
     def _register(cls,parser,formats,modes):
