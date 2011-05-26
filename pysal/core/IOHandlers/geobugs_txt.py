@@ -51,11 +51,12 @@ class GeoBUGSTextIO(FileIO.FileIO):
     """
 
     FORMATS = ['geobugs_text']
-    MODES = ['rg', 'wg']
+    MODES = ['r', 'w']
 
     def __init__(self, *args, **kwargs):
+        args = args[:2]
         FileIO.FileIO.__init__(self, *args, **kwargs)
-        self.file = open(self.dataPath, self.mode[0])
+        self.file = open(self.dataPath, self.mode)
 
     def read(self, n=-1):
         self._complain_ifclosed(self.closed)
@@ -76,7 +77,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open a GeoBUGS text file and read it into a pysal weights object
 
-        >>> w = pysal.open('../../examples/geobugs_scot','rg').read()
+        >>> w = pysal.open('../../examples/geobugs_scot','r','geobugs_text').read()
 
         Get the number of observations from the header
 
@@ -168,7 +169,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
         --------
 
         >>> import tempfile, pysal, os
-        >>> testfile = pysal.open('../../examples/geobugs_scot','rg')
+        >>> testfile = pysal.open('../../examples/geobugs_scot','r','geobugs_text')
         >>> w = testfile.read()
 
         Create a temporary file for this example
@@ -185,7 +186,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'wg')
+        >>> o = pysal.open(fname,'w','geobugs_text')
 
         Write the Weights object into the open file
 
@@ -194,7 +195,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
 
         Read in the newly created text file
 
-        >>> wnew =  pysal.open(fname,'rg').read()
+        >>> wnew =  pysal.open(fname,'r','geobugs_text').read()
 
         Compare values from old to new
 

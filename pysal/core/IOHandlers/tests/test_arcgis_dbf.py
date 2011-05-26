@@ -7,7 +7,7 @@ import os
 class test_ArcGISDbfIO(unittest.TestCase):
     def setUp(self):
         self.test_file = test_file = '../../../examples/arcgis_ohio.dbf'
-        self.obj = ArcGISDbfIO(test_file, 'rw')
+        self.obj = ArcGISDbfIO(test_file, 'r')
 
     def test_close(self):
         f = self.obj
@@ -31,10 +31,10 @@ class test_ArcGISDbfIO(unittest.TestCase):
         f = tempfile.NamedTemporaryFile(suffix='.dbf',dir="../../../examples")
         fname = f.name
         f.close()
-        o = pysal.open(fname,'ww')
+        o = pysal.open(fname,'w','arcgis_dbf')
         o.write(w)
         o.close()
-        wnew =  pysal.open(fname,'rw').read()
+        wnew =  pysal.open(fname,'r','arcgis_dbf').read()
         self.assertEqual( wnew.pct_nonzero, w.pct_nonzero)
         os.remove(fname)
 

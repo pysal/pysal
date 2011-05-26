@@ -31,10 +31,10 @@ class test_ArcGISTextIO(unittest.TestCase):
         f = tempfile.NamedTemporaryFile(suffix='',dir="../../../examples")
         fname = f.name
         f.close()
-        o = pysal.open(fname,'w')
+        o = pysal.open(fname,'w','arcgis_text')
         o.write(w)
         o.close()
-        wnew =  pysal.open(fname,'r').read()
+        wnew =  pysal.open(fname,'r','arcgis_text').read()
         self.assertEqual( wnew.pct_nonzero, w.pct_nonzero)
         os.remove(fname)
 

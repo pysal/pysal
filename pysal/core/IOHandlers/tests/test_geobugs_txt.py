@@ -8,8 +8,8 @@ class test_GeoBUGSTextIO(unittest.TestCase):
     def setUp(self):
         self.test_file_scot = test_file_scot = '../../../examples/geobugs_scot'
         self.test_file_col = test_file_col = '../../../examples/spdep_listw2WB_columbus'
-        self.obj_scot = GeoBUGSTextIO(test_file_scot, 'rg')
-        self.obj_col = GeoBUGSTextIO(test_file_col, 'rg')
+        self.obj_scot = GeoBUGSTextIO(test_file_scot, 'r')
+        self.obj_col = GeoBUGSTextIO(test_file_col, 'r')
 
     def test_close(self):
         for obj in [self.obj_scot, self.obj_col]:
@@ -42,10 +42,10 @@ class test_GeoBUGSTextIO(unittest.TestCase):
             f = tempfile.NamedTemporaryFile(suffix='',dir="../../../examples")
             fname = f.name
             f.close()
-            o = pysal.open(fname,'wg')
+            o = pysal.open(fname,'w','geobugs_text')
             o.write(w)
             o.close()
-            wnew =  pysal.open(fname,'rg').read()
+            wnew =  pysal.open(fname,'r','geobugs_text').read()
             self.assertEqual( wnew.pct_nonzero, w.pct_nonzero)
             os.remove(fname)
 

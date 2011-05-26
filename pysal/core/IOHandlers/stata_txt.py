@@ -63,11 +63,12 @@ class StataTextIO(FileIO.FileIO):
     """
 
     FORMATS = ['stata_text']
-    MODES = ['rs', 'ws']
+    MODES = ['r', 'w']
 
     def __init__(self,*args,**kwargs):
+        args = args[:2]
         FileIO.FileIO.__init__(self,*args,**kwargs)
-        self.file = open(self.dataPath,self.mode[0])
+        self.file = open(self.dataPath,self.mode)
 
     def read(self,n=-1):
         self._complain_ifclosed(self.closed)
@@ -88,7 +89,7 @@ class StataTextIO(FileIO.FileIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open a text file and read it into a pysal weights object
 
-        >>> w = pysal.open('../../examples/stata_sparse.txt','rs').read()
+        >>> w = pysal.open('../../examples/stata_sparse.txt','r','stata_text').read()
 
         Get the number of observations from the header
 
@@ -165,7 +166,7 @@ class StataTextIO(FileIO.FileIO):
         --------
 
         >>> import tempfile, pysal, os
-        >>> testfile = pysal.open('../../examples/stata_sparse.txt','rs')
+        >>> testfile = pysal.open('../../examples/stata_sparse.txt','r','stata_text')
         >>> w = testfile.read()
 
         Create a temporary file for this example
@@ -182,7 +183,7 @@ class StataTextIO(FileIO.FileIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'ws')
+        >>> o = pysal.open(fname,'w','stata_text')
 
         Write the Weights object into the open file
 
@@ -191,7 +192,7 @@ class StataTextIO(FileIO.FileIO):
 
         Read in the newly created text file
 
-        >>> wnew =  pysal.open(fname,'rs').read()
+        >>> wnew =  pysal.open(fname,'r','stata_text').read()
 
         Compare values from old to new
 

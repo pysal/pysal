@@ -54,6 +54,10 @@ class ArcGISTextIO(gwt.GwtIO):
     FORMATS = ['arcgis_text']
     MODES = ['r', 'w']
 
+    def __init__(self, *args, **kwargs):
+        args = args[:2]
+        gwt.GwtIO.__init__(self, *args, **kwargs) 
+
     def _read(self):
         """Reads ArcGIS Text file
         Returns a pysal.weights.weights.W object
@@ -64,7 +68,7 @@ class ArcGISTextIO(gwt.GwtIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open a text file and read it into a pysal weights object
 
-        >>> w = pysal.open('../../examples/arcgis_txt','r').read()
+        >>> w = pysal.open('../../examples/arcgis_txt','r','arcgis_text').read()
 
         Get the number of observations from the header
 
@@ -135,7 +139,7 @@ class ArcGISTextIO(gwt.GwtIO):
         --------
 
         >>> import tempfile, pysal, os
-        >>> testfile = pysal.open('../../examples/arcgis_txt','r')
+        >>> testfile = pysal.open('../../examples/arcgis_txt','r','arcgis_text')
         >>> w = testfile.read()
 
         Create a temporary file for this example
@@ -152,7 +156,7 @@ class ArcGISTextIO(gwt.GwtIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w')
+        >>> o = pysal.open(fname,'w','arcgis_text')
 
         Write the Weights object into the open file
 
@@ -161,7 +165,7 @@ class ArcGISTextIO(gwt.GwtIO):
 
         Read in the newly created text file
 
-        >>> wnew =  pysal.open(fname,'r').read()
+        >>> wnew =  pysal.open(fname,'r','arcgis_text').read()
 
         Compare values from old to new
 

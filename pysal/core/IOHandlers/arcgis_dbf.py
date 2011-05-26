@@ -44,12 +44,13 @@ class ArcGISDbfIO(FileIO.FileIO):
     """
 
     FORMATS = ['arcgis_dbf']
-    MODES = ['rw', 'ww']
+    MODES = ['r', 'w']
 
     def __init__(self, *args, **kwargs):
         self._varName = 'Unknown'
+        args = args[:2]
         FileIO.FileIO.__init__(self, *args, **kwargs)
-        self.file = pysal.open(self.dataPath, self.mode[0])
+        self.file = pysal.open(self.dataPath, self.mode)
 
     def _set_varName(self, val):
         if issubclass(type(val), basestring):
@@ -76,7 +77,7 @@ class ArcGISDbfIO(FileIO.FileIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open an ArcGIS dbf file and read it into a pysal weights object
 
-        >>> w = pysal.open('../../examples/arcgis_ohio.dbf','rw').read()
+        >>> w = pysal.open('../../examples/arcgis_ohio.dbf','r','arcgis_dbf').read()
 
         Get the number of observations from the header
 
@@ -152,7 +153,7 @@ class ArcGISDbfIO(FileIO.FileIO):
         --------
 
         >>> import tempfile, pysal, os
-        >>> testfile = pysal.open('../../examples/arcgis_ohio.dbf','rw')
+        >>> testfile = pysal.open('../../examples/arcgis_ohio.dbf','r','arcgis_dbf')
         >>> w = testfile.read()
 
         Create a temporary file for this example
@@ -169,7 +170,7 @@ class ArcGISDbfIO(FileIO.FileIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'ww')
+        >>> o = pysal.open(fname,'w','arcgis_dbf')
 
         Write the Weights object into the open file
 
@@ -178,7 +179,7 @@ class ArcGISDbfIO(FileIO.FileIO):
 
         Read in the newly created text file
 
-        >>> wnew =  pysal.open(fname,'rw').read()
+        >>> wnew =  pysal.open(fname,'r','arcgis_dbf').read()
 
         Compare values from old to new
 
