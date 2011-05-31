@@ -2,6 +2,7 @@ import pysal
 import os.path
 import gwt
 from pysal.weights import W
+from pysal.weights.util import remap_ids
 from warnings import warn
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
@@ -14,13 +15,19 @@ class ArcGISTextIO(gwt.GwtIO):
     Spatial weights objects in the ArcGIS text format are used in 
     ArcGIS Spatial Statistics tools.
     This format is a simple text file with ASCII encoding.
-    ArcGIS Spatial Statistics does not specify which file extension to use. 
-    Thus, PySAL assumes no extension is used in input ArcGIS text weights files.
+    This format can be directly used with the tools under 
+    the category of "Mapping Clusters." But, it cannot be used with
+    the "Generate Spatial Weights Matrix" tool. 
 
     The first line of the ArcGIS text file  is a header including the name of 
     a data column that holded the ID variable in the original source data table.
     After this header line, it includes three data columns 
     for origin id, destination id, and weight values.
+    ArcGIS Spatial Statistics tools support only unique integer ids. 
+    Thus, the values in the first two columns should be integers.
+    For the case where a weights object uses non-integer IDs,
+    ArcGISTextIO allows users to use internal ids corresponding to record numbers,
+    instead of original ids.
 
     An exemplary structure of an ArcGIS text file is as follows:
     [Line 1]    StationID    
@@ -68,7 +75,7 @@ class ArcGISTextIO(gwt.GwtIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open a text file and read it into a pysal weights object
 
-        >>> w = pysal.open('../../examples/arcgis_txt','r','arcgis_text').read()
+        >>> w = pysal.open('../../examples/arcgis_txt.txt','r','arcgis_text').read()
 
         Get the number of observations from the header
 
@@ -82,8 +89,8 @@ class ArcGISTextIO(gwt.GwtIO):
 
         Get neighbor distances for a single observation
 
-        >>> w['1']
-        {'1': 0.0, '3': 0.14285999999999999, '2': 0.10000000000000001}
+        >>> w[1]
+        {1: 0.0, 2: 0.10000000000000001, 3: 0.14285999999999999}
 
         """
         if self.pos > 0:
@@ -92,7 +99,7 @@ class ArcGISTextIO(gwt.GwtIO):
         id_var = self.file.readline().strip()
         self.varName = id_var
         id_order = None
-        id_type = str
+        id_type = int
         try:
             dbf = os.path.join(self.dataPath + '.dbf')
             if os.path.exists(dbf):
@@ -106,6 +113,9 @@ class ArcGISTextIO(gwt.GwtIO):
                 warn("DBF relating to ArcGIS TEXT was not found, proceeding with unordered string ids.", RuntimeWarning)
         except:
             warn("Exception occurred will reading DBF, proceeding with unordered string ids.", RuntimeWarning)
+
+        if (id_type is not int) or (id_order and type(id_order)[0] is not int):    
+            raise TypeError, "The data type for ids should be integer."        
 
         if id_order:
             self.n = len(id_order)
@@ -121,7 +131,7 @@ class ArcGISTextIO(gwt.GwtIO):
         self.pos += 1
         return W(neighbors,weights)
 
-    def write(self, obj):
+    def write(self, obj, useIdIndex=False):
         """ 
 
         Parameters
@@ -139,12 +149,12 @@ class ArcGISTextIO(gwt.GwtIO):
         --------
 
         >>> import tempfile, pysal, os
-        >>> testfile = pysal.open('../../examples/arcgis_txt','r','arcgis_text')
+        >>> testfile = pysal.open('../../examples/arcgis_txt.txt','r','arcgis_text')
         >>> w = testfile.read()
 
         Create a temporary file for this example
 
-        >>> f = tempfile.NamedTemporaryFile(suffix='')
+        >>> f = tempfile.NamedTemporaryFile(suffix='.txt')
 
         Reassign to new var
 
@@ -178,6 +188,13 @@ class ArcGISTextIO(gwt.GwtIO):
         """
         self._complain_ifclosed(self.closed)
         if issubclass(type(obj),W):
+            id_type = type(obj.id_order[0])
+            if id_type is not int and not useIdIndex:
+                raise TypeError, "ArcGIS TEXT weight files support only integer IDs"
+            if useIdIndex:
+                id2i = obj.id2i
+                obj = remap_ids(obj, id2i)
+ 
             header = '%s\n' % self.varName
             self.file.write(header)
             self._writelines(obj)

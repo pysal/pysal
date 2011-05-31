@@ -2,6 +2,7 @@ import pysal
 import os.path
 import pysal.core.FileIO as FileIO
 from pysal.weights import W
+from pysal.weights.util import remap_ids
 from warnings import warn
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
@@ -15,6 +16,8 @@ class ArcGISDbfIO(FileIO.FileIO):
     ArcGIS Spatial Statistics tools.
     This format is the same as the general dbf format, 
     but the structure of the weights dbf file is fixed unlike other dbf files.
+    This dbf format can be used with the "Generate Spatial Weights Matrix" tool,
+    but not with the tools under the "Mapping Clusters" category.
 
     The ArcGIS dbf file is assumed to have three or four data columns.
     When the file has four columns,
@@ -27,6 +30,12 @@ class ArcGISDbfIO(FileIO.FileIO):
     ID variable in the original source data table. 
     The names for the destination IDs and weight values columns are NID 
     and WEIGHT, respectively.
+    ArcGIS Spatial Statistics tools support only unique integer IDs. 
+    Therefore, the values for origin and destination ID columns should 
+    be integer. 
+    For the case where the IDs of a weights object are not integers, 
+    ArcGISDbfIO allows users to use internal id values corresponding to
+    record numbers, instead of original ids.
 
     An exemplary structure of an ArcGIS dbf file is as follows:
     [Line 1]    Field1    RECORD_ID    NID    WEIGHT
@@ -109,14 +118,10 @@ class ArcGISDbfIO(FileIO.FileIO):
             raise ValueError, "Wrong structure, a weights dbf file requires at least three data columns"
 
         self.varName = id_var
-        id_type = str
+        id_type = int
         id_spec = self.file.field_spec[startPos]
-        if id_spec[0] in ['N', 'F']:
-            if id_spec[2] == 0:
-                id_type = int
-            else:
-                id_type = float
-
+        if id_spec[0] != 'N':
+            raise TypeError, 'The data type for ids should be integer.'
         self.id_var = id_var
         
         weights = {}
@@ -135,7 +140,7 @@ class ArcGISDbfIO(FileIO.FileIO):
 
         return W(neighbors,weights)
 
-    def write(self, obj):
+    def write(self, obj, useIdIndex=False):
         """ 
 
         Parameters
@@ -196,18 +201,13 @@ class ArcGISDbfIO(FileIO.FileIO):
             self.file.header = [self.varName, 'NID', 'WEIGHT']
 
             id_type = type(obj.id_order[0])
-            id_precision = 0
-            keys = [(len(str(id)), str(id)) for id in obj.id_order]
-            keys.sort()
-            id_len = keys[-1][0]
-            if id_type == str:
-                id_type = 'C'
-            elif id_type in [int, float]:
-                id_type = 'N'
-                digits = keys[-1][1].split('.')
-                if len(digits) == 2:
-                    id_precision = len(digits[1])
-            id_spec = (id_type, id_len, id_precision)
+            if id_type is not int and not useIdIndex:
+                raise TypeError, "ArcGIS DBF weight files support only integer IDs"
+            if useIdIndex:
+                id2i = obj.id2i
+                obj = remap_ids(obj, id2i)
+
+            id_spec = ('N', len(str(max(obj.id_order))), 0)
             self.file.field_spec = [id_spec, id_spec, ('N', 13, 6)]
 
             for id in obj.id_order:

@@ -6,7 +6,7 @@ import os
 
 class test_ArcGISTextIO(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = '../../../examples/arcgis_txt'
+        self.test_file = test_file = '../../../examples/arcgis_txt.txt'
         self.obj = ArcGISTextIO(test_file, 'r')
 
     def test_close(self):
@@ -18,7 +18,7 @@ class test_ArcGISTextIO(unittest.TestCase):
         w = self.obj.read()
         self.assertEqual(3, w.n)
         self.assertEqual(3, w.mean_neighbors)
-        self.assertEqual([0.1, 0.05, 0.0], w['2'].values())
+        self.assertEqual([0.1, 0.0, 0.05], w[2].values())
 
     def test_seek(self):
         self.test_read()
@@ -28,7 +28,7 @@ class test_ArcGISTextIO(unittest.TestCase):
 
     def test_write(self):
         w = self.obj.read()
-        f = tempfile.NamedTemporaryFile(suffix='',dir="../../../examples")
+        f = tempfile.NamedTemporaryFile(suffix='.txt',dir="../../../examples")
         fname = f.name
         f.close()
         o = pysal.open(fname,'w','arcgis_text')

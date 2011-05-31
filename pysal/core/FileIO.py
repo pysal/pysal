@@ -80,6 +80,8 @@ class FileIO(object): #should be a type?
                 newCls = object.__new__(cls.__registry[cls.getType(dataPath,\
                     mode, dataFormat)][mode][0])
             except KeyError:
+                print cls.__registry.keys()
+                print 'here'
                 return open(dataPath,mode)
             return newCls
         else:

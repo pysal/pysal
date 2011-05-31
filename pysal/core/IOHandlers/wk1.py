@@ -271,11 +271,11 @@ class Wk1IO(FileIO.FileIO):
             f.write(pack('<7H',40,10,4,76,66,2,2))
             f.write(pack('<2H1c',41,1,"'"))
 
-            obj.id_order = range(n)
+            id2i = obj.id2i
             for i,w_i in enumerate(obj):
                 row = [0.0]*n
                 for k in w_i:
-                    row[k] = w_i[k]
+                    row[id2i[k]] = w_i[k]
                 for c,v in enumerate(row):
                     cell = tuple(['<2H1b2H1d',14,13,113,i,c,v])
                     f.write(pack(*cell))

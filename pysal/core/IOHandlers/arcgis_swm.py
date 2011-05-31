@@ -5,6 +5,7 @@ from numpy import array
 from struct import pack
 import pysal.core.FileIO as FileIO
 from pysal.weights import W
+from pysal.weights.util import remap_ids
 from warnings import warn
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
@@ -15,13 +16,20 @@ class ArcGISSwmIO(FileIO.FileIO):
     Opens, reads, and writes weights file objects in ArcGIS swm format.
     
     Spatial weights objects in the ArcGIS swm format are used in 
-    ArcGIS Spatial Statistics tools.
+    ArcGIS Spatial Statistics tools. 
+    Particularly, this format can be directly used with the tools under 
+    the category of "Mapping Clusters."
     
     An exemplary structure of an ArcGIS swm file is as follows:
     [ID_VAR_NAME];[ESRI_SRS]\n[NO_OBS][ROW_STD][WGT_1]...[WGT_i]...[WGT_n]
-    where [WGT_i] consists of [ORG_i][NO_NGH_i][NGHS_i] 
-    and [NGHS_i] cosists of [DSTS_i][WS_i][W_SUM_i].
+    where [WGT_i] takes the form of [ORG_i][NO_NGH_i][NGHS_i] 
+    and [NGHS_i] takes the form of [DSTS_i][WS_i][W_SUM_i].
     Here, n is the number of observations.
+    The values for [ORG_i] and [DST_i] should be integers, 
+    as ArcGIS Spatial Statistics tools support only unique integer IDs. 
+    For the case where a weights object uses non-integer IDs, 
+    ArcGISSwmIO allows users to use internal ids corresponding to record numbers,
+    instead of original ids.
 
     The specifics of each part of the above structure is as follows:
     Part	    Data type		   Desription				Length
@@ -118,7 +126,7 @@ class ArcGISSwmIO(FileIO.FileIO):
         self.pos += 1
         return W(neighbors,weights)
 
-    def write(self, obj):
+    def write(self, obj, useIdIndex=False):
         """ 
 
         Parameters
@@ -176,6 +184,11 @@ class ArcGISSwmIO(FileIO.FileIO):
         """
         self._complain_ifclosed(self.closed)
         if issubclass(type(obj),W):
+            if not isinstance(obj.id_order[0], int) and not useIdIndex:
+                raise TypeError, "ArcGIS SWM files support only integer IDs"
+            if useIdIndex:
+                id2i = obj.id2i
+                obj = remap_ids(obj, id2i)
             self.file.write('%s;Unknown\n' % self.varName)
             self.file.write(pack('<l', obj.n))
             self.file.write(pack('<l', obj.transform.upper() == 'R'))
