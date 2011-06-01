@@ -122,7 +122,7 @@ class StataTextIO(FileIO.FileIO):
             matrix_form = True
             def line2wgt(line):
                 row = line.strip().split(' ')
-                obs = int(row[0])
+                obs = int(float(row[0]))
                 ngh, wgt = [], []
                 for i in range(n):
                     w = float(row[i+1])
