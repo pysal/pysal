@@ -1,4 +1,8 @@
-..
+.. testsetup:: * 
+
+        import pysal
+        import numpy as np
+
 ******************
 Spatial Smoothing
 ******************
@@ -51,6 +55,8 @@ the ratios of each age group in the total population.
 To obtain the rates based on this approach, we first need to create two variables
 that correspond to event counts and population values, respectively.
 
+.. doctest:: 
+
     >>> import numpy as np
     >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
     >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
@@ -62,6 +68,8 @@ groups in the first region, and the last four elements the populations of the sa
 region. 
 
 To apply the crude age standardization, we need to make the following function call:
+
+.. doctest::  
 
     >>> from pysal.esda import smoothing as sm
     >>> sm.crude_age_standardization(e, b, 2)
@@ -79,6 +87,8 @@ While crude age standardization uses the ratios of each age group in the observe
 direct age standardization weights age-specific rates by the ratios of each age group in a reference 
 population. This reference population, the so-called standard million, is another required 
 argument in the PySAL implementation of direct age standardization:
+
+.. doctest:: 
 
     >>> s = np.array([100, 90, 100, 90, 100, 90, 100, 90])
     >>> rate = sm.direct_age_standardization(e, b, s, 2, alpha=0.05)
@@ -102,11 +112,13 @@ million, the PySAL implementation of indirect age standardization requires
 another argument that contains the counts of the events occurred in the
 standard million.
 
+.. doctest:: 
+
     >>> s_e = np.array([10, 15, 12, 10, 5, 3, 20, 8])
     >>> rate = sm.indirect_age_standardization(e, b, s_e, s, 2, alpha=0.05)
     >>> np.array(rate).round(6)
     array([[ 0.208055,  0.170156,  0.254395],
-          [ 0.298892,  0.246631,  0.362228]])
+           [ 0.298892,  0.246631,  0.362228]])
 
 The outcome of indirect age standardization is the same as that of its direct counterpart.
 
@@ -126,17 +138,23 @@ counties surrounding St. Louis during 1979-84, we first read the corresponding
 data table and extract data values for the homicide counts (the 11th column)
 and total population (the 13th column):
 
+.. doctest:: 
+
     >>> import pysal
-    >>> stl = pysal.open('../examples/stl_hom.csv', 'r')
+    >>> stl = pysal.open('../pysal/examples/stl_hom.csv', 'r')
     >>> e, b = np.array(stl[:,10]), np.array(stl[:,13])
 
 We then read the spatial weights file defining neighborhood relationships among the counties 
 and ensure that the :ref:`order <id_order>` of observations in the weights object is the same as that in the data table. 
 
-    >>> w = pysal.open('../examples/stl.gal', 'r').read()
+.. doctest:: 
+
+    >>> w = pysal.open('../pysal/examples/stl.gal', 'r').read()
     >>> if not w.id_order_set: w.id_order = range(1,len(stl) + 1)
 
 Now we calculate locally weighted averages of the homicide rates.
+
+.. doctest:: 
 
     >>> rate = sm.Disk_Smoother(e, b, w)
     >>> rate.r
@@ -150,6 +168,8 @@ A variation of locally weighted averages is to use median instead of mean.
 In other words, the rate for an observation can be replaced by the median of the rates of its neighbors.
 This method is called locally weighted median and can be applied in the following way:
 
+.. doctest:: 
+
     >>> rate = sm.Spatial_Median_Rate(e, b, w)
     >>> rate.r
     array([  3.96047383e-05,   3.55386859e-05,   3.28308921e-05,
@@ -160,6 +180,8 @@ This method is called locally weighted median and can be applied in the followin
 
 In this method the procedure to find local medians can be iterated until no further change occurs. 
 The resulting local medians are called iteratively resmoothed medians.
+
+.. doctest:: 
 
     >>> rate = sm.Spatial_Median_Rate(e, b, w, iteration=10)
     >>> rate.r
@@ -172,6 +194,8 @@ The resulting local medians are called iteratively resmoothed medians.
 The pure local medians can also be replaced by a weighted median. To obtain weighted medians, 
 we need to create an array of weights. For example, we can use the total population of the counties 
 as auxiliary weights:
+
+.. doctest:: 
 
     >>> rate = sm.Spatial_Median_Rate(e, b, w, aw=b)
     >>> rate.r
@@ -192,15 +216,19 @@ for North Carolina counties during 1974-78. We first need to read the source dat
 counts (the 9th column) and population values (the 9th column). 
 In this example the population values correspond to the numbers of live births during 1974-78. 
 
-    >>> sids_db = pysal.open('../examples/sids2.dbf', 'r')
+.. doctest:: 
+
+    >>> sids_db = pysal.open('../pysal/examples/sids2.dbf', 'r')
     >>> e, b = np.array(sids_db[:,9]), np.array(sids_db[:,8])
 
 Now we need to find triples for each observation. To support the search of triples, PySAL 
 provides a class called Headbanging_Triples. This class requires an array of point observations, 
 a spatial weights object, and the number of triples as its arguments:
 
+.. doctest:: 
+
     >>> from pysal import knnW
-    >>> sids = pysal.open('../examples/sids2.shp', 'r')
+    >>> sids = pysal.open('../pysal/examples/sids2.shp', 'r')
     >>> sids_d = np.array([i.centroid for i in sids])
     >>> sids_w = knnW(sids_d,k=5)
     >>> if not sids_w.id_order_set: sids_w.id_order = sids_w.id_order
@@ -211,6 +239,8 @@ In this example we define 5 neighbors for each observation by using nearest neig
 In the last line we define the maximum number of triples to be found as 5.
 
 Now we use the triples to compute the headbanging median rates:
+
+.. doctest:: 
 
     >>> rate = sm.Headbanging_Median_Rate(e,b,triples)
     >>> rate.r
@@ -232,6 +262,8 @@ PySAL provides the most simplistic form of spatial filtering where a user-specif
 on the data set and a moving window withi a fixed or adaptive radius visits each vertex of the grid to 
 compute the rate at the vertex. Using the previous SIDS example, we can use Spatial_Filtering class:
 
+.. doctest:: 
+
     >>> bbox = [sids.bbox[:2], sids.bbox[2:]]
     >>> rate = sm.Spatial_Filtering(bbox, sids_d, e, b, 10, 10, r=1.5)
     >>> rate.r
@@ -249,6 +281,8 @@ The last argument, r, is to define the radius of the moving window. When this pa
 a fixed radius is applied to all grid vertices. To make the size of moving window variable,
 we can specify the minimum number of population in the moving window without specifying r:
 
+.. doctest:: 
+
     >>> rate = sm.Spatial_Filtering(bbox, sids_d, e, b, 10, 10, pop=10000)
     >>> rate.r
     array([ 0.00157398,  0.00157398,  0.00157398,  0.00157398,  0.00166885,
@@ -263,6 +297,8 @@ the weighted sum is applied to event counts and population values separately.
 The resulting weighted sum of event counts is then divided by the counterpart of population 
 values. To obtain neighbor information, we need to use a spatial weights matrix as before. 
 
+.. doctest:: 
+
     >>> rate = sm.Spatial_Rate(e, b, sids_w)
     >>> rate.r
     array([ 0.00114976,  0.00104622,  0.00110001,  0.00153257,  0.00399662,
@@ -273,6 +309,8 @@ values. To obtain neighbor information, we need to use a spatial weights matrix 
 
 Another variation of spatial rate smoother is kernel smoother. PySAL supports kernel smoothing 
 by using a kernel spatial weights instance in place of a general spatial weights object.
+
+.. doctest:: 
 
     >>> from pysal import Kernel
     >>> kw = Kernel(sids_d)
@@ -290,6 +328,8 @@ This smoother applies direct age standardization while computing spatial rates.
 To illustrate the age-adjusted rate smoother, we create a new set of event counts and population values 
 as well as a new kernel weights object.
 
+.. doctest:: 
+
     >>> e = np.array([10, 8, 1, 4, 3, 5, 4, 3, 2, 1, 5, 3])
     >>> b = np.array([100, 90, 15, 30, 25, 20, 30, 20, 80, 80, 90, 60])
     >>> s = np.array([98, 88, 15, 29, 20, 23, 33, 25, 76, 80, 89, 66])
@@ -299,6 +339,8 @@ as well as a new kernel weights object.
 
 In the above example we created 6 observations each of which has two age groups. To apply age-adjusted 
 rate smoothing, we use the Age_Adjusted_Smoother class as follows:
+
+.. doctest:: 
 
     >>> rate = sm.Age_Adjusted_Smoother(e, b, kw, s)
     >>> rate.r
@@ -312,6 +354,8 @@ The last group of smoothing methods that PySAL supports is based upon the Bayesi
 a raw rate by taking into account information in the other raw rates. 
 As a reference PySAL provides a method for a-spatial Empirical Bayes smoothing:
 
+.. doctest:: 
+
     >>> e, b = sm.sum_by_n(e, np.ones(12), 6), sm.sum_by_n(b, np.ones(12), 6)
     >>> rate = sm.Empirical_Bayes(e, b)
     >>> rate.r
@@ -324,6 +368,8 @@ Next we applied the Empirical_Bayes class to the aggregated counts and populatio
 A spatial Empirical Bayes smoother is also implemented in PySAL. This method requires an additional 
 argument, i.e., a spatial weights object. We continue to reuse the kernel spatial weights object we built before.
 
+.. doctest:: 
+
     >>> rate = sm.Spatial_Empirical_Bayes(e, b, kw) 
     >>> rate.r
     array([ 0.10105263,  0.10165261,  0.16104362,  0.11642038,  0.0226908 ,
@@ -335,6 +381,8 @@ Excess Risk
 Besides a variety of spatial smoothing methods, PySAL provides a class for estimating excess risk from event counts 
 and population values. Excess risks are the ratios of observed event counts over expected event counts.
 An example for the class usage is as follows:
+
+.. doctest:: 
 
     >>> risk = sm.Excess_Risk(e, b)
     >>> risk.r

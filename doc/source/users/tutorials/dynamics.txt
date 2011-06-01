@@ -1,3 +1,7 @@
+.. testsetup:: *
+        
+        import pysal
+        import numpy as np
 ################
 Spatial Dynamics
 ################
@@ -40,10 +44,13 @@ transitions in and out of different classes for each pixel.
 
 For example, let's construct a small artificial chain consisting of 3 states
 (a,b,c) and 5 different pixels at three different points in time:
-        
+
+
+.. doctest::
+
         >>> import pysal
         >>> import numpy as np
-        >>> c=np.array([['b','a','c'],['c','c','a'],['c','b','c'],['a','a','b'],['a','b','c']])
+        >>> c = np.array([['b','a','c'],['c','c','a'],['c','b','c'],['a','a','b'],['a','b','c']])
         >>> c
         array([['b', 'a', 'c'],
                ['c', 'c', 'a'],
@@ -56,7 +63,9 @@ So the first pixel was in class 'b' in period 1, class 'a' in period 2,
 and class 'c' in period 3. We can summarize the overall transition
 dynamics for the set of pixels by treating it as a Markov chain:
 
-        >>> m=pysal.Markov(c)
+.. doctest::
+
+        >>> m = pysal.Markov(c)
         >>> m.classes
         array(['a', 'b', 'c'], 
               dtype='|S1')
@@ -66,6 +75,8 @@ the assumption is that the observations are on the rows of the input and
 the different points in time on the columns. In addition to extracting the
 classes as an attribute, our Markov instance will also have a transitions
 matrix:
+
+.. doctest::
 
         >>> m.transitions
         array([[ 1.,  2.,  1.],
@@ -83,14 +94,18 @@ application of Markov methods to understanding regional income dynamics in
 the US. Here we will load in data on per capita income observed annually
 from 1929 to 2010 for the lower 48 US states:
 
-        >>> f=pysal.open("../examples/usjoin.csv")
-        >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
+.. doctest::
+
+        >>> f = pysal.open("../pysal/examples/usjoin.csv")
+        >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)])
         >>> pci.shape
         (81, 48)
 
 The first row of the array is the per capita income for the first year:
 
-        >>> pci[0,:]
+.. doctest::
+
+        >>> pci[0, :]
         array([ 323,  600,  310,  991,  634, 1024, 1032,  518,  347,  507,  948,
                 607,  581,  532,  393,  414,  601,  768,  906,  790,  599,  286,
                 621,  592,  596,  868,  686,  918,  410, 1152,  332,  382,  771,
@@ -102,10 +117,12 @@ have to discretize the distribution by defining our classes. There are
 many ways to do this, but here we will use the quintiles for each annual
 income distribution to define the classes:
 
-        >>> q5=np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
+.. doctest::
+
+        >>> q5 = np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
         >>> q5.shape
         (48, 81)
-        >>> q5[:,0]
+        >>> q5[:, 0]
         array([0, 2, 0, 4, 2, 4, 4, 1, 0, 1, 4, 2, 2, 1, 0, 1, 2, 3, 4, 4, 2, 0, 2,
                2, 2, 4, 3, 4, 0, 4, 0, 0, 3, 1, 3, 3, 4, 0, 1, 0, 1, 2, 2, 1, 3, 1,
                3, 3])
@@ -124,7 +141,9 @@ fourth quintile. [#]_
 So now we have a time series for each state of its quintile membership.
 For example, Colorado's quintile time series is:
 
-        >>> q5[4,:]
+.. doctest::
+
+        >>> q5[4, :]
         array([2, 3, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 3, 2, 3, 2, 3,
                3, 3, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 3, 3, 3, 3, 3, 3,
                3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4,
@@ -134,7 +153,9 @@ indicating that it has occupied the 3rd, 4th and 5th quintiles in the
 distribution at different points in time. To summarize the transition
 dynamics for all units, we instantiate a Markov object:
 
-        >>> m5=pysal.Markov(q5)
+.. doctest::
+
+        >>> m5 = pysal.Markov(q5)
         >>> m5.transitions
         array([[ 729.,   71.,    1.,    0.,    0.],
                [  72.,  567.,   80.,    3.,    0.],
@@ -145,6 +166,8 @@ dynamics for all units, we instantiate a Markov object:
 Assuming we can treat these transitions as a first order Markov chain, we can estimate
 the transition probabilities:
 
+.. doctest::
+
         >>> m5.p
         matrix([[ 0.91011236,  0.0886392 ,  0.00124844,  0.        ,  0.        ],
                 [ 0.09972299,  0.78531856,  0.11080332,  0.00415512,  0.        ],
@@ -153,6 +176,8 @@ the transition probabilities:
                 [ 0.        ,  0.        ,  0.00125156,  0.07133917,  0.92740926]])
 
 as well as the long run steady state distribution:
+
+.. doctest::
 
         >>> m5.steady_state
         matrix([[ 0.20774716],
@@ -163,6 +188,8 @@ as well as the long run steady state distribution:
 
 With the transition probability matrix in hand, we can estimate the first
 mean passage time:
+
+.. doctest::
 
         >>> pysal.ergodic.fmpt(m5.p)
         matrix([[   4.81354357,   11.50292712,   29.60921231,   53.38594954,
@@ -198,28 +225,36 @@ framework. The first is the spatial Markov class that we illustrate here.
 We first are going to transform the income series to relative incomes (by
 standardizing by each period by the mean):
 
+.. doctest::
+
     >>> import pysal
-    >>> f=pysal.open("../examples/usjoin.csv")
-    >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
-    >>> pci=pci.transpose()
-    >>> rpci=pci/(pci.mean(axis=0))
+    >>> f = pysal.open("../pysal/examples/usjoin.csv")
+    >>> pci = np.array([f.by_col[str(y)] for y in range(1929, 2010)])
+    >>> pci = pci.transpose()
+    >>> rpci = pci / (pci.mean(axis = 0))
 
 
 Next, we require a spatial weights object, and here we will create one
 from an external GAL file:
 
-    >>> w=pysal.open("../examples/states48.gal").read()
-    >>> w.transform='r'
+.. doctest::
+
+    >>> w = pysal.open("../pysal/examples/states48.gal").read()
+    >>> w.transform = 'r'
 
 Finally, we create an instance of the Spatial Markov class using 5 states
 for the chain:
 
-    >>> sm=pysal.Spatial_Markov(rpci,w,fixed=True,k=5)
+.. doctest::
+
+    >>> sm = pysal.Spatial_Markov(rpci, w, fixed = True, k = 5)
 
 Here we are keeping the quintiles fixed, meaning the data are pooled over
 space and time and the quintiles calculated for the pooled data. This is
 why we first transformed the data to relative incomes.  We can next
 examine the global transition probability matrix for relative incomes:
+
+.. doctest::
 
     >>> sm.p
     matrix([[ 0.91461837,  0.07503234,  0.00905563,  0.00129366,  0.        ],
@@ -234,6 +269,8 @@ dynamics are split across economies who have spatial lags in different
 quintiles at the beginning of the year. In our example we have 5 classes,
 so 5 different conditioned transition probability matrices are estimated:
  
+.. doctest::
+
     >>> for p in sm.P:
     ...     print p
     ...     
@@ -273,6 +310,8 @@ neighbors are in the 4th quintile this drops to 0.903.
 We can also explore the different steady state distributions implied by
 these different transition probabilities:
 
+.. doctest::
+
     >>> sm.S
     array([[ 0.43509425,  0.2635327 ,  0.20363044,  0.06841983,  0.02932278],
            [ 0.13391287,  0.33993305,  0.25153036,  0.23343016,  0.04119356],
@@ -285,6 +324,8 @@ The long run distribution for states with poor (rich) neighbors has
 the second quintile, 0.204 (0.190) in the third, 0.0684 (0.255) in the
 fourth and 0.029 (0.337) in the fifth quintile. And, finally the first mean
 passage times:
+
+.. doctest::
 
     >>> for f in sm.F:
     ...     print f
@@ -336,15 +377,19 @@ in a dynamic context we develop the LISA Markov in which the states of the
 chain are defined as the four quadrants in the Moran scatter plot.
 Continuing on with our US example:
 
+.. doctest::
+
     >>> import numpy as np
-    >>> f=pysal.open("../examples/usjoin.csv")
-    >>> pci=np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
-    >>> w=pysal.open("../examples/states48.gal").read()
-    >>> lm=pysal.LISA_Markov(pci,w)
+    >>> f = pysal.open("../pysal/examples/usjoin.csv")
+    >>> pci = np.array([f.by_col[str(y)] for y in range(1929, 2010)]).transpose()
+    >>> w = pysal.open("../pysal/examples/states48.gal").read()
+    >>> lm = pysal.LISA_Markov(pci, w)
     >>> lm.classes
     array([1, 2, 3, 4])
 
 The LISA transitions are:
+
+.. doctest::
 
     >>> lm.transitions
     array([[ 495.,   47.,  384.,  244.],
@@ -353,6 +398,8 @@ The LISA transitions are:
            [ 169.,  105.,  218.,   83.]])
 
 and the estimated transition probability matrix is:
+
+.. doctest::
 
     >>> lm.p
     matrix([[ 0.42307692,  0.04017094,  0.32820513,  0.20854701],
@@ -366,6 +413,8 @@ there is greater mobility for observations in quadrants 2 and 4 than 1 and
 
 The implied long run steady state distribution of the chain is
 
+.. doctest::
+
     >>> lm.steady_state
     matrix([[ 0.31122083+0.j],
             [ 0.14496933+0.j],
@@ -374,6 +423,8 @@ The implied long run steady state distribution of the chain is
 
 again reflecting the dominance of quadrants 1 and 3 (positive
 autocorrelation). [#]_ Finally the first mean passage time for the LISAs is:
+
+.. doctest::
 
    >>> pysal.ergodic.fmpt(lm.p)
    matrix([[ 3.21315259,  7.72803263,  2.96241347,  5.6170544 ],
@@ -407,22 +458,26 @@ correlation is different between the two sets. [4]_ To illustrate this we
 turn to the case of regional incomes in Mexico over the 1940 to 2010
 period:
 
+.. doctest::
+
     >>> import pysal
-    >>> f=pysal.open("../examples/mexico.csv")
-    >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
-    >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
+    >>> f = pysal.open("../pysal/examples/mexico.csv")
+    >>> vnames = ["pcgdp%d"%dec for dec in range(1940, 2010, 10)]
+    >>> y = np.transpose(np.array([f.by_col[v] for v in vnames]))
 
 We also introduce the concept of regime weights that defines the neighbor
 set as those spatial units belonging to the same region. In this example
 the variable "esquivel99" represents a categorical classification of
 Mexican states into regions:
 
-    >>> regime=np.array(f.by_col['esquivel99'])
-    >>> w=pysal.weights.regime_weights(regime)
+.. doctest::
+
+    >>> regime = np.array(f.by_col['esquivel99'])
+    >>> w = pysal.weights.regime_weights(regime)
     >>> np.random.seed(10)
-    >>> res=[pysal.SpatialTau(y[:,i],y[:,i+1],w,99) for i in range(6)]
+    >>> res = [pysal.SpatialTau(y[:, i], y[:, i+1], w, 99) for i in range(6)]
     >>> for r in res:
-    ...     "%8.3f %8.3f %8.3f"%(r.wnc,r.ev_wnc,r.p_rand_wnc)
+    ...     "%8.3f %8.3f %8.3f"%(r.wnc, r.ev_wnc, r.p_rand_wnc)
     ...     
     '  44.000   52.354    0.000'
     '  47.000   53.576    0.006'
@@ -443,13 +498,15 @@ within mutually exclusive and exhaustive partitions (regimes) of the
 Theta is defined as the sum of the absolute sum of rank changes within
 the regimes over the sum of all absolute rank changes. [4]_
 
+.. doctest::
+
     >>> import pysal
-    >>> f=pysal.open("../examples/mexico.csv")
-    >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
-    >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
-    >>> regime=np.array(f.by_col['esquivel99'])
+    >>> f = pysal.open("../pysal/examples/mexico.csv")
+    >>> vnames = ["pcgdp%d"%dec for dec in range(1940, 2010, 10)]
+    >>> y = np.transpose(np.array([f.by_col[v] for v in vnames]))
+    >>> regime = np.array(f.by_col['esquivel99'])
     >>> np.random.seed(10)
-    >>> t=pysal.Theta(y,regime,999)
+    >>> t = pysal.Theta(y, regime, 999)
     >>> t.theta
     array([[ 0.41538462,  0.28070175,  0.61363636,  0.62222222,  0.33333333,
              0.47222222]])

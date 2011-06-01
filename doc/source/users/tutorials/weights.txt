@@ -1,4 +1,10 @@
 .. _weights:
+
+.. testsetup:: *
+
+    import pysal
+    import numpy as np
+
 ***************
 Spatial Weights
 ***************
@@ -47,12 +53,16 @@ Contiguity Based Weights
 ------------------------
 
 To illustrate the general weights object, we start with a simple contiguity
-matrix constructed for a 5 by 5 lattice (composed of 25 spatial units)::
+matrix constructed for a 5 by 5 lattice (composed of 25 spatial units):
+
+.. doctest::
 
     >>> import pysal
-    >>> w=pysal.lat2W(5,5)
+    >>> w = pysal.lat2W(5, 5)
 
-The w object has a number of attributes::
+The w object has a number of attributes:
+
+.. doctest::
 
     >>> w.n
     25
@@ -85,7 +95,9 @@ that of the rook which takes as neighbors any pair of cells that share an edge.
 Alternatively, we could have used the queen criterion to include the vertices
 of the lattice to define contiguities:
 
-	>>> wq=pysal.lat2W(rook=False)
+.. doctest::
+
+	>>> wq = pysal.lat2W(rook = False)
 	>>> wq.neighbors[0]
 	[5, 1, 6]
 	>>> 
@@ -102,7 +114,9 @@ topology is not stored in the underlying file there is a need to construct
 the spatial weights prior to carrying out the analysis. In PySAL spatial
 weights can be obtained directly from shapefiles:
 
-    >>> w=pysal.rook_from_shapefile("examples/columbus.shp")
+.. doctest::
+
+    >>> w = pysal.rook_from_shapefile("../pysal/examples/columbus.shp")
     >>> w.n
     49
     >>> w.pct_nonzero
@@ -112,7 +126,9 @@ weights can be obtained directly from shapefiles:
 
 If queen, rather than rook, contiguity is required then the following would work:
 
-    >>> w=pysal.queen_from_shapefile("examples/columbus.shp")
+.. doctest::
+
+    >>> w = pysal.queen_from_shapefile("../pysal/examples/columbus.shp")
     >>> w.pct_nonzero
     0.098292378175760101
     >>> w.histogram
@@ -138,17 +154,21 @@ The neighbors for a given observations can be defined using a k-nearest neighbor
 For example we could use the the centroids of our
 5x5 lattice as point locations to measure the distances:
 
+.. doctest::
+
 	>>> import numpy as np
-	>>> data=np.array([ord.flatten() for ord in np.indices((5,5))]).transpose()
+	>>> data = np.array([ord.flatten() for ord in np.indices((5, 5))]).transpose()
 
 then define the knn set as:
 
-	>>> wknn3=pysal.knnW(data,k=3)
+.. doctest::
+
+	>>> wknn3 = pysal.knnW(data, k = 3)
 	>>> wknn3.neighbors[0]
 	[1, 5, 6]
 	>>> wknn3.s0
 	75
-	>>> w4=pysal.knnW(data,k=4)
+	>>> w4 = pysal.knnW(data, k = 4)
 	>>> w4.neighbors[0]
 	[1, 5, 6, 2]
 	>>> w4.s0
@@ -165,7 +185,9 @@ An alternative distance based set of weights relies on distance bands or
 thresholds to define the neighbor set for each spatial unit as those other units
 falling within a threshold distance of the focal unit:
 
-	>>> wthresh=pysal.threshold_binaryW_from_array(data,2)
+.. doctest::
+
+	>>> wthresh = pysal.threshold_binaryW_from_array(data, 2)
 	>>> wthresh.neighbors[0]
 	[1, 2, 5, 6, 10]
 	>>> wthresh.neighbors[1]
@@ -184,13 +206,17 @@ Distance band weights can be generated for shapefiles as well as arrays of point
 minimum nearest neighbor distance should be determined so that each unit is assured of at least one 
 neighbor:
 
-    >>> thresh=pysal.min_threshold_dist_from_shapefile("examples/columbus.shp")
+.. doctest::
+
+    >>> thresh = pysal.min_threshold_dist_from_shapefile("../pysal/examples/columbus.shp")
     >>> thresh
     0.61886415807685413
 
 with this threshold in hand, the distance band weights are obtained as:
 
-    >>> wt=pysal.threshold_binaryW_from_shapefile("examples/columbus.shp",thresh)
+.. doctest::
+
+    >>> wt = pysal.threshold_binaryW_from_shapefile("../pysal/examples/columbus.shp", thresh)
     >>> wt.min_neighbors
     1
     >>> wt.histogram
@@ -205,14 +231,18 @@ than binary, with the values set to the inverse distance separating each pair
 within a given threshold distance. We illustrate this with a small set of 6
 points:
 
-    >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
-    >>> wid=pysal.threshold_continuousW_from_array(points,11.2)
+.. doctest::
+
+    >>> points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+    >>> wid = pysal.threshold_continuousW_from_array(points,11.2)
     >>> wid.weights[0]
     [0.10000000000000001, 0.089442719099991588]
 
-If we change the distance decay exponent to -2.0 the result is so called gravity weights;
+If we change the distance decay exponent to -2.0 the result is so called gravity weights:
 
-    >>> wid2=pysal.threshold_continuousW_from_array(points,11.2,alpha=-2.0)
+.. doctest::
+
+    >>> wid2 = pysal.threshold_continuousW_from_array(points,11.2,alpha = -2.0)
     >>> wid2.weights[0]
     [0.01, 0.0079999999999999984]
 
@@ -223,8 +253,10 @@ Kernel Weights
 A combination of distance based thresholds together with  continuously valued
 weights is supported through kernel weights:
 
-    >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
-    >>> kw=pysal.Kernel(points)
+.. doctest::
+
+    >>> points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+    >>> kw = pysal.Kernel(points)
     >>> kw.weights[0]
     [1.0, 0.50000004999999503, 0.44098306152674649]
     >>> kw.neighbors[0]
@@ -245,7 +277,9 @@ the derived continuous weights (the following are available:
 the bandwidth is set to the default value and fixed across the observations.
 The user could specify a different value for a fixed bandwidth:
 
-    >>> kw15=pysal.Kernel(points,bandwidth=15.0)
+.. doctest::
+
+    >>> kw15 = pysal.Kernel(points,bandwidth = 15.0)
     >>> kw15[0]
     {0: 1.0, 1: 0.33333333333333337, 3: 0.2546440075000701}
     >>> kw15.neighbors[0]
@@ -261,8 +295,10 @@ The user could specify a different value for a fixed bandwidth:
 which results in fewer neighbors for the first unit.  Adaptive bandwidths (i.e., different bandwidths
 for each unit) can also be user specified:
 
-    >>> bw=[25.0,15.0,25.0,16.0,14.5,25.0]
-    >>> kwa=pysal.Kernel(points,bandwidth=bw)
+.. doctest::
+
+    >>> bw = [25.0,15.0,25.0,16.0,14.5,25.0]
+    >>> kwa = pysal.Kernel(points,bandwidth = bw)
     >>> kwa.weights[0]
     [1.0, 0.59999999999999998, 0.55278640450004202, 0.10557280900008403]
     >>> kwa.neighbors[0]
@@ -277,7 +313,9 @@ for each unit) can also be user specified:
 
 Alternatively the adaptive bandwidths could be defined endogenously:
 
-    >>> kwea=pysal.Kernel(points,fixed=False)
+.. doctest::
+
+    >>> kwea = pysal.Kernel(points,fixed = False)
     >>> kwea.weights[0]
     [1.0, 0.10557289844279438, 9.9999990066379496e-08]
     >>> kwea.neighbors[0]
@@ -292,7 +330,9 @@ Alternatively the adaptive bandwidths could be defined endogenously:
 
 Finally, the kernel function could be changed (with endogenous adaptive bandwidths):
 
-    >>> kweag=pysal.Kernel(points,fixed=False,function='gaussian')
+.. doctest::
+
+    >>> kweag = pysal.Kernel(points,fixed = False,function = 'gaussian')
     >>> kweag.weights[0]
     [0.3989422804014327, 0.26741902915776961, 0.24197074871621341]
     >>> kweag.bandwidth
@@ -319,13 +359,13 @@ Attributes of W
 -----------------------------
 W objects come with a whole bunch of useful attributes that may help you when
 dealing with spatial weights matrices. To see a list of all of them, same as
-with any other Python object, type::
+with any other Python object, type:
 
     >>> import pysal
     >>> help(pysal.W)
 
 If you want to be more specific and learn, for example, about the attribute
-`s0`, then type::
+`s0`, then type:
 
     >>> help(pysal.W.s0)
     Help on property:
@@ -334,7 +374,7 @@ If you want to be more specific and learn, for example, about the attribute
             
         .. math::
                 
-            s0=\sum_i \sum_j w_{i,j}
+            s0 = \sum_i \sum_j w_{i,j}
 
 Weight Transformations
 ----------------------
@@ -349,13 +389,17 @@ Here each value in the row of the spatial weights matrix is rescaled to sum to o
 This and other weights transformations in PySAL are supported by the transform property of the W class. To see this 
 let's build a simple contiguity object for the Columbus data set:
 
-    >>> w=pysal.rook_from_shapefile("examples/columbus.shp")
+.. doctest::
+
+    >>> w = pysal.rook_from_shapefile("../pysal/examples/columbus.shp")
     >>> w.weights[0]
     [1.0, 1.0]
 
 We can row standardize this by setting the transform property:
 
-    >>> w.transform='r'
+.. doctest::
+
+    >>> w.transform = 'r'
     >>> w.weights[0]
     [0.5, 0.5]
 
@@ -367,13 +411,17 @@ Supported transformations are the following:
 
 If the original weights (unstandardized) are required, the transform property can be reset:
 
-    >>> w.transform='o'
+.. doctest::
+
+    >>> w.transform = 'o'
     >>> w.weights[0]
     [1.0, 1.0]
  
 Behind the scenes the transform property is updating all other characteristics of the spatial weights that are a function of the
 values and these standardization operations, freeing the user from having to keep these other attributes updated. To determine the current
 value of the transformation, simply query this attribute:
+
+.. doctest::
 
     >>> w.transform
     'O'
@@ -390,21 +438,29 @@ Generating a full array
 As the underlying data structure of the weights in W is based on a sparse representation, there may be a need to work with the full numpy array.
 This is supported through the full method of W:
 
-    >>> wf=w.full()
+.. doctest::
+
+    >>> wf = w.full()
     >>> len(wf)
     2
 
 The first element of the return from w.full is the numpy array:
     
+.. doctest::
+
     >>> wf[0].shape
     (49, 49)
 
 while the second element contains the ids for the row (column) ordering of the array:
 
+.. doctest::
+
     >>> wf[1][0:5]
     [0, 1, 2, 3, 4]
 
 If only the array is required, a simple Python slice can be used:
+
+.. doctest::
 
     >>> wf = w.full()[0]
     
@@ -415,8 +471,10 @@ The Shimbel matrix for a set of n objects contains the shortest path distance se
 This has wide use in spatial analysis for solving different types of clustering and optimization problems. Calling the shimbel
 method of a W object generates this information:
 
-    >>> w=pysal.lat2W(3,3)
-    >>> ws=w.shimbel()
+.. doctest::
+
+    >>> w = pysal.lat2W(3,3)
+    >>> ws = w.shimbel()
     >>> ws[0]
     [-1, 1, 2, 1, 2, 3, 2, 3, 4]
 
@@ -430,13 +488,17 @@ Higher Order Contiguity Weights
 Closely related to the shortest path distances is the concept of a spatial weight based on a particular order of contiguity. For example, we could
 define the second order contiguity relations using:
 
-    >>> w2=w.higher_order(2)
+.. doctest::
+
+    >>> w2 = w.higher_order(2)
     >>> w2.neighbors[0]
     [2, 4, 6]
 
 or a fourth order set of weights:
 
-    >>> w4=w.higher_order(4)
+.. doctest::
+
+    >>> w4 = w.higher_order(4)
     >>> w4.neighbors[0]
     [8]
 
@@ -449,14 +511,18 @@ The final function related to spatial weights that we illustrate here is used to
 lag is a function of the attribute values observed at neighboring locations. For example, if we continue with our regular 3x3 lattice and
 create an attribute variable y:
 
+.. doctest::
+
     >>> import numpy as np
-    >>> y=np.arange(w.n)
+    >>> y = np.arange(w.n)
     >>> y
     array([0, 1, 2, 3, 4, 5, 6, 7, 8])
 
 then the spatial lag can be constructed with:
     
-    >>> yl=pysal.lag_spatial(w,y)
+.. doctest::
+
+    >>> yl = pysal.lag_spatial(w,y)
     >>> yl
     array([  4.,   6.,   6.,  10.,  16.,  14.,  10.,  18.,  12.])
 
@@ -469,8 +535,10 @@ Mathematically, the spatial lag is a weighted sum of neighboring attribute value
 In the example above, the weights were binary, based on the rook criterion. If we row standardize our W object first
 and then recalculate the lag, it takes the form of a weighted average of the neighboring attribute values:
 
-    >>> w.transform='r'
-    >>> ylr=pysal.lag_spatial(w,y)
+.. doctest::
+
+    >>> w.transform = 'r'
+    >>> ylr = pysal.lag_spatial(w,y)
     >>> ylr
     array([ 2.        ,  2.        ,  3.        ,  3.33333333,  4.        ,
             4.66666667,  5.        ,  6.        ,  6.        ])
@@ -482,6 +550,8 @@ of the values in y aligns with the underlying order in W.  In cases where the
 source for your attribute data is different from the one to construct your
 weights you may need to reorder your y values accordingly.  To check if this is
 the case you can find the order in W as follows:
+
+.. doctest::
 
     >>> w.id_order
     [0, 1, 2, 3, 4, 5, 6, 7, 8]
@@ -495,12 +565,14 @@ and the orderings must be aligned.
 Fortunately, for the common use case where both the attribute and weights information come from a
 shapefile (and its dbf), PySAL handles the alignment automatically: [#]_
 
-    >>> w=pysal.rook_from_shapefile("examples/columbus.shp")
-    >>> f=pysal.open("examples/columbus.dbf")
+.. doctest::
+
+    >>> w = pysal.rook_from_shapefile("../pysal/examples/columbus.shp")
+    >>> f = pysal.open("../pysal/examples/columbus.dbf")
     >>> f.header
     ['AREA', 'PERIMETER', 'COLUMBUS_', 'COLUMBUS_I', 'POLYID', 'NEIG', 'HOVAL', 'INC', 'CRIME', 'OPEN', 'PLUMB', 'DISCBD', 'X', 'Y', 'NSA', 'NSB', 'EW', 'CP', 'THOUS', 'NEIGNO']
-    >>> y=np.array(f.by_col['INC'])
-    >>> w.transform='r'
+    >>> y = np.array(f.by_col['INC'])
+    >>> w.transform = 'r'
     >>> y
     array([ 19.531   ,  21.232   ,  15.956   ,   4.477   ,  11.252   ,
             16.028999,   8.438   ,  11.337   ,  17.586   ,  13.598   ,
@@ -512,7 +584,7 @@ shapefile (and its dbf), PySAL handles the alignment automatically: [#]_
             18.739   ,  17.017   ,  11.107   ,  18.476999,  29.833   ,
             22.207001,  25.872999,  13.38    ,  16.961   ,  14.135   ,
             18.323999,  18.950001,  11.813   ,  18.796   ])
-    >>> yl=pysal.lag_spatial(w,y)
+    >>> yl = pysal.lag_spatial(w,y)
     >>> yl
     array([ 18.594     ,  13.32133333,  14.123     ,  14.94425   ,
             11.817857  ,  14.419     ,  10.283     ,   8.3364    ,
@@ -562,6 +634,8 @@ function can be used to simply join together two weights objects, say one for
 Arizona counties and another for California counties.  It can also be used 
 to join two weights objects that overlap as in the example below. 
 
+.. doctest::
+
     >>> w1 = pysal.lat2W(4,4)
     >>> w2 = pysal.lat2W(6,4)
     >>> w = pysal.w_union(w1, w2)
@@ -591,6 +665,8 @@ in either matrix or with the dimensionality of just those tracts in the
 overlapping area. All of these options are available via the w_shape parameter
 and the order that the matrices are passed to the function.  The following
 example uses the all case:
+
+.. doctest::
 
     >>> w1 = pysal.lat2W(4,4)
     >>> w2 = pysal.lat2W(6,4)
@@ -628,28 +704,30 @@ differenced pairs should be identified based on the sets of pairs in the
 original weights matrices (constrained=False).  In the example below we
 difference weights matrices from regions with partial overlap.
 
+.. doctest::
+
     >>> w1 = pysal.lat2W(6,4)
     >>> w2 = pysal.lat2W(4,4)
     >>> w1.neighbors[15]
     [11, 14, 19]
     >>> w2.neighbors[15]
     [11, 14]
-    >>> w = pysal.w_difference(w1, w2, w_shape='w1', constrained=False)
+    >>> w = pysal.w_difference(w1, w2, w_shape = 'w1', constrained = False)
     >>> w.neighbors[15]
     [19]
     >>> w.neighbors[19]
     [15, 18, 23]
-    >>> w = pysal.w_difference(w1, w2, w_shape='min', constrained=False)
+    >>> w = pysal.w_difference(w1, w2, w_shape = 'min', constrained = False)
     >>> 15 in w.neighbors
     False
     >>> w.neighbors[19]
     [18, 23]
-    >>> w = pysal.w_difference(w1, w2, w_shape='w1', constrained=True)
+    >>> w = pysal.w_difference(w1, w2, w_shape = 'w1', constrained = True)
     >>> w.neighbors[15]
     []
     >>> w.neighbors[19]
     [18, 23]
-    >>> w = pysal.w_difference(w1, w2, w_shape='min', constrained=True)
+    >>> w = pysal.w_difference(w1, w2, w_shape = 'min', constrained = True)
     >>> 15 in w.neighbors
     False
     >>> w.neighbors[19]
@@ -659,9 +737,11 @@ The difference function can be used to construct a bishop
 :ref:`contiguity weights matrix <contiguity>` 
 by differencing a queen and rook matrix.
 
-        >>> wr=pysal.lat2W(5,5)
-        >>> wq=pysal.lat2W(5,5,rook=False)
-        >>> wb=pysal.w_difference(wq, wr,constrained=False)
+.. doctest::
+
+        >>> wr = pysal.lat2W(5,5)
+        >>> wq = pysal.lat2W(5,5,rook = False)
+        >>> wb = pysal.w_difference(wq, wr,constrained = False)
         >>> wb.neighbors[0]
         [6]
 
@@ -674,10 +754,12 @@ W, that includes only neighbor pairs that are not shared by either matrix.
 This function offers options similar to those in the difference function
 described above.
 
-    >>> w1 = pysal.lat2W(6,4)
-    >>> w2 = pysal.lat2W(2,4)
-    >>> w_lower = pysal.w_difference(w1, w2, w_shape='min', constrained=True)
-    >>> w_upper = pysal.lat2W(4,4)
+.. doctest::
+
+    >>> w1 = pysal.lat2W(6, 4)
+    >>> w2 = pysal.lat2W(2, 4)
+    >>> w_lower = pysal.w_difference(w1, w2, w_shape = 'min', constrained = True)
+    >>> w_upper = pysal.lat2W(4, 4)
     >>> w = pysal.w_symmetric_difference(w_lower, w_upper, 'all', False)
     >>> w_lower.id_order
     [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
@@ -706,7 +788,9 @@ Subset of a weights object returns a binary weights object, W, that includes
 only those observations provided by the user.  It also can be used to add
 islands to a previously existing weights object.
 
-    >>> w1 = pysal.lat2W(6,4)
+.. doctest::
+
+    >>> w1 = pysal.lat2W(6, 4)
     >>> w1.id_order
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
     >>> ids = range(16)

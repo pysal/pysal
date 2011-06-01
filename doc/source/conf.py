@@ -28,6 +28,11 @@ extensions = ['sphinx.ext.autodoc',
 'sphinx.ext.pngmath',
 'sphinx.ext.autosummary','sphinx.ext.viewcode','numpydoc']
 
+#doctest extension config values
+doctest_path = '/Users/stephens/code/pysal/doc/source/users/tutorials/' 
+doctest_test_doctest_blocks = ''
+#doctest_global_setup = 
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
