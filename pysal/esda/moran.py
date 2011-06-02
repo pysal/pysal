@@ -400,7 +400,7 @@ class Moran_Local:
     >>> lm.q
     array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
     >>> lm.p_z_sim[0]
-    0.99036648060872201
+    0.93513660775432128
 
 
     Note random components result is slightly different values across
@@ -458,10 +458,11 @@ class Moran_Local:
         z=self.z
         lisas=np.zeros((self.n, self.permutations))
         n_1=self.n-1
-        rid=range(n_1)
+        rid=range(self.n-1)
         prange=range(self.permutations)
         k = self.w.max_neighbors + 1
-        rids=np.array([np.random.permutation(rid)[0:k] for i in prange])
+        nn = range(self.n - 1)
+        rids=np.array([np.random.permutation(nn)[0:k] for i in prange])
         ids=np.arange(self.w.n)
         ido=self.w.id_order
         w = [ self.w.weights[ido[i]] for i in ids ]
@@ -469,6 +470,7 @@ class Moran_Local:
  
         for i in range(self.w.n):
             idsi=ids[ids!=i]
+            np.random.shuffle(idsi)
             lisas[i]=[z[i]*sum(w[i]*z[idsi[rid[0:wc[i]]]]) for rid in rids]
         self.rlisas=(n_1/self.den)*lisas
     
