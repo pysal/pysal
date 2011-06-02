@@ -42,9 +42,9 @@ class Moran_Local_Tester(unittest.TestCase):
         self.y = np.array(f.by_col['z'])
     def test_Moran_Local(self):
         lm = moran.Moran_Local(self.y, self.w, transformation="r", permutations=99)
-        self.assertAlmostEquals(lm.z_sim[0], -0.01207411940840397 )
-        self.assertAlmostEquals(lm.p_z_sim[0], 0.99036648060872201 )
-        self.assertAlmostEquals(lm.VI_sim, 0.23519675087018393 )
+        self.assertAlmostEquals(lm.z_sim[0],-0.081383956359666748 )
+        self.assertAlmostEquals(lm.p_z_sim[0], 0.93513660775432128 )
+        self.assertAlmostEquals(lm.VI_sim,  0.2067126047680822 )
         
 
 
