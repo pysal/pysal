@@ -21,6 +21,7 @@ Prior to the build, there are a number of actions to take.
        ** use svn2cl to generate the entire project history. Then prepend just the most important changes to the file CHANGELOG.txt.
 
      * update THANKS.txt 
+     * update README.txt 
      * update setup.py to add new modules or remove old ones
      * edit trunk/pysal/doc/source/contents.txt to include *New in this release*
      * prior to the Tag and final docs build, bump the docs version from x.xdev
@@ -79,10 +80,25 @@ look at that, run:
 
 Binary Installer for OS X 
 =============================
-
 To make a Mac OS X graphical installer, first install 'bdist_mpkg' from the
-Python Package Index using pip or easy_install or downloading the source
-code. Once it is installed, run ::
+Python Package Index. We recommend downloading the source code and using the
+included setup.py file to install. Note that you can install multiple versions
+of bdist_mpkg, so be sure you know which one you're calling, and which Python it
+is associated with. For instance, below we include edits to alter the .mpkg
+produced by bdist_mpkg so that PySAL will be installed in the Current version of
+Python in the Python Frameworks (i.e. /Library/Frameworks/Python.framework/ ...
+). That includes any or most Python distributions not included by Apple, such as
+those from python.org and Enthought.
+
+If you were targeting just one of those distributions, EPD for example, you
+could forego our edits below by installing a version of bdist_mpkg using the EPD
+Python executable. Likewise, if you're only interested to direct the installer
+to Python 2.6.6 distributed by python.org, you'd use the bdist_mpkg built by
+that executable, and forego the edits below. The same will hold true for other
+versions of Python, such as Python2.7 or 3.2., or for Apple-installed Python
+located at /usr/bin/python.
+
+After you install 'bdist_mpkg', run ::
 
     $ bdist_mpkg setup.py build 
 
