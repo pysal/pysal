@@ -38,6 +38,7 @@ class test_WeightConverter(unittest.TestCase):
                 #       are tested in their specific readers
                 warnings.simplefilter("always")
                 wc = WeightConverter(self.base_dir + f, dataFormat=self.dataformats[f])
+
             for ext, dataformat in self.fileformats:
                 if f.lower().endswith(ext):
                     continue
@@ -45,18 +46,22 @@ class test_WeightConverter(unittest.TestCase):
                 temp_fname = temp_f.name
                 temp_f.close()
                
-                if ext == 'swm':
-                    wc.write(temp_fname,useIdIndex=True) 
-                elif dataformat is None:
-                    wc.write(temp_fname)
-                elif dataformat in ['arcgis_dbf','arcgis_text']:
-                    wc.write(temp_fname, dataFormat=dataformat, useIdIndex=True)
-                elif dataformat == 'stata_text':
-                    wc.write(temp_fname, dataFormat=dataformat, matrix_form=True)
-                elif dataformat is None:
-                    wc.write(temp_fname)
-                else:
-                    wc.write(temp_fname, dataFormat=dataformat)
+                with warnings.catch_warnings(record=True) as warn:
+                    # note: we are just suppressing the warnings here; individual warnings 
+                    #       are tested in their specific readers
+                    warnings.simplefilter("always")
+                    if ext == 'swm':
+                        wc.write(temp_fname,useIdIndex=True) 
+                    elif dataformat is None:
+                        wc.write(temp_fname)
+                    elif dataformat in ['arcgis_dbf','arcgis_text']:
+                        wc.write(temp_fname, dataFormat=dataformat, useIdIndex=True)
+                    elif dataformat == 'stata_text':
+                        wc.write(temp_fname, dataFormat=dataformat, matrix_form=True)
+                    elif dataformat is None:
+                        wc.write(temp_fname)
+                    else:
+                        wc.write(temp_fname, dataFormat=dataformat)
 
                 with warnings.catch_warnings(record=True) as warn:
                     # note: we are just suppressing the warnings here; individual warnings 
