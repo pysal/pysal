@@ -4,9 +4,9 @@ import pysal.weights
 import numpy as np
 from scipy import sparse,float32
 from scipy.spatial import KDTree
-import os, gc
+import os, gc, operator
 
-__all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 'remap_ids','full2W' ,'full','get_ids', 'min_threshold_distance','lat2SW']
+__all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 'remap_ids','full2W' ,'full', 'insert_diagonal', 'get_ids', 'min_threshold_distance','lat2SW']
 
 
 def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
@@ -482,6 +482,79 @@ def full2W(m, ids=None):
         neighbors[i] = ngh
     return pysal.W(neighbors, weights, id_order=ids)
     
+
+def insert_diagonal(w, diagonal=1.0):
+    """
+    Returns a new pysal W object with values inserted along the main diagonal.
+
+    Parameters
+    ----------
+    w        : W
+               Spatial weights object
+
+    diagonal : float, int or array
+               Defines the value(s) to which the weights matrix diagonal should
+               be set. If a constant is passed then each element along the
+               diagonal will get this value (default is 1.0). An array of length 
+               w.n can be passed to set explicit values to each element along 
+               the diagonal (assumed to be in the same order as w.id_order).
+               
+    Returns
+    -------
+    w        : W
+               Spatial weights object
+
+    Example
+    -------
+    >>> import pysal
+    >>> import numpy as np
+
+    Build a basic rook weights matrix, which has zeros on the diagonal, then
+    insert ones along the diagonal. 
+
+    >>> w = pysal.lat2W(5, 5, id_type='string')
+    >>> w_const = pysal.weights.insert_diagonal(w)
+    >>> w['id0']
+    {'id5': 1.0, 'id1': 1.0}
+    >>> w_const['id0']
+    {'id5': 1.0, 'id0': 1.0, 'id1': 1.0}
+
+    Insert different values along the main diagonal.
+
+    >>> diag = np.arange(100, 125)
+    >>> w_var = pysal.weights.insert_diagonal(w, diag)
+    >>> w_var['id0']
+    {'id5': 1.0, 'id0': 100, 'id1': 1.0}
+
+    """
+    neighbors = w.neighbors
+    weights = w.weights
+    ids = copy.copy(w.id_order)
+    new_neigh = {}
+    new_weight = {}
+    if issubclass(type(diagonal), np.ndarray):
+        if w.n != diagonal.shape[0]:
+            raise Exception, "shape of w and diagonal do not match"
+        if not w.id_order:
+            raise Exception, "w.id_order must be set"
+        for index, oid in enumerate(ids):
+            neigh = copy.copy(neighbors[oid])
+            neigh.append(oid)
+            new_neigh[oid] = neigh
+            weight = copy.copy(weights[oid])
+            weight.append(diagonal[index])
+            new_weight[oid] = weight
+    elif operator.isNumberType(diagonal):
+        for oid in neighbors:
+            neigh = copy.copy(neighbors[oid])
+            neigh.append(oid)
+            new_neigh[oid] = neigh
+            weight = copy.copy(weights[oid])
+            weight.append(diagonal)
+            new_weight[oid] = weight
+    else:
+        raise Exception, "invalid value passed to diagonal"
+    return pysal.W(new_neigh, new_weight, ids)
 
 def remap_ids(w, old2new, id_order=[]):
     """

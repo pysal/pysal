@@ -96,6 +96,17 @@ class _Testutil(unittest.TestCase):
         idso = ['first', 'second', 'third']
         self.assertEquals(idso, ids)
 
+    def test_insert_diagonal(self):
+        w1 = pysal.weights.insert_diagonal(self.w)
+        r1 = {0: 1.0, 1: 1.0, 4: 1.0, 101: 1.0, 85: 1.0, 5: 1.0}
+        self.assertEquals(w1[0], r1)
+        w1 = pysal.weights.insert_diagonal(self.w, 20)
+        r1 = {0: 20, 1: 1.0, 4: 1.0, 101: 1.0, 85: 1.0, 5: 1.0}
+        self.assertEquals(w1[0], r1)
+        diag = np.arange(100, 100+self.w.n)
+        w1 = pysal.weights.insert_diagonal(self.w, diag)
+        r1 = {0: 100, 1: 1.0, 4: 1.0, 101: 1.0, 85: 1.0, 5: 1.0}
+        self.assertEquals(w1[0], r1)
 
     def test_remap_ids(self):
         w = pysal.lat2W(3,2)
