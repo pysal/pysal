@@ -1,8 +1,7 @@
 import pysal
 import os.path
-from numpy import fromstring
-from numpy import array
-from struct import pack
+import numpy as np
+from struct import pack, unpack
 import pysal.core.FileIO as FileIO
 from pysal.weights import W
 from pysal.weights.util import remap_ids
@@ -110,18 +109,18 @@ class ArcGISSwmIO(FileIO.FileIO):
         id_var, srs = header01[:-1].split(';')
         self.varName = id_var            
         self.header_len = len(header01) + 8
-        no_obs, row_std = tuple(fromstring(self.file.read(8), '<i'))
+        no_obs, row_std = tuple(unpack('<2l', self.file.read(8)))
 
         neighbors = {}
         weights = {}
         for i in xrange(no_obs):
-            origin, no_nghs = tuple(fromstring(self.file.read(8), '<i'))
+            origin, no_nghs = tuple(unpack('<2l', self.file.read(8)))
             neighbors[origin] = []
             weights[origin] = []
             if no_nghs > 0:
-                neighbors[origin]  = list(fromstring(self.file.read(4*no_nghs), '<i'))
-                weights[origin] = list(fromstring(self.file.read(8*no_nghs), '<d'))
-                w_sum = list(fromstring(self.file.read(8), '<d'))[0]
+                neighbors[origin]  = list(unpack('<%il' % no_nghs, self.file.read(4*no_nghs)))
+                weights[origin] = list(unpack('<%id' % no_nghs, self.file.read(8*no_nghs)))
+                w_sum = list(unpack('<d', self.file.read(8)))[0]
 
         self.pos += 1
         return W(neighbors,weights)
@@ -184,7 +183,7 @@ class ArcGISSwmIO(FileIO.FileIO):
         """
         self._complain_ifclosed(self.closed)
         if issubclass(type(obj),W):
-            if not isinstance(obj.id_order[0], int) and not useIdIndex:
+            if not (type(obj.id_order[0]) in (np.int32, np.int64, int)) and not useIdIndex:
                 raise TypeError, "ArcGIS SWM files support only integer IDs"
             if useIdIndex:
                 id2i = obj.id2i
@@ -194,9 +193,10 @@ class ArcGISSwmIO(FileIO.FileIO):
             self.file.write(pack('<l', obj.transform.upper() == 'R'))
             for obs in obj.weights:
                 self.file.write(pack('<l', obs))
-                self.file.write(pack('<l', len(obj.weights[obs])))
-                self.file.write(array(obj.neighbors[obs], '<l').tostring())
-                self.file.write(array(obj.weights[obs], '<d').tostring())
+                no_nghs = len(obj.weights[obs])
+                self.file.write(pack('<l', no_nghs))
+                self.file.write(pack('<%il' % no_nghs, *obj.neighbors[obs]))
+                self.file.write(pack('<%id' % no_nghs, *obj.weights[obs]))
                 self.file.write(pack('<d', sum(obj.weights[obs])))
             self.pos += 1
 

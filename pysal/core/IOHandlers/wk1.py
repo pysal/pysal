@@ -1,7 +1,5 @@
 import pysal
 import os.path
-from numpy import fromstring
-from numpy import array
 import struct
 import pysal.core.FileIO as FileIO
 from pysal.weights import W
