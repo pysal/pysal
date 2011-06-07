@@ -3,6 +3,7 @@ import pysal
 from pysal.core.IOHandlers.gwt import GwtIO
 import tempfile
 import os
+import warnings
 
 class test_GwtIO(unittest.TestCase):
     def setUp(self):
@@ -15,7 +16,11 @@ class test_GwtIO(unittest.TestCase):
         self.failUnlessRaises(ValueError, f.read)
 
     def test_read(self):
-        w = self.obj.read()
+        with warnings.catch_warnings(record=True) as warn:
+            warnings.simplefilter("always")
+            w = self.obj.read()
+            assert issubclass(warn[0].category, RuntimeWarning)
+            assert "Weights have been converted to binary. To retrieve original values use w.transform='o'" in str(warn[0].message)
         self.assertEqual(168, w.n)
         self.assertEqual(16.678571428571427, w.mean_neighbors)
         self.assertEqual([1.0], w[1].values())

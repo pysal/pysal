@@ -3,6 +3,7 @@ import pysal
 from pysal.core.util.weight_converter import WeightConverter
 import tempfile
 import os
+import warnings
 
 class test_WeightConverter(unittest.TestCase):
     def setUp(self):
@@ -22,13 +23,21 @@ class test_WeightConverter(unittest.TestCase):
 
     def test__setW(self):
         for f in self.test_files:
-            wc = WeightConverter(self.base_dir + f, dataFormat=self.dataformats[f])
+            with warnings.catch_warnings(record=True) as warn:
+                # note: we are just suppressing the warnings here; individual warnings 
+                #       are tested in their specific readers
+                warnings.simplefilter("always")
+                wc = WeightConverter(self.base_dir + f, dataFormat=self.dataformats[f])
             self.assertEqual(wc.w_set(), True)
             self.assertEqual(wc.w.n, self.ns[f])
 
     def test_write(self):
         for f in self.test_files:
-            wc = WeightConverter(self.base_dir + f, dataFormat=self.dataformats[f])
+            with warnings.catch_warnings(record=True) as warn:
+                # note: we are just suppressing the warnings here; individual warnings 
+                #       are tested in their specific readers
+                warnings.simplefilter("always")
+                wc = WeightConverter(self.base_dir + f, dataFormat=self.dataformats[f])
             for ext, dataformat in self.fileformats:
                 if f.lower().endswith(ext):
                     continue
@@ -49,10 +58,14 @@ class test_WeightConverter(unittest.TestCase):
                 else:
                     wc.write(temp_fname, dataFormat=dataformat)
 
-                if dataformat is None:
-                    wnew =  pysal.open(temp_fname,'r').read()
-                else:
-                    wnew =  pysal.open(temp_fname,'r', dataformat).read()
+                with warnings.catch_warnings(record=True) as warn:
+                    # note: we are just suppressing the warnings here; individual warnings 
+                    #       are tested in their specific readers
+                    warnings.simplefilter("always")
+                    if dataformat is None:
+                        wnew =  pysal.open(temp_fname,'r').read()
+                    else:
+                        wnew =  pysal.open(temp_fname,'r', dataformat).read()
 
                 if (ext in ['dbf', 'swm', 'dat', 'wk1'] or dataformat == 'arcgis_text'):
                     self.assertEqual(wnew.n, wc.w.n - len(wc.w.islands))

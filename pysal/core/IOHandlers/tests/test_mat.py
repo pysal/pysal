@@ -3,6 +3,7 @@ import pysal
 from pysal.core.IOHandlers.mat import MatIO
 import tempfile
 import os
+import warnings
 
 class test_MatIO(unittest.TestCase):
     def setUp(self):
@@ -32,7 +33,10 @@ class test_MatIO(unittest.TestCase):
         fname = f.name
         f.close()
         o = pysal.open(fname,'w')
-        o.write(w)
+        with warnings.catch_warnings(record=True) as warn:
+            warnings.simplefilter("always")
+            o.write(w)
+            assert issubclass(warn[0].category, FutureWarning)
         o.close()
         wnew =  pysal.open(fname,'r').read()
         self.assertEqual( wnew.pct_nonzero, w.pct_nonzero)

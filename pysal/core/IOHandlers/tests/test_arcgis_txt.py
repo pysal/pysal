@@ -3,6 +3,7 @@ import pysal
 from pysal.core.IOHandlers.arcgis_txt import ArcGISTextIO
 import tempfile
 import os
+import warnings
 
 class test_ArcGISTextIO(unittest.TestCase):
     def setUp(self):
@@ -15,7 +16,11 @@ class test_ArcGISTextIO(unittest.TestCase):
         self.failUnlessRaises(ValueError, f.read)
 
     def test_read(self):
-        w = self.obj.read()
+        with warnings.catch_warnings(record=True) as warn:
+            warnings.simplefilter("always")
+            w = self.obj.read()
+            assert issubclass(warn[0].category, RuntimeWarning)
+            assert "DBF relating to ArcGIS TEXT was not found, proceeding with unordered string ids." in str(warn[0].message)
         self.assertEqual(3, w.n)
         self.assertEqual(3, w.mean_neighbors)
         self.assertEqual([0.1, 0.0, 0.05], w[2].values())
@@ -27,14 +32,22 @@ class test_ArcGISTextIO(unittest.TestCase):
         self.test_read()
 
     def test_write(self):
-        w = self.obj.read()
+        with warnings.catch_warnings(record=True) as warn:
+            warnings.simplefilter("always")
+            w = self.obj.read()
+            assert issubclass(warn[0].category, RuntimeWarning)
+            assert "DBF relating to ArcGIS TEXT was not found, proceeding with unordered string ids." in str(warn[0].message)
         f = tempfile.NamedTemporaryFile(suffix='.txt',dir="../../../examples")
         fname = f.name
         f.close()
         o = pysal.open(fname,'w','arcgis_text')
         o.write(w)
         o.close()
-        wnew =  pysal.open(fname,'r','arcgis_text').read()
+        with warnings.catch_warnings(record=True) as warn:
+            warnings.simplefilter("always")
+            wnew =  pysal.open(fname,'r','arcgis_text').read()
+            assert issubclass(warn[0].category, RuntimeWarning)
+            assert "DBF relating to ArcGIS TEXT was not found, proceeding with unordered string ids." in str(warn[0].message)
         self.assertEqual( wnew.pct_nonzero, w.pct_nonzero)
         os.remove(fname)
 

@@ -3,6 +3,7 @@ import pysal
 from pysal.core.IOHandlers.arcgis_dbf import ArcGISDbfIO
 import tempfile
 import os
+import warnings
 
 class test_ArcGISDbfIO(unittest.TestCase):
     def setUp(self):
@@ -15,7 +16,11 @@ class test_ArcGISDbfIO(unittest.TestCase):
         self.failUnlessRaises(ValueError, f.read)
 
     def test_read(self):
-        w = self.obj.read()
+        with warnings.catch_warnings(record=True) as warn:
+            warnings.simplefilter("always")
+            w = self.obj.read()
+            assert issubclass(warn[0].category, RuntimeWarning)
+            assert "Missing Value Found, setting value to pysal.MISSINGVALUE" in str(warn[0].message)
         self.assertEqual(88, w.n)
         self.assertEqual(5.25, w.mean_neighbors)
         self.assertEqual([1.0, 1.0, 1.0, 1.0], w[1].values())
@@ -27,7 +32,11 @@ class test_ArcGISDbfIO(unittest.TestCase):
         self.test_read()
 
     def test_write(self):
-        w = self.obj.read()
+        with warnings.catch_warnings(record=True) as warn:
+            warnings.simplefilter("always")
+            w = self.obj.read()
+            assert issubclass(warn[0].category, RuntimeWarning)
+            assert "Missing Value Found, setting value to pysal.MISSINGVALUE" in str(warn[0].message)
         f = tempfile.NamedTemporaryFile(suffix='.dbf',dir="../../../examples")
         fname = f.name
         f.close()
@@ -40,3 +49,8 @@ class test_ArcGISDbfIO(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+
+
+
