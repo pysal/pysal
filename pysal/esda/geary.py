@@ -3,6 +3,7 @@ Geary's C statistic for spatial autocorrelation
 """
 __author__  = "Sergio J. Rey <srey@asu.edu> "
 from pysal.common import *
+import scipy
 __all__ = ['Geary']
 
 PERMUTATIONS=999
@@ -66,10 +67,11 @@ class Geary:
     Examples
     --------
     >>> import pysal
+    >>> import numpy as np
     >>> w=pysal.open("../examples/book.gal").read()
     >>> f=pysal.open("../examples/book.txt")
     >>> y=np.array(f.by_col['y'])
-    >>> c=Geary(y,w,permutations=0)
+    >>> c=pysal.esda.geary.Geary(y,w,permutations=0)
     >>> c.C
     0.33281733746130032
     >>> print "%.8f"%c.p_norm
@@ -129,17 +131,16 @@ class Geary:
         self.seC_rand = vc_rand**(0.5)
         self.seC_norm = vc_norm**(0.5)
 
-    
     def __calc(self,y):
-        ys=np.zeros(y.shape)
-        y2=y**2
-        for i,i0 in enumerate(self.w.id_order):
-            neighbors=self.w.neighbor_offsets[i0]
-            wijs=self.w.weights[i0]
-            z=zip(neighbors,wijs)
-            ys[i] = sum([wij*(y2[i] - 2*y[i]*y[j] + y2[j]) for j,wij in z])
-        a= (self.n-1)* sum(ys)
+        n = self.n
+        y_diag = scipy.sparse.dia_matrix((y,0), shape=(n,n))
+        yw1 = y_diag*self.w.sparse
+        yw2 = y_diag*self.w.sparse.T
+        yw = yw1 - yw2.T
+        yw.data = yw.data**2
+        a = (n-1) * yw.sum()
         return a/self.den
+
 
 def _test():
     import doctest
