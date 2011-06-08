@@ -466,7 +466,7 @@ def threshold_continuousW_from_shapefile(shapefile,threshold,p=2,
 
 # Kernel Weights
 
-def kernelW(points,k=2,function='triangular'):
+def kernelW(points,k=2,function='triangular',fixed=True):
     """
     Kernel based weights
  
@@ -482,8 +482,9 @@ def kernelW(points,k=2,function='triangular'):
                   where :math:`dknn` is a vector of k-nearest neighbor
                   distances (the distance to the kth nearest neighbor for each
                   observation).  
-    function    : string {'triangular','uniform','quadratic','quartic','gaussian'}
-                  kernel function defined as follows with 
+    function    : string {'triangular','uniform','quadratic','epanechnikov',
+                  'quartic','bisquare','gaussian'}
+
 
                   .. math::
 
@@ -507,17 +508,33 @@ def kernelW(points,k=2,function='triangular'):
 
                       K(z) = (3/4)(1-z^2) \ if |z| \le 1
 
+                  epanechnikov
+
+                  .. math::
+
+                      K(z) = (1-z^2) \ if |z| \le 1
+
                   quartic
 
                   .. math::
 
                       K(z) = (15/16)(1-z^2)^2 \ if |z| \le 1
                  
+                  bisquare
+
+                  .. math::
+
+                      K(z) = (1-z^2)^2 \ if |z| \le 1
+
                   gaussian
 
                   .. math::
 
                       K(z) = (2\pi)^{(-1/2)} exp(-z^2 / 2)
+
+    fixed        : binary
+                   If true then :math:`h_i=h \\forall i`. If false then
+                   bandwidth is adaptive across observations.
 
     Returns
     -------
@@ -554,9 +571,9 @@ def kernelW(points,k=2,function='triangular'):
            [ 22.36068201],
            [ 22.36068201]])
     """
-    return Kernel(points,function=function,k=k)
+    return Kernel(points,function=function,k=k,fixed=fixed)
 
-def kernelW_from_shapefile(shapefile,k=2,function='triangular',idVariable=None):
+def kernelW_from_shapefile(shapefile,k=2,function='triangular',idVariable=None, fixed=True):
     """
     Kernel based weights
  
@@ -571,8 +588,9 @@ def kernelW_from_shapefile(shapefile,k=2,function='triangular',idVariable=None):
                   where :math:`dknn` is a vector of k-nearest neighbor
                   distances (the distance to the kth nearest neighbor for each
                   observation).  
-    function    : string {'triangular','uniform','quadratic','quartic','gaussian'}
-                  kernel function defined as follows with 
+    function    : string {'triangular','uniform','quadratic','epanechnikov',
+                  'quartic','bisquare','gaussian'}
+
 
                   .. math::
 
@@ -596,12 +614,24 @@ def kernelW_from_shapefile(shapefile,k=2,function='triangular',idVariable=None):
 
                       K(z) = (3/4)(1-z^2) \ if |z| \le 1
 
+                  epanechnikov
+
+                  .. math::
+
+                      K(z) = (1-z^2) \ if |z| \le 1
+
                   quartic
 
                   .. math::
 
                       K(z) = (15/16)(1-z^2)^2 \ if |z| \le 1
                  
+                  bisquare
+
+                  .. math::
+
+                      K(z) = (1-z^2)^2 \ if |z| \le 1
+
                   gaussian
 
                   .. math::
@@ -609,6 +639,11 @@ def kernelW_from_shapefile(shapefile,k=2,function='triangular',idVariable=None):
                       K(z) = (2\pi)^{(-1/2)} exp(-z^2 / 2)
     idVariable   : string
                    name of a column in the shapefile's DBF to use for ids
+
+    fixed        : binary
+                   If true then :math:`h_i=h \\forall i`. If false then
+                   bandwidth is adaptive across observations.
+
 
     Returns
     -------
@@ -629,8 +664,8 @@ def kernelW_from_shapefile(shapefile,k=2,function='triangular',idVariable=None):
     points = get_points_array_from_shapefile(shapefile)
     if idVariable:
         ids = get_ids(shapefile,idVariable)
-        return Kernel(points,function=function,k=k,ids=ids)
-    return kernelW(points,k=k,function=function)
+        return Kernel(points,function=function,k=k,ids=ids,fixed=fixed)
+    return kernelW(points,k=k,function=function,fixed=fixed)
 
 def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular'):
     """
