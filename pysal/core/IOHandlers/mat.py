@@ -21,6 +21,12 @@ class MatIO(FileIO.FileIO):
     PySAL uses matlab io tools in scipy.  
     Thus, it is subject to all limits that loadmat and savemat in scipy have.
 
+    Notes
+    -----
+    If a given weights object contains too many observations to 
+    write it out as a full matrix, 
+    PySAL writes out the object as a sparse matrix. 
+
     References
     ----------
     MathWorks (2011) "MATLAB 7 MAT-File Format" at
@@ -151,7 +157,11 @@ class MatIO(FileIO.FileIO):
         """
         self._complain_ifclosed(self.closed)
         if issubclass(type(obj),W):
-            sio.savemat(self.file, {'WEIGHT': full(obj)[0]})
+            try:
+                w = full(obj)[0]
+            except ValueError:
+                w = obj.sparse             
+            sio.savemat(self.file, {'WEIGHT': w})
             self.pos += 1
         else:
             raise TypeError, "Expected a pysal weights object, got: %s" % (type(obj))

@@ -58,8 +58,6 @@ class test_WeightConverter(unittest.TestCase):
                         wc.write(temp_fname, dataFormat=dataformat, useIdIndex=True)
                     elif dataformat == 'stata_text':
                         wc.write(temp_fname, dataFormat=dataformat, matrix_form=True)
-                    elif dataformat is None:
-                        wc.write(temp_fname)
                     else:
                         wc.write(temp_fname, dataFormat=dataformat)
 

@@ -253,6 +253,8 @@ class Wk1IO(FileIO.FileIO):
         if issubclass(type(obj),W):
             f = self.file
             n = obj.n
+            if n > 256:
+                raise ValueError, 'WK1 file format supports only up to 256 observations.'
             pack = struct.pack
             f.write(pack('<6B',0,0,2,0,6,4))
             f.write(pack('<6H',6,8,0,0,n,n))
