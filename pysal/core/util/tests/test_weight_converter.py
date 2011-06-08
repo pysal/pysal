@@ -1,6 +1,7 @@
 import unittest
 import pysal
 from pysal.core.util.weight_converter import WeightConverter
+from pysal.core.util.weight_converter import weight_convert
 import tempfile
 import os
 import warnings
@@ -75,6 +76,54 @@ class test_WeightConverter(unittest.TestCase):
                 else:
                     self.assertEqual(wnew.n, wc.w.n)
                 os.remove(temp_fname)
+
+    def test_weight_convert(self):
+        for f in self.test_files:
+            inFile = self.base_dir + f
+            inDataFormat = self.dataformats[f]
+            with warnings.catch_warnings(record=True) as warn:
+                # note: we are just suppressing the warnings here; individual warnings 
+                #       are tested in their specific readers
+                warnings.simplefilter("always")
+                if inDataFormat is None:
+                    in_file =  pysal.open(inFile,'r')
+                else:
+                    in_file =  pysal.open(inFile,'r', inDataFormat)
+                wold = in_file.read()
+                in_file.close()
+
+            for ext, dataformat in self.fileformats:
+                if f.lower().endswith(ext):
+                    continue
+                temp_f = tempfile.NamedTemporaryFile(suffix='.%s' % ext,dir=self.base_dir)
+                outFile = temp_f.name
+                temp_f.close()
+                outDataFormat, useIdIndex, matrix_form = dataformat, False, False 
+                if ext == 'swm' or dataformat in ['arcgis_dbf', 'arcgis_text']:
+                    useIdIndex = True
+                elif dataformat == 'stata_text':
+                    matrix_form = True
+               
+                with warnings.catch_warnings(record=True) as warn:
+                    # note: we are just suppressing the warnings here; individual warnings 
+                    #       are tested in their specific readers
+                    warnings.simplefilter("always")
+                    weight_convert(inFile, outFile, inDataFormat, outDataFormat, useIdIndex, matrix_form)
+
+                with warnings.catch_warnings(record=True) as warn:
+                    # note: we are just suppressing the warnings here; individual warnings 
+                    #       are tested in their specific readers
+                    warnings.simplefilter("always")
+                    if dataformat is None:
+                        wnew =  pysal.open(outFile,'r').read()
+                    else:
+                        wnew =  pysal.open(outFile,'r', dataformat).read()
+
+                if (ext in ['dbf', 'swm', 'dat', 'wk1'] or dataformat == 'arcgis_text'):
+                    self.assertEqual(wnew.n, wold.n - len(wold.islands))
+                else:
+                    self.assertEqual(wnew.n, wold.n)
+                os.remove(outFile)
 
 if __name__ == '__main__':
     unittest.main()

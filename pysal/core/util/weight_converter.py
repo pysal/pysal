@@ -1,6 +1,9 @@
 import os
 import pysal
 
+__author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
+__all__ = ["weight_convert"]
+
 class WeightConverter(object):
 
     """
@@ -20,7 +23,7 @@ class WeightConverter(object):
 
     """
 
-    def __init__(self, inputPath='', dataFormat=None):
+    def __init__(self, inputPath, dataFormat=None):
         self.inputPath = inputPath
         self.inputDataFormat = dataFormat
         self._setW()
@@ -68,24 +71,23 @@ class WeightConverter(object):
         """
         return hasattr(self, 'w')
 
-    def write(self, outputPath, **kwargs):
+    def write(self, outputPath, dataFormat=None, useIdIndex=True, matrix_form=True):
         """
         Parameters 
         ----------
         outputPath: string
                     path to the output weights file
-        kwargs: dictionary
-                other options for writing the output file
-                Available options are as follows:
-                dataFormat: string
-                            'arcgis_dbf' for ArcGIS DBF format
-                            'arcgis_text' for ArcGIS Text format
-                            'geobugs_text' for GeoBUGS Text format
-                            'stata_text' for STATA Text format
-                useIdIndex: True or False 
-                            ArcGIS DBF/SWM/Text formats
-                matrix_form: True or False
-                             STATA Text format
+        dataFormat: string
+                    'arcgis_dbf' for ArcGIS DBF format
+                    'arcgis_text' for ArcGIS Text format
+                    'geobugs_text' for GeoBUGS Text format
+                    'stata_text' for STATA Text format
+        useIdIndex: boolean
+                    True or False 
+                    Applies only to ArcGIS DBF/SWM/Text formats
+        matrix_form: boolean 
+                     True or False
+                     STATA Text format
 
         Returns
         -------
@@ -143,9 +145,7 @@ class WeightConverter(object):
             raise RuntimeError, 'There is no weights object to write out.'
 
         try:
-            if kwargs.has_key('dataFormat'):
-                dataFormat = kwargs['dataFormat']
-                del kwargs['dataFormat']
+            if dataFormat:
                 o = pysal.open(outputPath, 'w', dataFormat)
             else:
                 o = pysal.open(outputPath, 'w')
@@ -153,19 +153,92 @@ class WeightConverter(object):
             raise IOError, 'A problem occurred while creating the output file.'
         else:
             try:
-                if len(kwargs) == 0:
-                    o.write(self.w)
+                if dataFormat in ['arcgis_text', 'arcgis_dbf'] or ext == 'swm':
+                    o.write(self.w, useIdIndex=useIdIndex)
+                elif dataFormat == 'stata_text':
+                    o.write(self.w, matrix_form=matrix_form)
                 else:
-                    o.write(self.w, **kwargs)
+                    o.write(self.w)
             except:
                 raise RuntimeError, 'A problem occurred while writing out the weights object'
             finally:
                 o.close()
 
+def weight_convert(inPath, outPath, inDataFormat=None, outDataFormat=None, useIdIndex=True, matrix_form=True):
+    """
+    A utility function for directly converting a given weight
+    file into the format specified in outPath
+
+    Parameters 
+    ----------
+    inPath: string
+            path to the input weights file
+    outPath: string
+             path to the output weights file
+    indataFormat: string
+                  'arcgis_dbf' for ArcGIS DBF format
+                  'arcgis_text' for ArcGIS Text format
+                  'geobugs_text' for GeoBUGS Text format
+                  'stata_text' for STATA Text format
+    outdataFormat: string
+                   'arcgis_dbf' for ArcGIS DBF format
+                   'arcgis_text' for ArcGIS Text format
+                   'geobugs_text' for GeoBUGS Text format
+                   'stata_text' for STATA Text format
+    useIdIndex: boolean
+                True or False 
+                Applies only to ArcGIS DBF/SWM/Text formats
+    matrix_form: boolean 
+                 True or False
+                 STATA Text format
+
+    Returns
+    -------
+    A weights file is created
+
+    Examples
+    --------
+    >>> import tempfile, os, pysal
+
+    Create a temporary file for this example
+
+    >>> f = tempfile.NamedTemporaryFile(suffix='.dbf')
+  
+    Reassign to new variable
+
+    >>> fname = f.name
+
+    Close the temporary named file
+
+    >>> f.close()
+ 
+    Create a WeightConverter object
+
+    >>> weight_convert('../../examples/sids2.gal', fname, outDataFormat='arcgis_dbf', useIdIndex=True)
+
+    Create a new weights object from the gal file
+
+    >>> wold = pysal.open('../../examples/sids2.gal', 'r').read()
+
+    Create a new weights object from the converted dbf file
+
+    >>> wnew = pysal.open(fname, 'r', 'arcgis_dbf').read()
+
+    Compare the number of observations in two W objects
+
+    >>> wold.n == wnew.n
+    True
+     
+    Clean up the temporary file
+
+    >>> os.remove(fname)
+
+    """
+
+    converter = WeightConverter(inPath, dataFormat=inDataFormat)
+    converter.write(outPath, dataFormat=outDataFormat, useIdIndex=useIdIndex, matrix_form=matrix_form) 
+
 if __name__ == '__main__':
     import doctest
     doctest.testmod(verbose=True)
-  
-            
-    
-    
+
