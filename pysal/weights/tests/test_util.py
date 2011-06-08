@@ -96,6 +96,18 @@ class _Testutil(unittest.TestCase):
         idso = ['first', 'second', 'third']
         self.assertEquals(idso, ids)
 
+    def test_WSP2W(self):
+        sp = pysal.weights.lat2SW(2, 5)
+        wsp = pysal.weights.WSP(sp)
+        w = pysal.weights.WSP2W(wsp)
+        self.assertEquals(w.n, 10)
+        self.assertEquals(w[0], {1: 1, 5: 1})
+        w = pysal.open('../../examples/sids2.gal','r').read()
+        wsp = pysal.weights.WSP(w.sparse, w.id_order)
+        w = pysal.weights.WSP2W(wsp)
+        self.assertEquals(w.n, 100)
+        self.assertEquals(w['37135'], {'37001': 1.0, '37033': 1.0, '37037': 1.0, '37063': 1.0, '37145': 1.0})
+
     def test_insert_diagonal(self):
         w1 = pysal.weights.insert_diagonal(self.w)
         r1 = {0: 1.0, 1: 1.0, 4: 1.0, 101: 1.0, 85: 1.0, 5: 1.0}

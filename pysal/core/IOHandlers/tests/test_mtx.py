@@ -17,10 +17,7 @@ class test_MtxIO(unittest.TestCase):
         self.failUnlessRaises(ValueError, f.read)
 
     def test_read(self):
-        with warnings.catch_warnings(record=True) as warn:
-            warnings.simplefilter("always")
-            w = self.obj.read()
-            assert issubclass(warn[0].category, SP.SparseEfficiencyWarning)
+        w = self.obj.read()
         self.assertEqual(49, w.n)
         self.assertEqual(4.7346938775510203, w.mean_neighbors)
         self.assertEqual([0.33329999999999999, 0.33329999999999999, 0.33329999999999999], w[1].values())
@@ -39,26 +36,14 @@ class test_MtxIO(unittest.TestCase):
     def test_write(self):
         for i in [False, True]:
             self.obj.seek(0)
-            if i==False:
-                with warnings.catch_warnings(record=True) as warn:
-                    warnings.simplefilter("always")
-                    w = self.obj.read(sparse=i)
-                    assert issubclass(warn[0].category, SP.SparseEfficiencyWarning)
-            else:
-                w = self.obj.read(sparse=i)
+            w = self.obj.read(sparse=i)
             f = tempfile.NamedTemporaryFile(suffix='.mtx',dir="../../../examples")
             fname = f.name
             f.close()
             o = pysal.open(fname,'w')
             o.write(w)
             o.close()
-            if i==False:
-                with warnings.catch_warnings(record=True) as warn:
-                    warnings.simplefilter("always")
-                    wnew =  pysal.open(fname,'r').read(sparse=i)
-                    assert issubclass(warn[0].category, SP.SparseEfficiencyWarning)
-            else:
-                wnew =  pysal.open(fname,'r').read(sparse=i)
+            wnew =  pysal.open(fname,'r').read(sparse=i)
             if i:
                 self.assertEqual(wnew.s0, w.s0)
             else:  

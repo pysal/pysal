@@ -965,9 +965,12 @@ class WSP(object):
     Parameters
     ----------
 
-    sparse  : scipy sparse object
-              NxN object from scipy.sparse
+    sparse   : scipy sparse object
+               NxN object from scipy.sparse
 
+    id_order : list 
+               An ordered list of ids, assumed to match the ordering in
+               sparse.  
 
     Examples
     --------
@@ -989,7 +992,7 @@ class WSP(object):
 
     
     """
-    def __init__(self, sparse):
+    def __init__(self, sparse, id_order=None):
         if not scipy.sparse.issparse(sparse):
             raise ValueError, "must pass a scipy sparse object"
         rows, cols = sparse.shape
@@ -997,7 +1000,12 @@ class WSP(object):
             raise ValueError, "Weights object must be square"
         self.sparse = sparse.tocsr()
         self.n = sparse.shape[0]
+        if id_order:
+            if len(id_order) != self.n:
+                raise ValueError, "Number of values in id_order must match shape of sparse"
+        self.id_order = id_order
         self._cache = {}
+
 
     @property
     def s0(self):

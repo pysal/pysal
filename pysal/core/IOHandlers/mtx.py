@@ -75,7 +75,7 @@ class MtxIO(FileIO.FileIO):
 
     def _read(self):
         """Reads MatrixMarket mtx file
-        Returns a pysal.weights.weights.W object
+        Returns a pysal.weights.weights.W or pysal.weights.weights.WSP object
 
         Examples
         --------
@@ -113,25 +113,27 @@ class MtxIO(FileIO.FileIO):
         >>> wsp.n
         49
 
+        Get row from the weights matrix. Note that the first row in the sparse
+        matrix (the 0th row) corresponds to ID 1 from the original mtx file
+        read in.
+
+        >>> print wsp.sparse[0].todense()
+        [[ 0.      0.3333  0.      0.      0.3333  0.3333  0.      0.      0.      0.
+           0.      0.      0.      0.      0.      0.      0.      0.      0.      0.
+           0.      0.      0.      0.      0.      0.      0.      0.      0.      0.
+           0.      0.      0.      0.      0.      0.      0.      0.      0.      0.
+           0.      0.      0.      0.      0.      0.      0.      0.      0.    ]]
+
         """
         if self.pos > 0:
             raise StopIteration
-        
         mtx = sio.mmread(self.file)
+        ids = range(1, mtx.shape[0]+1) #matrix market indexes start at one
+        wsp = WSP(mtx, ids)
         if self._sparse:
-            w = WSP(mtx)
+            w = wsp
         else:
-            neighbors, weights = {}, {}
-            n = mtx.shape[0]
-            for i in xrange(n):
-                row = mtx.getrow(i)
-                nghs = row.nonzero()
-                wgts = row.todense()[nghs].tolist()[0]
-                nghs = (nghs[1] + 1).tolist()
-                neighbors[i+1] = nghs
-                weights[i+1] = wgts
-            w = W(neighbors,weights) 
-
+            w = pysal.weights.WSP2W(wsp)
         self.pos += 1
         return w
 

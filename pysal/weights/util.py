@@ -6,7 +6,7 @@ from scipy import sparse,float32
 from scipy.spatial import KDTree
 import os, gc, operator
 
-__all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 'remap_ids','full2W' ,'full', 'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance','lat2SW']
+__all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 'remap_ids','full2W','full', 'WSP2W', 'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance','lat2SW']
 
 
 def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
@@ -482,6 +482,68 @@ def full2W(m, ids=None):
         neighbors[i] = ngh
     return pysal.W(neighbors, weights, id_order=ids)
     
+
+def WSP2W(wsp):
+    """
+    Convert a pysal WSP object (thin weights matrix) to a pysal W object.
+
+    Parameters
+    ----------
+    wsp     : WSP
+              PySAL sparse weights object
+
+    Returns
+    -------
+    w       : W
+              PySAL weights object
+
+    Examples
+    --------
+    >>> import pysal
+
+    Build a 10x10 scipy.sparse matrix for a rectangular 2x5 region of cells
+    (rook contiguity), then construct a PySAL sparse weights object (wsp).
+
+    >>> sp = pysal.weights.lat2SW(2, 5)
+    >>> wsp = pysal.weights.WSP(sp)
+    >>> wsp.n
+    10
+    >>> print wsp.sparse[0].todense()
+    [[0 1 0 0 0 1 0 0 0 0]]
+
+    Convert this sparse weights object to a standard PySAL weights object.
+
+    >>> w = pysal.weights.WSP2W(wsp)
+    >>> w.n
+    10
+    >>> print w.full()[0][0]
+    [ 0.  1.  0.  0.  0.  1.  0.  0.  0.  0.]
+    
+    """
+    wsp.sparse
+    indices = wsp.sparse.indices
+    data = wsp.sparse.data
+    indptr = wsp.sparse.indptr
+    id_order = wsp.id_order
+    if id_order:
+        # replace indices with user IDs
+        indices = [id_order[i] for i in indices]
+    else:
+        id_order = range(wsp.n)
+    neighbors, weights = {}, {}
+    start = indptr[0]
+    for i in xrange(wsp.n):
+        oid = id_order[i]
+        end = indptr[i+1]
+        neighbors[oid] = indices[start:end]
+        weights[oid] = data[start:end]
+        start = end
+    ids = copy.copy(wsp.id_order)
+    w = pysal.W(neighbors, weights, ids) 
+    w._sparse = copy.deepcopy(wsp.sparse)
+    w._cache['sparse']=w._sparse
+    return w
+
 
 def insert_diagonal(w, diagonal=1.0):
     """
