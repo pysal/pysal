@@ -96,6 +96,19 @@ class _Testutil(unittest.TestCase):
         idso = ['first', 'second', 'third']
         self.assertEquals(idso, ids)
 
+    def test_full2W(self):
+        a = np.zeros((4, 4))
+        for i in range(len(a)):
+            for j in range(len(a[i])):
+                if i!=j:
+                    a[i, j] = np.random.random(1)
+        w = pysal.weights.util.full2W(a)
+        np.testing.assert_array_equal(w.full()[0], a)
+        ids = ['myID0', 'myID1', 'myID2', 'myID3']
+        w = pysal.weights.util.full2W(a, ids=ids)
+        np.testing.assert_array_equal(w.full()[0], a)
+        w.full()[0] == a
+
     def test_WSP2W(self):
         sp = pysal.weights.lat2SW(2, 5)
         wsp = pysal.weights.WSP(sp)
