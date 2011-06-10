@@ -222,6 +222,11 @@ weights.DistanceBand failing
 
 This occurs due to a bug in scipy.sparse prior to version 0.8. If you are running such a version see `Issue 73 <http://code.google.com/p/pysal/issues/detail?id=73&sort=milestone>`_ for a fix.
 
+doc tests and unit tests under Linux
+------------------------------------
+
+Some Linux machines return different results for the unit and doc tests. We suspect this has to do with the way random seeds are set. See `Issue 52 <http://code.google.com/p/pysal/issues/detail?id=52&sort=milestone>`_
+
 
 Troubleshooting
 ===============
