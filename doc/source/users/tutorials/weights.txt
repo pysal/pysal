@@ -680,7 +680,7 @@ example uses the all case:
     >>> w.neighbors[15]
     [11, 14]
     >>> w2.neighbors[16]
-    [12, 17, 20]
+    [12, 20, 17]
     >>> w.neighbors[16]
     []
 
