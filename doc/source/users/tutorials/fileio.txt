@@ -21,11 +21,20 @@ PySAL contains a new file input-output API that should be used for all file IO o
     >>> pysal.open.check()
     PySAL File I/O understands the following file extensions:
     Ext: '.shp', Modes: ['r', 'wb', 'w', 'rb']
+    Ext: '.mtx', Modes: ['r', 'w']
+    Ext: '.swm', Modes: ['r', 'w']
+    Ext: '.mat', Modes: ['r', 'w']
     Ext: '.shx', Modes: ['r', 'wb', 'w', 'rb']
+    Ext: '.stata_text', Modes: ['r', 'w']
     Ext: '.geoda_txt', Modes: ['r']
     Ext: '.dbf', Modes: ['r', 'w']
+    Ext: '.dat', Modes: ['r', 'w']
     Ext: '.gwt', Modes: ['r']
-    Ext: '.gal', Modes: ['r']
+    Ext: '.gal', Modes: ['r', 'w']
+    Ext: '.arcgis_text', Modes: ['r', 'w']
+    Ext: '.wk1', Modes: ['r', 'w']
+    Ext: '.arcgis_dbf', Modes: ['r', 'w']
+    Ext: '.geobugs_text', Modes: ['r', 'w']
     Ext: '.csv', Modes: ['r']
     Ext: '.wkt', Modes: ['r']
     >>>
@@ -47,8 +56,9 @@ Shapefiles
 
     >>> import pysal
     >>> shp = pysal.open('../pysal/examples/10740.shp')
-    >>> shp.next()
-    <pysal.cg.shapes.Polygon object at 0xd01e50>
+    >>> poly = shp.next()
+    >>> type(poly)
+    <class 'pysal.cg.shapes.Polygon'>
     >>> len(shp)
     195
     >>> shp.get(len(shp)-1).id
@@ -92,14 +102,49 @@ CSV Files
     ['WKT', 'NAME', 'STATE_NAME', 'STATE_FIPS', 'CNTY_FIPS', 'FIPS', 'FIPSNO', 'HR7984', 'HR8488', 'HR8893', 'HC7984', 'HC8488', 'HC8893', 'PO7984', 'PO8488', 'PO8893', 'PE77', 'PE82', 'PE87', 'RDAC80', 'RDAC85', 'RDAC90']
     >>> db[0]
     [['POLYGON ((-89.585220336914062 39.978794097900391,-89.581146240234375 40.094867706298828,-89.603988647460938 40.095306396484375,-89.60589599609375 40.136119842529297,-89.6103515625 40.3251953125,-89.269027709960938 40.329566955566406,-89.268562316894531 40.285579681396484,-89.154655456542969 40.285774230957031,-89.152763366699219 40.054969787597656,-89.151618957519531 39.919403076171875,-89.224777221679688 39.918678283691406,-89.411857604980469 39.918041229248047,-89.412437438964844 39.931644439697266,-89.495201110839844 39.933486938476562,-89.4927978515625 39.980186462402344,-89.585220336914062 39.978794097900391))', 'Logan', 'Illinois', 17, 107, 17107, 17107, 2.1154280000000001, 1.2907219999999999, 1.624458, 4, 2, 3, 189087, 154952, 184677, 5.1043200000000004, 6.5957800000000004, 5.8329510000000004, -0.99125600000000003, -0.94026500000000002, -0.84500500000000001]]
-    >>> fromWKT = pysal.core._FileIO.wkt.WKTParser()
+    >>> fromWKT = pysal.core.util.wkt.WKTParser()
     >>> db.cast('WKT',fromWKT)
-    >>> db[0]
-    [[<pysal.cg.shapes.Polygon object at 0xd048b0>, 'Logan', 'Illinois', 17, 107, 17107, 17107, 2.1154280000000001, 1.2907219999999999, 1.624458, 4, 2, 3, 189087, 154952, 184677, 5.1043200000000004, 6.5957800000000004, 5.8329510000000004, -0.99125600000000003, -0.94026500000000002, -0.84500500000000001]]
+    >>> type(db[0][0][0])
+    <class 'pysal.cg.shapes.Polygon'>
+    >>> db[0][0][1:]
+    ['Logan', 'Illinois', 17, 107, 17107, 17107, 2.1154280000000001, 1.2907219999999999, 1.624458, 4, 2, 3, 189087, 154952, 184677, 5.1043200000000004, 6.5957800000000004, 5.8329510000000004, -0.99125600000000003, -0.94026500000000002, -0.84500500000000001]
     >>> polys = db.by_col('WKT')
     >>> from pysal.cg import standalone
     >>> standalone.get_bounding_box(polys)[:]
     [-92.700675964355469, 36.881809234619141, -87.916572570800781, 40.329566955566406]
+
+
+WKT Files
+---------
+
+.. doctest::
+
+    >>> import pysal
+    >>> wkt = pysal.open('../pysal/examples/stl_hom.wkt', 'r')
+    >>> polys = wkt.read()
+    >>> wkt.close()
+    >>> print len(polys)
+    78
+    >>> print polys[1].centroid
+    (-91.195784694307363, 39.990883050220845)
+
+
+GeoDa Text Files
+----------------
+
+.. doctest::
+
+    >>> import pysal
+    >>> geoda_txt = pysal.open('../pysal/examples/stl_hom.txt', 'r')
+    >>> geoda_txt.header
+    ['FIPSNO', 'HR8488', 'HR8893', 'HC8488']
+    >>> print len(geoda_txt)
+    78
+    >>> geoda_txt.dat[0]
+    ['17107', '1.290722', '1.624458', '2']
+    >>> geoda_txt._spec
+    [<type 'int'>, <type 'float'>, <type 'float'>, <type 'int'>]
+    >>> geoda_txt.close()
 
 
 GAL Binary Weights Files
@@ -117,7 +162,7 @@ To write a GAL file...
     >>> gal.write(w)
     >>> gal.close()
 
-    To read a GAL file...
+To read a GAL file...
 
 .. doctest::
 
@@ -127,39 +172,306 @@ To write a GAL file...
     >>> gal.close()
     >>> w.n
     136
-
+    >>> import os
+    >>> os.remove('../pysal/examples/virginia_queen.gal')
 
 GWT Weights Files
 -----------------
 
-To write a GWT file...
-
-.. doctest::
-
-    >>> import pysal
-    >>> w = pysal.queen_from_shapefile('../pysal/examples/virginia.shp',idVariable='FIPS')
-    >>> w.s0
-    586.0
-    >>> w.transform = 'R' # Row-standardization (global sum=n)
-    >>> w.s0
-    136.00000000000023
-    >>> gwt = pysal.open('../pysal/examples/virginia_queen_rs.gwt','w')
-    >>> # Set the header information...
-    >>> gwt.shpName = 'virginia'
-    >>> gwt.varName = 'FIPS'
-    >>> gwt.write(w)
-    >>> gwt.close()
+Currently, it is not allowed to write a GWT file.
 
 To read a GWT file...
 
 .. doctest::
 
     >>> import pysal
-    >>> gwt = pysal.open('../pysal/examples/virginia_queen_rs.gwt','r')
+    >>> gwt = pysal.open('../pysal/examples/juvenile.gwt', 'r')
     >>> w = gwt.read()
     >>> gwt.close()
-    >>> w.s0
-    136.00002110000037
+    >>> w.n
+    168
 
 
+ArcGIS Text Weights Files
+-------------------------
 
+To write an ArcGIS text file...
+
+.. doctest::
+
+    >>> import pysal
+    >>> w = pysal.queen_from_shapefile('../pysal/examples/virginia.shp',idVariable='FIPS')
+    >>> w.n
+    136
+    >>> arcgis_txt = pysal.open('../pysal/examples/virginia_queen.txt','w','arcgis_text')
+    >>> arcgis_txt.write(w, useIdIndex=True)
+    >>> arcgis_txt.close()
+
+To read an ArcGIS text file ...
+
+.. doctest::
+
+    >>> import pysal
+    >>> arcgis_txt = pysal.open('../pysal/examples/virginia_queen.txt','r','arcgis_text')
+    >>> w = arcgis_txt.read()
+    >>> arcgis_txt.close()
+    >>> w.n
+    136
+    >>> import os
+    >>> os.remove('../pysal/examples/virginia_queen.txt')
+
+
+ArcGIS DBF Weights Files
+-------------------------
+
+To write an ArcGIS DBF file...
+
+.. doctest::
+
+    >>> import pysal
+    >>> w = pysal.queen_from_shapefile('../pysal/examples/virginia.shp',idVariable='FIPS')
+    >>> w.n
+    136
+    >>> arcgis_dbf = pysal.open('../pysal/examples/virginia_queen.dbf','w','arcgis_dbf')
+    >>> arcgis_dbf.write(w, useIdIndex=True)
+    >>> arcgis_dbf.close()
+
+To read an ArcGIS DBF file ...
+
+.. doctest::
+
+    >>> import pysal
+    >>> arcgis_dbf = pysal.open('../pysal/examples/virginia_queen.dbf','r','arcgis_dbf')
+    >>> w = arcgis_dbf.read()
+    >>> arcgis_dbf.close()
+    >>> w.n
+    136
+    >>> import os
+    >>> os.remove('../pysal/examples/virginia_queen.dbf')
+
+
+ArcGIS SWM Weights Files
+-------------------------
+
+To write an ArcGIS SWM file...
+
+.. doctest::
+
+    >>> import pysal
+    >>> w = pysal.queen_from_shapefile('../pysal/examples/virginia.shp',idVariable='FIPS')
+    >>> w.n
+    136
+    >>> arcgis_swm = pysal.open('../pysal/examples/virginia_queen.swm','w')
+    >>> arcgis_swm.write(w, useIdIndex=True)
+    >>> arcgis_swm.close()
+
+To read an ArcGIS SWM file ...
+
+.. doctest::
+
+    >>> import pysal
+    >>> arcgis_swm = pysal.open('../pysal/examples/virginia_queen.swm','r')
+    >>> w = arcgis_swm.read()
+    >>> arcgis_swm.close()
+    >>> w.n
+    136
+    >>> import os
+    >>> os.remove('../pysal/examples/virginia_queen.swm')
+
+
+DAT Weights Files
+-----------------
+
+To write a DAT file...
+
+.. doctest::
+
+    >>> import pysal
+    >>> w = pysal.queen_from_shapefile('../pysal/examples/virginia.shp',idVariable='FIPS')
+    >>> w.n
+    136
+    >>> dat = pysal.open('../pysal/examples/virginia_queen.dat','w')
+    >>> dat.write(w)
+    >>> dat.close()
+
+To read a DAT file ...
+
+.. doctest::
+
+    >>> import pysal
+    >>> dat = pysal.open('../pysal/examples/virginia_queen.dat','r')
+    >>> w = dat.read()
+    >>> dat.close()
+    >>> w.n
+    136
+    >>> import os
+    >>> os.remove('../pysal/examples/virginia_queen.dat')
+
+
+MATLAB MAT Weights Files
+-------------------------
+
+To write a MATLAB MAT file...
+
+.. doctest::
+
+    >>> import pysal
+    >>> w = pysal.queen_from_shapefile('../pysal/examples/virginia.shp',idVariable='FIPS')
+    >>> w.n
+    136
+    >>> mat = pysal.open('../pysal/examples/virginia_queen.mat','w')
+    >>> mat.write(w)
+    >>> mat.close()
+
+To read a MATLAB MAT file ...
+
+.. doctest::
+
+    >>> import pysal
+    >>> mat = pysal.open('../pysal/examples/virginia_queen.mat','r')
+    >>> w = mat.read()
+    >>> mat.close()
+    >>> w.n
+    136
+    >>> import os
+    >>> os.remove('../pysal/examples/virginia_queen.mat')
+
+
+LOTUS WK1 Weights Files
+-----------------------
+
+To write a LOTUS WK1 file...
+
+.. doctest::
+
+    >>> import pysal
+    >>> w = pysal.queen_from_shapefile('../pysal/examples/virginia.shp',idVariable='FIPS')
+    >>> w.n
+    136
+    >>> wk1 = pysal.open('../pysal/examples/virginia_queen.wk1','w')
+    >>> wk1.write(w)
+    >>> wk1.close()
+
+To read a LOTUS WK1 file ...
+
+.. doctest::
+
+    >>> import pysal
+    >>> wk1 = pysal.open('../pysal/examples/virginia_queen.wk1','r')
+    >>> w = wk1.read()
+    >>> wk1.close()
+    >>> w.n
+    136
+    >>> import os
+    >>> os.remove('../pysal/examples/virginia_queen.wk1')
+
+
+GeoBUGS Text Weights Files
+--------------------------
+
+To write a GeoBUGS Text file...
+
+.. doctest::
+
+    >>> import pysal
+    >>> w = pysal.queen_from_shapefile('../pysal/examples/virginia.shp',idVariable='FIPS')
+    >>> w.n
+    136
+    >>> geobugs_txt = pysal.open('../pysal/examples/virginia_queen','w','geobugs_text')
+    >>> geobugs_txt.write(w)
+    >>> geobugs_txt.close()
+
+To read a GeoBUGS Text file ...
+
+.. doctest::
+
+    >>> import pysal
+    >>> geobugs_txt = pysal.open('../pysal/examples/virginia_queen','r','geobugs_text')
+    >>> w = geobugs_txt.read()
+    >>> geobugs_txt.close()
+    >>> w.n
+    136
+    >>> import os
+    >>> os.remove('../pysal/examples/virginia_queen')
+
+
+STATA Text Weights Files
+-------------------------
+
+To write a STATA Text file...
+
+.. doctest::
+
+    >>> import pysal
+    >>> w = pysal.queen_from_shapefile('../pysal/examples/virginia.shp',idVariable='FIPS')
+    >>> w.n
+    136
+    >>> stata_txt = pysal.open('../pysal/examples/virginia_queen.txt','w','stata_text')
+    >>> stata_txt.write(w,matrix_form=True)
+    >>> stata_txt.close()
+
+To read a STATA Text file ...
+
+.. doctest::
+
+    >>> import pysal
+    >>> stata_txt = pysal.open('../pysal/examples/virginia_queen.txt','r','stata_text')
+    >>> w = stata_txt.read()
+    >>> stata_txt.close()
+    >>> w.n
+    136
+    >>> import os
+    >>> os.remove('../pysal/examples/virginia_queen.txt')
+
+
+MatrixMarket MTX Weights Files
+------------------------------
+
+This file format or its variant is currently under consideration of the PySAL team 
+to store general spatial weights in a sparse matrix form.
+
+To write a MatrixMarket MTX file...
+
+.. doctest::
+
+    >>> import pysal
+    >>> w = pysal.queen_from_shapefile('../pysal/examples/virginia.shp',idVariable='FIPS')
+    >>> w.n
+    136
+    >>> mtx = pysal.open('../pysal/examples/virginia_queen.mtx','w')
+    >>> mtx.write(w)
+    >>> mtx.close()
+
+To read a MatrixMarket MTX file ...
+
+.. doctest::
+
+    >>> import pysal
+    >>> mtx = pysal.open('../pysal/examples/virginia_queen.mtx','r')
+    >>> w = mtx.read()
+    >>> mtx.close()
+    >>> w.n
+    136
+    >>> import os
+    >>> os.remove('../pysal/examples/virginia_queen.mtx')
+
+
+Weights Files Format Conversion
+-------------------------------
+
+PySAL provides a utility tool to convert a weights file from one format to another.
+
+From GAL to ArcGIS SWM format
+
+.. doctest::
+
+    >>> from pysal.core.util.weight_converter import weight_convert
+    >>> gal_file = '../pysal/examples/sids2.gal'
+    >>> swm_file = '../pysal/examples/sids2.swm'
+    >>> weight_convert(gal_file, swm_file, useIdIndex=True)
+    >>> wold = pysal.open(gal_file, 'r').read()
+    >>> wnew = pysal.open(swm_file, 'r').read()
+    >>> wold.n == wnew.n
+    True
+    >>> import os
+    >>> os.remove(swm_file)
