@@ -160,16 +160,16 @@ class G_Local:
     y: array
        variable
     w: DistanceBand W
-       weights instance that is based on threshold distance and assumed to be aligned with y
+       weights instance that is based on threshold distance 
+       and is assumed to be aligned with y
+    transform: string
+       the type of w, either 'B' (binary) or 'R' (row-standardized)
     permutations: int
                   the number of random permutations for calculating
-                  pseudo-p_values
+                  pseudo p values
     star: boolean
           whether or not to include focal observation in sums
           default is False 
-    diag_wgt: scalar or numpy array
-              a set of numerical values representing weights for observations themselves
-              default is 1.0
 
     Attributes:
     -----------
@@ -180,12 +180,17 @@ class G_Local:
     permutations: int
                  the number of permutations
     Gs: array of floats
-        the value of statistic
-        G and G* at an observation i follow N(0,1),
-        meaning that they are standard variates
+        the value of the orginal G statistic in Getis & Ord (1992)
+    EGs: float
+         expected value of Gs under normality assumption
+         the values is scalar, since the expectation is identical 
+         across all observations
+    VGs: array of floats
+         variance values of Gs under normality assumption
+    Zs: array of floats
+        standardized Gs 
     p_norm: array of floats
-            p-value under normality assumption (two-sided)
-            such as Gi ~ N(0,1) and G*i ~ N(0,1)
+            p-value under normality assumption (one-sided)
     sim: array of arrays of floats (if permutations>0)
          vector of I values for permutated samples
     p_sim: array of floats
@@ -204,14 +209,16 @@ class G_Local:
 
     Notes
     -----
-    Moments are based on normality assumption and when star is False. 
-    If star is true, inference should be based on permutations and not the
-    normal approximation. Under the null hypothesis, it is known that 
-    the expectation and variance are 0 and 1, since G and G* can be 
-    considered standard variates (see Getis and Ord, 1996). 
+    To compute moments of Gs under normality assumption, 
+    PySAL considers w is either binary or row-standardized. 
+    For binary weights object, the weight value for self is 1
+    For row-standardized weights object, the weight value for self is 
+    1/(the number of its neighbors + 1). 
 
     References
     ----------
+    Getis, A. and Ord., J.K. (1992) The analysis of spatial association by use of 
+    distance statistics. Geographical Analysis, 24(3):189-206
     Ord, J.K. and Getis, A. (1995) Local spatial autocorrelation statistics: 
     distributional issues and an application. Geographical Analysis, 27(4):286-306
     Getis, A. and Ord, J. K. (1996) Local spatial statistics: an overview,
@@ -231,44 +238,68 @@ class G_Local:
     Creating a weights object from points
 
     >>> w = DistanceBand(points,threshold=15)
-    >>> w.transform = "B"
 
     Prepareing a variable 
 
     >>> y = numpy.array([2, 3, 3.2, 5, 8, 7])
 
-    Applying Getis and Ord local G test
-    >>> lg = G_Local(y,w)
+    Applying Getis and Ord local G test using a binary weights object
+    >>> lg = G_Local(y,w,transform='B')
 
     Examining the results
-    >>> lg.Gs
+    >>> lg.Zs
     array([-1.0136729 , -0.04361589,  1.31558703, -0.31412676,  1.15373986,
             1.77833941])
     >>> lg.p_z_sim[0]
-    0.30986577755682521
-        
-    >>> numpy.random.seed(10)
+    0.0021945954433780779
 
-    Applying Getis and Ord local G* test
-    >>> lg_star = G_Local(y,w, star=True, diag_wgt=1.0)
+    >>> numpy.random.seed(10)
+        
+    Applying Getis and Ord local G* test using a binary weights object
+    >>> lg_star = G_Local(y,w,transform='B',star=True)
 
     Examining the results
-    >>> lg_star.Gs
+    >>> lg_star.Zs
     array([-1.39727626, -0.28917762,  0.65064964, -0.28917762,  1.23452088,
             2.02424331])
     >>> lg_star.p_z_sim[0]
-    0.93819450404703719
+    1.3688883360174486e-10
+
+    >>> numpy.random.seed(10)
+
+    Applying Getis and Ord local G test using a row-standardized weights object
+    >>> lg = G_Local(y,w,transform='R')
+
+    Examining the results
+    >>> lg.Zs
+    array([-0.62074534, -0.01780611,  1.31558703, -0.12824171,  0.28843496,
+            1.77833941])
+    >>> lg.p_z_sim[0]
+    0.0016021007872324411
+        
+    >>> numpy.random.seed(10)
+
+    Applying Getis and Ord local G* test using a row-standardized weights object
+    >>> lg_star = G_Local(y,w,transform='R',star=True)
+
+    Examining the results
+    >>> lg_star.Zs
+    array([-0.62488094, -0.09144599,  0.41150696, -0.09144599,  0.24690418,
+            1.28024388])
+    >>> lg_star.p_z_sim[0]
+    1.8585409515825546e-06
 
     """
-    def __init__(self, y, w, permutations=PERMUTATIONS, star=False, diag_wgt=1.0):
+    def __init__(self, y, w, transform='R', permutations=PERMUTATIONS, star=False):
         self.n = len(y)
         self.y = y
         self.w = w
+        self.w_original = w.transform
+        self.w.transform = self.w_transform = transform.lower()
         self.permutations = permutations
         self.star = star
-        self.diag_wgt = diag_wgt
-        self.Gs = self.calc()
-        self.p_norm = np.array([2.0*(1 - stats.norm.cdf(np.abs(i))) for i in self.Gs])
+        self.calc()
+        self.p_norm = np.array([1 - stats.norm.cdf(np.abs(i)) for i in self.Zs])
         if permutations:
             self.__crand()
             pos = self.Gs > 0
@@ -283,7 +314,7 @@ class G_Local:
             self.seG_sim = sim.std()
             self.VG_sim = self.seG_sim * self.seG_sim
             self.z_sim = (self.Gs - self.EG_sim)/self.seG_sim
-            self.p_z_sim = 2.0*(1-stats.norm.cdf(np.abs(self.z_sim)))
+            self.p_z_sim = 1-stats.norm.cdf(np.abs(self.z_sim))
 
     def __crand(self):
         y = self.y
@@ -295,52 +326,57 @@ class G_Local:
         rids = np.array([np.random.permutation(rid)[0:k] for i in prange])
         ids = np.arange(self.w.n)
         ido = self.w.id_order
-        w = [self.w.weights[ido[i]] for i in ids]
-        wc = [self.w.cardinalities[ido[i]] for i in ids]
-        star, dwgt = self.star, self.diag_wgt
-        if not isinstance(dwgt, np.ndarray):
-            dwgt = [dwgt]*self.w.n
-        Wybar, den = self.W_y_mean, self.denum
+        wc = self.__getCardinalities()
+        den = np.array(wc) + self.star
         for i in range(self.w.n):
             idsi = ids[ids!=i]
             np.random.shuffle(idsi)
-            w_i, i_val = w[i], star*dwgt[i]
-            Wybar, den = self.W_y_mean[i], self.denum[i]
-            rGs[i] = [((sum(w_i*y[idsi[rid[0:wc[i]]]]) + i_val) - Wybar)/den for rid in rids]
+            rGs[i] = [sum(y[idsi[rid[0:wc[i]]]]) for rid in rids] + self.star*y[i]
+            rGs[i] = rGs[i]/den[i]
         self.rGs = rGs
+
+    def __getCardinalities(self):
+        if not hasattr(self, 'wc'):
+            ido = self.w.id_order
+            self.wc = np.array([self.w.cardinalities[ido[i]] for i in range(self.n)])
+        return self.wc
 
     def calc(self):
         y = self.y
-        yl = slag(self.w, y)
-        ido = self.w.id_order
-        W = np.zeros(self.n)
-        S1 = np.zeros(self.n)
-        for i in range(self.n):
-            wgt = np.array(self.w.weights[ido[i]])
-            W[i] = wgt.sum()
-            S1[i] = (wgt*wgt).sum()
+        y2 = y*y
+        y_sum = sum(y)
+        y2_sum = sum(y2)
 
         if not self.star:
+            yl = 1.0*slag(self.w, y)
+            ydi = y_sum - y
+            self.Gs = yl/ydi
             N = self.n - 1
-            y2 = y*y
-            y_sum = sum(y)
-            y2_sum = sum(y2)
-            y_mean = (y_sum - y)/N*1.0
-            y2_mean = (y2_sum - y2)/N*1.0
-            s = np.sqrt(y2_mean - y_mean*y_mean)
+            yl_mean = ydi/N
+            s2 = (y2_sum - y2)/N - (yl_mean)**2
         else:
+            self.w.transform = 'B'
+            yl = 1.0*slag(self.w, y)
+            yl += y
+            if self.w_transform == 'r':
+                yl = yl/(self.__getCardinalities() + 1.0)
+            self.Gs = yl/y_sum
             N = self.n
-            s = y.std()
-            y_mean = y.mean()
-            W += self.diag_wgt
-            S1 = S1 + self.diag_wgt*self.diag_wgt
-            yl = yl + y
+            yl_mean = y.mean()
+            s2 = y.var()
+      
+        EGs_num, VGs_num = 1.0, 1.0
+        if self.w_transform == 'b':
+            W = self.__getCardinalities()
+            W += self.star
+            EGs_num = W*1.0
+            VGs_num = (W*(1.0*N-W))/(1.0*N-1)   
 
-        num = yl - W*y_mean
-        self.W_y_mean = W*y_mean
-        self.denum = s*np.sqrt((N*S1 - W*W)/(N-1))
+        self.EGs = (EGs_num*1.0)/N
+        self.VGs = (VGs_num)*(1.0/(N**2))*(s2/(yl_mean**2))
+        self.Zs = (self.Gs - self.EGs)/np.sqrt(self.VGs)
 
-        return num/self.denum
+        self.w.transform = self.w_original
 
 def _test():
     import doctest

@@ -26,15 +26,25 @@ class G_Local_Tester(unittest.TestCase):
         self.y = Y
         np.random.seed(10)
 
-    def test_G_Local(self):
-        lg = getisord.G_Local(self.y, self.w)
-        self.assertAlmostEquals(lg.Gs[0], -1.0136729, places=7)
-        self.assertAlmostEquals(lg.p_z_sim[0], 0.30986577, places=7)
+    def test_G_Local_Binary(self):
+        lg = getisord.G_Local(self.y, self.w, transform='B')
+        self.assertAlmostEquals(lg.Zs[0], -1.0136729, places=7)
+        self.assertAlmostEquals(lg.p_z_sim[0], 0.00219459, places=7)
 
-    def test_G_star_Local(self):
-        lg = getisord.G_Local(self.y, self.w, star=True)
-        self.assertAlmostEquals(lg.Gs[0], -1.39727626, places=8)
-        self.assertAlmostEquals(lg.p_z_sim[0], 0.93819450, places=7)
+    def test_G_Local_Row_Standardized(self):
+        lg = getisord.G_Local(self.y, self.w, transform='R')
+        self.assertAlmostEquals(lg.Zs[0], -0.62074534, places=7)
+        self.assertAlmostEquals(lg.p_z_sim[0], 0.0016021, places=7)
+
+    def test_G_star_Local_Binary(self):
+        lg = getisord.G_Local(self.y, self.w, transform='B', star=True)
+        self.assertAlmostEquals(lg.Zs[0], -1.39727626, places=8)
+        self.assertAlmostEquals(lg.p_z_sim[0], 1.3688883360174486e-10, places=7)
+
+    def test_G_star_Row_Standardized(self):
+        lg = getisord.G_Local(self.y, self.w, transform='R', star=True)
+        self.assertAlmostEquals(lg.Zs[0], -0.62488094, places=8)
+        self.assertAlmostEquals(lg.p_z_sim[0], 1.8585409515825546e-06, places=7)
 
 suite = unittest.TestSuite()
 test_classes = [G_Tester, G_Local_Tester]
