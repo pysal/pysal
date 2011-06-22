@@ -251,7 +251,7 @@ class G_Local:
     array([-1.0136729 , -0.04361589,  1.31558703, -0.31412676,  1.15373986,
             1.77833941])
     >>> lg.p_z_sim[0]
-    0.0021945954433780779
+    0.25226376068093781
 
     >>> numpy.random.seed(10)
         
@@ -263,7 +263,7 @@ class G_Local:
     array([-1.39727626, -0.28917762,  0.65064964, -0.28917762,  1.23452088,
             2.02424331])
     >>> lg_star.p_z_sim[0]
-    1.3688883360174486e-10
+    2.9976021664879227e-15
 
     >>> numpy.random.seed(10)
 
@@ -275,7 +275,7 @@ class G_Local:
     array([-0.62074534, -0.01780611,  1.31558703, -0.12824171,  0.28843496,
             1.77833941])
     >>> lg.p_z_sim[0]
-    0.0016021007872324411
+    0.09692623860784555
         
     >>> numpy.random.seed(10)
 
@@ -287,7 +287,7 @@ class G_Local:
     array([-0.62488094, -0.09144599,  0.41150696, -0.09144599,  0.24690418,
             1.28024388])
     >>> lg_star.p_z_sim[0]
-    1.8585409515825546e-06
+    0.087503244405434444
 
     """
     def __init__(self, y, w, transform='R', permutations=PERMUTATIONS, star=False):
@@ -327,12 +327,15 @@ class G_Local:
         ids = np.arange(self.w.n)
         ido = self.w.id_order
         wc = self.__getCardinalities()
-        den = np.array(wc) + self.star
+        if self.star:
+            den = np.array(wc) + self.star
+        else:
+            den = np.ones(self.w.n)
         for i in range(self.w.n):
             idsi = ids[ids!=i]
             np.random.shuffle(idsi)
             rGs[i] = [sum(y[idsi[rid[0:wc[i]]]]) for rid in rids] + self.star*y[i]
-            rGs[i] = rGs[i]/den[i]
+            rGs[i] = (rGs[i]/den[i])/(self.y_sum - (1 - self.star)*y[i])
         self.rGs = rGs
 
     def __getCardinalities(self):
@@ -344,7 +347,7 @@ class G_Local:
     def calc(self):
         y = self.y
         y2 = y*y
-        y_sum = sum(y)
+        self.y_sum = y_sum = sum(y)
         y2_sum = sum(y2)
 
         if not self.star:
