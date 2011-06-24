@@ -30,7 +30,7 @@ Documentation
 -------------
 Documentation is available on-line at `pysal.org <http://pysal.org>`_.
 
-You can also obtain help at the intepretor:
+You can also obtain help at the interpreter:
 
 	>>> import pysal
 	>>> help(pysal)
