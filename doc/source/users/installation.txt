@@ -137,14 +137,23 @@ Your terminal should reply with the following::
 
  PySAL File I/O understands the following file extensions:
  Ext: '.shp', Modes: ['r', 'wb', 'w', 'rb']
+ Ext: '.mtx', Modes: ['r', 'w']
+ Ext: '.swm', Modes: ['r', 'w']
+ Ext: '.mat', Modes: ['r', 'w']
  Ext: '.shx', Modes: ['r', 'wb', 'w', 'rb']
+ Ext: '.stata_text', Modes: ['r', 'w']
  Ext: '.geoda_txt', Modes: ['r']
  Ext: '.dbf', Modes: ['r', 'w']
+ Ext: '.dat', Modes: ['r', 'w']
  Ext: '.gwt', Modes: ['r']
  Ext: '.gal', Modes: ['r', 'w']
+ Ext: '.arcgis_text', Modes: ['r', 'w']
+ Ext: '.wk1', Modes: ['r', 'w']
+ Ext: '.arcgis_dbf', Modes: ['r', 'w']
+ Ext: '.geobugs_text', Modes: ['r', 'w']
  Ext: '.csv', Modes: ['r']
  Ext: '.wkt', Modes: ['r']
- >>> 
+ >>>
 
 
 Windows
@@ -203,14 +212,23 @@ Your terminal should reply with the following::
 
  PySAL File I/O understands the following file extensions:
  Ext: '.shp', Modes: ['r', 'wb', 'w', 'rb']
+ Ext: '.mtx', Modes: ['r', 'w']
+ Ext: '.swm', Modes: ['r', 'w']
+ Ext: '.mat', Modes: ['r', 'w']
  Ext: '.shx', Modes: ['r', 'wb', 'w', 'rb']
+ Ext: '.stata_text', Modes: ['r', 'w']
  Ext: '.geoda_txt', Modes: ['r']
  Ext: '.dbf', Modes: ['r', 'w']
+ Ext: '.dat', Modes: ['r', 'w']
  Ext: '.gwt', Modes: ['r']
  Ext: '.gal', Modes: ['r', 'w']
+ Ext: '.arcgis_text', Modes: ['r', 'w']
+ Ext: '.wk1', Modes: ['r', 'w']
+ Ext: '.arcgis_dbf', Modes: ['r', 'w']
+ Ext: '.geobugs_text', Modes: ['r', 'w']
  Ext: '.csv', Modes: ['r']
  Ext: '.wkt', Modes: ['r']
- >>> 
+ >>>
 
 
 
