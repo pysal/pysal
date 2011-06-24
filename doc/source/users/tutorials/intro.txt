@@ -13,6 +13,18 @@ spatial analysis can be found in the references cited in the tutorials.
 
 It is also assumed that the reader has already :doc:`installed PySAL <../installation>`.
 
+Examples
+============
+
+The examples use several sample data sets that are included in the pysal/examples
+directory. In the examples that follow, we refer to those using the path::
+
+  ../pysal/examples/filename_of_example
+ 
+You may need to adjust this path to match the location of the sample files on
+your system.
+
+
 Getting Help
 ============
 
