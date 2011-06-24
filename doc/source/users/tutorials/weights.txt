@@ -152,13 +152,19 @@ k-nearest neighbor weights
 
 The neighbors for a given observations can be defined using a k-nearest neighbor criterion.
 For example we could use the the centroids of our
-5x5 lattice as point locations to measure the distances:
+5x5 lattice as point locations to measure the distances. First, we import numpy to 
+create the coordinates as a 25x2 numpy array named data (numpy arrays are the only
+form of input supported at this point):
 
 .. doctest::
 
-	>>> import numpy as np
-	>>> data = np.array([ord.flatten() for ord in np.indices((5, 5))]).transpose()
-
+    >>> import numpy as np
+    >>> x,y=np.indices((5,5))
+    >>> x.shape=(25,1)
+    >>> y.shape=(25,1)
+    >>> data=np.hstack([x,y])
+    
+    
 then define the knn set as:
 
 .. doctest::
