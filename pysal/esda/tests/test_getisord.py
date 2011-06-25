@@ -29,22 +29,22 @@ class G_Local_Tester(unittest.TestCase):
     def test_G_Local_Binary(self):
         lg = getisord.G_Local(self.y, self.w, transform='B')
         self.assertAlmostEquals(lg.Zs[0], -1.0136729, places=7)
-        self.assertAlmostEquals(lg.p_z_sim[0], 0.25226376068093781, places=7)
+        self.assertAlmostEquals(lg.p_sim[0], 0.90000000000000002, places=7)
 
     def test_G_Local_Row_Standardized(self):
         lg = getisord.G_Local(self.y, self.w, transform='R')
         self.assertAlmostEquals(lg.Zs[0], -0.62074534, places=7)
-        self.assertAlmostEquals(lg.p_z_sim[0], 0.09692623860784555, places=7)
+        self.assertAlmostEquals(lg.p_sim[0], 0.90000000000000002, places=7)
 
     def test_G_star_Local_Binary(self):
         lg = getisord.G_Local(self.y, self.w, transform='B', star=True)
         self.assertAlmostEquals(lg.Zs[0], -1.39727626, places=8)
-        self.assertAlmostEquals(lg.p_z_sim[0], 2.9976021664879227e-15, places=7)
+        self.assertAlmostEquals(lg.p_sim[0], 0.90000000000000002, places=7)
 
     def test_G_star_Row_Standardized(self):
         lg = getisord.G_Local(self.y, self.w, transform='R', star=True)
         self.assertAlmostEquals(lg.Zs[0], -0.62488094, places=8)
-        self.assertAlmostEquals(lg.p_z_sim[0], 0.087503244405434444, places=7)
+        self.assertAlmostEquals(lg.p_sim[0], 0.90000000000000002, places=7)
 
 suite = unittest.TestSuite()
 test_classes = [G_Tester, G_Local_Tester]

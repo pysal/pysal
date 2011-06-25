@@ -250,8 +250,8 @@ class G_Local:
     >>> lg.Zs
     array([-1.0136729 , -0.04361589,  1.31558703, -0.31412676,  1.15373986,
             1.77833941])
-    >>> lg.p_z_sim[0]
-    0.25226376068093781
+    >>> lg.p_sim[0]
+    0.90000000000000002
 
     >>> numpy.random.seed(10)
         
@@ -262,8 +262,8 @@ class G_Local:
     >>> lg_star.Zs
     array([-1.39727626, -0.28917762,  0.65064964, -0.28917762,  1.23452088,
             2.02424331])
-    >>> lg_star.p_z_sim[0]
-    2.9976021664879227e-15
+    >>> lg_star.p_sim[0]
+    0.90000000000000002
 
     >>> numpy.random.seed(10)
 
@@ -274,8 +274,8 @@ class G_Local:
     >>> lg.Zs
     array([-0.62074534, -0.01780611,  1.31558703, -0.12824171,  0.28843496,
             1.77833941])
-    >>> lg.p_z_sim[0]
-    0.09692623860784555
+    >>> lg.p_sim[0]
+    0.90000000000000002
         
     >>> numpy.random.seed(10)
 
@@ -286,8 +286,8 @@ class G_Local:
     >>> lg_star.Zs
     array([-0.62488094, -0.09144599,  0.41150696, -0.09144599,  0.24690418,
             1.28024388])
-    >>> lg_star.p_z_sim[0]
-    0.087503244405434444
+    >>> lg_star.p_sim[0]
+    0.90000000000000002
 
     """
     def __init__(self, y, w, transform='R', permutations=PERMUTATIONS, star=False):
@@ -327,21 +327,20 @@ class G_Local:
         ids = np.arange(self.w.n)
         ido = self.w.id_order
         wc = self.__getCardinalities()
-        if self.star:
+        if self.w_transform == 'r':
             den = np.array(wc) + self.star
         else:
             den = np.ones(self.w.n)
         for i in range(self.w.n):
             idsi = ids[ids!=i]
             np.random.shuffle(idsi)
-            rGs[i] = [sum(y[idsi[rid[0:wc[i]]]]) for rid in rids] + self.star*y[i]
-            rGs[i] = (rGs[i]/den[i])/(self.y_sum - (1 - self.star)*y[i])
+            rGs[i] = [sum(y[idsi[rid[0:wc[i]]]]) + self.star*y[i] for rid in rids] 
+            rGs[i] = (np.array(rGs[i])/den[i])/(self.y_sum - (1 - self.star)*y[i])
         self.rGs = rGs
 
     def __getCardinalities(self):
-        if not hasattr(self, 'wc'):
-            ido = self.w.id_order
-            self.wc = np.array([self.w.cardinalities[ido[i]] for i in range(self.n)])
+        ido = self.w.id_order
+        self.wc = np.array([self.w.cardinalities[ido[i]] for i in range(self.n)])
         return self.wc
 
     def calc(self):
