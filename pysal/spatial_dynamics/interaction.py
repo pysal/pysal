@@ -144,7 +144,7 @@ def knox(events, delta, tau, permutations=99):
 
     References
     ----------
-    .. [1] E. Knox and M. Bartlett. 1964. The detection of space-time
+    .. [1] E. Knox. 1964. The detection of space-time
        interactions. Journal of the Royal Statistical Society. Series C
        (Applied Statistics), 13(1):25-30.
 
@@ -452,6 +452,8 @@ def jacquez(events, k, permutations=99):
     # report the results
     jacquez_result ={'stat':stat, 'pvalue':pvalue}
     return jacquez_result
+
+
 
 def _test():
     import doctest
