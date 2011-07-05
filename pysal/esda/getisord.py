@@ -108,10 +108,14 @@ class G:
         if permutations:
             sim = [self.__calc(np.random.permutation(self.y)) \
                  for i in xrange(permutations)]
-            self.sim = sim
-            self.p_sim = (sum(sim>=self.G) + 1.) / (permutations + 1.)
+            self.sim = sim = np.array(sim)
+            above = sim >= self.G
+            larger = sum(above)
+            if (self.permutations - larger) < larger:
+                larger = self.permutations - larger
+            self.p_sim = (larger + 1.0) / (permutations + 1.)
             self.EG_sim = sum(sim) / permutations
-            self.seG_sim = np.array(sim).std()
+            self.seG_sim = sim.std()
             self.VG_sim = self.seG_sim**2
             self.z_sim = (self.G - self.EG_sim) / self.seG_sim
             self.p_z_sim= 1.-stats.norm.cdf(np.abs(self.z_sim))
@@ -251,7 +255,7 @@ class G_Local:
     array([-1.0136729 , -0.04361589,  1.31558703, -0.31412676,  1.15373986,
             1.77833941])
     >>> lg.p_sim[0]
-    0.90000000000000002
+    0.10100000000000001
 
     >>> numpy.random.seed(10)
         
@@ -263,7 +267,7 @@ class G_Local:
     array([-1.39727626, -0.28917762,  0.65064964, -0.28917762,  1.23452088,
             2.02424331])
     >>> lg_star.p_sim[0]
-    0.90000000000000002
+    0.10100000000000001
 
     >>> numpy.random.seed(10)
 
@@ -275,7 +279,7 @@ class G_Local:
     array([-0.62074534, -0.01780611,  1.31558703, -0.12824171,  0.28843496,
             1.77833941])
     >>> lg.p_sim[0]
-    0.90000000000000002
+    0.10100000000000001
         
     >>> numpy.random.seed(10)
 
@@ -287,7 +291,7 @@ class G_Local:
     array([-0.62488094, -0.09144599,  0.41150696, -0.09144599,  0.24690418,
             1.28024388])
     >>> lg_star.p_sim[0]
-    0.90000000000000002
+    0.10100000000000001
 
     """
     def __init__(self, y, w, transform='R', permutations=PERMUTATIONS, star=False):
@@ -302,19 +306,46 @@ class G_Local:
         self.p_norm = np.array([1 - stats.norm.cdf(np.abs(i)) for i in self.Zs])
         if permutations:
             self.__crand()
-            pos = self.Gs > 0
-            neg = self.Gs <= 0
             sim = np.transpose(self.rGs)
             above = sim >= self.Gs
-            below = sim <= self.Gs
-            p = pos*above + neg*below
-            self.p_sim = (sum(p) + 1.0)/(permutations + 1)
+            larger = sum(above)
+            low_extreme = (self.permutations - larger) < larger
+            larger[low_extreme] = self.permutations - larger[low_extreme] 
+            self.p_sim = (larger + 1.0)/(permutations + 1)
             self.sim = sim
             self.EG_sim = sim.mean()
             self.seG_sim = sim.std()
             self.VG_sim = self.seG_sim * self.seG_sim
             self.z_sim = (self.Gs - self.EG_sim)/self.seG_sim
             self.p_z_sim = 1-stats.norm.cdf(np.abs(self.z_sim))
+
+    def __crand2(self):
+        # this method will be removed after full testing
+        y = self.y
+        rGs = []
+        k = self.w.max_neighbors + 1
+        ido = self.w.id_order
+        wc = self.__getCardinalities()
+        if self.w_transform == 'r':
+            den = wc + self.star
+        else:
+            den = np.ones(self.w.n)
+
+        for i in xrange(self.n):
+            rGi = []
+            for p in xrange(self.permutations):
+                rids = []
+                while len(rids) < wc[i]:
+                    rid = int(self.n*np.random.random())
+                    if rid != i and rid != self.n and rid not in rids:
+                        rids.append(rid)
+                Gi = (sum(y[rids]) + self.star*y[i])/den[i]
+                Gi = Gi/(self.y_sum - (1 - self.star)*y[i])
+                rGi.append(Gi)
+                #print i, rids, y[rids], Gi, self.Gs[i], Gi >= self.Gs[i]
+                rGi.append(sum(y[rids]) + self.star*y[i])
+            rGs.append(rGi)
+        self.rGs = np.array(rGs)           
 
     def __crand(self):
         y = self.y
