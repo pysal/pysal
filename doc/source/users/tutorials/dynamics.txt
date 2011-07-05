@@ -11,16 +11,16 @@ Spatial Dynamics
 Introduction
 ============
 
-PySAL implements a number of exploratory approaches to analyze a
-particular type of spatial dynamics. More specifically, the focus is on
-longitudinal spatial data, or observations on fixed areal units over
-multiple time periods. Examples could include time series of voting
-patterns in US Presidential elections, time series of remote sensing
-images, labor market dynamics, regional business cycles, among many
-others.  
+PySAL implements a number of exploratory approaches to analyze the 
+dynamics of longitudinal spatial data, or observations on fixed areal 
+units over multiple time periods. Examples could include time series 
+of voting patterns in US Presidential elections, time series of remote 
+sensing images, labor market dynamics, regional business cycles, among 
+many others. Two broad sets of spatial dynamics methods are implemented 
+to analyze these data types. The first are Markov based methods, while 
+the second are based on Rank dynamics.
 
-Two broad sets of spatial dynamics methods are implemented. The first are
-Markov based methods, while the second are based on Rank dynamics.
+Additionally, methods are included in this module to analyze patterns of individual events which have spatial and temporal coordinates associated with them. Examples include locations and times of individual cases of disease or crimes. Methods are included here to determine if these event patterns exhibit space-time interaction. 
 
 Markov Based Methods
 ====================
@@ -496,7 +496,7 @@ within mutually exclusive and exhaustive partitions (regimes) of the
 :math:`n` locations.
 
 Theta is defined as the sum of the absolute sum of rank changes within
-the regimes over the sum of all absolute rank changes. [4]_
+the regimes over the sum of all absolute rank changes. [#]_
 
 .. doctest::
 
@@ -514,6 +514,167 @@ the regimes over the sum of all absolute rank changes. [4]_
     array([ 0.307,  0.077,  0.823,  0.552,  0.045,  0.735])
 
 
+Space-Time Interaction Tests
+============================
+
+The third set of spatial dynamic methods in PySAL are global tests of space-time interaction. The purpose of these tests is to detect clustering within space-time event patterns. These patterns are composed of unique events that are labeled with spatial and temporal coordinates. The tests are designed to detect clustering of events in both space and time beyond "any purely spatial or purely temporal clustering" [#]_, that is, to determine if the events are "interacting." Essentially, the tests examine the dataset to determine if pairs of events closest to each other in space are also those closest to each other in time. The null hypothesis of these tests is that the examined events are distributed randomly in space and time, i.e. the distance between pairs of events in space is independent of the distance in time. Three tests are currently implemented in PySAL: the Knox test, the Mantel test and the Jacquez :math:`k` Nearest Neighbors test. These tests have been widely applied in epidemiology, criminology and biology. A more in-depth technical review of these methods is available in [Tango]_.
+
+
+Knox Test
+---------
+
+The Knox test for space-time interaction employs user-defined critical thresholds in space and time to define proximity between events. All pairs of events are examined to determine if the distance between them in space and time is within the respective thresholds. The Knox statistic is calculated as the total number of event pairs where the spatial and temporal distances separating the pair are within the specified thresholds [#]_. If interaction is present, the test statistic will be large. Significance is traditionally established using a Monte Carlo permuation method where event timestamps are permuted and the statistic is recalculated. This procedure is repeated to generate a distribution of statistics which is used to establish the pseudo-significance of the observed test statistic. This approach assumes a static underlying population from which events are drawn. If this is not the case the results may be biased [#]_.
+
+Formally, the specification of the Knox test is given as:
+
+.. math::
+
+ 	 \begin{align}
+ 	 X &=\sum_{i}^{n}\sum_{j}^{n}a_{ij}^{s}a_{ij}^{t}\\
+         a_{ij}^{s} &= \nonumber
+         \begin{cases}
+         1, & \text{if $d^s_{ij}<\delta$}\\
+         0, & \text{otherwise}
+         \end{cases}\\
+	 a_{ij}^{t} &= \nonumber
+	 \begin{cases}
+	 1, & \text{if $d^t_{ij}<\tau$}\\
+	 0, & \text{otherwise}
+	 \end{cases}
+	 \end{align}
+
+
+Where :math:`n$` = number of events, :math:`a^{s}` = adjacency in space, :math:`a^{t}` = adjacency in time, :math:`d^{s}` = distance in space, and :math:`d^{t}` = distance in time. Critical space and time distance thresholds are defined as :math:`\delta` and :math:`\tau`, respectively. 
+
+We illustrate the use of the Knox test using data from a study of Burkitt's Lymphoma in Uganda during the period 1961-75. [#]_ We start by importing Numpy, PySAL and the interaction module:
+
+.. doctest::
+
+    >>> import numpy as np
+    >>> import pysal
+    >>> import pysal.spatial_dynamics.interaction as interaction  
+
+Next, we read in the example data and create an instance of SpaceTimeEvents. This reformats the data so the test can be run by PySAL. This class requires the input of a point shapefile. The shapefile must contain a column that includes a timestamp for each point in the dataset. The class requires that the user input a path to an appropriate shapefile and the name of the column containing the timestamp. In this example, the appropriate column name is 'T'.   
+
+.. doctest::
+
+    >>> path = "../pysal/examples/burkitt"
+    >>> events = interaction.SpaceTimeEvents(path,'T')
+
+Next, we run the Knox test with distance and time thresholds of 20 and 5,respectively. This counts the events that are closer than 20 units in space, and 5 units in time.  
+
+.. doctest::
+
+    >>> result = interaction.knox(events,delta=20,tau=5,permutations=99)
+
+Next, we examine the results. First, we call the statistic from the results dictionary. This reports that there are 13 events close in both space and time, based on our threshold definitions. 
+
+.. doctest::
+
+    >>> print(result['stat'])
+    13.0
+
+Next, we look at the pseudo-significance of this value, calculated by permuting the timestamps and rerunning the statistics. Here, 99 permutations were used, but an alternative number can be specified by the user. In this case, the results indicate that we should reject the null hypothesis of no space-time interaction at an alpha level of 0.05. 
+
+.. doctest::
+
+    >>> print("%2.8f"%result['pvalue'])
+    0.04102287
+
+
+
+Mantel Test
+-----------
+
+Akin to the Knox test in its simplicity, the Mantel test keeps the distance information discarded by the Knox test. The unstandardized Mantel statistic is calculated by summing the product of the spatial and temporal distances between all event pairs [#]_. To prevent multiplication by 0 in instances of colocated or simultaneous events, Mantel proposed adding a constant to the distance measurements. Additionally, he suggested a reciprocal transform of the resulting distance measurement to lessen the effect of the larger distances on the product sum. The test is defined formally below: 
+
+.. math::
+
+	 Z=\sum_{i}^{n}\sum_{j}^{n}(d_{ij}^{s}+c)^{p}(d_{ij}^{t}+c)^{p} 
+
+Where, again, :math:`d^{s}` and :math:`d^{t}` denote distance in space and time, respectively. The constant, :math:`c`, and the power, :math:`p` are parameters set by the user. The default values are 0 and 1, respectively. A standardized version of the Mantel test is implemented here in PySAL, however. The standardized statistic (:math:`r`) is a measure of correlation between the spatial and temporal distance matrices. This is expressed formally as: 
+
+.. math::
+
+         r=\frac{1}{n^2-n-1}\sum_{i}^{n}\sum_{j}^{n}\Bigg[\frac{d_{ij}^{s}-\bar{d^{s}}}{\sigma_{d^{s}}}\Bigg] \Bigg[\frac{d_{ij}^{t}-\bar{d^{t}}}{\sigma_{d^{t}}}\Bigg]
+
+Where :math:`\bar{d^{s}}` refers to the average distance in space, and :math:`\bar{d^{t}}` the average distance in time. For notational convenience :math:`\sigma_{d^{t}}` and :math:`\sigma_{d^{t}}` refer to the sample (not population) standard deviations, for distance in space and time, respectively. The same constant and power transformations may also be applied to the spatial and temporal distance matrices employed by the standardized Mantel. Significance is determined through a Monte Carlo permuation approach similar to that employed in the Knox test.  
+
+Again, we use the Burkitt's Lymphoma data to illustrate the test. We start with the usual imports and read in the example data. 
+
+.. doctest::
+
+    >>> import numpy as np
+    >>> import pysal
+    >>> import pysal.spatial_dynamics.interaction as interaction  
+    >>> path = "../pysal/examples/burkitt"
+    >>> events = interaction.SpaceTimeEvents(path,'T')
+
+The following example runs the standardized Mantel test with constants of 0 and transformations of 1, meaning the distance matrices will remain unchanged; however, as recommended by Mantel, a small constant should be added and an inverse transformation (e.g. -1) specified. 
+
+.. doctest::
+
+    >>> result = interaction.mantel(events,99,scon=0.0,spow=1.0,tcon=0.0,tpow=1.0)
+
+Next, we examine the result of the test. 
+
+.. doctest::
+
+    >>> print("%6.6f"%result['stat'])
+    0.014154
+
+Finally, we look at the pseudo-significance of this value, calculated by permuting the timestamps and rerunning the statistic for each of the 99 permuatations. Again, note, the number of permutations can be changed by the user. According to these parameters, the results fail to reject the null hypothesis of no space-time interaction between the events.
+
+.. doctest::
+
+    >>> print("%2.8f"%result['pvalue'])
+    0.27370865
+
+
+Jacquez Test
+------------
+
+Instead of using a set distance in space and time to determine proximity (like the Knox test) the Jacquez test employs a nearest neighbor distance approach. This allows the test to account for changes in underlying population density. The statistic is calculated as the number of event pairs that are within the set of :math:`k` nearest neighbors for each other in both space and time [#]_. Significance of this count is established using a Monte Carlo permutation method. The test is expressed formally as: 
+
+.. math::
+
+	J_{k}=\sum_{i=1}^{n} \sum_{j=1}^{n} a_{ijk}^{s}a_{ijk}^{t}\\
+	a_{ijk}^{s} = 
+	\begin{cases}
+	1, & \text{if event \emph{j} is a \emph{k} nearest neighbor of event \emph{i} in space}\\
+	0, & \text{otherwise}
+	\end{cases}   
+	a_{ijk}^{t} = 
+	\begin{cases}
+	1, & \text{if event \emph{j} is a \emph{k} nearest neighbor of event \emph{i} in time}\\
+	0, & \text{otherwise}
+	\end{cases}
+
+Where :math:`n` = number of cases; :math:`a^{s}` = adjacency in space; :math:`a^{t}` = adjacency in time. 
+
+To illustrate the test, the Burkitt's Lymphoma data are employed again. We start with the usual imports and read in the example data. 
+
+.. doctest::
+
+    >>> import numpy as np
+    >>> import pysal
+    >>> import pysal.spatial_dynamics.interaction as interaction  
+    >>> path = "../pysal/examples/burkitt"
+    >>> events = interaction.SpaceTimeEvents(path,'T')
+
+
+The following runs the Jacquez test on the example data for a value of :math:`k` = 3 and reports the resulting statistic. In this case, there are 13 instances where events are nearest neighbors in both space and time. The significance of this can be assessed by calling the p-value from the results dictionary. Again, there is not enough evidence to reject the null hypothesis of no space-time interaction. 
+
+.. doctest::
+
+    >>> result = interaction.jacquez(events,k=3,permutations=99)
+    >>> print(result['stat'])
+    13
+    >>> print("%2.8f"%result['pvalue'])
+    0.16483628
+
+
+
 .. rubric:: Footnotes
 
 .. [#] Rey, S.J. 2001.
@@ -524,8 +685,25 @@ the regimes over the sum of all absolute rank changes. [4]_
 .. [#] The complex values of the steady state distribution arise from
        complex eigenvalues in the transition probability matrix which may indicate
        cyclicality in the chain.
-.. [4] Rey, S.J. (2004) "`Spatial dependence in the evolution of regional
+.. [#] Rey, S.J. (2004) "`Spatial dependence in the evolution of regional
        income distributions
        <http://econpapers.repec.org/paper/wpawuwpur/0105001.htm>`_,"
        in A. Getis, J. Mur and H.Zoeller (eds). Spatial Econometrics and Spatial
        Statistics. Palgrave, London, pp. 194-213.
+.. [#]  Kulldorff, M. (1998). Statistical methods for spatial epidemiology: tests
+        for randomness. In Gatrell, A. and Loytonen, M., editors, GIS and 
+        Health, pages 49–62. Taylor & Francis, London.
+.. [#]  Tango, T. (2010). Statistical Methods for Disease Clustering. Springer,
+        New York.
+.. [#]  Knox, E. (1964). The detection of space-time interactions. Journal of the
+        Royal Statistical Society. Series C (Applied Statistics), 13(1):25–30.
+.. [#]  Kulldorff, M. and Hjalmars, U. (1999). The Knox method and other tests
+	for space- time interaction. Biometrics, 55(2):544–552.
+.. [#]  Williams, E., Smith, P., Day, N., Geser, A., Ellice, J., and Tukei, P.
+	(1978). Space-time clustering of Burkitt’s lymphoma in the West Nile 
+	district of Uganda: 1961-1975. British Journal of Cancer, 37(1):109.
+.. [#]  Mantel, N. (1967). The detection of disease clustering and a generalized
+	regression approach. Cancer Research, 27(2):209–220.
+.. [#]  Jacquez, G. (1996). A k nearest neighbour test for space-time 
+	interaction. Statistics in Medicine, 15(18):1935–1949.
+
