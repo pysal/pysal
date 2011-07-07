@@ -103,7 +103,7 @@ class G:
         self.den = [y[i]*y[j] for i in xn for j in xn if i!=j ]
         self.G = self.__calc(self.y)
         self.z_norm = (self.G - self.EG) / math.sqrt(self.VG)
-        self.p_norm = 1 - stats.norm.cdf(np.abs(self.z_norm))
+        self.p_norm = 1.0 - stats.norm.cdf(np.abs(self.z_norm))
         
         if permutations:
             sim = [self.__calc(np.random.permutation(self.y)) \
@@ -319,34 +319,6 @@ class G_Local:
             self.z_sim = (self.Gs - self.EG_sim)/self.seG_sim
             self.p_z_sim = 1-stats.norm.cdf(np.abs(self.z_sim))
 
-    def __crand2(self):
-        # this method will be removed after full testing
-        y = self.y
-        rGs = []
-        k = self.w.max_neighbors + 1
-        ido = self.w.id_order
-        wc = self.__getCardinalities()
-        if self.w_transform == 'r':
-            den = wc + self.star
-        else:
-            den = np.ones(self.w.n)
-
-        for i in xrange(self.n):
-            rGi = []
-            for p in xrange(self.permutations):
-                rids = []
-                while len(rids) < wc[i]:
-                    rid = int(self.n*np.random.random())
-                    if rid != i and rid != self.n and rid not in rids:
-                        rids.append(rid)
-                Gi = (sum(y[rids]) + self.star*y[i])/den[i]
-                Gi = Gi/(self.y_sum - (1 - self.star)*y[i])
-                rGi.append(Gi)
-                #print i, rids, y[rids], Gi, self.Gs[i], Gi >= self.Gs[i]
-                rGi.append(sum(y[rids]) + self.star*y[i])
-            rGs.append(rGi)
-        self.rGs = np.array(rGs)           
-
     def __crand(self):
         y = self.y
         rGs = np.zeros((self.n, self.permutations))
@@ -364,7 +336,13 @@ class G_Local:
             den = np.ones(self.w.n)
         for i in range(self.w.n):
             idsi = ids[ids!=i]
-            np.random.shuffle(idsi)
+            np.random.shuffle(idsi)        
+            #for j, rid in enumerate(rids):
+            #    rGi = sum(y[idsi[rid[0:wc[i]]]]) + self.star*y[i]
+            #    rGi = (rGi/den[i])/(self.y_sum - (1 - self.star)*y[i])
+            #    rGs[i][j] = rGi
+            #    print idsi[rid[0:wc[i]]], 'Gi*', rGi
+            #print set(rGs[i])
             rGs[i] = [sum(y[idsi[rid[0:wc[i]]]]) + self.star*y[i] for rid in rids] 
             rGs[i] = (np.array(rGs[i])/den[i])/(self.y_sum - (1 - self.star)*y[i])
         self.rGs = rGs

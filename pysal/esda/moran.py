@@ -112,6 +112,12 @@ class Moran:
                  for i in xrange(permutations)]
             self.sim = sim
             self.p_sim = (sum(sim >= self.I)+1.)/(permutations+1.)
+            #self.sim2 = sim2 = np.array(sim)
+            #above = sim2 >= self.I
+            #larger = sum(above)
+            #if (self.permutations - larger) < larger:
+            #    larger = self.permutations - larger
+            #self.p_sim2 = (larger+1.)/(permutations+1.)
             self.EI_sim = sum(sim)/permutations
             self.seI_sim = np.array(sim).std()
             self.VI_sim = self.seI_sim**2
@@ -145,8 +151,8 @@ class Moran:
 
     def __calc(self,  z):
         zl = slag(self.w,  z)
-        self.inum = sum(self.z*zl)
-        return self.n/self.w.s0 * sum(self.z*zl)/self.z2ss
+        inum = sum(z*zl)
+        return self.n/self.w.s0 * inum/self.z2ss
 
 class Moran_BV:
     """Bivariate Moran's I
