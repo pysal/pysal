@@ -147,7 +147,7 @@ The pseudo p value based on these permutations is:
 .. doctest::
 
         >>> print mir.p_sim
-        0.0158
+        0.0015
 
 in other words there were 158 permutations that generated values for I that
 were as extreme as the original value, so the p value becomes (158+1)/(9999+1). [#]_
@@ -157,11 +157,11 @@ compare the original I using a z-transformation to get:
 .. doctest::
 
         >>> print mir.EI_sim
-        0.00124692715522
+        -0.0136555651205
         >>> print mir.z_sim
-        3.46776676113
+        4.74311431149
         >>> print mir.p_z_sim
-        0.000524802571723
+        2.10457431304e-06
         
 
 Geary's C
