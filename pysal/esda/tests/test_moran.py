@@ -43,7 +43,7 @@ class Moran_Local_Tester(unittest.TestCase):
     def test_Moran_Local(self):
         lm = moran.Moran_Local(self.y, self.w, transformation="r", permutations=99)
         self.assertAlmostEquals(lm.z_sim[0],-0.081383956359666748 )
-        self.assertAlmostEquals(lm.p_z_sim[0], 0.93513660775432128 )
+        self.assertAlmostEquals(lm.p_z_sim[0], 0.46756830387716064 )
         self.assertAlmostEquals(lm.VI_sim,  0.2067126047680822 )
         
 

@@ -44,7 +44,8 @@ class Moran:
     z_norm       : float
                    z-value of I under normality assumption
     p_norm       : float
-                   p-value of I under normality assumption (1-tailed)
+                   p-value of I under normality assumption (one-sided)
+                   for two-sided tests, this value should be multiplied by 2
     VI_rand      : float
                    variance of I under randomization assumption
     seI_rand     : float
@@ -56,7 +57,10 @@ class Moran:
     sim          : array (if permutations>0)
                    vector of I values for permutated samples
     p_sim        : array (if permutations>0)
-                   p-value based on permutations
+                   p-value based on permutations (one-sided)
+                   null: spatial randomness
+                   alternative: the observed I is extreme
+                                it is either extremely greater or extremely lower
     EI_sim       : float (if permutations>0)
                    average value of I from permutations
     VI_sim       : float (if permutations>0)
@@ -110,14 +114,12 @@ class Moran:
         if permutations:
             sim = [self.__calc(np.random.permutation(self.z)) \
                  for i in xrange(permutations)]
-            self.sim = sim
-            self.p_sim = (sum(sim >= self.I)+1.)/(permutations+1.)
-            #self.sim2 = sim2 = np.array(sim)
-            #above = sim2 >= self.I
-            #larger = sum(above)
-            #if (self.permutations - larger) < larger:
-            #    larger = self.permutations - larger
-            #self.p_sim2 = (larger+1.)/(permutations+1.)
+            self.sim = sim = np.array(sim)
+            above = sim >= self.I
+            larger = sum(above)
+            if (self.permutations - larger) < larger:
+                larger = self.permutations - larger
+            self.p_sim = (larger+1.)/(permutations+1.)
             self.EI_sim = sum(sim)/permutations
             self.seI_sim = np.array(sim).std()
             self.VI_sim = self.seI_sim**2
@@ -191,7 +193,10 @@ class Moran_BV:
     sim           : array (if permutations>0)
                     vector of I values for permutated samples
     p_sim         : float (if permutations>0)
-                    p-value based on permutations
+                    p-value based on permutations (one-sided)
+                    null: spatial randomness
+                    alternative: the observed I is extreme
+                                 it is either extremely high or extremely low
     EI_sim        : array (if permutations>0)
                     average value of I from permutations
     VI_sim        : array (if permutations>0)
@@ -256,8 +261,12 @@ class Moran_BV:
         if permutations:
             nrp = np.random.permutation
             sim = [self.__calc(nrp(zy)) for i in xrange(permutations)]
-            self.sim = sim
-            self.p_sim = (sum(sim >= self.I)+1.)/(permutations+1.)
+            self.sim = sim = np.array(sim)
+            above = sim >= self.I
+            larger = sum(above)
+            if (permutations - larger) < larger:
+                larger = permutations - larger
+            self.p_sim = (larger + 1.)/(permutations + 1.)
             self.EI_sim  =  sum(sim)/permutations
             self.seI_sim  =  np.array(sim).std()
             self.VI_sim  =  self.seI_sim**2
@@ -370,7 +379,10 @@ class Moran_Local:
     sim          : array (if permutations>0)
                    vector of I values for permutated samples
     p_sim        : array (if permutations>0)
-                   p-value based on permutations
+                   p-value based on permutations (one-sided)
+                   null: spatial randomness
+                   alternative: the observed Ii is further away or extreme from the median of simulated Iis
+                                it is either extremely high or extremely low in the distribution of simulated Is
     EI_sim       : float (if permutations>0)
                    average value of I from permutations
     VI_sim       : float (if permutations>0)
@@ -381,17 +393,8 @@ class Moran_Local:
                    standardized I based on permutations
     p_z_sim      : float (if permutations>0)
                    p-value based on standard normal approximation from
-                   permutations
-
-    Notes 
-    -----
-    p_sim values are one sided - where side is based on the original I value
-    for each observation (in self.Is). In other words extreme is considered
-    being further away from the origin and in the same direction than original I
-    statistic for the focal observation.
-
-    p_z_sim values are two sided since absolute value of z_sim is used
-    
+                   permutations (one-sided)
+                   for two-sided tests, these values should be multiplied by 2
 
     Examples
     --------
@@ -406,8 +409,7 @@ class Moran_Local:
     >>> lm.q
     array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
     >>> lm.p_z_sim[0]
-    0.93513660775432128
-
+    0.46756830387716064
 
     Note random components result is slightly different values across
     architectures so the results have been removed from doctests and will be
@@ -429,24 +431,22 @@ class Moran_Local:
         self.__quads()
         if permutations:
             self.__crand()
-            pos=self.Is>0
-            neg=self.Is<=0
             sim=np.transpose(self.rlisas)
             above=sim >= self.Is
-            below=sim <= self.Is
-            p=pos*above + neg*below
-            self.p_sim = (sum(p)+1.0)/(permutations+1)
+            larger = sum(above)
+            low_extreme = (self.permutations - larger) < larger
+            larger[low_extreme] = self.permutations - larger[low_extreme]
+            self.p_sim = (larger+1.0)/(permutations+1.0)
             self.sim=sim
             self.EI_sim = sim.mean()
             self.seI_sim = sim.std()
             self.VI_sim = self.seI_sim * self.seI_sim
             self.z_sim = (self.Is-self.EI_sim)/self.seI_sim
-            self.p_z_sim=2.0*(1-stats.norm.cdf(np.abs(self.z_sim)))
+            self.p_z_sim=1-stats.norm.cdf(np.abs(self.z_sim))
 
     def calc(self, w, z):
         zl=slag(w, z)
         return self.n_1*self.z*zl/self.den
-
 
     def __crand(self):
         """

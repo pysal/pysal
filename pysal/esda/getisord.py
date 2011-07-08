@@ -39,11 +39,15 @@ class G:
     z_norm: float
          standard normal test statistic
     p_norm: float
-            p-value under normality assumption (one-tailed)
+            p-value under normality assumption (one-sided)
+            for two-sided tests, this value should be multiplied by 2 
     sim: array (if permutations > 0) 
          vector of G values for permutated samples
     p_sim: float 
-           p-value based on permutations
+           p-value based on permutations (one-sided)
+           null: spatial randomness
+           alternative: the observed G is extreme 
+                        it is either extremely high or extremely low
     EG_sim: float 
             average value of G from permutations
     VG_sim: float 
@@ -54,7 +58,8 @@ class G:
            standardized G based on permutations
     p_z_sim: float
              p-value based on standard normal approximation from
-             permutations
+             permutations (one-sided)
+             for two-sided tests, this value should be multiplied by 2
 
     Notes
     -----
@@ -195,10 +200,14 @@ class G_Local:
         standardized Gs 
     p_norm: array of floats
             p-value under normality assumption (one-sided)
+            for two-sided tests, this value should be multiplied by 2 
     sim: array of arrays of floats (if permutations>0)
          vector of I values for permutated samples
     p_sim: array of floats
-           p-value based on permutations
+           p-value based on permutations (one-sided)
+           null: spatial randomness
+           alternative: the observed G is extreme 
+                        it is either extremely high or extremely low
     EG_sim: array of floats 
             average value of G from permutations
     VG_sim: array of floats
@@ -209,7 +218,8 @@ class G_Local:
            standardized G based on permutations
     p_z_sim: array of floats 
              p-value based on standard normal approximation from
-             permutations
+             permutations (one-sided)
+             for two-sided tests, these values should be multiplied by 2 
 
     Notes
     -----
@@ -337,12 +347,6 @@ class G_Local:
         for i in range(self.w.n):
             idsi = ids[ids!=i]
             np.random.shuffle(idsi)        
-            #for j, rid in enumerate(rids):
-            #    rGi = sum(y[idsi[rid[0:wc[i]]]]) + self.star*y[i]
-            #    rGi = (rGi/den[i])/(self.y_sum - (1 - self.star)*y[i])
-            #    rGs[i][j] = rGi
-            #    print idsi[rid[0:wc[i]]], 'Gi*', rGi
-            #print set(rGs[i])
             rGs[i] = [sum(y[idsi[rid[0:wc[i]]]]) + self.star*y[i] for rid in rids] 
             rGs[i] = (np.array(rGs[i])/den[i])/(self.y_sum - (1 - self.star)*y[i])
         self.rGs = rGs

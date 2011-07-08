@@ -3,7 +3,6 @@ Geary's C statistic for spatial autocorrelation
 """
 __author__  = "Sergio J. Rey <srey@asu.edu> "
 from pysal.common import *
-import scipy
 __all__ = ['Geary']
 
 PERMUTATIONS=999
@@ -46,12 +45,17 @@ class Geary:
                      z-statistic for C under randomization assumption
     p_norm         : float
                      p-value under normality assumption (one-tailed)
+                     for two-tailed tests, this value should be multiplied by 2
     p_rand         : float
                      p-value under randomization assumption (one-tailed)
+                     for two-tailed tests, this value should be multiplied by 2
     sim            : array (if permutations!=0)
                      vector of I values for permutated samples
     p_sim          : float (if permutations!=0)
-                     p-value based on permutations
+                     p-value based on permutations (one-tailed)
+                     null: sptial randomness
+                     alternative: the observed C is extreme
+                                  it is either extremely high or extremely low 
     EC_sim         : float (if permutations!=0)
                      average value of C from permutations
     VC_sim         : float (if permutations!=0)
@@ -62,20 +66,20 @@ class Geary:
                      standardized C based on permutations
     p_z_sim        : float (if permutations!=0)
                      p-value based on standard normal approximation from
-                     permutations
+                     permutations (one-tailed)
+                     for two-tailed tests, this value should be multipled by 2
 
     Examples
     --------
     >>> import pysal
-    >>> import numpy as np
     >>> w=pysal.open("../examples/book.gal").read()
     >>> f=pysal.open("../examples/book.txt")
     >>> y=np.array(f.by_col['y'])
-    >>> c=pysal.esda.geary.Geary(y,w,permutations=0)
+    >>> c=Geary(y,w,permutations=0)
     >>> c.C
     0.33281733746130032
     >>> print "%.8f"%c.p_norm
-    0.00040152
+    0.00020076
     >>> 
     """
     def __init__(self,y,w,transformation="B",permutations=0):
@@ -96,19 +100,23 @@ class Geary:
         self.EC=1.0
         self.z_norm=de/self.seC_norm
         self.z_rand=de/self.seC_rand
-        self.p_norm = 2.0*(1-stats.norm.cdf(np.abs(self.z_norm)))
-        self.p_rand = 2.0*(1-stats.norm.cdf(np.abs(self.z_rand)))
+        self.p_norm = 1-stats.norm.cdf(np.abs(self.z_norm))
+        self.p_rand = 1-stats.norm.cdf(np.abs(self.z_rand))
 
         if permutations:
             sim=[self.__calc(np.random.permutation(self.y)) \
                  for i in xrange(permutations)]
-            self.sim=sim
-            self.p_sim =1.-(sum(sim>=self.C)+1)/(permutations+1.)
+            self.sim = sim = np.array(sim)
+            above = sim >= self.C
+            larger = sum(above)
+            if (permutations - larger) < larger:
+                larger = permutations - larger
+            self.p_sim =(larger+1.)/(permutations+1.)
             self.EC_sim=sum(sim)/permutations
             self.seC_sim=np.array(sim).std()
             self.VC_sim=self.seC_sim**2
             self.z_sim = (self.C - self.EC_sim)/self.seC_sim
-            self.p_z_sim = 2.0*(1-stats.norm.cdf(np.abs(self.z_sim)))
+            self.p_z_sim = 1-stats.norm.cdf(np.abs(self.z_sim))
 
     def __moments(self):
         y=self.y
@@ -131,16 +139,17 @@ class Geary:
         self.seC_rand = vc_rand**(0.5)
         self.seC_norm = vc_norm**(0.5)
 
+    
     def __calc(self,y):
-        n = self.n
-        y_diag = scipy.sparse.dia_matrix((y,0), shape=(n,n))
-        yw1 = y_diag*self.w.sparse
-        yw2 = y_diag*self.w.sparse.T
-        yw = yw1 - yw2.T
-        yw.data = yw.data**2
-        a = (n-1) * yw.sum()
+        ys=np.zeros(y.shape)
+        y2=y**2
+        for i,i0 in enumerate(self.w.id_order):
+            neighbors=self.w.neighbor_offsets[i0]
+            wijs=self.w.weights[i0]
+            z=zip(neighbors,wijs)
+            ys[i] = sum([wij*(y2[i] - 2*y[i]*y[j] + y2[j]) for j,wij in z])
+        a= (self.n-1)* sum(ys)
         return a/self.den
-
 
 def _test():
     import doctest
