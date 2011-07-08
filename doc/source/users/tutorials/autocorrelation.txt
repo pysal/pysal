@@ -125,7 +125,8 @@ which generates::
          |  z_norm       : float
          |                 z-value of I under normality assumption
          |  p_norm       : float
-         |                 p-value of I under normality assumption (1-tailed)
+         |                 p-value of I under normality assumption (one-sided)
+         |                 for two-sided tests, this value should be multiplied by 2
          |  VI_rand      : float
          |                 variance of I under randomization assumption
          |  seI_rand     : float
@@ -149,8 +150,8 @@ The pseudo p value based on these permutations is:
         >>> print mir.p_sim
         0.0015
 
-in other words there were 158 permutations that generated values for I that
-were as extreme as the original value, so the p value becomes (158+1)/(9999+1). [#]_
+in other words there were 14 permutations that generated values for I that
+were as extreme as the original value, so the p value becomes (14+1)/(9999+1). [#]_
 Alternatively, we could use the realized values for I from the permutations and
 compare the original I using a z-transformation to get:
 
@@ -184,7 +185,7 @@ with all the terms defined as above. Applying this to the St. Louis data:
         >>> print gc.z_norm
         -4.99194306621
         >>> gc.p_norm
-        5.9774876937090937e-07
+        2.9887438468545469e-07
 
 we see that the statistic :math:`C` is significantly lower than its expected
 value :math:`EC`. Although the sign of the standardized statistic is negative (in contrast to what held for :math:`I`, the interpretation is the same, namely evidence of strong positive spatial autocorrelation in the homicide rates.
@@ -195,9 +196,9 @@ Similar to what we saw for Moran's I, we can base inference on Geary's C using r
 
         >>> gc = pysal.Geary(y, w, permutations = 9999)
         >>> print gc.p_z_sim
-        0.0421112172373
+        0.0210556086187
         >>> print gc.p_sim
-        0.005
+        0.0051
 
 with the first p-value based on a z-transform of the observed C relative to the
 distribution of values obtained in the permutations, and the second based on
@@ -281,15 +282,15 @@ thus we see 78 LISAs are stored in the vector lm.Is. Inference about these value
 
         >>> lm.p_sim
         array([ 0.201,  0.077,  0.398,  0.29 ,  0.363,  0.06 ,  0.302,  0.225,
-                0.043,  0.06 ,  0.249,  0.512,  0.457,  0.611,  0.431,  0.445,
-                0.52 ,  0.578,  0.596,  0.192,  0.147,  0.03 ,  0.366,  0.564,
-                0.281,  0.658,  0.227,  0.325,  0.347,  0.609,  0.506,  0.566,
-                0.004,  0.577,  0.261,  0.012,  0.003,  0.001,  0.062,  0.002,
-                0.096,  0.421,  0.549,  0.305,  0.266,  0.012,  0.032,  0.037,
+                0.043,  0.06 ,  0.249,  0.489,  0.457,  0.39 ,  0.431,  0.445,
+                0.481,  0.423,  0.405,  0.192,  0.147,  0.03 ,  0.366,  0.437,
+                0.281,  0.343,  0.227,  0.325,  0.347,  0.392,  0.495,  0.435,
+                0.004,  0.424,  0.261,  0.012,  0.003,  0.001,  0.062,  0.002,
+                0.096,  0.421,  0.452,  0.305,  0.266,  0.012,  0.032,  0.037,
                 0.051,  0.13 ,  0.306,  0.32 ,  0.11 ,  0.481,  0.036,  0.283,
-                0.112,  0.665,  0.679,  0.633,  0.307,  0.577,  0.363,  0.482,
-                0.361,  0.259,  0.25 ,  0.416,  0.185,  0.177,  0.258,  0.6  ,
-                0.561,  0.152,  0.631,  0.566,  0.085,  0.121])
+                0.112,  0.336,  0.322,  0.368,  0.307,  0.424,  0.363,  0.482,
+                0.361,  0.259,  0.25 ,  0.416,  0.185,  0.177,  0.258,  0.401,
+                0.44 ,  0.152,  0.37 ,  0.435,  0.085,  0.121])
         >>>
 
 To identify the significant [#]_ LISA values we can use numpy indexing:
