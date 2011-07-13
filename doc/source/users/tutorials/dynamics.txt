@@ -48,7 +48,7 @@ For example, let's construct a small artificial chain consisting of 3 states
 
 .. doctest::
 
-        >>> import pysal
+        >>> import pysal 
         >>> import numpy as np
         >>> c = np.array([['b','a','c'],['c','c','a'],['c','b','c'],['a','a','b'],['a','b','c']])
         >>> c
@@ -58,6 +58,7 @@ For example, let's construct a small artificial chain consisting of 3 states
                ['a', 'a', 'b'],
                ['a', 'b', 'c']], 
               dtype='|S1')
+
         
 So the first pixel was in class 'b' in period 1, class 'a' in period 2,
 and class 'c' in period 3. We can summarize the overall transition
@@ -391,50 +392,55 @@ The LISA transitions are:
 
 .. doctest::
 
-    >>> lm.transitions
-    array([[ 495.,   47.,  384.,  244.],
-           [ 180.,   83.,  178.,  115.],
-           [ 334.,  321.,  661.,  190.],
-           [ 169.,  105.,  218.,   83.]])
+  >>> lm.transitions
+  array([[  1.08700000e+03,   4.40000000e+01,   4.00000000e+00,
+            3.40000000e+01],
+         [  4.10000000e+01,   4.70000000e+02,   3.60000000e+01,
+            1.00000000e+00],
+         [  5.00000000e+00,   3.40000000e+01,   1.42200000e+03,
+            3.90000000e+01],
+         [  3.00000000e+01,   1.00000000e+00,   4.00000000e+01,
+            5.52000000e+02]])
+ 
 
 and the estimated transition probability matrix is:
 
 .. doctest::
 
     >>> lm.p
-    matrix([[ 0.42307692,  0.04017094,  0.32820513,  0.20854701],
-            [ 0.32374101,  0.14928058,  0.32014388,  0.20683453],
-            [ 0.22177955,  0.21314741,  0.43891102,  0.12616202],
-            [ 0.29391304,  0.1826087 ,  0.37913043,  0.14434783]])
+    matrix([[ 0.92985458,  0.03763901,  0.00342173,  0.02908469],
+            [ 0.07481752,  0.85766423,  0.06569343,  0.00182482],
+            [ 0.00333333,  0.02266667,  0.948     ,  0.026     ],
+            [ 0.04815409,  0.00160514,  0.06420546,  0.88603531]])
+
+
 
 The diagonal elements indicate the staying probabilities and we see that
-there is greater mobility for observations in quadrants 2 and 4 than 1 and
-2.
+there is greater mobility for observations in quadrants 1 and 3 than 2 and
+4.
 
 The implied long run steady state distribution of the chain is
 
 .. doctest::
 
     >>> lm.steady_state
-    matrix([[ 0.31122083+0.j],
-            [ 0.14496933+0.j],
-            [ 0.37728447+0.j],
-            [ 0.16652538+0.j]])
+    matrix([[ 0.28561505],
+            [ 0.14190226],
+            [ 0.40493672],
+            [ 0.16754598]])
 
 again reflecting the dominance of quadrants 1 and 3 (positive
 autocorrelation). [#]_ Finally the first mean passage time for the LISAs is:
 
 .. doctest::
 
-   >>> pysal.ergodic.fmpt(lm.p)
-   matrix([[ 3.21315259,  7.72803263,  2.96241347,  5.6170544 ],
-           [ 3.56371429,  6.8980109 ,  2.98948447,  5.62313228],
-           [ 3.96484993,  6.32688949,  2.65051994,  6.13860548],
-           [ 3.68603107,  6.62662485,  2.8242759 ,  6.00509057]])
+    >>> pysal.ergodic.fmpt(lm.p)
+    matrix([[  3.50121609,  37.93025465,  40.55772829,  43.17412009],
+            [ 31.72800152,   7.04710419,  28.68182751,  49.91485137],
+            [ 52.44489385,  47.42097495,   2.46952168,  43.75609676],
+            [ 38.76794022,  51.51755827,  26.31568558,   5.96851095]])
 
-which exhibits the tendency for short passage times into quadrants 1 and 3
-relative to 2 and 4, irrespective of the position of the LISA at the
-beginning of the period.
+
 
 Rank Based Methods
 ==================
