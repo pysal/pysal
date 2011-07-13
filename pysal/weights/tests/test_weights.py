@@ -97,7 +97,7 @@ class TestW(unittest.TestCase):
         neighbors = {0: [2, 4, 6], 1: [3, 5, 7], 2: [0, 4, 8], 3: [1, 5, 7],
                 4: [0, 2, 6, 8], 5: [1, 3, 7], 6: [0, 4, 8], 7: [1, 3, 5], 8:
                 [2, 4, 6]}
-        w2 = self.w3x3.higher_order(2) 
+        w2 = pysal.higher_order(self.w3x3, 2)
         self.assertEqual(w2.neighbors, neighbors)
         self.assertEqual(w2.weights, weights)
 
@@ -165,7 +165,7 @@ class TestW(unittest.TestCase):
           6: [2, 3, 0, 1, 2, 3, -1, 1, 2],
           7: [3, 2, 3, 2, 1, 2, 1, -1, 1],
           8: [0, 3, 2, 3, 2, 1, 2, 1, -1]}
-        self.assertEquals(w.order(), o)
+        self.assertEquals(pysal.order(w), o)
 
     def test_pct_nonzero(self):
         self.assertEqual(self.w3x3.pct_nonzero,  0.29629629629629628)
@@ -204,7 +204,7 @@ class TestW(unittest.TestCase):
               6: [2, 3, 4, 1, 2, 3, -1, 1, 2],
               7: [3, 2, 3, 2, 1, 2, 1, -1, 1],
               8: [4, 3, 2, 3, 2, 1, 2, 1, -1]}
-        self.assertEquals(self.w3x3.shimbel(), d)
+        self.assertEquals(pysal.shimbel(self.w3x3), d)
 
     def test_sparse(self):
         self.assertEqual(self.w3x3.sparse.nnz, 24)
@@ -317,7 +317,7 @@ class Test_WSP_Back_To_W(unittest.TestCase):
         neighbors = {0: [2, 4, 6], 1: [3, 5, 7], 2: [0, 4, 8], 3: [1, 5, 7],
                 4: [0, 2, 6, 8], 5: [1, 3, 7], 6: [0, 4, 8], 7: [1, 3, 5], 8:
                 [2, 4, 6]}
-        w2 = self.w3x3.higher_order(2) 
+        w2 = pysal.higher_order(self.w3x3, 2)
         self.assertEqual(w2.neighbors, neighbors)
         self.assertEqual(w2.weights, weights)
 
@@ -372,7 +372,7 @@ class Test_WSP_Back_To_W(unittest.TestCase):
           6: [2, 3, 0, 1, 2, 3, -1, 1, 2],
           7: [3, 2, 3, 2, 1, 2, 1, -1, 1],
           8: [0, 3, 2, 3, 2, 1, 2, 1, -1]}
-        self.assertEquals(w.order(), o)
+        self.assertEquals(pysal.order(w), o)
 
     def test_pct_nonzero(self):
         self.assertEqual(self.w3x3.pct_nonzero,  0.29629629629629628)
@@ -411,7 +411,7 @@ class Test_WSP_Back_To_W(unittest.TestCase):
               6: [2, 3, 4, 1, 2, 3, -1, 1, 2],
               7: [3, 2, 3, 2, 1, 2, 1, -1, 1],
               8: [4, 3, 2, 3, 2, 1, 2, 1, -1]}
-        self.assertEquals(self.w3x3.shimbel(), d)
+        self.assertEquals(pysal.shimbel(self.w3x3), d)
 
     def test_sparse(self):
         self.assertEqual(self.w3x3.sparse.nnz, 24)

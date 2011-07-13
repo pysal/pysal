@@ -265,7 +265,7 @@ def order(w,kmax=3):
         info[id]=s
     return info
 
-def higher_order(w,order=2):
+def higher_order(w, k=2):
     """
     Contiguity weights object of order k 
 
@@ -274,7 +274,7 @@ def higher_order(w,order=2):
 
     w     : W
             spatial weights object
-    order : int
+    k     : int
             order of contiguity
 
     Returns
@@ -310,12 +310,12 @@ def higher_order(w,order=2):
        constructing proper higher order spatial lag operators. Journal of
        Regional Science, 36, 67-89. 
     """
-    info=w.order(order)
+    info = order(w, k)
     ids=info.keys()
     neighbors={}
     weights={}
     for id in ids:
-        nids=[ids[j] for j,k in enumerate(info[id]) if order==k]
+        nids=[ids[j] for j,o in enumerate(info[id]) if o==k]
         neighbors[id]=nids
         weights[id]=[1.0]*len(nids)
     return pysal.weights.W(neighbors,weights)
@@ -323,7 +323,7 @@ def higher_order(w,order=2):
 
 def shimbel(w):
     """
-    Find the Shmibel matrix for first order contiguity matrix.
+    Find the Shimbel matrix for first order contiguity matrix.
 
     Parameters
     ----------

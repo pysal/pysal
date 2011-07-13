@@ -74,9 +74,9 @@ class _TestWeights(unittest.TestCase):
 
     def test_util(self):
         w=self.w25
-        shim=w.shimbel()
+        shim = pysal.shimbel(w)
         self.assertEquals(shim[0][0:4],[-1,1,2,3])
-        w8=w.higher_order(8)
+        w8= pysal.higher_order(w, 8)
         self.assertEquals(w8.neighbors[0],[24])
 
 

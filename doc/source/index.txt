@@ -18,6 +18,9 @@ On this site you will find :doc:`user level documentation </users/index>` as wel
 ****
 News
 ****
+
+(2011-01-31) :doc:`PySAL 1.1.0 released </users/installation>`
+
 (2010-07-31) :doc:`PySAL 1.0.0 released </users/installation>`
 
 (2010-01-6) New Website for PySAL!

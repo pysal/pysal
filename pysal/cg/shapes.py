@@ -425,6 +425,7 @@ class LineSegment:
         """
         v1 = (self._p2[0] - self._p1[0], self._p2[1] - self._p1[1])
         v2 = (pt[0] - self._p1[0], pt[1] - self._p1[1])
+
         return v1[0]*v2[1] - v1[1]*v2[0] > 0
 
     def is_cw(self, pt):
@@ -1140,8 +1141,8 @@ class Polygon(object):
 
         Notes
         -----
-        Follows the rule that a four-corner point is inside the northeast
-        polygon and outside the other three polygons
+        Points falling exactly on polygon edges may yield unpredictable
+        results
         """
 
         # ray from point to just outside left edge of bb

@@ -473,14 +473,16 @@ If only the array is required, a simple Python slice can be used:
 
 Shimbel Matrices
 ----------------
-The Shimbel matrix for a set of n objects contains the shortest path distance separating each pair of units.
-This has wide use in spatial analysis for solving different types of clustering and optimization problems. Calling the shimbel
-method of a W object generates this information:
+The Shimbel matrix for a set of n objects contains the shortest path distance
+separating each pair of units.  This has wide use in spatial analysis for
+solving different types of clustering and optimization problems. Using the
+function `shimbel` with a `W` instance as an argument generates this
+information:
 
 .. doctest::
 
     >>> w = pysal.lat2W(3,3)
-    >>> ws = w.shimbel()
+    >>> ws = pysal.shimbel(w)
     >>> ws[0]
     [-1, 1, 2, 1, 2, 3, 2, 3, 4]
 
@@ -496,7 +498,7 @@ define the second order contiguity relations using:
 
 .. doctest::
 
-    >>> w2 = w.higher_order(2)
+    >>> w2 = pysal.higher_order(w, 2)
     >>> w2.neighbors[0]
     [2, 4, 6]
 
@@ -504,11 +506,11 @@ or a fourth order set of weights:
 
 .. doctest::
 
-    >>> w4 = w.higher_order(4)
+    >>> w4 = pysal.higher_order(w, 4)
     >>> w4.neighbors[0]
     [8]
 
-In both cases a new instance of the W object is returned with the weights and neighbors defined using the particular order of contiguity.
+In both cases a new instance of the W class is returned with the weights and neighbors defined using the particular order of contiguity.
 
 Spatial Lag
 -----------
