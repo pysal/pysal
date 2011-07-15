@@ -245,6 +245,10 @@ doc tests and unit tests under Linux
 
 Some Linux machines return different results for the unit and doc tests. We suspect this has to do with the way random seeds are set. See `Issue 52 <http://code.google.com/p/pysal/issues/detail?id=52&sort=milestone>`_
 
+LISA Markov missing a transpose
+-------------------------------
+In versions of PySAL < 1.1 there is a bug in the LISA Markov, resulting in
+incorrect values. For a fix and more details see `Issue 115 <http://code.google.com/p/pysal/issues/detail?id=115>`_.
 
 Troubleshooting
 ===============
