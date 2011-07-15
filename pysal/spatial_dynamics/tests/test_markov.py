@@ -146,6 +146,30 @@ class test_kullback(unittest.TestCase):
         np.testing.assert_array_almost_equal(0.0,
             res['Conditional homogeneity pvalue'])
 
+class test_prais(unittest.TestCase):
+    def test___init__(self):
+        import numpy as np
+        f=pysal.open("../../examples/usjoin.csv")
+        pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
+        q5=np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
+        m=pysal.Markov(q5)
+        res = np.matrix([[ 0.08988764,  0.21468144,
+            0.21125   ,  0.20194986,  0.07259074]])
+        np.testing.assert_array_almost_equal(markov.prais(m.p), res)
+
+
+class test_shorrock(unittest.TestCase):
+    def test___init__(self):
+        import numpy as np
+        f=pysal.open("../../examples/usjoin.csv")
+        pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
+        q5=np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
+        m=pysal.Markov(q5)
+        np.testing.assert_array_almost_equal(markov.shorrock(m.p),
+               0.19758992000997844)
+
+
+
 if __name__ == '__main__':
     unittest.main()
 

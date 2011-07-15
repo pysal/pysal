@@ -10,7 +10,8 @@ from scipy import stats
 import pysal
 from operator import gt
 
-__all__ = ["Markov", "LISA_Markov", "Spatial_Markov", "kullback" ]
+__all__ = ["Markov", "LISA_Markov", "Spatial_Markov", "kullback",
+       "prais", "shorrock"]
 
 # TT predefine LISA transitions
 # TT[i,j] is the transition type from i to j
@@ -590,6 +591,7 @@ def chi2(T1, T2):
     Marginal sums from first matrix are distributed across these probabilities
     under the null. In other words the observed transitions are taken from T1
     while the expected transitions are formed as:
+
         .. math::
 
             E_{i,j} = \sum_j T1_{i,j} * T2_{i,j}/\sum_j T2_{i,j}
@@ -1112,7 +1114,108 @@ def kullback(F):
     results['Conditional homogeneity pvalue'] = 1 - stats.chi2.cdf(chom, cdof)
     return results
 
+def prais(pmat):		
+    """		
+    Prais conditional mobility measure
 
+    Parameters
+    ----------
+
+    pmat: kxk matrix
+          Markov probability transition matrix
+
+    Returns
+    -------
+    
+    pr : 1xk matrix
+          Conditional mobility measures for each of the k classes with each
+          element  obtained as:
+
+          .. math::
+
+                pr_i = 1 - \sum_j p_{i,j}
+
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> import pysal
+    >>> f = pysal.open("../examples/usjoin.csv")
+    >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)])
+    >>> q5 = np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
+    >>> m = pysal.Markov(q5)
+    >>> m.transitions
+    array([[ 729.,   71.,    1.,    0.,    0.],
+           [  72.,  567.,   80.,    3.,    0.],
+           [   0.,   81.,  631.,   86.,    2.],
+           [   0.,    3.,   86.,  573.,   56.],
+           [   0.,    0.,    1.,   57.,  741.]])
+    >>> m.p
+    matrix([[ 0.91011236,  0.0886392 ,  0.00124844,  0.        ,  0.        ],
+            [ 0.09972299,  0.78531856,  0.11080332,  0.00415512,  0.        ],
+            [ 0.        ,  0.10125   ,  0.78875   ,  0.1075    ,  0.0025    ],
+            [ 0.        ,  0.00417827,  0.11977716,  0.79805014,  0.07799443],
+            [ 0.        ,  0.        ,  0.00125156,  0.07133917,  0.92740926]])
+    >>> pysal.spatial_dynamics.markov.prais(m.p)
+    matrix([[ 0.08988764,  0.21468144,  0.21125   ,  0.20194986,  0.07259074]])
+
+               
+
+
+    """		
+    pr = (pmat.sum(axis=1)-np.diag(pmat))[0]
+    return 	pr	
+		
+def shorrock(pmat):		
+    """		
+    Shorrocks mobility measure		
+
+    Parameters
+    ----------
+
+    pmat: kxk matrix
+          Markov probability transition matrix
+
+    Returns
+    -------
+    
+    sh : scalar
+          Conditional mobility measure:
+
+          .. math::
+
+                sh = \frac{k  - \sum_j p_{i,i}}{k - 1}
+
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> import pysal
+    >>> f = pysal.open("../examples/usjoin.csv")
+    >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)])
+    >>> q5 = np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
+    >>> m = pysal.Markov(q5)
+    >>> m.transitions
+    array([[ 729.,   71.,    1.,    0.,    0.],
+           [  72.,  567.,   80.,    3.,    0.],
+           [   0.,   81.,  631.,   86.,    2.],
+           [   0.,    3.,   86.,  573.,   56.],
+           [   0.,    0.,    1.,   57.,  741.]])
+    >>> m.p
+    matrix([[ 0.91011236,  0.0886392 ,  0.00124844,  0.        ,  0.        ],
+            [ 0.09972299,  0.78531856,  0.11080332,  0.00415512,  0.        ],
+            [ 0.        ,  0.10125   ,  0.78875   ,  0.1075    ,  0.0025    ],
+            [ 0.        ,  0.00417827,  0.11977716,  0.79805014,  0.07799443],
+            [ 0.        ,  0.        ,  0.00125156,  0.07133917,  0.92740926]])
+    >>> pysal.spatial_dynamics.markov.shorrock(m.p)
+    0.19758992000997844
+
+    """		
+    t=np.trace(pmat)		
+    k=pmat.shape[1]		
+    sh = (k-t) / (k-1)
+    return sh
+		
 def _test():
     import doctest
     doctest.testmod(verbose=True)
