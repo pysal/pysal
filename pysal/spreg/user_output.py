@@ -409,11 +409,14 @@ def summary_results(reg, w, vm, pred, instruments):
     strSummary += "RANDOM COEFFICIENTS\n"
     strSummary += "TEST                  DF          VALUE            PROB\n"
     strSummary += "%-22s%2d       %12.6f        %9.7f\n" % ('Breusch-Pagan test',reg.breusch_pagan['df'],reg.breusch_pagan['bp'],reg.breusch_pagan['pvalue'])
-    strSummary += "%-22s%2d       %12.6f        %9.7f\n" % ('Koenker-Bassett test',reg.koenker_bassett['df'],reg.koenker_bassett['kb'],reg.koenker_bassett['pvalue'])
+    strSummary += "%-22s%2d       %12.6f        %9.7f\n\n" % ('Koenker-Bassett test',reg.koenker_bassett['df'],reg.koenker_bassett['kb'],reg.koenker_bassett['pvalue'])
     if reg.white:
         strSummary += "SPECIFICATION ROBUST TEST\n"
-        strSummary += "TEST                  DF          VALUE            PROB\n"
-        strSummary += "%-22s%2d       %12.6f        %9.7f\n\n" % ('White',reg.white['df'],reg.white['wh'],reg.white['pvalue'])
+        if len(reg.white)>3:
+            strSummary += reg.white+'\n'
+        else:
+            strSummary += "TEST                  DF          VALUE            PROB\n"
+            strSummary += "%-22s%2d       %12.6f        %9.7f\n\n" % ('White',reg.white['df'],reg.white['wh'],reg.white['pvalue'])
 
     # spatial diagonostics
     if w and not instruments:   # OLS diagnostics
