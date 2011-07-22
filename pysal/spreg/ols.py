@@ -377,6 +377,7 @@ class OLS(BaseOLS, USER.DiagnosticBuilder):
     TEST                  DF          VALUE            PROB
     Breusch-Pagan test     2           5.766791        0.0559445
     Koenker-Bassett test   2           2.270038        0.3214160
+    <BLANKLINE>
     SPECIFICATION ROBUST TEST
     TEST                  DF          VALUE            PROB
     White                  5           2.906067        0.7144648

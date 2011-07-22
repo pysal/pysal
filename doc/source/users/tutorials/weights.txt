@@ -899,10 +899,10 @@ and from a WSP to W:
     >>> sp = pysal.weights.lat2SW(5, 5)
     >>> wsp = pysal.weights.WSP(sp)
     >>> wsp.s0
-    80.0
+    80
     >>> w = pysal.weights.WSP2W(wsp)
     >>> w.s0
-    80.0
+    80
     
 
 

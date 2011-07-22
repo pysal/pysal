@@ -56,7 +56,7 @@ For example, let's construct a small artificial chain consisting of 3 states
                ['c', 'c', 'a'],
                ['c', 'b', 'c'],
                ['a', 'a', 'b'],
-               ['a', 'b', 'c']], 
+               ['a', 'b', 'c']],
               dtype='|S1')
 
         
@@ -68,8 +68,9 @@ dynamics for the set of pixels by treating it as a Markov chain:
 
         >>> m = pysal.Markov(c)
         >>> m.classes
-        array(['a', 'b', 'c'], 
+        array(['a', 'b', 'c'],
               dtype='|S1')
+
 
 The Markov instance m has an attribute class extracted from the chain -
 the assumption is that the observations are on the rows of the input and
