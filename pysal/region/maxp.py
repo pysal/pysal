@@ -129,6 +129,7 @@ class Maxp:
                         best_val=val
                     self.attempts += 1
             self.regions=copy.copy(self.current_regions)
+            self.p = len(self.regions)
             self.area2region=self.current_area2region
             self.swap()
 
@@ -548,7 +549,7 @@ class Maxp_LISA(Maxp):
     >>> p=np.ones(w.n)
     >>> mpl=pysal.region.Maxp_LISA(w,z,p,floor=3,floor_variable=p)
     >>> mpl.p
-    30
+    31
     >>> mpl.regions[0]
     [99, 89, 98]
 

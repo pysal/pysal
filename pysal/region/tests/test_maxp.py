@@ -42,7 +42,7 @@ class _Test_Maxp(unittest.TestCase):
         z=np.random.random_sample((w.n,2))
         p=np.ones(w.n)
         mpl=pysal.region.Maxp_LISA(w,z,p,floor=3,floor_variable=p)
-        self.assertEquals(mpl.p, 30)
+        self.assertEquals(mpl.p, 31)
         self.assertEquals(mpl.regions[0], [99, 89, 98])
 
 

@@ -838,17 +838,25 @@ class WSP(object):
                An ordered list of ids, assumed to match the ordering in
                sparse.  
 
+    Attributes
+    ----------
+
+    n               
+    s0              
+    trcWtW_WW
+
     Examples
     --------
 
     From GAL information
 
     >>> import scipy.sparse
+    >>> import pysal
     >>> rows = [0, 1, 1, 2, 2, 3]
     >>> cols = [1, 0, 2, 1, 3, 3]
     >>> weights =  [1, 0.75, 0.25, 0.9, 0.1, 1]
     >>> sparse = scipy.sparse.csr_matrix((weights, (rows, cols)), shape=(4,4))
-    >>> w = WSP(sparse)
+    >>> w = pysal.weights.WSP(sparse)
     >>> w.s0
     4.0
     >>> w.trcWtW_WW

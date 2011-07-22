@@ -557,10 +557,10 @@ def check_weights(w, y):
 
     """
     if w:
-        if type(w).__name__ != 'W':
-            raise Exception, "w must be a pysal.W object"
+        if type(w).__name__ != 'W' and type(w).__name__ != 'WSP':
+            raise Exception, "w must be a pysal.W or pysal.weights.WSP object"
         if w.n != y.shape[0]:
-            raise Exception, "y must be nx1, and w must be an nxn PySAL W object"
+            raise Exception, "y must be nx1, and w must be an nxn PySAL W or WSP object"
 
 
 

@@ -317,6 +317,9 @@ Getis and Ord's G can be localized in two forms: :math:`G_i` and :math:`G^*_i`.
 .. math::
 
         G_i(d) = \frac{\sum_j w_{i,j}(d) y_j - W_i\bar{y}(i)}{s(i)\{[(n-1)S_{1i} - W^2_i]/(n-2)\}^(1/2)}, j \neq i
+
+.. math::
+
         G^*_i(d) = \frac{\sum_j w_{i,j}(d) y_j - W^*_i\bar{y}}{s\{[(nS^*_{1i}) - (W^*_i)^2]/(n-1)\}^(1/2)}, j = i
 
 where we have :math:`W_i = \sum_{j \neq i} w_{i,j}(d)`, :math:`\bar{y}(i) = \frac{\sum_j y_j}{(n-1)}`, :math:`s^2(i) = \frac{\sum_j y^2_j}{(n-1)} - [\bar{y}(i)]^2`, :math:`W^*_i = W_i + w{i,i}`, :math:`S_{1i} = \sum_j w^2_{i,j} (j \neq i)`, and :math:`S^*_{1i} = \sum_j w^2_{i,j} (all j)`; :math;`\bar{y}` and :math:`s^2` denote the usual sample mean and variance of :math:`y`.

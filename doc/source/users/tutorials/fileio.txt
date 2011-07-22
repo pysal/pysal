@@ -266,6 +266,8 @@ STATA Text Weights Files
     >>> w.n
     56
 
+.. _mtx:
+
 MatrixMarket MTX Weights Files
 ------------------------------
 
