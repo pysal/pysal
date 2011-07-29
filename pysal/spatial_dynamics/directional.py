@@ -148,7 +148,7 @@ def rose(Y,w,k=8,permutations=0):
 
     .. [1] Rey, S.J., A.T. Murray and L. Anselin. 2011. "Visualizing
     regional income distribution dynamics." Letters in Spatial and Resource
-    Sciences. In Press.
+    Sciences, 4: 81-90.
 
     """
     results={}
