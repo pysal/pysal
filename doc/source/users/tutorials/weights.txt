@@ -493,8 +493,8 @@ information:
     >>> ws[0]
     [-1, 1, 2, 1, 2, 3, 2, 3, 4]
 
-Thus we see that observation 0 (the north east cell of our 3x3 lattice) is a first order neighbor to observations 1 and 3, second order
-neighbor to observations 2, 4, and 6, a third order neighbor to 5, and 7, and a fourth order neighbor to observation 8 (the extreme south east 
+Thus we see that observation 0 (the northwest cell of our 3x3 lattice) is a first order neighbor to observations 1 and 3, second order
+neighbor to observations 2, 4, and 6, a third order neighbor to 5, and 7, and a fourth order neighbor to observation 8 (the extreme southeast 
 cell in the lattice). The position of the -1 simply denotes the focal unit.
 
 Higher Order Contiguity Weights
