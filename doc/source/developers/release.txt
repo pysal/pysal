@@ -17,9 +17,7 @@ Prior to the build, there are a number of actions to take.
 
      * ensure all tests pass
      * update the change log
-
-       ** use svn2cl to generate the entire project history. Then prepend just the most important changes to the file CHANGELOG.txt.
-
+       * use svn2cl to generate the entire project history. Then prepend just the most important changes to the file CHANGELOG.txt.
      * update THANKS.txt 
      * update README.txt 
      * update setup.py to add new modules or remove old ones
