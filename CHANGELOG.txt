@@ -1,3 +1,91 @@
+v<1.2.0>, 2011-07-31
+
+	* pysal/spreg/user_output.py: Fix for bug 162
+
+	* pysal/spatial_dynamics/markov.py: Added markov mobility measures; addresses issue 137
+
+	* pysal/weights/weights.py: Partially addressed issue 160 by removing the shimbel, order, and higher_order methods from W. 
+
+	* doc/source/users/installation.txt: Adding known issue regarding GNU/Linux testing and random seeds; see ticket 52.
+
+	* pysal/esda/geary.py: Adding sparse implementation of Geary's C; substantial gains on larger datasets. 
+
+	* pysal/core/IOHandlers/mtx.py: Adding WSP2W function for fast conversion of sparse weights object (WSP) to pysal W.
+
+	* pysal/esda/getisord.py: Adding Getis-Ord G test module
+
+	* pysal/weights/util.py: Added function that inserts values along the main diagonal of a weights object
+
+	* doc/source/users/tutorials: Fixed issue 76.
+
+	* pysal/core/IOHandlers/mtx.py: Added an IOHandler for MatrixMarket MTX files
+
+	* pysal/esda/moran.py: Optimized conditional randomization
+
+	* pysal/weights/util.py: Re-adding full2W() method to convert full arrays into W objects; related to issue #136. 
+
+	* pysal/core/IOHandlers/gal.py: Added sparse WSP (thin W); gal reader can return W or WSP
+
+	* pysal/core/IOHandlers/pyDbfIO.py: Bug Fix, DBF files are not properly closed when opened in 'r' mode. See issue #155.
+
+	* pysal/core/IOHandlers/stata_txt.py: Adding FileIO handlers for STATA text files
+
+	* pysal/weights/user.py: Fixed issue #154, adding k option to User Kernel weights functions.
+
+	* pysal/core/IOHandlers/mat.py: Adding an IOHandler for MATLAB mat file
+
+	* pysal/core/IOHandlers/wk1.py: Adding an IO handler for wk1 file
+
+	* pysal/core/IOHandlers/geobugs_txt.py: Adding an IO handler for geobugs text file.
+
+	* pysal/core/IOHandlers/arcgis_swm.py: Added ArcGIS SWM file handler
+
+	* pysal/core/IOHandlers/arcgis_dbf.py: Adding a spatial weights file in the (ArcGIS-style) DBF format. 
+
+	* pysal/core/IOHandlers/arcgis_txt.py: Added ArcGIS ASCII file IO handler. 
+
+	* pysal/core/IOHandlers/dat.py: Added DAT file handler.
+
+	* pysal/cg/locators.py: Added point in polygon method for Polygon and PolygonLocator
+
+	* pysal/weights/Distance.py: Optimized Kernel() method to run much faster for the case of adaptive bandwidths
+
+	* pysal/weights/user.py: Added helper function in user.py to create scipy sparse matrix from a gal file
+
+	* pysal/common.py: Added shallow copy method to Read-Only Dict to support multiprocessing.
+
+	* pysal/spatial_dynamics/rank.py: More efficient regime weights
+
+	* pysal/weights/Distance.py: Adding epanechnikov and bisquare kernel funtions
+
+	* pysal/core/IOHandlers/pyDbfIO.py: Adding NULL support to numerical DBF fields; modifying PointLocator API to match PolygonLocator API 
+
+	* pysal/cg/locators.py: Handles case when query rectangle is completely inside a polygon
+
+	* pysal/cg/locators.py: Explicit polygon overlap hit test
+
+	* pysal/cg/standalone.py: Adding point-polygon intersection support for polygons with holes.
+
+	* pysal/spatial_dynamics/markov.py: Added homogeneity test.
+
+	* pysal/spatial_dynamics/markov.py: Added spillover test in LISA_Markov.
+
+	* pysal/cg/locators.py: Added Rtree based spatial index for polygonlocator.
+
+	* pysal/cg/rtree.py: Added pure python Rtree module.
+
+	* doc/source/developers/pep/pep-0010.txt: Added PEP 0010: Rtree module in pure python.
+
+	* pysal/esda/geary.py: Fixed bug 144.
+
+	* pysal/spatial_dynamics/markov.py: Added significance filtering of LISA markov.
+
+	* doc/source/developers/pep/pep-0009.txt: Added new PEP, "PEP 0009: Add Python 3.x Support."
+
+	* doc/source/developers/guidelines.txt: New release cycle schedules for 1.2 and 1.3.
+
+	* doc/source/developers/release.txt: Updated pypi instructions; PySAL available on the Python Package Index via download, easy_install, and pip. 
+
 v<1.1.0>, 2011-01-31
 
 	* pysal/core/FileIO.py, pysal/core/IOHandlers/pyDbfIO.py: Added missing value support to FileIO. Warnings will be issued when missing values are found and the value will be set to pysal.MISSINGVALUE, currently None, but the user can change it as needed.
@@ -14,8 +102,7 @@ v<1.1.0>, 2011-01-31
 
 	* pysal/weights/user.py: Added build_lattice_shapefile in weights.user, which writes an ncol by nrow grid to a shapefile.
 
-	* pysal/weights/Distance.py: fixed coincident point problem in knnW and made sure it returns k neighbors
-
+	* pysal/weights/Distance.py: fixed coincident point problem in knnW and made sure it returns k neighbors 
 	* pysal/spatial_dynamics/interaction.py: Added a suite of spatio-temporal interaction tests including the Knox, Mantel, and Jacquez tests. 
 
 	* pysal/weights/util.py: Added lat2SW, allows to create a sparse W matrix for a regular lattice.
