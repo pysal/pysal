@@ -8,8 +8,6 @@ The :mod:`weights` Spatial weights for PySAL
 .. automodule:: pysal.weights
     :synopsis: Spatial weights for PySAL
     :members:
-    :inherited-members:
-    :undoc-members:
 
 
 
