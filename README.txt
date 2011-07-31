@@ -64,8 +64,9 @@ PySAL modules
     * pysal.cg — Computational Geometry
     * pysal.esda — Exploratory Spatial Data Analysis
     * pysal.inequality — Spatial Inequality Analysis
-    * pysal.spatial_dynamics — Spatial Dynamics
     * pysal.region — Spatially constrained clustering
+    * pysal.spatial_dynamics — Spatial Dynamics
+    * pysal.spreg — Regression and diagnostics
     * pysal.weights — Spatial Weights
     * pysal.FileIO — PySAL FileIO: Module for reading and writing various file
                      types in a Pythonic way

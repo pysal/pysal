@@ -26,6 +26,8 @@ Xinyue Ye
 
 Funding from the following sources has supported PySAL development:
 
+National Science Foundation CyberGIS Software Integration for Sustained Geospatial Innovation
+
 National Institute of Justice Flexible Geospatial Visual Analytics and
 Simulation Technologies to Enhance Criminal Justice Decision Support Systems
 

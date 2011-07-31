@@ -1,4 +1,4 @@
-Copyright (c) 2010, Sergio J. Rey
+Copyright (c) 2007-2011, Sergio J. Rey
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

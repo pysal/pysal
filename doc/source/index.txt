@@ -19,6 +19,8 @@ On this site you will find :doc:`user level documentation </users/index>` as wel
 News
 ****
 
+(2011-07-31) :doc:`PySAL 1.2.0 released </users/installation>`
+
 (2011-01-31) :doc:`PySAL 1.1.0 released </users/installation>`
 
 (2010-07-31) :doc:`PySAL 1.0.0 released </users/installation>`
@@ -31,6 +33,8 @@ News
 *******
 Funding
 *******
+
+National Science Foundation `CyberGIS Software Integration for Sustained Geospatial Innovation <http://geodacenter.asu.edu/about/news/NSF_Cyber_Award>`_
 
 National Institute of Justice `Flexible Geospatial Visual Analytics and Simulation Technologies to Enhance Criminal Justice Decision Support Systems <http://geoplan.asu.edu/node/3855>`_
 

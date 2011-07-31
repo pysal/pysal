@@ -2,7 +2,7 @@
 Getis and Ord G statistic for spatial autocorrelation
 """
 __author__ = "Sergio J. Rey <srey@asu.edu>, Myunghwa Hwang <mhwang4@gmail.com> "
-__all__ = ['G']
+__all__ = ['G', 'G_Local']
 
 from pysal.common import np, stats, math
 from pysal.weights.spatial_lag import lag_spatial as slag
