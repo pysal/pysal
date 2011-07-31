@@ -21,7 +21,6 @@ Prior to the build, there are a number of actions to take.
      * update THANKS.txt 
      * update README.txt 
      * update setup.py to add new modules or remove old ones
-     * edit trunk/pysal/doc/source/contents.txt to include *New in this release*
      * prior to the Tag and final docs build, bump the docs version from x.xdev
        to x.x by editing doc/source/conf.py in two places.
      * create a tag X.0::

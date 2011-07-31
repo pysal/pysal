@@ -4,7 +4,7 @@ PEP 0010 Add pure Python rtree
 
 ========  ============================
 Author    Serge Rey <sjsrey@gmail.com>
-Status    Draft
+Status    Approved 1.2
 Created   12-Feb-2011
 Updated   12-Feb-2011
 ========  ============================
