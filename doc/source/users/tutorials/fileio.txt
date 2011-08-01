@@ -17,6 +17,7 @@ Introduction
 PySAL contains a new file input-output API that should be used for all file IO operations. The goal is to abstract file handling and return native PySAL data types when reading from known file types. A list of known extensions can be found by issuing the following command.
 
 .. doctest::
+   :options: +NORMALIZE_WHITESPACE
 
     >>> pysal.open.check()
     PySAL File I/O understands the following file extensions:
@@ -32,9 +33,9 @@ PySAL contains a new file input-output API that should be used for all file IO o
     Ext: '.gwt', Modes: ['r']
     Ext: '.gal', Modes: ['r', 'w']
     Ext: '.arcgis_text', Modes: ['r', 'w']
-    Ext: '.wk1', Modes: ['r', 'w']
     Ext: '.arcgis_dbf', Modes: ['r', 'w']
     Ext: '.geobugs_text', Modes: ['r', 'w']
+    Ext: '.wk1', Modes: ['r', 'w']
     Ext: '.csv', Modes: ['r']
     Ext: '.wkt', Modes: ['r']
     >>>
