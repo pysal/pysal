@@ -16,8 +16,7 @@ Pre-Build Activities
 Prior to the build, there are a number of actions to take. 
 
      * ensure all tests pass
-     * update the change log
-       * use svn2cl to generate the entire project history. Then prepend just the most important changes to the file CHANGELOG.txt.
+     * update the change log: use svn2cl to generate the entire project history. Then prepend just the most important changes to the file CHANGELOG.txt.
      * update THANKS.txt 
      * update README.txt 
      * update setup.py to add new modules or remove old ones
@@ -26,8 +25,9 @@ Prior to the build, there are a number of actions to take.
      * create a tag X.0::
 
 	svn copy https://pysal.googlecode.com/svn/trunk \
-        http://pysal.googlecode.com/svn/tags/X.0 -m "Release X.0"
+        https://pysal.googlecode.com/svn/tags/X.0 -m "Release X.0"
 
+     * cd into the new tag directory and build the LaTeX documentation 
      * Build release for X.0 out of tag X.0 following instructions below
 
 Post-build Activities

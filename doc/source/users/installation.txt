@@ -24,6 +24,9 @@ installed on your machine:
 With the `Enthought Python Distribution (EPD) <http://www.enthought.com/products/epd.php>`_, 
 you will install all of PySAL's required dependencies, as well as iPython and a lot more, rather than installing dependencies one by one.
 The package is free for academics, and downloadable `here <http://www.enthought.com/products/edudownload.php>`_. 
+Note that on OS X, PySAL 1.2 installers will not install to the EPD
+site-packages directory correctly. We advise EPD users to install PySAL via
+PyPi or source. 
 
 *Required to compile the documentation (optional):*
 
@@ -33,7 +36,6 @@ The package is free for academics, and downloadable `here <http://www.enthought.
 *Optional, recommended additions:*
 
 * `iPython <http://ipython.scipy.org/moin/Download>`_
-* `rtree <http://pypi.python.org/pypi/Rtree>`_ (*not included in EPD*)
 
 
 
@@ -41,7 +43,10 @@ Getting PySAL
 =============
 
 You can install PySAL in a number of ways. We provide system-specific package installers for Windows and Mac OS X that have an intuitive look-and-feel
-that most users are familiar with. We also build source distributions that self-install by invoking a single command line argument. Finally, advanced users and 
+that most users are familiar with. We also build source distributions that self-install by invoking a single command line argument. 
+PySAL is also available on the Python Package Index, which means it can be
+downloaded and installed from the command line using easy_install or pip.
+Finally, advanced users and 
 developers can use the popular version control tool **svn** to check out and use our latest code. Instructions for each of these methods follows.
 
 
@@ -65,22 +70,13 @@ Instructions for Mac OS X
 Grab one of the OS X installers (end with .dmg) and download to your
 computer. Double-click to launch the installer and follow the simple wizard.
 
-The "Frameworks" installer places PySAL into the "Current" Python
-site-packages directory (i.e.
-/Library/Frameworks/Python.framework/Versions/Current/lib/python2.6/site-packages)
-
-The "Apple" installer, for lack of a better term, places PySAL into the "System" Python
-site-packages directory (i.e. /Library/Python/2.6/site-packages)
-
-Choose the installer based on your level of experience with Python. You can
-find out what version of Python is the current default on your system by calling
-'which python' from a command shell. If it returns '/usr/bin/python', then
-you may want to choose the "Apple" installer. If it returns a Frameworks path, use the
-Frameworks installer. One of the benefits of using the Frameworks
-installer is that Python dependencies 'scipy' and 'numpy' also
-distribute binary OS X installers for the Frameworks, and the Enthought Python
-Distribution (EPD) adheres in large part to the Frameworks concept. 
-
+The installers place PySAL into the Python
+site-packages directory corresponding to the Python version exposed in the
+filename. For example, the Python 2.6 installer installs to 
+/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages.
+Note that the Python frameworks installation does not come pre-packaged with
+a new Mac. In order to successfully use our installers, you need the official Python
+distributions from python.org. 
 
 If you'd rather install source code, grab the tarball (ends with *.tar.gz*) and download to your computer. Decompress the file to a convenient location on your hard drive. Open a terminal and navigate to the decompressed PySAL folder. Type::
 
