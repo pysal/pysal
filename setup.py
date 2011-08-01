@@ -44,7 +44,7 @@ setup(name = 'pysal',
 
       requires = ['scipy'],
 
-      classifiers=['Development Status :: 4 - Beta',
+      classifiers=['Development Status :: 5 - Production/Stable',
           'Environment :: Console',
           'Intended Audience :: Science/Research',
           'Intended Audience :: Education',
