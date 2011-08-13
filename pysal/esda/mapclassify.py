@@ -985,6 +985,9 @@ class Fisher_Jenks(Map_Classifier):
         d=self.d
         tmin=self.d[interval]
         n1=end-1
+        if end - start == 1:
+            best = [start, end]
+            t = 0
         for left,right in [[(start,i),(i+1,end)] for i in range(start,end)]:
             t=d[left]+d[right]
             if t < tmin:
