@@ -981,18 +981,16 @@ class Fisher_Jenks(Map_Classifier):
 
     def _two_part(self,interval):
         """find the best two-partition between start and end"""
-        start,end=interval
-        d=self.d
-        tmin=self.d[interval]
-        n1=end-1
-        if end - start == 1:
-            best = [start, end]
-            t = 0
+        start,end = interval
+        d = self.d
+        tmin = self.d[interval]
+        best = [start, end]
+        t = 0
         for left,right in [[(start,i),(i+1,end)] for i in range(start,end)]:
             t=d[left]+d[right]
             if t < tmin:
-                best=[left,right]
-                tmin=t
+                best = [left,right]
+                tmin = t
         return (best,t)
 
 class Jenks_Caspall(Map_Classifier):
