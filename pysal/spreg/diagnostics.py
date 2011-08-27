@@ -149,7 +149,7 @@ def t_stat(reg, z_stat=False):
     vm = reg.vm         # (array) coefficients of variance matrix (k x k)
     betas = reg.betas   # (array) coefficients of the regressors (1 x k) 
     variance = vm.diagonal()
-    tStat = betas.reshape(len(betas),)/ np.sqrt(variance)
+    tStat = betas[range(0,len(vm))].reshape(len(vm),)/ np.sqrt(variance)
     ts_result = []
     for t in tStat:
         if z_stat:
