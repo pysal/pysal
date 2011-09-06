@@ -10,7 +10,26 @@ import doctest
 import math
 from warnings import warn
 
-__all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon', 'Rectangle']
+__all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon', 'Rectangle', 'asShape']
+
+def asShape(obj):
+    """ Returns a pysal shape object from obj.
+        obj must support the __geo_interface__.
+    """
+    if hasattr(obj,'__geo_interface__'):
+        geo = obj.__geo_interface__
+    else:
+        geo = obj
+    if hasattr(geo,'type'):
+        raise TypeError,'%r does not appear to be a shape object'%(obj)
+    geo_type = geo['type'].lower()
+    if geo_type.startswith('multi'):
+        raise NotImplementedError, "%s are not supported at this time."%geo_type
+    elif geo_type in _geoJSON_type_to_Pysal_type:
+        return _geoJSON_type_to_Pysal_type[geo_type].__from_geo_interface__(obj.__geo_interface__)
+    else:
+        raise NotImplementedError, "%s is not supported at this time."%geo_type
+    
 
 class Point(object):
     """
@@ -41,6 +60,12 @@ class Point(object):
         >>> p = Point((1, 3)) 
         """
         self.__loc = tuple(map(float, loc))
+    @classmethod
+    def __from_geo_interface__(cls, geo):
+        return cls(geo['coordinates'])
+    @property
+    def __geo_interface__(self):
+        return {'type': 'Point', 'coordinates':self.__loc}
 
     def __eq__(self,other):
         """
@@ -713,7 +738,13 @@ class Chain(object):
         else:
             self._vertices = [vertices]
         self._reset_props()
-
+    @classmethod
+    def __from_geo_interface__(cls,geo):
+        verts = [Point(pt) for pt in geo['coordinates']]
+        return cls(verts)
+    @property
+    def __geo_interface__(self):
+        return {'type':'LineString', 'coordinates': self.vertices}
     def _reset_props(self):
         """
         HELPER METHOD. DO NOT CALL.
@@ -887,6 +918,20 @@ class Polygon(object):
             self._holes = [[]] 
         self._reset_props()
 
+    @classmethod
+    def __from_geo_interface__(cls, geo):
+        """
+        This function cannot distinguis parts from holes all holes will become parts. 
+        geoJSON does not maintain the metadata.
+        """
+        verts = [[Point(pt) for pt in part] for part in geo['coordinates']]
+        return cls(verts)
+    @property
+    def __geo_interface__(self):
+        if self._holes[0]:
+            return {'type':'Polygon', 'coordinates':self._vertices+self._holes}
+        else:
+            return {'type':'Polygon', 'coordinates':self._vertices}
     def _reset_props(self):
         self._perimeter = None
         self._bounding_box = None
@@ -1367,6 +1412,7 @@ class Rectangle:
 def _test():
     doctest.testmod(verbose=True)
 
+_geoJSON_type_to_Pysal_type = {'point':Point, 'linestring':Chain, 'polygon':Polygon}
 import standalone   #moving this to top breaks unit tests !
 
 if __name__ == '__main__':
