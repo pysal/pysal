@@ -1302,14 +1302,14 @@ def constant_check(array):
 
 
     """
+
     n,k = array.shape
     constant = False
     for j in range(k):
         variable = array[:,j]
-        variable = variable.ravel()
-        test = set(variable)
-        test = list(test)
-        if len(test) == 1:
+        varmin = variable.min()
+        varmax = variable.max()
+        if varmin == varmax:
             constant = True
             break
     return constant
