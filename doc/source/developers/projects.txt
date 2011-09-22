@@ -18,6 +18,7 @@ GeoDa Center Projects
 
 
 -----------------
-External Projects
+Related Projects
 -----------------
-  * Your software package could be listed here!
+  * `StatsModels <http://statsmodels.sourceforge.net/related.html#related>`_
+  * `PythonAnywhere <http://pythonanywhere.com>`_ includes latest PySAL release
