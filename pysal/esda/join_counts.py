@@ -89,7 +89,7 @@ class Join_Counts:
         w.transformation='b' # ensure we have binary weights
         self.w=w
         self.y=y
-        b=sum(y)
+        b=sum(y)*1.
         bb=pysal.lag_spatial(w,y)
         self.B=b
         self.W=w.n-b
