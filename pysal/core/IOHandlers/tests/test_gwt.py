@@ -33,21 +33,22 @@ class test_GwtIO(unittest.TestCase):
 
     # Commented out by CRS, GWT 'w' mode removed until we can find a good solution for retaining distances.
     # see issue #153.
-    #def test_write(self):
-        #w = self.obj.read()
-        #f = tempfile.NamedTemporaryFile(suffix='.gwt',dir="../../../examples")
-        #fname = f.name
-        #f.close()
-        #o = pysal.open(fname,'w')
+    # Added back by CRS,
+    def test_write(self):
+        w = self.obj.read()
+        f = tempfile.NamedTemporaryFile(suffix='.gwt',dir="../../../examples")
+        fname = f.name
+        f.close()
+        o = pysal.open(fname,'w')
         #copy the shapefile and ID variable names from the old gwt.
         # this is only available after the read() method has been called.
         #o.shpName = self.obj.shpName
         #o.varName = self.obj.varName
-        #o.write(w)
-        #o.close()
-        #wnew =  pysal.open(fname,'r').read()
-        #self.assertEqual( wnew.pct_nonzero, w.pct_nonzero)
-        #os.remove(fname)
+        o.write(w)
+        o.close()
+        wnew =  pysal.open(fname,'r').read()
+        self.assertEqual( wnew.pct_nonzero, w.pct_nonzero)
+        os.remove(fname)
 
 
 

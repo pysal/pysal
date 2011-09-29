@@ -10,7 +10,7 @@ __all__ = ["GwtIO"]
 class GwtIO(FileIO.FileIO):
 
     FORMATS = ['gwt']
-    MODES = ['r']
+    MODES = ['r', 'w']
 
     def __init__(self,*args,**kwargs):
         self._varName = 'Unknown'
@@ -122,6 +122,9 @@ class GwtIO(FileIO.FileIO):
         self.pos += 1
         w = W(neighbors,weights,id_order)
         w.transform = 'b'
+        #set meta data
+        w._shpName = self.shpName
+        w._varName = self.varName
         warn("Weights have been converted to binary. To retrieve original values use w.transform='o'", RuntimeWarning)
         return w
 
@@ -196,9 +199,16 @@ class GwtIO(FileIO.FileIO):
         """
         self._complain_ifclosed(self.closed)
         if issubclass(type(obj),W):
+            transform = obj.transform
+            obj.transform = 'o'
+            if hasattr(obj,'_shpName'):
+                self.shpName = obj._shpName
+            if hasattr(obj,'_varName'):
+                self.varName = obj._varName
             header = '%s %i %s %s\n' % ('0', obj.n, self.shpName, self.varName)
             self.file.write(header)
             self._writelines(obj)
+            obj.transform = transform
 
         else:
             raise TypeError, "Expected a pysal weights object, got: %s" % (type(obj))
