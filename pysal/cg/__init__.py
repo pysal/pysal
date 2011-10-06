@@ -5,3 +5,4 @@ from shapes import *
 from standalone import *
 from locators import *
 from rtree import *
+from sphere import *
