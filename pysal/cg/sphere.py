@@ -113,15 +113,21 @@ def brute_knn(pts,k,mode='arc'):
     for i in xrange(n):
         w[i] = full[i].argsort()[1:k+1].tolist()
     return w
-def fast_knn(pts,k):
+def fast_knn(pts,k,return_dist=False):
     pts = numpy.array(pts)
     kd = scipy.spatial.KDTree(pts)
     d,w = kd.query(pts,k+1)
     w = w[:,1:]
-    wd = {}
+    wn = {}
     for i in xrange(len(pts)):
-        wd[i] = w[i].tolist()
-    return wd
+        wn[i] = w[i].tolist()
+    if return_dist:
+        d = d[:,1:]
+        wd = {}
+        for i in xrange(len(pts)):
+            wd[i] = [linear2arcdist(x, radius=RADIUS_EARTH_MILES) for x in d[i].tolist()]
+        return wn,wd
+    return wn
 def fast_threshold(pts,dist,radius=RADIUS_EARTH_KM):
     d = arcdist2linear(dist,radius)
     kd = scipy.spatial.KDTree(pts)
@@ -154,3 +160,19 @@ if __name__=='__main__':
         assert w == w2 == w3
     import doctest
     doctest.testmod()
+
+
+    ### Make knn1
+    import pysal
+    f = pysal.open('/Users/charlie/Documents/data/stl_hom/stl_hom.shp','r')
+    shapes = f.read()
+    pts = [shape.centroid for shape in shapes]
+    w0 = brute_knn(pts,4,'xyz')
+    w1 = brute_knn(pts,4,'arc')
+    pts = map(toXYZ, pts)
+    w2 = brute_knn(pts,4,'xyz')
+    w3 = fast_knn(pts,4)
+
+    wn,wd = fast_knn(pts,4,True)
+    ids = range(1,len(pts)+1)
+    
