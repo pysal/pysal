@@ -708,7 +708,7 @@ The following runs the Jacquez test on the example data for a value of :math:`k`
     >>> print(result['stat'])
     13
     >>> print("%2.8f"%result['pvalue'])
-    0.12042331
+    0.12051411
 
 
 
