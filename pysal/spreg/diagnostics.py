@@ -215,7 +215,7 @@ def r2(reg):
     Print the result. 
 
     >>> testresult
-    0.55240404083742334
+    0.55240404083742312
     
     """ 
     y = reg.y               # (array) vector of dep observations (n x 1)
@@ -281,7 +281,7 @@ def ar2(reg):
     Print the result. 
 
     >>> testresult
-    0.5329433469607896
+    0.53294334696078938
 
     """ 
     k = reg.k       # (scalar) number of ind. variables (includes constant)
@@ -407,7 +407,7 @@ def log_likelihood(reg):
     Print the result. 
 
     >>> testresult
-    -187.3772388121491
+    -187.37723881214913
 
     """
     n = reg.n       # (scalar) number of observations
@@ -471,7 +471,7 @@ def akaike(reg):
     Print the result. 
 
     >>> testresult
-    380.7544776242982
+    380.75447762429826
 
     """
     n = reg.n       # (scalar) number of observations
@@ -536,7 +536,7 @@ def schwarz(reg):
     Print the results. 
 
     >>> testresult
-    386.42993851863008
+    386.42993851863014
 
     """
     n = reg.n      # (scalar) number of observations

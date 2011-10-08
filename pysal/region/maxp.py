@@ -375,7 +375,7 @@ class Maxp:
 
         >>> solution.inference(nperm=9)
         >>> solution.pvalue
-        0.20000000000000001
+        0.2
 
         """
         ids=self.w.id_order
@@ -452,7 +452,7 @@ class Maxp:
 
         >>> solution.cinference(nperm=9, maxiter=100)
         >>> solution.cpvalue
-        0.10000000000000001
+        0.1
 
         """
         ids=self.w.id_order
