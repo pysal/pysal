@@ -490,8 +490,8 @@ def full2W(m, ids=None):
     Create a PySAL W object from a full array
     ...
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     m       : array
               nxn array with the full weights matrix
     ids     : list
@@ -635,8 +635,8 @@ def insert_diagonal(w, diagonal=1.0):
     w        : W
                Spatial weights object
 
-    Example
-    -------
+    Examples
+    --------
     >>> import pysal
     >>> import numpy as np
 

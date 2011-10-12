@@ -7,7 +7,7 @@ Developer Guide
    :maxdepth: 2
 
    guidelines
-   projectsusingpysal
+   projects
    testing
    pep/index
    docs/index
