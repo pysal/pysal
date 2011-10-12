@@ -6,7 +6,10 @@ from scipy import sparse,float32
 from scipy.spatial import KDTree
 import os, gc, operator
 
-__all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 'remap_ids','full2W','full', 'WSP2W', 'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance','lat2SW']
+__all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel',
+        'remap_ids','full2W','full', 'WSP2W', 'insert_diagonal', 'get_ids',
+        'get_points_array_from_shapefile', 'min_threshold_distance','lat2SW',
+        'w_local_cluster']
 
 
 def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
@@ -319,6 +322,72 @@ def higher_order(w, k=2):
         neighbors[id]=nids
         weights[id]=[1.0]*len(nids)
     return pysal.weights.W(neighbors,weights)
+
+def w_local_cluster(w):
+    """
+    Local clustering coefficients for each unit as a node in a graph. [ws]_
+
+    Parameters
+    ----------
+
+    w   : W
+          spatial weights object
+
+    Returns
+    -------
+
+    c     : array (w.n,1) 
+            local clustering coefficients
+
+
+    Notes
+    -----
+
+    The local clustering coefficient :math:`c_i` quantifies how close the
+    neighbors of observation :math:`i` are to being a clique:
+
+            .. math::
+
+               c_i = | \{w_{j,k}\} |/ (k_i(k_i - 1)): j,k \in N_i
+    
+    where :math:`N_i` is the set of neighbors to :math:`i`, :math:`k_i =
+    |N_i|` and :math:`\{w_{j,k}\}` is the set of non-zero elements of the
+    weights between pairs in :math:`N_i`.
+
+
+    References
+    ----------
+
+    .. [ws] Watts, D.J. and S.H. Strogatz (1988) "Collective dynamics of 'small-world' networks". Nature, 393: 440-442.
+
+    
+
+    Examples
+    --------
+
+    >>> w = pysal.lat2W(3,3, rook=False)
+    >>> w_local_cluster(w)
+    array([[ 1.        ],
+           [ 0.6       ],
+           [ 1.        ],
+           [ 0.6       ],
+           [ 0.42857143],
+           [ 0.6       ],
+           [ 1.        ],
+           [ 0.6       ],
+           [ 1.        ]])
+    
+    """
+
+    c = np.zeros((w.n,1), float)
+    w.transformation = 'b'
+    for i,id in enumerate(w.id_order):
+        ki = max(w.cardinalities[id], 1) # deal with islands
+        Ni = w.neighbors[id]
+        wi = pysal.w_subset(w,Ni).full()[0]
+        c[i] =  wi.sum() / (ki * (ki - 1))
+    return c
+
 
 
 def shimbel(w):
