@@ -61,6 +61,8 @@ def linear2arcdist(linear_dist, radius = RADIUS_EARTH_KM):
     >>> d == linear2arcdist(2.0, radius = RADIUS_EARTH_MILES)
     True
     """
+    if linear_dist > 2.0:
+        raise ValueError, "linear_dist, must not exceed the diameter of the unit sphere, 2.0"
     c = 2*math.pi*radius
     a2 = linear_dist**2
     theta = math.degrees(math.acos((2-a2)/(2.)))
