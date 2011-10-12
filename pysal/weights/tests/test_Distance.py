@@ -6,6 +6,7 @@ import numpy as np
 class _TestDistanceWeights(unittest.TestCase):
     def setUp(self):
         self.polyShp = '../../examples/columbus.shp'
+        self.arcShp = '../../examples/stl_hom.shp'
         self.points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
 
     def test_knnW(self):
@@ -28,6 +29,15 @@ class _TestDistanceWeights(unittest.TestCase):
         wc3=pysal.knnW_from_shapefile(self.polyShp,k=3,idVariable="POLYID")
         self.assertEqual(wc3.weights[1],[1, 1, 1])
         self.assertEqual(wc3.neighbors[1], [ 3, 2, 4])
+
+    def test_knnW_arc(self):
+        pts = [x.centroid for x in pysal.open(self.arcShp)]
+        dist = pysal.cg.sphere.arcdist #default radius is Earth KM
+        full = np.matrix([[dist(pts[i],pts[j]) for j in xrange(len(pts))] for i in xrange(len(pts))])
+
+        kd = pysal.cg.kdtree.KDTree(pts, distance_metric='Arc', radius=pysal.cg.sphere.RADIUS_EARTH_KM)
+        w = pysal.knnW(kd,4)
+        self.assertTrue((full.argsort()[:,1:5] == np.array([w.neighbors[x] for x in range(len(pts))])).all())
 
     def test_Kernel(self):
         kw=pysal.Kernel(self.points)
@@ -99,6 +109,15 @@ class _TestDistanceWeights(unittest.TestCase):
         w2 = pysal.DistanceBand(points2,1)
         for k in range(w.n):
             self.assertEqual(w[k],w2[k])
+    def test_DistanceBand_arc(self):
+        pts = [x.centroid for x in pysal.open(self.arcShp)]
+        dist = pysal.cg.sphere.arcdist #default radius is Earth KM
+        full = np.matrix([[dist(pts[i],pts[j]) for j in xrange(len(pts))] for i in xrange(len(pts))])
+
+        kd = pysal.cg.kdtree.KDTree(pts, distance_metric='Arc', radius=pysal.cg.sphere.RADIUS_EARTH_KM)
+        w = pysal.DistanceBand(kd,full.max(),binary=False,alpha=1.0)
+        self.assertTrue((w.sparse.todense() == full).all())
+        
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(_TestDistanceWeights)

@@ -5,6 +5,7 @@ Distance based spatial weights
 __author__  = "Sergio J. Rey <srey@asu.edu> "
 
 import pysal
+import scipy.spatial
 from pysal.common import *
 from pysal.weights import W
 
@@ -12,7 +13,7 @@ from scipy import sparse
 
 __all__ = ["knnW", "Kernel", "DistanceBand"]
 
-def knnW(point_array,k=2,p=2,ids=None):
+def knnW(data,k=2,p=2,ids=None):
     """
     Creates nearest neighbor weights matrix based on k nearest 
     neighbors.
@@ -20,9 +21,9 @@ def knnW(point_array,k=2,p=2,ids=None):
     Parameters
     ----------
 
-    point_array : multitype
-                 n observations on m attributes (only numpy arrays
-                 supported at this time)
+    data       : array (n,k) or KDTree where KDtree.data is array (n,k)
+                 n observations on k characteristics used to measure
+                 distances between the n objects
     k          : int
                  number of nearest neighbors
     p          : float
@@ -77,14 +78,16 @@ def knnW(point_array,k=2,p=2,ids=None):
     --------
     pysal.weights.W
     """
-    # handle point_array
-    if type(point_array).__name__=='ndarray':
-        data=point_array
+    # handle data
+    if issubclass(type(data),scipy.spatial.KDTree):
+        kd = data
+        data = kd.data
+    elif type(data).__name__=='ndarray':
+        kd=KDTree(data)
     else:
         print 'Unsupported  type'
 
     # calculate
-    kd=KDTree(data)
     nnq=kd.query(data,k=k+1,p=p)
     info=nnq[1]
     neighbors={}
@@ -109,7 +112,7 @@ class Kernel(W):
     Parameters
     ----------
 
-    data        : array (n,k)
+    data        : array (n,k) or KDTree where KDtree.data is array (n,k)
                   n observations on k characteristics used to measure
                   distances between the n objects
     bandwidth   : float or array-like (optional)
@@ -252,12 +255,17 @@ class Kernel(W):
     """
     def __init__(self,data,bandwidth=None,fixed=True,k=2,
                  function='triangular',eps=1.0000001,ids=None):
-        self.data=data
+        if issubclass(type(data),scipy.spatial.KDTree):
+            self.kdt = data
+            self.data = self.kdt.data
+            data = self.data
+        else:
+            self.data=data
+            self.kdt=KDTree(self.data)
         self.k=k+1 
         self.function=function.lower()
         self.fixed=fixed
         self.eps=eps
-        self.kdt=KDTree(self.data)
         if bandwidth:
             try:
                 bandwidth=np.array(bandwidth)
@@ -346,8 +354,9 @@ class DistanceBand(W):
     Parameters
     ----------
 
-    data       : array (n,m)
-                 attribute data, n observations on m attributes
+    data        : array (n,k) or KDTree where KDtree.data is array (n,k)
+                  n observations on k characteristics used to measure
+                  distances between the n objects
     threshold  : float
                  distance band
     p          : float
@@ -401,15 +410,19 @@ class DistanceBand(W):
         """
         Casting to floats is a work around for a bug in scipy.spatial.  See detail in pysal issue #126
         """
-        if not issubclass(type(data),np.ndarray):
+        if issubclass(type(data),scipy.spatial.KDTree):
+            self.kd = data
+            self.data = self.kd.data
+        else:
             try:
-                data = np.array(data)
+                data = np.asarray(data)
+                if data.dtype.kind != 'f':
+                    data = data.astype(float)
+                self.data = data
+                self.kd=KDTree(self.data)
             except:
                 raise ValueError, "Could not make array from data"
-        if data.dtype.kind != 'f':
-            data = data.astype(float)
 
-        self.data=data
         self.p=p
         self.threshold=threshold
         self.binary=binary
@@ -422,9 +435,9 @@ class DistanceBand(W):
         """ 
         find all pairs within threshold
         """
-        kd=KDTree(self.data)
-        self.kd=kd
-        ns=[kd.query_ball_point(point,self.threshold) for point in self.data]
+        kd=self.kd
+        #ns=[kd.query_ball_point(point,self.threshold) for point in self.data]
+        ns=kd.query_ball_tree(kd,self.threshold)
         self._nmat=ns
 
     def _distance_to_W(self,ids=None):
@@ -460,7 +473,7 @@ class DistanceBand(W):
 def _test():
     """Doc test"""
     import doctest
-    doctest.testmod(verbose=True)
+    doctest.testmod(verbose=False)
 
 if __name__ == "__main__":
     _test()

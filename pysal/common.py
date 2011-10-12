@@ -11,7 +11,7 @@ except:
 try:
     import scipy as sp
     import scipy.stats as stats
-    from scipy.spatial import KDTree
+    from cg.kdtree import KDTree
     from scipy.spatial.distance import pdist,cdist
 except:
     print 'scipy 0.7+ is required'
