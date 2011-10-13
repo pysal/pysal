@@ -156,7 +156,7 @@ class FileIO(object): #should be a type?
             else:
                 return self.p.get(key)
         __call__ = __getitem__
-    def __init__(self,dataPath='',mode='r'):
+    def __init__(self,dataPath='',mode='r', dataFormat=None):
         self.dataPath = dataPath
         self.dataObj = ''
         self.mode = mode
