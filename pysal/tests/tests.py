@@ -67,14 +67,31 @@ for root, subfolders, files in os.walk(path):
 #import time
 cwd = os.path.abspath(".")
 #t1 = time.time()
+N=0
+SECS = 0
 for _test in runners:
     print "Unit testing: ", _test
     pth, fname = os.path.split(_test)
     apth = os.path.abspath(pth)
     #print pth, fname, apth
     os.chdir(apth)
-    os.system("%s %s"%(sys.executable,fname))
+    pi,po,pe = os.popen3("%s %s"%(sys.executable,fname))
+    #sys.stdout.write(pipe.read())
+    test_results = pe.read()
+    test_results = test_results.splitlines()
+    #for i,line in enumerate(test_results):
+    #    print "%d: %s"%(i,line)
+    if test_results[-1][:2] == 'OK':
+        ran,n,tests,inn,seconds = test_results[-3].split()
+        N+=int(n)
+        SECS+=float(seconds[:-1])
+    else:
+        print '\n'.join(test_results)
+    pi.close()
+    po.close()
+    pe.close()
     os.chdir(cwd)
+print "Ran %d tests in %fs"%(N,SECS)
 #t2 = time.time()
 #print t2-t1
 os.chdir(cwd)
