@@ -3,7 +3,7 @@ from pysal.common import *
 import pysal.weights
 import numpy as np
 from scipy import sparse,float32
-from scipy.spatial import KDTree
+import scipy.spatial 
 import os, gc, operator
 
 __all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel',
@@ -835,7 +835,7 @@ def min_threshold_distance(data):
     Parameters
     ----------
 
-    data    : array (n,k)
+    data    : array (n,k) or KDTree where KDtree.data is array (n,k)
               n observations on k attributes
 
     Returns
@@ -855,8 +855,11 @@ def min_threshold_distance(data):
     1.0
 
     """
-
-    kd=KDTree(data)
+    if issubclass(type(data),scipy.spatial.KDTree):
+        kd = data
+        data = kd.data
+    else:
+        kd=KDTree(data)
     nn=kd.query(data,k=2,p=2)
     nnd=nn[0].max(axis=0)[1]
     return nnd

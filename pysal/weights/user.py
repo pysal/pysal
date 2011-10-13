@@ -151,7 +151,7 @@ def spw_from_gal(galfile):
 
 # Distance based weights
 
-def knnW_from_array(array, k=2, p=2, ids=None):
+def knnW_from_array(array, k=2, p=2, ids=None, radius=None):
     """
     Nearest neighbor weights from a numpy array
 
@@ -169,6 +169,8 @@ def knnW_from_array(array, k=2, p=2, ids=None):
                  1: Manhattan distance
     ids        : list
                  identifiers to attach to each observation
+    radius     : If supplied arc_distances will be calculated
+                 based on the given radius. p will be ignored.
 
     Returns
     -------
@@ -220,9 +222,11 @@ def knnW_from_array(array, k=2, p=2, ids=None):
     :class:`pysal.weights.W`
 
     """
+    if radius != None:
+        array = pysal.cg.KDTree(array, distance_metric='Arc', radius=radius)
     return knnW(array,k=k,p=p,ids=ids)
 
-def knnW_from_shapefile(shapefile,k=2,p=2,idVariable=None):
+def knnW_from_shapefile(shapefile,k=2,p=2,idVariable=None, radius=None):
     """
     Nearest neighbor weights from a shapefile
 
@@ -240,6 +244,8 @@ def knnW_from_shapefile(shapefile,k=2,p=2,idVariable=None):
                  1: Manhattan distance
     idVariable : string
                  name of a column in the shapefile's DBF to use for ids
+    radius     : If supplied arc_distances will be calculated
+                 based on the given radius. p will be ignored.
 
     Returns
     -------
@@ -292,12 +298,14 @@ def knnW_from_shapefile(shapefile,k=2,p=2,idVariable=None):
     """
 
     data = get_points_array_from_shapefile(shapefile)
+    if radius != None:
+        data = pysal.cg.KDTree(data, distance_metric='Arc', radius=radius)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
         return knnW(data,k=k,p=p,ids=ids)
     return knnW(data,k=k,p=p)
 
-def threshold_binaryW_from_array(array,threshold,p=2):
+def threshold_binaryW_from_array(array,threshold,p=2, radius=None):
     """
     Binary weights based on a distance threshold
 
@@ -313,6 +321,8 @@ def threshold_binaryW_from_array(array,threshold,p=2):
                  1<=p<=infinity
                  2: Euclidean distance
                  1: Manhattan distance
+    radius     : If supplied arc_distances will be calculated
+                 based on the given radius. p will be ignored.
 
     Returns
     -------
@@ -330,9 +340,11 @@ def threshold_binaryW_from_array(array,threshold,p=2):
     {0: [1, 3], 1: [0, 3], 2: [], 3: [0, 1], 4: [5], 5: [4]}
     >>> 
     """
+    if radius != None:
+        array = pysal.cg.KDTree(array, distance_metric='Arc', radius=radius)
     return DistanceBand(array,threshold=threshold,p=p)
 
-def threshold_binaryW_from_shapefile(shapefile,threshold,p=2,idVariable=None):
+def threshold_binaryW_from_shapefile(shapefile,threshold,p=2,idVariable=None, radius=None):
     """
     Threshold distance based binary weights from a shapefile
 
@@ -350,6 +362,8 @@ def threshold_binaryW_from_shapefile(shapefile,threshold,p=2,idVariable=None):
                  1: Manhattan distance
     idVariable : string
                  name of a column in the shapefile's DBF to use for ids
+    radius     : If supplied arc_distances will be calculated
+                 based on the given radius. p will be ignored.
 
     Returns
     -------
@@ -364,13 +378,15 @@ def threshold_binaryW_from_shapefile(shapefile,threshold,p=2,idVariable=None):
     [1, 1]
     """
     data = get_points_array_from_shapefile(shapefile)
+    if radius != None:
+        data = pysal.cg.KDTree(data, distance_metric='Arc', radius=radius)
     if idVariable:
         ids = get_ids(shapefile,idVariable)
         return DistanceBand(data,threshold=threshold,p=p,ids=ids)
     return threshold_binaryW_from_array(data,threshold,p=p)
 
 def threshold_continuousW_from_array(array,threshold,p=2,
-                                     alpha=-1):
+                                     alpha=-1,radius=None):
 
     """
     Continuous weights based on a distance threshold
@@ -392,6 +408,8 @@ def threshold_continuousW_from_array(array,threshold,p=2,
                  distance decay parameter for weight (default -1.0)
                  if alpha is positive the weights will not decline with
                  distance. 
+    radius     : If supplied arc_distances will be calculated
+                 based on the given radius. p will be ignored.
 
     Returns
     -------
@@ -418,12 +436,13 @@ def threshold_continuousW_from_array(array,threshold,p=2,
 
 
     """
-
+    if radius != None:
+        array = pysal.cg.KDTree(array, distance_metric='Arc', radius=radius)
     w=DistanceBand(array,threshold=threshold,p=p,alpha=alpha,binary=False)
     return w
 
 def threshold_continuousW_from_shapefile(shapefile,threshold,p=2,
-                                         alpha=-1,idVariable=None):
+                                         alpha=-1,idVariable=None, radius=None):
     """
     Threshold distance based continuous weights from a shapefile
 
@@ -445,6 +464,8 @@ def threshold_continuousW_from_shapefile(shapefile,threshold,p=2,
                  distance. 
     idVariable : string
                  name of a column in the shapefile's DBF to use for ids
+    radius     : If supplied arc_distances will be calculated
+                 based on the given radius. p will be ignored.
 
     Returns
     -------
@@ -459,6 +480,8 @@ def threshold_continuousW_from_shapefile(shapefile,threshold,p=2,
     [1.6702346893743276, 1.7250729841938044]
     """
     data = get_points_array_from_shapefile(shapefile)
+    if radius != None:
+        data = pysal.cg.KDTree(data, distance_metric='Arc', radius=radius)
     if idVariable:
         ids = get_ids(shapefile,idVariable)
         return DistanceBand(data,threshold=threshold,p=p,alpha=alpha,binary=False,ids=ids)
@@ -466,7 +489,7 @@ def threshold_continuousW_from_shapefile(shapefile,threshold,p=2,
 
 # Kernel Weights
 
-def kernelW(points,k=2,function='triangular',fixed=True):
+def kernelW(points,k=2,function='triangular',fixed=True, radius=None):
     """
     Kernel based weights
  
@@ -535,6 +558,8 @@ def kernelW(points,k=2,function='triangular',fixed=True):
     fixed        : binary
                    If true then :math:`h_i=h \\forall i`. If false then
                    bandwidth is adaptive across observations.
+    radius     : If supplied arc_distances will be calculated
+                 based on the given radius. p will be ignored.
 
     Returns
     -------
@@ -571,9 +596,11 @@ def kernelW(points,k=2,function='triangular',fixed=True):
            [ 22.36068201],
            [ 22.36068201]])
     """
+    if radius != None:
+        points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
     return Kernel(points,function=function,k=k,fixed=fixed)
 
-def kernelW_from_shapefile(shapefile,k=2,function='triangular',idVariable=None, fixed=True):
+def kernelW_from_shapefile(shapefile,k=2,function='triangular',idVariable=None, fixed=True, radius=None):
     """
     Kernel based weights
  
@@ -643,6 +670,8 @@ def kernelW_from_shapefile(shapefile,k=2,function='triangular',idVariable=None, 
     fixed        : binary
                    If true then :math:`h_i=h \\forall i`. If false then
                    bandwidth is adaptive across observations.
+    radius     : If supplied arc_distances will be calculated
+                 based on the given radius. p will be ignored.
 
 
     Returns
@@ -662,12 +691,14 @@ def kernelW_from_shapefile(shapefile,k=2,function='triangular',idVariable=None, 
            [ 0.75333961]])
     """
     points = get_points_array_from_shapefile(shapefile)
+    if radius != None:
+        points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
     if idVariable:
         ids = get_ids(shapefile,idVariable)
         return Kernel(points,function=function,k=k,ids=ids,fixed=fixed)
     return kernelW(points,k=k,function=function,fixed=fixed)
 
-def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular'):
+def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular', radius=None):
     """
     Kernel weights with adaptive bandwidths
 
@@ -724,6 +755,9 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular'):
                   .. math::
 
                       K(z) = (2\pi)^{(-1/2)} exp(-z^2 / 2)
+
+    radius     : If supplied arc_distances will be calculated
+                 based on the given radius. p will be ignored.
 
     Returns
     -------
@@ -780,10 +814,12 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular'):
            [ 14.14213704],
            [ 18.02775818]])
     """
+    if radius != None:
+        points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
     return Kernel(points, bandwidth=bandwidths,fixed=False, k=k, function=function)
 
 def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='triangular', 
-                                    idVariable=None):
+                                    idVariable=None, radius=None):
     """
     Kernel weights with adaptive bandwidths
  
@@ -840,6 +876,8 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='t
                       K(z) = (2\pi)^{(-1/2)} exp(-z^2 / 2)
     idVariable   : string
                    name of a column in the shapefile's DBF to use for ids
+    radius     : If supplied arc_distances will be calculated
+                 based on the given radius. p will be ignored.
 
     Returns
     -------
@@ -859,12 +897,14 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='t
            [ 0.56095647]])
     """
     points = get_points_array_from_shapefile(shapefile)
+    if radius != None:
+        points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
         return Kernel(points,bandwidth=bandwidths,fixed=False,k=k,function=function,ids=ids)
     return adaptive_kernelW(points,bandwidths=bandwidths,k=k,function=function)
 
-def min_threshold_dist_from_shapefile(shapefile):
+def min_threshold_dist_from_shapefile(shapefile, radius=None):
     """
     Kernel weights with adaptive bandwidths
  
@@ -873,6 +913,7 @@ def min_threshold_dist_from_shapefile(shapefile):
 
     shapefile   : string
                   shapefile name with shp suffix
+    radius     : If supplied arc_distances will be calculated based on the given radius.
 
     Returns
     -------
@@ -885,8 +926,12 @@ def min_threshold_dist_from_shapefile(shapefile):
     >>> md = min_threshold_dist_from_shapefile('../examples/columbus.shp')
     >>> md
     0.61886415807685413
+    >>> min_threshold_dist_from_shapefile('../examples/stl_hom.shp',pysal.cg.sphere.RADIUS_EARTH_MILES)
+    31.846942936393717
     """
     points = get_points_array_from_shapefile(shapefile)
+    if radius != None:
+        points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
     return min_threshold_distance(points)
 
 def build_lattice_shapefile(nrows, ncols, outFileName):
@@ -921,7 +966,7 @@ def build_lattice_shapefile(nrows, ncols, outFileName):
 
 def _test():
     import doctest
-    doctest.testmod(verbose=True)
+    doctest.testmod(verbose=False)
 
 if __name__ == "__main__":
     _test()
