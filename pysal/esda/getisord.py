@@ -388,7 +388,7 @@ class G_Local:
             VGs_num = (W*(1.0*N-W))/(1.0*N-1)   
 
         self.EGs = (EGs_num*1.0)/N
-        self.VGs = (VGs_num)*(1.0/(N**2))*(s2/(yl_mean**2))
+        self.VGs = (VGs_num)*(1.0/(N**2))*((s2*1.0)/(yl_mean**2))
         self.Zs = (self.Gs - self.EGs)/np.sqrt(self.VGs)
 
         self.w.transform = self.w_original
