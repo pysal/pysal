@@ -6,10 +6,7 @@ from scipy import sparse,float32
 import scipy.spatial 
 import os, gc, operator
 
-__all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel',
-        'remap_ids','full2W','full', 'WSP2W', 'insert_diagonal', 'get_ids',
-        'get_points_array_from_shapefile', 'min_threshold_distance','lat2SW',
-        'w_local_cluster']
+__all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 'remap_ids','full2W','full', 'WSP2W', 'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance','lat2SW', 'w_local_cluster']
 
 
 def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
