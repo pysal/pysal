@@ -155,7 +155,11 @@ class DBF(pysal.core.Tables.DataTable):
         self.f.write(' ')                        # deletion flag
         for (typ, size, deci), value in itertools.izip(self.field_spec, obj):
             if typ == "N":
-                value = str(value).rjust(size, ' ')
+                v = str(value).rjust(size, ' ')
+                if len(v) == size:
+                    value = v
+                else:
+                    value = ("%"+"%d.%d"%(size,deci)+"f")%(value)
             elif typ == 'D':
                 value = value.strftime('%Y%m%d')
             elif typ == 'L':

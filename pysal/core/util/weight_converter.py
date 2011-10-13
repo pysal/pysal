@@ -138,8 +138,8 @@ class WeightConverter(object):
         """
         ext = os.path.splitext(outputPath)[1]
         ext = ext.replace('.', '')
-        if ext.lower() == 'gwt':
-            raise TypeError, 'Currently, PySAL does not support writing a weights object into a gwt file.'
+        #if ext.lower() == 'gwt':
+        #    raise TypeError, 'Currently, PySAL does not support writing a weights object into a gwt file.'
         
         if not self.w_set():
             raise RuntimeError, 'There is no weights object to write out.'

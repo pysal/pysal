@@ -20,7 +20,7 @@ class test_WeightConverter(unittest.TestCase):
         self.ns = dict(zip(self.test_files,ns))
         self.fileformats = [('dbf','arcgis_dbf'),('txt','arcgis_text'),('swm',None),
                             ('dat',None),('mtx',None),('gal',None),('','geobugs_text'),
-                            ('txt','stata_text'),('mat',None),('wk1',None)]
+                            ('gwt',None), ('txt','stata_text'),('mat',None),('wk1',None)]
 
     def test__setW(self):
         for f in self.test_files:
@@ -71,7 +71,7 @@ class test_WeightConverter(unittest.TestCase):
                     else:
                         wnew =  pysal.open(temp_fname,'r', dataformat).read()
 
-                if (ext in ['dbf', 'swm', 'dat', 'wk1'] or dataformat == 'arcgis_text'):
+                if (ext in ['dbf', 'swm', 'dat', 'wk1', 'gwt'] or dataformat == 'arcgis_text'):
                     self.assertEqual(wnew.n, wc.w.n - len(wc.w.islands))
                 else:
                     self.assertEqual(wnew.n, wc.w.n)
@@ -119,7 +119,7 @@ class test_WeightConverter(unittest.TestCase):
                     else:
                         wnew =  pysal.open(outFile,'r', dataformat).read()
 
-                if (ext in ['dbf', 'swm', 'dat', 'wk1'] or dataformat == 'arcgis_text'):
+                if (ext in ['dbf', 'swm', 'dat', 'wk1', 'gwt'] or dataformat == 'arcgis_text'):
                     self.assertEqual(wnew.n, wold.n - len(wold.islands))
                 else:
                     self.assertEqual(wnew.n, wold.n)
