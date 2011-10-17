@@ -42,7 +42,7 @@ def flatten(l,unique=True):
 
     Creating a sample list whose elements are lists of integers
 
-    >>> l = [[1,2],[3,4,],[5,6]]
+    >>> l = [[1, 2], [3, 4, ], [5, 6]]
 
     Applying flatten function 
 
@@ -85,19 +85,19 @@ def weighted_median(d, w):
     The median of d will be decided with a consideration to these weight 
     values.
 
-    >>> w = np.array([10,22,9,2,5])
+    >>> w = np.array([10, 22, 9, 2, 5])
 
     Applying weighted_median function  
 
-    >>> weighted_median(d,w)
+    >>> weighted_median(d, w)
     4
 
     """
-    dtype = [('w','%s' % w.dtype),('v','%s' % d.dtype)]
-    d_w = np.array(zip(w,d),dtype=dtype)
-    d_w.sort(order='v')
+    dtype = [('w','%s' % w.dtype), ('v','%s' % d.dtype)]
+    d_w = np.array(zip(w, d), dtype = dtype)
+    d_w.sort(order = 'v')
     reordered_w = d_w['w'].cumsum()
-    cumsum_threshold = reordered_w[-1]*1.0/2
+    cumsum_threshold = reordered_w[-1] * 1.0/2
     median_inx = (reordered_w >= cumsum_threshold).nonzero()[0][0]
     if reordered_w[median_inx] == cumsum_threshold and len(d) - 1 > median_inx:
         return np.sort(d)[median_inx:median_inx + 2].mean()
@@ -201,7 +201,7 @@ def crude_age_standardization(e, b, n):
     age_weight = b * 1.0 / b_by_n.repeat(len(e)/n)
     return sum_by_n(r, age_weight, n)
 
-def direct_age_standardization(e, b, s, n, alpha=0.05):
+def direct_age_standardization(e, b, s, n, alpha = 0.05):
     """A utility function to compute rate through direct age standardization
 
     Parameters
@@ -272,15 +272,15 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
     res = []
     for i in range(len(adjusted_r)):
         if adjusted_r[i] == 0:
-            upper = 0.5*chi2(1 - 0.5*alpha)
+            upper = 0.5 * chi2(1 - 0.5 * alpha)
             lower = 0.0
         else:
-            lower = gamma.ppf(0.5*alpha, g_a[i], scale=g_b[i])  
+            lower = gamma.ppf(0.5 * alpha, g_a[i], scale = g_b[i])  
             upper = gamma.ppf(1 - 0.5 * alpha, g_a_k[i], scale=g_b_k[i]) 
         res.append((adjusted_r[i], lower, upper))
     return res
 
-def indirect_age_standardization(e, b, s_e, s_b, n, alpha=0.05):
+def indirect_age_standardization(e, b, s_e, s_b, n, alpha = 0.05):
     """A utility function to compute rate through indirect age standardization
 
     Parameters
@@ -351,11 +351,11 @@ def indirect_age_standardization(e, b, s_e, s_b, n, alpha=0.05):
     e_by_n = sum_by_n(e, 1.0, n)
     log_smr = np.log(smr)
     log_smr_sd = 1.0 / np.sqrt(e_by_n)
-    norm_thres = norm.ppf(1-0.5*alpha)
-    log_smr_lower = log_smr - norm_thres*log_smr_sd
-    log_smr_upper = log_smr + norm_thres*log_smr_sd
-    smr_lower = np.exp(log_smr_lower)*s_r_all
-    smr_upper = np.exp(log_smr_upper)*s_r_all
+    norm_thres = norm.ppf(1-0.5 * alpha)
+    log_smr_lower = log_smr - norm_thres * log_smr_sd
+    log_smr_upper = log_smr + norm_thres * log_smr_sd
+    smr_lower = np.exp(log_smr_lower) * s_r_all
+    smr_upper = np.exp(log_smr_upper) * s_r_all
     res = zip(adjusted_r, smr_lower, smr_upper)
     return res
     
@@ -422,7 +422,7 @@ def standardized_mortality_ratio(e, b, s_e, s_b, n):
     smr = e_by_n * 1.0 / expected
     return smr
 
-def choynowski(e, b, n, threshold=None):
+def choynowski(e, b, n, threshold = None):
     """Choynowski map probabilities. 
 
     Parameters
@@ -484,9 +484,9 @@ def choynowski(e, b, n, threshold=None):
         if i <= expected[index]:
             p.append(poisson.cdf(i, expected[index]))
         else:
-            p.append(1 - poisson.cdf(i-1, expected[index]))
+            p.append(1 - poisson.cdf(i - 1, expected[index]))
     if threshold:
-        p = [i if i<threshold else 0.0 for i in p]
+        p = [i if i < threshold else 0.0 for i in p]
     return np.array(p) 
 
 class Excess_Risk:
@@ -639,20 +639,20 @@ class Spatial_Empirical_Bayes:
             raise ValueError("w id_order must be set to align with the order of e an b")
         r_mean = Spatial_Rate(e, b, w).r
         rate = e * 1.0 / b
-        r_var_left = np.ones(len(e))*1.
+        r_var_left = np.ones(len(e)) * 1.
         ngh_num = np.ones(len(e))
         bi = slag(w, b) + b
         for i, idv in enumerate(w.id_order):
             ngh = w[idv].keys() + [idv]
             nghi = [w.id2i[k] for k in ngh]
             ngh_num[i] = len(nghi)
-            v = sum(np.square(rate[nghi] - r_mean[i])*b[nghi])
+            v = sum(np.square(rate[nghi] - r_mean[i]) * b[nghi])
             r_var_left[i] = v
         r_var_left = r_var_left / bi
         r_var_right = r_mean /(bi/ngh_num)
         r_var = r_var_left - r_var_right
         r_var[r_var < 0] = 0.0
-        self.r = r_mean + (rate - r_mean)*(r_var/(r_var + (r_mean/b)))
+        self.r = r_mean + (rate - r_mean) * (r_var/(r_var + (r_mean/b)))
 
 class Spatial_Rate:
     """Spatial Rate Smoothing
@@ -833,7 +833,7 @@ class Age_Adjusted_Smoother:
     array([ 0.10519625,  0.08494318,  0.06440072,  0.06898604,  0.06952076,
             0.05020968])
     """
-    def __init__(self, e, b, w, s, alpha=0.05):
+    def __init__(self, e, b, w, s, alpha = 0.05):
         t = len(e)
         h = t / w.n
         w.transform = 'b'
@@ -841,9 +841,9 @@ class Age_Adjusted_Smoother:
         for i in range(h):
             e_n.append(slag(w, e[i::h]).tolist())
             b_n.append(slag(w, b[i::h]).tolist())
-        e_n = np.array(e_n).reshape((1,t),order='F')[0]
-        b_n = np.array(b_n).reshape((1,t),order='F')[0]
-        r = direct_age_standardization(e_n, b_n, s, w.n, alpha=alpha)
+        e_n = np.array(e_n).reshape((1, t),order = 'F')[0]
+        b_n = np.array(b_n).reshape((1, t),order = 'F')[0]
+        r = direct_age_standardization(e_n, b_n, s, w.n, alpha = alpha)
         self.r = np.array([i[0] for i in r])
         w.transform = 'o'
 
@@ -1122,20 +1122,20 @@ class Spatial_Filtering:
 
     def __init__(self, bbox, data, e, b, x_grid, y_grid, r=None, pop=None):
         data_tree = KDTree(data)
-        x_range = bbox[1][0]- bbox[0][0]
+        x_range = bbox[1][0] - bbox[0][0]
         y_range = bbox[1][1] - bbox[0][1]
-        x, y = np.mgrid[bbox[0][0]:bbox[1][0]:x_range/x_grid, bbox[0][1]:bbox[1][1]:y_range/y_grid]
+        x, y = np.mgrid[bbox[0][0]:bbox[1][0]:x_range / x_grid, bbox[0][1]:bbox[1][1]:y_range / y_grid]
         self.grid = zip(x.ravel(), y.ravel())
         self.r = []
         if r is None and pop is None:
             raise ValueError("Either r or pop should not be None")
         if r is not None:
-            pnts_in_disk = data_tree.query_ball_point(self.grid, r=r)
+            pnts_in_disk = data_tree.query_ball_point(self.grid, r = r)
             for i in pnts_in_disk:
-                r = e[i].sum()*1.0/b[i].sum()
+                r = e[i].sum() * 1.0/b[i].sum()
                 self.r.append(r)
         if pop is not None:
-            half_nearest_pnts = data_tree.query(self.grid, k=len(e))[1]
+            half_nearest_pnts = data_tree.query(self.grid, k = len(e))[1]
             for i in half_nearest_pnts:
                 e_n, b_n = e[i].cumsum(), b[i].cumsum()
                 b_n_filter = b_n <= pop
@@ -1143,7 +1143,7 @@ class Spatial_Filtering:
                 if len(e_n_f) == 0:
                     e_n_f = e_n[[0]]
                     b_n_f = b_n[[0]]
-                self.r.append(e_n_f[-1]*1.0 / b_n_f[-1])
+                self.r.append(e_n_f[-1] * 1.0 / b_n_f[-1])
         self.r = np.array(self.r)  
                 
 class Headbanging_Triples:
@@ -1274,7 +1274,7 @@ class Headbanging_Triples:
     >>> round(extrapolated[1],5), round(extrapolated[2],6)
     (0.33753, 0.302707)
     """
-    def __init__(self, data, w, k=5, t=3, angle=135.0, edgecor=False):
+    def __init__(self, data, w, k = 5, t = 3, angle = 135.0, edgecor = False):
         if k < 3:
             raise ValueError("w should be NeareastNeighbors instance & the number of neighbors should be more than 3.")
         if not w.id_order_set:
@@ -1282,19 +1282,19 @@ class Headbanging_Triples:
         self.triples, points = {}, {}
         for i, pnt in enumerate(data):
             ng = w.neighbor_offsets[i]
-            points[(i,Point(pnt))] = dict(zip(ng,[Point(d) for d in data[ng]]))
+            points[(i, Point(pnt))] = dict(zip(ng, [Point(d) for d in data[ng]]))
         for i, pnt in points.keys():
-            ng = points[(i,pnt)]
+            ng = points[(i, pnt)]
             tr, tr_dis = {}, []
             for c in comb(ng.keys(), 2):
                 p2, p3 = ng[c[0]], ng[c[-1]]
-                ang = get_angle_between(Ray(pnt,p2),Ray(pnt,p3))
+                ang = get_angle_between(Ray(pnt, p2), Ray(pnt, p3))
                 if ang > angle or (ang < 0.0 and ang + 360 > angle):
                     tr[tuple(c)] = (p2, p3)
             if len(tr) > t:
                 for c in tr.keys():
                     p2, p3 = tr[c]
-                    tr_dis.append((get_segment_point_dist(LineSegment(p2,p3), pnt),c))
+                    tr_dis.append((get_segment_point_dist(LineSegment(p2, p3), pnt), c))
                 tr_dis = sorted(tr_dis)[:t]
                 self.triples[i] = [trp for dis, trp in tr_dis]
             else:
@@ -1307,8 +1307,8 @@ class Headbanging_Triples:
             for point in chull:
                 key = (ps[point], point)
                 ng = points[key]
-                ng_dist = [(get_points_dist(point, p),p) for p in ng.values()]
-                ng_dist_s = sorted(ng_dist,reverse=True)
+                ng_dist = [(get_points_dist(point, p), p) for p in ng.values()]
+                ng_dist_s = sorted(ng_dist, reverse = True)
                 extra = None
                 while extra is None and len(ng_dist_s) > 0:
                     p2 = ng_dist_s.pop()[-1]
@@ -1319,11 +1319,11 @@ class Headbanging_Triples:
                         dist_p_p2 = get_points_dist(point, p2)
                         dist_p_p3 = get_points_dist(point, p3)
                         if dist_p_p2 <= dist_p_p3:
-                            ray1,ray2,s_pnt,dist,c = Ray(p2, point),Ray(p2, p3),p2,dist_p_p2,(ps[p2],ps[p3])
+                            ray1, ray2, s_pnt, dist, c = Ray(p2, point), Ray(p2, p3), p2, dist_p_p2, (ps[p2], ps[p3])
                         else:
-                            ray1,ray2,s_pnt,dist,c = Ray(p3, point),Ray(p3, p2),p3,dist_p_p3,(ps[p3],ps[p2])
+                            ray1, ray2, s_pnt, dist, c = Ray(p3, point), Ray(p3, p2), p3, dist_p_p3,(ps[p3], ps[p2])
                         ang = get_angle_between(ray1,ray2)
-                        if ang >= 90 + angle/2 or (ang < 0 and ang + 360 >= 90 + angle/2):
+                        if ang >= 90 + angle / 2 or (ang < 0 and ang + 360 >= 90 + angle / 2):
                             ex_point = get_point_at_angle_and_dist(ray1, angle, dist)
                             extra = [c, dist_p2_p3, get_points_dist(s_pnt, ex_point)]
                             break
@@ -1413,7 +1413,7 @@ class Headbanging_Median_Rate:
     >>> sids_hb_r3.r[:5]
     array([ 0.00091659,  0.        ,  0.00156838,  0.0018315 ,  0.00498891])
     """
-    def __init__(self, e, b, t, aw=None, iteration=1):
+    def __init__(self, e, b, t, aw = None, iteration = 1):
         self.r = e * 1.0 / b
         self.tr, self.aw = t.triples, aw
         if hasattr(t, 'exta'): self.extra = t.extra
@@ -1421,18 +1421,18 @@ class Headbanging_Median_Rate:
             self.__search_headbanging_median()
             iteration -= 1
 
-    def __get_screens(self, id, triples, weighted=False):
+    def __get_screens(self, id, triples, weighted = False):
         r, tr = self.r, self.tr
         if len(triples) == 0: return r[id]
         if hasattr(self, 'extra') and self.extra.has_key(id):
             extra = self.extra
             trp_r = r[list(triples[0])]
-            trp_r[-1] = trp_r[0] + (trp_r[0] - trp_r[-1])*(extra[id][-1]*1.0/extra[id][1])
+            trp_r[-1] = trp_r[0] + (trp_r[0] - trp_r[-1]) * (extra[id][-1] * 1.0/extra[id][1])
             trp_r = sorted(trp_r)
             if not weighted: return r, trp_r[0], trp_r[-1]
             else:
                 trp_aw = self.aw[trp]
-                extra_w = trp_aw[0] + (trp_aw[0] - trp_aw[-1])*(extra[id][-1]*1.0/extra[id][1])
+                extra_w = trp_aw[0] + (trp_aw[0] - trp_aw[-1]) * (extra[id][-1] * 1.0/extra[id][1])
                 return r, trp_r[0], trp_r[-1], self.aw[id], trp_aw[0] + extra_w
         if not weighted:
             lowest, highest = [], []
@@ -1448,15 +1448,15 @@ class Headbanging_Median_Rate:
                 trp_r = r[list(trp)]
                 dtype = [('r','%s' % trp_r.dtype), ('w','%s' % self.aw.dtype)]
                 trp_r = np.array(zip(trp_r,list(trp)),dtype=dtype)
-                trp_r.sort(order='r')
+                trp_r.sort(order = 'r')
                 lowest.append(trp_r['r'][0])
                 highest.append(trp_r['r'][-1])
                 lowest_aw.append(self.aw[trp_r['w'][0]])
                 highest_aw.append(self.aw[trp_r['w'][-1]])
-            wm_lowest = weighted_median(np.array(lowest),np.array(lowest_aw))
-            wm_highest = weighted_median(np.array(highest),np.array(highest_aw))
-            triple_members = flatten(triples,unique=False)
-            return r[id], wm_lowest, wm_highest, self.aw[id]*len(triples), self.aw[triple_members].sum()
+            wm_lowest = weighted_median(np.array(lowest), np.array(lowest_aw))
+            wm_highest = weighted_median(np.array(highest), np.array(highest_aw))
+            triple_members = flatten(triples,unique = False)
+            return r[id], wm_lowest, wm_highest, self.aw[id] * len(triples), self.aw[triple_members].sum()
 
     def __get_median_from_screens(self, screens):
         if isinstance(screens, float): return screens
@@ -1472,7 +1472,7 @@ class Headbanging_Median_Rate:
         r, tr = self.r, self.tr
         new_r = []
         for k in tr.keys():
-            screens = self.__get_screens(k, tr[k], weighted=(self.aw!=None))
+            screens = self.__get_screens(k, tr[k], weighted = (self.aw != None))
             new_r.append(self.__get_median_from_screens(screens))
         self.r = np.array(new_r)
 

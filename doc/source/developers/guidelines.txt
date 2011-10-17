@@ -5,7 +5,7 @@ Guidelines
 ==========
 
 PySAL is adopting many of the conventions in the larger scientific computing
-in Python community and we ask that any one interested in joining the project
+in Python community and we ask that anyone interested in joining the project
 please review the following documents:
 
  * `Documentation standards <http://projects.scipy.org/numpy/wiki/CodingStyleGuidelines>`_

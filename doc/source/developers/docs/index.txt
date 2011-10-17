@@ -1,10 +1,53 @@
 ****************************
+Writing PySAL Documentation
+****************************
+
+PySAL project contains two distinct forms of documentation: inline and
+non-inline, for lack of a better term. Inline docs are contained in the source
+code itself, in *docstrings*.  Non-inline documentation is contained in the
+pysal/doc folder and is formatted as Restructured Text (ReST).  
+
+
+Writing Inline Documentation
+============================
+
+Best Practices
+--------------
+
+
+Things to watch out for
+------------------------
+
+
+Writing Non-Inline Documentation
+================================
+
+
+Best Practices
+--------------
+
+
+Things to watch out for
+------------------------
+
+If you encounter a failing tutorial doctest that does not seem to be in error, it could be 
+a difference in whitespace between the expected and received output. In that case, add an 
+'options' line as follows::
+ 
+ .. doctest::
+    :options: +NORMALIZE_WHITESPACE
+	
+    >>> print 'a   b   c'
+    abc
+
+
+****************************
 Building PySAL Documentation
 ****************************
  
 PySAL documentation is built using `Sphinx
 <http://pypi.python.org/pypi/Sphinx/1.0.7>`_ and the `numpydoc <http://pypi.python.org/pypi/numpydoc/0.4>`_
-extension to Sphinx, which formats PySAL's docstrings. 
+extension to Sphinx, which formats PySAL's docstrings. You'll need numpydoc version 0.4 or later and Sphinx version 1.0 or later to compile the documentation. 
 Both modules are available at the
 Python Package Index, and can be downloaded and installed from the command line
 using *pip* or *easy_install*.

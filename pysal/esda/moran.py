@@ -79,7 +79,7 @@ class Moran:
     >>> f = pysal.open("../examples/stl_hom.txt")
     >>> y = np.array(f.by_col['HR8893'])
     >>> mi = Moran(y,  w)
-    >>> "%7.5f"%mi.I
+    >>> "%7.5f" % mi.I
     '0.24366'
     >>> mi.EI
     -0.012987012987012988
@@ -92,13 +92,13 @@ class Moran:
     >>> f = pysal.open("../examples/sids2.dbf")
     >>> SIDR = np.array(f.by_col("SIDR74"))
     >>> mi = pysal.Moran(SIDR,  w)
-    >>> "%6.4f"%mi.I
+    >>> "%6.4f" % mi.I
     '0.2477'
     >>> mi.p_norm
     0.0001158330781489969
     
     """
-    def __init__(self,  y,  w,  transformation="r",  permutations=PERMUTATIONS):
+    def __init__(self, y, w, transformation = "r",  permutations = PERMUTATIONS):
         self.y = y
         w.transform = transformation
         self.w = w
@@ -106,9 +106,9 @@ class Moran:
         self.__moments()
         self.I  =  self.__calc(self.z)
         self.z_norm  =  (self.I - self.EI)/self.seI_norm
-        self.p_norm  =  2.0*(1-stats.norm.cdf(np.abs(self.z_norm)))
+        self.p_norm  =  2.0 * (1 - stats.norm.cdf(np.abs(self.z_norm)))
         self.z_rand  =  (self.I - self.EI)/self.seI_rand
-        self.p_rand  =  2.0*(1-stats.norm.cdf(np.abs(self.z_rand)))
+        self.p_rand  =  2.0 * (1 - stats.norm.cdf(np.abs(self.z_rand)))
 
 
         if permutations:
@@ -119,41 +119,41 @@ class Moran:
             larger = sum(above)
             if (self.permutations - larger) < larger:
                 larger = self.permutations - larger
-            self.p_sim = (larger+1.)/(permutations+1.)
+            self.p_sim = (larger + 1.)/(permutations + 1.)
             self.EI_sim = sum(sim)/permutations
             self.seI_sim = np.array(sim).std()
             self.VI_sim = self.seI_sim**2
             self.z_sim = (self.I - self.EI_sim)/self.seI_sim
-            self.p_z_sim = 2.0*(1-stats.norm.cdf(np.abs(self.z_sim)))
+            self.p_z_sim = 2.0 * (1 - stats.norm.cdf(np.abs(self.z_sim)))
 
     def __moments(self):
         self.n = len(self.y)
         y = self.y
         #z = (y-y.mean())/y.std()
-        z = y-y.mean()
+        z = y - y.mean()
         self.z = z
-        self.z2ss = sum(z*z)
-        self.EI = -1./(self.n-1)
+        self.z2ss = sum(z * z)
+        self.EI = -1./(self.n - 1)
         n = self.n
         s1 = self.w.s1
         s0 = self.w.s0
         s2 = self.w.s2
-        s02 = s0*s0
-        v_num = n*n*s1 - n*s2 + 3* s0*s0
-        v_den = (n-1)*(n+1)*s0*s0
-        self.VI_norm  =  v_num/v_den - (1.0/(n-1))**2
+        s02 = s0 * s0
+        v_num = n * n * s1 - n * s2 + 3 * s0 * s0
+        v_den = (n-1) * (n + 1) * s0 * s0
+        self.VI_norm  =  v_num/v_den - (1.0/(n - 1))**2
         self.seI_norm  =  self.VI_norm**(1/2.)
 
         k  =  (1/(sum(z**4)) * ((sum(z**2))**2))
-        vi  =  (1/(((n-1)**3)*s02)) * ((n*((n*n-3*n+3)*s1 - n*s2+3*s02)) \
-                - (k*((n*n-n)*s1-2*n*s2+6*s02)))
+        vi  =  (1/(((n - 1)**3) * s02)) * ((n * ((n * n - 3 * n + 3) * s1 - n * s2 + 3 * s02)) \
+                - (k * ((n * n - n) * s1 - 2 * n * s2 + 6 * s02)))
         self.VI_rand  =  vi
         self.seI_rand  =  vi**(1/2.)
 
 
     def __calc(self,  z):
         zl = slag(self.w,  z)
-        inum = sum(z*zl)
+        inum = sum(z * zl)
         return self.n/self.w.s0 * inum/self.z2ss
 
 class Moran_BV:
@@ -250,9 +250,9 @@ class Moran_BV:
     
     
     """
-    def __init__(self,  x,  y,  w,  transformation="r",  permutations=PERMUTATIONS):
-        zy = (y-y.mean())/y.std(ddof = 1)
-        zx = (x-x.mean())/x.std(ddof = 1)
+    def __init__(self, x, y, w, transformation = "r",  permutations = PERMUTATIONS):
+        zy = (y - y.mean())/y.std(ddof = 1)
+        zx = (x - x.mean())/x.std(ddof = 1)
         self.zx = zx
         self.zy = zy
         w.transform = transformation
@@ -271,15 +271,15 @@ class Moran_BV:
             self.seI_sim  =  np.array(sim).std()
             self.VI_sim  =  self.seI_sim**2
             self.z_sim = (self.I - self.EI_sim)/self.seI_sim
-            self.p_z_sim = 2.0*(1-stats.norm.cdf(np.abs(self.z_sim)))
+            self.p_z_sim = 2.0 * (1 - stats.norm.cdf(np.abs(self.z_sim)))
           
     def __calc(self,  zy):
         wzy = slag(self.w,  zy)
-        self.num = sum(self.zx*wzy)
-        self.den = sum(zy*zy)
-        return self.num/self.den
+        self.num = sum(self.zx * wzy)
+        self.den = sum(zy * zy)
+        return self.num / self.den
 
-def Moran_BV_matrix(variables,  w,  permutations = 0,  varnames = None):
+def Moran_BV_matrix(variables, w, permutations = 0, varnames = None):
     """Bivariate Moran Matrix
 
     Calculates bivariate Moran between all pairs of a set of variables.
@@ -334,14 +334,14 @@ def Moran_BV_matrix(variables,  w,  permutations = 0,  varnames = None):
     """
 
     k = len(variables)
-    rk = range(0,  k-1)
+    rk = range(0,  k - 1)
     results = {}
     for i in rk:
-        for j in range(i+1,  k):
+        for j in range(i + 1,  k):
             y1 = variables[i]
             y2 = variables[j]
-            results[i,  j] = Moran_BV(y1,  y2,  w,  permutations = permutations)
-            results[j,  i] = Moran_BV(y2,  y1,  w,  permutations = permutations)
+            results[i, j] = Moran_BV(y1, y2, w, permutations = permutations)
+            results[j, i] = Moran_BV(y2, y1, w, permutations = permutations)
     return results
 
 class Moran_Local:
@@ -419,34 +419,34 @@ class Moran_Local:
         self.y = y
         n = len(y)
         self.n = n
-        self.n_1 = n-1
-        z = y-y.mean()
+        self.n_1 = n - 1
+        z = y - y.mean()
         z =  z / y.std()
         self.z = z
-        w.transform=transformation
-        self.w=w
-        self.permutations=permutations
-        self.den=sum(z*z)
+        w.transform = transformation
+        self.w = w
+        self.permutations = permutations
+        self.den = sum(z * z)
         self.Is = self.calc(self.w, self.z)
         self.__quads()
         if permutations:
             self.__crand()
-            sim=np.transpose(self.rlisas)
-            above=sim >= self.Is
+            sim = np.transpose(self.rlisas)
+            above = sim >= self.Is
             larger = sum(above)
             low_extreme = (self.permutations - larger) < larger
             larger[low_extreme] = self.permutations - larger[low_extreme]
-            self.p_sim = (larger+1.0)/(permutations+1.0)
-            self.sim=sim
+            self.p_sim = (larger + 1.0)/(permutations + 1.0)
+            self.sim = sim
             self.EI_sim = sim.mean()
             self.seI_sim = sim.std()
             self.VI_sim = self.seI_sim * self.seI_sim
-            self.z_sim = (self.Is-self.EI_sim)/self.seI_sim
-            self.p_z_sim=1-stats.norm.cdf(np.abs(self.z_sim))
+            self.z_sim = (self.Is - self.EI_sim) / self.seI_sim
+            self.p_z_sim = 1 - stats.norm.cdf(np.abs(self.z_sim))
 
     def calc(self, w, z):
-        zl=slag(w, z)
-        return self.n_1*self.z*zl/self.den
+        zl = slag(w, z)
+        return self.n_1 * self.z * zl / self.den
 
     def __crand(self):
         """
@@ -461,34 +461,34 @@ class Moran_Local:
         neighbors to i in each randomization.
 
         """
-        z=self.z
-        lisas=np.zeros((self.n, self.permutations))
-        n_1=self.n-1
-        rid=range(self.n-1)
-        prange=range(self.permutations)
+        z = self.z
+        lisas = np.zeros((self.n, self.permutations))
+        n_1 = self.n - 1
+        rid = range(self.n - 1)
+        prange = range(self.permutations)
         k = self.w.max_neighbors + 1
         nn = range(self.n - 1)
-        rids=np.array([np.random.permutation(nn)[0:k] for i in prange])
-        ids=np.arange(self.w.n)
-        ido=self.w.id_order
+        rids = np.array([np.random.permutation(nn)[0:k] for i in prange])
+        ids = np.arange(self.w.n)
+        ido = self.w.id_order
         w = [ self.w.weights[ido[i]] for i in ids ]
         wc = [ self.w.cardinalities[ido[i]] for i in ids ]
  
         for i in range(self.w.n):
-            idsi=ids[ids!=i]
+            idsi = ids[ids != i]
             np.random.shuffle(idsi)
-            lisas[i]=[z[i]*sum(w[i]*z[idsi[rid[0:wc[i]]]]) for rid in rids]
-        self.rlisas=(n_1/self.den)*lisas
+            lisas[i] = [z[i] * sum(w[i] * z[idsi[rid[0:wc[i]]]]) for rid in rids]
+        self.rlisas = (n_1 / self.den) * lisas
     
     def __quads(self):
-        zl=slag(self.w, self.z)
-        zp=self.z>0
-        lp=zl>0
-        pp=zp*lp
-        np=(1-zp)*lp
-        nn=(1-zp)*(1-lp)
-        pn=zp*(1-lp)
-        self.q=1*pp+2*np+3*nn+4*pn
+        zl = slag(self.w, self.z)
+        zp = self.z > 0
+        lp = zl > 0
+        pp = zp * lp
+        np = (1 - zp) * lp
+        nn = (1 - zp) * (1 - lp)
+        pn = zp * (1 - lp)
+        self.q = 1 * pp + 2 * np + 3 * nn + 4 * pn
 
 def _test():
     import doctest
