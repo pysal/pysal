@@ -1,10 +1,10 @@
-:mod:`IOHandlers.csvWrapper` --- CSV Plugin for PySAL's FileIO System
-=====================================================================
+:mod:`IOHandlers.csvWrapper` --- CSV plugin 
+===========================================
 
 .. versionadded:: 1.0
 
 .. automodule:: pysal.core.IOHandlers.csvWrapper
-    :synopsis: CSV Plugin for PySAL's FileIO System
+    :synopsis: CSV Plugin 
     :members:
     :undoc-members:
     :inherited-members:

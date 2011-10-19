@@ -20,8 +20,6 @@ Available sub-packages
 ----------------------
 
 .. toctree::
-    :maxdepth: 1
-    :glob:
 
     cg/index
     esda/index

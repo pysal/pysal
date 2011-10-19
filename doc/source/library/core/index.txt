@@ -2,9 +2,7 @@
 =================================================
 
 .. toctree::
-    :maxdepth: 1
-    :glob:
 
-    FileIO
     Tables
+    FileIO
     IOHandlers/index
