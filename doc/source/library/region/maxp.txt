@@ -1,4 +1,4 @@
-:mod:`region.maxp` -- Spatially constrained regionalization
+:mod:`region.maxp` -- maxp regionalization
 ===========================================================
 
 .. versionadded:: 1.0

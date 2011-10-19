@@ -17,9 +17,8 @@ where :math:`C_j` denotes class :math:`j` which has lower bound :math:`C_j^l` an
 
     
 
-=========================
 Map Classifiers Supported
-=========================
+-------------------------
 
 * :class:`~pysal.esda.mapclassify.Box_Plot`
 * :class:`~pysal.esda.mapclassify.Equal_Interval`
@@ -35,25 +34,22 @@ Map Classifiers Supported
 * :class:`~pysal.esda.mapclassify.Std_Mean`
 * :class:`~pysal.esda.mapclassify.User_Defined`
 
-=========
 Utilities
-=========
+---------
 
 In addition to the classifiers, there are several utility functions that can be used to evaluate the properties of a specific classifier for different parameter values, or for automatic selection of a classifier and number of classes.
 
 * :func:`~pysal.esda.mapclassify.gadf`
 * :class:`~pysal.esda.mapclassify.K_classifiers`
 
-==========
 References
-==========
+----------
 
 Slocum, T.A., R.B. McMaster, F.C. Kessler and H.H. Howard (2009) *Thematic Cartography and Geovisualization*. Pearson Prentice Hall, Upper Saddle River.
 
 
-===
 API
-===
+---
 
 .. automodule:: pysal.esda.mapclassify
     :synopsis: Choropleth map classification

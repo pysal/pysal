@@ -2,9 +2,11 @@
 ==================================================
 
 .. toctree::
-    :maxdepth: 1
-    :glob:
 
-    *
+    directional
+    ergodic
+    interaction
+    markov
+    rank
 
 

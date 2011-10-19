@@ -1,4 +1,4 @@
-:mod:`weights.Distance` --- Distance based Spatial Weights
+:mod:`weights.Distance` --- Distance based spatial weights
 ==========================================================
 
 The :mod:`weights.Distance` module provides for spatial weights defined

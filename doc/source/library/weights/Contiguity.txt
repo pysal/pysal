@@ -1,5 +1,5 @@
-:mod:`weights.Contiguity` --- Contiguity based Spatial weights for PySAL: Python Spatial Analysis Library
-=========================================================================================================
+:mod:`weights.Contiguity` --- Contiguity based spatial weights 
+==============================================================
 
 The :mod:`weights.Contiguity.` module provides for the construction and manipulation of spatial  weights matrices based on contiguity criteria.
 

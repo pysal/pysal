@@ -1,5 +1,5 @@
-:mod:`weights.spatial_lag` --- Spatial lag operators  PySAL: Python Spatial Analysis Library
-==============================================================================================
+:mod:`weights.spatial_lag` --- Spatial lag operators
+====================================================
 
 The :mod:`weights.spatial_lag` Spatial lag operators for PySAL
 
