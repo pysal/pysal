@@ -1,7 +1,8 @@
-:mod:`pysal.cg` --- Computational Geometry
+:mod:`pysal.cg` -- Computational Geometry
 ==========================================
 
 .. toctree::
+
     locators
     shapes
     standalone

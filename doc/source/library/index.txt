@@ -30,13 +30,5 @@ Available sub-packages
     weights/index
     spreg/index
 
-    open
 
 
-
-Utilities
----------
-open
-    Tool for file input and output, supports many well known file formats
-__version__
-    PySAL version string
