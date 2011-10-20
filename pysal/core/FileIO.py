@@ -246,7 +246,7 @@ class FileIO(object): #should be a type?
         """A FileIO object is its own iterator, see StringIO"""
         self._complain_ifclosed(self.closed)
         r = self.__read()
-        if not r:
+        if r == None:
             raise StopIteration
         return r
     def close(self):
@@ -301,7 +301,7 @@ class FileIO(object): #should be a type?
     def __read(self):
         """ Gets one row from the file handler, and if necessary casts it's objects """
         row = self._read()
-        if not row:
+        if row == None:
             raise StopIteration
         row = self._cast(row)
         return row

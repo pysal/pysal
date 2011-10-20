@@ -155,7 +155,9 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
                     
                 shp = self.type(vertices)
             else:
-                raise ValueError, "Polygon %d has zero parts"%self.pos
+                warn("Polygon %d has zero parts"%self.pos, RuntimeWarning)
+                shp = self.type([[]])
+                #raise ValueError, "Polygon %d has zero parts"%self.pos
         if self.ids:
             shp.id = self.rIds[self.pos-1] # shp IDs start at 1.
         else:
