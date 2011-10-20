@@ -18,13 +18,47 @@ import unittest
 from struct import calcsize,unpack,pack
 from cStringIO import StringIO
 from itertools import izip,islice
+import array
+import sys
+if sys.byteorder == 'little':
+    SYS_BYTE_ORDER = '<'
+else:
+    SYS_BYTE_ORDER = '>'
+STRUCT_ITEMSIZE = {}
+STRUCT_ITEMSIZE['i'] = calcsize('i')
+STRUCT_ITEMSIZE['d'] = calcsize('d')
 
 __all__ = ['shp_file', 'shx_file']
 
 #SHAPEFILE Globals
+def struct2arrayinfo(struct):
+    struct = list(struct)
+    names = [x[0] for x in struct]
+    types = [x[1] for x in struct]
+    orders = [x[2] for x in struct]
+    lname,ltype,lorder = struct.pop(0)
+    groups = {}
+    g = 0
+    groups[g] = {'names':[lname],'size':STRUCT_ITEMSIZE[ltype],'fmt':ltype,'order':lorder}
+    while struct:
+        name,type,order = struct.pop(0)
+        if order == lorder:
+            groups[g]['names'].append(name)
+            groups[g]['size'] += STRUCT_ITEMSIZE[type]
+            groups[g]['fmt'] += type
+        else:
+            g+=1
+            groups[g] = {'names':[name],'size':STRUCT_ITEMSIZE[type],'fmt':type,'order':order}
+        lname,ltype,lorder = name,type,order
+    return [groups[x] for x in range(g+1)]
+
 HEADERSTRUCT = (\
     ('File Code','i','>'),\
-    ('Unused','5i','>'),\
+    ('Unused0','i','>'),\
+    ('Unused1','i','>'),\
+    ('Unused2','i','>'),\
+    ('Unused3','i','>'),\
+    ('Unused4','i','>'),\
     ('File Length','i','>'),\
     ('Version','i','<'),\
     ('Shape Type','i','<'),\
@@ -36,9 +70,11 @@ HEADERSTRUCT = (\
     ('BBOX Zmax','d','<'),\
     ('BBOX Mmin','d','<'),\
     ('BBOX Mmax','d','<'))
+UHEADERSTRUCT = struct2arrayinfo(HEADERSTRUCT)
 RHEADERSTRUCT = (\
     ('Record Number','i','>'),\
     ('Content Length','i','>'))
+URHEADERSTRUCT = struct2arrayinfo(RHEADERSTRUCT)
 
 def noneMax(a,b):
     if a is None:
@@ -66,16 +102,31 @@ def _unpackDict(structure,fileObj):
         #file at new position
 
     Example:
-    >>> _unpackDict(HEADERSTRUCT,open('../../examples/10740.shx','rb'))
-    {'BBOX Xmax': -105.29012, 'BBOX Ymax': 36.219799000000002, 'BBOX Mmax': 0.0, 'BBOX Zmin': 0.0, 'BBOX Mmin': 0.0, 'File Code': 9994, 'BBOX Ymin': 34.259672000000002, 'BBOX Xmin': -107.62651, 'Unused': (0, 0, 0, 0, 0), 'Version': 1000, 'BBOX Zmax': 0.0, 'Shape Type': 5, 'File Length': 830}
+    >>> _unpackDict(UHEADERSTRUCT,open('../../examples/10740.shx','rb')) == {'BBOX Xmax': -105.29012, 'BBOX Ymax': 36.219799000000002, 'BBOX Mmax': 0.0, 'BBOX Zmin': 0.0, 'BBOX Mmin': 0.0, 'File Code': 9994, 'BBOX Ymin': 34.259672000000002, 'BBOX Xmin': -107.62651, 'Unused0': 0, 'Unused1': 0, 'Unused2': 0, 'Unused3': 0, 'Unused4': 0, 'Version': 1000, 'BBOX Zmax': 0.0, 'Shape Type': 5, 'File Length': 830}
+    True
     """
     d = {}
-    for name,dtype,order in structure:
-        result = unpack(order+dtype,fileObj.read(calcsize(dtype)))
-        if len(result) == 1:
-            result = result[0]
-        d[name] = result
+    for struct in structure:
+        items = unpack(struct['order']+struct['fmt'], fileObj.read(struct['size']))
+        for i,name in enumerate(struct['names']):
+            d[name]=items[i]
     return d
+def _unpackDict2(d,structure,fileObj):
+    """Utility Function, used arrays instead from struct
+
+    Arguments:
+        d -- dict -- Dictionary to be updated.
+        structure -- tuple of tuples -- (('FieldName 1',('type',n),'byteOrder'),('FieldName 2',('type',n,'byteOrder'))
+    """
+    for name,dtype,order in structure:
+        dtype,n = dtype
+        result = array.array(dtype)
+        result.fromstring(fileObj.read(result.itemsize*n))
+        if order != SYS_BYTE_ORDER:
+            result.byteswap()
+        d[name] = result.tolist()
+    return d
+
 def _packDict(structure,d):
     """Utility Function
 
@@ -151,8 +202,8 @@ class shp_file:
 
         Example:
         >>> shp = shp_file('../../examples/10740.shp')
-        >>> shp.header
-        {'BBOX Xmax': -105.29012, 'BBOX Ymax': 36.219799000000002, 'BBOX Mmax': 0.0, 'BBOX Zmin': 0.0, 'BBOX Mmin': 0.0, 'File Code': 9994, 'BBOX Ymin': 34.259672000000002, 'BBOX Xmin': -107.62651, 'Unused': (0, 0, 0, 0, 0), 'Version': 1000, 'BBOX Zmax': 0.0, 'Shape Type': 5, 'File Length': 260534}
+        >>> shp.header == {'BBOX Xmax': -105.29012, 'BBOX Ymax': 36.219799000000002, 'BBOX Mmax': 0.0, 'BBOX Zmin': 0.0, 'BBOX Mmin': 0.0, 'File Code': 9994, 'BBOX Ymin': 34.259672000000002, 'BBOX Xmin': -107.62651, 'Unused0': 0, 'Unused1': 0, 'Unused2': 0, 'Unused3': 0, 'Unused4': 0, 'Version': 1000, 'BBOX Zmax': 0.0, 'Shape Type': 5, 'File Length': 260534}
+        True
         >>> len(shp)
         195
         """
@@ -160,7 +211,7 @@ class shp_file:
         fileName = self.fileName
         self.fileObj = open(fileName+'.shp', 'rb')
         self._shx = shx_file(fileName)
-        self.header = _unpackDict(HEADERSTRUCT,self.fileObj)
+        self.header = _unpackDict(UHEADERSTRUCT,self.fileObj)
         self.shape = TYPE_DISPATCH[self.header['Shape Type']]
         self.__lastShape = 0
         # localizing for convenience
@@ -203,7 +254,11 @@ class shp_file:
         self.header = {}
         self.header['Shape Type'] = self.SHAPE_TYPES[shape_type]
         self.header['Version'] = 1000
-        self.header['Unused'] = (0,0,0,0,0)
+        self.header['Unused0'] = 0
+        self.header['Unused1'] = 0
+        self.header['Unused2'] = 0
+        self.header['Unused3'] = 0
+        self.header['Unused4'] = 0
         self.header['File Code'] = 9994
         self.__file_Length = 100
         self.header['File Length'] = 0
@@ -227,8 +282,8 @@ class shp_file:
         """returns the next Shape in the shapeFile
         
         Example:
-        >>> list(shp_file('../../examples/shp_test/Point.shp'))
-        [{'Y': -0.25904661905760773, 'X': -0.00068176617532103578, 'Shape Type': 1}, {'Y': -0.25630328607387354, 'X': 0.11697145363360706, 'Shape Type': 1}, {'Y': -0.33930131004366804, 'X': 0.05043668122270728, 'Shape Type': 1}, {'Y': -0.41266375545851519, 'X': -0.041266375545851552, 'Shape Type': 1}, {'Y': -0.44017467248908293, 'X': -0.011462882096069604, 'Shape Type': 1}, {'Y': -0.46080786026200882, 'X': 0.027510917030567628, 'Shape Type': 1}, {'Y': -0.45851528384279472, 'X': 0.075655021834060809, 'Shape Type': 1}, {'Y': -0.43558951965065495, 'X': 0.11233624454148461, 'Shape Type': 1}, {'Y': -0.40578602620087334, 'X': 0.13984716157205224, 'Shape Type': 1}]
+        >>> list(shp_file('../../examples/shp_test/Point.shp')) == [{'Y': -0.25904661905760773, 'X': -0.00068176617532103578, 'Shape Type': 1}, {'Y': -0.25630328607387354, 'X': 0.11697145363360706, 'Shape Type': 1}, {'Y': -0.33930131004366804, 'X': 0.05043668122270728, 'Shape Type': 1}, {'Y': -0.41266375545851519, 'X': -0.041266375545851552, 'Shape Type': 1}, {'Y': -0.44017467248908293, 'X': -0.011462882096069604, 'Shape Type': 1}, {'Y': -0.46080786026200882, 'X': 0.027510917030567628, 'Shape Type': 1}, {'Y': -0.45851528384279472, 'X': 0.075655021834060809, 'Shape Type': 1}, {'Y': -0.43558951965065495, 'X': 0.11233624454148461, 'Shape Type': 1}, {'Y': -0.40578602620087334, 'X': 0.13984716157205224, 'Shape Type': 1}]
+        True
         """
         self.__isreadable()
         nextShape = self.__lastShape
@@ -253,8 +308,9 @@ class shp_file:
         fPosition,bytes = self._shx.index[shpId]
         self.__seek(fPosition)
         #the index does not include the 2 byte record header (which contains, Record ID and Content Length)
-        rec_id,con_len = _unpackDict(RHEADERSTRUCT,self.fileObj)
+        rec_id,con_len = _unpackDict(URHEADERSTRUCT,self.fileObj)
         return self.shape.unpack(StringIO(self.fileObj.read(bytes)))
+        #return self.shape.unpack(self.fileObj.read(bytes))
     def __update_bbox(self,s):
         h = self.header
         if s.get('Shape Type') == 1:
@@ -341,14 +397,14 @@ class shx_file:
 
         Example:
         >>> shx = shx_file('../../examples/10740')
-        >>> shx._header
-        {'BBOX Xmax': -105.29012, 'BBOX Ymax': 36.219799000000002, 'BBOX Mmax': 0.0, 'BBOX Zmin': 0.0, 'BBOX Mmin': 0.0, 'File Code': 9994, 'BBOX Ymin': 34.259672000000002, 'BBOX Xmin': -107.62651, 'Unused': (0, 0, 0, 0, 0), 'Version': 1000, 'BBOX Zmax': 0.0, 'Shape Type': 5, 'File Length': 830}
+        >>> shx._header == {'BBOX Xmax': -105.29012, 'BBOX Ymax': 36.219799000000002, 'BBOX Mmax': 0.0, 'BBOX Zmin': 0.0, 'BBOX Mmin': 0.0, 'File Code': 9994, 'BBOX Ymin': 34.259672000000002, 'BBOX Xmin': -107.62651, 'Unused0': 0, 'Unused1': 0, 'Unused2': 0, 'Unused3': 0, 'Unused4': 0, 'Version': 1000, 'BBOX Zmax': 0.0, 'Shape Type': 5, 'File Length': 830}
+        True
         >>> len(shx.index)
         195
         """
         self.__isreadable()
         self.fileObj = open(self.fileName+'.shx', 'rb')
-        self._header = _unpackDict(HEADERSTRUCT,self.fileObj)
+        self._header = _unpackDict(UHEADERSTRUCT,self.fileObj)
         self.numRecords = numRecords = (self._header['File Length'] - 50)/4
         index = {}
         fmt = '>%di'%(2*numRecords)
@@ -448,9 +504,10 @@ class Point(object):
     STRUCT = (('Shape Type','i','<'),\
               ('X','d','<'),\
               ('Y','d','<'))
+    USTRUCT = [{'fmt': 'idd', 'order': '<', 'names': ['Shape Type', 'X', 'Y'], 'size': 20}]
     @classmethod
     def unpack(cls,dat):
-        return _unpackDict(cls.STRUCT,dat)
+        return _unpackDict(cls.USTRUCT,dat)
     @classmethod
     def pack(cls,record):
         rheader = _packDict(cls.STRUCT,record)
@@ -477,12 +534,13 @@ class PolyLine:
               ('BBOX Ymax','d','<'),\
               ('NumParts','i','<'),\
               ('NumPoints','i','<'))
+    USTRUCT = [{'fmt': 'iddddii', 'order': '<', 'names': ['Shape Type', 'BBOX Xmin', 'BBOX Ymin', 'BBOX Xmax', 'BBOX Ymax', 'NumParts', 'NumPoints'], 'size': 44}]
     @classmethod
     def unpack(cls,dat):
-        record = _unpackDict(cls.STRUCT,dat)
-        contentStruct = (('Parts Index','%di'%record['NumParts'],'<'),\
-                         ('Vertices','%dd'%(2*record['NumPoints']),'<'))
-        record.update(_unpackDict(contentStruct,dat))
+        record = _unpackDict(cls.USTRUCT,dat)
+        contentStruct = (('Parts Index',('i',record['NumParts']),'<'),\
+                         ('Vertices',('d',2*record['NumPoints']),'<'))
+        _unpackDict2(record,contentStruct,dat)
         #record['Vertices'] = [(record['Vertices'][i],record['Vertices'][i+1]) for i in xrange(0,record['NumPoints']*2,2)]
         verts = record['Vertices']
         #Next line is equivalent to: zip(verts[::2],verts[1::2])
@@ -621,7 +679,7 @@ class _TestPolygons(unittest.TestCase):
             self.assertEquals(a,b)
 def _test():
     import doctest
-    doctest.testmod(verbose=True)
+    doctest.testmod(verbose=False)
     unittest.main()
 
 if __name__=='__main__':
