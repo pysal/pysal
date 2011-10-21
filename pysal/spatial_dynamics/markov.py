@@ -470,7 +470,9 @@ class Spatial_Markov:
         F = np.zeros_like(T) # fmpt
         ss = np.zeros_like(T[0])
         for i, mat in enumerate(T):
-            p_i = np.matrix(np.diag(1./mat.sum(axis=1))*np.matrix(mat))
+            row_sum = mat.sum(axis=1)
+            row_sum = row_sum + (row_sum == 0)
+            p_i = np.matrix(np.diag(1./row_sum)*np.matrix(mat))
             ss[i] = steady_state(p_i).transpose()
             try:
                 F[i] = fmpt(p_i)
