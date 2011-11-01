@@ -9,6 +9,19 @@ BORDER_COLOR = wx.Colour(0,0,0,255)
 SELECTION_COLOR = wx.Colour(255,128,0,255)
 NEIGHBORS_COLOR = wx.Colour(128,255,0,255)
 
+class WeightsMapFrame(wx.Frame):
+    def __init__(self,parent=None,size=(600,600), style=wx.DEFAULT_FRAME_STYLE, geo=None, w=None):
+        wx.Frame.__init__(self,parent,size=size,style=style)
+        self.Bind
+        self.SetTitle("Weights Inspector")
+        if issubclass(type(geo),basestring):
+            geo = pysal.open(geo,'r')
+        self.geo = geo
+        if issubclass(type(w),basestring):
+            w = pysal.open(w,'r').read()
+        self.w = w
+        self.wm = WeightsMap(self,self.geo,self.w)
+
 class WeightsMap(wx.Panel):
     """ Display a Weights Inspection Map """
     def __init__(self, parent, geo, w_obj):
@@ -139,18 +152,13 @@ class WeightsMap(wx.Panel):
 
 class WeightsMapApp(wx.App):
     def __init__(self, geo=None, w=None, redirect=False):
-        if issubclass(type(geo),basestring):
-            geo = pysal.open(geo,'r')
         self.geo = geo
-        if issubclass(type(w),basestring):
-            w = pysal.open(w,'r').read()
         self.w = w
         wx.App.__init__(self, redirect)
     def OnInit(self):
         self.SetAppName("Weights Inspector")
-        self.frame = wx.Frame(None,size=(600,600))
+        self.frame = WeightsMapFrame(None,size=(600,600),geo=self.geo,w=self.w)
         self.SetTopWindow(self.frame)
-        wm = WeightsMap(self.frame,self.geo,self.w)
         self.frame.Show()
         return True
 
