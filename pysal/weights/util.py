@@ -611,9 +611,9 @@ def WSP2W(wsp):
     return w
 
 
-def insert_diagonal(w, diagonal=1.0):
+def insert_diagonal(w, diagonal=1.0, wsp=False):
     """
-    Returns a new pysal W object with values inserted along the main diagonal.
+    Returns a new weights object with values inserted along the main diagonal.
 
     Parameters
     ----------
@@ -626,6 +626,10 @@ def insert_diagonal(w, diagonal=1.0):
                diagonal will get this value (default is 1.0). An array of length 
                w.n can be passed to set explicit values to each element along 
                the diagonal (assumed to be in the same order as w.id_order).
+
+    wsp      : boolean
+               If True return a thin weights object of the type WSP, if False
+               return the standard W object.
                
     Returns
     -------
@@ -652,37 +656,25 @@ def insert_diagonal(w, diagonal=1.0):
     >>> diag = np.arange(100, 125)
     >>> w_var = pysal.weights.insert_diagonal(w, diag)
     >>> w_var['id0']
-    {'id5': 1.0, 'id0': 100, 'id1': 1.0}
+    {'id5': 1.0, 'id0': 100.0, 'id1': 1.0}
 
     """
-    neighbors = w.neighbors
-    weights = w.weights
-    ids = copy.copy(w.id_order)
-    new_neigh = {}
-    new_weight = {}
+    w_new = copy.deepcopy(w.sparse)
+    w_new = w_new.tolil()
     if issubclass(type(diagonal), np.ndarray):
         if w.n != diagonal.shape[0]:
             raise Exception, "shape of w and diagonal do not match"
-        if not w.id_order:
-            raise Exception, "w.id_order must be set"
-        for index, oid in enumerate(ids):
-            neigh = copy.copy(neighbors[oid])
-            neigh.append(oid)
-            new_neigh[oid] = neigh
-            weight = copy.copy(weights[oid])
-            weight.append(diagonal[index])
-            new_weight[oid] = weight
+        w_new.setdiag(diagonal)    
     elif operator.isNumberType(diagonal):
-        for oid in neighbors:
-            neigh = copy.copy(neighbors[oid])
-            neigh.append(oid)
-            new_neigh[oid] = neigh
-            weight = copy.copy(weights[oid])
-            weight.append(diagonal)
-            new_weight[oid] = weight
+        w_new.setdiag([diagonal]*w.n)    
     else:
         raise Exception, "invalid value passed to diagonal"
-    return pysal.W(new_neigh, new_weight, ids)
+    w_out = pysal.weights.WSP(w_new, copy.copy(w.id_order))
+    if wsp:
+        return w_out
+    else:
+        return WSP2W(w_out)
+
 
 def remap_ids(w, old2new, id_order=[]):
     """
