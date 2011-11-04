@@ -126,8 +126,7 @@ class Kernel(W):
                   where :math:`dknn` is a vector of k-nearest neighbor
                   distances (the distance to the kth nearest neighbor for each
                   observation).  For adaptive bandwidths, :math:`h_i=dknn_i`
-    function    : string {'triangular','uniform','quadratic','epanechnikov',
-                  'quartic','bisquare','gaussian'}
+    function    : string {'triangular','uniform','quadratic','quartic','gaussian'}
                   kernel function defined as follows with 
 
                   .. math::
@@ -144,7 +143,7 @@ class Kernel(W):
 
                   .. math::
 
-                      K(z) = |z| \ if |z| \le 1
+                      K(z) = 1/2 \ if |z| \le 1
 
                   quadratic 
 
@@ -152,24 +151,12 @@ class Kernel(W):
 
                       K(z) = (3/4)(1-z^2) \ if |z| \le 1
 
-                  epanechnikov
-
-                  .. math::
-
-                      K(z) = (1-z^2) \ if |z| \le 1
-
                   quartic
 
                   .. math::
 
                       K(z) = (15/16)(1-z^2)^2 \ if |z| \le 1
                  
-                  bisquare
-
-                  .. math::
-
-                      K(z) = (1-z^2)^2 \ if |z| \le 1
-
                   gaussian
 
                   .. math::
@@ -331,15 +318,11 @@ class Kernel(W):
         if self.function=='triangular':
             self.kernel=[1-z for z in zs]
         elif self.function=='uniform':
-            self.kernel=z
+            self.kernel=[0.5]*len(z)
         elif self.function=='quadratic':
             self.kernel=[(3./4)*(1-z**2) for z in zs]
-        elif self.function=='epanechnikov':
-            self.kernel=[(1-z**2) for z in zs]
         elif self.function=='quartic':
             self.kernel=[(15./16)*(1-z**2)**2 for z in zs]
-        elif self.function=='bisquare':
-            self.kernel=[(1-z**2)**2 for z in zs]
         elif self.function=='gaussian':
             c=np.pi*2
             c=c**(-0.5)
