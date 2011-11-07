@@ -107,14 +107,14 @@ class WeightsMap(wx.Panel):
             x,y = matrix.TransformPoint(*pt)
             gc.DrawEllipse(x-radius,y-radius,r,r)
         return gc
-    def draw_shps(self, buff, fill_color=None, ids=None):
+    def draw_shps(self, buff, fill_color=None, ids=None, fill_style=wx.SOLID):
         transform = self.transform
         dc = wx.MemoryDC()
         dc.SelectObject(buff)
         gc = wx.GraphicsContext.Create(dc)
         gc.SetPen( gc.CreatePen(wx.Pen(BORDER_COLOR,1)) )
         if fill_color != None:
-            gc.SetBrush( gc.CreateBrush(wx.Brush(fill_color)) )
+            gc.SetBrush( gc.CreateBrush(wx.Brush(fill_color,fill_style)) )
             fill = True
         else:
             fill = False
@@ -135,8 +135,11 @@ class WeightsMap(wx.Panel):
             buff = wx.EmptyBitmapRGBA(w,h,alpha=self.trns)
             id = self.w.id_order[sel]
             neighbors = map(self.w.id_order.index,self.w.neighbors[id])
-            self.draw_shps(buff, SELECTION_COLOR, [sel])
             self.draw_shps(buff, NEIGHBORS_COLOR, neighbors)
+            if sel in neighbors:
+                self.draw_shps(buff, SELECTION_COLOR, [sel], wx.CROSSDIAG_HATCH)
+            else:
+                self.draw_shps(buff, SELECTION_COLOR, [sel])
             print sel,":",neighbors
             cdc.DrawBitmap(buff,0,0)
             stat0 = "Selection:%s"%id
