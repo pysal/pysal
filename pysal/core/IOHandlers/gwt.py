@@ -39,7 +39,7 @@ class GwtIO(FileIO.FileIO):
             self.file.seek(0)
             self.pos = 0
 
-    def _readlines(self, id_type):
+    def _readlines(self, id_type, ret_ids=False):
         """
         Reads the main body of gwt-like weights files 
         into two dictionaries containing weights and neighbors.
@@ -50,9 +50,12 @@ class GwtIO(FileIO.FileIO):
         """
         weights={}
         neighbors={}
+        ids = []
         for line in self.file.readlines():
             i,j,w=line.strip().split()
             i=id_type(i)
+            if i not in ids:
+                ids.append(i)
             j=id_type(j)
             w=float(w)
             if i not in weights:
@@ -60,7 +63,10 @@ class GwtIO(FileIO.FileIO):
                 neighbors[i]=[]
             weights[i].append(w)
             neighbors[i].append(j)
-        return weights, neighbors        
+        if ret_ids:
+            return weights, neighbors, ids
+        else:
+            return weights, neighbors
 
     def _read(self):
         """Reads .gwt file
@@ -117,7 +123,10 @@ class GwtIO(FileIO.FileIO):
         self.n=n
         self.shp=shp
         self.id_var=id_var
-        weights, neighbors = self._readlines(id_type)
+        if id_order == None:
+            weights, neighbors, id_order = self._readlines(id_type, True)
+        else:
+            weights, neighbors = self._readlines(id_type)
 
         self.pos += 1
         w = W(neighbors,weights,id_order)
