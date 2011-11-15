@@ -7,6 +7,28 @@ from warnings import warn
 __author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
 __all__ = ["GwtIO"]
 
+class unique_filter(object):
+    """ 
+    Util function:
+    When a new instance is passed as an arugment to the builtin filter 
+    it will remove duplicate entries without changing the order of the list.
+    
+    Besure to ceate a new instance everytime, unless you want a global filter.
+
+    Example:
+    >>> l = ['a','a','b','a','c','v','d','a','v','d']
+    >>> filter(unique_filter(),l)
+    ['a', 'b', 'c', 'v', 'd']
+    """
+    def __init__(self):
+        self.exclude = set()
+    def __call__(self,x):
+        if x in self.exclude:
+            return False
+        else:
+            self.exclude.add(x)
+            return True
+
 class GwtIO(FileIO.FileIO):
 
     FORMATS = ['gwt']
@@ -48,21 +70,21 @@ class GwtIO(FileIO.FileIO):
         So, for code reusability, this part is separated out from 
         _read function by Myunghwa Hwang.
         """
-        weights={}
-        neighbors={}
-        ids = []
-        for line in self.file.readlines():
-            i,j,w=line.strip().split()
+        data = [row.strip().split() for row in self.file.readlines()]
+        ids = filter(unique_filter(),[x[0] for x in data])
+        ids = map(id_type,ids)
+        WN = {}
+        for id in ids: #note: fromkeys is no good here, all keys end up sharing the say dict value
+            WN[id]={}
+        for i,j,v in data:
             i=id_type(i)
-            if i not in ids:
-                ids.append(i)
             j=id_type(j)
-            w=float(w)
-            if i not in weights:
-                weights[i]=[]
-                neighbors[i]=[]
-            weights[i].append(w)
-            neighbors[i].append(j)
+            WN[i][j] = float(v)
+        weights = {}
+        neighbors = {}
+        for i in WN: 
+            weights[i] = WN[i].values()
+            neighbors[i] = WN[i].keys()
         if ret_ids:
             return weights, neighbors, ids
         else:
