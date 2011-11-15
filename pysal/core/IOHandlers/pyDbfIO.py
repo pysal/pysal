@@ -59,11 +59,15 @@ class DBF(pysal.core.Tables.DataTable):
             self.field_info = [('DeletionFlag', 'C', 1, 0)]
             record_size = 1
             fmt = 's'
+            self._col_index = {}
+            idx = 0
             for fieldno in xrange(numfields):
                 name, typ, size, deci = struct.unpack('<11sc4xBB14x', f.read(32))
+                name = name.replace('\0', '')       # eliminate NULs from string
+                self._col_index[name] = (idx,record_size)
+                idx +=1
                 fmt+='%ds'%size
                 record_size+=size
-                name = name.replace('\0', '')       # eliminate NULs from string
                 self.field_info.append((name, typ, size, deci))
             terminator = f.read(1)
             assert terminator == '\r'
@@ -76,6 +80,7 @@ class DBF(pysal.core.Tables.DataTable):
             for fname,ftype,flen,fpre in self.field_info[1:]:
                 field_spec.append((ftype,flen,fpre))
             self.field_spec = field_spec
+            
             #self.spec = [types[fInfo[0]] for fInfo in self.field_info]
         elif self.mode == 'w':
             self.f = open(self.dataPath,'wb')
@@ -89,6 +94,59 @@ class DBF(pysal.core.Tables.DataTable):
     def seek(self,i):
         self.f.seek(self.header_size + (self.record_size*i))
         self.pos = i
+    def _get_col(self,key):
+        """return the column vector"""
+        if key not in self._col_index:
+            raise AttributeError, 'Field: % s does not exist in header'% key
+        prevPos = self.tell()
+        idx,offset = self._col_index[key]
+        typ,size,deci = self.field_spec[idx]
+        gap = (self.record_size-size)
+        f = self.f
+        f.seek(self.header_size+offset)
+        col = [0]*self.n_records
+        for i in xrange(self.n_records):
+            value = f.read(size)
+            f.seek(gap,1)
+            if typ == 'N':
+                value = value.replace('\0', '').lstrip()
+                if value == '': 
+                    value = pysal.MISSINGVALUE 
+                    warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
+                elif deci:
+                    try:
+                        value = float(value)
+                    except ValueError:
+                        value = pysal.MISSINGVALUE
+                        warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
+                else:
+                    try:
+                        value = int(value)
+                    except ValueError:
+                        value = pysal.MISSINGVALUE
+                        warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
+            elif typ == 'D':
+                try:
+                    y, m, d = int(value[:4]), int(value[4:6]), int(value[6:8])
+                    value = datetime.date(y, m, d)
+                except ValueError:
+                    value = pysal.MISSINGVALUE 
+                    warn("Missing Value Found, setting date to pysal.MISSINGVALUE", RuntimeWarning)
+            elif typ == 'L':
+                value = (value in 'YyTt' and 'T') or (value in 'NnFf' and 'F') or '?' 
+            elif typ == 'F':
+                value = value.replace('\0', '').lstrip()
+                if value == '': 
+                    value = pysal.MISSINGVALUE 
+                    warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
+                else:
+                    value = float(value)
+            if isinstance(value, str):
+                value = value.rstrip()
+            col[i] = value
+        self.seek(prevPos)
+        return col
+        
     def read_record(self,i):
         self.seek(i)
         rec = list(struct.unpack(self.record_fmt, self.f.read(self.record_size)))
