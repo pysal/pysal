@@ -29,6 +29,7 @@ Available sub-packages
     spatial_dynamics/index
     weights/index
     spreg/index
+    contrib/index
 
 
 
