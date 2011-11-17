@@ -5,15 +5,36 @@
 Welcome
 *******
 
-
 PySAL is an `open source <http://code.google.com/p/pysal/>`_  cross-platform library of spatial analysis functions written in
 Python. It is intended to support the development of high level applications
 for spatial analysis.
 
-On this site you will find :doc:`user level documentation </users/index>` as well as 
-:doc:`developer documentation </developers/index>` and
-:doc:`downloads </users/installation>`.
 
+****************
+Getting Involved
+****************
+
+Prospective developers can learn more in the :doc:`developer guide
+</developers/index>`.
+
+You can track PySAL development, submit bug reports, and make feature requests 
+`here <http://code.google.com/p/pysal/issues/list>`_. 
+
+Downloads are `here <http://code.google.com/p/pysal/downloads/list>`_.
+
+*************
+Documentation
+*************
+
+    :Release: |version|
+    :Date: |today|
+
+.. toctree::
+    :maxdepth: 1
+
+    users/index
+    developers/index
+    library/index
 
 ****
 News
@@ -45,12 +66,3 @@ National Science Foundation `An Exploratory Space-Time Data Analysis Toolit for 
 National Science Foundation `Hedonic Models of Location Decisions with Applications to Geospatial Microdata (0852261) <http://www.nsf.gov/awardsearch/showAward.do?AwardNumber=0852261>`_
 
 
-
-*************
-Documentation
-*************
-
-.. toctree::
-    :maxdepth: 2
-
-    contents
