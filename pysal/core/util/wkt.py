@@ -55,7 +55,7 @@ class WKTParser:
 
     Read in WKT from a file
 
-    >>> f = pysal.open('../../examples/stl_hom.wkt')
+    >>> f = pysal.open('pysal/examples/stl_hom.wkt')
     >>> f.mode
     'r'
     >>> f.header

@@ -37,17 +37,17 @@ def buildContiguity(polygons, criterion="rook", ids=None):
 
     Examples
     -------
-    >>> w = buildContiguity(pysal.open('../examples/10740.shp','r'))
+    >>> w = buildContiguity(pysal.open('pysal/examples/10740.shp','r'))
     >>> w[0]
     {1: 1.0, 4: 1.0, 101: 1.0, 85: 1.0, 5: 1.0}
-    >>> w = buildContiguity(pysal.open('../examples/10740.shp','r'),criterion='queen')
+    >>> w = buildContiguity(pysal.open('pysal/examples/10740.shp','r'),criterion='queen')
     >>> w.pct_nonzero
     0.031926364234056544
-    >>> w = buildContiguity(pysal.open('../examples/10740.shp','r'),criterion='rook')
+    >>> w = buildContiguity(pysal.open('pysal/examples/10740.shp','r'),criterion='rook')
     >>> w.pct_nonzero
     0.026351084812623275
-    >>> fips = pysal.open('../examples/10740.dbf').by_col('STFID')
-    >>> w = buildContiguity(pysal.open('../examples/10740.shp','r'),ids=fips)
+    >>> fips = pysal.open('pysal/examples/10740.dbf').by_col('STFID')
+    >>> w = buildContiguity(pysal.open('pysal/examples/10740.shp','r'),ids=fips)
     >>> w['35001000107']
     {'35001003805': 1.0, '35001003721': 1.0, '35001000111': 1.0, '35001000112': 1.0, '35001000108': 1.0}
 

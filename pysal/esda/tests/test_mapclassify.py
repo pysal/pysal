@@ -91,7 +91,7 @@ class TestBin1d(unittest.TestCase):
 
 class TestNaturalBreaks(unittest.TestCase):
     def setUp(self):
-        dat = pysal.open("../../examples/calempdensity.csv")
+        dat = pysal.open("pysal/examples/calempdensity.csv")
         self.V = np.array([record[-1] for record in dat])
 
     def test_natural_breaks(self):
@@ -148,7 +148,7 @@ class TestMapClassifier(unittest.TestCase):
 
 class TestEqualInterval(unittest.TestCase):
     def setUp(self):
-        dat = pysal.open("../../examples/calempdensity.csv")
+        dat = pysal.open("pysal/examples/calempdensity.csv")
         self.V = np.array([record[-1] for record in dat])
     def test_Equal_Interval(self):
         ei = Equal_Interval(self.V)
@@ -160,7 +160,7 @@ class TestEqualInterval(unittest.TestCase):
 
 class TestPercentiles(unittest.TestCase):
     def setUp(self):
-        dat = pysal.open("../../examples/calempdensity.csv")
+        dat = pysal.open("pysal/examples/calempdensity.csv")
         self.V = np.array([record[-1] for record in dat])
     def test_Percentiles(self):
         pc = Percentiles(self.V)
@@ -172,7 +172,7 @@ class TestPercentiles(unittest.TestCase):
 
 class TestBoxPlot(unittest.TestCase):
     def setUp(self):
-        dat = pysal.open("../../examples/calempdensity.csv")
+        dat = pysal.open("pysal/examples/calempdensity.csv")
         self.V = np.array([record[-1] for record in dat])
     def test_Box_Plot(self):
         bp = Box_Plot(self.V)
@@ -182,7 +182,7 @@ class TestBoxPlot(unittest.TestCase):
 
 class TestQuantiles(unittest.TestCase):
     def setUp(self):
-        dat = pysal.open("../../examples/calempdensity.csv")
+        dat = pysal.open("pysal/examples/calempdensity.csv")
         self.V = np.array([record[-1] for record in dat])
     def test_Quantiles(self):
         q = Quantiles(self.V, k=5)
@@ -194,7 +194,7 @@ class TestQuantiles(unittest.TestCase):
 
 class TestStdMean(unittest.TestCase):
     def setUp(self):
-        dat = pysal.open("../../examples/calempdensity.csv")
+        dat = pysal.open("pysal/examples/calempdensity.csv")
         self.V = np.array([record[-1] for record in dat])
     def test_Std_Mean(self):
         s = Std_Mean(self.V)
@@ -206,7 +206,7 @@ class TestStdMean(unittest.TestCase):
 
 class TestMaximumBreaks(unittest.TestCase):
     def setUp(self):
-        dat = pysal.open("../../examples/calempdensity.csv")
+        dat = pysal.open("pysal/examples/calempdensity.csv")
         self.V = np.array([record[-1] for record in dat])
     def test_Maximum_Breaks(self):
         mb = Maximum_Breaks(self.V, k=5)
@@ -219,7 +219,7 @@ class TestMaximumBreaks(unittest.TestCase):
 
 class TestFisherJenks(unittest.TestCase):
     def setUp(self):
-        dat = pysal.open("../../examples/calempdensity.csv")
+        dat = pysal.open("pysal/examples/calempdensity.csv")
         self.V = np.array([record[-1] for record in dat])
     def test_Fisher_Jenks(self):
          fj = Fisher_Jenks(self.V)
@@ -231,7 +231,7 @@ class TestFisherJenks(unittest.TestCase):
 
 class TestJenksCaspall(unittest.TestCase):
     def setUp(self):
-        dat = pysal.open("../../examples/calempdensity.csv")
+        dat = pysal.open("pysal/examples/calempdensity.csv")
         self.V = np.array([record[-1] for record in dat])
     def test_Jenks_Caspall(self):
          np.random.seed(10)
@@ -245,7 +245,7 @@ class TestJenksCaspall(unittest.TestCase):
 
 class TestJenksCaspallSampled(unittest.TestCase):
     def setUp(self):
-        dat = pysal.open("../../examples/calempdensity.csv")
+        dat = pysal.open("pysal/examples/calempdensity.csv")
         self.V = np.array([record[-1] for record in dat])
     def test_Jenks_Caspall_Sampled(self):
         np.random.seed(100)
@@ -268,7 +268,7 @@ class TestJenksCaspallSampled(unittest.TestCase):
 
 class TestJenksCaspallForced(unittest.TestCase):
     def setUp(self):
-        dat = pysal.open("../../examples/calempdensity.csv")
+        dat = pysal.open("pysal/examples/calempdensity.csv")
         self.V = np.array([record[-1] for record in dat])
     def test_Jenks_Caspall_Forced(self):
         np.random.seed(100)
@@ -284,7 +284,7 @@ class TestJenksCaspallForced(unittest.TestCase):
 
 class TestUserDefined(unittest.TestCase):
     def setUp(self):
-        dat = pysal.open("../../examples/calempdensity.csv")
+        dat = pysal.open("pysal/examples/calempdensity.csv")
         self.V = np.array([record[-1] for record in dat])
     def test_User_Defined(self):
         bins = [20, max(self.V)]
@@ -297,7 +297,7 @@ class TestUserDefined(unittest.TestCase):
 
 class TestMaxPClassifier(unittest.TestCase):
     def setUp(self):
-        dat = pysal.open("../../examples/calempdensity.csv")
+        dat = pysal.open("pysal/examples/calempdensity.csv")
         self.V = np.array([record[-1] for record in dat])
     def test_Max_P_Classifier(self):
         np.random.seed(100)
@@ -311,7 +311,7 @@ class TestMaxPClassifier(unittest.TestCase):
 
 class TestGadf(unittest.TestCase):
     def setUp(self):
-        dat = pysal.open("../../examples/calempdensity.csv")
+        dat = pysal.open("pysal/examples/calempdensity.csv")
         self.V = np.array([record[-1] for record in dat])
     def test_gadf(self):
         qgadf = gadf(self.V)
@@ -320,7 +320,7 @@ class TestGadf(unittest.TestCase):
 
 class TestKClassifiers(unittest.TestCase):
     def setUp(self):
-        dat = pysal.open("../../examples/calempdensity.csv")
+        dat = pysal.open("pysal/examples/calempdensity.csv")
         self.V = np.array([record[-1] for record in dat])
     def test_K_classifiers(self):
         np.random.seed(100)

@@ -8,7 +8,7 @@ from pysal.spreg.diagnostics_sp import LMtests, MoranRes, spDcache, spDcache
 class Test_diagnostics_sp(unittest.TestCase):
     """ setUp is called before each test function execution """
     def setUp(self):
-        db=pysal.open("../../examples/columbus.dbf","r")
+        db=pysal.open("pysal/examples/columbus.dbf","r")
         y = np.array(db.by_col("HOVAL"))
         y = np.reshape(y, (49,1))
         X = []
@@ -19,7 +19,7 @@ class Test_diagnostics_sp(unittest.TestCase):
         self.X = X
         ols = OLS(self.y, self.X)
         self.ols = ols
-        w = pysal.open('../../examples/columbus.gal', 'r').read()
+        w = pysal.open('pysal/examples/columbus.gal', 'r').read()
         w.transform='r'
         self.w = w
 

@@ -7,3 +7,4 @@ from locators import *
 from rtree import *
 from kdtree import *
 from sphere import *
+#why don't we import collection?

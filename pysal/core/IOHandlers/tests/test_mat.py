@@ -7,7 +7,7 @@ import warnings
 
 class test_MatIO(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = '../../../examples/spat-sym-us.mat'
+        self.test_file = test_file = 'pysal/examples/spat-sym-us.mat'
         self.obj = MatIO(test_file, 'r')
 
     def test_close(self):
@@ -29,7 +29,7 @@ class test_MatIO(unittest.TestCase):
 
     def test_write(self):
         w = self.obj.read()
-        f = tempfile.NamedTemporaryFile(suffix='.mat',dir="../../../examples")
+        f = tempfile.NamedTemporaryFile(suffix='.mat',dir="pysal/examples")
         fname = f.name
         f.close()
         o = pysal.open(fname,'w')

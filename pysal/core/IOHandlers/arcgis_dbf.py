@@ -86,7 +86,7 @@ class ArcGISDbfIO(FileIO.FileIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open an ArcGIS dbf file and read it into a pysal weights object
 
-        >>> w = pysal.open('../../examples/arcgis_ohio.dbf','r','arcgis_dbf').read()
+        >>> w = pysal.open('pysal/examples/arcgis_ohio.dbf','r','arcgis_dbf').read()
 
         Get the number of observations from the header
 
@@ -158,7 +158,7 @@ class ArcGISDbfIO(FileIO.FileIO):
         --------
 
         >>> import tempfile, pysal, os
-        >>> testfile = pysal.open('../../examples/arcgis_ohio.dbf','r','arcgis_dbf')
+        >>> testfile = pysal.open('pysal/examples/arcgis_ohio.dbf','r','arcgis_dbf')
         >>> w = testfile.read()
 
         Create a temporary file for this example

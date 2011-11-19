@@ -100,7 +100,7 @@ class GwtIO(FileIO.FileIO):
         Type 'dir(f)' at the interpreter to see what methods are supported.
         Open .gwt file and read it into a pysal weights object
 
-        >>> f = pysal.open('../../examples/juvenile.gwt','r').read()
+        >>> f = pysal.open('pysal/examples/juvenile.gwt','r').read()
 
         Get the number of observations from the header
 
@@ -191,7 +191,7 @@ class GwtIO(FileIO.FileIO):
         --------
 
         >>> import tempfile, pysal, os
-        >>> testfile = pysal.open('../../examples/juvenile.gwt','r')
+        >>> testfile = pysal.open('pysal/examples/juvenile.gwt','r')
         >>> w = testfile.read()
 
         Create a temporary file for this example

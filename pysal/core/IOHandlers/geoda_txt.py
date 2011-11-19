@@ -17,9 +17,9 @@ class GeoDaTxtReader(Tables.DataTable):
         Examples
         --------
         >>> import pysal
-        >>> f = pysal.open('../../examples/stl_hom.txt','r')
+        >>> f = pysal.open('pysal/examples/stl_hom.txt','r')
         >>> f
-        DataTable: ../../examples/stl_hom.txt
+        DataTable: pysal/examples/stl_hom.txt
         >>> f.header
         ['FIPSNO', 'HR8488', 'HR8893', 'HC8488']
         >>> len(f)

@@ -8,7 +8,7 @@ import scipy.sparse as SP
 
 class test_MtxIO(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = '../../../examples/wmat.mtx'
+        self.test_file = test_file = 'pysal/examples/wmat.mtx'
         self.obj = MtxIO(test_file, 'r')
 
     def test_close(self):
@@ -37,7 +37,7 @@ class test_MtxIO(unittest.TestCase):
         for i in [False, True]:
             self.obj.seek(0)
             w = self.obj.read(sparse=i)
-            f = tempfile.NamedTemporaryFile(suffix='.mtx',dir="../../../examples")
+            f = tempfile.NamedTemporaryFile(suffix='.mtx',dir="pysal/examples")
             fname = f.name
             f.close()
             o = pysal.open(fname,'w')

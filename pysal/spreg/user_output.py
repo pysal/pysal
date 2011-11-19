@@ -487,7 +487,7 @@ def check_arrays(*arrays):
 
     >>> import numpy as np
     >>> import pysal
-    >>> db=pysal.open("../examples/columbus.dbf","r")
+    >>> db=pysal.open("pysal/examples/columbus.dbf","r")
     >>> # Extract CRIME column from the dbf file
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
@@ -543,7 +543,7 @@ def check_weights(w, y):
 
     >>> import numpy as np
     >>> import pysal
-    >>> db=pysal.open("../examples/columbus.dbf","r")
+    >>> db=pysal.open("pysal/examples/columbus.dbf","r")
     >>> # Extract CRIME column from the dbf file
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
@@ -551,7 +551,7 @@ def check_weights(w, y):
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
-    >>> w = pysal.open("../examples/columbus.gal", 'r').read()
+    >>> w = pysal.open("pysal/examples/columbus.gal", 'r').read()
     >>> check_weights(w, y)
     >>> # should not raise an exception
 

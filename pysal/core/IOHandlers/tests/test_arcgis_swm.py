@@ -6,7 +6,7 @@ import os
 
 class test_ArcGISSwmIO(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = '../../../examples/ohio.swm'
+        self.test_file = test_file = 'pysal/examples/ohio.swm'
         self.obj = ArcGISSwmIO(test_file, 'r')
 
     def test_close(self):
@@ -28,7 +28,7 @@ class test_ArcGISSwmIO(unittest.TestCase):
 
     def test_write(self):
         w = self.obj.read()
-        f = tempfile.NamedTemporaryFile(suffix='.swm',dir="../../../examples")
+        f = tempfile.NamedTemporaryFile(suffix='.swm',dir="pysal/examples")
         fname = f.name
         f.close()
         o = pysal.open(fname,'w')

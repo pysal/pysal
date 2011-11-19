@@ -61,7 +61,7 @@ def rose(Y,w,k=8,permutations=0):
 
     Load comma delimited data file in and convert to a numpy array
 
-    >>> f=open("../examples/spi_download.csv",'r')
+    >>> f=open("pysal/examples/spi_download.csv",'r')
     >>> lines=f.readlines()
     >>> f.close()
     >>> lines=[line.strip().split(",") for line in lines]
@@ -98,7 +98,7 @@ def rose(Y,w,k=8,permutations=0):
     Create our contiguity matrix from an external GAL file and row standardize
     the resulting weights
 
-    >>> gal=pysal.open('../examples/states48.gal')
+    >>> gal=pysal.open('pysal/examples/states48.gal')
     >>> w=gal.read()
     >>> w.transform='r'
 

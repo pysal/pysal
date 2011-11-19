@@ -1,6 +1,6 @@
 """ FileIO: Module for reading and writing various file types in a Pythonic way.
     This module should not be used directly, instead...
-    >>> import pysal.FileIO as FileIO
+    import pysal.core.FileIO as FileIO
     Readers and Writers will mimic python file objects.
     .seek(n) seeks to the n'th object
     .read(n) reads n objects, default == all
@@ -9,7 +9,7 @@
         >>> import pysal
         >>> pysal.open == pysal.core.FileIO.FileIO
         True
-        >>> shp = pysal.open('shapefile.shp','r')
+        >>> shp = pysal.open('pysal/examples/stl_hom.shp','r')
         >>> wktout = pysal.open('output.wkt','w')
         >>> for polygon in shp:
         ...     wktout.write(polygon)
@@ -45,11 +45,11 @@ class FileIO_MetaCls(type):
         return cls
             
 class FileIO(object): #should be a type?
-    """ >>> geoReaderObj = FileIO.open('filename.shp','r')
-        >>> geoWriterObj = FileIO.open('filename.shp','w')
-        >>> TableObj = FileIO.open('filename.dbf','r')
-        >>> CVS = FileIO.open('filename.csv','w')
-        >>> weights = FileIO.open('weights.gal','r')
+    """ >>> geoReaderObj = FileIO.open('pysal/examples/stl_hom.shp','r')
+        >>> geoWriterObj = FileIO.open('pysal/examples/stl_hom.shp','w')
+        >>> TableObj = FileIO.open('pysal/examples/stl_hom.dbf','r')
+        >>> CVS = FileIO.open('pysal/examples/mexico.csv','w')
+        >>> weights = FileIO.open('pysal/examples/mexico.gal','r')
 
         How this works,
         FileIO.open(*args) == FileIO(*args)

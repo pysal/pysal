@@ -5,7 +5,7 @@ import os
 
 class test_csvWrapper(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = '../../../examples/stl_hom.csv'
+        self.test_file = test_file = 'pysal/examples/stl_hom.csv'
         self.obj = pysal.core.IOHandlers.csvWrapper.csvWrapper(test_file,'r')
     def test_len(self):
         self.assertEquals(len(self.obj),78)

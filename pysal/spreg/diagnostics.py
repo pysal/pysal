@@ -39,7 +39,7 @@ def f_stat(reg):
 
     Read the DBF associated with the Columbus data. 
 
-    >>> db = pysal.open("../examples/columbus.dbf","r")
+    >>> db = pysal.open("pysal/examples/columbus.dbf","r")
 
     Create the dependent variable vector. 
 
@@ -116,7 +116,7 @@ def t_stat(reg, z_stat=False):
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = pysal.open("../examples/columbus.dbf","r")
+    >>> db = pysal.open("pysal/examples/columbus.dbf","r")
 
     Create the dependent variable vector. 
 
@@ -190,7 +190,7 @@ def r2(reg):
 
     Read the DBF associated with the Columbus data.
     
-    >>> db = pysal.open("../examples/columbus.dbf","r")
+    >>> db = pysal.open("pysal/examples/columbus.dbf","r")
 
     Create the dependent variable vector.
 
@@ -257,7 +257,7 @@ def ar2(reg):
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = pysal.open("../examples/columbus.dbf","r")
+    >>> db = pysal.open("pysal/examples/columbus.dbf","r")
 
     Create the dependent variable vector. 
 
@@ -319,7 +319,7 @@ def se_betas(reg):
 
     Read the DBF associated with the Columbus data. 
 
-    >>> db = pysal.open("../examples/columbus.dbf","r")
+    >>> db = pysal.open("pysal/examples/columbus.dbf","r")
 
     Create the dependent variable vector.
 
@@ -382,7 +382,7 @@ def log_likelihood(reg):
 
     Read the DBF associated with the Columbus data. 
     
-    >>> db = pysal.open("../examples/columbus.dbf","r")
+    >>> db = pysal.open("pysal/examples/columbus.dbf","r")
 
     Create the dependent variable vector. 
 
@@ -446,7 +446,7 @@ def akaike(reg):
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = pysal.open("../examples/columbus.dbf","r")
+    >>> db = pysal.open("pysal/examples/columbus.dbf","r")
 
     Create the dependent variable vector. 
 
@@ -511,7 +511,7 @@ def schwarz(reg):
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = pysal.open("../examples/columbus.dbf","r")
+    >>> db = pysal.open("pysal/examples/columbus.dbf","r")
 
     Create the dependent variable vector. 
 
@@ -577,7 +577,7 @@ def condition_index(reg):
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = pysal.open("../examples/columbus.dbf","r")
+    >>> db = pysal.open("pysal/examples/columbus.dbf","r")
 
     Create the dependent variable vector. 
 
@@ -653,7 +653,7 @@ def jarque_bera(reg):
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = pysal.open("../examples/columbus.dbf","r")
+    >>> db = pysal.open("pysal/examples/columbus.dbf","r")
 
     Create the dependent variable vector. 
 
@@ -755,7 +755,7 @@ def breusch_pagan(reg, z=None):
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = pysal.open("../examples/columbus.dbf","r")
+    >>> db = pysal.open("pysal/examples/columbus.dbf","r")
 
     Create the dependent variable vector. 
 
@@ -901,7 +901,7 @@ def white(reg):
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = pysal.open("../examples/columbus.dbf","r")
+    >>> db = pysal.open("pysal/examples/columbus.dbf","r")
 
     Create the dependent variable vector. 
 
@@ -1057,7 +1057,7 @@ def koenker_bassett(reg, z=None):
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = pysal.open("../examples/columbus.dbf","r")
+    >>> db = pysal.open("pysal/examples/columbus.dbf","r")
 
     Create the dependent variable vector. 
 
@@ -1199,7 +1199,7 @@ def vif(reg):
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = pysal.open("../examples/columbus.dbf","r")
+    >>> db = pysal.open("pysal/examples/columbus.dbf","r")
 
     Create the dependent variable vector. 
 
@@ -1289,7 +1289,7 @@ def constant_check(array):
     >>> import pysal
     >>> import diagnostics
     >>> from ols import BaseOLS as OLS
-    >>> db = pysal.open("../examples/columbus.dbf","r")
+    >>> db = pysal.open("pysal/examples/columbus.dbf","r")
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
     >>> X = []

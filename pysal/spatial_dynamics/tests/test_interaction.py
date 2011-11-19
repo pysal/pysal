@@ -6,7 +6,7 @@ import numpy as np
 
 class SpaceTimeEvents_Tester(unittest.TestCase):
     def setUp(self):
-        self.path = "../../examples/burkitt"
+        self.path = "pysal/examples/burkitt"
     def test_SpaceTimeEvents(self):
         events = interaction.SpaceTimeEvents(self.path,'T')
         self.assertEquals(events.n, 188)
@@ -15,7 +15,7 @@ class SpaceTimeEvents_Tester(unittest.TestCase):
 
 class Knox_Tester(unittest.TestCase):
     def setUp(self):
-        path = "../../examples/burkitt"
+        path = "pysal/examples/burkitt"
         self.events = interaction.SpaceTimeEvents(path,'T')
     def test_knox(self):
         result = interaction.knox(self.events,delta=20,tau=5,permutations=1)
@@ -23,7 +23,7 @@ class Knox_Tester(unittest.TestCase):
 
 class Mantel_Tester(unittest.TestCase):
     def setUp(self):
-        path = "../../examples/burkitt"
+        path = "pysal/examples/burkitt"
         self.events = interaction.SpaceTimeEvents(path,'T')
     def test_mantel(self):
         result = interaction.mantel(self.events,1,scon=0.0,spow=1.0,tcon=0.0,tpow=1.0)
@@ -31,7 +31,7 @@ class Mantel_Tester(unittest.TestCase):
 
 class Jacquez_Tester(unittest.TestCase):
     def setUp(self):
-        path = "../../examples/burkitt"
+        path = "pysal/examples/burkitt"
         self.events = interaction.SpaceTimeEvents(path,'T')
     def test_jacquez(self):
         result = interaction.jacquez(self.events,k=3,permutations=1)

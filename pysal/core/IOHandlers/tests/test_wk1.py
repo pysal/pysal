@@ -6,7 +6,7 @@ import os
 
 class test_Wk1IO(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = '../../../examples/spat-sym-us.wk1'
+        self.test_file = test_file = 'pysal/examples/spat-sym-us.wk1'
         self.obj = Wk1IO(test_file, 'r')
 
     def test_close(self):
@@ -28,7 +28,7 @@ class test_Wk1IO(unittest.TestCase):
 
     def test_write(self):
         w = self.obj.read()
-        f = tempfile.NamedTemporaryFile(suffix='.wk1',dir="../../../examples")
+        f = tempfile.NamedTemporaryFile(suffix='.wk1',dir="pysal/examples")
         fname = f.name
         f.close()
         o = pysal.open(fname,'w')

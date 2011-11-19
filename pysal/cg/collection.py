@@ -59,7 +59,8 @@ class GeometryCollection:
 
         objs -- a list of geometric objects (from pysal.cg.shapes).
 
-        Example:
+        Examples
+        --------
         >>> import pysal.cg.shapes as shapes
         >>> g = GeometryCollection([shapes.Point((0, 0)), shapes.LineSegment(Point((1, 4)), Point((7, 3)))])
         """
@@ -72,7 +73,8 @@ class GeometryCollection:
 
         centroid -> number n-tuple, n > 1
       
-        Example:
+        Examples
+        --------
         >>> import pysal.cg.shapes as shapes
         >>> g = GeometryCollection([shapes.Point((0, 0)), shapes.Point((1, 1))])
         >>> g.centroid
@@ -87,7 +89,8 @@ class GeometryCollection:
 
         bounding_box -> number 4-tuple
  
-        Example:
+        Examples
+        --------
         >>> import pysal.cg.shapes as shapes
         >>> g = GeometryCollection([shapes.Point((0, 1)), shapes.Point((4, 5))])
         >>> g.bounding_box
@@ -101,7 +104,8 @@ class GeometryCollection:
 
         add(Shape obj) -> bool
     
-        Example:
+        Examples
+        --------
         >>> import pysal.cg.shapes as shapes
         >>> g = GeometryCollection()
         >>> g.add(shapes.Point((0, 1)))
@@ -116,7 +120,8 @@ class GeometryCollection:
 
         remove(Shape obj) -> bool
     
-        Example:
+        Examples
+        --------
         >>> import pysal.cg.shapes as shapes
         >>> g = GeometryCollection([shapes.Point((0, 1)), shapes.Point((4, 5))])
         >>> g.remove(shapes.Point((0, 1)))

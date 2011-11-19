@@ -37,7 +37,7 @@ class WeightConverter(object):
         
         Create a WeightConvert object
 
-        >>> wc = WeightConverter('../../examples/arcgis_ohio.dbf',dataFormat='arcgis_dbf')
+        >>> wc = WeightConverter('pysal/examples/arcgis_ohio.dbf',dataFormat='arcgis_dbf')
 
         Check whether or not the W object is set as an attribute
 
@@ -99,7 +99,7 @@ class WeightConverter(object):
  
         Create a WeightConverter object
 
-        >>> wc = WeightConverter('../../examples/sids2.gal')
+        >>> wc = WeightConverter('pysal/examples/sids2.gal')
 
         Check whether or not the W object is set as an attribute
 
@@ -214,11 +214,11 @@ def weight_convert(inPath, outPath, inDataFormat=None, outDataFormat=None, useId
  
     Create a WeightConverter object
 
-    >>> weight_convert('../../examples/sids2.gal', fname, outDataFormat='arcgis_dbf', useIdIndex=True)
+    >>> weight_convert('pysal/examples/sids2.gal', fname, outDataFormat='arcgis_dbf', useIdIndex=True)
 
     Create a new weights object from the gal file
 
-    >>> wold = pysal.open('../../examples/sids2.gal', 'r').read()
+    >>> wold = pysal.open('pysal/examples/sids2.gal', 'r').read()
 
     Create a new weights object from the converted dbf file
 

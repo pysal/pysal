@@ -229,7 +229,7 @@ def order(w,kmax=3):
     Examples
     --------
     >>> from pysal import rook_from_shapefile as rfs
-    >>> w=rfs('../examples/10740.shp')
+    >>> w=rfs('pysal/examples/10740.shp')
     >>> w3=order(w,kmax=3)
     >>> w3[1][0:5]
     [1, -1, 1, 2, 1]
@@ -753,7 +753,7 @@ def get_ids(shapefile, idVariable):
     Examples
     --------
     >>> from pysal.weights.util import get_ids
-    >>> polyids = get_ids("../examples/columbus.shp", "POLYID")      
+    >>> polyids = get_ids("pysal/examples/columbus.shp", "POLYID")      
     >>> polyids[:5]
     [1, 2, 3, 4, 5]
     """
@@ -794,14 +794,14 @@ def get_points_array_from_shapefile(shapefile):
     --------
     Point shapefile
     >>> from pysal.weights.util import get_points_array_from_shapefile
-    >>> xy = get_points_array_from_shapefile('../examples/juvenile.shp')
+    >>> xy = get_points_array_from_shapefile('pysal/examples/juvenile.shp')
     >>> xy[:3]
     array([[ 94.,  93.],
            [ 80.,  95.],
            [ 79.,  90.]])
 
     Polygon shapefile
-    >>> xy = get_points_array_from_shapefile('../examples/columbus.shp')
+    >>> xy = get_points_array_from_shapefile('pysal/examples/columbus.shp')
     >>> xy[:3]
     array([[  8.82721847,  14.36907602],
            [  8.33265837,  14.03162401],

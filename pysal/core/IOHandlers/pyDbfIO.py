@@ -32,7 +32,7 @@ class DBF(pysal.core.Tables.DataTable):
     --------
 
     >>> import pysal
-    >>> dbf = pysal.open('../../examples/juvenile.dbf', 'r')
+    >>> dbf = pysal.open('pysal/examples/juvenile.dbf', 'r')
     >>> dbf.header
     ['ID', 'X', 'Y']
     >>> dbf.field_spec
@@ -272,7 +272,7 @@ class DBF(pysal.core.Tables.DataTable):
 
 if __name__ == '__main__':
     import pysal
-    file_name = "../../examples/10740.dbf"
+    file_name = "pysal/examples/10740.dbf"
     f=pysal.open(file_name,'r')
     newDB = pysal.open('copy.dbf','w')
     newDB.header = f.header

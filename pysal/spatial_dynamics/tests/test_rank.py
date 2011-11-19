@@ -6,7 +6,7 @@ import numpy as np
 
 class Theta_Tester(unittest.TestCase):
     def setUp(self):
-        f=pysal.open("../../examples/mexico.csv")
+        f=pysal.open("pysal/examples/mexico.csv")
         vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
         self.y=np.transpose(np.array([f.by_col[v] for v in vnames]))
         self.regime=np.array(f.by_col['esquivel99'])
@@ -31,7 +31,7 @@ class Theta_Tester(unittest.TestCase):
 
 class SpatialTau_Tester(unittest.TestCase):
     def setUp(self):
-        f=pysal.open("../../examples/mexico.csv")
+        f=pysal.open("pysal/examples/mexico.csv")
         vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
         self.y=np.transpose(np.array([f.by_col[v] for v in vnames]))
         regime=np.array(f.by_col['esquivel99'])

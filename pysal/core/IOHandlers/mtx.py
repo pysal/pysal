@@ -83,7 +83,7 @@ class MtxIO(FileIO.FileIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open a MatrixMarket mtx file and read it into a pysal weights object
 
-        >>> f = pysal.open('../../examples/wmat.mtx','r')
+        >>> f = pysal.open('pysal/examples/wmat.mtx','r')
 
         >>> w = f.read()
 
@@ -104,7 +104,7 @@ class MtxIO(FileIO.FileIO):
 
         >>> f.close()
 
-        >>> f = pysal.open('../../examples/wmat.mtx','r')
+        >>> f = pysal.open('pysal/examples/wmat.mtx','r')
 
         >>> wsp = f.read(sparse=True)
 
@@ -155,7 +155,7 @@ class MtxIO(FileIO.FileIO):
         --------
 
         >>> import tempfile, pysal, os
-        >>> testfile = pysal.open('../../examples/wmat.mtx','r')
+        >>> testfile = pysal.open('pysal/examples/wmat.mtx','r')
         >>> w = testfile.read()
 
         Create a temporary file for this example

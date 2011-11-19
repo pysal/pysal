@@ -149,7 +149,7 @@ class ContiguityWeights_binning:
 
 if __name__ == "__main__":
     import time
-    fname = "../examples/10740.shp"
+    fname = "pysal/examples/10740.shp"
     t0 = time.time()
     c = ContiguityWeights_binning(pysal.open(fname), QUEEN)
     t1 = time.time()

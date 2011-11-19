@@ -72,7 +72,7 @@ class W(object):
     Read from external gal file
 
     >>> import pysal
-    >>> w=pysal.open("../examples/stl.gal").read()
+    >>> w=pysal.open("pysal/examples/stl.gal").read()
     >>> w.n
     78
     >>> w.pct_nonzero
@@ -97,7 +97,7 @@ class W(object):
 
     Cardinality Histogram
 
-    >>> w=pysal.rook_from_shapefile("../examples/sacramentot2.shp")
+    >>> w=pysal.rook_from_shapefile("pysal/examples/sacramentot2.shp")
     >>> w.histogram
     [(1, 1), (2, 6), (3, 33), (4, 103), (5, 114), (6, 73), (7, 35), (8, 17), (9, 9), (10, 4), (11, 4), (12, 3), (13, 0), (14, 1)]
 
@@ -457,7 +457,7 @@ class W(object):
         --------
         >>> from pysal import rook_from_shapefile as rfs
         >>> from pysal import lat2W
-        >>> w=rfs('../examples/10740.shp')
+        >>> w=rfs('pysal/examples/10740.shp')
         >>> w[0]
         {1: 1.0, 4: 1.0, 101: 1.0, 85: 1.0, 5: 1.0}
         >>> w = lat2W()

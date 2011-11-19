@@ -26,7 +26,7 @@ class WKTReader(FileIO.FileIO):
     Read in WKT-formatted file
     
     >>> import pysal
-    >>> f = pysal.open('../../examples/stl_hom.wkt', 'r')
+    >>> f = pysal.open('pysal/examples/stl_hom.wkt', 'r')
 
     Convert wkt to pysal polygons
 

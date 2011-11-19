@@ -61,7 +61,7 @@ class GalIO(FileIO.FileIO):
 
         Read in a file GAL file 
 
-        >>> testfile = pysal.open('../../examples/sids2.gal','r')
+        >>> testfile = pysal.open('pysal/examples/sids2.gal','r')
 
         Return a W object
 
@@ -70,7 +70,7 @@ class GalIO(FileIO.FileIO):
         True
         >>> w.sd == 1.5151237573214935
         True
-        >>> testfile = pysal.open("../../examples/sids2.gal",'r')
+        >>> testfile = pysal.open("pysal/examples/sids2.gal",'r')
 
         Return a sparse matrix for the w information
 
@@ -158,7 +158,7 @@ class GalIO(FileIO.FileIO):
         --------
 
         >>> import tempfile, pysal, os
-        >>> testfile = pysal.open('../../examples/sids2.gal','r')
+        >>> testfile = pysal.open('pysal/examples/sids2.gal','r')
         >>> w = testfile.read()
 
         Create a temporary file for this example

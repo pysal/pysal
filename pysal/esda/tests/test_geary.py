@@ -7,8 +7,8 @@ import numpy as np
 class Geary_Tester(unittest.TestCase):
     """Geary class for unit tests."""
     def setUp(self):
-        self.w = pysal.open("../../examples/book.gal").read()
-        f = pysal.open("../../examples/book.txt")
+        self.w = pysal.open("pysal/examples/book.gal").read()
+        f = pysal.open("pysal/examples/book.txt")
         self.y = np.array(f.by_col['y'])
 
     def test_Geary(self):

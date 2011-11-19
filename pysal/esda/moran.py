@@ -75,8 +75,8 @@ class Moran:
     Examples
     --------
     >>> import pysal
-    >>> w = pysal.open("../examples/stl.gal").read()
-    >>> f = pysal.open("../examples/stl_hom.txt")
+    >>> w = pysal.open("pysal/examples/stl.gal").read()
+    >>> f = pysal.open("pysal/examples/stl_hom.txt")
     >>> y = np.array(f.by_col['HR8893'])
     >>> mi = Moran(y,  w)
     >>> "%7.5f" % mi.I
@@ -88,8 +88,8 @@ class Moran:
 
     SIDS example replicating OpenGeoda
 
-    >>> w = pysal.open("../examples/sids2.gal").read()
-    >>> f = pysal.open("../examples/sids2.dbf")
+    >>> w = pysal.open("pysal/examples/sids2.gal").read()
+    >>> f = pysal.open("pysal/examples/sids2.dbf")
     >>> SIDR = np.array(f.by_col("SIDR74"))
     >>> mi = pysal.Moran(SIDR,  w)
     >>> "%6.4f" % mi.I
@@ -226,13 +226,13 @@ class Moran_BV:
     Open the sudden infant death dbf file and read in rates for 74 and 79
     converting each to a numpy array
 
-    >>> f = pysal.open("../examples/sids2.dbf")
+    >>> f = pysal.open("pysal/examples/sids2.dbf")
     >>> SIDR74 = np.array(f.by_col['SIDR74'])
     >>> SIDR79 = np.array(f.by_col['SIDR79'])
 
     Read a GAL file and construct our spatial weights object
 
-    >>> w = pysal.open("../examples/sids2.gal").read()
+    >>> w = pysal.open("pysal/examples/sids2.gal").read()
 
     Create an instance of Moran_BV
 
@@ -308,7 +308,7 @@ def Moran_BV_matrix(variables, w, permutations = 0, varnames = None):
 
     open dbf
 
-    >>> f = pysal.open("../examples/sids2.dbf")
+    >>> f = pysal.open("pysal/examples/sids2.dbf")
 
     pull of selected variables from dbf and create numpy arrays for each
 
@@ -317,7 +317,7 @@ def Moran_BV_matrix(variables, w, permutations = 0, varnames = None):
 
     create a contiguity matrix from an external gal file
 
-    >>> w = pysal.open("../examples/sids2.gal").read()
+    >>> w = pysal.open("pysal/examples/sids2.gal").read()
 
     create an instance of Moran_BV_matrix
 
@@ -402,8 +402,8 @@ class Moran_Local:
     >>> import numpy as np
     >>> from pysal.esda import moran
     >>> np.random.seed(10)
-    >>> w = pysal.open("../examples/desmith.gal").read()
-    >>> f = pysal.open("../examples/desmith.txt")
+    >>> w = pysal.open("pysal/examples/desmith.gal").read()
+    >>> f = pysal.open("pysal/examples/desmith.txt")
     >>> y = np.array(f.by_col['z'])
     >>> lm = Moran_Local(y, w, transformation = "r", permutations = 99)
     >>> lm.q

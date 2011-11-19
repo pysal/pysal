@@ -7,7 +7,7 @@ from pysal.spreg import user_output as USER
 class Test_OLS(unittest.TestCase):
     """ setUp is called before each test function execution """
     def setUp(self):
-        db=pysal.open("../../examples/columbus.dbf","r")
+        db=pysal.open("pysal/examples/columbus.dbf","r")
         y = np.array(db.by_col("CRIME"))
         y = np.reshape(y, (49,1))
         X = []
@@ -47,7 +47,7 @@ class Test_OLS(unittest.TestCase):
         self.assertEquals(ols.white['df'], 5)
         self.assertAlmostEquals(ols.white['pvalue'], 0.0012792228173925788)
         # test spatial diagnostics
-        w = pysal.open('../../examples/columbus.gal', 'r').read()
+        w = pysal.open('pysal/examples/columbus.gal', 'r').read()
         w.transform = 'r'
         ols = OLS.OLS(self.y, self.X, w=w)
         self.assertAlmostEquals(ols.lm_error[0], 5.2062139238820784)
@@ -141,7 +141,7 @@ class Test_OLS(unittest.TestCase):
 
 class Test_Checkers(unittest.TestCase):
     def setUp(self):
-        db=pysal.open("../../examples/columbus.dbf","r")
+        db=pysal.open("pysal/examples/columbus.dbf","r")
         y = np.array(db.by_col("CRIME"))
         self.y = y
         X = []

@@ -5,7 +5,7 @@ import os
 
 class test_DBF(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = '../../../examples/10740.dbf'
+        self.test_file = test_file = 'pysal/examples/10740.dbf'
         self.dbObj = pysal.core.IOHandlers.pyDbfIO.DBF(test_file,'r')
     def test_len(self):
         self.assertEquals(len(self.dbObj),195)

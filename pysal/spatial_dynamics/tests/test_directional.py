@@ -6,7 +6,7 @@ import numpy as np
 
 class Rose_Tester(unittest.TestCase):
     def setUp(self):
-        f=open("../../examples/spi_download.csv",'r')
+        f=open("pysal/examples/spi_download.csv",'r')
         lines=f.readlines()
         f.close()
         lines=[line.strip().split(",") for line in lines]
@@ -31,7 +31,7 @@ class Rose_Tester(unittest.TestCase):
         us=data[0]
         years=np.arange(1969,2009)
         rel=states/(us*1.)
-        gal=pysal.open('../../examples/states48.gal')
+        gal=pysal.open('pysal/examples/states48.gal')
         self.w=gal.read()
         self.w.transform='r'
         self.Y=rel[:,[0,-1]]

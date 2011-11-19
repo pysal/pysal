@@ -9,7 +9,7 @@ import os, gc
 
 class _Testutil(unittest.TestCase):
     def setUp(self):
-        self.w = pysal.rook_from_shapefile('../../examples/10740.shp')
+        self.w = pysal.rook_from_shapefile('pysal/examples/10740.shp')
 
     def test_lat2W(self):
         w9=pysal.lat2W(3,3)
@@ -115,7 +115,7 @@ class _Testutil(unittest.TestCase):
         w = pysal.weights.WSP2W(wsp)
         self.assertEquals(w.n, 10)
         self.assertEquals(w[0], {1: 1, 5: 1})
-        w = pysal.open('../../examples/sids2.gal','r').read()
+        w = pysal.open('pysal/examples/sids2.gal','r').read()
         wsp = pysal.weights.WSP(w.sparse, w.id_order)
         w = pysal.weights.WSP2W(wsp)
         self.assertEquals(w.n, 100)
@@ -147,15 +147,15 @@ class _Testutil(unittest.TestCase):
         self.assertEquals(w_newdneighborsa, w_new.neighbors['a'])
 
     def test_get_ids(self):
-        polyids = pysal.weights.util.get_ids("../../examples/columbus.shp", "POLYID")      
+        polyids = pysal.weights.util.get_ids("pysal/examples/columbus.shp", "POLYID")      
         polyids5 = [1, 2, 3, 4, 5]
         self.assertEquals(polyids5, polyids[:5])
 
     def test_get_points_array_from_shapefile(self):
-        xy = pysal.weights.util.get_points_array_from_shapefile('../../examples/juvenile.shp')
+        xy = pysal.weights.util.get_points_array_from_shapefile('pysal/examples/juvenile.shp')
         xy3 = np.array([[ 94.,  93.], [ 80.,  95.], [ 79.,  90.]])
         np.testing.assert_array_almost_equal(xy3, xy[:3], decimal=8)
-        xy = pysal.weights.util.get_points_array_from_shapefile('../../examples/columbus.shp')
+        xy = pysal.weights.util.get_points_array_from_shapefile('pysal/examples/columbus.shp')
         xy3 = np.array([[  8.82721847,  14.36907602], [  8.33265837,  14.03162401], [  9.01226541,  13.81971908]])
         np.testing.assert_array_almost_equal(xy3, xy[:3], decimal=8)
 

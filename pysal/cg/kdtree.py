@@ -54,7 +54,7 @@ class Arc_KDTree(scipy.spatial.KDTree):
         See scipy.spatial.KDTree.count_neighbors
 
         Parameters
-        ==========
+        ----------
         p: ignored, kept to maintain compatibility with scipy.spatial.KDTree
 
         Examples

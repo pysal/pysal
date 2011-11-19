@@ -7,7 +7,7 @@ from pysal.core.IOHandlers.gal import GalIO
 
 class test_GalIO(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = '../../../examples/sids2.gal'
+        self.test_file = test_file = 'pysal/examples/sids2.gal'
         self.obj = GalIO(test_file, 'r')
 
     def test___init__(self):

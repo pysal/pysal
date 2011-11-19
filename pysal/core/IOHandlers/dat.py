@@ -40,7 +40,7 @@ class DatIO(gwt.GwtIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open .dat file and read it into a pysal weights object
 
-        >>> w = pysal.open('../../examples/wmat.dat','r').read()
+        >>> w = pysal.open('pysal/examples/wmat.dat','r').read()
 
         Get the number of observations from the header
 
@@ -86,7 +86,7 @@ class DatIO(gwt.GwtIO):
         --------
 
         >>> import tempfile, pysal, os
-        >>> testfile = pysal.open('../../examples/wmat.dat','r')
+        >>> testfile = pysal.open('pysal/examples/wmat.dat','r')
         >>> w = testfile.read()
 
         Create a temporary file for this example
