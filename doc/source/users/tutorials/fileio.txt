@@ -14,31 +14,12 @@ An Overview of the FileIO system in PySAL.
 Introduction
 ============
 
-PySAL contains a new file input-output API that should be used for all file IO operations. The goal is to abstract file handling and return native PySAL data types when reading from known file types. A list of known extensions can be found by issuing the following command.
+PySAL contains a new file input-output API that should be used for all file IO
+operations. The goal is to abstract file handling and return native PySAL data
+types when reading from known file types. A list of known extensions can be
+found by issuing the following command::
 
-.. doctest::
-   :options: +NORMALIZE_WHITESPACE
-
-    >>> pysal.open.check()
-    PySAL File I/O understands the following file extensions:
-    Ext: '.shp', Modes: ['r', 'wb', 'w', 'rb']
-    Ext: '.mtx', Modes: ['r', 'w']
-    Ext: '.swm', Modes: ['r', 'w']
-    Ext: '.mat', Modes: ['r', 'w']
-    Ext: '.shx', Modes: ['r', 'wb', 'w', 'rb']
-    Ext: '.stata_text', Modes: ['r', 'w']
-    Ext: '.geoda_txt', Modes: ['r']
-    Ext: '.dbf', Modes: ['r', 'w']
-    Ext: '.dat', Modes: ['r', 'w']
-    Ext: '.gwt', Modes: ['r']
-    Ext: '.gal', Modes: ['r', 'w']
-    Ext: '.arcgis_text', Modes: ['r', 'w']
-    Ext: '.arcgis_dbf', Modes: ['r', 'w']
-    Ext: '.geobugs_text', Modes: ['r', 'w']
-    Ext: '.wk1', Modes: ['r', 'w']
-    Ext: '.csv', Modes: ['r']
-    Ext: '.wkt', Modes: ['r']
-    >>>
+    pysal.open.check()
 
 Note that in some cases the FileIO module will peek inside your file to
 determine its type. For example "geoda_txt" is just a unique scheme for ".txt"

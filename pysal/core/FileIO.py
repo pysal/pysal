@@ -10,7 +10,7 @@
         >>> pysal.open == pysal.core.FileIO.FileIO
         True
         >>> shp = pysal.open('pysal/examples/stl_hom.shp','r')
-        >>> wktout = pysal.open('output.wkt','w')
+        #>>> wktout = pysal.open('output.wkt','w')
         >>> for polygon in shp:
         ...     wktout.write(polygon)
         ...
@@ -46,9 +46,9 @@ class FileIO_MetaCls(type):
             
 class FileIO(object): #should be a type?
     """ >>> geoReaderObj = FileIO.open('pysal/examples/stl_hom.shp','r')
-        >>> geoWriterObj = FileIO.open('pysal/examples/stl_hom.shp','w')
+        #>>> geoWriterObj = FileIO.open('pysal/examples/stl_hom.shp','w')
         >>> TableObj = FileIO.open('pysal/examples/stl_hom.dbf','r')
-        >>> CVS = FileIO.open('pysal/examples/mexico.csv','w')
+        #>>> CVS = FileIO.open('pysal/examples/mexico.csv','w')
         >>> weights = FileIO.open('pysal/examples/mexico.gal','r')
 
         How this works,
