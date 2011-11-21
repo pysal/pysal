@@ -36,6 +36,9 @@ PySAL structure
 
 Currently PySAL consists of the following files and directories:
 
+  LICENSE.txt
+    PySAL license.
+
   INSTALL.txt
     PySAL prerequisites, installation, testing, and troubleshooting.
 
@@ -57,12 +60,16 @@ Currently PySAL consists of the following files and directories:
   pysal/
     Contains PySAL __init__.py and the directories of PySAL modules.
 
+  doc/
+    Contains PySAL documentation using the Sphinx framework.
+
 PySAL modules
 +++++++++++++
 
     * pysal.core — Core Data Structures and IO
     * pysal.cg — Computational Geometry
     * pysal.esda — Exploratory Spatial Data Analysis
+    * pysal.examples — Data Sets
     * pysal.inequality — Spatial Inequality Analysis
     * pysal.region — Spatially constrained clustering
     * pysal.spatial_dynamics — Spatial Dynamics
@@ -72,20 +79,11 @@ PySAL modules
                      types in a Pythonic way
 
 
-Documentation
--------------
+Website
+-------
 
-The documentation site is here
-    http://pysal.org/contents.html
-
-Web sites
----------
-
-PySAL's home is here
+All things PySAL can be found here
     http://pysal.org/
-
-The developer's site is here
-    http://code.google.com/p/pysal/
 
 
 Mailing Lists

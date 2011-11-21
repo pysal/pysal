@@ -5,20 +5,6 @@
     .seek(n) seeks to the n'th object
     .read(n) reads n objects, default == all
     .next() reads the next object
-    Example Usage:
-        >>> import pysal
-        >>> pysal.open == pysal.core.FileIO.FileIO
-        True
-        >>> shp = pysal.open('pysal/examples/stl_hom.shp','r')
-        #>>> wktout = pysal.open('output.wkt','w')
-        >>> for polygon in shp:
-        ...     wktout.write(polygon)
-        ...
-        >>> wktout.close()
-        >>> shp.seek(0)
-        >>> poly = shp.read(1)
-        >>> ring = poly[0]
-        >>> pt = ring[0]
 """
 
 __author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
@@ -45,12 +31,7 @@ class FileIO_MetaCls(type):
         return cls
             
 class FileIO(object): #should be a type?
-    """ >>> geoReaderObj = FileIO.open('pysal/examples/stl_hom.shp','r')
-        #>>> geoWriterObj = FileIO.open('pysal/examples/stl_hom.shp','w')
-        >>> TableObj = FileIO.open('pysal/examples/stl_hom.dbf','r')
-        #>>> CVS = FileIO.open('pysal/examples/mexico.csv','w')
-        >>> weights = FileIO.open('pysal/examples/mexico.gal','r')
-
+    """ 
         How this works,
         FileIO.open(*args) == FileIO(*args)
         When creating a new instance of FileIO the .__new__ method intercepts
