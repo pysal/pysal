@@ -98,6 +98,8 @@ pygments_style = 'sphinx'
 
 
 # -- Options for HTML output ---------------------------------------------------
+#custom strikethrough setup
+html_style = 'mydoc.css'
 
 # The theme to use for HTML and HTML Help pages.  Major themes that come with
 # Sphinx are currently 'default' and 'sphinxdoc'.

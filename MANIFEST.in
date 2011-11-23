@@ -1,5 +1,0 @@
-include *.txt 
-include doc/build/latex/pysal.pdf
-recursive-include pysal/examples *.*
-recursive-include pysal/*.py
-

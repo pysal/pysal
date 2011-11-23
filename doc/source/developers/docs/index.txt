@@ -1,34 +1,39 @@
-****************************
+.. role:: strike
+
+*******************
+PySAL Documentation
+*******************
+
 Writing PySAL Documentation
-****************************
+============================
 
 PySAL project contains two distinct forms of documentation: inline and
 non-inline, for lack of a better term. Inline docs are contained in the source
 code itself, in *docstrings*.  Non-inline documentation is contained in the
-pysal/doc folder and is formatted as Restructured Text (ReST).  
-
-
-Writing Inline Documentation
-============================
-
-Best Practices
---------------
-
-
-Things to watch out for
-------------------------
-
-
-Writing Non-Inline Documentation
-================================
+pysal/doc folder, is formatted as Restructured Text (ReST), and generated into
+HTML (and other formats) by `Sphinx <http://pypi.python.org/pypi/Sphinx/1.0.7>`_. 
 
 
 Best Practices
 --------------
 
+PySAL makes use of the built-in Sphinx extension *viewcode*. To use it,
+your source code module requires at least one properly formatted docstring.
+
+Developers can now strike-through older documentation with a custom directive as
+follows.  Near the top of the document, add the role directive.  Then, to strike through old text, add the :strike:
+directive and offset the text with back-ticks. This :strike:`strikethrough` is produced
+like this::
+
+  .. role:: strike
+  This :strike:`strikethrough` is produced like this:
+
+
+
 
 Things to watch out for
 ------------------------
+
 
 If you encounter a failing tutorial doctest that does not seem to be in error, it could be 
 a difference in whitespace between the expected and received output. In that case, add an 
@@ -41,9 +46,9 @@ a difference in whitespace between the expected and received output. In that cas
     abc
 
 
-****************************
+
 Building PySAL Documentation
-****************************
+============================
  
 PySAL documentation is built using `Sphinx
 <http://pypi.python.org/pypi/Sphinx/1.0.7>`_ and the `numpydoc <http://pypi.python.org/pypi/numpydoc/0.4>`_
@@ -69,12 +74,9 @@ docs. Consult the `Sphinx markup guide <http://sphinx.pocoo.org/contents.html>`_
 Once you are happy with your changes, check-in the `source` files. Do not
 add or check-in files under  `build` since they are dynamically built.
 
-
 Changes added to the `svn repository <http://code.google.com/p/pysal/>`_
-will be propogated to `pysal.org <http://pysal.org>`_ on a daily basis.
+will be propogated to `pysal.org <http://pysal.org>`_ on an hourly basis.
 
-PySAL makes use of the built-in Sphinx extension *viewcode*. To use it,
-your module requires at least one properly formatted docstring.
 
 Issues
 ======

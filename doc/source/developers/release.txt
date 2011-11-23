@@ -1,17 +1,19 @@
+.. _release:
+.. role:: strike
+
 ************************
 PySAL Release Management
 ************************
 
-.. contents::
 
 Preparing a release
-###################
+===================
 
 One individual developer will be assigned as the release manager and will be
 responsible for building and testing the releases.
 
 Pre-Build Activities
-======================
+--------------------
 
 Prior to the build, there are a number of actions to take. 
 
@@ -31,7 +33,7 @@ Prior to the build, there are a number of actions to take.
      * Build release for X.0 out of tag X.0 following instructions below
 
 Post-build Activities
-=======================
+-----------------------
 
   * bump the trunk up to version X.1 by editing `version.py`
   * update the release on http://pypi.python.org:
@@ -44,13 +46,13 @@ Post-build Activities
   * edit cronjob on peloton to rsync to new release directory
 
 Building the release
-####################
+====================
 
 A clean checkout of the trunk should be done on each machine used to build the
 release, after the Tag.
 
 Source Distributions
-====================
+--------------------
 
 The specification of files and folders to include in all pysal 
 distributions is handled in setup.py and
@@ -61,7 +63,7 @@ MANIFEST.in. To build a new source package, run::
 to generate two source distributions.  A good reference is http://docs.python.org/distutils/sourcedist.html
 
 Binary Installers for Windows 
-=============================
+-----------------------------
 
 Making a Windows binary installer for XP or 7 should be done on a Windows XP machine.
 To build an installer, run:: 
@@ -76,7 +78,8 @@ look at that, run:
 
 
 Binary Installer for OS X 
-=============================
+--------------------------
+
 To make a Mac OS X graphical installer, first install 'bdist_mpkg' from the
 Python Package Index. We recommend downloading the source code and using the
 included setup.py file to install. Note that you can install multiple versions

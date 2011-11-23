@@ -1,4 +1,5 @@
 .. _testing:
+..  role:: strike
 
 ************************
 PySAL Testing Procedures
@@ -17,14 +18,46 @@ For example, in the directory `pysal/esda` the module `moran.py` requires a
 unittest script named `test_moran.py`. This path for this script needs to be
 `pysal/esda/tests/test_moran.py`.
 
-To ensure that any changes made to one package/module do not introduce breakage in the wider project, developers should run the
-package wide test script in `tests/tests.py <http://code.google.com/p/pysal/source/browse/trunk/pysal/tests/tests.py>`_ before making any commits.
-This script will run any existing unit tests as well as identify packages
-missing any tests.
+To ensure that any changes made to one package/module do not introduce breakage in the wider project,
+developers should run the package wide test suite using nose before making any commits.
+To run the new test suite, install python-nose (pip install nose) to your
+working python installation. If you're using EPD, nose is already available.
+Then, do::
+
+  cd trunk/
+  nosetests pysal/
+  
+to run the unit test framework. All of the unittest and doctest example data paths are
+aligned to work with nose running only from trunk. 
+You can also run::
+
+  nosetests pysal/esda/
+  
+or any other directory, for instance, to run just those tests.
+To run the entire unittest test suite plus all of the docstring tests (doctests), run::
+
+  nosetests --with-doctest pysal/
+
+To exclude a specific directory or directories, install nose-exclude from PyPi
+(pip install nose-exclude). Then run it like this::
+
+  nosetests -v --exclude-dir=pysal/contrib --with-doctest  pysal/
+
+Note that you'll probably run into an IOError complaining about too many open
+files. To fix that, pass this via the command line::
+
+  ulimit -S -n 1024
+
+That changes the machine's open file limit for just the current terminal
+session. 
+
 The trunk should most always be in a state where all tests are passed.
 
-A useful development
-companion is the package `pythoscope <http://pythoscope.org>`_. It scans
+
+Generating Unit Tests
+=====================
+
+A useful development companion is the package `pythoscope <http://pythoscope.org>`_. It scans
 package folders and produces test script stubs for your modules that fail until
 you write the tests -- a pesky but useful trait. Using pythoscope in the most
 basic way requires just two simple command line calls::
@@ -33,8 +66,10 @@ basic way requires just two simple command line calls::
 
  pythoscope <my_module>.py
 
-One caveat: pythoscope does not name your test classes in a PySAL-friendly way
-so you'll have to rename each test class after the test scripts are generated.
+
+:strike:`One caveat: pythoscope does not name your test classes in a PySAL-friendly way
+so you'll have to rename each test class after the test scripts are generated.`
+Nose finds tests!
 
 Docstrings and Doctests
 =======================
@@ -56,7 +91,7 @@ includes doctest code (see below), ::
         import doctest
         doctest.testmod(verbose=True)
 
-developers can run the "main" of the file
+Developers can run the "main" of the file
 (python modname.py) and see the docstring results, as long as the call to
 testmod includes the verbose flag. Two, developers can see the doctest
 results for modules without a test function by running::
