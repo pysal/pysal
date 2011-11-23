@@ -36,7 +36,8 @@ class test_MatIO(unittest.TestCase):
         with warnings.catch_warnings(record=True) as warn:
             warnings.simplefilter("always")
             o.write(w)
-            assert issubclass(warn[0].category, FutureWarning)
+            if len(warn) > 0:
+                assert issubclass(warn[0].category, FutureWarning)
         o.close()
         wnew =  pysal.open(fname,'r').read()
         self.assertEqual( wnew.pct_nonzero, w.pct_nonzero)

@@ -19,8 +19,9 @@ class test_ArcGISTextIO(unittest.TestCase):
         with warnings.catch_warnings(record=True) as warn:
             warnings.simplefilter("always")
             w = self.obj.read()
-            assert issubclass(warn[0].category, RuntimeWarning)
-            assert "DBF relating to ArcGIS TEXT was not found, proceeding with unordered string ids." in str(warn[0].message)
+            if len(warn) > 0:
+                assert issubclass(warn[0].category, RuntimeWarning)
+                assert "DBF relating to ArcGIS TEXT was not found, proceeding with unordered string ids." in str(warn[0].message)
         self.assertEqual(3, w.n)
         self.assertEqual(2.0, w.mean_neighbors)
         self.assertEqual([0.1, 0.05], w[2].values())
@@ -35,8 +36,9 @@ class test_ArcGISTextIO(unittest.TestCase):
         with warnings.catch_warnings(record=True) as warn:
             warnings.simplefilter("always")
             w = self.obj.read()
-            assert issubclass(warn[0].category, RuntimeWarning)
-            assert "DBF relating to ArcGIS TEXT was not found, proceeding with unordered string ids." in str(warn[0].message)
+            if len(warn) > 0:
+                assert issubclass(warn[0].category, RuntimeWarning)
+                assert "DBF relating to ArcGIS TEXT was not found, proceeding with unordered string ids." in str(warn[0].message)
         f = tempfile.NamedTemporaryFile(suffix='.txt',dir="pysal/examples")
         fname = f.name
         f.close()
@@ -46,8 +48,9 @@ class test_ArcGISTextIO(unittest.TestCase):
         with warnings.catch_warnings(record=True) as warn:
             warnings.simplefilter("always")
             wnew =  pysal.open(fname,'r','arcgis_text').read()
-            assert issubclass(warn[0].category, RuntimeWarning)
-            assert "DBF relating to ArcGIS TEXT was not found, proceeding with unordered string ids." in str(warn[0].message)
+            if len(warn) > 0:
+                assert issubclass(warn[0].category, RuntimeWarning)
+                assert "DBF relating to ArcGIS TEXT was not found, proceeding with unordered string ids." in str(warn[0].message)
         self.assertEqual( wnew.pct_nonzero, w.pct_nonzero)
         os.remove(fname)
 
