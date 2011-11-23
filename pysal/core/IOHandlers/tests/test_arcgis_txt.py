@@ -22,8 +22,8 @@ class test_ArcGISTextIO(unittest.TestCase):
             assert issubclass(warn[0].category, RuntimeWarning)
             assert "DBF relating to ArcGIS TEXT was not found, proceeding with unordered string ids." in str(warn[0].message)
         self.assertEqual(3, w.n)
-        self.assertEqual(3, w.mean_neighbors)
-        self.assertEqual([0.1, 0.0, 0.05], w[2].values())
+        self.assertEqual(2.0, w.mean_neighbors)
+        self.assertEqual([0.1, 0.05], w[2].values())
 
     def test_seek(self):
         self.test_read()

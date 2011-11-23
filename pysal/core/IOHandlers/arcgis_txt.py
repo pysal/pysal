@@ -19,7 +19,7 @@ class ArcGISTextIO(gwt.GwtIO):
     the category of "Mapping Clusters." But, it cannot be used with
     the "Generate Spatial Weights Matrix" tool. 
 
-    The first line of the ArcGIS text file  is a header including the name of 
+    The first line of the ArcGIS text file is a header including the name of 
     a data column that holded the ID variable in the original source data table.
     After this header line, it includes three data columns 
     for origin id, destination id, and weight values.
@@ -42,9 +42,10 @@ class ArcGISTextIO(gwt.GwtIO):
     ...
 
     As shown in the above example, this file format allows explicit specification 
-    of weights for self-neighbors. When no entry is available for self-neighbors, 
+    of weights for self-neighbors. 
+    When no entry is available for self-neighbors, 
     ArcGIS spatial statistics tools consider they have zero weights.
-    PySAL ArcGISTextIO class assumes the same.
+    PySAL ArcGISTextIO class ignores self-neighbors if their weights are zero.
 
     References
     ----------
@@ -85,12 +86,12 @@ class ArcGISTextIO(gwt.GwtIO):
         Get the mean number of neighbors
 
         >>> w.mean_neighbors
-        3.0
+        2.0
 
         Get neighbor distances for a single observation
 
         >>> w[1]
-        {1: 0.0, 2: 0.10000000000000001, 3: 0.14285999999999999}
+        {2: 0.1, 3: 0.14286}
 
         """
         if self.pos > 0:
@@ -124,9 +125,11 @@ class ArcGISTextIO(gwt.GwtIO):
         
         weights, neighbors = self._readlines(id_type)
         for k in neighbors:
-            if k not in neighbors[k]:
-                neighbors[k].append(k)
-                weights[k].append(0.0)
+            if k in neighbors[k]:
+                k_index = neighbors[k].index(k)
+                if weights[k][k_index] == 0.0:
+                    del neighbors[k][k_index]
+                    del weights[k][k_index]
 
         self.pos += 1
         return W(neighbors,weights)
