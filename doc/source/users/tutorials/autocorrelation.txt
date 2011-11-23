@@ -357,7 +357,7 @@ thus we see 78 :math:`G_i` and :math:`G^*_i` are stored in the vector lg.Gs and 
                 0.489,  0.144,  0.265,  0.382,  0.092,  0.129])
         >>>
 
-To identify the significant [#]_ :math;`G_i' values we can use numpy indexing:
+To identify the significant :math:`G_i' values we can use numpy indexing:
 
 .. doctest::
 
