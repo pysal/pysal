@@ -601,9 +601,58 @@ Then we look at the pseudo-significance of this value, calculated by permuting t
 
 .. doctest::
 
-    >>> print("%2.8f"%result['pvalue'])
-    0.05757415
+    >>> print("%2.2f"%result['pvalue'])
+    0.18
 
+
+Modified Knox Test
+------------------
+
+A modification to the Knox test was proposed by Baker [#]_. Baker's modification measures the difference between the original observed Knox statistic and its expected value. This difference serves as the test statistic. Again, the significance of this statistic is assessed using a Monte Carlo permutation procedure. 
+
+
+.. math::
+ 	 
+ 	 T=\frac{1}{2}\bigg(\sum_{i=1}^{n}\sum_{j=1}^{n}f_{ij}g_{ij} - \frac{1}{n-1}\sum_{k=1}^{n}\sum_{l=1}^{n}\sum_{j=1}^{n}f_{kj}g_{lj}\bigg)\\
+
+
+Where :math:`n` = number of events, :math:`f` = adjacency in space, :math:`g` = adjacency in time (calculated in a manner equivalent to :math:`a^{s}` and :math:`a^{t}` above in the Knox test). The first part of this statistic is equivalent to the original Knox test, while the second part is the expected value under spatio-temporal randomness. 
+
+Here we illustrate the use of the modified Knox test using the data on Burkitt's Lymphoma cases in Uganda from above. We start by importing Numpy, PySAL and the interaction module. Next the example data are then read in and used to create an instance of SpaceTimeEvents.
+
+
+.. testsetup::*
+
+    import numpy as np
+    np.random.seed(100)
+
+.. doctest::
+
+    >>> import numpy as np
+    >>> import pysal
+    >>> import pysal.spatial_dynamics.interaction as interaction  
+    >>> path = "../pysal/examples/burkitt"
+    >>> events = interaction.SpaceTimeEvents(path,'T')
+
+Next, we run the modified Knox test with distance and time thresholds of 20 and 5,respectively. This counts the events that are closer than 20 units in space, and 5 units in time.  
+
+.. doctest::
+
+    >>> result = interaction.modified_knox(events,delta=20,tau=5,permutations=99)
+
+Finally we examine the results. We call the statistic from the results dictionary. This reports a statistic value of 2.810160.  
+
+.. doctest::
+
+    >>> print("%2.8f"%result['stat'])
+    2.81016043
+
+Next we look at the pseudo-significance of this value, calculated by permuting the timestamps and rerunning the statistics. Here, 99 permutations were used, but an alternative number can be specified by the user. In this case, the results indicate that we fail to reject the null hypothesis of no space-time interaction using an alpha value of 0.05. 
+
+.. doctest::
+
+    >>> print("%2.2f"%result['pvalue'])
+    0.11
 
 
 Mantel Test
@@ -656,9 +705,8 @@ Finally, we look at the pseudo-significance of this value, calculated by permuti
 
 .. doctest::
 
-    >>> print("%2.8f"%result['pvalue'])
-    0.24431963
-
+    >>> print("%2.2f"%result['pvalue'])
+    0.27
 
 Jacquez Test
 ------------
@@ -708,7 +756,7 @@ The following runs the Jacquez test on the example data for a value of :math:`k`
     >>> print(result['stat'])
     13
     >>> print("%2.8f"%result['pvalue'])
-    0.12051411
+    0.21
 
 
 
@@ -734,6 +782,8 @@ The following runs the Jacquez test on the example data for a value of :math:`k`
        New York.
 .. [#] Knox, E. (1964). The detection of space-time interactions. Journal of the
        Royal Statistical Society. Series C (Applied Statistics), 13(1):25–30.
+.. [#] R.D. Baker. (2004). Identifying space-time disease clusters. Acta Tropica, 
+       91(3):291-299.
 .. [#] Kulldorff, M. and Hjalmars, U. (1999). The Knox method and other tests
        for space- time interaction. Biometrics, 55(2):544–552.
 .. [#] Williams, E., Smith, P., Day, N., Geser, A., Ellice, J., and Tukei, P.

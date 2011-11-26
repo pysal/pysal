@@ -36,11 +36,18 @@ class Jacquez_Tester(unittest.TestCase):
     def test_jacquez(self):
         result = interaction.jacquez(self.events,k=3,permutations=1)
         self.assertEquals(result['stat'], 13)
-        
+
+class ModifiedKnox_Tester(unittest.TestCase):
+    def setUp(self):
+        path = "../../examples/burkitt"
+        self.events = interaction.SpaceTimeEvents(path,'T')
+    def test_modified_knox(self):
+        result = interaction.modified_knox(self.events,delta=20,tau=5,permutations=1)
+        self.assertAlmostEquals(result['stat'], 2.810160, 6)
 
 
 suite = unittest.TestSuite()
-test_classes = [SpaceTimeEvents_Tester, Knox_Tester, Mantel_Tester, Jacquez_Tester]
+test_classes = [SpaceTimeEvents_Tester, Knox_Tester, Mantel_Tester, Jacquez_Tester, ModifiedKnox_Tester]
 for i in test_classes:
     a = unittest.TestLoader().loadTestsFromTestCase(i)
     suite.addTest(a)

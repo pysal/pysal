@@ -10,7 +10,7 @@ import pysal.weights.Distance as Distance
 from pysal import cg
 import util
 
-__all__=['SpaceTimeEvents','knox','mantel','jacquez']
+__all__=['SpaceTimeEvents','knox','mantel','jacquez','modified_knox']
 
 
 class SpaceTimeEvents:
@@ -179,12 +179,12 @@ def knox(events, delta, tau, permutations=99):
 
     Next, we look at the pseudo-significance of this value, calculated by
     permuting the timestamps and rerunning the statistics. In this case,
-    the results indicate there may be spatio-temporal interaction between
+    the results indicate there is likely no space-time interaction between
     the events.
 
-    >>> print("%2.8f"%result['pvalue'])
-    0.04102287
-
+    >>> print("%2.2f"%result['pvalue'])
+    0.18
+    
 
     """
     n = events.n
@@ -215,19 +215,19 @@ def knox(events, delta, tau, permutations=99):
     # loop for generating a random distribution to assess significance
     for p in range(permutations):
         rtdistmat = util.shuffle_matrix(tdistmat,range(n))
-        timemat = np.zeros((n,n))
-        for i in range(n):
-            for j in range(n):
-                if rtdistmat[i,j] < tau:
-                    timemat[i,j] = 1
+        timemat = np.ones((n,n))
+        test = rtdistmat <= tau
+        timemat = timemat * test
         knoxmat = timemat*spacmat
         k = (knoxmat.sum()-n)/2
         distribution.append(k)
 
     # establish the pseudo significance of the observed statistic
     distribution=np.array(distribution)
-    t = (stat-distribution.mean())/distribution.std()
-    pvalue = stats.t.sf(t,permutations+1)
+    greater = np.ma.masked_greater_equal(distribution,stat)
+    count = np.ma.count_masked(greater)
+    pvalue = (count+1.0)/(permutations+1.0)
+
 
     # return results
     knox_result ={'stat':stat, 'pvalue':pvalue}
@@ -235,7 +235,7 @@ def knox(events, delta, tau, permutations=99):
 
 
 
-def mantel(events, permutations=99, scon=0.0, spow=1.0, tcon=0.0, tpow=1.0):
+def mantel(events, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0):
     """
     Standardized Mantel test for spatio-temporal interaction. [2]_
 
@@ -294,20 +294,20 @@ def mantel(events, permutations=99, scon=0.0, spow=1.0, tcon=0.0, tpow=1.0):
     should be added by the user. This can be done by adjusting the constant
     and power parameters. 
 
-    >>> result = mantel(events, 99, scon=0.0, spow=1.0, tcon=0.0, tpow=1.0)
+    >>> result = mantel(events, 99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0)
 
     Next, we examine the result of the test. 
 
     >>> print("%6.6f"%result['stat'])
-    0.014154
+    0.048368
 
     Finally, we look at the pseudo-significance of this value, calculated by
     permuting the timestamps and rerunning the statistic for each of the 99
-    permuatations. According to these parameters, the results do not
-    indicate spatio-temporal interaction between the events.
+    permutations. According to these parameters, the results indicate 
+    space-time interaction between the events.
 
-    >>> print("%2.8f"%result['pvalue'])
-    0.27370865
+    >>> print("%2.2f"%result['pvalue'])
+    0.01
 
 
     """
@@ -334,11 +334,13 @@ def mantel(events, permutations=99, scon=0.0, spow=1.0, tcon=0.0, tpow=1.0):
         timevec = (util.get_lower(trand)+tcon)**tpow
         m = stats.pearsonr(timevec,distvec)[0].sum()
         dist.append(m)
-
-    # establish the pseudo significance of the observed statistic
+ 
+    ## establish the pseudo significance of the observed statistic
     distribution=np.array(dist)
-    t = (stat-distribution.mean())/distribution.std()
-    pvalue = stats.t.sf(t,permutations+1)
+    greater = np.ma.masked_greater_equal(distribution,stat)
+    count = np.ma.count_masked(greater)
+    pvalue = (count+1.0)/(permutations+1.0)
+
 
     # report the results
     mantel_result = {'stat':stat, 'pvalue':pvalue}
@@ -392,13 +394,19 @@ def jacquez(events, k, permutations=99):
     neighbors in both time and space. The following runs the Jacquez test
     on the example data and reports the resulting statistic. In this case,
     there are 13 instances where events are nearest neighbors in both space
-    and time. The significance of this can be assessed by calling the p-
-    value from the results dictionary, as shown in the Knox and Mantel
-    examples. 
+    and time. 
 
+    >>> np.random.seed(100)
     >>> result = jacquez(events,k=3,permutations=99)
     >>> print result['stat']
     13
+
+    The significance of this can be assessed by calling the p-
+    value from the results dictionary, as shown below. Again, no 
+    space-time interaction is observed.
+
+    >>> print("%2.2f"%result['pvalue'])
+    0.21
 
     """    
     n = events.n
@@ -445,13 +453,148 @@ def jacquez(events, k, permutations=99):
         dist.append(j)
 
     # establish the pseudo significance of the observed statistic
-    distribution = np.array(dist)
-    t = (stat-distribution.mean())/distribution.std()
-    pvalue = stats.t.sf(t,permutations+1)
+    distribution=np.array(dist)
+    greater = np.ma.masked_greater_equal(distribution,stat)
+    count = np.ma.count_masked(greater)
+    pvalue = (count+1.0)/(permutations+1.0)
 
     # report the results
     jacquez_result ={'stat':stat, 'pvalue':pvalue}
     return jacquez_result
+
+
+
+def modified_knox(events, delta, tau, permutations=99):
+    """
+    Baker's modified Knox test for spatio-temporal interaction. [1]_
+
+    Parameters
+    ----------
+    events          : space time events object
+                      an output instance from the class SpaceTimeEvents
+    delta           : float
+                      threshold for proximity in space
+    tau             : float
+                      threshold for proximity in time
+    permutations    : int
+                      the number of permutations used to establish pseudo-
+                      significance (default is 99)
+
+    Returns
+    -------
+    modknox_result  : dictionary
+                      contains the statistic (stat) for the test and the
+                      associated p-value (pvalue)
+    stat            : float
+                      value of the modified knox test for the dataset
+    pvalue          : float
+                      pseudo p-value associated with the statistic
+
+    References
+    ----------
+    .. [1] R.D. Baker. Identifying space-time disease clusters. Acta Tropica, 
+       91(3):291-299, 2004
+       
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> import pysal
+
+    Read in the example data and create an instance of SpaceTimeEvents.
+
+    >>> path = "../examples/burkitt"
+    >>> events = SpaceTimeEvents(path,'T')
+
+    Set the random seed generator. This is used by the permutation based
+    inference to replicate the pseudo-significance of our example results -
+    the end-user will normally omit this step.
+
+    >>> np.random.seed(100)
+
+    Run the modified Knox test with distance and time thresholds of 20 and 5,
+    respectively. This counts the events that are closer than 20 units in
+    space, and 5 units in time.  
+
+    >>> result = modified_knox(events,delta=20,tau=5,permutations=99)
+
+    Next, we examine the results. First, we call the statistic from the
+    results dictionary. This reports the difference between the observed
+    and expected Knox statistic.  
+
+    >>> print("%2.8f"%result['stat'])
+    2.81016043
+
+    Next, we look at the pseudo-significance of this value, calculated by
+    permuting the timestamps and rerunning the statistics. In this case,
+    the results indicate there is likely no space-time interaction.
+
+    >>> print("%2.2f"%result['pvalue'])
+    0.11
+
+    """
+    n = events.n
+    s = events.space
+    t = events.t
+
+    # calculate the spatial and temporal distance matrices for the events
+    sdistmat = cg.distance_matrix(s)   
+    tdistmat = cg.distance_matrix(t)
+
+    # identify events within thresholds
+    spacmat = np.ones((n,n))
+    spacbin = sdistmat <= delta
+    spacmat = spacmat * spacbin
+    timemat = np.ones((n,n))
+    timebin = tdistmat <= tau
+    timemat = timemat * timebin
+
+    # calculate the observed (original) statistic
+    knoxmat = timemat * spacmat
+    obsstat = (knoxmat.sum()-n)
+
+    # calculate the expectated value
+    ssumvec = np.reshape((spacbin.sum(axis=0) - 1),(n,1))
+    tsumvec = np.reshape((timebin.sum(axis=0) - 1),(n,1))
+    expstat = (ssumvec*tsumvec).sum()
+
+    # calculate the modified stat
+    stat = (obsstat-(expstat/(n-1.0)))/2.0
+
+    # return results (if no inference)
+    if permutations==0: return stat
+    distribution=[]
+
+    # loop for generating a random distribution to assess significance
+    for p in range(permutations):
+        rtdistmat = util.shuffle_matrix(tdistmat,range(n))
+        timemat = np.ones((n,n))
+        timebin = rtdistmat <= tau
+        timemat = timemat * timebin
+
+        # calculate the observed knox again
+        knoxmat = timemat * spacmat
+        obsstat = (knoxmat.sum()-n)
+
+        # calculate the expectated value again
+        ssumvec = np.reshape((spacbin.sum(axis=0) - 1),(n,1))
+        tsumvec = np.reshape((timebin.sum(axis=0) - 1),(n,1))
+        expstat = (ssumvec*tsumvec).sum()
+
+        # calculate the modified stat
+        tempstat = (obsstat-(expstat/(n-1.0)))/2.0
+        distribution.append(tempstat)
+
+
+    # establish the pseudo significance of the observed statistic
+    distribution=np.array(distribution)
+    greater = np.ma.masked_greater_equal(distribution,stat)
+    count = np.ma.count_masked(greater)
+    pvalue = (count+1.0)/(permutations+1.0)
+
+    # return results
+    modknox_result ={'stat':stat, 'pvalue':pvalue}
+    return modknox_result
 
 
 
