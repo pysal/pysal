@@ -5,12 +5,13 @@
 """
 
 import pysal
+from pysal.core.FileIO import FileIO
 __author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
 __all__ = ['TemplateWriter', 'TemplateReaderWriter']
 
 
 # Always subclass FileIO
-class TemplateWriter(pysal.core.FileIO):
+class TemplateWriter(FileIO):
     #REQUIRED, List the formats this class supports.
     FORMATS = ['foo']
     #REQUIRED, List the modes supported by this class.
@@ -22,7 +23,7 @@ class TemplateWriter(pysal.core.FileIO):
     # use .__init__ to open any need file handlers
     def __init__(self,*args,**kwargs):
         # initialize the parent class...
-        pysal.core.FileIO.__init__(self,*args,**kwargs)
+        FileIO.__init__(self,*args,**kwargs)
         # this gives you:
         # self.dataPath == the connection string or path to file
         # self.mode == the mode the file should be opened in
@@ -65,13 +66,13 @@ class TemplateWriter(pysal.core.FileIO):
     def close(self):
         self.fileObj.close()
         #clean up the parent class too....
-        pysal.core.FileIO.close(self)
+        FileIO.close(self)
 
-class TemplateReaderWriter(pysal.core.FileIO):
+class TemplateReaderWriter(FileIO):
     FORMATS = ['bar']
     MODES = ['r','w']
     def __init__(self,*args,**kwargs):
-        pysal.core.FileIO.__init__(self,*args,**kwargs)
+        FileIO.__init__(self,*args,**kwargs)
         self.fileObj = open(self.dataPath,self.mode)
     #Notice reading is a bit different
     def _filter(self,st):
@@ -104,13 +105,13 @@ class TemplateReaderWriter(pysal.core.FileIO):
         self.fileObj.flush()
     def close(self):
         self.fileObj.close()
-        pysal.core.FileIO.close(self)
+        FileIO.close(self)
     
 
 
 if __name__=='__main__':
     "note, by running OR importing this module it's automatically added to the pysal fileIO registry."
-    pysal.FileIO.check()
+    pysal.open.check()
 
     lines = [   'This is an example of template FileIO classes',
                 'Each call to write expects a string object',
