@@ -605,7 +605,10 @@ def condition_index(reg):
     6.541827751444
 
     """
-    xtx = reg.xtx   # (array) k x k projection matrix (includes constant)
+    if hasattr(reg, 'xtx'):
+        xtx = reg.xtx   # (array) k x k projection matrix (includes constant)
+    elif hasattr(reg, 'hth'):
+        xtx = reg.hth   # (array) k x k projection matrix (includes constant)
     diag = np.diagonal(xtx)
     scale = xtx/diag    
     eigval = np.linalg.eigvals(scale)
