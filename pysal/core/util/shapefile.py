@@ -177,7 +177,7 @@ class shp_file:
         return True
     def __init__(self, fileName, mode = 'r', shape_type = None):
         self.__mode = mode
-        if fileName.endswith('.shp') or fileName.endswith('.shx') or fileName.endswith('.dbf'):
+        if fileName.lower().endswith('.shp') or fileName.lower().endswith('.shx') or fileName.lower().endswith('.dbf'):
             fileName = fileName[:-4]
         self.fileName = fileName
 
