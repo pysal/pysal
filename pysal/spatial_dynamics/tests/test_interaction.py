@@ -39,7 +39,7 @@ class Jacquez_Tester(unittest.TestCase):
 
 class ModifiedKnox_Tester(unittest.TestCase):
     def setUp(self):
-        path = "../../examples/burkitt"
+        path = "pysal/examples/burkitt"
         self.events = interaction.SpaceTimeEvents(path,'T')
     def test_modified_knox(self):
         result = interaction.modified_knox(self.events,delta=20,tau=5,permutations=1)

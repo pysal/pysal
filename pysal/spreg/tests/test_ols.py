@@ -6,7 +6,7 @@ from pysal.spreg import ols as OLS
 class Test_OLS(unittest.TestCase):
     """ setUp is called before each test function execution """
     def setUp(self):
-        db=pysal.open("pysal/examples/columbus.dbf","r")
+        db=pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
         y = np.array(db.by_col("CRIME"))
         y = np.reshape(y, (49,1))
         X = []
@@ -128,7 +128,7 @@ class Test_OLS(unittest.TestCase):
         betas = np.array([[ 1.28624161], [ 0.22045774]])
         np.testing.assert_array_almost_equal(ols.betas, betas, decimal=8)
         # test spatial diagnostics
-        w = pysal.open('pysal/examples/columbus.gal', 'r').read()
+        w = pysal.open(pysal.examples.get_path('columbus.gal'), 'r').read()
         w.transform = 'r'
         ols = OLS.OLS(self.y, self.X, w=w)
         self.assertAlmostEquals(ols.lm_error[0], 5.2062139238820784)

@@ -26,7 +26,7 @@ class WKTReader(FileIO.FileIO):
     Read in WKT-formatted file
     
     >>> import pysal
-    >>> f = pysal.open('pysal/examples/stl_hom.wkt', 'r')
+    >>> f = pysal.open(pysal.examples.get_path('stl_hom.wkt'), 'r')
 
     Convert wkt to pysal polygons
 
@@ -40,7 +40,7 @@ class WKTReader(FileIO.FileIO):
     Return centroid of polygon at index 1
 
     >>> polys[1].centroid
-    (-91.195784694307363, 39.990883050220845)
+    (-91.19578469430736, 39.990883050220845)
 
     Type dir(polys[1]) at the python interpreter to get a list of supported methods
 

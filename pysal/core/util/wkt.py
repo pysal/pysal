@@ -49,13 +49,13 @@ class WKTParser:
     Inspect our WKT linestring
 
     >>> wkt(l).len
-    73.455384532199886
+    73.45538453219989
     >>> wkt(l).parts
     [[(3.0, 4.0), (10.0, 50.0), (20.0, 25.0)]]
 
     Read in WKT from a file
 
-    >>> f = pysal.open('pysal/examples/stl_hom.wkt')
+    >>> f = pysal.open(pysal.examples.get_path('stl_hom.wkt'))
     >>> f.mode
     'r'
     >>> f.header

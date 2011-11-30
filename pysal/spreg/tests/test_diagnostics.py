@@ -8,7 +8,7 @@ from pysal.spreg.ols import BaseOLS as OLS
 
 
 # create regression object used by all the tests below
-db = pysal.open("pysal/examples/columbus.dbf", "r")
+db = pysal.open(pysal.examples.get_path("columbus.dbf"), "r")
 y = np.array(db.by_col("CRIME"))
 y = np.reshape(y, (49,1))
 X = []

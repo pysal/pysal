@@ -68,7 +68,7 @@ class LMtests:
 
     Open the csv file to access the data for analysis
 
-    >>> csv = pysal.open('pysal/examples/columbus.dbf','r')
+    >>> csv = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
 
     Pull out from the csv the files we need ('HOVAL' as dependent as well as
     'INC' and 'CRIME' as independent) and directly transform them into nx1 and
@@ -79,7 +79,7 @@ class LMtests:
 
     Create the weights object from existing .gal file
 
-    >>> w = pysal.open('pysal/examples/columbus.gal', 'r').read()
+    >>> w = pysal.open(pysal.examples.get_path('columbus.gal'), 'r').read()
 
     Row-standardize the weight object (not required although desirable in some
     cases)
@@ -174,7 +174,7 @@ class MoranRes:
 
     Open the csv file to access the data for analysis
 
-    >>> csv = pysal.open('pysal/examples/columbus.dbf','r')
+    >>> csv = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
 
     Pull out from the csv the files we need ('HOVAL' as dependent as well as
     'INC' and 'CRIME' as independent) and directly transform them into nx1 and
@@ -185,7 +185,7 @@ class MoranRes:
 
     Create the weights object from existing .gal file
 
-    >>> w = pysal.open('pysal/examples/columbus.gal', 'r').read()
+    >>> w = pysal.open(pysal.examples.get_path('columbus.gal'), 'r').read()
 
     Row-standardize the weight object (not required although desirable in some
     cases)

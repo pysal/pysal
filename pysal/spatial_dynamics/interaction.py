@@ -503,7 +503,7 @@ def modified_knox(events, delta, tau, permutations=99):
 
     Read in the example data and create an instance of SpaceTimeEvents.
 
-    >>> path = "../examples/burkitt"
+    >>> path = "pysal/examples/burkitt"
     >>> events = SpaceTimeEvents(path,'T')
 
     Set the random seed generator. This is used by the permutation based

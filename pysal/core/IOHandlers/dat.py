@@ -40,7 +40,7 @@ class DatIO(gwt.GwtIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open .dat file and read it into a pysal weights object
 
-        >>> w = pysal.open('pysal/examples/wmat.dat','r').read()
+        >>> w = pysal.open(pysal.examples.get_path('wmat.dat'),'r').read()
 
         Get the number of observations from the header
 
@@ -55,7 +55,7 @@ class DatIO(gwt.GwtIO):
         Get neighbor distances for a single observation
 
         >>> w[1]
-        {2.0: 0.33329999999999999, 5.0: 0.33329999999999999, 6.0: 0.33329999999999999}
+        {2.0: 0.3333, 5.0: 0.3333, 6.0: 0.3333}
 
 
         """
@@ -86,7 +86,7 @@ class DatIO(gwt.GwtIO):
         --------
 
         >>> import tempfile, pysal, os
-        >>> testfile = pysal.open('pysal/examples/wmat.dat','r')
+        >>> testfile = pysal.open(pysal.examples.get_path('wmat.dat'),'r')
         >>> w = testfile.read()
 
         Create a temporary file for this example
