@@ -557,9 +557,9 @@ def get_vI(ols, w, ei, spDcache):
     trA2 = np.sum(trA2.diagonal())
 
     B = spDcache.AB[1]
-    trB = np.sum(B.diagonal()) * 4
-    vi = (w.n**2 / (w.s0**2 * (w.n - ols.k) * (w.n - ols.k + 2))) * \
-            (w.s1 + 2 * trA2 - trB - ((2 * (spDcache.trA**2)) / (w.n - ols.k)))
+    trB = np.sum(B.diagonal()) * 4.
+    vi = (w.n**2 / (w.s0**2 * (w.n - ols.k) * (w.n - ols.k + 2.))) * \
+            (w.s1 + 2. * trA2 - trB - ((2. * (spDcache.trA**2)) / (w.n - ols.k)))
     return vi
 
 def get_eI(ols, w, spDcache):
