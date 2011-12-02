@@ -64,7 +64,7 @@ class Theta:
     Examples
     --------
     >>> import pysal
-    >>> f=pysal.open("pysal/examples/mexico.csv")
+    >>> f=pysal.open(pysal.examples.get_path("mexico.csv"))
     >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
     >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> regime=np.array(f.by_col['esquivel99'])
@@ -173,7 +173,7 @@ class SpatialTau:
     Examples
     --------
     >>> import pysal
-    >>> f=pysal.open("pysal/examples/mexico.csv")
+    >>> f=pysal.open(pysal.examples.get_path("mexico.csv"))
     >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
     >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> regime=np.array(f.by_col['esquivel99'])

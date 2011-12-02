@@ -6,42 +6,42 @@ import numpy as np
 class test_Markov(unittest.TestCase):
     def test___init__(self):
         # markov = Markov(class_ids, classes)
-         import pysal
-         f=pysal.open("pysal/examples/usjoin.csv")
-         pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
-         q5=np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
-         m=pysal.Markov(q5)
-         expected = np.array([[ 729.,   71.,    1.,    0.,    0.],
-               [  72.,  567.,   80.,    3.,    0.],
-               [   0.,   81.,  631.,   86.,    2.],
-               [   0.,    3.,   86.,  573.,   56.],
-               [   0.,    0.,    1.,   57.,  741.]])
-         np.testing.assert_array_equal(m.transitions, expected)
-         expected = np.matrix([[ 0.91011236,  0.0886392 ,
-             0.00124844,  0.        ,  0.        ],
-            [ 0.09972299,  0.78531856,  0.11080332,  0.00415512,  0.        ],
-            [ 0.        ,  0.10125   ,  0.78875   ,  0.1075    ,  0.0025    ],
-            [ 0.        ,  0.00417827,  0.11977716,  0.79805014,  0.07799443],
-            [ 0.        ,  0.        ,  0.00125156,  0.07133917,  0.92740926]])
-         np.testing.assert_array_almost_equal(m.p.getA(), expected.getA())
-         expected = np.matrix([[ 0.20774716],
-            [ 0.18725774],
-            [ 0.20740537],
-            [ 0.18821787],
-            [ 0.20937187]]).getA()
-         np.testing.assert_array_almost_equal(m.steady_state.getA(), expected)
+        import pysal
+        f = pysal.open(pysal.examples.get_path('usjoin.csv'))
+        pci = np.array([f.by_col[str(y)] for y in range(1929,2010)])
+        q5 = np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
+        m = pysal.Markov(q5)
+        expected = np.array([[ 729.,   71.,    1.,    0.,    0.],
+              [  72.,  567.,   80.,    3.,    0.],
+              [   0.,   81.,  631.,   86.,    2.],
+              [   0.,    3.,   86.,  573.,   56.],
+              [   0.,    0.,    1.,   57.,  741.]])
+        np.testing.assert_array_equal(m.transitions, expected)
+        expected = np.matrix([[ 0.91011236,  0.0886392 ,
+            0.00124844,  0.        ,  0.        ],
+           [ 0.09972299,  0.78531856,  0.11080332,  0.00415512,  0.        ],
+           [ 0.        ,  0.10125   ,  0.78875   ,  0.1075    ,  0.0025    ],
+           [ 0.        ,  0.00417827,  0.11977716,  0.79805014,  0.07799443],
+           [ 0.        ,  0.        ,  0.00125156,  0.07133917,  0.92740926]])
+        np.testing.assert_array_almost_equal(m.p.getA(), expected.getA())
+        expected = np.matrix([[ 0.20774716],
+           [ 0.18725774],
+           [ 0.20740537],
+           [ 0.18821787],
+           [ 0.20937187]]).getA()
+        np.testing.assert_array_almost_equal(m.steady_state.getA(), expected)
 
 
 class test_Spatial_Markov(unittest.TestCase):
     def test___init__(self):
         import pysal
-        f=pysal.open("pysal/examples/usjoin.csv")
-        pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
-        pci=pci.transpose()
-        rpci=pci/(pci.mean(axis=0))
-        w=pysal.open("pysal/examples/states48.gal").read()
-        w.transform='r'
-        sm = pysal.Spatial_Markov(rpci,w,fixed=True,k=5)
+        f = pysal.open(pysal.examples.get_path('usjoin.csv'))
+        pci = np.array([f.by_col[str(y)] for y in range(1929,2010)])
+        pci = pci.transpose()
+        rpci = pci/(pci.mean(axis=0))
+        w = pysal.open(pysal.examples.get_path("states48.gal")).read()
+        w.transform = 'r'
+        sm = pysal.Spatial_Markov(rpci, w, fixed = True, k = 5)
         S =  np.array([[ 0.43509425,  0.2635327 ,  0.20363044,  0.06841983,  0.02932278],
             [ 0.13391287,  0.33993305,  0.25153036,  0.23343016,  0.04119356],
             [ 0.12124869,  0.21137444,  0.2635101 ,  0.29013417,  0.1137326 ],
@@ -54,13 +54,13 @@ class test_Spatial_Markov(unittest.TestCase):
 class test_chi2(unittest.TestCase):
     def test_chi2(self):
         import pysal
-        f=pysal.open("pysal/examples/usjoin.csv")
-        pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
-        pci=pci.transpose()
-        rpci=pci/(pci.mean(axis=0))
-        w=pysal.open("pysal/examples/states48.gal").read()
-        w.transform='r'
-        sm = pysal.Spatial_Markov(rpci,w,fixed=True,k=5)
+        f = pysal.open(pysal.examples.get_path('usjoin.csv'))
+        pci = np.array([f.by_col[str(y)] for y in range(1929,2010)])
+        pci = pci.transpose()
+        rpci = pci/(pci.mean(axis = 0))
+        w = pysal.open(pysal.examples.get_path("states48.gal")).read()
+        w.transform = 'r'
+        sm = pysal.Spatial_Markov(rpci, w, fixed = True, k = 5)
         chi = np.matrix([[  4.06139105e+01,   6.32961385e-04,   1.60000000e+01],
             [  5.55485793e+01,   2.88879565e-06,   1.60000000e+01],
             [  1.77772638e+01,   3.37100315e-01,   1.60000000e+01],
@@ -81,10 +81,10 @@ class test_chi2(unittest.TestCase):
 class test_LISA_Markov(unittest.TestCase):
     def test___init__(self):
         import numpy as np
-        f=pysal.open("pysal/examples/usjoin.csv")
-        pci=np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
-        w=pysal.open("pysal/examples/states48.gal").read()
-        lm=pysal.LISA_Markov(pci,w)
+        f = pysal.open(pysal.examples.get_path('usjoin.csv'))
+        pci = np.array([f.by_col[str(y)] for y in range(1929, 2010)]).transpose()
+        w = pysal.open(pysal.examples.get_path("states48.gal")).read()
+        lm = pysal.LISA_Markov(pci, w)
         obs = np.array([1, 2, 3, 4])
         np.testing.assert_array_almost_equal(obs, lm.classes)
         """
@@ -149,10 +149,10 @@ class test_kullback(unittest.TestCase):
 class test_prais(unittest.TestCase):
     def test___init__(self):
         import numpy as np
-        f=pysal.open("pysal/examples/usjoin.csv")
-        pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
-        q5=np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
-        m=pysal.Markov(q5)
+        f = pysal.open(pysal.examples.get_path('usjoin.csv'))
+        pci = np.array([f.by_col[str(y)] for y in range(1929, 2010)])
+        q5 = np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
+        m = pysal.Markov(q5)
         res = np.matrix([[ 0.08988764,  0.21468144,
             0.21125   ,  0.20194986,  0.07259074]])
         np.testing.assert_array_almost_equal(markov.prais(m.p), res)
@@ -161,10 +161,10 @@ class test_prais(unittest.TestCase):
 class test_shorrock(unittest.TestCase):
     def test___init__(self):
         import numpy as np
-        f=pysal.open("pysal/examples/usjoin.csv")
-        pci=np.array([f.by_col[str(y)] for y in range(1929,2010)])
-        q5=np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
-        m=pysal.Markov(q5)
+        f = pysal.open(pysal.examples.get_path('usjoin.csv'))
+        pci = np.array([f.by_col[str(y)] for y in range(1929, 2010)])
+        q5 = np.array([pysal.Quantiles(y).yb for y in pci]).transpose()
+        m = pysal.Markov(q5)
         np.testing.assert_array_almost_equal(markov.shorrock(m.p),
                0.19758992000997844)
 

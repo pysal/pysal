@@ -55,7 +55,7 @@ class SpaceTimeEvents:
     timestamp for the events. There should be a numerical value (not a
     date) in every field.       
 
-    >>> path = "pysal/examples/burkitt"
+    >>> path = pysal.examples.get_path("burkitt")
 
     Create an instance of SpaceTimeEvents from a shapefile, where the
     temporal information is stored in a column named "T". 
@@ -155,7 +155,7 @@ def knox(events, delta, tau, permutations=99):
 
     Read in the example data and create an instance of SpaceTimeEvents.
 
-    >>> path = "pysal/examples/burkitt"
+    >>> path = pysal.examples.get_path("burkitt")
     >>> events = SpaceTimeEvents(path,'T')
 
     Set the random seed generator. This is used by the permutation based
@@ -278,7 +278,7 @@ def mantel(events, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0):
 
     Read in the example data and create an instance of SpaceTimeEvents.
 
-    >>> path = "pysal/examples/burkitt"
+    >>> path = pysal.examples.get_path("burkitt")
     >>> events = SpaceTimeEvents(path,'T')
 
     Set the random seed generator. This is used by the permutation based
@@ -387,7 +387,7 @@ def jacquez(events, k, permutations=99):
 
     Read in the example data and create an instance of SpaceTimeEvents.
     
-    >>> path = "pysal/examples/burkitt"
+    >>> path = pysal.examples.get_path("burkitt")
     >>> events = SpaceTimeEvents(path,'T')
 
     The Jacquez test counts the number of events that are k nearest
@@ -503,7 +503,7 @@ def modified_knox(events, delta, tau, permutations=99):
 
     Read in the example data and create an instance of SpaceTimeEvents.
 
-    >>> path = "pysal/examples/burkitt"
+    >>> path = pysal.examples.get_path("burkitt")
     >>> events = SpaceTimeEvents(path,'T')
 
     Set the random seed generator. This is used by the permutation based
