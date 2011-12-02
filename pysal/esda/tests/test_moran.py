@@ -6,43 +6,43 @@ import numpy as np
 
 class Moran_Tester(unittest.TestCase):
     def setUp(self):
-        self.w = pysal.open("pysal/examples/stl.gal").read()
-        f=pysal.open("pysal/examples/stl_hom.txt")
-        self.y=np.array(f.by_col['HR8893'])
+        self.w = pysal.open(pysal.examples.get_path("stl.gal")).read()
+        f = pysal.open(pysal.examples.get_path("stl_hom.txt"))
+        self.y = np.array(f.by_col['HR8893'])
     def test_moran(self):
-        mi=moran.Moran(self.y,self.w)
-        self.assertAlmostEquals(mi.I,0.24365582621771659,7)
+        mi = moran.Moran(self.y, self.w)
+        self.assertAlmostEquals(mi.I, 0.24365582621771659, 7)
         self.assertAlmostEquals(mi.p_norm, 0.00027147862770937614)
     def test_sids(self):
-        w=pysal.open("pysal/examples/sids2.gal").read()
-        f=pysal.open("pysal/examples/sids2.dbf")
-        SIDR=np.array(f.by_col("SIDR74"))
-        mi=pysal.Moran(SIDR,w)
-        self.assertAlmostEquals(mi.I,0.24772519320480135)
-        self.assertAlmostEquals(mi.p_norm,0.00011583330781)
+        w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
+        f = pysal.open(pysal.examples.get_path("sids2.dbf"))
+        SIDR = np.array(f.by_col("SIDR74"))
+        mi = pysal.Moran(SIDR,w)
+        self.assertAlmostEquals(mi.I, 0.24772519320480135)
+        self.assertAlmostEquals(mi.p_norm, 0.00011583330781)
 
 class Moran_BV_matrix_Tester(unittest.TestCase):
     def setUp(self):
-        f=pysal.open("pysal/examples/sids2.dbf")
-        varnames=['SIDR74','SIDR79','NWR74','NWR79']
-        self.names=varnames
-        vars=[np.array(f.by_col[var]) for var in varnames]
-        self.vars=vars
-        self.w=pysal.open("pysal/examples/sids2.gal").read()
+        f = pysal.open(pysal.examples.get_path("sids2.dbf"))
+        varnames = ['SIDR74', 'SIDR79', 'NWR74', 'NWR79']
+        self.names = varnames
+        vars = [np.array(f.by_col[var]) for var in varnames]
+        self.vars = vars
+        self.w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
     def test_Moran_BV_matrix(self):
-        res=moran.Moran_BV_matrix(self.vars,self.w,varnames=self.names)
-        self.assertAlmostEquals(res[(0,1)].I,0.19362610652874668)
-        self.assertAlmostEquals(res[(3,0)].I,0.37701382542927858)
+        res = moran.Moran_BV_matrix(self.vars, self.w, varnames = self.names)
+        self.assertAlmostEquals(res[(0, 1)].I, 0.19362610652874668)
+        self.assertAlmostEquals(res[(3, 0)].I, 0.37701382542927858)
         
 class Moran_Local_Tester(unittest.TestCase):
     def setUp(self):
         np.random.seed(10)
-        self.w = pysal.open("pysal/examples/desmith.gal").read()
-        f = pysal.open("pysal/examples/desmith.txt")
+        self.w = pysal.open(pysal.examples.get_path("desmith.gal")).read()
+        f = pysal.open(pysal.examples.get_path("desmith.txt"))
         self.y = np.array(f.by_col['z'])
     def test_Moran_Local(self):
-        lm = moran.Moran_Local(self.y, self.w, transformation="r", permutations=99)
-        self.assertAlmostEquals(lm.z_sim[0],-0.081383956359666748 )
+        lm = moran.Moran_Local(self.y, self.w, transformation = "r", permutations=99)
+        self.assertAlmostEquals(lm.z_sim[0], -0.081383956359666748 )
         self.assertAlmostEquals(lm.p_z_sim[0], 0.46756830387716064 )
         self.assertAlmostEquals(lm.VI_sim,  0.2067126047680822 )
         

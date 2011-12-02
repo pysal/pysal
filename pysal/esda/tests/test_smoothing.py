@@ -10,7 +10,7 @@ class TestFlatten(unittest.TestCase):
 
     def test_flatten(self):
         out1 = sm.flatten(self.input)
-        out2 = sm.flatten(self.input, unique=False)
+        out2 = sm.flatten(self.input, unique = False)
         self.assertEquals(out1, [1,2,3,4,5,6])
         self.assertEquals(out2, [1,2,3,3,4,5,6])
 
@@ -51,8 +51,8 @@ class TestAgeStd(unittest.TestCase):
 
 class TestSRate(unittest.TestCase):
     def setUp(self):
-        sids = pysal.open('pysal/examples/sids2.dbf', 'r')
-        self.w = pysal.open('pysal/examples/sids2.gal', 'r').read()
+        sids = pysal.open(pysal.examples.get_path('sids2.dbf'), 'r')
+        self.w = pysal.open(pysal.examples.get_path('sids2.gal'), 'r').read()
         self.b, self.e = np.array(sids[:,8]), np.array(sids[:,9])
         er = [0.453433, 0.000000, 0.775871, 0.973810, 3.133190]
         eb = [0.0016973, 0.0017054, 0.0017731, 0.0020129, 0.0035349]
@@ -78,9 +78,9 @@ class TestSRate(unittest.TestCase):
         self.assertEquals(out_eb, self.eb)
 
     def test_Spatial_Empirical_Bayes(self):
-        stl = pysal.open('pysal/examples/stl_hom.csv', 'r')
+        stl = pysal.open(pysal.examples.get_path('stl_hom.csv'), 'r')
         stl_e, stl_b = np.array(stl[:,10]), np.array(stl[:,13])
-        stl_w = pysal.open('pysal/examples/stl.gal', 'r').read()
+        stl_w = pysal.open(pysal.examples.get_path('stl.gal'), 'r').read()
         if not stl_w.id_order_set: 
             stl_w.id_order = range(1,len(stl) + 1)
         s_eb = sm.Spatial_Empirical_Bayes(stl_e, stl_b, stl_w)
@@ -108,12 +108,12 @@ class TestSRate(unittest.TestCase):
 
 class TestHB(unittest.TestCase):
     def setUp(self):
-        sids = pysal.open('pysal/examples/sids2.shp', 'r')
+        sids = pysal.open(pysal.examples.get_path('sids2.shp'), 'r')
         self.sids = sids
         self.d = np.array([i.centroid for i in sids])
         self.w = knnW(self.d, k=5)
         if not self.w.id_order_set: self.w.id_order = self.w.id_order
-        sids_db = pysal.open('pysal/examples/sids2.dbf', 'r')
+        sids_db = pysal.open(pysal.examples.get_path('sids2.dbf'), 'r')
         self.b, self.e = np.array(sids_db[:,8]), np.array(sids_db[:,9])
 
     def test_Headbanging_Triples(self):
@@ -133,7 +133,7 @@ class TestHB(unittest.TestCase):
         if not sids_w.id_order_set:
             sids_w.id_order = sids_w.id_order
         s_ht = sm.Headbanging_Triples(sids_d,sids_w,k=5)
-        sids_db = pysal.open('pysal/examples/sids2.dbf', 'r')
+        sids_db = pysal.open(pysal.examples.get_path('sids2.dbf'), 'r')
         s_e, s_b = np.array(sids_db[:,9]), np.array(sids_db[:,8])
         sids_hb_r = sm.Headbanging_Median_Rate(s_e,s_b,s_ht)
         sids_hb_rr5 = np.array([ 0.00075586,  0.        ,  0.0008285 ,  0.0018315 ,  0.00498891])

@@ -72,8 +72,8 @@ class Geary:
     Examples
     --------
     >>> import pysal
-    >>> w = pysal.open("pysal/examples/book.gal").read()
-    >>> f = pysal.open("pysal/examples/book.txt")
+    >>> w = pysal.open(pysal.examples.get_path("book.gal")).read()
+    >>> f = pysal.open(pysal.examples.get_path("book.txt"))
     >>> y = np.array(f.by_col['y'])
     >>> c = Geary(y,w,permutations=0)
     >>> c.C

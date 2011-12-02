@@ -232,7 +232,7 @@ def load_example():
     Helper function for doc tests"""
     import pysal
     np.random.seed(10)
-    dat = pysal.open('pysal/examples/calempdensity.csv')
+    dat = pysal.open(pysal.examples.get_path('calempdensity.csv'))
     cal = np.array([record[-1] for record in dat])
     return cal
 
