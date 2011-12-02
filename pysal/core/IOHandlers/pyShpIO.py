@@ -148,7 +148,7 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
                     shp = self.type(vertices)
             elif rec['NumParts'] == 1:
                 vertices = rec['Vertices']
-                if not pysal.cg.is_clockwise(vertices):
+                if self.dataObj.type() == 'POLYGON' and not pysal.cg.is_clockwise(vertices):
                     ### SHAPEFILE WARNING: Polygon %d topology has been fixed. (ccw -> cw)
                     warn("SHAPEFILE WARNING: Polygon %d topology has been fixed. (ccw -> cw)"%(self.pos),RuntimeWarning)
                     print "SHAPEFILE WARNING: Polygon %d topology has been fixed. (ccw -> cw)"%(self.pos)
