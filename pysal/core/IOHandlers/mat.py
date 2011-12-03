@@ -71,7 +71,7 @@ class MatIO(FileIO.FileIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open a MATLAB mat file and read it into a pysal weights object
 
-        >>> w = pysal.open('pysal/examples/spat-sym-us.mat','r').read()
+        >>> w = pysal.open(pysal.examples.get_path('spat-sym-us.mat'),'r').read()
 
         Get the number of observations from the header
 
@@ -117,7 +117,7 @@ class MatIO(FileIO.FileIO):
         --------
 
         >>> import tempfile, pysal, os
-        >>> testfile = pysal.open('pysal/examples/spat-sym-us.mat','r')
+        >>> testfile = pysal.open(pysal.examples.get_path('spat-sym-us.mat'),'r')
         >>> w = testfile.read()
 
         Create a temporary file for this example

@@ -77,7 +77,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open a GeoBUGS text file and read it into a pysal weights object
 
-        >>> w = pysal.open('pysal/examples/geobugs_scot','r','geobugs_text').read()
+        >>> w = pysal.open(pysal.examples.get_path('geobugs_scot'),'r','geobugs_text').read()
 
         Get the number of observations from the header
 
@@ -169,7 +169,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
         --------
 
         >>> import tempfile, pysal, os
-        >>> testfile = pysal.open('pysal/examples/geobugs_scot','r','geobugs_text')
+        >>> testfile = pysal.open(pysal.examples.get_path('geobugs_scot'),'r','geobugs_text')
         >>> w = testfile.read()
 
         Create a temporary file for this example

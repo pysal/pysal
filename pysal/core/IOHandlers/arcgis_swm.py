@@ -84,7 +84,7 @@ class ArcGISSwmIO(FileIO.FileIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open an ArcGIS swm file and read it into a pysal weights object
 
-        >>> w = pysal.open('pysal/examples/ohio.swm','r').read()
+        >>> w = pysal.open(pysal.examples.get_path('ohio.swm'),'r').read()
 
         Get the number of observations from the header
 
@@ -143,7 +143,7 @@ class ArcGISSwmIO(FileIO.FileIO):
         --------
 
         >>> import tempfile, pysal, os
-        >>> testfile = pysal.open('pysal/examples/ohio.swm','r')
+        >>> testfile = pysal.open(pysal.examples.get_path('ohio.swm'),'r')
         >>> w = testfile.read()
 
         Create a temporary file for this example

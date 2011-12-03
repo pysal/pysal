@@ -6,8 +6,8 @@ import os
 
 class test_StataTextIO(unittest.TestCase):
     def setUp(self):
-        self.test_file_sparse = test_file_sparse = 'pysal/examples/stata_sparse.txt'
-        self.test_file_full = test_file_full = 'pysal/examples/stata_full.txt'
+        self.test_file_sparse = test_file_sparse = pysal.examples.get_path('stata_sparse.txt')
+        self.test_file_full = test_file_full = pysal.examples.get_path('stata_full.txt')
         self.obj_sparse = StataTextIO(test_file_sparse, 'r')
         self.obj_full = StataTextIO(test_file_full, 'r')
 
@@ -39,7 +39,7 @@ class test_StataTextIO(unittest.TestCase):
     def test_write(self):
         for obj in [self.obj_sparse, self.obj_full]:
             w = obj.read()
-            f = tempfile.NamedTemporaryFile(suffix='.txt',dir="pysal/examples")
+            f = tempfile.NamedTemporaryFile(suffix='.txt',dir=pysal.examples.get_path(''))
             fname = f.name
             f.close()
             o = pysal.open(fname,'w','stata_text')

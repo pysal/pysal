@@ -6,7 +6,7 @@ import os
 
 class test_DatIO(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = 'pysal/examples/wmat.dat'
+        self.test_file = test_file = pysal.examples.get_path('wmat.dat')
         self.obj = DatIO(test_file, 'r')
 
     def test_close(self):
@@ -28,7 +28,7 @@ class test_DatIO(unittest.TestCase):
 
     def test_write(self):
         w = self.obj.read()
-        f = tempfile.NamedTemporaryFile(suffix='.dat',dir="pysal/examples")
+        f = tempfile.NamedTemporaryFile(suffix='.dat',dir=pysal.examples.get_path(''))
         fname = f.name
         f.close()
         o = pysal.open(fname,'w')

@@ -141,7 +141,7 @@ class Wk1IO(FileIO.FileIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open a Lotus Wk1 file and read it into a pysal weights object
 
-        >>> w = pysal.open('pysal/examples/spat-sym-us.wk1','r').read()
+        >>> w = pysal.open(pysal.examples.get_path('spat-sym-us.wk1'),'r').read()
 
         Get the number of observations from the header
 
@@ -211,7 +211,7 @@ class Wk1IO(FileIO.FileIO):
         --------
 
         >>> import tempfile, pysal, os
-        >>> testfile = pysal.open('pysal/examples/spat-sym-us.wk1','r')
+        >>> testfile = pysal.open(pysal.examples.get_path('spat-sym-us.wk1'),'r')
         >>> w = testfile.read()
 
         Create a temporary file for this example

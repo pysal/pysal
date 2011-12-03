@@ -5,7 +5,7 @@ import os
 
 class test_PurePyShpWrapper(unittest.TestCase):
     def setUp(self):
-        test_file = 'pysal/examples/10740.shp'
+        test_file = pysal.examples.get_path('10740.shp')
         self.test_file = test_file
         self.shpObj = pysal.core.IOHandlers.pyShpIO.PurePyShpWrapper(test_file,'r')
         f = tempfile.NamedTemporaryFile(suffix='.shp'); shpcopy = f.name; f.close()

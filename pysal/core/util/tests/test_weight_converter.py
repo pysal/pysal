@@ -8,7 +8,7 @@ import warnings
 
 class test_WeightConverter(unittest.TestCase):
     def setUp(self):
-        self.base_dir = 'pysal/examples/'
+        self.base_dir = pysal.examples.get_path('')
         self.test_files = ['arcgis_ohio.dbf', 'arcgis_txt.txt', 'ohio.swm',
                            'wmat.dat','wmat.mtx','sids2.gal','juvenile.gwt',
                            'geobugs_scot','stata_full.txt','stata_sparse.txt',

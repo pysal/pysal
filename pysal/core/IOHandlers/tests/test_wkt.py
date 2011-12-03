@@ -4,7 +4,7 @@ from pysal.core.IOHandlers.wkt import WKTReader
 
 class test_WKTReader(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = 'pysal/examples/stl_hom.wkt'
+        self.test_file = test_file = pysal.examples.get_path('stl_hom.wkt')
         self.obj = WKTReader(test_file, 'r')
 
     def test_close(self):
