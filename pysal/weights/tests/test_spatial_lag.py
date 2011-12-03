@@ -4,7 +4,7 @@ import unittest
 import pysal
 import numpy as np
 
-class _Testlag_spatial(unittest.TestCase):
+class Testlag_spatial(unittest.TestCase):
     def setUp(self):
         self.neighbors={'c': ['b'], 'b': ['c', 'a'], 'a': ['b']}
         self.weights ={'c': [1.0], 'b': [1.0, 1.0], 'a': [1.0]}
@@ -32,7 +32,7 @@ class _Testlag_spatial(unittest.TestCase):
         np.testing.assert_array_almost_equal(yl,ylc)
 
         
-suite = unittest.TestLoader().loadTestsFromTestCase(_Testlag_spatial)
+suite = unittest.TestLoader().loadTestsFromTestCase(Testlag_spatial)
 
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()

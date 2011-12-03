@@ -3,7 +3,7 @@ import unittest
 import pysal
 
 
-class _Test_Components(unittest.TestCase):
+class Test_Components(unittest.TestCase):
     def setUp(self):
         self.w = pysal.lat2W(5, 5)
 
@@ -18,7 +18,7 @@ class _Test_Components(unittest.TestCase):
         self.assertEquals(result, False)
         
 
-suite = unittest.TestLoader().loadTestsFromTestCase(_Test_Components)
+suite = unittest.TestLoader().loadTestsFromTestCase(Test_Components)
 
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()

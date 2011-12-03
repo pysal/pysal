@@ -9,10 +9,10 @@ except ImportError:
     OK_TO_RUN = False
     print "Cannot test rtree contiguity weights, rtree not installed"
 
-class _TestRtreeContiguityWeights(unittest.TestCase):
+class TestRtreeContiguityWeights(unittest.TestCase):
     def setUp(self):
         """ Setup the rtree contiguity weights"""
-        shpObj = pysal.open('pysal/examples/virginia.shp','r')
+        shpObj = pysal.open(pysal.examples.get_path('virginia.shp'),'r')
         self.rtreeW = ContiguityWeights_rtree(shpObj,QUEEN)
         shpObj.close()
     def test_w_type(self):
@@ -27,9 +27,9 @@ class _TestRtreeContiguityWeights(unittest.TestCase):
         self.assertEqual(len(self.rtreeW.w), 136)
     def test_nested_polygons(self):
         # load queen gal file created using Open Geoda.
-        geodaW = pysal.open('pysal/examples/virginia.gal','r').read()
+        geodaW = pysal.open(pysal.examples.get_path('virginia.gal'),'r').read()
         # build matching W with pysal
-        pysalWr = self.build_W('pysal/examples/virginia.shp',QUEEN,'POLY_ID')
+        pysalWr = self.build_W(pysal.examples.get_path('virginia.shp'),QUEEN,'POLY_ID')
         # compare output.
         for key in geodaW.neighbors:
             geoda_neighbors = map(int,geodaW.neighbors[key])
@@ -39,10 +39,10 @@ class _TestRtreeContiguityWeights(unittest.TestCase):
             self.assertEqual(geoda_neighbors,pysalr_neighbors)
     def test_true_rook(self):
         # load rook gal file created using Open Geoda.
-        geodaW = pysal.open('pysal/examples/rook31.gal','r').read()
+        geodaW = pysal.open(pysal.examples.get_path('rook31.gal'),'r').read()
         # build matching W with pysal
-        #pysalW = pysal.rook_from_shapefile('pysal/examples/rook31.shp','POLY_ID')
-        pysalWr = self.build_W('pysal/examples/rook31.shp',ROOK,'POLY_ID')
+        #pysalW = pysal.rook_from_shapefile(pysal.examples.get_path('rook31.shp'),'POLY_ID')
+        pysalWr = self.build_W(pysal.examples.get_path('rook31.shp'),ROOK,'POLY_ID')
         # compare output.
         for key in geodaW.neighbors:
             geoda_neighbors = map(int,geodaW.neighbors[key])
@@ -52,9 +52,9 @@ class _TestRtreeContiguityWeights(unittest.TestCase):
             self.assertEqual(geoda_neighbors,pysalr_neighbors)
     def test_true_rook2(self):
         # load rook gal file created using Open Geoda.
-        geodaW = pysal.open('pysal/examples/stl_hom_rook.gal','r').read()
+        geodaW = pysal.open(pysal.examples.get_path('stl_hom_rook.gal'),'r').read()
         # build matching W with pysal
-        pysalWr = self.build_W('pysal/examples/stl_hom.shp',ROOK,'POLY_ID_OG')
+        pysalWr = self.build_W(pysal.examples.get_path('stl_hom.shp'),ROOK,'POLY_ID_OG')
         # compare output.
         for key in geodaW.neighbors:
             geoda_neighbors = map(int,geodaW.neighbors[key])
@@ -64,9 +64,9 @@ class _TestRtreeContiguityWeights(unittest.TestCase):
             self.assertEqual(geoda_neighbors,pysalr_neighbors)
     def test_true_rook3(self):
         # load rook gal file created using Open Geoda.
-        geodaW = pysal.open('pysal/examples/sacramentot2.gal','r').read()
+        geodaW = pysal.open(pysal.examples.get_path('sacramentot2.gal'),'r').read()
         # build matching W with pysal
-        pysalWr = self.build_W('pysal/examples/sacramentot2.shp',ROOK,'POLYID')
+        pysalWr = self.build_W(pysal.examples.get_path('sacramentot2.shp'),ROOK,'POLYID')
         # compare output.
         for key in geodaW.neighbors:
             geoda_neighbors = map(int,geodaW.neighbors[key])
@@ -76,9 +76,9 @@ class _TestRtreeContiguityWeights(unittest.TestCase):
             self.assertEqual(geoda_neighbors,pysalr_neighbors)
     def test_true_rook4(self):
         # load rook gal file created using Open Geoda.
-        geodaW = pysal.open('pysal/examples/virginia_rook.gal','r').read()
+        geodaW = pysal.open(pysal.examples.get_path('virginia_rook.gal'),'r').read()
         # build matching W with pysal
-        pysalWr = self.build_W('pysal/examples/virginia.shp',ROOK,'POLY_ID')
+        pysalWr = self.build_W(pysal.examples.get_path('virginia.shp'),ROOK,'POLY_ID')
         # compare output.
         for key in geodaW.neighbors:
             geoda_neighbors = map(int,geodaW.neighbors[key])
@@ -111,7 +111,7 @@ class _TestRtreeContiguityWeights(unittest.TestCase):
         shpObj.seek(0)
         return rtreeW
 
-suite = unittest.TestLoader().loadTestsFromTestCase(_TestRtreeContiguityWeights)
+suite = unittest.TestLoader().loadTestsFromTestCase(TestRtreeContiguityWeights)
 
 if __name__ == '__main__' and OK_TO_RUN:
     runner = unittest.TextTestRunner()

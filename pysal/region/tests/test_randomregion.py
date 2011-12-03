@@ -5,7 +5,7 @@ import numpy as np
 import random
 
 
-class _Test_Random_Regions(unittest.TestCase):
+class Test_Random_Regions(unittest.TestCase):
     def setUp(self):
         self.nregs = 13
         self.cards = range(2,14) + [10]
@@ -160,7 +160,7 @@ class _Test_Random_Regions(unittest.TestCase):
         self.assertEquals(t0.feasible, True)
 
         
-suite = unittest.TestLoader().loadTestsFromTestCase(_Test_Random_Regions)
+suite = unittest.TestLoader().loadTestsFromTestCase(Test_Random_Regions)
 
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()

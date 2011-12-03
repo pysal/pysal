@@ -9,7 +9,7 @@ import os, gc, operator
 __all__ = ['lat2W','regime_weights','comb','order', 'higher_order', 'shimbel', 'remap_ids','full2W','full', 'WSP2W', 'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance','lat2SW', 'w_local_cluster']
 
 
-def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
+def lat2W(nrows = 5, ncols = 5, rook = True, id_type = 'int'):
     """
     Create a W object for a regular lattice.
 
@@ -42,7 +42,7 @@ def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
     --------
 
     >>> from pysal import lat2W
-    >>> w9=lat2W(3,3)
+    >>> w9 = lat2W(3,3)
     >>> w9.pct_nonzero
     0.29629629629629628
     >>> w9[0]
@@ -52,46 +52,46 @@ def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
     >>> 
     """
     gc.disable()
-    n=nrows*ncols
-    r1=nrows-1
-    c1=ncols-1
-    rid=[ i/ncols for i in xrange(n) ]
-    cid=[ i%ncols for i in xrange(n) ]
-    w={}
-    r=below=0
-    for i in xrange(n-1):
-        if rid[i]<r1:
-            below=rid[i]+1
-            r=below*ncols+cid[i]
-            w[i]=w.get(i,[])+[r]
-            w[r]=w.get(r,[])+[i]
-        if cid[i]<c1:
-            right=cid[i]+1
-            c=rid[i]*ncols+right
-            w[i]=w.get(i,[])+[c]
-            w[c]=w.get(c,[])+[i]
+    n = nrows * ncols
+    r1 = nrows - 1
+    c1 = ncols - 1
+    rid = [ i/ncols for i in xrange(n) ]
+    cid = [ i%ncols for i in xrange(n) ]
+    w = {}
+    r = below = 0
+    for i in xrange(n - 1):
+        if rid[i] < r1:
+            below = rid[i] + 1
+            r = below * ncols + cid[i]
+            w[i] = w.get(i,[])+[r]
+            w[r] = w.get(r, [])+[i]
+        if cid[i] < c1:
+            right = cid[i] + 1
+            c = rid[i] * ncols + right
+            w[i] = w.get(i, []) + [c]
+            w[c] = w.get(c,[ ]) + [i]
         if not rook:
             # southeast bishop
-            if cid[i]<c1 and rid[i]<r1:
-                r=(rid[i]+1)*ncols + 1 + cid[i]
-                w[i]=w.get(i,[])+[r]
-                w[r]=w.get(r,[])+[i]
+            if cid[i] < c1 and rid[i] < r1:
+                r = (rid[i] + 1 ) * ncols + 1 + cid[i]
+                w[i] = w.get(i, []) + [r]
+                w[r] = w.get(r, []) + [i]
             # southwest bishop
-            if cid[i]>0 and rid[i]<r1:
-                r=(rid[i]+1)*ncols - 1 + cid[i]
-                w[i]=w.get(i,[])+[r]
-                w[r]=w.get(r,[])+[i]
+            if cid[i] > 0 and rid[i] < r1:
+                r = (rid[i] + 1) * ncols - 1 + cid[i]
+                w[i] = w.get(i, []) + [r]
+                w[r] = w.get(r, []) + [i]
 
-    neighbors={}
-    weights={}
+    neighbors = {}
+    weights = {}
     for key in w:
-        weights[key]=[1.]*len(w[key])
+        weights[key] = [1.] * len(w[key])
     ids = range(n)
-    if id_type=='string':
-        ids = ['id'+str(i) for i in ids]
-    elif id_type=='float':
-        ids = [i*1. for i in ids]
-    if id_type=='string' or id_type=='float':
+    if id_type == 'string':
+        ids = ['id' + str(i) for i in ids]
+    elif id_type == 'float':
+        ids = [i * 1. for i in ids]
+    if id_type == 'string' or id_type == 'float':
         id_dict = dict(zip(range(n), ids))
         alt_w = {}
         alt_weights = {}
@@ -103,7 +103,7 @@ def lat2W(nrows=5,ncols=5,rook=True,id_type='int'):
         w = alt_w
         weights = alt_weights
     gc.enable()
-    return pysal.weights.W(w,weights,ids)
+    return pysal.weights.W(w, weights, ids)
 
 
 def regime_weights(regimes):
@@ -130,20 +130,20 @@ def regime_weights(regimes):
     
     >>> from pysal import regime_weights 
     >>> import numpy as np
-    >>> regimes=np.ones(25)
-    >>> regimes[range(10,20)]=2
-    >>> regimes[range(21,25)]=3
+    >>> regimes = np.ones(25)
+    >>> regimes[range(10,20)] = 2
+    >>> regimes[range(21,25)] = 3
     >>> regimes
     array([ 1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  2.,  2.,  2.,
             2.,  2.,  2.,  2.,  2.,  2.,  2.,  1.,  3.,  3.,  3.,  3.])
-    >>> w=regime_weights(regimes)
+    >>> w = regime_weights(regimes)
     >>> w.weights[0]
     [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
     >>> w.neighbors[0]
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 20]
-    >>> regimes=['n','n','s','s','e','e','w','w','e']
-    >>> n=len(regimes)
-    >>> w=regime_weights(regimes)
+    >>> regimes = ['n','n','s','s','e','e','w','w','e']
+    >>> n = len(regimes)
+    >>> w = regime_weights(regimes)
     >>> w.neighbors
     {0: [1], 1: [0], 2: [3], 3: [2], 4: [5, 8], 5: [4, 8], 6: [7], 7: [6], 8: [4, 5]}
     """ 
@@ -152,9 +152,9 @@ def regime_weights(regimes):
     NPNZ = np.nonzero
     regimes = np.array(regimes)
     for rid in rids:
-        members = NPNZ(regimes==rid)[0]
+        members = NPNZ(regimes == rid)[0]
         for member in members:
-            neighbors[member] = members[NPNZ(members!=member)[0]].tolist()
+            neighbors[member] = members[NPNZ(members != member)[0]].tolist()
     return pysal.weights.W(neighbors)
 
 
@@ -177,8 +177,8 @@ def comb(items, n=None):
 
     Examples
     --------
-    >>> x=range(4)
-    >>> for c in comb(x,2):
+    >>> x = range(4)
+    >>> for c in comb(x, 2):
     ...     print c
     ...     
     [0, 1]
@@ -190,17 +190,17 @@ def comb(items, n=None):
     
     """
     if n is None:
-        n=len(items)
+        n = len(items)
     for i in range(len(items)):
-        v=items[i:i+1]
-        if n==1:
+        v = items[i:i+1]
+        if n == 1:
             yield v
         else:
             rest = items[i+1:]
             for c in comb(rest, n-1):
                 yield v + c
 
-def order(w,kmax=3):
+def order(w, kmax=3):
     """
     Determine the non-redundant order of contiguity up to a specific
     order.
@@ -229,8 +229,8 @@ def order(w,kmax=3):
     Examples
     --------
     >>> from pysal import rook_from_shapefile as rfs
-    >>> w=rfs('pysal/examples/10740.shp')
-    >>> w3=order(w,kmax=3)
+    >>> w = rfs(pysal.examples.get_path('10740.shp'))
+    >>> w3 = order(w, kmax = 3)
     >>> w3[1][0:5]
     [1, -1, 1, 2, 1]
 
@@ -241,28 +241,28 @@ def order(w,kmax=3):
        Regional Science, 36, 67-89. 
 
     """
-    ids=w.neighbors.keys()
-    info={}
+    ids = w.neighbors.keys()
+    info = {}
     for id in ids:
-        s=[0]*w.n
+        s = [0] * w.n
         s[ids.index(id)]=-1
         for j in w.neighbors[id]:
-            s[ids.index(j)]=1
-        k=1
+            s[ids.index(j)] = 1
+        k = 1
         while k < kmax:
-            knext=k+1
+            knext = k+1
             if s.count(k):
                 # get neighbors of order k
-                js=[ids[j] for j,val in enumerate(s) if val==k]
+                js=[ids[j] for j, val in enumerate(s) if val == k]
                 # get first order neighbors for order k neighbors
                 for j in js:
-                    next_neighbors=w.neighbors[j]
+                    next_neighbors = w.neighbors[j]
                     for neighbor in next_neighbors:
-                        nid=ids.index(neighbor)
-                        if s[nid]==0:
-                            s[nid]=knext
-            k=knext
-        info[id]=s
+                        nid = ids.index(neighbor)
+                        if s[nid] == 0:
+                            s[nid] = knext
+            k = knext
+        info[id] = s
     return info
 
 def higher_order(w, k=2):
@@ -291,16 +291,16 @@ def higher_order(w, k=2):
     Examples
     --------
     >>> from pysal import lat2W, higher_order
-    >>> w10=lat2W(10,10)
-    >>> w10_2=higher_order(w10,2)
+    >>> w10 = lat2W(10, 10)
+    >>> w10_2 = higher_order(w10, 2)
     >>> w10_2[0]
     {2: 1.0, 11: 1.0, 20: 1.0}
-    >>> w5=lat2W()
+    >>> w5 = lat2W()
     >>> w5[0]
     {1: 1.0, 5: 1.0}
     >>> w5[1]
     {0: 1.0, 2: 1.0, 6: 1.0}
-    >>> w5_2=higher_order(w5,2)
+    >>> w5_2 = higher_order(w5,2)
     >>> w5_2[0]
     {2: 1.0, 10: 1.0, 6: 1.0}
 
@@ -311,14 +311,14 @@ def higher_order(w, k=2):
        Regional Science, 36, 67-89. 
     """
     info = order(w, k)
-    ids=info.keys()
-    neighbors={}
-    weights={}
+    ids = info.keys()
+    neighbors = {}
+    weights = {}
     for id in ids:
-        nids=[ids[j] for j,o in enumerate(info[id]) if o==k]
-        neighbors[id]=nids
-        weights[id]=[1.0]*len(nids)
-    return pysal.weights.W(neighbors,weights)
+        nids = [ids[j] for j, o in enumerate(info[id]) if o == k]
+        neighbors[id] = nids
+        weights[id] = [1.0] * len(nids)
+    return pysal.weights.W(neighbors, weights)
 
 def w_local_cluster(w):
     """
@@ -376,12 +376,12 @@ def w_local_cluster(w):
     
     """
 
-    c = np.zeros((w.n,1), float)
+    c = np.zeros((w.n, 1), float)
     w.transformation = 'b'
     for i,id in enumerate(w.id_order):
         ki = max(w.cardinalities[id], 1) # deal with islands
         Ni = w.neighbors[id]
-        wi = pysal.w_subset(w,Ni).full()[0]
+        wi = pysal.w_subset(w, Ni).full()[0]
         c[i] =  wi.sum() / (ki * (ki - 1))
     return c
 
@@ -405,37 +405,37 @@ def shimbel(w):
     Examples
     --------
     >>> from pysal import lat2W, shimbel
-    >>> w5=lat2W()
-    >>> w5_shimbel=shimbel(w5)
+    >>> w5 = lat2W()
+    >>> w5_shimbel = shimbel(w5)
     >>> w5_shimbel[0][24]
     8
     >>> w5_shimbel[0][0:4]
     [-1, 1, 2, 3]
     >>>
     """
-    info={}
-    ids=w.id_order
+    info = {}
+    ids = w.id_order
     for id in ids:
-        s=[0]*w.n
-        s[ids.index(id)]=-1
+        s = [0] * w.n
+        s[ids.index(id)] =-1
         for j in w.neighbors[id]:
-            s[ids.index(j)]=1
-        k=1
-        flag=s.count(0)
+            s[ids.index(j)] = 1
+        k = 1
+        flag = s.count(0)
         while flag:
-            p=-1
-            knext=k+1
+            p =-1
+            knext = k + 1
             for j in range(s.count(k)):
-                neighbor=s.index(k,p+1)
-                p=neighbor
-                next_neighbors=w.neighbors[ids[p]]
+                neighbor = s.index(k, p+1)
+                p = neighbor
+                next_neighbors = w.neighbors[ids[p]]
                 for neighbor in next_neighbors:
-                    nid=ids.index(neighbor)
-                    if s[nid]==0:
-                        s[nid]=knext
-            k=knext
-            flag=s.count(0)
-        info[id]=s
+                    nid = ids.index(neighbor)
+                    if s[nid] == 0:
+                        s[nid] = knext
+            k = knext
+            flag = s.count(0)
+        info[id] = s
     return info
 
 
@@ -458,10 +458,10 @@ def full(w):
     Examples
     --------
     >>> from pysal import W, full
-    >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
-    >>> weights={'first':[1],'second':[1,1],'third':[1]}
-    >>> w=W(neighbors,weights)
-    >>> wf,ids=full(w)
+    >>> neighbors = {'first':['second'],'second':['first','third'],'third':['second']}
+    >>> weights = {'first':[1],'second':[1,1],'third':[1]}
+    >>> w = W(neighbors, weights)
+    >>> wf, ids = full(w)
     >>> wf
     array([[ 0.,  1.,  0.],
            [ 1.,  0.,  1.],
@@ -469,17 +469,17 @@ def full(w):
     >>> ids
     ['first', 'second', 'third']
     """
-    wfull=np.zeros([w.n,w.n],dtype=float)
-    keys=w.neighbors.keys()
+    wfull = np.zeros([w.n, w.n], dtype = float)
+    keys = w.neighbors.keys()
     if w.id_order:
-        keys=w.id_order
-    for i,key in enumerate(keys):
-        n_i=w.neighbors[key]
-        w_i=w.weights[key]
-        for j,wij in zip(n_i,w_i):
-            c=keys.index(j)
-            wfull[i,c]=wij
-    return (wfull,keys)
+        keys = w.id_order
+    for i, key in enumerate(keys):
+        n_i = w.neighbors[key]
+        w_i = w.weights[key]
+        for j, wij in zip(n_i, w_i):
+            c = keys.index(j)
+            wfull[i, c] = wij
+    return (wfull, keys)
     
 
 def full2W(m, ids=None):
@@ -546,7 +546,7 @@ def full2W(m, ids=None):
         if ids:
             ngh = [ids[j] for j in ngh]
         neighbors[i] = ngh
-    return pysal.W(neighbors, weights, id_order=ids)
+    return pysal.W(neighbors, weights, id_order = ids)
     
 
 def WSP2W(wsp):
@@ -607,7 +607,7 @@ def WSP2W(wsp):
     ids = copy.copy(wsp.id_order)
     w = pysal.W(neighbors, weights, ids) 
     w._sparse = copy.deepcopy(wsp.sparse)
-    w._cache['sparse']=w._sparse
+    w._cache['sparse'] = w._sparse
     return w
 
 
@@ -666,9 +666,9 @@ def insert_diagonal(w, diagonal=1.0, wsp=False):
             raise Exception, "shape of w and diagonal do not match"
         w_new.setdiag(diagonal)    
     elif operator.isNumberType(diagonal):
-        w_new.setdiag([diagonal]*w.n)    
+        w_new.setdiag([diagonal] * w.n)    
     else:
-        raise Exception, "invalid value passed to diagonal"
+        raise Exception, "Invalid value passed to diagonal"
     w_out = pysal.weights.WSP(w_new, copy.copy(w.id_order))
     if wsp:
         return w_out
@@ -753,7 +753,7 @@ def get_ids(shapefile, idVariable):
     Examples
     --------
     >>> from pysal.weights.util import get_ids
-    >>> polyids = get_ids("pysal/examples/columbus.shp", "POLYID")      
+    >>> polyids = get_ids(pysal.examples.get_path("columbus.shp"), "POLYID")      
     >>> polyids[:5]
     [1, 2, 3, 4, 5]
     """
@@ -794,14 +794,14 @@ def get_points_array_from_shapefile(shapefile):
     --------
     Point shapefile
     >>> from pysal.weights.util import get_points_array_from_shapefile
-    >>> xy = get_points_array_from_shapefile('pysal/examples/juvenile.shp')
+    >>> xy = get_points_array_from_shapefile(pysal.examples.get_path('juvenile.shp'))
     >>> xy[:3]
     array([[ 94.,  93.],
            [ 80.,  95.],
            [ 79.,  90.]])
 
     Polygon shapefile
-    >>> xy = get_points_array_from_shapefile('pysal/examples/columbus.shp')
+    >>> xy = get_points_array_from_shapefile(pysal.examples.get_path('columbus.shp'))
     >>> xy[:3]
     array([[  8.82721847,  14.36907602],
            [  8.33265837,  14.03162401],
@@ -836,24 +836,24 @@ def min_threshold_distance(data):
     --------
     >>> from pysal.weights.util import min_threshold_distance
     >>> import numpy as np
-    >>> x,y=np.indices((5,5))
-    >>> x.shape=(25,1)
-    >>> y.shape=(25,1)
-    >>> data=np.hstack([x,y])
+    >>> x, y = np.indices((5, 5))
+    >>> x.shape = (25, 1)
+    >>> y.shape = (25, 1)
+    >>> data = np.hstack([x, y])
     >>> min_threshold_distance(data)
     1.0
 
     """
-    if issubclass(type(data),scipy.spatial.KDTree):
+    if issubclass(type(data), scipy.spatial.KDTree):
         kd = data
         data = kd.data
     else:
-        kd=KDTree(data)
-    nn=kd.query(data,k=2,p=2)
-    nnd=nn[0].max(axis=0)[1]
+        kd = KDTree(data)
+    nn = kd.query(data, k=2, p=2)
+    nnd = nn[0].max(axis=0)[1]
     return nnd
 
-def lat2SW(nrows=3,ncols=5,criterion="rook"):
+def lat2SW(nrows=3, ncols=5, criterion="rook"):
     """
     Create a sparse W matrix for a regular lattice.
 
@@ -883,13 +883,13 @@ def lat2SW(nrows=3,ncols=5,criterion="rook"):
     --------
 
     >>> from pysal import weights
-    >>> w9=weights.lat2SW(3,3)
+    >>> w9 = weights.lat2SW(3,3)
     >>> w9[0,1]
     1
     >>> w9[3,6]
     1
     """
-    n = nrows*ncols
+    n = nrows * ncols
     diagonals = []
     offsets = []
     if criterion == "rook" or criterion == "queen":
@@ -917,8 +917,8 @@ def lat2SW(nrows=3,ncols=5,criterion="rook"):
         offsets.append(-(ncols+1))
     data = np.concatenate(diagonals)
     offsets = np.array(offsets)
-    m = sparse.dia_matrix((data,offsets),shape=(n,n),dtype=np.int8)
-    m = m+m.T
+    m = sparse.dia_matrix((data,offsets), shape=(n,n), dtype=np.int8)
+    m = m + m.T
     return m
         
         

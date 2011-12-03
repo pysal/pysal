@@ -2,7 +2,7 @@
 import unittest
 import pysal
 
-class _TestWsets(unittest.TestCase):
+class TestWsets(unittest.TestCase):
     """Unit test for Wsets module."""
     
     def test_w_union(self):
@@ -57,7 +57,7 @@ class _TestWsets(unittest.TestCase):
 
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(_TestWsets)
+suite = unittest.TestLoader().loadTestsFromTestCase(TestWsets)
 
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()

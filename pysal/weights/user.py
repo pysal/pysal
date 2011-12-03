@@ -35,13 +35,13 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
 
     Examples
     --------
-    >>> wq=queen_from_shapefile("pysal/examples/columbus.shp")
+    >>> wq=queen_from_shapefile(pysal.examples.get_path("columbus.shp"))
     >>> wq.pct_nonzero
     0.098292378175760101
-    >>> wq=queen_from_shapefile("pysal/examples/columbus.shp","POLYID")
+    >>> wq=queen_from_shapefile(pysal.examples.get_path("columbus.shp"),"POLYID")
     >>> wq.pct_nonzero
     0.098292378175760101
-    >>> wq=queen_from_shapefile("pysal/examples/columbus.shp", sparse=True)
+    >>> wq=queen_from_shapefile(pysal.examples.get_path("columbus.shp"), sparse=True)
     >>> wq.sparse.nnz *1. / wq.n**2
     0.098292378175760101
 
@@ -91,10 +91,10 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
 
     Examples
     --------
-    >>> wr=rook_from_shapefile("pysal/examples/columbus.shp", "POLYID")
+    >>> wr=rook_from_shapefile(pysal.examples.get_path("columbus.shp"), "POLYID")
     >>> wr.pct_nonzero
     0.083298625572678045
-    >>> wr=rook_from_shapefile("pysal/examples/columbus.shp", sparse=True)
+    >>> wr=rook_from_shapefile(pysal.examples.get_path("columbus.shp"), sparse=True)
     >>> wr.sparse.nnz *1. / wr.n**2
     0.083298625572678045
 
@@ -142,7 +142,7 @@ def spw_from_gal(galfile):
     Examples
     --------
 
-    >>> spw = pysal.weights.user.spw_from_gal("pysal/examples/sids2.gal")
+    >>> spw = pysal.weights.user.spw_from_gal(pysal.examples.get_path("sids2.gal"))
     >>> spw.sparse.nnz
     462
     """
@@ -259,10 +259,10 @@ def knnW_from_shapefile(shapefile,k=2,p=2,idVariable=None, radius=None):
 
     Polygon shapefile
 
-    >>> wc=knnW_from_shapefile('pysal/examples/columbus.shp')
+    >>> wc=knnW_from_shapefile(pysal.examples.get_path("columbus.shp"))
     >>> wc.pct_nonzero
     0.040816326530612242
-    >>> wc3=knnW_from_shapefile('pysal/examples/columbus.shp',k=3,idVariable="POLYID")
+    >>> wc3=knnW_from_shapefile(pysal.examples.get_path("columbus.shp"),k=3,idVariable="POLYID")
     >>> wc3.weights[1]
     [1, 1, 1]
     >>> wc3.neighbors[1]
@@ -272,10 +272,10 @@ def knnW_from_shapefile(shapefile,k=2,p=2,idVariable=None, radius=None):
 
     Point shapefile
 
-    >>> w=knnW_from_shapefile('pysal/examples/juvenile.shp')
+    >>> w=knnW_from_shapefile(pysal.examples.get_path("juvenile.shp"))
     >>> w.pct_nonzero
     0.011904761904761904
-    >>> w1=knnW_from_shapefile('pysal/examples/juvenile.shp',k=1)
+    >>> w1=knnW_from_shapefile(pysal.examples.get_path("juvenile.shp"),k=1)
     >>> w1.pct_nonzero
     0.0059523809523809521
     >>> 
@@ -373,7 +373,7 @@ def threshold_binaryW_from_shapefile(shapefile,threshold,p=2,idVariable=None, ra
 
     Examples
     --------
-    >>> w = threshold_binaryW_from_shapefile('pysal/examples/columbus.shp',0.62,idVariable="POLYID")
+    >>> w = threshold_binaryW_from_shapefile(pysal.examples.get_path("columbus.shp"),0.62,idVariable="POLYID")
     >>> w.weights[1]
     [1, 1]
     """
@@ -475,7 +475,7 @@ def threshold_continuousW_from_shapefile(shapefile,threshold,p=2,
 
     Examples
     --------
-    >>> w = threshold_continuousW_from_shapefile('pysal/examples/columbus.shp',0.62,idVariable="POLYID")
+    >>> w = threshold_continuousW_from_shapefile(pysal.examples.get_path("columbus.shp"),0.62,idVariable="POLYID")
     >>> w.weights[1]
     [1.6702346893743276, 1.7250729841938044]
     """
@@ -682,7 +682,7 @@ def kernelW_from_shapefile(shapefile,k=2,function='triangular',idVariable=None, 
 
     Examples
     --------
-    >>> kw = kernelW_from_shapefile('pysal/examples/columbus.shp',idVariable='POLYID')
+    >>> kw = kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"),idVariable='POLYID')
     >>> kw.weights[1]
     [0.20524787824004365, 0.007078773148450623, 1.0, 0.23051223027663015]
     >>> kw.bandwidth[:3]
@@ -888,7 +888,7 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='t
 
     Examples
     --------
-    >>> kwa = adaptive_kernelW_from_shapefile('pysal/examples/columbus.shp')
+    >>> kwa = adaptive_kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"))
     >>> kwa.weights[0]
     [1.0, 0.03178906767736389, 9.99999900663795e-08]
     >>> kwa.bandwidth[:3]
@@ -923,10 +923,10 @@ def min_threshold_dist_from_shapefile(shapefile, radius=None):
 
     Examples
     --------
-    >>> md = min_threshold_dist_from_shapefile('pysal/examples/columbus.shp')
+    >>> md = min_threshold_dist_from_shapefile(pysal.examples.get_path("columbus.shp"))
     >>> md
     0.61886415807685413
-    >>> min_threshold_dist_from_shapefile('pysal/examples/stl_hom.shp',pysal.cg.sphere.RADIUS_EARTH_MILES)
+    >>> min_threshold_dist_from_shapefile(pysal.examples.get_path("stl_hom.shp"), pysal.cg.sphere.RADIUS_EARTH_MILES)
     31.846942936393717
     """
     points = get_points_array_from_shapefile(shapefile)

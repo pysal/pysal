@@ -5,7 +5,7 @@ import numpy as np
 import random
 
 
-class _Test_Maxp(unittest.TestCase):
+class Test_Maxp(unittest.TestCase):
     def setUp(self):
         random.seed(100)
         np.random.seed(100)
@@ -47,7 +47,7 @@ class _Test_Maxp(unittest.TestCase):
 
 
         
-suite = unittest.TestLoader().loadTestsFromTestCase(_Test_Maxp)
+suite = unittest.TestLoader().loadTestsFromTestCase(Test_Maxp)
 
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()

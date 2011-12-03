@@ -3,10 +3,10 @@ import unittest
 import pysal
 import numpy as np
 
-class _TestDistanceWeights(unittest.TestCase):
+class TestDistanceWeights(unittest.TestCase):
     def setUp(self):
-        self.polyShp = 'pysal/examples/columbus.shp'
-        self.arcShp = 'pysal/examples/stl_hom.shp'
+        self.polyShp = pysal.examples.get_path('columbus.shp')
+        self.arcShp = pysal.examples.get_path('stl_hom.shp')
         self.points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
 
     def test_knnW(self):
@@ -95,16 +95,16 @@ class _TestDistanceWeights(unittest.TestCase):
                                         1.7250729841938044])
     def test_DistanceBand(self):
         """ see issue #126 """
-        w = pysal.rook_from_shapefile("pysal/examples/lattice10x10.shp")
-        polygons = pysal.open("pysal/examples/lattice10x10.shp","r").read()
+        w = pysal.rook_from_shapefile(pysal.examples.get_path("lattice10x10.shp"))
+        polygons = pysal.open(pysal.examples.get_path("lattice10x10.shp"),"r").read()
         points1 = [poly.centroid for poly in polygons]
         w1 = pysal.DistanceBand(points1,1)
         for k in range(w.n):
             self.assertEqual(w[k],w1[k])
     def test_DistanceBand_ints(self):
         """ see issue #126 """
-        w = pysal.rook_from_shapefile("pysal/examples/lattice10x10.shp")
-        polygons = pysal.open("pysal/examples/lattice10x10.shp","r").read()
+        w = pysal.rook_from_shapefile(pysal.examples.get_path("lattice10x10.shp"))
+        polygons = pysal.open(pysal.examples.get_path("lattice10x10.shp"),"r").read()
         points2 = [tuple(map(int,poly.vertices[0])) for poly in polygons]
         w2 = pysal.DistanceBand(points2,1)
         for k in range(w.n):
@@ -120,7 +120,7 @@ class _TestDistanceWeights(unittest.TestCase):
         
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(_TestDistanceWeights)
+suite = unittest.TestLoader().loadTestsFromTestCase(TestDistanceWeights)
 
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()

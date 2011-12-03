@@ -7,7 +7,7 @@ NPTA3E = np.testing.assert_array_almost_equal
 class TestW(unittest.TestCase):
     def setUp(self):
         from pysal import rook_from_shapefile
-        self.w = rook_from_shapefile("pysal/examples/10740.shp")
+        self.w = rook_from_shapefile(pysal.examples.get_path('10740.shp'))
 
         self.neighbors={0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3,
             7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
@@ -223,7 +223,7 @@ class Test_WSP_Back_To_W(unittest.TestCase):
     # Test to make sure we get back to the same W functionality
     def setUp(self):
         from pysal import rook_from_shapefile
-        self.w = rook_from_shapefile("pysal/examples/10740.shp")
+        self.w = rook_from_shapefile(pysal.examples.get_path('10740.shp'))
         wsp = pysal.weights.WSP(self.w.sparse, self.w.id_order)
         self.w = pysal.weights.WSP2W(wsp)
 
@@ -429,7 +429,7 @@ class Test_WSP_Back_To_W(unittest.TestCase):
 class TestWSP(unittest.TestCase):
     def setUp(self):
         from pysal import rook_from_shapefile
-        self.w = pysal.open("pysal/examples/sids2.gal").read()
+        self.w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
         self.wsp = pysal.weights.WSP(self.w.sparse, self.w.id_order)
         w3x3 = pysal.lat2W(3,3)
         self.w3x3 = pysal.weights.WSP(w3x3.sparse)
