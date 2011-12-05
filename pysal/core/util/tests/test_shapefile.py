@@ -214,5 +214,84 @@ class TestMultiPatch(unittest.TestCase):
         self.failUnlessRaises(NotImplementedError, MultiPatch)
         # multi_patch = MultiPatch()
 
+class _TestPoints(unittest.TestCase):
+    def test1(self):
+        """ Test creating and reading Point Shape Files """
+        shp = shp_file('test_point','w','POINT')
+        points = [ {'Shape Type': 1, 'X': 0, 'Y': 0}, {'Shape Type': 1, 'X': 1, 'Y': 1}, {'Shape Type': 1, 'X': 2, 'Y': 2}, {'Shape Type': 1, 'X': 3, 'Y': 3}, {'Shape Type': 1, 'X': 4, 'Y': 4} ]
+        for pt in points:
+            shp.add_shape(pt)
+        shp.close()
+
+        shp = list(shp_file('test_point'))
+        for a,b in zip(points,shp):
+            self.assertEquals(a,b)
+        os.remove('test_point.shp')
+        os.remove('test_point.shx')
+class _TestPolyLines(unittest.TestCase):
+    def test1(self):
+        """ Test creating and reading PolyLine Shape Files """
+        lines = [ [(0,0),(4,4)], [(1,0),(5,4)], [(2,0),(6,4)] ]
+        shapes = []
+        for line in lines:
+            x = [v[0] for v in line]
+            y = [v[1] for v in line]
+            rec = {}
+            rec['BBOX Xmin'] = min(x)
+            rec['BBOX Ymin'] = min(y)
+            rec['BBOX Xmax'] = max(x)
+            rec['BBOX Ymax'] = max(y)
+            rec['NumPoints'] = len(line)
+            rec['NumParts'] = 1
+            rec['Vertices'] = line
+            rec['Shape Type'] = 3
+            rec['Parts Index'] = [0]
+            shapes.append(rec)
+        shp = shp_file('test_line','w','ARC')
+        for line in shapes:
+            shp.add_shape(line)
+        shp.close()
+        shp = list(shp_file('test_line'))
+        for a,b in zip(shapes,shp):
+            self.assertEquals(a,b)
+        os.remove('test_line.shp')
+        os.remove('test_line.shx')
+class _TestPolygons(unittest.TestCase):
+    def test1(self):
+        """ Test creating and reading PolyLine Shape Files """
+        lines = [ [(0,0),(4,4),(5,4),(1,0),(0,0)], [(1,0),(5,4),(6,4),(2,0),(1,0)] ]
+        shapes = []
+        for line in lines:
+            x = [v[0] for v in line]
+            y = [v[1] for v in line]
+            rec = {}
+            rec['BBOX Xmin'] = min(x)
+            rec['BBOX Ymin'] = min(y)
+            rec['BBOX Xmax'] = max(x)
+            rec['BBOX Ymax'] = max(y)
+            rec['NumPoints'] = len(line)
+            rec['NumParts'] = 1
+            rec['Vertices'] = line
+            rec['Shape Type'] = 5
+            rec['Parts Index'] = [0]
+            shapes.append(rec)
+        shp = shp_file('test_poly','w','POLYGON')
+        for line in shapes:
+            shp.add_shape(line)
+        shp.close()
+        shp = list(shp_file('test_poly'))
+        for a,b in zip(shapes,shp):
+            self.assertEquals(a,b)
+        os.remove('test_poly.shp')
+        os.remove('test_poly.shx')
+
+
+
+
+
+
+
+
+
 if __name__ == '__main__':
     unittest.main()

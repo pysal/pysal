@@ -14,7 +14,6 @@ http://geodacenter.asu.edu
 
 __author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
 
-import unittest
 from struct import calcsize,unpack,pack
 from cStringIO import StringIO
 from itertools import izip,islice
@@ -238,7 +237,7 @@ class shp_file:
                 'MULTIPOINT', 'MULTIPOINTZ', 'MULTIPOINTM', 'MULTIPATCH'
 
         Example:
-        >>> import pysal
+        >>> import pysal,os
         >>> shp = shp_file('test','w','POINT')
         >>> p = shp_file(pysal.examples.get_path('shp_test/Point.shp'))
         >>> for pt in p:
@@ -249,6 +248,8 @@ class shp_file:
         True
         >>> open('test.shx','rb').read() == open(pysal.examples.get_path('shp_test/Point.shx'),'rb').read()
         True
+        >>> os.remove('test.shx')
+        >>> os.remove('test.shp')
         """
         self.__iswritable()
         fileName = self.fileName
@@ -451,7 +452,7 @@ class shx_file:
         Note: the SHX records contain (Offset, Length) in 16-bit words.
 
         Example:
-        >>> import pysal
+        >>> import pysal,os
         >>> shx = shx_file(pysal.examples.get_path('shp_test/Point'))
         >>> shx.index
         [(100, 20), (128, 20), (156, 20), (184, 20), (212, 20), (240, 20), (268, 20), (296, 20), (324, 20)]
@@ -463,6 +464,7 @@ class shx_file:
         >>> shx2.close(shx._header)
         >>> open('test.shx','rb').read() == open(pysal.examples.get_path('shp_test/Point.shx'),'rb').read()
         True
+        >>> os.remove('test.shx')
         """
         self.__iswritable()
         pos = self.__offset
@@ -623,74 +625,9 @@ class MultiPatch:
 
 TYPE_DISPATCH= {0:NullShape, 1:Point, 3:PolyLine, 5:Polygon, 8:MultiPoint, 11:PointZ, 13:PolyLineZ, 15:PolygonZ, 18:MultiPointZ, 21:PointM, 23:PolyLineM, 25:PolygonM, 28:MultiPointM, 31:MultiPatch, 'POINT':Point, 'POINTZ':PointZ, 'POINTM':PointM, 'ARC':PolyLine, 'ARCZ':PolyLineZ, 'ARCM':PolyLineM, 'POLYGON':Polygon, 'POLYGONZ':PolygonZ, 'POLYGONM':PolygonM, 'MULTIPOINT':MultiPoint, 'MULTIPOINTZ':MultiPointZ, 'MULTIPOINTM':MultiPointM, 'MULTIPATCH':MultiPatch}
 
-class _TestPoints(unittest.TestCase):
-    def test1(self):
-        """ Test creating and reading Point Shape Files """
-        shp = shp_file('test_point','w','POINT')
-        points = [ {'Shape Type': 1, 'X': 0, 'Y': 0}, {'Shape Type': 1, 'X': 1, 'Y': 1}, {'Shape Type': 1, 'X': 2, 'Y': 2}, {'Shape Type': 1, 'X': 3, 'Y': 3}, {'Shape Type': 1, 'X': 4, 'Y': 4} ]
-        for pt in points:
-            shp.add_shape(pt)
-        shp.close()
-
-        shp = list(shp_file('test_point'))
-        for a,b in zip(points,shp):
-            self.assertEquals(a,b)
-class _TestPolyLines(unittest.TestCase):
-    def test1(self):
-        """ Test creating and reading PolyLine Shape Files """
-        lines = [ [(0,0),(4,4)], [(1,0),(5,4)], [(2,0),(6,4)] ]
-        shapes = []
-        for line in lines:
-            x = [v[0] for v in line]
-            y = [v[1] for v in line]
-            rec = {}
-            rec['BBOX Xmin'] = min(x)
-            rec['BBOX Ymin'] = min(y)
-            rec['BBOX Xmax'] = max(x)
-            rec['BBOX Ymax'] = max(y)
-            rec['NumPoints'] = len(line)
-            rec['NumParts'] = 1
-            rec['Vertices'] = line
-            rec['Shape Type'] = 3
-            rec['Parts Index'] = [0]
-            shapes.append(rec)
-        shp = shp_file('test_line','w','ARC')
-        for line in shapes:
-            shp.add_shape(line)
-        shp.close()
-        shp = list(shp_file('test_line'))
-        for a,b in zip(shapes,shp):
-            self.assertEquals(a,b)
-class _TestPolygons(unittest.TestCase):
-    def test1(self):
-        """ Test creating and reading PolyLine Shape Files """
-        lines = [ [(0,0),(4,4),(5,4),(1,0),(0,0)], [(1,0),(5,4),(6,4),(2,0),(1,0)] ]
-        shapes = []
-        for line in lines:
-            x = [v[0] for v in line]
-            y = [v[1] for v in line]
-            rec = {}
-            rec['BBOX Xmin'] = min(x)
-            rec['BBOX Ymin'] = min(y)
-            rec['BBOX Xmax'] = max(x)
-            rec['BBOX Ymax'] = max(y)
-            rec['NumPoints'] = len(line)
-            rec['NumParts'] = 1
-            rec['Vertices'] = line
-            rec['Shape Type'] = 5
-            rec['Parts Index'] = [0]
-            shapes.append(rec)
-        shp = shp_file('test_poly','w','POLYGON')
-        for line in shapes:
-            shp.add_shape(line)
-        shp.close()
-        shp = list(shp_file('test_poly'))
-        for a,b in zip(shapes,shp):
-            self.assertEquals(a,b)
 def _test():
     import doctest
-    doctest.testmod(verbose=False)
-    unittest.main()
+    doctest.testmod(verbose=True)
 
 if __name__=='__main__':
     _test()
