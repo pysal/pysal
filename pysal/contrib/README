@@ -37,3 +37,6 @@ Currently the following contribs are available:
   Shapely Extension -- Exposes shapely methods as standalone functions
     Path: pysal.contrib.shapely_ext
     Requires: shapely
+  Shared Perimeter Weights -- calculate shared perimeters weights.
+    Path: pysal.contrib.shared_perimeter_weights
+    Requires: shapely
