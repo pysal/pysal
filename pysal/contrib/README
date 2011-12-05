@@ -34,3 +34,6 @@ Currently the following contribs are available:
   Weights Viewer -- A Graphical tool for examining spatial weights.
     Path: pysal.contrib.weights_viewer.weights_viewer
     Requires: wxPython
+  Shapely Extension -- Exposes shapely methods as standalone functions
+    Path: pysal.contrib.shapely_ext
+    Requires: shapely
