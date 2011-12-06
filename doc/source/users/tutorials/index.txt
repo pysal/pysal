@@ -14,5 +14,6 @@ Getting Started with PySAL
    Spatial Smoothing <smoothing>
    Regionalization <region>
    Spatial Dynamics <dynamics>
+   Shapely Extension <shapely>
    Next Steps <next>
    Sample Datasets <examples>

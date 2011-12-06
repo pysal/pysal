@@ -1,0 +1,47 @@
+.. testsetup:: *
+        
+        import pysal
+        import numpy as np
+
+#################################
+Using the PySAL Shapely Extension
+#################################
+
+
+Introduction
+============
+
+The Shapely project is a BSD-licensed
+Python package for manipulation and analysis of
+planar geometric objects, and depends on the widely used GEOS library.
+
+
+Installation
+============
+
+If you run into problems with our *general* instructions below, please refer to the `Shapely <http://pypi.python.org/pypi/Shapely>`_
+website for definitive instructions on installing Shapely and its
+dependencies, *without which PySAL's Shapely extension will not work.*
+
+First, on OS X, check to see if the GEOS Framework is installed at
+/Library/Frameworks/GEOS.framework. If not, download and install `GEOS <http://trac.osgeo.org/geos/>`_ (Geometry Engine Open
+Source) following the instructions there for your platform. 
+
+Once GEOS is installed, use your favorite Python installation method to
+install Shapely. A number of methods are illustrated `here <http://pypi.python.org/pypi/Shapely>`_.
+
+Verify Install
+--------------
+
+Type the following into a Terminal or Shell::
+
+  python -c 'import shapely'
+
+If you get no complaint, continue with this tutorial. 
+
+
+Usage
+=====
+
+TBD
+
