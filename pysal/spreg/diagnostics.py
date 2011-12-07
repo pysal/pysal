@@ -214,8 +214,8 @@ def r2(reg):
 
     Print the result. 
 
-    >>> testresult
-    0.55240404083742312
+    >>> print("%1.8f"%testresult)
+    0.55240404
     
     """ 
     y = reg.y               # (array) vector of dep observations (n x 1)
@@ -280,8 +280,8 @@ def ar2(reg):
 
     Print the result. 
 
-    >>> testresult
-    0.53294334696078938
+    >>> print("%1.8f"%testresult)
+    0.53294335
 
     """ 
     k = reg.k       # (scalar) number of ind. variables (includes constant)
