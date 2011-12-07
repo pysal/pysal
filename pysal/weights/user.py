@@ -572,7 +572,7 @@ def kernelW(points,k=2,function='triangular',fixed=True, radius=None):
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
     >>> kw=kernelW(points)
     >>> kw.weights[0]
-    [1.0, 0.50000004999999503, 0.44098306152674649]
+    [1.0, 0.500000049999995, 0.4409830615267465]
     >>> kw.neighbors[0]
     [0, 1, 3]
     >>> kw.bandwidth
@@ -684,7 +684,7 @@ def kernelW_from_shapefile(shapefile,k=2,function='triangular',idVariable=None, 
     --------
     >>> kw = kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"),idVariable='POLYID')
     >>> kw.weights[1]
-    [0.20524787824004365, 0.0070787731484506233, 1.0, 0.23051223027663015]
+    [0.20524787824004365, 0.007078773148450623, 1.0, 0.23051223027663015]
     >>> kw.bandwidth[:3]
     array([[ 0.75333961],
            [ 0.75333961],
@@ -775,7 +775,7 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular', radius
     >>> bw=[25.0,15.0,25.0,16.0,14.5,25.0]
     >>> kwa=adaptive_kernelW(points,bandwidths=bw)
     >>> kwa.weights[0]
-    [1.0, 0.59999999999999998, 0.55278640450004202, 0.10557280900008403]
+    [1.0, 0.6, 0.552786404500042, 0.10557280900008403]
     >>> kwa.neighbors[0]
     [0, 1, 3, 4]
     >>> kwa.bandwidth
@@ -790,7 +790,7 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular', radius
 
     >>> kwea=adaptive_kernelW(points)
     >>> kwea.weights[0]
-    [1.0, 0.10557289844279438, 9.9999990066379496e-08]
+    [1.0, 0.10557289844279438, 9.99999900663795e-08]
     >>> kwea.neighbors[0]
     [0, 1, 3]
     >>> kwea.bandwidth
@@ -805,7 +805,7 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular', radius
 
     >>> kweag=adaptive_kernelW(points,function='gaussian')
     >>> kweag.weights[0]
-    [0.3989422804014327, 0.26741902915776961, 0.24197074871621341]
+    [0.3989422804014327, 0.2674190291577696, 0.2419707487162134]
     >>> kweag.bandwidth
     array([[ 11.18034101],
            [ 11.18034101],
@@ -890,7 +890,7 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='t
     --------
     >>> kwa = adaptive_kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"))
     >>> kwa.weights[0]
-    [1.0, 0.031789067677363891, 9.9999990066379496e-08]
+    [1.0, 0.03178906767736389, 9.99999900663795e-08]
     >>> kwa.bandwidth[:3]
     array([[ 0.59871832],
            [ 0.59871832],
