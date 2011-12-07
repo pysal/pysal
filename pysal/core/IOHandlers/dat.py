@@ -55,8 +55,7 @@ class DatIO(gwt.GwtIO):
         Get neighbor distances for a single observation
 
         >>> w[1]
-        {2.0: 0.3333, 5.0: 0.3333, 6.0: 0.3333}
-
+        {2.0: 0.33329999999999999, 5.0: 0.33329999999999999, 6.0: 0.33329999999999999}
 
         """
         if self.pos > 0:

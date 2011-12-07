@@ -5,8 +5,9 @@ Moran's I Spatial Autocorrelation Statistics
 __author__  = "Sergio J. Rey <srey@asu.edu>"
 from pysal.common import *
 from pysal.weights.spatial_lag import lag_spatial as slag
+from pysal.esda.smoothing import assuncao_rate
 
-__all__ = ["Moran",  "Moran_Local",  "Moran_BV",  "Moran_BV_matrix"]
+__all__ = ["Moran",  "Moran_Local",  "Moran_BV",  "Moran_BV_matrix", "Moran_Rate", "Moran_Local_Rate"]
 
 
 PERMUTATIONS = 999
@@ -21,6 +22,11 @@ class Moran:
                       variable measured across n spatial units
     w               : W
                       spatial weights instance
+    transformation  : string
+                      weights transformation,  default is row-standardized "r".
+                      Other options include "B": binary,  "D":
+                      doubly-standardized,  "U": untransformed (general weights), 
+                      "V": variance-stabilizing.
     permutations    : int
                       number of random permutations for calculation of pseudo-p_values
 
@@ -344,6 +350,104 @@ def Moran_BV_matrix(variables, w, permutations = 0, varnames = None):
             results[j, i] = Moran_BV(y2, y1, w, permutations = permutations)
     return results
 
+class Moran_Rate(Moran):
+    """Adjusted Moran's I Global Autocorrelation Statistic for Rate Variables
+    
+    Parameters
+    ----------
+
+    e               : array
+                      an event variable measured across n spatial units
+    b               : array
+                      a population-at-risk variable measured across n spatial units
+    w               : W
+                      spatial weights instance
+    adjusted        : boolean
+                      whether or not Moran's I needs to be adjusted for rate variable
+    transformation  : string
+                      weights transformation,  default is row-standardized "r".
+                      Other options include "B": binary,  "D":
+                      doubly-standardized,  "U": untransformed (general weights), 
+                      "V": variance-stabilizing.
+    permutations    : int
+                      number of random permutations for calculation of pseudo-p_values
+
+
+    Attributes
+    ----------
+    y            : array
+                   rate variable computed from parameters e and b
+                   if adjusted is True, y is standardized rates
+                   otherwise, y is raw rates
+    w            : W
+                   original w object
+    permutations : int
+                   number of permutations
+    I            : float
+                   value of Moran's I
+    EI           : float
+                   expected value under normality assumption
+    VI_norm      : float
+                   variance of I under normality assumption
+    seI_norm     : float
+                   standard deviation of I under normality assumption
+    z_norm       : float
+                   z-value of I under normality assumption
+    p_norm       : float
+                   p-value of I under normality assumption (one-sided)
+                   for two-sided tests, this value should be multiplied by 2
+    VI_rand      : float
+                   variance of I under randomization assumption
+    seI_rand     : float
+                   standard deviation of I under randomization assumption
+    z_rand       : float
+                   z-value of I under randomization assumption
+    p_rand       : float
+                   p-value of I under randomization assumption (1-tailed)
+    sim          : array (if permutations>0)
+                   vector of I values for permutated samples
+    p_sim        : array (if permutations>0)
+                   p-value based on permutations (one-sided)
+                   null: spatial randomness
+                   alternative: the observed I is extreme
+                                it is either extremely greater or extremely lower
+    EI_sim       : float (if permutations>0)
+                   average value of I from permutations
+    VI_sim       : float (if permutations>0)
+                   variance of I from permutations
+    seI_sim      : float (if permutations>0)
+                   standard deviation of I under permutations.
+    z_sim        : float (if permutations>0)
+                   standardized I based on permutations
+    p_z_sim      : float (if permutations>0)
+                   p-value based on standard normal approximation from
+
+    References
+    ----------
+    Assuncao, R. E. and Reis, E. A. 1999. A new proposal to adjust Moran's I 
+    for population density. Statistics in Medicine. 18, 2147-2162
+
+    Examples
+    --------
+    >>> import pysal
+    >>> w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
+    >>> f = pysal.open(pysal.examples.get_path("sids2.dbf"))
+    >>> e = np.array(f.by_col('SID79'))
+    >>> b = np.array(f.by_col('BIR79'))
+    >>> mi = pysal.esda.moran.Moran_Rate(e, b,  w)
+    >>> "%6.4f" % mi.I
+    '0.1662'
+    >>> "%6.4f" % mi.p_norm
+    '0.0084'
+    """
+
+    def __init__(self, e, b, w, adjusted=True, transformation = "r",  permutations = PERMUTATIONS):
+        if adjusted:
+            y = assuncao_rate(e, b)
+        else:
+            y = e*1.0/b
+        Moran.__init__(self, y, w, transformation = transformation,  permutations = permutations)
+
 class Moran_Local:
     """Local Moran Statistics
 
@@ -489,6 +593,93 @@ class Moran_Local:
         nn = (1 - zp) * (1 - lp)
         pn = zp * (1 - lp)
         self.q = 1 * pp + 2 * np + 3 * nn + 4 * pn
+
+class Moran_Local_Rate(Moran_Local):
+    """Adjusted Local Moran Statistics for Rate Variables
+
+
+    Parameters
+    ----------
+    e : n*1 array
+        an event variable across n spatial units
+    b : n*1 array
+        a population-at-risk variable across n spatial units
+    w : weight instance assumed to be aligned with y
+    adjusted: boolean
+              whether or not local Moran statistics need to be adjusted for rate variable
+    transformation : string
+                     weights transformation,  default is row-standardized "r".
+                     Other options include "B": binary,  "D":
+                     doubly-standardized,  "U": untransformed (general weights), 
+                     "V": variance-stabilizing.
+    permutations   : number of random permutations for calculation of pseudo-p_values
+
+
+    Attributes
+    ----------
+    y            : array
+                   rate variables computed from parameters e and b
+                   if adjusted is True, y is standardized rates
+                   otherwise, y is raw rates
+    w            : W
+                   original w object
+    permutations : int
+                   number of random permutations for calculation of pseudo-p_values
+    I            : float
+                   value of Moran's I
+    q            : array (if permutations>0)
+                   values indicate quadrat location 1 HH,  2 LH,  3 LL,  4 HL 
+    sim          : array (if permutations>0)
+                   vector of I values for permutated samples
+    p_sim        : array (if permutations>0)
+                   p-value based on permutations (one-sided)
+                   null: spatial randomness
+                   alternative: the observed Ii is further away or extreme from the median of simulated Iis
+                                it is either extremely high or extremely low in the distribution of simulated Is
+    EI_sim       : float (if permutations>0)
+                   average value of I from permutations
+    VI_sim       : float (if permutations>0)
+                   variance of I from permutations
+    seI_sim      : float (if permutations>0)
+                   standard deviation of I under permutations.
+    z_sim        : float (if permutations>0)
+                   standardized I based on permutations
+    p_z_sim      : float (if permutations>0)
+                   p-value based on standard normal approximation from
+                   permutations (one-sided)
+                   for two-sided tests, these values should be multiplied by 2
+
+    References
+    ----------
+    Assuncao, R. E. and Reis, E. A. 1999. A new proposal to adjust Moran's I 
+    for population density. Statistics in Medicine. 18, 2147-2162
+
+    Examples
+    --------
+    >>> import pysal
+    >>> import numpy as np
+    >>> np.random.seed(10)
+    >>> w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
+    >>> f = pysal.open(pysal.examples.get_path("sids2.dbf"))
+    >>> e = np.array(f.by_col('SID79'))
+    >>> b = np.array(f.by_col('BIR79'))
+    >>> lm = pysal.esda.moran.Moran_Local_Rate(e, b, w, transformation = "r", permutations = 99)
+    >>> lm.q[:10]
+    array([2, 4, 3, 1, 2, 1, 1, 4, 2, 4])
+    >>> lm.p_z_sim[0]
+    0.39319552026912641
+
+    Note random components result is slightly different values across
+    architectures so the results have been removed from doctests and will be
+    moved into unittests that are conditional on architectures
+    """
+
+    def __init__(self, e, b, w, adjusted=True, transformation="r", permutations=PERMUTATIONS):
+        if adjusted:
+            y = assuncao_rate(e, b)
+        else:
+            y = e*1.0/b
+        Moran_Local.__init__(self, y, w, transformation=transformation, permutations=permutations)
 
 def _test():
     import doctest

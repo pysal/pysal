@@ -91,7 +91,7 @@ class ArcGISTextIO(gwt.GwtIO):
         Get neighbor distances for a single observation
 
         >>> w[1]
-        {2: 0.1, 3: 0.14286}
+        {2: 0.10000000000000001, 3: 0.14285999999999999}
 
         """
         if self.pos > 0:

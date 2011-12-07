@@ -21,6 +21,17 @@ class Moran_Tester(unittest.TestCase):
         self.assertAlmostEquals(mi.I, 0.24772519320480135)
         self.assertAlmostEquals(mi.p_norm, 0.00011583330781)
 
+class Moran_Rate_Tester(unittest.TestCase):
+    def setUp(self):
+        self.w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
+        f = pysal.open(pysal.examples.get_path("sids2.dbf"))
+        self.e = np.array(f.by_col['SID79'])
+        self.b = np.array(f.by_col['BIR79'])
+    def test_moran_rate(self):
+        mi = moran.Moran_Rate(self.e, self.b, self.w)
+        self.assertAlmostEquals(mi.I, 0.16622343552567395, 7)
+        self.assertAlmostEquals(mi.p_norm, 0.0083829990097843421)
+
 class Moran_BV_matrix_Tester(unittest.TestCase):
     def setUp(self):
         f = pysal.open(pysal.examples.get_path("sids2.dbf"))
@@ -46,7 +57,18 @@ class Moran_Local_Tester(unittest.TestCase):
         self.assertAlmostEquals(lm.p_z_sim[0], 0.46756830387716064 )
         self.assertAlmostEquals(lm.VI_sim,  0.2067126047680822 )
         
-
+class Moran_Local_Rate_Tester(unittest.TestCase):
+    def setUp(self):
+        np.random.seed(10)
+        self.w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
+        f = pysal.open(pysal.examples.get_path("sids2.dbf"))
+        self.e = np.array(f.by_col['SID79'])
+        self.b = np.array(f.by_col['BIR79'])
+    def test_moran_rate(self):
+        lm = moran.Moran_Local_Rate(self.e, self.b, self.w, transformation="r", permutations=99)
+        self.assertAlmostEquals(lm.z_sim[0], -0.27099998923550017)
+        self.assertAlmostEquals(lm.p_z_sim[0], 0.39319552026912641)
+        self.assertAlmostEquals(lm.VI_sim, 0.21879403675396222)
 
 
 suite = unittest.TestSuite()

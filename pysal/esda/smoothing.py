@@ -22,7 +22,7 @@ from pysal.common import np, KDTree
 from pysal.weights.spatial_lag import lag_spatial as slag
 from scipy.stats import gamma, norm, chi2, poisson
 
-__all__ = ['Excess_Risk', 'Empirical_Bayes', 'Spatial_Empirical_Bayes', 'Spatial_Rate', 'Kernel_Smoother', 'Age_Adjusted_Smoother', 'Disk_Smoother', 'Spatial_Median_Rate', 'Spatial_Filtering', 'Headbanging_Triples', 'Headbanging_Median_Rate', 'flatten', 'weighted_median', 'sum_by_n', 'crude_age_standardization', 'direct_age_standardization', 'indirect_age_standardization', 'standardized_mortality_ratio', 'choynowski']
+__all__ = ['Excess_Risk', 'Empirical_Bayes', 'Spatial_Empirical_Bayes', 'Spatial_Rate', 'Kernel_Smoother', 'Age_Adjusted_Smoother', 'Disk_Smoother', 'Spatial_Median_Rate', 'Spatial_Filtering', 'Headbanging_Triples', 'Headbanging_Median_Rate', 'flatten', 'weighted_median', 'sum_by_n', 'crude_age_standardization', 'direct_age_standardization', 'indirect_age_standardization', 'standardized_mortality_ratio', 'choynowski', 'assuncao_rate']
 
 def flatten(l,unique=True):
     """flatten a list of lists
@@ -488,6 +488,61 @@ def choynowski(e, b, n, threshold = None):
     if threshold:
         p = [i if i < threshold else 0.0 for i in p]
     return np.array(p) 
+
+def assuncao_rate(e, b):
+    """The standardized rates where the mean and stadard deviation used for 
+    the standardization are those of Empirical Bayes rate estimates
+    The standardized rates resulting from this function are used to compute 
+    Moran's I corrected for rate variables. 
+
+    Parameters
+    ----------
+    e          : array(n, 1)
+                 event variable measured at n spatial units
+    b          : array(n, 1)
+                 population at risk variable measured at n spatial units
+
+    Notes
+    -----
+    e and b are arranged in the same order
+
+    Returns
+    -------
+               : array (nx1)
+
+    References
+    ----------
+    [1] Assuncao R. M. and Reis E. A., 1999, A new proposal to adjust Moran's I
+    for population density. Statistics in Medicine, 18, 2147-2162.
+    
+    Examples
+    --------
+
+    Creating an array of an event variable (e.g., the number of cancer patients) 
+    for 8 regions.
+
+    >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
+
+    Creating another array of a population-at-risk variable (e.g., total population) 
+    for the same 8 regions. 
+    The order for entering values is the same as the case of e.
+
+    >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
+
+    Computing the rates
+
+    >>> print assuncao_rate(e, b)[:4]
+    [ 1.04319254 -0.04117865 -0.56539054 -1.73762547]
+
+    """
+                                      
+    y = e*1.0/b                   
+    e_sum, b_sum = sum(e), sum(b)                                                                                           
+    ebi_b = e_sum*1.0/b_sum
+    s2 = sum(b*((y-ebi_b)**2))/b_sum
+    ebi_a = s2 - ebi_b/(b_sum/len(e))
+    ebi_v = ebi_a + ebi_b/b
+    return (y - ebi_b)/np.sqrt(ebi_v)
 
 class Excess_Risk:
     """Excess Risk

@@ -205,6 +205,11 @@ class TestUtils(unittest.TestCase):
         exp_choy = np.array([ 0.30437751,  0.29367033])
         np.testing.assert_array_almost_equal(exp_choy, sm.choynowski(e, b, n))
 
+    def test_assuncao_rate(self):
+        e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
+        b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
+        exp_assuncao = np.array([1.04319254, -0.04117865, -0.56539054, -1.73762547])
+        np.testing.assert_array_almost_equal(exp_assuncao, sm.assuncao_rate(e, b)[:4])
 
 
 suite = unittest.TestSuite()

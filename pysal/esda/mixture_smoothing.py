@@ -84,7 +84,7 @@ class NP_Mixture_Smoother(object):
     extracting the smoothed rates through the property r of the NP_Mixture_Smoother instance
 
     >>> mixture.r
-    array([ 0.10982267,  0.03445525,  0.11018393,  0.11018593])
+    array([ 0.10982278,  0.03445531,  0.11018404,  0.11018604])
 
     Checking the subpopulations to which each observation belongs 
 
