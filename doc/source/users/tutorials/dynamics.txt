@@ -565,17 +565,12 @@ Where :math:`n` = number of events, :math:`a^{s}` = adjacency in space, :math:`a
 We illustrate the use of the Knox test using data from a study of Burkitt's Lymphoma in Uganda during the period 1961-75 [#]_. We start by importing Numpy, PySAL and the interaction module:
 
 
-
-.. testsetup::*
-
-    import numpy as np
-    np.random.seed(100)
-
 .. doctest::
 
     >>> import numpy as np
     >>> import pysal
-    >>> import pysal.spatial_dynamics.interaction as interaction  
+    >>> import pysal.spatial_dynamics.interaction as interaction
+    >>> np.random.seed(100) 
 
 The example data are then read in and used to create an instance of SpaceTimeEvents. This reformats the data so the test can be run by PySAL. This class requires the input of a point shapefile. The shapefile must contain a column that includes a timestamp for each point in the dataset. The class requires that the user input a path to an appropriate shapefile and the name of the column containing the timestamp. In this example, the appropriate column name is 'T'.
 
@@ -621,16 +616,12 @@ Where :math:`n` = number of events, :math:`f` = adjacency in space, :math:`g` = 
 Here we illustrate the use of the modified Knox test using the data on Burkitt's Lymphoma cases in Uganda from above. We start by importing Numpy, PySAL and the interaction module. Next the example data are then read in and used to create an instance of SpaceTimeEvents.
 
 
-.. testsetup::*
-
-    import numpy as np
-    np.random.seed(100)
-
 .. doctest::
 
     >>> import numpy as np
     >>> import pysal
-    >>> import pysal.spatial_dynamics.interaction as interaction  
+    >>> import pysal.spatial_dynamics.interaction as interaction 
+    >>> np.random.seed(100) 
     >>> path = "../pysal/examples/burkitt"
     >>> events = interaction.SpaceTimeEvents(path,'T')
 
@@ -675,18 +666,14 @@ Where :math:`\bar{d^{s}}` refers to the average distance in space, and :math:`\b
 Again, we use the Burkitt's Lymphoma data to illustrate the test. We start with the usual imports and read in the example data. 
 
 
-.. testsetup::*
-
-    import numpy as np
-    np.random.seed(100)
-
 .. doctest::
 
-    import numpy as np
-    import pysal
-    import pysal.spatial_dynamics.interaction as interaction
-    path = "../pysal/examples/burkitt"
-    events = interaction.SpaceTimeEvents(path,'T')
+    >>> import numpy as np
+    >>> import pysal
+    >>> import pysal.spatial_dynamics.interaction as interaction
+    >>> np.random.seed(100)
+    >>> path = "../pysal/examples/burkitt"
+    >>> events = interaction.SpaceTimeEvents(path,'T')
 
 The following example runs the standardized Mantel test with constants of 0 and transformations of 1, meaning the distance matrices will remain unchanged; however, as recommended by Mantel, a small constant should be added and an inverse transformation (i.e. -1) specified. 
 
@@ -743,7 +730,8 @@ Where :math:`n` = number of cases; :math:`a^{s}` = adjacency in space; :math:`a^
 
     >>> import numpy as np
     >>> import pysal
-    >>> import pysal.spatial_dynamics.interaction as interaction  
+    >>> import pysal.spatial_dynamics.interaction as interaction
+    >>> np.random.seed(100)
     >>> path = "../pysal/examples/burkitt"
     >>> events = interaction.SpaceTimeEvents(path,'T')
 
@@ -755,7 +743,7 @@ The following runs the Jacquez test on the example data for a value of :math:`k`
     >>> result = interaction.jacquez(events,k=3,permutations=99)
     >>> print(result['stat'])
     13
-    >>> print("%2.8f"%result['pvalue'])
+    >>> print("%2.2f"%result['pvalue'])
     0.21
 
 
