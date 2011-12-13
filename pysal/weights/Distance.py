@@ -318,7 +318,7 @@ class Kernel(W):
         if self.function=='triangular':
             self.kernel=[1-z for z in zs]
         elif self.function=='uniform':
-            self.kernel=[0.5]*len(z)
+            self.kernel=[np.ones(z.shape)*0.5 for z in zs]
         elif self.function=='quadratic':
             self.kernel=[(3./4)*(1-z**2) for z in zs]
         elif self.function=='quartic':
