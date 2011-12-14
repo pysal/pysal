@@ -128,11 +128,9 @@ class WeightsMap(wx.Panel):
         self.selection = sel
 
         cdc = wx.ClientDC(self)
-        cdc.Clear()
-        cdc.DrawBitmap(self.buffer,0,0)
         if sel != None:
             w,h = self.transform.pixel_size
-            buff = wx.EmptyBitmapRGBA(w,h,alpha=self.trns)
+            buff = self.buffer.GetSubBitmap((0,0,w,h))
             id = self.w.id_order[sel]
             neighbors = map(self.w.id_order.index,self.w.neighbors[id])
             self.draw_shps(buff, NEIGHBORS_COLOR, neighbors)
@@ -167,7 +165,7 @@ class WeightsMapApp(wx.App):
 
 
 if __name__=='__main__':
-    shp = '../../examples/sids2.shp'
-    w = '../../examples/sids2.gal'
+    shp = pysal.examples.get_path('sids2.shp')
+    w = pysal.examples.get_path('sids2.gal')
     app = WeightsMapApp(shp,w)
     app.MainLoop()
