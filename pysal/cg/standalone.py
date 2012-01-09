@@ -885,6 +885,121 @@ def distance_matrix(X,p=2.0,threshold=5e7):
         D=D**(1.0/p)
         return D
 
+def polygon_area(poly):
+    """
+    Returns the area of polygon p definded as:
+    
+    ...
+
+    Example
+    -------
+    >>> p = Polygon([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))])
+    >>> polygon_area(p)
+    1.0
+    """
+    #get all verts with holes in counter clockwise orientation.
+    vp = []
+    for part in poly._vertices:
+        p = part[:]
+        if part[0] != part[-1]:
+            p.append(p[0])
+        vp.extend(p)
+    vh = []
+    for part in poly._holes:
+        if part:
+            p = part[::-1]
+            if part[0] != part[-1]:
+                p.append(p[0])
+            vh.extend(p)
+    def f(v):
+        N = len(v)
+        x = [pt[0] for pt in v]
+        y = [pt[1] for pt in v]
+        
+        A = 0.0
+        for i in xrange(N-1):
+            A += (x[i]*y[i+1] - x[i+1]*y[i])
+        A = A/2.0
+        return A
+    return abs(f(vp)+f(vh))
+def polygon_centroid_decomp(poly):
+    def area_of_ring(ring):
+        N = len(ring)
+        x = [pt[0] for pt in ring]
+        y = [pt[1] for pt in ring]
+        
+        A = 0.0
+        for i in xrange(N-1):
+            A += (x[i]*y[i+1] - x[i+1]*y[i])
+        A = A/2.0
+        return A
+    def centroid_of_ring(ring):
+        x = [pt[0] for pt in ring]
+        y = [pt[1] for pt in ring]
+        A = area_of_ring(ring)
+        N = len(ring)
+        cx = 0
+        cy = 0
+        for i in xrange(N-1):
+            cx += (x[i]+x[i+1]) * (x[i]*y[i+1] - x[i+1]*y[i])
+            cy += (y[i]+y[i+1]) * (x[i]*y[i+1] - x[i+1]*y[i])
+        cx = 1.0/(6*A) * cx
+        cy = 1.0/(6*A) * cy
+        return cx,cy
+    
+    c = []
+    a = []
+    for part in poly._vertices:
+        p = part[::-1] #counter-clockwise parts
+        if part[0] != part[-1]:
+            p.append(p[0])
+            print centroid_of_ring(p)
+            print area_of_ring(p)
+            c.append( centroid_of_ring(p) )
+            a.append(area_of_ring(p))
+    for part in poly._holes:
+        if part:
+            p = part[:] #clockwise holes (oppisite of shapefile)
+            if part[0] != part[-1]:
+                p.append(p[0])
+                print centroid_of_ring(p)
+                print area_of_ring(p)
+                c.append( centroid_of_ring(p) )
+                a.append(area_of_ring(p))
+    cx = [pt[0] for pt in c]
+    cy = [pt[1] for pt in c]
+    cx = sum([x*area for x,area in zip(cx,a)])/sum(a)
+    cy = sum([y*area for y,area in zip(cy,a)])/sum(a)
+    return cx,cy
+    
+    
+def polygon_centroid(poly):
+    vp = []
+    for part in poly._vertices:
+        p = part[::-1]
+        if part[0] != part[-1]:
+            p.append(p[0])
+        vp.extend(p)
+    vh = []
+    for part in poly._holes:
+        if part:
+            p = part[:]
+            if part[0] != part[-1]:
+                p.append(p[0])
+            vh.extend(p)
+    v = vp+vh
+    x = [pt[0] for pt in v]
+    y = [pt[1] for pt in v]
+    A = polygon_area(poly)
+    N = len(v)
+    cx = 0
+    cy = 0
+    for i in xrange(N-1):
+        cx += (x[i]+x[i+1]) * (x[i]*y[i+1] - x[i+1]*y[i])
+        cy += (y[i]+y[i+1]) * (x[i]*y[i+1] - x[i+1]*y[i])
+    cx = 1.0/(6*A) * cx
+    cy = 1.0/(6*A) * cy
+    return cx,cy
 def _test():
     doctest.testmod(verbose=True)
 
