@@ -23,9 +23,9 @@ def asShape(obj):
     if hasattr(geo,'type'):
         raise TypeError,'%r does not appear to be a shape object'%(obj)
     geo_type = geo['type'].lower()
-    if geo_type.startswith('multi'):
-        raise NotImplementedError, "%s are not supported at this time."%geo_type
-    elif geo_type in _geoJSON_type_to_Pysal_type:
+    #if geo_type.startswith('multi'):
+    #    raise NotImplementedError, "%s are not supported at this time."%geo_type
+    if geo_type in _geoJSON_type_to_Pysal_type:
         return _geoJSON_type_to_Pysal_type[geo_type].__from_geo_interface__(obj.__geo_interface__)
     else:
         raise NotImplementedError, "%s is not supported at this time."%geo_type
@@ -859,18 +859,161 @@ class Chain(object):
             self._len = sum([part_perimeter(part) for part in self._vertices])
         return self._len
 
+class Ring(object):
+    """
+    Geometric representation of a Linear Ring
+
+    Linear Rings must be closed, the first and last point must be the same. Open rings will be closed.
+
+    This class exists primarily as a geometric primitive to form complex polygons with multiple rings and holes.
+
+    The ordering of the vertices is ignored and will not be altered.
+
+    Parameters
+    ----------
+    vertices : list -- a list of vertices
+
+    Attributes
+    __________
+    vertices        : list
+                      List of Points with the vertices of the ring
+    len             : int
+                      Number of vertices
+    perimeter       : float
+                      Geometric length of the perimeter of the ring
+    bounding_box    : Rectangle
+                      Bounding box of the ring
+    area            : float
+                      area enclosed by the ring
+    centroid        : tuple
+                      The centroid of the ring defined by the 'center of gravity' or 'center or mass'
+    """
+    def __init__(self, vertices):
+        if vertices[0] != vertices[-1]:
+            vertices = vertices[:]+vertices[0:1]
+            #raise ValueError, "Supplied vertices do not form a closed ring, the first and last vertices are not the same"
+        self.vertices = tuple(vertices)
+        self._perimeter = None
+        self._bounding_box = None
+        self._area = None
+        self._centroid = None
+    def __len__(self):
+        return len(self.vertices)
+    @property
+    def len(self):
+        return len(self)
+    @staticmethod
+    def dist(v1, v2):
+        return math.hypot(v1[0] - v2[0], v1[1] - v2[1])
+    @property
+    def perimeter(self):
+        if self._perimeter == None:
+            dist = self.dist
+            v = self.vertices
+            self._perimeter = sum([dist(v[i], v[i+1]) for i in xrange(-1, len(self)-1)])
+        return self._perimeter
+    @property
+    def bounding_box(self):
+        """
+        Returns the bounding box of the ring
+ 
+        bounding_box -> Rectangle 
+
+        Examples
+        --------
+        >>> r = Ring([Point((0, 0)), Point((2, 0)), Point((2, 1)), Point((0, 1)), Point((0,0))])
+        >>> r.bounding_box.left
+        0.0
+        >>> r.bounding_box.lower
+        0.0
+        >>> r.bounding_box.right
+        2.0
+        >>> r.bounding_box.upper
+        1.0
+        """
+        if self._bounding_box == None:
+            vertices = self.vertices
+            x = [v[0] for v in vertices]
+            y = [v[1] for v in vertices]
+            self._bounding_box = Rectangle(min(x), min(y), max(x), max(y))
+        return self._bounding_box 
+    @property
+    def area(self):
+        """
+        Returns the area of the ring.
+ 
+        area -> number
+
+        Examples
+        --------
+        >>> r = Ring([Point((0, 0)), Point((2, 0)), Point((2, 1)), Point((0, 1)), Point((0,0))])
+        >>> r.area
+        2.0
+        """
+        return abs(self.signed_area)
+    @property
+    def signed_area(self):
+        if self._area == None:
+            vertices = self.vertices
+            x = [v[0] for v in vertices]
+            y = [v[1] for v in vertices]
+            N = len(self)
+         
+            A = 0.0
+            for i in xrange(N-1):
+                A += (x[i]*y[i+1] - x[i+1]*y[i])
+            A = A/2.0
+            self._area = A
+        return self._area
+    @property
+    def centroid(self):
+        """
+        Returns the centroid of the ring.
+ 
+        centroid -> Point
+
+        Notes
+        -----
+        The centroid returned by this method is the geometric centroid.
+        Also known as the 'center of gravity' or 'center of mass'.
+
+
+        Examples
+        --------
+        >>> r = Ring([Point((0, 0)), Point((2, 0)), Point((2, 1)), Point((0, 1)), Point((0,0))])
+        >>> str(r.centroid)
+        '(1.0, 0.5)'
+        """
+        if self._centroid == None:
+            vertices = self.vertices
+            x = [v[0] for v in vertices]
+            y = [v[1] for v in vertices]
+            A = self.signed_area
+            N = len(self)
+            cx = 0
+            cy = 0
+            for i in xrange(N-1):
+                f = (x[i]*y[i+1] - x[i+1]*y[i])
+                cx += (x[i]+x[i+1]) * f 
+                cy += (y[i]+y[i+1]) * f
+            cx = 1.0/(6*A) * cx 
+            cy = 1.0/(6*A) * cy 
+            self._centroid = Point((cx,cy))
+        return self._centroid
+
+
+
 class Polygon(object):
     """
     Geometric representation of polygon objects.
 
     Attributes
     ----------
-
     vertices        : list
                       List of Points with the vertices of the Polygon in
                       clockwise order
     len             : int
-                      Number of verticies including holes
+                      Number of vertices including holes
     perimeter       : float
                       Geometric length of the perimeter of the Polygon
     bounding_box    : Rectangle
@@ -899,6 +1042,8 @@ class Polygon(object):
         --------
         >>> p1 = Polygon([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))])
         """
+        self._part_rings = []
+        self._hole_rings = []
         def clockwise(part):
             if standalone.is_clockwise(part):
                 return part[:] 
@@ -906,13 +1051,17 @@ class Polygon(object):
                 return part[::-1]
 
         if isinstance(vertices[0], list):
+            self._part_rings = map(Ring,vertices)
             self._vertices = [clockwise(part) for part in vertices]
         else:
+            self._part_rings = [Ring(vertices)]
             self._vertices = [clockwise(vertices)]
         if holes != None:
             if isinstance(holes[0], list):
+                self._hole_rings = map(Ring,holes)
                 self._holes = [clockwise(hole) for hole in holes]
             else:
+                self._hole_rings = [Ring(holes)]
                 self._holes = [clockwise(holes)]
         else:
             self._holes = [[]] 
@@ -921,13 +1070,31 @@ class Polygon(object):
     @classmethod
     def __from_geo_interface__(cls, geo):
         """
-        This function cannot distinguis parts from holes all holes will become parts. 
-        geoJSON does not maintain the metadata.
+        While pysal does not differentiate polygons and multipolygons GEOS,Shapely and geoJSON do.
+        In GEOS, etc, polygons may only have a single exterior ring, all other parts are holes.
+        MultiPolygons are simply a list of polygons.
         """
-        verts = [[Point(pt) for pt in part] for part in geo['coordinates']]
-        return cls(verts)
+        geo_type = geo['type'].lower()
+        if geo_type == 'multipolygon':
+            parts = []
+            holes = []
+            for polygon in geo['coordinates']:
+                verts = [[Point(pt) for pt in part] for part in polygon]
+                parts+= verts[0:1]
+                holes+= verts[1:]
+            if not holes:
+                holes = [[]]
+            return cls(parts,holes)
+        else:
+            verts = [[Point(pt) for pt in part] for part in geo['coordinates']]
+            return cls(verts[0:1],verts[1:])
     @property
     def __geo_interface__(self):
+        if len(self.parts) > 1:
+            geo = {'type':'MultiPolygon', 'coordinates': [[part] for part in self.parts]}
+            if self._holes[0]:
+                geo['coordinates'][0] += self._holes
+            return geo
         if self._holes[0]:
             return {'type':'Polygon', 'coordinates':self._vertices+self._holes}
         else:
@@ -1109,50 +1276,32 @@ class Polygon(object):
     @property
     def centroid(self):
         """
-        Returns the centroid of the polygon.
+        Returns the centroid of the polygon
  
         centroid -> Point
 
         Notes
         -----
-        The centroid return by this method is the geometric centroid.  The currently implementation ignors any holes found in the polygon, 
-        a warning will be issued if holes are encountered.  This is a known issue, ticket #138 on google code.
+        The centroid returned by this method is the geometric centroid and respects multipart polygons with holes.
+        Also known as the 'center of gravity' or 'center of mass'.
+
 
         Examples
         --------
-        >>> p = Polygon([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((0, 1))])
-        >>> cent = p.centroid
-        >>> str(cent)
-        '(0.5, 0.5)'
+        >>> p = Polygon([Point((0, 0)), Point((10, 0)), Point((10, 10)), Point((0, 10))], [Point((1, 1)), Point((1, 2)), Point((2, 2)), Point((2, 1))])
+        >>> p.centroid
+        (5.0353535353535355, 5.0353535353535355)
         """
-        def part_area(part_verts):
-            area = 0
-            for i in xrange(-1, len(part_verts)-1):
-                area = area + (part_verts[i][0] + part_verts[i+1][0])*(part_verts[i][1] - part_verts[i+1][1])
-            area = area*0.5
-            if area < 0:
-                area = -area
-            return area
+        CP = [ring.centroid for ring in self._part_rings]
+        AP = [ring.area for ring in self._part_rings]
+        CH = [ring.centroid for ring in self._hole_rings]
+        AH = [-ring.area for ring in self._hole_rings]
 
-        def part_centroid_area(vertices):
-            # Return a 2-tuple of (centroid, area) for the part
-            area = part_area(vertices)
-            x_center = sum([(vertices[i][0] + vertices[i-1][0])*
-                           (vertices[i][0]*vertices[i-1][1] - vertices[i-1][0]*vertices[i][1])
-                               for i in xrange(0, len(vertices))])/(6*area)
-            y_center = sum([(vertices[i][1] + vertices[i-1][1])*
-                           (vertices[i][0]*vertices[i-1][1] - vertices[i-1][0]*vertices[i][1])
-                               for i in xrange(0, len(vertices))])/(6*area)
-            return ((x_center, y_center), area)
-
-        if self._holes != [[]]:
-            #raise NotImplementedError, 'Cannot compute centroid for polygon with holes'
-            warn("Polygon contains holes which are ignored when computing centroid.",RuntimeWarning)
-        part_centroids_areas = [part_centroid_area(vertices) for vertices in self._vertices]
-        tot_area = sum([a for c,a in part_centroids_areas])
-        return (sum([c[0]*(a/tot_area) for c,a in part_centroids_areas]),
-                sum([c[1]*(a/tot_area) for c,a in part_centroids_areas]))
-
+        A = AP+AH
+        cx = sum([pt[0]*area for pt,area in zip(CP+CH,A)])/sum(A)
+        cy = sum([pt[1]*area for pt,area in zip(CP+CH,A)])/sum(A)
+        return cx,cy
+        
     def contains_point(self, point):
         """
         Test if polygon contains point
@@ -1412,7 +1561,7 @@ class Rectangle:
 def _test():
     doctest.testmod(verbose=True)
 
-_geoJSON_type_to_Pysal_type = {'point':Point, 'linestring':Chain, 'polygon':Polygon}
+_geoJSON_type_to_Pysal_type = {'point':Point, 'linestring':Chain, 'polygon':Polygon, 'multipolygon':Polygon}
 import standalone   #moving this to top breaks unit tests !
 
 if __name__ == '__main__':

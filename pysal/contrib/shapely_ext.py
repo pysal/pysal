@@ -145,77 +145,77 @@ def is_valid(shape):
 
 # Binary predicates
 # -----------------
-def relate(self, other):
+def relate(shape, other):
     if not hasattr(shape,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     if not hasattr(other,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     o = shapely.geometry.asShape(shape)
     o2 = shapely.geometry.asShape(other)
     return o.relate(o2)
 
-def contains(self, other):
+def contains(shape, other):
     if not hasattr(shape,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     if not hasattr(other,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     o = shapely.geometry.asShape(shape)
     o2 = shapely.geometry.asShape(other)
     return o.contains(o2)
 
-def crosses(self, other):
+def crosses(shape, other):
     if not hasattr(shape,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     if not hasattr(other,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     o = shapely.geometry.asShape(shape)
     o2 = shapely.geometry.asShape(other)
     return o.crosses(o2)
 
-def disjoint(self, other):
+def disjoint(shape, other):
     if not hasattr(shape,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     if not hasattr(other,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     o = shapely.geometry.asShape(shape)
     o2 = shapely.geometry.asShape(other)
     return o.disjoint(o2)
 
-def equals(self, other):
+def equals(shape, other):
     if not hasattr(shape,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     if not hasattr(other,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     o = shapely.geometry.asShape(shape)
     o2 = shapely.geometry.asShape(other)
     return o.equals(o2)
 
-def intersects(self, other):
+def intersects(shape, other):
     if not hasattr(shape,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     if not hasattr(other,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     o = shapely.geometry.asShape(shape)
     o2 = shapely.geometry.asShape(other)
     return o.intersects(o2)
 
-def overlaps(self, other):
+def overlaps(shape, other):
     if not hasattr(shape,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     if not hasattr(other,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     o = shapely.geometry.asShape(shape)
     o2 = shapely.geometry.asShape(other)
     return o.overlaps(o2)
 
-def touches(self, other):
+def touches(shape, other):
     if not hasattr(shape,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     if not hasattr(other,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     o = shapely.geometry.asShape(shape)
     o2 = shapely.geometry.asShape(other)
     return o.touches(o2)
 
-def within(self, other):
+def within(shape, other):
     if not hasattr(shape,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     if not hasattr(other,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     o = shapely.geometry.asShape(shape)
     o2 = shapely.geometry.asShape(other)
     return o.within(o2)
 
-def equals_exact(self, other, tolerance):
+def equals_exact(shape, other, tolerance):
     if not hasattr(shape,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     if not hasattr(other,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     o = shapely.geometry.asShape(shape)
     o2 = shapely.geometry.asShape(other)
     return o.equals_exact(o2, tolerance)
 
-def almost_equals(self, other, decimal=6):
+def almost_equals(shape, other, decimal=6):
     if not hasattr(shape,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     if not hasattr(other,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     o = shapely.geometry.asShape(shape)
@@ -232,7 +232,7 @@ def project(shape, other, normalized=False):
     o2 = shapely.geometry.asShape(other)
     return o.project(o2, normalized)
 
-def interpolate(self, distance, normalized=False):
+def interpolate(shape, distance, normalized=False):
     if not hasattr(shape,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     o = shapely.geometry.asShape(shape)
     res = o.interpolate(distance, normalized)
