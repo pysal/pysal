@@ -4,51 +4,9 @@
 PySAL Documentation
 *******************
 
-Writing PySAL Documentation
-============================
 
-PySAL project contains two distinct forms of documentation: inline and
-non-inline, for lack of a better term. Inline docs are contained in the source
-code itself, in *docstrings*.  Non-inline documentation is contained in the
-pysal/doc folder, is formatted as Restructured Text (ReST), and generated into
-HTML (and other formats) by `Sphinx <http://pypi.python.org/pypi/Sphinx/1.0.7>`_. 
-
-
-Best Practices
---------------
-
-PySAL makes use of the built-in Sphinx extension *viewcode*. To use it,
-your source code module requires at least one properly formatted docstring.
-
-Developers can now strike-through older documentation with a custom directive as
-follows.  Near the top of the document, add the role directive.  Then, to strike through old text, add the :strike:
-directive and offset the text with back-ticks. This :strike:`strikethrough` is produced
-like this::
-
-  .. role:: strike
-  This :strike:`strikethrough` is produced like this:
-
-
-
-
-Things to watch out for
-------------------------
-
-
-If you encounter a failing tutorial doctest that does not seem to be in error, it could be 
-a difference in whitespace between the expected and received output. In that case, add an 
-'options' line as follows::
- 
- .. doctest::
-    :options: +NORMALIZE_WHITESPACE
-	
-    >>> print 'a   b   c'
-    abc
-
-
-
-Building PySAL Documentation
-============================
+Compiling Documentation
+=======================
  
 PySAL documentation is built using `Sphinx
 <http://pypi.python.org/pypi/Sphinx/1.0.7>`_ and the `numpydoc <http://pypi.python.org/pypi/numpydoc/0.4>`_
@@ -74,8 +32,9 @@ docs. Consult the `Sphinx markup guide <http://sphinx.pocoo.org/contents.html>`_
 Once you are happy with your changes, check-in the `source` files. Do not
 add or check-in files under  `build` since they are dynamically built.
 
-Changes added to the `svn repository <http://code.google.com/p/pysal/>`_
-will be propogated to `pysal.org <http://pysal.org>`_ on an hourly basis.
+Changes checked in to the `Subversion repository <http://code.google.com/p/pysal/>`_
+will be propogated to `pysal.geodacenter.org/dev
+<http://pysal.geodacenter.org/dev>`_ within about ten minutes.
 
 
 Issues
@@ -101,3 +60,50 @@ A fix is to do the following:
         pip install -U numpydoc
 
 
+Writing Documentation
+=====================
+
+The PySAL project contains two distinct forms of documentation: inline and
+non-inline. Inline docs are contained in the source
+code itself, in what are known as *docstrings*.  Non-inline documentation is in the
+doc folder in the trunk. 
+
+
+Inline documentation is processed with an extension to Sphinx called numpydoc.
+We have adopted the community standard outlined `here <https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt>`_.
+
+
+PySAL makes use of the built-in Sphinx extension *viewcode*, which allows the
+reader to quicky toggle between docs and source code. To use it,
+the source code module requires at least one properly formatted docstring.
+
+
+Non-inline documentation editors can opt to strike-through older documentation rather than
+delete it with the custom "role" directive as
+follows.  Near the top of the document, add the role directive.  Then, to strike through old text, add the :strike:
+directive and offset the text with back-ticks. This :strike:`strikethrough` is produced
+like this::
+
+  .. role:: strike
+
+  ...
+  ...
+
+  This :strike:`strikethrough` is produced like this:
+
+
+
+
+Things to watch out for
+------------------------
+
+
+If you encounter a failing tutorial doctest that does not seem to be in error, it could be 
+a difference in whitespace between the expected and received output. In that case, add an 
+'options' line as follows::
+ 
+ .. doctest::
+    :options: +NORMALIZE_WHITESPACE
+	
+    >>> print 'a   b   c'
+    abc
