@@ -581,7 +581,8 @@ class Moran_Local:
         for i in range(self.w.n):
             idsi = ids[ids != i]
             np.random.shuffle(idsi)
-            lisas[i] = [z[i] * sum(w[i] * z[idsi[rid[0:wc[i]]]]) for rid in rids]
+            tmp = np.array([z[idsi[rid[0:wc[i]]]] for rid in rids])
+            lisas[i] = z[i] * (w[i]* tmp).sum(1)
         self.rlisas = (n_1 / self.den) * lisas
     
     def __quads(self):
