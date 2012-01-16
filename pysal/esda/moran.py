@@ -581,7 +581,7 @@ class Moran_Local:
         for i in range(self.w.n):
             idsi = ids[ids != i]
             np.random.shuffle(idsi)
-            tmp = np.array([z[idsi[rid[0:wc[i]]]] for rid in rids])
+            tmp = z[idsi[rids[:,0:wc[i]]]]
             lisas[i] = z[i] * (w[i]* tmp).sum(1)
         self.rlisas = (n_1 / self.den) * lisas
     
