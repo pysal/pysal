@@ -571,7 +571,7 @@ class Moran_Local:
         rid = range(self.n - 1)
         prange = range(self.permutations)
         k = self.w.max_neighbors + 1
-        nn = range(self.n - 1)
+        nn = self.n - 1
         rids = np.array([np.random.permutation(nn)[0:k] for i in prange])
         ids = np.arange(self.w.n)
         ido = self.w.id_order
