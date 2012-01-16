@@ -853,7 +853,7 @@ def min_threshold_distance(data):
     nnd = nn[0].max(axis=0)[1]
     return nnd
 
-def lat2SW(nrows=3, ncols=5, criterion="rook"):
+def lat2SW(nrows=3, ncols=5, criterion="rook", row_st=False):
     """
     Create a sparse W matrix for a regular lattice.
 
@@ -866,6 +866,9 @@ def lat2SW(nrows=3, ncols=5, criterion="rook"):
               number of columns
     rook    : "rook", "queen", or "bishop"
               type of contiguity. Default is rook.
+    row_st  : boolean
+              If True, the created sparse W object is row-standardized so
+              every row sums up to one. Defaults to False.
 
     Returns
     -------
@@ -888,6 +891,9 @@ def lat2SW(nrows=3, ncols=5, criterion="rook"):
     1
     >>> w9[3,6]
     1
+    >>> w9r = weights.lat2SW(3,3, row_st=True)
+    >>> w9r[3,6]
+    0.33333333333333331
     """
     n = nrows * ncols
     diagonals = []
@@ -919,6 +925,8 @@ def lat2SW(nrows=3, ncols=5, criterion="rook"):
     offsets = np.array(offsets)
     m = sparse.dia_matrix((data,offsets), shape=(n,n), dtype=np.int8)
     m = m + m.T
+    if row_st:
+        m = sparse.spdiags(1. / m.sum(1).T, 0, *m.shape) * m
     return m
         
         
