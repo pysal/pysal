@@ -477,7 +477,7 @@ def threshold_continuousW_from_shapefile(shapefile,threshold,p=2,
     --------
     >>> w = threshold_continuousW_from_shapefile(pysal.examples.get_path("columbus.shp"),0.62,idVariable="POLYID")
     >>> w.weights[1]
-    [1.6702346893743276, 1.7250729841938044]
+    [1.6702346893743334, 1.7250729841938093]
     """
     data = get_points_array_from_shapefile(shapefile)
     if radius != None:
@@ -684,7 +684,7 @@ def kernelW_from_shapefile(shapefile,k=2,function='triangular',idVariable=None, 
     --------
     >>> kw = kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"),idVariable='POLYID')
     >>> kw.weights[1]
-    [0.20524787824004365, 0.007078773148450623, 1.0, 0.23051223027663015]
+    [0.2052478782400463, 0.007078773148450623, 1.0, 0.23051223027663237]
     >>> kw.bandwidth[:3]
     array([[ 0.75333961],
            [ 0.75333961],
@@ -890,7 +890,7 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='t
     --------
     >>> kwa = adaptive_kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"))
     >>> kwa.weights[0]
-    [1.0, 0.03178906767736389, 9.99999900663795e-08]
+    [1.0, 0.03178906767736345, 9.99999900663795e-08]
     >>> kwa.bandwidth[:3]
     array([[ 0.59871832],
            [ 0.59871832],

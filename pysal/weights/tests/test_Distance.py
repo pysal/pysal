@@ -75,11 +75,11 @@ class TestDistanceWeights(unittest.TestCase):
                             [14.142137037944515], [18.027758180095585]])
 
         kw = pysal.kernelW_from_shapefile(self.polyShp,idVariable='POLYID')
-        self.assertEqual(kw.weights[1], [0.20524787824004365,
+        self.assertEqual(kw.weights[1], [0.2052478782400463,
                                          0.0070787731484506233, 1.0,
-                                         0.23051223027663015])
+                                         0.23051223027663237])
         kwa=pysal.adaptive_kernelW_from_shapefile(self.polyShp)
-        self.assertEqual(kwa.weights[0], [1.0, 0.031789067677363891,
+        self.assertEqual(kwa.weights[0], [1.0, 0.03178906767736345,
                                            9.9999990066379496e-08])
 
     def test_threshold(self):
@@ -91,8 +91,8 @@ class TestDistanceWeights(unittest.TestCase):
         wid2=pysal.threshold_continuousW_from_array(self.points,11.2,alpha=-2.0)
         self.assertEqual(wid2.weights[0], [0.01, 0.0079999999999999984])
         w=pysal.threshold_continuousW_from_shapefile(self.polyShp,0.62,idVariable="POLYID")
-        self.assertEqual(w.weights[1], [1.6702346893743276,
-                                        1.7250729841938044])
+        self.assertEqual(w.weights[1], [1.6702346893743334,
+                                        1.7250729841938093])
     def test_DistanceBand(self):
         """ see issue #126 """
         w = pysal.rook_from_shapefile(pysal.examples.get_path("lattice10x10.shp"))

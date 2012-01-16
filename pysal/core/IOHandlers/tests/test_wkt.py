@@ -22,7 +22,7 @@ class test_WKTReader(unittest.TestCase):
     def test__read(self):
         polys = self.obj.read()
         self.assertEqual(78, len(polys))
-        self.assertEqual((-91.195784694307363, 39.990883050220845),
+        self.assertEqual((-91.195784694307383, 39.990883050220845),
                 polys[1].centroid)
 
 

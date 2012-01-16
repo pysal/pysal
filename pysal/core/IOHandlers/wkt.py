@@ -40,7 +40,7 @@ class WKTReader(FileIO.FileIO):
     Return centroid of polygon at index 1
 
     >>> polys[1].centroid
-    (-91.19578469430736, 39.990883050220845)
+    (-91.19578469430738, 39.990883050220845)
 
     Type dir(polys[1]) at the python interpreter to get a list of supported methods
 

@@ -34,7 +34,7 @@ class test_WKTParser(unittest.TestCase):
         self.assertEquals(parts, [[(1.0, 1.0), (1.0, 5.0), (5.0, 5.0), (5.0,
             1.0), (1.0, 1.0)], [(2.0, 2.0), (2.0, 3.0), (3.0, 3.0), (3.0, 2.0),
                 (2.0, 2.0)]])
-        self.assertEquals(poly.centroid, (2.9705882352941173, 2.9705882352941173))
+        self.assertEquals(poly.centroid, (2.9705882352941178, 2.9705882352941178))
         self.assertEquals(poly.area, 17.0)
 
     def test_fromWKT(self):

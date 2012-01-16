@@ -68,7 +68,7 @@ class Testuser(unittest.TestCase):
 
     def test_threshold_continuousW_from_shapefile(self):
         w = pysal.threshold_continuousW_from_shapefile(pysal.examples.get_path("columbus.shp"), 0.62,idVariable="POLYID")
-        self.assertEquals(w.weights[1], [1.6702346893743276, 1.7250729841938044])
+        self.assertEquals(w.weights[1], [1.6702346893743334, 1.7250729841938093])
     def test_kernelW(self):
         points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
         kw = pysal.kernelW(points)
@@ -87,9 +87,9 @@ class Testuser(unittest.TestCase):
 
     def test_kernelW_from_shapefile(self):
         kw = pysal.kernelW_from_shapefile(pysal.examples.get_path('columbus.shp'),idVariable='POLYID')
-        self.assertEquals(kw.weights[1], [0.20524787824004365,
+        self.assertEquals(kw.weights[1], [0.2052478782400463,
                                           0.0070787731484506233, 1.0,
-                                          0.23051223027663015])
+                                          0.23051223027663237])
         np.testing.assert_array_almost_equal(kw.bandwidth[:3], np.array([[ 0.75333961], [ 0.75333961],
                                                    [ 0.75333961]]))
         
@@ -118,7 +118,7 @@ class Testuser(unittest.TestCase):
 
     def test_adaptive_kernelW_from_shapefile(self):
         kwa = pysal.adaptive_kernelW_from_shapefile(pysal.examples.get_path('columbus.shp'))
-        self.assertEquals(kwa.weights[0], [1.0, 0.031789067677363891,
+        self.assertEquals(kwa.weights[0], [1.0, 0.03178906767736345,
                                            9.9999990066379496e-08])
         np.testing.assert_array_almost_equal(kwa.bandwidth[:3],
                                              np.array([[ 0.59871832],
