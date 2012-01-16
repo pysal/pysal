@@ -163,7 +163,41 @@ compare the original I using a z-transformation to get:
         4.74311431149
         >>> print mir.p_z_sim
         2.10457431304e-06
-        
+
+When the variable of interest (:math:`y`) is rates based on populations with different sizes, 
+the Moran's I value for :math:`y` needs to be adjusted to account for the differences among populations. [#]_
+To apply this adjustment, we can create an instance of the Moran_Rate class rather than the Moran class.
+For example, let's assume that we want to estimate the Moran's I for the rates of newborn infants who died of 
+Sudden Infant Death Syndrome (SIDS). We start this estimation by reading in the total number of newborn infants (BIR79)
+and the total number of newborn infants who died of SIDS (SID79):
+
+.. doctest::
+
+        >>> f = pysal.open(pysal.examples.get_path("sids2.dbf"))
+        >>> b = np.array(f.by_col('BIR79'))
+        >>> e = np.array(f.by_col('SID79'))
+
+Next, we create an instance of W:
+
+.. doctest::
+
+        >>> w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
+
+Now, we create an instance of Moran_Rate:
+
+.. doctest::
+
+        >>> mi = pysal.esda.moran.Moran_Rate(e, b, w)
+        >>> "%6.4f" % mi.I
+        '0.1662'
+        >>> "6.4f" % mi.EI
+        '-0.0101'
+        >>> "%6.4f" % mi.p_norm
+        '0.0084'
+
+From these results, we see that the observed value for I is significantly higher than its expected value,
+after the adjustment for the differences in population.
+
 
 Geary's C
 ---------
@@ -309,6 +343,26 @@ and then use this indexing on the q attribute to find out which quadrant of the 
         >>> lm.q[sig]
         array([4, 4, 1, 3, 1, 3, 1, 1, 3, 3, 3])
 
+As in the case of global Moran's I, when the variable of interest is rates based on populations with different sizes,
+we need to account for the differences among population to estimate local Moran's Is. 
+Continuing on with the SIDS example above, the adjusted local Moran's Is are obtained with:
+
+.. doctest::
+
+        >>> lm = pysal.esda.moran.Moran_Local_Rate(e, b, w)
+        >>> lm.Is[:10]
+        array([-0.13452366, -1.21133985,  0.05019761,  0.06127125, -0.12627466,
+                0.23497679,  0.26345855, -0.00951288, -0.01517879, -0.34513514])
+
+As demonstrated above, significant Moran's Is can be idenfied by using numpy indexing:
+
+.. doctest::
+
+        >>> sig = lm.p_sim<0.05
+        >>> lm.p_sim[sig]
+        array([ 0.022,  0.036,  0.047,  0.021,  0.001,  0.028,  0.029,  0.023,
+                0.027,  0.017,  0.006,  0.001])
+
 Local G and G*
 --------------
 
@@ -370,6 +424,7 @@ To identify the significant :math:`G_i' values we can use numpy indexing:
 
 .. [#] Source: S. Messner, L. Anselin, D. Hawkins, G. Deane, S. Tolnay, R. Baller (2000). An Atlas of the Spatial Patterning of County-Level Homicide, 1960-1990. Pittsburgh, PA, National Consortium on Violence Research (NCOVR)
 .. [#] Because the permutations are random, results from those presented here may vary if you replicate this example.
+.. [#] Source: Assuncao, R. E. and Reis, E. A. 1999. A new proposal to adjust Moran's I for population density. Statistics in Medicine. 18, 2147-2162.
 .. [#] The n-1 spatial units other than i are used to generate the empirical distribution of the LISA statistics for each i.
 .. [#] Caution is required in interpreting the significance of the LISA statistics due to difficulties with multiple comparisons and a lack of independence across the individual tests. For further discussion see Anselin, L. (1995). "Local indicators of spatial association – LISA". Geographical Analysis, 27, 93-115.
 
