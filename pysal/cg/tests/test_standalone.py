@@ -424,12 +424,30 @@ class TestGetSharedSegments(unittest.TestCase):
     def test_get_shared_segments(self):
         poly1 = Polygon([Point((0, 0)), Point((0, 1)), Point((1, 1)), Point((1, 0))])
         poly2 = Polygon([Point((1, 0)), Point((1, 1)), Point((2, 1)), Point((2, 0))])
-        self.failUnless(True, get_shared_segments(poly1, poly2, bool_ret=True))
+        poly3 = Polygon([Point((0, 1)), Point((0, 2)), Point((1, 2)), Point((1, 1))])
+        poly4 = Polygon([Point((1, 1)), Point((1, 2)), Point((2, 2)), Point((2, 1))])
+        self.assertEqual(True, get_shared_segments(poly1, poly2, bool_ret=True))
+        self.assertEqual(True, get_shared_segments(poly1, poly3, bool_ret=True))
+        self.assertEqual(True, get_shared_segments(poly3, poly4, bool_ret=True))
+        self.assertEqual(True, get_shared_segments(poly4, poly2, bool_ret=True))
+
+        self.assertEqual(False, get_shared_segments(poly1, poly4, bool_ret=True))
+        self.assertEqual(False, get_shared_segments(poly3, poly2, bool_ret=True))
     def test_get_shared_segments_non_bool(self):
         poly1 = Polygon([Point((0, 0)), Point((0, 1)), Point((1, 1)), Point((1, 0))])
         poly2 = Polygon([Point((1, 0)), Point((1, 1)), Point((2, 1)), Point((2, 0))])
-        expected =  [LineSegment(Point((1, 1)), Point((1, 0)))]
-        assert expected == get_shared_segments(poly1, poly2)
+        poly3 = Polygon([Point((0, 1)), Point((0, 2)), Point((1, 2)), Point((1, 1))])
+        poly4 = Polygon([Point((1, 1)), Point((1, 2)), Point((2, 2)), Point((2, 1))])
+        self.assertEqual(LineSegment(Point((1, 0)), Point((1, 1))), get_shared_segments(poly1, poly2)[0])
+        self.assertEqual(LineSegment(Point((0, 1)), Point((1, 1))), get_shared_segments(poly1, poly3)[0])
+        self.assertEqual(LineSegment(Point((1, 2)), Point((1, 1))), get_shared_segments(poly3, poly4)[0])
+        self.assertEqual(LineSegment(Point((2, 1)), Point((1, 1))), get_shared_segments(poly4, poly2)[0])
+        #expected =  [LineSegment(Point((1, 1)), Point((1, 0)))]
+        #assert expected == get_shared_segments(poly1, poly3)
+        #expected =  [LineSegment(Point((1, 1)), Point((1, 0)))]
+        #assert expected == get_shared_segments(poly3, poly4)
+        #expected =  [LineSegment(Point((1, 1)), Point((1, 0)))]
+        #assert expected == get_shared_segments(poly4, poly2)
 
 class TestDistanceMatrix(unittest.TestCase):
     def test_distance_matrix(self):

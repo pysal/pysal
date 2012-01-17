@@ -67,6 +67,50 @@ class Point(object):
     def __geo_interface__(self):
         return {'type': 'Point', 'coordinates':self.__loc}
 
+    def __lt__(self,other):
+        """
+        Tests if the Point is < another object.
+
+        __ne__(x) -> bool
+
+        Parameters
+        ----------
+        other : an object to test equality against
+
+        Attributes
+        ----------
+
+        Examples
+        --------
+        >>> Point((0,1)) < Point((0,1))
+        False
+        >>> Point((0,1)) < Point((1,1))
+        True
+        """
+        return (self.__loc) < (other.__loc)
+
+    def __le__(self,other):
+        """
+        Tests if the Point is <= another object.
+
+        __ne__(x) -> bool
+
+        Parameters
+        ----------
+        other : an object to test equality against
+
+        Attributes
+        ----------
+
+        Examples
+        --------
+        >>> Point((0,1)) <= Point((0,1))
+        True
+        >>> Point((0,1)) <= Point((1,1))
+        True
+        """
+        return (self.__loc) <= (other.__loc)
+
     def __eq__(self,other):
         """
         Tests if the Point is equal to another object.
@@ -116,6 +160,48 @@ class Point(object):
             return (self.__loc) != (other.__loc)
         except AttributeError:
             return True
+    def __gt__(self,other):
+        """
+        Tests if the Point is > another object.
+
+        __ne__(x) -> bool
+
+        Parameters
+        ----------
+        other : an object to test equality against
+
+        Attributes
+        ----------
+
+        Examples
+        --------
+        >>> Point((0,1)) > Point((0,1))
+        False
+        >>> Point((0,1)) > Point((1,1))
+        False
+        """
+        return (self.__loc) > (other.__loc)
+    def __ge__(self,other):
+        """
+        Tests if the Point is >= another object.
+
+        __ne__(x) -> bool
+
+        Parameters
+        ----------
+        other : an object to test equality against
+
+        Attributes
+        ----------
+
+        Examples
+        --------
+        >>> Point((0,1)) >= Point((0,1))
+        True
+        >>> Point((0,1)) >= Point((1,1))
+        False
+        """
+        return (self.__loc) >= (other.__loc)
 
     def __hash__(self):
         """
