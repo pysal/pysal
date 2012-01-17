@@ -785,8 +785,11 @@ def get_shared_segments(poly1,poly2,bool_ret=False):
         for b in islice(part,1,None):
             # inlining point_touches_rectangle for speed
             x,y = a
-            if x >= wLeft and x <= wRight:
-                if y >= wLower and y <= wUpper:
+            # check if point a is in the bounding box intersection
+            if x >= wLeft and x <= wRight and y >= wLower and y <= wUpper:
+                x,y = b
+                # check if point b is in the bounding box intersection
+                if x >= wLeft and x <= wRight and y >= wLower and y <= wUpper:
                     if a > b:
                         segmentsA.add((b,a))
                     else:
@@ -799,8 +802,9 @@ def get_shared_segments(poly1,poly2,bool_ret=False):
         for b in islice(part,1,None):
             # inlining point_touches_rectangle for speed
             x,y = a
-            if x >= wLeft and x <= wRight:
-                if y >= wLower and y <= wUpper:
+            if x >= wLeft and x <= wRight and y >= wLower and y <= wUpper:
+                x,y = b
+                if x >= wLeft and x <= wRight and y >= wLower and y <= wUpper:
                     if a > b:
                         seg = (b,a)
                     else:
