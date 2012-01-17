@@ -2,7 +2,7 @@ import os
 import unittest
 import pysal
 
-class _TestNameSpace(unittest.TestCase):
+class TestNameSpace(unittest.TestCase):
     """
         This test makes sure we don't remove anything from the pysal NameSpace that
         1.0 users might expect to be there.  1.0 Namespace was taken from the 1.1
@@ -33,20 +33,18 @@ class _TestNameSpace(unittest.TestCase):
                             'threshold_continuousW_from_array', 'threshold_continuousW_from_shapefile',\
                             'version', 'w_difference', 'w_intersection', 'w_subset',\
                             'w_symmetric_difference', 'w_union', 'weights']
+
         current_namespace = dir(pysal)
         for item in namespace_v1_0:
-            ### This try/except is for debugging only.
-            try:
-                assert item in current_namespace
-            except AssertionError:
-                print item, "not in current_namespace"
-            self.assert_(item in current_namespace)
+            self.assertTrue(item in current_namespace)
         for item in current_namespace:
             if item not in namespace_v1_0 and not item.startswith('__'):
                 print item, "added to name space"
 
-suite = unittest.TestLoader().loadTestsFromTestCase(_TestNameSpace)
+
+suite = unittest.TestLoader().loadTestsFromTestCase(TestNameSpace)
 
 if __name__ == '__main__':
+    unittest.main()
     runner = unittest.TextTestRunner()
     runner.run(suite)
