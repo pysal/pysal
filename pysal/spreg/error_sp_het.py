@@ -5,7 +5,8 @@ Spatial Error with Heteroskedasticity family of models
 __author__ = "Luc Anselin luc.anselin@asu.edu, \
         Pedro V. Amaral pedro.amaral@asu.edu, \
         Daniel Arribas-Bel darribas@asu.edu, \
-        David C. Folch david.folch@asu.edu"
+        David C. Folch david.folch@asu.edu \
+        Ran Wei rwei5@asu.edu"
 
 import numpy as np
 import numpy.linalg as la
