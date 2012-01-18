@@ -420,7 +420,7 @@ class BaseGM_Endog_Error(RegressionPropsY):
         self.predy = np.dot(tsls.z, tsls2.betas)
         self.u = y - self.predy
         self.sig2 = np.dot(tsls2.u.T,tsls2.u) / self.n
-        self.vm = sig2 * tsls2.varb 
+        self.vm = self.sig2 * tsls2.varb 
         self._cache = {}
 
 class GM_Endog_Error(BaseGM_Endog_Error, USER.DiagnosticBuilder):
