@@ -1,0 +1,2 @@
+pysal/contrib
+pysal/spreg/tests
