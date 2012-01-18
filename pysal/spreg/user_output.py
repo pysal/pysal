@@ -7,7 +7,6 @@ import copy as COPY
 import diagnostics as diagnostics
 import diagnostics_tsls as diagnostics_tsls
 import diagnostics_sp as diagnostics_sp
-import ak as AK
 import pysal
 
 __all__ = []
@@ -62,7 +61,7 @@ class DiagnosticBuilder:
             if spat_diag:
                 if instruments:
                     cache = diagnostics_sp.spDcache(self, w)
-                    mi, ak, ak_p = AK.akTest(self, w, cache)
+                    mi, ak, ak_p = diagnostics_sp.akTest(self, w, cache)
                     self.ak_test = ak, ak_p
                 else:
                     lm_tests = diagnostics_sp.LMtests(self, w)
