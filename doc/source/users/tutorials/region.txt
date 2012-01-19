@@ -202,5 +202,5 @@ constraints.
 
 .. rubric:: Footnotes
 
-.. [#] Duque, J. C., L. Anselin and S. J. Rey. 2010. "The max-p region problem" Working Paper. GeoDa Center for Geospatial Analysis and Computation.
+.. [#] Duque, J. C., L. Anselin and S. J. Rey. 2011. "The max-p-regions problem."  *Journal of Regional Science* `DOI: 10.1111/j.1467-9787.2011.00743.x <http://onlinelibrary.wiley.com/doi/10.1111/j.1467-9787.2011.00743.x/abstract>`_
 .. [#] Because this is a randomized algorithm, results may vary when replicating this example. To reproduce a regionalization solution, you should first set the random seed generator. See http://docs.scipy.org/doc/numpy/reference/generated/numpy.random.seed.html for more information.
