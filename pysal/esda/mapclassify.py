@@ -281,6 +281,75 @@ def natural_breaks(values, k = 5, itmax = 100):
     cuts = [max(values[c1 == c]) for c in rk]
     return sids, seeds, diffs, class_ids, solved, it, cuts
 
+def _fisher_jenks_means(values, classes=5):
+  """
+  Jenks Optimal (Natural Breaks) algorithm implemented in Python.
+  The original Python code comes from here:
+  http://danieljlewis.org/2010/06/07/jenks-natural-breaks-algorithm-in-python/
+  and is based on a JAVA and Fortran code available here:
+  https://stat.ethz.ch/pipermail/r-sig-geo/2006-March/000811.html
+  
+  Returns class breaks such that classes are internally homogeneous while 
+  assuring heterogeneity among classes.
+  
+  """
+
+  values.sort()
+  mat1 = []
+  for i in range(0,len(values)+1):
+    temp = []
+    for j in range(0,classes+1):
+        temp.append(0)
+    mat1.append(temp)
+  mat2 = []
+  for i in range(0,len(values)+1):
+    temp = []
+    for j in range(0,classes+1):
+        temp.append(0)
+    mat2.append(temp)
+  for i in range(1,classes+1):
+    mat1[1][i] = 1
+    mat2[1][i] = 0
+    for j in range(2,len(values)+1):
+        mat2[j][i] = float('inf')
+  v = 0.0
+  for l in range(2,len(values)+1):
+    s1 = 0.0
+    s2 = 0.0
+    w = 0.0
+    for m in range(1,l+1):
+      i3 = l - m + 1
+      val = float(values[i3-1])
+      s2 += val * val
+      s1 += val
+      w += 1
+      v = s2 - (s1 * s1) / w
+      i4 = i3 - 1
+      if i4 != 0:
+        for j in range(2,classes+1):
+          if mat2[l][j] >= (v + mat2[i4][j - 1]):
+            mat1[l][j] = i3
+            mat2[l][j] = v + mat2[i4][j - 1]
+    mat1[l][1] = 1
+    mat2[l][1] = v
+
+  k = len(values)
+
+  kclass = []
+  for i in range(0,classes+1):
+    kclass.append(0)
+  kclass[classes] = float(values[len(values) - 1])
+  kclass[0] = float(values[0])
+  countNum = classes
+  while countNum >= 2:
+    pivot = mat1[k][countNum]
+    id = int(pivot - 2)
+    kclass[countNum - 1] = values[id]
+    k = int(pivot - 1)
+    countNum -= 1
+  return kclass
+
+
 
 class Map_Classifier:
     """
@@ -887,7 +956,7 @@ class Natural_Breaks(Map_Classifier):
 
 class Fisher_Jenks(Map_Classifier):
     """
-    Fisher Jenks optimal classifier
+    Fisher Jenks optimal classifier - mean based
 
     Parameters
     ----------
@@ -915,11 +984,11 @@ class Fisher_Jenks(Map_Classifier):
     >>> cal = load_example()
     >>> fj = Fisher_Jenks(cal)
     >>> fj.adcm
-    832.8900000000001
+    799.24000000000001
     >>> fj.bins
-    [110.73999999999999, 192.05000000000001, 370.5, 722.85000000000002, 4111.4499999999998]
+    [75.290000000000006, 192.05000000000001, 370.5, 722.85000000000002, 4111.45]
     >>> fj.counts
-    array([50,  2,  4,  1,  1])
+    array([49,  3,  4,  1,  1])
     >>> 
     """
 
@@ -929,68 +998,11 @@ class Fisher_Jenks(Map_Classifier):
         self.name = "Fisher_Jenks"
 
     def _set_bins(self):
-        # build diameter matrix
-        d = {}
-        n = self.y.shape[0]
         x = self.y.copy()
-        x.sort()
-        for i in range(n):
-            d[i,i] = 0.0
-            for j in range(i + 1, n):
-                c = x[range(i, j + 1)]
-                cm = np.median(c)
-                d[i, j] = sum(abs(c - cm))
-        self.d = d
-        dmin = sum([d[key] for key in d])
-        self._maxd = dmin.copy()
-        solving = True
-        start = 0
-        end = n
-        interval = 0, n - 1
-        classes = [interval]
-        med = np.median(x)
-        adcms = [sum([abs(xi - med) for xi in x])]
-        adcm = sum(adcms)
-        self.d[interval] = adcm
-        k = len(classes)
-        it = 0
-        while k < self.k:
-            splits = {}
-            delta = 0
-            for i, interval in enumerate(classes):
-                if interval[1] > interval[0]:
-                    p, p_adcm = self._two_part(interval)
-                    p_delta = adcms[i] - p_adcm
-                    splits[i] = [p, p_adcm]
-                    if p_delta > delta:
-                        delta = p_delta
-                        split = i
-            if delta > 0:
-                left, right = splits[split][0]
-                classes.insert(split, right)
-                classes.insert(split, left)
-                classes.pop(split + 2)
-                adcms.insert(split, self.d[right[0], right[1]])
-                adcms.insert(split, self.d[left[0], left[1]])
-                adcms.pop(split + 2)
-            k = len(classes)
-            it += 1
-        self.bins = [ x[b[-1]] for b in classes]
-        self.bins.sort()
+        self.bins =  _fisher_jenks_means(x, classes=self.k)[1:]
 
-    def _two_part(self, interval):
-        """find the best two-partition between start and end"""
-        start, end = interval
-        d = self.d
-        tmin = self.d[interval]
-        best = [start, end]
-        t = 0
-        for left, right in [[(start, i), (i + 1, end)] for i in range(start, end)]:
-            t = d[left] + d[right]
-            if t < tmin:
-                best = [left, right]
-                tmin = t
-        return (best, t)
+
+
 
 class Jenks_Caspall(Map_Classifier):
     """
@@ -1688,6 +1700,40 @@ class K_classifiers:
                 pct0 = pct1
         self.results = results
         self.best = best[1]
+
+def fj(x, k=5):
+    y = x.copy()
+    y.sort()
+    d = {}
+    initial = opt_part(y)
+    # d has key = number of groups
+    # value: list of ids, list of group tss, group size
+    split_id = [initial[0]]
+    tss = initial[1:] # left and right within tss
+    sizes = [ split_id - 1, len(y) - split_id ]
+    d[2] = [split_id, tss, sizes]
+    return d
+
+def opt_part(x):
+    """
+    Find optimal bi-partition of x values
+    """
+
+    n = len(x)
+    tss = np.inf
+    opt_i = -999
+    for i in xrange(1, n):
+        print i
+        left = x[:i].var()*i
+        right = x[i:].var() * (n-i)
+        tss_i = left + right
+        if tss_i < tss:
+            opt_i = i
+            tss = tss_i
+            left_min = left
+            right_min = right
+    return (opt_i, tss, left_min, right_min)
+
 
 
 def _test():

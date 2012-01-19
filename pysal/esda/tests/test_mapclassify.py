@@ -223,11 +223,11 @@ class TestFisherJenks(unittest.TestCase):
         self.V = np.array([record[-1] for record in dat])
     def test_Fisher_Jenks(self):
          fj = Fisher_Jenks(self.V)
-         self.assertEquals(fj.adcm,832.8900000000001)
-         self.assertEquals(fj.bins, [110.73999999999999, 192.05000000000001,
-             370.5, 722.85000000000002, 4111.4499999999998])
-         np.testing.assert_array_almost_equal(fj.counts,
-                 np.array([50, 2, 4, 1, 1]))
+         self.assertEquals(fj.adcm,799.24000000000001)
+         self.assertEquals(fj.bins, [75.290000000000006, 192.05000000000001,
+             370.5, 722.85000000000002, 4111.45])
+         np.testing.assert_array_almost_equal(fj.counts, np.array([49, 3, 4,
+             1, 1]))
 
 class TestJenksCaspall(unittest.TestCase):
     def setUp(self):
