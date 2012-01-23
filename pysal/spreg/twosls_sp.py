@@ -153,6 +153,13 @@ class BaseGM_Lag(TSLS.BaseTSLS):
     >>> q = np.array(db.by_col("DISCBD"))
     >>> q = np.reshape(q, (49,1))
     >>> reg=BaseGM_Lag(y, X, w=w, yend=yd, q=q, w_lags=2)
+    >>> reg.betas
+    array([[ 100.79359082],
+           [  -0.50215501],
+           [  -1.14881711],
+           [  -0.38235022]])
+    >>> D.se_betas(reg)
+    array([ 53.0829123 ,   1.02511494,   0.57589064,   0.59891744])
 
     References
     ----------
