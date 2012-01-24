@@ -446,7 +446,17 @@ class GM_Lag(BaseGM_Lag, USER.DiagnosticBuilder):
     And we can run the model again:
 
     >>> reg=GM_Lag(y, X, w=w, yend=yd, q=q, w_lags=2, name_x=['inc'], name_y='hoval', name_yend=['crime'], name_q=['discbd'], name_ds='columbus')
+    >>> reg.betas
+    array([[ 100.79359082],
+           [  -0.50215501],
+           [  -1.14881711],
+           [  -0.38235022]])
 
+    Once the model is run, we can obtain the standard error of the coefficient
+    estimates by calling the diagnostics module:
+
+    >>> D.se_betas(reg)
+    array([ 53.0829123 ,   1.02511494,   0.57589064,   0.59891744])
 
     """
     def __init__(self, y, x, yend=None, q=None,\
