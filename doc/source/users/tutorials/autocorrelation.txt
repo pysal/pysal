@@ -190,7 +190,7 @@ Now, we create an instance of Moran_Rate:
         >>> mi = pysal.esda.moran.Moran_Rate(e, b, w)
         >>> "%6.4f" % mi.I
         '0.1662'
-        >>> "6.4f" % mi.EI
+        >>> "%6.4f" % mi.EI
         '-0.0101'
         >>> "%6.4f" % mi.p_norm
         '0.0084'
