@@ -452,13 +452,7 @@ class TSLS(BaseTSLS, USER.DiagnosticBuilder):
                                             moran=False, std_err=std_err)
         
 
-def _test():
-    import doctest
-    doctest.testmod()
-
                      
 if __name__ == '__main__':
-    _test()    
-    import numpy as np
-    import pysal
-       
+    import doctest
+    doctest.testmod()
