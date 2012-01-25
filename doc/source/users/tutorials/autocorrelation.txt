@@ -2,6 +2,7 @@
 
         import pysal
         import numpy as np
+        np.random.seed(10)
 
 #######################
 Spatial Autocorrelation
@@ -50,17 +51,15 @@ where :math:`w_{i,j}` is a spatial :doc:`weight <weights>`, :math:`z_i = y_i - \
 We start with the usual imports:
 
 
-.. doctest:: 
-
-        import pysal
-        import numpy as np
-        np.random.seed(10)
+        >>> import pysal
+        >>> import numpy as np
+        >>> np.random.seed(10)
 
 Next, we read in the homicide rates:
 
 .. doctest::
 
-        >>> f = pysal.open("../pysal/examples/stl_hom.txt")
+        >>> f = pysal.open(pysal.examples.get_path("stl_hom.txt"))
         >>> y = np.array(f.by_col['HR8893'])
 
 To calculate Moran's I we first need to read in a GAL file for a rook weights
@@ -68,7 +67,7 @@ matrix and create an instance of W:
 
 .. doctest::
 
-        >>> w = pysal.open("../pysal/examples/stl.gal").read()
+        >>> w = pysal.open(pysal.examples.get_path("stl.gal")).read()
         
 The instance of Moran's I can then be obtained with:
 

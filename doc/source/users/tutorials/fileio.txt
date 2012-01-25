@@ -108,7 +108,7 @@ WKT Files
     >>> print len(polys)
     78
     >>> print polys[1].centroid
-    (-91.19578469430736, 39.990883050220845)
+    (-91.19578469430738, 39.990883050220845)
 
 
 GeoDa Text Files
