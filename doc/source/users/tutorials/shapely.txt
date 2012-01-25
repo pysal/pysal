@@ -48,19 +48,47 @@ Using the Python Geo Interface...
     >>> fpath = pysal.examples.get_path('stl_hom.shp')
     >>> # Now, open the shapefile using pysal's FileIO
     >>> shps = pysal.open(fpath , 'r')
-    >>> # We can read all the polygons into a list...
-    >>> polygons = shps.read()
-    >>> # To use these polygons with shapely we simply convert them with
+    >>> # We can read a polygon...
+    >>> polygon = shps.next()
+    >>> # To use this polygon with shapely we simply convert it with
     >>> # Shapely's asShape method.
-    >>> polygons = map(shapely.geometry.asShape, polygons)
+    >>> polygon = shapely.geometry.asShape(polygon)
     >>> # now we can operate on our polygons like normal shapely objects...
-    >>> total_area = sum([poly.area for poly in polygons])
-    >>> print "%.4f"%total_area
-    11.9842
-    >>> eroded_polygons = [poly.buffer(-0.01) for poly in polygons]
-    >>> total_area = sum([poly.area for poly in eroded_polygons])
-    >>> print "%.4f"%total_area
-    10.6538
+    >>> print "%.4f"%polygon.area
+    0.1701
+    >>> # We can do things like buffering...
+    >>> eroded_polygon = polygon.buffer(-0.01)
+    >>> print "%.4f"%eroded_polygon.area
+    0.1533
+    >>> # and containment testing...
+    >>> polygon.contains(eroded_polygon)
+    True
+    >>> eroded_polygon.contains(polygon)
+    False
+    >>> # To go back to pysal shapes we call pysal.cg.asShape...
+    >>> eroded_polygon = pysal.cg.asShape(eroded_polygon)
+    >>> type(eroded_polygon)
+    <class 'pysal.cg.shapes.Polygon'>
+
+Using The PySAL shapely_ext module...
+
+.. doctest::
+
+    >>> import pysal
+    >>> from pysal.contrib import shapely_ext
+    >>> fpath = pysal.examples.get_path('stl_hom.shp')
+    >>> shps = pysal.open(fpath , 'r')
+    >>> polygon = shps.next()
+    >>> eroded_polygon = shapely_ext.buffer(polygon, -0.01)
+    >>> print "%0.4f"%eroded_polygon.area
+    0.1533
+    >>> shapely_ext.contains(polygon,eroded_polygon)
+    True
+    >>> shapely_ext.contains(eroded_polygon,polygon)
+    False
+    >>> type(eroded_polygon)
+    <class 'pysal.cg.shapes.Polygon'>
 
 
+    
 
