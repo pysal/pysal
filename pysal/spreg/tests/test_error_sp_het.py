@@ -98,6 +98,15 @@ class TestGMErrorHet(unittest.TestCase):
            [  0.00000000e+00,   0.00000000e+00,   0.00000000e+00,
               2.82398517e-02]])
         np.testing.assert_array_almost_equal(reg.vm,vm,6)
+        pr2 = 0.34951013222581306
+        self.assertEqual(reg.pr2,pr2)
+        stde = np.array([ 11.47900385,   0.36812187,   0.16156816,   0.16804717])
+        np.testing.assert_array_almost_equal(reg.std_err,stde,4)
+        z_stat = np.array([[  4.18122226e+00,   2.89946274e-05],
+           [  1.93003988e+00,   5.36018970e-02],
+           [ -3.45836247e+00,   5.43469673e-04],
+           [  2.45042960e+00,   1.42685863e-02]])
+        np.testing.assert_array_almost_equal(reg.z_stat,z_stat,4)
         xtx = np.array([[  4.90000000e+01,   7.04371999e+02,   1.72131237e+03],
            [  7.04371999e+02,   1.16866734e+04,   2.15575320e+04],
            [  1.72131237e+03,   2.15575320e+04,   7.39058986e+04]])
@@ -224,6 +233,13 @@ class TestGMEndogErrorHet(unittest.TestCase):
                [  1.65840848e+00,  -3.90111107e-02,  -2.81929695e-02,
                   3.15686105e-02]])
         np.testing.assert_array_almost_equal(reg.vm,vm,6)
+        pr2 = 0.34648011338954804
+        self.assertEqual(reg.pr2,pr2,7)
+        std_err = np.array([ 28.89009873,  0.77309965,  0.46798299,
+            0.17767558])
+        np.testing.assert_array_almost_equal(reg.std_err,std_err,6)
+        z_stat = np.array([(1.9175109006819244, 0.055173057472126787), (0.60229035155742305, 0.54698088217644414), (-1.4324949211864271, 0.15200223057569454), (2.3151759776869496, 0.020603303355572443)])
+        np.testing.assert_array_almost_equal(reg.z_stat,z_stat,6)
         hth = np.array([[    49.        ,    704.371999  ,    139.75      ],
                [   704.371999  ,  11686.67338121,   2246.12800625],
                [   139.75      ,   2246.12800625,    498.5851    ]])
@@ -314,6 +330,10 @@ class TestGMComboHet(unittest.TestCase):
         np.testing.assert_array_almost_equal(reg.betas,betas,7)
         u = np.array([ 25.65156033])
         np.testing.assert_array_almost_equal(reg.u[0],u,7)
+        er = np.array([ 19.28727178])
+        np.testing.assert_array_almost_equal(reg.e_reduced[0],er,7)
+        pe = np.array([ 61.17973122])
+        np.testing.assert_array_almost_equal(reg.predy_e[0],pe,7)
         predy = np.array([ 54.81544267])
         np.testing.assert_array_almost_equal(reg.predy[0],predy,7)
         n = 49
@@ -349,6 +369,14 @@ class TestGMComboHet(unittest.TestCase):
            [  2.74302006e+00,   3.70052723e-03,  -7.30173070e-03,
              -6.89402590e-02,   7.12034037e-02]])
         np.testing.assert_array_almost_equal(reg.vm,vm,6)
+        pr2 = 0.3001582877472412
+        self.assertEqual(reg.pr2,pr2,7)
+        pr2_e = 0.0683367517326917
+        self.assertEqual(reg.pr2_e,pr2_e,7)
+        std_err = np.array([ 22.05035768,  0.32354439,  0.14685221,  0.52751653,  0.26683966])
+        np.testing.assert_array_almost_equal(reg.std_err,std_err,6)
+        z_stat = np.array([(2.6202684885795335, 0.00878605635338265), (2.2573385444145524, 0.023986928627746887), (-4.0351698589183433, 5.456281036278686e-05), (-0.42277935292121521, 0.67245625315942159), (2.1225002455741895, 0.033795752094112265)])
+        np.testing.assert_array_almost_equal(reg.z_stat,z_stat,6)
         hth = np.array([[  4.90000000e+01,   7.04371999e+02,   1.72131237e+03,
               7.24743592e+02,   1.70735413e+03],
            [  7.04371999e+02,   1.16866734e+04,   2.15575320e+04,
