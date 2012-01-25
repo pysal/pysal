@@ -1142,7 +1142,7 @@ class Polygon(object):
         else:
             self._part_rings = [Ring(vertices)]
             self._vertices = [clockwise(vertices)]
-        if holes != None:
+        if holes != None and holes != []:
             if isinstance(holes[0], list):
                 self._hole_rings = map(Ring,holes)
                 self._holes = [clockwise(hole) for hole in holes]
