@@ -53,7 +53,6 @@ We start with the usual imports:
 
         >>> import pysal
         >>> import numpy as np
-        >>> np.random.seed(10)
 
 Next, we read in the homicide rates:
 
@@ -140,6 +139,7 @@ we see that we can base the inference not only on the normality assumption, but 
 
 .. doctest::
 
+        >>> np.random.seed(10)
         >>> mir = pysal.Moran(y, w, permutations = 9999)
 
 The pseudo p value based on these permutations is: 
@@ -147,7 +147,7 @@ The pseudo p value based on these permutations is:
 .. doctest::
 
         >>> print mir.p_sim
-        0.0015
+        0.0022
 
 in other words there were 14 permutations that generated values for I that
 were as extreme as the original value, so the p value becomes (14+1)/(9999+1). [#]_
@@ -157,11 +157,11 @@ compare the original I using a z-transformation to get:
 .. doctest::
 
         >>> print mir.EI_sim
-        -0.0136555651205
+        -0.0118217511619
         >>> print mir.z_sim
-        4.74311431149
+        4.55451777821
         >>> print mir.p_z_sim
-        2.10457431304e-06
+	5.25058844025e-06
 
 When the variable of interest (:math:`y`) is rates based on populations with different sizes, 
 the Moran's I value for :math:`y` needs to be adjusted to account for the differences among populations. [#]_
@@ -200,7 +200,7 @@ after the adjustment for the differences in population.
 
 Geary's C
 ---------
-The second statistic for global spatial autcorrelation implemented in PySAL is Geary's C:
+The second statistic for global spatial autocorrelation implemented in PySAL is Geary's C:
 
 .. math::
 
@@ -210,6 +210,9 @@ with all the terms defined as above. Applying this to the St. Louis data:
 
 .. doctest::
 
+        >>> f = pysal.open(pysal.examples.get_path("stl_hom.txt"))
+        >>> y = np.array(f.by_col['HR8893'])
+        >>> w = pysal.open(pysal.examples.get_path("stl.gal")).read()
         >>> gc = pysal.Geary(y, w)
         >>> print gc.C
         0.586776506108
