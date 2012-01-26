@@ -423,7 +423,7 @@ class Spatial_Markov:
         self.P = P
         self.S = ss
         self.F = F
-        self.shtest = self._mn_test()
+        #self.shtest = self._mn_test()
         self.chi2 = self._chi2_test()
         self.x2 = sum([c[0] for c in self.chi2])
         dof = k * (k-1) * (k-1)
@@ -473,6 +473,9 @@ class Spatial_Markov:
             row_sum = mat.sum(axis=1)
             row_sum = row_sum + (row_sum == 0)
             p_i = np.matrix(np.diag(1./row_sum)*np.matrix(mat))
+            #print i
+            #print mat
+            #print p_i
             ss[i] = steady_state(p_i).transpose()
             try:
                 F[i] = fmpt(p_i)

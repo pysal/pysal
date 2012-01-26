@@ -232,9 +232,9 @@ Similar to what we saw for Moran's I, we can base inference on Geary's C using r
 
         >>> gc = pysal.Geary(y, w, permutations = 9999)
         >>> print gc.p_z_sim
-        0.0210556086187
+	0.0198880753441
         >>> print gc.p_sim
-        0.0051
+        0.0058
 
 with the first p-value based on a z-transform of the observed C relative to the
 distribution of values obtained in the permutations, and the second based on
@@ -277,9 +277,9 @@ Similar to what we saw for Moran's I and Geary's C, we can base inference on Get
 
         >>> g = G(y, dist_w, permutations = 9999)
         >>> print g.p_z_sim
-        0.00061476957041
+        0.000438499751996
         >>> print g.p_sim
-        0.0061
+        0.0059
 
 with the first p-value based on a z-transform of the observed G relative to the
 distribution of values obtained in the permutations, and the second based on
@@ -317,17 +317,16 @@ thus we see 78 LISAs are stored in the vector lm.Is. Inference about these value
 .. doctest::
 
         >>> lm.p_sim
-        array([ 0.201,  0.077,  0.398,  0.29 ,  0.363,  0.06 ,  0.302,  0.225,
-                0.043,  0.06 ,  0.249,  0.489,  0.457,  0.39 ,  0.431,  0.445,
-                0.481,  0.423,  0.405,  0.192,  0.147,  0.03 ,  0.366,  0.437,
-                0.281,  0.343,  0.227,  0.325,  0.347,  0.392,  0.495,  0.435,
-                0.004,  0.424,  0.261,  0.012,  0.003,  0.001,  0.062,  0.002,
-                0.096,  0.421,  0.452,  0.305,  0.266,  0.012,  0.032,  0.037,
-                0.051,  0.13 ,  0.306,  0.32 ,  0.11 ,  0.481,  0.036,  0.283,
-                0.112,  0.336,  0.322,  0.368,  0.307,  0.424,  0.363,  0.482,
-                0.361,  0.259,  0.25 ,  0.416,  0.185,  0.177,  0.258,  0.401,
-                0.44 ,  0.152,  0.37 ,  0.435,  0.085,  0.121])
-        >>>
+        array([ 0.19 ,  0.071,  0.43 ,  0.298,  0.377,  0.066,  0.282,  0.226,
+                0.061,  0.059,  0.259,  0.478,  0.472,  0.375,  0.423,  0.457,
+                0.488,  0.423,  0.407,  0.187,  0.144,  0.035,  0.354,  0.393,
+                0.291,  0.341,  0.214,  0.324,  0.395,  0.395,  0.49 ,  0.423,
+                0.001,  0.435,  0.262,  0.007,  0.001,  0.001,  0.068,  0.002,
+                0.076,  0.443,  0.444,  0.324,  0.238,  0.007,  0.035,  0.035,
+                0.075,  0.122,  0.292,  0.31 ,  0.106,  0.462,  0.04 ,  0.296,
+                0.113,  0.352,  0.327,  0.342,  0.321,  0.407,  0.356,  0.488,
+                0.358,  0.246,  0.289,  0.414,  0.177,  0.146,  0.248,  0.426,
+                0.459,  0.132,  0.393,  0.431,  0.08 ,  0.103])
 
 To identify the significant [#]_ LISA values we can use numpy indexing:
 
@@ -335,15 +334,15 @@ To identify the significant [#]_ LISA values we can use numpy indexing:
 
         >>> sig = lm.p_sim<0.05
         >>> lm.p_sim[sig]
-        array([ 0.043,  0.03 ,  0.004,  0.012,  0.003,  0.001,  0.002,  0.012,
-                0.032,  0.037,  0.036])
+	array([ 0.035,  0.001,  0.007,  0.001,  0.001,  0.002,  0.007,  0.035,
+		0.035,  0.04 ])
 
 and then use this indexing on the q attribute to find out which quadrant of the Moran scatter plot each of the significant values is contained in:
 
 .. doctest::
 
         >>> lm.q[sig]
-        array([4, 4, 1, 3, 1, 3, 1, 1, 3, 3, 3])
+        array([4, 1, 3, 1, 3, 1, 1, 3, 3, 3])
 
 As in the case of global Moran's I, when the variable of interest is rates based on populations with different sizes,
 we need to account for the differences among population to estimate local Moran's Is. 
@@ -351,19 +350,24 @@ Continuing on with the SIDS example above, the adjusted local Moran's Is are obt
 
 .. doctest::
 
+	>>> f = pysal.open(pysal.examples.get_path("sids2.dbf"))
+	>>> b = np.array(f.by_col('BIR79'))
+	>>> e = np.array(f.by_col('SID79'))
+	>>> w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
         >>> lm = pysal.esda.moran.Moran_Local_Rate(e, b, w)
         >>> lm.Is[:10]
         array([-0.13452366, -1.21133985,  0.05019761,  0.06127125, -0.12627466,
                 0.23497679,  0.26345855, -0.00951288, -0.01517879, -0.34513514])
 
-As demonstrated above, significant Moran's Is can be idenfied by using numpy indexing:
+As demonstrated above, significant Moran's Is can be identified by using numpy indexing:
 
 .. doctest::
 
         >>> sig = lm.p_sim<0.05
         >>> lm.p_sim[sig]
-        array([ 0.022,  0.036,  0.047,  0.021,  0.001,  0.028,  0.029,  0.023,
-                0.027,  0.017,  0.006,  0.001])
+        array([ 0.017,  0.03 ,  0.037,  0.024,  0.002,  0.022,  0.03 ,  0.029,
+                0.017,  0.023,  0.015,  0.002])
+
 
 Local G and G*
 --------------
@@ -401,16 +405,17 @@ thus we see 78 :math:`G_i` and :math:`G^*_i` are stored in the vector lg.Gs and 
 .. doctest::
 
         >>> lg.p_sim
-        array([ 0.339,  0.051,  0.478,  0.016,  0.069,  0.005,  0.08 ,  0.169,
-                0.076,  0.079,  0.409,  0.297,  0.148,  0.418,  0.329,  0.498,
-                0.458,  0.287,  0.416,  0.183,  0.163,  0.001,  0.321,  0.05 ,
-                0.304,  0.337,  0.224,  0.102,  0.257,  0.48 ,  0.471,  0.476,
-                0.003,  0.437,  0.034,  0.101,  0.002,  0.24 ,  0.236,  0.025,
-                0.101,  0.302,  0.407,  0.263,  0.278,  0.019,  0.032,  0.011,
-                0.001,  0.113,  0.028,  0.209,  0.047,  0.333,  0.04 ,  0.108,
-                0.102,  0.399,  0.24 ,  0.358,  0.362,  0.402,  0.478,  0.455,
-                0.354,  0.266,  0.268,  0.476,  0.136,  0.168,  0.203,  0.404,
-                0.489,  0.144,  0.265,  0.382,  0.092,  0.129])
+	array([ 0.338,  0.05 ,  0.477,  0.017,  0.065,  0.008,  0.101,  0.135,
+		0.065,  0.085,  0.393,  0.269,  0.136,  0.38 ,  0.349,  0.455,
+		0.449,  0.261,  0.414,  0.195,  0.168,  0.001,  0.3  ,  0.035,
+		0.266,  0.364,  0.205,  0.101,  0.242,  0.489,  0.5  ,  0.481,
+		0.002,  0.455,  0.031,  0.094,  0.003,  0.238,  0.262,  0.021,
+		0.101,  0.326,  0.397,  0.282,  0.288,  0.011,  0.038,  0.02 ,
+		0.004,  0.111,  0.028,  0.214,  0.052,  0.329,  0.039,  0.103,
+		0.112,  0.423,  0.28 ,  0.354,  0.392,  0.411,  0.463,  0.44 ,
+		0.35 ,  0.283,  0.252,  0.469,  0.156,  0.152,  0.22 ,  0.415,
+		0.473,  0.137,  0.272,  0.418,  0.071,  0.106])
+
         >>>
 
 To identify the significant :math:`G_i' values we can use numpy indexing:
@@ -419,8 +424,9 @@ To identify the significant :math:`G_i' values we can use numpy indexing:
 
         >>> sig = lg.p_sim<0.05
         >>> lg.p_sim[sig]
-        array([ 0.016,  0.005,  0.001,  0.003,  0.034,  0.002,  0.025,  0.019,
-                0.032,  0.011,  0.001,  0.028,  0.047,  0.04 ])
+	array([ 0.017,  0.008,  0.001,  0.035,  0.002,  0.031,  0.003,  0.021,
+                0.011,  0.038,  0.02 ,  0.004,  0.028,  0.039])
+
 
 .. rubric:: Footnotes
 
