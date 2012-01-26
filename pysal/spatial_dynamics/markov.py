@@ -423,7 +423,7 @@ class Spatial_Markov:
         self.P = P
         self.S = ss
         self.F = F
-        #self.shtest = self._mn_test()
+        self.shtest = self._mn_test()
         self.chi2 = self._chi2_test()
         self.x2 = sum([c[0] for c in self.chi2])
         dof = k * (k-1) * (k-1)
