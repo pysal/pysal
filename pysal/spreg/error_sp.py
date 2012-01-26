@@ -21,7 +21,7 @@ __all__ = ["GM_Error", "GM_Endog_Error", "GM_Combo"]
 class BaseGM_Error(RegressionPropsY):
     """
     GMM method for a spatial error model (note: no consistency checks or
-    diagnostics); based on Kelejian and Prucha (1998, 1999).
+    diagnostics); based on Kelejian and Prucha (1998, 1999)[1]_ [2]_.
 
     Parameters
     ----------
@@ -292,7 +292,7 @@ class GM_Error(BaseGM_Error, USER.DiagnosticBuilder):
         USER.check_weights(w, y)
         USER.check_constant(x)
         BaseGM_Error.__init__(self, y=y, x=x, w=w) 
-        self.title = "SPATIALLY WEIGHTED LEAST SQUARES"        
+        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
@@ -628,7 +628,7 @@ class GM_Endog_Error(BaseGM_Endog_Error, USER.DiagnosticBuilder):
         USER.check_weights(w, y)
         USER.check_constant(x)
         BaseGM_Endog_Error.__init__(self, y=y, x=x, w=w, yend=yend, q=q)
-        self.title = "GENERALIZED SPATIAL TWO STAGE LEAST SQUARES"        
+        self.title = "SPATIALLY WEIGHTED LEAST SQUARES"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
@@ -1022,7 +1022,7 @@ class GM_Combo(BaseGM_Combo, USER.DiagnosticBuilder):
                               lag_q=lag_q)
         self.predy_e, self.e_reduced = sp_att(w,self.y,\
                    self.predy,self.z[:,-1].reshape(self.n,1),self.betas[-2])        
-        self.title = "GENERALIZED SPATIAL TWO STAGE LEAST SQUARES"        
+        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)

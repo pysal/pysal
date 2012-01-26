@@ -23,7 +23,8 @@ __all__ = ["GM_Error_Het", "GM_Endog_Error_Het", "GM_Combo_Het"]
 class BaseGM_Error_Het(RegressionPropsY):
     """
     GMM method for a spatial error model with heteroskedasticity (note: no
-    consistency checks or diagnostics); based on Arraiz et al [1]_.
+    consistency checks or diagnostics); based on Arraiz et al [1]_, following
+    Anselin.
 
     Parameters
     ----------
@@ -353,7 +354,7 @@ class GM_Error_Het(BaseGM_Error_Het, USER.DiagnosticBuilder):
         USER.check_constant(x)
         BaseGM_Error_Het.__init__(self, y, x, w, max_iter=max_iter,\
                 step1c=step1c, epsilon=epsilon)
-        self.title = "SPATIALLY WEIGHTED LEAST SQUARES"        
+        self.title = "SPATIALLY WEIGHTED LEAST SQUARES (het)"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)

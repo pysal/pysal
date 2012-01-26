@@ -18,7 +18,7 @@ __all__ = ["GM_Lag"]
 class BaseGM_Lag(TSLS.BaseTSLS):
     """
     Spatial two stage least squares (S2SLS) (note: no consistency checks or
-    diagnostics)
+    diagnostics); Anselin (1988)
 
     Parameters
     ----------
@@ -112,7 +112,14 @@ class BaseGM_Lag(TSLS.BaseTSLS):
     pfora1a2     : array
                    n(zthhthi)'varb
 
+    References
+    ----------
 
+    .. [1] Anselin, L. (1988)
+    Kelejian, H.H., Prucha, I.R. and Yuzefovich, Y. (2004)
+    "Instrumental variable estimation of a spatial autoregressive model with
+    autoregressive disturbances: large and small sample results". Advances in
+    Econometrics, 18, 163-198.
     Examples
     --------
 
@@ -161,13 +168,6 @@ class BaseGM_Lag(TSLS.BaseTSLS):
     >>> D.se_betas(reg)
     array([ 53.0829123 ,   1.02511494,   0.57589064,   0.59891744])
 
-    References
-    ----------
-
-    .. [1] Kelejian, H.H., Prucha, I.R. and Yuzefovich, Y. (2004)
-    "Instrumental variable estimation of a spatial autoregressive model with
-    autoregressive disturbances: large and small sample results". Advances in
-    Econometrics, 18, 163-198.
     """
 
     def __init__(self, y, x, yend=None, q=None,\
