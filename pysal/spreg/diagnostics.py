@@ -8,7 +8,11 @@ import pysal
 from pysal.common import *
 from math import sqrt
 
+
+
 __all__ = [ "f_stat", "t_stat", "r2", "ar2", "se_betas", "log_likelihood", "akaike", "schwarz", "condition_index", "jarque_bera", "breusch_pagan", "white", "koenker_bassett", "vif" ]
+
+
 
 def f_stat(reg):
     """
@@ -81,9 +85,6 @@ def f_stat(reg):
 
 
 
-
-
-
 def t_stat(reg, z_stat=False):
     """
     Calculates the t-statistics (or z-statistics) and associated p-values.
@@ -114,7 +115,7 @@ def t_stat(reg, z_stat=False):
     >>> import diagnostics
     >>> from ols import BaseOLS as OLS
 
-    Read the DBF associated with the Columbus data.
+    Read the DBF associated with the Columbus data. 
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
 
@@ -130,10 +131,10 @@ def t_stat(reg, z_stat=False):
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
 
-    Run an OLS regression. 
+    Run an OLS regression.    
 
     >>> reg = OLS(y,X)
-    
+
     Calculate t-statistics for the regression coefficients. 
     
     >>> testresult = diagnostics.t_stat(reg)
