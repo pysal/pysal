@@ -4,14 +4,14 @@ setup.py for PySAL package.
 
 #import distribute_setup
 #distribute_setup.use_setuptools()
-from distutils.core import setup, Extension
+from distutils.core import setup 
 from pysal.version import version
 
 setup(name = 'pysal',
       description = 'PySAL: Python Spatial Analysis Library',
       #long_description = open('INSTALL.txt'),
       maintainer = "PySAL Developers",
-	  maintainer_email = "pysal-dev@googlegroups.com",
+      maintainer_email = "pysal-dev@googlegroups.com",
       url = 'http://pysal.org/',
       download_url = 'http://code.google.com/p/pysal/downloads/list',
       version = version,
@@ -27,7 +27,8 @@ setup(name = 'pysal',
                 'pysal.core.util.tests', 
                 'pysal.core.IOHandlers', 
                 'pysal.esda', 
-                'pysal.esda.tests', 
+		'pysal.esda.tests', 
+                'pysal.examples', 
                 'pysal.inequality',
                 'pysal.inequality.tests',
                 'pysal.spatial_dynamics',
@@ -41,7 +42,7 @@ setup(name = 'pysal',
       
 
       #package_data = {'pysal':['examples/shp_test/*','examples/*.*','examples/README']},
-      #package_data = {'doc': ['build/latex/pysal.pdf', 'source'], 'pysal':['examples/shp_test/*','examples/*.*','examples/README']},
+      #package_data = {'pysal':['examples/*.*', 'examples/shp_test/*','examples/README'], 'doc': ['build/latex/pysal.pdf'] },
 
       requires = ['scipy'],
 

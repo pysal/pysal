@@ -1,2 +1,2 @@
 pysal/contrib
-pysal/spreg/tests
+pysal/core/IOHandlers
