@@ -37,8 +37,8 @@ class TestBaseOLS(unittest.TestCase):
                 np.array([[ 46.42818268], [  0.62898397], \
                     [ -0.48488854]]), 7) 
         bp = {'df': 2, 'bp': 5.7667905131212587, 'pvalue': 0.05594449410070558}
-        np.testing.assert_equal(ols.breusch_pagan, \
-                bp)
+        ols_bp = np.array([ols.breusch_pagan['df'], ols.breusch_pagan['bp'], ols.breusch_pagan['pvalue']])
+        np.testing.assert_array_almost_equal(bp, ols_bp, 7)
         np.testing.assert_array_almost_equal(ols.f_stat, \
             (12.358198885356581, 5.0636903313953024e-05), 7)
         jb = {'df': 2, 'pvalue': 2.387360356860208e-09, 'jb': 39.706155069114878}

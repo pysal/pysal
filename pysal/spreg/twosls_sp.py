@@ -18,7 +18,7 @@ __all__ = ["GM_Lag"]
 class BaseGM_Lag(TSLS.BaseTSLS):
     """
     Spatial two stage least squares (S2SLS) (note: no consistency checks or
-    diagnostics); Anselin (1988)
+    diagnostics); Anselin (1988) [1]_
 
     Parameters
     ----------
@@ -115,11 +115,9 @@ class BaseGM_Lag(TSLS.BaseTSLS):
     References
     ----------
 
-    .. [1] Anselin, L. (1988)
-    Kelejian, H.H., Prucha, I.R. and Yuzefovich, Y. (2004)
-    "Instrumental variable estimation of a spatial autoregressive model with
-    autoregressive disturbances: large and small sample results". Advances in
-    Econometrics, 18, 163-198.
+    .. [1] Anselin, L. (1988) "Spatial Econometrics: Methods and Models".
+    Kluwer Academic Publishers. Dordrecht.
+
     Examples
     --------
 
@@ -183,7 +181,8 @@ class BaseGM_Lag(TSLS.BaseTSLS):
 
 class GM_Lag(BaseGM_Lag, USER.DiagnosticBuilder):
     """
-    Spatial two stage least squares (S2SLS) with results and diagnostics.
+    Spatial two stage least squares (S2SLS) with results and diagnostics; 
+    Anselin (1988) [1]_
 
     Parameters
     ----------
@@ -248,7 +247,7 @@ class GM_Lag(BaseGM_Lag, USER.DiagnosticBuilder):
                    kx1 array of estimated coefficients
     u            : array
                    nx1 array of residuals
-    e            : array
+    e_pred       : array
                    nx1 array of residuals (using reduced form)
     predy        : array
                    nx1 array of predicted y values
@@ -336,6 +335,13 @@ class GM_Lag(BaseGM_Lag, USER.DiagnosticBuilder):
                    Z'H(H'H)^-1
     pfora1a2     : array
                    n(zthhthi)'varb
+
+
+    References
+    ----------
+
+    .. [1] Anselin, L. (1988) "Spatial Econometrics: Methods and Models".
+    Kluwer Academic Publishers. Dordrecht.
 
     
     Examples
@@ -474,7 +480,7 @@ class GM_Lag(BaseGM_Lag, USER.DiagnosticBuilder):
         BaseGM_Lag.__init__(self, y=y, x=x, w=w, yend=yend, q=q,\
                             w_lags=w_lags, robust=robust,\
                             lag_q=lag_q, sig2n_k=sig2n_k)
-        self.predy_e, self.e = sp_att(w,self.y,self.predy,\
+        self.predy_e, self.e_pred = sp_att(w,self.y,self.predy,\
                       self.z[:,-1].reshape(self.n,1),self.betas[-1])
         self.title = "SPATIAL TWO STAGE LEAST SQUARES"        
         self.name_ds = USER.set_name_ds(name_ds)
