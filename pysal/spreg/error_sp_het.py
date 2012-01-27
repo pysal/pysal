@@ -354,7 +354,7 @@ class GM_Error_Het(BaseGM_Error_Het, USER.DiagnosticBuilder):
         USER.check_constant(x)
         BaseGM_Error_Het.__init__(self, y, x, w, max_iter=max_iter,\
                 step1c=step1c, epsilon=epsilon)
-        self.title = "SPATIALLY WEIGHTED LEAST SQUARES (het)"        
+        self.title = "SPATIALLY WEIGHTED LEAST SQUARES (HET)"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
@@ -785,7 +785,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het, USER.DiagnosticBuilder):
         USER.check_constant(x)
         BaseGM_Endog_Error_Het.__init__(self, y=y, x=x, yend=yend, q=q, w=w, max_iter=max_iter,\
                                         step1c=step1c, epsilon=epsilon, inv_method=inv_method)
-        self.title = "GENERALIZED SPATIAL TWO STAGE LEAST SQUARES"
+        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HET)"
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
@@ -1217,7 +1217,7 @@ class GM_Combo_Het(BaseGM_Combo_Het, USER.DiagnosticBuilder):
               epsilon=epsilon, inv_method=inv_method)
         self.predy_e, self.e_reduced = UTILS.sp_att(w,self.y,self.predy,\
                             self.z[:,-1].reshape(self.n,1),self.betas[-1])        
-        self.title = "GENERALIZED SPATIAL TWO STAGE LEAST SQUARES"        
+        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HET)"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)

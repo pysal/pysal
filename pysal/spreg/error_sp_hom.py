@@ -362,7 +362,7 @@ class GM_Error_Hom(BaseGM_Error_Hom, USER.DiagnosticBuilder):
         USER.check_constant(x)
         BaseGM_Error_Hom.__init__(self, y=y, x=x, w=w, A1=A1,\
                 max_iter=max_iter, epsilon=epsilon)
-        self.title = "SPATIALLY WEIGHTED LEAST SQUARES (Hom)"        
+        self.title = "SPATIALLY WEIGHTED LEAST SQUARES (HOM)"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
@@ -801,7 +801,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom, USER.DiagnosticBuilder):
         USER.check_constant(x)
         BaseGM_Endog_Error_Hom.__init__(self, y=y, x=x, w=w, yend=yend, q=q,\
                 A1=A1, max_iter=max_iter, epsilon=epsilon, constant=True)
-        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (Hom)"        
+        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HOM)"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
@@ -1248,7 +1248,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom, USER.DiagnosticBuilder):
                     max_iter=max_iter, epsilon=epsilon)
         self.predy_e, self.e_reduced = sp_att(w,self.y,self.predy,\
                              self.z[:,-1].reshape(self.n,1),self.betas[-2])        
-        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (Hom)"        
+        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HOM)"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
