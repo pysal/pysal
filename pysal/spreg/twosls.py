@@ -101,10 +101,6 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
                    n(zthhthi)'varb
 
     
-    Notes
-    -----
-    Sigma squared calculated using n in the denominator. 
-    
     Examples
     --------
 
