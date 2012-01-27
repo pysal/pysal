@@ -1,109 +1,179 @@
 import unittest
+import numpy as np
+import pysal
+from pysal.spreg import diagnostics
+from pysal.spreg.ols import BaseOLS as OLS
+from pysal.spreg.twosls import BaseTSLS as TSLS
+from pysal.spreg.twosls_sp import GM_Lag
+from pysal.spreg.diagnostics_sp import LMtests, MoranRes, spDcache, AKtest
+
 
 class TestLMtests(unittest.TestCase):
-    def test___init__(self):
-        # l_mtests = LMtests(ols, w, tests)
-        assert False # TODO: implement your test here
+    def setUp(self):
+        db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
+        y = np.array(db.by_col("HOVAL"))
+        y = np.reshape(y, (49,1))
+        X = []
+        X.append(db.by_col("INC"))
+        X.append(db.by_col("CRIME"))
+        X = np.array(X).T
+        self.y = y
+        self.X = X
+        ols = OLS(self.y, self.X)
+        self.ols = ols
+        w = pysal.open(pysal.examples.get_path('columbus.gal'), 'r').read()
+        w.transform='r'
+        self.w = w
+
+    def test_lm_err(self):
+        lms = LMtests(self.ols, self.w)
+        lme = np.array([3.097094,  0.078432])
+        np.testing.assert_array_almost_equal(lms.lme, lme, decimal=6)
+
+    def test_lm_lag(self):
+        lms = LMtests(self.ols, self.w)
+        lml = np.array([ 0.981552,  0.321816])
+        np.testing.assert_array_almost_equal(lms.lml, lml, decimal=6)
+
+    def test_rlm_err(self):
+        lms = LMtests(self.ols, self.w)
+        rlme = np.array([ 3.209187,  0.073226])
+        np.testing.assert_array_almost_equal(lms.rlme, rlme, decimal=6)
+
+    def test_rlm_lag(self):
+        lms = LMtests(self.ols, self.w)
+        rlml = np.array([ 1.093645,  0.295665])
+        np.testing.assert_array_almost_equal(lms.rlml, rlml, decimal=6)
+
+    def test_lm_sarma(self):
+        lms = LMtests(self.ols, self.w)
+        sarma = np.array([ 4.190739,  0.123025])
+        np.testing.assert_array_almost_equal(lms.sarma, sarma, decimal=6)
+
 
 class TestMoranRes(unittest.TestCase):
-    def test___init__(self):
-        # moran_res = MoranRes(ols, w, z)
-        assert False # TODO: implement your test here
+    def setUp(self):
+        db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
+        y = np.array(db.by_col("HOVAL"))
+        y = np.reshape(y, (49,1))
+        X = []
+        X.append(db.by_col("INC"))
+        X.append(db.by_col("CRIME"))
+        X = np.array(X).T
+        self.y = y
+        self.X = X
+        ols = OLS(self.y, self.X)
+        self.ols = ols
+        w = pysal.open(pysal.examples.get_path('columbus.gal'), 'r').read()
+        w.transform='r'
+        self.w = w
+    
+    def test_get_m_i(self):
+        m = MoranRes(self.ols, self.w, z=True)
+        np.testing.assert_array_almost_equal(m.I, 0.17130999999999999, decimal=6)
 
-class TestAKtest(unittest.TestCase):
-    def test___init__(self):
-        # a_ktest = AKtest(iv, w, case)
-        assert False # TODO: implement your test here
+    def test_get_v_i(self):
+        m = MoranRes(self.ols, self.w, z=True)
+        np.testing.assert_array_almost_equal(m.vI, 0.0081300000000000001, decimal=6)
+
+    def test_get_e_i(self):
+        m = MoranRes(self.ols, self.w, z=True)
+        np.testing.assert_array_almost_equal(m.eI, -0.034522999999999998, decimal=6)
+
+    def test_get_z_i(self):
+        m = MoranRes(self.ols, self.w, z=True)
+        np.testing.assert_array_almost_equal(m.zI, 2.2827389999999999, decimal=6)
+
+
+class TestAKTest(unittest.TestCase):
+    def setUp(self):
+        db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
+        y = np.array(db.by_col("CRIME"))
+        y = np.reshape(y, (49,1))
+        self.y = y
+        X = []
+        X.append(db.by_col("INC"))
+        X = np.array(X).T
+        self.X = X
+        yd = []
+        yd.append(db.by_col("HOVAL"))
+        yd = np.array(yd).T
+        self.yd = yd
+        q = []
+        q.append(db.by_col("DISCBD"))
+        q = np.array(q).T
+        self.q = q
+        reg = TSLS(y, X, yd, q=q)
+        self.reg = reg
+        w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
+        w.transform = 'r'
+        self.w = w
+
+    def test_gen_mi(self):
+        ak = AKtest(self.reg, self.w)
+        np.testing.assert_array_almost_equal(ak.mi, 0.2232672865437263, decimal=6)
+
+    def test_gen_ak(self):
+        ak = AKtest(self.reg, self.w)
+        np.testing.assert_array_almost_equal(ak.ak, 4.6428948758930852, decimal=6)
+
+    def test_gen_p(self):
+        ak = AKtest(self.reg, self.w)
+        np.testing.assert_array_almost_equal(ak.p, 0.031182360054340875, decimal=6)
+
+    def test_sp_mi(self):
+        ak = AKtest(self.reg, self.w, case='gen')
+        np.testing.assert_array_almost_equal(ak.mi, 0.2232672865437263, decimal=6)
+
+    def test_sp_ak(self):
+        ak = AKtest(self.reg, self.w,case='gen')
+        np.testing.assert_array_almost_equal(ak.ak, 1.1575928784397795, decimal=6)
+
+    def test_sp_p(self):
+        ak = AKtest(self.reg, self.w, case='gen')
+        np.testing.assert_array_almost_equal(ak.p, 0.28196531619791054, decimal=6)
 
 class TestSpDcache(unittest.TestCase):
-    def TestAB(self):
-        # sp_dcache = spDcache(reg, w)
-        # self.assertEqual(expected, sp_dcache.AB())
-        assert False # TODO: implement your test here
-
-    def test___init__(self):
-        # sp_dcache = spDcache(reg, w)
-        assert False # TODO: implement your test here
+    def setUp(self):
+        db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
+        y = np.array(db.by_col("HOVAL"))
+        y = np.reshape(y, (49,1))
+        X = []
+        X.append(db.by_col("INC"))
+        X.append(db.by_col("CRIME"))
+        X = np.array(X).T
+        self.y = y
+        self.X = X
+        ols = OLS(self.y, self.X)
+        self.ols = ols
+        w = pysal.open(pysal.examples.get_path('columbus.gal'), 'r').read()
+        w.transform='r'
+        self.w = w
 
     def test_j(self):
-        # sp_dcache = spDcache(reg, w)
-        # self.assertEqual(expected, sp_dcache.j())
-        assert False # TODO: implement your test here
+        cache = spDcache(self.ols, self.w)
+        np.testing.assert_array_almost_equal(cache.j[0][0], 0.62330311259039439, decimal=6)
 
     def test_t(self):
-        # sp_dcache = spDcache(reg, w)
-        # self.assertEqual(expected, sp_dcache.t())
-        assert False # TODO: implement your test here
+        cache = spDcache(self.ols, self.w)
+        np.testing.assert_array_almost_equal(cache.t, 22.751186696900984, decimal=6)
 
     def test_trA(self):
-        # sp_dcache = spDcache(reg, w)
-        # self.assertEqual(expected, sp_dcache.trA())
-        assert False # TODO: implement your test here
+        cache = spDcache(self.ols, self.w)
+        np.testing.assert_array_almost_equal(cache.trA, 1.5880426389276328, decimal=6)
 
     def test_utwuDs(self):
-        # sp_dcache = spDcache(reg, w)
-        # self.assertEqual(expected, sp_dcache.utwuDs())
-        assert False # TODO: implement your test here
+        cache = spDcache(self.ols, self.w)
+        np.testing.assert_array_almost_equal(cache.utwuDs[0][0], 8.3941977502916068, decimal=6)
 
     def test_utwyDs(self):
-        # sp_dcache = spDcache(reg, w)
-        # self.assertEqual(expected, sp_dcache.utwyDs())
-        assert False # TODO: implement your test here
+        cache = spDcache(self.ols, self.w)
+        np.testing.assert_array_almost_equal(cache.utwyDs[0][0], 5.475255215067957, decimal=6)
 
     def test_wu(self):
-        # sp_dcache = spDcache(reg, w)
-        # self.assertEqual(expected, sp_dcache.wu())
-        assert False # TODO: implement your test here
+        cache = spDcache(self.ols, self.w)
+        np.testing.assert_array_almost_equal(cache.wu[0][0], -10.681344941514411, decimal=6)
 
-class TestLmErr(unittest.TestCase):
-    def test_lm_err(self):
-        # self.assertEqual(expected, lmErr(reg, w, spDcache))
-        assert False # TODO: implement your test here
-
-class TestLmLag(unittest.TestCase):
-    def test_lm_lag(self):
-        # self.assertEqual(expected, lmLag(ols, w, spDcache))
-        assert False # TODO: implement your test here
-
-class TestRlmErr(unittest.TestCase):
-    def test_rlm_err(self):
-        # self.assertEqual(expected, rlmErr(ols, w, spDcache))
-        assert False # TODO: implement your test here
-
-class TestRlmLag(unittest.TestCase):
-    def test_rlm_lag(self):
-        # self.assertEqual(expected, rlmLag(ols, w, spDcache))
-        assert False # TODO: implement your test here
-
-class TestLmSarma(unittest.TestCase):
-    def test_lm_sarma(self):
-        # self.assertEqual(expected, lmSarma(ols, w, spDcache))
-        assert False # TODO: implement your test here
-
-class TestGetMI(unittest.TestCase):
-    def test_get_m_i(self):
-        # self.assertEqual(expected, get_mI(reg, w, spDcache))
-        assert False # TODO: implement your test here
-
-class TestGetVI(unittest.TestCase):
-    def test_get_v_i(self):
-        # self.assertEqual(expected, get_vI(ols, w, ei, spDcache))
-        assert False # TODO: implement your test here
-
-class TestGetEI(unittest.TestCase):
-    def test_get_e_i(self):
-        # self.assertEqual(expected, get_eI(ols, w, spDcache))
-        assert False # TODO: implement your test here
-
-class TestGetZI(unittest.TestCase):
-    def test_get_z_i(self):
-        # self.assertEqual(expected, get_zI(I, ei, vi))
-        assert False # TODO: implement your test here
-
-class TestAkTest(unittest.TestCase):
-    def test_ak_test(self):
-        # self.assertEqual(expected, akTest(iv, w, spDcache))
-        assert False # TODO: implement your test here
 
 if __name__ == '__main__':
     unittest.main()
