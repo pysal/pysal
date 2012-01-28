@@ -173,7 +173,7 @@ class BaseGM_Lag(TSLS.BaseTSLS):
                  robust=None, gwk=None, sig2n_k=False):
 
         yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
-        TSLS.BaseTSLS.__init__(self, y, x, yend2, q=q2,\
+        TSLS.BaseTSLS.__init__(self, y=y, x=x, yend=yend2, q=q2,\
                                sig2n_k=sig2n_k)        
         if robust:
             self.vm = ROBUST.robust_vm(self, gwk=gwk)
@@ -478,7 +478,7 @@ class GM_Lag(BaseGM_Lag, USER.DiagnosticBuilder):
         USER.check_robust(robust, gwk)
         USER.check_constant(x)
         BaseGM_Lag.__init__(self, y=y, x=x, w=w, yend=yend, q=q,\
-                            w_lags=w_lags, robust=robust,\
+                            w_lags=w_lags, robust=robust, gwk=gwk,\
                             lag_q=lag_q, sig2n_k=sig2n_k)
         self.predy_e, self.e_pred = sp_att(w,self.y,self.predy,\
                       self.z[:,-1].reshape(self.n,1),self.betas[-1])
