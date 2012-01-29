@@ -123,7 +123,7 @@ class BaseGM_Error(RegressionPropsY):
 class GM_Error(BaseGM_Error, USER.DiagnosticBuilder):
     """
     GMM method for a spatial error model, with results and diagnostics; based
-    on Kelejian and Prucha (1998, 1999).
+    on Kelejian and Prucha (1998, 1999)[1]_ [2]_.
 
     Parameters
     ----------
@@ -197,6 +197,17 @@ class GM_Error(BaseGM_Error, USER.DiagnosticBuilder):
     title        : string
                    Name of the regression method used
 
+    References
+    ----------
+
+    .. [1] Kelejian, H.R., Prucha, I.R. (1998) "A generalized spatial
+    two-stage least squares procedure for estimating a spatial autoregressive
+    model with autoregressive disturbances". The Journal of Real State
+    Finance and Economics, 17, 1.
+
+    .. [2] Kelejian, H.R., Prucha, I.R. (1999) "A Generalized Moments
+    Estimator for the Autoregressive Parameter in a Spatial Model".
+    International Economic Review, 40, 2.
 
     Examples
     --------
@@ -309,7 +320,8 @@ class GM_Error(BaseGM_Error, USER.DiagnosticBuilder):
 class BaseGM_Endog_Error(RegressionPropsY):
     '''
     GMM method for a spatial error model with endogenous variables (note: no
-    consistency checks or diagnostics); based on Kelejian and Prucha (1998, 1999).
+    consistency checks or diagnostics); based on Kelejian and Prucha (1998,
+    1999)[1]_[2]_.
 
     Parameters
     ----------
@@ -426,7 +438,7 @@ class BaseGM_Endog_Error(RegressionPropsY):
 class GM_Endog_Error(BaseGM_Endog_Error, USER.DiagnosticBuilder):
     '''
     GMM method for a spatial error model with endogenous variables, with
-    results and diagnostics; based on Kelejian and Prucha (1998, 1999).
+    results and diagnostics; based on Kelejian and Prucha (1998, 1999)[1]_[2]_.
 
     Parameters
     ----------
@@ -524,6 +536,17 @@ class GM_Endog_Error(BaseGM_Endog_Error, USER.DiagnosticBuilder):
     title         : string
                     Name of the regression method used
 
+    References
+    ----------
+
+    .. [1] Kelejian, H.R., Prucha, I.R. (1998) "A generalized spatial
+    two-stage least squares procedure for estimating a spatial autoregressive
+    model with autoregressive disturbances". The Journal of Real State
+    Finance and Economics, 17, 1.
+
+    .. [2] Kelejian, H.R., Prucha, I.R. (1999) "A Generalized Moments
+    Estimator for the Autoregressive Parameter in a Spatial Model".
+    International Economic Review, 40, 2.
 
     Examples
     --------
@@ -650,7 +673,7 @@ class BaseGM_Combo(BaseGM_Endog_Error):
     """
     GMM method for a spatial lag and error model, with endogenous variables
     (note: no consistency checks or diagnostics); based on Kelejian and Prucha
-    (1998, 1999).
+    (1998, 1999)[1]_[2]_.
 
     Parameters
     ----------
@@ -781,7 +804,8 @@ class BaseGM_Combo(BaseGM_Endog_Error):
 class GM_Combo(BaseGM_Combo, USER.DiagnosticBuilder):
     """
     GMM method for a spatial lag and error model with endogenous variables,
-    with results and diagnostics; based on Kelejian and Prucha (1998, 1999).
+    with results and diagnostics; based on Kelejian and Prucha (1998,
+    1999)[1]_[2]_.
 
     Parameters
     ----------
@@ -894,6 +918,17 @@ class GM_Combo(BaseGM_Combo, USER.DiagnosticBuilder):
     title         : string
                     Name of the regression method used
 
+    References
+    ----------
+
+    .. [1] Kelejian, H.R., Prucha, I.R. (1998) "A generalized spatial
+    two-stage least squares procedure for estimating a spatial autoregressive
+    model with autoregressive disturbances". The Journal of Real State
+    Finance and Economics, 17, 1.
+
+    .. [2] Kelejian, H.R., Prucha, I.R. (1999) "A Generalized Moments
+    Estimator for the Autoregressive Parameter in a Spatial Model".
+    International Economic Review, 40, 2.
 
     Examples
     --------

@@ -30,7 +30,8 @@ __all__ = ["GM_Error_Hom", "GM_Endog_Error_Hom", "GM_Combo_Hom"]
 class BaseGM_Error_Hom(RegressionPropsY):
     '''
     GMM method for a spatial error model with homoskedasticity (note: no
-    consistency checks or diagnostics); based on Anselin (2011) [1]_.
+    consistency checks or diagnostics); based on Drukker et al. (2010) [1]_,
+    following Anselin (2011) [2]_.
 
     Parameters
     ----------
@@ -96,7 +97,11 @@ class BaseGM_Error_Hom(RegressionPropsY):
     References
     ----------
 
-    .. [1] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
+    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
+    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
+    Disturbances and Endogenous Regressors". Working paper.
+ 
+    .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
     with and without Heteroskedasticity". 
 
     Examples
@@ -175,7 +180,8 @@ class BaseGM_Error_Hom(RegressionPropsY):
 class GM_Error_Hom(BaseGM_Error_Hom, USER.DiagnosticBuilder):
     '''
     GMM method for a spatial error model with homoskedasticity, with results
-    and diagnostics; based on Anselin (2011) [1]_.
+    and diagnostics; based on Drukker et al. (2010) [1]_, following Anselin
+    (2011) [2]_.
 
     Parameters
     ----------
@@ -268,11 +274,14 @@ class GM_Error_Hom(BaseGM_Error_Hom, USER.DiagnosticBuilder):
     title        : string
                    Name of the regression method used
 
-
     References
     ----------
 
-    .. [1] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
+    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
+    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
+    Disturbances and Endogenous Regressors". Working paper.
+ 
+    .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
     with and without Heteroskedasticity". 
 
     Examples
@@ -380,8 +389,7 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
     '''
     GMM method for a spatial error model with homoskedasticity and
     endogenous variables (note: no consistency checks or diagnostics); based
-    on Drukker et al. (2010) [1]_ and Drukker et al. (2011) [2]_, following
-    Anselin (2011) [3]_.
+    on Drukker et al. (2010) [1]_, following Anselin (2011) [2]_.
 
     Parameters
     ----------
@@ -467,16 +475,11 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
     References
     ----------
 
-    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010) "On Two-step
-    Estimation of a Spatial Autoregressive Model with Autoregressive
+    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
+    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
-
-    .. [2] Drukker, Prucha, I. R., Raciborski, R. (2010) "A command for
-    estimating spatial-autoregressive models with spatial-autoregressive
-    disturbances and additional endogenous variables". The Stata Journal, 1,
-    N. 1, pp. 1-13.
-
-    .. [3] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
+ 
+    .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
     with and without Heteroskedasticity". 
 
     Examples
@@ -556,8 +559,8 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
 class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom, USER.DiagnosticBuilder):
     '''
     GMM method for a spatial error model with homoskedasticity and endogenous
-    variables, with results and diagnostics; based on Drukker et al. (2010)
-    [1]_ and Drukker et al. (2011) [2]_, following Anselin (2011) [3]_.
+    variables, with results and diagnostics; based on Drukker et al. (2010) [1]_,
+    following Anselin (2011) [2]_.
 
     Parameters
     ----------
@@ -683,16 +686,11 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom, USER.DiagnosticBuilder):
     References
     ----------
 
-    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010) "On Two-step
-    Estimation of a Spatial Autoregressive Model with Autoregressive
+    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
+    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
-
-    .. [2] Drukker, Prucha, I. R., Raciborski, R. (2010) "A command for
-    estimating spatial-autoregressive models with spatial-autoregressive
-    disturbances and additional endogenous variables". The Stata Journal, 1,
-    N. 1, pp. 1-13.
-
-    .. [3] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
+ 
+    .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
     with and without Heteroskedasticity". 
 
     Examples
@@ -823,8 +821,7 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
     '''
     GMM method for a spatial lag and error model with homoskedasticity and
     endogenous variables (note: no consistency checks or diagnostics); based
-    on Drukker et al. (2010) [1]_ and Drukker et al. (2011) [2]_,
-    following Anselin (2011) [3]_.
+    on Drukker et al. (2010) [1]_, following Anselin (2011) [2]_.
 
     Parameters
     ----------
@@ -914,16 +911,11 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
     References
     ----------
 
-    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010) "On Two-step
-    Estimation of a Spatial Autoregressive Model with Autoregressive
+    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
+    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
-
-    .. [2] Drukker, Prucha, I. R., Raciborski, R. (2010) "A command for
-    estimating spatial-autoregressive models with spatial-autoregressive
-    disturbances and additional endogenous variables". The Stata Journal, 1,
-    N. 1, pp. 1-13.
-
-    .. [3] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
+ 
+    .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
     with and without Heteroskedasticity". 
 
     Examples
@@ -979,8 +971,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom, USER.DiagnosticBuilder):
     '''
     GMM method for a spatial lag and error model with homoskedasticity and
     endogenous variables, with results and diagnostics; based on Drukker et
-    al. (2010) [1]_ and Drukker et al. (2011) [2]_, following Anselin (2011)
-    [3]_.
+    al. (2010) [1]_, following Anselin (2011) [2]_.
 
     Parameters
     ----------
@@ -1121,16 +1112,11 @@ class GM_Combo_Hom(BaseGM_Combo_Hom, USER.DiagnosticBuilder):
     References
     ----------
 
-    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010) "On Two-step
-    Estimation of a Spatial Autoregressive Model with Autoregressive
+    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
+    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
-
-    .. [2] Drukker, Prucha, I. R., Raciborski, R. (2010) "A command for
-    estimating spatial-autoregressive models with spatial-autoregressive
-    disturbances and additional endogenous variables". The Stata Journal, 1,
-    N. 1, pp. 1-13.
-
-    .. [3] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
+ 
+    .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
     with and without Heteroskedasticity". 
 
     Examples

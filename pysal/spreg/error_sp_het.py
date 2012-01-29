@@ -24,7 +24,7 @@ class BaseGM_Error_Het(RegressionPropsY):
     """
     GMM method for a spatial error model with heteroskedasticity (note: no
     consistency checks or diagnostics); based on Arraiz et al [1]_, following
-    Anselin.
+    Anselin [2]_.
 
     Parameters
     ----------
@@ -91,6 +91,8 @@ class BaseGM_Error_Het(RegressionPropsY):
     Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
     Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
     592-614.
+
+    .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
     Examples
     --------
@@ -163,7 +165,7 @@ class BaseGM_Error_Het(RegressionPropsY):
 class GM_Error_Het(BaseGM_Error_Het, USER.DiagnosticBuilder):
     """
     GMM method for a spatial error model with heteroskedasticity, with results
-    and diagnostics; based on Arraiz et al [1]_.
+    and diagnostics; based on Arraiz et al [1]_, following Anselin [2]_.
 
     Parameters
     ----------
@@ -261,6 +263,8 @@ class GM_Error_Het(BaseGM_Error_Het, USER.DiagnosticBuilder):
     Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
     Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
     592-614.
+
+    .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
     Examples
     --------
@@ -373,7 +377,7 @@ class BaseGM_Endog_Error_Het(RegressionPropsY):
     """
     GMM method for a spatial error model with heteroskedasticity and
     endogenous variables (note: no consistency checks or diagnostics); based
-    on Arraiz et al [1]_.
+    on Arraiz et al [1]_, following Anselin [2]_.
 
     Parameters
     ----------
@@ -465,6 +469,8 @@ class BaseGM_Endog_Error_Het(RegressionPropsY):
     Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
     592-614.
 
+    .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
+
     Examples
     --------
     >>> import numpy as np
@@ -546,7 +552,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het, USER.DiagnosticBuilder):
     """
     GMM method for a spatial error model with heteroskedasticity and
     endogenous variables, with results and diagnostics; based on Arraiz et al
-    [1]_.
+    [1]_, following Anselin [2]_.
 
     Parameters
     ----------
@@ -677,6 +683,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het, USER.DiagnosticBuilder):
     Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
     592-614.
 
+    .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
     Examples
     --------
@@ -808,7 +815,7 @@ class BaseGM_Combo_Het(BaseGM_Endog_Error_Het):
     """
     GMM method for a spatial lag and error model with heteroskedasticity and
     endogenous variables (note: no consistency checks or diagnostics); based
-    on Arraiz et al [1]_.
+    on Arraiz et al [1]_, following Anselin [2]_.
 
     Parameters
     ----------
@@ -903,6 +910,8 @@ class BaseGM_Combo_Het(BaseGM_Endog_Error_Het):
     Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
     592-614.
 
+    .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
+
     Examples
     --------
     >>> import numpy as np
@@ -956,7 +965,7 @@ class GM_Combo_Het(BaseGM_Combo_Het, USER.DiagnosticBuilder):
     """
     GMM method for a spatial lag and error model with heteroskedasticity and
     endogenous variables, with results and diagnostics; based on Arraiz et al
-    [1]_.
+    [1]_, following Anselin [2]_.
 
     Parameters
     ----------
@@ -1093,6 +1102,16 @@ class GM_Combo_Het(BaseGM_Combo_Het, USER.DiagnosticBuilder):
                     Name of the regression method used
     hth          : float
                    H'H
+
+    References
+    ----------
+
+    .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
+    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
+    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
+    592-614.
+
+    .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
     Examples
     --------
