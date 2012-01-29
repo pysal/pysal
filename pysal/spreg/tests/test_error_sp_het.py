@@ -24,9 +24,9 @@ class TestBaseGMErrorHet(unittest.TestCase):
         predy = np.array([ 53.08577603])
         np.testing.assert_array_almost_equal(reg.predy[0],predy,7)
         n = 49
-        self.assertEqual(reg.n,n,7)
+        self.assertAlmostEqual(reg.n,n)
         k = 3
-        self.assertEqual(reg.k,k,7)
+        self.assertAlmostEqual(reg.k,k)
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,7)
         x = np.array([  1.     ,  19.531  ,  15.72598])
@@ -34,11 +34,11 @@ class TestBaseGMErrorHet(unittest.TestCase):
         i_s = 'Maximum number of iterations reached.'
         np.testing.assert_string_equal(reg.iter_stop,i_s)
         its = 1
-        self.assertEqual(reg.iteration,its,7)
+        self.assertAlmostEqual(reg.iteration,its,7)
         my = 38.436224469387746
-        self.assertEqual(reg.mean_y,my,7)
+        self.assertAlmostEqual(reg.mean_y,my)
         stdy = 18.466069465206047
-        self.assertEqual(reg.std_y,stdy,7)
+        self.assertAlmostEqual(reg.std_y,stdy)
         vm = np.array([[  1.31767529e+02,  -3.58368748e+00,  -1.65090647e+00,
               0.00000000e+00],
            [ -3.58368748e+00,   1.35513711e-01,   3.77539055e-02,
@@ -74,9 +74,9 @@ class TestGMErrorHet(unittest.TestCase):
         predy = np.array([ 53.08577603])
         np.testing.assert_array_almost_equal(reg.predy[0],predy,7)
         n = 49
-        self.assertEqual(reg.n,n,7)
+        self.assertAlmostEqual(reg.n,n)
         k = 3
-        self.assertEqual(reg.k,k,7)
+        self.assertAlmostEqual(reg.k,k)
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,7)
         x = np.array([  1.     ,  19.531  ,  15.72598])
@@ -84,11 +84,11 @@ class TestGMErrorHet(unittest.TestCase):
         i_s = 'Maximum number of iterations reached.'
         np.testing.assert_string_equal(reg.iter_stop,i_s)
         its = 1
-        self.assertEqual(reg.iteration,its,7)
+        self.assertAlmostEqual(reg.iteration,its,7)
         my = 38.436224469387746
-        self.assertEqual(reg.mean_y,my,7)
+        self.assertAlmostEqual(reg.mean_y,my)
         stdy = 18.466069465206047
-        self.assertEqual(reg.std_y,stdy,7)
+        self.assertAlmostEqual(reg.std_y,stdy)
         vm = np.array([[  1.31767529e+02,  -3.58368748e+00,  -1.65090647e+00,
               0.00000000e+00],
            [ -3.58368748e+00,   1.35513711e-01,   3.77539055e-02,
@@ -99,7 +99,7 @@ class TestGMErrorHet(unittest.TestCase):
               2.82398517e-02]])
         np.testing.assert_array_almost_equal(reg.vm,vm,6)
         pr2 = 0.34951013222581306
-        self.assertEqual(reg.pr2,pr2)
+        self.assertAlmostEqual(reg.pr2,pr2)
         stde = np.array([ 11.47900385,   0.36812187,   0.16156816,   0.16804717])
         np.testing.assert_array_almost_equal(reg.std_err,stde,4)
         z_stat = np.array([[  4.18122226e+00,   2.89946274e-05],
@@ -138,9 +138,9 @@ class TestBaseGMEndogErrorHet(unittest.TestCase):
         predy = np.array([ 53.94887405])
         np.testing.assert_array_almost_equal(reg.predy[0],predy,7)
         n = 49
-        self.assertEqual(reg.n,n,7)
+        self.assertAlmostEqual(reg.n,n)
         k = 3
-        self.assertEqual(reg.k,k,7)
+        self.assertAlmostEqual(reg.k,k)
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,7)
         x = np.array([  1.   ,  19.531])
@@ -156,11 +156,11 @@ class TestBaseGMEndogErrorHet(unittest.TestCase):
         i_s = 'Maximum number of iterations reached.'
         np.testing.assert_string_equal(reg.iter_stop,i_s)
         its = 1
-        self.assertEqual(reg.iteration,its,7)
+        self.assertAlmostEqual(reg.iteration,its,7)
         my = 38.436224469387746
-        self.assertEqual(reg.mean_y,my,7)
+        self.assertAlmostEqual(reg.mean_y,my)
         stdy = 18.466069465206047
-        self.assertEqual(reg.std_y,stdy,7)
+        self.assertAlmostEqual(reg.std_y,stdy)
         vm = np.array([[  8.34637805e+02,  -2.16932259e+01,  -1.33327894e+01,
                   1.65840848e+00],
                [ -2.16932259e+01,   5.97683070e-01,   3.39503523e-01,
@@ -201,9 +201,9 @@ class TestGMEndogErrorHet(unittest.TestCase):
         predy = np.array([ 53.94887405])
         np.testing.assert_array_almost_equal(reg.predy[0],predy,7)
         n = 49
-        self.assertEqual(reg.n,n,7)
+        self.assertAlmostEqual(reg.n,n)
         k = 3
-        self.assertEqual(reg.k,k,7)
+        self.assertAlmostEqual(reg.k,k)
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,7)
         x = np.array([  1.   ,  19.531])
@@ -219,11 +219,11 @@ class TestGMEndogErrorHet(unittest.TestCase):
         i_s = 'Maximum number of iterations reached.'
         np.testing.assert_string_equal(reg.iter_stop,i_s)
         its = 1
-        self.assertEqual(reg.iteration,its,7)
+        self.assertAlmostEqual(reg.iteration,its,7)
         my = 38.436224469387746
-        self.assertEqual(reg.mean_y,my,7)
+        self.assertAlmostEqual(reg.mean_y,my)
         stdy = 18.466069465206047
-        self.assertEqual(reg.std_y,stdy,7)
+        self.assertAlmostEqual(reg.std_y,stdy)
         vm = np.array([[  8.34637805e+02,  -2.16932259e+01,  -1.33327894e+01,
                   1.65840848e+00],
                [ -2.16932259e+01,   5.97683070e-01,   3.39503523e-01,
@@ -234,7 +234,7 @@ class TestGMEndogErrorHet(unittest.TestCase):
                   3.15686105e-02]])
         np.testing.assert_array_almost_equal(reg.vm,vm,6)
         pr2 = 0.34648011338954804
-        self.assertEqual(reg.pr2,pr2,7)
+        self.assertAlmostEqual(reg.pr2,pr2,7)
         std_err = np.array([ 28.89009873,  0.77309965,  0.46798299,
             0.17767558])
         np.testing.assert_array_almost_equal(reg.std_err,std_err,6)
@@ -267,9 +267,9 @@ class TestBaseGMComboHet(unittest.TestCase):
         predy = np.array([ 54.81544267])
         np.testing.assert_array_almost_equal(reg.predy[0],predy,7)
         n = 49
-        self.assertEqual(reg.n,n,7)
+        self.assertAlmostEqual(reg.n,n)
         k = 4
-        self.assertEqual(reg.k,k,7)
+        self.assertAlmostEqual(reg.k,k)
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,7)
         x = np.array([  1.     ,  19.531  ,  15.72598])
@@ -283,11 +283,11 @@ class TestBaseGMComboHet(unittest.TestCase):
         i_s = 'Maximum number of iterations reached.'
         np.testing.assert_string_equal(reg.iter_stop,i_s)
         its = 1
-        self.assertEqual(reg.iteration,its,7)
+        self.assertAlmostEqual(reg.iteration,its,7)
         my = 38.436224469387746
-        self.assertEqual(reg.mean_y,my,7)
+        self.assertAlmostEqual(reg.mean_y,my)
         stdy = 18.466069465206047
-        self.assertEqual(reg.std_y,stdy,7)
+        self.assertAlmostEqual(reg.std_y,stdy,7)
         vm = np.array([[  4.86218274e+02,  -2.77268729e+00,  -1.59987770e+00,
              -1.01969471e+01,   2.74302006e+00],
            [ -2.77268729e+00,   1.04680972e-01,   2.51172238e-02,
@@ -337,9 +337,9 @@ class TestGMComboHet(unittest.TestCase):
         predy = np.array([ 54.81544267])
         np.testing.assert_array_almost_equal(reg.predy[0],predy,7)
         n = 49
-        self.assertEqual(reg.n,n,7)
+        self.assertAlmostEqual(reg.n,n)
         k = 4
-        self.assertEqual(reg.k,k,7)
+        self.assertAlmostEqual(reg.k,k)
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,7)
         x = np.array([  1.     ,  19.531  ,  15.72598])
@@ -353,11 +353,11 @@ class TestGMComboHet(unittest.TestCase):
         i_s = 'Maximum number of iterations reached.'
         np.testing.assert_string_equal(reg.iter_stop,i_s)
         its = 1
-        self.assertEqual(reg.iteration,its,7)
+        self.assertAlmostEqual(reg.iteration,its,7)
         my = 38.436224469387746
-        self.assertEqual(reg.mean_y,my,7)
+        self.assertAlmostEqual(reg.mean_y,my)
         stdy = 18.466069465206047
-        self.assertEqual(reg.std_y,stdy,7)
+        self.assertAlmostEqual(reg.std_y,stdy)
         vm = np.array([[  4.86218274e+02,  -2.77268729e+00,  -1.59987770e+00,
              -1.01969471e+01,   2.74302006e+00],
            [ -2.77268729e+00,   1.04680972e-01,   2.51172238e-02,
@@ -370,9 +370,9 @@ class TestGMComboHet(unittest.TestCase):
              -6.89402590e-02,   7.12034037e-02]])
         np.testing.assert_array_almost_equal(reg.vm,vm,6)
         pr2 = 0.3001582877472412
-        self.assertEqual(reg.pr2,pr2,7)
+        self.assertAlmostEqual(reg.pr2,pr2,7)
         pr2_e = 0.0683367517326917
-        self.assertEqual(reg.pr2_e,pr2_e,7)
+        self.assertAlmostEqual(reg.pr2_e,pr2_e,7)
         std_err = np.array([ 22.05035768,  0.32354439,  0.14685221,  0.52751653,  0.26683966])
         np.testing.assert_array_almost_equal(reg.std_err,std_err,6)
         z_stat = np.array([(2.6202684885795335, 0.00878605635338265), (2.2573385444145524, 0.023986928627746887), (-4.0351698589183433, 5.456281036278686e-05), (-0.42277935292121521, 0.67245625315942159), (2.1225002455741895, 0.033795752094112265)])
