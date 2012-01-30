@@ -63,7 +63,7 @@ class BaseGM_Error_Hom(RegressionPropsY):
                    kx1 array of estimated coefficients
     u            : array
                    nx1 array of residuals
-    e            : array
+    e_filtered   : array
                    nx1 array of spatially filtered residuals
     predy        : array
                    nx1 array of predicted y values
@@ -174,7 +174,8 @@ class BaseGM_Error_Hom(RegressionPropsY):
 
         # Output
         self.betas = np.vstack((ols_s.betas,lambda2))
-        self.vm = get_omega_hom_ols(w, self, lambda2, moments[0])
+        self.vm,self.sig2 = get_omega_hom_ols(w, self, lambda2, moments[0])
+        self.e_filtered = self.u - lambda2*lag_spatial(w,self.u)
         self._cache = {}
 
 class GM_Error_Hom(BaseGM_Error_Hom, USER.DiagnosticBuilder):
@@ -227,7 +228,7 @@ class GM_Error_Hom(BaseGM_Error_Hom, USER.DiagnosticBuilder):
                    kx1 array of estimated coefficients
     u            : array
                    nx1 array of residuals
-    e            : array
+    e_filtered   : array
                    nx1 array of spatially filtered residuals
     predy        : array
                    nx1 array of predicted y values
@@ -431,7 +432,7 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
                    kx1 array of estimated coefficients
     u            : array
                    nx1 array of residuals
-    e            : array
+    e_filtered   : array
                    nx1 array of spatially filtered residuals
     predy        : array
                    nx1 array of predicted y values
@@ -553,7 +554,8 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
 
         # Output
         self.betas = np.vstack((tsls_s.betas,lambda2))
-        self.vm = get_omega_hom(w, self, lambda2, moments[0])
+        self.vm,self.sig2 = get_omega_hom(w, self, lambda2, moments[0])
+        self.e_filtered = self.u - lambda2*lag_spatial(w,self.u)
         self._cache = {}
 
 class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom, USER.DiagnosticBuilder):
@@ -616,7 +618,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom, USER.DiagnosticBuilder):
                    kx1 array of estimated coefficients
     u            : array
                    nx1 array of residuals
-    e            : array
+    e_filtered   : array
                    nx1 array of spatially filtered residuals
     predy        : array
                    nx1 array of predicted y values
@@ -1036,7 +1038,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom, USER.DiagnosticBuilder):
                    nx1 array of residuals
     e_filtered   : array
                    nx1 array of spatially filtered residuals
-    e_reduced    : array
+    e_pred       : array
                    nx1 array of residuals (using reduced form)
     predy        : array
                    nx1 array of predicted y values
@@ -1232,7 +1234,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom, USER.DiagnosticBuilder):
         BaseGM_Combo_Hom.__init__(self, y=y, x=x, w=w, yend=yend, q=q,\
                     w_lags=w_lags, A1=A1, lag_q=lag_q,\
                     max_iter=max_iter, epsilon=epsilon)
-        self.predy_e, self.e_reduced = sp_att(w,self.y,self.predy,\
+        self.predy_e, self.e_pred = sp_att(w,self.y,self.predy,\
                              self.z[:,-1].reshape(self.n,1),self.betas[-2])        
         self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HOM)"        
         self.name_ds = USER.set_name_ds(name_ds)
@@ -1442,7 +1444,7 @@ def get_omega_hom(w, reg, lamb, G):
 
     o_upper = np.hstack((oDD, oDL))
     o_lower = np.hstack((oDL.T, oLL))
-    return np.vstack((o_upper, o_lower))
+    return np.vstack((o_upper, o_lower)),float(sig2)
 
 def get_omega_hom_ols(w, reg, lamb, G):
     '''
@@ -1492,7 +1494,7 @@ def get_omega_hom_ols(w, reg, lamb, G):
 
     o_upper = np.hstack((oDD, oDL))
     o_lower = np.hstack((oDL.T, oLL))
-    return np.vstack((o_upper, o_lower))
+    return np.vstack((o_upper, o_lower)),float(sig2)
 
 def _test():
     import doctest

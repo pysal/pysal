@@ -21,6 +21,8 @@ class TestBaseGMErrorHet(unittest.TestCase):
         np.testing.assert_array_almost_equal(reg.betas,betas,7)
         u = np.array([ 27.38122697])
         np.testing.assert_array_almost_equal(reg.u[0],u,7)
+        ef = np.array([ 32.29765975])
+        np.testing.assert_array_almost_equal(reg.e_filtered[0],ef,7)
         predy = np.array([ 53.08577603])
         np.testing.assert_array_almost_equal(reg.predy[0],predy,7)
         n = 49
@@ -71,6 +73,8 @@ class TestGMErrorHet(unittest.TestCase):
         np.testing.assert_array_almost_equal(reg.betas,betas,7)
         u = np.array([ 27.38122697])
         np.testing.assert_array_almost_equal(reg.u[0],u,7)
+        ef = np.array([ 32.29765975])
+        np.testing.assert_array_almost_equal(reg.e_filtered[0],ef,7)
         predy = np.array([ 53.08577603])
         np.testing.assert_array_almost_equal(reg.predy[0],predy,7)
         n = 49
@@ -135,6 +139,8 @@ class TestBaseGMEndogErrorHet(unittest.TestCase):
         np.testing.assert_array_almost_equal(reg.betas,betas,7)
         u = np.array([ 26.51812895])
         np.testing.assert_array_almost_equal(reg.u[0],u,7)
+        ef = np.array([ 31.46604707])
+        np.testing.assert_array_almost_equal(reg.e_filtered[0],ef,7)
         predy = np.array([ 53.94887405])
         np.testing.assert_array_almost_equal(reg.predy[0],predy,7)
         n = 49
@@ -264,6 +270,8 @@ class TestBaseGMComboHet(unittest.TestCase):
         np.testing.assert_array_almost_equal(reg.betas,betas,7)
         u = np.array([ 25.65156033])
         np.testing.assert_array_almost_equal(reg.u[0],u,7)
+        ef = np.array([ 31.87664403])
+        np.testing.assert_array_almost_equal(reg.e_filtered[0],ef,7)
         predy = np.array([ 54.81544267])
         np.testing.assert_array_almost_equal(reg.predy[0],predy,7)
         n = 49
@@ -330,9 +338,11 @@ class TestGMComboHet(unittest.TestCase):
         np.testing.assert_array_almost_equal(reg.betas,betas,7)
         u = np.array([ 25.65156033])
         np.testing.assert_array_almost_equal(reg.u[0],u,7)
-        er = np.array([ 19.28727178])
-        np.testing.assert_array_almost_equal(reg.e_reduced[0],er,7)
-        pe = np.array([ 61.17973122])
+        ef = np.array([ 31.87664403])
+        np.testing.assert_array_almost_equal(reg.e_filtered[0],ef,7)
+        ep = np.array([ 28.30648145])
+        np.testing.assert_array_almost_equal(reg.e_pred[0],ep,7)
+        pe = np.array([ 52.16052155])
         np.testing.assert_array_almost_equal(reg.predy_e[0],pe,7)
         predy = np.array([ 54.81544267])
         np.testing.assert_array_almost_equal(reg.predy[0],predy,7)
@@ -371,7 +381,7 @@ class TestGMComboHet(unittest.TestCase):
         np.testing.assert_array_almost_equal(reg.vm,vm,6)
         pr2 = 0.3001582877472412
         self.assertAlmostEqual(reg.pr2,pr2,7)
-        pr2_e = 0.0683367517326917
+        pr2_e = 0.35613102283621967
         self.assertAlmostEqual(reg.pr2_e,pr2_e,7)
         std_err = np.array([ 22.05035768,  0.32354439,  0.14685221,  0.52751653,  0.26683966])
         np.testing.assert_array_almost_equal(reg.std_err,std_err,6)

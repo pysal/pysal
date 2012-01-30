@@ -40,7 +40,7 @@ class BaseGM_Error(RegressionPropsY):
                    kx1 array of estimated coefficients
     u            : array
                    nx1 array of residuals
-    e            : array
+    e_filtered   : array
                    nx1 array of spatially filtered residuals
     predy        : array
                    nx1 array of predicted y values
@@ -115,6 +115,7 @@ class BaseGM_Error(RegressionPropsY):
         self.u = y - self.predy
         self.betas = np.vstack((ols2.betas, np.array([[lambda1]])))
         self.sig2 = ols2.sig2n
+        self.e_filtered = self.u - lambda1*lag_spatial(w,self.u)
 
         self.vm = self.sig2 * ols2.xtxi
         se_betas = np.sqrt(self.vm.diagonal())
@@ -157,7 +158,7 @@ class GM_Error(BaseGM_Error, USER.DiagnosticBuilder):
                    kx1 array of estimated coefficients
     u            : array
                    nx1 array of residuals
-    e            : array
+    e_filtered   : array
                    nx1 array of spatially filtered residuals
     predy        : array
                    nx1 array of predicted y values
@@ -347,7 +348,7 @@ class BaseGM_Endog_Error(RegressionPropsY):
                    kx1 array of estimated coefficients
     u            : array
                    nx1 array of residuals
-    e            : array
+    e_filtered   : array
                    nx1 array of spatially filtered residuals
     predy        : array
                    nx1 array of predicted y values
@@ -431,7 +432,8 @@ class BaseGM_Endog_Error(RegressionPropsY):
         self.betas = np.vstack((tsls2.betas, np.array([[lambda1]])))
         self.predy = np.dot(tsls.z, tsls2.betas)
         self.u = y - self.predy
-        self.sig2 = np.dot(tsls2.u.T,tsls2.u) / self.n
+        self.sig2 = float(np.dot(tsls2.u.T,tsls2.u)) / self.n
+        self.e_filtered = self.u - lambda1*lag_spatial(w,self.u)
         self.vm = self.sig2 * tsls2.varb 
         self._cache = {}
 
@@ -482,7 +484,7 @@ class GM_Endog_Error(BaseGM_Endog_Error, USER.DiagnosticBuilder):
                    kx1 array of estimated coefficients
     u            : array
                    nx1 array of residuals
-    e            : array
+    e_filtered   : array
                    nx1 array of spatially filtered residuals
     predy        : array
                    nx1 array of predicted y values
@@ -858,7 +860,7 @@ class GM_Combo(BaseGM_Combo, USER.DiagnosticBuilder):
                    nx1 array of residuals
     e_filtered   : array
                    nx1 array of spatially filtered residuals
-    e_reduced    : array
+    e_pred       : array
                    nx1 array of residuals (using reduced form)
     predy        : array
                    nx1 array of predicted y values
@@ -1055,7 +1057,7 @@ class GM_Combo(BaseGM_Combo, USER.DiagnosticBuilder):
         USER.check_constant(x)
         BaseGM_Combo.__init__(self, y=y, x=x, w=w, yend=yend, q=q, w_lags=w_lags,\
                               lag_q=lag_q)
-        self.predy_e, self.e_reduced = sp_att(w,self.y,\
+        self.predy_e, self.e_pred = sp_att(w,self.y,\
                    self.predy,self.z[:,-1].reshape(self.n,1),self.betas[-2])        
         self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES"        
         self.name_ds = USER.set_name_ds(name_ds)
