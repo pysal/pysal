@@ -41,11 +41,13 @@ class TestBaseOLS(unittest.TestCase):
         np.testing.assert_array_almost_equal(bp, ols_bp, 7)
         np.testing.assert_array_almost_equal(ols.f_stat, \
             (12.358198885356581, 5.0636903313953024e-05), 7)
-        jb = {'df': 2, 'pvalue': 2.387360356860208e-09, 'jb': 39.706155069114878}
-        np.testing.assert_equal(ols.jarque_bera,jb)
+        jb = np.array([2, 39.706155069114878, 2.387360356860208e-09])
+        ols_jb = np.array([ols.jarque_bera['df'], ols.jarque_bera['jb'], ols.jarque_bera['pvalue']])
+        np.testing.assert_array_almost_equal(ols_jb,jb, 7)
         np.testing.assert_equal(ols.k,  3)
         kb = {'df': 2, 'kb': 2.2700383871478675, 'pvalue': 0.32141595215434604}
-        np.testing.assert_equal(ols.koenker_bassett,  kb)
+        for key in kb:
+            self.assertAlmostEqual(ols.koenker_bassett[key],  kb[key], 7)
         np.testing.assert_array_almost_equal(ols.lm_error, \
             (4.1508117035117893, 0.041614570655392716),7)
         np.testing.assert_array_almost_equal(ols.lm_lag, \
