@@ -217,7 +217,7 @@ class DBF(pysal.core.Tables.DataTable):
                 #if len(v) == size:
                 #    value = v
                 #else:
-                value = ("%"+"%d.%d"%(size,deci)+"f")%(value)
+                value = (("%"+"%d.%d"%(size,deci)+"f")%(value))[:size]
             elif typ == 'D':
                 value = value.strftime('%Y%m%d')
             elif typ == 'L':
