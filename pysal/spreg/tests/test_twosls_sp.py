@@ -159,6 +159,8 @@ class TestGMLag(unittest.TestCase):
         reg = pysal.spreg.twosls_sp.GM_Lag(self.y, self.X, w=self.w, w_lags=2)
         betas = np.array([[  4.53017056e+01], [  6.20888617e-01], [ -4.80723451e-01], [  2.83622122e-02]])
         np.testing.assert_array_almost_equal(reg.betas, betas, 7)
+        e_5 = np.array( [[ 29.28976367], [ -6.07439501], [-15.30080685], [ -0.41773375], [ -5.67197968]])
+        np.testing.assert_array_almost_equal(reg.e_pred[0:5], e_5, 7)
         h_0 = np.array([  1.        ,  19.531     ,  15.72598   ,  18.594     ,
                             24.7142675 ,  13.72216667,  27.82929567])
         np.testing.assert_array_almost_equal(reg.h[0], h_0)
@@ -174,11 +176,16 @@ class TestGMLag(unittest.TestCase):
         self.assertAlmostEqual(reg.mean_y, 38.436224469387746, 7)
         self.assertEqual(reg.n, 49)
         pfora1a2 = np.array([ 80.5588479 ,  -1.06625281,  -0.61703759,  -1.10071931]) 
+        self.assertAlmostEqual(reg.pr2, 0.3551928222612527, 7)
+        self.assertAlmostEqual(reg.pr2_e, 0.34763857386174174, 7)
         np.testing.assert_array_almost_equal(reg.pfora1a2[0], pfora1a2, 7)
         predy_5 = np.array([[ 50.87411532],[ 50.76969931],[ 41.77223722],[ 33.44262382],[ 28.77418036]])
         np.testing.assert_array_almost_equal(reg.predy[0:5], predy_5, 7)
+        predy_e_5 = np.array( [[ 51.17723933], [ 50.64139601], [ 41.65080685], [ 33.61773475], [ 28.89697968]])
+        np.testing.assert_array_almost_equal(reg.predy_e[0:5], predy_e_5, 7)
         q_5 = np.array([ 18.594     ,  24.7142675 ,  13.72216667,  27.82929567])
         np.testing.assert_array_almost_equal(reg.q[0], q_5)
+        self.assertEqual(reg.robust, 'unadjusted')
         self.assertAlmostEqual(reg.sig2n_k, 234.54258763039289, 7)
         self.assertAlmostEqual(reg.sig2n, 215.39625394627919, 7)
         self.assertAlmostEqual(reg.sig2, 215.39625394627919, 7)
@@ -281,6 +288,61 @@ class TestGMLag(unittest.TestCase):
         se_betas = np.array([ 58.33203837,   1.09100446,   0.62315167,   0.68088777])
         np.testing.assert_array_almost_equal(dbetas, se_betas)
 
+    def test_spatial(self):
+        X = np.array(self.db.by_col("INC"))
+        X = np.reshape(X, (49,1))
+        yd = np.array(self.db.by_col("CRIME"))
+        yd = np.reshape(yd, (49,1))
+        q = np.array(self.db.by_col("DISCBD"))
+        q = np.reshape(q, (49,1))
+        w = pysal.queen_from_shapefile(pysal.examples.get_path('columbus.shp'))
+        reg = pysal.spreg.twosls_sp.GM_Lag(self.y, X, yd, q, spat_diag=True, w=w)
+        betas = np.array([[  5.46344924e+01], [  4.13301682e-01], [ -5.92637442e-01], [ -7.40490883e-03]])
+        np.testing.assert_array_almost_equal(reg.betas, betas, 7)
+        vm = np.array( [[  4.45202654e+02, -1.50290275e+01, -6.36557072e+00, -5.71403440e-03],
+                        [ -1.50290275e+01,  5.93124683e-01,  2.19169508e-01, -6.70675916e-03],
+                        [ -6.36557072e+00,  2.19169508e-01,  1.06577542e-01, -2.96533875e-03],
+                        [ -5.71403440e-03, -6.70675916e-03, -2.96533875e-03,  1.15655425e-03]]) 
+        np.testing.assert_array_almost_equal(reg.vm, vm, 6)
+        ak_test = np.array([ 2.52597326,  0.11198567])
+        np.testing.assert_array_almost_equal(reg.ak_test, ak_test, 7)
+
+    def test_names(self):
+        X = np.array(self.db.by_col("INC"))
+        X = np.reshape(X, (49,1))
+        yd = np.array(self.db.by_col("CRIME"))
+        yd = np.reshape(yd, (49,1))
+        q = np.array(self.db.by_col("DISCBD"))
+        q = np.reshape(q, (49,1))
+        w = pysal.queen_from_shapefile(pysal.examples.get_path('columbus.shp'))
+        gwk = pysal.kernelW_from_shapefile(pysal.examples.get_path('columbus.shp'),k=5,function='triangular', fixed=False)
+        name_x = ['inc']
+        name_y = 'crime'
+        name_yend = ['crime']
+        name_q = ['discbd']
+        name_w = 'queen'
+        name_gwk = 'k=5'
+        name_ds = 'columbus'
+        reg = pysal.spreg.twosls_sp.GM_Lag(self.y, X, yd, q,
+                spat_diag=True, w=w, robust='hac', gwk=gwk,
+                name_x=name_x, name_y=name_y, name_q=name_q, name_w=name_w,
+                name_yend=name_yend, name_gwk=name_gwk, name_ds=name_ds)
+        betas = np.array([[  5.46344924e+01], [  4.13301682e-01], [ -5.92637442e-01], [ -7.40490883e-03]])
+        np.testing.assert_array_almost_equal(reg.betas, betas, 7)
+        vm = np.array( [[  5.70817052e+02, -1.83655385e+01, -8.36602575e+00,  2.37538877e-02],
+                        [ -1.85224661e+01,  6.53311383e-01,  2.84209566e-01, -6.47694160e-03],
+                        [ -8.31105622e+00,  2.78772694e-01,  1.38144928e-01, -3.98175246e-03],
+                        [  2.66662466e-02, -6.23783104e-03, -4.11092891e-03,  1.10936528e-03]]) 
+        np.testing.assert_array_almost_equal(reg.vm, vm, 6)
+        self.assertListEqual(reg.name_x, ['CONSTANT']+name_x)
+        name_yend.append('W_crime')
+        self.assertListEqual(reg.name_yend, name_yend)
+        name_q.extend(['W_inc', 'W_discbd'])
+        self.assertListEqual(reg.name_q, name_q)
+        self.assertEqual(reg.name_y, name_y)
+        self.assertEqual(reg.name_w, name_w)
+        self.assertEqual(reg.name_gwk, name_gwk)
+        self.assertEqual(reg.name_ds, name_ds)
 
 
 
