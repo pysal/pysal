@@ -1,124 +1,324 @@
+v<1.3.0>, 2012-01-31
+
+    * core/IOHandlers/pyDbfIO.py: Addressing issue #186
+
+    * cg/shapes.py: fixing small bug in polygon constructor that causes
+      an exception when an empty list is passed in for the holes.
+
+    * cg/standalone.py: removing standalone centroid method. see issue
+      #138.
+
+    * esda/mapclassify.py, esda/tests/test_mapclassify.py: - new
+      implementation of fisher jenks
+
+    * spreg/__init__.py, spreg/diagnostics_sp.py,
+      spreg/diagnostics_tsls.py, spreg/error_sp.py,
+      spreg/error_sp_het.py, spreg/error_sp_hom.py, spreg/ols.py,
+      spreg/robust.py, spreg/tests, spreg/twosls.py,
+      spreg/twosls_sp.py, spreg/user_output.py, spreg/utils.py: Adding
+      the following non-spatial/spatial regression modules:
+      * Two Stage Least Squares
+      * Spatial Two Stage Least Squares
+      * GM Error (KP 98-99)
+      * GM Error Homoskedasticity (Drukker et. al, 2010)
+      * GM Error Heteroskedasticity (Arraiz et. al, 2010)
+      * Anselin-Kelejian test for residual spatial autocorrelation of
+      residuals from IV regression
+      
+      Adding also utility functions and other helper classes.
+      
+    * cg/standalone.py: slight improvment to get_shared_segments, in
+      part to make it more readable.
+
+    * cg/shapes.py, cg/tests/test_standalone.py: adding <,<=,>,>= tests
+      to Point, this fixes a bug in the get_shared_segments function
+      that was causing some LineSegments to be incorectly ordered
+      because the default memory address was being used instead of the
+      points location.
+
+    * core/IOHandlers/tests/test_wkt.py, core/IOHandlers/wkt.py,
+      core/util/tests/test_wkt.py, core/util/wkt.py,
+      weights/tests/test_Distance.py, weights/tests/test_user.py,
+      weights/user.py: Fixing small numerical errors n testing that
+      resulted from changing the centroid algorithm.
+
+    * esda/moran.py: another optimization for __crand see issue #188
+
+    * weights/util.py: Added option for row-standardized SW in lat2SW.
+      Implementing suggestion from Charlie in Issue 181 from
+      StackOverflow
+
+    * esda/moran.py: another optimization to __crand, see issue #188
+      for details.
+
+    * esda/moran.py: Optimized __crand in Local_Moran
+
+    * cg/shapes.py, cg/standalone.py, contrib/shapely_ext.py:
+      Adddressing issue #138, centroids for polygons with holes
+      Fixing some issues with the shapely wrapper and out implemenation
+      of __geo_interface__
+
+    * weights/Distance.py: previous 'fix' to uniform kernel did not
+      have correct dimensions
+
+    * core/IOHandlers/arcgis_txt.py, core/IOHandlers/dat.py,
+      weights/user.py: fixing rounding errors with docstrings
+
+    * contrib/README, contrib/shared_perimeter_weights.py: Adding
+      shared perimeter weights, see Issue #46
+
+    * contrib/README, contrib/shapely_ext.py: moving shapely_ext into
+      contrib
+
+    * core/IOHandlers/pyDbfIO.py: Fixing issue with scientific notation
+      is DBF files. #182
+
+    * core/IOHandlers/pyShpIO.py: clockwise testing should only be
+      performed on Polygons. #183
+
+    * spreg/diagnostics_sp.py: Switching ints to floats in variance of
+      Morans I for residuals to get correct results
+
+    * core/util/shapefile.py, examples/__init__.py: Add a "get_path"
+      function to examples module.
+      pysal.examples.get_path('stl_hom.shp') will always return the
+      correct system path to stl_hom.shp, no matter where it's run
+      from. This is useful for testing.
+      Modified shapefile tests to use the new function.
+
+    * spreg/diagnostics.py: Adding check on condition_index to pick OLS
+      (xtx) or IV (hth) model
+
+    * core/IOHandlers/template.py: Updating template to pass unit
+      testing.
+
+    * core/util/shapefile.py: Fixing issue #180. Making shapefile
+      opener case insensitive.
+
+    * spatial_dynamics/interaction.py,
+      spatial_dynamics/tests/test_interaction.py: Adding modified Knox
+      and changes to existing tests in spatial_dynamics.
+
+    * core/IOHandlers/arcgis_txt.py,
+      core/IOHandlers/tests/test_arcgis_txt.py: fixing arcgis_txt.py so
+      that it ignores self-neighbors with zero weights
+
+    * core/FileIO.py: Updating library README.
+      Removing docstrings from FileIO module.
+
+    * contrib/README: adding contrib to installer and adding initial
+      README
+
+    * core/IOHandlers/gwt.py: rewrote GWT reader to avoid list appends.
+      resulted in speed up of about 12x.
+
+    * core/IOHandlers/pyDbfIO.py: implementing _get_col for dbf files.
+
+    * core/IOHandlers/gwt.py: Adding a small fix to gwt reader, if the
+      ids cannot be found in the associated DBF, they will be read in
+      order from the GWT file.
+
+    * contrib/weights_viewer/weights_viewer.py: Small change to
+      identify polygons that are their own neighbor.
+
+    * weights/Distance.py: removing incorrect kernel functions and
+      fixing bug in uniform kernel
+
+    * weights/util.py: refactoring insert_diagonal so that it can add
+      or overwrite the diagonal weights
+
+    * contrib, contrib/README, contrib/__init__.py,
+      contrib/weights_viewer, contrib/weights_viewer/__init__.py,
+      contrib/weights_viewer/transforms.py,
+      contrib/weights_viewer/weights_viewer.py: Adding 1st contrib, a
+      wxPython based Weights file viewer.
+
+
+    * spatial_dynamics/markov.py: - handle case of zero transitions in
+      spatial markov, consistent with treatment
+      in classic markov
+
+    * core/FileIO.py, core/IOHandlers/pyShpIO.py: Changes to allow
+      reading of null polygons.
+
+    * core/util/shapefile.py, core/util/tests/test_shapefile.py:
+      refactoring shapefile reader, see issue #89
+
+    * core/FileIO.py: small change to FileIO to allow FileFormat
+      argument to be passed through
+
+    * esda/getisord.py: fixing bug in local Z values for integer data
+
+    * cg/__init__.py, weights/user.py, weights/util.py: adding radius
+      option to user weights methods
+
+    * cg/kdtree.py, common.py, weights/Distance.py,
+      weights/tests/test_Distance.py: Distance weights can not be
+      passed an instnace of KDTree instead of an array. If the KDTree
+      is of type ArcKDTree, the weights returns will be based on
+      ArcDistances. Adding tests for Arc cases off KNN and
+      DistanceBand.
+
+    * weights/util.py: - added function for local clustering
+      coefficient - summary for W as a graph
+
+    * cg/kdtree.py, cg/sphere.py: finishing up Arc_KDTree
+
+    * weights/Distance.py: More doctest fixes.
+
+    * region/maxp.py, spreg/diagnostics.py, weights/Distance.py,
+      weights/user.py: Fixing the doctests for dusty python setup.
+
+    * cg/kdtree.py, cg/sphere.py: adding spherical wrapper around scipy
+      kdtree
+
+    * cg/__init__.py, cg/sphere.py: Adding spherical distance tools to
+      cg. Related to issue #168
+
+    * core/IOHandlers/gwt.py, core/IOHandlers/tests/test_gwt.py:
+      re-enabled gwt writing.
+      'o' transform is used on all GWTs for writing (w is returned to
+      existing transform on exit)
+      Also, setting '_shpName' and '_varName' attributes on W's which
+      are read in through gwt.
+      the writer will check if these vars exist and use them for the
+      header, this prevents metadata loss on simple copies
+
+    * esda/join_counts.py: - fix for handling int array type
+
+    * spreg/diagnostics.py: Adding more efficient constant check for
+      spreg.
+
+    * cg/shapes.py: adding __geo_interface__ and asShape adapter for
+      Point, LineString and Polygon
+
+    * spreg/diagnostics.py: minor change to t-stat function to
+      accommodate future regression models
+
+    * esda/mapclassify.py: - more general fix for #166
+
+
 v<1.2.0>, 2011-07-31
 
-	* pysal/spreg/user_output.py: Fix for bug 162
+    * pysal/spreg/user_output.py: Fix for bug 162
 
-	* pysal/spatial_dynamics/markov.py: Added markov mobility measures; addresses issue 137
+    * pysal/spatial_dynamics/markov.py: Added markov mobility measures; addresses issue 137
 
-	* pysal/weights/weights.py: Partially addressed issue 160 by removing the shimbel, order, and higher_order methods from W. 
+    * pysal/weights/weights.py: Partially addressed issue 160 by removing the shimbel, order, and higher_order methods from W. 
 
-	* doc/source/users/installation.txt: Adding known issue regarding GNU/Linux testing and random seeds; see ticket 52.
+    * doc/source/users/installation.txt: Adding known issue regarding GNU/Linux testing and random seeds; see ticket 52.
 
-	* pysal/esda/geary.py: Adding sparse implementation of Geary's C; substantial gains on larger datasets. 
+    * pysal/esda/geary.py: Adding sparse implementation of Geary's C; substantial gains on larger datasets. 
 
-	* pysal/core/IOHandlers/mtx.py: Adding WSP2W function for fast conversion of sparse weights object (WSP) to pysal W.
+    * pysal/core/IOHandlers/mtx.py: Adding WSP2W function for fast conversion of sparse weights object (WSP) to pysal W.
 
-	* pysal/esda/getisord.py: Adding Getis-Ord G test module
+    * pysal/esda/getisord.py: Adding Getis-Ord G test module
 
-	* pysal/weights/util.py: Added function that inserts values along the main diagonal of a weights object
+    * pysal/weights/util.py: Added function that inserts values along the main diagonal of a weights object
 
-	* doc/source/users/tutorials: Fixed issue 76.
+    * doc/source/users/tutorials: Fixed issue 76.
 
-	* pysal/core/IOHandlers/mtx.py: Added an IOHandler for MatrixMarket MTX files
+    * pysal/core/IOHandlers/mtx.py: Added an IOHandler for MatrixMarket MTX files
 
-	* pysal/esda/moran.py: Optimized conditional randomization
+    * pysal/esda/moran.py: Optimized conditional randomization
 
-	* pysal/weights/util.py: Re-adding full2W() method to convert full arrays into W objects; related to issue #136. 
+    * pysal/weights/util.py: Re-adding full2W() method to convert full arrays into W objects; related to issue #136. 
 
-	* pysal/core/IOHandlers/gal.py: Added sparse WSP (thin W); gal reader can return W or WSP
+    * pysal/core/IOHandlers/gal.py: Added sparse WSP (thin W); gal reader can return W or WSP
 
-	* pysal/core/IOHandlers/pyDbfIO.py: Bug Fix, DBF files are not properly closed when opened in 'r' mode. See issue #155.
+    * pysal/core/IOHandlers/pyDbfIO.py: Bug Fix, DBF files are not properly closed when opened in 'r' mode. See issue #155.
 
-	* pysal/core/IOHandlers/stata_txt.py: Adding FileIO handlers for STATA text files
+    * pysal/core/IOHandlers/stata_txt.py: Adding FileIO handlers for STATA text files
 
-	* pysal/weights/user.py: Fixed issue #154, adding k option to User Kernel weights functions.
+    * pysal/weights/user.py: Fixed issue #154, adding k option to User Kernel weights functions.
 
-	* pysal/core/IOHandlers/mat.py: Adding an IOHandler for MATLAB mat file
+    * pysal/core/IOHandlers/mat.py: Adding an IOHandler for MATLAB mat file
 
-	* pysal/core/IOHandlers/wk1.py: Adding an IO handler for wk1 file
+    * pysal/core/IOHandlers/wk1.py: Adding an IO handler for wk1 file
 
-	* pysal/core/IOHandlers/geobugs_txt.py: Adding an IO handler for geobugs text file.
+    * pysal/core/IOHandlers/geobugs_txt.py: Adding an IO handler for geobugs text file.
 
-	* pysal/core/IOHandlers/arcgis_swm.py: Added ArcGIS SWM file handler
+    * pysal/core/IOHandlers/arcgis_swm.py: Added ArcGIS SWM file handler
 
-	* pysal/core/IOHandlers/arcgis_dbf.py: Adding a spatial weights file in the (ArcGIS-style) DBF format. 
+    * pysal/core/IOHandlers/arcgis_dbf.py: Adding a spatial weights file in the (ArcGIS-style) DBF format. 
 
-	* pysal/core/IOHandlers/arcgis_txt.py: Added ArcGIS ASCII file IO handler. 
+    * pysal/core/IOHandlers/arcgis_txt.py: Added ArcGIS ASCII file IO handler. 
 
-	* pysal/core/IOHandlers/dat.py: Added DAT file handler.
+    * pysal/core/IOHandlers/dat.py: Added DAT file handler.
 
-	* pysal/cg/locators.py: Added point in polygon method for Polygon and PolygonLocator
+    * pysal/cg/locators.py: Added point in polygon method for Polygon and PolygonLocator
 
-	* pysal/weights/Distance.py: Optimized Kernel() method to run much faster for the case of adaptive bandwidths
+    * pysal/weights/Distance.py: Optimized Kernel() method to run much faster for the case of adaptive bandwidths
 
-	* pysal/weights/user.py: Added helper function in user.py to create scipy sparse matrix from a gal file
+    * pysal/weights/user.py: Added helper function in user.py to create scipy sparse matrix from a gal file
 
-	* pysal/common.py: Added shallow copy method to Read-Only Dict to support multiprocessing.
+    * pysal/common.py: Added shallow copy method to Read-Only Dict to support multiprocessing.
 
-	* pysal/spatial_dynamics/rank.py: More efficient regime weights
+    * pysal/spatial_dynamics/rank.py: More efficient regime weights
 
-	* pysal/weights/Distance.py: Adding epanechnikov and bisquare kernel funtions
+    * pysal/weights/Distance.py: Adding epanechnikov and bisquare kernel funtions
 
-	* pysal/core/IOHandlers/pyDbfIO.py: Adding NULL support to numerical DBF fields; modifying PointLocator API to match PolygonLocator API 
+    * pysal/core/IOHandlers/pyDbfIO.py: Adding NULL support to numerical DBF fields; modifying PointLocator API to match PolygonLocator API 
 
-	* pysal/cg/locators.py: Handles case when query rectangle is completely inside a polygon
+    * pysal/cg/locators.py: Handles case when query rectangle is completely inside a polygon
 
-	* pysal/cg/locators.py: Explicit polygon overlap hit test
+    * pysal/cg/locators.py: Explicit polygon overlap hit test
 
-	* pysal/cg/standalone.py: Adding point-polygon intersection support for polygons with holes.
+    * pysal/cg/standalone.py: Adding point-polygon intersection support for polygons with holes.
 
-	* pysal/spatial_dynamics/markov.py: Added homogeneity test.
+    * pysal/spatial_dynamics/markov.py: Added homogeneity test.
 
-	* pysal/spatial_dynamics/markov.py: Added spillover test in LISA_Markov.
+    * pysal/spatial_dynamics/markov.py: Added spillover test in LISA_Markov.
 
-	* pysal/cg/locators.py: Added Rtree based spatial index for polygonlocator.
+    * pysal/cg/locators.py: Added Rtree based spatial index for polygonlocator.
 
-	* pysal/cg/rtree.py: Added pure python Rtree module.
+    * pysal/cg/rtree.py: Added pure python Rtree module.
 
-	* doc/source/developers/pep/pep-0010.txt: Added PEP 0010: Rtree module in pure python.
+    * doc/source/developers/pep/pep-0010.txt: Added PEP 0010: Rtree module in pure python.
 
-	* pysal/esda/geary.py: Fixed bug 144.
+    * pysal/esda/geary.py: Fixed bug 144.
 
-	* pysal/spatial_dynamics/markov.py: Added significance filtering of LISA markov.
+    * pysal/spatial_dynamics/markov.py: Added significance filtering of LISA markov.
 
-	* doc/source/developers/pep/pep-0009.txt: Added new PEP, "PEP 0009: Add Python 3.x Support."
+    * doc/source/developers/pep/pep-0009.txt: Added new PEP, "PEP 0009: Add Python 3.x Support."
 
-	* doc/source/developers/guidelines.txt: New release cycle schedules for 1.2 and 1.3.
+    * doc/source/developers/guidelines.txt: New release cycle schedules for 1.2 and 1.3.
 
-	* doc/source/developers/release.txt: Updated pypi instructions; PySAL available on the Python Package Index via download, easy_install, and pip. 
+    * doc/source/developers/release.txt: Updated pypi instructions; PySAL available on the Python Package Index via download, easy_install, and pip. 
 
 v<1.1.0>, 2011-01-31
 
-	* pysal/core/FileIO.py, pysal/core/IOHandlers/pyDbfIO.py: Added missing value support to FileIO. Warnings will be issued when missing values are found and the value will be set to pysal.MISSINGVALUE, currently None, but the user can change it as needed.
+    * pysal/core/FileIO.py, pysal/core/IOHandlers/pyDbfIO.py: Added missing value support to FileIO. Warnings will be issued when missing values are found and the value will be set to pysal.MISSINGVALUE, currently None, but the user can change it as needed.
 
-	* pysal/spreg/: Added Spatial Regression module, spreg, and tests.  Added non-spatial diagnostic tests for OLS regression. 
+    * pysal/spreg/: Added Spatial Regression module, spreg, and tests.  Added non-spatial diagnostic tests for OLS regression. 
 
-	* pysal/core/IOHandlers/gwt.py: Fixing bottle neck in gwt reader, adding support for GeoDa Style ID's and DBF id_order.
+    * pysal/core/IOHandlers/gwt.py: Fixing bottle neck in gwt reader, adding support for GeoDa Style ID's and DBF id_order.
 
-	* pysal/cg/standalone.py: adding, distance_matrix, full distance matrix calculation using sparse matrices
+    * pysal/cg/standalone.py: adding, distance_matrix, full distance matrix calculation using sparse matrices
 
-	* pysal/core/util: Moved "converters" into core.util, allows them to be used independently of FileIO.
+    * pysal/core/util: Moved "converters" into core.util, allows them to be used independently of FileIO.
 
-	* pysal/weights/Distance.py: Adding work around for bug in scipy spatial, see pysal issue #126
+    * pysal/weights/Distance.py: Adding work around for bug in scipy spatial, see pysal issue #126
 
-	* pysal/weights/user.py: Added build_lattice_shapefile in weights.user, which writes an ncol by nrow grid to a shapefile.
+    * pysal/weights/user.py: Added build_lattice_shapefile in weights.user, which writes an ncol by nrow grid to a shapefile.
 
-	* pysal/weights/Distance.py: fixed coincident point problem in knnW and made sure it returns k neighbors 
-	* pysal/spatial_dynamics/interaction.py: Added a suite of spatio-temporal interaction tests including the Knox, Mantel, and Jacquez tests. 
+    * pysal/weights/Distance.py: fixed coincident point problem in knnW and made sure it returns k neighbors 
+    * pysal/spatial_dynamics/interaction.py: Added a suite of spatio-temporal interaction tests including the Knox, Mantel, and Jacquez tests. 
 
-	* pysal/weights/util.py: Added lat2SW, allows to create a sparse W matrix for a regular lattice.
+    * pysal/weights/util.py: Added lat2SW, allows to create a sparse W matrix for a regular lattice.
 
-	* pysal/tests/tests.py: - new 1.1 integration testing scheme.
+    * pysal/tests/tests.py: - new 1.1 integration testing scheme.
 
-	* pysal/esda/interaction.py: added standardized Mantel test and improved readability.
+    * pysal/esda/interaction.py: added standardized Mantel test and improved readability.
 
-	* pysal/spatial_dynamics/directional.py: - adding directional LISA analytics
+    * pysal/spatial_dynamics/directional.py: - adding directional LISA analytics
 
-	* pysal/esda/mapclassify.py: Natural_Breaks will lower k for data with fewer than k unique values, prints warning.
+    * pysal/esda/mapclassify.py: Natural_Breaks will lower k for data with fewer than k unique values, prints warning.
 
-	* pysal/region/randomregion.py: improvements to spatially constrained random region algorithm
+    * pysal/region/randomregion.py: improvements to spatially constrained random region algorithm
 
-	* pysal/esda/smoothing.py: Adding choynowski probabilities and SMR to smoothing.py
+    * pysal/esda/smoothing.py: Adding choynowski probabilities and SMR to smoothing.py
 
-	* doc/source/developers/release.txt: - updating release cycle - release management
+    * doc/source/developers/release.txt: - updating release cycle - release management
 
 v<1.0.0>, 2010-07-31 -- Initial release.
