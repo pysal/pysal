@@ -135,7 +135,7 @@ class TestBaseGMEndogError(unittest.TestCase):
         self.assertAlmostEqual(reg.std_y,sy)
         #vm
         vm = np.array([[  5.29156458e+02,  -1.57833384e+01,  -8.38016915e+00], [ -1.57833384e+01,   5.40234656e-01,   2.31119606e-01], [ -8.38016915e+00,   2.31119606e-01, 1.44976477e-01]])
-        np.testing.assert_array_almost_equal(reg.vm,vm,6)
+        np.testing.assert_array_almost_equal(reg.vm,vm,4)
         #sig2
 
 class TestGMEndogError(unittest.TestCase):
@@ -182,7 +182,7 @@ class TestGMEndogError(unittest.TestCase):
         sy = 18.466069465206047
         self.assertAlmostEqual(reg.std_y,sy)
         vm = np.array([[  5.29156458e+02,  -1.57833384e+01,  -8.38016915e+00], [ -1.57833384e+01,   5.40234656e-01,   2.31119606e-01], [ -8.38016915e+00,   2.31119606e-01, 1.44976477e-01]])
-        np.testing.assert_array_almost_equal(reg.vm,vm,6)
+        np.testing.assert_array_almost_equal(reg.vm,vm,4)
         pr2 = 0.346472557570858
         self.assertAlmostEqual(reg.pr2,pr2)
         #sig2
@@ -207,13 +207,13 @@ class TestBaseGMCombo(unittest.TestCase):
         # Only spatial lag
         reg = SP.BaseGM_Combo(self.y, self.X, w=self.w)
         betas = np.array([[ 57.61123515],[  0.73441313], [ -0.59459416], [ -0.21762921], [  0.54732051]])
-        np.testing.assert_array_almost_equal(reg.betas,betas,7)
+        np.testing.assert_array_almost_equal(reg.betas,betas,6)
         u = np.array([ 25.57932637])
-        np.testing.assert_array_almost_equal(reg.u[0],u,7)
+        np.testing.assert_array_almost_equal(reg.u[0],u,6)
         e_filtered = np.array([ 26.5595155])
         #np.testing.assert_array_almost_equal(reg.e_filtered[0],e_filtered,7)
         predy = np.array([ 54.88767663])
-        np.testing.assert_array_almost_equal(reg.predy[0],predy,7)
+        np.testing.assert_array_almost_equal(reg.predy[0],predy,6)
         n = 49
         self.assertAlmostEqual(reg.n,n)
         k = 3
@@ -231,7 +231,8 @@ class TestBaseGMCombo(unittest.TestCase):
         sy = 18.466069465206047
         self.assertAlmostEqual(reg.std_y,sy)
         vm = np.array([[  5.22438853e+02, -6.07257218e+00, -1.91428911e+00, -8.97134237e+00], [ -6.07257218e+00,  2.38012839e-01,  4.70160773e-02, 2.80964005e-02], [ -1.91428911e+00,  4.70160773e-02,  3.20924154e-02, 3.14968682e-03], [ -8.97134237e+00,  2.80964005e-02,  3.14968682e-03, 2.15753890e-01]])
-        np.testing.assert_array_almost_equal(reg.vm,vm,6)        #sig2
+        np.testing.assert_array_almost_equal(reg.vm,vm,4)        
+        #sig2
 
 class TestGMCombo(unittest.TestCase):
     def setUp(self):
@@ -248,17 +249,17 @@ class TestGMCombo(unittest.TestCase):
         # Only spatial lag
         reg = SP.GM_Combo(self.y, self.X, w=self.w)
         e_reduced = np.array([ 28.18617518])
-        np.testing.assert_array_almost_equal(reg.e_reduced[0],e_reduced,7)
+        np.testing.assert_array_almost_equal(reg.e_reduced[0],e_reduced,6)
         predy_e = np.array([ 52.28082782])
-        np.testing.assert_array_almost_equal(reg.predy_e[0],predy_e,7)
+        np.testing.assert_array_almost_equal(reg.predy_e[0],predy_e,6)
         betas = np.array([[ 57.61123515],[  0.73441313], [ -0.59459416], [ -0.21762921], [  0.54732051]])
-        np.testing.assert_array_almost_equal(reg.betas,betas,7)
+        np.testing.assert_array_almost_equal(reg.betas,betas,6)
         u = np.array([ 25.57932637])
-        np.testing.assert_array_almost_equal(reg.u[0],u,7)
+        np.testing.assert_array_almost_equal(reg.u[0],u,6)
         e_filtered = np.array([ 26.5595155])
         #np.testing.assert_array_almost_equal(reg.e_filtered[0],e_filtered,7)
         predy = np.array([ 54.88767663])
-        np.testing.assert_array_almost_equal(reg.predy[0],predy,7)
+        np.testing.assert_array_almost_equal(reg.predy[0],predy,6)
         n = 49
         self.assertAlmostEqual(reg.n,n)
         k = 3
@@ -276,13 +277,14 @@ class TestGMCombo(unittest.TestCase):
         sy = 18.466069465206047
         self.assertAlmostEqual(reg.std_y,sy)
         vm = np.array([[  5.22438853e+02, -6.07257218e+00, -1.91428911e+00, -8.97134237e+00], [ -6.07257218e+00,  2.38012839e-01,  4.70160773e-02, 2.80964005e-02], [ -1.91428911e+00,  4.70160773e-02,  3.20924154e-02, 3.14968682e-03], [ -8.97134237e+00,  2.80964005e-02,  3.14968682e-03, 2.15753890e-01]])
-        np.testing.assert_array_almost_equal(reg.vm,vm,6)        #sig2
+        np.testing.assert_array_almost_equal(reg.vm,vm,4)        
+        #sig2
         pr2 = 0.3018280166937799
         self.assertAlmostEqual(reg.pr2,pr2)
         pr2_e = 0.3561355587000738
         self.assertAlmostEqual(reg.pr2_e,pr2_e)
         std_err = np.array([ 22.85692133,   0.48786559,   0.17914356, 0.46449315])
-        np.testing.assert_array_almost_equal(reg.std_err,std_err,7)
+        np.testing.assert_array_almost_equal(reg.std_err,std_err,6)
         z_stat = np.array([[  2.52051597e+00,   1.17182922e-02], [  1.50535954e+00,   1.32231664e-01], [ -3.31909311e+00,   9.03103123e-04], [ -4.68530506e-01,   6.39405261e-01]])
         np.testing.assert_array_almost_equal(reg.z_stat,z_stat,7)
 
