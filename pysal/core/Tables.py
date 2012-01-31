@@ -6,7 +6,7 @@ __author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
 class DataTable(FileIO.FileIO):
     """ DataTable provides additional functionality to FileIO for data table file tables
         FileIO Handlers that provide data tables should subclass this instead of FileIO """
-    class by_col:
+    class By_Col:
         def __init__(self,  parent):
             self.p = parent
         def __repr__(self):
@@ -18,13 +18,18 @@ class DataTable(FileIO.FileIO):
         def __call__(self, key):
             return self.p._get_col(key)
     def __init__(self, *args, **kwargs):
-        self.by_col = self.by_col(self)
+        self._by_col = None
         FileIO.FileIO.__init__(self, *args, **kwargs)
     def __repr__(self):
         return 'DataTable: % s'% self.dataPath
     def __len__(self):
         """ __len__ should be implemented by DataTable Subclasses """
         raise NotImplementedError
+    @property
+    def by_col(self):
+        if self._by_col == None:
+            self._by_col = self.by_col(self)
+        return self._by_col
     def _get_col(self, key):
         """ returns the column vector
         """

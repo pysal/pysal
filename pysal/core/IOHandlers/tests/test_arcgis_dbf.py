@@ -25,12 +25,14 @@ class test_ArcGISDbfIO(unittest.TestCase):
         self.assertEqual(88, w.n)
         self.assertEqual(5.25, w.mean_neighbors)
         self.assertEqual([1.0, 1.0, 1.0, 1.0], w[1].values())
+        self.obj.close()
 
     def test_seek(self):
         self.test_read()
         self.failUnlessRaises(StopIteration, self.obj.read)
         self.obj.seek(0)
         self.test_read()
+        self.obj.close()
 
     def test_write(self):
         with warnings.catch_warnings(record=True) as warn:
@@ -45,9 +47,12 @@ class test_ArcGISDbfIO(unittest.TestCase):
         o = pysal.open(fname,'w','arcgis_dbf')
         o.write(w)
         o.close()
-        wnew =  pysal.open(fname,'r','arcgis_dbf').read()
+        f = pysal.open(fname,'r','arcgis_dbf')
+        wnew = f.read()
+        f.close()
         self.assertEqual( wnew.pct_nonzero, w.pct_nonzero)
         os.remove(fname)
+        self.obj.close()
 
 if __name__ == '__main__':
     unittest.main()
