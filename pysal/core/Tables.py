@@ -28,7 +28,7 @@ class DataTable(FileIO.FileIO):
     @property
     def by_col(self):
         if self._by_col == None:
-            self._by_col = self.by_col(self)
+            self._by_col = self.By_Col(self)
         return self._by_col
     def _get_col(self, key):
         """ returns the column vector
