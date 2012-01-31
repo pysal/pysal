@@ -65,8 +65,6 @@ class FileIO(object): #should be a type?
             return newCls
         else:
             return object.__new__(cls)
-    def __del__(self):
-        self.close()
     @staticmethod
     def getType(dataPath, mode, dataFormat=None):
         """Parse the dataPath and return the data type"""
@@ -114,7 +112,7 @@ class FileIO(object): #should be a type?
     def open(cls,*args,**kwargs):
         """ Alias for FileIO() """
         return cls(*args,**kwargs)
-    class by_row:
+    class By_Row:
         def __init__(self,parent):
             self.p = parent
         def __repr__(self):
@@ -147,9 +145,14 @@ class FileIO(object): #should be a type?
         self.__ids = None #{'id':n}
         self.__rIds = None
         self.closed = False
-        self.by_row = self.by_row(self)
+        self._by_row = None
         self._spec = []
         self.header = []
+    @property
+    def by_row(self):
+        if self._by_row == None:
+            self._by_row = self.By_Row(self)
+        return self._by_row
     def __getIds(self):
         return self.__ids
     def __setIds(self,ids):
