@@ -1,7 +1,7 @@
 :mod:`spreg.ols` --- Ordinary Least Squares
 ============================================
 
-The :mod:`spreg.ols` module provides OLS regression.
+The :mod:`spreg.ols` module provides OLS regression estimation.
 
 .. versionadded:: 1.1
 

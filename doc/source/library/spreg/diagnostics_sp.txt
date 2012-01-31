@@ -1,4 +1,4 @@
-:mod:`spreg.diagnostics_sp` --- Diagnostics_spatial
+:mod:`spreg.diagnostics_sp` --- Spatial Diagnostics
 ====================================================
 
 The :mod:`spreg.diagnostics_sp` module provides spatial diagnostic tests.
