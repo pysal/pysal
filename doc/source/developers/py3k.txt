@@ -1,0 +1,36 @@
+PySAL and Python3
+=================
+
+Background
+----------
+
+PySAL Enhancement Proposal #9 was approved February 2, 2011. It called for
+adapting the code base to support both Python 2.x and 3.x releases. 
+
+Setting up for development
+--------------------------
+
+Setup for ipython3 by first getting distribute from PyPi::
+ 
+ curl -O http://python-distribute.org/distribute_setup.py
+ python3 distribute_setup.py
+
+After distribute is installed, get pip::
+
+  curl -O https://raw.github.com/pypa/pip/master/contrib/get-pip.py
+  python3 get-pip.py
+
+Now that you have pip, get iPython::
+
+ # Use pip from the Python3 distribution on your system
+ /Library/Frameworks/Python.framework/Versions/3.2/bin/pip install ipython
+
+
+Get numpy and scipy installed (from source) for Python3. Download source
+tarballs, cd into the trunk, and run python3 setup.py install. Post issues to
+the pysal-dev mailing list
+
+
+
+
+

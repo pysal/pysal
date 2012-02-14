@@ -29,7 +29,7 @@ Prior to the build, there are a number of actions to take.
 	svn copy https://pysal.googlecode.com/svn/trunk \
         https://pysal.googlecode.com/svn/tags/X.0 -m "Release X.0"
 
-     * cd into the new tag directory and build the LaTeX documentation 
+     * cd into the new tag directory and build the LaTeX and HTML documentation 
      * Build release for X.0 out of tag X.0 following instructions below
 
 Post-build Activities
@@ -39,11 +39,13 @@ Post-build Activities
   * update the release on http://pypi.python.org:
      * go to http://pypi.python.org/pypi?:action=submit_form
      * pick option 2 to upload the PKG-INFO from top level pysal directory in a release tarball
-  * upload releases to code.google.com/p/pysal/downloads
+  * upload releases and docs to code.google.com/p/pysal/downloads
   * edit documentation links on http://code.google.com/p/pysal/ (which as of 1.1 will be the landing page for pysal.org)
   * after the Tag and final docs build, bump the docs version from x.x to x.x+1dev by editing doc/source/conf.py in two places.
   * create new release directory on documentation server
-  * edit cronjob on peloton to rsync to new release directory
+  * copy the new HTML docs to the doc server 
+  * :strike:`edit cronjob on peloton to rsync to new release directory`
+  * draft release announcement, ensuring docs link point to pysal.geodacenter.org
 
 Building the release
 ====================
