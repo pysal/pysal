@@ -346,7 +346,9 @@ class G_Local:
         for i in range(self.w.n):
             idsi = ids[ids!=i]
             np.random.shuffle(idsi)        
-            rGs[i] = [sum(y[idsi[rid[0:wc[i]]]]) + self.star*y[i] for rid in rids] 
+            yi_star = y[i]*self.star
+            wci = wc[i]
+            rGs[i] = (y[idsi[rids[:,0:wci]]]).sum(1) + yi_star
             rGs[i] = (np.array(rGs[i])/den[i])/(self.y_sum - (1 - self.star)*y[i])
         self.rGs = rGs
 
