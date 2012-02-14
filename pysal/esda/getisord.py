@@ -103,7 +103,7 @@ class G:
         self.permutations = permutations
         self.__moments()
         self.y2 = y*y
-        y.shape = (len(y),1) # Ensure that y is an n by 1 vector, otherwise y*y.T == y*y
+        y = y.reshape(len(y),1) # Ensure that y is an n by 1 vector, otherwise y*y.T == y*y
         self.den_sum = (y*y.T).sum() - (y*y).sum()
         self.G = self.__calc(self.y)
         self.z_norm = (self.G - self.EG) / math.sqrt(self.VG)
