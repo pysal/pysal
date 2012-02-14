@@ -102,10 +102,9 @@ class G:
         self.w = w
         self.permutations = permutations
         self.__moments()
-        xn = xrange(len(y))
-        self.xn = xn
         self.y2 = y*y
-        self.den = [y[i]*y[j] for i in xn for j in xn if i!=j ]
+        y.shape = (len(y),1) # Ensure that y is an n by 1 vector, otherwise y*y.T == y*y
+        self.den_sum = (y*y.T).sum() - (y*y).sum()
         self.G = self.__calc(self.y)
         self.z_norm = (self.G - self.EG) / math.sqrt(self.VG)
         self.p_norm = 1.0 - stats.norm.cdf(np.abs(self.z_norm))
@@ -158,7 +157,7 @@ class G:
     def __calc(self, y):
         yl = slag(self.w,y)
         self.num = y*yl
-        return sum(self.num) / sum(self.den)
+        return self.num.sum() / self.den_sum
 
 class G_Local:
     """ 
