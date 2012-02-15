@@ -15,23 +15,23 @@ installed on your machine:
 
 
 * `Python <http://www.python.org/>`_ 2.5 or later
-* `Numpy <http://numpy.scipy.org/>`_ 1.3 or later
-* `Scipy <http://www.scipy.org/>`_ 0.7 or later
+* `Numpy <http://new.scipy.org/download.html>`_ 1.3 or later
+* `Scipy <http://new.scipy.org/download.html>`_ 0.7 or later
 
 
 *Optional, bundled installation:* 
 
-With the `Enthought Python Distribution (EPD) <http://www.enthought.com/products/epd.php>`_, 
+With the `Enthought Python Distribution (EPD Free) <http://www.enthought.com/products/epd_free.php>`_, 
 you will install all of PySAL's required dependencies, as well as iPython and a lot more, rather than installing dependencies one by one.
-The package is free for academics, and downloadable `here <http://www.enthought.com/products/edudownload.php>`_. 
-Note that on OS X, PySAL 1.2 installers will not install to the EPD
-site-packages directory correctly. We advise EPD users to install PySAL via
+The full-blown EPD package is free for academics, and downloadable `here <http://www.enthought.com/products/edudownload.php>`_. 
+Note that on OS X, PySAL binary installers will not install to the EPD
+site-packages directory. We advise EPD users to install PySAL via
 PyPi or source. 
 
 *Required to compile the documentation (optional):*
 
 * `Sphinx <http://sphinx.pocoo.org/>`_
-* `numpydoc <http://pypi.python.org/pypi/numpydoc/0.2>`_  extension to Sphinx (*not included in EPD*)
+* `numpydoc <http://pypi.python.org/pypi/numpydoc/0.4>`_  extension to Sphinx (*not included in EPD*)
 
 *Optional, recommended additions:*
 
