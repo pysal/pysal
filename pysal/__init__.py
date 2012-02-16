@@ -61,7 +61,7 @@ import spreg
 import examples
 
 # Load the IOHandlers
-import core.IOHandlers
+from core import IOHandlers
 # Assign pysal.open to dispatcher
 open = core.FileIO.FileIO
 

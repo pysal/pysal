@@ -16,7 +16,7 @@ __author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
 
 from struct import calcsize,unpack,pack
 from cStringIO import StringIO
-from itertools import izip,islice
+from itertools import izip, islice
 import array
 import sys
 if sys.byteorder == 'little':
