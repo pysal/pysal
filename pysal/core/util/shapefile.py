@@ -239,14 +239,14 @@ class shp_file:
         Example:
         >>> import pysal,os
         >>> shp = shp_file('test','w','POINT')
-        >>> p = shp_file(pysal.examples.get_path('shp_test/Point.shp'))
+        >>> p = shp_file(pysal.examples.get_path('Point.shp'))
         >>> for pt in p:
         ...   shp.add_shape(pt)
         ... 
         >>> shp.close()
-        >>> open('test.shp','rb').read() == open(pysal.examples.get_path('shp_test/Point.shp'),'rb').read()
+        >>> open('test.shp','rb').read() == open(pysal.examples.get_path('Point.shp'),'rb').read()
         True
-        >>> open('test.shx','rb').read() == open(pysal.examples.get_path('shp_test/Point.shx'),'rb').read()
+        >>> open('test.shx','rb').read() == open(pysal.examples.get_path('Point.shx'),'rb').read()
         True
         >>> os.remove('test.shx')
         >>> os.remove('test.shp')
@@ -287,7 +287,7 @@ class shp_file:
         
         Example:
         >>> import pysal
-        >>> list(shp_file(pysal.examples.get_path('shp_test/Point.shp'))) == [{'Y': -0.25904661905760773, 'X': -0.00068176617532103578, 'Shape Type': 1}, {'Y': -0.25630328607387354, 'X': 0.11697145363360706, 'Shape Type': 1}, {'Y': -0.33930131004366804, 'X': 0.05043668122270728, 'Shape Type': 1}, {'Y': -0.41266375545851519, 'X': -0.041266375545851552, 'Shape Type': 1}, {'Y': -0.44017467248908293, 'X': -0.011462882096069604, 'Shape Type': 1}, {'Y': -0.46080786026200882, 'X': 0.027510917030567628, 'Shape Type': 1}, {'Y': -0.45851528384279472, 'X': 0.075655021834060809, 'Shape Type': 1}, {'Y': -0.43558951965065495, 'X': 0.11233624454148461, 'Shape Type': 1}, {'Y': -0.40578602620087334, 'X': 0.13984716157205224, 'Shape Type': 1}]
+        >>> list(shp_file(pysal.examples.get_path('Point.shp'))) == [{'Y': -0.25904661905760773, 'X': -0.00068176617532103578, 'Shape Type': 1}, {'Y': -0.25630328607387354, 'X': 0.11697145363360706, 'Shape Type': 1}, {'Y': -0.33930131004366804, 'X': 0.05043668122270728, 'Shape Type': 1}, {'Y': -0.41266375545851519, 'X': -0.041266375545851552, 'Shape Type': 1}, {'Y': -0.44017467248908293, 'X': -0.011462882096069604, 'Shape Type': 1}, {'Y': -0.46080786026200882, 'X': 0.027510917030567628, 'Shape Type': 1}, {'Y': -0.45851528384279472, 'X': 0.075655021834060809, 'Shape Type': 1}, {'Y': -0.43558951965065495, 'X': 0.11233624454148461, 'Shape Type': 1}, {'Y': -0.40578602620087334, 'X': 0.13984716157205224, 'Shape Type': 1}]
         True
         """
         self.__isreadable()
@@ -428,7 +428,7 @@ class shx_file:
 
         Example:
         >>> import pysal
-        >>> shx = shx_file(pysal.examples.get_path('shp_test/Point'))
+        >>> shx = shx_file(pysal.examples.get_path('Point'))
         >>> isinstance(shx,shx_file)
         True
         """
@@ -453,7 +453,7 @@ class shx_file:
 
         Example:
         >>> import pysal,os
-        >>> shx = shx_file(pysal.examples.get_path('shp_test/Point'))
+        >>> shx = shx_file(pysal.examples.get_path('Point'))
         >>> shx.index
         [(100, 20), (128, 20), (156, 20), (184, 20), (212, 20), (240, 20), (268, 20), (296, 20), (324, 20)]
         >>> shx2 = shx_file('test','w')
@@ -462,7 +462,7 @@ class shx_file:
         >>> shx2.index == shx.index
         True
         >>> shx2.close(shx._header)
-        >>> open('test.shx','rb').read() == open(pysal.examples.get_path('shp_test/Point.shx'),'rb').read()
+        >>> open('test.shx','rb').read() == open(pysal.examples.get_path('Point.shx'),'rb').read()
         True
         >>> os.remove('test.shx')
         """
@@ -498,7 +498,7 @@ class Point(object):
     """ Packs and Unpacks a ShapeFile Point Type 
     Example:
     >>> import pysal
-    >>> shp = shp_file(pysal.examples.get_path('shp_test/Point.shp'))
+    >>> shp = shp_file(pysal.examples.get_path('Point.shp'))
     >>> rec = shp.get_shape(0)
     >>> rec == {'Y': -0.25904661905760773, 'X': -0.00068176617532103578, 'Shape Type': 1}
     True
@@ -526,7 +526,7 @@ class PolyLine:
     """ Packs and Unpacks a ShapeFile PolyLine Type 
     Example:
     >>> import pysal
-    >>> shp = shp_file(pysal.examples.get_path('shp_test/Line.shp'))
+    >>> shp = shp_file(pysal.examples.get_path('Line.shp'))
     >>> rec = shp.get_shape(0)
     >>> rec == {'BBOX Ymax': -0.25832280562918325, 'NumPoints': 3, 'BBOX Ymin': -0.25895877033237352, 'NumParts': 1, 'Vertices': [(-0.0090539248870159517, -0.25832280562918325), (0.0074811573959305822, -0.25895877033237352), (0.0074811573959305822, -0.25895877033237352)], 'BBOX Xmax': 0.0074811573959305822, 'BBOX Xmin': -0.0090539248870159517, 'Shape Type': 3, 'Parts Index': [0]}
     True
@@ -580,7 +580,7 @@ class Polygon(PolyLine):
 
     Example:
     >>> import pysal
-    >>> shp = shp_file(pysal.examples.get_path('shp_test/Polygon.shp'))
+    >>> shp = shp_file(pysal.examples.get_path('Polygon.shp'))
     >>> rec = shp.get_shape(1)
     >>> rec == {'BBOX Ymax': -0.3126531125455273, 'NumPoints': 7, 'BBOX Ymin': -0.35957259110238166, 'NumParts': 1, 'Vertices': [(0.05396439570183631, -0.3126531125455273), (0.051473095955454629, -0.35251390848763364), (0.059777428443393454, -0.34254870950210703), (0.063099161438568974, -0.34462479262409174), (0.048981796209073003, -0.35957259110238166), (0.046905713087088297, -0.3126531125455273), (0.05396439570183631, -0.3126531125455273)], 'BBOX Xmax': 0.063099161438568974, 'BBOX Xmin': 0.046905713087088297, 'Shape Type': 5, 'Parts Index': [0]}
     True
