@@ -13,7 +13,8 @@ Setting up for development
 First install `Python3 <http://python.org/download/releases/3.2.2/>`_.
 Once Python3 is installed, you have the choice of downloading the following
 files as pure source code from PyPi and running "python3 setup.py install" for
-each, or follow the instructions below to setup useful helpers.
+each, or follow the instructions below to setup useful helpers: easy_install and
+pip.
 
 To get setuptools and pip, first get distribute from PyPi::
  
@@ -30,25 +31,6 @@ After distribute is installed, get pip::
   # It may be useful to setup an alias to this version of pip in your shell profile
   alias pip3='/Library/Frameworks/Python.framework/Versions/3.2/bin/pip'
 
-Now that you have pip, get iPython::
-
- # Use pip from the Python3 distribution on your system, or with the alias above
- pip3 install iPython
-
-The first time you launch iPython3, you may receive a warning about the Python
-library readline. The warning makes it clear that pip does not work to install
-readline, so use easy_install, which was installed with distribute above::
-
- /Library/Frameworks/Python.framework/Versions/3.2/bin/easy_install readline
-
-If when launching iPython3 you receive another warning about kernmagic, note
-that iPython 0.12 and newer use an alternate config file from previous versions.
-Since I had not extensively customized my iPython profile, I just deleted the
-~/.iPython directory and relaunched iPython3.
-   
-Now let's get our testing and documentation suites::
-
-  pip3 install nose nose-exclude sphinx numpydoc
 
 NumPy and SciPy require extensive refactoring on installation. We recommend
 `downloading the source code <http://new.scipy.org/download.html>`_, unzipping,
@@ -76,6 +58,40 @@ If python complains about not finding gcc-4.2, and you're sure it is installed,
   cd /usr/bin/ 
   sudo ln -s gcc  gcc-4.2
 
-Now for PySAL. 
+
+Now for PySAL. Get the bleeding edge repository version of PySAL and pass in
+this call::
+ 
+ cd pysal/trunk
+ python3 setup.py install
+
+You'll be able to watch the dynamic refactoring taking place. If all goes well,
+PySAL will be installed into your Python3 site-packages directory. Confirm
+success with:: 
+
+  cd
+  python3 -c 'import pysal; pysal.open.check()'
 
 
+Optional Installations
+-----------------------
+
+Now that you have pip, get iPython::
+
+ # Use pip from the Python3 distribution on your system, or with the alias above
+ pip3 install iPython
+
+The first time you launch iPython3, you may receive a warning about the Python
+library readline. The warning makes it clear that pip does not work to install
+readline, so use easy_install, which was installed with distribute above::
+
+ /Library/Frameworks/Python.framework/Versions/3.2/bin/easy_install readline
+
+If when launching iPython3 you receive another warning about kernmagic, note
+that iPython 0.12 and newer use an alternate config file from previous versions.
+Since I had not extensively customized my iPython profile, I just deleted the
+~/.iPython directory and relaunched iPython3.
+   
+Now let's get our testing and documentation suites::
+
+  pip3 install nose nose-exclude sphinx numpydoc
