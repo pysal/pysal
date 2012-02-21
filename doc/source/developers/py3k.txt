@@ -95,3 +95,15 @@ Since I had not extensively customized my iPython profile, I just deleted the
 Now let's get our testing and documentation suites::
 
   pip3 install nose nose-exclude sphinx numpydoc
+
+Now that nose is installed, let's run the test suite. Since the refactored code
+only exists in the Python3 site-packages directory, cd into it and run nose.
+First, however, copy our nose config files to the installed pysal so that nose
+finds them::
+ 
+ cp <path to local pysal svn>/nose-exclude.txt /Library/Frameworks/Python.frameworks/Versions/3.2/lib/python3.2/site-packages/pysal/
+ cp <path to local pysal svn>/setup.cfg /Library/Frameworks/Python.frameworks/Versions/3.2/lib/python3.2/site-packages/pysal/
+ cd /Library/Frameworks/Python.frameworks/Versions/3.2/lib/python3.2/site-packages
+ /Library/Frameworks/Python.framework/Versions/3.2/bin/nosetests pysal > ~/Desktop/nose-output.txt 2>&1
+
+
