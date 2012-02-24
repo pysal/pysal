@@ -346,9 +346,11 @@ class Snapper:
 def network_from_endnodes(s, d, wgt, undirected=True):
     G = {}
     for g, r in zip(s,d):
+        start = g.vertices[0]
         end = g.vertices[-1]
         G.setdefault(start, {})
         G.setdefault(end, {})
+        r_w = wgt(g,r)
         G[start][end] = r_w
         if undirected:
             G[end][start] = r_w
