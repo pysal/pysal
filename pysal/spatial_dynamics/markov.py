@@ -1187,9 +1187,7 @@ def shorrock(pmat):
     sh : scalar
           Conditional mobility measure:
 
-          .. math::
-
-                sh = \frac{k  - \sum_j p_{i,i}}{k - 1}
+    .. math:: sh = \frac{k  - \sum_j p_{i,i}}{k - 1}
 
 
     Examples
@@ -1221,9 +1219,9 @@ def shorrock(pmat):
     sh = (k-t) / (k-1)
     return sh
 		
-def _test():
+def test():
     import doctest
     doctest.testmod(verbose=True)
 
 if __name__ == '__main__':
-    _test()
+    test()
