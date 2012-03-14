@@ -31,6 +31,14 @@ Then::
   cd trunk/
   nosetests pysal/
   
+You can also run the test suite from within a Python session. At the
+conclusion of the test, Python will exit, however::
+ 
+  import pysal
+  import nose
+  nose.runmodule('pysal')
+
+
 The file setup.cfg (added in revision 1050) in trunk holds nose configuration variables. When nosetests
 is run from trunk, nose reads those configuration parameters into its operation,
 so developers do not need to specify the optional flags on the command line as

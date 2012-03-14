@@ -44,8 +44,16 @@ Getting PySAL
 
 You can install PySAL in a number of ways. We provide system-specific package installers for Windows and Mac OS X that have an intuitive look-and-feel
 that most users are familiar with. We also build source distributions that self-install by invoking a single command line argument. 
+
 PySAL is also available on the Python Package Index, which means it can be
-downloaded and installed from the command line using easy_install or pip.
+downloaded and installed from the command line using easy_install or pip, as
+follows::
+
+ $ pip install pysal
+ #or
+ $ easy_install pysal
+
+
 Finally, advanced users and 
 developers can use the popular version control tool **svn** to check out and use our latest code. Instructions for each of these methods follows.
 
@@ -62,7 +70,7 @@ Grab the Windows installer (ends with *.exe*) and download to your computer. Dou
 
 If you'd rather install source code, grab the zipfile (ends with *.zip*) and download to your computer. Decompress the file to a convenient location on your hard drive. Open a command shell and navigate to the decompressed PySAL folder. Type::
 
- python setup.py install
+ $ python setup.py install
 
 Instructions for Mac OS X
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -80,14 +88,14 @@ distributions from python.org.
 
 If you'd rather install source code, grab the tarball (ends with *.tar.gz*) and download to your computer. Decompress the file to a convenient location on your hard drive. Open a terminal and navigate to the decompressed PySAL folder. Type::
 
- python setup.py install
+ $ python setup.py install
 
 Instructions for GNU/Linux
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Grab either of the source distributions and decompress to your selected destination. Open a command shell and navigate to the decompressed PySAL folder. Type::
 
- python setup.py install
+ $ python setup.py install
 
 
 Development version from Subversion (SVN)
@@ -102,14 +110,14 @@ GNU/Linux and Mac OS X
 Open a command shell, navigate to a convenient location on your hard drive, and
 type::
 
- svn checkout http://pysal.googlecode.com/svn/trunk/ pysal
+ $ svn checkout http://pysal.googlecode.com/svn/trunk/ pysal
 
 
 This will create a folder called 'pysal' containing the source
 code in trunk. This will allow you to easily update any change
 to the developer code base by running::
 
- svn update
+ $ svn update
 
 Since PySAL is in active development, changes are made frequently. For that
 reason, we recommend you 'tell' Python to look for PySAL in that folder
@@ -119,11 +127,11 @@ To do that, create or edit your command shell profile (.bash_profile if using
 BASH) and add the following line, substituting where appropriate::
 
 
- export PYTHONPATH=${PYTHONPATH}:"/path_to_desired/folder/pysal/"
+ $ export PYTHONPATH=${PYTHONPATH}:"/path_to_desired/folder/pysal/"
 
 Save and quit the file, then source it as follows::
 
- source ~/.bash_profile
+ $ source ~/.bash_profile
 
 You are all set. To test your setup, start a Python session and type::
 
