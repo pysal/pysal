@@ -219,7 +219,10 @@ class DBF(pysal.core.Tables.DataTable):
                 #else:
                 value = (("%"+"%d.%d"%(size,deci)+"f")%(value))[:size]
             elif typ == 'D':
-                value = value.strftime('%Y%m%d')
+                if value == None:
+                    value = '\0'*8
+                else:
+                    value = value.strftime('%Y%m%d')
             elif typ == 'L':
                 value = str(value)[0].upper()
             else:
