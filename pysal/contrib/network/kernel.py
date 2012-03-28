@@ -89,8 +89,6 @@ def kernel_density(network, events, bandwidth, orig_nodes, kernel='quadratic'):
     <tc>#is#kernel_density</tc>
     """
 
-    print kernel
-
     # beginning of step i
     density = {}
     for n in network:
@@ -180,27 +178,6 @@ def kernel_density(network, events, bandwidth, orig_nodes, kernel='quadratic'):
 
     return density
 
-class _TestKernel(unittest.TestCase):
-
-    def test_kernel_density1(self):
-        """
-        <tc>#tests#kernel_density</tc>
-        """
-        network = {}
-        for i in [1, 2, 3]:
-            network[i] = {}
-            for j in [1, 2, 3]:
-                if j != i:
-                    network[i][j] = 1
-        d = kernel_density(network, [(1, 2, 0, 0.5, 0.5)], 2.0)
-        self.assertEquals(len(d), 3)
-        self.assertTrue(d[1] > 0)
-        self.assertTrue(d[2] > 0)
-        self.assertTrue(d[3] > 0)
-
-if __name__ == '__main__':
-    print test.get_coverage('kernel.py')
-    unittest.main()
     
 
 

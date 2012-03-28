@@ -71,12 +71,5 @@ def kt_values(t_specs, distances, scaling_const):
         ks[t] = scaling_const*_binary_search(distances, t)
     return ks     
 
-class _TestKFuncs(unittest.TestCase):
-    
-    pass
-            
-if __name__ == '__main__':
-    print test.get_coverage('kfuncs.py')
-    unittest.main()
 
 
