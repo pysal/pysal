@@ -45,7 +45,8 @@ Getting PySAL
 You can install PySAL in a number of ways. We provide system-specific package installers for Windows and Mac OS X that have an intuitive look-and-feel
 that most users are familiar with. We also build source distributions that self-install by invoking a single command line argument. 
 
-PySAL is also available on the Python Package Index, which means it can be
+PySAL is also available on the `Python Package Index
+<http://pypi.python.org/pypi/pysal>`_, which means it can be
 downloaded and installed from the command line using easy_install or pip, as
 follows::
 

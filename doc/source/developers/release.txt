@@ -22,6 +22,7 @@ Prior to the build, there are a number of actions to take.
      * update THANKS.txt 
      * update README.txt 
      * update setup.py to add new modules or remove old ones
+     * update the DOWNLOAD_URL in setup.py 
      * prior to the Tag and final docs build, bump the docs version from x.xdev
        to x.x by editing doc/source/conf.py in two places.
      * create a tag X.0::
@@ -46,6 +47,7 @@ Post-build Activities
   * copy the new HTML docs to the doc server 
   * :strike:`edit cronjob on peloton to rsync to new release directory`
   * draft release announcement, ensuring docs link point to pysal.geodacenter.org
+  * write and distribute the press release on geodacenter.asu.edu, openspace-list, and pysal.org
 
 Building the release
 ====================
