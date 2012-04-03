@@ -32,6 +32,10 @@ class Rect(object):
     """
 
     __slots__ = ("x", "y", "xx", "yy", "swapped_x", "swapped_y")
+    def __getstate__(self):
+        return (self.x, self.y, self.xx, self.yy, self.swapped_x, self.swapped_y)
+    def __setstate__(self,state):
+        self.x, self.y, self.xx, self.yy, self.swapped_x, self.swapped_y = state
 
     def __init__(self, minx, miny, maxx, maxy):
         self.swapped_x = (maxx < minx)
@@ -272,6 +276,10 @@ class _NodeCursor(object):
         return res
 
     __slots__ = ("root", "npool", "rpool", "index", "rect", "next_sibling", "first_child")
+    def __getstate__(self):
+        return (self.root, self.npool, self.rpool, self.index, self.rect, self.next_sibling, self.first_child)
+    def __setstate__(self,state):
+        self.root, self.npool, self.rpool, self.index, self.rect, self.next_sibling, self.first_child = state
 
     def __init__(self, rooto, index, rect, first_child, next_sibling):
         self.root = rooto
