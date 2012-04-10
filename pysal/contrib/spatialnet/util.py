@@ -10,7 +10,7 @@ __author__ = "Serge Rey <sjsrey@gmail.com>"
 
 def w2dg(w):
     """
-    Return a directed graph from a PySAL W object
+    Return a networkx directed graph from a PySAL W object
 
 
     Parameters
@@ -78,9 +78,50 @@ def w2dwg(w):
     return G
 
 
+def dwg2w(g, weight_name = 'weight'):
+    """
+    Returns a PySAL W object from a directed-weighted graph
+
+    Parameters
+    ----------
+
+    g: networkx digraph
+
+    weight_name: name of weight attribute of g
+
+    Returns
+    -------
+    w: PySAL W 
+
+    Example
+    -------
+    >>> w = ps.lat2W()
+    >>> g = w2dg(w)
+    >>> w1 = dwg2w(g)
+    >>> w1.n
+    25
+    >>> w1.neighbors[0]
+    [1, 5]
+    """
+
+    neighbors = {}
+    weights = {}
+    for node in g.nodes_iter():
+        neighbors[node] = []
+        weights[node] = []
+        for neighbor in g.neighbors_iter(node):
+            neighbors[node].append(neighbor)
+            weight = g.get_edge_data(node,neighbor)
+            if weight:
+                weights[node].append(weight[weight_name])
+            else:
+                weights[node].append(1)
+    return ps.W(neighbors=neighbors, weights=weights)
 
 
-def edge2W(edge_file):
+
+
+def edge2w(edge_file, nodetype=str):
     """
     Create a PySAL W object from an edgelist
 
@@ -88,6 +129,8 @@ def edge2W(edge_file):
     ----------
 
     edge_file: file with edgelist
+
+    nodetype: type for node (str, int, float)
 
 
     Returns
@@ -97,30 +140,87 @@ def edge2W(edge_file):
 
     Example
     -------
-    >>> import networkx as nx
-    >>> w = ps.lat2W()
-    >>> w.transform = 'r'
-    >>> g = w2dwg(w)
-    >>> fh = open("test.edgelist",'wb')
-    >>> nx.write_edgelist(g,fh)
+
+
     """
-    info = np.loadtxt(edge_file)
+    raise NotImplementedError 
+    
 
-    nodes = np.unique(info[:,[0,1]])
-    neighbors = {}
-    weights = {}
-    for node in nodes:
-        neighbors[node] = []
-        weights[node] = []
-    for row in info:
-        neighbors[row[0]].append(row[1])
-        weights[row[0]].append(row[2])
+def adjl2w(adjacency_list_file, nodetype=str):
+    """
+    Create a PySAL W object from an adjacency list file
 
-    w = ps.W(neighbors=neighbors, weights = weights)
+    Parameters
+    ----------
+
+    adjacency_list_file: file with edgelist
+
+    nodetype: type for node (str, int, float)
 
 
-    return w
+    Returns
+    -------
+    W: PySAL W
 
+
+    Example
+    -------
+
+
+    """
+    raise NotImplementedError 
+    
+
+def mladjl2w(adjacency_list_file, nodetype=str):
+    """
+    Create a PySAL W object from a multiline adjacency list file
+
+    Parameters
+    ----------
+
+    adjacency_list_file: multiline adjacency list file
+
+    nodetype: type for node (str, int, float)
+
+
+    Returns
+    -------
+    W: PySAL W
+
+
+    Example
+    -------
+
+
+    """
+    raise NotImplementedError 
+    
+
+
+def gml2w(gml_file):
+    """
+    Create a PySAL W object from a GML file
+
+    Parameters
+    ----------
+
+    gml_file: gml file name
+
+    nodetype: type for node (str, int, float)
+
+
+    Returns
+    -------
+    W: PySAL W
+
+
+    Example
+    -------
+
+
+    """
+    raise NotImplementedError 
+    
 
                        
 
