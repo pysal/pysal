@@ -9,7 +9,7 @@ import copy
 from scipy.sparse import isspmatrix_csr
 from numpy import ones
 
-__all__ = ['w_union', 'w_intersection', 'w_difference', 'w_symmetric_difference', 'w_subset']
+__all__ = ['w_union', 'w_intersection', 'w_difference', 'w_symmetric_difference', 'w_subset', 'w_clip']
 
 
 def w_union(w1, w2):
