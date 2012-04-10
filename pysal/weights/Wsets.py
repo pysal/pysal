@@ -2,10 +2,12 @@
 Set-like manipulation of weights matrices.
 """
 
-__author__ = "Sergio J. Rey <srey@asu.edu>, Charles Schmidt <Charles.R.Schmidt@asu.edu>, David Folch <david.folch@asu.edu>"
+__author__ = "Sergio J. Rey <srey@asu.edu>, Charles Schmidt <Charles.R.Schmidt@asu.edu>, David Folch <david.folch@asu.edu>, Dani Arribas-Bel <darribas@asu.edu>"
 
 import pysal
 import copy
+from scipy.sparse import isspmatrix_csr
+from numpy import ones
 
 __all__ = ['w_union', 'w_intersection', 'w_difference', 'w_symmetric_difference', 'w_subset']
 
@@ -379,7 +381,125 @@ def w_subset(w1, ids):
 
     return pysal.W(neighbors)
 
-    
+
+def w_clip(w1, w2, outSP=True):
+    '''
+    Clip a continuous W object (w1) with a different W object (w2) so only cells where
+    w2 has a non-zero value remain with non-zero values in w1
+
+    Checks on w1 and w2 are performed to make sure they conform to the
+    appropriate format and, if not, they are converted.
+    ...
+
+    Arguments
+    ---------
+    w1      : pysal.W, scipy.sparse.csr.csr_matrix
+              Potentially continuous weights matrix to be clipped. The clipped
+              matrix wc will have at most the same elements as w1.
+    w2      : pysal.W, scipy.sparse.csr.csr_matrix
+              Weights matrix to use as shell to clip w1. Automatically
+              converted to binary format. Only non-zero elements in w2 will be
+              kept non-zero in wc. NOTE: assumed to be of the same shape as w1
+    outSP   : boolean
+              If True (default) return sparse version of the clipped W, if
+              False, return pysal.W object of the clipped matrix
+    Returns
+    -------
+    wc      : pysal.W, scipy.sparse.csr.csr_matrix
+              Clipped W object (sparse if outSP=Ture). It inherits
+              ``id_order`` from w1.
+
+    Examples
+    --------
+    >>> import pysal as ps
+
+    First create a W object from a lattice using queen contiguity and
+    row-standardize it (note that these weights will stay when we clip the
+    object, but they will not neccesarily represent a row-standardization
+    anymore):
+
+    >>> w1 = ps.lat2W(3, 2, rook=False)
+    >>> w1.transform = 'R'
+
+    We will clip that geography assuming observations 0, 2, 3 and 4 belong to
+    one group and 1, 5 belong to another group and we don't want both groups
+    to interact with each other in our weights (i.e. w_ij = 0 if i and j in
+    different groups). For that, we use the following method:
+
+    >>> w2 = ps.regime_weights(['r1', 'r2', 'r1', 'r1', 'r1', 'r2'])
+
+    To illustrate that w2 will only be considered as binary even when the
+    object passed is not, we can row-standardize it
+
+    >>> w2.transform = 'R'
+
+    The clipped object ``wc`` will contain only the spatial queen
+    relationships that occur within one group ('r1' or 'r2') but will have
+    gotten rid of those that happen across groups
+
+    >>> wcs = ps.weights.Wsets.w_clip(w1, w2, outSP=True)
+
+    This will create a sparse object (recommended when n is large).
+
+    >>> wcs.sparse.toarray()
+    array([[ 0.        ,  0.        ,  0.33333333,  0.33333333,  0.        ,
+             0.        ],
+           [ 0.        ,  0.        ,  0.        ,  0.        ,  0.        ,
+             0.        ],
+           [ 0.2       ,  0.        ,  0.        ,  0.2       ,  0.2       ,
+             0.        ],
+           [ 0.2       ,  0.        ,  0.2       ,  0.        ,  0.2       ,
+             0.        ],
+           [ 0.        ,  0.        ,  0.33333333,  0.33333333,  0.        ,
+             0.        ],
+           [ 0.        ,  0.        ,  0.        ,  0.        ,  0.        ,
+             0.        ]])
+
+    If we wanted an original W object, we can control that with the argument
+    ``outSP``:
+
+    >>> wc = ps.weights.Wsets.w_clip(w1, w2, outSP=False)
+    >>> wc.full()[0]
+    array([[ 0.        ,  0.        ,  0.33333333,  0.33333333,  0.        ,
+             0.        ],
+           [ 0.        ,  0.        ,  0.        ,  0.        ,  0.        ,
+             0.        ],
+           [ 0.2       ,  0.        ,  0.        ,  0.2       ,  0.2       ,
+             0.        ],
+           [ 0.2       ,  0.        ,  0.2       ,  0.        ,  0.2       ,
+             0.        ],
+           [ 0.        ,  0.        ,  0.33333333,  0.33333333,  0.        ,
+             0.        ],
+           [ 0.        ,  0.        ,  0.        ,  0.        ,  0.        ,
+             0.        ]])
+
+    You can check they are actually the same:
+
+    >>> wcs.sparse.toarray() == wc.full()[0]
+    array([[ True,  True,  True,  True,  True,  True],
+           [ True,  True,  True,  True,  True,  True],
+           [ True,  True,  True,  True,  True,  True],
+           [ True,  True,  True,  True,  True,  True],
+           [ True,  True,  True,  True,  True,  True],
+           [ True,  True,  True,  True,  True,  True]], dtype=bool)
+
+ 
+    '''
+    if not w1.id_order:
+        w1.id_order = None
+    id_order = w1.id_order
+    if not isspmatrix_csr(w1):
+        w1 = w1.sparse
+    if not isspmatrix_csr(w2):
+        w2 = w2.sparse
+    w2.data = ones(w2.data.shape)
+    wc = w1.multiply(w2)
+    wc = pysal.weights.WSP(wc, id_order=id_order)
+    if not outSP:
+        wc = pysal.weights.WSP2W(wc)
+    return wc
+
+
 def _test():
     """Doc test"""
     import doctest
