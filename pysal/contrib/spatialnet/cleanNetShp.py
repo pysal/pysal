@@ -95,6 +95,10 @@ def split_at_nodes(shp):
     generator -- yields pysal.cg.Chain objects
     """
     nodes = find_nodes(shp)
+    nodeIds = list(nodes)
+    nodeIds.sort()
+    nodeIds = dict([(node,i) for i,node in enumerate(nodeIds)])
+    
     for road in shp:
         vrts = road.vertices
         midVrts = set(road.vertices[1:-1]) #we know end points are nodes
@@ -106,16 +110,32 @@ def split_at_nodes(shp):
             starts = [0]+midIdx
             stops = [x+1 for x in midIdx]+[None]
             for start,stop in zip(starts,stops):
-                yield pysal.cg.Chain(vrts[start:stop])
+                feat = pysal.cg.Chain(vrts[start:stop])
+                rec = (nodeIds[feat.vertices[0]],nodeIds[feat.vertices[-1]],False)
+                yield feat,rec
         else:
-            yield road
+            rec = (nodeIds[road.vertices[0]],nodeIds[road.vertices[-1]],False)
+            yield road,rec
+
+
+def createSpatialNetworkShapefile(inshp,outshp):
+    assert inshp.lower().endswith('.shp')
+    assert outshp.lower().endswith('.shp')
+    shp = pysal.open(inshp,'r')
+    snapped = list(snap_verts(shp,.001))
+    o = pysal.open(outshp,'w')
+    odb = pysal.open(outshp[:-4]+'.dbf','w')
+    odb.header = ["FNODE","TNODE","ONEWAY"]
+    odb.field_spec = [('N',20,0),('N',20,0),('L',1,0)]
+
+    new = list(split_at_nodes(snapped))
+    for feat,rec in new:
+        o.write(feat)
+        odb.write(rec)
+    o.close()
+    odb.close()
+    print "Split %d roads in %d network edges"%(len(shp),len(new))
 
 if __name__=='__main__':
-    shp = pysal.open('beth_roads.shp','r')
-    snapped = list(snap_verts(shp,.001))
-    o = pysal.open('beth_netSnap.shp','w')
-    new = list(split_at_nodes(snapped))
-    for feat in new: o.write(feat)
-    o.close()
-    print "Split %d roads in %d network edges"%(len(shp),len(new))
+    createSpatialNetworkShapefile('beth_roads.shp','beth_network.shp')
 
