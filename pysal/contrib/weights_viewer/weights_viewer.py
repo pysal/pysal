@@ -150,6 +150,7 @@ class WeightsMap(wx.Panel):
             self.status.SetStatusText('No Selection',0)
             self.status.SetStatusText('',1)
             self.status.SetStatusText('',2)
+            cdc.DrawBitmap(self.buffer,0,0)
 
 class WeightsMapApp(wx.App):
     def __init__(self, geo=None, w=None, redirect=False):
