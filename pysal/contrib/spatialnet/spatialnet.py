@@ -1,6 +1,8 @@
 import pysal
 import networkx
 
+EUCLIDEAN_DISTANCE = "Euclidean"
+ARC_DISTANCE = "Arc"
 
 class SpatialNetwork(object):
     """
@@ -16,9 +18,10 @@ class SpatialNetwork(object):
                     FNODE -- source node -- ID of the source node, the first vertex in the polyline feature.
                     TNODE -- destination node -- ID of the destination node, the last vertex in the polyline feature.
                     ONEWAY -- bool -- If True, the edge will be marked oneway starting at FNODE and ending at TNODE
+    distance_metric -- EUCLIDEAN_DISTANCE or ARC_DISTANCE
     
     """
-    def __init__(self,shapefile):
+    def __init__(self,shapefile,distance_metric=EUCLIDEAN_DISTANCE):
         if issubclass(type(shapefile),basestring): #Path
             shp = pysal.open(shapefile,'r')
         else:
@@ -33,6 +36,13 @@ class SpatialNetwork(object):
         oneway = [{'F':False,'T':True}[x] for x in dbf.by_col('ONEWAY')]
         fnode = dbf.by_col('FNODE')
         tnode = dbf.by_col('TNODE')
+        if distance_metric == EUCLIDEAN_DISTANCE:
+            lengths = [x.len for x in shp]
+        elif distance_metric == ARC_DISTANCE:
+            lengths = [x.arclen for x in shp]
+        else:
+            raise ValueError,"distance_metric must be either EUCLIDEAN_DISTANCE or ARC_DISTANCE"
+        self.lengths = lengths
         if any(oneway):
             G = networkx.DiGraph()
             def isoneway(x):
@@ -51,4 +61,8 @@ class SpatialNetwork(object):
         else:
             G = networkx.Graph(zip(fnode,tnode))
         self.G = G
+    
+if __name__=='__main__':
+    net = SpatialNetwork('beth_network.shp',ARC_DISTANCE)
+    
 
