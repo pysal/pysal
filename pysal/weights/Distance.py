@@ -302,7 +302,7 @@ class Kernel(W):
         # get points within bandwidth distance of each point
         if not hasattr(self, 'neigh'):
             kdtq=self.kdt.query_ball_point
-            neighbors=[kdtq(self.data,r=bwi[0])[i] for i,bwi in enumerate(self.bandwidth)]
+            neighbors=[kdtq(self.data[i],r=bwi[0]) for i,bwi in enumerate(self.bandwidth)]
             self.neigh=neighbors
         # get distances for neighbors
         data=np.array(self.data)
