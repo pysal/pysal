@@ -4,7 +4,7 @@ from pysal.cg.standalone import get_shared_segments
 QUEEN = 1
 ROOK = 2
 
-__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+__author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ["QUEEN","ROOK","ContiguityWeights_rtree"]
 
 Q_TARGET_MEM_SIZE = 250 * 1024 * 1024 #250mb

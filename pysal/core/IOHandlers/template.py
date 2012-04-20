@@ -6,7 +6,7 @@
 
 import pysal
 from pysal.core.FileIO import FileIO
-__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+__author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ['TemplateWriter', 'TemplateReaderWriter']
 
 

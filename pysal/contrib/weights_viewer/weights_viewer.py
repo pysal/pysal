@@ -2,7 +2,7 @@ import wx
 import pysal
 from transforms import WorldToViewTransform
 
-__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+__author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 
 POINT_RADIUS = 5
 BORDER_COLOR = wx.Colour(0,0,0,255)

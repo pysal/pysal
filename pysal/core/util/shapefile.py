@@ -12,7 +12,7 @@ Tempe, AZ
 http://geodacenter.asu.edu
 """
 
-__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+__author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 
 from struct import calcsize,unpack,pack
 from cStringIO import StringIO

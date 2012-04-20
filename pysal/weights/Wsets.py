@@ -2,7 +2,7 @@
 Set-like manipulation of weights matrices.
 """
 
-__author__ = "Sergio J. Rey <srey@asu.edu>, Charles Schmidt <Charles.R.Schmidt@asu.edu>, David Folch <david.folch@asu.edu>, Dani Arribas-Bel <darribas@asu.edu>"
+__author__ = "Sergio J. Rey <srey@asu.edu>, Charles Schmidt <schmidtc@gmail.com>, David Folch <david.folch@asu.edu>, Dani Arribas-Bel <darribas@asu.edu>"
 
 import pysal
 import copy

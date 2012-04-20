@@ -3,7 +3,7 @@ from pysal.weights import W, WSP
 from scipy import sparse
 import numpy as np
 
-__author__='Charles R Schmidt <Charles.R.Schmidt@asu.edu>'
+__author__='Charles R Schmidt <schmidtc@gmail.com>'
 __all__ =  ['GalIO']
 
 class GalIO(FileIO.FileIO):

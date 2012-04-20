@@ -1,7 +1,7 @@
 import pysal.core.Tables as Tables
 import csv
 
-__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+__author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ['csvWrapper']
 
 class csvWrapper(Tables.DataTable):

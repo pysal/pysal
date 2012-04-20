@@ -3,7 +3,7 @@ PEP 0009 Add Python 3.x Support
 *******************************
 
 ========  =================================
-Author    Charles Schmidt <Charles.R.Schmidt@asu.edu>
+Author    Charles Schmidt <schmidtc@gmail.com>
 Status    Approved 1.2
 Created   02-Feb-2011
 Updated   02-Feb-2011

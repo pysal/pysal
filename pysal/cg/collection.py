@@ -4,7 +4,7 @@ Computational geometry code for PySAL: Python Spatial Analysis Library.
 Authors:
 Sergio Rey <srey@asu.edu>
 Xinyue Ye <xinyue.ye@gmail.com>
-Charles Schmidt <Charles.Schmidt@asu.edu>
+Charles Schmidt <schmidtc@gmail.com>
 Andrew Winslow <Andrew.Winslow@asu.edu>
 
 Not to be used without permission of the authors. 

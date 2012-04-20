@@ -10,7 +10,7 @@ import numpy
 from scipy import inf
 import sphere
 
-__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+__author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 DISTANCE_METRICS = ['Euclidean','Arc']
 FLOAT_EPS = numpy.finfo(float).eps
 

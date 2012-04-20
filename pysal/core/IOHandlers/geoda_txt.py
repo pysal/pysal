@@ -1,6 +1,6 @@
 import pysal.core.Tables as Tables
 
-__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+__author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ['GeoDaTxtReader']
 
 class GeoDaTxtReader(Tables.DataTable):

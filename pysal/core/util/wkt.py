@@ -1,7 +1,7 @@
 from pysal import cg
 import re
 
-__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+__author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ['WKTParser']
 #####################################################################
 ## ToDo: Add Well-Known-Binary support...

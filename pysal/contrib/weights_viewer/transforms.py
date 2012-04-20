@@ -1,6 +1,6 @@
 import pysal
 
-__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+__author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 
 class WorldToViewTransform(object):
     """

@@ -8,7 +8,7 @@ l_ij = length of shared border i and j
 P_j = perimeter of j
 
 """
-__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+__author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ["spw_from_shapefile"]
 
 

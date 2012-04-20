@@ -1,10 +1,10 @@
 """
 sphere: Tools for working with spherical distances.
 
-Author: Charles R Schmidt <charlies.r.schmidt@asu.edu>
+Author: Charles R Schmidt <schmidtc@gmail.com>
 """
 
-__author__ = "Charles R Schmidt <charles.r.schmidt@asu.edu>"
+__author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 import math
 import random
 import numpy

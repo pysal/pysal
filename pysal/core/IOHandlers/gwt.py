@@ -4,7 +4,7 @@ import pysal.core.FileIO as FileIO
 from pysal.weights import W
 from warnings import warn
 
-__author__ = "Charles R Schmidt <Charles.R.Schmidt@asu.edu>"
+__author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ["GwtIO"]
 
 class unique_filter(object):
