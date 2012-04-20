@@ -9,6 +9,7 @@ __credits__ = "Copyright (c) 2005-2009 Sergio J. Rey"
 import doctest
 import math
 from warnings import warn
+from sphere import arcdist
 
 __all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon', 'Rectangle', 'asShape']
 
@@ -849,6 +850,7 @@ class Chain(object):
         >>> ls._reset_props()
         """ 
         self._len = None
+        self._arclen = None
         self._bounding_box = None
 
     @property
@@ -944,6 +946,24 @@ class Chain(object):
         if self._len == None:
             self._len = sum([part_perimeter(part) for part in self._vertices])
         return self._len
+    @property
+    def arclen(self):
+        """
+        Returns the geometric length of the chain computed using arcdistance (meters). 
+ 
+        len -> number
+
+        Attributes
+        ----------
+
+        Examples
+        --------
+        """
+        def part_perimeter(part):
+            return sum([arcdist(part[i], part[i+1])*1000. for i in xrange(len(part)-1)])
+        if self._arclen == None:
+            self._arclen = sum([part_perimeter(part) for part in self._vertices])
+        return self._arclen
 
 class Ring(object):
     """
