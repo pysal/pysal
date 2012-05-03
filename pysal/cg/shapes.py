@@ -421,7 +421,7 @@ class LineSegment:
         """ 
         self._bounding_box = None
         self._len = None
-        self._line = None
+        self._line = False
 
     def _get_p1(self):
         """
@@ -671,18 +671,16 @@ class LineSegment:
         >>> l.b
         0.0
         """
-        if self._line == None:
+        if self._line == False:
             dx = self._p1[0] - self._p2[0]
             dy = self._p1[1] - self._p2[1]
             if dx == 0:
-                self._line = False
+                self._line = None
             else:
                 m = dy/dx
                 b = self._p1[1] - m*self._p1[0] # y - mx
                 self._line = Line(m, b)
-        if not self._line: # If the line is not defined
-            return None
-        return Line(self._line.m, self._line.b)
+        return self._line
 
 class Line:
     """
@@ -718,15 +716,38 @@ class Line:
         --------
         >>> ls = Line(1, 0)
         >>> ls.m
-        1
+        1.0
         >>> ls.b
-        0
+        0.0
         """
-        if m == 1e600 or m == -1e600:
-            raise ArithmeticException, 'Slope cannot be infinite.'
-        self.m = m
-        self.b = b
+        if m == float('inf') or m == float('inf'):
+            raise ArithmeticError, 'Slope cannot be infinite.'
+        self.m = float(m)
+        self.b = float(b)
 
+    def x(self, y):
+        """
+        Returns the x-value of the line at a particular y-value.
+ 
+        x(number) -> number
+
+        Parameters
+        ----------
+        y : the y-value to compute x at
+
+        Attributes
+        ----------
+
+        Examples
+        --------
+        >>> l = Line(0.5, 0)
+        >>> l.x(0.25)
+        0.5
+        """
+        if self.m == 0:
+            raise ArithmeticError, 'Cannot solve for X when slope is zero.'
+        return (y-self.b)/self.m
+    
     def y(self, x):
         """
         Returns the y-value of the line at a particular x-value.
@@ -744,7 +765,7 @@ class Line:
         --------
         >>> l = Line(1, 0)
         >>> l.y(1)
-        1
+        1.0
         """
         if self.m == 0:
             return self.b

@@ -216,6 +216,31 @@ class test_Line(unittest.TestCase):
         self.assertEquals(l.y(-1e600), 1e600)
         self.assertEquals(l.y(1e600), -1e600)
 
+    def test_x1(self):
+        """
+        Tests a variety of generic and special cases (+-infinity).
+
+        Test tag: <tc>#tests#Line.x</tc>
+        """
+        l = Line(0, 0)
+        #self.assertEquals(l.x(0), 0)
+        with self.assertRaises(ArithmeticError):
+            l.x(0)
+        with self.assertRaises(ArithmeticError):
+            l.x(-1e600)
+        with self.assertRaises(ArithmeticError):
+            l.x(1e600)
+
+        l = Line(1, 1)
+        self.assertEquals(l.x(3), 2)
+        self.assertEquals(l.x(-1e600), -1e600)
+        self.assertEquals(l.x(1e600), 1e600)
+ 
+        l = Line(-1, 1)
+        self.assertEquals(l.x(2), -1)
+        self.assertEquals(l.x(-1e600), 1e600)
+        self.assertEquals(l.x(1e600), -1e600)
+
 class test_Ray(unittest.TestCase):
 
     def test___init__1(self):
