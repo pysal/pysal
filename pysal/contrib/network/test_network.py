@@ -8,7 +8,7 @@ import pysal
 class Network_Tester(unittest.TestCase):
 
     def setUp(self):
-        self.net = '/Users/myunghwa/Dropbox/GeoDaNet/example_data/streets.shp'
+        self.net = 'streets.shp'
         self.G = pynet.read_network(self.net)
         self.G2 = {(1,1): {(2,2): 0.125, (3,3): 0.75}, (2,2): {(1,1): 0.125, (4,4): 1.2},
                    (3,3): {(1,1): 0.75, (4,4): 0.375},
