@@ -333,7 +333,7 @@ class Point(object):
         """
         return str(self.__loc)
 
-class LineSegment:
+class LineSegment(object):
     """
     Geometric representation of line segment objects.
     ...
@@ -382,6 +382,8 @@ class LineSegment:
         self._p1 = start_pt
         self._p2 = end_pt
         self._reset_props()
+    def __str__(self):
+        return "LineSegment("+str(self._p1)+", "+str(self._p2)+")"
     def __eq__(self,other):
         """
         Returns true if self and other are the same line segment
