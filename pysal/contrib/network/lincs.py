@@ -174,7 +174,10 @@ def edgepoints_from_network(network, attribute=False):
             if (n1,n2) not in link2id or (n2,n1) not in link2id:
                 link2id[(n1,n2)] = counter
                 link2id[(n2,n1)] = counter
-                half_dist = network[n1][n2][0]/2 # fix this line so that it is applicable to network without a list of attributes
+                if type(network[n1][n2]) != list:
+                    half_dist = network[n1][n2]/2 
+                else:
+                    half_dist = network[n1][n2][0]/2 
                 if n1[0] < n2[0] or (n1[0] == n2[0] and n1[1] < n2[1]):
                     id2linkpoints[counter] = (n1,n2,half_dist,half_dist)
                 else:
@@ -343,113 +346,4 @@ def lincs(network, event, base, weight, dist=None, lisa_func='moran', sim_method
     w.transform = 'O'
     return zip(edges_geom, e, b, Is, Zs, p_sim), w
 
-class _TestLINCS(unittest.TestCase):
-
-    def setUp(self):
-
-        def wgt(n1, n2):
-            n1 = pysal.cg.Point(n1)
-            n2 = pysal.cg.Point(n2)
-            return pysal.cg.get_points_dist(n1, n2)
-
-        netfile = '/Users/myunghwa/work/NIJ/fake_data/lincs.shp'
-        shp = pysal.open(netfile, 'r')
-        dbf = pysal.open(netfile[:-3] + 'dbf')
-        network = {}
-        for l, d in zip(shp, dbf):
-            vertices = l.vertices
-            n1, n2 = vertices[0], vertices[-1]
-            b, e = d[2], d[1]
-            d = wgt(n1, n2)
-            if n1 not in network:
-                network[n1] = {}
-            if n2 not in network:
-                network[n2] = {}
-            network[n1][n2] = (d, b, e)
-            network[n2][n1] = (d, b, e)
-        shp.close()
-        dbf.close()
-
-        self.network = network
-
-    def printOutput(self, r):
-        for v in r:
-            print v
-
-    #def test_ilincs_node_perm(self):
-    #    r = lincs(self.network, 2, 1, 'Node-based')        
-    #    self.printOutput(r)
-
-    #def test_ilincs_node_binomial(self):
-    #    r = lincs(self.network, 2, 1, 'Node-based', sim_method='binomial')        
-    #    self.printOutput(r)
-
-    #def test_ilincs_node_poisson(self):
-    #    r = lincs(self.network, 2, 1, 'Node-based', sim_method='poisson')        
-    #    self.printOutput(r)
-
-    #def test_ilincs_node_multinomial(self):
-    #    r = lincs(self.network, 2, 1, 'Node-based', sim_method='multinomial')        
-    #    self.printOutput(r)
-
-    #def test_ilincs_dist_perm(self):
-    #    r = lincs(self.network, 2, 1, 'Distance-based', dist=30)        
-    #    self.printOutput(r)
-
-    #def test_ilincs_dist_binomial(self):
-    #    r = lincs(self.network, 2, 1, 'Distance-based', dist=30, sim_method='binomial')        
-    #    self.printOutput(r)
-
-    #def test_ilincs_dist_poisson(self):
-    #    r = lincs(self.network, 2, 1, 'Distance-based', dist=30, sim_method='poisson')        
-    #    self.printOutput(r)
-
-    #def test_ilincs_dist_multinomial(self):
-    #    r = lincs(self.network, 2, 1, 'Distance-based', dist=30, sim_method='multinomial')        
-    #    self.printOutput(r)
-
-    def test_glincs_dist_perm(self):
-        r = lincs(self.network, 2, 1, 'Distance-based', dist=5, lisa_func='g')        
-        self.printOutput(r)
-
-#    def test_glincs_dist_binomial(self):
-#        r = lincs(self.network, 2, 1, 'Distance-based', dist=5, lisa_func='g', sim_method='binomial')        
-#        self.printOutput(r)
-#
-#    def test_glincs_dist_poisson(self):
-#        r = lincs(self.network, 2, 1, 'Distance-based', dist=5, lisa_func='g', sim_method='poisson')        
-#        self.printOutput(r)
-#
-#    def test_glincs_dist_multinomial(self):
-#        r = lincs(self.network, 2, 1, 'Distance-based', dist=5, lisa_func='g', sim_method='multinomial')        
-#        self.printOutput(r)
-#
-#    def test_gslincs_dist_perm(self):
-#        r = lincs(self.network, 2, 1, 'Distance-based', dist=5, lisa_func='g_star')        
-#        self.printOutput(r)
-#
-#    def test_gslincs_dist_binomial(self):
-#        r = lincs(self.network, 2, 1, 'Distance-based', dist=5, lisa_func='g_star', sim_method='binomial')        
-#        self.printOutput(r)
-#
-#    def test_gslincs_dist_poisson(self):
-#        r = lincs(self.network, 2, 1, 'Distance-based', dist=5, lisa_func='g_star', sim_method='poisson')        
-#        self.printOutput(r)
-#
-#    def test_gslincs_dist_multinomial(self):
-#        r = lincs(self.network, 2, 1, 'Distance-based', dist=5, lisa_func='g_star', sim_method='multinomial')        
-#        self.printOutput(r)
-
-    #def test_bin_sim(self):
-    #    dbf = pysal.open('/Users/myunghwa/work/NIJ/fake_data/references.dbf', 'r')
-    #    e, b = [], []
-    #    for rec in dbf:
-    #        e.append(rec[-1])
-    #        b.append(rec[-2])
-    #    e, b = np.array(e), np.array(b)
-    #    print unconditional_sim(e, b, 99)
-        
-
-if __name__ == '__main__':
-    unittest.main()
         

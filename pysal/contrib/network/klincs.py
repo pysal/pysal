@@ -161,8 +161,11 @@ def k_cluster(network, events, refs, scale_set, sims, sig=0.1, sim_network=None,
     refs: a set of reference points unprojected into the network
     scale_set: tuple same as (min, max, resolution)
     sims: integer; the number of simulations
-    wgt: numpy array; weights of reference points
     sig: float; siginificance level
+    sim_network: the source shape file containing the network data
+                 this is used to simualte point patterns for inference 
+    cpus: integer: the number of cpus
+          multiprocessing can be used for inference
     """
 
     """
