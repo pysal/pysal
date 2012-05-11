@@ -4,7 +4,7 @@ A module of classification schemes for choropleth mapping.
 __author__ = "Sergio J. Rey"
 __credits__= "Copyright (c) 2009-10 Sergio J. Rey"
 
-__all__=['quantile','Map_Classifier','Box_Plot','Equal_Interval','Fisher_Jenks', 'Jenks_Caspall','Jenks_Caspall_Forced','Jenks_Caspall_Sampled', 'Max_P_Classifier','Maximum_Breaks','Natural_Breaks', 'Quantiles','Percentiles', 'Std_Mean','User_Defined', 'gadf','K_classifiers']
+__all__=['quantile','Map_Classifier','Box_Plot','Equal_Interval','Fisher_Jenks', 'Fisher_Jenks_Sampled', 'Jenks_Caspall','Jenks_Caspall_Forced','Jenks_Caspall_Sampled', 'Max_P_Classifier','Maximum_Breaks','Natural_Breaks', 'Quantiles','Percentiles', 'Std_Mean','User_Defined', 'gadf','K_classifiers']
 
 from pysal.common import *
 
@@ -281,7 +281,7 @@ def natural_breaks(values, k = 5, itmax = 100):
     cuts = [max(values[c1 == c]) for c in rk]
     return sids, seeds, diffs, class_ids, solved, it, cuts
 
-def _fisher_jenks_means(values, classes=5):
+def _fisher_jenks_means(values, classes=5, sort=True):
   """
   Jenks Optimal (Natural Breaks) algorithm implemented in Python.
   The original Python code comes from here:
@@ -294,7 +294,8 @@ def _fisher_jenks_means(values, classes=5):
   
   """
 
-  values.sort()
+  if sort:
+    values.sort()
   mat1 = []
   for i in range(0,len(values)+1):
     temp = []
@@ -1002,6 +1003,77 @@ class Fisher_Jenks(Map_Classifier):
         self.bins =  _fisher_jenks_means(x, classes=self.k)[1:]
 
 
+class Fisher_Jenks_Sampled(Map_Classifier):
+    """
+    Fisher Jenks optimal classifier - mean based using random sample
+
+    Parameters
+    ----------
+    y      : array (n,1)
+             values to classify
+    k      : int
+             number of classes required
+    pct    : float
+             The percentage of n that should form the sample
+             If pct is specified such that n*pct > 1000, then pct = 1000./n
+
+    Attributes
+    ----------
+
+    yb      : array (n,1)
+              bin ids for observations
+    bins    : array (k,1)
+              the upper bounds of each class 
+    k       : int
+              the number of classes
+    counts  : array (k,1)
+              the number of observations falling in each class
+
+
+    Examples
+    --------
+    # turned off due to timing being different across hardware
+    #>>> import pysal
+    #>>> import numpy as np
+    #>>> import time
+    #>>> x = np.arange(1000)
+    #>>> t0=time.time();fj=pysal.esda.mapclassify.Fisher_Jenks(x,k=4);t1=time.time()
+    #>>> t2=time.time();fjs=pysal.esda.mapclassify.Fisher_Jenks_Sampled(x,k=4);t3=time.time()
+    #>>> print t1-t0
+    #1.84405994415
+    #>>> print t3-t2
+    #0.0295069217682
+    #>>> fj.tss
+    #5208250.0
+    #>>> fjs.tss
+    #5337860.0
+    #>>> 
+    """
+
+    def __init__(self, y, k=K, pct=0.10):
+        self.k = k
+        n = y.size
+
+        if pct * n > 1000:
+            pct = 1000./n
+        ids = np.random.random_integers(0, n - 1, n * pct)
+        yr = y[ids]
+        yr[-1] = max(y) # make sure we have the upper bound
+        yr[0] = min(y) # make sure we have the min
+        self.original_y = y
+        self.pct = pct
+        self.yr = yr
+        self.yr_n = yr.size
+        Map_Classifier.__init__(self, yr)
+        self.yb, self.counts = bin1d(y, self.bins)
+        self.name = "Fisher_Jenks_Sampled"
+        self.y = y
+        self._summary() # have to recalculate summary stats
+
+    def _set_bins(self):
+        fj = Fisher_Jenks(self.y, self.k)
+        self.bins = fj.bins
+
 
 
 class Jenks_Caspall(Map_Classifier):
@@ -1162,6 +1234,8 @@ class Jenks_Caspall_Sampled(Map_Classifier):
         Map_Classifier.__init__(self, yr)
         self.yb, self.counts = bin1d(y, self.bins)
         self.name = "Jenks_Caspall_Sampled"
+        self.y = y
+        self._summary() # have to recalculate summary stats
 
     def _set_bins(self):
         jc = Jenks_Caspall(self.y, self.k)
