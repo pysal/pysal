@@ -34,28 +34,6 @@ class LINCS_Tester(unittest.TestCase):
                 done.add((n1,n2))
                 done.add((n2,n1))
 
-    def get_points_from_shapefile(self, src_filename, src_uid=None):
-        src_file = pysal.open(src_filename)
-        dbf = pysal.open(src_filename[:-3] + 'dbf')
-        src_uid_index = dbf.header.index(src_uid) if src_uid else None 
-        if src_uid_index != None:
-            def get_index(index, record):
-                return record[src_uid_index]
-        else:
-            def get_index(index, record):
-                return index
-        if src_file.type == pysal.cg.shapes.Polygon:
-            def get_geom(g):
-                return g.centroid
-        elif src_file.type == pysal.cg.shapes.Point:
-            def get_geom(g):
-                return (g[0], g[1])
-        srcs = [] 
-        for i, rec in enumerate(src_file):
-            srcs.append([get_geom(rec), get_index(i, dbf.next())]) 
-        src_file.close()
-        return srcs 
-
     def test_unconditional_sim(self):
         simulated_events = lincs.unconditional_sim(self.events, self.base, 2)
         self.assertEqual(list(simulated_events[0]),[21,15])

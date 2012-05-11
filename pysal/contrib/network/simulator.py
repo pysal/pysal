@@ -30,6 +30,7 @@ class Simulation(object):
                 self.total_length += d
                 self.nwNum += 1
         self.nw.close()
+        self.imaginaryLineGenerated = False
             
     def generateImaginaryLine(self):
         '''
@@ -42,17 +43,23 @@ class Simulation(object):
                                                                         
         # self.nwCumProDict --> {edge_index:right_side_end_point_of_the_link_on_the_imaginary_line}
         self.nwCumProDict = dict(zip(self.G.keys(), self.nwCumPro[1:])) 
+        self.imaginaryLineGenerated = True
             
     def getRandomPoints(self, n, projected=False, toShp=False):   
         '''Create a random point pattern data set on the given network'''
 
-        self.generateImaginaryLine()
+        if not self.imaginaryLineGenerated:
+            self.generateImaginaryLine()
 
-        # generate n unique random numbers betwen 0 and 1
-        randSet = set()
-        while len(randSet) < n: 
-            randSet.add(np.random.random_sample())
-        randSet = np.array(list(randSet))        
+        ## generate n unique random numbers between 0 and 1
+        #randSet = set()
+        #while len(randSet) < n: 
+        #    randSet = set(np.random.random_sample(n))
+        #randSet = np.array(list(randSet))        
+
+        # generate n random numbers between 0 and 1
+        randSet = np.random.random_sample(n)
+
         # Assign the random numbers to the links on the network
         # Think nwCumPro as bins; get bin numbers for all random numbers
         randSet_to_bins=np.digitize(randSet,self.nwCumPro)
@@ -61,27 +68,28 @@ class Simulation(object):
         # Determine geographic coordinates for each random number
         nwPtDict = {}
         for bin_id, rand_number in randSet_to_bins:
-            n1, n2 = self.G[bin_id][1] # n1 and n2 are geographic (real) coordinates for the end points of a link
-            origin = 0 if bin_id <= 0 else self.nwCumProDict[bin_id-1]
-            length = self.nwCumProDict[bin_id] - origin
+            bid = bin_id - 1
+            n1, n2 = self.G[bid][1] # n1 and n2 are geographic (real) coordinates for the end points of a link
+            origin = 0 if bid <= 0 else self.nwCumProDict[bid-1]
+            length = self.nwCumProDict[bid] - origin
             # get prop to determine the geographic coordinate of a random number on the link (n1, n2)
             # length is the length of the link (n1, n2) on the imaginary line
             # (self.nwCumProDict[bin_id] - rand_number) is the distance between a random point and n2 
             # on the imaginary line
-            prop = (self.nwCumProDict[bin_id] - rand_number)*1.0/length
-            nwPtDict.setdefault(bin_id, [])
+            prop = (self.nwCumProDict[bid] - rand_number)*1.0/length
+            nwPtDict.setdefault(bid, [])
             if not projected:
                 x = n2[0] - (n2[0] - n1[0])*prop # n2[0]: the geographic coordinate of n2 on the X axis
                 y = n2[1] - (n2[1] - n1[1])*prop # n2[1]: the geographic coordinate of n2 on the Y axis
-                nwPtDict[bin_id].append((x,y))
+                nwPtDict[bid].append((x,y))
             else:
-                dist = self.G[bin_id][0]
+                dist = self.G[bid][0]
                 proj_pnt = (n1, n2, dist*(1-prop), dist*prop)
                 if toShp:
                     x = n2[0] - (n2[0] - n1[0])*prop
                     y = n2[1] - (n2[1] - n1[1])*prop
                     proj_pnt = tuple(list(proj_pnt) + [x, y])                        
-                nwPtDict[k].append(proj_pnt)
+                nwPtDict[bid].append(proj_pnt)
             
         return nwPtDict
 
@@ -176,6 +184,7 @@ class Simulation(object):
 
         self.G, self.total_length = centerG, centerG_length
         n_centerPoints = int(percent*ptNum*1.0)
+        self.imaginaryLineGenerated = False
         pointsInCenter = self.getRandomPoints(n_centerPoints) 
         meta = {}
         if clusterMeta:
@@ -188,6 +197,7 @@ class Simulation(object):
                 #meta[centerID] = [num_points] + list(self.oldG[centerID])
        
         self.G, self.total_length = nonCenterG, nonCenterG_length 
+        self.imaginaryLineGenerated = False
         pointsInNonCenter = self.getRandomPoints(ptNum - n_centerPoints)
         centers_no = len(centers)
         for k in pointsInNonCenter:
@@ -196,13 +206,15 @@ class Simulation(object):
 
         self.G, self.total_length = self.oldG, self.old_total_length
 
+        self.imaginaryLineGenerated = False
+
         return pointsInCenter, meta
 
     def writeMeta(self, metaData, out_file):
         shp = pysal.open(out_file, 'w')
         dbf = pysal.open(out_file[:-3] + 'dbf', 'w')
-        dbf.header = ['LENGTH', 'NO_PNTS']
-        dbf.field_spec = [('N',9,0)]*2
+        dbf.header = ['LENGTH', 'NO_PNTS', 'INITIAL_CENTER']
+        dbf.field_spec = [('N',9,0)]*2 + [('L',1,0)]
         for link in metaData:
             vertices = list(link)
             vertices = [pysal.cg.Point(v) for v in vertices]
@@ -218,16 +230,6 @@ class Simulation(object):
             self.writeMeta(meta, clusterMetaFile)
 
 if __name__ == '__main__':
-    #base_dir = "/Users/myunghwa/work/NIJ/simulation_exp2/Base_Network/Real_Network"
-    #sim=Simulation("%s/mesa_part_660_feet.shp" % base_dir)
-    #sim.createProjRandomPointsShp(1500, "/Users/myunghwa/work/NIJ/simulation_exp2/Test_Points/mesa_part_660_random_1500.shp")
-    base_dir = "/Users/myunghwa/work/NIJ/simulation_exp2/Base_Network/Grid_Network"
-    sim=Simulation("%s/mesa_part_grid_660_feet.shp" % base_dir)
-    start = raw_input('Enter the starting number.\n')
-    points_no = 1709
-    start = int(start)
-    for p in [points_no]:
-        for i in range(start,start + 100):
-            sim.createProjRandomPointsShp(p, "/Users/myunghwa/work/NIJ/simulation_exp2/KDE_01312012/random_points_grid/pnts_%i/grid_%s_random_%i.shp" % (p, p, i))
-    #sim.createRandomPointsShp(1500, "/Users/myunghwa/work/NIJ/simulation_experiment/test_data/mesa_random_1500_02.shp")
-    #sim.createClusteredPointsShp(5, 1500, 0.1, "%s/mesa_clustered_1500_02.shp" % base_dir, "%s/clustered_1500_02_meta.shp" % base_dir) 
+    sim=Simulation("streets.shp")
+    sim.createProjRandomPointsShp(100, "random_100.shp")
+    sim.createClusteredPointsShp(2, 100, 0.1, "clustered_100_10p.shp", "clustered_100_10p_meta.shp") 

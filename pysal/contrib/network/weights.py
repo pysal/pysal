@@ -77,7 +77,4 @@ def dist_weights(distfile, weight_type, ids, cutoff, inverse=False):
     w.id_order = ids
     return w
 
-if __name__ == '__main__':
-    print test.get_coverage('weights.py')
-    unittest.main()
 
