@@ -1562,6 +1562,10 @@ class Rectangle:
         if other:
             return self[:] == other[:]
         return False
+    def __add__(self,other):
+        x,y,X,Y = self[:]
+        x1,y2,X1,Y1 = other[:]
+        return Rectangle(min(self.left, other.left), min(self.lower, other.lower), max(self.right, other.right), max(self.upper, other.upper))
 
     def __getitem__(self,key):
         """
