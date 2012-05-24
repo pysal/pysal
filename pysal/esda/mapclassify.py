@@ -1015,7 +1015,11 @@ class Fisher_Jenks_Sampled(Map_Classifier):
              number of classes required
     pct    : float
              The percentage of n that should form the sample
-             If pct is specified such that n*pct > 1000, then pct = 1000./n
+             If pct is specified such that n*pct > 1000, then pct = 1000./n,
+             unless truncate is False
+    truncate: binary (Default True)
+             truncate pct in cases where pct * n > 1000.
+
 
     Attributes
     ----------
@@ -1050,11 +1054,11 @@ class Fisher_Jenks_Sampled(Map_Classifier):
     #>>> 
     """
 
-    def __init__(self, y, k=K, pct=0.10):
+    def __init__(self, y, k=K, pct=0.10, truncate=True):
         self.k = k
         n = y.size
 
-        if pct * n > 1000:
+        if (pct * n > 1000) and truncate:
             pct = 1000./n
         ids = np.random.random_integers(0, n - 1, n * pct)
         yr = y[ids]
