@@ -1,4 +1,5 @@
 import pysal
+from pysal.cg.segmentLocator import Polyline_Shapefile_SegmentLocator
 import networkx
 
 EUCLIDEAN_DISTANCE = "Euclidean"
@@ -23,12 +24,12 @@ class SpatialNetwork(object):
     """
     def __init__(self,shapefile,distance_metric=EUCLIDEAN_DISTANCE):
         if issubclass(type(shapefile),basestring): #Path
-            shp = pysal.open(shapefile,'r')
+            self.shp = shp = pysal.open(shapefile,'r')
         else:
             raise TypeError,"Expecting a string, shapefile should the path to shapefile"
         if shp.type != pysal.cg.shapes.Chain:
             raise ValueError,"Shapefile must contain polyline features"
-        dbf = pysal.open(shapefile[:-4]+'.dbf','r')
+        self.dbf = dbf = pysal.open(shapefile[:-4]+'.dbf','r')
         header = dbf.header
         if (('FNODE' not in header) or ('TNODE' not in header) or ('ONEWAY' not in header)):
             raise ValueError,"DBF must contain: FNODE,TNODE,ONEWAY"
@@ -61,6 +62,16 @@ class SpatialNetwork(object):
         else:
             G = networkx.Graph(zip(fnode,tnode))
         self.G = G
+        shp.seek(0)
+        self._locator = Polyline_Shapefile_SegmentLocator(shp)
+    def snap(self,pt):
+        i,p,j = self._locator.nearest(pt) #shpID,partID,segmentID
+        dbf = self.dbf
+        rec = zip(dbf.header,dbf[i])
+        edge = (rec['FNODE'],rec['TNODE'])
+        #TODO: Calculate location along edge and distance to edge"
+        return edge
+        
     
 if __name__=='__main__':
     net = SpatialNetwork('beth_network.shp',ARC_DISTANCE)

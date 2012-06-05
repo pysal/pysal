@@ -987,6 +987,12 @@ class Chain(object):
         if self._arclen == None:
             self._arclen = sum([part_perimeter(part) for part in self._vertices])
         return self._arclen
+    @property
+    def segments(self):
+        """
+        Returns the segments that compose the Chain
+        """
+        return [[LineSegment(a,b) for (a,b) in zip(part[:-1],part[1:])] for part in self._vertices]
 
 class Ring(object):
     """

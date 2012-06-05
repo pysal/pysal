@@ -37,6 +37,24 @@ class SegmentLocator(object):
         #print "distances",distances
         #print "argmin", numpy.argmin(distances)
         return possibles[numpy.argmin(distances)]
+class Polyline_Shapefile_SegmentLocator(object):
+    def __init__(self, shpfile, nbins = 500):
+        self.data = shpfile
+        bbox = Rectangle(*shpfile.bbox)
+        res = max((bbox.right-bbox.left), (bbox.upper-bbox.lower))/float(nbins)
+        self.grid = SegmentGrid(bbox, res)
+        for i, polyline in enumerate(shpfile):
+            for p, part in enumerate(polyline.segments):
+                for j, seg in enumerate(part):
+                    self.grid.add(seg,(i,p,j))
+    def nearest(self,pt):
+        d = self.data
+        possibles = self.grid.nearest(pt)
+        distances = [get_segment_point_dist(d[i].segments[p][j],pt)[0] for (i,p,j) in possibles]
+        #print "possibles",possibles
+        #print "distances",distances
+        #print "argmin", numpy.argmin(distances)
+        return possibles[numpy.argmin(distances)]
             
         
         
