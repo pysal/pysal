@@ -123,7 +123,7 @@ class test_shx_file(unittest.TestCase):
 class TestNullShape(unittest.TestCase):
     def test_pack(self):
         null_shape = NullShape()
-        self.assertEqual('\x00'*4, null_shape.pack())
+        self.assertEqual(b'\x00'*4, null_shape.pack())
 
     def test_unpack(self):
         null_shape = NullShape()
@@ -132,18 +132,18 @@ class TestNullShape(unittest.TestCase):
 class TestPoint(unittest.TestCase):
     def test_pack(self):
         record = {"X":5,"Y":5,"Shape Type":1}
-        expected = "\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14\x40\x00\x00\x00\x00\x00\x00\x14\x40"
+        expected = b"\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14\x40\x00\x00\x00\x00\x00\x00\x14\x40"
         self.assertEqual(expected, Point.pack(record))
 
     def test_unpack(self):
-        dat = StringIO("\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14\x40\x00\x00\x00\x00\x00\x00\x14\x40")
+        dat = StringIO(b"\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14\x40\x00\x00\x00\x00\x00\x00\x14\x40")
         expected = {"X":5,"Y":5,"Shape Type":1}
         self.assertEqual(expected, Point.unpack(dat))
 
 class TestPolyLine(unittest.TestCase):
     def test_pack(self):
         record = {'BBOX Ymax': -0.25832280562918325, 'NumPoints': 3, 'BBOX Ymin': -0.25895877033237352, 'NumParts': 1, 'Vertices': [(-0.0090539248870159517, -0.25832280562918325), (0.0074811573959305822, -0.25895877033237352), (0.0074811573959305822, -0.25895877033237352)], 'BBOX Xmax': 0.0074811573959305822, 'BBOX Xmin': -0.0090539248870159517, 'Shape Type': 3, 'Parts Index': [0]}
-        expected = """\x03\x00\x00\x00\xc0\x46\x52\x3a\xdd\x8a\x82\
+        expected = b"""\x03\x00\x00\x00\xc0\x46\x52\x3a\xdd\x8a\x82\
 \xbf\x3d\xc1\x65\xce\xc7\x92\xd0\xbf\x00\xc5\
 \xa0\xe5\x8f\xa4\x7e\x3f\x6b\x40\x7f\x60\x5c\
 \x88\xd0\xbf\x01\x00\x00\x00\x03\x00\x00\x00\
@@ -155,7 +155,7 @@ class TestPolyLine(unittest.TestCase):
         self.assertEqual(expected, PolyLine.pack(record))
 
     def test_unpack(self):
-        dat = StringIO("""\x03\x00\x00\x00\xc0\x46\x52\x3a\xdd\x8a\x82\
+        dat = StringIO(b"""\x03\x00\x00\x00\xc0\x46\x52\x3a\xdd\x8a\x82\
 \xbf\x3d\xc1\x65\xce\xc7\x92\xd0\xbf\x00\xc5\
 \xa0\xe5\x8f\xa4\x7e\x3f\x6b\x40\x7f\x60\x5c\
 \x88\xd0\xbf\x01\x00\x00\x00\x03\x00\x00\x00\

@@ -143,7 +143,7 @@ def _packDict(structure,d):
     >>> unpack('<ii',s)
     (1, 2)
     """
-    string = ''
+    string = b''
     for name,dtype,order in structure:
         if len(dtype) > 1:
             string += pack(order+dtype,*d[name])
@@ -502,7 +502,7 @@ class Point(object):
     >>> rec = shp.get_shape(0)
     >>> rec == {'Y': -0.25904661905760773, 'X': -0.00068176617532103578, 'Shape Type': 1}
     True
-    >>> shp.fileObj.seek(shp._shx.index[0][0]+8) #+8 byte record header
+    >>> pos = shp.fileObj.seek(shp._shx.index[0][0]+8) #+8 byte record header
     >>> dat = shp.fileObj.read(shp._shx.index[0][1])
     >>> dat == Point.pack(rec)
     True
@@ -522,6 +522,16 @@ class Point(object):
     def pack(cls,record):
         rheader = _packDict(cls.STRUCT,record)
         return rheader
+class PointZ(Point):
+    Shape_Type = 11
+    String_Type = "POINTZ"
+    HASZ = True
+    HASM = True
+    STRUCT = (('Shape Type','i','<'),\
+              ('X','d','<'),\
+              ('Y','d','<'),\
+              ('Z','d','<'),\
+              ('M','d','<'))
 class PolyLine:
     """ Packs and Unpacks a ShapeFile PolyLine Type 
     Example:
@@ -530,7 +540,7 @@ class PolyLine:
     >>> rec = shp.get_shape(0)
     >>> rec == {'BBOX Ymax': -0.25832280562918325, 'NumPoints': 3, 'BBOX Ymin': -0.25895877033237352, 'NumParts': 1, 'Vertices': [(-0.0090539248870159517, -0.25832280562918325), (0.0074811573959305822, -0.25895877033237352), (0.0074811573959305822, -0.25895877033237352)], 'BBOX Xmax': 0.0074811573959305822, 'BBOX Xmin': -0.0090539248870159517, 'Shape Type': 3, 'Parts Index': [0]}
     True
-    >>> shp.fileObj.seek(shp._shx.index[0][0]+8) #+8 byte record header
+    >>> pos = shp.fileObj.seek(shp._shx.index[0][0]+8) #+8 byte record header
     >>> dat = shp.fileObj.read(shp._shx.index[0][1])
     >>> dat == PolyLine.pack(rec)
     True
@@ -574,6 +584,36 @@ class PolyLine:
         content['Vertices'] = verts
         content = _packDict(contentStruct,content)
         return rheader+content
+class PolyLineZ:
+    HASZ = True
+    HASM = True
+    String_Type = 'ARC'
+    STRUCT = (('Shape Type','i','<'),\
+              ('BBOX Xmin','d','<'),\
+              ('BBOX Ymin','d','<'),\
+              ('BBOX Xmax','d','<'),\
+              ('BBOX Ymax','d','<'),\
+              ('NumParts','i','<'),\
+              ('NumPoints','i','<'))
+    @classmethod
+    def unpack(cls,dat):
+        record = _unpackDict(cls.STRUCT,dat)
+        contentStruct = (('Parts Index','%di'%record['NumParts'],'<'),\
+                         ('Vertices','%dd'%(2*record['NumPoints']),'<'),\
+                         ('Z Range','2d','<'),\
+                         ('Z Array','%dd'%(record['NumPoints']),'<'),\
+                         ('M Range','2d','<'),\
+                         ('M Array','%dd'%(record['NumPoints']),'<'))
+        record.update(_unpackDict(contentStruct,dat))
+        verts = record['Vertices']
+        #Next line is equivalent to: zip(verts[::2],verts[1::2])
+        record['Vertices'] = list(izip( islice(verts,0,None,2), islice(verts,1,None,2) ))
+        if not record['Parts Index']:
+            record['Parts Index'] = [0]
+        return record
+    @classmethod
+    def pack(cls,record):
+        raise NotImplementedError,"No support for writing PolyLineZ or PolygonZ."
 class Polygon(PolyLine):
     """ Packs and Unpacks a ShapeFile Polygon Type
     Indentical to PolyLine.
@@ -584,7 +624,7 @@ class Polygon(PolyLine):
     >>> rec = shp.get_shape(1)
     >>> rec == {'BBOX Ymax': -0.3126531125455273, 'NumPoints': 7, 'BBOX Ymin': -0.35957259110238166, 'NumParts': 1, 'Vertices': [(0.05396439570183631, -0.3126531125455273), (0.051473095955454629, -0.35251390848763364), (0.059777428443393454, -0.34254870950210703), (0.063099161438568974, -0.34462479262409174), (0.048981796209073003, -0.35957259110238166), (0.046905713087088297, -0.3126531125455273), (0.05396439570183631, -0.3126531125455273)], 'BBOX Xmax': 0.063099161438568974, 'BBOX Xmin': 0.046905713087088297, 'Shape Type': 5, 'Parts Index': [0]}
     True
-    >>> shp.fileObj.seek(shp._shx.index[1][0]+8) #+8 byte record header
+    >>> pos = shp.fileObj.seek(shp._shx.index[1][0]+8) #+8 byte record header
     >>> dat = shp.fileObj.read(shp._shx.index[1][1])
     >>> dat == Polygon.pack(rec)
     True
@@ -595,15 +635,8 @@ class Polygon(PolyLine):
 class MultiPoint:
     def __init__(self):
         raise NotImplementedError, "No MultiPoint Support at this time."
-class PointZ:
-    def __init__(self):
-        raise NotImplementedError, "No PointZ Support at this time."
-class PolyLineZ:
-    def __init__(self):
-        raise NotImplementedError, "No PolyLineZ Support at this time."
-class PolygonZ:
-    def __init__(self):
-        raise NotImplementedError, "No PolygonZ Support at this time."
+class PolygonZ(PolyLineZ):
+    String_Type = 'POLYGONZ'
 class MultiPointZ:
     def __init__(self):
         raise NotImplementedError, "No MultiPointZ Support at this time."

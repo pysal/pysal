@@ -14,10 +14,10 @@ import pysal.cg as cg
 from warnings import warn
 import unittest
 
-STRING_TO_TYPE = {'POLYGON':cg.Polygon,'POINT':cg.Point,'POINTM':cg.Point,'POINTZ':cg.Point,'ARC':cg.Chain}
+STRING_TO_TYPE = {'POLYGON':cg.Polygon,'POINT':cg.Point,'POINTM':cg.Point,'POINTZ':cg.Point,'ARC':cg.Chain,'POLYGONZ':cg.Polygon}
 TYPE_TO_STRING = {cg.Polygon:'POLYGON',cg.Point:'POINT',cg.Chain:'ARC'} #build the reverse map
-for key,value in STRING_TO_TYPE.iteritems():
-    TYPE_TO_STRING[value] = key
+#for key,value in STRING_TO_TYPE.iteritems():
+#    TYPE_TO_STRING[value] = key
 
 class PurePyShpWrapper(pysal.core.FileIO.FileIO):
     """
@@ -131,6 +131,10 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
         self.pos+=1
         if self.dataObj.type() == 'POINT':
             shp = self.type((rec['X'],rec['Y']))
+        elif self.dataObj.type() == 'POINTZ':
+            shp = self.type((rec['X'],rec['Y']))
+            shp.Z = rec['Z']
+            shp.M = rec['M']
         else:
             if rec['NumParts'] > 1:
                 partsIndex = list(rec['Parts Index'])
