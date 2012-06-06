@@ -28,5 +28,6 @@ cd pysal
 #/Library/Frameworks/Python.framework/Versions/2.7/bin/python setup.py sdist 
 /Library/Frameworks/Python.framework/Versions/2.7/bin/bdist_mpkg setup.py build
 cd dist/
-hdiutil create -fs HFS+ -srcfolder *.mpkg/ pysal-python2.7-Frameworks-macosx.dmg
+hdiutil create -fs HFS+ -srcfolder *.mpkg/ pysal-nightly-FrameworksPython2.7-macosx10.6.dmg
+#hdiutil create -fs HFS+ -srcfolder *.mpkg/ pysal-python2.7-Frameworks-macosx.dmg
 rsync -uz *.dmg geodacenter.org:~/tmp/builds/
