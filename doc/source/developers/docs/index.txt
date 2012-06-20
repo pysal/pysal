@@ -13,7 +13,10 @@ PySAL documentation is built using `Sphinx
 extension to Sphinx, which formats PySAL's docstrings. You'll need numpydoc version 0.4 or later and Sphinx version 1.0 or later to compile the documentation. 
 Both modules are available at the
 Python Package Index, and can be downloaded and installed from the command line
-using *pip* or *easy_install*.
+using *pip* or *easy_install*.::
+
+       serge@think:~/ sudo easy_install sphinx
+       serge@think:~/ sudo easy_install numpydoc
 
 The source for the docs is in `trunk/doc`. Building the documentation is
 done as follows (assuming
