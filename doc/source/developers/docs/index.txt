@@ -4,6 +4,7 @@
 PySAL Documentation
 *******************
 
+.. _compiling-doc-label:
 
 Compiling Documentation
 =======================
@@ -110,3 +111,107 @@ a difference in whitespace between the expected and received output. In that cas
 	
     >>> print 'a   b   c'
     abc
+
+
+
+Adding a new tutorial: spreg
+============================
+
+While the :doc:`API docs </library/index>` are automatically generated when
+compiling with Sphinx, tutorials that demonstrate use cases for new modules
+need to be crafted by the developer. Below we use the case of one particular
+module that currently does not have a tutorial as a guide for how to add
+tutorials for new modules.
+
+As of PySAL 1.3 there are API docs for
+:doc:`spreg </library/spreg/index>`,
+but no :doc:`tutorial </users/tutorials/index>`
+currently exists for this module. 
+
+We will fix this and add a tutorial for
+:doc:`spreg </library/spreg/index>`.
+
+
+Requirements
+------------
+
+ - sphinx
+ - numpydoc
+ - pysal sources
+
+
+You can install `sphinx` or `numpydoc` using `easy_install` as described
+above in :ref:`compiling-doc-label`.
+
+Where to add the tutorial content
+---------------------------------
+
+
+Within the PySAL source the docs live in::
+
+    pysal/src/pysal/trunk/doc/source
+
+This directory has the source `reStructuredText
+<http://sphinx.pocoo.org/rest.html>`_ files used to render the html
+pages. The tutorial pages live under::
+
+
+    pysal/src/pysal/trunk/doc/source/users/tutorials
+
+
+As of PySAL 1.3, the content of this directory is::
+
+	autocorrelation.txt  fileio.txt  next.txt     smoothing.txt
+	dynamics.txt	     index.txt	 region.txt   weights.txt
+	examples.txt	     intro.txt	 shapely.txt
+
+
+The body of the `index.txt` file lists the sections for the tutorials::
+
+	   
+	   Introduction to the Tutorials <intro>
+	   File Input and Output <fileio>
+	   Spatial Weights <weights>
+	   Spatial Autocorrelation <autocorrelation>
+	   Spatial Smoothing <smoothing>
+	   Regionalization <region>
+	   Spatial Dynamics <dynamics>
+	   Shapely Extension <shapely>
+	   Next Steps <next>
+	   Sample Datasets <examples>
+
+
+In order to add a tutorial for `spreg` we need the to change this to read::
+
+	   Introduction to the Tutorials <intro>
+	   File Input and Output <fileio>
+	   Spatial Weights <weights>
+	   Spatial Autocorrelation <autocorrelation>
+	   Spatial Smoothing <smoothing>
+	   Spatial Regression <spreg>
+	   Regionalization <region>
+	   Spatial Dynamics <dynamics>
+	   Shapely Extension <shapely>
+	   Next Steps <next>
+	   Sample Datasets <examples>
+
+
+So we are adding a new section that will show up as `Spatial Regression` and
+its contents will be found in the file `spreg.txt`. To create the latter
+file simpy copy say `dynamics.txt` to `spreg.txt` and then modify `spreg.txt`
+to have the correct content.
+
+
+Once this is done, move back up to the top level doc directory::
+
+	pysal/trunk/pysal/doc
+
+Then::
+
+        make clean
+        make html
+
+Point your browser to `pysal/trunk/pysal/doc/build/html/index.html`
+
+and check your work. You can then make changes to the `spreg.txt` file and
+recompile until you are set with the content.
