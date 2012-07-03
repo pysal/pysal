@@ -40,11 +40,15 @@ Documentation
 News
 ****
 
-(2011-07-31) :doc:`PySAL 1.2.0 released </users/installation>`
+(2012-01-31) `PySAL 1.3.0 released  <http://pysal.geodacenter.org/1.3/users/installation.html>`_
 
-(2011-01-31) :doc:`PySAL 1.1.0 released </users/installation>`
+(2011-07-31) `PySAL 1.2.0 released <http://pysal.geodacenter.org/1.2/users/installation.html>`_
 
-(2010-07-31) :doc:`PySAL 1.0.0 released </users/installation>`
+
+(2011-01-31) `PySAL 1.1.0 released <http://pysal.geodacenter.org/1.1/users/installation.html>`_
+
+(2010-07-31) `PySAL 1.0.0 released <http://pysal.geodacenter.org/1.0/users/installation.html>`_
+
 
 (2010-01-6) New Website for PySAL!
 
