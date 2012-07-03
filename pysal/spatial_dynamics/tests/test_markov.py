@@ -115,6 +115,17 @@ class test_LISA_Markov(unittest.TestCase):
                [  6.,   6.,   6., ...,   6.,   6.,   6.],
                [  1.,   1.,   1., ...,   6.,   6.,   6.],
                [ 16.,  16.,  16., ...,  16.,  16.,  16.]])
+        >>> np.random.seed(10)
+        >>> lm_random = pysal.LISA_Markov(pci, w, permutations=99)
+        >>> lm_random.significant_moves
+        array([[11, 11, 11, ..., 59, 59, 59],
+               [54, 54, 54, ..., 54, 55, 59],
+               [11, 11, 11, ..., 11, 59, 59],
+               ..., 
+               [54, 54, 54, ..., 54, 54, 54],
+               [49, 49, 49, ..., 54, 54, 54],
+               [64, 64, 64, ..., 64, 64, 64]])
+
         """ 
 
 class test_kullback(unittest.TestCase):

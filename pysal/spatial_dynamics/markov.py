@@ -34,22 +34,16 @@ for i in range(1, 5):
 
 MOVE_TYPES = {}
 c = 1
-for i in range(1, 5):
-    for j in range(1, 5):
-        key = (i, j, True, True)
-        MOVE_TYPES[key] = c
-        c += 1
-    for j in range(1, 5):
-        key = (i, j, False, True)
-        MOVE_TYPES[key] = c
-    c += 1
-for i in range(1, 5):
-    for j in range(1, 5):
-        key = (i, j, True, False)
-        MOVE_TYPES[key] = c
-        key = (i, j, False, False)
-        MOVE_TYPES[key] = 25
-    c += 1
+cases = (True, False)
+sig_keys = [ (i,j) for i in cases for j in cases ]
+
+for i,sig_key in enumerate(sig_keys):
+    c = 1 + i * 16
+    for i in range(1, 5):
+        for j in range(1, 5):
+            key = (i, j, sig_key[0], sig_key[1])
+            MOVE_TYPES[key] = c
+            c += 1
 
 class Markov:
     """
@@ -622,6 +616,7 @@ def chi2(T1, T2):
     pvalue = 1-stats.chi2.cdf(chi2, dof)
     return chi2, pvalue, dof
 
+
 class LISA_Markov(Markov):
     """
     Markov for Local Indicators of Spatial Association
@@ -659,23 +654,23 @@ class LISA_Markov(Markov):
                    integer values indicating which type of LISA transition
                    occurred (q1 is quadrant in period 1, q2 is quadrant in
                    period 2)
-                   q1   q2   move_type
-                   1    1    1
-                   2    1    2
-                   3    1    3
-                   4    1    4
-                   1    2    5
-                   2    2    6
-                   3    2    7
-                   4    2    8
-                   1    3    9
-                   2    3    10
-                   3    3    11
-                   4    3    12
-                   1    4    13
-                   2    4    14
-                   3    4    15
-                   4    4    16
+                   q1  q2     move_type
+                   1   1      1
+                   1   2      2
+                   1   3      3
+                   1   4      4
+                   2   1      5
+                   2   2      6
+                   2   3      7
+                   2   4      8
+                   3   1      9
+                   3   2      10
+                   3   3      11
+                   3   4      12
+                   4   1      13
+                   4   2      14
+                   4   3      15
+                   4   4      16
 
     p            : matrix (k, k)
                    transition probability matrix
@@ -685,33 +680,48 @@ class LISA_Markov(Markov):
     significant_moves    : (if permutations > 0)
                        matrix (n, t-1)
                        integer values indicating the type and significance of a LISA
-                       transition. Nonsignificant LISAs are represented as n
-                       q1   q2   move_type 
-                       1    1    1       
-                       2    1    2
-                       3    1    3
-                       4    1    4
-                       n    1    5
-                       1    2    6
-                       2    2    7
-                       3    2    8
-                       4    2    9
-                       n    2    10
-                       1    3    11
-                       2    3    12
-                       3    3    13
-                       4    3    14
-                       n    3    15
-                       1    4    16
-                       2    4    17
-                       3    4    18
-                       4    4    19
-                       n    5    20
-                       1    n    21
-                       2    n    22
-                       3    n    23
-                       4    n    24
-                       n    n    25
+                       transition. st = 1 if significant in period t, else
+                       st=0 
+                       if s1==s2==1: 1<= move_type <= 16
+                       if s1=1 and s2==1: 17<= move_type <=32
+                       if s1=0 and s2==1: 33<= move_type <=48
+                       if s1=0 and s2==0: 49<= move_type <=64
+
+                       q1 q2  s1  s2  move_type
+                        1  1   1   1   1
+                        1  2   1   1   2
+                        1  3   1   1   3
+                        1  4   1   1   4
+                        2  1   1   1   5
+                        2  2   1   1   6
+                        2  3   1   1   7
+                        2  4   1   1   8
+                        3  1   1   1   9
+                        3  2   1   1   10
+                        3  3   1   1   11
+                        3  4   1   1   12
+                        4  1   1   1   13
+                        4  2   1   1   14
+                        4  3   1   1   15
+                        4  4   1   1   16
+                        1  1   1   0   17
+                        1  2   1   0   18
+                        .  .   .   .    .
+                        .  .   .   .    .
+                        4  3   1   0   31
+                        4  4   1   0   32
+                        1  1   0   1   33
+                        1  2   0   1   34 
+                        .  .   .   .    .
+                        .  .   .   .    .
+                        4  3   0   1   47 
+                        4  4   0   1   48
+                        1  1   0   0   49 
+                        1  2   0   0   50 
+                        .  .   .   .    .
+                        .  .   .   .    .
+                        4  3   0   0   63
+                        4  4   0   0   64
 
     steady_state : matrix (k, 1)
                    ergodic distribution
@@ -765,10 +775,19 @@ class LISA_Markov(Markov):
 
     >>> np.random.seed(10)
     >>> lm_random = pysal.LISA_Markov(pci, w, permutations=99)
-    >>> lm_random.significant_moves[:,0]
-    array([13, 25, 13, 25, 25,  1,  1, 25, 13, 25, 25, 25, 25, 25, 25, 13, 25,
-           25,  1, 25, 25, 13, 25, 25, 25, 25, 25,  1, 25,  1, 13, 25, 25, 25,
-           25, 25,  1, 13, 25, 13, 25, 25, 25, 25, 25, 25, 25, 25])
+    >>> lm_random.significant_moves
+    array([[11, 11, 11, ..., 59, 59, 59],
+           [54, 54, 54, ..., 54, 55, 59],
+           [11, 11, 11, ..., 11, 59, 59],
+           ..., 
+           [54, 54, 54, ..., 54, 54, 54],
+           [49, 49, 49, ..., 54, 54, 54],
+           [64, 64, 64, ..., 64, 64, 64]])
+        
+    Any value less than 49 indicates at least one of the LISA end points was
+    significant. So for example, the first spatial unit experienced a
+    transition of type 11 (LL, LL)  during the first three and last tree intervals (according to lm.move_types), however, the last three of these transitions involved insignificant LISAS in both the start and ending year of each transition.
+
 
     Test whether the moves of y are independent of the moves of wy
 
