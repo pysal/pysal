@@ -3,11 +3,11 @@ Spatial diagnostics module
 """
 __author__ = "Luc Anselin luc.anselin@asu.edu, Daniel Arribas-Bel darribas@asu.edu"
 
+from utils import spdot
 from scipy.stats.stats import chisqprob
 from scipy.stats import norm
 import numpy as np
 import numpy.linalg as la
-import pysal
 
 __all__ = ['LMtests', 'MoranRes', 'AKtest'] 
 
@@ -294,7 +294,7 @@ class AKtest:
 
     >>> import numpy as np
     >>> import pysal
-    >>> from twosls import BaseTSLS as TSLS
+    >>> from twosls import TSLS
     >>> from twosls_sp import GM_Lag
 
     Open data on Columbus neighborhood crime (49 areas) using pysal.open().
@@ -465,7 +465,7 @@ class spDcache:
         if 'j' not in self._cache:
             wxb = self.w.sparse * self.reg.predy
             wxb2 = np.dot(wxb.T, wxb)
-            xwxb = np.dot(self.reg.x.T, wxb)
+            xwxb = spdot(self.reg.x.T, wxb)
             num1 = wxb2 - np.dot(xwxb.T, np.dot(self.reg.xtxi, xwxb))
             num = num1 + (self.t * self.reg.sig2n)
             den = self.reg.n * self.reg.sig2n
@@ -497,7 +497,7 @@ class spDcache:
     @property
     def trA(self):
         if 'trA' not in self._cache:
-            xtwx = np.dot(self.reg.x.T, pysal.lag_spatial(self.w, self.reg.x))
+            xtwx = spdot(self.reg.x.T, spdot(self.w.sparse, self.reg.x))
             mw = np.dot(self.reg.xtxi, xtwx)
             self._cache['trA'] = np.sum(mw.diagonal())
         return self._cache['trA']
@@ -508,12 +508,12 @@ class spDcache:
         """
         if 'AB' not in self._cache:
             U = (self.w.sparse + self.w.sparse.T) / 2.
-            z = U * self.reg.x
-            c1 = np.dot(self.reg.x.T, z)
-            c2 = np.dot(z.T, z)
+            z = spdot(U, self.reg.x, array_out=False)
+            c1 = spdot(self.reg.x.T, z, array_out=False)
+            c2 = spdot(z.T, z, array_out=False)
             G = self.reg.xtxi
-            A = np.dot(G, c1)
-            B = np.dot(G, c2)
+            A = spdot(G, c1)
+            B = spdot(G, c2)
             self._cache['AB'] = [A, B]
         return self._cache['AB']
 
@@ -780,7 +780,7 @@ def akTest(iv, w, spDcache):
     """
     mi = get_mI(iv, w, spDcache)
     # Phi2
-    etwz = np.dot(iv.u.T, (w.sparse * iv.z))
+    etwz = spdot(iv.u.T, spdot(w.sparse, iv.z))
     a = np.dot(etwz,np.dot(iv.varb,etwz.T))
     s12 = (w.s0 / w.n)**2
     phi2 = ( spDcache.t + (4.0 / iv.sig2n) * a ) / (s12 * w.n)

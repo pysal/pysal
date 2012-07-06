@@ -1,8 +1,10 @@
 import unittest
 import numpy as np
 import pysal
-import pysal.spreg.diagnostics as D
 from pysal.spreg.twosls_sp import GM_Lag, BaseGM_Lag
+import pysal.spreg.diagnostics as D
+from scipy import sparse as SP
+
 
 class TestBaseGMLag(unittest.TestCase):
     def setUp(self):
@@ -13,20 +15,20 @@ class TestBaseGMLag(unittest.TestCase):
         self.y = np.reshape(y, (49,1))
         
     def test___init__(self):
-        w_lags = 2
         X = []
         X.append(self.db.by_col("INC"))
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
-        yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, None, None, w_lags, True)
+        yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 2, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
-        reg = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w, w_lags=w_lags)
+        self.X = SP.csr_matrix(self.X)
+        reg = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w, w_lags=2)
         betas = np.array([[  4.53017056e+01], [  6.20888617e-01], [ -4.80723451e-01], [  2.83622122e-02]])
         np.testing.assert_array_almost_equal(reg.betas, betas, 7)
         h_0 = np.array([  1.        ,  19.531     ,  15.72598   ,  18.594     ,
                             24.7142675 ,  13.72216667,  27.82929567])
-        np.testing.assert_array_almost_equal(reg.h[0], h_0)
-        hth = np.  array([   49.        ,   704.371999  ,  1721.312371  ,   724.7435916 ,
+        np.testing.assert_array_almost_equal(reg.h.toarray()[0], h_0)
+        hth = np.array([   49.        ,   704.371999  ,  1721.312371  ,   724.7435916 ,
                              1707.35412945,   711.31248483,  1729.63201243])
         np.testing.assert_array_almost_equal(reg.hth[0], hth, 7)
         hthi = np.array([  7.33701328e+00,   2.27764882e-02,   2.18153588e-02,
@@ -61,13 +63,13 @@ class TestBaseGMLag(unittest.TestCase):
                        [ -4.00127615e+00, -2.87549056e-02,  1.47945172e-02,  1.00743323e-01]])
         np.testing.assert_array_almost_equal(reg.vm, vm, 6)
         x_0 = np.array([  1.     ,  19.531  ,  15.72598])
-        np.testing.assert_array_almost_equal(reg.x[0], x_0, 7)
+        np.testing.assert_array_almost_equal(reg.x.toarray()[0], x_0, 7)
         y_5 = np.array( [[ 80.467003], [ 44.567001], [ 26.35    ], [ 33.200001], [ 23.225   ]])
         np.testing.assert_array_almost_equal(reg.y[0:5], y_5, 7)
         yend_5 = np.array( [[ 35.4585005 ], [ 46.67233467], [ 45.36475125], [ 32.81675025], [ 30.81785714]])
         np.testing.assert_array_almost_equal(reg.yend[0:5], yend_5, 7)
         z_0 = np.array([  1.       ,  19.531    ,  15.72598  ,  35.4585005]) 
-        np.testing.assert_array_almost_equal(reg.z[0], z_0, 7)
+        np.testing.assert_array_almost_equal(reg.z.toarray()[0], z_0, 7)
         zthhthi = np.array( [[  1.00000000e+00, -2.22044605e-16, -2.22044605e-16 , 2.22044605e-16,
                                 4.44089210e-16,  0.00000000e+00, -8.88178420e-16],
                              [  0.00000000e+00,  1.00000000e+00, -3.55271368e-15 , 3.55271368e-15,
@@ -79,14 +81,14 @@ class TestBaseGMLag(unittest.TestCase):
         np.testing.assert_array_almost_equal(reg.zthhthi, zthhthi, 7)
 
     def test_init_white_(self):
-        w_lags = 2
         X = []
         X.append(self.db.by_col("INC"))
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
-        yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, None, None, w_lags, True)
+        yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 2, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
-        base_gm_lag = BaseGM_Lag(self.y, self.X,  yend=yd2, q=q2, w=self.w, w_lags=w_lags, robust='white')
+        self.X = SP.csr_matrix(self.X)
+        base_gm_lag = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w, w_lags=2, robust='white')
         tbetas = np.array([[  4.53017056e+01], [  6.20888617e-01], [ -4.80723451e-01], [  2.83622122e-02]])
         np.testing.assert_array_almost_equal(base_gm_lag.betas, tbetas) 
         dbetas = D.se_betas(base_gm_lag)
@@ -94,15 +96,15 @@ class TestBaseGMLag(unittest.TestCase):
         np.testing.assert_array_almost_equal(dbetas, se_betas)
 
     def test_init_hac_(self):
-        w_lags = 2
         X = []
         X.append(self.db.by_col("INC"))
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
-        yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, None, None, w_lags, True)
+        yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 2, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
+        self.X = SP.csr_matrix(self.X)
         gwk = pysal.kernelW_from_shapefile(pysal.examples.get_path('columbus.shp'),k=15,function='triangular', fixed=False)        
-        base_gm_lag = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w, w_lags=w_lags, robust='hac', gwk=gwk)
+        base_gm_lag = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w, w_lags=2, robust='hac', gwk=gwk)
         tbetas = np.array([[  4.53017056e+01], [  6.20888617e-01], [ -4.80723451e-01], [  2.83622122e-02]])
         np.testing.assert_array_almost_equal(base_gm_lag.betas, tbetas) 
         dbetas = D.se_betas(base_gm_lag)
@@ -110,16 +112,16 @@ class TestBaseGMLag(unittest.TestCase):
         np.testing.assert_array_almost_equal(dbetas, se_betas)
 
     def test_init_discbd(self):
-        w_lags = 2
         X = np.array(self.db.by_col("INC"))
         self.X = np.reshape(X, (49,1))
         yd = np.array(self.db.by_col("CRIME"))
         yd = np.reshape(yd, (49,1))
         q = np.array(self.db.by_col("DISCBD"))
         q = np.reshape(q, (49,1))
-        yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, yd, q, w_lags, True)
+        yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, yd, q, 2, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
-        reg = BaseGM_Lag(self.y, self.X, w=self.w, yend=yd2, q=q2, w_lags=w_lags)
+        self.X = SP.csr_matrix(self.X)
+        reg = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w, w_lags=2)
         tbetas = np.array([[ 100.79359082], [  -0.50215501], [  -1.14881711], [  -0.38235022]])
         np.testing.assert_array_almost_equal(tbetas, reg.betas)
         dbetas = D.se_betas(reg)
@@ -127,14 +129,14 @@ class TestBaseGMLag(unittest.TestCase):
         np.testing.assert_array_almost_equal(dbetas, se_betas)
 
     def test_n_k(self):
-        w_lags = 2
         X = []
         X.append(self.db.by_col("INC"))
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
-        yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, None, None, w_lags, True)
+        yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 2, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
-        reg = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w, w_lags=w_lags, sig2n_k=True)
+        self.X = SP.csr_matrix(self.X)
+        reg = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w, w_lags=2, sig2n_k=True)
         betas = np.  array([[  4.53017056e+01], [  6.20888617e-01], [ -4.80723451e-01], [  2.83622122e-02]])
         np.testing.assert_array_almost_equal(reg.betas, betas, 7)
         vm = np.array( [[  3.49389596e+02, -5.36394351e+00, -2.81960968e+00, -4.35694515e+00],
@@ -144,16 +146,16 @@ class TestBaseGMLag(unittest.TestCase):
         np.testing.assert_array_almost_equal(reg.vm, vm, 7)
 
     def test_lag_q(self):
-        w_lags = 2
         X = np.array(self.db.by_col("INC"))
         self.X = np.reshape(X, (49,1))
         yd = np.array(self.db.by_col("CRIME"))
         yd = np.reshape(yd, (49,1))
         q = np.array(self.db.by_col("DISCBD"))
         q = np.reshape(q, (49,1))
-        yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, yd, q, w_lags, False)
+        yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, yd, q, 2, False)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
-        reg = BaseGM_Lag(self.y, self.X, w=self.w, yend=yd2, q=q2, w_lags=w_lags, lag_q=False)
+        self.X = SP.csr_matrix(self.X)
+        reg = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w, w_lags=2, lag_q=False)
         tbetas = np.array( [[ 108.83261383], [  -0.48041099], [  -1.18950006], [  -0.56140186]])
         np.testing.assert_array_almost_equal(tbetas, reg.betas)
         dbetas = D.se_betas(reg)
@@ -175,6 +177,7 @@ class TestGMLag(unittest.TestCase):
         X.append(self.db.by_col("INC"))
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
+        self.X = SP.csr_matrix(self.X)
         reg = GM_Lag(self.y, self.X, w=self.w, w_lags=2)
         betas = np.array([[  4.53017056e+01], [  6.20888617e-01], [ -4.80723451e-01], [  2.83622122e-02]])
         np.testing.assert_array_almost_equal(reg.betas, betas, 7)
@@ -182,7 +185,7 @@ class TestGMLag(unittest.TestCase):
         np.testing.assert_array_almost_equal(reg.e_pred[0:5], e_5, 7)
         h_0 = np.array([  1.        ,  19.531     ,  15.72598   ,  18.594     ,
                             24.7142675 ,  13.72216667,  27.82929567])
-        np.testing.assert_array_almost_equal(reg.h[0], h_0)
+        np.testing.assert_array_almost_equal(reg.h.toarray()[0], h_0)
         hth = np.  array([   49.        ,   704.371999  ,  1721.312371  ,   724.7435916 ,
                              1707.35412945,   711.31248483,  1729.63201243])
         np.testing.assert_array_almost_equal(reg.hth[0], hth, 7)
@@ -203,7 +206,7 @@ class TestGMLag(unittest.TestCase):
         predy_e_5 = np.array( [[ 51.17723933], [ 50.64139601], [ 41.65080685], [ 33.61773475], [ 28.89697968]])
         np.testing.assert_array_almost_equal(reg.predy_e[0:5], predy_e_5, 7)
         q_5 = np.array([ 18.594     ,  24.7142675 ,  13.72216667,  27.82929567])
-        np.testing.assert_array_almost_equal(reg.q[0], q_5)
+        np.testing.assert_array_almost_equal(reg.q.toarray()[0], q_5)
         self.assertEqual(reg.robust, 'unadjusted')
         self.assertAlmostEqual(reg.sig2n_k, 234.54258763039289, 7)
         self.assertAlmostEqual(reg.sig2n, 215.39625394627919, 7)
@@ -223,13 +226,13 @@ class TestGMLag(unittest.TestCase):
                        [ -4.00127615e+00, -2.87549056e-02,  1.47945172e-02,  1.00743323e-01]])
         np.testing.assert_array_almost_equal(reg.vm, vm, 6)
         x_0 = np.array([  1.     ,  19.531  ,  15.72598])
-        np.testing.assert_array_almost_equal(reg.x[0], x_0, 7)
+        np.testing.assert_array_almost_equal(reg.x.toarray()[0], x_0, 7)
         y_5 = np.array( [[ 80.467003], [ 44.567001], [ 26.35    ], [ 33.200001], [ 23.225   ]])
         np.testing.assert_array_almost_equal(reg.y[0:5], y_5, 7)
         yend_5 = np.array( [[ 35.4585005 ], [ 46.67233467], [ 45.36475125], [ 32.81675025], [ 30.81785714]])
         np.testing.assert_array_almost_equal(reg.yend[0:5], yend_5, 7)
         z_0 = np.array([  1.       ,  19.531    ,  15.72598  ,  35.4585005]) 
-        np.testing.assert_array_almost_equal(reg.z[0], z_0, 7)
+        np.testing.assert_array_almost_equal(reg.z.toarray()[0], z_0, 7)
         zthhthi = np.array( [[  1.00000000e+00, -2.22044605e-16, -2.22044605e-16 , 2.22044605e-16,
                                 4.44089210e-16,  0.00000000e+00, -8.88178420e-16],
                              [  0.00000000e+00,  1.00000000e+00, -3.55271368e-15 , 3.55271368e-15,
@@ -245,6 +248,7 @@ class TestGMLag(unittest.TestCase):
         X.append(self.db.by_col("INC"))
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
+        self.X = SP.csr_matrix(self.X)
         base_gm_lag = GM_Lag(self.y, self.X, w=self.w, w_lags=2, robust='white')
         tbetas = np.array([[  4.53017056e+01], [  6.20888617e-01], [ -4.80723451e-01], [  2.83622122e-02]])
         np.testing.assert_array_almost_equal(base_gm_lag.betas, tbetas) 
@@ -257,6 +261,7 @@ class TestGMLag(unittest.TestCase):
         X.append(self.db.by_col("INC"))
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
+        self.X = SP.csr_matrix(self.X)
         gwk = pysal.kernelW_from_shapefile(pysal.examples.get_path('columbus.shp'),k=15,function='triangular', fixed=False)        
         base_gm_lag = GM_Lag(self.y, self.X, w=self.w, w_lags=2, robust='hac', gwk=gwk)
         tbetas = np.array([[  4.53017056e+01], [  6.20888617e-01], [ -4.80723451e-01], [  2.83622122e-02]])
@@ -268,6 +273,7 @@ class TestGMLag(unittest.TestCase):
     def test_init_discbd(self):
         X = np.array(self.db.by_col("INC"))
         X = np.reshape(X, (49,1))
+        X = SP.csr_matrix(X)
         yd = np.array(self.db.by_col("CRIME"))
         yd = np.reshape(yd, (49,1))
         q = np.array(self.db.by_col("DISCBD"))
@@ -284,6 +290,7 @@ class TestGMLag(unittest.TestCase):
         X.append(self.db.by_col("INC"))
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
+        self.X = SP.csr_matrix(self.X)
         reg = GM_Lag(self.y, self.X, w=self.w, w_lags=2, sig2n_k=True)
         betas = np.  array([[  4.53017056e+01], [  6.20888617e-01], [ -4.80723451e-01], [  2.83622122e-02]])
         np.testing.assert_array_almost_equal(reg.betas, betas, 7)
@@ -296,6 +303,7 @@ class TestGMLag(unittest.TestCase):
     def test_lag_q(self):
         X = np.array(self.db.by_col("INC"))
         X = np.reshape(X, (49,1))
+        X = SP.csr_matrix(X)
         yd = np.array(self.db.by_col("CRIME"))
         yd = np.reshape(yd, (49,1))
         q = np.array(self.db.by_col("DISCBD"))
@@ -310,6 +318,7 @@ class TestGMLag(unittest.TestCase):
     def test_spatial(self):
         X = np.array(self.db.by_col("INC"))
         X = np.reshape(X, (49,1))
+        X = SP.csr_matrix(X)
         yd = np.array(self.db.by_col("CRIME"))
         yd = np.reshape(yd, (49,1))
         q = np.array(self.db.by_col("DISCBD"))
@@ -329,6 +338,7 @@ class TestGMLag(unittest.TestCase):
     def test_names(self):
         X = np.array(self.db.by_col("INC"))
         X = np.reshape(X, (49,1))
+        X = SP.csr_matrix(X)
         yd = np.array(self.db.by_col("CRIME"))
         yd = np.reshape(yd, (49,1))
         q = np.array(self.db.by_col("DISCBD"))

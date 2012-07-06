@@ -1,17 +1,18 @@
 import numpy as np
 import copy
 import numpy.linalg as la
+import summary_output as SUMMARY
 import robust as ROBUST
 import user_output as USER
-from utils import RegressionPropsY, RegressionPropsVM
+from utils import spdot, sphstack, RegressionPropsY, RegressionPropsVM
 
 __author__ = "Luc Anselin luc.anselin@asu.edu, David C. Folch david.folch@asu.edu, Jing Yao jingyao@asu.edu"
 __all__ = ["TSLS"]
 
 class BaseTSLS(RegressionPropsY, RegressionPropsVM):
     """
-    Two stage least squares (2SLS) (note: no consistency checks or
-    diagnostics)
+    Two stage least squares (2SLS) (note: no consistency checks,
+    diagnostics or constant added)
 
     Parameters
     ----------
@@ -112,6 +113,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X = np.array(X).T
+    >>> X = np.hstack((np.ones(y.shape),X))
     >>> yd = []
     >>> yd.append(db.by_col("HOVAL"))
     >>> yd = np.array(yd).T
@@ -126,7 +128,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
     >>> reg = BaseTSLS(y, X, yd, q=q, robust="white")
     
     """
-    def __init__(self, y, x, yend, q=None, h=None, constant=True,\
+    def __init__(self, y, x, yend, q=None, h=None,\
                  robust=None, gwk=None, sig2n_k=False):
 
         if issubclass(type(q), np.ndarray) and issubclass(type(h), np.ndarray):  
@@ -136,16 +138,12 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
         
         self.y = y  
         self.n = y.shape[0]
-
-        if constant:
-            self.x = np.hstack((np.ones(y.shape),x))
-        else:
-            self.x = x
+        self.x = x
 
         self.kstar = yend.shape[1]        
-        z = np.hstack((self.x,yend))  # including exogenous and endogenous variables   
-        if type(h).__name__ != 'ndarray':
-            h = np.hstack((self.x,q))   # including exogenous variables and instrument
+        z = sphstack(self.x,yend)  # including exogenous and endogenous variables   
+        if type(h).__name__ not in ['ndarray', 'csr_matrix']:
+            h = sphstack(self.x,q)   # including exogenous variables and instrument
 
         self.z = z
         self.h = h
@@ -153,10 +151,10 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
         self.yend = yend
         self.k = z.shape[1]    # k = number of exogenous variables and endogenous variables 
         
-        hth = np.dot(h.T,h)    
+        hth = spdot(h.T,h)    
         hthi = la.inv(hth)
-        zth = np.dot(z.T,h)    
-        hty = np.dot(h.T,y) 
+        zth = spdot(z.T,h)    
+        hty = spdot(h.T,y) 
         
         factor_1 = np.dot(zth,hthi)  
         factor_2 = np.dot(factor_1,zth.T)  
@@ -168,7 +166,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
         self.zthhthi = factor_1  
         
         # predicted values
-        self.predy = np.dot(z,betas)
+        self.predy = spdot(z,betas)
         
         # residuals
         u = y - self.predy
@@ -199,7 +197,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
             self._cache['vm'] = np.dot(self.sig2, self.varb)
         return self._cache['vm']
 
-class TSLS(BaseTSLS, USER.DiagnosticBuilder):
+class TSLS(BaseTSLS):
     """
     Two stage least squares with results and diagnostics.
 
@@ -416,12 +414,13 @@ class TSLS(BaseTSLS, USER.DiagnosticBuilder):
                  name_yend=None, name_q=None,\
                  name_w=None, name_gwk=None, name_ds=None):
 
-        USER.check_arrays(y, x, yend, q)
+        n = USER.check_arrays(y, x, yend, q)
+        USER.check_y(y, n)
         USER.check_weights(w, y)
         USER.check_robust(robust, gwk)
         USER.check_spat_diag(spat_diag, w)
-        USER.check_constant(x)
-        BaseTSLS.__init__(self, y=y, x=x, yend=yend, q=q,\
+        x_constant = USER.check_constant(x)
+        BaseTSLS.__init__(self, y=y, x=x_constant, yend=yend, q=q,\
                               robust=robust, gwk=gwk, sig2n_k=sig2n_k)
         self.title = "TWO STAGE LEAST SQUARES"        
         self.name_ds = USER.set_name_ds(name_ds)
@@ -434,21 +433,17 @@ class TSLS(BaseTSLS, USER.DiagnosticBuilder):
         self.robust = USER.set_robust(robust)
         self.name_w = USER.set_name_w(name_w, w)
         self.name_gwk = USER.set_name_w(name_gwk, gwk)
-        self._get_diagnostics(w=w, beta_diag=True, nonspat_diag=False,\
-                                    spat_diag=spat_diag, vm=vm,
-                                    std_err=self.robust)
-
-    def _get_diagnostics(self, beta_diag=True, w=None, nonspat_diag=True,\
-                              spat_diag=False, vm=False, moran=False,
-                              std_err=None):
-        USER.DiagnosticBuilder.__init__(self, w=w, beta_diag=beta_diag,\
-                                            nonspat_diag=nonspat_diag,\
-                                            spat_diag=spat_diag, vm=vm,\
-                                            instruments=True,
-                                            moran=False, std_err=std_err)
+        SUMMARY.TSLS(reg=self, vm=vm, w=w, spat_diag=spat_diag)
         
 
-                     
-if __name__ == '__main__':
+def _test():
     import doctest
+    start_suppress = np.get_printoptions()['suppress']
+    np.set_printoptions(suppress=True)    
     doctest.testmod()
+    np.set_printoptions(suppress=start_suppress)
+
+
+if __name__ == '__main__':
+    _test()
+

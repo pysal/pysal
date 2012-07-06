@@ -5,6 +5,7 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, \
 import numpy as np
 import numpy.linalg as la
 from pysal import lag_spatial
+from utils import spdot, spbroadcast
 
 def robust_vm(reg, gwk=None):
     """
@@ -31,8 +32,8 @@ def robust_vm(reg, gwk=None):
     
     >>> import numpy as np
     >>> import pysal
-    >>> from ols import BaseOLS
-    >>> from twosls import BaseTSLS
+    >>> from ols import OLS
+    >>> from twosls import TSLS
     >>> db=pysal.open(pysal.examples.get_path("NAT.dbf"),"r")
     >>> y = np.array(db.by_col("HR90"))
     >>> y = np.reshape(y, (y.shape[0],1))
@@ -43,7 +44,7 @@ def robust_vm(reg, gwk=None):
 
     Example with OLS with unadjusted standard errors
 
-    >>> ols = BaseOLS(y,X)
+    >>> ols = OLS(y,X)
     >>> ols.vm
     array([[ 0.17004545,  0.00226532, -0.02243898],
            [ 0.00226532,  0.00941319, -0.00031638],
@@ -51,7 +52,7 @@ def robust_vm(reg, gwk=None):
 
     Example with OLS and White
     
-    >>> ols = BaseOLS(y,X, robust='white')
+    >>> ols = OLS(y,X, robust='white')
     >>> ols.vm
     array([[ 0.24491641,  0.01092258, -0.03438619],
            [ 0.01092258,  0.01796867, -0.00071345],
@@ -61,7 +62,7 @@ def robust_vm(reg, gwk=None):
 
     >>> wk = pysal.kernelW_from_shapefile(pysal.examples.get_path('NAT.shp'),k=15,function='triangular', fixed=False)
     >>> wk.transform = 'o'
-    >>> ols = BaseOLS(y,X, robust='hac', gwk=wk)
+    >>> ols = OLS(y,X, robust='hac', gwk=wk)
     >>> ols.vm
     array([[ 0.29213532,  0.01670361, -0.03948199],
            [ 0.01655557,  0.02295829, -0.00116874],
@@ -75,7 +76,7 @@ def robust_vm(reg, gwk=None):
     >>> q = []
     >>> q.append(db.by_col("UE80"))
     >>> q = np.array(q).T
-    >>> tsls = BaseTSLS(y, X, yd, q=q, robust='white')
+    >>> tsls = TSLS(y, X, yd, q=q, robust='white')
     >>> tsls.vm
     array([[ 0.29569954,  0.04119843, -0.02496858, -0.01640185],
            [ 0.04119843,  0.03647762,  0.004702  , -0.00987345],
@@ -84,7 +85,7 @@ def robust_vm(reg, gwk=None):
 
     Example with 2SLS and HAC
 
-    >>> tsls = BaseTSLS(y, X, yd, q=q, robust='hac', gwk=wk)
+    >>> tsls = TSLS(y, X, yd, q=q, robust='hac', gwk=wk)
     >>> tsls.vm
     array([[ 0.41985329,  0.06823119, -0.02883889, -0.02788116],
            [ 0.06867042,  0.04887508,  0.00497443, -0.01367746],
@@ -94,22 +95,22 @@ def robust_vm(reg, gwk=None):
     """
     if hasattr(reg, 'h'): #If reg has H, do 2SLS estimator. OLS otherwise.
         tsls = True
-        xu = reg.h * reg.u
+        xu = spbroadcast(reg.h, reg.u)
     else:
         tsls = False
-        xu = reg.x * reg.u
+        xu = spbroadcast(reg.x, reg.u)
         
     if gwk: #If gwk do HAC. White otherwise.
         gwkxu = lag_spatial(gwk,xu)
-        psi0 = np.dot(xu.T,gwkxu)
+        psi0 = spdot(xu.T,gwkxu)
     else:
-        psi0 = np.dot(xu.T,xu)
+        psi0 = spdot(xu.T,xu)
         
     if tsls:
-        psi1 = np.dot(reg.varb,reg.zthhthi)
-        psi = np.dot(psi1,np.dot(psi0,psi1.T))
+        psi1 = spdot(reg.varb,reg.zthhthi)
+        psi = spdot(psi1,np.dot(psi0,psi1.T))
     else:
-        psi = np.dot(reg.xtxi,np.dot(psi0,reg.xtxi))
+        psi = spdot(reg.xtxi,np.dot(psi0,reg.xtxi))
         
     return psi
     

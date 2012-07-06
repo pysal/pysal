@@ -12,16 +12,18 @@ import ols as OLS
 from pysal import lag_spatial
 from utils import power_expansion, set_endog, iter_msg, sp_att
 from utils import get_A1_hom, get_A2_hom, get_A1_het, optim_moments, get_spFilter, get_lags, _moments2eqs
-from utils import RegressionPropsY
+from utils import spdot, RegressionPropsY
 import twosls as TSLS
 import user_output as USER
+import summary_output as SUMMARY
 
 __all__ = ["GM_Error", "GM_Endog_Error", "GM_Combo"]
 
 class BaseGM_Error(RegressionPropsY):
     """
-    GMM method for a spatial error model (note: no consistency checks or
-    diagnostics); based on Kelejian and Prucha (1998, 1999)[1]_ [2]_.
+    GMM method for a spatial error model (note: no consistency checks
+    diagnostics or constant added); based on Kelejian and Prucha 
+    (1998, 1999)[1]_ [2]_.
 
     Parameters
     ----------
@@ -84,6 +86,7 @@ class BaseGM_Error(RegressionPropsY):
     >>> dbf = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
     >>> y = np.array([dbf.by_col('HOVAL')]).T
     >>> x = np.array([dbf.by_col('INC'), dbf.by_col('CRIME')]).T
+    >>> x = np.hstack((np.ones(y.shape),x))
     >>> w = pysal.open(pysal.examples.get_path("columbus.gal"), 'r').read() 
     >>> w.transform='r'
     >>> model = BaseGM_Error(y, x, w)
@@ -108,10 +111,10 @@ class BaseGM_Error(RegressionPropsY):
         #2a. OLS -->\hat{betas}
         xs = get_spFilter(w, lambda1, self.x)
         ys = get_spFilter(w, lambda1, self.y)
-        ols2 = OLS.BaseOLS(y=ys, x=xs, constant=False)
+        ols2 = OLS.BaseOLS(y=ys, x=xs)
 
         #Output
-        self.predy = np.dot(self.x, ols2.betas)
+        self.predy = spdot(self.x, ols2.betas)
         self.u = y - self.predy
         self.betas = np.vstack((ols2.betas, np.array([[lambda1]])))
         self.sig2 = ols2.sig2n
@@ -121,7 +124,7 @@ class BaseGM_Error(RegressionPropsY):
         se_betas = np.sqrt(self.vm.diagonal())
         self._cache = {}
 
-class GM_Error(BaseGM_Error, USER.DiagnosticBuilder):
+class GM_Error(BaseGM_Error):
     """
     GMM method for a spatial error model, with results and diagnostics; based
     on Kelejian and Prucha (1998, 1999)[1]_ [2]_.
@@ -239,8 +242,7 @@ class GM_Error(BaseGM_Error, USER.DiagnosticBuilder):
     independent variables in the regression.  Note that PySAL requires this to
     be an nxj numpy array, where j is the number of independent variables (not
     including a constant). By default this class adds a vector of ones to the
-    independent variables passed in, this can be overridden by passing
-    constant=False.
+    independent variables passed in.
 
     >>> names_to_extract = ['INC', 'CRIME']
     >>> x = np.array([dbf.by_col(name) for name in names_to_extract]).T
@@ -278,7 +280,6 @@ class GM_Error(BaseGM_Error, USER.DiagnosticBuilder):
     although you get a value for it (there are for coefficients under
     model.betas), you cannot perform inference on it (there are only three
     values in model.se_betas).
-
     >>> print model.name_x
     ['CONSTANT', 'income', 'crime', 'lambda']
     >>> np.around(model.betas, decimals=6)
@@ -289,9 +290,9 @@ class GM_Error(BaseGM_Error, USER.DiagnosticBuilder):
     >>> np.around(model.std_err, decimals=6)
     array([ 12.412038,   0.504443,   0.178496])
     >>> np.around(model.z_stat, decimals=6)
-    array([[  3.84261100e+00,   1.22000000e-04],
-           [  1.40839200e+00,   1.59015000e-01],
-           [ -3.08424700e+00,   2.04100000e-03]])
+    array([[ 3.842611,  0.000122],
+           [ 1.408392,  0.159015],
+           [-3.084247,  0.002041]])
     >>> np.around(model.sig2, decimals=6)
     198.55957900000001
 
@@ -300,29 +301,25 @@ class GM_Error(BaseGM_Error, USER.DiagnosticBuilder):
                  vm=False, name_y=None, name_x=None,\
                  name_w=None, name_ds=None):
 
-        USER.check_arrays(y, x)
+        n = USER.check_arrays(y, x)
+        USER.check_y(y, n)
         USER.check_weights(w, y)
-        USER.check_constant(x)
-        BaseGM_Error.__init__(self, y=y, x=x, w=w) 
+        x_constant = USER.check_constant(x)
+        BaseGM_Error.__init__(self, y=y, x=x_constant, w=w) 
         self.title = "SPATIALLY WEIGHTED LEAST SQUARES"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
         self.name_x.append('lambda')
         self.name_w = USER.set_name_w(name_w, w)
-        self._get_diagnostics(w=w, beta_diag=True, vm=vm)
-
-    def _get_diagnostics(self, beta_diag=True, w=None, vm=False):
-        USER.DiagnosticBuilder.__init__(self, w=w, beta_diag=True,\
-                                            nonspat_diag=False, lamb=True,\
-                                            vm=vm, instruments=False)
+        SUMMARY.GM_Error(reg=self, w=w, vm=vm)
 
 
 class BaseGM_Endog_Error(RegressionPropsY):
     '''
     GMM method for a spatial error model with endogenous variables (note: no
-    consistency checks or diagnostics); based on Kelejian and Prucha (1998,
-    1999)[1]_[2]_.
+    consistency checks, diagnostics or constant added); based on Kelejian and
+    Prucha (1998, 1999)[1]_[2]_.
 
     Parameters
     ----------
@@ -397,6 +394,7 @@ class BaseGM_Endog_Error(RegressionPropsY):
     >>> dbf = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
     >>> y = np.array([dbf.by_col('CRIME')]).T
     >>> x = np.array([dbf.by_col('INC')]).T
+    >>> x = np.hstack((np.ones(y.shape),x))
     >>> yend = np.array([dbf.by_col('HOVAL')]).T
     >>> q = np.array([dbf.by_col('DISCBD')]).T
     >>> w = pysal.open(pysal.examples.get_path("columbus.gal"), 'r').read() 
@@ -426,18 +424,18 @@ class BaseGM_Endog_Error(RegressionPropsY):
         xs = get_spFilter(w, lambda1, self.x)
         ys = get_spFilter(w, lambda1, self.y)
         yend_s = get_spFilter(w, lambda1, self.yend)
-        tsls2 = TSLS.BaseTSLS(ys, xs, yend_s, h=tsls.h, constant=False)
+        tsls2 = TSLS.BaseTSLS(ys, xs, yend_s, h=tsls.h)
 
         #Output
         self.betas = np.vstack((tsls2.betas, np.array([[lambda1]])))
-        self.predy = np.dot(tsls.z, tsls2.betas)
+        self.predy = spdot(tsls.z, tsls2.betas)
         self.u = y - self.predy
         self.sig2 = float(np.dot(tsls2.u.T,tsls2.u)) / self.n
         self.e_filtered = self.u - lambda1*lag_spatial(w,self.u)
         self.vm = self.sig2 * tsls2.varb 
         self._cache = {}
 
-class GM_Endog_Error(BaseGM_Endog_Error, USER.DiagnosticBuilder):
+class GM_Endog_Error(BaseGM_Endog_Error):
     '''
     GMM method for a spatial error model with endogenous variables, with
     results and diagnostics; based on Kelejian and Prucha (1998, 1999)[1]_[2]_.
@@ -579,8 +577,7 @@ class GM_Endog_Error(BaseGM_Endog_Error, USER.DiagnosticBuilder):
     independent variables in the regression.  Note that PySAL requires this to
     be an nxj numpy array, where j is the number of independent variables (not
     including a constant). By default this model adds a vector of ones to the
-    independent variables passed in, but this can be overridden by passing
-    constant=False.
+    independent variables passed in.
 
     >>> x = np.array([dbf.by_col('INC')]).T
 
@@ -649,10 +646,11 @@ class GM_Endog_Error(BaseGM_Endog_Error, USER.DiagnosticBuilder):
                  name_yend=None, name_q=None,\
                  name_w=None, name_ds=None):
 
-        USER.check_arrays(y, x, yend, q)
+        n = USER.check_arrays(y, x, yend, q)
+        USER.check_y(y, n)
         USER.check_weights(w, y)
-        USER.check_constant(x)
-        BaseGM_Endog_Error.__init__(self, y=y, x=x, w=w, yend=yend, q=q)
+        x_constant = USER.check_constant(x)
+        BaseGM_Endog_Error.__init__(self, y=y, x=x_constant, w=w, yend=yend, q=q)
         self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
@@ -663,19 +661,14 @@ class GM_Endog_Error(BaseGM_Endog_Error, USER.DiagnosticBuilder):
         self.name_q = USER.set_name_q(name_q, q)
         self.name_h = USER.set_name_h(self.name_x, self.name_q)
         self.name_w = USER.set_name_w(name_w, w)
-        self._get_diagnostics(w=w, beta_diag=True, vm=vm)
-     
-    def _get_diagnostics(self, beta_diag=True, w=None, vm=False):
-        USER.DiagnosticBuilder.__init__(self, w=w, beta_diag=True,\
-                                            nonspat_diag=False, lamb=True,\
-                                            vm=vm, instruments=True)        
+        SUMMARY.GM_Endog_Error(reg=self, w=w, vm=vm)
 
 
 class BaseGM_Combo(BaseGM_Endog_Error):
     """
     GMM method for a spatial lag and error model, with endogenous variables
-    (note: no consistency checks or diagnostics); based on Kelejian and Prucha
-    (1998, 1999)[1]_[2]_.
+    (note: no consistency checks, diagnostics or constant added); based on 
+    Kelejian and Prucha (1998, 1999)[1]_[2]_.
 
     Parameters
     ----------
@@ -762,10 +755,13 @@ class BaseGM_Combo(BaseGM_Endog_Error):
     >>> X = np.array(X).T
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
     >>> w.transform = 'r'
+    >>> w_lags = 1
+    >>> yd2, q2 = pysal.spreg.utils.set_endog(y, X, w, None, None, w_lags, True)
+    >>> X = np.hstack((np.ones(y.shape),X))
 
     Example only with spatial lag
 
-    >>> reg = BaseGM_Combo(y, X, w=w)
+    >>> reg = BaseGM_Combo(y, X, yend=yd2, q=q2, w=w)
 
     Print the betas
 
@@ -782,13 +778,18 @@ class BaseGM_Combo(BaseGM_Endog_Error):
         
     Example with both spatial lag and other endogenous variables
 
+    >>> X = []
+    >>> X.append(db.by_col("INC"))
+    >>> X = np.array(X).T
     >>> yd = []
     >>> yd.append(db.by_col("HOVAL"))
     >>> yd = np.array(yd).T
     >>> q = []
     >>> q.append(db.by_col("DISCBD"))
     >>> q = np.array(q).T
-    >>> reg = BaseGM_Combo(y, X, yd, q, w)
+    >>> yd2, q2 = pysal.spreg.utils.set_endog(y, X, w, yd, q, w_lags, True)
+    >>> X = np.hstack((np.ones(y.shape),X))
+    >>> reg = BaseGM_Combo(y, X, yd2, q2, w)
     >>> betas = np.array([['CONSTANT'],['INC'],['HOVAL'],['W_CRIME']])
     >>> print np.hstack((betas, np.around(np.hstack((reg.betas[:-1], np.sqrt(reg.vm.diagonal()).reshape(4,1))),4)))
     [['CONSTANT' '50.0944' '14.3593']
@@ -800,10 +801,9 @@ class BaseGM_Combo(BaseGM_Endog_Error):
     def __init__(self, y, x, yend=None, q=None,\
                  w=None, w_lags=1, lag_q=True):
 
-        yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
-        BaseGM_Endog_Error.__init__(self, y=y, x=x, w=w, yend=yend2, q=q2)
+        BaseGM_Endog_Error.__init__(self, y=y, x=x, w=w, yend=yend, q=q)
 
-class GM_Combo(BaseGM_Combo, USER.DiagnosticBuilder):
+class GM_Combo(BaseGM_Combo):
     """
     GMM method for a spatial lag and error model with endogenous variables,
     with results and diagnostics; based on Kelejian and Prucha (1998,
@@ -962,8 +962,7 @@ class GM_Combo(BaseGM_Combo, USER.DiagnosticBuilder):
     independent variables in the regression.  Note that PySAL requires this to
     be an nxj numpy array, where j is the number of independent variables (not
     including a constant). By default this model adds a vector of ones to the
-    independent variables passed in, but this can be overridden by passing
-    constant=False.
+    independent variables passed in.
 
     >>> X = []
     >>> X.append(db.by_col("INC"))
@@ -1052,13 +1051,15 @@ class GM_Combo(BaseGM_Combo, USER.DiagnosticBuilder):
                  name_yend=None, name_q=None,\
                  name_w=None, name_ds=None):
 
-        USER.check_arrays(y, x, yend, q)
+        n = USER.check_arrays(y, x, yend, q)
+        USER.check_y(y, n)
         USER.check_weights(w, y)
-        USER.check_constant(x)
-        BaseGM_Combo.__init__(self, y=y, x=x, w=w, yend=yend, q=q, w_lags=w_lags,\
-                              lag_q=lag_q)
+        yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
+        x_constant = USER.check_constant(x)
+        BaseGM_Combo.__init__(self, y=y, x=x_constant, w=w, yend=yend2, q=q2,\
+                                w_lags=w_lags, lag_q=lag_q)
         self.predy_e, self.e_pred = sp_att(w,self.y,\
-                   self.predy,self.z[:,-1].reshape(self.n,1),self.betas[-2])        
+                   self.predy,yend2[:,-1].reshape(self.n,1),self.betas[-2])        
         self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
@@ -1071,13 +1072,7 @@ class GM_Combo(BaseGM_Combo, USER.DiagnosticBuilder):
         self.name_q.extend(USER.set_name_q_sp(self.name_x, w_lags, self.name_q, lag_q))
         self.name_h = USER.set_name_h(self.name_x, self.name_q)
         self.name_w = USER.set_name_w(name_w, w)
-        self._get_diagnostics(w=w, beta_diag=True, vm=vm)
-     
-    def _get_diagnostics(self, beta_diag=True, w=None, vm=False):
-        USER.DiagnosticBuilder.__init__(self, w=w, beta_diag=True,\
-                                            nonspat_diag=False, lamb=True,\
-                                            vm=vm, instruments=True,\
-                                            spatial_lag=True)        
+        SUMMARY.GM_Combo(reg=self, w=w, vm=vm)
 
    
 
@@ -1098,7 +1093,10 @@ def _momentsGM_Error(w, u):
 
 def _test():
     import doctest
+    start_suppress = np.get_printoptions()['suppress']
+    np.set_printoptions(suppress=True)    
     doctest.testmod()
+    np.set_printoptions(suppress=start_suppress)
 
 if __name__ == '__main__':
 

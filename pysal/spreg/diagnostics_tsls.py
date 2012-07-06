@@ -5,7 +5,6 @@ Diagnostics for two stage least squares regression estimations.
 
 __author__ = "Luc Anselin luc.anselin@asu.edu, Nicholas Malizia nicholas.malizia@asu.edu "
 
-import pysal
 from pysal.common import *
 from scipy.stats import pearsonr
 
@@ -45,8 +44,8 @@ def t_stat(reg, z_stat=False):
     >>> import numpy as np
     >>> import pysal
     >>> import pysal.spreg.diagnostics as diagnostics
-    >>> from pysal.spreg.ols import BaseOLS as OLS
-    >>> from twosls import BaseTSLS as TSLS
+    >>> from pysal.spreg.ols import OLS
+    >>> from twosls import TSLS
 
     Open data on Columbus neighborhood crime (49 areas) using pysal.open().
     This is the DBF associated with the Columbus shapefile.  Note that
@@ -158,7 +157,7 @@ def pr2_aspatial(tslsreg):
 
     >>> import numpy as np
     >>> import pysal
-    >>> from twosls import BaseTSLS as TSLS
+    >>> from twosls import TSLS
 
     Open data on Columbus neighborhood crime (49 areas) using pysal.open().
     This is the DBF associated with the Columbus shapefile.  Note that

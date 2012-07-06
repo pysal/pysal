@@ -3,8 +3,8 @@ import numpy as np
 import pysal
 import pysal.spreg.diagnostics_tsls as diagnostics_tsls
 import pysal.spreg.diagnostics as diagnostics
-from pysal.spreg.ols import BaseOLS as OLS
-from pysal.spreg.twosls import BaseTSLS as TSLS
+from pysal.spreg.ols import OLS as OLS
+from pysal.spreg.twosls import TSLS as TSLS
 from pysal.spreg.twosls_sp import GM_Lag
 from scipy.stats import pearsonr
 

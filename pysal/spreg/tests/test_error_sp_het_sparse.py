@@ -1,6 +1,7 @@
 import unittest
 import pysal
 import numpy as np
+from scipy import sparse
 from pysal.spreg import error_sp_het as HET
 
 class TestBaseGMErrorHet(unittest.TestCase):
@@ -13,6 +14,7 @@ class TestBaseGMErrorHet(unittest.TestCase):
         X.append(db.by_col("CRIME"))
         self.X = np.array(X).T
         self.X = np.hstack((np.ones(self.y.shape),self.X))
+        self.X = sparse.csr_matrix(self.X)
         self.w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
 
@@ -33,7 +35,7 @@ class TestBaseGMErrorHet(unittest.TestCase):
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,7)
         x = np.array([  1.     ,  19.531  ,  15.72598])
-        np.testing.assert_array_almost_equal(reg.x[0],x,7)
+        np.testing.assert_array_almost_equal(reg.x[0].toarray()[0],x,7)
         i_s = 'Maximum number of iterations reached.'
         np.testing.assert_string_equal(reg.iter_stop,i_s)
         its = 1
@@ -65,6 +67,7 @@ class TestGMErrorHet(unittest.TestCase):
         X.append(db.by_col("INC"))
         X.append(db.by_col("CRIME"))
         self.X = np.array(X).T
+        self.X = sparse.csr_matrix(self.X)
         self.w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
 
@@ -85,7 +88,7 @@ class TestGMErrorHet(unittest.TestCase):
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,7)
         x = np.array([  1.     ,  19.531  ,  15.72598])
-        np.testing.assert_array_almost_equal(reg.x[0],x,7)
+        np.testing.assert_array_almost_equal(reg.x[0].toarray()[0],x,7)
         i_s = 'Maximum number of iterations reached.'
         np.testing.assert_string_equal(reg.iter_stop,i_s)
         its = 1
@@ -126,6 +129,7 @@ class TestBaseGMEndogErrorHet(unittest.TestCase):
         X.append(db.by_col("INC"))
         self.X = np.array(X).T
         self.X = np.hstack((np.ones(self.y.shape),self.X))
+        self.X = sparse.csr_matrix(self.X)
         yd = []
         yd.append(db.by_col("CRIME"))
         self.yd = np.array(yd).T
@@ -152,15 +156,15 @@ class TestBaseGMEndogErrorHet(unittest.TestCase):
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,7)
         x = np.array([  1.   ,  19.531])
-        np.testing.assert_array_almost_equal(reg.x[0],x,7)
+        np.testing.assert_array_almost_equal(reg.x[0].toarray()[0],x,7)
         yend = np.array([ 15.72598])
         np.testing.assert_array_almost_equal(reg.yend[0],yend,7)
         q = np.array([ 5.03])
         np.testing.assert_array_almost_equal(reg.q[0],q,7)
         z = np.array([  1.     ,  19.531  ,  15.72598])
-        np.testing.assert_array_almost_equal(reg.z[0],z,7)
+        np.testing.assert_array_almost_equal(reg.z[0].toarray()[0],z,7)
         h = np.array([  1.   ,  19.531,   5.03 ])
-        np.testing.assert_array_almost_equal(reg.h[0],h,7)
+        np.testing.assert_array_almost_equal(reg.h[0].toarray()[0],h,7)
         i_s = 'Maximum number of iterations reached.'
         np.testing.assert_string_equal(reg.iter_stop,i_s)
         its = 1
@@ -191,6 +195,7 @@ class TestGMEndogErrorHet(unittest.TestCase):
         X = []
         X.append(db.by_col("INC"))
         self.X = np.array(X).T
+        self.X = sparse.csr_matrix(self.X)
         yd = []
         yd.append(db.by_col("CRIME"))
         self.yd = np.array(yd).T
@@ -215,15 +220,15 @@ class TestGMEndogErrorHet(unittest.TestCase):
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,7)
         x = np.array([  1.   ,  19.531])
-        np.testing.assert_array_almost_equal(reg.x[0],x,7)
+        np.testing.assert_array_almost_equal(reg.x[0].toarray()[0],x,7)
         yend = np.array([ 15.72598])
         np.testing.assert_array_almost_equal(reg.yend[0],yend,7)
         q = np.array([ 5.03])
         np.testing.assert_array_almost_equal(reg.q[0],q,7)
         z = np.array([  1.     ,  19.531  ,  15.72598])
-        np.testing.assert_array_almost_equal(reg.z[0],z,7)
+        np.testing.assert_array_almost_equal(reg.z[0].toarray()[0],z,7)
         h = np.array([  1.   ,  19.531,   5.03 ])
-        np.testing.assert_array_almost_equal(reg.h[0],h,7)
+        np.testing.assert_array_almost_equal(reg.h[0].toarray()[0],h,7)
         i_s = 'Maximum number of iterations reached.'
         np.testing.assert_string_equal(reg.iter_stop,i_s)
         its = 1
@@ -269,6 +274,7 @@ class TestBaseGMComboHet(unittest.TestCase):
         # Only spatial lag
         yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 1, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
+        self.X = sparse.csr_matrix(self.X)
         reg = HET.BaseGM_Combo_Het(self.y, self.X, yend=yd2, q=q2, w=self.w, step1c=True)
         betas = np.array([[ 57.7778574 ], [  0.73034922], [ -0.59257362], [ -0.2230231 ], [  0.56636724]])
         np.testing.assert_array_almost_equal(reg.betas,betas,7)
@@ -285,13 +291,13 @@ class TestBaseGMComboHet(unittest.TestCase):
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,7)
         x = np.array([  1.     ,  19.531  ,  15.72598])
-        np.testing.assert_array_almost_equal(reg.x[0],x,7)
+        np.testing.assert_array_almost_equal(reg.x[0].toarray()[0],x,7)
         yend = np.array([ 35.4585005])
         np.testing.assert_array_almost_equal(reg.yend[0],yend,7)
         q = np.array([ 18.594    ,  24.7142675])
         np.testing.assert_array_almost_equal(reg.q[0],q,7)
         z = np.array([  1.       ,  19.531    ,  15.72598  ,  35.4585005])
-        np.testing.assert_array_almost_equal(reg.z[0],z,7)
+        np.testing.assert_array_almost_equal(reg.z[0].toarray()[0],z,7)
         i_s = 'Maximum number of iterations reached.'
         np.testing.assert_string_equal(reg.iter_stop,i_s)
         its = 1
@@ -332,6 +338,7 @@ class TestGMComboHet(unittest.TestCase):
         X.append(db.by_col("INC"))
         X.append(db.by_col("CRIME"))
         self.X = np.array(X).T
+        self.X = sparse.csr_matrix(self.X)
         self.w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
 
@@ -357,13 +364,13 @@ class TestGMComboHet(unittest.TestCase):
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,7)
         x = np.array([  1.     ,  19.531  ,  15.72598])
-        np.testing.assert_array_almost_equal(reg.x[0],x,7)
+        np.testing.assert_array_almost_equal(reg.x[0].toarray()[0],x,7)
         yend = np.array([ 35.4585005])
         np.testing.assert_array_almost_equal(reg.yend[0],yend,7)
         q = np.array([ 18.594    ,  24.7142675])
-        np.testing.assert_array_almost_equal(reg.q[0],q,7)
+        np.testing.assert_array_almost_equal(reg.q[0].toarray()[0],q,7)
         z = np.array([  1.       ,  19.531    ,  15.72598  ,  35.4585005])
-        np.testing.assert_array_almost_equal(reg.z[0],z,7)
+        np.testing.assert_array_almost_equal(reg.z[0].toarray()[0],z,7)
         i_s = 'Maximum number of iterations reached.'
         np.testing.assert_string_equal(reg.iter_stop,i_s)
         its = 1

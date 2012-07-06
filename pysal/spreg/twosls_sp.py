@@ -11,14 +11,15 @@ import numpy.linalg as la
 import twosls as TSLS
 import robust as ROBUST
 import user_output as USER
+import summary_output as SUMMARY
 from utils import get_lags, set_endog, sp_att
 
 __all__ = ["GM_Lag"]
 
 class BaseGM_Lag(TSLS.BaseTSLS):
     """
-    Spatial two stage least squares (S2SLS) (note: no consistency checks or
-    diagnostics); Anselin (1988) [1]_
+    Spatial two stage least squares (S2SLS) (note: no consistency checks,
+    diagnostics or constant added); Anselin (1988) [1]_
 
     Parameters
     ----------
@@ -134,20 +135,23 @@ class BaseGM_Lag(TSLS.BaseTSLS):
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("CRIME"))
     >>> X = np.array(X).T
-    >>> reg=BaseGM_Lag(y, X, w=w, w_lags=2)
+    >>> w_lags = 2
+    >>> yd2, q2 = pysal.spreg.utils.set_endog(y, X, w, None, None, w_lags, True)
+    >>> X = np.hstack((np.ones(y.shape),X))
+    >>> reg=BaseGM_Lag(y, X, yend=yd2, q=q2, w=w, w_lags=w_lags)
     >>> reg.betas
-    array([[  4.53017056e+01],
-           [  6.20888617e-01],
-           [ -4.80723451e-01],
-           [  2.83622122e-02]])
+    array([[ 45.30170561],
+           [  0.62088862],
+           [ -0.48072345],
+           [  0.02836221]])
     >>> D.se_betas(reg)
     array([ 17.91278862,   0.52486082,   0.1822815 ,   0.31740089])
-    >>> reg=BaseGM_Lag(y, X, w=w, w_lags=2, robust='white')
+    >>> reg=BaseGM_Lag(y, X, yend=yd2, q=q2, w=w, w_lags=w_lags, robust='white')
     >>> reg.betas
-    array([[  4.53017056e+01],
-           [  6.20888617e-01],
-           [ -4.80723451e-01],
-           [  2.83622122e-02]])
+    array([[ 45.30170561],
+           [  0.62088862],
+           [ -0.48072345],
+           [  0.02836221]])
     >>> D.se_betas(reg)
     array([ 20.47077481,   0.50613931,   0.20138425,   0.38028295])
     >>> # instrument for HOVAL with DISCBD
@@ -157,7 +161,9 @@ class BaseGM_Lag(TSLS.BaseTSLS):
     >>> yd = np.reshape(yd, (49,1))
     >>> q = np.array(db.by_col("DISCBD"))
     >>> q = np.reshape(q, (49,1))
-    >>> reg=BaseGM_Lag(y, X, w=w, yend=yd, q=q, w_lags=2)
+    >>> yd2, q2 = pysal.spreg.utils.set_endog(y, X, w, yd, q, w_lags, True)
+    >>> X = np.hstack((np.ones(y.shape),X))
+    >>> reg=BaseGM_Lag(y, X, w=w, yend=yd2, q=q2, w_lags=w_lags)
     >>> reg.betas
     array([[ 100.79359082],
            [  -0.50215501],
@@ -172,14 +178,11 @@ class BaseGM_Lag(TSLS.BaseTSLS):
                  w=None, w_lags=1, lag_q=True,\
                  robust=None, gwk=None, sig2n_k=False):
 
-        yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
-        TSLS.BaseTSLS.__init__(self, y=y, x=x, yend=yend2, q=q2,\
-                               sig2n_k=sig2n_k)        
-        if robust:
-            self.vm = ROBUST.robust_vm(self, gwk=gwk)
+        TSLS.BaseTSLS.__init__(self, y=y, x=x, yend=yend, q=q,\
+                               robust=robust, gwk=gwk, sig2n_k=sig2n_k)        
 
 
-class GM_Lag(BaseGM_Lag, USER.DiagnosticBuilder):
+class GM_Lag(BaseGM_Lag):
     """
     Spatial two stage least squares (S2SLS) with results and diagnostics; 
     Anselin (1988) [1]_
@@ -408,10 +411,10 @@ class GM_Lag(BaseGM_Lag, USER.DiagnosticBuilder):
 
     >>> reg=GM_Lag(y, X, w=w, w_lags=2, name_x=['inc', 'crime'], name_y='hoval', name_ds='columbus')
     >>> reg.betas
-    array([[  4.53017056e+01],
-           [  6.20888617e-01],
-           [ -4.80723451e-01],
-           [  2.83622122e-02]])
+    array([[ 45.30170561],
+           [  0.62088862],
+           [ -0.48072345],
+           [  0.02836221]])
 
     Once the model is run, we can obtain the standard error of the coefficient
     estimates by calling the diagnostics module:
@@ -425,10 +428,10 @@ class GM_Lag(BaseGM_Lag, USER.DiagnosticBuilder):
 
     >>> reg=GM_Lag(y, X, w=w, w_lags=2, robust='white', name_x=['inc', 'crime'], name_y='hoval', name_ds='columbus')
     >>> reg.betas
-    array([[  4.53017056e+01],
-           [  6.20888617e-01],
-           [ -4.80723451e-01],
-           [  2.83622122e-02]])
+    array([[ 45.30170561],
+           [  0.62088862],
+           [ -0.48072345],
+           [  0.02836221]])
 
     And we can access the standard errors from the model object:
 
@@ -473,15 +476,17 @@ class GM_Lag(BaseGM_Lag, USER.DiagnosticBuilder):
                  name_yend=None, name_q=None,\
                  name_w=None, name_gwk=None, name_ds=None):
 
-        USER.check_arrays(y, x, yend, q)
+        n = USER.check_arrays(x, yend, q)
+        USER.check_y(y, n)
         USER.check_weights(w, y)
         USER.check_robust(robust, gwk)
-        USER.check_constant(x)
-        BaseGM_Lag.__init__(self, y=y, x=x, w=w, yend=yend, q=q,\
+        yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
+        x_constant = USER.check_constant(x)
+        BaseGM_Lag.__init__(self, y=y, x=x_constant, w=w, yend=yend2, q=q2,\
                             w_lags=w_lags, robust=robust, gwk=gwk,\
                             lag_q=lag_q, sig2n_k=sig2n_k)
         self.predy_e, self.e_pred = sp_att(w,self.y,self.predy,\
-                      self.z[:,-1].reshape(self.n,1),self.betas[-1])
+                      yend2[:,-1].reshape(self.n,1),self.betas[-1])
         self.title = "SPATIAL TWO STAGE LEAST SQUARES"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
@@ -495,22 +500,18 @@ class GM_Lag(BaseGM_Lag, USER.DiagnosticBuilder):
         self.robust = USER.set_robust(robust)
         self.name_w = USER.set_name_w(name_w, w)
         self.name_gwk = USER.set_name_w(name_gwk, gwk)
-        self._get_diagnostics(w=w, beta_diag=True, nonspat_diag=False,\
-                                    vm=vm, spat_diag=spat_diag,
-                                    std_err=self.robust)
+        SUMMARY.GM_Lag(reg=self, w=w, vm=vm, spat_diag=spat_diag)
 
-    def _get_diagnostics(self, beta_diag=True, w=None, nonspat_diag=True,\
-                              spat_diag=False, vm=False, std_err=None):
-        USER.DiagnosticBuilder.__init__(self, w=w, beta_diag=beta_diag,\
-                                            nonspat_diag=nonspat_diag,\
-                                            spat_diag=spat_diag, vm=vm,\
-                                            instruments=True, std_err=std_err,\
-                                            spatial_lag=True)
 
 def _test():
     import doctest
+    start_suppress = np.get_printoptions()['suppress']
+    np.set_printoptions(suppress=True)    
     doctest.testmod()
+    np.set_printoptions(suppress=start_suppress)
+
 
 if __name__ == '__main__':
     _test()
+
 

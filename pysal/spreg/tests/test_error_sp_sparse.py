@@ -2,6 +2,7 @@ import unittest
 import pysal
 import numpy as np
 from pysal.spreg import error_sp as SP
+from scipy import sparse
 
 class TestBaseGMError(unittest.TestCase):
     def setUp(self):
@@ -13,6 +14,7 @@ class TestBaseGMError(unittest.TestCase):
         X.append(db.by_col("CRIME"))
         self.X = np.array(X).T
         self.X = np.hstack((np.ones(self.y.shape),self.X))
+        self.X = sparse.csr_matrix(self.X)
         self.w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
 
@@ -31,7 +33,7 @@ class TestBaseGMError(unittest.TestCase):
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,6)
         x = np.array([  1.     ,  19.531  ,  15.72598])
-        np.testing.assert_array_almost_equal(reg.x[0],x,6)
+        np.testing.assert_array_almost_equal(reg.x.toarray()[0],x,6)
         e = np.array([ 31.89620319])
         np.testing.assert_array_almost_equal(reg.e_filtered[0],e,6)
         predy = np.array([ 52.9930255])
@@ -54,6 +56,7 @@ class TestGMError(unittest.TestCase):
         X.append(db.by_col("INC"))
         X.append(db.by_col("CRIME"))
         self.X = np.array(X).T
+        self.X = sparse.csr_matrix(self.X)
         self.w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
 
@@ -72,7 +75,7 @@ class TestGMError(unittest.TestCase):
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,6)
         x = np.array([  1.     ,  19.531  ,  15.72598])
-        np.testing.assert_array_almost_equal(reg.x[0],x,6)
+        np.testing.assert_array_almost_equal(reg.x.toarray()[0],x,6)
         e = np.array([ 31.89620319])
         np.testing.assert_array_almost_equal(reg.e_filtered[0],e,6)
         predy = np.array([ 52.9930255])
@@ -101,6 +104,7 @@ class TestBaseGMEndogError(unittest.TestCase):
         X.append(db.by_col("INC"))
         self.X = np.array(X).T
         self.X = np.hstack((np.ones(self.y.shape),self.X))
+        self.X = sparse.csr_matrix(self.X)
         yd = []
         yd.append(db.by_col("CRIME"))
         self.yd = np.array(yd).T
@@ -127,11 +131,11 @@ class TestBaseGMEndogError(unittest.TestCase):
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,6)
         x = np.array([  1.   ,  19.531])
-        np.testing.assert_array_almost_equal(reg.x[0],x,6)
+        np.testing.assert_array_almost_equal(reg.x.toarray()[0],x,6)
         yend = np.array([  15.72598])
         np.testing.assert_array_almost_equal(reg.yend[0],yend,6)
         z = np.array([  1.     ,  19.531  ,  15.72598])
-        np.testing.assert_array_almost_equal(reg.z[0],z,6)
+        np.testing.assert_array_almost_equal(reg.z.toarray()[0],z,6)
         my = 38.43622446938776
         self.assertAlmostEqual(reg.mean_y,my)
         #std_y
@@ -151,6 +155,7 @@ class TestGMEndogError(unittest.TestCase):
         X = []
         X.append(db.by_col("INC"))
         self.X = np.array(X).T
+        self.X = sparse.csr_matrix(self.X)
         yd = []
         yd.append(db.by_col("CRIME"))
         self.yd = np.array(yd).T
@@ -177,11 +182,11 @@ class TestGMEndogError(unittest.TestCase):
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,6)
         x = np.array([  1.   ,  19.531])
-        np.testing.assert_array_almost_equal(reg.x[0],x,6)
+        np.testing.assert_array_almost_equal(reg.x.toarray()[0],x,6)
         yend = np.array([  15.72598])
         np.testing.assert_array_almost_equal(reg.yend[0],yend,6)
         z = np.array([  1.     ,  19.531  ,  15.72598])
-        np.testing.assert_array_almost_equal(reg.z[0],z,6)
+        np.testing.assert_array_almost_equal(reg.z.toarray()[0],z,6)
         my = 38.43622446938776
         self.assertAlmostEqual(reg.mean_y,my)
         sy = 18.466069465206047
@@ -213,6 +218,7 @@ class TestBaseGMCombo(unittest.TestCase):
         # Only spatial lag
         yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 1, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
+        self.X = sparse.csr_matrix(self.X)
         reg = SP.BaseGM_Combo(self.y, self.X, yend=yd2, q=q2, w=self.w)
         betas = np.array([[ 57.61123461],[  0.73441314], [ -0.59459416], [ -0.21762921], [  0.54732051]])
         np.testing.assert_array_almost_equal(reg.betas,betas,5)
@@ -229,11 +235,11 @@ class TestBaseGMCombo(unittest.TestCase):
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,6)
         x = np.array([  1.     ,  19.531  ,  15.72598])
-        np.testing.assert_array_almost_equal(reg.x[0],x,6)
+        np.testing.assert_array_almost_equal(reg.x.toarray()[0],x,6)
         yend = np.array([  35.4585005])
         np.testing.assert_array_almost_equal(reg.yend[0],yend,6)
         z = np.array([  1.       ,  19.531    ,  15.72598  ,  35.4585005])
-        np.testing.assert_array_almost_equal(reg.z[0],z,6)
+        np.testing.assert_array_almost_equal(reg.z.toarray()[0],z,6)
         my = 38.43622446938776
         self.assertAlmostEqual(reg.mean_y,my)
         sy = 18.466069465206047
@@ -252,6 +258,7 @@ class TestGMCombo(unittest.TestCase):
         X.append(db.by_col("INC"))
         X.append(db.by_col("CRIME"))
         self.X = np.array(X).T
+        self.X = sparse.csr_matrix(self.X)
         self.w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
     def test_model(self):
@@ -276,11 +283,11 @@ class TestGMCombo(unittest.TestCase):
         y = np.array([ 80.467003])
         np.testing.assert_array_almost_equal(reg.y[0],y,6)
         x = np.array([  1.     ,  19.531  ,  15.72598])
-        np.testing.assert_array_almost_equal(reg.x[0],x,6)
+        np.testing.assert_array_almost_equal(reg.x.toarray()[0],x,6)
         yend = np.array([  35.4585005])
         np.testing.assert_array_almost_equal(reg.yend[0],yend,6)
         z = np.array([  1.       ,  19.531    ,  15.72598  ,  35.4585005])
-        np.testing.assert_array_almost_equal(reg.z[0],z,6)
+        np.testing.assert_array_almost_equal(reg.z.toarray()[0],z,6)
         my = 38.43622446938776
         self.assertAlmostEqual(reg.mean_y,my)
         sy = 18.466069465206047

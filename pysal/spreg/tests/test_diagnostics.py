@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import pysal
 from pysal.spreg import diagnostics
-from pysal.spreg.ols import BaseOLS as OLS 
+from pysal.spreg.ols import OLS 
 
 
 # create regression object used by all the tests below

@@ -84,7 +84,7 @@ class RegressionPropsVM:
     @property
     def vm(self):
         if 'vm' not in self._cache:
-            self._cache['vm'] = np.dot(self.sig2, self.xtxi) 
+            self._cache['vm'] = np.dot(self.sig2, self.xtxi)
         return self._cache['vm']    
     
 def get_A1_het(S):
@@ -117,7 +117,7 @@ def get_A1_het(S):
     Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
     592-614.
     """
-    StS = S.T * S   #LA set diagonal of StS to zero, that's it
+    StS = S.T*S
     d = SP.spdiags([StS.diagonal()], [0], S.get_shape()[0], S.get_shape()[1])
     d = d.asformat('csr')
     return StS - d
@@ -155,7 +155,7 @@ def get_A1_hom(s, scalarKP=False):
     N. 1, pp. 1-13.      
     """
     n = float(s.shape[0])
-    wpw = s.T * s
+    wpw = s.T*s
     twpw = np.sum(wpw.diagonal()) 
     e = SP.eye(n, n, format='csr')
     e.data = np.ones(n) * (twpw / n)
@@ -228,16 +228,16 @@ def _moments2eqs(A1, s, u):
     N. 1, pp. 1-13.
     '''
     n = float(s.shape[0])
-    A1u = A1 * u
-    wu = s * u
+    A1u = A1*u
+    wu = s*u
     g1 = np.dot(u.T, A1u)
-    g2 = np.dot(u.T, wu)   #LA use 1/2 (W + W') for A2
+    g2 = np.dot(u.T, wu) 
     g = np.array([[g1][0][0],[g2][0][0]]) / n
 
-    G11 = np.dot(u.T, (A1 + A1.T) * wu) #LA use eqn (38) (39)
-    G12 = -np.dot(wu.T * A1, wu)
-    G21 = np.dot(u.T, (s + s.T) * wu)
-    G22 = -np.dot(wu.T, (s * wu))
+    G11 = np.dot(u.T, ((A1 + A1.T)*wu))
+    G12 = -np.dot((wu.T*A1), wu)
+    G21 = np.dot(u.T, ((s + s.T)*wu))
+    G22 = -np.dot(wu.T, (s*wu))
     G = np.array([[G11[0][0],G12[0][0]],[G21[0][0],G22[0][0]]]) / n
     return [G, g]
 
@@ -307,8 +307,8 @@ def foptim_par(par,moments):
                       sum of square residuals (e) of the equation system 
                       moments.g - moments.G * lambdapar = e
     """
-    vv=np.dot(moments[0],par)
-    vv2=vv-moments[1]             #LA - should be moments[1] - vv? doesn't matter in the end
+    vv = np.dot(moments[0],par)
+    vv2 = moments[1]-vv
     return sum(vv2**2)
 
 def get_spFilter(w,lamb,sf):
@@ -371,7 +371,7 @@ def get_lags(w, x, w_lags):
     spat_lags = lag
     for i in range(w_lags-1):
         lag = lag_spatial(w, lag)
-        spat_lags = np.hstack((spat_lags, lag))
+        spat_lags = sphstack(spat_lags, lag)
     return spat_lags
 
 def inverse_prod(w, data, scalar, post_multiply=False, inv_method="power_exp", threshold=0.0000000001, max_iterations=None):
@@ -435,9 +435,9 @@ def inverse_prod(w, data, scalar, post_multiply=False, inv_method="power_exp", t
     elif inv_method=="true_inv":
         matrix = la.inv(np.eye(w.n) - (scalar * w.full()[0]))
         if post_multiply:
-            inv_prod = np.dot(data.T, matrix)
+            inv_prod = spdot(data.T, matrix)
         else:
-            inv_prod = np.dot(matrix, data)
+            inv_prod = spdot(matrix, data)
     else:
         raise Exception, "Invalid method selected for inversion."
     return inv_prod
@@ -509,12 +509,12 @@ def set_endog(y, x, w, yend, q, w_lags, lag_q):
     yl = lag_spatial(w, y)
     if issubclass(type(yend), np.ndarray):  # spatial and non-spatial instruments
         if lag_q:
-            lag_vars = np.hstack((x, q))
+            lag_vars = sphstack(x, q)
         else:
             lag_vars = x
         spatial_inst = get_lags(w ,lag_vars, w_lags)
-        q = np.hstack((q, spatial_inst))
-        yend = np.hstack((yend, yl))
+        q = sphstack(q, spatial_inst)
+        yend = sphstack(yend, yl)
     elif yend == None: # spatial instruments only
         q = get_lags(w, x, w_lags)
         yend = yl
@@ -537,6 +537,144 @@ def sp_att(w,y,predy,w_y,rho):
         return predy_sp, resid_sp
     else:
         return None, None
+
+def spdot(a,b, array_out=True):
+    """
+    Matrix multiplication function to deal with sparse and dense objects
+
+    Parameters
+    ----------
+
+    a           : array
+                  first multiplication factor. Can either be sparse or dense.
+    b           : array
+                  second multiplication factor. Can either be sparse or dense.
+    array_out   : boolean
+                  If True (default) the output object is always a np.array
+
+    Returns
+    -------
+
+    ab : array
+         product of a times b. Sparse if a and b are sparse. Dense otherwise.
+    """  
+    if type(a).__name__ == 'ndarray' and type(b).__name__ == 'ndarray':
+        ab = np.dot(a,b)
+    elif type(a).__name__ == 'csr_matrix' or type(b).__name__ == 'csr_matrix' \
+            or type(a).__name__ == 'csc_matrix' or type(b).__name__ == 'csc_matrix':
+        ab = a*b
+        if array_out:
+            if type(ab).__name__ == 'csc_matrix' or type(ab).__name__ == 'csr_matrix':
+                ab = ab.toarray()
+    else:
+        raise Exception, "Invalid format for 'spdot' argument: %s and %s"%(type(a).__name__, type(b).__name__)
+    return ab
+
+def spmultiply(a, b, array_out=True):
+    """
+    Element-wise multiplication function to deal with sparse and dense
+    objects. Both objects must be of the same type.
+
+    Parameters
+    ----------
+
+    a           : array
+                  first multiplication factor. Can either be sparse or dense.
+    b           : array
+                  second multiplication factor. Can either be sparse or dense.
+                  integer.
+    array_out   : boolean
+                  If True (default) the output object is always a np.array
+
+    Returns
+    -------
+
+    ab : array
+         elementwise multiplied object. Sparse if a is sparse. Dense otherwise.
+    """  
+    if type(a).__name__ == 'ndarray' and type(b).__name__ == 'ndarray':
+        ab = a*b
+    elif (type(a).__name__ == 'csr_matrix' or type(a).__name__ == 'csc_matrix') \
+         and (type(b).__name__ == 'csr_matrix' or type(b).__name__ == 'csc_matrix'):
+        ab = a.multiply(b)
+        if array_out:
+            if type(ab).__name__ == 'csc_matrix' or type(ab).__name__ == 'csr_matrix':
+                ab = ab.toarray()
+    else:
+        raise Exception, "Invalid format for 'spmultiply' argument: %s and %s"%(type(a).__name__, type(b).__name__)
+    return ab
+
+def sphstack(a,b, array_out=False):
+    """
+    Horizontal stacking of vectors (or matrices) to deal with sparse and dense objects
+
+    Parameters
+    ----------
+
+    a           : array or sparse matrix
+                  First object.
+    b           : array or sparse matrix
+                  Object to be stacked next to a
+    array_out   : boolean
+                  If True the output object is a np.array; if False (default)
+                  the output object is an np.array if both inputs are
+                  arrays or CSR matrix if at least one input is a CSR matrix
+
+    Returns
+    -------
+
+    ab          : array or sparse matrix
+                  Horizontally stacked objects
+    """  
+    if type(a).__name__ == 'ndarray' and type(b).__name__ == 'ndarray':
+        ab = np.hstack((a,b))
+    elif type(a).__name__ == 'csr_matrix' or type(b).__name__ == 'csr_matrix':
+        ab = SP.hstack((a,b), format='csr')
+        if array_out:
+            if type(ab).__name__ == 'csr_matrix':
+                ab = ab.toarray()
+    else:
+        raise Exception, "Invalid format for 'sphstack' argument: %s and %s"%(type(a).__name__, type(b).__name__)
+    return ab
+
+def spbroadcast(a,b, array_out=False):
+    """
+    Element-wise multiplication of a matrix and vector to deal with sparse 
+    and dense objects
+
+    Parameters
+    ----------
+
+    a           : array or sparse matrix
+                  Object with one or more columns.
+    b           : array
+                  Object with only one column
+    array_out   : boolean
+                  If True the output object is a np.array; if False (default)
+                  the output object is an np.array if both inputs are
+                  arrays or CSR matrix if at least one input is a CSR matrix
+
+    Returns
+    -------
+
+    ab          : array or sparse matrix
+                  Element-wise multiplication of a and b
+    """  
+    if type(a).__name__ == 'ndarray' and type(b).__name__ == 'ndarray':
+        ab = a*b
+    elif type(a).__name__ == 'csr_matrix':
+        b_mod = SP.lil_matrix((b.shape[0], b.shape[0]))
+        b_mod.setdiag(b)
+        ab = (a.T*b_mod).T
+        if array_out:
+            if type(ab).__name__ == 'csr_matrix':
+                ab = ab.toarray()
+    else:
+        raise Exception, "Invalid format for 'spbroadcast' argument: %s and %s"%(type(a).__name__, type(b).__name__)
+    return ab
+
+
+
 
 def _test():
     import doctest

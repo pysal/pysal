@@ -6,8 +6,9 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, Nicholas Malizia nicholas.malizia
 
 import pysal
 from pysal.common import *
+import scipy.sparse as SP
 from math import sqrt
-
+from utils import spmultiply, sphstack
 
 
 __all__ = [ "f_stat", "t_stat", "r2", "ar2", "se_betas", "log_likelihood", "akaike", "schwarz", "condition_index", "jarque_bera", "breusch_pagan", "white", "koenker_bassett", "vif" ]
@@ -39,7 +40,7 @@ def f_stat(reg):
     >>> import numpy as np
     >>> import pysal
     >>> import diagnostics
-    >>> from ols import BaseOLS as OLS
+    >>> from ols import OLS
 
     Read the DBF associated with the Columbus data. 
 
@@ -113,7 +114,7 @@ def t_stat(reg, z_stat=False):
     >>> import numpy as np
     >>> import pysal
     >>> import diagnostics
-    >>> from ols import BaseOLS as OLS
+    >>> from ols import OLS
 
     Read the DBF associated with the Columbus data. 
 
@@ -187,7 +188,7 @@ def r2(reg):
     >>> import numpy as np
     >>> import pysal
     >>> import diagnostics
-    >>> from ols import BaseOLS as OLS
+    >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
     
@@ -254,7 +255,7 @@ def ar2(reg):
     >>> import numpy as np
     >>> import pysal
     >>> import diagnostics
-    >>> from ols import BaseOLS as OLS
+    >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
@@ -316,7 +317,7 @@ def se_betas(reg):
     >>> import numpy as np
     >>> import pysal
     >>> import diagnostics
-    >>> from ols import BaseOLS as OLS
+    >>> from ols import OLS
 
     Read the DBF associated with the Columbus data. 
 
@@ -379,7 +380,7 @@ def log_likelihood(reg):
     >>> import numpy as np
     >>> import pysal
     >>> import diagnostics
-    >>> from ols import BaseOLS as OLS
+    >>> from ols import OLS
 
     Read the DBF associated with the Columbus data. 
     
@@ -443,7 +444,7 @@ def akaike(reg):
     >>> import numpy as np
     >>> import pysal
     >>> import diagnostics
-    >>> from ols import BaseOLS as OLS
+    >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
@@ -508,7 +509,7 @@ def schwarz(reg):
     >>> import numpy as np
     >>> import pysal
     >>> import diagnostics
-    >>> from ols import BaseOLS as OLS
+    >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
@@ -574,7 +575,7 @@ def condition_index(reg):
     >>> import numpy as np
     >>> import pysal
     >>> import diagnostics
-    >>> from ols import BaseOLS as OLS
+    >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
@@ -653,7 +654,7 @@ def jarque_bera(reg):
     >>> import numpy as np
     >>> import pysal
     >>> import diagnostics
-    >>> from ols import BaseOLS as OLS
+    >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
@@ -743,6 +744,11 @@ def breusch_pagan(reg, z=None):
                       p-value associated with the statistic (chi^2
                       distributed with k df)
 
+    Note
+    ----
+    x attribute in the reg object must have a constant term included. This is
+    standard for spreg.OLS so no testing done to confirm constant.
+
     References
     ----------
     
@@ -755,7 +761,7 @@ def breusch_pagan(reg, z=None):
     >>> import numpy as np
     >>> import pysal
     >>> import diagnostics
-    >>> from ols import BaseOLS as OLS
+    >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
@@ -808,15 +814,17 @@ def breusch_pagan(reg, z=None):
 
     if z == None:
         x = reg.x
-        constant = constant_check(x)
-        if constant == False: 
-            z = np.hstack((np.ones((n,1)),x))**2
-        else:
-            z = x**2
+        #constant = constant_check(x)
+        #if constant == False: 
+        #    z = np.hstack((np.ones((n,1)),x))**2
+        #else:
+        #    z = x**2
+        z = spmultiply(x, x)
     else:
-        constant = constant_check(z)
-        if constant == False: 
-            z = np.hstack((np.ones((n,1)),z))
+        #constant = constant_check(z)
+        #if constant == False: 
+        #    z = np.hstack((np.ones((n,1)),z))
+        pass
 
     n,p = z.shape
 
@@ -865,15 +873,12 @@ def breusch_pagan(reg, z=None):
 
 def white(reg):
     """
-    Calculates the White test to check for heteroscedasticity. 
+    Calculates the White test to check for heteroscedasticity.
 
     Parameters
     ----------
     reg             : regression object
                       output instance from a regression model
-    constant        : boolean
-                      if true the original regression includes a constant,
-                      set to "True" by default
 
     Returns
     -------
@@ -889,6 +894,11 @@ def white(reg):
                       p-value associated with the statistic (chi^2
                       distributed with k df)
     
+    Note
+    ----
+    x attribute in the reg object must have a constant term included. This is
+    standard for spreg.OLS so no testing done to confirm constant.
+
     References
     ----------
     .. [1] H. White. 1980. A heteroscedasticity-consistent covariance
@@ -901,7 +911,7 @@ def white(reg):
     >>> import numpy as np
     >>> import pysal
     >>> import diagnostics
-    >>> from ols import BaseOLS as OLS
+    >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
@@ -948,11 +958,11 @@ def white(reg):
     n = reg.n
     y = reg.y
     X = reg.x
-    constant = constant_check(X)
+    #constant = constant_check(X)
     
     # Check for constant, if none add one, see Greene 2003, pg. 222
-    if constant == False: 
-        X = np.hstack((np.ones((n,1)),X))
+    #if constant == False: 
+    #    X = np.hstack((np.ones((n,1)),X))
 
     # Check for multicollinearity in the X matrix
     ci = condition_index(reg)
@@ -960,22 +970,23 @@ def white(reg):
         white_result = "Not computed due to multicollinearity."
         return white_result
 
-    # Compute cross-products of the regression variables
-    A = []
-    for i in range(k-1):
-        for j in range(i+1,k):
-            v = X[:,i]*X[:,j]
-            A.append(v)
-    
-    # Square the regression variables
+    # Compute cross-products and squares of the regression variables
+    if type(X).__name__ == 'ndarray':
+        A = np.zeros((n, (k*(k+1))/2.))
+    elif type(X).__name__ == 'csc_matrix' or type(X).__name__ == 'csr_matrix':
+        # this is probably inefficient
+        A = SP.lil_matrix((n, (k*(k+1))/2.))
+    else:
+        raise Exception, "unknown X type, %s" %type(X).__name__
+    counter = 0
     for i in range(k):
-        v = X[:,i]**2
-        A.append(v)
+        for j in range(i,k):
+            v = spmultiply(X[:,i], X[:,j], False)
+            A[:,counter] = v
+            counter += 1
 
-    # Convert to an array with the proper dimensions and append the
-    # original non-binary variables
-    A = np.array(A).T
-    A = np.hstack((X,A))
+    # Append the original non-binary variables
+    A = sphstack(X,A)   # note: this also converts a LIL to CSR
     n,k = A.shape
 
     # Check to identify any duplicate columns in A
@@ -988,29 +999,31 @@ def white(reg):
                 test = abs(current - check).sum()
                 if test == 0:
                     omitcolumn.append(j)
-
     uniqueomit = set(omitcolumn)
     omitcolumn = list(uniqueomit)
 
-    # Now the identified columns must be removed (done in reverse to
-    # prevent renumbering)
-    omitcolumn.sort()
-    omitcolumn.reverse()
-    for c in omitcolumn:
-        A = np.delete(A,c,1)
+    # Now the identified columns must be removed
+    if type(A).__name__ == 'ndarray':
+        A = np.delete(A,omitcolumn,1)
+    elif type(A).__name__ == 'csc_matrix' or type(A).__name__ == 'csr_matrix':
+        # this is probably inefficient
+        keepcolumn = range(k)
+        for i in omitcolumn:
+            keepcolumn.remove(i)
+        A = A[:,keepcolumn]
+    else:
+        raise Exception, "unknown A type, %s" %type(X).__name__
     n,k = A.shape
 
     # Conduct the auxiliary regression and calculate the statistic
     import ols as OLS
-    aux_reg = OLS.BaseOLS(e,A,constant=False)
+    aux_reg = OLS.BaseOLS(e,A)
     aux_r2 = r2(aux_reg)
     wh = aux_r2*n
     df = k-1
     pvalue = stats.chisqprob(wh,df)
     white_result={'df':df,'wh':wh, 'pvalue':pvalue}
     return white_result 
-
-
 
 def koenker_bassett(reg, z=None):
     """
@@ -1043,6 +1056,11 @@ def koenker_bassett(reg, z=None):
                       p-value associated with the statistic (chi^2
                       distributed)
 
+    Note
+    ----
+    x attribute in the reg object must have a constant term included. This is
+    standard for spreg.OLS so no testing done to confirm constant.
+
     Reference
     ---------
     .. [1] R. Koenker and G. Bassett. 1982. Robust tests for
@@ -1057,7 +1075,7 @@ def koenker_bassett(reg, z=None):
     >>> import numpy as np
     >>> import pysal
     >>> import diagnostics
-    >>> from ols import BaseOLS as OLS
+    >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
@@ -1106,7 +1124,7 @@ def koenker_bassett(reg, z=None):
     k = reg.k
     x = reg.x
     ete = reg.utu
-    constant = constant_check(x)
+    #constant = constant_check(x)
 
     ubar = ete/n
     ubari = ubar*np.ones((n,1))
@@ -1115,15 +1133,17 @@ def koenker_bassett(reg, z=None):
 
     if z == None:
         x = reg.x
-        constant = constant_check(x)
-        if constant == False: 
-            z = np.hstack((np.ones((n,1)),x))**2
-        else:
-            z = x**2
+        #constant = constant_check(x)
+        #if constant == False: 
+        #    z = np.hstack((np.ones((n,1)),x))**2
+        #else:
+        #    z = x**2
+        z = spmultiply(x, x)
     else:
-        constant = constant_check(z)
-        if constant == False: 
-            z = np.hstack((np.ones((n,1)),z))
+        #constant = constant_check(z)
+        #if constant == False: 
+        #    z = np.hstack((np.ones((n,1)),z))
+        pass
 
     n,p = z.shape
 
@@ -1199,7 +1219,7 @@ def vif(reg):
     >>> import numpy as np
     >>> import pysal
     >>> import diagnostics
-    >>> from ols import BaseOLS as OLS
+    >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
@@ -1256,7 +1276,7 @@ def vif(reg):
         Z = np.delete(Z,j,1)
         y  = X[:,j]
         import ols as OLS
-        aux = OLS.BaseOLS(y,Z,constant=False)
+        aux = OLS.BaseOLS(y,Z)
         mean_y = aux.mean_y
         utu = aux.utu
         ss_tot = sum((y-mean_y)**2)
@@ -1292,7 +1312,7 @@ def constant_check(array):
     >>> import numpy as np
     >>> import pysal
     >>> import diagnostics
-    >>> from ols import BaseOLS as OLS
+    >>> from ols import OLS
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))

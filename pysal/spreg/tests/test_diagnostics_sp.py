@@ -2,8 +2,8 @@ import unittest
 import numpy as np
 import pysal
 from pysal.spreg import diagnostics
-from pysal.spreg.ols import BaseOLS as OLS
-from pysal.spreg.twosls import BaseTSLS as TSLS
+from pysal.spreg.ols import OLS as OLS
+from pysal.spreg.twosls import TSLS as TSLS
 from pysal.spreg.twosls_sp import GM_Lag
 from pysal.spreg.diagnostics_sp import LMtests, MoranRes, spDcache, AKtest
 

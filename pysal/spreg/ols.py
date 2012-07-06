@@ -1,18 +1,21 @@
 """Ordinary Least Squares regression classes."""
 
 __author__ = "Luc Anselin luc.anselin@asu.edu, David C. Folch david.folch@asu.edu"
+
 import numpy as np
 import copy as COPY
 import numpy.linalg as la
 import user_output as USER
+import summary_output as SUMMARY
 import robust as ROBUST
-from utils import RegressionPropsY, RegressionPropsVM
+from utils import spdot, sphstack, RegressionPropsY, RegressionPropsVM
 
 __all__ = ["OLS"]
 
 class BaseOLS(RegressionPropsY, RegressionPropsVM):
     """
-    Ordinary least squares (OLS) (note: no consistency checks or diagnostics)
+    Ordinary least squares (OLS) (note: no consistency checks, diagnostics or
+    constant added)
 
     Parameters
     ----------
@@ -21,9 +24,6 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
     x            : array
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, excluding the constant
-    constant     : boolean
-                   If True, then add a constant term to the array of
-                   independent variables
     robust       : string
                    If 'white', then a White consistent estimator of the
                    variance-covariance matrix is given.  If 'hac', then a
@@ -85,28 +85,26 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("CRIME"))
     >>> X = np.array(X).T
+    >>> X = np.hstack((np.ones(y.shape),X))
     >>> ols=BaseOLS(y,X)
     >>> ols.betas
     array([[ 46.42818268],
            [  0.62898397],
            [ -0.48488854]])
     >>> ols.vm
-    array([[  1.74022453e+02,  -6.52060364e+00,  -2.15109867e+00],
-           [ -6.52060364e+00,   2.87200008e-01,   6.80956787e-02],
-           [ -2.15109867e+00,   6.80956787e-02,   3.33693910e-02]])
+    array([[ 174.02245348,   -6.52060364,   -2.15109867],
+           [  -6.52060364,    0.28720001,    0.06809568],
+           [  -2.15109867,    0.06809568,    0.03336939]])
     """
-    def __init__(self, y, x, constant=True,\
-                 robust=None, gwk=None, sig2n_k=True):
+    def __init__(self, y, x, robust=None, gwk=None, sig2n_k=True):
+        self.x = x
+        self.xtx = spdot(self.x.T, self.x)
+        xty = spdot(self.x.T, y)
 
-        if constant:
-            self.x = np.hstack((np.ones(y.shape), x))
-        else:
-            self.x = x
-        self.xtx = np.dot(self.x.T, self.x)
         self.xtxi = la.inv(self.xtx)
-        xty = np.dot(self.x.T, y)
         self.betas = np.dot(self.xtxi, xty)
-        predy = np.dot(self.x, self.betas)
+        predy = spdot(self.x, self.betas)
+
         u = y-predy
         self.u = u
         self.predy = predy
@@ -122,8 +120,7 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
         else:
             self.sig2 = self.sig2n
 
-
-class OLS(BaseOLS, USER.DiagnosticBuilder):
+class OLS(BaseOLS):
     """
     Ordinary least squares with results and diagnostics.
     
@@ -415,13 +412,14 @@ class OLS(BaseOLS, USER.DiagnosticBuilder):
                  vm=False, name_y=None, name_x=None,\
                  name_w=None, name_gwk=None, name_ds=None):
 
-        USER.check_arrays(y, x)
+        n = USER.check_arrays(y, x)
+        USER.check_y(y, n)
         USER.check_weights(w, y)
         USER.check_robust(robust, gwk)
         USER.check_spat_diag(spat_diag, w)
-        USER.check_constant(x)
-        BaseOLS.__init__(self, y=y, x=x, robust=robust,\
-                         gwk=gwk, sig2n_k=sig2n_k) 
+        x_constant = USER.check_constant(x)
+        BaseOLS.__init__(self, y=y, x=x_constant, robust=robust,\
+                     gwk=gwk, sig2n_k=sig2n_k) 
         self.title = "ORDINARY LEAST SQUARES"
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
@@ -429,27 +427,18 @@ class OLS(BaseOLS, USER.DiagnosticBuilder):
         self.robust = USER.set_robust(robust)
         self.name_w = USER.set_name_w(name_w, w)
         self.name_gwk = USER.set_name_w(name_gwk, gwk)
-        self._get_diagnostics(w=w, beta_diag=True, nonspat_diag=nonspat_diag,\
-                                    spat_diag=spat_diag, vm=vm, moran=moran,
-                                    std_err=self.robust)
-
-    def _get_diagnostics(self, beta_diag=True, w=None, nonspat_diag=True,\
-                              spat_diag=False, vm=False, moran=False,
-                              std_err=None):
-        USER.DiagnosticBuilder.__init__(self, w=w, beta_diag=beta_diag,\
-                                            nonspat_diag=nonspat_diag,\
-                                            spat_diag=spat_diag, vm=vm,\
-                                            moran=moran, std_err=std_err,\
-                                            ols=True)
+        SUMMARY.OLS(reg=self, vm=vm, w=w, nonspat_diag=nonspat_diag,\
+                    spat_diag=spat_diag, moran=moran)
 
 def _test():
     import doctest
     # the following line could be used to define an alternative to the '<BLANKLINE>' flag
     #doctest.BLANKLINE_MARKER = 'something better than <BLANKLINE>'
+    start_suppress = np.get_printoptions()['suppress']
+    np.set_printoptions(suppress=True)
     doctest.testmod()
+    np.set_printoptions(suppress=start_suppress)    
 
 if __name__ == '__main__':
     _test()
-
-
 
