@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 import pysal
-import econometrics as EC
+import pysal.spreg as EC
 from scipy import sparse
 
 PEGP = pysal.examples.get_path
