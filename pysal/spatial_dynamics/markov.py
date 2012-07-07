@@ -654,7 +654,10 @@ class LISA_Markov(Markov):
                    integer values indicating which type of LISA transition
                    occurred (q1 is quadrant in period 1, q2 is quadrant in
                    period 2)
+
+                   ==  ==     ========
                    q1  q2     move_type
+                   ==  ==     ========
                    1   1      1
                    1   2      2
                    1   3      3
@@ -671,6 +674,7 @@ class LISA_Markov(Markov):
                    4   2      14
                    4   3      15
                    4   4      16
+                   ==  ==     ========
 
     p            : matrix (k, k)
                    transition probability matrix
@@ -682,12 +686,20 @@ class LISA_Markov(Markov):
                        integer values indicating the type and significance of a LISA
                        transition. st = 1 if significant in period t, else
                        st=0 
-                       if s1==s2==1: 1<= move_type <= 16
-                       if s1=1 and s2==1: 17<= move_type <=32
-                       if s1=0 and s2==1: 33<= move_type <=48
-                       if s1=0 and s2==0: 49<= move_type <=64
 
+                       ===============  ===================
+                       (s1,s2)          move_type
+                       ===============  ===================
+                       (1,1)            [1, 16]
+                       (1,0)            [17, 32]
+                       (0,1)            [33, 48]
+                       (0,0)            [49, 64]
+                       ===============  ===================
+
+
+                       == ==  ==  ==  =========
                        q1 q2  s1  s2  move_type
+                       == ==  ==  ==  =========
                         1  1   1   1   1
                         1  2   1   1   2
                         1  3   1   1   3
@@ -722,6 +734,7 @@ class LISA_Markov(Markov):
                         .  .   .   .    .
                         4  3   0   0   63
                         4  4   0   0   64
+                       == ==  ==  ==  =========
 
     steady_state : matrix (k, 1)
                    ergodic distribution
@@ -1206,7 +1219,9 @@ def shorrock(pmat):
     sh : scalar
           Conditional mobility measure:
 
-    .. math:: sh = \frac{k  - \sum_j p_{i,i}}{k - 1}
+        .. math::
+
+         sh = (k  - \sum_{j=1}^{k} p_{j,j})/(k - 1)
 
 
     Examples
