@@ -23,8 +23,12 @@ region
     Regionalization algorithms and spatially constrained clustering
 spatial_dynamics
     Space-time exploratory methods and clustering
+spreg
+    Spatial regression and econometrics
 weights
     Tools for creating and manipulating weights
+contrib
+    Package for interfacing with third-party libraries
 
 Utilities
 ---------
