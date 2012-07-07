@@ -22,13 +22,13 @@ Available sub-packages
 .. toctree::
 
     cg/index
-    esda/index
     core/index
+    esda/index
     inequality/index
     region/index
     spatial_dynamics/index
-    weights/index
     spreg/index
+    weights/index
     contrib/index
 
 
