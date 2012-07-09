@@ -378,7 +378,7 @@ class W(object):
         """
         average number of neighbors
         """
-        if 'max_neighbors' not in self._cache:
+        if 'mean_neighbors' not in self._cache:
             self._mean_neighbors=np.mean(self.cardinalities.values())
             self._cache['mean_neighbors']=self._mean_neighbors
         return self._mean_neighbors
