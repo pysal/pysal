@@ -99,6 +99,8 @@ class Join_Counts:
     0.0030000000000000001
     >>> np.mean(jc.sim_bb)
     5.6396396396396398
+    >>> np.max(jc.sim_bb)
+    10.0
     >>> 
     """
     def __init__(self,y,w,permutations = PERMUTATIONS):

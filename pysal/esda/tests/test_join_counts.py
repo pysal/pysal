@@ -23,6 +23,7 @@ class Join_Counts_Tester(unittest.TestCase):
         self.assertAlmostEquals(np.sqrt(jc.Vbw), 2.4494897427831779 )
         self.assertAlmostEquals(jc.p_sim_bb, 0.0030000000000000001 )
         self.assertAlmostEquals(np.mean(jc.sim_bb), 5.6396396396396398 )
+        self.assertAlmostEquals(np.max(jc.sim_bb), 10.0 )
 
 suite = unittest.TestSuite()
 test_classes = [Join_Counts_Tester ]
