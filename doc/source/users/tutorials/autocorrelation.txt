@@ -35,8 +35,116 @@ autocorrelation.
 Global Autocorrelation
 ======================
 
-PySAL implements three different tests for global spatial autocorrelation:
-Moran's I, Geary's C, and Getis and Ord's G.
+PySAL implements four different tests for global spatial autocorrelation:
+join count statistics, Moran's I, Geary's C, and Getis and Ord's G.
+
+Join Count Statistics
+----------------------
+
+The join count statistics measure global spatial autocorrelation for binary data, i.e.,
+with observations coded as 1 or B (for Black) and 0 or W (for White). They follow the
+very simple principle of counting joins, i.e., the arrangement of values between
+pairs of observations where the pairs correspond to neighbors. The three resulting
+join count statistics are BB, WW and BW. Both BB and WW are measures of positive
+spatial autocorrelation, whereas BW is an indicator of negative spatial autocorrelation.
+
+To implement the join count statistics, we need the spatial weights matrix in 
+binary (not row-standardized) form. With :math:`y` as the vector of observations
+and the spatial :doc:`weight <weights>` as :math:`w_{i,j}`, the three statistics can be expressed as:
+
+.. math::
+
+       BB = (1/2) \sum_{i}\sum_{j} y_i y_j w_{ij}
+     
+.. math::      
+  
+       WW = (1/2) \sum_{i}\sum_{j} (1 - y_i)(1 - y_j) w_{ij}
+
+.. math::
+
+       BW = (1/2) \sum_{i}\sum_{j} (y_i - y_j)^2 w_{ij}
+     
+By convention, the join counts are divided by 2 to avoid double counting. Also, since
+the three joins exhaust all the possibilities, they sum to one half (because of the
+division by 2) of the total sum of weights :math:`(1/2)S_0 = (1/2)\sum_{i}\sum_{j} w_{ij}`.
+
+Inference for the join count statistics can be based on either an analytical approach
+or a computational approach. The analytical approach starts from the binomial distribution
+and derives the moments of the statistics under the assumption of free sampling
+and non-free sampling. The resulting mean and variance are used to construct a
+standardized z-variable which can be approximated as a standard normal variate. [#]_
+Computational inference is based on a permutation approach in which the values of y
+are randomly reshuffled many times to obtain a reference distribution of the statistics
+under the null hypothesis of spatial randomness. The observed join count is then
+compared to this reference distribution and a pseudo-significance computed as
+
+.. math::
+
+       p = (m + 1) / (n + 1)
+       
+where m is the number of values from the reference distribution that are equal to
+or greater than the observed join count and n is the number of permutations.
+
+We will illustrate the join count statistics with a simple artificial example
+of a 4 by 4 square lattice with values of 0 in the top half and values of 1 in
+the bottom half.
+
+We start with the usual imports, and set the random seed to 10 in order
+to be able to replicate the results of the permutation approach.
+
+
+        >>> import pysal
+        >>> import numpy as np
+        >>> np.random.seed(10)
+        
+We create the binary weights matrix for the 4 x 4 lattice and generate the
+observation vector y:
+
+.. doctest::
+
+        >>> w=pysal.lat2W(4,4)
+        >>> y=np.ones(16)
+        >>> y[0:8]=0 
+
+We obtain an instance of the joint count statistics as:
+
+.. doctest::
+
+        >>> jc=Join_Counts(y,w)
+        >>> jc.bb
+        10.0
+        >>> jc.zbb
+        1.2060453783110545
+        >>> jc.bw
+        4.0
+        >>> jc.zbw
+        -3.2659863237109046
+
+The number of permutations is set to 999 by default. For other values, this parameter
+needs to be passed explicitly, as in:
+
+
+        >>> jc=Join_Counts(y,w,permutations=99)
+        
+The results in our simple example show that the BB counts are 10. There are
+in fact 3 horizontal joins in each of the bottom rows of the lattice as well as
+4 vertical joins, which makes for BB = 3 + 3 + 4 = 10. The BW joins are 4, matching the
+separation between the bottom and top part. Using the free sampling approximation,
+we obtain a z value for the BB counts of 1.21 and a value for BW of -3.27.
+
+The permutation results give a pseudo-p value for BB of 0.003. The average BB count
+for the sample of 999 replications is 5.6, quite a bit lower than the count of 10
+we obtain. Only two instances of the replicated samples yield a value equal to 10,
+none is greater.
+
+.. doctest::
+
+        >>> jc.p_sim_bb
+        0.0030000000000000001
+        >>> np.mean(jc.sim_bb)
+        5.6396396396396398
+        >>> np.max(jc.sim_bb)
+        10.0
 
 Moran's I
 ---------
@@ -430,6 +538,7 @@ To identify the significant :math:`G_i` values we can use numpy indexing:
 
 .. rubric:: Footnotes
 
+.. [#] Technical details and derivations can be found in A.D. Cliff and J.K. Ord (1981). Spatial Processes, Models and Applications. London, Pion, pp. 34-41.
 .. [#] Source: S. Messner, L. Anselin, D. Hawkins, G. Deane, S. Tolnay, R. Baller (2000). An Atlas of the Spatial Patterning of County-Level Homicide, 1960-1990. Pittsburgh, PA, National Consortium on Violence Research (NCOVR)
 .. [#] Because the permutations are random, results from those presented here may vary if you replicate this example.
 .. [#] Source: Assuncao, R. E. and Reis, E. A. 1999. A new proposal to adjust Moran's I for population density. Statistics in Medicine. 18, 2147-2162.
