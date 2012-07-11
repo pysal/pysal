@@ -41,31 +41,24 @@ class Join_Counts:
                    number of black-white joins
     J            : float
                    number of joins
-    Ebb          : float
-                   expected value of bb under free sampling
-    Eww          : float
-                   expected value of ww under free sampling
-    Ebw          : float
-                   expected value of bw under free sampling
-    Vbb          : float
-                   variance of bb under free sampling
-    Vww          : float
-                   variance of ww under free sampling
-    Vbw          : float
-                   variance of bw under free sampling
-    zbb          : float
-                   z-value for bb under free sampling
-    zww          : float
-                   z-value for ww under free sampling
-    zbw          : float
-                   z-value for bw under free sampling
     sim_bb       : array (if permutations>0)
-                   vector of bb values for permutated samples
+                   vector of bb values for permuted samples
     p_sim_bb     : array (if permutations>0)
                    p-value based on permutations (one-sided)
                    null: spatial randomness
-                   alternative: the observed bb is extreme
-                                it is either extremely greater or extremely lower
+                   alternative: the observed bb is greater than under randomness
+    mean_bb      : average of permuted bb values
+    min_bb       : minimum of permuted bb values
+    max_bb       : maximum of permuted bb values
+    sim_bw       : array (if permutations>0)
+                   vector of bw values for permuted samples
+    p_sim_bw     : array (if permutations>0)
+                   p-value based on permutations (one-sided)
+                   null: spatial randomness
+                   alternative: the observed bw is greater than under randomness   
+    mean_bw      : average of permuted bw values
+    min_bw       : minimum of permuted bw values
+    max_bw       : maximum of permuted bw values
 
 
     Examples
@@ -77,30 +70,36 @@ class Join_Counts:
     >>> w=pysal.lat2W(4,4)
     >>> y=np.ones(16)
     >>> y[0:8]=0
-    >>> np.random.seed(10)
-    >>> jc=Join_Counts(y,w)
+    >>> np.random.seed(12345)
+    >>> jc=pysal.Join_Counts(y,w)
     >>> jc.bb
     10.0
-    >>> jc.zbb
-    1.2060453783110545
     >>> jc.bw
     4.0
-    >>> jc.zbw
-    -3.2659863237109046
-    >>> jc.Ebw
-    12.0
-    >>> jc.bw
-    4.0
-    >>> jc.Vbw
-    6.0
-    >>> np.sqrt(jc.Vbw)
-    2.4494897427831779
+    >>> jc.ww
+    10.0
+    >>> jc.J
+    24.0
+    >>> len(jc.sim_bb)
+    999
     >>> jc.p_sim_bb
     0.0030000000000000001
     >>> np.mean(jc.sim_bb)
-    5.6396396396396398
+    5.5465465465465469
     >>> np.max(jc.sim_bb)
     10.0
+    >>> np.min(jc.sim_bb)
+    0.0
+    >>> len(jc.sim_bw)
+    999
+    >>> jc.p_sim_bw
+    1.0
+    >>> np.mean(jc.sim_bw)
+    12.811811811811811
+    >>> np.max(jc.sim_bw)
+    24.0
+    >>> np.min(jc.sim_bw)
+    7.0
     >>> 
     """
     def __init__(self,y,w,permutations = PERMUTATIONS):
@@ -108,50 +107,40 @@ class Join_Counts:
         self.w=w
         self.y=y
         self.permutations = permutations
-        b=sum(y)*1.
-        self.B=b
-        self.W=w.n-b
         self.J=w.s0/2.
-        self.bb = self.__calc(self.y)
-        yw=1-y;
-        self.ww = self.__calc(yw)
-        self.bw=self.J-(self.ww+self.bb)
-        pb= (self.B/w.n)
-        pw= (self.W/w.n)
-        pb2=pb**2
-        pw2=pw**2
-        Ebb=self.J * pb2
-        Eww=self.J * pw2
-        Ebw=2. * self.J * pb * pw
-        self.Ebb=Ebb
-        self.Eww=Eww
-        self.Ebw=Ebw
-        self.pb=pb
-        self.pw=pw
-        ks=w.cardinalities.values()
-        m=sum([k*(k-1) for k in ks])/2.
-        self.m=m
-        self.Vbb=self.J * pb2 + 2*m*pb2*pb - (self.J + 2*m)*pb2*pb2
-        self.Vww=self.J * pw2 + 2*m*pw2*pw - (self.J + 2*m)*pw2*pw2
-        self.Vbw=2*(self.J + m)*pb*pw - 4*(self.J+2*m)*pb2*pw2
-        self.zbb=(self.bb-self.Ebb)/np.sqrt(self.Vbb)
-        self.zww=(self.ww-self.Eww)/np.sqrt(self.Vww)
-        self.zbw=(self.bw-self.Ebw)/np.sqrt(self.Vbw)
+        self.bb,self.ww,self.bw = self.__calc(self.y)
         
         if permutations:
             sim = [self.__calc(np.random.permutation(self.y)) \
                  for i in xrange(permutations)]
-            self.sim_bb = sim_bb = np.array(sim)
-            above = sim_bb >= self.bb
-            larger = sum(above)
-            if (self.permutations - larger) < larger:
-                larger = self.permutations - larger
-            self.p_sim_bb = (larger + 1.)/(permutations + 1.)
+            sim_jc = np.array(sim)
+            self.sim_bb = sim_jc[:,0]
+            self.min_bb = np.min(self.sim_bb)
+            self.mean_bb = np.mean(self.sim_bb)
+            self.max_bb = np.max(self.sim_bb)
+            self.sim_bw = sim_jc[:,2]
+            self.min_bw = np.min(self.sim_bw)
+            self.mean_bw = np.mean(self.sim_bw)
+            self.max_bw = np.max(self.sim_bw)
+            p_sim_bb = self.__pseudop(self.sim_bb,self.bb)
+            p_sim_bw = self.__pseudop(self.sim_bw,self.bw)
+            self.p_sim_bb = p_sim_bb
+            self.p_sim_bw = p_sim_bw
         
     def __calc(self,z):
         zl = pysal.lag_spatial(self.w,z)
-        jc = sum(z*zl)/2.0
-        return jc
+        bb = sum(z*zl)/2.0
+        zw = 1 - z
+        zl = pysal.lag_spatial(self.w,zw)
+        ww = sum(zw*zl)/2.0
+        bw = self.J - (bb + ww)
+        return (bb,ww,bw)
+        
+    def __pseudop(self,sim,jc):
+        above = sim >= jc
+        larger = sum(above)
+        psim = (larger + 1.)/(self.permutations + 1.)
+        return psim
 
         
 def _test():

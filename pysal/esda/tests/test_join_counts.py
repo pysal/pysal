@@ -11,19 +11,22 @@ class Join_Counts_Tester(unittest.TestCase):
         self.y[0:8] = 0
     def test_Join_Counts(self):
         """Test method"""
-        np.random.seed(10)
+        np.random.seed(12345)
         jc = Join_Counts(self.y, self.w)
         self.assertAlmostEquals(jc.bb, 10.0)
-        self.assertAlmostEquals(jc.zbb, 1.2060453783110545)
         self.assertAlmostEquals(jc.bw, 4.0)
-        self.assertAlmostEquals(jc.zbw, -3.2659863237109046)
-        self.assertAlmostEquals(jc.Ebw, 12.0 ) 
-        self.assertAlmostEquals(jc.bw, 4.0)
-        self.assertAlmostEquals(jc.Vbw, 6.0)
-        self.assertAlmostEquals(np.sqrt(jc.Vbw), 2.4494897427831779 )
+        self.assertAlmostEquals(jc.ww, 10.0)
+        self.assertAlmostEquals(jc.J, 24.0)
+        self.assertAlmostEquals(len(jc.sim_bb), 999)
         self.assertAlmostEquals(jc.p_sim_bb, 0.0030000000000000001 )
-        self.assertAlmostEquals(np.mean(jc.sim_bb), 5.6396396396396398 )
+        self.assertAlmostEquals(np.mean(jc.sim_bb), 5.5465465465465469 )
         self.assertAlmostEquals(np.max(jc.sim_bb), 10.0 )
+        self.assertAlmostEquals(np.min(jc.sim_bb), 0.0 )
+        self.assertAlmostEquals(len(jc.sim_bw), 999 )
+        self.assertAlmostEquals(jc.p_sim_bw, 1.0 )
+        self.assertAlmostEquals(np.mean(jc.sim_bw), 12.811811811811811 )
+        self.assertAlmostEquals(np.max(jc.sim_bw), 24.0 )
+        self.assertAlmostEquals(np.min(jc.sim_bw), 7.0 )
 
 suite = unittest.TestSuite()
 test_classes = [Join_Counts_Tester ]
