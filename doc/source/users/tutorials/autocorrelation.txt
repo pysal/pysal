@@ -66,13 +66,16 @@ and the spatial :doc:`weight <weights>` as :math:`w_{i,j}`, the three statistics
      
 By convention, the join counts are divided by 2 to avoid double counting. Also, since
 the three joins exhaust all the possibilities, they sum to one half (because of the
-division by 2) of the total sum of weights :math:`(1/2)S_0 = (1/2)\sum_{i}\sum_{j} w_{ij}`.
+division by 2) of the total sum of weights :math:`J = (1/2)S_0 = (1/2)\sum_{i}\sum_{j} w_{ij}`.
 
 Inference for the join count statistics can be based on either an analytical approach
 or a computational approach. The analytical approach starts from the binomial distribution
 and derives the moments of the statistics under the assumption of free sampling
 and non-free sampling. The resulting mean and variance are used to construct a
 standardized z-variable which can be approximated as a standard normal variate. [#]_
+However, the approximation is often poor in practice. We therefore only implement the
+computational approach.
+
 Computational inference is based on a permutation approach in which the values of y
 are randomly reshuffled many times to obtain a reference distribution of the statistics
 under the null hypothesis of spatial randomness. The observed join count is then
@@ -83,19 +86,24 @@ compared to this reference distribution and a pseudo-significance computed as
        p = (m + 1) / (n + 1)
        
 where m is the number of values from the reference distribution that are equal to
-or greater than the observed join count and n is the number of permutations.
+or greater than the observed join count and n is the number of permutations. Note
+that the join counts are a one sided-test. If the counts are extremely smaller
+than the reference distribution, this is not an indication of significance. For
+example, if the BW counts are extremely small, this is not an indication of
+*negative* BW autocorrelation, but instead points to the presence of BB or WW
+autocorrelation.
 
 We will illustrate the join count statistics with a simple artificial example
 of a 4 by 4 square lattice with values of 0 in the top half and values of 1 in
 the bottom half.
 
-We start with the usual imports, and set the random seed to 10 in order
+We start with the usual imports, and set the random seed to 12345 in order
 to be able to replicate the results of the permutation approach.
 
 
         >>> import pysal
         >>> import numpy as np
-        >>> np.random.seed(10)
+        >>> np.random.seed(12345)
         
 We create the binary weights matrix for the 4 x 4 lattice and generate the
 observation vector y:
@@ -106,45 +114,71 @@ observation vector y:
         >>> y=np.ones(16)
         >>> y[0:8]=0 
 
-We obtain an instance of the joint count statistics as:
+We obtain an instance of the joint count statistics BB, BW and WW as (J is
+half the sum of all the weights and should equal the sum of BB, WW and BW):
 
 .. doctest::
 
-        >>> jc=Join_Counts(y,w)
+        >>> jc=pysal.Join_Counts(y,w)
         >>> jc.bb
         10.0
-        >>> jc.zbb
-        1.2060453783110545
         >>> jc.bw
         4.0
-        >>> jc.zbw
-        -3.2659863237109046
+        >>> jc.ww
+        10.0
+        >>> jc.J
+        24.0
 
 The number of permutations is set to 999 by default. For other values, this parameter
 needs to be passed explicitly, as in:
 
 
-        >>> jc=Join_Counts(y,w,permutations=99)
+        >>> jc=pysal.Join_Counts(y,w,permutations=99)
         
 The results in our simple example show that the BB counts are 10. There are
 in fact 3 horizontal joins in each of the bottom rows of the lattice as well as
-4 vertical joins, which makes for BB = 3 + 3 + 4 = 10. The BW joins are 4, matching the
-separation between the bottom and top part. Using the free sampling approximation,
-we obtain a z value for the BB counts of 1.21 and a value for BW of -3.27.
+4 vertical joins, which makes for bb = 3 + 3 + 4 = 10. The BW joins are 4, matching the
+separation between the bottom and top part.
 
-The permutation results give a pseudo-p value for BB of 0.003. The average BB count
-for the sample of 999 replications is 5.6, quite a bit lower than the count of 10
+The permutation results give a pseudo-p value for BB of 0.003, suggesting highly
+significant positive spatial autocorrelation. The average BB count
+for the sample of 999 replications is 5.5, quite a bit lower than the count of 10
 we obtain. Only two instances of the replicated samples yield a value equal to 10,
-none is greater.
+none is greater (the randomly permuted samples yield bb values between 0 and 10).
 
 .. doctest::
 
+        >>> len(jc.sim_bb)
+        999
         >>> jc.p_sim_bb
         0.0030000000000000001
         >>> np.mean(jc.sim_bb)
-        5.6396396396396398
+        5.5465465465465469
         >>> np.max(jc.sim_bb)
         10.0
+        >>> np.min(jc.sim_bb)
+        0.0
+
+The results for BW (negative spatial autocorrelation) show a probability of 1.0
+under the null hypothesis. This means that all the values of BW from the randomly
+permuted data sets were larger than the observed value of 4. In fact the range
+of these values is between 7 and 24. In other words, this again strongly points
+towards the presence of positive spatial autocorrelation. The observed number of
+BB and WW joins (10 each) is so high that there are hardly any BW joins (4).
+
+.. doctest::
+
+        >>> len(jc.sim_bw)
+        999
+        >>> jc.p_sim_bw
+        1.0
+        >>> np.mean(jc.sim_bw)
+        12.811811811811811
+        >>> np.max(jc.sim_bw)
+        24.0
+        >>> np.min(jc.sim_bw)
+        7.0
+
 
 Moran's I
 ---------
