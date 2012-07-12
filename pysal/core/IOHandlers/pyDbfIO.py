@@ -112,33 +112,28 @@ class DBF(pysal.core.Tables.DataTable):
                 value = value.replace('\0', '').lstrip()
                 if value == '': 
                     value = pysal.MISSINGVALUE 
-                    warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
                 elif deci:
                     try:
                         value = float(value)
                     except ValueError:
                         value = pysal.MISSINGVALUE
-                        warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
                 else:
                     try:
                         value = int(value)
                     except ValueError:
                         value = pysal.MISSINGVALUE
-                        warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
             elif typ == 'D':
                 try:
                     y, m, d = int(value[:4]), int(value[4:6]), int(value[6:8])
                     value = datetime.date(y, m, d)
                 except ValueError:
                     value = pysal.MISSINGVALUE 
-                    warn("Missing Value Found, setting date to pysal.MISSINGVALUE", RuntimeWarning)
             elif typ == 'L':
                 value = (value in 'YyTt' and 'T') or (value in 'NnFf' and 'F') or '?' 
             elif typ == 'F':
                 value = value.replace('\0', '').lstrip()
                 if value == '': 
                     value = pysal.MISSINGVALUE 
-                    warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
                 else:
                     value = float(value)
             if isinstance(value, str):
@@ -160,19 +155,16 @@ class DBF(pysal.core.Tables.DataTable):
                 value = value.replace('\0', '').lstrip()
                 if value == '': 
                     value = pysal.MISSINGVALUE 
-                    warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
                 elif deci:
                     try:
                         value = float(value)
                     except ValueError:
                         value = pysal.MISSINGVALUE
-                        warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
                 else:
                     try:
                         value = int(value)
                     except ValueError:
                         value = pysal.MISSINGVALUE
-                        warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
             elif typ == 'D':
                 try:
                     y, m, d = int(value[:4]), int(value[4:6]), int(value[6:8])
@@ -180,14 +172,12 @@ class DBF(pysal.core.Tables.DataTable):
                 except ValueError:
                     #value = datetime.date.min#NULL Date: See issue 114
                     value = pysal.MISSINGVALUE 
-                    warn("Missing Value Found, setting date to pysal.MISSINGVALUE", RuntimeWarning)
             elif typ == 'L':
                 value = (value in 'YyTt' and 'T') or (value in 'NnFf' and 'F') or '?' 
             elif typ == 'F':
                 value = value.replace('\0', '').lstrip()
                 if value == '': 
                     value = pysal.MISSINGVALUE 
-                    warn("Missing Value Found, setting value to pysal.MISSINGVALUE", RuntimeWarning)
                 else:
                     value = float(value)
             if isinstance(value, str):
