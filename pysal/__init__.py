@@ -44,6 +44,7 @@ from pysal.version import version
 from pysal.esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local
 from pysal.esda.geary import Geary
 from pysal.esda.join_counts import Join_Counts
+from pysal.esda.gamma import Gamma
 from pysal.esda.mapclassify import quantile, binC, bin, bin1d, Equal_Interval, \
         Percentiles
 from pysal.esda.mapclassify import Box_Plot, Quantiles, Std_Mean, Maximum_Breaks
