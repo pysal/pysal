@@ -70,6 +70,7 @@ from pysal.weights.user import queen_from_shapefile, rook_from_shapefile, \
         threshold_continuousW_from_shapefile, kernelW, kernelW_from_shapefile,\
         adaptive_kernelW, adaptive_kernelW_from_shapefile,\
         min_threshold_dist_from_shapefile, build_lattice_shapefile
+from pysal.core.util.weight_converter import weight_convert
 import pysal.spreg
 import pysal.examples
 
