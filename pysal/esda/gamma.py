@@ -122,8 +122,18 @@ class Gamma:
     20.0
     >>> g3.mean_g
     -3.2472472472472473
-
-
+    >>> np.random.seed(12345)
+    >>> def func(z,i,j):
+    ...     q = z[i]*z[j]
+    ...     return q
+    ... 
+    >>> g4 = pysal.Gamma(y,w,operation=func)
+    >>> g4.g
+    20.0
+    >>> g4.g_z
+    3.1879280354548638
+    >>> g4.p_sim_g
+    0.0030000000000000001
 
     """
     def __init__(self,y,w,operation='c',standardize='no',permutations = PERMUTATIONS):
@@ -151,10 +161,10 @@ class Gamma:
             self.g_z = (self.g - self.mean_g)/np.std(self.sim_g)
         
     def __calc(self,z,op):
-        if op == 'c':
+        if op == 'c':     # cross-product
             zl = pysal.lag_spatial(self.w,z)
             g = sum(z*zl)
-        elif op == 's':
+        elif op == 's':   # squared difference
             zs = np.zeros(z.shape)
             z2 = z**2
             for i, i0 in enumerate(self.w.id_order):
@@ -163,7 +173,7 @@ class Gamma:
                 zw = zip(neighbors, wijs)
                 zs[i] = sum([wij * (z2[i] - 2.0 * z[i] * z[j] + z2[j]) for j, wij in zw])
             g = sum(zs)
-        elif op == 'a':
+        elif op == 'a':    # absolute difference
             zs = np.zeros(z.shape)
             for i, i0 in enumerate(self.w.id_order):
                 neighbors = self.w.neighbor_offsets[i0]
@@ -171,8 +181,14 @@ class Gamma:
                 zw = zip(neighbors, wijs)
                 zs[i] = sum([wij * abs(z[i] - z[j]) for j, wij in zw])
             g = sum(zs)
-        else:
-            pass
+        else:              # any previously defined function op
+            zs = np.zeros(z.shape)
+            for i, i0 in enumerate(self.w.id_order):
+                neighbors = self.w.neighbor_offsets[i0]
+                wijs = self.w.weights[i0]
+                zw = zip(neighbors, wijs)
+                zs[i] = sum([wij * op(z,i,j) for j, wij in zw])
+            g = sum(zs)            
         return g
         
     def __pseudop(self,sim,g):

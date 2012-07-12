@@ -43,6 +43,15 @@ class Gamma_Tester(unittest.TestCase):
         self.assertAlmostEquals(g3.min_g, -48.0 )
         self.assertAlmostEquals(g3.max_g, 20.0 )
         self.assertAlmostEquals(g3.mean_g, -3.2472472472472473 )
+        np.random.seed(12345)
+        def func(z,i,j):
+            q = z[i]*z[j]
+            return q
+            
+        g4 = Gamma(self.y, self.w,operation = func)
+        self.assertAlmostEquals(g4.g, 20.0 )
+        self.assertAlmostEquals(g4.g_z, 3.1879280354548638 )
+        self.assertAlmostEquals(g4.p_sim_g, 0.0030000000000000001 )
 
 
 
