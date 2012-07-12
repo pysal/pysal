@@ -9,7 +9,8 @@ class SpatialNetwork(object):
     """
     SpatialNetwork -- Represents a Spatial Network. 
 
-    A Spatial Network in PySAL is a graph who's nodes and edges are represented by geographic features such as Points for nodes and Lines for edges.
+    A Spatial Network in PySAL is a graph who's nodes and edges are represented by geographic features 
+    such as Points for nodes and Lines for edges.
     An example of a spatial network is a road network.
 
     Arguments

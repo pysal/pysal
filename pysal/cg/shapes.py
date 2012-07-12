@@ -677,12 +677,87 @@ class LineSegment(object):
             dx = self._p1[0] - self._p2[0]
             dy = self._p1[1] - self._p2[1]
             if dx == 0:
-                self._line = None
+                self._line = VerticalLine(self._p1[0])
             else:
                 m = dy/dx
                 b = self._p1[1] - m*self._p1[0] # y - mx
                 self._line = Line(m, b)
         return self._line
+
+class VerticalLine:
+    """
+    Geometric representation of verticle line objects.
+
+    Attributes
+    ----------
+    x       : float
+              x-intercept
+    """
+    def __init__(self, x):
+        """
+        Returns a VerticalLine object.
+ 
+        __init__(number) -> VerticalLine
+ 
+        Parameters
+        ----------
+        x : the x-intercept of the line
+
+        Attributes
+        ----------
+
+        Examples
+        --------
+        >>> ls = VerticalLine(0)
+        >>> ls.m
+        inf
+        >>> ls.b
+        nan
+        """
+        self._x = float(x)
+        self.m = float('inf')
+        self.b = float('nan')
+    def x(self, y):
+        """
+        Returns the x-value of the line at a particular y-value.
+ 
+        x(number) -> number
+
+        Parameters
+        ----------
+        y : the y-value to compute x at
+
+        Attributes
+        ----------
+
+        Examples
+        --------
+        >>> l = VerticalLine(0)
+        >>> l.x(0.25)
+        0.0
+        """
+        return self._x
+    def y(self, x):
+        """
+        Returns the y-value of the line at a particular x-value.
+ 
+        y(number) -> number
+
+        Parameters
+        ----------
+        x : the x-value to compute y at
+
+        Attributes
+        ----------
+
+        Examples
+        --------
+        >>> l = VerticalLine(1)
+        >>> l.y(1)
+        nan
+        """
+        return float('nan')
+
 
 class Line:
     """

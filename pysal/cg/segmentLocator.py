@@ -6,7 +6,7 @@ from pysal.cg.standalone import get_segment_point_dist, get_bounding_box
 import random
 import time
 
-__all__ = ["SegmentGrid"]
+__all__ = ["SegmentGrid", "SegmentLocator", "Polyline_Shapefile_SegmentLocator"]
 DEBUG = False
 
 class BruteSegmentLocator(object):
