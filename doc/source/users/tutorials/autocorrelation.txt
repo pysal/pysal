@@ -35,11 +35,244 @@ autocorrelation.
 Global Autocorrelation
 ======================
 
-PySAL implements four different tests for global spatial autocorrelation:
-join count statistics, Moran's I, Geary's C, and Getis and Ord's G.
+PySAL implements five different tests for global spatial autocorrelation:
+the Gamma index of spatial autocorrelation, join count statistics, 
+Moran's I, Geary's C, and Getis and Ord's G.
+
+Gamma Index of Spatial Autocorrelation
+--------------------------------------
+
+The Gamma Index of spatial autocorrelation consists of the application of the principle
+behind a general cross-product statistic to measuring spatial autocorrelation. [#]_
+The idea is to assess whether two similarity matrices for n objects, i.e., n by n
+matrices A and B measure the same type of similarity. This is reflected in a so-called
+Gamma Index :math:`\Gamma = \sum_i \sum_j a_{ij}.b_{ij}`. In other words, the statistic
+consists of the sum over all cross-products of matching elements (i,j) in the two 
+matrices.
+
+The application of this principle to spatial autocorrelation consists of turning
+the first similarity matrix into a measure of attribute similarity and the second
+matrix into a measure of locational similarity. Naturally, the second matrix is the
+a spatial :doc:`weight <weights>` matrix. The first matrix can be any reasonable measure of attribute
+similarity or dissimilarity, such as a cross-product, squared difference or absolute
+difference.
+
+Formally, then, the Gamma index is:
+
+.. math::
+
+        \Gamma = \sum_i \sum_j a_{ij}.w_{ij}
+        
+where the :math:`w_{ij}` are the elements of the weights matrix and 
+:math:`a_{ij}` are corresponding measures of attribute similarity.
+
+Inference for this statistic is based on a permutation approach in which the values
+are shuffled around among the locations and the statistic is recomputed each
+time. This creates a reference distribution for the statistic under the null
+hypothesis of spatial randomness. The observed statistic is then compared to this
+reference distribution and a pseudo-significance computed as
+
+.. math::
+
+       p = (m + 1) / (n + 1)
+       
+where m is the number of values from the reference distribution that are equal to
+or greater than the observed join count and n is the number of permutations.
+
+The Gamma test is a two-sided test in the sense that both extremely high values (e.g.,
+larger than any value in the reference distribution) and extremely low values
+(e.g., smaller than any value in the reference distribution) can be considered
+to be significant. Depending on how the measure of attribute similarity is defined,
+a high value will indicate positive or negative spatial autocorrelation, and vice
+versa. For example, for a cross-product measure of attribute similarity, high values
+indicate positive spatial autocorrelation and low values negative spatial autocorrelation.
+For a squared difference measure, it is the reverse. This is similar to the 
+interpretation of the :ref:`moran` statistic and :ref:`geary` statistic respectively.
+
+Many spatial autocorrelation test statistics can be shown to be special cases of the
+Gamma index. In most instances, the Gamma index is an unstandardized version of the
+commonly used statistics. As such, the Gamma index is scale dependent, since no
+normalization is carried out (such as deviations from the mean or rescaling by the
+variance). Also, since the sum is over all the elements, the value of a Gamma
+statistic will grow with the sample size, everything else being the same.
+
+PySAL implements four forms of the Gamma index. Three of these are pre-specified
+and one allows the user to pass any function that computes a measure of attribute
+similarity. This function should take three parameters: the vector of observations,
+an index i and an index j.
+
+We will illustrate the Gamma index using the same small artificial example
+as we use for the  :ref:`moran1`  in order to illustrate the similarities
+and differences between them. The data consist of a regular 4 by 4 lattice with
+values of 0 in the top half and values of 1 in the bottom half. We start with the usual 
+imports, and set the random seed to 12345 in order
+to be able to replicate the results of the permutation approach.
+
+
+        >>> import pysal
+        >>> import numpy as np
+        >>> np.random.seed(12345)
+        
+We create the binary weights matrix for the 4 x 4 lattice and generate the
+observation vector y:
+
+.. doctest::
+
+        >>> w=pysal.lat2W(4,4)
+        >>> y=np.ones(16)
+        >>> y[0:8]=0 
+
+The Gamma index function has five arguments, three of which are optional.
+The first two arguments are the vector of observations (y) and the spatial
+weights object (w). Next are ``operation``, the measure of attribute similarity,
+the default of which is ``operation = 'c'`` for cross-product similarity, 
+:math:`a_{ij} = y_i.y_j`. The other two built-in options are ``operation = 's'`` for
+squared difference, :math:`a_{ij} = (y_i - y_j)^2` and ``operation = 'a'`` for
+absolute difference, :math:`a_{ij} = | y_i - y_j |`. The fourth option is to
+pass an arbitrary attribute similarity function, as in ``operation = func``, where ``func``
+is a function with three arguments, ``def func(y,i,j)`` with y as the vector
+of observations, and i and j as indices. This function should return a single
+value for attribute similarity.
+
+The fourth argument allows the observed values to be standardized before the
+calculation of the Gamma index. To some extent, this addresses the scale dependence
+of the index, but not its dependence on the number of observations. The default
+is no standardization, ``standardize = 'no'``. To force standardization,
+set ``standardize = 'yes'`` or ``'y'``. The final argument is the number of
+permutations, ``permutations`` with the default set to 999.
+
+As a first illustration, we invoke the Gamma index using all the default
+values, i.e. cross-product similarity, no standardization, and permutations
+set to 999. The interesting statistics are the magnitude of the Gamma index ``g``,
+the standardized Gamma index using the mean and standard deviation from the
+reference distribution, ``g_z`` and the pseudo-p value obtained from the
+permutation, ``g_sim_p``. In addition, the minimum (``min_g``), maximum (``max_g``)
+and mean (``mean_g``) of the reference distribution are available as well.
+
+.. doctest::
+
+        >>> g = pysal.Gamma(y,w)
+        >>> g.g
+        20.0
+        >>> g.g_z
+        3.1879280354548638
+        >>> g.p_sim_g
+        0.0030000000000000001
+        >>> g.min_g
+        0.0
+        >>> g.max_g
+        20.0
+        >>> g.mean_g
+        11.093093093093094
+
+Note that the value for Gamma is exactly twice the BB statistic obtained in the
+example below, since the attribute similarity criterion is identical, but Gamma is
+not divided by 2.0. The observed value is very extreme, with only two replications
+from the permutation equalling the value of 20.0. This indicates significant
+positive spatial autocorrelation.
+
+As a second illustration, we use the squared difference criterion, which
+corresponds to the BW Join Count statistic. We reset the random seed to
+keep comparability of the results.
+
+.. doctest::
+
+        >>> np.random.seed(12345)
+        >>> g1 = pysal.Gamma(y,w,operation='s')
+        >>> g1.g
+        8.0
+        >>> g1.g_z
+        -3.7057554345954791
+        >>> g1.p_sim_g
+        0.001
+        >>> g1.min_g
+        14.0
+        >>> g1.max_g
+        48.0
+        >>> g1.mean_g
+        25.623623623623622
+
+The Gamma index value of 8.0 is exactly twice the value of the BW statistic for
+this example. However, since the Gamma index is used for a two-sided test, this
+value is highly significant, and with a negative z-value, this suggests positive 
+spatial autocorrelation (similar
+to Geary's C). In other words, this result is consistent with the finding for the
+Gamma index that used cross-product similarity.
+
+As a third example, we use the absolute difference for attribute similarity.
+The results are identical to those for squared difference since these two
+criteria are equivalent for 0-1 values.
+
+.. doctest::
+
+        >>> np.random.seed(12345)
+        >>> g2 = pysal.Gamma(y,w,operation='a')
+        >>> g2.g
+        8.0
+        >>> g2.g_z
+        -3.7057554345954791
+        >>> g2.p_sim_g
+        0.001
+        >>> g2.min_g
+        14.0
+        >>> g2.max_g
+        48.0
+        >>> g2.mean_g
+        25.623623623623622
+    
+We next illustrate the effect of standardization, using the default operation.
+As shown, the value of the statistic is quite different from the unstandardized
+form, but the inference is equivalent.
+
+.. doctest::
+
+        >>> np.random.seed(12345)
+        >>> g3 = pysal.Gamma(y,w,standardize='y')
+        >>> g3.g
+        32.0
+        >>> g3.g_z
+        3.7057554345954791
+        >>> g3.p_sim_g
+        0.001
+        >>> g3.min_g
+        -48.0
+        >>> g3.max_g
+        20.0
+        >>> g3.mean_g
+        -3.2472472472472473
+
+Note that all the tests shown here have used the weights matrix in binary form.
+However, since the Gamma index is perfectly general,
+any standardization can be applied to the weights.
+
+Finally, we illustrate the use of an arbitrary attribute similarity function.
+In order to compare to the results above, we will define a function that 
+produces a cross product similarity measure. We will then pass this function
+to the ``operation`` argument of the Gamma index.
+
+.. doctest::
+
+        >>> np.random.seed(12345)
+        >>> def func(z,i,j):
+        ...     q = z[i]*z[j]
+        ...     return q
+        ... 
+        >>> g4 = pysal.Gamma(y,w,operation=func)
+        >>> g4.g
+        20.0
+        >>> g4.g_z
+        3.1879280354548638
+        >>> g4.p_sim_g
+        0.0030000000000000001
+
+As expected, the results are identical to those obtained with the default
+operation. 
+
+
+.. _moran1:
 
 Join Count Statistics
-----------------------
+---------------------
 
 The join count statistics measure global spatial autocorrelation for binary data, i.e.,
 with observations coded as 1 or B (for Black) and 0 or W (for White). They follow the
@@ -179,6 +412,7 @@ BB and WW joins (10 each) is so high that there are hardly any BW joins (4).
         >>> np.min(jc.sim_bw)
         7.0
 
+.. _moran:
 
 Moran's I
 ---------
@@ -339,6 +573,7 @@ Now, we create an instance of Moran_Rate:
 From these results, we see that the observed value for I is significantly higher than its expected value,
 after the adjustment for the differences in population.
 
+.. _geary:
 
 Geary's C
 ---------
@@ -572,6 +807,7 @@ To identify the significant :math:`G_i` values we can use numpy indexing:
 
 .. rubric:: Footnotes
 
+.. [#] L. Hubert, R. Golledge and C.M. Costanzo (1981). Generalized procedures for evaluating spatial autocorrelation. Geographical Analysis 13, 224-233.
 .. [#] Technical details and derivations can be found in A.D. Cliff and J.K. Ord (1981). Spatial Processes, Models and Applications. London, Pion, pp. 34-41.
 .. [#] Source: S. Messner, L. Anselin, D. Hawkins, G. Deane, S. Tolnay, R. Baller (2000). An Atlas of the Spatial Patterning of County-Level Homicide, 1960-1990. Pittsburgh, PA, National Consortium on Violence Research (NCOVR)
 .. [#] Because the permutations are random, results from those presented here may vary if you replicate this example.
