@@ -37,20 +37,31 @@ class SpatialTau_Tester(unittest.TestCase):
         regime = np.array(f.by_col['esquivel99'])
         self.w = pysal.weights.regime_weights(regime)
     def test_SpatialTau(self):
-        np.random.seed(10)
+        np.random.seed(12345)
         k = self.y.shape[1]
         obs = [rank.SpatialTau(self.y[:,i],self.y[:,i+1],self.w,99) for i in range(k-1)]
-        exp_wnc = [44., 47., 52., 54., 53., 57.]
-        exp_evwnc = [52.354, 53.576, 55.747, 55.556, 53.384, 57.566]
-        exp_prandwnc = [0.000, 0.006, 0.031, 0.212, 0.436, 0.390]
+        tau_s = [ 0.281, 0.348, 0.460, 0.505, 0.483, 0.572]
+        ev_tau_s = [ 0.466, 0.499, 0.546, 0.532, 0.499, 0.579]
+        p_vals = [0.010, 0.010,0.020, 0.210, 0.270, 0.280]
         for i in range(k-1):
-            self.assertAlmostEqual(exp_wnc[i], obs[i].wnc,3)
-            self.assertAlmostEqual(exp_evwnc[i], obs[i].ev_wnc,3)
-            self.assertAlmostEqual(exp_prandwnc[i], obs[i].p_rand_wnc,3)
+            self.assertAlmostEqual(tau_s[i], obs[i].tau_spatial,3)
+            self.assertAlmostEqual(ev_tau_s[i], obs[i].taus.mean(),3)
+            self.assertAlmostEqual(p_vals[i], obs[i].tau_spatial_psim,3)
+
+
+
+class Tau_Tester(unittest.TestCase):
+    def test_Tau(self):
+        x1 = [12, 2, 1, 12, 2]
+        x2 = [1, 4, 7, 1, 0]
+        kt = rank.Tau(x1,x2)
+        self.assertAlmostEqual(kt.tau, -0.47140452079103173, 5)
+        self.assertAlmostEqual(kt.tau_p, 0.24821309157521476, 5)
+
 
 
 suite = unittest.TestSuite()
-test_classes = [Theta_Tester, SpatialTau_Tester]
+test_classes = [Theta_Tester, SpatialTau_Tester, Tau_Tester]
 for i in test_classes:
     a = unittest.TestLoader().loadTestsFromTestCase(i)
     suite.addTest(a)

@@ -2,11 +2,15 @@
 Rank and spatial rank mobility measures
 """
 __author__  = "Sergio J. Rey <srey@asu.edu> "
+
 from pysal.common import *
 from scipy.stats.mstats import rankdata
 from scipy.special import erfc
+import pysal
+import numpy 
+from numpy.random import permutation as NRP
 
-__all__=['Theta','SpatialTau']
+__all__=['SpatialTau', 'Tau', 'Theta', ]
 
 class Theta:
     """
@@ -17,7 +21,7 @@ class Theta:
     within mutually exclusive and exhaustive partitions (regimes) of the n locations.
 
     Theta is defined as the sum of the absolute sum of rank changes within
-    the regimes over the sum of all absolute rank changes. [1]_
+    the regimes over the sum of all absolute rank changes. 
 
 
     Parameters
@@ -56,9 +60,9 @@ class Theta:
 
     References
     ----------
-    .. [1] Rey, S.J. (2004) "Spatial dependence in the evolution of regional
-       income distributions," in A. Getis, J. Mur and H.Zoeller (eds). Spatial Econometrics and Spatial
-       Statistics. Palgrave, London, pp. 194-213.
+    Rey, S.J. (2004) "Spatial dependence in the evolution of regional income
+    distributions," in A. Getis, J. Mur and H.Zoeller (eds). Spatial
+    Econometrics and Spatial Statistics. Palgrave, London, pp. 194-213.
 
 
     Examples
@@ -109,6 +113,161 @@ class Theta:
         within=[abs(sum(self.ranks_d[regime==reg])) for reg in self.regimes]
         return np.array(sum(within)/self.total)
 
+
+class Tau:
+    """
+    Kendall's Tau is based on a comparison of the number of pairs of n
+    observations that have concordant ranks between two variables.
+
+    Parameters
+    ----------
+    x            : array (n,)
+                   first variable
+    y            : array (n,)
+                   second variable
+
+    Attributes
+    ----------
+    tau          : float
+                   The classic Tau statistic
+
+    tau_p       : float
+                  asymptotic p-value
+
+    Notes
+    -----
+
+    Modification of algorithm suggested by Christensen (2005). 
+    PySAL implementation uses a list based representation of a binary tree for
+    the accumulation of the concordance measures. Ties are handled by this
+    implementation (in other words, if there are ties in either x, or y, or
+    both, the calculation returns Tau_b, if no ties classic Tau is returned.)
+
+    References
+    ----------
+
+    Christensen, D. (2005) Fast algorithms for the calculation of
+    Kendall's tau. Computational Statistics, 20: 51-62.
+
+    Examples
+    --------
+
+    # from scipy example
+
+    >>> from scipy.stats import kendalltau
+    >>> x1 = [12, 2, 1, 12, 2]
+    >>> x2 = [1, 4, 7, 1, 0]
+    >>> kt = Tau(x1,x2)
+    >>> kt.tau
+    -0.47140452079103173
+    >>> kt.tau_p
+    0.24821309157521476
+
+
+    """
+
+    def __init__(self,x,y):
+        res = self._calc(x,y)
+        self.tau = res[0]
+        self.tau_p = res[1]
+        self.concordant = res[2]
+        self.discordant = res[3]
+        self.extraX = res[4]
+        self.extraY = res[5]
+
+    def _calc(self, x,y):
+        """
+        List based implementation of binary tree algorithm for concordance
+        measure after Christensen (2005).
+
+        """
+        x = np.array(x) 
+        y = np.array(y)
+        n = len(y)
+        perm = range(n)
+        perm.sort(key=lambda a: (x[a], y[a]))
+        vals = y[perm]
+        ExtraY = 0
+        ExtraX = 0
+        ACount = 0
+        BCount = 0
+        CCount = 0
+        DCount = 0
+        ECount = 0
+        DCount = 0
+        Concordant = 0
+        Discordant = 0
+        # ids for left child
+        li = [None] * (n-1) 
+        # ids for right child
+        ri = [None] * (n-1) 
+        # number of left descendants for a node
+        ld = np.zeros(n) 
+        # number of values equal to value i
+        nequal = np.zeros(n)
+
+        for i in range(1,n):
+            NumBefore = 0
+            NumEqual = 1
+            root = 0
+            x0 = x[perm[i-1]]
+            y0 = y[perm[i-1]]
+            x1 = x[perm[i]]
+            y1 = y[perm[i]]
+            if x0 != x1:
+                DCount = 0
+                ECount = 1
+            else:
+                if y0 == y1:
+                    ECount += 1
+                else:
+                    DCount += ECount
+                    ECount = 1
+            root = 0
+            inserting = True
+            while inserting:
+                current = y[perm[i]] 
+                if current > y[perm[root]]: 
+                    # right branch
+                    NumBefore += 1 + ld[root] + nequal[root] 
+                    if ri[root] is None:
+                        # insert as right child to root
+                        ri[root] = i
+                        inserting =  False
+                    else:
+                        root = ri[root]
+                elif current < y[perm[root]]: 
+                    # increment number of left descendants
+                    ld[root] += 1 
+                    if li[root] is None:
+                        # insert as left child to root
+                        li[root] = i
+                        inserting = False
+                    else:
+                        root = li[root]
+                elif current == y[perm[root]]:
+                    NumBefore +=  ld[root] 
+                    NumEqual += nequal[root] + 1
+                    nequal[root] += 1
+                    inserting = False
+
+            ACount = NumBefore - DCount
+            BCount = NumEqual - ECount
+            CCount = i - (ACount + BCount + DCount + ECount - 1)
+            ExtraY += DCount
+            ExtraX += BCount
+            Concordant += ACount
+            Discordant += CCount
+
+        cd = Concordant + Discordant
+        num = Concordant - Discordant
+        tau = num / np.sqrt( (cd + ExtraX) * (cd + ExtraY))
+        v = (4.*n + 10) / (9. * n * (n-1))
+        z = tau / np.sqrt(v)
+        pval = erfc(np.abs(z) / 1.4142136) # follow scipy
+        return tau, pval, Concordant, Discordant, ExtraX, ExtraY
+
+
 class SpatialTau:
     """
     Spatial version of Kendall's rank correlation statistic
@@ -117,9 +276,7 @@ class SpatialTau:
     observations that have concordant ranks between two variables. The spatial
     Tau decomposes these pairs into those that are spatial neighbors and those
     that are not, and examines whether the rank correlation is different
-    between the two sets. [1]_
-
-
+    between the two sets relative to what would be expected under spatial randomness.
 
     Parameters
     ----------
@@ -137,37 +294,53 @@ class SpatialTau:
     ----------
     tau          : float
                    The classic Tau statistic
-    wn           : int
-                   The number of neighboring pairs
-    tau_w        : float
-                   Spatial Tau statistic
-    tau_nw       : float
-                   Tau for non-neighboring pairs
-    p_tau_diff   : float
-                   p-value for test of difference between tau_w and tau_nw
-                   based on asymptotic distribution (Use with caution in small
-                   samples).
-    wnc          : int
-                   number of concordant neighbor pairs
-    wdc          : int
-                   number of discordant neighbor pairs
-    ev_wnc       : int
-                   average value of concordant neighbor pairs under random
-                   spatial permuations
-    s_wnc        : float
-                   standard deviation of the number of concordant neighbor
-                   pairs under random spatial permutations.
-    p_rand_wnc   : float
-                   p-value for test of difference between wnc and its expected
-                   value under spatial random permutations
-    z_rand_wnc   : z-value for test of difference between wnc and its expected
-                   value under spatial random permutations
+    tau_spatial  : float
+                   Value of Tau for pairs that are spatial neighbors
+    taus         : array (permtuations x 1)
+                   Values of simulated tau_spatial values under random spatial permutations in both periods. (Same permutation used for start and ending period).
+    pairs_spatial : int
+                    Number of spatial pairs
+    concordant   : float
+                   Number of concordant pairs
+    concordant_spatial : float
+                   Number of concordant pairs that are spatial neighbors
+    extraX       : float
+                   Number of extra X pairs 
+    extraY       : float
+                   Number of extra Y pairs
+    discordant   : float
+                   Number of discordant pairs
+    discordant_spatial   : float
+                   Number of discordant pairs that are spatial neighbors
+    taus         : float
+                   spatial tau values for permuted samples (if permutations>0)
+    tau_spatial_psim:
+                 : float
+                   pseudo p-value for observed tau_spatial under the null of spatial randomness (if permutations>0)
+
+
+
+
+    Notes
+    -----
+
+    Algorithm has two stages. The first calculates classic Tau using a list
+    based implementation of the algorithm from Christensen (2005). Second
+    stage calculates concordance measures for neighboring pairs of locations
+    using a modification of the algorithm from Press et al (2007).
 
     References
     ----------
-    .. [1] Rey, S.J. (2004) "Spatial dependence in the evolution of regional
-       income distributions," in A. Getis, J. Mur and H.Zoeller (eds). Spatial Econometrics and Spatial
-       Statistics. Palgrave, London, pp. 194-213.
+
+    Christensen, D. (2005) "Fast algorithms for the calculation of
+    Kendall's tau". Computational Statistics, 20: 51-62.
+
+    Press, W.H, S. A Teukolsky, W.T. Vetterling and B. P. Flannery (2007).
+    Numerical Recipes: The Art of Scientific Computing. Cambridge. Pg 752.
+
+    Rey, S.J. (2004) "Spatial dependence in the evolution of regional income
+    distributions," in A. Getis, J. Mur and H.Zoeller (eds). Spatial
+    Econometrics and Spatial Statistics. Palgrave, London, pp. 194-213.
 
 
     Examples
@@ -178,153 +351,94 @@ class SpatialTau:
     >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> regime=np.array(f.by_col['esquivel99'])
     >>> w=pysal.weights.regime_weights(regime)
-    >>> np.random.seed(10)
+    >>> np.random.seed(12345)
     >>> res=[SpatialTau(y[:,i],y[:,i+1],w,99) for i in range(6)]
     >>> for r in res:
-    ...     "%8.3f %8.3f %8.3f"%(r.wnc,r.ev_wnc,r.p_rand_wnc)
+    ...     ev = r.taus.mean()
+    ...     "%8.3f %8.3f %8.3f"%(r.tau_spatial, ev, r.tau_spatial_psim)
     ...     
-    '  44.000   52.354    0.000'
-    '  47.000   53.576    0.006'
-    '  52.000   55.747    0.031'
-    '  54.000   55.556    0.212'
-    '  53.000   53.384    0.436'
-    '  57.000   57.566    0.390'
-    >>> 
+    '   0.281    0.466    0.010'
+    '   0.348    0.499    0.010'
+    '   0.460    0.546    0.020'
+    '   0.505    0.532    0.210'
+    '   0.483    0.499    0.270'
+    '   0.572    0.579    0.280'
     """
-    def __init__(self, x, y, w, permutations=0):
-        self.x=x
-        self.y=y
-        self.w=w
-        self.wn=w.s0/2. # number of neighboring pairs
-        self.permutations = permutations
-        res=self._calc(x,y,w)
-        self.tau=res['tau']
-        self.tau_w=res['tau_w']
-        self.tau_nw=res['tau_nw']
-        self.p_tau_diff=res['p_tau_diff']
-        self.wnc = res['wnc'] # number of concordant neighbor pairs
-        self.wdc = res['wdc'] # number of concordant nonneighbor pairs
 
-        n=len(y)
-        diff=self.tau_w-self.tau_nw
-        adiff=abs(diff)
-        ids=range(n)
-        p=0
-        pa=0
-        pwnc=0
-        counts=[]
-        if permutations:
-            for it in range(permutations):
-                id=np.random.permutation(ids)
-                r=self._calc(x[id],y[id],w)
-                d=r['tau_w']-r['tau_nw']
-                if d >= diff:
-                    p+=1
-                if abs(d) >= adiff:
-                    pa+=1
-                counts.append(r['wnc'])
-            self.p_rand = p*1./(permutations+1)
-            self.pa_rand =pa*1./(permutations+1)
-            counts=np.array(counts)
-            self.ev_wnc=ev_wnc=counts.mean()
-            self.s_wnc=s_wnc=counts.std(ddof=1)
-            z=(self.wnc-ev_wnc)/s_wnc
-            self.p_rand_wnc= 1.0-sp.stats.norm.cdf(abs(z))
-            self.z_rand_wnc=z
+
+
+    def __init__(self, x, y, w, permutations=0):
+
+        w.transform = 'b'
+        self.n = len(x)
+        res = Tau(x,y)
+        self.tau = res.tau
+        self.tau_p = res.tau_p
+        self.concordant = res.concordant
+        self.discordant = res.discordant
+        self.extraX = res.extraX
+        self.extraY = res.extraY
+        res = self._calc(x,y,w)
+        self.tau_spatial = res[0]
+        self.pairs_spatial = int(w.s0 /2.)
+        self.concordant_spatial = res[1]
+        self.discordant_spatial = res[2]
+
+        if permutations > 0:
+            taus = np.zeros(permutations)
+            ids = np.arange(self.n)
+            for r in xrange(permutations):
+                rids = np.random.permutation(ids)
+                taus[r] = self._calc(x[rids],y[rids],w)[0]
+            self.taus = taus
+            self.tau_spatial_psim = pseudop(taus, self.tau_spatial,
+                    permutations)
 
 
     def _calc(self,x,y,w):
-        tx=0
-        ty=0
-        wtx=0
-        wty=0
-        nc = 0
-        nd = 0
-        wnc = 0
-        wdc = 0
-        n1 = 0
-        n2 = 0
-        n=len(x)
-        self.wn = w.s0/2. # number of neighboring pairs
-        ids=w.id_order
-        for j in range(n-1):
-            for k in range(j+1,n):
-                wj=ids[j]
-                wk=ids[k]
-                dx = x[j] - x[k]
-                dy = y[j] - y[k]
-                p = dx * dy
-                if (p):  
-                    if p > 0:
-                        nc+=1
-                        if wk in w[wj]:
-                            wnc+=1
+        n1 = n2 = iS = gc = 0
+        ijs = {}
+        for i in w.id_order:
+            xi = x[i]
+            yi = y[i]
+            for j in w.neighbors[i]:
+                if i < j:
+                    ijs[(i,j)] = (i,j)
+                    xj = x[j]
+                    yj = y[j]
+                    dx = xi-xj
+                    dy = yi-yj
+                    dxdy = dx*dy
+                    if dxdy != 0:
+                        n1 += 1
+                        n2 += 2
+                        if dxdy > 0.0:
+                            gc += 1
+                            iS += 1
+                        else:
+                            iS -= 1
                     else:
-                        nd+=1
-                        if wk in w[wj]:
-                            wdc+=1
-                else:
-                    if dx:
-                        ty+=1
-                        if wk in w[wj]:
-                            wty+=1
-                    if dy:
-                        tx+=1
-                        if wk in w[wj]:
-                            wtx+=1
-        den=n*(n-1)/2.
-        results={}
-        tau = (nc-nd) / den
-        results['tau']=tau
-        tau_b = (nc-nd) / np.sqrt( (den-tx) * (den-ty))
-        results['tau_b']=tau_b
-        ties_y=ty
-        results['ties_y']=ties_y
-        ties_x=tx
-        results['ties_x']=ties_x
-        nc=nc
-        results['nc']=nc
-        nd=nd
-        results['nd']=nd
-        vtau=(2*(2*n+5.))/(9*n*(n+1.))
-        results['vtau']=vtau
-        ztau=tau/np.sqrt(vtau)
-        results['ztau']=ztau
-        p_norm=erfc(abs(ztau)/1.4142136)
-        results['p_norm']=p_norm
-        wnc=wnc
-        results['wnc']=wnc
-        wdc=wdc
-        results['wdc']=wdc
+                        if dx != 0.0:
+                            n1 += 1
+                        if dy != 0.0:
+                            n2 += 1
+        tau_g = iS / (np.sqrt(n1) * np.sqrt(n2))
+        gd = gc - iS
+        return [tau_g, gc, gd ]
+            
 
-        tau_w = (wnc-wdc) / self.wn
-        results['tau_w']=tau_w
-        tau_nw = (nc-wnc - (nd-wdc)) / (den - self.wn)
-        results['tau_nw']=tau_nw
-        wn=self.wn
-        vtau_w=(4*wn+10.)/(9*wn*(wn+1.))
-        results['vtau_w']=vtau_w
-        vtau_nw=(4*(den-wn)+10)/(9*(den-wn)*(den-wn+1.))
-        results['vtau_nw']=vtau_nw
-        z_tau_w=tau_w/np.sqrt(vtau_w)
-        results['z_tau_w']=z_tau_w
-        p_tau_w_norm=erfc(abs(z_tau_w)/1.4142136) # from scipy.stats.kedalltau
-        results['p_tau_w_norm']=p_tau_w_norm
-        z_tau_nw=tau_nw/np.sqrt(vtau_nw)
-        results['z_tau_nw']=z_tau_nw
-        p_tau_nw_norm=erfc(abs(z_tau_nw)/1.4142136)
-        results['p_tau_nw_norm']=p_tau_nw_norm
-        # difference of taus for contiguous versus non contiguous
-        d=z_tau_w-z_tau_nw
-        p_tau_diff=1.0-sp.stats.norm.cdf(abs(d),0,2)
-        results['p_tau_diff']=p_tau_diff
-        return results
+
+def pseudop(sim, observed, nperm):
+    above = sim >= observed
+    larger = above.sum()
+    psim = (larger + 1.) / (nperm + 1.)
+    if psim > 0.5:
+        psim = (nperm - larger + 1.) / (nperm + 1.)
+    return psim
 
 def _test():
     import doctest
     doctest.testmod(verbose=True)
-
-
 
 if __name__ == '__main__':
     _test()
