@@ -5,7 +5,6 @@ __author__  = "Sergio J. Rey <srey@asu.edu> "
 from pysal.common import *
 __all__ = ['Geary']
 
-PERMUTATIONS = 999
 
 class Geary:
     """
@@ -77,12 +76,12 @@ class Geary:
     >>> y = np.array(f.by_col['y'])
     >>> c = Geary(y,w,permutations=0)
     >>> c.C
-    0.33281733746130032
+    0.33301083591331254
     >>> print "%.8f"%c.p_norm
-    0.00020076
+    0.00009202
     >>> 
     """
-    def __init__(self, y, w, transformation = "B", permutations = 0):
+    def __init__(self, y, w, transformation = "r", permutations = 999):
         self.n = len(y)
         self.y = y
         w.transform = transformation
