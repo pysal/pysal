@@ -3,6 +3,7 @@
 
 .. toctree::
 
+    gamma
     geary
     join_counts
     mapclassify
