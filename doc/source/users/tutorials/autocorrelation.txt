@@ -577,7 +577,7 @@ after the adjustment for the differences in population.
 
 Geary's C
 ---------
-The second statistic for global spatial autocorrelation implemented in PySAL is Geary's C:
+The fourth statistic for global spatial autocorrelation implemented in PySAL is Geary's C:
 
 .. math::
 
@@ -587,35 +587,31 @@ with all the terms defined as above. Applying this to the St. Louis data:
 
 .. doctest::
 
-        >>> f = pysal.open(pysal.examples.get_path("stl_hom.txt"))
-        >>> y = np.array(f.by_col['HR8893'])
-        >>> w = pysal.open(pysal.examples.get_path("stl.gal")).read()
-        >>> gc = pysal.Geary(y, w)
-        >>> print gc.C
-        0.586776506108
-        >>> gc.EC
-        1.0
-        >>> print gc.z_norm
-        -4.99194306621
-        >>> gc.p_norm
-        2.9887438468545469e-07
+    >>> np.random.seed(12345)
+    >>> f = pysal.open(pysal.examples.get_path("stl_hom.txt"))
+    >>> y = np.array(f.by_col['HR8893'])
+    >>> gc = pysal.Geary(y, w)
+    >>> gc.C
+    0.59712821589368859
+    >>> gc.EC
+    1.0
+    >>> gc.z_norm
+    -5.4492977418541138
 
 we see that the statistic :math:`C` is significantly lower than its expected
 value :math:`EC`. Although the sign of the standardized statistic is negative (in contrast to what held for :math:`I`, the interpretation is the same, namely evidence of strong positive spatial autocorrelation in the homicide rates.
 
-Similar to what we saw for Moran's I, we can base inference on Geary's C using random spatial permutations:
+Similar to what we saw for Moran's I, we can base inference on Geary's :math:`C` using
+random spatial permutations, which are actually run as a default with the
+number of permutations=999 (this is why we set the seed of the random number
+generator to 12345 to replicate the result):
 
 .. doctest::
 
-        >>> gc = pysal.Geary(y, w, permutations = 9999)
-        >>> print gc.p_z_sim
-	0.0198880753441
-        >>> print gc.p_sim
-        0.0058
+    >>> gc.p_sim
+    0.001
 
-with the first p-value based on a z-transform of the observed C relative to the
-distribution of values obtained in the permutations, and the second based on
-the cumulative probability of the observed value in the empirical distribution.
+which indicates that none of the C values from the permuted samples was as extreme as our observed value.
 
 Getis and Ord's G
 -----------------
