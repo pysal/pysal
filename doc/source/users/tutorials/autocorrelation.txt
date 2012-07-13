@@ -803,11 +803,12 @@ To identify the significant :math:`G_i` values we can use numpy indexing:
 
 .. rubric:: Footnotes
 
-.. [#] L. Hubert, R. Golledge and C.M. Costanzo (1981). Generalized procedures for evaluating spatial autocorrelation. Geographical Analysis 13, 224-233.
+
+.. [#] Hubert, L., R. Golledge and C.M. Costanzo (1981). Generalized procedures for evaluating spatial autocorrelation. Geographical Analysis 13, 224-233.
 .. [#] Technical details and derivations can be found in A.D. Cliff and J.K. Ord (1981). Spatial Processes, Models and Applications. London, Pion, pp. 34-41.
-.. [#] Source: S. Messner, L. Anselin, D. Hawkins, G. Deane, S. Tolnay, R. Baller (2000). An Atlas of the Spatial Patterning of County-Level Homicide, 1960-1990. Pittsburgh, PA, National Consortium on Violence Research (NCOVR)
+.. [#] Messner, S.,  L. Anselin, D. Hawkins, G. Deane, S. Tolnay, R. Baller (2000). An Atlas of the Spatial Patterning of County-Level Homicide, 1960-1990. Pittsburgh, PA, National Consortium on Violence Research (NCOVR)
 .. [#] Because the permutations are random, results from those presented here may vary if you replicate this example.
-.. [#] Source: Assuncao, R. E. and Reis, E. A. 1999. A new proposal to adjust Moran's I for population density. Statistics in Medicine. 18, 2147-2162.
+.. [#] Assuncao, R. E. and Reis, E. A. 1999. A new proposal to adjust Moran's I for population density. Statistics in Medicine. 18, 2147-2162.
 .. [#] The n-1 spatial units other than i are used to generate the empirical distribution of the LISA statistics for each i.
 .. [#] Caution is required in interpreting the significance of the LISA statistics due to difficulties with multiple comparisons and a lack of independence across the individual tests. For further discussion see Anselin, L. (1995). "Local indicators of spatial association – LISA". Geographical Analysis, 27, 93-115.
 
