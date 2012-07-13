@@ -484,17 +484,35 @@ Mexican states into regions:
     >>> regime = np.array(f.by_col['esquivel99'])
     >>> w = pysal.weights.regime_weights(regime)
     >>> np.random.seed(10)
-    >>> res = [pysal.SpatialTau(y[:, i], y[:, i+1], w, 99) for i in range(6)]
-    >>> for r in res:
-    ...     "%8.3f %8.3f %8.3f"%(r.wnc, r.ev_wnc, r.p_rand_wnc)
-    ...     
-    '  44.000   52.354    0.000'
-    '  47.000   53.576    0.006'
-    '  52.000   55.747    0.031'
-    '  54.000   55.556    0.212'
-    '  53.000   53.384    0.436'
-    '  57.000   57.566    0.390'
 
+Now we will calculate the spatial tau for decade transitions from 1940 through
+2000 and report the observed spatial tau against that expected if the rank
+changes were randomly distributed in space by using 99 permutations:
+
+.. doctest::
+
+    >>> res=[pysal.SpatialTau(y[:,i],y[:,i+1],w,99) for i in range(6)]
+    >>> for r in res:
+    ...     ev = r.taus.mean()
+    ...     "%8.3f %8.3f %8.3f"%(r.tau_spatial, ev, r.tau_spatial_psim)
+    ...     
+    '   0.281    0.466    0.010'
+    '   0.348    0.499    0.010'
+    '   0.460    0.546    0.020'
+    '   0.505    0.532    0.210'
+    '   0.483    0.499    0.270'
+    '   0.572    0.579    0.280'
+    """
+
+The observed level of spatial concordance during the 1940-50 transition was
+0.281 which is significantly lower (p=0.010) than the average level of spatial
+concordance (0.466) from randomly permuted incomes in Mexico. Similar patterns
+are found for the next two transition periods as well. In other words the
+amount of rank concordance is significantly distinct between pairs of
+observations that are geographical neighbors and those that are not in these
+first three transition periods. This reflects the greater degree of spatial
+similarity within rather than  between the regimes making the
+discordant pairs dominated by neighboring pairs. 
 
 Rank Decomposition
 ------------------

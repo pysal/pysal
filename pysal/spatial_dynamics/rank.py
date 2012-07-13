@@ -318,9 +318,6 @@ class SpatialTau:
                  : float
                    pseudo p-value for observed tau_spatial under the null of spatial randomness (if permutations>0)
 
-
-
-
     Notes
     -----
 

@@ -55,7 +55,7 @@ from pysal.esda.mapclassify import K_classifiers
 from pysal.inequality.theil import Theil, TheilD, TheilDSim
 from pysal.region.maxp import Maxp, Maxp_LISA
 from pysal.spatial_dynamics import Markov, Spatial_Markov, LISA_Markov, \
-        SpatialTau, Theta
+        SpatialTau, Theta, Tau
 from pysal.spatial_dynamics import ergodic
 from pysal.spatial_dynamics import directional
 from pysal.weights import W, lat2W, regime_weights, comb, full, shimbel, \
