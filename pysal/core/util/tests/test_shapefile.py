@@ -172,17 +172,54 @@ class TestMultiPoint(unittest.TestCase):
         self.failUnlessRaises(NotImplementedError, MultiPoint)
 
 class TestPointZ(unittest.TestCase):
-    def test___init__(self):
-        self.failUnlessRaises(NotImplementedError, PointZ)
+    def test_pack(self):
+        record = {"X":5,"Y":5,"Z":5,"M":5,"Shape Type":11}
+        expected = b"\x0b\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14@\x00\x00\x00\x00\x00\x00\x14@\x00\x00\x00\x00\x00\x00\x14@\x00\x00\x00\x00\x00\x00\x14@"
+        self.assertEqual(expected, PointZ.pack(record))
+
+    def test_unpack(self):
+        dat = StringIO(b"\x0b\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14@\x00\x00\x00\x00\x00\x00\x14@\x00\x00\x00\x00\x00\x00\x14@\x00\x00\x00\x00\x00\x00\x14@")
+        expected = {"X":5,"Y":5,"Z":5,"M":5,"Shape Type":11}
+        self.assertEqual(expected, PointZ.unpack(dat))
 
 class TestPolyLineZ(unittest.TestCase):
     def test___init__(self):
         self.failUnlessRaises(NotImplementedError, PolyLineZ)
+class TestPolyLineZ(unittest.TestCase):
+    def test_pack(self):
+        record = {'BBOX Ymax': -0.25832280562918325, 'NumPoints': 3, 'BBOX Ymin': -0.25895877033237352, 'NumParts': 1, 'Vertices': [(-0.0090539248870159517, -0.25832280562918325), (0.0074811573959305822, -0.25895877033237352), (0.0074811573959305822, -0.25895877033237352)], 'BBOX Xmax': 0.0074811573959305822, 'BBOX Xmin': -0.0090539248870159517, 'Shape Type': 13, 'Parts Index': [0], 'Zmin': 0, 'Zmax': 10, 'Zarray': [0, 5, 10], 'Mmin':2, 'Mmax': 4, 'Marray': [2,3,4]}
+        expected = b"""\r\x00\x00\x00\xc0FR:\xdd\x8a\x82\xbf=\xc1e\xce\xc7\x92\xd0\xbf\x00\xc5\xa0\xe5\x8f\xa4~?k@\x7f`\\\x88\xd0\xbf\x01\x00\x00\x00\x03\x00\x00\x00\x00\x00\x00\x00\xc0FR:\xdd\x8a\x82\xbfk@\x7f`\\\x88\xd0\xbf\x00\xc5\xa0\xe5\x8f\xa4~?=\xc1e\xce\xc7\x92\xd0\xbf\x00\xc5\xa0\xe5\x8f\xa4~?=\xc1e\xce\xc7\x92\xd0\xbf\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00$@\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14@\x00\x00\x00\x00\x00\x00$@\x00\x00\x00\x00\x00\x00\x00@\x00\x00\x00\x00\x00\x00\x10@\x00\x00\x00\x00\x00\x00\x00@\x00\x00\x00\x00\x00\x00\x08@\x00\x00\x00\x00\x00\x00\x10@"""
+        self.assertEqual(expected, PolyLineZ.pack(record))
+
+    def test_unpack(self):
+        dat = StringIO(b"""\r\x00\x00\x00\xc0FR:\xdd\x8a\x82\xbf=\xc1e\xce\xc7\x92\xd0\xbf\x00\xc5\xa0\xe5\x8f\xa4~?k@\x7f`\\\x88\xd0\xbf\x01\x00\x00\x00\x03\x00\x00\x00\x00\x00\x00\x00\xc0FR:\xdd\x8a\x82\xbfk@\x7f`\\\x88\xd0\xbf\x00\xc5\xa0\xe5\x8f\xa4~?=\xc1e\xce\xc7\x92\xd0\xbf\x00\xc5\xa0\xe5\x8f\xa4~?=\xc1e\xce\xc7\x92\xd0\xbf\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00$@\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14@\x00\x00\x00\x00\x00\x00$@\x00\x00\x00\x00\x00\x00\x00@\x00\x00\x00\x00\x00\x00\x10@\x00\x00\x00\x00\x00\x00\x00@\x00\x00\x00\x00\x00\x00\x08@\x00\x00\x00\x00\x00\x00\x10@""")
+        expected = {'BBOX Ymax': -0.25832280562918325, 'NumPoints': 3, 'BBOX Ymin': -0.25895877033237352, 'NumParts': 1, 'Vertices': [(-0.0090539248870159517, -0.25832280562918325), (0.0074811573959305822, -0.25895877033237352), (0.0074811573959305822, -0.25895877033237352)], 'BBOX Xmax': 0.0074811573959305822, 'BBOX Xmin': -0.0090539248870159517, 'Shape Type': 13, 'Parts Index': [0], 'Zmin': 0, 'Zmax': 10, 'Zarray': [0, 5, 10], 'Mmin':2, 'Mmax': 4, 'Marray': [2,3,4]}
+        self.assertEqual(expected, PolyLineZ.unpack(dat))
 
 class TestPolygonZ(unittest.TestCase):
-    def test___init__(self):
-        self.failUnlessRaises(NotImplementedError, PolygonZ)
-        # polygon_z = PolygonZ()
+    def test_pack(self):
+        record = {
+            'BBOX Xmin': 0.0,
+            'BBOX Xmax': 10.0,
+            'BBOX Ymin': 0.0,
+            'BBOX Ymax': 10.0,
+            'NumPoints': 4,
+            'NumParts': 1,
+            'Vertices': [(0.0, 0.0),
+                         (10.0, 10.0),
+                         (10.0, 0.0),
+                         (0.0, 0.0)],
+            'Shape Type': 15,
+            'Parts Index': [0],
+            'Zmin': 0,
+            'Zmax': 10,
+            'Zarray': [0, 10, 0, 0],
+            'Mmin': 2,
+            'Mmax': 4,
+            'Marray': [2, 4, 2, 2]
+        }
+        dat = StringIO(PolygonZ.pack(record))
+        self.assertEqual(record, PolygonZ.unpack(dat))
 
 class TestMultiPointZ(unittest.TestCase):
     def test___init__(self):

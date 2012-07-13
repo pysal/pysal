@@ -532,6 +532,7 @@ class PointZ(Point):
               ('Y','d','<'),\
               ('Z','d','<'),\
               ('M','d','<'))
+    USTRUCT = [{'fmt': 'idddd', 'order': '<', 'names': ['Shape Type', 'X', 'Y', 'Z', 'M'], 'size': 36}]
 class PolyLine:
     """ Packs and Unpacks a ShapeFile PolyLine Type 
     Example:
@@ -584,7 +585,7 @@ class PolyLine:
         content['Vertices'] = verts
         content = _packDict(contentStruct,content)
         return rheader+content
-class PolyLineZ:
+class PolyLineZ(object):
     HASZ = True
     HASM = True
     String_Type = 'ARC'
@@ -595,25 +596,47 @@ class PolyLineZ:
               ('BBOX Ymax','d','<'),\
               ('NumParts','i','<'),\
               ('NumPoints','i','<'))
+    USTRUCT = [{'fmt': 'iddddii', 'order': '<', 'names': ['Shape Type', 'BBOX Xmin', 'BBOX Ymin', 'BBOX Xmax', 'BBOX Ymax', 'NumParts', 'NumPoints'], 'size': 44}]
     @classmethod
     def unpack(cls,dat):
-        record = _unpackDict(cls.STRUCT,dat)
-        contentStruct = (('Parts Index','%di'%record['NumParts'],'<'),\
-                         ('Vertices','%dd'%(2*record['NumPoints']),'<'),\
-                         ('Z Range','2d','<'),\
-                         ('Z Array','%dd'%(record['NumPoints']),'<'),\
-                         ('M Range','2d','<'),\
-                         ('M Array','%dd'%(record['NumPoints']),'<'))
-        record.update(_unpackDict(contentStruct,dat))
+        record = _unpackDict(cls.USTRUCT,dat)
+        contentStruct = (('Parts Index',('i',record['NumParts']),'<'),\
+                         ('Vertices',('d',2*record['NumPoints']),'<'),\
+                         ('Zmin',('d',1),'<'),\
+                         ('Zmax',('d',1),'<'),\
+                         ('Zarray',('d',record['NumPoints']),'<'),\
+                         ('Mmin',('d',1),'<'),\
+                         ('Mmax',('d',1),'<'),\
+                         ('Marray',('d',record['NumPoints']),'<'),)
+        _unpackDict2(record,contentStruct,dat)
         verts = record['Vertices']
-        #Next line is equivalent to: zip(verts[::2],verts[1::2])
         record['Vertices'] = list(izip( islice(verts,0,None,2), islice(verts,1,None,2) ))
         if not record['Parts Index']:
             record['Parts Index'] = [0]
+        record['Zmin'] = record['Zmin'][0]
+        record['Zmax'] = record['Zmax'][0]
+        record['Mmin'] = record['Mmin'][0]
+        record['Mmax'] = record['Mmax'][0]
         return record
     @classmethod
     def pack(cls,record):
-        raise NotImplementedError,"No support for writing PolyLineZ or PolygonZ."
+        rheader = _packDict(cls.STRUCT,record)
+        contentStruct = (('Parts Index','%di'%record['NumParts'],'<'),\
+                         ('Vertices','%dd'%(2*record['NumPoints']),'<'),\
+                         ('Zmin','d','<'),\
+                         ('Zmax','d','<'),\
+                         ('Zarray','%dd'%(record['NumPoints']),'<'),\
+                         ('Mmin','d','<'),\
+                         ('Mmax','d','<'),\
+                         ('Marray','%dd'%(record['NumPoints']),'<'))
+        content = {}
+        content.update(record)
+        content['Parts Index'] = record['Parts Index']
+        verts = []
+        [verts.extend(vert) for vert in record['Vertices']]
+        content['Vertices'] = verts
+        content = _packDict(contentStruct,content)
+        return rheader+content
 class Polygon(PolyLine):
     """ Packs and Unpacks a ShapeFile Polygon Type
     Indentical to PolyLine.
