@@ -72,6 +72,27 @@ class test_DBF(unittest.TestCase):
         orig.close()
         copy.close()
         os.remove(self.dbfcopy)
+    def test_writeNones(self):
+        import datetime
+        import time
+        f = tempfile.NamedTemporaryFile(suffix='.dbf'); fname = f.name; f.close()
+        db = pysal.core.IOHandlers.pyDbfIO.DBF(fname,'w')
+        db.header = ["recID","date","strID","aFloat"]
+        db.field_spec = [('N',10,0),('D',8,0),('C',10,0),('N',5,5)]
+        records = []
+        for i in range(10):
+            d = datetime.date(*time.localtime()[:3])
+            rec = [i+1,d,str(i+1),(i+1)/2.0]
+            records.append(rec)
+        records.append([None,None,'',None])
+        records.append(rec)
+        for rec in records:
+            db.write(rec)
+        db.close()
+        db2 = pysal.core.IOHandlers.pyDbfIO.DBF(fname,'r')
+        self.assertEquals(records,db2.read())
+
+        os.remove(fname)
     
 if __name__ == '__main__':
     unittest.main()
