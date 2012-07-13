@@ -2,7 +2,7 @@
 ======================================================================
 
 
-.. versionadded:: 1.0
+.. versionadded:: 1.4
 
 .. automodule:: pysal.esda.gamma
     :synopsis: Global measures of autocorrelation based on Gamma statistics
