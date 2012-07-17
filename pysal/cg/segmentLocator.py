@@ -87,6 +87,7 @@ class SegmentGrid(object):
         self.res = resolution
         self.hash = {}
         self._kd = None
+        self._kd2 = None
         self.x_range = (bounds.left, bounds.right)
         self.y_range = (bounds.lower, bounds.upper)
         try:
@@ -101,6 +102,11 @@ class SegmentGrid(object):
         if self._kd == None:
             self._kd = scipy.spatial.cKDTree(self.hash.keys())
         return self._kd
+    @property
+    def kd2(self):
+        if self._kd2 == None:
+            self._kd2 = scipy.spatial.KDTree(self.hash.keys())
+        return self._kd2
     def in_grid(self, loc):
         """
         Returns whether a 2-tuple location _loc_ lies inside the grid bounds.
@@ -170,9 +176,11 @@ class SegmentGrid(object):
             self.bin_loc((x,y-tiny), id)
             self.bin_loc((x,y+tiny), id)
         self._kd = None
+        self._kd2 = None
         return True
     def remove(self, segment):
         self._kd = None
+        self._kd2 = None
         pass
     def nearest(self, pt):
         """
@@ -205,40 +213,41 @@ class SegmentGrid(object):
         # +1 returns inconsistent results (compared to BruteSegmentLocator)
         # +2 seems to do the trick.
         radius = int(math.ceil(dist))+2
-        a,b = numpy.ogrid[-radius:radius+1, -radius:radius+1]   # build square index arrays centered at 0,0
-        index = a**2 + b**2 <= radius**2                        # create a boolean mask to filter indicies outside radius
-        a,b = index.nonzero()                                   # grad the (i,j)'s of the elements within radius.
-        rows,cols = row+a-radius,col+b-radius                   # recenter the (i,j)'s over the Q point
-        #### Filter indicies by bounds of the grid.
-        ### filters must be applied one at a time
-        ### I havn't figure out a way to group these
-        filter = rows>=0;           rows = rows[filter]; cols = cols[filter] # i >= 0
-        filter = rows<self.i_range; rows = rows[filter]; cols = cols[filter] # i < i_range
-        filter = cols>=0;           rows = rows[filter]; cols = cols[filter] # j >= 0
-        filter = cols<self.j_range; rows = rows[filter]; cols = cols[filter] # j < j_range
-        if DEBUG:
-            maskCopy = self.mask.copy().astype(float)
-            maskCopy+= self.endMask.astype(float)
-            maskCopy[rows,cols] += 1
-            maskCopy[row,col] += 3
-            i = pylab.matshow(maskCopy, origin='lower', extent=self.x_range+self.y_range, fignum=1)
-            #raw_input('pause')
-        ### All that was just setup for this one line...
-        idx = self.mask[rows,cols].nonzero()[0]                 # Filter out empty bins.
-        rows,cols = rows[idx],cols[idx]                         # (i,j)'s of the filled grid cells within radius.
+        if radius < 30:
+            a,b = numpy.ogrid[-radius:radius+1, -radius:radius+1]   # build square index arrays centered at 0,0
+            index = a**2 + b**2 <= radius**2                        # create a boolean mask to filter indicies outside radius
+            a,b = index.nonzero()                                   # grad the (i,j)'s of the elements within radius.
+            rows,cols = row+a-radius,col+b-radius                   # recenter the (i,j)'s over the Q point
+            #### Filter indicies by bounds of the grid.
+            ### filters must be applied one at a time
+            ### I havn't figure out a way to group these
+            filter = rows>=0;           rows = rows[filter]; cols = cols[filter] # i >= 0
+            filter = rows<self.i_range; rows = rows[filter]; cols = cols[filter] # i < i_range
+            filter = cols>=0;           rows = rows[filter]; cols = cols[filter] # j >= 0
+            filter = cols<self.j_range; rows = rows[filter]; cols = cols[filter] # j < j_range
+            if DEBUG:
+                maskCopy = self.mask.copy().astype(float)
+                maskCopy+= self.endMask.astype(float)
+                maskCopy[rows,cols] += 1
+                maskCopy[row,col] += 3
+                i = pylab.matshow(maskCopy, origin='lower', extent=self.x_range+self.y_range, fignum=1)
+                #raw_input('pause')
+            ### All that was just setup for this one line...
+            idx = self.mask[rows,cols].nonzero()[0]                 # Filter out empty bins.
+            rows,cols = rows[idx],cols[idx]                         # (i,j)'s of the filled grid cells within radius.
 
-        for t in zip(rows,cols):
-            possibles.update(self.hash[t])
+            for t in zip(rows,cols):
+                possibles.update(self.hash[t])
 
-        if DEBUG:
-            print "possibles",possibles
-        
+            if DEBUG:
+                print "possibles",possibles
+        else:
         ### The old way...
         ### previously I was using kd.query_ball_point on, but the performance was terrible.
-        #I = self.kd.query_ball_point(grid_loc, r+2)
-        #for i in I:
-            #t = tuple(self.kd.data[i])
-            #possibles.update(self.hash[t])
+            I = self.kd2.query_ball_point(grid_loc, radius)
+            for i in I:
+                t = tuple(self.kd.data[i])
+                possibles.update(self.hash[t])
         return list(possibles)
         
 def random_segments(n):
