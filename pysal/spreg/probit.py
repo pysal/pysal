@@ -475,7 +475,7 @@ class Probit(BaseProbit):
     have the names of the variables printed in the output summary, we will
     have to pass them in as well, although this is optional. 
 
-    >>> model = Probit(y, x, w=w)
+    >>> model = Probit(y, x, w=w, name_y='crime', name_x=['income','home value'], name_ds='columbus', name_w='columbus.gal')
     
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
@@ -511,9 +511,9 @@ class Probit(BaseProbit):
     ----------
     SUMMARY OF OUTPUT: CLASSIC PROBIT ESTIMATOR ESTIMATION
     ------------------------------------------------------
-    Data set            :      unknown
-    Weights matrix      :      unknown
-    Dependent Variable  :     dep_var  Number of Observations:          49
+    Data set            :     columbus
+    Weights matrix      : columbus.gal
+    Dependent Variable  :       crime  Number of Observations:          49
     <BLANKLINE>
     % correctly predicted: 85.71
     Log-Likelihood       : -20.0601
@@ -524,8 +524,8 @@ class Probit(BaseProbit):
         Variable     Coefficient       Std.Error     z-Statistic     Probability
     ----------------------------------------------------------------------------
         CONSTANT       3.3538108       0.9234792       3.6317122     0.000281547
-           var_1      -0.1996531       0.0641390      -3.1128178     0.001853104
-           var_2      -0.0295137       0.0175972      -1.6771855      0.09350621
+          income      -0.1996531       0.0641390      -3.1128178     0.001853104
+      home value      -0.0295137       0.0175972      -1.6771855      0.09350621
     ----------------------------------------------------------------------------
     <BLANKLINE>
     DIAGNOSTICS FOR SPATIAL DEPENDENCE
@@ -540,8 +540,8 @@ class Probit(BaseProbit):
     ----------------------------------------------------------------------------
         Variable           Slope       Std.Error     z-Statistic     Probability
     ----------------------------------------------------------------------------
-           var_1      -0.0465378       0.0133080      -3.4969848    0.0004705486
-           var_2      -0.0068794       0.0040072      -1.7167785      0.08601965
+          income      -0.0465378       0.0133080      -3.4969848    0.0004705486
+      home value      -0.0068794       0.0040072      -1.7167785      0.08601965
     <BLANKLINE>
     <BLANKLINE>
     ========================= END OF REPORT ==============================
