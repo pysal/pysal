@@ -6,7 +6,7 @@ __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 class DataTable(FileIO.FileIO):
     """ DataTable provides additional functionality to FileIO for data table file tables
         FileIO Handlers that provide data tables should subclass this instead of FileIO """
-    class By_Col:
+    class _By_Col:
         def __init__(self,  parent):
             self.p = parent
         def __repr__(self):
@@ -28,7 +28,7 @@ class DataTable(FileIO.FileIO):
     @property
     def by_col(self):
         if self._by_col == None:
-            self._by_col = self.By_Col(self)
+            self._by_col = self._By_Col(self)
         return self._by_col
     def _get_col(self, key):
         """ returns the column vector

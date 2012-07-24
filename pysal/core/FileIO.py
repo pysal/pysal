@@ -112,7 +112,7 @@ class FileIO(object): #should be a type?
     def open(cls,*args,**kwargs):
         """ Alias for FileIO() """
         return cls(*args,**kwargs)
-    class By_Row:
+    class _By_Row:
         def __init__(self,parent):
             self.p = parent
         def __repr__(self):
@@ -153,7 +153,7 @@ class FileIO(object): #should be a type?
     @property
     def by_row(self):
         if self._by_row == None:
-            self._by_row = self.By_Row(self)
+            self._by_row = self._By_Row(self)
         return self._by_row
     def __getIds(self):
         return self.__ids

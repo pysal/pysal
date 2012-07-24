@@ -24,7 +24,7 @@ class IntervalTree:
     212-217. Springer-Verlag, Berlin, 2000.
     """
 
-    class Node:
+    class _Node:
         """
         Private class representing a node in an interval tree.
         """
@@ -222,7 +222,7 @@ class IntervalTree:
         bp = binary_search(eps, median)
         left_eps = eps[:bp]
         right_eps = eps[bp:]
-        node = (IntervalTree.Node(median, left_list, right_list,
+        node = (IntervalTree._Node(median, left_list, right_list,
                     self._recursive_build(rem_is, left_eps),
                     self._recursive_build(rem_is, right_eps)))
         return node
