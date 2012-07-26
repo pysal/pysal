@@ -18,7 +18,6 @@ class DataTable(FileIO.FileIO):
         def __call__(self, key):
             return self.p._get_col(key)
     def __init__(self, *args, **kwargs):
-        self._by_col = None
         FileIO.FileIO.__init__(self, *args, **kwargs)
     def __repr__(self):
         return 'DataTable: % s'% self.dataPath
@@ -27,9 +26,7 @@ class DataTable(FileIO.FileIO):
         raise NotImplementedError
     @property
     def by_col(self):
-        if self._by_col == None:
-            self._by_col = self._By_Col(self)
-        return self._by_col
+        return self._By_Col(self)
     def _get_col(self, key):
         """ returns the column vector
         """

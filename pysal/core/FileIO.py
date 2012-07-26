@@ -145,16 +145,13 @@ class FileIO(object): #should be a type?
         self.__ids = None #{'id':n}
         self.__rIds = None
         self.closed = False
-        self._by_row = None
         self._spec = []
         self.header = []
     def __getitem__(self,key):
         return self.by_row.__getitem__(key)
     @property
     def by_row(self):
-        if self._by_row == None:
-            self._by_row = self._By_Row(self)
-        return self._by_row
+        return self._By_Row(self)
     def __getIds(self):
         return self.__ids
     def __setIds(self,ids):
