@@ -21,8 +21,8 @@ Prior to the build, there are a number of actions to take.
      * update the change log: use svn2cl to generate the entire project history. Then prepend just the most important changes to the file CHANGELOG.txt.
      * update THANKS.txt 
      * update README.txt 
-     * update setup.py to add new modules or remove old ones
-     * update the DOWNLOAD_URL in setup.py 
+     * update setup.py to add new modules or remove old ones, and to bump
+       version
      * prior to the Tag and final docs build, bump the docs version from x.xdev
        to x.x by editing doc/source/conf.py in two places.
      * create a tag X.0::

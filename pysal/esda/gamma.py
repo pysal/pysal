@@ -1,6 +1,7 @@
 """
 Gamma index for spatial autocorrelation
 
+
 """
 __author__  = "Luc Anselin <luc.anselin@asu.edu>"
 

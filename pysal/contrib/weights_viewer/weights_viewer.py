@@ -8,6 +8,7 @@ POINT_RADIUS = 5
 BORDER_COLOR = wx.Colour(0,0,0,255)
 SELECTION_COLOR = wx.Colour(255,128,0,255)
 NEIGHBORS_COLOR = wx.Colour(128,255,0,255)
+BACKGROUND_COLOR = wx.Colour(0,0,0,0)
 
 class WeightsMapFrame(wx.Frame):
     def __init__(self,parent=None,size=(600,600), style=wx.DEFAULT_FRAME_STYLE, geo=None, w=None):
@@ -46,6 +47,7 @@ class WeightsMap(wx.Panel):
         else:
             raise TypeError, "Unsupported Type: %r"%(geo.type)
         self.w = w_obj
+        self._ids = range(self.w.n)
         self.transform = WorldToViewTransform(geo.bbox,w,h)
         self.selection = None
     def onMouse(self, evt):
