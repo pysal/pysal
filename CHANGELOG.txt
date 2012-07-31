@@ -1,5 +1,81 @@
 v<1.4.0>, 2012-07-31
 
+
+2012-07-31 21:30  sjsrey@gmail.com
+
+	* pysal/spatial_dynamics/ergodic.py,
+	  pysal/spatial_dynamics/rank.py:
+	  - docs/example
+
+2012-07-31 20:47  sjsrey@gmail.com
+
+	* pysal/spreg/tests/test_error_sp_hom.py:
+	  - rounding/precision issue
+
+2012-07-31 20:27  sjsrey@gmail.com
+
+	* pysal/spatial_dynamics/directional.py,
+	  pysal/spatial_dynamics/tests/test_directional.py:
+	  - fixing pvalue bug
+
+2012-07-31 20:24  sjsrey@gmail.com
+
+	* doc/source/users/tutorials/dynamics.txt:
+	  - fixed rounding problem
+
+2012-07-31 19:58  sjsrey@gmail.com
+
+	* doc/source/index.txt,
+	  doc/source/users/tutorials/autocorrelation.txt,
+	  doc/source/users/tutorials/dynamics.txt,
+	  doc/source/users/tutorials/econometrics.txt,
+	  doc/source/users/tutorials/fileio.txt,
+	  doc/source/users/tutorials/index.txt,
+	  doc/source/users/tutorials/intro.txt,
+	  doc/source/users/tutorials/region.txt,
+	  doc/source/users/tutorials/smoothing.txt,
+	  doc/source/users/tutorials/weights.txt:
+	  - adding links to API for more details
+
+2012-07-31 19:05  sjsrey@gmail.com
+
+	* pysal/spatial_dynamics/directional.py:
+	  - consistency on pvalues for randomization
+
+2012-07-31 19:02  sjsrey@gmail.com
+
+	* pysal/weights/Distance.py:
+	  - docs
+
+2012-07-31 18:58  sjsrey@gmail.com
+
+	* doc/source/users/tutorials/dynamics.txt:
+	  - seed issue 
+
+2012-07-31 18:36  sjsrey@gmail.com
+
+	* doc/source/users/tutorials/autocorrelation.txt:
+	  - closing issue 214
+
+2012-07-31 18:19  sjsrey@gmail.com
+
+	* doc/source/users/tutorials/autocorrelation.txt:
+	  - fixing random.seed issues in doctests
+
+2012-07-31 17:31  schmidtc
+
+	* pysal/cg/shapes.py,
+	  pysal/cg/tests/test_shapes.py:
+	  Fixing small bugs with VerticleLines and testing
+
+2012-07-31 16:26  sjsrey@gmail.com
+
+	* doc/source/developers/guidelines.txt,
+	  doc/source/users/installation.txt:
+	  - updating docs 
+
+
+
 2012-07-26 15:24  schmidtc
 
 	* pysal/core/FileIO.py,
