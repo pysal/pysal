@@ -179,8 +179,12 @@ def rose(Y,w,k=8,permutations=0):
             c,b=np.histogram(utheta,cuts)
             c.shape=(1,k)
             all_counts[i,:]=c
-        p=((all_counts>=counts).sum(axis=0)+1)/(permutations*1.+1)
-        results['pvalues']=p
+        larger = sum(all_counts >= counts)
+        p_l = permutations - larger
+        extreme = (p_l) < larger
+        extreme = np.where(extreme, p_l, larger)
+        p = (extreme + 1.) / (permutations + 1.)
+        results['pvalues'] = p
         results['random_counts']=all_counts
         
     return results
