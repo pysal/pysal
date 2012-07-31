@@ -151,12 +151,14 @@ class Kernel(W):
 
                       K(z) = (3/4)(1-z^2) \ if |z| \le 1
 
+
                   quartic
 
                   .. math::
 
                       K(z) = (15/16)(1-z^2)^2 \ if |z| \le 1
                  
+
                   gaussian
 
                   .. math::
