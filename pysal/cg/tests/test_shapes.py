@@ -171,15 +171,18 @@ class test_LineSegment(unittest.TestCase):
 
         Test tag: <tc>#tests#LineSegment.line</tc>
         """         
+        import math
         ls = LineSegment(Point((0, 0)), Point((1, 0)))
         self.assertEquals(ls.line.m, 0) 
         self.assertEquals(ls.line.b, 0) 
 
         ls = LineSegment(Point((0, 0)), Point((0, 1)))
-        self.assertEquals(ls.line, None)
+        self.assertEquals(ls.line.m, float('inf'))
+        self.assertTrue(math.isnan(ls.line.b))
         
         ls = LineSegment(Point((0, 0)), Point((0, -1)))
-        self.assertEquals(ls.line, None)
+        self.assertEquals(ls.line.m, float('inf'))
+        self.assertTrue(math.isnan(ls.line.b))
    
         ls  = LineSegment(Point((0, 0)), Point((0, 0)))
         self.assertEquals(ls.line, None)

@@ -676,7 +676,9 @@ class LineSegment(object):
         if self._line == False:
             dx = self._p1[0] - self._p2[0]
             dy = self._p1[1] - self._p2[1]
-            if dx == 0:
+            if dx == 0 and dy == 0:
+                self._line = None
+            elif dx == 0:
                 self._line = VerticalLine(self._p1[0])
             else:
                 m = dy/dx
