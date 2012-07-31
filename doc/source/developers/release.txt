@@ -37,10 +37,10 @@ Post-build Activities
 -----------------------
 
   * bump the trunk up to version X.1 by editing `version.py`
+  * upload releases and docs to code.google.com/p/pysal/downloads
   * update the release on http://pypi.python.org:
      * go to http://pypi.python.org/pypi?:action=submit_form
      * pick option 2 to upload the PKG-INFO from top level pysal directory in a release tarball
-  * upload releases and docs to code.google.com/p/pysal/downloads
   * edit documentation links on http://code.google.com/p/pysal/ (which as of 1.1 will be the landing page for pysal.org)
   * after the Tag and final docs build, bump the docs version from x.x to x.x+1dev by editing doc/source/conf.py in two places.
   * create new release directory on documentation server
