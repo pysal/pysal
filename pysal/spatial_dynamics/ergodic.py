@@ -101,7 +101,8 @@ def fmpt(P):
     today. (That wicked witch can only die once so I reckon that is the
     ultimate absorbing state).
     
-    Notes -----
+    Notes
+    -----
 
     Uses formulation (and examples on p. 218) in Kemeny and Snell (1976) [1]_
 
