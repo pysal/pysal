@@ -199,6 +199,11 @@ constraints.
     [37, 27, 36, 17]
     >>>
 
+Further Information 
+====================
+
+For further details see the :doc:`Regionalization  API <../../library/region/index>`.
+
 
 .. rubric:: Footnotes
 

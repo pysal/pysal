@@ -809,6 +809,13 @@ To identify the significant :math:`G_i` values we can use numpy indexing:
     array([ 0.037,  0.011,  0.006,  0.001,  0.042,  0.006,  0.037,  0.005,
             0.023,  0.017,  0.033,  0.01 ,  0.001,  0.034,  0.043,  0.045])
 
+Further Information 
+====================
+
+For further details see the :doc:`ESDA  API <../../library/esda/index>`.
+
+
+
 
 .. rubric:: Footnotes
 

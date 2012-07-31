@@ -7,9 +7,11 @@ Assumptions
 ===========
 
 The tutorials presented here are designed to illustrate a selection of the
-functionality in PySAL. The reader is **assumed to have working knowledge of
-the particular spatial analytical methods** illustrated. Background on
-spatial analysis can be found in the references cited in the tutorials.
+functionality in PySAL. Further details on PySAL functionality not covered in
+these tutorials can be found in the :doc:`API <../../library/index>`. The reader is
+**assumed to have working knowledge of the particular spatial analytical
+methods** illustrated. Background on spatial analysis can be found in the
+references cited in the tutorials.
 
 It is also assumed that the reader has already :doc:`installed PySAL <../installation>`.
 

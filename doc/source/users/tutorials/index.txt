@@ -11,6 +11,7 @@ Getting Started with PySAL
    File Input and Output <fileio>
    Spatial Weights <weights>
    Spatial Autocorrelation <autocorrelation>
+   Spatial Econometrics <econometrics>
    Spatial Smoothing <smoothing>
    Regionalization <region>
    Spatial Dynamics <dynamics>

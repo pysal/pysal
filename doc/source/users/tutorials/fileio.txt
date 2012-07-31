@@ -421,3 +421,5 @@ From GAL to ArcGIS SWM format
     >>> wold.n == wnew.n
     True
 
+
+For further details see the :doc:`FileIO API <../../library/core/FileIO>`.

@@ -905,6 +905,12 @@ and from a WSP to W:
     80
     
 
+Further Information 
+====================
+
+For further details see the :doc:`Weights  API <../../library/weights/index>`.
+
+
 
 .. rubric:: Footnotes
 

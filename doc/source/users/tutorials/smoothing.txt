@@ -389,6 +389,11 @@ An example for the class usage is as follows:
     array([ 1.23737916,  1.45124717,  2.32199546,  1.82857143,  0.24489796,
             0.69659864])
 
+Further Information 
+====================
+
+For further details see the :doc:`Smoothing API <../../library/esda/smoothing>`.
+
 .. rubric:: Footnotes
 
 .. [#] Although this tutorial provides an introduction to the PySAL implementations for spatial smoothing, it is not exhaustive. Complete documentation for the implementations can be found by accessing the help from within a Python interpreter. 
