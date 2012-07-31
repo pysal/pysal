@@ -682,31 +682,31 @@ which results in :math:`n` values of local spatial autocorrelation, 1 for each s
 
 .. doctest::
 
-        >>> np.random.seed(12345)
-        >>> f = pysal.open(pysal.examples.get_path("stl_hom.txt"))
-        >>> y = np.array(f.by_col['HR8893'])
-        >>> w = pysal.open(pysal.examples.get_path("stl.gal")).read()
-        >>> lm = pysal.Moran_Local(y, w)
-        >>> lm.n
-        78
-        >>> len(lm.Is)
-        78
+       >>> f = pysal.open(pysal.examples.get_path("stl_hom.txt"))
+       >>> y = np.array(f.by_col['HR8893'])
+       >>> w = pysal.open(pysal.examples.get_path("stl.gal")).read()
+       >>> np.random.seed(12345)
+       >>> lm = pysal.Moran_Local(y,w)
+       >>> lm.n
+       78
+       >>> len(lm.Is)
+       78
         
 thus we see 78 LISAs are stored in the vector lm.Is. Inference about these values is obtained through conditional randomization [#]_ which leads to pseudo p-values for each LISA:
 
 .. doctest::
 
-        >>> lm.p_sim
-        array([ 0.176,  0.073,  0.405,  0.267,  0.332,  0.057,  0.296,  0.242,
-        0.055,  0.062,  0.273,  0.488,  0.44 ,  0.354,  0.415,  0.478,
-        0.473,  0.374,  0.415,  0.21 ,  0.161,  0.025,  0.338,  0.375,
-        0.285,  0.374,  0.208,  0.3  ,  0.373,  0.411,  0.478,  0.414,
-        0.009,  0.429,  0.269,  0.015,  0.005,  0.002,  0.077,  0.001,
-        0.088,  0.459,  0.435,  0.365,  0.231,  0.017,  0.033,  0.04 ,
-        0.068,  0.101,  0.284,  0.309,  0.113,  0.457,  0.045,  0.269,
-        0.118,  0.346,  0.328,  0.379,  0.342,  0.39 ,  0.376,  0.467,
-        0.357,  0.241,  0.26 ,  0.401,  0.185,  0.172,  0.248,  0.4  ,
-        0.482,  0.159,  0.373,  0.455,  0.083,  0.128])
+    >>> lm.p_sim
+    array([ 0.176,  0.073,  0.405,  0.267,  0.332,  0.057,  0.296,  0.242,
+            0.055,  0.062,  0.273,  0.488,  0.44 ,  0.354,  0.415,  0.478,
+            0.473,  0.374,  0.415,  0.21 ,  0.161,  0.025,  0.338,  0.375,
+            0.285,  0.374,  0.208,  0.3  ,  0.373,  0.411,  0.478,  0.414,
+            0.009,  0.429,  0.269,  0.015,  0.005,  0.002,  0.077,  0.001,
+            0.088,  0.459,  0.435,  0.365,  0.231,  0.017,  0.033,  0.04 ,
+            0.068,  0.101,  0.284,  0.309,  0.113,  0.457,  0.045,  0.269,
+            0.118,  0.346,  0.328,  0.379,  0.342,  0.39 ,  0.376,  0.467,
+            0.357,  0.241,  0.26 ,  0.401,  0.185,  0.172,  0.248,  0.4  ,
+            0.482,  0.159,  0.373,  0.455,  0.083,  0.128])
 
 To identify the significant [#]_ LISA values we can use numpy indexing:
 
@@ -714,8 +714,8 @@ To identify the significant [#]_ LISA values we can use numpy indexing:
 
         >>> sig = lm.p_sim<0.05
         >>> lm.p_sim[sig]
-	array([ 0.035,  0.001,  0.007,  0.001,  0.001,  0.002,  0.007,  0.035,
-		0.035,  0.04 ])
+        array([ 0.025,  0.009,  0.015,  0.005,  0.002,  0.001,  0.017,  0.033,
+                0.04 ,  0.045])
 
 and then use this indexing on the q attribute to find out which quadrant of the Moran scatter plot each of the significant values is contained in:
 
@@ -734,10 +734,11 @@ Continuing on with the SIDS example above, the adjusted local Moran's Is are obt
 	>>> b = np.array(f.by_col('BIR79'))
 	>>> e = np.array(f.by_col('SID79'))
 	>>> w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
-        >>> lm = pysal.esda.moran.Moran_Local_Rate(e, b, w)
-        >>> lm.Is[:10]
-        array([-0.13452366, -1.21133985,  0.05019761,  0.06127125, -0.12627466,
-                0.23497679,  0.26345855, -0.00951288, -0.01517879, -0.34513514])
+    >>> np.random.seed(12345)
+    >>> lm = pysal.esda.moran.Moran_Local_Rate(e, b, w)
+    >>> lm.Is[:10]
+    array([-0.13452366, -1.21133985,  0.05019761,  0.06127125, -0.12627466,
+            0.23497679,  0.26345855, -0.00951288, -0.01517879, -0.34513514])
 
 As demonstrated above, significant Moran's Is can be identified by using numpy indexing:
 
@@ -745,8 +746,8 @@ As demonstrated above, significant Moran's Is can be identified by using numpy i
 
         >>> sig = lm.p_sim<0.05
         >>> lm.p_sim[sig]
-        array([ 0.017,  0.03 ,  0.037,  0.024,  0.002,  0.022,  0.03 ,  0.029,
-                0.017,  0.023,  0.015,  0.002])
+        array([ 0.021,  0.04 ,  0.047,  0.015,  0.001,  0.017,  0.032,  0.031,
+                0.019,  0.014,  0.004,  0.048,  0.003])
 
 
 Local G and G*
@@ -769,6 +770,7 @@ Continuing on with the St. Louis example, the :math:`G_i` and :math:`G^*_i` stat
 .. doctest::
 
         >>> from pysal.esda.getisord import G_Local
+        >>> np.random.seed(12345)
         >>> lg = G_Local(y, dist_w)
         >>> lg.n
         78
@@ -784,28 +786,28 @@ thus we see 78 :math:`G_i` and :math:`G^*_i` are stored in the vector lg.Gs and 
 
 .. doctest::
 
-        >>> lg.p_sim
-	array([ 0.338,  0.05 ,  0.477,  0.017,  0.065,  0.008,  0.101,  0.135,
-		0.065,  0.085,  0.393,  0.269,  0.136,  0.38 ,  0.349,  0.455,
-		0.449,  0.261,  0.414,  0.195,  0.168,  0.001,  0.3  ,  0.035,
-		0.266,  0.364,  0.205,  0.101,  0.242,  0.489,  0.5  ,  0.481,
-		0.002,  0.455,  0.031,  0.094,  0.003,  0.238,  0.262,  0.021,
-		0.101,  0.326,  0.397,  0.282,  0.288,  0.011,  0.038,  0.02 ,
-		0.004,  0.111,  0.028,  0.214,  0.052,  0.329,  0.039,  0.103,
-		0.112,  0.423,  0.28 ,  0.354,  0.392,  0.411,  0.463,  0.44 ,
-		0.35 ,  0.283,  0.252,  0.469,  0.156,  0.152,  0.22 ,  0.415,
-		0.473,  0.137,  0.272,  0.418,  0.071,  0.106])
+    >>> lg.p_sim
+    array([ 0.301,  0.037,  0.457,  0.011,  0.062,  0.006,  0.094,  0.163,
+            0.075,  0.078,  0.419,  0.286,  0.138,  0.443,  0.36 ,  0.484,
+            0.434,  0.251,  0.415,  0.21 ,  0.177,  0.001,  0.304,  0.042,
+            0.285,  0.394,  0.208,  0.089,  0.244,  0.493,  0.478,  0.433,
+            0.006,  0.429,  0.037,  0.105,  0.005,  0.216,  0.23 ,  0.023,
+            0.105,  0.343,  0.395,  0.305,  0.264,  0.017,  0.033,  0.01 ,
+            0.001,  0.115,  0.034,  0.225,  0.043,  0.312,  0.045,  0.092,
+            0.118,  0.428,  0.258,  0.379,  0.408,  0.39 ,  0.475,  0.493,
+            0.357,  0.298,  0.232,  0.454,  0.149,  0.161,  0.226,  0.4  ,
+            0.482,  0.159,  0.27 ,  0.423,  0.083,  0.128])
 
-        >>>
 
 To identify the significant :math:`G_i` values we can use numpy indexing:
 
 .. doctest::
 
-        >>> sig = lg.p_sim<0.05
-        >>> lg.p_sim[sig]
-	array([ 0.017,  0.008,  0.001,  0.035,  0.002,  0.031,  0.003,  0.021,
-                0.011,  0.038,  0.02 ,  0.004,  0.028,  0.039])
+
+    >>> sig = lg.p_sim<0.05
+    >>> lg.p_sim[sig]
+    array([ 0.037,  0.011,  0.006,  0.001,  0.042,  0.006,  0.037,  0.005,
+            0.023,  0.017,  0.033,  0.01 ,  0.001,  0.034,  0.043,  0.045])
 
 
 .. rubric:: Footnotes
