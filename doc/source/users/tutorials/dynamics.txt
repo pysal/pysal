@@ -483,7 +483,7 @@ Mexican states into regions:
 
     >>> regime = np.array(f.by_col['esquivel99'])
     >>> w = pysal.weights.regime_weights(regime)
-    >>> np.random.seed(10)
+    >>> np.random.seed(12345)
 
 Now we will calculate the spatial tau for decade transitions from 1940 through
 2000 and report the observed spatial tau against that expected if the rank
@@ -502,7 +502,6 @@ changes were randomly distributed in space by using 99 permutations:
     '   0.505    0.532    0.210'
     '   0.483    0.499    0.270'
     '   0.572    0.579    0.280'
-    """
 
 The observed level of spatial concordance during the 1940-50 transition was
 0.281 which is significantly lower (p=0.010) than the average level of spatial
