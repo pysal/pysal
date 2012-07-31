@@ -133,7 +133,7 @@ def rose(Y,w,k=8,permutations=0):
     permutations of the state income data
 
     >>> r4['pvalues']
-    array([ 0.02 ,  1.   ,  0.001,  1.   ])
+    array([ 0.02 ,  0.001,  0.001,  0.001])
 
     Repeat the exercise but now for 8 rather than 4 sectors
 
@@ -141,7 +141,7 @@ def rose(Y,w,k=8,permutations=0):
     >>> r8['counts']
     array([19, 13,  3,  2,  7,  2,  1,  1])
     >>> r8['pvalues']
-    array([ 0.445,  0.042,  0.922,  0.998,  0.005,  0.1  ,  0.732,  0.999])
+    array([ 0.445,  0.042,  0.079,  0.003,  0.005,  0.1  ,  0.269,  0.002])
 
     References
     ----------

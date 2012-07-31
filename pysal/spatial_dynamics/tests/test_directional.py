@@ -44,7 +44,7 @@ class Rose_Tester(unittest.TestCase):
         for i in range(k + 1):
             self.assertAlmostEqual(exp[i], obs[i])
         self.assertEquals(list(r4['counts']), [32,  5,  9,  2])
-        exp = [0.02, 1., 0.001, 1.]
+        exp = [0.02, 0.001, 0.001, 0.001]
         obs = list(r4['pvalues'])
         for i in range(k):
             self.assertAlmostEqual(exp[i], obs[i])
