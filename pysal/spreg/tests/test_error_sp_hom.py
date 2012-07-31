@@ -241,7 +241,7 @@ class BaseGM_Combo_Hom_Tester(unittest.TestCase):
         self.assertAlmostEqual(reg.mean_y,my)
         std_y = 18.466069465206047
         self.assertAlmostEqual(reg.std_y,std_y)
-        sig2 = 232.22680644168395
+        sig2 = 232.22680650302124
         self.assertAlmostEqual(reg.sig2,sig2)
         hth = np.array([[    49.        ,    704.371999  ,    724.7435916 ], [   704.371999  ,  11686.67338121,  11092.519988  ], [   724.7435916 ,  11092.519988  , 11614.62257048]])
         np.testing.assert_array_almost_equal(reg.hth,hth,4)
@@ -290,7 +290,7 @@ class GM_Combo_Hom_Tester(unittest.TestCase):
         self.assertAlmostEqual(reg.pr2,pr2)
         pr2_e = 0.25082892555141506
         self.assertAlmostEqual(reg.pr2_e,pr2_e)
-        sig2 = 232.22680644168395
+        sig2 = 232.22680650302124 
         self.assertAlmostEqual(reg.sig2,sig2)
         std_err = np.array([ 15.28707761,   0.44072838,   0.40479714, 0.42263726])
         np.testing.assert_array_almost_equal(reg.std_err,std_err,6)
