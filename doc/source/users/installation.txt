@@ -255,6 +255,13 @@ LISA Markov missing a transpose
 In versions of PySAL < 1.1 there is a bug in the LISA Markov, resulting in
 incorrect values. For a fix and more details see `Issue 115 <http://code.google.com/p/pysal/issues/detail?id=115>`_.
 
+
+PIP Install Fails
+-----------------
+
+
+Having numpy and scipy specified in pip requiretments.txt causes PIP install of pysal to fail. For discussion and suggested fixes see `Issue 207 <http://code.google.com/p/pysal/issues/detail?id=207&sort=milestone>`_.
+
 Troubleshooting
 ===============
 
