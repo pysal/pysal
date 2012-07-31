@@ -1,3 +1,411 @@
+v<1.4.0>, 2012-07-31
+
+2012-07-26 15:24  schmidtc
+
+	* pysal/core/FileIO.py,
+	  pysal/core/Tables.py:
+	 Fixing issue #190
+
+2012-07-24 16:32  schmidtc
+
+	* pysal/cg/sphere.py:
+	Allowing linear2arcdist function to maintin 'inf', this allows compatability with Scipy's KDTree and addresses issue 208.  
+
+2012-07-24 16:07  schmidtc
+
+	* pysal/cg/locators.py,
+	  pysal/core/FileIO.py,
+	  pysal/core/Tables.py:
+	  Addressing issue 212, renaming nested and private classes to begin with an underscore.  By default sphinx does not try to document private object, which avoids what appears to be a a bug in Sphinx.
+
+2012-07-17 22:06  sjsrey@gmail.com
+
+	* pysal/spreg/probit.py: pedro doc fixes
+
+2012-07-17 15:07  schmidtc
+
+	* pysal/cg/segmentLocator.py,
+	  pysal/cg/tests/test_segmentLocator.py: Cleaned up fix for Issue 211
+
+2012-07-13 22:50  sjsrey@gmail.com
+
+	* doc/source/users/tutorials/autocorrelation.txt: fixing sphinx weirdness in footnotes 
+
+2012-07-13 22:37  sjsrey@gmail.com
+
+	* doc/source/users/tutorials/autocorrelation.txt: update for new default parameter values
+
+2012-07-13 22:13  sjsrey@gmail.com
+
+	* pysal/esda/geary.py,
+	  pysal/esda/tests/test_geary.py: consistency on transformation and permutation args
+
+2012-07-13 19:59  sjsrey@gmail.com
+
+	* doc/source/users/tutorials/dynamics.txt,
+	  pysal/__init__.py,
+	  pysal/spatial_dynamics/rank.py: - update user tutorial and __init__
+
+2012-07-13 19:33  sjsrey@gmail.com
+
+	* pysal/spatial_dynamics/rank.py,
+	  pysal/spatial_dynamics/tests/test_rank.py: - O(n log n) algorithm for spatial tau (old one was O(n^2)) - closing ticket http://code.google.com/p/pysal/issues/detail?id=83
+
+2012-07-13 17:57  schmidtc
+
+	* pysal/core/IOHandlers/pyDbfIO.py,
+	  pysal/core/IOHandlers/tests/test_pyDbfIO.py: Adding better support for writing Null values to DBF.  See issue #193
+
+2012-07-13 15:55  schmidtc
+
+	* pysal/core/util/shapefile.py,
+	  pysal/core/util/tests/test_shapefile.py: Cleaning up support for ZM points, polylines and polygons in the shapefile reader. Added unit tests for same.
+
+2012-07-13 15:42  sjsrey@gmail.com
+
+	* doc/source/library/esda/gamma.txt: - update version info 
+
+2012-07-13 15:37  sjsrey@gmail.com
+
+	* doc/source/library/esda/gamma.txt,
+	  doc/source/library/esda/index.txt: - adding gamma to api docs
+
+2012-07-13 00:21  sjsrey@gmail.com
+
+	* pysal/esda/gamma.py: optimizations 
+
+2012-07-12 21:28  schmidtc
+
+	* pysal/core/IOHandlers/pyDbfIO.py: Disabling mising value warning for DBF files.  See issue #185
+
+2012-07-12 21:07  schmidtc
+
+	* pysal/cg/segmentLocator.py,
+	  pysal/cg/shapes.py,
+	  pysal/cg/tests/test_segmentLocator.py,
+	  pysal/contrib/spatialnet/spatialnet.py: Adding unittests for segmentLocator (including one that fails see #211). Added VerticalLine class to represent verticle LineSegments. Updated __all__ in segmentLocator. Minor comment formatting in spatialnet.
+
+2012-07-12 19:41  lanselin@gmail.com
+
+	* doc/source/users/tutorials/autocorrelation.txt: tutorial for gamma index
+
+2012-07-12 19:40  lanselin@gmail.com
+
+	* pysal/esda/gamma.py,
+	  pysal/esda/tests/test_gamma.py: gamma with generic function
+
+2012-07-12 14:17  sjsrey@gmail.com
+
+	* pysal/__init__.py: - gamma index added
+
+2012-07-12 03:14  lanselin@gmail.com
+
+	* pysal/esda/tests/test_gamma.py: tests for gamma
+
+2012-07-12 03:13  lanselin@gmail.com
+
+	* pysal/esda/gamma.py: gamma index of spatial autocorrelation
+
+2012-07-12 03:11  lanselin@gmail.com
+
+	* pysal/esda/__init__.py: gamma index 
+
+2012-07-11 21:32  lanselin@gmail.com
+
+	* pysal/esda/join_counts.py,
+	  pysal/esda/tests/test_join_counts.py: join counts without analytical results, new permutation 
+
+2012-07-11 21:32  lanselin@gmail.com
+
+	* doc/source/users/tutorials/autocorrelation.txt: updated docs for join counts
+
+2012-07-10 21:13  lanselin@gmail.com
+
+	* doc/source/users/tutorials/autocorrelation.txt: docs for join count in autocorrelation
+
+2012-07-10 21:12  lanselin@gmail.com
+
+	* pysal/esda/join_counts.py,
+	  pysal/esda/tests/test_join_counts.py: additional test in join counts, docs added
+
+2012-07-10 19:24  lanselin@gmail.com
+
+	* pysal/esda/join_counts.py,
+	  pysal/esda/tests/test_join_counts.py: join counts with permutations for BB, updated tests to include permutations
+
+2012-07-09 04:22  sjsrey
+
+	* pysal/weights/weights.py:
+	  - fixing bug luc identified with regard to mean_neighbor property.  wrong key name was used in cache dictionary.  
+
+2012-07-07 17:00  sjsrey
+
+	* pysal/__init__.py: update for spreg and contrib inclusion
+
+
+2012-07-07 16:51  sjsrey
+
+	* pysal/spatial_dynamics/markov.py: - updating doc strings
+
+2012-07-07 16:17  sjsrey
+
+	* pysal/spreg/probit.py:
+	  - fixing doc string and refs 
+
+2012-07-06 21:58  dfolch
+
+	* doc/source/library/spreg/probit.txt: txt file to include probit in the HTML docs
+
+2012-07-06 21:11  dfolch
+
+	* pysal/spreg/tests/test_ols_sparse.py: fixing unittest error; still no solution to scientific notation formatting in doctests
+
+2012-07-06 20:24  dfolch
+
+	* pysal/spreg/__init__.py,
+	  pysal/spreg/diagnostics.py,
+	  pysal/spreg/diagnostics_sp.py,
+	  pysal/spreg/diagnostics_tsls.py,
+	  pysal/spreg/error_sp.py,
+	  pysal/spreg/error_sp_het.py,
+	  pysal/spreg/error_sp_hom.py,
+	  pysal/spreg/ols.py,
+	  pysal/spreg/probit.py,
+	  pysal/spreg/robust.py,
+	  pysal/spreg/summary_output.py,
+	  pysal/spreg/tests/test_diagnostics.py,
+	  pysal/spreg/tests/test_diagnostics_sp.py,
+	  pysal/spreg/tests/test_diagnostics_tsls.py,
+	  pysal/spreg/tests/test_error_sp.py,
+	  pysal/spreg/tests/test_error_sp_het.py,
+	  pysal/spreg/tests/test_error_sp_het_sparse.py,
+	  pysal/spreg/tests/test_error_sp_hom.py,
+	  pysal/spreg/tests/test_error_sp_hom_sparse.py,
+	  pysal/spreg/tests/test_error_sp_sparse.py,
+	  pysal/spreg/tests/test_ols.py,
+	  pysal/spreg/tests/test_ols_sparse.py,
+	  pysal/spreg/tests/test_probit.py,
+	  pysal/spreg/tests/test_twosls.py,
+	  pysal/spreg/tests/test_twosls_sp.py,
+	  pysal/spreg/tests/test_twosls_sp_sparse.py,
+	  pysal/spreg/tests/test_twosls_sparse.py,
+	  pysal/spreg/twosls.py,
+	  pysal/spreg/twosls_sp.py,
+	  pysal/spreg/user_output.py,
+	  pysal/spreg/utils.py: -Adding classic probit regression class -Adding spatial diagnostics for probit -Allowing x parameter to be either a numpy array or scipy sparse matrix in all regression classes -Adding additional unit tests -Various refactoring to streamline code base and improve long term maintainability -Contributions from Luc Anselin, Pedro Amaral, Daniel Arribas-Bel, David Folch and Nicholas Malizia
+
+2012-07-03 18:59  sjsrey
+
+	* pysal/spatial_dynamics/markov.py,
+	  pysal/spatial_dynamics/tests/test_markov.py: - refactor significant move_types for clarity and fixing a logic bug
+
+
+2012-06-20 04:50  sjsrey@gmail.com
+
+	* doc/source/developers/docs/index.txt:
+	  - added section for how to write a tutorial for new modules 
+2012-06-20 02:45  sjsrey
+
+	* doc/source/developers/docs/index.txt:
+	  - updating doc building instructions
+
+2012-06-06 18:58  phil.stphns
+
+	* .build-osx10.6-py26.sh,
+	  .build-osx10.6-py27.sh:
+	  - local modifications for Frameworks builds
+
+2012-06-05 20:56  phil.stphns
+
+	* .build-osx10.6-py26.sh,
+	  .build-osx10.6-py27.sh,
+	  .build-osx10.7-py27.sh, .runTests.sh:
+	  - adding experimental build and test scripts.
+
+2012-06-05 16:43  schmidtc
+
+	* pysal/cg/segmentLocator.py,
+	  pysal/cg/shapes.py,
+	  pysal/contrib/spatialnet/spatialnet.py:
+	  initial snap function for spatialnet
+
+2012-06-05 16:38  schmidtc
+
+	* pysal/core/IOHandlers/pyShpIO.py,
+	  pysal/core/util/shapefile.py,
+	  pysal/core/util/tests/test_shapefile.py: Adding PolygonZ support to Shapefile IO
+
+2012-05-24 21:57  sjsrey
+
+	* pysal/esda/mapclassify.py: - truncate option for fisher_jenks sampling
+
+2012-05-15 20:08  schmidtc
+
+	* pysal/cg/segmentLocator.py,
+	  pysal/cg/shapes.py: Added query to SegmentLocator
+
+2012-05-11 22:17  sjsrey
+
+	* pysal/esda/mapclassify.py: - added Fisher_Jenks_Sampled
+
+2012-05-11 00:45  mhwang4
+
+	* pysal/contrib/network/distances.csv,
+	  pysal/contrib/network/simulator.py,
+	  pysal/contrib/network/test_lincs.py,
+	  pysal/contrib/network/test_weights.py,
+	  pysal/contrib/network/weights.py: adding test code for distance-file-based weight generator; updates on simulator 
+
+2012-05-10 22:37  mhwang4
+
+	* pysal/contrib/network/klincs.py,
+	  pysal/contrib/network/lincs.py,
+	  pysal/contrib/network/test_klincs.py,
+	  pysal/contrib/network/test_lincs.py: adding test code for network-constrained lisa
+
+2012-05-10 21:11  mhwang4
+
+	* pysal/contrib/network/crimes.dbf,
+	  pysal/contrib/network/crimes.shp,
+	  pysal/contrib/network/crimes.shx,
+	  pysal/contrib/network/test_klincs.py: test code for local K function
+
+2012-05-08 18:05  mhwang4
+
+	* pysal/contrib/network/streets.dbf,
+	  pysal/contrib/network/streets.shp,
+	  pysal/contrib/network/streets.shx,
+	  pysal/contrib/network/test_network.py: adding a test data set
+
+2012-05-08 16:34  schmidtc
+
+	* pysal/cg/segmentLocator.py,
+	  pysal/cg/shapes.py,
+	  pysal/core/FileIO.py: Adding start of segmentLocator, adding minimal slicing support to FileIO
+
+
+2012-05-03 17:03  schmidtc
+
+	* pysal/cg/shapes.py,
+	  pysal/cg/tests/test_shapes.py: Adding solve for x support to Line. Cleaning up LineSegment's Line method.
+
+2012-04-20 17:48  schmidtc
+
+	* pysal/cg/shapes.py: adding arclen method to Chain object.
+
+2012-04-19 16:37  dfolch
+
+	* pysal/weights/Distance.py: reducing number of distance queries in Kernel from n^2 to n
+
+2012-04-17 21:20  schmidtc
+
+	* pysal/contrib/spatialnet/spatialnet.py: adding distance
+
+2012-04-17 19:46  schmidtc
+
+	* pysal/contrib/spatialnet/cleanNetShp.py,
+	  pysal/contrib/spatialnet/spatialnet.py: Adding FNODE/TNODE to dbf when cleaning shapefiles. Added util function createSpatialNetworkShapefile Added SpatialNetwork class
+
+2012-04-17 15:32  schmidtc
+
+	* pysal/contrib/weights_viewer/weights_viewer.py: "revert back to the background when the point is outside of any unit" - request from serge
+
+2012-04-11 02:50  schmidtc
+
+	* pysal/cg/kdtree.py: Fixing user submitted bug,issue #206.
+
+2012-04-10 22:00  dreamessence
+
+	* pysal/weights/Wsets.py: Including w_clip in __all__
+
+2012-04-10 21:58  dreamessence
+
+	* pysal/weights/Wsets.py: Adding w_clip method to clip W matrices (sparse and/or pysal.W) with a second (binary) matrix
+
+2012-04-10 21:57  schmidtc
+
+	* pysal/contrib/spatialnet/beth_roads.shp,
+	  pysal/contrib/spatialnet/beth_roads.shx,
+	  pysal/contrib/spatialnet/cleanNetShp.py: Adding network shapefile cleaning tools and temporary sample data.  
+
+2012-04-10 21:48  sjsrey
+
+	* pysal/contrib/spatialnet/util.py: - more stubs for util mod
+
+2012-04-10 19:58  sjsrey
+
+	* pysal/contrib/spatialnet/util.py: - start of util module
+
+2012-04-03 20:43  sjsrey
+
+	* pysal/contrib/spatialnet: - new contrib module - integrate geodanet functional (move over from network) - wrap networkx
+
+2012-04-03 01:21  schmidtc
+
+	* pysal/cg/rtree.py: Adding pickle support to RTree
+
+
+2012-03-28 23:27  mhwang4 
+	* pysal/contrib/network/kernel.py,
+	  pysal/contrib/network/kfuncs.py,
+	  pysal/contrib/network/test_access.py,
+	  pysal/contrib/network/test_kernel.py,
+	  pysal/contrib/network/test_kfuncs.py,
+	  pysal/contrib/network/test_network.py: adding examples for network-related modules
+
+2012-03-19 15:33  schmidtc
+
+	* pysal/core/IOHandlers/pyDbfIO.py: Adding support for writing Null dates
+
+2012-03-14 21:04  phil.stphns
+
+	* doc/source/developers/testing.txt,
+	  doc/source/users/installation.txt: Small changes to user install instructions to highlight the ease with which pysal can be installed ;-> And, developer instructions for running the test suite from within a session if desired.
+
+2012-03-03 00:00  phil.stphns
+
+	* pysal/spatial_dynamics/markov.py: Potential source of dev docs pngmath latex fail.
+
+2012-02-24 23:29  mhwang4
+
+	* pysal/contrib/network/network.py: fixing bug in network.py
+
+2012-02-20 19:50  phil.stphns
+
+	* doc/source/developers/py3k.txt: Developer doc to explain setting up PySAL for Python3.
+
+2012-02-20 16:18  schmidtc
+
+	* pysal/esda/__init__.py: removing invalid __all__ from esda's init.  See #194
+
+2012-02-16 23:15  phil.stphns
+
+	* pysal/__init__.py,
+	  pysal/core/util/shapefile.py: Minor changes to imports that cause py3tool to stumble.
+
+2012-02-15 23:16  phil.stphns
+
+	* doc/source/developers/py3k.txt,
+	  doc/source/users/installation.txt: Modified links in user installation instructions.  Added more steps for developers setting up Python3 dev environments on OSX.
+
+2012-02-14 21:55  schmidtc
+
+	* pysal/esda/getisord.py: fixing side effect caused when changing the shape of y, creating a new view with reshape instead.
+
+2012-02-14 21:21  schmidtc
+
+	* pysal/esda/getisord.py: optimizing G_Local
+
+2012-02-14 20:37  schmidtc
+
+	* pysal/esda/getisord.py: optimizing G
+
+2012-02-14 00:21  phil.stphns
+
+	* doc/source/developers/index.txt,
+	  doc/source/developers/py3k.txt,
+	  doc/source/developers/release.txt: Adding early docs on Python 3 support. Modifying release instructions.
+
 v<1.3.0>, 2012-01-31
 
     * core/IOHandlers/pyDbfIO.py: Addressing issue #186
