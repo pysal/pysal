@@ -640,7 +640,6 @@ The default is to add ones to the diagonal, but the function allows any values t
 be added.
 
 
-.. 
 WSets
 =====
 

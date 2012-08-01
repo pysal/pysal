@@ -47,7 +47,10 @@ Post-build Activities
   * copy the new HTML docs to the doc server 
   * :strike:`edit cronjob on peloton to rsync to new release directory`
   * draft release announcement, ensuring docs link point to pysal.geodacenter.org
-  * write and distribute the press release on geodacenter.asu.edu, openspace-list, and pysal.org
+  * write and distribute the press release on geodacenter.asu.edu, openspace-list, and :strike:`pysal.org`:
+    * create a news item (copy the openspace announcement and designate a custom URL)
+    * "List" Content and filter by "Featured Project". Choose to 'edit' PySAL and then modify the short text there.
+    * If you click PySAL, you'll be directed to the PySAL project page, where you can edit the text there.
 
 Building the release
 ====================
@@ -96,6 +99,8 @@ look at that, run:
 
 Binary Installer for OS X 
 --------------------------
+
+As of 1.4 we're no longer creating OS X binary installers due to the increasing complexity of the OS X developer environment.
 
 To make a Mac OS X graphical installer, first install 'bdist_mpkg' from the
 Python Package Index. We recommend downloading the source code and using the
