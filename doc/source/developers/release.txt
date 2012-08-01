@@ -47,10 +47,10 @@ Post-build Activities
   * copy the new HTML docs to the doc server 
   * :strike:`edit cronjob on peloton to rsync to new release directory`
   * draft release announcement, ensuring docs link point to pysal.geodacenter.org
-  * write and distribute the press release on geodacenter.asu.edu, openspace-list, and :strike:`pysal.org`:
-    * create a news item (copy the openspace announcement and designate a custom URL)
-    * "List" Content and filter by "Featured Project". Choose to 'edit' PySAL and then modify the short text there.
-    * If you click PySAL, you'll be directed to the PySAL project page, where you can edit the text there.
+  * write and distribute the press release on geodacenter.asu.edu, openspace-list, and pysal.org:
+     * create a news item (copy the openspace announcement and designate a custom URL)
+     * "List" Content and filter by "Featured Project". Choose to 'edit' PySAL and then modify the short text there.
+     * If you click PySAL, you'll be directed to the PySAL project page, where you can edit the text there.
 
 Building the release
 ====================
