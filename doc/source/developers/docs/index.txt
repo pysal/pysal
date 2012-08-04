@@ -9,8 +9,7 @@ PySAL Documentation
 Compiling Documentation
 =======================
  
-PySAL documentation is built using `Sphinx
-<http://pypi.python.org/pypi/Sphinx/1.0.7>`_ and the `numpydoc <http://pypi.python.org/pypi/numpydoc/0.4>`_
+PySAL documentation is built using `Sphinx`_ and the `numpydoc`_
 extension to Sphinx, which formats PySAL's docstrings. You'll need numpydoc version 0.4 or later and Sphinx version 1.0 or later to compile the documentation. 
 Both modules are available at the
 Python Package Index, and can be downloaded and installed from the command line
@@ -31,14 +30,35 @@ sphinx and numpydoc are already installed)::
 
 To see the results in a browser open `build/html/index.html`. To make
 changes, edit (or add) the relevant files in `source` and rebuild the
-docs. Consult the `Sphinx markup guide <http://sphinx.pocoo.org/contents.html>`_ for details on the syntax and structure of the files in `source`.
+docs. Consult the `Sphinx markup guide`_ for details on the syntax and structure of the files in `source`.
 
 Once you are happy with your changes, check-in the `source` files. Do not
 add or check-in files under  `build` since they are dynamically built.
 
-Changes checked in to the `Subversion repository <http://code.google.com/p/pysal/>`_
-will be propogated to `pysal.geodacenter.org/dev
-<http://pysal.geodacenter.org/dev>`_ within about ten minutes.
+Changes checked in to the `Subversion repository`_
+will be propogated to `pysal.geodacenter.org/dev`_ within about ten minutes.
+
+
+Lightweight Editing with rst2html.py
+------------------------------------
+
+Because the doc build process can sometimes be lengthy, you may want to avoid
+having to do a full build until after you are done with your major edits on
+one particular document.  As part of the
+`docutils`_ package,
+the file `rs2html.py` can take an `rst` document and generate the html file.
+This will get most of the work done that you need to get a sense if your edits
+are good, *without* having to rebuild all the PySAL docs. As of version 0.8 it
+also understands LaTeX. It will cough on some sphinx directives, but those can
+be dealt with in the final build.
+
+To use this download the doctutils tarball and put `rst2html.py` somewhere in
+your path. In vim (on Mac OS X) you can then add something like:
+
+    map ;r :!rst2html.py % > ~/tmp/tmp.html; open ~/tmp/tmp.html
+
+which will render the html in your default browser.
+
 
 
 Issues
@@ -74,7 +94,7 @@ doc folder in the trunk.
 
 
 Inline documentation is processed with an extension to Sphinx called numpydoc.
-We have adopted the community standard outlined `here <https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt>`_.
+We have adopted the community standard outlined `here`_.
 
 
 PySAL makes use of the built-in Sphinx extension *viewcode*, which allows the
@@ -117,19 +137,18 @@ a difference in whitespace between the expected and received output. In that cas
 Adding a new tutorial: spreg
 ============================
 
-While the :doc:`API docs </library/index>` are automatically generated when
+While the :doc:`API docs`_are automatically generated when
 compiling with Sphinx, tutorials that demonstrate use cases for new modules
 need to be crafted by the developer. Below we use the case of one particular
 module that currently does not have a tutorial as a guide for how to add
 tutorials for new modules.
 
 As of PySAL 1.3 there are API docs for
-:doc:`spreg </library/spreg/index>`,
-but no :doc:`tutorial </users/tutorials/index>`
-currently exists for this module. 
+:doc:`spreg`_
+but no :doc:`tutorial`_currently exists for this module. 
 
 We will fix this and add a tutorial for
-:doc:`spreg </library/spreg/index>`.
+:doc:`spreg`_
 
 
 Requirements
@@ -151,8 +170,7 @@ Within the PySAL source the docs live in::
 
     pysal/src/pysal/trunk/doc/source
 
-This directory has the source `reStructuredText
-<http://sphinx.pocoo.org/rest.html>`_ files used to render the html
+This directory has the source `reStructuredText`_ files used to render the html
 pages. The tutorial pages live under::
 
 
@@ -215,3 +233,19 @@ Point your browser to `pysal/trunk/pysal/doc/build/html/index.html`
 
 and check your work. You can then make changes to the `spreg.txt` file and
 recompile until you are set with the content.
+
+
+
+
+.. _tutorial: /users/tutorials/index
+.. _docutils: http://docutils.sourceforge.net/docs/user/tools.html
+.. _API docs: /library/index
+.. _spreg: /library/spreg/index
+.. _Sphinx: http://pypi.python.org/pypi/Sphinx/1.0.7
+.. _numpydoc: http://pypi.python.org/pypi/numpydoc/0.4
+.. _here: https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt
+.. _Subversion repository: http://code.google.com/p/pysal/
+.. _spreg: /library/spreg/index
+.. _reStructuredText: http://sphinx.pocoo.org/rest.html
+.. _Sphinx markup guide: http://sphinx.pocoo.org/contents.html
+.. _pysal.geodacenter.org/dev: http://pysal.geodacenter.org/dev
