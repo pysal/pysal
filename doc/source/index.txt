@@ -11,7 +11,7 @@ for spatial analysis.
 
 PySAL is Open Source and licensed under the `BSD License`_.
 
-.. _BSD License: http://www.opensource.org/license/BSD-2-Clause
+.. _BSD License: http://opensource.org/licenses/bsd-license.php 
 
 Getting Started
 ===============
