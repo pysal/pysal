@@ -52,6 +52,13 @@ News
 
 (2012-07-31) `PySAL 1.4.0 released  <http://pysal.geodacenter.org/1.4/users/installation.html>`_
 
+(2012-07-30) `Short course on PySAL for Spatial Regression <https://www.geodapress.com/workshops/spatial-regression#description>`_
+
+(2012-07-30) `PySAL presentation at Joint Statistical Meetings
+<https://www.amstat.org/meetings/jsm/2012/onlineprogram/AbstractDetails.cfm?abstractid=303498>`_
+
+(2012-07-18) `PySAL at SciPy 2012 <http://conference.scipy.org/scipy2012/schedule/conf_schedule_1.php>`_
+
 (2012-01-31) `PySAL 1.3.0 released  <http://pysal.geodacenter.org/1.3/users/installation.html>`_
 
 (2011-07-31) `PySAL 1.2.0 released <http://pysal.geodacenter.org/1.2/users/installation.html>`_
