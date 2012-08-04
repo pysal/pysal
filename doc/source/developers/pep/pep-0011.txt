@@ -86,6 +86,20 @@ If we decide to move the issues over we may look at
 `tratihubus`_
 as well as other possibilities.
 
+Continuous integration with travis-ci
+-------------------------------------
+
+`Travis-CI`_ is a hosted Continuous Integration (CI) service that is integrated
+with GitHub. This sponsored service provides:
+
+  - testing with multiple versions of Python
+  - testing with multiple versions of project dependencies (numpy and scipy)
+  - `build history`_
+  - integrated GitHub commit hooks
+  - testing against multiple `database services`_
+
+Configuration is achieved with a single YAML file, reducing development
+overhead, maintenance, and monitoring.
 
 Code Sprint for GitHub migration
 --------------------------------
@@ -101,3 +115,6 @@ The proposal is to organize a future sprint to focus on this migration.
 .. _svn2git: https://help.GitHub.com/articles/importing-from-subversion
 .. _Post-Receive Hooks: https://help.GitHub.com/articles/post-receive-hooks/
 .. _book.: http://git-scm.com/book
+.. _Travis-CI: http://travis-ci.org/
+.. _build history: http://travis-ci.org/#!/zendframework/zf2
+.. _database services: http://about.travis-ci.org/docs/user/database-setup/
