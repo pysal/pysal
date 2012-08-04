@@ -53,9 +53,9 @@ also understands LaTeX. It will cough on some sphinx directives, but those can
 be dealt with in the final build.
 
 To use this download the doctutils tarball and put `rst2html.py` somewhere in
-your path. In vim (on Mac OS X) you can then add something like:
+your path. In vim (on Mac OS X) you can then add something like::
 
-    map ;r :!rst2html.py % > ~/tmp/tmp.html; open ~/tmp/tmp.html
+    map ;r ^[:!rst2html.py % > ~/tmp/tmp.html; open ~/tmp/tmp.html^M^M
 
 which will render the html in your default browser.
 
@@ -137,18 +137,18 @@ a difference in whitespace between the expected and received output. In that cas
 Adding a new tutorial: spreg
 ============================
 
-While the :doc:`API docs`_are automatically generated when
+While the :doc:`API docs </library/index>` are automatically generated when
 compiling with Sphinx, tutorials that demonstrate use cases for new modules
 need to be crafted by the developer. Below we use the case of one particular
 module that currently does not have a tutorial as a guide for how to add
 tutorials for new modules.
 
 As of PySAL 1.3 there are API docs for
-:doc:`spreg`_
-but no :doc:`tutorial`_currently exists for this module. 
+:doc:`spreg </library/spreg/index>`
+but no :doc:`tutorial </users/tutorials/index>` currently exists for this module. 
 
-We will fix this and add a tutorial for
-:doc:`spreg`_
+We will fix this and add a tutorial forh
+:doc:`spreg </library/spreg/index>`.
 
 
 Requirements
