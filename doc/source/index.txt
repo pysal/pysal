@@ -5,14 +5,27 @@
 Welcome
 *******
 
-PySAL is an `open source <http://code.google.com/p/pysal/>`_  cross-platform library of spatial analysis functions written in
+PySAL is a cross-platform library of spatial analysis functions written in
 Python. It is intended to support the development of high level applications
 for spatial analysis.
 
+PySAL is Open Source and licensed under the `BSD License`_.
 
-****************
+.. _BSD License: http://www.opensource.org/license/BSD-2-Clause
+
+Getting Started
+===============
+
+If you are new to PySAL you might want to read :ref:`users-tutorials`.
+
+Downloads
+=========
+
+`Downloads  <http://code.google.com/p/pysal/downloads/list>`_  are hosted on the project development site at `Google Code. <http://code.google.com/p/pysal/>`_
+
+
 Getting Involved
-****************
+================
 
 Prospective developers can learn more in the :doc:`developer guide
 </developers/index>`.
@@ -20,11 +33,9 @@ Prospective developers can learn more in the :doc:`developer guide
 You can track PySAL development, submit bug reports, and make feature requests 
 `here <http://code.google.com/p/pysal/issues/list>`_. 
 
-Downloads are `here <http://code.google.com/p/pysal/downloads/list>`_.
 
-*************
 Documentation
-*************
+=============
 
     :Release: |version|
     :Date: |today|
@@ -36,9 +47,8 @@ Documentation
     developers/index
     library/index
 
-****
 News
-****
+====
 
 (2012-07-31) `PySAL 1.4.0 released  <http://pysal.geodacenter.org/1.4/users/installation.html>`_
 
@@ -57,9 +67,8 @@ News
 (2009-11-03) `National Institute of Justice funding <http://geoplan.asu.edu/node/3855>`_
 
 
-*******
 Funding
-*******
+=======
 
 National Science Foundation `CyberGIS Software Integration for Sustained Geospatial Innovation <http://geodacenter.asu.edu/about/news/NSF_Cyber_Award>`_
 
