@@ -309,11 +309,12 @@ class Kernel(W):
         # get distances for neighbors
         data=np.array(self.data)
         bw=self.bandwidth
+
+        kdtq=self.kdt.query
         z=[]
         for i,nids in enumerate(self.neigh):
-            di=data[np.array([0,i])]
-            ni=data[nids]
-            zi=cdist(di,ni)[1]/bw[i]
+            di,ni = kdtq(self.data[i],k=len(nids))
+            zi = np.array([dict(zip(ni,di))[nid] for nid in nids])/bw[i]
             z.append(zi)
         zs=z
         # functions follow Anselin and Rey (2010) table 5.4
