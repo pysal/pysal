@@ -7,7 +7,7 @@ Author    Phil Stephens <phil.stphns@gmail.com>,
           Serge Rey <sjsrey@gmail.com>
 Status    Draft
 Created   09-Sep-2010
-Updated   13-Oct-2010
+Updated   09-Aug-2012
 ========  =======================================
 
 Abstract
@@ -30,15 +30,13 @@ utility of the library.
 Reference Implementation
 ========================
 
-We suggest adding the module ``PySAL.core.spTables``. 
-spTables.py will subclass Tables.py, adding support for accessing spatial databases. 
-We propose to employ a proven implementation of a Python
-Object Relational Mapper (ORM) layer by using SQLAlchemy [2]_ and GeoAlchemy [3]_, MIT-licensed software that
+We propose to add the module ``pysal.contrib.spatialdb``, hereafter
+referred to simply as spatialdb. 
+spatialdb will leverage the Python Object Relational Mapper (ORM) libraries SQLAlchemy [2]_ and GeoAlchemy [3]_, MIT-licensed software that
 provides a database-agnostic SQL layer for several different databases and
 spatial database extensions 
 including PostgreSQL/PostGIS, Oracle Spatial, Spatialite, MS SQL Server, MySQL Spatial, and others.
-These lightweight libraries manage database connections, transactions, and SQL
-Expression translation .
+These lightweight libraries manage database connections, transactions, and SQL expression translation.  
 
 References
 ==========
@@ -48,4 +46,6 @@ References
 .. [2] SQLAlchemy (2010) `SQLAlchemy 0.6.5 Documentation <http://www.sqlalchemy.org/docs/orm/index.html>`_.  Accessed October 4, 2010.
 
 .. [3] GeoAlchemy (2010) `GeoAlchemy 0.4.1 Documentation <http://geoalchemy.org/index.html>`_. Accessed October 4, 2010.
+
+.. [4] GeoAlchemy (2012) `GeoAlchemy on GitHub <http://https://github.com/geoalchemy/geoalchemy>`_. Accessed August 9, 2012.
 
