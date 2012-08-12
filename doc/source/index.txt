@@ -50,7 +50,7 @@ Documentation
 News
 ====
 
-(2012-07-31) `PySAL 1.4.0 released  <http://pysal.geodacenter.org/1.4/users/installation.html>`_
+(2012-07-31) `PySAL 1.4.0 released <http://code.google.com/p/pysal/wiki/Announce1_4>`_ (`Install <http://pysal.geodacenter.org/1.4/users/installation.html>`_)
 
 (2012-07-30) `Short course on PySAL for Spatial Regression <https://www.geodapress.com/workshops/spatial-regression#description>`_
 
@@ -59,14 +59,13 @@ News
 
 (2012-07-18) `PySAL at SciPy 2012 <http://conference.scipy.org/scipy2012/schedule/conf_schedule_1.php>`_
 
-(2012-01-31) `PySAL 1.3.0 released  <http://pysal.geodacenter.org/1.3/users/installation.html>`_
+(2012-01-31) `PySAL 1.3.0 released <http://code.google.com/p/pysal/wiki/Announce1_3>`_ (`Install <http://pysal.geodacenter.org/1.3/users/installation.html>`_)
 
-(2011-07-31) `PySAL 1.2.0 released <http://pysal.geodacenter.org/1.2/users/installation.html>`_
+(2011-07-31) `PySAL 1.2.0 released <http://code.google.com/p/pysal/wiki/Announce1_2>`_ (`Install <http://pysal.geodacenter.org/1.2/users/installation.html>`_)
 
+(2011-01-31) `PySAL 1.1.0 released <http://code.google.com/p/pysal/wiki/Announce1_1>`_ (`Install <http://pysal.geodacenter.org/1.1/users/installation.html>`_)
 
-(2011-01-31) `PySAL 1.1.0 released <http://pysal.geodacenter.org/1.1/users/installation.html>`_
-
-(2010-07-31) `PySAL 1.0.0 released <http://pysal.geodacenter.org/1.0/users/installation.html>`_
+(2010-07-31) `PySAL 1.0.0 released <http://code.google.com/p/pysal/wiki/Announce1_0>`_ (`Install <http://pysal.geodacenter.org/1.0/users/installation.html>`_)
 
 
 (2010-01-6) New Website for PySAL!
