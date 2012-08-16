@@ -16,7 +16,7 @@ else:
 #import distribute_setup
 #distribute_setup.use_setuptools()
 from distutils.core import setup 
-#from pysal.version import version
+from pysal.version import version as dversion
 #version = '1.3.x'
 
 CLASSIFIERS = """\
@@ -102,7 +102,7 @@ def setup_package():
         maintainer_email = MAINTAINER_EMAIL,
         url = URL,
         download_url = DOWNLOAD_URL,
-        version = VERSION,
+        version = dversion,
         license = LICENSE,
         classifiers = CLASSIFIERS,
         packages = ['pysal', 
