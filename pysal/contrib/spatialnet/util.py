@@ -69,7 +69,7 @@ def w2dwg(w):
     >>> gw.get_edge_data(0,1)
     {'weight': 0.5}
     >>> gw.get_edge_data(1,0)
-    {'weight': 0.3333333333333333}
+    {'weight': 0.33333333333333331}
     """
 
     w_l = [(i,j,w[i][j]) for i in w.neighbors for j in w[i]]
@@ -96,12 +96,19 @@ def dwg2w(g, weight_name = 'weight'):
     Example
     -------
     >>> w = ps.lat2W()
-    >>> g = w2dg(w)
+    >>> w.transform = 'r'
+    >>> g = w2dwg(w)
     >>> w1 = dwg2w(g)
     >>> w1.n
     25
     >>> w1.neighbors[0]
     [1, 5]
+    >>> w1.neighbors[1]
+    [0, 2, 6]
+    >>> w1.weights[0]
+    [0.5, 0.5]
+    >>> w1.weights[1]
+    [0.33333333333333331, 0.33333333333333331, 0.33333333333333331]
     """
 
     neighbors = {}
@@ -121,7 +128,7 @@ def dwg2w(g, weight_name = 'weight'):
 
 
 
-def edge2w(edge_file, nodetype=str):
+def edge2w(edgelist, nodetype=str):
     """
     Create a PySAL W object from an edgelist
 
@@ -140,20 +147,38 @@ def edge2w(edge_file, nodetype=str):
 
     Example
     -------
+    >>> lines = ["1 2", "2 3", "3 4", "4 5"]
+    >>> w = edge2w(lines)
+    >>> w.n
+    5
+    >>> w.neighbors["2"]
+    ['1', '3']
 
+    >>> w = edge2w(lines, nodetype=int)
+    >>> w.neighbors[2]
+    [1, 3]
+    >>> lines = ["1 2 {'weight':1.0}", "2 3 {'weight':0.5}", "3 4 {'weight':3.0}"] 
+    >>> w = edge2w(lines, nodetype=int)
+    >>> w.neighbors[2]
+    [1, 3]
+    >>> w.weights[2]
+    [1.0, 0.5]
 
     """
-    raise NotImplementedError 
+    G = nx.parse_edgelist(edgelist, nodetype=nodetype)
+    return dwg2w(G)
+
     
 
-def adjl2w(adjacency_list_file, nodetype=str):
+def adjl2w(adjacency_list, nodetype=str):
     """
     Create a PySAL W object from an adjacency list file
 
     Parameters
     ----------
 
-    adjacency_list_file: file with edgelist
+    adjacency_list: list of adjacencies
+                    for directed graphs list only outgoing adjacencies
 
     nodetype: type for node (str, int, float)
 
@@ -165,62 +190,23 @@ def adjl2w(adjacency_list_file, nodetype=str):
 
     Example
     -------
+    >>> al = [[1], [0,2], [1,3], [2]]
+    >>> w = adjl2w(al)
+    >>> w.n
+    4
+    >>> w.neighbors['0']
+    ['1']
+    >>> w = adjl2w(al, nodetype=int)
+    >>> w.n
+    4
+    >>> w.neighbors[0]
+    [1]
 
 
     """
-    raise NotImplementedError 
-    
 
-def mladjl2w(adjacency_list_file, nodetype=str):
-    """
-    Create a PySAL W object from a multiline adjacency list file
-
-    Parameters
-    ----------
-
-    adjacency_list_file: multiline adjacency list file
-
-    nodetype: type for node (str, int, float)
-
-
-    Returns
-    -------
-    W: PySAL W
-
-
-    Example
-    -------
-
-
-    """
-    raise NotImplementedError 
-    
-
-
-def gml2w(gml_file):
-    """
-    Create a PySAL W object from a GML file
-
-    Parameters
-    ----------
-
-    gml_file: gml file name
-
-    nodetype: type for node (str, int, float)
-
-
-    Returns
-    -------
-    W: PySAL W
-
-
-    Example
-    -------
-
-
-    """
-    raise NotImplementedError 
-    
+    adjacency_list = [ map(nodetype, neighs) for neighs in adjacency_list]
+    return ps.W(dict([(nodetype(i),neighs) for i,neighs in enumerate(adjacency_list)]))
 
                        
 
