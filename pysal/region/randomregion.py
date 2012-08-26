@@ -6,17 +6,14 @@ composition.
 """
 
 __author__ = "David Folch dfolch@asu.edu, Serge Rey srey@asu.edu"
-    
+
 import pysal
 from pysal.common import *
 
-__all__=["Random_Regions","Random_Region"]
-
-
+__all__ = ["Random_Regions", "Random_Region"]
 
 class Random_Regions:
     """Generate a list of Random_Region instances.
-    
 
     Parameters
     ----------
@@ -300,15 +297,15 @@ class Random_Region:
         if cardinality:
             if self.n != sum(cardinality):
                 self.feasible = False
-                raise Exception, 'number of areas does not match cardinality'
+                raise Exception('number of areas does not match cardinality')
         if contiguity:
             if area_ids != contiguity.id_order:
                 self.feasible = False
-                raise Exception, 'order of area_ids must match order in contiguity'
+                raise Exception('order of area_ids must match order in contiguity')
         if num_regions and cardinality:
             if num_regions != len(cardinality):
                 self.feasible = False
-                raise Exception, 'number of regions does not match cardinality'
+                raise Exception('number of regions does not match cardinality')
 
         # dispatches the appropriate algorithm
         if num_regions and cardinality and contiguity:
@@ -355,8 +352,8 @@ class Random_Region:
 
     def get_region_breaks(self, num_regions):
         region_breaks = set([])
-        while len(region_breaks) < num_regions-1:
-            region_breaks.add(np.random.random_integers(1, self.n-1))
+        while len(region_breaks) < num_regions - 1:
+            region_breaks.add(np.random.random_integers(1, self.n - 1))
         region_breaks = list(region_breaks)
         region_breaks.sort()
         return region_breaks
@@ -391,8 +388,8 @@ class Random_Region:
         # try to build a compact region by exhausting all existing
         # potential areas before adding new potential areas
         add_areas = []
-        while potential and len(region)<test_card: 
-            pot_index = np.random.random_integers(0, len(potential)-1)
+        while potential and len(region) < test_card:
+            pot_index = np.random.random_integers(0, len(potential) - 1)
             add_area = potential[pot_index]
             region.append(add_area)
             candidates.remove(add_area)
@@ -408,7 +405,7 @@ class Random_Region:
     def grow_free(self, w, test_card, region, candidates, potential):
         # increment potential areas after each new area is
         # added to the region (faster than the grow_compact)
-        pot_index = np.random.random_integers(0, len(potential)-1)
+        pot_index = np.random.random_integers(0, len(potential) - 1)
         add_area = potential[pot_index]
         region.append(add_area)
         candidates.remove(add_area)
@@ -440,7 +437,7 @@ class Random_Region:
             candidates = copy.copy(self.ids)  # these are already shuffled
             
             # begin building regions
-            while candidates and swap_count<max_swaps:
+            while candidates and swap_count < max_swaps:
                 # setup test to determine if swapping is needed
                 if size_pre == len(regions):
                     counter += 1
@@ -453,7 +450,7 @@ class Random_Region:
                     # start swapping
                     # swapping simply changes the candidate list
                     swap_in = None   # area to become new candidate
-                    while swap_in == None:
+                    while swap_in == None: #PEP8 E711
                         swap_count += 1
                         swap_out = candidates.pop(0)  # area to remove from candidates
                         swap_neighs = copy.copy(w.neighbors[swap_out])
@@ -469,7 +466,7 @@ class Random_Region:
                                     if j != join:  # leave the join area to ensure regional connectivity 
                                         swap_in = j
                                         break
-                            if swap_in != None:
+                            if swap_in != None: #PEP8 E711
                                 break
                         else:
                             candidates.append(swap_out)
@@ -489,7 +486,7 @@ class Random_Region:
                 test_card = cards.pop()
 
                 # begin building single region
-                while building and len(region)<test_card:
+                while building and len(region) < test_card:
                     if potential:
                         region, candidates, potential = grow_region(w, test_card,\
                                         region, candidates, potential)
