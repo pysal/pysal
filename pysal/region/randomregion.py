@@ -7,8 +7,8 @@ composition.
 
 __author__ = "David Folch dfolch@asu.edu, Serge Rey srey@asu.edu"
 
-import pysal
-from pysal.common import *
+import numpy as np
+from pysal.common import copy
 
 __all__ = ["Random_Regions", "Random_Region"]
 
@@ -527,4 +527,3 @@ def _test():
 
 if __name__ == '__main__':
     _test()
-

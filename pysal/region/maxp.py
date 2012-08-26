@@ -10,7 +10,10 @@ __author__ = "Serge Rey <srey@asu.edu>, David Folch <david.folch@asu.edu>"
 
 import pysal
 from components import check_contiguity
-from pysal.common import *
+import copy
+import random
+import numpy as np
+#from pysal.common import *
 from pysal.region import randomregion as RR
 
 __all__ = ["Maxp", "Maxp_LISA"]
