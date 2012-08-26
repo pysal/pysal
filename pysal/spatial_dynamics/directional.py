@@ -2,16 +2,14 @@
 Directional Analysis of Dynamic LISAs
 
 """
+__author__ = "Sergio J. Rey <srey@asu.edu"
 
-__author__= "Sergio J. Rey <srey@asu.edu"
-
-__all__=['rose']
+__all__ = ['rose']
 
 import numpy as np
 import pysal
 
-
-def rose(Y,w,k=8,permutations=0):
+def rose(Y, w, k=8, permutations=0):
     """
     Calculation of rose diagram for local indicators of spatial association
 
@@ -151,41 +149,41 @@ def rose(Y,w,k=8,permutations=0):
     Sciences, 4: 81-90.
 
     """
-    results={}
-    sw=2*np.pi/k 
-    cuts=np.arange(0.0,2*np.pi+sw,sw)
-    wY=pysal.lag_spatial(w,Y)
-    dx=Y[:,-1]-Y[:,0]
-    dy=wY[:,-1]-wY[:,0]
-    theta=np.arctan2(dy,dx)
-    neg=theta < 0.0
-    utheta=theta*(1-neg) + neg * (2*np.pi+theta)
-    counts,bins=np.histogram(utheta,cuts)
-    results['counts']=counts
-    results['cuts']=cuts
+    results = {}
+    sw = 2 * np.pi / k 
+    cuts = np.arange(0.0, 2 * np.pi + sw, sw)
+    wY = pysal.lag_spatial(w, Y)
+    dx = Y[:, -1] - Y[:, 0]
+    dy = wY[:, -1] - wY[:, 0]
+    theta = np.arctan2(dy, dx)
+    neg = theta < 0.0
+    utheta = theta * (1 - neg) + neg * (2 * np.pi + theta)
+    counts, bins = np.histogram(utheta, cuts)
+    results['counts'] = counts
+    results['cuts'] = cuts
     if permutations:
-        n,k1=Y.shape
-        ids=np.arange(n)
-        all_counts=np.zeros((permutations,k))
+        n, k1 = Y.shape
+        ids = np.arange(n)
+        all_counts = np.zeros((permutations, k))
         for i in range(permutations):
-            rid=np.random.permutation(ids)
-            YR=Y[rid,:]
-            wYR=pysal.lag_spatial(w,YR)
-            dx=YR[:,-1]-YR[:,0]
-            dy=wYR[:,-1]-wYR[:,0]
-            theta=np.arctan2(dy,dx)
-            neg=theta<0.0
-            utheta=theta*(1-neg) + neg * (2*np.pi+theta)
-            c,b=np.histogram(utheta,cuts)
-            c.shape=(1,k)
-            all_counts[i,:]=c
+            rid = np.random.permutation(ids)
+            YR = Y[rid, :]
+            wYR = pysal.lag_spatial(w, YR)
+            dx = YR[:, -1] - YR[:, 0]
+            dy = wYR[:, -1] - wYR[:, 0]
+            theta = np.arctan2(dy, dx)
+            neg = theta < 0.0
+            utheta = theta * (1 - neg) + neg * (2 * np.pi + theta)
+            c, b = np.histogram(utheta, cuts)
+            c.shape = (1, k)
+            all_counts[i, :] = c
         larger = sum(all_counts >= counts)
         p_l = permutations - larger
         extreme = (p_l) < larger
         extreme = np.where(extreme, p_l, larger)
         p = (extreme + 1.) / (permutations + 1.)
         results['pvalues'] = p
-        results['random_counts']=all_counts
+        results['random_counts'] = all_counts
         
     return results
 
@@ -195,5 +193,3 @@ def _test():
 
 if __name__ == '__main__':
     _test()
-
-

@@ -1,11 +1,11 @@
 """
-Utilities for the spatial dynamics module. 
+Utilities for the spatial dynamics module.
 """
 import numpy as np
 
-__all__=['shuffle_matrix','get_lower']
+__all__ = ['shuffle_matrix', 'get_lower']
 
-def shuffle_matrix(X,ids):
+def shuffle_matrix(X, ids):
     """
     Random permutation of rows and columns of a matrix
 
@@ -33,9 +33,7 @@ def shuffle_matrix(X,ids):
     
     """
     np.random.shuffle(ids)
-    return X[ids,:][:,ids]
-
-
+    return X[ids, :][:, ids]
 
 def get_lower(matrix):
     """
@@ -71,17 +69,12 @@ def get_lower(matrix):
     lowerlist = []
     for i in range(n):
         for j in range(n):
-            if i>j:
-                lowerlist.append(matrix[i,j])
-
-    veclen = n*(n-1)/2
-    lowvec = np.reshape(lowerlist,(veclen,1))
-
+            if i > j:
+                lowerlist.append(matrix[i, j])
+    veclen = n * (n - 1) / 2
+    lowvec = np.reshape(lowerlist, (veclen, 1))
     return lowvec
 
-
-
 if __name__ == '__main__':
-
     import doctest
     doctest.testmod(verbose=True)

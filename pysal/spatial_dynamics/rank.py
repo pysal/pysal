@@ -3,11 +3,12 @@ Rank and spatial rank mobility measures
 """
 __author__  = "Sergio J. Rey <srey@asu.edu> "
 
-from pysal.common import *
+#from pysal.common import *
 from scipy.stats.mstats import rankdata
 from scipy.special import erfc
 import pysal
-import numpy 
+import numpy as np
+import scipy as sp
 from numpy.random import permutation as NRP
 
 __all__=['SpatialTau', 'Tau', 'Theta', ]

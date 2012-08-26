@@ -1,11 +1,11 @@
 """
 Markov based methods for spatial dynamics
 """
-__author__ =  "Sergio J. Rey <srey@asu.edu"
+__author__ = "Sergio J. Rey <srey@asu.edu"
 
 import numpy as np
 import numpy.linalg as la
-from ergodic import fmpt, steady_state
+from pysal.spatial_dynamics.ergodic import fmpt, steady_state
 from scipy import stats
 import pysal
 from operator import gt
@@ -35,9 +35,9 @@ for i in range(1, 5):
 MOVE_TYPES = {}
 c = 1
 cases = (True, False)
-sig_keys = [ (i,j) for i in cases for j in cases ]
+sig_keys = [(i, j) for i in cases for j in cases]
 
-for i,sig_key in enumerate(sig_keys):
+for i, sig_key in enumerate(sig_keys):
     c = 1 + i * 16
     for i in range(1, 5):
         for j in range(1, 5):
@@ -135,6 +135,7 @@ class Markov:
     
     """
     def __init__(self, class_ids, classes=[]):
+        #pylint: Dangerous default value [] as argument
         if len(classes):
             self.classes = classes
         else:
@@ -142,14 +143,14 @@ class Markov:
 
         n, t = class_ids.shape
         k = len(self.classes)
-        js = range(t-1)
+        js = range(t - 1)
 
         classIds = self.classes.tolist()
-        transitions=np.zeros((k,k))
+        transitions = np.zeros((k, k))
         for state_0 in js:
-            state_1 = state_0+1
-            state_0 = class_ids[:,state_0]
-            state_1 = class_ids[:,state_1]
+            state_1 = state_0 + 1
+            state_0 = class_ids[:, state_0]
+            state_1 = class_ids[:, state_1]
             initial = np.unique(state_0)
             for i in initial:
                 ending = state_1[state_0 == i]
@@ -160,7 +161,7 @@ class Markov:
                     transitions[row, col] += sum(ending == j)
         self.transitions = transitions
         row_sum = transitions.sum(axis=1)
-        p = np.dot(np.diag(1/(row_sum+(row_sum == 0))), transitions)
+        p = np.dot(np.diag(1 / (row_sum + (row_sum == 0))), transitions)
         self.p = np.matrix(p)
 
         # steady_state vector 
@@ -170,15 +171,7 @@ class Markov:
         # find its position
         i = v.tolist().index(mv)
         # normalize eigenvector corresponding to the eigenvalue 1
-        self.steady_state =  d[:,i]/sum(d[:,i])
-
-
-        
-
-
-
-
-
+        self.steady_state = d[:, i] / sum(d[:, i])
 
 
 class Spatial_Markov:
@@ -395,7 +388,7 @@ class Spatial_Markov:
     def __init__(self, y, w, k=4, permutations=0, fixed=False):
 
         self.y = y
-        rows,cols = y.shape
+        rows, cols = y.shape
         self.cols = cols
         npm = np.matrix
         npa = np.array
@@ -406,7 +399,7 @@ class Spatial_Markov:
             yb.shape = (rows, cols)
             classes = yb
         else:
-            classes = npa([pysal.Quantiles(y[:,i],k=k).yb for i in np.arange(cols)]).transpose()
+            classes = npa([pysal.Quantiles(y[:, i], k=k).yb for i in np.arange(cols)]).transpose()
         classic = Markov(classes)
         self.classes = classes
         self.p = classic.p
@@ -420,7 +413,7 @@ class Spatial_Markov:
         self.shtest = self._mn_test()
         self.chi2 = self._chi2_test()
         self.x2 = sum([c[0] for c in self.chi2])
-        dof = k * (k-1) * (k-1)
+        dof = k * (k - 1) * (k - 1)
         self.x2_pvalue = 1 - stats.chi2.cdf(self.x2, dof) 
         self.x2_dof = dof
 
@@ -432,14 +425,13 @@ class Spatial_Markov:
             x2ss = []
             for perm in range(permutations):
                 T, P, ss, F = self._calc(nrp(y), w, classes, k=k)
-                x2 = [chi2(T[i],self.transitions)[0] for i in range(k)]
+                x2 = [chi2(T[i], self.transitions)[0] for i in range(k)]
                 x2s = sum(x2)
                 x2_realizations[perm] = x2s
                 if x2s >= self.x2:
                     counter += 1
-            self.x2_rpvalue = (counter+1.0)/(permutations+1.)
+            self.x2_rpvalue = (counter + 1.0) / (permutations + 1.)
             self.x2_realizations = x2_realizations
-
 
     def _calc(self, y, w, classes, k):
         # lag markov
@@ -450,23 +442,23 @@ class Spatial_Markov:
             l_classes = pysal.Quantiles(ly.flatten(), k=k).yb
             l_classes.shape = ly.shape
         else:
-            l_classes = npa([pysal.Quantiles(ly[:,i],k=k).yb for i in np.arange(self.cols)])
+            l_classes = npa([pysal.Quantiles(ly[:, i], k=k).yb for i in np.arange(self.cols)])
             l_classes = l_classes.transpose()
         l_classic = Markov(l_classes)
         T = np.zeros((k, k, k))
         n, t = y.shape
-        for t1 in range(t-1):
+        for t1 in range(t - 1):
             t2 = t1 + 1
             for i in range(n):
                 T[l_classes[i, t1], classes[i, t1], classes[i, t2]] += 1
 
         P = np.zeros_like(T)
-        F = np.zeros_like(T) # fmpt
+        F = np.zeros_like(T)  # fmpt
         ss = np.zeros_like(T[0])
         for i, mat in enumerate(T):
             row_sum = mat.sum(axis=1)
             row_sum = row_sum + (row_sum == 0)
-            p_i = np.matrix(np.diag(1./row_sum)*np.matrix(mat))
+            p_i = np.matrix(np.diag(1. / row_sum) * np.matrix(mat))
             #print i
             #print mat
             #print p_i
@@ -474,7 +466,8 @@ class Spatial_Markov:
             try:
                 F[i] = fmpt(p_i)
             except:
-                print "Singlular fmpt matrix for class ",i
+                #pylint: "No exception type(s) specified"
+                print "Singlular fmpt matrix for class ", i
             P[i] = p_i
         return T, P, ss, F
 
@@ -484,12 +477,11 @@ class Spatial_Markov:
         distributions from the conditional and overall distributions.
         """
         n, t = self.y.shape
-        nt =  n * (t - 1)
+        nt = n * (t - 1)
         n0, n1, n2 = self.T.shape
         rn = range(n0)
         mat = [self._ssmnp_test(self.s, self.S[i], self.T[i].sum()) for i in rn]
         return mat
-
 
     def _ssmnp_test(self, p1, p2, nt):
         """
@@ -521,10 +513,10 @@ class Spatial_Markov:
         o = nt * p2
         e = nt * p1
         d = np.multiply((o - e), (o - e))
-        d = d/e
+        d = d / e
         chi2 = d.sum()
-        pvalue = 1-stats.chi2.cdf(chi2, k-1)
-        return (chi2,pvalue,k-1)
+        pvalue = 1 - stats.chi2.cdf(chi2, k - 1)
+        return (chi2, pvalue, k - 1)
 
     def _chi2_test(self):
         """
@@ -600,20 +592,20 @@ def chi2(T1, T2):
     """
     rs2 = T2.sum(axis=1)
     rs1 = T1.sum(axis=1)
-    rs2nz = rs2>0
-    rs1nz = rs1>0
+    rs2nz = rs2 > 0
+    rs1nz = rs1 > 0
     dof1 = sum(rs1nz)
     dof2 = sum(rs2nz)
     rs2 = rs2 + rs2nz
-    dof = (dof1-1) * (dof2-1)
-    p = np.diag(1/rs2) * np.matrix(T2)
+    dof = (dof1 - 1) * (dof2 - 1)
+    p = np.diag(1 / rs2) * np.matrix(T2)
     E = np.diag(rs1) * np.matrix(p)
     num = T1 - E
     num = np.multiply(num, num)
-    E = E + (E==0)
-    chi2 = num/E
+    E = E + (E == 0)
+    chi2 = num / E
     chi2 = chi2.sum()
-    pvalue = 1-stats.chi2.cdf(chi2, dof)
+    pvalue = 1 - stats.chi2.cdf(chi2, dof)
     return chi2, pvalue, dof
 
 
@@ -840,11 +832,11 @@ class LISA_Markov(Markov):
         #################################################################
         # have to optimize conditional spatial permutations over a
         # time series - this is a place holder for the foreclosure paper
-        ml = [ pml(yi, w, permutations=permutations) for yi in y]
+        ml = [pml(yi, w, permutations=permutations) for yi in y]
         #################################################################
 
-        q = np.array([ mli.q for mli in ml]).transpose()
-        classes = np.arange(1,5) # no guarantee all 4 quadrants are visited
+        q = np.array([mli.q for mli in ml]).transpose()
+        classes = np.arange(1, 5)  # no guarantee all 4 quadrants are visited
         Markov.__init__(self, q, classes)
         self.q = q
         self.w = w
@@ -855,14 +847,14 @@ class LISA_Markov(Markov):
         sm = np.zeros((n, k), int)
         self.significance_level = significance_level
         if permutations > 0:
-            p = np.array([ mli.p_z_sim for mli in ml]).transpose()
+            p = np.array([mli.p_z_sim for mli in ml]).transpose()
             self.p_values = p
             pb = p <= significance_level
         else:
             pb = np.zeros_like(y.T)
         for t in range(k):
             origin = q[:, t]
-            dest = q[:, t+1]
+            dest = q[:, t + 1]
             p_origin = pb[:, t]
             p_dest = pb[:, t]
             for r in range(n):
@@ -871,22 +863,22 @@ class LISA_Markov(Markov):
                 sm[r, t] = MOVE_TYPES[key]
         if permutations > 0:
             self.significant_moves = sm       
-        self.move_types=move_types
+        self.move_types = move_types
 
         # null of own and lag moves being independent
 
         ybar = y.mean(axis=0)
-        r = y/ybar
-        ylag = np.array([ pysal.lag_spatial(w, yt) for yt in y])
-        rlag = ylag/ybar
+        r = y / ybar
+        ylag = np.array([pysal.lag_spatial(w, yt) for yt in y])
+        rlag = ylag / ybar
         rc = r < 1.
         rlagc = rlag < 1.
         markov_y = pysal.Markov(rc)
         markov_ylag = pysal.Markov(rlagc)
-        A = np.matrix( [[1, 0, 0, 0],
+        A = np.matrix([[1, 0, 0, 0],
             [0, 0, 1, 0],
             [0, 0, 0, 1],
-            [0, 1, 0, 1]] )
+            [0, 1, 0, 1]])
 
         kp = A * np.kron(markov_y.p, markov_ylag.p) * A.T
         trans = self.transitions.sum(axis=1)
@@ -897,8 +889,7 @@ class LISA_Markov(Markov):
         self.expected_t = t1
         self.permutations = permutations
 
-
-    def spillover(self, quadrant = 1, neighbors_on=False):
+    def spillover(self, quadrant=1, neighbors_on=False):
         """
         Detect spillover locations for diffusion in LISA Markov
 
@@ -974,20 +965,20 @@ class LISA_Markov(Markov):
         """
         n, k = self.q.shape
         if self.permutations:
-            spill_over = np.zeros((n, k-1))
+            spill_over = np.zeros((n, k - 1))
             components = np.zeros((n, k))
-            i2id = {} # handle string keys
+            i2id = {}  # handle string keys
             for key in self.w.neighbors.keys():
-                id = self.w.id2i[key]
+                id = self.w.id2i[key]  #pylint "redefining built-in 'id'
                 i2id[id] = key
             sig_lisas = (self.q == quadrant) \
-                    * (self.p_values <= self.significance_level)
-            sig_ids = [ np.nonzero(sig_lisas[:,i])[0].tolist() for i in range(k)]
+                * (self.p_values <= self.significance_level)
+            sig_ids = [np.nonzero(sig_lisas[:, i])[0].tolist() for i in range(k)]
 
             neighbors = self.w.neighbors
-            for t in range(k-1):
+            for t in range(k - 1):
                 s1 = sig_ids[t]
-                s2 = sig_ids[t+1]
+                s2 = sig_ids[t + 1]
                 g1 = pysal.region.components.Graph(undirected=True)
                 for i in s1:
                     for neighbor in neighbors[i2id[i]]:
@@ -996,7 +987,7 @@ class LISA_Markov(Markov):
                             for nn in neighbors[neighbor]:
                                 g1.add_edge(neighbor, nn, 1.0)
                 components1 = g1.connected_components(op=gt)
-                components1 = [ list(c.nodes) for c in components1 ]
+                components1 = [list(c.nodes) for c in components1]
                 g2 = pysal.region.components.Graph(undirected=True)
                 for i in s2:
                     for neighbor in neighbors[i2id[i]]:
@@ -1005,7 +996,7 @@ class LISA_Markov(Markov):
                             for nn in neighbors[neighbor]:
                                 g2.add_edge(neighbor, nn, 1.0)
                 components2 = g2.connected_components(op=gt)
-                components2 = [ list(c.nodes) for c in components2 ]
+                components2 = [list(c.nodes) for c in components2]
                 c2 = []
                 c1 = []
                 for c in components2:
@@ -1013,11 +1004,11 @@ class LISA_Markov(Markov):
                 for c in components1:
                     c1.extend(c)
 
-                new_ids = [ j for j in c2 if j not in c1 ]
+                new_ids = [j for j in c2 if j not in c1]
                 spill_ids = []
                 for j in new_ids:
                     # find j's component in period 2
-                    cj = [ c for c in components2 if j in c][0]
+                    cj = [c for c in components2 if j in c][0]
                     # for members of j's component in period 2, check if they belonged to
                     # any components in period 1
                     for i in cj:
@@ -1030,9 +1021,7 @@ class LISA_Markov(Markov):
                 for c, component in enumerate(components1):
                     for i in component:
                         ii = self.w.id2i[i]
-                        components[ii, t] = c+1
-
-
+                        components[ii, t] = c + 1
             results = {}
             results['components'] = components
             results['spill_over'] = spill_over
@@ -1040,8 +1029,6 @@ class LISA_Markov(Markov):
 
         else:
             return None
-
-
 
 
 def kullback(F):
@@ -1118,41 +1105,41 @@ def kullback(F):
 
     """
 
-    F1 = F==0
+    F1 = F == 0
     F1 = F + F1
     FLF = F * np.log(F1)
     T1 = 2 * FLF.sum()
 
     FdJK = F.sum(axis=0)
-    FdJK1 = FdJK + (FdJK==0)
+    FdJK1 = FdJK + (FdJK == 0)
     FdJKLFdJK = FdJK * np.log(FdJK1)
     T2 = 2 * FdJKLFdJK.sum()
 
     FdJd = F.sum(axis=0).sum(axis=1)
-    FdJd1 = FdJd + (FdJd==0)
-    T3 = 2 * (FdJd * np.log( FdJd1 )).sum()
+    FdJd1 = FdJd + (FdJd == 0)
+    T3 = 2 * (FdJd * np.log(FdJd1)).sum()
 
-    FIJd = F[:,:].sum(axis=1)
-    FIJd1 = FIJd + (FIJd==0)
+    FIJd = F[:, :].sum(axis=1)
+    FIJd1 = FIJd + (FIJd == 0)
     T4 = 2 * (FIJd * np.log(FIJd1)).sum()
 
     FIdd = F.sum(axis=1).sum(axis=1)
     T5 = 2 * (FIdd * np.log(FIdd)).sum()
 
-    T6 =  F.sum()
+    T6 = F.sum()
     T6 = 2 * T6 * np.log(T6)
 
-    s,r,r1 = F.shape
+    s, r, r1 = F.shape
     chom = T1 - T4 - T2 + T3
-    cdof = r * ( s - 1 ) * ( r - 1 )
+    cdof = r * (s - 1) * (r - 1)
     results = {}
     results['Conditional homogeneity'] = chom
     results['Conditional homogeneity dof'] = cdof
     results['Conditional homogeneity pvalue'] = 1 - stats.chi2.cdf(chom, cdof)
     return results
 
-def prais(pmat):		
-    """		
+def prais(pmat):
+    """
     Prais conditional mobility measure
 
     Parameters
@@ -1199,13 +1186,13 @@ def prais(pmat):
                
 
 
-    """		
-    pr = (pmat.sum(axis=1)-np.diag(pmat))[0]
-    return 	pr	
-		
-def shorrock(pmat):		
-    """		
-    Shorrocks mobility measure		
+    """
+    pr = (pmat.sum(axis=1) - np.diag(pmat))[0]
+    return pr
+
+def shorrock(pmat):
+    """
+    Shorrocks mobility measure
 
     Parameters
     ----------
@@ -1247,12 +1234,12 @@ def shorrock(pmat):
     >>> pysal.spatial_dynamics.markov.shorrock(m.p)
     0.19758992000997844
 
-    """		
-    t=np.trace(pmat)		
-    k=pmat.shape[1]		
-    sh = (k-t) / (k-1)
+    """
+    t = np.trace(pmat)
+    k = pmat.shape[1]
+    sh = (k - t) / (k - 1)
     return sh
-		
+
 def test():
     import doctest
     doctest.testmod(verbose=True)
