@@ -1,20 +1,23 @@
 """
 Geary's C statistic for spatial autocorrelation
 """
-__author__  = "Sergio J. Rey <srey@asu.edu> "
-from pysal.common import *
+__author__ = "Sergio J. Rey <srey@asu.edu> "
+
+import numpy as np
+import scipy.stats as stats
+
 __all__ = ['Geary']
 
 
 class Geary:
     """
     Global Geary C Autocorrelation statistic
-    
+
     Parameters
     ----------
     y              : array
     w              : W
-                     spatial weights 
+                     spatial weights
     transformation : string
                      weights transformation, default is binary.
                      Other options include "R": row-standardized, "D":
@@ -54,7 +57,7 @@ class Geary:
                      p-value based on permutations (one-tailed)
                      null: sptial randomness
                      alternative: the observed C is extreme
-                                  it is either extremely high or extremely low 
+                                  it is either extremely high or extremely low
     EC_sim         : float (if permutations!=0)
                      average value of C from permutations
     VC_sim         : float (if permutations!=0)
@@ -79,9 +82,9 @@ class Geary:
     0.33301083591331254
     >>> print "%.8f"%c.p_norm
     0.00009202
-    >>> 
+    >>>
     """
-    def __init__(self, y, w, transformation = "r", permutations = 999):
+    def __init__(self, y, w, transformation="r", permutations=999):
         self.n = len(y)
         self.y = y
         w.transform = transformation
@@ -90,15 +93,15 @@ class Geary:
         self.__moments()
         xn = xrange(len(y))
         self.xn = xn
-        self.y2 = y*y
-        yd = y-y.mean()
+        self.y2 = y * y
+        yd = y - y.mean()
         yss = sum(yd * yd)
         self.den = yss * self.w.s0 * 2.0
         self.C = self.__calc(y)
         de = self.C - 1.0
         self.EC = 1.0
-        self.z_norm = de/self.seC_norm
-        self.z_rand = de/self.seC_rand
+        self.z_norm = de / self.seC_norm
+        self.z_rand = de / self.seC_rand
         self.p_norm = 1 - stats.norm.cdf(np.abs(self.z_norm))
         self.p_rand = 1 - stats.norm.cdf(np.abs(self.z_rand))
 
@@ -110,11 +113,11 @@ class Geary:
             larger = sum(above)
             if (permutations - larger) < larger:
                 larger = permutations - larger
-            self.p_sim =(larger + 1.)/(permutations + 1.)
-            self.EC_sim = sum(sim)/permutations
+            self.p_sim = (larger + 1.) / (permutations + 1.)
+            self.EC_sim = sum(sim) / permutations
             self.seC_sim = np.array(sim).std()
-            self.VC_sim = self.seC_sim**2
-            self.z_sim = (self.C - self.EC_sim)/self.seC_sim
+            self.VC_sim = self.seC_sim ** 2
+            self.z_sim = (self.C - self.EC_sim) / self.seC_sim
             self.p_z_sim = 1 - stats.norm.cdf(np.abs(self.z_sim))
 
     def __moments(self):
@@ -124,31 +127,35 @@ class Geary:
         s0 = w.s0
         s1 = w.s1
         s2 = w.s2
-        s02 = s0*s0
+        s02 = s0 * s0
 
         yd = y - y.mean()
-        k = (1/(sum(yd**4)) * ((sum(yd**2))**2))
-        vc_rand = (1/(n * ((n-2)**2) * s02)) * ((((n-1) * s1) * (n * n - 3 * n + 3 - (n - 1) * k)) \
-             - ((.25 * (n - 1) * s2) * (n * n + 3 * n - 6 - (n * n - n + 2) * k)) \
-                + (s02 * (n * n - 3 - ((n - 1)**2) * k)))
-        vc_norm = ((1 / (2 * (n + 1) * s02)) * ((2 * s1 + s2) * (n - 1) - 4 * s02))
+        k = (1 / (sum(yd ** 4)) * ((sum(yd ** 2)) ** 2))
+        vc_rand = (1 / (n * ((n - 2) ** 2) * s02)) * \
+                ((((n - 1) * s1) * (n * n - 3 * n + 3 - (n - 1) * k)) \
+             - ((.25 * (n - 1) * s2) * (n * n + 3 * n - 6 - \
+                (n * n - n + 2) * k)) \
+                + (s02 * (n * n - 3 - ((n - 1) ** 2) * k)))
+        vc_norm = ((1 / (2 * (n + 1) * s02)) * \
+                ((2 * s1 + s2) * (n - 1) - 4 * s02))
 
         self.VC_rand = vc_rand
         self.VC_norm = vc_norm
-        self.seC_rand = vc_rand**(0.5)
-        self.seC_norm = vc_norm**(0.5)
+        self.seC_rand = vc_rand ** (0.5)
+        self.seC_norm = vc_norm ** (0.5)
 
-    
-    def __calc(self,y):
+    def __calc(self, y):
         ys = np.zeros(y.shape)
-        y2 = y**2
+        y2 = y ** 2
         for i, i0 in enumerate(self.w.id_order):
             neighbors = self.w.neighbor_offsets[i0]
             wijs = self.w.weights[i0]
             z = zip(neighbors, wijs)
-            ys[i] = sum([wij * (y2[i] - 2 * y[i] * y[j] + y2[j]) for j, wij in z])
-        a= (self.n - 1) * sum(ys)
-        return a/self.den
+            ys[i] = sum([wij * (y2[i] - 2 * y[i] * y[j] + y2[j]) \
+                    for j, wij in z])
+        a = (self.n - 1) * sum(ys)
+        return a / self.den
+
 
 def _test():
     import doctest
