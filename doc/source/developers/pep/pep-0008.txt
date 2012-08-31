@@ -7,25 +7,24 @@ Author    Phil Stephens <phil.stphns@gmail.com>,
           Serge Rey <sjsrey@gmail.com>
 Status    Draft
 Created   09-Sep-2010
-Updated   09-Aug-2012
+Updated   31-Aug-2012
 ========  =======================================
 
 Abstract
 ========
 
-A spatial database module will extend PySAL's FileIO module to spatial database software conforming to the Open Geospatial Consortium (OGC) ``Simple Features for SQL`` (SFSQL) specification [1]_, allowing PySAL users to read, write, dump, load, and perform geographic queries on spatial database software.
+A spatial database module will extend PySAL file I/O capabilities to spatial
+database software, allowing PySAL
+users to connect to and perform geographic lookups and queries on spatial
+databases.
 
 Motivation
 ==========
 
-PySAL 1.0 reads and writes computational geometry via the Shapefile data
-structure, a long-time industry standard. Users with mission-critical, large databases,
-however, may store and retrieve their data more efficiently and more reliably using Relational
-Database technologies. In addition to the reliability, redundancy, and
-robustness of the database transaction model, spatially-indexed databases permit
-rapid and efficient queries on the geometric relations between objects in the database [1]_.
-The ability to perform geometry management in PySAL will expand the
-utility of the library.
+PySAL currently reads and writes geometry in only the Shapefile data
+structure. 
+Spatially-indexed databases permit queries on the
+geometric relations between objects [1]_.
 
 Reference Implementation
 ========================
@@ -38,6 +37,10 @@ spatial database extensions
 including PostgreSQL/PostGIS, Oracle Spatial, Spatialite, MS SQL Server, MySQL Spatial, and others.
 These lightweight libraries manage database connections, transactions, and SQL expression translation.  
 
+Another option to research is the GeoDjango package. It provides a large
+number of spatial lookups [5]_ and geo queries for PostGIS databases, and a
+smaller set of lookups / queries for Oracle, MySQL, and SpatiaLite.
+
 References
 ==========
 
@@ -49,3 +52,4 @@ References
 
 .. [4] GeoAlchemy (2012) `GeoAlchemy on GitHub <http://https://github.com/geoalchemy/geoalchemy>`_. Accessed August 9, 2012.
 
+.. [5] GeoDjango (2012) `GeoDjango Compatibility Tables <http://docs.djangoproject.com/en/dev/ref/contrib/gis/db-api>`_. Accessed August 31, 2012.
