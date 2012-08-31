@@ -2,7 +2,7 @@
 Spatial autocorrelation for binary attributes
 
 """
-__author__  = "Sergio J. Rey <srey@asu.edu> , Luc Anselin <luc.anselin@asu.edu>"
+__author__ = "Sergio J. Rey <srey@asu.edu> , Luc Anselin <luc.anselin@asu.edu>"
 
 import pysal
 import numpy as np
@@ -11,9 +11,10 @@ __all__ = ['Join_Counts']
 
 PERMUTATIONS = 999
 
+
 class Join_Counts:
     """Binary Join Counts
-    
+
 
     Parameters
     ----------
@@ -55,7 +56,7 @@ class Join_Counts:
     p_sim_bw     : array (if permutations>0)
                    p-value based on permutations (one-sided)
                    null: spatial randomness
-                   alternative: the observed bw is greater than under randomness   
+                   alternative: the observed bw is greater than under randomness
     mean_bw      : average of permuted bw values
     min_bw       : minimum of permuted bw values
     max_bw       : maximum of permuted bw values
@@ -100,55 +101,53 @@ class Join_Counts:
     24.0
     >>> np.min(jc.sim_bw)
     7.0
-    >>> 
+    >>>
     """
-    def __init__(self,y,w,permutations = PERMUTATIONS):
-        w.transformation='b' # ensure we have binary weights
-        self.w=w
-        self.y=y
+    def __init__(self, y, w, permutations=PERMUTATIONS):
+        w.transformation = 'b'  # ensure we have binary weights
+        self.w = w
+        self.y = y
         self.permutations = permutations
-        self.J=w.s0/2.
-        self.bb,self.ww,self.bw = self.__calc(self.y)
-        
+        self.J = w.s0 / 2.
+        self.bb, self.ww, self.bw = self.__calc(self.y)
+
         if permutations:
-            sim = [self.__calc(np.random.permutation(self.y)) \
-                 for i in xrange(permutations)]
+            sim = [self.__calc(np.random.permutation(self.y))
+                   for i in xrange(permutations)]
             sim_jc = np.array(sim)
-            self.sim_bb = sim_jc[:,0]
+            self.sim_bb = sim_jc[:, 0]
             self.min_bb = np.min(self.sim_bb)
             self.mean_bb = np.mean(self.sim_bb)
             self.max_bb = np.max(self.sim_bb)
-            self.sim_bw = sim_jc[:,2]
+            self.sim_bw = sim_jc[:, 2]
             self.min_bw = np.min(self.sim_bw)
             self.mean_bw = np.mean(self.sim_bw)
             self.max_bw = np.max(self.sim_bw)
-            p_sim_bb = self.__pseudop(self.sim_bb,self.bb)
-            p_sim_bw = self.__pseudop(self.sim_bw,self.bw)
+            p_sim_bb = self.__pseudop(self.sim_bb, self.bb)
+            p_sim_bw = self.__pseudop(self.sim_bw, self.bw)
             self.p_sim_bb = p_sim_bb
             self.p_sim_bw = p_sim_bw
-        
-    def __calc(self,z):
-        zl = pysal.lag_spatial(self.w,z)
-        bb = sum(z*zl)/2.0
+
+    def __calc(self, z):
+        zl = pysal.lag_spatial(self.w, z)
+        bb = sum(z * zl) / 2.0
         zw = 1 - z
-        zl = pysal.lag_spatial(self.w,zw)
-        ww = sum(zw*zl)/2.0
+        zl = pysal.lag_spatial(self.w, zw)
+        ww = sum(zw * zl) / 2.0
         bw = self.J - (bb + ww)
-        return (bb,ww,bw)
-        
-    def __pseudop(self,sim,jc):
+        return (bb, ww, bw)
+
+    def __pseudop(self, sim, jc):
         above = sim >= jc
         larger = sum(above)
-        psim = (larger + 1.)/(self.permutations + 1.)
+        psim = (larger + 1.) / (self.permutations + 1.)
         return psim
 
-        
+
 def _test():
     import doctest
     doctest.testmod(verbose=True)
 
 
-
 if __name__ == '__main__':
     _test()
-

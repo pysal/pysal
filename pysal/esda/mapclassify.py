@@ -2,29 +2,30 @@
 A module of classification schemes for choropleth mapping.
 """
 __author__ = "Sergio J. Rey"
-__credits__= "Copyright (c) 2009-10 Sergio J. Rey"
+__credits__ = "Copyright (c) 2009-10 Sergio J. Rey"
 
-__all__=['quantile','Map_Classifier','Box_Plot','Equal_Interval','Fisher_Jenks', 'Fisher_Jenks_Sampled', 'Jenks_Caspall','Jenks_Caspall_Forced','Jenks_Caspall_Sampled', 'Max_P_Classifier','Maximum_Breaks','Natural_Breaks', 'Quantiles','Percentiles', 'Std_Mean','User_Defined', 'gadf','K_classifiers']
+__all__ = ['quantile', 'Map_Classifier', 'Box_Plot', 'Equal_Interval', 'Fisher_Jenks', 'Fisher_Jenks_Sampled', 'Jenks_Caspall', 'Jenks_Caspall_Forced', 'Jenks_Caspall_Sampled', 'Max_P_Classifier', 'Maximum_Breaks', 'Natural_Breaks', 'Quantiles', 'Percentiles', 'Std_Mean', 'User_Defined', 'gadf', 'K_classifiers']
 
 from pysal.common import *
 
-K = 5 # default number of classes in any map scheme with this as an argument
+K = 5  # default number of classes in any map scheme with this as an argument
 
-def quantile(y, k = 4):
+
+def quantile(y, k=4):
     """
     Calculates the quantiles for an array
 
     Parameters
     ----------
     y : array (n,1)
-        values to classify 
+        values to classify
     k : int
-        number of quantiles 
+        number of quantiles
 
     Returns
     -------
     implicit  : array (n,1)
-                quantile values 
+                quantile values
 
     Examples
     --------
@@ -33,7 +34,7 @@ def quantile(y, k = 4):
     array([ 249.75,  499.5 ,  749.25,  999.  ])
     >>> quantile(x, k = 3)
     array([ 333.,  666.,  999.])
-    >>> 
+    >>>
 
     Note that if there are enough ties that the quantile values repeat, we
     collapse to pseudo quantiles in which case the number of classes will be less than k
@@ -46,12 +47,13 @@ def quantile(y, k = 4):
     >>> quantile(y)
     array([ 1.,  3.])
     """
-    w = 100./k
+    w = 100. / k
     p = np.arange(w, 100 + w, w)
     if p[-1] > 100.0:
         p[-1] = 100.0
     q = np.array([stats.scoreatpercentile(y, pct) for pct in p])
     return np.unique(q)
+
 
 def binC(y, bins):
     """
@@ -62,7 +64,7 @@ def binC(y, bins):
     y : array (n,q)
         categorical values
     bins :  array (k,1)
-        unique values associated with each bin 
+        unique values associated with each bin
 
     Return
     ------
@@ -97,7 +99,7 @@ def binC(y, bins):
            [2, 4, 5],
            [2, 4, 1],
            [1, 0, 5]])
-    >>> 
+    >>>
     """
 
     if np.rank(y) == 1:
@@ -105,7 +107,7 @@ def binC(y, bins):
         n = np.shape(y)[0]
     else:
         n, k = np.shape(y)
-    b = np.zeros((n, k), dtype = 'int')
+    b = np.zeros((n, k), dtype='int')
     for i, bin in enumerate(bins):
         b[np.nonzero(y == bin)] = i
 
@@ -117,6 +119,7 @@ def binC(y, bins):
             print 'bins: ', bins
 
     return b
+
 
 def bin(y, bins):
     """
@@ -162,14 +165,14 @@ def bin(y, bins):
            [2, 0, 1],
            [1, 1, 0],
            [0, 0, 2]])
-    >>> 
+    >>>
     """
     if np.rank(y) == 1:
         k = 1
         n = np.shape(y)[0]
     else:
         n, k = np.shape(y)
-    b = np.zeros((n, k), dtype = 'int')
+    b = np.zeros((n, k), dtype='int')
     i = len(bins)
     if type(bins) != list:
         bins = bins.tolist()
@@ -180,6 +183,7 @@ def bin(y, bins):
         b[np.nonzero(y <= c)] = i
     return b
 
+
 def bin1d(x, bins):
     """
     place values of a 1-d array into bins and determine counts of values in
@@ -187,7 +191,7 @@ def bin1d(x, bins):
 
     Parameters
     ----------
-    y : 1-d array 
+    y : 1-d array
         values to bin
     bins : array (k,1)
         upper bounds of each bin (monotonic)
@@ -219,13 +223,14 @@ def bin1d(x, bins):
     right = bins
     cuts = zip(left, right)
     k = len(bins)
-    binIds = np.zeros(x.shape, dtype = 'int')
+    binIds = np.zeros(x.shape, dtype='int')
     while cuts:
         k -= 1
         l, r = cuts.pop(-1)
         binIds += (x > l) * (x <= r) * k
     counts = np.bincount(binIds)
     return (binIds, counts)
+
 
 def load_example():
     """
@@ -236,7 +241,8 @@ def load_example():
     cal = np.array([record[-1] for record in dat])
     return cal
 
-def natural_breaks(values, k = 5, itmax = 100):
+
+def natural_breaks(values, k=5, itmax=100):
     """
     natural breaks helper function
     """
@@ -246,13 +252,13 @@ def natural_breaks(values, k = 5, itmax = 100):
     uvk = len(uv)
     if  uvk < k:
         print 'Warning: Not enough unique values in array to form k classes'
-        print "Warning: setting k to %d"%uvk
+        print "Warning: setting k to %d" % uvk
         k = uvk
     sids = np.random.permutation(range(len(uv)))[0:k]
     seeds = uv[sids]
     seeds.sort()
     diffs = abs(np.matrix([values - seed for seed in seeds]))
-    c0 = diffs.argmin(axis = 0)
+    c0 = diffs.argmin(axis=0)
     c0 = np.array(c0)[0]
     solving = True
     solved = False
@@ -265,7 +271,7 @@ def natural_breaks(values, k = 5, itmax = 100):
         # for each value find closest centroid
         diffs = abs(np.matrix([values - seed for seed in seeds]))
         # assign value to that centroid
-        c1 = diffs.argmin(axis = 0)
+        c1 = diffs.argmin(axis=0)
         c1 = np.array(c1)[0]
         #compare new classids to previous
         d = abs(c1 - c0)
@@ -281,75 +287,75 @@ def natural_breaks(values, k = 5, itmax = 100):
     cuts = [max(values[c1 == c]) for c in rk]
     return sids, seeds, diffs, class_ids, solved, it, cuts
 
+
 def _fisher_jenks_means(values, classes=5, sort=True):
-  """
-  Jenks Optimal (Natural Breaks) algorithm implemented in Python.
-  The original Python code comes from here:
-  http://danieljlewis.org/2010/06/07/jenks-natural-breaks-algorithm-in-python/
-  and is based on a JAVA and Fortran code available here:
-  https://stat.ethz.ch/pipermail/r-sig-geo/2006-March/000811.html
-  
-  Returns class breaks such that classes are internally homogeneous while 
-  assuring heterogeneity among classes.
-  
-  """
+    """
+    Jenks Optimal (Natural Breaks) algorithm implemented in Python.
+    The original Python code comes from here:
+    http://danieljlewis.org/2010/06/07/jenks-natural-breaks-algorithm-in-python/
+    and is based on a JAVA and Fortran code available here:
+    https://stat.ethz.ch/pipermail/r-sig-geo/2006-March/000811.html
 
-  if sort:
-    values.sort()
-  mat1 = []
-  for i in range(0,len(values)+1):
-    temp = []
-    for j in range(0,classes+1):
-        temp.append(0)
-    mat1.append(temp)
-  mat2 = []
-  for i in range(0,len(values)+1):
-    temp = []
-    for j in range(0,classes+1):
-        temp.append(0)
-    mat2.append(temp)
-  for i in range(1,classes+1):
-    mat1[1][i] = 1
-    mat2[1][i] = 0
-    for j in range(2,len(values)+1):
-        mat2[j][i] = float('inf')
-  v = 0.0
-  for l in range(2,len(values)+1):
-    s1 = 0.0
-    s2 = 0.0
-    w = 0.0
-    for m in range(1,l+1):
-      i3 = l - m + 1
-      val = float(values[i3-1])
-      s2 += val * val
-      s1 += val
-      w += 1
-      v = s2 - (s1 * s1) / w
-      i4 = i3 - 1
-      if i4 != 0:
-        for j in range(2,classes+1):
-          if mat2[l][j] >= (v + mat2[i4][j - 1]):
-            mat1[l][j] = i3
-            mat2[l][j] = v + mat2[i4][j - 1]
-    mat1[l][1] = 1
-    mat2[l][1] = v
+    Returns class breaks such that classes are internally homogeneous while
+    assuring heterogeneity among classes.
 
-  k = len(values)
+    """
 
-  kclass = []
-  for i in range(0,classes+1):
-    kclass.append(0)
-  kclass[classes] = float(values[len(values) - 1])
-  kclass[0] = float(values[0])
-  countNum = classes
-  while countNum >= 2:
-    pivot = mat1[k][countNum]
-    id = int(pivot - 2)
-    kclass[countNum - 1] = values[id]
-    k = int(pivot - 1)
-    countNum -= 1
-  return kclass
+    if sort:
+        values.sort()
+    mat1 = []
+    for i in range(0, len(values) + 1):
+        temp = []
+        for j in range(0, classes + 1):
+            temp.append(0)
+        mat1.append(temp)
+    mat2 = []
+    for i in range(0, len(values) + 1):
+        temp = []
+        for j in range(0, classes + 1):
+            temp.append(0)
+        mat2.append(temp)
+    for i in range(1, classes + 1):
+        mat1[1][i] = 1
+        mat2[1][i] = 0
+        for j in range(2, len(values) + 1):
+            mat2[j][i] = float('inf')
+    v = 0.0
+    for l in range(2, len(values) + 1):
+        s1 = 0.0
+        s2 = 0.0
+        w = 0.0
+        for m in range(1, l + 1):
+            i3 = l - m + 1
+            val = float(values[i3 - 1])
+            s2 += val * val
+            s1 += val
+            w += 1
+            v = s2 - (s1 * s1) / w
+            i4 = i3 - 1
+            if i4 != 0:
+                for j in range(2, classes + 1):
+                    if mat2[l][j] >= (v + mat2[i4][j - 1]):
+                        mat1[l][j] = i3
+                        mat2[l][j] = v + mat2[i4][j - 1]
+        mat1[l][1] = 1
+        mat2[l][1] = v
 
+    k = len(values)
+
+    kclass = []
+    for i in range(0, classes + 1):
+        kclass.append(0)
+    kclass[classes] = float(values[len(values) - 1])
+    kclass[0] = float(values[0])
+    countNum = classes
+    while countNum >= 2:
+        pivot = mat1[k][countNum]
+        id = int(pivot - 2)
+        kclass[countNum - 1] = values[id]
+        k = int(pivot - 1)
+        countNum -= 1
+    return kclass
 
 
 class Map_Classifier:
@@ -397,15 +403,13 @@ class Map_Classifier:
     def _set_bins(self):
         pass
 
-
-
     def get_adcm(self):
         """
         Absolute deviation around class median (ADCM).
 
         Calculates the absolute deviations of each observation about its class
         median as a measure of fit for the classification method.
-        
+
         Returns sum of ADCM over all classes
         """
         adcm = 0
@@ -422,14 +426,13 @@ class Map_Classifier:
         Goodness of absolute deviation of fit
         """
         adam = (np.abs(self.y - np.median(self.y))).sum()
-        gadf = 1 - self.adcm/adam 
+        gadf = 1 - self.adcm / adam
         return gadf
 
-
-    def _table_string(self, width = 12, decimal = 3):
+    def _table_string(self, width=12, decimal=3):
         fmt = ".%df" % decimal
         fmt = "%" + fmt
-        largest = max([ len(fmt % i) for i in self.bins])
+        largest = max([len(fmt % i) for i in self.bins])
         width = largest
         fmt = "%d.%df" % (width, decimal)
         fmt = "%" + fmt
@@ -451,13 +454,13 @@ class Map_Classifier:
         table.append(header)
         table.append("=" * len(header))
 
-        rows=[]
+        rows = []
         for i, up in enumerate(self.bins):
             if i == 0:
                 left = " " * width
                 left += "   x[i] <= "
             else:
-                left = fmt % self.bins[i-1]
+                left = fmt % self.bins[i - 1]
                 left += " < x[i] <= "
             right = fmt % self.bins[i]
             row = left + right
@@ -472,9 +475,10 @@ class Map_Classifier:
         table = "\n".join(table)
         return table
 
+
 class Equal_Interval(Map_Classifier):
     """
-    Equal Interval Classification 
+    Equal Interval Classification
 
     Parameters
     ----------
@@ -491,7 +495,7 @@ class Equal_Interval(Map_Classifier):
               each value is the id of the class the observation belongs to
               yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
     bins    : array (k,1)
-              the upper bounds of each class 
+              the upper bounds of each class
     k       : int
               the number of classes
     counts  : array (k,1)
@@ -507,7 +511,7 @@ class Equal_Interval(Map_Classifier):
     array([57,  0,  0,  0,  1])
     >>> ei.bins
     array([  822.394,  1644.658,  2466.922,  3289.186,  4111.45 ])
-    >>> 
+    >>>
 
 
     Notes
@@ -521,10 +525,10 @@ class Equal_Interval(Map_Classifier):
     with :math:`w=\\frac{max(y)-min(j)}{k}`
     """
 
-    def __init__(self, y, k = K):
+    def __init__(self, y, k=K):
         """
         see class docstring
-        
+
         """
 
         self.k = k
@@ -537,13 +541,14 @@ class Equal_Interval(Map_Classifier):
         max_y = max(y)
         min_y = min(y)
         rg = max_y - min_y
-        width = rg * 1./k
+        width = rg * 1. / k
         cuts = np.arange(min_y + width, max_y + width, width)
-        if len(cuts) > self.k: # handle overshooting
+        if len(cuts) > self.k:  # handle overshooting
             cuts = cuts[0:k]
         cuts[-1] = max_y
         bins = cuts.copy()
         self.bins = bins
+
 
 class Percentiles(Map_Classifier):
     """
@@ -553,7 +558,7 @@ class Percentiles(Map_Classifier):
     ----------
 
     y    : array
-           attribute to classify 
+           attribute to classify
     pct  : array
            percentiles default=[1,10,50,90,99,100]
 
@@ -589,31 +594,33 @@ class Percentiles(Map_Classifier):
     2
     """
 
-    def __init__(self, y, pct = [1, 10, 50, 90, 99, 100]):
+    def __init__(self, y, pct=[1, 10, 50, 90, 99, 100]):
         self.pct = pct
         Map_Classifier.__init__(self, y)
         self.name = 'Percentiles'
+
     def _set_bins(self):
         y = self.y
         pct = self.pct
         self.bins = np.array([stats.scoreatpercentile(y, p) for p in pct])
         self.k = len(self.bins)
 
+
 class Box_Plot(Map_Classifier):
     """
     Box_Plot Map Classification
-        
-   
+
+
     Parameters
     ----------
     y     : array
-            attribute to classify 
+            attribute to classify
     hinge : float
-            multiplier for IQR 
+            multiplier for IQR
 
     Attributes
     ----------
-    yb : array (n,1) 
+    yb : array (n,1)
         bin ids for observations
     bins : array (n,1)
         the upper bounds of each class  (monotonic)
@@ -621,14 +628,14 @@ class Box_Plot(Map_Classifier):
         the number of classes
     counts : array (k,1)
         the number of observations falling in each class
-    low_outlier_ids : array 
+    low_outlier_ids : array
         indices of observations that are low outliers
     high_outlier_ids : array
         indices of observations that are high outliers
 
     Notes
     -----
-    
+
     The bins are set as follows::
 
         bins[0] = q[0]-hinge*IQR
@@ -645,7 +652,7 @@ class Box_Plot(Map_Classifier):
     If q[2]+hinge*IQR > max(y) there will only be 5 classes and no high outliers,
         otherwise, there will be 6 classes and at least one high outlier.
 
-    Examples 
+    Examples
     --------
     >>> cal = load_example()
     >>> bp = Box_Plot(cal)
@@ -665,12 +672,12 @@ class Box_Plot(Map_Classifier):
 
     """
 
-    def __init__(self, y, hinge = 1.5):
+    def __init__(self, y, hinge=1.5):
         """
         Parameters
         ----------
         y : array (n,1)
-            attribute to classify 
+            attribute to classify
         hinge : float
             multiple of inter-quartile range (default=1.5)
         """
@@ -700,6 +707,7 @@ class Box_Plot(Map_Classifier):
         self.low_outlier_ids = np.nonzero(self.yb == 0)[0]
         self.high_outlier_ids = np.nonzero(self.yb == 5)[0]
 
+
 class Quantiles(Map_Classifier):
     """Quantile Map Classification
 
@@ -718,7 +726,7 @@ class Quantiles(Map_Classifier):
               each value is the id of the class the observation belongs to
               yb[i] = j  for j>=1  if bins[j-1] < y[i] <= bins[j], yb[i] = 0  otherwise
     bins    : array (k,1)
-              the upper bounds of each class 
+              the upper bounds of each class
     k       : int
               the number of classes
     counts  : array (k,1)
@@ -734,10 +742,10 @@ class Quantiles(Map_Classifier):
              5.46160000e+01,   4.11145000e+03])
     >>> q.counts
     array([12, 11, 12, 11, 12])
-    >>> 
+    >>>
     """
 
-    def __init__(self, y, k = K):
+    def __init__(self, y, k=K):
         self.k = k
         Map_Classifier.__init__(self, y)
         self.name = 'Quantiles'
@@ -745,7 +753,8 @@ class Quantiles(Map_Classifier):
     def _set_bins(self):
         y = self.y
         k = self.k
-        self.bins = quantile(y, k = k)
+        self.bins = quantile(y, k=k)
+
 
 class Std_Mean(Map_Classifier):
     """
@@ -765,7 +774,7 @@ class Std_Mean(Map_Classifier):
     yb      : array (n,1)
               bin ids for observations,
     bins    : array (k,1)
-              the upper bounds of each class 
+              the upper bounds of each class
     k       : int
               the number of classes
     counts  : array (k,1)
@@ -783,24 +792,24 @@ class Std_Mean(Map_Classifier):
             4111.45      ])
     >>> st.counts
     array([ 0,  0, 56,  1,  1])
-    >>> 
+    >>>
     >>> st3 = Std_Mean(cal, multiples = [-3, -1.5, 1.5, 3])
     >>> st3.bins
     array([-1514.00758246,  -694.03973951,   945.8959464 ,  1765.86378936,
             4111.45      ])
     >>> st3.counts
     array([ 0,  0, 57,  0,  1])
-    >>> 
+    >>>
 
     """
-    def __init__(self, y, multiples = [-2, -1, 1, 2]):
+    def __init__(self, y, multiples=[-2, -1, 1, 2]):
         self.multiples = multiples
         Map_Classifier.__init__(self, y)
         self.name = 'Std_Mean'
 
     def _set_bins(self):
         y = self.y
-        s = y.std(ddof = 1)
+        s = y.std(ddof=1)
         m = y.mean()
         cuts = [m + s * w for w in self.multiples]
         y_max = y.max()
@@ -808,6 +817,7 @@ class Std_Mean(Map_Classifier):
             cuts.append(y_max)
         self.bins = np.array(cuts)
         self.k = len(cuts)
+
 
 class Maximum_Breaks(Map_Classifier):
     """
@@ -827,12 +837,12 @@ class Maximum_Breaks(Map_Classifier):
          bin ids for observations
 
     bins : array (kx1)
-           the upper bounds of each class 
+           the upper bounds of each class
 
     k    : int
            the number of classes
 
-    counts : array (kx1) 
+    counts : array (kx1)
              the number of observations falling in each class (numpy array k x 1)
 
     Examples
@@ -845,9 +855,9 @@ class Maximum_Breaks(Map_Classifier):
     array([  146.005,   228.49 ,   546.675,  2417.15 ,  4111.45 ])
     >>> mb.counts
     array([50,  2,  4,  1,  1])
-    >>> 
+    >>>
     """
-    def __init__(self, y, k = K, mindiff = 0):
+    def __init__(self, y, k=K, mindiff=0):
         self.k = k
         self.mindiff = mindiff
         Map_Classifier.__init__(self, y)
@@ -865,17 +875,18 @@ class Maximum_Breaks(Map_Classifier):
         k1 = k - 1
         if len(diffs) > k1:
             diffs = diffs[-k1:]
-        mp=[]
+        mp = []
         self.cids = []
         for diff in diffs:
             ids = np.nonzero(d == diff)
             for id in ids:
                 self.cids.append(id[0])
-                cp=((xs[id] + xs[id+1])/2.)
+                cp = ((xs[id] + xs[id + 1]) / 2.)
                 mp.append(cp[0])
         mp.append(xs[-1])
         mp.sort()
         self.bins = np.array(mp)
+
 
 class Natural_Breaks(Map_Classifier):
     """
@@ -896,7 +907,7 @@ class Natural_Breaks(Map_Classifier):
     yb      : array (n,1)
               bin ids for observations,
     bins    : array (k,1)
-              the upper bounds of each class 
+              the upper bounds of each class
     k       : int
               the number of classes
     counts  : array (k,1)
@@ -923,23 +934,24 @@ class Natural_Breaks(Map_Classifier):
     [1, 20]
     >>> nb.counts
     array([49,  1])
-    
-    
+
+
     Notes
     -----
     There is a tradeoff here between speed and consistency of the classification
-    If you want more speed, set initial to a smaller value (0 
-    would result in the best speed, if you want more consistent classes in 
-    multiple runs of Natural_Breaks on the same data, set initial to a higer 
+    If you want more speed, set initial to a smaller value (0
+    would result in the best speed, if you want more consistent classes in
+    multiple runs of Natural_Breaks on the same data, set initial to a higer
     value.
-     
+
 
     """
-    def __init__(self, y, k = K, initial = 100):
+    def __init__(self, y, k=K, initial=100):
         self.k = k
         self.initial = initial
         Map_Classifier.__init__(self, y)
         self.name = 'Natural_Breaks'
+
     def _set_bins(self):
 
         x = self.y.copy()
@@ -954,6 +966,7 @@ class Natural_Breaks(Map_Classifier):
         self.bins = res0[-1]
         self.k = len(self.bins)
         self.iterations = res0[-2]
+
 
 class Fisher_Jenks(Map_Classifier):
     """
@@ -972,7 +985,7 @@ class Fisher_Jenks(Map_Classifier):
     yb      : array (n,1)
               bin ids for observations
     bins    : array (k,1)
-              the upper bounds of each class 
+              the upper bounds of each class
     k       : int
               the number of classes
     counts  : array (k,1)
@@ -990,17 +1003,17 @@ class Fisher_Jenks(Map_Classifier):
     [75.290000000000006, 192.05000000000001, 370.5, 722.85000000000002, 4111.45]
     >>> fj.counts
     array([49,  3,  4,  1,  1])
-    >>> 
+    >>>
     """
 
-    def __init__(self, y, k = K):
+    def __init__(self, y, k=K):
         self.k = k
         Map_Classifier.__init__(self, y)
         self.name = "Fisher_Jenks"
 
     def _set_bins(self):
         x = self.y.copy()
-        self.bins =  _fisher_jenks_means(x, classes=self.k)[1:]
+        self.bins = _fisher_jenks_means(x, classes=self.k)[1:]
 
 
 class Fisher_Jenks_Sampled(Map_Classifier):
@@ -1027,7 +1040,7 @@ class Fisher_Jenks_Sampled(Map_Classifier):
     yb      : array (n,1)
               bin ids for observations
     bins    : array (k,1)
-              the upper bounds of each class 
+              the upper bounds of each class
     k       : int
               the number of classes
     counts  : array (k,1)
@@ -1051,7 +1064,7 @@ class Fisher_Jenks_Sampled(Map_Classifier):
     #5208250.0
     #>>> fjs.tss
     #5337860.0
-    #>>> 
+    #>>>
     """
 
     def __init__(self, y, k=K, pct=0.10, truncate=True):
@@ -1059,11 +1072,11 @@ class Fisher_Jenks_Sampled(Map_Classifier):
         n = y.size
 
         if (pct * n > 1000) and truncate:
-            pct = 1000./n
+            pct = 1000. / n
         ids = np.random.random_integers(0, n - 1, n * pct)
         yr = y[ids]
-        yr[-1] = max(y) # make sure we have the upper bound
-        yr[0] = min(y) # make sure we have the min
+        yr[-1] = max(y)  # make sure we have the upper bound
+        yr[0] = min(y)  # make sure we have the min
         self.original_y = y
         self.pct = pct
         self.yr = yr
@@ -1072,18 +1085,17 @@ class Fisher_Jenks_Sampled(Map_Classifier):
         self.yb, self.counts = bin1d(y, self.bins)
         self.name = "Fisher_Jenks_Sampled"
         self.y = y
-        self._summary() # have to recalculate summary stats
+        self._summary()  # have to recalculate summary stats
 
     def _set_bins(self):
         fj = Fisher_Jenks(self.y, self.k)
         self.bins = fj.bins
 
 
-
 class Jenks_Caspall(Map_Classifier):
     """
     Jenks Caspall  Map Classification
-    
+
     Parameters
     ----------
     y : array (n,1)
@@ -1097,7 +1109,7 @@ class Jenks_Caspall(Map_Classifier):
     yb      : array (n,1)
               bin ids for observations,
     bins    : array (k,1)
-              the upper bounds of each class 
+              the upper bounds of each class
     k       : int
               the number of classes
     counts  : array (k,1)
@@ -1118,7 +1130,7 @@ class Jenks_Caspall(Map_Classifier):
     array([14, 13, 14, 10,  7])
 
     """
-    def __init__(self, y, k = K):
+    def __init__(self, y, k=K):
         self.k = k
         Map_Classifier.__init__(self, y)
         self.name = "Jenks_Caspall"
@@ -1134,7 +1146,7 @@ class Jenks_Caspall(Map_Classifier):
         if x.ndim == 1:
             x.shape = (x.size, 1)
         n, k = x.shape
-        xm = [ np.median(x[xb == i]) for i in np.unique(xb)]
+        xm = [np.median(x[xb == i]) for i in np.unique(xb)]
         xb0 = xb.copy()
         q = xm
         it = 0
@@ -1142,7 +1154,7 @@ class Jenks_Caspall(Map_Classifier):
         while solving:
             xb = np.zeros(xb0.shape, int)
             d = abs(x - q)
-            xb = d.argmin(axis = 1)
+            xb = d.argmin(axis=1)
             if (xb0 == xb).all():
                 solving = False
             else:
@@ -1152,6 +1164,7 @@ class Jenks_Caspall(Map_Classifier):
         cuts = [max(x[xb == i]) for i in sp.unique(xb)]
         self.bins = np.array(cuts)
         self.iterations = it
+
 
 class Jenks_Caspall_Sampled(Map_Classifier):
     """
@@ -1174,7 +1187,7 @@ class Jenks_Caspall_Sampled(Map_Classifier):
     yb      : array (n,1)
               bin ids for observations,
     bins    : array (k,1)
-              the upper bounds of each class 
+              the upper bounds of each class
     k       : int
               the number of classes
     counts  : array (k,1)
@@ -1204,7 +1217,7 @@ class Jenks_Caspall_Sampled(Map_Classifier):
     array([19804, 20005, 19925, 20178, 20088])
     >>> jcs.counts
     array([18922, 20521, 20980, 19826, 19751])
-    >>> 
+    >>>
 
     # not for testing since we get different times on different hardware
     # just included for documentation of likely speed gains
@@ -1223,14 +1236,14 @@ class Jenks_Caspall_Sampled(Map_Classifier):
 
     """
 
-    def __init__(self, y, k = K, pct = 0.10):
+    def __init__(self, y, k=K, pct=0.10):
         self.k = k
         n = y.size
         if pct * n > 1000:
-            pct = 1000./n
+            pct = 1000. / n
         ids = np.random.random_integers(0, n - 1, n * pct)
         yr = y[ids]
-        yr[0] = max(y) # make sure we have the upper bound
+        yr[0] = max(y)  # make sure we have the upper bound
         self.original_y = y
         self.pct = pct
         self.yr = yr
@@ -1239,16 +1252,17 @@ class Jenks_Caspall_Sampled(Map_Classifier):
         self.yb, self.counts = bin1d(y, self.bins)
         self.name = "Jenks_Caspall_Sampled"
         self.y = y
-        self._summary() # have to recalculate summary stats
+        self._summary()  # have to recalculate summary stats
 
     def _set_bins(self):
         jc = Jenks_Caspall(self.y, self.k)
         self.bins = jc.bins
         self.iterations = jc.iterations
 
+
 class Jenks_Caspall_Forced(Map_Classifier):
     """
-    
+
     Jenks Caspall  Map Classification with forced movements
 
     Parameters
@@ -1264,7 +1278,7 @@ class Jenks_Caspall_Forced(Map_Classifier):
     yb      : array (n,1)
               bin ids for observations,
     bins    : array (k,1)
-              the upper bounds of each class 
+              the upper bounds of each class
     k       : int
               the number of classes
     counts  : array (k,1)
@@ -1295,9 +1309,9 @@ class Jenks_Caspall_Forced(Map_Classifier):
            [  4.11145000e+03]])
     >>> jcf4.counts
     array([15, 14, 14, 15])
-    >>> 
+    >>>
     """
-    def __init__(self, y, k = K):
+    def __init__(self, y, k=K):
         self.k = k
         Map_Classifier.__init__(self, y)
         self.name = "Jenks_Caspall_Forced"
@@ -1312,10 +1326,10 @@ class Jenks_Caspall_Forced(Map_Classifier):
         if x.ndim == 1:
             x.shape = (x.size, 1)
         n, tmp = x.shape
-        xm = [ x[xb == i].mean() for i in np.unique(xb)]
+        xm = [x[xb == i].mean() for i in np.unique(xb)]
         xb0 = xb.copy()
         q = xm
-        xbar = np.array([ xm[xbi] for xbi in xb])
+        xbar = np.array([xm[xbi] for xbi in xb])
         xbar.shape = (n, 1)
         ss = x - xbar
         ss *= ss
@@ -1333,15 +1347,15 @@ class Jenks_Caspall_Forced(Map_Classifier):
                 candidates = nk[:-1]
                 i = 0
                 up_moves = 0
-                while candidates: 
+                while candidates:
                     nki = candidates.pop(0)
                     if nki > 1:
                         ids = np.nonzero(xb == class_ids[i])
                         mover = max(ids[0])
                         tmp = xb.copy()
                         tmp[mover] = xb[mover] + 1
-                        tm = [ x[tmp == j].mean() for j in sp.unique(tmp)]
-                        txbar = np.array([ tm[xbi] for xbi in tmp])
+                        tm = [x[tmp == j].mean() for j in sp.unique(tmp)]
+                        txbar = np.array([tm[xbi] for xbi in tmp])
                         txbar.shape = (n, 1)
                         tss = x - txbar
                         tss *= tss
@@ -1370,8 +1384,8 @@ class Jenks_Caspall_Forced(Map_Classifier):
                         target_class = mover_class - 1
                         tmp = xb.copy()
                         tmp[mover] = target_class
-                        tm = [ x[tmp == j].mean() for j in sp.unique(tmp)]
-                        txbar = np.array([ tm[xbi] for xbi in tmp])
+                        tm = [x[tmp == j].mean() for j in sp.unique(tmp)]
+                        txbar = np.array([tm[xbi] for xbi in tmp])
                         txbar.shape = (n, 1)
                         tss = x - txbar
                         tss *= tss
@@ -1391,6 +1405,7 @@ class Jenks_Caspall_Forced(Map_Classifier):
         self.bins = np.array(cuts)
         self.iterations = it
 
+
 class User_Defined(Map_Classifier):
     """
     User Specified Binning
@@ -1409,7 +1424,7 @@ class User_Defined(Map_Classifier):
     yb      : array (n,1)
               bin ids for observations,
     bins    : array (k,1)
-              the upper bounds of each class 
+              the upper bounds of each class
     k       : int
               the number of classes
     counts  : array (k,1)
@@ -1433,7 +1448,7 @@ class User_Defined(Map_Classifier):
     array([   20.  ,    30.  ,  4111.45])
     >>> ud.counts
     array([37,  4, 17])
-    >>> 
+    >>>
 
 
     Notes
@@ -1455,10 +1470,11 @@ class User_Defined(Map_Classifier):
     def _set_bins(self):
         pass
 
+
 class Max_P_Classifier(Map_Classifier):
     """
     Max_P Map Classification
-    
+
     Based on Max_p regionalization algorithm
 
     Parameters
@@ -1476,7 +1492,7 @@ class Max_P_Classifier(Map_Classifier):
     yb      : array (n,1)
               bin ids for observations,
     bins    : array (k,1)
-              the upper bounds of each class 
+              the upper bounds of each class
     k       : int
               the number of classes
     counts  : array (k,1)
@@ -1489,11 +1505,11 @@ class Max_P_Classifier(Map_Classifier):
     >>> mp = pysal.Max_P_Classifier(cal)
     >>> mp.bins
     [8.6999999999999993, 16.699999999999999, 20.469999999999999, 66.260000000000005, 4111.4499999999998]
-    >>> mp.counts    
+    >>> mp.counts
     array([29,  8,  1, 10, 10])
 
     """
-    def __init__(self, y, k = K, initial = 1000):
+    def __init__(self, y, k=K, initial=1000):
         self.k = k
         self.initial = initial
         Map_Classifier.__init__(self, y)
@@ -1506,18 +1522,19 @@ class Max_P_Classifier(Map_Classifier):
         if x.ndim == 1:
             x.shape = (x.size, 1)
         n, tmp = x.shape
-        x.sort(axis = 0)
+        x.sort(axis=0)
         # find best of initial solutions
         solution = 0
         best_tss = x.var() * x.shape[0]
         tss_all = np.zeros((self.initial, 1))
         while solution < self.initial:
             remaining = range(n)
-            seeds = [np.nonzero(di == min(di))[0][0] for di in [np.abs(x - qi) for qi in q]]
+            seeds = [np.nonzero(di == min(
+                di))[0][0] for di in [np.abs(x - qi) for qi in q]]
             rseeds = np.random.permutation(range(k)).tolist()
-            tmp = [ remaining.remove(seed) for seed in seeds]
+            tmp = [remaining.remove(seed) for seed in seeds]
             self.classes = classes = []
-            tmp = [ classes.append([seed]) for seed in seeds ]
+            tmp = [classes.append([seed]) for seed in seeds]
             while rseeds:
                 seed_id = rseeds.pop()
                 current = classes[seed_id]
@@ -1603,23 +1620,24 @@ class Max_P_Classifier(Map_Classifier):
         css = yc - yc.mean()
         css *= css
         return sum(css)
-    
+
     def _swap(self, class1, class2, a):
         """evaluate cost of moving a from class1 to class2"""
         ss1 = self._ss(class1)
         ss2 = self._ss(class2)
-        tss1 = ss1+ss2
+        tss1 = ss1 + ss2
         class1c = copy.copy(class1)
         class2c = copy.copy(class2)
         class1c.remove(a)
         class2c.append(a)
         ss1 = self._ss(class1c)
         ss2 = self._ss(class2c)
-        tss2 = ss1+ss2
+        tss2 = ss1 + ss2
         if tss1 < tss2:
             return False
         else:
             return True
+
 
 def _fit(y, classes):
     """Calculate the total sum of squares for a vector y classified into
@@ -1646,7 +1664,8 @@ kmethods["Fisher_Jenks"] = Fisher_Jenks
 kmethods['Natural_Breaks'] = Natural_Breaks
 kmethods['Maximum_Breaks'] = Maximum_Breaks
 
-def gadf(y, method="Quantiles", maxk = 15, pct = 0.8):
+
+def gadf(y, method="Quantiles", maxk=15, pct=0.8):
     """
     Evaluate the Goodness of Absolute Deviation Fit of a Classifier
     Finds the minimum value of k for which gadf>pct
@@ -1655,19 +1674,19 @@ def gadf(y, method="Quantiles", maxk = 15, pct = 0.8):
     ----------
 
     y      : array (nx1)
-             values to be classified 
+             values to be classified
     method : string
              Name of classifier ["Quantiles,"Fisher_Jenks","Maximum_Breaks",
              "Natural_Breaks"]
     maxk   : int
              maximum value of k to evaluate
     pct    : float
-             The percentage of GADF to exceed 
+             The percentage of GADF to exceed
 
 
     Returns
     -------
-    
+
     implicit : tuple
                first value is k, second value is instance of classifier at k,
                third is the pct obtained
@@ -1690,8 +1709,8 @@ def gadf(y, method="Quantiles", maxk = 15, pct = 0.8):
     5
     >>> qgadf2[-1]
     0.21710231966462412
-    >>> 
-    
+    >>>
+
     Notes
     -----
 
@@ -1700,7 +1719,7 @@ def gadf(y, method="Quantiles", maxk = 15, pct = 0.8):
         .. math::
 
             GADF = 1 - \sum_c \sum_{i \in c} |y_i - y_{c,med}|  / \sum_i |y_i - y_{med}|
-        
+
         where :math:`y_{med}` is the global median and :math:`y_{c,med}` is
         the median for class :math:`c`.
 
@@ -1713,10 +1732,11 @@ def gadf(y, method="Quantiles", maxk = 15, pct = 0.8):
     adam = (np.abs(y - np.median(y))).sum()
     for k in range(2, maxk + 1):
         cl = kmethods[method](y, k)
-        gadf = 1 - cl.adcm/adam
+        gadf = 1 - cl.adcm / adam
         if gadf > pct:
             break
     return (k, cl, gadf)
+
 
 class K_classifiers:
     """
@@ -1725,9 +1745,9 @@ class K_classifiers:
     Parameters
     ----------
     y      : array (nx1)
-             values to be classified 
+             values to be classified
     pct    : float
-             The percentage of GADF to exceed 
+             The percentage of GADF to exceed
 
 
     Attributes
@@ -1736,7 +1756,7 @@ class K_classifiers:
               the optimal classifer
     results : dictionary
               keys are classifier names, values are the Map_Classifier instances with the best pct for each classifer
-    
+
     Examples
     --------
 
@@ -1748,8 +1768,8 @@ class K_classifiers:
     4
     >>> ks.best.gadf
     0.84810327199081048
-    >>> 
-    
+    >>>
+
     Notes
     -----
     This can be used to suggest a classification scheme.
@@ -1759,17 +1779,17 @@ class K_classifiers:
     gadf
 
     """
-    def __init__(self, y, pct = 0.8):
+    def __init__(self, y, pct=0.8):
         results = {}
         c = 0
-        best = gadf(y, "Fisher_Jenks", maxk = len(y) - 1, pct = pct)
+        best = gadf(y, "Fisher_Jenks", maxk=len(y) - 1, pct=pct)
         pct0 = best[0]
         k0 = best[-1]
         keys = kmethods.keys()
         keys.remove("Fisher_Jenks")
         results["Fisher_Jenks"] = best
         for method in keys:
-            results[method] = gadf(y, method, maxk = len(y) - 1, pct = pct)
+            results[method] = gadf(y, method, maxk=len(y) - 1, pct=pct)
             k1 = results[method][0]
             pct1 = results[method][-1]
             if (k1 < k0) or (k1 == k0 and pct0 < pct1):
@@ -1779,6 +1799,7 @@ class K_classifiers:
         self.results = results
         self.best = best[1]
 
+
 def fj(x, k=5):
     y = x.copy()
     y.sort()
@@ -1787,10 +1808,11 @@ def fj(x, k=5):
     # d has key = number of groups
     # value: list of ids, list of group tss, group size
     split_id = [initial[0]]
-    tss = initial[1:] # left and right within tss
-    sizes = [ split_id - 1, len(y) - split_id ]
+    tss = initial[1:]  # left and right within tss
+    sizes = [split_id - 1, len(y) - split_id]
     d[2] = [split_id, tss, sizes]
     return d
+
 
 def opt_part(x):
     """
@@ -1802,8 +1824,8 @@ def opt_part(x):
     opt_i = -999
     for i in xrange(1, n):
         print i
-        left = x[:i].var()*i
-        right = x[i:].var() * (n-i)
+        left = x[:i].var() * i
+        right = x[i:].var() * (n - i)
         tss_i = left + right
         if tss_i < tss:
             opt_i = i
@@ -1813,10 +1835,9 @@ def opt_part(x):
     return (opt_i, tss, left_min, right_min)
 
 
-
 def _test():
     import doctest
-    doctest.testmod(verbose = True)
+    doctest.testmod(verbose=True)
 
 if __name__ == '__main__':
     _test()

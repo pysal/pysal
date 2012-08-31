@@ -1,9 +1,9 @@
 """
-Emprical Bayesian smoother using non-parametric mixture models 
+Emprical Bayesian smoother using non-parametric mixture models
 to specify the prior distribution of risks
 
-This module is a python translation of mixlag function 
-in CAMAN R package that is originally written by Peter Schlattmann. 
+This module is a python translation of mixlag function
+in CAMAN R package that is originally written by Peter Schlattmann.
 """
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>, Luc Anselin <luc.anselin@asu.edu>, Serge Rey <srey@asu.edu"
@@ -13,13 +13,14 @@ from scipy.stats import poisson
 import math
 __all__ = ['NP_Mixture_Smoother']
 
+
 class NP_Mixture_Smoother(object):
     """Empirical Bayesian Rate Smoother Using Mixture Prior Distributions
-    It goes through 1) defining an initial set of subpopulations, 
+    It goes through 1) defining an initial set of subpopulations,
     2) VEM algorithm to determine the number of major subpopulations,
     3) EM algorithm, 4) combining simialr subpopulations, and 5) estimating
-    EB rates from a mixture of prior distributions from subpopulation 
-    models. 
+    EB rates from a mixture of prior distributions from subpopulation
+    models.
 
     Parameters
     ----------
@@ -29,13 +30,13 @@ class NP_Mixture_Smoother(object):
                   population at risk variable measured across n spatial units
     k           : integer
                   a seed number to specify the number of subpopulations
-    acc         : float 
-                  convergence criterion; VEM and EM loops stop 
+    acc         : float
+                  convergence criterion; VEM and EM loops stop
                   when the increase of log likelihood is less than acc
     numiter     : integer
                   the maximum number of iterations for VEM and EM loops
     limit       : float
-                  a parameter to cotrol the limit for combing subpopulation 
+                  a parameter to cotrol the limit for combing subpopulation
                   models
 
     Attributes
@@ -51,14 +52,14 @@ class NP_Mixture_Smoother(object):
     acc         : same as acc in parameters
     numiter     : same as numiter in parameters
     limit       : same as limit in parameters
-    p           : array (k, 1) 
-                  the proportions of individual subpopulations 
+    p           : array (k, 1)
+                  the proportions of individual subpopulations
     t           : array (k, 1)
                   prior risks of individual subpopulations
     r           : array (n, 1)
                   estimated rate values
     category    : array (n, 1)
-                  indices of subpopulations to which each observation belongs 
+                  indices of subpopulations to which each observation belongs
 
     Examples
     --------
@@ -86,12 +87,12 @@ class NP_Mixture_Smoother(object):
     >>> mixture.r
     array([ 0.10982278,  0.03445531,  0.11018404,  0.11018604])
 
-    Checking the subpopulations to which each observation belongs 
+    Checking the subpopulations to which each observation belongs
 
     >>> mixture.category
     array([1, 0, 1, 1])
 
-    computing an initial set of prior distributions for the subpopulations    
+    computing an initial set of prior distributions for the subpopulations
 
     >>> mixture.getSeed()
     (array([ 0.5,  0.5]), array([ 0.03333333,  0.15      ]))
@@ -102,18 +103,18 @@ class NP_Mixture_Smoother(object):
     >>> mixture.mixalg()
     {'mix_den': array([ 0.,  0.,  0.,  0.]), 'gradient': array([ 0.]), 'k': 1, 'p': array([ 1.]), 'grid': array([ 11.27659574]), 'accuracy': 1.0}
 
-    estimating empirical Bayesian smoothed rates 
+    estimating empirical Bayesian smoothed rates
 
     >>> mixture.getRateEstimates()
     (array([ 0.0911574,  0.0911574,  0.0911574,  0.0911574]), array([1, 1, 1, 1]))
-    
+
     """
 
-    def __init__(self, e, b, k = 50, acc = 1.E-7, numiter = 5000, limit = 0.01):
+    def __init__(self, e, b, k=50, acc=1.E-7, numiter=5000, limit=0.01):
         self.e = e
         self.b = b
         self.n = len(e)
-        self.w = 1./self.n
+        self.w = 1. / self.n
         self.k = k
         self.acc = acc
         self.numiter = numiter
@@ -127,9 +128,9 @@ class NP_Mixture_Smoother(object):
         self.raw_r = self.e * 1.0 / self.b
         r_max, r_min = self.raw_r.max(), self.raw_r.min()
         r_diff = r_max - r_min
-        step = r_diff/(self.k-1) 
-        grid = np.arange(r_min, r_max+step, step)
-        p = np.ones(self.k)*1./self.k
+        step = r_diff / (self.k - 1)
+        grid = np.arange(r_min, r_max + step, step)
+        p = np.ones(self.k) * 1. / self.k
         return p, grid
 
     def getMixedProb(self, grid):
@@ -141,12 +142,12 @@ class NP_Mixture_Smoother(object):
 
     def getGradient(self, mix, p):
         mix_p = mix * p
-        mix_den = mix_p.sum(axis = 1)
+        mix_den = mix_p.sum(axis=1)
         obs_id = mix_den > 1.E-13
         for i in range(self.k):
             mix_den_len = len(mix_den)
             if (mix_den > 1.E-13).sum() == mix_den_len:
-                mix_p[:, i] = (1./mix_den_len) * mix[:, i] / mix_den
+                mix_p[:, i] = (1. / mix_den_len) * mix[:, i] / mix_den
         gradient = []
         for i in range(self.k):
             gradient.append(mix_p[:, i][obs_id].sum())
@@ -205,15 +206,16 @@ class NP_Mixture_Smoother(object):
             grad, mix_den = self.getGradient(mix, p)
             grad_max, grad_max_inx = self.getMaxGradient(grad)
             grad_min, grad_min_inx = self.getMinGradient(grad, p)
-            ht = (mix[:,grad_max_inx] - mix[:,grad_min_inx]) * p[grad_min_inx]
+            ht = (mix[:, grad_max_inx] - mix[:, grad_min_inx]
+                  ) * p[grad_min_inx]
             st = self.getStepsize(mix_den, ht)
             xs = st * p[grad_min_inx]
             p[grad_min_inx] = p[grad_min_inx] - xs
             p[grad_max_inx] = p[grad_max_inx] + xs
             if (grad_max - 1.0) < self.acc or it == (self.numiter - 1):
-                res = {'k':self.k, 'accuracy': grad_max - 1.0, 'p': p, 'grid':grid, 'gradient': grad, 'mix_den': mix_den}
+                res = {'k': self.k, 'accuracy': grad_max - 1.0, 'p': p, 'grid': grid, 'gradient': grad, 'mix_den': mix_den}
                 break
-        return res 
+        return res
 
     def update(self, p, grid):
         p_inx = p > 1.E-3
@@ -226,14 +228,14 @@ class NP_Mixture_Smoother(object):
         l = self.k - 1
         w, n, e, b = self.w, self.n, self.e, self.b
         if self.k == 1:
-            s11 = (w * b/np.ones(n)).sum()
-            s12 = (w * e/np.ones(n)).sum()
-            grid[l] = s11/s12
+            s11 = (w * b / np.ones(n)).sum()
+            s12 = (w * e / np.ones(n)).sum()
+            grid[l] = s11 / s12
             p[l] = 1.
             mix = self.getMixedProb(grid)
             grad, mix_den = self.getGradient(mix, p)
             grad_max, grad_max_inx = self.getMaxGradient(grad)
-            return {'accuracy': math.fabs(grad_max - 1), 'k':self.k, 'p':p, 'grid': grid, 'gradient': grad, 'mix_den':mix_den}
+            return {'accuracy': math.fabs(grad_max - 1), 'k': self.k, 'p': p, 'grid': grid, 'gradient': grad, 'mix_den': mix_den}
         else:
             res = {}
             for counter in range(nstep):
@@ -245,21 +247,21 @@ class NP_Mixture_Smoother(object):
                 for j in range(self.k):
                     mix_den_fil = mix_den > 1.E-10
                     f_len = len(mix_den_fil)
-                    s11 = (w * e[mix_den_fil]/np.ones(f_len) * mix[mix_den_fil,j] / mix_den[mix_den_fil]).sum()
-                    s12 = (w * b[mix_den_fil] * (mix[mix_den_fil, j]/np.ones(f_len)) / mix_den[mix_den_fil]).sum()
+                    s11 = (w * e[mix_den_fil] / np.ones(f_len) * mix[mix_den_fil, j] / mix_den[mix_den_fil]).sum()
+                    s12 = (w * b[mix_den_fil] * (mix[mix_den_fil, j] / np.ones(f_len)) / mix_den[mix_den_fil]).sum()
                     if s12 > 1.E-12:
-                        grid[j] = s11/s12
+                        grid[j] = s11 / s12
                 grad_max, grad_max_inx = self.getMaxGradient(grad)
-                res = {'accuracy': math.fabs(grad_max - 1.), 'step': counter + 1, 'k': self.k, 'p':p, 'grid':grid, 'gradient':grad, 'mix_den':mix_den}
+                res = {'accuracy': math.fabs(grad_max - 1.), 'step': counter + 1, 'k': self.k, 'p': p, 'grid': grid, 'gradient': grad, 'mix_den': mix_den}
                 if res['accuracy'] < self.acc and counter > 10:
-                    break;
-        return res  
+                    break
+        return res
 
     def getLikelihood(self, mix_den):
         mix_den_fil = mix_den > 0
         r = np.log(mix_den[mix_den_fil]).sum()
-        return r    
-            
+        return r
+
     def combine(self, res):
         p, grid, k = res['p'], res['grid'], self.k
         diff = np.fabs(grid[:-1] - grid[1:])
@@ -281,7 +283,7 @@ class NP_Mixture_Smoother(object):
                 new_p.append(p[bp[i]:bp[i + 1]].sum())
             self.k = new_k = len(new_p)
             new_grid, new_p = np.array(new_grid), np.array(new_p)
-            mix = self.getMixedProb(new_grid)    
+            mix = self.getMixedProb(new_grid)
             grad, mix_den = self.getGradient(mix, new_p)
             res = self.em(1, new_grid, new_p)
             if res is not None:
@@ -294,7 +296,7 @@ class NP_Mixture_Smoother(object):
         mix = self.getMixedProb(grid)
         vem_res = self.vem(mix, p, grid)
         p, grid, k = vem_res['p'], vem_res['grid'], vem_res['k']
-        n_p, n_g  = self.update(p, grid)
+        n_p, n_g = self.update(p, grid)
         em_res = self.em(self.numiter, n_g, n_p)
         com_res = self.combine(em_res)
         return com_res
@@ -302,12 +304,11 @@ class NP_Mixture_Smoother(object):
     def getRateEstimates(self):
         mix = self.getMixedProb(self.t)
         mix_p = mix * self.p
-        denom = mix_p.sum(axis = 1)
-        categ = (mix_p / denom.reshape((self.n, 1))).argmax(axis = 1)
-        r = (self.t * mix_p).sum(axis = 1)/denom
+        denom = mix_p.sum(axis=1)
+        categ = (mix_p / denom.reshape((self.n, 1))).argmax(axis=1)
+        r = (self.t * mix_p).sum(axis=1) / denom
         return r, categ
 
 if __name__ == '__main__':
     import doctest
     doctest.testmod(verbose=True)
-

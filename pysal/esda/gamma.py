@@ -3,7 +3,7 @@ Gamma index for spatial autocorrelation
 
 
 """
-__author__  = "Luc Anselin <luc.anselin@asu.edu>"
+__author__ = "Luc Anselin <luc.anselin@asu.edu>"
 
 import pysal
 import numpy as np
@@ -12,9 +12,10 @@ __all__ = ['Gamma']
 
 PERMUTATIONS = 999
 
+
 class Gamma:
     """Gamma index for spatial autocorrelation
-    
+
 
     Parameters
     ----------
@@ -127,7 +128,7 @@ class Gamma:
     >>> def func(z,i,j):
     ...     q = z[i]*z[j]
     ...     return q
-    ... 
+    ...
     >>> g4 = pysal.Gamma(y,w,operation=func)
     >>> g4.g
     20.0
@@ -137,42 +138,43 @@ class Gamma:
     0.0030000000000000001
 
     """
-    def __init__(self,y,w,operation='c',standardize='no',permutations = PERMUTATIONS):
-        self.w=w
-        self.y=y
-        self.op=operation
-        self.stand=standardize.lower()
+    def __init__(self, y, w, operation='c', standardize='no', permutations=PERMUTATIONS):
+        self.w = w
+        self.y = y
+        self.op = operation
+        self.stand = standardize.lower()
         self.permutations = permutations
         if self.stand == 'yes' or self.stand == 'y':
             ym = np.mean(self.y)
             ysd = np.std(self.y)
-            ys = (self.y - ym)/ysd
-            self.y = ys          
-        self.g = self.__calc(self.y,self.op)
-        
+            ys = (self.y - ym) / ysd
+            self.y = ys
+        self.g = self.__calc(self.y, self.op)
+
         if permutations:
-            sim = [self.__calc(np.random.permutation(self.y),self.op) \
-                 for i in xrange(permutations)]
+            sim = [self.__calc(np.random.permutation(self.y), self.op)
+                   for i in xrange(permutations)]
             self.sim_g = np.array(sim)
             self.min_g = np.min(self.sim_g)
             self.mean_g = np.mean(self.sim_g)
             self.max_g = np.max(self.sim_g)
-            p_sim_g = self.__pseudop(self.sim_g,self.g)
+            p_sim_g = self.__pseudop(self.sim_g, self.g)
             self.p_sim_g = p_sim_g
-            self.g_z = (self.g - self.mean_g)/np.std(self.sim_g)
-        
-    def __calc(self,z,op):
+            self.g_z = (self.g - self.mean_g) / np.std(self.sim_g)
+
+    def __calc(self, z, op):
         if op == 'c':     # cross-product
-            zl = pysal.lag_spatial(self.w,z)
-            g = (z*zl).sum()
+            zl = pysal.lag_spatial(self.w, z)
+            g = (z * zl).sum()
         elif op == 's':   # squared difference
             zs = np.zeros(z.shape)
-            z2 = z**2
+            z2 = z ** 2
             for i, i0 in enumerate(self.w.id_order):
                 neighbors = self.w.neighbor_offsets[i0]
                 wijs = self.w.weights[i0]
                 zw = zip(neighbors, wijs)
-                zs[i] = sum([wij * (z2[i] - 2.0 * z[i] * z[j] + z2[j]) for j, wij in zw])
+                zs[i] = sum([wij * (z2[i] - 2.0 * z[i] * z[
+                    j] + z2[j]) for j, wij in zw])
             g = zs.sum()
         elif op == 'a':    # absolute difference
             zs = np.zeros(z.shape)
@@ -188,25 +190,23 @@ class Gamma:
                 neighbors = self.w.neighbor_offsets[i0]
                 wijs = self.w.weights[i0]
                 zw = zip(neighbors, wijs)
-                zs[i] = sum([wij * op(z,i,j) for j, wij in zw])
-            g = zs.sum()           
+                zs[i] = sum([wij * op(z, i, j) for j, wij in zw])
+            g = zs.sum()
         return g
-        
-    def __pseudop(self,sim,g):
+
+    def __pseudop(self, sim, g):
         above = sim >= g
         larger = above.sum()
-        psim = (larger + 1.)/(self.permutations + 1.)
+        psim = (larger + 1.) / (self.permutations + 1.)
         if psim > 0.5:
-            psim = (self.permutations - larger + 1.)/(self.permutations + 1.)
+            psim = (self.permutations - larger + 1.) / (self.permutations + 1.)
         return psim
 
-        
+
 def _test():
     import doctest
     doctest.testmod(verbose=True)
 
 
-
 if __name__ == '__main__':
     _test()
-

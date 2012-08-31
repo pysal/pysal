@@ -2,19 +2,21 @@
 Moran's I Spatial Autocorrelation Statistics
 
 """
-__author__  = "Sergio J. Rey <srey@asu.edu>"
+__author__ = "Sergio J. Rey <srey@asu.edu>"
 from pysal.common import *
 from pysal.weights.spatial_lag import lag_spatial as slag
 from pysal.esda.smoothing import assuncao_rate
 
-__all__ = ["Moran",  "Moran_Local",  "Moran_BV",  "Moran_BV_matrix", "Moran_Rate", "Moran_Local_Rate"]
+__all__ = ["Moran", "Moran_Local", "Moran_BV", "Moran_BV_matrix",
+           "Moran_Rate", "Moran_Local_Rate"]
 
 
 PERMUTATIONS = 999
 
+
 class Moran:
     """Moran's I Global Autocorrelation Statistic
-    
+
     Parameters
     ----------
 
@@ -25,7 +27,7 @@ class Moran:
     transformation  : string
                       weights transformation,  default is row-standardized "r".
                       Other options include "B": binary,  "D":
-                      doubly-standardized,  "U": untransformed (general weights), 
+                      doubly-standardized,  "U": untransformed (general weights),
                       "V": variance-stabilizing.
     permutations    : int
                       number of random permutations for calculation of pseudo-p_values
@@ -102,34 +104,33 @@ class Moran:
     '0.2477'
     >>> mi.p_norm
     0.0001158330781489969
-    
+
     """
-    def __init__(self, y, w, transformation = "r",  permutations = PERMUTATIONS):
+    def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS):
         self.y = y
         w.transform = transformation
         self.w = w
         self.permutations = permutations
         self.__moments()
-        self.I  =  self.__calc(self.z)
-        self.z_norm  =  (self.I - self.EI)/self.seI_norm
-        self.p_norm  =  2.0 * (1 - stats.norm.cdf(np.abs(self.z_norm)))
-        self.z_rand  =  (self.I - self.EI)/self.seI_rand
-        self.p_rand  =  2.0 * (1 - stats.norm.cdf(np.abs(self.z_rand)))
-
+        self.I = self.__calc(self.z)
+        self.z_norm = (self.I - self.EI) / self.seI_norm
+        self.p_norm = 2.0 * (1 - stats.norm.cdf(np.abs(self.z_norm)))
+        self.z_rand = (self.I - self.EI) / self.seI_rand
+        self.p_rand = 2.0 * (1 - stats.norm.cdf(np.abs(self.z_rand)))
 
         if permutations:
-            sim = [self.__calc(np.random.permutation(self.z)) \
-                 for i in xrange(permutations)]
+            sim = [self.__calc(np.random.permutation(self.z))
+                   for i in xrange(permutations)]
             self.sim = sim = np.array(sim)
             above = sim >= self.I
             larger = sum(above)
             if (self.permutations - larger) < larger:
                 larger = self.permutations - larger
-            self.p_sim = (larger + 1.)/(permutations + 1.)
-            self.EI_sim = sum(sim)/permutations
+            self.p_sim = (larger + 1.) / (permutations + 1.)
+            self.EI_sim = sum(sim) / permutations
             self.seI_sim = np.array(sim).std()
-            self.VI_sim = self.seI_sim**2
-            self.z_sim = (self.I - self.EI_sim)/self.seI_sim
+            self.VI_sim = self.seI_sim ** 2
+            self.z_sim = (self.I - self.EI_sim) / self.seI_sim
             self.p_z_sim = 2.0 * (1 - stats.norm.cdf(np.abs(self.z_sim)))
 
     def __moments(self):
@@ -139,34 +140,34 @@ class Moran:
         z = y - y.mean()
         self.z = z
         self.z2ss = sum(z * z)
-        self.EI = -1./(self.n - 1)
+        self.EI = -1. / (self.n - 1)
         n = self.n
         s1 = self.w.s1
         s0 = self.w.s0
         s2 = self.w.s2
         s02 = s0 * s0
         v_num = n * n * s1 - n * s2 + 3 * s0 * s0
-        v_den = (n-1) * (n + 1) * s0 * s0
-        self.VI_norm  =  v_num/v_den - (1.0/(n - 1))**2
-        self.seI_norm  =  self.VI_norm**(1/2.)
+        v_den = (n - 1) * (n + 1) * s0 * s0
+        self.VI_norm = v_num / v_den - (1.0 / (n - 1)) ** 2
+        self.seI_norm = self.VI_norm ** (1 / 2.)
 
-        k  =  (1/(sum(z**4)) * ((sum(z**2))**2))
-        vi  =  (1/(((n - 1)**3) * s02)) * ((n * ((n * n - 3 * n + 3) * s1 - n * s2 + 3 * s02)) \
-                - (k * ((n * n - n) * s1 - 2 * n * s2 + 6 * s02)))
-        self.VI_rand  =  vi
-        self.seI_rand  =  vi**(1/2.)
+        k = (1 / (sum(z ** 4)) * ((sum(z ** 2)) ** 2))
+        vi = (1 / (((n - 1) ** 3) * s02)) * ((n * ((n * n - 3 * n + 3) * s1 - n * s2 + 3 * s02))
+                                             - (k * ((n * n - n) * s1 - 2 * n * s2 + 6 * s02)))
+        self.VI_rand = vi
+        self.seI_rand = vi ** (1 / 2.)
 
-
-    def __calc(self,  z):
-        zl = slag(self.w,  z)
+    def __calc(self, z):
+        zl = slag(self.w, z)
         inum = sum(z * zl)
-        return self.n/self.w.s0 * inum/self.z2ss
+        return self.n / self.w.s0 * inum / self.z2ss
+
 
 class Moran_BV:
     """Bivariate Moran's I
-    
- 
-    
+
+
+
     Parameters
     ----------
     x : array
@@ -178,7 +179,7 @@ class Moran_BV:
     transformation  : string
                       weights transformation,  default is row-standardized "r".
                       Other options include "B": binary,  "D":
-                      doubly-standardized,  "U": untransformed (general weights), 
+                      doubly-standardized,  "U": untransformed (general weights),
                       "V": variance-stabilizing.
     permutations    : int
                       number of random permutations for calculation of pseudo-p_values
@@ -190,7 +191,7 @@ class Moran_BV:
                     original x variable standardized by mean and std
     zy            : array
                     original y variable standardized by mean and std
-    w             : W 
+    w             : W
                     original w object
     permutation   : int
                     number of permutations
@@ -253,12 +254,12 @@ class Moran_BV:
 
     >>> mbi.p_z_sim
     0.0028373234843530604
-    
-    
+
+
     """
-    def __init__(self, x, y, w, transformation = "r",  permutations = PERMUTATIONS):
-        zy = (y - y.mean())/y.std(ddof = 1)
-        zx = (x - x.mean())/x.std(ddof = 1)
+    def __init__(self, x, y, w, transformation="r", permutations=PERMUTATIONS):
+        zy = (y - y.mean()) / y.std(ddof=1)
+        zx = (x - x.mean()) / x.std(ddof=1)
         self.zx = zx
         self.zy = zy
         w.transform = transformation
@@ -272,28 +273,29 @@ class Moran_BV:
             larger = sum(above)
             if (permutations - larger) < larger:
                 larger = permutations - larger
-            self.p_sim = (larger + 1.)/(permutations + 1.)
-            self.EI_sim  =  sum(sim)/permutations
-            self.seI_sim  =  np.array(sim).std()
-            self.VI_sim  =  self.seI_sim**2
-            self.z_sim = (self.I - self.EI_sim)/self.seI_sim
+            self.p_sim = (larger + 1.) / (permutations + 1.)
+            self.EI_sim = sum(sim) / permutations
+            self.seI_sim = np.array(sim).std()
+            self.VI_sim = self.seI_sim ** 2
+            self.z_sim = (self.I - self.EI_sim) / self.seI_sim
             self.p_z_sim = 2.0 * (1 - stats.norm.cdf(np.abs(self.z_sim)))
-          
-    def __calc(self,  zy):
-        wzy = slag(self.w,  zy)
+
+    def __calc(self, zy):
+        wzy = slag(self.w, zy)
         self.num = sum(self.zx * wzy)
         self.den = sum(zy * zy)
         return self.num / self.den
 
-def Moran_BV_matrix(variables, w, permutations = 0, varnames = None):
+
+def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
     """Bivariate Moran Matrix
 
     Calculates bivariate Moran between all pairs of a set of variables.
 
     Parameters
     ----------
-    variables    : list 
-                   sequence of variables 
+    variables    : list
+                   sequence of variables
     w            : W
                    a spatial weights object
     permutations : int
@@ -335,24 +337,25 @@ def Moran_BV_matrix(variables, w, permutations = 0, varnames = None):
     0.19362610652874668
     >>> res[(3,  0)].I
     0.37701382542927858
-    
+
 
     """
 
     k = len(variables)
-    rk = range(0,  k - 1)
+    rk = range(0, k - 1)
     results = {}
     for i in rk:
-        for j in range(i + 1,  k):
+        for j in range(i + 1, k):
             y1 = variables[i]
             y2 = variables[j]
-            results[i, j] = Moran_BV(y1, y2, w, permutations = permutations)
-            results[j, i] = Moran_BV(y2, y1, w, permutations = permutations)
+            results[i, j] = Moran_BV(y1, y2, w, permutations=permutations)
+            results[j, i] = Moran_BV(y2, y1, w, permutations=permutations)
     return results
+
 
 class Moran_Rate(Moran):
     """Adjusted Moran's I Global Autocorrelation Statistic for Rate Variables
-    
+
     Parameters
     ----------
 
@@ -367,7 +370,7 @@ class Moran_Rate(Moran):
     transformation  : string
                       weights transformation,  default is row-standardized "r".
                       Other options include "B": binary,  "D":
-                      doubly-standardized,  "U": untransformed (general weights), 
+                      doubly-standardized,  "U": untransformed (general weights),
                       "V": variance-stabilizing.
     permutations    : int
                       number of random permutations for calculation of pseudo-p_values
@@ -424,7 +427,7 @@ class Moran_Rate(Moran):
 
     References
     ----------
-    Assuncao, R. E. and Reis, E. A. 1999. A new proposal to adjust Moran's I 
+    Assuncao, R. E. and Reis, E. A. 1999. A new proposal to adjust Moran's I
     for population density. Statistics in Medicine. 18, 2147-2162
 
     Examples
@@ -441,12 +444,14 @@ class Moran_Rate(Moran):
     '0.0084'
     """
 
-    def __init__(self, e, b, w, adjusted=True, transformation = "r",  permutations = PERMUTATIONS):
+    def __init__(self, e, b, w, adjusted=True, transformation="r", permutations=PERMUTATIONS):
         if adjusted:
             y = assuncao_rate(e, b)
         else:
-            y = e*1.0/b
-        Moran.__init__(self, y, w, transformation = transformation,  permutations = permutations)
+            y = e * 1.0 / b
+        Moran.__init__(self, y, w, transformation=transformation,
+                       permutations=permutations)
+
 
 class Moran_Local:
     """Local Moran Statistics
@@ -461,7 +466,7 @@ class Moran_Local:
     transformation : string
                      weights transformation,  default is row-standardized "r".
                      Other options include "B": binary,  "D":
-                     doubly-standardized,  "U": untransformed (general weights), 
+                     doubly-standardized,  "U": untransformed (general weights),
                      "V": variance-stabilizing.
 
     permutations   : number of random permutations for calculation of pseudo-p_values
@@ -479,7 +484,7 @@ class Moran_Local:
     I            : float
                    value of Moran's I
     q            : array (if permutations>0)
-                   values indicate quadrat location 1 HH,  2 LH,  3 LL,  4 HL 
+                   values indicate quadrat location 1 HH,  2 LH,  3 LL,  4 HL
     sim          : array (if permutations>0)
                    vector of I values for permutated samples
     p_sim        : array (if permutations>0)
@@ -519,13 +524,13 @@ class Moran_Local:
     architectures so the results have been removed from doctests and will be
     moved into unittests that are conditional on architectures
     """
-    def __init__(self, y, w, transformation = "r", permutations = PERMUTATIONS):
+    def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS):
         self.y = y
         n = len(y)
         self.n = n
         self.n_1 = n - 1
         z = y - y.mean()
-        z =  z / y.std()
+        z = z / y.std()
         self.z = z
         w.transform = transformation
         self.w = w
@@ -540,7 +545,7 @@ class Moran_Local:
             larger = sum(above)
             low_extreme = (self.permutations - larger) < larger
             larger[low_extreme] = self.permutations - larger[low_extreme]
-            self.p_sim = (larger + 1.0)/(permutations + 1.0)
+            self.p_sim = (larger + 1.0) / (permutations + 1.0)
             self.sim = sim
             self.EI_sim = sim.mean()
             self.seI_sim = sim.std()
@@ -575,16 +580,16 @@ class Moran_Local:
         rids = np.array([np.random.permutation(nn)[0:k] for i in prange])
         ids = np.arange(self.w.n)
         ido = self.w.id_order
-        w = [ self.w.weights[ido[i]] for i in ids ]
-        wc = [ self.w.cardinalities[ido[i]] for i in ids ]
- 
+        w = [self.w.weights[ido[i]] for i in ids]
+        wc = [self.w.cardinalities[ido[i]] for i in ids]
+
         for i in range(self.w.n):
             idsi = ids[ids != i]
             np.random.shuffle(idsi)
-            tmp = z[idsi[rids[:,0:wc[i]]]]
-            lisas[i] = z[i] * (w[i]* tmp).sum(1)
+            tmp = z[idsi[rids[:, 0:wc[i]]]]
+            lisas[i] = z[i] * (w[i] * tmp).sum(1)
         self.rlisas = (n_1 / self.den) * lisas
-    
+
     def __quads(self):
         zl = slag(self.w, self.z)
         zp = self.z > 0
@@ -594,6 +599,7 @@ class Moran_Local:
         nn = (1 - zp) * (1 - lp)
         pn = zp * (1 - lp)
         self.q = 1 * pp + 2 * np + 3 * nn + 4 * pn
+
 
 class Moran_Local_Rate(Moran_Local):
     """Adjusted Local Moran Statistics for Rate Variables
@@ -611,7 +617,7 @@ class Moran_Local_Rate(Moran_Local):
     transformation : string
                      weights transformation,  default is row-standardized "r".
                      Other options include "B": binary,  "D":
-                     doubly-standardized,  "U": untransformed (general weights), 
+                     doubly-standardized,  "U": untransformed (general weights),
                      "V": variance-stabilizing.
     permutations   : number of random permutations for calculation of pseudo-p_values
 
@@ -629,7 +635,7 @@ class Moran_Local_Rate(Moran_Local):
     I            : float
                    value of Moran's I
     q            : array (if permutations>0)
-                   values indicate quadrat location 1 HH,  2 LH,  3 LL,  4 HL 
+                   values indicate quadrat location 1 HH,  2 LH,  3 LL,  4 HL
     sim          : array (if permutations>0)
                    vector of I values for permutated samples
     p_sim        : array (if permutations>0)
@@ -652,7 +658,7 @@ class Moran_Local_Rate(Moran_Local):
 
     References
     ----------
-    Assuncao, R. E. and Reis, E. A. 1999. A new proposal to adjust Moran's I 
+    Assuncao, R. E. and Reis, E. A. 1999. A new proposal to adjust Moran's I
     for population density. Statistics in Medicine. 18, 2147-2162
 
     Examples
@@ -679,12 +685,14 @@ class Moran_Local_Rate(Moran_Local):
         if adjusted:
             y = assuncao_rate(e, b)
         else:
-            y = e*1.0/b
-        Moran_Local.__init__(self, y, w, transformation=transformation, permutations=permutations)
+            y = e * 1.0 / b
+        Moran_Local.__init__(self, y, w,
+                             transformation=transformation, permutations=permutations)
+
 
 def _test():
     import doctest
     doctest.testmod(verbose=True)
-    
+
 if __name__ == '__main__':
     _test()
