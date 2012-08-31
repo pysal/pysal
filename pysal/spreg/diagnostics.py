@@ -1,6 +1,6 @@
 """
-Diagnostics for regression estimations. 
-        
+Diagnostics for regression estimations.
+
 """
 __author__ = "Luc Anselin luc.anselin@asu.edu, Nicholas Malizia nicholas.malizia@asu.edu "
 
@@ -11,15 +11,14 @@ from math import sqrt
 from utils import spmultiply, sphstack
 
 
-__all__ = [ "f_stat", "t_stat", "r2", "ar2", "se_betas", "log_likelihood", "akaike", "schwarz", "condition_index", "jarque_bera", "breusch_pagan", "white", "koenker_bassett", "vif" ]
-
+__all__ = ["f_stat", "t_stat", "r2", "ar2", "se_betas", "log_likelihood", "akaike", "schwarz", "condition_index", "jarque_bera", "breusch_pagan", "white", "koenker_bassett", "vif"]
 
 
 def f_stat(reg):
     """
     Calculates the f-statistic and associated p-value of the regression.
     (For two stage least squares see f_stat_tsls)
-    
+
     Parameters
     ----------
     reg             : regression object
@@ -33,7 +32,7 @@ def f_stat(reg):
     References
     ----------
     .. [1] W. Greene. 2003. Econometric Analysis. Prentice Hall, Upper
-       Saddle River. 
+       Saddle River.
 
     Examples
     --------
@@ -42,27 +41,27 @@ def f_stat(reg):
     >>> import diagnostics
     >>> from ols import OLS
 
-    Read the DBF associated with the Columbus data. 
+    Read the DBF associated with the Columbus data.
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
 
-    Create the dependent variable vector. 
+    Create the dependent variable vector.
 
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
 
-    Create the matrix of independent variables. 
+    Create the matrix of independent variables.
 
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
 
-    Run an OLS regression.    
+    Run an OLS regression.
 
     >>> reg = OLS(y,X)
 
-    Calculate the F-statistic for the regression. 
+    Calculate the F-statistic for the regression.
 
     >>> testresult = diagnostics.f_stat(reg)
 
@@ -71,34 +70,33 @@ def f_stat(reg):
     >>> print("%12.12f"%testresult[0],"%12.12f"%testresult[1])
     ('28.385629224695', '0.000000009341')
 
-    """ 
+    """
     k = reg.k            # (scalar) number of ind. vars (includes constant)
     n = reg.n            # (scalar) number of observations
     utu = reg.utu        # (scalar) residual sum of squares
     predy = reg.predy    # (array) vector of predicted values (n x 1)
     mean_y = reg.mean_y  # (scalar) mean of dependent observations
     Q = utu
-    U = np.sum((predy-mean_y)**2)
-    fStat = (U/(k-1))/(Q/(n-k))
-    pValue = stats.f.sf(fStat,k-1,n-k)
+    U = np.sum((predy - mean_y) ** 2)
+    fStat = (U / (k - 1)) / (Q / (n - k))
+    pValue = stats.f.sf(fStat, k - 1, n - k)
     fs_result = (fStat, pValue)
     return fs_result
-
 
 
 def t_stat(reg, z_stat=False):
     """
     Calculates the t-statistics (or z-statistics) and associated p-values.
-    
+
     Parameters
     ----------
     reg             : regression object
                       output instance from a regression model
     z_stat          : boolean
                       If True run z-stat instead of t-stat
-        
+
     Returns
-    -------    
+    -------
     ts_result       : list of tuples
                       each tuple includes value of t statistic (or z
                       statistic) and associated p-value
@@ -107,7 +105,7 @@ def t_stat(reg, z_stat=False):
     ----------
 
     .. [1] W. Greene. 2003. Econometric Analysis. Prentice Hall, Upper
-       Saddle River. 
+       Saddle River.
 
     Examples
     --------
@@ -116,57 +114,55 @@ def t_stat(reg, z_stat=False):
     >>> import diagnostics
     >>> from ols import OLS
 
-    Read the DBF associated with the Columbus data. 
+    Read the DBF associated with the Columbus data.
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
 
-    Create the dependent variable vector. 
+    Create the dependent variable vector.
 
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
 
-    Create the matrix of independent variables. 
+    Create the matrix of independent variables.
 
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
 
-    Run an OLS regression.    
+    Run an OLS regression.
 
     >>> reg = OLS(y,X)
 
-    Calculate t-statistics for the regression coefficients. 
-    
+    Calculate t-statistics for the regression coefficients.
+
     >>> testresult = diagnostics.t_stat(reg)
 
     Print the tuples that contain the t-statistics and their significances.
 
     >>> print("%12.12f"%testresult[0][0], "%12.12f"%testresult[0][1], "%12.12f"%testresult[1][0], "%12.12f"%testresult[1][1], "%12.12f"%testresult[2][0], "%12.12f"%testresult[2][1])
     ('14.490373143689', '0.000000000000', '-4.780496191297', '0.000018289595', '-2.654408642718', '0.010874504910')
-    """ 
-    
+    """
+
     k = reg.k           # (scalar) number of ind. vars (includes constant)
     n = reg.n           # (scalar) number of observations
     vm = reg.vm         # (array) coefficients of variance matrix (k x k)
-    betas = reg.betas   # (array) coefficients of the regressors (1 x k) 
+    betas = reg.betas   # (array) coefficients of the regressors (1 x k)
     variance = vm.diagonal()
-    tStat = betas[range(0,len(vm))].reshape(len(vm),)/ np.sqrt(variance)
+    tStat = betas[range(0, len(vm))].reshape(len(vm),) / np.sqrt(variance)
     ts_result = []
     for t in tStat:
         if z_stat:
-            ts_result.append((t, stats.norm.sf(abs(t))*2))
+            ts_result.append((t, stats.norm.sf(abs(t)) * 2))
         else:
-            ts_result.append((t, stats.t.sf(abs(t),n-k)*2))
+            ts_result.append((t, stats.t.sf(abs(t), n - k) * 2))
     return ts_result
-
-
 
 
 def r2(reg):
     """
-    Calculates the R^2 value for the regression. 
-    
+    Calculates the R^2 value for the regression.
+
     Parameters
     ----------
     reg             : regression object
@@ -176,13 +172,13 @@ def r2(reg):
     ----------
     r2_result       : float
                       value of the coefficient of determination for the
-                      regression 
+                      regression
 
     References
     ----------
     .. [1] W. Greene. 2003. Econometric Analysis. Prentice Hall, Upper
-       Saddle River. 
-    
+       Saddle River.
+
     Examples
     --------
     >>> import numpy as np
@@ -191,7 +187,7 @@ def r2(reg):
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
-    
+
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
 
     Create the dependent variable vector.
@@ -199,45 +195,44 @@ def r2(reg):
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
 
-    Create the matrix of independent variables. 
+    Create the matrix of independent variables.
 
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
 
-    Run an OLS regression. 
+    Run an OLS regression.
 
     >>> reg = OLS(y,X)
 
-    Calculate the R^2 value for the regression. 
+    Calculate the R^2 value for the regression.
 
     >>> testresult = diagnostics.r2(reg)
 
-    Print the result. 
+    Print the result.
 
     >>> print("%1.8f"%testresult)
     0.55240404
-    
-    """ 
+
+    """
     y = reg.y               # (array) vector of dep observations (n x 1)
     mean_y = reg.mean_y     # (scalar) mean of dep observations
     utu = reg.utu           # (scalar) residual sum of squares
-    ss_tot = sum((y-mean_y)**2)
-    r2 = 1-utu/ss_tot
+    ss_tot = sum((y - mean_y) ** 2)
+    r2 = 1 - utu / ss_tot
     r2_result = r2[0]
     return r2_result
 
 
-
 def ar2(reg):
     """
-    Calculates the adjusted R^2 value for the regression. 
-    
+    Calculates the adjusted R^2 value for the regression.
+
     Parameters
     ----------
     reg             : regression object
-                      output instance from a regression model   
+                      output instance from a regression model
 
     Returns
     ----------
@@ -248,8 +243,8 @@ def ar2(reg):
     References
     ----------
     .. [1] W. Greene. 2003. Econometric Analysis. Prentice Hall, Upper
-       Saddle River. 
-    
+       Saddle River.
+
     Examples
     --------
     >>> import numpy as np
@@ -261,42 +256,41 @@ def ar2(reg):
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
 
-    Create the dependent variable vector. 
+    Create the dependent variable vector.
 
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
 
-    Create the matrix of independent variables. 
+    Create the matrix of independent variables.
 
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
 
-    Run an OLS regression. 
+    Run an OLS regression.
 
     >>> reg = OLS(y,X)
 
-    Calculate the adjusted R^2 value for the regression. 
+    Calculate the adjusted R^2 value for the regression.
     >>> testresult = diagnostics.ar2(reg)
 
-    Print the result. 
+    Print the result.
 
     >>> print("%1.8f"%testresult)
     0.53294335
 
-    """ 
+    """
     k = reg.k       # (scalar) number of ind. variables (includes constant)
     n = reg.n       # (scalar) number of observations
-    ar2_result =  1-(1-r2(reg))*(n-1)/(n-k)
+    ar2_result = 1 - (1 - r2(reg)) * (n - 1) / (n - k)
     return ar2_result
-
 
 
 def se_betas(reg):
     """
     Calculates the standard error of the regression coefficients.
-    
+
     Parameters
     ----------
     reg             : regression object
@@ -310,8 +304,8 @@ def se_betas(reg):
     References
     ----------
     .. [1] W. Greene. 2003. Econometric Analysis. Prentice Hall, Upper
-       Saddle River. 
-    
+       Saddle River.
+
     Examples
     --------
     >>> import numpy as np
@@ -319,7 +313,7 @@ def se_betas(reg):
     >>> import diagnostics
     >>> from ols import OLS
 
-    Read the DBF associated with the Columbus data. 
+    Read the DBF associated with the Columbus data.
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
 
@@ -328,38 +322,37 @@ def se_betas(reg):
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
 
-    Create the matrix of independent variables. 
+    Create the matrix of independent variables.
 
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
 
-    Run an OLS regression. 
+    Run an OLS regression.
 
     >>> reg = OLS(y,X)
 
-    Calculate the standard errors of the regression coefficients. 
+    Calculate the standard errors of the regression coefficients.
 
     >>> testresult = diagnostics.se_betas(reg)
 
-    Print the vector of standard errors. 
+    Print the vector of standard errors.
 
     >>> testresult
     array([ 4.73548613,  0.33413076,  0.10319868])
-    
-    """ 
-    vm = reg.vm         # (array) coefficients of variance matrix (k x k)  
+
+    """
+    vm = reg.vm         # (array) coefficients of variance matrix (k x k)
     variance = vm.diagonal()
     se_result = np.sqrt(variance)
     return se_result
 
 
-
 def log_likelihood(reg):
     """
-    Calculates the log-likelihood value for the regression. 
-    
+    Calculates the log-likelihood value for the regression.
+
     Parameters
     ----------
     reg             : regression object
@@ -373,7 +366,7 @@ def log_likelihood(reg):
     References
     ----------
     .. [1] W. Greene. 2003. Econometric Analysis. Prentice Hall, Upper
-       Saddle River. 
+       Saddle River.
 
     Examples
     --------
@@ -382,16 +375,16 @@ def log_likelihood(reg):
     >>> import diagnostics
     >>> from ols import OLS
 
-    Read the DBF associated with the Columbus data. 
-    
+    Read the DBF associated with the Columbus data.
+
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
 
-    Create the dependent variable vector. 
+    Create the dependent variable vector.
 
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
 
-    Create the matrix of independent variables. 
+    Create the matrix of independent variables.
 
     >>> X = []
     >>> X.append(db.by_col("INC"))
@@ -402,11 +395,11 @@ def log_likelihood(reg):
 
     >>> reg = OLS(y,X)
 
-    Calculate the log-likelihood for the regression. 
+    Calculate the log-likelihood for the regression.
 
     >>> testresult = diagnostics.log_likelihood(reg)
 
-    Print the result. 
+    Print the result.
 
     >>> testresult
     -187.3772388121491
@@ -414,9 +407,9 @@ def log_likelihood(reg):
     """
     n = reg.n       # (scalar) number of observations
     utu = reg.utu   # (scalar) residual sum of squares
-    ll_result = -0.5*(n*(np.log(2*math.pi))+n*np.log(utu/n)+(utu/(utu/n)))
-    return ll_result   
-
+    ll_result = -0.5 * (n * (np.log(2 * math.pi)) + n * np.log(utu / n)
+                        + (utu / (utu / n)))
+    return ll_result
 
 
 def akaike(reg):
@@ -432,7 +425,7 @@ def akaike(reg):
     -------
     aic_result      : scalar
                       value for Akaike Information Criterion of the
-                      regression. 
+                      regression.
 
     References
     ----------
@@ -450,12 +443,12 @@ def akaike(reg):
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
 
-    Create the dependent variable vector. 
+    Create the dependent variable vector.
 
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
 
-    Create the matrix of independent variables. 
+    Create the matrix of independent variables.
 
     >>> X = []
     >>> X.append(db.by_col("INC"))
@@ -466,11 +459,11 @@ def akaike(reg):
 
     >>> reg = OLS(y,X)
 
-    Calculate the Akaike Information Criterion (AIC). 
+    Calculate the Akaike Information Criterion (AIC).
 
     >>> testresult = diagnostics.akaike(reg)
 
-    Print the result. 
+    Print the result.
 
     >>> testresult
     380.7544776242982
@@ -479,9 +472,8 @@ def akaike(reg):
     n = reg.n       # (scalar) number of observations
     k = reg.k       # (scalar) number of ind. variables (including constant)
     utu = reg.utu   # (scalar) residual sum of squares
-    aic_result = 2*k + n*(np.log((2*np.pi*utu)/n)+1)
+    aic_result = 2 * k + n * (np.log((2 * np.pi * utu) / n) + 1)
     return aic_result
-
 
 
 def schwarz(reg):
@@ -497,12 +489,12 @@ def schwarz(reg):
     -------
     bic_result      : scalar
                       value for Schwarz (Bayesian) Information Criterion of
-                      the regression. 
+                      the regression.
 
     References
     ----------
     .. [1] G. Schwarz. 1978. Estimating the dimension of a model. The
-       Annals of Statistics, pages 461-464. 
+       Annals of Statistics, pages 461-464.
 
     Examples
     --------
@@ -515,12 +507,12 @@ def schwarz(reg):
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
 
-    Create the dependent variable vector. 
+    Create the dependent variable vector.
 
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
 
-    Create the matrix of independent variables. 
+    Create the matrix of independent variables.
 
     >>> X = []
     >>> X.append(db.by_col("INC"))
@@ -531,11 +523,11 @@ def schwarz(reg):
 
     >>> reg = OLS(y,X)
 
-    Calculate the Schwarz Information Criterion. 
+    Calculate the Schwarz Information Criterion.
 
     >>> testresult = diagnostics.schwarz(reg)
 
-    Print the results. 
+    Print the results.
 
     >>> testresult
     386.42993851863008
@@ -544,9 +536,8 @@ def schwarz(reg):
     n = reg.n      # (scalar) number of observations
     k = reg.k      # (scalar) number of ind. variables (including constant)
     utu = reg.utu  # (scalar) residual sum of squares
-    sc_result = k*np.log(n) + n*(np.log((2*np.pi*utu)/n)+1)
+    sc_result = k * np.log(n) + n * (np.log((2 * np.pi * utu) / n) + 1)
     return sc_result
-
 
 
 def condition_index(reg):
@@ -563,7 +554,7 @@ def condition_index(reg):
     -------
     ci_result       : float
                       scalar value for the multicollinearity condition
-                      index. 
+                      index.
 
     References
     ----------
@@ -581,12 +572,12 @@ def condition_index(reg):
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
 
-    Create the dependent variable vector. 
+    Create the dependent variable vector.
 
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
 
-    Create the matrix of independent variables. 
+    Create the matrix of independent variables.
 
     >>> X = []
     >>> X.append(db.by_col("INC"))
@@ -612,18 +603,17 @@ def condition_index(reg):
     elif hasattr(reg, 'hth'):
         xtx = reg.hth   # (array) k x k projection matrix (includes constant)
     diag = np.diagonal(xtx)
-    scale = xtx/diag    
+    scale = xtx / diag
     eigval = np.linalg.eigvals(scale)
     max_eigval = max(eigval)
     min_eigval = min(eigval)
-    ci_result = sqrt(max_eigval/min_eigval)
+    ci_result = sqrt(max_eigval / min_eigval)
     return ci_result
-
 
 
 def jarque_bera(reg):
     """
-    Jarque-Bera test for normality in the residuals. 
+    Jarque-Bera test for normality in the residuals.
 
     Parameters
     ----------
@@ -631,7 +621,7 @@ def jarque_bera(reg):
                       output instance from a regression model
 
     Returns
-    ------- 
+    -------
     jb_result       : dictionary
                       contains the statistic (jb) for the Jarque-Bera test
                       and the associated p-value (p-value)
@@ -660,12 +650,12 @@ def jarque_bera(reg):
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"), "r")
 
-    Create the dependent variable vector. 
+    Create the dependent variable vector.
 
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
 
-    Create the matrix of independent variables. 
+    Create the matrix of independent variables.
 
     >>> X = []
     >>> X.append(db.by_col("INC"))
@@ -685,7 +675,7 @@ def jarque_bera(reg):
     >>> testresult['df']
     2
 
-    Print the test statistic. 
+    Print the test statistic.
 
     >>> print("%12.12f"%testresult['jb'])
     1.835752520076
@@ -697,26 +687,25 @@ def jarque_bera(reg):
 
     """
     n = reg.n               # (scalar) number of observations
-    u = reg.u               # (array) residuals from regression 
-    u2 = u**2                          
-    u3 = u**3                          
-    u4 = u**4                           
-    mu2 = np.mean(u2)       
-    mu3 = np.mean(u3)       
-    mu4 = np.mean(u4)         
-    S = mu3/(mu2**(1.5))    # skewness measure
-    K = (mu4/(mu2**2))      # kurtosis measure
-    jb = n*(((S**2)/6)+((K-3)**2)/24)
-    pvalue=stats.chisqprob(jb,2)
-    jb_result={"df":2,"jb":jb,'pvalue':pvalue}
-    return jb_result 
-
+    u = reg.u               # (array) residuals from regression
+    u2 = u ** 2
+    u3 = u ** 3
+    u4 = u ** 4
+    mu2 = np.mean(u2)
+    mu3 = np.mean(u3)
+    mu4 = np.mean(u4)
+    S = mu3 / (mu2 ** (1.5))    # skewness measure
+    K = (mu4 / (mu2 ** 2))      # kurtosis measure
+    jb = n * (((S ** 2) / 6) + ((K - 3) ** 2) / 24)
+    pvalue = stats.chisqprob(jb, 2)
+    jb_result = {"df": 2, "jb": jb, 'pvalue': pvalue}
+    return jb_result
 
 
 def breusch_pagan(reg, z=None):
     """
     Calculates the Breusch-Pagan test statistic to check for
-    heteroscedasticity. 
+    heteroscedasticity.
 
     Parameters
     ----------
@@ -729,7 +718,7 @@ def breusch_pagan(reg, z=None):
                       variables (X**2) with a constant added to the first
                       column if not already present. In the default case,
                       the explanatory variables are squared to eliminate
-                      negative values. 
+                      negative values.
 
     Returns
     -------
@@ -751,7 +740,7 @@ def breusch_pagan(reg, z=None):
 
     References
     ----------
-    
+
     .. [1] T. Breusch and A. Pagan. 1979. A simple test for
        heteroscedasticity and random coefficient variation. Econometrica:
        Journal of the Econometric Society, 47(5):1287-1294.
@@ -766,13 +755,13 @@ def breusch_pagan(reg, z=None):
     Read the DBF associated with the Columbus data.
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"), "r")
- 
-    Create the dependent variable vector. 
+
+    Create the dependent variable vector.
 
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
 
-    Create the matrix of independent variables. 
+    Create the matrix of independent variables.
 
     >>> X = []
     >>> X.append(db.by_col("INC"))
@@ -797,43 +786,43 @@ def breusch_pagan(reg, z=None):
     >>> print("%12.12f"%testresult['bp'])
     7.900441675960
 
-    Print the associated p-value. 
+    Print the associated p-value.
 
     >>> print("%12.12f"%testresult['pvalue'])
     0.019250450075
 
     """
-    e2 = reg.u**2
+    e2 = reg.u ** 2
     e = reg.u
     n = reg.n
     k = reg.k
     ete = reg.utu
 
-    den = ete/n
-    g = e2/den - 1.0
+    den = ete / n
+    g = e2 / den - 1.0
 
-    if z == None:
+    if z is None:
         x = reg.x
         #constant = constant_check(x)
-        #if constant == False: 
+        #if constant == False:
         #    z = np.hstack((np.ones((n,1)),x))**2
         #else:
         #    z = x**2
         z = spmultiply(x, x)
     else:
         #constant = constant_check(z)
-        #if constant == False: 
+        #if constant == False:
         #    z = np.hstack((np.ones((n,1)),z))
         pass
 
-    n,p = z.shape
+    n, p = z.shape
 
     # Check to identify any duplicate columns in Z
     omitcolumn = []
     for i in range(p):
-        current = z[:,i]
+        current = z[:, i]
         for j in range(p):
-            check = z[:,j]
+            check = z[:, j]
             if i < j:
                 test = abs(current - check).sum()
                 if test == 0:
@@ -847,28 +836,27 @@ def breusch_pagan(reg, z=None):
     omitcolumn.sort()
     omitcolumn.reverse()
     for c in omitcolumn:
-        z = np.delete(z,c,1)
-    n,p = z.shape
+        z = np.delete(z, c, 1)
+    n, p = z.shape
 
-    df = p-1
+    df = p - 1
 
     # Now that the variables are prepared, we calculate the statistic
     zt = np.transpose(z)
     gt = np.transpose(g)
-    gtz = np.dot(gt,z)
-    ztg = np.dot(zt,g)
-    ztz = np.dot(zt,z)
+    gtz = np.dot(gt, z)
+    ztg = np.dot(zt, g)
+    ztz = np.dot(zt, z)
     ztzi = la.inv(ztz)
 
     part1 = np.dot(gtz, ztzi)
-    part2 = np.dot(part1,ztg)
-    bp_array = 0.5*part2
-    bp = bp_array[0,0]
+    part2 = np.dot(part1, ztg)
+    bp_array = 0.5 * part2
+    bp = bp_array[0, 0]
 
-    pvalue=stats.chisqprob(bp,df)
-    bp_result={'df':df,'bp':bp, 'pvalue':pvalue}
+    pvalue = stats.chisqprob(bp, df)
+    bp_result = {'df': df, 'bp': bp, 'pvalue': pvalue}
     return bp_result
-
 
 
 def white(reg):
@@ -885,7 +873,7 @@ def white(reg):
     white_result    : dictionary
                       contains the statistic (white), degrees of freedom
                       (df) and the associated p-value (pvalue) for the
-                      White test. 
+                      White test.
     white           : float
                       scalar value for the White test statistic.
     df              : integer
@@ -893,7 +881,7 @@ def white(reg):
     pvalue          : float
                       p-value associated with the statistic (chi^2
                       distributed with k df)
-    
+
     Note
     ----
     x attribute in the reg object must have a constant term included. This is
@@ -903,7 +891,7 @@ def white(reg):
     ----------
     .. [1] H. White. 1980. A heteroscedasticity-consistent covariance
        matrix estimator and a direct test for heteroskdasticity.
-       Econometrica. 48(4) 817-838. 
+       Econometrica. 48(4) 817-838.
 
 
     Examples
@@ -917,12 +905,12 @@ def white(reg):
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
 
-    Create the dependent variable vector. 
+    Create the dependent variable vector.
 
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
 
-    Create the matrix of independent variables. 
+    Create the matrix of independent variables.
 
     >>> X = []
     >>> X.append(db.by_col("INC"))
@@ -934,7 +922,7 @@ def white(reg):
     >>> reg = OLS(y,X)
 
     Calculate the White test for heteroscedasticity.
-    
+
     >>> testresult = diagnostics.white(reg)
 
     Print the degrees of freedom for the test.
@@ -947,21 +935,21 @@ def white(reg):
     >>> print("%12.12f"%testresult['wh'])
     19.946008239903
 
-    Print the associated p-value. 
+    Print the associated p-value.
 
     >>> print("%12.12f"%testresult['pvalue'])
     0.001279222817
 
     """
-    e = reg.u**2
+    e = reg.u ** 2
     k = reg.k
     n = reg.n
     y = reg.y
     X = reg.x
     #constant = constant_check(X)
-    
+
     # Check for constant, if none add one, see Greene 2003, pg. 222
-    #if constant == False: 
+    #if constant == False:
     #    X = np.hstack((np.ones((n,1)),X))
 
     # Check for multicollinearity in the X matrix
@@ -972,29 +960,29 @@ def white(reg):
 
     # Compute cross-products and squares of the regression variables
     if type(X).__name__ == 'ndarray':
-        A = np.zeros((n, (k*(k+1))/2.))
+        A = np.zeros((n, (k * (k + 1)) / 2.))
     elif type(X).__name__ == 'csc_matrix' or type(X).__name__ == 'csr_matrix':
         # this is probably inefficient
-        A = SP.lil_matrix((n, (k*(k+1))/2.))
+        A = SP.lil_matrix((n, (k * (k + 1)) / 2.))
     else:
-        raise Exception, "unknown X type, %s" %type(X).__name__
+        raise Exception("unknown X type, %s" % type(X).__name__)
     counter = 0
     for i in range(k):
-        for j in range(i,k):
-            v = spmultiply(X[:,i], X[:,j], False)
-            A[:,counter] = v
+        for j in range(i, k):
+            v = spmultiply(X[:, i], X[:, j], False)
+            A[:, counter] = v
             counter += 1
 
     # Append the original non-binary variables
-    A = sphstack(X,A)   # note: this also converts a LIL to CSR
-    n,k = A.shape
+    A = sphstack(X, A)   # note: this also converts a LIL to CSR
+    n, k = A.shape
 
     # Check to identify any duplicate columns in A
     omitcolumn = []
     for i in range(k):
-        current = A[:,i]
+        current = A[:, i]
         for j in range(k):
-            check = A[:,j]
+            check = A[:, j]
             if i < j:
                 test = abs(current - check).sum()
                 if test == 0:
@@ -1004,31 +992,32 @@ def white(reg):
 
     # Now the identified columns must be removed
     if type(A).__name__ == 'ndarray':
-        A = np.delete(A,omitcolumn,1)
+        A = np.delete(A, omitcolumn, 1)
     elif type(A).__name__ == 'csc_matrix' or type(A).__name__ == 'csr_matrix':
         # this is probably inefficient
         keepcolumn = range(k)
         for i in omitcolumn:
             keepcolumn.remove(i)
-        A = A[:,keepcolumn]
+        A = A[:, keepcolumn]
     else:
-        raise Exception, "unknown A type, %s" %type(X).__name__
-    n,k = A.shape
+        raise Exception("unknown A type, %s" % type(X).__name__)
+    n, k = A.shape
 
     # Conduct the auxiliary regression and calculate the statistic
     import ols as OLS
-    aux_reg = OLS.BaseOLS(e,A)
+    aux_reg = OLS.BaseOLS(e, A)
     aux_r2 = r2(aux_reg)
-    wh = aux_r2*n
-    df = k-1
-    pvalue = stats.chisqprob(wh,df)
-    white_result={'df':df,'wh':wh, 'pvalue':pvalue}
-    return white_result 
+    wh = aux_r2 * n
+    df = k - 1
+    pvalue = stats.chisqprob(wh, df)
+    white_result = {'df': df, 'wh': wh, 'pvalue': pvalue}
+    return white_result
+
 
 def koenker_bassett(reg, z=None):
     """
     Calculates the Koenker-Bassett test statistic to check for
-    heteroscedasticity. 
+    heteroscedasticity.
 
     Parameters
     ----------
@@ -1041,13 +1030,13 @@ def koenker_bassett(reg, z=None):
                       variables (X**2) with a constant added to the first
                       column if not already present. In the default case,
                       the explanatory variables are squared to eliminate
-                      negative values. 
+                      negative values.
 
     Returns
     -------
     kb_result       : dictionary
                       contains the statistic (kb), degrees of freedom (df)
-                      and the associated p-value (pvalue) for the test. 
+                      and the associated p-value (pvalue) for the test.
     kb              : float
                       scalar value for the Koenker-Bassett test statistic.
     df              : integer
@@ -1065,10 +1054,10 @@ def koenker_bassett(reg, z=None):
     ---------
     .. [1] R. Koenker and G. Bassett. 1982. Robust tests for
        heteroscedasticity based on regression quantiles. Econometrica,
-       50(1):43-61. 
+       50(1):43-61.
 
     .. [2] W. Greene. 2003. Econometric Analysis. Prentice Hall, Upper
-       Saddle River. 
+       Saddle River.
 
     Examples
     --------
@@ -1081,12 +1070,12 @@ def koenker_bassett(reg, z=None):
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
 
-    Create the dependent variable vector. 
+    Create the dependent variable vector.
 
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
 
-    Create the matrix of independent variables. 
+    Create the matrix of independent variables.
 
     >>> X = []
     >>> X.append(db.by_col("INC"))
@@ -1111,14 +1100,14 @@ def koenker_bassett(reg, z=None):
     >>> print("%12.12f"%testresult['kb'])
     5.694087931707
 
-    Print the associated p-value. 
+    Print the associated p-value.
 
     >>> print("%12.12f"%testresult['pvalue'])
     0.058015563638
 
     """
     # The notation here matches that of Greene (2003).
-    u = reg.u**2
+    u = reg.u ** 2
     e = reg.u
     n = reg.n
     k = reg.k
@@ -1126,33 +1115,33 @@ def koenker_bassett(reg, z=None):
     ete = reg.utu
     #constant = constant_check(x)
 
-    ubar = ete/n
-    ubari = ubar*np.ones((n,1))
-    g = u-ubari
-    v = (1.0/n)*np.sum((u-ubar)**2)
+    ubar = ete / n
+    ubari = ubar * np.ones((n, 1))
+    g = u - ubari
+    v = (1.0 / n) * np.sum((u - ubar) ** 2)
 
-    if z == None:
+    if z is None:
         x = reg.x
         #constant = constant_check(x)
-        #if constant == False: 
+        #if constant == False:
         #    z = np.hstack((np.ones((n,1)),x))**2
         #else:
         #    z = x**2
         z = spmultiply(x, x)
     else:
         #constant = constant_check(z)
-        #if constant == False: 
+        #if constant == False:
         #    z = np.hstack((np.ones((n,1)),z))
         pass
 
-    n,p = z.shape
+    n, p = z.shape
 
     # Check to identify any duplicate columns in Z
     omitcolumn = []
     for i in range(p):
-        current = z[:,i]
+        current = z[:, i]
         for j in range(p):
-            check = z[:,j]
+            check = z[:, j]
             if i < j:
                 test = abs(current - check).sum()
                 if test == 0:
@@ -1166,28 +1155,27 @@ def koenker_bassett(reg, z=None):
     omitcolumn.sort()
     omitcolumn.reverse()
     for c in omitcolumn:
-        z = np.delete(z,c,1)
-    n,p = z.shape
+        z = np.delete(z, c, 1)
+    n, p = z.shape
 
-    df = p-1
+    df = p - 1
 
     # Conduct the auxiliary regression.
     zt = np.transpose(z)
     gt = np.transpose(g)
-    gtz = np.dot(gt,z)
-    ztg = np.dot(zt,g)
-    ztz = np.dot(zt,z)
+    gtz = np.dot(gt, z)
+    ztg = np.dot(zt, g)
+    ztz = np.dot(zt, z)
     ztzi = la.inv(ztz)
 
     part1 = np.dot(gtz, ztzi)
-    part2 = np.dot(part1,ztg)
-    kb_array = (1.0/v)*part2
-    kb = kb_array[0,0]
-    
-    pvalue=stats.chisqprob(kb,df)
-    kb_result = {'kb':kb,'df':df,'pvalue':pvalue}
-    return kb_result
+    part2 = np.dot(part1, ztg)
+    kb_array = (1.0 / v) * part2
+    kb = kb_array[0, 0]
 
+    pvalue = stats.chisqprob(kb, df)
+    kb_result = {'kb': kb, 'df': df, 'pvalue': pvalue}
+    return kb_result
 
 
 def vif(reg):
@@ -1196,14 +1184,14 @@ def vif(reg):
     For the ease of indexing the results, the constant is currently
     included. This should be omitted when reporting the results to the
     output text.
-    
+
     Parameters
     ----------
     reg             : regression object
                       output instance from a regression model
-        
+
     Returns
-    -------    
+    -------
     vif_result      : list of tuples
                       each tuple includes the vif and the tolerance, the
                       order of the variables corresponds to their order in
@@ -1212,7 +1200,7 @@ def vif(reg):
     References
     ----------
     .. [1] W. Greene. 2003. Econometric Analysis. Prentice Hall, Upper
-       Saddle River. 
+       Saddle River.
 
     Examples
     --------
@@ -1225,12 +1213,12 @@ def vif(reg):
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
 
-    Create the dependent variable vector. 
+    Create the dependent variable vector.
 
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
 
-    Create the matrix of independent variables. 
+    Create the matrix of independent variables.
 
     >>> X = []
     >>> X.append(db.by_col("INC"))
@@ -1241,24 +1229,24 @@ def vif(reg):
 
     >>> reg = OLS(y,X)
 
-    Calculate the variance inflation factor (VIF). 
+    Calculate the variance inflation factor (VIF).
     >>> testresult = diagnostics.vif(reg)
 
-    Select the tuple for the income variable. 
-    
+    Select the tuple for the income variable.
+
     >>> incvif = testresult[1]
 
-    Print the VIF for income. 
+    Print the VIF for income.
 
     >>> print("%12.12f"%incvif[0])
     1.333117497189
 
-    Print the tolerance for income. 
+    Print the tolerance for income.
 
     >>> print("%12.12f"%incvif[1])
     0.750121427487
 
-    Repeat for the home value variable. 
+    Repeat for the home value variable.
 
     >>> hovalvif = testresult[2]
     >>> print("%12.12f"%hovalvif[0])
@@ -1268,28 +1256,27 @@ def vif(reg):
 
     """
     X = reg.x
-    n,k = X.shape
+    n, k = X.shape
     vif_result = []
 
     for j in range(k):
         Z = X.copy()
-        Z = np.delete(Z,j,1)
-        y  = X[:,j]
+        Z = np.delete(Z, j, 1)
+        y = X[:, j]
         import ols as OLS
-        aux = OLS.BaseOLS(y,Z)
+        aux = OLS.BaseOLS(y, Z)
         mean_y = aux.mean_y
         utu = aux.utu
-        ss_tot = sum((y-mean_y)**2)
+        ss_tot = sum((y - mean_y) ** 2)
         if ss_tot == 0:
             resj = pysal.MISSINGVALUE
         else:
-            r2aux = 1-utu/ss_tot
+            r2aux = 1 - utu / ss_tot
             tolj = 1 - r2aux
             vifj = 1 / tolj
-            resj = (vifj,tolj)
+            resj = (vifj, tolj)
         vif_result.append(resj)
     return vif_result
-
 
 
 def constant_check(array):
@@ -1299,7 +1286,7 @@ def constant_check(array):
     Parameters
     ----------
     array           : array
-                      an array of variables to be inspected 
+                      an array of variables to be inspected
 
     Returns
     -------
@@ -1327,17 +1314,17 @@ def constant_check(array):
 
     """
 
-    n,k = array.shape
+    n, k = array.shape
     constant = False
     for j in range(k):
-        variable = array[:,j]
+        variable = array[:, j]
         varmin = variable.min()
         varmax = variable.max()
         if varmin == varmax:
             constant = True
             break
     return constant
-        
+
 
 def _test():
     import doctest
@@ -1345,4 +1332,3 @@ def _test():
 
 if __name__ == '__main__':
     _test()
-

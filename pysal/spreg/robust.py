@@ -7,29 +7,30 @@ import numpy.linalg as la
 from pysal import lag_spatial
 from utils import spdot, spbroadcast
 
+
 def robust_vm(reg, gwk=None):
     """
-    Robust estimation of the variance-covariance matrix. Estimated by White (default) or HAC (if wk is provided). 
-        
+    Robust estimation of the variance-covariance matrix. Estimated by White (default) or HAC (if wk is provided).
+
     Parameters
     ----------
-    
+
     reg             : Regression object (OLS or TSLS)
                       output instance from a regression model
 
     gwk             : PySAL weights object
                       Optional. Spatial weights based on kernel functions
                       If provided, returns the HAC variance estimation
-                      
+
     Returns
     --------
-    
+
     psi             : kxk array
                       Robust estimation of the variance-covariance
-                      
+
     Examples
     --------
-    
+
     >>> import numpy as np
     >>> import pysal
     >>> from ols import OLS
@@ -40,7 +41,7 @@ def robust_vm(reg, gwk=None):
     >>> X = []
     >>> X.append(db.by_col("RD90"))
     >>> X.append(db.by_col("DV90"))
-    >>> X = np.array(X).T                       
+    >>> X = np.array(X).T
 
     Example with OLS with unadjusted standard errors
 
@@ -51,13 +52,13 @@ def robust_vm(reg, gwk=None):
            [-0.02243898, -0.00031638,  0.00313386]])
 
     Example with OLS and White
-    
+
     >>> ols = OLS(y,X, robust='white')
     >>> ols.vm
     array([[ 0.24491641,  0.01092258, -0.03438619],
            [ 0.01092258,  0.01796867, -0.00071345],
            [-0.03438619, -0.00071345,  0.00501042]])
-    
+
     Example with OLS and HAC
 
     >>> wk = pysal.kernelW_from_shapefile(pysal.examples.get_path('NAT.shp'),k=15,function='triangular', fixed=False)
@@ -93,33 +94,31 @@ def robust_vm(reg, gwk=None):
            [-0.02810131, -0.01364908, -0.00318197,  0.00713251]])
 
     """
-    if hasattr(reg, 'h'): #If reg has H, do 2SLS estimator. OLS otherwise.
+    if hasattr(reg, 'h'):  # If reg has H, do 2SLS estimator. OLS otherwise.
         tsls = True
         xu = spbroadcast(reg.h, reg.u)
     else:
         tsls = False
         xu = spbroadcast(reg.x, reg.u)
-        
-    if gwk: #If gwk do HAC. White otherwise.
-        gwkxu = lag_spatial(gwk,xu)
-        psi0 = spdot(xu.T,gwkxu)
+
+    if gwk:  # If gwk do HAC. White otherwise.
+        gwkxu = lag_spatial(gwk, xu)
+        psi0 = spdot(xu.T, gwkxu)
     else:
-        psi0 = spdot(xu.T,xu)
-        
+        psi0 = spdot(xu.T, xu)
+
     if tsls:
-        psi1 = spdot(reg.varb,reg.zthhthi)
-        psi = spdot(psi1,np.dot(psi0,psi1.T))
+        psi1 = spdot(reg.varb, reg.zthhthi)
+        psi = spdot(psi1, np.dot(psi0, psi1.T))
     else:
-        psi = spdot(reg.xtxi,np.dot(psi0,reg.xtxi))
-        
+        psi = spdot(reg.xtxi, np.dot(psi0, reg.xtxi))
+
     return psi
-    
+
+
 def _test():
     import doctest
     doctest.testmod()
 
 if __name__ == '__main__':
     _test()
-
-
-

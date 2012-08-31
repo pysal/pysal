@@ -27,13 +27,14 @@ def set_name_ds(name_ds):
 
     Returns
     -------
-    
+
     name_ds     : string
-                  
+
     """
     if not name_ds:
         name_ds = 'unknown'
     return name_ds
+
 
 def set_name_y(name_y):
     """Set the dataset name in regression; return generic name if user
@@ -47,13 +48,14 @@ def set_name_y(name_y):
 
     Returns
     -------
-    
+
     name_ds     : string
-                  
+
     """
     if not name_y:
         name_y = 'dep_var'
     return name_y
+
 
 def set_name_x(name_x, x, regi=False):
     """Set the independent variable names in regression; return generic name if user
@@ -73,18 +75,19 @@ def set_name_x(name_x, x, regi=False):
 
     Returns
     -------
-    
+
     name_x      : list of strings
-                  
+
     """
     if not name_x:
-        name_x = ['var_'+str(i+1) for i in range(x.shape[1])]
+        name_x = ['var_' + str(i + 1) for i in range(x.shape[1])]
     else:
         name_x = name_x[:]
     if not regi:
         name_x.insert(0, 'CONSTANT')
     return name_x
-    
+
+
 def set_name_yend(name_yend, yend):
     """Set the endogenous variable names in regression; return generic name if user
     provides no explicit name."
@@ -97,17 +100,18 @@ def set_name_yend(name_yend, yend):
 
     Returns
     -------
-    
+
     name_yend   : list of strings
-                  
+
     """
-    if yend != None:
+    if yend is not None:
         if not name_yend:
-            return ['endogenous_'+str(i+1) for i in range(len(yend[0]))]
+            return ['endogenous_' + str(i + 1) for i in range(len(yend[0]))]
         else:
             return name_yend[:]
     else:
         return []
+
 
 def set_name_q(name_q, q):
     """Set the external instrument names in regression; return generic name if user
@@ -123,17 +127,18 @@ def set_name_q(name_q, q):
 
     Returns
     -------
-    
+
     name_q      : list of strings
-                  
+
     """
-    if q != None:
+    if q is not None:
         if not name_q:
-            return ['instrument_'+str(i+1) for i in range(len(q[0]))]
+            return ['instrument_' + str(i + 1) for i in range(len(q[0]))]
         else:
             return name_q[:]
     else:
         return []
+
 
 def set_name_yend_sp(name_y):
     """Set the spatial lag name in regression; return generic name if user
@@ -147,11 +152,12 @@ def set_name_yend_sp(name_y):
 
     Returns
     -------
-    
+
     name_yend_sp : string
-                  
+
     """
     return 'W_' + name_y
+
 
 def set_name_q_sp(name_x, w_lags, name_q, lag_q):
     """Set the spatial instrument names in regression; return generic name if user
@@ -168,9 +174,9 @@ def set_name_q_sp(name_x, w_lags, name_q, lag_q):
 
     Returns
     -------
-    
+
     name_q_sp   : list of strings
-                  
+
     """
     if lag_q:
         names = name_x[1:] + name_q   # drop the constant
@@ -178,13 +184,14 @@ def set_name_q_sp(name_x, w_lags, name_q, lag_q):
         names = name_x[1:]   # drop the constant
     sp_inst_names = []
     for j in names:
-        sp_inst_names.append('W_'+j)
+        sp_inst_names.append('W_' + j)
     if w_lags > 1:
-        for i in range(2, w_lags+1):
+        for i in range(2, w_lags + 1):
             for j in names:
-                sp_inst_names.append('W'+str(i)+'_'+j)
+                sp_inst_names.append('W' + str(i) + '_' + j)
     return sp_inst_names
-    
+
+
 def set_name_h(name_x, name_q):
     """Set the full instruments names in regression; return generic name if user
     provides no explicit name."
@@ -199,11 +206,12 @@ def set_name_h(name_x, name_q):
 
     Returns
     -------
-    
+
     name_h      : list of strings
-                  
+
     """
     return name_x + name_q
+
 
 def set_robust(robust):
     """Return generic name if user passes None to the robust parameter in a
@@ -218,13 +226,14 @@ def set_robust(robust):
 
     Returns
     -------
-    
+
     robust      : string
-                  
+
     """
     if not robust:
         return 'unadjusted'
     return robust
+
 
 def set_name_w(name_w, w):
     """Return generic name if user passes None to the robust parameter in a
@@ -241,12 +250,12 @@ def set_name_w(name_w, w):
 
     Returns
     -------
-    
+
     name_w      : string
-                  
+
     """
-    if w != None:
-        if name_w != None:
+    if w is not None:
+        if name_w is not None:
             return name_w
         else:
             return 'unknown'
@@ -256,7 +265,7 @@ def set_name_w(name_w, w):
 def check_arrays(*arrays):
     """Check if the objects passed by a user to a regression class are
     correctly structured. If the user's data is correctly formed this function
-    returns nothing, if not then an exception is raised. Note, this does not 
+    returns nothing, if not then an exception is raised. Note, this does not
     check for model setup, simply the shape and types of the objects.
 
     Parameters
@@ -265,7 +274,7 @@ def check_arrays(*arrays):
     *arrays : anything
               Objects passed by the user to a regression class; any type
               object can be passed and any number of objects can be passed
-     
+
     Returns
     -------
 
@@ -293,26 +302,27 @@ def check_arrays(*arrays):
     allowed = ['ndarray', 'csr_matrix']
     rows = []
     for i in arrays:
-        if i == None:
+        if i is None:
             continue
         if i.__class__.__name__ not in allowed:
-            raise Exception, "all input data must be either numpy arrays or sparse csr matrices"
+            raise Exception("all input data must be either numpy arrays or sparse csr matrices")
         shape = i.shape
         if len(shape) > 2:
-            raise Exception, "all input arrays must have exactly two dimensions"
+            raise Exception("all input arrays must have exactly two dimensions")
         if len(shape) == 1:
-            raise Exception, "all input arrays must have exactly two dimensions"
+            raise Exception("all input arrays must have exactly two dimensions")
         if shape[0] < shape[1]:
-            raise Exception, "one or more input arrays have more columns than rows"
+            raise Exception("one or more input arrays have more columns than rows")
         rows.append(shape[0])
     if len(set(rows)) > 1:
-        raise Exception, "arrays not all of same length"
+        raise Exception("arrays not all of same length")
     return rows[0]
+
 
 def check_y(y, n):
     """Check if the y object passed by a user to a regression class is
     correctly structured. If the user's data is correctly formed this function
-    returns nothing, if not then an exception is raised. Note, this does not 
+    returns nothing, if not then an exception is raised. Note, this does not
     check for model setup, simply the shape and types of the objects.
 
     Parameters
@@ -324,7 +334,7 @@ def check_y(y, n):
 
     n       : int
               number of observations
-     
+
     Returns
     -------
 
@@ -346,14 +356,15 @@ def check_y(y, n):
     """
     if y.__class__.__name__ != 'ndarray':
         print y.__class__.__name__
-        raise Exception, "y must be a numpy array"
+        raise Exception("y must be a numpy array")
     shape = y.shape
     if len(shape) > 2:
-        raise Exception, "all input arrays must have exactly two dimensions"
+        raise Exception("all input arrays must have exactly two dimensions")
     if len(shape) == 1:
-        raise Exception, "all input arrays must have exactly two dimensions"
+        raise Exception("all input arrays must have exactly two dimensions")
     if shape != (n, 1):
-        raise Exception, "y must be a single column array matching the length of other arrays"
+        raise Exception("y must be a single column array matching the length of other arrays")
+
 
 def check_weights(w, y):
     """Check if the w parameter passed by the user is a pysal.W object and
@@ -375,7 +386,7 @@ def check_weights(w, y):
 
     Returns : nothing
               Nothing is returned
-              
+
     Examples
     --------
 
@@ -394,22 +405,22 @@ def check_weights(w, y):
     >>> # should not raise an exception
 
     """
-    if w != None:
+    if w is not None:
         if not isinstance(w, pysal.W):
-            raise Exception, "w must be a pysal.W object"
+            raise Exception("w must be a pysal.W object")
         if w.n != y.shape[0]:
-            raise Exception, "y must be nx1, and w must be an nxn PySAL W object"
+            raise Exception("y must be nx1, and w must be an nxn PySAL W object")
         diag = w.sparse.diagonal()
         # check to make sure all entries equal 0
         if diag.min() != 0:
-            raise Exception, "All entries on diagonal must equal 0."
+            raise Exception("All entries on diagonal must equal 0.")
         if diag.max() != 0:
-            raise Exception, "All entries on diagonal must equal 0."
+            raise Exception("All entries on diagonal must equal 0.")
 
 
 def check_robust(robust, wk):
     """Check if the combination of robust and wk parameters passed by the user
-    are valid. Note: this does not check if the W object is a valid adaptive 
+    are valid. Note: this does not check if the W object is a valid adaptive
     kernel weights matrix needed for the HAC.
 
     Parameters
@@ -426,7 +437,7 @@ def check_robust(robust, wk):
 
     Returns : nothing
               Nothing is returned
-              
+
     Examples
     --------
 
@@ -448,15 +459,15 @@ def check_robust(robust, wk):
     if robust:
         if robust.lower() == 'hac':
             if type(wk).__name__ != 'W' and type(wk).__name__ != 'Kernel':
-                raise Exception, "HAC requires that wk be a pysal.W object"
+                raise Exception("HAC requires that wk be a pysal.W object")
             diag = wk.sparse.diagonal()
             # check to make sure all entries equal 1
             if diag.min() < 1.0:
                 print diag.min()
-                raise Exception, "All entries on diagonal of kernel weights matrix must equal 1."
+                raise Exception("All entries on diagonal of kernel weights matrix must equal 1.")
             if diag.max() > 1.0:
                 print diag.max()
-                raise Exception, "All entries on diagonal of kernel weights matrix must equal 1."
+                raise Exception("All entries on diagonal of kernel weights matrix must equal 1.")
             # ensure off-diagonal entries are in the set of real numbers [0,1)
             wegt = wk.weights
             for i in wk.id_order:
@@ -464,15 +475,16 @@ def check_robust(robust, wk):
                 vmin = min(vals)
                 vmax = max(vals)
                 if vmin < 0.0:
-                    raise Exception, "Off-diagonal entries must be greater than or equal to 0."
+                    raise Exception("Off-diagonal entries must be greater than or equal to 0.")
                 if vmax > 1.0:
                     ##### NOTE: we are not checking for the case of exactly 1.0 #####
-                    raise Exception, "Off-diagonal entries must be less than 1."
+                    raise Exception("Off-diagonal entries must be less than 1.")
         elif robust.lower() == 'white':
             if wk:
-                raise Exception, "White requires that wk be set to None"
+                raise Exception("White requires that wk be set to None")
         else:
-            raise Exception, "invalid value passed to robust, see docs for valid options"
+            raise Exception("invalid value passed to robust, see docs for valid options")
+
 
 def check_spat_diag(spat_diag, w):
     """Check if there is a w parameter passed by the user if the user also
@@ -492,7 +504,7 @@ def check_spat_diag(spat_diag, w):
 
     Returns : nothing
               Nothing is returned
-              
+
     Examples
     --------
 
@@ -513,7 +525,7 @@ def check_spat_diag(spat_diag, w):
     """
     if spat_diag:
         if type(w).__name__ != 'W':
-            raise Exception, "w must be a pysal.W object to run spatial diagnostics"
+            raise Exception("w must be a pysal.W object to run spatial diagnostics")
 
 
 def check_constant(x):
@@ -531,7 +543,7 @@ def check_constant(x):
 
     Returns : nothing
               Nothing is returned
-              
+
     Examples
     --------
 
@@ -548,10 +560,10 @@ def check_constant(x):
 
     """
     if not diagnostics.constant_check:
-        raise Exception, "x array cannot contain a constant vector; constant will be added automatically"
+        raise Exception("x array cannot contain a constant vector; constant will be added automatically")
     else:
         x_constant = COPY.copy(x)
-        return sphstack(np.ones((x_constant.shape[0],1)),x_constant)
+        return sphstack(np.ones((x_constant.shape[0], 1)), x_constant)
 
 
 def _test():
@@ -560,6 +572,3 @@ def _test():
 
 if __name__ == '__main__':
     _test()
-
-
-
