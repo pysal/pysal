@@ -3,7 +3,7 @@ Helper functions for computational geometry in PySAL
 
 """
 
-__author__  = "Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow"
+__author__ = "Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow"
 __credits__ = "Copyright (c) 2005-2009 Sergio J. Rey"
 
 import doctest
@@ -19,8 +19,9 @@ EPSILON_SCALER = 3
 
 __all__ = ['bbcommon', 'get_bounding_box', 'get_angle_between', 'is_collinear', 'get_segments_intersect', 'get_segment_point_intersect', 'get_polygon_point_intersect', 'get_rectangle_point_intersect', 'get_ray_segment_intersect', 'get_rectangle_rectangle_intersection', 'get_polygon_point_dist', 'get_points_dist', 'get_segment_point_dist', 'get_point_at_angle_and_dist', 'convex_hull', 'is_clockwise', 'point_touches_rectangle', 'get_shared_segments', 'distance_matrix']
 
-def bbcommon(bb,bbother):
-    """ Old Stars method for bounding box overlap testing 
+
+def bbcommon(bb, bbother):
+    """ Old Stars method for bounding box overlap testing
         Also defined in pysal.weights._cont_binning
 
     >>> b0 = [0,0,10,10]
@@ -28,10 +29,10 @@ def bbcommon(bb,bbother):
     >>> bbcommon(b0,b1)
     1
     """
-    chflag = 0 
+    chflag = 0
     if not ((bbother[2] < bb[0]) or (bbother[0] > bb[2])):
         if not ((bbother[3] < bb[1]) or (bbother[1] > bb[3])):
-            chflag = 1 
+            chflag = 1
     return chflag
 
 
@@ -58,38 +59,39 @@ def get_bounding_box(items):
     """
 
     def left(o):
-        if hasattr(o, 'bounding_box'): # Polygon, Ellipse
+        if hasattr(o, 'bounding_box'):  # Polygon, Ellipse
             return o.bounding_box.left
-        elif hasattr(o, 'left'): # Rectangle
+        elif hasattr(o, 'left'):  # Rectangle
             return o.left
-        else: # Point
+        else:  # Point
             return o[0]
 
     def right(o):
-        if hasattr(o, 'bounding_box'): # Polygon, Ellipse
+        if hasattr(o, 'bounding_box'):  # Polygon, Ellipse
             return o.bounding_box.right
-        elif hasattr(o, 'right'): # Rectangle
+        elif hasattr(o, 'right'):  # Rectangle
             return o.right
-        else: # Point
+        else:  # Point
             return o[0]
 
     def lower(o):
-        if hasattr(o, 'bounding_box'): # Polygon, Ellipse
+        if hasattr(o, 'bounding_box'):  # Polygon, Ellipse
             return o.bounding_box.lower
-        elif hasattr(o, 'lower'): # Rectangle
+        elif hasattr(o, 'lower'):  # Rectangle
             return o.lower
-        else: # Point
+        else:  # Point
             return o[1]
 
     def upper(o):
-        if hasattr(o, 'bounding_box'): # Polygon, Ellipse
+        if hasattr(o, 'bounding_box'):  # Polygon, Ellipse
             return o.bounding_box.upper
-        elif hasattr(o, 'upper'): # Rectangle
+        elif hasattr(o, 'upper'):  # Rectangle
             return o.upper
-        else: # Point
+        else:  # Point
             return o[1]
 
-    return Rectangle(min(map(left, items)), min(map(lower, items)), max(map(right, items)), max(map(upper, items))) 
+    return Rectangle(min(map(left, items)), min(map(lower, items)), max(map(right, items)), max(map(upper, items)))
+
 
 def get_angle_between(ray1, ray2):
     """ Returns the angle formed between a pair of rays which share an origin
@@ -106,19 +108,21 @@ def get_angle_between(ray1, ray2):
 
     Examples
     --------
-    >>> get_angle_between(Ray(Point((0, 0)), Point((1, 0))), Ray(Point((0, 0)), Point((1, 0)))) 
+    >>> get_angle_between(Ray(Point((0, 0)), Point((1, 0))), Ray(Point((0, 0)), Point((1, 0))))
     0.0
     """
 
     if ray1.o != ray2.o:
-        raise ValueError, 'Rays must have the same origin.'
+        raise ValueError('Rays must have the same origin.')
     vec1 = (ray1.p[0] - ray1.o[0], ray1.p[1] - ray1.o[1])
     vec2 = (ray2.p[0] - ray2.o[0], ray2.p[1] - ray2.o[1])
     rot_theta = -math.atan2(vec1[1], vec1[0])
-    rot_matrix = [[math.cos(rot_theta), -math.sin(rot_theta)], [math.sin(rot_theta), math.cos(rot_theta)]]
-    rot_vec2 = (rot_matrix[0][0]*vec2[0] + rot_matrix[0][1]*vec2[1], 
-                rot_matrix[1][0]*vec2[0] + rot_matrix[1][1]*vec2[1])
+    rot_matrix = [[math.cos(rot_theta), -math.sin(rot_theta)], [
+        math.sin(rot_theta), math.cos(rot_theta)]]
+    rot_vec2 = (rot_matrix[0][0] * vec2[0] + rot_matrix[0][1] * vec2[1],
+                rot_matrix[1][0] * vec2[0] + rot_matrix[1][1] * vec2[1])
     return math.atan2(rot_vec2[1], rot_vec2[0])
+
 
 def is_collinear(p1, p2, p3):
     """
@@ -144,7 +148,8 @@ def is_collinear(p1, p2, p3):
     """
     eps = np.finfo(type(p1[0])).eps
 
-    return (abs((p2[0]-p1[0])*(p3[1]-p1[1]) - (p2[1]-p1[1])*(p3[0]-p1[0])) < EPSILON_SCALER*eps)
+    return (abs((p2[0] - p1[0]) * (p3[1] - p1[1]) - (p2[1] - p1[1]) * (p3[0] - p1[0])) < EPSILON_SCALER * eps)
+
 
 def get_segments_intersect(seg1, seg2):
     """
@@ -181,40 +186,40 @@ def get_segments_intersect(seg1, seg2):
     b = p3[0] - p4[0]
     c = p2[1] - p1[1]
     d = p3[1] - p4[1]
-    det = float(a*d - b*c)
+    det = float(a * d - b * c)
     if det == 0:
         if seg1 == seg2:
-            return LineSegment(seg1.p1,seg1.p2)
+            return LineSegment(seg1.p1, seg1.p2)
         else:
-            a = get_segment_point_intersect(seg2,seg1.p1)
-            b = get_segment_point_intersect(seg2,seg1.p2)
-            c = get_segment_point_intersect(seg1,seg2.p1)
-            d = get_segment_point_intersect(seg1,seg2.p2)
-        
-            if a and b: #seg1 in seg2
-                return LineSegment(seg1.p1,seg1.p2)
-            if c and d: #seg2 in seg1
-                return LineSegment(seg2.p1,seg2.p2)
+            a = get_segment_point_intersect(seg2, seg1.p1)
+            b = get_segment_point_intersect(seg2, seg1.p2)
+            c = get_segment_point_intersect(seg1, seg2.p1)
+            d = get_segment_point_intersect(seg1, seg2.p2)
+
+            if a and b:  # seg1 in seg2
+                return LineSegment(seg1.p1, seg1.p2)
+            if c and d:  # seg2 in seg1
+                return LineSegment(seg2.p1, seg2.p2)
             if (a or b) and (c or d):
                 p1 = a if a else b
                 p2 = c if c else d
-                return LineSegment(p1,p2)
-                
-            
+                return LineSegment(p1, p2)
+
         return None
-    a_inv = d/det
-    b_inv = -b/det
-    c_inv = -c/det
-    d_inv = a/det
+    a_inv = d / det
+    b_inv = -b / det
+    c_inv = -c / det
+    d_inv = a / det
     m = p3[0] - p1[0]
     n = p3[1] - p1[1]
-    x = a_inv*m + b_inv*n
-    y = c_inv*m + d_inv*n
+    x = a_inv * m + b_inv * n
+    y = c_inv * m + d_inv * n
     intersect_exists = 0 <= x <= 1 and 0 <= y <= 1
     if not intersect_exists:
         return None
-    return Point((p1[0] + x*(p2[0] - p1[0]), p1[1] + x*(p2[1] - p1[1])))
-    
+    return Point((p1[0] + x * (p2[0] - p1[0]), p1[1] + x * (p2[1] - p1[1])))
+
+
 def get_segment_point_intersect(seg, pt):
     """
     Returns the intersection of a segment and point.
@@ -237,21 +242,22 @@ def get_segment_point_intersect(seg, pt):
     >>> str(i)
     '(0.0, 5.0)'
     >>> pt2 = Point((5, 5))
-    >>> get_segment_point_intersect(seg, pt2)  
+    >>> get_segment_point_intersect(seg, pt2)
     """
     eps = np.finfo(type(pt[0])).eps
 
-    if is_collinear(pt,seg.p1,seg.p2):
-        if get_segment_point_dist(seg,pt)[0] < EPSILON_SCALER*eps:
+    if is_collinear(pt, seg.p1, seg.p2):
+        if get_segment_point_dist(seg, pt)[0] < EPSILON_SCALER * eps:
             return pt
         else:
             return None
 
     vec1 = (pt[0] - seg.p1[0], pt[1] - seg.p1[1])
     vec2 = (seg.p2[0] - seg.p1[0], seg.p2[1] - seg.p1[1])
-    if abs(vec1[0]*vec2[1] - vec1[1]*vec2[0]) < eps:
+    if abs(vec1[0] * vec2[1] - vec1[1] * vec2[0]) < eps:
         return pt
-    return None 
+    return None
+
 
 def get_polygon_point_intersect(poly, pt):
     """
@@ -278,11 +284,13 @@ def get_polygon_point_intersect(poly, pt):
     >>> get_polygon_point_intersect(poly, pt2)
     """
     def pt_lies_on_part_boundary(pt, vertices):
-        return filter(lambda i: get_segment_point_dist(LineSegment(vertices[i], vertices[i+1]), pt)[0] == 0,
-                      xrange(-1, len(vertices)-1)) != []
+        return filter(
+            lambda i: get_segment_point_dist(LineSegment(
+                vertices[i], vertices[i + 1]), pt)[0] == 0,
+            xrange(-1, len(vertices) - 1)) != []
 
     ret = None
-    if get_rectangle_point_intersect(poly.bounding_box, pt) == None: # Weed out points that aren't even close
+    if get_rectangle_point_intersect(poly.bounding_box, pt) is None:  # Weed out points that aren't even close
         return None
     elif filter(lambda verts: pt_lies_on_part_boundary(pt, verts), poly._vertices) != []:
         ret = pt
@@ -297,7 +305,8 @@ def get_polygon_point_intersect(poly, pt):
             ret = None
         #raise NotImplementedError, 'Cannot compute containment for polygon with holes'
     return ret
-    
+
+
 def get_rectangle_point_intersect(rect, pt):
     """
     Returns the intersection of a rectangle and point.
@@ -323,8 +332,9 @@ def get_rectangle_point_intersect(rect, pt):
     >>> get_rectangle_point_intersect(rect, pt2)
     """
     if rect.left <= pt[0] <= rect.right and rect.lower <= pt[1] <= rect.upper:
-        return pt  
+        return pt
     return None
+
 
 def get_ray_segment_intersect(ray, seg):
     """
@@ -353,14 +363,16 @@ def get_ray_segment_intersect(ray, seg):
     >>> seg2 = LineSegment(Point((10, 10)), Point((10, 11)))
     >>> get_ray_segment_intersect(ray, seg2)
     """
-    d = max(math.hypot(seg.p1[0] - ray.o[0], seg.p1[1] - ray.o[1]), 
-            math.hypot(seg.p2[0] - ray.o[0], seg.p2[1] - ray.o[1])) + 1 # Upper bound on origin to segment dist (+1)
-    ratio = d/math.hypot(ray.o[0] - ray.p[0], ray.o[1] - ray.p[1])
-    ray_seg = LineSegment(ray.o, Point((ray.o[0] + ratio*(ray.p[0] - ray.o[0]), 
-                                        ray.o[1] + ratio*(ray.p[1] - ray.o[1]))))
+    d = max(math.hypot(seg.p1[0] - ray.o[0], seg.p1[1] - ray.o[1]),
+            math.hypot(seg.p2[0] - ray.o[0], seg.p2[1] - ray.o[1])) + 1  # Upper bound on origin to segment dist (+1)
+    ratio = d / math.hypot(ray.o[0] - ray.p[0], ray.o[1] - ray.p[1])
+    ray_seg = LineSegment(
+        ray.o, Point((ray.o[0] + ratio * (ray.p[0] - ray.o[0]),
+                      ray.o[1] + ratio * (ray.p[1] - ray.o[1]))))
     return get_segments_intersect(seg, ray_seg)
 
-def get_rectangle_rectangle_intersection(r0,r1,checkOverlap=True):
+
+def get_rectangle_rectangle_intersection(r0, r1, checkOverlap=True):
     """
     Returns the intersection between two rectangles.
 
@@ -396,23 +408,24 @@ def get_rectangle_rectangle_intersection(r0,r1,checkOverlap=True):
     True
     """
     if checkOverlap:
-        if not bbcommon(r0,r1):
+        if not bbcommon(r0, r1):
             #raise ValueError, "Rectangles do not intersect"
             return None
-    left = max(r0.left,r1.left)
-    lower = max(r0.lower,r1.lower)
-    right = min(r0.right,r1.right)
-    upper = min(r0.upper,r1.upper)
+    left = max(r0.left, r1.left)
+    lower = max(r0.lower, r1.lower)
+    right = min(r0.right, r1.right)
+    upper = min(r0.upper, r1.upper)
 
     if upper == lower and left == right:
-        return Point((left,lower))
+        return Point((left, lower))
     elif upper == lower:
-        return LineSegment(Point((left,lower)), Point((right,lower)))
+        return LineSegment(Point((left, lower)), Point((right, lower)))
     elif left == right:
-        return LineSegment(Point((left,lower)), Point((left,upper)))
+        return LineSegment(Point((left, lower)), Point((left, upper)))
 
-    return Rectangle(left,lower,right,upper)
-    
+    return Rectangle(left, lower, right, upper)
+
+
 def get_polygon_point_dist(poly, pt):
     """
     Returns the distance between a polygon and point.
@@ -434,16 +447,17 @@ def get_polygon_point_dist(poly, pt):
     >>> get_polygon_point_dist(poly, pt)
     1.0
     >>> pt2 = Point((0.5, 0.5))
-    >>> get_polygon_point_dist(poly, pt2) 
+    >>> get_polygon_point_dist(poly, pt2)
     0.0
     """
-    if get_polygon_point_intersect(poly, pt) != None:
+    if get_polygon_point_intersect(poly, pt) is not None:
         return 0.0
     part_prox = []
     for vertices in poly._vertices:
-        part_prox.append(min([get_segment_point_dist(LineSegment(vertices[i], vertices[i+1]), pt)[0] 
-                              for i in xrange(-1, len(vertices)-1)]))
+        part_prox.append(min([get_segment_point_dist(LineSegment(vertices[i], vertices[i + 1]), pt)[0]
+                              for i in xrange(-1, len(vertices) - 1)]))
     return min(part_prox)
+
 
 def get_points_dist(pt1, pt2):
     """
@@ -458,7 +472,7 @@ def get_points_dist(pt1, pt2):
 
     Attributes
     ----------
-   
+
     Examples
     --------
     >>> get_points_dist(Point((4, 4)), Point((4, 8)))
@@ -467,6 +481,7 @@ def get_points_dist(pt1, pt2):
     0.0
     """
     return math.hypot(pt1[0] - pt2[0], pt1[1] - pt2[1])
+
 
 def get_segment_point_dist(seg, pt):
     """
@@ -511,24 +526,27 @@ def get_segment_point_dist(seg, pt):
     if segment_length == 0:
         return (get_points_dist(pt, src_p), 0)
 
-    u_x = points_4/segment_length
-    u_y = points_5/segment_length
+    u_x = points_4 / segment_length
+    u_y = points_5 / segment_length
 
-    inter_x = u_x*u_x*points_0 + u_x*u_y*points_1
-    inter_y = u_x*u_y*points_0 + u_y*u_y*points_1
+    inter_x = u_x * u_x * points_0 + u_x * u_y * points_1
+    inter_y = u_x * u_y * points_0 + u_y * u_y * points_1
 
-    src_proj_dist = get_points_dist((0,0), (inter_x, inter_y))
+    src_proj_dist = get_points_dist((0, 0), (inter_x, inter_y))
     dest_proj_dist = get_points_dist((inter_x, inter_y), (points_4, points_5))
 
     if src_proj_dist > segment_length or dest_proj_dist > segment_length:
-        src_pt_dist = get_points_dist((points_2, points_3), (points_0, points_1))
-        dest_pt_dist = get_points_dist((points_4, points_5), (points_0, points_1))
+        src_pt_dist = get_points_dist(
+            (points_2, points_3), (points_0, points_1))
+        dest_pt_dist = get_points_dist(
+            (points_4, points_5), (points_0, points_1))
         if src_pt_dist < dest_pt_dist:
             return (src_pt_dist, 0)
         else:
             return (dest_pt_dist, 1)
     else:
-        return (get_points_dist((inter_x, inter_y), (points_0, points_1)), src_proj_dist/segment_length)
+        return (get_points_dist((inter_x, inter_y), (points_0, points_1)), src_proj_dist / segment_length)
+
 
 def get_point_at_angle_and_dist(ray, angle, dist):
     """
@@ -557,9 +575,10 @@ def get_point_at_angle_and_dist(ray, angle, dist):
     0.0
     """
     v = (ray.p[0] - ray.o[0], ray.p[1] - ray.o[1])
-    cur_angle = math.atan2(v[1],v[0])
+    cur_angle = math.atan2(v[1], v[0])
     dest_angle = cur_angle + angle
-    return Point((ray.o[0] + dist*math.cos(dest_angle), ray.o[1] + dist*math.sin(dest_angle)))
+    return Point((ray.o[0] + dist * math.cos(dest_angle), ray.o[1] + dist * math.sin(dest_angle)))
+
 
 def convex_hull(points):
     """
@@ -586,25 +605,26 @@ def convex_hull(points):
     points.remove(lowest)
     points.sort(key=lambda p: math.atan2(p[1] - lowest[1], p[0] - lowest[0]))
 
-    stack = [lowest]   
+    stack = [lowest]
 
     def right_turn(p1, p2, p3):
         # Returns if p1 -> p2 -> p3 forms a 'right turn'
         vec1 = (p2[0] - p1[0], p2[1] - p1[1])
         vec2 = (p3[0] - p2[0], p3[1] - p2[1])
-        return vec2[0]*vec1[1] - vec2[1]*vec1[0] >= 0
+        return vec2[0] * vec1[1] - vec2[1] * vec1[0] >= 0
 
     for p in points:
         stack.append(p)
         while len(stack) > 3 and right_turn(stack[-3], stack[-2], stack[-1]):
-            stack.pop(-2) 
-   
-    return stack 
+            stack.pop(-2)
+
+    return stack
+
 
 def is_clockwise(vertices):
     """
     Returns whether a list of points describing a polygon are clockwise or counterclockwise.
- 
+
     is_clockwise(Point list) -> bool
 
     Parameters
@@ -624,13 +644,14 @@ def is_clockwise(vertices):
     if len(vertices) < 3:
         return True
     area = 0.0
-    ax,ay = vertices[0]
-    for bx,by in vertices[1:]:
-        area += ax*by - ay*bx
-        ax,ay = bx,by
-    bx,by = vertices[0]
-    area += ax*by - ay*bx
+    ax, ay = vertices[0]
+    for bx, by in vertices[1:]:
+        area += ax * by - ay * bx
+        ax, ay = bx, by
+    bx, by = vertices[0]
+    area += ax * by - ay * bx
     return area < 0.0
+
 
 def ccw(vertices):
     """
@@ -647,7 +668,8 @@ def ccw(vertices):
     else:
         return True
 
-def seg_intersect(a,b,c,d):
+
+def seg_intersect(a, b, c, d):
     """
     Tests if two segments (a,b) (c,d) intersect
 
@@ -669,10 +691,9 @@ def seg_intersect(a,b,c,d):
         return True
 
 
-
 def _point_in_vertices(pt, vertices):
     """
-    HELPER METHOD. DO NOT CALL.  
+    HELPER METHOD. DO NOT CALL.
 
     Returns whether a point is contained in a polygon specified by a sequence of vertices.
 
@@ -691,7 +712,7 @@ def _point_in_vertices(pt, vertices):
     """
 
     def neg_ray_intersect(p1, p2, p3):
-        # Returns whether a ray in the negative-x direction from p3 intersects the segment between 
+        # Returns whether a ray in the negative-x direction from p3 intersects the segment between
         if not min(p1[1], p2[1]) <= p3[1] <= max(p1[1], p2[1]):
             return False
         if p1[1] > p2[1]:
@@ -699,19 +720,21 @@ def _point_in_vertices(pt, vertices):
         else:
             vec1 = (p1[0] - p2[0], p1[1] - p2[1])
         vec2 = (p3[0] - p1[0], p3[1] - p1[1])
-        return vec1[0]*vec2[1] - vec2[0]*vec1[1] >= 0
- 
+        return vec1[0] * vec2[1] - vec2[0] * vec1[1] >= 0
+
     vert_y_set = set([v[1] for v in vertices])
     while pt[1] in vert_y_set:
-        pt = (pt[0], pt[1] + -1e-14 + random.random()*2e-14) # Perturb the location very slightly
+        pt = (pt[0], pt[1] + -1e-14 + random.random(
+        ) * 2e-14)  # Perturb the location very slightly
     inters = 0
-    for i in xrange(-1, len(vertices)-1):
+    for i in xrange(-1, len(vertices) - 1):
         v1 = vertices[i]
-        v2 = vertices[i+1]
+        v2 = vertices[i + 1]
         if neg_ray_intersect(v1, v2, pt):
             inters += 1
 
     return inters % 2 == 1
+
 
 def point_touches_rectangle(point, rect):
     """
@@ -742,7 +765,9 @@ def point_touches_rectangle(point, rect):
         if point[1] >= rect.lower and point[1] <= rect.upper:
             chflag = 1
     return chflag
-def get_shared_segments(poly1,poly2,bool_ret=False):
+
+
+def get_shared_segments(poly1, poly2, bool_ret=False):
     """
     Returns the line segments in common to both polygons.
 
@@ -770,45 +795,45 @@ def get_shared_segments(poly1,poly2,bool_ret=False):
     #get_rectangle_rectangle_intersection inlined for speed.
     r0 = poly1.bounding_box
     r1 = poly2.bounding_box
-    wLeft = max(r0.left,r1.left)
-    wLower = max(r0.lower,r1.lower)
-    wRight = min(r0.right,r1.right)
-    wUpper = min(r0.upper,r1.upper)
-    
+    wLeft = max(r0.left, r1.left)
+    wLower = max(r0.lower, r1.lower)
+    wRight = min(r0.right, r1.right)
+    wUpper = min(r0.upper, r1.upper)
+
     segmentsA = set()
     common = list()
     partsA = poly1.parts
-    for part in poly1.parts+[p for p in poly1.holes if p]:
-        if part[0] != part[-1]: #not closed
-            part = part[:]+part[0:1]
+    for part in poly1.parts + [p for p in poly1.holes if p]:
+        if part[0] != part[-1]:  # not closed
+            part = part[:] + part[0:1]
         a = part[0]
-        for b in islice(part,1,None):
+        for b in islice(part, 1, None):
             # inlining point_touches_rectangle for speed
-            x,y = a
+            x, y = a
             # check if point a is in the bounding box intersection
             if x >= wLeft and x <= wRight and y >= wLower and y <= wUpper:
-                x,y = b
+                x, y = b
                 # check if point b is in the bounding box intersection
                 if x >= wLeft and x <= wRight and y >= wLower and y <= wUpper:
                     if a > b:
-                        segmentsA.add((b,a))
+                        segmentsA.add((b, a))
                     else:
-                        segmentsA.add((a,b))
+                        segmentsA.add((a, b))
             a = b
-    for part in poly2.parts+[p for p in poly2.holes if p]:
-        if part[0] != part[-1]: #not closed
-            part = part[:]+part[0:1]
+    for part in poly2.parts + [p for p in poly2.holes if p]:
+        if part[0] != part[-1]:  # not closed
+            part = part[:] + part[0:1]
         a = part[0]
-        for b in islice(part,1,None):
+        for b in islice(part, 1, None):
             # inlining point_touches_rectangle for speed
-            x,y = a
+            x, y = a
             if x >= wLeft and x <= wRight and y >= wLower and y <= wUpper:
-                x,y = b
+                x, y = b
                 if x >= wLeft and x <= wRight and y >= wLower and y <= wUpper:
                     if a > b:
-                        seg = (b,a)
+                        seg = (b, a)
                     else:
-                        seg = (a,b)
+                        seg = (a, b)
                     if seg in segmentsA:
                         common.append(LineSegment(*seg))
                         if bool_ret:
@@ -821,12 +846,13 @@ def get_shared_segments(poly1,poly2,bool_ret=False):
             return False
     return common
 
-def distance_matrix(X,p=2.0,threshold=5e7):
+
+def distance_matrix(X, p=2.0, threshold=5e7):
     """
     Distance Matrices
 
     XXX Needs optimization/integration with other weights in pysal
-    
+
     Parameters
     ----------
     X          : An, n by k numpy.ndarray
@@ -865,30 +891,31 @@ def distance_matrix(X,p=2.0,threshold=5e7):
              1.41421356,  1.        ,  0.        ,  1.        ],
            [ 2.82842712,  2.23606798,  2.        ,  2.23606798,  1.41421356,
              1.        ,  2.        ,  1.        ,  0.        ]])
-    >>> 
+    >>>
     """
     if X.ndim == 1:
-        X.shape = (X.shape[0],1)
+        X.shape = (X.shape[0], 1)
     if X.ndim > 2:
-        raise TypeError,"wtf?"
+        raise TypeError("wtf?")
     n, k = X.shape
 
-    if (n**2)*32 > threshold:
-        return scipy.spatial.distance_matrix(X,X,p)
+    if (n ** 2) * 32 > threshold:
+        return scipy.spatial.distance_matrix(X, X, p)
     else:
-        M=np.ones((n,n))
-        D=np.zeros((n,n))
+        M = np.ones((n, n))
+        D = np.zeros((n, n))
         for col in range(k):
-            x = X[:,col]
-            xM=x*M
-            dx=xM-xM.T
-            if p%2 != 0:
+            x = X[:, col]
+            xM = x * M
+            dx = xM - xM.T
+            if p % 2 != 0:
                 dx = np.abs(dx)
-            dx2=dx**p   
-            D+=dx2
-        D=D**(1.0/p)
+            dx2 = dx ** p
+            D += dx2
+        D = D ** (1.0 / p)
         return D
-    
+
+
 def _test():
     doctest.testmod(verbose=True)
 

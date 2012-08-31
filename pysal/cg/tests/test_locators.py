@@ -3,6 +3,7 @@
 from pysal.cg import *
 import unittest
 
+
 class PolygonLocator_Tester(unittest.TestCase):
     """setup class for unit tests."""
     def setUp(self):
@@ -20,42 +21,41 @@ class PolygonLocator_Tester(unittest.TestCase):
             r = l + 10
             b = 10
             t = 20
-            sw = pt((l,b))
-            se = pt((r,b))
-            ne = pt((r,t))
-            nw = pt((l,t))
+            sw = pt((l, b))
+            se = pt((r, b))
+            ne = pt((r, t))
+            nw = pt((l, t))
             polys.append(pg([sw, se, ne, nw]))
         self.pl2 = PolygonLocator(polys)
 
-
     def test_PolygonLocator(self):
-       qr = Rectangle(3, 7, 5, 8)
-       res = self.pl.inside( qr )
-       self.assertEqual(len(res), 0)
+        qr = Rectangle(3, 7, 5, 8)
+        res = self.pl.inside(qr)
+        self.assertEqual(len(res), 0)
 
     def test_inside(self):
-       qr = Rectangle(3, 3, 5, 5)
-       res = self.pl.inside( qr )
-       self.assertEqual(len(res), 0)
-       qr = Rectangle(0, 0, 5, 5)
-       res = self.pl.inside( qr )
-       self.assertEqual(len(res), 1)
+        qr = Rectangle(3, 3, 5, 5)
+        res = self.pl.inside(qr)
+        self.assertEqual(len(res), 0)
+        qr = Rectangle(0, 0, 5, 5)
+        res = self.pl.inside(qr)
+        self.assertEqual(len(res), 1)
 
     def test_overlapping(self):
 
-       qr = Rectangle(3, 3, 5, 5)
-       res = self.pl.overlapping( qr )
-       self.assertEqual(len(res), 2)
-       qr = Rectangle(8, 3, 10, 10)
-       res = self.pl.overlapping( qr )
-       self.assertEqual(len(res), 1)
+        qr = Rectangle(3, 3, 5, 5)
+        res = self.pl.overlapping(qr)
+        self.assertEqual(len(res), 2)
+        qr = Rectangle(8, 3, 10, 10)
+        res = self.pl.overlapping(qr)
+        self.assertEqual(len(res), 1)
 
-       qr = Rectangle(2, 12, 35, 15)
-       res = self.pl2.overlapping( qr)
-       self.assertEqual(len(res), 4)
+        qr = Rectangle(2, 12, 35, 15)
+        res = self.pl2.overlapping(qr)
+        self.assertEqual(len(res), 4)
 
 suite = unittest.TestSuite()
-test_classes = [ PolygonLocator_Tester ]
+test_classes = [PolygonLocator_Tester]
 for i in test_classes:
     a = unittest.TestLoader().loadTestsFromTestCase(i)
     suite.addTest(a)

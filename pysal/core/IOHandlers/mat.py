@@ -9,23 +9,24 @@ from warnings import warn
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
 __all__ = ["MatIO"]
 
+
 class MatIO(FileIO.FileIO):
     """
     Opens, reads, and writes weights file objects in MATLAB Level 4-5 MAT format.
 
     MAT files are used in Dr. LeSage's MATLAB Econometrics library.
-    The MAT file format can handle both full and sparse matrices, 
-    and it allows for a matrix dimension greater than 256. 
-    In PySAL, row and column headers of a MATLAB array are ignored. 
+    The MAT file format can handle both full and sparse matrices,
+    and it allows for a matrix dimension greater than 256.
+    In PySAL, row and column headers of a MATLAB array are ignored.
 
-    PySAL uses matlab io tools in scipy.  
+    PySAL uses matlab io tools in scipy.
     Thus, it is subject to all limits that loadmat and savemat in scipy have.
 
     Notes
     -----
-    If a given weights object contains too many observations to 
-    write it out as a full matrix, 
-    PySAL writes out the object as a sparse matrix. 
+    If a given weights object contains too many observations to
+    write it out as a full matrix,
+    PySAL writes out the object as a sparse matrix.
 
     References
     ----------
@@ -34,7 +35,7 @@ class MatIO(FileIO.FileIO):
 
     scipy matlab io
     http://docs.scipy.org/doc/scipy/reference/tutorial/io.html
-    
+
     """
 
     FORMATS = ['mat']
@@ -48,6 +49,7 @@ class MatIO(FileIO.FileIO):
     def _set_varName(self, val):
         if issubclass(type(val), basestring):
             self._varName = val
+
     def _get_varName(self):
         return self._varName
     varName = property(fget=_get_varName, fset=_set_varName)
@@ -91,7 +93,7 @@ class MatIO(FileIO.FileIO):
         """
         if self.pos > 0:
             raise StopIteration
-        
+
         mat = sio.loadmat(self.file)
         mat_keys = [k for k in mat if not k.startswith("_")]
         full_w = mat[mat_keys[0]]
@@ -100,7 +102,7 @@ class MatIO(FileIO.FileIO):
         return full2W(full_w)
 
     def write(self, obj):
-        """ 
+        """
 
         Parameters
         ----------
@@ -156,15 +158,16 @@ class MatIO(FileIO.FileIO):
 
         """
         self._complain_ifclosed(self.closed)
-        if issubclass(type(obj),W):
+        if issubclass(type(obj), W):
             try:
                 w = full(obj)[0]
             except ValueError:
-                w = obj.sparse             
+                w = obj.sparse
             sio.savemat(self.file, {'WEIGHT': w})
             self.pos += 1
         else:
-            raise TypeError, "Expected a pysal weights object, got: %s" % (type(obj))
+            raise TypeError("Expected a pysal weights object, got: %s" % (
+                type(obj)))
 
     def close(self):
         self.file.close()

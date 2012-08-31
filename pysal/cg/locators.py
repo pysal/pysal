@@ -2,7 +2,7 @@
 Computational geometry code for PySAL: Python Spatial Analysis Library.
 """
 
-__author__  = "Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow"
+__author__ = "Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow"
 __credits__ = "Copyright (c) 2005-2011 Sergio J. Rey"
 
 import math
@@ -12,7 +12,9 @@ from rtree import *
 from standalone import *
 from shapes import *
 
-__all__ = ["IntervalTree", "Grid", "BruteForcePointLocator", "PointLocator", "PolygonLocator"]
+__all__ = ["IntervalTree", "Grid", "BruteForcePointLocator",
+           "PointLocator", "PolygonLocator"]
+
 
 class IntervalTree:
     """
@@ -20,7 +22,7 @@ class IntervalTree:
     quickly determine which intervals in a set contain a value or overlap with a query interval.
 
     Reference:
-    de Berg, van Kreveld, Overmars, Schwarzkopf. Computational Geometry: Algorithms and Application. 
+    de Berg, van Kreveld, Overmars, Schwarzkopf. Computational Geometry: Algorithms and Application.
     212-217. Springer-Verlag, Berlin, 2000.
     """
 
@@ -52,7 +54,7 @@ class IntervalTree:
             Adds an interval to the IntervalTree node.
             """
             if not i[0] <= self.val <= i[1]:
-                raise Exception, 'Attempt to add an interval to an inappropriate IntervalTree node'
+                raise Exception('Attempt to add an interval to an inappropriate IntervalTree node')
             index = 0
             while index < len(self.left_list) and self.left_list[index] < i[0]:
                 index = index + 1
@@ -69,7 +71,7 @@ class IntervalTree:
             l = 0
             r = len(self.left_list)
             while l < r:
-                m = (l + r)/2
+                m = (l + r) / 2
                 if self.left_list[m] < i[0]:
                     l = m + 1
                 elif self.left_list[m] > i[0]:
@@ -78,11 +80,11 @@ class IntervalTree:
                     if self.left_list[m] == i:
                         self.left_list.pop(m)
                     else:
-                        raise Exception, 'Attempt to remove an unknown interval'
+                        raise Exception('Attempt to remove an unknown interval')
             l = 0
             r = len(self.right_list)
             while l < r:
-                m = (l + r)/2
+                m = (l + r) / 2
                 if self.right_list[m] > i[1]:
                     l = m + 1
                 elif self.right_left[m] < i[1]:
@@ -91,7 +93,7 @@ class IntervalTree:
                     if self.right_list[m] == i:
                         self.right_list.pop(m)
                     else:
-                        raise Exception, 'Attempt to remove an unknown interval'
+                        raise Exception('Attempt to remove an unknown interval')
 
     def __init__(self, intervals):
         """
@@ -100,7 +102,7 @@ class IntervalTree:
 
         Parameters
         ----------
-        intervals : a list of (lower, upper, item) elements to build the interval tree 
+        intervals : a list of (lower, upper, item) elements to build the interval tree
 
         Attributes
         ----------
@@ -127,7 +129,7 @@ class IntervalTree:
         """
         bad_is = filter(lambda i: i[0] > i[1], intervals)
         if bad_is != []:
-            raise Exception, 'Attempt to build IntervalTree with invalid intervals: ' + str(bad_is)
+            raise Exception('Attempt to build IntervalTree with invalid intervals: ' + str(bad_is))
         eps = list(set([i[0] for i in intervals] + [i[1] for i in intervals]))
         eps.sort()
         self.root = self._recursive_build(copy.copy(intervals), eps)
@@ -162,7 +164,7 @@ class IntervalTree:
             return self._query_points(q)
 
     def _query_range(self, q, root):
-        if root == None:
+        if root is None:
             return []
         if root.val < q[0]:
             return self._query_range(q, root.right_node) + root.query(q[0])
@@ -174,14 +176,13 @@ class IntervalTree:
     def _query_points(self, q):
         found = []
         cur = self.root
-        while cur != None:
+        while cur is not None:
             found.extend(cur.query(q))
             if q < cur.val:
                 cur = cur.left_node
             else:
                 cur = cur.right_node
         return found
-
 
     def _recursive_build(self, intervals, eps):
         def sign(x):
@@ -196,7 +197,7 @@ class IntervalTree:
             l = 0
             r = len(list)
             while l < r:
-                m = (l + r)/2
+                m = (l + r) / 2
                 if list[m] < q:
                     l = m + 1
                 else:
@@ -205,7 +206,7 @@ class IntervalTree:
 
         if eps == []:
             return None
-        median = eps[len(eps)/2]
+        median = eps[len(eps) / 2]
         hit_is = []
         rem_is = []
         for i in intervals:
@@ -223,9 +224,10 @@ class IntervalTree:
         left_eps = eps[:bp]
         right_eps = eps[bp:]
         node = (IntervalTree._Node(median, left_list, right_list,
-                    self._recursive_build(rem_is, left_eps),
-                    self._recursive_build(rem_is, right_eps)))
+                                   self._recursive_build(rem_is, left_eps),
+                                   self._recursive_build(rem_is, right_eps)))
         return node
+
 
 class Grid:
     """
@@ -234,14 +236,14 @@ class Grid:
 
     def __init__(self, bounds, resolution):
         """
-        Returns a grid with specified properties. 
+        Returns a grid with specified properties.
 
-        __init__(Rectangle, number) -> Grid 
+        __init__(Rectangle, number) -> Grid
 
         Parameters
         ----------
         bounds      : the area for the grid to encompass
-        resolution  : the diameter of each bin 
+        resolution  : the diameter of each bin
 
         Examples
         --------
@@ -249,30 +251,34 @@ class Grid:
         >>> g = Grid(Rectangle(0, 0, 10, 10), 1)
         """
         if resolution == 0:
-            raise Exception, 'Cannot create grid with resolution 0'
+            raise Exception('Cannot create grid with resolution 0')
         self.res = resolution
         self.hash = {}
         self.x_range = (bounds.left, bounds.right)
         self.y_range = (bounds.lower, bounds.upper)
         try:
-            self.i_range = int(math.ceil((self.x_range[1]-self.x_range[0])/self.res))
-            self.j_range = int(math.ceil((self.y_range[1]-self.y_range[0])/self.res))
+            self.i_range = int(math.ceil(
+                (self.x_range[1] - self.x_range[0]) / self.res))
+            self.j_range = int(math.ceil(
+                (self.y_range[1] - self.y_range[0]) / self.res))
         except Exception:
-            raise Exception, ('Invalid arguments for Grid(): (' +
-                                 str(x_range) + ', ' + str(y_range) + ', ' + str(res) + ')')
+            raise Exception('Invalid arguments for Grid(): (' +
+                            str(x_range) + ', ' + str(y_range) + ', ' + str(res) + ')')
 
     def in_grid(self, loc):
         """
         Returns whether a 2-tuple location _loc_ lies inside the grid bounds.
-        
+
         Test tag: <tc>#is#Grid.in_grid</tc>
         """
         return (self.x_range[0] <= loc[0] <= self.x_range[1] and
                 self.y_range[0] <= loc[1] <= self.y_range[1])
 
     def __grid_loc(self, loc):
-        i = min(self.i_range, max(int((loc[0] - self.x_range[0])/self.res), 0))
-        j = min(self.j_range, max(int((loc[1] - self.y_range[0])/self.res), 0))
+        i = min(self.i_range, max(int((loc[0] - self.x_range[0]) /
+                                      self.res), 0))
+        j = min(self.j_range, max(int((loc[1] - self.y_range[0]) /
+                                      self.res), 0))
         return (i, j)
 
     def add(self, item, pt):
@@ -297,7 +303,7 @@ class Grid:
         'A'
         """
         if not self.in_grid(pt):
-            raise Exception, 'Attempt to insert item at location outside grid bounds: ' + str(pt)
+            raise Exception('Attempt to insert item at location outside grid bounds: ' + str(pt))
         grid_loc = self.__grid_loc(pt)
         if grid_loc in self.hash:
             self.hash[grid_loc].append((pt, item))
@@ -329,7 +335,7 @@ class Grid:
         'A'
         """
         if not self.in_grid(pt):
-            raise Exception, 'Attempt to remove item at location outside grid bounds: ' + str(pt)
+            raise Exception('Attempt to remove item at location outside grid bounds: ' + str(pt))
         grid_loc = self.__grid_loc(pt)
         self.hash[grid_loc].remove((pt, item))
         if self.hash[grid_loc] == []:
@@ -373,7 +379,7 @@ class Grid:
         for i in xrange(lower_left[0], upper_right[0] + 1):
             for j in xrange(lower_left[1], upper_right[1] + 1):
                 if (i, j) in self.hash:
-                    items.extend(map(lambda item: item[1], filter(lambda item: x_range[0] <= item[0][0] <= x_range[1] and y_range[0] <= item[0][1] <= y_range[1], self.hash[(i,j)])))
+                    items.extend(map(lambda item: item[1], filter(lambda item: x_range[0] <= item[0][0] <= x_range[1] and y_range[0] <= item[0][1] <= y_range[1], self.hash[(i, j)])))
         return items
 
     def proximity(self, pt, r):
@@ -410,14 +416,14 @@ class Grid:
         for i in xrange(lower_left[0], upper_right[0] + 1):
             for j in xrange(lower_left[1], upper_right[1] + 1):
                 if (i, j) in self.hash:
-                    items.extend(map(lambda item: item[1], filter(lambda item: get_points_dist(pt, item[0]) <= r, self.hash[(i,j)])))
+                    items.extend(map(lambda item: item[1], filter(lambda item: get_points_dist(pt, item[0]) <= r, self.hash[(i, j)])))
         return items
 
     def nearest(self, pt):
         """
         Returns the nearest item to a point.
 
-        nearest(Point) -> x 
+        nearest(Point) -> x
 
         Parameters
         ----------
@@ -444,17 +450,21 @@ class Grid:
                 get_points_dist((self.x_range[1], self.y_range[0]), pt) > search_size or
                 get_points_dist((self.x_range[0], self.y_range[1]), pt) > search_size or
                 get_points_dist((self.x_range[1], self.y_range[1]), pt) > search_size)):
-            search_size = 2*search_size
+            search_size = 2 * search_size
         items = []
-        lower_left = self.__grid_loc((pt[0] - search_size, pt[1] - search_size))
-        upper_right = self.__grid_loc((pt[0] + search_size, pt[1] + search_size))
+        lower_left = self.__grid_loc(
+            (pt[0] - search_size, pt[1] - search_size))
+        upper_right = self.__grid_loc(
+            (pt[0] + search_size, pt[1] + search_size))
         for i in xrange(lower_left[0], upper_right[0] + 1):
             for j in xrange(lower_left[1], upper_right[1] + 1):
                 if (i, j) in self.hash:
-                    items.extend(map(lambda item: (get_points_dist(pt, item[0]), item[1]), self.hash[(i,j)]))
+                    items.extend(map(lambda item: (get_points_dist(pt, item[
+                        0]), item[1]), self.hash[(i, j)]))
         if items == []:
             return None
         return min(items)[1]
+
 
 class BruteForcePointLocator:
     """
@@ -472,7 +482,7 @@ class BruteForcePointLocator:
 
         Attributes
         ----------
-       
+
         Examples
         --------
         >>> pl = BruteForcePointLocator([Point((0, 0)), Point((5, 0)), Point((0, 10))])
@@ -482,7 +492,7 @@ class BruteForcePointLocator:
     def nearest(self, query_point):
         """
         Returns the nearest point indexed to a query point.
- 
+
         nearest(Point) -> Point
 
         Parameters
@@ -499,13 +509,13 @@ class BruteForcePointLocator:
         >>> n = pl.nearest(Point((1, 1)))
         >>> str(n)
         '(0.0, 0.0)'
-        """ 
+        """
         return min(self._points, key=lambda p: get_points_dist(p, query_point))
 
     def region(self, region_rect):
         """
         Returns the indexed points located inside a rectangular query region.
- 
+
         region(Rectangle) -> Point list
 
         Parameters
@@ -523,12 +533,12 @@ class BruteForcePointLocator:
         >>> len(pts)
         3
         """
-        return filter(lambda p: get_rectangle_point_intersect(region_rect, p) != None, self._points)
+        return filter(lambda p: get_rectangle_point_intersect(region_rect, p) is not None, self._points)
 
     def proximity(self, origin, r):
         """
         Returns the indexed points located within some distance of an origin point.
- 
+
         proximity(Point, number) -> Point list
 
         Parameters
@@ -552,19 +562,20 @@ class BruteForcePointLocator:
         >>> str(p)
         '(0.0, 0.0)'
         """
-        return filter(lambda p: get_points_dist(p, origin) <= r, self._points) 
+        return filter(lambda p: get_points_dist(p, origin) <= r, self._points)
+
 
 class PointLocator:
     """
     An abstract representation of a point indexing data structure.
-    """ 
+    """
 
     def __init__(self, points):
         """
         Returns a point locator object.
 
         __init__(Point list) -> PointLocator
-  
+
         Parameters
         ----------
         points : a list of points to index
@@ -582,7 +593,7 @@ class PointLocator:
     def nearest(self, query_point):
         """
         Returns the nearest point indexed to a query point.
- 
+
         nearest(Point) -> Point
 
         Parameters
@@ -605,7 +616,7 @@ class PointLocator:
     def region(self, region_rect):
         """
         Returns the indexed points located inside a rectangular query region.
- 
+
         region(Rectangle) -> Point list
 
         Parameters
@@ -634,11 +645,11 @@ class PointLocator:
         # get points in polygon bounding box
 
         # for points in bounding box, check for inclusion in polygon
-   
+
     def proximity(self, origin, r):
         """
         Returns the indexed points located within some distance of an origin point.
- 
+
         proximity(Point, number) -> Point list
 
         Parameters
@@ -658,17 +669,18 @@ class PointLocator:
         """
         return self._locator.proximity(origin, r)
 
+
 class PolygonLocator:
     """
     An abstract representation of a polygon indexing data structure.
-    """ 
+    """
 
     def __init__(self, polygons):
         """
         Returns a polygon locator object.
 
         __init__(Polygon list) -> PolygonLocator
-  
+
         Parameters
         ----------
         polygons : a list of polygons to index
@@ -685,7 +697,7 @@ class PolygonLocator:
         True
         """
 
-        self._locator=polygons
+        self._locator = polygons
         # create and rtree
         self._rtree = RTree()
         for polygon in polygons:
@@ -740,11 +752,11 @@ class PolygonLocator:
         # rtree rect
         qr = Rect(left, lower, right, upper)
         # bb overlaps
-        res = [ r.leaf_obj() for r in self._rtree.query_rect(qr) \
-                if r.is_leaf()]
+        res = [r.leaf_obj() for r in self._rtree.query_rect(qr)
+               if r.is_leaf()]
 
-        qp = Polygon([ Point((left, lower)), Point((right,lower)),
-            Point((right, upper)), Point((left, upper))])
+        qp = Polygon([Point((left, lower)), Point((right, lower)),
+                      Point((right, upper)), Point((left, upper))])
         ip = []
         GPPI = get_polygon_point_intersect
         for poly in res:
@@ -758,7 +770,6 @@ class PolygonLocator:
             if GPPI(qp, p1) and GPPI(qp, p2):
                 ip.append(poly)
         return ip
-
 
     def overlapping(self, query_rectangle):
         """
@@ -811,10 +822,9 @@ class PolygonLocator:
         # rtree rect
         qr = Rect(left, lower, right, upper)
 
-
         # bb overlaps
-        res = [ r.leaf_obj() for r in self._rtree.query_rect(qr) \
-                if r.is_leaf()]
+        res = [r.leaf_obj() for r in self._rtree.query_rect(qr)
+               if r.is_leaf()]
         # have to check for polygon overlap using segment intersection
 
         # add polys whose bb contains at least one of the corners of the query
@@ -824,15 +834,14 @@ class PolygonLocator:
         se = (right, lower)
         ne = (right, upper)
         nw = (left, upper)
-        pnts = [ sw, se, ne, nw]
+        pnts = [sw, se, ne, nw]
         cs = []
         for pnt in pnts:
-            c = [ r.leaf_obj() for r in self._rtree.query_point( pnt ) if r.is_leaf() ]
+            c = [r.leaf_obj() for r in self._rtree.query_point(
+                pnt) if r.is_leaf()]
             cs.extend(c)
 
         cs = list(set(cs))
-                    
-
 
         overlapping = []
 
@@ -845,7 +854,7 @@ class PolygonLocator:
                 xb *= vertex[0] < right
                 yb = vertex[1] >= lower
                 yb *= vertex[1] < upper
-                if xb*yb:
+                if xb * yb:
                     overlapping.append(polygon)
                     remaining.remove(polygon)
                     break
@@ -853,21 +862,21 @@ class PolygonLocator:
         # for remaining polys in bb overlap check if vertex chains intersect
         # segments of the query rectangle
         left_edge = LineSegment(Point((left, lower)), Point((left,
-            upper)))
+                                                             upper)))
         right_edge = LineSegment(Point((right, lower)), Point((right,
-            upper)))
+                                                               upper)))
         lower_edge = LineSegment(Point((left, lower)), Point((right,
-            lower)))
+                                                              lower)))
         upper_edge = LineSegment(Point((left, upper)), Point((right,
-            upper)))
+                                                              upper)))
         for polygon in remaining:
             vertices = copy.copy(polygon.vertices)
             if vertices[-1] != vertices[0]:
-                vertices.append(vertices[0]) # put on closed cartographic form
+                vertices.append(vertices[0])  # put on closed cartographic form
             nv = len(vertices)
-            for i in range(nv-1):
+            for i in range(nv - 1):
                 head = vertices[i]
-                tail = vertices[i+1]
+                tail = vertices[i + 1]
                 edge = LineSegment(head, tail)
                 li = get_segments_intersect(edge, left_edge)
                 if li:
@@ -902,28 +911,27 @@ class PolygonLocator:
                 overlapping.append(polygon)
                 break
         return list(set(overlapping))
-        
-        
+
     def nearest(self, query_point, rule='vertex'):
         """
         Returns the nearest polygon indexed to a query point based on
         various rules.
-  
+
         nearest(Polygon) -> Polygon
-  
+
         Parameters
         ----------
         query_point  : a point to find the nearest indexed polygon to
-  
+
         rule         : representative point for polygon in nearest query.
                  vertex -- measures distance between vertices and query_point
                  centroid -- measures distance between centroid and
                  query_point
                  edge   -- measures the distance between edges and query_point
-  
+
         Attributes
         ----------
-  
+
         Examples
         --------
         >>> p1 = Polygon([Point((0, 1)), Point((4, 5)), Point((5, 1))])
@@ -935,11 +943,10 @@ class PolygonLocator:
         """
         raise NotImplementedError
 
-
     def region(self, region_rect):
         """
         Returns the indexed polygons located inside a rectangular query region.
- 
+
         region(Rectangle) -> Polygon list
 
         Parameters
@@ -958,12 +965,12 @@ class PolygonLocator:
         >>> len(n)
         2
         """
-        n=self._locator
+        n = self._locator
         for polygon in n:
-            points=polygon.vertices
+            points = polygon.vertices
             pl = BruteForcePointLocator(points)
             pts = pl.region(region_rect)
-            if len(pts)==0:
+            if len(pts) == 0:
                 n.remove(polygon)
         return n
 
@@ -1001,19 +1008,19 @@ class PolygonLocator:
         (3.3333333333333335, 1.3333333333333333)
         >>> pl.contains_point((1,1))[0].centroid
         (3.3333333333333335, 1.3333333333333333)
-        
+
         """
         # bbounding box containment
-        res = [r.leaf_obj() for r in self._rtree.query_point(point) \
-                if r.is_leaf() ]
+        res = [r.leaf_obj() for r in self._rtree.query_point(point)
+               if r.is_leaf()]
         # explicit containment check for candidate polygons needed
-        return [ poly for poly in res if poly.contains_point(point)]
+        return [poly for poly in res if poly.contains_point(point)]
 
     def proximity(self, origin, r, rule='vertex'):
         """
         Returns the indexed polygons located within some distance of an
         origin point based on various rules.
- 
+
         proximity(Polygon, number) -> Polygon list
 
         Parameters
@@ -1037,15 +1044,16 @@ class PolygonLocator:
         >>> pl = PolygonLocator([p1, p2])
         >>> try:
         ...     len(pl.proximity(Point((0, 0)), 2))
-        ... except NotImplementedError: 
+        ... except NotImplementedError:
         ...     print "future test: len(pl.proximity(Point((0, 0)), 2)) == 2"
         future test: len(pl.proximity(Point((0, 0)), 2)) == 2
         """
         raise NotImplementedError
+
 
 def _test():
     import doctest
     doctest.testmod(verbose=True)
 
 if __name__ == '__main__':
-    _test() 
+    _test()

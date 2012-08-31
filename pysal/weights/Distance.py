@@ -2,7 +2,7 @@
 Distance based spatial weights
 """
 
-__author__  = "Sergio J. Rey <srey@asu.edu> "
+__author__ = "Sergio J. Rey <srey@asu.edu> "
 
 import pysal
 import scipy.spatial
@@ -13,11 +13,12 @@ from scipy import sparse
 
 __all__ = ["knnW", "Kernel", "DistanceBand"]
 
-def knnW(data,k=2,p=2,ids=None):
+
+def knnW(data, k=2, p=2, ids=None):
     """
-    Creates nearest neighbor weights matrix based on k nearest 
+    Creates nearest neighbor weights matrix based on k nearest
     neighbors.
-    
+
     Parameters
     ----------
 
@@ -79,19 +80,19 @@ def knnW(data,k=2,p=2,ids=None):
     pysal.weights.W
     """
     # handle data
-    if issubclass(type(data),scipy.spatial.KDTree):
+    if issubclass(type(data), scipy.spatial.KDTree):
         kd = data
         data = kd.data
-    elif type(data).__name__=='ndarray':
-        kd=KDTree(data)
+    elif type(data).__name__ == 'ndarray':
+        kd = KDTree(data)
     else:
         print 'Unsupported  type'
 
     # calculate
-    nnq=kd.query(data,k=k+1,p=p)
-    info=nnq[1]
-    neighbors={}
-    weights={}
+    nnq = kd.query(data, k=k + 1, p=p)
+    info = nnq[1]
+    neighbors = {}
+    weights = {}
     if ids:
         idset = np.array(ids)
     else:
@@ -100,15 +101,15 @@ def knnW(data,k=2,p=2,ids=None):
         row = row.tolist()
         row.remove(i)
         neighbors[idset[i]] = list(idset[row])
-        weights[idset[i]] = [1]*len(neighbors[idset[i]])
+        weights[idset[i]] = [1] * len(neighbors[idset[i]])
 
-    return pysal.weights.W(neighbors,weights=weights,id_order=ids)
+    return pysal.weights.W(neighbors, weights=weights, id_order=ids)
 
 
 class Kernel(W):
     """Spatial weights based on kernel functions
-    
-    
+
+
     Parameters
     ----------
 
@@ -116,7 +117,7 @@ class Kernel(W):
                   n observations on k characteristics used to measure
                   distances between the n objects
     bandwidth   : float or array-like (optional)
-                  the bandwidth :math:`h_i` for the kernel. 
+                  the bandwidth :math:`h_i` for the kernel.
     fixed       : binary
                   If true then :math:`h_i=h \\forall i`. If false then
                   bandwidth is adaptive across observations.
@@ -127,25 +128,25 @@ class Kernel(W):
                   distances (the distance to the kth nearest neighbor for each
                   observation).  For adaptive bandwidths, :math:`h_i=dknn_i`
     function    : string {'triangular','uniform','quadratic','quartic','gaussian'}
-                  kernel function defined as follows with 
+                  kernel function defined as follows with
 
                   .. math::
 
                       z_{i,j} = d_{i,j}/h_i
 
-                  triangular 
+                  triangular
 
                   .. math::
 
                       K(z) = (1 - |z|) \ if |z| \le 1
 
-                  uniform 
+                  uniform
 
                   .. math::
 
                       K(z) = 1/2 \ if |z| \le 1
 
-                  quadratic 
+                  quadratic
 
                   .. math::
 
@@ -157,7 +158,7 @@ class Kernel(W):
                   .. math::
 
                       K(z) = (15/16)(1-z^2)^2 \ if |z| \le 1
-                 
+
 
                   gaussian
 
@@ -214,7 +215,7 @@ class Kernel(W):
            [ 14.5],
            [ 25. ]])
 
-    Endogenous adaptive bandwidths 
+    Endogenous adaptive bandwidths
 
     >>> kwea=Kernel(points,fixed=False)
     >>> kwea.weights[0]
@@ -242,36 +243,36 @@ class Kernel(W):
            [ 14.14213704],
            [ 18.02775818]])
     """
-    def __init__(self,data,bandwidth=None,fixed=True,k=2,
-                 function='triangular',eps=1.0000001,ids=None):
-        if issubclass(type(data),scipy.spatial.KDTree):
+    def __init__(self, data, bandwidth=None, fixed=True, k=2,
+                 function='triangular', eps=1.0000001, ids=None):
+        if issubclass(type(data), scipy.spatial.KDTree):
             self.kdt = data
             self.data = self.kdt.data
             data = self.data
         else:
-            self.data=data
-            self.kdt=KDTree(self.data)
-        self.k=k+1 
-        self.function=function.lower()
-        self.fixed=fixed
-        self.eps=eps
+            self.data = data
+            self.kdt = KDTree(self.data)
+        self.k = k + 1
+        self.function = function.lower()
+        self.fixed = fixed
+        self.eps = eps
         if bandwidth:
             try:
-                bandwidth=np.array(bandwidth)
-                bandwidth.shape=(len(bandwidth),1)
+                bandwidth = np.array(bandwidth)
+                bandwidth.shape = (len(bandwidth), 1)
             except:
-                bandwidth=np.ones((len(data),1),'float')*bandwidth
-            self.bandwidth=bandwidth
+                bandwidth = np.ones((len(data), 1), 'float') * bandwidth
+            self.bandwidth = bandwidth
         else:
             self._set_bw()
 
         self._eval_kernel()
         neighbors, weights = self._k_to_W(ids)
-        W.__init__(self,neighbors,weights,ids)
+        W.__init__(self, neighbors, weights, ids)
 
     def _k_to_W(self, ids=None):
-        allneighbors={}
-        weights={}
+        allneighbors = {}
+        weights = {}
         if ids:
             ids = np.array(ids)
         else:
@@ -280,59 +281,60 @@ class Kernel(W):
             if len(self.neigh[i]) == 0:
                 allneighbors[ids[i]] = []
                 weights[ids[i]] = []
-            else:    
+            else:
                 allneighbors[ids[i]] = list(ids[self.neigh[i]])
                 weights[ids[i]] = self.kernel[i].tolist()
-        return allneighbors,weights
+        return allneighbors, weights
 
     def _set_bw(self):
-        dmat,neigh=self.kdt.query(self.data,k=self.k)
+        dmat, neigh = self.kdt.query(self.data, k=self.k)
         if self.fixed:
             # use max knn distance as bandwidth
-            bandwidth=dmat.max()*self.eps
-            n=len(dmat)
-            self.bandwidth=np.ones((n,1),'float')*bandwidth
+            bandwidth = dmat.max() * self.eps
+            n = len(dmat)
+            self.bandwidth = np.ones((n, 1), 'float') * bandwidth
         else:
             # use local max knn distance
-            self.bandwidth=dmat.max(axis=1)*self.eps
-            self.bandwidth.shape=(self.bandwidth.size,1)
+            self.bandwidth = dmat.max(axis=1) * self.eps
+            self.bandwidth.shape = (self.bandwidth.size, 1)
             # identify knn neighbors for each point
-            nnq=self.kdt.query(self.data,k=self.k)
-            self.neigh=nnq[1]
+            nnq = self.kdt.query(self.data, k=self.k)
+            self.neigh = nnq[1]
 
     def _eval_kernel(self):
         # get points within bandwidth distance of each point
         if not hasattr(self, 'neigh'):
-            kdtq=self.kdt.query_ball_point
-            neighbors=[kdtq(self.data[i],r=bwi[0]) for i,bwi in enumerate(self.bandwidth)]
-            self.neigh=neighbors
+            kdtq = self.kdt.query_ball_point
+            neighbors = [kdtq(self.data[i], r=bwi[0]) for i,
+                         bwi in enumerate(self.bandwidth)]
+            self.neigh = neighbors
         # get distances for neighbors
-        data=np.array(self.data)
-        bw=self.bandwidth
+        data = np.array(self.data)
+        bw = self.bandwidth
 
-        kdtq=self.kdt.query
-        z=[]
-        for i,nids in enumerate(self.neigh):
-            di,ni = kdtq(self.data[i],k=len(nids))
-            zi = np.array([dict(zip(ni,di))[nid] for nid in nids])/bw[i]
+        kdtq = self.kdt.query
+        z = []
+        for i, nids in enumerate(self.neigh):
+            di, ni = kdtq(self.data[i], k=len(nids))
+            zi = np.array([dict(zip(ni, di))[nid] for nid in nids]) / bw[i]
             z.append(zi)
-        zs=z
+        zs = z
         # functions follow Anselin and Rey (2010) table 5.4
-        if self.function=='triangular':
-            self.kernel=[1-z for z in zs]
-        elif self.function=='uniform':
-            self.kernel=[np.ones(z.shape)*0.5 for z in zs]
-        elif self.function=='quadratic':
-            self.kernel=[(3./4)*(1-z**2) for z in zs]
-        elif self.function=='quartic':
-            self.kernel=[(15./16)*(1-z**2)**2 for z in zs]
-        elif self.function=='gaussian':
-            c=np.pi*2
-            c=c**(-0.5)
-            self.kernel=[c*np.exp(-(z**2)/2.) for z in zs]
+        if self.function == 'triangular':
+            self.kernel = [1 - z for z in zs]
+        elif self.function == 'uniform':
+            self.kernel = [np.ones(z.shape) * 0.5 for z in zs]
+        elif self.function == 'quadratic':
+            self.kernel = [(3. / 4) * (1 - z ** 2) for z in zs]
+        elif self.function == 'quartic':
+            self.kernel = [(15. / 16) * (1 - z ** 2) ** 2 for z in zs]
+        elif self.function == 'gaussian':
+            c = np.pi * 2
+            c = c ** (-0.5)
+            self.kernel = [c * np.exp(-(z ** 2) / 2.) for z in zs]
         else:
-            print 'Unsupported kernel function',self.function
-        
+            print 'Unsupported kernel function', self.function
+
 
 class DistanceBand(W):
     """Spatial weights based on distance band
@@ -353,10 +355,10 @@ class DistanceBand(W):
     binary     : binary
                  If true w_{ij}=1 if d_{i,j}<=threshold, otherwise w_{i,j}=0
                  If false wij=dij^{alpha}
-    alpha      : float 
+    alpha      : float
                  distance decay parameter for weight (default -1.0)
                  if alpha is positive the weights will not decline with
-                 distance. If binary is True, alpha is ignored 
+                 distance. If binary is True, alpha is ignored
 
     Examples
     --------
@@ -368,14 +370,14 @@ class DistanceBand(W):
     >>> w.neighbors
     {0: [1, 3], 1: [0, 3], 2: [], 3: [0, 1], 4: [5], 5: [4]}
 
-    inverse distance weights 
+    inverse distance weights
 
     >>> w=DistanceBand(points,threshold=11.2,binary=False)
     >>> w.weights[0]
     [0.10000000000000001, 0.089442719099991588]
     >>> w.neighbors[0]
     [1, 3]
-    >>> 
+    >>>
 
     gravity weights
 
@@ -392,11 +394,11 @@ class DistanceBand(W):
     so serge changed line 221 of that file on sal-dev to fix the logic bug
 
     """
-    def __init__(self,data,threshold,p=2,alpha=-1.0,binary=True,ids=None):
+    def __init__(self, data, threshold, p=2, alpha=-1.0, binary=True, ids=None):
         """
         Casting to floats is a work around for a bug in scipy.spatial.  See detail in pysal issue #126
         """
-        if issubclass(type(data),scipy.spatial.KDTree):
+        if issubclass(type(data), scipy.spatial.KDTree):
             self.kd = data
             self.data = self.kd.data
         else:
@@ -405,56 +407,59 @@ class DistanceBand(W):
                 if data.dtype.kind != 'f':
                     data = data.astype(float)
                 self.data = data
-                self.kd=KDTree(self.data)
+                self.kd = KDTree(self.data)
             except:
-                raise ValueError, "Could not make array from data"
+                raise ValueError("Could not make array from data")
 
-        self.p=p
-        self.threshold=threshold
-        self.binary=binary
-        self.alpha=alpha
+        self.p = p
+        self.threshold = threshold
+        self.binary = binary
+        self.alpha = alpha
         self._band()
         neighbors, weights = self._distance_to_W(ids)
-        W.__init__(self,neighbors,weights,ids)
+        W.__init__(self, neighbors, weights, ids)
 
     def _band(self):
-        """ 
+        """
         find all pairs within threshold
         """
-        kd=self.kd
+        kd = self.kd
         #ns=[kd.query_ball_point(point,self.threshold) for point in self.data]
-        ns=kd.query_ball_tree(kd,self.threshold)
-        self._nmat=ns
+        ns = kd.query_ball_tree(kd, self.threshold)
+        self._nmat = ns
 
-    def _distance_to_W(self,ids=None):
-        allneighbors={}
-        weights={}
+    def _distance_to_W(self, ids=None):
+        allneighbors = {}
+        weights = {}
         if ids:
             ids = np.array(ids)
         else:
             ids = np.arange(len(self._nmat))
         if self.binary:
-            for i,neighbors in enumerate(self._nmat):
-                ns=[ni for ni in neighbors if ni!=i]
+            for i, neighbors in enumerate(self._nmat):
+                ns = [ni for ni in neighbors if ni != i]
                 neigh = list(ids[ns])
                 if len(neigh) == 0:
                     allneighbors[ids[i]] = []
                     weights[ids[i]] = []
-                else:        
+                else:
                     allneighbors[ids[i]] = neigh
-                    weights[ids[i]] = [1]*len(ns)
+                    weights[ids[i]] = [1] * len(ns)
         else:
-            self.dmat=self.kd.sparse_distance_matrix(self.kd,max_distance=self.threshold)
-            for i,neighbors in enumerate(self._nmat):
-                ns=[ni for ni in neighbors if ni!=i]
+            self.dmat = self.kd.sparse_distance_matrix(
+                self.kd, max_distance=self.threshold)
+            for i, neighbors in enumerate(self._nmat):
+                ns = [ni for ni in neighbors if ni != i]
                 neigh = list(ids[ns])
                 if len(neigh) == 0:
                     allneighbors[ids[i]] = []
                     weights[ids[i]] = []
-                else:        
+                else:
                     allneighbors[ids[i]] = neigh
-                    weights[ids[i]] = [self.dmat[(i,j)]**self.alpha for j in ns] 
-        return allneighbors,weights
+                    weights[ids[i]] = [self.dmat[(
+                        i, j)] ** self.alpha for j in ns]
+        return allneighbors, weights
+
 
 def _test():
     """Doc test"""
@@ -463,23 +468,23 @@ def _test():
 
 if __name__ == "__main__":
     _test()
-    
-    x=np.arange(1,5)
 
-    n=len(x)
-    data=[]
-    row=[]
-    col=[]
-    rdata=[]
+    x = np.arange(1, 5)
 
-    for i in range(n-1):
-        data.extend(x[i+1:])
-        
-        rdata.extend((x[i]*np.ones((1,n-i-1))).tolist()[0]
-)
-        row.extend([i]*(n-i-1))
-        col.extend(range(i+1,n))
-    L=sparse.csr_matrix((data,(row,col)),shape=(n,n))
-    R=sparse.csr_matrix((rdata,(row,col)),shape=(n,n))
-    dlr=L-R
-    D=dlr.multiply(dlr)
+    n = len(x)
+    data = []
+    row = []
+    col = []
+    rdata = []
+
+    for i in range(n - 1):
+        data.extend(x[i + 1:])
+
+        rdata.extend((x[i] * np.ones((1, n - i - 1))).tolist()[0]
+                     )
+        row.extend([i] * (n - i - 1))
+        col.extend(range(i + 1, n))
+    L = sparse.csr_matrix((data, (row, col)), shape=(n, n))
+    R = sparse.csr_matrix((rdata, (row, col)), shape=(n, n))
+    dlr = L - R
+    D = dlr.multiply(dlr)

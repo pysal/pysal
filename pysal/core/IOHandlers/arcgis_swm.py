@@ -10,23 +10,24 @@ from warnings import warn
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
 __all__ = ["ArcGISSwmIO"]
 
+
 class ArcGISSwmIO(FileIO.FileIO):
     """
     Opens, reads, and writes weights file objects in ArcGIS swm format.
-    
-    Spatial weights objects in the ArcGIS swm format are used in 
-    ArcGIS Spatial Statistics tools. 
-    Particularly, this format can be directly used with the tools under 
+
+    Spatial weights objects in the ArcGIS swm format are used in
+    ArcGIS Spatial Statistics tools.
+    Particularly, this format can be directly used with the tools under
     the category of "Mapping Clusters."
-    
+
     An exemplary structure of an ArcGIS swm file is as follows:
     [ID_VAR_NAME];[ESRI_SRS]\n[NO_OBS][ROW_STD][WGT_1]...[WGT_i]...[WGT_n]
-    where [WGT_i] takes the form of [ORG_i][NO_NGH_i][NGHS_i] 
+    where [WGT_i] takes the form of [ORG_i][NO_NGH_i][NGHS_i]
     and [NGHS_i] takes the form of [DSTS_i][WS_i][W_SUM_i].
     Here, n is the number of observations.
-    The values for [ORG_i] and [DST_i] should be integers, 
-    as ArcGIS Spatial Statistics tools support only unique integer IDs. 
-    For the case where a weights object uses non-integer IDs, 
+    The values for [ORG_i] and [DST_i] should be integers,
+    as ArcGIS Spatial Statistics tools support only unique integer IDs.
+    For the case where a weights object uses non-integer IDs,
     ArcGISSwmIO allows users to use internal ids corresponding to record numbers,
     instead of original ids.
 
@@ -41,13 +42,13 @@ class ArcGISSwmIO(FileIO.FileIO):
       [NO_NGH_i]    little endian integer  Number of neighbors for obs. i (m)	4
       [NGHS_i]
         [DSTS_i]    little endian integer  IDs of all neighbors of obs. i	4*m
-        [WS_i]      little endian float    Weights for obs. i and its neighbors 8*m		
+        [WS_i]      little endian float    Weights for obs. i and its neighbors 8*m
         [W_SUM_i]   little endian float    Sum of weights for "                 8
 
     References
     ----------
     ArcGIS 9.3 SWM2Table.py
-    
+
     """
 
     FORMATS = ['swm']
@@ -61,6 +62,7 @@ class ArcGISSwmIO(FileIO.FileIO):
     def _set_varName(self, val):
         if issubclass(type(val), basestring):
             self._varName = val
+
     def _get_varName(self):
         return self._varName
     varName = property(fget=_get_varName, fset=_set_varName)
@@ -107,7 +109,7 @@ class ArcGISSwmIO(FileIO.FileIO):
 
         header01 = self.file.readline()
         id_var, srs = header01[:-1].split(';')
-        self.varName = id_var            
+        self.varName = id_var
         self.header_len = len(header01) + 8
         no_obs, row_std = tuple(unpack('<2l', self.file.read(8)))
 
@@ -118,15 +120,17 @@ class ArcGISSwmIO(FileIO.FileIO):
             neighbors[origin] = []
             weights[origin] = []
             if no_nghs > 0:
-                neighbors[origin]  = list(unpack('<%il' % no_nghs, self.file.read(4*no_nghs)))
-                weights[origin] = list(unpack('<%id' % no_nghs, self.file.read(8*no_nghs)))
+                neighbors[origin] = list(unpack('<%il' %
+                                                no_nghs, self.file.read(4 * no_nghs)))
+                weights[origin] = list(unpack('<%id' %
+                                              no_nghs, self.file.read(8 * no_nghs)))
                 w_sum = list(unpack('<d', self.file.read(8)))[0]
 
         self.pos += 1
-        return W(neighbors,weights)
+        return W(neighbors, weights)
 
     def write(self, obj, useIdIndex=False):
-        """ 
+        """
 
         Parameters
         ----------
@@ -182,9 +186,9 @@ class ArcGISSwmIO(FileIO.FileIO):
 
         """
         self._complain_ifclosed(self.closed)
-        if issubclass(type(obj),W):
+        if issubclass(type(obj), W):
             if not (type(obj.id_order[0]) in (np.int32, np.int64, int)) and not useIdIndex:
-                raise TypeError, "ArcGIS SWM files support only integer IDs"
+                raise TypeError("ArcGIS SWM files support only integer IDs")
             if useIdIndex:
                 id2i = obj.id2i
                 obj = remap_ids(obj, id2i)
@@ -201,7 +205,8 @@ class ArcGISSwmIO(FileIO.FileIO):
             self.pos += 1
 
         else:
-            raise TypeError, "Expected a pysal weights object, got: %s" % (type(obj))
+            raise TypeError("Expected a pysal weights object, got: %s" % (
+                type(obj)))
 
     def close(self):
         self.file.close()

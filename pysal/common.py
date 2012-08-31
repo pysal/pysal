@@ -16,6 +16,7 @@ except:
     print 'scipy 0.7+ is required'
     raise
 
+
 class ROD(dict):
     """
     Read Only Dictionary

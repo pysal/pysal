@@ -4,8 +4,9 @@ from pysal.esda import getisord
 import numpy as np
 
 POINTS = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
-W = DistanceBand(POINTS,threshold=15)
+W = DistanceBand(POINTS, threshold=15)
 Y = np.array([2, 3, 3.2, 5, 8, 7])
+
 
 class G_Tester(unittest.TestCase):
 
@@ -18,6 +19,7 @@ class G_Tester(unittest.TestCase):
         g = getisord.G(self.y, self.w)
         self.assertAlmostEquals(g.G, 0.55709779, places=8)
         self.assertAlmostEquals(g.p_norm, 0.1729, places=4)
+
 
 class G_Local_Tester(unittest.TestCase):
 
@@ -55,4 +57,3 @@ for i in test_classes:
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()
     runner.run(suite)
-

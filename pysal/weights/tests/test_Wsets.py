@@ -2,9 +2,10 @@
 import unittest
 import pysal
 
+
 class TestWsets(unittest.TestCase):
     """Unit test for Wsets module."""
-    
+
     def test_w_union(self):
         """Unit test"""
         w1 = pysal.lat2W(4, 4)
@@ -24,7 +25,7 @@ class TestWsets(unittest.TestCase):
         self.assertEqual(w1.neighbors[15], [11, 14])
         self.assertEqual(w2.neighbors[15], [11, 14, 19])
         self.assertEqual(w3.neighbors[15], [19, 11, 14])
-    
+
     def test_w_difference(self):
         """Unit test"""
         w1 = pysal.lat2W(4, 4, rook=False)
@@ -39,12 +40,12 @@ class TestWsets(unittest.TestCase):
         """Unit test"""
         w1 = pysal.lat2W(4, 4, rook=False)
         w2 = pysal.lat2W(6, 4, rook=True)
-        w3 = pysal.weights.Wsets.w_symmetric_difference(w1, w2, constrained=False)
+        w3 = pysal.weights.Wsets.w_symmetric_difference(
+            w1, w2, constrained=False)
         self.assertNotEqual(w1[0], w3[0])
         self.assertEqual(w1.neighbors[15], [10, 11, 14])
         self.assertEqual(w2.neighbors[15], [11, 14, 19])
         self.assertEqual(w3.neighbors[15], [10, 19])
-
 
     def test_w_subset(self):
         """Unit test"""
@@ -54,7 +55,6 @@ class TestWsets(unittest.TestCase):
         self.assertEqual(w1[0], w2[0])
         self.assertEqual(w1.neighbors[15], [11, 14, 19])
         self.assertEqual(w2.neighbors[15], [11, 14])
-
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestWsets)

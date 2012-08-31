@@ -3,8 +3,9 @@ from pysal.weights import W, WSP
 from scipy import sparse
 import numpy as np
 
-__author__='Charles R Schmidt <schmidtc@gmail.com>'
-__all__ =  ['GalIO']
+__author__ = 'Charles R Schmidt <schmidtc@gmail.com>'
+__all__ = ['GalIO']
+
 
 class GalIO(FileIO.FileIO):
     """
@@ -13,11 +14,11 @@ class GalIO(FileIO.FileIO):
 
     """
     FORMATS = ['gal']
-    MODES = ['r','w']
+    MODES = ['r', 'w']
 
-    def __init__(self,*args,**kwargs):
+    def __init__(self, *args, **kwargs):
         self._typ = str
-        FileIO.FileIO.__init__(self,*args,**kwargs)
+        FileIO.FileIO.__init__(self, *args, **kwargs)
         self.file = open(self.dataPath, self.mode)
 
     def read(self, n=-1, sparse=False):
@@ -35,14 +36,16 @@ class GalIO(FileIO.FileIO):
         if pos == 0:
             self.file.seek(0)
             self.pos = 0
+
     def _get_data_type(self):
         return self._typ
-    def _set_data_type(self,typ):
+
+    def _set_data_type(self, typ):
         if callable(typ):
             self._typ = typ
         else:
-            raise TypeError, "Expecting a callable"
-    data_type = property(fset=_set_data_type,fget=_get_data_type)
+            raise TypeError("Expecting a callable")
+    data_type = property(fset=_set_data_type, fget=_get_data_type)
 
     def _read(self):
         """
@@ -52,14 +55,14 @@ class GalIO(FileIO.FileIO):
 
         Returns
         -------
-        returns a W object 
+        returns a W object
 
         Examples
         --------
 
         >>> import tempfile, pysal, os
 
-        Read in a file GAL file 
+        Read in a file GAL file
 
         >>> testfile = pysal.open(pysal.examples.get_path('sids2.gal'),'r')
 
@@ -77,7 +80,7 @@ class GalIO(FileIO.FileIO):
         >>> wsp = testfile.read(sparse=True)
         >>> wsp.sparse.nnz
         462
-        
+
         """
         if self._sparse:
             if self.pos > 0:
@@ -100,48 +103,48 @@ class GalIO(FileIO.FileIO):
                 id, n_neighbors = self.file.readline().strip().split()
                 id = typ(id)
                 n_neighbors = int(n_neighbors)
-                neighbors_i = map(typ,self.file.readline().strip().split())
+                neighbors_i = map(typ, self.file.readline().strip().split())
                 nn = len(neighbors_i)
-                extend([id]*nn)
+                extend([id] * nn)
                 counter += nn
                 for id_neigh in neighbors_i:
                     append(id_neigh)
                 idsappend(id)
-            self.pos += 1 
+            self.pos += 1
             row = np.array(row)
             col = np.array(col)
             data = np.ones(counter)
             ids = np.unique(row)
-            row = np.array([ np.where(ids==j)[0] for j in row]).flatten()
-            col = np.array([ np.where(ids==j)[0] for j in col]).flatten()
-            spmat = sparse.csr_matrix((data,(row,col)), shape=(n, n))
+            row = np.array([np.where(ids == j)[0] for j in row]).flatten()
+            col = np.array([np.where(ids == j)[0] for j in col]).flatten()
+            spmat = sparse.csr_matrix((data, (row, col)), shape=(n, n))
             return WSP(spmat)
 
         else:
             if self.pos > 0:
                 raise StopIteration
-            neighbors={}
-            ids=[]
+            neighbors = {}
+            ids = []
             # handle case where more than n is specified in first line
-            header=self.file.readline().strip().split()
-            header_n= len(header)
-            n=int(header[0])
+            header = self.file.readline().strip().split()
+            header_n = len(header)
+            n = int(header[0])
             if header_n > 1:
-                n=int(header[1])
-            w={}
+                n = int(header[1])
+            w = {}
             typ = self.data_type
-            for i in range (n):
-                id,n_neighbors=self.file.readline().strip().split()
+            for i in range(n):
+                id, n_neighbors = self.file.readline().strip().split()
                 id = typ(id)
                 n_neighbors = int(n_neighbors)
-                neighbors_i = map(typ,self.file.readline().strip().split())
-                neighbors[id]=neighbors_i
+                neighbors_i = map(typ, self.file.readline().strip().split())
+                neighbors[id] = neighbors_i
                 ids.append(id)
-            self.pos += 1 
-            return W(neighbors,id_order=ids)
+            self.pos += 1
+            return W(neighbors, id_order=ids)
 
-    def write(self,obj):
-        """ 
+    def write(self, obj):
+        """
 
         Parameters
         ----------
@@ -196,28 +199,28 @@ class GalIO(FileIO.FileIO):
         >>> os.remove(fname)
         """
         self._complain_ifclosed(self.closed)
-        if issubclass(type(obj),W):
+        if issubclass(type(obj), W):
             IDS = obj.id_order
-            self.file.write('%d\n'%(obj.n))
+            self.file.write('%d\n' % (obj.n))
             for id in IDS:
                 neighbors = obj.neighbors[id]
-                self.file.write('%s %d\n'%(str(id),len(neighbors)))
-                self.file.write(' '.join(map(str,neighbors))+'\n')
+                self.file.write('%s %d\n' % (str(id), len(neighbors)))
+                self.file.write(' '.join(map(str, neighbors)) + '\n')
             self.pos += 1
         else:
-            raise TypeError,"Expected a pysal weights object, got: %s"%(type(obj))
+            raise TypeError("Expected a pysal weights object, got: %s" %
+                            (type(obj)))
 
     def close(self):
         self.file.close()
         FileIO.FileIO.close(self)
 
+
 def _test():
-    import doctest, unittest
+    import doctest
+    import unittest
     doctest.testmod(verbose=True)
     unittest.main()
 
-if __name__=='__main__':
+if __name__ == '__main__':
     _test()
-
-
-

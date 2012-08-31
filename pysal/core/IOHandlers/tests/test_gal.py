@@ -5,6 +5,7 @@ import tempfile
 import os
 from pysal.core.IOHandlers.gal import GalIO
 
+
 class test_GalIO(unittest.TestCase):
     def setUp(self):
         self.test_file = test_file = pysal.examples.get_path('sids2.gal')
@@ -22,9 +23,9 @@ class test_GalIO(unittest.TestCase):
         # reading a GAL returns a W
         w = self.obj.read()
         self.assertEqual(w.n, 100)
-        self.assertAlmostEqual(w.sd, 1.5151237573214935 )
-        self.assertEqual(w.s0, 462.0 )
-        self.assertEqual(w.s1, 924.0 )
+        self.assertAlmostEqual(w.sd, 1.5151237573214935)
+        self.assertEqual(w.s0, 462.0)
+        self.assertEqual(w.s1, 924.0)
 
     def test_seek(self):
         self.test_read()
@@ -37,10 +38,10 @@ class test_GalIO(unittest.TestCase):
         f = tempfile.NamedTemporaryFile(suffix='.gal')
         fname = f.name
         f.close()
-        o = pysal.open(fname,'w')
+        o = pysal.open(fname, 'w')
         o.write(w)
         o.close()
-        wnew =  pysal.open(fname,'r').read()
+        wnew = pysal.open(fname, 'r').read()
         self.assertEqual(wnew.pct_nonzero, w.pct_nonzero)
 
 

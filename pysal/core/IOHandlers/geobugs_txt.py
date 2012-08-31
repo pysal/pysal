@@ -7,47 +7,48 @@ from warnings import warn
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
 __all__ = ["GeoBUGSTextIO"]
 
+
 class GeoBUGSTextIO(FileIO.FileIO):
     """
-    Opens, reads, and writes weights file objects in the text format 
-    used in GeoBUGS. GeoBUGS generates a spatial weights matrix 
-    as an R object and writes it out as an ASCII text representation of 
-    the R object. 
-    
+    Opens, reads, and writes weights file objects in the text format
+    used in GeoBUGS. GeoBUGS generates a spatial weights matrix
+    as an R object and writes it out as an ASCII text representation of
+    the R object.
+
     An exemplary GeoBUGS text file is as follows:
     list([CARD],[ADJ],[WGT],[SUMNUMNEIGH])
-    where [CARD] and [ADJ] are required but the others are optional. 
+    where [CARD] and [ADJ] are required but the others are optional.
     PySAL assumes [CARD] and [ADJ] always exist in an input text file.
     It can read a GeoBUGS text file, even when its content is not written
-    in the order of [CARD], [ADJ], [WGT], and [SUMNUMNEIGH]. 
+    in the order of [CARD], [ADJ], [WGT], and [SUMNUMNEIGH].
     It always writes all of [CARD], [ADJ], [WGT], and [SUMNUMNEIGH].
     PySAL does not apply text wrapping during file writing.
 
-    In the above example, 
+    In the above example,
     [CARD]: num=c([a list of comma-splitted neighbor cardinalities])
     [ADJ]: adj=c([a list of comma-splitted neighbor IDs])
-           if caridnality is zero, neighbor IDs are skipped. 
-           The ordering of observations is the same in both [CARD] and 
-           [ADJ]. 
+           if caridnality is zero, neighbor IDs are skipped.
+           The ordering of observations is the same in both [CARD] and
+           [ADJ].
            Neighbor IDs are record numbers starting from one.
     [WGT]: weights=c([a list of comma-splitted weights])
            The restrictions for [ADJ] also apply to [WGT].
-    [SUMNUMNEIGH]: sumNumNeigh=[The total number of neighbor pairs] 
-                   the total number of neighbor pairs  is an integer 
+    [SUMNUMNEIGH]: sumNumNeigh=[The total number of neighbor pairs]
+                   the total number of neighbor pairs  is an integer
                    value and the same as the sum of neighbor cardinalities.
 
     Notes
     -----
-    For the files generated from R spdep nb2WB and dput function, 
-    it is assumed that the value for the control parameter of dput function 
+    For the files generated from R spdep nb2WB and dput function,
+    it is assumed that the value for the control parameter of dput function
     is NULL. Please refer to R spdep nb2WB function help file.
 
     References
     ----------
-    Thomas, A., Best, N., Lunn, D., Arnold, R., and Spiegelhalter, D. 
+    Thomas, A., Best, N., Lunn, D., Arnold, R., and Spiegelhalter, D.
     (2004) GeoBUGS User Manual.
     R spdep nb2WB function help file.
-    
+
     """
 
     FORMATS = ['geobugs_text']
@@ -105,10 +106,10 @@ class GeoBUGSTextIO(FileIO.FileIO):
             if i_loc != -1:
                 body_structure[i] = (i_loc, i)
         body_sequence = sorted(body_structure.values())
-        body_sequence.append((-1,'eof'))        
+        body_sequence.append((-1, 'eof'))
 
         for i in range(len(body_sequence) - 1):
-            part, next_part = body_sequence[i], body_sequence[i+1]
+            part, next_part = body_sequence[i], body_sequence[i + 1]
             start, end = part[0], next_part[0]
             part_text = fbody[start:end]
 
@@ -127,11 +128,12 @@ class GeoBUGSTextIO(FileIO.FileIO):
             value_type = int
             if part[1] == 'weights':
                 value_type = float
-            body_structure[part[1]] = [value_type(v) for v in part_text.split(',')]
+            body_structure[part[1]] = [value_type(v)
+                                       for v in part_text.split(',')]
 
         cardinalities = body_structure['num']
         adjacency = body_structure['adj']
-        raw_weights = [1.0]*int(sum(cardinalities))
+        raw_weights = [1.0] * int(sum(cardinalities))
         if 'weights' in body_structure and isinstance(body_structure['weights'], list):
             raw_weights = body_structure['weights']
 
@@ -140,19 +142,19 @@ class GeoBUGSTextIO(FileIO.FileIO):
         weights = {}
         pos = 0
         for i in xrange(no_obs):
-            neighbors[i+1] = []
-            weights[i+1] = []
+            neighbors[i + 1] = []
+            weights[i + 1] = []
             no_nghs = cardinalities[i]
             if no_nghs > 0:
-                neighbors[i+1]  = adjacency[pos: pos + no_nghs]
-                weights[i+1] = raw_weights[pos: pos + no_nghs]
+                neighbors[i + 1] = adjacency[pos: pos + no_nghs]
+                weights[i + 1] = raw_weights[pos: pos + no_nghs]
             pos += no_nghs
 
         self.pos += 1
-        return W(neighbors,weights)
+        return W(neighbors, weights)
 
     def write(self, obj):
-        """ 
+        """
 
         Parameters
         ----------
@@ -208,22 +210,23 @@ class GeoBUGSTextIO(FileIO.FileIO):
 
         """
         self._complain_ifclosed(self.closed)
-        if issubclass(type(obj),W):
+        if issubclass(type(obj), W):
 
             cardinalities, neighbors, weights = [], [], []
             for i in obj.id_order:
                 cardinalities.append(obj.cardinalities[i])
                 neighbors.extend(obj.neighbors[i])
                 weights.extend(obj.weights[i])
-            
+
             self.file.write('list(')
-            self.file.write('num=c(%s),' % ','.join(map(str,cardinalities)))
-            self.file.write('adj=c(%s),' % ','.join(map(str,neighbors)))
+            self.file.write('num=c(%s),' % ','.join(map(str, cardinalities)))
+            self.file.write('adj=c(%s),' % ','.join(map(str, neighbors)))
             self.file.write('sumNumNeigh=%i)' % sum(cardinalities))
             self.pos += 1
 
         else:
-            raise TypeError, "Expected a pysal weights object, got: %s" % (type(obj))
+            raise TypeError("Expected a pysal weights object, got: %s" % (
+                type(obj)))
 
     def close(self):
         self.file.close()

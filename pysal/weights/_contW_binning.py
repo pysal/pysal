@@ -3,7 +3,7 @@
 import pysal
 from pysal.cg.standalone import get_shared_segments
 
-__author__  = "Sergio J. Rey <srey@asu.edu> "
+__author__ = "Sergio J. Rey <srey@asu.edu> "
 __all__ = ["QUEEN", "ROOK", "ContiguityWeights_binning"]
 
 
@@ -18,9 +18,10 @@ BUCK_SM = 8
 BUCK_LG = 80
 SHP_SMALL = 1000
 
+
 def bbcommon(bb, bbother):
     """
-    Checks for overlaps of bounding boxes. First, east-west, then north-south. 
+    Checks for overlaps of bounding boxes. First, east-west, then north-south.
     Element 0 is west, element 2 is east, element 1 is north?, element 3 is
     south?
     All four checks must be false for chflag to be true, meaning the two
@@ -31,6 +32,7 @@ def bbcommon(bb, bbother):
         if not ((bbother[3] < bb[1]) or (bbother[1] > bb[3])):
             chflag = 1
     return chflag
+
 
 class ContiguityWeights_binning:
     """ """
@@ -57,26 +59,29 @@ class ContiguityWeights_binning:
         else:
             bucketmin = numPoly / BUCK_LG + 2
         # bucket length
-        lengthx = ((shapebox[2]+DELTA) - shapebox[0]) / bucketmin
-        lengthy = ((shapebox[3]+DELTA) - shapebox[1]) / bucketmin
-        
+        lengthx = ((shapebox[2] + DELTA) - shapebox[0]) / bucketmin
+        lengthy = ((shapebox[3] + DELTA) - shapebox[1]) / bucketmin
+
         # initialize buckets
-        columns = [ set() for i in range(bucketmin) ]
-        rows = [ set() for i in range(bucketmin) ]
-                
-        minbox = shapebox[:2] * 2                                  # minx,miny,minx,miny
-        binWidth = [lengthx, lengthy] * 2                              # lenx,leny,lenx,leny
-        bbcache = {} 
-        poly2Column = [ set() for i in range(numPoly) ]
-        poly2Row = [ set() for i in range(numPoly) ]
+        columns = [set() for i in range(bucketmin)]
+        rows = [set() for i in range(bucketmin)]
+
+        minbox = shapebox[:2] * \
+            2                                  # minx,miny,minx,miny
+        binWidth = [lengthx, lengthy] * \
+            2                              # lenx,leny,lenx,leny
+        bbcache = {}
+        poly2Column = [set() for i in range(numPoly)]
+        poly2Row = [set() for i in range(numPoly)]
         for i in range(numPoly):
             shpObj = shpFileObject.get(i)
             bbcache[i] = shpObj.bounding_box[:]
-            projBBox = [int((shpObj.bounding_box[:][j] - minbox[j])/binWidth[j]) for j in xrange(4)]
-            for j in range(projBBox[0], projBBox[2]+1):
+            projBBox = [int((shpObj.bounding_box[:][j] -
+                             minbox[j]) / binWidth[j]) for j in xrange(4)]
+            for j in range(projBBox[0], projBBox[2] + 1):
                 columns[j].add(i)
                 poly2Column[i].add(j)
-            for j in range(projBBox[1], projBBox[3]+1):
+            for j in range(projBBox[1], projBBox[3] + 1):
                 rows[j].add(i)
                 poly2Row[i].add(j)
         # loop over polygons rather than bins
@@ -89,8 +94,10 @@ class ContiguityWeights_binning:
             for row in idRows:
                 rowPotentialNeighbors = rowPotentialNeighbors.union(rows[row])
             for col in idCols:
-                colPotentialNeighbors = colPotentialNeighbors.union(columns[col])
-            potentialNeighbors = rowPotentialNeighbors.intersection(colPotentialNeighbors)
+                colPotentialNeighbors = colPotentialNeighbors.union(
+                    columns[col])
+            potentialNeighbors = rowPotentialNeighbors.intersection(
+                colPotentialNeighbors)
             if polyId not in w:
                 w[polyId] = set()
             for j in potentialNeighbors:
@@ -119,11 +126,11 @@ class ContiguityWeights_binning:
                     polygonCache[j] = set(shpFileObject.get(j).vertices)
                 common = iVerts.intersection(polygonCache[j])
                 join = False
-                if len(common) > 1: #ROOK
+                if len(common) > 1:  # ROOK
                     #double check rook
                     poly0 = shpFileObject.get(polyId)
                     poly1 = shpFileObject.get(j)
-                    if get_shared_segments(poly0,poly1,True):
+                    if get_shared_segments(poly0, poly1, True):
                         join = True
                     #for vert in common:
                     #    idx = poly0.vertices.index(vert)
@@ -135,7 +142,7 @@ class ContiguityWeights_binning:
                     #            break
                     #    except IndexError:
                     #        pass
-                if len(common) > 0: #QUEEN
+                if len(common) > 0:  # QUEEN
                     if self.wttype == QUEEN:
                         join = True
                 if join:
@@ -153,6 +160,5 @@ if __name__ == "__main__":
     t0 = time.time()
     c = ContiguityWeights_binning(pysal.open(fname), QUEEN)
     t1 = time.time()
-    print "using "+str(fname)
-    print "time elapsed for ... using bins: " + str(t1-t0)
-
+    print "using " + str(fname)
+    print "time elapsed for ... using bins: " + str(t1 - t0)

@@ -9,6 +9,7 @@ __all__ = ['rose']
 import numpy as np
 import pysal
 
+
 def rose(Y, w, k=8, permutations=0):
     """
     Calculation of rose diagram for local indicators of spatial association
@@ -28,7 +29,7 @@ def rose(Y, w, k=8, permutations=0):
        number of random spatial permutations for calculation of pseudo
        p-values
 
-    Returns 
+    Returns
     -------
 
     results: dictionary (keys defined below)
@@ -44,7 +45,7 @@ def rose(Y, w, k=8, permutations=0):
 
     pvalues: array (kx1)
         one sided (upper tail) pvalues for observed counts
-               
+
     Notes
     -----
     Based on Rey, Murray, and Anselin (2011) [1]_
@@ -150,7 +151,7 @@ def rose(Y, w, k=8, permutations=0):
 
     """
     results = {}
-    sw = 2 * np.pi / k 
+    sw = 2 * np.pi / k
     cuts = np.arange(0.0, 2 * np.pi + sw, sw)
     wY = pysal.lag_spatial(w, Y)
     dx = Y[:, -1] - Y[:, 0]
@@ -184,8 +185,9 @@ def rose(Y, w, k=8, permutations=0):
         p = (extreme + 1.) / (permutations + 1.)
         results['pvalues'] = p
         results['random_counts'] = all_counts
-        
+
     return results
+
 
 def _test():
     import doctest

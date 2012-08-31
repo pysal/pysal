@@ -46,7 +46,7 @@ from pysal.esda.geary import Geary
 from pysal.esda.join_counts import Join_Counts
 from pysal.esda.gamma import Gamma
 from pysal.esda.mapclassify import quantile, binC, bin, bin1d, Equal_Interval, \
-        Percentiles
+    Percentiles
 from pysal.esda.mapclassify import Box_Plot, Quantiles, Std_Mean, Maximum_Breaks
 from pysal.esda.mapclassify import Natural_Breaks, Fisher_Jenks, Jenks_Caspall
 from pysal.esda.mapclassify import Jenks_Caspall_Sampled, Jenks_Caspall_Forced
@@ -55,22 +55,22 @@ from pysal.esda.mapclassify import K_classifiers
 from pysal.inequality.theil import Theil, TheilD, TheilDSim
 from pysal.region.maxp import Maxp, Maxp_LISA
 from pysal.spatial_dynamics import Markov, Spatial_Markov, LISA_Markov, \
-        SpatialTau, Theta, Tau
+    SpatialTau, Theta, Tau
 from pysal.spatial_dynamics import ergodic
 from pysal.spatial_dynamics import directional
 from pysal.weights import W, lat2W, regime_weights, comb, full, shimbel, \
-        order, higher_order, remap_ids
+    order, higher_order, remap_ids
 from pysal.weights.Distance import knnW, Kernel, DistanceBand
 from pysal.weights.Contiguity import buildContiguity
 from pysal.weights.spatial_lag import lag_spatial
 from pysal.weights.Wsets import w_union, w_intersection, w_difference
 from pysal.weights.Wsets import w_symmetric_difference, w_subset
 from pysal.weights.user import queen_from_shapefile, rook_from_shapefile, \
-        knnW_from_array,knnW_from_shapefile, threshold_binaryW_from_array,\
-        threshold_binaryW_from_shapefile, threshold_continuousW_from_array,\
-        threshold_continuousW_from_shapefile, kernelW, kernelW_from_shapefile,\
-        adaptive_kernelW, adaptive_kernelW_from_shapefile,\
-        min_threshold_dist_from_shapefile, build_lattice_shapefile
+    knnW_from_array, knnW_from_shapefile, threshold_binaryW_from_array,\
+    threshold_binaryW_from_shapefile, threshold_continuousW_from_array,\
+    threshold_continuousW_from_shapefile, kernelW, kernelW_from_shapefile,\
+    adaptive_kernelW, adaptive_kernelW_from_shapefile,\
+    min_threshold_dist_from_shapefile, build_lattice_shapefile
 from pysal.core.util.weight_converter import weight_convert
 import pysal.spreg
 import pysal.examples
@@ -86,4 +86,4 @@ open = pysal.core.FileIO.FileIO
 #__all__+=weights.__all__
 
 # Constants
-MISSINGVALUE = None # used by fileIO to flag missing values.
+MISSINGVALUE = None  # used by fileIO to flag missing values.

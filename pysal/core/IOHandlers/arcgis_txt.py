@@ -8,29 +8,30 @@ from warnings import warn
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
 __all__ = ["ArcGISTextIO"]
 
+
 class ArcGISTextIO(gwt.GwtIO):
     """
     Opens, reads, and writes weights file objects in ArcGIS ASCII text format.
-    
-    Spatial weights objects in the ArcGIS text format are used in 
+
+    Spatial weights objects in the ArcGIS text format are used in
     ArcGIS Spatial Statistics tools.
     This format is a simple text file with ASCII encoding.
-    This format can be directly used with the tools under 
+    This format can be directly used with the tools under
     the category of "Mapping Clusters." But, it cannot be used with
-    the "Generate Spatial Weights Matrix" tool. 
+    the "Generate Spatial Weights Matrix" tool.
 
-    The first line of the ArcGIS text file is a header including the name of 
+    The first line of the ArcGIS text file is a header including the name of
     a data column that holded the ID variable in the original source data table.
-    After this header line, it includes three data columns 
+    After this header line, it includes three data columns
     for origin id, destination id, and weight values.
-    ArcGIS Spatial Statistics tools support only unique integer ids. 
+    ArcGIS Spatial Statistics tools support only unique integer ids.
     Thus, the values in the first two columns should be integers.
     For the case where a weights object uses non-integer IDs,
     ArcGISTextIO allows users to use internal ids corresponding to record numbers,
     instead of original ids.
 
     An exemplary structure of an ArcGIS text file is as follows:
-    [Line 1]    StationID    
+    [Line 1]    StationID
     [Line 2]    1    1    0.0
     [Line 3]    1    2    0.1
     [Line 4]    1    3    0.14286
@@ -38,24 +39,24 @@ class ArcGISTextIO(gwt.GwtIO):
     [Line 6]    2    3    0.05
     [Line 7]    3    1    0.16667
     [Line 8]    3    2    0.06667
-    [Line 9]    3    3    0.0 
+    [Line 9]    3    3    0.0
     ...
 
-    As shown in the above example, this file format allows explicit specification 
-    of weights for self-neighbors. 
-    When no entry is available for self-neighbors, 
+    As shown in the above example, this file format allows explicit specification
+    of weights for self-neighbors.
+    When no entry is available for self-neighbors,
     ArcGIS spatial statistics tools consider they have zero weights.
     PySAL ArcGISTextIO class ignores self-neighbors if their weights are zero.
 
     References
     ----------
     http://webhelp.esri.com/arcgisdesktop/9.3/index.cfm?TopicName=Modeling_spatial_relationships
-    
+
     Notes
     -----
     When there are an dbf file whose name is identical to the name of the source text file,
-    ArcGISTextIO checks the data type of the ID data column and uses it for reading and 
-    writing the text file. Otherwise, it considers IDs are strings. 
+    ArcGISTextIO checks the data type of the ID data column and uses it for reading and
+    writing the text file. Otherwise, it considers IDs are strings.
 
     """
 
@@ -64,7 +65,7 @@ class ArcGISTextIO(gwt.GwtIO):
 
     def __init__(self, *args, **kwargs):
         args = args[:2]
-        gwt.GwtIO.__init__(self, *args, **kwargs) 
+        gwt.GwtIO.__init__(self, *args, **kwargs)
 
     def _read(self):
         """Reads ArcGIS Text file
@@ -109,20 +110,20 @@ class ArcGISTextIO(gwt.GwtIO):
                     id_order = db.by_col(id_var)
                     id_type = type(id_order[0])
                 else:
-                    warn("ID_VAR:'%s' was in in the DBF header, proceeding with unordered string ids."%(id_var), RuntimeWarning)
+                    warn("ID_VAR:'%s' was in in the DBF header, proceeding with unordered string ids." % (id_var), RuntimeWarning)
             else:
                 warn("DBF relating to ArcGIS TEXT was not found, proceeding with unordered string ids.", RuntimeWarning)
         except:
             warn("Exception occurred will reading DBF, proceeding with unordered string ids.", RuntimeWarning)
 
-        if (id_type is not int) or (id_order and type(id_order)[0] is not int):    
-            raise TypeError, "The data type for ids should be integer."        
+        if (id_type is not int) or (id_order and type(id_order)[0] is not int):
+            raise TypeError("The data type for ids should be integer.")
 
         if id_order:
             self.n = len(id_order)
             self.shp = os.path.split(self.dataPath)[1].split('.')[0]
         self.id_var = id_var
-        
+
         weights, neighbors = self._readlines(id_type)
         for k in neighbors:
             if k in neighbors[k]:
@@ -132,10 +133,10 @@ class ArcGISTextIO(gwt.GwtIO):
                     del weights[k][k_index]
 
         self.pos += 1
-        return W(neighbors,weights)
+        return W(neighbors, weights)
 
     def write(self, obj, useIdIndex=False):
-        """ 
+        """
 
         Parameters
         ----------
@@ -190,19 +191,20 @@ class ArcGISTextIO(gwt.GwtIO):
         >>> os.remove(fname)
         """
         self._complain_ifclosed(self.closed)
-        if issubclass(type(obj),W):
+        if issubclass(type(obj), W):
             id_type = type(obj.id_order[0])
             if id_type is not int and not useIdIndex:
-                raise TypeError, "ArcGIS TEXT weight files support only integer IDs"
+                raise TypeError("ArcGIS TEXT weight files support only integer IDs")
             if useIdIndex:
                 id2i = obj.id2i
                 obj = remap_ids(obj, id2i)
- 
+
             header = '%s\n' % self.varName
             self.file.write(header)
             self._writelines(obj)
         else:
-            raise TypeError, "Expected a pysal weights object, got: %s" % (type(obj))
+            raise TypeError("Expected a pysal weights object, got: %s" % (
+                type(obj)))
 
 if __name__ == '__main__':
     import doctest

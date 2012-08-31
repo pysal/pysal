@@ -106,8 +106,8 @@ class Geary:
         self.p_rand = 1 - stats.norm.cdf(np.abs(self.z_rand))
 
         if permutations:
-            sim = [self.__calc(np.random.permutation(self.y)) \
-                 for i in xrange(permutations)]
+            sim = [self.__calc(np.random.permutation(self.y))
+                   for i in xrange(permutations)]
             self.sim = sim = np.array(sim)
             above = sim >= self.C
             larger = sum(above)
@@ -132,12 +132,12 @@ class Geary:
         yd = y - y.mean()
         k = (1 / (sum(yd ** 4)) * ((sum(yd ** 2)) ** 2))
         vc_rand = (1 / (n * ((n - 2) ** 2) * s02)) * \
-                ((((n - 1) * s1) * (n * n - 3 * n + 3 - (n - 1) * k)) \
-             - ((.25 * (n - 1) * s2) * (n * n + 3 * n - 6 - \
-                (n * n - n + 2) * k)) \
+            ((((n - 1) * s1) * (n * n - 3 * n + 3 - (n - 1) * k))
+             - ((.25 * (n - 1) * s2) * (n * n + 3 * n - 6 -
+                (n * n - n + 2) * k))
                 + (s02 * (n * n - 3 - ((n - 1) ** 2) * k)))
-        vc_norm = ((1 / (2 * (n + 1) * s02)) * \
-                ((2 * s1 + s2) * (n - 1) - 4 * s02))
+        vc_norm = ((1 / (2 * (n + 1) * s02)) *
+                   ((2 * s1 + s2) * (n - 1) - 4 * s02))
 
         self.VC_rand = vc_rand
         self.VC_norm = vc_norm
@@ -151,8 +151,8 @@ class Geary:
             neighbors = self.w.neighbor_offsets[i0]
             wijs = self.w.weights[i0]
             z = zip(neighbors, wijs)
-            ys[i] = sum([wij * (y2[i] - 2 * y[i] * y[j] + y2[j]) \
-                    for j, wij in z])
+            ys[i] = sum([wij * (y2[i] - 2 * y[i] * y[j] + y2[j])
+                         for j, wij in z])
         a = (self.n - 1) * sum(ys)
         return a / self.den
 

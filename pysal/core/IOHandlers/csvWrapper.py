@@ -4,6 +4,7 @@ import csv
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ['csvWrapper']
 
+
 class csvWrapper(Tables.DataTable):
 
     __doc__ = Tables.DataTable.__doc__
@@ -11,7 +12,7 @@ class csvWrapper(Tables.DataTable):
     FORMATS = ['csv']
     MODES = ['r']
 
-    def __init__(self,*args,**kwargs):
+    def __init__(self, *args, **kwargs):
         """
 
         Examples
@@ -27,26 +28,29 @@ class csvWrapper(Tables.DataTable):
 
 
         """
-        Tables.DataTable.__init__(self,*args,**kwargs)
+        Tables.DataTable.__init__(self, *args, **kwargs)
         self.__idx = {}
         self.__len = None
         self._open()
+
     def __len__(self):
         return self.__len
+
     def _open(self):
-        self.fileObj = open(self.dataPath,self.mode)
+        self.fileObj = open(self.dataPath, self.mode)
         if self.mode == 'r':
             self.dataObj = csv.reader(self.fileObj)
             data = list(self.dataObj)
             if self._determineHeader(data):
                 self.header = data.pop(0)
             else:
-                self.header = ['field_%d'%i for i in range(len(data[0]))]
+                self.header = ['field_%d' % i for i in range(len(data[0]))]
             self._spec = self._determineSpec(data)
             self.data = data
             self.fileObj.close()
             self.__len = len(data)
-    def _determineHeader(self,data):
+
+    def _determineHeader(self, data):
         #head = [val.strip().replace('-','').replace('.','').isdigit() for val in data[0]]
         #if True in head: #no numbers in header!
         #    HEADER = False
@@ -57,6 +61,7 @@ class csvWrapper(Tables.DataTable):
             HEADER = False
             return HEADER
         return True
+
     @staticmethod
     def _determineSpec(data):
         cols = len(data[0])
@@ -66,7 +71,7 @@ class csvWrapper(Tables.DataTable):
             isFloat = True
             for row in data:
                 val = row[j]
-                if not val.strip().replace('-','').replace('.','').isdigit():
+                if not val.strip().replace('-', '').replace('.', '').isdigit():
                     isInt = False
                     isFloat = False
                     break
@@ -80,19 +85,21 @@ class csvWrapper(Tables.DataTable):
             else:
                 spec.append(str)
         return spec
+
     def _read(self):
         if self.pos < len(self):
-            row  = self.data[self.pos]
-            self.pos+=1
+            row = self.data[self.pos]
+            self.pos += 1
             return row
         else:
             return None
 
+
 def _test():
-    import doctest, unittest
+    import doctest
+    import unittest
     doctest.testmod(verbose=True)
     unittest.main()
 
 if __name__ == '__main__':
-    _test() 
-        
+    _test()

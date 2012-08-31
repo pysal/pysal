@@ -12,6 +12,7 @@ from pysal.common import copy
 
 __all__ = ["Random_Regions", "Random_Region"]
 
+
 class Random_Regions:
     """Generate a list of Random_Region instances.
 
@@ -22,34 +23,34 @@ class Random_Regions:
                       IDs indexing the areas to be grouped into regions (must
                       be in the same order as spatial weights matrix if this
                       is provided)
-                    
+
     num_regions     : integer
-                      number of regions to generate (if None then this is 
-                      chosen randomly from 2 to n where n is the number of 
+                      number of regions to generate (if None then this is
+                      chosen randomly from 2 to n where n is the number of
                       areas)
 
     cardinality     : list
                       list containing the number of areas to assign to regions
                       (if num_regions is also provided then len(cardinality)
-                      must equal num_regions; if cardinality=None then a list 
+                      must equal num_regions; if cardinality=None then a list
                       of length num_regions will be generated randomly)
 
     contiguity      : W
-                      spatial weights object (if None then contiguity will be 
+                      spatial weights object (if None then contiguity will be
                       ignored)
 
     maxiter         : int
-                      maximum number attempts (for each permutation) at finding 
-                      a feasible solution (only affects contiguity constrained 
-                      regions) 
+                      maximum number attempts (for each permutation) at finding
+                      a feasible solution (only affects contiguity constrained
+                      regions)
 
     compact         : boolean
-                      attempt to build compact regions, note (only affects 
+                      attempt to build compact regions, note (only affects
                       contiguity constrained regions)
 
     max_swaps       : int
                       maximum number of swaps to find a feasible solution
-                      (only affects contiguity constrained regions) 
+                      (only affects contiguity constrained regions)
 
     permutations    : int
                       number of Random_Region instances to generate
@@ -77,13 +78,13 @@ class Random_Regions:
     >>> ids = w.id_order
 
     Unconstrained
-    
+
     >>> random.seed(10)
     >>> np.random.seed(10)
     >>> t0 = pysal.region.Random_Regions(ids, permutations=2)
     >>> t0.solutions[0].regions[0]
     [19, 14, 43, 37, 66, 3, 79, 41, 38, 68, 2, 1, 60]
-    
+
     Cardinality and contiguity constrained (num_regions implied)
 
     >>> random.seed(60)
@@ -91,15 +92,15 @@ class Random_Regions:
     >>> t1 = pysal.region.Random_Regions(ids, num_regions=nregs, cardinality=cards, contiguity=w, permutations=2)
     >>> t1.solutions[0].regions[0]
     [88, 97, 98, 89, 99, 86, 78, 59, 49, 69, 68, 79, 77]
-    
+
     Cardinality constrained (num_regions implied)
-    
+
     >>> random.seed(100)
     >>> np.random.seed(100)
     >>> t2 = pysal.region.Random_Regions(ids, num_regions=nregs, cardinality=cards, permutations=2)
     >>> t2.solutions[0].regions[0]
     [37, 62]
-    
+
     Number of regions and contiguity constrained
 
     >>> random.seed(100)
@@ -107,7 +108,7 @@ class Random_Regions:
     >>> t3 = pysal.region.Random_Regions(ids, num_regions=nregs, contiguity=w, permutations=2)
     >>> t3.solutions[0].regions[1]
     [71, 72, 70, 93, 51, 91, 85, 74, 63, 73, 61, 62, 82]
-    
+
     Cardinality and contiguity constrained
 
     >>> random.seed(60)
@@ -115,7 +116,7 @@ class Random_Regions:
     >>> t4 = pysal.region.Random_Regions(ids, cardinality=cards, contiguity=w, permutations=2)
     >>> t4.solutions[0].regions[0]
     [88, 97, 98, 89, 99, 86, 78, 59, 49, 69, 68, 79, 77]
-    
+
     Number of regions constrained
 
     >>> random.seed(100)
@@ -123,7 +124,7 @@ class Random_Regions:
     >>> t5 = pysal.region.Random_Regions(ids, num_regions=nregs, permutations=2)
     >>> t5.solutions[0].regions[0]
     [37, 62, 26, 41, 35, 25, 36]
-    
+
     Cardinality constrained
 
     >>> random.seed(100)
@@ -131,7 +132,7 @@ class Random_Regions:
     >>> t6 = pysal.region.Random_Regions(ids, cardinality=cards, permutations=2)
     >>> t6.solutions[0].regions[0]
     [37, 62]
-    
+
     Contiguity constrained
 
     >>> random.seed(100)
@@ -141,12 +142,13 @@ class Random_Regions:
     [62, 52, 51, 50]
 
     """
-    def __init__(self, area_ids, num_regions=None, cardinality=None, contiguity=None,\
-                    maxiter=100, compact=False, max_swaps=1000000, permutations=99):
-        
+    def __init__(
+        self, area_ids, num_regions=None, cardinality=None, contiguity=None,
+        maxiter=100, compact=False, max_swaps=1000000, permutations=99):
+
         solutions = []
         for i in range(permutations):
-            solutions.append(Random_Region(area_ids, num_regions, cardinality,\
+            solutions.append(Random_Region(area_ids, num_regions, cardinality,
                                            contiguity, maxiter, compact, max_swaps))
         self.solutions = solutions
         self.solutions_feas = []
@@ -156,7 +158,7 @@ class Random_Regions:
 
 
 class Random_Region:
-    """Randomly combine a given set of areas into two or more regions based 
+    """Randomly combine a given set of areas into two or more regions based
     on various constraints.
 
 
@@ -167,33 +169,33 @@ class Random_Region:
                       IDs indexing the areas to be grouped into regions (must
                       be in the same order as spatial weights matrix if this
                       is provided)
-                    
+
     num_regions     : integer
-                      number of regions to generate (if None then this is 
-                      chosen randomly from 2 to n where n is the number of 
+                      number of regions to generate (if None then this is
+                      chosen randomly from 2 to n where n is the number of
                       areas)
 
     cardinality     : list
                       list containing the number of areas to assign to regions
                       (if num_regions is also provided then len(cardinality)
-                      must equal num_regions; if cardinality=None then a list 
+                      must equal num_regions; if cardinality=None then a list
                       of length num_regions will be generated randomly)
 
     contiguity      : W
-                      spatial weights object (if None then contiguity will be 
+                      spatial weights object (if None then contiguity will be
                       ignored)
 
     maxiter         : int
                       maximum number attempts at finding a feasible solution
-                      (only affects contiguity constrained regions) 
+                      (only affects contiguity constrained regions)
 
     compact         : boolean
-                      attempt to build compact regions (only affects 
+                      attempt to build compact regions (only affects
                       contiguity constrained regions)
 
     max_swaps       : int
                       maximum number of swaps to find a feasible solution
-                      (only affects contiguity constrained regions) 
+                      (only affects contiguity constrained regions)
 
     Attributes
     ----------
@@ -201,7 +203,7 @@ class Random_Region:
     feasible        : boolean
                       if True then solution was found
 
-    regions         : list 
+    regions         : list
                       list of lists of regions (each list has the ids of areas
                       in that region)
 
@@ -225,7 +227,7 @@ class Random_Region:
     >>> t0 = pysal.region.Random_Region(ids)
     >>> t0.regions[0]
     [19, 14, 43, 37, 66, 3, 79, 41, 38, 68, 2, 1, 60]
-    
+
     Cardinality and contiguity constrained (num_regions implied)
 
     >>> random.seed(60)
@@ -233,49 +235,49 @@ class Random_Region:
     >>> t1 = pysal.region.Random_Region(ids, num_regions=nregs, cardinality=cards, contiguity=w)
     >>> t1.regions[0]
     [88, 97, 98, 89, 99, 86, 78, 59, 49, 69, 68, 79, 77]
-    
+
     Cardinality constrained (num_regions implied)
-    
+
     >>> random.seed(100)
     >>> np.random.seed(100)
     >>> t2 = pysal.region.Random_Region(ids, num_regions=nregs, cardinality=cards)
     >>> t2.regions[0]
     [37, 62]
-    
+
     Number of regions and contiguity constrained
-    
+
     >>> random.seed(100)
     >>> np.random.seed(100)
     >>> t3 = pysal.region.Random_Region(ids, num_regions=nregs, contiguity=w)
     >>> t3.regions[1]
     [71, 72, 70, 93, 51, 91, 85, 74, 63, 73, 61, 62, 82]
-    
+
     Cardinality and contiguity constrained
-    
+
     >>> random.seed(60)
     >>> np.random.seed(60)
     >>> t4 = pysal.region.Random_Region(ids, cardinality=cards, contiguity=w)
     >>> t4.regions[0]
     [88, 97, 98, 89, 99, 86, 78, 59, 49, 69, 68, 79, 77]
-    
+
     Number of regions constrained
-    
+
     >>> random.seed(100)
     >>> np.random.seed(100)
     >>> t5 = pysal.region.Random_Region(ids, num_regions=nregs)
     >>> t5.regions[0]
     [37, 62, 26, 41, 35, 25, 36]
-    
+
     Cardinality constrained
-    
+
     >>> random.seed(100)
     >>> np.random.seed(100)
     >>> t6 = pysal.region.Random_Region(ids, cardinality=cards)
     >>> t6.regions[0]
     [37, 62]
-    
+
     Contiguity constrained
-    
+
     >>> random.seed(100)
     >>> np.random.seed(100)
     >>> t7 = pysal.region.Random_Region(ids, contiguity=w)
@@ -283,9 +285,10 @@ class Random_Region:
     [37, 27, 36, 17]
 
     """
-    def __init__(self, area_ids, num_regions=None, cardinality=None, contiguity=None,\
+    def __init__(
+        self, area_ids, num_regions=None, cardinality=None, contiguity=None,
                     maxiter=1000, compact=False, max_swaps=1000000):
-        
+
         self.n = len(area_ids)
         ids = copy.copy(area_ids)
         self.ids = list(np.random.permutation(ids))
@@ -319,12 +322,12 @@ class Random_Region:
         elif num_regions and contiguity:
             # conditioning on number of regions and contiguity
             cards = self.get_cards(num_regions)
-            self.build_contig_regions(num_regions, cards, contiguity,\
+            self.build_contig_regions(num_regions, cards, contiguity,
                                       maxiter, compact, max_swaps)
         elif cardinality and contiguity:
             # conditioning on cardinality and contiguity
             num_regions = len(cardinality)
-            self.build_contig_regions(num_regions, cardinality, contiguity,\
+            self.build_contig_regions(num_regions, cardinality, contiguity,
                                       maxiter, compact, max_swaps)
         elif num_regions:
             # conditioning on number of regions only
@@ -339,7 +342,7 @@ class Random_Region:
             # conditioning on number of contiguity only
             num_regions = self.get_num_regions()
             cards = self.get_cards(num_regions)
-            self.build_contig_regions(num_regions, cards, contiguity,\
+            self.build_contig_regions(num_regions, cards, contiguity,
                                       maxiter, compact, max_swaps)
         else:
             # unconditioned
@@ -396,9 +399,9 @@ class Random_Region:
             potential.remove(add_area)
             add_areas.append(add_area)
         for i in add_areas:
-            potential.extend([j for j in w.neighbors[i] \
-                                 if j not in region and \
-                                    j not in potential and \
+            potential.extend([j for j in w.neighbors[i]
+                                 if j not in region and
+                                    j not in potential and
                                     j in candidates])
         return region, candidates, potential
 
@@ -410,13 +413,13 @@ class Random_Region:
         region.append(add_area)
         candidates.remove(add_area)
         potential.remove(add_area)
-        potential.extend([i for i in w.neighbors[add_area] \
-                             if i not in region and \
-                                i not in potential and \
+        potential.extend([i for i in w.neighbors[add_area]
+                             if i not in region and
+                                i not in potential and
                                 i in candidates])
         return region, candidates, potential
 
-    def build_contig_regions(self, num_regions, cardinality, w,\
+    def build_contig_regions(self, num_regions, cardinality, w,
                                 maxiter, compact, max_swaps):
         if compact:
             grow_region = self.grow_compact
@@ -424,7 +427,7 @@ class Random_Region:
             grow_region = self.grow_free
         iter = 0
         while iter < maxiter:
-            
+
             # regionalization setup
             regions = []
             size_pre = 0
@@ -435,7 +438,7 @@ class Random_Region:
             cards = copy.copy(cardinality)
             cards.sort()  # try to build largest regions first (pop from end of list)
             candidates = copy.copy(self.ids)  # these are already shuffled
-            
+
             # begin building regions
             while candidates and swap_count < max_swaps:
                 # setup test to determine if swapping is needed
@@ -450,7 +453,7 @@ class Random_Region:
                     # start swapping
                     # swapping simply changes the candidate list
                     swap_in = None   # area to become new candidate
-                    while swap_in == None: #PEP8 E711
+                    while swap_in is None:  # PEP8 E711
                         swap_count += 1
                         swap_out = candidates.pop(0)  # area to remove from candidates
                         swap_neighs = copy.copy(w.neighbors[swap_out])
@@ -463,10 +466,10 @@ class Random_Region:
                                 swap_region = regions[swap_index]
                                 swap_region = list(np.random.permutation(swap_region))
                                 for j in swap_region:
-                                    if j != join:  # leave the join area to ensure regional connectivity 
+                                    if j != join:  # leave the join area to ensure regional connectivity
                                         swap_in = j
                                         break
-                            if swap_in != None: #PEP8 E711
+                            if swap_in is not None:  # PEP8 E711
                                 break
                         else:
                             candidates.append(swap_out)
@@ -488,7 +491,8 @@ class Random_Region:
                 # begin building single region
                 while building and len(region) < test_card:
                     if potential:
-                        region, candidates, potential = grow_region(w, test_card,\
+                        region, candidates, potential = grow_region(
+                            w, test_card,
                                         region, candidates, potential)
                     else:
                         # not enough potential neighbors to reach test_card size
@@ -501,7 +505,7 @@ class Random_Region:
                             # constructed region doesn't match a candidate region size
                             candidates.extend(region)
                             region = []
-                
+
                 # cleanup when successful region built
                 if region:
                     regions.append(region)
@@ -509,7 +513,7 @@ class Random_Region:
                     for i in region:
                         area2region[i] = region_index   # area2region needed for swapping
 
-            # handling of regionalization result            
+            # handling of regionalization result
             if len(regions) < num_regions:
                 # regionalization failed
                 self.ids = list(np.random.permutation(self.ids))
@@ -520,6 +524,7 @@ class Random_Region:
                 self.feasible = True
                 iter = maxiter
         self.regions = regions
+
 
 def _test():
     import doctest

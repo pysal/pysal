@@ -1,7 +1,7 @@
 """
 Rank and spatial rank mobility measures
 """
-__author__  = "Sergio J. Rey <srey@asu.edu> "
+__author__ = "Sergio J. Rey <srey@asu.edu> "
 
 #from pysal.common import *
 from scipy.stats.mstats import rankdata
@@ -11,7 +11,8 @@ import numpy as np
 import scipy as sp
 from numpy.random import permutation as NRP
 
-__all__=['SpatialTau', 'Tau', 'Theta', ]
+__all__ = ['SpatialTau', 'Tau', 'Theta', ]
+
 
 class Theta:
     """
@@ -22,7 +23,7 @@ class Theta:
     within mutually exclusive and exhaustive partitions (regimes) of the n locations.
 
     Theta is defined as the sum of the absolute sum of rank changes within
-    the regimes over the sum of all absolute rank changes. 
+    the regimes over the sum of all absolute rank changes.
 
 
     Parameters
@@ -41,7 +42,7 @@ class Theta:
     ranks        : array
                    ranks of the original y array (by columns)
     regimes      : array
-                   the original regimes array 
+                   the original regimes array
     total        : array (k-1,)
                    the total number of rank changes for each of the k periods
     max_total    : int
@@ -84,35 +85,37 @@ class Theta:
     array([ 130.,  114.,   88.,   90.,   90.,   72.])
     >>> t.max_total
     512
-    >>> 
+    >>>
     """
-    def __init__(self,y,regime,permutations=999):
-        ranks=rankdata(y,axis=0)
-        self.ranks=ranks
-        n,k=y.shape
-        ranks_d=ranks[:,range(1,k)] - ranks[:,range(k-1)]
-        self.ranks_d=ranks_d
-        regimes=sp.unique(regime)
-        self.regimes=regimes
-        self.total=sum(abs(ranks_d))
-        self.max_total=sum([abs(i-n+i-1) for i in range(1,n+1)])
+    def __init__(self, y, regime, permutations=999):
+        ranks = rankdata(y, axis=0)
+        self.ranks = ranks
+        n, k = y.shape
+        ranks_d = ranks[:, range(1, k)] - ranks[:, range(k - 1)]
+        self.ranks_d = ranks_d
+        regimes = sp.unique(regime)
+        self.regimes = regimes
+        self.total = sum(abs(ranks_d))
+        self.max_total = sum([abs(i - n + i - 1) for i in range(1, n + 1)])
         self._calc(regime)
-        self.theta=self._calc(regime)
-        self.permutations=permutations
+        self.theta = self._calc(regime)
+        self.permutations = permutations
         if permutations:
             np.perm = np.random.permutation
-            sim=np.array([self._calc(np.perm(regime)) for i in xrange(permutations)])
-            self.theta.shape=(1,len(self.theta))
-            sim=np.concatenate((self.theta,sim))
-            self.sim=sim
-            den=permutations+1.
-            self.pvalue_left=(sim<=sim[0]).sum(axis=0)/den
-            self.pvalue_right=(sim>sim[0]).sum(axis=0)/den
-            self.z=(sim[0]-sim.mean(axis=0))/sim.std(axis=0)
+            sim = np.array([self._calc(
+                np.perm(regime)) for i in xrange(permutations)])
+            self.theta.shape = (1, len(self.theta))
+            sim = np.concatenate((self.theta, sim))
+            self.sim = sim
+            den = permutations + 1.
+            self.pvalue_left = (sim <= sim[0]).sum(axis=0) / den
+            self.pvalue_right = (sim > sim[0]).sum(axis=0) / den
+            self.z = (sim[0] - sim.mean(axis=0)) / sim.std(axis=0)
 
-    def _calc(self,regime):
-        within=[abs(sum(self.ranks_d[regime==reg])) for reg in self.regimes]
-        return np.array(sum(within)/self.total)
+    def _calc(self, regime):
+        within = [abs(
+            sum(self.ranks_d[regime == reg])) for reg in self.regimes]
+        return np.array(sum(within) / self.total)
 
 
 class Tau:
@@ -138,7 +141,7 @@ class Tau:
     Notes
     -----
 
-    Modification of algorithm suggested by Christensen (2005). 
+    Modification of algorithm suggested by Christensen (2005).
     PySAL implementation uses a list based representation of a binary tree for
     the accumulation of the concordance measures. Ties are handled by this
     implementation (in other words, if there are ties in either x, or y, or
@@ -169,8 +172,8 @@ class Tau:
 
     """
 
-    def __init__(self,x,y):
-        res = self._calc(x,y)
+    def __init__(self, x, y):
+        res = self._calc(x, y)
         self.tau = res[0]
         self.tau_p = res[1]
         self.concordant = res[2]
@@ -178,13 +181,13 @@ class Tau:
         self.extraX = res[4]
         self.extraY = res[5]
 
-    def _calc(self, x,y):
+    def _calc(self, x, y):
         """
         List based implementation of binary tree algorithm for concordance
         measure after Christensen (2005).
 
         """
-        x = np.array(x) 
+        x = np.array(x)
         y = np.array(y)
         n = len(y)
         perm = range(n)
@@ -201,20 +204,20 @@ class Tau:
         Concordant = 0
         Discordant = 0
         # ids for left child
-        li = [None] * (n-1) 
+        li = [None] * (n - 1)
         # ids for right child
-        ri = [None] * (n-1) 
+        ri = [None] * (n - 1)
         # number of left descendants for a node
-        ld = np.zeros(n) 
+        ld = np.zeros(n)
         # number of values equal to value i
         nequal = np.zeros(n)
 
-        for i in range(1,n):
+        for i in range(1, n):
             NumBefore = 0
             NumEqual = 1
             root = 0
-            x0 = x[perm[i-1]]
-            y0 = y[perm[i-1]]
+            x0 = x[perm[i - 1]]
+            y0 = y[perm[i - 1]]
             x1 = x[perm[i]]
             y1 = y[perm[i]]
             if x0 != x1:
@@ -229,19 +232,19 @@ class Tau:
             root = 0
             inserting = True
             while inserting:
-                current = y[perm[i]] 
-                if current > y[perm[root]]: 
+                current = y[perm[i]]
+                if current > y[perm[root]]:
                     # right branch
-                    NumBefore += 1 + ld[root] + nequal[root] 
+                    NumBefore += 1 + ld[root] + nequal[root]
                     if ri[root] is None:
                         # insert as right child to root
                         ri[root] = i
-                        inserting =  False
+                        inserting = False
                     else:
                         root = ri[root]
-                elif current < y[perm[root]]: 
+                elif current < y[perm[root]]:
                     # increment number of left descendants
-                    ld[root] += 1 
+                    ld[root] += 1
                     if li[root] is None:
                         # insert as left child to root
                         li[root] = i
@@ -249,7 +252,7 @@ class Tau:
                     else:
                         root = li[root]
                 elif current == y[perm[root]]:
-                    NumBefore +=  ld[root] 
+                    NumBefore += ld[root]
                     NumEqual += nequal[root] + 1
                     nequal[root] += 1
                     inserting = False
@@ -264,10 +267,10 @@ class Tau:
 
         cd = Concordant + Discordant
         num = Concordant - Discordant
-        tau = num / np.sqrt( (cd + ExtraX) * (cd + ExtraY))
-        v = (4.*n + 10) / (9. * n * (n-1))
+        tau = num / np.sqrt((cd + ExtraX) * (cd + ExtraY))
+        v = (4. * n + 10) / (9. * n * (n - 1))
         z = tau / np.sqrt(v)
-        pval = erfc(np.abs(z) / 1.4142136) # follow scipy
+        pval = erfc(np.abs(z) / 1.4142136)  # follow scipy
         return tau, pval, Concordant, Discordant, ExtraX, ExtraY
 
 
@@ -308,7 +311,7 @@ class SpatialTau:
     concordant_spatial : float
                    Number of concordant pairs that are spatial neighbors
     extraX       : float
-                   Number of extra X pairs 
+                   Number of extra X pairs
     extraY       : float
                    Number of extra Y pairs
     discordant   : float
@@ -356,7 +359,7 @@ class SpatialTau:
     >>> for r in res:
     ...     ev = r.taus.mean()
     ...     "%8.3f %8.3f %8.3f"%(r.tau_spatial, ev, r.tau_spatial_psim)
-    ...     
+    ...
     '   0.281    0.466    0.010'
     '   0.348    0.499    0.010'
     '   0.460    0.546    0.020'
@@ -365,22 +368,20 @@ class SpatialTau:
     '   0.572    0.579    0.280'
     """
 
-
-
     def __init__(self, x, y, w, permutations=0):
 
         w.transform = 'b'
         self.n = len(x)
-        res = Tau(x,y)
+        res = Tau(x, y)
         self.tau = res.tau
         self.tau_p = res.tau_p
         self.concordant = res.concordant
         self.discordant = res.discordant
         self.extraX = res.extraX
         self.extraY = res.extraY
-        res = self._calc(x,y,w)
+        res = self._calc(x, y, w)
         self.tau_spatial = res[0]
-        self.pairs_spatial = int(w.s0 /2.)
+        self.pairs_spatial = int(w.s0 / 2.)
         self.concordant_spatial = res[1]
         self.discordant_spatial = res[2]
 
@@ -389,13 +390,12 @@ class SpatialTau:
             ids = np.arange(self.n)
             for r in xrange(permutations):
                 rids = np.random.permutation(ids)
-                taus[r] = self._calc(x[rids],y[rids],w)[0]
+                taus[r] = self._calc(x[rids], y[rids], w)[0]
             self.taus = taus
             self.tau_spatial_psim = pseudop(taus, self.tau_spatial,
-                    permutations)
+                                            permutations)
 
-
-    def _calc(self,x,y,w):
+    def _calc(self, x, y, w):
         n1 = n2 = iS = gc = 0
         ijs = {}
         for i in w.id_order:
@@ -403,12 +403,12 @@ class SpatialTau:
             yi = y[i]
             for j in w.neighbors[i]:
                 if i < j:
-                    ijs[(i,j)] = (i,j)
+                    ijs[(i, j)] = (i, j)
                     xj = x[j]
                     yj = y[j]
-                    dx = xi-xj
-                    dy = yi-yj
-                    dxdy = dx*dy
+                    dx = xi - xj
+                    dy = yi - yj
+                    dxdy = dx * dy
                     if dxdy != 0:
                         n1 += 1
                         n2 += 2
@@ -424,8 +424,7 @@ class SpatialTau:
                             n2 += 1
         tau_g = iS / (np.sqrt(n1) * np.sqrt(n2))
         gd = gc - iS
-        return [tau_g, gc, gd ]
-            
+        return [tau_g, gc, gd]
 
 
 def pseudop(sim, observed, nperm):
@@ -436,10 +435,10 @@ def pseudop(sim, observed, nperm):
         psim = (nperm - larger + 1.) / (nperm + 1.)
     return psim
 
+
 def _test():
     import doctest
     doctest.testmod(verbose=True)
 
 if __name__ == '__main__':
     _test()
-

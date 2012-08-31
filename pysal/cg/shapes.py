@@ -3,7 +3,7 @@ Computational geometry code for PySAL: Python Spatial Analysis Library.
 
 """
 
-__author__  = "Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow"
+__author__ = "Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow"
 __credits__ = "Copyright (c) 2005-2009 Sergio J. Rey"
 
 import doctest
@@ -11,26 +11,29 @@ import math
 from warnings import warn
 from sphere import arcdist
 
-__all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon', 'Rectangle', 'asShape']
+__all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon',
+           'Rectangle', 'asShape']
+
 
 def asShape(obj):
     """ Returns a pysal shape object from obj.
         obj must support the __geo_interface__.
     """
-    if hasattr(obj,'__geo_interface__'):
+    if hasattr(obj, '__geo_interface__'):
         geo = obj.__geo_interface__
     else:
         geo = obj
-    if hasattr(geo,'type'):
-        raise TypeError,'%r does not appear to be a shape object'%(obj)
+    if hasattr(geo, 'type'):
+        raise TypeError('%r does not appear to be a shape object' % (obj))
     geo_type = geo['type'].lower()
     #if geo_type.startswith('multi'):
     #    raise NotImplementedError, "%s are not supported at this time."%geo_type
     if geo_type in _geoJSON_type_to_Pysal_type:
         return _geoJSON_type_to_Pysal_type[geo_type].__from_geo_interface__(obj.__geo_interface__)
     else:
-        raise NotImplementedError, "%s is not supported at this time."%geo_type
-    
+        raise NotImplementedError(
+            "%s is not supported at this time." % geo_type)
+
 
 class Point(object):
     """
@@ -44,31 +47,33 @@ class Point(object):
         """
         Returns an instance of a Point object.
 
-        __init__((number, number)) -> Point 
+        __init__((number, number)) -> Point
 
-        Test tag: <tc>#is#Point.__init__</tc>    
-        Test tag: <tc>#tests#Point.__init__</tc>    
- 
+        Test tag: <tc>#is#Point.__init__</tc>
+        Test tag: <tc>#tests#Point.__init__</tc>
+
         Parameters
         ----------
-        loc : tuple location (number x-tuple, x > 1) 
+        loc : tuple location (number x-tuple, x > 1)
 
         Attributes
         ----------
 
         Examples
         --------
-        >>> p = Point((1, 3)) 
+        >>> p = Point((1, 3))
         """
         self.__loc = tuple(map(float, loc))
+
     @classmethod
     def __from_geo_interface__(cls, geo):
         return cls(geo['coordinates'])
+
     @property
     def __geo_interface__(self):
-        return {'type': 'Point', 'coordinates':self.__loc}
+        return {'type': 'Point', 'coordinates': self.__loc}
 
-    def __lt__(self,other):
+    def __lt__(self, other):
         """
         Tests if the Point is < another object.
 
@@ -90,7 +95,7 @@ class Point(object):
         """
         return (self.__loc) < (other.__loc)
 
-    def __le__(self,other):
+    def __le__(self, other):
         """
         Tests if the Point is <= another object.
 
@@ -112,7 +117,7 @@ class Point(object):
         """
         return (self.__loc) <= (other.__loc)
 
-    def __eq__(self,other):
+    def __eq__(self, other):
         """
         Tests if the Point is equal to another object.
 
@@ -137,7 +142,7 @@ class Point(object):
         except AttributeError:
             return False
 
-    def __ne__(self,other):
+    def __ne__(self, other):
         """
         Tests if the Point is not equal to another object.
 
@@ -161,7 +166,8 @@ class Point(object):
             return (self.__loc) != (other.__loc)
         except AttributeError:
             return True
-    def __gt__(self,other):
+
+    def __gt__(self, other):
         """
         Tests if the Point is > another object.
 
@@ -182,7 +188,8 @@ class Point(object):
         False
         """
         return (self.__loc) > (other.__loc)
-    def __ge__(self,other):
+
+    def __ge__(self, other):
         """
         Tests if the Point is >= another object.
 
@@ -226,7 +233,7 @@ class Point(object):
         """
         return hash(self.__loc)
 
-    def __getitem__(self,*args):
+    def __getitem__(self, *args):
         """
         Return the coordinate for the given dimension.
 
@@ -249,7 +256,7 @@ class Point(object):
         """
         return self.__loc.__getitem__(*args)
 
-    def __getslice__(self,*args):
+    def __getslice__(self, *args):
         """
         Return the coordinate for the given dimensions.
 
@@ -298,7 +305,7 @@ class Point(object):
         Returns the string representation of the Point
 
         __repr__() -> string
-        
+
         Parameters
         ----------
         None
@@ -316,12 +323,12 @@ class Point(object):
     def __str__(self):
         """
         Returns a string representation of a Point object.
-                   
-        __str__() -> string 
 
-        Test tag: <tc>#is#Point.__str__</tc>    
-        Test tag: <tc>#tests#Point.__str__</tc>    
- 
+        __str__() -> string
+
+        Test tag: <tc>#is#Point.__str__</tc>
+        Test tag: <tc>#tests#Point.__str__</tc>
+
         Attributes
         ----------
 
@@ -333,6 +340,7 @@ class Point(object):
         """
         return str(self.__loc)
 
+
 class LineSegment(object):
     """
     Geometric representation of line segment objects.
@@ -341,9 +349,9 @@ class LineSegment(object):
     Parameters
     ----------
 
-    start_pt     : Point 
+    start_pt     : Point
                    Point where segment begins
-    end_pt       : Point 
+    end_pt       : Point
                    Point where segment ends
 
     Attributes
@@ -361,11 +369,11 @@ class LineSegment(object):
                       The line on which the segment lies
 
     """
- 
+
     def __init__(self, start_pt, end_pt):
         """
         Creates a LineSegment object.
- 
+
         __init__(Point, Point) -> LineSegment
 
         Test tag: <tc>#is#LineSegment.__init__</tc>
@@ -382,9 +390,11 @@ class LineSegment(object):
         self._p1 = start_pt
         self._p2 = end_pt
         self._reset_props()
+
     def __str__(self):
-        return "LineSegment("+str(self._p1)+", "+str(self._p2)+")"
-    def __eq__(self,other):
+        return "LineSegment(" + str(self._p1) + ", " + str(self._p2) + ")"
+
+    def __eq__(self, other):
         """
         Returns true if self and other are the same line segment
 
@@ -397,13 +407,14 @@ class LineSegment(object):
         >>> l2 == l1
         True
         """
-        if not isinstance(other,self.__class__):
+        if not isinstance(other, self.__class__):
             return False
         if (other.p1 == self._p1 and other.p2 == self._p2):
             return True
         elif (other.p2 == self._p1 and other.p1 == self._p2):
             return True
         return False
+
     def _reset_props(self):
         """
         HELPER METHOD. DO NOT CALL.
@@ -420,7 +431,7 @@ class LineSegment(object):
         --------
         >>> ls = LineSegment(Point((1, 2)), Point((5, 6)))
         >>> ls._reset_props()
-        """ 
+        """
         self._bounding_box = None
         self._len = None
         self._line = False
@@ -439,7 +450,7 @@ class LineSegment(object):
         Examples
         --------
         >>> ls = LineSegment(Point((1, 2)), Point((5, 6)))
-        >>> r = ls._get_p1() 
+        >>> r = ls._get_p1()
         >>> r == Point((1, 2))
         True
         """
@@ -483,7 +494,7 @@ class LineSegment(object):
         Examples
         --------
         >>> ls = LineSegment(Point((1, 2)), Point((5, 6)))
-        >>> r = ls._get_p2() 
+        >>> r = ls._get_p2()
         >>> r == Point((5, 6))
         True
         """
@@ -516,7 +527,7 @@ class LineSegment(object):
     def is_ccw(self, pt):
         """
         Returns whether a point is counterclockwise of the segment. Exclusive.
- 
+
         is_ccw(Point) -> bool
 
         Test tag: <tc>#is#LineSegment.is_ccw</tc>
@@ -525,7 +536,7 @@ class LineSegment(object):
         Parameters
         ----------
         pt : point lying ccw or cw of a segment
- 
+
         Attributes
         ----------
 
@@ -540,12 +551,12 @@ class LineSegment(object):
         v1 = (self._p2[0] - self._p1[0], self._p2[1] - self._p1[1])
         v2 = (pt[0] - self._p1[0], pt[1] - self._p1[1])
 
-        return v1[0]*v2[1] - v1[1]*v2[0] > 0
+        return v1[0] * v2[1] - v1[1] * v2[0] > 0
 
     def is_cw(self, pt):
         """
-        Returns whether a point is clockwise of the segment. Exclusive. 
- 
+        Returns whether a point is clockwise of the segment. Exclusive.
+
         is_cw(Point) -> bool
 
         Test tag: <tc>#is#LineSegment.is_cw</tc>
@@ -554,7 +565,7 @@ class LineSegment(object):
         Parameters
         ----------
         pt : point lying ccw or cw of a segment
- 
+
         Attributes
         ----------
 
@@ -568,12 +579,12 @@ class LineSegment(object):
         """
         v1 = (self._p2[0] - self._p1[0], self._p2[1] - self._p1[1])
         v2 = (pt[0] - self._p1[0], pt[1] - self._p1[1])
-        return v1[0]*v2[1] - v1[1]*v2[0] < 0
+        return v1[0] * v2[1] - v1[1] * v2[0] < 0
 
     def get_swap(self):
         """
         Returns a LineSegment object which has its endpoints swapped.
- 
+
         get_swap() -> LineSegment
 
         Test tag: <tc>#is#LineSegment.get_swap</tc>
@@ -595,7 +606,7 @@ class LineSegment(object):
         >>> swap.p2[1]
         2.0
         """
-        return LineSegment(self._p2, self._p1) 
+        return LineSegment(self._p2, self._p1)
 
     @property
     def bounding_box(self):
@@ -604,7 +615,7 @@ class LineSegment(object):
 
         Test tag: <tc>#is#LineSegment.bounding_box</tc>
         Test tag: <tc>#tests#LineSegment.bounding_box</tc>
- 
+
         bounding_box -> Rectangle
 
         Attributes
@@ -622,11 +633,14 @@ class LineSegment(object):
         >>> ls.bounding_box.upper
         6.0
         """
-        if self._bounding_box == None: # If LineSegment attributes p1, p2 changed, recompute
-            self._bounding_box = Rectangle(min([self._p1[0], self._p2[0]]), min([self._p1[1], self._p2[1]]),
-                                           max([self._p1[0], self._p2[0]]), max([self._p1[1], self._p2[1]]))
-        return Rectangle(self._bounding_box.left, self._bounding_box.lower, self._bounding_box.right, 
-                         self._bounding_box.upper)
+        if self._bounding_box is None:  # If LineSegment attributes p1, p2 changed, recompute
+            self._bounding_box = Rectangle(
+                min([self._p1[0], self._p2[0]]), min([
+                    self._p1[1], self._p2[1]]),
+                max([self._p1[0], self._p2[0]]), max([self._p1[1], self._p2[1]]))
+        return Rectangle(
+            self._bounding_box.left, self._bounding_box.lower, self._bounding_box.right,
+            self._bounding_box.upper)
 
     @property
     def len(self):
@@ -635,7 +649,7 @@ class LineSegment(object):
 
         Test tag: <tc>#is#LineSegment.len</tc>
         Test tag: <tc>#tests#LineSegment.len</tc>
- 
+
         len() -> number
 
         Attributes
@@ -647,18 +661,19 @@ class LineSegment(object):
         >>> ls.len
         3.0
         """
-        if self._len == None: # If LineSegment attributes p1, p2 changed, recompute
-            self._len = math.hypot(self._p1[0] - self._p2[0], self._p1[1] - self._p2[1])
+        if self._len is None:  # If LineSegment attributes p1, p2 changed, recompute
+            self._len = math.hypot(self._p1[0] - self._p2[0],
+                                   self._p1[1] - self._p2[1])
         return self._len
 
     @property
     def line(self):
         """
         Returns a Line object of the line which the segment lies on.
- 
+
         Test tag: <tc>#is#LineSegment.line</tc>
         Test tag: <tc>#tests#LineSegment.line</tc>
- 
+
         line() -> Line
 
         Attributes
@@ -681,10 +696,11 @@ class LineSegment(object):
             elif dx == 0:
                 self._line = VerticalLine(self._p1[0])
             else:
-                m = dy/dx
-                b = self._p1[1] - m*self._p1[0] # y - mx
+                m = dy / dx
+                b = self._p1[1] - m * self._p1[0]  # y - mx
                 self._line = Line(m, b)
         return self._line
+
 
 class VerticalLine:
     """
@@ -698,9 +714,9 @@ class VerticalLine:
     def __init__(self, x):
         """
         Returns a VerticalLine object.
- 
+
         __init__(number) -> VerticalLine
- 
+
         Parameters
         ----------
         x : the x-intercept of the line
@@ -719,10 +735,11 @@ class VerticalLine:
         self._x = float(x)
         self.m = float('inf')
         self.b = float('nan')
+
     def x(self, y):
         """
         Returns the x-value of the line at a particular y-value.
- 
+
         x(number) -> number
 
         Parameters
@@ -739,10 +756,11 @@ class VerticalLine:
         0.0
         """
         return self._x
+
     def y(self, x):
         """
         Returns the y-value of the line at a particular x-value.
- 
+
         y(number) -> number
 
         Parameters
@@ -777,12 +795,12 @@ class Line:
     def __init__(self, m, b):
         """
         Returns a Line object.
- 
+
         __init__(number, number) -> Line
 
         Test tag: <tc>#is#Line.__init__</tc>
         Test tag: <tc>#tests#Line.__init__</tc>
- 
+
         Parameters
         ----------
         m : the slope of the line
@@ -800,14 +818,14 @@ class Line:
         0.0
         """
         if m == float('inf') or m == float('inf'):
-            raise ArithmeticError, 'Slope cannot be infinite.'
+            raise ArithmeticError('Slope cannot be infinite.')
         self.m = float(m)
         self.b = float(b)
 
     def x(self, y):
         """
         Returns the x-value of the line at a particular y-value.
- 
+
         x(number) -> number
 
         Parameters
@@ -824,13 +842,13 @@ class Line:
         0.5
         """
         if self.m == 0:
-            raise ArithmeticError, 'Cannot solve for X when slope is zero.'
-        return (y-self.b)/self.m
-    
+            raise ArithmeticError('Cannot solve for X when slope is zero.')
+        return (y - self.b) / self.m
+
     def y(self, x):
         """
         Returns the y-value of the line at a particular x-value.
- 
+
         y(number) -> number
 
         Parameters
@@ -848,7 +866,8 @@ class Line:
         """
         if self.m == 0:
             return self.b
-        return self.m*x + self.b  
+        return self.m * x + self.b
+
 
 class Ray:
     """
@@ -866,13 +885,13 @@ class Ray:
     def __init__(self, origin, second_p):
         """
         Returns a ray with the values specified.
- 
+
         __init__(Point, Point) -> Ray
 
         Parameters
         ----------
         origin   : the point where the ray originates
-        second_p : the second point specifying the ray (not the origin) 
+        second_p : the second point specifying the ray (not the origin)
 
         Attributes
         ----------
@@ -906,7 +925,7 @@ class Chain(object):
     def __init__(self, vertices):
         """
         Returns a chain created from the points specified.
- 
+
         __init__(Point list or list of Point lists) -> Chain
 
         Parameters
@@ -919,19 +938,22 @@ class Chain(object):
         Examples
         --------
         >>> c = Chain([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((2, 1))])
-        """ 
+        """
         if isinstance(vertices[0], list):
             self._vertices = [part for part in vertices]
         else:
             self._vertices = [vertices]
         self._reset_props()
+
     @classmethod
-    def __from_geo_interface__(cls,geo):
+    def __from_geo_interface__(cls, geo):
         verts = [Point(pt) for pt in geo['coordinates']]
         return cls(verts)
+
     @property
     def __geo_interface__(self):
-        return {'type':'LineString', 'coordinates': self.vertices}
+        return {'type': 'LineString', 'coordinates': self.vertices}
+
     def _reset_props(self):
         """
         HELPER METHOD. DO NOT CALL.
@@ -948,7 +970,7 @@ class Chain(object):
         --------
         >>> ls = Chain([Point((1, 2)), Point((5, 6))])
         >>> ls._reset_props()
-        """ 
+        """
         self._len = None
         self._arclen = None
         self._bounding_box = None
@@ -967,7 +989,7 @@ class Chain(object):
         --------
         >>> c = Chain([Point((0, 0)), Point((1, 0)), Point((1, 1)), Point((2, 1))])
         >>> verts = c.vertices
-        >>> len(verts) 
+        >>> len(verts)
         4
         """
         return sum([part for part in self._vertices], [])
@@ -976,7 +998,7 @@ class Chain(object):
     def parts(self):
         """
         Returns the parts of the chain.
-        
+
         parts -> Point list
 
         Attributes
@@ -994,8 +1016,8 @@ class Chain(object):
     def bounding_box(self):
         """
         Returns the bounding box of the chain.
- 
-        bounding_box -> Rectangle 
+
+        bounding_box -> Rectangle
 
         Attributes
         ----------
@@ -1012,17 +1034,18 @@ class Chain(object):
         >>> c.bounding_box.upper
         1.0
         """
-        if self._bounding_box == None:
+        if self._bounding_box is None:
             vertices = self.vertices
-            self._bounding_box = Rectangle(min([v[0] for v in vertices]), min([v[1] for v in vertices]),
-                                           max([v[0] for v in vertices]), max([v[1] for v in vertices]))
-        return self._bounding_box 
+            self._bounding_box = Rectangle(
+                min([v[0] for v in vertices]), min([v[1] for v in vertices]),
+                max([v[0] for v in vertices]), max([v[1] for v in vertices]))
+        return self._bounding_box
 
     @property
     def len(self):
         """
-        Returns the geometric length of the chain. 
- 
+        Returns the geometric length of the chain.
+
         len -> number
 
         Attributes
@@ -1041,16 +1064,17 @@ class Chain(object):
             return math.hypot(v1[0] - v2[0], v1[1] - v2[1])
 
         def part_perimeter(part):
-            return sum([dist(part[i], part[i+1]) for i in xrange(len(part)-1)])
+            return sum([dist(part[i], part[i + 1]) for i in xrange(len(part) - 1)])
 
-        if self._len == None:
+        if self._len is None:
             self._len = sum([part_perimeter(part) for part in self._vertices])
         return self._len
+
     @property
     def arclen(self):
         """
-        Returns the geometric length of the chain computed using arcdistance (meters). 
- 
+        Returns the geometric length of the chain computed using arcdistance (meters).
+
         len -> number
 
         Attributes
@@ -1060,16 +1084,19 @@ class Chain(object):
         --------
         """
         def part_perimeter(part):
-            return sum([arcdist(part[i], part[i+1])*1000. for i in xrange(len(part)-1)])
-        if self._arclen == None:
-            self._arclen = sum([part_perimeter(part) for part in self._vertices])
+            return sum([arcdist(part[i], part[i + 1]) * 1000. for i in xrange(len(part) - 1)])
+        if self._arclen is None:
+            self._arclen = sum(
+                [part_perimeter(part) for part in self._vertices])
         return self._arclen
+
     @property
     def segments(self):
         """
         Returns the segments that compose the Chain
         """
-        return [[LineSegment(a,b) for (a,b) in zip(part[:-1],part[1:])] for part in self._vertices]
+        return [[LineSegment(a, b) for (a, b) in zip(part[:-1], part[1:])] for part in self._vertices]
+
 
 class Ring(object):
     """
@@ -1102,34 +1129,40 @@ class Ring(object):
     """
     def __init__(self, vertices):
         if vertices[0] != vertices[-1]:
-            vertices = vertices[:]+vertices[0:1]
+            vertices = vertices[:] + vertices[0:1]
             #raise ValueError, "Supplied vertices do not form a closed ring, the first and last vertices are not the same"
         self.vertices = tuple(vertices)
         self._perimeter = None
         self._bounding_box = None
         self._area = None
         self._centroid = None
+
     def __len__(self):
         return len(self.vertices)
+
     @property
     def len(self):
         return len(self)
+
     @staticmethod
     def dist(v1, v2):
         return math.hypot(v1[0] - v2[0], v1[1] - v2[1])
+
     @property
     def perimeter(self):
-        if self._perimeter == None:
+        if self._perimeter is None:
             dist = self.dist
             v = self.vertices
-            self._perimeter = sum([dist(v[i], v[i+1]) for i in xrange(-1, len(self)-1)])
+            self._perimeter = sum([dist(v[i], v[i + 1])
+                                   for i in xrange(-1, len(self) - 1)])
         return self._perimeter
+
     @property
     def bounding_box(self):
         """
         Returns the bounding box of the ring
- 
-        bounding_box -> Rectangle 
+
+        bounding_box -> Rectangle
 
         Examples
         --------
@@ -1143,17 +1176,18 @@ class Ring(object):
         >>> r.bounding_box.upper
         1.0
         """
-        if self._bounding_box == None:
+        if self._bounding_box is None:
             vertices = self.vertices
             x = [v[0] for v in vertices]
             y = [v[1] for v in vertices]
             self._bounding_box = Rectangle(min(x), min(y), max(x), max(y))
-        return self._bounding_box 
+        return self._bounding_box
+
     @property
     def area(self):
         """
         Returns the area of the ring.
- 
+
         area -> number
 
         Examples
@@ -1163,25 +1197,27 @@ class Ring(object):
         2.0
         """
         return abs(self.signed_area)
+
     @property
     def signed_area(self):
-        if self._area == None:
+        if self._area is None:
             vertices = self.vertices
             x = [v[0] for v in vertices]
             y = [v[1] for v in vertices]
             N = len(self)
-         
+
             A = 0.0
-            for i in xrange(N-1):
-                A += (x[i]*y[i+1] - x[i+1]*y[i])
-            A = A/2.0
+            for i in xrange(N - 1):
+                A += (x[i] * y[i + 1] - x[i + 1] * y[i])
+            A = A / 2.0
             self._area = A
         return self._area
+
     @property
     def centroid(self):
         """
         Returns the centroid of the ring.
- 
+
         centroid -> Point
 
         Notes
@@ -1196,7 +1232,7 @@ class Ring(object):
         >>> str(r.centroid)
         '(1.0, 0.5)'
         """
-        if self._centroid == None:
+        if self._centroid is None:
             vertices = self.vertices
             x = [v[0] for v in vertices]
             y = [v[1] for v in vertices]
@@ -1204,15 +1240,14 @@ class Ring(object):
             N = len(self)
             cx = 0
             cy = 0
-            for i in xrange(N-1):
-                f = (x[i]*y[i+1] - x[i+1]*y[i])
-                cx += (x[i]+x[i+1]) * f 
-                cy += (y[i]+y[i+1]) * f
-            cx = 1.0/(6*A) * cx 
-            cy = 1.0/(6*A) * cy 
-            self._centroid = Point((cx,cy))
+            for i in xrange(N - 1):
+                f = (x[i] * y[i + 1] - x[i + 1] * y[i])
+                cx += (x[i] + x[i + 1]) * f
+                cy += (y[i] + y[i + 1]) * f
+            cx = 1.0 / (6 * A) * cx
+            cy = 1.0 / (6 * A) * cy
+            self._centroid = Point((cx, cy))
         return self._centroid
-
 
 
 class Polygon(object):
@@ -1239,7 +1274,7 @@ class Polygon(object):
     def __init__(self, vertices, holes=None):
         """
         Returns a polygon created from the objects specified.
- 
+
         __init__(Point list or list of Point lists, holes list ) -> Polygon
 
         Parameters
@@ -1256,27 +1291,28 @@ class Polygon(object):
         """
         self._part_rings = []
         self._hole_rings = []
+
         def clockwise(part):
             if standalone.is_clockwise(part):
-                return part[:] 
+                return part[:]
             else:
                 return part[::-1]
 
         if isinstance(vertices[0], list):
-            self._part_rings = map(Ring,vertices)
+            self._part_rings = map(Ring, vertices)
             self._vertices = [clockwise(part) for part in vertices]
         else:
             self._part_rings = [Ring(vertices)]
             self._vertices = [clockwise(vertices)]
-        if holes != None and holes != []:
+        if holes is not None and holes != []:
             if isinstance(holes[0], list):
-                self._hole_rings = map(Ring,holes)
+                self._hole_rings = map(Ring, holes)
                 self._holes = [clockwise(hole) for hole in holes]
             else:
                 self._hole_rings = [Ring(holes)]
                 self._holes = [clockwise(holes)]
         else:
-            self._holes = [[]] 
+            self._holes = [[]]
         self._reset_props()
 
     @classmethod
@@ -1292,31 +1328,35 @@ class Polygon(object):
             holes = []
             for polygon in geo['coordinates']:
                 verts = [[Point(pt) for pt in part] for part in polygon]
-                parts+= verts[0:1]
-                holes+= verts[1:]
+                parts += verts[0:1]
+                holes += verts[1:]
             if not holes:
                 holes = [[]]
-            return cls(parts,holes)
+            return cls(parts, holes)
         else:
             verts = [[Point(pt) for pt in part] for part in geo['coordinates']]
-            return cls(verts[0:1],verts[1:])
+            return cls(verts[0:1], verts[1:])
+
     @property
     def __geo_interface__(self):
         if len(self.parts) > 1:
-            geo = {'type':'MultiPolygon', 'coordinates': [[part] for part in self.parts]}
+            geo = {'type': 'MultiPolygon', 'coordinates': [[
+                part] for part in self.parts]}
             if self._holes[0]:
                 geo['coordinates'][0] += self._holes
             return geo
         if self._holes[0]:
-            return {'type':'Polygon', 'coordinates':self._vertices+self._holes}
+            return {'type': 'Polygon', 'coordinates': self._vertices + self._holes}
         else:
-            return {'type':'Polygon', 'coordinates':self._vertices}
+            return {'type': 'Polygon', 'coordinates': self._vertices}
+
     def _reset_props(self):
         self._perimeter = None
         self._bounding_box = None
         self._area = None
         self._centroid = None
         self._len = None
+
     def __len__(self):
         return self.len
 
@@ -1338,10 +1378,10 @@ class Polygon(object):
         >>> len(p1)
         4
         """
-        if self._len == None:
+        if self._len is None:
             self._len = len(self.vertices)
         return self._len
-    
+
     @property
     def vertices(self):
         """
@@ -1364,7 +1404,7 @@ class Polygon(object):
     def holes(self):
         """
         Returns the holes of the polygon in clockwise order.
-        
+
         holes -> Point list
 
         Attributes
@@ -1382,7 +1422,7 @@ class Polygon(object):
     def parts(self):
         """
         Returns the parts of the polygon in clockwise order.
-        
+
         parts -> Point list
 
         Attributes
@@ -1403,7 +1443,7 @@ class Polygon(object):
     def perimeter(self):
         """
         Returns the perimeter of the polygon.
- 
+
         perimeter() -> number
 
         Attributes
@@ -1419,19 +1459,19 @@ class Polygon(object):
             return math.hypot(v1[0] - v2[0], v1[1] - v2[1])
 
         def part_perimeter(part):
-            return sum([dist(part[i], part[i+1]) for i in xrange(-1, len(part)-1)])
+            return sum([dist(part[i], part[i + 1]) for i in xrange(-1, len(part) - 1)])
 
-        if self._perimeter == None:
-            self._perimeter = (sum([part_perimeter(part) for part in self._vertices]) + 
-                               sum([part_perimeter(hole) for hole in self._holes])) 
+        if self._perimeter is None:
+            self._perimeter = (sum([part_perimeter(part) for part in self._vertices]) +
+                               sum([part_perimeter(hole) for hole in self._holes]))
         return self._perimeter
 
     @property
     def bounding_box(self):
         """
         Returns the bounding box of the polygon.
- 
-        bounding_box -> Rectangle 
+
+        bounding_box -> Rectangle
 
         Attributes
         ----------
@@ -1448,17 +1488,18 @@ class Polygon(object):
         >>> p.bounding_box.upper
         1.0
         """
-        if self._bounding_box == None:
+        if self._bounding_box is None:
             vertices = self.vertices
-            self._bounding_box = Rectangle(min([v[0] for v in vertices]), min([v[1] for v in vertices]),
-                                           max([v[0] for v in vertices]), max([v[1] for v in vertices]))
-        return self._bounding_box 
+            self._bounding_box = Rectangle(
+                min([v[0] for v in vertices]), min([v[1] for v in vertices]),
+                max([v[0] for v in vertices]), max([v[1] for v in vertices]))
+        return self._bounding_box
 
     @property
     def area(self):
         """
         Returns the area of the polygon.
- 
+
         area -> number
 
         Attributes
@@ -1475,9 +1516,10 @@ class Polygon(object):
         """
         def part_area(part_verts):
             area = 0
-            for i in xrange(-1, len(part_verts)-1):
-                area += (part_verts[i][0] + part_verts[i+1][0])*(part_verts[i][1] - part_verts[i+1][1])
-            area = area*0.5
+            for i in xrange(-1, len(part_verts) - 1):
+                area += (part_verts[i][0] + part_verts[i + 1][0]) * \
+                    (part_verts[i][1] - part_verts[i + 1][1])
+            area = area * 0.5
             if area < 0:
                 area = -area
             return area
@@ -1489,7 +1531,7 @@ class Polygon(object):
     def centroid(self):
         """
         Returns the centroid of the polygon
- 
+
         centroid -> Point
 
         Notes
@@ -1509,11 +1551,11 @@ class Polygon(object):
         CH = [ring.centroid for ring in self._hole_rings]
         AH = [-ring.area for ring in self._hole_rings]
 
-        A = AP+AH
-        cx = sum([pt[0]*area for pt,area in zip(CP+CH,A)])/sum(A)
-        cy = sum([pt[1]*area for pt,area in zip(CP+CH,A)])/sum(A)
-        return cx,cy
-        
+        A = AP + AH
+        cx = sum([pt[0] * area for pt, area in zip(CP + CH, A)]) / sum(A)
+        cy = sum([pt[1] * area for pt, area in zip(CP + CH, A)]) / sum(A)
+        return cx, cy
+
     def contains_point(self, point):
         """
         Test if polygon contains point
@@ -1531,7 +1573,7 @@ class Polygon(object):
         0
         >>> p.contains_point((4,0))
         1
-        >>> 
+        >>>
 
         Handles holes
 
@@ -1542,8 +1584,8 @@ class Polygon(object):
         1
         >>> p.contains_point((10,10))
         0
-        >>> 
-        
+        >>>
+
 
         Notes
         -----
@@ -1557,15 +1599,15 @@ class Polygon(object):
         right = point[0]
         cn = 0
         verts = self.vertices
-        c = Point((left,y))
-        d = Point((right,y))
-        ray = LineSegment(c,d)
-        for i in xrange(-1, len(self.vertices)-1):
+        c = Point((left, y))
+        d = Point((right, y))
+        ray = LineSegment(c, d)
+        for i in xrange(-1, len(self.vertices) - 1):
             a = verts[i]
-            b = verts[i+1]
-            ab = LineSegment(a,b)
-            ac = LineSegment(a,c)
-            bc = LineSegment(b,c)
+            b = verts[i + 1]
+            ab = LineSegment(a, b)
+            ac = LineSegment(a, c)
+            bc = LineSegment(b, c)
             if ac.is_ccw(d) == bc.is_ccw(d):
                 pass
             elif ab.is_ccw(c) == ab.is_ccw(d):
@@ -1575,14 +1617,13 @@ class Polygon(object):
         return cn % 2
 
 
-
 class Rectangle:
     """
     Geometric representation of rectangle objects.
 
     Attributes
     ----------
-    
+
     left    : float
               Minimum x-value of the rectangle
     lower   : float
@@ -1596,7 +1637,7 @@ class Rectangle:
     def __init__(self, left, lower, right, upper):
         """
         Returns a Rectangle object.
- 
+
         __init__(number, number, number, number) -> Rectangle
 
         Parameters
@@ -1622,7 +1663,7 @@ class Rectangle:
         17.0
         """
         if right < left or upper < lower:
-            raise ArithmeticError, 'Rectangle must have positive area.'
+            raise ArithmeticError('Rectangle must have positive area.')
         self.left = float(left)
         self.lower = float(lower)
         self.right = float(right)
@@ -1641,28 +1682,30 @@ class Rectangle:
         True
         """
         return bool(self.area)
-    def __eq__(self,other):
+
+    def __eq__(self, other):
         if other:
             return self[:] == other[:]
         return False
-    def __add__(self,other):
-        x,y,X,Y = self[:]
-        x1,y2,X1,Y1 = other[:]
+
+    def __add__(self, other):
+        x, y, X, Y = self[:]
+        x1, y2, X1, Y1 = other[:]
         return Rectangle(min(self.left, other.left), min(self.lower, other.lower), max(self.right, other.right), max(self.upper, other.upper))
 
-    def __getitem__(self,key):
+    def __getitem__(self, key):
         """
         >>> r = Rectangle(-4, 3, 10, 17)
         >>> r[:]
         [-4.0, 3.0, 10.0, 17.0]
         """
-        l = [self.left,self.lower,self.right,self.upper]
+        l = [self.left, self.lower, self.right, self.upper]
         return l.__getitem__(key)
 
     def set_centroid(self, new_center):
         """
         Moves the rectangle center to a new specified point.
- 
+
         set_centroid(Point) -> Point
 
         Parameters
@@ -1685,7 +1728,8 @@ class Rectangle:
         >>> r.upper
         6.0
         """
-        shift = (new_center[0] - (self.left + self.right)/2, new_center[1] - (self.lower + self.upper)/2)
+        shift = (new_center[0] - (self.left + self.right) / 2,
+                 new_center[1] - (self.lower + self.upper) / 2)
         self.left = self.left + shift[0]
         self.right = self.right + shift[0]
         self.lower = self.lower + shift[1]
@@ -1693,8 +1737,8 @@ class Rectangle:
 
     def set_scale(self, scale):
         """
-        Rescales the rectangle around its center.  
- 
+        Rescales the rectangle around its center.
+
         set_scale(number) -> number
 
         Parameters
@@ -1717,17 +1761,17 @@ class Rectangle:
         >>> r.upper
         6.0
         """
-        center = ((self.left + self.right)/2, (self.lower + self.upper)/2)
-        self.left = center[0] + scale*(self.left - center[0])
-        self.right = center[0] + scale*(self.right - center[0])
-        self.lower = center[1] + scale*(self.lower - center[1])
-        self.upper = center[1] + scale*(self.upper - center[1])
+        center = ((self.left + self.right) / 2, (self.lower + self.upper) / 2)
+        self.left = center[0] + scale * (self.left - center[0])
+        self.right = center[0] + scale * (self.right - center[0])
+        self.lower = center[1] + scale * (self.lower - center[1])
+        self.upper = center[1] + scale * (self.upper - center[1])
 
     @property
     def area(self):
         """
-        Returns the area of the Rectangle. 
- 
+        Returns the area of the Rectangle.
+
         area -> number
 
         Attributes
@@ -1739,13 +1783,13 @@ class Rectangle:
         >>> r.area
         16.0
         """
-        return (self.right - self.left)*(self.upper - self.lower)
+        return (self.right - self.left) * (self.upper - self.lower)
 
     @property
     def width(self):
         """
-        Returns the width of the Rectangle. 
- 
+        Returns the width of the Rectangle.
+
         width -> number
 
         Attributes
@@ -1762,8 +1806,8 @@ class Rectangle:
     @property
     def height(self):
         """
-        Returns the height of the Rectangle. 
- 
+        Returns the height of the Rectangle.
+
         height -> number
 
         Examples
@@ -1774,11 +1818,13 @@ class Rectangle:
         """
         return self.upper - self.lower
 
+
 def _test():
     doctest.testmod(verbose=True)
 
-_geoJSON_type_to_Pysal_type = {'point':Point, 'linestring':Chain, 'polygon':Polygon, 'multipolygon':Polygon}
-import standalone   #moving this to top breaks unit tests !
+_geoJSON_type_to_Pysal_type = {'point': Point, 'linestring': Chain,
+                               'polygon': Polygon, 'multipolygon': Polygon}
+import standalone  # moving this to top breaks unit tests !
 
 if __name__ == '__main__':
     _test()

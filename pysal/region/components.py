@@ -8,6 +8,7 @@ from operator import gt, lt
 
 __all__ = ["check_contiguity"]
 
+
 def check_contiguity(w, neighbors, leaver):
     """Check if contiguity is maintained if leaver is removed from neighbors
 
@@ -76,6 +77,7 @@ def check_contiguity(w, neighbors, leaver):
     else:
         return False
 
+
 class Graph(object):
     def __init__(self, undirected=True):
         self.nodes = set()
@@ -87,9 +89,9 @@ class Graph(object):
     def add_edge(self, n1, n2, w):
         self.nodes.add(n1)
         self.nodes.add(n2)
-        self.edges.setdefault(n1, {}).update({n2:w})
+        self.edges.setdefault(n1, {}).update({n2: w})
         if self.undirected:
-            self.edges.setdefault(n2, {}).update({n1:w})
+            self.edges.setdefault(n2, {}).update({n1: w})
 
     def connected_components(self, threshold=0.9, op=lt):
         if not self.undirected:
@@ -101,7 +103,8 @@ class Graph(object):
             nodes = set(self.nodes)
             components, visited = [], set()
             while len(nodes) > 0:
-                connected, visited = self.dfs(nodes.pop(), visited, threshold, op)
+                connected, visited = self.dfs(
+                    nodes.pop(), visited, threshold, op)
                 connected = set(connected)
                 for node in connected:
                     if node in nodes:
@@ -112,18 +115,18 @@ class Graph(object):
                 for s in subgraph.nodes:
                     for k, v in self.edges.get(s, {}).iteritems():
                         if k in subgraph.nodes:
-                            subgraph.edges.setdefault(s, {}).update({k:v})
+                            subgraph.edges.setdefault(s, {}).update({k: v})
                     if s in self.cluster_lookup:
                         subgraph.cluster_lookup[s] = self.cluster_lookup[s]
                 components.append(subgraph)
             return components
-    
+
     def dfs(self, v, visited, threshold, op=lt, first=None):
         aux = [v]
         visited.add(v)
         if first is None:
             first = v
-        for i in (n for n, w in self.edges.get(v, {}).iteritems() \
+        for i in (n for n, w in self.edges.get(v, {}).iteritems()
                   if op(w, threshold) and n not in visited):
             x, y = self.dfs(i, visited, threshold, op, first)
             aux.extend(x)
@@ -131,6 +134,7 @@ class Graph(object):
         return aux, visited
 
 # tests
+
 
 def _test():
     import doctest

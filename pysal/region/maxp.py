@@ -21,18 +21,19 @@ __all__ = ["Maxp", "Maxp_LISA"]
 LARGE = 10 ** 6
 MAX_ATTEMPTS = 100
 
+
 class Maxp:
     """Try to find the maximum number of regions for a set of areas such that
     each region combines contiguous areas that satisfy a given threshold
     constraint.
-    
-    
+
+
     Parameters
     ----------
- 
+
     w               : W
                       spatial weights object
-                    
+
     z               : array
                       n*m array of observations on m attributes across n
                       areas. This is used to calculate intra-regional
@@ -42,7 +43,7 @@ class Maxp:
                       obtained in each region
     floor_variable  : array
                       n*1 vector of observations on variable for the floor
-    initial         : int 
+    initial         : int
                       number of initial solutions to generate
     verbose         : binary
                       if true debugging information is printed
@@ -51,7 +52,7 @@ class Maxp:
                       len(ids) is less than the number of observations, the
                       complementary ids are added to the end of seeds. Thus
                       the specified seeds get priority in the solution
-     
+
     Attributes
     ----------
 
@@ -79,7 +80,7 @@ class Maxp:
     >>> import pysal
     >>> random.seed(100)
     >>> np.random.seed(100)
-    
+
     Setup a spatial weights matrix describing the connectivity of a square
     community with 100 areas.  Generate two random data attributes for each area
     in the community (a 100x2 array) called z. p is the data vector used to
@@ -97,12 +98,12 @@ class Maxp:
     29
     >>> solution.regions[0]
     [4, 14, 5, 24, 3]
-    >>> 
+    >>>
 
     """
     def __init__(self, w, z, floor, floor_variable,
-                verbose=False, initial=100, seeds=[]):
-    
+                 verbose=False, initial=100, seeds=[]):
+
         self.w = w
         self.z = z
         self.floor = floor
@@ -113,7 +114,7 @@ class Maxp:
         if not self.p:
             self.feasible = False
         else:
-            self.feasible = True 
+            self.feasible = True
             best_val = self.objective_function()
             self.current_regions = copy.copy(self.regions)
             self.current_area2region = copy.copy(self.area2region)
@@ -163,7 +164,7 @@ class Maxp:
                         regions.append(region)
                         building_region = False
                     else:
-                        potential = [] 
+                        potential = []
                         for area in region:
                             neighbors = self.w.neighbors[area]
                             neighbors = [neigh for neigh in neighbors if neigh in candidates]
@@ -241,7 +242,7 @@ class Maxp:
         nr = range(self.k)
         while swapping:
             moves_made = 0
-            regionIds = [r for r in nr if changed_regions[r]] 
+            regionIds = [r for r in nr if changed_regions[r]]
             np.random.permutation(regionIds)
             changed_regions = [0] * self.k
             swap_iteration += 1
@@ -260,12 +261,13 @@ class Maxp:
                         neighbors.extend(candidates)
                     candidates = []
                     for neighbor in neighbors:
-                        block = copy.copy(self.regions[self.area2region[neighbor]])
+                        block = copy.copy(self.regions[self.area2region[
+                            neighbor]])
                         if check_contiguity(self.w, block, neighbor):
                             fv = self.check_floor(block)
                             if fv:
                                 candidates.append(neighbor)
-                    # find the best local move 
+                    # find the best local move
                     if not candidates:
                         local_swapping = False
                     else:
@@ -275,13 +277,15 @@ class Maxp:
                         cv = 0.0
                         for area in candidates:
                             current_internal = self.regions[seed]
-                            current_outter = self.regions[self.area2region[area]]
+                            current_outter = self.regions[self.area2region[
+                                area]]
                             current = self.objective_function([current_internal, current_outter])
                             new_internal = copy.copy(current_internal)
                             new_outter = copy.copy(current_outter)
                             new_internal.append(area)
                             new_outter.remove(area)
-                            new = self.objective_function([new_internal, new_outter])
+                            new = self.objective_function([new_internal,
+                                                           new_outter])
                             change = new - current
                             if change < cv:
                                 best = area
@@ -303,7 +307,8 @@ class Maxp:
                     if self.verbose:
                         print 'swap_iteration: ', swap_iteration, 'moves_made: ', moves_made
                         print 'number of regions: ', len(self.regions)
-                        print 'number of changed regions: ', sum(changed_regions)
+                        print 'number of changed regions: ', sum(
+                            changed_regions)
                         print 'internal region: ', seed, 'local_attempts: ', local_attempts
                         print 'objective function: ', self.objective_function()
             total_moves += moves_made
@@ -315,7 +320,7 @@ class Maxp:
                 print 'moves_made: ', moves_made
                 print 'objective function: ', self.objective_function()
 
-    def check_floor(self, region):                
+    def check_floor(self, region):
         selectionIDs = [self.w.id_order.index(i) for i in region]
         cv = sum(self.floor_variable[selectionIDs])
         if cv >= self.floor:
@@ -346,18 +351,18 @@ class Maxp:
         ----------
 
         nperm       : int
-                      number of random permutations for calculation of 
+                      number of random permutations for calculation of
                       pseudo-p_values
 
         Attributes
         ----------
-        
+
         pvalue      : float
                       pseudo p_value
 
         Examples
         --------
-        
+
         Setup is the same as shown above except using a 5x5 community.
 
         >>> import random
@@ -386,8 +391,8 @@ class Maxp:
         wsss = np.zeros(nperm + 1)
         self.wss = self.objective_function()
         cards = [len(i) for i in self.regions]
-        sim_solutions = RR.Random_Regions(ids, num_regions, \
-                    cardinality=cards, permutations=nperm)
+        sim_solutions = RR.Random_Regions(ids, num_regions,
+                                          cardinality=cards, permutations=nperm)
         cv = 1
         c = 1
         for solution in sim_solutions.solutions_feas:
@@ -399,7 +404,7 @@ class Maxp:
         self.pvalue = cv / (1. + len(sim_solutions.solutions_feas))
         self.wss_perm = wsss
         self.wss_perm[0] = self.wss
-            
+
     def cinference(self, nperm=99, maxiter=1000):
         """Compare the within sum of squares for the solution against
         conditional simulated solutions where areas are randomly assigned to
@@ -410,7 +415,7 @@ class Maxp:
         ----------
 
         nperm       : int
-                      number of random permutations for calculation of 
+                      number of random permutations for calculation of
                       pseudo-p_values
 
         maxiter     : int
@@ -418,7 +423,7 @@ class Maxp:
 
         Attributes
         ----------
-        
+
         pvalue      : float
                       pseudo p_value
 
@@ -434,7 +439,7 @@ class Maxp:
 
         Examples
         --------
-        
+
         Setup is the same as shown above except using a 5x5 community.
 
         >>> import random
@@ -463,10 +468,10 @@ class Maxp:
         wsss = np.zeros(nperm + 1)
         self.cwss = self.objective_function()
         cards = [len(i) for i in self.regions]
-        sim_solutions = RR.Random_Regions(ids, num_regions, \
-                    cardinality=cards, contiguity=self.w, \
-                    maxiter=maxiter, permutations=nperm)
-        self.cfeas_sols = len(sim_solutions.solutions_feas) 
+        sim_solutions = RR.Random_Regions(ids, num_regions,
+                                          cardinality=cards, contiguity=self.w,
+                                          maxiter=maxiter, permutations=nperm)
+        self.cfeas_sols = len(sim_solutions.solutions_feas)
         if self.cfeas_sols < nperm:
             raise Exception('not enough feasible solutions found')
         cv = 1
@@ -480,7 +485,7 @@ class Maxp:
         self.cpvalue = cv / (1. + self.cfeas_sols)
         self.cwss_perm = wsss
         self.cwss_perm[0] = self.cwss
-            
+
 
 class Maxp_LISA(Maxp):
     """Max-p regionalization using LISA seeds
@@ -503,7 +508,7 @@ class Maxp_LISA(Maxp):
     initial        : int
                      number of initial feasible solutions to generate
                      prior to swapping
-    
+
     Attributes
     ----------
 
@@ -518,7 +523,7 @@ class Maxp_LISA(Maxp):
     total_moves     : int
                       number of moves into internal regions
 
-    
+
     Notes
     -----
 
@@ -563,10 +568,13 @@ class Maxp_LISA(Maxp):
         ids = np.argsort(lis.Is)
         ids = ids[range(w.n - 1, -1, -1)]
         ids = ids.tolist()
-        mp = Maxp.__init__(self, w, z, floor=floor, floor_variable=floor_variable,
-                      initial=initial, seeds=ids)
+        mp = Maxp.__init__(
+            self, w, z, floor=floor, floor_variable=floor_variable,
+            initial=initial, seeds=ids)
 
 # tests
+
+
 def _test():
     import doctest
     doctest.testmod(verbose=True)

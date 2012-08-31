@@ -7,22 +7,23 @@ from warnings import warn
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
 __all__ = ["DatIO"]
 
+
 class DatIO(gwt.GwtIO):
     """
     Opens, reads, and writes file objects in DAT format.
-    
-    Spatial weights objects in DAT format are used in 
+
+    Spatial weights objects in DAT format are used in
     Dr. LeSage's MatLab Econ library.
     This DAT format is a simple text file with DAT or dat extension.
-    Without header line, it includes three data columns 
+    Without header line, it includes three data columns
     for origin id, destination id, and weight values as follows:
-    
+
     [Line 1]    2    1    0.25
-    [Line 2]    5    1    0.50 
+    [Line 2]    5    1    0.50
     ...
 
-    Origin/destination IDs in this file format are simply record 
-    numbers starting with 1. IDs are not necessarily integers. 
+    Origin/destination IDs in this file format are simply record
+    numbers starting with 1. IDs are not necessarily integers.
     Data values for all columns should be numeric.
 
     """
@@ -65,10 +66,10 @@ class DatIO(gwt.GwtIO):
         weights, neighbors = self._readlines(id_type)
 
         self.pos += 1
-        return W(neighbors,weights)
+        return W(neighbors, weights)
 
     def write(self, obj):
-        """ 
+        """
 
         Parameters
         ----------
@@ -123,10 +124,11 @@ class DatIO(gwt.GwtIO):
         >>> os.remove(fname)
         """
         self._complain_ifclosed(self.closed)
-        if issubclass(type(obj),W):
+        if issubclass(type(obj), W):
             self._writelines(obj)
         else:
-            raise TypeError, "Expected a pysal weights object, got: %s" % (type(obj))
+            raise TypeError("Expected a pysal weights object, got: %s" % (
+                type(obj)))
 
 if __name__ == '__main__':
     import doctest

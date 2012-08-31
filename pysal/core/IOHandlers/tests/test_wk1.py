@@ -4,6 +4,7 @@ from pysal.core.IOHandlers.wk1 import Wk1IO
 import tempfile
 import os
 
+
 class test_Wk1IO(unittest.TestCase):
     def setUp(self):
         self.test_file = test_file = pysal.examples.get_path('spat-sym-us.wk1')
@@ -28,14 +29,15 @@ class test_Wk1IO(unittest.TestCase):
 
     def test_write(self):
         w = self.obj.read()
-        f = tempfile.NamedTemporaryFile(suffix='.wk1',dir=pysal.examples.get_path(''))
+        f = tempfile.NamedTemporaryFile(
+            suffix='.wk1', dir=pysal.examples.get_path(''))
         fname = f.name
         f.close()
-        o = pysal.open(fname,'w')
+        o = pysal.open(fname, 'w')
         o.write(w)
         o.close()
-        wnew =  pysal.open(fname,'r').read()
-        self.assertEqual( wnew.pct_nonzero, w.pct_nonzero)
+        wnew = pysal.open(fname, 'r').read()
+        self.assertEqual(wnew.pct_nonzero, w.pct_nonzero)
         os.remove(fname)
 
 if __name__ == '__main__':

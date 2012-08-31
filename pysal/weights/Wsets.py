@@ -9,12 +9,13 @@ import copy
 from scipy.sparse import isspmatrix_csr
 from numpy import ones
 
-__all__ = ['w_union', 'w_intersection', 'w_difference', 'w_symmetric_difference', 'w_subset', 'w_clip']
+__all__ = ['w_union', 'w_intersection', 'w_difference',
+           'w_symmetric_difference', 'w_subset', 'w_clip']
 
 
 def w_union(w1, w2):
     """Returns a binary weights object, w, that includes all neighbor pairs that
-    exist in either w1 or w2. 
+    exist in either w1 or w2.
 
     Parameters
     ----------
@@ -32,12 +33,12 @@ def w_union(w1, w2):
 
     Notes
     -----
-    ID comparisons are performed using ==, therefore the integer ID 2 is 
+    ID comparisons are performed using ==, therefore the integer ID 2 is
     equivalent to the float ID 2.0. Returns a matrix with all the unique IDs
     from w1 and w2.
 
 
-    Examples 
+    Examples
     --------
 
     Construct rook weights matrices for two regions, one is 4x4 (16 areas)
@@ -71,7 +72,7 @@ def w_union(w1, w2):
 
 def w_intersection(w1, w2, w_shape='w1'):
     """Returns a binary weights object, w, that includes only those neighbor
-    pairs that exist in both w1 and w2. 
+    pairs that exist in both w1 and w2.
 
     Parameters
     ----------
@@ -82,8 +83,8 @@ def w_intersection(w1, w2, w_shape='w1'):
 
     w_shape : string
               Defines the shape of the returned weights matrix. 'w1' returns a
-              matrix with the same IDs as w1; 'all' returns a matrix with all 
-              the unique IDs from w1 and w2; and 'min' returns a matrix with 
+              matrix with the same IDs as w1; 'all' returns a matrix with all
+              the unique IDs from w1 and w2; and 'min' returns a matrix with
               only the IDs occurring in both w1 and w2.
 
 
@@ -95,8 +96,8 @@ def w_intersection(w1, w2, w_shape='w1'):
 
     Notes
     -----
-    ID comparisons are performed using ==, therefore the integer ID 2 is 
-    equivalent to the float ID 2.0. 
+    ID comparisons are performed using ==, therefore the integer ID 2 is
+    equivalent to the float ID 2.0.
 
 
     Examples
@@ -126,9 +127,10 @@ def w_intersection(w1, w2, w_shape='w1'):
     elif w_shape == 'all':
         neigh_keys = set(w1.neighbors.keys()).union(set(w2.neighbors.keys()))
     elif w_shape == 'min':
-        neigh_keys = set(w1.neighbors.keys()).intersection(set(w2.neighbors.keys()))
+        neigh_keys = set(w1.neighbors.keys(
+        )).intersection(set(w2.neighbors.keys()))
     else:
-        raise Exception, "invalid string passed to w_shape"
+        raise Exception("invalid string passed to w_shape")
 
     neighbors = {}
     for i in neigh_keys:
@@ -155,14 +157,14 @@ def w_difference(w1, w2, w_shape='w1', constrained=True):
 
     w_shape : string
               Defines the shape of the returned weights matrix. 'w1' returns a
-              matrix with the same IDs as w1; 'all' returns a matrix with all 
+              matrix with the same IDs as w1; 'all' returns a matrix with all
               the unique IDs from w1 and w2; and 'min' returns a matrix with
               the IDs occurring in w1 and not in w2.
 
     constrained : boolean
                   If False then the full set of neighbor pairs in w1 that are
-                  not in w2 are returned. If True then those pairs that would 
-                  not be possible if w_shape='min' are dropped. Ignored if 
+                  not in w2 are returned. If True then those pairs that would
+                  not be possible if w_shape='min' are dropped. Ignored if
                   w_shape is set to 'min'.
 
 
@@ -174,8 +176,8 @@ def w_difference(w1, w2, w_shape='w1', constrained=True):
 
     Notes
     -----
-    ID comparisons are performed using ==, therefore the integer ID 2 is 
-    equivalent to the float ID 2.0. 
+    ID comparisons are performed using ==, therefore the integer ID 2 is
+    equivalent to the float ID 2.0.
 
 
     Examples
@@ -208,17 +210,19 @@ def w_difference(w1, w2, w_shape='w1', constrained=True):
     elif w_shape == 'all':
         neigh_keys = set(w1.neighbors.keys()).union(set(w2.neighbors.keys()))
     elif w_shape == 'min':
-        neigh_keys = set(w1.neighbors.keys()).difference(set(w2.neighbors.keys()))
+        neigh_keys = set(
+            w1.neighbors.keys()).difference(set(w2.neighbors.keys()))
         if not neigh_keys:
-            raise Exception, "returned an empty weights matrix"
+            raise Exception("returned an empty weights matrix")
     else:
-        raise Exception, "invalid string passed to w_shape"
+        raise Exception("invalid string passed to w_shape")
 
     neighbors = {}
     for i in neigh_keys:
         if i in w1.neighbors:
             if i in w2.neighbors:
-                add_neigh = set(w1.neighbors[i]).difference(set(w2.neighbors[i]))
+                add_neigh = set(w1.neighbors[i]
+                                ).difference(set(w2.neighbors[i]))
                 neighbors[i] = list(add_neigh)
             else:
                 neighbors[i] = copy.copy(w1.neighbors[i])
@@ -226,12 +230,14 @@ def w_difference(w1, w2, w_shape='w1', constrained=True):
             neighbors[i] = []
 
     if constrained or w_shape == 'min':
-        constrained_keys = set(w1.neighbors.keys()).difference(set(w2.neighbors.keys()))
+        constrained_keys = set(
+            w1.neighbors.keys()).difference(set(w2.neighbors.keys()))
         island_keys = set(neighbors.keys()).difference(constrained_keys)
         for i in island_keys:
             neighbors[i] = []
         for i in constrained_keys:
-            neighbors[i] = list(set(neighbors[i]).intersection(constrained_keys))
+            neighbors[i] = list(
+                set(neighbors[i]).intersection(constrained_keys))
 
     return pysal.W(neighbors)
 
@@ -250,13 +256,13 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
 
     w_shape : string
               Defines the shape of the returned weights matrix. 'all' returns a
-              matrix with all the unique IDs from w1 and w2; and 'min' returns 
+              matrix with all the unique IDs from w1 and w2; and 'min' returns
               a matrix with the IDs not shared by w1 and w2.
 
     constrained : boolean
                   If False then the full set of neighbor pairs that are not
-                  shared by w1 and w2 are returned. If True then those pairs 
-                  that would not be possible if w_shape='min' are dropped. 
+                  shared by w1 and w2 are returned. If True then those pairs
+                  that would not be possible if w_shape='min' are dropped.
                   Ignored if w_shape is set to 'min'.
 
 
@@ -268,8 +274,8 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
 
     Notes
     -----
-    ID comparisons are performed using ==, therefore the integer ID 2 is 
-    equivalent to the float ID 2.0. 
+    ID comparisons are performed using ==, therefore the integer ID 2 is
+    equivalent to the float ID 2.0.
 
 
     Examples
@@ -300,15 +306,17 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
     if w_shape == 'all':
         neigh_keys = set(w1.neighbors.keys()).union(set(w2.neighbors.keys()))
     elif w_shape == 'min':
-        neigh_keys = set(w1.neighbors.keys()).symmetric_difference(set(w2.neighbors.keys()))
+        neigh_keys = set(w1.neighbors.keys(
+        )).symmetric_difference(set(w2.neighbors.keys()))
     else:
-        raise Exception, "invalid string passed to w_shape"
+        raise Exception("invalid string passed to w_shape")
 
     neighbors = {}
     for i in neigh_keys:
         if i in w1.neighbors:
             if i in w2.neighbors:
-                add_neigh = set(w1.neighbors[i]).symmetric_difference(set(w2.neighbors[i]))
+                add_neigh = set(w1.neighbors[i]).symmetric_difference(
+                    set(w2.neighbors[i]))
                 neighbors[i] = list(add_neigh)
             else:
                 neighbors[i] = copy.copy(w1.neighbors[i])
@@ -318,12 +326,14 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
             neighbors[i] = []
 
     if constrained or w_shape == 'min':
-        constrained_keys = set(w1.neighbors.keys()).difference(set(w2.neighbors.keys()))
+        constrained_keys = set(
+            w1.neighbors.keys()).difference(set(w2.neighbors.keys()))
         island_keys = set(neighbors.keys()).difference(constrained_keys)
         for i in island_keys:
             neighbors[i] = []
         for i in constrained_keys:
-            neighbors[i] = list(set(neighbors[i]).intersection(constrained_keys))
+            neighbors[i] = list(
+                set(neighbors[i]).intersection(constrained_keys))
 
     return pysal.W(neighbors)
 
@@ -339,7 +349,7 @@ def w_subset(w1, ids):
 
     ids     : list
               A list containing the IDs to be include in the returned weights
-              object. 
+              object.
 
 
     Returns
@@ -483,7 +493,7 @@ def w_clip(w1, w2, outSP=True):
            [ True,  True,  True,  True,  True,  True],
            [ True,  True,  True,  True,  True,  True]], dtype=bool)
 
- 
+
     '''
     if not w1.id_order:
         w1.id_order = None
@@ -507,5 +517,3 @@ def _test():
 
 if __name__ == '__main__':
     _test()
-
-

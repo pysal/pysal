@@ -11,13 +11,13 @@ import pysal
 from operator import gt
 
 __all__ = ["Markov", "LISA_Markov", "Spatial_Markov", "kullback",
-       "prais", "shorrock"]
+           "prais", "shorrock"]
 
 # TT predefine LISA transitions
 # TT[i,j] is the transition type from i to j
 # i = quadrant in period 0
 # j = quadrant in period 1
-# uses one offset so first row and col of TT are ignored 
+# uses one offset so first row and col of TT are ignored
 TT = np.zeros((5, 5), int)
 c = 1
 for i in range(1, 5):
@@ -45,16 +45,17 @@ for i, sig_key in enumerate(sig_keys):
             MOVE_TYPES[key] = c
             c += 1
 
+
 class Markov:
     """
     Classic Markov transition matrices
 
     Parameters
     ----------
-    class_ids    : array (n, t) 
+    class_ids    : array (n, t)
                    One row per observation, one column recording the state of each
                    observation, with as many columns as time periods
-    classes      : array (k) 
+    classes      : array (k)
                    All different classes (bins) of the matrix
 
     Attributes
@@ -132,7 +133,7 @@ class Markov:
             [ 0.21499942],
             [ 0.21134662],
             [ 0.17776576]])
-    
+
     """
     def __init__(self, class_ids, classes=[]):
         #pylint: Dangerous default value [] as argument
@@ -164,7 +165,7 @@ class Markov:
         p = np.dot(np.diag(1 / (row_sum + (row_sum == 0))), transitions)
         self.p = np.matrix(p)
 
-        # steady_state vector 
+        # steady_state vector
         v, d = la.eig(np.transpose(self.p))
         # for a regular P maximum eigenvalue will be 1
         mv = max(v)
@@ -177,11 +178,11 @@ class Markov:
 class Spatial_Markov:
     """
     Markov transitions conditioned on the value of the spatial lag
-    
+
     Parameters
     ----------
 
-    y               : array (n,t) 
+    y               : array (n,t)
                       One row per observation, one column per state of each
                       observation, with as many columns as time periods
 
@@ -233,7 +234,7 @@ class Spatial_Markov:
                       of the difference between the conditional transition
                       matrix against the overall transition matrix, first
                       element of the tuple is the chi2 value, second its
-                      p-value and the third the degrees of freedom 
+                      p-value and the third the degrees of freedom
     x2              : float
                       sum of the chi2 values for each of the conditional tests
                       has an asymptotic chi2 distribution with k(k-1)(k-1)
@@ -247,9 +248,9 @@ class Spatial_Markov:
                       distribution
     x2_rpvalue       : float (if permutations>0)
                       pseudo p-value for x2 based on random spatial permutations
-                      of the rows of the original transitions 
+                      of the rows of the original transitions
     x2_realizations : array (permutations,1)
-                      the values of x2 for the random permutations 
+                      the values of x2 for the random permutations
 
     Notes
     -----
@@ -260,7 +261,7 @@ class Spatial_Markov:
     preferable since it simulates the randomness under the null. It is an
     experimental test requiring further analysis.
 
-    
+
     Examples
     --------
     >>> import pysal
@@ -273,7 +274,7 @@ class Spatial_Markov:
     >>> sm = Spatial_Markov(rpci, w, fixed=True, k=5)
     >>> for p in sm.P:
     ...     print p
-    ...     
+    ...
     [[ 0.96341463  0.0304878   0.00609756  0.          0.        ]
      [ 0.06040268  0.83221477  0.10738255  0.          0.        ]
      [ 0.          0.14        0.74        0.12        0.        ]
@@ -299,13 +300,13 @@ class Spatial_Markov:
      [ 0.01149425  0.16091954  0.74712644  0.08045977  0.        ]
      [ 0.          0.01036269  0.06217617  0.89637306  0.03108808]
      [ 0.          0.          0.          0.02352941  0.97647059]]
- 
+
     The probability of a poor state remaining poor is 0.963 if their
     neighbors are in the 1st quintile and 0.798 if their neighbors are
     in the 2nd quintile. The probability of a rich economy remaining
     rich is 0.977 if their neighbors are in the 5th quintile, but if their
     neighbors are in the 4th quintile this drops to 0.903.
-   
+
     Test if the transitional dynamics are homogeneous across the lag classes
 
     >>> sm.x2
@@ -329,7 +330,7 @@ class Spatial_Markov:
 
     >>> for f in sm.F:
     ...     print f
-    ...     
+    ...
     [[   2.29835259   28.95614035   46.14285714   80.80952381  279.42857143]
      [  33.86549708    3.79459555   22.57142857   57.23809524  255.85714286]
      [  43.60233918    9.73684211    4.91085714   34.66666667  233.28571429]
@@ -376,14 +377,14 @@ class Spatial_Markov:
             [  6.33129261e+01,   5.83089133e-13,   4.00000000e+00],
             [  7.22778509e+01,   7.54951657e-15,   4.00000000e+00],
             [  2.32659201e+02,   0.00000000e+00,   4.00000000e+00]])
-    
+
 
     References
     ----------
 
     .. [1] Rey, S.J. 2001. "Spatial empirics for economic growth
        and convergence", 34 Geographical Analysis, 33, 195-214.
-    
+
     """
     def __init__(self, y, w, k=4, permutations=0, fixed=False):
 
@@ -399,7 +400,8 @@ class Spatial_Markov:
             yb.shape = (rows, cols)
             classes = yb
         else:
-            classes = npa([pysal.Quantiles(y[:, i], k=k).yb for i in np.arange(cols)]).transpose()
+            classes = npa([pysal.Quantiles(y[:, i], k=k)
+                           .yb for i in np.arange(cols)]).transpose()
         classic = Markov(classes)
         self.classes = classes
         self.p = classic.p
@@ -414,7 +416,7 @@ class Spatial_Markov:
         self.chi2 = self._chi2_test()
         self.x2 = sum([c[0] for c in self.chi2])
         dof = k * (k - 1) * (k - 1)
-        self.x2_pvalue = 1 - stats.chi2.cdf(self.x2, dof) 
+        self.x2_pvalue = 1 - stats.chi2.cdf(self.x2, dof)
         self.x2_dof = dof
 
         if permutations:
@@ -442,7 +444,8 @@ class Spatial_Markov:
             l_classes = pysal.Quantiles(ly.flatten(), k=k).yb
             l_classes.shape = ly.shape
         else:
-            l_classes = npa([pysal.Quantiles(ly[:, i], k=k).yb for i in np.arange(self.cols)])
+            l_classes = npa([pysal.Quantiles(
+                ly[:, i], k=k).yb for i in np.arange(self.cols)])
             l_classes = l_classes.transpose()
         l_classic = Markov(l_classes)
         T = np.zeros((k, k, k))
@@ -480,7 +483,8 @@ class Spatial_Markov:
         nt = n * (t - 1)
         n0, n1, n2 = self.T.shape
         rn = range(n0)
-        mat = [self._ssmnp_test(self.s, self.S[i], self.T[i].sum()) for i in rn]
+        mat = [self._ssmnp_test(
+            self.s, self.S[i], self.T[i].sum()) for i in rn]
         return mat
 
     def _ssmnp_test(self, p1, p2, nt):
@@ -529,6 +533,7 @@ class Spatial_Markov:
         mat = [chi2(self.T[i], self.transitions) for i in rn]
         return mat
 
+
 def chi2(T1, T2):
     """
     chi-squared test of difference between two transition matrices.
@@ -574,7 +579,7 @@ def chi2(T1, T2):
            [   1.,    0.,   60.,  903.]])
     >>> chi2(T1,T2)
     (23.422628044813656, 0.0053137895983268457, 9)
-    
+
     Notes
     -----
 
@@ -612,7 +617,7 @@ def chi2(T1, T2):
 class LISA_Markov(Markov):
     """
     Markov for Local Indicators of Spatial Association
-    
+
     Parameters
     ----------
 
@@ -677,7 +682,7 @@ class LISA_Markov(Markov):
                        matrix (n, t-1)
                        integer values indicating the type and significance of a LISA
                        transition. st = 1 if significant in period t, else
-                       st=0 
+                       st=0
 
                        ===============  ===================
                        (s1,s2)          move_type
@@ -715,13 +720,13 @@ class LISA_Markov(Markov):
                         4  3   1   0   31
                         4  4   1   0   32
                         1  1   0   1   33
-                        1  2   0   1   34 
+                        1  2   0   1   34
                         .  .   .   .    .
                         .  .   .   .    .
-                        4  3   0   1   47 
+                        4  3   0   1   47
                         4  4   0   1   48
-                        1  1   0   0   49 
-                        1  2   0   0   50 
+                        1  1   0   0   49
+                        1  2   0   0   50
                         .  .   .   .    .
                         .  .   .   .    .
                         4  3   0   0   63
@@ -739,7 +744,7 @@ class LISA_Markov(Markov):
 
     Examples
     --------
- 
+
     >>> import numpy as np
     >>> f = pysal.open(pysal.examples.get_path("usjoin.csv"))
     >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
@@ -788,7 +793,7 @@ class LISA_Markov(Markov):
            [54, 54, 54, ..., 54, 54, 54],
            [49, 49, 49, ..., 54, 54, 54],
            [64, 64, 64, ..., 64, 64, 64]])
-        
+
     Any value less than 49 indicates at least one of the LISA end points was
     significant. So for example, the first spatial unit experienced a
     transition of type 11 (LL, LL)  during the first three and last tree intervals (according to lm.move_types), however, the last three of these transitions involved insignificant LISAS in both the start and ending year of each transition.
@@ -824,8 +829,8 @@ class LISA_Markov(Markov):
            [  9.67166213e+00,   9.74121200e+00,   6.15490790e+02,
               1.22658713e+03]])
     """
-    def __init__(self, y, w, permutations=0, 
-            significance_level=0.05):
+    def __init__(self, y, w, permutations=0,
+                 significance_level=0.05):
         y = y.transpose()
         pml = pysal.Moran_Local
 
@@ -862,7 +867,7 @@ class LISA_Markov(Markov):
                 key = (origin[r], dest[r], p_origin[r], p_dest[r])
                 sm[r, t] = MOVE_TYPES[key]
         if permutations > 0:
-            self.significant_moves = sm       
+            self.significant_moves = sm
         self.move_types = move_types
 
         # null of own and lag moves being independent
@@ -876,9 +881,9 @@ class LISA_Markov(Markov):
         markov_y = pysal.Markov(rc)
         markov_ylag = pysal.Markov(rlagc)
         A = np.matrix([[1, 0, 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1],
-            [0, 1, 0, 1]])
+                       [0, 0, 1, 0],
+                       [0, 0, 0, 1],
+                       [0, 1, 0, 1]])
 
         kp = A * np.kron(markov_y.p, markov_ylag.p) * A.T
         trans = self.transitions.sum(axis=1)
@@ -908,7 +913,7 @@ class LISA_Markov(Markov):
         Returns
         -------
         dictionary: two keys: values pairs
-                    'components': array (n, t) 
+                    'components': array (n, t)
                     values are integer ids (starting at 1) indicating which
                     component/cluster observation i in period t belonged to
 
@@ -941,7 +946,7 @@ class LISA_Markov(Markov):
                 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,
                 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,
                 0.,  0.,  1.,  0.,  0.,  1.,  0.,  0.,  0.])
-        
+
         Including neighbors of core neighbors
 
         >>> rn = lm_random.spillover(neighbors_on=True)
@@ -960,7 +965,7 @@ class LISA_Markov(Markov):
                 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  1.,  0.,  0.,
                 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,
                 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  1.])
-        
+
 
         """
         n, k = self.q.shape
@@ -969,11 +974,12 @@ class LISA_Markov(Markov):
             components = np.zeros((n, k))
             i2id = {}  # handle string keys
             for key in self.w.neighbors.keys():
-                id = self.w.id2i[key]  #pylint "redefining built-in 'id'
+                id = self.w.id2i[key]  # pylint "redefining built-in 'id'
                 i2id[id] = key
             sig_lisas = (self.q == quadrant) \
                 * (self.p_values <= self.significance_level)
-            sig_ids = [np.nonzero(sig_lisas[:, i])[0].tolist() for i in range(k)]
+            sig_ids = [np.nonzero(
+                sig_lisas[:, i])[0].tolist() for i in range(k)]
 
             neighbors = self.w.neighbors
             for t in range(k - 1):
@@ -1038,12 +1044,12 @@ def kullback(F):
     Parameters
     ----------
     F: array (s, r, r)
-       Values are transitions (not probabilities) for 
+       Values are transitions (not probabilities) for
        s strata
        r initial states
-       r terminal states 
+       r terminal states
 
-    
+
     Returns
     -------
 
@@ -1061,7 +1067,7 @@ def kullback(F):
     -----
 
     Based on  Kullback, Kupperman and Ku (1962) [2]_
-    
+
 
     Example below is taken from Table 9.2 of [2]_
 
@@ -1076,7 +1082,7 @@ def kullback(F):
     ...         [ 4, 21, 190, 25, 20, 34],
     ...         [0, 2, 14, 56, 14, 28],
     ...         [32, 15, 20, 10, 56, 14],
-    ...         [5, 22, 31, 18, 13, 134] 
+    ...         [5, 22, 31, 18, 13, 134]
     ...     ])
     >>> s2 = np.array([
     ...     [3, 6, 9, 3, 0, 8],
@@ -1086,7 +1092,7 @@ def kullback(F):
     ...     [22, 14, 9, 26, 224, 14],
     ...     [1, 5, 13, 53, 13, 116]
     ...     ])
-    >>> 
+    >>>
     >>> F = np.array([s1, s2])
     >>> res = kullback(F)
     >>> res['Conditional homogeneity']
@@ -1138,6 +1144,7 @@ def kullback(F):
     results['Conditional homogeneity pvalue'] = 1 - stats.chi2.cdf(chom, cdof)
     return results
 
+
 def prais(pmat):
     """
     Prais conditional mobility measure
@@ -1150,7 +1157,7 @@ def prais(pmat):
 
     Returns
     -------
-    
+
     pr : 1xk matrix
           Conditional mobility measures for each of the k classes with each
           element  obtained as:
@@ -1183,12 +1190,13 @@ def prais(pmat):
     >>> pysal.spatial_dynamics.markov.prais(m.p)
     matrix([[ 0.08988764,  0.21468144,  0.21125   ,  0.20194986,  0.07259074]])
 
-               
+
 
 
     """
     pr = (pmat.sum(axis=1) - np.diag(pmat))[0]
     return pr
+
 
 def shorrock(pmat):
     """
@@ -1202,7 +1210,7 @@ def shorrock(pmat):
 
     Returns
     -------
-    
+
     sh : scalar
           Conditional mobility measure:
 
@@ -1239,6 +1247,7 @@ def shorrock(pmat):
     k = pmat.shape[1]
     sh = (k - t) / (k - 1)
     return sh
+
 
 def test():
     import doctest

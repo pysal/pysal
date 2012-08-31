@@ -60,6 +60,7 @@ def steady_state(P):
     # normalize eigenvector corresponding to the eigenvalue 1
     return d[:, i] / sum(d[:, i])
 
+
 def fmpt(P):
     """
     Calculates the matrix of first mean passage times for an
@@ -81,8 +82,8 @@ def fmpt(P):
 
     Examples
     --------
-    
-    
+
+
 
     >>> import numpy as np
     >>> p=np.matrix([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])
@@ -99,7 +100,7 @@ def fmpt(P):
     experience a change in the weather (either rain or snow) in 2.67 days from
     today. (That wicked witch can only die once so I reckon that is the
     ultimate absorbing state).
-    
+
     Notes
     -----
 
@@ -107,7 +108,7 @@ def fmpt(P):
 
     References
     ----------
-    
+
     .. [1] Kemeny, John, G. and J. Laurie Snell (1976) Finite Markov
        Chains. Springer-Verlag. Berlin
     """
@@ -156,7 +157,7 @@ def var_fmpt(P):
             [  6.88888889,  12.        ,   5.58333333]])
 
 
-    
+
     Notes
     -----
 
@@ -164,7 +165,7 @@ def var_fmpt(P):
 
     References
     ----------
-    
+
     .. [1] Kemeny, John, G. and J. Laurie Snell (1976) Finite Markov
        Chains. Springer-Verlag. Berlin
 
@@ -181,6 +182,7 @@ def var_fmpt(P):
     ZMdg = np.diag(np.diag(ZM))
     W = M * (2 * Zdg * D - I) + 2 * (ZM - E * ZMdg)
     return W - np.multiply(M, M)
+
 
 def _test():
     import doctest

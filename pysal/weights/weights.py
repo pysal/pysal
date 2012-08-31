@@ -1,10 +1,11 @@
 __all__ = ['W', 'WSP']
-__author__  = "Sergio J. Rey <srey@asu.edu> "
+__author__ = "Sergio J. Rey <srey@asu.edu> "
 from pysal.common import *
 import scipy.sparse
 import gc
 import util
-import pysal #added to get test path func
+import pysal  # added to get test path func
+
 
 class W(object):
     """
@@ -19,7 +20,7 @@ class W(object):
                       key is region ID, value is a list of edge weights
                       If not supplied all edge wegiths are assumed to have a weight of 1.
                       Example: {'a':[0.5],'b':[0.5,1.5],'c':[1.5]}
-    id_order = None : list 
+    id_order = None : list
                       An ordered list of ids, defines the order of
                       observations when iterating over W if not set,
                       lexicographical ordering is used to iterate and the
@@ -35,31 +36,31 @@ class W(object):
     diagWtW
     diagWtW_WW
     histogram
-    id2i            
+    id2i
     id_order
     id_order_set
     islands
     max_neighbors
     mean_neighbors
     min_neighbors
-    n               
+    n
     neighbor_offsets
     nonzero
     pct_nonzero
-    s0              
-    s1              
+    s0
+    s1
     s2
     s2array
     sd
-    sparse          
+    sparse
     trcW2
     trcWtW
     trcWtW_WW
     transform
 
-                    
 
-                      
+
+
 
     Examples
     --------
@@ -79,7 +80,7 @@ class W(object):
     >>> w.pct_nonzero
     0.065417488494411577
 
-    Set weights implicitly 
+    Set weights implicitly
 
     >>> neighbors={0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
     >>> w=W(neighbors)
@@ -103,32 +104,31 @@ class W(object):
     [(1, 1), (2, 6), (3, 33), (4, 103), (5, 114), (6, 73), (7, 35), (8, 17), (9, 9), (10, 4), (11, 4), (12, 3), (13, 0), (14, 1)]
 
     """
-    def __init__(self,neighbors,weights=None,id_order=None):
-        self.transformations={}
-        self.neighbors=ROD(neighbors)
+    def __init__(self, neighbors, weights=None, id_order=None):
+        self.transformations = {}
+        self.neighbors = ROD(neighbors)
         if not weights:
             weights = {}
             for key in neighbors:
                 weights[key] = [1.] * len(neighbors[key])
-        self.weights=ROD(weights)
-        self.transformations['O']=self.weights #original weights
-        self.transform='O'
-        if id_order == None:
-            self._id_order=self.neighbors.keys()
+        self.weights = ROD(weights)
+        self.transformations['O'] = self.weights  # original weights
+        self.transform = 'O'
+        if id_order is None:
+            self._id_order = self.neighbors.keys()
             self._id_order.sort()
-            self._id_order_set=False
+            self._id_order_set = False
         else:
-            self._id_order=id_order
-            self._id_order_set=True
+            self._id_order = id_order
+            self._id_order_set = True
         self._reset()
-        self._n=len(self.weights)
-
+        self._n = len(self.weights)
 
     def _reset(self):
         """
         Reset properties
         """
-        self._cache={}
+        self._cache = {}
 
     @property
     def sparse(self):
@@ -136,33 +136,33 @@ class W(object):
         Sparse matrix object
 
         For any matrix manipulations required for w, w.sparse should be
-        used. This is based on scipy.sparse. 
+        used. This is based on scipy.sparse.
         """
         if 'sparse' not in self._cache:
-            self._sparse=self._build_sparse()
-            self._cache['sparse']=self._sparse
+            self._sparse = self._build_sparse()
+            self._cache['sparse'] = self._sparse
         return self._sparse
 
     def _build_sparse(self):
         """
         construct the sparse attribute
         """
-        
-        row=[]
-        col=[]
-        data=[]
+
+        row = []
+        col = []
+        data = []
         gc.disable()
-        id2i=self.id2i
+        id2i = self.id2i
         for id, neigh_list in self.neighbor_offsets.iteritems():
-            card=self.cardinalities[id]
-            row.extend([id2i[id]]*card)
+            card = self.cardinalities[id]
+            row.extend([id2i[id]] * card)
             col.extend(neigh_list)
             data.extend(self.weights[id])
         gc.enable()
-        row=np.array(row)
-        col=np.array(col)
-        data=np.array(data)
-        s=scipy.sparse.csr_matrix((data,(row,col)), shape=(self.n, self.n))
+        row = np.array(row)
+        col = np.array(col)
+        data = np.array(data)
+        s = scipy.sparse.csr_matrix((data, (row, col)), shape=(self.n, self.n))
         return s
 
     @property
@@ -172,11 +172,11 @@ class W(object):
         index in W.id_order.
         """
         if 'id2i' not in self._cache:
-            self._id2i={}
-            for i,id in enumerate(self._id_order):
-                self._id2i[id]=i
-            self._id2i=ROD(self._id2i)
-            self._cache['id2i']=self._id2i
+            self._id2i = {}
+            for i, id in enumerate(self._id_order):
+                self._id2i[id] = i
+            self._id2i = ROD(self._id2i)
+            self._cache['id2i'] = self._id2i
         return self._id2i
 
     @property
@@ -185,10 +185,9 @@ class W(object):
         number of units
         """
         if "n" not in self._cache:
-            self._n=len(self.neighbors)
-            self._cache['n']=self._n
+            self._n = len(self.neighbors)
+            self._cache['n'] = self._n
         return self._n
-
 
     @property
     def s0(self):
@@ -201,8 +200,8 @@ class W(object):
 
         """
         if 's0' not in self._cache:
-            self._s0=self.sparse.sum()
-            self._cache['s0']=self._s0
+            self._s0 = self.sparse.sum()
+            self._cache['s0'] = self._s0
         return self._s0
 
     @property
@@ -216,11 +215,11 @@ class W(object):
 
         """
         if 's1' not in self._cache:
-            t=self.sparse.transpose()
-            t=t+self.sparse
-            t2=t.multiply(t) # element-wise square
-            self._s1=t2.sum()/2.
-            self._cache['s1']=self._s1
+            t = self.sparse.transpose()
+            t = t + self.sparse
+            t2 = t.multiply(t)  # element-wise square
+            self._s1 = t2.sum() / 2.
+            self._cache['s1'] = self._s1
         return self._s1
 
     @property
@@ -235,9 +234,9 @@ class W(object):
 
         """
         if 's2array' not in self._cache:
-            s=self.sparse
-            self._s2array= np.array(s.sum(1)+s.sum(0).transpose())**2
-            self._cache['s2array']=self._s2array
+            s = self.sparse
+            self._s2array = np.array(s.sum(1) + s.sum(0).transpose()) ** 2
+            self._cache['s2array'] = self._s2array
         return self._s2array
 
     @property
@@ -252,8 +251,8 @@ class W(object):
 
         """
         if 's2' not in self._cache:
-            self._s2=self.s2array.sum()
-            self._cache['s2']=self._s2
+            self._s2 = self.s2array.sum()
+            self._cache['s2'] = self._s2
         return self._s2
 
     @property
@@ -267,10 +266,9 @@ class W(object):
 
         """
         if 'trcW2' not in self._cache:
-            self._trcW2=self.diagW2.sum()
-            self._cache['trcw2']=self._trcW2
+            self._trcW2 = self.diagW2.sum()
+            self._cache['trcw2'] = self._trcW2
         return self._trcW2
-
 
     @property
     def diagW2(self):
@@ -283,8 +281,8 @@ class W(object):
 
         """
         if 'diagw2' not in self._cache:
-            self._diagW2=(self.sparse*self.sparse).diagonal()
-            self._cache['diagW2']=self._diagW2
+            self._diagW2 = (self.sparse * self.sparse).diagonal()
+            self._cache['diagW2'] = self._diagW2
         return self._diagW2
 
     @property
@@ -298,11 +296,11 @@ class W(object):
 
         """
         if 'diagWtW' not in self._cache:
-            self._diagWtW=(self.sparse.transpose()*self.sparse).diagonal()
-            self._cache['diagWtW']=self._diagWtW
+            self._diagWtW = (self.sparse.transpose() * self.sparse).diagonal()
+            self._cache['diagWtW'] = self._diagWtW
         return self._diagWtW
 
-    @property 
+    @property
     def trcWtW(self):
         """
         Trace of :math:`W^{'}W`  : float
@@ -313,8 +311,8 @@ class W(object):
 
         """
         if 'trcWtW' not in self._cache:
-            self._trcWtW=self.diagWtW.sum()
-            self._cache['trcWtW']=self._trcWtW
+            self._trcWtW = self.diagWtW.sum()
+            self._cache['trcWtW'] = self._trcWtW
         return self._trcWtW
 
     @property
@@ -323,10 +321,10 @@ class W(object):
         diagonal of :math:`W^{'}W + WW`
         """
         if 'diagWtW_WW' not in self._cache:
-            wt=self.sparse.transpose()
-            w=self.sparse
-            self._diagWtW_WW=(wt*w+w*w).diagonal()
-            self._cache['diagWtW_WW']=self._diagWtW_WW
+            wt = self.sparse.transpose()
+            w = self.sparse
+            self._diagWtW_WW = (wt * w + w * w).diagonal()
+            self._cache['diagWtW_WW'] = self._diagWtW_WW
         return self._diagWtW_WW
 
     @property
@@ -335,8 +333,8 @@ class W(object):
         trace of :math:`W^{'}W + WW`
         """
         if 'trcWtW_WW' not in self._cache:
-            self._trcWtW_WW=self.diagWtW_WW.sum()
-            self._cache['trcWtW_WW']=self._trcWtW_WW
+            self._trcWtW_WW = self.diagWtW_WW.sum()
+            self._cache['trcWtW_WW'] = self._trcWtW_WW
         return self._trcWtW_WW
 
     @property
@@ -345,8 +343,8 @@ class W(object):
         percentage of nonzero weights
         """
         if 'pct_nonzero' not in self._cache:
-            self._pct_nonzero=self.sparse.nnz/(1.*self._n**2)
-            self._cache['pct_nonzero']=self._pct_nonzero
+            self._pct_nonzero = self.sparse.nnz / (1. * self._n ** 2)
+            self._cache['pct_nonzero'] = self._pct_nonzero
         return self._pct_nonzero
 
     @property
@@ -355,11 +353,11 @@ class W(object):
         number of neighbors for each observation : dict
         """
         if 'cardinalities' not in self._cache:
-            c={}
+            c = {}
             for i in self._id_order:
-                c[i]=len(self.neighbors[i])
-            self._cardinalities=c
-            self._cache['cardinalities']=self._cardinalities
+                c[i] = len(self.neighbors[i])
+            self._cardinalities = c
+            self._cache['cardinalities'] = self._cardinalities
         return self._cardinalities
 
     @property
@@ -368,10 +366,9 @@ class W(object):
         largest number of neighbors
         """
         if 'max_neighbors' not in self._cache:
-            self._max_neighbors=max(self.cardinalities.values())
-            self._cache['max_neighbors']=self._max_neighbors
+            self._max_neighbors = max(self.cardinalities.values())
+            self._cache['max_neighbors'] = self._max_neighbors
         return self._max_neighbors
-
 
     @property
     def mean_neighbors(self):
@@ -379,10 +376,9 @@ class W(object):
         average number of neighbors
         """
         if 'mean_neighbors' not in self._cache:
-            self._mean_neighbors=np.mean(self.cardinalities.values())
-            self._cache['mean_neighbors']=self._mean_neighbors
+            self._mean_neighbors = np.mean(self.cardinalities.values())
+            self._cache['mean_neighbors'] = self._mean_neighbors
         return self._mean_neighbors
-
 
     @property
     def min_neighbors(self):
@@ -390,10 +386,9 @@ class W(object):
         minimum number of neighbors
         """
         if 'min_neighbors' not in self._cache:
-            self._min_neighbors=min(self.cardinalities.values())
-            self._cache['min_neighbors']=self._min_neighbors
+            self._min_neighbors = min(self.cardinalities.values())
+            self._cache['min_neighbors'] = self._min_neighbors
         return self._min_neighbors
-
 
     @property
     def nonzero(self):
@@ -401,8 +396,8 @@ class W(object):
         number of nonzero weights
         """
         if 'nonzero' not in self._cache:
-            self._nonzero=self.sparse.nnz
-            self._cache['nonzero']=self._nonzero
+            self._nonzero = self.sparse.nnz
+            self._cache['nonzero'] = self._nonzero
         return self._nonzero
 
     @property
@@ -411,10 +406,9 @@ class W(object):
         standard deviation of number of neighbors : float
         """
         if 'sd' not in self._cache:
-            self._sd=np.std(self.cardinalities.values())
-            self._cache['sd']=self._sd
+            self._sd = np.std(self.cardinalities.values())
+            self._cache['sd'] = self._sd
         return self._sd
-
 
     @property
     def asymmetries(self):
@@ -422,8 +416,8 @@ class W(object):
         list of id pairs with asymmetric weights
         """
         if 'asymmetries' not in self._cache:
-            self._asymmetries=self.asymmetry()
-            self._cache['asymmetries']=self._asymmetries
+            self._asymmetries = self.asymmetry()
+            self._cache['asymmetries'] = self._asymmetries
         return self._asymmetries
 
     @property
@@ -432,10 +426,10 @@ class W(object):
         list of ids without any neighbors
         """
         if 'islands' not in self._cache:
-            self._islands = [i for i,c in self.cardinalities.items() if c==0]
-            self._cache['islands']=self._islands
+            self._islands = [i for i,
+                             c in self.cardinalities.items() if c == 0]
+            self._cache['islands'] = self._islands
         return self._islands
-
 
     @property
     def histogram(self):
@@ -444,13 +438,13 @@ class W(object):
         number of neighbors for that unit
         """
         if 'histogram' not in self._cache:
-            ct,bin=np.histogram(self.cardinalities.values(),range(self.min_neighbors,self.max_neighbors+2))
-            self._histogram=zip(bin,ct)
-            self._cache['histogram']=self._histogram
+            ct, bin = np.histogram(self.cardinalities.values(),
+                                   range(self.min_neighbors, self.max_neighbors + 2))
+            self._histogram = zip(bin, ct)
+            self._cache['histogram'] = self._histogram
         return self._histogram
 
-
-    def __getitem__(self,key):
+    def __getitem__(self, key):
         """
         Allow a dictionary like interaction with the weights class.
 
@@ -467,8 +461,7 @@ class W(object):
         >>> w[0]
         {1: 1.0, 5: 1.0}
         """
-        return dict(zip(self.neighbors[key],self.weights[key]))
-
+        return dict(zip(self.neighbors[key], self.weights[key]))
 
     def __iter__(self):
         """
@@ -480,7 +473,7 @@ class W(object):
         >>> w=pysal.lat2W(3,3)
         >>> for i,wi in enumerate(w):
         ...     print i,wi
-        ...     
+        ...
         0 {1: 1.0, 3: 1.0}
         1 {0: 1.0, 2: 1.0, 4: 1.0}
         2 {1: 1.0, 5: 1.0}
@@ -490,19 +483,20 @@ class W(object):
         6 {3: 1.0, 7: 1.0}
         7 {8: 1.0, 4: 1.0, 6: 1.0}
         8 {5: 1.0, 7: 1.0}
-        >>> 
+        >>>
         """
         class _W_iter:
-            def __init__(self,w):
+            def __init__(self, w):
                 self.w = w
                 self.n = len(w._id_order)
                 self._idx = 0
+
             def next(self):
                 if self._idx >= self.n:
-                    self._idx=0
+                    self._idx = 0
                     raise StopIteration
                 value = self.w.__getitem__(self.w._id_order[self._idx])
-                self._idx+=1
+                self._idx += 1
                 return value
         return _W_iter(self)
 
@@ -534,7 +528,7 @@ class W(object):
         >>> w=pysal.lat2W(3,3)
         >>> for i,wi in enumerate(w):
         ...     print i,wi
-        ...     
+        ...
         0 {1: 1.0, 3: 1.0}
         1 {0: 1.0, 2: 1.0, 4: 1.0}
         2 {1: 1.0, 5: 1.0}
@@ -552,7 +546,7 @@ class W(object):
         [8, 7, 6, 5, 4, 3, 2, 1, 0]
         >>> for i,w_i in enumerate(w):
         ...     print i,w_i
-        ...     
+        ...
         0 {5: 1.0, 7: 1.0}
         1 {8: 1.0, 4: 1.0, 6: 1.0}
         2 {3: 1.0, 7: 1.0}
@@ -562,23 +556,23 @@ class W(object):
         6 {1: 1.0, 5: 1.0}
         7 {0: 1.0, 2: 1.0, 4: 1.0}
         8 {1: 1.0, 3: 1.0}
-        >>> 
-        
+        >>>
+
         """
         if set(self._id_order) == set(ordered_ids):
-            self._id_order=ordered_ids
-            self._idx=0
-            self._id_order_set=True
+            self._id_order = ordered_ids
+            self._idx = 0
+            self._id_order_set = True
             self._reset()
         else:
-            raise Exception, 'ordered_ids do not align with W ids'
+            raise Exception('ordered_ids do not align with W ids')
 
     def __get_id_order(self):
         """returns the ids for the observations in the order in which they
         would be encountered if iterating over the weights."""
         return self._id_order
 
-    id_order=property(__get_id_order, __set_id_order)
+    id_order = property(__get_id_order, __set_id_order)
 
     @property
     def id_order_set(self):
@@ -592,7 +586,6 @@ class W(object):
         True
         """
         return self._id_order_set
-
 
     @property
     def neighbor_offsets(self):
@@ -614,13 +607,12 @@ class W(object):
         [2, 1]
         """
         if "neighbors_0" not in self._cache:
-            self.__neighbors_0={}
-            id2i=self.id2i
+            self.__neighbors_0 = {}
+            id2i = self.id2i
             for id, neigh_list in self.neighbors.iteritems():
-                self.__neighbors_0[id]=[id2i[neigh] for neigh in neigh_list] 
-            self._cache['neighbors_0']=self.__neighbors_0
+                self.__neighbors_0[id] = [id2i[neigh] for neigh in neigh_list]
+            self._cache['neighbors_0'] = self.__neighbors_0
         return self.__neighbors_0
-
 
     def get_transform(self):
         """
@@ -644,7 +636,7 @@ class W(object):
         >>> w.transform='b'
         >>> w.weights[0]
         [1.0, 1.0]
-        >>> 
+        >>>
         """
         return self._transform
 
@@ -655,7 +647,7 @@ class W(object):
         Parameters
         ----------
         transform : string (not case sensitive)
-                    B: Binary 
+                    B: Binary
                     R: Row-standardization (global sum=n)
                     D: Double-standardization (global sum=1)
                     V: Variance stabilizing
@@ -675,79 +667,78 @@ class W(object):
         >>> w.transform='b'
         >>> w.weights[0]
         [1.0, 1.0]
-        >>> 
+        >>>
         """
-        value=value.upper()
+        value = value.upper()
         self._transform = value
-        if self.transformations.has_key(value):
-            self.weights=self.transformations[value]
+        if value in self.transformations:
+            self.weights = self.transformations[value]
             self._reset()
         else:
-            if value == "R": 
+            if value == "R":
                 # row standardized weights
-                weights={}
+                weights = {}
                 for i in self.weights:
                     wijs = self.weights[i]
-                    row_sum=sum(wijs)*1.0
-                    weights[i]=[wij/row_sum for wij in wijs]
-                weights=ROD(weights)
-                self.transformations[value]=weights
-                self.weights=weights
+                    row_sum = sum(wijs) * 1.0
+                    weights[i] = [wij / row_sum for wij in wijs]
+                weights = ROD(weights)
+                self.transformations[value] = weights
+                self.weights = weights
                 self._reset()
             elif value == "D":
                 # doubly-standardized weights
                 # update current chars before doing global sum
                 self._reset()
-                s0=self.s0
-                ws=1.0/s0
-                weights={}
+                s0 = self.s0
+                ws = 1.0 / s0
+                weights = {}
                 for i in self.weights:
                     wijs = self.weights[i]
-                    weights[i]=[wij*ws for wij in wijs]
-                weights=ROD(weights)
-                self.transformations[value]=weights
-                self.weights=weights
+                    weights[i] = [wij * ws for wij in wijs]
+                weights = ROD(weights)
+                self.transformations[value] = weights
+                self.weights = weights
                 self._reset()
             elif value == "B":
                 # binary transformation
-                weights={}
+                weights = {}
                 for i in self.weights:
                     wijs = self.weights[i]
-                    weights[i]=[1.0 for wij in wijs]
-                weights=ROD(weights)
-                self.transformations[value]=weights
-                self.weights=weights
+                    weights[i] = [1.0 for wij in wijs]
+                weights = ROD(weights)
+                self.transformations[value] = weights
+                self.weights = weights
                 self._reset()
             elif value == "V":
                 # variance stabilizing
-                weights={}
-                q={}
-                k=self.cardinalities
-                s={}
-                Q=0.0
+                weights = {}
+                q = {}
+                k = self.cardinalities
+                s = {}
+                Q = 0.0
                 for i in self.weights:
                     wijs = self.weights[i]
-                    q[i] = math.sqrt(sum([wij*wij for wij in wijs]))
+                    q[i] = math.sqrt(sum([wij * wij for wij in wijs]))
                     s[i] = [wij / q[i] for wij in wijs]
-                    Q+=sum([si for si in s[i]])
-                nQ=self.n/Q
+                    Q += sum([si for si in s[i]])
+                nQ = self.n / Q
                 for i in self.weights:
-                    weights[i] = [ w*nQ for w in s[i]]
-                weights=ROD(weights)
-                self.transformations[value]=weights
-                self.weights=weights
+                    weights[i] = [w * nQ for w in s[i]]
+                weights = ROD(weights)
+                self.transformations[value] = weights
+                self.weights = weights
                 self._reset()
-            elif value =="O":
+            elif value == "O":
                 # put weights back to original transformation
-                weights={}
-                original=self.transformations[value]
-                self.weights=original
+                weights = {}
+                original = self.transformations[value]
+                self.weights = original
                 self._reset()
             else:
                 print 'unsupported weights transformation'
 
     transform = property(get_transform, set_transform)
-    
 
     def asymmetry(self):
         """
@@ -755,7 +746,7 @@ class W(object):
 
         Returns
         -------
-        asymmetries : list 
+        asymmetries : list
                       empty if no asymmetries are found
                       if asymmetries, first list is row indices, second
                       list is column indices of asymmetric cells
@@ -783,13 +774,12 @@ class W(object):
         [0 1]
         """
 
-        wd=self.sparse.transpose()-self.sparse
-        ids=np.nonzero(wd)
-        if len(ids[0])==0:
+        wd = self.sparse.transpose() - self.sparse
+        ids = np.nonzero(wd)
+        if len(ids[0]) == 0:
             return []
         else:
             return ids
-
 
     def full(self):
         """
@@ -835,15 +825,15 @@ class WSP(object):
     sparse   : scipy sparse object
                NxN object from scipy.sparse
 
-    id_order : list 
+    id_order : list
                An ordered list of ids, assumed to match the ordering in
-               sparse.  
+               sparse.
 
     Attributes
     ----------
 
-    n               
-    s0              
+    n
+    s0
     trcWtW_WW
 
     Examples
@@ -865,22 +855,21 @@ class WSP(object):
     >>> w.n
     4
 
-    
+
     """
     def __init__(self, sparse, id_order=None):
         if not scipy.sparse.issparse(sparse):
-            raise ValueError, "must pass a scipy sparse object"
+            raise ValueError("must pass a scipy sparse object")
         rows, cols = sparse.shape
         if rows != cols:
-            raise ValueError, "Weights object must be square"
+            raise ValueError("Weights object must be square")
         self.sparse = sparse.tocsr()
         self.n = sparse.shape[0]
         if id_order:
             if len(id_order) != self.n:
-                raise ValueError, "Number of values in id_order must match shape of sparse"
+                raise ValueError("Number of values in id_order must match shape of sparse")
         self.id_order = id_order
         self._cache = {}
-
 
     @property
     def s0(self):
@@ -893,10 +882,9 @@ class WSP(object):
 
         """
         if 's0' not in self._cache:
-            self._s0=self.sparse.sum()
-            self._cache['s0']=self._s0
+            self._s0 = self.sparse.sum()
+            self._cache['s0'] = self._s0
         return self._s0
-
 
     @property
     def trcWtW_WW(self):
@@ -904,8 +892,8 @@ class WSP(object):
         trace of :math:`W^{'}W + WW`
         """
         if 'trcWtW_WW' not in self._cache:
-            self._trcWtW_WW=self.diagWtW_WW.sum()
-            self._cache['trcWtW_WW']=self._trcWtW_WW
+            self._trcWtW_WW = self.diagWtW_WW.sum()
+            self._cache['trcWtW_WW'] = self._trcWtW_WW
         return self._trcWtW_WW
 
     @property
@@ -914,10 +902,10 @@ class WSP(object):
         diagonal of :math:`W^{'}W + WW`
         """
         if 'diagWtW_WW' not in self._cache:
-            wt=self.sparse.transpose()
-            w=self.sparse
-            self._diagWtW_WW=(wt*w+w*w).diagonal()
-            self._cache['diagWtW_WW']=self._diagWtW_WW
+            wt = self.sparse.transpose()
+            w = self.sparse
+            self._diagWtW_WW = (wt * w + w * w).diagonal()
+            self._cache['diagWtW_WW'] = self._diagWtW_WW
         return self._diagWtW_WW
 
 

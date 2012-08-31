@@ -5,6 +5,7 @@ import tempfile
 import os
 import warnings
 
+
 class test_MatIO(unittest.TestCase):
     def setUp(self):
         self.test_file = test_file = pysal.examples.get_path('spat-sym-us.mat')
@@ -29,18 +30,19 @@ class test_MatIO(unittest.TestCase):
 
     def test_write(self):
         w = self.obj.read()
-        f = tempfile.NamedTemporaryFile(suffix='.mat',dir=pysal.examples.get_path(''))
+        f = tempfile.NamedTemporaryFile(
+            suffix='.mat', dir=pysal.examples.get_path(''))
         fname = f.name
         f.close()
-        o = pysal.open(fname,'w')
+        o = pysal.open(fname, 'w')
         with warnings.catch_warnings(record=True) as warn:
             warnings.simplefilter("always")
             o.write(w)
             if len(warn) > 0:
                 assert issubclass(warn[0].category, FutureWarning)
         o.close()
-        wnew =  pysal.open(fname,'r').read()
-        self.assertEqual( wnew.pct_nonzero, w.pct_nonzero)
+        wnew = pysal.open(fname, 'r').read()
+        self.assertEqual(wnew.pct_nonzero, w.pct_nonzero)
         os.remove(fname)
 
 if __name__ == '__main__':

@@ -1,5 +1,6 @@
 import warnings
-warnings.filterwarnings(action='ignore', message=".*__builtin__.file size changed.*")
+warnings.filterwarnings(
+    action='ignore', message=".*__builtin__.file size changed.*")
 import gwt
 import gal
 import dat

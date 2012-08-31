@@ -7,7 +7,7 @@ Xinyue Ye <xinyue.ye@gmail.com>
 Charles Schmidt <schmidtc@gmail.com>
 Andrew Winslow <Andrew.Winslow@asu.edu>
 
-Not to be used without permission of the authors. 
+Not to be used without permission of the authors.
 
 Style Guide, Follow:
 http://www.python.org/dev/peps/pep-0008/
@@ -40,10 +40,11 @@ Function comment format:
     Extras (notes, references, examples, doctest, etc.)
 """
 
-__author__  = "Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow"
+__author__ = "Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow"
 __credits__ = "Copyright (c) 2005-2009 Sergio J. Rey"
 
 import doctest
+
 
 class GeometryCollection:
     """
@@ -72,14 +73,14 @@ class GeometryCollection:
         Returns the centroid of the collection.
 
         centroid -> number n-tuple, n > 1
-      
+
         Examples
         --------
         >>> import pysal.cg.shapes as shapes
         >>> g = GeometryCollection([shapes.Point((0, 0)), shapes.Point((1, 1))])
         >>> g.centroid
         (0.5, 0.5)
-        """ 
+        """
         pass
 
     @property
@@ -88,7 +89,7 @@ class GeometryCollection:
         Returns the bounding box of the collection.
 
         bounding_box -> number 4-tuple
- 
+
         Examples
         --------
         >>> import pysal.cg.shapes as shapes
@@ -96,14 +97,14 @@ class GeometryCollection:
         >>> g.bounding_box
         (0, 1, 4, 5)
         """
-        pass 
+        pass
 
-    def add(self,obj):
+    def add(self, obj):
         """
         Adds the object _obj_ to the to geometry collection.
 
         add(Shape obj) -> bool
-    
+
         Examples
         --------
         >>> import pysal.cg.shapes as shapes
@@ -114,12 +115,13 @@ class GeometryCollection:
         True
         """
         pass
-    def remove(self,obj):
+
+    def remove(self, obj):
         """
         Removes the object _obj_ from the geometry collection.
 
         remove(Shape obj) -> bool
-    
+
         Examples
         --------
         >>> import pysal.cg.shapes as shapes
@@ -131,13 +133,10 @@ class GeometryCollection:
         """
         pass
 
+
 def _test():
     import doctest
     doctest.testmod()
 
 if __name__ == '__main__':
     _test()
-
-
-
-

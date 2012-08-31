@@ -2,14 +2,15 @@
 Contiguity based spatial weights
 """
 
-__author__  = "Sergio J. Rey <srey@asu.edu> "
+__author__ = "Sergio J. Rey <srey@asu.edu> "
 __all__ = ['buildContiguity']
 
 import pysal
 from _contW_rtree import ContiguityWeights_rtree as ContiguityWeights
 
 
-WT_TYPE = {'rook':2,'queen':1} # for _contW_Binning
+WT_TYPE = {'rook': 2, 'queen': 1}  # for _contW_Binning
+
 
 def buildContiguity(polygons, criterion="rook", ids=None):
     """
@@ -62,15 +63,16 @@ def buildContiguity(polygons, criterion="rook", ids=None):
 
     """
     if ids and len(ids) != len(set(ids)):
-        raise ValueError, "The argument to the ids parameter contains duplicate entries."
-    
+        raise ValueError("The argument to the ids parameter contains duplicate entries.")
+
     wt_type = WT_TYPE[criterion.lower()]
     geo = polygons
     if issubclass(type(geo), pysal.open):
-        geo.seek(0) # Make sure we read from the beinging of the file.
+        geo.seek(0)  # Make sure we read from the beinging of the file.
         geoObj = geo
     else:
-        raise TypeError, "Argument must be a FileIO handler or connection string"
+        raise TypeError(
+            "Argument must be a FileIO handler or connection string")
     neighbor_data = ContiguityWeights(geoObj, wt_type).w
     neighbors = {}
     #weights={}
@@ -87,11 +89,12 @@ def buildContiguity(polygons, criterion="rook", ids=None):
             neighbors[key] = list(neighbor_data[key])
     return pysal.weights.W(neighbors, id_order=ids)
 
+
 def _test():
     """Doc test"""
     import doctest
     doctest.testmod(verbose=True)
 
-    
+
 if __name__ == "__main__":
     _test()
