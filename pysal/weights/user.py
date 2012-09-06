@@ -381,6 +381,16 @@ def threshold_binaryW_from_shapefile(shapefile, threshold, p=2, idVariable=None,
     >>> w = threshold_binaryW_from_shapefile(pysal.examples.get_path("columbus.shp"),0.62,idVariable="POLYID")
     >>> w.weights[1]
     [1, 1]
+
+
+    Notes
+    -----
+    Supports polygon or point shapefiles. For polygon shapefiles, distance is
+    based on polygon centroids. Distances are defined using coordinates in
+    shapefile which are assumed to be projected and not geographical
+    coordinates.
+
+
     """
     data = get_points_array_from_shapefile(shapefile)
     if radius is not None:
@@ -486,6 +496,15 @@ def threshold_continuousW_from_shapefile(shapefile, threshold, p=2,
     >>> w = threshold_continuousW_from_shapefile(pysal.examples.get_path("columbus.shp"),0.62,idVariable="POLYID")
     >>> w.weights[1]
     [1.6702346893743334, 1.7250729841938093]
+
+    Notes
+    -----
+    Supports polygon or point shapefiles. For polygon shapefiles, distance is
+    based on polygon centroids. Distances are defined using coordinates in
+    shapefile which are assumed to be projected and not geographical
+    coordinates.
+
+
     """
     data = get_points_array_from_shapefile(shapefile)
     if radius is not None:
@@ -699,6 +718,16 @@ def kernelW_from_shapefile(shapefile, k=2, function='triangular', idVariable=Non
     array([[ 0.75333961],
            [ 0.75333961],
            [ 0.75333961]])
+
+
+    Notes
+    -----
+    Supports polygon or point shapefiles. For polygon shapefiles, distance is
+    based on polygon centroids. Distances are defined using coordinates in
+    shapefile which are assumed to be projected and not geographical
+    coordinates.
+
+
     """
     points = get_points_array_from_shapefile(shapefile)
     if radius is not None:
@@ -907,6 +936,14 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='t
     array([[ 0.59871832],
            [ 0.59871832],
            [ 0.56095647]])
+
+    Notes
+    -----
+    Supports polygon or point shapefiles. For polygon shapefiles, distance is
+    based on polygon centroids. Distances are defined using coordinates in
+    shapefile which are assumed to be projected and not geographical
+    coordinates.
+
     """
     points = get_points_array_from_shapefile(shapefile)
     if radius is not None:
@@ -941,6 +978,14 @@ def min_threshold_dist_from_shapefile(shapefile, radius=None):
     0.61886415807685413
     >>> min_threshold_dist_from_shapefile(pysal.examples.get_path("stl_hom.shp"), pysal.cg.sphere.RADIUS_EARTH_MILES)
     31.846942936393717
+
+    Notes
+    -----
+    Supports polygon or point shapefiles. For polygon shapefiles, distance is
+    based on polygon centroids. Distances are defined using coordinates in
+    shapefile which are assumed to be projected and not geographical
+    coordinates.
+
     """
     points = get_points_array_from_shapefile(shapefile)
     if radius is not None:
