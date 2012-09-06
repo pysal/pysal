@@ -46,7 +46,9 @@ class Arc_KDTree(scipy.spatial.KDTree):
             x = numpy.array(x)
         if len(x.shape) == 2 and x.shape[1] == 3:  # assume point is already in XYZ
             return x
-        if len(x.shape) == 1:
+        if len(x.shape) == 1 and x.shape[0] == 3:  # assume point is already in XYZ
+            return x
+        elif len(x.shape) == 1:
             x = numpy.array(sphere.toXYZ(x))
         else:
             x = map(sphere.toXYZ, x)
