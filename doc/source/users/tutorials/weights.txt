@@ -187,6 +187,14 @@ then define the knn set as:
 	>>> w4.weights[0]
 	[1, 1, 1, 1]
 
+Alternatively, we can use a utility funtion to build a knn W straight from a
+shapefile:
+
+.. doctest:;
+    
+    >>> wknn5 = pysal.knnW_from_shapefile(pysal.examples.get_path('columbus.shp'), k=5)
+    >>> wknn5.neighbors[0]
+    [2, 1, 3, 7, 4]
 
 Distance band weights
 ---------------------
