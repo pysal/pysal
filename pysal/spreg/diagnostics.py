@@ -219,7 +219,7 @@ def r2(reg):
     y = reg.y               # (array) vector of dep observations (n x 1)
     mean_y = reg.mean_y     # (scalar) mean of dep observations
     utu = reg.utu           # (scalar) residual sum of squares
-    ss_tot = sum((y - mean_y) ** 2)
+    ss_tot = ((y - mean_y) ** 2).sum(0)
     r2 = 1 - utu / ss_tot
     r2_result = r2[0]
     return r2_result
