@@ -1,5 +1,5 @@
 """
-Wing-edge Data Structure for Networks
+Winged-edge Data Structure for Networks
 
 """
 
@@ -8,6 +8,25 @@ __author__ = "Sergio J. Rey <srey@asu.edu>"
 
 
 def get_regions(graph):
+    """
+    Find the connected regions formed by the links partitioning of the plane
+
+    Parameters
+    ----------
+
+    graph: a networkx graph assumed to be planar
+
+
+
+    Returns
+    -------
+
+    regions: a list of regions, with each reach a tuple of the nodes tracing
+    out the region in closed-cartographic form. First region is the external
+    polygon for the plane.
+
+
+    """
     regions = nx.cycle_basis(G)
     for region in regions:
         region.append(region[0])
@@ -165,7 +184,7 @@ class WingEdge(object):
 if __name__ == '__main__':
 
     # example from figure 3.19 of okabe
-    # ommiting 1-3 link to ensure planarity
+    # omitting 1-3 link to ensure planarity
 
     import networkx as nx
     import numpy as np
