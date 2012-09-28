@@ -97,7 +97,7 @@ class Maxp:
     >>> solution.p
     29
     >>> solution.regions[0]
-    [4, 14, 5, 24, 3]
+    [4, 14, 5, 24, 3, 25, 15, 23]
     >>>
 
     """
@@ -559,7 +559,7 @@ class Maxp_LISA(Maxp):
     >>> mpl.p
     31
     >>> mpl.regions[0]
-    [99, 89, 98]
+    [99, 89, 98, 97]
 
     """
     def __init__(self, w, z, y, floor, floor_variable, initial=100):

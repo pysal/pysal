@@ -66,9 +66,9 @@ The Maxp instance s has a number of attributes regarding the solution. First is 
 .. doctest:: 
 
 	>>> r.regions
-	[['44', '34', '3', '25', '1', '4', '47'], ['12', '46', '20', '24', '13'], ['14', '45', '35', '30', '39'], ['6', '27', '17', '29', '5', '43'], ['33', '40', '28', '15', '41', '9', '23', '31', '38'], ['37', '8', '0', '7', '21', '2'], ['32', '19', '11', '10', '22'], ['16', '26', '42', '18', '36']]
+	[['44', '34', '3', '25', '1', '4', '47'], ['38', '12', '31', '22', '13', '24'], ['43', '45', '35', '32'], ['6', '27', '17', '29', '5'], ['33', '40', '28', '15', '41', '9', '23', '2', '21', '0'], ['37', '8', '7', '39', '14', '30', '11'], ['19', '10', '46', '20'], ['16', '26', '42', '18', '36']]
 
-which is a list of eight lists of region ids. For example, the first nested list indicates there are nine states in the first region, while the last region has five states.  To determine which states these are we can read in the names from the original csv file:
+which is a list of eight lists of region ids. For example, the first nested list indicates there are seven states in the first region, while the last region has five states.  To determine which states these are we can read in the names from the original csv file:
 
 .. doctest:: 
 
@@ -96,14 +96,15 @@ and then loop over the region definitions to identify the specific states compri
 	...     print names[ids]
 	...     
 	['Washington' 'Oregon' 'California' 'Nevada' 'Arizona' 'Colorado' 'Wyoming']
-	['Iowa' 'Wisconsin' 'Minnesota' 'Nebraska' 'Kansas']
-	['Kentucky' 'West Virginia' 'Pennsylvania' 'North Carolina' 'Tennessee']
-	['Delaware' 'New Jersey' 'Maryland' 'New York' 'Connecticut' 'Virginia']
-	['Oklahoma' 'Texas' 'New Mexico' 'Louisiana' 'Utah' 'Idaho' 'Montana'
-	 'North Dakota' 'South Dakota']
-	['South Carolina' 'Georgia' 'Alabama' 'Florida' 'Mississippi' 'Arkansas']
-	['Ohio' 'Michigan' 'Indiana' 'Illinois' 'Missouri']
-	['Maine' 'New Hampshire' 'Vermont' 'Massachusetts' 'Rhode Island']
+    ['South Dakota' 'Iowa' 'North Dakota' 'Missouri' 'Kansas' 'Nebraska']
+    ['Virginia' 'West Virginia' 'Pennsylvania' 'Ohio']
+    ['Delaware' 'New Jersey' 'Maryland' 'New York' 'Connecticut']
+    ['Oklahoma' 'Texas' 'New Mexico' 'Louisiana' 'Utah' 'Idaho' 'Montana'
+     'Arkansas' 'Mississippi' 'Alabama']
+    ['South Carolina' 'Georgia' 'Florida' 'Tennessee' 'Kentucky'
+     'North Carolina' 'Indiana']
+    ['Michigan' 'Illinois' 'Wisconsin' 'Minnesota']
+    ['Maine' 'New Hampshire' 'Vermont' 'Massachusetts' 'Rhode Island']
 
 
 We can evaluate our solution by developing a pseudo pvalue for the regionalization.
