@@ -18,7 +18,7 @@ class Test_Maxp(unittest.TestCase):
         solution = pysal.region.Maxp(
             w, z, floor, floor_variable=p, initial=100)
         self.assertEquals(solution.p, 29)
-        self.assertEquals(solution.regions[0], [4, 14, 5, 24, 3])
+        self.assertEquals(solution.regions[0], [4, 14, 5, 24, 3, 25, 15, 23])
 
     def test_inference(self):
         w = pysal.weights.lat2W(5, 5)
@@ -46,7 +46,7 @@ class Test_Maxp(unittest.TestCase):
         p = np.ones(w.n)
         mpl = pysal.region.Maxp_LISA(w, z, p, floor=3, floor_variable=p)
         self.assertEquals(mpl.p, 31)
-        self.assertEquals(mpl.regions[0], [99, 89, 98])
+        self.assertEquals(mpl.regions[0], [99, 89, 98, 97])
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(Test_Maxp)

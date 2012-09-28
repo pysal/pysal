@@ -5,6 +5,7 @@ __author__ = "Sergio J. Rey <srey@asu.edu>"
 
 import sys
 from operator import gt, lt
+import copy
 
 __all__ = ["check_contiguity"]
 
@@ -58,6 +59,7 @@ def check_contiguity(w, neighbors, leaver):
     """
     d = {}
     g = Graph()
+    neighbors = copy.copy(neighbors)
     for i in neighbors:
         d[i] = [j for j in w.neighbors[i] if (j in neighbors and j != leaver)]
     try:
