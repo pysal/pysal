@@ -187,7 +187,7 @@ class Vertex(object):
         super(Vertex, self).__init__()
         self.x= x
         self.y =y
-        self.edge = edge
+        self.edge = edge # one incident edge for the vertex
     def __str__(self):
         return "(%f, %f)"%(self.x, self.y)
 
@@ -197,14 +197,14 @@ class Edge(object):
                 pl=None, sl=None, pr=None, sr=None, name=None):
         super(Edge, self).__init__()
 
-        self.start = startV 
-        self.end = endV
-        self.left = left
-        self.right = right
-        self.pl = pl
-        self.sl = sl
-        self.pr = pr
-        self.sr = sr
+        self.start = startV  # start vertex
+        self.end = endV      # end vertex
+        self.left = left     # left face
+        self.right = right   # right face
+        self.pl = pl         # preceding edge for cw traversal of left face
+        self.sl = sl         # successor edge for cw traversal of left face
+        self.pr = pr         # preceding edge for cw traversal of right face
+        self.sr = sr         # successor edge for cw traversal of right face 
         self.name = name
 
     def __str__(self):
@@ -217,8 +217,8 @@ class Face(object):
     """Face for Winged Edge Data Structure"""
     def __init__(self, nodes, edge=None):
         super(Face, self).__init__()
-        self.nodes = nodes
-        self.edge = edge
+        self.nodes = nodes # nodes/vertices defining face
+        self.edge = edge # one incident edge for the face
 
         if self.nodes[0] != self.nodes[-1]:
             self.nodes.append(self.nodes[0]) # put in closed form
@@ -308,6 +308,23 @@ if __name__ == '__main__':
 
 
     # Alternative implementation of WED
+
+    """Simple network example
+
+    A a B b C m J
+    c 1 d 2 e
+    D f E g F
+    h 3 i 4 j
+    G k H l I
+
+    Where upper case letters are Nodes/Vertices, lower case letters are edges,
+    and integers are face ids.
+    
+    There are four faces 1-4, but one external face 0 (implied)
+    """
+
+
+
     vertices = {}
     vertices['A'] = Vertex(0.,2.)
     vertices['B'] = Vertex(1.,2.)
