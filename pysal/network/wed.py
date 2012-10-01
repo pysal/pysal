@@ -180,7 +180,114 @@ class WingEdge(object):
                 self.end_c_link[edge] = pred
                 self.end_cc_link[edge] = nxt
 
+        
+class Vertex(object):
+    """Vertex for Winged Edge Data Structure"""
+    def __init__(self, x,y, edge=None):
+        super(Vertex, self).__init__()
+        self.x= x
+        self.y =y
+        self.edge = edge
+    def __str__(self):
+        return "(%f, %f)"%(self.x, self.y)
 
+class Edge(object):
+    """Edge for Winged Edge Data Structure"""
+    def __init__(self, startV, endV, left=None, right=None,
+                pl=None, sl=None, pr=None, sr=None, name=None):
+        super(Edge, self).__init__()
+
+        self.start = startV 
+        self.end = endV
+        self.left = left
+        self.right = right
+        self.pl = pl
+        self.sl = sl
+        self.pr = pr
+        self.sr = sr
+        self.name = name
+
+    def __str__(self):
+        if not self.name:
+            self.name = 'Edge'
+        return "%s: (%f,%f)--(%f,%f)"%(self.name, self.start.x, self.start.y, self.end.x,
+                self.end.y) 
+        
+class Face(object):
+    """Face for Winged Edge Data Structure"""
+    def __init__(self, nodes, edge=None):
+        super(Face, self).__init__()
+        self.nodes = nodes
+        self.edge = edge
+
+        if self.nodes[0] != self.nodes[-1]:
+            self.nodes.append(self.nodes[0]) # put in closed form
+
+    def __str__(self):
+        n = len(self.nodes)
+        nv = [ "(%f,%f)"%(v.x,v.y) for v in self.nodes]
+        return "--".join(nv)
+
+def face_boundary(face):
+    """Clockwise traversal around face edges
+
+    Arguments
+    --------
+    face: face instance
+
+    Returns
+    ------
+    edges: list of edges on face boundary ordered clockwise
+
+    """
+    l0 = face.edge
+    l = l0
+    edges = []
+    traversing = True
+    while traversing:
+        edges.append(l)
+        r = l.right
+        if r == face:
+            l = l.sr
+        else:
+            l = l.sl
+        if l == l0:
+            traversing = False
+    return edges
+
+
+def incident_cw_edges_node(node):
+    """Clockwise traversal of edges incident with node
+
+    Arguments
+    ---------
+
+    node: Vertex instance
+
+    Returns
+    ------
+    edges: list of edges that are cw incident with node
+
+    """
+    l0 = node.edge
+    l = l0
+    edges = []
+    traversing = True
+    while traversing:
+        edges.append(l)
+        v = l.start
+        if v == node:
+            l = l.pr
+        else:
+            l = l.pl
+        #print l0, l
+        if l0 == l:
+            traversing = False
+        #raw_input('here')
+    return edges
+
+
+        
 if __name__ == '__main__':
 
     # example from figure 3.19 of okabe
@@ -199,5 +306,128 @@ if __name__ == '__main__':
         for j in d:
             G.add_edge(i,j)
 
-    wed = WingEdge(G,P)
+
+    # Alternative implementation of WED
+    vertices = {}
+    vertices['A'] = Vertex(0.,2.)
+    vertices['B'] = Vertex(1.,2.)
+    vertices['C'] = Vertex(2.,2.)
+    vertices['D'] = Vertex(0.,1.)
+    vertices['E'] = Vertex(1.,1.)
+    vertices['F'] = Vertex(2.,1.)
+    vertices['G'] = Vertex(0.,0.)
+    vertices['H'] = Vertex(1.,0.)
+    vertices['I'] = Vertex(2.,0.)
+    vertices['J'] = Vertex(3.,2.)
+
+
+
+    edges = {}
+    edata = [ ('a', 'A', 'B'),
+              ('b', 'B', 'C'),
+              ('c', 'A', 'D'),
+              ('d', 'E', 'B'),
+              ('e', 'C', 'F'),
+              ('f', 'D', 'E'),
+              ('g', 'E', 'F'),
+              ('h', 'D', 'G'),
+              ('i', 'H', 'E'),
+              ('j', 'F', 'I'),
+              ('k', 'G', 'H'),
+              ('l', 'I', 'H'),
+              ('m', 'C', 'J')]
+
+    for edge in edata:
+        edges[edge[0]] = Edge(vertices[edge[1]], vertices[edge[2]])
+
+    faces = {}
+    fdata = [ ('A', 'B', 'E', 'D'),
+              ('B', 'C', 'F', 'E'),
+              ('D', 'E', 'H', 'G'),
+              ('E', 'F', 'I', 'H') ]
+
+    fe = [ 'c', 'd', 'f', 'j']
+
+    for i, face in enumerate(fdata):
+        i+=1
+        coords = [ vertices[j] for j in face]
+        faces[i] = Face(coords)
+        faces[i].edge = edges[fe[i-1]]
+
+    faces[0] = Face([0.,0.,0.0])
+    faces[0].edge = edges['h']
+
+    lrdata = [ (0,1),
+               (0,2),
+               (1,0),
+               (1,2),
+               (0,2),
+               (1,3),
+               (2,4),
+               (3,0),
+               (3,4),
+               (0,4),
+               (3,0),
+               (0,4),
+               (0,0)]
+    ekeys = edges.keys()
+    ekeys.sort()
+
+    for i, lr in enumerate(lrdata):
+        edges[ekeys[i]].left = faces[lr[0]]
+        edges[ekeys[i]].right = faces[lr[1]]
+
+
+
+    psdata = [ #node pre_left successor_left, pre_right, successor_right
+            ('a', 'b', 'c', 'c', 'd'),
+            ('b', 'm', 'a', 'd', 'e'),
+            ('c', 'f', 'a', 'a', 'h'),
+            ('d', 'a', 'f', 'g', 'b'),
+            ('e', 'j', 'm', 'b', 'g'),
+            ('f', 'd', 'c', 'h', 'i'),
+            ('g', 'e', 'd', 'i', 'j'),
+            ('h', 'k', 'f', 'c', 'k'),
+            ('i', 'f', 'k', 'l', 'g'),
+            ('j', 'l', 'e', 'g', 'l'),
+            ('k', 'i', 'h', 'h', 'l'),
+            ('l', 'k', 'j', 'j', 'i'),
+            ('m', 'e', 'b', 'e', 'b') ]
+
+    for pdata in psdata:
+        e,pl,sl,pr,sr = pdata
+        edges[e].pl = edges[pl]
+        edges[e].sl = edges[sl]
+        edges[e].pr = edges[pr] 
+        edges[e].sr = edges[sr]
+        edges[e].name = e
+
+    n2e = [
+            ('A', 'c'),
+            ('B', 'b'),
+            ('C', 'e'),
+            ('D', 'f'),
+            ('E', 'd'),
+            ('F', 'g'),
+            ('G', 'h'),
+            ('H', 'k'),
+            ('I', 'j'),
+            ('J', 'm')]
+    for node in n2e:
+        v,e = node
+        vertices[v].edge = edges[e]
+
+    cv = 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', "I"
+    for v in cv:
+        icwe = incident_cw_edges_node(vertices[v])
+        print "Node: ", v, "cw incident edges: "
+        for e in icwe:
+            print e
+
+
+    for f in range(1,5):
+        ecwf = face_boundary(faces[f])
+        print "Face: ",f, " cw edges:"
+        for e in ecwf:
+            print e
 
