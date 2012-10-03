@@ -381,15 +381,15 @@ def w_subset(w1, ids):
 
     """
     neighbors = {}
-    ids = set(ids)
+    ids_set = set(ids)
     for i in ids:
         if i in w1.neighbors:
-            neigh_add = ids.intersection(set(w1.neighbors[i]))
+            neigh_add = ids_set.intersection(set(w1.neighbors[i]))
             neighbors[i] = list(neigh_add)
         else:
             neighbors[i] = []
 
-    return pysal.W(neighbors)
+    return pysal.W(neighbors, id_order=ids)
 
 
 def w_clip(w1, w2, outSP=True):
