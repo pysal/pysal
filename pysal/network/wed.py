@@ -5,33 +5,41 @@ Winged-edge Data Structure for Networks
 
 __author__ = "Sergio J. Rey <srey@asu.edu>"
 
+from shapely.ops import polygonize
 
 
-def get_regions(graph):
+def get_faces(lines):
     """
-    Find the connected regions formed by the links partitioning of the plane
+    Find the connected faces formed by the list of lines
 
     Parameters
     ----------
 
-    graph: a networkx graph assumed to be planar
-
-
+    lines: list of tuples of tuples
+           [ ( (x0, y0), (x1, y1) ),
+             ( (x1, y1), (x2, y2) ),
+             ...
+            ]
 
     Returns
     -------
 
-    regions: a list of regions, with each reach a tuple of the nodes tracing
-    out the region in closed-cartographic form. First region is the external
-    polygon for the plane.
+    faces: a list of shapely polygons, 
 
-
+    Example
+    -------
+    >>> lines = [ ( (0,0), (1,1) ), ( (0, 0), (0,1) ), ( (0,1), (1,1) ), ( (1,1), (1,0) ), ( (1,0), (0,0))]
+    >>> faces = get_faces(lines)
+    >>> len(faces)
+    2
+    >>> print faces[0]
+    POLYGON ((0.0000000000000000 0.0000000000000000, 1.0000000000000000 1.0000000000000000, 1.0000000000000000 0.0000000000000000, 0.0000000000000000 0.0000000000000000))
+    >>> print faces[1]
+    POLYGON ((1.0000000000000000 1.0000000000000000, 0.0000000000000000 0.0000000000000000, 0.0000000000000000 1.0000000000000000, 1.0000000000000000 1.0000000000000000))
     """
-    regions = nx.cycle_basis(G)
-    for region in regions:
-        region.append(region[0])
-    regions.insert(0,())
-    return regions
+
+    faces = list(polygonize(lines))
+    return faces
 
 def pcw(coords):
     """ test if polygon coordinates are clockwise ordered """
@@ -448,3 +456,6 @@ if __name__ == '__main__':
         for e in ecwf:
             print e
 
+
+    import doctest
+    doctest.testmod()
