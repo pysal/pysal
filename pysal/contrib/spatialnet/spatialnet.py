@@ -46,35 +46,62 @@ class SpatialNetwork(object):
             raise ValueError,"distance_metric must be either EUCLIDEAN_DISTANCE or ARC_DISTANCE"
         self.lengths = lengths
         if any(oneway):
-            G = networkx.DiGraph()
-            def isoneway(x):
-                return x[-1]
-            def isnotoneway(x):
-                if(x[-1]):
-                    return False
-                return True
-                
-            A = filter(isoneway,zip(fnode,tnode,oneway))
-            B = filter(isnotoneway,zip(fnode,tnode,oneway))
-            C = filter(isnotoneway,zip(tnode,fnode,oneway))
-            G.add_edges_from(A)
-            G.add_edges_from(B)
-            G.add_edges_from(C)
+            G = networkx.MultiDiGraph()
+            #def isoneway(x):
+            #    return x[-1]
+            #def isnotoneway(x):
+            #    if(x[-1]):
+            #        return False
+            #    return True
+            #    
+            #A = filter(isoneway,zip(fnode,tnode,oneway))
+            #B = filter(isnotoneway,zip(fnode,tnode,oneway))
+            #C = filter(isnotoneway,zip(tnode,fnode,oneway))
+            #G.add_edges_from(A)
+            #G.add_edges_from(B)
+            #G.add_edges_from(C)
         else:
-            G = networkx.Graph(zip(fnode,tnode))
+            G = networkx.MultiGraph()
+        #zip(fnode,tnode))
         self.G = G
         shp.seek(0)
         self._locator = Polyline_Shapefile_SegmentLocator(shp)
     def snap(self,pt):
         i,p,j = self._locator.nearest(pt) #shpID,partID,segmentID
-        dbf = self.dbf
-        rec = zip(dbf.header,dbf[i])
-        edge = (rec['FNODE'],rec['TNODE'])
+        segment = self.shp[i].segments[p][j] #grab segment
+        d,pct = pysal.cg.get_segment_point_dist(segment,pt) #find pct along segment
+        x0,x1 = segment.p1[0],segment.p2[0]
+        x2 = x0 + (x1-x0)*pct # find x location of snap
+        y2 = segment.line.y(x2) # find y location of snap
+
+        #dbf = self.dbf
+        #rec = dict(zip(dbf.header,dbf[i][0]))
+        #edge = (rec['FNODE'],rec['TNODE'])
         #TODO: Calculate location along edge and distance to edge"
-        return edge
+        #return edge
+        return x2,y2
         
     
 if __name__=='__main__':
+    import random
     net = SpatialNetwork('beth_network.shp',ARC_DISTANCE)
+
+    n = 1000
+    minX,minY,maxX,maxY = net.shp.bbox
+    xRange = maxX-minX
+    yRange = maxY-minY
+    qpts = [(random.random(), random.random()) for i in xrange(n)]
+    qpts = [pysal.cg.Point((minX+(xRange*x),minY+(yRange*y))) for x,y in qpts]
+    o = pysal.open('random_qpts.shp','w')
+    for p in qpts:
+        o.write(p)
+    o.close()
+    o = pysal.open('random_qpts_snapped.shp','w')
+    for qpt in qpts:
+        spt = net.snap(qpt)
+        o.write(pysal.cg.Chain([qpt,spt]))
+    o.close()
     
+
+
 
