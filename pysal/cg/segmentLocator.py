@@ -100,6 +100,7 @@ class SegmentGrid(object):
         self.hash = {}
         self._kd = None
         self._kd2 = None
+        self._hashKeys = None
         self.x_range = (bounds.left, bounds.right)
         self.y_range = (bounds.lower, bounds.upper)
         try:
@@ -111,17 +112,22 @@ class SegmentGrid(object):
             self.endMask = numpy.zeros((self.i_range, self.j_range), bool)
         except Exception:
             raise Exception('Invalid arguments for SegmentGrid(): (' + str(self.x_range) + ', ' + str(self.y_range) + ', ' + str(self.res) + ')')
+    @property
+    def hashKeys(self):
+        if self._hashKeys == None:
+            self._hashKeys = numpy.array(self.hash.keys(),dtype=float)
+        return self._hashKeys
 
     @property
     def kd(self):
-        if self._kd is None:
-            self._kd = scipy.spatial.cKDTree(self.hash.keys())
+        if self._kd == None:
+            self._kd = scipy.spatial.cKDTree(self.hashKeys)
         return self._kd
 
     @property
     def kd2(self):
-        if self._kd2 is None:
-            self._kd2 = scipy.spatial.KDTree(self.hash.keys())
+        if self._kd2 == None:
+            self._kd2 = scipy.spatial.KDTree(self.hashKeys)
         return self._kd2
 
     def in_grid(self, loc):
@@ -267,10 +273,8 @@ class SegmentGrid(object):
                 i = pylab.matshow(maskCopy, origin='lower', extent=self.x_range + self.y_range, fignum=1)
                 #raw_input('pause')
             ### All that was just setup for this one line...
-            idx = self.mask[rows, cols].nonzero(
-            )[0]                 # Filter out empty bins.
-            rows, cols = rows[idx], cols[idx]
-                # (i,j)'s of the filled grid cells within radius.
+            idx = self.mask[rows, cols].nonzero()[0] # Filter out empty bins.
+            rows, cols = rows[idx], cols[idx]        # (i,j)'s of the filled grid cells within radius.
 
             for t in zip(rows, cols):
                 possibles.update(self.hash[t])
@@ -393,4 +397,7 @@ if __name__ == '__main__':
     print "segments:", t1 - t0
     print "points:", t2 - t1
     #test_brute(segs,qpts)
-    test_grid(50, segs, qpts)
+    #test_grid(50, segs, qpts)
+
+    SG = SegmentLocator(segs)
+    grid = SG.grid
