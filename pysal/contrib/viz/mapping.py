@@ -39,6 +39,7 @@ class Map_Projection(object):
         projected coordinates for each shape in the shapefile. Each
         sublist contains projected coordinates for parts of a  shape
     
+
     """
     def __init__(self, shapefile, projection='merc'):
         super(Map_Projection, self).__init__()
@@ -366,19 +367,27 @@ def unique_values_map(coords,y, title='Unique Value'):
        zeros for elements that should not be mapped, 1-4 for elements to 
        highlight
 
-    k: int
-       number of classes
-
     title: string
            map title
 
 
     Notes
     =====
-    Currently designed for use with a Moran_Local Instance for mapping a 
-    subset of the significant LISAs.
+    Allows for an unlimited number of categories, but if there are many
+    categories the colors may be difficult to distinguish.
+    [Currently designed for use with a Moran_Local Instance for mapping a 
+    subset of the significant LISAs.]
 
     """
+    yu = np.unique(y)
+    colormap = plt.cm.Set1
+    colors = [colormap(i) for i in np.linspace(0, 0.9, len(yu))]
+    colors = np.random.permutation(colors)
+    colormatch = zip(yu, colors)
+    c = {}
+    for i in colormatch:
+        c[i[0]] = i[1]
+    '''
     # pysal: 1 HH,  2 LH,  3 LL,  4 HL
     c ={}
     c[0] = 'white' # non-significant
@@ -386,8 +395,7 @@ def unique_values_map(coords,y, title='Unique Value'):
     c[2] = 'lightsalmon' 
     c[3] = 'darkblue'
     c[4] = 'lightblue'
-
-
+    '''
     fig = plt.figure()
     ax = fig.add_subplot(111)
     i = 0
@@ -399,7 +407,8 @@ def unique_values_map(coords,y, title='Unique Value'):
             n = len(x)
             x.shape = (n,1)
             yc.shape = (n,1)
-            ax.fill(x,yc,c[y[i]])
+            ax.fill(x,yc,color=c[y[i]], edgecolor='black')
+            #ax.fill(x,yc,c[y[i]])
         i += 1
     ax.set_frame_on(False)
     ax.axes.get_yaxis().set_visible(False)
