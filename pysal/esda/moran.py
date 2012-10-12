@@ -583,7 +583,7 @@ class Moran_Local:
         w = [self.w.weights[ido[i]] for i in ids]
         wc = [self.w.cardinalities[ido[i]] for i in ids]
 
-        for i in range(self.w.n):
+        for i in xrange(self.w.n):
             idsi = ids[ids != i]
             np.random.shuffle(idsi)
             tmp = z[idsi[rids[:, 0:wc[i]]]]
