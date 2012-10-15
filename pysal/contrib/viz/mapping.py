@@ -1,13 +1,9 @@
 """
-mapping.py
-
-Illustration of how to do choropleth mapping by combining matplotlib and 
-PySAL
-
+Choropleth mapping using PySAL and Matplotlib
 
 """
 
-__author__ = "Sergio Rey <sjsrey@gmail.com>"
+__author__ = "Sergio Rey <sjsrey@gmail.com>", "Dani Arribas-Bel <daniel.arribas.bel@gmail.com"
 
 
 import pysal as ps
@@ -20,6 +16,328 @@ from matplotlib import cm
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
 from mpl_toolkits.basemap import Basemap
+
+def map_poly_shp_lonlat(shp_link, projection='merc'):
+    '''
+    Create a map object from a shapefile in lon/lat CRS
+    ...
+
+    Arguments
+    ---------
+
+    shp_link        : str
+                      Path to shapefile
+    projection      : str
+                      Basemap projection. See [1]_ for a list. Defaults to
+                      'merc'
+
+    Returns
+    -------
+
+    map             : PatchCollection
+                      Map object with the polygons from the shapefile
+    
+    Links
+    -----
+    .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
+    '''
+    shp = ps.open(shp_link)
+    shps = list(shp)
+    left, bottom, right, top = shp.bbox
+    m = Basemap(resolution = 'i', projection=projection,
+            llcrnrlat=bottom, urcrnrlat=top,
+            llcrnrlon=left, urcrnrlon=right,
+            lat_ts=(bottom+top)/2,
+            lon_0=(right-left)/2, lat_0=(top-bottom)/2) 
+    bounding_box = [m.llcrnrx, m.llcrnry,m.urcrnrx,m.urcrnry]
+    patches = []
+    for shape in shps:
+        parts = []
+        for ring in shape.parts:
+            xy = np.array(ring)
+            x,y = m(xy[:,0], xy[:,1])
+            x = x / bounding_box[2]
+            y = y / bounding_box[3]
+            n = len(x)
+            x.shape = (n,1)
+            y.shape = (n,1)
+            xy = np.hstack((x,y))
+            polygon = Polygon(xy, True)
+            patches.append(polygon)
+    return PatchCollection(patches)
+
+def plot_poly_lines(shp_link, projection='merc', savein=None, poly_col='none'):
+    '''
+    Quick plotting of shapefiles
+    ...
+
+    Arguments
+    ---------
+    shp_link        : str
+                      Path to shapefile
+    projection      : str
+                      Basemap projection. See [1]_ for a list. Defaults to
+                      'merc'
+    savein          : str
+                      Path to png file where to dump the plot. Optional,
+                      defaults to None
+    poly_col        : str
+                      Face color of polygons
+    '''
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    patchco = map_poly_shp_lonlat(shp_link, projection=projection)
+    patchco.set_facecolor('none')
+    ax.add_collection(patchco)
+    ax.set_frame_on(False)
+    ax.axes.get_yaxis().set_visible(False)
+    ax.axes.get_xaxis().set_visible(False)
+    if savein:
+        plt.savefig(savein)
+    else:
+        plt.show()
+    return None
+
+def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
+        projection='merc', sample_fisher=True, title='', \
+        savein=None, figsize=None):
+    '''
+    Wrapper to quickly create and plot from a lat/lon shapefile
+    ...
+
+    Arguments
+    ---------
+
+    shp_link        : str
+                      Path to shapefile
+    values          : array
+                      Numpy array with values to map
+    type            : str
+                      Type of choropleth. Supported methods:
+                        * 'classless'
+                        * 'unique_values'
+                        * 'quantiles' (default)
+                        * 'fisher_jenks'
+                        * 'equal_interval'
+    k               : int
+                      Number of bins to classify values in and assign a color
+                      to
+    cmap            : str
+                      Matplotlib coloring scheme
+    projection      : str
+                      Basemap projection. See [1]_ for a list. Defaults to
+                      'merc'
+    sample_fisher   : Boolean
+                      Defaults to True, controls whether Fisher-Jenks
+                      classification uses a sample (faster) or the entire
+                      array of values. Ignored if 'classification'!='fisher_jenks'
+    title           : str
+                      Optional string for the title
+    savein          : str
+                      Path to png file where to dump the plot. Optional,
+                      defaults to None
+    figsize         : tuple
+                      Figure dimensions
+
+    Returns
+    -------
+
+    map             : PatchCollection
+                      Map object with the polygons from the shapefile and
+                      unique value coloring
+    
+    Links
+    -----
+    .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
+    '''
+    if type == 'classless':
+        map_obj = base_choropleth_classless(shp_link, values, cmap=cmap, \
+                projection=projection)
+    if type == 'unique_values':
+        map_obj = base_choropleth_unique(shp_link, values, cmap=cmap, \
+                projection=projection)
+    if type == 'quantiles':
+        map_obj = base_choropleth_classif(shp_link, values, \
+                classification='quantiles', cmap=cmap, projection=projection)
+    if type == 'fisher_jenks':
+        map_obj = base_choropleth_classif(shp_link, values, \
+                classification='fisher_jenks', cmap=cmap, \
+                projection=projection, sample_fisher=sample_fisher)
+    if type == 'equal_interval':
+        map_obj = base_choropleth_classif(shp_link, values, \
+                classification='equal_interval', cmap=cmap, projection=projection)
+
+    fig = plt.figure(figsize=figsize)
+    ax = fig.add_subplot(111)
+    ax.add_collection(map_obj)
+    ax.set_frame_on(False)
+    ax.axes.get_yaxis().set_visible(False)
+    ax.axes.get_xaxis().set_visible(False)
+    if title:
+        ax.set_title(title)
+    if type=='quantiles' or type=='fisher_jenks' or type=='equal_interval':
+        cmap = map_obj.get_cmap()
+        norm = map_obj.norm
+        boundaries = np.round(map_obj.norm.boundaries, decimals=3)
+        plt.colorbar(map_obj, cmap=cmap, norm=norm, boundaries=boundaries, \
+                ticks=boundaries, orientation='horizontal')
+    if savein:
+        plt.savefig(savein)
+    else:
+        plt.show()
+    return None
+
+
+def base_choropleth_classless(shp_link, values, cmap='hot_r', projection='merc'):
+    '''
+    Create a map object with classless coloring from a shapefile in lon/lat CRS
+    ...
+
+    Arguments
+    ---------
+
+    shp_link        : str
+                      Path to shapefile
+    values          : array
+                      Numpy array with values to map
+    cmap            : str
+                      Matplotlib coloring scheme
+    projection      : str
+                      Basemap projection. See [1]_ for a list. Defaults to
+                      'merc'
+
+    Returns
+    -------
+
+    map             : PatchCollection
+                      Map object with the polygons from the shapefile and
+                      classless coloring
+    
+    Links
+    -----
+    .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
+    '''
+    cmap = cm.get_cmap(cmap)
+    map_obj = map_poly_shp_lonlat(shp_link, projection=projection)
+    map_obj.set_cmap(cmap)
+    map_obj.set_array(values)
+    return map_obj
+
+def base_choropleth_unique(shp_link, values,  cmap='hot_r', projection='merc'):
+    '''
+    Create a map object with coloring based on unique values from a shapefile in lon/lat CRS
+    ...
+
+    Arguments
+    ---------
+
+    shp_link        : str
+                      Path to shapefile
+    values          : array
+                      Numpy array with values to map
+    cmap            : str
+                      Matplotlib coloring scheme
+    projection      : str
+                      Basemap projection. See [1]_ for a list. Defaults to
+                      'merc'
+
+    Returns
+    -------
+
+    map             : PatchCollection
+                      Map object with the polygons from the shapefile and
+                      unique value coloring
+    
+    Links
+    -----
+    .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
+    '''
+    uvals = np.unique(values)
+    colormap = plt.cm.Set1
+    colors = [colormap(i) for i in np.linspace(0, 0.9, len(uvals))]
+    colors = np.random.permutation(colors)
+    colormatch = {val: col for val, col in zip(uvals, colors)}
+
+    map_obj = map_poly_shp_lonlat(shp_link, projection=projection)
+    map_obj.set_color([colormatch[i] for i in values])
+    map_obj.set_edgecolor('k')
+    return map_obj
+
+def base_choropleth_classif(shp_link, values, classification='quantiles', \
+        k=5, cmap='hot_r', projection='merc', sample_fisher=True):
+    '''
+    Create a map object with coloring based on different classification
+    methods, from a shapefile in lon/lat CRS
+    ...
+
+    Arguments
+    ---------
+
+    shp_link        : str
+                      Path to shapefile
+    values          : array
+                      Numpy array with values to map
+    classification  : str
+                      Classificatio method to use. Options supported:
+                        * 'quantiles' (default)
+                        * 'fisher_jenks'
+                        * 'equal_interval'
+                            
+    k               : int
+                      Number of bins to classify values in and assign a color
+                      to
+    cmap            : str
+                      Matplotlib coloring scheme
+    projection      : str
+                      Basemap projection. See [1]_ for a list. Defaults to
+                      'merc'
+    sample_fisher   : Boolean
+                      Defaults to True, controls whether Fisher-Jenks
+                      classification uses a sample (faster) or the entire
+                      array of values. Ignored if 'classification'!='fisher_jenks'
+
+    Returns
+    -------
+
+    map             : PatchCollection
+                      Map object with the polygons from the shapefile and
+                      unique value coloring
+    
+    Links
+    -----
+    .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
+    '''
+    if classification == 'quantiles':
+        classification = ps.Quantiles(values, k)
+        boundaries = classification.bins.tolist()
+
+    if classification == 'equal_interval':
+        classification = ps.Equal_Interval(values, k)
+        boundaries = classification.bins.tolist()
+
+    if classification == 'fisher_jenks':
+        if sample_fisher:
+            classification = ps.esda.mapclassify.Fisher_Jenks_Sampled(values,k)
+        else:
+            classification = ps.Fisher_Jenks(values,k)
+        boundaries = classification.bins[:]
+
+    map_obj = map_poly_shp_lonlat(shp_link, projection=projection)
+    map_obj.set_alpha(0.4)
+
+    cmap = cm.get_cmap(cmap, k+1)
+    map_obj.set_cmap(cmap)
+
+    boundaries.insert(0,0)
+    norm = clrs.BoundaryNorm(boundaries, cmap.N)
+    map_obj.set_norm(norm)
+
+    map_obj.set_array(values)
+    return map_obj
+
+            #############################
+            ### Serge's original code ###
+            #############################
 
 class Map_Projection(object):
     """Map_Projection
@@ -419,5 +737,12 @@ def unique_values_map(coords,y, title='Unique Value'):
 
 
 if __name__ == '__main__':
-    pass
+
+    shp_link = ps.examples.get_path("sids2.shp")
+    dbf = ps.open(shp_link.replace('.shp', '.dbf'))
+    values = np.array(dbf.by_col("SIDR74"))
+    #values[: values.shape[0]/2] = 1
+    #values[values.shape[0]/2: ] = 0
+
+    plot_choropleth(shp_link, values, 'quantiles', figsize=(9, 9))
 
