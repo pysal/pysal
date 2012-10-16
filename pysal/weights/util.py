@@ -815,11 +815,10 @@ def get_points_array_from_shapefile(shapefile):
     """
 
     f = pysal.open(shapefile)
-    shapes = f.read()
     if f.type.__name__ == 'Polygon':
-        data = np.array([shape.centroid for shape in shapes])
+        data = np.array([shape.centroid for shape in f])
     elif f.type.__name__ == 'Point':
-        data = np.array([shape for shape in shapes])
+        data = np.array([shape for shape in f])
     f.close()
     return data
 
