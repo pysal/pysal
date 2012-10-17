@@ -67,7 +67,7 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
     shp.close()
 
     if sparse:
-        w = pysal.weights.WSP(w.sparse)
+        w = pysal.weights.WSP(w.sparse, id_order=ids)
     return w
 
 
@@ -118,7 +118,7 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
     w = buildContiguity(shp, criterion='rook', ids=ids)
     shp.close()
     if sparse:
-        w = pysal.weights.WSP(w.sparse)
+        w = pysal.weights.WSP(w.sparse, id_order=ids)
     return w
 
 
@@ -1023,6 +1023,11 @@ def build_lattice_shapefile(nrows, ncols, outFileName):
             o.write(pysal.cg.Polygon([ll, ul, ur, lr, ll]))
     o.close()
 
+def w2gal_file(w, filename):
+    rows = []
+    keys = w.neighbors.keys()
+    n = w.n
+   
 
 def _test():
     import doctest
