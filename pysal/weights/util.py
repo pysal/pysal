@@ -8,7 +8,7 @@ import os
 import gc
 import operator
 
-__all__ = ['lat2W', 'regime_weights', 'comb', 'order', 'higher_order', 'shimbel', 'remap_ids', 'full2W', 'full', 'WSP2W', 'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance', 'lat2SW', 'w_local_cluster']
+__all__ = ['lat2W', 'regime_weights', 'comb', 'order', 'higher_order', 'shimbel', 'remap_ids', 'full2W', 'full', 'WSP2W', 'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance', 'lat2SW', 'w_local_cluster', 'higher_order_sp']
 
 
 def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
@@ -324,6 +324,61 @@ def higher_order(w, k=2):
         weights[id] = [1.0] * len(nids)
     return pysal.weights.W(neighbors, weights)
 
+def higher_order_sp(wsp, k=2):
+    """
+    Contiguity weights for a sparse W for order k
+
+    Arguments
+    =========
+
+    wsp:  WSP instance
+
+    k: Order of contiguity
+
+    Return
+    ------
+
+    wk: WSP instance
+        binary sparse contiguity of order k
+
+    Notes
+    -----
+    Lower order contiguities are removed.
+
+    Examples
+    -------
+
+    >>> import pysal
+    >>> w25 = pysal.lat2W(5,5)
+    >>> w25.n
+    25
+    >>> ws25 = w25.sparse
+    >>> ws25o3 = pysal.weights.higher_order_sp(ws25,3)
+    >>> w25o3 = pysal.weights.higher_order(w25,3)
+    >>> w25o3[12]
+    {1: 1.0, 3: 1.0, 5: 1.0, 9: 1.0, 15: 1.0, 19: 1.0, 21: 1.0, 23: 1.0}
+    >>> pysal.weights.WSP2W(ws25o3)[12]
+    {1: 1.0, 3: 1.0, 5: 1.0, 9: 1.0, 15: 1.0, 19: 1.0, 21: 1.0, 23: 1.0}
+    >>>     
+    """
+
+
+    wk = wsp**k
+    rk,ck = wk.nonzero()
+    sk = set(zip(rk,ck))
+    for j in range(1,k):
+        wj = wsp**j
+        rj,cj = wj.nonzero()
+        sj = set(zip(rj,cj))
+        sk.difference_update(sj)
+    d= {}
+    for pair in sk:
+        k,v = pair
+        if d.has_key(k):
+            d[k].append(v)
+        else:
+            d[k] = [v]
+    return pysal.weights.WSP(pysal.W(neighbors=d).sparse)
 
 def w_local_cluster(w):
     """
