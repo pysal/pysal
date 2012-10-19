@@ -644,6 +644,13 @@ class W(object):
         """
         Transformations of weights.
 
+        Notes
+        -----
+
+        Transformations are applied only to the value of the weights at
+        instantiation. Chaining of transformations cannot be done on a W
+        instance.
+
         Parameters
         ----------
         transform : string (not case sensitive)
@@ -678,6 +685,7 @@ class W(object):
             if value == "R":
                 # row standardized weights
                 weights = {}
+                self.weights = self.transformations['O']
                 for i in self.weights:
                     wijs = self.weights[i]
                     row_sum = sum(wijs) * 1.0
@@ -693,6 +701,7 @@ class W(object):
                 s0 = self.s0
                 ws = 1.0 / s0
                 weights = {}
+                self.weights = self.transformations['O']
                 for i in self.weights:
                     wijs = self.weights[i]
                     weights[i] = [wij * ws for wij in wijs]
@@ -703,6 +712,7 @@ class W(object):
             elif value == "B":
                 # binary transformation
                 weights = {}
+                self.weights = self.transformations['O']
                 for i in self.weights:
                     wijs = self.weights[i]
                     weights[i] = [1.0 for wij in wijs]
@@ -717,6 +727,7 @@ class W(object):
                 k = self.cardinalities
                 s = {}
                 Q = 0.0
+                self.weights = self.transformations['O']
                 for i in self.weights:
                     wijs = self.weights[i]
                     q[i] = math.sqrt(sum([wij * wij for wij in wijs]))
