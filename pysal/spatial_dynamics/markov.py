@@ -802,7 +802,7 @@ class LISA_Markov(Markov):
     Test whether the moves of y are independent of the moves of wy
 
     >>> lm.chi_2
-    (28645.587708342005, 0.0, 9)
+    (162.47505958346289, 0.0, 9)
 
     Actual transitions of LISAs
 
@@ -821,13 +821,13 @@ class LISA_Markov(Markov):
 
     >>> lm.expected_t
     array([[  1.12328098e+03,   1.15377356e+01,   3.47522158e-01,
-              3.41812865e+01],
+              3.38337644e+01],
            [  3.50272664e+00,   5.28473882e+02,   1.59178880e+01,
-              1.60233918e+01],
+              1.05503814e-01],
            [  1.53878082e-01,   2.32163556e+01,   1.46690710e+03,
-              1.47662977e+03],
-           [  9.67166213e+00,   9.74121200e+00,   6.15490790e+02,
-              1.22658713e+03]])
+              9.72266513e+00],
+           [  9.60775143e+00,   9.86856346e-02,   6.23537392e+00,
+              6.07058189e+02]])
     """
     def __init__(self, y, w, permutations=0,
                  significance_level=0.05):
@@ -883,7 +883,7 @@ class LISA_Markov(Markov):
         A = np.matrix([[1, 0, 0, 0],
                        [0, 0, 1, 0],
                        [0, 0, 0, 1],
-                       [0, 1, 0, 1]])
+                       [0, 1, 0, 0]])
 
         kp = A * np.kron(markov_y.p, markov_ylag.p) * A.T
         trans = self.transitions.sum(axis=1)
