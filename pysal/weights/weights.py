@@ -18,7 +18,7 @@ class W(object):
                       Example:  {'a':['b'],'b':['a','c'],'c':['b']}
     weights = None  : dictionary
                       key is region ID, value is a list of edge weights
-                      If not supplied all edge wegiths are assumed to have a weight of 1.
+                      If not supplied all edge weights are assumed to have a weight of 1.
                       Example: {'a':[0.5],'b':[0.5,1.5],'c':[1.5]}
     id_order = None : list
                       An ordered list of ids, defines the order of
