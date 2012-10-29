@@ -1,10 +1,12 @@
 __all__ = ['W', 'WSP']
 __author__ = "Sergio J. Rey <srey@asu.edu> "
-from pysal.common import *
+
+import pysal
+from pysal.common import ROD
+import numpy as np
 import scipy.sparse
 import gc
-import util
-import pysal  # added to get test path func
+from pysal.weights import  util
 
 
 class W(object):
@@ -65,16 +67,16 @@ class W(object):
     Examples
     --------
     >>> from pysal import W, lat2W
-    >>> neighbors={0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
-    >>> weights={0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
-    >>> w=W(neighbors,weights)
+    >>> neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
+    >>> weights = {0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
+    >>> w = W(neighbors, weights)
     >>> w.pct_nonzero
     0.29629629629629628
 
     Read from external gal file
 
     >>> import pysal
-    >>> w=pysal.open(pysal.examples.get_path("stl.gal")).read()
+    >>> w = pysal.open(pysal.examples.get_path("stl.gal")).read()
     >>> w.n
     78
     >>> w.pct_nonzero
@@ -82,11 +84,11 @@ class W(object):
 
     Set weights implicitly
 
-    >>> neighbors={0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
-    >>> w=W(neighbors)
+    >>> neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
+    >>> w = W(neighbors)
     >>> w.pct_nonzero
     0.29629629629629628
-    >>> w=lat2W(100,100)
+    >>> w = lat2W(100, 100)
     >>> w.trcW2
     39600.0
     >>> w.trcWtW
@@ -591,7 +593,7 @@ class W(object):
     def neighbor_offsets(self):
         """
         Given the current id_order, neighbor_offsets[id] is the offsets of the
-        id's neighrbors in id_order
+        id's neighbors in id_order
 
         Examples
         --------
