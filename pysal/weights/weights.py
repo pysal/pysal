@@ -2,7 +2,8 @@ __all__ = ['W', 'WSP']
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 
 import pysal
-from pysal.common import ROD
+from pysal.common import ROD 
+import math
 import numpy as np
 import scipy.sparse
 import gc
