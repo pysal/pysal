@@ -1029,12 +1029,6 @@ def build_lattice_shapefile(nrows, ncols, outFileName):
             o.write(pysal.cg.Polygon([ll, ul, ur, lr, ll]))
     o.close()
 
-def w2gal_file(w, filename):
-    rows = []
-    keys = w.neighbors.keys()
-    n = w.n
-   
-
 def _test():
     import doctest
     doctest.testmod(verbose=False)
