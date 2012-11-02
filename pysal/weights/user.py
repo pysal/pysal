@@ -954,16 +954,22 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='t
     return adaptive_kernelW(points, bandwidths=bandwidths, k=k, function=function)
 
 
-def min_threshold_dist_from_shapefile(shapefile, radius=None):
+def min_threshold_dist_from_shapefile(shapefile, radius=None, p=2):
     """
     Kernel weights with adaptive bandwidths
 
     Parameters
     ----------
 
-    shapefile   : string
-                  shapefile name with shp suffix
-    radius     : If supplied arc_distances will be calculated based on the given radius.
+    shapefile  : string
+                 shapefile name with shp suffix
+    radius     : If supplied arc_distances will be calculated
+                 based on the given radius. p will be ignored.
+    p          : float
+                 Minkowski p-norm distance metric parameter:
+                 1<=p<=infinity
+                 2: Euclidean distance
+                 1: Manhattan distance
 
     Returns
     -------
@@ -990,7 +996,7 @@ def min_threshold_dist_from_shapefile(shapefile, radius=None):
     points = get_points_array_from_shapefile(shapefile)
     if radius is not None:
         points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
-    return min_threshold_distance(points)
+    return min_threshold_distance(points,p)
 
 
 def build_lattice_shapefile(nrows, ncols, outFileName):

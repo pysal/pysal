@@ -878,7 +878,7 @@ def get_points_array_from_shapefile(shapefile):
     return data
 
 
-def min_threshold_distance(data):
+def min_threshold_distance(data,p=2):
     """
     Get the maximum nearest neighbor distance
 
@@ -887,6 +887,12 @@ def min_threshold_distance(data):
 
     data    : array (n,k) or KDTree where KDtree.data is array (n,k)
               n observations on k attributes
+    p       : float
+              Minkowski p-norm distance metric parameter:
+              1<=p<=infinity
+              2: Euclidean distance
+              1: Manhattan distance
+
 
     Returns
     -------
@@ -910,7 +916,7 @@ def min_threshold_distance(data):
         data = kd.data
     else:
         kd = KDTree(data)
-    nn = kd.query(data, k=2, p=2)
+    nn = kd.query(data, k=2, p=p)
     nnd = nn[0].max(axis=0)[1]
     return nnd
 
