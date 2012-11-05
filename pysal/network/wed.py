@@ -5,8 +5,8 @@ Winged-edge Data Structure for Networks
 
 __author__ = "Sergio J. Rey <srey@asu.edu>"
 
-from shapely.ops import polygonize
 import pysal as ps
+import numpy as np
 
 
 
@@ -150,8 +150,6 @@ def regions_from_graph(vertices, edges):
     return nodes
 
 
-
-
 def pcw(coords):
     """ test if polygon coordinates are clockwise ordered """
     n = len(coords)
@@ -166,16 +164,16 @@ def pcw(coords):
     else:
         return 0
      
-class WingEdge(object):
-    """Data Structure for Networks
-    
-    Parameters
-    ----------
+class WED(object):
+    """
+    Winged-Edge data structure for a planar network.
 
-    G: networkx graph
+    Arguments
+    ---------
 
-    P: nx2 array of coordinates for nodes in G
+    vertices: dictionary with ids as key and value a tuple of coordinates for the vertex
 
+    edges: list of edge tuples (o,d) where o is origin vertex, d is destination vertex
 
     Notes
     -----
@@ -188,193 +186,155 @@ class WingEdge(object):
     described, the logic from
     http://www.cs.mtu.edu/~shene/COURSES/cs3621/NOTES/model/winged-e.html is
     used to implement these points
-    
-    """
-    def __init__(self, G, P):
-        super(WingEdge, self).__init__()
-        self.G = G 
-        self.P = P
-        self.regions = get_regions(G)
 
+
+    Examples
+    -------
+
+    >>> network = _lat2Network(3)
+    >>> vertices = network['nodes']
+    >>> edges = network['edges'] 
+    >>> we1 = WED(vertices, edges)
+    >>> we1.regions
+    {0: [0, 1, 2, 3, 7, 11, 15, 14, 13, 12, 8, 4, 0], 1: [0, 4, 5, 1, 0], 2: [1, 5, 6, 2, 1], 3: [2, 6, 7, 3, 2], 4: [4, 8, 9, 5, 4], 5: [5, 9, 10, 6, 5], 6: [6, 10, 11, 7, 6], 7: [8, 12, 13, 9, 8], 8: [9, 13, 14, 10, 9], 9: [10, 14, 15, 11, 10]}
+    >>> we1.cw_face_edges(5)
+    [(9, 5), (5, 6), (6, 10), (10, 9)]
+    """
+ 
+    def __init__(self, vertices, edges):
+        super(WED, self).__init__()
+        regions = regions_from_graph(vertices,edges)
+        regions = dict( [ (i,c) for i,c in enumerate(regions)])
+        self.regions = regions
         self.node_link = {}     # key: node, value: incident link (edge)
         self.region_link = {}   # key: region (face), value: incident link (edge) 
         self.start_node = {}    # key: link (edge), value: start node 
         self.end_node = {}      # key: link (edge), value: end node 
         self.right_region = {}  # key: link (edge), value: region (face)
         self.left_region = {}   # key: link (edge), value: region (face)
-        self.start_c_link = {}  # key: link, value: first incident cw link 
-        self.start_cc_link = {} # key: link, value: first incident ccw link 
-        self.end_c_link = {}    # key: link, value: first incident c link (end node)
-        self.end_cc_link = {}   # key: link, value: first incident ccw link (end node)
+        self.pred_left = {}     # key: link (edge), predecessor edge to edge
+                                # when traversing left region cw
+        self.succ_left = {}     # key: link (edge), successor edge to edge
+                                # when traversing left region cw
+        self.pred_right = {}    # key: link (edge), predecessor edge to edge
+                                # when traversing right region cw
+        self.succ_right = {}    # key: link (edge), successor edge to edge
+                                # when traversing right region cw
 
-        edges = G.edges()
-        for edge in edges:
-            o,d = edge
-            if not o in self.node_link:
-                self.node_link[o] = edge
+        for r,region in enumerate(regions):
+            nodes = regions[region]
+            self.region_link[region] = (nodes[0],nodes[1])
+            cw = pcw(np.array([vertices[i] for i in nodes]))
+            if cw:
 
-            if not edge in self.start_node:
-                self.start_node[edge] = o
+                # this is the external region
+                self.external_region = r
+                for j in xrange(len(nodes)-1):
+                    start_node = nodes[j]
+                    end_node = nodes[j+1]
+                    self.start_node[(start_node, end_node)] = start_node
+                    self.end_node[(start_node, end_node)] = end_node
+                    self.left_region[(start_node, end_node)] = r
+                    self.right_region[(end_node, start_node)] = r
+            else:
+                for j in xrange(len(nodes)-1):
+                    start_node = nodes[j]
+                    end_node = nodes[j+1]
+                    self.start_node[(start_node, end_node)] = start_node
+                    self.end_node[(start_node, end_node)] = end_node
+                    self.left_region[(start_node, end_node)] = r
+                    self.right_region[(end_node, start_node)] = r
 
-            if not edge in self.end_node:
-                self.end_node[edge] = d
 
-
-        for r, region in enumerate(self.regions):
-            if not r in self.region_link and r > 0:
-                self.region_link[r] = (region[0], region[1])
-            if r > 0:
-                rcw = pcw(self.P[region[:-1],:])
-                for i in xrange(len(region)-1):
-                    o,d = region[i:i+2]
-                    if rcw:
-                        self.right_region[(o,d)] = r
-                        self.left_region[(d,o)] = r
-                    else:
-                        self.left_region[(o,d)] = r
-                        self.right_region[(d,o)] = r
-
-        # now for external face
-        G = self.G.to_directed()
-
-        missing = [ edge for edge in G.edges() if edge not in self.left_region]
-        for edge in missing:
-            self.left_region[edge] = 0
-
-        missing = [ edge for edge in G.edges() if edge not in self.right_region]
-        for edge in missing:
-            self.right_region[edge] = 0
-        
-        # ccw and cw links
+        # left and right traverse
         for edge in self.left_region:
             left_r = self.left_region[edge]
             right_r = self.right_region[edge]
-            self.start_c_link[edge] = None
-            self.start_cc_link[edge] = None
-            self.end_c_link[edge] = None
-            self.end_cc_link[edge] = None
-            if left_r > 0:
-                region = self.regions[left_r]
-                n = len(region)
-                o = region.index(edge[0])
-                d = region.index(edge[1])
-                # predecessor
-                pred = None
-                nxt = None
-                if o == 0:
-                    pred = (region[-2], region[-1])
-                    nxt = (region[o+1], region[o+2])
 
-                if o == n-2:
-                    nxt = (region[0], region[1])
-                    pred = (region[o-1], region[o])
+            if left_r == self.external_region:
+                # coords are clockwise
 
-                if o > 0 and o < n-2:
-                    nxt = (region[o+1], region[o+2])
-                    pred = (region[o-1], region[o])
+                lnodes = self.regions[left_r]
+                s = lnodes.index(edge[0])
+                e = lnodes.index(edge[1])
 
-                self.start_c_link[edge] = pred
-                self.start_cc_link[edge] = nxt
+                pred_left = (lnodes[e+1], lnodes[e])
+                if s==0:
+                    succ_left = (lnodes[-1], lnodes[-2])
+                else:
+                    succ_left = (lnodes[s], lnodes[s-1])
 
-            if right_r > 0:
-                region = self.regions[right_r]
-                n = len(region)
-                o = region.index(edge[0])
-                d = region.index(edge[1])
-                # predecessor
-                pred = None
-                nxt = None
-                if o == 0:
-                    pred = (region[-2], region[-1])
-                    nxt = (region[o+1], region[o+2])
 
-                if o == n-2:
-                    nxt = (region[0], region[1])
-                    pred = (region[o-1], region[o])
+                rnodes = self.regions[right_r]
+                s = rnodes.index(edge[0])
+                e = rnodes.index(edge[1])
+                pred_right = (rnodes[s+1], rnodes[s])
+                if e==0:
+                    succ_right = (rnodes[-1], rnodes[-2])
+                else:
+                    succ_right = (rnodes[e], rnodes[e-1])
 
-                if o > 0 and o < n-2:
-                    nxt = (region[o+1], region[o+2])
-                    pred = (region[o-1], region[o])
 
-                self.end_c_link[edge] = pred
-                self.end_cc_link[edge] = nxt
+                self.pred_left[edge] = pred_left
+                self.succ_left[edge] = succ_left
+                self.pred_right[edge] = pred_right
+                self.succ_right[edge] = succ_right
+                
+            else:
+                # coords are ccw
+                lnodes = self.regions[left_r]
+                s = lnodes.index(edge[0])
+                e = lnodes.index(edge[1])
+                if s == 0:
+                    pred_left = (lnodes[e+1], lnodes[e])
+                    succ_left = (lnodes[-1], lnodes[-2])
+                else:
+                    pred_left = (lnodes[e+1], lnodes[e])
+                    succ_left = (lnodes[s], lnodes[s-1])
+
+                rnodes = self.regions[right_r]
+                s = rnodes.index(edge[0])
+                e = rnodes.index(edge[1])
+                if s == 0:
+                    pred_right = (rnodes[1], rnodes[0])
+                    succ_right = (rnodes[-2], rnodes[-3])
+                else:
+                    pred_right = (rnodes[s+1], rnodes[s])
+                    if e==0:
+                        succ_right = (rnodes[-1 ], rnodes[-2 ])
+                    else:
+                        succ_right = (rnodes[e], rnodes[e-1])
+
+                self.pred_left[edge] = pred_left
+                self.succ_left[edge] = succ_left
+                self.pred_right[edge] = pred_right
+                self.succ_right[edge] = succ_right
+
+
+    def cw_face_edges(self,face):
+        """
+        Return the edges defining a face in cw order
+        """
+
+        l0 = self.region_link[face]
+        if face == self.left_region[l0]:
+            l0 = (l0[1], l0[0])
+        l = l0
+
+        traversing = True
+        edges = []
+        while traversing:
+            edges.append(l)
+            r = self.right_region[l]
+            if r == face:
+                l = self.succ_right[l]
+            else:
+                l = self.succ_left[l]
+            if l == l0:
+                traversing = False
+        return edges
 
         
-class Vertex(object):
-    """Vertex for Winged Edge Data Structure"""
-    def __init__(self, x,y, edge=None):
-        super(Vertex, self).__init__()
-        self.x= x
-        self.y =y
-        self.edge = edge # one incident edge for the vertex
-    def __str__(self):
-        return "(%f, %f)"%(self.x, self.y)
-
-class Edge(object):
-    """Edge for Winged Edge Data Structure"""
-    def __init__(self, startV, endV, left=None, right=None,
-                pl=None, sl=None, pr=None, sr=None, name=None):
-        super(Edge, self).__init__()
-
-        self.start = startV  # start vertex
-        self.end = endV      # end vertex
-        self.left = left     # left face
-        self.right = right   # right face
-        self.pl = pl         # preceding edge for cw traversal of left face
-        self.sl = sl         # successor edge for cw traversal of left face
-        self.pr = pr         # preceding edge for cw traversal of right face
-        self.sr = sr         # successor edge for cw traversal of right face 
-        self.name = name
-
-    def __str__(self):
-        if not self.name:
-            self.name = 'Edge'
-        return "%s: (%f,%f)--(%f,%f)"%(self.name, self.start.x, self.start.y, self.end.x,
-                self.end.y) 
-        
-class Face(object):
-    """Face for Winged Edge Data Structure"""
-    def __init__(self, nodes, edge=None):
-        super(Face, self).__init__()
-        self.nodes = nodes # nodes/vertices defining face
-        self.edge = edge # one incident edge for the face
-
-        if self.nodes[0] != self.nodes[-1]:
-            self.nodes.append(self.nodes[0]) # put in closed form
-
-    def __str__(self):
-        n = len(self.nodes)
-        nv = [ "(%f,%f)"%(v.x,v.y) for v in self.nodes]
-        return "--".join(nv)
-
-def face_boundary(face):
-    """Clockwise traversal around face edges
-
-    Arguments
-    --------
-    face: face instance
-
-    Returns
-    ------
-    edges: list of edges on face boundary ordered clockwise
-
-    """
-    l0 = face.edge
-    l = l0
-    edges = []
-    traversing = True
-    while traversing:
-        edges.append(l)
-        r = l.right
-        if r == face:
-            l = l.sr
-        else:
-            l = l.sl
-        if l == l0:
-            traversing = False
-    return edges
-
-
 def incident_cw_edges_node(node):
     """Clockwise traversal of edges incident with node
 
@@ -460,166 +420,6 @@ class NPWED(object):
         
 if __name__ == '__main__':
 
-    # example from figure 3.19 of okabe
-    # omitting 1-3 link to ensure planarity
-
-    import networkx as nx
-    import numpy as np
-
-    V = [ (0,0), (1,1), (2,0), (1,-1), (2,-1) ] 
-    E = [ (1,2,3), (0,2), (1,0,3), (0,2,4), (3,) ]
-
-    P = np.array(V)
-
-    G = nx.DiGraph()
-    for i,d in enumerate(E):
-        for j in d:
-            G.add_edge(i,j)
-
-
-    npwed = NPWED(G,P)
-
-    # Alternative implementation of WED
-
-    """Simple network example
-
-    A a B b C m J
-    c 1 d 2 e
-    D f E g F
-    h 3 i 4 j
-    G k H l I
-
-    Where upper case letters are Nodes/Vertices, lower case letters are edges,
-    and integers are face ids.
-    
-    There are four faces 1-4, but one external face 0 (implied)
-    """
-
-
-
-    vertices = {}
-    vertices['A'] = Vertex(0.,2.)
-    vertices['B'] = Vertex(1.,2.)
-    vertices['C'] = Vertex(2.,2.)
-    vertices['D'] = Vertex(0.,1.)
-    vertices['E'] = Vertex(1.,1.)
-    vertices['F'] = Vertex(2.,1.)
-    vertices['G'] = Vertex(0.,0.)
-    vertices['H'] = Vertex(1.,0.)
-    vertices['I'] = Vertex(2.,0.)
-    vertices['J'] = Vertex(3.,2.)
-
-
-
-    edges = {}
-    edata = [ ('a', 'A', 'B'),
-              ('b', 'B', 'C'),
-              ('c', 'A', 'D'),
-              ('d', 'E', 'B'),
-              ('e', 'C', 'F'),
-              ('f', 'D', 'E'),
-              ('g', 'E', 'F'),
-              ('h', 'D', 'G'),
-              ('i', 'H', 'E'),
-              ('j', 'F', 'I'),
-              ('k', 'G', 'H'),
-              ('l', 'I', 'H'),
-              ('m', 'C', 'J')]
-
-    for edge in edata:
-        edges[edge[0]] = Edge(vertices[edge[1]], vertices[edge[2]])
-
-    faces = {}
-    fdata = [ ('A', 'B', 'E', 'D'),
-              ('B', 'C', 'F', 'E'),
-              ('D', 'E', 'H', 'G'),
-              ('E', 'F', 'I', 'H') ]
-
-    fe = [ 'c', 'd', 'f', 'j']
-
-    for i, face in enumerate(fdata):
-        i+=1
-        coords = [ vertices[j] for j in face]
-        faces[i] = Face(coords)
-        faces[i].edge = edges[fe[i-1]]
-
-    faces[0] = Face([0.,0.,0.0])
-    faces[0].edge = edges['h']
-
-    lrdata = [ (0,1),
-               (0,2),
-               (1,0),
-               (1,2),
-               (0,2),
-               (1,3),
-               (2,4),
-               (3,0),
-               (3,4),
-               (0,4),
-               (3,0),
-               (0,4),
-               (0,0)]
-    ekeys = edges.keys()
-    ekeys.sort()
-
-    for i, lr in enumerate(lrdata):
-        edges[ekeys[i]].left = faces[lr[0]]
-        edges[ekeys[i]].right = faces[lr[1]]
-
-
-
-    psdata = [ #node pre_left successor_left, pre_right, successor_right
-            ('a', 'b', 'c', 'c', 'd'),
-            ('b', 'm', 'a', 'd', 'e'),
-            ('c', 'f', 'a', 'a', 'h'),
-            ('d', 'a', 'f', 'g', 'b'),
-            ('e', 'j', 'm', 'b', 'g'),
-            ('f', 'd', 'c', 'h', 'i'),
-            ('g', 'e', 'd', 'i', 'j'),
-            ('h', 'k', 'f', 'c', 'k'),
-            ('i', 'f', 'k', 'l', 'g'),
-            ('j', 'l', 'e', 'g', 'l'),
-            ('k', 'i', 'h', 'h', 'l'),
-            ('l', 'k', 'j', 'j', 'i'),
-            ('m', 'e', 'b', 'e', 'b') ]
-
-    for pdata in psdata:
-        e,pl,sl,pr,sr = pdata
-        edges[e].pl = edges[pl]
-        edges[e].sl = edges[sl]
-        edges[e].pr = edges[pr] 
-        edges[e].sr = edges[sr]
-        edges[e].name = e
-
-    n2e = [
-            ('A', 'c'),
-            ('B', 'b'),
-            ('C', 'e'),
-            ('D', 'f'),
-            ('E', 'd'),
-            ('F', 'g'),
-            ('G', 'h'),
-            ('H', 'k'),
-            ('I', 'j'),
-            ('J', 'm')]
-    for node in n2e:
-        v,e = node
-        vertices[v].edge = edges[e]
-
-    cv = 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', "I"
-    for v in cv:
-        icwe = incident_cw_edges_node(vertices[v])
-        print "Node: ", v, "cw incident edges: "
-        for e in icwe:
-            print e
-
-
-    for f in range(1,5):
-        ecwf = face_boundary(faces[f])
-        print "Face: ",f, " cw edges:"
-        for e in ecwf:
-            print e
-
 
     # test region extraction
 
@@ -637,15 +437,15 @@ if __name__ == '__main__':
             (4,5),
             (5,3) ]
 
-    """
-    r = regions_from_graph(vertices,edges)
-    """
+    #r = regions_from_graph(vertices,edges)
+    #we0 = WED(vertices,edges)
 
 
     network = _lat2Network(3)
     vertices = network['nodes']
     edges = network['edges']
     r1 = regions_from_graph(vertices, edges)
+    we1 = WED(vertices,edges)
 
 
     import doctest
