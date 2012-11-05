@@ -8,38 +8,136 @@ __author__ = "Sergio J. Rey <srey@asu.edu>"
 from shapely.ops import polygonize
 
 
-def get_faces(lines):
+
+
+
+
+def regions_from_graph(vertices, edges):
     """
-    Find the connected faces formed by the list of lines
+    Extract regions from vertices and edges of a planar graph
 
-    Parameters
-    ----------
+    Arguments
+    ---------
 
-    lines: list of tuples of tuples
-           [ ( (x0, y0), (x1, y1) ),
-             ( (x1, y1), (x2, y2) ),
-             ...
-            ]
+    vertices: dictionary with vertex id as key, coordinates of vertex as value
+
+    edges: list of (head,tail) edges
 
     Returns
-    -------
+    ------
 
-    faces: a list of shapely polygons, 
+    regions: list of contiguous wedges forming a region.
 
-    Example
-    -------
-    >>> lines = [ ( (0,0), (1,1) ), ( (0, 0), (0,1) ), ( (0,1), (1,1) ), ( (1,1), (1,0) ), ( (1,0), (0,0))]
-    >>> faces = get_faces(lines)
-    >>> len(faces)
-    2
-    >>> print faces[0]
-    POLYGON ((0.0000000000000000 0.0000000000000000, 1.0000000000000000 1.0000000000000000, 1.0000000000000000 0.0000000000000000, 0.0000000000000000 0.0000000000000000))
-    >>> print faces[1]
-    POLYGON ((1.0000000000000000 1.0000000000000000, 0.0000000000000000 0.0000000000000000, 0.0000000000000000 1.0000000000000000, 1.0000000000000000 1.0000000000000000))
+
+
+    Examples
+    --------
+    >>> vertices = {1: (1,2), 2:(0,1), 3:(2,1), 4:(0,0), 5:(2,0)}
+    >>> edges = [ (1,2), (1,3), (2,3), (2,4), (4,5), (5,3) ]
+    >>> r = regions_from_graph(vertices, edges)
+    >>> r
+    [[[1, 2, 3], [2, 3, 1], [3, 1, 2]], [[1, 3, 5], [3, 5, 4], [5, 4, 2], [4, 2, 1], [2, 1, 3]], [[2, 4, 5], [4, 5, 3], [5, 3, 2], [3, 2, 4]]]
+
+
+
+    Notes
+    -----
+    =====
+
+    Based on Jiang, X.Y. and H. Bunke (1993) "An optimal algorithm for
+    extracting the regions of a plane graph." Pattern Recognition Letters,
+    14:533-558.
     """
 
-    faces = list(polygonize(lines))
-    return faces
+    # step 1
+    # have a twin for each directed edge
+    dedges = edges[:]
+    for edge in edges:
+        dedges.append( (edge[1],edge[0]) )
+
+    # step 2 complement each directed edge with an angle formed with horizontal
+    # line passing through edge[0] for each edge
+    angles = []
+    from math import atan2, degrees
+
+    for edge in dedges:
+
+        v1 = vertices[edge[0]]
+        v2 = vertices[edge[1]]
+        dx = v2[0] - v1[0]
+        dy = v2[1] - v1[1]
+        at = atan2(dy, dx)
+        d = degrees(at)
+        if d < 0:
+            d = 360 + d
+        angles.append( [ (edge[0],d), (edge[0],edge[1]) ])
+
+    # step 3 sort the list into ascending order using vi and angle as primary and
+    # secondary keys
+    angles.sort()
+
+
+    # form wedges on consecutive entries with same vi (vi,vj,dij), (vi,vk,dik)
+    # gives the wedge (vk,vi,vj)
+    wedges = []
+    start = angles[0]
+    c = 0
+    for i in range(1,len(angles)):
+        next_edge = angles[i]
+        previous_edge = angles[i-1]
+        if next_edge[0][0] == start[0][0]:
+            wedge = [ next_edge[1][1], previous_edge[1][0], previous_edge[1][1] ]
+            wedges.append(wedge)
+        else:
+            # first form wedge with last and first entry of current group
+            # to do
+            wedge = [ start[1][1], previous_edge[1][0], previous_edge[1][1] ]
+            wedges.append(wedge)
+            start = next_edge
+
+    # final pair
+
+    wedge = [ start[1][1], previous_edge[1][0], next_edge[1][1] ]
+    wedges.append(wedge)
+
+
+    # phase two
+    # form regions from contiguous wedges
+
+    nw = len(wedges)
+    used = [0]*nw
+    wedges.sort()
+
+    i = 0
+    regions = []
+    while sum(used) < nw:
+        i = used.index(0)
+        wi = wedges[i]
+        start = wedges[i]
+        used[i] = 1
+        region = [start]
+        # find next contiguous wedge for wi
+        forming = True
+        while forming:
+
+            # find first wedge contiguous to wi
+            for j in xrange(nw):
+                wj = wedges[j]
+                if wj[0] ==  wi[1] and wj[1] == wi[2]:
+                    region.append(wj)
+                    used[j] = 1
+                    wi = wj
+                    if wi[1] == start[0] and wi[2] == start[1]:
+                        forming = False
+                        regions.append(region)
+                    break
+
+    # test for filaments and remove them prior to the algorithm
+    # a filament is an edge with one (or both) of its edge have an incidence of 1
+    return regions
+
+
+
 
 def pcw(coords):
     """ test if polygon coordinates are clockwise ordered """
@@ -295,6 +393,74 @@ def incident_cw_edges_node(node):
     return edges
 
 
+def _lat2Network(k):
+    """helper function to create a network from a lattice.
+    
+    Used for testing purposes 
+    """
+    edges = {}
+    faces = {}
+    nodes = {}
+    network = {}
+    f = 0
+    for i in xrange(k):
+        for j in xrange(k):
+            y0 = i 
+            y1 = i+1
+            x0 = j
+            x1 = j+1
+            nw = (x0,y0)
+            ne = (x1,y0)
+            sw = (x0,y1)
+            se = (x1,y1)
+            edges[ nw,ne ] = nw, ne
+            edges[ ne,se ] = ne, se
+            edges[ se,sw ] = se, sw
+            edges[ sw,nw ] = sw, nw
+            faces[f] = (nw,ne), (ne,se), (se,sw), (sw,nw)
+            nodes[nw] = nw
+            nodes[ne] = ne
+            nodes[sw] = sw
+            nodes[se] = se
+            f += 1
+    network['edges'] = edges
+    network['faces'] = faces
+    network['nodes'] = nodes
+    return network
+
+class NPWED(object):
+    """Winged edge data structure for Nonplanar network"""
+    def __init__(self, G, P):
+        super(NPWED, self).__init__()
+        self.G = G
+        self.P = P
+        self.node_link = {}     # key: node, value: incident link (edge)
+        self.start_node = {}    # key: link (edge), value: start node 
+        self.end_node = {}      # key: link (edge), value: end node 
+        self.start_c_link = {}  # key: link, value: first incident cw link 
+        self.start_cc_link = {} # key: link, value: first incident ccw link 
+        self.end_c_link = {}    # key: link, value: first incident cw link (end node)
+        self.end_cc_link = {}   # key: link, value: first incident ccw link (end node)
+
+        for edge in self.G.edges():
+            s,e = edge
+            self.node_link[s] = edge
+            self.start_node[edge] = s
+            self.end_node[edge] = e
+
+    def incident_links(self, node):
+        links = []
+        links.extend(self.G.out_edges(node))
+        links.extend(self.G.in_edges(node))
+        return links
+
+
+
+
+
+
+
+        
         
 if __name__ == '__main__':
 
@@ -309,11 +475,13 @@ if __name__ == '__main__':
 
     P = np.array(V)
 
-    G = nx.Graph()
+    G = nx.DiGraph()
     for i,d in enumerate(E):
         for j in d:
             G.add_edge(i,j)
 
+
+    npwed = NPWED(G,P)
 
     # Alternative implementation of WED
 
@@ -457,5 +625,25 @@ if __name__ == '__main__':
             print e
 
 
+    # test region extraction
+
+    vertices = {1: (1,2),
+            2:(0,1),
+            3:(2,1),
+            4:(0,0),
+            5:(2,0)}
+
+    edges = [
+            (1,2),
+            (1,3),
+            (2,3),
+            (2,4),
+            (4,5),
+            (5,3) ]
+
+    r = regions_from_graph(vertices,edges)
+
+
     import doctest
     doctest.testmod()
+
