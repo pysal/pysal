@@ -1,0 +1,10 @@
+Pl/Python
+---------
+
+An alternative approach.
+
+Installation
+------------
+sudo apt-get install postgresql-plpython-9.1
+createlang plpythonu <dbname> (in this case, pysaldb)
+

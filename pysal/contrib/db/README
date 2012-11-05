@@ -1,0 +1,125 @@
+Pysal.Contrib.db
+================
+
+This module enables simplified connection and query on spatial databases. 
+It enables developers to return the query results in a 
+Pysal-digestible format such as geojson or Well Known Text (WKT).
+It explicitly supports the following spatial databases:
+
+ * postgis (October, 2012)
+
+Caveat: This is experimental, use with Caution!
+
+Depends
+=======
+
+ * psycopg2
+ * pysal
+ * osgeo
+ * django.contrib.gis
+ * any of the supported databases and associated CRUD privileges 
+
+Suggests
+========
+
+ * PL/PYTHON
+ * Shapely
+ * sqlalchemy
+
+Usage
+=====
+
+The first function PySAL supports is dumping data from a PostGIS table into
+shapefile format. We'll access the db and dump data using
+the ogr module. 
+
+The secondary utility to be developed is a cursor manager. Developers may use this cursor to write
+their own database functions for their particular spatial analysis
+applications.
+
+For instance::
+ 
+ >>> import psycopg2 as pg
+ >>> conn = pg.connect("dbname=pysaldb user=stephens")
+ >>> cur = conn.cursor()
+ >>> cur.execute(<your SQL>)
+
+
+Installation
+============
+
+TBD
+
+Configuration
+=============
+
+If you have PostGres environment variables set in your userspace, you can
+instruct Pysal to use them rather than passing in database credentials each
+time. Look at the __init__.py for more information.
+
+I'm leaving the details of setting up a PostGIS database to the user. 
+I developed this module on Ubuntu 12.04. I used the psql console to create the
+spatial indices for the pysal example data, and used the SPIT plugin in QGIS
+to upload the pysal example data into the PostGIS db. There is a bug for only
+some of the example data using SPIT to upload. To remedy it, use the ftools
+plugin to convert multipart polygons to single parts. Vector -> Geometry
+tools -> multi...
+
+
+Notes
+-----
+
+When choosing between psycopg2 and sqlalchemy, sqlalchemy is db
+agnostic, meaning your code will work with any db. Also, 
+sqlalchemy ships with Enthought Python so the dependencies are handled by
+Pysal's new (as of 1.5) dependency policy.
+
+However you connect and query the db, return results from
+postgis as geojson or wkt so python/pysal can deal with them directly.
+
+Or, as an alternative, SQLalchemy offers the ORM path, which is more
+abstract and maps database objects to python constructs.
+
+What I want to write here is basically a cursor object manager that other
+functions or classes in pysal can use to query a database object. For example,
+in the weights class, an alternative distance-based calculator function can post
+a hard-coded query into a db using a cursor enabled by this module. This does
+not necessarily have to be a complicated module: accept a database name, a user
+name, a password, and a table; receive a cursor for that table. Not even sure if
+this module is necessary? Perhaps just so we do not repeat ourselves in the
+potentially many instances of using postgis functionality. Be sure to check out
+pandas.io for tips.
+
+
+
+Dataset Notes
+-------------
+As noted in the README, I used the psql console, pgAdmin3 and QGIS to set up
+the data. I was able to create a spatial index on almost all of the example data
+sets except Chicago77, which the console insisted did not exist, though it
+plainly appeared in pgAdmin3.
+
+From IRC with strk:
+11:32 peas am I right in thinking that the ability to easily create a topo
+representation of a postgis table is not yet available?
+looks like in future opportunities
+peas: the support was improved since the Paris presentation
+strk
+the toTopoGeom (maybe presented as a funding opportunity in those slides) it
+is now available
+strk
+should make it pretty simple to build the topology
+11:37 peas
+strk: i'll check it out, thanks again
+strk
+my blog has some recipes too
+
+
+TODO
+====
+
+I did not set the SRID when I imported the pysal example data into the
+postgis database. That may have to be remedied
+before making any of that data public, if it comes to that. 
+
+Update: I did figure out how to set the SRID on import.
