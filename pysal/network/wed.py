@@ -6,6 +6,7 @@ Winged-edge Data Structure for Networks
 __author__ = "Sergio J. Rey <srey@asu.edu>"
 
 from shapely.ops import polygonize
+import pysal as ps
 
 
 
@@ -26,7 +27,8 @@ def regions_from_graph(vertices, edges):
     Returns
     ------
 
-    regions: list of contiguous wedges forming a region.
+    regions: list of lists of nodes defining a region. Includes the external
+    region
 
 
 
@@ -36,13 +38,11 @@ def regions_from_graph(vertices, edges):
     >>> edges = [ (1,2), (1,3), (2,3), (2,4), (4,5), (5,3) ]
     >>> r = regions_from_graph(vertices, edges)
     >>> r
-    [[[1, 2, 3], [2, 3, 1], [3, 1, 2]], [[1, 3, 5], [3, 5, 4], [5, 4, 2], [4, 2, 1], [2, 1, 3]], [[2, 4, 5], [4, 5, 3], [5, 3, 2], [3, 2, 4]]]
-
+    [[1, 2, 3, 1], [1, 3, 5, 4, 2, 1], [2, 4, 5, 3, 2]]
 
 
     Notes
     -----
-    =====
 
     Based on Jiang, X.Y. and H. Bunke (1993) "An optimal algorithm for
     extracting the regions of a plane graph." Pattern Recognition Letters,
@@ -53,7 +53,9 @@ def regions_from_graph(vertices, edges):
     # have a twin for each directed edge
     dedges = edges[:]
     for edge in edges:
-        dedges.append( (edge[1],edge[0]) )
+        new_edge = edge[1], edge[0]
+        if new_edge not in dedges:
+            dedges.append( (edge[1],edge[0]) )
 
     # step 2 complement each directed edge with an angle formed with horizontal
     # line passing through edge[0] for each edge
@@ -107,6 +109,9 @@ def regions_from_graph(vertices, edges):
     nw = len(wedges)
     used = [0]*nw
     wedges.sort()
+    #print wedges
+
+    #print 'forming regions'
 
     i = 0
     regions = []
@@ -120,6 +125,7 @@ def regions_from_graph(vertices, edges):
         forming = True
         while forming:
 
+
             # find first wedge contiguous to wi
             for j in xrange(nw):
                 wj = wedges[j]
@@ -130,11 +136,18 @@ def regions_from_graph(vertices, edges):
                     if wi[1] == start[0] and wi[2] == start[1]:
                         forming = False
                         regions.append(region)
+                        #print start, regions
+                        #raw_input('h')
                     break
 
-    # test for filaments and remove them prior to the algorithm
-    # a filament is an edge with one (or both) of its edge have an incidence of 1
-    return regions
+    # put in closed cartographic form
+    nodes = []
+    for region in regions:
+        wedge0 = [ wedge[0] for wedge in region]
+        wedge0.append(wedge0[0])
+        nodes.append(wedge0)
+
+    return nodes
 
 
 
@@ -394,39 +407,22 @@ def incident_cw_edges_node(node):
 
 
 def _lat2Network(k):
-    """helper function to create a network from a lattice.
+    """helper function to create a network from a square lattice.
     
     Used for testing purposes 
     """
-    edges = {}
-    faces = {}
+    lat = ps.lat2W(k+1,k+1) 
+    k1 = k+1
     nodes = {}
-    network = {}
-    f = 0
-    for i in xrange(k):
-        for j in xrange(k):
-            y0 = i 
-            y1 = i+1
-            x0 = j
-            x1 = j+1
-            nw = (x0,y0)
-            ne = (x1,y0)
-            sw = (x0,y1)
-            se = (x1,y1)
-            edges[ nw,ne ] = nw, ne
-            edges[ ne,se ] = ne, se
-            edges[ se,sw ] = se, sw
-            edges[ sw,nw ] = sw, nw
-            faces[f] = (nw,ne), (ne,se), (se,sw), (sw,nw)
-            nodes[nw] = nw
-            nodes[ne] = ne
-            nodes[sw] = sw
-            nodes[se] = se
-            f += 1
-    network['edges'] = edges
-    network['faces'] = faces
-    network['nodes'] = nodes
-    return network
+    edges = []
+    for node in lat.id_order:
+        for neighbor in lat[node]:
+            edges.append((node,neighbor))
+        nodes[node] = ( node/k1, node%k1 )
+
+    res = {"nodes": nodes, "edges": edges}
+
+    return res
 
 class NPWED(object):
     """Winged edge data structure for Nonplanar network"""
@@ -641,7 +637,15 @@ if __name__ == '__main__':
             (4,5),
             (5,3) ]
 
+    """
     r = regions_from_graph(vertices,edges)
+    """
+
+
+    network = _lat2Network(3)
+    vertices = network['nodes']
+    edges = network['edges']
+    r1 = regions_from_graph(vertices, edges)
 
 
     import doctest
