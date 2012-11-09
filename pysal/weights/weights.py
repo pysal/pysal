@@ -754,10 +754,21 @@ class W(object):
 
     transform = property(get_transform, set_transform)
 
-    def asymmetry(self):
+    def asymmetry(self, intrinsic=True):
         """
-        Checks for w_{i,j} == w_{j,i} forall i,j
+        Asymmetry check
 
+        Arguments
+        ---------
+
+        intrinsic: boolean (default=True)
+                
+                intrinsic symmetry: :math:`w_{i,j} == w_{j,i}`
+
+                if intrisic is False:
+                    symmetry is defined as :math:`i \in N_j \ AND \ j \in N_i` where
+                    :math:`N_j` is the set of neighbors for j.
+            
         Returns
         -------
         asymmetries : list
@@ -778,6 +789,9 @@ class W(object):
         [1 3 0 2 4 1 5 0 4 6 1 3 5 7 2 4 8 3 7 4 6 8 5 7]
         >>> print result[1]
         [0 0 1 1 1 2 2 3 3 3 4 4 4 4 5 5 5 6 6 7 7 7 8 8]
+        >>> result = w.asymmetry(intrinsic=False)
+        >>> result
+        []
         >>> neighbors={0:[1,2,3], 1:[1,2,3], 2:[0,1], 3:[0,1]}
         >>> weights={0:[1,1,1], 1:[1,1,1], 2:[1,1], 3:[1,1]}
         >>> w=W(neighbors,weights)
@@ -788,12 +802,20 @@ class W(object):
         [0 1]
         """
 
-        wd = self.sparse.transpose() - self.sparse
+        if intrinsic:
+            wd = self.sparse.transpose() - self.sparse
+        else:
+            transform = self.transform
+            self.transform = 'b'
+            wd = self.sparse.transpose() - self.sparse
+            self.transform = transform
+
         ids = np.nonzero(wd)
         if len(ids[0]) == 0:
             return []
         else:
             return ids
+
 
     def full(self):
         """
