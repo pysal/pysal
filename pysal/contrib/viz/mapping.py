@@ -16,10 +16,79 @@ from matplotlib import cm
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
 from mpl_toolkits.basemap import Basemap
+from ogr import osr
+
+def transCRS(xy, src_prj, trt_prj):
+    '''
+    Re-project a 2D array of xy coordinates from one prj file to another
+    ...
+
+    Arguments
+    ---------
+    xy          : ndarray
+                  nx2 array with coordinates to be reprojected. First column
+                  is X axis, second is Y axis
+    src_prj     : str
+                  Path to .prj file of the source Coordinate Reference System
+                  (CRS) of `xy`
+    trt_prj     : str
+                  Path to .prj file of the target Coordinate Reference System
+                  (CRS) to reproject `xy`
+
+    Returns
+    -------
+    xyp         : ndarray
+                  nx2 array with reprojected coordinates. First column
+                  is X axis, second is Y axis
+                  
+    '''
+    orig = osr.SpatialReference()
+    orig.ImportFromWkt(open(src_prj).read())
+    target = osr.SpatialReference()
+    target.ImportFromWkt(open(trt_prj).read())
+    trCRS = osr.CoordinateTransformation(orig, target)
+    return np.array(trCRS.TransformPoints(xy))[:, :2]
+
+def map_poly_shp(shp_link):
+    '''
+    Create a map object from a shapefile
+    ...
+
+    Arguments
+    ---------
+
+    shp_link        : str
+                      Path to shapefile
+
+    Returns
+    -------
+
+    map             : PatchCollection
+                      Map object with the polygons from the shapefile
+
+    '''
+    shp = ps.open(shp_link)
+    shps = list(shp)
+    left, bottom, right, top = shp.bbox
+    patches = []
+    for shape in shps:
+        parts = []
+        for ring in shape.parts:
+            xy = np.array(ring)
+            x,y = xy[:,0], xy[:,1]
+            x = (x - left) / (right - left)
+            y = (y - bottom) / (top - bottom)
+            n = len(x)
+            x.shape = (n,1)
+            y.shape = (n,1)
+            xy = np.hstack((x,y))
+            polygon = Polygon(xy, True)
+            patches.append(polygon)
+    return PatchCollection(patches)
 
 def map_poly_shp_lonlat(shp_link, projection='merc'):
     '''
-    Create a map object from a shapefile in lon/lat CRS
+    Create a map object from a shapefile in lon/lat CRS using Basemap
     ...
 
     Arguments
@@ -744,5 +813,15 @@ if __name__ == '__main__':
     #values[: values.shape[0]/2] = 1
     #values[values.shape[0]/2: ] = 0
 
-    plot_choropleth(shp_link, values, 'quantiles', figsize=(9, 9))
+    #plot_choropleth(shp_link, values, 'quantiles', figsize=(9, 9))
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    patchco = map_poly_shp(shp_link)
+    #patchco = map_poly_shp_lonlat(shp_link, 'merc')
+    patchco.set_facecolor('none')
+    ax.add_collection(patchco)
+    ax.set_frame_on(False)
+    ax.axes.get_yaxis().set_visible(False)
+    ax.axes.get_xaxis().set_visible(False)
+    plt.show()
 
