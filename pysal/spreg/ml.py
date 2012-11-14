@@ -114,7 +114,7 @@ def symmetrize(w):
 
     Returns
     -------
-    a full numpy symmetric matrix with same eigenvalues as w
+    a sparse symmetric matrix with same eigenvalues as w
     
     """
     current = w.transform
