@@ -1,14 +1,25 @@
 """
 Maximum likelihood estimation of spatial process models
 
+
+TODO
+----
+
+ - check log likelihood for lag model and columnbus vesus opengeoda
+ - check ORD versus FULL likelihood results with sparse implementation for ORD
+ - asymptotic standard errors for ML_Lag
+ - ML_error likelihood
+ - ML_error partial
+ - ML_error estimation
+
 """
 
 __author__ = "Serge Rey srey@asu.edu, Luc Anselin luc.anselin@asu.edu"
 
 import numpy as np
 import pysal as ps
+import scipy.sparse as SPARSE
 
-SMALL = 500
 
 def defl_lag(r, w, e1, e2):
     """
@@ -84,7 +95,6 @@ def like_lag_ord(r, e1, e2, evals):
     return -(n/2.)  * np.log( (e1re2**2).sum() / n  ) + np.log(1-revals).sum()
 
 
-
 def _logJacobian(w, rho):
     """
     Log determinant of I-\rho W
@@ -107,12 +117,13 @@ def symmetrize(w):
     a full numpy symmetric matrix with same eigenvalues as w
     
     """
-    neighbors = w.neighbors
-    b = ps.W(neighbors)
-    d = np.array(b.cardinalities.values())
-    D = np.diag(1./d)
-    D12 = D**(1/2.)
-    return np.dot(D12,np.dot(b.full()[0],D12))
+    current = w.transform
+    w.transform = 'B'
+    d = w.sparse.sum(axis=1) # row sum
+    d.shape=(w.n,)
+    D12 = SPARSE.spdiags(np.sqrt(1./d),[0],w.n,w.n)
+    w.transform = current
+    return D12*w.sparse*D12
 
 
 
@@ -224,7 +235,7 @@ def ML_Lag(y, w, X, precrit=0.0000001, verbose=False, like='full'):
     # Likelihood evaluation
 
     if like.upper() == 'ORD':
-        evals = np.linalg.eigvalsh(symmetrize(w))
+        evals = SPARSE.linalg.eigsh(symmetrize(w))[0]
         llik = like_lag_ord(ro, e1, e2, evals)
     elif like.upper() == 'FULL':
         llik = like_lag_full(ro, e1, e2, w)
