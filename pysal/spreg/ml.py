@@ -10,7 +10,7 @@ import pysal as ps
 
 SMALL = 500
 
-def defl_lag(r, w, e1, e2, evals=None):
+def defl_lag(r, w, e1, e2):
     """
     Derivative of the likelihood for the lag model
 
@@ -21,10 +21,9 @@ def defl_lag(r, w, e1, e2, evals=None):
 
     w: spatial weights object
 
-    e1: ols residuals of X on y
+    e1: ols residuals of y on X 
 
-    e2: ols residuals of X on Wy
-
+    e2: ols residuals of Wy on X
 
     Returns
     -------
@@ -45,8 +44,46 @@ def defl_lag(r, w, e1, e2, evals=None):
     dfl = n * (num/den) - tr
     return dfl[0][0], tr
 
+def like_lag_full(r, e1, e2, w):
+    """
+    Log concentrated likelihood for the lag model using full evaluation
+    """
 
-    
+    n = w.n
+    e1re2 = e1 - r*e2
+    ldet = _logJacobian(w, r)
+    return -(n/2.)  * np.log( (e1re2**2).sum() / n  ) + ldet
+
+
+def like_lag_ord(r, e1, e2, evals):
+    """
+    Log concentrated likelihood for the lag model using Ord (1975)
+    approximation
+
+    Parameters
+    ----------
+
+    r: estimate of rho
+
+    e1: ols residuals of y on X 
+
+    e2: ols residuals of Wy on X
+
+    evals: vector of eigenvalues of W
+
+
+    Returns
+    -------
+
+    lc: scalar value of concentrated likelihood
+
+    """
+    n = w.n
+    e1re2 = e1 - r*e2
+    revals = r * evals
+    return -(n/2.)  * np.log( (e1re2**2).sum() / n  ) + np.log(1-revals).sum()
+
+
 
 def _logJacobian(w, rho):
     """
@@ -54,13 +91,47 @@ def _logJacobian(w, rho):
 
     Brute force initially
     """
-    return np.linalg.det(np.eye(w.n) - rho * w.full()[0])
+
+    return np.log(np.linalg.det(np.eye(w.n) - rho * w.full()[0]))
+
+def symmetrize(w):
+    """Generate symmetric matrix that has same eigenvalues as unsymmetric row
+    standardized matrix w
+
+    Parameters
+    ----------
+    w: weights object that has been row standardized
+
+    Returns
+    -------
+    a full numpy symmetric matrix with same eigenvalues as w
+    
+    """
+    neighbors = w.neighbors
+    b = ps.W(neighbors)
+    d = np.array(b.cardinalities.values())
+    D = np.diag(1./d)
+    D12 = D**(1/2.)
+    return np.dot(D12,np.dot(b.full()[0],D12))
 
 
 
-def ML_Lag(y, w, X, precrit=0.0000001, verbose=False):
+def ML_Lag(y, w, X, precrit=0.0000001, verbose=False, like='full'):
     """
     Maximum likelihood estimation of spatial lag model
+
+    y: dependent variabl (nx1 array)
+
+    w: spatial weights object
+
+    X: explanatory variables (nxk array)
+
+    precrit: convergence criterion
+
+    verbose: boolen to print iterations in estimation
+
+    like: method to use for evaluating concentrated likelihood function
+    (FULL|ORD) where FULL=Brute Force, ORD = eigenvalue based jacobian
     """
 
     # step 1 OLS of X on y yields b1
@@ -91,7 +162,6 @@ def ML_Lag(y, w, X, precrit=0.0000001, verbose=False):
     else:
         r2 = rols
         r1 = r2 / 5.0
-    #print r1, r2
 
     df1 = 0
     df2 = 0
@@ -151,8 +221,15 @@ def ML_Lag(y, w, X, precrit=0.0000001, verbose=False):
     bml = b1 - (ro * b2)
     b = [ro,bml]
 
-    return (b, tr1)
+    # Likelihood evaluation
 
+    if like.upper() == 'ORD':
+        evals = np.linalg.eigvalsh(symmetrize(w))
+        llik = like_lag_ord(ro, e1, e2, evals)
+    elif like.upper() == 'FULL':
+        llik = like_lag_full(ro, e1, e2, w)
+
+    return (b, tr1, llik)
 
 
 
@@ -165,8 +242,9 @@ if __name__ == '__main__':
     X.append(db.by_col("INC"))
     X.append(db.by_col("HOVAL"))
     X = np.array(X).T
-    w = ps.open(ps.examples.get_path("columbus.gal")).read()
+    #w = ps.open(ps.examples.get_path("columbus.gal")).read()
+    w = ps.rook_from_shapefile(ps.examples.get_path("columbus.shp"))
     w.transform = 'r'
     X = np.hstack((np.ones((w.n,1)),X))
-    bml = ML_Lag(y,w,X, verbose=True)
-    bml = ML_Lag(y,w,X, verbose=True, precrit=10.0**-10)
+    bml = ML_Lag(y,w,X, verbose=True, like='ORD')
+    bmlf = ML_Lag(y,w,X, verbose=True, like='FULL')
