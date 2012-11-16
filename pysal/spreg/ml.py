@@ -5,7 +5,6 @@ Maximum likelihood estimation of spatial process models
 TODO
 ----
 
- - check log likelihood for lag model and columnbus vesus opengeoda
  - check ORD versus FULL likelihood results with sparse implementation for ORD
  - asymptotic standard errors for ML_Lag
  - ML_error likelihood
@@ -55,18 +54,55 @@ def defl_lag(r, w, e1, e2):
     dfl = n * (num/den) - tr
     return dfl[0][0], tr
 
-def like_lag_full(r, e1, e2, w):
+def log_like_lag_full(w,b,X,y):
+    n = w.n
+    r = b[0]    # ml estimate of rho
+    b = b[1:]   # ml for betas
+    ldet = _logJacobian(w, r)
+    yl = ps.lag_spatial(w,y)
+    ys = y - r * yl
+    XX = np.dot(X.T, X)
+    iXX = np.linalg.inv(XX)
+    b = np.dot(iXX, np.dot(X.T,ys))
+    yhat = r * yl + np.dot(X,b)
+    e = y - yhat
+    e2 = (e**2).sum()
+    sig2 = e2 / n
+    ln2pi = np.log(2*np.pi)
+    return ldet - n/2. * ln2pi - n/2. * np.log(sig2) - e2/(2 * sig2)
+
+
+def c_log_like_lag_full(r, e1, e2, w):
     """
     Log concentrated likelihood for the lag model using full evaluation
     """
-
     n = w.n
     e1re2 = e1 - r*e2
     ldet = _logJacobian(w, r)
+
     return -(n/2.)  * np.log( (e1re2**2).sum() / n  ) + ldet
 
+def log_like_lag_ord(w, b, X, y, evals):
+    n = w.n
+    r = b[0]    # ml estimate of rho
+    b = b[1:]   # ml for betas
+    yl = ps.lag_spatial(w,y)
+    ys = y - r * yl
+    XX = np.dot(X.T, X)
+    iXX = np.linalg.inv(XX)
+    b = np.dot(iXX, np.dot(X.T,ys))
+    yhat = r * yl + np.dot(X,b)
+    e = y - yhat
+    e2 = (e**2).sum()
+    sig2 = e2 / n
+    ln2pi = np.log(2*np.pi)
+    revals = r * evals
+    ldet = np.log(1-revals).sum()
+    return ldet - n/2. * ln2pi - n/2. * np.log(sig2) - e2/(2 * sig2)
 
-def like_lag_ord(r, e1, e2, evals):
+
+
+def c_log_like_lag_ord(r, e1, e2, evals):
     """
     Log concentrated likelihood for the lag model using Ord (1975)
     approximation
@@ -131,7 +167,7 @@ def ML_Lag(y, w, X, precrit=0.0000001, verbose=False, like='full'):
     """
     Maximum likelihood estimation of spatial lag model
 
-    y: dependent variabl (nx1 array)
+    y: dependent variable (nx1 array)
 
     w: spatial weights object
 
@@ -236,9 +272,9 @@ def ML_Lag(y, w, X, precrit=0.0000001, verbose=False, like='full'):
 
     if like.upper() == 'ORD':
         evals = SPARSE.linalg.eigsh(symmetrize(w))[0]
-        llik = like_lag_ord(ro, e1, e2, evals)
+        llik = log_like_lag_ord(w, b, X, y, evals)
     elif like.upper() == 'FULL':
-        llik = like_lag_full(ro, e1, e2, w)
+        llik = log_like_lag_full(w, b, X, y)
 
     return (b, tr1, llik)
 
