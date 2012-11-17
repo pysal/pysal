@@ -55,21 +55,9 @@ def defl_lag(r, w, e1, e2):
     return dfl[0][0], tr
 
 def log_like_lag_full(w,b,X,y):
-    n = w.n
-    r = b[0]    # ml estimate of rho
-    b = b[1:]   # ml for betas
+    r = b[0]
     ldet = _logJacobian(w, r)
-    yl = ps.lag_spatial(w,y)
-    ys = y - r * yl
-    XX = np.dot(X.T, X)
-    iXX = np.linalg.inv(XX)
-    b = np.dot(iXX, np.dot(X.T,ys))
-    yhat = r * yl + np.dot(X,b)
-    e = y - yhat
-    e2 = (e**2).sum()
-    sig2 = e2 / n
-    ln2pi = np.log(2*np.pi)
-    return ldet - n/2. * ln2pi - n/2. * np.log(sig2) - e2/(2 * sig2)
+    return log_like_lag(ldet, w, b, X, y)
 
 
 def c_log_like_lag_full(r, e1, e2, w):
@@ -83,6 +71,12 @@ def c_log_like_lag_full(r, e1, e2, w):
     return -(n/2.)  * np.log( (e1re2**2).sum() / n  ) + ldet
 
 def log_like_lag_ord(w, b, X, y, evals):
+    r = b[0]
+    revals = r * evals
+    ldet = np.log(1-revals).sum()
+    return log_like_lag(ldet, w, b, X, y)
+
+def log_like_lag(ldet, w, b, X, y):
     n = w.n
     r = b[0]    # ml estimate of rho
     b = b[1:]   # ml for betas
@@ -96,8 +90,6 @@ def log_like_lag_ord(w, b, X, y, evals):
     e2 = (e**2).sum()
     sig2 = e2 / n
     ln2pi = np.log(2*np.pi)
-    revals = r * evals
-    ldet = np.log(1-revals).sum()
     return ldet - n/2. * ln2pi - n/2. * np.log(sig2) - e2/(2 * sig2)
 
 
