@@ -122,6 +122,21 @@ def c_log_like_lag_ord(r, e1, e2, evals):
     revals = r * evals
     return -(n/2.)  * np.log( (e1re2**2).sum() / n  ) + np.log(1-revals).sum()
 
+def log_lik_error(ldet, w, b, X, y):
+    n = w.n
+    lam = b[0] #lambda is python keyword
+    yl = ps.lag_spatial(w,y)
+    ys = y - lam * yl
+    XS = X - lam * ps.lag_spatial(w,X)
+    iXSXS = np.linalg.inv(np.dot(XS.T, XS))
+    b = np.dot(iXSXS, np.dot(XS.T, ys))
+    es = y  - ys - np.dot(X,b) + np.dot(XS,b)
+    es2 = (e**2).sum()
+    sig2 = es2 / n
+    ln2pi = np.log(2*np.pi)
+    return  ldet - n/2. * ln2pi - n/2. * np.log(sig2) - es2 / (2 * sig2)
+
+
 
 def _logJacobian(w, rho):
     """
@@ -153,6 +168,131 @@ def symmetrize(w):
     w.transform = current
     return D12*w.sparse*D12
 
+def ML_Error(y, w, X, precrit=0.0000001, verbose=False, like='full'):
+
+    n = w.n
+    yy = (y**2).sum()
+    yl = ps.lag_spatial(w,y)
+    ylyl = (yl**2).sum()
+    Xy = np.dot(X.T,y)
+    Xl = ps.lag_spatial(w,X)
+    Xly = np.dot(Xl.T,y) + np.dot(X.T, yl)
+    Xlyl = np.dot(Xl.T, yl)
+    XX = np.dot(X.T, X)
+    XlX = np.dot(Xl.T,X) + np.dot(X.T, Xl)
+    XlXl = np.dot(Xl.T, Xl)
+    yly = np.dot(yl.T, y)
+    yyl = np.dot(y.T, yl)
+    ylyl = np.dot(yl.T, yl)
+
+
+    lam = 0
+    dlik, b, sig2, tr, dd = defer(w, lam, yy, yyl, ylyl, Xy, Xly, Xlyl, XX, XlX,
+            XlXl)
+
+    #roots = SPARSE.linalg.eigsh(symmetrize(w))[0]
+    #maxroot = 1. / roots.max()
+    #minroot = 1. / roots.min()
+
+    roots = np.linalg.eigvals(w.full()[0])
+    maxroot = 1./roots.max()
+    minroot = 1./roots.min()
+    delta = 0.0001
+
+
+
+    if dlik > 0:
+        ll = lam
+        ul = maxroot - delta
+    else:
+        ul = lam
+        ll = minroot + delta
+
+    # bisection
+    t = 10
+
+    lam0 = (ll + ul) /2.
+    i = 0
+
+    if verbose:
+        line ="\nMaximum Likelihood Estimation of Spatial Error Model"
+        print line
+        line ="%-5s\t%12s\t%12s\t%12s\t%12s"%("Iter.","LL","LAMBDA","UL","dlik")
+        print line
+
+    while abs(t - lam0)  > precrit:
+        if verbose:
+            print "%d\t%12.8f\t%12.8f\t%12.8f\t%12.8f"  % (i,ll, lam0, ul, dlik)
+        i += 1
+
+        dlik, b, sig2, tr, dd = defer(w, lam0, yy, yyl, ylyl, Xy, Xly, Xlyl,
+                XX, XlX, XlXl)
+        if dlik > 0:
+            ll = lam0
+        else:
+            ul = lam0
+        t = lam0
+        lam0 = (ul + ll)/ 2.
+ 
+    return b, lam0
+
+
+def defer(w, lam, yy, yyl, ylyl, Xy, Xly, Xlyl, XX, XlX, XlXl):
+    """
+    Partial derivative of concentrated log-likelihood for error model.
+
+
+    Parameters
+    ----------
+
+    w: spatial weights object
+
+    lam: estimate of autoregressive coefficient
+
+    yy: sum of squares of y
+
+    yyl: y'Wy
+
+    ylyl: (Wy)'Wy
+
+    Xy: X'y
+
+    Xly:  (WX)'y
+
+
+    Xlyl:  (WX)'Wy
+
+    XlX: (WX)' X
+
+    XLXL: (WX)'WX
+    """
+
+    n = w.n
+
+    dlik = 0
+    flag = 0
+    lam2 = lam**2
+    tlam = 2.0 * lam
+
+    # weighted ls for lam
+    dd = np.linalg.inv(XX - lam * XlX + lam2 * XlXl)
+    longyX = Xy - lam * Xly + lam2 * Xlyl
+    b = np.dot(dd, longyX)
+    shortyX = -Xly + tlam * Xlyl
+
+    doubX = np.dot(b.T, np.dot(XX,b)) - lam * np.dot(b.T, np.dot(XlX,b))
+    doubX = doubX + lam2 * np.dot(b.T, np.dot(XlXl, b))
+    ee = yy - tlam * yyl + lam2 *ylyl - 2.0 * np.dot(longyX.T, b) + doubX
+    sig2 = ee/n
+
+    # full for now, optional later
+    tr = _logJacobian(w, lam)
+
+    dlik = -2.0 * yyl + tlam * ylyl
+    dlik = dlik - 2.0 * np.dot(shortyX.T, b)
+    dlik = dlik + np.dot(b.T, np.dot( (-XlX + tlam * XlXl), b))
+    dlik = -0.5 * dlik / sig2 - tr
+    return (dlik[0][0], b, sig2, tr, dd)
 
 
 def ML_Lag(y, w, X, precrit=0.0000001, verbose=False, like='full'):
@@ -238,6 +378,8 @@ def ML_Lag(y, w, X, precrit=0.0000001, verbose=False, like='full'):
     t = rols
     ro = (ll+ul) / 2.
     if verbose:
+        line ="\nMaximum Likelihood Estimation of Spatial Lag Model"
+        print line
         line ="%-5s\t%12s\t%12s\t%12s\t%12s"%("Iter.","LL","RHO","UL","DFR")
         print line
 
@@ -287,3 +429,4 @@ if __name__ == '__main__':
     X = np.hstack((np.ones((w.n,1)),X))
     bml = ML_Lag(y,w,X, verbose=True, like='ORD')
     bmlf = ML_Lag(y,w,X, verbose=True, like='FULL')
+    bmle = ML_Error(y,w,X, verbose=True)
