@@ -285,8 +285,11 @@ def defer(w, lam, yy, yyl, ylyl, Xy, Xly, Xlyl, XX, XlX, XlXl):
     ee = yy - tlam * yyl + lam2 *ylyl - 2.0 * np.dot(longyX.T, b) + doubX
     sig2 = ee/n
 
-    # full for now, optional later
-    tr = _logJacobian(w, lam)
+    # trace
+    a = -lam * w.full()[0]
+    np.fill_diagonal(a, np.ones((w.n,1)))
+    a = np.linalg.inv(a)
+    tr = np.trace(np.dot(a, w.full()[0]))
 
     dlik = -2.0 * yyl + tlam * ylyl
     dlik = dlik - 2.0 * np.dot(shortyX.T, b)
