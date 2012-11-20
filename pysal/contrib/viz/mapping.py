@@ -10,11 +10,11 @@ import pysal as ps
 import numpy as np
 import  matplotlib.pyplot as plt 
 from matplotlib import colors as clrs
-from matplotlib import mpl
+import matplotlib as mpl
 from matplotlib.pyplot import fill, text
 from matplotlib import cm
 from matplotlib.patches import Polygon
-from matplotlib.collections import PatchCollection
+from matplotlib.collections import PolyCollection, PathCollection, PatchCollection
 from mpl_toolkits.basemap import Basemap
 from ogr import osr
 
@@ -49,7 +49,7 @@ def transCRS(xy, src_prj, trt_prj):
     trCRS = osr.CoordinateTransformation(orig, target)
     return np.array(trCRS.TransformPoints(xy))[:, :2]
 
-def map_poly_shp(shp_link):
+def map_poly_shp(shp_link, which='all'):
     '''
     Create a map object from a shapefile
     ...
@@ -59,6 +59,7 @@ def map_poly_shp(shp_link):
 
     shp_link        : str
                       Path to shapefile
+    which           : str/list
 
     Returns
     -------
@@ -68,23 +69,18 @@ def map_poly_shp(shp_link):
 
     '''
     shp = ps.open(shp_link)
-    shps = list(shp)
-    left, bottom, right, top = shp.bbox
+    if which == 'all':
+        db = ps.open(shp_link.replace('.shp', '.dbf'))
+        n = len(db.by_col(db.header[0]))
+        db.close()
+        which = [True] * n
     patches = []
-    for shape in shps:
-        parts = []
-        for ring in shape.parts:
-            xy = np.array(ring)
-            x,y = xy[:,0], xy[:,1]
-            x = (x - left) / (right - left)
-            y = (y - bottom) / (top - bottom)
-            n = len(x)
-            x.shape = (n,1)
-            y.shape = (n,1)
-            xy = np.hstack((x,y))
-            polygon = Polygon(xy, True)
-            patches.append(polygon)
-    return PatchCollection(patches)
+    for inwhich, shape in zip(which, shp):
+        if inwhich:
+            for ring in shape.parts:
+                xy = np.array(ring)
+                patches.append(xy)
+    return PolyCollection(patches)
 
 def map_poly_shp_lonlat(shp_link, projection='merc'):
     '''
@@ -134,6 +130,31 @@ def map_poly_shp_lonlat(shp_link, projection='merc'):
             polygon = Polygon(xy, True)
             patches.append(polygon)
     return PatchCollection(patches)
+
+def setup_ax(polyCos):
+    '''
+    Generate an Axes object for a list of collections
+    ...
+
+    Arguments
+    ---------
+    polyCos     : list
+                  List of Matplotlib collections (e.g. an object from
+                  map_poly_shp)
+    Returns
+    -------
+    ax          : AxesSubplot
+                  Rescaled axes object with the collection and without frame
+                  or X/Yaxis
+    '''
+    ax = plt.axes()
+    for polyCo in polyCos:
+        ax.add_collection(polyCo)
+    ax.autoscale_view()
+    ax.set_frame_on(False)
+    ax.axes.get_yaxis().set_visible(False)
+    ax.axes.get_xaxis().set_visible(False)
+    return ax
 
 def plot_poly_lines(shp_link, projection='merc', savein=None, poly_col='none'):
     '''
@@ -813,15 +834,19 @@ if __name__ == '__main__':
     #values[: values.shape[0]/2] = 1
     #values[values.shape[0]/2: ] = 0
 
-    #plot_choropleth(shp_link, values, 'quantiles', figsize=(9, 9))
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    patchco = map_poly_shp(shp_link)
-    #patchco = map_poly_shp_lonlat(shp_link, 'merc')
-    patchco.set_facecolor('none')
-    ax.add_collection(patchco)
-    ax.set_frame_on(False)
-    ax.axes.get_yaxis().set_visible(False)
-    ax.axes.get_xaxis().set_visible(False)
-    plt.show()
+    #shp_link0 = '/home/dani/Desktop/world/TM_WORLD_BORDERS-0.3.shp'
+    #shp_link1 = '/home/dani/Desktop/world/world.shp'
+
+    which = values > 1.
+
+    for shp_link in [shp_link, shp_link]:
+
+        fig = plt.figure()
+        patchco = map_poly_shp(shp_link)
+        patchcoB = map_poly_shp(shp_link, which=which)
+        patchco.set_facecolor('none')
+        ax = setup_ax([patchco, patchcoB])
+        fig.add_axes(ax)
+        plt.show()
+        break
 
