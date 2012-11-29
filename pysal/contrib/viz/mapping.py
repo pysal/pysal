@@ -131,24 +131,29 @@ def map_poly_shp_lonlat(shp_link, projection='merc'):
             patches.append(polygon)
     return PatchCollection(patches)
 
-def setup_ax(polyCos):
+def setup_ax(polyCos_list, ax=None):
     '''
     Generate an Axes object for a list of collections
     ...
 
     Arguments
     ---------
-    polyCos     : list
+    polyCos_list: list
                   List of Matplotlib collections (e.g. an object from
                   map_poly_shp)
+    ax          : AxesSubplot
+                  (Optional) Pre-existing axes to which append the collections
+                  and setup
+                
     Returns
     -------
     ax          : AxesSubplot
                   Rescaled axes object with the collection and without frame
                   or X/Yaxis
     '''
-    ax = plt.axes()
-    for polyCo in polyCos:
+    if not ax:
+        ax = plt.axes()
+    for polyCo in polyCos_list:
         ax.add_collection(polyCo)
     ax.autoscale_view()
     ax.set_frame_on(False)
@@ -837,9 +842,10 @@ if __name__ == '__main__':
     #shp_link0 = '/home/dani/Desktop/world/TM_WORLD_BORDERS-0.3.shp'
     #shp_link1 = '/home/dani/Desktop/world/world.shp'
 
+    '''
     which = values > 1.
 
-    for shp_link in [shp_link, shp_link]:
+    for shp_link in [shp_link]:
 
         fig = plt.figure()
         patchco = map_poly_shp(shp_link)
@@ -849,4 +855,12 @@ if __name__ == '__main__':
         fig.add_axes(ax)
         plt.show()
         break
+    '''
+    patchco = map_poly_shp(shp_link)
+    patchco.set_facecolor('none')
+
+    fig = plt.figure()
+    ax = fig.add_subplot(121)
+    ax = setup_ax([patchco], ax)
+    plt.show()
 
