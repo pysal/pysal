@@ -1,8 +1,9 @@
-import pysal
+import shapely
 import shapely.geometry
 import shapely.ops
 _basegeom = shapely.geometry.base.BaseGeometry
-__all__ = ["to_wkb", "to_wkt", "area", "distance", "length", "boundary", "bounds", "centroid", "representative_point", "convex_hull", "envelope", "buffer", "simplify", "difference", "intersection", "symmetric_difference", "union", "cascaded_union", "has_z", "is_empty", "is_ring", "is_simple", "is_valid", "relate", "contains", "crosses", "disjoint", "equals", "intersects", "overlaps", "touches", "within", "equals_exact", "almost_equals", "project", "interpolate"]
+import pysal
+__all__ = ["to_wkb", "to_wkt", "area", "distance", "length", "boundary", "bounds", "centroid", "representative_point", "convex_hull", "envelope", "buffer", "simplify", "difference", "intersection", "symmetric_difference", "union", "unary_union", "cascaded_union", "has_z", "is_empty", "is_ring", "is_simple", "is_valid", "relate", "contains", "crosses", "disjoint", "equals", "intersects", "overlaps", "touches", "within", "equals_exact", "almost_equals", "project", "interpolate"]
 
 
 def to_wkb(shape):
@@ -123,6 +124,17 @@ def cascaded_union(shapes):
         if not hasattr(shape,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
         o.append(shapely.geometry.asShape(shape))
     res = shapely.ops.cascaded_union(o)
+    return pysal.cg.shapes.asShape(res)
+
+def unary_union(shapes):
+    # seems to be the same as cascade_union except that it handles multipart polygons
+    if shapely.__version__ < '1.2.16':
+        raise Exception, "shapely 1.2.16 or higher needed for unary_union; upgrade shapely or try cascade_union instead"
+    o = []
+    for shape in shapes:
+        if not hasattr(shape,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
+        o.append(shapely.geometry.asShape(shape))
+    res = shapely.ops.unary_union(o)
     return pysal.cg.shapes.asShape(res)
 
 # Unary predicates
