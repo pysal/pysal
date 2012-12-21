@@ -601,7 +601,7 @@ def k_means_cluster(root, k, nodes):
     root.stats["count_kmeans_iter_f"] += 1
 
     # Initialize: take n random nodes.
-    random.shuffle(ns)
+    #random.shuffle(ns)
 
     cluster_starts = ns[:k]
     cluster_centers = [center_of_gravity([n]) for n in ns[:k]]

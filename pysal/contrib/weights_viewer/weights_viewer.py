@@ -168,7 +168,12 @@ class WeightsMapApp(wx.App):
 
 
 if __name__=='__main__':
-    shp = pysal.examples.get_path('sids2.shp')
-    w = pysal.examples.get_path('sids2.gal')
+    #shp = pysal.examples.get_path('sids2.shp')
+    #w = pysal.examples.get_path('sids2.gal')
+    #app = WeightsMapApp(shp,w)
+    #app.MainLoop()
+
+    shp = pysal.examples.get_path('columbus.shp')
+    w = pysal.queen_from_shapefile(shp)
     app = WeightsMapApp(shp,w)
     app.MainLoop()

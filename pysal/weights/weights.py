@@ -760,10 +760,10 @@ class W(object):
 
         Arguments
         ---------
-
         intrinsic: boolean (default=True)
                 
-                intrinsic symmetry: :math:`w_{i,j} == w_{j,i}`
+                intrinsic symmetry:
+                      :math:`w_{i,j} == w_{j,i}`
 
                 if intrisic is False:
                     symmetry is defined as :math:`i \in N_j \ AND \ j \in N_i` where
