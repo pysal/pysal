@@ -1,4 +1,3 @@
 include INSTALL.txt LICENSE.txt THANKS.txt CHANGELOG.txt MANIFEST.in pysal/COPYING 
-include doc/build/latex/pysal.pdf
 recursive-include pysal/*.py
 

@@ -2,8 +2,6 @@
 
 if [ -f /tmp/pysal.lock ]
     then
-    export PATH=/Library/Frameworks/EPD64.framework/Versions/Current/bin:$PATH
-    export PYTHONPATH=/tmp/pysal
     cd /tmp/pysal/
     svn cleanup
     a=$(svnversion)
@@ -17,7 +15,12 @@ if [ -f /tmp/pysal.lock ]
 
     if [ "$a" != "$b"  ]
         then 
-        find pysal -name "*.pyc" -exec rm '{}' ';'
+        cd /tmp/
+        rm -rf /tmp/pysal
+        svn checkout http://pysal.googlecode.com/svn/trunk pysal
+        export PYTHONPATH=/tmp/pysal
+        export PATH=/Library/Frameworks/EPD64.framework/Versions/Current/bin:$PATH
+        # find pysal -name "*.pyc" -exec rm '{}' ';'
 
         # setup message header
         #echo "to: pas@asu.edu" > /tmp/report.txt
@@ -27,6 +30,7 @@ if [ -f /tmp/pysal.lock ]
         echo "" >> /tmp/report.txt 
 
 
+        cd /tmp/pysal/
         svn log -r $(svnversion) >> /tmp/report.txt 
         echo "" >> /tmp/report.txt 
 
