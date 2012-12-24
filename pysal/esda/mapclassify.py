@@ -1833,11 +1833,3 @@ def opt_part(x):
             left_min = left
             right_min = right
     return (opt_i, tss, left_min, right_min)
-
-
-def _test():
-    import doctest
-    doctest.testmod(verbose=True)
-
-if __name__ == '__main__':
-    _test()

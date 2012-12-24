@@ -187,11 +187,3 @@ def rose(Y, w, k=8, permutations=0):
         results['random_counts'] = all_counts
 
     return results
-
-
-def _test():
-    import doctest
-    doctest.testmod(verbose=True)
-
-if __name__ == '__main__':
-    _test()

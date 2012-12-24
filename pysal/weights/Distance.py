@@ -461,13 +461,8 @@ class DistanceBand(W):
         return allneighbors, weights
 
 
-def _test():
-    """Doc test"""
-    import doctest
-    doctest.testmod(verbose=False)
 
 if __name__ == "__main__":
-    _test()
 
     x = np.arange(1, 5)
 

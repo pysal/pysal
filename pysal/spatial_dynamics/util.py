@@ -77,6 +77,3 @@ def get_lower(matrix):
     lowvec = np.reshape(lowerlist, (veclen, 1))
     return lowvec
 
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod(verbose=True)

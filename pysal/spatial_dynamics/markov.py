@@ -1249,9 +1249,3 @@ def shorrock(pmat):
     return sh
 
 
-def test():
-    import doctest
-    doctest.testmod(verbose=True)
-
-if __name__ == '__main__':
-    test()

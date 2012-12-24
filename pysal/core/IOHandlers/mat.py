@@ -173,7 +173,3 @@ class MatIO(FileIO.FileIO):
         self.file.close()
         FileIO.FileIO.close(self)
 
-
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod(verbose=True)

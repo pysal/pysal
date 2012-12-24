@@ -142,12 +142,3 @@ class Join_Counts:
         larger = sum(above)
         psim = (larger + 1.) / (self.permutations + 1.)
         return psim
-
-
-def _test():
-    import doctest
-    doctest.testmod(verbose=True)
-
-
-if __name__ == '__main__':
-    _test()

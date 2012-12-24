@@ -89,12 +89,3 @@ def buildContiguity(polygons, criterion="rook", ids=None):
             neighbors[key] = list(neighbor_data[key])
     return pysal.weights.W(neighbors, id_order=ids)
 
-
-def _test():
-    """Doc test"""
-    import doctest
-    doctest.testmod(verbose=True)
-
-
-if __name__ == "__main__":
-    _test()

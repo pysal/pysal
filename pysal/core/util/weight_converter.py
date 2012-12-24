@@ -241,6 +241,3 @@ def weight_convert(inPath, outPath, inDataFormat=None, outDataFormat=None, useId
     converter.write(outPath, dataFormat=outDataFormat,
                     useIdIndex=useIdIndex, matrix_form=matrix_form)
 
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod(verbose=True)

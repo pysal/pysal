@@ -294,6 +294,3 @@ class Wk1IO(FileIO.FileIO):
         FileIO.FileIO.close(self)
 
 
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod(verbose=True)

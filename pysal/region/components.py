@@ -135,12 +135,4 @@ class Graph(object):
             visited = visited.union(y)
         return aux, visited
 
-# tests
 
-
-def _test():
-    import doctest
-    doctest.testmod(verbose=True)
-
-if __name__ == '__main__':
-    _test()

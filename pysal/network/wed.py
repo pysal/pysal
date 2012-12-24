@@ -448,6 +448,4 @@ if __name__ == '__main__':
     we1 = WED(vertices,edges)
 
 
-    import doctest
-    doctest.testmod()
 

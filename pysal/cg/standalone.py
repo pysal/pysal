@@ -916,8 +916,3 @@ def distance_matrix(X, p=2.0, threshold=5e7):
         return D
 
 
-def _test():
-    doctest.testmod(verbose=True)
-
-if __name__ == '__main__':
-    _test()

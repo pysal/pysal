@@ -1571,11 +1571,3 @@ class Headbanging_Median_Rate:
                 k, tr[k], weighted=(self.aw is not None))
             new_r.append(self.__get_median_from_screens(screens))
         self.r = np.array(new_r)
-
-
-def _test():
-    import doctest
-    doctest.testmod(verbose=True)
-
-if __name__ == '__main__':
-    _test()

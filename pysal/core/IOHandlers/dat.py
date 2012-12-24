@@ -130,6 +130,3 @@ class DatIO(gwt.GwtIO):
             raise TypeError("Expected a pysal weights object, got: %s" % (
                 type(obj)))
 
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod(verbose=True)

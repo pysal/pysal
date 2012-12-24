@@ -96,10 +96,3 @@ class WKTReader(FileIO.FileIO):
         self.dataObj.close()
         FileIO.FileIO.close(self)
 
-
-def _test():
-    import doctest
-    doctest.testmod(verbose=True)
-
-if __name__ == '__main__':
-    _test()

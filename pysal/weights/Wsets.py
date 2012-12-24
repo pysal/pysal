@@ -510,10 +510,3 @@ def w_clip(w1, w2, outSP=True):
     return wc
 
 
-def _test():
-    """Doc test"""
-    import doctest
-    doctest.testmod(verbose=True)
-
-if __name__ == '__main__':
-    _test()

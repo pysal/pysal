@@ -944,8 +944,3 @@ class WSP(object):
             self._cache['diagWtW_WW'] = self._diagWtW_WW
         return self._diagWtW_WW
 
-
-if __name__ == "__main__":
-
-    import doctest
-    doctest.testmod(verbose=False)

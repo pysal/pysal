@@ -1501,13 +1501,3 @@ def get_omega_hom_ols(w, reg, lamb, G):
     return np.vstack((o_upper, o_lower)), float(sig2)
 
 
-def _test():
-    import doctest
-    start_suppress = np.get_printoptions()['suppress']
-    np.set_printoptions(suppress=True)
-    doctest.testmod()
-    np.set_printoptions(suppress=start_suppress)
-
-if __name__ == '__main__':
-
-    _test()

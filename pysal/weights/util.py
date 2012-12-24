@@ -1011,14 +1011,7 @@ def write_gal(file, k=10):
         f.write(" ".join(map(str, neighs)))
     f.close()
 
-
-def _test():
-    """Doc test"""
-    import doctest
-    doctest.testmod(verbose=True)
-
 if __name__ == "__main__":
-    _test()
     from pysal import lat2W
 
     assert (lat2W(5, 5).sparse.todense() == lat2SW(5, 5).todense()).all()

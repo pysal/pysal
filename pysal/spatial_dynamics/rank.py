@@ -435,10 +435,3 @@ def pseudop(sim, observed, nperm):
         psim = (nperm - larger + 1.) / (nperm + 1.)
     return psim
 
-
-def _test():
-    import doctest
-    doctest.testmod(verbose=True)
-
-if __name__ == '__main__':
-    _test()

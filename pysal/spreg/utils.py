@@ -703,10 +703,3 @@ def spbroadcast(a, b, array_out=False):
         raise Exception("Invalid format for 'spbroadcast' argument: %s and %s" % (type(a).__name__, type(b).__name__))
     return ab
 
-
-def _test():
-    import doctest
-    doctest.testmod()
-
-if __name__ == '__main__':
-    _test()

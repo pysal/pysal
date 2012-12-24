@@ -689,10 +689,3 @@ class Moran_Local_Rate(Moran_Local):
         Moran_Local.__init__(self, y, w,
                              transformation=transformation, permutations=permutations)
 
-
-def _test():
-    import doctest
-    doctest.testmod(verbose=True)
-
-if __name__ == '__main__':
-    _test()

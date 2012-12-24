@@ -173,8 +173,6 @@ if __name__ == '__main__':
         w2 = brute_knn(pts2, 4, 'xyz')
         w3 = fast_knn(pts2, 4)
         assert w == w2 == w3
-    import doctest
-    doctest.testmod()
 
     ### Make knn1
     import pysal

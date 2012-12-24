@@ -1097,7 +1097,7 @@ def _momentsGM_Error(w, u):
         0][0], trWtW], [uwwu[0][0] + wu2[0][0], -wuwwu[0][0], 0.]]) / w.n
     return [G, g]
 
-
+'''
 def _test():
     import doctest
     start_suppress = np.get_printoptions()['suppress']
@@ -1108,3 +1108,4 @@ def _test():
 if __name__ == '__main__':
 
     _test()
+'''

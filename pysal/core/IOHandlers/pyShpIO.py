@@ -187,11 +187,3 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
         self.dataObj.close()
         pysal.core.FileIO.FileIO.close(self)
 
-
-def _test():
-    import doctest
-    doctest.testmod(verbose=True)
-    unittest.main()
-
-if __name__ == '__main__':
-    _test()

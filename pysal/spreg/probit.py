@@ -695,15 +695,7 @@ def moran_KP(w, u, sig2i):
     return moran
 
 
-def _test():
-    import doctest
-    start_suppress = np.get_printoptions()['suppress']
-    np.set_printoptions(suppress=True)
-    doctest.testmod()
-    np.set_printoptions(suppress=start_suppress)
-
 if __name__ == '__main__':
-    _test()
     import numpy as np
     import pysal
     dbf = pysal.open(pysal.examples.get_path('columbus.dbf'), 'r')

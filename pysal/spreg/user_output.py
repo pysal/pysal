@@ -565,10 +565,3 @@ def check_constant(x):
         x_constant = COPY.copy(x)
         return sphstack(np.ones((x_constant.shape[0], 1)), x_constant)
 
-
-def _test():
-    import doctest
-    doctest.testmod()
-
-if __name__ == '__main__':
-    _test()

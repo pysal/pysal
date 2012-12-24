@@ -331,11 +331,3 @@ def pr2_spatial(tslsreg):
     pr2_result = float(pr ** 2)
     return pr2_result
 
-
-def _test():
-    import doctest
-    doctest.testmod()
-
-
-if __name__ == '__main__':
-    _test()

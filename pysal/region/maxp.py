@@ -572,12 +572,3 @@ class Maxp_LISA(Maxp):
             self, w, z, floor=floor, floor_variable=floor_variable,
             initial=initial, seeds=ids)
 
-# tests
-
-
-def _test():
-    import doctest
-    doctest.testmod(verbose=True)
-
-if __name__ == '__main__':
-    _test()

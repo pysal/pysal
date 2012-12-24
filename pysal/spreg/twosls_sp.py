@@ -504,14 +504,3 @@ class GM_Lag(BaseGM_Lag):
         self.name_gwk = USER.set_name_w(name_gwk, gwk)
         SUMMARY.GM_Lag(reg=self, w=w, vm=vm, spat_diag=spat_diag)
 
-
-def _test():
-    import doctest
-    start_suppress = np.get_printoptions()['suppress']
-    np.set_printoptions(suppress=True)
-    doctest.testmod()
-    np.set_printoptions(suppress=start_suppress)
-
-
-if __name__ == '__main__':
-    _test()

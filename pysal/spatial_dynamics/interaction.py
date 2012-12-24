@@ -595,10 +595,3 @@ def modified_knox(events, delta, tau, permutations=99):
     modknox_result = {'stat': stat, 'pvalue': pvalue}
     return modknox_result
 
-
-def _test():
-    import doctest
-    doctest.testmod(verbose=True)
-
-if __name__ == '__main__':
-    _test()

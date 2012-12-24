@@ -309,6 +309,3 @@ class NP_Mixture_Smoother(object):
         r = (self.t * mix_p).sum(axis=1) / denom
         return r, categ
 
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod(verbose=True)

@@ -114,11 +114,3 @@ def robust_vm(reg, gwk=None):
         psi = spdot(reg.xtxi, np.dot(psi0, reg.xtxi))
 
     return psi
-
-
-def _test():
-    import doctest
-    doctest.testmod()
-
-if __name__ == '__main__':
-    _test()

@@ -183,10 +183,3 @@ def var_fmpt(P):
     W = M * (2 * Zdg * D - I) + 2 * (ZM - E * ZMdg)
     return W - np.multiply(M, M)
 
-
-def _test():
-    import doctest
-    doctest.testmod(verbose=True)
-
-if __name__ == '__main__':
-    _test()

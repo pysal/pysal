@@ -1498,10 +1498,3 @@ def get_Omega_GS2SLS(w, lamb, reg, G, psi, P):
     omega = np.dot(np.dot(omega_left, psi_o), omega_right)
     return omega / w.n
 
-
-def _test():
-    import doctest
-    doctest.testmod()
-
-if __name__ == '__main__':
-    _test()

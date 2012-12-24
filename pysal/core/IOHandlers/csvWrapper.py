@@ -94,12 +94,3 @@ class csvWrapper(Tables.DataTable):
         else:
             return None
 
-
-def _test():
-    import doctest
-    import unittest
-    doctest.testmod(verbose=True)
-    unittest.main()
-
-if __name__ == '__main__':
-    _test()

@@ -229,6 +229,3 @@ class ArcGISDbfIO(FileIO.FileIO):
     def close(self):
         self.file.close()
 
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod(verbose=True)

@@ -156,10 +156,3 @@ class Geary:
         a = (self.n - 1) * sum(ys)
         return a / self.den
 
-
-def _test():
-    import doctest
-    doctest.testmod(verbose=True)
-
-if __name__ == '__main__':
-    _test()

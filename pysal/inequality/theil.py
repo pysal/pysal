@@ -202,6 +202,3 @@ class TheilDSim:
         self.bg = np.array([r.bg for r in results])
         self.wg = np.array([r.wg for r in results])
 
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod(verbose=True)

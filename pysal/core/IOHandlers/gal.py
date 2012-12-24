@@ -216,11 +216,3 @@ class GalIO(FileIO.FileIO):
         FileIO.FileIO.close(self)
 
 
-def _test():
-    import doctest
-    import unittest
-    doctest.testmod(verbose=True)
-    unittest.main()
-
-if __name__ == '__main__':
-    _test()

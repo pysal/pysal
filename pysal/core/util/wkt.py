@@ -123,10 +123,3 @@ if __name__ == '__main__':
                    'MULTIPOLYGON EMPTY']
     wkt = WKTParser()
 
-
-def _test():
-    import doctest
-    doctest.testmod(verbose=True)
-
-if __name__ == '__main__':
-    _test()
