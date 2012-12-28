@@ -2,7 +2,7 @@
 
 if [ -f /tmp/pysal.lock ]
     then
-    cd /tmp/pysal/
+    cd /Users/stephens/tmp/pysal/
     svn cleanup
     a=$(svnversion)
     svn update -r $((a+1)) 2>&1
@@ -15,12 +15,12 @@ if [ -f /tmp/pysal.lock ]
 
     if [ "$a" != "$b"  ]
         then 
-        cd /tmp/
-        rm -rf /tmp/pysal
-        svn checkout http://pysal.googlecode.com/svn/trunk pysal
-        export PYTHONPATH=/tmp/pysal
+        cd pysal
+        #rm -rf /tmp/pysal
+        #svn checkout http://pysal.googlecode.com/svn/trunk pysal
+        export PYTHONPATH=/Users/stephens/tmp/pysal
         export PATH=/Library/Frameworks/EPD64.framework/Versions/Current/bin:$PATH
-        # find pysal -name "*.pyc" -exec rm '{}' ';'
+        find pysal -name "*.pyc" -exec rm '{}' ';'
 
         # setup message header
         #echo "to: pas@asu.edu" > /tmp/report.txt
@@ -30,7 +30,7 @@ if [ -f /tmp/pysal.lock ]
         echo "" >> /tmp/report.txt 
 
 
-        cd /tmp/pysal/
+        cd /Users/stephens/tmp/pysal/
         svn log -r $(svnversion) >> /tmp/report.txt 
         echo "" >> /tmp/report.txt 
 
@@ -54,7 +54,7 @@ if [ -f /tmp/pysal.lock ]
         echo "" >> /tmp/report.txt 
 
         # execute sphinx doctest framework
-        cd /tmp/pysal/doc
+        cd /Users/stephens/tmp/pysal/doc/
         /usr/bin/make clean
         sphinx-build -b doctest -d build/doctrees  source build/doctest >> /tmp/report.txt  2>/dev/null
         echo "" >> /tmp/report.txt 
