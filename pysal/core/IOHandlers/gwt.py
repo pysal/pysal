@@ -34,7 +34,7 @@ class unique_filter(object):
 
 class GwtIO(FileIO.FileIO):
 
-    FORMATS = ['gwt']
+    FORMATS = ['kwt','gwt']
     MODES = ['r', 'w']
 
     def __init__(self, *args, **kwargs):
