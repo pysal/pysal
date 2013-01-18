@@ -22,11 +22,37 @@ class ROD(dict):
     Read Only Dictionary
     """
     def __setitem__(self, *args):
-        #raise TypeError, "'Read Only Dictionary (ROD)' object does not support item assignment"
-        print args
+        raise TypeError, "'Read Only Dictionary (ROD)' object does not support item assignment"
 
     def __copy__(self):
+        """
+        Example:
+        >>> import copy
+        >>> d = ROD({'key':[1,2,3]})
+        >>> d2 = copy.copy(d)
+        >>> d2 == d
+        True
+        >>> d2 is d
+        False
+        >>> d2['key'] is d['key']
+        True
+        """
         return ROD(self.copy())
+    def __deepcopy__(self,memo):
+        """
+        Example:
+        >>> import copy
+        >>> d = ROD({'key':[1,2,3]})
+        >>> d2 = copy.deepcopy(d)
+        >>> d2 == d
+        True
+        >>> d2 is d
+        False
+        >>> d2['key'] is d['key']
+        False
+        """
+        import copy
+        return ROD(copy.deepcopy(self.copy()))
 
 import copy
 import math
