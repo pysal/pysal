@@ -8,10 +8,10 @@ from error_sp import *
 from error_sp_het import *
 from error_sp_hom import *
 from probit import *
-from error_sp_het_regimes.py import *
-from error_sp_hom_regimes.py import *
-from error_sp_regimes.py import *
-from ols_regimes.py import *
-from regimes.py import *
-from twosls_regimes.py import *
-from twosls_sp_regimes.py import *
+from error_sp_het_regimes import *
+from error_sp_hom_regimes import *
+from error_sp_regimes import *
+from ols_regimes import *
+from regimes import *
+from twosls_regimes import *
+from twosls_sp_regimes import *
