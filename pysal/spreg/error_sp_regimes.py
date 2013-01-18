@@ -4,9 +4,9 @@ import regimes as REGI
 import user_output as USER
 import summary_output as SUMMARY
 from pysal import lag_spatial
-from econometrics.ols import BaseOLS
-from econometrics.twosls import BaseTSLS
-from econometrics.error_sp import BaseGM_Error, BaseGM_Endog_Error, _momentsGM_Error
+from pysal.spreg.ols import BaseOLS
+from pysal.spreg.twosls import BaseTSLS
+from pysal.spreg.error_sp import BaseGM_Error, BaseGM_Endog_Error, _momentsGM_Error
 from utils import set_endog, iter_msg, sp_att, set_warn
 from utils import optim_moments, get_spFilter, get_lags
 from utils import spdot, RegressionPropsY

@@ -21,9 +21,9 @@ from utils import power_expansion, set_endog, iter_msg, sp_att
 from utils import get_A1_hom, get_A2_hom, get_A1_het, optim_moments
 from utils import get_spFilter, get_lags, _moments2eqs
 from utils import spdot, RegressionPropsY, set_warn
-from econometrics.ols import BaseOLS
-from econometrics.twosls import BaseTSLS
-from econometrics.error_sp_hom import BaseGM_Error_Hom, BaseGM_Endog_Error_Hom, moments_hom, get_vc_hom, get_omega_hom, get_omega_hom_ols
+from pysal.spreg.ols import BaseOLS
+from pysal.spreg.twosls import BaseTSLS
+from pysal.spreg.error_sp_hom import BaseGM_Error_Hom, BaseGM_Endog_Error_Hom, moments_hom, get_vc_hom, get_omega_hom, get_omega_hom_ols
 import regimes as REGI
 import user_output as USER
 import summary_output as SUMMARY
