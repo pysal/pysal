@@ -1,10 +1,10 @@
 '''
-Hom family of models based on:
+Hom family of models based on: 
 
     Drukker, D. M., Egger, P., Prucha, I. R. (2010)
     "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
-
+    
 Following:
 
     Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation with
@@ -29,11 +29,10 @@ import summary_output as SUMMARY
 
 __all__ = ["GM_Error_Hom", "GM_Endog_Error_Hom", "GM_Combo_Hom"]
 
-
 class BaseGM_Error_Hom(RegressionPropsY):
     '''
     GMM method for a spatial error model with homoskedasticity (note: no
-    consistency checks, diagnostics or constant added); based on
+    consistency checks, diagnostics or constant added); based on 
     Drukker et al. (2010) [1]_, following Anselin (2011) [2]_.
 
     Parameters
@@ -43,9 +42,8 @@ class BaseGM_Error_Hom(RegressionPropsY):
     x            : array
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, excluding the constant
-    w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)
+    w            : Sparse matrix
+                   Spatial weights sparse matrix   
     max_iter     : int
                    Maximum number of iterations of steps 2a and 2b from Arraiz
                    et al. Note: epsilon provides an additional stop condition.
@@ -56,7 +54,7 @@ class BaseGM_Error_Hom(RegressionPropsY):
     A1           : string
                    If A1='het', then the matrix A1 is defined as in Arraiz et
                    al. If A1='hom', then as in Anselin (2011) (default).  If
-                   A1='hom_sc', then as in Drukker, Egger and Prucha (2010)
+                   A1='hom_sc' (default), then as in Drukker, Egger and Prucha (2010)
                    and Drukker, Prucha and Raciborski (2010).
 
     Attributes
@@ -101,9 +99,9 @@ class BaseGM_Error_Hom(RegressionPropsY):
     .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
     "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
-
+ 
     .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity".
+    with and without Heteroskedasticity". 
 
     Examples
     --------
@@ -122,64 +120,63 @@ class BaseGM_Error_Hom(RegressionPropsY):
 
     Model commands
 
-    >>> reg = BaseGM_Error_Hom(y, X, w, A1='hom_sc')
+    >>> reg = BaseGM_Error_Hom(y, X, w.sparse, A1='hom_sc')
     >>> print np.around(np.hstack((reg.betas,np.sqrt(reg.vm.diagonal()).reshape(4,1))),4)
     [[ 47.9479  12.3021]
      [  0.7063   0.4967]
      [ -0.556    0.179 ]
      [  0.4129   0.1835]]
     >>> print np.around(reg.vm, 4)
-    [[  1.51340700e+02  -5.29060000e+00  -1.85650000e+00  -2.40000000e-03]
-     [ -5.29060000e+00   2.46700000e-01   5.14000000e-02   3.00000000e-04]
-     [ -1.85650000e+00   5.14000000e-02   3.21000000e-02  -1.00000000e-04]
-     [ -2.40000000e-03   3.00000000e-04  -1.00000000e-04   3.37000000e-02]]
+    [[ 151.3407   -5.2906   -1.8565   -0.0024]
+     [  -5.2906    0.2467    0.0514    0.0003]
+     [  -1.8565    0.0514    0.0321   -0.0001]
+     [  -0.0024    0.0003   -0.0001    0.0337]]
     '''
 
-    def __init__(self, y, x, w,
-                 max_iter=1, epsilon=0.00001, A1='het'):
+    def __init__(self, y, x, w,\
+                 max_iter=1, epsilon=0.00001, A1='hom_sc'):
         if A1 == 'hom':
-            w.A1 = get_A1_hom(w.sparse)
+            wA1 = get_A1_hom(w)
         elif A1 == 'hom_sc':
-            w.A1 = get_A1_hom(w.sparse, scalarKP=True)
+            wA1 = get_A1_hom(w, scalarKP=True)
         elif A1 == 'het':
-            w.A1 = get_A1_het(w.sparse)
+            wA1 = get_A1_het(w)
 
-        w.A2 = get_A2_hom(w.sparse)
+        wA2 = get_A2_hom(w)
 
         # 1a. OLS --> \tilde{\delta}
         ols = OLS.BaseOLS(y=y, x=x)
         self.x, self.y, self.n, self.k, self.xtx = ols.x, ols.y, ols.n, ols.k, ols.xtx
 
         # 1b. GM --> \tilde{\rho}
-        moments = moments_hom(w, ols.u)
+        moments = moments_hom(w, wA1, wA2, ols.u)
         lambda1 = optim_moments(moments)
         lambda_old = lambda1
 
         self.iteration, eps = 0, 1
-        while self.iteration < max_iter and eps > epsilon:
+        while self.iteration<max_iter and eps>epsilon:
             # 2a. SWLS --> \hat{\delta}
-            x_s = get_spFilter(w, lambda_old, self.x)
-            y_s = get_spFilter(w, lambda_old, self.y)
+            x_s = get_spFilter(w,lambda_old,self.x)
+            y_s = get_spFilter(w,lambda_old,self.y)
             ols_s = OLS.BaseOLS(y=y_s, x=x_s)
             self.predy = spdot(self.x, ols_s.betas)
             self.u = self.y - self.predy
 
             # 2b. GM 2nd iteration --> \hat{\rho}
-            moments = moments_hom(w, self.u)
-            psi = get_vc_hom(w, self, lambda_old)[0]
+            moments = moments_hom(w, wA1, wA2, self.u)
+            psi = get_vc_hom(w, wA1, wA2, self, lambda_old)[0]
             lambda2 = optim_moments(moments, psi)
             eps = abs(lambda2 - lambda_old)
             lambda_old = lambda2
-            self.iteration += 1
+            self.iteration+=1
 
-        self.iter_stop = iter_msg(self.iteration, max_iter)
+        self.iter_stop = iter_msg(self.iteration,max_iter)
 
         # Output
-        self.betas = np.vstack((ols_s.betas, lambda2))
-        self.vm, self.sig2 = get_omega_hom_ols(w, self, lambda2, moments[0])
-        self.e_filtered = self.u - lambda2 * lag_spatial(w, self.u)
+        self.betas = np.vstack((ols_s.betas,lambda2))
+        self.vm,self.sig2 = get_omega_hom_ols(w, wA1, wA2, self, lambda2, moments[0])
+        self.e_filtered = self.u - lambda2*w*self.u
         self._cache = {}
-
 
 class GM_Error_Hom(BaseGM_Error_Hom):
     '''
@@ -196,7 +193,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
                    independent (exogenous) variable, excluding the constant
     w            : pysal W object
                    Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)
+                   diagnostics are computed)   
     max_iter     : int
                    Maximum number of iterations of steps 2a and 2b from Arraiz
                    et al. Note: epsilon provides an additional stop condition.
@@ -207,7 +204,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
     A1           : string
                    If A1='het', then the matrix A1 is defined as in Arraiz et
                    al. If A1='hom', then as in Anselin (2011).  If
-                   A1='hom_sc', then as in Drukker, Egger and Prucha (2010)
+                   A1='hom_sc' (default), then as in Drukker, Egger and Prucha (2010)
                    and Drukker, Prucha and Raciborski (2010).
     vm           : boolean
                    If True, include variance-covariance matrix in summary
@@ -261,7 +258,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
     sig2         : float
                    Sigma squared used in computations
     std_err      : array
-                   1xk array of standard errors of the betas
+                   1xk array of standard errors of the betas    
     z_stat       : list of tuples
                    z statistic; each tuple contains the pair (statistic,
                    p-value), where each is a float
@@ -284,9 +281,9 @@ class GM_Error_Hom(BaseGM_Error_Hom):
     .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
     "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
-
+ 
     .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity".
+    with and without Heteroskedasticity". 
 
     Examples
     --------
@@ -302,10 +299,10 @@ class GM_Error_Hom(BaseGM_Error_Hom):
     This is the DBF associated with the Columbus shapefile.  Note that
     pysal.open() also reads data in CSV format; since the actual class
     requires data to be passed in as numpy arrays, the user can read their
-    data in using any method.
+    data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
-
+    
     Extract the HOVAL column (home values) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -332,7 +329,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
     from ``columbus.shp``.
 
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
-
+    
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other
     things, his allows to interpret the spatial lag of a variable as the
@@ -347,7 +344,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
     have to pass them in as well, although this is optional.
 
     >>> reg = GM_Error_Hom(y, X, w, A1='hom_sc', name_y='home value', name_x=['income', 'crime'], name_ds='columbus')
-
+   
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
     discover them. This class offers an error model that assumes
@@ -356,7 +353,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
     parameter. This is why you obtain as many coefficient estimates as
     standard errors, which you calculate taking the square root of the
     diagonal of the variance-covariance matrix of the parameters:
-
+   
     >>> print np.around(np.hstack((reg.betas,np.sqrt(reg.vm.diagonal()).reshape(4,1))),4)
     [[ 47.9479  12.3021]
      [  0.7063   0.4967]
@@ -364,18 +361,19 @@ class GM_Error_Hom(BaseGM_Error_Hom):
      [  0.4129   0.1835]]
 
     '''
-    def __init__(self, y, x, w,
-                 max_iter=1, epsilon=0.00001, A1='het',
-                 vm=False, name_y=None, name_x=None,
+    
+    def __init__(self, y, x, w,\
+                 max_iter=1, epsilon=0.00001, A1='hom_sc',\
+                 vm=False, name_y=None, name_x=None,\
                  name_w=None, name_ds=None):
 
         n = USER.check_arrays(y, x)
         USER.check_y(y, n)
         USER.check_weights(w, y)
         x_constant = USER.check_constant(x)
-        BaseGM_Error_Hom.__init__(self, y=y, x=x_constant, w=w, A1=A1,
-                                  max_iter=max_iter, epsilon=epsilon)
-        self.title = "SPATIALLY WEIGHTED LEAST SQUARES (HOM)"
+        BaseGM_Error_Hom.__init__(self, y=y, x=x_constant, w=w.sparse, A1=A1,\
+                max_iter=max_iter, epsilon=epsilon)
+        self.title = "SPATIALLY WEIGHTED LEAST SQUARES (HOM)"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
@@ -402,11 +400,10 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable to use as instruments (note:
+                   external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
-    w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)
+    w            : Sparse matrix
+                   Spatial weights sparse matrix   
     max_iter     : int
                    Maximum number of iterations of steps 2a and 2b from Arraiz
                    et al. Note: epsilon provides an additional stop condition.
@@ -417,7 +414,7 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
     A1           : string
                    If A1='het', then the matrix A1 is defined as in Arraiz et
                    al. If A1='hom', then as in Anselin (2011).  If
-                   A1='hom_sc', then as in Drukker, Egger and Prucha (2010)
+                   A1='hom_sc' (default), then as in Drukker, Egger and Prucha (2010)
                    and Drukker, Prucha and Raciborski (2010).
 
     Attributes
@@ -445,7 +442,7 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable used as instruments
+                   external exogenous variable used as instruments 
     z            : array
                    nxk array of variables (combination of x and yend)
     h            : array
@@ -472,9 +469,9 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
     .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
     "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
-
+ 
     .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity".
+    with and without Heteroskedasticity". 
 
     Examples
     --------
@@ -495,26 +492,26 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
     >>> q = np.array(q).T
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
     >>> w.transform = 'r'
-    >>> reg = BaseGM_Endog_Error_Hom(y, X, yd, q, w, A1='hom_sc')
+    >>> reg = BaseGM_Endog_Error_Hom(y, X, yd, q, w.sparse, A1='hom_sc')
     >>> print np.around(np.hstack((reg.betas,np.sqrt(reg.vm.diagonal()).reshape(4,1))),4)
     [[ 55.3658  23.496 ]
      [  0.4643   0.7382]
      [ -0.669    0.3943]
      [  0.4321   0.1927]]
 
-
+    
     '''
-    def __init__(self, y, x, yend, q, w,
-                 max_iter=1, epsilon=0.00001, A1='het'):
+    def __init__(self, y, x, yend, q, w,\
+                 max_iter=1, epsilon=0.00001, A1='hom_sc'):
 
         if A1 == 'hom':
-            w.A1 = get_A1_hom(w.sparse)
+            wA1 = get_A1_hom(w)
         elif A1 == 'hom_sc':
-            w.A1 = get_A1_hom(w.sparse, scalarKP=True)
+            wA1 = get_A1_hom(w, scalarKP=True)
         elif A1 == 'het':
-            w.A1 = get_A1_het(w.sparse)
+            wA1 = get_A1_het(w)
 
-        w.A2 = get_A2_hom(w.sparse)
+        wA2 = get_A2_hom(w)
 
         # 1a. S2SLS --> \tilde{\delta}
         tsls = TSLS.BaseTSLS(y=y, x=x, yend=yend, q=q)
@@ -522,36 +519,35 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
         self.yend, self.q, self.n, self.k = tsls.yend, tsls.q, tsls.n, tsls.k
 
         # 1b. GM --> \tilde{\rho}
-        moments = moments_hom(w, tsls.u)
+        moments = moments_hom(w, wA1, wA2, tsls.u)
         lambda1 = optim_moments(moments)
         lambda_old = lambda1
 
         self.iteration, eps = 0, 1
-        while self.iteration < max_iter and eps > epsilon:
+        while self.iteration<max_iter and eps>epsilon:
             # 2a. GS2SLS --> \hat{\delta}
-            x_s = get_spFilter(w, lambda_old, self.x)
-            y_s = get_spFilter(w, lambda_old, self.y)
+            x_s = get_spFilter(w,lambda_old,self.x)
+            y_s = get_spFilter(w,lambda_old,self.y)
             yend_s = get_spFilter(w, lambda_old, self.yend)
             tsls_s = TSLS.BaseTSLS(y=y_s, x=x_s, yend=yend_s, h=self.h)
             self.predy = spdot(self.z, tsls_s.betas)
             self.u = self.y - self.predy
 
             # 2b. GM 2nd iteration --> \hat{\rho}
-            moments = moments_hom(w, self.u)
-            psi = get_vc_hom(w, self, lambda_old, tsls_s.z)[0]
+            moments = moments_hom(w, wA1, wA2, self.u)
+            psi = get_vc_hom(w, wA1, wA2, self, lambda_old, tsls_s.z)[0]
             lambda2 = optim_moments(moments, psi)
             eps = abs(lambda2 - lambda_old)
             lambda_old = lambda2
-            self.iteration += 1
+            self.iteration+=1
 
-        self.iter_stop = iter_msg(self.iteration, max_iter)
+        self.iter_stop = iter_msg(self.iteration,max_iter)            
 
         # Output
-        self.betas = np.vstack((tsls_s.betas, lambda2))
-        self.vm, self.sig2 = get_omega_hom(w, self, lambda2, moments[0])
-        self.e_filtered = self.u - lambda2 * lag_spatial(w, self.u)
+        self.betas = np.vstack((tsls_s.betas,lambda2))
+        self.vm,self.sig2 = get_omega_hom(w, wA1, wA2, self, lambda2, moments[0])
+        self.e_filtered = self.u - lambda2*w*self.u
         self._cache = {}
-
 
 class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     '''
@@ -571,11 +567,11 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable to use as instruments (note:
+                   external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
     w            : pysal W object
                    Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)
+                   diagnostics are computed)   
     max_iter     : int
                    Maximum number of iterations of steps 2a and 2b from Arraiz
                    et al. Note: epsilon provides an additional stop condition.
@@ -586,7 +582,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     A1           : string
                    If A1='het', then the matrix A1 is defined as in Arraiz et
                    al. If A1='hom', then as in Anselin (2011).  If
-                   A1='hom_sc', then as in Drukker, Egger and Prucha (2010)
+                   A1='hom_sc' (default), then as in Drukker, Egger and Prucha (2010)
                    and Drukker, Prucha and Raciborski (2010).
     vm           : boolean
                    If True, include variance-covariance matrix in summary
@@ -632,7 +628,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable used as instruments
+                   external exogenous variable used as instruments 
     z            : array
                    nxk array of variables (combination of x and yend)
     h            : array
@@ -653,7 +649,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     sig2         : float
                    Sigma squared used in computations
     std_err      : array
-                   1xk array of standard errors of the betas
+                   1xk array of standard errors of the betas    
     z_stat       : list of tuples
                    z statistic; each tuple contains the pair (statistic,
                    p-value), where each is a float
@@ -664,7 +660,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     name_yend     : list of strings
                     Names of endogenous variables for use in output
     name_z        : list of strings
-                    Names of exogenous and endogenous variables for use in
+                    Names of exogenous and endogenous variables for use in 
                     output
     name_q        : list of strings
                     Names of external instruments
@@ -686,9 +682,9 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
     "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
-
+ 
     .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity".
+    with and without Heteroskedasticity". 
 
     Examples
     --------
@@ -704,10 +700,10 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     This is the DBF associated with the Columbus shapefile.  Note that
     pysal.open() also reads data in CSV format; since the actual class
     requires data to be passed in as numpy arrays, the user can read their
-    data in using any method.
+    data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
-
+    
     Extract the HOVAL column (home values) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -749,7 +745,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     from ``columbus.shp``.
 
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
-
+    
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other
     things, his allows to interpret the spatial lag of a variable as the
@@ -765,7 +761,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     have to pass them in as well, although this is optional.
 
     >>> reg = GM_Endog_Error_Hom(y, X, yd, q, w, A1='hom_sc', name_x=['inc'], name_y='hoval', name_yend=['crime'], name_q=['discbd'], name_ds='columbus')
-
+   
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
     discover them. This class offers an error model that assumes
@@ -784,30 +780,30 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
      [  0.4321   0.1927]]
 
     '''
-    def __init__(self, y, x, yend, q, w,
-                 max_iter=1, epsilon=0.00001, A1='het',
-                 vm=False, name_y=None, name_x=None,
-                 name_yend=None, name_q=None,
+    def __init__(self, y, x, yend, q, w,\
+                 max_iter=1, epsilon=0.00001, A1='hom_sc',\
+                 vm=False, name_y=None, name_x=None,\
+                 name_yend=None, name_q=None,\
                  name_w=None, name_ds=None):
 
         n = USER.check_arrays(y, x, yend, q)
         USER.check_y(y, n)
         USER.check_weights(w, y)
         x_constant = USER.check_constant(x)
-        BaseGM_Endog_Error_Hom.__init__(
-            self, y=y, x=x_constant, w=w, yend=yend, q=q,
-            A1=A1, max_iter=max_iter, epsilon=epsilon)
-        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HOM)"
+        BaseGM_Endog_Error_Hom.__init__(self, y=y, x=x_constant, w=w.sparse, yend=yend, q=q,\
+                A1=A1, max_iter=max_iter, epsilon=epsilon)
+        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HOM)"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
         self.name_yend = USER.set_name_yend(name_yend, yend)
         self.name_z = self.name_x + self.name_yend
-        self.name_z.append('lambda')  # listing lambda last
+        self.name_z.append('lambda')  #listing lambda last
         self.name_q = USER.set_name_q(name_q, q)
         self.name_h = USER.set_name_h(self.name_x, self.name_q)
         self.name_w = USER.set_name_w(name_w, w)
         SUMMARY.GM_Endog_Error_Hom(reg=self, w=w, vm=vm)
+
 
 
 class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
@@ -828,17 +824,16 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable to use as instruments (note:
+                   external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
-    w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)
+    w            : Sparse matrix
+                   Spatial weights sparse matrix   
     w_lags       : integer
                    Orders of W to include as instruments for the spatially
                    lagged dependent variable. For example, w_lags=1, then
                    instruments are WX; if w_lags=2, then WX, WWX; and so on.
     lag_q        : boolean
-                   If True, then include spatial lags of the additional
+                   If True, then include spatial lags of the additional 
                    instruments (q).
     max_iter     : int
                    Maximum number of iterations of steps 2a and 2b from Arraiz
@@ -850,7 +845,7 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
     A1           : string
                    If A1='het', then the matrix A1 is defined as in Arraiz et
                    al. If A1='hom', then as in Anselin (2011).  If
-                   A1='hom_sc', then as in Drukker, Egger and Prucha (2010)
+                   A1='hom_sc' (default), then as in Drukker, Egger and Prucha (2010)
                    and Drukker, Prucha and Raciborski (2010).
 
 
@@ -879,7 +874,7 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable used as instruments
+                   external exogenous variable used as instruments 
     z            : array
                    nxk array of variables (combination of x and yend)
     h            : array
@@ -907,9 +902,9 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
     .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
     "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
-
+ 
     .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity".
+    with and without Heteroskedasticity". 
 
     Examples
     --------
@@ -929,7 +924,7 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
 
     Example only with spatial lag
 
-    >>> reg = BaseGM_Combo_Hom(y, X, yend=yd2, q=q2, w=w, A1='hom_sc')
+    >>> reg = BaseGM_Combo_Hom(y, X, yend=yd2, q=q2, w=w.sparse, A1='hom_sc')
     >>> print np.around(np.hstack((reg.betas,np.sqrt(reg.vm.diagonal()).reshape(4,1))),4)
     [[ 10.1254  15.2871]
      [  1.5683   0.4407]
@@ -950,7 +945,7 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
     >>> q = np.array(q).T
     >>> yd2, q2 = pysal.spreg.utils.set_endog(y, X, w, yd, q, w_lags, True)
     >>> X = np.hstack((np.ones(y.shape),X))
-    >>> reg = BaseGM_Combo_Hom(y, X, yd2, q2, w, A1='hom_sc')
+    >>> reg = BaseGM_Combo_Hom(y, X, yd2, q2, w.sparse, A1='hom_sc')
     >>> betas = np.array([['CONSTANT'],['inc'],['crime'],['W_hoval'],['lambda']])
     >>> print np.hstack((betas, np.around(np.hstack((reg.betas, np.sqrt(reg.vm.diagonal()).reshape(5,1))),5)))
     [['CONSTANT' '111.7705' '67.75191']
@@ -960,14 +955,12 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
      ['lambda' '0.60116' '0.18605']]
 
     '''
-    def __init__(self, y, x, yend=None, q=None,
-                 w=None, w_lags=1, lag_q=True,
-                 max_iter=1, epsilon=0.00001, A1='het'):
-
-        BaseGM_Endog_Error_Hom.__init__(
-            self, y=y, x=x, w=w, yend=yend, q=q, A1=A1,
-            max_iter=max_iter, epsilon=epsilon)
-
+    def __init__(self, y, x, yend=None, q=None,\
+                 w=None, w_lags=1, lag_q=True,\
+                 max_iter=1, epsilon=0.00001, A1='hom_sc'):
+    
+        BaseGM_Endog_Error_Hom.__init__(self, y=y, x=x, w=w, yend=yend, q=q, A1=A1,\
+                                        max_iter=max_iter, epsilon=epsilon)
 
 class GM_Combo_Hom(BaseGM_Combo_Hom):
     '''
@@ -987,17 +980,17 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable to use as instruments (note:
+                   external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
     w            : pysal W object
                    Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)
+                   diagnostics are computed)   
     w_lags       : integer
                    Orders of W to include as instruments for the spatially
                    lagged dependent variable. For example, w_lags=1, then
                    instruments are WX; if w_lags=2, then WX, WWX; and so on.
     lag_q        : boolean
-                   If True, then include spatial lags of the additional
+                   If True, then include spatial lags of the additional 
                    instruments (q).
     max_iter     : int
                    Maximum number of iterations of steps 2a and 2b from Arraiz
@@ -1009,7 +1002,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
     A1           : string
                    If A1='het', then the matrix A1 is defined as in Arraiz et
                    al. If A1='hom', then as in Anselin (2011).  If
-                   A1='hom_sc', then as in Drukker, Egger and Prucha (2010)
+                   A1='hom_sc' (default), then as in Drukker, Egger and Prucha (2010)
                    and Drukker, Prucha and Raciborski (2010).
     vm           : boolean
                    If True, include variance-covariance matrix in summary
@@ -1059,7 +1052,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable used as instruments
+                   external exogenous variable used as instruments 
     z            : array
                    nxk array of variables (combination of x and yend)
     h            : array
@@ -1084,7 +1077,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
                    Sigma squared used in computations (based on filtered
                    residuals)
     std_err      : array
-                   1xk array of standard errors of the betas
+                   1xk array of standard errors of the betas    
     z_stat       : list of tuples
                    z statistic; each tuple contains the pair (statistic,
                    p-value), where each is a float
@@ -1095,7 +1088,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
     name_yend     : list of strings
                     Names of endogenous variables for use in output
     name_z        : list of strings
-                    Names of exogenous and endogenous variables for use in
+                    Names of exogenous and endogenous variables for use in 
                     output
     name_q        : list of strings
                     Names of external instruments
@@ -1117,9 +1110,9 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
     .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
     "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
-
+ 
     .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity".
+    with and without Heteroskedasticity". 
 
     Examples
     --------
@@ -1135,10 +1128,10 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
     This is the DBF associated with the Columbus shapefile.  Note that
     pysal.open() also reads data in CSV format; since the actual class
     requires data to be passed in as numpy arrays, the user can read their
-    data in using any method.
+    data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
-
+    
     Extract the HOVAL column (home values) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -1164,7 +1157,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
     from ``columbus.shp``.
 
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
-
+    
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other
     things, his allows to interpret the spatial lag of a variable as the
@@ -1190,7 +1183,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
      [  1.5683   0.4407]
      [  0.1513   0.4048]
      [  0.2103   0.4226]]
-
+        
     This class also allows the user to run a spatial lag+error model with the
     extra feature of including non-spatial endogenous regressors. This means
     that, in addition to the spatial lag and error, we consider some of the
@@ -1220,35 +1213,33 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
      ['lambda' '0.60116' '0.18605']]
 
     '''
-    def __init__(self, y, x, yend=None, q=None,
-                 w=None, w_lags=1, lag_q=True,
-                 max_iter=1, epsilon=0.00001, A1='het',
-                 vm=False, name_y=None, name_x=None,
-                 name_yend=None, name_q=None,
+    def __init__(self, y, x, yend=None, q=None,\
+                 w=None, w_lags=1, lag_q=True,\
+                 max_iter=1, epsilon=0.00001, A1='hom_sc',\
+                 vm=False, name_y=None, name_x=None,\
+                 name_yend=None, name_q=None,\
                  name_w=None, name_ds=None):
-
+    
         n = USER.check_arrays(y, x, yend, q)
         USER.check_y(y, n)
         USER.check_weights(w, y)
         yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
         x_constant = USER.check_constant(x)
-        BaseGM_Combo_Hom.__init__(
-            self, y=y, x=x_constant, w=w, yend=yend2, q=q2,
-                    w_lags=w_lags, A1=A1, lag_q=lag_q,
+        BaseGM_Combo_Hom.__init__(self, y=y, x=x_constant, w=w.sparse, yend=yend2, q=q2,\
+                    w_lags=w_lags, A1=A1, lag_q=lag_q,\
                     max_iter=max_iter, epsilon=epsilon)
-        self.predy_e, self.e_pred = sp_att(w, self.y, self.predy,
-                                           yend2[:, -1].reshape(self.n, 1), self.betas[-2])
-        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HOM)"
+        self.predy_e, self.e_pred = sp_att(w,self.y,self.predy,\
+                             yend2[:,-1].reshape(self.n,1),self.betas[-2])        
+        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HOM)"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
         self.name_yend = USER.set_name_yend(name_yend, yend)
         self.name_yend.append(USER.set_name_yend_sp(self.name_y))
         self.name_z = self.name_x + self.name_yend
-        self.name_z.append('lambda')  # listing lambda last
+        self.name_z.append('lambda')  #listing lambda last
         self.name_q = USER.set_name_q(name_q, q)
-        self.name_q.extend(USER.set_name_q_sp(
-            self.name_x, w_lags, self.name_q, lag_q))
+        self.name_q.extend(USER.set_name_q_sp(self.name_x, w_lags, self.name_q, lag_q))
         self.name_h = USER.set_name_h(self.name_x, self.name_q)
         self.name_w = USER.set_name_w(name_w, w)
         SUMMARY.GM_Combo_Hom(reg=self, w=w, vm=vm)
@@ -1256,7 +1247,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
 
 # Functions
 
-def moments_hom(w, u):
+def moments_hom(w, wA1, wA2, u):
     '''
     Compute G and g matrices for the spatial error model with homoscedasticity
     as in Anselin [1]_ (2011).
@@ -1265,12 +1256,12 @@ def moments_hom(w, u):
     Parameters
     ----------
 
-    w           : W
-                  Spatial weights instance
+    w           : Sparse matrix
+                  Spatial weights sparse matrix   
 
     u           : array
                   Residuals. nx1 array assumed to be aligned with w
-
+ 
     Attributes
     ----------
 
@@ -1283,35 +1274,34 @@ def moments_hom(w, u):
     ----------
 
     .. [1] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity".
+    with and without Heteroskedasticity". 
     '''
-    n = w.sparse.shape[0]
-    A1u = w.A1 * u
-    A2u = w.A2 * u
-    wu = w.sparse * u
+    n = w.shape[0]
+    A1u = wA1 * u
+    A2u = wA2 * u
+    wu = w * u
 
     g1 = np.dot(u.T, A1u)
     g2 = np.dot(u.T, A2u)
-    g = np.array([[g1][0][0], [g2][0][0]]) / n
+    g = np.array([[g1][0][0],[g2][0][0]]) / n
 
-    G11 = 2 * np.dot(wu.T * w.A1, u)
-    G12 = -np.dot(wu.T * w.A1, wu)
-    G21 = 2 * np.dot(wu.T * w.A2, u)
-    G22 = -np.dot(wu.T * w.A2, wu)
-    G = np.array([[G11[0][0], G12[0][0]], [G21[0][0], G22[0][0]]]) / n
+    G11 = 2 * np.dot(wu.T * wA1, u)
+    G12 = -np.dot(wu.T * wA1, wu)
+    G21 = 2 * np.dot(wu.T * wA2, u)
+    G22 = -np.dot(wu.T * wA2, wu)
+    G = np.array([[G11[0][0],G12[0][0]],[G21[0][0],G22[0][0]]]) / n
     return [G, g]
 
-
-def get_vc_hom(w, reg, lambdapar, z_s=None, for_omegaOLS=False):
+def get_vc_hom(w, wA1, wA2, reg, lambdapar, z_s=None, for_omegaOLS=False):
     '''
-    VC matrix \psi of Spatial error with homoscedasticity. As in
+    VC matrix \psi of Spatial error with homoscedasticity. As in 
     Anselin (2011) [1]_ (p. 20)
     ...
 
     Parameters
     ----------
-    w               :   W
-                        Weights with A1 appended
+    w               :   Sparse matrix
+                        Spatial weights sparse matrix
     reg             :   reg
                         Regression object
     lambdapar       :   float
@@ -1340,27 +1330,27 @@ def get_vc_hom(w, reg, lambdapar, z_s=None, for_omegaOLS=False):
     ----------
 
     .. [1] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity".
+    with and without Heteroskedasticity". 
 
     '''
     u_s = get_spFilter(w, lambdapar, reg.u)
-    n = float(w.n)
+    n = float(w.shape[0])
     sig2 = np.dot(u_s.T, u_s) / n
-    mu3 = np.sum(u_s ** 3) / n
-    mu4 = np.sum(u_s ** 4) / n
+    mu3 = np.sum(u_s**3) / n
+    mu4 = np.sum(u_s**4) / n
 
-    tr11 = w.A1 * w.A1
+    tr11 = wA1 * wA1
     tr11 = np.sum(tr11.diagonal())
-    tr12 = w.A1 * (w.A2 * 2)
+    tr12 = wA1 * (wA2 * 2)
     tr12 = np.sum(tr12.diagonal())
-    tr22 = w.A2 * w.A2 * 2
+    tr22 = wA2 * wA2 * 2
     tr22 = np.sum(tr22.diagonal())
-    vecd1 = np.array([w.A1.diagonal()]).T
+    vecd1 = np.array([wA1.diagonal()]).T
 
-    psi11 = 2 * sig2 ** 2 * tr11 + \
-            (mu4 - 3 * sig2 ** 2) * np.dot(vecd1.T, vecd1)
-    psi12 = sig2 ** 2 * tr12
-    psi22 = sig2 ** 2 * tr22
+    psi11 = 2 * sig2**2 * tr11 + \
+            (mu4 - 3 * sig2**2) * np.dot(vecd1.T, vecd1)
+    psi12 = sig2**2 * tr12
+    psi22 = sig2**2 * tr22
 
     a1, a2, p = 0., 0., 0.
 
@@ -1371,12 +1361,12 @@ def get_vc_hom(w, reg, lambdapar, z_s=None, for_omegaOLS=False):
     if issubclass(type(z_s), np.ndarray) or \
             issubclass(type(z_s), SP.csr.csr_matrix) or \
             issubclass(type(z_s), SP.csc.csc_matrix):
-        alpha1 = (-2 / n) * spdot(z_s.T, w.A1 * u_s)
-        alpha2 = (-2 / n) * spdot(z_s.T, w.A2 * u_s)
+        alpha1 = (-2/n) * spdot(z_s.T, wA1 * u_s)
+        alpha2 = (-2/n) * spdot(z_s.T, wA2 * u_s)
 
         hth = spdot(reg.h.T, reg.h)
-        hthni = la.inv(hth / n)
-        htzsn = spdot(reg.h.T, z_s) / n
+        hthni = la.inv(hth / n) 
+        htzsn = spdot(reg.h.T, z_s) / n 
         p = spdot(hthni, htzsn)
         p = spdot(p, la.inv(spdot(htzsn.T, p)))
         hp = spdot(reg.h, p)
@@ -1388,16 +1378,14 @@ def get_vc_hom(w, reg, lambdapar, z_s=None, for_omegaOLS=False):
             2 * mu3 * spdot(a1.T, vecd1)
         psi12 = psi12 + \
             sig2 * spdot(a1.T, a2) + \
-            mu3 * spdot(a2.T, vecd1)  # 3rd term=0
+            mu3 * spdot(a2.T, vecd1) # 3rd term=0
         psi22 = psi22 + \
-            sig2 * spdot(a2.T, a2)  # 3rd&4th terms=0 bc vecd2=0
+            sig2 * spdot(a2.T, a2) # 3rd&4th terms=0 bc vecd2=0
 
-    psi = np.array(
-        [[psi11[0][0], psi12[0][0]], [psi12[0][0], psi22[0][0]]]) / n
+    psi = np.array([[psi11[0][0], psi12[0][0]], [psi12[0][0], psi22[0][0]]]) / n
     return psi, a1, a2, p
 
-
-def get_omega_hom(w, reg, lamb, G):
+def get_omega_hom(w, wA1, wA2, reg, lamb, G):
     '''
     Omega VC matrix for Hom models with endogenous variables computed as in
     Anselin (2011) [1]_ (p. 21).
@@ -1405,8 +1393,8 @@ def get_omega_hom(w, reg, lamb, G):
 
     Parameters
     ----------
-    w       :   W
-                Weights with A1 appended
+    w       :   Sparse matrix
+                Spatial weights sparse matrix
     reg     :   reg
                 Regression object
     lamb    :   float
@@ -1424,21 +1412,21 @@ def get_omega_hom(w, reg, lamb, G):
     ----------
 
     .. [1] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity".
+    with and without Heteroskedasticity". 
 
     '''
-    n = float(w.n)
+    n = float(w.shape[0])
     z_s = get_spFilter(w, lamb, reg.z)
     u_s = get_spFilter(w, lamb, reg.u)
     sig2 = np.dot(u_s.T, u_s) / n
-    mu3 = np.sum(u_s ** 3) / n
-    vecdA1 = np.array([w.A1.diagonal()]).T
-    psi, a1, a2, p = get_vc_hom(w, reg, lamb, z_s)
-    j = np.dot(G, np.array([[1.], [2 * lamb]]))
+    mu3 = np.sum(u_s**3) / n
+    vecdA1 = np.array([wA1.diagonal()]).T
+    psi, a1, a2, p = get_vc_hom(w, wA1, wA2, reg, lamb, z_s)
+    j = np.dot(G, np.array([[1.], [2*lamb]]))
     psii = la.inv(psi)
     t2 = spdot(reg.h.T, np.hstack((a1, a2)))
-    psiDL = (mu3 * spdot(reg.h.T, np.hstack((vecdA1, np.zeros((n, 1))))) +
-             sig2 * spdot(reg.h.T, np.hstack((a1, a2)))) / n
+    psiDL = (mu3 * spdot(reg.h.T, np.hstack((vecdA1, np.zeros((n, 1))))) + \
+            sig2 * spdot(reg.h.T, np.hstack((a1, a2)))) / n
 
     oDD = spdot(la.inv(spdot(reg.h.T, reg.h)), spdot(reg.h.T, z_s))
     oDD = sig2 * la.inv(spdot(z_s.T, spdot(reg.h, oDD)))
@@ -1447,10 +1435,9 @@ def get_omega_hom(w, reg, lamb, G):
 
     o_upper = np.hstack((oDD, oDL))
     o_lower = np.hstack((oDL.T, oLL))
-    return np.vstack((o_upper, o_lower)), float(sig2)
+    return np.vstack((o_upper, o_lower)),float(sig2)
 
-
-def get_omega_hom_ols(w, reg, lamb, G):
+def get_omega_hom_ols(w, wA1, wA2, reg, lamb, G):
     '''
     Omega VC matrix for Hom models without endogenous variables (OLS) computed
     as in Anselin (2011) [1]_.
@@ -1458,8 +1445,8 @@ def get_omega_hom_ols(w, reg, lamb, G):
 
     Parameters
     ----------
-    w       :   W
-                Weights with A1 appended
+    w       :   Sparse matrix
+                Spatial weights sparse matrix
     reg     :   reg
                 Regression object
     lamb    :   float
@@ -1477,27 +1464,38 @@ def get_omega_hom_ols(w, reg, lamb, G):
     ----------
 
     .. [1] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity".
+    with and without Heteroskedasticity". 
 
     '''
-    n = float(w.n)
+    n = float(w.shape[0])
     x_s = get_spFilter(w, lamb, reg.x)
     u_s = get_spFilter(w, lamb, reg.u)
     sig2 = np.dot(u_s.T, u_s) / n
-    vecdA1 = np.array([w.A1.diagonal()]).T
-    psi, a1, a2, p = get_vc_hom(w, reg, lamb, for_omegaOLS=True)
-    j = np.dot(G, np.array([[1.], [2 * lamb]]))
+    vecdA1 = np.array([wA1.diagonal()]).T
+    psi, a1, a2, p = get_vc_hom(w, wA1, wA2, reg, lamb, for_omegaOLS=True)
+    j = np.dot(G, np.array([[1.], [2*lamb]]))
     psii = la.inv(psi)
 
     oDD = sig2 * la.inv(spdot(x_s.T, x_s))
     oLL = la.inv(spdot(j.T, spdot(psii, j))) / n
     #oDL = np.zeros((oDD.shape[0], oLL.shape[1]))
-    mu3 = np.sum(u_s ** 3) / n
+    mu3 = np.sum(u_s**3) / n
     psiDL = (mu3 * spdot(reg.x.T, np.hstack((vecdA1, np.zeros((n, 1)))))) / n
     oDL = spdot(spdot(spdot(p.T, psiDL), spdot(psii, j)), oLL)
 
     o_upper = np.hstack((oDD, oDL))
     o_lower = np.hstack((oDL.T, oLL))
-    return np.vstack((o_upper, o_lower)), float(sig2)
+    return np.vstack((o_upper, o_lower)),float(sig2)
+
+def _test():
+    import doctest
+    start_suppress = np.get_printoptions()['suppress']
+    np.set_printoptions(suppress=True)    
+    doctest.testmod()
+    np.set_printoptions(suppress=start_suppress)
+
+if __name__ == '__main__':
+
+    _test()
 
 

@@ -9,7 +9,6 @@ from utils import spdot, sphstack, RegressionPropsY, RegressionPropsVM
 __author__ = "Luc Anselin luc.anselin@asu.edu, David C. Folch david.folch@asu.edu, Jing Yao jingyao@asu.edu"
 __all__ = ["TSLS"]
 
-
 class BaseTSLS(RegressionPropsY, RegressionPropsVM):
     """
     Two stage least squares (2SLS) (note: no consistency checks,
@@ -27,19 +26,19 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable to use as instruments (note:
+                   external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x); cannot be
                    used in combination with h
     h            : array
                    Two dimensional array with n rows and one column for each
-                   exogenous variable to use as instruments (note: this
-                   can contain variables from x); cannot be used in
+                   exogenous variable to use as instruments (note: this 
+                   can contain variables from x); cannot be used in 
                    combination with q
     robust       : string
                    If 'white', then a White consistent estimator of the
                    variance-covariance matrix is given.  If 'hac', then a
                    HAC consistent estimator of the variance-covariance
-                   matrix is given. Default set to None.
+                   matrix is given. Default set to None. 
     gwk          : pysal W object
                    Kernel spatial weights needed for HAC estimation. Note:
                    matrix must have ones along the main diagonal.
@@ -61,7 +60,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
                    Number of variables for which coefficients are estimated
                    (including the constant)
     kstar        : integer
-                   Number of endogenous variables.
+                   Number of endogenous variables. 
     y            : array
                    nx1 array for dependent variable
     x            : array
@@ -72,7 +71,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable used as instruments
+                   external exogenous variable used as instruments 
     z            : array
                    nxk array of variables (combination of x and yend)
     h            : array
@@ -102,7 +101,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
     pfora1a2     : array
                    n(zthhthi)'varb
 
-
+    
     Examples
     --------
 
@@ -127,59 +126,54 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
      [  0.5200379 ]
      [ -1.58216593]]
     >>> reg = BaseTSLS(y, X, yd, q=q, robust="white")
-
+    
     """
-    def __init__(self, y, x, yend, q=None, h=None,
+    def __init__(self, y, x, yend, q=None, h=None,\
                  robust=None, gwk=None, sig2n_k=False):
 
-        if issubclass(type(q), np.ndarray) and issubclass(type(h), np.ndarray):
-            raise Exception("Please do not provide 'q' and 'h' together")
-        if q is None and h is None:
-            raise Exception("Please provide either 'q' or 'h'")
-
-        self.y = y
+        if issubclass(type(q), np.ndarray) and issubclass(type(h), np.ndarray):  
+            raise Exception, "Please do not provide 'q' and 'h' together"
+        if q==None and h==None:
+            raise Exception, "Please provide either 'q' or 'h'"
+        
+        self.y = y  
         self.n = y.shape[0]
         self.x = x
 
         self.kstar = yend.shape[1]
-        z = sphstack(self.x, yend)
-            # including exogenous and endogenous variables
+        z = sphstack(self.x,yend)  # including exogenous and endogenous variables   
         if type(h).__name__ not in ['ndarray', 'csr_matrix']:
-            h = sphstack(self.x, q)
-                # including exogenous variables and instrument
-
+            h = sphstack(self.x,q)   # including exogenous variables and instrument
         self.z = z
         self.h = h
         self.q = q
         self.yend = yend
         self.k = z.shape[1]    # k = number of exogenous variables and endogenous variables
-
-        hth = spdot(h.T, h)
+        hth = spdot(h.T,h)    
         hthi = la.inv(hth)
-        zth = spdot(z.T, h)
-        hty = spdot(h.T, y)
-
-        factor_1 = np.dot(zth, hthi)
-        factor_2 = np.dot(factor_1, zth.T)
-        varb = la.inv(factor_2)
-            # this one needs to be in cache to be used in AK
-        factor_3 = np.dot(varb, factor_1)
-        betas = np.dot(factor_3, hty)
+        zth = spdot(z.T,h)    
+        hty = spdot(h.T,y) 
+        
+        factor_1 = np.dot(zth,hthi)  
+        factor_2 = np.dot(factor_1,zth.T)  
+        varb = la.inv(factor_2)          # this one needs to be in cache to be used in AK
+        factor_3 = np.dot(varb,factor_1)   
+        betas = np.dot(factor_3,hty)  
         self.betas = betas
         self.varb = varb
-        self.zthhthi = factor_1
-
+        self.zthhthi = factor_1  
+        
         # predicted values
-        self.predy = spdot(z, betas)
-
+        self.predy = spdot(z,betas)
+        
         # residuals
         u = y - self.predy
         self.u = u
-
-        # attributes used in property
+        
+        # attributes used in property 
         self.hth = hth     # Required for condition index
-        self.hthi = hthi    # Used in error models
-
+        self.hthi =hthi    # Used in error models
+      
         if robust:
             self.vm = ROBUST.robust_vm(reg=self, gwk=gwk)
 
@@ -192,16 +186,14 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
     @property
     def pfora1a2(self):
         if 'pfora1a2' not in self._cache:
-            self._cache['pfora1a2'] = self.n * np.dot(
-                self.zthhthi.T, self.varb)
-        return self._cache['pfora1a2']
-
+            self._cache['pfora1a2'] = self.n*np.dot(self.zthhthi.T, self.varb) 
+        return self._cache['pfora1a2']    
+            
     @property
     def vm(self):
         if 'vm' not in self._cache:
             self._cache['vm'] = np.dot(self.sig2, self.varb)
         return self._cache['vm']
-
 
 class TSLS(BaseTSLS):
     """
@@ -219,7 +211,7 @@ class TSLS(BaseTSLS):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable to use as instruments (note:
+                   external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
     w            : pysal W object
                    Spatial weights object (required if running spatial
@@ -228,7 +220,7 @@ class TSLS(BaseTSLS):
                    If 'white', then a White consistent estimator of the
                    variance-covariance matrix is given.  If 'hac', then a
                    HAC consistent estimator of the variance-covariance
-                   matrix is given. Default set to None.
+                   matrix is given. Default set to None. 
     gwk          : pysal W object
                    Kernel spatial weights needed for HAC estimation. Note:
                    matrix must have ones along the main diagonal.
@@ -272,7 +264,7 @@ class TSLS(BaseTSLS):
                    Number of variables for which coefficients are estimated
                    (including the constant)
     kstar        : integer
-                   Number of endogenous variables.
+                   Number of endogenous variables. 
     y            : array
                    nx1 array for dependent variable
     x            : array
@@ -283,7 +275,7 @@ class TSLS(BaseTSLS):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable used as instruments
+                   external exogenous variable used as instruments 
     z            : array
                    nxk array of variables (combination of x and yend)
     h            : array
@@ -303,7 +295,7 @@ class TSLS(BaseTSLS):
     sig2         : float
                    Sigma squared used in computations
     std_err      : array
-                   1xk array of standard errors of the betas
+                   1xk array of standard errors of the betas    
     z_stat       : list of tuples
                    z statistic; each tuple contains the pair (statistic,
                    p-value), where each is a float
@@ -317,7 +309,7 @@ class TSLS(BaseTSLS):
     name_yend    : list of strings
                    Names of endogenous variables for use in output
     name_z       : list of strings
-                   Names of exogenous and endogenous variables for use in
+                   Names of exogenous and endogenous variables for use in 
                    output
     name_q       : list of strings
                    Names of external instruments
@@ -346,7 +338,7 @@ class TSLS(BaseTSLS):
     pfora1a2     : array
                    n(zthhthi)'varb
 
-
+    
     Examples
     --------
 
@@ -361,10 +353,10 @@ class TSLS(BaseTSLS):
     This is the DBF associated with the Columbus shapefile.  Note that
     pysal.open() also reads data in CSV format; since the actual class
     requires data to be passed in as numpy arrays, the user can read their
-    data in using any method.
+    data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
-
+    
     Extract the CRIME column (crime rates) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -412,12 +404,12 @@ class TSLS(BaseTSLS):
      [ -1.58216593]]
 
     """
-    def __init__(self, y, x, yend, q,
-                 w=None,
-                 robust=None, gwk=None, sig2n_k=False,
-                 spat_diag=False,
-                 vm=False, name_y=None, name_x=None,
-                 name_yend=None, name_q=None,
+    def __init__(self, y, x, yend, q,\
+                 w=None,\
+                 robust=None, gwk=None, sig2n_k=False,\
+                 spat_diag=False,\
+                 vm=False, name_y=None, name_x=None,\
+                 name_yend=None, name_q=None,\
                  name_w=None, name_gwk=None, name_ds=None):
 
         n = USER.check_arrays(y, x, yend, q)
@@ -426,9 +418,9 @@ class TSLS(BaseTSLS):
         USER.check_robust(robust, gwk)
         USER.check_spat_diag(spat_diag, w)
         x_constant = USER.check_constant(x)
-        BaseTSLS.__init__(self, y=y, x=x_constant, yend=yend, q=q,
-                          robust=robust, gwk=gwk, sig2n_k=sig2n_k)
-        self.title = "TWO STAGE LEAST SQUARES"
+        BaseTSLS.__init__(self, y=y, x=x_constant, yend=yend, q=q,\
+                              robust=robust, gwk=gwk, sig2n_k=sig2n_k)
+        self.title = "TWO STAGE LEAST SQUARES"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
@@ -440,5 +432,32 @@ class TSLS(BaseTSLS):
         self.name_w = USER.set_name_w(name_w, w)
         self.name_gwk = USER.set_name_w(name_gwk, gwk)
         SUMMARY.TSLS(reg=self, vm=vm, w=w, spat_diag=spat_diag)
+        
 
+def _test():
+    import doctest
+    start_suppress = np.get_printoptions()['suppress']
+    np.set_printoptions(suppress=True)    
+    doctest.testmod()
+    np.set_printoptions(suppress=start_suppress)
+
+
+if __name__ == '__main__':
+    _test()
+
+    import numpy as np
+    import pysal
+    db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
+    y_var = 'CRIME'
+    y = np.array([db.by_col(y_var)]).reshape(49,1)
+    x_var = ['INC']
+    x = np.array([db.by_col(name) for name in x_var]).T
+    yd_var = ['HOVAL']
+    yd = np.array([db.by_col(name) for name in yd_var]).T
+    q_var = ['DISCBD']
+    q = np.array([db.by_col(name) for name in q_var]).T
+    w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
+    w.transform = 'r'
+    tsls = TSLS(y, x, yd, q, w=w, spat_diag=True, name_y=y_var, name_x=x_var, name_yend=yd_var, name_q=q_var, name_ds='columbus', name_w='columbus.gal')
+    print tsls.summary
 

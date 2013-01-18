@@ -1,7 +1,6 @@
 """Ordinary Least Squares regression classes."""
 
 __author__ = "Luc Anselin luc.anselin@asu.edu, David C. Folch david.folch@asu.edu"
-
 import numpy as np
 import copy as COPY
 import numpy.linalg as la
@@ -11,7 +10,6 @@ import robust as ROBUST
 from utils import spdot, sphstack, RegressionPropsY, RegressionPropsVM
 
 __all__ = ["OLS"]
-
 
 class BaseOLS(RegressionPropsY, RegressionPropsVM):
     """
@@ -29,13 +27,13 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
                    If 'white', then a White consistent estimator of the
                    variance-covariance matrix is given.  If 'hac', then a
                    HAC consistent estimator of the variance-covariance
-                   matrix is given. Default set to None.
+                   matrix is given. Default set to None. 
     gwk          : pysal W object
                    Kernel spatial weights needed for HAC estimation. Note:
                    matrix must have ones along the main diagonal.
     sig2n_k      : boolean
                    If True, then use n-k to estimate sigma^2. If False, use n.
-
+               
     Attributes
     ----------
     betas        : array
@@ -73,7 +71,7 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
     xtxi         : float
                    (X'X)^-1
 
-
+              
     Examples
     --------
 
@@ -93,9 +91,9 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
            [  0.62898397],
            [ -0.48488854]])
     >>> ols.vm
-    array([[  1.74022453e+02,  -6.52060364e+00,  -2.15109867e+00],
-           [ -6.52060364e+00,   2.87200008e-01,   6.80956787e-02],
-           [ -2.15109867e+00,   6.80956787e-02,   3.33693910e-02]])
+    array([[ 174.02245348,   -6.52060364,   -2.15109867],
+           [  -6.52060364,    0.28720001,    0.06809568],
+           [  -2.15109867,    0.06809568,    0.03336939]])
     """
     def __init__(self, y, x, robust=None, gwk=None, sig2n_k=True):
         self.x = x
@@ -106,7 +104,7 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
         self.betas = np.dot(self.xtxi, xty)
         predy = spdot(self.x, self.betas)
 
-        u = y - predy
+        u = y-predy
         self.u = u
         self.predy = predy
         self.y = y
@@ -121,11 +119,10 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
         else:
             self.sig2 = self.sig2n
 
-
 class OLS(BaseOLS):
     """
     Ordinary least squares with results and diagnostics.
-
+    
     Parameters
     ----------
     y            : array
@@ -140,7 +137,7 @@ class OLS(BaseOLS):
                    If 'white', then a White consistent estimator of the
                    variance-covariance matrix is given.  If 'hac', then a
                    HAC consistent estimator of the variance-covariance
-                   matrix is given. Default set to None.
+                   matrix is given. Default set to None. 
     gwk          : pysal W object
                    Kernel spatial weights needed for HAC estimation. Note:
                    matrix must have ones along the main diagonal.
@@ -168,7 +165,7 @@ class OLS(BaseOLS):
                    Name of kernel weights matrix for use in output
     name_ds      : string
                    Name of dataset for use in output
-
+    
 
     Attributes
     ----------
@@ -214,11 +211,11 @@ class OLS(BaseOLS):
     logll        : float
                    Log likelihood
     aic          : float
-                   Akaike information criterion
+                   Akaike information criterion 
     schwarz      : float
-                   Schwarz information criterion
+                   Schwarz information criterion     
     std_err      : array
-                   1xk array of standard errors of the betas
+                   1xk array of standard errors of the betas    
     t_stat       : list of tuples
                    t statistic; each tuple contains the pair (statistic,
                    p-value), where each is a float
@@ -226,24 +223,24 @@ class OLS(BaseOLS):
                    Multicollinearity condition number
     jarque_bera  : dictionary
                    'jb': Jarque-Bera statistic (float); 'pvalue': p-value
-                   (float); 'df': degrees of freedom (int)
+                   (float); 'df': degrees of freedom (int)  
     breusch_pagan : dictionary
                     'bp': Breusch-Pagan statistic (float); 'pvalue': p-value
-                    (float); 'df': degrees of freedom (int)
+                    (float); 'df': degrees of freedom (int)  
     koenker_bassett : dictionary
                       'kb': Koenker-Bassett statistic (float); 'pvalue':
-                      p-value (float); 'df': degrees of freedom (int)
+                      p-value (float); 'df': degrees of freedom (int)  
     white         : dictionary
                     'wh': White statistic (float); 'pvalue': p-value (float);
-                    'df': degrees of freedom (int)
+                    'df': degrees of freedom (int)  
     lm_error      : tuple
                     Lagrange multiplier test for spatial error model; tuple
                     contains the pair (statistic, p-value), where each is a
-                    float
+                    float 
     lm_lag        : tuple
                     Lagrange multiplier test for spatial lag model; tuple
                     contains the pair (statistic, p-value), where each is a
-                    float
+                    float 
     rlm_error     : tuple
                     Robust lagrange multiplier test for spatial error model;
                     tuple contains the pair (statistic, p-value), where each
@@ -280,7 +277,7 @@ class OLS(BaseOLS):
     xtxi         : float
                    (X'X)^-1
 
-
+    
     Examples
     --------
     >>> import numpy as np
@@ -290,14 +287,14 @@ class OLS(BaseOLS):
     This is the DBF associated with the Columbus shapefile.  Note that
     pysal.open() also reads data in CSV format; also, the actual OLS class
     requires data to be passed in as numpy arrays so the user can read their
-    data in using any method.
+    data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
-
+    
     Extract the HOVAL column (home values) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an nx1 numpy array.
-
+    
     >>> hoval = db.by_col("HOVAL")
     >>> y = np.array(hoval)
     >>> y.shape = (len(hoval), 1)
@@ -339,48 +336,53 @@ class OLS(BaseOLS):
     0.0108745049098
     >>> ols.r2
     0.34951437785126105
+
+    Or we can easily obtain a full summary of all the results nicely formatted and
+    ready to be printed:
+
     >>> print ols.summary
     REGRESSION
     ----------
-    SUMMARY OF OUTPUT: ORDINARY LEAST SQUARES ESTIMATION
-    ----------------------------------------------------
-    Data set            :     columbus
-    Dependent Variable  :  home value  Number of Observations:          49
-    Mean dependent var  :     38.4362  Number of Variables   :           3
-    S.D. dependent var  :     18.4661  Degrees of Freedom    :          46
+    SUMMARY OF OUTPUT: ORDINARY LEAST SQUARES
+    -----------------------------------------
+    Data set            :    columbus
+    Dependent Variable  :  home value               Number of Observations:          49
+    Mean dependent var  :     38.4362               Number of Variables   :           3
+    S.D. dependent var  :     18.4661               Degrees of Freedom    :          46
     <BLANKLINE>
     R-squared           :    0.349514
     Adjusted R-squared  :      0.3212
-    Sum squared residual:   10647.015  F-statistic           :     12.3582
-    Sigma-square        :     231.457  Prob(F-statistic)     : 5.06369e-05
-    S.E. of regression  :      15.214  Log likelihood        :    -201.368
-    Sigma-square ML     :     217.286  Akaike info criterion :     408.735
-    S.E of regression ML:     14.7406  Schwarz criterion     :     414.411
+    Sum squared residual:   10647.015               F-statistic           :     12.3582
+    Sigma-square        :     231.457               Prob(F-statistic)     :   5.064e-05
+    S.E. of regression  :      15.214               Log likelihood        :    -201.368
+    Sigma-square ML     :     217.286               Akaike info criterion :     408.735
+    S.E of regression ML:     14.7406               Schwarz criterion     :     414.411
     <BLANKLINE>
-    ----------------------------------------------------------------------------
-        Variable     Coefficient       Std.Error     t-Statistic     Probability
-    ----------------------------------------------------------------------------
-        CONSTANT      46.4281827      13.1917570       3.5194844    0.0009866767
-          income       0.6289840       0.5359104       1.1736736       0.2465669
-           crime      -0.4848885       0.1826729      -2.6544086       0.0108745
-    ----------------------------------------------------------------------------
+    ------------------------------------------------------------------------------------
+                Variable     Coefficient       Std.Error     t-Statistic     Probability
+    ------------------------------------------------------------------------------------
+                CONSTANT      46.4281827      13.1917570       3.5194844       0.0009867
+                   crime      -0.4848885       0.1826729      -2.6544086       0.0108745
+                  income       0.6289840       0.5359104       1.1736736       0.2465669
+    ------------------------------------------------------------------------------------
     <BLANKLINE>
     REGRESSION DIAGNOSTICS
-    MULTICOLLINEARITY CONDITION NUMBER   12.537555
+    MULTICOLLINEARITY CONDITION NUMBER        12.537555
+    <BLANKLINE>
     TEST ON NORMALITY OF ERRORS
-    TEST                  DF          VALUE            PROB
-    Jarque-Bera            2          39.706155        0.0000000
+    TEST                             DF        VALUE           PROB
+    Jarque-Bera                       2       39.706155        0.0000000
     <BLANKLINE>
     DIAGNOSTICS FOR HETEROSKEDASTICITY
     RANDOM COEFFICIENTS
-    TEST                  DF          VALUE            PROB
-    Breusch-Pagan test     2           5.766791        0.0559445
-    Koenker-Bassett test   2           2.270038        0.3214160
+    TEST                             DF        VALUE           PROB
+    Breusch-Pagan test                2        5.766791        0.0559445
+    Koenker-Bassett test              2        2.270038        0.3214160
     <BLANKLINE>
     SPECIFICATION ROBUST TEST
-    TEST                  DF          VALUE            PROB
-    White                  5           2.906067        0.7144648
-    ========================= END OF REPORT ==============================
+    TEST                             DF        VALUE           PROB
+    White                             5        2.906067        0.7144648
+    ================================ END OF REPORT =====================================
 
     If the optional parameters w and spat_diag are passed to pysal.spreg.OLS,
     spatial diagnostics will also be computed for the regression.  These
@@ -407,11 +409,11 @@ class OLS(BaseOLS):
     0.00954740031251
 
     """
-    def __init__(self, y, x,
-                 w=None,
-                 robust=None, gwk=None, sig2n_k=True,
-                 nonspat_diag=True, spat_diag=False, moran=False,
-                 vm=False, name_y=None, name_x=None,
+    def __init__(self, y, x,\
+                 w=None,\
+                 robust=None, gwk=None, sig2n_k=True,\
+                 nonspat_diag=True, spat_diag=False, moran=False,\
+                 vm=False, name_y=None, name_x=None,\
                  name_w=None, name_gwk=None, name_ds=None):
 
         n = USER.check_arrays(y, x)
@@ -420,8 +422,8 @@ class OLS(BaseOLS):
         USER.check_robust(robust, gwk)
         USER.check_spat_diag(spat_diag, w)
         x_constant = USER.check_constant(x)
-        BaseOLS.__init__(self, y=y, x=x_constant, robust=robust,
-                         gwk=gwk, sig2n_k=sig2n_k)
+        BaseOLS.__init__(self, y=y, x=x_constant, robust=robust,\
+                     gwk=gwk, sig2n_k=sig2n_k) 
         self.title = "ORDINARY LEAST SQUARES"
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
@@ -429,9 +431,8 @@ class OLS(BaseOLS):
         self.robust = USER.set_robust(robust)
         self.name_w = USER.set_name_w(name_w, w)
         self.name_gwk = USER.set_name_w(name_gwk, gwk)
-        SUMMARY.OLS(reg=self, vm=vm, w=w, nonspat_diag=nonspat_diag,
+        SUMMARY.OLS(reg=self, vm=vm, w=w, nonspat_diag=nonspat_diag,\
                     spat_diag=spat_diag, moran=moran)
-
 
 def _test():
     import doctest
@@ -440,7 +441,20 @@ def _test():
     start_suppress = np.get_printoptions()['suppress']
     np.set_printoptions(suppress=True)
     doctest.testmod()
-    np.set_printoptions(suppress=start_suppress)
+    np.set_printoptions(suppress=start_suppress)    
 
 if __name__ == '__main__':
     _test()
+
+    import numpy as np
+    import pysal
+    db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
+    y_var = 'CRIME'
+    y = np.array([db.by_col(y_var)]).reshape(49,1)
+    x_var = ['INC','HOVAL']
+    x = np.array([db.by_col(name) for name in x_var]).T
+    w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
+    w.transform = 'r'
+    ols = OLS(y, x, w=w, nonspat_diag=True, spat_diag=True, name_y=y_var, name_x=x_var, name_ds='columbus', name_w='columbus.gal')
+    print ols.summary
+

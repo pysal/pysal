@@ -6,31 +6,31 @@ import numpy as np
 import numpy.linalg as la
 from pysal import lag_spatial
 from utils import spdot, spbroadcast
-
+from user_output import check_constant
 
 def robust_vm(reg, gwk=None):
     """
-    Robust estimation of the variance-covariance matrix. Estimated by White (default) or HAC (if wk is provided).
-
+    Robust estimation of the variance-covariance matrix. Estimated by White (default) or HAC (if wk is provided). 
+        
     Parameters
     ----------
-
+    
     reg             : Regression object (OLS or TSLS)
                       output instance from a regression model
 
     gwk             : PySAL weights object
                       Optional. Spatial weights based on kernel functions
                       If provided, returns the HAC variance estimation
-
+                      
     Returns
     --------
-
+    
     psi             : kxk array
                       Robust estimation of the variance-covariance
-
+                      
     Examples
     --------
-
+    
     >>> import numpy as np
     >>> import pysal
     >>> from ols import OLS
@@ -41,7 +41,7 @@ def robust_vm(reg, gwk=None):
     >>> X = []
     >>> X.append(db.by_col("RD90"))
     >>> X.append(db.by_col("DV90"))
-    >>> X = np.array(X).T
+    >>> X = np.array(X).T                       
 
     Example with OLS with unadjusted standard errors
 
@@ -52,13 +52,13 @@ def robust_vm(reg, gwk=None):
            [-0.02243898, -0.00031638,  0.00313386]])
 
     Example with OLS and White
-
+    
     >>> ols = OLS(y,X, robust='white')
     >>> ols.vm
     array([[ 0.24491641,  0.01092258, -0.03438619],
            [ 0.01092258,  0.01796867, -0.00071345],
            [-0.03438619, -0.00071345,  0.00501042]])
-
+    
     Example with OLS and HAC
 
     >>> wk = pysal.kernelW_from_shapefile(pysal.examples.get_path('NAT.shp'),k=15,function='triangular', fixed=False)
@@ -94,23 +94,69 @@ def robust_vm(reg, gwk=None):
            [-0.02810131, -0.01364908, -0.00318197,  0.00713251]])
 
     """
-    if hasattr(reg, 'h'):  # If reg has H, do 2SLS estimator. OLS otherwise.
+    if hasattr(reg, 'h'): #If reg has H, do 2SLS estimator. OLS otherwise.
         tsls = True
         xu = spbroadcast(reg.h, reg.u)
     else:
         tsls = False
         xu = spbroadcast(reg.x, reg.u)
-
-    if gwk:  # If gwk do HAC. White otherwise.
-        gwkxu = lag_spatial(gwk, xu)
-        psi0 = spdot(xu.T, gwkxu)
+        
+    if gwk: #If gwk do HAC. White otherwise.
+        gwkxu = lag_spatial(gwk,xu)
+        psi0 = spdot(xu.T,gwkxu)
     else:
-        psi0 = spdot(xu.T, xu)
-
+        psi0 = spdot(xu.T,xu)
     if tsls:
-        psi1 = spdot(reg.varb, reg.zthhthi)
-        psi = spdot(psi1, np.dot(psi0, psi1.T))
+        psi1 = spdot(reg.varb,reg.zthhthi)
+        psi = spdot(psi1,np.dot(psi0,psi1.T))
     else:
-        psi = spdot(reg.xtxi, np.dot(psi0, reg.xtxi))
-
+        psi = spdot(reg.xtxi,np.dot(psi0,reg.xtxi))
+        
     return psi
+    
+def hac_multi(reg, gwk, constant=False):
+    """
+    HAC robust estimation of the variance-covariance matrix for multi-regression object 
+        
+    Parameters
+    ----------
+    
+    reg             : Regression object (OLS or TSLS)
+                      output instance from a regression model
+
+    gwk             : PySAL weights object
+                      Spatial weights based on kernel functions
+                      
+    Returns
+    --------
+    
+    psi             : kxk array
+                      Robust estimation of the variance-covariance
+
+    """
+    if not constant:
+        reg.hac_var = check_constant(reg.hac_var)
+    xu = spbroadcast(reg.hac_var, reg.u)       
+    gwkxu = lag_spatial(gwk,xu)
+    psi0 = spdot(xu.T,gwkxu)
+    counter = 0
+    for m in reg.multi:
+        reg.multi[m].robust = 'hac'
+        reg.multi[m].name_gwk = reg.name_gwk
+        try:
+            psi1 = spdot(reg.multi[m].varb,reg.multi[m].zthhthi)
+            reg.multi[m].vm = spdot(psi1,np.dot(psi0,psi1.T))
+        except:
+            reg.multi[m].vm = spdot(reg.multi[m].xtxi,np.dot(psi0,reg.multi[m].xtxi))
+        reg.vm[(counter*reg.kr):((counter+1)*reg.kr),(counter*reg.kr):((counter+1)*reg.kr)] = reg.multi[m].vm
+        counter += 1
+
+def _test():
+    import doctest
+    doctest.testmod()
+
+if __name__ == '__main__':
+    _test()
+
+
+
