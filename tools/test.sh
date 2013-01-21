@@ -15,7 +15,7 @@ if [ -f /tmp/pysal.lock ]
 
     if [ "$a" != "$b"  ]
         then 
-        cd pysal
+        #cd pysal
         #rm -rf /tmp/pysal
         #svn checkout http://pysal.googlecode.com/svn/trunk pysal
         export PYTHONPATH=/Users/stephens/tmp/pysal

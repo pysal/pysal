@@ -15,7 +15,8 @@ else:
     import builtins
 #import distribute_setup
 #distribute_setup.use_setuptools()
-from distutils.core import setup 
+#from distutils.core import setup 
+from setuptools import setup, find_packages
 from pysal.version import version as dversion
 #version = '1.3.x'
 
@@ -43,7 +44,8 @@ MAINTAINER_EMAIL    = "pysal-dev@googlegroups.com"
 DESCRIPTION         = DOCLINES[0]
 LONG_DESCRIPTION    = "\n".join(DOCLINES[2:])
 URL                 = "http://pysal.org"
-DOWNLOAD_URL        = 'http://code.google.com/p/pysal/downloads/list'
+#DOWNLOAD_URL        = 'http://code.google.com/p/pysal/downloads/list'
+DOWNLOAD_URL        = 'http://pysal.googlecode.com/files/pysal-1.5.0.zip'
 LICENSE             = 'BSD'
 CLASSIFIERS         = filter(None, CLASSIFIERS.split('\n'))
 PLATFORMS           = ["Windows", "Linux", "Solaris", "Mac OS-X", "Unix"]
@@ -104,6 +106,7 @@ def setup_package():
         download_url = DOWNLOAD_URL,
         version = dversion,
         license = LICENSE,
+        test_suite = 'nose.collector',
         classifiers = CLASSIFIERS,
         packages = ['pysal', 
             'pysal.cg',

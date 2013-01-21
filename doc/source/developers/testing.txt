@@ -19,7 +19,9 @@ unittest script named `test_moran.py`. This path for this script needs to be
 `pysal/esda/tests/test_moran.py`.
 
 To ensure that any changes made to one package/module do not introduce breakage in the wider project,
-developers should run the package wide test suite using nose before making any commits.
+developers should run the package wide test suite using nose before making any
+commits. As of release version 1.5, all tests must pass using a 64-bit
+version of Python.
 To run the new test suite, install nose and nose-exclude into your
 working python installation. If you're using EPD, nose is already available::
 
