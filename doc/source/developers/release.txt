@@ -5,11 +5,11 @@
 PySAL Release Management
 ************************
 
-Preparing a release
-===================
+.. contents::
 
-Get ready to tag
-----------------
+Prepare the release
+-------------------
+
 
 - Check all tests pass.
 
@@ -25,18 +25,19 @@ Get ready to tag
 
 - Commit all changes.
 
-Tag and build
--------------
-
-Create the Tag::
+Tag 
+---
+Make the Tag::
 
   $ svn copy https://pysal.googlecode.com/svn/trunk \
    https://pysal.googlecode.com/svn/tags/X.x -m "Release X.x"
 
-Checkout the newly created Tag on each build machine::
+Checkout the newly created tag on each build machine::
 
   $ svn checkout http://pysal.googlecode.com/svn/tags/<X.x>
 
+Make docs
+---------
 Make the html docs:: 
 
   $ cd tags/X.x/doc/
@@ -47,28 +48,34 @@ Create a new directory on doc server and copy new docs to it::
   $ mkdir -p /srv/www/pysal/public_html/<X.x>
   $ rsync -ruz doc/build/html/ geodacenter.org:/srv/www/pysal/public_html/<X.x>  (no trailing slash!)
 
-Make a source distribution for the build platform you're using::
+Now, compress the HTML and upload it to the Google Code downloads_.
 
-  $ cd tags/X.x/
-  $ python setup.py sdist  
+Make and Upload distributions
+-------------------------------
 
-A good reference is http://docs.python.org/distutils/sourcedist.html
+- Make and upload_ to the Python Package Index in one shot!::
 
-To make a graphical Windows installer on a Windows box:: 
+   $ python setup.py sdist upload
 
-  $ cd tags/X.x/
-  $ python setup.py bdist_wininst
-   
+  - if not registered_, do so. Follow the prompts. You can save the
+      login credentials in a dot-file, .pypirc
 
-Release
--------
+- :strike:`Update the release on the Python Package Index`
+    - :strike:`open a new release tarball to get PKG-INFO from top level pysal directory`
+    - :strike:`go to http://pypi.python.org/pypi?:action=submit_form`
+    - :strike:`pick option 2 to upload the PKG-INFO`
 
-- Upload releases and zipped docs to http://code.google.com/p/pysal/downloads
+- Make and upload releases to the Google Code downloads_.   
 
-- Update the release on the Python Package Index
-   - open a new release tarball to get PKG-INFO from top level pysal directory
-   - go to http://pypi.python.org/pypi?:action=submit_form
-   - pick option 2 to upload the PKG-INFO 
+  - Make a source_ distribution for the build platform you're using::
+
+    $ cd tags/X.x/
+    $ python setup.py sdist  
+
+  - Make a graphical Windows installer on a Windows box:: 
+
+    $ cd tags/X.x/
+    $ python setup.py bdist_wininst
 
 
 Announce
@@ -90,3 +97,7 @@ Put trunk back to dev
 
 - Change the docs version from X.x to X.xdev by editing trunk/doc/source/conf.py in two places.
 
+.. _upload: http://docs.python.org/2.7/distutils/uploading.html
+.. _registered: http://docs.python.org/2.7/distutils/packageindex.html
+.. _downloads: http://code.google.com/p/pysal/downloads
+.. _source: http://docs.python.org/distutils/sourcedist.html

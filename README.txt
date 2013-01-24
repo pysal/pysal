@@ -1,10 +1,8 @@
-
 =================================================
 Python Spatial Analysis Library
 =================================================
 
 .. Contents::
-
 
 What is PySAL
 --------------
@@ -30,9 +28,8 @@ as the Python based plug-in architectures for QGIS, GRASS, and the toolbox
 extensions for ArcGIS, that end user access to PySAL functionality will be
 widening in the near future.
 
-
-PySAL structure
----------------
+PySAL package structure
+-----------------------
 
 Currently PySAL consists of the following files and directories:
 
@@ -66,29 +63,25 @@ Currently PySAL consists of the following files and directories:
 PySAL modules
 +++++++++++++
 
-    * pysal.core — Core Data Structures and IO
     * pysal.cg — Computational Geometry
+    * pysal.contrib - Contributed modules
+    * pysal.core — Core Data Structures and IO
     * pysal.esda — Exploratory Spatial Data Analysis
     * pysal.examples — Data Sets
     * pysal.inequality — Spatial Inequality Analysis
+    * pysal.network - Spatial network analysis
     * pysal.region — Spatially constrained clustering
     * pysal.spatial_dynamics — Spatial Dynamics
     * pysal.spreg — Regression and diagnostics
     * pysal.weights — Spatial Weights
-    * pysal.FileIO — PySAL FileIO: Module for reading and writing various file
-                     types in a Pythonic way
-
 
 Website
 -------
-
 All things PySAL can be found here
     http://pysal.org/
 
-
 Mailing Lists
 -------------
-
 Please see the developer's list here
     http://groups.google.com/group/pysal-dev
 
@@ -97,14 +90,11 @@ Help for users is here
 
 Bug reports
 -----------
-
 To search for or report bugs, please see
     http://code.google.com/p/pysal/issues/list
 
-
 License information
 -------------------
-
 See the file "LICENSE.txt" for information on the history of this
 software, terms & conditions for usage, and a DISCLAIMER OF ALL
 WARRANTIES.
