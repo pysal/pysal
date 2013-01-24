@@ -1,6 +1,9 @@
-"""Internal helper files for user output."""
+"""
+Internal helper files for user output.
+"""
 
-__author__ = "Luc Anselin luc.anselin@asu.edu, David C. Folch david.folch@asu.edu, Jing Yao jingyao@asu.edu"
+__author__ = "Luc Anselin luc.anselin@asu.edu, David C. Folch david.folch@asu.edu, Pedro V. Amaral pedro.amaral@asu.edu, Jing Yao jingyao@asu.edu"
+
 import textwrap as TW
 import numpy as np
 import copy as COPY

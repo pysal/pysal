@@ -22,7 +22,7 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, excluding the constant
+                   independent (exogenous) variable, including the constant
     robust       : string
                    If 'white', then a White consistent estimator of the
                    variance-covariance matrix is given.  If 'hac', then a
@@ -91,9 +91,9 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
            [  0.62898397],
            [ -0.48488854]])
     >>> ols.vm
-    array([[  1.74022453e+02,  -6.52060364e+00,  -2.15109867e+00],
-           [ -6.52060364e+00,   2.87200008e-01,   6.80956787e-02],
-           [ -2.15109867e+00,   6.80956787e-02,   3.33693910e-02]])
+    array([[ 174.02245348,   -6.52060364,   -2.15109867],
+           [  -6.52060364,    0.28720001,    0.06809568],
+           [  -2.15109867,    0.06809568,    0.03336939]])
     """
     def __init__(self, y, x, robust=None, gwk=None, sig2n_k=True):
         self.x = x

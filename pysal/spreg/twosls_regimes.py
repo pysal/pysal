@@ -1,3 +1,9 @@
+"""
+Two-stage Least Squares estimation with regimes.
+"""
+
+__author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.edu, David C. Folch david.folch@asu.edu"
+
 import numpy as np
 import regimes as REGI
 import user_output as USER

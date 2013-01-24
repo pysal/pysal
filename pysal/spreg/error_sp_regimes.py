@@ -1,3 +1,9 @@
+"""
+Spatial Error Models with regimes module
+"""
+
+__author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.edu"
+
 import numpy as np
 import multiprocessing as mp
 import regimes as REGI

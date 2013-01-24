@@ -20,7 +20,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, excluding the constant
+                   independent (exogenous) variable, including the constant
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable

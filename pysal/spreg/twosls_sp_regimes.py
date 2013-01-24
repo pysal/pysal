@@ -2,6 +2,8 @@
 Spatial Two Stages Least Squares with Regimes
 '''
 
+__author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.edu, David C. Folch david.folch@asu.edu"
+
 import numpy as np
 import pysal
 import regimes as REGI

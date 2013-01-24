@@ -1,16 +1,9 @@
 '''
-Hom family of models based on: 
-
-    Drukker, D. M., Egger, P., Prucha, I. R. (2010)
-    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
-    Disturbances and Endogenous Regressors". Working paper.
-    
-Following:
-
-    Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation with
-    and without Heteroskedasticity".
+Hom family of models with regimes".
 
 '''
+
+__author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.edu, Daniel Arribas-Bel darribas@asu.edu"
 
 from scipy import sparse as SP
 import numpy as np
@@ -280,7 +273,7 @@ class GM_Error_Hom_Regimes(RegressionPropsY, REGI.Regimes_Frame):
      [ 0.4104]]
 
     >>> print np.sqrt(reg.vm.diagonal())
-    [ 0.39105853  0.15664624  0.05254328  0.48379958  0.20018799  0.05834139
+    [ 0.39105854  0.15664624  0.05254328  0.48379958  0.20018799  0.05834139
       0.01882401]
 
     '''

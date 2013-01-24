@@ -41,7 +41,7 @@ class BaseGM_Error_Hom(RegressionPropsY):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, excluding the constant
+                   independent (exogenous) variable, including the constant
     w            : Sparse matrix
                    Spatial weights sparse matrix   
     max_iter     : int
@@ -127,10 +127,10 @@ class BaseGM_Error_Hom(RegressionPropsY):
      [ -0.556    0.179 ]
      [  0.4129   0.1835]]
     >>> print np.around(reg.vm, 4)
-    [[  1.51340700e+02  -5.29060000e+00  -1.85650000e+00  -2.40000000e-03]
-     [ -5.29060000e+00   2.46700000e-01   5.14000000e-02   3.00000000e-04]
-     [ -1.85650000e+00   5.14000000e-02   3.21000000e-02  -1.00000000e-04]
-     [ -2.40000000e-03   3.00000000e-04  -1.00000000e-04   3.37000000e-02]]
+    [[ 151.3407   -5.2906   -1.8565   -0.0024]
+     [  -5.2906    0.2467    0.0514    0.0003]
+     [  -1.8565    0.0514    0.0321   -0.0001]
+     [  -0.0024    0.0003   -0.0001    0.0337]]
     '''
 
     def __init__(self, y, x, w,\
@@ -394,7 +394,7 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, excluding the constant
+                   independent (exogenous) variable, including the constant
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
@@ -818,7 +818,7 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, excluding the constant
+                   independent (exogenous) variable, including the constant
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable

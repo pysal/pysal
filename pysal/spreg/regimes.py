@@ -1,3 +1,11 @@
+"""
+Tools for different regimes procedure estimations
+"""
+
+__author__ = "Luc Anselin luc.anselin@asu.edu, \
+        Daniel Arribas-Bel darribas@asu.edu, \
+        Pedro V. Amaral pedro.amaral@asu.edu"
+        
 import numpy as np
 import pysal
 import scipy.sparse as SP

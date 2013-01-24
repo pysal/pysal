@@ -33,7 +33,7 @@ class BaseGM_Error_Het(RegressionPropsY):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, excluding the constant
+                   independent (exogenous) variable, including the constant
     w            : Sparse matrix
                    Spatial weights sparse matrix 
     max_iter     : int
@@ -376,7 +376,7 @@ class BaseGM_Endog_Error_Het(RegressionPropsY):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, excluding the constant
+                   independent (exogenous) variable, including the constant
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
@@ -803,7 +803,7 @@ class BaseGM_Combo_Het(BaseGM_Endog_Error_Het):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, excluding the constant
+                   independent (exogenous) variable, including the constant
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
