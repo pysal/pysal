@@ -333,10 +333,10 @@ def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
 
     check values
 
-    >>> res[(0,  1)].I
-    0.19362610652874668
-    >>> res[(3,  0)].I
-    0.37701382542927858
+    >>> print round(res[(0,  1)].I,7)
+    0.1936261
+    >>> print round(res[(3,  0)].I,7)
+    0.3770138
 
 
     """
@@ -688,4 +688,17 @@ class Moran_Local_Rate(Moran_Local):
             y = e * 1.0 / b
         Moran_Local.__init__(self, y, w,
                              transformation=transformation, permutations=permutations)
+
+def _test():
+    import doctest
+    # the following line could be used to define an alternative to the '<BLANKLINE>' flag
+    #doctest.BLANKLINE_MARKER = 'something better than <BLANKLINE>'
+    start_suppress = np.get_printoptions()['suppress']
+    np.set_printoptions(suppress=True)
+    doctest.testmod()
+    np.set_printoptions(suppress=start_suppress)    
+
+if __name__ == '__main__':
+    _test()
+
 

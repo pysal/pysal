@@ -78,10 +78,10 @@ class Geary:
     >>> f = pysal.open(pysal.examples.get_path("book.txt"))
     >>> y = np.array(f.by_col['y'])
     >>> c = Geary(y,w,permutations=0)
-    >>> c.C
-    0.33301083591331254
-    >>> print "%.8f"%c.p_norm
-    0.00009202
+    >>> print round(c.C,7)
+    0.3330108
+    >>> print round(c.p_norm,7)
+    9.2e-05
     >>>
     """
     def __init__(self, y, w, transformation="r", permutations=999):
@@ -155,4 +155,17 @@ class Geary:
                          for j, wij in z])
         a = (self.n - 1) * sum(ys)
         return a / self.den
+
+def _test():
+    import doctest
+    # the following line could be used to define an alternative to the '<BLANKLINE>' flag
+    #doctest.BLANKLINE_MARKER = 'something better than <BLANKLINE>'
+    start_suppress = np.get_printoptions()['suppress']
+    np.set_printoptions(suppress=True)
+    doctest.testmod()
+    np.set_printoptions(suppress=start_suppress)    
+
+if __name__ == '__main__':
+    _test()
+
 
