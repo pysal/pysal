@@ -1,4 +1,24 @@
+v<1.5.0>, 2013-01-31
+
+- Adding regime classes for all GM methods and OLS available in
+  pysal.spreg, i.e. OLS, TSLS, spatial lag models, spatial error models
+  and SARAR models. All tests and heteroskedasticity
+  corrections/estimators currently available in pysal.spreg apply to
+  regime models (e.g. White, HAC and KP-HET). With the regimes, it is
+  possible to estimate models that have:
+  -- Common or regime-specific error variance;
+  -- Common or regime-specific coefficients for all variables or for a
+  selection of variables;
+  -- Common or regime-specific constant term;
+  - Various refactoring to streamline code base and improve long term
+    maintainability
+    - Contributions from Luc Anselin, Pedro Amaral, Daniel Arribas-Bel
+      and David Folch
+
+
 v<1.4.0>, 2012-07-31
+
+2013-01-31 
 
 
 2012-07-31 21:30  sjsrey@gmail.com
