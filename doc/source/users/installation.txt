@@ -46,7 +46,7 @@ You can install PySAL in a number of ways. We provide system-specific package in
 that most users are familiar with. We also build source distributions that self-install by invoking a single command line argument. 
 
 PySAL is also available on the `Python Package Index
-<http://pypi.python.org/pypi/pysal>`_, which means it can be
+<http://pypi.python.org/pypi/PySAL>`_, which means it can be
 downloaded and installed from the command line using easy_install or pip, as
 follows::
 
@@ -55,8 +55,6 @@ follows::
  $ easy_install pysal
 
 
-Finally, advanced users and 
-developers can use the popular version control tool **svn** to check out and use our latest code. Instructions for each of these methods follows.
 
 
 Downloads
@@ -64,43 +62,26 @@ Downloads
 
 Click-to-download PySAL distributions are available at `Google Code <http://code.google.com/p/pysal/downloads/list>`_.  Choose the right one for your system, or grab a source tarball or zipfile.
 
-Instructions for Windows 
-~~~~~~~~~~~~~~~~~~~~~~~~
+Windows installer
+~~~~~~~~~~~~~~~~~~
 
 Grab the Windows installer (ends with *.exe*) and download to your computer. Double-click to launch the installer and follow the simple wizard. You will have to select the version of Python you want the package to install with, if you have more than one version of Python on your system. You may repeat this procedure for as many versions of Python as you have on your machine. 
 
-If you'd rather install source code, grab the zipfile (ends with *.zip*) and download to your computer. Decompress the file to a convenient location on your hard drive. Open a command shell and navigate to the decompressed PySAL folder. Type::
 
- $ python setup.py install
 
-Instructions for Mac OS X
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Source install instructions for all platforms
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Grab one of the OS X installers (end with .dmg) and download to your
-computer. Double-click to launch the installer and follow the simple wizard.
-
-The installers place PySAL into the Python
-site-packages directory corresponding to the Python version exposed in the
-filename. For example, the Python 2.6 installer installs to 
-/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages.
-Note that the Python frameworks installation does not come pre-packaged with
-a new Mac. In order to successfully use our installers, you need the official Python
-distributions from python.org. 
-
-If you'd rather install source code, grab the tarball (ends with *.tar.gz*) and download to your computer. Decompress the file to a convenient location on your hard drive. Open a terminal and navigate to the decompressed PySAL folder. Type::
-
- $ python setup.py install
-
-Instructions for GNU/Linux
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Grab either of the source distributions and decompress to your selected destination. Open a command shell and navigate to the decompressed PySAL folder. Type::
+Grab either of the source distributions (.tar.gz or .zip) and decompress to your selected destination. Open a command shell and navigate to the decompressed PySAL folder. Type::
 
  $ python setup.py install
 
 
 Development version from Subversion (SVN)
 -----------------------------------------
+
+Finally, advanced users and 
+developers can use the popular version control tool **svn** to check out and use our latest code. Instructions for each of these methods follows.
 
 Users and developers can grab the source code from our Subversion repository using
 an svn client and the following instructions:
