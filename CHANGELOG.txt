@@ -1,19 +1,388 @@
 v<1.5.0>, 2013-01-31
 
-- Adding regime classes for all GM methods and OLS available in
-  pysal.spreg, i.e. OLS, TSLS, spatial lag models, spatial error models
-  and SARAR models. All tests and heteroskedasticity
-  corrections/estimators currently available in pysal.spreg apply to
-  regime models (e.g. White, HAC and KP-HET). With the regimes, it is
-  possible to estimate models that have:
-  -- Common or regime-specific error variance;
-  -- Common or regime-specific coefficients for all variables or for a
-  selection of variables;
-  -- Common or regime-specific constant term;
-  - Various refactoring to streamline code base and improve long term
-    maintainability
-    - Contributions from Luc Anselin, Pedro Amaral, Daniel Arribas-Bel
-      and David Folch
+2013-01-29 20:36  phil.stphns
+
+	* doc/source/users/installation.txt: updating and simplifying user
+	  install instructions.
+
+2013-01-18 16:17  sjsrey
+
+	* Adding regime classes for all GM methods and OLS available in
+	  pysal.spreg, i.e. OLS, TSLS, spatial lag models, spatial error models
+	  and SARAR models. All tests and heteroskedasticity
+	  corrections/estimators currently available in pysal.spreg apply to
+	  regime models (e.g. White, HAC and KP-HET). With the regimes, it is
+	  possible to estimate models that have:
+	  -- Common or regime-specific error variance;
+	  -- Common or regime-specific coefficients for all variables or for a
+	  selection of variables;
+	  -- Common or regime-specific constant term;
+	  - Various refactoring to streamline code base and improve long term
+	    maintainability
+	    - Contributions from Luc Anselin, Pedro Amaral, Daniel Arribas-Bel
+	      and David Folch
+
+2013-01-18 14:08  schmidtc
+
+	* pysal/common.py: implemented deepcopy for ROD, see #237
+
+2013-01-08 12:28  dreamessence
+
+	* pysal/contrib/spatialnet/__init__.py: Adding __init__.py to make it importable
+
+2012-12-31 22:53  schmidtc
+
+	* pysal/core/IOHandlers/gwt.py: adding kwt support, see #232
+
+2012-12-21 20:53  sjsrey@gmail.com
+
+	* pysal/__init__.py, pysal/cg/rtree.py,
+	  pysal/contrib/weights_viewer/weights_viewer.py,
+	  pysal/weights/weights.py: - turning off randomization in rtree
+
+2012-12-06 16:34  dfolch
+
+	* pysal/contrib/shapely_ext.py: adding unary_union() to shapely
+	  contrib; note this only works with shapely version 1.2.16 or higher
+
+
+2012-11-29 13:39  dreamessence 
+
+	* pysal/contrib/viz/mapping.py: Added option in setup_ax to pass
+	  pre-existing axes object to append.  It is optional and it enables,
+	  for instance, to embed several different maps in one single figure
+
+2012-11-20 00:23  dfolch
+
+	* pysal/contrib/shapely_ext.py: adding shapely's cascaded_union
+	  function to contrib
+
+2012-11-12 18:08  dreamessence
+
+	* pysal/contrib/viz/mapping.py: -Adding transCRS method to convert
+	  points from one prj to another arbitrary one -Adding map_poly_shp to
+	  be able to plot shapefiles in arbitrary projections, not needing to
+	  be in lonlat and not depending on Basemap
+
+2012-11-09 15:40  sjsrey@gmail.com
+
+	* pysal/weights/weights.py:
+	  - distinguish between intrinsic symmetry and general symmetry
+	
+2012-11-02 17:48  schmidtc
+
+	* pysal/weights/user.py, pysal/weights/util.py: Adding Minkowski
+	  p-norm to min_threshold_dist_from_shapefile, see issue #221
+
+2012-10-19 22:35  sjsrey@gmail.com
+
+	* pysal/weights/weights.py:
+	  explicitly prohibit chaining of transformations - all
+	  transformations are only applied to the original weights at
+	  instantiation
+
+2012-10-19 17:38  sjsrey@gmail.com
+
+	* pysal/spatial_dynamics/markov.py:
+	  - fixing bug in permutation matrix to reorder kronecker product in
+	    the join test
+
+2012-10-17 17:55  sjsrey@gmail.com
+
+	* pysal/weights/util.py:
+	  -
+	  higher order contiguity for WSP objects
+
+2012-10-17 15:43  sjsrey@gmail.com
+
+	* pysal/weights/user.py:
+	  -
+	  id_order attribute was always NONE for wsp created from
+	  
+	  queen/rook_from_shapefile with sparse=True
+
+2012-10-16 19:25  schmidtc
+
+	* pysal/weights/util.py: improving memory usage of
+	  get_points_array_from_shapefile, no need to read entire shapefile
+	  into memory.
+
+2012-10-15 00:44  dreamessence
+
+	* pysal/contrib/viz/mapping.py: First attempt to refactor Serge's code
+	  for choropleth mapping.  It now offers a more general and flexible
+	  architecture.  Still lots of work and extensions left.  The module
+	  is explained in a notebook available as a gist at
+	  https://gist.github.com/3890284 and viewable at
+	  http://nbviewer.ipython.org/3890284/
+
+2012-10-12 18:34  schmidtc
+
+	* pysal/contrib/spatialnet/spatialnet.py: modified SpatialNetwork.snap
+	  to calculate and return the snapped point
+
+2012-10-12 17:05  dfolch
+
+	* pysal/contrib/viz/mapping.py: made edits to unique_values_map to
+	  allow for unlimited number of categories; I commented out the
+	  previous code so these changes can easily be rolled back if it
+	  breaks something somewhere else
+
+2012-10-12 15:03  schmidtc
+
+	* pysal/cg/segmentLocator.py: Fixing issue with segmentLocator, when
+	  query point is extreamly far from the grid boundary, overflow errors
+	  were causing the KDTree to not return any results.  Changed both
+	  KDtree's to use Float64 and share the same data.  Previously,
+	  cKDTree was using float64 and KDtree was using int32.
+
+2012-10-11 08:12  dreamessence
+
+	* pysal/contrib/viz/__init__.py: Adding __init__.py to viz module to
+	  make it importable
+
+2012-08-31 02:57  phil.stphns
+
+	* pysal/spreg/tests/test_diagnostics.py,
+	  pysal/spreg/tests/test_diagnostics_sp.py,
+	  pysal/spreg/tests/test_diagnostics_tsls.py,
+	  pysal/spreg/tests/test_error_sp.py,
+	  pysal/spreg/tests/test_error_sp_het.py,
+	  pysal/spreg/tests/test_error_sp_het_sparse.py,
+	  pysal/spreg/tests/test_error_sp_hom.py,
+	  pysal/spreg/tests/test_error_sp_hom_sparse.py,
+	  pysal/spreg/tests/test_error_sp_sparse.py,
+	  pysal/spreg/tests/test_ols.py,
+	  pysal/spreg/tests/test_ols_sparse.py,
+	  pysal/spreg/tests/test_probit.py,
+	  pysal/spreg/tests/test_twosls.py,
+	  pysal/spreg/tests/test_twosls_sp.py,
+	  pysal/spreg/tests/test_twosls_sp_sparse.py,
+	  pysal/spreg/tests/test_twosls_sparse.py:
+	  - autopep8 -iv spreg/tests/*.py - nosetests pysal - no fixes needed
+
+2012-08-31 01:16  phil.stphns
+
+	* pysal/spreg/diagnostics.py,
+	  pysal/spreg/diagnostics_sp.py,
+	  pysal/spreg/diagnostics_tsls.py,
+	  pysal/spreg/error_sp.py,
+	  pysal/spreg/error_sp_het.py,
+	  pysal/spreg/error_sp_hom.py,
+	  pysal/spreg/ols.py,
+	  pysal/spreg/probit.py,
+	  pysal/spreg/robust.py,
+	  pysal/spreg/summary_output.py,
+	  pysal/spreg/twosls.py,
+	  pysal/spreg/twosls_sp.py,
+	  pysal/spreg/user_output.py,
+	  pysal/spreg/utils.py:
+	  -
+	  autopep8 -iv spreg/*.py - fixed autopep8-introduced doctest failures
+	  - fixed lingering scientific notation test failures
+
+2012-08-31 00:26  phil.stphns
+
+	* pysal/esda/gamma.py,
+	  pysal/esda/join_counts.py,
+	  pysal/esda/mapclassify.py,
+	  pysal/esda/mixture_smoothing.py,
+	  pysal/esda/moran.py,
+	  pysal/esda/smoothing.py:
+	  -
+	  autopep8 fixes - make sure to run unit and doc tests before
+	  committing - one autofix breaks long lines, and thus breaks some
+	  doctests; must be
+	  
+	  fixed manually
+
+2012-08-31 00:10  phil.stphns
+
+	* pysal/esda/getisord.py:
+	  -
+	  using autopep8 module - call: autopep8 -vi getisord.py
+
+2012-08-30 23:18  phil.stphns
+
+	* pysal/esda/geary.py:
+	  -
+	  pep8 clear - removed wildcard import
+
+2012-08-26 22:53  phil.stphns
+
+	* pysal/spatial_dynamics/directional.py,
+	  pysal/spatial_dynamics/ergodic.py,
+	  pysal/spatial_dynamics/interaction.py,
+	  pysal/spatial_dynamics/markov.py,
+	  pysal/spatial_dynamics/rank.py,
+	  pysal/spatial_dynamics/util.py:
+	  -pep8 and pylint fixes -clean wildcard imports
+
+2012-08-26 21:03  phil.stphns
+
+	* pysal/region/maxp.py,
+	  pysal/region/randomregion.py:
+	  -
+	  cleaning up imports
+
+2012-08-26 18:16  phil.stphns
+
+	* pysal/region/maxp.py:
+	  -
+	  style fixes with pep8 - cmd line call: pep8 --show-source
+	  --ignore=E128,E302,E501,E502,W293,W291
+	  
+	  region/maxp.py
+
+2012-08-26 17:47  phil.stphns
+
+	* pysal/common.py,
+	  pysal/examples/README.txt,
+	  pysal/region/components.py,
+	  pysal/region/randomregion.py:
+	  -
+	  using pep8 module
+
+2012-08-24 20:47  schmidtc
+
+	* pysal/network,
+	  pysal/network/__init__.py: adding network module
+
+2012-08-21 22:53  phil.stphns
+
+	* doc/source/_templates/ganalytics_layout.html:
+	  -
+	  updating analytics tracker
+
+2012-08-17 17:11  sjsrey@gmail.com
+
+	* pysal/contrib/spatialnet/util.py:
+	  -
+	  more utility functions for pysal
+	  -
+	  networkx interop
+
+2012-08-16 23:44  phil.stphns
+
+	* setup.py:
+	  -
+	  tweak for build names
+
+2012-08-12 13:15  dreamessence
+
+	* doc/source/index.txt:
+	  Adding announcement links to landing page
+
+2012-08-11 17:38  sjsrey
+
+	* LICENSE.txt:
+	  -
+	  update
+
+2012-08-09 17:19  phil.stphns
+
+	* doc/source/developers/pep/pep-0008.txt:
+	  updating
+	  spatial
+	  db
+	  pep
+
+2012-08-08 17:22  schmidtc
+
+	* pysal/weights/Distance.py:
+	  Fixing bug in Kernel weights that causes erroneous results when
+	  using ArcDistances.  See issue #218.
+
+2012-08-04 21:14  sjsrey
+
+	* doc/source/developers/docs/index.txt:
+	  -
+	  fixed
+	  links
+
+2012-08-04 21:03  sjsrey
+
+	* doc/source/developers/docs/index.txt:
+	  -
+	  hints
+	  on
+	  editing
+	  docs
+	  
+
+2012-08-04 20:14  phil.stphns
+
+	* doc/source/developers/pep/pep-0011.txt:
+	  note
+	  about
+	  travis-ci
+	  and
+	  github
+
+2012-08-04 16:24  sjsrey
+
+	* doc/source/developers/pep/pep-0011.txt:
+	  PEP-0011
+	  
+
+2012-08-04 16:22  sjsrey
+
+	* doc/source/developers/pep/index.txt:
+	  -
+	  PEP 0011 Move from Google Code to Github
+
+2012-08-04 04:42  sjsrey
+
+	* doc/source/index.txt:
+	  - broken link
+
+2012-08-04 04:35  sjsrey
+
+	* doc/source/index.txt:
+	  - news updates
+
+2012-08-04 04:24  sjsrey
+
+	* doc/source/index.txt:
+	  - reorg
+
+2012-08-02 02:32  sjsrey
+
+	* pysal/examples/__init__.py:
+	  -
+	  moving back to r1049 but leaving r1310 in history for ideas on
+	  moving forward - we need to distinguish between using examples in
+	  the doctests (which the users see) and for the developers since we
+	  are no longer distributing examples with the source
+
+2012-08-02 01:49  sjsrey
+
+	* pysal/examples/__init__.py:
+	  -
+	  correct conditional this time (i hope)
+
+2012-08-02 01:36  sjsrey
+
+	* pysal/examples/__init__.py:
+	  -
+	  compromise
+	  -
+	  returns pth rather than None if file does not exist
+
+2012-08-02 00:58  sjsrey
+
+	* pysal/examples/__init__.py:
+	  -
+	  link to examples download
+
+2012-08-02 00:42  sjsrey
+
+	* pysal/examples/__init__.py:
+	  -
+	  explicit check if examples are actually present
+
+
+
 
 
 v<1.4.0>, 2012-07-31
