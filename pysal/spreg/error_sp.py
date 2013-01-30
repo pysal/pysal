@@ -289,9 +289,9 @@ class GM_Error(BaseGM_Error):
     >>> np.around(model.std_err, decimals=6)
     array([ 12.412038,   0.504443,   0.178496])
     >>> np.around(model.z_stat, decimals=6)
-    array([[ 3.842611,  0.000122],
-           [ 1.408392,  0.159015],
-           [-3.084247,  0.002041]])
+    array([[  3.84261100e+00,   1.22000000e-04],
+           [  1.40839200e+00,   1.59015000e-01],
+           [ -3.08424700e+00,   2.04100000e-03]])
     >>> np.around(model.sig2, decimals=6)
     198.55957900000001
 
