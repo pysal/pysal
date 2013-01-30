@@ -21,7 +21,7 @@ If you are new to PySAL you might want to read :ref:`users-tutorials`.
 Downloads
 =========
 
-`Downloads  <http://pypi.python.org/pypi/PySAL/1.4.1>`_  are hosted on the
+`Downloads  <http://pypi.python.org/pypi/PySAL>`_  are hosted on the
 Python Package Index. 
 
 Getting Involved
