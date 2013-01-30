@@ -47,14 +47,12 @@ that most users are familiar with. We also build source distributions that self-
 
 PySAL is also available on the `Python Package Index
 <http://pypi.python.org/pypi/PySAL>`_, which means it can be
-downloaded and installed from the command line using easy_install or pip, as
+downloaded and installed manually or from the command line using easy_install or pip, as
 follows::
 
  $ pip install pysal
  #or
  $ easy_install pysal
-
-
 
 
 Downloads

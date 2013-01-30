@@ -17,7 +17,7 @@ Prepare the release
 
 - Edit THANKS and README if needed.
 
-- Change MAJOR, MINOR version and DOWNLOAD_URL in setup script.
+- Change MAJOR, MINOR version in setup script.
 
 - Change pysal/version.py to non-dev number
 

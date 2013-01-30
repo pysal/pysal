@@ -69,7 +69,6 @@ PySAL modules
     * pysal.esda — Exploratory Spatial Data Analysis
     * pysal.examples — Data Sets
     * pysal.inequality — Spatial Inequality Analysis
-    * pysal.network - Spatial network analysis
     * pysal.region — Spatially constrained clustering
     * pysal.spatial_dynamics — Spatial Dynamics
     * pysal.spreg — Regression and diagnostics

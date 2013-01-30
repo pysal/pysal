@@ -21,8 +21,8 @@ If you are new to PySAL you might want to read :ref:`users-tutorials`.
 Downloads
 =========
 
-`Downloads  <http://code.google.com/p/pysal/downloads/list>`_  are hosted on the project development site at `Google Code. <http://code.google.com/p/pysal/>`_
-
+`Downloads  <http://pypi.python.org/pypi/PySAL/1.4.1>`_  are hosted on the
+Python Package Index. 
 
 Getting Involved
 ================
