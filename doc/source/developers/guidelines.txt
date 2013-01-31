@@ -71,23 +71,6 @@ PySAL development follows a six-month release schedule that is aligned with
 the academic calendar.
 
 
-
-1.5 Cycle
-=========
-
-========   ========   ================= ====================================================
-Start      End        Phase             Notes
-========   ========   ================= ====================================================
-8/1/12      8/14/12   Module Proposals  Developers draft PEPs and prototype
-8/15/12     8/15/12   Developer vote    All developers vote on PEPs 
-8/16/12     8/16/12   Module Approval   BDFL announces final approval
-8/17/11    12/30/11   Development       Implementation and testing of approved modules
-1/1/13       1/1/13   Code Freeze       APIs fixed, bug and testing changes only
-1/23/13     1/30/13   Release Prep      Test release builds, updating svn 
-1/31/13     1/31/13   Release           Official release of 1.5
-========   ========   ================= ====================================================
-
-
 1.6 Cycle
 =========
 
@@ -101,6 +84,23 @@ Start      End        Phase             Notes
 7/1/13      7/27/13   Code Freeze       APIs fixed, bug and testing changes only
 7/23/13     7/30/13   Release Prep      Test release builds, updating svn 
 7/31/13     7/31/13   Release           Official release of 1.6
+========   ========   ================= ====================================================
+
+
+
+1.7 Cycle
+=========
+
+========   ========   ================= ====================================================
+Start      End        Phase             Notes
+========   ========   ================= ====================================================
+8/1/13      8/14/13   Module Proposals  Developers draft PEPs and prototype
+8/15/13     8/15/13   Developer vote    All developers vote on PEPs 
+8/16/13     8/16/13   Module Approval   BDFL announces final approval
+8/17/13    12/30/13   Development       Implementation and testing of approved modules
+1/1/14       1/1/14   Code Freeze       APIs fixed, bug and testing changes only
+1/23/14     1/30/14   Release Prep      Test release builds, updating svn 
+1/31/14     1/31/14   Release           Official release of 1.7
 ========   ========   ================= ====================================================
 
 
