@@ -50,6 +50,13 @@ Documentation
 News
 ====
 
+
+(2013-01-30) `PySAL 1.5.0 released <http://code.google.com/p/pysal/wiki/Announce1_5>`_ (`Install <http://pysal.geodacenter.org/1.5/users/installation.html>`_)
+
+(2012-10-24) `PySAL short course at OSGRS 2012 <https://twitter.com/OGRS2012/status/261106998861504512>`_
+
+(2012-09-18) `PySAL short course at GIScience 2012 <http://www.giscience.org/workshops.html>`_
+
 (2012-07-31) `PySAL 1.4.0 released <http://code.google.com/p/pysal/wiki/Announce1_4>`_ (`Install <http://pysal.geodacenter.org/1.4/users/installation.html>`_)
 
 (2012-07-30) `Short course on PySAL for Spatial Regression <https://www.geodapress.com/workshops/spatial-regression#description>`_
