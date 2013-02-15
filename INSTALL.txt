@@ -1,72 +1,85 @@
+.. _installation:
+
 ================
 Installing PySAL
 ================
 
+.. contents::
+
 Prerequisites
 =============
+
 
 Before installing PySAL, make sure the following libraries are properly
 installed on your machine:
 
+
 * `Python <http://www.python.org/>`_ 2.5 or later
-* `Numpy <http://numpy.scipy.org/>`_ 1.3 or later
-* `Scipy <http://www.scipy.org/>`_ 0.7 or later
+* `Numpy <http://new.scipy.org/download.html>`_ 1.3 or later
+* `Scipy <http://new.scipy.org/download.html>`_ 0.7 or later
+
 
 *Optional, bundled installation:* 
 
-With the `Enthought Python Distribution (EPD) <http://www.enthought.com/products/epd.php>`_, 
+With the `Enthought Python Distribution (EPD Free) <http://www.enthought.com/products/epd_free.php>`_, 
 you will install all of PySAL's required dependencies, as well as iPython and a lot more, rather than installing dependencies one by one.
-The package is free for academics, and downloadable `here <http://www.enthought.com/products/edudownload.php>`_. 
+The full-blown EPD package is free for academics, and downloadable `here <http://www.enthought.com/products/edudownload.php>`_. 
+Note that on OS X, PySAL binary installers will not install to the EPD
+site-packages directory. We advise EPD users to install PySAL via
+PyPi or source. 
 
 *Required to compile the documentation (optional):*
 
 * `Sphinx <http://sphinx.pocoo.org/>`_
-* `numpydoc <http://pypi.python.org/pypi/numpydoc/0.2>`_  extension to Sphinx (*not included in EPD*)
+* `numpydoc <http://pypi.python.org/pypi/numpydoc/0.4>`_  extension to Sphinx (*not included in EPD*)
 
 *Optional, recommended additions:*
 
 * `iPython <http://ipython.scipy.org/moin/Download>`_
-* `rtree <http://pypi.python.org/pypi/Rtree>`_ (*not included in EPD*)
+
+
 
 Getting PySAL
 =============
 
 You can install PySAL in a number of ways. We provide system-specific package installers for Windows and Mac OS X that have an intuitive look-and-feel
-that most users are familiar with. We also build source distributions that self-install by invoking a single command line argument. Finally, advanced users and 
-developers can use the popular version control tool **svn** to check out and use our latest code. Instructions for each of these methods follows.
+that most users are familiar with. We also build source distributions that self-install by invoking a single command line argument. 
+
+PySAL is also available on the `Python Package Index
+<http://pypi.python.org/pypi/PySAL>`_, which means it can be
+downloaded and installed manually or from the command line using easy_install or pip, as
+follows::
+
+ $ pip install pysal
+ #or
+ $ easy_install pysal
+
 
 Downloads
 ---------
 
 Click-to-download PySAL distributions are available at `Google Code <http://code.google.com/p/pysal/downloads/list>`_.  Choose the right one for your system, or grab a source tarball or zipfile.
 
-Instructions for Windows 
-~~~~~~~~~~~~~~~~~~~~~~~~
+Windows installer
+~~~~~~~~~~~~~~~~~~
 
 Grab the Windows installer (ends with *.exe*) and download to your computer. Double-click to launch the installer and follow the simple wizard. You will have to select the version of Python you want the package to install with, if you have more than one version of Python on your system. You may repeat this procedure for as many versions of Python as you have on your machine. 
 
-If you'd rather install source code, grab the zipfile (ends with *.zip*) and download to your computer. Decompress the file to a convenient location on your hard drive. Open a command shell and navigate to the decompressed PySAL folder. Type::
 
- python setup.py install
 
-Instructions for Mac OS X
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Source install instructions for all platforms
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Grab the OS X installer (ends with *.dmg*) and download to your computer. Double-click to launch the installer and follow the simple wizard. This installer places PySAL into the active Python version on your system (the version that comes up when you type *python* into a terminal). 
+Grab either of the source distributions (.tar.gz or .zip) and decompress to your selected destination. Open a command shell and navigate to the decompressed PySAL folder. Type::
 
-If you'd rather install source code, grab the tarball (ends with *.tar.gz*) and download to your computer. Decompress the file to a convenient location on your hard drive. Open a terminal and navigate to the decompressed PySAL folder. Type::
+ $ python setup.py install
 
- python setup.py install
-
-Instructions for GNU/Linux
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Grab either of the source distributions and decompress to your selected destination. Open a command shell and navigate to the decompressed PySAL folder. Type::
-
- python setup.py install
 
 Development version from Subversion (SVN)
 -----------------------------------------
+
+Finally, advanced users and 
+developers can use the popular version control tool **svn** to check out and use our latest code. Instructions for each of these methods follows.
 
 Users and developers can grab the source code from our Subversion repository using
 an svn client and the following instructions:
@@ -77,13 +90,14 @@ GNU/Linux and Mac OS X
 Open a command shell, navigate to a convenient location on your hard drive, and
 type::
 
- svn checkout http://pysal.googlecode.com/svn/trunk/ pysal
+ $ svn checkout http://pysal.googlecode.com/svn/trunk/ pysal
+
 
 This will create a folder called 'pysal' containing the source
 code in trunk. This will allow you to easily update any change
 to the developer code base by running::
 
- svn update
+ $ svn update
 
 Since PySAL is in active development, changes are made frequently. For that
 reason, we recommend you 'tell' Python to look for PySAL in that folder
@@ -92,11 +106,12 @@ PySAL folder to the PYTHONPATH, a UNIX environment variable.
 To do that, create or edit your command shell profile (.bash_profile if using
 BASH) and add the following line, substituting where appropriate::
 
- export PYTHONPATH=${PYTHONPATH}:"/path_to_desired/folder/pysal/"
+
+ $ export PYTHONPATH=${PYTHONPATH}:"/path_to_desired/folder/pysal/"
 
 Save and quit the file, then source it as follows::
 
- source ~/.bash_profile
+ $ source ~/.bash_profile
 
 You are all set. To test your setup, start a Python session and type::
 
@@ -106,14 +121,24 @@ Your terminal should reply with the following::
 
  PySAL File I/O understands the following file extensions:
  Ext: '.shp', Modes: ['r', 'wb', 'w', 'rb']
+ Ext: '.mtx', Modes: ['r', 'w']
+ Ext: '.swm', Modes: ['r', 'w']
+ Ext: '.mat', Modes: ['r', 'w']
  Ext: '.shx', Modes: ['r', 'wb', 'w', 'rb']
+ Ext: '.stata_text', Modes: ['r', 'w']
  Ext: '.geoda_txt', Modes: ['r']
  Ext: '.dbf', Modes: ['r', 'w']
+ Ext: '.dat', Modes: ['r', 'w']
  Ext: '.gwt', Modes: ['r']
  Ext: '.gal', Modes: ['r', 'w']
+ Ext: '.arcgis_text', Modes: ['r', 'w']
+ Ext: '.wk1', Modes: ['r', 'w']
+ Ext: '.arcgis_dbf', Modes: ['r', 'w']
+ Ext: '.geobugs_text', Modes: ['r', 'w']
  Ext: '.csv', Modes: ['r']
  Ext: '.wkt', Modes: ['r']
- >>> 
+ >>>
+
 
 Windows
 ~~~~~~~~
@@ -168,26 +193,73 @@ You are all set.  To test your setup, start a Python session and type::
 
 Your terminal should reply with the following::
 
+
  PySAL File I/O understands the following file extensions:
  Ext: '.shp', Modes: ['r', 'wb', 'w', 'rb']
+ Ext: '.mtx', Modes: ['r', 'w']
+ Ext: '.swm', Modes: ['r', 'w']
+ Ext: '.mat', Modes: ['r', 'w']
  Ext: '.shx', Modes: ['r', 'wb', 'w', 'rb']
+ Ext: '.stata_text', Modes: ['r', 'w']
  Ext: '.geoda_txt', Modes: ['r']
  Ext: '.dbf', Modes: ['r', 'w']
+ Ext: '.dat', Modes: ['r', 'w']
  Ext: '.gwt', Modes: ['r']
  Ext: '.gal', Modes: ['r', 'w']
+ Ext: '.arcgis_text', Modes: ['r', 'w']
+ Ext: '.wk1', Modes: ['r', 'w']
+ Ext: '.arcgis_dbf', Modes: ['r', 'w']
+ Ext: '.geobugs_text', Modes: ['r', 'w']
  Ext: '.csv', Modes: ['r']
  Ext: '.wkt', Modes: ['r']
- >>> 
+ >>>
+
+
 
 Known Issues
 ============
 
+1.5 install fails with scipy 11.0 on Mac OS X
+---------------------------------------------
+
+Running `python setup.py install` results in::
+
+	from _cephes import *
+	ImportError:
+	dlopen(/Users/serge/Documents/p/pysal/virtualenvs/python1.5/lib/python2.7/site-packages/scipy/special/_cephes.so,
+	2): Symbol not found: _aswfa_
+	  Referenced from:
+	  /Users/serge/Documents/p/pysal/virtualenvs/python1.5/lib/python2.7/site-packages/scipy/special/_cephes.so
+	    Expected in: dynamic lookup
+
+This occurs when your scipy on Mac OS X was complied with gnu95 and not
+gfortran.  See `this thread <http://mail.scipy.org/pipermail/scipy-user/2010-November/027548.html>`_ for possible solutions.
+
 weights.DistanceBand failing
 ----------------------------
+
 This occurs due to a bug in scipy.sparse prior to version 0.8. If you are running such a version see `Issue 73 <http://code.google.com/p/pysal/issues/detail?id=73&sort=milestone>`_ for a fix.
+
+doc tests and unit tests under Linux
+------------------------------------
+
+Some Linux machines return different results for the unit and doc tests. We suspect this has to do with the way random seeds are set. See `Issue 52 <http://code.google.com/p/pysal/issues/detail?id=52&sort=milestone>`_
+
+LISA Markov missing a transpose
+-------------------------------
+In versions of PySAL < 1.1 there is a bug in the LISA Markov, resulting in
+incorrect values. For a fix and more details see `Issue 115 <http://code.google.com/p/pysal/issues/detail?id=115>`_.
+
+
+PIP Install Fails
+-----------------
+
+
+Having numpy and scipy specified in pip requiretments.txt causes PIP install of pysal to fail. For discussion and suggested fixes see `Issue 207 <http://code.google.com/p/pysal/issues/detail?id=207&sort=milestone>`_.
 
 Troubleshooting
 ===============
+
 If you experience problems when building, installing, or testing PySAL, ask for
 help on the
 `OpenSpace <http://geodacenter.asu.edu/support/community>`_ 
@@ -220,3 +292,7 @@ Please include the output of the following commands in your message:
    installation command can be very helpful. Since this output can be
    rather large, ask before sending it into the mailing list (or
    better yet, to one of the developers, if asked).
+
+
+
+
