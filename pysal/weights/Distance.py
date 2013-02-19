@@ -97,13 +97,13 @@ def knnW(data, k=2, p=2, ids=None):
         idset = np.array(ids)
     else:
         idset = np.arange(len(info))
-    for i, row in enumerate(info):
-        row = row.tolist()
-        row.remove(i)
-        neighbors[idset[i]] = list(idset[row])
-        weights[idset[i]] = [1] * len(neighbors[idset[i]])
-
-    return pysal.weights.W(neighbors, weights=weights, id_order=ids)
+    
+    #neighbors = dict( [ (i,row[row!=i].tolist()[:k]) for i,row in enumerate(info)  ] )
+    n = info.shape[0]
+    info[info == np.arange(n)[:,None]] = n+1
+    info.sort(axis=1)
+    neighbors = { i: row[:k] for i,row in enumerate(info) }
+    return pysal.weights.W(neighbors,  id_order=ids)
 
 
 class Kernel(W):
