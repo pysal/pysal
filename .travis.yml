@@ -6,9 +6,8 @@ python:
 virtualenv:
     - system_site_packages: true
 
-before_install:
-    - "sudo apt-get install -qq python-numpy python-scipy"
 install:
+    - "sudo apt-get install -qq python-numpy python-scipy"
     #- "pip install -r requirements.txt --use-mirrors"
     #- - "pip install numpy --use-mirrors"
     #- - "pip install scipy --use-mirrors"
