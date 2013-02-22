@@ -5,6 +5,6 @@ python:
 
 install:
     "sudo apt-get install -qq python-numpy python-scipy"
-#    "pip install -r requirements.txt --use-mirrors"
+    "pip install -r requirements.txt --use-mirrors"
 
 script: nosetests
