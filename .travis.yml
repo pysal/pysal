@@ -1,18 +1,18 @@
 language: python
 python:
-    - "2.7"
-    #- "2.6"
-    #
+  - "2.7"
+  #- "2.6"
+  #
 virtualenv:
-    - system_site_packages: true
+  system_site_packages: true
 
 install:
-    - "sudo apt-get install -qq python-numpy python-scipy"
-    #- "pip install -r requirements.txt --use-mirrors"
-    #- - "pip install numpy --use-mirrors"
-    #- - "pip install scipy --use-mirrors"
-    - "pip install nose-exclude --use-mirrors"
+  - "sudo apt-get install -qq python-numpy python-scipy"
+  #- "pip install -r requirements.txt --use-mirrors"
+  #- - "pip install numpy --use-mirrors"
+  #- - "pip install scipy --use-mirrors"
+  - "pip install nose-exclude --use-mirrors"
 
 script: 
-    - python -c 'import scipy'
-    - nosetests
+  - python -c 'import scipy'
+  - nosetests
