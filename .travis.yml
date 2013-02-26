@@ -9,7 +9,7 @@ virtualenv:
 install:
   - "sudo apt-get install -qq python-numpy python-scipy"
   #- "pip install -r requirements.txt --use-mirrors"
-  - "pip install nose-exclude sphinx --use-mirrors"
+  - "pip install nose-exclude sphinx numpydoc --use-mirrors"
 
 script: 
   - python -c 'import numpy; print numpy.version.version'
