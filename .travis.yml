@@ -8,12 +8,12 @@ virtualenv:
 
 install:
   - "sudo apt-get install -qq python-numpy python-scipy"
-  - "pip install -r requirements.txt --use-mirrors"
+  - "pip install -q -r requirements.txt --use-mirrors"
 
 script: 
   - python -c 'import numpy; print numpy.version.version'
   - python -c 'import scipy; print scipy.version.version'
-  - nosetests
-  - python setup.py install
-  - python setup.py sdist
-  - cd doc; make pickle; make doctest
+  - make test
+  - make doctest
+  - make install
+  - make src

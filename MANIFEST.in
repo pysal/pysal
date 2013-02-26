@@ -1,3 +1,2 @@
-include INSTALL.txt LICENSE.txt THANKS.txt CHANGELOG.txt MANIFEST.in pysal/COPYING 
-recursive-include pysal/*.py
+include authors.txt INSTALL.txt LICENSE.txt THANKS.txt CHANGELOG.txt MANIFEST.in pysal/COPYING 
 
