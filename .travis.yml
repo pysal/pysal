@@ -15,3 +15,5 @@ script:
   - python -c 'import scipy; print scipy.version.version'
   - nosetests
   - cd doc; make pickle; make doctest
+  - python setup.py install
+  - python setup.py sdist
