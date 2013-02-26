@@ -9,10 +9,10 @@ virtualenv:
 install:
   - "sudo apt-get install -qq python-numpy python-scipy"
   #- "pip install -r requirements.txt --use-mirrors"
-  #- - "pip install numpy --use-mirrors"
-  #- - "pip install scipy --use-mirrors"
   - "pip install nose-exclude --use-mirrors"
 
 script: 
-  - python -c 'import scipy'
+  - python -c 'import numpy; print numpy.version.version'
+  - python -c 'import scipy; print scipy.version.version'
   - nosetests
+  - cd doc; make doctest
