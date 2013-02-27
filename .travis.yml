@@ -11,7 +11,7 @@ before_install:
   - "sudo apt-get install -qq libgeos-3.2.2 python-numpy python-scipy"
 
 install:
-  - "pip install -q -r requirements.txt --use-mirrors"
+  - "pip install -r requirements.txt --use-mirrors"
   - "pip install pysal --use-mirrors"
   - "pip uninstall -y pysal"
 
@@ -19,5 +19,5 @@ script:
   - python -c 'import numpy; print numpy.version.version'
   - python -c 'import scipy; print scipy.version.version'
   - nosetests
-  - python setup.py sdist
+  - python setup.py sdist >/dev/null
   - cd doc; make pickle; make doctest
