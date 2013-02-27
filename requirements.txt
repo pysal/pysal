@@ -1,4 +1,4 @@
 nose-exclude
 sphinx
 numpydoc
-shapely
+Shapely
