@@ -26,5 +26,6 @@ notifications:
         recipients:
             - sjsrey@gmail.com
             - phil.stphns@gmail.com
+            - pysal-dev@googlegroups.com
         on_success: always
         on_failure: always
