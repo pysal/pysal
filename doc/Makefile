@@ -40,7 +40,7 @@ dirhtml:
 	@echo "Build finished. The HTML pages are in build/dirhtml."
 
 pickle:
-	$(SPHINXBUILD) -b pickle $(ALLSPHINXOPTS) build/pickle
+	$(SPHINXBUILD) -Q -b pickle $(ALLSPHINXOPTS) build/pickle
 	@echo
 	@echo "Build finished; now you can process the pickle files."
 
@@ -83,6 +83,6 @@ linkcheck:
 	      "or in build/linkcheck/output.txt."
 
 doctest:
-	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) build/doctest
+	$(SPHINXBUILD) -b doctest  $(ALLSPHINXOPTS) build/doctest
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in build/doctest/output.txt."
