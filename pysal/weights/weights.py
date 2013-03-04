@@ -168,6 +168,7 @@ class W(object):
         s = scipy.sparse.csr_matrix((data, (row, col)), shape=(self.n, self.n))
         return s
 
+
     @property
     def id2i(self):
         """

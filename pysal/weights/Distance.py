@@ -50,24 +50,24 @@ def knnW(data, k=2, p=2, ids=None):
     >>> data=np.hstack([x,y])
     >>> wnn2=knnW(data,k=2)
     >>> wnn4=knnW(data,k=4)
-    >>> wnn4.neighbors[0]
-    [1, 5, 6, 2]
-    >>> wnn4.neighbors[5]
-    [0, 6, 10, 1]
-    >>> wnn2.neighbors[0]
-    [1, 5]
-    >>> wnn2.neighbors[5]
-    [0, 6]
+    >>> set([1,5,6,2]) == set(wnn4.neighbors[0])
+    True
+    >>> set([0,6,10,1]) == set(wnn4.neighbors[5])
+    True
+    >>> set([1,5]) == set(wnn2.neighbors[0])
+    True
+    >>> set([0,6]) == set(wnn2.neighbors[5])
+    True
     >>> wnn2.pct_nonzero
     0.080000000000000002
     >>> wnn4.pct_nonzero
     0.16
     >>> wnn3e=knnW(data,p=2,k=3)
-    >>> wnn3e.neighbors[0]
-    [1, 5, 6]
+    >>> set([1,5,6]) == set(wnn3e.neighbors[0])
+    True
     >>> wnn3m=knnW(data,p=1,k=3)
-    >>> wnn3m.neighbors[0]
-    [1, 5, 2]
+    >>> set([1,2,5]) == set(wnn3m.neighbors[0])
+    True
 
 
     Notes
@@ -127,8 +127,13 @@ class Kernel(W):
                   where :math:`dknn` is a vector of k-nearest neighbor
                   distances (the distance to the kth nearest neighbor for each
                   observation).  For adaptive bandwidths, :math:`h_i=dknn_i`
+    diagonal    : boolean
+                  If true, set diagonal weights = 1.0, if false (default),
+                  diagonals weights are set to value according to kernel
+                  function.
     function    : string {'triangular','uniform','quadratic','quartic','gaussian'}
                   kernel function defined as follows with
+                 
 
                   .. math::
 
@@ -242,9 +247,20 @@ class Kernel(W):
            [ 11.18034101],
            [ 14.14213704],
            [ 18.02775818]])
+
+
+    Diagonals to 1.0
+
+    >>> kq = Kernel(points,function='gaussian')
+    >>> kq.weights
+    {0: [0.3989422804014327, 0.35206533556593145, 0.3412334260702758], 1: [0.35206533556593145, 0.3989422804014327, 0.2419707487162134, 0.3412334260702758, 0.31069657591175387], 2: [0.2419707487162134, 0.3989422804014327, 0.31069657591175387], 3: [0.3412334260702758, 0.3412334260702758, 0.3989422804014327, 0.3011374490937829, 0.26575287272131043], 4: [0.31069657591175387, 0.31069657591175387, 0.3011374490937829, 0.3989422804014327, 0.35206533556593145], 5: [0.26575287272131043, 0.35206533556593145, 0.3989422804014327]}
+    >>> kqd = Kernel(points, function='gaussian', diagonal=True)
+    >>> kqd.weights
+    {0: [1.0, 0.35206533556593145, 0.3412334260702758], 1: [0.35206533556593145, 1.0, 0.2419707487162134, 0.3412334260702758, 0.31069657591175387], 2: [0.2419707487162134, 1.0, 0.31069657591175387], 3: [0.3412334260702758, 0.3412334260702758, 1.0, 0.3011374490937829, 0.26575287272131043], 4: [0.31069657591175387, 0.31069657591175387, 0.3011374490937829, 1.0, 0.35206533556593145], 5: [0.26575287272131043, 0.35206533556593145, 1.0]}
     """
     def __init__(self, data, bandwidth=None, fixed=True, k=2,
-                 function='triangular', eps=1.0000001, ids=None):
+                 function='triangular', eps=1.0000001, ids=None,
+                 diagonal=False):
         if issubclass(type(data), scipy.spatial.KDTree):
             self.kdt = data
             self.data = self.kdt.data
@@ -268,6 +284,10 @@ class Kernel(W):
 
         self._eval_kernel()
         neighbors, weights = self._k_to_W(ids)
+        if diagonal:
+            for i in neighbors:
+                nis = neighbors[i]
+                weights[i][neighbors[i].index(i)] = 1.0
         W.__init__(self, neighbors, weights, ids)
 
     def _k_to_W(self, ids=None):
@@ -461,25 +481,15 @@ class DistanceBand(W):
         return allneighbors, weights
 
 
+def _test():
+    import doctest
+    # the following line could be used to define an alternative to the '<BLANKLINE>' flag
+    #doctest.BLANKLINE_MARKER = 'something better than <BLANKLINE>'
+    start_suppress = np.get_printoptions()['suppress']
+    np.set_printoptions(suppress=True)
+    doctest.testmod()
+    np.set_printoptions(suppress=start_suppress)    
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    _test()
 
-    x = np.arange(1, 5)
-
-    n = len(x)
-    data = []
-    row = []
-    col = []
-    rdata = []
-
-    for i in range(n - 1):
-        data.extend(x[i + 1:])
-
-        rdata.extend((x[i] * np.ones((1, n - i - 1))).tolist()[0]
-                     )
-        row.extend([i] * (n - i - 1))
-        col.extend(range(i + 1, n))
-    L = sparse.csr_matrix((data, (row, col)), shape=(n, n))
-    R = sparse.csr_matrix((rdata, (row, col)), shape=(n, n))
-    dlr = L - R
-    D = dlr.multiply(dlr)
