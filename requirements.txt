@@ -1,2 +1,4 @@
-numpy==1.6.0
-scipy==0.11.0
+nose-exclude
+sphinx
+numpydoc
+Shapely
