@@ -90,7 +90,7 @@ Help for users is here
 Bug reports
 -----------
 To search for or report bugs, please see
-    http://github.com/sjsrey/pysal/issues
+    http://github.com/pysal/pysal/issues
 
 License information
 -------------------
