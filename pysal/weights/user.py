@@ -11,7 +11,7 @@ import pysal
 from Contiguity import buildContiguity
 from Distance import knnW, Kernel, DistanceBand
 from util import get_ids, get_points_array_from_shapefile, min_threshold_distance
-
+import numpy as np
 
 def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
     """
@@ -190,28 +190,28 @@ def knnW_from_array(array, k=2, p=2, ids=None, radius=None):
     >>> data=np.hstack([x,y])
     >>> wnn2=knnW_from_array(data,k=2)
     >>> wnn4=knnW_from_array(data,k=4)
-    >>> wnn4.neighbors[0]
-    [1, 5, 6, 2]
-    >>> wnn4.neighbors[5]
-    [0, 6, 10, 1]
-    >>> wnn2.neighbors[0]
-    [1, 5]
-    >>> wnn2.neighbors[5]
-    [0, 6]
+    >>> set([1, 5, 6, 2]) == set(wnn4.neighbors[0])
+    True
+    >>> set([0, 1, 10, 6]) == set(wnn4.neighbors[5])
+    True
+    >>> set([1, 5]) == set(wnn2.neighbors[0])
+    True
+    >>> set([0,6]) == set(wnn2.neighbors[5])
+    True
     >>> wnn2.pct_nonzero
     0.080000000000000002
     >>> wnn4.pct_nonzero
     0.16
     >>> wnn4=knnW_from_array(data,k=4)
-    >>> wnn4.neighbors[0]
-    [1, 5, 6, 2]
+    >>> set([ 1,5,6,2]) == set(wnn4.neighbors[0])
+    True
     >>> wnn4=knnW_from_array(data,k=4)
     >>> wnn3e=knnW(data,p=2,k=3)
-    >>> wnn3e.neighbors[0]
-    [1, 5, 6]
+    >>> set([1,5,6]) == set(wnn3e.neighbors[0])
+    True
     >>> wnn3m=knnW(data,p=1,k=3)
-    >>> wnn3m.neighbors[0]
-    [1, 5, 2]
+    >>> set([1,5,2]) == set(wnn3m.neighbors[0])
+    True
 
 
     Notes
@@ -267,11 +267,12 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
     0.040816326530612242
     >>> wc3=knnW_from_shapefile(pysal.examples.get_path("columbus.shp"),k=3,idVariable="POLYID")
     >>> wc3.weights[1]
-    [1, 1, 1]
-    >>> wc3.neighbors[1]
-    [3, 2, 4]
-    >>> wc.neighbors[0]
-    [2, 1]
+    [1.0, 1.0, 1.0]
+    >>> set([0,3,7]) == set(wc3.neighbors[1])
+    True
+    >>> set([2,1]) == set(wc.neighbors[0])
+    True
+    
 
     Point shapefile
 
@@ -1028,4 +1029,17 @@ def build_lattice_shapefile(nrows, ncols, outFileName):
             lr = i + 1, j
             o.write(pysal.cg.Polygon([ll, ul, ur, lr, ll]))
     o.close()
+
+def _test():
+    import doctest
+    # the following line could be used to define an alternative to the '<BLANKLINE>' flag
+    #doctest.BLANKLINE_MARKER = 'something better than <BLANKLINE>'
+    start_suppress = np.get_printoptions()['suppress']
+    np.set_printoptions(suppress=True)
+    doctest.testmod()
+    np.set_printoptions(suppress=start_suppress)    
+
+if __name__ == '__main__':
+    _test()
+
 
