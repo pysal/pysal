@@ -10,9 +10,6 @@ import numpy as np
 
 
 
-
-
-
 def regions_from_graph(vertices, edges):
     """
     Extract regions from vertices and edges of a planar graph
@@ -236,6 +233,8 @@ class WED(object):
                     self.end_node[(start_node, end_node)] = end_node
                     self.left_region[(start_node, end_node)] = r
                     self.right_region[(end_node, start_node)] = r
+                    self.node_link[start_node] = (start_node, end_node)
+                    self.node_link[end_node] = (start_node,end_node)
             else:
                 for j in xrange(len(nodes)-1):
                     start_node = nodes[j]
@@ -244,6 +243,8 @@ class WED(object):
                     self.end_node[(start_node, end_node)] = end_node
                     self.left_region[(start_node, end_node)] = r
                     self.right_region[(end_node, start_node)] = r
+                    self.node_link[start_node] = (start_node, end_node)
+                    self.node_link[end_node] = (start_node,end_node)
 
 
         # left and right traverse
@@ -334,36 +335,49 @@ class WED(object):
                 traversing = False
         return edges
 
-        
-def incident_cw_edges_node(node):
-    """Clockwise traversal of edges incident with node
+    def enumerate_links_around_node(self, node):
+        """
+        Clockwise traversal of edges incident with node
 
-    Arguments
-    ---------
+        Arguments
+        ---------
 
-    node: Vertex instance
+        node: Vertex instance
 
-    Returns
-    ------
-    edges: list of edges that are cw incident with node
+        Returns
+        -------
+        edges: list of edges that are cw incident with node
 
-    """
-    l0 = node.edge
-    l = l0
-    edges = []
-    traversing = True
-    while traversing:
-        edges.append(l)
-        v = l.start
-        if v == node:
-            l = l.pr
-        else:
-            l = l.pl
-        #print l0, l
-        if l0 == l:
-            traversing = False
-        #raw_input('here')
-    return edges
+        Examples
+        --------
+
+        >>> vertices = {0: (0, 0), 1: (0, 1), 2: (0, 2), 3: (0, 3), 4: (1, 0), 5: (1, 1), 6: (1, 2), 7: (1, 3), 8: (2, 0), 9: (2, 1), 10: (2, 2), 11: (2, 3), 12: (3, 0), 13: (3, 1), 14: (3, 2), 15: (3, 3)}
+        >>> edges = [(0, 1), (0, 4), (1, 0), (1, 2), (1, 5), (2, 1), (2, 3), (2, 6), (3, 2), (3, 7), (4, 0), (4, 8), (4, 5), (5, 1), (5, 4), (5, 6), (5, 9), (6, 2), (6, 10), (6, 5), (6, 7), (7, 11), (7, 3), (7, 6), (8, 12), (8, 4), (8, 9), (9, 8), (9, 10), (9, 5), (9, 13), (10, 9), (10, 11), (10, 14), (10, 6), (11, 10), (11, 15), (11, 7), (12, 8), (12, 13), (13, 9), (13, 12), (13, 14), (14, 10), (14, 13), (14, 15), (15, 11), (15, 14)]
+        >>> we1 = WED(vertices,edges)
+        >>> we1.enumerate_links_around_node(4)
+        [(5, 4), (8, 4), (0, 4)]
+        >>> we1.enumerate_links_around_node(6)
+        [(7, 6), (10, 6), (5, 6), (2, 6)]
+
+        """
+
+        l0 = self.node_link[node]
+        l = l0
+        edges = []
+        traversing = True
+        while traversing:
+            edges.append(l)
+            v = l[0]
+            if v == node:
+                l = self.pred_right[l]
+            else:
+                l = self.pred_left[l]
+            if l0 == l:
+                traversing = False
+        return edges
+
+
+
 
 
 def _lat2Network(k):
@@ -383,6 +397,34 @@ def _lat2Network(k):
     res = {"nodes": nodes, "edges": edges}
 
     return res
+
+
+def _polyShp2Network(shpFile):
+    nodes = {}
+    edges = {}
+    f = ps.open(shpFile, 'r')
+    i = 0
+    for shp in f:
+        verts = shp.vertices
+        nv = len(verts)
+        for v in range(nv-1):
+            start = verts[v]
+            end = verts[v+1]
+            nodes[start] = start
+            nodes[end] = end
+            edges[(start,end)] = (start,end)
+    f.close()
+    return {"nodes": nodes, "edges": edges.values() }
+
+
+
+            
+
+
+
+
+    res = {"nodes": nodes, "edges": edges}
+
 
 class NPWED(object):
     """Winged edge data structure for Nonplanar network"""
@@ -415,37 +457,16 @@ class NPWED(object):
 
 
 
+def _test():
+    import doctest
+    # the following line could be used to define an alternative to the '<BLANKLINE>' flag
+    #doctest.BLANKLINE_MARKER = 'something better than <BLANKLINE>'
+    start_suppress = np.get_printoptions()['suppress']
+    np.set_printoptions(suppress=True)
+    doctest.testmod()
+    np.set_printoptions(suppress=start_suppress)    
 
-        
-        
+
 if __name__ == '__main__':
-
-
-    # test region extraction
-
-    vertices = {1: (1,2),
-            2:(0,1),
-            3:(2,1),
-            4:(0,0),
-            5:(2,0)}
-
-    edges = [
-            (1,2),
-            (1,3),
-            (2,3),
-            (2,4),
-            (4,5),
-            (5,3) ]
-
-    #r = regions_from_graph(vertices,edges)
-    #we0 = WED(vertices,edges)
-
-
-    network = _lat2Network(3)
-    vertices = network['nodes']
-    edges = network['edges']
-    r1 = regions_from_graph(vertices, edges)
-    we1 = WED(vertices,edges)
-
-
+    _test()
 
