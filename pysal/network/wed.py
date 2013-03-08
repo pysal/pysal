@@ -217,12 +217,6 @@ class WED(object):
                                 # when traversing right region cw
         self.succ_right = {}    # key: link (edge), successor edge to edge
                                 # when traversing right region cw
-        # okabe
-        self.s_cc_link = {}     # preceding link to link when traversing left region ccw
-        self.e_c_link = {}      # ending link to link when traversing left region cw 
-        self.s_c_link = {}      # preceding link to link when traversing right region cw
-        self.e_cc_link = {}     # ending link to link when traversing right region ccw
-
         for r,region in enumerate(regions):
             nodes = regions[region]
             self.region_link[region] = (nodes[0],nodes[1])
@@ -286,11 +280,6 @@ class WED(object):
                 self.pred_right[edge] = pred_right
                 self.succ_right[edge] = succ_right
 
-                # okabe
-                self.s_cc_link[edge] = pred_left
-                self.e_c_link[edge] = succ_left
-                self.s_c_link[edge] = pred_right
-                self.e_cc_link[edge] = succ_right
                 
             else:
                 # coords are ccw
@@ -323,6 +312,7 @@ class WED(object):
                 self.succ_right[edge] = succ_right
 
 
+
     def cw_face_edges(self,face):
         """
         Return the edges defining a face in cw order
@@ -345,6 +335,8 @@ class WED(object):
             if l == l0:
                 traversing = False
         return edges
+
+
 
     def enumerate_links_around_node(self, node):
         """
@@ -385,8 +377,10 @@ class WED(object):
                 l = self.pred_left[l]
             if l0 == l:
                 traversing = False
-            print v, l
-            raw_input('here')
+            if l0[1] == l[0] and l0[0] == l[1]:
+                traversing = False
+            #print v, l
+            #raw_input('here')
         return edges
 
 
@@ -487,3 +481,5 @@ if __name__ == '__main__':
 
     for node in we1.node_link.keys():
             print node, we1.enumerate_links_around_node(node)
+            #print node, we1.enumerate_links_ok(node)
+            print "\n"
