@@ -217,6 +217,11 @@ class WED(object):
                                 # when traversing right region cw
         self.succ_right = {}    # key: link (edge), successor edge to edge
                                 # when traversing right region cw
+        # okabe
+        self.s_cc_link = {}     # preceding link to link when traversing left region ccw
+        self.e_c_link = {}      # ending link to link when traversing left region cw 
+        self.s_c_link = {}      # preceding link to link when traversing right region cw
+        self.e_cc_link = {}     # ending link to link when traversing right region ccw
 
         for r,region in enumerate(regions):
             nodes = regions[region]
@@ -280,6 +285,12 @@ class WED(object):
                 self.succ_left[edge] = succ_left
                 self.pred_right[edge] = pred_right
                 self.succ_right[edge] = succ_right
+
+                # okabe
+                self.s_cc_link[edge] = pred_left
+                self.e_c_link[edge] = succ_left
+                self.s_c_link[edge] = pred_right
+                self.e_cc_link[edge] = succ_right
                 
             else:
                 # coords are ccw
@@ -420,14 +431,6 @@ def _polyShp2Network(shpFile):
 
 
 
-            
-
-
-
-
-    res = {"nodes": nodes, "edges": edges}
-
-
 class NPWED(object):
     """Winged edge data structure for Nonplanar network"""
     def __init__(self, G, P):
@@ -453,8 +456,6 @@ class NPWED(object):
         links.extend(self.G.out_edges(node))
         links.extend(self.G.in_edges(node))
         return links
-
-
 
 
 
