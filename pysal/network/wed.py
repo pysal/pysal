@@ -34,7 +34,7 @@ def regions_from_graph(vertices, edges):
     >>> vertices = {1: (1,2), 2:(0,1), 3:(2,1), 4:(0,0), 5:(2,0)}
     >>> edges = [ (1,2), (1,3), (2,3), (2,4), (4,5), (5,3) ]
     >>> r = regions_from_graph(vertices, edges)
-    >>> r
+    >>> r['regions']
     [[1, 2, 3, 1], [1, 3, 5, 4, 2, 1], [2, 4, 5, 3, 2]]
 
 
@@ -45,6 +45,25 @@ def regions_from_graph(vertices, edges):
     extracting the regions of a plane graph." Pattern Recognition Letters,
     14:533-558.
     """
+    # step 0 remove filaments (not included in original algorithm)
+    nv = np.zeros(len(vertices))
+    v = vertices.keys()
+    v.sort()
+    v2e = {}
+    for edge in edges:
+        s,e = edge
+        nv[v.index(s)] += 1
+        nv[v.index(e)] += 1
+        v2e[s] = edge
+        v2e[e] = edge
+
+    filament_nodes = np.nonzero(nv==1)[0]
+    filaments = []
+    for f in filament_nodes:
+        filaments.append(v2e[f])
+        edges.remove(v2e[f])
+
+    #print filaments
 
     # step 1
     # have a twin for each directed edge
@@ -144,7 +163,11 @@ def regions_from_graph(vertices, edges):
         wedge0.append(wedge0[0])
         nodes.append(wedge0)
 
-    return nodes
+    results = {}
+    results['regions'] = nodes
+    results['filaments'] = filaments
+
+    return results
 
 
 def pcw(coords):
@@ -185,6 +208,10 @@ class WED(object):
     used to implement these points
 
 
+    Currently filaments (edges with at least one node with 1-incidence) are
+    currently removed.
+
+
     Examples
     -------
 
@@ -201,6 +228,8 @@ class WED(object):
     def __init__(self, vertices, edges):
         super(WED, self).__init__()
         regions = regions_from_graph(vertices,edges)
+        filaments = regions['filaments']
+        regions = regions['regions']
         regions = dict( [ (i,c) for i,c in enumerate(regions)])
         self.regions = regions
         self.node_link = {}     # key: node, value: incident link (edge)
