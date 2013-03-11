@@ -31,7 +31,7 @@ Prospective developers can learn more in the :doc:`developer guide
 </developers/index>`.
 
 You can track PySAL development, submit bug reports, and make feature requests 
-`here <http://code.google.com/p/pysal/issues/list>`_. 
+`here <https://github.com/pysal/pysal/issues>`_. 
 
 
 Documentation
