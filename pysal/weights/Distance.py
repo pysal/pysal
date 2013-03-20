@@ -10,11 +10,12 @@ from pysal.common import *
 from pysal.weights import W
 
 from scipy import sparse
+import scipy.stats
 
 __all__ = ["knnW", "Kernel", "DistanceBand"]
 
 
-def knnW(data, k=2, p=2, ids=None):
+def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
     """
     Creates nearest neighbor weights matrix based on k nearest
     neighbors.
@@ -34,6 +35,9 @@ def knnW(data, k=2, p=2, ids=None):
                  1: Manhattan distance
     ids        : list
                  identifiers to attach to each observation
+    pct_unique : float 
+                 threshold percentage of unique points in data. Below this
+                 threshold tree is built on unique values only
     Returns
     -------
 
@@ -79,18 +83,24 @@ def knnW(data, k=2, p=2, ids=None):
     --------
     pysal.weights.W
     """
-    # handle data
-    if issubclass(type(data), scipy.spatial.KDTree):
-        kd = data
-        data = kd.data
-    elif type(data).__name__ == 'ndarray':
-        kd = KDTree(data)
-    else:
-        print 'Unsupported  type'
 
-    # calculate
-    nnq = kd.query(data, k=k + 1, p=p)
-    info = nnq[1]
+    # check if unique points are a small fraction of all points
+    u = scipy.stats._support.unique(data)
+    pct_u = len(u)*1. / len(data)
+    if pct_u < pct_unique:
+        tree = KDTree(u)
+        nnq = tree.query(data, k=k+1, p=p)
+        info = nnq[1]
+        uid = [ np.where((data==ui).all(axis=1))[0][0] for ui in u]
+        new_info = np.zeros((len(data),k+1),'int')
+        for i,row in enumerate(info):
+            new_info[i] = [ uid[j] for j in row]
+        info = new_info
+    else:
+        kd = KDTree(data)
+        # calculate
+        nnq = kd.query(data, k=k + 1, p=p)
+        info = nnq[1]
     neighbors = {}
     weights = {}
     if ids:
