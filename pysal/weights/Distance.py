@@ -82,25 +82,37 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
     See Also
     --------
     pysal.weights.W
+
     """
 
-    # check if unique points are a small fraction of all points
-    u = scipy.stats._support.unique(data)
-    pct_u = len(u)*1. / len(data)
-    if pct_u < pct_unique:
-        tree = KDTree(u)
-        nnq = tree.query(data, k=k+1, p=p)
+    if issubclass(type(data), scipy.spatial.KDTree):
+        kd = data
+        data = kd.data
+        nnq = kd.query(data, k=k+1, p=p)
         info = nnq[1]
-        uid = [ np.where((data==ui).all(axis=1))[0][0] for ui in u]
-        new_info = np.zeros((len(data),k+1),'int')
-        for i,row in enumerate(info):
-            new_info[i] = [ uid[j] for j in row]
-        info = new_info
+    elif type(data).__name__ == 'ndarray':
+        # check if unique points are a small fraction of all points
+        u = scipy.stats._support.unique(data)
+        pct_u = len(u)*1. / len(data)
+        if pct_u < pct_unique:
+            tree = KDTree(u)
+            nnq = tree.query(data, k=k+1, p=p)
+            info = nnq[1]
+            uid = [ np.where((data==ui).all(axis=1))[0][0] for ui in u]
+            new_info = np.zeros((len(data),k+1),'int')
+            for i,row in enumerate(info):
+                new_info[i] = [ uid[j] for j in row]
+            info = new_info
+        else:
+            kd = KDTree(data)
+            # calculate
+            nnq = kd.query(data, k=k + 1, p=p)
+            info = nnq[1]
     else:
-        kd = KDTree(data)
-        # calculate
-        nnq = kd.query(data, k=k + 1, p=p)
-        info = nnq[1]
+        print 'Unsupported type'
+        return None
+
+
     neighbors = {}
     weights = {}
     if ids:
