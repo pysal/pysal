@@ -14,7 +14,8 @@ import matplotlib as mpl
 from matplotlib.pyplot import fill, text
 from matplotlib import cm
 from matplotlib.patches import Polygon
-from matplotlib.collections import PolyCollection, PathCollection, PatchCollection
+from matplotlib.path import Path
+from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection
 from mpl_toolkits.basemap import Basemap
 from ogr import osr
 
@@ -49,9 +50,77 @@ def transCRS(xy, src_prj, trt_prj):
     trCRS = osr.CoordinateTransformation(orig, target)
     return np.array(trCRS.TransformPoints(xy))[:, :2]
 
+def map_point_shp(shp_link, which='all'):
+    '''
+    Create a map object from a point shapefile
+    ...
+
+    Arguments
+    ---------
+
+    shp_link        : str
+                      Path to shapefile
+    which           : str/list
+
+    Returns
+    -------
+
+    map             : PatchCollection
+                      Map object with the points from the shapefile
+
+    '''
+    shp = ps.open(shp_link)
+    if which == 'all':
+        db = ps.open(shp_link.replace('.shp', '.dbf'))
+        n = len(db.by_col(db.header[0]))
+        db.close()
+        which = [True] * n
+    pts = []
+    for inwhich, pt in zip(which, shp):
+        if inwhich:
+                pts.append(pt)
+    pts = np.array(pts)
+    sc = plt.scatter(pts[:, 0], pts[:, 1])
+    _ = _add_axes2col(sc, shp.bbox)
+    return sc
+
+def map_line_shp(shp_link, which='all'):
+    '''
+    Create a map object from a line shapefile
+    ...
+
+    Arguments
+    ---------
+
+    shp_link        : str
+                      Path to shapefile
+    which           : str/list
+
+    Returns
+    -------
+
+    map             : PatchCollection
+                      Map object with the polygons from the shapefile
+
+    '''
+    shp = ps.open(shp_link)
+    if which == 'all':
+        db = ps.open(shp_link.replace('.shp', '.dbf'))
+        n = len(db.by_col(db.header[0]))
+        db.close()
+        which = [True] * n
+    patches = []
+    for inwhich, shape in zip(which, shp):
+        if inwhich:
+            for xy in shape.parts:
+                patches.append(xy)
+    lc = LineCollection(patches)
+    _ = _add_axes2col(lc, shp.bbox)
+    return lc
+
 def map_poly_shp(shp_link, which='all'):
     '''
-    Create a map object from a shapefile
+    Create a map object from a polygon shapefile
     ...
 
     Arguments
@@ -80,7 +149,9 @@ def map_poly_shp(shp_link, which='all'):
             for ring in shape.parts:
                 xy = np.array(ring)
                 patches.append(xy)
-    return PolyCollection(patches)
+    pc = PolyCollection(patches)
+    _ = _add_axes2col(pc, shp.bbox)
+    return pc
 
 def map_poly_shp_lonlat(shp_link, projection='merc'):
     '''
@@ -153,13 +224,54 @@ def setup_ax(polyCos_list, ax=None):
     '''
     if not ax:
         ax = plt.axes()
+    # Determine bboxes of new axes
+    xlim = [np.inf, -np.inf]
+    ylim = [np.inf, -np.inf]
     for polyCo in polyCos_list:
+        axs = polyCo.get_axes()
+        xmin, xmax = axs.get_xlim()
+        ymin, ymax = axs.get_ylim()
+        if xmin < xlim[0]:
+            xlim[0] = xmin
+        if xmax > xlim[1]:
+            xlim[1] = xmax
+        if ymin < ylim[0]:
+            ylim[0] = ymin
+        if ymax > ylim[1]:
+            ylim[1] = ymax
+    ax.set_xlim(xlim)
+    ax.set_ylim(ylim)
+    # Resize bbox of each coll and add it to axes
+    for polyCo in polyCos_list:
+        polyCo.get_axes().set_xlim(ax.get_xlim()) 
+        polyCo.get_axes().set_ylim(ax.get_ylim()) 
         ax.add_collection(polyCo)
-    ax.autoscale_view()
     ax.set_frame_on(False)
     ax.axes.get_yaxis().set_visible(False)
     ax.axes.get_xaxis().set_visible(False)
     return ax
+
+def _add_axes2col(col, bbox):
+    """
+    Adds (inplace) axes with proper limits to a poly/line collection. This is
+    still pretty much a hack! Ideally, you don't have to setup a new figure
+    for this
+    ...
+    
+    Arguments
+    ---------
+    col     : Collection
+    bbox    : list
+              Bounding box as [xmin, ymin, xmax, ymax]
+    """
+    tf = plt.figure()
+    ax = plt.axes()
+    minx, miny, maxx, maxy = bbox
+    ax.set_xlim((minx, maxx))
+    ax.set_ylim((miny, maxy))
+    col.set_axes(ax)
+    plt.close(tf)
+    return None
 
 def plot_poly_lines(shp_link, projection='merc', savein=None, poly_col='none'):
     '''
@@ -833,14 +945,27 @@ def unique_values_map(coords,y, title='Unique Value'):
 
 if __name__ == '__main__':
 
-    shp_link = ps.examples.get_path("sids2.shp")
-    dbf = ps.open(shp_link.replace('.shp', '.dbf'))
-    values = np.array(dbf.by_col("SIDR74"))
-    #values[: values.shape[0]/2] = 1
-    #values[values.shape[0]/2: ] = 0
+    data = 'poly'
+    if data == 'poly':
+        shp_link = ps.examples.get_path("sids2.shp")
+        dbf = ps.open(shp_link.replace('.shp', '.dbf'))
+        '''
+        values = np.array(dbf.by_col("SIDR74"))
+        #values[: values.shape[0]/2] = 1
+        #values[values.shape[0]/2: ] = 0
+        '''
+        patchco = map_poly_shp(shp_link)
+        pts = map_point_shp('/home/dani/Desktop/cents.shp')
 
-    #shp_link0 = '/home/dani/Desktop/world/TM_WORLD_BORDERS-0.3.shp'
-    #shp_link1 = '/home/dani/Desktop/world/world.shp'
+    if data == 'point':
+        shp_link = ps.examples.get_path("burkitt.shp")
+        dbf = ps.open(shp_link.replace('.shp', '.dbf'))
+        patchco = map_point_shp(shp_link)
+
+    if data == 'line':
+        shp_link = ps.examples.get_path("Line.shp")
+        dbf = ps.open(shp_link.replace('.shp', '.dbf'))
+        patchco = map_line_shp(shp_link)
 
     '''
     which = values > 1.
@@ -856,11 +981,10 @@ if __name__ == '__main__':
         plt.show()
         break
     '''
-    patchco = map_poly_shp(shp_link)
-    patchco.set_facecolor('none')
 
     fig = plt.figure()
-    ax = fig.add_subplot(121)
-    ax = setup_ax([patchco], ax)
+    ax = fig.add_subplot(111)
+    #ax.add_collection(patchco)
+    ax = setup_ax([patchco, pts], ax)
     plt.show()
 
