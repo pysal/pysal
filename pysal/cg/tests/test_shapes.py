@@ -202,6 +202,17 @@ class test_LineSegment(unittest.TestCase):
         ls = LineSegment(Point((0, 0)), Point((0, 0)))
         self.assertEquals(ls.line, None)
 
+        ls = LineSegment(Point((5,0)), Point((10,0)))
+        ls1 = LineSegment(Point((5,0)), Point((10,1)))
+        self.assertTrue(ls.intersect(ls1))
+        ls2 = LineSegment(Point((5,1)), Point((10,1)))
+        self.assertFalse(ls.intersect(ls2))
+        ls2 = LineSegment(Point((7,-1)), Point((7,2)))
+        self.assertTrue(ls.intersect(ls2))
+        
+
+
+
 
 class test_Line(unittest.TestCase):
 

@@ -128,6 +128,18 @@ if __name__ == '__main__':
     cycles = nx.cycle_basis(G)
     # len of cycles is equal to the number of faces (not including external face
 
+    # find cycles that share a vertex
+    node2cycle = {}
+    multi_nodes = set()
+    for i,cycle in enumerate(cycles):
+        for node in cycle:
+            if node in node2cycle:
+                node2cycle[node].append(i)
+                multi_nodes.add(node)
+            else:
+                node2cycle[node] = [i]
+
+    
     dcel = DCEL(G)
 
 

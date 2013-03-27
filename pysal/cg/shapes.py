@@ -415,6 +415,36 @@ class LineSegment(object):
             return True
         return False
 
+    def intersect(self, other):
+        """
+        Test whether segment intersects with other segment
+
+        Handles endpoints of segments being on other segment
+
+        Examples
+        -------
+
+        >>> ls = LineSegment(Point((5,0)), Point((10,0)))
+        >>> ls1 = LineSegment(Point((5,0)), Point((10,1)))
+        >>> ls.intersect(ls1)
+        True
+        >>> ls2 = LineSegment(Point((5,1)), Point((10,1)))
+        >>> ls.intersect(ls2)
+        False
+        >>> ls2 = LineSegment(Point((7,-1)), Point((7,2)))
+        >>> ls.intersect(ls2)
+        True
+        >>>
+        """
+        ccw1 = self.sw_ccw(other.p2)
+        ccw2 = self.sw_ccw(other.p1)
+        ccw3 = other.sw_ccw(self.p1)
+        ccw4 = other.sw_ccw(self.p2)
+
+        return ccw1*ccw2 <= 0 and ccw3*ccw4 <=0
+
+
+
     def _reset_props(self):
         """
         HELPER METHOD. DO NOT CALL.
@@ -580,6 +610,42 @@ class LineSegment(object):
         v1 = (self._p2[0] - self._p1[0], self._p2[1] - self._p1[1])
         v2 = (pt[0] - self._p1[0], pt[1] - self._p1[1])
         return v1[0] * v2[1] - v1[1] * v2[0] < 0
+
+    def sw_ccw(self, pt):
+        """
+        Sedgewick test for pt being ccw of segment
+
+        Returns
+         1 if turn from self.p1 to self.p2 to pt is ccw
+        -1 if turn from self.p1 to self.p2 to pt is cw
+        -1 if the points are collinear and self.p1 is in the middle
+         1 if the points are collinear and self.p2 is in the middle
+         0 if the points are collinear and pt is in the middle
+        
+        """
+
+        p0 = self.p1
+        p1 = self.p2
+        p2 = pt
+
+        dx1 = p1[0] - p0[0]
+        dy1 = p1[1] - p0[1]
+        dx2 = p2[0] - p0[0]
+        dy2 = p2[1] - p0[1]
+
+        if dy1*dx2 < dy2*dx1:
+            return 1
+        if dy1*dx2 > dy2*dx1:
+            return -1
+        if (dx1*dx2 < 0 or dy1*dy2 <0):
+                return -1
+        if dx1*dx1 + dy1*dy1 >= dx2*dx2 + dy2*dy2:
+            return 0
+        else:
+            return 1
+
+
+
 
     def get_swap(self):
         """
@@ -1819,8 +1885,8 @@ class Rectangle:
         return self.upper - self.lower
 
 
-
 _geoJSON_type_to_Pysal_type = {'point': Point, 'linestring': Chain,
                                'polygon': Polygon, 'multipolygon': Polygon}
 import standalone  # moving this to top breaks unit tests !
+
 
