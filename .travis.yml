@@ -12,15 +12,15 @@ before_install:
 
 install:
   - "pip install -r requirements.txt --use-mirrors"
-  - "pip install pysal --use-mirrors"
-  - "pip uninstall -y pysal"
+  #- "pip install pysal --use-mirrors"
+  #- "pip uninstall -y pysal"
 
 script: 
   - python -c 'import numpy; print numpy.version.version'
   - python -c 'import scipy; print scipy.version.version'
   - python -c 'import pysal; print pysal.version'
   - nosetests
-  - python setup.py sdist >/dev/null
+  #- python setup.py sdist >/dev/null
   - cd doc; make pickle; make doctest
 notifications:
     email:
