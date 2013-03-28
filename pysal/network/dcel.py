@@ -140,6 +140,11 @@ if __name__ == '__main__':
                 node2cycle[node] = [i]
 
     
-    dcel = DCEL(G)
+
+    # check if there are nodes belonging to multiple cycles
+    if multi_nodes:
+        
+        # put nodes for each edge in lexicographic order
+        edges = [ sorted(edge) for edge in G.edges()]
 
 

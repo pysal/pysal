@@ -8,8 +8,6 @@ __author__ = "Sergio J. Rey <srey@asu.edu>"
 import pysal as ps
 import numpy as np
 
-
-
 def regions_from_graph(vertices, edges):
     """
     Extract regions from vertices and edges of a planar graph
@@ -184,6 +182,8 @@ def pcw(coords):
     else:
         return 0
      
+
+
 class WED(object):
     """
     Winged-Edge data structure for a planar network.
@@ -412,7 +412,29 @@ class WED(object):
             #raw_input('here')
         return edges
 
+    def rook_neighbors_face(self, face):
+        """
+        Return a list of rook neighbors for face
 
+        Note: Includes external face for faces on the edge
+        """
+        edges = self.cw_face_edges(face)
+        return list(set([ self.left_region[edge] for edge in edges]))
+
+    def queen_neighbors_face(self, face):
+        """
+        Return a list of queen neighbors for face
+
+        Note: Includes external face for faces on the edge
+        """
+        neighbors = set()
+        nodes = [ node[0] for node in self.cw_face_edges(face) ]
+        edges = [ self.enumerate_links_around_node(node) for node in nodes]
+        for edge_list in edges:
+            for edge in edge_list:
+                neighbors.add(self.right_region[edge])
+                neighbors.add(self.left_region[edge])
+        return list(neighbors.symmetric_difference(set([face])))
 
 
 
@@ -451,7 +473,6 @@ def _polyShp2Network(shpFile):
             edges[(start,end)] = (start,end)
     f.close()
     return {"nodes": nodes, "edges": edges.values() }
-
 
 
 class NPWED(object):
@@ -508,7 +529,3 @@ if __name__ == '__main__':
                 10), (14, 13), (14, 15), (15, 11), (15, 14)]
     we1 = WED(vertices,edges)
 
-    for node in we1.node_link.keys():
-            print node, we1.enumerate_links_around_node(node)
-            #print node, we1.enumerate_links_ok(node)
-            print "\n"
