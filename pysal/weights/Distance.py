@@ -120,11 +120,7 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
     else:
         idset = np.arange(len(info))
     
-    #neighbors = dict( [ (i,row[row!=i].tolist()[:k]) for i,row in enumerate(info)  ] )
-    n = info.shape[0]
-    info[info == np.arange(n)[:,None]] = n+1
-    info.sort(axis=1)
-    neighbors = { i: row[:k] for i,row in enumerate(info) }
+    neighbors = dict( [ (i,row[row!=i].tolist()[:k]) for i,row in enumerate(info)  ] )
     return pysal.weights.W(neighbors,  id_order=ids)
 
 
