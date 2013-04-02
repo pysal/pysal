@@ -10,7 +10,8 @@ class csvWrapper(Tables.DataTable):
     __doc__ = Tables.DataTable.__doc__
 
     FORMATS = ['csv']
-    MODES = ['r']
+    READ_MODES = ['r','Ur','rU','U']
+    MODES = READ_MODES[:]
 
     def __init__(self, *args, **kwargs):
         """
@@ -38,7 +39,7 @@ class csvWrapper(Tables.DataTable):
 
     def _open(self):
         self.fileObj = open(self.dataPath, self.mode)
-        if self.mode == 'r':
+        if self.mode in self.READ_MODES:
             self.dataObj = csv.reader(self.fileObj)
             data = list(self.dataObj)
             if self._determineHeader(data):
