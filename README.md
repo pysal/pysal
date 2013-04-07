@@ -1,8 +1,5 @@
-=================================================
 Python Spatial Analysis Library
-=================================================
-
-.. Contents::
+==============================
 
 What is PySAL
 --------------
@@ -61,18 +58,18 @@ Currently PySAL consists of the following files and directories:
     Contains PySAL documentation using the Sphinx framework.
 
 PySAL modules
-+++++++++++++
+-------------
 
-    * pysal.cg — Computational Geometry
-    * pysal.contrib - Contributed modules
-    * pysal.core — Core Data Structures and IO
-    * pysal.esda — Exploratory Spatial Data Analysis
-    * pysal.examples — Data Sets
-    * pysal.inequality — Spatial Inequality Analysis
-    * pysal.region — Spatially constrained clustering
-    * pysal.spatial_dynamics — Spatial Dynamics
-    * pysal.spreg — Regression and diagnostics
-    * pysal.weights — Spatial Weights
+* pysal.cg — Computational Geometry
+* pysal.contrib - Contributed modules
+* pysal.core — Core Data Structures and IO
+* pysal.esda — Exploratory Spatial Data Analysis
+* pysal.examples — Data Sets
+* pysal.inequality — Spatial Inequality Analysis
+* pysal.region — Spatially constrained clustering
+* pysal.spatial_dynamics — Spatial Dynamics
+* pysal.spreg — Regression and diagnostics
+* pysal.weights — Spatial Weights
 
 Website
 -------
