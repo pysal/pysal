@@ -68,11 +68,11 @@ class Join_Counts:
     Replicate example from anselin and rey
 
     >>> import numpy as np
-    >>> w=pysal.lat2W(4,4)
-    >>> y=np.ones(16)
-    >>> y[0:8]=0
+    >>> w = pysal.lat2W(4, 4)
+    >>> y = np.ones(16)
+    >>> y[0:8] = 0
     >>> np.random.seed(12345)
-    >>> jc=pysal.Join_Counts(y,w)
+    >>> jc = pysal.Join_Counts(y, w)
     >>> jc.bb
     10.0
     >>> jc.bw
