@@ -12,6 +12,7 @@ from scipy import sparse as SP
 import scipy.optimize as op
 import numpy.linalg as la
 from pysal import lag_spatial
+from warnings import warn
 import copy
 
 
@@ -552,6 +553,11 @@ def sp_att(w,y,predy,w_y,rho):
         resid_sp = y - predy_sp
         return predy_sp, resid_sp
     else:
+        t = ("WARNING: Estimate for rho is outside the boundary of (-1, 1)."
+        "`predy_sp` and `resid_sp` are not returned. This may cause problems"
+        "in subsequent steps.")
+        warn(t, RuntimeWarning)
+        print t
         return None, None
 
 def spdot(a,b, array_out=True):
