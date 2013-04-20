@@ -177,7 +177,7 @@ class GwtIO(FileIO.FileIO):
         for id in obj.id_order:
             neighbors = zip(obj.neighbors[id], obj.weights[id])
             for neighbor, weight in neighbors:
-                self.file.write('%s %s %6G\n' % (str(id),
+                self.file.write('"%s" "%s" %6G\n' % (str(id),
                                                  str(neighbor), weight))
                 self.pos += 1
 

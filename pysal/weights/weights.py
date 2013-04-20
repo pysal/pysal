@@ -852,6 +852,18 @@ class W(object):
         return util.full(self)
 
     def set_shapefile(self, shapefile, idVariable=None):
+        """
+        Adding meta data for writing headers of gal and gwt files
+
+
+        Parameters
+        ----------
+
+        shapefile: (string) shapefile name used to construct weights
+
+        idVariable: (string) name of attribute in shapefile to associate with
+        ids in the weights
+        """
         self._shpName = shapefile
         self._varName = idVariable
 
