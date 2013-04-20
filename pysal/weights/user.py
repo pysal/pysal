@@ -65,11 +65,11 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
         ids = None
     w = buildContiguity(shp, criterion='queen', ids=ids)
     shp.close()
+    w.set_shapefile(shapefile, idVariable)
 
     if sparse:
         w = pysal.weights.WSP(w.sparse, id_order=ids)
-    w.shpName = shapefile
-    w.varName = idVariable
+
     return w
 
 
@@ -119,8 +119,11 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
         ids = None
     w = buildContiguity(shp, criterion='rook', ids=ids)
     shp.close()
+    w.set_shapefile(shapefile, idVariable)
     if sparse:
         w = pysal.weights.WSP(w.sparse, id_order=ids)
+
+
     return w
 
 

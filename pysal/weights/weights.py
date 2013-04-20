@@ -7,6 +7,7 @@ import math
 import numpy as np
 import scipy.sparse
 import gc
+from os.path import basename as BASENAME
 from pysal.weights import  util
 
 
@@ -851,7 +852,7 @@ class W(object):
         """
         return util.full(self)
 
-    def set_shapefile(self, shapefile, idVariable=None):
+    def set_shapefile(self, shapefile, idVariable=None, full=False):
         """
         Adding meta data for writing headers of gal and gwt files
 
@@ -863,9 +864,19 @@ class W(object):
 
         idVariable: (string) name of attribute in shapefile to associate with
         ids in the weights
+
+        full: (boolean) True - write out entire path for shapefile, False
+        (default) only base of shapefile without extension
+
         """
-        self._shpName = shapefile
+        if full:
+            self._shpName = shapefile
+        else:
+            self._shpName = BASENAME(shapefile).split(".")[0]
+
         self._varName = idVariable
+
+
 
 
 
