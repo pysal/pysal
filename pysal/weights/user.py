@@ -68,6 +68,8 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
 
     if sparse:
         w = pysal.weights.WSP(w.sparse, id_order=ids)
+    w.shpName = shapefile
+    w.varName = idVariable
     return w
 
 
@@ -512,8 +514,12 @@ def threshold_continuousW_from_shapefile(shapefile, threshold, p=2,
         data = pysal.cg.KDTree(data, distance_metric='Arc', radius=radius)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
-        return DistanceBand(data, threshold=threshold, p=p, alpha=alpha, binary=False, ids=ids)
-    return threshold_continuousW_from_array(data, threshold, p=p, alpha=alpha)
+        w = DistanceBand(data, threshold=threshold, p=p, alpha=alpha, binary=False, ids=ids)
+    else:
+        w =  threshold_continuousW_from_array(data, threshold, p=p, alpha=alpha)
+    w.set_shapefile(shapefile,idVariable)
+    return w
+
 
 # Kernel Weights
 

@@ -851,6 +851,11 @@ class W(object):
         """
         return util.full(self)
 
+    def set_shapefile(self, shapefile, idVariable=None):
+        self._shpName = shapefile
+        self._varName = idVariable
+
+
 
 class WSP(object):
     """
