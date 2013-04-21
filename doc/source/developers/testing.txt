@@ -102,16 +102,6 @@ Doctests will be executed when building PySAL documentation with Sphinx.
 
 Developers *should* run tests manually before committing any changes that
 may potentially effect usability. Developers can run doctests (docstring
-tests) manually from the command line in two ways: one, if the module
-includes doctest code (see below), ::
+tests) manually from the command line using nosetests ::
 
-    def _test():
-        import doctest
-        doctest.testmod(verbose=True)
-
-Developers can run the "main" of the file
-(python modname.py) and see the docstring results, as long as the call to
-testmod includes the verbose flag. Two, developers can see the doctest
-results for modules without a test function by running::
-
- python -m doctest -v modname.py
+  nosetests --with-doctest pysal/
