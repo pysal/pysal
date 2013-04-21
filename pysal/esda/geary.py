@@ -156,16 +156,4 @@ class Geary:
         a = (self.n - 1) * sum(ys)
         return a / self.den
 
-def _test():
-    import doctest
-    # the following line could be used to define an alternative to the '<BLANKLINE>' flag
-    #doctest.BLANKLINE_MARKER = 'something better than <BLANKLINE>'
-    start_suppress = np.get_printoptions()['suppress']
-    np.set_printoptions(suppress=True)
-    doctest.testmod()
-    np.set_printoptions(suppress=start_suppress)    
-
-if __name__ == '__main__':
-    _test()
-
 
