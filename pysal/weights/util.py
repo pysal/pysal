@@ -233,6 +233,8 @@ def order(w, kmax=3):
     --------
     >>> from pysal import rook_from_shapefile as rfs
     >>> w = rfs(pysal.examples.get_path('10740.shp'))
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  [163]
     >>> w3 = order(w, kmax = 3)
     >>> w3[1][0:5]
     [1, -1, 1, 2, 1]

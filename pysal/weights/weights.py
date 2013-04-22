@@ -107,6 +107,12 @@ class W(object):
     >>> w.histogram
     [(1, 1), (2, 6), (3, 33), (4, 103), (5, 114), (6, 73), (7, 35), (8, 17), (9, 9), (10, 4), (11, 4), (12, 3), (13, 0), (14, 1)]
 
+    Disconnected observations (islands)
+
+    >>> w = pysal.W({1:[0],0:[1],2:[], 3:[]})
+    WARNING: there 2 are disconnected observations
+    Island ids:  [2, 3]
+
     """
     def __init__(self, neighbors, weights=None, id_order=None):
         self.transformations = {}
@@ -127,6 +133,14 @@ class W(object):
             self._id_order_set = True
         self._reset()
         self._n = len(self.weights)
+        if self.islands:
+            ni = len(self.islands)
+            if ni == 1:
+                print "WARNING: there is one disconnected observation (no neighbors)"
+                print "Island id: ",self.islands
+            else:
+                print "WARNING: there %d are disconnected observations"%ni
+                print "Island ids: ",self.islands
 
     def _reset(self):
         """
@@ -456,15 +470,13 @@ class W(object):
         Examples
         --------
         >>> from pysal import rook_from_shapefile as rfs
-        >>> from pysal import lat2W
-        >>> w = rfs(pysal.examples.get_path('10740.shp'))
+        >>> w = rfs(pysal.examples.get_path("10740.shp"))
+        WARNING: there is one disconnected observation (no neighbors)
+        Island id:  [163]
+        >>> w[163]
+        {}
         >>> w[0]
         {1: 1.0, 4: 1.0, 101: 1.0, 85: 1.0, 5: 1.0}
-        >>> w = lat2W()
-        >>> w[1]
-        {0: 1.0, 2: 1.0, 6: 1.0}
-        >>> w[0]
-        {1: 1.0, 5: 1.0}
         """
         return dict(zip(self.neighbors[key], self.weights[key]))
 
@@ -694,6 +706,8 @@ class W(object):
                 for i in self.weights:
                     wijs = self.weights[i]
                     row_sum = sum(wijs) * 1.0
+                    if row_sum == 0.0:
+                        print 'WARNING: ',i,' is an island (no neighbors)'
                     weights[i] = [wij / row_sum for wij in wijs]
                 weights = ROD(weights)
                 self.transformations[value] = weights

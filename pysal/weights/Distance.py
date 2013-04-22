@@ -403,6 +403,8 @@ class DistanceBand(W):
 
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
     >>> w=DistanceBand(points,threshold=11.2)
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  [2]
     >>> w.weights
     {0: [1, 1], 1: [1, 1], 2: [], 3: [1, 1], 4: [1], 5: [1]}
     >>> w.neighbors
@@ -411,6 +413,8 @@ class DistanceBand(W):
     inverse distance weights
 
     >>> w=DistanceBand(points,threshold=11.2,binary=False)
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  [2]
     >>> w.weights[0]
     [0.10000000000000001, 0.089442719099991588]
     >>> w.neighbors[0]
@@ -420,6 +424,8 @@ class DistanceBand(W):
     gravity weights
 
     >>> w=DistanceBand(points,threshold=11.2,binary=False,alpha=-2.)
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  [2]
     >>> w.weights[0]
     [0.01, 0.0079999999999999984]
 

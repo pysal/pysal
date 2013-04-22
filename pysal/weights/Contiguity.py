@@ -39,16 +39,24 @@ def buildContiguity(polygons, criterion="rook", ids=None):
     Examples
     -------
     >>> w = buildContiguity(pysal.open(pysal.examples.get_path('10740.shp'),'r'))
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  [163]
     >>> w[0]
     {1: 1.0, 4: 1.0, 101: 1.0, 85: 1.0, 5: 1.0}
     >>> w = buildContiguity(pysal.open(pysal.examples.get_path('10740.shp'),'r'),criterion='queen')
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  [163]
     >>> w.pct_nonzero
     0.031926364234056544
     >>> w = buildContiguity(pysal.open(pysal.examples.get_path('10740.shp'),'r'),criterion='rook')
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  [163]
     >>> w.pct_nonzero
     0.026351084812623275
     >>> fips = pysal.open(pysal.examples.get_path('10740.dbf')).by_col('STFID')
     >>> w = buildContiguity(pysal.open(pysal.examples.get_path('10740.shp'),'r'),ids=fips)
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  ['35043940300']
     >>> w['35001000107']
     {'35001003805': 1.0, '35001003721': 1.0, '35001000111': 1.0, '35001000112': 1.0, '35001000108': 1.0}
 

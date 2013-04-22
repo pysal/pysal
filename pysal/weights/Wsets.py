@@ -469,6 +469,8 @@ def w_clip(w1, w2, outSP=True):
     ``outSP``:
 
     >>> wc = ps.weights.Wsets.w_clip(w1, w2, outSP=False)
+    WARNING: there 2 are disconnected observations
+    Island ids:  [1, 5]
     >>> wc.full()[0]
     array([[ 0.        ,  0.        ,  0.33333333,  0.33333333,  0.        ,
              0.        ],

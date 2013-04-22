@@ -270,7 +270,7 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
     >>> wc=knnW_from_shapefile(pysal.examples.get_path("columbus.shp"))
     >>> wc.pct_nonzero
     0.040816326530612242
-    >>> wc3=knnW_from_shapefile(pysal.examples.get_path("columbus.shp"),k=3,idVariable="POLYID")
+    >>> wc3=knnW_from_shapefile(pysal.examples.get_path("columbus.shp"),k=3)
     >>> wc3.weights[1]
     [1.0, 1.0, 1.0]
     >>> set([0,3,7]) == set(wc3.neighbors[1])
@@ -344,6 +344,8 @@ def threshold_binaryW_from_array(array, threshold, p=2, radius=None):
     --------
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
     >>> w=threshold_binaryW_from_array(points,threshold=11.2)
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  [2]
     >>> w.weights
     {0: [1, 1], 1: [1, 1], 2: [], 3: [1, 1], 4: [1], 5: [1]}
     >>> w.neighbors
@@ -447,12 +449,16 @@ def threshold_continuousW_from_array(array, threshold, p=2,
 
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
     >>> wid=threshold_continuousW_from_array(points,11.2)
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  [2]
     >>> wid.weights[0]
     [0.10000000000000001, 0.089442719099991588]
 
     gravity weights
 
     >>> wid2=threshold_continuousW_from_array(points,11.2,alpha=-2.0)
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  [2]
     >>> wid2.weights[0]
     [0.01, 0.0079999999999999984]
 

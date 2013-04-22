@@ -42,7 +42,7 @@ class Testuser(unittest.TestCase):
         wc = pysal.knnW_from_shapefile(pysal.examples.get_path("columbus.shp"))
         self.assertAlmostEquals(wc.pct_nonzero, 0.040816326530612242)
         wc3 = pysal.knnW_from_shapefile(pysal.examples.get_path(
-            "columbus.shp"), k=3, idVariable="POLYID")
+            "columbus.shp"), k=3)
         self.assertEquals(wc3.weights[1], [1, 1, 1])
         self.assertEquals(set(wc3.neighbors[1]), set([3, 0, 7]))
         self.assertEquals(set(wc.neighbors[0]), set([2, 1]))

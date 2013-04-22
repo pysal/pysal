@@ -29,7 +29,7 @@ class TestDistanceWeights(unittest.TestCase):
         wc = pysal.knnW_from_shapefile(self.polyShp)
         self.assertEqual(wc.pct_nonzero, 0.040816326530612242)
         self.assertEqual(set(wc.neighbors[0]), set([2, 1]))
-        wc3 = pysal.knnW_from_shapefile(self.polyShp, k=3, idVariable="POLYID")
+        wc3 = pysal.knnW_from_shapefile(self.polyShp, k=3)
         self.assertEqual(wc3.weights[1], [1, 1, 1])
         self.assertEqual(set(wc3.neighbors[1]), set([0,3,7]))
 
