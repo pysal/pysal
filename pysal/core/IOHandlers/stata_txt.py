@@ -91,6 +91,8 @@ class StataTextIO(FileIO.FileIO):
         Open a text file and read it into a pysal weights object
 
         >>> w = pysal.open(pysal.examples.get_path('stata_sparse.txt'),'r','stata_text').read()
+        WARNING: there 7 are disconnected observations
+        Island ids:  [5, 9, 10, 11, 12, 14, 15]
 
         Get the number of observations from the header
 
@@ -169,6 +171,8 @@ class StataTextIO(FileIO.FileIO):
         >>> import tempfile, pysal, os
         >>> testfile = pysal.open(pysal.examples.get_path('stata_sparse.txt'),'r','stata_text')
         >>> w = testfile.read()
+        WARNING: there 7 are disconnected observations
+        Island ids:  [5, 9, 10, 11, 12, 14, 15]
 
         Create a temporary file for this example
 
@@ -194,6 +198,8 @@ class StataTextIO(FileIO.FileIO):
         Read in the newly created text file
 
         >>> wnew =  pysal.open(fname,'r','stata_text').read()
+        WARNING: there 7 are disconnected observations
+        Island ids:  [5, 9, 10, 11, 12, 14, 15]
 
         Compare values from old to new
 
