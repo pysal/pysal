@@ -73,6 +73,24 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
     >>> set([1,2,5]) == set(wnn3m.neighbors[0])
     True
 
+    ids
+
+    >>> wnn2 = knnW(data,2)
+    >>> wnn2[0]
+    {1: 1.0, 5: 1.0}
+    >>> wnn2[1]
+    {0: 1.0, 2: 1.0}
+
+    now with 1 rather than 0 offset
+
+    >>> wnn2 = knnW(data,2, ids = range(1,26))
+    >>> wnn2[1]
+    {2: 1.0, 6: 1.0}
+    >>> wnn2[2]
+    {1: 1.0, 3: 1.0}
+    >>> 0 in wnn2.neighbors
+    False
+
 
     Notes
     -----
@@ -117,10 +135,13 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
     weights = {}
     if ids:
         idset = np.array(ids)
+        for i,row in enumerate(info):
+            new_row = [ idset[j] for j in row]
+            info[i] = new_row
     else:
         idset = np.arange(len(info))
     
-    neighbors = dict( [ (i,row[row!=i].tolist()[:k]) for i,row in enumerate(info)  ] )
+    neighbors = dict( [ (idset[i],row[row!=idset[i]].tolist()[:k]) for i,row in enumerate(info)  ] )
     return pysal.weights.W(neighbors,  id_order=ids)
 
 

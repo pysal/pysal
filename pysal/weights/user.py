@@ -270,12 +270,22 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
     >>> wc=knnW_from_shapefile(pysal.examples.get_path("columbus.shp"))
     >>> wc.pct_nonzero
     0.040816326530612242
-    >>> wc3=knnW_from_shapefile(pysal.examples.get_path("columbus.shp"),k=3)
-    >>> wc3.weights[1]
-    [1.0, 1.0, 1.0]
-    >>> set([0,3,7]) == set(wc3.neighbors[1])
-    True
     >>> set([2,1]) == set(wc.neighbors[0])
+    True
+    >>> wc3=pysal.knnW_from_shapefile(pysal.examples.get_path("columbus.shp"),k=3)
+    >>> set(wc3.neighbors[0]) == set([2,1,3])
+    True
+    >>> set(wc3.neighbors[2]) == set([4,3,0])
+    True
+
+    1 offset rather than 0 offset
+
+    >>> wc3_1=knnW_from_shapefile(pysal.examples.get_path("columbus.shp"),k=3,idVariable="POLYID")
+    >>> set([4,3,2]) == set(wc3_1.neighbors[1])
+    True
+    >>> wc3_1.weights[2]
+    [1.0, 1.0, 1.0]
+    >>> set([4,1,8]) == set(wc3_1.neighbors[2])
     True
     
 
