@@ -9,7 +9,6 @@ import pysal
 import regimes as REGI
 import user_output as USER
 import summary_output as SUMMARY
-import multiprocessing as mp
 from twosls_regimes import TSLS_Regimes
 from twosls import BaseTSLS
 from utils import set_endog, set_endog_sparse, sp_att, set_warn, sphstack
@@ -465,7 +464,6 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
                  spat_diag=False, vm=False, name_y=None, name_x=None,\
                  name_yend=None, name_q=None, name_regimes=None,\
                  name_w=None, name_gwk=None, name_ds=None):
-        pool = mp.Pool(cores)
         self.name_ds = USER.set_name_ds(name_ds)
         name_x = USER.set_name_x(name_x, x)
         name_yend.append(USER.set_name_yend_sp(name_y))
@@ -474,7 +472,8 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
         results_p = {}
         for r in self.regimes_set:
             w_r = w_i[r].sparse
-            results_p[r] = pool.apply_async(_work,args=(y,x,regi_ids,r,yend,q,w_r,w_lags,lag_q,robust,sig2n_k,self.name_ds,name_y,name_x,name_yend,name_q,self.name_w,name_regimes, ))
+            results_p[r] = _work(y,x,regi_ids,r,yend,q,w_r,w_lags,lag_q,robust,sig2n_k,self.name_ds,name_y,name_x,name_yend,name_q,self.name_w,name_regimes, )
+        
         self.kryd = 0
         self.kr = len(cols2regi) + 1
         self.kf = 0
@@ -487,13 +486,11 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
         self.predy = np.zeros((self.n,1),float)
         self.predy_e = np.zeros((self.n,1),float)
         self.e_pred = np.zeros((self.n,1),float)
-        pool.close()
-        pool.join()
         results = {}
         self.name_y, self.name_x, self.name_yend, self.name_q, self.name_z, self.name_h = [],[],[],[],[],[]
         counter = 0
         for r in self.regimes_set:
-            results[r] = results_p[r].get()
+            results[r] = results_p[r]
             results[r].predy_e, results[r].e_pred = sp_att(w_i[r],results[r].y,results[r].predy, results[r].yend[:,-1].reshape(results[r].n,1),results[r].betas[-1])
             results[r].w = w_i[r]
             self.vm[(counter*self.kr):((counter+1)*self.kr),(counter*self.kr):((counter+1)*self.kr)] = results[r].vm
