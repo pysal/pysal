@@ -33,9 +33,10 @@ def bbcommon(bb, bbother):
             chflag = 1
     return chflag
 
-
 class ContiguityWeights_binning:
-    """ """
+    """
+    Contiguity using a binning algorithm
+    """
     def __init__(self, shpFileObject, wttype):
         self.shpFileObject = shpFileObject
         self.wttype = wttype
@@ -109,56 +110,109 @@ class ContiguityWeights_binning:
 
     def doWeights(self):
         pw = self.potentialW
-        polygonCache = {}
         w = {}
         shpFileObject = self.shpFileObject
-        for polyId in xrange(self.numPoly):
-            if polyId not in polygonCache:
-                iVerts = set(shpFileObject.get(polyId).vertices)
-                polygonCache[polyId] = iVerts
-            else:
-                iVerts = polygonCache[polyId]
-            potentialNeighbors = pw[polyId]
-            if polyId not in w:
-                w[polyId] = set()
-            for j in potentialNeighbors:
-                if j not in polygonCache:
-                    polygonCache[j] = set(shpFileObject.get(j).vertices)
-                common = iVerts.intersection(polygonCache[j])
-                join = False
-                if len(common) > 1:  # ROOK
-                    #double check rook
-                    poly0 = shpFileObject.get(polyId)
-                    poly1 = shpFileObject.get(j)
-                    if get_shared_segments(poly0, poly1, True):
-                        join = True
-                    #for vert in common:
-                    #    idx = poly0.vertices.index(vert)
-                    #    IDX = poly1.vertices.index(vert)
-                    #    try:
-                    #        if poly0.vertices[idx+1] == poly1.vertices[IDX+1] or poly0.vertices[idx+1] == poly1.vertices[IDX-1]\
-                    #        or poly0.vertices[idx-1] == poly1.vertices[IDX+1] or poly0.vertices[idx-1] == poly1.vertices[IDX-1]:
-                    #            join = True
-                    #            break
-                    #    except IndexError:
-                    #        pass
-                if len(common) > 0:  # QUEEN
-                    if self.wttype == QUEEN:
-                        join = True
-                if join:
-                    w[polyId].add(j)
-                    if j not in w:
-                        w[j] = set()
-                    w[j].add(polyId)
 
-            del polygonCache[polyId]
-        self.w = w
+        if self.wttype == QUEEN:
+            # check for a shared vertex
+            vertCache = {}
+            for polyId in xrange(self.numPoly):
+                iVerts = shpFileObject.get(polyId).vertices
+                if polyId not in vertCache:
+                    vertCache[polyId] = set(iVerts)
+                nbrs = [j for j in pw[polyId] if j > polyId]
+                if polyId not in w:
+                    w[polyId] = set()
+                for j in nbrs:
+                    join = False
+                    if j not in vertCache:
+                        vertCache[j] = set(shpFileObject.get(j).vertices)
+                    common = vertCache[polyId].intersection(vertCache[j])
+                    if len(common) > 0:
+                        join = True
+                    if join:
+                        w[polyId].add(j)
+                        if j not in w:
+                            w[j] = set()
+                        w[j].add(polyId)
+            self.w = w
+        elif self.wttype == ROOK:
+            # check for a shared edge
+            edgeCache = {}
+            for polyId in xrange(self.numPoly):
+                if polyId not in edgeCache:
+                    iEdges ={}
+                    iVerts = shpFileObject.get(polyId).vertices
+                    nv = len(iVerts)
+                    ne = nv - 1
+                    for i in range(ne):
+                        l = iVerts[i]
+                        r = iVerts[i+1]
+                        iEdges[(l,r)] = []
+                        iEdges[(r,l)] = []
+                    edgeCache[polyId] = iEdges
+
+                nbrs = [j for j in pw[polyId] if j > polyId]
+                if polyId not in w:
+                    w[polyId] = set()
+                for j in nbrs:
+                    join = False
+                    if j not in edgeCache:
+                        jVerts = shpFileObject.get(j).vertices
+                        jEdges = {}
+                        nv = len(jVerts)
+                        ne = nv - 1
+                        for e in range(ne):
+                            l = jVerts[e]
+                            r = jVerts[e+1]
+                            jEdges[(l,r)] = []
+                            jEdges[(r,l)] = []
+                        edgeCache[j] = jEdges
+                    for edge in edgeCache[j]:
+                        if edge in edgeCache[polyId]:
+                            join = True
+                            w[polyId].add(j)
+                            if j not in w:
+                                w[j] = set()
+                            w[j].add(polyId)
+                            break
+            self.w = w
+        else:
+            print 'unsupported weight type'
+
 
 if __name__ == "__main__":
     import time
-    fname = pysal.examples.get_path('10740.shp')
+    fname = pysal.examples.get_path('nat.shp')
+    print 'QUEEN'
     t0 = time.time()
-    c = ContiguityWeights_binning(pysal.open(fname), QUEEN)
+    qb = ContiguityWeights_binning(pysal.open(fname), QUEEN)
     t1 = time.time()
     print "using " + str(fname)
-    print "time elapsed for ... using bins: " + str(t1 - t0)
+    print "time elapsed for queen... using bins: " + str(t1 - t0)
+
+    t0 = time.time()
+    rb = ContiguityWeights_binning(pysal.open(fname), ROOK)
+    t1 = time.time()
+    print "using " + str(fname)
+    print "time elapsed for rook... using bins: " + str(t1 - t0)
+
+
+    from _contW_rtree import ContiguityWeights_rtree
+
+    t0 = time.time()
+    rt = ContiguityWeights_rtree(pysal.open(fname), ROOK)
+    t1 = time.time()
+
+    print "time elapsed for rook... using rtree: " + str(t1 - t0)
+    print rt.w == rb.w
+
+    print 'QUEEN'
+    t0 = time.time()
+    qt = ContiguityWeights_rtree(pysal.open(fname), QUEEN)
+    t1 = time.time()
+    print "using " + str(fname)
+    print "time elapsed for queen... using rtree: " + str(t1 - t0)
+    print qb.w == qt.w
+
+
