@@ -245,9 +245,9 @@ STATA Text Weights Files
 
     >>> import pysal
     >>> stata_txt = pysal.open('../pysal/examples/stata_sparse.txt','r','stata_text')
+    >>> w = stata_txt.read()
     WARNING: there are 7 disconnected observations
     Island ids:  [5, 9, 10, 11, 12, 14, 15]
-    >>> w = stata_txt.read()
     >>> stata_txt.close()
     >>> w.n
     56
