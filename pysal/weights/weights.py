@@ -110,7 +110,7 @@ class W(object):
     Disconnected observations (islands)
 
     >>> w = pysal.W({1:[0],0:[1],2:[], 3:[]})
-    WARNING: there 2 are disconnected observations
+    WARNING: there are 2 disconnected observations
     Island ids:  [2, 3]
 
     """
@@ -139,7 +139,7 @@ class W(object):
                 print "WARNING: there is one disconnected observation (no neighbors)"
                 print "Island id: ",self.islands
             else:
-                print "WARNING: there %d are disconnected observations"%ni
+                print "WARNING: there are %d disconnected observations"%ni
                 print "Island ids: ",self.islands
 
     def _reset(self):

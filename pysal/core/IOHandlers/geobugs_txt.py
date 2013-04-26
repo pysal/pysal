@@ -79,7 +79,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
         Open a GeoBUGS text file and read it into a pysal weights object
 
         >>> w = pysal.open(pysal.examples.get_path('geobugs_scot'),'r','geobugs_text').read()
-        WARNING: there 3 are disconnected observations
+        WARNING: there are 3 disconnected observations
         Island ids:  [6, 8, 11]
 
         Get the number of observations from the header
@@ -175,7 +175,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
         >>> import tempfile, pysal, os
         >>> testfile = pysal.open(pysal.examples.get_path('geobugs_scot'),'r','geobugs_text')
         >>> w = testfile.read()
-        WARNING: there 3 are disconnected observations
+        WARNING: there are 3 disconnected observations
         Island ids:  [6, 8, 11]
 
         Create a temporary file for this example
@@ -202,7 +202,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
         Read in the newly created text file
 
         >>> wnew =  pysal.open(fname,'r','geobugs_text').read()
-        WARNING: there 3 are disconnected observations
+        WARNING: there are 3 disconnected observations
         Island ids:  [6, 8, 11]
 
         Compare values from old to new

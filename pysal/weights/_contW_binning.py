@@ -183,7 +183,7 @@ class ContiguityWeights_binning:
 
 if __name__ == "__main__":
     import time
-    fname = pysal.examples.get_path('nat.shp')
+    fname = pysal.examples.get_path('NAT.shp')
     print 'QUEEN'
     t0 = time.time()
     qb = ContiguityWeights_binning(pysal.open(fname), QUEEN)
@@ -214,5 +214,17 @@ if __name__ == "__main__":
     print "using " + str(fname)
     print "time elapsed for queen... using rtree: " + str(t1 - t0)
     print qb.w == qt.w
+
+    print 'knn4'
+    t0 = time.time()
+    knn = pysal.knnW_from_shapefile(fname,k=4)
+    t1 = time.time()
+    print t1-t0
+
+    print 'rook from shapefile'
+    t0 = time.time()
+    knn = pysal.rook_from_shapefile(fname)
+    t1 = time.time()
+    print t1-t0
 
 
