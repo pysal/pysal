@@ -8,7 +8,7 @@ import os
 import gc
 import operator
 
-__all__ = ['lat2W', 'regime_weights', 'comb', 'order', 'higher_order', 'shimbel', 'remap_ids', 'full2W', 'full', 'WSP2W', 'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance', 'lat2SW', 'w_local_cluster', 'higher_order_sp']
+__all__ = ['lat2W', 'regime_weights', 'comb', 'order', 'higher_order', 'shimbel', 'full2W', 'full', 'WSP2W', 'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance', 'lat2SW', 'w_local_cluster', 'higher_order_sp']
 
 
 def lat2W(nrows=5, ncols=5, rook=True):
@@ -598,7 +598,7 @@ def full2W(m, ids=None):
         if ids:
             ngh = [ids[j] for j in ngh]
         neighbors[i] = ngh
-    return pysal.W(neighbors, weights, id_order=ids)
+    return pysal.W(neighbors, weights)
 
 
 def WSP2W(wsp):
@@ -721,70 +721,11 @@ def insert_diagonal(w, diagonal=1.0, wsp=False):
         w_new.setdiag([diagonal] * w.n)
     else:
         raise Exception("Invalid value passed to diagonal")
-    w_out = pysal.weights.WSP(w_new, copy.copy(w.id_order))
+    w_out = pysal.weights.WSP(w_new)
     if wsp:
         return w_out
     else:
         return WSP2W(w_out)
-
-
-def remap_ids(w, old2new, id_order=[]):
-    """
-    Remaps the IDs in a spatial weights object
-
-    Parameters
-    ----------
-    w        : W
-               Spatial weights object
-
-    old2new  : dictionary
-               Dictionary where the keys are the IDs in w (i.e. "old IDs") and
-               the values are the IDs to replace them (i.e. "new IDs")
-
-    id_order : list
-               An ordered list of new IDs, which defines the order of observations when
-               iterating over W. If not set then the id_order in w will be
-               used.
-
-    Returns
-    -------
-
-    implicit : W
-               Spatial weights object with new IDs
-
-    Examples
-    --------
-    >>> from pysal import lat2W, remap_ids
-    >>> w = lat2W(3,2)
-    >>> w.id_order
-    [0, 1, 2, 3, 4, 5]
-    >>> w.neighbors[0]
-    [2, 1]
-    >>> old_to_new = {0:'a', 1:'b', 2:'c', 3:'d', 4:'e', 5:'f'}
-    >>> w_new = remap_ids(w, old_to_new)
-    >>> w_new.id_order
-    ['a', 'b', 'c', 'd', 'e', 'f']
-    >>> w_new.neighbors['a']
-    ['c', 'b']
-
-    """
-    if not isinstance(w, pysal.weights.W):
-        raise Exception("w must be a spatial weights object")
-    new_neigh = {}
-    new_weights = {}
-    for key, value in w.neighbors.iteritems():
-        new_values = [old2new[i] for i in value]
-        new_key = old2new[key]
-        new_neigh[new_key] = new_values
-        new_weights[new_key] = copy.copy(w.weights[key])
-    if id_order:
-        return pysal.weights.W(new_neigh, new_weights, id_order)
-    else:
-        if w.id_order:
-            id_order = [old2new[i] for i in w.id_order]
-            return pysal.weights.W(new_neigh, new_weights, id_order)
-        else:
-            return pysal.weights.W(new_neigh, new_weights)
 
 
 def get_ids(shapefile, idVariable):
