@@ -757,6 +757,8 @@ difference weights matrices from regions with partial overlap.
     >>> w2.neighbors[15]
     [11, 14]
     >>> w = pysal.w_difference(w1, w2, w_shape = 'w1', constrained = False)
+    WARNING: there are 12 disconnected observations
+    Island ids:  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     >>> w.neighbors[15]
     [19]
     >>> w.neighbors[19]
@@ -807,8 +809,6 @@ described above.
     >>> w_lower = pysal.w_difference(w1, w2, w_shape = 'min', constrained = True)
     >>> w_upper = pysal.lat2W(4, 4)
     >>> w = pysal.w_symmetric_difference(w_lower, w_upper, 'all', False)
-    WARNING: there are 8 disconnected observations
-    Island ids: [0, 1, 2, 3, 4, 5, 6, 7]
     >>> w_lower.id_order
     [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
     >>> w_upper.id_order
@@ -818,6 +818,8 @@ described above.
     >>> w.neighbors[11]
     [7]
     >>> w = pysal.w_symmetric_difference(w_lower, w_upper, 'min', False)
+    WARNING: there are 8 disconnected observations
+    Island ids:  [0, 1, 2, 3, 4, 5, 6, 7]
     >>> 11 in w.neighbors
     False
     >>> w.id_order
@@ -829,7 +831,7 @@ described above.
     []
     >>> w = pysal.w_symmetric_difference(w_lower, w_upper, 'min', True)
     WARNING: there are 8 disconnected observations
-    Island ids: [0, 1, 2, 3, 4, 5, 6, 7]
+    Island ids:  [0, 1, 2, 3, 4, 5, 6, 7]
     >>> 11 in w.neighbors
     False
 
