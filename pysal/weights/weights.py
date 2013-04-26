@@ -24,12 +24,6 @@ class W(object):
                       key is region ID, value is a list of edge weights
                       If not supplied all edge weights are assumed to have a weight of 1.
                       Example: {'a':[0.5],'b':[0.5,1.5],'c':[1.5]}
-    id_order = None : list
-                      An ordered list of ids, defines the order of
-                      observations when iterating over W if not set,
-                      lexicographical ordering is used to iterate and the
-                      id_order_set property will return False.  This can be
-                      set after creation by setting the 'id_order' property.
 
     Attributes
     ----------
@@ -41,8 +35,6 @@ class W(object):
     diagWtW_WW
     histogram
     id2i
-    id_order
-    id_order_set
     islands
     max_neighbors
     mean_neighbors
@@ -114,7 +106,7 @@ class W(object):
     Island ids:  [2, 3]
 
     """
-    def __init__(self, neighbors, weights=None, id_order=None):
+    def __init__(self, neighbors, weights=None):
         self.transformations = {}
         self.neighbors = ROD(neighbors)
         if not weights:
@@ -124,13 +116,7 @@ class W(object):
         self.weights = ROD(weights)
         self.transformations['O'] = self.weights  # original weights
         self.transform = 'O'
-        if id_order is None:
-            self._id_order = self.neighbors.keys()
-            self._id_order.sort()
-            self._id_order_set = False
-        else:
-            self._id_order = id_order
-            self._id_order_set = True
+        self._id_order = self.neighbors.keys()
         self._reset()
         self._n = len(self.weights)
         if self.islands:
@@ -183,20 +169,6 @@ class W(object):
         s = scipy.sparse.csr_matrix((data, (row, col)), shape=(self.n, self.n))
         return s
 
-
-    @property
-    def id2i(self):
-        """
-        Dictionary where the key is an ID and the value is that ID's
-        index in W.id_order.
-        """
-        if 'id2i' not in self._cache:
-            self._id2i = {}
-            for i, id in enumerate(self._id_order):
-                self._id2i[id] = i
-            self._id2i = ROD(self._id2i)
-            self._cache['id2i'] = self._id2i
-        return self._id2i
 
     @property
     def n(self):
@@ -505,131 +477,17 @@ class W(object):
         class _W_iter:
             def __init__(self, w):
                 self.w = w
-                self.n = len(w._id_order)
+                self.n = len(w.neighbors)
                 self._idx = 0
 
             def next(self):
                 if self._idx >= self.n:
                     self._idx = 0
                     raise StopIteration
-                value = self.w.__getitem__(self.w._id_order[self._idx])
+                value = self.w.__getitem__(self._idx)
                 self._idx += 1
                 return value
         return _W_iter(self)
-
-    def __set_id_order(self, ordered_ids):
-        """
-        Set the iteration order in w.
-
-        W can be iterated over. On construction the iteration order is set to
-        the lexicographic order of the keys in the w.weights dictionary. If a specific order
-        is required it can be set with this method.
-
-        Parameters
-        ----------
-
-        ordered_ids : sequence
-                      identifiers for observations in specified order
-
-        Notes
-        -----
-
-        ordered_ids is checked against the ids implied by the keys in
-        w.weights. If they are not equivalent sets an exception is raised and
-        the iteration order is not changed.
-
-        Examples
-        --------
-
-        >>> import pysal
-        >>> w=pysal.lat2W(3,3)
-        >>> for i,wi in enumerate(w):
-        ...     print i,wi
-        ...
-        0 {1: 1.0, 3: 1.0}
-        1 {0: 1.0, 2: 1.0, 4: 1.0}
-        2 {1: 1.0, 5: 1.0}
-        3 {0: 1.0, 4: 1.0, 6: 1.0}
-        4 {1: 1.0, 3: 1.0, 5: 1.0, 7: 1.0}
-        5 {8: 1.0, 2: 1.0, 4: 1.0}
-        6 {3: 1.0, 7: 1.0}
-        7 {8: 1.0, 4: 1.0, 6: 1.0}
-        8 {5: 1.0, 7: 1.0}
-
-        >>> w.id_order
-        [0, 1, 2, 3, 4, 5, 6, 7, 8]
-        >>> w.id_order=range(8,-1,-1)
-        >>> w.id_order
-        [8, 7, 6, 5, 4, 3, 2, 1, 0]
-        >>> for i,w_i in enumerate(w):
-        ...     print i,w_i
-        ...
-        0 {5: 1.0, 7: 1.0}
-        1 {8: 1.0, 4: 1.0, 6: 1.0}
-        2 {3: 1.0, 7: 1.0}
-        3 {8: 1.0, 2: 1.0, 4: 1.0}
-        4 {1: 1.0, 3: 1.0, 5: 1.0, 7: 1.0}
-        5 {0: 1.0, 4: 1.0, 6: 1.0}
-        6 {1: 1.0, 5: 1.0}
-        7 {0: 1.0, 2: 1.0, 4: 1.0}
-        8 {1: 1.0, 3: 1.0}
-        >>>
-
-        """
-        if set(self._id_order) == set(ordered_ids):
-            self._id_order = ordered_ids
-            self._idx = 0
-            self._id_order_set = True
-            self._reset()
-        else:
-            raise Exception('ordered_ids do not align with W ids')
-
-    def __get_id_order(self):
-        """returns the ids for the observations in the order in which they
-        would be encountered if iterating over the weights."""
-        return self._id_order
-
-    id_order = property(__get_id_order, __set_id_order)
-
-    @property
-    def id_order_set(self):
-        """returns True if user has set id_order, False if not.
-
-        Examples
-        --------
-        >>> from pysal import lat2W
-        >>> w=lat2W()
-        >>> w.id_order_set
-        True
-        """
-        return self._id_order_set
-
-    @property
-    def neighbor_offsets(self):
-        """
-        Given the current id_order, neighbor_offsets[id] is the offsets of the
-        id's neighbors in id_order
-
-        Examples
-        --------
-        >>> from pysal import W
-        >>> neighbors={'c': ['b'], 'b': ['c', 'a'], 'a': ['b']}
-        >>> weights ={'c': [1.0], 'b': [1.0, 1.0], 'a': [1.0]}
-        >>> w=W(neighbors,weights)
-        >>> w.id_order = ['a','b','c']
-        >>> w.neighbor_offsets['b']
-        [2, 0]
-        >>> w.id_order = ['b','a','c']
-        >>> w.neighbor_offsets['b']
-        [2, 1]
-        """
-        if "neighbors_0" not in self._cache:
-            self.__neighbors_0 = {}
-            id2i = self.id2i
-            for id, neigh_list in self.neighbors.iteritems():
-                self.__neighbors_0[id] = [id2i[neigh] for neigh in neigh_list]
-            self._cache['neighbors_0'] = self.__neighbors_0
-        return self.__neighbors_0
 
     def get_transform(self):
         """
@@ -890,7 +748,8 @@ class W(object):
 
         self._varName = idVariable
 
-
+    def get_idVariable(self):
+        return self._varName
 
 
 

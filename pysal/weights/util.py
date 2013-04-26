@@ -11,7 +11,7 @@ import operator
 __all__ = ['lat2W', 'regime_weights', 'comb', 'order', 'higher_order', 'shimbel', 'remap_ids', 'full2W', 'full', 'WSP2W', 'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance', 'lat2SW', 'w_local_cluster', 'higher_order_sp']
 
 
-def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
+def lat2W(nrows=5, ncols=5, rook=True):
     """
     Create a W object for a regular lattice.
 
@@ -24,10 +24,6 @@ def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
               number of columns
     rook    : boolean
               type of contiguity. Default is rook. For queen, rook =False
-    id_type : string
-              string defining the type of IDs to use in the final W object;
-              options are 'int' (0, 1, 2 ...; default), 'float' (0.0,
-              1.0, 2.0, ...) and 'string' ('id0', 'id1', 'id2', ...)
 
     Returns
     -------
@@ -89,23 +85,18 @@ def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
     for key in w:
         weights[key] = [1.] * len(w[key])
     ids = range(n)
-    if id_type == 'string':
-        ids = ['id' + str(i) for i in ids]
-    elif id_type == 'float':
-        ids = [i * 1. for i in ids]
-    if id_type == 'string' or id_type == 'float':
-        id_dict = dict(zip(range(n), ids))
-        alt_w = {}
-        alt_weights = {}
-        for i in w:
-            values = [id_dict[j] for j in w[i]]
-            key = id_dict[i]
-            alt_w[key] = values
-            alt_weights[key] = weights[i]
-        w = alt_w
-        weights = alt_weights
+    id_dict = dict(zip(range(n), ids))
+    alt_w = {}
+    alt_weights = {}
+    for i in w:
+        values = [id_dict[j] for j in w[i]]
+        key = id_dict[i]
+        alt_w[key] = values
+        alt_weights[key] = weights[i]
+    w = alt_w
+    weights = alt_weights
     gc.enable()
-    return pysal.weights.W(w, weights, ids)
+    return pysal.weights.W(w, weights)
 
 
 def regime_weights(regimes):
