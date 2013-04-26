@@ -530,7 +530,12 @@ class Moran_Local:
         self.n = n
         self.n_1 = n - 1
         z = y - y.mean()
-        z = z / y.std()
+        # setting for floating point noise
+        orig_settings = np.seterr()
+        np.seterr(all="ignore")
+        sy = y.std()
+        z /=  sy
+        np.seterr(**orig_settings)
         self.z = z
         w.transform = transformation
         self.w = w
