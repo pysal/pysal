@@ -184,7 +184,7 @@ class ContiguityWeights_binning:
 if __name__ == "__main__":
     import time
     fname = pysal.examples.get_path('NAT.shp')
-    print 'QUEEN'
+    print 'QUEEN binning'
     t0 = time.time()
     qb = ContiguityWeights_binning(pysal.open(fname), QUEEN)
     t1 = time.time()
