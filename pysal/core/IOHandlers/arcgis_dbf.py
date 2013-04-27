@@ -2,7 +2,6 @@ import pysal
 import os.path
 import pysal.core.FileIO as FileIO
 from pysal.weights import W
-from pysal.weights.util import remap_ids
 from warnings import warn
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
