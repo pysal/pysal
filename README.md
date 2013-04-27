@@ -1,3 +1,9 @@
+weight_ids Branch
+=================
+
+Branch to work on refactoring treatment of idVariable within weights class.
+
+
 Python Spatial Analysis Library
 ==============================
 
