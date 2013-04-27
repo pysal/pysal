@@ -3,6 +3,8 @@ weight_ids Branch
 
 Branch to work on refactoring treatment of idVariable within weights class.
 
+This will have major breakage for a while so be sure to use [ci skip] in the
+commits until breakage is repaired.
 
 Python Spatial Analysis Library
 ==============================
