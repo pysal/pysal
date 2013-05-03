@@ -16,7 +16,10 @@ from matplotlib import cm
 from matplotlib.patches import Polygon
 from matplotlib.path import Path
 from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection
-from mpl_toolkits.basemap import Basemap
+try:
+    from mpl_toolkits.basemap import Basemap
+except:
+    print "WARNING: Basemap not installed and cannot be imported"
 from ogr import osr
 
 def transCRS(xy, src_prj, trt_prj):
