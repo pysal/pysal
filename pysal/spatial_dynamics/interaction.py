@@ -114,14 +114,12 @@ class SpaceTimeEvents:
         # extract the temporal information from the database
         if infer_timestamp:
             col = dbf.by_col(time_col)
-            try:
-                for i in col:
-                    isinstance(i, datetime.date)
-            except TypeError as e:
-                print(e)
-            day1 = min(col)
-            col = [(d - day1).days for d in col]
-            t = np.array(col)
+            if isinstance(col[0], datetime.date):
+                day1 = min(col)
+                col = [(d - day1).days for d in col]
+                t = np.array(col)
+            else:
+                t = np.array(dbf.by_col(time_col))
         else:
             t = np.array(dbf.by_col(time_col))
         line = np.ones((n, 1))
