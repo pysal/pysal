@@ -114,8 +114,9 @@ print enum_links_node(wed,4)
 
 
 # handle internal filament with end node
-
-print 'before: ', enum_links_node(wed,4)
+print 'before'
+print 'enum around node 4', enum_links_node(wed,4)
+print 'enum around region 0', enum_links_region(wed,r0)
 
 # make local adjustments
 # new edges first
@@ -126,18 +127,67 @@ wed['node_edge'][5] = 4,5
 wed['node_edge'][6] = 5,6
 wed['right_region'][4,5] = r0
 wed['left_region'][4,5] = r0
+
 wed['start_c'][4,5] = 2,4
 wed['end_cc'][4,5] = 5,6
 wed['start_cc'][4,5] = 4,3
 wed['end_c'][4,5] = 5,6
+
 wed['start_c'][5,6] = 4,5
 wed['end_cc'][5,6] = 5,6
 wed['start_cc'][5,6] = 4,5
 wed['end_c'][5,6] = 5,6
 
 
+# need these to pick up 4,5 when enumerating edges around node 4
 wed['start_cc'][4,2] = 4,5
 wed['end_c'][3,4] = 4,5
 
+# as long as end_cc pointers for non-filament edges defining the region are
+# not modified due to insertion of an end-node-filament, traversing around the
+# edges of a region works
 
-print 'after: ', enum_links_node(wed,4)
+print 'after internal end-node filament'
+print 'enum around node 4', enum_links_node(wed,4)
+print 'enum around region 0', enum_links_region(wed,r0)
+
+
+# now try an end-point filament that is external, but linked to a region
+
+
+print 'before external end-node-filament'
+print 'enum around node 3', enum_links_node(wed,3)
+print 'enum around region 0', enum_links_region(wed,r0)
+
+wed['edges'][3,28] = 3,28
+wed['edges'][28,29] = 28,29
+wed['node_edge'][28] = 3,28
+wed['node_edge'][29] = 28,29
+wed['right_region'][28,29] = r_1
+wed['right_region'][3,28] = r_1
+wed['left_region'][28,29] = r_1
+wed['left_region'][3,28] = r_1
+
+wed['start_cc'][3,28] = 3,4
+wed['end_c'][3,28] = 28,29
+wed['start_c'][3,28] = 1,3
+wed['end_cc'][3,28]= 28,29
+
+
+wed['start_c'][28,29] = 3,28 
+wed['end_cc'][28,29]= 28,29
+wed['start_cc'][28,29] = 3,28
+wed['end_c'][28,29] = 28,29
+
+wed['start_c'][4,3] = 3,28
+wed['end_c'][4,3] = 3,28
+
+
+
+print 'after external end-node filament'
+print 'enum around node 3', enum_links_node(wed,3)
+print 'enum around region 0', enum_links_region(wed,r0)
+
+
+print 'enum links around 28: ', enum_links_node(wed,28)
+print 'enum links around 29: ', enum_links_node(wed,29)
