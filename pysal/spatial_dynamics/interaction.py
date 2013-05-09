@@ -5,14 +5,21 @@ data.
 __author__ = "Nicholas Malizia <nmalizia@asu.edu>"
 
 import pysal
-#from pysal.common import *
 import numpy as np
 import scipy.stats as stats
 import pysal.weights.Distance as Distance
 from pysal import cg
 from pysal.spatial_dynamics import util
+import datetime
 
 __all__ = ['SpaceTimeEvents', 'knox', 'mantel', 'jacquez', 'modified_knox']
+
+#TODO: add try/except statement for inferring datetime object from timestamp
+#column specified by user
+#TODO: optimize SpaceTimeEvents class init extraction of x,y
+#TODO: replace full distance matrices with brute force, then scipy kdtree, then sklearn kdtree, then numba
+#TODO: write new tests with Burkitt where you infer the timestamp from the date
+#instead of using the given column
 
 
 class SpaceTimeEvents:
@@ -48,8 +55,6 @@ class SpaceTimeEvents:
 
     Examples
     --------
-    >>> import numpy as np
-    >>> import pysal
 
     Read in the example shapefile data, ensuring to omit the file
     extension. In order to successfully create the event data the .dbf file
@@ -81,7 +86,7 @@ class SpaceTimeEvents:
 
 
     """
-    def __init__(self, path, time_col):
+    def __init__(self, path, time_col, infer_timestamp=False):
         shp = pysal.open(path + '.shp')
         dbf = pysal.open(path + '.dbf')
 
@@ -107,7 +112,18 @@ class SpaceTimeEvents:
         self.space = np.hstack((self.x, self.y))
 
         # extract the temporal information from the database
-        t = np.array(dbf.by_col(time_col))
+        if infer_timestamp:
+            col = dbf.by_col(time_col)
+            try:
+                for i in col:
+                    isinstance(i, datetime.date)
+            except TypeError as e:
+                print(e)
+            day1 = min(col)
+            col = [(d - day1).days for d in col]
+            t = np.array(col)
+        else:
+            t = np.array(dbf.by_col(time_col))
         line = np.ones((n, 1))
         self.t = np.reshape(t, (n, 1))
         self.time = np.hstack((self.t, line))
@@ -117,7 +133,7 @@ class SpaceTimeEvents:
         shp.close()
 
 
-def knox(events, delta, tau, permutations=99):
+def knox(events, delta, tau, permutations=99, debug=False):
     """
     Knox test for spatio-temporal interaction. [1]_
 
@@ -132,6 +148,8 @@ def knox(events, delta, tau, permutations=99):
     permutations    : int
                       the number of permutations used to establish pseudo-
                       significance (default is 99)
+    debug           : bool
+                      if true debugging information is printed
 
     Returns
     -------
@@ -142,6 +160,8 @@ def knox(events, delta, tau, permutations=99):
                       value of the knox test for the dataset
     pvalue          : float
                       pseudo p-value associated with the statistic
+    counts          : int
+                      count of space time neighbors
 
     References
     ----------
@@ -169,7 +189,7 @@ def knox(events, delta, tau, permutations=99):
     respectively. This counts the events that are closer than 20 units in
     space, and 5 units in time.
 
-    >>> result = knox(events,delta=20,tau=5,permutations=99)
+    >>> result = knox(events, delta=20, tau=5, permutations=99)
 
     Next, we examine the results. First, we call the statistic from the
     results results dictionary. This reports that there are 13 events close
@@ -186,6 +206,25 @@ def knox(events, delta, tau, permutations=99):
     >>> print("%2.2f"%result['pvalue'])
     0.18
 
+    Now, let's look at the case where the time column is formatted as a date
+    rather than an integer.
+
+    >>> path2 = pysal.examples.get_path("burkitt_mod")
+    >>> events2 = SpaceTimeEvents(path2, 'DATE', infer_timestamp=True)
+    >>> result2 = knox(events2, delta=20, tau=5, permutations=99)
+
+    The results should be identical.
+
+    >>> print(result2['stat'])
+    13.0
+    >>> print("%2.2f"%result2['pvalue'])
+    0.18
+
+    Now let's try to generate an error.
+
+    >>> path3 = pysal.examples.get_path("burkitt_mod")
+    >>> events3 = SpaceTimeEvents(path3, 'T', infer_timestamp=True)
+    >>> result3 = knox(events3, delta=20, tau=5, permutations=99)
 
     """
     n = events.n
@@ -194,23 +233,31 @@ def knox(events, delta, tau, permutations=99):
 
     # calculate the spatial and temporal distance matrices for the events
     sdistmat = cg.distance_matrix(s)
+    if debug:
+        print(sdistmat.min(), sdistmat.mean(), sdistmat.max())
     tdistmat = cg.distance_matrix(t)
+    if debug:
+        print(tdistmat.min(), tdistmat.max())
 
     # identify events within thresholds
     spacmat = np.ones((n, n))
     test = sdistmat <= delta
     spacmat = spacmat * test
+    if debug:
+        False in spacmat
 
     timemat = np.ones((n, n))
     test = tdistmat <= tau
     timemat = timemat * test
+    if debug:
+        False in timemat
 
     # calculate the statistic
     knoxmat = timemat * spacmat
     stat = (knoxmat.sum() - n) / 2
 
     # return results (if no inference)
-    if permutations == 0:
+    if not permutations:
         return stat
     distribution = []
 
@@ -594,4 +641,3 @@ def modified_knox(events, delta, tau, permutations=99):
     # return results
     modknox_result = {'stat': stat, 'pvalue': pvalue}
     return modknox_result
-
