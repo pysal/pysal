@@ -60,6 +60,7 @@ for region in regions:
         left_region[edge[1],edge[0]] = region
         start_cc[edge[1], edge[0] ] = end_cc[edge]
         end_c[edge[1], edge[0] ] = start_c[edge]
+        edges[edge] = edge
 
 wed = {}
 wed['node_edge'] = node_edge
@@ -109,4 +110,34 @@ def enum_links_region(wed,region):
             links.append(l)
     return links
 
+print enum_links_node(wed,4)
 
+
+# handle internal filament with end node
+
+print 'before: ', enum_links_node(wed,4)
+
+# make local adjustments
+# new edges first
+wed['edges'][4,5] = 4,5
+wed['edges'][5,6] = 5,6
+wed['edges'][6,5] = 6,5
+wed['node_edge'][5] = 4,5
+wed['node_edge'][6] = 5,6
+wed['right_region'][4,5] = r0
+wed['left_region'][4,5] = r0
+wed['start_c'][4,5] = 2,4
+wed['end_cc'][4,5] = 5,6
+wed['start_cc'][4,5] = 4,3
+wed['end_c'][4,5] = 5,6
+wed['start_c'][5,6] = 4,5
+wed['end_cc'][5,6] = 5,6
+wed['start_cc'][5,6] = 4,5
+wed['end_c'][5,6] = 5,6
+
+
+wed['start_cc'][4,2] = 4,5
+wed['end_c'][3,4] = 4,5
+
+
+print 'after: ', enum_links_node(wed,4)
