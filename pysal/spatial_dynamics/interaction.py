@@ -10,16 +10,13 @@ import scipy.stats as stats
 import pysal.weights.Distance as Distance
 from pysal import cg
 from pysal.spatial_dynamics import util
-import datetime
+from datetime import date
 
 __all__ = ['SpaceTimeEvents', 'knox', 'mantel', 'jacquez', 'modified_knox']
 
-#TODO: add try/except statement for inferring datetime object from timestamp
-#column specified by user
 #TODO: optimize SpaceTimeEvents class init extraction of x,y
-#TODO: replace full distance matrices with brute force, then scipy kdtree, then sklearn kdtree, then numba
-#TODO: write new tests with Burkitt where you infer the timestamp from the date
-#instead of using the given column
+#TODO: replace full distance matrices with brute force, then scipy kdtree,
+#then sklearn kdtree, then numba
 
 
 class SpaceTimeEvents:
@@ -35,6 +32,10 @@ class SpaceTimeEvents:
     time            : string
                       column header in the DBF file indicating the column
                       containing the time stamp
+    infer_timestamp : boolean
+                      if the column containing the timestamp is formatted as
+                      calendar dates, try to coerce them into Python datetime
+                      objects
 
     Attributes
     ----------
@@ -60,7 +61,7 @@ class SpaceTimeEvents:
     extension. In order to successfully create the event data the .dbf file
     associated with the shapefile should have a column of values that are a
     timestamp for the events. There should be a numerical value (not a
-    date) in every field.
+    date) in every field. UPDATE: added date inference in 1.6
 
     >>> path = pysal.examples.get_path("burkitt")
 
@@ -82,8 +83,38 @@ class SpaceTimeEvents:
     Check the time of the first event.
 
     >>> events.t[0]
-    array([413])
+    array([ 413.])
 
+    Calculate the time difference between the first two events.
+
+    >>> events.t[1] - events.t[0]
+    array([ 59.])
+
+    Now, create an instance of SpaceTimeEvents from a shapefile, where the
+    temporal information is stored in a column named "DATE".
+
+    >>> events = SpaceTimeEvents(path,'DATE')
+
+    See how many events are in the instance.
+
+    >>> events.n
+    188
+
+    Check the spatial coordinates of the first event.
+
+    >>> events.space[0]
+    array([ 300.,  302.])
+
+    Check the time of the first event. Note that this value is equivalent to
+    413 days after January 1, 1900.
+
+    >>> events.t[0][0]
+    datetime.date(1901, 2, 16)
+
+    Calculate the time difference between the first two events.
+
+    >>> (events.t[1][0] - events.t[0][0]).days
+    59
 
     """
     def __init__(self, path, time_col, infer_timestamp=False):
@@ -114,12 +145,14 @@ class SpaceTimeEvents:
         # extract the temporal information from the database
         if infer_timestamp:
             col = dbf.by_col(time_col)
-            if isinstance(col[0], datetime.date):
+            if isinstance(col[0], date):
                 day1 = min(col)
                 col = [(d - day1).days for d in col]
                 t = np.array(col)
             else:
-                t = np.array(dbf.by_col(time_col))
+                print("Unable to parse your time column as Python datetime \
+                      objects, proceeding as integers.")
+                t = np.array(col)
         else:
             t = np.array(dbf.by_col(time_col))
         line = np.ones((n, 1))
@@ -147,7 +180,7 @@ def knox(events, delta, tau, permutations=99, debug=False):
                       the number of permutations used to establish pseudo-
                       significance (default is 99)
     debug           : bool
-                      if true debugging information is printed
+                      if true, debugging information is printed
 
     Returns
     -------
@@ -204,26 +237,6 @@ def knox(events, delta, tau, permutations=99, debug=False):
     >>> print("%2.2f"%result['pvalue'])
     0.18
 
-    Now, let's look at the case where the time column is formatted as a date
-    rather than an integer.
-
-    >>> path2 = pysal.examples.get_path("burkitt_mod")
-    >>> events2 = SpaceTimeEvents(path2, 'DATE', infer_timestamp=True)
-    >>> result2 = knox(events2, delta=20, tau=5, permutations=99)
-
-    The results should be identical.
-
-    >>> print(result2['stat'])
-    13.0
-    >>> print("%2.2f"%result2['pvalue'])
-    0.18
-
-    Now let's try to generate an error.
-
-    >>> path3 = pysal.examples.get_path("burkitt_mod")
-    >>> events3 = SpaceTimeEvents(path3, 'T', infer_timestamp=True)
-    >>> result3 = knox(events3, delta=20, tau=5, permutations=99)
-
     """
     n = events.n
     s = events.space
@@ -257,6 +270,8 @@ def knox(events, delta, tau, permutations=99, debug=False):
     # return results (if no inference)
     if not permutations:
         return stat
+    if debug:
+        print(stat)
     distribution = []
 
     # loop for generating a random distribution to assess significance
@@ -548,7 +563,7 @@ def modified_knox(events, delta, tau, permutations=99):
     Read in the example data and create an instance of SpaceTimeEvents.
 
     >>> path = pysal.examples.get_path("burkitt")
-    >>> events = SpaceTimeEvents(path,'T')
+    >>> events = SpaceTimeEvents(path, 'T')
 
     Set the random seed generator. This is used by the permutation based
     inference to replicate the pseudo-significance of our example results -
@@ -560,20 +575,20 @@ def modified_knox(events, delta, tau, permutations=99):
     respectively. This counts the events that are closer than 20 units in
     space, and 5 units in time.
 
-    >>> result = modified_knox(events,delta=20,tau=5,permutations=99)
+    >>> result = modified_knox(events, delta=20, tau=5, permutations=99)
 
     Next, we examine the results. First, we call the statistic from the
     results dictionary. This reports the difference between the observed
     and expected Knox statistic.
 
-    >>> print("%2.8f"%result['stat'])
+    >>> print("%2.8f" % result['stat'])
     2.81016043
 
     Next, we look at the pseudo-significance of this value, calculated by
     permuting the timestamps and rerunning the statistics. In this case,
     the results indicate there is likely no space-time interaction.
 
-    >>> print("%2.2f"%result['pvalue'])
+    >>> print("%2.2f" % result['pvalue'])
     0.11
 
     """
@@ -639,3 +654,33 @@ def modified_knox(events, delta, tau, permutations=99):
     # return results
     modknox_result = {'stat': stat, 'pvalue': pvalue}
     return modknox_result
+
+if __name__ == '__main__':
+
+    np.random.seed(100)
+
+    path = pysal.examples.get_path("burkitt")
+    path2 = pysal.examples.get_path("burkitt_mod")
+
+    events = SpaceTimeEvents(path, 'T')
+    result = knox(events, delta=20, tau=5, permutations=99, debug=False)
+    print(result['stat'], "%2.2f" % result['pvalue'])
+    print("==================")
+
+    np.random.seed(100)
+    events = SpaceTimeEvents(path, 'T', infer_timestamp=True)
+    result = knox(events, delta=20, tau=5, permutations=99, debug=False)
+    print(result['stat'],  "%2.2f" % result['pvalue'])
+    print("==================")
+
+    np.random.seed(100)
+    events = SpaceTimeEvents(path2, 'DATE', infer_timestamp=True)
+    result = knox(events, delta=20, tau=5, permutations=99, debug=False)
+    print(result['stat'],  "%2.2f" % result['pvalue'])
+    print("==================")
+
+    np.random.seed(100)
+    events = SpaceTimeEvents(path2, 'T')
+    result = knox(events, delta=20, tau=5, permutations=99, debug=False)
+    print(result['stat'], "%2.2f" % result['pvalue'])
+    print("==================")
