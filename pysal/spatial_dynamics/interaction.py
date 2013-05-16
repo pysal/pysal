@@ -122,20 +122,10 @@ class SpaceTimeEvents:
         dbf = pysal.open(path + '.dbf')
 
         # extract the spatial coordinates from the shapefile
-        x = []
-        y = []
-        n = 0
-        for i in shp:
-            count = 0
-            for j in i:
-                if count == 0:
-                    x.append(j)
-                elif count == 1:
-                    y.append(j)
-                count += 1
-            n += 1
+        x = [coords[0] for coords in shp]
+        y = [coords[1] for coords in shp]
 
-        self.n = n
+        self.n = n = len(shp)
         x = np.array(x)
         y = np.array(y)
         self.x = np.reshape(x, (n, 1))
@@ -657,30 +647,38 @@ def modified_knox(events, delta, tau, permutations=99):
 
 if __name__ == '__main__':
 
+    import time
+    t1 = time.time()
     np.random.seed(100)
 
     path = pysal.examples.get_path("burkitt")
-    path2 = pysal.examples.get_path("burkitt_mod")
+    #path2 = pysal.examples.get_path("burkitt_mod")
 
     events = SpaceTimeEvents(path, 'T')
-    result = knox(events, delta=20, tau=5, permutations=99, debug=False)
+    result = knox(events, delta=20, tau=5, permutations=999, debug=False)
     print(result['stat'], "%2.2f" % result['pvalue'])
     print("==================")
 
+    t2 = time.time()
     np.random.seed(100)
     events = SpaceTimeEvents(path, 'T', infer_timestamp=True)
-    result = knox(events, delta=20, tau=5, permutations=99, debug=False)
+    result = knox(events, delta=20, tau=5, permutations=999, debug=False)
     print(result['stat'],  "%2.2f" % result['pvalue'])
     print("==================")
 
+    t3 = time.time()
     np.random.seed(100)
-    events = SpaceTimeEvents(path2, 'DATE', infer_timestamp=True)
-    result = knox(events, delta=20, tau=5, permutations=99, debug=False)
+    events = SpaceTimeEvents(path, 'DATE', infer_timestamp=True)
+    result = knox(events, delta=20, tau=5, permutations=999, debug=False)
     print(result['stat'],  "%2.2f" % result['pvalue'])
     print("==================")
 
-    np.random.seed(100)
-    events = SpaceTimeEvents(path2, 'T')
-    result = knox(events, delta=20, tau=5, permutations=99, debug=False)
-    print(result['stat'], "%2.2f" % result['pvalue'])
-    print("==================")
+    t4 = time.time()
+    print(t2-t1)
+    print(t3-t2)
+    print(t4-t3)
+
+    # results before refactoring shapefile read, with 999 perm
+    # 2.02850198746
+    # 1.97812914848
+    # 1.95059895515
