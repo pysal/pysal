@@ -525,9 +525,12 @@ class DistanceBand(W):
                     allneighbors[ids[i]] = []
                     weights[ids[i]] = []
                 else:
-                    allneighbors[ids[i]] = neigh
-                    weights[ids[i]] = [self.dmat[(
-                        i, j)] ** self.alpha for j in ns]
+                    try:
+                        allneighbors[ids[i]] = neigh
+                        weights[ids[i]] = [self.dmat[(
+                            i, j)] ** self.alpha for j in ns]
+                    except ZeroDivisionError:
+                        raise Exception, "Cannot compute inverse distance for elements at same location (distance=0)."
         return allneighbors, weights
 
 
