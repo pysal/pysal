@@ -13,7 +13,7 @@ def adj_nodes(start_key, edges):
         #print "Vertex is end point."
     return vnext
 
-def regions_from_graph(nodes, edges):
+def regions_from_graph(nodes, edges, remove_holes = False):
     """
     Extract regions from nodes and edges of a planar graph
 
@@ -332,31 +332,32 @@ def regions_from_graph(nodes, edges):
             sorted_nodes, edges, nodes, node_coord, primitives, minimal_cycles,cycle_edge, vertices, ext_edges = extract_primitives(start_key,sorted_nodes, edges, nodes, node_coord, primitives, minimal_cycles,cycle_edge, vertices, ext_edges)
     
     #4. Remove holes from the graph
-    polys = []
-    for cycle in minimal_cycles:
-        polys.append(ps.cg.Polygon([ps.cg.Point(vertices[pnt]) for pnt in cycle]))
+    if remove_holes == True:
+        polys = []
+        for cycle in minimal_cycles:
+            polys.append(ps.cg.Polygon([ps.cg.Point(vertices[pnt]) for pnt in cycle]))
+            
+        pl = ps.cg.PolygonLocator(polys)
+           
+        # find all overlapping polygon mbrs
+        overlaps ={}
+        nump = len(minimal_cycles)
+        for i in range(nump):
+            overlaps[i] = pl.overlapping(polys[i].bounding_box)
         
-    pl = ps.cg.PolygonLocator(polys)
-       
-    # find all overlapping polygon mbrs
-    overlaps ={}
-    nump = len(minimal_cycles)
-    for i in range(nump):
-        overlaps[i] = pl.overlapping(polys[i].bounding_box)
-    
-    # for overlapping mbrs (left,right) check if right polygon is contained in left
-    holes = []
-    for k in overlaps:
-        for  pc in overlaps[k]:
-            s = sum( [polys[k].contains_point(v) for v in pc.vertices])
-            if s == len(pc.vertices):
-                # print k, pc
-                holes.append((k,pc))    
-    
-    for hole in holes:
-        outer, inner = hole
-        inner = polys.index(inner)
-        minimal_cycles.pop(inner)
+        # for overlapping mbrs (left,right) check if right polygon is contained in left
+        holes = []
+        for k in overlaps:
+            for  pc in overlaps[k]:
+                s = sum( [polys[k].contains_point(v) for v in pc.vertices])
+                if s == len(pc.vertices):
+                    # print k, pc
+                    holes.append((k,pc))    
+        
+        for hole in holes:
+            outer, inner = hole
+            inner = polys.index(inner)
+            minimal_cycles.pop(inner)
     
     #5. Remove isolated vertices
     filaments = []
@@ -439,6 +440,55 @@ def classify_filaments(filaments, cycles, edges, vertices):
     classified_filaments['internal'] = internal_filaments
     
     return classified_filaments
+
+def generate_wed(regions):
+    left_region = {}
+    right_region = {}
+    edges = {}
+    region_edge = {}
+    start_c = {}
+    end_c = {}
+    start_cc = {}
+    end_cc = {}
+    
+    node_edge = {}
+    
+    for region in regions:
+        r = [region[-2]]
+        r.extend(region)
+        r.append(region[1])
+        for i in range(len(region)-1):
+            edge = r[i+1],r[i+2]
+            if edge[0] not in node_edge:
+                node_edge[edge[0]] = edge
+            if edge[1] not in node_edge:
+                node_edge[edge[1]] = edge
+            s_c = r[i],r[i+1]
+            e_cc = r[i+2],r[i+3]
+            right_region[edge] = region
+            region_edge[tuple(region)] = edge
+            start_c[edge] = s_c
+            end_cc[edge] = e_cc
+    
+            left_region[edge[1],edge[0]] = region
+            start_cc[edge[1], edge[0] ] = end_cc[edge]
+            end_c[edge[1], edge[0] ] = start_c[edge]
+    
+            edges[edge] = edge
+    
+    wed = {}
+    wed['node_edge'] = node_edge
+    wed['end_c'] = end_c
+    wed['start_c'] = start_c
+    wed['start_cc'] = start_cc
+    wed['end_cc'] = end_cc
+    wed['edges'] = edges
+    wed['region_edge'] = region_edge
+    wed['right_region'] = right_region
+    wed['left_region'] = left_region    
+
+    return wed
+
 if __name__ == "__main__":
     
     #Eberly
@@ -456,3 +506,7 @@ if __name__ == "__main__":
     print "Bridge Filaments: ", filaments['bridge']
     print "Internal Filaments: ", filaments['internal']
     print "External Filaments: ", filaments['external']
+    
+    wed = generate_wed(cycles['regions'])
+    
+    print wed['node_edge']
