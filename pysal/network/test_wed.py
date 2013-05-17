@@ -8,6 +8,7 @@ to do
  - add in end node filaments
 
  Currently working for enumeration around nodes and around polygons for other
+
  cases
 """
 
@@ -23,8 +24,6 @@ r1 = [11,13,12,11]
 r2 = [12,13,18,19,20,12]
 r3 = [19,21,20,19]
 r4 = [20,24,23,22,20]
-#r5 = [25,27,26,25] # hole
-#r6 = [8,9,10,8]
 # external polygon
 r_1 = [ 1,3, 4, 2,7, 11,12,20,22,23,24,20,21,19,18, 13, 11,7, 2,1]
 
@@ -60,6 +59,7 @@ for region in regions:
         left_region[edge[1],edge[0]] = region
         start_cc[edge[1], edge[0] ] = end_cc[edge]
         end_c[edge[1], edge[0] ] = start_c[edge]
+
         edges[edge] = edge
 
 wed = {}
@@ -86,7 +86,7 @@ def enum_links_node(wed,v0):
             l = wed['start_c'][l]
         else:
             l = wed['end_c'][l]
-        if (l is None) or (l == l0):
+        if (l is None) or (set(l) == set(l0)):
             searching = False 
         else:
             links.append(l)
@@ -191,3 +191,66 @@ print 'enum around region 0', enum_links_region(wed,r0)
 
 print 'enum links around 28: ', enum_links_node(wed,28)
 print 'enum links around 29: ', enum_links_node(wed,29)
+
+
+# adding isolated cases and holes for connected component checks
+r6 = [8,10,9,8]
+node_edge[8]= 9,8
+node_edge[9]= 9,8
+node_edge[10]= 8,10
+right_region[9,8] = r6
+right_region[8,10] = r6
+right_region[10,9] = r6
+left_region[8,9] = r6
+left_region[10,8] = r6
+left_region[9,10] = r6
+region_edge[tuple(r6)] = 8,9
+
+
+end_cc[9,8] = 8,10
+start_c[9,8] = 10,9
+
+end_cc[10,9] = 10,9
+start_c[10,9] = 8,10
+
+
+end_cc[8, 10] = 10,9
+start_c[8,10] = 9,8
+
+
+end_c[9,8] = 8,10
+start_cc[9,8] = 10,9
+
+end_c[8,10] = 10,9
+start_cc[8,10] = 9,8
+
+end_c[10,9] = 9,8
+start_cc[10,9] = 8,10
+
+wed['node_edge'] = node_edge
+wed['right_region'] = right_region
+wed['left_region'] = left_region
+wed['end_cc'] = end_cc
+wed['start_c'] = start_c
+
+
+
+#enum_links_node(wed,9)
+
+r5 = [25,27,26,25] # hole
+
+region_edge[tuple(r5)] = 25,26
+
+
+def components(wed,start_node):
+    stack = [start_node]
+    children = enum_links_node(wed, start_node)
+    A = {}
+    A[start_node] = set()
+    for child in children:
+        if child[0] == start_node:
+            A[start_node].add(child[1])
+        else:
+            A[start_node].add(child[0])
+
+    return children,A
