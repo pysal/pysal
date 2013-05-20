@@ -270,6 +270,10 @@ wed['node_edge'][14] = 14,15
 wed['node_edge'][15] = 15,16
 wed['node_edge'][16] = 15,16
 
+# last case - isolated nodes
+wed['node_edge'][0] = None
+wed['node_edge'][17] = None
+
 
 def connected_components(wed):
     """
@@ -281,10 +285,11 @@ def connected_components(wed):
     components = []
     while nodes:
         start = nodes.pop()
-        component = connected_component(wed, start)[-1]
-        for node in component:
-            if node in nodes:
-                nodes.remove(node)
+        component = connected_component(wed, start)
+        if len(component) > 1:
+            for node in component:
+                if node in nodes:
+                    nodes.remove(node)
         components.append(component)
     return components
 
@@ -293,6 +298,9 @@ def connected_component(wed,start_node):
     """
     Find connected component containing start_node
     """
+
+    if not wed['node_edge'][start_node]:
+        return [start_node]
     stack = [start_node]
     children = enum_links_node(wed, start_node)
     A = {}
@@ -307,7 +315,6 @@ def connected_component(wed,start_node):
     visited.append(start_node)
     while searching:
         current = stack[-1]
-        print current, A
         if current not in A:
             children = enum_links_node(wed, current)
             A[current] = set()
@@ -329,4 +336,4 @@ def connected_component(wed,start_node):
 
 
 
-    return children,A, stack, visited
+    return visited
