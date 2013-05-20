@@ -239,7 +239,27 @@ wed['start_c'] = start_c
 
 r5 = [25,27,26,25] # hole
 
-region_edge[tuple(r5)] = 25,26
+wed['region_edge'][tuple(r5)] = 26,25
+wed['node_edge'][25] = 26,25
+wed['node_edge'][26] = 26,25
+wed['node_edge'][27] = 25,27
+wed['right_region'][26,25] = r5
+wed['right_region'][25,27] = r5
+wed['right_region'][27,26] = r5
+wed['start_c'][26,25] = 27,26
+wed['start_cc'][26,25] = 27,26
+wed['end_cc'][26,25] = 25,27
+wed['end_c'][26,25] = 25,27
+wed['start_c'][25,27] = 26,25
+wed['start_cc'][25,27] = 26,25
+wed['end_cc'][25,27] = 27,26
+wed['end_c'][25,27] = 27,26
+wed['start_c'][27,26] = 25,27
+wed['start_cc'][27,26] = 25,27
+wed['end_cc'][27,26] = 26,25
+wed['end_c'][27,26] = 26,25
+
+
 
 def connected_components(wed):
     """
