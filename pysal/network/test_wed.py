@@ -260,6 +260,16 @@ wed['end_cc'][27,26] = 26,25
 wed['end_c'][27,26] = 26,25
 
 
+# now the isolated filament
+wed['end_cc'][14,15] = 15,16
+wed['end_c'][14,15] = 15,16
+wed['start_c'][14,15] = 14,15
+wed['start_c'][15,16] = 14,15
+wed['end_c'][15,16] = 15,16
+wed['node_edge'][14] = 14,15
+wed['node_edge'][15] = 15,16
+wed['node_edge'][16] = 15,16
+
 
 def connected_components(wed):
     """
