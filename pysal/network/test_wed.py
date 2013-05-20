@@ -241,16 +241,62 @@ r5 = [25,27,26,25] # hole
 
 region_edge[tuple(r5)] = 25,26
 
+def connected_components(wed):
+    """
+    Find all connected components in a WED
 
-def components(wed,start_node):
+    """
+
+    nodes = wed['node_edge'].keys()
+    components = []
+    while nodes:
+        start = nodes.pop()
+        component = connected_component(wed, start)[-1]
+        for node in component:
+            if node in nodes:
+                nodes.remove(node)
+        components.append(component)
+    return components
+
+
+def connected_component(wed,start_node):
+    """
+    Find connected component containing start_node
+    """
     stack = [start_node]
     children = enum_links_node(wed, start_node)
     A = {}
     A[start_node] = set()
+    visited =  []
     for child in children:
         if child[0] == start_node:
             A[start_node].add(child[1])
         else:
             A[start_node].add(child[0])
+    searching = True
+    visited.append(start_node)
+    while searching:
+        current = stack[-1]
+        print current, A
+        if current not in A:
+            children = enum_links_node(wed, current)
+            A[current] = set()
+            for child in children:
+                if child[0] == current:
+                    A[current].add(child[1])
+                else:
+                    A[current].add(child[0])
+        else:
+            if A[current]:
+                child = A[current].pop()
+                if child not in visited:
+                    visited.append(child)
+                    stack.append(child)
+            else:  # current has no more children
+                stack.remove(current)
+                if not stack:
+                    searching = False
 
-    return children,A
+
+
+    return children,A, stack, visited
