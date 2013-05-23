@@ -489,6 +489,66 @@ def generate_wed(regions):
 
     return wed
 
+def connected_components(wed):
+    """
+    Find all connected components in a WED
+
+    """
+
+    nodes = wed['node_edge'].keys()
+    components = []
+    while nodes:
+        start = nodes.pop()
+        component = connected_component(wed, start)
+        if len(component) > 1:
+            for node in component:
+                if node in nodes:
+                    nodes.remove(node)
+        components.append(component)
+    return components
+
+def connected_component(wed,start_node):
+    """
+    Find connected component containing start_node
+    """
+
+    if not wed['node_edge'][start_node]:
+        return [start_node]
+    stack = [start_node]
+    children = enum_links_node(wed, start_node)
+    A = {}
+    A[start_node] = set()
+    visited =  []
+    for child in children:
+        if child[0] == start_node:
+            A[start_node].add(child[1])
+        else:
+            A[start_node].add(child[0])
+    searching = True
+    visited.append(start_node)
+    while searching:
+        current = stack[-1]
+        if current not in A:
+            children = enum_links_node(wed, current)
+            A[current] = set()
+            for child in children:
+                if child[0] == current:
+                    A[current].add(child[1])
+                else:
+                    A[current].add(child[0])
+        else:
+            if A[current]:
+                child = A[current].pop()
+                if child not in visited:
+                    visited.append(child)
+                    stack.append(child)
+            else:  # current has no more children
+                stack.remove(current)
+                if not stack:
+                    searching = False
+
+    return visited
+
 if __name__ == "__main__":
     
     #Eberly
@@ -510,3 +570,16 @@ if __name__ == "__main__":
     wed = generate_wed(cycles['regions'])
     
     print wed['node_edge']
+    
+    components = connected_components(wed)
+    print "Components are: ",components
+    
+    n2_connected = connected_component(wed, 2)
+    print "Starting at node 2, I visited: ", n2_connected
+    
+    n25_connected = connected_component(wed,25)
+    print "I am starting in a hole.  I visited: ", n25_connected
+    
+    n15_connected = connected_component(wed, 15)
+    print "I am on a disconnected component and visited: ", n15_connected
+    
