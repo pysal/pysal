@@ -11,6 +11,7 @@ import pysal.weights.Distance as Distance
 from pysal import cg
 from pysal.spatial_dynamics import util
 from datetime import date
+import math
 
 __all__ = ['SpaceTimeEvents', 'knox', 'mantel', 'jacquez', 'modified_knox']
 
@@ -231,27 +232,46 @@ def knox(events, delta, tau, permutations=99, debug=False):
     n = events.n
     s = events.space
     t = events.t
+    x = events.x
+    y = events.y
+
+    # begin: refactor pseudo-code
+    n = n
+    k = 0
+    for i in xrange(n - 1):
+        for j in xrange(i + 1, n):
+            ds = (x[i] - x[j]) ** 2 + (y[i] - y[j]) ** 2
+            ds = math.sqrt(ds)
+            dt = (t[i] - t[j]) ** 2
+            if ds < delta and dt < tau:
+                k += 1
+    mystat = (k - n) / 2
+
+    if debug:
+        print mystat
+        print k
+    # end: refactor pseudo-code
 
     # calculate the spatial and temporal distance matrices for the events
     sdistmat = cg.distance_matrix(s)
     if debug:
-        print(sdistmat.min(), sdistmat.mean(), sdistmat.max())
+        print(sdistmat.max())
     tdistmat = cg.distance_matrix(t)
     if debug:
-        print(tdistmat.min(), tdistmat.max())
+        print(tdistmat.max())
 
     # identify events within thresholds
     spacmat = np.ones((n, n))
     test = sdistmat <= delta
     spacmat = spacmat * test
     if debug:
-        False in spacmat
+        print spacmat.sum()
 
     timemat = np.ones((n, n))
     test = tdistmat <= tau
     timemat = timemat * test
     if debug:
-        False in timemat
+        print timemat.sum()
 
     # calculate the statistic
     knoxmat = timemat * spacmat
@@ -652,31 +672,15 @@ if __name__ == '__main__':
     np.random.seed(100)
 
     path = pysal.examples.get_path("burkitt")
-    #path2 = pysal.examples.get_path("burkitt_mod")
 
     events = SpaceTimeEvents(path, 'T')
-    result = knox(events, delta=20, tau=5, permutations=999, debug=False)
+    result = knox(events, delta=20, tau=5, permutations=999, debug=True)
     print(result['stat'], "%2.2f" % result['pvalue'])
     print("==================")
 
-    t2 = time.time()
-    np.random.seed(100)
-    events = SpaceTimeEvents(path, 'T', infer_timestamp=True)
-    result = knox(events, delta=20, tau=5, permutations=999, debug=False)
-    print(result['stat'],  "%2.2f" % result['pvalue'])
-    print("==================")
-
-    t3 = time.time()
-    np.random.seed(100)
-    events = SpaceTimeEvents(path, 'DATE', infer_timestamp=True)
-    result = knox(events, delta=20, tau=5, permutations=999, debug=False)
-    print(result['stat'],  "%2.2f" % result['pvalue'])
-    print("==================")
 
     t4 = time.time()
-    print(t2-t1)
-    print(t3-t2)
-    print(t4-t3)
+    print(t4-t1)
 
     # results before refactoring shapefile read, with 999 perm
     # 2.02850198746
