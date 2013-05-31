@@ -12,6 +12,7 @@ before_install:
 
 install:
   - "pip install -q -r requirements.txt --use-mirrors"
+  - "pip install coveralls --use-mirrors"
   #- "pip install pysal --use-mirrors"
   #- "pip uninstall -y pysal"
 
@@ -19,7 +20,7 @@ script:
   - python -c 'import numpy; print numpy.version.version'
   - python -c 'import scipy; print scipy.version.version'
   - python -c 'import pysal; print pysal.version'
-  - nosetests
+  - nosetests --with-coverage
   #- python setup.py sdist >/dev/null
   - cd doc; make pickle; make doctest
 notifications:
@@ -29,3 +30,6 @@ notifications:
             - phil.stphns@gmail.com
         on_success: always
         on_failure: always
+
+after_success:
+  - coveralls
