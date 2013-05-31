@@ -236,46 +236,45 @@ def knox(events, delta, tau, permutations=99, debug=False):
     y = events.y
 
     # begin: refactor pseudo-code
-    n = n
+    if debug:
+        t1 = time.time()
     k = 0
     for i in xrange(n - 1):
         for j in xrange(i + 1, n):
             ds = (x[i] - x[j]) ** 2 + (y[i] - y[j]) ** 2
             ds = math.sqrt(ds)
             dt = (t[i] - t[j]) ** 2
-            if ds < delta and dt < tau:
+            dt = math.sqrt(dt)
+            if ds <= delta and dt <= tau:
                 k += 1
-    mystat = (k - n) / 2
 
     if debug:
-        print mystat
+        t2 = time.time()
         print k
+        print t2-t1
     # end: refactor pseudo-code
 
+    if debug:
+        t3 = time.time()
     # calculate the spatial and temporal distance matrices for the events
     sdistmat = cg.distance_matrix(s)
-    if debug:
-        print(sdistmat.max())
     tdistmat = cg.distance_matrix(t)
-    if debug:
-        print(tdistmat.max())
 
     # identify events within thresholds
     spacmat = np.ones((n, n))
     test = sdistmat <= delta
     spacmat = spacmat * test
-    if debug:
-        print spacmat.sum()
 
     timemat = np.ones((n, n))
     test = tdistmat <= tau
     timemat = timemat * test
-    if debug:
-        print timemat.sum()
 
     # calculate the statistic
     knoxmat = timemat * spacmat
     stat = (knoxmat.sum() - n) / 2
+    if debug:
+        t4 = time.time()
+        print t4-t3
 
     # return results (if no inference)
     if not permutations:
