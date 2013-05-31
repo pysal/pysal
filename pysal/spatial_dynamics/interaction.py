@@ -12,6 +12,7 @@ from pysal import cg
 from pysal.spatial_dynamics import util
 from datetime import date
 import math
+import time
 
 __all__ = ['SpaceTimeEvents', 'knox', 'mantel', 'jacquez', 'modified_knox']
 
@@ -155,7 +156,7 @@ class SpaceTimeEvents:
         shp.close()
 
 
-def knox(events, delta, tau, permutations=99, debug=False):
+def knox(events, delta, tau, permutations=99, debug=False, bigdata=False):
     """
     Knox test for spatio-temporal interaction. [1]_
 
@@ -172,6 +173,8 @@ def knox(events, delta, tau, permutations=99, debug=False):
                       significance (default is 99)
     debug           : bool
                       if true, debugging information is printed
+    bigdata        : bool
+                      set true for large datasets.
 
     Returns
     -------
@@ -232,76 +235,99 @@ def knox(events, delta, tau, permutations=99, debug=False):
     n = events.n
     s = events.space
     t = events.t
-    x = events.x
-    y = events.y
 
-    # begin: refactor pseudo-code
-    if debug:
-        t1 = time.time()
-    k = 0
-    for i in xrange(n - 1):
-        for j in xrange(i + 1, n):
-            ds = (x[i] - x[j]) ** 2 + (y[i] - y[j]) ** 2
-            ds = math.sqrt(ds)
-            dt = (t[i] - t[j]) ** 2
-            dt = math.sqrt(dt)
-            if ds <= delta and dt <= tau:
-                k += 1
+    if not bigdata:
+        # calculate the spatial and temporal distance matrices for the events
+        if debug:
+            t3 = time.time()
+        sdistmat = cg.distance_matrix(s)
+        tdistmat = cg.distance_matrix(t)
 
-    if debug:
-        t2 = time.time()
-        print k
-        print t2-t1
-    # end: refactor pseudo-code
+        # identify events within thresholds
+        spacmat = np.ones((n, n))
+        test = sdistmat <= delta
+        spacmat = spacmat * test
 
-    if debug:
-        t3 = time.time()
-    # calculate the spatial and temporal distance matrices for the events
-    sdistmat = cg.distance_matrix(s)
-    tdistmat = cg.distance_matrix(t)
-
-    # identify events within thresholds
-    spacmat = np.ones((n, n))
-    test = sdistmat <= delta
-    spacmat = spacmat * test
-
-    timemat = np.ones((n, n))
-    test = tdistmat <= tau
-    timemat = timemat * test
-
-    # calculate the statistic
-    knoxmat = timemat * spacmat
-    stat = (knoxmat.sum() - n) / 2
-    if debug:
-        t4 = time.time()
-        print t4-t3
-
-    # return results (if no inference)
-    if not permutations:
-        return stat
-    if debug:
-        print(stat)
-    distribution = []
-
-    # loop for generating a random distribution to assess significance
-    for p in range(permutations):
-        rtdistmat = util.shuffle_matrix(tdistmat, range(n))
         timemat = np.ones((n, n))
-        test = rtdistmat <= tau
+        test = tdistmat <= tau
         timemat = timemat * test
+
+        # calculate the statistic
         knoxmat = timemat * spacmat
-        k = (knoxmat.sum() - n) / 2
-        distribution.append(k)
+        stat = (knoxmat.sum() - n) / 2
+        if debug:
+            t4 = time.time()
+            print t4 - t3
 
-    # establish the pseudo significance of the observed statistic
-    distribution = np.array(distribution)
-    greater = np.ma.masked_greater_equal(distribution, stat)
-    count = np.ma.count_masked(greater)
-    pvalue = (count + 1.0) / (permutations + 1.0)
+        # return results (if no inference)
+        if not permutations:
+            return stat
+        distribution = []
 
-    # return results
-    knox_result = {'stat': stat, 'pvalue': pvalue}
-    return knox_result
+        # loop for generating a random distribution to assess significance
+        for p in range(permutations):
+            rtdistmat = util.shuffle_matrix(tdistmat, range(n))
+            timemat = np.ones((n, n))
+            test = rtdistmat <= tau
+            timemat = timemat * test
+            knoxmat = timemat * spacmat
+            k = (knoxmat.sum() - n) / 2
+            distribution.append(k)
+
+        # establish the pseudo significance of the observed statistic
+        distribution = np.array(distribution)
+        greater = np.ma.masked_greater_equal(distribution, stat)
+        count = np.ma.count_masked(greater)
+        pvalue = (count + 1.0) / (permutations + 1.0)
+
+        # return results
+        knox_result = {'stat': stat, 'pvalue': pvalue}
+        return knox_result
+
+    else:
+        if debug:
+            t1 = time.time()
+        stat = 0
+        x = events.x
+        y = events.y
+        for i in xrange(n - 1):
+            for j in xrange(i + 1, n):
+                ds = (x[i] - x[j]) ** 2 + (y[i] - y[j]) ** 2
+                ds = math.sqrt(ds)
+                dt = (t[i] - t[j]) ** 2
+                dt = math.sqrt(dt)
+                if ds <= delta and dt <= tau:
+                    stat += 1
+
+        # return results (if no inference)
+        if not permutations:
+            return {'stat': stat, 'pvalue': False}
+        distribution = []
+
+        # loop for generating a random distribution to assess significance
+        for p in range(permutations):
+            rtdistmat = util.shuffle_matrix(tdistmat, range(n))
+            timemat = np.ones((n, n))
+            test = rtdistmat <= tau
+            timemat = timemat * test
+            knoxmat = timemat * spacmat
+            k = (knoxmat.sum() - n) / 2
+            distribution.append(k)
+
+        # establish the pseudo significance of the observed statistic
+        distribution = np.array(distribution)
+        greater = np.ma.masked_greater_equal(distribution, stat)
+        count = np.ma.count_masked(greater)
+        pvalue = (count + 1.0) / (permutations + 1.0)
+
+        # return results
+        knox_result = {'stat': stat, 'pvalue': pvalue}
+        return knox_result
+
+        if debug:
+            t2 = time.time()
+            print k
+            print t2 - t1
 
 
 def mantel(events, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0):
@@ -666,20 +692,16 @@ def modified_knox(events, delta, tau, permutations=99):
 
 if __name__ == '__main__':
 
-    import time
-    t1 = time.time()
     np.random.seed(100)
-
     path = pysal.examples.get_path("burkitt")
-
     events = SpaceTimeEvents(path, 'T')
-    result = knox(events, delta=20, tau=5, permutations=999, debug=True)
-    print(result['stat'], "%2.2f" % result['pvalue'])
+    #result = knox(events, delta=20, tau=5, permutations=999, debug=True,
+    #              bigdata=True)
+    result = knox(events, delta=20, tau=5, permutations=0, debug=True,
+                  bigdata=True)
+    #print(result['stat'], "%2.2f" % result['pvalue'])
+    print result['stat']
     print("==================")
-
-
-    t4 = time.time()
-    print(t4-t1)
 
     # results before refactoring shapefile read, with 999 perm
     # 2.02850198746
