@@ -294,19 +294,18 @@ def knox(events, delta, tau, permutations=99, debug=False, bigdata=False):
             for j in xrange(i + 1, n):
                 ds = (x[i] - x[j]) ** 2 + (y[i] - y[j]) ** 2
                 ds = math.sqrt(ds)
-                dt = (t[i] - t[j]) ** 2
-                dt = math.sqrt(dt)
+                dt = math.fabs((t[i] - t[j]))
                 if ds <= delta and dt <= tau:
                     stat += 1
 
         # return results (if no inference)
         if not permutations:
             return {'stat': stat, 'pvalue': False}
-        distribution = []
 
         # loop for generating a random distribution to assess significance
-        for p in range(permutations):
-            rtdistmat = util.shuffle_matrix(tdistmat, range(n))
+        distribution = []
+        for p in xrange(permutations):
+            rtdistmat = util.shuffle_matrix(tdistmat, xrange(n))
             timemat = np.ones((n, n))
             test = rtdistmat <= tau
             timemat = timemat * test
