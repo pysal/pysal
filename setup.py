@@ -73,9 +73,11 @@ def setup_package():
         maintainer="PySAL Developers",
         maintainer_email='pysal-dev@googlegroups.com',
         url='http://pysal.org',
+        download_url='https://pypi.python.org/pypi/PySAL',
         license='BSD',
         test_suite='nose.collector',
         tests_require=['nose'],
+        keywords='spatial statistics',
         classifiers=[
             'Development Status :: 5 - Production/Stable',
             'Intended Audience :: Science/Research',
