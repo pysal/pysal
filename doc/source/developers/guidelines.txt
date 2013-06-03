@@ -19,7 +19,7 @@ Open Source Development
 
 PySAL is an open source project and we invite any interested user who wants to
 contribute to the project to contact one of the
-`team members <http://code.google.com/p/pysal/people/list>`_. For users who
+`team members <https://github.com/pysal?tab=members>`_. For users who
 are new to open source development you may want to consult the following
 documents for background information:
 
@@ -34,22 +34,8 @@ Source Code
 -----------------------
 
 
-PySAL uses `Google Code <http://code.google.com>`_ and subversion for our
-`code repository <http://code.google.com/p/pysal/>`_.
+PySAL uses `git <http://git-scm.com/>`_ and github for our  `code repository <https://github.com/pysal/pysal.git/>`_.
 Prospective developers can check out the current version using:
-
-::
-
-  svn checkout http://pysal.googlecode.com/svn/trunk/ pysal-read-only
-
-while developers with commit rights can use:
-
-::
-
-  svn checkout https://pysal.googlecode.com/svn/trunk/ pysal --username username
-
-substituting your Google username. When prompted, enter your generated
-googlecode.com password.
 
 
 You can setup PySAL for local development following the :doc:`installation instructions </users/installation>`.
