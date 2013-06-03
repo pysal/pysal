@@ -24,6 +24,10 @@ Downloads
 `Downloads  <http://pypi.python.org/pypi/PySAL>`_  are hosted on the
 Python Package Index. 
 
+Legacy builds are still available on the old source code repository at
+Google Code, `here <http://code.google.com/p/pysal>`_.  You can also find old
+versions of this documentation there as well. 
+
 Getting Involved
 ================
 
@@ -46,6 +50,9 @@ Documentation
     users/index
     developers/index
     library/index
+
+Bleeding edge documentation is available for developers here >
+http://pysal.geodacenter.org/dev/ 
 
 News
 ====
