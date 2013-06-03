@@ -132,6 +132,17 @@ a difference in whitespace between the expected and received output. In that cas
     >>> print 'a   b   c'
     abc
 
+Adding a new package and modules
+================================
+
+To include the docstrings of a new module in the :doc:`API docs </library/index>` the following steps are required:
+
+ 1. In the directory `/doc/source/library` add a directory with the name of
+    the new package. You can skip to step 3 if the package exists and you are
+    just adding new modules to this package.
+ 2. Within `/doc/source/library/packageName` add a file `index.txt`
+ 3. For each new module in this package, add a file `moduleName.txt` and
+    update the `index.txt` file to include `modulename`.
 
 
 Adding a new tutorial: spreg
@@ -147,7 +158,7 @@ As of PySAL 1.3 there are API docs for
 :doc:`spreg </library/spreg/index>`
 but no :doc:`tutorial </users/tutorials/index>` currently exists for this module. 
 
-We will fix this and add a tutorial forh
+We will fix this and add a tutorial for
 :doc:`spreg </library/spreg/index>`.
 
 
