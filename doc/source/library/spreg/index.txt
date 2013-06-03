@@ -13,5 +13,6 @@
    error_sp
    error_sp_het
    error_sp_hom
+   regimes
 
 
