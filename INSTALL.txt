@@ -21,14 +21,15 @@ installed on your machine:
 
 *Optional, bundled installation:* 
 
+The Anaconda Python distribution ships with PySAL (version 1.5 as of June 3,
+2013). Opting for this distro means you don't have to read any further!
+Check it out at http://continuum.io/downloads.html
+
 With the `Enthought Python Distribution (EPD Free) <http://www.enthought.com/products/epd_free.php>`_, 
 you will install all of PySAL's required dependencies, as well as iPython and a lot more, rather than installing dependencies one by one.
 The full-blown EPD package is free for academics, and downloadable `here <http://www.enthought.com/products/edudownload.php>`_. 
-Note that on OS X, PySAL binary installers will not install to the EPD
-site-packages directory. We advise EPD users to install PySAL via
-PyPi or source. 
 
-*Required to compile the documentation (optional):*
+* Optional, tools to compile our documentation:*
 
 * `Sphinx <http://sphinx.pocoo.org/>`_
 * `numpydoc <http://pypi.python.org/pypi/numpydoc/0.4>`_  extension to Sphinx (*not included in EPD*)
@@ -37,15 +38,10 @@ PyPi or source.
 
 * `iPython <http://ipython.scipy.org/moin/Download>`_
 
-
-
 Getting PySAL
 =============
 
-You can install PySAL in a number of ways. We provide system-specific package installers for Windows and Mac OS X that have an intuitive look-and-feel
-that most users are familiar with. We also build source distributions that self-install by invoking a single command line argument. 
-
-PySAL is also available on the `Python Package Index
+PySAL is available on the `Python Package Index
 <http://pypi.python.org/pypi/PySAL>`_, which means it can be
 downloaded and installed manually or from the command line using easy_install or pip, as
 follows::
@@ -54,50 +50,23 @@ follows::
  #or
  $ easy_install pysal
 
-
-Downloads
----------
-
-Click-to-download PySAL distributions are available at `Google Code <http://code.google.com/p/pysal/downloads/list>`_.  Choose the right one for your system, or grab a source tarball or zipfile.
-
-Windows installer
-~~~~~~~~~~~~~~~~~~
-
-Grab the Windows installer (ends with *.exe*) and download to your computer. Double-click to launch the installer and follow the simple wizard. You will have to select the version of Python you want the package to install with, if you have more than one version of Python on your system. You may repeat this procedure for as many versions of Python as you have on your machine. 
-
-
-
-Source install instructions for all platforms
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Grab either of the source distributions (.tar.gz or .zip) and decompress to your selected destination. Open a command shell and navigate to the decompressed PySAL folder. Type::
+Alternatively, grab the source distribution (.tar.gz) and decompress it to your selected destination. Open a command shell and navigate to the decompressed PySAL folder. Type::
 
  $ python setup.py install
 
+Development version on GitHub 
+-----------------------------
 
-Development version from Subversion (SVN)
------------------------------------------
+Developers can checkout PySAL using **git**::
 
-Finally, advanced users and 
-developers can use the popular version control tool **svn** to check out and use our latest code. Instructions for each of these methods follows.
-
-Users and developers can grab the source code from our Subversion repository using
-an svn client and the following instructions:
-
-GNU/Linux and Mac OS X 
-~~~~~~~~~~~~~~~~~~~~~~
-
-Open a command shell, navigate to a convenient location on your hard drive, and
-type::
-
- $ svn checkout http://pysal.googlecode.com/svn/trunk/ pysal
+ $ git clone https://github.com/pysal/pysal.git pysal
 
 
 This will create a folder called 'pysal' containing the source
 code in trunk. This will allow you to easily update any change
 to the developer code base by running::
 
- $ svn update
+ $ git pull
 
 Since PySAL is in active development, changes are made frequently. For that
 reason, we recommend you 'tell' Python to look for PySAL in that folder
@@ -143,35 +112,12 @@ Your terminal should reply with the following::
 Windows
 ~~~~~~~~
 
-To keep up to date with PySAL development, you will need an SVN client that allows you to access and 
+To keep up to date with PySAL development, you will need a Git client that allows you to access and 
 update the code from our repository. We recommend 
-`TortoiseSVN <http://tortoisesvn.tigris.org/>`_, which is free and easy to
-install. The following instructions assume you are using it. There are two basic
-steps. One, checkout a copy of the source code to your local drive. Two, adjust
-your PYTHONPATH environment variable so that Python looks for PySAL where you
-have downloaded it.
+`GitHub Windows <http://windows.github.com/>`_.
 
-First, create a folder where you want to store PySAL's code. For the sake of this
-example, we will name it ``PySALsvn`` and put it in the root folder, so the
-path is::
- 
- C:\PySALsvn
-
-If for some reason you do not have access to the root directory, you can place
-the PySAL source code anywhere. Adjust your paths as appropriate for the rest of
-these instructions.
-
-Right-click your PySAL folder and select 'SVN checkout' under the Tortoise menu.
-A dialog will appear. The 'Checkout Directory' refers to the path to your PySAL folder
-(``C:\PySALsvn`` in this case). Copy and paste the following link into the 'URL
-of repository' textbox::
-
- http://pysal.googlecode.com/svn/trunk/
-
-Once you click 'OK', a folder called 'pysal-read-only' will be created under
-``C:\PySALsvn`` and  all the code will be downloaded to your computer.
-
-Now tell Python where to find PySAL.  There are several ways to do this. Here we
+After using GitHub Windows to install a local copy of Pysal, you need to tell
+your Python distribution where to find PySAL.  There are several ways to do this. Here we
 will use a simple one that requires you to create a text file
 called ``sitecustomize.py`` in the
 ``site-packages`` folder of your Python distribution. That path looks more or
@@ -213,7 +159,6 @@ Your terminal should reply with the following::
  Ext: '.csv', Modes: ['r']
  Ext: '.wkt', Modes: ['r']
  >>>
-
 
 
 Known Issues
