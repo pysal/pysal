@@ -1,4 +1,4 @@
-"""Extracting a Winged Edge Data Structure from a Planar Network.
+"""Extracting a Winged Edge Data Structure from a Plannar Network.
 
 
 
@@ -562,6 +562,7 @@ def regions_from_graph(nodes, edges, remove_holes = False):
                     v1 = v0
                     v0 = adj_nodes(v0, edges)[1]
             sorted_nodes, edges, nodes, node_coord, primitives = extractfilament(v0,v1,nodes, node_coord, sorted_nodes, edges, primitives,cycle_edge)
+
         return sorted_nodes, edges, nodes, node_coord, primitives, minimal_cycles,cycle_edge, vertices, ext_edges
     #1.
     sorted_nodes = sorted(nodes.iteritems(), key=operator.itemgetter(1))
@@ -638,9 +639,9 @@ def extract_wed(edges, coords):
     Arguments
     ---------
 
-    edges: (dict) key is node, value is list of adjacent nodes
+    edges: (dict) key is edge id, value is list of adjacent nodes
 
-    coords: (dict) key is node, value is a tuple of x,y coordinates for the node
+    coords: (dict) key is node id, value is a tuple of x,y coordinates for the node
 
 
     Returns
@@ -1004,3 +1005,66 @@ if __name__ == '__main__':
     print "Enumeration of links around regions"
     for region in range(5):
         print region, enum_edges_region(wed_res, region)
+
+
+
+    # new test from eberly shapefile after converting with contrib\spatialnet
+
+    coords = {0: (0.0, 4.0),
+     1: (1.0, 7.0),
+     2: (2.0, 4.5),
+     3: (3.0, 5.0),
+     4: (4.0, 7.0),
+     5: (5.0, 4.0),
+     6: (5.5, 3.0),
+     7: (6.2, 5.0),
+     8: (6.5, 9.0),
+     9: (7.0, 3.0),
+     10: (7.5, 7.25),
+     11: (8.0, 4.0),
+     12: (9.0, 1.0),
+     13: (11.0, 3.0),
+     14: (11.5, 7.25),
+     15: (12.0, 2.0),
+     16: (13.5, 6.0),
+     17: (14.0, 7.25),
+     18: (16.0, 1.0),
+     19: (16.0, 4.0),
+     20: (17.0, 2.0),
+     21: (18.0, 3.5),
+     22: (18.0, 8.5),
+     23: (19.0, 2.0),
+     24: (21.0, 1.0),
+     25: (21.0, 4.0)}
+
+
+    edges = [(1, 0),
+         (4, 5),
+         (4, 8),
+         (0, 5),
+         (5, 3),
+         (3, 2),
+         (8, 10),
+         (7, 6),
+         (7, 9),
+         (6, 9),
+         (10, 11),
+         (10, 14),
+         (11, 14),
+         (11, 19),
+         (14, 16),
+         (12, 13),
+         (13, 15),
+         (16, 17),
+         (17, 19),
+         (17, 22),
+         (19, 22),
+         (19, 18),
+         (19, 25),
+         (18, 24),
+         (24, 25),
+         (21, 20),
+         (21, 23),
+         (20, 23)]
+
+    wed_1 = extract_wed(edges, coords)
