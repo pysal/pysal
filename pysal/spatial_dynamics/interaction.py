@@ -13,6 +13,7 @@ from pysal.spatial_dynamics import util
 from datetime import date
 import math
 import time
+import random
 
 __all__ = ['SpaceTimeEvents', 'knox', 'mantel', 'jacquez', 'modified_knox']
 
@@ -62,8 +63,8 @@ class SpaceTimeEvents:
     Read in the example shapefile data, ensuring to omit the file
     extension. In order to successfully create the event data the .dbf file
     associated with the shapefile should have a column of values that are a
-    timestamp for the events. There should be a numerical value (not a
-    date) in every field. UPDATE: added date inference in 1.6
+    timestamp for the events. This timestamp may be a numerical value
+    or a date. Date inference was added in version 1.6.
 
     >>> path = pysal.examples.get_path("burkitt")
 
@@ -158,7 +159,7 @@ class SpaceTimeEvents:
         shp.close()
 
 
-def knox(events, delta, tau, permutations=99, debug=False, bd=False):
+def knox(events, delta, tau, permutations=99, debug=False, ld=False):
     """
     Knox test for spatio-temporal interaction. [1]_
 
@@ -175,8 +176,8 @@ def knox(events, delta, tau, permutations=99, debug=False, bd=False):
                       significance (default is 99)
     debug           : bool
                       if true, debugging information is printed
-    bd              : bool
-                      "big data", set true for large datasets.
+    ld              : bool
+                      ld stands for 'large data', set true for large datasets.
 
     Returns
     -------
@@ -236,7 +237,7 @@ def knox(events, delta, tau, permutations=99, debug=False, bd=False):
     Added in 1.6:
 
     Next, let's look at the case where you have a large dataset that runs
-    very slowly under the default Knox test parameters.  Using the bd=True
+    very slowly under the default Knox test parameters.  Using the ld=True
     flag, this alternate design pattern uses Python generators rather than
     in-memory lists or arrays to minimize system memory consumption.  Using the
     same path and events variables established above, let's reset the seed and
@@ -246,7 +247,7 @@ def knox(events, delta, tau, permutations=99, debug=False, bd=False):
 
     Run the Knox test again with delta and tau as above, but now call bigdata.
 
-    >>> result = knox(events, delta=20, tau=5, permutations=99, bd=True)
+    >>> result = knox(events, delta=20, tau=5, permutations=99, ld=True)
 
     Results should match the original.
 
@@ -261,7 +262,7 @@ def knox(events, delta, tau, permutations=99, debug=False, bd=False):
     s = events.space
     t = events.t
 
-    if not bd:
+    if not ld:
         # calculate the spatial and temporal distance matrices for the events
         if debug:
             t3 = time.time()
@@ -282,7 +283,7 @@ def knox(events, delta, tau, permutations=99, debug=False, bd=False):
         stat = (knoxmat.sum() - n) / 2
         if debug:
             t4 = time.time()
-            print t4 - t3
+            #print t4 - t3
 
         # return results (if no inference)
         if not permutations:
@@ -310,52 +311,42 @@ def knox(events, delta, tau, permutations=99, debug=False, bd=False):
         return knox_result
 
     else:
-        if debug:
-            t1 = time.time()
-        stat = 0
         x = events.x
         y = events.y
+        t = events.t
+        k = 0
+        dt_lt_tau = 0
+        full_set = set()
+        st_set = set()
+
         for i in xrange(n - 1):
             for j in xrange(i + 1, n):
-                ds = (x[i] - x[j]) ** 2 + (y[i] - y[j]) ** 2
-                ds = math.sqrt(ds)
                 dt = math.fabs((t[i] - t[j]))
-                if ds <= delta and dt <= tau:
-                    stat += 1
+                if permutations:
+                    full_set.add(frozenset([i, j]))
+                if dt <= tau:
+                    if permutations:
+                        dt_lt_tau += 1
+                    ds = (x[i] - x[j]) ** 2 + (y[i] - y[j]) ** 2
+                    ds = math.sqrt(ds)
+                    if ds <= delta:
+                        k += 1
+                        if permutations:
+                            st_set.add(frozenset([i, j]))
 
-        if debug:
-            t2 = time.time()
-            print t2 - t1
-        # return results (if no inference)
-        if not permutations:
-            if debug:
-                print stat
-            return {'stat': stat, 'pvalue': False}
+        knox_result = {'stat': k, 'pvalue': False}
+        if permutations:
+            k = 0
+            sample = dt_lt_tau
+            for i in xrange(permutations):
+                temp_set = set(random.sample(full_set, sample))
+                if temp_set >= st_set:
+                    k += 1
 
-        # loop for generating a random distribution to assess significance
-        distribution = []
-        for p in xrange(permutations):
-            rtdistmat = util.shuffle_matrix(tdistmat, xrange(n))
-            timemat = np.ones((n, n))
-            test = rtdistmat <= tau
-            timemat = timemat * test
-            knoxmat = timemat * spacmat
-            k = (knoxmat.sum() - n) / 2
-            distribution.append(k)
+            pvalue = (k + 1.0) / (permutations + 1.0)
+            knox_result = {'stat': k, 'pvalue': pvalue}
 
-        # establish the pseudo significance of the observed statistic
-        distribution = np.array(distribution)
-        greater = np.ma.masked_greater_equal(distribution, stat)
-        count = np.ma.count_masked(greater)
-        pvalue = (count + 1.0) / (permutations + 1.0)
-
-        # return results
-        knox_result = {'stat': stat, 'pvalue': pvalue}
         return knox_result
-
-        if debug:
-            t3 = time.time()
-            print t3 - t1
 
 
 def mantel(events, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0):
@@ -723,11 +714,21 @@ if __name__ == '__main__':
     np.random.seed(100)
     path = pysal.examples.get_path("burkitt")
     events = SpaceTimeEvents(path, 'T')
+    #eventx = SpaceTimeEvents(path, 'DATE')
+
     result1 = knox(events, delta=20, tau=5, permutations=999, debug=True)
-    result2 = knox(events, delta=20, tau=5, permutations=0, debug=True, bd=True)
+    print("Result 1")
     print(result1['stat'], "%2.2f" % result1['pvalue'])
     print("==================")
+
+    result2 = knox(events, delta=20, tau=5, permutations=0, debug=True, ld=True)
+    print("Result 2")
     print(result2['stat'], "%2.2f" % result2['pvalue'])
+    print("==================")
+
+    result3 = knox(events, delta=20, tau=5, permutations=99, debug=True, ld=True)
+    print("Result 3")
+    print(result3['stat'], "%f" % result3['pvalue'])
 
     # results before refactoring shapefile read, with 999 perm
     # 2.02850198746
