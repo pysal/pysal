@@ -23,6 +23,7 @@ import networkx as nx
 from numpy import array
 import operator
 import math
+import net_shp_io
 
 def enum_links_node(wed, node):
     """
@@ -1089,3 +1090,21 @@ if __name__ == '__main__':
         print region, enum_edges_region(wed_1, region)    
         
     print "Eberly Shapefile (non-ordered nodes) Complete"
+
+
+    # testing reader
+    coords, edges = net_shp_io.reader("../contrib/spatialnet/eberly_net.shp")
+    wed_2 = extract_wed(edges, coords)
+
+
+    print "Enumeration of links around nodes"
+    for node in range(0,26):
+        print node, enum_links_node(wed_1, node)
+
+    print "Enumeration of links around regions"
+    for region in range(7):
+        print region, enum_edges_region(wed_1, region)    
+        
+    print "Eberly read Shapefile (non-ordered nodes) Complete"
+
+
