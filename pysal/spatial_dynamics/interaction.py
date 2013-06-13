@@ -660,6 +660,7 @@ if __name__ == '__main__':
     np.random.seed(100)
 
     path = pysal.examples.get_path("burkitt")
+    path2 = pysal.examples.get_path("burkitt_mod")
 
     events = SpaceTimeEvents(path, 'T')
     result = knox(events, delta=20, tau=5, permutations=99, debug=False)
@@ -673,13 +674,13 @@ if __name__ == '__main__':
     print("==================")
 
     np.random.seed(100)
-    events = SpaceTimeEvents(path, 'DATE', infer_timestamp=True)
+    events = SpaceTimeEvents(path2, 'DATE', infer_timestamp=True)
     result = knox(events, delta=20, tau=5, permutations=99, debug=False)
     print(result['stat'],  "%2.2f" % result['pvalue'])
     print("==================")
 
     np.random.seed(100)
-    events = SpaceTimeEvents(path, 'T')
+    events = SpaceTimeEvents(path2, 'T')
     result = knox(events, delta=20, tau=5, permutations=99, debug=False)
     print(result['stat'], "%2.2f" % result['pvalue'])
     print("==================")
