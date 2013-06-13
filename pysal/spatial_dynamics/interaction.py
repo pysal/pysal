@@ -321,8 +321,6 @@ def knox(events, delta, tau, permutations=99, debug=False, ld=False):
         for i in xrange(n - 1):
             for j in xrange(i + 1, n):
                 dt = math.fabs((t[i] - t[j]))
-                #if permutations:
-                    #full_set.add(frozenset([i, j]))
                 if dt <= tau:
                     if permutations:
                         ss += 1
