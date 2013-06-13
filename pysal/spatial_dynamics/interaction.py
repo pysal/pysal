@@ -315,35 +315,37 @@ def knox(events, delta, tau, permutations=99, debug=False, ld=False):
         y = events.y
         t = events.t
         k = 0
-        dt_lt_tau = 0
-        full_set = set()
-        st_set = set()
+        ss = 0
+        stl = []
 
         for i in xrange(n - 1):
             for j in xrange(i + 1, n):
                 dt = math.fabs((t[i] - t[j]))
-                if permutations:
-                    full_set.add(frozenset([i, j]))
+                #if permutations:
+                    #full_set.add(frozenset([i, j]))
                 if dt <= tau:
                     if permutations:
-                        dt_lt_tau += 1
+                        ss += 1
                     ds = (x[i] - x[j]) ** 2 + (y[i] - y[j]) ** 2
                     ds = math.sqrt(ds)
                     if ds <= delta:
                         k += 1
                         if permutations:
-                            st_set.add(frozenset([i, j]))
+                            stl.append((i, j))
 
+        print ss
+        print len(stl)
         knox_result = {'stat': k, 'pvalue': False}
         if permutations:
-            k = 0
-            sample = dt_lt_tau
+            count = 0
+            st_set = set(stl)
             for i in xrange(permutations):
-                temp_set = set(random.sample(full_set, sample))
-                if temp_set >= st_set:
-                    k += 1
-
-            pvalue = (k + 1.0) / (permutations + 1.0)
+                tmp1 = random.sample(xrange(n), ss)
+                tmp2 = random.sample(xrange(n), ss)
+                tmp_set = set(zip(tmp1, tmp2))
+                if st_set.isdisjoint(tmp_set):
+                    count += 1
+            pvalue = (count + 1.0) / (permutations + 1.0)
             knox_result = {'stat': k, 'pvalue': pvalue}
 
         return knox_result
@@ -717,18 +719,11 @@ if __name__ == '__main__':
     #eventx = SpaceTimeEvents(path, 'DATE')
 
     result1 = knox(events, delta=20, tau=5, permutations=999, debug=True)
-    print("Result 1")
-    print(result1['stat'], "%2.2f" % result1['pvalue'])
-    print("==================")
+    print("Result 1", result1['stat'], "%2.2f" % result1['pvalue'])
 
-    result2 = knox(events, delta=20, tau=5, permutations=0, debug=True, ld=True)
-    print("Result 2")
-    print(result2['stat'], "%2.2f" % result2['pvalue'])
-    print("==================")
-
-    result3 = knox(events, delta=20, tau=5, permutations=99, debug=True, ld=True)
-    print("Result 3")
-    print(result3['stat'], "%f" % result3['pvalue'])
+    np.random.seed(100)
+    result3 = knox(events, delta=20, tau=5, permutations=999, debug=True, ld=True)
+    print("Result 3", result3['stat'], "%f" % result3['pvalue'])
 
     # results before refactoring shapefile read, with 999 perm
     # 2.02850198746
