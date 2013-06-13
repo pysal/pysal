@@ -486,10 +486,12 @@ def regions_from_graph(nodes, edges, remove_holes = False):
             
             primitive.append(v0)
             if len(adj_nodes(v0, edges)) == 0:
+
                 sorted_nodes = remove_heap(v0, sorted_nodes)
                 edges, ext_edges = remove_edge(v0, v1, edges, ext_edges)
                 nodes, node_coord, vertices = remove_node(v0, nodes, node_coord, vertices)
             primitives.append((primitive))
+    
         return sorted_nodes, edges, nodes, node_coord, primitives, vertices, ext_edges
     
     def extract_primitives(start_key,sorted_nodes, edges, nodes, node_coord, primitives,minimal_cycles,cycle_edge, vertices, ext_edges):
@@ -497,7 +499,7 @@ def regions_from_graph(nodes, edges, remove_holes = False):
         visited = []
         sequence = []
         sequence.append(v0)
-    
+
         #Find the CWise most vertex
         vnext = adj_nodes(start_key, edges)
         start_node,v1,v_prev = clockwise(nodes,vnext,start_key,prev_key)
@@ -511,11 +513,12 @@ def regions_from_graph(nodes, edges, remove_holes = False):
             process = False
         elif v_curr in visited:
             process = False
-        
+  
         while process == True:
             sequence.append(v_curr)
             visited.append(v_curr)
             vnext = adj_nodes(v_curr, edges)
+    
             v_curr_coords,v_next,v_prev = counterclockwise(nodes,vnext,v_curr, v_prev)
             v_curr = v_next
             if v_curr == None:
@@ -524,7 +527,7 @@ def regions_from_graph(nodes, edges, remove_holes = False):
                 process = False
             elif v_curr in visited:
                 process = False
-        
+    
         if v_curr is None:
             #Filament found, not necessarily at start_key
             sorted_nodes, edges, nodes, node_coord, primitives, vertices, ext_edges = extractfilament(v_prev, adj_nodes(v_prev, edges)[0],nodes, node_coord, sorted_nodes, edges, primitives, cycle_edge, vertices, ext_edges)
@@ -561,7 +564,7 @@ def regions_from_graph(nodes, edges, remove_holes = False):
                 else:
                     v1 = v0
                     v0 = adj_nodes(v0, edges)[1]
-            sorted_nodes, edges, nodes, node_coord, primitives = extractfilament(v0,v1,nodes, node_coord, sorted_nodes, edges, primitives,cycle_edge)
+            sorted_nodes, edges, nodes, node_coord, primitives, vertices, ext_edges = extractfilament(v0,v1,nodes, node_coord, sorted_nodes, edges, primitives,cycle_edge,vertices,ext_edges)
 
         return sorted_nodes, edges, nodes, node_coord, primitives, minimal_cycles,cycle_edge, vertices, ext_edges
     #1.
@@ -581,6 +584,7 @@ def regions_from_graph(nodes, edges, remove_holes = False):
     while sorted_nodes: #Iterate through the sorted list
         start_key = sorted_nodes[0][0]
         numadj = len(adj_nodes(start_key, edges))
+        
         if numadj == 0:
             nodes, node_coord, primitives, vertices, ext_edges = extractisolated(nodes,node_coord,start_key,primitives, vertices, ext_edges)
             sorted_nodes.pop(0)
@@ -677,7 +681,6 @@ def extract_wed(edges, coords):
     # find minimum cycles, filaments and isolated nodes
     pos = coords.values()
     mcb = regions_from_graph(coords,edges)
-
     # Edge pointers
     # 
     # - start_node[edge]
@@ -995,7 +998,7 @@ if __name__ == '__main__':
     for vert in vertices:
         for dest in vertices[vert]:
             edges.append((vert,dest))
-
+            
     wed_res = extract_wed(edges, coords)
 
     print "Enumeration of links around nodes"
@@ -1003,13 +1006,13 @@ if __name__ == '__main__':
         print node, enum_links_node(wed_res, node)
 
     print "Enumeration of links around regions"
-    for region in range(5):
+    for region in range(7):
         print region, enum_edges_region(wed_res, region)
 
-
+    print "Eberly Test Completed \n"
 
     # new test from eberly shapefile after converting with contrib\spatialnet
-
+    
     coords = {0: (0.0, 4.0),
      1: (1.0, 7.0),
      2: (2.0, 4.5),
@@ -1039,6 +1042,7 @@ if __name__ == '__main__':
 
 
     edges = [(1, 0),
+         (4, 1),
          (4, 5),
          (4, 8),
          (0, 5),
@@ -1067,4 +1071,21 @@ if __name__ == '__main__':
          (21, 23),
          (20, 23)]
 
-    wed_1 = extract_wed(edges, coords)
+    
+    #Eberly expects double edges.  
+    dbl_edges = []
+    for e in edges:
+        dbl_edges.append(e)
+        dbl_edges.append((e[1], e[0]))
+        
+    wed_1 = extract_wed(dbl_edges, coords)
+
+    print "Enumeration of links around nodes"
+    for node in range(0,26):
+        print node, enum_links_node(wed_1, node)
+
+    print "Enumeration of links around regions"
+    for region in range(7):
+        print region, enum_edges_region(wed_1, region)    
+        
+    print "Eberly Shapefile (non-ordered nodes) Complete"
