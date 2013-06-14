@@ -11,9 +11,6 @@ import pysal.weights.Distance as Distance
 from pysal import cg
 from pysal.spatial_dynamics import util
 from datetime import date
-import math
-import time
-import random
 
 __all__ = ['SpaceTimeEvents', 'knox', 'mantel', 'jacquez', 'modified_knox']
 
@@ -159,7 +156,7 @@ class SpaceTimeEvents:
         shp.close()
 
 
-def knox(events, delta, tau, permutations=99, debug=False, ld=False):
+def knox(events, delta, tau, permutations=99, debug=False):
     """
     Knox test for spatio-temporal interaction. [1]_
 
@@ -176,8 +173,6 @@ def knox(events, delta, tau, permutations=99, debug=False, ld=False):
                       significance (default is 99)
     debug           : bool
                       if true, debugging information is printed
-    ld              : bool
-                      ld stands for 'large data', set true for large datasets.
 
     Returns
     -------
@@ -224,7 +219,7 @@ def knox(events, delta, tau, permutations=99, debug=False, ld=False):
     in both space and time, according to our threshold definitions.
 
     >>> print(result['stat'])
-    13.0
+    13
 
     Next, we look at the pseudo-significance of this value, calculated by
     permuting the timestamps and rerunning the statistics. In this case,
@@ -234,119 +229,39 @@ def knox(events, delta, tau, permutations=99, debug=False, ld=False):
     >>> print("%2.2f"%result['pvalue'])
     0.18
 
-    Added in 1.6:
-
-    Next, let's look at the case where you have a large dataset that runs
-    very slowly under the default Knox test parameters.  Using the ld=True
-    flag, this alternate design pattern uses Python generators rather than
-    in-memory lists or arrays to minimize system memory consumption.  Using the
-    same path and events variables established above, let's reset the seed and
-    proceed.
-
-    >>> np.random.seed(100)
-
-    Run the Knox test again with delta and tau as above, but now call bigdata.
-
-    >>> result = knox(events, delta=20, tau=5, permutations=99, ld=True)
-
-    Results should match the original.
-
-    >>> print(result['stat'])
-    13.0
-
-    >>> print("%2.2f"%result['pvalue'])
-    0.18
-
     """
-    n = events.n
-    s = events.space
-    t = events.t
+    kd_t = pysal.cg.KDTree(events.time)
+    neigh_t = kd_t.query_pairs(tau)
+    kd_s = pysal.cg.KDTree(events.space)
+    neigh_s = kd_s.query_pairs(delta)
 
-    if not ld:
-        # calculate the spatial and temporal distance matrices for the events
-        if debug:
-            t3 = time.time()
-        sdistmat = cg.distance_matrix(s)
-        tdistmat = cg.distance_matrix(t)
+    joint = neigh_s.intersection(neigh_t)
+    npairs = len(joint)
+    time_ids = np.array([pair for pair in neigh_t])
+    len_t = len(time_ids)
+    ids = np.arange(len(events.time))
+    larger = 0
+    joints = np.zeros((permutations, 1), int)
 
-        # identify events within thresholds
-        spacmat = np.ones((n, n))
-        test = sdistmat <= delta
-        spacmat = spacmat * test
+    for p in xrange(permutations):
+        np.random.shuffle(ids)
+        random_time = np.zeros((len_t, 2), int)
+        random_time[:, 0] = ids[time_ids[:, 0]]
+        random_time[:, 1] = ids[time_ids[:, 1]]
+        random_time.sort(axis=1)
+        random_time = set([tuple(row) for row in random_time])
+        random_joint = random_time.intersection(neigh_s)
+        nrj = len(random_joint)
+        joints[p] = nrj
+        if nrj >= npairs:
+            larger += 1
 
-        timemat = np.ones((n, n))
-        test = tdistmat <= tau
-        timemat = timemat * test
+    if (permutations - larger) < larger:
+        larger = permutations - larger
 
-        # calculate the statistic
-        knoxmat = timemat * spacmat
-        stat = (knoxmat.sum() - n) / 2
-        if debug:
-            t4 = time.time()
-            #print t4 - t3
-
-        # return results (if no inference)
-        if not permutations:
-            return {'stat': stat}  # check this
-        distribution = []
-
-        # loop for generating a random distribution to assess significance
-        for p in range(permutations):
-            rtdistmat = util.shuffle_matrix(tdistmat, range(n))
-            timemat = np.ones((n, n))
-            test = rtdistmat <= tau
-            timemat = timemat * test
-            knoxmat = timemat * spacmat
-            k = (knoxmat.sum() - n) / 2
-            distribution.append(k)
-
-        # establish the pseudo significance of the observed statistic
-        distribution = np.array(distribution)
-        greater = np.ma.masked_greater_equal(distribution, stat)
-        count = np.ma.count_masked(greater)
-        pvalue = (count + 1.0) / (permutations + 1.0)
-
-        # return results
-        knox_result = {'stat': stat, 'pvalue': pvalue}
-        return knox_result
-
-    else:
-        x = events.x
-        y = events.y
-        t = events.t
-        k = 0
-        ss = 0
-        stl = []
-
-        for i in xrange(n - 1):
-            for j in xrange(i + 1, n):
-                dt = math.fabs((t[i] - t[j]))
-                if dt <= tau:
-                    if permutations:
-                        ss += 1
-                    ds = (x[i] - x[j]) ** 2 + (y[i] - y[j]) ** 2
-                    ds = math.sqrt(ds)
-                    if ds <= delta:
-                        k += 1
-                        if permutations:
-                            stl.append((i, j))
-
-        print ss
-        print len(stl)
-        knox_result = {'stat': k, 'pvalue': False}
-        if permutations:
-            count = 0
-            st_set = set(stl)
-            for i in xrange(permutations):
-                tmp1 = random.sample(xrange(n), ss)
-                tmp2 = random.sample(xrange(n), ss)
-                tmp_set = set(zip(tmp1, tmp2))
-                if st_set.isdisjoint(tmp_set):
-                    count += 1
-            pvalue = (count + 1.0) / (permutations + 1.0)
-            knox_result = {'stat': k, 'pvalue': pvalue}
-
-        return knox_result
+    p_sim = (larger + 1.) / (permutations + 1.)
+    knox_result = {'stat': npairs, 'pvalue': p_sim}
+    return knox_result
 
 
 def mantel(events, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0):
@@ -708,22 +623,3 @@ def modified_knox(events, delta, tau, permutations=99):
     # return results
     modknox_result = {'stat': stat, 'pvalue': pvalue}
     return modknox_result
-
-if __name__ == '__main__':
-
-    np.random.seed(100)
-    path = pysal.examples.get_path("burkitt")
-    events = SpaceTimeEvents(path, 'T')
-    #eventx = SpaceTimeEvents(path, 'DATE')
-
-    result1 = knox(events, delta=20, tau=5, permutations=999, debug=True)
-    print("Result 1", result1['stat'], "%2.2f" % result1['pvalue'])
-
-    np.random.seed(100)
-    result3 = knox(events, delta=20, tau=5, permutations=999, debug=True, ld=True)
-    print("Result 3", result3['stat'], "%f" % result3['pvalue'])
-
-    # results before refactoring shapefile read, with 999 perm
-    # 2.02850198746
-    # 1.97812914848
-    # 1.95059895515
