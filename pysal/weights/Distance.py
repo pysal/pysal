@@ -534,6 +534,143 @@ class DistanceBand(W):
         return allneighbors, weights
 
 
+class DistanceBand1(W):
+    """Spatial weights based on distance band
+
+    Parameters
+    ----------
+
+    data        : array (n,k) or KDTree where KDtree.data is array (n,k)
+                  n observations on k characteristics used to measure
+                  distances between the n objects
+    threshold  : float
+                 distance band
+    p          : float
+                 Minkowski p-norm distance metric parameter:
+                 1<=p<=infinity
+                 2: Euclidean distance
+                 1: Manhattan distance
+    binary     : binary
+                 If true w_{ij}=1 if d_{i,j}<=threshold, otherwise w_{i,j}=0
+                 If false wij=dij^{alpha}
+    alpha      : float
+                 distance decay parameter for weight (default -1.0)
+                 if alpha is positive the weights will not decline with
+                 distance. If binary is True, alpha is ignored
+
+    Examples
+    --------
+
+    >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+    >>> w=DistanceBand1(points,threshold=11.2)
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  [2]
+    >>> w.weights
+    {0: [1, 1], 1: [1, 1], 2: [], 3: [1, 1], 4: [1], 5: [1]}
+    >>> w.neighbors
+    {0: [1, 3], 1: [0, 3], 2: [], 3: [0, 1], 4: [5], 5: [4]}
+    >>> w=DistanceBand1(points,threshold=14.2)
+    >>> w.weights
+    {0: [1, 1], 1: [1, 1, 1], 2: [1], 3: [1, 1], 4: [1, 1, 1], 5: [1]}
+    >>> set(w.neighbors[4]) == set([1,2,5])
+    True
+
+    inverse distance weights
+
+    >>> w=DistanceBand(points,threshold=11.2,binary=False)
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  [2]
+    >>> w.weights[0]
+    [0.10000000000000001, 0.089442719099991588]
+    >>> w.neighbors[0]
+    [1, 3]
+    >>>
+
+    gravity weights
+
+    >>> w=DistanceBand(points,threshold=11.2,binary=False,alpha=-2.)
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  [2]
+    >>> w.weights[0]
+    [0.01, 0.0079999999999999984]
+
+
+    Notes
+    -----
+
+    this was initially implemented running scipy 0.8.0dev (in epd 6.1).
+    earlier versions of scipy (0.7.0) have a logic bug in scipy/sparse/dok.py
+    so serge changed line 221 of that file on sal-dev to fix the logic bug
+
+    """
+    def __init__(self, data, threshold, p=2, alpha=-1.0, binary=True, ids=None):
+        """
+        Casting to floats is a work around for a bug in scipy.spatial.  See detail in pysal issue #126
+        """
+        if issubclass(type(data), scipy.spatial.KDTree):
+            self.kd = data
+            self.data = self.kd.data
+        else:
+            try:
+                data = np.asarray(data)
+                if data.dtype.kind != 'f':
+                    data = data.astype(float)
+                self.data = data
+                self.kd = KDTree(self.data)
+            except:
+                raise ValueError("Could not make array from data")
+
+        self._n = self.kd.data.shape[0]
+        self.p = p
+        self.threshold = threshold
+        self.binary = binary
+        self.alpha = alpha
+        self._band()
+        neighbors, weights = self._distance_to_W(ids)
+        W.__init__(self, neighbors, weights, ids)
+
+    def _band(self):
+        """
+        find all pairs within threshold
+        """
+        kd = self.kd
+        pairs = kd.query_pairs(self.threshold)
+        self._nmat = pairs 
+
+    def _distance_to_W(self, ids=None):
+        allneighbors = {}
+        weights = {}
+        for i in xrange(self._n):
+            allneighbors[i] = []
+            weights[i] = []
+        if ids:
+            ids = np.array(ids)
+        else:
+            ids = np.arange(len(self._nmat))
+        if self.binary:
+            for pair in self._nmat:
+                i,j = pair
+                weights[i].append(1)
+                weights[j].append(1)
+                allneighbors[i].append(j)
+                allneighbors[j].append(i)
+        else:
+            self.dmat = self.kd.sparse_distance_matrix(
+                self.kd, max_distance=self.threshold)
+            for pair in self._nmat:
+                i,j = pair
+                allneighbors[i].append(j)
+                allneighbors[j].append(i)
+                wij = 0
+                if (i,j) in self.dmat:
+                    dij = self.dmat[(i,j)]
+                    if dij > 0.0:
+                        wij = dij**self.alpha
+                weights[i].append(wij)
+                weights[j].append(wij)
+        return allneighbors, weights
+
+
 def _test():
     import doctest
     # the following line could be used to define an alternative to the '<BLANKLINE>' flag
@@ -545,4 +682,42 @@ def _test():
 
 if __name__ == '__main__':
     _test()
+
+
+    import numpy as np
+    import time as time
+    data = np.random.random((1000,2))*100.
+    t0 = time.time()
+    w1 = DistanceBand(data,threshold=10.0)
+    t1 = time.time()
+    print t1-t0
+    t2 = time.time()
+    w2 = DistanceBand1(data,threshold=10.0)
+    t3 = time.time()
+    print t3-t2
+
+    print "Equal weights: ", w2.weights == w1.weights
+
+    t0 = time.time()
+    w1 = DistanceBand(data,threshold=10.,binary=False)
+    t1 = time.time()
+    print t1-t0
+    t2 = time.time()
+    w2 = DistanceBand1(data,threshold=10.,binary=False)
+    t3 = time.time()
+    print t3-t2
+    diff = 0
+    for neighbor in w1.neighbors:
+        if set(w1.neighbors[neighbor]) != set(w2.neighbors[neighbor]):
+            diff += 1
+        if set(w1.weights[neighbor]) != set(w2.weights[neighbor]):
+            diff += 1
+    if diff != 0:
+        print 'Equal weights: False'
+    else:
+        print 'Equal weights: True'
+
+
+
+
 
