@@ -20,7 +20,7 @@ script:
   - python -c 'import numpy; print numpy.version.version'
   - python -c 'import scipy; print scipy.version.version'
   - python -c 'import pysal; print pysal.version'
-  - nosetests --with-coverage
+  - nosetests 
   #- python setup.py sdist >/dev/null
   - cd doc; make pickle; make doctest
 notifications:
@@ -30,6 +30,3 @@ notifications:
             - phil.stphns@gmail.com
         on_success: always
         on_failure: always
-
-after_success:
-  - coveralls

@@ -60,8 +60,8 @@ class SpaceTimeEvents:
     Read in the example shapefile data, ensuring to omit the file
     extension. In order to successfully create the event data the .dbf file
     associated with the shapefile should have a column of values that are a
-    timestamp for the events. There should be a numerical value (not a
-    date) in every field. UPDATE: added date inference in 1.6
+    timestamp for the events. This timestamp may be a numerical value
+    or a date. Date inference was added in version 1.6.
 
     >>> path = pysal.examples.get_path("burkitt")
 
@@ -89,6 +89,8 @@ class SpaceTimeEvents:
 
     >>> events.t[1] - events.t[0]
     array([ 59.])
+
+    New, in 1.6, date support:
 
     Now, create an instance of SpaceTimeEvents from a shapefile, where the
     temporal information is stored in a column named "DATE".
@@ -122,20 +124,10 @@ class SpaceTimeEvents:
         dbf = pysal.open(path + '.dbf')
 
         # extract the spatial coordinates from the shapefile
-        x = []
-        y = []
-        n = 0
-        for i in shp:
-            count = 0
-            for j in i:
-                if count == 0:
-                    x.append(j)
-                elif count == 1:
-                    y.append(j)
-                count += 1
-            n += 1
+        x = [coords[0] for coords in shp]
+        y = [coords[1] for coords in shp]
 
-        self.n = n
+        self.n = n = len(shp)
         x = np.array(x)
         y = np.array(y)
         self.x = np.reshape(x, (n, 1))
@@ -223,11 +215,11 @@ def knox(events, delta, tau, permutations=99, debug=False):
     >>> result = knox(events, delta=20, tau=5, permutations=99)
 
     Next, we examine the results. First, we call the statistic from the
-    results results dictionary. This reports that there are 13 events close
+    results dictionary. This reports that there are 13 events close
     in both space and time, according to our threshold definitions.
 
     >>> print(result['stat'])
-    13.0
+    13
 
     Next, we look at the pseudo-significance of this value, calculated by
     permuting the timestamps and rerunning the statistics. In this case,
@@ -238,60 +230,37 @@ def knox(events, delta, tau, permutations=99, debug=False):
     0.18
 
     """
-    n = events.n
-    s = events.space
-    t = events.t
+    kd_t = pysal.cg.KDTree(events.time)
+    neigh_t = kd_t.query_pairs(tau)
+    kd_s = pysal.cg.KDTree(events.space)
+    neigh_s = kd_s.query_pairs(delta)
 
-    # calculate the spatial and temporal distance matrices for the events
-    sdistmat = cg.distance_matrix(s)
-    if debug:
-        print(sdistmat.min(), sdistmat.mean(), sdistmat.max())
-    tdistmat = cg.distance_matrix(t)
-    if debug:
-        print(tdistmat.min(), tdistmat.max())
+    joint = neigh_s.intersection(neigh_t)
+    npairs = len(joint)
+    time_ids = np.array([pair for pair in neigh_t])
+    len_t = len(time_ids)
+    ids = np.arange(len(events.time))
+    larger = 0
+    joints = np.zeros((permutations, 1), int)
 
-    # identify events within thresholds
-    spacmat = np.ones((n, n))
-    test = sdistmat <= delta
-    spacmat = spacmat * test
-    if debug:
-        False in spacmat
+    for p in xrange(permutations):
+        np.random.shuffle(ids)
+        random_time = np.zeros((len_t, 2), int)
+        random_time[:, 0] = ids[time_ids[:, 0]]
+        random_time[:, 1] = ids[time_ids[:, 1]]
+        random_time.sort(axis=1)
+        random_time = set([tuple(row) for row in random_time])
+        random_joint = random_time.intersection(neigh_s)
+        nrj = len(random_joint)
+        joints[p] = nrj
+        if nrj >= npairs:
+            larger += 1
 
-    timemat = np.ones((n, n))
-    test = tdistmat <= tau
-    timemat = timemat * test
-    if debug:
-        False in timemat
+    if (permutations - larger) < larger:
+        larger = permutations - larger
 
-    # calculate the statistic
-    knoxmat = timemat * spacmat
-    stat = (knoxmat.sum() - n) / 2
-
-    # return results (if no inference)
-    if not permutations:
-        return stat
-    if debug:
-        print(stat)
-    distribution = []
-
-    # loop for generating a random distribution to assess significance
-    for p in range(permutations):
-        rtdistmat = util.shuffle_matrix(tdistmat, range(n))
-        timemat = np.ones((n, n))
-        test = rtdistmat <= tau
-        timemat = timemat * test
-        knoxmat = timemat * spacmat
-        k = (knoxmat.sum() - n) / 2
-        distribution.append(k)
-
-    # establish the pseudo significance of the observed statistic
-    distribution = np.array(distribution)
-    greater = np.ma.masked_greater_equal(distribution, stat)
-    count = np.ma.count_masked(greater)
-    pvalue = (count + 1.0) / (permutations + 1.0)
-
-    # return results
-    knox_result = {'stat': stat, 'pvalue': pvalue}
+    p_sim = (larger + 1.) / (permutations + 1.)
+    knox_result = {'stat': npairs, 'pvalue': p_sim}
     return knox_result
 
 
@@ -654,32 +623,3 @@ def modified_knox(events, delta, tau, permutations=99):
     # return results
     modknox_result = {'stat': stat, 'pvalue': pvalue}
     return modknox_result
-
-if __name__ == '__main__':
-
-    np.random.seed(100)
-
-    path = pysal.examples.get_path("burkitt")
-
-    events = SpaceTimeEvents(path, 'T')
-    result = knox(events, delta=20, tau=5, permutations=99, debug=False)
-    print(result['stat'], "%2.2f" % result['pvalue'])
-    print("==================")
-
-    np.random.seed(100)
-    events = SpaceTimeEvents(path, 'T', infer_timestamp=True)
-    result = knox(events, delta=20, tau=5, permutations=99, debug=False)
-    print(result['stat'],  "%2.2f" % result['pvalue'])
-    print("==================")
-
-    np.random.seed(100)
-    events = SpaceTimeEvents(path, 'DATE', infer_timestamp=True)
-    result = knox(events, delta=20, tau=5, permutations=99, debug=False)
-    print(result['stat'],  "%2.2f" % result['pvalue'])
-    print("==================")
-
-    np.random.seed(100)
-    events = SpaceTimeEvents(path, 'T')
-    result = knox(events, delta=20, tau=5, permutations=99, debug=False)
-    print(result['stat'], "%2.2f" % result['pvalue'])
-    print("==================")
