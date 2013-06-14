@@ -2,7 +2,8 @@
 Methods for identifying space-time interaction in spatio-temporal event
 data.
 """
-__author__ = "Nicholas Malizia <nmalizia@asu.edu>"
+__author__ = "Nicholas Malizia <nmalizia@asu.edu>", "Sergio J. Rey \
+<srey@asu.edu>", "Philip Stephens <philip.stephens@asu.edu"
 
 import pysal
 import numpy as np
@@ -13,10 +14,6 @@ from pysal.spatial_dynamics import util
 from datetime import date
 
 __all__ = ['SpaceTimeEvents', 'knox', 'mantel', 'jacquez', 'modified_knox']
-
-#TODO: optimize SpaceTimeEvents class init extraction of x,y
-#TODO: replace full distance matrices with brute force, then scipy kdtree,
-#then sklearn kdtree, then numba
 
 
 class SpaceTimeEvents:
@@ -219,7 +216,7 @@ def knox(events, delta, tau, permutations=99, debug=False):
     in both space and time, according to our threshold definitions.
 
     >>> print(result['stat'])
-    13
+    13.0
 
     Next, we look at the pseudo-significance of this value, calculated by
     permuting the timestamps and rerunning the statistics. In this case,
