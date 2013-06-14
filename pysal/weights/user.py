@@ -367,7 +367,7 @@ def threshold_binaryW_from_array(array, threshold, p=2, radius=None):
     return DistanceBand(array, threshold=threshold, p=p)
 
 
-def threshold_binaryW_from_shapefile(shapefile, threshold, p=2,  radius=None):
+def threshold_binaryW_from_shapefile(shapefile, threshold, p=2, idVariable=None, radius=None):
     """
     Threshold distance based binary weights from a shapefile
 
@@ -383,6 +383,8 @@ def threshold_binaryW_from_shapefile(shapefile, threshold, p=2,  radius=None):
                  1<=p<=infinity
                  2: Euclidean distance
                  1: Manhattan distance
+    idVariable : string
+                 name of a column in the shapefile's DBF to use for ids
     radius     : If supplied arc_distances will be calculated
                  based on the given radius. p will be ignored.
 
@@ -394,8 +396,8 @@ def threshold_binaryW_from_shapefile(shapefile, threshold, p=2,  radius=None):
 
     Examples
     --------
-    >>> w = threshold_binaryW_from_shapefile(pysal.examples.get_path("columbus.shp"),0.62)
-    >>> w.weights[0]
+    >>> w = threshold_binaryW_from_shapefile(pysal.examples.get_path("columbus.shp"),0.62,idVariable="POLYID")
+    >>> w.weights[1]
     [1, 1]
 
 
@@ -411,7 +413,9 @@ def threshold_binaryW_from_shapefile(shapefile, threshold, p=2,  radius=None):
     data = get_points_array_from_shapefile(shapefile)
     if radius is not None:
         data = pysal.cg.KDTree(data, distance_metric='Arc', radius=radius)
-        return DistanceBand(data, threshold=threshold, p=p)
+    if idVariable:
+        ids = get_ids(shapefile, idVariable)
+        return DistanceBand(data, threshold=threshold, p=p, ids=ids)
     return threshold_binaryW_from_array(data, threshold, p=p)
 
 
@@ -478,7 +482,7 @@ def threshold_continuousW_from_array(array, threshold, p=2,
 
 
 def threshold_continuousW_from_shapefile(shapefile, threshold, p=2,
-                                         alpha=-1, radius=None):
+                                         alpha=-1, idVariable=None, radius=None):
     """
     Threshold distance based continuous weights from a shapefile
 
@@ -498,6 +502,8 @@ def threshold_continuousW_from_shapefile(shapefile, threshold, p=2,
                  distance decay parameter for weight (default -1.0)
                  if alpha is positive the weights will not decline with
                  distance.
+    idVariable : string
+                 name of a column in the shapefile's DBF to use for ids
     radius     : If supplied arc_distances will be calculated
                  based on the given radius. p will be ignored.
 
@@ -509,8 +515,8 @@ def threshold_continuousW_from_shapefile(shapefile, threshold, p=2,
 
     Examples
     --------
-    >>> w = threshold_continuousW_from_shapefile(pysal.examples.get_path("columbus.shp"),0.62,p=2)
-    >>> w.weights[0]
+    >>> w = threshold_continuousW_from_shapefile(pysal.examples.get_path("columbus.shp"),0.62,idVariable="POLYID")
+    >>> w.weights[1]
     [1.6702346893743334, 1.7250729841938093]
 
     Notes
@@ -525,10 +531,12 @@ def threshold_continuousW_from_shapefile(shapefile, threshold, p=2,
     data = get_points_array_from_shapefile(shapefile)
     if radius is not None:
         data = pysal.cg.KDTree(data, distance_metric='Arc', radius=radius)
-        w = DistanceBand(data, threshold=threshold, p=p, alpha=alpha, binary=False) 
+    if idVariable:
+        ids = get_ids(shapefile, idVariable)
+        w = DistanceBand(data, threshold=threshold, p=p, alpha=alpha, binary=False, ids=ids)
     else:
         w =  threshold_continuousW_from_array(data, threshold, p=p, alpha=alpha)
-    w.set_shapefile(shapefile)
+    w.set_shapefile(shapefile,idVariable)
     return w
 
 

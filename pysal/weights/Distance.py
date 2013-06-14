@@ -394,6 +394,7 @@ class Kernel(W):
         else:
             print 'Unsupported kernel function', self.function
 
+
 class DistanceBand(W):
     """Spatial weights based on distance band
 
@@ -418,7 +419,6 @@ class DistanceBand(W):
                  if alpha is positive the weights will not decline with
                  distance. If binary is True, alpha is ignored
 
-    
     Examples
     --------
 
@@ -433,8 +433,8 @@ class DistanceBand(W):
     >>> w=DistanceBand(points,threshold=14.2)
     >>> w.weights
     {0: [1, 1], 1: [1, 1, 1], 2: [1], 3: [1, 1], 4: [1, 1, 1], 5: [1]}
-    >>> set(w.neighbors[4]) == set([1,2,5])
-    True
+    >>> w.neighbors
+    {0: [1, 3], 1: [0, 3, 4], 2: [4], 3: [0, 1], 4: [1, 2, 5], 5: [4]}
 
     inverse distance weights
 
@@ -481,7 +481,6 @@ class DistanceBand(W):
             except:
                 raise ValueError("Could not make array from data")
 
-        self._n = self.kd.data.shape[0]
         self.p = p
         self.threshold = threshold
         self.binary = binary
@@ -495,35 +494,45 @@ class DistanceBand(W):
         find all pairs within threshold
         """
         kd = self.kd
-        pairs = kd.query_pairs(self.threshold)
-        self._nmat = pairs 
+        #ns=[kd.query_ball_point(point,self.threshold) for point in self.data]
+        ns = kd.query_ball_tree(kd, self.threshold)
+        self._nmat = ns
 
     def _distance_to_W(self, ids=None):
         allneighbors = {}
         weights = {}
-        ids = np.arange(len(self._n))
+        if ids:
+            ids = np.array(ids)
+        else:
+            ids = np.arange(len(self._nmat))
         if self.binary:
-            for pair in self._nmat:
-                i,j = pair
-                weights[i].append(1)
-                weights[j].append(1)
-                allneighbors[i].append(j)
-                allneighbors[j].append(i)
+            for i, neighbors in enumerate(self._nmat):
+                ns = [ni for ni in neighbors if ni != i]
+                neigh = list(ids[ns])
+                if len(neigh) == 0:
+                    allneighbors[ids[i]] = []
+                    weights[ids[i]] = []
+                else:
+                    allneighbors[ids[i]] = neigh
+                    weights[ids[i]] = [1] * len(ns)
         else:
             self.dmat = self.kd.sparse_distance_matrix(
                 self.kd, max_distance=self.threshold)
-            for pair in self._nmat:
-                i,j = pair
-                allneighbors[i].append(j)
-                allneighbors[j].append(i)
-                wij = 0
-                if (i,j) in self.dmat:
-                    dij = self.dmat[(i,j)]
-                    if dij > 0.0:
-                        wij = dij**self.alpha
-                weights[i].append(wij)
-                weights[j].append(wij)
+            for i, neighbors in enumerate(self._nmat):
+                ns = [ni for ni in neighbors if ni != i]
+                neigh = list(ids[ns])
+                if len(neigh) == 0:
+                    allneighbors[ids[i]] = []
+                    weights[ids[i]] = []
+                else:
+                    try:
+                        allneighbors[ids[i]] = neigh
+                        weights[ids[i]] = [self.dmat[(
+                            i, j)] ** self.alpha for j in ns]
+                    except ZeroDivisionError:
+                        raise Exception, "Cannot compute inverse distance for elements at same location (distance=0)."
         return allneighbors, weights
+
 
 def _test():
     import doctest
@@ -537,17 +546,3 @@ def _test():
 if __name__ == '__main__':
     _test()
 
-
-    import numpy as np
-    import time as time
-    data = np.random.random((1000,2))*100.
-    t0 = time.time()
-    w1 = DistanceBand(data,threshold=10.0)
-    t1 = time.time()
-    print t1-t0
-
-
-    t0 = time.time()
-    w1 = DistanceBand(data,threshold=10.,binary=False)
-    t1 = time.time()
-    print t1-t0
