@@ -418,6 +418,7 @@ class DistanceBand(W):
                  if alpha is positive the weights will not decline with
                  distance. If binary is True, alpha is ignored
 
+    
     Examples
     --------
 
@@ -500,13 +501,7 @@ class DistanceBand(W):
     def _distance_to_W(self, ids=None):
         allneighbors = {}
         weights = {}
-        for i in xrange(self._n):
-            allneighbors[i] = []
-            weights[i] = []
-        if ids:
-            ids = np.array(ids)
-        else:
-            ids = np.arange(len(self._nmat))
+        ids = np.arange(len(self._n))
         if self.binary:
             for pair in self._nmat:
                 i,j = pair
