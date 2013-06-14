@@ -394,7 +394,6 @@ class Kernel(W):
         else:
             print 'Unsupported kernel function', self.function
 
-
 class DistanceBand(W):
     """Spatial weights based on distance band
 
@@ -431,145 +430,6 @@ class DistanceBand(W):
     >>> w.neighbors
     {0: [1, 3], 1: [0, 3], 2: [], 3: [0, 1], 4: [5], 5: [4]}
     >>> w=DistanceBand(points,threshold=14.2)
-    >>> w.weights
-    {0: [1, 1], 1: [1, 1, 1], 2: [1], 3: [1, 1], 4: [1, 1, 1], 5: [1]}
-    >>> w.neighbors
-    {0: [1, 3], 1: [0, 3, 4], 2: [4], 3: [0, 1], 4: [1, 2, 5], 5: [4]}
-
-    inverse distance weights
-
-    >>> w=DistanceBand(points,threshold=11.2,binary=False)
-    WARNING: there is one disconnected observation (no neighbors)
-    Island id:  [2]
-    >>> w.weights[0]
-    [0.10000000000000001, 0.089442719099991588]
-    >>> w.neighbors[0]
-    [1, 3]
-    >>>
-
-    gravity weights
-
-    >>> w=DistanceBand(points,threshold=11.2,binary=False,alpha=-2.)
-    WARNING: there is one disconnected observation (no neighbors)
-    Island id:  [2]
-    >>> w.weights[0]
-    [0.01, 0.0079999999999999984]
-
-
-    Notes
-    -----
-
-    this was initially implemented running scipy 0.8.0dev (in epd 6.1).
-    earlier versions of scipy (0.7.0) have a logic bug in scipy/sparse/dok.py
-    so serge changed line 221 of that file on sal-dev to fix the logic bug
-
-    """
-    def __init__(self, data, threshold, p=2, alpha=-1.0, binary=True, ids=None):
-        """
-        Casting to floats is a work around for a bug in scipy.spatial.  See detail in pysal issue #126
-        """
-        if issubclass(type(data), scipy.spatial.KDTree):
-            self.kd = data
-            self.data = self.kd.data
-        else:
-            try:
-                data = np.asarray(data)
-                if data.dtype.kind != 'f':
-                    data = data.astype(float)
-                self.data = data
-                self.kd = KDTree(self.data)
-            except:
-                raise ValueError("Could not make array from data")
-
-        self.p = p
-        self.threshold = threshold
-        self.binary = binary
-        self.alpha = alpha
-        self._band()
-        neighbors, weights = self._distance_to_W(ids)
-        W.__init__(self, neighbors, weights, ids)
-
-    def _band(self):
-        """
-        find all pairs within threshold
-        """
-        kd = self.kd
-        #ns=[kd.query_ball_point(point,self.threshold) for point in self.data]
-        ns = kd.query_ball_tree(kd, self.threshold)
-        self._nmat = ns
-
-    def _distance_to_W(self, ids=None):
-        allneighbors = {}
-        weights = {}
-        if ids:
-            ids = np.array(ids)
-        else:
-            ids = np.arange(len(self._nmat))
-        if self.binary:
-            for i, neighbors in enumerate(self._nmat):
-                ns = [ni for ni in neighbors if ni != i]
-                neigh = list(ids[ns])
-                if len(neigh) == 0:
-                    allneighbors[ids[i]] = []
-                    weights[ids[i]] = []
-                else:
-                    allneighbors[ids[i]] = neigh
-                    weights[ids[i]] = [1] * len(ns)
-        else:
-            self.dmat = self.kd.sparse_distance_matrix(
-                self.kd, max_distance=self.threshold)
-            for i, neighbors in enumerate(self._nmat):
-                ns = [ni for ni in neighbors if ni != i]
-                neigh = list(ids[ns])
-                if len(neigh) == 0:
-                    allneighbors[ids[i]] = []
-                    weights[ids[i]] = []
-                else:
-                    try:
-                        allneighbors[ids[i]] = neigh
-                        weights[ids[i]] = [self.dmat[(
-                            i, j)] ** self.alpha for j in ns]
-                    except ZeroDivisionError:
-                        raise Exception, "Cannot compute inverse distance for elements at same location (distance=0)."
-        return allneighbors, weights
-
-
-class DistanceBand1(W):
-    """Spatial weights based on distance band
-
-    Parameters
-    ----------
-
-    data        : array (n,k) or KDTree where KDtree.data is array (n,k)
-                  n observations on k characteristics used to measure
-                  distances between the n objects
-    threshold  : float
-                 distance band
-    p          : float
-                 Minkowski p-norm distance metric parameter:
-                 1<=p<=infinity
-                 2: Euclidean distance
-                 1: Manhattan distance
-    binary     : binary
-                 If true w_{ij}=1 if d_{i,j}<=threshold, otherwise w_{i,j}=0
-                 If false wij=dij^{alpha}
-    alpha      : float
-                 distance decay parameter for weight (default -1.0)
-                 if alpha is positive the weights will not decline with
-                 distance. If binary is True, alpha is ignored
-
-    Examples
-    --------
-
-    >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
-    >>> w=DistanceBand1(points,threshold=11.2)
-    WARNING: there is one disconnected observation (no neighbors)
-    Island id:  [2]
-    >>> w.weights
-    {0: [1, 1], 1: [1, 1], 2: [], 3: [1, 1], 4: [1], 5: [1]}
-    >>> w.neighbors
-    {0: [1, 3], 1: [0, 3], 2: [], 3: [0, 1], 4: [5], 5: [4]}
-    >>> w=DistanceBand1(points,threshold=14.2)
     >>> w.weights
     {0: [1, 1], 1: [1, 1, 1], 2: [1], 3: [1, 1], 4: [1, 1, 1], 5: [1]}
     >>> set(w.neighbors[4]) == set([1,2,5])
@@ -670,7 +530,6 @@ class DistanceBand1(W):
                 weights[j].append(wij)
         return allneighbors, weights
 
-
 def _test():
     import doctest
     # the following line could be used to define an alternative to the '<BLANKLINE>' flag
@@ -691,33 +550,9 @@ if __name__ == '__main__':
     w1 = DistanceBand(data,threshold=10.0)
     t1 = time.time()
     print t1-t0
-    t2 = time.time()
-    w2 = DistanceBand1(data,threshold=10.0)
-    t3 = time.time()
-    print t3-t2
 
-    print "Equal weights: ", w2.weights == w1.weights
 
     t0 = time.time()
     w1 = DistanceBand(data,threshold=10.,binary=False)
     t1 = time.time()
     print t1-t0
-    t2 = time.time()
-    w2 = DistanceBand1(data,threshold=10.,binary=False)
-    t3 = time.time()
-    print t3-t2
-    diff = 0
-    for neighbor in w1.neighbors:
-        if set(w1.neighbors[neighbor]) != set(w2.neighbors[neighbor]):
-            diff += 1
-        if set(w1.weights[neighbor]) != set(w2.weights[neighbor]):
-            diff += 1
-    if diff != 0:
-        print 'Equal weights: False'
-    else:
-        print 'Equal weights: True'
-
-
-
-
-
