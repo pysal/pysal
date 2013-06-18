@@ -215,8 +215,8 @@ def knox(events, delta, tau, permutations=99, debug=False):
     results dictionary. This reports that there are 13 events close
     in both space and time, according to our threshold definitions.
 
-    >>> print(result['stat'])
-    13.0
+    >>> result['stat'] == 13
+    True
 
     Next, we look at the pseudo-significance of this value, calculated by
     permuting the timestamps and rerunning the statistics. In this case,
