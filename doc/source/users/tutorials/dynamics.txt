@@ -607,7 +607,7 @@ Finally we examine the results. We call the statistic from the results dictionar
 .. doctest::
 
     >>> print(result['stat'])
-    13.0
+    13
 
 Then we look at the pseudo-significance of this value, calculated by permuting the timestamps and rerunning the statistics. Here, 99 permutations were used, but an alternative number can be specified by the user. In this case, the results indicate that we fail to reject the null hypothesis of no space-time interaction using an alpha value of 0.05. 
 
