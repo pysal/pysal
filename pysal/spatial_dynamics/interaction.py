@@ -240,24 +240,27 @@ def knox(events, delta, tau, permutations=99, debug=False):
     larger = 0
     joints = np.zeros((permutations, 1), int)
 
-    for p in xrange(permutations):
-        np.random.shuffle(ids)
-        random_time = np.zeros((len_t, 2), int)
-        random_time[:, 0] = ids[time_ids[:, 0]]
-        random_time[:, 1] = ids[time_ids[:, 1]]
-        random_time.sort(axis=1)
-        random_time = set([tuple(row) for row in random_time])
-        random_joint = random_time.intersection(neigh_s)
-        nrj = len(random_joint)
-        joints[p] = nrj
-        if nrj >= npairs:
-            larger += 1
+    if permutations:
+        for p in xrange(permutations):
+            np.random.shuffle(ids)
+            random_time = np.zeros((len_t, 2), int)
+            random_time[:, 0] = ids[time_ids[:, 0]]
+            random_time[:, 1] = ids[time_ids[:, 1]]
+            random_time.sort(axis=1)
+            random_time = set([tuple(row) for row in random_time])
+            random_joint = random_time.intersection(neigh_s)
+            nrj = len(random_joint)
+            joints[p] = nrj
+            if nrj >= npairs:
+                larger += 1
 
-    if (permutations - larger) < larger:
-        larger = permutations - larger
+        if (permutations - larger) < larger:
+            larger = permutations - larger
 
-    p_sim = (larger + 1.) / (permutations + 1.)
-    knox_result = {'stat': npairs, 'pvalue': p_sim}
+        p_sim = (larger + 1.) / (permutations + 1.)
+        knox_result = {'stat': npairs, 'pvalue': p_sim}
+    else:
+        knox_result = {'stat': npairs, 'pvalue': False}
     return knox_result
 
 
@@ -351,7 +354,7 @@ def mantel(events, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0):
     stat = stats.pearsonr(timevec, distvec)[0].sum()
 
     # return the results (if no inference)
-    if permutations == 0:
+    if not permutations:
         return stat
 
     # loop for generating a random distribution to assess significance
@@ -458,7 +461,7 @@ def jacquez(events, k, permutations=99):
     stat = knn_sum
 
     # return the results (if no inference)
-    if permutations == 0:
+    if not permutations:
         return stat
 
     # loop for generating a random distribution to assess significance
@@ -587,7 +590,7 @@ def modified_knox(events, delta, tau, permutations=99):
     stat = (obsstat - (expstat / (n - 1.0))) / 2.0
 
     # return results (if no inference)
-    if permutations == 0:
+    if not permutations:
         return stat
     distribution = []
 
@@ -620,3 +623,7 @@ def modified_knox(events, delta, tau, permutations=99):
     # return results
     modknox_result = {'stat': stat, 'pvalue': pvalue}
     return modknox_result
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
