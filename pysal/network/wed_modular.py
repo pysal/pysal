@@ -151,7 +151,8 @@ def connected_components(adjacency):
 
     Arguments
     ---------
-    adjacency: (dict) key is a node, value is a list of adjacent nodes
+    adjacency: dict
+               key is a node, value is a list of adjacent nodes
 
     Returns
     -------
@@ -192,30 +193,36 @@ def filament_pointers(filament, node_edge={}):
     Arguments
     ---------
 
-    filament: list of ordered nodes defining a graph filament where a filament
-    is defined as a sequence of ordered nodes with at least one internal node
-    having incidence=2
+    filament:   list
+                ordered nodes defining a graph filament where a filament is
+                defined as a sequence of ordered nodes with at least one
+                internal node having incidence=2
 
-    node_edge: (dict) key is a node, value is the edge the node is assigned to
+    node_edge:  dict
+                key is a node, value is the edge the node is assigned to
 
     Returns
     -------
 
-    ecc: (dict) key is edge, value is first edge encountered
-            when rotating counterclockwise around edge start end node
+    ecc:    dict
+            key is edge, value is first edge encountered when rotating
+            counterclockwise around edge start end node
 
-    ec: (dict) key is edge, value is first edge encountered
-            when rotating clockwise around edge start end node
+    ec:     dict
+            key is edge, value is first edge encountered when rotating
+            clockwise around edge start end node
  
 
-    scc: (dict) key is edge, value is first edge encountered
-            when rotating counterclockwise around edge start node
+    scc:    dict
+            key is edge, value is first edge encountered when rotating
+            counterclockwise around edge start node
 
 
-    sc: (dict) key is edge, value is first edge encountered when
-            rotating clockwise around edge start node
+    sc:     dict
+            key is edge, value is first edge encountered when rotating clockwise around edge start node
 
-    node_edge: (dict) key is a node, value is the edge the node is assigned to
+    node_edge: dict
+               key is a node, value is the edge the node is assigned to
 
     """
 
@@ -277,18 +284,20 @@ def regions_from_graph(nodes, edges, remove_holes = False):
     Arguments
     ---------
 
-    nodes: dictionary with vertex id as key, coordinates of vertex as value
+    nodes: dict
+           vertex id as key, coordinates of vertex as value
 
-    edges: list of (head,tail), (tail, head) edges
+    edges: list
+           (head,tail), (tail, head) edges
 
     Returns
     ------
 
-    regions: list of lists of nodes defining a region. Includes the external
-    region
+    regions: list
+             lists of nodes defining a region. Includes the external region
 
-    filaments: list of lists of nodes defining filaments and isolated
-    vertices
+    filaments:  list
+                lists of nodes defining filaments and isolated vertices
 
 
 
@@ -644,38 +653,50 @@ def extract_wed(edges, coords):
     Arguments
     ---------
 
-    edges: (dict) key is edge id, value is list of adjacent nodes
+    edges:  dict
+            key is edge id, value is list of adjacent nodes
 
-    coords: (dict) key is node id, value is a tuple of x,y coordinates for the node
+    coords: dict
+            key is node id, value is a tuple of x,y coordinates for the node
 
 
     Returns
     -------
     wed: Dictionary holding the WED with 10 keys
         
-         start_node: (dict) key is node, value is edge with node as start node
+         start_node: dict
+                     key is node, value is edge with node as start node
 
-         end_node: (dict) key is node, value is edge with node as end node
+         end_node:   dict
+                     key is node, value is edge with node as end node
 
-         right_polygon: (dict) key is edge, value is id of right polygon to edge
+         right_polygon: dict
+                        key is edge, value is id of right polygon to edge
 
-         left_polygon: (dict) key is edge, value is id of left polygon to edge
+         left_polygon: dict
+                       key is edge, value is id of left polygon to edge
 
-         node_edge: (dict) key is node, value is edge associated with the node
+         node_edge: dict
+                    key is node, value is edge associated with the node
 
-         region_edge: (dict) key is region, value is an edge on perimeter of region
+         region_edge: dict
+                      key is region, value is an edge on perimeter of region
 
-         start_c: (dict) key is edge, value is first edge encountered when
-            rotating clockwise around edge start node
+         start_c:   dict
+                    key is edge, value is first edge encountered when rotating
+                    clockwise around edge start node
 
-         start_cc[edge]: (dict) key is edge, value is first edge encountered
-            when rotating counterclockwise around edge start node
+         start_cc:  dict
+                    key is edge, value is first edge encountered when rotating
+                    counterclockwise around edge start node
 
-         end_c[edge]: (dict) key is edge, value is first edge encountered
-            when rotating clockwise around edge start end node
+         end_c:     dict
+                    key is edge, value is first edge encountered when rotating
+                    clockwise around edge start end node
 
-         end_cc[edge]: (dict) key is edge, value is first edge encountered
-            when rotating counterclockwise around edge start end node
+         end_cc:    dict
+                    key is edge, value is first edge encountered when rotating
+                    counterclockwise around edge start end node
 
     """
 
