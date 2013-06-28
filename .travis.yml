@@ -27,13 +27,5 @@ notifications:
     email:
         recipients:
             - sjsrey@gmail.com
-            - phil.stphns@gmail.com
-            - daniel.arribas.bel@gmail.com
-            - dfolch@gmail.com
-            - jlaura@gmail.com
-            - drferling@gmail.com
-            - lanselin@gmail.com
-            - pedrovma@gmail.com
-            - schmidtc@gmail.com
         on_success: always
         on_failure: always
