@@ -4,7 +4,7 @@ Python Spatial Analysis Library
 What is PySAL
 --------------
 [![Build
-Status](https://travis-ci.org/sjsrey/pysal.png)](https://travis-ci.org/sjsrey/pysal)
+Status](https://travis-ci.org/pysal/pysal.png)](https://travis-ci.org/pysal/pysal)
 
 PySAL is an open source cross-platform library of spatial analysis functions
 written in Python. It is intended to support the development of high level
