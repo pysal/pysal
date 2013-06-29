@@ -153,21 +153,28 @@ class SpaceTimeEvents:
         shp.close()
 
 
-def knox(events, delta, tau, permutations=99, debug=False):
+def knox(s_coords, t_coords, delta, tau, permutations=99, debug=False):
     """
     Knox test for spatio-temporal interaction. [1]_
 
     Parameters
     ----------
-    events          : space time events object
-                      an output instance from the class SpaceTimeEvents
+    s_coords        : array
+                      nx2 spatial coordinates
+
+    t_coords        : array
+                      nx1 temporal coordinates
+
     delta           : float
                       threshold for proximity in space
+
     tau             : float
                       threshold for proximity in time
+
     permutations    : int
                       the number of permutations used to establish pseudo-
                       significance (default is 99)
+
     debug           : bool
                       if true, debugging information is printed
 
@@ -209,7 +216,7 @@ def knox(events, delta, tau, permutations=99, debug=False):
     respectively. This counts the events that are closer than 20 units in
     space, and 5 units in time.
 
-    >>> result = knox(events, delta=20, tau=5, permutations=99)
+    >>> result = knox(events.space, events.t, delta=20, tau=5, permutations=99)
 
     Next, we examine the results. First, we call the statistic from the
     results dictionary. This reports that there are 13 events close
@@ -224,63 +231,69 @@ def knox(events, delta, tau, permutations=99, debug=False):
     the events.
 
     >>> print("%2.2f"%result['pvalue'])
-    0.18
+    0.17
 
     """
-    kd_t = pysal.cg.KDTree(events.time)
-    neigh_t = kd_t.query_pairs(tau)
-    kd_s = pysal.cg.KDTree(events.space)
-    neigh_s = kd_s.query_pairs(delta)
 
-    joint = neigh_s.intersection(neigh_t)
-    npairs = len(joint)
-    time_ids = np.array([pair for pair in neigh_t])
-    len_t = len(time_ids)
-    ids = np.arange(len(events.time))
-    larger = 0
-    joints = np.zeros((permutations, 1), int)
+    # Do a kdtree on space first as the number of ties (identical points) is
+    # likely to be lower for space than time.
+
+    kd_s = pysal.cg.KDTree(s_coords)
+    neigh_s = kd_s.query_pairs(delta)
+    tau2 = tau * tau
+    ids = np.array(list(neigh_s))
+
+    # For the neighboring pairs in space, determine which are also time
+    # neighbors
+
+    d_t = (t_coords[ids[:,0]] - t_coords[ids[:,1]])**2
+    n_st = sum(d_t <= tau2)
+
+    knox_result = {'stat': n_st[0]}
 
     if permutations:
+        joint = np.zeros((permutations, 1), int)
         for p in xrange(permutations):
-            np.random.shuffle(ids)
-            random_time = np.zeros((len_t, 2), int)
-            random_time[:, 0] = ids[time_ids[:, 0]]
-            random_time[:, 1] = ids[time_ids[:, 1]]
-            random_time.sort(axis=1)
-            random_time = set([tuple(row) for row in random_time])
-            random_joint = random_time.intersection(neigh_s)
-            nrj = len(random_joint)
-            joints[p] = nrj
-            if nrj >= npairs:
-                larger += 1
+            np.random.shuffle(t_coords)
+            d_t = (t_coords[ids[:,0]] - t_coords[ids[:,1]])**2
+            joint[p] = np.sum(d_t <= tau2)
 
+        larger = sum(joint >= n_st[0])
         if (permutations - larger) < larger:
             larger = permutations - larger
-
-        p_sim = (larger + 1.) / (permutations + 1.)
-        knox_result = {'stat': npairs, 'pvalue': p_sim}
-    else:
-        knox_result = {'stat': npairs, 'pvalue': False}
+        p_sim = (larger + 1.) / (permutations +1. )
+        knox_result['pvalue'] = p_sim
     return knox_result
 
+    
 
-def mantel(events, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0):
+
+
+def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0):
     """
     Standardized Mantel test for spatio-temporal interaction. [2]_
 
     Parameters
     ----------
-    events          : space time events object
-                      an output instance from the class SpaceTimeEvents
+    s_coords        : array
+                      nx2 spatial coordinates
+
+    t_coords        : array
+                      nx1 temporal coordinates
+
     permutations    : int
                       the number of permutations used to establish pseudo-
                       significance (default is 99)
+
     scon            : float
                       constant added to spatial distances
+
     spow            : float
                       value for power transformation for spatial distances
+
     tcon            : float
                       constant added to temporal distances
+
     tpow            : float
                       value for power transformation for temporal distances
 
@@ -323,7 +336,7 @@ def mantel(events, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0):
     should be added by the user. This can be done by adjusting the constant
     and power parameters.
 
-    >>> result = mantel(events, 99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0)
+    >>> result = mantel(events.space, events.t, 99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0)
 
     Next, we examine the result of the test.
 
@@ -340,9 +353,10 @@ def mantel(events, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0):
 
 
     """
-    n = events.n
-    s = events.space
-    t = events.t
+
+    t = t_coords
+    s = s_coords
+    n =  len(t)
 
     # calculate the spatial and temporal distance matrices for the events
     distmat = cg.distance_matrix(s)
@@ -376,16 +390,21 @@ def mantel(events, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0):
     return mantel_result
 
 
-def jacquez(events, k, permutations=99):
+def jacquez(s_coords, t_coords, k, permutations=99):
     """
     Jacquez k nearest neighbors test for spatio-temporal interaction. [3]_
 
     Parameters
     ----------
-    events          : space time events object
-                      an output instance from the class SpaceTimeEvents
+    s_coords        : array
+                      nx2 spatial coordinates
+
+    t_coords        : array
+                      nx1 temporal coordinates
+
     k               : int
                       the number of nearest neighbors to be searched
+
     permutations    : int
                       the number of permutations used to establish pseudo-
                       significance (default is 99)
@@ -425,7 +444,7 @@ def jacquez(events, k, permutations=99):
     and time.
 
     >>> np.random.seed(100)
-    >>> result = jacquez(events,k=3,permutations=99)
+    >>> result = jacquez(events.space, events.t ,k=3,permutations=99)
     >>> print result['stat']
     13
 
@@ -437,9 +456,9 @@ def jacquez(events, k, permutations=99):
     False
 
     """
-    n = events.n
-    time = events.time
-    space = events.space
+    time = t_coords
+    space = s_coords
+    n =  len(time)
 
     # calculate the nearest neighbors in space and time separately
     knnt = Distance.knnW(time, k)
@@ -492,18 +511,25 @@ def jacquez(events, k, permutations=99):
     return jacquez_result
 
 
-def modified_knox(events, delta, tau, permutations=99):
+def modified_knox(s_coords, t_coords, delta, tau, permutations=99):
     """
     Baker's modified Knox test for spatio-temporal interaction. [1]_
 
     Parameters
     ----------
-    events          : space time events object
-                      an output instance from the class SpaceTimeEvents
+    s_coords        : array
+                      nx2 spatial coordinates
+
+    t_coords        : array
+                      nx1 temporal coordinates
+
+
     delta           : float
                       threshold for proximity in space
+
     tau             : float
                       threshold for proximity in time
+
     permutations    : int
                       the number of permutations used to establish pseudo-
                       significance (default is 99)
@@ -544,7 +570,7 @@ def modified_knox(events, delta, tau, permutations=99):
     respectively. This counts the events that are closer than 20 units in
     space, and 5 units in time.
 
-    >>> result = modified_knox(events, delta=20, tau=5, permutations=99)
+    >>> result = modified_knox(events.space, events.t, delta=20, tau=5, permutations=99)
 
     Next, we examine the results. First, we call the statistic from the
     results dictionary. This reports the difference between the observed
@@ -561,9 +587,9 @@ def modified_knox(events, delta, tau, permutations=99):
     0.11
 
     """
-    n = events.n
-    s = events.space
-    t = events.t
+    s = s_coords
+    t = t_coords
+    n = len(t)
 
     # calculate the spatial and temporal distance matrices for the events
     sdistmat = cg.distance_matrix(s)

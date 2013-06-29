@@ -600,7 +600,7 @@ Next, we run the Knox test with distance and time thresholds of 20 and 5,respect
 
 .. doctest::
 
-    >>> result = interaction.knox(events,delta=20,tau=5,permutations=99)
+    >>> result = interaction.knox(events.space, events.t ,delta=20,tau=5,permutations=99)
 
 Finally we examine the results. We call the statistic from the results dictionary. This reports that there are 13 events close in both space and time, based on our threshold definitions. 
 
@@ -614,7 +614,7 @@ Then we look at the pseudo-significance of this value, calculated by permuting t
 .. doctest::
 
     >>> print("%2.2f"%result['pvalue'])
-    0.18
+    0.17
 
 
 Modified Knox Test
@@ -646,7 +646,7 @@ Next, we run the modified Knox test with distance and time thresholds of 20 and 
 
 .. doctest::
 
-    >>> result = interaction.modified_knox(events,delta=20,tau=5,permutations=99)
+    >>> result = interaction.modified_knox(events.space, events.t,delta=20,tau=5,permutations=99)
 
 Finally we examine the results. We call the statistic from the results dictionary. This reports a statistic value of 2.810160.  
 
@@ -696,7 +696,7 @@ The following example runs the standardized Mantel test with constants of 0 and 
 
 .. doctest::
 
-    >>> result = interaction.mantel(events,99,scon=0.0,spow=1.0,tcon=0.0,tpow=1.0)
+    >>> result = interaction.mantel(events.space, events.t,99,scon=0.0,spow=1.0,tcon=0.0,tpow=1.0)
 
 Next, we examine the result of the test. 
 
@@ -757,7 +757,7 @@ The following runs the Jacquez test on the example data for a value of :math:`k`
 
 .. doctest::
 
-    >>> result = interaction.jacquez(events,k=3,permutations=99)
+    >>> result = interaction.jacquez(events.space, events.t ,k=3,permutations=99)
     >>> print result['stat'] 
     13
     >>> print "%3.1f"%result['pvalue']
