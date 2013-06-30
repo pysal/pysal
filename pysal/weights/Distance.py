@@ -70,7 +70,11 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
     >>> set([1,5,6]) == set(wnn3e.neighbors[0])
     True
     >>> wnn3m=knnW(data,p=1,k=3)
-    >>> set([1,2,5]) == set(wnn3m.neighbors[0])
+    >>> a = set([1,5,2])
+    >>> b = set([1,5,6])
+    >>> c = set([1,5,10])
+    >>> w0n = set(wnn3m.neighbors[0])
+    >>> a==w0n or b==w0n or c==w0n
     True
 
     ids
