@@ -15,13 +15,13 @@ Prepare the release
 
 - Edit CHANGELOG using svn2cl.sh script.
 
-- Edit THANKS and README if needed.
+- Edit THANKS and README and README.md if needed.
 
 - Change MAJOR, MINOR version in setup script.
 
 - Change pysal/version.py to non-dev number
 
-- Change the docs version from X.xdev to X.x by editing trunk/doc/source/conf.py in two places.
+- Change the docs version from X.xdev to X.x by editing doc/source/conf.py in two places.
 
 - Commit all changes.
 
@@ -31,7 +31,7 @@ Make the Tag::
 
   $ git tag -a v1.4 -m 'my version 1.4'
 
-Clone and switch to the newly created tag on each build machine::
+On each build machine, clone and checkout the newly created tag::
 
   $ git clone http://github.com/pysal/pysal.git
   $ git fetch --tags
@@ -41,7 +41,7 @@ Make docs
 ---------
 Make the html docs:: 
 
-  $ cd tags/X.x/doc/
+  $ cd doc
   $ make html 
 
 Create a new directory on doc server and copy new docs to it::
@@ -49,35 +49,25 @@ Create a new directory on doc server and copy new docs to it::
   $ mkdir -p /srv/www/pysal/public_html/<X.x>
   $ rsync -ruz doc/build/html/ geodacenter.org:/srv/www/pysal/public_html/<X.x>  (no trailing slash!)
 
-Now, compress the HTML and upload it to the Google Code downloads_.
+Now, compress the HTML and upload it to the GeoDa Center server.
 
 Make and Upload distributions
 -------------------------------
 
 - Make and upload_ to the Python Package Index in one shot!::
 
+   $ python setup.py sdist  (to test it)
+
    $ python setup.py sdist upload
 
   - if not registered_, do so. Follow the prompts. You can save the
       login credentials in a dot-file, .pypirc
 
-- :strike:`Update the release on the Python Package Index`
-    - :strike:`open a new release tarball to get PKG-INFO from top level pysal directory`
-    - :strike:`go to http://pypi.python.org/pypi?:action=submit_form`
-    - :strike:`pick option 2 to upload the PKG-INFO`
-
-- Make and upload releases to the Google Code downloads_.   
-
-  - Make a source_ distribution for the build platform you're using::
-
-    $ cd tags/X.x/
-    $ python setup.py sdist  
+- Make and upload binary installers to the GeoDa Center server.
 
   - Make a graphical Windows installer on a Windows box:: 
 
-    $ cd tags/X.x/
     $ python setup.py bdist_wininst
-
 
 Announce
 --------
@@ -90,15 +80,14 @@ Announce
 
 - Add link to released docs on Google Code site (pysal.geodacenter.org/<X.x>/index.html)
 
-Put trunk back to dev
+Put master back to dev
 ---------------------
 - Change MAJOR, MINOR version in setup script.
 
 - Change pysal/version.py to dev number
 
-- Change the docs version from X.x to X.xdev by editing trunk/doc/source/conf.py in two places.
+- Change the docs version from X.x to X.xdev by editing doc/source/conf.py in two places.
 
 .. _upload: http://docs.python.org/2.7/distutils/uploading.html
 .. _registered: http://docs.python.org/2.7/distutils/packageindex.html
-.. _downloads: http://code.google.com/p/pysal/downloads
 .. _source: http://docs.python.org/distutils/sourcedist.html
