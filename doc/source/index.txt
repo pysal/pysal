@@ -21,8 +21,11 @@ If you are new to PySAL you might want to read :ref:`users-tutorials`.
 Downloads
 =========
 
-`Downloads  <http://pypi.python.org/pypi/PySAL>`_  are hosted on the
+`Source downloads  <http://pypi.python.org/pypi/PySAL>`_  are hosted on the
 Python Package Index. 
+
+Graphical installers for recent releases are hosted on the `GeoDa Center
+website <http://geodacenter.asu.edu/software>`_. 
 
 Legacy builds are still available on the old source code repository at
 Google Code, `here <http://code.google.com/p/pysal>`_.  You can also find old

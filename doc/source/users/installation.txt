@@ -54,6 +54,16 @@ Alternatively, grab the source distribution (.tar.gz) and decompress it to your 
 
  $ python setup.py install
 
+You may not want to install the latest version in place of the last stable
+release. If that is the case, you can use the 'develop' subcommand to
+install PySAL in development mode. This option builds the modules in place 
+and modifies sys.path to include the code. The advantage of this method is that
+you get the latest and greatest code but don't have to muck about with
+setting or re-setting *NIX environment variables.
+
+  $ python setup.py develop
+
+
 Development version on GitHub 
 -----------------------------
 
@@ -116,7 +126,7 @@ To keep up to date with PySAL development, you will need a Git client that allow
 update the code from our repository. We recommend 
 `GitHub Windows <http://windows.github.com/>`_.
 
-After using GitHub Windows to install a local copy of Pysal, you need to tell
+After using GitHub Windows to install a local copy of PySAL, you need to tell
 your Python distribution where to find PySAL.  There are several ways to do this. Here we
 will use a simple one that requires you to create a text file
 called ``sitecustomize.py`` in the
