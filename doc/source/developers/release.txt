@@ -29,14 +29,13 @@ Tag
 ---
 Make the Tag::
 
+  $ git tag -a v1.4 -m 'my version 1.4'
+
+Clone and switch to the newly created tag on each build machine::
+
   $ git clone http://github.com/pysal/pysal.git
-
-  $ svn copy https://pysal.googlecode.com/svn/trunk \
-   https://pysal.googlecode.com/svn/tags/X.x -m "Release X.x"
-
-Checkout the newly created tag on each build machine::
-
-  $ svn checkout http://pysal.googlecode.com/svn/tags/<X.x>
+  $ git fetch --tags
+  $ git checkout v1.4
 
 Make docs
 ---------
