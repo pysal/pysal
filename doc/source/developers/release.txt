@@ -29,6 +29,8 @@ Tag
 ---
 Make the Tag::
 
+  $ git clone http://github.com/pysal/pysal.git
+
   $ svn copy https://pysal.googlecode.com/svn/trunk \
    https://pysal.googlecode.com/svn/tags/X.x -m "Release X.x"
 
