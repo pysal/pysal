@@ -54,6 +54,16 @@ Alternatively, grab the source distribution (.tar.gz) and decompress it to your 
 
  $ python setup.py install
 
+You may not want to install the latest version in place of the last stable
+release. If that is the case, you can use the 'develop' subcommand to
+install PySAL in development mode. This option builds the modules in place 
+and modifies sys.path to include the code. The advantage of this method is that
+you get the latest and greatest code but don't have to muck about with
+setting or re-setting *NIX environment variables.
+
+  $ python setup.py develop
+
+
 Development version on GitHub 
 -----------------------------
 
