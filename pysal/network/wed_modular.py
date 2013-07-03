@@ -34,13 +34,15 @@ def enum_links_node(wed, node):
 
     wed: Winged edge data instance (see extract_wed function below)
 
-    node: id for the node in wed
+    node: string/int
+          id for the node in wed
 
 
     Returns
     -------
 
-    links: list of links ordered cw around node
+    links: list
+           links ordered cw around node
     """
 
     start_c = wed['start_c']
