@@ -866,6 +866,36 @@ class W(object):
         """
         return util.full(self)
 
+    def towsp(self):
+        '''
+        Generate a WSP object
+        ...
+
+        Returns
+        -------
+        implicit    : pysal.WSP
+                      Thin W class
+
+        Examples
+        ---------
+        >>> from pysal import W
+        >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
+        >>> weights={'first':[1],'second':[1,1],'third':[1]}
+        >>> w=W(neighbors,weights)
+        >>> wsp=w.towsp()
+        >>> wsp
+        <pysal.weights.weights.WSP at 0x33429d0>
+        >>> wsp.n
+        3
+        >>> wsp.s0
+        4
+
+        See also
+        --------
+        WSP
+        '''
+        return WSP(self.sparse, self._id_order)
+
     def set_shapefile(self, shapefile, idVariable=None, full=False):
         """
         Adding meta data for writing headers of gal and gwt files
