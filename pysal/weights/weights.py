@@ -878,13 +878,14 @@ class W(object):
 
         Examples
         ---------
+        >>> import pysal as ps
         >>> from pysal import W
         >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
         >>> weights={'first':[1],'second':[1,1],'third':[1]}
         >>> w=W(neighbors,weights)
         >>> wsp=w.towsp()
-        >>> type(wsp)
-        pysal.weights.weights.WSP
+        >>> isinstance(wsp, ps.weights.weights.WSP)
+        True
         >>> wsp.n
         3
         >>> wsp.s0
