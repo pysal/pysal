@@ -883,8 +883,8 @@ class W(object):
         >>> weights={'first':[1],'second':[1,1],'third':[1]}
         >>> w=W(neighbors,weights)
         >>> wsp=w.towsp()
-        >>> wsp
-        <pysal.weights.weights.WSP at 0x33429d0>
+        >>> type(wsp)
+        pysal.weights.weights.WSP
         >>> wsp.n
         3
         >>> wsp.s0
