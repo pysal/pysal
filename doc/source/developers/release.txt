@@ -13,7 +13,11 @@ Prepare the release
 
 - Check all tests pass.
 
-- Edit CHANGELOG using svn2cl.sh script.
+- Update CHANGELOG::
+
+     $ git log --pretty="%h %an -%s" --since="2013-02-01" >> cghlog
+
+  - Prepend `chglog` to `CHANGELOG` and edit
 
 - Edit THANKS and README and README.md if needed.
 
