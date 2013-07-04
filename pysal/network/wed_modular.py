@@ -1,6 +1,4 @@
-"""Extracting a Winged Edge Data Structure from a Plannar Network.
-
-
+"""Winged-Edge Data Structure and Functions
 
 
 TO DO
@@ -13,7 +11,6 @@ TO DO
 
 
 __author__ = "Sergio Rey <sjsrey@gmail.com>, Jay Laura <jlaura@asu.edu>"
-
 
 
 import numpy as np
