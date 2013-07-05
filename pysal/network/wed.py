@@ -719,6 +719,9 @@ def extract_wed(edges, coords):
 
     """
 
+    # coords will be destroyed so keep a copy around
+    coords_org = coords.copy()
+
     # find minimum cycles, filaments and isolated nodes
     pos = coords.values()
     mcb = regions_from_graph(coords,edges)
@@ -733,8 +736,9 @@ def extract_wed(edges, coords):
     start_node = {}
     end_node = {}
     for edge in edges:
-        start_node[edge] = edge[0]
-        end_node[edge] = edge[1]
+        if edge[0] != edge[1]: # no self-loops
+            start_node[edge] = edge[0]
+            end_node[edge] = edge[1]
 
     # Right polygon for each edge in each region primitive
     # 
@@ -948,7 +952,8 @@ def extract_wed(edges, coords):
                     end_cc[filament[-2],filament[-1]] = filament[-2],filament[-1]
                    
     return WED(start_c, start_cc, end_c, end_cc, region_edge,
-            node_edge, right_polygon, left_polygon, start_node, end_node)
+            node_edge, right_polygon, left_polygon, start_node, end_node,
+            node_coords = coords_org)
 
 class WED:
     """Winged-Edge Data Structure
@@ -956,7 +961,8 @@ class WED:
     
     """
     def __init__(self, start_c, start_cc, end_c, end_cc, region_edge,
-            node_edge, right_polygon, left_polygon, start_node, end_node):
+            node_edge, right_polygon, left_polygon, start_node, end_node,
+            node_coords=None):
 
         self.start_c = start_c
         self.start_cc = start_cc
@@ -968,6 +974,7 @@ class WED:
         self.left_polygon = left_polygon
         self.start_node = start_node
         self.end_node = end_node
+        self.node_coords = node_coords
 
 if __name__ == '__main__':
 
