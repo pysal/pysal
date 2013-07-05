@@ -4,7 +4,7 @@
 The :mod:`inequality.gini` module provides Gini inequality based measures
 
 
-.. versionadded:: 1.0
+.. versionadded:: 1.6
 
 .. automodule:: pysal.inequality.gini
     :synopsis: Gini based inequality measures
