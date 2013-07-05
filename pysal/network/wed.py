@@ -615,7 +615,7 @@ def regions_from_graph(nodes, edges, remove_holes = False):
         numadj = len(adj_nodes(start_key, edges))
         
         if numadj == 0:
-            nodes, node_coord, primitives, vertices, ext_edges = extractisolated(nodes,node_coord,start_key,primitives, vertices, ext_edges)
+            nodes, node_coord, primitives, vertices, ext_edges = extractisolated(nodes,node_coord,start_key,primitives, vertices, ext_edges) 
             sorted_nodes.pop(0)
         elif numadj == 1:
             sorted_nodes, edges, nodes, node_coord, primitives, vertices, ext_edges = extractfilament(start_key, adj_nodes(start_key, edges)[0],nodes, node_coord, sorted_nodes, edges,primitives,cycle_edge, vertices, ext_edges)
