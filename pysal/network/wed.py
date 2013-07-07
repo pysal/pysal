@@ -672,8 +672,8 @@ def extract_wed(edges, coords):
     Arguments
     ---------
 
-    edges:  dict
-            key is edge id, value is list of adjacent nodes
+    edges:  list
+            tuples of origin, destination nodes for each edge
 
     coords: dict
             key is node id, value is a tuple of x,y coordinates for the node
