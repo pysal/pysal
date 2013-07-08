@@ -73,6 +73,10 @@ coords1, edges1 = net_shp_io.reader(file_name, doubleEdges=False)
 import wed
 
 wed_streets = wed.extract_wed(edges, coords)
+#wed1_streets = wed.extract_wed(edges1, coords1)
+
+regions = wed_streets.region_edge.keys()
+
 
 
 
