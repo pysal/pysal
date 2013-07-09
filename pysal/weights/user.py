@@ -543,7 +543,8 @@ def threshold_continuousW_from_shapefile(shapefile, threshold, p=2,
 # Kernel Weights
 
 
-def kernelW(points, k=2, function='triangular', fixed=True, radius=None):
+def kernelW(points, k=2, function='triangular', fixed=True,
+        radius=None, diagonal=False):
     """
     Kernel based weights
 
@@ -614,6 +615,10 @@ def kernelW(points, k=2, function='triangular', fixed=True, radius=None):
                    bandwidth is adaptive across observations.
     radius     : If supplied arc_distances will be calculated
                  based on the given radius. p will be ignored.
+    diagonal   : boolean
+                 If true, set diagonal weights = 1.0, if false (default)
+                 diagonal weights are set to value according to kernel
+                 function
 
     Returns
     -------
@@ -649,13 +654,26 @@ def kernelW(points, k=2, function='triangular', fixed=True, radius=None):
            [ 22.36068201],
            [ 22.36068201],
            [ 22.36068201]])
+
+    Diagonals to 1.0
+
+    >>> kq = kernelW(points,function='gaussian')
+    >>> kq.weights
+    {0: [0.3989422804014327, 0.35206533556593145, 0.3412334260702758], 1: [0.35206533556593145, 0.3989422804014327, 0.2419707487162134, 0.3412334260702758, 0.31069657591175387], 2: [0.2419707487162134, 0.3989422804014327, 0.31069657591175387], 3: [0.3412334260702758, 0.3412334260702758, 0.3989422804014327, 0.3011374490937829, 0.26575287272131043], 4: [0.31069657591175387, 0.31069657591175387, 0.3011374490937829, 0.3989422804014327, 0.35206533556593145], 5: [0.26575287272131043, 0.35206533556593145, 0.3989422804014327]}
+    >>> kqd = kernelW(points, function='gaussian', diagonal=True)
+    >>> kqd.weights
+    {0: [1.0, 0.35206533556593145, 0.3412334260702758], 1: [0.35206533556593145, 1.0, 0.2419707487162134, 0.3412334260702758, 0.31069657591175387], 2: [0.2419707487162134, 1.0, 0.31069657591175387], 3: [0.3412334260702758, 0.3412334260702758, 1.0, 0.3011374490937829, 0.26575287272131043], 4: [0.31069657591175387, 0.31069657591175387, 0.3011374490937829, 1.0, 0.35206533556593145], 5: [0.26575287272131043, 0.35206533556593145, 1.0]}
+
+
     """
     if radius is not None:
         points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
-    return Kernel(points, function=function, k=k, fixed=fixed)
+    return Kernel(points, function=function, k=k, fixed=fixed,
+            diagonal=diagonal)
 
 
-def kernelW_from_shapefile(shapefile, k=2, function='triangular', idVariable=None, fixed=True, radius=None):
+def kernelW_from_shapefile(shapefile, k=2, function='triangular',
+        idVariable=None, fixed=True, radius=None, diagonal=False):
     """
     Kernel based weights
 
@@ -727,6 +745,10 @@ def kernelW_from_shapefile(shapefile, k=2, function='triangular', idVariable=Non
                    bandwidth is adaptive across observations.
     radius     : If supplied arc_distances will be calculated
                  based on the given radius. p will be ignored.
+    diagonal   : boolean
+                 If true, set diagonal weights = 1.0, if false (default)
+                 diagonal weights are set to value according to kernel
+                 function
 
 
     Returns
@@ -737,14 +759,18 @@ def kernelW_from_shapefile(shapefile, k=2, function='triangular', idVariable=Non
 
     Examples
     --------
-    >>> kw = kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"),idVariable='POLYID')
-    >>> kw.weights[1]
-    [0.2052478782400463, 0.007078773148450623, 1.0, 0.23051223027663237]
-    >>> kw.bandwidth[:3]
-    array([[ 0.75333961],
-           [ 0.75333961],
-           [ 0.75333961]])
+    >>> kw = pysal.kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"),idVariable='POLYID', function = 'gaussian')
 
+    >>> kwd = pysal.kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"),idVariable='POLYID', function = 'gaussian', diagonal = True)
+    >>> kw.neighbors[1]
+    [2, 4, 1, 3]
+    >>> kwd.neighbors[1]
+    [2, 4, 1, 3]
+    >>> kw.weights[1]
+    [0.29090631630909874, 0.2436835517263174, 0.3989422804014327, 0.29671172124745776]
+    >>> kwd.weights[1]
+    [0.29090631630909874, 0.2436835517263174, 1.0, 0.29671172124745776]
+    
 
     Notes
     -----
@@ -760,11 +786,14 @@ def kernelW_from_shapefile(shapefile, k=2, function='triangular', idVariable=Non
         points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
-        return Kernel(points, function=function, k=k, ids=ids, fixed=fixed)
-    return kernelW(points, k=k, function=function, fixed=fixed)
+        return Kernel(points, function=function, k=k, ids=ids, fixed=fixed,
+                diagonal = diagonal)
+    return kernelW(points, k=k, function=function, fixed=fixed,
+            diagonal=diagonal)
 
 
-def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular', radius=None):
+def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular',
+        radius=None, diagonal=False):
     """
     Kernel weights with adaptive bandwidths
 
@@ -824,7 +853,10 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular', radius
 
     radius     : If supplied arc_distances will be calculated
                  based on the given radius. p will be ignored.
-
+    diagonal   : boolean
+                 If true, set diagonal weights = 1.0, if false (default)
+                 diagonal weights are set to value according to kernel
+                 function
     Returns
     -------
 
@@ -879,14 +911,31 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular', radius
            [ 11.18034101],
            [ 14.14213704],
            [ 18.02775818]])
+
+    with diagonal
+
+    >>> kweag = pysal.adaptive_kernelW(points, function='gaussian')
+    >>> kweagd = pysal.adaptive_kernelW(points, function='gaussian', diagonal=True)
+    >>> kweag.neighbors[0]
+    [0, 1, 3]
+    >>> kweagd.neighbors[0]
+    [0, 1, 3]
+    >>> kweag.weights[0]
+    [0.3989422804014327, 0.2674190291577696, 0.2419707487162134]
+    >>> kweagd.weights[0]
+    [1.0, 0.2674190291577696, 0.2419707487162134]
+
+
     """
     if radius is not None:
         points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
-    return Kernel(points, bandwidth=bandwidths, fixed=False, k=k, function=function)
+    return Kernel(points, bandwidth=bandwidths, fixed=False, k=k,
+            function=function, diagonal=diagonal)
 
 
 def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='triangular',
-                                    idVariable=None, radius=None):
+                                    idVariable=None, radius=None,
+                                    diagonal = False):
     """
     Kernel weights with adaptive bandwidths
 
@@ -945,6 +994,10 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='t
                    name of a column in the shapefile's DBF to use for ids
     radius     : If supplied arc_distances will be calculated
                  based on the given radius. p will be ignored.
+    diagonal   : boolean
+                 If true, set diagonal weights = 1.0, if false (default)
+                 diagonal weights are set to value according to kernel
+                 function
 
     Returns
     -------
@@ -955,13 +1008,17 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='t
 
     Examples
     --------
-    >>> kwa = adaptive_kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"))
+    >>> kwa = pysal.adaptive_kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"), function='gaussian')
+    >>> kwad = pysal.adaptive_kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"), function='gaussian', diagonal=True)
+    >>> kwa.neighbors[0]
+    [0, 2, 1]
+    >>> kwad.neighbors[0]
+    [0, 2, 1]
     >>> kwa.weights[0]
-    [1.0, 0.03178906767736345, 9.99999900663795e-08]
-    >>> kwa.bandwidth[:3]
-    array([[ 0.59871832],
-           [ 0.59871832],
-           [ 0.56095647]])
+    [0.3989422804014327, 0.24966013701844503, 0.2419707487162134]
+    >>> kwad.weights[0]
+    [1.0, 0.24966013701844503, 0.2419707487162134]
+    >>>
 
     Notes
     -----
@@ -976,8 +1033,10 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='t
         points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
-        return Kernel(points, bandwidth=bandwidths, fixed=False, k=k, function=function, ids=ids)
-    return adaptive_kernelW(points, bandwidths=bandwidths, k=k, function=function)
+        return Kernel(points, bandwidth=bandwidths, fixed=False, k=k,
+                function=function, ids=ids, diagonal=diagonal)
+    return adaptive_kernelW(points, bandwidths=bandwidths, k=k,
+            function=function, diagonal=diagonal)
 
 
 def min_threshold_dist_from_shapefile(shapefile, radius=None, p=2):
