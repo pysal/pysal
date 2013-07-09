@@ -1105,6 +1105,11 @@ def build_lattice_shapefile(nrows, ncols, outFileName):
     if not outFileName.endswith('.shp'):
         raise ValueError("outFileName must end with .shp")
     o = pysal.open(outFileName, 'w')
+    dbf_name = outFileName.split(".")[0] + ".dbf"
+    d = pysal.open(dbf_name, 'w')
+    d.header = [ 'ID' ]
+    d.field_spec = [ ('N', 8, 0) ]
+    c = 0
     for i in xrange(nrows):
         for j in xrange(ncols):
             ll = i, j
@@ -1112,6 +1117,9 @@ def build_lattice_shapefile(nrows, ncols, outFileName):
             ur = i + 1, j + 1
             lr = i + 1, j
             o.write(pysal.cg.Polygon([ll, ul, ur, lr, ll]))
+            d.write([c])
+            c += 1
+    d.close()
     o.close()
 
 def _test():
