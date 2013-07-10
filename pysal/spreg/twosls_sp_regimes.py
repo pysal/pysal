@@ -103,6 +103,8 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
                    Name of kernel weights matrix for use in output
     name_ds      : string
                    Name of dataset for use in output
+    name_regimes : string
+                   Name of regimes variable for use in output
 
     Attributes
     ----------
@@ -185,6 +187,8 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
                    Name of kernel weights matrix for use in output
     name_ds      : string
                    Name of dataset for use in output
+    name_regimes : string
+                   Name of regimes variable for use in output
     title        : string
                    Name of the regression method used
     sig2n        : float

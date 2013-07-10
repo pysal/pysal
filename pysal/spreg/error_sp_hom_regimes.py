@@ -143,6 +143,8 @@ class GM_Error_Hom_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    Name of weights matrix for use in output
     name_ds      : string
                    Name of dataset for use in output
+    name_regimes : string
+                   Name of regime variable for use in the output
     title        : string
                    Name of the regression method used
     regimes      : list
@@ -558,6 +560,8 @@ class GM_Endog_Error_Hom_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                     Name of weights matrix for use in output
     name_ds       : string
                     Name of dataset for use in output
+    name_regimes  : string
+                    Name of regimes variable for use in output
     title         : string
                     Name of the regression method used
     regimes       : list
@@ -1032,6 +1036,8 @@ class GM_Combo_Hom_Regimes(GM_Endog_Error_Hom_Regimes):
                     Name of weights matrix for use in output
     name_ds       : string
                     Name of dataset for use in output
+    name_regimes  : string
+                    Name of regimes variable for use in output
     title         : string
                     Name of the regression method used
     regimes       : list

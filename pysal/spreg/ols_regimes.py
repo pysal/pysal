@@ -88,6 +88,8 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
                    Name of kernel weights matrix for use in output
     name_ds      : string
                    Name of dataset for use in output
+    name_regimes : string
+                   Name of regime variable for use in the output
     
 
     Attributes
@@ -189,6 +191,8 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
                     Name of kernel weights matrix for use in output
     name_ds       : string
                     Name of dataset for use in output
+    name_regimes : string
+                   Name of regime variable for use in the output
     title         : string
                     Name of the regression method used
     sig2n        : float

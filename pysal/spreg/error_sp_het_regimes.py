@@ -543,6 +543,8 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                     Name of weights matrix for use in output
     name_ds       : string
                     Name of dataset for use in output
+    name_regimes  : string
+                    Name of regimes variable for use in output
     title         : string
                     Name of the regression method used
     regimes       : list
@@ -1018,6 +1020,8 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                     Name of weights matrix for use in output
     name_ds       : string
                     Name of dataset for use in output
+    name_regimes  : string
+                    Name of regimes variable for use in output
     title         : string
                     Name of the regression method used
     regimes       : list
