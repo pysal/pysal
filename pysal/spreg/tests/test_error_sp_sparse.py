@@ -1,7 +1,7 @@
 import unittest
 import pysal
 import numpy as np
-from econometrics import error_sp as SP
+from pysal.spreg import error_sp as SP
 from scipy import sparse
 
 class TestBaseGMError(unittest.TestCase):

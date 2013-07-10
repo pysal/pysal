@@ -1,8 +1,8 @@
 import unittest
 import pysal
 import numpy as np
-from econometrics import error_sp_regimes as SP
-from econometrics.error_sp import GM_Error, GM_Endog_Error, GM_Combo
+from pysal.spreg import error_sp_regimes as SP
+from pysal.spreg.error_sp import GM_Error, GM_Endog_Error, GM_Combo
 
 class TestGM_Error_Regimes(unittest.TestCase):
     def setUp(self):

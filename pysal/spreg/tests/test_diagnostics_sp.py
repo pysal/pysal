@@ -1,11 +1,11 @@
 import unittest
 import numpy as np
 import pysal
-from econometrics import diagnostics
-from econometrics.ols import OLS as OLS
-from econometrics.twosls import TSLS as TSLS
-from econometrics.twosls_sp import GM_Lag
-from econometrics.diagnostics_sp import LMtests, MoranRes, spDcache, AKtest
+from pysal.spreg import diagnostics
+from pysal.spreg.ols import OLS as OLS
+from pysal.spreg.twosls import TSLS as TSLS
+from pysal.spreg.twosls_sp import GM_Lag
+from pysal.spreg.diagnostics_sp import LMtests, MoranRes, spDcache, AKtest
 
 
 class TestLMtests(unittest.TestCase):

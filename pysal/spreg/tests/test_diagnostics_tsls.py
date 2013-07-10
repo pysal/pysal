@@ -1,11 +1,11 @@
 import unittest
 import numpy as np
 import pysal
-import econometrics.diagnostics_tsls as diagnostics_tsls
-import econometrics.diagnostics as diagnostics
-from econometrics.ols import OLS as OLS
-from econometrics.twosls import TSLS as TSLS
-from econometrics.twosls_sp import GM_Lag
+import pysal.spreg.diagnostics_tsls as diagnostics_tsls
+import pysal.spreg.diagnostics as diagnostics
+from pysal.spreg.ols import OLS as OLS
+from pysal.spreg.twosls import TSLS as TSLS
+from pysal.spreg.twosls_sp import GM_Lag
 from scipy.stats import pearsonr
 
 

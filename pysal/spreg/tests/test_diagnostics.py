@@ -1,8 +1,8 @@
 import unittest
 import numpy as np
 import pysal
-from econometrics import diagnostics
-from econometrics.ols import OLS 
+from pysal.spreg import diagnostics
+from pysal.spreg.ols import OLS 
 
 
 # create regression object used by all the tests below
