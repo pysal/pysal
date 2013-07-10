@@ -22,7 +22,7 @@ from pysal import lag_spatial
 from utils import power_expansion, set_endog, iter_msg, sp_att
 from utils import get_A1_hom, get_A2_hom, get_A1_het, optim_moments
 from utils import get_spFilter, get_lags, _moments2eqs
-from utils import spdot, RegressionPropsY
+from utils import spdot, RegressionPropsY, set_warn
 import twosls as TSLS
 import user_output as USER
 import summary_output as SUMMARY
@@ -41,7 +41,7 @@ class BaseGM_Error_Hom(RegressionPropsY):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, including the constant
+                   independent (exogenous) variable, excluding the constant
     w            : Sparse matrix
                    Spatial weights sparse matrix   
     max_iter     : int
@@ -80,7 +80,7 @@ class BaseGM_Error_Hom(RegressionPropsY):
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
-    iterations   : integer
+    iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
     mean_y       : float
                    Mean of dependent variable
@@ -120,17 +120,17 @@ class BaseGM_Error_Hom(RegressionPropsY):
 
     Model commands
 
-    >>> reg = BaseGM_Error_Hom(y, X, w.sparse, A1='hom_sc')
+    >>> reg = BaseGM_Error_Hom(y, X, w=w.sparse, A1='hom_sc')
     >>> print np.around(np.hstack((reg.betas,np.sqrt(reg.vm.diagonal()).reshape(4,1))),4)
     [[ 47.9479  12.3021]
      [  0.7063   0.4967]
      [ -0.556    0.179 ]
      [  0.4129   0.1835]]
     >>> print np.around(reg.vm, 4)
-    [[  1.51340700e+02  -5.29060000e+00  -1.85650000e+00  -2.40000000e-03]
-     [ -5.29060000e+00   2.46700000e-01   5.14000000e-02   3.00000000e-04]
-     [ -1.85650000e+00   5.14000000e-02   3.21000000e-02  -1.00000000e-04]
-     [ -2.40000000e-03   3.00000000e-04  -1.00000000e-04   3.37000000e-02]]
+    [[ 151.3407   -5.2906   -1.8565   -0.0024]
+     [  -5.2906    0.2467    0.0514    0.0003]
+     [  -1.8565    0.0514    0.0321   -0.0001]
+     [  -0.0024    0.0003   -0.0001    0.0337]]
     '''
 
     def __init__(self, y, x, w,\
@@ -192,8 +192,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, excluding the constant
     w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)   
+                   Spatial weights object   
     max_iter     : int
                    Maximum number of iterations of steps 2a and 2b from Arraiz
                    et al. Note: epsilon provides an additional stop condition.
@@ -245,7 +244,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
-    iterations   : integer
+    iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
     mean_y       : float
                    Mean of dependent variable
@@ -343,7 +342,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
     have the names of the variables printed in the output summary, we will
     have to pass them in as well, although this is optional.
 
-    >>> reg = GM_Error_Hom(y, X, w, A1='hom_sc', name_y='home value', name_x=['income', 'crime'], name_ds='columbus')
+    >>> reg = GM_Error_Hom(y, X, w=w, A1='hom_sc', name_y='home value', name_x=['income', 'crime'], name_ds='columbus')
    
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
@@ -369,7 +368,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
 
         n = USER.check_arrays(y, x)
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         x_constant = USER.check_constant(x)
         BaseGM_Error_Hom.__init__(self, y=y, x=x_constant, w=w.sparse, A1=A1,\
                 max_iter=max_iter, epsilon=epsilon)
@@ -394,7 +393,7 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, including the constant
+                   independent (exogenous) variable, excluding the constant
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
@@ -450,7 +449,7 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
-    iterations   : integer
+    iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
     mean_y       : float
                    Mean of dependent variable
@@ -492,7 +491,7 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
     >>> q = np.array(q).T
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
     >>> w.transform = 'r'
-    >>> reg = BaseGM_Endog_Error_Hom(y, X, yd, q, w.sparse, A1='hom_sc')
+    >>> reg = BaseGM_Endog_Error_Hom(y, X, yd, q, w=w.sparse, A1='hom_sc')
     >>> print np.around(np.hstack((reg.betas,np.sqrt(reg.vm.diagonal()).reshape(4,1))),4)
     [[ 55.3658  23.496 ]
      [  0.4643   0.7382]
@@ -570,8 +569,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
                    external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
     w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)   
+                   Spatial weights object   
     max_iter     : int
                    Maximum number of iterations of steps 2a and 2b from Arraiz
                    et al. Note: epsilon provides an additional stop condition.
@@ -636,7 +634,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
-    iterations   : integer
+    iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
     mean_y       : float
                    Mean of dependent variable
@@ -760,7 +758,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     have the names of the variables printed in the output summary, we will
     have to pass them in as well, although this is optional.
 
-    >>> reg = GM_Endog_Error_Hom(y, X, yd, q, w, A1='hom_sc', name_x=['inc'], name_y='hoval', name_yend=['crime'], name_q=['discbd'], name_ds='columbus')
+    >>> reg = GM_Endog_Error_Hom(y, X, yd, q, w=w, A1='hom_sc', name_x=['inc'], name_y='hoval', name_yend=['crime'], name_q=['discbd'], name_ds='columbus')
    
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
@@ -788,7 +786,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
 
         n = USER.check_arrays(y, x, yend, q)
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         x_constant = USER.check_constant(x)
         BaseGM_Endog_Error_Hom.__init__(self, y=y, x=x_constant, w=w.sparse, yend=yend, q=q,\
                 A1=A1, max_iter=max_iter, epsilon=epsilon)
@@ -818,7 +816,7 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, including the constant
+                   independent (exogenous) variable, excluding the constant
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
@@ -882,7 +880,7 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
-    iterations   : integer
+    iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
     mean_y       : float
                    Mean of dependent variable
@@ -945,7 +943,7 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
     >>> q = np.array(q).T
     >>> yd2, q2 = pysal.spreg.utils.set_endog(y, X, w, yd, q, w_lags, True)
     >>> X = np.hstack((np.ones(y.shape),X))
-    >>> reg = BaseGM_Combo_Hom(y, X, yd2, q2, w.sparse, A1='hom_sc')
+    >>> reg = BaseGM_Combo_Hom(y, X, yd2, q2, w=w.sparse, A1='hom_sc')
     >>> betas = np.array([['CONSTANT'],['inc'],['crime'],['W_hoval'],['lambda']])
     >>> print np.hstack((betas, np.around(np.hstack((reg.betas, np.sqrt(reg.vm.diagonal()).reshape(5,1))),5)))
     [['CONSTANT' '111.7705' '67.75191']
@@ -983,8 +981,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
                    external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
     w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)   
+                   Spatial weights object (always necessary)   
     w_lags       : integer
                    Orders of W to include as instruments for the spatially
                    lagged dependent variable. For example, w_lags=1, then
@@ -1060,7 +1057,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
-    iterations   : integer
+    iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
     mean_y       : float
                    Mean of dependent variable
@@ -1202,7 +1199,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
 
     And then we can run and explore the model analogously to the previous combo:
 
-    >>> reg = GM_Combo_Hom(y, X, yd, q, w, A1='hom_sc', \
+    >>> reg = GM_Combo_Hom(y, X, yd, q, w=w, A1='hom_sc', \
             name_ds='columbus')
     >>> betas = np.array([['CONSTANT'],['inc'],['crime'],['W_hoval'],['lambda']])
     >>> print np.hstack((betas, np.around(np.hstack((reg.betas, np.sqrt(reg.vm.diagonal()).reshape(5,1))),5)))
@@ -1222,14 +1219,15 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
     
         n = USER.check_arrays(y, x, yend, q)
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
         x_constant = USER.check_constant(x)
         BaseGM_Combo_Hom.__init__(self, y=y, x=x_constant, w=w.sparse, yend=yend2, q=q2,\
                     w_lags=w_lags, A1=A1, lag_q=lag_q,\
                     max_iter=max_iter, epsilon=epsilon)
-        self.predy_e, self.e_pred = sp_att(w,self.y,self.predy,\
-                             yend2[:,-1].reshape(self.n,1),self.betas[-2])        
+        self.predy_e, self.e_pred, warn = sp_att(w,self.y,self.predy,\
+                             yend2[:,-1].reshape(self.n,1),self.betas[-2])
+        set_warn(self, warn)
         self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HOM)"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)

@@ -1,7 +1,6 @@
 '''
 Spatial Error with Heteroskedasticity and Regimes family of models
 '''
-
 __author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.edu"
 
 import numpy as np
@@ -16,6 +15,7 @@ from pysal.spreg.error_sp_het import BaseGM_Error_Het, BaseGM_Endog_Error_Het, g
 from utils import RegressionPropsY, spdot, set_endog, sphstack, set_warn
 from scipy import sparse as SP
 from pysal import lag_spatial
+from platform import system
 
 class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     """
@@ -33,9 +33,8 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
     w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)   
-    constant_regi: [False, 'one', 'many']
+                   Spatial weights object   
+    constant_regi: ['one', 'many']
                    Switcher controlling the constant term setup. It may take
                    the following values:
                      *  'one': a vector of ones is appended to x and held
@@ -63,6 +62,10 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
+    cores        : integer
+                   Specifies the number of cores to be used in multiprocessing
+                   Default: all cores available (specified as cores=None).
+                   Note: Multiprocessing currently not available on Windows.
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -100,7 +103,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
-    iterations   : integer
+    iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
     mean_y       : float
                    Mean of dependent variable
@@ -233,7 +236,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     have the names of the variables printed in the output summary, we will
     have to pass them in as well, although this is optional.
 
-    >>> reg = GM_Error_Het_Regimes(y, x, regimes, w, step1c=True, name_y=y_var, name_x=x_var, name_regimes=r_var, name_ds='NAT.dbf')
+    >>> reg = GM_Error_Het_Regimes(y, x, regimes, w=w, step1c=True, name_y=y_var, name_x=x_var, name_regimes=r_var, name_ds='NAT.dbf')
    
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
@@ -266,7 +269,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
         n = USER.check_arrays(y, x)
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         self.constant_regi = constant_regi
         self.cols2regi = cols2regi
         self.regime_err_sep = regime_err_sep
@@ -274,20 +277,13 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         self.name_y = USER.set_name_y(name_y)
         self.name_w = USER.set_name_w(name_w, w)
         self.name_regimes = USER.set_name_ds(name_regimes)
-        self.n = n
+        self.n,self.step1c = n,step1c
 
         x_constant = USER.check_constant(x)
         name_x = USER.set_name_x(name_x, x)
         self.name_x_r = name_x
 
-        if constant_regi=='many':
-            regi_cons = [True]
-        elif constant_regi=='one':
-            regi_cons = [False]
-        if cols2regi=='all':
-            cols2regi = regi_cons + [True]*x.shape[1]
-        else:
-            cols2regi = regi_cons + cols2regi
+        cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x)
 
         if regime_err_sep == True:
             if set(cols2regi) == set([True]):
@@ -357,15 +353,19 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     def _error_regimes_multi(self, y, x, regimes, w, cores,\
                  max_iter, epsilon, step1c, cols2regi, vm, name_x):
 
-        self.regimes_set = list(set(regimes))
-        self.regimes_set.sort()
+        self.regimes_set = REGI._get_regimes_set(regimes)
         w_i,regi_ids,warn = REGI.w_regimes(w, regimes, self.regimes_set, transform=True, get_ids=True)
         set_warn(self, warn)
         pool = mp.Pool(cores)
         results_p = {}
         for r in self.regimes_set:
             w_r = w_i[r].sparse
-            results_p[r] = pool.apply_async(_work_error,args=(y,x,regi_ids,r,w_r,max_iter,epsilon,step1c,self.name_ds,self.name_y,name_x+['lambda'],self.name_w,self.name_regimes, ))
+            if system() == 'Windows':
+                is_win = True
+                results_p[r] = _work_error(*(y,x,regi_ids,r,w_r,max_iter,epsilon,step1c,self.name_ds,self.name_y,name_x+['lambda'],self.name_w,self.name_regimes))
+            else:
+                results_p[r] = pool.apply_async(_work_error,args=(y,x,regi_ids,r,w_r,max_iter,epsilon,step1c,self.name_ds,self.name_y,name_x+['lambda'],self.name_w,self.name_regimes, ))
+                is_win = False
         self.kryd = 0
         self.kr = len(cols2regi)+1
         self.kf = 0
@@ -375,13 +375,17 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         self.u = np.zeros((self.n,1),float)
         self.predy = np.zeros((self.n,1),float)
         self.e_filtered = np.zeros((self.n,1),float)
-        pool.close()
-        pool.join()
+        if not is_win:
+            pool.close()
+            pool.join()
         results = {}
         self.name_y, self.name_x = [],[]
         counter = 0
         for r in self.regimes_set:
-            results[r] = results_p[r].get()
+            if is_win:
+                results[r] = results_p[r]
+            else:
+                results[r] = results_p[r].get()
             results[r].w = w_i[r]
             self.vm[(counter*self.kr):((counter+1)*self.kr),(counter*self.kr):((counter+1)*self.kr)] = results[r].vm
             self.betas[(counter*self.kr):((counter+1)*self.kr),] = results[r].betas
@@ -419,9 +423,8 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
     w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)   
-    constant_regi: [False, 'one', 'many']
+                   Spatial weights object   
+    constant_regi: ['one', 'many']
                    Switcher controlling the constant term setup. It may take
                    the following values:
                      *  'one': a vector of ones is appended to x and held
@@ -453,6 +456,10 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
+    cores        : integer
+                   Specifies the number of cores to be used in multiprocessing
+                   Default: all cores available (specified as cores=None).
+                   Note: Multiprocessing currently not available on Windows.
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -504,7 +511,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
-    iterations   : integer
+    iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
     mean_y       : float
                    Mean of dependent variable
@@ -541,7 +548,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     regimes       : list
                     List of n values with the mapping of each
                     observation to a regime. Assumed to be aligned with 'x'.
-    constant_regi : [False, 'one', 'many']
+    constant_regi : ['one', 'many']
                     Ignored if regimes=False. Constant option for regimes.
                     Switcher controlling the constant term setup. It may take
                     the following values:
@@ -652,7 +659,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     have the names of the variables printed in the output summary, we will
     have to pass them in as well, although this is optional.
 
-    >>> reg = GM_Endog_Error_Het_Regimes(y, x, yend, q, regimes, w, step1c=True, name_y=y_var, name_x=x_var, name_yend=yd_var, name_q=q_var, name_regimes=r_var, name_ds='NAT.dbf')
+    >>> reg = GM_Endog_Error_Het_Regimes(y, x, yend, q, regimes, w=w, step1c=True, name_y=y_var, name_x=x_var, name_yend=yd_var, name_q=q_var, name_regimes=r_var, name_ds='NAT.dbf')
    
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
@@ -692,13 +699,13 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     
         n = USER.check_arrays(y, x, yend, q)
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         self.constant_regi = constant_regi
         self.cols2regi = cols2regi
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_regimes = USER.set_name_ds(name_regimes)
         self.name_w = USER.set_name_w(name_w, w)
-        self.n = n
+        self.n,self.step1c = n,step1c
         
         x_constant = USER.check_constant(x)
         name_x = USER.set_name_x(name_x, x)
@@ -708,14 +715,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
             name_q = USER.set_name_q(name_q, q)
         self.name_x_r = name_x + name_yend
 
-        if constant_regi=='many':
-            regi_cons = [True]
-        elif constant_regi=='one':
-            regi_cons = [False]
-        if cols2regi=='all':
-            cols2regi = regi_cons + [True]*(x.shape[1]+yend.shape[1])
-        else:
-            cols2regi = regi_cons + cols2regi
+        cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, yend=yend)
 
         if regime_err_sep == True:
             if set(cols2regi) == set([True]):
@@ -803,8 +803,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                  max_iter, epsilon, step1c, inv_method, cols2regi, regi_w, vm,\
                  name_x, name_yend, name_q):
 
-        self.regimes_set = list(set(regimes))
-        self.regimes_set.sort()
+        self.regimes_set = REGI._get_regimes_set(regimes)
         if regi_w:
             w_i,regi_ids = regi_w[0:2]
         else:
@@ -814,7 +813,12 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         results_p = {}
         for r in self.regimes_set:
             w_r = w_i[r].sparse
-            results_p[r] = pool.apply_async(_work_endog_error,args=(y,x,yend,q,regi_ids,r,w_r,max_iter,epsilon,step1c,inv_method,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes, ))
+            if system() == 'Windows':
+                is_win = True
+                results_p[r] = _work_endog_error(*(y,x,yend,q,regi_ids,r,w_r,max_iter,epsilon,step1c,inv_method,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes))
+            else:
+                results_p[r] = pool.apply_async(_work_endog_error,args=(y,x,yend,q,regi_ids,r,w_r,max_iter,epsilon,step1c,inv_method,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes, ))
+                is_win = False
         self.kryd,self.kf = 0,0
         self.kr = len(cols2regi)+1
         self.nr = len(self.regimes_set)
@@ -823,13 +827,17 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         self.u = np.zeros((self.n,1),float)
         self.predy = np.zeros((self.n,1),float)
         self.e_filtered = np.zeros((self.n,1),float)
-        pool.close()
-        pool.join()
+        if not is_win:
+            pool.close()
+            pool.join()
         results = {}
         self.name_y, self.name_x, self.name_yend, self.name_q, self.name_z, self.name_h = [],[],[],[],[],[]
         counter = 0
         for r in self.regimes_set:
-            results[r] = results_p[r].get()
+            if is_win:
+                results[r] = results_p[r]
+            else:
+                results[r] = results_p[r].get()
             results[r].w = w_i[r]
             self.vm[(counter*self.kr):((counter+1)*self.kr),(counter*self.kr):((counter+1)*self.kr)] = results[r].vm
             self.betas[(counter*self.kr):((counter+1)*self.kr),] = results[r].betas
@@ -872,9 +880,8 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
     w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)   
-    constant_regi: [False, 'one', 'many']
+                   Spatial weights object (always needed)   
+    constant_regi: ['one', 'many']
                    Switcher controlling the constant term setup. It may take
                    the following values:
                      *  'one': a vector of ones is appended to x and held
@@ -917,6 +924,10 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
+    cores        : integer
+                   Specifies the number of cores to be used in multiprocessing
+                   Default: all cores available (specified as cores=None).
+                   Note: Multiprocessing currently not available on Windows.
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -972,7 +983,7 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
-    iterations   : integer
+    iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
     mean_y       : float
                    Mean of dependent variable
@@ -1012,7 +1023,7 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
     regimes       : list
                     List of n values with the mapping of each
                     observation to a regime. Assumed to be aligned with 'x'.
-    constant_regi : [False, 'one', 'many']
+    constant_regi : ['one', 'many']
                     Ignored if regimes=False. Constant option for regimes.
                     Switcher controlling the constant term setup. It may take
                     the following values:
@@ -1156,7 +1167,7 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
 
     And then we can run and explore the model analogously to the previous combo:
 
-    >>> reg = GM_Combo_Het_Regimes(y, x, regimes, yd, q, w, step1c=True, name_y=y_var, name_x=x_var, name_yend=yd_var, name_q=q_var, name_regimes=r_var, name_ds='NAT')
+    >>> reg = GM_Combo_Het_Regimes(y, x, regimes, yd, q, w=w, step1c=True, name_y=y_var, name_x=x_var, name_yend=yd_var, name_q=q_var, name_regimes=r_var, name_ds='NAT')
     >>> print reg.name_z
     ['0_CONSTANT', '0_PS90', '0_UE90', '1_CONSTANT', '1_PS90', '1_UE90', '0_RD90', '1_RD90', '_Global_W_HR90', 'lambda']
     >>> print reg.betas
@@ -1188,24 +1199,20 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                  name_w=None, name_ds=None, name_regimes=None):
     
         n = USER.check_arrays(y, x)
+        self.step1c = step1c
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         name_x = USER.set_name_x(name_x, x,constant=True)
         self.name_y = USER.set_name_y(name_y)
         name_yend = USER.set_name_yend(name_yend, yend)
         name_q = USER.set_name_q(name_q, q)
         name_q.extend(USER.set_name_q_sp(name_x, w_lags, name_q, lag_q, force_all=True))
 
-        if cols2regi == 'all':
-            if yend!=None:
-                cols2regi = [True] * (x.shape[1]+yend.shape[1])
-            else:
-                cols2regi = [True] * (x.shape[1])     
+        cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, yend=yend, add_cons=False)     
 
         if regime_lag_sep == True:
             cols2regi += [True]
-            self.regimes_set = list(set(regimes))
-            self.regimes_set.sort()
+            self.regimes_set = REGI._get_regimes_set(regimes)
             regi_w = (REGI.w_regimes(w, regimes, self.regimes_set, transform=regime_err_sep, get_ids=regime_err_sep))
             w = REGI.w_regimes_union(w, regi_w[0], self.regimes_set)
             set_warn(self, regi_w[2])
@@ -1228,8 +1235,9 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                  name_ds=name_ds, name_regimes=name_regimes, summ=False)
 
         if regime_err_sep != True:
-            self.predy_e, self.e_pred = UTILS.sp_att(w,self.y,\
+            self.predy_e, self.e_pred, warn = UTILS.sp_att(w,self.y,\
                        self.predy,yend2[:,-1].reshape(self.n,1),self.betas[-2])
+            UTILS.set_warn(self,warn)
             self.regime_lag_sep=regime_lag_sep
             self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HET) - REGIMES"
             SUMMARY.GM_Combo_Het(reg=self, w=w, vm=vm, regimes=True)

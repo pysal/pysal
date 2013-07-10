@@ -12,7 +12,7 @@ import ols as OLS
 from pysal import lag_spatial
 from utils import power_expansion, set_endog, iter_msg, sp_att
 from utils import get_A1_hom, get_A2_hom, get_A1_het, optim_moments, get_spFilter, get_lags, _moments2eqs
-from utils import spdot, RegressionPropsY
+from utils import spdot, RegressionPropsY, set_warn
 import twosls as TSLS
 import user_output as USER
 import summary_output as SUMMARY
@@ -31,7 +31,7 @@ class BaseGM_Error(RegressionPropsY):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, including the constant
+                   independent (exogenous) variable, excluding the constant
     w            : Sparse matrix
                    Spatial weights sparse matrix   
 
@@ -88,7 +88,7 @@ class BaseGM_Error(RegressionPropsY):
     >>> x = np.hstack((np.ones(y.shape),x))
     >>> w = pysal.open(pysal.examples.get_path("columbus.gal"), 'r').read() 
     >>> w.transform='r'
-    >>> model = BaseGM_Error(y, x, w.sparse)
+    >>> model = BaseGM_Error(y, x, w=w.sparse)
     >>> np.around(model.betas, decimals=6)
     array([[ 47.694635],
            [  0.710453],
@@ -136,8 +136,7 @@ class GM_Error(BaseGM_Error):
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, excluding the constant
     w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)   
+                   Spatial weights object (always needed)   
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
@@ -270,7 +269,7 @@ class GM_Error(BaseGM_Error):
     have the names of the variables printed in the output summary, we will
     have to pass them in as well, although this is optional.
 
-    >>> model = GM_Error(y, x, w, name_y='hoval', name_x=['income', 'crime'], name_ds='columbus')
+    >>> model = GM_Error(y, x, w=w, name_y='hoval', name_x=['income', 'crime'], name_ds='columbus')
 
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
@@ -289,9 +288,9 @@ class GM_Error(BaseGM_Error):
     >>> np.around(model.std_err, decimals=6)
     array([ 12.412038,   0.504443,   0.178496])
     >>> np.around(model.z_stat, decimals=6)
-    array([[  3.84261100e+00,   1.22000000e-04],
-           [  1.40839200e+00,   1.59015000e-01],
-           [ -3.08424700e+00,   2.04100000e-03]])
+    array([[ 3.842611,  0.000122],
+           [ 1.408392,  0.159015],
+           [-3.084247,  0.002041]])
     >>> np.around(model.sig2, decimals=6)
     198.55957900000001
 
@@ -302,7 +301,7 @@ class GM_Error(BaseGM_Error):
 
         n = USER.check_arrays(y, x)
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         x_constant = USER.check_constant(x)
         BaseGM_Error.__init__(self, y=y, x=x_constant, w=w.sparse)
         self.title = "SPATIALLY WEIGHTED LEAST SQUARES"        
@@ -326,7 +325,7 @@ class BaseGM_Endog_Error(RegressionPropsY):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, including the constant
+                   independent (exogenous) variable, excluding the constant
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
@@ -397,7 +396,7 @@ class BaseGM_Endog_Error(RegressionPropsY):
     >>> q = np.array([dbf.by_col('DISCBD')]).T
     >>> w = pysal.open(pysal.examples.get_path("columbus.gal"), 'r').read() 
     >>> w.transform='r'
-    >>> model = BaseGM_Endog_Error(y, x, yend, q, w.sparse)
+    >>> model = BaseGM_Endog_Error(y, x, yend, q, w=w.sparse)
     >>> np.around(model.betas, decimals=5)
     array([[ 82.57297],
            [  0.58096],
@@ -453,8 +452,7 @@ class GM_Endog_Error(BaseGM_Endog_Error):
                    external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
     w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)   
+                   Spatial weights object (always needed)   
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
@@ -616,7 +614,7 @@ class GM_Endog_Error(BaseGM_Endog_Error):
     have the names of the variables printed in the output summary, we will
     have to pass them in as well, although this is optional.
 
-    >>> model = GM_Endog_Error(y, x, yend, q, w, name_x=['inc'], name_y='crime', name_yend=['hoval'], name_q=['discbd'], name_ds='columbus')
+    >>> model = GM_Endog_Error(y, x, yend, q, w=w, name_x=['inc'], name_y='crime', name_yend=['hoval'], name_q=['discbd'], name_ds='columbus')
 
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
@@ -646,7 +644,7 @@ class GM_Endog_Error(BaseGM_Endog_Error):
 
         n = USER.check_arrays(y, x, yend, q)
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         x_constant = USER.check_constant(x)
         BaseGM_Endog_Error.__init__(self, y=y, x=x_constant, w=w.sparse, yend=yend, q=q)
         self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES"        
@@ -674,7 +672,7 @@ class BaseGM_Combo(BaseGM_Endog_Error):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, including the constant
+                   independent (exogenous) variable, excluding the constant
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
@@ -786,7 +784,7 @@ class BaseGM_Combo(BaseGM_Endog_Error):
     >>> q = np.array(q).T
     >>> yd2, q2 = pysal.spreg.utils.set_endog(y, X, w, yd, q, w_lags, True)
     >>> X = np.hstack((np.ones(y.shape),X))
-    >>> reg = BaseGM_Combo(y, X, yd2, q2, w.sparse)
+    >>> reg = BaseGM_Combo(y, X, yd2, q2, w=w.sparse)
     >>> betas = np.array([['CONSTANT'],['INC'],['HOVAL'],['W_CRIME']])
     >>> print np.hstack((betas, np.around(np.hstack((reg.betas[:-1], np.sqrt(reg.vm.diagonal()).reshape(4,1))),4)))
     [['CONSTANT' '50.0944' '14.3593']
@@ -821,8 +819,7 @@ class GM_Combo(BaseGM_Combo):
                    external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
     w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)   
+                   Spatial weights object (always needed)   
     w_lags       : integer
                    Orders of W to include as instruments for the spatially
                    lagged dependent variable. For example, w_lags=1, then
@@ -1029,7 +1026,7 @@ class GM_Combo(BaseGM_Combo):
 
     And then we can run and explore the model analogously to the previous combo:
 
-    >>> reg = GM_Combo(y, X, yd, q, w, name_x=['inc'], name_y='crime', name_yend=['hoval'], name_q=['discbd'], name_ds='columbus')
+    >>> reg = GM_Combo(y, X, yd, q, w=w, name_x=['inc'], name_y='crime', name_yend=['hoval'], name_q=['discbd'], name_ds='columbus')
     >>> print reg.name_z
     ['CONSTANT', 'inc', 'hoval', 'W_crime', 'lambda']
     >>> names = np.array(reg.name_z).reshape(5,1)
@@ -1050,13 +1047,14 @@ class GM_Combo(BaseGM_Combo):
 
         n = USER.check_arrays(y, x, yend, q)
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
         x_constant = USER.check_constant(x)
         BaseGM_Combo.__init__(self, y=y, x=x_constant, w=w.sparse, yend=yend2, q=q2,\
                                 w_lags=w_lags, lag_q=lag_q)
-        self.predy_e, self.e_pred = sp_att(w,self.y,\
-                   self.predy,yend2[:,-1].reshape(self.n,1),self.betas[-2])        
+        self.predy_e, self.e_pred, warn = sp_att(w,self.y,\
+                   self.predy,yend2[:,-1].reshape(self.n,1),self.betas[-2])
+        set_warn(self, warn)
         self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)

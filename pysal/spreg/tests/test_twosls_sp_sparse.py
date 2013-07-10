@@ -1,8 +1,8 @@
 import unittest
 import numpy as np
 import pysal
-from pysal.spreg.twosls_sp import BaseGM_Lag, GM_Lag
-import pysal.spreg.diagnostics as D
+from econometrics.twosls_sp import BaseGM_Lag, GM_Lag
+import econometrics.diagnostics as D
 from scipy import sparse as SP
 
 

@@ -1,17 +1,19 @@
+import numpy as np
+import regimes as REGI
+import user_output as USER
+import multiprocessing as mp
+import scipy.sparse as SP
+from utils import sphstack, set_warn, RegressionProps_basic, spdot
+from twosls import BaseTSLS
+from robust import hac_multi
+import summary_output as SUMMARY
+from platform import system
+
 """
 Two-stage Least Squares estimation with regimes.
 """
 
 __author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.edu, David C. Folch david.folch@asu.edu"
-
-import numpy as np
-import regimes as REGI
-import user_output as USER
-import multiprocessing as mp
-from utils import sphstack, set_warn
-from twosls import BaseTSLS
-from robust import hac_multi
-import summary_output as SUMMARY
 
 class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
     """
@@ -30,21 +32,13 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
     q            : array
                    Two dimensional array with n rows and one column for each
                    external exogenous variable to use as instruments (note: 
-                   this should not contain any variables from x); cannot be
-                   used in combination with h
-    h            : array
-                   Two dimensional array with n rows and one column for each
-                   exogenous variable to use as instruments (note: this 
-                   can contain variables from x); cannot be used in 
-                   combination with q
+                   this should not contain any variables from x)
     regimes      : list
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
-    constant_regi: [False, 'one', 'many']
+    constant_regi: ['one', 'many']
                    Switcher controlling the constant term setup. It may take
                    the following values:
-                    
-                     *  False: no constant term is appended in any way
                      *  'one': a vector of ones is appended to x and held
                                constant across regimes
                      * 'many': a vector of ones is appended to x and considered
@@ -68,7 +62,28 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
                    matrix must have ones along the main diagonal.
     sig2n_k      : boolean
                    If True, then use n-k to estimate sigma^2. If False, use n.
-
+    vm           : boolean
+                   If True, include variance-covariance matrix in summary
+    cores        : integer
+                   Specifies the number of cores to be used in multiprocessing
+                   Default: all cores available (specified as cores=None).
+                   Note: Multiprocessing currently not available on Windows.
+    name_y       : string
+                   Name of dependent variable for use in output
+    name_x       : list of strings
+                   Names of independent variables for use in output
+    name_yend    : list of strings
+                   Names of endogenous variables for use in output
+    name_q       : list of strings
+                   Names of instruments for use in output
+    name_regimes : string
+                   Name of regimes variable for use in output
+    name_w       : string
+                   Name of weights matrix for use in output
+    name_gwk     : string
+                   Name of kernel weights matrix for use in output
+    name_ds      : string
+                   Name of dataset for use in output
 
     Attributes
     ----------
@@ -100,8 +115,6 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
                    Ignored if regimes=False. Constant option for regimes.
                    Switcher controlling the constant term setup. It may take
                    the following values:
-                    
-                     *  False: no constant term is appended in any way
                      *  'one': a vector of ones is appended to x and held
                                constant across regimes
                      * 'many': a vector of ones is appended to x and considered
@@ -210,21 +223,21 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
     array([[ 3.66973562],
            [ 1.06950466],
            [ 0.14680946],
+           [ 2.45864196],
            [ 9.55873243],
            [ 1.94666348],
            [-0.30810214],
-           [ 2.45864196],
            [ 3.68718119]])
 
-    >>> tslsr.std_err
-    array([ 0.46522151,  0.12074672,  0.05661795,  0.41893265,  0.16721773,
-            0.06631022,  0.27538921,  0.21745974])
+    >>> np.sqrt(tslsr.vm.diagonal())
+    array([ 0.38389901,  0.09963973,  0.04672091,  0.22725012,  0.49181223,
+            0.19630774,  0.07784587,  0.25529011])
 
     """
     def __init__(self, y, x, yend, q, regimes,\
              w=None, robust=None, gwk=None, sig2n_k=True,\
              spat_diag=False, vm=False, constant_regi='many',\
-             cols2regi='all', regime_err_sep=False, name_y=None, name_x=None,\
+             cols2regi='all', regime_err_sep=True, name_y=None, name_x=None,\
              cores=None, name_yend=None, name_q=None, name_regimes=None,\
              name_w=None, name_gwk=None, name_ds=None, summ=True):
        
@@ -244,24 +257,19 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
         name_q = USER.set_name_q(name_q, q)
         self.name_x_r = USER.set_name_x(name_x, x) + name_yend            
         self.n = n
-        if regime_err_sep == True:
+        cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, yend=yend, add_cons=False)
+        self.regimes_set = REGI._get_regimes_set(regimes)        
+        if regime_err_sep == True and set(cols2regi) == set([True]) and constant_regi == 'many':
             name_x = USER.set_name_x(name_x, x)
             self.y = y
-            if cols2regi == 'all':
-                cols2regi = [True] * (x.shape[1]+yend.shape[1])
-            self.regimes_set = list(set(regimes))
-            self.regimes_set.sort()
             if w:
                 w_i,regi_ids,warn = REGI.w_regimes(w, regimes, self.regimes_set, transform=True, get_ids=True, min_n=len(self.cols2regi)+1)
                 set_warn(self,warn)
             else:
                 regi_ids = dict((r, list(np.where(np.array(regimes) == r)[0])) for r in self.regimes_set)
                 w_i = None
-            if set(cols2regi) == set([True]):
-                self._tsls_regimes_multi(x, yend, q, w_i, regi_ids, cores,\
+            self._tsls_regimes_multi(x, yend, q, w_i, regi_ids, cores,\
                  gwk, sig2n_k, robust, spat_diag, vm, name_x, name_yend, name_q)
-            else:
-                raise Exception, "All coefficients must vary accross regimes if regime_err_sep = True."
         else:
             name_x = USER.set_name_x(name_x, x,constant=True)
             q, self.name_q = REGI.Regimes_Frame.__init__(self, q, \
@@ -273,12 +281,27 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
                     cols2regi=cols2regi, yend=True, names=name_yend)
             BaseTSLS.__init__(self, y=y, x=x, yend=yend, q=q, \
                     robust=robust, gwk=gwk, sig2n_k=sig2n_k)
+            if regime_err_sep == True and robust == None:
+                """
+                # Weighted x, y, yend and q approach:
+                y2,x2,yend2,q2 = REGI._get_weighted_var(regimes,self.regimes_set,sig2n_k,self.u,y,x,yend,q)
+                tsls2 = BaseTSLS(y=y2, x=x2, yend=yend2, q=q2, sig2n_k=sig2n_k)
+                # Updating S_hat to S_tilde approach:               
+                betas2, predy2, resid2, vm2 = self._optimal_weight(sig2n_k)
+                RegressionProps_basic(self,betas=betas2,predy=predy2,u=resid2,vm=vm2,sig2=False)
+                """
+                betas2, vm2 = self._optimal_weight(sig2n_k)
+                RegressionProps_basic(self,betas=betas2,vm=vm2,sig2=False)
+                self.title = "TWO STAGE LEAST SQUARES - REGIMES (Optimal-Weighted GMM)"
+                robust = None
+                set_warn(self,"Residuals treated as homoskedastic for the purpose of diagnostics.")
+            else:
+                self.title = "TWO STAGE LEAST SQUARES - REGIMES"
             self.name_z = self.name_x + self.name_yend
             self.name_h = USER.set_name_h(self.name_x, self.name_q)
             self.chow = REGI.Chow(self)
             self.robust = USER.set_robust(robust)
             if summ:
-                self.title = "TWO STAGE LEAST SQUARES - REGIMES"
                 SUMMARY.TSLS(reg=self, vm=vm, w=w, spat_diag=spat_diag, regimes=True)
 
     def _tsls_regimes_multi(self, x, yend, q, w_i, regi_ids, cores,\
@@ -286,7 +309,12 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
         pool = mp.Pool(cores)
         results_p = {}
         for r in self.regimes_set:
-            results_p[r] = pool.apply_async(_work,args=(self.y,x,regi_ids,r,yend,q,robust,sig2n_k,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes))
+            if system() == 'Windows':
+                is_win = True
+                results_p[r] = _work(*(self.y,x,regi_ids,r,yend,q,robust,sig2n_k,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes))
+            else:
+                results_p[r] = pool.apply_async(_work,args=(self.y,x,regi_ids,r,yend,q,robust,sig2n_k,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes))
+                is_win = False
         self.kryd = 0
         self.kr = x.shape[1]+yend.shape[1]+1
         self.kf = 0
@@ -295,13 +323,17 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
         self.betas = np.zeros((self.nr*self.kr,1),float)
         self.u = np.zeros((self.n,1),float)
         self.predy = np.zeros((self.n,1),float)
-        pool.close()
-        pool.join()
+        if not is_win:
+            pool.close()
+            pool.join()
         results = {}
         self.name_y, self.name_x, self.name_yend, self.name_q, self.name_z, self.name_h = [],[],[],[],[],[]
         counter = 0
         for r in self.regimes_set:
-            results[r] = results_p[r].get()
+            if is_win:
+                results[r] = results_p[r]
+            else:
+                results[r] = results_p[r].get()
             if w_i:
                 results[r].w = w_i[r]
             else:
@@ -324,6 +356,38 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
         self.chow = REGI.Chow(self)
         SUMMARY.TSLS_multi(reg=self, multireg=self.multi, vm=vm, spat_diag=spat_diag, regimes=True)
 
+    def _optimal_weight(self,sig2n_k):
+        ''' Computes optimal weights GMM. '''
+        H = spdot(spdot(self.h,self.hthi),self.htz)
+        fac2, ZtHSi = self._get_fac2_het(H,self.u,sig2n_k)
+        fac3 = spdot(ZtHSi,spdot(H.T,self.y),array_out=True)
+        betas = np.dot(fac2,fac3)
+        """
+        # Updating S_hat to S_tilde
+        predy = spdot(self.z, betas)
+        u = self.y - predy
+        fac2, ZtHSi = self._get_fac2_het(u,sig2n_k)
+        """
+        if sig2n_k:
+            vm = fac2*(self.n-self.k)
+        else:
+            vm = fac2*self.n
+        #return betas, predy, u, vm #Use this line instead of next if updating S_hat to S_tilde.
+        return betas, vm
+
+    def _get_fac2_het(self,H,u,sig2n_k):
+        D = SP.lil_matrix((self.n, self.n))
+        D.setdiag(u**2)
+        if sig2n_k:
+            S = spdot(spdot(self.z.T,D),self.z,array_out=True)/(self.n-self.k)
+        else:
+            S = spdot(spdot(self.z.T,D),self.z,array_out=True)/self.n
+        Si = np.linalg.inv(S)
+        ZtH = spdot(self.z.T,H)
+        ZtHSi = spdot(ZtH,Si)
+        fac2 = np.linalg.inv(spdot(ZtHSi,ZtH.T,array_out=True))
+        return fac2, ZtHSi
+        
 def _work(y,x,regi_ids,r,yend,q,robust,sig2n_k,name_ds,name_y,name_x,name_yend,name_q,name_w,name_regimes):
     y_r = y[regi_ids[r]]
     x_r = x[regi_ids[r]]
@@ -355,8 +419,7 @@ def _test():
 
 
 if __name__ == '__main__':
-    _test()        
-    
+    _test()    
     import numpy as np
     import pysal
     db = pysal.open(pysal.examples.get_path('NAT.dbf'),'r')
@@ -370,5 +433,7 @@ if __name__ == '__main__':
     q = np.array([db.by_col(name) for name in q_var]).T
     r_var = 'SOUTH'
     regimes = db.by_col(r_var)
-    tslsr = TSLS_Regimes(y, x, yd, q, regimes, constant_regi='many', spat_diag=False, name_y=y_var, name_x=x_var, name_yend=yd_var, name_q=q_var, name_regimes=r_var)
+    tslsr = TSLS_Regimes(y, x, yd, q, regimes, constant_regi='many', spat_diag=False, name_y=y_var, name_x=x_var, \
+                         name_yend=yd_var, name_q=q_var, name_regimes=r_var, cols2regi=[False,True,True,True,True], \
+                         sig2n_k=False, robust='white')
     print tslsr.summary

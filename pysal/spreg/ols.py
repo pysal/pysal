@@ -22,7 +22,7 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, including the constant
+                   independent (exogenous) variable, excluding the constant
     robust       : string
                    If 'white', then a White consistent estimator of the
                    variance-covariance matrix is given.  If 'hac', then a
@@ -91,9 +91,9 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
            [  0.62898397],
            [ -0.48488854]])
     >>> ols.vm
-    array([[  1.74022453e+02,  -6.52060364e+00,  -2.15109867e+00],
-           [ -6.52060364e+00,   2.87200008e-01,   6.80956787e-02],
-           [ -2.15109867e+00,   6.80956787e-02,   3.33693910e-02]])
+    array([[ 174.02245348,   -6.52060364,   -2.15109867],
+           [  -6.52060364,    0.28720001,    0.06809568],
+           [  -2.15109867,    0.06809568,    0.03336939]])
     """
     def __init__(self, y, x, robust=None, gwk=None, sig2n_k=True):
         self.x = x
@@ -152,6 +152,9 @@ class OLS(BaseOLS):
     moran        : boolean
                    If True, compute Moran's I on the residuals. Note:
                    requires spat_diag=True.
+    white_test   : boolean
+                   If True, compute White's specification robust test.
+                   (requires nonspat_diag=True)
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
@@ -315,11 +318,12 @@ class OLS(BaseOLS):
     variables respectively.  To make the printed results more meaningful, the
     user can pass in explicit names for the variables used; this is optional.
 
-    >>> ols = OLS(y, X, name_y='home value', name_x=['income','crime'], name_ds='columbus')
+    >>> ols = OLS(y, X, name_y='home value', name_x=['income','crime'], name_ds='columbus', white_test=True)
 
     pysal.spreg.OLS computes the regression coefficients and their standard
     errors, t-stats and p-values. It also computes a large battery of
-    diagnostics on the regression. All of these results can be independently
+    diagnostics on the regression. In this example we compute the white test
+    which by default isn't ('white_test=True'). All of these results can be independently
     accessed as attributes of the regression object created by running
     pysal.spreg.OLS.  They can also be accessed at one time by printing the
     summary attribute of the regression object. In the example below, the
@@ -349,8 +353,7 @@ class OLS(BaseOLS):
     Dependent Variable  :  home value               Number of Observations:          49
     Mean dependent var  :     38.4362               Number of Variables   :           3
     S.D. dependent var  :     18.4661               Degrees of Freedom    :          46
-    <BLANKLINE>
-    R-squared           :    0.349514
+    R-squared           :      0.3495
     Adjusted R-squared  :      0.3212
     Sum squared residual:   10647.015               F-statistic           :     12.3582
     Sigma-square        :     231.457               Prob(F-statistic)     :   5.064e-05
@@ -413,7 +416,7 @@ class OLS(BaseOLS):
                  w=None,\
                  robust=None, gwk=None, sig2n_k=True,\
                  nonspat_diag=True, spat_diag=False, moran=False,\
-                 vm=False, name_y=None, name_x=None,\
+                 white_test=False, vm=False, name_y=None, name_x=None,\
                  name_w=None, name_gwk=None, name_ds=None):
 
         n = USER.check_arrays(y, x)
@@ -432,7 +435,7 @@ class OLS(BaseOLS):
         self.name_w = USER.set_name_w(name_w, w)
         self.name_gwk = USER.set_name_w(name_gwk, gwk)
         SUMMARY.OLS(reg=self, vm=vm, w=w, nonspat_diag=nonspat_diag,\
-                    spat_diag=spat_diag, moran=moran)
+                    spat_diag=spat_diag, moran=moran, white_test=white_test)
 
 def _test():
     import doctest

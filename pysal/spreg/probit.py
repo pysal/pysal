@@ -116,9 +116,9 @@ class BaseProbit:
            [-0.029514]])
            
     >>> np.around(model.vm, decimals=6)
-    array([[  8.52814000e-01,  -4.36270000e-02,  -8.05200000e-03],
-           [ -4.36270000e-02,   4.11400000e-03,  -1.93000000e-04],
-           [ -8.05200000e-03,  -1.93000000e-04,   3.10000000e-04]])
+    array([[ 0.852814, -0.043627, -0.008052],
+           [-0.043627,  0.004114, -0.000193],
+           [-0.008052, -0.000193,  0.00031 ]])
 
     >>> tests = np.array([['Pinkse_error','KP_error','PS_error']])
     >>> stats = np.array([[model.Pinkse_error[0],model.KP_error[0],model.PS_error[0]]])
@@ -487,9 +487,9 @@ class Probit(BaseProbit):
            [-0.029514]])
            
     >>> np.around(model.vm, decimals=6)
-    array([[  8.52814000e-01,  -4.36270000e-02,  -8.05200000e-03],
-           [ -4.36270000e-02,   4.11400000e-03,  -1.93000000e-04],
-           [ -8.05200000e-03,  -1.93000000e-04,   3.10000000e-04]])
+    array([[ 0.852814, -0.043627, -0.008052],
+           [-0.043627,  0.004114, -0.000193],
+           [-0.008052, -0.000193,  0.00031 ]])
 
     Since we have provided a spatial weigths matrix, the diagnostics for
     spatial dependence have also been computed. We can access them and their
@@ -517,7 +517,7 @@ class Probit(BaseProbit):
             USER.check_weights(w, y)
             spat_diag = True
         x_constant = USER.check_constant(x)
-        BaseProbit.__init__(self, y=y, x=x_constant, w=w) 
+        BaseProbit.__init__(self,y=y,x=x_constant,w=w,optim=optim,scalem=scalem,maxiter=maxiter) 
         self.title = "CLASSIC PROBIT ESTIMATOR"        
         self.name_ds = USER.set_name_ds(name_ds)    
         self.name_y = USER.set_name_y(name_y)

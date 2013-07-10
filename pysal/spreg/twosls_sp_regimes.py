@@ -9,10 +9,13 @@ import pysal
 import regimes as REGI
 import user_output as USER
 import summary_output as SUMMARY
+import multiprocessing as mp
 from twosls_regimes import TSLS_Regimes
 from twosls import BaseTSLS
 from utils import set_endog, set_endog_sparse, sp_att, set_warn, sphstack
 from robust import hac_multi
+from platform import system
+
 
 class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
     """
@@ -37,11 +40,9 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
                    external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x); cannot be
                    used in combination with h
-    constant_regi: [False, 'one', 'many']
+    constant_regi: ['one', 'many']
                    Switcher controlling the constant term setup. It may take
                    the following values:
-                    
-                     *  False: no constant term is appended in any way
                      *  'one': a vector of ones is appended to x and held
                                constant across regimes
                      * 'many': a vector of ones is appended to x and considered
@@ -84,6 +85,10 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
+    cores        : integer
+                   Specifies the number of cores to be used in multiprocessing
+                   Default: all cores available (specified as cores=None).
+                   Note: Multiprocessing currently not available on Windows.
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -199,12 +204,10 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
     regimes      : list
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
-    constant_regi: [False, 'one', 'many']
+    constant_regi: ['one', 'many']
                    Ignored if regimes=False. Constant option for regimes.
                    Switcher controlling the constant term setup. It may take
                    the following values:
-                    
-                     *  False: no constant term is appended in any way
                      *  'one': a vector of ones is appended to x and held
                                constant across regimes
                      * 'many': a vector of ones is appended to x and considered
@@ -338,24 +341,6 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
      ['1_W_HR90' '-0.2960338' '0.19934459']]
 
     Alternatively, we can type: 'model.summary' to see the organized results output.
-    If instead we want to have varying coefficients for the spatial lag
-    but only one regression, restricting the sigma^2 to be the same across
-    regimes, we can se regime_err_sep to False. The change in the option regime_err_sep
-    will not affect the estimated coefficients, as expected, but the standard
-    errors will reflect the restricted sigma^2:
-
-    >>> model=GM_Lag_Regimes(y, x, regimes, w=w, regime_lag_sep=True, regime_err_sep=False, name_y=y_var, name_x=x_var, name_regimes=r_var, name_ds='NAT', name_w='NAT.shp')
-    >>> print np.hstack((np.array(model.name_z).reshape(8,1),model.betas,np.sqrt(model.vm.diagonal().reshape(8,1))))
-    [['0_CONSTANT' '1.36584769' '0.51821919']
-     ['0_PS90' '0.80875730' '0.14725414']
-     ['0_UE90' '0.56946813' '0.06013865']
-     ['1_CONSTANT' '7.90731073' '1.34296528']
-     ['1_PS90' '1.27465703' '0.20283690']
-     ['1_UE90' '0.60167693' '0.06561510']
-     ['0_W_HR90' '-0.4342438' '0.17358818']
-     ['1_W_HR90' '-0.2960338' '0.16363680']]
-
-    Alternatively, we can type: 'model.summary' to see the organized results output.
     The class is flexible enough to accomodate a spatial lag model that,
     besides the spatial lag of the dependent variable, includes other
     non-spatial endogenous regressors. As an example, we will add the endogenous
@@ -393,14 +378,14 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
                  w=None, w_lags=1, lag_q=True,\
                  robust=None, gwk=None, sig2n_k=False,\
                  spat_diag=False, constant_regi='many',\
-                 cols2regi='all', regime_lag_sep=True, regime_err_sep=True,\
+                 cols2regi='all', regime_lag_sep=False, regime_err_sep=True,\
                  cores=None, vm=False, name_y=None, name_x=None,\
                  name_yend=None, name_q=None, name_regimes=None,\
                  name_w=None, name_gwk=None, name_ds=None):
 
         n = USER.check_arrays(y, x)
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         USER.check_robust(robust, gwk)
         USER.check_spat_diag(spat_diag, w)
         name_x = USER.set_name_x(name_x, x,constant=True)
@@ -411,51 +396,49 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
         self.name_regimes = USER.set_name_ds(name_regimes)
         self.constant_regi=constant_regi
         self.n = n
-        if cols2regi == 'all':
-            if yend!=None:
-                cols2regi = [True] * (x.shape[1]+yend.shape[1])
-            else:
-                cols2regi = [True] * (x.shape[1])     
+        cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, yend=yend, add_cons=False)    
+        self.cols2regi = cols2regi
+        self.regimes_set = REGI._get_regimes_set(regimes)
         if regime_lag_sep == True:
+            if not regime_err_sep:
+                raise Exception, "regime_err_sep must be True when regime_lag_sep=True."
             cols2regi += [True]
-            self.regimes_set = list(set(regimes))
-            self.regimes_set.sort()
             w_i,regi_ids,warn = REGI.w_regimes(w, regimes, self.regimes_set, transform=True, get_ids=True, min_n=len(cols2regi)+1)
             set_warn(self,warn)
-            if not regime_err_sep:
-                w = REGI.w_regimes_union(w, w_i, self.regimes_set)
+
         else:
-            cols2regi += [False]
-            if regime_err_sep == True:
-                raise Exception, "All coefficients must vary accross regimes if regime_err_sep = True."            
-        self.cols2regi = cols2regi
-        if regime_lag_sep == True and regime_err_sep == True:
-            if set(cols2regi) == set([True]):
-                self.GM_Lag_Regimes_Multi(y, x, w_i, regi_ids,\
+            cols2regi += [False]            
+
+        if regime_err_sep == True and set(cols2regi) == set([True]) and constant_regi == 'many':
+            self.GM_Lag_Regimes_Multi(y, x, w_i, regi_ids,\
                  yend=yend, q=q, w_lags=w_lags, lag_q=lag_q, cores=cores,\
                  robust=robust, gwk=gwk, sig2n_k=sig2n_k, cols2regi=cols2regi,\
                  spat_diag=spat_diag, vm=vm, name_y=name_y, name_x=name_x,\
                  name_yend=name_yend, name_q=name_q, name_regimes=self.name_regimes,\
                  name_w=name_w, name_gwk=name_gwk, name_ds=name_ds)
-            else:
-                raise Exception, "All coefficients must vary accross regimes if regime_err_sep = True."
         else:
+            if regime_lag_sep == True:
+                w = REGI.w_regimes_union(w, w_i, self.regimes_set)
             yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
             name_yend.append(USER.set_name_yend_sp(name_y))
             TSLS_Regimes.__init__(self, y=y, x=x, yend=yend2, q=q2,\
                  regimes=regimes, w=w, robust=robust, gwk=gwk,\
                  sig2n_k=sig2n_k, spat_diag=spat_diag, vm=vm,\
-                 constant_regi=constant_regi, cols2regi=cols2regi, name_y=name_y,\
-                 name_x=name_x, name_yend=name_yend, name_q=name_q,\
+                 constant_regi=constant_regi, cols2regi=cols2regi, regime_err_sep=regime_err_sep,\
+                 name_y=name_y, name_x=name_x, name_yend=name_yend, name_q=name_q,\
                  name_regimes=name_regimes, name_w=name_w, name_gwk=name_gwk,\
                  name_ds=name_ds,summ=False)
             if regime_lag_sep:
                 self.sp_att_reg(w_i, regi_ids, yend2[:,-1].reshape(self.n,1))
             else:
-                self.predy_e, self.e_pred = sp_att(w,self.y,self.predy,\
+                self.predy_e, self.e_pred, warn = sp_att(w,self.y,self.predy,\
                           yend2[:,-1].reshape(self.n,1),self.betas[-1])
+                set_warn(self,warn)
             self.regime_lag_sep=regime_lag_sep
-            self.title = "SPATIAL TWO STAGE LEAST SQUARES - REGIMES"
+            if regime_err_sep == True:
+                self.title = "SPATIAL TWO STAGE LEAST SQUARES - REGIMES (Group-wise heteroskedasticity)"
+            else:
+                self.title = "SPATIAL TWO STAGE LEAST SQUARES - REGIMES"
             SUMMARY.GM_Lag(reg=self, w=w, vm=vm, spat_diag=spat_diag, regimes=True)
 
     def GM_Lag_Regimes_Multi(self, y, x, w_i, regi_ids, cores=None,\
@@ -464,6 +447,7 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
                  spat_diag=False, vm=False, name_y=None, name_x=None,\
                  name_yend=None, name_q=None, name_regimes=None,\
                  name_w=None, name_gwk=None, name_ds=None):
+        pool = mp.Pool(cores)
         self.name_ds = USER.set_name_ds(name_ds)
         name_x = USER.set_name_x(name_x, x)
         name_yend.append(USER.set_name_yend_sp(name_y))
@@ -472,8 +456,12 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
         results_p = {}
         for r in self.regimes_set:
             w_r = w_i[r].sparse
-            results_p[r] = _work(y,x,regi_ids,r,yend,q,w_r,w_lags,lag_q,robust,sig2n_k,self.name_ds,name_y,name_x,name_yend,name_q,self.name_w,name_regimes, )
-        
+            if system() == 'Windows':
+                is_win = True
+                results_p[r] = _work(*(y,x,regi_ids,r,yend,q,w_r,w_lags,lag_q,robust,sig2n_k,self.name_ds,name_y,name_x,name_yend,name_q,self.name_w,name_regimes))
+            else:                
+                results_p[r] = pool.apply_async(_work,args=(y,x,regi_ids,r,yend,q,w_r,w_lags,lag_q,robust,sig2n_k,self.name_ds,name_y,name_x,name_yend,name_q,self.name_w,name_regimes, ))
+                is_win = False
         self.kryd = 0
         self.kr = len(cols2regi) + 1
         self.kf = 0
@@ -486,12 +474,19 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
         self.predy = np.zeros((self.n,1),float)
         self.predy_e = np.zeros((self.n,1),float)
         self.e_pred = np.zeros((self.n,1),float)
+        if not is_win:
+            pool.close()
+            pool.join()
         results = {}
         self.name_y, self.name_x, self.name_yend, self.name_q, self.name_z, self.name_h = [],[],[],[],[],[]
         counter = 0
         for r in self.regimes_set:
-            results[r] = results_p[r]
-            results[r].predy_e, results[r].e_pred = sp_att(w_i[r],results[r].y,results[r].predy, results[r].yend[:,-1].reshape(results[r].n,1),results[r].betas[-1])
+            if is_win:
+                results[r] = results_p[r]
+            else:
+                results[r] = results_p[r].get()
+            results[r].predy_e, results[r].e_pred, warn = sp_att(w_i[r],results[r].y,results[r].predy, results[r].yend[:,-1].reshape(results[r].n,1),results[r].betas[-1])
+            set_warn(results[r],warn)
             results[r].w = w_i[r]
             self.vm[(counter*self.kr):((counter+1)*self.kr),(counter*self.kr):((counter+1)*self.kr)] = results[r].vm
             self.betas[(counter*self.kr):((counter+1)*self.kr),] = results[r].betas
@@ -522,7 +517,7 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
         counter = 1
         for r in self.regimes_set:
             lambd = self.betas[(self.kr-self.kryd)*self.nr+counter*self.kryd-1]
-            self.predy_e[regi_ids[r],], self.e_pred[regi_ids[r],] = sp_att(w_i[r],\
+            self.predy_e[regi_ids[r],], self.e_pred[regi_ids[r],], warn = sp_att(w_i[r],\
                           self.y[regi_ids[r]],self.predy[regi_ids[r]],\
                           wy[regi_ids[r]],lambd)
             counter += 1
@@ -565,8 +560,7 @@ def _test():
 
 
 if __name__ == '__main__':
-    _test()        
-    
+    _test()    
     import numpy as np
     import pysal
     db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')

@@ -255,6 +255,45 @@ def set_name_w(name_w, w):
     return None
 
 
+def set_name_multi(multireg,multi_set,name_multiID,y,x,name_y,name_x,name_ds,title,name_w,robust,endog=False,sp_lag=False):
+    """Returns multiple regression objects with generic names
+
+    Parameters
+    ----------
+
+    endog       : tuple
+                  If the regression object contains endogenous variables, endog must have the
+                  following parameters in the following order: (yend, q, name_yend, name_q)
+    sp_lag       : tuple
+                  If the regression object contains spatial lag, sp_lag must have the
+                  following parameters in the following order: (w_lags, lag_q)
+
+    """
+    name_ds = set_name_ds(name_ds)
+    name_y = set_name_y(name_y)
+    name_x = set_name_x(name_x, x)
+    name_multiID = set_name_ds(name_multiID)
+    if endog or sp_lag:
+        name_yend = set_name_yend(endog[2], endog[0])
+        name_q = set_name_q(endog[3], endog[1])        
+    for r in multi_set:
+        multireg[r].title = title + "%s" %r
+        multireg[r].name_ds = name_ds
+        multireg[r].robust = set_robust(robust)
+        multireg[r].name_w = name_w        
+        multireg[r].name_y = '%s_%s'%(str(r), name_y)
+        multireg[r].name_x = ['%s_%s'%(str(r), i) for i in name_x]
+        multireg[r].name_multiID = name_multiID
+        if endog or sp_lag:
+            multireg[r].name_yend = ['%s_%s'%(str(r), i) for i in name_yend]
+            multireg[r].name_q = ['%s_%s'%(str(r), i) for i in name_q]
+            if sp_lag:
+                multireg[r].name_yend.append(set_name_yend_sp(multireg[r].name_y))
+                multireg[r].name_q.extend(set_name_q_sp(multireg[r].name_x, sp_lag[0], multireg[r].name_q, sp_lag[1]))
+            multireg[r].name_z = multireg[r].name_x + multireg[r].name_yend
+            multireg[r].name_h = multireg[r].name_x + multireg[r].name_q
+    return multireg
+
 def check_arrays(*arrays):
     """Check if the objects passed by a user to a regression class are
     correctly structured. If the user's data is correctly formed this function
@@ -357,7 +396,7 @@ def check_y(y, n):
     if shape != (n, 1):
         raise Exception, "y must be a single column array matching the length of other arrays"
 
-def check_weights(w, y):
+def check_weights(w, y, w_required=False):
     """Check if the w parameter passed by the user is a pysal.W object and
     check that its dimensionality matches the y parameter.  Note that this
     check is not performed if w set to None.
@@ -396,7 +435,9 @@ def check_weights(w, y):
     >>> # should not raise an exception
 
     """
-    if w != None:
+    if w_required == True or w != None:
+        if w == None:
+            raise Exception, "A weights matrix w must be provided to run this method."            
         if not isinstance(w, pysal.W):
             raise Exception, "w must be a pysal.W object"
         if w.n != y.shape[0]:
