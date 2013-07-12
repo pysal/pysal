@@ -100,12 +100,18 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
     x            : array
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, including the constant
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     q            : array
                    Two dimensional array with n rows and one column for each
                    external exogenous variable used as instruments 
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     vm           : array
                    Variance covariance matrix (kxk)
     regimes      : list
@@ -155,6 +161,11 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
                    Name of kernel weights matrix for use in output
     name_ds      : string
                    Name of dataset for use in output
+    multi        : dictionary
+                   Only available when multiple regressions are estimated,
+                   i.e. when regime_err_sep=True and no variable is fixed
+                   across regimes.
+                   Contains all attributes of each individual regression
 
     Examples
     --------
@@ -274,7 +285,11 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
         self.name_x_r = USER.set_name_x(name_x, x) + name_yend            
         self.n = n
         cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, yend=yend, add_cons=False)
-        self.regimes_set = REGI._get_regimes_set(regimes)        
+        self.regimes_set = REGI._get_regimes_set(regimes)
+        self.regimes = regimes
+        USER.check_regimes(self.regimes_set)
+        self.regime_err_sep = regime_err_sep
+
         if regime_err_sep == True and set(cols2regi) == set([True]) and constant_regi == 'many':
             name_x = USER.set_name_x(name_x, x)
             self.y = y

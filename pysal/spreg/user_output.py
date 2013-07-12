@@ -558,6 +558,24 @@ def check_spat_diag(spat_diag, w):
         if type(w).__name__ != 'W':
             raise Exception, "w must be a pysal.W object to run spatial diagnostics"
 
+def check_regimes(reg_set):
+    """Check if there are at least two regimes
+
+    Parameters
+    ----------
+
+    reg_set     : list
+                  List of the regimes IDs
+
+    Returns
+    -------
+
+    Returns : nothing
+              Nothing is returned
+              
+    """
+    if len(reg_set) < 2:
+        raise Exception, "At least 2 regimes are needed to run regimes methods. Please check your regimes variable."
 
 def check_constant(x):
     """Check if the X matrix contains a constant, raise exception if it does

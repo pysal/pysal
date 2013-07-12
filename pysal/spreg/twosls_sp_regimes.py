@@ -126,25 +126,41 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
     k            : integer
                    Number of variables for which coefficients are estimated
                    (including the constant)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     kstar        : integer
                    Number of endogenous variables. 
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     y            : array
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, including the constant
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     q            : array
                    Two dimensional array with n rows and one column for each
                    external exogenous variable used as instruments 
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     z            : array
                    nxk array of variables (combination of x and yend)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     h            : array
                    nxl array of instruments (combination of x and q)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     robust       : string
                    Adjustment for robust standard errors
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     mean_y       : float
                    Mean of dependent variable
     std_y        : float
@@ -153,21 +169,33 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
                    Variance covariance matrix (kxk)
     pr2          : float
                    Pseudo R squared (squared correlation between y and ypred)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     pr2_e        : float
                    Pseudo R squared (squared correlation between y and ypred_e
                    (using reduced form))
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     utu          : float
                    Sum of squared residuals
     sig2         : float
                    Sigma squared used in computations
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     std_err      : array
                    1xk array of standard errors of the betas    
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     z_stat       : list of tuples
                    z statistic; each tuple contains the pair (statistic,
                    p-value), where each is a float
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     ak_test      : tuple
                    Anselin-Kelejian test; tuple contains the pair (statistic,
                    p-value)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -191,20 +219,32 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
                    Name of regimes variable for use in output
     title        : string
                    Name of the regression method used
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     sig2n        : float
                    Sigma squared (computed with n in the denominator)
     sig2n_k      : float
                    Sigma squared (computed with n-k in the denominator)
     hth          : float
                    H'H
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     hthi         : float
                    (H'H)^-1
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     varb         : array
                    (Z'H (H'H)^-1 H'Z)^-1
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     zthhthi      : array
                    Z'H(H'H)^-1
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     pfora1a2     : array
                    n(zthhthi)'varb
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     regimes      : list
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
@@ -240,6 +280,11 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
                    estimate
     nr           : int
                    Number of different regimes in the 'regimes' list
+    multi        : dictionary
+                   Only available when multiple regressions are estimated,
+                   i.e. when regime_err_sep=True and no variable is fixed
+                   across regimes.
+                   Contains all attributes of each individual regression
 
     References
     ----------
@@ -403,6 +448,10 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
         cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, yend=yend, add_cons=False)    
         self.cols2regi = cols2regi
         self.regimes_set = REGI._get_regimes_set(regimes)
+        self.regimes = regimes
+        USER.check_regimes(self.regimes_set)
+        self.regime_err_sep = regime_err_sep        
+        self.regime_lag_sep = regime_lag_sep        
         if regime_lag_sep == True:
             if not regime_err_sep:
                 raise Exception, "regime_err_sep must be True when regime_lag_sep=True."
@@ -414,6 +463,7 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
             cols2regi += [False]            
 
         if regime_err_sep == True and set(cols2regi) == set([True]) and constant_regi == 'many':
+            self.y = y
             self.GM_Lag_Regimes_Multi(y, x, w_i, regi_ids,\
                  yend=yend, q=q, w_lags=w_lags, lag_q=lag_q, cores=cores,\
                  robust=robust, gwk=gwk, sig2n_k=sig2n_k, cols2regi=cols2regi,\

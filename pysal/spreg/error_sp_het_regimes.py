@@ -95,31 +95,47 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     k            : integer
                    Number of variables for which coefficients are estimated
                    (including the constant)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     y            : array
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, including the constant
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     mean_y       : float
                    Mean of dependent variable
     std_y        : float
                    Standard deviation of dependent variable
     pr2          : float
                    Pseudo R squared (squared correlation between y and ypred)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     vm           : array
                    Variance covariance matrix (kxk)
     sig2         : float
                    Sigma squared used in computations
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     std_err      : array
                    1xk array of standard errors of the betas    
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     z_stat       : list of tuples
                    z statistic; each tuple contains the pair (statistic,
                    p-value), where each is a float
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -132,6 +148,8 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    Name of regime variable for use in the output
     title        : string
                    Name of the regression method used
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     regimes      : list
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
@@ -163,6 +181,11 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    estimate
     nr           : int
                    Number of different regimes in the 'regimes' list
+    multi         : dictionary
+                    Only available when multiple regressions are estimated,
+                    i.e. when regime_err_sep=True and no variable is fixed
+                    across regimes.
+                    Contains all attributes of each individual regression
 
     References
     ----------
@@ -263,7 +286,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     """
 
     def __init__(self, y, x, regimes, w, max_iter=1, epsilon=0.00001, step1c=False,\
-                 constant_regi='many', cols2regi='all', regime_err_sep=False,\
+                 constant_regi='many', cols2regi='all', regime_err_sep=True,\
                  cores=None, vm=False, name_y=None, name_x=None, name_w=None,\
                  name_ds=None, name_regimes=None):
 
@@ -278,12 +301,17 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         self.name_w = USER.set_name_w(name_w, w)
         self.name_regimes = USER.set_name_ds(name_regimes)
         self.n,self.step1c = n,step1c
+        self.y = y
 
         x_constant = USER.check_constant(x)
         name_x = USER.set_name_x(name_x, x)
         self.name_x_r = name_x
 
         cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x)
+        self.regimes_set = REGI._get_regimes_set(regimes)
+        self.regimes = regimes
+        USER.check_regimes(self.regimes_set)
+        self.regime_err_sep = regime_err_sep        
 
         if regime_err_sep == True:
             if set(cols2regi) == set([True]):
@@ -296,10 +324,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
             self.x, self.name_x = REGI.Regimes_Frame.__init__(self, x_constant, \
                     regimes, constant_regi=None, cols2regi=cols2regi, names=name_x)
             ols = BaseOLS(y=y, x=self.x)
-
             self.k = ols.x.shape[1]
-            self.y = ols.y
-
             wA1 = UTILS.get_A1_het(w.sparse)
 
             #1b. GMM --> \tilde{\lambda1}
@@ -353,7 +378,6 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     def _error_regimes_multi(self, y, x, regimes, w, cores,\
                  max_iter, epsilon, step1c, cols2regi, vm, name_x):
 
-        self.regimes_set = REGI._get_regimes_set(regimes)
         w_i,regi_ids,warn = REGI.w_regimes(w, regimes, self.regimes_set, transform=True, get_ids=True)
         set_warn(self, warn)
         pool = mp.Pool(cores)
@@ -493,26 +517,42 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     k            : integer
                    Number of variables for which coefficients are estimated
                    (including the constant)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     y            : array
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, including the constant
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     q            : array
                    Two dimensional array with n rows and one column for each
                    external exogenous variable used as instruments 
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     z            : array
                    nxk array of variables (combination of x and yend)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     h            : array
                    nxl array of instruments (combination of x and q)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     mean_y       : float
                    Mean of dependent variable
     std_y        : float
@@ -521,11 +561,17 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    Variance covariance matrix (kxk)
     pr2          : float
                    Pseudo R squared (squared correlation between y and ypred)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     std_err      : array
                    1xk array of standard errors of the betas    
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     z_stat       : list of tuples
                    z statistic; each tuple contains the pair (statistic,
                    p-value), where each is a float
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     name_y        : string
                     Name of dependent variable for use in output
     name_x        : list of strings
@@ -547,6 +593,8 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                     Name of regimes variable for use in output
     title         : string
                     Name of the regression method used
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     regimes       : list
                     List of n values with the mapping of each
                     observation to a regime. Assumed to be aligned with 'x'.
@@ -578,6 +626,11 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                     estimate
     nr            : int
                     Number of different regimes in the 'regimes' list
+    multi         : dictionary
+                    Only available when multiple regressions are estimated,
+                    i.e. when regime_err_sep=True and no variable is fixed
+                    across regimes.
+                    Contains all attributes of each individual regression
 
     References
     ----------
@@ -693,7 +746,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     """
     def __init__(self, y, x, yend, q, regimes, w,\
                  max_iter=1, epsilon=0.00001, step1c=False,\
-                 constant_regi='many', cols2regi='all', regime_err_sep=False,\
+                 constant_regi='many', cols2regi='all', regime_err_sep=True,\
                  inv_method='power_exp', cores=None, regi_w=None,\
                  vm=False, name_y=None, name_x=None,\
                  name_yend=None, name_q=None,\
@@ -708,6 +761,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         self.name_regimes = USER.set_name_ds(name_regimes)
         self.name_w = USER.set_name_w(name_w, w)
         self.n,self.step1c = n,step1c
+        self.y = y
         
         x_constant = USER.check_constant(x)
         name_x = USER.set_name_x(name_x, x)
@@ -718,6 +772,10 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         self.name_x_r = name_x + name_yend
 
         cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, yend=yend)
+        self.regimes_set = REGI._get_regimes_set(regimes)
+        self.regimes = regimes
+        USER.check_regimes(self.regimes_set)
+        self.regime_err_sep = regime_err_sep        
 
         if regime_err_sep == True:
             if set(cols2regi) == set([True]):
@@ -739,7 +797,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
             # 1a. S2SLS --> \tilde{\delta}
             tsls = BaseTSLS(y=y, x=x, yend=yend2, q=q)
             self.k = tsls.z.shape[1]
-            self.x, self.y = tsls.x, tsls.y
+            self.x = tsls.x
             self.yend, self.z, self.h = tsls.yend, tsls.z, tsls.h
             wA1 = UTILS.get_A1_het(w.sparse)
 
@@ -805,7 +863,6 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                  max_iter, epsilon, step1c, inv_method, cols2regi, regi_w, vm,\
                  name_x, name_yend, name_q):
 
-        self.regimes_set = REGI._get_regimes_set(regimes)
         if regi_w:
             w_i,regi_ids = regi_w[0:2]
         else:
@@ -967,26 +1024,42 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
     k            : integer
                    Number of variables for which coefficients are estimated
                    (including the constant)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     y            : array
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, including the constant
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     q            : array
                    Two dimensional array with n rows and one column for each
                    external exogenous variable used as instruments 
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     z            : array
                    nxk array of variables (combination of x and yend)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     h            : array
                    nxl array of instruments (combination of x and q)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     mean_y       : float
                    Mean of dependent variable
     std_y        : float
@@ -995,14 +1068,22 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                    Variance covariance matrix (kxk)
     pr2          : float
                    Pseudo R squared (squared correlation between y and ypred)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     pr2_e        : float
                    Pseudo R squared (squared correlation between y and ypred_e
                    (using reduced form))
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     std_err      : array
                    1xk array of standard errors of the betas    
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     z_stat       : list of tuples
                    z statistic; each tuple contains the pair (statistic,
                    p-value), where each is a float
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     name_y        : string
                     Name of dependent variable for use in output
     name_x        : list of strings
@@ -1024,6 +1105,8 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                     Name of regimes variable for use in output
     title         : string
                     Name of the regression method used
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     regimes       : list
                     List of n values with the mapping of each
                     observation to a regime. Assumed to be aligned with 'x'.
@@ -1059,6 +1142,11 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                     estimate
     nr            : int
                     Number of different regimes in the 'regimes' list
+    multi         : dictionary
+                    Only available when multiple regressions are estimated,
+                    i.e. when regime_err_sep=True and no variable is fixed
+                    across regimes.
+                    Contains all attributes of each individual regression
 
     References
     ----------
@@ -1197,7 +1285,7 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                  max_iter=1, epsilon=0.00001, step1c=False,\
                  cores=None, inv_method='power_exp',\
                  constant_regi='many', cols2regi='all',\
-                 regime_err_sep=False, regime_lag_sep=False,\
+                 regime_err_sep=True, regime_lag_sep=False,\
                  vm=False, name_y=None, name_x=None,\
                  name_yend=None, name_q=None,\
                  name_w=None, name_ds=None, name_regimes=None):
@@ -1213,10 +1301,14 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
         name_q.extend(USER.set_name_q_sp(name_x, w_lags, name_q, lag_q, force_all=True))
 
         cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, yend=yend, add_cons=False)     
+        self.regimes_set = REGI._get_regimes_set(regimes)
+        self.regimes = regimes
+        USER.check_regimes(self.regimes_set)
+        self.regime_err_sep = regime_err_sep        
+        self.regime_lag_sep = regime_lag_sep 
 
         if regime_lag_sep == True:
             cols2regi += [True]
-            self.regimes_set = REGI._get_regimes_set(regimes)
             regi_w = (REGI.w_regimes(w, regimes, self.regimes_set, transform=regime_err_sep, get_ids=regime_err_sep))
             w = REGI.w_regimes_union(w, regi_w[0], self.regimes_set)
             set_warn(self, regi_w[2])

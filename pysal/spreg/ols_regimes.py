@@ -108,13 +108,19 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
     k            : integer
                    Number of variables for which coefficients are estimated
                    (including the constant)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     y            : array
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, including the constant
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     robust       : string
                    Adjustment for robust standard errors
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)                  
     mean_y       : float
                    Mean of dependent variable
     std_y        : float
@@ -123,61 +129,101 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
                    Variance covariance matrix (kxk)
     r2           : float
                    R squared
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     ar2          : float
                    Adjusted R squared
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     utu          : float
                    Sum of squared residuals
     sig2         : float
                    Sigma squared used in computations
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     sig2ML       : float
                    Sigma squared (maximum likelihood)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     f_stat       : tuple
                    Statistic (float), p-value (float)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     logll        : float
                    Log likelihood
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     aic          : float
                    Akaike information criterion 
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     schwarz      : float
                    Schwarz information criterion     
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     std_err      : array
                    1xk array of standard errors of the betas    
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     t_stat       : list of tuples
                    t statistic; each tuple contains the pair (statistic,
                    p-value), where each is a float
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     mulColli     : float
                    Multicollinearity condition number
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     jarque_bera  : dictionary
                    'jb': Jarque-Bera statistic (float); 'pvalue': p-value
                    (float); 'df': degrees of freedom (int)  
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     breusch_pagan : dictionary
                     'bp': Breusch-Pagan statistic (float); 'pvalue': p-value
                     (float); 'df': degrees of freedom (int)  
+                    Only available in dictionary 'multi' when multiple regressions
+                    (see 'multi' below for details)
     koenker_bassett : dictionary
                       'kb': Koenker-Bassett statistic (float); 'pvalue':
                       p-value (float); 'df': degrees of freedom (int)  
+                      Only available in dictionary 'multi' when multiple regressions
+                      (see 'multi' below for details)
     white         : dictionary
                     'wh': White statistic (float); 'pvalue': p-value (float);
                     'df': degrees of freedom (int)  
+                    Only available in dictionary 'multi' when multiple regressions
+                    (see 'multi' below for details)
     lm_error      : tuple
                     Lagrange multiplier test for spatial error model; tuple
                     contains the pair (statistic, p-value), where each is a
                     float 
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     lm_lag        : tuple
                     Lagrange multiplier test for spatial lag model; tuple
                     contains the pair (statistic, p-value), where each is a
                     float 
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     rlm_error     : tuple
                     Robust lagrange multiplier test for spatial error model;
                     tuple contains the pair (statistic, p-value), where each
                     is a float
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     rlm_lag       : tuple
                     Robust lagrange multiplier test for spatial lag model;
                     tuple contains the pair (statistic, p-value), where each
                     is a float
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     lm_sarma      : tuple
                     Lagrange multiplier test for spatial SARMA model; tuple
                     contains the pair (statistic, p-value), where each is a
                     float
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     moran_res     : tuple
                     Moran's I for the residuals; tuple containing the triple
                     (Moran's I, standardized Moran's I, p-value)
@@ -195,14 +241,20 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
                    Name of regime variable for use in the output
     title         : string
                     Name of the regression method used
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     sig2n        : float
                    Sigma squared (computed with n in the denominator)
     sig2n_k      : float
                    Sigma squared (computed with n-k in the denominator)
     xtx          : float
                    X'X
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     xtxi         : float
                    (X'X)^-1
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     regimes      : list
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
@@ -234,7 +286,11 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
                    estimate
     nr           : int
                    Number of different regimes in the 'regimes' list
-
+    multi        : dictionary
+                   Only available when multiple regressions are estimated,
+                   i.e. when regime_err_sep=True and no variable is fixed
+                   across regimes.
+                   Contains all attributes of each individual regression
     
     Examples
     --------
@@ -314,9 +370,12 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_regimes = USER.set_name_ds(name_regimes)
-        self.n = n        
+        self.n = n 
         cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, add_cons=False)
         self.regimes_set = REGI._get_regimes_set(regimes)
+        self.regimes = regimes
+        USER.check_regimes(self.regimes_set)
+        self.regime_err_sep = regime_err_sep
         if regime_err_sep == True and set(cols2regi) == set([True]) and constant_regi == 'many':
             self.y = y
             name_x = USER.set_name_x(name_x, x)
