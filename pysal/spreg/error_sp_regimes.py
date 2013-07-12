@@ -281,7 +281,7 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     """
     def __init__(self, y, x, regimes, w,\
                  vm=False, name_y=None, name_x=None, name_w=None,\
-                 constant_regi='many', cols2regi='all', regime_err_sep=True,\
+                 constant_regi='many', cols2regi='all', regime_err_sep=False,\
                  cores=None, name_ds=None, name_regimes=None):
 
         n = USER.check_arrays(y, x)
@@ -683,7 +683,7 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     '''
     def __init__(self, y, x, yend, q, regimes, w, cores=None,\
                  vm=False, constant_regi='many', cols2regi='all',\
-                 regime_err_sep=True, regi_w=None, name_y=None,\
+                 regime_err_sep=False, regi_w=None, name_y=None,\
                  name_x=None, name_yend=None, name_q=None, name_w=None,\
                  name_ds=None, name_regimes=None, summ=True):      
         
@@ -1170,7 +1170,7 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
     def __init__(self, y, x, regimes, yend=None, q=None,\
                  w=None, w_lags=1, lag_q=True, cores=None,\
                  constant_regi='many', cols2regi='all',\
-                 regime_err_sep=True, regime_lag_sep=False,\
+                 regime_err_sep=False, regime_lag_sep=False,\
                  vm=False, name_y=None, name_x=None,\
                  name_yend=None, name_q=None,\
                  name_w=None, name_ds=None, name_regimes=None):

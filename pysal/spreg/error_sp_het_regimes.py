@@ -286,7 +286,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     """
 
     def __init__(self, y, x, regimes, w, max_iter=1, epsilon=0.00001, step1c=False,\
-                 constant_regi='many', cols2regi='all', regime_err_sep=True,\
+                 constant_regi='many', cols2regi='all', regime_err_sep=False,\
                  cores=None, vm=False, name_y=None, name_x=None, name_w=None,\
                  name_ds=None, name_regimes=None):
 
@@ -746,7 +746,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     """
     def __init__(self, y, x, yend, q, regimes, w,\
                  max_iter=1, epsilon=0.00001, step1c=False,\
-                 constant_regi='many', cols2regi='all', regime_err_sep=True,\
+                 constant_regi='many', cols2regi='all', regime_err_sep=False,\
                  inv_method='power_exp', cores=None, regi_w=None,\
                  vm=False, name_y=None, name_x=None,\
                  name_yend=None, name_q=None,\
@@ -1285,7 +1285,7 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                  max_iter=1, epsilon=0.00001, step1c=False,\
                  cores=None, inv_method='power_exp',\
                  constant_regi='many', cols2regi='all',\
-                 regime_err_sep=True, regime_lag_sep=False,\
+                 regime_err_sep=False, regime_lag_sep=False,\
                  vm=False, name_y=None, name_x=None,\
                  name_yend=None, name_q=None,\
                  name_w=None, name_ds=None, name_regimes=None):
