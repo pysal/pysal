@@ -15,13 +15,13 @@ __author__ = "Sergio Rey <sjsrey@gmail.com>, Jay Laura <jlaura@asu.edu>"
 
 import numpy as np
 import pysal as ps
+from pysal.cg import Point, Polygon
 import copy
-import networkx as nx
-from numpy import array
 import operator
 import math
 import net_shp_io
 from itertools import combinations
+
 
 def enum_links_node(wed, node):
     """
@@ -46,7 +46,7 @@ def enum_links_node(wed, node):
     start_c = wed.start_c
     end_c = wed.end_c
     node_edge = wed.node_edge
-    
+
     links = []
     if node not in node_edge:
         return links
@@ -65,7 +65,8 @@ def enum_links_node(wed, node):
         else:
             links.append(l)
     return links
-    
+
+
 def enum_edges_region(wed, region):
     """
     Enumerate the edges of a region/polygon in cw order
@@ -103,18 +104,19 @@ def enum_edges_region(wed, region):
             traveling = False
     return edges
 
+
 def w_links(wed):
     """
-    Generate Weights object for links in a WED 
+    Generate Weights object for links in a WED
     """
     nodes = wed.node_edge.keys()
     neighbors = {}
     for node in nodes:
         lnks = enum_links_node(wed, node)
         # put i,j s.t. i < j
-        lnks = [ tuple(sorted(lnk)) for lnk in lnks]
-        for comb in combinations(range(len(lnks)),2):
-            l,r = comb
+        lnks = [tuple(sorted(lnk)) for lnk in lnks]
+        for comb in combinations(range(len(lnks)), 2):
+            l, r = comb
             if lnks[l] not in neighbors:
                 neighbors[lnks[l]] = []
             neighbors[lnks[l]].append(lnks[r])
@@ -122,6 +124,23 @@ def w_links(wed):
                 neighbors[lnks[r]] = []
             neighbors[lnks[r]].append(lnks[l])
     return ps.W(neighbors)
+
+
+def assign_points_to_edges(pts, wed):
+    #Build PySAL polygon objects from each region
+    polys = {}
+    for r in range(len(wed.region_edge)):
+        print r
+        edges = enum_edges_region(wed, r)
+        poly = []
+        for e in edges:
+            poly.append(Point(wed.node_coords[e[0]]))
+        polys[r] = (Polygon(poly))
+
+    #Brute force check point in polygon
+    for pt in pts:
+        for poly in polys:
+            print ps.cg.standalone.get_polygon_point_intersection(poly, pt)
 
 
 def connected_component(adjacency, node):
@@ -150,7 +169,6 @@ def connected_component(adjacency, node):
         return [node]
     stack = [node]
     visited = []
-    children = A[node]
     searching = True
     visited.append(node)
     while searching:
@@ -165,6 +183,7 @@ def connected_component(adjacency, node):
             if not stack:
                 searching = False
     return visited
+
 
 def connected_components(adjacency):
     """
@@ -194,14 +213,15 @@ def connected_components(adjacency):
 
 # helper functions to determine relative position of vectors
 def _dotproduct(v1, v2):
-    return sum((a*b) for a,b in zip(v1, v2))
+    return sum((a * b) for a, b in zip(v1, v2))
+
 
 def _length(v):
     return math.sqrt(_dotproduct(v,v))
 
+
 def _angle(v1, v2):
     return math.acos(_dotproduct(v1, v2) / (_length(v1) * _length(v2)))
-
 
 
 def filament_pointers(filament, node_edge={}):
@@ -230,7 +250,7 @@ def filament_pointers(filament, node_edge={}):
     ec:     dict
             key is edge, value is first edge encountered when rotating
             clockwise around edge start end node
- 
+
 
     scc:    dict
             key is edge, value is first edge encountered when rotating
@@ -238,7 +258,8 @@ def filament_pointers(filament, node_edge={}):
 
 
     sc:     dict
-            key is edge, value is first edge encountered when rotating clockwise around edge start node
+            key is edge, value is first edge encountered when rotating
+            clockwise around edge start node
 
     node_edge: dict
                key is a node, value is the edge the node is assigned to
@@ -250,25 +271,25 @@ def filament_pointers(filament, node_edge={}):
     ecc = {}
     sc = {}
     scc = {}
-    for i in range(nv-2):
+    for i in range(nv - 2):
         s0 = filament[i]
-        e0 = filament[i+1]
-        s1 = filament[i+2]
-        ecc[s0,e0] = e0,s1
-        ecc[s1,e0] = e0,s0
-        ec[s0,e0] = e0,s1
-        sc[e0,s1] = s0,e0
-        scc[e0,s1] = s0,e0
+        e0 = filament[i + 1]
+        s1 = filament[i + 2]
+        ecc[s0, e0] = e0, s1
+        ecc[s1, e0] = e0, s0
+        ec[s0, e0] = e0, s1
+        sc[e0, s1] = s0, e0
+        scc[e0, s1] = s0, e0
         if s0 not in node_edge:
-            node_edge[s0] = s0,e0
+            node_edge[s0] = s0, e0
         if e0 not in node_edge:
-            node_edge[e0] = s0,e0
+            node_edge[e0] = s0, e0
         if s1 not in node_edge:
             node_edge[s1] = e0, s1
     # wrapper pointers for first and last edges
     ecc[filament[-2], filament[-1]] = filament[-1], filament[-2]
     ec[filament[-2], filament[-1]] = filament[-2], filament[-1]
-    ecc[filament[1],filament[0]] = filament[0], filament[1]
+    ecc[filament[1], filament[0]] = filament[0], filament[1]
     ec[filament[1], filament[0]] = filament[1], filament[0]
     sc[filament[0], filament[1]] = filament[0], filament[1]
     # technically filaments have to have at least intermediate node with incidence 2
@@ -284,7 +305,8 @@ def filament_pointers(filament, node_edge={}):
         if filament[1] not in node_edge:
             node_edge[filament[1]] = filament[0], filament[1]
     return ecc, ec, scc, sc, node_edge
-     
+
+
 def adj_nodes(start_key, edges):
     start_key
     vnext = []
@@ -295,6 +317,7 @@ def adj_nodes(start_key, edges):
         pass
         #print "Vertex is end point."
     return vnext
+
 
 def regions_from_graph(nodes, edges, remove_holes = False):
     """
@@ -335,10 +358,12 @@ def regions_from_graph(nodes, edges, remove_holes = False):
     Based on
     Eberly http://www.geometrictools.com/Documentation/MinimalCycleBasis.pdf.
     """
+
+
     def find_start_node(nodes,node_coord):
         start_node = []
         minx = float('inf')
-        for key,node in nodes.items():
+        for key ,node in nodes.items():
             if node[0] <= minx:
                 minx = node[0]
                 start_node.append(key)
@@ -350,7 +375,8 @@ def regions_from_graph(nodes, edges, remove_holes = False):
                 else:
                     start_node.remove(i)
         return nodes[start_node[0]], node_coord[nodes[start_node[0]]]
-    
+
+
     def clockwise(nodes,vnext,start_key, v_prev, vertices=None):
         v_curr = np.asarray(nodes[start_key])
         v_next = None
@@ -359,19 +385,19 @@ def regions_from_graph(nodes, edges, remove_holes = False):
         else:
             pass
         d_curr = v_curr - v_prev
-        
+
         for v_adj in vnext:
             #No backtracking
             if np.array_equal(np.asarray(nodes[v_adj]),v_prev) == True:
-                
+
                 continue
             if type(v_prev) == int:
                 if v_adj == v_prev:
                     continue
-            
+
             #The potential direction to move in
             d_adj = np.asarray(nodes[v_adj]) - v_curr
-            
+
             #Select the first candidate
             if v_next is None:
                 v_next = np.asarray(nodes[v_adj])
@@ -381,12 +407,12 @@ def regions_from_graph(nodes, edges, remove_holes = False):
                     convex = True
                 else:
                     convex = False
-            
+
             #Update if the next candidate is clockwise of the current clock-wise most
             if convex == True:
                 if (d_curr[0]*d_adj[1] - d_curr[1]*d_adj[0]) < 0 or (d_next[0]*d_adj[1]-d_next[1]*d_adj[0]) < 0:
                     v_next = np.asarray(nodes[v_adj])
-                    d_next = d_adj 
+                    d_next = d_adj
                     convex = d_next[0]*d_curr[1] - d_next[1]*d_curr[0]
                     if convex <= 0:
                         convex = True
@@ -395,8 +421,8 @@ def regions_from_graph(nodes, edges, remove_holes = False):
             else:
                 if (d_curr[0]*d_adj[1] - d_curr[1]*d_adj[0]) < 0 and (d_next[0]*d_adj[1]-d_next[1]*d_adj[0]) < 0:
                     v_next = np.asarray(nodes[v_adj])
-                    d_next = d_adj 
-                    convex = d_next[0]*d_curr[1] - d_next[1]*d_curr[0] 
+                    d_next = d_adj
+                    convex = d_next[0]*d_curr[1] - d_next[1]*d_curr[0]
                     if convex <= 0:
                         convex = True
                     else:
@@ -411,36 +437,36 @@ def regions_from_graph(nodes, edges, remove_holes = False):
         v_prev = np.asarray(nodes[prev_key])
         v_curr = np.asarray(nodes[start_key])
         d_curr = v_curr - v_prev
-        
-        for v_adj in vnexts: 
+
+        for v_adj in vnexts:
             #Prohibit Back-tracking
             if v_adj == prev_key:
                 continue
             d_adj = np.asarray(nodes[v_adj]) - v_curr
-            
+
             if v_next == None:
                 v_next = np.asarray(nodes[v_adj])
                 d_next = d_adj
                 convex = d_next[0]*d_curr[1] - d_next[1]*d_curr[0]
-                
+
             if convex <= 0:
                 if d_curr[0]*d_adj[1] - d_curr[1]*d_adj[0] > 0 and d_next[0]*d_adj[1] - d_next[1]*d_adj[0] > 0:
                     v_next = np.asarray(nodes[v_adj])
-                    d_next = d_adj 
+                    d_next = d_adj
                     convex = d_next[0]*d_curr[1] - d_next[1]*d_curr[0]
                 else:
                     pass
             else:
                 if d_curr[0]*d_adj[1] - d_curr[1]*d_adj[0] > 0 or d_next[0]*d_adj[1]-d_next[1]*d_adj[0] > 0:
                     v_next = np.asarray(nodes[v_adj])
-                    d_next = d_adj 
+                    d_next = d_adj
                     convex = d_next[0]*d_curr[1] - d_next[1]*d_curr[0]
                 else:
                     pass
         prev_key = start_key
         try:
             return tuple(v_next.tolist()), node_coord[tuple(v_next.tolist())], prev_key
-        except: 
+        except:
             return v_next, None, prev_key
     def remove_edge(v0,v1,edges, ext_edges):
         try:
@@ -451,22 +477,22 @@ def regions_from_graph(nodes, edges, remove_holes = False):
         except:
             pass
         return edges, ext_edges
-    
+
     def remove_heap(v0,sorted_nodes):
         sorted_nodes[:] = [x for x in sorted_nodes if x[0] != v0]
         return sorted_nodes
-            
+
     def remove_node(v0, nodes, nodes_coord, vertices):
         vertices[v0] = nodes[v0]
         del nodes_coord[nodes[v0]]
         del nodes[v0]
         return nodes, nodes_coord, vertices
-        
+
     def extractisolated(nodes,node_coord,v0,primitives, vertices, ext_edges):
         primitives.append(v0)
         nodes, node_coord, vertices = remove_node(v0, nodes, node_coord, vertices)
         return nodes, node_coord, primitives, vertices, ext_edges
-    
+
     def extractfilament(v0,v1, nodes, node_coord,sorted_nodes, edges, primitives,cycle_edge, vertices, ext_edges, iscycle=False):
         if (v0,v1) in cycle_edge or (v1,v0) in cycle_edge:
             iscycle = True
@@ -483,7 +509,7 @@ def regions_from_graph(nodes, edges, remove_holes = False):
                 iscycle = False
                 if (v0,v1) in cycle_edge or (v1,v0) in cycle_edge:
                     iscycle = True
-                
+
                 if iscycle == True:
                     edges, ext_edges = remove_edge(v0,v1,edges, ext_edges)
                     nodes, node_coord, vertices = remove_node(v0, nodes, node_coord, vertices)
@@ -492,7 +518,7 @@ def regions_from_graph(nodes, edges, remove_holes = False):
                 else:
                     break
             if len(adj_nodes(v0, edges)) == 0:
-                
+
                 nodes, node_coord, vertices = remove_node(v0, nodes, node_coord, vertices)
                 sorted_nodes = remove_heap(v0, sorted_nodes)
         else:
@@ -504,7 +530,7 @@ def regions_from_graph(nodes, edges, remove_holes = False):
                 v0 = v1
                 if len(adj_nodes(v0, edges)) == 1:
                     v1 = adj_nodes(v0, edges)[0]
-    
+
             while len(adj_nodes(v0, edges)) == 1:
                 primitive.append(v0)
                 v1 = adj_nodes(v0, edges)[0]
@@ -512,7 +538,7 @@ def regions_from_graph(nodes, edges, remove_holes = False):
                 edges, ext_edges = remove_edge(v0, v1, edges, ext_edges)
                 nodes, node_coord, vertices = remove_node(v0, nodes, node_coord, vertices)
                 v0 = v1
-            
+
             primitive.append(v0)
             if len(adj_nodes(v0, edges)) == 0:
 
@@ -520,9 +546,9 @@ def regions_from_graph(nodes, edges, remove_holes = False):
                 edges, ext_edges = remove_edge(v0, v1, edges, ext_edges)
                 nodes, node_coord, vertices = remove_node(v0, nodes, node_coord, vertices)
             primitives.append((primitive))
-    
+
         return sorted_nodes, edges, nodes, node_coord, primitives, vertices, ext_edges
-    
+
     def extract_primitives(start_key,sorted_nodes, edges, nodes, node_coord, primitives,minimal_cycles,cycle_edge, vertices, ext_edges):
         v0 = start_key
         visited = []
@@ -542,12 +568,12 @@ def regions_from_graph(nodes, edges, remove_holes = False):
             process = False
         elif v_curr in visited:
             process = False
-  
+
         while process == True:
             sequence.append(v_curr)
             visited.append(v_curr)
             vnext = adj_nodes(v_curr, edges)
-    
+
             v_curr_coords,v_next,v_prev = counterclockwise(nodes,vnext,v_curr, v_prev)
             v_curr = v_next
             if v_curr == None:
@@ -556,11 +582,11 @@ def regions_from_graph(nodes, edges, remove_holes = False):
                 process = False
             elif v_curr in visited:
                 process = False
-    
+
         if v_curr is None:
             #Filament found, not necessarily at start_key
             sorted_nodes, edges, nodes, node_coord, primitives, vertices, ext_edges = extractfilament(v_prev, adj_nodes(v_prev, edges)[0],nodes, node_coord, sorted_nodes, edges, primitives, cycle_edge, vertices, ext_edges)
-            
+
         elif v_curr == v0:
             #Minimal cycle found
             primitive = []
@@ -579,11 +605,11 @@ def regions_from_graph(nodes, edges, remove_holes = False):
                 cycle_edge.append((v1, adj_nodes(v1, edges)[0]))
                 cycle_edge.append((adj_nodes(v1, edges)[0],v1))
                 sorted_nodes, edges, nodes, node_coord, primitives, vertices, ext_edges = extractfilament(v1, adj_nodes(v1, edges)[0],nodes, node_coord, sorted_nodes, edges, primitives, cycle_edge, vertices, ext_edges)
-           
+
             for i,v in enumerate(sequence[1:-1]):
                 cycle_edge.append((v,sequence[i]))
                 cycle_edge.append((sequence[i],v))
-            
+
         else:
             #vcurr was visited earlier, so traverse the filament to find the end
             while len(adj_nodes(v0,edges)) == 2:
@@ -599,7 +625,7 @@ def regions_from_graph(nodes, edges, remove_holes = False):
     #1.
     sorted_nodes = sorted(nodes.iteritems(), key=operator.itemgetter(1))
     node_coord = dict (zip(nodes.values(),nodes.keys()))
-    
+
     #2.
     primitives = []
     minimal_cycles = []
@@ -607,35 +633,35 @@ def regions_from_graph(nodes, edges, remove_holes = False):
     prev_key = None #This is only true for the first iteration.
     #This handles edge and node deletion we need populated later.
     vertices = {}
-    ext_edges = []    
-    
+    ext_edges = []
+
     #3.
     while sorted_nodes: #Iterate through the sorted list
         start_key = sorted_nodes[0][0]
         numadj = len(adj_nodes(start_key, edges))
-        
+
         if numadj == 0:
-            nodes, node_coord, primitives, vertices, ext_edges = extractisolated(nodes,node_coord,start_key,primitives, vertices, ext_edges) 
+            nodes, node_coord, primitives, vertices, ext_edges = extractisolated(nodes,node_coord,start_key,primitives, vertices, ext_edges)
             sorted_nodes.pop(0)
         elif numadj == 1:
             sorted_nodes, edges, nodes, node_coord, primitives, vertices, ext_edges = extractfilament(start_key, adj_nodes(start_key, edges)[0],nodes, node_coord, sorted_nodes, edges,primitives,cycle_edge, vertices, ext_edges)
         else:
             sorted_nodes, edges, nodes, node_coord, primitives, minimal_cycles,cycle_edge, vertices, ext_edges = extract_primitives(start_key,sorted_nodes, edges, nodes, node_coord, primitives, minimal_cycles,cycle_edge, vertices, ext_edges)
-    
+
     #4. Remove holes from the graph
     if remove_holes == True:
         polys = []
         for cycle in minimal_cycles:
             polys.append(ps.cg.Polygon([ps.cg.Point(vertices[pnt]) for pnt in cycle]))
-            
+
         pl = ps.cg.PolygonLocator(polys)
-           
+
         # find all overlapping polygon mbrs
         overlaps ={}
         nump = len(minimal_cycles)
         for i in range(nump):
             overlaps[i] = pl.overlapping(polys[i].bounding_box)
-        
+
         # for overlapping mbrs (left,right) check if right polygon is contained in left
         holes = []
         for k in overlaps:
@@ -643,19 +669,19 @@ def regions_from_graph(nodes, edges, remove_holes = False):
                 s = sum( [polys[k].contains_point(v) for v in pc.vertices])
                 if s == len(pc.vertices):
                     # print k, pc
-                    holes.append((k,pc))    
-        
+                    holes.append((k,pc))
+
         for hole in holes:
             outer, inner = hole
             inner = polys.index(inner)
             minimal_cycles.pop(inner)
-    
+
     #5. Remove isolated vertices
     filaments = []
     for index, primitive in enumerate(primitives):
         if type(primitive) == list:
             filaments.append(primitive)
-    
+
     results = {}
     results['regions'] = minimal_cycles
     results['filaments'] = filaments
@@ -682,7 +708,7 @@ def extract_wed(edges, coords):
     Returns
     -------
     wed: Dictionary holding the WED with 10 keys
-        
+
          start_node: dict
                      key is node, value is edge with node as start node
 
@@ -726,7 +752,7 @@ def extract_wed(edges, coords):
     pos = coords.values()
     mcb = regions_from_graph(coords,edges)
     # Edge pointers
-    # 
+    #
     # - start_node[edge]
     # - end_node[edge]
 
@@ -741,7 +767,7 @@ def extract_wed(edges, coords):
             end_node[edge] = edge[1]
 
     # Right polygon for each edge in each region primitive
-    # 
+    #
     # Also define start_c, end_cc for each polygon edge and start_cc and end_c for its twin
 
     right_polygon = {}
@@ -772,7 +798,7 @@ def extract_wed(edges, coords):
             start_cc[twin] = end_cc[edge]
             end_c[twin] = start_c[edge]
         region_edge[ri] = edge
-         
+
 
     # Test for holes
     # Need to add
@@ -817,7 +843,7 @@ def extract_wed(edges, coords):
                 y0 = pos[current[0]][1] - origin[1]
                 maxangle = 0.0
                 v0 = (x0,y0)
-                
+
                 for i,candidate in enumerate(candidates):
                     x1 = pos[candidate[1]][0] - origin[0]
                     y1 = pos[candidate[1]][1] - origin[1]
@@ -827,7 +853,7 @@ def extract_wed(edges, coords):
                         maxangle = v0_v1
                         j=i
                     angles.append(v0_v1)
-                    
+
             next_edge = candidates[j]
             path.append(next_edge)
             noleft_poly.remove(next_edge)
@@ -835,7 +861,7 @@ def extract_wed(edges, coords):
         unions.append(path)
 
 
-    # unions has the paths that trace out the unions of contiguous regions (in cw order) 
+    # unions has the paths that trace out the unions of contiguous regions (in cw order)
 
 
     # Walk around each union in cw fashion
@@ -859,26 +885,43 @@ def extract_wed(edges, coords):
     # after this find the holes in the external polygon (these should be the connected components)
 
     # Fill out s_c, s_cc, e_c, e_cc pointers for each edge after filaments are inserted
-           
+
     regions = [set(region) for region in mcb['regions']]
     filaments = mcb['filaments']
     filament_region = {}
-    for f,filament in enumerate(filaments):
+    for f, filament in enumerate(filaments):
         filament_region[f] = []
-        # set up pointers on filament edges prior to insertion 
+        print "Filament: ", filament
+        # set up pointers on filament edges prior to insertion
         ecc, ec, scc, sc, node_edge = filament_pointers(filament, node_edge)
         end_cc.update(ecc)
         start_c.update(sc)
         start_cc.update(scc)
         end_c.update(ec)
-        
+
         # find which regions the filament is adjacent to
         sf = set(filament)
-        for r,region in enumerate(regions):
+        for r, region in enumerate(regions):
+            internal = False
             sfi = sf.intersection(region)
             if sfi:
                 node = sfi.pop()
                 filament_region[f].append(r)
+                #print "Region: ",filament_region[f]
+                # The logic here is that, if the filament is internal to the
+                # region we are good to go.  If it is external to the region it
+                # will never break and we are good to go.  If the filament is
+                # internal to one region and external to one or mroe regions,
+                # it will set the pointers incorrectly until it hits the
+                # internal region.  Then it sets the pointers based on the
+                # internal region and breaks.
+                region = []
+                for v in regions[r]:
+                    region.append(coords_org[v])
+                pr = ps.cg.Polygon(region)
+                if pr.contains_point(coords_org[filament[1]]):
+                    #print "Internal: ", r, filament
+                    internal = True
                 # find edges in region that that are adjacent to sfi
                 # find which pair of edges in the region that the filament bisects
                 if mcb['regions'][r].count(node) == 2:
@@ -886,9 +929,8 @@ def extract_wed(edges, coords):
                     e2 = node, mcb['regions'][r][1]
                 else:
                     i = mcb['regions'][r].index(node)
-                    e1 = node, mcb['regions'][r][i-1]
-                    e2 = node, mcb['regions'][r][i+1]
-                
+                    e1 = node, mcb['regions'][r][i - 1]
+                    e2 = node, mcb['regions'][r][i + 1]
                 # get filament edge
                 fi = filament.index(node)
                 fstart = True # start of filament is adjacent node to region
@@ -900,7 +942,7 @@ def extract_wed(edges, coords):
                 A = vertices[e1[1]]
                 B = vertices[e1[0]]
                 C = vertices[filament[fj]]
-                area_abc = A[0] * (B[1]-C[1]) + B[0] * (C[1]-A[1]) + C[0] * (A[1]- B[1])
+                area_abc = A[0] * (B[1] - C[1]) + B[0] * (C[1] - A[1]) + C[0] * (A[1] - B[1])
                 D = vertices[e2[0]]
                 E = vertices[e2[1]]
                 area_dec = D[0] * (E[1] - C[1]) + E[0] * (C[1] - D[1]) + C[0] * (D[1] - E[1])
@@ -916,7 +958,10 @@ def extract_wed(edges, coords):
                     right_polygon[filament[fj], filament[fi]] = r
                     left_polygon[filament[fj], filament[fi]] = r
                     end_cc[filament[fj], filament[fi]] = e2 # twin of first internal edge so enumerate region works
-                    
+                    try:
+                        print start_c[(136,198)]
+                    except:
+                        pass
                     n_f = len(filament) - 1 # number of filament edges
                     for j in range(1,n_f):
                         sj = j
@@ -930,14 +975,14 @@ def extract_wed(edges, coords):
                     left_polygon[filament[-1],filament[-2]] = r
                     right_polygon[filament[-2],filament[-1]] = r
                     left_polygon[filament[-2],filament[-1]] = r
-                    
+
                 else:
-                    #print 'outside', filament[fi], filament[fj]
+                    #print 'outside', filament[fi], filament[fj
                     end_c[e1[1],e1[0]] = filament[fi],filament[fj]
                     start_cc[e2] = filament[fi],filament[fj]
                     start_cc[filament[fi],filament[fj]] = e1[1],e1[0]
                     start_c[filament[fi],filament[fj]] = e2
-                    
+
                     n_f = len(filament) - 1 # number of filament edges
                     for j in range(1,n_f):
                         sj = j
@@ -950,15 +995,18 @@ def extract_wed(edges, coords):
                     # last edge
                     end_c[filament[-2],filament[-1]] = filament[-2],filament[-1]
                     end_cc[filament[-2],filament[-1]] = filament[-2],filament[-1]
-                   
+
+            if internal is True:
+                break
+
     return WED(start_c, start_cc, end_c, end_cc, region_edge,
             node_edge, right_polygon, left_polygon, start_node, end_node,
             node_coords = coords_org)
 
 class WED:
     """Winged-Edge Data Structure
-    
-    
+
+
     """
     def __init__(self, start_c, start_cc, end_c, end_cc, region_edge,
             node_edge, right_polygon, left_polygon, start_node, end_node,
@@ -1015,7 +1063,7 @@ if __name__ == '__main__':
     vertices = {}
     for v in range(28):
         vertices[v] = []
-        
+
     vertices[1] = [2,3]
     vertices[2] = [1,4,7]
     vertices[3] = [1,4]
@@ -1055,7 +1103,7 @@ if __name__ == '__main__':
     for vert in vertices:
         for dest in vertices[vert]:
             edges.append((vert,dest))
-            
+
     wed_res = extract_wed(edges, coords)
 
     print "Enumeration of links around nodes"
@@ -1069,7 +1117,7 @@ if __name__ == '__main__':
     print "Eberly Test Completed \n"
 
     # new test from eberly shapefile after converting with contrib\spatialnet
-    
+
     coords = {0: (0.0, 4.0),
      1: (1.0, 7.0),
      2: (2.0, 4.5),
@@ -1128,13 +1176,13 @@ if __name__ == '__main__':
          (21, 23),
          (20, 23)]
 
-    
-    #Eberly expects double edges.  
+
+    #Eberly expects double edges.
     dbl_edges = []
     for e in edges:
         dbl_edges.append(e)
         dbl_edges.append((e[1], e[0]))
-        
+
     wed_1 = extract_wed(dbl_edges, coords)
 
     print "Enumeration of links around nodes"
@@ -1143,8 +1191,8 @@ if __name__ == '__main__':
 
     print "Enumeration of links around regions"
     for region in range(7):
-        print region, enum_edges_region(wed_1, region)    
-        
+        print region, enum_edges_region(wed_1, region)
+
     print "Eberly Shapefile (non-ordered nodes) Complete"
 
 
@@ -1160,8 +1208,8 @@ if __name__ == '__main__':
 
     print "Enumeration of links around regions"
     for region in range(7):
-        print region, enum_edges_region(wed_1, region)    
-        
+        print region, enum_edges_region(wed_1, region)
+
     print "Eberly read Shapefile (non-ordered nodes) Complete"
 
 
