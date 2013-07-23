@@ -338,18 +338,21 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
     return pysal.W(neighbors)
 
 
-def w_subset(w1, ids):
+def w_subset(w1, ids, silent_island_warning=False):
     """Returns a binary weights object, w, that includes only those
     observations in ids.
 
     Parameters
     ----------
 
-    w1      : W object
+    w1                      : W object
 
-    ids     : list
-              A list containing the IDs to be include in the returned weights
-              object.
+    ids                     : list
+                              A list containing the IDs to be include in the returned weights
+                              object.
+    silent_island_warning   : boolean
+                              Switch to turn off (default on) print statements
+                              for every observation with islands
 
 
     Returns
@@ -389,7 +392,7 @@ def w_subset(w1, ids):
         else:
             neighbors[i] = []
 
-    return pysal.W(neighbors, id_order=ids)
+    return pysal.W(neighbors, id_order=ids, silent_island_warning=True)
 
 
 def w_clip(w1, w2, outSP=True):
