@@ -919,8 +919,9 @@ def extract_wed(edges, coords):
                 for v in regions[r]:
                     region.append(coords_org[v])
                 pr = ps.cg.Polygon(region)
-                if pr.contains_point(coords_org[filament[1]]):
-                    #print "Internal: ", r, filament
+                print filament, filament[1]
+                if pr.contains_point(coords_org[filament[1]]) or pr.contains_point(coords_org[filament[0]]):
+                    print "Internal: ", r, filament
                     internal = True
                 # find edges in region that that are adjacent to sfi
                 # find which pair of edges in the region that the filament bisects
@@ -958,23 +959,20 @@ def extract_wed(edges, coords):
                     right_polygon[filament[fj], filament[fi]] = r
                     left_polygon[filament[fj], filament[fi]] = r
                     end_cc[filament[fj], filament[fi]] = e2 # twin of first internal edge so enumerate region works
-                    try:
-                        print start_c[(136,198)]
-                    except:
-                        pass
+
                     n_f = len(filament) - 1 # number of filament edges
-                    for j in range(1,n_f):
+                    for j in range(1, n_f):
                         sj = j
                         ej = j + 1
-                        right_polygon[filament[sj],filament[ej]] = r
-                        left_polygon[filament[sj],filament[ej]] = r
-                        right_polygon[filament[ej],filament[sj]] = r
-                        left_polygon[filament[ej],filament[sj]] = r
+                        right_polygon[filament[sj], filament[ej]] = r
+                        left_polygon[filament[sj], filament[ej]] = r
+                        right_polygon[filament[ej], filament[sj]] = r
+                        left_polygon[filament[ej], filament[sj]] = r
                     #last edge
-                    right_polygon[filament[-1],filament[-2]] = r
-                    left_polygon[filament[-1],filament[-2]] = r
-                    right_polygon[filament[-2],filament[-1]] = r
-                    left_polygon[filament[-2],filament[-1]] = r
+                    right_polygon[filament[-1], filament[-2]] = r
+                    left_polygon[filament[-1], filament[-2]] = r
+                    right_polygon[filament[-2], filament[-1]] = r
+                    left_polygon[filament[-2], filament[-1]] = r
 
                 else:
                     #print 'outside', filament[fi], filament[fj
