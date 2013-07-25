@@ -891,7 +891,7 @@ def extract_wed(edges, coords):
     filament_region = {}
     for f, filament in enumerate(filaments):
         filament_region[f] = []
-        print "Filament: ", filament
+        #print "Filament: ", filament
         # set up pointers on filament edges prior to insertion
         ecc, ec, scc, sc, node_edge = filament_pointers(filament, node_edge)
         end_cc.update(ecc)
@@ -919,9 +919,9 @@ def extract_wed(edges, coords):
                 for v in regions[r]:
                     region.append(coords_org[v])
                 pr = ps.cg.Polygon(region)
-                print filament, filament[1]
+                #print filament, filament[1]
                 if pr.contains_point(coords_org[filament[1]]) or pr.contains_point(coords_org[filament[0]]):
-                    print "Internal: ", r, filament
+                    #print "Internal: ", r, filament
                     internal = True
                 # find edges in region that that are adjacent to sfi
                 # find which pair of edges in the region that the filament bisects
