@@ -126,11 +126,35 @@ def w_links(wed):
     return ps.W(neighbors)
 
 
-def assign_points_to_edges(pts, wed):
+def assign_points_to_edges(pts, attribs, wed):
+    """
+    Assigns point observations to network edges
+
+    Arguments
+    ---------
+
+    pts: (list) PySAL point objects or tuples of x,y coords
+
+    attribs: (list) of attribute values
+
+    wed: (object) PySAL WED object
+
+    Returns
+    -------
+
+    obs_to_edge: (dict) where key is the edge and value is a set of observation attributes
+
+    Notes
+    -----
+    Assumes bi-directional edges and sets observations to both edges, e.g. [2,0] and [0,2]
+    """
+    #Setup a dictionary that stores node_id:[observations values]
+    obs_to_edge = {}
+    for x in wed.start_cc.iterkeys():
+        obs_to_edge[x] = set()
     #Build PySAL polygon objects from each region
     polys = {}
     for r in range(len(wed.region_edge)):
-        print r
         edges = enum_edges_region(wed, r)
         poly = []
         for e in edges:
@@ -138,9 +162,24 @@ def assign_points_to_edges(pts, wed):
         polys[r] = (Polygon(poly))
 
     #Brute force check point in polygon
-    for pt in pts:
-        for poly in polys:
-            print ps.cg.standalone.get_polygon_point_intersection(poly, pt)
+    for pt_index, pt in enumerate(pts):
+        for key, poly in polys.iteritems():
+            if ps.cg.standalone.get_polygon_point_intersect(poly, pt):
+                #print pt_index, key
+                potential_edges = enum_edges_region(wed, key)[:-1]
+                #Flags
+                dist = np.inf
+                e = None
+                #Brute force check all edges of the region
+                for edge in potential_edges:
+                    seg = ps.cg.shapes.LineSegment(wed.node_coords[edge[0]], wed.node_coords[edge[1]])
+                    ndist = ps.cg.standalone.get_segment_point_dist(seg, pt)[0]
+                    if ndist < dist:
+                        e = edge
+                        dist = ndist
+                obs_to_edge[e].add(attribs[pt_index])
+                obs_to_edge[e[1], e[0]].add(attribs[pt_index])
+    return obs_to_edge
 
 
 def connected_component(adjacency, node):
