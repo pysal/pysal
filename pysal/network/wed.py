@@ -15,7 +15,7 @@ __author__ = "Sergio Rey <sjsrey@gmail.com>, Jay Laura <jlaura@asu.edu>"
 
 import numpy as np
 import pysal as ps
-from pysal.cg import Point, Polygon
+from pysal.cg import Point, Polygon,LineSegment, KDTree
 import copy
 import operator
 import math
@@ -146,7 +146,8 @@ def assign_points_to_edges(pts, attribs, wed):
 
     Notes
     -----
-    Assumes bi-directional edges and sets observations to both edges, e.g. [2,0] and [0,2]
+    Assumes double edges and sets observations to both edges, e.g. [2,0] and [0,2]
+    Wrapped in a try / except block incase the edges are single .
     """
     #Setup a dictionary that stores node_id:[observations values]
     obs_to_edge = {}
@@ -172,14 +173,34 @@ def assign_points_to_edges(pts, attribs, wed):
                 e = None
                 #Brute force check all edges of the region
                 for edge in potential_edges:
-                    seg = ps.cg.shapes.LineSegment(wed.node_coords[edge[0]], wed.node_coords[edge[1]])
+                    seg = LineSegment(wed.node_coords[edge[0]], wed.node_coords[edge[1]])
                     ndist = ps.cg.standalone.get_segment_point_dist(seg, pt)[0]
                     if ndist < dist:
                         e = edge
                         dist = ndist
                 obs_to_edge[e].add(attribs[pt_index])
-                obs_to_edge[e[1], e[0]].add(attribs[pt_index])
+                try:
+                    obs_to_edge[e[1], e[0]].add(attribs[pt_index])
+                except:
+                    pass
     return obs_to_edge
+
+
+def assign_points_to_nodes(pts, attribs, wed):
+    #Setup a dictionary that stores node_id:[observations values]
+    obs_to_node = {}
+    for x in wed.node_coords.iterkeys():
+        obs_to_node[x] = set()
+
+    #Generate a KDTree of all of the nodes in the wed
+    kd_tree = KDTree([node for node in wed.node_coords.itervalues()])
+
+    #Iterate over each observation and query the KDTree.
+    for index,point in enumerate(pts):
+        nn = kd_tree.query(point, k=1)
+        obs_to_node[nn[1]].add(attribs[index])
+
+    return obs_to_node
 
 
 def connected_component(adjacency, node):
