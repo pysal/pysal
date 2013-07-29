@@ -124,14 +124,9 @@ class TestGM_Error_Regimes(unittest.TestCase):
 
     def test_model_endog(self):
         reg = SP.GM_Endog_Error_Regimes(self.y, self.X1, self.yd, self.q, self.regimes, self.w)
-        betas = np.array([[ 77.48379382],
-       [  4.52984624],
-       [ 78.93199865],
-       [  0.4218605 ],
-       [ -3.23822819],
-       [ -1.14757443],
-       [  0.20222542]])
-        np.testing.assert_array_almost_equal(reg.betas.T,betas.T,5)
+        betas = np.array([[ 77.48385551,   4.52986622,  78.93209405,   0.42186261,
+         -3.23823854,  -1.1475775 ,   0.20222108]])
+        np.testing.assert_array_almost_equal(reg.betas.T,betas,6)
         u = np.array([ 20.89649869])
         np.testing.assert_array_almost_equal(reg.u[0],u,6)
         e = np.array([ 25.21816453])
@@ -184,7 +179,7 @@ class TestGM_Error_Regimes(unittest.TestCase):
        [ -1.28824699e+00],
        [  6.70387351e-02]])
         np.testing.assert_array_almost_equal(reg.betas,betas,6)
-        vm = np.array([ 791.86691753,  140.12970972,  -81.37582956,    0.        ,
+        vm = np.array([ 791.86679123,  140.12967794,  -81.37581255,    0.        ,
           0.        ,    0.        ])
         np.testing.assert_array_almost_equal(reg.vm[0],vm,6)
         u = np.array([ 25.80361497])
