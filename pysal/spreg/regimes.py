@@ -1,3 +1,11 @@
+import numpy as np
+import pysal
+import scipy.sparse as SP
+import itertools as iter
+from scipy.stats import f, chisqprob
+import numpy.linalg as la
+from utils import spbroadcast
+
 """
 Tools for different regimes procedure estimations
 """
@@ -5,14 +13,6 @@ Tools for different regimes procedure estimations
 __author__ = "Luc Anselin luc.anselin@asu.edu, \
         Daniel Arribas-Bel darribas@asu.edu, \
         Pedro V. Amaral pedro.amaral@asu.edu"
-        
-import numpy as np
-import pysal
-import scipy.sparse as SP
-import itertools as iter
-from scipy.stats import f, chisqprob
-import numpy.linalg as la
-
 
 class Chow:
     '''
@@ -58,7 +58,7 @@ class Chow:
     >>> x = np.array([db.by_col(name) for name in x_var]).T
     >>> r_var = 'NSA'
     >>> regimes = db.by_col(r_var)
-    >>> olsr = OLS_Regimes(y, x, regimes, constant_regi='many', nonspat_diag=False, spat_diag=False, name_y=y_var, name_x=x_var, name_ds='columbus', name_regimes=r_var)
+    >>> olsr = OLS_Regimes(y, x, regimes, constant_regi='many', nonspat_diag=False, spat_diag=False, name_y=y_var, name_x=x_var, name_ds='columbus', name_regimes=r_var, regime_err_sep=False)
     >>> print olsr.name_x_r #x_var
     ['CONSTANT', 'INC', 'HOVAL']
     >>> print olsr.chow.regi
@@ -209,8 +209,7 @@ class Regimes_Frame:
         try:
             x = regimeX_setup(x, regimes, cols2regi, self.regimes_set, constant=constant_regi)            
         except AttributeError:
-            self.regimes_set = list(set(regimes))
-            self.regimes_set.sort()
+            self.regimes_set = _get_regimes_set(regimes)
             x = regimeX_setup(x, regimes, cols2regi, self.regimes_set, constant=constant_regi)
 
         kr = len(np.where(np.array(cols2regi)==True)[0])
@@ -470,7 +469,7 @@ def w_regimes(w, regimes, regimes_set, transform=True, get_ids=None, min_n=None)
     regi_ids = dict((r, list(np.where(np.array(regimes) == r)[0])) for r in regimes_set)
     w_ids = dict((r, map(w.id_order.__getitem__, regi_ids[r])) for r in regimes_set)
     w_regi_i = {}
-    warn = "\n"
+    warn = None
     for r in regimes_set:
         w_regi_i[r] = pysal.weights.w_subset(w, w_ids[r])
         if min_n:
@@ -479,11 +478,9 @@ def w_regimes(w, regimes, regimes_set, transform=True, get_ids=None, min_n=None)
         if transform:
             w_regi_i[r].transform = w.get_transform()
         if w_regi_i[r].islands:
-            warn += "Warning: The regimes operation resulted in islands for regime %s.\n" %r
+            warn = "The regimes operation resulted in islands for regime %s." %r
     if get_ids:
         get_ids = regi_ids
-    if len(warn)<3:
-        warn = None
     return w_regi_i, get_ids, warn
 
 def w_regimes_union(w, w_regi_i, regimes_set):
@@ -546,6 +543,59 @@ def x2xsp(x, regimes, regimes_set):
     indptr[:-1] = list(np.arange(n) * k)
     indptr[-1] = n*k
     return SP.csr_matrix((data, indices, indptr))
+
+def check_cols2regi(constant_regi, cols2regi, x, yend=None, add_cons=True):
+    ''' Checks if dimensions of list cols2regi match number of variables. '''
+
+    if add_cons:
+        is_cons = 1
+        if constant_regi=='many':
+            regi_cons = [True]
+        elif constant_regi=='one':
+            regi_cons = [False]
+    else:
+        is_cons = 0
+        regi_cons = []
+    try:
+        tot_k = x.shape[1]+yend.shape[1]
+    except:
+        tot_k = x.shape[1]
+    if cols2regi=='all':
+        cols2regi = regi_cons + [True]*tot_k
+    else:
+        cols2regi = regi_cons + cols2regi
+    if len(cols2regi)-is_cons != tot_k:
+        raise Exception, "The lenght of list 'cols2regi' must be equal to the amount of variables (exogenous + endogenous) when not using cols2regi=='all'."
+    return cols2regi
+
+def _get_regimes_set(regimes):
+    ''' Creates a list with regimes in alphabetical order. '''
+    regimes_set = list(set(regimes))
+    if isinstance(regimes_set[0], float):
+        regimes_set1 = list(set(map(int, regimes_set)))
+        if len(regimes_set1) == len(regimes_set):
+            regimes_set = regimes_set1
+    regimes_set.sort()
+    return regimes_set
+
+def _get_weighted_var(regimes,regimes_set,sig2n_k,u,y,x,yend=None,q=None):
+    regi_ids = dict((r, list(np.where(np.array(regimes) == r)[0])) for r in regimes_set)
+    if sig2n_k:
+        sig =  dict((r, np.dot(u[regi_ids[r]].T,u[regi_ids[r]])/(len(regi_ids[r])-x.shape[1])) for r in regimes_set)
+    else:
+        sig =  dict((r, np.dot(u[regi_ids[r]].T,u[regi_ids[r]])/len(regi_ids[r])) for r in regimes_set)
+    sig_vec = np.zeros(y.shape,float)
+    y2 = np.zeros(y.shape,float)
+    for r in regimes_set:
+        sig_vec[regi_ids[r]] = 1/float(np.sqrt(sig[r]))
+        y2[regi_ids[r]] = y[regi_ids[r]]/float(np.sqrt(sig[r]))
+    x2 = spbroadcast(x,sig_vec)
+    if yend != None:
+        yend2 = spbroadcast(yend,sig_vec)
+        q2 = spbroadcast(q,sig_vec)
+        return y2, x2, yend2, q2
+    else:
+        return y2, x2
 
 def _test():
     import doctest

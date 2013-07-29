@@ -33,7 +33,7 @@ class BaseGM_Error_Het(RegressionPropsY):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, including the constant
+                   independent (exogenous) variable, excluding the constant
     w            : Sparse matrix
                    Spatial weights sparse matrix 
     max_iter     : int
@@ -70,7 +70,7 @@ class BaseGM_Error_Het(RegressionPropsY):
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
-    iterations   : integer
+    iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
     mean_y       : float
                    Mean of dependent variable
@@ -117,6 +117,7 @@ class BaseGM_Error_Het(RegressionPropsY):
     def __init__(self, y, x, w,\
                  max_iter=1, epsilon=0.00001, step1c=False):
 
+        self.step1c = step1c
         #1a. OLS --> \tilde{betas}
         ols = OLS.BaseOLS(y=y, x=x)
         self.x, self.y, self.n, self.k, self.xtx = ols.x, ols.y, ols.n, ols.k, ols.xtx
@@ -175,8 +176,7 @@ class GM_Error_Het(BaseGM_Error_Het):
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, excluding the constant
     w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)   
+                   Spatial weights object   
     max_iter     : int
                    Maximum number of iterations of steps 2a and 2b from Arraiz
                    et al. Note: epsilon provides an additional stop condition.
@@ -225,7 +225,7 @@ class GM_Error_Het(BaseGM_Error_Het):
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
-    iterations   : integer
+    iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
     mean_y       : float
                    Mean of dependent variable
@@ -322,7 +322,7 @@ class GM_Error_Het(BaseGM_Error_Het):
     have the names of the variables printed in the output summary, we will
     have to pass them in as well, although this is optional.
 
-    >>> reg = GM_Error_Het(y, X, w, step1c=True, name_y='home value', name_x=['income', 'crime'], name_ds='columbus')
+    >>> reg = GM_Error_Het(y, X, w=w, step1c=True, name_y='home value', name_x=['income', 'crime'], name_ds='columbus')
    
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
@@ -352,7 +352,7 @@ class GM_Error_Het(BaseGM_Error_Het):
 
         n = USER.check_arrays(y, x)
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         x_constant = USER.check_constant(x)
         BaseGM_Error_Het.__init__(self, y, x_constant, w.sparse, max_iter=max_iter,\
                 step1c=step1c, epsilon=epsilon)
@@ -376,7 +376,7 @@ class BaseGM_Endog_Error_Het(RegressionPropsY):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, including the constant
+                   independent (exogenous) variable, excluding the constant
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
@@ -434,7 +434,7 @@ class BaseGM_Endog_Error_Het(RegressionPropsY):
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
-    iterations   : integer
+    iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
     mean_y       : float
                    Mean of dependent variable
@@ -475,7 +475,7 @@ class BaseGM_Endog_Error_Het(RegressionPropsY):
     >>> q = np.array(q).T
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
     >>> w.transform = 'r'
-    >>> reg = BaseGM_Endog_Error_Het(y, X, yd, q, w.sparse, step1c=True)
+    >>> reg = BaseGM_Endog_Error_Het(y, X, yd, q, w=w.sparse, step1c=True)
     >>> print np.around(np.hstack((reg.betas,np.sqrt(reg.vm.diagonal()).reshape(4,1))),4)
     [[ 55.3971  28.8901]
      [  0.4656   0.7731]
@@ -487,6 +487,7 @@ class BaseGM_Endog_Error_Het(RegressionPropsY):
                  max_iter=1, epsilon=0.00001,
                  step1c=False, inv_method='power_exp'):
     
+        self.step1c = step1c
         #1a. reg --> \tilde{betas} 
         tsls = TSLS.BaseTSLS(y=y, x=x, yend=yend, q=q)
         self.x, self.z, self.h, self.y = tsls.x, tsls.z, tsls.h, tsls.y
@@ -556,8 +557,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
                    external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
     w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)   
+                   Spatial weights object   
     max_iter     : int
                    Maximum number of iterations of steps 2a and 2b from Arraiz
                    et al. Note: epsilon provides an additional stop condition.
@@ -623,7 +623,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
-    iterations   : integer
+    iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
     mean_y       : float
                    Mean of dependent variable
@@ -744,7 +744,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
     have the names of the variables printed in the output summary, we will
     have to pass them in as well, although this is optional.
 
-    >>> reg = GM_Endog_Error_Het(y, X, yd, q, w, step1c=True, name_x=['inc'], name_y='hoval', name_yend=['crime'], name_q=['discbd'], name_ds='columbus')
+    >>> reg = GM_Endog_Error_Het(y, X, yd, q, w=w, step1c=True, name_x=['inc'], name_y='hoval', name_yend=['crime'], name_q=['discbd'], name_ds='columbus')
    
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
@@ -773,7 +773,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
     
         n = USER.check_arrays(y, x, yend, q)
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         x_constant = USER.check_constant(x)
         BaseGM_Endog_Error_Het.__init__(self, y=y, x=x_constant, yend=yend,\
                                         q=q, w=w.sparse, max_iter=max_iter,\
@@ -803,7 +803,7 @@ class BaseGM_Combo_Het(BaseGM_Endog_Error_Het):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, including the constant
+                   independent (exogenous) variable, excluding the constant
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
@@ -868,7 +868,7 @@ class BaseGM_Combo_Het(BaseGM_Endog_Error_Het):
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
-    iterations   : integer
+    iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
     mean_y       : float
                    Mean of dependent variable
@@ -927,7 +927,7 @@ class BaseGM_Combo_Het(BaseGM_Endog_Error_Het):
     >>> q = np.array(q).T
     >>> yd2, q2 = pysal.spreg.utils.set_endog(y, X, w, yd, q, w_lags, True)
     >>> X = np.hstack((np.ones(y.shape),X))
-    >>> reg = BaseGM_Combo_Het(y, X, yd2, q2, w.sparse, step1c=True)
+    >>> reg = BaseGM_Combo_Het(y, X, yd2, q2, w=w.sparse, step1c=True)
     >>> betas = np.array([['CONSTANT'],['inc'],['crime'],['lag_hoval'],['lambda']])
     >>> print np.hstack((betas, np.around(np.hstack((reg.betas, np.sqrt(reg.vm.diagonal()).reshape(5,1))),5)))
     [['CONSTANT' '113.91292' '64.38815']
@@ -966,8 +966,7 @@ class GM_Combo_Het(BaseGM_Combo_Het):
                    external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
     w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)   
+                   Spatial weights object (always needed)   
     w_lags       : integer
                    Orders of W to include as instruments for the spatially
                    lagged dependent variable. For example, w_lags=1, then
@@ -1044,7 +1043,7 @@ class GM_Combo_Het(BaseGM_Combo_Het):
     iter_stop    : string
                    Stop criterion reached during iteration of steps 2a and 2b
                    from Arraiz et al.
-    iterations   : integer
+    iteration    : integer
                    Number of iterations of steps 2a and 2b from Arraiz et al.
     mean_y       : float
                    Mean of dependent variable
@@ -1210,15 +1209,16 @@ class GM_Combo_Het(BaseGM_Combo_Het):
     
         n = USER.check_arrays(y, x, yend, q)
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
         x_constant = USER.check_constant(x)
         BaseGM_Combo_Het.__init__(self, y=y, x=x_constant, yend=yend2, q=q2,\
                                 w=w.sparse, w_lags=w_lags,\
                                 max_iter=max_iter, step1c=step1c, lag_q=lag_q,\
                                 epsilon=epsilon, inv_method=inv_method)
-        self.predy_e, self.e_pred = UTILS.sp_att(w,self.y,self.predy,\
-                            yend2[:,-1].reshape(self.n,1),self.betas[-2])        
+        self.predy_e, self.e_pred, warn = UTILS.sp_att(w,self.y,self.predy,\
+                            yend2[:,-1].reshape(self.n,1),self.betas[-2])
+        UTILS.set_warn(self,warn)
         self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HET)"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
