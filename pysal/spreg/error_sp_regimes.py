@@ -13,9 +13,9 @@ from pysal import lag_spatial
 from pysal.spreg.ols import BaseOLS
 from pysal.spreg.twosls import BaseTSLS
 from pysal.spreg.error_sp import BaseGM_Error, BaseGM_Endog_Error, _momentsGM_Error
-from utils import set_endog, iter_msg, sp_att, set_warn
-from utils import optim_moments, get_spFilter, get_lags
-from utils import spdot, RegressionPropsY
+from pysal.spreg.utils import set_endog, iter_msg, sp_att, set_warn
+from pysal.spreg.utils import optim_moments, get_spFilter, get_lags
+from pysal.spreg.utils import spdot, RegressionPropsY
 from platform import system
 
 class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
@@ -1192,6 +1192,8 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
         self.regime_lag_sep = regime_lag_sep 
 
         if regime_lag_sep == True:
+            if regime_err_sep == False:
+               raise Exception, "For spatial combo models, if spatial lag is set by regimes (regime_lag_sep=True), spatial error must also be set by regimes (regime_err_sep=True)."
             cols2regi += [True]
             regi_w = (REGI.w_regimes(w, regimes, self.regimes_set, transform=regime_err_sep, get_ids=regime_err_sep))
             w = REGI.w_regimes_union(w, regi_w[0], self.regimes_set)
@@ -1200,7 +1202,7 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
             cols2regi += [False]
             regi_w = None
             if regime_err_sep == True:
-               raise Exception, "All coefficients must vary accross regimes if regime_err_sep = True. Therefore, if regime_err_sep = True, regime_lag_sep must also be True."
+               raise Exception, "For spatial combo models, if spatial error is set by regimes (regime_err_sep=True), all coefficients including lambda (regime_lag_sep=True) must be set by regimes."
 
         yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
         name_yend.append(USER.set_name_yend_sp(self.name_y))

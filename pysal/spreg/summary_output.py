@@ -250,7 +250,7 @@ def GM_Error_Hom_multi(reg, multireg, vm, regimes=False):
         if regimes:
             summary_regimes(mreg,chow=False)
     reg.__summary = {}
-    summary_chow(reg)
+    summary_chow(reg, lambd=True)
     summary_warning(reg)
     summary_multi(reg=reg, multireg=multireg, vm=vm, instruments=False, nonspat_diag=False, spat_diag=False)
 
@@ -282,7 +282,7 @@ def GM_Endog_Error_Hom_multi(reg, multireg, vm, regimes=False):
         if regimes:
             summary_regimes(mreg,chow=False)
     reg.__summary = {}
-    summary_chow(reg)
+    summary_chow(reg, lambd=True)
     summary_warning(reg)
     summary_multi(reg=reg, multireg=multireg, vm=vm, instruments=True, nonspat_diag=False, spat_diag=False)
 
@@ -312,7 +312,7 @@ def GM_Error_Het_multi(reg, multireg, vm, regimes=False):
         if regimes:
             summary_regimes(mreg,chow=False)
     reg.__summary = {}
-    summary_chow(reg)
+    summary_chow(reg, lambd=True)
     summary_warning(reg)
     summary_multi(reg=reg, multireg=multireg, vm=vm, instruments=False, nonspat_diag=False, spat_diag=False)
 
@@ -344,7 +344,7 @@ def GM_Endog_Error_Het_multi(reg, multireg, vm, regimes=False):
         if regimes:
             summary_regimes(mreg,chow=False)
     reg.__summary = {}
-    summary_chow(reg)
+    summary_chow(reg, lambd=True)
     summary_warning(reg)
     summary_multi(reg=reg, multireg=multireg, vm=vm, instruments=True, nonspat_diag=False, spat_diag=False)
 
@@ -759,7 +759,7 @@ def summary_sur(reg,u_cov=False):
         except:
             pass
 
-def summary_chow(reg):
+def summary_chow(reg,lambd=False):
     reg.__summary['summary_chow'] = "\nREGIMES DIAGNOSTICS - CHOW TEST\n"
     reg.__summary['summary_chow'] += "                 VARIABLE        DF        VALUE           PROB\n"
     if reg.cols2regi == 'all':
@@ -771,6 +771,9 @@ def summary_chow(reg):
         names_chow = ['CONSTANT']+names_chow
     else:
         indices = (np.argsort(names_chow)).tolist() 
+    if lambd:        
+        indices += [-1]
+        names_chow += ['lambda']
     for i in indices:    
         reg.__summary['summary_chow'] += "%25s        %2d    %12.6f        %9.7f\n" %(names_chow[i],reg.nr-1,reg.chow.regi[i,0],reg.chow.regi[i,1])
     reg.__summary['summary_chow'] += "%25s        %2d    %12.6f        %9.7f\n" %('Global test',reg.kr*(reg.nr-1),reg.chow.joint[0],reg.chow.joint[1])
@@ -905,6 +908,3 @@ def _test():
 
 if __name__ == '__main__':
     _test()
-
-
-

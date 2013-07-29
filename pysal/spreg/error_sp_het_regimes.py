@@ -1300,14 +1300,16 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
         name_q = USER.set_name_q(name_q, q)
         name_q.extend(USER.set_name_q_sp(name_x, w_lags, name_q, lag_q, force_all=True))
 
-        cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, yend=yend, add_cons=False)     
+        cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, yend=yend, add_cons=False) 
         self.regimes_set = REGI._get_regimes_set(regimes)
         self.regimes = regimes
         USER.check_regimes(self.regimes_set)
-        self.regime_err_sep = regime_err_sep        
-        self.regime_lag_sep = regime_lag_sep 
+        self.regime_err_sep = regime_err_sep
+        self.regime_lag_sep = regime_lag_sep
 
         if regime_lag_sep == True:
+            if regime_err_sep == False:
+               raise Exception, "For spatial combo models, if spatial lag is set by regimes (regime_lag_sep=True), spatial error must also be set by regimes (regime_err_sep=True)."
             cols2regi += [True]
             regi_w = (REGI.w_regimes(w, regimes, self.regimes_set, transform=regime_err_sep, get_ids=regime_err_sep))
             w = REGI.w_regimes_union(w, regi_w[0], self.regimes_set)
@@ -1316,7 +1318,7 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
             cols2regi += [False]
             regi_w = None
             if regime_err_sep == True:
-               raise Exception, "All coefficients must vary accross regimes if regime_err_sep = True. Therefore, if regime_err_sep = True, regime_lag_sep must also be True."
+               raise Exception, "For spatial combo models, if spatial error is set by regimes (regime_err_sep=True), all coefficients including lambda (regime_lag_sep=True) must be set by regimes."
 
         yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
         name_yend.append(USER.set_name_yend_sp(self.name_y))
