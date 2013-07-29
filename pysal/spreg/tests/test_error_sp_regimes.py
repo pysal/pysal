@@ -127,7 +127,7 @@ class TestGM_Error_Regimes(unittest.TestCase):
         betas = np.array([[ 77.48385551,   4.52986622,  78.93209405,   0.42186261,
          -3.23823854,  -1.1475775 ,   0.20222108]])
         np.testing.assert_array_almost_equal(reg.betas.T,betas,6)
-        u = np.array([ 20.89649869])
+        u = np.array([ 20.89660904])
         np.testing.assert_array_almost_equal(reg.u[0],u,6)
         e = np.array([ 25.21816453])
         np.testing.assert_array_almost_equal(reg.e_filtered[0],e,6)
@@ -192,7 +192,7 @@ class TestGM_Error_Regimes(unittest.TestCase):
        [ 0.26102777,  0.60941494],
        [ 0.26664581,  0.60559072]])
         np.testing.assert_array_almost_equal(reg.chow.regi,chow_r,6)
-        chow_j = 1.1184630076017283
+        chow_j = 1.1184631131987004
         self.assertAlmostEqual(reg.chow.joint[0],chow_j)
         #Artficial:
         model = SP.GM_Endog_Error_Regimes(self.y_a, self.x_a1, yend=self.x_a2, q=self.q_a, regimes=self.regi_a, w=self.w_a, regime_err_sep=True)
@@ -298,3 +298,5 @@ class TestGM_Error_Regimes(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
