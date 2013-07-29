@@ -1,5 +1,30 @@
 v<1.6.0>, 2013-07-31
 
+3e5076e Serge Rey -Merge branch 'master' of github.com:pysal/pysal into changelog_1.6
+742afbd Sergio Rey -Merge pull request #288 from pedrovma/spreg_integration_1.6
+c48d268 Philip Stephens -Merge pull request #305 from sjsrey/history
+0fabd99 Philip Stephens -Merge pull request #306 from sjsrey/yaml_mp
+c7774fb Serge Rey -- update THANKS.txt - testing travis for timing out
+6983d59 Philip Stephens -Merge pull request #303 from sjsrey/exclude_network
+cd98057 Serge Rey -- travis fix for multiprocessing permission error
+86702f8 Serge Rey -- start of changelog for 1.6
+3ee686d pedrovma -Reloading to check new results from Travis.
+cfe8574 Philip Stephens -Merge pull request #304 from sjsrey/yaml_mp
+2de1d21 Serge Rey -- docs
+ef72edc Serge Rey -- update docs
+0716581 Serge Rey -- deal with multiprocessing on travis
+b508c88 Serge Rey -- excluding network from 1.6 release
+ff13e31 pedrovma -Matching Travis results. Multiprocessing errors still an issue.
+5b916ba pedrovma -Adding Chow test on lambda and updating dynamics of regime_err_sep and regime_lag_sep in combom models.
+7ea5f35 pedrovma -Fixing defaults
+62ca76b pedrovma -Updating documentation and checking if there are more than 2 regimes when regimes methods are used.
+3212249 pedrovma -Fixing documentation on 'name_regimes'
+a782d50 pedrovma -Updating tests for integration with pysal 1.6
+14f9181 pedrovma -Merging spreg_1.6 with my pysal fork.
+f7e2c20 jlaura -Merge pull request #287 from sjsrey/lattice_shapefile
+817f2c2 Serge Rey -- having build_lattice_shapefile also create the associated dbf file - useful for testing our contiguity builders against geoda since dbf is   required by the latter
+1fe4306 Luc Anselin -Merge pull request #285 from sjsrey/diag
+41d59a4 Serge Rey -- adding diagonal option to kernel weights in user.py
 9df626f jlaura -Merge pull request #277 from sjsrey/spatial_gini
 506d808 Serge Rey -update when added
 094a2d9 jlaura -Merge pull request #276 from sjsrey/spatial_gini
