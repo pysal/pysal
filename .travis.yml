@@ -13,7 +13,7 @@ before_install:
 install:
   - "pip install -q -r requirements.txt --use-mirrors"
   - "pip install coveralls --use-mirrors"
-  sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm
+  - "sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm"
   #- "pip install pysal --use-mirrors"
   #- "pip uninstall -y pysal"
 
