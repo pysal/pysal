@@ -131,7 +131,7 @@ class TestGM_Error_Regimes(unittest.TestCase):
        [ -3.23822819],
        [ -1.14757443],
        [  0.20222542]])
-        np.testing.assert_array_almost_equal(reg.betas.T,betas.T,6)
+        np.testing.assert_array_almost_equal(reg.betas.T,betas.T,5)
         u = np.array([ 20.89649869])
         np.testing.assert_array_almost_equal(reg.u[0],u,6)
         e = np.array([ 25.21816453])
