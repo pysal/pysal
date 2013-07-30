@@ -150,8 +150,8 @@ class TestGM_Error_Regimes(unittest.TestCase):
         self.assertAlmostEqual(reg.mean_y,my)
         sy = 16.732092091229699
         self.assertAlmostEqual(reg.std_y,sy)
-        vm = np.array([ 390.88166776,   52.25894909,    0.        ,    0.        ,
-        -32.64259391,    0.        ])
+        vm = np.array([ 390.88250241,   52.25924084,    0.        ,    0.        ,
+        -32.64274729,    0.        ])
         np.testing.assert_array_almost_equal(reg.vm[0],vm,5)
         pr2 = 0.19624037473243752
         self.assertAlmostEqual(reg.pr2,pr2)
