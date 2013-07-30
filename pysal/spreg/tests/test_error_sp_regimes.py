@@ -124,19 +124,14 @@ class TestGM_Error_Regimes(unittest.TestCase):
 
     def test_model_endog(self):
         reg = SP.GM_Endog_Error_Regimes(self.y, self.X1, self.yd, self.q, self.regimes, self.w)
-        betas = np.array([[ 77.48379382],
-       [  4.52984624],
-       [ 78.93199865],
-       [  0.4218605 ],
-       [ -3.23822819],
-       [ -1.14757443],
-       [  0.20222542]])
-        np.testing.assert_array_almost_equal(reg.betas.T,betas.T,6)
-        u = np.array([ 20.89649869])
+        betas = np.array([[ 77.48385551,   4.52986622,  78.93209405,   0.42186261,
+         -3.23823854,  -1.1475775 ,   0.20222108]])
+        np.testing.assert_array_almost_equal(reg.betas.T,betas,6)
+        u = np.array([ 20.89660904])
         np.testing.assert_array_almost_equal(reg.u[0],u,6)
-        e = np.array([ 25.21816453])
+        e = np.array([ 25.21818724])
         np.testing.assert_array_almost_equal(reg.e_filtered[0],e,6)
-        predy = np.array([-5.17051869])
+        predy = np.array([-5.17062904])
         np.testing.assert_array_almost_equal(reg.predy[0],predy,6)
         n = 49
         self.assertAlmostEqual(reg.n,n)
@@ -155,21 +150,21 @@ class TestGM_Error_Regimes(unittest.TestCase):
         self.assertAlmostEqual(reg.mean_y,my)
         sy = 16.732092091229699
         self.assertAlmostEqual(reg.std_y,sy)
-        vm = np.array([ 390.88166776,   52.25894909,    0.        ,    0.        ,
-        -32.64259391,    0.        ])
+        vm = np.array([ 390.88250241,   52.25924084,    0.        ,    0.        ,
+        -32.64274729,    0.        ])
         np.testing.assert_array_almost_equal(reg.vm[0],vm,5)
-        pr2 = 0.19624037473243752
+        pr2 = 0.19623994206233333
         self.assertAlmostEqual(reg.pr2,pr2)
-        sig2 = 649.3969633627547
+        sig2 = 649.4011663791624
         self.assertAlmostEqual(reg.sig2,sig2,5)
-        std_err = np.array([ 19.77072755,   6.07664636,  24.3225277 ,   2.17776174,
-         2.97077393,   0.94392156])
+        std_err = np.array([ 19.77074866,   6.07667394,  24.32254786,   2.17776972,
+         2.97078606,   0.94392418])
         np.testing.assert_array_almost_equal(reg.std_err,std_err,6)
         chow_r = np.array([[ 0.0021348 ,  0.96314775],
        [ 0.40499741,  0.5245196 ],
        [ 0.4498365 ,  0.50241261]])
         np.testing.assert_array_almost_equal(reg.chow.regi,chow_r,6)
-        chow_j = 1.288557343447073
+        chow_j = 1.2885590185243503
         self.assertAlmostEqual(reg.chow.joint[0],chow_j)
 
     def test_model_endog_regi_error(self):
@@ -184,7 +179,7 @@ class TestGM_Error_Regimes(unittest.TestCase):
        [ -1.28824699e+00],
        [  6.70387351e-02]])
         np.testing.assert_array_almost_equal(reg.betas,betas,6)
-        vm = np.array([ 791.86691753,  140.12970972,  -81.37582956,    0.        ,
+        vm = np.array([ 791.86679123,  140.12967794,  -81.37581255,    0.        ,
           0.        ,    0.        ])
         np.testing.assert_array_almost_equal(reg.vm[0],vm,6)
         u = np.array([ 25.80361497])
@@ -197,7 +192,7 @@ class TestGM_Error_Regimes(unittest.TestCase):
        [ 0.26102777,  0.60941494],
        [ 0.26664581,  0.60559072]])
         np.testing.assert_array_almost_equal(reg.chow.regi,chow_r,6)
-        chow_j = 1.1184630076017283
+        chow_j = 1.1184631131987004
         self.assertAlmostEqual(reg.chow.joint[0],chow_j)
         #Artficial:
         model = SP.GM_Endog_Error_Regimes(self.y_a, self.x_a1, yend=self.x_a2, q=self.q_a, regimes=self.regi_a, w=self.w_a, regime_err_sep=True)
@@ -303,3 +298,5 @@ class TestGM_Error_Regimes(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
