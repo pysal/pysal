@@ -70,22 +70,25 @@ def w_union(w1, w2):
     return pysal.W(neighbors)
 
 
-def w_intersection(w1, w2, w_shape='w1'):
+def w_intersection(w1, w2, w_shape='w1', silent_island_warning=False):
     """Returns a binary weights object, w, that includes only those neighbor
     pairs that exist in both w1 and w2.
 
     Parameters
     ----------
 
-    w1      : W object
+    w1                      : W object
 
-    w2      : W object
+    w2                      : W object
 
-    w_shape : string
-              Defines the shape of the returned weights matrix. 'w1' returns a
-              matrix with the same IDs as w1; 'all' returns a matrix with all
-              the unique IDs from w1 and w2; and 'min' returns a matrix with
-              only the IDs occurring in both w1 and w2.
+    w_shape                 : string
+                              Defines the shape of the returned weights matrix. 'w1' returns a
+                              matrix with the same IDs as w1; 'all' returns a matrix with all
+                              the unique IDs from w1 and w2; and 'min' returns a matrix with
+                              only the IDs occurring in both w1 and w2.
+    silent_island_warning   : boolean
+                              Switch to turn off (default on) print statements
+                              for every observation with islands
 
 
     Returns
@@ -140,7 +143,7 @@ def w_intersection(w1, w2, w_shape='w1'):
         else:
             neighbors[i] = []
 
-    return pysal.W(neighbors)
+    return pysal.W(neighbors, silent_island_warning=silent_island_warning)
 
 
 def w_difference(w1, w2, w_shape='w1', constrained=True, silent_island_warning=False):
