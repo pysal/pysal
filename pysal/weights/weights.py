@@ -30,6 +30,9 @@ class W(object):
                       lexicographical ordering is used to iterate and the
                       id_order_set property will return False.  This can be
                       set after creation by setting the 'id_order' property.
+    silent_island_warning   : boolean
+                              Switch to turn off (default on) print statements
+                              for every observation with islands
 
     Attributes
     ----------
@@ -114,7 +117,8 @@ class W(object):
     Island ids:  [2, 3]
 
     """
-    def __init__(self, neighbors, weights=None, id_order=None):
+    def __init__(self, neighbors, weights=None, id_order=None, silent_island_warning=False):
+        self.silent_island_warning = silent_island_warning
         self.transformations = {}
         self.neighbors = ROD(neighbors)
         if not weights:
@@ -133,7 +137,7 @@ class W(object):
             self._id_order_set = True
         self._reset()
         self._n = len(self.weights)
-        if self.islands:
+        if self.islands and not self.silent_island_warning:
             ni = len(self.islands)
             if ni == 1:
                 print "WARNING: there is one disconnected observation (no neighbors)"
