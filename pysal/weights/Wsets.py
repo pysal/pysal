@@ -392,10 +392,10 @@ def w_subset(w1, ids, silent_island_warning=False):
         else:
             neighbors[i] = []
 
-    return pysal.W(neighbors, id_order=ids, silent_island_warning=True)
+    return pysal.W(neighbors, id_order=ids, silent_island_warning=silent_island_warning)
 
 
-def w_clip(w1, w2, outSP=True):
+def w_clip(w1, w2, outSP=True, silent_island_warning=False):
     '''
     Clip a continuous W object (w1) with a different W object (w2) so only cells where
     w2 has a non-zero value remain with non-zero values in w1
@@ -406,16 +406,19 @@ def w_clip(w1, w2, outSP=True):
 
     Arguments
     ---------
-    w1      : pysal.W, scipy.sparse.csr.csr_matrix
-              Potentially continuous weights matrix to be clipped. The clipped
-              matrix wc will have at most the same elements as w1.
-    w2      : pysal.W, scipy.sparse.csr.csr_matrix
-              Weights matrix to use as shell to clip w1. Automatically
-              converted to binary format. Only non-zero elements in w2 will be
-              kept non-zero in wc. NOTE: assumed to be of the same shape as w1
-    outSP   : boolean
-              If True (default) return sparse version of the clipped W, if
-              False, return pysal.W object of the clipped matrix
+    w1                      : pysal.W, scipy.sparse.csr.csr_matrix
+                              Potentially continuous weights matrix to be clipped. The clipped
+                              matrix wc will have at most the same elements as w1.
+    w2                      : pysal.W, scipy.sparse.csr.csr_matrix
+                              Weights matrix to use as shell to clip w1. Automatically
+                              converted to binary format. Only non-zero elements in w2 will be
+                              kept non-zero in wc. NOTE: assumed to be of the same shape as w1
+    outSP                   : boolean
+                              If True (default) return sparse version of the clipped W, if
+                              False, return pysal.W object of the clipped matrix
+    silent_island_warning   : boolean
+                              Switch to turn off (default on) print statements
+                              for every observation with islands
     Returns
     -------
     wc      : pysal.W, scipy.sparse.csr.csr_matrix
@@ -511,7 +514,7 @@ def w_clip(w1, w2, outSP=True):
     wc = w1.multiply(w2)
     wc = pysal.weights.WSP(wc, id_order=id_order)
     if not outSP:
-        wc = pysal.weights.WSP2W(wc)
+        wc = pysal.weights.WSP2W(wc, silent_island_warning=silent_island_warning)
     return wc
 
 
