@@ -13,16 +13,19 @@ __all__ = ['w_union', 'w_intersection', 'w_difference',
            'w_symmetric_difference', 'w_subset', 'w_clip']
 
 
-def w_union(w1, w2):
+def w_union(w1, w2, silent_island_warning=False):
     """Returns a binary weights object, w, that includes all neighbor pairs that
     exist in either w1 or w2.
 
     Parameters
     ----------
 
-    w1      : W object
+    w1                      : W object
 
-    w2      : W object
+    w2                      : W object
+    silent_island_warning   : boolean
+                              Switch to turn off (default on) print statements
+                              for every observation with islands
 
 
     Returns
@@ -67,7 +70,7 @@ def w_union(w1, w2):
             neighbors[i] = list(add_neigh)
         else:
             neighbors[i] = copy.copy(w2.neighbors[i])
-    return pysal.W(neighbors)
+    return pysal.W(neighbors, silent_island_warning=silent_island_warning)
 
 
 def w_intersection(w1, w2, w_shape='w1', silent_island_warning=False):
