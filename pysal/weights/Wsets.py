@@ -242,7 +242,7 @@ def w_difference(w1, w2, w_shape='w1', constrained=True):
     return pysal.W(neighbors)
 
 
-def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
+def w_symmetric_difference(w1, w2, w_shape='all', constrained=True, silent_island_warning=False):
     """Returns a binary weights object, w, that includes only neighbor pairs
     that are not shared by w1 and w2. The w_shape and constrained parameters
     determine which pairs that are not shared by w1 and w2 are returned.
@@ -250,20 +250,23 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
     Parameters
     ----------
 
-    w1      : W object
+    w1                      : W object
 
-    w2      : W object
+    w2                      : W object
 
-    w_shape : string
-              Defines the shape of the returned weights matrix. 'all' returns a
-              matrix with all the unique IDs from w1 and w2; and 'min' returns
-              a matrix with the IDs not shared by w1 and w2.
+    w_shape                 : string
+                              Defines the shape of the returned weights matrix. 'all' returns a
+                              matrix with all the unique IDs from w1 and w2; and 'min' returns
+                              a matrix with the IDs not shared by w1 and w2.
 
-    constrained : boolean
-                  If False then the full set of neighbor pairs that are not
-                  shared by w1 and w2 are returned. If True then those pairs
-                  that would not be possible if w_shape='min' are dropped.
-                  Ignored if w_shape is set to 'min'.
+    constrained             : boolean
+                              If False then the full set of neighbor pairs that are not
+                              shared by w1 and w2 are returned. If True then those pairs
+                              that would not be possible if w_shape='min' are dropped.
+                              Ignored if w_shape is set to 'min'.
+    silent_island_warning   : boolean
+                              Switch to turn off (default on) print statements
+                              for every observation with islands
 
 
     Returns
@@ -335,7 +338,7 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True):
             neighbors[i] = list(
                 set(neighbors[i]).intersection(constrained_keys))
 
-    return pysal.W(neighbors)
+    return pysal.W(neighbors, silent_island_warning=silent_island_warning)
 
 
 def w_subset(w1, ids, silent_island_warning=False):
