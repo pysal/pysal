@@ -1,43 +1,48 @@
 v<1.6.0>, 2013-07-31
 
-3e5076e Serge Rey -Merge branch 'master' of github.com:pysal/pysal into changelog_1.6
-742afbd Sergio Rey -Merge pull request #288 from pedrovma/spreg_integration_1.6
-c48d268 Philip Stephens -Merge pull request #305 from sjsrey/history
-0fabd99 Philip Stephens -Merge pull request #306 from sjsrey/yaml_mp
+5fa9d09 darribas -silent_island_warning implemented for w_union
+6526c62 Sergio Rey -Update README.md
+ea826c1 darribas -silent_island_warning implemented for w_intersection
+335540a darribas -silent_island_warning implemented for w_difference
+0a156cb darribas -silent_island_warning implemented for w_symmetric_difference. Previous commit included support of silent_island_warning for WSP2W as well
+34d20d7 darribas -silent_island_warning implemented for w_clip
+499815d pedrovma -Test fixing...
+8778f75 pedrovma -Test fixing...
+a799a13 pedrovma -Test fixing...
+6482d81 pedrovma -Test fixing...
+2752b1b pedrovma -Test fixing...
+0c0a5bf pedrovma -Test fixing...
+bbf9dcb pedrovma -Test fixing...
+05c34ff pedrovma -Test fixing...
+8a3986a Serge Rey -- preparing for release, version updates
+9106cfe pedrovma -Matching travis results reg. precision issues.
+3cd0ce1 Serge Rey -- updating changelog
+74dadd6 pedrovma -Bump.
 c7774fb Serge Rey -- update THANKS.txt - testing travis for timing out
-6983d59 Philip Stephens -Merge pull request #303 from sjsrey/exclude_network
 cd98057 Serge Rey -- travis fix for multiprocessing permission error
 86702f8 Serge Rey -- start of changelog for 1.6
 3ee686d pedrovma -Reloading to check new results from Travis.
-cfe8574 Philip Stephens -Merge pull request #304 from sjsrey/yaml_mp
 2de1d21 Serge Rey -- docs
 ef72edc Serge Rey -- update docs
 0716581 Serge Rey -- deal with multiprocessing on travis
 b508c88 Serge Rey -- excluding network from 1.6 release
 ff13e31 pedrovma -Matching Travis results. Multiprocessing errors still an issue.
 5b916ba pedrovma -Adding Chow test on lambda and updating dynamics of regime_err_sep and regime_lag_sep in combom models.
+b6e687f darribas -Patch to include switch for island warning as proposed in #295. The method  is modified as well to include the switch
 7ea5f35 pedrovma -Fixing defaults
 62ca76b pedrovma -Updating documentation and checking if there are more than 2 regimes when regimes methods are used.
 3212249 pedrovma -Fixing documentation on 'name_regimes'
 a782d50 pedrovma -Updating tests for integration with pysal 1.6
 14f9181 pedrovma -Merging spreg_1.6 with my pysal fork.
-f7e2c20 jlaura -Merge pull request #287 from sjsrey/lattice_shapefile
 817f2c2 Serge Rey -- having build_lattice_shapefile also create the associated dbf file - useful for testing our contiguity builders against geoda since dbf is   required by the latter
-1fe4306 Luc Anselin -Merge pull request #285 from sjsrey/diag
 41d59a4 Serge Rey -- adding diagonal option to kernel weights in user.py
-9df626f jlaura -Merge pull request #277 from sjsrey/spatial_gini
 506d808 Serge Rey -update when added
-094a2d9 jlaura -Merge pull request #276 from sjsrey/spatial_gini
 b2ec3d4 Serge Rey -- updating api docs
-455d602 jlaura -Merge pull request #275 from sjsrey/spatial_gini
 9d45496 Serge Rey -- example and doctests for spatial gini
-e61052e jlaura -Merge pull request #270 from sjsrey/doc_sr
 95635bb Serge Rey -updating release docs
-c8dfebc Sergio Rey -Merge pull request #269 from darribas/issue226
 bd2f924 darribas -Fixing doctest of towsp method by including isinstance(wsp, ps.weights.weights.WSP)
 76183d7 darribas -Fixing doctest of towsp method by including type(wsp)
 0c54181 darribas -Adding  method in W that calls WSP class for convenience and elegance. Related to issue #226
-731e87f Sergio Rey -Merge pull request #268 from pastephens/docs
 f3b23e8 Philip Stephens -adding source build to travis-ci
 60930e7 Philip Stephens -adding new url for downloads
 9bf7f5b Philip Stephens -modified release docs.
@@ -45,22 +50,17 @@ f98d4a9 Philip Stephens -interim ci
 aa19028 Philip Stephens -Adding docs about installing in develop mode.
 674112f Philip Stephens -starting rewrite of install docs
 af0d9b3 Philip Stephens -working on doc tickets
-d8398a5 Philip Stephens -Merge pull request #262 from sjsrey/knnties
 200e77e Serge Rey -handle ties in knnW in doctest
-920ff60 Philip Stephens -Merge pull request #261 from sjsrey/interaction
 d0d2dd2 Serge Rey -resetting README for pysal/pysal
 6afb6ac Serge Rey -- updating docs for new api in interation.py
 4c5572f Serge Rey -- updating tests for new api
 fabd16a Serge Rey -- refactored signatures to use numpy arrays rather than event class
 6367947 Serge Rey -- refactor knox for large samples
 5fad3b2 Serge Rey -- updating travis test
-8d7cdfc Philip Stephens -Merge pull request #256 from sjsrey/readme
 06894d8 Serge Rey -- updated README
-22ff8b6 Philip Stephens -Merge pull request #255 from sjsrey/master
 8b06e63 Serge Rey -- so only i get email when i commit locally
 efbb7ff Serge Rey -- removing google pysal-dev circle
 9859bda Serge Rey -- turning off gmail circle
-b924e34 Sergio Rey -Merge pull request #254 from sjsrey/master
 51f6d3e Serge Rey -- fixing
 46b1084 Serge Rey --docos
 4e2c27a Philip Stephens -missing if statement added
@@ -68,23 +68,17 @@ d1a83fd Serge Rey -- fixing docs
 8275d76 Serge Rey -- fix precision
 87ea5cc Philip Stephens -adding to authors and quick test fix for linux
 1cfb67f Serge Rey -cant easily remove idVariable, reverting
-3eac237 Serge Rey -Merge branch 'master' of github.com:pysal/pysal
 5933d1e Serge Rey -removing idvariable from Distance - causes too many issues
 05f2573 Philip Stephens -removing coverage tests
-344aeca Philip Stephens -merging
-e9f9a13 Philip Stephens -fixed conflicts, merging knox branch
 fcb8c6f Philip Stephens -Knox using KDTree.
 2237173 Serge Rey -with tests against previous implementation removed
 233e59a Serge Rey -speed comparison for change to query_pairs in kdtree
 fb78ea9 Serge Rey -removing test file
-4f09548 Serge Rey -fixing conflict
 4d04575 Philip Stephens -testing
 357a184 Serge Rey -second great idea
 1fafc2b Serge Rey -on a plane commit 1
 fef6eae Philip Stephens -fix
-503e157 Philip Stephens -merging file
 86c17ac Serge Rey -- test file
-9ac6ee6 Philip Stephens -merging in remote changes
 a619f62 Philip Stephens -interim ci
 1a9d881 Serge Rey -- knox test using kdtrees
 7459c44 Serge Rey -Fixing reference to missing shapefile Fixing one rounding error induced test
@@ -120,36 +114,29 @@ baa8f60 Serge Rey -- hole is now included and enumeration of links (cw) around n
 416d3db Serge Rey -- pointers updated for edges of connected components
 c34e274 Serge Rey -- convex/between edge test as start of testing for insertion of multiple   internal filaments in one region.
 78d96b1 Serge Rey -- filament insertion and pointer updates
-f26959e Serge Rey -Merge branch 'master' of github.com:pysal/pysal
 ced2c5b Serge Rey -- filament insertion (inc)
 ba4263f Jay -Logic roughed in for filaments [ci skip]
 cf3b0bc Jay -updated wed ipynb [ci skip]
 33ce81e Serge Rey -- refactoring of wed construction (incomplete)
 0fc16fc Jay -modular WED Pulled Apart 2 funcs in 1 cell
 bf73b90 Jay -modular WED
-37b318e Serge Rey -Merge branch 'master' of github.com:pysal/pysal
 3163377 Serge Rey -- new modular wed construction
 e50b31d Jay -added test_wed additions to test_wed2
-4633e6a Serge Rey -Merge branch 'master' of github.com:pysal/pysal
 1cbc941 Serge Rey -- isolated nodes handled
 d28b97f Serge Rey -- isolated filament handled
 6188fd5 Serge Rey -- hole component handled
 a96040b Serge Rey -- getting connected components (current 14,15,16  and 25,26,27 are not   included)
 3aa31a5 Jay -Added boolean arg to include or exclude holes [ci skip]
-d5ce900 Jay -Merge branch 'master' of github.com:pysal/pysal
 d07876d Jay -Filament identification [ci skip]
 0139ea5 Philip Stephens -Slight speed improvement getting rid of append calls in reading shapefile and building x,y lists.
-278dacc Serge Rey -Merge branch 'master' of github.com:pysal/pysal
 43010b5 Serge Rey -- fixed logic problem with enum for v1, starting on components
 8737918 Pedro -Adding more meaningful error message to inverse distance weights
 01f52f6 Serge Rey -- replacing code that got deleted previously
 7c4c6e1 Philip Stephens -Replacing deleted files.
-d000e5f Philip Stephens -merging as git suggests
 a8da725 Philip Stephens -added date support to spacetimeevents class, a date column to example dbf.
 90c4730 Philip Stephens -logic works, numeric test still failing
 b8e43e1 Philip Stephens -saving progress on interaction
 81f2408 Serge Rey -- handling external end-node-filament
-66a02a6 Serge Rey -Merge branch 'master' of github.com:pysal/pysal fixing author on new box
 7de6253 Serge Rey -- adding end node filament handling - edge enumeration around node working
 f542b9a Serge -- adding end node filament handling - edge enumeration around node working
 d7e3a57 Philip Stephens -[ci skip] disabling nose-progressive so travis output looks best
@@ -159,11 +146,8 @@ fe03013 Dani Arribas-Bel -Adding set of diversity indices to inequality module u
 665ef22 Serge Rey -- fixed 7,2 failure
 71fc9ad Serge Rey -start of adding gini and other inequality measures
 f7b7bcc Phil Stephens -Adding nose-progressive plugin to test suite. Devs can run test suite with 'make test'.
-9358230 Phil Stephens -Merge branch 'master' of https://github.com/pysal/pysal
 f5db7bf Serge Rey -- updating copyright
-fc9e75e Phil Stephens -Merge branch 'master' of https://github.com/pysal/pysal
 07574b5 Serge Rey -- docs
-3189e93 Philip Stephens -Merge branch 'master' of https://github.com/pysal/pysal
 478d2cb Philip Stephens -Adding requirement. Removing redundancy.
 916a6ca Serge Rey -- more island check updates
 edd9960 Serge Rey -- more island check doctest changes
@@ -175,7 +159,6 @@ b99665b Jay -Eberly
 d911344 Jay -mp removed, passing nosetests on my machine serial
 f005675 Serge Rey -improved binning algorithm for contiguity builder
 4a69557 Serge Rey -- double checking threshold in Distance Band - new example to show functionality
-88c8fae Serge Rey -Merge branch 'master' of github.com:pysal/pysal
 7256f13 Serge Rey -- fix handling of idVariable for knnW
 31bb36e Jay -bug fixes [ci skip]
 a2d2dd4 Jay -WEberly - WED Building [ci skip]
@@ -183,16 +166,13 @@ a2d2dd4 Jay -WEberly - WED Building [ci skip]
 756ac05 Serge Rey -- adding warning if islands exist upon W instantiation
 db097a6 Jay -Weberly, bug fix, c and cc link remaining
 d5cc6f9 Jay -All but start / end working
-9b5918b Jay -Merge branch 'master' of github.com:pysal/pysal
 033963d Jay -Integration to WEberly error fixed [ci skip]
-b4b4a7c Serge Rey -Merge branch 'master' of github.com:pysal/pysal
 22b931a Serge Rey -- removing main for doc tests which can be run from nosetests. - updating testing docs
 bf753e9 Jay -Integration to WEberly started [ci skip]
 6506e07 Serge Rey -- typo
 aede375 Serge Rey -- replacing double quotes around multi word ids with strings joined with   underscores
 cf029e8 Serge Rey -- changes to wrap string ids in gwt writer - see https://github.com/pysal/pysal/issues/244#issuecomment-16707353
 626ac08 Serge Rey -- adding shapefile and variable name to gwt objects created in user space
-8a61538 Jay -Merge branch 'master' of github.com:pysal/pysal
 3c84bb0 Jay -Working version 4.19 [ci skip]
 7d77da9 darribas -Include warning in sp_att when rho is outside (-1, 1), ammends #243 although the true problem (pearsonr in diagnostics_tsls) will still raise an error
 3719d21 Jay -working WED [ci skip]
@@ -201,10 +181,8 @@ f4bb412 Jay -excessive print statements removed. ci skip
 9f7dee6 Jay -SUCCESS! ci skip
 9077615 Phil Stephens -Note, [ci skip] anywhere in your commit message causes Travis to NOT build a test run.
 cb072c4 Jay -getting there
-6901980 Serge Rey -Merge branch 'master' of github.com:pysal/pysal
 d3b36bc Serge Rey -correcting typo user told me about
 19ea051 Jay -trivial working
-84d90f7 Jay -Merge branch 'master' of github.com:pysal/pysal
 b9ea577 Jay -eberly cycles - edge issue still
 d5153e3 Serge Rey -more refinement of wed from plannar graph
 edff44b Philip Stephens -adding git ignore file
@@ -219,7 +197,6 @@ d1ec0f2 Phil Stephens -quieting pip output and fix one doctest
 927e799 Phil Stephens -adding networkx, tweaks to travis config
 5971bb1 Serge Rey -neighbors from wed
 28f0e55 Serge Rey -adding robust segment intersection tests
-7da84b8 Serge Rey -Merge branch 'master' of github.com:pysal/pysal
 3bcac73 Serge Rey -adding doubly connected edge list to network module
 86f0fea darribas -Adding methods to read line and point shapefiles and improving the method to append different collections to one axes. Still in progress
 b61cb55 Serge Rey -- fixing introduced bug in knnW_arc
@@ -237,7 +214,6 @@ f2e65d3 Serge Rey -- cw traversal of edges incident with a node
 6265b3b Serge Rey -- fixing doc tests
 7e8c4fe Serge Rey -- testing after move to org
 37fc8d4 Serge Rey -- testing post commit emails
-fc3685e Serge Rey -Merge branch 'master' of https://github.com/pastephens/pysal
 bed7f6e Phil Stephens -removed files
 eab2895 Phil Stephens -removed virginia_queen files
 bcef010 Serge Rey -- adding diagonal argument to Kernel weights - adding doctest evaluation to Distance.py
@@ -252,7 +228,6 @@ bcef010 Serge Rey -- adding diagonal argument to Kernel weights - adding doctest
 5e905d3 Phil Stephens -adding numpydoc
 33a5298 Phil Stephens -tweaks travis config
 5c85f50 Phil Stephens -tweaking service configs
-aa683cd Philip Stephens -Merge pull request #1 from joshk/patch-1
 4ed1201 Josh Kalderimis -use the correct syntax for sysytem_site_packages
 954b6d2 Phil Stephens -stop!
 311eca8 Phil Stephens -ssp=true
@@ -265,7 +240,6 @@ b535d3e Phil Stephens -testing
 440a772 Phil Stephens -tweaking pip requirements file
 34a74e2 Phil Stephens -tweaking travis file
 33b13aa Serge Rey -- new links
-3d2ca54 Serge Rey -Merge branch 'master' of github.com:sjsrey/pysal
 8e09d7b Serge Rey -- setting up travis
 d33001e Sergio Rey -Update CHANGELOG.txt
 9d4de66 Serge Rey -- added authors
@@ -273,8 +247,6 @@ ab672c9 Serge Rey -- modified knnW to speed up dict construction
 4edd2ab Serge Rey -- update cr
 39e6564 Phil Stephens -syncing install instructions with docs
 9e98db9 Phil Stephens -adding website favicon; chrome does not empty cache properly!!
-
-v<1.6.0dev>, 2013-02-19
 
  * migration to github from svn
    svn2git http://pysal.googlecode.com/svn --authors ~/Dropbox/pysal/src/pysal/authors.txt --verbose
