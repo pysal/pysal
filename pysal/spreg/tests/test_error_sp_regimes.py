@@ -157,8 +157,8 @@ class TestGM_Error_Regimes(unittest.TestCase):
         self.assertAlmostEqual(reg.pr2,pr2)
         sig2 = 649.4011663791624
         self.assertAlmostEqual(reg.sig2,sig2,5)
-        std_err = np.array([ 19.77072755,   6.07664636,  24.3225277 ,   2.17776174,
-         2.97077393,   0.94392156])
+        std_err = np.array([ 19.77074866,   6.07667394,  24.32254786,   2.17776972,
+         2.97078606,   0.94392418])
         np.testing.assert_array_almost_equal(reg.std_err,std_err,6)
         chow_r = np.array([[ 0.0021348 ,  0.96314775],
        [ 0.40499741,  0.5245196 ],
