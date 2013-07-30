@@ -164,7 +164,7 @@ class TestGM_Error_Regimes(unittest.TestCase):
        [ 0.40499741,  0.5245196 ],
        [ 0.4498365 ,  0.50241261]])
         np.testing.assert_array_almost_equal(reg.chow.regi,chow_r,6)
-        chow_j = 1.288557343447073
+        chow_j = 1.2885590185243503
         self.assertAlmostEqual(reg.chow.joint[0],chow_j)
 
     def test_model_endog_regi_error(self):
