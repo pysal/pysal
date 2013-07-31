@@ -19,7 +19,7 @@ with open('README.txt') as file:
     long_description = file.read()
 
 MAJOR = 1
-MINOR = 6
+MINOR = 7
 MICRO = 0
 ISRELEASED = False
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
