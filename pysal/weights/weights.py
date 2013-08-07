@@ -2,7 +2,6 @@ __all__ = ['W', 'WSP']
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 
 import pysal
-from pysal.common import ROD 
 import math
 import numpy as np
 import scipy.sparse
@@ -120,12 +119,12 @@ class W(object):
     def __init__(self, neighbors, weights=None, id_order=None, silent_island_warning=False):
         self.silent_island_warning = silent_island_warning
         self.transformations = {}
-        self.neighbors = ROD(neighbors)
+        self.neighbors = neighbors
         if not weights:
             weights = {}
             for key in neighbors:
                 weights[key] = [1.] * len(neighbors[key])
-        self.weights = ROD(weights)
+        self.weights = weights
         self.transformations['O'] = self.weights  # original weights
         self.transform = 'O'
         if id_order is None:
@@ -198,7 +197,7 @@ class W(object):
             self._id2i = {}
             for i, id in enumerate(self._id_order):
                 self._id2i[id] = i
-            self._id2i = ROD(self._id2i)
+            self._id2i = self._id2i
             self._cache['id2i'] = self._id2i
         return self._id2i
 
@@ -713,7 +712,7 @@ class W(object):
                     if row_sum == 0.0:
                         print 'WARNING: ',i,' is an island (no neighbors)'
                     weights[i] = [wij / row_sum for wij in wijs]
-                weights = ROD(weights)
+                weights = weights
                 self.transformations[value] = weights
                 self.weights = weights
                 self._reset()
@@ -728,7 +727,7 @@ class W(object):
                 for i in self.weights:
                     wijs = self.weights[i]
                     weights[i] = [wij * ws for wij in wijs]
-                weights = ROD(weights)
+                weights = weights
                 self.transformations[value] = weights
                 self.weights = weights
                 self._reset()
@@ -739,7 +738,7 @@ class W(object):
                 for i in self.weights:
                     wijs = self.weights[i]
                     weights[i] = [1.0 for wij in wijs]
-                weights = ROD(weights)
+                weights = weights
                 self.transformations[value] = weights
                 self.weights = weights
                 self._reset()
@@ -759,7 +758,7 @@ class W(object):
                 nQ = self.n / Q
                 for i in self.weights:
                     weights[i] = [w * nQ for w in s[i]]
-                weights = ROD(weights)
+                weights = weights
                 self.transformations[value] = weights
                 self.weights = weights
                 self._reset()
