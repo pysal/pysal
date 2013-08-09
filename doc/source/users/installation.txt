@@ -21,9 +21,8 @@ installed on your machine:
 
 *Optional, bundled installation:* 
 
-The Anaconda Python distribution ships with PySAL (version 1.5 as of June 3,
-2013). Opting for this distro means you don't have to read any further!
-Check it out at http://continuum.io/downloads.html
+The Anaconda Python distribution ships with PySAL. 
+Check it out `here <http://continuum.io/downloads.html>`_.
 
 With the `Enthought Python Distribution (EPD Free) <http://www.enthought.com/products/epd_free.php>`_, 
 you will install all of PySAL's required dependencies, as well as iPython and a lot more, rather than installing dependencies one by one.
@@ -47,22 +46,15 @@ downloaded and installed manually or from the command line using easy_install or
 follows::
 
  $ pip install pysal
- #or
+  - or -
  $ easy_install pysal
 
 Alternatively, grab the source distribution (.tar.gz) and decompress it to your selected destination. Open a command shell and navigate to the decompressed PySAL folder. Type::
 
  $ python setup.py install
 
-You may not want to install the latest version in place of the last stable
-release. If that is the case, you can use the 'develop' subcommand to
-install PySAL in development mode. This option builds the modules in place 
-and modifies sys.path to include the code. The advantage of this method is that
-you get the latest and greatest code but don't have to muck about with
-setting or re-setting *NIX environment variables.
-
-  $ python setup.py develop
-
+Windows users can download a graphical installer from
+`Sourceforge <http://sourceforge.net/projects/pysal/files/?source=navbar>`_.
 
 Development version on GitHub 
 -----------------------------
@@ -71,104 +63,54 @@ Developers can checkout PySAL using **git**::
 
  $ git clone https://github.com/pysal/pysal.git pysal
 
+This will create a directory called 'pysal' containing the source
+code.
+Open a command shell and navigate to the cloned PySAL
+directory. Type::
 
-This will create a folder called 'pysal' containing the source
-code in trunk. This will allow you to easily update any change
-to the developer code base by running::
+ $ python setup.py develop
+
+The 'develop' subcommand builds the modules in place 
+and modifies sys.path to include the code.
+The advantage of this method is that you get the latest code 
+but don't have to fuss with editing system environment variables.
+
+To test your setup, start a Python session and type::
+
+ >>> import pysal
+
+Keep up to date with PySAL development by 'pulling' the latest
+changes::
 
  $ git pull
-
-Since PySAL is in active development, changes are made frequently. For that
-reason, we recommend you 'tell' Python to look for PySAL in that folder
-rather than properly install it as a package. You can do this by adding the
-PySAL folder to the PYTHONPATH, a UNIX environment variable. 
-To do that, create or edit your command shell profile (.bash_profile if using
-BASH) and add the following line, substituting where appropriate::
-
-
- $ export PYTHONPATH=${PYTHONPATH}:"/path_to_desired/folder/pysal/"
-
-Save and quit the file, then source it as follows::
-
- $ source ~/.bash_profile
-
-You are all set. To test your setup, start a Python session and type::
-
- >>> import pysal; pysal.open.check()
-
-Your terminal should reply with the following::
-
- PySAL File I/O understands the following file extensions:
- Ext: '.shp', Modes: ['r', 'wb', 'w', 'rb']
- Ext: '.mtx', Modes: ['r', 'w']
- Ext: '.swm', Modes: ['r', 'w']
- Ext: '.mat', Modes: ['r', 'w']
- Ext: '.shx', Modes: ['r', 'wb', 'w', 'rb']
- Ext: '.stata_text', Modes: ['r', 'w']
- Ext: '.geoda_txt', Modes: ['r']
- Ext: '.dbf', Modes: ['r', 'w']
- Ext: '.dat', Modes: ['r', 'w']
- Ext: '.gwt', Modes: ['r']
- Ext: '.gal', Modes: ['r', 'w']
- Ext: '.arcgis_text', Modes: ['r', 'w']
- Ext: '.wk1', Modes: ['r', 'w']
- Ext: '.arcgis_dbf', Modes: ['r', 'w']
- Ext: '.geobugs_text', Modes: ['r', 'w']
- Ext: '.csv', Modes: ['r']
- Ext: '.wkt', Modes: ['r']
- >>>
-
 
 Windows
 ~~~~~~~~
 
 To keep up to date with PySAL development, you will need a Git client that allows you to access and 
 update the code from our repository. We recommend 
-`GitHub Windows <http://windows.github.com/>`_.
+`GitHub Windows <http://windows.github.com/>`_ for a more graphical client, or
+`Git Bash <https://code.google.com/p/msysgit/downloads/list?q=label:Featured>`_ for a
+command line client. This one gives you a nice Unix-like shell with
+familiar commands. Here is `a nice tutorial
+<http://openhatch.org/missions/windows-setup/>`_ on getting going with Open
+Source software on Windows. 
 
-After using GitHub Windows to install a local copy of PySAL, you need to tell
-your Python distribution where to find PySAL.  There are several ways to do this. Here we
-will use a simple one that requires you to create a text file
-called ``sitecustomize.py`` in the
-``site-packages`` folder of your Python distribution. That path looks more or
-less like this::
- 
- C:\PythonXX\Lib\site-packages\sitecustomize.py
+After cloning PySAL, install it in develop mode so Python knows where to find it. 
 
-,where XX corresponds to the version of the Python distribution you are using
-(25 for 2.5, for example).
-Edit ``sitecustomize.py`` with the following two lines of text::
+Open a command shell and navigate to the cloned PySAL
+directory. Type::
 
- import sys
- sys.path.append("C:/PySALsvn/pysal-read-only")
- 
-Save and close the file.
-You are all set.  To test your setup, start a Python session and type::
+ $ python setup.py develop
 
- >>> import pysal; pysal.open.check()
+To test your setup, start a Python session and type::
 
-Your terminal should reply with the following::
+ >>> import pysal
 
+Keep up to date with PySAL development by 'pulling' the latest
+changes::
 
- PySAL File I/O understands the following file extensions:
- Ext: '.shp', Modes: ['r', 'wb', 'w', 'rb']
- Ext: '.mtx', Modes: ['r', 'w']
- Ext: '.swm', Modes: ['r', 'w']
- Ext: '.mat', Modes: ['r', 'w']
- Ext: '.shx', Modes: ['r', 'wb', 'w', 'rb']
- Ext: '.stata_text', Modes: ['r', 'w']
- Ext: '.geoda_txt', Modes: ['r']
- Ext: '.dbf', Modes: ['r', 'w']
- Ext: '.dat', Modes: ['r', 'w']
- Ext: '.gwt', Modes: ['r']
- Ext: '.gal', Modes: ['r', 'w']
- Ext: '.arcgis_text', Modes: ['r', 'w']
- Ext: '.wk1', Modes: ['r', 'w']
- Ext: '.arcgis_dbf', Modes: ['r', 'w']
- Ext: '.geobugs_text', Modes: ['r', 'w']
- Ext: '.csv', Modes: ['r']
- Ext: '.wkt', Modes: ['r']
- >>>
+ $ git pull
 
 
 Known Issues
