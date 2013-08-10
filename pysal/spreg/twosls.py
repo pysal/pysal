@@ -20,7 +20,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, including the constant
+                   independent (exogenous) variable, excluding the constant
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
@@ -172,7 +172,8 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
         
         # attributes used in property 
         self.hth = hth     # Required for condition index
-        self.hthi =hthi    # Used in error models
+        self.hthi = hthi   # Used in error models
+        self.htz = zth.T
       
         if robust:
             self.vm = ROBUST.robust_vm(reg=self, gwk=gwk)

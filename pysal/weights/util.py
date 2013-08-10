@@ -610,14 +610,17 @@ def full2W(m, ids=None):
     return pysal.W(neighbors, weights, id_order=ids)
 
 
-def WSP2W(wsp):
+def WSP2W(wsp, silent_island_warning=False):
     """
     Convert a pysal WSP object (thin weights matrix) to a pysal W object.
 
     Parameters
     ----------
-    wsp     : WSP
-              PySAL sparse weights object
+    wsp                     : WSP
+                              PySAL sparse weights object
+    silent_island_warning   : boolean
+                              Switch to turn off (default on) print statements
+                              for every observation with islands
 
     Returns
     -------
@@ -666,7 +669,7 @@ def WSP2W(wsp):
         weights[oid] = data[start:end]
         start = end
     ids = copy.copy(wsp.id_order)
-    w = pysal.W(neighbors, weights, ids)
+    w = pysal.W(neighbors, weights, ids, silent_island_warning=silent_island_warning)
     w._sparse = copy.deepcopy(wsp.sparse)
     w._cache['sparse'] = w._sparse
     return w
