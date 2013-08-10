@@ -124,6 +124,7 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
                 rec['NumParts'] = len(shape.parts) + len(holes)
                 all_parts = shape.parts + holes
             else:
+                print self.type
                 rec['NumParts'] = len(shape.parts)
                 all_parts = shape.parts
             partsIndex = [0]
