@@ -29,7 +29,7 @@ def asShape(obj):
     #if geo_type.startswith('multi'):
     #    raise NotImplementedError, "%s are not supported at this time."%geo_type
     if geo_type in _geoJSON_type_to_Pysal_type:
-        return _geoJSON_type_to_Pysal_type[geo_type].__from_geo_interface__(obj.__geo_interface__)
+        return _geoJSON_type_to_Pysal_type[geo_type].__from_geo_interface__(geo)
     else:
         raise NotImplementedError(
             "%s is not supported at this time." % geo_type)
@@ -1397,7 +1397,7 @@ class Polygon(object):
                 parts += verts[0:1]
                 holes += verts[1:]
             if not holes:
-                holes = [[]]
+                holes = None
             return cls(parts, holes)
         else:
             verts = [[Point(pt) for pt in part] for part in geo['coordinates']]
