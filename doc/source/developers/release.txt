@@ -67,7 +67,7 @@ Make and Upload distributions
   - if not registered_, do so. Follow the prompts. You can save the
       login credentials in a dot-file, .pypirc
 
-- Make and upload binary installers to the GeoDa Center server.
+- Make and upload the Windows installer to SourceForge.
 
   - Make a graphical Windows installer on a Windows box:: 
 
@@ -78,14 +78,20 @@ Announce
 - Draft and distribute press release on geodacenter.asu.edu, openspace-list, and pysal.org
 
   - On GeoDa center website, do this:
-   - Create a news item (copy the openspace announcement and designate a custom URL)
-   - "List" Content and filter by "Featured Project". Choose to 'edit' PySAL and then modify the short text there.
-   - If you click PySAL, you'll be directed to the PySAL project page, where you can edit the text there.
-
-- Add link to released docs on Google Code site (pysal.geodacenter.org/<X.x>/index.html)
+   - Login to the site
+   - Expand the wrench icon to reveal the admin menu
+   - Click "Administer", then "Content Management", then "Content"
+   - Next, click "List", filter by type, and select "Featured Project".
+   - Click "Filter"
+   Now you will see the list of Featured Projects. Find "PySAL".
+   - Choose to 'edit' PySAL and modify the short text there. This changes the
+     text users see on the homepage slider.
+   - Clicking on the name "PySAL" allows you to edit the content of the
+     PySAL project page, which is also the "About PySAL" page linked to
+     from the homepage slider.
 
 Put master back to dev
----------------------
+----------------------
 - Change MAJOR, MINOR version in setup script.
 
 - Change pysal/version.py to dev number
