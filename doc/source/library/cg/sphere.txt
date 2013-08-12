@@ -1,4 +1,4 @@
-:mod:`cg.sphere` --- Shapes 
+:mod:`cg.sphere` --- Sphere 
 ===========================
 
 The :mod:`cg.sphere` module provides tools for working with spherical distances.
