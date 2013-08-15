@@ -73,6 +73,7 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
     return w
 
 
+
 def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
     """
     Rook contiguity weights from a polygon shapefile
