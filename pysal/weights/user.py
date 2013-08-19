@@ -5,13 +5,23 @@ contiguity and distance criteria
 """
 
 __author__ = "Sergio J. Rey <srey@asu.edu> "
-__all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array', 'knnW_from_shapefile', 'threshold_binaryW_from_array', 'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array', 'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile', 'adaptive_kernelW', 'adaptive_kernelW_from_shapefile', 'min_threshold_dist_from_shapefile', 'build_lattice_shapefile']
+__all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array',
+'knnW_from_shapefile', 'threshold_binaryW_from_array',
+'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array',
+'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile',
+'adaptive_kernelW', 'adaptive_kernelW_from_shapefile',
+'min_threshold_dist_from_shapefile', 'build_lattice_shapefile',
+'queen_from_geojson', 'queen_from_geojsons', 'queen_from_geojsonf']
+
+
 
 import pysal
 from Contiguity import buildContiguity
 from Distance import knnW, Kernel, DistanceBand
 from util import get_ids, get_points_array_from_shapefile, min_threshold_distance
 import numpy as np
+import geojson
+import urllib
 
 def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
     """
@@ -1122,6 +1132,46 @@ def build_lattice_shapefile(nrows, ncols, outFileName):
             c += 1
     d.close()
     o.close()
+
+
+def _queen_geojson(gjobj):
+    """
+    Constructs a PySAL queen contiguity W from a GeoJSON feature collection consisting of Polygons and/or Multipolygons
+
+    """
+    first = gjobj['features'][0]['geometry']['type']
+    if first == 'Polygon' or first =='MultiPolygon':
+        polys = []
+        ids = []
+        i = 0
+        for feature in gjobj['features']:
+            if feature['geometry']['type'] == 'Polygon':
+                polys.append(pysal.cg.asShape(geojson.Polygon(feature['geometry']['coordinates'])))
+            else:               
+                polys.append(pysal.cg.asShape(geojson.MultiPolygon(feature['geometry']['coordinates'])))
+            ids.append(i)
+            i += 1
+        polygons = pysal.cg.shapes.PolygonCollection(dict(zip(ids,polys)))
+        neighbors = pysal.weights.Contiguity.ContiguityWeightsPolygons(polygons).w
+        return pysal.W(neighbors)
+    else:
+        print "GeoJSON feature type must be 'Polygon' or 'MultiPolygon'"
+        return None
+
+
+def queen_from_geojson(uri):
+    gjobj = geojson.load(urllib.urlopen(uri))
+    return _queen_geojson(gjobj)
+
+def queen_from_geojsons(s):
+    return _queen_geojson(info)
+
+def queen_from_geojsonf(fileName):
+    fp = open(fileName)
+    obj = geojson.load(fp)
+    fp.close()
+    return _queen_geojson(obj)
+
 
 def _test():
     import doctest
