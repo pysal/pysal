@@ -28,7 +28,7 @@ class TestBaseOLS(unittest.TestCase):
 
     def test_OLS(self):
         ols = EC.OLS(self.y, self.X, self.w, spat_diag=True, moran=True, \
-                name_y='home value', name_x=['income','crime'], \
+                white_test=True, name_y='home value', name_x=['income','crime'], \
                 name_ds='columbus')
         
         np.testing.assert_array_almost_equal(ols.aic, \
