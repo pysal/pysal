@@ -1054,10 +1054,6 @@ class WED(object):
 
         pts: (list) PySAL point objects or tuples of x,y coords
 
-        attribs: (list) of attribute values
-
-        wed: (object) PySAL WED object
-
         Returns
         -------
 
@@ -1069,8 +1065,10 @@ class WED(object):
         Wrapped in a try / except block incase the edges are single .
         """
         #We can't enumerate over an array of points, so convert to list.
-        pts = points.tolist()
-
+        if not isinstance(points, list):
+            pts = points.tolist()
+        else:
+            pts = points
         #Setup a dictionary that stores node_id:[observations values]
         obs_to_edge = {}
         for x in self.start_cc.iterkeys():
@@ -1087,8 +1085,9 @@ class WED(object):
         #Brute force check point in polygon
         for pt_index, pt in enumerate(pts):
             for key, poly in polys.iteritems():
+                internal = False
                 if ps.cg.standalone.get_polygon_point_intersect(poly, pt):
-                    #print pt_index, key
+                    internal = True
                     potential_edges = self.enum_edges_region(key)[:-1]
                     #Flags
                     dist = np.inf
@@ -1105,6 +1104,11 @@ class WED(object):
                         obs_to_edge[e[1], e[0]].add(pt_index)
                     except:
                         pass
+                    break
+            if internal == False:
+
+                print "Point {0} is external to the network and not snapped to an edge".format(pt_index)
+
         return obs_to_edge
 
 if __name__ == '__main__':
