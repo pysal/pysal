@@ -1003,6 +1003,7 @@ class WED(object):
         wed.start_node = {ast.literal_eval(key):value for key, value in data['start_node'].iteritems()}
         wed.end_node = {ast.literal_eval(key):value for key, value in data['end_node'].iteritems()}
         wed.node_coords = {ast.literal_eval(key):value for key, value in data['node_coords'].iteritems()}
+        wed.edge_list = data['edge_list']
 
         return wed
 
@@ -1011,9 +1012,13 @@ class WED(object):
         new_wed = {}
         for key, value in vars(self).iteritems():
             nested_attr = {}
-            for k2, v2 in value.iteritems():
-               nested_attr[str(k2)] = v2
-            new_wed[key] = nested_attr
+            if isinstance(value, dict):
+                for k2, v2 in value.iteritems():
+                    nested_attr[str(k2)] = v2
+                new_wed[key] = nested_attr
+            else:
+                new_wed[key] = value
+        #print new_wed['edge_list']
         if binary:
             with open(outfile, 'w') as outfile:
                 outfile.write(cPickle.dumps(new_wed, 1))
