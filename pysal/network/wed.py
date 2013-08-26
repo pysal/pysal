@@ -23,6 +23,7 @@ import copy
 import operator
 import math
 from itertools import combinations
+import collections
 
 
 class WED(object):
@@ -1142,7 +1143,7 @@ class WED(object):
         return obs_to_node
 
 
-    def assign_points_to_edges(self,points, warning=False):
+    def assign_points_to_edges(self,points):
         """
         Assigns point observations to network edges
 
@@ -1167,6 +1168,7 @@ class WED(object):
         else:
             pts = points
 
+        #Empty dict with all the edges
         obs_to_edge = {}
         for e in self.edge_list:
             obs_to_edge[e] = set()
@@ -1203,8 +1205,25 @@ class WED(object):
                     except:
                         pass
                     break
-            if internal == False and warning == True:
-                print "Point {0} is external to the network and not snapped to an edge".format(pt_index)
+            #Exceptionally brute force - if we aren't in a poly, check all edges
+            # added to test how this functions, must be optimized.
+            if internal == False:
+                #The point is not internal to a polygon.  Now we need to
+                # brute force check against all of the unshared edges.
+                # Shared edges are known to be internal, so we can skip them.
+                dist = np.inf
+                e = None
+                for edge in self.edge_list:
+                    seg = LineSegment(self.node_coords[edge[0]], self.node_coords[edge[1]])
+                    ndist = ps.cg.standalone.get_segment_point_dist(seg, pt)[0]
+                    if ndist < dist:
+                        e = edge
+                        dist = ndist
+                obs_to_edge[e].add(pt_index)
+                try:
+                    obs_to_edge[e[1], e[0]].add(pt_index)
+                except:
+                    pass
 
         return obs_to_edge
 
