@@ -18,6 +18,7 @@ import cPickle
 import numpy as np
 import pysal as ps
 from pysal.cg import Point, Polygon, LineSegment, KDTree
+from pysal.cg.standalone import get_points_dist
 import copy
 import operator
 import math
@@ -619,7 +620,7 @@ class WED(object):
         --------
         >>> vertices = {0: (1, 8), 1: (1, 7), 2: (4, 7), 3: (0, 4), 4: (5, 4), 5: (3, 5), 6: (2, 4.5), 7: (6.5, 9), 8: (6.2, 5), 9: (5.5, 3), 10: (7, 3), 11: (7.5, 7.25), 12: (8, 4), 13: (11.5, 7.25), 14: (9, 1), 15: (11, 3), 16: (12, 2), 17: (12, 5), 18: (13.5, 6), 19: (14, 7.25), 20: (16, 4), 21: (18, 8.5), 22: (16, 1), 23: (21, 1), 24: (21, 4), 25: (18, 3.5), 26: (17, 2), 27: (19, 2)}
         >>> edges = [(1, 2),(1, 3),(2, 1),(2, 4),(2, 7),(3, 1),(3, 4),(4, 2),(4, 3),(4, 5),(5, 4),(5, 6),(6, 5),(7, 2),(7, 11),(8, 9),(8, 10),(9, 8),(9, 10),(10, 8),(10, 9),(11, 7),(11, 12),(11, 13),(12, 11),(12, 13),(12, 20),(13, 11),(13, 12),(13, 18),(14, 15),(15, 14),(15, 16),(16, 15),(18, 13),(18, 19),(19, 18),(19, 20),(19, 21),(20, 12),(20, 19),(20, 21),(20, 22),(20, 24),(21, 19),(21, 20),(22, 20),(22, 23),(23, 22),(23, 24),(24, 20),(24, 23),(25, 26),(25, 27),(26, 25),(26, 27),(27, 25),(27, 26)]
-        >>> r = regions_from_graph(vertices, edges)
+        >>> r = WED.regions_from_graph(vertices, edges)
         >>> r['filaments']
         [[6, 5, 4], [2, 7, 11], [14, 15, 16]]
         >>> r['regions']
@@ -1071,7 +1072,7 @@ class WED(object):
         lisa = ps.Moran_Local(y, w)
         return lisa
 
-    def moran(self, points, attributes):
+    def moran(self, y, w):
         """
         This is a wrapper that gets points observations snapped to the WED
          and then performs LISA analysis.
@@ -1092,19 +1093,37 @@ class WED(object):
             A PySAL Moran's I`s object
         """
 
-        #This is a double edge mapping, we only use a single edge
-        mapping = self.assign_points_to_edges(points)
-        #Generate the W object
-        w = self.w_links()
         #Generate the observation count and link it back
         # to the correct edge position in the W
-        y = np.zeros(len(w.neighbors))
+        y_matched = np.zeros(len(w.neighbors))
         for index, value in enumerate(w.neighbors):
-            obs_at_edge = mapping[value]
+            obs_at_edge = y[value]
             #rate
-            y[index] = len(obs_at_edge)
-        moran = ps.Moran(y, w)
+            y_matched[index] = len(obs_at_edge)
+        moran = ps.Moran(y_matched, w)
         return moran
+
+    def edge_length(self):
+        """
+        Compute the cartesian length of all edges.  This is a helper
+         function to allow for ratio data with spatial autocorrelation
+         analysis.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        length : dict {tuple(edge): float(length)}
+            The length of each edge.
+        """
+
+        lengths = {}
+        for edge in self.edge_list:
+            lengths[edge] = get_points_dist(self.node_coords[edge[0]],
+                                            self.node_coords[edge[1]])
+        return lengths
 
     def assign_points_to_nodes(self, pts):
         #Setup a dictionary that stores node_id:[observations values]
