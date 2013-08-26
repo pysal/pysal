@@ -43,10 +43,13 @@ class WED(object):
         self.start_node = None
         self.end_node = None
         self.node_coords = None
+        self.edge_list = []
 
-        if edges != None and coords != None:
+        if edges is not None and coords is not None:
             #Check for single edges and double if needed
             edges = self.check_edges(edges)
+            self.edge_list[:] = edges
+
             #Create the WED object
             self.extract_wed(edges, coords)
 
@@ -1028,14 +1031,84 @@ class WED(object):
         pass
 
 
-    def assign_points_to_nodes(self,pts, attribs):
+    def lisa(self, points):
+        """
+        This is a wrapper that gets points observations snapped to the WED
+         and then performs LISA analysis.
+
+        Parameters
+        ----------
+        points: list or ndarray
+            A list of PySAL Points to snap to the WED
+
+        attributes: list of ndarray
+            The attribute value of the observation.
+            Assumed to be in the same position as the
+             corresponding geometry
+
+        Returns
+        -------
+        LISA : Object
+            A PySAL LISA object
+        """
+
+        #This mapping has double edges, but the W is single.
+        # We need to maintain dimensionality for LISA to work
+        mapping = self.assign_points_to_edges(points)
+        #Generate the W object
+        w = self.w_links()
+        #Generate the observation count
+        y = np.zeros(len(w.neighbors))
+        for index, value in enumerate(w.neighbors):
+            obs_at_edge = mapping[value]
+            #rate
+            y[index] = len(obs_at_edge)
+        lisa = ps.Moran_Local(y, w)
+        return lisa
+
+    def moran(self, points, attributes):
+        """
+        This is a wrapper that gets points observations snapped to the WED
+         and then performs LISA analysis.
+
+        Parameters
+        ----------
+        points: list or ndarray
+            A list of PySAL Points to snap to the WED
+
+        attributes: list of ndarray
+            The attribute value of the observation.
+            Assumed to be in the same position as the
+             corresponding geometry
+
+        Returns
+        -------
+        moran : Object
+            A PySAL Moran's I`s object
+        """
+
+        #This is a double edge mapping, we only use a single edge
+        mapping = self.assign_points_to_edges(points)
+        #Generate the W object
+        w = self.w_links()
+        #Generate the observation count and link it back
+        # to the correct edge position in the W
+        y = np.zeros(len(w.neighbors))
+        for index, value in enumerate(w.neighbors):
+            obs_at_edge = mapping[value]
+            #rate
+            y[index] = len(obs_at_edge)
+        moran = ps.Moran(y, w)
+        return moran
+
+    def assign_points_to_nodes(self, pts):
         #Setup a dictionary that stores node_id:[observations values]
         obs_to_node = {}
         for x in self.node_coords.iterkeys():
             obs_to_node[x] = set()
 
         #Generate a KDTree of all of the nodes in the wed
-        kd_tree = KDTree([node for node in wed.node_coords.itervalues()])
+        kd_tree = KDTree([node for node in self.node_coords.itervalues()])
 
         #Iterate over each observation and query the KDTree.
         for index, point in enumerate(pts):
@@ -1045,7 +1118,7 @@ class WED(object):
         return obs_to_node
 
 
-    def assign_points_to_edges(self,points):
+    def assign_points_to_edges(self,points, warning=False):
         """
         Assigns point observations to network edges
 
@@ -1069,10 +1142,11 @@ class WED(object):
             pts = points.tolist()
         else:
             pts = points
-        #Setup a dictionary that stores node_id:[observations values]
+
         obs_to_edge = {}
-        for x in self.start_cc.iterkeys():
-            obs_to_edge[x] = set()
+        for e in self.edge_list:
+            obs_to_edge[e] = set()
+
         #Build PySAL polygon objects from each region
         polys = {}
         for r in range(len(self.region_edge)):
@@ -1105,8 +1179,7 @@ class WED(object):
                     except:
                         pass
                     break
-            if internal == False:
-
+            if internal == False and warning == True:
                 print "Point {0} is external to the network and not snapped to an edge".format(pt_index)
 
         return obs_to_edge
