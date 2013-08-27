@@ -187,6 +187,31 @@ class WED(object):
                 neighbors[lnks[r]].append(lnks[l])
         return ps.W(neighbors)
 
+    def _filament_links_node(self, node, node_edge, start_c, end_c):
+        """
+        Private method that duplicates enum_links_around_node, but
+         is callable before the WED is generated.  This is used
+         for filament insertion.
+        """
+        links = []
+        if node not in node_edge:
+            return links
+        l0 = node_edge[node]
+        links.append(l0)
+        l = l0
+        v = node
+        searching = True
+        while searching:
+            if v == l[0]:
+                l = start_c[l]
+            else:
+                l = end_c[l]
+            if (l is None) or (set(l) == set(l0)):
+                searching = False
+            else:
+                links.append(l)
+        return links
+
     def extract_wed(self, edges, coords):
         # helper functions to determine relative position of vectors
         def _dotproduct(v1, v2):
@@ -271,7 +296,8 @@ class WED(object):
 
         # Right polygon for each edge in each region primitive
         #
-        # Also define start_c, end_cc for each polygon edge and start_cc and end_c for its twin
+        # Also define start_c, end_cc for each polygon edge and
+        #  start_cc and end_c for its twin
 
         right_polygon = {}
         left_polygon = {}
@@ -403,6 +429,56 @@ class WED(object):
                 internal = False
                 sfi = sf.intersection(region)
                 if sfi:
+                    incident_node = sfi.pop()
+                    break
+            if incident_node:
+                incident_links = self._filament_links_node(incident_node,node_edge, start_c, end_c)
+                # Now I have a list of all edges that potentially need an
+                # update.
+                #Determine which two edges the filament bisects.
+                origin = coords_org[incident_node]
+                if filament[0] == incident_node:
+                    f = filament[1]
+                else:
+                    f = filament[0]
+
+                x0 = coords_org[f][0] - origin[0]
+                y0 = coords_org[f][1]  - origin[1]
+                v0 = (x0,y0)
+                min_angle = -180.1
+                max_angle = 180.1
+                for e in incident_links:
+                    if e[0] == incident_node:
+                        e = e[1]
+                    else:
+                        e = e[0]
+                    x1 = coords_org[e][0] - origin[0]
+                    y1 = coords_org[e][1] - origin[1]
+                    v1 = (x1,y1)
+                    angle = 180 * _angle(v0,v1) / math.pi
+                    det = x1 * y0 - x0 * y1
+                    if det < 0:
+                        angle *= -1
+                    if angle < 0 and angle > min_angle:
+                        min_angle = angle
+                        min_edge = e
+                    elif angle > 0 and angle < max_angle:
+                        max_angle = angle
+                        max_edge = e
+                max_edge = (incident_node, max_edge)
+                min_edge = (incident_node, min_edge)
+                print "Filament {} bisects filament {} (max angle) and filament {} (min angle).".format(filament, max_edge, min_edge)
+                #print incident_node, incident_links
+                print
+
+            '''
+            if incident_regions:
+                for r in incident_regions:
+                    poly_region = ps.cg.Polygon([coords_org[v] for v in regions[r]])
+                    print poly_region
+            '''
+            """
+                if sfi:
                     node = sfi.pop()
                     filament_region[f].append(r)
                     #print "Region: ",filament_region[f]
@@ -494,7 +570,7 @@ class WED(object):
 
                 if internal is True:
                     break
-
+            """
         self.start_c = start_c
         self.start_cc = start_cc
         self.end_c = end_c
