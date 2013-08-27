@@ -174,11 +174,11 @@ class W(object):
         data = []
         gc.disable()
         id2i = self.id2i
-        for id, neigh_list in self.neighbor_offsets.iteritems():
-            card = self.cardinalities[id]
-            row.extend([id2i[id]] * card)
+        for id_i, neigh_list in self.neighbor_offsets.iteritems():
+            card = self.cardinalities[id_i]
+            row.extend([id2i[id_i]] * card)
             col.extend(neigh_list)
-            data.extend(self.weights[id])
+            data.extend(self.weights[id_i])
         gc.enable()
         row = np.array(row)
         col = np.array(col)
@@ -195,8 +195,8 @@ class W(object):
         """
         if 'id2i' not in self._cache:
             self._id2i = {}
-            for i, id in enumerate(self._id_order):
-                self._id2i[id] = i
+            for i, id_i in enumerate(self._id_order):
+                self._id2i[id_i] = i
             self._id2i = self._id2i
             self._cache['id2i'] = self._id2i
         return self._id2i
