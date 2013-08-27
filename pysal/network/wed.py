@@ -12,14 +12,18 @@ TO DO
 
 __author__ = "Sergio Rey <sjsrey@gmail.com>, Jay Laura <jlaura@asu.edu>"
 
-
+import ast
+import json
+import cPickle
 import numpy as np
 import pysal as ps
 from pysal.cg import Point, Polygon, LineSegment, KDTree
+from pysal.cg.standalone import get_points_dist
 import copy
 import operator
 import math
 from itertools import combinations
+import collections
 
 
 class WED(object):
@@ -28,7 +32,7 @@ class WED(object):
 
     """
 
-    def __init__(self, edges, coords):
+    def __init__(self, edges=None, coords=None):
 
         self.start_c = None
         self.start_cc = None
@@ -41,11 +45,15 @@ class WED(object):
         self.start_node = None
         self.end_node = None
         self.node_coords = None
+        self.edge_list = []
 
-        #Check for single edges and double if needed
-        edges = self.check_edges(edges)
-        #Create the WED object
-        self.extract_wed(edges, coords)
+        if edges is not None and coords is not None:
+            #Check for single edges and double if needed
+            edges = self.check_edges(edges)
+            self.edge_list[:] = edges
+
+            #Create the WED object
+            self.extract_wed(edges, coords)
 
     def check_edges(self, edges):
         """
@@ -613,7 +621,7 @@ class WED(object):
         --------
         >>> vertices = {0: (1, 8), 1: (1, 7), 2: (4, 7), 3: (0, 4), 4: (5, 4), 5: (3, 5), 6: (2, 4.5), 7: (6.5, 9), 8: (6.2, 5), 9: (5.5, 3), 10: (7, 3), 11: (7.5, 7.25), 12: (8, 4), 13: (11.5, 7.25), 14: (9, 1), 15: (11, 3), 16: (12, 2), 17: (12, 5), 18: (13.5, 6), 19: (14, 7.25), 20: (16, 4), 21: (18, 8.5), 22: (16, 1), 23: (21, 1), 24: (21, 4), 25: (18, 3.5), 26: (17, 2), 27: (19, 2)}
         >>> edges = [(1, 2),(1, 3),(2, 1),(2, 4),(2, 7),(3, 1),(3, 4),(4, 2),(4, 3),(4, 5),(5, 4),(5, 6),(6, 5),(7, 2),(7, 11),(8, 9),(8, 10),(9, 8),(9, 10),(10, 8),(10, 9),(11, 7),(11, 12),(11, 13),(12, 11),(12, 13),(12, 20),(13, 11),(13, 12),(13, 18),(14, 15),(15, 14),(15, 16),(16, 15),(18, 13),(18, 19),(19, 18),(19, 20),(19, 21),(20, 12),(20, 19),(20, 21),(20, 22),(20, 24),(21, 19),(21, 20),(22, 20),(22, 23),(23, 22),(23, 24),(24, 20),(24, 23),(25, 26),(25, 27),(26, 25),(26, 27),(27, 25),(27, 26)]
-        >>> r = regions_from_graph(vertices, edges)
+        >>> r = WED.regions_from_graph(vertices, edges)
         >>> r['filaments']
         [[6, 5, 4], [2, 7, 11], [14, 15, 16]]
         >>> r['regions']
@@ -976,83 +984,248 @@ class WED(object):
         results['nodes'] = vertices
         return results
 
+    @classmethod
+    def wed_from_json(cls,infile, binary=True):
+        wed = WED()
+        if binary:
+            with open(infile, 'r') as f:
+                data = cPickle.load(f)
+        else:
+            with open(infile, 'r') as f:
+                data = json.loads(f)
 
-def assign_points_to_nodes(pts, attribs, wed):
-    #Setup a dictionary that stores node_id:[observations values]
-    obs_to_node = {}
-    for x in wed.node_coords.iterkeys():
-        obs_to_node[x] = set()
+        wed.start_c = {ast.literal_eval(key):value for key, value in data['start_c'].iteritems()}
+        wed.start_cc = {ast.literal_eval(key):value for key, value in data['start_cc'].iteritems()}
+        wed.end_c = {ast.literal_eval(key):value for key, value in data['end_c'].iteritems()}
+        wed.end_cc = {ast.literal_eval(key):value for key, value in data['end_cc'].iteritems()}
+        wed.region_edge = {ast.literal_eval(key):value for key, value in data['region_edge'].iteritems()}
+        wed.node_edge = {ast.literal_eval(key):value for key, value in data['node_edge'].iteritems()}
+        wed.right_polygon = {ast.literal_eval(key):value for key, value in data['right_polygon'].iteritems()}
+        wed.left_polygon = {ast.literal_eval(key):value for key, value in data['left_polygon'].iteritems()}
+        wed.start_node = {ast.literal_eval(key):value for key, value in data['start_node'].iteritems()}
+        wed.end_node = {ast.literal_eval(key):value for key, value in data['end_node'].iteritems()}
+        wed.node_coords = {ast.literal_eval(key):value for key, value in data['node_coords'].iteritems()}
+        wed.edge_list = data['edge_list']
 
-    #Generate a KDTree of all of the nodes in the wed
-    kd_tree = KDTree([node for node in wed.node_coords.itervalues()])
+        return wed
 
-    #Iterate over each observation and query the KDTree.
-    for index, point in enumerate(pts):
-        nn = kd_tree.query(point, k=1)
-        obs_to_node[nn[1]].add(attribs[index])
+    def wed_to_json(self, outfile, binary=True):
+        #keys need to be strings
+        new_wed = {}
+        for key, value in vars(self).iteritems():
+            nested_attr = {}
+            if isinstance(value, dict):
+                for k2, v2 in value.iteritems():
+                    nested_attr[str(k2)] = v2
+                new_wed[key] = nested_attr
+            else:
+                new_wed[key] = value
+        #print new_wed['edge_list']
+        if binary:
+            with open(outfile, 'w') as outfile:
+                outfile.write(cPickle.dumps(new_wed, 1))
+        else:
+            with open(outfile, 'w') as outfile:
+                json_str = json.dumps(new_wed, sort_keys=True, indent=4)
+                outfile.write(json_str)
 
-    return obs_to_node
+
+    def nearest_point_on_edge(self,v1):
+        """
+        Computes the distance from the start_node of point observation
+         tagged to an edge. Okabe 3.3.3.8 (pg.65)
+        """
+        pass
 
 
-def assign_points_to_edges(pts, attribs, wed):
-    """
-    Assigns point observations to network edges
+    def lisa(self, points):
+        """
+        This is a wrapper that gets points observations snapped to the WED
+         and then performs LISA analysis.
 
-    Arguments
-    ---------
+        Parameters
+        ----------
+        points: list or ndarray
+            A list of PySAL Points to snap to the WED
 
-    pts: (list) PySAL point objects or tuples of x,y coords
+        attributes: list of ndarray
+            The attribute value of the observation.
+            Assumed to be in the same position as the
+             corresponding geometry
 
-    attribs: (list) of attribute values
+        Returns
+        -------
+        LISA : Object
+            A PySAL LISA object
+        """
 
-    wed: (object) PySAL WED object
+        #This mapping has double edges, but the W is single.
+        # We need to maintain dimensionality for LISA to work
+        mapping = self.assign_points_to_edges(points)
+        #Generate the W object
+        w = self.w_links()
+        #Generate the observation count
+        y = np.zeros(len(w.neighbors))
+        for index, value in enumerate(w.neighbors):
+            obs_at_edge = mapping[value]
+            #rate
+            y[index] = len(obs_at_edge)
+        lisa = ps.Moran_Local(y, w)
+        return lisa
 
-    Returns
-    -------
+    def moran(self, y, w):
+        """
+        This is a wrapper that gets points observations snapped to the WED
+         and then performs LISA analysis.
 
-    obs_to_edge: (dict) where key is the edge and value is a set of observation attributes
+        Parameters
+        ----------
+        points: list or ndarray
+            A list of PySAL Points to snap to the WED
 
-    Notes
-    -----
-    Assumes double edges and sets observations to both edges, e.g. [2,0] and [0,2]
-    Wrapped in a try / except block incase the edges are single .
-    """
-    #Setup a dictionary that stores node_id:[observations values]
-    obs_to_edge = {}
-    for x in wed.start_cc.iterkeys():
-        obs_to_edge[x] = set()
-    #Build PySAL polygon objects from each region
-    polys = {}
-    for r in range(len(wed.region_edge)):
-        edges = enum_edges_region(wed, r)
-        poly = []
-        for e in edges:
-            poly.append(Point(wed.node_coords[e[0]]))
-        polys[r] = (Polygon(poly))
+        attributes: list of ndarray
+            The attribute value of the observation.
+            Assumed to be in the same position as the
+             corresponding geometry
 
-    #Brute force check point in polygon
-    for pt_index, pt in enumerate(pts):
-        for key, poly in polys.iteritems():
-            if ps.cg.standalone.get_polygon_point_intersect(poly, pt):
-                #print pt_index, key
-                potential_edges = enum_edges_region(wed, key)[:-1]
-                #Flags
+        Returns
+        -------
+        moran : Object
+            A PySAL Moran's I`s object
+        """
+
+        #Generate the observation count and link it back
+        # to the correct edge position in the W
+        y_matched = np.zeros(len(w.neighbors))
+        for index, value in enumerate(w.neighbors):
+            obs_at_edge = y[value]
+            #rate
+            y_matched[index] = len(obs_at_edge)
+        moran = ps.Moran(y_matched, w)
+        return moran
+
+    def edge_length(self):
+        """
+        Compute the cartesian length of all edges.  This is a helper
+         function to allow for ratio data with spatial autocorrelation
+         analysis.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        length : dict {tuple(edge): float(length)}
+            The length of each edge.
+        """
+
+        lengths = {}
+        for edge in self.edge_list:
+            lengths[edge] = get_points_dist(self.node_coords[edge[0]],
+                                            self.node_coords[edge[1]])
+        return lengths
+
+    def assign_points_to_nodes(self, pts):
+        #Setup a dictionary that stores node_id:[observations values]
+        obs_to_node = {}
+        for x in self.node_coords.iterkeys():
+            obs_to_node[x] = set()
+
+        #Generate a KDTree of all of the nodes in the wed
+        kd_tree = KDTree([node for node in self.node_coords.itervalues()])
+
+        #Iterate over each observation and query the KDTree.
+        for index, point in enumerate(pts):
+            nn = kd_tree.query(point, k=1)
+            obs_to_node[nn[1]].add(attribs[index])
+
+        return obs_to_node
+
+
+    def assign_points_to_edges(self,points):
+        """
+        Assigns point observations to network edges
+
+        Arguments
+        ---------
+
+        pts: (list) PySAL point objects or tuples of x,y coords
+
+        Returns
+        -------
+
+        obs_to_edge: (dict) where key is the edge and value is the observation index.
+
+        Notes
+        -----
+        Assumes double edges and sets observations to both edges, e.g. [2,0] and [0,2]
+        Wrapped in a try / except block incase the edges are single .
+        """
+        #We can't enumerate over an array of points, so convert to list.
+        if not isinstance(points, list):
+            pts = points.tolist()
+        else:
+            pts = points
+
+        #Empty dict with all the edges
+        obs_to_edge = {}
+        for e in self.edge_list:
+            obs_to_edge[e] = set()
+
+        #Build PySAL polygon objects from each region
+        polys = {}
+        for r in range(len(self.region_edge)):
+            edges = self.enum_edges_region(r)
+            poly = []
+            for e in edges:
+                poly.append(Point(self.node_coords[e[0]]))
+            polys[r] = (Polygon(poly))
+
+        #Brute force check point in polygon
+        for pt_index, pt in enumerate(pts):
+            for key, poly in polys.iteritems():
+                internal = False
+                if ps.cg.standalone.get_polygon_point_intersect(poly, pt):
+                    internal = True
+                    potential_edges = self.enum_edges_region(key)[:-1]
+                    #Flags
+                    dist = np.inf
+                    e = None
+                    #Brute force check all edges of the region
+                    for edge in potential_edges:
+                        seg = LineSegment(self.node_coords[edge[0]], self.node_coords[edge[1]])
+                        ndist = ps.cg.standalone.get_segment_point_dist(seg, pt)[0]
+                        if ndist < dist:
+                            e = edge
+                            dist = ndist
+                    obs_to_edge[e].add(pt_index)
+                    try:
+                        obs_to_edge[e[1], e[0]].add(pt_index)
+                    except:
+                        pass
+                    break
+            #Exceptionally brute force - if we aren't in a poly, check all edges
+            # added to test how this functions, must be optimized.
+            if internal == False:
+                #The point is not internal to a polygon.  Now we need to
+                # brute force check against all of the unshared edges.
+                # Shared edges are known to be internal, so we can skip them.
                 dist = np.inf
                 e = None
-                #Brute force check all edges of the region
-                for edge in potential_edges:
-                    seg = LineSegment(wed.node_coords[edge[0]], wed.node_coords[edge[1]])
+                for edge in self.edge_list:
+                    seg = LineSegment(self.node_coords[edge[0]], self.node_coords[edge[1]])
                     ndist = ps.cg.standalone.get_segment_point_dist(seg, pt)[0]
                     if ndist < dist:
                         e = edge
                         dist = ndist
-                obs_to_edge[e].add(attribs[pt_index])
+                obs_to_edge[e].add(pt_index)
                 try:
-                    obs_to_edge[e[1], e[0]].add(attribs[pt_index])
+                    obs_to_edge[e[1], e[0]].add(pt_index)
                 except:
                     pass
-    return obs_to_edge
 
+        return obs_to_edge
 
 if __name__ == '__main__':
     #Best way to add calls to the doctests in the tests directory?

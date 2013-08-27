@@ -32,7 +32,7 @@ for i,shp in enumerate(shps):
             coord2id[d] = n_nodes
             did = n_nodes
             n_nodes+=1
-        
+
         oid = coord2id[o]
         did = coord2id[d]
         edge = tuple(np.sort((oid,did)))
@@ -72,7 +72,7 @@ coords1, edges1 = net_shp_io.reader(file_name, doubleEdges=False)
 
 import wed
 
-wed_streets = wed.extract_wed(edges, coords)
+wed_streets = wed.WED(edges, coords)
 #wed1_streets = wed.extract_wed(edges1, coords1)
 
 regions = wed_streets.region_edge.keys()
