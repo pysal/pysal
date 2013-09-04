@@ -1973,10 +1973,12 @@ class PolygonCollection:
             
     @property
     def bbox(self):
-        bboxes = np.array([self.polygons[p].bbox for p in self.polygons])
-        mins = bboxes.min(axis=0)
-        maxs = bboxes.max(axis=0)
-        self._bbox = [ mins[0], mins[1], maxs[2], maxs[3] ]
+        if self._bbox is None:
+            print 'setting bounding box for FeatureCollection'
+            bboxes = np.array([self.polygons[p].bbox for p in self.polygons])
+            mins = bboxes.min(axis=0)
+            maxs = bboxes.max(axis=0)
+            self._bbox = [ mins[0], mins[1], maxs[2], maxs[3] ]
         return self._bbox
         
     
