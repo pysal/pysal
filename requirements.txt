@@ -4,3 +4,5 @@ sphinx
 numpydoc
 networkx
 Shapely
+geojson
+fiona
