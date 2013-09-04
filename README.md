@@ -80,7 +80,7 @@ All things PySAL can be found here
 
 Mailing Lists
 -------------
-Please see the developer's list here
+Please see the developer list here
     http://groups.google.com/group/pysal-dev
 
 Help for users is here

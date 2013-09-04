@@ -12,7 +12,7 @@ import twosls as TSLS
 import robust as ROBUST
 import user_output as USER
 import summary_output as SUMMARY
-from utils import get_lags, set_endog, sp_att
+from utils import get_lags, set_endog, sp_att, set_warn
 
 __all__ = ["GM_Lag"]
 
@@ -27,7 +27,7 @@ class BaseGM_Lag(TSLS.BaseTSLS):
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
-                   independent (exogenous) variable, including the constant
+                   independent (exogenous) variable, excluding the constant
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
@@ -477,15 +477,16 @@ class GM_Lag(BaseGM_Lag):
 
         n = USER.check_arrays(x, yend, q)
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         USER.check_robust(robust, gwk)
         yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
         x_constant = USER.check_constant(x)
         BaseGM_Lag.__init__(self, y=y, x=x_constant, w=w.sparse, yend=yend2, q=q2,\
                             w_lags=w_lags, robust=robust, gwk=gwk,\
                             lag_q=lag_q, sig2n_k=sig2n_k)
-        self.predy_e, self.e_pred = sp_att(w,self.y,self.predy,\
+        self.predy_e, self.e_pred, warn = sp_att(w,self.y,self.predy,\
                       yend2[:,-1].reshape(self.n,1),self.betas[-1])
+        set_warn(self,warn)
         self.title = "SPATIAL TWO STAGE LEAST SQUARES"        
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)

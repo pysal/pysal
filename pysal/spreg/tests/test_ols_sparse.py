@@ -32,7 +32,7 @@ class TestBaseOLS(unittest.TestCase):
         self.X = sparse.csr_matrix(self.X)
         ols = EC.OLS(self.y, self.X, self.w, spat_diag=True, moran=True, \
                 name_y='home value', name_x=['income','crime'], \
-                name_ds='columbus', nonspat_diag=True)
+                name_ds='columbus', nonspat_diag=True, white_test=True)
         
         np.testing.assert_array_almost_equal(ols.aic, \
                 408.73548964604873 ,7)

@@ -21,8 +21,7 @@ installed on your machine:
 
 *Optional, bundled installation:* 
 
-The Anaconda Python distribution ships with PySAL (version 1.5 as of June 3,
-2013). Opting for this distro means you don't have to read any further!
+The Anaconda Python distribution ships with PySAL. Opting for this distro means you don't have to read any further!
 Check it out at http://continuum.io/downloads.html
 
 With the `Enthought Python Distribution (EPD Free) <http://www.enthought.com/products/epd_free.php>`_, 

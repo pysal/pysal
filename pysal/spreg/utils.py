@@ -12,7 +12,6 @@ from scipy import sparse as SP
 import scipy.optimize as op
 import numpy.linalg as la
 from pysal import lag_spatial
-from warnings import warn
 import copy
 
 
@@ -547,19 +546,20 @@ def iter_msg(iteration,max_iter):
     return iter_stop
 
 def sp_att(w,y,predy,w_y,rho):
+    xb = predy - rho*w_y
     if np.abs(rho)<1:
-        xb = predy - rho*w_y
-        predy_sp = inverse_prod(w, xb, rho) 
-        resid_sp = y - predy_sp
-        return predy_sp, resid_sp
+        predy_sp = inverse_prod(w, xb, rho)
+        warn = None
+        resid_sp = y - predy_sp #Note 1: Here if omitting pseudo-R2; If not, see Note 2.
     else:
-        t = ("WARNING: Estimate for rho is outside the boundary of (-1, 1)."
-        "`predy_sp` and `resid_sp` are not returned. This may cause problems"
-        "in subsequent steps.")
-        warn(t, RuntimeWarning)
-        print t
-        return None, None
-
+        #warn = "Warning: Estimate for rho is outside the boundary (-1, 1). Computation of true inverse of W was required (slow)."
+        #predy_sp = inverse_prod(w, xb, rho, inv_method="true_inv")        
+        warn = "*** WARNING: Estimate for spatial lag coefficient is outside the boundary (-1, 1). ***"
+        predy_sp = np.zeros(y.shape,float)
+        resid_sp = np.zeros(y.shape,float)
+    #resid_sp = y - predy_sp #Note 2: Here if computing true inverse; If not, see Note 1.
+    return predy_sp, resid_sp, warn
+    
 def spdot(a,b, array_out=True):
     """
     Matrix multiplication function to deal with sparse and dense objects
@@ -756,14 +756,40 @@ def spmax(a):
         raise Exception, "Invalid format for 'spmultiply' argument: %s and %s"%(type(a).__name__, type(b).__name__)
 
 def set_warn(reg,warn):
+    ''' Groups warning messages for printout. '''
     if warn:
         try:
-            reg.warning += warn
+            reg.warning += "Warning: "+warn+"\n"
         except:
-            reg.warning = warn
+            reg.warning = "Warning: "+warn+"\n"
     else:
         reg.warning = None
 
+def RegressionProps_basic(reg,betas=None,predy=None,u=None,sig2=None,sig2n_k=None,vm=None):
+    ''' Set props based on arguments passed. '''
+    if betas != None:
+        reg.betas = betas
+    if predy != None:
+        reg.predy = predy
+    else:
+        try:
+            reg.predy = spdot(reg.z, reg.betas)
+        except:
+            reg.predy = spdot(reg.x, reg.betas)
+    if u != None:
+        reg.u = u
+    else:
+        reg.u = reg.y-reg.predy
+    if sig2 !=None:
+        reg.sig2 = sig2
+    elif sig2n_k:
+        reg.sig2 = np.sum(reg.u**2) / (reg.n-reg.k)
+    else:
+        reg.sig2 = np.sum(reg.u**2) / reg.n
+    if vm != None:
+        reg.vm = vm
+
+        
 def _test():
     import doctest
     doctest.testmod()

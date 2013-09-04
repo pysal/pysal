@@ -13,9 +13,10 @@ from pysal import lag_spatial
 from pysal.spreg.ols import BaseOLS
 from pysal.spreg.twosls import BaseTSLS
 from pysal.spreg.error_sp import BaseGM_Error, BaseGM_Endog_Error, _momentsGM_Error
-from utils import set_endog, iter_msg, sp_att, set_warn
-from utils import optim_moments, get_spFilter, get_lags
-from utils import spdot, RegressionPropsY
+from pysal.spreg.utils import set_endog, iter_msg, sp_att, set_warn
+from pysal.spreg.utils import optim_moments, get_spFilter, get_lags
+from pysal.spreg.utils import spdot, RegressionPropsY
+from platform import system
 
 class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     """
@@ -33,9 +34,8 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
     w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)   
-    constant_regi: [False, 'one', 'many']
+                   Spatial weights object   
+    constant_regi: ['one', 'many']
                    Switcher controlling the constant term setup. It may take
                    the following values:
                      *  'one': a vector of ones is appended to x and held
@@ -54,6 +54,10 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
+    cores        : integer
+                   Specifies the number of cores to be used in multiprocessing
+                   Default: all cores available (specified as cores=None).
+                   Note: Multiprocessing currently not available on Windows.
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -84,26 +88,38 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     k            : integer
                    Number of variables for which coefficients are estimated
                    (including the constant)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     y            : array
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, including the constant
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     mean_y       : float
                    Mean of dependent variable
     std_y        : float
                    Standard deviation of dependent variable
     pr2          : float
                    Pseudo R squared (squared correlation between y and ypred)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     vm           : array
                    Variance covariance matrix (kxk)
     sig2         : float
                    Sigma squared used in computations
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     std_err      : array
                    1xk array of standard errors of the betas    
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     z_stat       : list of tuples
                    z statistic; each tuple contains the pair (statistic,
                    p-value), where each is a float
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -116,6 +132,8 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    Name of regime variable for use in the output
     title        : string
                    Name of the regression method used
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     regimes      : list
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
@@ -147,6 +165,11 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    estimate
     nr           : int
                    Number of different regimes in the 'regimes' list
+    multi        : dictionary
+                   Only available when multiple regressions are estimated,
+                   i.e. when regime_err_sep=True and no variable is fixed
+                   across regimes.
+                   Contains all attributes of each individual regression
 
     References
     ----------
@@ -222,7 +245,7 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     have the names of the variables printed in the output summary, we will
     have to pass them in as well, although this is optional.
 
-    >>> model = GM_Error_Regimes(y, x, regimes, w, name_y=y_var, name_x=x_var, name_regimes=r_var, name_ds='NAT.dbf')
+    >>> model = GM_Error_Regimes(y, x, regimes, w=w, name_y=y_var, name_x=x_var, name_regimes=r_var, name_ds='NAT.dbf')
 
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
@@ -263,29 +286,25 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
         n = USER.check_arrays(y, x)
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         self.constant_regi = constant_regi
         self.cols2regi = cols2regi
-        self.regime_err_sep = regime_err_sep
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_w = USER.set_name_w(name_w, w)
         self.name_regimes = USER.set_name_ds(name_regimes)
         self.n = n
+        self.y = y
 
         x_constant = USER.check_constant(x)
         name_x = USER.set_name_x(name_x, x)
         self.name_x_r = name_x
 
-        if constant_regi=='many':
-            regi_cons = [True]
-        elif constant_regi=='one':
-            regi_cons = [False]
-        if cols2regi=='all':
-            cols2regi = regi_cons + [True]*x.shape[1]
-        else:
-            cols2regi = regi_cons + cols2regi
-
+        cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x)
+        self.regimes_set = REGI._get_regimes_set(regimes)
+        self.regimes = regimes
+        USER.check_regimes(self.regimes_set)
+        self.regime_err_sep = regime_err_sep        
         if regime_err_sep == True:
             if set(cols2regi) == set([True]):
                 self._error_regimes_multi(y, x, regimes, w, cores,\
@@ -297,7 +316,6 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                     regimes, constant_regi=None, cols2regi=cols2regi, names=name_x)
             ols = BaseOLS(y=y, x=self.x)
             self.k = ols.x.shape[1]
-            self.y = ols.y
             moments = _momentsGM_Error(w, ols.u)
             lambda1 = optim_moments(moments)
             xs = get_spFilter(w, lambda1, x_constant)
@@ -322,16 +340,18 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
     def _error_regimes_multi(self, y, x, regimes, w, cores,\
                  cols2regi, vm, name_x):
-
-        self.regimes_set = list(set(regimes))
-        self.regimes_set.sort()
         w_i,regi_ids,warn = REGI.w_regimes(w, regimes, self.regimes_set, transform=True, get_ids=True)
         set_warn(self, warn)
         pool = mp.Pool(cores)
         results_p = {}
         for r in self.regimes_set:
             w_r = w_i[r].sparse
-            results_p[r] = pool.apply_async(_work_error,args=(y,x,regi_ids,r,w_r,self.name_ds,self.name_y,name_x+['lambda'],self.name_w,self.name_regimes, ))
+            if system() == 'Windows':
+                results_p[r] = _work_error(*(y,x,regi_ids,r,w_r,self.name_ds,self.name_y,name_x+['lambda'],self.name_w,self.name_regimes))
+                is_win = True
+            else:
+                results_p[r] = pool.apply_async(_work_error,args=(y,x,regi_ids,r,w_r,self.name_ds,self.name_y,name_x+['lambda'],self.name_w,self.name_regimes, ))
+                is_win = False
         self.kryd = 0
         self.kr = len(cols2regi)
         self.kf = 0
@@ -341,13 +361,17 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         self.u = np.zeros((self.n,1),float)
         self.predy = np.zeros((self.n,1),float)
         self.e_filtered = np.zeros((self.n,1),float)
-        pool.close()
-        pool.join()
+        if not is_win:
+            pool.close()
+            pool.join()
         results = {}
         self.name_y, self.name_x = [],[]
         counter = 0
         for r in self.regimes_set:
-            results[r] = results_p[r].get()
+            if is_win:
+                results[r] = results_p[r]
+            else:
+                results[r] = results_p[r].get()
             results[r].w = w_i[r]
             self.vm[(counter*self.kr):((counter+1)*self.kr),(counter*self.kr):((counter+1)*self.kr)] = results[r].vm
             self.betas[(counter*(self.kr+1)):((counter+1)*(self.kr+1)),] = results[r].betas
@@ -385,9 +409,8 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
     w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)   
-    constant_regi: [False, 'one', 'many']
+                   Spatial weights object   
+    constant_regi: ['one', 'many']
                    Switcher controlling the constant term setup. It may take
                    the following values:
                      *  'one': a vector of ones is appended to x and held
@@ -406,6 +429,10 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
+    cores        : integer
+                   Specifies the number of cores to be used in multiprocessing
+                   Default: all cores available (specified as cores=None).
+                   Note: Multiprocessing currently not available on Windows.
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -439,16 +466,24 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     k            : integer
                    Number of variables for which coefficients are estimated
                    (including the constant)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     y            : array
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, including the constant
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     z            : array
                    nxk array of variables (combination of x and yend)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     mean_y       : float
                    Mean of dependent variable
     std_y        : float
@@ -457,13 +492,21 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    Variance covariance matrix (kxk)
     pr2          : float
                    Pseudo R squared (squared correlation between y and ypred)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     sig2         : float
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
                    Sigma squared used in computations
     std_err      : array
                    1xk array of standard errors of the betas    
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     z_stat       : list of tuples
                    z statistic; each tuple contains the pair (statistic,
                    p-value), where each is a float
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     name_y        : string
                     Name of dependent variable for use in output
     name_x        : list of strings
@@ -481,12 +524,16 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                     Name of weights matrix for use in output
     name_ds       : string
                     Name of dataset for use in output
+    name_regimes  : string
+                    Name of regimes variable for use in output
     title         : string
                     Name of the regression method used
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     regimes       : list
                     List of n values with the mapping of each
                     observation to a regime. Assumed to be aligned with 'x'.
-    constant_regi : [False, 'one', 'many']
+    constant_regi : ['one', 'many']
                     Ignored if regimes=False. Constant option for regimes.
                     Switcher controlling the constant term setup. It may take
                     the following values:
@@ -514,6 +561,11 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                     estimate
     nr            : int
                     Number of different regimes in the 'regimes' list
+    multi        : dictionary
+                   Only available when multiple regressions are estimated,
+                   i.e. when regime_err_sep=True and no variable is fixed
+                   across regimes.
+                   Contains all attributes of each individual regression
 
     References
     ----------
@@ -599,7 +651,7 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     have the names of the variables printed in the output summary, we will
     have to pass them in as well, although this is optional.
 
-    >>> model = GM_Endog_Error_Regimes(y, x, yend, q, regimes, w, name_y=y_var, name_x=x_var, name_yend=yd_var, name_q=q_var, name_regimes=r_var, name_ds='NAT.dbf')
+    >>> model = GM_Endog_Error_Regimes(y, x, yend, q, regimes, w=w, name_y=y_var, name_x=x_var, name_yend=yd_var, name_q=q_var, name_regimes=r_var, name_ds='NAT.dbf')
 
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
@@ -637,13 +689,14 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         
         n = USER.check_arrays(y, x, yend, q)
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         self.constant_regi = constant_regi
         self.cols2regi = cols2regi
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_regimes = USER.set_name_ds(name_regimes)
         self.name_w = USER.set_name_w(name_w, w)
         self.n = n
+        self.y = y
         
         x_constant = USER.check_constant(x)
         name_x = USER.set_name_x(name_x, x)
@@ -653,14 +706,11 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
             name_q = USER.set_name_q(name_q, q)
         self.name_x_r = name_x + name_yend
 
-        if constant_regi=='many':
-            regi_cons = [True]
-        elif constant_regi=='one':
-            regi_cons = [False]
-        if cols2regi=='all':
-            cols2regi = regi_cons + [True]*(x.shape[1]+yend.shape[1])
-        else:
-            cols2regi = regi_cons + cols2regi
+        cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, yend=yend)
+        self.regimes_set = REGI._get_regimes_set(regimes)
+        self.regimes = regimes
+        USER.check_regimes(self.regimes_set)
+        self.regime_err_sep = regime_err_sep        
 
         if regime_err_sep == True:
             if set(cols2regi) == set([True]):
@@ -680,7 +730,7 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
             tsls = BaseTSLS(y=y, x=x, yend=yend2, q=q)
             self.k = tsls.z.shape[1]
-            self.x, self.y = tsls.x, tsls.y
+            self.x = tsls.x
             self.yend, self.z = tsls.yend, tsls.z
             moments = _momentsGM_Error(w, tsls.u)
             lambda1 = optim_moments(moments)
@@ -717,8 +767,6 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     def _endog_error_regimes_multi(self, y, x, regimes, w, yend, q, cores,\
                  cols2regi, regi_w, vm, name_x, name_yend, name_q):
 
-        self.regimes_set = list(set(regimes))
-        self.regimes_set.sort()
         if regi_w:
             w_i,regi_ids = regi_w[0:2]
         else:
@@ -728,7 +776,12 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         results_p = {}
         for r in self.regimes_set:
             w_r = w_i[r].sparse
-            results_p[r] = pool.apply_async(_work_endog_error,args=(y,x,yend,q,regi_ids,r,w_r,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes, ))
+            if system() == 'Windows':
+                results_p[r] = _work_endog_error(*(y,x,yend,q,regi_ids,r,w_r,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes))
+                is_win = True
+            else:
+                results_p[r] = pool.apply_async(_work_endog_error,args=(y,x,yend,q,regi_ids,r,w_r,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes, ))
+                is_win = False
         self.kryd,self.kf = 0,0
         self.kr = len(cols2regi)
         self.nr = len(self.regimes_set)
@@ -737,13 +790,17 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         self.u = np.zeros((self.n,1),float)
         self.predy = np.zeros((self.n,1),float)
         self.e_filtered = np.zeros((self.n,1),float)
-        pool.close()
-        pool.join()
+        if not is_win:
+            pool.close()
+            pool.join()
         results = {}
         self.name_y, self.name_x, self.name_yend, self.name_q, self.name_z, self.name_h = [],[],[],[],[],[]
         counter = 0
         for r in self.regimes_set:
-            results[r] = results_p[r].get()
+            if is_win:
+                results[r] = results_p[r]
+            else:
+                results[r] = results_p[r].get()
             results[r].w = w_i[r]
             self.vm[(counter*self.kr):((counter+1)*self.kr),(counter*self.kr):((counter+1)*self.kr)] = results[r].vm
             self.betas[(counter*(self.kr+1)):((counter+1)*(self.kr+1)),] = results[r].betas
@@ -785,13 +842,10 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
                    external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
     w            : pysal W object
-                   Spatial weights object (note: if provided then spatial
-                   diagnostics are computed)   
-    constant_regi: [False, 'one', 'many']
+                   Spatial weights object (always needed)   
+    constant_regi: ['one', 'many']
                    Switcher controlling the constant term setup. It may take
                    the following values:
-                    
-                     *  False: no constant term is appended in any way
                      *  'one': a vector of ones is appended to x and held
                                constant across regimes
                      * 'many': a vector of ones is appended to x and considered
@@ -819,6 +873,10 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
+    cores        : integer
+                   Specifies the number of cores to be used in multiprocessing
+                   Default: all cores available (specified as cores=None).
+                   Note: Multiprocessing currently not available on Windows.
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -856,16 +914,24 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
     k            : integer
                    Number of variables for which coefficients are estimated
                    (including the constant)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     y            : array
                    nx1 array for dependent variable
     x            : array
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, including the constant
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     yend         : array
                    Two dimensional array with n rows and one column for each
                    endogenous variable
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     z            : array
                    nxk array of variables (combination of x and yend)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     mean_y       : float
                    Mean of dependent variable
     std_y        : float
@@ -874,17 +940,27 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
                    Variance covariance matrix (kxk)
     pr2          : float
                    Pseudo R squared (squared correlation between y and ypred)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     pr2_e        : float
                    Pseudo R squared (squared correlation between y and ypred_e
                    (using reduced form))
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     sig2         : float
                    Sigma squared used in computations (based on filtered
                    residuals)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     std_err      : array
                    1xk array of standard errors of the betas    
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     z_stat       : list of tuples
                    z statistic; each tuple contains the pair (statistic,
                    p-value), where each is a float
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     name_y        : string
                     Name of dependent variable for use in output
     name_x        : list of strings
@@ -902,12 +978,16 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
                     Name of weights matrix for use in output
     name_ds       : string
                     Name of dataset for use in output
+    name_regimes  : string
+                    Name of regimes variable for use in output
     title         : string
                     Name of the regression method used
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     regimes       : list
                     List of n values with the mapping of each
                     observation to a regime. Assumed to be aligned with 'x'.
-    constant_regi : [False, 'one', 'many']
+    constant_regi : ['one', 'many']
                     Ignored if regimes=False. Constant option for regimes.
                     Switcher controlling the constant term setup. It may take
                     the following values:
@@ -939,6 +1019,11 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
                     estimate
     nr            : int
                     Number of different regimes in the 'regimes' list
+    multi        : dictionary
+                   Only available when multiple regressions are estimated,
+                   i.e. when regime_err_sep=True and no variable is fixed
+                   across regimes.
+                   Contains all attributes of each individual regression
 
     References
     ----------
@@ -1062,7 +1147,7 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
 
     And then we can run and explore the model analogously to the previous combo:
 
-    >>> model = GM_Combo_Regimes(y, x, regimes, yd, q, w, name_y=y_var, name_x=x_var, name_yend=yd_var, name_q=q_var, name_regimes=r_var, name_ds='NAT')
+    >>> model = GM_Combo_Regimes(y, x, regimes, yd, q, w=w, name_y=y_var, name_x=x_var, name_yend=yd_var, name_q=q_var, name_regimes=r_var, name_ds='NAT')
     >>> print model.name_z
     ['0_CONSTANT', '0_PS90', '0_UE90', '1_CONSTANT', '1_PS90', '1_UE90', '0_RD90', '1_RD90', '_Global_W_HR90', 'lambda']
     >>> print model.betas
@@ -1092,23 +1177,24 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
 
         n = USER.check_arrays(y, x)
         USER.check_y(y, n)
-        USER.check_weights(w, y)
+        USER.check_weights(w, y, w_required=True)
         name_x = USER.set_name_x(name_x, x,constant=True)
         self.name_y = USER.set_name_y(name_y)
         name_yend = USER.set_name_yend(name_yend, yend)
         name_q = USER.set_name_q(name_q, q)
         name_q.extend(USER.set_name_q_sp(name_x, w_lags, name_q, lag_q, force_all=True))        
 
-        if cols2regi == 'all':
-            if yend!=None:
-                cols2regi = [True] * (x.shape[1]+yend.shape[1])
-            else:
-                cols2regi = [True] * (x.shape[1])     
+        cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, yend=yend, add_cons=False)    
+        self.regimes_set = REGI._get_regimes_set(regimes)
+        self.regimes = regimes
+        USER.check_regimes(self.regimes_set)
+        self.regime_err_sep = regime_err_sep        
+        self.regime_lag_sep = regime_lag_sep 
 
         if regime_lag_sep == True:
+            if regime_err_sep == False:
+               raise Exception, "For spatial combo models, if spatial lag is set by regimes (regime_lag_sep=True), spatial error must also be set by regimes (regime_err_sep=True)."
             cols2regi += [True]
-            self.regimes_set = list(set(regimes))
-            self.regimes_set.sort()
             regi_w = (REGI.w_regimes(w, regimes, self.regimes_set, transform=regime_err_sep, get_ids=regime_err_sep))
             w = REGI.w_regimes_union(w, regi_w[0], self.regimes_set)
             set_warn(self, regi_w[2])
@@ -1116,7 +1202,7 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
             cols2regi += [False]
             regi_w = None
             if regime_err_sep == True:
-               raise Exception, "All coefficients must vary accross regimes if regime_err_sep = True. Therefore, if regime_err_sep = True, regime_lag_sep must also be True."
+               raise Exception, "For spatial combo models, if spatial error is set by regimes (regime_err_sep=True), all coefficients including lambda (regime_lag_sep=True) must be set by regimes."
 
         yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
         name_yend.append(USER.set_name_yend_sp(self.name_y))
@@ -1129,8 +1215,9 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
                 name_ds=name_ds, name_regimes=name_regimes, summ=False)
 
         if regime_err_sep != True:
-            self.predy_e, self.e_pred = sp_att(w,self.y,\
+            self.predy_e, self.e_pred, warn = sp_att(w,self.y,\
                    self.predy,yend2[:,-1].reshape(self.n,1),self.betas[-2])
+            set_warn(self, warn)
             self.regime_lag_sep=regime_lag_sep
             self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES - REGIMES"
             SUMMARY.GM_Combo(reg=self, w=w, vm=vm, regimes=True)
@@ -1186,6 +1273,5 @@ if __name__ == '__main__':
     regimes = regimes = dbf.by_col('NSA')
     w = pysal.open(pysal.examples.get_path("columbus.gal"), 'r').read() 
     w.transform='r'
-    model = GM_Error_Regimes(y, x, regimes, w=w, name_y='crime', name_x=['income', 'hoval'], name_regimes='nsa', name_ds='columbus')
+    model = GM_Error_Regimes(y, x, regimes, w=w, name_y='crime', name_x=['income', 'hoval'], name_regimes='nsa', name_ds='columbus', regime_err_sep=True)
     print model.summary
-    

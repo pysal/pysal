@@ -13,6 +13,8 @@ Daniel Arribas-Bel
 David C. Folch
 Myunghwa Hwang
 Julia Koschinsky
+Jason Laura
+Xun Li
 Nicholas Malizia
 Mark McCann
 Serge Rey
