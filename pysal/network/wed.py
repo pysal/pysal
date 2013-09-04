@@ -400,12 +400,6 @@ class WED(object):
             end_c[union[-1]] = union[0]
             start_cc[union[-1]] = union[-2]
 
-        # we need to attach filaments at this point
-        # internal filaments get left and right poly set to containing poly
-        # external filaments get left and right poly set to external poly
-        # bridge filaments get left and right poly set to external poly
-        # isolated filaments (not contained in mcb-regions) have left and right poly set to external poly
-
         # after this find the holes in the external polygon (these should be the connected components)
 
         # Fill out s_c, s_cc, e_c, e_cc pointers for each edge after filaments are inserted
@@ -423,53 +417,89 @@ class WED(object):
             start_cc.update(scc)
             end_c.update(ec)
 
-            # find which regions the filament is adjacent to
+            # find which regions the filament is incident to
             sf = set(filament)
+            incident_nodes = set()
             for r, region in enumerate(regions):
                 internal = False
                 sfi = sf.intersection(region)
-                if sfi:
-                    incident_node = sfi.pop()
+                while sfi:
+                    incident_nodes.add(sfi.pop())
                     break
-            if incident_node:
-                incident_links = self._filament_links_node(incident_node,node_edge, start_c, end_c)
-                # Now I have a list of all edges that potentially need an
-                # update.
-                #Determine which two edges the filament bisects.
-                origin = coords_org[incident_node]
-                if filament[0] == incident_node:
-                    f = filament[1]
-                else:
-                    f = filament[0]
 
-                x0 = coords_org[f][0] - origin[0]
-                y0 = coords_org[f][1]  - origin[1]
-                v0 = (x0,y0)
-                min_angle = -180.1
-                max_angle = 180.1
-                for e in incident_links:
-                    if e[0] == incident_node:
-                        e = e[1]
+
+            while incident_nodes:
+                incident_node = incident_nodes.pop()
+                incident_links = self._filament_links_node(incident_node,node_edge, start_c, end_c)
+                #Polar coordinates centered on incident node, no rotation from x-axis
+                origin = coords_org[incident_node]
+
+                #Logic: If the filament has 2 nodes, grab the other one
+                # If the filament has 3+, grab the first and last segments
+                if filament.index(incident_node) == 0:
+                    f = filament[1]
+                elif filament.index(incident_node) == 1:
+                    f = filament[0]
+                else:
+                    f = filament[-2]
+                filament_end = coords_org[f]
+
+                #Determine the relationship between the origin and the filament end
+                filamentx = filament_end[0] - origin[0]
+                filamenty = filament_end[1] - origin[1]
+                filament_theta = math.atan2(filamenty, filamentx) * 180 / math.pi
+                if filament_theta < 0:
+                    filament_theta += 360
+                #Find the rotation necessary to get the filament to theta 0
+                f_rotation = 360 - filament_theta
+
+                link_angles = {}
+                for link in incident_links:
+                    if link[0] == incident_node:
+                        link_node = link[1]
                     else:
-                        e = e[0]
-                    x1 = coords_org[e][0] - origin[0]
-                    y1 = coords_org[e][1] - origin[1]
-                    v1 = (x1,y1)
-                    angle = 180 * _angle(v0,v1) / math.pi
-                    det = x1 * y0 - x0 * y1
-                    if det < 0:
-                        angle *= -1
-                    if angle < 0 and angle > min_angle:
-                        min_angle = angle
-                        min_edge = e
-                    elif angle > 0 and angle < max_angle:
-                        max_angle = angle
-                        max_edge = e
-                max_edge = (incident_node, max_edge)
-                min_edge = (incident_node, min_edge)
-                print "Filament {} bisects filament {} (max angle) and filament {} (min angle).".format(filament, max_edge, min_edge)
-                #print incident_node, incident_links
-                print
+                        link_node = link[0]
+                    #Get the end coord of the incident link
+                    link_node_coords = coords_org[link_node]
+                    y = link_node_coords[1] - origin[1]
+                    x = link_node_coords[0] - origin[0]
+                    r = math.sqrt(x**2 + y**2)
+                    node = coords_org[link_node]
+                    node_theta = math.atan2(y, x) * 180 / math.pi
+                    if node_theta < 0:
+                        node_theta += 360
+                    #Rotate the edge node to match the new polar axis
+                    node_theta += f_rotation
+                    if node_theta > 360:
+                        node_theta -= 360
+                    link_angles[link] = node_theta
+                #Update the filament pointer in the direction (segment end, incident node)
+                cwise = min(link_angles, key=link_angles.get)
+                ccwise = max(link_angles, key=link_angles.get)
+                end_c[(f, incident_node)] = (cwise[1], cwise[0])
+                end_cc[(f, incident_node)] = (ccwise[1], ccwise[0])
+                #Reverse the edge direction
+                start_c[(incident_node, f)] = (tuple(cwise))
+                start_cc[(incident_node, f)] = (tuple(ccwise))
+                #Update the bisected edge points in the direction(segment end, incident node)
+                #Cwise link
+                end_c[cwise] = (incident_node, f)
+                start_cc[(cwise[1], cwise[0])] = (incident_node, f)
+                #CCWise link
+                end_cc[ccwise] = (incident_node, f)
+                start_c[(ccwise[1], ccwise[0])] = (incident_node, f)
+
+
+                #print "For filament {}: ".format(filament)
+                #print "    CCW Most edge is {}".format(min(link_angles, key=link_angles.get))
+                #print "    CW Most edge is {}".format(max(link_angles, key=link_angles.get))
+
+
+
+
+
+
+
 
             '''
             if incident_regions:
