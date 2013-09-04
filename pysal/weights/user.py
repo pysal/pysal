@@ -1139,6 +1139,10 @@ def _queen_geojson(gjobj):
     Constructs a PySAL queen contiguity W from a GeoJSON feature collection consisting of Polygons and/or Multipolygons
 
     """
+    fc_bbox = None
+    if 'bbox' in gjobj:
+        fc_bbox = gjobj['bbox']
+    
     first = gjobj['features'][0]['geometry']['type']
     if first == 'Polygon' or first =='MultiPolygon':
         polys = []
@@ -1151,7 +1155,8 @@ def _queen_geojson(gjobj):
                 polys.append(pysal.cg.asShape(geojson.MultiPolygon(feature['geometry']['coordinates'])))
             ids.append(i)
             i += 1
-        polygons = pysal.cg.shapes.PolygonCollection(dict(zip(ids,polys)))
+        polygons = pysal.cg.shapes.PolygonCollection(dict(zip(ids,polys)),
+                bbox=fc_bbox)
         neighbors = pysal.weights.Contiguity.ContiguityWeightsPolygons(polygons).w
         return pysal.W(neighbors)
     else:
