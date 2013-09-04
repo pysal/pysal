@@ -93,7 +93,7 @@ def setup_package():
         ],
         packages=find_packages(exclude=["*.network", "*.network.*", "network.*", "network"]),
         package_data={'pysal': ['examples/*']},
-        requires=['scipy']
+        requires=['scipy', 'geojson','fiona']
     )
 
 
