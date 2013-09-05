@@ -420,17 +420,18 @@ class WED(object):
             # find which regions the filament is incident to
             sf = set(filament)
             incident_nodes = set()
+            incident_regions = set()
             for r, region in enumerate(regions):
                 internal = False
                 sfi = sf.intersection(region)
                 while sfi:
                     incident_nodes.add(sfi.pop())
-                    break
-
+                    incident_regions.add(r)
 
             while incident_nodes:
                 incident_node = incident_nodes.pop()
                 incident_links = self._filament_links_node(incident_node,node_edge, start_c, end_c)
+
                 #Polar coordinates centered on incident node, no rotation from x-axis
                 origin = coords_org[incident_node]
 
@@ -443,7 +444,7 @@ class WED(object):
                 else:
                     f = filament[-2]
                 filament_end = coords_org[f]
-
+                #print "Filament:{}, Incident_Node:{} ".format(f, incident_node)
                 #Determine the relationship between the origin and the filament end
                 filamentx = filament_end[0] - origin[0]
                 filamenty = filament_end[1] - origin[1]
@@ -473,9 +474,16 @@ class WED(object):
                     if node_theta > 360:
                         node_theta -= 360
                     link_angles[link] = node_theta
+
+                #Get the bisected edges
+                ccwise = min(link_angles, key=link_angles.get)
+                cwise = max(link_angles, key=link_angles.get)
+                #Fix the direction of the bisected edges
+                if ccwise.index(incident_node) != 1:
+                    ccwise = (ccwise[1], ccwise[0])
+                if cwise.index(incident_node) != 1:
+                    cwise = (cwise[1], cwise[0])
                 #Update the filament pointer in the direction (segment end, incident node)
-                cwise = min(link_angles, key=link_angles.get)
-                ccwise = max(link_angles, key=link_angles.get)
                 end_c[(f, incident_node)] = (cwise[1], cwise[0])
                 end_cc[(f, incident_node)] = (ccwise[1], ccwise[0])
                 #Reverse the edge direction
@@ -483,17 +491,24 @@ class WED(object):
                 start_cc[(incident_node, f)] = (tuple(ccwise))
                 #Update the bisected edge points in the direction(segment end, incident node)
                 #Cwise link
-                end_c[cwise] = (incident_node, f)
-                start_cc[(cwise[1], cwise[0])] = (incident_node, f)
+                end_cc[cwise] = (incident_node, f)
+                start_cc[(cwise[1],cwise[0])] = (incident_node, f)
                 #CCWise link
-                end_cc[ccwise] = (incident_node, f)
                 start_c[(ccwise[1], ccwise[0])] = (incident_node, f)
+                end_c[ccwise] = (incident_node, f)
+                #Now we need to update the right and left polygon for the filament.
+                for r in incident_regions:
+                     poly = ps.cg.Polygon([coords_org[v] for v in regions[r]])
+                     if poly.contains_point((coords_org[filament[1]]) or pr.contains_point(coords_org[filament[0]])):
+                            for n in range(len(filament)-1):
+                                right_polygon[(filament[n], filament[n+1])] = r
+                                left_polygon[(filament[n], filament[n+1])] = r
+                                right_polygon[(filament[n+1], filament[n])] = r
+                                left_polygon[(filament[n+1], filament[n])] = r
 
-
-                #print "For filament {}: ".format(filament)
-                #print "    CCW Most edge is {}".format(min(link_angles, key=link_angles.get))
-                #print "    CW Most edge is {}".format(max(link_angles, key=link_angles.get))
-
+                #print "For filament {}: ".format((incident_node, f))
+                #print "    CCW Most edge is {}".format(ccwise)
+                #print "    CW Most edge is {}".format(cwise)
 
 
 
