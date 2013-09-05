@@ -26,6 +26,8 @@ PySAL network will include the following spatial analytical methods
  - Assignment of Counts/Rates to segments, nodes, edges
  - Network Edge Length
  - Snapping off-network objects to network
+ - Single shortest path (Dijkstra's) (Algorithm 3.5)
+ - Extended shortest path
 
 ### Data Structures
 
