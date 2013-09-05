@@ -18,11 +18,13 @@ PySAL network will include the following spatial analytical methods
  - Local Indicators of Network-Constrained Clusters (LINCS)
  - Local K-Functions
  - Network Kernels
+ - Network Voronoi Diagrams ?
 
 ### Utility
 
  - Network Edge Segmentation
  - Assignment of Counts/Rates to segments, nodes, edges
+ - Network Edge Length
  - Snapping off-network objects to network
 
 ### Data Structures
