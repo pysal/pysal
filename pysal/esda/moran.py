@@ -52,8 +52,7 @@ class Moran:
     z_norm       : float
                    z-value of I under normality assumption
     p_norm       : float
-                   p-value of I under normality assumption (one-sided)
-                   for two-sided tests, this value should be multiplied by 2
+                   p-value of I under normality assumption (one-tailed)
     VI_rand      : float
                    variance of I under randomization assumption
     seI_rand     : float
@@ -61,11 +60,11 @@ class Moran:
     z_rand       : float
                    z-value of I under randomization assumption
     p_rand       : float
-                   p-value of I under randomization assumption (1-tailed)
+                   p-value of I under randomization assumption (one-tailed)
     sim          : array (if permutations>0)
                    vector of I values for permutated samples
     p_sim        : array (if permutations>0)
-                   p-value based on permutations (one-sided)
+                   p-value based on permutations (one-tailed)
                    null: spatial randomness
                    alternative: the observed I is extreme
                                 it is either extremely greater or extremely lower
@@ -92,7 +91,7 @@ class Moran:
     >>> mi.EI
     -0.012987012987012988
     >>> mi.p_norm
-    0.00027147862770937614
+    0.00013573931385468807
 
     SIDS example replicating OpenGeoda
 
@@ -103,8 +102,7 @@ class Moran:
     >>> "%6.4f" % mi.I
     '0.2477'
     >>> mi.p_norm
-    0.0001158330781489969
-
+    5.7916539074498452e-05
     """
     def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS):
         self.y = y
@@ -114,9 +112,13 @@ class Moran:
         self.__moments()
         self.I = self.__calc(self.z)
         self.z_norm = (self.I - self.EI) / self.seI_norm
-        self.p_norm = 2.0 * (1 - stats.norm.cdf(np.abs(self.z_norm)))
         self.z_rand = (self.I - self.EI) / self.seI_rand
-        self.p_rand = 2.0 * (1 - stats.norm.cdf(np.abs(self.z_rand)))
+        if self.z_norm > 0:
+            self.p_norm = 1 - stats.norm.cdf(self.z_norm)
+            self.p_rand = 1 - stats.norm.cdf(self.z_rand)
+        else:
+            self.p_norm = stats.norm.cdf(self.z_norm)
+            self.p_rand = stats.norm.cdf(self.z_rand)
 
         if permutations:
             sim = [self.__calc(np.random.permutation(self.z))
@@ -131,7 +133,11 @@ class Moran:
             self.seI_sim = np.array(sim).std()
             self.VI_sim = self.seI_sim ** 2
             self.z_sim = (self.I - self.EI_sim) / self.seI_sim
-            self.p_z_sim = 2.0 * (1 - stats.norm.cdf(np.abs(self.z_sim)))
+            if self.z_sim > 0:
+                self.p_z_sim = 1 - stats.norm.cdf(self.z_sim)
+            else:
+                self.p_z_sim = stats.norm.cdf(self.z_sim)
+
 
     def __moments(self):
         self.n = len(self.y)
@@ -253,7 +259,7 @@ class Moran_BV:
     Based on 999 permutations, what is the p-value of our statistic
 
     >>> mbi.p_z_sim
-    0.0028373234843530604
+    0.0014186617421765302
 
 
     """
@@ -278,7 +284,11 @@ class Moran_BV:
             self.seI_sim = np.array(sim).std()
             self.VI_sim = self.seI_sim ** 2
             self.z_sim = (self.I - self.EI_sim) / self.seI_sim
-            self.p_z_sim = 2.0 * (1 - stats.norm.cdf(np.abs(self.z_sim)))
+            if self.z_sim > 0:
+                self.p_z_sim = 1 - stats.norm.cdf(self.z_sim)
+            else:
+                self.p_z_sim = stats.norm.cdf(self.z_sim)
+
 
     def __calc(self, zy):
         wzy = slag(self.w, zy)
@@ -441,7 +451,7 @@ class Moran_Rate(Moran):
     >>> "%6.4f" % mi.I
     '0.1662'
     >>> "%6.4f" % mi.p_norm
-    '0.0084'
+    '0.0042'
     """
 
     def __init__(self, e, b, w, adjusted=True, transformation="r", permutations=PERMUTATIONS):

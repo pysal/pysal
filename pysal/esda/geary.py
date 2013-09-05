@@ -47,10 +47,8 @@ class Geary:
                      z-statistic for C under randomization assumption
     p_norm         : float
                      p-value under normality assumption (one-tailed)
-                     for two-tailed tests, this value should be multiplied by 2
     p_rand         : float
                      p-value under randomization assumption (one-tailed)
-                     for two-tailed tests, this value should be multiplied by 2
     sim            : array (if permutations!=0)
                      vector of I values for permutated samples
     p_sim          : float (if permutations!=0)
@@ -69,7 +67,6 @@ class Geary:
     p_z_sim        : float (if permutations!=0)
                      p-value based on standard normal approximation from
                      permutations (one-tailed)
-                     for two-tailed tests, this value should be multipled by 2
 
     Examples
     --------
@@ -102,8 +99,13 @@ class Geary:
         self.EC = 1.0
         self.z_norm = de / self.seC_norm
         self.z_rand = de / self.seC_rand
-        self.p_norm = 1 - stats.norm.cdf(np.abs(self.z_norm))
-        self.p_rand = 1 - stats.norm.cdf(np.abs(self.z_rand))
+        if de > 0:
+            self.p_norm = 1 - stats.norm.cdf(self.z_norm)
+            self.p_rand = 1 - stats.norm.cdf(self.z_rand)
+        else:
+            self.p_norm = stats.norm.cdf(self.z_norm)
+            self.p_rand = stats.norm.cdf(self.z_rand)
+
 
         if permutations:
             sim = [self.__calc(np.random.permutation(self.y))
