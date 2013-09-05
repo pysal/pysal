@@ -566,15 +566,18 @@ def full2W(m, ids=None):
     >>> import numpy as np
 
     Create an array of zeros
+
     >>> a = np.zeros((4, 4))
 
     For loop to fill it with random numbers
+
     >>> for i in range(len(a)):
     ...     for j in range(len(a[i])):
     ...         if i!=j:
     ...             a[i, j] = np.random.random(1)
 
     Create W object
+
     >>> w = ps.weights.util.full2W(a)
     >>> w.full()[0] == a
     array([[ True,  True,  True,  True],
@@ -583,6 +586,7 @@ def full2W(m, ids=None):
            [ True,  True,  True,  True]], dtype=bool)
 
     Create list of user ids
+
     >>> ids = ['myID0', 'myID1', 'myID2', 'myID3']
     >>> w = ps.weights.util.full2W(a, ids=ids)
     >>> w.full()[0] == a
