@@ -18,6 +18,7 @@ PySAL network will include the following spatial analytical methods
  - Local Indicators of Network-Constrained Clusters (LINCS)
  - Local K-Functions
  - Network Kernels
+ - Accessibility Indices
 
 ### Utility
 
@@ -35,11 +36,28 @@ PySAL network will include the following spatial analytical methods
  - Extraction of WED from a planar polyine shapefile
  - Spatial Weights for Networks
 
+### FileIO
+
+#### Input
+ - reading polyline shapefiles
+ - point shapefiles
+ - polygon files
+ - wed
+ - dot
+ - (geo)json
+
+#### Output
+ - wed
+ - dot
+ - shapefiles
+ 	- polyline
+	- points
+	- polygons
+ - (geo)json
 
 ### Module Listing
 
 List key modules here and their purposes
-
 
  - `shp2graph.py` ?
  - `wed.py` core winged edge data structure
@@ -53,10 +71,9 @@ List notebooks and their purpose
 
 Prioritize components for 1.7 development
 
-
 ## Issues
 
-
+- holes in the wed
 
 
 [GeoDaNet]: https://geodacenter.asu.edu/drupal_files/Geodanet_Manual_03_2012.pdf
