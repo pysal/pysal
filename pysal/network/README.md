@@ -9,7 +9,7 @@ The network module will implement the feature set from [GeoDaNet][GeoDaNet]
 
 ## Structure
 
-### Analytics
+### Analytics (s)
 
 PySAL network will include the following spatial analytical methods
 
@@ -20,7 +20,7 @@ PySAL network will include the following spatial analytical methods
  - Network Kernels
  - Accessibility Indices
 
-### Utility
+### Utility (j)
 
  - Network Edge Segmentation
  - Assignment of Counts/Rates to segments, nodes, edges
@@ -29,12 +29,16 @@ PySAL network will include the following spatial analytical methods
  - Single shortest path (Dijkstra's) (Algorithm 3.5)
  - Extended shortest path
  - Network Voronoi Diagrams ?
+ - Simulated points on a network
+ - Threshold distance
+ - Intersection with buffering (s)
 
-### Data Structures
+### Data Structures (j)
 
  - Winged Edge Data Structure
  - Extraction of WED from a planar polyine shapefile
  - Spatial Weights for Networks
+ - Handle direction
 
 ### FileIO
 
