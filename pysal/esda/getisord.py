@@ -41,7 +41,6 @@ class G:
          standard normal test statistic
     p_norm: float
             p-value under normality assumption (one-sided)
-            for two-sided tests, this value should be multiplied by 2
     sim: array (if permutations > 0)
          vector of G values for permutated samples
     p_sim: float
@@ -60,7 +59,6 @@ class G:
     p_z_sim: float
              p-value based on standard normal approximation from
              permutations (one-sided)
-             for two-sided tests, this value should be multiplied by 2
 
     Notes
     -----
@@ -222,7 +220,6 @@ class G_Local:
     p_z_sim: array of floats
              p-value based on standard normal approximation from
              permutations (one-sided)
-             for two-sided tests, these values should be multiplied by 2
 
     Notes
     -----

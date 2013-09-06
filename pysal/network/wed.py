@@ -187,6 +187,31 @@ class WED(object):
                 neighbors[lnks[r]].append(lnks[l])
         return ps.W(neighbors)
 
+    def _filament_links_node(self, node, node_edge, start_c, end_c):
+        """
+        Private method that duplicates enum_links_around_node, but
+         is callable before the WED is generated.  This is used
+         for filament insertion.
+        """
+        links = []
+        if node not in node_edge:
+            return links
+        l0 = node_edge[node]
+        links.append(l0)
+        l = l0
+        v = node
+        searching = True
+        while searching:
+            if v == l[0]:
+                l = start_c[l]
+            else:
+                l = end_c[l]
+            if (l is None) or (set(l) == set(l0)):
+                searching = False
+            else:
+                links.append(l)
+        return links
+
     def extract_wed(self, edges, coords):
         # helper functions to determine relative position of vectors
         def _dotproduct(v1, v2):
@@ -271,7 +296,8 @@ class WED(object):
 
         # Right polygon for each edge in each region primitive
         #
-        # Also define start_c, end_cc for each polygon edge and start_cc and end_c for its twin
+        # Also define start_c, end_cc for each polygon edge and
+        #  start_cc and end_c for its twin
 
         right_polygon = {}
         left_polygon = {}
@@ -374,12 +400,6 @@ class WED(object):
             end_c[union[-1]] = union[0]
             start_cc[union[-1]] = union[-2]
 
-        # we need to attach filaments at this point
-        # internal filaments get left and right poly set to containing poly
-        # external filaments get left and right poly set to external poly
-        # bridge filaments get left and right poly set to external poly
-        # isolated filaments (not contained in mcb-regions) have left and right poly set to external poly
-
         # after this find the holes in the external polygon (these should be the connected components)
 
         # Fill out s_c, s_cc, e_c, e_cc pointers for each edge after filaments are inserted
@@ -397,11 +417,112 @@ class WED(object):
             start_cc.update(scc)
             end_c.update(ec)
 
-            # find which regions the filament is adjacent to
+            # find which regions the filament is incident to
             sf = set(filament)
+            incident_nodes = set()
+            incident_regions = set()
             for r, region in enumerate(regions):
                 internal = False
                 sfi = sf.intersection(region)
+                while sfi:
+                    incident_nodes.add(sfi.pop())
+                    incident_regions.add(r)
+
+            while incident_nodes:
+                incident_node = incident_nodes.pop()
+                incident_links = self._filament_links_node(incident_node,node_edge, start_c, end_c)
+
+                #Polar coordinates centered on incident node, no rotation from x-axis
+                origin = coords_org[incident_node]
+
+                #Logic: If the filament has 2 nodes, grab the other one
+                # If the filament has 3+, grab the first and last segments
+                if filament.index(incident_node) == 0:
+                    f = filament[1]
+                elif filament.index(incident_node) == 1:
+                    f = filament[0]
+                else:
+                    f = filament[-2]
+                filament_end = coords_org[f]
+                #print "Filament:{}, Incident_Node:{} ".format(f, incident_node)
+                #Determine the relationship between the origin and the filament end
+                filamentx = filament_end[0] - origin[0]
+                filamenty = filament_end[1] - origin[1]
+                filament_theta = math.atan2(filamenty, filamentx) * 180 / math.pi
+                if filament_theta < 0:
+                    filament_theta += 360
+                #Find the rotation necessary to get the filament to theta 0
+                f_rotation = 360 - filament_theta
+
+                link_angles = {}
+                for link in incident_links:
+                    if link[0] == incident_node:
+                        link_node = link[1]
+                    else:
+                        link_node = link[0]
+                    #Get the end coord of the incident link
+                    link_node_coords = coords_org[link_node]
+                    y = link_node_coords[1] - origin[1]
+                    x = link_node_coords[0] - origin[0]
+                    r = math.sqrt(x**2 + y**2)
+                    node = coords_org[link_node]
+                    node_theta = math.atan2(y, x) * 180 / math.pi
+                    if node_theta < 0:
+                        node_theta += 360
+                    #Rotate the edge node to match the new polar axis
+                    node_theta += f_rotation
+                    if node_theta > 360:
+                        node_theta -= 360
+                    link_angles[link] = node_theta
+
+                #Get the bisected edges
+                ccwise = min(link_angles, key=link_angles.get)
+                cwise = max(link_angles, key=link_angles.get)
+                #Fix the direction of the bisected edges
+                if ccwise.index(incident_node) != 1:
+                    ccwise = (ccwise[1], ccwise[0])
+                if cwise.index(incident_node) != 1:
+                    cwise = (cwise[1], cwise[0])
+                #Update the filament pointer in the direction (segment end, incident node)
+                end_c[(f, incident_node)] = (cwise[1], cwise[0])
+                end_cc[(f, incident_node)] = (ccwise[1], ccwise[0])
+                #Reverse the edge direction
+                start_c[(incident_node, f)] = (tuple(cwise))
+                start_cc[(incident_node, f)] = (tuple(ccwise))
+                #Update the bisected edge points in the direction(segment end, incident node)
+                #Cwise link
+                end_cc[cwise] = (incident_node, f)
+                start_cc[(cwise[1],cwise[0])] = (incident_node, f)
+                #CCWise link
+                start_c[(ccwise[1], ccwise[0])] = (incident_node, f)
+                end_c[ccwise] = (incident_node, f)
+                #Now we need to update the right and left polygon for the filament.
+                for r in incident_regions:
+                     poly = ps.cg.Polygon([coords_org[v] for v in regions[r]])
+                     if poly.contains_point((coords_org[filament[1]]) or pr.contains_point(coords_org[filament[0]])):
+                            for n in range(len(filament)-1):
+                                right_polygon[(filament[n], filament[n+1])] = r
+                                left_polygon[(filament[n], filament[n+1])] = r
+                                right_polygon[(filament[n+1], filament[n])] = r
+                                left_polygon[(filament[n+1], filament[n])] = r
+
+                #print "For filament {}: ".format((incident_node, f))
+                #print "    CCW Most edge is {}".format(ccwise)
+                #print "    CW Most edge is {}".format(cwise)
+
+
+
+
+
+
+
+            '''
+            if incident_regions:
+                for r in incident_regions:
+                    poly_region = ps.cg.Polygon([coords_org[v] for v in regions[r]])
+                    print poly_region
+            '''
+            """
                 if sfi:
                     node = sfi.pop()
                     filament_region[f].append(r)
@@ -494,7 +615,7 @@ class WED(object):
 
                 if internal is True:
                     break
-
+            """
         self.start_c = start_c
         self.start_cc = start_cc
         self.end_c = end_c
