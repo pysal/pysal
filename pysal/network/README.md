@@ -18,7 +18,6 @@ PySAL network will include the following spatial analytical methods
  - Local Indicators of Network-Constrained Clusters (LINCS)
  - Local K-Functions
  - Network Kernels
- - Network Voronoi Diagrams ?
 
 ### Utility
 
@@ -28,6 +27,7 @@ PySAL network will include the following spatial analytical methods
  - Snapping off-network objects to network
  - Single shortest path (Dijkstra's) (Algorithm 3.5)
  - Extended shortest path
+ - Network Voronoi Diagrams ?
 
 ### Data Structures
 
