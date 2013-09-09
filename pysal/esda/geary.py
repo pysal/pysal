@@ -18,11 +18,6 @@ class Geary:
     y              : array
     w              : W
                      spatial weights
-    transformation : string
-                     weights transformation, default is binary.
-                     Other options include "R": row-standardized, "D":
-                     doubly-standardized, "U": untransformed (general
-                     weights), "V": variance-stabilizing.
     permutations   : int
                      number of random permutations for calculation of
                      pseudo-p_values
@@ -72,6 +67,7 @@ class Geary:
     --------
     >>> import pysal
     >>> w = pysal.open(pysal.examples.get_path("book.gal")).read()
+    >>> w.transform = 'r'
     >>> f = pysal.open(pysal.examples.get_path("book.txt"))
     >>> y = np.array(f.by_col['y'])
     >>> c = Geary(y,w,permutations=0)
@@ -81,10 +77,9 @@ class Geary:
     9.2e-05
     >>>
     """
-    def __init__(self, y, w, transformation="r", permutations=999):
+    def __init__(self, y, w,  permutations=999):
         self.n = len(y)
         self.y = y
-        w.transform = transformation
         self.w = w
         self.permutations = permutations
         self.__moments()
