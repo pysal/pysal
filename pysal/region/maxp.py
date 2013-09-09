@@ -556,6 +556,9 @@ class Maxp_LISA(Maxp):
     >>> z=np.random.random_sample((w.n,2))
     >>> p=np.ones(w.n)
     >>> mpl=pysal.region.Maxp_LISA(w,z,p,floor=3,floor_variable=p)
+    DEPRECATION WARNING
+    transformation option in Moran_Local is deprecated in 1.7 and 1.8
+    replace with: w.transform = 'r'; pysal.Moran_Local(y, w)
     >>> mpl.p
     31
     >>> mpl.regions[0]
