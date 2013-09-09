@@ -749,6 +749,7 @@ class LISA_Markov(Markov):
     >>> f = pysal.open(pysal.examples.get_path("usjoin.csv"))
     >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
     >>> w = pysal.open(pysal.examples.get_path("states48.gal")).read()
+    >>> w.transform = 'r'
     >>> lm = LISA_Markov(pci,w)
     >>> lm.classes
     array([1, 2, 3, 4])
@@ -928,6 +929,7 @@ class LISA_Markov(Markov):
         >>> f = pysal.open(pysal.examples.get_path("usjoin.csv"))
         >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
         >>> w = pysal.open(pysal.examples.get_path("states48.gal")).read()
+        >>> w.transform = 'r'
         >>> np.random.seed(10)
         >>> lm_random = pysal.LISA_Markov(pci, w, permutations=99)
         >>> r = lm_random.spillover()
