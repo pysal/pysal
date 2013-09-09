@@ -24,6 +24,12 @@ class Moran:
                       variable measured across n spatial units
     w               : W
                       spatial weights instance
+    transformation  : string
+                      weights transformation, default is row-standardized "r".
+                      Other options include 'B': binary, 'D':
+                      doubly-standardized, 'O': original (at instantiation),
+                      'V': variance-stabilizing
+                      (Deprecated in 1.7 and 1.8)
     permutations    : int
                       number of random permutations for calculation of pseudo-p_values
 
@@ -89,6 +95,23 @@ class Moran:
     >>> mi.p_norm
     0.00013573931385468807
 
+    Depreciation of transformation argument
+    >>> w = pysal.open(pysal.examples.get_path("stl.gal")).read()
+    >>> f = pysal.open(pysal.examples.get_path("stl_hom.txt"))
+    >>> y = np.array(f.by_col['HR8893'])
+    >>> mi = Moran(y,  w)
+    DEPRECATION WARNING
+    transformation option in Moran is deprecated in 1.7 and 1.8
+    replace with: w.transform = 'r'; pysal.Moran(y, w)
+    >>> "%7.5f" % mi.I
+    '0.24366'
+    >>> mi.EI
+    -0.012987012987012988
+    >>> mi.p_norm
+    0.00013573931385468807
+
+
+
     SIDS example replicating OpenGeoda
 
     >>> w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
@@ -101,9 +124,19 @@ class Moran:
     >>> mi.p_norm
     5.7916539074498452e-05
     """
-    def __init__(self, y, w,  permutations=PERMUTATIONS):
+    def __init__(self, y, w,  transformation='R', permutations=PERMUTATIONS):
         self.y = y
         self.w = w
+        if transformation.upper() == "R" and w.transform.upper() !='R':
+            print "DEPRECATION WARNING"
+            print "transformation option in Moran is deprecated in 1.7 and 1.8"
+            print "replace with: w.transform = 'r'; pysal.Moran(y, w)"
+            w.transform = transformation
+        elif transformation.upper() != "R":
+            print "DEPRECATION WARNING"
+            print "transformation option in Moran is deprecated in 1.7 and 1.8"
+            print "replace with: w.transform = '%s'; pysal.Moran(y, w)"%transformation.upper()
+            w.transform = transformation
         self.permutations = permutations
         self.__moments()
         self.I = self.__calc(self.z)
@@ -178,6 +211,12 @@ class Moran_BV:
         (wy will be on y axis)
     w : W
         weight instance assumed to be aligned with y
+    transformation  : string
+                      weights transformation, default is row-standardized "r".
+                      Other options include 'B': binary, 'D':
+                      doubly-standardized, 'O': original (at instantiation),
+                      'V': variance-stabilizing
+                      (Deprecated in 1.7 and 1.8)
     permutations    : int
                       number of random permutations for calculation of pseudo-p_values
 
@@ -255,11 +294,21 @@ class Moran_BV:
 
 
     """
-    def __init__(self, x, y, w,  permutations=PERMUTATIONS):
+    def __init__(self, x, y, w,  permutations=PERMUTATIONS, transformation='R'):
         zy = (y - y.mean()) / y.std(ddof=1)
         zx = (x - x.mean()) / x.std(ddof=1)
         self.zx = zx
         self.zy = zy
+        if transformation.upper() == "R" and w.transform.upper() !='R':
+            print "DEPRECATION WARNING"
+            print "transformation option in Moran_BV is deprecated in 1.7 and 1.8"
+            print "replace with: w.transform = 'r'; pysal.Moran(y, w)"
+            w.transform = transformation
+        elif transformation.upper() != "R":
+            print "DEPRECATION WARNING"
+            print "transformation option in Moran_BV is deprecated in 1.7 and 1.8"
+            print "replace with: w.transform = '%s'; pysal.Moran(y, w)"%transformation.upper()
+            w.transform = transformation
         self.w = w
         self.I = self.__calc(zy)
         if permutations:
@@ -369,6 +418,11 @@ class Moran_Rate(Moran):
                       spatial weights instance
     adjusted        : boolean
                       whether or not Moran's I needs to be adjusted for rate variable
+    transformation  : string
+                      weights transformation,  default is row-standardized "r".
+                      Other options include "B": binary,  "D":
+                      doubly-standardized,  "U": untransformed (general weights),
+                      "V": variance-stabilizing.
     permutations    : int
                       number of random permutations for calculation of pseudo-p_values
 
@@ -442,12 +496,12 @@ class Moran_Rate(Moran):
     '0.0042'
     """
 
-    def __init__(self, e, b, w, adjusted=True,  permutations=PERMUTATIONS):
+    def __init__(self, e, b, w, adjusted=True, transformation = 'r',  permutations=PERMUTATIONS):
         if adjusted:
             y = assuncao_rate(e, b)
         else:
             y = e * 1.0 / b
-        Moran.__init__(self, y, w, permutations=permutations)
+        Moran.__init__(self, y, w, transformation = transformation, permutations=permutations)
 
 
 class Moran_Local:
@@ -459,6 +513,12 @@ class Moran_Local:
     y : n*1 array
 
     w : weight instance assumed to be aligned with y
+
+    transformation : string
+                     weights transformation,  default is row-standardized "r".
+                     Other options include "B": binary,  "D":
+                     doubly-standardized,  "U": untransformed (general weights),
+                     "V": variance-stabilizing.
 
     permutations   : number of random permutations for calculation of pseudo-p_values
 
@@ -512,11 +572,22 @@ class Moran_Local:
     >>> lm.p_z_sim[0]
     0.46756830387716064
 
+    Deprecation warning for transformation argument
+
+    >>> w = pysal.open(pysal.examples.get_path("desmith.gal")).read()
+    >>> f = pysal.open(pysal.examples.get_path("desmith.txt"))
+    >>> y = np.array(f.by_col['z'])
+    >>> lm = Moran_Local(y, w,  permutations = 99)
+    DEPRECATION WARNING
+    transformation option in Moran_Local is deprecated in 1.7 and 1.8
+    replace with: w.transform = 'r'; pysal.Moran_Local(y, w)
+
+
     Note random components result is slightly different values across
     architectures so the results have been removed from doctests and will be
     moved into unittests that are conditional on architectures
     """
-    def __init__(self, y, w,  permutations=PERMUTATIONS):
+    def __init__(self, y, w, transformation='r',  permutations=PERMUTATIONS):
         self.y = y
         n = len(y)
         self.n = n
@@ -529,6 +600,16 @@ class Moran_Local:
         z /=  sy
         np.seterr(**orig_settings)
         self.z = z
+        if transformation.upper() == "R" and w.transform.upper() !='R':
+            print "DEPRECATION WARNING"
+            print "transformation option in Moran_Local is deprecated in 1.7 and 1.8"
+            print "replace with: w.transform = 'r'; pysal.Moran_Local(y, w)"
+            w.transform = transformation
+        elif transformation.upper() != "R":
+            print "DEPRECATION WARNING"
+            print "transformation option in Moran is deprecated in 1.7 and 1.8"
+            print "replace with: w.transform = '%s'; pysal.Moran_Local(y, w)"%transformation.upper()
+            w.transform = transformation
         self.w = w
         self.permutations = permutations
         self.den = sum(z * z)
@@ -608,6 +689,11 @@ class Moran_Local_Rate(Moran_Local):
     b : n*1 array
         a population-at-risk variable across n spatial units
     w : weight instance assumed to be aligned with y
+    transformation : string
+                 weights transformation,  default is row-standardized "r".
+                 Other options include "B": binary,  "D":
+                 doubly-standardized,  "U": untransformed (general weights),
+                 "V": variance-stabilizing.
     adjusted: boolean
               whether or not local Moran statistics need to be adjusted for rate variable
     permutations   : number of random permutations for calculation of pseudo-p_values
@@ -673,12 +759,12 @@ class Moran_Local_Rate(Moran_Local):
     moved into unittests that are conditional on architectures
     """
 
-    def __init__(self, e, b, w, adjusted=True,  permutations=PERMUTATIONS):
+    def __init__(self, e, b, w, transformation = 'r', adjusted=True,  permutations=PERMUTATIONS):
         if adjusted:
             y = assuncao_rate(e, b)
         else:
             y = e * 1.0 / b
-        Moran_Local.__init__(self, y, w, permutations=permutations)
+        Moran_Local.__init__(self, y, w, transformation = 'r', permutations=permutations)
 
 def _test():
     import doctest
