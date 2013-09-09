@@ -5,6 +5,7 @@ __author__ = "Sergio J. Rey <srey@asu.edu> "
 
 import numpy as np
 import scipy.stats as stats
+from .fast_geary import compute_geary_c
 
 __all__ = ['Geary']
 
@@ -147,15 +148,6 @@ class Geary:
         self.seC_norm = vc_norm ** (0.5)
 
     def __calc(self, y):
-        ys = np.zeros(y.shape)
-        y2 = y ** 2
-        for i, i0 in enumerate(self.w.id_order):
-            neighbors = self.w.neighbor_offsets[i0]
-            wijs = self.w.weights[i0]
-            z = zip(neighbors, wijs)
-            ys[i] = sum([wij * (y2[i] - 2 * y[i] * y[j] + y2[j])
-                         for j, wij in z])
-        a = (self.n - 1) * sum(ys)
-        return a / self.den
-
-
+        return compute_geary_c(y.squeeze().astype(float), self.w.id_order,
+                               self.w.neighbor_offsets, self.w.weights,
+                               self.n, self.den)
