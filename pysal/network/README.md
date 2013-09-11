@@ -24,31 +24,41 @@ PySAL network will include the following spatial analytical methods
 
  - Network Edge Segmentation
  - Assignment of Counts/Rates to segments, nodes, edges
- - Network Edge Length
- - Snapping off-network objects to network
- - Single shortest path (Dijkstra's) (Algorithm 3.5)
+ - ~~Network Edge Length~~
+ - ~~Snapping off-network objects to network~~
+ - ~~Single shortest path (Dijkstra's) (One node and all other nodes)~~
+ - ~~Shortest Path (Path between two nodes)~~
+ - ~~Network Connectivity~~
  - Extended shortest path
  - Network Voronoi Diagrams ?
  - Simulated points on a network
- - Threshold distance
+ - ~~Threshold distance~~
+ - Network Center
  - Intersection with buffering (s)
+ - Node insertion / deletion
 
 ### Data Structures (j)
 
- - Winged Edge Data Structure
- - Extraction of WED from a planar polyine shapefile
+ - ~~Winged Edge Data Structure~~
+ - ~~Extraction of WED from a planar polyine shapefile~~
  - Spatial Weights for Networks
+     - Link Contiguity
+         - ~~First Order~~
+     - Distance Based
+         - KNN
+         - Threshold   
  - Handle direction
 
 ### FileIO
 
 #### Input
- - reading polyline shapefiles
+ - ~~reading polyline shapefiles~~
  - point shapefiles
  - polygon files
  - wed
  - dot
  - (geo)json
+ - binary
 
 #### Output
  - wed
@@ -58,6 +68,7 @@ PySAL network will include the following spatial analytical methods
 	- points
 	- polygons
  - (geo)json
+ - binary
 
 ### Module Listing
 
