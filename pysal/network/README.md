@@ -25,13 +25,15 @@ PySAL network will include the following spatial analytical methods
  - Network Edge Segmentation
  - Assignment of Counts/Rates to segments, nodes, edges
  - ~~Network Edge Length~~
- - ~~Snapping off-network objects to network~~
+ - ~~Snapping off-network objects to network~~ (Only internal observations)
  - ~~Single shortest path (Dijkstra's) (One node and all other nodes)~~
  - ~~Shortest Path (Path between two nodes)~~
  - ~~Network Connectivity~~
  - Extended shortest path
  - Network Voronoi Diagrams ?
  - Simulated points on a network
+     - ~~Uniform~~
+     - Nonuniform
  - ~~Threshold distance~~
  - Network Center
  - Intersection with buffering (s)

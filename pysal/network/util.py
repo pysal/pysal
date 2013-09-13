@@ -3,13 +3,24 @@ Utilities for PySAL Network Module
 """
 
 __author__ = "Sergio Rey <sjsrey@gmail.com>, Jay Laura <jlaura@asu.edu>"
-
 import copy
 import math
 from collections import OrderedDict
+from random import uniform
 import pysal as ps
 import numpy as np
 from pysal.cg.standalone import get_points_dist
+
+
+class SortedEdges(OrderedDict):
+    def next_key(self, key):
+        next = self._OrderedDict__map[key][1]
+        if next is self._OrderedDict__root:
+            raise ValueError("{!r} is the last key.".format(key))
+        return next[2]
+    def first_key(self):
+        for key in self: return key
+        raise ValueError("No sorted edges remain.")
 
 def enum_links_node(wed, node):
     """
@@ -117,12 +128,10 @@ def snap_to_edges(wed, points):
 
     Returns:
     --------
-
+    obs_to_edge: a dict of dicts {edge:{point_id:(x,y)}}
     """
 
     obs_to_edge = {}
-
-    polys = {}
     for region in wed.region_edge.keys():
         verts = []
         region_edges = enum_edges_region(wed, region)
@@ -135,35 +144,143 @@ def snap_to_edges(wed, points):
         poly = ps.cg.Polygon([wed.node_coords[v] for v in verts])
 
         for pt_index, point in enumerate(points):
+            x0 = point[0]
+            y0 = point[1]
             if ps.cg.standalone.get_polygon_point_intersect(poly, point):
                 d = {}
-
-                for i in range(len(region_edges)-1):
-                    region_edges[i]
-                    xi = wed.node_coords[region_edges[i][0]][0]
-                    xi1 = wed.node_coords[region_edges[i+1][0]][0]
-                    yi = wed.node_coords[region_edges[i][1]][1]
-                    yi1 = wed.node_coords[region_edges[i+1][1]][1]
-                    distance = abs((xi-xi1)*(point[1] - yi) - (yi-yi1)*(point[0]-xi))\
-                            / math.sqrt((xi-xi1)**2 + (yi-yi1)**2)
-                    d[distance] = (xi, xi1, yi, yi1, region_edges[i])
-
-                min_dist = OrderedDict(sorted(d.items()))
-
-                for value in min_dist.iteritems():
-                    xi = value[1][0]
-                    xi1 = value[1][1]
-                    yi = value[1][2]
-                    yi1 = value[1][3]
-                    if point[0] > xi and point[0] < xi1 or point[0] < xi and point[0] >xi1:
-                        if point[1] > yi and point[1] < yi1 or point[1] < yi and point[1] >yi1:
-                            x = point[0] - value[0] * (xi-xi1)
-                            y = point[1] - value[0] * (yi-yi1)
-                            #print pt_index,value[1][4], (x,y)
-                            obs_to_edge[(value[1][4])] = {pt_index:(x,y)}
+                vectors = {}
+                c = 0
+                ccw_edges = region_edges[::-1]
+                for i in range(len(ccw_edges)-1):
+                    edge = ccw_edges[i]
+                    xi = wed.node_coords[edge[0]][0]
+                    yi = wed.node_coords[edge[0]][1]
+                    xi1 = wed.node_coords[edge[1]][0]
+                    yi1 = wed.node_coords[edge[1]][1]
+                    num = ((yi1 - yi)*(x0-xi)-(xi1-xi)*(y0-yi))
+                    denom = ((yi1-yi)**2 + (xi1-xi)**2)
+                    #num = abs(((xi - xi1) * (y0 - yi)) - ((yi - yi1) * (x0 - xi)))
+                    #denom = math.sqrt(((xi - xi1)**2) + (yi-yi1)**2)
+                    k = num / denom
+                    distance = abs(num) / math.sqrt(((yi1-yi)**2 + (xi1-xi)**2))
+                    vectors[c] = (xi, xi1, yi, yi1,k,edge)
+                    d[distance] = c
+                    c += 1
+                min_dist = SortedEdges(sorted(d.items()))
+                for dist, vector_id in min_dist.iteritems():
+                    value = vectors[vector_id]
+                    xi = value[0]
+                    xi1 = value[1]
+                    yi = value[2]
+                    yi1 = value[3]
+                    k = value[4]
+                    edge = value[5]
+                    #Okabe Method
+                    x = x0 - k * (yi1 - yi)
+                    y = y0 + k * (xi1 - xi)
+                    if xi <= x <= xi1 or xi1 <= x <= xi and yi <= y <= yi1 or yi1 <=y <= yi:
+                        #print "{} intersections edge {} at {}".format(pt_index, edge, (x,y))
+                        if edge not in obs_to_edge.keys():
+                            obs_to_edge[edge] = {pt_index:(x,y)}
+                        else:
+                            obs_to_edge[edge][pt_index] = (x,y)
+                        break
+                    else:
+                        #either pi or pi+1 are the nearest point on that edge.
+                        #If this point is closer than the next distance, we can break, the
+                        # observation intersects the node with the shorter
+                        # distance.
+                        pi = (xi, yi)
+                        pi1 = (xi1, yi1)
+                        p0 = (x0,y0)
+                        dist_pi = ps.cg.standalone.get_points_dist(p0, pi)
+                        dist_pi1 = ps.cg.standalone.get_points_dist(p0, pi1)
+                        if dist_pi < dist_pi1:
+                            node_dist = dist_pi
+                            (x,y) = pi
+                        else:
+                            node_dist = dist_pi1
+                            (x,y) = pi1
+                        if node_dist < min_dist.next_key(dist):
+                            if edge not in obs_to_edge.keys():
+                                obs_to_edge[edge] = {pt_index:(x,y)}
+                            else:
+                                obs_to_edge[edge][pt_index] = (x,y)
                             break
 
     return obs_to_edge
+
+
+def count_per_edge(obs_on_network):
+    """
+    Snaps observations to the nearest edge and then counts
+        the number of observations per edge.
+
+    Parameters
+    ----------
+    obs_on_network: dict of observations on the network
+        {(edge): {pt_id: (coords)}} or {edge: [(coord), (coord), (coord)]}
+    Returns
+    -------
+    counts: dict {(edge):count}
+    """
+
+    counts = {}
+    for key in obs_on_network.iterkeys():
+        counts[key] = len(obs_on_network[key])
+    return counts
+
+
+def simulate_observations(wed, count, distribution='uniform'):
+    """
+    Generates simulated points to test for NCSR
+
+    Parameters
+    ----------
+    wed: PySAL Winged Edged Data Structure
+    count: integer number of points to create
+    distirbution: distribution of random points
+
+    Returns
+    -------
+    random_pts: dict with {(edge):[(x,y), (x1, y1), ... , (xn,yn)]}
+    """
+    if distribution is 'uniform':
+        lengths = wed.edge_length()
+        single_lengths = []
+        edges = []
+        for edge, l in lengths.iteritems():
+            if (edge[0], edge[1]) or (edge[1], edge[0]) not in edges:
+                edges.append(edge)
+                single_lengths.append(l)
+        line = np.array([single_lengths])
+        offsets = np.cumsum(line)
+        total_length = offsets[-1]
+        starts = np.concatenate((np.array([0]), offsets[:-1]), axis=0)
+        random_pts = {}
+        for x in range(count):
+            random_pt = uniform(0,total_length)
+            start_index = np.where(starts <= random_pt)[0][-1]
+            assignment_edge = edges[start_index]
+            distance_from_start = random_pt - offsets[start_index - 1]
+            x1 = wed.node_coords[assignment_edge[0]][0]
+            y1 = wed.node_coords[assignment_edge[0]][1]
+            x2 = wed.node_coords[assignment_edge[1]][0]
+            y2 = wed.node_coords[assignment_edge[1]][1]
+            m = (y2 - y1) / (x2 - x1)
+            b1 = y1 - m * (x1)
+            if x1 > x2:
+                x0 = x1 - distance_from_start / math.sqrt(1 + m**2)
+            elif x1 < x2:
+                x0 = x1 + distance_from_start / math.sqrt(1 + m**2)
+            y0 = m * (x0 - x1) + y1
+            if assignment_edge not in random_pts.keys():
+                random_pts[assignment_edge] = [(x0,y0)]
+            else:
+                random_pts[assignment_edge].append((x0,y0))
+    return random_pts
+
+
 
 def dijkstra(wed, cost, node):
     """
