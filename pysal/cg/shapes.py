@@ -29,7 +29,7 @@ def asShape(obj):
     #if geo_type.startswith('multi'):
     #    raise NotImplementedError, "%s are not supported at this time."%geo_type
     if geo_type in _geoJSON_type_to_Pysal_type:
-        return _geoJSON_type_to_Pysal_type[geo_type].__from_geo_interface__(obj.__geo_interface__)
+        return _geoJSON_type_to_Pysal_type[geo_type].__from_geo_interface__(geo)
     else:
         raise NotImplementedError(
             "%s is not supported at this time." % geo_type)
@@ -1331,6 +1331,8 @@ class Polygon(object):
                       Geometric length of the perimeter of the Polygon
     bounding_box    : Rectangle
                       Bounding box of the polygon
+    bbox            : List
+                      [left, lower, right, upper]
     area            : float
                       Area enclosed by the polygon
     centroid        : tuple
@@ -1397,7 +1399,7 @@ class Polygon(object):
                 parts += verts[0:1]
                 holes += verts[1:]
             if not holes:
-                holes = [[]]
+                holes = None
             return cls(parts, holes)
         else:
             verts = [[Point(pt) for pt in part] for part in geo['coordinates']]
@@ -1419,6 +1421,7 @@ class Polygon(object):
     def _reset_props(self):
         self._perimeter = None
         self._bounding_box = None
+        self._bbox = None
         self._area = None
         self._centroid = None
         self._len = None
@@ -1531,6 +1534,21 @@ class Polygon(object):
             self._perimeter = (sum([part_perimeter(part) for part in self._vertices]) +
                                sum([part_perimeter(hole) for hole in self._holes]))
         return self._perimeter
+
+    @property
+    def bbox(self):
+        """
+        Returns the bounding box of the polygon as a list
+
+        See also bounding_box
+        """
+        if self._bbox is None:
+            self._bbox = [ self.bounding_box.left,
+                    self.bounding_box.lower,
+                    self.bounding_box.right,
+                    self.bounding_box.upper]
+        return self._bbox
+
 
     @property
     def bounding_box(self):

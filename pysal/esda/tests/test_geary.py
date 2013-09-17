@@ -9,6 +9,7 @@ class Geary_Tester(unittest.TestCase):
     """Geary class for unit tests."""
     def setUp(self):
         self.w = pysal.open(pysal.examples.get_path("book.gal")).read()
+        self.w.transform = 'r'
         f = pysal.open(pysal.examples.get_path("book.txt"))
         self.y = np.array(f.by_col['y'])
 

@@ -88,6 +88,7 @@ class test_LISA_Markov(unittest.TestCase):
         pci = np.array(
             [f.by_col[str(y)] for y in range(1929, 2010)]).transpose()
         w = pysal.open(pysal.examples.get_path("states48.gal")).read()
+        w.transform = 'r'
         lm = pysal.LISA_Markov(pci, w)
         obs = np.array([1, 2, 3, 4])
         np.testing.assert_array_almost_equal(obs, lm.classes)

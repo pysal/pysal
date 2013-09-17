@@ -439,11 +439,12 @@ Next, we read in the homicide rates:
         >>> y = np.array(f.by_col['HR8893'])
 
 To calculate Moran's I we first need to read in a GAL file for a rook weights
-matrix and create an instance of W:
+matrix and create an instance of W and apply row-standardization:
 
 .. doctest::
 
         >>> w = pysal.open(pysal.examples.get_path("stl.gal")).read()
+        >>> w.transform = 'r'
         
 The instance of Moran's I can then be obtained with:
 
@@ -455,7 +456,7 @@ The instance of Moran's I can then be obtained with:
         >>> mi.EI
         -0.012987012987012988
         >>> mi.p_norm
-        0.00027147862770937614
+	0.00013573931385468807
 
 From these results, we see that the observed value for I is significantly above its expected value, under the assumption of normality for the homicide rates. 
 
@@ -538,7 +539,7 @@ compare the original I using a z-transformation to get:
         >>> print mir.z_sim
         4.55451777821
         >>> print mir.p_z_sim
-	5.25058844025e-06
+	2.62529422013e-06
 
 When the variable of interest (:math:`y`) is rates based on populations with different sizes, 
 the Moran's I value for :math:`y` needs to be adjusted to account for the differences among populations. [#]_
@@ -553,11 +554,12 @@ and the total number of newborn infants who died of SIDS (SID79):
         >>> b = np.array(f.by_col('BIR79'))
         >>> e = np.array(f.by_col('SID79'))
 
-Next, we create an instance of W:
+Next, we create an instance of W and again row-standardize:
 
 .. doctest::
 
         >>> w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
+        >>> w.transform = 'r'
 
 Now, we create an instance of Moran_Rate:
 
@@ -569,7 +571,7 @@ Now, we create an instance of Moran_Rate:
         >>> "%6.4f" % mi.EI
         '-0.0101'
         >>> "%6.4f" % mi.p_norm
-        '0.0084'
+        '0.0042'
 
 From these results, we see that the observed value for I is significantly higher than its expected value,
 after the adjustment for the differences in population.
@@ -592,6 +594,7 @@ with all the terms defined as above. Applying this to the St. Louis data:
     >>> f = pysal.open(pysal.examples.get_path("stl_hom.txt"))
     >>> y = np.array(f.by_col['HR8893'])
     >>> w = pysal.open(pysal.examples.get_path("stl.gal")).read()
+    >>> w.transform = 'r'
     >>> gc = pysal.Geary(y, w)
     >>> gc.C
     0.59712821589368859
@@ -617,7 +620,7 @@ which indicates that none of the C values from the permuted samples was as extre
 
 Getis and Ord's G
 -----------------
-The last statistic for global spatial autcorrelation implemented in PySAL is Getis and Ord's G:
+The last statistic for global spatial autocorrelation implemented in PySAL is Getis and Ord's G:
 
 .. math::
 
@@ -685,6 +688,7 @@ which results in :math:`n` values of local spatial autocorrelation, 1 for each s
        >>> f = pysal.open(pysal.examples.get_path("stl_hom.txt"))
        >>> y = np.array(f.by_col['HR8893'])
        >>> w = pysal.open(pysal.examples.get_path("stl.gal")).read()
+       >>> w.transform = 'r'
        >>> np.random.seed(12345)
        >>> lm = pysal.Moran_Local(y,w)
        >>> lm.n
@@ -734,6 +738,7 @@ Continuing on with the SIDS example above, the adjusted local Moran's Is are obt
 	>>> b = np.array(f.by_col('BIR79'))
 	>>> e = np.array(f.by_col('SID79'))
 	>>> w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
+    >>> w.transform = 'r'
     >>> np.random.seed(12345)
     >>> lm = pysal.esda.moran.Moran_Local_Rate(e, b, w)
     >>> lm.Is[:10]

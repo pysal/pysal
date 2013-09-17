@@ -18,11 +18,12 @@ class Geary:
     y              : array
     w              : W
                      spatial weights
+    
     transformation : string
-                     weights transformation, default is binary.
-                     Other options include "R": row-standardized, "D":
-                     doubly-standardized, "U": untransformed (general
-                     weights), "V": variance-stabilizing.
+                     weights transformation,  default is row-standardized "r".
+                     Other options include "B": binary,  "D":
+                     doubly-standardized,  "U": untransformed (general weights),
+                     "V": variance-stabilizing.
     permutations   : int
                      number of random permutations for calculation of
                      pseudo-p_values
@@ -47,10 +48,8 @@ class Geary:
                      z-statistic for C under randomization assumption
     p_norm         : float
                      p-value under normality assumption (one-tailed)
-                     for two-tailed tests, this value should be multiplied by 2
     p_rand         : float
                      p-value under randomization assumption (one-tailed)
-                     for two-tailed tests, this value should be multiplied by 2
     sim            : array (if permutations!=0)
                      vector of I values for permutated samples
     p_sim          : float (if permutations!=0)
@@ -69,12 +68,12 @@ class Geary:
     p_z_sim        : float (if permutations!=0)
                      p-value based on standard normal approximation from
                      permutations (one-tailed)
-                     for two-tailed tests, this value should be multipled by 2
 
     Examples
     --------
     >>> import pysal
     >>> w = pysal.open(pysal.examples.get_path("book.gal")).read()
+    >>> w.transform = 'r'
     >>> f = pysal.open(pysal.examples.get_path("book.txt"))
     >>> y = np.array(f.by_col['y'])
     >>> c = Geary(y,w,permutations=0)
@@ -83,11 +82,34 @@ class Geary:
     >>> print round(c.p_norm,7)
     9.2e-05
     >>>
+
+    Deprecation warning for transformation argument
+
+    >>> w = pysal.open(pysal.examples.get_path("book.gal")).read()
+    >>> f = pysal.open(pysal.examples.get_path("book.txt"))
+    >>> y = np.array(f.by_col['y'])
+    >>> c = Geary(y,w,permutations=0)
+    DEPRECATION WARNING
+    transformation option in Moran_Local is deprecated in 1.7 and 1.8
+    replace with: w.transform = 'r'; pysal.Geary(y, w)
+
+
+
     """
-    def __init__(self, y, w, transformation="r", permutations=999):
+    def __init__(self, y, w, transformation = 'r',  permutations=999):
         self.n = len(y)
         self.y = y
-        w.transform = transformation
+        if transformation.upper() == "R" and w.transform.upper() !='R':
+            print "DEPRECATION WARNING"
+            print "transformation option in Moran_Local is deprecated in 1.7 and 1.8"
+            print "replace with: w.transform = 'r'; pysal.Geary(y, w)"
+            w.transform = transformation
+        elif transformation.upper() != "R":
+            print "DEPRECATION WARNING"
+            print "transformation option in Moran is deprecated in 1.7 and 1.8"
+            print "replace with: w.transform = '%s'; pysal.Geary(y, w)"%transformation.upper()
+            w.transform = transformation
+
         self.w = w
         self.permutations = permutations
         self.__moments()
@@ -102,8 +124,13 @@ class Geary:
         self.EC = 1.0
         self.z_norm = de / self.seC_norm
         self.z_rand = de / self.seC_rand
-        self.p_norm = 1 - stats.norm.cdf(np.abs(self.z_norm))
-        self.p_rand = 1 - stats.norm.cdf(np.abs(self.z_rand))
+        if de > 0:
+            self.p_norm = 1 - stats.norm.cdf(self.z_norm)
+            self.p_rand = 1 - stats.norm.cdf(self.z_rand)
+        else:
+            self.p_norm = stats.norm.cdf(self.z_norm)
+            self.p_rand = stats.norm.cdf(self.z_rand)
+
 
         if permutations:
             sim = [self.__calc(np.random.permutation(self.y))

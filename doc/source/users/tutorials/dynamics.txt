@@ -388,6 +388,9 @@ Continuing on with our US example:
     >>> pci = np.array([f.by_col[str(y)] for y in range(1929, 2010)]).transpose()
     >>> w = pysal.open("../pysal/examples/states48.gal").read()
     >>> lm = pysal.LISA_Markov(pci, w)
+    DEPRECATION WARNING
+    transformation option in Moran_Local is deprecated in 1.7 and 1.8
+    replace with: w.transform = 'r'; pysal.Moran_Local(y, w)
     >>> lm.classes
     array([1, 2, 3, 4])
 
