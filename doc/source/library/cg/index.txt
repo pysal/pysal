@@ -6,6 +6,10 @@
     locators
     shapes
     standalone
+    rtree
+    kdtree
+    sphere
+
 
 
 
