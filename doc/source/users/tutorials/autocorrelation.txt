@@ -455,7 +455,7 @@ The instance of Moran's I can then be obtained with:
         >>> mi.EI
         -0.012987012987012988
         >>> mi.p_norm
-        0.00027147862770937614
+	0.00013573931385468807
 
 From these results, we see that the observed value for I is significantly above its expected value, under the assumption of normality for the homicide rates. 
 
@@ -538,7 +538,7 @@ compare the original I using a z-transformation to get:
         >>> print mir.z_sim
         4.55451777821
         >>> print mir.p_z_sim
-	5.25058844025e-06
+	2.62529422013e-06
 
 When the variable of interest (:math:`y`) is rates based on populations with different sizes, 
 the Moran's I value for :math:`y` needs to be adjusted to account for the differences among populations. [#]_
@@ -569,7 +569,7 @@ Now, we create an instance of Moran_Rate:
         >>> "%6.4f" % mi.EI
         '-0.0101'
         >>> "%6.4f" % mi.p_norm
-        '0.0084'
+        '0.0042'
 
 From these results, we see that the observed value for I is significantly higher than its expected value,
 after the adjustment for the differences in population.
