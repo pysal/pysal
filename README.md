@@ -39,7 +39,7 @@ Currently PySAL consists of the following files and directories:
     PySAL prerequisites, installation, testing, and troubleshooting.
 
   THANKS.txt
-    PySAL developers and contributors. Please keep it up to date!!
+    PySAL developers and contributors. 
 
   README.txt
     PySAL structure (this document).
