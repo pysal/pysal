@@ -7,6 +7,9 @@ import copy
 import math
 from collections import OrderedDict
 from random import uniform
+import multiprocessing as mp
+from heapq import nsmallest
+
 import pysal as ps
 import numpy as np
 from pysal.cg.standalone import get_points_dist
@@ -282,7 +285,7 @@ def simulate_observations(wed, count, distribution='uniform'):
 
 
 
-def dijkstra(wed, cost, node):
+def dijkstra(wed, cost, node, n=float('inf')):
     """
     Compute the shortest path between a start node and
         all other nodes in the wed.
@@ -292,21 +295,13 @@ def dijkstra(wed, cost, node):
     wed: PySAL Winged Edged Data Structure
     cost: Cost per edge to travel, e.g. distance
     node: Start node ID
+    n: integer break point to stop iteration and return n
+     neighbors
 
     Returns:
     distance: List of distances from node to all other nodes
     pred : List of preceeding nodes for traversal route
     """
-
-    def get_neighbor_distances(wed, v0, l):
-        edges = wed.enum_links_node(v0)
-        neighbors = {}
-        for e in edges:
-            if e[0] != v0:
-                neighbors[e[0]] = l[e]
-            else:
-                neighbors[e[1]] = l[e]
-        return neighbors
 
     v0 = node
     distance = [float('inf') for x in wed.node_list]
@@ -354,6 +349,17 @@ def check_connectivity(wed, cost):
         return True
 
 
+def get_neighbor_distances(wed, v0, l):
+    edges = wed.enum_links_node(v0)
+    neighbors = {}
+    for e in edges:
+        if e[0] != v0:
+            neighbors[e[0]] = l[e]
+        else:
+            neighbors[e[1]] = l[e]
+    return neighbors
+
+
 def threshold_distance(wed, cost, node, threshold):
     """
     Compute the shortest path between a start node and
@@ -371,16 +377,6 @@ def threshold_distance(wed, cost, node, threshold):
     pred : List of preceeding nodes for traversal route
     """
 
-    def get_neighbor_distances(wed, v0, l):
-        edges = wed.enum_links_node(v0)
-        neighbors = {}
-        for e in edges:
-            if e[0] != v0:
-                neighbors[e[0]] = l[e]
-            else:
-                neighbors[e[1]] = l[e]
-        return neighbors
-
     near = []
     v0 = node
     distance = [float('inf') for x in wed.node_list]
@@ -397,8 +393,11 @@ def threshold_distance(wed, cost, node, threshold):
                 v = node
         #Remove that node from the set
         a.remove(v)
+        last = v
         if distance[v] <= threshold:
             near.append(v)
+        elif distance[v] > threshold:
+            break
         #4. Get the neighbors to the current node
         neighbors = get_neighbor_distances(wed, v, cost)
         for v1, indiv_cost in neighbors.iteritems():
@@ -406,8 +405,55 @@ def threshold_distance(wed, cost, node, threshold):
                 distance[v1] = distance[v] + indiv_cost
                 pred[v1] = v
                 a.add(v1)
-    return near
+    return near,pred
 
+
+def knn_distance(wed, cost, node, n):
+    """
+    Compute the shortest path between a start node and
+        all other nodes in the wed.
+
+    Parameters
+    ----------
+    wed: PySAL Winged Edged Data Structure
+    cost: Cost per edge to travel, e.g. distance
+    node: Start node ID
+    n: integer number of nearest neighbors
+    Returns:
+    distance: List of distances from node to all other nodes
+    pred : List of preceeding nodes for traversal route
+    """
+
+    near = []  #Set because we can update distance more than once
+    v0 = node
+    distance = [float('inf') for x in wed.node_list]
+    distance[wed.node_list.index(v0)] = 0
+    pred = [None for x in wed.node_list]
+    a = set()
+    a.add(v0)
+    while len(a) > 0:
+        #Get node with the lowest value from distance
+        dist = float('inf')
+        for node in a:
+            if distance[node] < dist:
+                dist = distance[node]
+                v = node
+                near.append(v)
+        #Remove that node from the set
+        a.remove(v)
+        last = v
+        #4. Get the neighbors to the current node
+        neighbors = get_neighbor_distances(wed, v, cost)
+        for v1, indiv_cost in neighbors.iteritems():
+            if distance[v1] > distance[v] + indiv_cost:
+                distance[v1] = distance[v] + indiv_cost
+                pred[v1] = v
+                a.add(v1)
+    near = nsmallest(n + 1, distance)
+    near.remove(0)  #Remove obs from near
+    for i,n in enumerate(near):
+        near[i] = distance.index(n)
+    return near
 
 def lat2Network(k):
     """helper function to create a network from a square lattice.
