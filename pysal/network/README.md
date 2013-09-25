@@ -13,6 +13,7 @@ The network module will implement the feature set from [GeoDaNet][GeoDaNet]
 
 PySAL network will include the following spatial analytical methods
 
+ - Nearest Neighbor Distance Distributions
  - Global Network Autocorrelation
  - Global K-Functions
  - Local Indicators of Network-Constrained Clusters (LINCS)
