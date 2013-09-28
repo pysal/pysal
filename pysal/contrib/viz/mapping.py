@@ -367,14 +367,14 @@ def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
         map_obj = base_choropleth_unique(shp_link, values, cmap=cmap, \
                 projection=projection)
     if type == 'quantiles':
-        map_obj = base_choropleth_classif(shp_link, values, \
+        map_obj = base_choropleth_classif(shp_link, values, k=k, \
                 classification='quantiles', cmap=cmap, projection=projection)
     if type == 'fisher_jenks':
-        map_obj = base_choropleth_classif(shp_link, values, \
+        map_obj = base_choropleth_classif(shp_link, values, k=k, \
                 classification='fisher_jenks', cmap=cmap, \
                 projection=projection, sample_fisher=sample_fisher)
     if type == 'equal_interval':
-        map_obj = base_choropleth_classif(shp_link, values, \
+        map_obj = base_choropleth_classif(shp_link, values, k=k, \
                 classification='equal_interval', cmap=cmap, projection=projection)
 
     fig = plt.figure(figsize=figsize)
