@@ -1,6 +1,13 @@
 """
 Choropleth mapping using PySAL and Matplotlib
 
+ToDo:
+    * Fix issue in multi-part polygons for choropleth where they are taken as
+    different polygons, hence different colors
+    * base_choropleth_classif, base_choropleth_unique, base_chopleth_classless
+    should take a shp object not a shp_link
+    * Same for map_poly_shp(_lonlat)
+    * Replace map_poly_shp_lonlat for map_poly_shp in base_choropleth_X
 """
 
 __author__ = "Sergio Rey <sjsrey@gmail.com>", "Dani Arribas-Bel <daniel.arribas.bel@gmail.com"
@@ -132,6 +139,8 @@ def map_poly_shp(shp_link, which='all'):
     shp_link        : str
                       Path to shapefile
     which           : str/list
+                      List of booleans for which polygons of the shapefile to
+                      be included (True) or excluded (False)
 
     Returns
     -------
@@ -958,7 +967,7 @@ if __name__ == '__main__':
         #values[values.shape[0]/2: ] = 0
         '''
         patchco = map_poly_shp(shp_link)
-        pts = map_point_shp('/home/dani/Desktop/cents.shp')
+        #pts = map_point_shp('/home/dani/Desktop/cents.shp')
 
     if data == 'point':
         shp_link = ps.examples.get_path("burkitt.shp")
@@ -988,6 +997,6 @@ if __name__ == '__main__':
     fig = plt.figure()
     ax = fig.add_subplot(111)
     #ax.add_collection(patchco)
-    ax = setup_ax([patchco, pts], ax)
+    ax = setup_ax([patchco], ax)
     plt.show()
 
