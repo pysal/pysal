@@ -591,7 +591,7 @@ def _expand_values(values, poly2dbf_row):
                       passed from dbf to polygons
     '''
     pvalues = pd.Series(values, index=np.arange(values.shape[0]))\
-            .reindex(map_obj.poly2dbf_row)#Expand values to every poly
+            .reindex(poly2dbf_row)#Expand values to every poly
     return pvalues.values
 
             #############################
