@@ -2,20 +2,9 @@
 Choropleth mapping using PySAL and Matplotlib
 
 ToDo:
-    * base_choropleth_classif, base_choropleth_unique, base_chopleth_classless
-    should take a shp object not a shp_link
+    * map_line_shp, map_point_shp should take a shp object not a shp_link
     * Same for map_poly_shp(_lonlat)
 
-Done :
-    * Replacing map_poly_shp_lonlat for map_poly_shp in
-    base_choropleth_classif/unique/classless
-    * removed 'projection' from base_choropleth_classif/unique/classless
-    * Allow base_choropleth_classif/unique/classless to plot multi-part
-    polygons properly
-    * changes streamlined to generic plot_choropleth
-    * Added dependency on pandas for rapid reindexing (this is done externally
-    * on the method _expand_values to it is easy to drop the dependency when
-    neccesary/time available
 """
 
 __author__ = "Sergio Rey <sjsrey@gmail.com>", "Dani Arribas-Bel <daniel.arribas.bel@gmail.com"
@@ -69,84 +58,94 @@ def transCRS(xy, src_prj, trt_prj):
     trCRS = osr.CoordinateTransformation(orig, target)
     return np.array(trCRS.TransformPoints(xy))[:, :2]
 
-def map_point_shp(shp_link, which='all'):
+def map_point_shp(shp, which='all'):
     '''
-    Create a map object from a point shapefile
+    Create a map object from a point shape
     ...
 
     Arguments
     ---------
 
-    shp_link        : str
-                      Path to shapefile
+    shp             : iterable
+                      PySAL point iterable with the attribute `bbox` (e.g.
+                      shape object from `ps.open` a poly shapefile)
     which           : str/list
 
     Returns
     -------
 
     map             : PatchCollection
-                      Map object with the points from the shapefile
+                      Map object with the points from the shape
 
     '''
-    shp = ps.open(shp_link)
-    if which == 'all':
-        db = ps.open(shp_link.replace('.shp', '.dbf'))
-        n = len(db.by_col(db.header[0]))
-        db.close()
-        which = [True] * n
     pts = []
-    for inwhich, pt in zip(which, shp):
-        if inwhich:
+    if which == 'all':
+        for pt in shp:
                 pts.append(pt)
+    else:
+        for inwhich, pt in zip(which, shp):
+            if inwhich:
+                    pts.append(pt)
     pts = np.array(pts)
     sc = plt.scatter(pts[:, 0], pts[:, 1])
     _ = _add_axes2col(sc, shp.bbox)
     return sc
 
-def map_line_shp(shp_link, which='all'):
+def map_line_shp(shp, which='all'):
     '''
-    Create a map object from a line shapefile
+    Create a map object from a line shape
     ...
 
     Arguments
     ---------
 
-    shp_link        : str
-                      Path to shapefile
+    shp             : iterable
+                      PySAL line iterable with the attribute `bbox` (e.g.
+                      shape object from `ps.open` a poly shapefile)
     which           : str/list
 
     Returns
     -------
 
     map             : PatchCollection
-                      Map object with the polygons from the shapefile
+                      Map object with the lines from the shape
+                      This includes the attribute `shp2dbf_row` with the
+                      cardinality of every line to its row in the dbf
+                      (zero-offset)
 
     '''
-    shp = ps.open(shp_link)
-    if which == 'all':
-        db = ps.open(shp_link.replace('.shp', '.dbf'))
-        n = len(db.by_col(db.header[0]))
-        db.close()
-        which = [True] * n
     patches = []
-    for inwhich, shape in zip(which, shp):
-        if inwhich:
+    rows = []
+    i = 0
+    if which == 'all':
+        for shape in shp:
             for xy in shape.parts:
                 patches.append(xy)
+                rows.append(i)
+            i += 1
+    else:
+        for inwhich, shape in zip(which, shp):
+            if inwhich:
+                for xy in shape.parts:
+                    patches.append(xy)
+                    rows.append(i)
+                i += 1
     lc = LineCollection(patches)
     _ = _add_axes2col(lc, shp.bbox)
+    lc.shp2dbf_row = rows
     return lc
 
-def map_poly_shp(shp_link, which='all'):
+def map_poly_shp(shp, which='all'):
     '''
-    Create a map object from a polygon shapefile
+    Create a map object from a polygon shape
     ...
 
     Arguments
     ---------
 
-    shp_link        : str
-                      Path to shapefile
+    shp             : iterable
+                      PySAL polygon iterable with the attribute `bbox` (e.g.
+                      shape object from `ps.open` a poly shapefile)
     which           : str/list
                       List of booleans for which polygons of the shapefile to
                       be included (True) or excluded (False)
@@ -155,36 +154,40 @@ def map_poly_shp(shp_link, which='all'):
     -------
 
     map             : PatchCollection
-                      Map object with the polygons from the shapefile
-                      This includes the attribute `poly2dbf_row` with the
+                      Map object with the polygons from the shape
+                      This includes the attribute `shp2dbf_row` with the
                       cardinality of every polygon to its row in the dbf
                       (zero-offset)
 
     '''
-    shp = ps.open(shp_link)
-    if which == 'all':
-        db = ps.open(shp_link.replace('.shp', '.dbf'))
-        n = len(db.by_col(db.header[0]))
-        db.close()
-        which = [True] * n
     patches = []
     rows = []
     i = 0
-    for inwhich, shape in zip(which, shp):
-        if inwhich:
+    if which == 'all':
+        for shape in shp:
             for ring in shape.parts:
                 xy = np.array(ring)
                 patches.append(xy)
                 rows.append(i)
             i += 1
+    else:
+        for inwhich, shape in zip(which, shp):
+            if inwhich:
+                for ring in shape.parts:
+                    xy = np.array(ring)
+                    patches.append(xy)
+                    rows.append(i)
+                i += 1
     pc = PolyCollection(patches)
     _ = _add_axes2col(pc, shp.bbox)
-    pc.poly2dbf_row = rows
+    pc.shp2dbf_row = rows
     return pc
 
 def map_poly_shp_lonlat(shp_link, projection='merc'):
     '''
     Create a map object from a shapefile in lon/lat CRS using Basemap
+
+    NOTE: deprecated in higher level functions for dependency on Basemap
     ...
 
     Arguments
@@ -322,7 +325,8 @@ def plot_poly_lines(shp_link, projection='merc', savein=None, poly_col='none'):
     '''
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    patchco = map_poly_shp_lonlat(shp_link, projection=projection)
+    shp = ps.open(shp_link)
+    patchco = map_poly_shp_lonlat(shp, projection=projection)
     patchco.set_facecolor('none')
     ax.add_collection(patchco)
     ax.set_frame_on(False)
@@ -386,19 +390,20 @@ def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
     -----
     .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
     '''
+    shp = ps.open(shp_link)
     if type == 'classless':
-        map_obj = base_choropleth_classless(shp_link, values, cmap=cmap)
+        map_obj = base_choropleth_classless(shp, values, cmap=cmap)
     if type == 'unique_values':
-        map_obj = base_choropleth_unique(shp_link, values, cmap=cmap)
+        map_obj = base_choropleth_unique(shp, values, cmap=cmap)
     if type == 'quantiles':
-        map_obj = base_choropleth_classif(shp_link, values, k=k, \
+        map_obj = base_choropleth_classif(shp, values, k=k, \
                 classification='quantiles', cmap=cmap)
     if type == 'fisher_jenks':
-        map_obj = base_choropleth_classif(shp_link, values, k=k, \
+        map_obj = base_choropleth_classif(shp, values, k=k, \
                 classification='fisher_jenks', cmap=cmap, \
                 sample_fisher=sample_fisher)
     if type == 'equal_interval':
-        map_obj = base_choropleth_classif(shp_link, values, k=k, \
+        map_obj = base_choropleth_classif(shp, values, k=k, \
                 classification='equal_interval', cmap=cmap)
 
     fig = plt.figure(figsize=figsize)
@@ -419,7 +424,7 @@ def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
     return None
 
 
-def base_choropleth_classless(shp_link, values, cmap='hot_r', projection='merc'):
+def base_choropleth_classless(shp, values, cmap='hot_r', projection='merc'):
     '''
     Create a map object with classless coloring from a shapefile in lon/lat CRS
     ...
@@ -427,8 +432,9 @@ def base_choropleth_classless(shp_link, values, cmap='hot_r', projection='merc')
     Arguments
     ---------
 
-    shp_link        : str
-                      Path to shapefile
+    shp             : iterable
+                      PySAL polygon iterable with the attribute `bbox` (e.g.
+                      shape object from `ps.open` a poly shapefile)
     values          : array
                       Numpy array with values to map
     cmap            : str
@@ -449,13 +455,13 @@ def base_choropleth_classless(shp_link, values, cmap='hot_r', projection='merc')
     .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
     '''
     cmap = cm.get_cmap(cmap)
-    map_obj = map_poly_shp(shp_link)
+    map_obj = map_poly_shp(shp)
     map_obj.set_cmap(cmap)
-    pvalues = _expand_values(values, map_obj.poly2dbf_row)
+    pvalues = _expand_values(values, map_obj.shp2dbf_row)
     map_obj.set_array(pvalues)
     return map_obj
 
-def base_choropleth_unique(shp_link, values,  cmap='hot_r', projection='merc'):
+def base_choropleth_unique(shp, values,  cmap='hot_r', projection='merc'):
     '''
     Create a map object with coloring based on unique values from a shapefile in lon/lat CRS
     ...
@@ -463,8 +469,9 @@ def base_choropleth_unique(shp_link, values,  cmap='hot_r', projection='merc'):
     Arguments
     ---------
 
-    shp_link        : str
-                      Path to shapefile
+    shp             : iterable
+                      PySAL polygon iterable with the attribute `bbox` (e.g.
+                      shape object from `ps.open` a poly shapefile)
     values          : array
                       Numpy array with values to map
     cmap            : str
@@ -490,13 +497,13 @@ def base_choropleth_unique(shp_link, values,  cmap='hot_r', projection='merc'):
     colors = np.random.permutation(colors)
     colormatch = {val: col for val, col in zip(uvals, colors)}
 
-    map_obj = map_poly_shp(shp_link)
-    pvalues = _expand_values(values, map_obj.poly2dbf_row)
+    map_obj = map_poly_shp(shp)
+    pvalues = _expand_values(values, map_obj.shp2dbf_row)
     map_obj.set_color([colormatch[i] for i in pvalues])
     map_obj.set_edgecolor('k')
     return map_obj
 
-def base_choropleth_classif(shp_link, values, classification='quantiles', \
+def base_choropleth_classif(shp, values, classification='quantiles', \
         k=5, cmap='hot_r', sample_fisher=True):
     '''
     Create a map object with coloring based on different classification
@@ -506,8 +513,9 @@ def base_choropleth_classif(shp_link, values, classification='quantiles', \
     Arguments
     ---------
 
-    shp_link        : str
-                      Path to shapefile
+    shp             : iterable
+                      PySAL polygon iterable with the attribute `bbox` (e.g.
+                      shape object from `ps.open` a poly shapefile)
     values          : array
                       Numpy array with values to map
     classification  : str
@@ -552,7 +560,7 @@ def base_choropleth_classif(shp_link, values, classification='quantiles', \
             classification = ps.Fisher_Jenks(values,k)
         boundaries = classification.bins[:]
 
-    map_obj = map_poly_shp(shp_link)
+    map_obj = map_poly_shp(shp)
     map_obj.set_alpha(0.4)
 
     cmap = cm.get_cmap(cmap, k+1)
@@ -562,11 +570,11 @@ def base_choropleth_classif(shp_link, values, classification='quantiles', \
     norm = clrs.BoundaryNorm(boundaries, cmap.N)
     map_obj.set_norm(norm)
 
-    pvalues = _expand_values(values, map_obj.poly2dbf_row)
+    pvalues = _expand_values(values, map_obj.shp2dbf_row)
     map_obj.set_array(pvalues)
     return map_obj
 
-def _expand_values(values, poly2dbf_row):
+def _expand_values(values, shp2dbf_row):
     '''
     Expand series of values based on dbf order to polygons (to allow plotting
     of multi-part polygons). 
@@ -580,7 +588,7 @@ def _expand_values(values, poly2dbf_row):
     values          : ndarray
                       Values aligned with dbf rows to be plotted (e.d.
                       choropleth)
-    poly2dbf_row    : list/sequence
+    shp2dbf_row    : list/sequence
                       Cardinality list of polygon to dbf row as provided by
                       map_poly_shp
 
@@ -591,7 +599,7 @@ def _expand_values(values, poly2dbf_row):
                       passed from dbf to polygons
     '''
     pvalues = pd.Series(values, index=np.arange(values.shape[0]))\
-            .reindex(poly2dbf_row)#Expand values to every poly
+            .reindex(shp2dbf_row)#Expand values to every poly
     return pvalues.values
 
             #############################
@@ -1007,9 +1015,9 @@ if __name__ == '__main__':
         #values[: values.shape[0]/2] = 1
         #values[values.shape[0]/2: ] = 0
         '''
-        #patchco = map_poly_shp(shp_link)
+        patchco = map_poly_shp(shp_link)
         #patchco = base_choropleth_classif(shp_link, np.random.random(3))
-        patchco = plot_choropleth(shp_link, np.random.random(3), 'quantiles')
+        #patchco = plot_choropleth(shp_link, np.random.random(3), 'quantiles')
 
     if data == 'point':
         shp_link = ps.examples.get_path("burkitt.shp")
@@ -1034,11 +1042,11 @@ if __name__ == '__main__':
         fig.add_axes(ax)
         plt.show()
         break
+    '''
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
     #ax.add_collection(patchco)
     ax = setup_ax([patchco], ax)
     plt.show()
-    '''
 
