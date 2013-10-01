@@ -326,12 +326,10 @@ def plot_poly_lines(shp_link, projection='merc', savein=None, poly_col='none'):
     fig = plt.figure()
     ax = fig.add_subplot(111)
     shp = ps.open(shp_link)
-    patchco = map_poly_shp_lonlat(shp, projection=projection)
+    patchco = map_poly_shp(shp)
     patchco.set_facecolor('none')
-    ax.add_collection(patchco)
-    ax.set_frame_on(False)
-    ax.axes.get_yaxis().set_visible(False)
-    ax.axes.get_xaxis().set_visible(False)
+    patchco.set_edgecolor('0.8')
+    ax = setup_ax([patchco], ax)
     if savein:
         plt.savefig(savein)
     else:
@@ -339,7 +337,7 @@ def plot_poly_lines(shp_link, projection='merc', savein=None, poly_col='none'):
     return None
 
 def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
-        projection='merc', sample_fisher=True, title='', \
+        shp_type='poly', sample_fisher=True, title='', \
         savein=None, figsize=None):
     '''
     Wrapper to quickly create and plot from a lat/lon shapefile
@@ -361,12 +359,12 @@ def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
                         * 'equal_interval'
     k               : int
                       Number of bins to classify values in and assign a color
-                      to
+                      to (defaults to 5)
     cmap            : str
                       Matplotlib coloring scheme
-    projection      : str
-                      Basemap projection. See [1]_ for a list. Defaults to
-                      'merc'
+    shp_type        : str
+                      'poly' (default) or 'line', for the kind of shapefile
+                      passed
     sample_fisher   : Boolean
                       Defaults to True, controls whether Fisher-Jenks
                       classification uses a sample (faster) or the entire
@@ -391,19 +389,24 @@ def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
     .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
     '''
     shp = ps.open(shp_link)
+    if shp_type == 'poly':
+        map_obj = map_poly_shp(shp)
+    if shp_type == 'line':
+        map_obj = map_line_shp(shp)
+
     if type == 'classless':
-        map_obj = base_choropleth_classless(shp, values, cmap=cmap)
+        map_obj = base_choropleth_classless(map_obj, values, cmap=cmap)
     if type == 'unique_values':
-        map_obj = base_choropleth_unique(shp, values, cmap=cmap)
+        map_obj = base_choropleth_unique(map_obj, values, cmap=cmap)
     if type == 'quantiles':
-        map_obj = base_choropleth_classif(shp, values, k=k, \
+        map_obj = base_choropleth_classif(map_obj, values, k=k, \
                 classification='quantiles', cmap=cmap)
     if type == 'fisher_jenks':
-        map_obj = base_choropleth_classif(shp, values, k=k, \
+        map_obj = base_choropleth_classif(map_obj, values, k=k, \
                 classification='fisher_jenks', cmap=cmap, \
                 sample_fisher=sample_fisher)
     if type == 'equal_interval':
-        map_obj = base_choropleth_classif(shp, values, k=k, \
+        map_obj = base_choropleth_classif(map_obj, values, k=k, \
                 classification='equal_interval', cmap=cmap)
 
     fig = plt.figure(figsize=figsize)
@@ -424,17 +427,16 @@ def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
     return None
 
 
-def base_choropleth_classless(shp, values, cmap='hot_r', projection='merc'):
+def base_choropleth_classless(map_obj, values, cmap='hot_r', projection='merc'):
     '''
-    Create a map object with classless coloring from a shapefile in lon/lat CRS
+    Set classless coloring from a map object
     ...
 
     Arguments
     ---------
 
-    shp             : iterable
-                      PySAL polygon iterable with the attribute `bbox` (e.g.
-                      shape object from `ps.open` a poly shapefile)
+    map_obj         : Poly/Line collection
+                      Output from map_X_shp
     values          : array
                       Numpy array with values to map
     cmap            : str
@@ -455,23 +457,25 @@ def base_choropleth_classless(shp, values, cmap='hot_r', projection='merc'):
     .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
     '''
     cmap = cm.get_cmap(cmap)
-    map_obj = map_poly_shp(shp)
     map_obj.set_cmap(cmap)
     pvalues = _expand_values(values, map_obj.shp2dbf_row)
-    map_obj.set_array(pvalues)
+    if isinstance(map_obj, mpl.collections.PolyCollection):
+        map_obj.set_array(pvalues)
+        map_obj.set_edgecolor('k')
+    elif isinstance(map_obj, mpl.collections.LineCollection):
+        map_obj.set_array(pvalues)
     return map_obj
 
-def base_choropleth_unique(shp, values,  cmap='hot_r', projection='merc'):
+def base_choropleth_unique(map_obj, values,  cmap='hot_r', projection='merc'):
     '''
-    Create a map object with coloring based on unique values from a shapefile in lon/lat CRS
+    Set coloring based on unique values from a map object
     ...
 
     Arguments
     ---------
 
-    shp             : iterable
-                      PySAL polygon iterable with the attribute `bbox` (e.g.
-                      shape object from `ps.open` a poly shapefile)
+    map_obj         : Poly/Line collection
+                      Output from map_X_shp
     values          : array
                       Numpy array with values to map
     cmap            : str
@@ -497,25 +501,26 @@ def base_choropleth_unique(shp, values,  cmap='hot_r', projection='merc'):
     colors = np.random.permutation(colors)
     colormatch = {val: col for val, col in zip(uvals, colors)}
 
-    map_obj = map_poly_shp(shp)
     pvalues = _expand_values(values, map_obj.shp2dbf_row)
-    map_obj.set_color([colormatch[i] for i in pvalues])
-    map_obj.set_edgecolor('k')
+    if isinstance(map_obj, mpl.collections.PolyCollection):
+        map_obj.set_color([colormatch[i] for i in pvalues])
+        map_obj.set_edgecolor('k')
+    elif isinstance(map_obj, mpl.collections.LineCollection):
+        map_obj.set_color([colormatch[i] for i in pvalues])
     return map_obj
 
-def base_choropleth_classif(shp, values, classification='quantiles', \
+def base_choropleth_classif(map_obj, values, classification='quantiles', \
         k=5, cmap='hot_r', sample_fisher=True):
     '''
-    Create a map object with coloring based on different classification
-    methods, from a shapefile in lon/lat CRS
+    Set coloring based based on different classification
+    methods
     ...
 
     Arguments
     ---------
 
-    shp             : iterable
-                      PySAL polygon iterable with the attribute `bbox` (e.g.
-                      shape object from `ps.open` a poly shapefile)
+    map_obj         : Poly/Line collection
+                      Output from map_X_shp
     values          : array
                       Numpy array with values to map
     classification  : str
@@ -560,7 +565,6 @@ def base_choropleth_classif(shp, values, classification='quantiles', \
             classification = ps.Fisher_Jenks(values,k)
         boundaries = classification.bins[:]
 
-    map_obj = map_poly_shp(shp)
     map_obj.set_alpha(0.4)
 
     cmap = cm.get_cmap(cmap, k+1)
@@ -571,7 +575,11 @@ def base_choropleth_classif(shp, values, classification='quantiles', \
     map_obj.set_norm(norm)
 
     pvalues = _expand_values(values, map_obj.shp2dbf_row)
-    map_obj.set_array(pvalues)
+    if isinstance(map_obj, mpl.collections.PolyCollection):
+        map_obj.set_array(pvalues)
+        map_obj.set_edgecolor('k')
+    elif isinstance(map_obj, mpl.collections.LineCollection):
+        map_obj.set_array(pvalues)
     return map_obj
 
 def _expand_values(values, shp2dbf_row):
@@ -1005,7 +1013,7 @@ def unique_values_map(coords,y, title='Unique Value'):
 
 if __name__ == '__main__':
 
-    data = 'poly'
+    data = 'point'
     if data == 'poly':
         shp_link = ps.examples.get_path("sids2.shp")
         shp_link = ps.examples.get_path("Polygon.shp")
@@ -1015,19 +1023,21 @@ if __name__ == '__main__':
         #values[: values.shape[0]/2] = 1
         #values[values.shape[0]/2: ] = 0
         '''
-        patchco = map_poly_shp(shp_link)
+        patchco = map_poly_shp(ps.open(shp_link))
         #patchco = base_choropleth_classif(shp_link, np.random.random(3))
         #patchco = plot_choropleth(shp_link, np.random.random(3), 'quantiles')
 
     if data == 'point':
         shp_link = ps.examples.get_path("burkitt.shp")
         dbf = ps.open(shp_link.replace('.shp', '.dbf'))
-        patchco = map_point_shp(shp_link)
+        patchco = map_point_shp(ps.open(shp_link))
 
     if data == 'line':
-        shp_link = ps.examples.get_path("Line.shp")
+        shp_link = ps.examples.get_path("eberly_net.shp")
         dbf = ps.open(shp_link.replace('.shp', '.dbf'))
-        patchco = map_line_shp(shp_link)
+        values = np.array(dbf.by_col('TNODE'))
+        mobj = map_line_shp(ps.open(shp_link))
+        patchco = base_choropleth_unique(mobj, values)
 
     '''
     which = values > 1.
