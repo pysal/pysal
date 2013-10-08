@@ -266,23 +266,27 @@ def simulate_observations(wed, count, distribution='uniform'):
             start_index = np.where(starts <= random_pt)[0][-1]
             assignment_edge = edges[start_index]
             distance_from_start = random_pt - offsets[start_index - 1]
-            x1 = wed.node_coords[assignment_edge[0]][0]
-            y1 = wed.node_coords[assignment_edge[0]][1]
-            x2 = wed.node_coords[assignment_edge[1]][0]
-            y2 = wed.node_coords[assignment_edge[1]][1]
-            m = (y2 - y1) / (x2 - x1)
-            b1 = y1 - m * (x1)
-            if x1 > x2:
-                x0 = x1 - distance_from_start / math.sqrt(1 + m**2)
-            elif x1 < x2:
-                x0 = x1 + distance_from_start / math.sqrt(1 + m**2)
-            y0 = m * (x0 - x1) + y1
+            x0, y0 = newpoint_coords(wed, assignment_edge, distance_from_start)
             if assignment_edge not in random_pts.keys():
                 random_pts[assignment_edge] = [(x0,y0)]
             else:
                 random_pts[assignment_edge].append((x0,y0))
     return random_pts
 
+
+def newpoint_coords(wed, edge, distance):
+    x1 = wed.node_coords[edge[0]][0]
+    y1 = wed.node_coords[edge[0]][1]
+    x2 = wed.node_coords[edge[1]][0]
+    y2 = wed.node_coords[edge[1]][1]
+    m = (y2 - y1) / (x2 - x1)
+    b1 = y1 - m * (x1)
+    if x1 > x2:
+        x0 = x1 - distance / math.sqrt(1 + m**2)
+    elif x1 < x2:
+        x0 = x1 + distance / math.sqrt(1 + m**2)
+    y0 = m * (x0 - x1) + y1
+    return x0, y0
 
 
 def dijkstra(wed, cost, node, n=float('inf')):
@@ -360,7 +364,120 @@ def get_neighbor_distances(wed, v0, l):
     return neighbors
 
 
-def threshold_distance(wed, cost, node, threshold):
+def insert_node(wed, edge, distance):
+    """
+    Insert a node into an existing edge at a fixed distance from
+     the start node.
+
+    Parameters
+    ----------
+    wed: PySAL Winged Edge Data Structure
+    edge: The edge to insert a node into
+    distance: float, distance from the start node of the edge
+
+    Returns
+    -------
+    wed: Modified PySAL WED data structure
+    """
+    #Get the coordinates of the new point and update the node_coords
+    x0, y0 = newpoint_coords(wed, edge, distance)
+    newcoord_id = max(wed.node_list) + 1
+    wed.node_list.append(newcoord_id)
+    wed.node_coords[newcoord_id] = (x0, y0)
+    #Update the region edge
+    new_edge = (edge[0], newcoord_id)
+    if edge in wed.region_edge.keys():
+        wed.region_edge[new_edge] = wed.region_edge.pop(edge)
+    if (edge[1], edge[0]) in wed.region_edge.keys():
+        wed.region_edge[(new_edge[1], new_edge[0])] = wed.region_edge.pop((edge[1], edge[0]))
+    #Update the edge list
+    a = edge[0]
+    b = edge[1]
+    c = newcoord_id
+    idx = wed.edge_list.index(edge)
+    wed.edge_list.pop(idx)
+    wed.edge_list += [(a, c), (c, a)]
+    idx = wed.edge_list.index((b, a))
+    wed.edge_list.pop(idx)
+    wed.edge_list += [(b, c),(c, b)]
+    #Update the start and end nodes
+        #Remove the old start and end node pointers
+    wed.start_node.pop(edge)
+    wed.start_node.pop((b, a))
+    wed.end_node.pop(edge)
+    wed.end_node.pop((b, a))
+        #Add the 4 new pointers
+    wed.start_node[(a, c)] = a
+    wed.end_node[(a, c)] = c
+    wed.start_node[(c, a)] = c
+    wed.end_node[(c, a)] = a
+    wed.start_node[(c, b)] = c
+    wed.end_node[(c, b)] = b
+    wed.start_node[(b, c)] = b
+    wed.end_node[(b, c)] = c
+    #Update the startc, startcc, enc, endcc of the new links
+        #Replace the old pointers with new pointers
+    wed.start_c[(a, c)] = wed.start_c.pop(edge)
+    wed.start_cc[(a, c)] = wed.start_cc.pop(edge)
+    wed.end_c[(c, b)] = wed.end_c.pop(edge)
+    wed.end_cc[(c, b)] = wed.end_cc.pop(edge)
+    rev_edge = (b, a)
+    wed.start_c[(b, c)] = wed.start_c.pop(rev_edge)
+    wed.start_cc[(b, c)] = wed.start_cc.pop(rev_edge)
+    wed.end_c[(c, a)] = wed.end_c.pop(rev_edge)
+    wed.end_cc[(c, a)] = wed.end_cc.pop(rev_edge)
+        #Add brand new pointers for the new edges
+    wed.start_c[(c, a)] = (c, b)
+    wed.start_cc[(c, a)] = (c, b)
+    wed.end_c[(a, c)] = (c, b)
+    wed.end_cc[(a, c)] = (c, b)
+    wed.start_c[(c, b)] = (a, c)
+    wed.start_c[(c, b)] = (a, c)
+    wed.end_c[(b, c)] = (c, a)
+    wed.end_cc[(b, c)] = (c, a)
+    #Update the pointer to the nodes incident to start / end of the original link
+    for k, v in wed.start_c.iteritems():
+        if v == edge:
+            wed.start_c[k] = (v[0], c)
+        elif v == rev_edge:
+            wed.start_c[k] = (v[1], c)
+    for k, v in wed.start_cc.iteritems():
+        if v == edge:
+            wed.start_cc[k] = (v[0], c)
+        elif v == rev_edge:
+            wed.start_cc[k] = (v[1], c)
+    for k, v in wed.end_c.iteritems():
+        if v == edge:
+            wed.end_c[k] = (v[1], c)
+        elif v == rev_edge:
+            wed.end_c[k] = (v[0], c)
+    for k, v in wed.end_cc.iteritems():
+        if v == edge:
+            wed.end_cc[k] = (v[1], c)
+        elif v == rev_edge:
+            wed.end_cc[k] = (v[0], c)
+    #Update the node_edge pointer
+    wed.node_edge[c] = (a, c)
+    wed.node_edge[a] = (a, c)
+    wed.node_edge[b] = (b, c)
+    #update right and left polygon regions
+    right = wed.right_polygon.pop(edge)
+    left = wed.left_polygon.pop(edge)
+    wed.right_polygon[(a, c)] = right
+    wed.left_polygon[(a, c)] = left
+    wed.right_polygon[(c, b)] = right
+    wed.left_polygon[(c, b)] = left
+    right = wed.right_polygon.pop(rev_edge)
+    left = wed.left_polygon.pop(rev_edge)
+    wed.right_polygon[(b, c)] = right
+    wed.left_polygon[(b, c)] = left
+    wed.right_polygon[(c, a)] = right
+    wed.left_polygon[(c, a)] = left
+
+    return wed
+
+
+def threshold_distance(wed, cost, node, threshold, midpoint=False):
     """
     Compute the shortest path between a start node and
         all other nodes in the wed.
@@ -371,8 +488,11 @@ def threshold_distance(wed, cost, node, threshold):
     cost: Cost per edge to travel, e.g. distance
     node: Start node ID
     threshold: float, distance to which neighbors are included
+    midpoint: Boolean to indicate whether distance is computed from the start
+     node or the midpoint of the edge
 
-    Returns:
+    Returns
+    -------
     distance: List of distances from node to all other nodes
     pred : List of preceeding nodes for traversal route
     """
