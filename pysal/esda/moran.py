@@ -3,9 +3,11 @@ Moran's I Spatial Autocorrelation Statistics
 
 """
 __author__ = "Sergio J. Rey <srey@asu.edu>"
-from pysal.common import *
+# from pysal.common import *
 from pysal.weights.spatial_lag import lag_spatial as slag
 from pysal.esda.smoothing import assuncao_rate
+import scipy.stats as stats
+import numpy as np
 
 __all__ = ["Moran", "Moran_Local", "Moran_BV", "Moran_BV_matrix",
            "Moran_Rate", "Moran_Local_Rate"]
@@ -27,10 +29,11 @@ class Moran:
     transformation  : string
                       weights transformation,  default is row-standardized "r".
                       Other options include "B": binary,  "D":
-                      doubly-standardized,  "U": untransformed (general weights),
-                      "V": variance-stabilizing.
+                      doubly-standardized,  "U": untransformed
+                      (general weights), "V": variance-stabilizing.
     permutations    : int
-                      number of random permutations for calculation of pseudo-p_values
+                      number of random permutations for calculation of
+                      pseudo-p_values
 
 
     Attributes
@@ -66,8 +69,9 @@ class Moran:
     p_sim        : array (if permutations>0)
                    p-value based on permutations (one-tailed)
                    null: spatial randomness
-                   alternative: the observed I is extreme
-                                it is either extremely greater or extremely lower
+                   alternative: the observed I is extreme if
+                   it is either extremely greater or extremely lower
+                   than the values obtained based on permutations
     EI_sim       : float (if permutations>0)
                    average value of I from permutations
     VI_sim       : float (if permutations>0)
@@ -138,7 +142,6 @@ class Moran:
             else:
                 self.p_z_sim = stats.norm.cdf(self.z_sim)
 
-
     def __moments(self):
         self.n = len(self.y)
         y = self.y
@@ -158,8 +161,10 @@ class Moran:
         self.seI_norm = self.VI_norm ** (1 / 2.)
 
         k = (1 / (sum(z ** 4)) * ((sum(z ** 2)) ** 2))
-        vi = (1 / (((n - 1) ** 3) * s02)) * ((n * ((n * n - 3 * n + 3) * s1 - n * s2 + 3 * s02))
-                                             - (k * ((n * n - n) * s1 - 2 * n * s2 + 6 * s02)))
+        vi = (1 / (((n - 1) ** 3) * s02)) * ((n * ((n * n - 3 * n + 3)
+                                                   * s1 - n * s2 + 3 * s02))
+                                             - (k * ((n * n - n) * s1 - 2 * n *
+                                                     s2 + 6 * s02)))
         self.VI_rand = vi
         self.seI_rand = vi ** (1 / 2.)
 
@@ -183,12 +188,15 @@ class Moran_BV:
     w : W
         weight instance assumed to be aligned with y
     transformation  : string
-                      weights transformation,  default is row-standardized "r".
-                      Other options include "B": binary,  "D":
-                      doubly-standardized,  "U": untransformed (general weights),
+                      weights transformation, default is row-standardized "r".
+                      Other options include
+                      "B": binary,
+                      "D": doubly-standardized,
+                      "U": untransformed (general weights),
                       "V": variance-stabilizing.
     permutations    : int
-                      number of random permutations for calculation of pseudo-p_values
+                      number of random permutations for calculation of pseudo
+                      p_values
 
 
     Attributes
@@ -225,7 +233,8 @@ class Moran_BV:
     Notes
     -----
 
-    Inference is only based on permutations as analytical results are none too reliable.
+    Inference is only based on permutations as analytical results are none too
+    reliable.
 
     Examples
     --------
@@ -289,7 +298,6 @@ class Moran_BV:
             else:
                 self.p_z_sim = stats.norm.cdf(self.z_sim)
 
-
     def __calc(self, zy):
         wzy = slag(self.w, zy)
         self.num = sum(self.zx * wzy)
@@ -317,8 +325,8 @@ def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
     Returns
     -------
     results      : dictionary
-                   (i,  j) is the key for the pair of variables,  values are the
-                   Moran_BV object.
+                   (i,  j) is the key for the pair of variables, values are
+                   the Moran_BV objects.
 
     Examples
     --------
@@ -372,18 +380,23 @@ class Moran_Rate(Moran):
     e               : array
                       an event variable measured across n spatial units
     b               : array
-                      a population-at-risk variable measured across n spatial units
+                      a population-at-risk variable measured across n spatial
+                      units
     w               : W
                       spatial weights instance
     adjusted        : boolean
-                      whether or not Moran's I needs to be adjusted for rate variable
+                      whether or not Moran's I needs to be adjusted for rate
+                      variable
     transformation  : string
-                      weights transformation,  default is row-standardized "r".
-                      Other options include "B": binary,  "D":
-                      doubly-standardized,  "U": untransformed (general weights),
+                      weights transformation, default is row-standardized "r".
+                      Other options include
+                      "B": binary,
+                      "D": doubly-standardized,
+                      "U": untransformed (general weights),
                       "V": variance-stabilizing.
     permutations    : int
-                      number of random permutations for calculation of pseudo-p_values
+                      number of random permutations for calculation of pseudo
+                      p_values
 
 
     Attributes
@@ -422,8 +435,9 @@ class Moran_Rate(Moran):
     p_sim        : array (if permutations>0)
                    p-value based on permutations (one-sided)
                    null: spatial randomness
-                   alternative: the observed I is extreme
-                                it is either extremely greater or extremely lower
+                   alternative: the observed I is extreme if it is
+                   either extremely greater or extremely lower than the values
+                   obtained from permutaitons
     EI_sim       : float (if permutations>0)
                    average value of I from permutations
     VI_sim       : float (if permutations>0)
@@ -454,7 +468,8 @@ class Moran_Rate(Moran):
     '0.0042'
     """
 
-    def __init__(self, e, b, w, adjusted=True, transformation="r", permutations=PERMUTATIONS):
+    def __init__(self, e, b, w, adjusted=True, transformation="r",
+                 permutations=PERMUTATIONS):
         if adjusted:
             y = assuncao_rate(e, b)
         else:
@@ -475,12 +490,14 @@ class Moran_Local:
 
     transformation : string
                      weights transformation,  default is row-standardized "r".
-                     Other options include "B": binary,  "D":
-                     doubly-standardized,  "U": untransformed (general weights),
+                     Other options include
+                     "B": binary,
+                     "D": doubly-standardized,
+                     "U": untransformed (general weights),
                      "V": variance-stabilizing.
 
-    permutations   : number of random permutations for calculation of pseudo-p_values
-
+    permutations   : number of random permutations for calculation of pseudo
+                     p_values
 
     Attributes
     ----------
@@ -490,7 +507,8 @@ class Moran_Local:
     w            : W
                    original w object
     permutations : int
-                   number of random permutations for calculation of pseudo-p_values
+                   number of random permutations for calculation of pseudo
+                   p_values
     I            : float
                    value of Moran's I
     q            : array (if permutations>0)
@@ -500,8 +518,9 @@ class Moran_Local:
     p_sim        : array (if permutations>0)
                    p-value based on permutations (one-sided)
                    null: spatial randomness
-                   alternative: the observed Ii is further away or extreme from the median of simulated Iis
-                                it is either extremely high or extremely low in the distribution of simulated Is
+                   alternative: the observed Ii is further away or extreme
+                   from the median of simulated values. It is either extremelyi
+                   high or extremely low in the distribution of simulated Is.
     EI_sim       : float (if permutations>0)
                    average value of I from permutations
     VI_sim       : float (if permutations>0)
@@ -519,7 +538,6 @@ class Moran_Local:
     --------
     >>> import pysal
     >>> import numpy as np
-    >>> from pysal.esda import moran
     >>> np.random.seed(10)
     >>> w = pysal.open(pysal.examples.get_path("desmith.gal")).read()
     >>> f = pysal.open(pysal.examples.get_path("desmith.txt"))
@@ -544,7 +562,7 @@ class Moran_Local:
         orig_settings = np.seterr()
         np.seterr(all="ignore")
         sy = y.std()
-        z /=  sy
+        z /= sy
         np.seterr(**orig_settings)
         self.z = z
         w.transform = transformation
@@ -588,7 +606,6 @@ class Moran_Local:
         z = self.z
         lisas = np.zeros((self.n, self.permutations))
         n_1 = self.n - 1
-        rid = range(self.n - 1)
         prange = range(self.permutations)
         k = self.w.max_neighbors + 1
         nn = self.n - 1
@@ -628,13 +645,17 @@ class Moran_Local_Rate(Moran_Local):
         a population-at-risk variable across n spatial units
     w : weight instance assumed to be aligned with y
     adjusted: boolean
-              whether or not local Moran statistics need to be adjusted for rate variable
+              whether or not local Moran statistics need to be adjusted for
+              rate variable
     transformation : string
                      weights transformation,  default is row-standardized "r".
-                     Other options include "B": binary,  "D":
-                     doubly-standardized,  "U": untransformed (general weights),
+                     Other options include
+                     "B": binary,
+                     "D": doubly-standardized,
+                     "U": untransformed (general weights),
                      "V": variance-stabilizing.
-    permutations   : number of random permutations for calculation of pseudo-p_values
+    permutations   : number of random permutations for calculation of pseudo
+                     p_values
 
 
     Attributes
@@ -646,7 +667,8 @@ class Moran_Local_Rate(Moran_Local):
     w            : W
                    original w object
     permutations : int
-                   number of random permutations for calculation of pseudo-p_values
+                   number of random permutations for calculation of pseudo
+                   p_values
     I            : float
                    value of Moran's I
     q            : array (if permutations>0)
@@ -656,8 +678,9 @@ class Moran_Local_Rate(Moran_Local):
     p_sim        : array (if permutations>0)
                    p-value based on permutations (one-sided)
                    null: spatial randomness
-                   alternative: the observed Ii is further away or extreme from the median of simulated Iis
-                                it is either extremely high or extremely low in the distribution of simulated Is
+                   alternative: the observed Ii is further away or extreme
+                   from the median of simulated Iis. It is either extremely
+                   high or extremely low in the distribution of simulated Is
     EI_sim       : float (if permutations>0)
                    average value of I from permutations
     VI_sim       : float (if permutations>0)
@@ -685,7 +708,9 @@ class Moran_Local_Rate(Moran_Local):
     >>> f = pysal.open(pysal.examples.get_path("sids2.dbf"))
     >>> e = np.array(f.by_col('SID79'))
     >>> b = np.array(f.by_col('BIR79'))
-    >>> lm = pysal.esda.moran.Moran_Local_Rate(e, b, w, transformation = "r", permutations = 99)
+    >>> lm = pysal.esda.moran.Moran_Local_Rate(e, b, w, \
+                                               transformation = "r", \
+                                               permutations = 99)
     >>> lm.q[:10]
     array([2, 4, 3, 1, 2, 1, 1, 4, 2, 4])
     >>> lm.p_z_sim[0]
@@ -696,24 +721,26 @@ class Moran_Local_Rate(Moran_Local):
     moved into unittests that are conditional on architectures
     """
 
-    def __init__(self, e, b, w, adjusted=True, transformation="r", permutations=PERMUTATIONS):
+    def __init__(self, e, b, w, adjusted=True, transformation="r",
+                 permutations=PERMUTATIONS):
         if adjusted:
             y = assuncao_rate(e, b)
         else:
             y = e * 1.0 / b
         Moran_Local.__init__(self, y, w,
-                             transformation=transformation, permutations=permutations)
+                             transformation=transformation,
+                             permutations=permutations)
+
 
 def _test():
     import doctest
-    # the following line could be used to define an alternative to the '<BLANKLINE>' flag
-    #doctest.BLANKLINE_MARKER = 'something better than <BLANKLINE>'
+    # the following line could be used to define an alternative to the
+    # '<BLANKLINE>' flag
+    # doctest.BLANKLINE_MARKER = 'something better than <BLANKLINE>'
     start_suppress = np.get_printoptions()['suppress']
     np.set_printoptions(suppress=True)
     doctest.testmod()
-    np.set_printoptions(suppress=start_suppress)    
+    np.set_printoptions(suppress=start_suppress)
 
 if __name__ == '__main__':
     _test()
-
-
