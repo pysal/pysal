@@ -1,29 +1,13 @@
-"""Winged-Edge Data Structure and Functions
-
-
-TO DO
-
-- handle hole region explicitly
-- relax assumption about integer node ids
-- test on other edge cases besides Eberly
-
-"""
-
+# Data structures for network module
 
 __author__ = "Sergio Rey <sjsrey@gmail.com>, Jay Laura <jlaura@asu.edu>"
 
-import ast
-import json
-import cPickle
-import numpy as np
-import pysal as ps
-from pysal.cg import Point, Polygon, LineSegment, KDTree
-from pysal.cg.standalone import get_points_dist
-import copy
 import operator
 import math
-from itertools import combinations
-import collections
+import numpy as np
+import pysal as ps
+import util
+import networkw
 
 
 class WED(object):
@@ -46,13 +30,15 @@ class WED(object):
         self.end_node = None
         self.node_coords = None
         self.edge_list = []
+        self.node_list = []
 
         if edges is not None and coords is not None:
             #Check for single edges and double if needed
             edges = self.check_edges(edges)
             self.edge_list[:] = edges
 
-            #Create the WED object
+            #Create the WED object:w
+
             self.extract_wed(edges, coords)
 
     def check_edges(self, edges):
@@ -86,106 +72,6 @@ class WED(object):
             return dbl_edges
         else:
             return edges
-
-    def enum_links_node(self, node):
-        """
-        Enumerate links in cw order around a node
-
-        Parameters
-        ----------
-
-        node: string/int
-            id for the node in wed
-
-
-        Returns
-        -------
-
-        links: list
-            links ordered cw around node
-        """
-
-        links = []
-        if node not in self.node_edge:
-            return links
-        l0 = self.node_edge[node]
-        links.append(l0)
-        l = l0
-        v = node
-        searching = True
-        while searching:
-            if v == l[0]:
-                l = self.start_c[l]
-            else:
-                l = self.end_c[l]
-            if (l is None) or (set(l) == set(l0)):
-                searching = False
-            else:
-                links.append(l)
-        return links
-
-    def enum_edges_region(self, region):
-        """
-        Enumerate the edges of a region/polygon in cw order
-
-        Parameters
-        ----------
-
-        region: id for the region in wed
-
-
-        Returns
-        -------
-
-        links: list of links ordered cw that define the region/polygon
-
-        """
-        right_polygon = self.right_polygon
-        end_cc = self.end_cc
-        start_cc = self.start_cc
-        region_edge = self.region_edge
-        l0 = region_edge[region]
-        l = copy.copy(l0)
-        edges = []
-        edges.append(l)
-        traveling = True
-        while traveling:
-            if region == right_polygon[l]:
-                l = end_cc[l]
-            else:
-                l = start_cc[l]
-            edges.append(l)
-            if set(l) == set(l0):
-                traveling = False
-        return edges
-
-    def w_links(self):
-        """
-        Generate Weights object for links in a WED
-
-        Parameters
-        ----------
-        None
-
-        Returns
-
-        ps.W(neighbors): PySAL Weights Dict
-        """
-        nodes = self.node_edge.keys()
-        neighbors = {}
-        for node in nodes:
-            lnks = self.enum_links_node(node)
-            # put i,j s.t. i < j
-            lnks = [tuple(sorted(lnk)) for lnk in lnks]
-            for comb in combinations(range(len(lnks)), 2):
-                l, r = comb
-                if lnks[l] not in neighbors:
-                    neighbors[lnks[l]] = []
-                neighbors[lnks[l]].append(lnks[r])
-                if lnks[r] not in neighbors:
-                    neighbors[lnks[r]] = []
-                neighbors[lnks[r]].append(lnks[l])
-        return ps.W(neighbors)
 
     def _filament_links_node(self, node, node_edge, start_c, end_c):
         """
@@ -286,18 +172,12 @@ class WED(object):
 
         regions = mcb['regions']
         edges = mcb['edges']
-        vertices = mcb['vertices']
         start_node = {}
         end_node = {}
         for edge in edges:
             if edge[0] != edge[1]:  # no self-loops
                 start_node[edge] = edge[0]
                 end_node[edge] = edge[1]
-
-        # Right polygon for each edge in each region primitive
-        #
-        # Also define start_c, end_cc for each polygon edge and
-        #  start_cc and end_c for its twin
 
         right_polygon = {}
         left_polygon = {}
@@ -328,37 +208,25 @@ class WED(object):
                 end_c[twin] = start_c[edge]
             region_edge[ri] = edge
 
-
-        # Test for holes
-        # Need to add
-
-        #lp = right_polygon[20,24] # for now just assign as placeholder
-        #left_polygon[26,25] = lp
-        #left_polygon[25,27] = lp
-        #left_polygon[27,26] = lp
-
-        # Edges belonging to a minimum cycle at this point without a left
-        # region have external bounding polygon as implicit left poly. Assign this
-        # explicitly
-        rpkeys = right_polygon.keys() # only minimum cycle regions have explicit right polygons
+        rpkeys = right_polygon.keys()  # only minimum cycle regions have explicit right polygons
         noleft_poly = [k for k in rpkeys if k not in left_polygon]
 
         for edge in noleft_poly:
-            left_polygon[edge] = ri+1
+            left_polygon[edge] = ri + 1
         # Fill out s_c, s_cc, e_c, e_cc pointers for each edge (before filaments are added)
         regions = region_edge.keys()
 
         # Find the union of adjacent faces/regions
         unions = []
         while noleft_poly:
-            path =[]
+            path = []
             current = noleft_poly.pop()
             path_head = current[0]
             tail = current[1]
             path.append(current)
             while tail != path_head:
-                candidates = [ edge for edge in noleft_poly if edge[0] == tail ]
-                j=0
+                candidates = [edge for edge in noleft_poly if edge[0] == tail]
+                j = 0
                 if len(candidates) > 1:
                     # we want candidate that forms largest ccw angle from current
                     angles = []
@@ -366,16 +234,16 @@ class WED(object):
                     x0 = pos[current[0]][0] - origin[0]
                     y0 = pos[current[0]][1] - origin[1]
                     maxangle = 0.0
-                    v0 = (x0,y0)
+                    v0 = (x0, y0)
 
-                    for i,candidate in enumerate(candidates):
+                    for i, candidate in enumerate(candidates):
                         x1 = pos[candidate[1]][0] - origin[0]
                         y1 = pos[candidate[1]][1] - origin[1]
-                        v1 = (x1,y1)
+                        v1 = (x1, y1)
                         v0_v1 = _angle(v0, v1)
                         if v0_v1 > maxangle:
                             maxangle = v0_v1
-                            j=i
+                            j = i
                         angles.append(v0_v1)
 
                 next_edge = candidates[j]
@@ -384,32 +252,20 @@ class WED(object):
                 tail = next_edge[1]
             unions.append(path)
 
-
-        # unions has the paths that trace out the unions of contiguous regions (in cw order)
-
-
-        # Walk around each union in cw fashion
-        # start_cc[current] = prev
-        # end_c[current] = next
         for union in unions:
             for prev, edge in enumerate(union[1:-1]):
                 start_cc[edge] = union[prev]
-                end_c[edge] = union[prev+2]
+                end_c[edge] = union[prev + 2]
             start_cc[union[0]] = union[-1]
             end_c[union[0]] = union[1]
             end_c[union[-1]] = union[0]
             start_cc[union[-1]] = union[-2]
-
-        # after this find the holes in the external polygon (these should be the connected components)
-
-        # Fill out s_c, s_cc, e_c, e_cc pointers for each edge after filaments are inserted
 
         regions = [set(region) for region in mcb['regions']]
         filaments = mcb['filaments']
         filament_region = {}
         for f, filament in enumerate(filaments):
             filament_region[f] = []
-            #print "Filament: ", filament
             # set up pointers on filament edges prior to insertion
             ecc, ec, scc, sc, node_edge = self.filament_pointers(filament, node_edge)
             end_cc.update(ecc)
@@ -422,7 +278,6 @@ class WED(object):
             incident_nodes = set()
             incident_regions = set()
             for r, region in enumerate(regions):
-                internal = False
                 sfi = sf.intersection(region)
                 while sfi:
                     incident_nodes.add(sfi.pop())
@@ -430,7 +285,7 @@ class WED(object):
 
             while incident_nodes:
                 incident_node = incident_nodes.pop()
-                incident_links = self._filament_links_node(incident_node,node_edge, start_c, end_c)
+                incident_links = self._filament_links_node(incident_node, node_edge, start_c, end_c)
 
                 #Polar coordinates centered on incident node, no rotation from x-axis
                 origin = coords_org[incident_node]
@@ -465,7 +320,6 @@ class WED(object):
                     y = link_node_coords[1] - origin[1]
                     x = link_node_coords[0] - origin[0]
                     r = math.sqrt(x**2 + y**2)
-                    node = coords_org[link_node]
                     node_theta = math.atan2(y, x) * 180 / math.pi
                     if node_theta < 0:
                         node_theta += 360
@@ -492,130 +346,20 @@ class WED(object):
                 #Update the bisected edge points in the direction(segment end, incident node)
                 #Cwise link
                 end_cc[cwise] = (incident_node, f)
-                start_cc[(cwise[1],cwise[0])] = (incident_node, f)
+                start_cc[(cwise[1], cwise[0])] = (incident_node, f)
                 #CCWise link
                 start_c[(ccwise[1], ccwise[0])] = (incident_node, f)
                 end_c[ccwise] = (incident_node, f)
-                #Now we need to update the right and left polygon for the filament.
+
                 for r in incident_regions:
-                     poly = ps.cg.Polygon([coords_org[v] for v in regions[r]])
-                     if poly.contains_point((coords_org[filament[1]]) or pr.contains_point(coords_org[filament[0]])):
-                            for n in range(len(filament)-1):
-                                right_polygon[(filament[n], filament[n+1])] = r
-                                left_polygon[(filament[n], filament[n+1])] = r
-                                right_polygon[(filament[n+1], filament[n])] = r
-                                left_polygon[(filament[n+1], filament[n])] = r
+                    poly = ps.cg.Polygon([coords_org[v] for v in regions[r]])
+                    if poly.contains_point((coords_org[filament[1]]) or poly.contains_point(coords_org[filament[0]])):
+                        for n in range(len(filament)-1):
+                            right_polygon[(filament[n], filament[n+1])] = r
+                            left_polygon[(filament[n], filament[n+1])] = r
+                            right_polygon[(filament[n+1], filament[n])] = r
+                            left_polygon[(filament[n+1], filament[n])] = r
 
-                #print "For filament {}: ".format((incident_node, f))
-                #print "    CCW Most edge is {}".format(ccwise)
-                #print "    CW Most edge is {}".format(cwise)
-
-
-
-
-
-
-
-            '''
-            if incident_regions:
-                for r in incident_regions:
-                    poly_region = ps.cg.Polygon([coords_org[v] for v in regions[r]])
-                    print poly_region
-            '''
-            """
-                if sfi:
-                    node = sfi.pop()
-                    filament_region[f].append(r)
-                    #print "Region: ",filament_region[f]
-                    # The logic here is that, if the filament is internal to the
-                    # region we are good to go.  If it is external to the region it
-                    # will never break and we are good to go.  If the filament is
-                    # internal to one region and external to one or mroe regions,
-                    # it will set the pointers incorrectly until it hits the
-                    # internal region.  Then it sets the pointers based on the
-                    # internal region and breaks.
-                    region = []
-                    for v in regions[r]:
-                        region.append(coords_org[v])
-                    pr = ps.cg.Polygon(region)
-                    #print filament, filament[1]
-                    if pr.contains_point(coords_org[filament[1]]) or pr.contains_point(coords_org[filament[0]]):
-                        #print "Internal: ", r, filament
-                        internal = True
-                    # find edges in region that that are adjacent to sfi
-                    # find which pair of edges in the region that the filament bisects
-                    if mcb['regions'][r].count(node) == 2:
-                        e1 = node, mcb['regions'][r][-2]
-                        e2 = node, mcb['regions'][r][1]
-                    else:
-                        i = mcb['regions'][r].index(node)
-                        e1 = node, mcb['regions'][r][i - 1]
-                        e2 = node, mcb['regions'][r][i + 1]
-                    # get filament edge
-                    fi = filament.index(node)
-                    fstart = True # start of filament is adjacent node to region
-                    if filament[-1] == filament[fi]:
-                        filament.reverse() # put end node at tail of list
-                        fstart = False # end of filament is adjacent node to region
-                    fi = 0
-                    fj = 1
-                    A = vertices[e1[1]]
-                    B = vertices[e1[0]]
-                    C = vertices[filament[fj]]
-                    area_abc = A[0] * (B[1] - C[1]) + B[0] * (C[1] - A[1]) + C[0] * (A[1] - B[1])
-                    D = vertices[e2[0]]
-                    E = vertices[e2[1]]
-                    area_dec = D[0] * (E[1] - C[1]) + E[0] * (C[1] - D[1]) + C[0] * (D[1] - E[1])
-
-                    if area_abc < 0 and area_dec < 0:
-                        # inside a region
-                        end_cc[e1[1],e1[0]] = filament[fi],filament[fj]
-                        start_c[e2] = filament[fi],filament[fj]
-                        start_c[filament[fi],filament[fj]] = e1[1],e1[0]
-                        start_cc[filament[fi],filament[fj]] = e2
-                        right_polygon[filament[fi],filament[fj]] = r
-                        left_polygon[filament[fi],filament[fj]] = r
-                        right_polygon[filament[fj], filament[fi]] = r
-                        left_polygon[filament[fj], filament[fi]] = r
-                        end_cc[filament[fj], filament[fi]] = e2 # twin of first internal edge so enumerate region works
-
-                        n_f = len(filament) - 1 # number of filament edges
-                        for j in range(1, n_f):
-                            sj = j
-                            ej = j + 1
-                            right_polygon[filament[sj], filament[ej]] = r
-                            left_polygon[filament[sj], filament[ej]] = r
-                            right_polygon[filament[ej], filament[sj]] = r
-                            left_polygon[filament[ej], filament[sj]] = r
-                        #last edge
-                        right_polygon[filament[-1], filament[-2]] = r
-                        left_polygon[filament[-1], filament[-2]] = r
-                        right_polygon[filament[-2], filament[-1]] = r
-                        left_polygon[filament[-2], filament[-1]] = r
-
-                    else:
-                        #print 'outside', filament[fi], filament[fj
-                        end_c[e1[1],e1[0]] = filament[fi],filament[fj]
-                        start_cc[e2] = filament[fi],filament[fj]
-                        start_cc[filament[fi],filament[fj]] = e1[1],e1[0]
-                        start_c[filament[fi],filament[fj]] = e2
-
-                        n_f = len(filament) - 1 # number of filament edges
-                        for j in range(1,n_f):
-                            sj = j
-                            ej = j + 1
-                            start_c[filament[sj],filament[ej]] = filament[sj-1], filament[sj]
-                            start_cc[filament[sj],filament[ej]] = filament[sj-1], filament[sj]
-                            end_c[filament[sj-1], filament[sj]] = filament[sj],filament[ej]
-                            end_cc[filament[sj-1], filament[sj]] = filament[sj],filament[ej]
-
-                        # last edge
-                        end_c[filament[-2],filament[-1]] = filament[-2],filament[-1]
-                        end_cc[filament[-2],filament[-1]] = filament[-2],filament[-1]
-
-                if internal is True:
-                    break
-            """
         self.start_c = start_c
         self.start_cc = start_cc
         self.end_c = end_c
@@ -627,8 +371,7 @@ class WED(object):
         self.start_node = start_node
         self.end_node = end_node
         self.node_coords = coords_org
-
-
+        self.node_list = [n for n in self.node_coords.keys()]
 
     @staticmethod
     def filament_pointers(filament, node_edge={}):
@@ -800,14 +543,14 @@ class WED(object):
             v_curr = np.asarray(nodes[start_key])
             v_next = None
             if v_prev is None:
-                v_prev = np.asarray([0, -1]) #This should be a vertical tangent to the start node at initialization.
+                v_prev = np.asarray([0, -1])  #This should be a vertical tangent to the start node at initialization.
             else:
                 pass
             d_curr = v_curr - v_prev
 
             for v_adj in vnext:
                 #No backtracking
-                if np.array_equal(np.asarray(nodes[v_adj]),v_prev) == True:
+                if np.array_equal(np.asarray(nodes[v_adj]), v_prev) is True:
                     continue
                 if type(v_prev) == int:
                     if v_adj == v_prev:
@@ -818,7 +561,7 @@ class WED(object):
                 if v_next is None:
                     v_next = np.asarray(nodes[v_adj])
                     d_next = d_adj
-                    convex = d_next[0]*d_curr[1] - d_next[1]*d_curr[0]
+                    convex = d_next[0] * d_curr[1] - d_next[1] * d_curr[0]
                     if convex <= 0:
                         convex = True
                     else:
@@ -847,6 +590,7 @@ class WED(object):
                 return tuple(v_next.tolist()), node_coord[tuple(v_next.tolist())], prev_key
             else:
                 return tuple(v_next.tolist()), vertices[tuple(v_next.tolist())], prev_key
+
         def counterclockwise(nodes, vnexts, start_key, prev_key):
             v_next = None
             v_prev = np.asarray(nodes[prev_key])
@@ -1004,8 +748,8 @@ class WED(object):
 
             elif v_curr == v0:
                 #Minimal cycle found
-                primitive = []
-                iscycle=True
+                #primitive = []
+                #iscycle=True
                 sequence.append(v0)
                 minimal_cycles.append(list(sequence))
                 #Remove the v0, v1 edges from the graph.
@@ -1105,322 +849,14 @@ class WED(object):
         results['nodes'] = vertices
         return results
 
-    @classmethod
-    def wed_from_json(cls,infile, binary=True):
-        wed = WED()
-        if binary:
-            with open(infile, 'r') as f:
-                data = cPickle.load(f)
-        else:
-            with open(infile, 'r') as f:
-                data = json.loads(f)
+    def enum_links_node(self, node):
+        return util.enum_links_node(self, node)
 
-        wed.start_c = {ast.literal_eval(key):value for key, value in data['start_c'].iteritems()}
-        wed.start_cc = {ast.literal_eval(key):value for key, value in data['start_cc'].iteritems()}
-        wed.end_c = {ast.literal_eval(key):value for key, value in data['end_c'].iteritems()}
-        wed.end_cc = {ast.literal_eval(key):value for key, value in data['end_cc'].iteritems()}
-        wed.region_edge = {ast.literal_eval(key):value for key, value in data['region_edge'].iteritems()}
-        wed.node_edge = {ast.literal_eval(key):value for key, value in data['node_edge'].iteritems()}
-        wed.right_polygon = {ast.literal_eval(key):value for key, value in data['right_polygon'].iteritems()}
-        wed.left_polygon = {ast.literal_eval(key):value for key, value in data['left_polygon'].iteritems()}
-        wed.start_node = {ast.literal_eval(key):value for key, value in data['start_node'].iteritems()}
-        wed.end_node = {ast.literal_eval(key):value for key, value in data['end_node'].iteritems()}
-        wed.node_coords = {ast.literal_eval(key):value for key, value in data['node_coords'].iteritems()}
-        wed.edge_list = data['edge_list']
-
-        return wed
-
-    def wed_to_json(self, outfile, binary=True):
-        #keys need to be strings
-        new_wed = {}
-        for key, value in vars(self).iteritems():
-            nested_attr = {}
-            if isinstance(value, dict):
-                for k2, v2 in value.iteritems():
-                    nested_attr[str(k2)] = v2
-                new_wed[key] = nested_attr
-            else:
-                new_wed[key] = value
-        #print new_wed['edge_list']
-        if binary:
-            with open(outfile, 'w') as outfile:
-                outfile.write(cPickle.dumps(new_wed, 1))
-        else:
-            with open(outfile, 'w') as outfile:
-                json_str = json.dumps(new_wed, sort_keys=True, indent=4)
-                outfile.write(json_str)
-
-
-    def nearest_point_on_edge(self,v1):
-        """
-        Computes the distance from the start_node of point observation
-         tagged to an edge. Okabe 3.3.3.8 (pg.65)
-        """
-        pass
-
-
-    def lisa(self, points):
-        """
-        This is a wrapper that gets points observations snapped to the WED
-         and then performs LISA analysis.
-
-        Parameters
-        ----------
-        points: list or ndarray
-            A list of PySAL Points to snap to the WED
-
-        attributes: list of ndarray
-            The attribute value of the observation.
-            Assumed to be in the same position as the
-             corresponding geometry
-
-        Returns
-        -------
-        LISA : Object
-            A PySAL LISA object
-        """
-
-        #This mapping has double edges, but the W is single.
-        # We need to maintain dimensionality for LISA to work
-        mapping = self.assign_points_to_edges(points)
-        #Generate the W object
-        w = self.w_links()
-        #Generate the observation count
-        y = np.zeros(len(w.neighbors))
-        for index, value in enumerate(w.neighbors):
-            obs_at_edge = mapping[value]
-            #rate
-            y[index] = len(obs_at_edge)
-        lisa = ps.Moran_Local(y, w)
-        return lisa
-
-    def moran(self, y, w):
-        """
-        This is a wrapper that gets points observations snapped to the WED
-         and then performs LISA analysis.
-
-        Parameters
-        ----------
-        points: list or ndarray
-            A list of PySAL Points to snap to the WED
-
-        attributes: list of ndarray
-            The attribute value of the observation.
-            Assumed to be in the same position as the
-             corresponding geometry
-
-        Returns
-        -------
-        moran : Object
-            A PySAL Moran's I`s object
-        """
-
-        #Generate the observation count and link it back
-        # to the correct edge position in the W
-        y_matched = np.zeros(len(w.neighbors))
-        for index, value in enumerate(w.neighbors):
-            obs_at_edge = y[value]
-            #rate
-            y_matched[index] = len(obs_at_edge)
-        moran = ps.Moran(y_matched, w)
-        return moran
+    def enum_edges_region(self, region):
+        return util.enum_edges_region(self, region)
 
     def edge_length(self):
-        """
-        Compute the cartesian length of all edges.  This is a helper
-         function to allow for ratio data with spatial autocorrelation
-         analysis.
+        return util.edge_length(self)
 
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        length : dict {tuple(edge): float(length)}
-            The length of each edge.
-        """
-
-        lengths = {}
-        for edge in self.edge_list:
-            lengths[edge] = get_points_dist(self.node_coords[edge[0]],
-                                            self.node_coords[edge[1]])
-        return lengths
-
-    def assign_points_to_nodes(self, pts):
-        #Setup a dictionary that stores node_id:[observations values]
-        obs_to_node = {}
-        for x in self.node_coords.iterkeys():
-            obs_to_node[x] = set()
-
-        #Generate a KDTree of all of the nodes in the wed
-        kd_tree = KDTree([node for node in self.node_coords.itervalues()])
-
-        #Iterate over each observation and query the KDTree.
-        for index, point in enumerate(pts):
-            nn = kd_tree.query(point, k=1)
-            obs_to_node[nn[1]].add(attribs[index])
-
-        return obs_to_node
-
-
-    def assign_points_to_edges(self,points):
-        """
-        Assigns point observations to network edges
-
-        Arguments
-        ---------
-
-        pts: (list) PySAL point objects or tuples of x,y coords
-
-        Returns
-        -------
-
-        obs_to_edge: (dict) where key is the edge and value is the observation index.
-
-        Notes
-        -----
-        Assumes double edges and sets observations to both edges, e.g. [2,0] and [0,2]
-        Wrapped in a try / except block incase the edges are single .
-        """
-        #We can't enumerate over an array of points, so convert to list.
-        if not isinstance(points, list):
-            pts = points.tolist()
-        else:
-            pts = points
-
-        #Empty dict with all the edges
-        obs_to_edge = {}
-        for e in self.edge_list:
-            obs_to_edge[e] = set()
-
-        #Build PySAL polygon objects from each region
-        polys = {}
-        for r in range(len(self.region_edge)):
-            edges = self.enum_edges_region(r)
-            poly = []
-            for e in edges:
-                poly.append(Point(self.node_coords[e[0]]))
-            polys[r] = (Polygon(poly))
-
-        #Brute force check point in polygon
-        for pt_index, pt in enumerate(pts):
-            for key, poly in polys.iteritems():
-                internal = False
-                if ps.cg.standalone.get_polygon_point_intersect(poly, pt):
-                    internal = True
-                    potential_edges = self.enum_edges_region(key)[:-1]
-                    #Flags
-                    dist = np.inf
-                    e = None
-                    #Brute force check all edges of the region
-                    for edge in potential_edges:
-                        seg = LineSegment(self.node_coords[edge[0]], self.node_coords[edge[1]])
-                        ndist = ps.cg.standalone.get_segment_point_dist(seg, pt)[0]
-                        if ndist < dist:
-                            e = edge
-                            dist = ndist
-                    obs_to_edge[e].add(pt_index)
-                    try:
-                        obs_to_edge[e[1], e[0]].add(pt_index)
-                    except:
-                        pass
-                    break
-            #Exceptionally brute force - if we aren't in a poly, check all edges
-            # added to test how this functions, must be optimized.
-            if internal == False:
-                #The point is not internal to a polygon.  Now we need to
-                # brute force check against all of the unshared edges.
-                # Shared edges are known to be internal, so we can skip them.
-                dist = np.inf
-                e = None
-                for edge in self.edge_list:
-                    seg = LineSegment(self.node_coords[edge[0]], self.node_coords[edge[1]])
-                    ndist = ps.cg.standalone.get_segment_point_dist(seg, pt)[0]
-                    if ndist < dist:
-                        e = edge
-                        dist = ndist
-                obs_to_edge[e].add(pt_index)
-                try:
-                    obs_to_edge[e[1], e[0]].add(pt_index)
-                except:
-                    pass
-
-        return obs_to_edge
-
-if __name__ == '__main__':
-    #Best way to add calls to the doctests in the tests directory?
-    pass
-
-###########Redundant or Unused?#################
-
-"""
-def connected_component(adjacency, node):
-
-    Find the connected component that a node belongs to
-
-    Arguments
-    ---------
-
-    adjacency: (dict) key is a node, value is a list of adjacent nodes
-
-    node: id of node
-
-    Returns
-    -------
-
-    visited: list of nodes comprising the connected component containing node
-
-    Notes
-    -----
-    Relies on a depth first search of the graph
-
-    A = copy.deepcopy(adjacency)
-    if node not in A:
-        # isolated node
-        return [node]
-    stack = [node]
-    visited = []
-    searching = True
-    visited.append(node)
-    while searching:
-        current = stack[-1]
-        if A[current]:
-            child = A[current].pop()
-            if child not in visited:
-                visited.append(child)
-                stack.append(child)
-        else:
-            stack.remove(current)
-            if not stack:
-                searching = False
-    return visited
-
-
-def connected_components(adjacency):
-
-    Find all the connected components in a graph
-
-    Arguments
-    ---------
-    adjacency: dict
-               key is a node, value is a list of adjacent nodes
-
-    Returns
-    -------
-
-    components: list of lists for connected components
-
-    nodes = adjacency.keys()
-    components = []
-    while nodes:
-        start = nodes.pop()
-        component = connected_component(adjacency, start)
-        if len(component) > 1:
-            for node in component:
-                if node in nodes:
-                    nodes.remove(node)
-        components.append(component)
-    return components
-"""
-
+    def w_links(self):
+        return networkw.w_links(self)

@@ -65,6 +65,23 @@ def setup_package():
     os.chdir(src_path)
     sys.path.insert(0, src_path)
 
+
+    # get all file endings and copy whole file names without a file suffix
+    # assumes nested directories are only down one level
+    example_data_files = set()
+    for i in os.listdir("pysal/examples"):
+        if i.endswith(('py', 'pyc')):
+            continue
+        if not os.path.isdir("pysal/examples/" + i):
+            if "." in i:
+                glob_name = "examples/*." + i.split(".")[-1]
+            else:
+                glob_name = "examples/" + i
+        else:
+            glob_name = "examples/" + i + "/*"
+
+        example_data_files.add(glob_name)
+
     setup(
         name='PySAL',
         version=dversion,
@@ -92,7 +109,7 @@ def setup_package():
             'Programming Language :: Python :: 2.7'
         ],
         packages=find_packages(exclude=["*.network", "*.network.*", "network.*", "network"]),
-        package_data={'pysal': ['examples/*']},
+        package_data={'pysal': list(example_data_files)},
         requires=['scipy']
     )
 
