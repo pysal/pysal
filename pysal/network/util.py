@@ -383,13 +383,14 @@ def newpointer(k,v,c):
     -------
     l: tuple new value of the pointer k
     '''
-    mask = [(i == j) for i, j in zip(k,v)]
+    mask = [(i == j) for i, j in zip(k, v)]
     if all(x == False for x in mask):
-        mask = [(i == j) for i, j in zip(k,(v[1], v[0]))]
+        mask = [(i == j) for i, j in zip(k, (v[1], v[0]))]
     replace = mask.index(False)
     l = list(v)
     l[replace] = c
     return tuple(l)
+
 
 def insert_node(wed, edge, distance, segment=False):
     """
@@ -428,7 +429,7 @@ def insert_node(wed, edge, distance, segment=False):
     wed.edge_list += [(a, c), (c, a)]
     idx = wed.edge_list.index((b, a))
     wed.edge_list.pop(idx)
-    wed.edge_list += [(b, c),(c, b)]
+    wed.edge_list += [(b, c), (c, b)]
     #Update the start and end nodes
         #Remove the old start and end node pointers
     wed.start_node.pop(edge)
@@ -464,7 +465,6 @@ def insert_node(wed, edge, distance, segment=False):
     wed.start_cc[(c, b)] = (c, a)
     wed.end_c[(b, c)] = (c, a)
     wed.end_cc[(b, c)] = (c, a)
-
     #Update the pointer to the nodes incident to start / end of the original link
     for k, v in wed.start_c.iteritems():
         if v == edge:
@@ -525,8 +525,8 @@ def segment_edges(wed, distance=None, count=None):
     distance: float distance at which edges are split
     count: integer count of the number of desired segments
     '''
-
-    assert(type(count) == int)
+    if count != None:
+        assert(type(count) == int)
 
     def segment(count, distance, wed, start, end):
         '''
@@ -541,7 +541,7 @@ def segment_edges(wed, distance=None, count=None):
         return wed
 
     #Any segmentation has float inconsistencies.  On the order of 1x10^-14
-    if count == None and distance == None:
+    if count == None and distance == None or count != None and distance != None:
         print '''
         Please supply either a distance at which to
         segment edges or a count of the number of
@@ -549,10 +549,17 @@ def segment_edges(wed, distance=None, count=None):
         '''
         return
     lengths = edge_length(wed, half=True)
-    if count:
+    if count != None:
         for k, l in lengths.iteritems():
             interval = l / count
             wed = segment(count, interval, wed, k[0], k[1])
+    elif distance:
+        for k, l in lengths.iteritems():
+            if distance >= l or l / distance == 0:
+                continue
+            count = l / distance
+            print count
+            wed = segment(count, distance, wed, k[0], k[1])
     return wed
 
 
