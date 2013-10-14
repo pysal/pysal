@@ -44,12 +44,12 @@ PySAL network will include the following spatial analytical methods
 
  - ~~Winged Edge Data Structure~~
  - ~~Extraction of WED from a planar polyine shapefile~~
- - Spatial Weights for Networks
+ - ~~Spatial Weights for Networks~~
      - Link Contiguity
          - ~~First Order~~
      - Distance Based
-         - KNN
-         - Threshold   
+         - ~~KNN~~
+         - ~~Threshold~~   
  - Handle direction
 
 ### FileIO
