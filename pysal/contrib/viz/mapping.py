@@ -1028,7 +1028,7 @@ def unique_values_map(coords,y, title='Unique Value'):
 
 if __name__ == '__main__':
 
-    data = 'point'
+    data = 'none'
     if data == 'poly':
         shp_link = ps.examples.get_path("sids2.shp")
         shp_link = ps.examples.get_path("Polygon.shp")
@@ -1069,9 +1069,20 @@ if __name__ == '__main__':
         break
     '''
 
+    xy = (((0, 0), (0, 0)), ((2, 1), (2, 1)), ((3, 1), (3, 1)), ((2, 5), (2, 5)))
+    xy = np.array([[10, 30], [20, 20]])
+    markerobj = mpl.markers.MarkerStyle('o')
+    path = markerobj.get_path().transformed(
+            markerobj.get_transform())
+    scales = np.array([2, 2])
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    #ax.add_collection(patchco)
-    ax = setup_ax([patchco], ax)
+    pc = PathCollection((path,), scales, offsets=xy, \
+            facecolors='r', transOffset=mpl.transforms.IdentityTransform())
+    #pc.set_transform(mpl.transforms.IdentityTransform())
+    #_ = _add_axes2col(pc, [0, 0, 5, 5])
+    ax.add_collection(pc)
+    fig.add_axes(ax)
+    #ax = setup_ax([pc], ax)
     plt.show()
 
