@@ -458,12 +458,17 @@ def base_choropleth_classless(map_obj, values, cmap='hot_r', projection='merc'):
     '''
     cmap = cm.get_cmap(cmap)
     map_obj.set_cmap(cmap)
-    pvalues = _expand_values(values, map_obj.shp2dbf_row)
     if isinstance(map_obj, mpl.collections.PolyCollection):
+        pvalues = _expand_values(values, map_obj.shp2dbf_row)
         map_obj.set_array(pvalues)
         map_obj.set_edgecolor('k')
     elif isinstance(map_obj, mpl.collections.LineCollection):
+        pvalues = _expand_values(values, map_obj.shp2dbf_row)
         map_obj.set_array(pvalues)
+    elif isinstance(map_obj, mpl.collections.PathCollection):
+        if not hasattr(map_obj, 'shp2dbf_row'):
+            map_obj.shp2dbf_row = np.arange(values.shape[0])
+        map_obj.set_array(values)
     return map_obj
 
 def base_choropleth_unique(map_obj, values,  cmap='hot_r', projection='merc'):
@@ -501,12 +506,17 @@ def base_choropleth_unique(map_obj, values,  cmap='hot_r', projection='merc'):
     colors = np.random.permutation(colors)
     colormatch = {val: col for val, col in zip(uvals, colors)}
 
-    pvalues = _expand_values(values, map_obj.shp2dbf_row)
     if isinstance(map_obj, mpl.collections.PolyCollection):
+        pvalues = _expand_values(values, map_obj.shp2dbf_row)
         map_obj.set_color([colormatch[i] for i in pvalues])
         map_obj.set_edgecolor('k')
     elif isinstance(map_obj, mpl.collections.LineCollection):
+        pvalues = _expand_values(values, map_obj.shp2dbf_row)
         map_obj.set_color([colormatch[i] for i in pvalues])
+    elif isinstance(map_obj, mpl.collections.PathCollection):
+        if not hasattr(map_obj, 'shp2dbf_row'):
+            map_obj.shp2dbf_row = np.arange(values.shape[0])
+        map_obj.set_array(values)
     return map_obj
 
 def base_choropleth_classif(map_obj, values, classification='quantiles', \
