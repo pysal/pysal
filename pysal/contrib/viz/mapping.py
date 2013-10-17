@@ -574,12 +574,17 @@ def base_choropleth_classif(map_obj, values, classification='quantiles', \
     norm = clrs.BoundaryNorm(boundaries, cmap.N)
     map_obj.set_norm(norm)
 
-    pvalues = _expand_values(values, map_obj.shp2dbf_row)
     if isinstance(map_obj, mpl.collections.PolyCollection):
+        pvalues = _expand_values(values, map_obj.shp2dbf_row)
         map_obj.set_array(pvalues)
         map_obj.set_edgecolor('k')
     elif isinstance(map_obj, mpl.collections.LineCollection):
+        pvalues = _expand_values(values, map_obj.shp2dbf_row)
         map_obj.set_array(pvalues)
+    elif isinstance(map_obj, mpl.collections.PathCollection):
+        if not hasattr(map_obj, 'shp2dbf_row'):
+            map_obj.shp2dbf_row = np.arange(values.shape[0])
+        map_obj.set_array(values)
     return map_obj
 
 def _expand_values(values, shp2dbf_row):
