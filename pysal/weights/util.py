@@ -8,7 +8,9 @@ import os
 import gc
 import operator
 
-__all__ = ['lat2W', 'regime_weights', 'comb', 'order', 'higher_order', 'shimbel', 'remap_ids', 'full2W', 'full', 'WSP2W', 'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance', 'lat2SW', 'w_local_cluster', 'higher_order_sp']
+__all__ = ['lat2W', 'regime_weights', 'comb', 'order', 'higher_order', 'shimbel', 'remap_ids', 'full2W', 'full',
+           'WSP2W', 'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance',
+           'lat2SW', 'w_local_cluster', 'higher_order_sp', 'w_graph_properties']
 
 
 def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
@@ -106,7 +108,6 @@ def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
         weights = alt_weights
     gc.enable()
     return pysal.weights.W(w, weights, ids)
-
 
 def regime_weights(regimes):
     """
@@ -361,7 +362,7 @@ def higher_order_sp(wsp, k=2):
     {1: 1.0, 3: 1.0, 5: 1.0, 9: 1.0, 15: 1.0, 19: 1.0, 21: 1.0, 23: 1.0}
     >>> pysal.weights.WSP2W(ws25o3)[12]
     {1: 1.0, 3: 1.0, 5: 1.0, 9: 1.0, 15: 1.0, 19: 1.0, 21: 1.0, 23: 1.0}
-    >>>     
+    >>>
     """
 
 
@@ -1019,6 +1020,114 @@ def write_gal(file, k=10):
         f.write("\n%d %d\n" % (i, len(neighs)))
         f.write(" ".join(map(str, neighs)))
     f.close()
+
+def w_graph_properties(w):
+    """
+    Report graph theory based properties of the neighbor relations for a W object
+
+    Arguments
+    =========
+
+    w: Spatial Weights Object
+
+    Returns
+    =======
+    results: dict
+           'cycles': list of lists of simple cycles
+           'n_cycles': number of cycles
+           'components': list of lists of connected components
+           'n_compotnents: number of components
+
+    Example
+    =======
+    >>> c = {0:[1,2], 1:[0,3], 2:[0,3], 3:[1,2]}
+    >>> c[4] = [5]
+    >>> c[5] = [4]
+    >>> pysal.weights.util.w_graph_properties(pysal.W(c))
+    {'cycles': [[0, 1, 3, 2]], 'n_cycles': 1, 'n_components': 2, 'components': [[0, 1, 2, 3], [4, 5]]}
+    """
+
+
+    results = {}
+    results['cycles'] = _find_all_cycles(w.neighbors)
+    results['n_cycles'] = len(results['cycles'])
+    results['components'] = _get_components(w.neighbors)
+    results['n_components'] = len(results['components'])
+    return results
+
+
+
+# These will likely move elsewhere and PySAL so we make them private here for
+# now.
+
+def _single_source_shortest_path(neighbors, source):
+    level = 0
+    next_level = {source:1}
+    paths = {source: [source]}
+    while next_level:
+        this_level = next_level
+        next_level = {}
+        for v in this_level:
+            for w in neighbors[v]:
+                if w not in paths:
+                    paths[w] = paths[v]+[w]
+                    next_level[w] = 1
+        level = level + 1
+    return paths
+
+def _get_components(neighbors):
+    """
+    Get connected components of the neighbors adjacency graph
+    """
+    nodes = neighbors.keys()
+    seen = {}
+    components = []
+    for node in nodes:
+        if node not in seen:
+            c = _single_source_shortest_path(neighbors, node)
+            components.append(c.keys())
+            seen.update(c)
+    components.sort(key=len, reverse=True)
+    return components
+
+
+def _find_cycle_to_ancestor(spanning_tree, node, ancestor):
+    path = []
+    while (node != ancestor):
+        if node is None:
+            return []
+        path.append(node)
+        node = spanning_tree[node]
+    path.append(node)
+    path.reverse()
+    return path
+
+def _find_all_cycles(graph):
+    """
+    Find simple cycles in the graph
+    """
+    def dfs(node):
+        visited.add(node)
+        for each in graph[node]:
+            if each not in visited:
+                spanning_tree[each] = node
+                dfs(each)
+            else:
+                if (spanning_tree[node] != each):
+                    cycle = _find_cycle_to_ancestor(spanning_tree, node, each)
+                    if cycle:
+                        cycles.append(cycle)
+    visited = set()
+    spanning_tree = {}
+    cycles = []
+    for each in graph:
+        if each not in visited:
+            spanning_tree[each] = None
+            dfs(each)
+    return cycles
+
+
+
 
 if __name__ == "__main__":
     from pysal import lat2W
