@@ -1057,8 +1057,9 @@ def w_graph_properties(w):
 
 
 
-# These will likely move elsewhere and PySAL so we make them private here for
-# now.
+# These will likely move elsewhere in PySAL to be used more generally. For now
+# we make them private as they are the implementation for  here for  w_graph_properties(w):
+
 
 def _single_source_shortest_path(neighbors, source):
     level = 0
