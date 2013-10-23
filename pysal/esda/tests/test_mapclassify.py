@@ -268,10 +268,9 @@ class TestJenksCaspall(unittest.TestCase):
         np.testing.assert_array_almost_equal(jc.counts,
                                              np.array([14, 13, 14, 10, 7]))
         np.testing.assert_array_almost_equal(jc.bins,
-                                             np.array(
-                                                 [[1.81000000e+00], [7.60000000e+00],
-                                                  [2.98200000e+01], [1.81270000e+02],
-                                                  [4.11145000e+03]]))
+                                             np.array( [1.81000000e+00, 7.60000000e+00,
+                                                  2.98200000e+01, 1.81270000e+02,
+                                                  4.11145000e+03]))
 
 
 class TestJenksCaspallSampled(unittest.TestCase):
@@ -285,17 +284,17 @@ class TestJenksCaspallSampled(unittest.TestCase):
         jc = Jenks_Caspall(x)
         jcs = Jenks_Caspall_Sampled(x)
         np.testing.assert_array_almost_equal(jc.bins,
-                                             np.array([[0.19718393],
-                                                       [0.39655886],
-                                                       [0.59648522],
-                                                       [0.79780763],
-                                                       [0.99997979]]))
+                                             np.array([0.19718393,
+                                                       0.39655886,
+                                                       0.59648522,
+                                                       0.79780763,
+                                                       0.99997979]))
         np.testing.assert_array_almost_equal(jcs.bins,
-                                             np.array([[0.20856569],
-                                                       [0.41513931],
-                                                       [0.62457691],
-                                                       [0.82561423],
-                                                       [0.99997979]]))
+                                             np.array([0.20856569,
+                                                       0.41513931,
+                                                       0.62457691,
+                                                       0.82561423,
+                                                       0.99997979]))
 
 
 class TestJenksCaspallForced(unittest.TestCase):
