@@ -25,7 +25,10 @@ try:
     from mpl_toolkits.basemap import Basemap
 except:
     print "WARNING: Basemap not installed and cannot be imported"
-from ogr import osr
+try:
+    from ogr import osr
+except:
+    print "WARNING: 'ogr' could not be imported. Reprojections won't work"
 
 def transCRS(xy, src_prj, trt_prj):
     '''
