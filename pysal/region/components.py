@@ -6,6 +6,7 @@ __author__ = "Sergio J. Rey <srey@asu.edu>"
 import sys
 from operator import gt, lt
 import copy
+import numpy as np
 
 __all__ = ["check_contiguity"]
 
@@ -57,6 +58,7 @@ def check_contiguity(w, neighbors, leaver):
     False
     >>>
     """
+
     d = {}
     g = Graph()
     neighbors = copy.copy(neighbors)
