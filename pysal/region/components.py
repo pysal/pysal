@@ -6,6 +6,7 @@ __author__ = "Sergio J. Rey <srey@asu.edu>"
 import sys
 from operator import gt, lt
 import copy
+import numpy as np
 
 __all__ = ["check_contiguity"]
 
@@ -57,27 +58,14 @@ def check_contiguity(w, neighbors, leaver):
     False
     >>>
     """
-    d = {}
-    g = Graph()
-    neighbors = copy.copy(neighbors)
-    for i in neighbors:
-        d[i] = [j for j in w.neighbors[i] if (j in neighbors and j != leaver)]
-    try:
-        d.pop(leaver)
-    except:
-        pass
-    for i in d:
-        for j in d[i]:
-            g.add_edge(i, j, 1.0)
-    cc = g.connected_components(op=gt)
-    if len(cc) == 1:
-        neighbors.remove(leaver)
-        if cc[0].nodes == set(neighbors):
-            return True
-        else:
-            return False
-    else:
+
+    ids = neighbors[:]
+    ids.remove(leaver)
+    check = w.sparse[ids,:][:,ids].sum(axis=0)
+    if  np.any(check==0):
         return False
+    else:
+        return True
 
 
 class Graph(object):
