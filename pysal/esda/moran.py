@@ -3,7 +3,6 @@ Moran's I Spatial Autocorrelation Statistics
 
 """
 __author__ = "Sergio J. Rey <srey@asu.edu>"
-# from pysal.common import *
 from pysal.weights.spatial_lag import lag_spatial as slag
 from pysal.esda.smoothing import assuncao_rate
 import scipy.stats as stats

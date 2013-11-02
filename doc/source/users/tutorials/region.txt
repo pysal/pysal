@@ -99,7 +99,7 @@ and then loop over the region definitions to identify the specific states compri
     ['South Dakota' 'Iowa' 'North Dakota' 'Missouri' 'Kansas' 'Nebraska']
     ['Virginia' 'West Virginia' 'Pennsylvania' 'Ohio']
     ['Delaware' 'New Jersey' 'Maryland' 'New York' 'Connecticut']
-    ['Oklahoma' 'Texas' 'New Mexico' 'Louisiana' 'Utah' 'Idaho' 'Montana'
+    ['Oklahoma' 'Texas' 'New Mexico' 'Louisiana'  'Utah' 'Idaho' 'Montana' 
      'Arkansas' 'Mississippi' 'Alabama']
     ['South Carolina' 'Georgia' 'Florida' 'Tennessee' 'Kentucky'
      'North Carolina' 'Indiana']
