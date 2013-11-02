@@ -573,7 +573,7 @@ class Maxp_LISA(Maxp):
     >>> mpl.p
     31
     >>> mpl.regions[0]
-    [99, 89, 98, 97]
+    [99, 89, 98]
 
     """
     def __init__(self, w, z, y, floor, floor_variable, initial=100):
