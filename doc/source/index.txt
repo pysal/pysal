@@ -60,6 +60,9 @@ http://pysal.geodacenter.org/dev/
 News
 ====
 
+(2013-11-13) `PySAL Workshop at North American Regional Science Association Meetings, Atlanta, GA <http://www.narsc.org/newsite/?page_id=2547>`_ 
+
+
 (2013-07-31) `PySAL 1.6.0 released <https://github.com/pysal/pysal/wiki/PySAL-1.6-Released-(2013-07-31)>`_ (`Install <http://pysal.geodacenter.org/1.6/users/installation.html>`_)
 
 
