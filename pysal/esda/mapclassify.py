@@ -363,6 +363,8 @@ class Map_Classifier:
     Abstract class for all map classifications """
     def __init__(self, y):
         self.name = 'Map Classifier'
+        if hasattr(y, 'values'):
+            y = y.values # fix for pandas
         self.y = y
         self._classify()
         self._summary()
