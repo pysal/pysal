@@ -55,7 +55,7 @@ Documentation
     library/index
 
 Bleeding edge documentation is available for developers here >
-http://pysal.geodacenter.org/dev/ 
+http://pysal.readthedocs.org/en/latest/ 
 
 News
 ====
