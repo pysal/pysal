@@ -1,8 +1,8 @@
 """
 Max p regionalization
 
-Heuristically form the maximum number (p) of regions given a set of n areas and a floor
-constraint.
+Heuristically form the maximum number (p) of regions given a set of n
+areas and a floor constraint.
 """
 
 __author__ = "Serge Rey <srey@asu.edu>, David Folch <david.folch@asu.edu>"
@@ -82,22 +82,29 @@ class Maxp:
     >>> np.random.seed(100)
 
     Setup a spatial weights matrix describing the connectivity of a square
-    community with 100 areas.  Generate two random data attributes for each area
-    in the community (a 100x2 array) called z. p is the data vector used to
+    community with 100 areas.  Generate two random data attributes for each
+    area in the community (a 100x2 array) called z. p is the data vector used to
     compute the floor for a region, and floor is the floor value; in this case
     p is simply a vector of ones and the floor is set to three. This means
     that each region will contain at least three areas.  In other cases the
     floor may be computed based on a minimum population count for example.
 
-    >>> w=pysal.lat2W(10,10)
-    >>> z=np.random.random_sample((w.n,2))
-    >>> p=np.ones((w.n,1),float)
-    >>> floor=3
-    >>> solution=pysal.region.Maxp(w,z,floor,floor_variable=p,initial=100)
+    >>> import random
+    >>> import numpy as np
+    >>> import pysal
+    >>> random.seed(100)
+    >>> np.random.seed(100)
+    >>> w = pysal.lat2W(10,10)
+    >>> z = np.random.random_sample((w.n,2))
+    >>> p = np.ones((w.n,1), float)
+    >>> floor = 3
+    >>> solution = pysal.region.Maxp(w, z, floor, floor_variable=p, initial=100)
     >>> solution.p
     29
+    >>> min([len(region) for region in solution.regions])
+    3
     >>> solution.regions[0]
-    [4, 14, 5, 24, 3, 25, 15, 23]
+    [4, 14, 5, 24, 3]
     >>>
 
     """
@@ -135,6 +142,10 @@ class Maxp:
             self.regions = copy.copy(self.current_regions)
             self.p = len(self.regions)
             self.area2region = self.current_area2region
+            if verbose:
+                print "smallest region ifs: ", min([len(region) for region in self.regions])
+                raw_input='wait'
+
             self.swap()
 
     def initial_solution(self):
@@ -264,6 +275,7 @@ class Maxp:
                         block = copy.copy(self.regions[self.area2region[
                             neighbor]])
                         if check_contiguity(self.w, block, neighbor):
+                            block.remove(neighbor)
                             fv = self.check_floor(block)
                             if fv:
                                 candidates.append(neighbor)
@@ -311,6 +323,7 @@ class Maxp:
                             changed_regions)
                         print 'internal region: ', seed, 'local_attempts: ', local_attempts
                         print 'objective function: ', self.objective_function()
+                        print 'smallest region size: ',min([len(region) for region in self.regions])
             total_moves += moves_made
             if moves_made == 0:
                 swapping = False
@@ -324,6 +337,7 @@ class Maxp:
         selectionIDs = [self.w.id_order.index(i) for i in region]
         cv = sum(self.floor_variable[selectionIDs])
         if cv >= self.floor:
+            #print len(selectionIDs)
             return True
         else:
             return False
@@ -559,7 +573,7 @@ class Maxp_LISA(Maxp):
     >>> mpl.p
     31
     >>> mpl.regions[0]
-    [99, 89, 98, 97]
+    [99, 89, 98]
 
     """
     def __init__(self, w, z, y, floor, floor_variable, initial=100):

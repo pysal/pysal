@@ -762,7 +762,7 @@ class LineSegment(object):
             elif dx == 0:
                 self._line = VerticalLine(self._p1[0])
             else:
-                m = dy / dx
+                m = dy / float(dx)
                 b = self._p1[1] - m * self._p1[0]  # y - mx
                 self._line = Line(m, b)
         return self._line

@@ -363,6 +363,8 @@ class Map_Classifier:
     Abstract class for all map classifications """
     def __init__(self, y):
         self.name = 'Map Classifier'
+        if hasattr(y, 'values'):
+            y = y.values # fix for pandas
         self.y = y
         self._classify()
         self._summary()
@@ -1121,11 +1123,8 @@ class Jenks_Caspall(Map_Classifier):
     >>> cal = load_example()
     >>> jc = Jenks_Caspall(cal, k = 5)
     >>> jc.bins
-    array([[  1.81000000e+00],
-           [  7.60000000e+00],
-           [  2.98200000e+01],
-           [  1.81270000e+02],
-           [  4.11145000e+03]])
+    array([  1.81000000e+00,   7.60000000e+00,   2.98200000e+01,
+             1.81270000e+02,   4.11145000e+03])
     >>> jc.counts
     array([14, 13, 14, 10,  7])
 
@@ -1161,8 +1160,9 @@ class Jenks_Caspall(Map_Classifier):
                 xb0 = xb
             it += 1
             q = np.array([np.median(x[xb == i]) for i in rk])
-        cuts = [max(x[xb == i]) for i in sp.unique(xb)]
-        self.bins = np.array(cuts)
+        cuts = np.array([max(x[xb == i]) for i in sp.unique(xb)])
+        cuts.shape = (len(cuts),)
+        self.bins = cuts
         self.iterations = it
 
 
@@ -1202,17 +1202,9 @@ class Jenks_Caspall_Sampled(Map_Classifier):
     >>> jc = Jenks_Caspall(x)
     >>> jcs = Jenks_Caspall_Sampled(x)
     >>> jc.bins
-    array([[ 0.19770952],
-           [ 0.39695769],
-           [ 0.59588617],
-           [ 0.79716865],
-           [ 0.99999425]])
+    array([ 0.19770952,  0.39695769,  0.59588617,  0.79716865,  0.99999425])
     >>> jcs.bins
-    array([[ 0.18877882],
-           [ 0.39341638],
-           [ 0.6028286 ],
-           [ 0.80070925],
-           [ 0.99999425]])
+    array([ 0.18877882,  0.39341638,  0.6028286 ,  0.80070925,  0.99999425])
     >>> jc.counts
     array([19804, 20005, 19925, 20178, 20088])
     >>> jcs.counts

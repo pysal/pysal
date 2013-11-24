@@ -3,11 +3,52 @@ Checking for connected components in a graph.
 """
 __author__ = "Sergio J. Rey <srey@asu.edu>"
 
-import sys
-from operator import gt, lt
-import copy
 
 __all__ = ["check_contiguity"]
+
+from operator import lt
+
+
+def is_component(w, ids):
+    """Check if the set of ids form a single connected component
+
+    Parameters
+    ----------
+
+    w   : spatial weights boject
+
+    ids : list
+          identifiers of units that are tested to be a single connected
+          component
+
+
+    Returns
+    -------
+
+    True    : if the list of ids represents a single connected component
+
+    False   : if the list of ids forms more than a single connected component
+
+    """
+
+    components = 0
+    marks = dict([(node, 0) for node in ids])
+    q = []
+    for node in ids:
+        if marks[node] == 0:
+            components += 1
+            q.append(node)
+            if components > 1:
+                return False
+        while q:
+            node = q.pop()
+            marks[node] = components
+            others = [neighbor for neighbor in w.neighbors[node]
+                      if neighbor in ids]
+            for other in others:
+                if marks[other] == 0 and other not in q:
+                    q.append(other)
+    return True
 
 
 def check_contiguity(w, neighbors, leaver):
@@ -57,27 +98,10 @@ def check_contiguity(w, neighbors, leaver):
     False
     >>>
     """
-    d = {}
-    g = Graph()
-    neighbors = copy.copy(neighbors)
-    for i in neighbors:
-        d[i] = [j for j in w.neighbors[i] if (j in neighbors and j != leaver)]
-    try:
-        d.pop(leaver)
-    except:
-        pass
-    for i in d:
-        for j in d[i]:
-            g.add_edge(i, j, 1.0)
-    cc = g.connected_components(op=gt)
-    if len(cc) == 1:
-        neighbors.remove(leaver)
-        if cc[0].nodes == set(neighbors):
-            return True
-        else:
-            return False
-    else:
-        return False
+
+    ids = neighbors[:]
+    ids.remove(leaver)
+    return is_component(w, ids)
 
 
 class Graph(object):
@@ -134,5 +158,3 @@ class Graph(object):
             aux.extend(x)
             visited = visited.union(y)
         return aux, visited
-
-
