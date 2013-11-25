@@ -310,7 +310,7 @@ def plot_poly_lines(shp_link, projection='merc', savein=None, poly_col='none'):
 
 def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
         projection='merc', sample_fisher=True, title='', \
-        savein=None, figsize=None):
+        savein=None, figsize=None, dpi=300):
     '''
     Wrapper to quickly create and plot from a lat/lon shapefile
     ...
@@ -348,6 +348,8 @@ def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
                       defaults to None
     figsize         : tuple
                       Figure dimensions
+    dpi             : int
+                      resolution of graphic file
 
     Returns
     -------
@@ -392,7 +394,7 @@ def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
         plt.colorbar(map_obj, cmap=cmap, norm=norm, boundaries=boundaries, \
                 ticks=boundaries, orientation='horizontal')
     if savein:
-        plt.savefig(savein)
+        plt.savefig(savein, dpi=dpi)
     else:
         plt.show()
     return None
