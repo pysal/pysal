@@ -400,7 +400,7 @@ def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
         map_obj = map_line_shp(shp)
 
     if type == 'classless':
-        map_obj = base_choropleth_classless(map_obj, values, cmap=cmap)
+        map_obj = base_choropleth_classless(map_obj, values)
     if type == 'unique_values':
         map_obj = base_choropleth_unique(map_obj, values, cmap=cmap)
     if type == 'quantiles':
@@ -432,7 +432,7 @@ def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
     return None
 
 
-def base_choropleth_classless(map_obj, values, cmap='hot_r', projection='merc'):
+def base_choropleth_classless(map_obj, values, cmap='Greys', projection='merc'):
     '''
     Set classless coloring from a map object
     ...
