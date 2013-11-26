@@ -13,7 +13,7 @@ __author__ = "Sergio Rey <sjsrey@gmail.com>", "Dani Arribas-Bel <daniel.arribas.
 import pandas as pd
 import pysal as ps
 import numpy as np
-import  matplotlib.pyplot as plt 
+import  matplotlib.pyplot as plt
 from matplotlib import colors as clrs
 import matplotlib as mpl
 from matplotlib.pyplot import fill, text
@@ -52,7 +52,7 @@ def transCRS(xy, src_prj, trt_prj):
     xyp         : ndarray
                   nx2 array with reprojected coordinates. First column
                   is X axis, second is Y axis
-                  
+
     '''
     orig = osr.SpatialReference()
     orig.ImportFromWkt(open(src_prj).read())
@@ -207,7 +207,7 @@ def map_poly_shp_lonlat(shp_link, projection='merc'):
 
     map             : PatchCollection
                       Map object with the polygons from the shapefile
-    
+
     Links
     -----
     .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
@@ -219,7 +219,7 @@ def map_poly_shp_lonlat(shp_link, projection='merc'):
             llcrnrlat=bottom, urcrnrlat=top,
             llcrnrlon=left, urcrnrlon=right,
             lat_ts=(bottom+top)/2,
-            lon_0=(right-left)/2, lat_0=(top-bottom)/2) 
+            lon_0=(right-left)/2, lat_0=(top-bottom)/2)
     bounding_box = [m.llcrnrx, m.llcrnry,m.urcrnrx,m.urcrnry]
     patches = []
     for shape in shps:
@@ -250,7 +250,7 @@ def setup_ax(polyCos_list, ax=None):
     ax          : AxesSubplot
                   (Optional) Pre-existing axes to which append the collections
                   and setup
-                
+
     Returns
     -------
     ax          : AxesSubplot
@@ -278,8 +278,8 @@ def setup_ax(polyCos_list, ax=None):
     ax.set_ylim(ylim)
     # Resize bbox of each coll and add it to axes
     for polyCo in polyCos_list:
-        polyCo.get_axes().set_xlim(ax.get_xlim()) 
-        polyCo.get_axes().set_ylim(ax.get_ylim()) 
+        polyCo.get_axes().set_xlim(ax.get_xlim())
+        polyCo.get_axes().set_ylim(ax.get_ylim())
         ax.add_collection(polyCo)
     ax.set_frame_on(False)
     ax.axes.get_yaxis().set_visible(False)
@@ -292,7 +292,7 @@ def _add_axes2col(col, bbox):
     still pretty much a hack! Ideally, you don't have to setup a new figure
     for this
     ...
-    
+
     Arguments
     ---------
     col     : Collection
@@ -388,7 +388,7 @@ def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
     map             : PatchCollection
                       Map object with the polygons from the shapefile and
                       unique value coloring
-    
+
     Links
     -----
     .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
@@ -423,8 +423,8 @@ def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
         cmap = map_obj.get_cmap()
         norm = map_obj.norm
         boundaries = np.round(map_obj.norm.boundaries, decimals=3)
-        plt.colorbar(map_obj, cmap=cmap, norm=norm, boundaries=boundaries, \
-                ticks=boundaries, orientation='horizontal')
+        cbar = plt.colorbar(map_obj, cmap=cmap, norm=norm, boundaries=boundaries, \
+                ticks=boundaries, orientation='horizontal', shrink=0.5)
     if savein:
         plt.savefig(savein, dpi=dpi)
     else:
@@ -456,7 +456,7 @@ def base_choropleth_classless(map_obj, values, cmap='hot_r', projection='merc'):
     map             : PatchCollection
                       Map object with the polygons from the shapefile and
                       classless coloring
-    
+
     Links
     -----
     .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
@@ -500,7 +500,7 @@ def base_choropleth_unique(map_obj, values,  cmap='hot_r', projection='merc'):
     map             : PatchCollection
                       Map object with the polygons from the shapefile and
                       unique value coloring
-    
+
     Links
     -----
     .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
@@ -543,7 +543,7 @@ def base_choropleth_classif(map_obj, values, classification='quantiles', \
                         * 'quantiles' (default)
                         * 'fisher_jenks'
                         * 'equal_interval'
-                            
+
     k               : int
                       Number of bins to classify values in and assign a color
                       to
@@ -560,7 +560,7 @@ def base_choropleth_classif(map_obj, values, classification='quantiles', \
     map             : PatchCollection
                       Map object with the polygons from the shapefile and
                       unique value coloring
-    
+
     Links
     -----
     .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
@@ -605,9 +605,9 @@ def base_choropleth_classif(map_obj, values, classification='quantiles', \
 def _expand_values(values, shp2dbf_row):
     '''
     Expand series of values based on dbf order to polygons (to allow plotting
-    of multi-part polygons). 
+    of multi-part polygons).
     ...
-    
+
     NOTE: this is done externally so it's easy to drop dependency on Pandas
     when neccesary/time is available.
 
@@ -651,7 +651,7 @@ class Map_Projection(object):
     projected: list of lists
         projected coordinates for each shape in the shapefile. Each
         sublist contains projected coordinates for parts of a  shape
-    
+
 
     """
     def __init__(self, shapefile, projection='merc'):
@@ -668,7 +668,7 @@ class Map_Projection(object):
         m = Basemap(resolution = 'i', projection='merc',
                 llcrnrlat=bottom, urcrnrlat=top,
                 llcrnrlon=left, urcrnrlon=right,
-                lat_ts=(bottom+top)/2) 
+                lat_ts=(bottom+top)/2)
         projected = []
         for shp in shps:
             parts = []
@@ -679,7 +679,7 @@ class Map_Projection(object):
             projected.append(parts)
         results = {}
         self.projected = projected
-        self.bounding_box = [m.llcrnrx, m.llcrnry,m.urcrnrx,m.urcrnry] 
+        self.bounding_box = [m.llcrnrx, m.llcrnry,m.urcrnrx,m.urcrnry]
         self.shapefile = shapefile
 
 def equal_interval_map(coords, y, k, title='Equal Interval'):
@@ -731,7 +731,7 @@ def equal_interval_map(coords, y, k, title='Equal Interval'):
     ax.axes.get_xaxis().set_visible(False)
     ax.set_title(title)
     plt.colorbar(p, cmap=cmap, norm = norm, boundaries = boundaries, ticks=
-            boundaries)
+            boundaries, shrink=0.5)
     plt.show()
     return classification
 
@@ -751,7 +751,7 @@ def fisher_jenks_map(coords, y, k, title='Fisher-Jenks', sampled=False):
            map title
 
     sampled: binary
-             if True classification bins obtained on a sample of y and then 
+             if True classification bins obtained on a sample of y and then
                  applied. Useful for large n arrays
     """
 
@@ -799,7 +799,7 @@ def fisher_jenks_map(coords, y, k, title='Fisher-Jenks', sampled=False):
     ax.axes.get_xaxis().set_visible(False)
     ax.set_title(title)
     plt.colorbar(p, cmap=cmap, norm = norm, boundaries = boundaries, ticks=
-            boundaries)
+             boundaries)
     plt.show()
     return classification
 
@@ -938,8 +938,8 @@ def lisa_cluster_map(coords, lisa,  title='LISA Cluster Map', p = 0.05):
     # pysal: 1 HH,  2 LH,  3 LL,  4 HL
     c ={}
     c[0] = 'white' # non-significant
-    c[1] = 'darkred' 
-    c[2] = 'lightsalmon' 
+    c[1] = 'darkred'
+    c[2] = 'lightsalmon'
     c[3] = 'darkblue'
     c[4] = 'lightblue'
 
@@ -977,7 +977,7 @@ def unique_values_map(coords,y, title='Unique Value'):
     coords: Map_Projection instance
 
     y: array
-       zeros for elements that should not be mapped, 1-4 for elements to 
+       zeros for elements that should not be mapped, 1-4 for elements to
        highlight
 
     title: string
@@ -988,7 +988,7 @@ def unique_values_map(coords,y, title='Unique Value'):
     =====
     Allows for an unlimited number of categories, but if there are many
     categories the colors may be difficult to distinguish.
-    [Currently designed for use with a Moran_Local Instance for mapping a 
+    [Currently designed for use with a Moran_Local Instance for mapping a
     subset of the significant LISAs.]
 
     """
@@ -1004,8 +1004,8 @@ def unique_values_map(coords,y, title='Unique Value'):
     # pysal: 1 HH,  2 LH,  3 LL,  4 HL
     c ={}
     c[0] = 'white' # non-significant
-    c[1] = 'darkred' 
-    c[2] = 'lightsalmon' 
+    c[1] = 'darkred'
+    c[2] = 'lightsalmon'
     c[3] = 'darkblue'
     c[4] = 'lightblue'
     '''
