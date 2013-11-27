@@ -339,7 +339,7 @@ def plot_poly_lines(shp_link, projection='merc', savein=None, poly_col='none'):
         plt.show()
     return None
 
-def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
+def plot_choropleth(shp_link, values, type, k=5, cmap=None, \
         shp_type='poly', sample_fisher=True, title='', \
         savein=None, figsize=None, dpi=300):
     '''
@@ -364,7 +364,12 @@ def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
                       Number of bins to classify values in and assign a color
                       to (defaults to 5)
     cmap            : str
-                      Matplotlib coloring scheme
+                      Matplotlib coloring scheme. If None (default), uses:
+                        * 'classless': 'Greys'
+                        * 'unique_values': 'hot_r'
+                        * 'quantiles': 'hot_r'
+                        * 'fisher_jenks': 'hot_r'
+                        * 'equal_interval': 'hot_r'
     shp_type        : str
                       'poly' (default) or 'line', for the kind of shapefile
                       passed
@@ -400,17 +405,27 @@ def plot_choropleth(shp_link, values, type, k=5, cmap='hot_r', \
         map_obj = map_line_shp(shp)
 
     if type == 'classless':
-        map_obj = base_choropleth_classless(map_obj, values)
+        if not cmap:
+            cmap = 'Greys'
+        map_obj = base_choropleth_classless(map_obj, values, cmap=cmap)
     if type == 'unique_values':
+        if not cmap:
+            cmap = 'hot_r'
         map_obj = base_choropleth_unique(map_obj, values, cmap=cmap)
     if type == 'quantiles':
+        if not cmap:
+            cmap = 'hot_r'
         map_obj = base_choropleth_classif(map_obj, values, k=k, \
                 classification='quantiles', cmap=cmap)
     if type == 'fisher_jenks':
+        if not cmap:
+            cmap = 'hot_r'
         map_obj = base_choropleth_classif(map_obj, values, k=k, \
                 classification='fisher_jenks', cmap=cmap, \
                 sample_fisher=sample_fisher)
     if type == 'equal_interval':
+        if not cmap:
+            cmap = 'hot_r'
         map_obj = base_choropleth_classif(map_obj, values, k=k, \
                 classification='equal_interval', cmap=cmap)
 
