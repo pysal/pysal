@@ -506,7 +506,7 @@ def base_choropleth_unique(map_obj, values,  cmap='hot_r', projection='merc'):
     .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
     '''
     uvals = np.unique(values)
-    colormap = plt.cm.Set1
+    colormap = getattr(plt.cm, cmap)
     colors = [colormap(i) for i in np.linspace(0, 0.9, len(uvals))]
     colors = np.random.permutation(colors)
     colormatch = {val: col for val, col in zip(uvals, colors)}
