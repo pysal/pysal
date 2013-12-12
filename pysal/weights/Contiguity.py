@@ -38,7 +38,8 @@ def buildContiguity(polygons, criterion="rook", ids=None):
 
 
     Examples
-    -------
+    --------
+
     >>> w = buildContiguity(pysal.open(pysal.examples.get_path('10740.shp'),'r'))
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [163]

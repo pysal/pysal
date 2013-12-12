@@ -11,7 +11,8 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os
+import sys 
+import os
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -76,6 +77,7 @@ release = '1.7.0dev'
 # for source files.
 exclude_trees = []
 
+
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None
 
@@ -99,17 +101,28 @@ pygments_style = 'sphinx'
 
 # -- Options for HTML output ---------------------------------------------------
 #custom strikethrough setup
-html_style = 'mydoc.css'
+#html_style = 'mydoc.css'
 
 # The theme to use for HTML and HTML Help pages.  Major themes that come with
 # Sphinx are currently 'default' and 'sphinxdoc'.
-#html_theme = 'default'
-html_theme = 'sphinxdoc'
+html_theme = 'default'
+#html_theme = 'sphinxdoc'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#html_theme_options = {}
+html_theme_options = {
+        "rightsidebar": "true",
+        "relbarbgcolor": "CornflowerBlue",
+        "sidebartextcolor": "black",
+        "sidebarlinkcolor": "#355f7c",
+        "sidebarbgcolor": "#F2F2F2",
+        "codebgcolor": "AliceBlue",
+        "footerbgcolor": "Black",
+        "externalrefs": "false",
+        "bodyfont": "Optima",
+        "headfont": "Optima "
+        }
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
