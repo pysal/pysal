@@ -867,8 +867,8 @@ def distance_matrix(X, p=2.0, threshold=5e7):
                     If (n**2)*32 > threshold use scipy.spatial.distance_matrix instead
                     of working in ram, this is roughly the ammount of ram (in bytes) that will be used.
 
-    Example
-    -------
+    Examples
+    --------
     >>> x,y=[r.flatten() for r in np.indices((3,3))]
     >>> data = np.array([x,y]).T
     >>> d=distance_matrix(data)

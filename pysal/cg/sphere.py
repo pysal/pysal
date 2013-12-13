@@ -27,6 +27,7 @@ def arcdist(pt0, pt1, radius=RADIUS_EARTH_KM):
     pt0 and pt1 are assumed to be in the form (lng,lat)
 
     Examples
+    --------
     >>> pt0 = (0,0)
     >>> pt1 = (180,0)
     >>> d = arcdist(pt0,pt1,RADIUS_EARTH_MILES)
@@ -41,6 +42,7 @@ def arcdist2linear(arc_dist, radius=RADIUS_EARTH_KM):
     Convert an arc distance (spherical earth) to a linear distance (R3) in the unit sphere.
 
     Examples
+    --------
     >>> pt0 = (0,0)
     >>> pt1 = (180,0)
     >>> d = arcdist(pt0,pt1,RADIUS_EARTH_MILES)
@@ -59,6 +61,7 @@ def linear2arcdist(linear_dist, radius=RADIUS_EARTH_KM):
     Convert a linear distance in the unit sphere (R3) to an arc distance based on supplied radius
 
     Examples
+    --------
     >>> pt0 = (0,0)
     >>> pt1 = (180,0)
     >>> d = arcdist(pt0,pt1,RADIUS_EARTH_MILES)

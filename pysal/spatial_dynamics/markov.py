@@ -1073,8 +1073,8 @@ def kullback(F):
 
 
 
-    Example
-    -------
+    Examples
+    --------
 
     >>> s1 = np.array([
     ...         [ 22, 11, 24,  2,  2,  7],

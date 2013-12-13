@@ -5,7 +5,7 @@
 """
 __author__ = "Sergio J. Rey <srey@asu.edu>"
 
-__all__ = ['steady_state', 'fmpt']
+__all__ = ['steady_state', 'fmpt', 'var_fmpt']
 
 import numpy as np
 import numpy.linalg as la

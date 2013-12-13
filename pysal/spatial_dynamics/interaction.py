@@ -308,8 +308,8 @@ def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, t
     pvalue          : float
                       pseudo p-value associated with the statistic
 
-    Reference
-    ---------
+    References
+    ----------
     .. [2] N. Mantel. 1967. The detection of disease clustering and a
     generalized regression approach. Cancer Research, 27(2):209-220.
 
