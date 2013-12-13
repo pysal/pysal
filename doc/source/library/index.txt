@@ -20,6 +20,7 @@ Available sub-packages
 ----------------------
 
 .. toctree::
+    :maxdepth: 1
 
     cg/index
     core/index

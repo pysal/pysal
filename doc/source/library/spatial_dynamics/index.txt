@@ -2,6 +2,7 @@
 ==================================================
 
 .. toctree::
+    :maxdepth: 1
 
     directional
     ergodic
