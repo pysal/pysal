@@ -1,5 +1,7 @@
+=================
 PySAL and Python3
 =================
+.. contents::
 
 Background
 ----------

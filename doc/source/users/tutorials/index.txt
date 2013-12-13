@@ -16,5 +16,5 @@ Getting Started with PySAL
    Regionalization <region>
    Spatial Dynamics <dynamics>
    Shapely Extension <shapely>
-   Next Steps <next>
    Sample Datasets <examples>
+   Next Steps <next>

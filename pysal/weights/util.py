@@ -348,7 +348,7 @@ def higher_order_sp(wsp, k=2):
     Lower order contiguities are removed.
 
     Examples
-    -------
+    --------
 
     >>> import pysal
     >>> w25 = pysal.lat2W(5,5)

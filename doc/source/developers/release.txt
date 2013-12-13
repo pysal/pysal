@@ -4,15 +4,12 @@
 ************************
 PySAL Release Management
 ************************
-
 .. contents::
 
 Prepare the release
 -------------------
 
-
 - Check all tests pass.
-
 - Update CHANGELOG::
 
      $ git log --pretty="%h %an -%s" --since="2013-02-01" >> cghlog
@@ -20,17 +17,14 @@ Prepare the release
   - Prepend `chglog` to `CHANGELOG` and edit
 
 - Edit THANKS and README and README.md if needed.
-
 - Change MAJOR, MINOR version in setup script.
-
 - Change pysal/version.py to non-dev number
-
 - Change the docs version from X.xdev to X.x by editing doc/source/conf.py in two places.
-
 - Commit all changes.
 
 Tag 
 ---
+
 Make the Tag::
 
   $ git tag -a v1.4 -m 'my version 1.4'
@@ -43,17 +37,8 @@ On each build machine, clone and checkout the newly created tag::
 
 Make docs
 ---------
-Make the html docs:: 
 
-  $ cd doc
-  $ make html 
-
-Create a new directory on doc server and copy new docs to it::
-  
-  $ mkdir -p /srv/www/pysal/public_html/<X.x>
-  $ rsync -ruz doc/build/html/ geodacenter.org:/srv/www/pysal/public_html/<X.x>  (no trailing slash!)
-
-Now, compress the HTML and upload it to the GeoDa Center server.
+As of verison 1.6, docs are automatically compiled and hosted_.
 
 Make and Upload distributions
 -------------------------------
@@ -61,43 +46,41 @@ Make and Upload distributions
 - Make and upload_ to the Python Package Index in one shot!::
 
    $ python setup.py sdist  (to test it)
-
    $ python setup.py sdist upload
 
   - if not registered_, do so. Follow the prompts. You can save the
       login credentials in a dot-file, .pypirc
 
 - Make and upload the Windows installer to SourceForge.
-
-  - Make a graphical Windows installer on a Windows box:: 
+  - On a Windows box, build the installer as so:: 
 
     $ python setup.py bdist_wininst
 
 Announce
 --------
+
 - Draft and distribute press release on geodacenter.asu.edu, openspace-list, and pysal.org
 
   - On GeoDa center website, do this:
-   - Login to the site
-   - Expand the wrench icon to reveal the admin menu
-   - Click "Administer", then "Content Management", then "Content"
+
+   - Login and expand the wrench icon to reveal the Admin menu
+   - Click "Administer", "Content Management", "Content"
    - Next, click "List", filter by type, and select "Featured Project".
    - Click "Filter"
+
    Now you will see the list of Featured Projects. Find "PySAL".
-   - Choose to 'edit' PySAL and modify the short text there. This changes the
-     text users see on the homepage slider.
-   - Clicking on the name "PySAL" allows you to edit the content of the
-     PySAL project page, which is also the "About PySAL" page linked to
-     from the homepage slider.
+
+   - Choose to 'edit' PySAL and modify the short text there. This changes the text users see on the homepage slider.
+   - Clicking on the name "PySAL" allows you to edit the content of the PySAL project page, which is also the "About PySAL" page linked to from the homepage slider.
 
 Put master back to dev
 ----------------------
+
 - Change MAJOR, MINOR version in setup script.
-
 - Change pysal/version.py to dev number
-
 - Change the docs version from X.x to X.xdev by editing doc/source/conf.py in two places.
 
 .. _upload: http://docs.python.org/2.7/distutils/uploading.html
 .. _registered: http://docs.python.org/2.7/distutils/packageindex.html
 .. _source: http://docs.python.org/distutils/sourcedist.html
+.. _hosted: http://pysal.readthedocs.org

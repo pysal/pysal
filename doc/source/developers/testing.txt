@@ -4,6 +4,7 @@
 ************************
 PySAL Testing Procedures
 ************************
+.. contents::
 
 PySAL relies on two different modes of testing [1] integration (regression)
 testing and [2] doctests. All developers responsible for given packages shall
