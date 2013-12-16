@@ -130,7 +130,7 @@ html_theme_options = {
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
 #html_title = "%s v%s Reference Guide" % (project, version)
-html_title = "Python Spatial Anlaysis Library" 
+html_title = "Python Spatial Analysis Library" 
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 html_short_title = "PySAL"
