@@ -6,6 +6,7 @@ __author__ = "Sergio J. Rey <srey@asu.edu> "
 __all__ = ['buildContiguity']
 
 import pysal
+from _contW_binning import ContiguityWeightsLists
 from _contW_binning import ContiguityWeights_binning as ContiguityWeights
 from _contW_binning import ContiguityWeightsPolygons
 
@@ -82,7 +83,7 @@ def buildContiguity(polygons, criterion="rook", ids=None):
     else:
         raise TypeError(
             "Argument must be a FileIO handler or connection string")
-    neighbor_data = ContiguityWeights(geoObj, wt_type).w
+    neighbor_data = ContiguityWeightsLists(geoObj, wt_type).w
     neighbors = {}
     #weights={}
     if ids:
@@ -94,7 +95,6 @@ def buildContiguity(polygons, criterion="rook", ids=None):
         for key in neighbors:
             neighbors[key] = list(neighbors[key])
     else:
-        for key in neighbor_data:
-            neighbors[key] = list(neighbor_data[key])
+        for key, value in neighbor_data.iteritems():
+            neighbors[key] = list(value)  # Lookup key and value concurrently
     return pysal.weights.W(neighbors, id_order=ids)
-

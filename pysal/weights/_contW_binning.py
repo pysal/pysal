@@ -1,11 +1,11 @@
 #!/usr/bin/python
 #import math
+import collections
 import pysal
-from pysal.cg.standalone import get_shared_segments
 
-__author__ = "Sergio J. Rey <srey@asu.edu> "
+__author__ = "Sergio J. Rey <srey@asu.edu>, Jason Laura <jlaura@asu.edu> "
 __all__ = ["QUEEN", "ROOK", "ContiguityWeights_binning",
-        "ContiguityWeightsPolygons"]
+           "ContiguityWeightsPolygons", "ContiguityWeightsLists"]
 
 
 import time
@@ -18,7 +18,7 @@ ROOK = 2
 
 # constants for bucket sizes
 BUCK_SM = 8
-BUCK_LG =  80 
+BUCK_LG = 80
 SHP_SMALL = 1000
 
 
@@ -35,6 +35,7 @@ def bbcommon(bb, bbother):
         if not ((bbother[3] < bb[1]) or (bbother[1] > bb[3])):
             chflag = 1
     return chflag
+
 
 class ContiguityWeights_binning:
     """
@@ -72,7 +73,7 @@ class ContiguityWeights_binning:
         columns = [set() for i in range(bucketmin)]
         rows = [set() for i in range(bucketmin)]
 
-        minbox = shapebox[:2] *  2             # minx,miny,minx,miny
+        minbox = shapebox[:2] * 2             # minx,miny,minx,miny
         binWidth = [lengthx, lengthy] * 2      # lenx,leny,lenx,leny
         bbcache = {}
         poly2Column = [set() for i in range(numPoly)]
@@ -132,9 +133,9 @@ class ContiguityWeights_binning:
                     ne = nv - 1
                     for i in xrange(ne):
                         l = iVerts[i]
-                        r = iVerts[i+1]
-                        iEdges[(l,r)] = []
-                        iEdges[(r,l)] = []
+                        r = iVerts[i + 1]
+                        iEdges[(l, r)] = []
+                        iEdges[(r, l)] = []
                     edgeCache[polyId] = iEdges
                 iEdgeSet = set(edgeCache[polyId].keys())
                 idRows = poly2Row[polyId]
@@ -160,9 +161,9 @@ class ContiguityWeights_binning:
                                 ne = nv - 1
                                 for e in xrange(ne):
                                     l = jVerts[e]
-                                    r = jVerts[e+1]
-                                    jEdges[(l,r)] = []
-                                    jEdges[(r,l)] = []
+                                    r = jVerts[e + 1]
+                                    jEdges[(l, r)] = []
+                                    jEdges[(r, l)] = []
                                 edgeCache[j] = jEdges
                             #for edge in edgeCache[j]:
                             if iEdgeSet.intersection(edgeCache[j].keys()):
@@ -174,10 +175,96 @@ class ContiguityWeights_binning:
         else:
             print "Unsupported weight type."
 
-
         self.w = w
-        
+
+
+class ContiguityWeightsLists:
+    """
+    Contiguity for a collection of polygons using high performance
+    list, set, and dict containers
+    """
+    def __init__(self, collection, wttype=1):
+        """
+        Arguments
+        =========
+
+        collection: PySAL PolygonCollection
+
+        wttype: int
+                1: Queen
+                2: Rook
+        """
+        self.collection = collection
+        self.wttype = wttype
+        self.jcontiguity()
+
+    def jcontiguity(self):
+        if self.collection.type != pysal.cg.Polygon:
+            return False
+
+        numPoly = len(self.collection)
+
+        w = {}
+        for i in range(numPoly):
+            w[i] = set()
+
+        geoms = []
+        offsets = []
+        c = 0  # PolyID Counter
+
+        if self.wttype == QUEEN:
+            for n in range(numPoly):
+                    verts = self.collection.get(n).vertices
+                    offsets += [c] * len(verts)
+                    geoms += (verts)
+                    c += 1
+
+            items = collections.defaultdict(set)
+            for i, vertex in enumerate(geoms):
+                items[vertex].add(offsets[i])
+
+            shared_vertices = []
+            for item, location in items.iteritems():
+                if len(location) > 1:
+                    shared_vertices.append(location)
+
+            for vert_set in shared_vertices:
+                for v in vert_set:
+                    w[v] = w[v] | vert_set
+                    try:
+                        w[v].remove(v)
+                    except:
+                        pass
+
+        elif self.wttype == ROOK:
+            for n in range(numPoly):
+                verts = self.collection.get(n).vertices
+                for v in range(len(verts) - 1):
+                    geoms.append(tuple(sorted([verts[v], verts[v + 1]])))
+                offsets += [c] * (len(verts) - 1)
+                c += 1
+
+            items = collections.defaultdict(set)
+            for i, item in enumerate(geoms):
+                items[item].add(offsets[i])
+
+            shared_vertices = []
+            for item, location in items.iteritems():
+                if len(location) > 1:
+                    shared_vertices.append(location)
+
+            for vert_set in shared_vertices:
+                for v in vert_set:
+                    w[v] = w[v] | vert_set
+                    try:
+                        w[v].remove(v)
+                    except:
+                        pass
+        self.w = w
+
+
 # Generalize to handle polygon collections - independent of origin file type
+
 
 class ContiguityWeightsPolygons:
     """
@@ -189,7 +276,7 @@ class ContiguityWeightsPolygons:
         Arguments
         =========
 
-        collection: PySAL PolygonCollection 
+        collection: PySAL PolygonCollection
 
         wttype: int
                 1: Queen
@@ -226,7 +313,7 @@ class ContiguityWeightsPolygons:
         columns = [set() for i in range(bucketmin)]
         rows = [set() for i in range(bucketmin)]
 
-        minbox = shapebox[:2] *  2             # minx,miny,minx,miny
+        minbox = shapebox[:2] * 2             # minx,miny,minx,miny
         binWidth = [lengthx, lengthy] * 2      # lenx,leny,lenx,leny
         bbcache = {}
         poly2Column = [set() for i in range(numPoly)]
@@ -246,7 +333,7 @@ class ContiguityWeightsPolygons:
         w = {}
         if self.wttype == QUEEN:
             # loop over polygons rather than bins
-            vertCache ={}
+            vertCache = {}
             for polyId in xrange(numPoly):
                 if polyId not in vertCache:
                     vertCache[polyId] = set(self.collection[polyId].vertices)
@@ -282,14 +369,14 @@ class ContiguityWeightsPolygons:
             for polyId in xrange(numPoly):
                 if polyId not in edgeCache:
                     iEdges = {}
-                    iVerts = shpFileObject.get(polyId).vertices
+                    iVerts = self.collections.get(polyId).vertices
                     nv = len(iVerts)
                     ne = nv - 1
                     for i in xrange(ne):
                         l = iVerts[i]
-                        r = iVerts[i+1]
-                        iEdges[(l,r)] = []
-                        iEdges[(r,l)] = []
+                        r = iVerts[i + 1]
+                        iEdges[(l, r)] = []
+                        iEdges[(r, l)] = []
                     edgeCache[polyId] = iEdges
                 iEdgeSet = set(edgeCache[polyId].keys())
                 idRows = poly2Row[polyId]
@@ -315,9 +402,9 @@ class ContiguityWeightsPolygons:
                                 ne = nv - 1
                                 for e in xrange(ne):
                                     l = jVerts[e]
-                                    r = jVerts[e+1]
-                                    jEdges[(l,r)] = []
-                                    jEdges[(r,l)] = []
+                                    r = jVerts[e + 1]
+                                    jEdges[(l, r)] = []
+                                    jEdges[(r, l)] = []
                                 edgeCache[j] = jEdges
                             #for edge in edgeCache[j]:
                             if iEdgeSet.intersection(edgeCache[j].keys()):
@@ -329,13 +416,12 @@ class ContiguityWeightsPolygons:
         else:
             print "Unsupported weight type."
 
-
         self.w = w
- 
+
 if __name__ == "__main__":
     import time
     fname = pysal.examples.get_path('NAT.shp')
-    print 'QUEEN binning'
+    print 'BINNING'
     t0 = time.time()
     qb = ContiguityWeights_binning(pysal.open(fname), QUEEN)
     t1 = time.time()
@@ -349,25 +435,43 @@ if __name__ == "__main__":
     print "using " + str(fname)
     print "time elapsed for rook... using bins: " + str(t1 - t0)
 
-
-
     from _contW_rtree import ContiguityWeights_rtree
 
-    t0 = time.time()
-    rt = ContiguityWeights_rtree(pysal.open(fname), ROOK)
-    t1 = time.time()
-
-    print "time elapsed for rook... using rtree: " + str(t1 - t0)
-    print rt.w == rb.w
-
-    print 'QUEEN'
+    print '\nRTREE'
     t0 = time.time()
     qt = ContiguityWeights_rtree(pysal.open(fname), QUEEN)
     t1 = time.time()
     print "using " + str(fname)
     print "time elapsed for queen... using rtree: " + str(t1 - t0)
-    print qb.w == qt.w
 
+    t0 = time.time()
+    rt = ContiguityWeights_rtree(pysal.open(fname), ROOK)
+    t1 = time.time()
+    print "time elapsed for rook... using rtree: " + str(t1 - t0)
+
+
+
+    """USING LISTS"""
+
+    print '\nLISTS'
+    t0 = time.time()
+    ql = ContiguityWeightsLists(pysal.open(fname), QUEEN)
+    t1 = time.time()
+    print "using " + str(fname)
+    print "time elapsed for queen... using lists: " + str(t1 - t0)
+
+    t0 = time.time()
+    rl = ContiguityWeightsLists(pysal.open(fname), ROOK)
+    t1 = time.time()
+    print "using " + str(fname)
+    print "time elapsed for rook... using lists: " + str(t1 - t0)
+
+    #Assert that all dicts are equal
+    print '\nASSERTING EQUAL'
+    print qb.w == qt.w == ql.w
+    print rt.w == rb.w == rl.w
+
+    """
     print 'knn4'
     t0 = time.time()
     knn = pysal.knnW_from_shapefile(fname,k=4)
@@ -379,5 +483,4 @@ if __name__ == "__main__":
     knn = pysal.rook_from_shapefile(fname)
     t1 = time.time()
     print t1-t0
-
-
+    """
