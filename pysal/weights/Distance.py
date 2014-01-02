@@ -134,18 +134,16 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
         print 'Unsupported type'
         return None
 
-
     neighbors = {}
-    weights = {}
-    if ids:
-        idset = np.array(ids)
-        for i,row in enumerate(info):
-            new_row = [ idset[j] for j in row]
-            info[i] = new_row
-    else:
-        idset = np.arange(len(info))
-    
-    neighbors = dict( [ (idset[i],row[row!=idset[i]].tolist()[:k]) for i,row in enumerate(info)  ] )
+    for i, row in enumerate(info):
+        row = row.tolist()
+        if i in row:
+            row.remove(i)
+            focal = i
+        if ids:
+            row = [ ids[j] for j in row]
+            focal = ids[i]
+        neighbors[focal] = row
     return pysal.weights.W(neighbors,  id_order=ids)
 
 
