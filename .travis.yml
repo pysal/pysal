@@ -9,6 +9,9 @@ virtualenv:
 before_install:
   - "sudo apt-get update -qq"
   - "sudo apt-get install -qq libgeos-3.2.2 libgeos-dev python-numpy python-scipy"
+  - "sudo apt-add-repository 'deb http://us.archive.ubuntu.com/ubuntu raring main universe'"
+  - "sudo apt-get update -qq"
+  - "sudo apt-get --only-upgrade install -qq python-scipy"
 
 install:
   - "pip install -q -r requirements.txt --use-mirrors"
