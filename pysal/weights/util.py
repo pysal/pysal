@@ -45,8 +45,8 @@ def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
 
     >>> from pysal import lat2W
     >>> w9 = lat2W(3,3)
-    >>> w9.pct_nonzero
-    0.29629629629629628
+    >>> "%.3f"%w9.pct_nonzero
+    '0.296'
     >>> w9[0]
     {1: 1.0, 3: 1.0}
     >>> w9[3]
