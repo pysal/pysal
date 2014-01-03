@@ -827,7 +827,9 @@ class W(object):
         if len(ids[0]) == 0:
             return []
         else:
-            return zip(ids[0], ids[1])
+            ijs = zip(ids[0], ids[1])
+            ijs.sort()
+            return ijs
 
 
     def full(self):
