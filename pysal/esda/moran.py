@@ -110,9 +110,6 @@ class Moran:
     >>> "%6.4f" % mi.I
     '0.2477'
     >>> mi.p_norm
-<<<<<<< HEAD
-    5.7916539074498452e-05
-=======
     0.0001158330781489969
 
     One-tailed version
@@ -124,7 +121,6 @@ class Moran:
     True
 
 
->>>>>>> 1b7b6be4c67868211cafa8f5ae33fcae38aa87b0
     """
     def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS,
         two_tailed=True):
@@ -135,15 +131,6 @@ class Moran:
         self.__moments()
         self.I = self.__calc(self.z)
         self.z_norm = (self.I - self.EI) / self.seI_norm
-<<<<<<< HEAD
-        self.z_rand = (self.I - self.EI) / self.seI_rand
-        if self.z_norm > 0:
-            self.p_norm = 1 - stats.norm.cdf(self.z_norm)
-            self.p_rand = 1 - stats.norm.cdf(self.z_rand)
-        else:
-            self.p_norm = stats.norm.cdf(self.z_norm)
-            self.p_rand = stats.norm.cdf(self.z_rand)
-=======
         self.p_norm =  1 - stats.norm.cdf(np.abs(self.z_norm))
         self.z_rand = (self.I - self.EI) / self.seI_rand
         self.p_rand =  1 - stats.norm.cdf(np.abs(self.z_rand))
@@ -151,7 +138,6 @@ class Moran:
         if two_tailed:
             self.p_norm *= 2.0
             self.p_rand *= 2.0 
->>>>>>> 1b7b6be4c67868211cafa8f5ae33fcae38aa87b0
 
         if permutations:
             sim = [self.__calc(np.random.permutation(self.z))
@@ -166,15 +152,8 @@ class Moran:
             self.seI_sim = np.array(sim).std()
             self.VI_sim = self.seI_sim ** 2
             self.z_sim = (self.I - self.EI_sim) / self.seI_sim
-<<<<<<< HEAD
-            if self.z_sim > 0:
-                self.p_z_sim = 1 - stats.norm.cdf(self.z_sim)
-            else:
-                self.p_z_sim = stats.norm.cdf(self.z_sim)
-=======
             # should use one-tail to compare with synthetic distribution
             self.p_z_sim = 1 - stats.norm.cdf(np.abs(self.z_sim))
->>>>>>> 1b7b6be4c67868211cafa8f5ae33fcae38aa87b0
 
     def __moments(self):
         self.n = len(self.y)
