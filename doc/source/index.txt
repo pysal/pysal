@@ -42,7 +42,7 @@ PySAL
       <a href="library/index.html">
         <img alt="Documentation" src="_static/images/documentation.png" title="Documentation"  height="80" style="display: block; margin-left: auto; margin-right: auto;"></a> </td>
     <td>
-      <a href="developers/index.html">
+      <a href="http://github.com/pysal/pysal/issues?state=open">
         <img alt="Bug Report" src="_static/images/bugs.png" title="Bug Report"  height="80" style="display: block; margin-left: auto; margin-right: auto;"></a> </td>
   </tr>
 
@@ -50,7 +50,7 @@ PySAL
     <td><strong><small><a href="users/installation.html">Install</a></small></strong></td>
     <td><strong><small><a href="users/tutorials/index.html">Getting Started</a></small></strong></td>
     <td><strong><small><a href="library/index.html">Documentation</a></small></strong></td>
-    <td><strong><small><a href="developers/index.html">Report Bugs</a></small></strong></td>
+    <td><strong><small><a href="http://github.com/pysal/pysal/issues?state=open">Report Bugs</a></small></strong></td>
   </tr>
   </table>
 
@@ -63,6 +63,11 @@ PySAL is licensed under the `BSD License`_.
 
 
 .. toctree::
+    :maxdepth: 1
+
     News <news>
     Funding <funding>
+    users/index
+    developers/index
+    library/index
 
