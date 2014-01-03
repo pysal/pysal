@@ -33,6 +33,9 @@ class Moran:
     permutations    : int
                       number of random permutations for calculation of
                       pseudo-p_values
+    two_tailed      : boolean
+                      If True (default), analytical p-values for Moran are for
+                      the two-tailed case. Otherwise they are one-tailed.
 
 
     Attributes
@@ -54,7 +57,7 @@ class Moran:
     z_norm       : float
                    z-value of I under normality assumption
     p_norm       : float
-                   p-value of I under normality assumption (one-tailed)
+                   p-value of I under normality assumption
     VI_rand      : float
                    variance of I under randomization assumption
     seI_rand     : float
@@ -62,9 +65,11 @@ class Moran:
     z_rand       : float
                    z-value of I under randomization assumption
     p_rand       : float
-                   p-value of I under randomization assumption (one-tailed)
+                   p-value of I under randomization assumption 
+    two_tailed   : Boolean, if true p_norm and p_rand are two-tailed, if false
+                   p_norm and p_rand are one tailed
     sim          : array (if permutations>0)
-                   vector of I values for permutated samples
+                   vector of I values for permuted samples
     p_sim        : array (if permutations>0)
                    p-value based on permutations (one-tailed)
                    null: spatial randomness
@@ -105,9 +110,24 @@ class Moran:
     >>> "%6.4f" % mi.I
     '0.2477'
     >>> mi.p_norm
+<<<<<<< HEAD
     5.7916539074498452e-05
+=======
+    0.0001158330781489969
+
+    One-tailed version
+
+    >>> mi_1 = pysal.Moran(SIDR,  w, two_tailed=False)
+    >>> "%6.4f" % mi_1.I
+    '0.2477'
+    >>> mi.p_norm == mi_1.p_norm * 2.
+    True
+
+
+>>>>>>> 1b7b6be4c67868211cafa8f5ae33fcae38aa87b0
     """
-    def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS):
+    def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS,
+        two_tailed=True):
         self.y = y
         w.transform = transformation
         self.w = w
@@ -115,6 +135,7 @@ class Moran:
         self.__moments()
         self.I = self.__calc(self.z)
         self.z_norm = (self.I - self.EI) / self.seI_norm
+<<<<<<< HEAD
         self.z_rand = (self.I - self.EI) / self.seI_rand
         if self.z_norm > 0:
             self.p_norm = 1 - stats.norm.cdf(self.z_norm)
@@ -122,6 +143,15 @@ class Moran:
         else:
             self.p_norm = stats.norm.cdf(self.z_norm)
             self.p_rand = stats.norm.cdf(self.z_rand)
+=======
+        self.p_norm =  1 - stats.norm.cdf(np.abs(self.z_norm))
+        self.z_rand = (self.I - self.EI) / self.seI_rand
+        self.p_rand =  1 - stats.norm.cdf(np.abs(self.z_rand))
+        self.two_tailed = two_tailed
+        if two_tailed:
+            self.p_norm *= 2.0
+            self.p_rand *= 2.0 
+>>>>>>> 1b7b6be4c67868211cafa8f5ae33fcae38aa87b0
 
         if permutations:
             sim = [self.__calc(np.random.permutation(self.z))
@@ -136,10 +166,15 @@ class Moran:
             self.seI_sim = np.array(sim).std()
             self.VI_sim = self.seI_sim ** 2
             self.z_sim = (self.I - self.EI_sim) / self.seI_sim
+<<<<<<< HEAD
             if self.z_sim > 0:
                 self.p_z_sim = 1 - stats.norm.cdf(self.z_sim)
             else:
                 self.p_z_sim = stats.norm.cdf(self.z_sim)
+=======
+            # should use one-tail to compare with synthetic distribution
+            self.p_z_sim = 1 - stats.norm.cdf(np.abs(self.z_sim))
+>>>>>>> 1b7b6be4c67868211cafa8f5ae33fcae38aa87b0
 
     def __moments(self):
         self.n = len(self.y)
