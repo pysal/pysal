@@ -31,6 +31,9 @@ class Moran:
                       "V": variance-stabilizing.
     permutations    : int
                       number of random permutations for calculation of pseudo-p_values
+    two_tailed      : boolean
+                      If True (default), analytical p-values for Moran are for
+                      the two-tailed case. Otherwise they are one-tailed.
 
 
     Attributes
@@ -52,8 +55,9 @@ class Moran:
     z_norm       : float
                    z-value of I under normality assumption
     p_norm       : float
-                   p-value of I under normality assumption (one-sided)
-                   for two-sided tests, this value should be multiplied by 2
+                   p-value of I under normality assumption
+    two_tailed   : Boolean, if true p_norm is two-tailed, if false p_norm is
+                   one tailed
     VI_rand      : float
                    variance of I under randomization assumption
     seI_rand     : float
@@ -61,9 +65,11 @@ class Moran:
     z_rand       : float
                    z-value of I under randomization assumption
     p_rand       : float
-                   p-value of I under randomization assumption (1-tailed)
+                   p-value of I under randomization assumption 
+    two_tailed   : Boolean, if true p_norm and p_rand are two-tailed, if false
+                   p_norm and p_rand are one tailed
     sim          : array (if permutations>0)
-                   vector of I values for permutated samples
+                   vector of I values for permuted samples
     p_sim        : array (if permutations>0)
                    p-value based on permutations (one-sided)
                    null: spatial randomness
