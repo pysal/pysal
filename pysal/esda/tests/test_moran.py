@@ -14,6 +14,8 @@ class Moran_Tester(unittest.TestCase):
         mi = moran.Moran(self.y, self.w)
         self.assertAlmostEquals(mi.I, 0.24365582621771659, 7)
         self.assertAlmostEquals(mi.p_norm, 0.00027147862770937614)
+        mi_1 = moran.Moran(self.y, self.w, two_tailed=False)
+        self.assertAlmostEquals(mi_1.p_norm, 0.00013573931385468807)
 
     def test_sids(self):
         w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
