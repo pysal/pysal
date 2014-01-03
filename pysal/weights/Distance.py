@@ -62,8 +62,8 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
     True
     >>> set([0,6]) == set(wnn2.neighbors[5])
     True
-    >>> wnn2.pct_nonzero
-    0.080000000000000002
+    >>> "%.2f"%wnn2.pct_nonzero
+    '0.08'
     >>> wnn4.pct_nonzero
     0.16
     >>> wnn3e=knnW(data,p=2,k=3)
