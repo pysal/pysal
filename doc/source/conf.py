@@ -226,3 +226,4 @@ intersphinx_mapping = {'http://docs.python.org/': None}
 
 #numpydoc option
 numpydoc_show_class_members = True
+numpydoc_class_members_toctree = False
