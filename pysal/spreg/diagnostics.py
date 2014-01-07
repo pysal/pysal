@@ -1067,8 +1067,8 @@ def koenker_bassett(reg, z=None):
     x attribute in the reg object must have a constant term included. This is
     standard for spreg.OLS so no testing done to confirm constant.
 
-    Reference
-    ---------
+    References
+    ----------
     .. [1] R. Koenker and G. Bassett. 1982. Robust tests for
        heteroscedasticity based on regression quantiles. Econometrica,
        50(1):43-61. 
