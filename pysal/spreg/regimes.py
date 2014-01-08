@@ -21,8 +21,8 @@ class Chow:
     according to the spatial or other type of regime structure
     ...
 
-    Arguments
-    =========
+    Parameters
+    ==========
     reg     : regression object
               Regression object from PySAL.spreg which is assumed to have the
               following attributes:
@@ -101,8 +101,8 @@ class Wald:
     Implementation following Greene [1]_ eq. (17-24), p. 488
     ...
 
-    Arguments
-    =========
+    Parameters
+    ==========
     reg     : regression object
               Regression object from PySAL.spreg
     r       : array
@@ -137,8 +137,8 @@ class Regimes_Frame:
         * Generating a list of names of X taking into account regimes
     ...
 
-    Arguments
-    =========
+    Parameters
+    ==========
     x            : array
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, excluding the constant
@@ -187,8 +187,6 @@ class Regimes_Frame:
     nr           : int
                    Number of different regimes in the 'regimes' list
 
-    Appends to self
-    ===============
     '''
     def __init__(self, x, regimes, constant_regi, cols2regi, names=None, yend=False):
         if cols2regi == 'all':
@@ -234,8 +232,8 @@ def wald_test(betas, r, q, vm):
     Implementation following Greene [1]_ eq. (17-24), p. 488
     ...
 
-    Arguments
-    =========
+    Parameters
+    ==========
     betas   : array
               kx1 array with coefficient estimates
     r       : array
@@ -273,8 +271,8 @@ def buildR(kr, kf, nr):
     across regimes
     ...
 
-    Arguments
-    =========
+    Parameters
+    ==========
     kr      : int
               Number of variables that vary across regimes ("regimized")
     kf      : int
@@ -298,8 +296,8 @@ def buildR1var(vari, kr, kf, kryd, nr):
     are the same across regimes
     ...
 
-    Arguments
-    =========
+    Parameters
+    ==========
     vari    : int
               Position of the variable to be tested (order in the sequence of
               variables per regime)
@@ -341,8 +339,8 @@ def regimeX_setup(x, regimes, cols2regi, regimes_set, constant=False):
     already
     ...
 
-    Arguments
-    =========
+    Parameters
+    ==========
     x           : np.array
                   Dense array of dimension (n, k) with values for all observations
                   IMPORTANT: constant term (if desired in the model) should be
@@ -399,8 +397,8 @@ def set_name_x_regimes(name_x, regimes, constant_regi, cols2regi, regimes_set):
     already
     ...
 
-    Arguments
-    =========
+    Parameters
+    ==========
     name_x          : list/None
                       If passed, list of strings with the names of the
                       variables aligned with the original dense array x

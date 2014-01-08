@@ -416,8 +416,8 @@ def w_clip(w1, w2, outSP=True, silent_island_warning=False):
     appropriate format and, if not, they are converted.
     ...
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     w1                      : pysal.W, scipy.sparse.csr.csr_matrix
                               Potentially continuous weights matrix to be clipped. The clipped
                               matrix wc will have at most the same elements as w1.

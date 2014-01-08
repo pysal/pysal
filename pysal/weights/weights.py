@@ -778,8 +778,8 @@ class W(object):
         """
         Asymmetry check
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         intrinsic: boolean (default=True)
                 
                 intrinsic symmetry:

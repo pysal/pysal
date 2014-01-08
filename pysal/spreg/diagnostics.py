@@ -11,8 +11,9 @@ from math import sqrt
 from utils import spmultiply, sphstack, spmin, spmax
 
 
-__all__ = [ "f_stat", "t_stat", "r2", "ar2", "se_betas", "log_likelihood", "akaike", "schwarz", "condition_index", "jarque_bera", "breusch_pagan", "white", "koenker_bassett", "vif" ]
-
+__all__ = [
+    "f_stat", "t_stat", "r2", "ar2", "se_betas", "log_likelihood", "akaike", "schwarz",
+    "condition_index", "jarque_bera", "breusch_pagan", "white", "koenker_bassett", "vif"]
 
 
 def f_stat(reg):
@@ -71,19 +72,18 @@ def f_stat(reg):
     >>> print("%12.12f"%testresult[0],"%12.12f"%testresult[1])
     ('28.385629224695', '0.000000009341')
 
-    """ 
+    """
     k = reg.k            # (scalar) number of ind. vars (includes constant)
     n = reg.n            # (scalar) number of observations
     utu = reg.utu        # (scalar) residual sum of squares
     predy = reg.predy    # (array) vector of predicted values (n x 1)
     mean_y = reg.mean_y  # (scalar) mean of dependent observations
     Q = utu
-    U = np.sum((predy-mean_y)**2)
-    fStat = (U/(k-1))/(Q/(n-k))
-    pValue = stats.f.sf(fStat,k-1,n-k)
+    U = np.sum((predy - mean_y) ** 2)
+    fStat = (U / (k - 1)) / (Q / (n - k))
+    pValue = stats.f.sf(fStat, k - 1, n - k)
     fs_result = (fStat, pValue)
     return fs_result
-
 
 
 def t_stat(reg, z_stat=False):
@@ -144,23 +144,21 @@ def t_stat(reg, z_stat=False):
 
     >>> print("%12.12f"%testresult[0][0], "%12.12f"%testresult[0][1], "%12.12f"%testresult[1][0], "%12.12f"%testresult[1][1], "%12.12f"%testresult[2][0], "%12.12f"%testresult[2][1])
     ('14.490373143689', '0.000000000000', '-4.780496191297', '0.000018289595', '-2.654408642718', '0.010874504910')
-    """ 
-    
+    """
+
     k = reg.k           # (scalar) number of ind. vars (includes constant)
     n = reg.n           # (scalar) number of observations
     vm = reg.vm         # (array) coefficients of variance matrix (k x k)
-    betas = reg.betas   # (array) coefficients of the regressors (1 x k) 
+    betas = reg.betas   # (array) coefficients of the regressors (1 x k)
     variance = vm.diagonal()
-    tStat = betas[range(0,len(vm))].reshape(len(vm),)/ np.sqrt(variance)
+    tStat = betas[range(0, len(vm))].reshape(len(vm),) / np.sqrt(variance)
     ts_result = []
     for t in tStat:
         if z_stat:
-            ts_result.append((t, stats.norm.sf(abs(t))*2))
+            ts_result.append((t, stats.norm.sf(abs(t)) * 2))
         else:
-            ts_result.append((t, stats.t.sf(abs(t),n-k)*2))
+            ts_result.append((t, stats.t.sf(abs(t), n - k) * 2))
     return ts_result
-
-
 
 
 def r2(reg):
@@ -219,15 +217,14 @@ def r2(reg):
     >>> print("%1.8f"%testresult)
     0.55240404
     
-    """ 
+    """
     y = reg.y               # (array) vector of dep observations (n x 1)
     mean_y = reg.mean_y     # (scalar) mean of dep observations
     utu = reg.utu           # (scalar) residual sum of squares
     ss_tot = ((y - mean_y) ** 2).sum(0)
-    r2 = 1-utu/ss_tot
+    r2 = 1 - utu / ss_tot
     r2_result = r2[0]
     return r2_result
-
 
 
 def ar2(reg):
@@ -285,12 +282,11 @@ def ar2(reg):
     >>> print("%1.8f"%testresult)
     0.53294335
 
-    """ 
+    """
     k = reg.k       # (scalar) number of ind. variables (includes constant)
     n = reg.n       # (scalar) number of observations
-    ar2_result =  1-(1-r2(reg))*(n-1)/(n-k)
+    ar2_result = 1 - (1 - r2(reg)) * (n - 1) / (n - k)
     return ar2_result
-
 
 
 def se_betas(reg):
@@ -348,12 +344,11 @@ def se_betas(reg):
     >>> testresult
     array([ 4.73548613,  0.33413076,  0.10319868])
     
-    """ 
-    vm = reg.vm         # (array) coefficients of variance matrix (k x k)  
+    """
+    vm = reg.vm         # (array) coefficients of variance matrix (k x k)
     variance = vm.diagonal()
     se_result = np.sqrt(variance)
     return se_result
-
 
 
 def log_likelihood(reg):
@@ -414,9 +409,9 @@ def log_likelihood(reg):
     """
     n = reg.n       # (scalar) number of observations
     utu = reg.utu   # (scalar) residual sum of squares
-    ll_result = -0.5*(n*(np.log(2*math.pi))+n*np.log(utu/n)+(utu/(utu/n)))
-    return ll_result   
-
+    ll_result = -0.5 * \
+        (n * (np.log(2 * math.pi)) + n * np.log(utu / n) + (utu / (utu / n)))
+    return ll_result
 
 
 def akaike(reg):
@@ -479,9 +474,8 @@ def akaike(reg):
     n = reg.n       # (scalar) number of observations
     k = reg.k       # (scalar) number of ind. variables (including constant)
     utu = reg.utu   # (scalar) residual sum of squares
-    aic_result = 2*k + n*(np.log((2*np.pi*utu)/n)+1)
+    aic_result = 2 * k + n * (np.log((2 * np.pi * utu) / n) + 1)
     return aic_result
-
 
 
 def schwarz(reg):
@@ -544,9 +538,8 @@ def schwarz(reg):
     n = reg.n      # (scalar) number of observations
     k = reg.k      # (scalar) number of ind. variables (including constant)
     utu = reg.utu  # (scalar) residual sum of squares
-    sc_result = k*np.log(n) + n*(np.log((2*np.pi*utu)/n)+1)
+    sc_result = k * np.log(n) + n * (np.log((2 * np.pi * utu) / n) + 1)
     return sc_result
-
 
 
 def condition_index(reg):
@@ -612,13 +605,12 @@ def condition_index(reg):
     elif hasattr(reg, 'hth'):
         xtx = reg.hth   # (array) k x k projection matrix (includes constant)
     diag = np.diagonal(xtx)
-    scale = xtx/diag    
+    scale = xtx / diag
     eigval = np.linalg.eigvals(scale)
     max_eigval = max(eigval)
     min_eigval = min(eigval)
-    ci_result = sqrt(max_eigval/min_eigval)
+    ci_result = sqrt(max_eigval / min_eigval)
     return ci_result
-
 
 
 def jarque_bera(reg):
@@ -697,20 +689,19 @@ def jarque_bera(reg):
 
     """
     n = reg.n               # (scalar) number of observations
-    u = reg.u               # (array) residuals from regression 
-    u2 = u**2                          
-    u3 = u**3                          
-    u4 = u**4                           
-    mu2 = np.mean(u2)       
-    mu3 = np.mean(u3)       
-    mu4 = np.mean(u4)         
-    S = mu3/(mu2**(1.5))    # skewness measure
-    K = (mu4/(mu2**2))      # kurtosis measure
-    jb = n*(((S**2)/6)+((K-3)**2)/24)
-    pvalue=stats.chisqprob(jb,2)
-    jb_result={"df":2,"jb":jb,'pvalue':pvalue}
-    return jb_result 
-
+    u = reg.u               # (array) residuals from regression
+    u2 = u ** 2
+    u3 = u ** 3
+    u4 = u ** 4
+    mu2 = np.mean(u2)
+    mu3 = np.mean(u3)
+    mu4 = np.mean(u4)
+    S = mu3 / (mu2 ** (1.5))    # skewness measure
+    K = (mu4 / (mu2 ** 2))      # kurtosis measure
+    jb = n * (((S ** 2) / 6) + ((K - 3) ** 2) / 24)
+    pvalue = stats.chisqprob(jb, 2)
+    jb_result = {"df": 2, "jb": jb, 'pvalue': pvalue}
+    return jb_result
 
 
 def breusch_pagan(reg, z=None):
@@ -744,8 +735,8 @@ def breusch_pagan(reg, z=None):
                       p-value associated with the statistic (chi^2
                       distributed with k df)
 
-    Note
-    ----
+    Notes
+    -----
     x attribute in the reg object must have a constant term included. This is
     standard for spreg.OLS so no testing done to confirm constant.
 
@@ -803,37 +794,37 @@ def breusch_pagan(reg, z=None):
     0.019250450075
 
     """
-    e2 = reg.u**2
+    e2 = reg.u ** 2
     e = reg.u
     n = reg.n
     k = reg.k
     ete = reg.utu
 
-    den = ete/n
-    g = e2/den - 1.0
+    den = ete / n
+    g = e2 / den - 1.0
 
     if z == None:
         x = reg.x
         #constant = constant_check(x)
-        #if constant == False: 
+        # if constant == False:
         #    z = np.hstack((np.ones((n,1)),x))**2
-        #else:
+        # else:
         #    z = x**2
         z = spmultiply(x, x)
     else:
         #constant = constant_check(z)
-        #if constant == False: 
+        # if constant == False:
         #    z = np.hstack((np.ones((n,1)),z))
         pass
 
-    n,p = z.shape
+    n, p = z.shape
 
     # Check to identify any duplicate columns in Z
     omitcolumn = []
     for i in range(p):
-        current = z[:,i]
+        current = z[:, i]
         for j in range(p):
-            check = z[:,j]
+            check = z[:, j]
             if i < j:
                 test = abs(current - check).sum()
                 if test == 0:
@@ -847,28 +838,27 @@ def breusch_pagan(reg, z=None):
     omitcolumn.sort()
     omitcolumn.reverse()
     for c in omitcolumn:
-        z = np.delete(z,c,1)
-    n,p = z.shape
+        z = np.delete(z, c, 1)
+    n, p = z.shape
 
-    df = p-1
+    df = p - 1
 
     # Now that the variables are prepared, we calculate the statistic
     zt = np.transpose(z)
     gt = np.transpose(g)
-    gtz = np.dot(gt,z)
-    ztg = np.dot(zt,g)
-    ztz = np.dot(zt,z)
+    gtz = np.dot(gt, z)
+    ztg = np.dot(zt, g)
+    ztz = np.dot(zt, z)
     ztzi = la.inv(ztz)
 
     part1 = np.dot(gtz, ztzi)
-    part2 = np.dot(part1,ztg)
-    bp_array = 0.5*part2
-    bp = bp_array[0,0]
+    part2 = np.dot(part1, ztg)
+    bp_array = 0.5 * part2
+    bp = bp_array[0, 0]
 
-    pvalue=stats.chisqprob(bp,df)
-    bp_result={'df':df,'bp':bp, 'pvalue':pvalue}
+    pvalue = stats.chisqprob(bp, df)
+    bp_result = {'df': df, 'bp': bp, 'pvalue': pvalue}
     return bp_result
-
 
 
 def white(reg):
@@ -894,8 +884,8 @@ def white(reg):
                       p-value associated with the statistic (chi^2
                       distributed with k df)
     
-    Note
-    ----
+    Notes
+    -----
     x attribute in the reg object must have a constant term included. This is
     standard for spreg.OLS so no testing done to confirm constant.
 
@@ -953,15 +943,15 @@ def white(reg):
     0.001279222817
 
     """
-    e = reg.u**2
+    e = reg.u ** 2
     k = reg.k
     n = reg.n
     y = reg.y
     X = reg.x
     #constant = constant_check(X)
-    
+
     # Check for constant, if none add one, see Greene 2003, pg. 222
-    #if constant == False: 
+    # if constant == False:
     #    X = np.hstack((np.ones((n,1)),X))
 
     # Check for multicollinearity in the X matrix
@@ -972,34 +962,34 @@ def white(reg):
 
     # Compute cross-products and squares of the regression variables
     if type(X).__name__ == 'ndarray':
-        A = np.zeros((n, (k*(k+1))/2.))
+        A = np.zeros((n, (k * (k + 1)) / 2.))
     elif type(X).__name__ == 'csc_matrix' or type(X).__name__ == 'csr_matrix':
         # this is probably inefficient
-        A = SP.lil_matrix((n, (k*(k+1))/2.))
+        A = SP.lil_matrix((n, (k * (k + 1)) / 2.))
     else:
-        raise Exception, "unknown X type, %s" %type(X).__name__
+        raise Exception, "unknown X type, %s" % type(X).__name__
     counter = 0
     for i in range(k):
-        for j in range(i,k):
-            v = spmultiply(X[:,i], X[:,j], False)
-            A[:,counter] = v
+        for j in range(i, k):
+            v = spmultiply(X[:, i], X[:, j], False)
+            A[:, counter] = v
             counter += 1
 
     # Append the original variables
-    A = sphstack(X,A)   # note: this also converts a LIL to CSR
-    n,k = A.shape
+    A = sphstack(X, A)   # note: this also converts a LIL to CSR
+    n, k = A.shape
 
     # Check to identify any duplicate or constant columns in A
     omitcolumn = []
     for i in range(k):
-        current = A[:,i]
+        current = A[:, i]
         # remove all constant terms (will add a constant back later)
         if spmax(current) == spmin(current):
             omitcolumn.append(i)
             pass
         # do not allow duplicates
         for j in range(k):
-            check = A[:,j]
+            check = A[:, j]
             if i < j:
                 test = abs(current - check).sum()
                 if test == 0:
@@ -1009,27 +999,28 @@ def white(reg):
 
     # Now the identified columns must be removed
     if type(A).__name__ == 'ndarray':
-        A = np.delete(A,omitcolumn,1)
+        A = np.delete(A, omitcolumn, 1)
     elif type(A).__name__ == 'csc_matrix' or type(A).__name__ == 'csr_matrix':
         # this is probably inefficient
         keepcolumn = range(k)
         for i in omitcolumn:
             keepcolumn.remove(i)
-        A = A[:,keepcolumn]
+        A = A[:, keepcolumn]
     else:
-        raise Exception, "unknown A type, %s" %type(X).__name__
-    A = sphstack(np.ones((A.shape[0],1)), A)   # add a constant back in
-    n,k = A.shape
+        raise Exception, "unknown A type, %s" % type(X).__name__
+    A = sphstack(np.ones((A.shape[0], 1)), A)   # add a constant back in
+    n, k = A.shape
 
     # Conduct the auxiliary regression and calculate the statistic
     import ols as OLS
-    aux_reg = OLS.BaseOLS(e,A)
+    aux_reg = OLS.BaseOLS(e, A)
     aux_r2 = r2(aux_reg)
-    wh = aux_r2*n
-    df = k-1
-    pvalue = stats.chisqprob(wh,df)
-    white_result={'df':df,'wh':wh, 'pvalue':pvalue}
-    return white_result 
+    wh = aux_r2 * n
+    df = k - 1
+    pvalue = stats.chisqprob(wh, df)
+    white_result = {'df': df, 'wh': wh, 'pvalue': pvalue}
+    return white_result
+
 
 def koenker_bassett(reg, z=None):
     """
@@ -1062,8 +1053,8 @@ def koenker_bassett(reg, z=None):
                       p-value associated with the statistic (chi^2
                       distributed)
 
-    Note
-    ----
+    Notes
+    -----
     x attribute in the reg object must have a constant term included. This is
     standard for spreg.OLS so no testing done to confirm constant.
 
@@ -1124,7 +1115,7 @@ def koenker_bassett(reg, z=None):
 
     """
     # The notation here matches that of Greene (2003).
-    u = reg.u**2
+    u = reg.u ** 2
     e = reg.u
     n = reg.n
     k = reg.k
@@ -1132,33 +1123,33 @@ def koenker_bassett(reg, z=None):
     ete = reg.utu
     #constant = constant_check(x)
 
-    ubar = ete/n
-    ubari = ubar*np.ones((n,1))
-    g = u-ubari
-    v = (1.0/n)*np.sum((u-ubar)**2)
+    ubar = ete / n
+    ubari = ubar * np.ones((n, 1))
+    g = u - ubari
+    v = (1.0 / n) * np.sum((u - ubar) ** 2)
 
     if z == None:
         x = reg.x
         #constant = constant_check(x)
-        #if constant == False: 
+        # if constant == False:
         #    z = np.hstack((np.ones((n,1)),x))**2
-        #else:
+        # else:
         #    z = x**2
         z = spmultiply(x, x)
     else:
         #constant = constant_check(z)
-        #if constant == False: 
+        # if constant == False:
         #    z = np.hstack((np.ones((n,1)),z))
         pass
 
-    n,p = z.shape
+    n, p = z.shape
 
     # Check to identify any duplicate columns in Z
     omitcolumn = []
     for i in range(p):
-        current = z[:,i]
+        current = z[:, i]
         for j in range(p):
-            check = z[:,j]
+            check = z[:, j]
             if i < j:
                 test = abs(current - check).sum()
                 if test == 0:
@@ -1172,28 +1163,27 @@ def koenker_bassett(reg, z=None):
     omitcolumn.sort()
     omitcolumn.reverse()
     for c in omitcolumn:
-        z = np.delete(z,c,1)
-    n,p = z.shape
+        z = np.delete(z, c, 1)
+    n, p = z.shape
 
-    df = p-1
+    df = p - 1
 
     # Conduct the auxiliary regression.
     zt = np.transpose(z)
     gt = np.transpose(g)
-    gtz = np.dot(gt,z)
-    ztg = np.dot(zt,g)
-    ztz = np.dot(zt,z)
+    gtz = np.dot(gt, z)
+    ztg = np.dot(zt, g)
+    ztz = np.dot(zt, z)
     ztzi = la.inv(ztz)
 
     part1 = np.dot(gtz, ztzi)
-    part2 = np.dot(part1,ztg)
-    kb_array = (1.0/v)*part2
-    kb = kb_array[0,0]
-    
-    pvalue=stats.chisqprob(kb,df)
-    kb_result = {'kb':kb,'df':df,'pvalue':pvalue}
-    return kb_result
+    part2 = np.dot(part1, ztg)
+    kb_array = (1.0 / v) * part2
+    kb = kb_array[0, 0]
 
+    pvalue = stats.chisqprob(kb, df)
+    kb_result = {'kb': kb, 'df': df, 'pvalue': pvalue}
+    return kb_result
 
 
 def vif(reg):
@@ -1274,28 +1264,27 @@ def vif(reg):
 
     """
     X = reg.x
-    n,k = X.shape
+    n, k = X.shape
     vif_result = []
 
     for j in range(k):
         Z = X.copy()
-        Z = np.delete(Z,j,1)
-        y  = X[:,j]
+        Z = np.delete(Z, j, 1)
+        y = X[:, j]
         import ols as OLS
-        aux = OLS.BaseOLS(y,Z)
+        aux = OLS.BaseOLS(y, Z)
         mean_y = aux.mean_y
         utu = aux.utu
-        ss_tot = sum((y-mean_y)**2)
+        ss_tot = sum((y - mean_y) ** 2)
         if ss_tot == 0:
             resj = pysal.MISSINGVALUE
         else:
-            r2aux = 1-utu/ss_tot
+            r2aux = 1 - utu / ss_tot
             tolj = 1 - r2aux
             vifj = 1 / tolj
-            resj = (vifj,tolj)
+            resj = (vifj, tolj)
         vif_result.append(resj)
     return vif_result
-
 
 
 def constant_check(array):
@@ -1333,17 +1322,17 @@ def constant_check(array):
 
     """
 
-    n,k = array.shape
+    n, k = array.shape
     constant = False
     for j in range(k):
-        variable = array[:,j]
+        variable = array[:, j]
         varmin = variable.min()
         varmax = variable.max()
         if varmin == varmax:
             constant = True
             break
     return constant
-        
+
 
 def _test():
     import doctest
@@ -1351,4 +1340,3 @@ def _test():
 
 if __name__ == '__main__':
     _test()
-

@@ -8,7 +8,9 @@ import os
 import gc
 import operator
 
-__all__ = ['lat2W', 'regime_weights', 'comb', 'order', 'higher_order', 'shimbel', 'remap_ids', 'full2W', 'full', 'WSP2W', 'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance', 'lat2SW', 'w_local_cluster', 'higher_order_sp']
+__all__ = [
+    'lat2W', 'regime_weights', 'comb', 'order', 'higher_order', 'shimbel', 'remap_ids', 'full2W', 'full', 'WSP2W',
+    'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance', 'lat2SW', 'w_local_cluster', 'higher_order_sp']
 
 
 def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
@@ -326,19 +328,20 @@ def higher_order(w, k=2):
         weights[id] = [1.0] * len(nids)
     return pysal.weights.W(neighbors, weights)
 
+
 def higher_order_sp(wsp, k=2):
     """
     Contiguity weights for a sparse W for order k
 
-    Arguments
-    =========
+    Parameters
+    ==========
 
     wsp:  WSP instance
 
     k: Order of contiguity
 
-    Return
-    ------
+    Returns
+    -------
 
     wk: WSP instance
         binary sparse contiguity of order k
@@ -364,23 +367,23 @@ def higher_order_sp(wsp, k=2):
     >>>     
     """
 
-
-    wk = wsp**k
-    rk,ck = wk.nonzero()
-    sk = set(zip(rk,ck))
-    for j in range(1,k):
-        wj = wsp**j
-        rj,cj = wj.nonzero()
-        sj = set(zip(rj,cj))
+    wk = wsp ** k
+    rk, ck = wk.nonzero()
+    sk = set(zip(rk, ck))
+    for j in range(1, k):
+        wj = wsp ** j
+        rj, cj = wj.nonzero()
+        sj = set(zip(rj, cj))
         sk.difference_update(sj)
-    d= {}
+    d = {}
     for pair in sk:
-        k,v = pair
+        k, v = pair
         if d.has_key(k):
             d[k].append(v)
         else:
             d[k] = [v]
     return pysal.weights.WSP(pysal.W(neighbors=d).sparse)
+
 
 def w_local_cluster(w):
     """
@@ -601,7 +604,7 @@ def full2W(m, ids=None):
         raise ValueError('Your array is not square')
     neighbors, weights = {}, {}
     for i in xrange(m.shape[0]):
-    #for i, row in enumerate(m):
+    # for i, row in enumerate(m):
         row = m[i]
         if ids:
             i = ids[i]
@@ -673,7 +676,8 @@ def WSP2W(wsp, silent_island_warning=False):
         weights[oid] = data[start:end]
         start = end
     ids = copy.copy(wsp.id_order)
-    w = pysal.W(neighbors, weights, ids, silent_island_warning=silent_island_warning)
+    w = pysal.W(neighbors, weights, ids,
+                silent_island_warning=silent_island_warning)
     w._sparse = copy.deepcopy(wsp.sparse)
     w._cache['sparse'] = w._sparse
     return w
@@ -834,10 +838,12 @@ def get_ids(shapefile, idVariable):
         db.close()
         return var
     except IOError:
-        msg = 'The shapefile "%s" appears to be missing its DBF file. The DBF file "%s" could not be found.' % (shapefile, dbname)
+        msg = 'The shapefile "%s" appears to be missing its DBF file. The DBF file "%s" could not be found.' % (
+            shapefile, dbname)
         raise IOError(msg)
     except AttributeError:
-        msg = 'The variable "%s" was not found in the DBF file. The DBF contains the following variables: %s.' % (idVariable, ','.join(db.header))
+        msg = 'The variable "%s" was not found in the DBF file. The DBF contains the following variables: %s.' % (
+            idVariable, ','.join(db.header))
         raise KeyError(msg)
 
 
@@ -887,7 +893,7 @@ def get_points_array_from_shapefile(shapefile):
     return data
 
 
-def min_threshold_distance(data,p=2):
+def min_threshold_distance(data, p=2):
     """
     Get the maximum nearest neighbor distance
 
