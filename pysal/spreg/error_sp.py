@@ -89,11 +89,11 @@ class BaseGM_Error(RegressionPropsY):
     >>> w = pysal.open(pysal.examples.get_path("columbus.gal"), 'r').read() 
     >>> w.transform='r'
     >>> model = BaseGM_Error(y, x, w=w.sparse)
-    >>> np.around(model.betas, decimals=6)
-    array([[ 47.694635],
-           [  0.710453],
-           [ -0.550527],
-           [  0.32573 ]])
+    >>> np.around(model.betas, decimals=4)
+    array([[ 47.6946],
+           [  0.7105],
+           [ -0.5505],
+           [  0.3257]])
     """
     def __init__(self, y, x, w):
 
@@ -280,19 +280,19 @@ class GM_Error(BaseGM_Error):
     values in model.se_betas).
     >>> print model.name_x
     ['CONSTANT', 'income', 'crime', 'lambda']
-    >>> np.around(model.betas, decimals=6)
-    array([[ 47.694635],
-           [  0.710453],
-           [ -0.550527],
-           [  0.32573 ]])
-    >>> np.around(model.std_err, decimals=6)
-    array([ 12.412038,   0.504443,   0.178496])
+    >>> np.around(model.betas, decimals=4)
+    array([[ 47.6946],
+           [  0.7105],
+           [ -0.5505],
+           [  0.3257]])
+    >>> np.around(model.std_err, decimals=4)
+    array([ 12.412 ,   0.5044,   0.1785])
     >>> np.around(model.z_stat, decimals=6)
     array([[  3.84261100e+00,   1.22000000e-04],
            [  1.40839200e+00,   1.59015000e-01],
            [ -3.08424700e+00,   2.04100000e-03]])
-    >>> np.around(model.sig2, decimals=6)
-    198.55957900000001
+    >>> round(model.sig2,4)
+    198.5596
 
     """
     def __init__(self, y, x, w,\
@@ -397,11 +397,11 @@ class BaseGM_Endog_Error(RegressionPropsY):
     >>> w = pysal.open(pysal.examples.get_path("columbus.gal"), 'r').read() 
     >>> w.transform='r'
     >>> model = BaseGM_Endog_Error(y, x, yend, q, w=w.sparse)
-    >>> np.around(model.betas, decimals=5)
-    array([[ 82.57297],
-           [  0.58096],
-           [ -1.44808],
-           [  0.34992]])
+    >>> np.around(model.betas, decimals=4)
+    array([[ 82.573 ],
+           [  0.581 ],
+           [ -1.4481],
+           [  0.3499]])
 
     '''
     def __init__(self, y, x, yend, q, w):
@@ -628,13 +628,13 @@ class GM_Endog_Error(BaseGM_Endog_Error):
 
     >>> print model.name_z
     ['CONSTANT', 'inc', 'hoval', 'lambda']
-    >>> np.around(model.betas, decimals=5)
-    array([[ 82.57297],
-           [  0.58096],
-           [ -1.44808],
-           [  0.34992]])
-    >>> np.around(model.std_err, decimals=6)
-    array([ 16.138089,   1.354476,   0.786205])
+    >>> np.around(model.betas, decimals=4)
+    array([[ 82.573 ],
+           [  0.581 ],
+           [ -1.4481],
+           [  0.3499]])
+    >>> np.around(model.std_err, decimals=4)
+    array([ 16.1381,   1.3545,   0.7862])
     
     '''
     def __init__(self, y, x, yend, q, w,\
@@ -1052,8 +1052,9 @@ class GM_Combo(BaseGM_Combo):
         x_constant = USER.check_constant(x)
         BaseGM_Combo.__init__(self, y=y, x=x_constant, w=w.sparse, yend=yend2, q=q2,\
                                 w_lags=w_lags, lag_q=lag_q)
+        self.rho = self.betas[-2]
         self.predy_e, self.e_pred, warn = sp_att(w,self.y,\
-                   self.predy,yend2[:,-1].reshape(self.n,1),self.betas[-2])
+                   self.predy,yend2[:,-1].reshape(self.n,1),self.rho)
         set_warn(self, warn)
         self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES"        
         self.name_ds = USER.set_name_ds(name_ds)

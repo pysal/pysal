@@ -8,7 +8,7 @@ from pysal import lag_spatial
 from utils import spdot, spbroadcast
 from user_output import check_constant
 
-def robust_vm(reg, gwk=None):
+def robust_vm(reg, gwk=None, sig2n_k=False):
     """
     Robust estimation of the variance-covariance matrix. Estimated by White (default) or HAC (if wk is provided). 
         
@@ -21,6 +21,9 @@ def robust_vm(reg, gwk=None):
     gwk             : PySAL weights object
                       Optional. Spatial weights based on kernel functions
                       If provided, returns the HAC variance estimation
+    sig2n_k         : boolean
+                      If True, then use n-k to rescale the vc matrix.
+                      If False, use n. (White only)
                       
     Returns
     --------
@@ -55,9 +58,9 @@ def robust_vm(reg, gwk=None):
     
     >>> ols = OLS(y,X, robust='white')
     >>> ols.vm
-    array([[ 0.24491641,  0.01092258, -0.03438619],
-           [ 0.01092258,  0.01796867, -0.00071345],
-           [-0.03438619, -0.00071345,  0.00501042]])
+    array([[ 0.24515481,  0.01093322, -0.03441966],
+           [ 0.01093322,  0.01798616, -0.00071414],
+           [-0.03441966, -0.00071414,  0.0050153 ]])
     
     Example with OLS and HAC
 
@@ -106,6 +109,8 @@ def robust_vm(reg, gwk=None):
         psi0 = spdot(xu.T,gwkxu)
     else:
         psi0 = spdot(xu.T,xu)
+        if sig2n_k:
+            psi0 = psi0*(1.*reg.n/(reg.n-reg.k))
     if tsls:
         psi1 = spdot(reg.varb,reg.zthhthi)
         psi = spdot(psi1,np.dot(psi0,psi1.T))

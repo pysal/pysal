@@ -139,18 +139,18 @@ class BaseGM_Lag(TSLS.BaseTSLS):
     >>> X = np.hstack((np.ones(y.shape),X))
     >>> reg=BaseGM_Lag(y, X, yend=yd2, q=q2, w=w.sparse, w_lags=w_lags)
     >>> reg.betas
-    array([[  4.53017056e+01],
-           [  6.20888617e-01],
-           [ -4.80723451e-01],
-           [  2.83622122e-02]])
+    array([[ 45.30170561],
+           [  0.62088862],
+           [ -0.48072345],
+           [  0.02836221]])
     >>> D.se_betas(reg)
     array([ 17.91278862,   0.52486082,   0.1822815 ,   0.31740089])
     >>> reg=BaseGM_Lag(y, X, yend=yd2, q=q2, w=w.sparse, w_lags=w_lags, robust='white')
     >>> reg.betas
-    array([[  4.53017056e+01],
-           [  6.20888617e-01],
-           [ -4.80723451e-01],
-           [  2.83622122e-02]])
+    array([[ 45.30170561],
+           [  0.62088862],
+           [ -0.48072345],
+           [  0.02836221]])
     >>> D.se_betas(reg)
     array([ 20.47077481,   0.50613931,   0.20138425,   0.38028295])
     >>> # instrument for HOVAL with DISCBD
@@ -410,10 +410,10 @@ class GM_Lag(BaseGM_Lag):
 
     >>> reg=GM_Lag(y, X, w=w, w_lags=2, name_x=['inc', 'crime'], name_y='hoval', name_ds='columbus')
     >>> reg.betas
-    array([[  4.53017056e+01],
-           [  6.20888617e-01],
-           [ -4.80723451e-01],
-           [  2.83622122e-02]])
+    array([[ 45.30170561],
+           [  0.62088862],
+           [ -0.48072345],
+           [  0.02836221]])
 
     Once the model is run, we can obtain the standard error of the coefficient
     estimates by calling the diagnostics module:
@@ -427,10 +427,10 @@ class GM_Lag(BaseGM_Lag):
 
     >>> reg=GM_Lag(y, X, w=w, w_lags=2, robust='white', name_x=['inc', 'crime'], name_y='hoval', name_ds='columbus')
     >>> reg.betas
-    array([[  4.53017056e+01],
-           [  6.20888617e-01],
-           [ -4.80723451e-01],
-           [  2.83622122e-02]])
+    array([[ 45.30170561],
+           [  0.62088862],
+           [ -0.48072345],
+           [  0.02836221]])
 
     And we can access the standard errors from the model object:
 
@@ -484,8 +484,9 @@ class GM_Lag(BaseGM_Lag):
         BaseGM_Lag.__init__(self, y=y, x=x_constant, w=w.sparse, yend=yend2, q=q2,\
                             w_lags=w_lags, robust=robust, gwk=gwk,\
                             lag_q=lag_q, sig2n_k=sig2n_k)
+        self.rho = self.betas[-1]
         self.predy_e, self.e_pred, warn = sp_att(w,self.y,self.predy,\
-                      yend2[:,-1].reshape(self.n,1),self.betas[-1])
+                      yend2[:,-1].reshape(self.n,1),self.rho)
         set_warn(self,warn)
         self.title = "SPATIAL TWO STAGE LEAST SQUARES"        
         self.name_ds = USER.set_name_ds(name_ds)
