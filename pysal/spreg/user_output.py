@@ -511,7 +511,7 @@ def check_robust(robust, wk):
                 if vmax > 1.0:
                     ##### NOTE: we are not checking for the case of exactly 1.0 #####
                     raise Exception, "Off-diagonal entries must be less than 1."
-        elif robust.lower() == 'white':
+        elif robust.lower() == 'white' or robust.lower() == 'ogmm':
             if wk:
                 raise Exception, "White requires that wk be set to None"
         else:
@@ -558,7 +558,7 @@ def check_spat_diag(spat_diag, w):
         if type(w).__name__ != 'W':
             raise Exception, "w must be a pysal.W object to run spatial diagnostics"
 
-def check_regimes(reg_set):
+def check_regimes(reg_set,N=None,K=None):
     """Check if there are at least two regimes
 
     Parameters
@@ -576,6 +576,9 @@ def check_regimes(reg_set):
     """
     if len(reg_set) < 2:
         raise Exception, "At least 2 regimes are needed to run regimes methods. Please check your regimes variable."
+    if 1.0*N/len(reg_set) < K+1:
+        raise Exception, "There aren't enough observations for the given number of regimes and variables. Please check your regimes variable."
+
 
 def check_constant(x):
     """Check if the X matrix contains a constant, raise exception if it does
