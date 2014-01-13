@@ -33,6 +33,9 @@ class Moran:
     permutations    : int
                       number of random permutations for calculation of
                       pseudo-p_values
+    two_tailed      : boolean
+                      If True (default) analytical p-values for Moran are two
+                      tailed, otherwise if False, they are one-tailed.
 
 
     Attributes
@@ -54,7 +57,7 @@ class Moran:
     z_norm       : float
                    z-value of I under normality assumption
     p_norm       : float
-                   p-value of I under normality assumption (one-tailed)
+                   p-value of I under normality assumption 
     VI_rand      : float
                    variance of I under randomization assumption
     seI_rand     : float
@@ -62,9 +65,12 @@ class Moran:
     z_rand       : float
                    z-value of I under randomization assumption
     p_rand       : float
-                   p-value of I under randomization assumption (one-tailed)
+                   p-value of I under randomization assumption 
+    two_tailed   : Boolean
+                   If True p_norm and p_rand are two-tailed, otherwise they
+                   are one-tailed.
     sim          : array (if permutations>0)
-                   vector of I values for permutated samples
+                   vector of I values for permuted samples
     p_sim        : array (if permutations>0)
                    p-value based on permutations (one-tailed)
                    null: spatial randomness
@@ -94,7 +100,7 @@ class Moran:
     >>> mi.EI
     -0.012987012987012988
     >>> mi.p_norm
-    0.00013573931385468807
+    0.00027147862770937614
 
     SIDS example replicating OpenGeoda
 
@@ -105,9 +111,21 @@ class Moran:
     >>> "%6.4f" % mi.I
     '0.2477'
     >>> mi.p_norm
+    0.0001158330781489969
+
+    One-tailed
+
+    >>> mi_1 = pysal.Moran(SIDR,  w, two_tailed=False)
+    >>> "%6.4f" % mi_1.I
+    '0.2477'
+    >>> mi_1.p_norm
+    5.7916539074498452e-05
+
+
     5.7916539074498452e-05
     """
-    def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS):
+    def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS,
+        two_tailed=True):
         self.y = y
         w.transform = transformation
         self.w = w
@@ -116,12 +134,18 @@ class Moran:
         self.I = self.__calc(self.z)
         self.z_norm = (self.I - self.EI) / self.seI_norm
         self.z_rand = (self.I - self.EI) / self.seI_rand
+
         if self.z_norm > 0:
             self.p_norm = 1 - stats.norm.cdf(self.z_norm)
             self.p_rand = 1 - stats.norm.cdf(self.z_rand)
         else:
             self.p_norm = stats.norm.cdf(self.z_norm)
             self.p_rand = stats.norm.cdf(self.z_rand)
+
+        if two_tailed:
+            self.p_norm *= 2.
+            self.p_rand *= 2.
+
 
         if permutations:
             sim = [self.__calc(np.random.permutation(self.z))
@@ -211,7 +235,7 @@ class Moran_BV:
     I             : float
                     value of bivariate Moran's I
     sim           : array (if permutations>0)
-                    vector of I values for permutated samples
+                    vector of I values for permuted samples
     p_sim         : float (if permutations>0)
                     p-value based on permutations (one-sided)
                     null: spatial randomness
@@ -393,6 +417,9 @@ class Moran_Rate(Moran):
                       "D": doubly-standardized,
                       "U": untransformed (general weights),
                       "V": variance-stabilizing.
+    two_tailed      : Boolean
+                      If True (default), analytical p-values for Moran's I are
+                      two-tailed, otherwise they are one tailed.
     permutations    : int
                       number of random permutations for calculation of pseudo
                       p_values
@@ -419,8 +446,7 @@ class Moran_Rate(Moran):
     z_norm       : float
                    z-value of I under normality assumption
     p_norm       : float
-                   p-value of I under normality assumption (one-sided)
-                   for two-sided tests, this value should be multiplied by 2
+                   p-value of I under normality assumption 
     VI_rand      : float
                    variance of I under randomization assumption
     seI_rand     : float
@@ -428,9 +454,12 @@ class Moran_Rate(Moran):
     z_rand       : float
                    z-value of I under randomization assumption
     p_rand       : float
-                   p-value of I under randomization assumption (1-tailed)
+                   p-value of I under randomization assumption
+    two_tailed   : Boolean
+                   If True, p_norm and p_rand are two-tailed p-values,
+                   otherwise they are one-tailed.
     sim          : array (if permutations>0)
-                   vector of I values for permutated samples
+                   vector of I values for permuted samples
     p_sim        : array (if permutations>0)
                    p-value based on permutations (one-sided)
                    null: spatial randomness
@@ -460,7 +489,7 @@ class Moran_Rate(Moran):
     >>> f = pysal.open(pysal.examples.get_path("sids2.dbf"))
     >>> e = np.array(f.by_col('SID79'))
     >>> b = np.array(f.by_col('BIR79'))
-    >>> mi = pysal.esda.moran.Moran_Rate(e, b,  w)
+    >>> mi = pysal.esda.moran.Moran_Rate(e, b,  w, two_tailed=False)
     >>> "%6.4f" % mi.I
     '0.1662'
     >>> "%6.4f" % mi.p_norm
@@ -468,13 +497,13 @@ class Moran_Rate(Moran):
     """
 
     def __init__(self, e, b, w, adjusted=True, transformation="r",
-                 permutations=PERMUTATIONS):
+                 permutations=PERMUTATIONS, two_tailed=True):
         if adjusted:
             y = assuncao_rate(e, b)
         else:
             y = e * 1.0 / b
         Moran.__init__(self, y, w, transformation=transformation,
-                       permutations=permutations)
+                       permutations=permutations, two_tailed=two_tailed)
 
 
 class Moran_Local:
@@ -513,7 +542,7 @@ class Moran_Local:
     q            : array (if permutations>0)
                    values indicate quadrat location 1 HH,  2 LH,  3 LL,  4 HL
     sim          : array (if permutations>0)
-                   vector of I values for permutated samples
+                   vector of I values for permuted samples
     p_sim        : array (if permutations>0)
                    p-value based on permutations (one-sided)
                    null: spatial randomness
@@ -598,7 +627,7 @@ class Moran_Local:
         replacement from a set of ids that doesn't include i. numpy doesn't
         directly support sampling wo replacement and it is expensive to
         implement this. instead we omit i from the original ids,  permutate the
-        ids and take the first ni elements of the permutated ids as the
+        ids and take the first ni elements of the permuted ids as the
         neighbors to i in each randomization.
 
         """
@@ -673,7 +702,7 @@ class Moran_Local_Rate(Moran_Local):
     q            : array (if permutations>0)
                    values indicate quadrat location 1 HH,  2 LH,  3 LL,  4 HL
     sim          : array (if permutations>0)
-                   vector of I values for permutated samples
+                   vector of I values for permuted samples
     p_sim        : array (if permutations>0)
                    p-value based on permutations (one-sided)
                    null: spatial randomness

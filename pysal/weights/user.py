@@ -36,14 +36,15 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
     Examples
     --------
     >>> wq=queen_from_shapefile(pysal.examples.get_path("columbus.shp"))
-    >>> wq.pct_nonzero
-    0.098292378175760101
+    >>> "%.3f"%wq.pct_nonzero
+    '0.098'
     >>> wq=queen_from_shapefile(pysal.examples.get_path("columbus.shp"),"POLYID")
-    >>> wq.pct_nonzero
-    0.098292378175760101
+    >>> "%.3f"%wq.pct_nonzero
+    '0.098'
     >>> wq=queen_from_shapefile(pysal.examples.get_path("columbus.shp"), sparse=True)
-    >>> wq.sparse.nnz *1. / wq.n**2
-    0.098292378175760101
+    >>> pct_sp = wq.sparse.nnz *1. / wq.n**2
+    >>> "%.3f"%pct_sp
+    '0.098'
 
 
 
@@ -95,11 +96,12 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
     Examples
     --------
     >>> wr=rook_from_shapefile(pysal.examples.get_path("columbus.shp"), "POLYID")
-    >>> wr.pct_nonzero
-    0.083298625572678045
+    >>> "%.3f"%wr.pct_nonzero
+    '0.083'
     >>> wr=rook_from_shapefile(pysal.examples.get_path("columbus.shp"), sparse=True)
-    >>> wr.sparse.nnz *1. / wr.n**2
-    0.083298625572678045
+    >>> pct_sp = wr.sparse.nnz *1. / wr.n**2
+    >>> "%.3f"%pct_sp
+    '0.083'
 
     Notes
     -----
@@ -203,8 +205,8 @@ def knnW_from_array(array, k=2, p=2, ids=None, radius=None):
     True
     >>> set([0,6]) == set(wnn2.neighbors[5])
     True
-    >>> wnn2.pct_nonzero
-    0.080000000000000002
+    >>> "%.2f"%wnn2.pct_nonzero
+    '0.08'
     >>> wnn4.pct_nonzero
     0.16
     >>> wnn4=knnW_from_array(data,k=4)
@@ -268,8 +270,8 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
     Polygon shapefile
 
     >>> wc=knnW_from_shapefile(pysal.examples.get_path("columbus.shp"))
-    >>> wc.pct_nonzero
-    0.040816326530612242
+    >>> "%.4f"%wc.pct_nonzero
+    '0.0408'
     >>> set([2,1]) == set(wc.neighbors[0])
     True
     >>> wc3=pysal.knnW_from_shapefile(pysal.examples.get_path("columbus.shp"),k=3)
@@ -295,8 +297,8 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
     >>> w.pct_nonzero
     0.011904761904761904
     >>> w1=knnW_from_shapefile(pysal.examples.get_path("juvenile.shp"),k=1)
-    >>> w1.pct_nonzero
-    0.0059523809523809521
+    >>> "%.3f"%w1.pct_nonzero
+    '0.006'
     >>>
 
     Notes

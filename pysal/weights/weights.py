@@ -74,8 +74,8 @@ class W(object):
     >>> neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
     >>> weights = {0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
     >>> w = W(neighbors, weights)
-    >>> w.pct_nonzero
-    0.29629629629629628
+    >>> "%.3f"%w.pct_nonzero
+    '0.296'
 
     Read from external gal file
 
@@ -83,15 +83,15 @@ class W(object):
     >>> w = pysal.open(pysal.examples.get_path("stl.gal")).read()
     >>> w.n
     78
-    >>> w.pct_nonzero
-    0.065417488494411577
+    >>> "%.3f"%w.pct_nonzero
+    '0.065'
 
     Set weights implicitly
 
     >>> neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
     >>> w = W(neighbors)
-    >>> w.pct_nonzero
-    0.29629629629629628
+    >>> "%.3f"%w.pct_nonzero
+    '0.296'
     >>> w = lat2W(100, 100)
     >>> w.trcW2
     39600.0
@@ -793,8 +793,7 @@ class W(object):
         -------
         asymmetries : list
                       empty if no asymmetries are found
-                      if asymmetries, first list is row indices, second
-                      list is column indices of asymmetric cells
+                      if asymmetries, then a list of (i,j) tuples is returned 
 
         Examples
         --------
@@ -804,22 +803,16 @@ class W(object):
         >>> w.asymmetry()
         []
         >>> w.transform='r'
-        >>> result = w.asymmetry()[0:2]
-        >>> print result[0]
-        [1 3 0 2 4 1 5 0 4 6 1 3 5 7 2 4 8 3 7 4 6 8 5 7]
-        >>> print result[1]
-        [0 0 1 1 1 2 2 3 3 3 4 4 4 4 5 5 5 6 6 7 7 7 8 8]
+        >>> w.asymmetry()
+        [(0, 1), (0, 3), (1, 0), (1, 2), (1, 4), (2, 1), (2, 5), (3, 0), (3, 4), (3, 6), (4, 1), (4, 3), (4, 5), (4, 7), (5, 2), (5, 4), (5, 8), (6, 3), (6, 7), (7, 4), (7, 6), (7, 8), (8, 5), (8, 7)]
         >>> result = w.asymmetry(intrinsic=False)
         >>> result
         []
         >>> neighbors={0:[1,2,3], 1:[1,2,3], 2:[0,1], 3:[0,1]}
         >>> weights={0:[1,1,1], 1:[1,1,1], 2:[1,1], 3:[1,1]}
         >>> w=W(neighbors,weights)
-        >>> result = w.asymmetry()
-        >>> print result[0]
-        [1 0]
-        >>> print result[1]
-        [0 1]
+        >>> w.asymmetry()
+        [(0, 1), (1, 0)]
         """
 
         if intrinsic:
@@ -834,7 +827,9 @@ class W(object):
         if len(ids[0]) == 0:
             return []
         else:
-            return ids
+            ijs = zip(ids[0], ids[1])
+            ijs.sort()
+            return ijs
 
 
     def full(self):
