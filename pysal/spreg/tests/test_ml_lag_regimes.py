@@ -4,7 +4,7 @@ import numpy as np
 from pysal.spreg.ml_lag_regimes import ML_Lag_Regimes
 from pysal.spreg.ml_lag import ML_Lag
 from pysal.spreg import utils
-
+ 
 class TestMLError(unittest.TestCase):
     def setUp(self):
         db =  pysal.open(pysal.examples.get_path("baltim.dbf"),'r')
