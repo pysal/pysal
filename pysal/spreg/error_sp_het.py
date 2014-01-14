@@ -1216,8 +1216,9 @@ class GM_Combo_Het(BaseGM_Combo_Het):
                                 w=w.sparse, w_lags=w_lags,\
                                 max_iter=max_iter, step1c=step1c, lag_q=lag_q,\
                                 epsilon=epsilon, inv_method=inv_method)
+        self.rho = self.betas[-2]
         self.predy_e, self.e_pred, warn = UTILS.sp_att(w,self.y,self.predy,\
-                            yend2[:,-1].reshape(self.n,1),self.betas[-2])
+                            yend2[:,-1].reshape(self.n,1),self.rho)
         UTILS.set_warn(self,warn)
         self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HET)"        
         self.name_ds = USER.set_name_ds(name_ds)

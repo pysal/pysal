@@ -99,30 +99,30 @@ class LMtests:
 
     >>> lms = pysal.spreg.diagnostics_sp.LMtests(ols, w)
 
-    LM error test (rounded to 6 decimals)
+    LM error test:
 
-    >>> np.around(lms.lme, decimals=6)
-    array([ 3.097094,  0.078432])
+    >>> print round(lms.lme[0],4), round(lms.lme[1],4)
+    3.0971 0.0784
 
-    LM lag test (rounded to 6 decimals)
+    LM lag test:
 
-    >>> np.around(lms.lml, decimals=6)
-    array([ 0.981552,  0.321816])
+    >>> print round(lms.lml[0],4), round(lms.lml[1],4)
+    0.9816 0.3218
 
-    Robust LM error test (rounded to 6 decimals)
+    Robust LM error test:
 
-    >>> np.around(lms.rlme, decimals=6)
-    array([ 3.209187,  0.073226])
+    >>> print round(lms.rlme[0],4), round(lms.rlme[1],4)
+    3.2092 0.0732
 
-    Robust LM lag test (rounded to 6 decimals)
+    Robust LM lag test:
 
-    >>> np.around(lms.rlml, decimals=6)
-    array([ 1.093645,  0.295665])
+    >>> print round(lms.rlml[0],4), round(lms.rlml[1],4)
+    1.0936 0.2957
 
-    LM SARMA test (rounded to 6 decimals)
+    LM SARMA test:
 
-    >>> np.around(lms.sarma, decimals=6)
-    array([ 4.190739,  0.123025])
+    >>> print round(lms.sarma[0],4), round(lms.sarma[1],4)
+    4.1907 0.123
     """
     def __init__(self, ols, w, tests=['all']):
         cache = spDcache(ols, w)
@@ -203,31 +203,31 @@ class MoranRes:
 
     >>> m = pysal.spreg.diagnostics_sp.MoranRes(ols, w, z=True)
 
-    Value of the Moran's I statistic rounded to 6 decimals
+    Value of the Moran's I statistic:
 
-    >>> np.around(m.I, decimals=6)
-    0.17130999999999999
+    >>> print round(m.I,4)
+    0.1713
 
-    Value of the Moran's I expectation rounded to 6 decimals
+    Value of the Moran's I expectation:
 
-    >>> np.around(m.eI, decimals=6)
-    -0.034522999999999998
+    >>> print round(m.eI,4)
+    -0.0345
 
-    Value of the Moran's I variance rounded to 6 decimals
+    Value of the Moran's I variance:
 
-    >>> np.around(m.vI, decimals=6)
-    0.0081300000000000001
+    >>> print round(m.vI,4)
+    0.0081
 
-    Value of the Moran's I standardized value rounded to 6 decimals. This is
+    Value of the Moran's I standardized value. This is
     distributed as a standard Normal(0, 1)
 
-    >>> np.around(m.zI, decimals=6)
-    2.2827389999999999
+    >>> print round(m.zI,4)
+    2.2827
 
-    P-value of the standardized Moran's I value (z) rounded to 6 decimals
+    P-value of the standardized Moran's I value (z):
 
-    >>> np.around(m.p_norm, decimals=6)
-    0.022446000000000001
+    >>> print round(m.p_norm,4)
+    0.0224
     """
     def __init__(self, ols, w, z=False):
         cache = spDcache(ols, w)
@@ -392,7 +392,7 @@ class AKtest:
     def __init__(self, iv, w, case='nosp'):
         if case == 'gen':
             cache = spDcache(iv, w)
-            self.mi, self.ak, self.p = akTest(iv, w, cache)
+            self.mi, self.ak, self.p = akTest(iv, w, cache) 
         elif case == 'nosp':
             cache = spDcache(iv, w)
             self.mi = get_mI(iv, w, cache)
