@@ -5,7 +5,6 @@ import pysal
 import math
 import numpy as np
 import scipy.sparse
-import gc
 from os.path import basename as BASENAME
 from pysal.weights import  util
 
@@ -172,14 +171,12 @@ class W(object):
         row = []
         col = []
         data = []
-        gc.disable()
         id2i = self.id2i
         for id_i, neigh_list in self.neighbor_offsets.iteritems():
             card = self.cardinalities[id_i]
             row.extend([id2i[id_i]] * card)
             col.extend(neigh_list)
             data.extend(self.weights[id_i])
-        gc.enable()
         row = np.array(row)
         col = np.array(col)
         data = np.array(data)
