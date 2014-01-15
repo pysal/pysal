@@ -34,7 +34,6 @@ class Moran:
                       number of random permutations for calculation of
                       pseudo-p_values
 
-
     Attributes
     ----------
     y            : array
@@ -174,9 +173,8 @@ class Moran:
 
 
 class Moran_BV:
-    """Bivariate Moran's I
-
-
+    """
+    Bivariate Moran's I
 
     Parameters
     ----------
@@ -197,7 +195,6 @@ class Moran_BV:
                       number of random permutations for calculation of pseudo
                       p_values
 
-
     Attributes
     ----------
     zx            : array
@@ -216,7 +213,7 @@ class Moran_BV:
                     p-value based on permutations (one-sided)
                     null: spatial randomness
                     alternative: the observed I is extreme
-                                 it is either extremely high or extremely low
+                    it is either extremely high or extremely low
     EI_sim        : array (if permutations>0)
                     average value of I from permutations
     VI_sim        : array (if permutations>0)
@@ -371,7 +368,8 @@ def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
 
 
 class Moran_Rate(Moran):
-    """Adjusted Moran's I Global Autocorrelation Statistic for Rate Variables
+    """
+    Adjusted Moran's I Global Autocorrelation Statistic for Rate Variables
 
     Parameters
     ----------
@@ -396,7 +394,6 @@ class Moran_Rate(Moran):
     permutations    : int
                       number of random permutations for calculation of pseudo
                       p_values
-
 
     Attributes
     ----------
@@ -633,8 +630,8 @@ class Moran_Local:
 
 
 class Moran_Local_Rate(Moran_Local):
-    """Adjusted Local Moran Statistics for Rate Variables
-
+    """
+    Adjusted Local Moran Statistics for Rate Variables
 
     Parameters
     ----------
@@ -655,7 +652,6 @@ class Moran_Local_Rate(Moran_Local):
                      "V": variance-stabilizing.
     permutations   : number of random permutations for calculation of pseudo
                      p_values
-
 
     Attributes
     ----------
