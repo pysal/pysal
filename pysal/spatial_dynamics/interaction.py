@@ -160,20 +160,15 @@ def knox(s_coords, t_coords, delta, tau, permutations=99, debug=False):
     ----------
     s_coords        : array
                       nx2 spatial coordinates
-
     t_coords        : array
                       nx1 temporal coordinates
-
     delta           : float
                       threshold for proximity in space
-
     tau             : float
                       threshold for proximity in time
-
     permutations    : int
                       the number of permutations used to establish pseudo-
                       significance (default is 99)
-
     debug           : bool
                       if true, debugging information is printed
 
@@ -509,23 +504,18 @@ def jacquez(s_coords, t_coords, k, permutations=99):
 
 def modified_knox(s_coords, t_coords, delta, tau, permutations=99):
     """
-    Baker's modified Knox test for spatio-temporal interaction. [1]_
+    Baker's modified Knox test for spatio-temporal interaction. [4]_
 
     Parameters
     ----------
     s_coords        : array
                       nx2 spatial coordinates
-
     t_coords        : array
                       nx1 temporal coordinates
-
-
     delta           : float
                       threshold for proximity in space
-
     tau             : float
                       threshold for proximity in time
-
     permutations    : int
                       the number of permutations used to establish pseudo-
                       significance (default is 99)
@@ -542,9 +532,8 @@ def modified_knox(s_coords, t_coords, delta, tau, permutations=99):
 
     References
     ----------
-    .. [1] R.D. Baker. Identifying space-time disease clusters. Acta Tropica,
+    .. [4] R.D. Baker. Identifying space-time disease clusters. Acta Tropica,
        91(3):291-299, 2004
-
 
     Examples
     --------
