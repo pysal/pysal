@@ -623,17 +623,15 @@ class LISA_Markov(Markov):
 
     y  : array (n,t)
          n cross-sectional units observed over t time periods
-
     w  : weights instance
-
     permutations : int
                    number of permutations used to determine LISA significance
                    default = 0
-
     significance_level : float
                          significance level (two-sided) for filtering significant LISA end
                          points in a transition
                          default = 0.05
+
     Attributes
     ----------
     chi_2        : tuple (3 elements)
@@ -684,6 +682,7 @@ class LISA_Markov(Markov):
                        integer values indicating the type and significance of a LISA
                        transition. st = 1 if significant in period t, else
                        st=0
+
     .. Table:: Significant Moves
 
                        ===============  ===================
@@ -739,7 +738,6 @@ class LISA_Markov(Markov):
                    ergodic distribution
     transitions  : matrix (4, 4)
                    count of transitions between each state i and j
-
     spillover    : binary array (n, 1)
                    locations that were not part of a cluster in period 1 but
                    joined a prexisting cluster in period 2
@@ -1052,7 +1050,6 @@ def kullback(F):
        r initial states
        r terminal states
 
-
     Returns
     -------
 
@@ -1065,14 +1062,11 @@ def kullback(F):
 
         Conditional homogeneity dof - (int) degrees of freedom =  r(s-1)(r-1)
 
-
     Notes
     -----
 
     Based on  Kullback, Kupperman and Ku (1962) [2]_
     Example below is taken from Table 9.2 
-
-
 
     Examples
     --------
@@ -1102,7 +1096,6 @@ def kullback(F):
     30
     >>> res['Conditional homogeneity pvalue']
     0.0
-
 
     References
     ----------
@@ -1167,7 +1160,6 @@ def prais(pmat):
 
             pr_i = 1 - \sum_j p_{i,j}
 
-
     Examples
     --------
     >>> import numpy as np
@@ -1190,9 +1182,6 @@ def prais(pmat):
             [ 0.        ,  0.        ,  0.00125156,  0.07133917,  0.92740926]])
     >>> pysal.spatial_dynamics.markov.prais(m.p)
     matrix([[ 0.08988764,  0.21468144,  0.21125   ,  0.20194986,  0.07259074]])
-
-
-
 
     """
     pr = (pmat.sum(axis=1) - np.diag(pmat))[0]
@@ -1218,7 +1207,6 @@ def shorrock(pmat):
     .. math::
 
          sh = (k  - \sum_{j=1}^{k} p_{j,j})/(k - 1)
-
 
     Examples
     --------
