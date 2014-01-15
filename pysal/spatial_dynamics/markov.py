@@ -136,7 +136,7 @@ class Markov:
 
     """
     def __init__(self, class_ids, classes=[]):
-        #pylint: Dangerous default value [] as argument
+        #pylint; Dangerous default value [] as argument
         if len(classes):
             self.classes = classes
         else:
@@ -469,7 +469,7 @@ class Spatial_Markov:
             try:
                 F[i] = fmpt(p_i)
             except:
-                #pylint: "No exception type(s) specified"
+                #pylint; "No exception type(s) specified"
                 print "Singlular fmpt matrix for class ", i
             P[i] = p_i
         return T, P, ss, F
@@ -586,9 +586,9 @@ def chi2(T1, T2):
     Second matrix is used to form the probabilities under the null.
     Marginal sums from first matrix are distributed across these probabilities
     under the null. In other words the observed transitions are taken from T1
-    while the expected transitions are formed as:
+    while the expected transitions are formed as follows
 
-        .. math::
+    .. math::
 
             E_{i,j} = \sum_j T1_{i,j} * T2_{i,j}/\sum_j T2_{i,j}
 
@@ -640,8 +640,7 @@ class LISA_Markov(Markov):
                    chi square test statistic
                    p-value
                    degrees of freedom
-                   for test that dynamics of y are independent of dynamics of
-                       wy
+                   for test that dynamics of y are independent of dynamics of wy
     classes      : array (4, 1)
                    1=HH, 2=LH, 3=LL, 4=HL (own, lag)
     expected_t   : array (4, 4)
@@ -651,6 +650,8 @@ class LISA_Markov(Markov):
                    integer values indicating which type of LISA transition
                    occurred (q1 is quadrant in period 1, q2 is quadrant in
                    period 2)
+
+    .. Table:: Move Types
 
                    ==  ==     ========
                    q1  q2     move_type
@@ -683,6 +684,7 @@ class LISA_Markov(Markov):
                        integer values indicating the type and significance of a LISA
                        transition. st = 1 if significant in period t, else
                        st=0
+    .. Table:: Significant Moves
 
                        ===============  ===================
                        (s1,s2)          move_type
@@ -796,8 +798,10 @@ class LISA_Markov(Markov):
 
     Any value less than 49 indicates at least one of the LISA end points was
     significant. So for example, the first spatial unit experienced a
-    transition of type 11 (LL, LL)  during the first three and last tree intervals (according to lm.move_types), however, the last three of these transitions involved insignificant LISAS in both the start and ending year of each transition.
-
+    transition of type 11 (LL, LL)  during the first three and last tree
+    intervals (according to lm.move_types), however, the last three of these
+    transitions involved insignificant LISAS in both the start and ending year
+    of each transition.
 
     Test whether the moves of y are independent of the moves of wy
 
@@ -904,7 +908,7 @@ class LISA_Markov(Markov):
                    which quadrant in the scatterplot should form the core of a
                    cluster
 
-        neighbors_on: binary
+        neighbors_on : binary
                    If false then only the 1st order neighbors of a core
                    location are included in the cluster.
                    If true, neighbors of cluster core 1st order neighbors are
@@ -912,12 +916,11 @@ class LISA_Markov(Markov):
 
         Returns
         -------
-        dictionary: two keys: values pairs
-                    'components': array (n, t)
+        dictionary : two keys - values pairs
+                    'components' - array (n, t)
                     values are integer ids (starting at 1) indicating which
                     component/cluster observation i in period t belonged to
-
-                    'spillover': array (n, t-1)
+                    'spillover' - array (n, t-1)
                     binary values indicating if the location was a spill-over
                     location that became a new member of a previously existing
                     cluster
@@ -1043,7 +1046,7 @@ def kullback(F):
 
     Parameters
     ----------
-    F: array (s, r, r)
+    F : array (s, r, r)
        Values are transitions (not probabilities) for
        s strata
        r initial states
@@ -1053,23 +1056,21 @@ def kullback(F):
     Returns
     -------
 
-    Results: Dictionary (key: value)
+    Results : Dictionary (key - value)
 
-        Conditional homogeneity: (float) test statistic for homogeneity of
+        Conditional homogeneity - (float) test statistic for homogeneity of
         transition probabilities across strata
 
-        Conditional homogeneity pvalue: (float) p-value for test statistic
+        Conditional homogeneity pvalue - (float) p-value for test statistic
 
-        Conditional homogeneity dof: (int) degrees of freedom =  r(s-1)(r-1)
+        Conditional homogeneity dof - (int) degrees of freedom =  r(s-1)(r-1)
 
 
     Notes
     -----
 
     Based on  Kullback, Kupperman and Ku (1962) [2]_
-
-
-    Example below is taken from Table 9.2 of [2]_
+    Example below is taken from Table 9.2 
 
 
 
@@ -1107,7 +1108,7 @@ def kullback(F):
     ----------
 
     .. [2] Kullback, S. Kupperman, M. and H.H. Ku. (1962) "Tests for
-       contigency tables and Markov chains", Technometrics: 4, 573--608.
+       contigency tables and Markov chains", Technometrics : 4, 573--608.
 
     """
 
@@ -1152,7 +1153,7 @@ def prais(pmat):
     Parameters
     ----------
 
-    pmat: kxk matrix
+    pmat : kxk matrix
           Markov probability transition matrix
 
     Returns
@@ -1160,11 +1161,11 @@ def prais(pmat):
 
     pr : 1xk matrix
           Conditional mobility measures for each of the k classes with each
-          element  obtained as:
+          element obtained as follows -
 
-          .. math::
+    .. math::
 
-                pr_i = 1 - \sum_j p_{i,j}
+            pr_i = 1 - \sum_j p_{i,j}
 
 
     Examples
@@ -1205,16 +1206,16 @@ def shorrock(pmat):
     Parameters
     ----------
 
-    pmat: kxk matrix
+    pmat : kxk matrix
           Markov probability transition matrix
 
     Returns
     -------
 
     sh : scalar
-          Conditional mobility measure:
+          Conditional mobility measure
 
-        .. math::
+    .. math::
 
          sh = (k  - \sum_{j=1}^{k} p_{j,j})/(k - 1)
 

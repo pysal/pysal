@@ -16,8 +16,9 @@ __all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon',
 
 
 def asShape(obj):
-    """ Returns a pysal shape object from obj.
-        obj must support the __geo_interface__.
+    """
+    Returns a pysal shape object from obj.
+    obj must support the __geo_interface__.
     """
     if hasattr(obj, '__geo_interface__'):
         geo = obj.__geo_interface__
@@ -344,7 +345,6 @@ class Point(object):
 class LineSegment(object):
     """
     Geometric representation of line segment objects.
-    ...
 
     Parameters
     ----------
@@ -619,11 +619,11 @@ class LineSegment(object):
         Returns
         -------
 
-         1 if turn from self.p1 to self.p2 to pt is ccw
+        1 if turn from self.p1 to self.p2 to pt is ccw
         -1 if turn from self.p1 to self.p2 to pt is cw
         -1 if the points are collinear and self.p1 is in the middle
-         1 if the points are collinear and self.p2 is in the middle
-         0 if the points are collinear and pt is in the middle
+        1 if the points are collinear and self.p2 is in the middle
+        0 if the points are collinear and pt is in the middle
         
         """
 

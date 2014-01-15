@@ -4,7 +4,12 @@ A module of classification schemes for choropleth mapping.
 __author__ = "Sergio J. Rey"
 __credits__ = "Copyright (c) 2009-10 Sergio J. Rey"
 
-__all__ = ['Map_Classifier', 'quantile', 'Box_Plot', 'Equal_Interval', 'Fisher_Jenks', 'Fisher_Jenks_Sampled', 'Jenks_Caspall', 'Jenks_Caspall_Forced', 'Jenks_Caspall_Sampled', 'Max_P_Classifier', 'Maximum_Breaks', 'Natural_Breaks', 'Quantiles', 'Percentiles', 'Std_Mean', 'User_Defined', 'gadf', 'K_classifiers']
+__all__ = ['Map_Classifier', 'quantile', 'Box_Plot', 'Equal_Interval',
+           'Fisher_Jenks', 'Fisher_Jenks_Sampled', 'Jenks_Caspall',
+           'Jenks_Caspall_Forced', 'Jenks_Caspall_Sampled', 
+           'Max_P_Classifier', 'Maximum_Breaks', 'Natural_Breaks',
+           'Quantiles', 'Percentiles', 'Std_Mean', 'User_Defined',
+           'gadf', 'K_classifiers']
 
 from pysal.common import *
 
@@ -902,6 +907,7 @@ class Maximum_Breaks(Map_Classifier):
     >>> mb.counts
     array([50,  2,  4,  1,  1])
     >>>
+
     """
     def __init__(self, y, k=K, mindiff=0):
         self.k = k
@@ -984,11 +990,12 @@ class Natural_Breaks(Map_Classifier):
 
     Notes
     -----
-    There is a tradeoff here between speed and consistency of the classification
+    There is a tradeoff here between speed and consistency of the
+    classification
     If you want more speed, set initial to a smaller value (0
     would result in the best speed, if you want more consistent classes in
-    multiple runs of Natural_Breaks on the same data, set initial to a higer
-    value.
+    multiple runs of Natural_Breaks on the same data, set initial to a
+    higher value.
 
 
     """
@@ -1074,11 +1081,10 @@ class Fisher_Jenks_Sampled(Map_Classifier):
              number of classes required
     pct    : float
              The percentage of n that should form the sample
-             If pct is specified such that n*pct > 1000, then pct = 1000./n,
-             unless truncate is False
-    truncate: binary (Default True)
+             If pct is specified such that n*pct > 1000, then 
+             pct = 1000./n, unless truncate is False
+    truncate : binary (Default True)
              truncate pct in cases where pct * n > 1000.
-
 
     Attributes
     ----------
@@ -1091,7 +1097,6 @@ class Fisher_Jenks_Sampled(Map_Classifier):
               the number of classes
     counts  : array (k,1)
               the number of observations falling in each class
-
 
     Examples
     --------
@@ -1706,14 +1711,12 @@ def gadf(y, method="Quantiles", maxk=15, pct=0.8):
     pct    : float
              The percentage of GADF to exceed
 
-
     Returns
     -------
 
     implicit : tuple
                first value is k, second value is instance of classifier at k,
                third is the pct obtained
-
 
     Examples
     --------
@@ -1771,7 +1774,6 @@ class K_classifiers:
              values to be classified
     pct    : float
              The percentage of GADF to exceed
-
 
     Attributes
     ----------

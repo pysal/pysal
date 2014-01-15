@@ -11,6 +11,8 @@ __all__ = ["Wk1IO"]
 
 class Wk1IO(FileIO.FileIO):
     """
+    MATLAB wk1read.m and wk1write.m that were written by Brian M. Bourgault in 10/22/93
+
     Opens, reads, and writes weights file objects in Lotus Wk1 format.
 
     Lotus Wk1 file is used in Dr. LeSage's MATLAB Econometrics library.
@@ -133,10 +135,6 @@ class Wk1IO(FileIO.FileIO):
    |  [EOF]      |End of file          |unsigned short           |4      |1,0,0,0                      |
    +-------------+---------------------+-------------------------+-------+-----------------------------+
 
-
-    Notes
-    -----
-    MATLAB wk1read.m and wk1write.m that were written by Brian M. Bourgault in 10/22/93
 
     """
 
