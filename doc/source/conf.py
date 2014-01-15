@@ -18,7 +18,8 @@ import os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.append(os.path.abspath('sphinxext'))
-sys.path.append(os.path.abspath('../../'))
+#sys.path.append(os.path.abspath('../../'))
+sys.path.append(os.path.abspath('/Users/phil/anaconda/lib/python2.7/site-packages/'))
 
 # -- General configuration -----------------------------------------------------
 
@@ -27,7 +28,7 @@ sys.path.append(os.path.abspath('../../'))
 extensions = ['sphinx.ext.autodoc',
 'sphinx.ext.doctest','sphinx.ext.graphviz', 'sphinx.ext.intersphinx',
 'sphinx.ext.pngmath',
-'sphinx.ext.autosummary','sphinx.ext.viewcode','numpydoc']
+'sphinx.ext.autosummary','sphinx.ext.viewcode', 'sphinxcontrib.napoleon']
 
 #doctest extension config values
 doctest_path = '/Users/stephens/code/pysal/doc/source/users/tutorials/' 
