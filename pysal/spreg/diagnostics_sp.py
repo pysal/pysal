@@ -276,14 +276,13 @@ class AKtest:
     ----------
 
     .. [1] Anselin, L., Kelejian, H. (1997) "Testing for spatial error
-    autocorrelation in the presence of endogenous regressors". Interregional
-    Regional Science Review, 20, 1.
-
+        autocorrelation in the presence of endogenous regressors".
+        Interregional Regional Science Review, 20, 1.
     .. [2] Kelejian, H.H., Prucha, I.R. and Yuzefovich, Y. (2004)
-    "Instrumental variable estimation of a spatial autorgressive model with
-    autoregressive disturbances: large and small sample results". Advances in
-    Econometrics, 18, 163-198.
-    
+        "Instrumental variable estimation of a spatial autorgressive model with
+        autoregressive disturbances: large and small sample results".
+        Advances in Econometrics, 18, 163-198.
+
     Examples
     --------
 
@@ -304,7 +303,7 @@ class AKtest:
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
-    
+
     Before being able to apply the diagnostics, we have to run a model and,
     for that, we need the input variables. Extract the CRIME column (crime
     rates) from the DBF file and make it the dependent variable for the
@@ -386,8 +385,8 @@ class AKtest:
     >>> ak_sp = AKtest(reg, w, case='gen')
     >>> print('AK test: %f\tP-value: %f'%(ak_sp.ak, ak_sp.p))
     AK test: 1.157593      P-value: 0.281965
-    
-            """
+
+    """
 
     def __init__(self, iv, w, case='nosp'):
         if case == 'gen':

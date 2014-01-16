@@ -13,14 +13,14 @@ __all__ = ["t_stat", "pr2_aspatial", "pr2_spatial"]
 def t_stat(reg, z_stat=False):
     """
     Calculates the t-statistics (or z-statistics) and associated p-values.
-    
+
     Parameters
     ----------
     reg             : regression object
                       output instance from a regression model
     z_stat          : boolean
                       If True run z-stat instead of t-stat
-        
+
     Returns
     -------    
     ts_result       : list of tuples
@@ -132,21 +132,19 @@ def t_stat(reg, z_stat=False):
 def pr2_aspatial(tslsreg):
     """
     Calculates the pseudo r^2 for the two stage least squares regression.
-    
+
     Parameters
     ----------
     tslsreg             : two stage least squares regression object
                           output instance from a two stage least squares
                           regression model
 
-        
     Returns
-    -------    
+    -------
     pr2_result          : float
                           value of the squared pearson correlation between
                           the y and tsls-predicted y vectors
 
-    
     Examples
     --------
 
@@ -166,7 +164,7 @@ def pr2_aspatial(tslsreg):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
-    
+
     Before being able to apply the diagnostics, we have to run a model and,
     for that, we need the input variables. Extract the CRIME column (crime
     rates) from the DBF file and make it the dependent variable for the
@@ -226,21 +224,19 @@ def pr2_spatial(tslsreg):
     """
     Calculates the pseudo r^2 for the spatial two stage least squares 
     regression.
-    
+
     Parameters
     ----------
     stslsreg            : spatial two stage least squares regression object
                           output instance from a spatial two stage least 
                           squares regression model
 
-        
     Returns
     -------    
     pr2_result          : float
                           value of the squared pearson correlation between
                           the y and stsls-predicted y vectors
 
-    
     Examples
     --------
 
@@ -262,7 +258,7 @@ def pr2_spatial(tslsreg):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
-    
+
     Extract the HOVAL column (home value) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
