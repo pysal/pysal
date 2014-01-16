@@ -69,13 +69,13 @@ class BaseGM_Error(RegressionPropsY):
     ----------
 
     .. [1] Kelejian, H.R., Prucha, I.R. (1998) "A generalized spatial
-    two-stage least squares procedure for estimating a spatial autoregressive
-    model with autoregressive disturbances". The Journal of Real State
-    Finance and Economics, 17, 1.
+        two-stage least squares procedure for estimating a spatial autoregressive
+        model with autoregressive disturbances". The Journal of Real State
+        Finance and Economics, 17, 1.
 
     .. [2] Kelejian, H.R., Prucha, I.R. (1999) "A Generalized Moments
-    Estimator for the Autoregressive Parameter in a Spatial Model".
-    International Economic Review, 40, 2.
+        Estimator for the Autoregressive Parameter in a Spatial Model".
+        International Economic Review, 40, 2.
 
     Examples
     --------
@@ -149,7 +149,6 @@ class GM_Error(BaseGM_Error):
     name_ds      : string
                    Name of dataset for use in output
 
-
     Attributes
     ----------
     summary      : string
@@ -203,13 +202,12 @@ class GM_Error(BaseGM_Error):
     ----------
 
     .. [1] Kelejian, H.R., Prucha, I.R. (1998) "A generalized spatial
-    two-stage least squares procedure for estimating a spatial autoregressive
-    model with autoregressive disturbances". The Journal of Real State
-    Finance and Economics, 17, 1.
-
+        two-stage least squares procedure for estimating a spatial autoregressive
+        model with autoregressive disturbances". The Journal of Real State
+        Finance and Economics, 17, 1.
     .. [2] Kelejian, H.R., Prucha, I.R. (1999) "A Generalized Moments
-    Estimator for the Autoregressive Parameter in a Spatial Model".
-    International Economic Review, 40, 2.
+        Estimator for the Autoregressive Parameter in a Spatial Model".
+        International Economic Review, 40, 2.
 
     Examples
     --------
@@ -228,7 +226,7 @@ class GM_Error(BaseGM_Error):
     data in using any method.  
 
     >>> dbf = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
-    
+
     Extract the HOVAL column (home values) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -255,7 +253,7 @@ class GM_Error(BaseGM_Error):
     append '.read()' at the end of the command.
 
     >>> w = pysal.open(pysal.examples.get_path("columbus.gal"), 'r').read() 
-    
+
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other
     things, his allows to interpret the spatial lag of a variable as the
@@ -278,6 +276,7 @@ class GM_Error(BaseGM_Error):
     although you get a value for it (there are for coefficients under
     model.betas), you cannot perform inference on it (there are only three
     values in model.se_betas).
+
     >>> print model.name_x
     ['CONSTANT', 'income', 'crime', 'lambda']
     >>> np.around(model.betas, decimals=6)
@@ -370,18 +369,17 @@ class BaseGM_Endog_Error(RegressionPropsY):
     sig2         : float
                    Sigma squared used in computations
 
-
     References
     ----------
 
     .. [1] Kelejian, H.R., Prucha, I.R. (1998) "A generalized spatial
-    two-stage least squares procedure for estimating a spatial autoregressive
-    model with autoregressive disturbances". The Journal of Real State
-    Finance and Economics, 17, 1.
+        two-stage least squares procedure for estimating a spatial autoregressive
+        model with autoregressive disturbances". The Journal of Real State
+        Finance and Economics, 17, 1.
 
     .. [2] Kelejian, H.R., Prucha, I.R. (1999) "A Generalized Moments
-    Estimator for the Autoregressive Parameter in a Spatial Model".
-    International Economic Review, 40, 2.
+        Estimator for the Autoregressive Parameter in a Spatial Model".
+        International Economic Review, 40, 2.
 
     Examples
     --------
@@ -536,13 +534,13 @@ class GM_Endog_Error(BaseGM_Endog_Error):
     ----------
 
     .. [1] Kelejian, H.R., Prucha, I.R. (1998) "A generalized spatial
-    two-stage least squares procedure for estimating a spatial autoregressive
-    model with autoregressive disturbances". The Journal of Real State
-    Finance and Economics, 17, 1.
+        two-stage least squares procedure for estimating a spatial autoregressive
+        model with autoregressive disturbances". The Journal of Real State
+        Finance and Economics, 17, 1.
 
     .. [2] Kelejian, H.R., Prucha, I.R. (1999) "A Generalized Moments
-    Estimator for the Autoregressive Parameter in a Spatial Model".
-    International Economic Review, 40, 2.
+        Estimator for the Autoregressive Parameter in a Spatial Model".
+        International Economic Review, 40, 2.
 
     Examples
     --------
@@ -561,7 +559,7 @@ class GM_Endog_Error(BaseGM_Endog_Error):
     data in using any method.  
 
     >>> dbf = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
-    
+
     Extract the CRIME column (crime rates) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -635,7 +633,7 @@ class GM_Endog_Error(BaseGM_Endog_Error):
            [  0.34992]])
     >>> np.around(model.std_err, decimals=6)
     array([ 16.138089,   1.354476,   0.786205])
-    
+
     '''
     def __init__(self, y, x, yend, q, w,\
                  vm=False, name_y=None, name_x=None,\
@@ -724,18 +722,17 @@ class BaseGM_Combo(BaseGM_Endog_Error):
     sig2         : float
                    Sigma squared used in computations
 
-
     References
     ----------
 
     .. [1] Kelejian, H.R., Prucha, I.R. (1998) "A generalized spatial
-    two-stage least squares procedure for estimating a spatial autoregressive
-    model with autoregressive disturbances". The Journal of Real State
-    Finance and Economics, 17, 1.
+        two-stage least squares procedure for estimating a spatial autoregressive
+        model with autoregressive disturbances". The Journal of Real State
+        Finance and Economics, 17, 1.
 
     .. [2] Kelejian, H.R., Prucha, I.R. (1999) "A Generalized Moments
-    Estimator for the Autoregressive Parameter in a Spatial Model".
-    International Economic Review, 40, 2.
+        Estimator for the Autoregressive Parameter in a Spatial Model".
+        International Economic Review, 40, 2.
 
     Examples
     --------
@@ -764,13 +761,12 @@ class BaseGM_Combo(BaseGM_Endog_Error):
     [[ 39.059  11.86 ]
      [ -1.404   0.391]
      [  0.467   0.2  ]]
-    
 
     And lambda
 
     >>> print 'Lamda: ', np.around(reg.betas[-1], 3)
     Lamda:  [-0.048]
-        
+
     Example with both spatial lag and other endogenous variables
 
     >>> X = []
@@ -918,13 +914,13 @@ class GM_Combo(BaseGM_Combo):
     ----------
 
     .. [1] Kelejian, H.R., Prucha, I.R. (1998) "A generalized spatial
-    two-stage least squares procedure for estimating a spatial autoregressive
-    model with autoregressive disturbances". The Journal of Real State
-    Finance and Economics, 17, 1.
+        two-stage least squares procedure for estimating a spatial autoregressive
+        model with autoregressive disturbances". The Journal of Real State
+        Finance and Economics, 17, 1.
 
     .. [2] Kelejian, H.R., Prucha, I.R. (1999) "A Generalized Moments
-    Estimator for the Autoregressive Parameter in a Spatial Model".
-    International Economic Review, 40, 2.
+        Estimator for the Autoregressive Parameter in a Spatial Model".
+        International Economic Review, 40, 2.
 
     Examples
     --------
@@ -943,7 +939,7 @@ class GM_Combo(BaseGM_Combo):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
-    
+
     Extract the CRIME column (crime rates) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -1008,7 +1004,7 @@ class GM_Combo(BaseGM_Combo):
 
     >>> print 'lambda: ', np.around(reg.betas[-1], 3)
     lambda:  [-0.048]
-        
+
     This class also allows the user to run a spatial lag+error model with the
     extra feature of including non-spatial endogenous regressors. This means
     that, in addition to the spatial lag and error, we consider some of the
@@ -1038,6 +1034,7 @@ class GM_Combo(BaseGM_Combo):
 
     >>> print 'lambda: ', np.around(reg.betas[-1], 3)
     lambda:  [ 0.254]
+
     """
     def __init__(self, y, x, yend=None, q=None,\
                  w=None, w_lags=1, lag_q=True,\
