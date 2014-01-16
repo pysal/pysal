@@ -19,7 +19,7 @@ import os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.append(os.path.abspath('sphinxext'))
 #sys.path.append(os.path.abspath('../../'))
-sys.path.append(os.path.abspath('/Users/phil/anaconda/lib/python2.7/site-packages/'))
+sys.path.append(os.path.abspath('~/anaconda/lib/python2.7/site-packages/'))
 
 # -- General configuration -----------------------------------------------------
 
@@ -39,8 +39,8 @@ doctest_test_doctest_blocks = ''
 templates_path = ['_templates']
 
 # The suffix of source filenames.
-#source_suffix = '.rst'
-source_suffix = '.txt'
+source_suffix = '.rst'
+#source_suffix = '.txt'
 
 # The encoding of source files.
 #source_encoding = 'utf-8'
