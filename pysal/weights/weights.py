@@ -11,7 +11,6 @@ from pysal.weights import util
 
 
 class W(object):
-
     """
     Spatial weights
 
@@ -64,7 +63,6 @@ class W(object):
     trcWtW
     trcWtW_WW
     transform
-
 
     Examples
     --------
@@ -247,7 +245,6 @@ class W(object):
         """
         individual elements comprising s2
 
-
         See Also
         --------
         s2
@@ -263,7 +260,6 @@ class W(object):
     def s2(self):
         """
         float
-
 
         .. math::
 
@@ -587,15 +583,18 @@ class W(object):
             raise Exception('ordered_ids do not align with W ids')
 
     def __get_id_order(self):
-        """returns the ids for the observations in the order in which they
-        would be encountered if iterating over the weights."""
+        """
+        Returns the ids for the observations in the order in which they
+        would be encountered if iterating over the weights .
+        """
         return self._id_order
 
     id_order = property(__get_id_order, __set_id_order)
 
     @property
     def id_order_set(self):
-        """returns True if user has set id_order, False if not.
+        """
+        Returns True if user has set id_order, False if not.
 
         Examples
         --------
@@ -908,7 +907,6 @@ class W(object):
         """
         Adding meta data for writing headers of gal and gwt files
 
-
         Parameters
         ----------
 
@@ -971,7 +969,6 @@ class WSP(object):
     6.3949999999999996
     >>> w.n
     4
-
 
     """
 

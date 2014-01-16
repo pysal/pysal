@@ -20,7 +20,7 @@ def f_stat(reg):
     """
     Calculates the f-statistic and associated p-value of the regression.
     (For two stage least squares see f_stat_tsls)
-    
+
     Parameters
     ----------
     reg             : regression object
@@ -89,16 +89,16 @@ def f_stat(reg):
 def t_stat(reg, z_stat=False):
     """
     Calculates the t-statistics (or z-statistics) and associated p-values.
-    
+
     Parameters
     ----------
     reg             : regression object
                       output instance from a regression model
     z_stat          : boolean
                       If True run z-stat instead of t-stat
-        
+
     Returns
-    -------    
+    -------
     ts_result       : list of tuples
                       each tuple includes value of t statistic (or z
                       statistic) and associated p-value
@@ -137,7 +137,7 @@ def t_stat(reg, z_stat=False):
     >>> reg = OLS(y,X)
 
     Calculate t-statistics for the regression coefficients. 
-    
+
     >>> testresult = diagnostics.t_stat(reg)
 
     Print the tuples that contain the t-statistics and their significances.
@@ -164,7 +164,7 @@ def t_stat(reg, z_stat=False):
 def r2(reg):
     """
     Calculates the R^2 value for the regression. 
-    
+
     Parameters
     ----------
     reg             : regression object
@@ -180,7 +180,7 @@ def r2(reg):
     ----------
     .. [1] W. Greene. 2003. Econometric Analysis. Prentice Hall, Upper
        Saddle River. 
-    
+
     Examples
     --------
     >>> import numpy as np
@@ -189,7 +189,7 @@ def r2(reg):
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
-    
+
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
 
     Create the dependent variable vector.
@@ -216,7 +216,7 @@ def r2(reg):
 
     >>> print("%1.8f"%testresult)
     0.55240404
-    
+
     """
     y = reg.y               # (array) vector of dep observations (n x 1)
     mean_y = reg.mean_y     # (scalar) mean of dep observations
@@ -230,7 +230,7 @@ def r2(reg):
 def ar2(reg):
     """
     Calculates the adjusted R^2 value for the regression. 
-    
+
     Parameters
     ----------
     reg             : regression object
@@ -246,7 +246,7 @@ def ar2(reg):
     ----------
     .. [1] W. Greene. 2003. Econometric Analysis. Prentice Hall, Upper
        Saddle River. 
-    
+
     Examples
     --------
     >>> import numpy as np
@@ -292,7 +292,7 @@ def ar2(reg):
 def se_betas(reg):
     """
     Calculates the standard error of the regression coefficients.
-    
+
     Parameters
     ----------
     reg             : regression object
@@ -307,7 +307,7 @@ def se_betas(reg):
     ----------
     .. [1] W. Greene. 2003. Econometric Analysis. Prentice Hall, Upper
        Saddle River. 
-    
+
     Examples
     --------
     >>> import numpy as np
@@ -343,7 +343,7 @@ def se_betas(reg):
 
     >>> testresult
     array([ 4.73548613,  0.33413076,  0.10319868])
-    
+
     """
     vm = reg.vm         # (array) coefficients of variance matrix (k x k)
     variance = vm.diagonal()
@@ -354,7 +354,7 @@ def se_betas(reg):
 def log_likelihood(reg):
     """
     Calculates the log-likelihood value for the regression. 
-    
+
     Parameters
     ----------
     reg             : regression object
@@ -742,7 +742,7 @@ def breusch_pagan(reg, z=None):
 
     References
     ----------
-    
+
     .. [1] T. Breusch and A. Pagan. 1979. A simple test for
        heteroscedasticity and random coefficient variation. Econometrica:
        Journal of the Econometric Society, 47(5):1287-1294.
@@ -883,7 +883,7 @@ def white(reg):
     pvalue          : float
                       p-value associated with the statistic (chi^2
                       distributed with k df)
-    
+
     Notes
     -----
     x attribute in the reg object must have a constant term included. This is
@@ -894,7 +894,6 @@ def white(reg):
     .. [1] H. White. 1980. A heteroscedasticity-consistent covariance
        matrix estimator and a direct test for heteroskdasticity.
        Econometrica. 48(4) 817-838. 
-
 
     Examples
     --------
@@ -924,7 +923,7 @@ def white(reg):
     >>> reg = OLS(y,X)
 
     Calculate the White test for heteroscedasticity.
-    
+
     >>> testresult = diagnostics.white(reg)
 
     Print the degrees of freedom for the test.
@@ -1063,7 +1062,6 @@ def koenker_bassett(reg, z=None):
     .. [1] R. Koenker and G. Bassett. 1982. Robust tests for
        heteroscedasticity based on regression quantiles. Econometrica,
        50(1):43-61. 
-
     .. [2] W. Greene. 2003. Econometric Analysis. Prentice Hall, Upper
        Saddle River. 
 
@@ -1192,12 +1190,12 @@ def vif(reg):
     For the ease of indexing the results, the constant is currently
     included. This should be omitted when reporting the results to the
     output text.
-    
+
     Parameters
     ----------
     reg             : regression object
                       output instance from a regression model
-        
+
     Returns
     -------    
     vif_result      : list of tuples
@@ -1241,7 +1239,7 @@ def vif(reg):
     >>> testresult = diagnostics.vif(reg)
 
     Select the tuple for the income variable. 
-    
+
     >>> incvif = testresult[1]
 
     Print the VIF for income. 
@@ -1318,7 +1316,6 @@ def constant_check(array):
     >>> reg = OLS(y,X)
     >>> diagnostics.constant_check(reg.x)
     True
-
 
     """
 

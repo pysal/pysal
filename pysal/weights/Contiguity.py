@@ -22,20 +22,16 @@ def buildContiguity(polygons, criterion="rook", ids=None):
 
     polygons   : an instance of a pysal geo file handler
                  Any thing returned by pysal.open that is explicitly polygons
-
     criterion  : string
                  contiguity criterion ("rook","queen")
-
     ids        : list
                  identifiers for i,j
-
 
     Returns
     -------
 
     w         : W instance
                 Contiguity weights object
-
 
     Examples
     --------

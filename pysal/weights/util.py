@@ -230,7 +230,6 @@ def order(w, kmax=3):
     -----
     Implements the algorithm in Anselin and Smirnov (1996) [1]_
 
-
     Examples
     --------
     >>> from pysal import rook_from_shapefile as rfs
@@ -240,12 +239,6 @@ def order(w, kmax=3):
     >>> w3 = order(w, kmax = 3)
     >>> w3[1][0:5]
     [1, -1, 1, 2, 1]
-
-    References
-    ----------
-    .. [1] Anselin, L. and O. Smirnov (1996) "Efficient algorithms for
-       constructing proper higher order spatial lag operators. Journal of
-       Regional Science, 36, 67-89.
 
     """
     ids = w.neighbors.keys()
@@ -290,7 +283,6 @@ def higher_order(w, k=2):
 
     implicit : W
                spatial weights object
-
 
     Notes
     -----
@@ -401,7 +393,6 @@ def w_local_cluster(w):
     c     : array (w.n,1)
             local clustering coefficients
 
-
     Notes
     -----
 
@@ -416,13 +407,10 @@ def w_local_cluster(w):
     |N_i|` and :math:`\{w_{j,k}\}` is the set of non-zero elements of the
     weights between pairs in :math:`N_i`.
 
-
     References
     ----------
 
     .. [ws] Watts, D.J. and S.H. Strogatz (1988) "Collective dynamics of 'small-world' networks". Nature, 393: 440-442.
-
-
 
     Examples
     --------
@@ -597,8 +585,6 @@ def full2W(m, ids=None):
            [ True,  True,  True,  True],
            [ True,  True,  True,  True],
            [ True,  True,  True,  True]], dtype=bool)
-
-
     '''
     if m.shape[0] != m.shape[1]:
         raise ValueError('Your array is not square')
@@ -858,7 +844,7 @@ def get_points_array_from_shapefile(shapefile):
 
     Returns
     -------
-    points        : array (n,2)
+    points        : array (n, 2)
                     a data array of x and y coordinates
 
     Notes
@@ -869,6 +855,7 @@ def get_points_array_from_shapefile(shapefile):
     Examples
     --------
     Point shapefile
+
     >>> from pysal.weights.util import get_points_array_from_shapefile
     >>> xy = get_points_array_from_shapefile(pysal.examples.get_path('juvenile.shp'))
     >>> xy[:3]
@@ -877,6 +864,7 @@ def get_points_array_from_shapefile(shapefile):
            [ 79.,  90.]])
 
     Polygon shapefile
+
     >>> xy = get_points_array_from_shapefile(pysal.examples.get_path('columbus.shp'))
     >>> xy[:3]
     array([[  8.82721847,  14.36907602],
@@ -907,7 +895,6 @@ def min_threshold_distance(data, p=2):
               1<=p<=infinity
               2: Euclidean distance
               1: Manhattan distance
-
 
     Returns
     -------
