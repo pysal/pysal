@@ -46,7 +46,6 @@ class BaseGM_Error_Het(RegressionPropsY):
     step1c       : boolean
                    If True, then include Step 1c from Arraiz et al. 
 
-
     Attributes
     ----------
     betas        : array
@@ -80,7 +79,6 @@ class BaseGM_Error_Het(RegressionPropsY):
                    Variance covariance matrix (kxk)
     xtx          : float
                    X'X
-
 
     References
     ----------
@@ -198,7 +196,6 @@ class GM_Error_Het(BaseGM_Error_Het):
     name_ds      : string
                    Name of dataset for use in output
 
-
     Attributes
     ----------
     summary      : string
@@ -253,14 +250,13 @@ class GM_Error_Het(BaseGM_Error_Het):
     title        : string
                    Name of the regression method used
 
-
     References
     ----------
 
     .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
+        Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
+        Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
+        592-614.
 
     .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
@@ -281,7 +277,7 @@ class GM_Error_Het(BaseGM_Error_Het):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
-    
+
     Extract the HOVAL column (home values) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -308,7 +304,7 @@ class GM_Error_Het(BaseGM_Error_Het):
     from ``columbus.shp``.
 
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
-    
+
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other
     things, his allows to interpret the spatial lag of a variable as the
@@ -323,14 +319,14 @@ class GM_Error_Het(BaseGM_Error_Het):
     have to pass them in as well, although this is optional.
 
     >>> reg = GM_Error_Het(y, X, w=w, step1c=True, name_y='home value', name_x=['income', 'crime'], name_ds='columbus')
-   
+
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
     discover them. This class offers an error model that explicitly accounts
     for heteroskedasticity and that unlike the models from
     ``pysal.spreg.error_sp``, it allows for inference on the spatial
     parameter.
-   
+
     >>> print reg.name_x
     ['CONSTANT', 'income', 'crime', 'lambda']
 
@@ -664,9 +660,9 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
     ----------
 
     .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
+        Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
+        Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
+        592-614.
 
     .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
@@ -687,7 +683,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
-    
+
     Extract the HOVAL column (home values) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -729,7 +725,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
     from ``columbus.shp``.
 
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
-    
+
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other
     things, his allows to interpret the spatial lag of a variable as the
@@ -745,7 +741,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
     have to pass them in as well, although this is optional.
 
     >>> reg = GM_Endog_Error_Het(y, X, yd, q, w=w, step1c=True, name_x=['inc'], name_y='hoval', name_yend=['crime'], name_q=['discbd'], name_ds='columbus')
-   
+
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
     discover them. This class offers an error model that explicitly accounts
@@ -1087,9 +1083,9 @@ class GM_Combo_Het(BaseGM_Combo_Het):
     ----------
 
     .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
+        Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
+        Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
+        592-614.
 
     .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 

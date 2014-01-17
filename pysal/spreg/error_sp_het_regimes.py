@@ -191,15 +191,15 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     ----------
 
     .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
+        Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
+        Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
+        592-614.
 
     .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
     Examples
     --------
-    
+
     We first need to import the needed modules, namely numpy to convert the
     data we read into arrays that ``spreg`` understands and ``pysal`` to
     perform all the analysis.
@@ -214,7 +214,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("NAT.dbf"),'r')
-    
+
     Extract the HR90 column (homicide rates in 1990) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -222,7 +222,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
     >>> y_var = 'HR90'
     >>> y = np.array([db.by_col(y_var)]).reshape(3085,1)
-    
+
     Extract UE90 (unemployment rate) and PS90 (population structure) vectors from
     the DBF to be used as independent variables in the regression. Other variables
     can be inserted by adding their names to x_var, such as x_var = ['Var1','Var2','...]
@@ -260,7 +260,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     have to pass them in as well, although this is optional.
 
     >>> reg = GM_Error_Het_Regimes(y, x, regimes, w=w, step1c=True, name_y=y_var, name_x=x_var, name_regimes=r_var, name_ds='NAT.dbf')
-   
+
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
     discover them. This class offers an error model that explicitly accounts
@@ -636,9 +636,9 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     ----------
 
     .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
+        Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
+        Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
+        592-614.
 
     .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
@@ -940,9 +940,9 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                    observation to a regime. Assumed to be aligned with 'x'.
     w            : pysal W object
                    Spatial weights object (always needed)   
-    constant_regi: ['one', 'many']
-                   Switcher controlling the constant term setup. It may take
-                   the following values:
+    constant_regi : ['one', 'many']
+                    Switcher controlling the constant term setup. It may take
+                    the following values:
                      *  'one': a vector of ones is appended to x and held
                                constant across regimes
                      * 'many': a vector of ones is appended to x and considered
@@ -955,11 +955,11 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                    option (True if one per regime, False to be held constant).
                    If 'all' (default), all the variables vary by regime.
     regime_err_sep : boolean
-                   If True, a separate regression is run for each regime.
+                     If True, a separate regression is run for each regime.
     regime_lag_sep   : boolean
-                   If True, the spatial parameter for spatial lag is also
-                   computed according to different regimes. If False (default), 
-                   the spatial parameter is fixed accross regimes.
+                       If True, the spatial parameter for spatial lag is also
+                       computed according to different regimes. If False (default), 
+                       the spatial parameter is fixed accross regimes.
     w_lags       : integer
                    Orders of W to include as instruments for the spatially
                    lagged dependent variable. For example, w_lags=1, then
@@ -1105,8 +1105,8 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                     Name of regimes variable for use in output
     title         : string
                     Name of the regression method used
-                   Only available in dictionary 'multi' when multiple regressions
-                   (see 'multi' below for details)
+                    Only available in dictionary 'multi' when multiple regressions
+                    (see 'multi' below for details)
     regimes       : list
                     List of n values with the mapping of each
                     observation to a regime. Assumed to be aligned with 'x'.
@@ -1125,12 +1125,12 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                     If a list, k booleans indicating for each variable the
                     option (True if one per regime, False to be held constant).
                     If 'all', all the variables vary by regime.
-    regime_err_sep: boolean
-                    If True, a separate regression is run for each regime.
-    regime_lag_sep: boolean
-                    If True, the spatial parameter for spatial lag is also
-                    computed according to different regimes. If False (default), 
-                    the spatial parameter is fixed accross regimes.
+    regime_err_sep : boolean
+                     If True, a separate regression is run for each regime.
+    regime_lag_sep : boolean
+                     If True, the spatial parameter for spatial lag is also
+                     computed according to different regimes. If False (default), 
+                     the spatial parameter is fixed accross regimes.
     kr            : int
                     Number of variables/columns to be "regimized" or subject
                     to change by regime. These will result in one parameter
@@ -1152,9 +1152,9 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
     ----------
 
     .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
+        Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
+        Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
+        592-614.
 
     .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
