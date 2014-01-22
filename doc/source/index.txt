@@ -54,7 +54,7 @@ Documentation
     developers/index
     library/index
 
-Bleeding edge documentation is available for developers by selecting `latest` from the drop-down in the lower right-hand corer of this page.
+Bleeding edge documentation is available for developers by selecting `latest` from the drop-down in the lower right-hand corner of this page.
 
 News
 ====
