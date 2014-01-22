@@ -3,7 +3,7 @@ import regimes as REGI
 import user_output as USER
 import multiprocessing as mp
 import scipy.sparse as SP
-from utils import sphstack, set_warn, RegressionProps_basic, spdot
+from utils import sphstack, set_warn, RegressionProps_basic, spdot, sphstack
 from twosls import BaseTSLS
 from robust import hac_multi
 import summary_output as SUMMARY
@@ -54,9 +54,12 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
                    If True, a separate regression is run for each regime.
     robust       : string
                    If 'white', then a White consistent estimator of the
-                   variance-covariance matrix is given.  If 'hac', then a
-                   HAC consistent estimator of the variance-covariance
-                   matrix is given. Default set to None. 
+                   variance-covariance matrix is given.
+                   If 'hac', then a HAC consistent estimator of the 
+                   variance-covariance matrix is given.
+                   If 'ogmm', then Optimal GMM is used to estimate
+                   betas and the variance-covariance matrix.
+                   Default set to None. 
     gwk          : pysal W object
                    Kernel spatial weights needed for HAC estimation. Note:
                    matrix must have ones along the main diagonal.
@@ -287,19 +290,16 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
         cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, yend=yend, add_cons=False)
         self.regimes_set = REGI._get_regimes_set(regimes)
         self.regimes = regimes
-        USER.check_regimes(self.regimes_set)
+        USER.check_regimes(self.regimes_set,self.n,x.shape[1])
+        if regime_err_sep == True and robust == 'hac':
+            set_warn(self,"Error by regimes is incompatible with HAC estimation for 2SLS models. Hence, the error by regimes has been disabled for this model.")
+            regime_err_sep = False
         self.regime_err_sep = regime_err_sep
-
         if regime_err_sep == True and set(cols2regi) == set([True]) and constant_regi == 'many':
             name_x = USER.set_name_x(name_x, x)
             self.y = y
-            if w:
-                w_i,regi_ids,warn = REGI.w_regimes(w, regimes, self.regimes_set, transform=True, get_ids=True, min_n=len(self.cols2regi)+1)
-                set_warn(self,warn)
-            else:
-                regi_ids = dict((r, list(np.where(np.array(regimes) == r)[0])) for r in self.regimes_set)
-                w_i = None
-            self._tsls_regimes_multi(x, yend, q, w_i, regi_ids, cores,\
+            regi_ids = dict((r, list(np.where(np.array(regimes) == r)[0])) for r in self.regimes_set)
+            self._tsls_regimes_multi(x, yend, q, w, regi_ids, cores,\
                  gwk, sig2n_k, robust, spat_diag, vm, name_x, name_yend, name_q)
         else:
             name_x = USER.set_name_x(name_x, x,constant=True)
@@ -310,24 +310,13 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
             yend, self.name_yend = REGI.Regimes_Frame.__init__(self, yend, \
                     regimes, constant_regi=None, \
                     cols2regi=cols2regi, yend=True, names=name_yend)
+            if regime_err_sep == True and robust == None:
+                robust = 'white'
             BaseTSLS.__init__(self, y=y, x=x, yend=yend, q=q, \
                     robust=robust, gwk=gwk, sig2n_k=sig2n_k)
-            if regime_err_sep == True and robust == None:
-                """
-                # Weighted x, y, yend and q approach:
-                y2,x2,yend2,q2 = REGI._get_weighted_var(regimes,self.regimes_set,sig2n_k,self.u,y,x,yend,q)
-                tsls2 = BaseTSLS(y=y2, x=x2, yend=yend2, q=q2, sig2n_k=sig2n_k)
-                # Updating S_hat to S_tilde approach:               
-                betas2, predy2, resid2, vm2 = self._optimal_weight(sig2n_k)
-                RegressionProps_basic(self,betas=betas2,predy=predy2,u=resid2,vm=vm2,sig2=False)
-                """
-                betas2, vm2 = self._optimal_weight(sig2n_k)
-                RegressionProps_basic(self,betas=betas2,vm=vm2,sig2=False)
-                self.title = "TWO STAGE LEAST SQUARES - REGIMES (Optimal-Weighted GMM)"
-                robust = None
-                set_warn(self,"Residuals treated as homoskedastic for the purpose of diagnostics.")
-            else:
-                self.title = "TWO STAGE LEAST SQUARES - REGIMES"
+            self.title = "TWO STAGE LEAST SQUARES - REGIMES"
+            if robust == 'ogmm':
+                _optimal_weight(self,sig2n_k)
             self.name_z = self.name_x + self.name_yend
             self.name_h = USER.set_name_h(self.name_x, self.name_q)
             self.chow = REGI.Chow(self)
@@ -335,16 +324,16 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
             if summ:
                 SUMMARY.TSLS(reg=self, vm=vm, w=w, spat_diag=spat_diag, regimes=True)
 
-    def _tsls_regimes_multi(self, x, yend, q, w_i, regi_ids, cores,\
+    def _tsls_regimes_multi(self, x, yend, q, w, regi_ids, cores,\
                  gwk, sig2n_k, robust, spat_diag, vm, name_x, name_yend, name_q):
-        pool = mp.Pool(cores)
         results_p = {}
         for r in self.regimes_set:
-            if system() == 'Windows':
+            if system() != 'Windows':
                 is_win = True
-                results_p[r] = _work(*(self.y,x,regi_ids,r,yend,q,robust,sig2n_k,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes))
+                results_p[r] = _work(*(self.y,x,w,regi_ids,r,yend,q,robust,sig2n_k,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes))
             else:
-                results_p[r] = pool.apply_async(_work,args=(self.y,x,regi_ids,r,yend,q,robust,sig2n_k,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes))
+                pool = mp.Pool(cores)
+                results_p[r] = pool.apply_async(_work,args=(self.y,x,w,regi_ids,r,yend,q,robust,sig2n_k,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes))
                 is_win = False
         self.kryd = 0
         self.kr = x.shape[1]+yend.shape[1]+1
@@ -365,10 +354,6 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
                 results[r] = results_p[r]
             else:
                 results[r] = results_p[r].get()
-            if w_i:
-                results[r].w = w_i[r]
-            else:
-                results[r].w = None
             self.vm[(counter*self.kr):((counter+1)*self.kr),(counter*self.kr):((counter+1)*self.kr)] = results[r].vm
             self.betas[(counter*self.kr):((counter+1)*self.kr),] = results[r].betas
             self.u[regi_ids[r],]=results[r].u
@@ -384,51 +369,37 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
         self.hac_var = sphstack(x,q)
         if robust == 'hac':
             hac_multi(self,gwk)
+        if robust == 'ogmm':
+            set_warn(self,"Residuals treated as homoskedastic for the purpose of diagnostics.")
         self.chow = REGI.Chow(self)
-        SUMMARY.TSLS_multi(reg=self, multireg=self.multi, vm=vm, spat_diag=spat_diag, regimes=True)
+        if spat_diag:
+            self._get_spat_diag_props(results, regi_ids, x, yend, q)
+        SUMMARY.TSLS_multi(reg=self, multireg=self.multi, vm=vm, spat_diag=spat_diag, regimes=True, w=w)
 
-    def _optimal_weight(self,sig2n_k):
-        ''' Computes optimal weights GMM. '''
-        H = spdot(spdot(self.h,self.hthi),self.htz)
-        fac2, ZtHSi = self._get_fac2_het(H,self.u,sig2n_k)
-        fac3 = spdot(ZtHSi,spdot(H.T,self.y),array_out=True)
-        betas = np.dot(fac2,fac3)
-        """
-        # Updating S_hat to S_tilde
-        predy = spdot(self.z, betas)
-        u = self.y - predy
-        fac2, ZtHSi = self._get_fac2_het(u,sig2n_k)
-        """
-        if sig2n_k:
-            vm = fac2*(self.n-self.k)
-        else:
-            vm = fac2*self.n
-        #return betas, predy, u, vm #Use this line instead of next if updating S_hat to S_tilde.
-        return betas, vm
+    def _get_spat_diag_props(self, results, regi_ids, x, yend, q):
+        self._cache = {}
+        x = USER.check_constant(x)
+        x = REGI.regimeX_setup(x, self.regimes, [True] * x.shape[1], self.regimes_set)
+        self.z = sphstack(x,REGI.regimeX_setup(yend, self.regimes, [True] * yend.shape[1], self.regimes_set))
+        self.h = sphstack(x,REGI.regimeX_setup(q, self.regimes, [True] * q.shape[1], self.regimes_set))
+        hthi = np.linalg.inv(spdot(self.h.T,self.h))
+        zth = spdot(self.z.T,self.h)     
+        self.varb = np.linalg.inv(spdot(spdot(zth,hthi),zth.T))
 
-    def _get_fac2_het(self,H,u,sig2n_k):
-        D = SP.lil_matrix((self.n, self.n))
-        D.setdiag(u**2)
-        if sig2n_k:
-            S = spdot(spdot(self.z.T,D),self.z,array_out=True)/(self.n-self.k)
-        else:
-            S = spdot(spdot(self.z.T,D),self.z,array_out=True)/self.n
-        Si = np.linalg.inv(S)
-        ZtH = spdot(self.z.T,H)
-        ZtHSi = spdot(ZtH,Si)
-        fac2 = np.linalg.inv(spdot(ZtHSi,ZtH.T,array_out=True))
-        return fac2, ZtHSi
-        
-def _work(y,x,regi_ids,r,yend,q,robust,sig2n_k,name_ds,name_y,name_x,name_yend,name_q,name_w,name_regimes):
+def _work(y,x,w,regi_ids,r,yend,q,robust,sig2n_k,name_ds,name_y,name_x,name_yend,name_q,name_w,name_regimes):
     y_r = y[regi_ids[r]]
     x_r = x[regi_ids[r]]
     yend_r = yend[regi_ids[r]]
     q_r = q[regi_ids[r]]
     x_constant = USER.check_constant(x_r)
-    if robust == 'hac':
-        robust = None
-    model = BaseTSLS(y_r, x_constant, yend_r, q_r, robust=robust, sig2n_k=sig2n_k)
+    if robust == 'hac' or robust == 'ogmm':
+        robust2 = None
+    else:
+        robust2 = robust
+    model = BaseTSLS(y_r, x_constant, yend_r, q_r, robust=robust2, sig2n_k=sig2n_k)
     model.title = "TWO STAGE LEAST SQUARES ESTIMATION - REGIME %s" %r
+    if robust == 'ogmm':
+        _optimal_weight(model,sig2n_k,warn=False)
     model.robust = USER.set_robust(robust)
     model.name_ds = name_ds
     model.name_y = '%s_%s'%(str(r), name_y)
@@ -439,7 +410,36 @@ def _work(y,x,regi_ids,r,yend,q,robust,sig2n_k,name_ds,name_y,name_x,name_yend,n
     model.name_h = model.name_x + model.name_q
     model.name_w = name_w
     model.name_regimes = name_regimes
+    if w:
+        w_r,warn = REGI.w_regime(w, regi_ids[r], r, transform=True)
+        set_warn(model, warn)
+        model.w = w_r        
     return model
+
+def _optimal_weight(reg,sig2n_k,warn=True):
+    try:
+        Hu = reg.h.toarray() * reg.u**2 
+    except:
+        Hu = reg.h * reg.u**2
+    if sig2n_k:
+        S = spdot(reg.h.T,Hu,array_out=True)/(reg.n-reg.k)
+    else:
+        S = spdot(reg.h.T,Hu,array_out=True)/reg.n
+    Si = np.linalg.inv(S)
+    ZtH = spdot(reg.z.T,reg.h)
+    ZtHSi = spdot(ZtH,Si)
+    fac2 = np.linalg.inv(spdot(ZtHSi,ZtH.T,array_out=True))
+    fac3 = spdot(ZtHSi,spdot(reg.h.T,reg.y),array_out=True)
+    betas = np.dot(fac2,fac3)
+    if sig2n_k:
+        vm = fac2*(reg.n-reg.k)
+    else:
+        vm = fac2*reg.n
+    RegressionProps_basic(reg,betas=betas,vm=vm,sig2=False)
+    reg.title += " (Optimal-Weighted GMM)"
+    if warn:
+        set_warn(reg,"Residuals treated as homoskedastic for the purpose of diagnostics.")
+    return
 
 def _test():
     import doctest
@@ -456,15 +456,16 @@ if __name__ == '__main__':
     db = pysal.open(pysal.examples.get_path('NAT.dbf'),'r')
     y_var = 'HR60'
     y = np.array([db.by_col(y_var)]).T
-    x_var = ['PS60','MA60','DV60','UE60']
+    x_var = ['PS60','DV60','RD60']
     x = np.array([db.by_col(name) for name in x_var]).T
-    yd_var = ['RD60']
+    yd_var = ['UE60']
     yd = np.array([db.by_col(name) for name in yd_var]).T
-    q_var = ['FP89']
+    q_var = ['FP59','MA60']
     q = np.array([db.by_col(name) for name in q_var]).T
     r_var = 'SOUTH'
     regimes = db.by_col(r_var)
     tslsr = TSLS_Regimes(y, x, yd, q, regimes, constant_regi='many', spat_diag=False, name_y=y_var, name_x=x_var, \
-                         name_yend=yd_var, name_q=q_var, name_regimes=r_var, cols2regi=[False,True,True,True,True], \
-                         sig2n_k=False, robust='white')
+                         name_yend=yd_var, name_q=q_var, name_regimes=r_var, cols2regi=[False,True,True,True], \
+                         sig2n_k=False)
     print tslsr.summary
+

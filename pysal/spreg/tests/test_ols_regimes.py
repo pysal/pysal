@@ -65,7 +65,7 @@ class TestOLS_regimes(unittest.TestCase):
         np.testing.assert_array_almost_equal(ols.t_stat[2][1], \
                 0.66687472578594531,7)
         np.set_printoptions(suppress=start_suppress)        
-
+    """
     def test_OLS_regi(self):
         #Artficial:
         n = 256
@@ -106,48 +106,7 @@ class TestOLS_regimes(unittest.TestCase):
        [ 0.60732697,  0.43579603]])
         np.testing.assert_array_almost_equal(reg.chow.regi, chow_regi, 7)
         self.assertAlmostEqual(reg.chow.joint[0], 0.67787986791767096, 7)
-
-    def test_OLS_regime_err_sep(self):
-        start_suppress = np.get_printoptions()['suppress']
-        np.set_printoptions(suppress=True)    
-        ols = OLS_Regimes(self.y, self.x, self.regimes, w=self.w, regime_err_sep=True, constant_regi='many', nonspat_diag=False, spat_diag=True, name_y=self.y_var, name_x=self.x_var, name_ds='columbus', name_regimes=self.r_var, name_w='columbus.gal')        
-        np.testing.assert_array_almost_equal(ols.betas,np.array([[ 68.78670869],\
-                [ -1.9864167 ],[ -0.10887962],[ 67.73579559],[ -1.36937552],[ -0.31792362]])) 
-        vm = np.array([ 41.68828023,  -1.83582717,  -0.17053478,   0.        ,
-         0.        ,   0.        ])
-        np.testing.assert_array_almost_equal(ols.vm[0], vm, 6)
-        np.testing.assert_array_almost_equal(ols.multi[0].lm_error, \
-            (5.45795541,  0.01947943),7)
-        np.testing.assert_array_almost_equal(ols.multi[0].lm_lag, \
-            (8.20573925,  0.00417581), 7)
-        np.testing.assert_array_almost_equal(ols.multi[0].lm_sarma, \
-                (8.39852379,  0.01500665), 7)
-        np.testing.assert_array_almost_equal(ols.multi[0].mean_y, \
-            31.614447920000003,7)
-        np.testing.assert_equal(ols.kf, 0)
-        np.testing.assert_equal(ols.kr, 3)
-        np.testing.assert_equal(ols.n, 49)
-        np.testing.assert_equal(ols.nr, 2)
-        np.testing.assert_equal(ols.name_ds,  'columbus')
-        np.testing.assert_equal(ols.name_gwk,  None)
-        np.testing.assert_equal(ols.name_w,  'columbus.gal')
-        np.testing.assert_equal(ols.name_x,  ['0_CONSTANT', '0_INC', '0_HOVAL', '1_CONSTANT', '1_INC', '1_HOVAL'])
-        np.testing.assert_equal(ols.multi[0].name_y,  '0_CRIME')
-        np.testing.assert_array_almost_equal(ols.predy[3], np.array([
-            51.05003696]),7)
-        np.testing.assert_array_almost_equal(ols.multi[0].r2, \
-                0.6298789694928845 ,7)
-        np.testing.assert_equal(ols.multi[0].robust,  'unadjusted')
-        np.testing.assert_array_almost_equal(ols.multi[0].sig2, \
-            117.72766418598968,7 )
-        np.testing.assert_array_almost_equal(ols.multi[0].sig2n, \
-                103.60034448367092, 7)
-        np.testing.assert_array_almost_equal(ols.multi[0].t_stat[2][0], \
-                -0.46900084351673077,7)
-        np.testing.assert_array_almost_equal(ols.multi[0].t_stat[2][1], \
-                0.6436834438232635,7)
-        np.set_printoptions(suppress=start_suppress)  
-
+    """
     def test_OLS_fixed(self):
         start_suppress = np.get_printoptions()['suppress']
         np.set_printoptions(suppress=True)    

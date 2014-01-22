@@ -11,7 +11,7 @@ from math import sqrt
 from utils import spmultiply, sphstack, spmin, spmax
 
 
-__all__ = [ "f_stat", "t_stat", "r2", "ar2", "se_betas", "log_likelihood", "akaike", "schwarz", "condition_index", "jarque_bera", "breusch_pagan", "white", "koenker_bassett", "vif" ]
+__all__ = [ "f_stat", "t_stat", "r2", "ar2", "se_betas", "log_likelihood", "akaike", "schwarz", "condition_index", "jarque_bera", "breusch_pagan", "white", "koenker_bassett", "vif", "likratiotest" ]
 
 
 
@@ -476,10 +476,13 @@ def akaike(reg):
     380.7544776242982
 
     """
-    n = reg.n       # (scalar) number of observations
-    k = reg.k       # (scalar) number of ind. variables (including constant)
-    utu = reg.utu   # (scalar) residual sum of squares
-    aic_result = 2*k + n*(np.log((2*np.pi*utu)/n)+1)
+    k = reg.k       # (scalar) number of explanatory vars (including constant)
+    try:   # ML estimation, logll already exists
+        aic_result = 2.0*k - 2.0*reg.logll    # spatial coefficient included in k
+    except AttributeError:           # OLS case
+        n = reg.n       # (scalar) number of observations
+        utu = reg.utu   # (scalar) residual sum of squares
+        aic_result = 2*k + n*(np.log((2*np.pi*utu)/n)+1)
     return aic_result
 
 
@@ -543,10 +546,12 @@ def schwarz(reg):
     """
     n = reg.n      # (scalar) number of observations
     k = reg.k      # (scalar) number of ind. variables (including constant)
-    utu = reg.utu  # (scalar) residual sum of squares
-    sc_result = k*np.log(n) + n*(np.log((2*np.pi*utu)/n)+1)
+    try:  # ML case logll already computed
+        sc_result = k*np.log(n) - 2.0 * reg.logll    #spatial coeff included in k
+    except AttributeError:          # OLS case
+        utu = reg.utu  # (scalar) residual sum of squares
+        sc_result = k*np.log(n) + n*(np.log((2*np.pi*utu)/n)+1)
     return sc_result
-
 
 
 def condition_index(reg):
@@ -603,8 +608,8 @@ def condition_index(reg):
 
     Print the result.
 
-    >>> print("%12.12f"%testresult)
-    6.541827751444
+    >>> print("%1.3f"%testresult)
+    6.542
 
     """
     if hasattr(reg, 'xtx'):
@@ -687,13 +692,13 @@ def jarque_bera(reg):
 
     Print the test statistic. 
 
-    >>> print("%12.12f"%testresult['jb'])
-    1.835752520076
+    >>> print("%1.3f"%testresult['jb'])
+    1.836
 
     Print the associated p-value.
 
-    >>> print("%12.12f"%testresult['pvalue'])
-    0.399366291249
+    >>> print("%1.4f"%testresult['pvalue'])
+    0.3994
 
     """
     n = reg.n               # (scalar) number of observations
@@ -794,13 +799,13 @@ def breusch_pagan(reg, z=None):
 
     Print the test statistic.
 
-    >>> print("%12.12f"%testresult['bp'])
-    7.900441675960
+    >>> print("%1.3f"%testresult['bp'])
+    7.900
 
     Print the associated p-value. 
 
-    >>> print("%12.12f"%testresult['pvalue'])
-    0.019250450075
+    >>> print("%1.4f"%testresult['pvalue'])
+    0.0193
 
     """
     e2 = reg.u**2
@@ -939,18 +944,18 @@ def white(reg):
 
     Print the degrees of freedom for the test.
 
-    >>> testresult['df']
+    >>> print testresult['df']
     5
 
     Print the test statistic.
 
-    >>> print("%12.12f"%testresult['wh'])
-    19.946008239903
+    >>> print("%1.3f"%testresult['wh'])
+    19.946
 
     Print the associated p-value. 
 
-    >>> print("%12.12f"%testresult['pvalue'])
-    0.001279222817
+    >>> print("%1.4f"%testresult['pvalue'])
+    0.0013
 
     """
     e = reg.u**2
@@ -1114,13 +1119,13 @@ def koenker_bassett(reg, z=None):
 
     Print the test statistic.
 
-    >>> print("%12.12f"%testresult['kb'])
-    5.694087931707
+    >>> print("%1.3f"%testresult['kb'])
+    5.694
 
     Print the associated p-value. 
 
-    >>> print("%12.12f"%testresult['pvalue'])
-    0.058015563638
+    >>> print("%1.4f"%testresult['pvalue'])
+    0.0580
 
     """
     # The notation here matches that of Greene (2003).
@@ -1344,6 +1349,82 @@ def constant_check(array):
             break
     return constant
         
+def likratiotest(reg0,reg1):
+    """
+    Likelihood ratio test statistic
+
+    Parameters
+    ----------
+    
+    reg0         : regression object for constrained model (H0)
+    reg1         : regression object for unconstrained model (H1)
+    
+    Returns
+    -------
+    
+    likratio     : dictionary
+                   contains the statistic (likr), the degrees of
+                   freedom (df) and the p-value (pvalue)
+    likr         : float
+                   likelihood ratio statistic
+    df           : integer
+                   degrees of freedom
+    p-value      : float
+                   p-value
+                   
+    References
+    ----------
+    .. [1] W. Greene. 2012. Econometric Analysis. Prentice Hall, Upper
+       Saddle River.
+       
+    Examples
+    --------
+
+    >>> import numpy as np
+    >>> import pysal as ps
+    >>> import scipy.stats as stats
+    >>> import pysal.spreg.ml_lag as lag
+    
+    Use the baltim sample data set
+    
+    >>> db =  ps.open(ps.examples.get_path("baltim.dbf"),'r')
+    >>> y_name = "PRICE"
+    >>> y = np.array(db.by_col(y_name)).T
+    >>> y.shape = (len(y),1)
+    >>> x_names = ["NROOM","NBATH","PATIO","FIREPL","AC","GAR","AGE","LOTSZ","SQFT"]
+    >>> x = np.array([db.by_col(var) for var in x_names]).T
+    >>> ww = ps.open(ps.examples.get_path("baltim_q.gal"))
+    >>> w = ww.read()
+    >>> ww.close()
+    >>> w.transform = 'r'
+    
+    OLS regression
+    
+    >>> ols1 = ps.spreg.OLS(y,x)
+    
+    ML Lag regression
+    
+    >>> mllag1 = lag.ML_Lag(y,x,w)
+    
+    >>> lr = likratiotest(ols1,mllag1)
+    
+    >>> print "Likelihood Ratio Test: {0:.4f}       df: {1}        p-value: {2:.4f}".format(lr["likr"],lr["df"],lr["p-value"])
+    Likelihood Ratio Test: 44.5721       df: 1        p-value: 0.0000
+  
+    """
+    
+    likratio = {}
+    
+    try:
+        likr = 2.0 * (reg1.logll - reg0.logll)
+    except AttributeError:
+        raise Exception,"Missing or improper log-likelihoods in regression objects"
+    if likr < 0.0:  # always enforces positive likelihood ratio
+        likr = -likr
+    pvalue=stats.chisqprob(likr,1)
+    likratio = {"likr":likr,"df":1,"p-value":pvalue}
+    return likratio
+
 
 def _test():
     import doctest

@@ -1225,8 +1225,9 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
         BaseGM_Combo_Hom.__init__(self, y=y, x=x_constant, w=w.sparse, yend=yend2, q=q2,\
                     w_lags=w_lags, A1=A1, lag_q=lag_q,\
                     max_iter=max_iter, epsilon=epsilon)
+        self.rho = self.betas[-2]
         self.predy_e, self.e_pred, warn = sp_att(w,self.y,self.predy,\
-                             yend2[:,-1].reshape(self.n,1),self.betas[-2])
+                             yend2[:,-1].reshape(self.n,1),self.rho)
         set_warn(self, warn)
         self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HOM)"        
         self.name_ds = USER.set_name_ds(name_ds)

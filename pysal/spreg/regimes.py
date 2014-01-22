@@ -446,8 +446,40 @@ def set_name_x_regimes(name_x, regimes, constant_regi, cols2regi, regimes_set):
     name_x_regi.extend(['_Global_%s'%i for i in vars_glob])
     return name_x_regi
 
+def w_regime(w, regi_ids, regi_i, transform=True, min_n=None):
+    '''
+    Returns the subset of W matrix according to a given regime ID
+    ...
+
+    Attributes
+    ==========
+    w           : pysal W object
+                  Spatial weights object
+    regi_ids    : list
+                  Contains the location of observations in y that are assigned to regime regi_i
+    regi_i      : string or float
+                  The regime for which W will be subset
+
+    Returns
+    =======
+    w_regi_i    : pysal W object
+                  Subset of W for regime regi_i
+    '''
+    w_ids = map(w.id_order.__getitem__, regi_ids)
+    warn = None
+    w_regi_i = pysal.weights.w_subset(w, w_ids, silent_island_warning=True)
+    if min_n:
+        if w_regi_i.n < min_n:
+            raise Exception, "There are less observations than variables in regime %s." %regi_i
+    if transform:
+        w_regi_i.transform = w.get_transform()
+    if w_regi_i.islands:
+        warn = "The regimes operation resulted in islands for regime %s." %regi_i
+    return w_regi_i, warn
+
 def w_regimes(w, regimes, regimes_set, transform=True, get_ids=None, min_n=None):
     '''
+    ######### DEPRECATED ##########
     Subsets W matrix according to regimes
     ...
 
@@ -471,7 +503,8 @@ def w_regimes(w, regimes, regimes_set, transform=True, get_ids=None, min_n=None)
     w_regi_i = {}
     warn = None
     for r in regimes_set:
-        w_regi_i[r] = pysal.weights.w_subset(w, w_ids[r])
+        w_regi_i[r] = pysal.weights.w_subset(w, w_ids[r],
+                silent_island_warning=True)
         if min_n:
             if w_regi_i[r].n < min_n:
                 raise Exception, "There are less observations than variables in regime %s." %r
@@ -502,10 +535,12 @@ def w_regimes_union(w, w_regi_i, regimes_set):
     w_regi      : pysal W object
                   Spatial weights object containing the union of the subsets of W
     '''
-    w_regi = pysal.weights.w_union(w_regi_i[regimes_set[0]], w_regi_i[regimes_set[1]])
+    w_regi = pysal.weights.w_union(w_regi_i[regimes_set[0]],
+            w_regi_i[regimes_set[1]], silent_island_warning=True)
     if len(regimes_set)>2:
         for i in range(len(regimes_set))[2:]:
-            w_regi = pysal.weights.w_union(w_regi, w_regi_i[regimes_set[i]])
+            w_regi = pysal.weights.w_union(w_regi,
+                    w_regi_i[regimes_set[i]], silent_island_warning=True)
     w_regi = pysal.weights.remap_ids(w_regi, dict((i,i) for i in w_regi.id_order),w.id_order)
     w_regi.transform = w.get_transform()
     return w_regi

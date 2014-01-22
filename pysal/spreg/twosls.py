@@ -176,7 +176,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
         self.htz = zth.T
       
         if robust:
-            self.vm = ROBUST.robust_vm(reg=self, gwk=gwk)
+            self.vm = ROBUST.robust_vm(reg=self, gwk=gwk, sig2n_k=sig2n_k)
 
         self._cache = {}
         if sig2n_k:
