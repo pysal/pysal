@@ -61,8 +61,8 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
     True
     >>> set([0,6]) == set(wnn2.neighbors[5])
     True
-    >>> wnn2.pct_nonzero
-    0.080000000000000002
+    >>> "%.2f"%wnn2.pct_nonzero
+    '0.08'
     >>> wnn4.pct_nonzero
     0.16
     >>> wnn3e=knnW(data,p=2,k=3)
@@ -133,17 +133,16 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
         return None
 
     neighbors = {}
-    weights = {}  # flake8; F841 local var 'weights' is assigned to but never used
-    if ids:
-        idset = np.array(ids)
-        for i, row in enumerate(info):
-            new_row = [idset[j] for j in row]
-            info[i] = new_row
-    else:
-        idset = np.arange(len(info))
-
-    neighbors = dict([(idset[i], row[row != idset[i]].tolist()[:k]) for i, row in enumerate(info)])
-    return pysal.weights.W(neighbors, id_order=ids)
+    for i, row in enumerate(info):
+        row = row.tolist()
+        if i in row:
+            row.remove(i)
+            focal = i
+        if ids:
+            row = [ ids[j] for j in row]
+            focal = ids[i]
+        neighbors[focal] = row
+    return pysal.weights.W(neighbors,  id_order=ids)
 
 
 class Kernel(W):

@@ -40,9 +40,8 @@ class TestW(unittest.TestCase):
     def test_asymmetries(self):
         w = pysal.lat2W(3, 3)
         w.transform = 'r'
-        result = w.asymmetry()[0:2]
-        NPTA3E(result[0], np.array([1, 3, 0, 2, 4, 1,
-                                    5, 0, 4, 6, 1, 3, 5, 7, 2, 4, 8, 3, 7, 4, 6, 8, 5, 7]))
+        result = w.asymmetry()
+        self.assertEqual(result, [(0, 1), (0, 3), (1, 0), (1, 2), (1, 4), (2, 1), (2, 5), (3, 0), (3, 4), (3, 6), (4, 1), (4, 3), (4, 5), (4, 7), (5, 2), (5, 4), (5, 8), (6, 3), (6, 7), (7, 4), (7, 6), (7, 8), (8, 5), (8, 7)])
 
     def test_asymmetry(self):
         w = pysal.lat2W(3, 3)
@@ -259,10 +258,8 @@ class Test_WSP_Back_To_W(unittest.TestCase):
     def test_asymmetries(self):
         w = pysal.lat2W(3, 3)
         w.transform = 'r'
-        result = w.asymmetry()[0:2]
-        NPTA3E(result[0], np.array([1, 3, 0, 2, 4, 1,
-                                    5, 0, 4, 6, 1, 3, 5, 7, 2, 4, 8, 3, 7, 4, 6, 8, 5, 7]))
-
+        result = w.asymmetry()
+        self.assertEqual(result, [(0, 1), (0, 3), (1, 0), (1, 2), (1, 4), (2, 1), (2, 5), (3, 0), (3, 4), (3, 6), (4, 1), (4, 3), (4, 5), (4, 7), (5, 2), (5, 4), (5, 8), (6, 3), (6, 7), (7, 4), (7, 6), (7, 8), (8, 5), (8, 7)])
     def test_asymmetry(self):
         w = pysal.lat2W(3, 3)
         self.assertEqual(w.asymmetry(), [])

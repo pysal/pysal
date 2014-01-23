@@ -21,5 +21,9 @@
    error_sp_hom
    error_sp_hom_regimes
    regimes
+   ml_error
+   ml_error_regimes
+   ml_lag
+   ml_lag_regimes
 
 
