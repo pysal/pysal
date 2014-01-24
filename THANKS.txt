@@ -3,7 +3,7 @@ analysis using Python.  It is a community project sponsored by the GeoDa
 Center for Geospatial Analysis and Computation at Arizona State University.
 PySAL originated with code contributions by Luc Anselin and Serge Rey.
 
-Since then many people have contributed to PySAL, both in code development,
+Since then many people have contributed to PySAL, in code development,
 suggestions, and financial support.  Below is a partial list.  If you've
 been left off, please email the "PySAL Developers List" <pysal-dev@googlegroups.com>
 
