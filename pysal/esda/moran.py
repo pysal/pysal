@@ -87,6 +87,7 @@ class Moran:
                    standardized I based on permutations
     p_z_sim      : float (if permutations>0)
                    p-value based on standard normal approximation from
+                   permutations
 
     Examples
     --------

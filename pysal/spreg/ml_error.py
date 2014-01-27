@@ -39,6 +39,7 @@ class BaseML_Error(RegressionPropsY,RegressionPropsVM,REGI.Regimes_Frame):
                    Dictionary containing elements to be used in case of a regimes model,
                    i.e. 'x' before regimes, 'regimes' list and 'cols2regi'
 
+
     Attributes
     ----------
     betas        : array
@@ -81,8 +82,7 @@ class BaseML_Error(RegressionPropsY,RegressionPropsVM,REGI.Regimes_Frame):
                    maximized log-likelihood (including constant terms)
 
     Examples
-    ________
-    
+    --------
     >>> import numpy as np
     >>> import pysal as ps
     >>> np.set_printoptions(suppress=True) #prevent scientific format
@@ -347,7 +347,7 @@ class ML_Error(BaseML_Error):
                    Name of the regression method used
 
     Examples
-    ________
+    --------
     
     >>> import numpy as np
     >>> import pysal as ps

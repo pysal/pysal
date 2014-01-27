@@ -200,8 +200,8 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
     .. [1] Anselin, L. (1988) "Spatial Econometrics: Methods and Models".
     Kluwer Academic Publishers. Dordrecht.
                    
-    Example
-    ________
+    Examples
+    --------
 
     Open data baltim.dbf using pysal and create the variables matrices and weights matrix.
     
