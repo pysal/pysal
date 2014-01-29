@@ -1,3 +1,180 @@
+v<1.7.0>, 2014-01-29
+36d268f Philip Stephens -Merge pull request #400 from sjsrey/mldoc
+c2c4741 Serge Rey -Formatting ml docs
+685f5e3 Sergio Rey -Merge pull request #399 from sjsrey/master
+481ccb4 Serge Rey -correct thanks
+4a5cce3 Sergio Rey -Update index.txt
+1fe7aeb Philip Stephens -Merge pull request #396 from sjsrey/mldoc
+e731278 Serge Rey -EHN: fixing link to bleeding edge docs.
+e4e9930 Serge Rey -ENH: adding ml docs to api
+9b3c77e Serge Rey -Merge branch 'master' of github.com:pysal/pysal
+dda3c01 Philip Stephens -Merge pull request #389 from dfolch/master
+74b26d5 Philip Stephens -Merge pull request #392 from pedrovma/spreg17
+b47ba84 pedrovma -Bump.
+3d8504c Sergio Rey -Merge pull request #386 from pastephens/master
+f9b59ea Philip Stephens -Merge branch 'master' of https://github.com/pysal/pysal
+429e19e pedrovma -Upgrading to spreg 1.7.
+c698747 David Folch -removing legacy speedup hack that is no longer relevant
+88177d0 Sergio Rey -Merge pull request #387 from sjsrey/scipy13
+64a4089 Serge Rey -BUG: sorting ijs for asymmetries
+5539ef5 Sergio Rey -Merge pull request #1 from sjsrey/scipy13
+8a86951 Serge Rey -BUG: fixes for scipy .0.9.0 to 0.13.0 induced errors
+fe02796 Philip Stephens -tweaking travis to only run master commits
+8c1fbe8 jlaura -Merge pull request #385 from sjsrey/docupdate
+b71aedc Serge Rey -ENH: update date
+4f237e4 Sergio Rey -Merge pull request #384 from sjsrey/moran
+01da3be Serge Rey -ENH: Analytical p-values for Moran are two-tailed by default #337
+918fe60 Philip Stephens -further travis tweaks
+3920d73 Sergio Rey -Merge pull request #382 from sjsrey/st_docs
+d90bc70 Serge Rey -DOC: updating refs for concordance algorithm
+0db2790 Philip Stephens -tweaks to travis
+063e057 Philip Stephens -upgrading scipy on travis
+f90e742 Philip Stephens -Merge branch 'master' of https://github.com/pysal/pysal
+edc9c07 Dani Arribas-Bel -Merge pull request #379 from sjsrey/b244
+82479bb Serge Rey -BUG: fix for the comment https://github.com/pysal/pysal/issues/244#issuecomment-30055558
+57ba485 jlaura -Update README.md
+981ed31 Sergio Rey -Merge pull request #377 from darribas/master
+3320c39 darribas -Changing cmap default in plot_choropleth so every type defaults to its own adecuate colormap
+e063bee darribas -Fixing ignorance of argument cmap in base_choropleth_unique
+1f10906 Dani Arribas-Bel -Merge pull request #375 from sjsrey/viz
+94aa3e7 Dani Arribas-Bel -Merge pull request #376 from pedrovma/baltim_data
+7568b0b pedrovma -Adding Baltimore example dataset for use with LM models.
+5b23f89 Serge Rey -greys for classless map
+d4eae1e Dani Arribas-Bel -Merge pull request #374 from sjsrey/viz
+652440d Serge Rey -shrinking colorbar
+c17bf67 Sergio Rey -Merge pull request #373 from darribas/master
+a71c3cb darribas -Fixing minor conflict to merge darribas viz branch into darribas master
+ec27e30 Dani Arribas-Bel -Merge pull request #372 from sjsrey/viz
+8c03170 Serge Rey -option for resolution of output figs
+3fc5bd4 Philip Stephens -Merge branch 'master' of https://github.com/pysal/pysal
+2b5cb23 jlaura -Merge pull request #371 from sjsrey/geopandas
+469afa7 Serge Rey -fix for #370
+59cdafc jlaura -Merge pull request #369 from pedrovma/south_data
+6b88e13 jlaura -Merge pull request #368 from schmidtc/issue367
+40fe928 pedrovma -Adding south data to be used in ML doctests.
+bcc257e schmidtc -fixes #367
+87e057f jlaura -Merge pull request #366 from sjsrey/ml_lag
+a64eb27 Serge Rey -queen contiguity for nat.shp
+77add5c Sergio Rey -Merge pull request #365 from sjsrey/news
+82464ef Serge Rey -narsc workshop
+fd79424 Sergio Rey -Merge pull request #364 from sjsrey/news
+bc7f25a Serge Rey -Merge branch 'master' of https://github.com/sjsrey/pysal
+d669913 David Folch -Merge pull request #363 from sjsrey/maxp
+22f9e36 Serge Rey -update example for bug fix #362
+fac3b8a Serge Rey -- update tests for bug fix #362
+44b4b06 Sergio Rey -Merge pull request #1 from sjsrey/maxp
+1e6f1e5 Serge Rey -- fix for #362
+68ab3e9 Sergio Rey -Merge pull request #361 from sjsrey/components
+aa27c7e Serge Rey -doc test fix
+7c08208 Serge Rey -putting Graph class back in for component checking
+003b519 Serge Rey -alternative efficient component checker
+2080e62 Serge Rey -- fixing doc
+4fda442 Serge Rey -Merge branch 'components' of github.com:sjsrey/pysal into components
+e9e613b Serge Rey -reverting back to old component check
+83d855e Serge Rey -updating example
+9defd86 jlaura -Merge pull request #360 from sjsrey/components
+6f92335 Serge Rey -more efficient connectivity test
+ebde3d1 Dani Arribas-Bel -Adding try/except for ogr since it's only used to reprojection methods but not on the plotting toolkit
+5b170eb Sergio Rey -Merge pull request #356 from sjsrey/classification
+c9dac41 Serge Rey -- update unit tests for reshaping jenks caspal
+d9b06e2 Sergio Rey -Merge pull request #355 from sjsrey/cleanup/moran
+dc589e8 darribas -Adding caution note when plotting points to the notebook. Ideally, we wanna be able to build a PathCollection out of the XYs, but for now we rely on plt.scatter, which gets the job done but has some problems.
+2224b95 darribas -Including support for points in  base_choropleth_unique and base_choropleth_classless
+ac2d08a darribas -Modifying example to show how to do choropleth mapping on points
+270786e darribas -Adding support for choropleth plotting on point map objects (this may come from map_point_shp or from a simple matplotlib scatter
+e56697c Sergio Rey -Merge pull request #357 from jlaura/newstyle_wed
+4c67c2f Jay -errors in segmentation fixed
+512cc76 Serge Rey -have Jenks-Caspal bins be a one dimensional array - to be consistent with all other classifiers
+5254859 Philip Stephens -Merge branch 'master' of https://github.com/pysal/pysal
+788ecab Serge -pruning
+5b6b7b6 Serge -pruning
+eb7e9a1 Jay -bug fix and all pointers filled for external edges
+e47aa7a Jay -Node insertion, precursor to segmentation.
+18a44d1 darribas -*Replacing shp by map_obj in medium layer functionality. *Bringing everything else in line with it *Adding example for line colorig and mixing overlaying of points.
+bd041b1 darribas -Replacing shp_link by shp as input for medium and low-level layers. This brings much more flexibility and opens the door to plot formats other than shapefiles (e.g. geojson)
+c74a361 darribas -Adding IP notebook to exemplify and keep track of development of mapping module
+d23c882 darribas -Minor fixes
+4b82a76 darribas -New commit message* Replacing map_poly_shp_lonlat for map_poly_shp in base_choropleth_classif/unique/classless * removed 'projection' from base_choropleth_classif/unique/classless * Allow base_choropleth_classif/unique/classless to plot multi-part polygons properly * changes streamlined to generic plot_choropleth * Added dependency on pandas for rapid reindexing (this is done externally on the method _expand_values to it is easy to drop the dependency when neccesary/time available)
+7a0eaec darribas -Merge branch 'viz' of github.com:darribas/pysal into viz
+5536424 darribas -Merge branch 'master' of github.com:darribas/pysal
+e54ce16 Sergio Rey -Merge pull request #353 from darribas/master
+819ee60 darribas -Adding immediate todo on head of the file
+946772d darribas -Passing k to base_choropleth_classif from plot_choropleth. This should fix Issue #352
+f299b45 darribas -Merge branch 'master' of https://github.com/pysal/pysal
+f044f43 Jay -Added W generation
+5f48446 jlaura -Merge pull request #348 from sjsrey/master
+938a1ae Serge Rey -- adding nn stats to point based methods
+a86a051 Philip Stephens -removing dependency tracking service, it was ruby only
+1e24fde Philip Stephens -testing dependency tracking service
+3aa410c Philip Stephens -Merge pull request #347 from pedrovma/w_silence_island
+03990f6 pedrovma -Extending PR #310 (silence island warnings) to include w.transform.
+160001a Sergio Rey -Merge pull request #346 from jlaura/newstyle_wed
+44989f9 Sergio Rey -Merge pull request #345 from sjsrey/master
+2fd99b8 Sergio Rey -Update README.md
+bdcc6a8 Jay -NCSR with uniform distribution
+769aa03 Jay -Fixed snapping
+2561071 Jay -saved notebook and updated readme
+3784783 Jay -ReadMe for Changes
+019e16b Sergio Rey -Merge pull request #334 from jseabold/fix-build-example-dirs
+1889885 Skipper Seabold -BLD: Correctly install package_data dirs.
+ff4e355 Serge Rey -- assignments
+c5b0cc0 Serge Rey -- reorg
+a4f5642 Serge Rey -Merge branch 'network' of github.com:pysal/pysal into network
+a95fec8 jlaura -Update README.md
+1713145 Serge Rey -Merge branch 'master' of github.com:pysal/pysal into network
+ede75c0 Sergio Rey -Merge pull request #329 from jlaura/wed_polar
+7399cf2 Jay -Single-source shortest path notebook
+9eb3fc1 Philip Stephens -Merge pull request #331 from sjsrey/docfix
+ef9c82a Serge Rey -- sphinx doctest markup fix
+1e2b6b3 jlaura -Update README.md
+e19bffa jlaura -Merge pull request #330 from pysal/b328
+6afc30b Serge Rey -- tutorial doc fixes for #328
+c7239f1 Serge Rey -- b328 fix
+d5fec13 Serge Rey -- fix for #328  making all p-values one-tailed
+16b5e6e Jay -enumeration working with filaments
+9507bbc jlaura -Update README.md
+eef8eec Serge Rey -- stub for design of module
+2707d60 Jay -Filaments in polar coordinates
+b64f9e2 Serge Rey -Documentation for the development of network module
+b90876e Serge Rey -Merge branch 'network' of github.com:pysal/pysal into network
+ddad2a5 Philip Stephens -Merge pull request #326 from sjsrey/doc
+6b0cd08 Serge Rey -- update release schedule
+4cc7bca Jay -bisecting for single point working
+79c77d9 jlaura -Merge pull request #324 from pysal/bf_id
+9f4c7c9 Serge Rey -id is a keyword
+72b1f85 Sergio Rey -Merge pull request #323 from jlaura/network
+b5cdae0 Jay -fix to shp2graph
+846dce2 Jay -Brute force for point outside network
+d6c2ef4 Jay -Added length computation, alter global morans
+b7e1465 Jay -Added new pointer to reader/writer
+616d62d Jay -LISA and Global Morans on the network
+16f84d6 Jay -Added explicit point external to network warning
+34f4d8e Jay -update to the ipython notebook
+e359e59 Jay -JSON and cPickle Bianry WED Reader/Writer
+5373c82 Sergio Rey -Merge pull request #322 from jlaura/network
+059d99c Jay -wed into class, tests added
+aa5969d Sergio Rey -Merge pull request #320 from pastephens/master
+a18000b Philip Stephens -version added info
+5b8d490 Philip Stephens -typo
+d31a22a Philip Stephens -stubs for cg docs
+4dbdfe3 schmidtc -fixes #318
+35a0317 Jay -Merge branch 'master' of https://github.com/pysal/pysal into network
+77e8387 Jay -Merge branch 'geojson' of https://github.com/pysal/pysal into network
+ad670c5 Sergio Rey -Merge pull request #317 from pastephens/master
+628f27e Philip Stephens -merging local changes
+f9dcb3e Philip Stephens -simplified install instructions
+f2fab4c Serge Rey -- notebook on w construction for geojson
+830826b Serge Rey -prototyping W from geojson
+b10240d Serge Rey -created with "ogr2ogr -lco WRITE_BBOX=YES -f "GeoJSON" columbus.json columbus.shp"
+d546926 Philip Stephens -merging with pull
+d711011 darribas -Merge branch 'rod'
+8bef782 darribas -Merge branch 'rod' of https://github.com/pysal/pysal into rod
+03c1003 pedrovma -Merge pull request #315 from sjsrey/rod
+950fe8b Serge Rey -Replacing ROD with regular dictionary
+b1f009f Philip Stephens -Changes to release docs.
+028364a Sergio Rey -Update THANKS.txt
+94f5916 Sergio Rey -Update INSTALL.txt
+
 v<1.6.0>, 2013-07-31
 
 5fa9d09 darribas -silent_island_warning implemented for w_union
