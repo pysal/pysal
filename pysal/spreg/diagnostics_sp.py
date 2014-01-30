@@ -253,8 +253,9 @@ class AKtest:
                   Spatial weights instance 
     case        : string
                   Flag for special cases (default to 'nosp'):
-                    * 'nosp': Only NO spatial end. reg.
-                    * 'gen': General case (spatial lag + end. reg.)
+
+                   * 'nosp': Only NO spatial end. reg.
+                   * 'gen': General case (spatial lag + end. reg.)
 
     Attributes
     ----------
