@@ -11,7 +11,9 @@ from utils import spdot, sphstack, RegressionPropsY, RegressionPropsVM
 
 __all__ = ["OLS"]
 
+
 class BaseOLS(RegressionPropsY, RegressionPropsVM):
+
     """
     Ordinary least squares (OLS) (note: no consistency checks, diagnostics or
     constant added)
@@ -95,6 +97,7 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
            [  -6.52060364,    0.28720001,    0.06809568],
            [  -2.15109867,    0.06809568,    0.03336939]])
     """
+
     def __init__(self, y, x, robust=None, gwk=None, sig2n_k=True):
         self.x = x
         self.xtx = spdot(self.x.T, self.x)
@@ -104,7 +107,7 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
         self.betas = np.dot(self.xtxi, xty)
         predy = spdot(self.x, self.betas)
 
-        u = y-predy
+        u = y - predy
         self.u = u
         self.predy = predy
         self.y = y
@@ -119,7 +122,9 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
         else:
             self.sig2 = self.sig2n
 
+
 class OLS(BaseOLS):
+
     """
     Ordinary least squares with results and diagnostics.
     
@@ -412,11 +417,12 @@ class OLS(BaseOLS):
     0.0095
 
     """
-    def __init__(self, y, x,\
-                 w=None,\
-                 robust=None, gwk=None, sig2n_k=True,\
-                 nonspat_diag=True, spat_diag=False, moran=False,\
-                 white_test=False, vm=False, name_y=None, name_x=None,\
+
+    def __init__(self, y, x,
+                 w=None,
+                 robust=None, gwk=None, sig2n_k=True,
+                 nonspat_diag=True, spat_diag=False, moran=False,
+                 white_test=False, vm=False, name_y=None, name_x=None,
                  name_w=None, name_gwk=None, name_ds=None):
 
         n = USER.check_arrays(y, x)
@@ -425,8 +431,8 @@ class OLS(BaseOLS):
         USER.check_robust(robust, gwk)
         USER.check_spat_diag(spat_diag, w)
         x_constant = USER.check_constant(x)
-        BaseOLS.__init__(self, y=y, x=x_constant, robust=robust,\
-                     gwk=gwk, sig2n_k=sig2n_k) 
+        BaseOLS.__init__(self, y=y, x=x_constant, robust=robust,
+                         gwk=gwk, sig2n_k=sig2n_k)
         self.title = "ORDINARY LEAST SQUARES"
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
@@ -434,8 +440,9 @@ class OLS(BaseOLS):
         self.robust = USER.set_robust(robust)
         self.name_w = USER.set_name_w(name_w, w)
         self.name_gwk = USER.set_name_w(name_gwk, gwk)
-        SUMMARY.OLS(reg=self, vm=vm, w=w, nonspat_diag=nonspat_diag,\
+        SUMMARY.OLS(reg=self, vm=vm, w=w, nonspat_diag=nonspat_diag,
                     spat_diag=spat_diag, moran=moran, white_test=white_test)
+
 
 def _test():
     import doctest
@@ -444,20 +451,21 @@ def _test():
     start_suppress = np.get_printoptions()['suppress']
     np.set_printoptions(suppress=True)
     doctest.testmod()
-    np.set_printoptions(suppress=start_suppress)    
+    np.set_printoptions(suppress=start_suppress)
 
 if __name__ == '__main__':
     _test()
 
     import numpy as np
     import pysal
-    db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
+    db = pysal.open(pysal.examples.get_path("columbus.dbf"), 'r')
     y_var = 'CRIME'
-    y = np.array([db.by_col(y_var)]).reshape(49,1)
-    x_var = ['INC','HOVAL']
+    y = np.array([db.by_col(y_var)]).reshape(49, 1)
+    x_var = ['INC', 'HOVAL']
     x = np.array([db.by_col(name) for name in x_var]).T
     w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
     w.transform = 'r'
-    ols = OLS(y, x, w=w, nonspat_diag=True, spat_diag=True, name_y=y_var, name_x=x_var, name_ds='columbus', name_w='columbus.gal', robust='white', sig2n_k=True, moran=True)
+    ols = OLS(
+        y, x, w=w, nonspat_diag=True, spat_diag=True, name_y=y_var, name_x=x_var,
+        name_ds='columbus', name_w='columbus.gal', robust='white', sig2n_k=True, moran=True)
     print ols.summary
-

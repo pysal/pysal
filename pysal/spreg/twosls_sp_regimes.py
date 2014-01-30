@@ -18,6 +18,7 @@ from platform import system
 
 
 class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
+
     """
     Spatial two stage least squares (S2SLS) with regimes; 
     Anselin (1988) [1]_
@@ -426,13 +427,14 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
     array([ 0.49163311,  0.12237382,  0.05633464,  0.72555909,  0.17250521,
             0.06749131,  0.27370369,  0.25106224,  0.05804213])
     """
-    def __init__(self, y, x, regimes, yend=None, q=None,\
-                 w=None, w_lags=1, lag_q=True,\
-                 robust=None, gwk=None, sig2n_k=False,\
-                 spat_diag=False, constant_regi='many',\
-                 cols2regi='all', regime_lag_sep=False, regime_err_sep=True,\
-                 cores=None, vm=False, name_y=None, name_x=None,\
-                 name_yend=None, name_q=None, name_regimes=None,\
+
+    def __init__(self, y, x, regimes, yend=None, q=None,
+                 w=None, w_lags=1, lag_q=True,
+                 robust=None, gwk=None, sig2n_k=False,
+                 spat_diag=False, constant_regi='many',
+                 cols2regi='all', regime_lag_sep=False, regime_err_sep=True,
+                 cores=None, vm=False, name_y=None, name_x=None,
+                 name_yend=None, name_q=None, name_regimes=None,
                  name_w=None, name_gwk=None, name_ds=None):
 
         n = USER.check_arrays(y, x)
@@ -440,72 +442,77 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
         USER.check_weights(w, y, w_required=True)
         USER.check_robust(robust, gwk)
         USER.check_spat_diag(spat_diag, w)
-        name_x = USER.set_name_x(name_x, x,constant=True)
+        name_x = USER.set_name_x(name_x, x, constant=True)
         name_y = USER.set_name_y(name_y)
         name_yend = USER.set_name_yend(name_yend, yend)
         name_q = USER.set_name_q(name_q, q)
-        name_q.extend(USER.set_name_q_sp(name_x, w_lags, name_q, lag_q, force_all=True))
+        name_q.extend(USER.set_name_q_sp(name_x, w_lags, name_q, lag_q,
+                      force_all=True))
         self.name_regimes = USER.set_name_ds(name_regimes)
-        self.constant_regi=constant_regi
+        self.constant_regi = constant_regi
         self.n = n
-        cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, yend=yend, add_cons=False)    
+        cols2regi = REGI.check_cols2regi(
+            constant_regi, cols2regi, x, yend=yend, add_cons=False)
         self.cols2regi = cols2regi
         self.regimes_set = REGI._get_regimes_set(regimes)
         self.regimes = regimes
-        USER.check_regimes(self.regimes_set,self.n,x.shape[1])
+        USER.check_regimes(self.regimes_set, self.n, x.shape[1])
         if regime_err_sep == True and robust == 'hac':
-            set_warn(self,"Error by regimes is incompatible with HAC estimation for Spatial Lag models. Hence, error and lag by regimes have been disabled for this model.")
+            set_warn(
+                self, "Error by regimes is incompatible with HAC estimation for Spatial Lag models. Hence, error and lag by regimes have been disabled for this model.")
             regime_err_sep = False
             regime_lag_sep = False
-        self.regime_err_sep = regime_err_sep        
-        self.regime_lag_sep = regime_lag_sep        
+        self.regime_err_sep = regime_err_sep
+        self.regime_lag_sep = regime_lag_sep
         if regime_lag_sep == True:
             if not regime_err_sep:
                 raise Exception, "regime_err_sep must be True when regime_lag_sep=True."
             cols2regi += [True]
-            w_i,regi_ids,warn = REGI.w_regimes(w, regimes, self.regimes_set, transform=True, get_ids=True, min_n=len(cols2regi)+1)
-            set_warn(self,warn)
+            w_i, regi_ids, warn = REGI.w_regimes(
+                w, regimes, self.regimes_set, transform=True, get_ids=True, min_n=len(cols2regi) + 1)
+            set_warn(self, warn)
 
         else:
-            cols2regi += [False]            
+            cols2regi += [False]
 
         if regime_err_sep == True and set(cols2regi) == set([True]) and constant_regi == 'many':
             self.y = y
-            self.GM_Lag_Regimes_Multi(y, x, w_i, w, regi_ids,\
-                 yend=yend, q=q, w_lags=w_lags, lag_q=lag_q, cores=cores,\
-                 robust=robust, gwk=gwk, sig2n_k=sig2n_k, cols2regi=cols2regi,\
-                 spat_diag=spat_diag, vm=vm, name_y=name_y, name_x=name_x,\
-                 name_yend=name_yend, name_q=name_q, name_regimes=self.name_regimes,\
-                 name_w=name_w, name_gwk=name_gwk, name_ds=name_ds)
+            self.GM_Lag_Regimes_Multi(y, x, w_i, w, regi_ids,
+                                      yend=yend, q=q, w_lags=w_lags, lag_q=lag_q, cores=cores,
+                                      robust=robust, gwk=gwk, sig2n_k=sig2n_k, cols2regi=cols2regi,
+                                      spat_diag=spat_diag, vm=vm, name_y=name_y, name_x=name_x,
+                                      name_yend=name_yend, name_q=name_q, name_regimes=self.name_regimes,
+                                      name_w=name_w, name_gwk=name_gwk, name_ds=name_ds)
         else:
             if regime_lag_sep == True:
                 w = REGI.w_regimes_union(w, w_i, self.regimes_set)
             yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
             name_yend.append(USER.set_name_yend_sp(name_y))
-            TSLS_Regimes.__init__(self, y=y, x=x, yend=yend2, q=q2,\
-                 regimes=regimes, w=w, robust=robust, gwk=gwk,\
-                 sig2n_k=sig2n_k, spat_diag=spat_diag, vm=vm,\
-                 constant_regi=constant_regi, cols2regi=cols2regi, regime_err_sep=regime_err_sep,\
-                 name_y=name_y, name_x=name_x, name_yend=name_yend, name_q=name_q,\
-                 name_regimes=name_regimes, name_w=name_w, name_gwk=name_gwk,\
-                 name_ds=name_ds,summ=False)
+            TSLS_Regimes.__init__(self, y=y, x=x, yend=yend2, q=q2,
+                                  regimes=regimes, w=w, robust=robust, gwk=gwk,
+                                  sig2n_k=sig2n_k, spat_diag=spat_diag, vm=vm,
+                                  constant_regi=constant_regi, cols2regi=cols2regi, regime_err_sep=regime_err_sep,
+                                  name_y=name_y, name_x=name_x, name_yend=name_yend, name_q=name_q,
+                                  name_regimes=name_regimes, name_w=name_w, name_gwk=name_gwk,
+                                  name_ds=name_ds, summ=False)
             if regime_lag_sep:
-                self.sp_att_reg(w_i, regi_ids, yend2[:,-1].reshape(self.n,1))
+                self.sp_att_reg(w_i, regi_ids, yend2[:, -1].reshape(self.n, 1))
             else:
                 self.rho = self.betas[-1]
-                self.predy_e, self.e_pred, warn = sp_att(w,self.y,self.predy,\
-                          yend2[:,-1].reshape(self.n,1),self.rho)
-                set_warn(self,warn)
-            self.regime_lag_sep=regime_lag_sep
-            self.title = "SPATIAL "+ self.title
-            SUMMARY.GM_Lag(reg=self, w=w, vm=vm, spat_diag=spat_diag, regimes=True)
+                self.predy_e, self.e_pred, warn = sp_att(w, self.y, self.predy,
+                                                         yend2[:, -1].reshape(self.n, 1), self.rho)
+                set_warn(self, warn)
+            self.regime_lag_sep = regime_lag_sep
+            self.title = "SPATIAL " + self.title
+            SUMMARY.GM_Lag(reg=self, w=w, vm=vm,
+                           spat_diag=spat_diag, regimes=True)
 
-    def GM_Lag_Regimes_Multi(self, y, x, w_i, w, regi_ids, cores=None,\
-                 yend=None, q=None, w_lags=1, lag_q=True,\
-                 robust=None, gwk=None, sig2n_k=False,cols2regi='all',\
-                 spat_diag=False, vm=False, name_y=None, name_x=None,\
-                 name_yend=None, name_q=None, name_regimes=None,\
-                 name_w=None, name_gwk=None, name_ds=None):
+    def GM_Lag_Regimes_Multi(self, y, x, w_i, w, regi_ids, cores=None,
+                             yend=None, q=None, w_lags=1, lag_q=True,
+                             robust=None, gwk=None, sig2n_k=False, cols2regi='all',
+                             spat_diag=False, vm=False, name_y=None, name_x=None,
+                             name_yend=None, name_q=None, name_regimes=None,
+                             name_w=None, name_gwk=None, name_ds=None):
         pool = mp.Pool(cores)
         self.name_ds = USER.set_name_ds(name_ds)
         name_x = USER.set_name_x(name_x, x)
@@ -517,9 +524,14 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
             w_r = w_i[r].sparse
             if system() == 'Windows':
                 is_win = True
-                results_p[r] = _work(*(y,x,regi_ids,r,yend,q,w_r,w_lags,lag_q,robust,sig2n_k,self.name_ds,name_y,name_x,name_yend,name_q,self.name_w,name_regimes))
-            else:                
-                results_p[r] = pool.apply_async(_work,args=(y,x,regi_ids,r,yend,q,w_r,w_lags,lag_q,robust,sig2n_k,self.name_ds,name_y,name_x,name_yend,name_q,self.name_w,name_regimes, ))
+                results_p[r] = _work(
+                    *(y, x, regi_ids, r, yend, q, w_r, w_lags, lag_q, robust, sig2n_k,
+                      self.name_ds, name_y, name_x, name_yend, name_q, self.name_w, name_regimes))
+            else:
+                results_p[r] = pool.apply_async(
+                    _work, args=(
+                        y, x, regi_ids, r, yend, q, w_r, w_lags, lag_q,
+                        robust, sig2n_k, self.name_ds, name_y, name_x, name_yend, name_q, self.name_w, name_regimes, ))
                 is_win = False
         self.kryd = 0
         self.kr = len(cols2regi) + 1
@@ -527,32 +539,36 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
         self.nr = len(self.regimes_set)
         self.name_x_r = name_x + name_yend
         self.name_regimes = name_regimes
-        self.vm = np.zeros((self.nr*self.kr,self.nr*self.kr),float)
-        self.betas = np.zeros((self.nr*self.kr,1),float)
-        self.u = np.zeros((self.n,1),float)
-        self.predy = np.zeros((self.n,1),float)
-        self.predy_e = np.zeros((self.n,1),float)
-        self.e_pred = np.zeros((self.n,1),float)
+        self.vm = np.zeros((self.nr * self.kr, self.nr * self.kr), float)
+        self.betas = np.zeros((self.nr * self.kr, 1), float)
+        self.u = np.zeros((self.n, 1), float)
+        self.predy = np.zeros((self.n, 1), float)
+        self.predy_e = np.zeros((self.n, 1), float)
+        self.e_pred = np.zeros((self.n, 1), float)
         if not is_win:
             pool.close()
             pool.join()
         results = {}
-        self.name_y, self.name_x, self.name_yend, self.name_q, self.name_z, self.name_h = [],[],[],[],[],[]
+        self.name_y, self.name_x, self.name_yend, self.name_q, self.name_z, self.name_h = [
+        ], [], [], [], [], []
         counter = 0
         for r in self.regimes_set:
             if is_win:
                 results[r] = results_p[r]
             else:
                 results[r] = results_p[r].get()
-            results[r].predy_e, results[r].e_pred, warn = sp_att(w_i[r],results[r].y,results[r].predy, results[r].yend[:,-1].reshape(results[r].n,1),results[r].rho)
-            set_warn(results[r],warn)
+            results[r].predy_e, results[r].e_pred, warn = sp_att(
+                w_i[r], results[r].y, results[r].predy, results[r].yend[:, -1].reshape(results[r].n, 1), results[r].rho)
+            set_warn(results[r], warn)
             results[r].w = w_i[r]
-            self.vm[(counter*self.kr):((counter+1)*self.kr),(counter*self.kr):((counter+1)*self.kr)] = results[r].vm
-            self.betas[(counter*self.kr):((counter+1)*self.kr),] = results[r].betas
-            self.u[regi_ids[r],]=results[r].u
-            self.predy[regi_ids[r],]=results[r].predy
-            self.predy_e[regi_ids[r],]=results[r].predy_e
-            self.e_pred[regi_ids[r],]=results[r].e_pred
+            self.vm[(counter * self.kr):((counter + 1) * self.kr),
+                    (counter * self.kr):((counter + 1) * self.kr)] = results[r].vm
+            self.betas[(counter * self.kr):((counter + 1) * self.kr),
+                       ] = results[r].betas
+            self.u[regi_ids[r], ] = results[r].u
+            self.predy[regi_ids[r], ] = results[r].predy
+            self.predy_e[regi_ids[r], ] = results[r].predy_e
+            self.e_pred[regi_ids[r], ] = results[r].e_pred
             self.name_y += results[r].name_y
             self.name_x += results[r].name_x
             self.name_yend += results[r].name_yend
@@ -560,44 +576,54 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
             self.name_z += results[r].name_z
             self.name_h += results[r].name_h
             if r == self.regimes_set[0]:
-                self.hac_var = np.zeros((self.n,results[r].h.shape[1]),float)
-            self.hac_var[regi_ids[r],] = results[r].h                
+                self.hac_var = np.zeros((self.n, results[r].h.shape[1]), float)
+            self.hac_var[regi_ids[r], ] = results[r].h
             counter += 1
         self.multi = results
         if robust == 'hac':
-            hac_multi(self,gwk,constant=True)
+            hac_multi(self, gwk, constant=True)
         if robust == 'ogmm':
-            set_warn(self,"Residuals treated as homoskedastic for the purpose of diagnostics.")
+            set_warn(
+                self, "Residuals treated as homoskedastic for the purpose of diagnostics.")
         self.chow = REGI.Chow(self)
         if spat_diag:
             pass
             #self._get_spat_diag_props(y, x, w, yend, q, w_lags, lag_q)
-        SUMMARY.GM_Lag_multi(reg=self, multireg=self.multi, vm=vm, spat_diag=spat_diag, regimes=True, w=w)
+        SUMMARY.GM_Lag_multi(reg=self, multireg=self.multi,
+                             vm=vm, spat_diag=spat_diag, regimes=True, w=w)
 
     def sp_att_reg(self, w_i, regi_ids, wy):
-        predy_e_r,e_pred_r = {},{}
-        self.predy_e = np.zeros((self.n,1),float) 
-        self.e_pred = np.zeros((self.n,1),float)
+        predy_e_r, e_pred_r = {}, {}
+        self.predy_e = np.zeros((self.n, 1), float)
+        self.e_pred = np.zeros((self.n, 1), float)
         counter = 1
         for r in self.regimes_set:
-            self.rho = self.betas[(self.kr-self.kryd)*self.nr+self.kf-(self.yend.shape[1]-self.nr*self.kryd)+self.kryd*counter-1]
-            self.predy_e[regi_ids[r],], self.e_pred[regi_ids[r],], warn = sp_att(w_i[r],\
-                          self.y[regi_ids[r]],self.predy[regi_ids[r]],\
-                          wy[regi_ids[r]],self.rho)
+            self.rho = self.betas[(self.kr - self.kryd) * self.nr + self.kf -
+                                  (self.yend.shape[1] - self.nr * self.kryd) + self.kryd * counter - 1]
+            self.predy_e[regi_ids[r], ], self.e_pred[regi_ids[r], ], warn = sp_att(
+                w_i[r],
+                self.y[regi_ids[r]], self.predy[
+                    regi_ids[
+                        r]],
+                wy[regi_ids[r]], self.rho)
             counter += 1
 
-    def _get_spat_diag_props(self,y, x, w, yend, q, w_lags, lag_q):
+    def _get_spat_diag_props(self, y, x, w, yend, q, w_lags, lag_q):
         self._cache = {}
         yend, q = set_endog(y, x, w, yend, q, w_lags, lag_q)
         x = USER.check_constant(x)
-        x = REGI.regimeX_setup(x, self.regimes, [True] * x.shape[1], self.regimes_set)
-        self.z = sphstack(x,REGI.regimeX_setup(yend, self.regimes, [True] * (yend.shape[1]-1)+[False], self.regimes_set))
-        self.h = sphstack(x,REGI.regimeX_setup(q, self.regimes, [True] * q.shape[1], self.regimes_set))
-        hthi = np.linalg.inv(spdot(self.h.T,self.h))
-        zth = spdot(self.z.T,self.h)     
-        self.varb = np.linalg.inv(spdot(spdot(zth,hthi),zth.T))
+        x = REGI.regimeX_setup(
+            x, self.regimes, [True] * x.shape[1], self.regimes_set)
+        self.z = sphstack(x, REGI.regimeX_setup(
+            yend, self.regimes, [True] * (yend.shape[1] - 1) + [False], self.regimes_set))
+        self.h = sphstack(
+            x, REGI.regimeX_setup(q, self.regimes, [True] * q.shape[1], self.regimes_set))
+        hthi = np.linalg.inv(spdot(self.h.T, self.h))
+        zth = spdot(self.z.T, self.h)
+        self.varb = np.linalg.inv(spdot(spdot(zth, hthi), zth.T))
 
-def _work(y,x,regi_ids,r,yend,q,w_r,w_lags,lag_q,robust,sig2n_k,name_ds,name_y,name_x,name_yend,name_q,name_w,name_regimes):
+
+def _work(y, x, regi_ids, r, yend, q, w_r, w_lags, lag_q, robust, sig2n_k, name_ds, name_y, name_x, name_yend, name_q, name_w, name_regimes):
     y_r = y[regi_ids[r]]
     x_r = x[regi_ids[r]]
     if yend != None:
@@ -614,38 +640,40 @@ def _work(y,x,regi_ids,r,yend,q,w_r,w_lags,lag_q,robust,sig2n_k,name_ds,name_y,n
         robust2 = None
     else:
         robust2 = robust
-    model = BaseTSLS(y_r, x_constant, yend_r, q_r, robust=robust2, sig2n_k=sig2n_k)
-    model.title = "SPATIAL TWO STAGE LEAST SQUARES ESTIMATION - REGIME %s" %r
+    model = BaseTSLS(y_r, x_constant, yend_r, q_r,
+                     robust=robust2, sig2n_k=sig2n_k)
+    model.title = "SPATIAL TWO STAGE LEAST SQUARES ESTIMATION - REGIME %s" % r
     if robust == 'ogmm':
-        _optimal_weight(model,sig2n_k,warn=False)
+        _optimal_weight(model, sig2n_k, warn=False)
     model.rho = model.betas[-1]
     model.robust = USER.set_robust(robust)
     model.name_ds = name_ds
-    model.name_y = '%s_%s'%(str(r), name_y)
-    model.name_x = ['%s_%s'%(str(r), i) for i in name_x]
-    model.name_yend = ['%s_%s'%(str(r), i) for i in name_yend]
+    model.name_y = '%s_%s' % (str(r), name_y)
+    model.name_x = ['%s_%s' % (str(r), i) for i in name_x]
+    model.name_yend = ['%s_%s' % (str(r), i) for i in name_yend]
     model.name_z = model.name_x + model.name_yend
-    model.name_q = ['%s_%s'%(str(r), i) for i in name_q]
+    model.name_q = ['%s_%s' % (str(r), i) for i in name_q]
     model.name_h = model.name_x + model.name_q
     model.name_w = name_w
     model.name_regimes = name_regimes
     return model
 
+
 def _test():
     import doctest
     start_suppress = np.get_printoptions()['suppress']
-    np.set_printoptions(suppress=True)    
+    np.set_printoptions(suppress=True)
     doctest.testmod()
     np.set_printoptions(suppress=start_suppress)
 
 
 if __name__ == '__main__':
-    _test()    
+    _test()
     import numpy as np
     import pysal
-    db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
+    db = pysal.open(pysal.examples.get_path("columbus.dbf"), 'r')
     y_var = 'CRIME'
-    y = np.array([db.by_col(y_var)]).reshape(49,1)
+    y = np.array([db.by_col(y_var)]).reshape(49, 1)
     x_var = ['INC']
     x = np.array([db.by_col(name) for name in x_var]).T
     yd_var = ['HOVAL']
@@ -656,5 +684,7 @@ if __name__ == '__main__':
     regimes = db.by_col(r_var)
     w = pysal.queen_from_shapefile(pysal.examples.get_path("columbus.shp"))
     w.transform = 'r'
-    model = GM_Lag_Regimes(y, x, regimes, yend=yd, q=q, w=w, constant_regi='many', spat_diag=True, sig2n_k=False, lag_q=True, name_y=y_var, name_x=x_var, name_yend=yd_var, name_q=q_var, name_regimes=r_var, name_ds='columbus', name_w='columbus.gal', regime_err_sep=True, robust='white')
+    model = GM_Lag_Regimes(
+        y, x, regimes, yend=yd, q=q, w=w, constant_regi='many', spat_diag=True, sig2n_k=False, lag_q=True, name_y=y_var,
+        name_x=x_var, name_yend=yd_var, name_q=q_var, name_regimes=r_var, name_ds='columbus', name_w='columbus.gal', regime_err_sep=True, robust='white')
     print model.summary

@@ -11,7 +11,9 @@ from math import sqrt
 from utils import spmultiply, sphstack, spmin, spmax
 
 
-__all__ = [ "f_stat", "t_stat", "r2", "ar2", "se_betas", "log_likelihood", "akaike", "schwarz", "condition_index", "jarque_bera", "breusch_pagan", "white", "koenker_bassett", "vif", "likratiotest" ]
+__all__ = [
+    "f_stat", "t_stat", "r2", "ar2", "se_betas", "log_likelihood", "akaike", "schwarz",
+    "condition_index", "jarque_bera", "breusch_pagan", "white", "koenker_bassett", "vif", "likratiotest"]
 
 
 def f_stat(reg):
@@ -471,11 +473,12 @@ def akaike(reg):
     """
     k = reg.k       # (scalar) number of explanatory vars (including constant)
     try:   # ML estimation, logll already exists
-        aic_result = 2.0*k - 2.0*reg.logll    # spatial coefficient included in k
+        # spatial coefficient included in k
+        aic_result = 2.0 * k - 2.0 * reg.logll
     except AttributeError:           # OLS case
         n = reg.n       # (scalar) number of observations
         utu = reg.utu   # (scalar) residual sum of squares
-        aic_result = 2*k + n*(np.log((2*np.pi*utu)/n)+1)
+        aic_result = 2 * k + n * (np.log((2 * np.pi * utu) / n) + 1)
     return aic_result
 
 
@@ -539,10 +542,11 @@ def schwarz(reg):
     n = reg.n      # (scalar) number of observations
     k = reg.k      # (scalar) number of ind. variables (including constant)
     try:  # ML case logll already computed
-        sc_result = k*np.log(n) - 2.0 * reg.logll    #spatial coeff included in k
+        # spatial coeff included in k
+        sc_result = k * np.log(n) - 2.0 * reg.logll
     except AttributeError:          # OLS case
         utu = reg.utu  # (scalar) residual sum of squares
-        sc_result = k*np.log(n) + n*(np.log((2*np.pi*utu)/n)+1)
+        sc_result = k * np.log(n) + n * (np.log((2 * np.pi * utu) / n) + 1)
     return sc_result
 
 
@@ -1333,8 +1337,9 @@ def constant_check(array):
             constant = True
             break
     return constant
-        
-def likratiotest(reg0,reg1):
+
+
+def likratiotest(reg0, reg1):
     """
     Likelihood ratio test statistic
 
@@ -1397,17 +1402,17 @@ def likratiotest(reg0,reg1):
     Likelihood Ratio Test: 44.5721       df: 1        p-value: 0.0000
   
     """
-    
+
     likratio = {}
-    
+
     try:
         likr = 2.0 * (reg1.logll - reg0.logll)
     except AttributeError:
-        raise Exception,"Missing or improper log-likelihoods in regression objects"
+        raise Exception, "Missing or improper log-likelihoods in regression objects"
     if likr < 0.0:  # always enforces positive likelihood ratio
         likr = -likr
-    pvalue=stats.chisqprob(likr,1)
-    likratio = {"likr":likr,"df":1,"p-value":pvalue}
+    pvalue = stats.chisqprob(likr, 1)
+    likratio = {"likr": likr, "df": 1, "p-value": pvalue}
     return likratio
 
 

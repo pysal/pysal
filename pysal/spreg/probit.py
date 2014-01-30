@@ -13,7 +13,8 @@ import summary_output as SUMMARY
 __all__ = ["Probit"]
 
 
-class BaseProbit: 
+class BaseProbit:
+
     """
     Probit class to do all the computations
 
@@ -128,8 +129,9 @@ class BaseProbit:
      ['KP_error' '1.721312' '0.085194']
      ['PS_error' '2.558166' '0.109726']]
     """
-    def __init__(self,y,x,w=None,optim='newton',scalem='phimean',maxiter=100):
-        self.y = y        
+
+    def __init__(self, y, x, w=None, optim='newton', scalem='phimean', maxiter=100):
+        self.y = y
         self.x = x
         self.n, self.k = x.shape
         self.optim = optim
@@ -137,7 +139,7 @@ class BaseProbit:
         self.w = w
         self.maxiter = maxiter
         par_est, self.warning = self.par_est()
-        self.betas = np.reshape(par_est[0],(self.k,1))
+        self.betas = np.reshape(par_est[0], (self.k, 1))
         self.logl = -float(par_est[1])
         self._cache = {}
 
@@ -147,97 +149,117 @@ class BaseProbit:
             H = self.hessian(self.betas)
             self._cache['vm'] = -la.inv(H)
         return self._cache['vm']
+
     @property
     def z_stat(self):
         if 'z_stat' not in self._cache:
             variance = self.vm.diagonal()
-            zStat = self.betas.reshape(len(self.betas),)/ np.sqrt(variance)
+            zStat = self.betas.reshape(len(self.betas),) / np.sqrt(variance)
             rs = {}
             for i in range(len(self.betas)):
-                rs[i] = (zStat[i],norm.sf(abs(zStat[i]))*2)
+                rs[i] = (zStat[i], norm.sf(abs(zStat[i])) * 2)
             self._cache['z_stat'] = rs.values()
         return self._cache['z_stat']
+
     @property
     def slopes_std_err(self):
         if 'slopes_std_err' not in self._cache:
-            variance = self.slopes_vm.diagonal() 
+            variance = self.slopes_vm.diagonal()
             self._cache['slopes_std_err'] = np.sqrt(variance)
-        return self._cache['slopes_std_err'] 
+        return self._cache['slopes_std_err']
+
     @property
     def slopes_z_stat(self):
         if 'slopes_z_stat' not in self._cache:
-            zStat = self.slopes.reshape(len(self.slopes),)/self.slopes_std_err
+            zStat = self.slopes.reshape(
+                len(self.slopes),) / self.slopes_std_err
             rs = {}
             for i in range(len(self.slopes)):
-                rs[i] = (zStat[i],norm.sf(abs(zStat[i]))*2)
+                rs[i] = (zStat[i], norm.sf(abs(zStat[i])) * 2)
             self._cache['slopes_z_stat'] = rs.values()
-        return self._cache['slopes_z_stat']    
+        return self._cache['slopes_z_stat']
+
     @property
     def xmean(self):
         if 'xmean' not in self._cache:
-            self._cache['xmean'] = np.reshape(sum(self.x)/self.n,(self.k,1))
+            self._cache['xmean'] = np.reshape(
+                sum(self.x) / self.n, (self.k, 1))
         return self._cache['xmean']
+
     @property
     def xb(self):
         if 'xb' not in self._cache:
-            self._cache['xb'] = np.dot(self.x,self.betas)
-        return self._cache['xb']    
+            self._cache['xb'] = np.dot(self.x, self.betas)
+        return self._cache['xb']
+
     @property
     def predy(self):
         if 'predy' not in self._cache:
             self._cache['predy'] = norm.cdf(self.xb)
         return self._cache['predy']
+
     @property
     def predpc(self):
         if 'predpc' not in self._cache:
-            predpc = abs(self.y-self.predy)
+            predpc = abs(self.y - self.predy)
             for i in range(len(predpc)):
-                if predpc[i]>0.5:
-                    predpc[i]=0
+                if predpc[i] > 0.5:
+                    predpc[i] = 0
                 else:
-                    predpc[i]=1
-            self._cache['predpc'] = float(100* np.sum(predpc) / self.n)
+                    predpc[i] = 1
+            self._cache['predpc'] = float(100 * np.sum(predpc) / self.n)
         return self._cache['predpc']
+
     @property
     def phiy(self):
         if 'phiy' not in self._cache:
             self._cache['phiy'] = norm.pdf(self.xb)
         return self._cache['phiy']
+
     @property
     def scale(self):
         if 'scale' not in self._cache:
             if self.scalem == 'phimean':
-                self._cache['scale'] = float(1.0 * np.sum(self.phiy)/self.n)
+                self._cache['scale'] = float(1.0 * np.sum(self.phiy) / self.n)
             if self.scalem == 'xmean':
-                self._cache['scale'] = float(norm.pdf(np.dot(self.xmean.T,self.betas)))
+                self._cache['scale'] = float(
+                    norm.pdf(np.dot(self.xmean.T, self.betas)))
         return self._cache['scale']
+
     @property
     def slopes(self):
         if 'slopes' not in self._cache:
-            self._cache['slopes'] = self.betas[1:] * self.scale #Disregard the presence of dummies.
+            # Disregard the presence of dummies.
+            self._cache['slopes'] = self.betas[1:] * self.scale
         return self._cache['slopes']
+
     @property
     def slopes_vm(self):
         if 'slopes_vm' not in self._cache:
             x = self.xmean
             b = self.betas
-            dfdb = np.eye(self.k) - np.dot(b.T,x)*np.dot(b,x.T)
-            slopes_vm = (self.scale**2)*np.dot(np.dot(dfdb,self.vm),dfdb.T)
-            self._cache['slopes_vm'] = slopes_vm[1:,1:]
+            dfdb = np.eye(self.k) - np.dot(b.T, x) * np.dot(b, x.T)
+            slopes_vm = (self.scale ** 2) * \
+                np.dot(np.dot(dfdb, self.vm), dfdb.T)
+            self._cache['slopes_vm'] = slopes_vm[1:, 1:]
         return self._cache['slopes_vm']
+
     @property
     def LR(self):
-        if 'LR' not in self._cache:    
+        if 'LR' not in self._cache:
             P = 1.0 * np.sum(self.y) / self.n
-            LR = float(-2 * (self.n*(P * np.log(P) + (1 - P) * np.log(1 - P)) - self.logl))
-            self._cache['LR'] = (LR,chisqprob(LR,self.k))
+            LR = float(
+                -2 * (self.n * (P * np.log(P) + (1 - P) * np.log(1 - P)) - self.logl))
+            self._cache['LR'] = (LR, chisqprob(LR, self.k))
         return self._cache['LR']
+
     @property
     def u_naive(self):
         if 'u_naive' not in self._cache:
             u_naive = self.y - self.predy
             self._cache['u_naive'] = u_naive
         return self._cache['u_naive']
+
     @property
     def u_gen(self):
         if 'u_gen' not in self._cache:
@@ -245,38 +267,47 @@ class BaseProbit:
             u_gen = self.phiy * (self.u_naive / Phi_prod)
             self._cache['u_gen'] = u_gen
         return self._cache['u_gen']
+
     @property
     def Pinkse_error(self):
         if 'Pinkse_error' not in self._cache:
-            self._cache['Pinkse_error'],self._cache['KP_error'],self._cache['PS_error'] = sp_tests(self)
+            self._cache['Pinkse_error'], self._cache[
+                'KP_error'], self._cache['PS_error'] = sp_tests(self)
         return self._cache['Pinkse_error']
+
     @property
     def KP_error(self):
         if 'KP_error' not in self._cache:
-            self._cache['Pinkse_error'],self._cache['KP_error'],self._cache['PS_error'] = sp_tests(self)
+            self._cache['Pinkse_error'], self._cache[
+                'KP_error'], self._cache['PS_error'] = sp_tests(self)
         return self._cache['KP_error']
+
     @property
     def PS_error(self):
         if 'PS_error' not in self._cache:
-            self._cache['Pinkse_error'],self._cache['KP_error'],self._cache['PS_error'] = sp_tests(self)
+            self._cache['Pinkse_error'], self._cache[
+                'KP_error'], self._cache['PS_error'] = sp_tests(self)
         return self._cache['PS_error']
 
     def par_est(self):
-        start = np.dot(la.inv(np.dot(self.x.T,self.x)),np.dot(self.x.T,self.y))
+        start = np.dot(la.inv(np.dot(self.x.T, self.x)),
+                       np.dot(self.x.T, self.y))
         flogl = lambda par: -self.ll(par)
         if self.optim == 'newton':
             fgrad = lambda par: self.gradient(par)
-            fhess = lambda par: self.hessian(par)            
-            par_hat = newton(flogl,start,fgrad,fhess,self.maxiter)
+            fhess = lambda par: self.hessian(par)
+            par_hat = newton(flogl, start, fgrad, fhess, self.maxiter)
             warn = par_hat[2]
-        else:            
+        else:
             fgrad = lambda par: -self.gradient(par)
             if self.optim == 'bfgs':
-                par_hat = op.fmin_bfgs(flogl,start,fgrad,full_output=1,disp=0)
-                warn = par_hat[6] 
-            if self.optim == 'ncg':                
+                par_hat = op.fmin_bfgs(
+                    flogl, start, fgrad, full_output=1, disp=0)
+                warn = par_hat[6]
+            if self.optim == 'ncg':
                 fhess = lambda par: -self.hessian(par)
-                par_hat = op.fmin_ncg(flogl,start,fgrad,fhess=fhess,full_output=1,disp=0)
+                par_hat = op.fmin_ncg(
+                    flogl, start, fgrad, fhess=fhess, full_output=1, disp=0)
                 warn = par_hat[5]
         if warn > 0:
             warn = True
@@ -284,31 +315,33 @@ class BaseProbit:
             warn = False
         return par_hat, warn
 
-    def ll(self,par):       
-        beta = np.reshape(np.array(par),(self.k,1))
+    def ll(self, par):
+        beta = np.reshape(np.array(par), (self.k, 1))
         q = 2 * self.y - 1
-        qxb = q * np.dot(self.x,beta)
+        qxb = q * np.dot(self.x, beta)
         ll = sum(np.log(norm.cdf(qxb)))
         return ll
 
-    def gradient(self,par):      
-        beta = np.reshape(np.array(par),(self.k,1))
+    def gradient(self, par):
+        beta = np.reshape(np.array(par), (self.k, 1))
         q = 2 * self.y - 1
-        qxb = q * np.dot(self.x,beta)
-        lamb = q * norm.pdf(qxb)/norm.cdf(qxb)
-        gradient = np.dot(lamb.T,self.x)[0]
+        qxb = q * np.dot(self.x, beta)
+        lamb = q * norm.pdf(qxb) / norm.cdf(qxb)
+        gradient = np.dot(lamb.T, self.x)[0]
         return gradient
 
-    def hessian(self,par):           
-        beta = np.reshape(np.array(par),(self.k,1))
+    def hessian(self, par):
+        beta = np.reshape(np.array(par), (self.k, 1))
         q = 2 * self.y - 1
-        xb = np.dot(self.x,beta)
+        xb = np.dot(self.x, beta)
         qxb = q * xb
-        lamb = q * norm.pdf(qxb)/norm.cdf(qxb)
-        hessian = np.dot((self.x.T),(-lamb * (lamb + xb) * self.x ))
+        lamb = q * norm.pdf(qxb) / norm.cdf(qxb)
+        hessian = np.dot((self.x.T), (-lamb * (lamb + xb) * self.x))
         return hessian
 
-class Probit(BaseProbit): 
+
+class Probit(BaseProbit):
+
     """
     Classic non-spatial Probit and spatial diagnostics. The class includes a
     printout that formats all the results and tests in a nice format.
@@ -507,9 +540,11 @@ class Probit(BaseProbit):
     ready to be printed simply by typing 'print model.summary'
 
     """
-    def __init__(self, y, x, w=None, optim='newton',scalem='phimean',maxiter=100,\
-                 vm=False, name_y=None, name_x=None, name_w=None, name_ds=None, \
-                 spat_diag=False):
+
+    def __init__(
+        self, y, x, w=None, optim='newton', scalem='phimean', maxiter=100,
+        vm=False, name_y=None, name_x=None, name_w=None, name_ds=None,
+            spat_diag=False):
 
         n = USER.check_arrays(y, x)
         USER.check_y(y, n)
@@ -517,15 +552,17 @@ class Probit(BaseProbit):
             USER.check_weights(w, y)
             spat_diag = True
         x_constant = USER.check_constant(x)
-        BaseProbit.__init__(self,y=y,x=x_constant,w=w,optim=optim,scalem=scalem,maxiter=maxiter) 
-        self.title = "CLASSIC PROBIT ESTIMATOR"        
-        self.name_ds = USER.set_name_ds(name_ds)    
+        BaseProbit.__init__(self, y=y, x=x_constant, w=w,
+                            optim=optim, scalem=scalem, maxiter=maxiter)
+        self.title = "CLASSIC PROBIT ESTIMATOR"
+        self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
         self.name_w = USER.set_name_w(name_w, w)
-        SUMMARY.Probit(reg=self, w=w, vm=vm, spat_diag=spat_diag)    
+        SUMMARY.Probit(reg=self, w=w, vm=vm, spat_diag=spat_diag)
 
-def newton(flogl,start,fgrad,fhess,maxiter):
+
+def newton(flogl, start, fgrad, fhess, maxiter):
     """
     Calculates the Newton-Raphson method
 
@@ -547,17 +584,18 @@ def newton(flogl,start,fgrad,fhess,maxiter):
     iteration = 0
     par_hat0 = start
     m = 1
-    while (iteration < maxiter and m>=1e-04):
+    while (iteration < maxiter and m >= 1e-04):
         H = -la.inv(fhess(par_hat0))
         g = fgrad(par_hat0).reshape(start.shape)
-        Hg = np.dot(H,g)
+        Hg = np.dot(H, g)
         par_hat0 = par_hat0 + Hg
         iteration += 1
-        m = np.dot(g.T,Hg)
+        m = np.dot(g.T, Hg)
     if iteration == maxiter:
         warn = 1
     logl = flogl(par_hat0)
     return (par_hat0, logl, warn)
+
 
 def sp_tests(reg):
     """
@@ -568,34 +606,36 @@ def sp_tests(reg):
 
     reg         : regression object
                   output instance from a probit model            
-    """    
+    """
     if reg.w:
         w = reg.w.sparse
         Phi = reg.predy
-        phi = reg.phiy                
-        #Pinkse_error:
+        phi = reg.phiy
+        # Pinkse_error:
         Phi_prod = Phi * (1 - Phi)
         u_naive = reg.u_naive
         u_gen = reg.u_gen
         sig2 = np.sum((phi * phi) / Phi_prod) / reg.n
-        LM_err_num = np.dot(u_gen.T,(w * u_gen))**2
-        trWW = np.sum((w*w).diagonal())
-        trWWWWp = trWW + np.sum((w*w.T).diagonal())
-        LM_err = float(1.0 * LM_err_num / (sig2**2 * trWWWWp))
-        LM_err = np.array([LM_err,chisqprob(LM_err,1)])
-        #KP_error:
-        moran = moran_KP(reg.w,u_naive,Phi_prod)
-        #Pinkse-Slade_error:
+        LM_err_num = np.dot(u_gen.T, (w * u_gen)) ** 2
+        trWW = np.sum((w * w).diagonal())
+        trWWWWp = trWW + np.sum((w * w.T).diagonal())
+        LM_err = float(1.0 * LM_err_num / (sig2 ** 2 * trWWWWp))
+        LM_err = np.array([LM_err, chisqprob(LM_err, 1)])
+        # KP_error:
+        moran = moran_KP(reg.w, u_naive, Phi_prod)
+        # Pinkse-Slade_error:
         u_std = u_naive / np.sqrt(Phi_prod)
-        ps_num = np.dot(u_std.T, (w * u_std))**2
-        trWpW = np.sum((w.T*w).diagonal())
+        ps_num = np.dot(u_std.T, (w * u_std)) ** 2
+        trWpW = np.sum((w.T * w).diagonal())
         ps = float(ps_num / (trWW + trWpW))
-        ps = np.array([ps,chisqprob(ps,1)]) #chi-square instead of bootstrap.
+        # chi-square instead of bootstrap.
+        ps = np.array([ps, chisqprob(ps, 1)])
     else:
         raise Exception, "W matrix not provided to calculate spatial test."
-    return LM_err,moran,ps
+    return LM_err, moran, ps
 
-def moran_KP(w,u,sig2i):
+
+def moran_KP(w, u, sig2i):
     """
     Calculates Moran-flavoured tests 
 
@@ -614,11 +654,12 @@ def moran_KP(w,u,sig2i):
     E = SP.lil_matrix(w.get_shape())
     E.setdiag(sig2i.flat)
     E = E.asformat('csr')
-    WE = w*E
-    moran_den = np.sqrt(np.sum((WE*WE + (w.T*E)*WE).diagonal()))      
-    moran = float(1.0*moran_num / moran_den)
-    moran = np.array([moran,norm.sf(abs(moran)) * 2.])
+    WE = w * E
+    moran_den = np.sqrt(np.sum((WE * WE + (w.T * E) * WE).diagonal()))
+    moran = float(1.0 * moran_num / moran_den)
+    moran = np.array([moran, norm.sf(abs(moran)) * 2.])
     return moran
+
 
 def _test():
     import doctest
@@ -631,12 +672,13 @@ if __name__ == '__main__':
     _test()
     import numpy as np
     import pysal
-    dbf = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
+    dbf = pysal.open(pysal.examples.get_path('columbus.dbf'), 'r')
     y = np.array([dbf.by_col('CRIME')]).T
     var_x = ['INC', 'HOVAL']
-    x = np.array([dbf.by_col(name) for name in var_x]).T    
+    x = np.array([dbf.by_col(name) for name in var_x]).T
     w = pysal.open(pysal.examples.get_path("columbus.gal"), 'r').read()
-    w.transform='r'
-    probit1 = Probit((y>40).astype(float), x, w=w, name_x=var_x, name_y="CRIME",\
-                     name_ds="Columbus", name_w="columbus.dbf")    
-    #print probit1.summary
+    w.transform = 'r'
+    probit1 = Probit(
+        (y > 40).astype(float), x, w=w, name_x=var_x, name_y="CRIME",
+        name_ds="Columbus", name_w="columbus.dbf")
+    # print probit1.summary

@@ -19,7 +19,9 @@ import summary_output as SUMMARY
 
 __all__ = ["GM_Error", "GM_Endog_Error", "GM_Combo"]
 
+
 class BaseGM_Error(RegressionPropsY):
+
     """
     GMM method for a spatial error model (note: no consistency checks
     diagnostics or constant added); based on Kelejian and Prucha 
@@ -95,35 +97,38 @@ class BaseGM_Error(RegressionPropsY):
            [ -0.5505],
            [  0.3257]])
     """
+
     def __init__(self, y, x, w):
 
-        #1a. OLS --> \tilde{betas}
+        # 1a. OLS --> \tilde{betas}
         ols = OLS.BaseOLS(y=y, x=x)
         self.n, self.k = ols.x.shape
         self.x = ols.x
         self.y = ols.y
 
-        #1b. GMM --> \tilde{\lambda1}
+        # 1b. GMM --> \tilde{\lambda1}
         moments = _momentsGM_Error(w, ols.u)
         lambda1 = optim_moments(moments)
 
-        #2a. OLS -->\hat{betas}
+        # 2a. OLS -->\hat{betas}
         xs = get_spFilter(w, lambda1, self.x)
         ys = get_spFilter(w, lambda1, self.y)
         ols2 = OLS.BaseOLS(y=ys, x=xs)
 
-        #Output
+        # Output
         self.predy = spdot(self.x, ols2.betas)
         self.u = y - self.predy
         self.betas = np.vstack((ols2.betas, np.array([[lambda1]])))
         self.sig2 = ols2.sig2n
-        self.e_filtered = self.u - lambda1*w*self.u
+        self.e_filtered = self.u - lambda1 * w * self.u
 
         self.vm = self.sig2 * ols2.xtxi
         se_betas = np.sqrt(self.vm.diagonal())
         self._cache = {}
 
+
 class GM_Error(BaseGM_Error):
+
     """
     GMM method for a spatial error model, with results and diagnostics; based
     on Kelejian and Prucha (1998, 1999)[1]_ [2]_.
@@ -294,8 +299,9 @@ class GM_Error(BaseGM_Error):
     198.5596
 
     """
-    def __init__(self, y, x, w,\
-                 vm=False, name_y=None, name_x=None,\
+
+    def __init__(self, y, x, w,
+                 vm=False, name_y=None, name_x=None,
                  name_w=None, name_ds=None):
 
         n = USER.check_arrays(y, x)
@@ -303,7 +309,7 @@ class GM_Error(BaseGM_Error):
         USER.check_weights(w, y, w_required=True)
         x_constant = USER.check_constant(x)
         BaseGM_Error.__init__(self, y=y, x=x_constant, w=w.sparse)
-        self.title = "SPATIALLY WEIGHTED LEAST SQUARES"        
+        self.title = "SPATIALLY WEIGHTED LEAST SQUARES"
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
@@ -313,6 +319,7 @@ class GM_Error(BaseGM_Error):
 
 
 class BaseGM_Endog_Error(RegressionPropsY):
+
     '''
     GMM method for a spatial error model with endogenous variables (note: no
     consistency checks, diagnostics or constant added); based on Kelejian and
@@ -402,35 +409,38 @@ class BaseGM_Endog_Error(RegressionPropsY):
            [  0.3499]])
 
     '''
+
     def __init__(self, y, x, yend, q, w):
 
-        #1a. TSLS --> \tilde{betas}
+        # 1a. TSLS --> \tilde{betas}
         tsls = TSLS.BaseTSLS(y=y, x=x, yend=yend, q=q)
         self.n, self.k = tsls.z.shape
         self.x = tsls.x
         self.y = tsls.y
         self.yend, self.z = tsls.yend, tsls.z
 
-        #1b. GMM --> \tilde{\lambda1}
+        # 1b. GMM --> \tilde{\lambda1}
         moments = _momentsGM_Error(w, tsls.u)
         lambda1 = optim_moments(moments)
 
-        #2a. 2SLS -->\hat{betas}
+        # 2a. 2SLS -->\hat{betas}
         xs = get_spFilter(w, lambda1, self.x)
         ys = get_spFilter(w, lambda1, self.y)
         yend_s = get_spFilter(w, lambda1, self.yend)
         tsls2 = TSLS.BaseTSLS(ys, xs, yend_s, h=tsls.h)
 
-        #Output
+        # Output
         self.betas = np.vstack((tsls2.betas, np.array([[lambda1]])))
         self.predy = spdot(tsls.z, tsls2.betas)
         self.u = y - self.predy
-        self.sig2 = float(np.dot(tsls2.u.T,tsls2.u)) / self.n
-        self.e_filtered = self.u - lambda1*w*self.u
-        self.vm = self.sig2 * tsls2.varb 
+        self.sig2 = float(np.dot(tsls2.u.T, tsls2.u)) / self.n
+        self.e_filtered = self.u - lambda1 * w * self.u
+        self.vm = self.sig2 * tsls2.varb
         self._cache = {}
 
+
 class GM_Endog_Error(BaseGM_Endog_Error):
+
     '''
     GMM method for a spatial error model with endogenous variables, with
     results and diagnostics; based on Kelejian and Prucha (1998, 1999)[1]_[2]_.
@@ -635,17 +645,19 @@ class GM_Endog_Error(BaseGM_Endog_Error):
     array([ 16.1381,   1.3545,   0.7862])
     
     '''
-    def __init__(self, y, x, yend, q, w,\
-                 vm=False, name_y=None, name_x=None,\
-                 name_yend=None, name_q=None,\
+
+    def __init__(self, y, x, yend, q, w,
+                 vm=False, name_y=None, name_x=None,
+                 name_yend=None, name_q=None,
                  name_w=None, name_ds=None):
 
         n = USER.check_arrays(y, x, yend, q)
         USER.check_y(y, n)
         USER.check_weights(w, y, w_required=True)
         x_constant = USER.check_constant(x)
-        BaseGM_Endog_Error.__init__(self, y=y, x=x_constant, w=w.sparse, yend=yend, q=q)
-        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES"        
+        BaseGM_Endog_Error.__init__(
+            self, y=y, x=x_constant, w=w.sparse, yend=yend, q=q)
+        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES"
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
@@ -659,6 +671,7 @@ class GM_Endog_Error(BaseGM_Endog_Error):
 
 
 class BaseGM_Combo(BaseGM_Endog_Error):
+
     """
     GMM method for a spatial lag and error model, with endogenous variables
     (note: no consistency checks, diagnostics or constant added); based on 
@@ -789,12 +802,15 @@ class BaseGM_Combo(BaseGM_Endog_Error):
      ['W_CRIME' '0.4375' '0.2314']]
 
         """
-    def __init__(self, y, x, yend=None, q=None,\
+
+    def __init__(self, y, x, yend=None, q=None,
                  w=None, w_lags=1, lag_q=True):
 
         BaseGM_Endog_Error.__init__(self, y=y, x=x, w=w, yend=yend, q=q)
 
+
 class GM_Combo(BaseGM_Combo):
+
     """
     GMM method for a spatial lag and error model with endogenous variables,
     with results and diagnostics; based on Kelejian and Prucha (1998,
@@ -1036,10 +1052,11 @@ class GM_Combo(BaseGM_Combo):
     lambda:  [ 0.254]
 
     """
-    def __init__(self, y, x, yend=None, q=None,\
-                 w=None, w_lags=1, lag_q=True,\
-                 vm=False, name_y=None, name_x=None,\
-                 name_yend=None, name_q=None,\
+
+    def __init__(self, y, x, yend=None, q=None,
+                 w=None, w_lags=1, lag_q=True,
+                 vm=False, name_y=None, name_x=None,
+                 name_yend=None, name_q=None,
                  name_w=None, name_ds=None):
 
         n = USER.check_arrays(y, x, yend, q)
@@ -1047,13 +1064,14 @@ class GM_Combo(BaseGM_Combo):
         USER.check_weights(w, y, w_required=True)
         yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
         x_constant = USER.check_constant(x)
-        BaseGM_Combo.__init__(self, y=y, x=x_constant, w=w.sparse, yend=yend2, q=q2,\
-                                w_lags=w_lags, lag_q=lag_q)
+        BaseGM_Combo.__init__(
+            self, y=y, x=x_constant, w=w.sparse, yend=yend2, q=q2,
+            w_lags=w_lags, lag_q=lag_q)
         self.rho = self.betas[-2]
-        self.predy_e, self.e_pred, warn = sp_att(w,self.y,\
-                   self.predy,yend2[:,-1].reshape(self.n,1),self.rho)
+        self.predy_e, self.e_pred, warn = sp_att(w, self.y,
+                                                 self.predy, yend2[:, -1].reshape(self.n, 1), self.rho)
         set_warn(self, warn)
-        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES"        
+        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES"
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
@@ -1062,10 +1080,12 @@ class GM_Combo(BaseGM_Combo):
         self.name_z = self.name_x + self.name_yend
         self.name_z.append('lambda')
         self.name_q = USER.set_name_q(name_q, q)
-        self.name_q.extend(USER.set_name_q_sp(self.name_x, w_lags, self.name_q, lag_q))
+        self.name_q.extend(
+            USER.set_name_q_sp(self.name_x, w_lags, self.name_q, lag_q))
         self.name_h = USER.set_name_h(self.name_x, self.name_q)
         self.name_w = USER.set_name_w(name_w, w)
-        SUMMARY.GM_Combo(reg=self, w=w, vm=vm)   
+        SUMMARY.GM_Combo(reg=self, w=w, vm=vm)
+
 
 def _momentsGM_Error(w, u):
     try:
@@ -1084,13 +1104,16 @@ def _momentsGM_Error(w, u):
     wtw = wsparse.T * wsparse
     trWtW = np.sum(wtw.diagonal())
     g = np.array([[u2[0][0], wu2[0][0], uwu[0][0]]]).T / n
-    G = np.array([[2 * uwu[0][0], -wu2[0][0], n], [2 * wuwwu[0][0], -wwu2[0][0], trWtW], [uwwu[0][0] + wu2[0][0], -wuwwu[0][0], 0.]]) / n
+    G = np.array(
+        [[2 * uwu[0][0], -wu2[0][0], n], [2 * wuwwu[0][0], -wwu2[0][0], trWtW],
+         [uwwu[0][0] + wu2[0][0], -wuwwu[0][0], 0.]]) / n
     return [G, g]
+
 
 def _test():
     import doctest
     start_suppress = np.get_printoptions()['suppress']
-    np.set_printoptions(suppress=True)    
+    np.set_printoptions(suppress=True)
     doctest.testmod()
     np.set_printoptions(suppress=start_suppress)
 
@@ -1099,12 +1122,12 @@ if __name__ == '__main__':
     _test()
     import pysal
     import numpy as np
-    dbf = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
+    dbf = pysal.open(pysal.examples.get_path('columbus.dbf'), 'r')
     y = np.array([dbf.by_col('HOVAL')]).T
     names_to_extract = ['INC', 'CRIME']
     x = np.array([dbf.by_col(name) for name in names_to_extract]).T
-    w = pysal.open(pysal.examples.get_path("columbus.gal"), 'r').read() 
-    w.transform='r'
-    model = GM_Error(y, x, w, name_y='hoval', name_x=['income', 'crime'], name_ds='columbus')
+    w = pysal.open(pysal.examples.get_path("columbus.gal"), 'r').read()
+    w.transform = 'r'
+    model = GM_Error(y, x, w, name_y='hoval',
+                     name_x=['income', 'crime'], name_ds='columbus')
     print model.summary
-    

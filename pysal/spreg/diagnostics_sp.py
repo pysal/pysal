@@ -13,6 +13,7 @@ __all__ = ['LMtests', 'MoranRes', 'AKtest']
 
 
 class LMtests:
+
     """
     Lagrange Multiplier tests. Implemented as presented in Anselin et al.
     (1996) [1]_
@@ -125,6 +126,7 @@ class LMtests:
     >>> print round(lms.sarma[0],4), round(lms.sarma[1],4)
     4.1907 0.123
     """
+
     def __init__(self, ols, w, tests=['all']):
         cache = spDcache(ols, w)
         if tests == ['all']:
@@ -142,6 +144,7 @@ class LMtests:
 
 
 class MoranRes:
+
     """
     Moran's I for spatial autocorrelation in residuals from OLS regression
     ...
@@ -231,6 +234,7 @@ class MoranRes:
     >>> print round(m.p_norm,4)
     0.0224
     """
+
     def __init__(self, ols, w, z=False):
         cache = spDcache(ols, w)
         self.I = get_mI(ols, w, cache)
@@ -241,6 +245,7 @@ class MoranRes:
 
 
 class AKtest:
+
     """
     Moran's I test of spatial autocorrelation for IV estimation.
     Implemented following the original reference Anselin and Kelejian
@@ -409,6 +414,7 @@ class AKtest:
 
 
 class spDcache:
+
     """
     Helper class to compute reusable pieces in the spatial diagnostics module
     ...
@@ -460,6 +466,7 @@ class spDcache:
                   Trace of A as in Cliff & Ord (1981)
 
     """
+
     def __init__(self, reg, w):
         self.reg = reg
         self.w = w
@@ -557,7 +564,7 @@ def lmErr(reg, w, spDcache):
        diagnostic tests for spatial dependence". Regional Science and Urban
        Economics, 26, 77-104.
     """
-    lm = spDcache.utwuDs**2 / spDcache.t
+    lm = spDcache.utwuDs ** 2 / spDcache.t
     pval = chisqprob(lm, 1)
     return (lm[0][0], pval[0][0])
 
@@ -590,7 +597,7 @@ def lmLag(ols, w, spDcache):
        diagnostic tests for spatial dependence". Regional Science and Urban
        Economics, 26, 77-104.
     """
-    lm = spDcache.utwyDs**2 / (ols.n * spDcache.j)
+    lm = spDcache.utwyDs ** 2 / (ols.n * spDcache.j)
     pval = chisqprob(lm, 1)
     return (lm[0][0], pval[0][0])
 
@@ -625,7 +632,7 @@ def rlmErr(ols, w, spDcache):
        Economics, 26, 77-104.
     """
     nj = ols.n * spDcache.j
-    num = (spDcache.utwuDs - (spDcache.t * spDcache.utwyDs) / nj)**2
+    num = (spDcache.utwuDs - (spDcache.t * spDcache.utwyDs) / nj) ** 2
     den = spDcache.t * (1. - (spDcache.t / nj))
     lm = num / den
     pval = chisqprob(lm, 1)
@@ -660,7 +667,8 @@ def rlmLag(ols, w, spDcache):
        diagnostic tests for spatial dependence". Regional Science and Urban
        Economics, 26, 77-104.
     """
-    lm = (spDcache.utwyDs - spDcache.utwuDs)**2 / ((ols.n * spDcache.j) - spDcache.t)
+    lm = (spDcache.utwyDs - spDcache.utwuDs) ** 2 / \
+        ((ols.n * spDcache.j) - spDcache.t)
     pval = chisqprob(lm, 1)
     return (lm[0][0], pval[0][0])
 
@@ -694,8 +702,9 @@ def lmSarma(ols, w, spDcache):
        Economics, 26, 77-104.
     """
 
-    first = (spDcache.utwyDs - spDcache.utwuDs)**2 / (w.n * spDcache.j - spDcache.t)
-    secnd = spDcache.utwuDs**2 / spDcache.t
+    first = (spDcache.utwyDs - spDcache.utwuDs) ** 2 / \
+        (w.n * spDcache.j - spDcache.t)
+    secnd = spDcache.utwuDs ** 2 / spDcache.t
     lm = first + secnd
     pval = chisqprob(lm, 2)
     return (lm[0][0], pval[0][0])
@@ -742,8 +751,9 @@ def get_vI(ols, w, ei, spDcache):
 
     B = spDcache.AB[1]
     trB = np.sum(B.diagonal()) * 4.
-    vi = (w.n**2 / (w.s0**2 * (w.n - ols.k) * (w.n - ols.k + 2.))) * \
-         (w.s1 + 2. * trA2 - trB - ((2. * (spDcache.trA**2)) / (w.n - ols.k)))
+    vi = (w.n ** 2 / (w.s0 ** 2 * (w.n - ols.k) * (w.n - ols.k + 2.))) * \
+         (w.s1 + 2. * trA2 - trB -
+          ((2. * (spDcache.trA ** 2)) / (w.n - ols.k)))
     return vi
 
 
@@ -801,9 +811,9 @@ def akTest(iv, w, spDcache):
     # Phi2
     etwz = spdot(iv.u.T, spdot(w.sparse, iv.z))
     a = np.dot(etwz, np.dot(iv.varb, etwz.T))
-    s12 = (w.s0 / w.n)**2
+    s12 = (w.s0 / w.n) ** 2
     phi2 = (spDcache.t + (4.0 / iv.sig2n) * a) / (s12 * w.n)
-    ak = w.n * mi**2 / phi2
+    ak = w.n * mi ** 2 / phi2
     pval = chisqprob(ak, 1)
     return (mi, ak[0][0], pval[0][0])
 

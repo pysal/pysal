@@ -35,6 +35,7 @@ def set_name_ds(name_ds):
         name_ds = 'unknown'
     return name_ds
 
+
 def set_name_y(name_y):
     """Set the dataset name in regression; return generic name if user
     provides no explicit name."
@@ -54,6 +55,7 @@ def set_name_y(name_y):
     if not name_y:
         name_y = 'dep_var'
     return name_y
+
 
 def set_name_x(name_x, x, constant=False):
     """Set the independent variable names in regression; return generic name if user
@@ -78,13 +80,14 @@ def set_name_x(name_x, x, constant=False):
                   
     """
     if not name_x:
-        name_x = ['var_'+str(i+1) for i in range(x.shape[1])]
+        name_x = ['var_' + str(i + 1) for i in range(x.shape[1])]
     else:
         name_x = name_x[:]
     if not constant:
         name_x.insert(0, 'CONSTANT')
     return name_x
-    
+
+
 def set_name_yend(name_yend, yend):
     """Set the endogenous variable names in regression; return generic name if user
     provides no explicit name."
@@ -103,11 +106,12 @@ def set_name_yend(name_yend, yend):
     """
     if yend != None:
         if not name_yend:
-            return ['endogenous_'+str(i+1) for i in range(len(yend[0]))]
+            return ['endogenous_' + str(i + 1) for i in range(len(yend[0]))]
         else:
             return name_yend[:]
     else:
         return []
+
 
 def set_name_q(name_q, q):
     """Set the external instrument names in regression; return generic name if user
@@ -129,11 +133,12 @@ def set_name_q(name_q, q):
     """
     if q != None:
         if not name_q:
-            return ['instrument_'+str(i+1) for i in range(len(q[0]))]
+            return ['instrument_' + str(i + 1) for i in range(len(q[0]))]
         else:
             return name_q[:]
     else:
         return []
+
 
 def set_name_yend_sp(name_y):
     """Set the spatial lag name in regression; return generic name if user
@@ -152,6 +157,7 @@ def set_name_yend_sp(name_y):
                   
     """
     return 'W_' + name_y
+
 
 def set_name_q_sp(name_x, w_lags, name_q, lag_q, force_all=False):
     """Set the spatial instrument names in regression; return generic name if user
@@ -175,18 +181,19 @@ def set_name_q_sp(name_x, w_lags, name_q, lag_q, force_all=False):
     if force_all:
         names = name_x
     else:
-        names = name_x[1:] # drop the constant
+        names = name_x[1:]  # drop the constant
     if lag_q:
-        names = names + name_q   
+        names = names + name_q
     sp_inst_names = []
     for j in names:
-        sp_inst_names.append('W_'+j)
+        sp_inst_names.append('W_' + j)
     if w_lags > 1:
-        for i in range(2, w_lags+1):
+        for i in range(2, w_lags + 1):
             for j in names:
-                sp_inst_names.append('W'+str(i)+'_'+j)
+                sp_inst_names.append('W' + str(i) + '_' + j)
     return sp_inst_names
-    
+
+
 def set_name_h(name_x, name_q):
     """Set the full instruments names in regression; return generic name if user
     provides no explicit name."
@@ -206,6 +213,7 @@ def set_name_h(name_x, name_q):
                   
     """
     return name_x + name_q
+
 
 def set_robust(robust):
     """Return generic name if user passes None to the robust parameter in a
@@ -227,6 +235,7 @@ def set_robust(robust):
     if not robust:
         return 'unadjusted'
     return robust
+
 
 def set_name_w(name_w, w):
     """Return generic name if user passes None to the robust parameter in a
@@ -255,7 +264,7 @@ def set_name_w(name_w, w):
     return None
 
 
-def set_name_multi(multireg,multi_set,name_multiID,y,x,name_y,name_x,name_ds,title,name_w,robust,endog=False,sp_lag=False):
+def set_name_multi(multireg, multi_set, name_multiID, y, x, name_y, name_x, name_ds, title, name_w, robust, endog=False, sp_lag=False):
     """Returns multiple regression objects with generic names
 
     Parameters
@@ -275,24 +284,27 @@ def set_name_multi(multireg,multi_set,name_multiID,y,x,name_y,name_x,name_ds,tit
     name_multiID = set_name_ds(name_multiID)
     if endog or sp_lag:
         name_yend = set_name_yend(endog[2], endog[0])
-        name_q = set_name_q(endog[3], endog[1])        
+        name_q = set_name_q(endog[3], endog[1])
     for r in multi_set:
-        multireg[r].title = title + "%s" %r
+        multireg[r].title = title + "%s" % r
         multireg[r].name_ds = name_ds
         multireg[r].robust = set_robust(robust)
-        multireg[r].name_w = name_w        
-        multireg[r].name_y = '%s_%s'%(str(r), name_y)
-        multireg[r].name_x = ['%s_%s'%(str(r), i) for i in name_x]
+        multireg[r].name_w = name_w
+        multireg[r].name_y = '%s_%s' % (str(r), name_y)
+        multireg[r].name_x = ['%s_%s' % (str(r), i) for i in name_x]
         multireg[r].name_multiID = name_multiID
         if endog or sp_lag:
-            multireg[r].name_yend = ['%s_%s'%(str(r), i) for i in name_yend]
-            multireg[r].name_q = ['%s_%s'%(str(r), i) for i in name_q]
+            multireg[r].name_yend = ['%s_%s' % (str(r), i) for i in name_yend]
+            multireg[r].name_q = ['%s_%s' % (str(r), i) for i in name_q]
             if sp_lag:
-                multireg[r].name_yend.append(set_name_yend_sp(multireg[r].name_y))
-                multireg[r].name_q.extend(set_name_q_sp(multireg[r].name_x, sp_lag[0], multireg[r].name_q, sp_lag[1]))
+                multireg[r].name_yend.append(
+                    set_name_yend_sp(multireg[r].name_y))
+                multireg[r].name_q.extend(
+                    set_name_q_sp(multireg[r].name_x, sp_lag[0], multireg[r].name_q, sp_lag[1]))
             multireg[r].name_z = multireg[r].name_x + multireg[r].name_yend
             multireg[r].name_h = multireg[r].name_x + multireg[r].name_q
     return multireg
+
 
 def check_arrays(*arrays):
     """Check if the objects passed by a user to a regression class are
@@ -350,6 +362,7 @@ def check_arrays(*arrays):
         raise Exception, "arrays not all of same length"
     return rows[0]
 
+
 def check_y(y, n):
     """Check if the y object passed by a user to a regression class is
     correctly structured. If the user's data is correctly formed this function
@@ -396,6 +409,7 @@ def check_y(y, n):
     if shape != (n, 1):
         raise Exception, "y must be a single column array matching the length of other arrays"
 
+
 def check_weights(w, y, w_required=False):
     """Check if the w parameter passed by the user is a pysal.W object and
     check that its dimensionality matches the y parameter.  Note that this
@@ -437,7 +451,7 @@ def check_weights(w, y, w_required=False):
     """
     if w_required == True or w != None:
         if w == None:
-            raise Exception, "A weights matrix w must be provided to run this method."            
+            raise Exception, "A weights matrix w must be provided to run this method."
         if not isinstance(w, pysal.W):
             raise Exception, "w must be a pysal.W object"
         if w.n != y.shape[0]:
@@ -509,13 +523,14 @@ def check_robust(robust, wk):
                 if vmin < 0.0:
                     raise Exception, "Off-diagonal entries must be greater than or equal to 0."
                 if vmax > 1.0:
-                    ##### NOTE: we are not checking for the case of exactly 1.0 #####
+                    # NOTE: we are not checking for the case of exactly 1.0 ###
                     raise Exception, "Off-diagonal entries must be less than 1."
         elif robust.lower() == 'white' or robust.lower() == 'ogmm':
             if wk:
                 raise Exception, "White requires that wk be set to None"
         else:
             raise Exception, "invalid value passed to robust, see docs for valid options"
+
 
 def check_spat_diag(spat_diag, w):
     """Check if there is a w parameter passed by the user if the user also
@@ -558,7 +573,8 @@ def check_spat_diag(spat_diag, w):
         if type(w).__name__ != 'W':
             raise Exception, "w must be a pysal.W object to run spatial diagnostics"
 
-def check_regimes(reg_set,N=None,K=None):
+
+def check_regimes(reg_set, N=None, K=None):
     """Check if there are at least two regimes
 
     Parameters
@@ -576,7 +592,7 @@ def check_regimes(reg_set,N=None,K=None):
     """
     if len(reg_set) < 2:
         raise Exception, "At least 2 regimes are needed to run regimes methods. Please check your regimes variable."
-    if 1.0*N/len(reg_set) < K+1:
+    if 1.0 * N / len(reg_set) < K + 1:
         raise Exception, "There aren't enough observations for the given number of regimes and variables. Please check your regimes variable."
 
 
@@ -615,7 +631,7 @@ def check_constant(x):
         raise Exception, "x array cannot contain a constant vector; constant will be added automatically"
     else:
         x_constant = COPY.copy(x)
-        return sphstack(np.ones((x_constant.shape[0],1)),x_constant)
+        return sphstack(np.ones((x_constant.shape[0], 1)), x_constant)
 
 
 def _test():
@@ -624,6 +640,3 @@ def _test():
 
 if __name__ == '__main__':
     _test()
-
-
-

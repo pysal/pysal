@@ -10,6 +10,7 @@ from scipy.stats import pearsonr
 
 __all__ = ["t_stat", "pr2_aspatial", "pr2_spatial"]
 
+
 def t_stat(reg, z_stat=False):
     """
     Calculates the t-statistics (or z-statistics) and associated p-values.
@@ -112,20 +113,20 @@ def t_stat(reg, z_stat=False):
     >>> testresult = diagnostics.t_stat(reg, z_stat=True)
     >>> print("%12.10f"%testresult[0][0], "%12.10f"%testresult[0][1], "%12.10f"%testresult[1][0], "%12.10f"%testresult[1][1], "%12.10f"%testresult[2][0], "%12.10f"%testresult[2][1])
     ('5.8452644705', '0.0000000051', '0.3676015668', '0.7131703463', '-1.9946891308', '0.0460767956')
-    """ 
-    
+    """
+
     k = reg.k           # (scalar) number of ind. vas (includes constant)
     n = reg.n           # (scalar) number of observations
     vm = reg.vm         # (array) coefficients of variance matrix (k x k)
-    betas = reg.betas   # (array) coefficients of the regressors (1 x k) 
+    betas = reg.betas   # (array) coefficients of the regressors (1 x k)
     variance = vm.diagonal()
-    tStat = betas.reshape(len(betas),)/ np.sqrt(variance)
+    tStat = betas.reshape(len(betas),) / np.sqrt(variance)
     ts_result = []
     for t in tStat:
         if z_stat:
-            ts_result.append((t, stats.norm.sf(abs(t))*2))
+            ts_result.append((t, stats.norm.sf(abs(t)) * 2))
         else:
-            ts_result.append((t, stats.t.sf(abs(t),n-k)*2))
+            ts_result.append((t, stats.t.sf(abs(t), n - k) * 2))
     return ts_result
 
 
@@ -215,8 +216,8 @@ def pr2_aspatial(tslsreg):
 
     y = tslsreg.y
     predy = tslsreg.predy
-    pr = pearsonr(y,predy)[0]
-    pr2_result = float(pr**2)
+    pr = pearsonr(y, predy)[0]
+    pr2_result = float(pr ** 2)
     return pr2_result
 
 
@@ -322,21 +323,15 @@ def pr2_spatial(tslsreg):
 
     y = tslsreg.y
     predy_e = tslsreg.predy_e
-    pr = pearsonr(y,predy_e)[0]
-    pr2_result = float(pr**2)
+    pr = pearsonr(y, predy_e)[0]
+    pr2_result = float(pr ** 2)
     return pr2_result
-
-
-
-
-
 
 
 def _test():
     import doctest
     doctest.testmod()
 
-                     
-if __name__ == '__main__':
-    _test()    
 
+if __name__ == '__main__':
+    _test()

@@ -29,7 +29,9 @@ import summary_output as SUMMARY
 
 __all__ = ["GM_Error_Hom", "GM_Endog_Error_Hom", "GM_Combo_Hom"]
 
+
 class BaseGM_Error_Hom(RegressionPropsY):
+
     '''
     GMM method for a spatial error model with homoskedasticity (note: no
     consistency checks, diagnostics or constant added); based on 
@@ -133,7 +135,7 @@ class BaseGM_Error_Hom(RegressionPropsY):
      [ -2.40000000e-03   3.00000000e-04  -1.00000000e-04   3.37000000e-02]]
     '''
 
-    def __init__(self, y, x, w,\
+    def __init__(self, y, x, w,
                  max_iter=1, epsilon=0.00001, A1='hom_sc'):
         if A1 == 'hom':
             wA1 = get_A1_hom(w)
@@ -154,10 +156,10 @@ class BaseGM_Error_Hom(RegressionPropsY):
         lambda_old = lambda1
 
         self.iteration, eps = 0, 1
-        while self.iteration<max_iter and eps>epsilon:
+        while self.iteration < max_iter and eps > epsilon:
             # 2a. SWLS --> \hat{\delta}
-            x_s = get_spFilter(w,lambda_old,self.x)
-            y_s = get_spFilter(w,lambda_old,self.y)
+            x_s = get_spFilter(w, lambda_old, self.x)
+            y_s = get_spFilter(w, lambda_old, self.y)
             ols_s = OLS.BaseOLS(y=y_s, x=x_s)
             self.predy = spdot(self.x, ols_s.betas)
             self.u = self.y - self.predy
@@ -168,17 +170,20 @@ class BaseGM_Error_Hom(RegressionPropsY):
             lambda2 = optim_moments(moments, psi)
             eps = abs(lambda2 - lambda_old)
             lambda_old = lambda2
-            self.iteration+=1
+            self.iteration += 1
 
-        self.iter_stop = iter_msg(self.iteration,max_iter)
+        self.iter_stop = iter_msg(self.iteration, max_iter)
 
         # Output
-        self.betas = np.vstack((ols_s.betas,lambda2))
-        self.vm,self.sig2 = get_omega_hom_ols(w, wA1, wA2, self, lambda2, moments[0])
-        self.e_filtered = self.u - lambda2*w*self.u
+        self.betas = np.vstack((ols_s.betas, lambda2))
+        self.vm, self.sig2 = get_omega_hom_ols(
+            w, wA1, wA2, self, lambda2, moments[0])
+        self.e_filtered = self.u - lambda2 * w * self.u
         self._cache = {}
 
+
 class GM_Error_Hom(BaseGM_Error_Hom):
+
     '''
     GMM method for a spatial error model with homoskedasticity, with results
     and diagnostics; based on Drukker et al. (2010) [1]_, following Anselin
@@ -360,19 +365,19 @@ class GM_Error_Hom(BaseGM_Error_Hom):
      [  0.4129   0.1835]]
 
     '''
-    
-    def __init__(self, y, x, w,\
-                 max_iter=1, epsilon=0.00001, A1='hom_sc',\
-                 vm=False, name_y=None, name_x=None,\
+
+    def __init__(self, y, x, w,
+                 max_iter=1, epsilon=0.00001, A1='hom_sc',
+                 vm=False, name_y=None, name_x=None,
                  name_w=None, name_ds=None):
 
         n = USER.check_arrays(y, x)
         USER.check_y(y, n)
         USER.check_weights(w, y, w_required=True)
         x_constant = USER.check_constant(x)
-        BaseGM_Error_Hom.__init__(self, y=y, x=x_constant, w=w.sparse, A1=A1,\
-                max_iter=max_iter, epsilon=epsilon)
-        self.title = "SPATIALLY WEIGHTED LEAST SQUARES (HOM)"        
+        BaseGM_Error_Hom.__init__(self, y=y, x=x_constant, w=w.sparse, A1=A1,
+                                  max_iter=max_iter, epsilon=epsilon)
+        self.title = "SPATIALLY WEIGHTED LEAST SQUARES (HOM)"
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
@@ -382,6 +387,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
 
 
 class BaseGM_Endog_Error_Hom(RegressionPropsY):
+
     '''
     GMM method for a spatial error model with homoskedasticity and
     endogenous variables (note: no consistency checks, diagnostics or constant
@@ -500,7 +506,8 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
 
     
     '''
-    def __init__(self, y, x, yend, q, w,\
+
+    def __init__(self, y, x, yend, q, w,
                  max_iter=1, epsilon=0.00001, A1='hom_sc'):
 
         if A1 == 'hom':
@@ -523,10 +530,10 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
         lambda_old = lambda1
 
         self.iteration, eps = 0, 1
-        while self.iteration<max_iter and eps>epsilon:
+        while self.iteration < max_iter and eps > epsilon:
             # 2a. GS2SLS --> \hat{\delta}
-            x_s = get_spFilter(w,lambda_old,self.x)
-            y_s = get_spFilter(w,lambda_old,self.y)
+            x_s = get_spFilter(w, lambda_old, self.x)
+            y_s = get_spFilter(w, lambda_old, self.y)
             yend_s = get_spFilter(w, lambda_old, self.yend)
             tsls_s = TSLS.BaseTSLS(y=y_s, x=x_s, yend=yend_s, h=self.h)
             self.predy = spdot(self.z, tsls_s.betas)
@@ -538,17 +545,20 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
             lambda2 = optim_moments(moments, psi)
             eps = abs(lambda2 - lambda_old)
             lambda_old = lambda2
-            self.iteration+=1
+            self.iteration += 1
 
-        self.iter_stop = iter_msg(self.iteration,max_iter)            
+        self.iter_stop = iter_msg(self.iteration, max_iter)
 
         # Output
-        self.betas = np.vstack((tsls_s.betas,lambda2))
-        self.vm,self.sig2 = get_omega_hom(w, wA1, wA2, self, lambda2, moments[0])
-        self.e_filtered = self.u - lambda2*w*self.u
+        self.betas = np.vstack((tsls_s.betas, lambda2))
+        self.vm, self.sig2 = get_omega_hom(
+            w, wA1, wA2, self, lambda2, moments[0])
+        self.e_filtered = self.u - lambda2 * w * self.u
         self._cache = {}
 
+
 class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
+
     '''
     GMM method for a spatial error model with homoskedasticity and endogenous
     variables, with results and diagnostics; based on Drukker et al. (2010) [1]_,
@@ -778,33 +788,35 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
      [  0.4321   0.1927]]
 
     '''
-    def __init__(self, y, x, yend, q, w,\
-                 max_iter=1, epsilon=0.00001, A1='hom_sc',\
-                 vm=False, name_y=None, name_x=None,\
-                 name_yend=None, name_q=None,\
+
+    def __init__(self, y, x, yend, q, w,
+                 max_iter=1, epsilon=0.00001, A1='hom_sc',
+                 vm=False, name_y=None, name_x=None,
+                 name_yend=None, name_q=None,
                  name_w=None, name_ds=None):
 
         n = USER.check_arrays(y, x, yend, q)
         USER.check_y(y, n)
         USER.check_weights(w, y, w_required=True)
         x_constant = USER.check_constant(x)
-        BaseGM_Endog_Error_Hom.__init__(self, y=y, x=x_constant, w=w.sparse, yend=yend, q=q,\
-                A1=A1, max_iter=max_iter, epsilon=epsilon)
-        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HOM)"        
+        BaseGM_Endog_Error_Hom.__init__(
+            self, y=y, x=x_constant, w=w.sparse, yend=yend, q=q,
+            A1=A1, max_iter=max_iter, epsilon=epsilon)
+        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HOM)"
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
         self.name_yend = USER.set_name_yend(name_yend, yend)
         self.name_z = self.name_x + self.name_yend
-        self.name_z.append('lambda')  #listing lambda last
+        self.name_z.append('lambda')  # listing lambda last
         self.name_q = USER.set_name_q(name_q, q)
         self.name_h = USER.set_name_h(self.name_x, self.name_q)
         self.name_w = USER.set_name_w(name_w, w)
         SUMMARY.GM_Endog_Error_Hom(reg=self, w=w, vm=vm)
 
 
-
 class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
+
     '''
     GMM method for a spatial lag and error model with homoskedasticity and
     endogenous variables (note: no consistency checks, diagnostics or constant
@@ -953,14 +965,18 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
      ['lambda' '0.60116' '0.18605']]
 
     '''
-    def __init__(self, y, x, yend=None, q=None,\
-                 w=None, w_lags=1, lag_q=True,\
+
+    def __init__(self, y, x, yend=None, q=None,
+                 w=None, w_lags=1, lag_q=True,
                  max_iter=1, epsilon=0.00001, A1='hom_sc'):
-    
-        BaseGM_Endog_Error_Hom.__init__(self, y=y, x=x, w=w, yend=yend, q=q, A1=A1,\
-                                        max_iter=max_iter, epsilon=epsilon)
+
+        BaseGM_Endog_Error_Hom.__init__(
+            self, y=y, x=x, w=w, yend=yend, q=q, A1=A1,
+            max_iter=max_iter, epsilon=epsilon)
+
 
 class GM_Combo_Hom(BaseGM_Combo_Hom):
+
     '''
     GMM method for a spatial lag and error model with homoskedasticity and
     endogenous variables, with results and diagnostics; based on Drukker et
@@ -1210,35 +1226,38 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
      ['lambda' '0.60116' '0.18605']]
 
     '''
-    def __init__(self, y, x, yend=None, q=None,\
-                 w=None, w_lags=1, lag_q=True,\
-                 max_iter=1, epsilon=0.00001, A1='hom_sc',\
-                 vm=False, name_y=None, name_x=None,\
-                 name_yend=None, name_q=None,\
+
+    def __init__(self, y, x, yend=None, q=None,
+                 w=None, w_lags=1, lag_q=True,
+                 max_iter=1, epsilon=0.00001, A1='hom_sc',
+                 vm=False, name_y=None, name_x=None,
+                 name_yend=None, name_q=None,
                  name_w=None, name_ds=None):
-    
+
         n = USER.check_arrays(y, x, yend, q)
         USER.check_y(y, n)
         USER.check_weights(w, y, w_required=True)
         yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
         x_constant = USER.check_constant(x)
-        BaseGM_Combo_Hom.__init__(self, y=y, x=x_constant, w=w.sparse, yend=yend2, q=q2,\
-                    w_lags=w_lags, A1=A1, lag_q=lag_q,\
-                    max_iter=max_iter, epsilon=epsilon)
+        BaseGM_Combo_Hom.__init__(
+            self, y=y, x=x_constant, w=w.sparse, yend=yend2, q=q2,
+            w_lags=w_lags, A1=A1, lag_q=lag_q,
+            max_iter=max_iter, epsilon=epsilon)
         self.rho = self.betas[-2]
-        self.predy_e, self.e_pred, warn = sp_att(w,self.y,self.predy,\
-                             yend2[:,-1].reshape(self.n,1),self.rho)
+        self.predy_e, self.e_pred, warn = sp_att(w, self.y, self.predy,
+                                                 yend2[:, -1].reshape(self.n, 1), self.rho)
         set_warn(self, warn)
-        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HOM)"        
+        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HOM)"
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
         self.name_yend = USER.set_name_yend(name_yend, yend)
         self.name_yend.append(USER.set_name_yend_sp(self.name_y))
         self.name_z = self.name_x + self.name_yend
-        self.name_z.append('lambda')  #listing lambda last
+        self.name_z.append('lambda')  # listing lambda last
         self.name_q = USER.set_name_q(name_q, q)
-        self.name_q.extend(USER.set_name_q_sp(self.name_x, w_lags, self.name_q, lag_q))
+        self.name_q.extend(
+            USER.set_name_q_sp(self.name_x, w_lags, self.name_q, lag_q))
         self.name_h = USER.set_name_h(self.name_x, self.name_q)
         self.name_w = USER.set_name_w(name_w, w)
         SUMMARY.GM_Combo_Hom(reg=self, w=w, vm=vm)
@@ -1282,14 +1301,15 @@ def moments_hom(w, wA1, wA2, u):
 
     g1 = np.dot(u.T, A1u)
     g2 = np.dot(u.T, A2u)
-    g = np.array([[g1][0][0],[g2][0][0]]) / n
+    g = np.array([[g1][0][0], [g2][0][0]]) / n
 
     G11 = 2 * np.dot(wu.T * wA1, u)
     G12 = -np.dot(wu.T * wA1, wu)
     G21 = 2 * np.dot(wu.T * wA2, u)
     G22 = -np.dot(wu.T * wA2, wu)
-    G = np.array([[G11[0][0],G12[0][0]],[G21[0][0],G22[0][0]]]) / n
+    G = np.array([[G11[0][0], G12[0][0]], [G21[0][0], G22[0][0]]]) / n
     return [G, g]
+
 
 def get_vc_hom(w, wA1, wA2, reg, lambdapar, z_s=None, for_omegaOLS=False):
     '''
@@ -1335,8 +1355,8 @@ def get_vc_hom(w, wA1, wA2, reg, lambdapar, z_s=None, for_omegaOLS=False):
     u_s = get_spFilter(w, lambdapar, reg.u)
     n = float(w.shape[0])
     sig2 = np.dot(u_s.T, u_s) / n
-    mu3 = np.sum(u_s**3) / n
-    mu4 = np.sum(u_s**4) / n
+    mu3 = np.sum(u_s ** 3) / n
+    mu4 = np.sum(u_s ** 4) / n
 
     tr11 = wA1 * wA1
     tr11 = np.sum(tr11.diagonal())
@@ -1346,10 +1366,10 @@ def get_vc_hom(w, wA1, wA2, reg, lambdapar, z_s=None, for_omegaOLS=False):
     tr22 = np.sum(tr22.diagonal())
     vecd1 = np.array([wA1.diagonal()]).T
 
-    psi11 = 2 * sig2**2 * tr11 + \
-            (mu4 - 3 * sig2**2) * np.dot(vecd1.T, vecd1)
-    psi12 = sig2**2 * tr12
-    psi22 = sig2**2 * tr22
+    psi11 = 2 * sig2 ** 2 * tr11 + \
+        (mu4 - 3 * sig2 ** 2) * np.dot(vecd1.T, vecd1)
+    psi12 = sig2 ** 2 * tr12
+    psi22 = sig2 ** 2 * tr22
 
     a1, a2, p = 0., 0., 0.
 
@@ -1360,12 +1380,12 @@ def get_vc_hom(w, wA1, wA2, reg, lambdapar, z_s=None, for_omegaOLS=False):
     if issubclass(type(z_s), np.ndarray) or \
             issubclass(type(z_s), SP.csr.csr_matrix) or \
             issubclass(type(z_s), SP.csc.csc_matrix):
-        alpha1 = (-2/n) * spdot(z_s.T, wA1 * u_s)
-        alpha2 = (-2/n) * spdot(z_s.T, wA2 * u_s)
+        alpha1 = (-2 / n) * spdot(z_s.T, wA1 * u_s)
+        alpha2 = (-2 / n) * spdot(z_s.T, wA2 * u_s)
 
         hth = spdot(reg.h.T, reg.h)
-        hthni = la.inv(hth / n) 
-        htzsn = spdot(reg.h.T, z_s) / n 
+        hthni = la.inv(hth / n)
+        htzsn = spdot(reg.h.T, z_s) / n
         p = spdot(hthni, htzsn)
         p = spdot(p, la.inv(spdot(htzsn.T, p)))
         hp = spdot(reg.h, p)
@@ -1377,12 +1397,14 @@ def get_vc_hom(w, wA1, wA2, reg, lambdapar, z_s=None, for_omegaOLS=False):
             2 * mu3 * spdot(a1.T, vecd1)
         psi12 = psi12 + \
             sig2 * spdot(a1.T, a2) + \
-            mu3 * spdot(a2.T, vecd1) # 3rd term=0
+            mu3 * spdot(a2.T, vecd1)  # 3rd term=0
         psi22 = psi22 + \
-            sig2 * spdot(a2.T, a2) # 3rd&4th terms=0 bc vecd2=0
+            sig2 * spdot(a2.T, a2)  # 3rd&4th terms=0 bc vecd2=0
 
-    psi = np.array([[psi11[0][0], psi12[0][0]], [psi12[0][0], psi22[0][0]]]) / n
+    psi = np.array(
+        [[psi11[0][0], psi12[0][0]], [psi12[0][0], psi22[0][0]]]) / n
     return psi, a1, a2, p
+
 
 def get_omega_hom(w, wA1, wA2, reg, lamb, G):
     '''
@@ -1418,14 +1440,14 @@ def get_omega_hom(w, wA1, wA2, reg, lamb, G):
     z_s = get_spFilter(w, lamb, reg.z)
     u_s = get_spFilter(w, lamb, reg.u)
     sig2 = np.dot(u_s.T, u_s) / n
-    mu3 = np.sum(u_s**3) / n
+    mu3 = np.sum(u_s ** 3) / n
     vecdA1 = np.array([wA1.diagonal()]).T
     psi, a1, a2, p = get_vc_hom(w, wA1, wA2, reg, lamb, z_s)
-    j = np.dot(G, np.array([[1.], [2*lamb]]))
+    j = np.dot(G, np.array([[1.], [2 * lamb]]))
     psii = la.inv(psi)
     t2 = spdot(reg.h.T, np.hstack((a1, a2)))
-    psiDL = (mu3 * spdot(reg.h.T, np.hstack((vecdA1, np.zeros((n, 1))))) + \
-            sig2 * spdot(reg.h.T, np.hstack((a1, a2)))) / n
+    psiDL = (mu3 * spdot(reg.h.T, np.hstack((vecdA1, np.zeros((n, 1))))) +
+             sig2 * spdot(reg.h.T, np.hstack((a1, a2)))) / n
 
     oDD = spdot(la.inv(spdot(reg.h.T, reg.h)), spdot(reg.h.T, z_s))
     oDD = sig2 * la.inv(spdot(z_s.T, spdot(reg.h, oDD)))
@@ -1434,7 +1456,8 @@ def get_omega_hom(w, wA1, wA2, reg, lamb, G):
 
     o_upper = np.hstack((oDD, oDL))
     o_lower = np.hstack((oDL.T, oLL))
-    return np.vstack((o_upper, o_lower)),float(sig2)
+    return np.vstack((o_upper, o_lower)), float(sig2)
+
 
 def get_omega_hom_ols(w, wA1, wA2, reg, lamb, G):
     '''
@@ -1472,29 +1495,28 @@ def get_omega_hom_ols(w, wA1, wA2, reg, lamb, G):
     sig2 = np.dot(u_s.T, u_s) / n
     vecdA1 = np.array([wA1.diagonal()]).T
     psi, a1, a2, p = get_vc_hom(w, wA1, wA2, reg, lamb, for_omegaOLS=True)
-    j = np.dot(G, np.array([[1.], [2*lamb]]))
+    j = np.dot(G, np.array([[1.], [2 * lamb]]))
     psii = la.inv(psi)
 
     oDD = sig2 * la.inv(spdot(x_s.T, x_s))
     oLL = la.inv(spdot(j.T, spdot(psii, j))) / n
     #oDL = np.zeros((oDD.shape[0], oLL.shape[1]))
-    mu3 = np.sum(u_s**3) / n
+    mu3 = np.sum(u_s ** 3) / n
     psiDL = (mu3 * spdot(reg.x.T, np.hstack((vecdA1, np.zeros((n, 1)))))) / n
     oDL = spdot(spdot(spdot(p.T, psiDL), spdot(psii, j)), oLL)
 
     o_upper = np.hstack((oDD, oDL))
     o_lower = np.hstack((oDL.T, oLL))
-    return np.vstack((o_upper, o_lower)),float(sig2)
+    return np.vstack((o_upper, o_lower)), float(sig2)
+
 
 def _test():
     import doctest
     start_suppress = np.get_printoptions()['suppress']
-    np.set_printoptions(suppress=True)    
+    np.set_printoptions(suppress=True)
     doctest.testmod()
     np.set_printoptions(suppress=start_suppress)
 
 if __name__ == '__main__':
 
     _test()
-
-
