@@ -81,7 +81,7 @@ class BaseML_Lag(RegressionPropsY,RegressionPropsVM):
                    
                    
     Examples
-    ________
+    --------
     
     >>> import numpy as np
     >>> import pysal as ps
@@ -359,7 +359,7 @@ class ML_Lag(BaseML_Lag):
                    Name of the regression method used
 
     Examples
-    ________
+    --------
     
     >>> import numpy as np
     >>> import pysal as ps
