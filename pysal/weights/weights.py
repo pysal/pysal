@@ -517,6 +517,36 @@ class W(object):
                 return value
         return _W_iter(self)
 
+    def remap_ids(self, bridge):
+        ids = self.neighbors.keys()
+        # sanity check
+        
+        c = 0
+        for i in bridge.keys():
+            if i in ids:
+                c += 1
+        if c != self.n:
+            # only remap if all ids are accounted for, otherwise leave
+            # untouched
+            return
+        w1 = {}
+        w2 = {}
+        for i in bridge:
+            i_neighbors = self.neighbors[i]
+            for c,j in enumerate(i_neighbors):
+                new_j = bridge[j]
+                i_neighbors[c] = new_j
+            w1[bridge[i]] = i_neighbors
+            self.neighbors.pop(i)
+            w2[bridge[i]] = self.weights.pop(i)
+        self.neighbors = w1
+        self.weights = w2
+
+        id_order = [ bridge[i] for i in self.id_order ]
+        self._id_order = id_order
+        self._reset()
+
+
     def __set_id_order(self, ordered_ids):
         """
         Set the iteration order in w.
@@ -591,6 +621,8 @@ class W(object):
 
     id_order = property(__get_id_order, __set_id_order)
 
+
+
     @property
     def id_order_set(self):
         """returns True if user has set id_order, False if not.
@@ -603,6 +635,7 @@ class W(object):
         True
         """
         return self._id_order_set
+
 
     @property
     def neighbor_offsets(self):
