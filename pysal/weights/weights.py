@@ -518,17 +518,47 @@ class W(object):
         return _W_iter(self)
 
     def remap_ids(self, bridge):
+        """
+        Convert ids to a new set of values
+
+        Parameters
+        ----------
+
+        bridge: dict
+                key is the value of a current id, value is the value it should be
+                replaced by
+
+        Notes
+        -----
+
+        All ids have to be remapped, otherwise if any original ids are missing
+        as keys in bridge, remapping is not carried out.
+
+        Examples
+        --------
+        >>> import pysal as ps
+        >>> w = ps.lat2W()
+        >>> w = ps.lat2W(3,3)
+        >>> w.neighbors
+        {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
+        >>> bridge = dict([(i,i+11) for i in w.id_order])
+        >>> bridge
+        {0: 11, 1: 12, 2: 13, 3: 14, 4: 15, 5: 16, 6: 17, 7: 18, 8: 19}
+        >>> w.remap_ids(bridge)
+        >>> w.neighbors
+        {11: [14, 12], 12: [11, 15, 13], 13: [12, 16], 14: [11, 17, 15], 15: [12, 14, 18, 16], 16: [13, 15, 19], 17: [14, 18], 18: [15, 17, 19], 19: [16, 18]}
+        >>> w.remap_ids(bridge)
+        >>> w.neighbors
+        {11: [14, 12], 12: [11, 15, 13], 13: [12, 16], 14: [11, 17, 15], 15: [12, 14, 18, 16], 16: [13, 15, 19], 17: [14, 18], 18: [15, 17, 19], 19: [16, 18]}
+
+        """
         ids = self.neighbors.keys()
         # sanity check
-        
-        c = 0
         for i in bridge.keys():
-            if i in ids:
-                c += 1
-        if c != self.n:
-            # only remap if all ids are accounted for, otherwise leave
-            # untouched
-            return
+            if i not in ids:
+                # only remap if all ids are accounted for, otherwise leave
+                # untouched
+                return
         w1 = {}
         w2 = {}
         for i in bridge:
@@ -541,7 +571,6 @@ class W(object):
             w2[bridge[i]] = self.weights.pop(i)
         self.neighbors = w1
         self.weights = w2
-
         id_order = [ bridge[i] for i in self.id_order ]
         self._id_order = id_order
         self._reset()
