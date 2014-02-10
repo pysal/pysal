@@ -21,45 +21,6 @@ from matplotlib import cm
 from matplotlib.patches import Polygon
 from matplotlib.path import Path
 from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection
-try:
-    from mpl_toolkits.basemap import Basemap
-except:
-    print "WARNING: Basemap not installed and cannot be imported"
-try:
-    from ogr import osr
-except:
-    print "WARNING: 'ogr' could not be imported. Reprojections won't work"
-
-def transCRS(xy, src_prj, trt_prj):
-    '''
-    Re-project a 2D array of xy coordinates from one prj file to another
-    ...
-
-    Arguments
-    ---------
-    xy          : ndarray
-                  nx2 array with coordinates to be reprojected. First column
-                  is X axis, second is Y axis
-    src_prj     : str
-                  Path to .prj file of the source Coordinate Reference System
-                  (CRS) of `xy`
-    trt_prj     : str
-                  Path to .prj file of the target Coordinate Reference System
-                  (CRS) to reproject `xy`
-
-    Returns
-    -------
-    xyp         : ndarray
-                  nx2 array with reprojected coordinates. First column
-                  is X axis, second is Y axis
-
-    '''
-    orig = osr.SpatialReference()
-    orig.ImportFromWkt(open(src_prj).read())
-    target = osr.SpatialReference()
-    target.ImportFromWkt(open(trt_prj).read())
-    trCRS = osr.CoordinateTransformation(orig, target)
-    return np.array(trCRS.TransformPoints(xy))[:, :2]
 
 def map_point_shp(shp, which='all'):
     '''
@@ -186,57 +147,6 @@ def map_poly_shp(shp, which='all'):
     pc.shp2dbf_row = rows
     return pc
 
-def map_poly_shp_lonlat(shp_link, projection='merc'):
-    '''
-    Create a map object from a shapefile in lon/lat CRS using Basemap
-
-    NOTE: deprecated in higher level functions for dependency on Basemap
-    ...
-
-    Arguments
-    ---------
-
-    shp_link        : str
-                      Path to shapefile
-    projection      : str
-                      Basemap projection. See [1]_ for a list. Defaults to
-                      'merc'
-
-    Returns
-    -------
-
-    map             : PatchCollection
-                      Map object with the polygons from the shapefile
-
-    Links
-    -----
-    .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
-    '''
-    shp = ps.open(shp_link)
-    shps = list(shp)
-    left, bottom, right, top = shp.bbox
-    m = Basemap(resolution = 'i', projection=projection,
-            llcrnrlat=bottom, urcrnrlat=top,
-            llcrnrlon=left, urcrnrlon=right,
-            lat_ts=(bottom+top)/2,
-            lon_0=(right-left)/2, lat_0=(top-bottom)/2)
-    bounding_box = [m.llcrnrx, m.llcrnry,m.urcrnrx,m.urcrnry]
-    patches = []
-    for shape in shps:
-        parts = []
-        for ring in shape.parts:
-            xy = np.array(ring)
-            x,y = m(xy[:,0], xy[:,1])
-            x = x / bounding_box[2]
-            y = y / bounding_box[3]
-            n = len(x)
-            x.shape = (n,1)
-            y.shape = (n,1)
-            xy = np.hstack((x,y))
-            polygon = Polygon(xy, True)
-            patches.append(polygon)
-    return PatchCollection(patches)
-
 def setup_ax(polyCos_list, ax=None):
     '''
     Generate an Axes object for a list of collections
@@ -308,7 +218,7 @@ def _add_axes2col(col, bbox):
     plt.close(tf)
     return None
 
-def plot_poly_lines(shp_link, projection='merc', savein=None, poly_col='none'):
+def plot_poly_lines(shp_link,  savein=None, poly_col='none'):
     '''
     Quick plotting of shapefiles
     ...
@@ -317,9 +227,6 @@ def plot_poly_lines(shp_link, projection='merc', savein=None, poly_col='none'):
     ---------
     shp_link        : str
                       Path to shapefile
-    projection      : str
-                      Basemap projection. See [1]_ for a list. Defaults to
-                      'merc'
     savein          : str
                       Path to png file where to dump the plot. Optional,
                       defaults to None
@@ -394,9 +301,6 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None, \
                       Map object with the polygons from the shapefile and
                       unique value coloring
 
-    Links
-    -----
-    .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
     '''
     shp = ps.open(shp_link)
     if shp_type == 'poly':
@@ -447,7 +351,7 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None, \
     return None
 
 
-def base_choropleth_classless(map_obj, values, cmap='Greys', projection='merc'):
+def base_choropleth_classless(map_obj, values, cmap='Greys' ):
     '''
     Set classless coloring from a map object
     ...
@@ -461,9 +365,6 @@ def base_choropleth_classless(map_obj, values, cmap='Greys', projection='merc'):
                       Numpy array with values to map
     cmap            : str
                       Matplotlib coloring scheme
-    projection      : str
-                      Basemap projection. See [1]_ for a list. Defaults to
-                      'merc'
 
     Returns
     -------
@@ -472,9 +373,6 @@ def base_choropleth_classless(map_obj, values, cmap='Greys', projection='merc'):
                       Map object with the polygons from the shapefile and
                       classless coloring
 
-    Links
-    -----
-    .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
     '''
     cmap = cm.get_cmap(cmap)
     map_obj.set_cmap(cmap)
@@ -491,7 +389,7 @@ def base_choropleth_classless(map_obj, values, cmap='Greys', projection='merc'):
         map_obj.set_array(values)
     return map_obj
 
-def base_choropleth_unique(map_obj, values,  cmap='hot_r', projection='merc'):
+def base_choropleth_unique(map_obj, values,  cmap='hot_r'):
     '''
     Set coloring based on unique values from a map object
     ...
@@ -505,9 +403,6 @@ def base_choropleth_unique(map_obj, values,  cmap='hot_r', projection='merc'):
                       Numpy array with values to map
     cmap            : str
                       Matplotlib coloring scheme
-    projection      : str
-                      Basemap projection. See [1]_ for a list. Defaults to
-                      'merc'
 
     Returns
     -------
@@ -516,9 +411,6 @@ def base_choropleth_unique(map_obj, values,  cmap='hot_r', projection='merc'):
                       Map object with the polygons from the shapefile and
                       unique value coloring
 
-    Links
-    -----
-    .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
     '''
     uvals = np.unique(values)
     colormap = getattr(plt.cm, cmap)
@@ -576,9 +468,6 @@ def base_choropleth_classif(map_obj, values, classification='quantiles', \
                       Map object with the polygons from the shapefile and
                       unique value coloring
 
-    Links
-    -----
-    .. [1] <http://matplotlib.org/basemap/api/basemap_api.html#module-mpl_toolkits.basemap>
     '''
     if classification == 'quantiles':
         classification = ps.Quantiles(values, k)
@@ -645,406 +534,7 @@ def _expand_values(values, shp2dbf_row):
             .reindex(shp2dbf_row)#Expand values to every poly
     return pvalues.values
 
-            #############################
-            ### Serge's original code ###
-            #############################
-
-class Map_Projection(object):
-    """Map_Projection
-
-    Parameters
-    ==========
-
-    shapefile: name of shapefile with .shp extension
-
-    projection: proj4 projection string
-
-
-    Returns
-    =======
-
-    projected: list of lists
-        projected coordinates for each shape in the shapefile. Each
-        sublist contains projected coordinates for parts of a  shape
-
-
-    """
-    def __init__(self, shapefile, projection='merc'):
-        super(Map_Projection, self).__init__()
-        self.projection = projection
-        shp_reader = ps.open(shapefile)
-        shps = []
-        for shp in shp_reader:
-            shps.append(shp)
-        left = shp_reader.header['BBOX Xmin']
-        right = shp_reader.header['BBOX Xmax']
-        bottom = shp_reader.header['BBOX Ymin']
-        top = shp_reader.header['BBOX Ymax']
-        m = Basemap(resolution = 'i', projection='merc',
-                llcrnrlat=bottom, urcrnrlat=top,
-                llcrnrlon=left, urcrnrlon=right,
-                lat_ts=(bottom+top)/2)
-        projected = []
-        for shp in shps:
-            parts = []
-            for ring in shp.parts:
-                xy = np.array(ring)
-                x,y = m(xy[:,0], xy[:,1])
-                parts.append([x,y])
-            projected.append(parts)
-        results = {}
-        self.projected = projected
-        self.bounding_box = [m.llcrnrx, m.llcrnry,m.urcrnrx,m.urcrnry]
-        self.shapefile = shapefile
-
-def equal_interval_map(coords, y, k, title='Equal Interval'):
-    """
-
-    coords: Map_Projection instance
-
-    y: array
-       variable to map
-
-    k: int
-       number of classes
-
-    title: string
-           map title
-    """
-    classification = ps.Equal_Interval(y,k)
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    patches = []
-    colors = []
-    i = 0
-    shape_colors = classification.bins[classification.yb]
-    shape_colors = y
-    #classification.bins[classification.yb]
-    for shp in coords.projected:
-        for ring in shp:
-            x,y = ring
-            x = x / coords.bounding_box[2]
-            y = y / coords.bounding_box[3]
-            n = len(x)
-            x.shape = (n,1)
-            y.shape = (n,1)
-            xy = np.hstack((x,y))
-            polygon = Polygon(xy, True)
-            patches.append(polygon)
-            colors.append(shape_colors[i])
-        i += 1
-    cmap = cm.get_cmap('hot_r', k+1)
-    boundaries = classification.bins.tolist()
-    boundaries.insert(0,0)
-    norm = clrs.BoundaryNorm(boundaries, cmap.N)
-    p = PatchCollection(patches, cmap=cmap, alpha=0.4, norm=norm)
-    colors = np.array(colors)
-    p.set_array(colors)
-    ax.add_collection(p)
-    ax.set_frame_on(False)
-    ax.axes.get_yaxis().set_visible(False)
-    ax.axes.get_xaxis().set_visible(False)
-    ax.set_title(title)
-    plt.colorbar(p, cmap=cmap, norm = norm, boundaries = boundaries, ticks=
-            boundaries, shrink=0.5)
-    plt.show()
-    return classification
-
-
-def fisher_jenks_map(coords, y, k, title='Fisher-Jenks', sampled=False):
-    """
-
-    coords: Map_Projection instance
-
-    y: array
-       variable to map
-
-    k: int
-       number of classes
-
-    title: string
-           map title
-
-    sampled: binary
-             if True classification bins obtained on a sample of y and then
-                 applied. Useful for large n arrays
-    """
-
-
-    if sampled:
-        classification = ps.esda.mapclassify.Fisher_Jenks_Sampled(y,k)
-    else:
-        classification = ps.Fisher_Jenks(y,k)
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    patches = []
-    colors = []
-    i = 0
-    shape_colors = y
-    #classification.bins[classification.yb]
-    for shp in coords.projected:
-        for ring in shp:
-            x,y = ring
-            x = x / coords.bounding_box[2]
-            y = y / coords.bounding_box[3]
-            n = len(x)
-            x.shape = (n,1)
-            y.shape = (n,1)
-            xy = np.hstack((x,y))
-            polygon = Polygon(xy, True)
-            patches.append(polygon)
-            colors.append(shape_colors[i])
-        i += 1
-    cmap = cm.get_cmap('hot_r', k+1)
-    boundaries = classification.bins[:]
-    #print boundaries
-    #print min(shape_colors) > 0.0
-    if min(shape_colors) > 0.0:
-        boundaries.insert(0,0)
-    else:
-        boundaries.insert(0, boundaries[0] - boundaries[1])
-    #print boundaries
-    norm = clrs.BoundaryNorm(boundaries, cmap.N)
-    p = PatchCollection(patches, cmap=cmap, alpha=0.4, norm=norm)
-    colors = np.array(colors)
-    p.set_array(colors)
-    ax.add_collection(p)
-    ax.set_frame_on(False)
-    ax.axes.get_yaxis().set_visible(False)
-    ax.axes.get_xaxis().set_visible(False)
-    ax.set_title(title)
-    plt.colorbar(p, cmap=cmap, norm = norm, boundaries = boundaries, ticks=
-             boundaries)
-    plt.show()
-    return classification
-
-
-
-def quantile_map(coords,y,k, title='Quantile'):
-    """
-    Quantile choropleth map
-
-    Arguments
-    =========
-
-    coords: Map_Projection instance
-
-    y: array
-       variable to map
-
-    k: int
-       number of classes
-
-    title: string
-           map title
-
-    """
-
-
-    classification = ps.Quantiles(y,k)
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    patches = []
-    colors = []
-    i = 0
-    shape_colors = classification.bins[classification.yb]
-    shape_colors = y
-    #classification.bins[classification.yb]
-    for shp in coords.projected:
-        for ring in shp:
-            x,y = ring
-            x = x / coords.bounding_box[2]
-            y = y / coords.bounding_box[3]
-            n = len(x)
-            x.shape = (n,1)
-            y.shape = (n,1)
-            xy = np.hstack((x,y))
-            polygon = Polygon(xy, True)
-            patches.append(polygon)
-            colors.append(shape_colors[i])
-        i += 1
-    cmap = cm.get_cmap('hot_r', k+1)
-    boundaries = classification.bins.tolist()
-    boundaries.insert(0,0)
-    norm = clrs.BoundaryNorm(boundaries, cmap.N)
-    p = PatchCollection(patches, cmap=cmap, alpha=0.4, norm=norm)
-    colors = np.array(colors)
-    p.set_array(colors)
-    ax.add_collection(p)
-    ax.set_frame_on(False)
-    ax.axes.get_yaxis().set_visible(False)
-    ax.axes.get_xaxis().set_visible(False)
-    ax.set_title(title)
-    plt.colorbar(p, cmap=cmap, norm = norm, boundaries = boundaries, ticks=
-            boundaries)
-    plt.show()
-    return classification
-
-
-
-def classless_map(coords,y, title='Classless'):
-    """
-    Classless choropleth map
-
-    Arguments
-    =========
-
-    coords: Map_Projection instance
-
-    y: array
-       variable to map
-
-    title: string
-           map title
-
-    """
-
-
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    patches = []
-    colors = []
-    i = 0
-    shape_colors = y
-    for shp in coords.projected:
-        for ring in shp:
-            x,y = ring
-            x = x / coords.bounding_box[2]
-            y = y / coords.bounding_box[3]
-            n = len(x)
-            x.shape = (n,1)
-            y.shape = (n,1)
-            xy = np.hstack((x,y))
-            polygon = Polygon(xy, True)
-            patches.append(polygon)
-            colors.append(shape_colors[i])
-        i += 1
-    cmap = cm.get_cmap('hot_r')
-    p = PatchCollection(patches, cmap=cmap, alpha=0.4)
-    colors = np.array(colors)
-    p.set_array(colors)
-    ax.add_collection(p)
-    ax.set_frame_on(False)
-    ax.axes.get_yaxis().set_visible(False)
-    ax.axes.get_xaxis().set_visible(False)
-    ax.set_title(title)
-    plt.colorbar(p)
-    plt.show()
-
-
-def lisa_cluster_map(coords, lisa,  title='LISA Cluster Map', p = 0.05):
-    """
-    LISA Cluster Map
-
-    Arguments
-    =========
-
-    coords: Map_Projection instance
-
-    lisa: Moran_Local instance
-
-    title: string
-           map title
-
-    p: float
-       p-value to define clusters
-    """
-
-    # pysal: 1 HH,  2 LH,  3 LL,  4 HL
-    c ={}
-    c[0] = 'white' # non-significant
-    c[1] = 'darkred'
-    c[2] = 'lightsalmon'
-    c[3] = 'darkblue'
-    c[4] = 'lightblue'
-
-    q = lisa.q.copy()
-    yp = lisa.p_sim.copy()
-    nsig = yp >  p
-    q[nsig] = 0
-
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    i = 0
-    for shp in coords.projected:
-        for ring in shp:
-            x,y = ring
-            x = x / coords.bounding_box[2]
-            y = y / coords.bounding_box[3]
-            n = len(x)
-            x.shape = (n,1)
-            y.shape = (n,1)
-            ax.fill(x,y,c[q[i]])
-        i += 1
-    ax.set_frame_on(False)
-    ax.axes.get_yaxis().set_visible(False)
-    ax.axes.get_xaxis().set_visible(False)
-    ax.set_title(title)
-    plt.show()
-
-
-def unique_values_map(coords,y, title='Unique Value'):
-    """
-    Unique value choropleth
-
-    Arguments
-    =========
-    coords: Map_Projection instance
-
-    y: array
-       zeros for elements that should not be mapped, 1-4 for elements to
-       highlight
-
-    title: string
-           map title
-
-
-    Notes
-    =====
-    Allows for an unlimited number of categories, but if there are many
-    categories the colors may be difficult to distinguish.
-    [Currently designed for use with a Moran_Local Instance for mapping a
-    subset of the significant LISAs.]
-
-    """
-    yu = np.unique(y)
-    colormap = plt.cm.Set1
-    colors = [colormap(i) for i in np.linspace(0, 0.9, len(yu))]
-    colors = np.random.permutation(colors)
-    colormatch = zip(yu, colors)
-    c = {}
-    for i in colormatch:
-        c[i[0]] = i[1]
-    '''
-    # pysal: 1 HH,  2 LH,  3 LL,  4 HL
-    c ={}
-    c[0] = 'white' # non-significant
-    c[1] = 'darkred'
-    c[2] = 'lightsalmon'
-    c[3] = 'darkblue'
-    c[4] = 'lightblue'
-    '''
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    i = 0
-    for shp in coords.projected:
-        for ring in shp:
-            x,yc = ring
-            x = x / coords.bounding_box[2]
-            yc = yc / coords.bounding_box[3]
-            n = len(x)
-            x.shape = (n,1)
-            yc.shape = (n,1)
-            ax.fill(x,yc,color=c[y[i]], edgecolor='black')
-            #ax.fill(x,yc,c[y[i]])
-        i += 1
-    ax.set_frame_on(False)
-    ax.axes.get_yaxis().set_visible(False)
-    ax.axes.get_xaxis().set_visible(False)
-    ax.set_title(title)
-    plt.show()
-
-
+    
 
 if __name__ == '__main__':
 
