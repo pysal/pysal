@@ -5,7 +5,6 @@ import numpy as np
 from scipy import sparse, float32
 import scipy.spatial
 import os
-import gc
 import operator
 
 __all__ = ['lat2W', 'regime_weights', 'comb', 'order', 'higher_order', 'shimbel', 'remap_ids', 'full2W', 'full', 'WSP2W', 'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance', 'lat2SW', 'w_local_cluster', 'higher_order_sp']
@@ -45,15 +44,14 @@ def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
 
     >>> from pysal import lat2W
     >>> w9 = lat2W(3,3)
-    >>> w9.pct_nonzero
-    0.29629629629629628
+    >>> "%.3f"%w9.pct_nonzero
+    '0.296'
     >>> w9[0]
     {1: 1.0, 3: 1.0}
     >>> w9[3]
     {0: 1.0, 4: 1.0, 6: 1.0}
     >>>
     """
-    gc.disable()
     n = nrows * ncols
     r1 = nrows - 1
     c1 = ncols - 1
@@ -104,7 +102,6 @@ def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
             alt_weights[key] = weights[i]
         w = alt_w
         weights = alt_weights
-    gc.enable()
     return pysal.weights.W(w, weights, ids)
 
 

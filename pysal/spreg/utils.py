@@ -763,7 +763,7 @@ def set_warn(reg,warn):
         except:
             reg.warning = "Warning: "+warn+"\n"
     else:
-        reg.warning = None
+        pass
 
 def RegressionProps_basic(reg,betas=None,predy=None,u=None,sig2=None,sig2n_k=None,vm=None):
     ''' Set props based on arguments passed. '''

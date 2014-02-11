@@ -5,6 +5,15 @@
 PySAL Testing Procedures
 ************************
 
+As of PySAL release 1.6, continuous integration testing was ported to the
+Travis-CI hosted testing framework (http://travis-ci.org).  There is integration within GitHub that
+provides Travis-CI test results included in a pending Pull Request page, so
+developers can know before merging a Pull Request that the changes will or will
+not induce breakage. 
+
+Take a moment to read about the Pull Request development model on our wiki at
+https://github.com/pysal/pysal/wiki/GitHub-Standard-Operating-Procedures
+
 PySAL relies on two different modes of testing [1] integration (regression)
 testing and [2] doctests. All developers responsible for given packages shall
 utilize both modes.
@@ -22,10 +31,11 @@ To ensure that any changes made to one package/module do not introduce breakage 
 developers should run the package wide test suite using nose before making any
 commits. As of release version 1.5, all tests must pass using a 64-bit
 version of Python.
-To run the new test suite, install nose and nose-exclude into your
+To run the new test suite, install nose, nose-progressive, and nose-exclude into your
 working python installation. If you're using EPD, nose is already available::
 
     pip install -U nose
+    pip install nose-progressive
     pip install nose-exclude
 
 Then::
@@ -34,7 +44,7 @@ Then::
   nosetests pysal/
   
 You can also run the test suite from within a Python session. At the
-conclusion of the test, Python will exit, however::
+conclusion of the test, Python will, however, exit::
  
   import pysal
   import nose
@@ -105,3 +115,12 @@ may potentially effect usability. Developers can run doctests (docstring
 tests) manually from the command line using nosetests ::
 
   nosetests --with-doctest pysal/
+
+Tutorial Doctests
+=================
+
+All of the tutorials are tested along with the overall test suite. Developers
+can test their changes against the tutorial docstrings by cd'ing into
+/doc/ and running::
+
+    make doctest

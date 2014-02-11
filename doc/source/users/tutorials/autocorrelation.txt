@@ -449,7 +449,7 @@ The instance of Moran's I can then be obtained with:
 
 .. doctest::
 
-        >>> mi = pysal.Moran(y, w)
+        >>> mi = pysal.Moran(y, w, two_tailed=False)
         >>> mi.I
         0.24365582621771659
         >>> mi.EI
@@ -563,7 +563,7 @@ Now, we create an instance of Moran_Rate:
 
 .. doctest::
 
-        >>> mi = pysal.esda.moran.Moran_Rate(e, b, w)
+        >>> mi = pysal.esda.moran.Moran_Rate(e, b, w, two_tailed=False)
         >>> "%6.4f" % mi.I
         '0.1662'
         >>> "%6.4f" % mi.EI

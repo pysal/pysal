@@ -10,12 +10,12 @@ import regimes as REGI
 import user_output as USER
 import summary_output as SUMMARY
 from pysal import lag_spatial
-from pysal.spreg.ols import BaseOLS
-from pysal.spreg.twosls import BaseTSLS
-from pysal.spreg.error_sp import BaseGM_Error, BaseGM_Endog_Error, _momentsGM_Error
-from pysal.spreg.utils import set_endog, iter_msg, sp_att, set_warn
-from pysal.spreg.utils import optim_moments, get_spFilter, get_lags
-from pysal.spreg.utils import spdot, RegressionPropsY
+from ols import BaseOLS
+from twosls import BaseTSLS
+from error_sp import BaseGM_Error, BaseGM_Endog_Error, _momentsGM_Error
+from utils import set_endog, iter_msg, sp_att, set_warn
+from utils import optim_moments, get_spFilter, get_lags
+from utils import spdot, RegressionPropsY
 from platform import system
 
 class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
@@ -303,7 +303,7 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x)
         self.regimes_set = REGI._get_regimes_set(regimes)
         self.regimes = regimes
-        USER.check_regimes(self.regimes_set)
+        USER.check_regimes(self.regimes_set,self.n,x.shape[1])
         self.regime_err_sep = regime_err_sep        
         if regime_err_sep == True:
             if set(cols2regi) == set([True]):
@@ -340,17 +340,15 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
     def _error_regimes_multi(self, y, x, regimes, w, cores,\
                  cols2regi, vm, name_x):
-        w_i,regi_ids,warn = REGI.w_regimes(w, regimes, self.regimes_set, transform=True, get_ids=True)
-        set_warn(self, warn)
-        pool = mp.Pool(cores)
+        regi_ids = dict((r, list(np.where(np.array(regimes) == r)[0])) for r in self.regimes_set)    
         results_p = {}
         for r in self.regimes_set:
-            w_r = w_i[r].sparse
             if system() == 'Windows':
-                results_p[r] = _work_error(*(y,x,regi_ids,r,w_r,self.name_ds,self.name_y,name_x+['lambda'],self.name_w,self.name_regimes))
+                results_p[r] = _work_error(*(y,x,regi_ids,r,w,self.name_ds,self.name_y,name_x+['lambda'],self.name_w,self.name_regimes))
                 is_win = True
             else:
-                results_p[r] = pool.apply_async(_work_error,args=(y,x,regi_ids,r,w_r,self.name_ds,self.name_y,name_x+['lambda'],self.name_w,self.name_regimes, ))
+                pool = mp.Pool(cores)                
+                results_p[r] = pool.apply_async(_work_error,args=(y,x,regi_ids,r,w,self.name_ds,self.name_y,name_x+['lambda'],self.name_w,self.name_regimes, ))
                 is_win = False
         self.kryd = 0
         self.kr = len(cols2regi)
@@ -372,7 +370,6 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                 results[r] = results_p[r]
             else:
                 results[r] = results_p[r].get()
-            results[r].w = w_i[r]
             self.vm[(counter*self.kr):((counter+1)*self.kr),(counter*self.kr):((counter+1)*self.kr)] = results[r].vm
             self.betas[(counter*(self.kr+1)):((counter+1)*(self.kr+1)),] = results[r].betas
             self.u[regi_ids[r],]=results[r].u
@@ -683,9 +680,9 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     '''
     def __init__(self, y, x, yend, q, regimes, w, cores=None,\
                  vm=False, constant_regi='many', cols2regi='all',\
-                 regime_err_sep=False, regi_w=None, name_y=None,\
+                 regime_err_sep=False, name_y=None,\
                  name_x=None, name_yend=None, name_q=None, name_w=None,\
-                 name_ds=None, name_regimes=None, summ=True):      
+                 name_ds=None, name_regimes=None, summ=True, add_lag=False):      
         
         n = USER.check_arrays(y, x, yend, q)
         USER.check_y(y, n)
@@ -698,7 +695,6 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         self.n = n
         self.y = y
         
-        x_constant = USER.check_constant(x)
         name_x = USER.set_name_x(name_x, x)
         if summ:
             name_yend = USER.set_name_yend(name_yend, yend)
@@ -709,16 +705,17 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, yend=yend)
         self.regimes_set = REGI._get_regimes_set(regimes)
         self.regimes = regimes
-        USER.check_regimes(self.regimes_set)
+        USER.check_regimes(self.regimes_set,self.n,x.shape[1])
         self.regime_err_sep = regime_err_sep        
 
         if regime_err_sep == True:
             if set(cols2regi) == set([True]):
                 self._endog_error_regimes_multi(y, x, regimes, w, yend, q, cores,\
-                 cols2regi, regi_w, vm, name_x, name_yend, name_q)
+                 cols2regi, vm, name_x, name_yend, name_q, add_lag)
             else:
                 raise Exception, "All coefficients must vary accross regimes if regime_err_sep = True."
         else:
+            x_constant = USER.check_constant(x)            
             q, name_q = REGI.Regimes_Frame.__init__(self, q,\
                     regimes, constant_regi=None, cols2regi='all', names=name_q)
             x, name_x = REGI.Regimes_Frame.__init__(self, x_constant,\
@@ -765,22 +762,22 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                 SUMMARY.GM_Endog_Error(reg=self, w=w, vm=vm, regimes=True)
 
     def _endog_error_regimes_multi(self, y, x, regimes, w, yend, q, cores,\
-                 cols2regi, regi_w, vm, name_x, name_yend, name_q):
+                 cols2regi, vm, name_x, name_yend, name_q, add_lag):
 
-        if regi_w:
-            w_i,regi_ids = regi_w[0:2]
-        else:
-            w_i,regi_ids,warn = REGI.w_regimes(w, regimes, self.regimes_set, transform=True, get_ids=True)
-            set_warn(self, warn)
-        pool = mp.Pool(cores)
+        regi_ids = dict((r, list(np.where(np.array(regimes) == r)[0])) for r in self.regimes_set)
+        if add_lag != False:
+            self.cols2regi += [True]
+            cols2regi += [True]
+            self.predy_e = np.zeros((self.n,1),float)
+            self.e_pred = np.zeros((self.n,1),float)
         results_p = {}
         for r in self.regimes_set:
-            w_r = w_i[r].sparse
             if system() == 'Windows':
-                results_p[r] = _work_endog_error(*(y,x,yend,q,regi_ids,r,w_r,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes))
+                results_p[r] = _work_endog_error(*(y,x,yend,q,regi_ids,r,w,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes,add_lag))
                 is_win = True
             else:
-                results_p[r] = pool.apply_async(_work_endog_error,args=(y,x,yend,q,regi_ids,r,w_r,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes, ))
+                pool = mp.Pool(cores)        
+                results_p[r] = pool.apply_async(_work_endog_error,args=(y,x,yend,q,regi_ids,r,w,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes,add_lag, ))
                 is_win = False
         self.kryd,self.kf = 0,0
         self.kr = len(cols2regi)
@@ -801,7 +798,6 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                 results[r] = results_p[r]
             else:
                 results[r] = results_p[r].get()
-            results[r].w = w_i[r]
             self.vm[(counter*self.kr):((counter+1)*self.kr),(counter*self.kr):((counter+1)*self.kr)] = results[r].vm
             self.betas[(counter*(self.kr+1)):((counter+1)*(self.kr+1)),] = results[r].betas
             self.u[regi_ids[r],]=results[r].u
@@ -813,10 +809,16 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
             self.name_q += results[r].name_q
             self.name_z += results[r].name_z
             self.name_h += results[r].name_h
+            if add_lag != False:
+                self.predy_e[regi_ids[r],]=results[r].predy_e
+                self.e_pred[regi_ids[r],]=results[r].e_pred
             counter += 1
         self.chow = REGI.Chow(self)            
         self.multi = results
-        SUMMARY.GM_Endog_Error_multi(reg=self, multireg=self.multi, vm=vm, regimes=True)
+        if add_lag != False:
+            SUMMARY.GM_Combo_multi(reg=self, multireg=self.multi, vm=vm, regimes=True)            
+        else:
+            SUMMARY.GM_Endog_Error_multi(reg=self, multireg=self.multi, vm=vm, regimes=True)
 
 class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
     """
@@ -1187,61 +1189,73 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
         cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, yend=yend, add_cons=False)    
         self.regimes_set = REGI._get_regimes_set(regimes)
         self.regimes = regimes
-        USER.check_regimes(self.regimes_set)
+        USER.check_regimes(self.regimes_set,n,x.shape[1])
         self.regime_err_sep = regime_err_sep        
         self.regime_lag_sep = regime_lag_sep 
 
         if regime_lag_sep == True:
             if regime_err_sep == False:
-               raise Exception, "For spatial combo models, if spatial lag is set by regimes (regime_lag_sep=True), spatial error must also be set by regimes (regime_err_sep=True)."
-            cols2regi += [True]
-            regi_w = (REGI.w_regimes(w, regimes, self.regimes_set, transform=regime_err_sep, get_ids=regime_err_sep))
-            w = REGI.w_regimes_union(w, regi_w[0], self.regimes_set)
-            set_warn(self, regi_w[2])
+                raise Exception, "For spatial combo models, if spatial lag is set by regimes (regime_lag_sep=True), spatial error must also be set by regimes (regime_err_sep=True)."
+            add_lag = [w_lags, lag_q]
         else:
-            cols2regi += [False]
-            regi_w = None
             if regime_err_sep == True:
-               raise Exception, "For spatial combo models, if spatial error is set by regimes (regime_err_sep=True), all coefficients including lambda (regime_lag_sep=True) must be set by regimes."
-
-        yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
+                raise Exception, "For spatial combo models, if spatial error is set by regimes (regime_err_sep=True), all coefficients including lambda (regime_lag_sep=True) must be set by regimes."
+            cols2regi += [False]
+            add_lag = False
+            yend, q = set_endog(y, x, w, yend, q, w_lags, lag_q)
         name_yend.append(USER.set_name_yend_sp(self.name_y))
 
-        GM_Endog_Error_Regimes.__init__(self, y=y, x=x, yend=yend2,\
-                q=q2, regimes=regimes, w=w, vm=vm, constant_regi=constant_regi,\
+        GM_Endog_Error_Regimes.__init__(self, y=y, x=x, yend=yend,\
+                q=q, regimes=regimes, w=w, vm=vm, constant_regi=constant_regi,\
                 cols2regi=cols2regi, regime_err_sep=regime_err_sep, cores=cores,\
-                regi_w=regi_w, name_y=self.name_y, name_x=name_x,\
+                name_y=self.name_y, name_x=name_x,\
                 name_yend=name_yend, name_q=name_q, name_w=name_w,\
-                name_ds=name_ds, name_regimes=name_regimes, summ=False)
+                name_ds=name_ds, name_regimes=name_regimes, summ=False, add_lag=add_lag)
 
         if regime_err_sep != True:
+            self.rho = self.betas[-2]
             self.predy_e, self.e_pred, warn = sp_att(w,self.y,\
-                   self.predy,yend2[:,-1].reshape(self.n,1),self.betas[-2])
+                   self.predy,yend[:,-1].reshape(self.n,1),self.rho)
             set_warn(self, warn)
-            self.regime_lag_sep=regime_lag_sep
             self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES - REGIMES"
             SUMMARY.GM_Combo(reg=self, w=w, vm=vm, regimes=True)
 
-def _work_error(y,x,regi_ids,r,w_r,name_ds,name_y,name_x,name_w,name_regimes):
+def _work_error(y,x,regi_ids,r,w,name_ds,name_y,name_x,name_w,name_regimes):
+    w_r,warn = REGI.w_regime(w, regi_ids[r], r, transform=True)
     y_r = y[regi_ids[r]]
     x_r = x[regi_ids[r]]
     x_constant = USER.check_constant(x_r)
-    model = BaseGM_Error(y_r, x_constant, w_r)
+    model = BaseGM_Error(y_r, x_constant, w_r.sparse)
+    set_warn(model, warn)
+    model.w = w_r
     model.title = "SPATIALLY WEIGHTED LEAST SQUARES ESTIMATION - REGIME %s" %r
     model.name_ds = name_ds
     model.name_y = '%s_%s'%(str(r), name_y)
     model.name_x = ['%s_%s'%(str(r), i) for i in name_x]
     model.name_w = name_w
-    model.name_regimes = name_regimes       
+    model.name_regimes = name_regimes
     return model
 
-def _work_endog_error(y,x,yend,q,regi_ids,r,w_r,name_ds,name_y,name_x,name_yend,name_q,name_w,name_regimes):
+def _work_endog_error(y,x,yend,q,regi_ids,r,w,name_ds,name_y,name_x,name_yend,name_q,name_w,name_regimes,add_lag):
+    w_r,warn = REGI.w_regime(w, regi_ids[r], r, transform=True)    
     y_r = y[regi_ids[r]]
     x_r = x[regi_ids[r]]
-    yend_r = yend[regi_ids[r]]
-    q_r = q[regi_ids[r]]
+    if yend != None:
+        yend_r = yend[regi_ids[r]]
+        q_r = q[regi_ids[r]]
+    else:
+        yend_r,q_r = None,None
+    if add_lag != False:
+        yend_r, q_r = set_endog(y_r, x_r, w_r, yend_r, q_r, add_lag[0], add_lag[1])
     x_constant = USER.check_constant(x_r)
-    model = BaseGM_Endog_Error(y_r, x_constant, yend_r, q_r, w_r)
+    model = BaseGM_Endog_Error(y_r, x_constant, yend_r, q_r, w_r.sparse)
+    set_warn(model, warn)
+    if add_lag != False:
+        model.rho = model.betas[-2]
+        model.predy_e, model.e_pred, warn = sp_att(w_r,model.y,\
+            model.predy,model.yend[:,-1].reshape(model.n,1),model.rho)
+        set_warn(model, warn)  
+    model.w = w_r
     model.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES - REGIME %s" %r
     model.name_ds = name_ds
     model.name_y = '%s_%s'%(str(r), name_y)
@@ -1268,10 +1282,14 @@ if __name__ == '__main__':
     import numpy as np
     dbf = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
     y = np.array([dbf.by_col('CRIME')]).T
-    names_to_extract = ['INC', 'HOVAL']
+    names_to_extract = ['INC']
     x = np.array([dbf.by_col(name) for name in names_to_extract]).T
+    yd_var = ['HOVAL']
+    yend = np.array([dbf.by_col(name) for name in yd_var]).T
+    q_var = ['DISCBD']
+    q = np.array([dbf.by_col(name) for name in q_var]).T
     regimes = regimes = dbf.by_col('NSA')
     w = pysal.open(pysal.examples.get_path("columbus.gal"), 'r').read() 
     w.transform='r'
-    model = GM_Error_Regimes(y, x, regimes, w=w, name_y='crime', name_x=['income', 'hoval'], name_regimes='nsa', name_ds='columbus', regime_err_sep=True)
+    model = GM_Error_Regimes(y, x, regimes=regimes, w=w, name_y='crime', name_x=['income'], name_regimes='nsa', name_ds='columbus', regime_err_sep=True)
     print model.summary
