@@ -124,13 +124,13 @@ class TestMLError(unittest.TestCase):
         chow_j = 26.673798071789673
         self.assertAlmostEqual(reg.chow.joint[0],chow_j,4)
         #Artficial:
-        #model = ML_Error_Regimes(self.y_a, self.x_a, self.regi_a, w=self.w_a, regime_err_sep=True)
-        #model1 = ML_Error(self.y_a[0:(self.n2)].reshape((self.n2),1), self.x_a[0:(self.n2)], w=self.w_a1)
-        #model2 = ML_Error(self.y_a[(self.n2):].reshape((self.n2),1), self.x_a[(self.n2):], w=self.w_a1)
-        #tbetas = np.vstack((model1.betas, model2.betas))
-        #np.testing.assert_array_almost_equal(model.betas,tbetas)
-        #vm = np.hstack((model1.vm.diagonal(),model2.vm.diagonal()))
-        #np.testing.assert_array_almost_equal(model.vm.diagonal(), vm, 4)
+        model = ML_Error_Regimes(self.y_a, self.x_a, self.regi_a, w=self.w_a, regime_err_sep=True)
+        model1 = ML_Error(self.y_a[0:(self.n2)].reshape((self.n2),1), self.x_a[0:(self.n2)], w=self.w_a1)
+        model2 = ML_Error(self.y_a[(self.n2):].reshape((self.n2),1), self.x_a[(self.n2):], w=self.w_a1)
+        tbetas = np.vstack((model1.betas, model2.betas))
+        np.testing.assert_array_almost_equal(model.betas,tbetas)
+        vm = np.hstack((model1.vm.diagonal(),model2.vm.diagonal()))
+        np.testing.assert_array_almost_equal(model.vm.diagonal(), vm, 4)
     """
 
 if __name__ == '__main__':
