@@ -85,7 +85,7 @@ class TestGM_Error_Regimes(unittest.TestCase):
         np.testing.assert_array_almost_equal(reg.chow.regi,chow_r,4)
         chow_j = 0.81985446000130979
         self.assertAlmostEqual(reg.chow.joint[0],chow_j)
-
+    """
     def test_model_regi_error(self):
         #Columbus:
         reg = SP.GM_Error_Regimes(self.y, self.X, self.regimes, self.w, regime_err_sep=True)
@@ -121,7 +121,7 @@ class TestGM_Error_Regimes(unittest.TestCase):
         np.testing.assert_array_almost_equal(model.betas,tbetas)
         vm = np.hstack((model1.vm.diagonal(),model2.vm.diagonal()))
         np.testing.assert_array_almost_equal(model.vm.diagonal(), vm, 4)
-
+    """
     def test_model_endog(self):
         reg = SP.GM_Endog_Error_Regimes(self.y, self.X1, self.yd, self.q, self.regimes, self.w)
         betas = np.array([[ 77.48385551,   4.52986622,  78.93209405,   0.42186261,
