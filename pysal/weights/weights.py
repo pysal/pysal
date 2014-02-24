@@ -518,6 +518,37 @@ class W(object):
         return _W_iter(self)
 
     def remap_ids(self, bridge):
+        """
+        Remap existing ids to a new set of values
+
+        Parameters
+        ----------
+
+        bridge: dict
+                key is current id, value is new value
+
+
+        Examples
+        --------
+        >>> import pysal as ps
+        >>> w = ps.lat2W(5,5)
+        >>> w.n
+        25
+        >>> bridge = dict([ [i, i+11] for i in range(w.n)])
+        >>> w.neighbors[1]
+        [0, 6, 2]
+        >>> w.remap_ids(bridge)
+        >>> w.neighbors[12]
+        [11, 17, 13]
+
+
+        Notes
+        -----
+        All existing ids have be listed as keys in bridge, otherwise no
+        mapping is carried out
+
+
+        """
         ids = self.neighbors.keys()
         # sanity check
         
