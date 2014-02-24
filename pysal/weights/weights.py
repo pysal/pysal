@@ -541,6 +541,7 @@ class W(object):
         All existing ids have be listed as keys in bridge, otherwise no
         mapping is carried out
 
+        >>> import pysal as ps
         >>> w = ps.lat2W(3,3)
         >>> w.neighbors
         {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
