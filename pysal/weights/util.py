@@ -7,9 +7,97 @@ import scipy.spatial
 import os
 import operator
 
-__all__ = [
-    'lat2W', 'regime_weights', 'comb', 'order', 'higher_order', 'shimbel', 'remap_ids', 'full2W', 'full', 'WSP2W',
-    'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance', 'lat2SW', 'w_local_cluster', 'higher_order_sp']
+__all__ = ['lat2W', 'regime_weights', 'comb', 'order', 'higher_order', 'shimbel',
+           'remap_ids', 'full2W', 'full', 'WSP2W', 'insert_diagonal', 'get_ids',
+           'get_points_array_from_shapefile', 'min_threshold_distance', 'lat2SW', 'w_local_cluster',
+           'higher_order_sp', 'hexLat2W']
+
+
+def hexLat2W(nrows=5, ncols=5):
+    """
+    Create a W object for a hexagonal lattice.
+
+    Parameters
+    ----------
+
+    nrows   : int
+              number of rows
+    ncols   : int
+              number of columns
+
+    Returns
+    -------
+
+    w : W
+        instance of spatial weights class W
+
+    Notes
+    -----
+
+    Observations are row ordered: first k observations are in row 0, next k in row 1, and so on.
+
+    Construction is based on shifting every other column of a regular lattice
+    down 1/2 of a cell.
+
+    Examples
+    --------
+
+    >>> import pysal as ps
+    >>> w = ps.lat2W()
+    >>> w.neighbors[1]
+    [0, 6, 2]
+    >>> w.neighbors[21]
+    [16, 20, 22]
+    >>> wh = ps.hexLat2W()
+    >>> wh.neighbors[1]
+    [0, 6, 2, 5, 7]
+    >>> wh.neighbors[21]
+    [16, 20, 22]
+    >>>
+    """
+
+    if nrows == 1 or ncols == 1:
+        print "Hexagon lattice requires at least 2 rows and columns"
+        print "Returning a linear contiguity structure"
+        return lat2W(nrows, ncols)
+
+    n = nrows * ncols
+    rid = [i / ncols for i in xrange(n)]
+    cid = [i % ncols for i in xrange(n)]
+    r1 = nrows - 1
+    c1 = ncols - 1
+
+    w = lat2W(nrows, ncols).neighbors
+    for i in xrange(n):
+        odd = cid[i] % 2
+        if odd:
+            if rid[i] < r1:  # odd col index above last row
+                # new sw neighbor
+                if cid[i] > 0:
+                    j = i + ncols - 1
+                    w[i] = w.get(i, []) + [j]
+                # new se neighbor
+                if cid[i] < c1:
+                    j = i + ncols + 1
+                    w[i] = w.get(i, []) + [j]
+
+        else:  # even col
+            # nw
+            jnw = [i - ncols - 1]
+            # ne
+            jne = [i - ncols + 1]
+            if rid[i] > 0:
+                w[i]
+                if cid[i] == 0:
+                    w[i] = w.get(i, []) + jne
+                elif cid[i] == c1:
+                    w[i] = w.get(i, []) + jnw
+                else:
+                    w[i] = w.get(i, []) + jne
+                    w[i] = w.get(i, []) + jnw
+
+
+    return pysal.weights.W(w)
 
 
 def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
@@ -353,7 +441,7 @@ def higher_order_sp(wsp, k=2):
     {1: 1.0, 3: 1.0, 5: 1.0, 9: 1.0, 15: 1.0, 19: 1.0, 21: 1.0, 23: 1.0}
     >>> pysal.weights.WSP2W(ws25o3)[12]
     {1: 1.0, 3: 1.0, 5: 1.0, 9: 1.0, 15: 1.0, 19: 1.0, 21: 1.0, 23: 1.0}
-    >>>     
+    >>>
     """
 
     wk = wsp ** k
@@ -367,7 +455,8 @@ def higher_order_sp(wsp, k=2):
     d = {}
     for pair in sk:
         k, v = pair
-        if d.has_key(k):
+        #if d.has_key(k):
+        if k in d:
             d[k].append(v)
         else:
             d[k] = [v]
