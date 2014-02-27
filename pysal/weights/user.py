@@ -7,6 +7,7 @@ contiguity and distance criteria
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 __all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array', 'knnW_from_shapefile', 'threshold_binaryW_from_array', 'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array', 'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile', 'adaptive_kernelW', 'adaptive_kernelW_from_shapefile', 'min_threshold_dist_from_shapefile', 'build_lattice_shapefile']
 
+import math
 import pysal
 from Contiguity import buildContiguity
 from Distance import knnW, Kernel, DistanceBand
@@ -289,7 +290,7 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
     [1.0, 1.0, 1.0]
     >>> set([4,1,8]) == set(wc3_1.neighbors[2])
     True
-    
+
 
     Point shapefile
 
@@ -772,7 +773,7 @@ def kernelW_from_shapefile(shapefile, k=2, function='triangular',
     [0.29090631630909874, 0.2436835517263174, 0.3989422804014327, 0.29671172124745776]
     >>> kwd.weights[1]
     [0.29090631630909874, 0.2436835517263174, 1.0, 0.29671172124745776]
-    
+
 
     Notes
     -----
@@ -1085,8 +1086,7 @@ def min_threshold_dist_from_shapefile(shapefile, radius=None, p=2):
         points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
     return min_threshold_distance(points,p)
 
-
-def build_lattice_shapefile(nrows, ncols, outFileName):
+def build_lattice_shapefile(nrows, ncols, outFileName, geom='square'):
     """
     Build a lattice shapefile with nrows rows and ncols cols
 
@@ -1100,6 +1100,9 @@ def build_lattice_shapefile(nrows, ncols, outFileName):
     outFileName : str
                   shapefile name with shp suffix
 
+    geom        : str
+                  geometry to tesselate, options are: 'square', 'hex'
+
     Returns
     -------
     None
@@ -1112,17 +1115,61 @@ def build_lattice_shapefile(nrows, ncols, outFileName):
     d.header = [ 'ID' ]
     d.field_spec = [ ('N', 8, 0) ]
     c = 0
-    for i in xrange(nrows):
-        for j in xrange(ncols):
-            ll = i, j
-            ul = i, j + 1
-            ur = i + 1, j + 1
-            lr = i + 1, j
-            o.write(pysal.cg.Polygon([ll, ul, ur, lr, ll]))
-            d.write([c])
-            c += 1
+    if geom == 'square':
+        for i in xrange(nrows):
+            for j in xrange(ncols):
+                ll = i, j
+                ul = i, j + 1
+                ur = i + 1, j + 1
+                lr = i + 1, j
+                o.write(pysal.cg.Polygon([ll, ul, ur, lr, ll]))
+                d.write([c])
+                c += 1
+    elif geom == 'hex':
+        xoffset = math.cos(math.radians(30))
+        yoffset = math.sin(math.radians(30))
+        for i in xrange(nrows):
+            for j in xrange(ncols):
+                xoff = j * xoffset * 2
+                if i % 2 != 0:
+                    xoff += xoffset
+                yoff = i * yoffset * 3
+                o.write(_createhex(xoff, yoff))
+                d.write([c])
+                c += 1
     d.close()
     o.close()
+
+def _createhex(xoff=1, yoff=1):
+    """
+    Generates a single hexagon for tesselation.
+
+    Parameters
+    ----------
+    xoff    : int or float
+              Offset from 0,0 on the x-axis
+
+    yoff    : int or float
+             Offset from 0,0 on the y-axis
+
+    Returns
+    -------
+
+    poly    : PySAL Polygon Object
+              Hexagon geometry
+    """
+
+    A = (math.cos(math.radians(30)), math.sin(math.radians(30)))
+    B = (math.cos(math.radians(90)), math.sin(math.radians(90)))
+    C = (math.cos(math.radians(150)), math.sin(math.radians(150)))
+    D = (math.cos(math.radians(210)), math.sin(math.radians(210)))
+    E = (math.cos(math.radians(270)), math.sin(math.radians(270)))
+    F = (math.cos(math.radians(330)), math.sin(math.radians(330)))
+    G = (math.cos(math.radians(30)), math.sin(math.radians(30)))
+    x,y = zip(A,B,C,D,E,F,G)
+    x = [round(i + xoff,2) for i in x]
+    y = [round(i + yoff,2) for i in y]
+    return pysal.cg.Polygon(zip(x,y))
 
 def _test():
     import doctest
@@ -1131,7 +1178,7 @@ def _test():
     start_suppress = np.get_printoptions()['suppress']
     np.set_printoptions(suppress=True)
     doctest.testmod()
-    np.set_printoptions(suppress=start_suppress)    
+    np.set_printoptions(suppress=start_suppress)
 
 if __name__ == '__main__':
     _test()
