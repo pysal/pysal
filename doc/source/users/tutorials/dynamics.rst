@@ -1,7 +1,7 @@
 .. testsetup:: *
-        
-import pysal
-import numpy as np
+
+    import pysal
+    import numpy as np
 
 ################
 Spatial Dynamics
@@ -48,6 +48,7 @@ For example, let's construct a small artificial chain consisting of 3 states
 
 
 .. doctest::
+   :options: +NORMALIZE_WHITESPACE
 
         >>> import pysal 
         >>> import numpy as np
@@ -66,6 +67,7 @@ and class 'c' in period 3. We can summarize the overall transition
 dynamics for the set of pixels by treating it as a Markov chain:
 
 .. doctest::
+   :options: +NORMALIZE_WHITESPACE
 
         >>> m = pysal.Markov(c)
         >>> m.classes
