@@ -1,0 +1,11 @@
+
+
+####################
+Spatial Econometrics
+####################
+
+
+For details see the :doc:`spreg API <../../library/spreg/index>`.
+
+
+

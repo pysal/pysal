@@ -1,0 +1,55 @@
+**************************************************
+PEP 0008 Spatial Database Module
+**************************************************
+
+========  =======================================
+Author    Phil Stephens <phil.stphns@gmail.com>,
+          Serge Rey <sjsrey@gmail.com>
+Status    Draft
+Created   09-Sep-2010
+Updated   31-Aug-2012
+========  =======================================
+
+Abstract
+========
+
+A spatial database module will extend PySAL file I/O capabilities to spatial
+database software, allowing PySAL
+users to connect to and perform geographic lookups and queries on spatial
+databases.
+
+Motivation
+==========
+
+PySAL currently reads and writes geometry in only the Shapefile data
+structure. 
+Spatially-indexed databases permit queries on the
+geometric relations between objects [1]_.
+
+Reference Implementation
+========================
+
+We propose to add the module ``pysal.contrib.spatialdb``, hereafter
+referred to simply as spatialdb. 
+spatialdb will leverage the Python Object Relational Mapper (ORM) libraries SQLAlchemy [2]_ and GeoAlchemy [3]_, MIT-licensed software that
+provides a database-agnostic SQL layer for several different databases and
+spatial database extensions 
+including PostgreSQL/PostGIS, Oracle Spatial, Spatialite, MS SQL Server, MySQL Spatial, and others.
+These lightweight libraries manage database connections, transactions, and SQL expression translation.  
+
+Another option to research is the GeoDjango package. It provides a large
+number of spatial lookups [5]_ and geo queries for PostGIS databases, and a
+smaller set of lookups / queries for Oracle, MySQL, and SpatiaLite.
+
+References
+==========
+
+.. [1] OpenGeo (2010) `Spatial Database Tips and Tricks <http://workshops.opengeo.org/postgis-spatialdbtips/introduction.html>`_.   Accessed September 9, 2010.  
+
+.. [2] SQLAlchemy (2010) `SQLAlchemy 0.6.5 Documentation <http://www.sqlalchemy.org/docs/orm/index.html>`_.  Accessed October 4, 2010.
+
+.. [3] GeoAlchemy (2010) `GeoAlchemy 0.4.1 Documentation <http://geoalchemy.org/index.html>`_. Accessed October 4, 2010.
+
+.. [4] GeoAlchemy (2012) `GeoAlchemy on GitHub <http://https://github.com/geoalchemy/geoalchemy>`_. Accessed August 9, 2012.
+
+.. [5] GeoDjango (2012) `GeoDjango Compatibility Tables <http://docs.djangoproject.com/en/dev/ref/contrib/gis/db-api>`_. Accessed August 31, 2012.

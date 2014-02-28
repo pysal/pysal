@@ -1,0 +1,76 @@
+*****************************
+PEP 0007 Spatial Econometrics
+*****************************
+
+========  ======================================
+Author    Luc Anselin <luc.anselin@asu.edu>
+          Serge Rey <sjsrey@gmail.com>,David Folch <dfolch@asu.edu>,Daniel Arribas-Bel <daniel.arribas.bel@gmail.com>,Pedro Amaral <pvmda2@cam.ac.uk>,Nicholas Malizia <nmalizia@gmail.com>,Ran Wei <rwei5@asu.edu>,Jing Yao <jyao13@asu.edu>,Elizabeth Mack <Elizabeth.A.Mack@asu.edu>
+Status    Approved 1.1
+Created   12-Oct-2010
+Updated   12-Oct-2010
+========  ======================================
+
+Abstract
+========
+
+The spatial econometrics module will provide a uniform interface to the
+spatial econometric functionality contained in the former PySpace and
+current GeoDaSpace efforts. This module would centralize all specification,
+estimation, diagnostic testing and prediction/simulation for spatial
+econometric models.
+
+
+Motivation
+==========
+
+Spatial econometric methodology is at the core of GeoDa and 
+GeoDaSpace. This module would allow access to state of the art
+methods at the source code level.
+
+
+Reference Implementation
+========================
+
+We suggest adding the module ``pysal.spreg``. As development
+progresses, there may be a need for submodules dealing with
+pure cross sectional regression, spatial panel models and spatial probit.
+
+Core methods to be implemented include:
+
+   * OLS estimation with diagnostics for spatial effects
+   * 2SLS estimation with diagnostics for spatial effects
+   * spatial 2SLS for spatial lag model (with endogeneity)
+   * GM and GMM estimation for spatial error model
+   * GMM spatial error with heteroskedasticity
+   * spatial HAC estimation
+
+A significant component of the effort for this PEP would consist of
+implementing methods with good performance on very large data
+sets, exploiting sparse matrix operations in scipy.
+
+References
+==========
+
+[1] Anselin, L. (1988). Spatial Econometrics, Methods and Models. Kluwer, Dordrecht.
+
+[2] Anselin, L. (2006). Spatial econometrics. In Mills, T. and Patterson, K., editors,
+     Palgrave Handbook of Econometrics, Volume I, Econometric Theory, pp. 901-969.
+     Palgrave Macmillan, Basingstoke.
+     
+[3] Arraiz, I., Drukker, D., Kelejian H.H., and Prucha, I.R. (2010). A spatial Cliff-Ord-type
+     model with heteroskedastic innovations: small and large sample results.
+     Journal of Regional Science 50: 592-614.
+     
+[4] Kelejian, H.H. and Prucha, I.R. (1998). A generalized spatial two stage least squares
+     procedure for estimationg a spatial autoregressive model with autoregressive
+     disturbances. Journal of Real Estate Finance and Economics 17: 99-121.
+     
+[5] Kelejian, H.H. and Prucha, I.R. (1999). A generalized moments estimator  for the
+     autoregressive parameter in a spatial model. International Economic Review 40: 509-533.
+     
+[6] Kelejian, H.H. and Prucha, I.R. (2007). HAC estimation in a spatial framework.
+     Journal of Econometrics 140: 131-154.
+     
+[7] Kelejian, H.H. and Prucha, I.R. (2010). Specification and estimation of spatial autoregressive
+     models with autoregressive and heteroskedastic disturbances. Journal of Econometrics
+     (forthcoming).

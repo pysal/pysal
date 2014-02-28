@@ -1,0 +1,55 @@
+*********************************
+PEP 0003 Spatial Smoothing Module
+*********************************
+
+========  =================================
+Author    Myunghwa Hwang <mhwang4@gmail.com>
+          Luc Anselin <luc.anselin@asu.edu>
+          Serge Rey <srey@asu.edu>
+Status    Approved 1.0
+Created   11-Feb-2010
+Updated   
+========  =================================
+
+
+Abstract
+========
+
+Spatial smoothing techniques aim to adjust problems with applying simple 
+normalization to rate computation. Geographic studies of disease widely 
+adopt these techniques to better summarize spatial patterns of disease occurrences.
+The smoothing module combines a number of previously developed and to-be-developed 
+classes for carrying out spatial smoothing. It will include classes for 
+the following techniques: mean and median based smoothing, nonparametric smoothing, 
+and empirical Bayes smoothing.
+
+
+Motivation
+==========
+
+Despite wide usage of spatial smoothing techniques in epidemiology, 
+there are only few software libraries that include a range of different smoothing 
+techniques at one place. 
+Since spatial smoothing is a subtype of exploratory data analysis method, 
+PySAL is the best place that host multiple smoothing techniques. 
+
+The smoothing module will mainly implement the techniques reported in [Anselin2006].
+
+
+Reference Implementation
+========================
+
+We suggest adding the module ``pysal.esda.smoothing`` which in turn would
+encompass the following modules:
+
+* locally weighted averages, locally weighted median, headbanging
+* spatial rate smoothing
+* excess risk, empricial Bayes smoothing, spatial empirical Bayes smoothing
+* headbanging
+
+
+References
+==========
+
+[Anselin2006] Anselin, L., N. Lozano, and J. Koschinsky (2006) Rate Transformations and Smoothing, GeoDa Center Research Report.
+

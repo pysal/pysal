@@ -5,10 +5,99 @@ import numpy as np
 from scipy import sparse, float32
 import scipy.spatial
 import os
-import gc
 import operator
 
-__all__ = ['lat2W', 'regime_weights', 'comb', 'order', 'higher_order', 'shimbel', 'remap_ids', 'full2W', 'full', 'WSP2W', 'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile', 'min_threshold_distance', 'lat2SW', 'w_local_cluster', 'higher_order_sp']
+__all__ = ['lat2W', 'regime_weights', 'comb', 'order', 'higher_order', 'shimbel',
+           'remap_ids', 'full2W', 'full', 'WSP2W', 'insert_diagonal', 'get_ids',
+           'get_points_array_from_shapefile', 'min_threshold_distance', 'lat2SW', 'w_local_cluster',
+           'higher_order_sp', 'hexLat2W']
+
+
+def hexLat2W(nrows=5, ncols=5):
+    """
+    Create a W object for a hexagonal lattice.
+
+    Parameters
+    ----------
+
+    nrows   : int
+              number of rows
+    ncols   : int
+              number of columns
+
+    Returns
+    -------
+
+    w : W
+        instance of spatial weights class W
+
+    Notes
+    -----
+
+    Observations are row ordered: first k observations are in row 0, next k in row 1, and so on.
+
+    Construction is based on shifting every other column of a regular lattice
+    down 1/2 of a cell.
+
+    Examples
+    --------
+
+    >>> import pysal as ps
+    >>> w = ps.lat2W()
+    >>> w.neighbors[1]
+    [0, 6, 2]
+    >>> w.neighbors[21]
+    [16, 20, 22]
+    >>> wh = ps.hexLat2W()
+    >>> wh.neighbors[1]
+    [0, 6, 2, 5, 7]
+    >>> wh.neighbors[21]
+    [16, 20, 22]
+    >>>
+    """
+
+    if nrows == 1 or ncols == 1:
+        print "Hexagon lattice requires at least 2 rows and columns"
+        print "Returning a linear contiguity structure"
+        return lat2W(nrows, ncols)
+
+    n = nrows * ncols
+    rid = [i / ncols for i in xrange(n)]
+    cid = [i % ncols for i in xrange(n)]
+    r1 = nrows - 1
+    c1 = ncols - 1
+
+    w = lat2W(nrows, ncols).neighbors
+    for i in xrange(n):
+        odd = cid[i] % 2
+        if odd:
+            if rid[i] < r1:  # odd col index above last row
+                # new sw neighbor
+                if cid[i] > 0:
+                    j = i + ncols - 1
+                    w[i] = w.get(i, []) + [j]
+                # new se neighbor
+                if cid[i] < c1:
+                    j = i + ncols + 1
+                    w[i] = w.get(i, []) + [j]
+
+        else:  # even col
+            # nw
+            jnw = [i - ncols - 1]
+            # ne
+            jne = [i - ncols + 1]
+            if rid[i] > 0:
+                w[i]
+                if cid[i] == 0:
+                    w[i] = w.get(i, []) + jne
+                elif cid[i] == c1:
+                    w[i] = w.get(i, []) + jnw
+                else:
+                    w[i] = w.get(i, []) + jne
+                    w[i] = w.get(i, []) + jnw
+
+
+    return pysal.weights.W(w)
 
 
 def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
@@ -45,15 +134,14 @@ def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
 
     >>> from pysal import lat2W
     >>> w9 = lat2W(3,3)
-    >>> w9.pct_nonzero
-    0.29629629629629628
+    >>> "%.3f"%w9.pct_nonzero
+    '0.296'
     >>> w9[0]
     {1: 1.0, 3: 1.0}
     >>> w9[3]
     {0: 1.0, 4: 1.0, 6: 1.0}
     >>>
     """
-    gc.disable()
     n = nrows * ncols
     r1 = nrows - 1
     c1 = ncols - 1
@@ -104,7 +192,6 @@ def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
             alt_weights[key] = weights[i]
         w = alt_w
         weights = alt_weights
-    gc.enable()
     return pysal.weights.W(w, weights, ids)
 
 
@@ -228,7 +315,6 @@ def order(w, kmax=3):
     -----
     Implements the algorithm in Anselin and Smirnov (1996) [1]_
 
-
     Examples
     --------
     >>> from pysal import rook_from_shapefile as rfs
@@ -238,12 +324,6 @@ def order(w, kmax=3):
     >>> w3 = order(w, kmax = 3)
     >>> w3[1][0:5]
     [1, -1, 1, 2, 1]
-
-    References
-    ----------
-    .. [1] Anselin, L. and O. Smirnov (1996) "Efficient algorithms for
-       constructing proper higher order spatial lag operators. Journal of
-       Regional Science, 36, 67-89.
 
     """
     ids = w.neighbors.keys()
@@ -289,7 +369,6 @@ def higher_order(w, k=2):
     implicit : W
                spatial weights object
 
-
     Notes
     -----
     Implements the algorithm in Anselin and Smirnov (1996) [1]_
@@ -326,19 +405,20 @@ def higher_order(w, k=2):
         weights[id] = [1.0] * len(nids)
     return pysal.weights.W(neighbors, weights)
 
+
 def higher_order_sp(wsp, k=2):
     """
     Contiguity weights for a sparse W for order k
 
-    Arguments
-    =========
+    Parameters
+    ==========
 
     wsp:  WSP instance
 
     k: Order of contiguity
 
-    Return
-    ------
+    Returns
+    -------
 
     wk: WSP instance
         binary sparse contiguity of order k
@@ -361,26 +441,27 @@ def higher_order_sp(wsp, k=2):
     {1: 1.0, 3: 1.0, 5: 1.0, 9: 1.0, 15: 1.0, 19: 1.0, 21: 1.0, 23: 1.0}
     >>> pysal.weights.WSP2W(ws25o3)[12]
     {1: 1.0, 3: 1.0, 5: 1.0, 9: 1.0, 15: 1.0, 19: 1.0, 21: 1.0, 23: 1.0}
-    >>>     
+    >>>
     """
 
-
-    wk = wsp**k
-    rk,ck = wk.nonzero()
-    sk = set(zip(rk,ck))
-    for j in range(1,k):
-        wj = wsp**j
-        rj,cj = wj.nonzero()
-        sj = set(zip(rj,cj))
+    wk = wsp ** k
+    rk, ck = wk.nonzero()
+    sk = set(zip(rk, ck))
+    for j in range(1, k):
+        wj = wsp ** j
+        rj, cj = wj.nonzero()
+        sj = set(zip(rj, cj))
         sk.difference_update(sj)
-    d= {}
+    d = {}
     for pair in sk:
-        k,v = pair
-        if d.has_key(k):
+        k, v = pair
+        #if d.has_key(k):
+        if k in d:
             d[k].append(v)
         else:
             d[k] = [v]
     return pysal.weights.WSP(pysal.W(neighbors=d).sparse)
+
 
 def w_local_cluster(w):
     """
@@ -398,7 +479,6 @@ def w_local_cluster(w):
     c     : array (w.n,1)
             local clustering coefficients
 
-
     Notes
     -----
 
@@ -413,13 +493,10 @@ def w_local_cluster(w):
     |N_i|` and :math:`\{w_{j,k}\}` is the set of non-zero elements of the
     weights between pairs in :math:`N_i`.
 
-
     References
     ----------
 
     .. [ws] Watts, D.J. and S.H. Strogatz (1988) "Collective dynamics of 'small-world' networks". Nature, 393: 440-442.
-
-
 
     Examples
     --------
@@ -594,14 +671,12 @@ def full2W(m, ids=None):
            [ True,  True,  True,  True],
            [ True,  True,  True,  True],
            [ True,  True,  True,  True]], dtype=bool)
-
-
     '''
     if m.shape[0] != m.shape[1]:
         raise ValueError('Your array is not square')
     neighbors, weights = {}, {}
     for i in xrange(m.shape[0]):
-    #for i, row in enumerate(m):
+    # for i, row in enumerate(m):
         row = m[i]
         if ids:
             i = ids[i]
@@ -673,7 +748,8 @@ def WSP2W(wsp, silent_island_warning=False):
         weights[oid] = data[start:end]
         start = end
     ids = copy.copy(wsp.id_order)
-    w = pysal.W(neighbors, weights, ids, silent_island_warning=silent_island_warning)
+    w = pysal.W(neighbors, weights, ids,
+                silent_island_warning=silent_island_warning)
     w._sparse = copy.deepcopy(wsp.sparse)
     w._cache['sparse'] = w._sparse
     return w
@@ -834,10 +910,12 @@ def get_ids(shapefile, idVariable):
         db.close()
         return var
     except IOError:
-        msg = 'The shapefile "%s" appears to be missing its DBF file. The DBF file "%s" could not be found.' % (shapefile, dbname)
+        msg = 'The shapefile "%s" appears to be missing its DBF file. The DBF file "%s" could not be found.' % (
+            shapefile, dbname)
         raise IOError(msg)
     except AttributeError:
-        msg = 'The variable "%s" was not found in the DBF file. The DBF contains the following variables: %s.' % (idVariable, ','.join(db.header))
+        msg = 'The variable "%s" was not found in the DBF file. The DBF contains the following variables: %s.' % (
+            idVariable, ','.join(db.header))
         raise KeyError(msg)
 
 
@@ -852,7 +930,7 @@ def get_points_array_from_shapefile(shapefile):
 
     Returns
     -------
-    points        : array (n,2)
+    points        : array (n, 2)
                     a data array of x and y coordinates
 
     Notes
@@ -863,6 +941,7 @@ def get_points_array_from_shapefile(shapefile):
     Examples
     --------
     Point shapefile
+
     >>> from pysal.weights.util import get_points_array_from_shapefile
     >>> xy = get_points_array_from_shapefile(pysal.examples.get_path('juvenile.shp'))
     >>> xy[:3]
@@ -871,6 +950,7 @@ def get_points_array_from_shapefile(shapefile):
            [ 79.,  90.]])
 
     Polygon shapefile
+
     >>> xy = get_points_array_from_shapefile(pysal.examples.get_path('columbus.shp'))
     >>> xy[:3]
     array([[  8.82721847,  14.36907602],
@@ -887,7 +967,7 @@ def get_points_array_from_shapefile(shapefile):
     return data
 
 
-def min_threshold_distance(data,p=2):
+def min_threshold_distance(data, p=2):
     """
     Get the maximum nearest neighbor distance
 
@@ -901,7 +981,6 @@ def min_threshold_distance(data,p=2):
               1<=p<=infinity
               2: Euclidean distance
               1: Manhattan distance
-
 
     Returns
     -------

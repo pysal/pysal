@@ -25,7 +25,6 @@ def lag_spatial(w, y):
     wy : array
          array of numeric values for the spatial lag
 
-
     Examples
     --------
 

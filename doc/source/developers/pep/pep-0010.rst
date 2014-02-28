@@ -1,0 +1,46 @@
+*******************************
+PEP 0010 Add pure Python rtree
+*******************************
+
+========  ============================
+Author    Serge Rey <sjsrey@gmail.com>
+Status    Approved 1.2
+Created   12-Feb-2011
+Updated   12-Feb-2011
+========  ============================
+
+Abstract
+========
+
+A pure Python implementation of an Rtree will be developed for use in the
+construction of spatial weights matrices based on contiguity relations in
+shapefiles as well as supporting a spatial index that can be used by GUI based
+applications built with PySAL requiring brushing and linking.
+
+
+Motivation
+==========
+
+As of 1.1 PySAL checks if the external library ([Rtree]_) is installed. If it
+is not, then an internal binning algorithm is used to determine contiguity
+relations in shapefiles for the construction of certain spatial weights.  A
+pure Python implementation of Rtrees may provide for improved cross-platform
+efficiency when the external Rtree library is not present. At the same time,
+such an implementation can be relied on by application developers using PySAL
+who wish to build visualization applications supporting brushing, linking and
+other interactions requiring spatial indices for object selection.
+
+
+Reference Implementation
+========================
+
+A pure Python implementation of Rtrees has recently been implemented ([pyrtree]_) and
+is undergoing testing for possible inclusion in PySAL. It appears that this
+module can be integrated into PySAL with modest effort.
+
+References
+==========
+
+.. [Rtree] http://pypi.python.org/pypi/Rtree/
+
+.. [pyrtree] http://code.google.com/p/pyrtree/

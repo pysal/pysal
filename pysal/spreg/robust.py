@@ -8,7 +8,8 @@ from pysal import lag_spatial
 from utils import spdot, spbroadcast
 from user_output import check_constant
 
-def robust_vm(reg, gwk=None):
+
+def robust_vm(reg, gwk=None, sig2n_k=False):
     """
     Robust estimation of the variance-covariance matrix. Estimated by White (default) or HAC (if wk is provided). 
         
@@ -21,6 +22,9 @@ def robust_vm(reg, gwk=None):
     gwk             : PySAL weights object
                       Optional. Spatial weights based on kernel functions
                       If provided, returns the HAC variance estimation
+    sig2n_k         : boolean
+                      If True, then use n-k to rescale the vc matrix.
+                      If False, use n. (White only)
                       
     Returns
     --------
@@ -55,9 +59,9 @@ def robust_vm(reg, gwk=None):
     
     >>> ols = OLS(y,X, robust='white')
     >>> ols.vm
-    array([[ 0.24491641,  0.01092258, -0.03438619],
-           [ 0.01092258,  0.01796867, -0.00071345],
-           [-0.03438619, -0.00071345,  0.00501042]])
+    array([[ 0.24515481,  0.01093322, -0.03441966],
+           [ 0.01093322,  0.01798616, -0.00071414],
+           [-0.03441966, -0.00071414,  0.0050153 ]])
     
     Example with OLS and HAC
 
@@ -94,26 +98,29 @@ def robust_vm(reg, gwk=None):
            [-0.02810131, -0.01364908, -0.00318197,  0.00713251]])
 
     """
-    if hasattr(reg, 'h'): #If reg has H, do 2SLS estimator. OLS otherwise.
+    if hasattr(reg, 'h'):  # If reg has H, do 2SLS estimator. OLS otherwise.
         tsls = True
         xu = spbroadcast(reg.h, reg.u)
     else:
         tsls = False
         xu = spbroadcast(reg.x, reg.u)
-        
-    if gwk: #If gwk do HAC. White otherwise.
-        gwkxu = lag_spatial(gwk,xu)
-        psi0 = spdot(xu.T,gwkxu)
+
+    if gwk:  # If gwk do HAC. White otherwise.
+        gwkxu = lag_spatial(gwk, xu)
+        psi0 = spdot(xu.T, gwkxu)
     else:
-        psi0 = spdot(xu.T,xu)
+        psi0 = spdot(xu.T, xu)
+        if sig2n_k:
+            psi0 = psi0 * (1. * reg.n / (reg.n - reg.k))
     if tsls:
-        psi1 = spdot(reg.varb,reg.zthhthi)
-        psi = spdot(psi1,np.dot(psi0,psi1.T))
+        psi1 = spdot(reg.varb, reg.zthhthi)
+        psi = spdot(psi1, np.dot(psi0, psi1.T))
     else:
-        psi = spdot(reg.xtxi,np.dot(psi0,reg.xtxi))
-        
+        psi = spdot(reg.xtxi, np.dot(psi0, reg.xtxi))
+
     return psi
-    
+
+
 def hac_multi(reg, gwk, constant=False):
     """
     HAC robust estimation of the variance-covariance matrix for multi-regression object 
@@ -136,20 +143,22 @@ def hac_multi(reg, gwk, constant=False):
     """
     if not constant:
         reg.hac_var = check_constant(reg.hac_var)
-    xu = spbroadcast(reg.hac_var, reg.u)       
-    gwkxu = lag_spatial(gwk,xu)
-    psi0 = spdot(xu.T,gwkxu)
+    xu = spbroadcast(reg.hac_var, reg.u)
+    gwkxu = lag_spatial(gwk, xu)
+    psi0 = spdot(xu.T, gwkxu)
     counter = 0
     for m in reg.multi:
         reg.multi[m].robust = 'hac'
         reg.multi[m].name_gwk = reg.name_gwk
         try:
-            psi1 = spdot(reg.multi[m].varb,reg.multi[m].zthhthi)
-            reg.multi[m].vm = spdot(psi1,np.dot(psi0,psi1.T))
+            psi1 = spdot(reg.multi[m].varb, reg.multi[m].zthhthi)
+            reg.multi[m].vm = spdot(psi1, np.dot(psi0, psi1.T))
         except:
-            reg.multi[m].vm = spdot(reg.multi[m].xtxi,np.dot(psi0,reg.multi[m].xtxi))
-        reg.vm[(counter*reg.kr):((counter+1)*reg.kr),(counter*reg.kr):((counter+1)*reg.kr)] = reg.multi[m].vm
+            reg.multi[m].vm = spdot(
+                reg.multi[m].xtxi, np.dot(psi0, reg.multi[m].xtxi))
+        reg.vm[(counter*reg.kr):((counter+1)*reg.kr), (counter*reg.kr)               :((counter+1)*reg.kr)] = reg.multi[m].vm
         counter += 1
+
 
 def _test():
     import doctest
@@ -157,6 +166,3 @@ def _test():
 
 if __name__ == '__main__':
     _test()
-
-
-

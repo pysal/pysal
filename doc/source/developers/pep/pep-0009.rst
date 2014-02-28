@@ -1,0 +1,57 @@
+*******************************
+PEP 0009 Add Python 3.x Support
+*******************************
+
+========  =================================
+Author    Charles Schmidt <schmidtc@gmail.com>
+Status    Approved 1.2
+Created   02-Feb-2011
+Updated   02-Feb-2011
+========  =================================
+
+Abstract
+========
+
+Python 2.x is being phased out in favor of the backwards incompatible Python 3
+line.  In order to stay relevant to the python community as a whole PySAL needs
+to support the latest production releases of Python. With the release of Numpy
+1.5 and the pending release of SciPy 0.9, all PySAL dependencies support Python
+3. This PEP proposes porting the code base to support both the 2.x and 3.x lines
+of Python.
+
+Motivation
+==========
+
+Python 2.7 is the final major release in the 2.x line.  The Python 2.x line will
+continue to receive bug fixes, however only the 3.x line will receive new
+features ([Python271]_).  Python 3.x introduces many backward incompatible
+changes to Python ([PythonNewIn3]_).  Numpy added support for Python 3.0 in
+version 1.5 ([NumpyANN150]_).  Scipy 0.9.0 is currently in the release candidate
+stage and supports Python 3.0 ([SciPyRoadmap]_, [SciPyANN090rc2]_).  Many of the
+new features in Python 2.7 were back ported from 3.0, allowing us to start using
+some of the new feature of the language without abandoning our 2.x users.
+
+Reference Implementation
+========================
+
+Since python 2.6 the interpreter has included a '-3' command line switch to
+"warn about Python 3.x incompatibilities that 2to3 cannot trivially fix"
+([Python2to3]_).  Running PySAL tests with this switch produces no warnings
+internal to PySAL.  This suggests porting to 3.x will require only trivial
+changes to the code. A porting strategy is provided by [PythonNewIn3]_.
+
+References
+==========
+
+.. [Python271] http://www.python.org/download/releases/2.7.1/
+
+.. [PythonNewIn3] http://docs.python.org/release/3.0.1/whatsnew/3.0.html
+
+.. [Python2to3] http://docs.python.org/release/3.0.1/library/2to3.html#to3-reference
+
+.. [NumpyANN150] http://mail.scipy.org/pipermail/numpy-discussion/2010-August/052522.html
+
+.. [SciPyRoadmap] http://projects.scipy.org/scipy/roadmap#python-3
+
+.. [SciPyANN090rc2] http://mail.scipy.org/pipermail/scipy-dev/2011-January/015927.html
+

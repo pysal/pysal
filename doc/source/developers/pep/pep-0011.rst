@@ -1,0 +1,120 @@
+****************************************
+PEP 0011 Move from Google Code to Github
+****************************************
+
+========  ============================
+Author    Serge Rey <sjsrey@gmail.com>
+Status    Draft
+Created   04-Aug-2012
+Updated   04-Aug-2012
+========  ============================
+
+Abstract
+========
+
+This proposal is to move the PySAL code repository from Google Code to Github.
+
+
+Motivation
+==========
+
+`Git`_ is a decentralized version control system that
+brings a number of benefits:
+
+ - distributed development
+ - off-line development
+ - elegant and lightweight branching
+ - fast operations
+ - flexible workflows
+
+among `many others.`_
+
+The two main PySAL dependencies, SciPy and NumPy, made the switch to GitHub
+roughly two years ago. In discussions with members of those development teams
+and related projects (pandas, statsmodels) it is clear that git is gaining
+widespread adoption in the Python scientific computing community. By moving to
+git and GitHub, PySAL would benefit by facilitating interaction with developers in this
+community. Discussions with developers at SciPy 2012 indicated that all
+projects experienced significant growth in community involvement after the
+move to Github. Other projects considering such a move have been `discussing`_ similar issues.
+
+Moving to GitHub would also streamline the administration of project updates,
+documentation and related tasks. The Google Code infrastructure requires
+updates in multiple locations which results in either additional work, or
+neglected changes during releases. GitHub understands markdown and reStructured
+text formats, the latter is heavily used in PySAL documentation and the former
+is clearly preferred to wiki markup on Google Code.
+
+Although there is a learning curve to Git, it is relatively minor for
+developers familiar with Subversion, as all PySAL developers are. Moreover,
+several of the developers have been using Git and GitHub for other projects
+and have expressed interest in such a move. There are excellent on-line
+resources for learning more about git, such as this
+`book.`_
+
+Reference Implementation
+========================
+
+Moving code and history
+-----------------------
+
+There are utilities, such as
+`svn2git`_ 
+that can be used to convert an SVN repo to a git repo.
+
+The converted git repo would then be pushed to a `GitHub`_ account.
+
+Setting up post-(commit|push|pull) hooks
+----------------------------------------
+Migration of the current integration testing will be required. Github has
+support for `Post-Receive Hooks`_
+that can be used for this aspect of the migration.
+
+
+Moving issues tracking over
+---------------------------
+
+A decision about whether to move the issue tracking over to Github will have
+to be considered. This has been handled in different ways:
+
+  - keep using Google Code for issue tracking
+  - move all issues (even closed ones) over to Github
+  - freeze tickets at Google Code and have a breadcrumb for active tickets
+    pointing to issue tracker at Github
+
+If we decide to move the issues over we may look at 
+`tratihubus`_
+as well as other possibilities.
+
+Continuous integration with travis-ci
+-------------------------------------
+
+`Travis-CI`_ is a hosted Continuous Integration (CI) service that is integrated
+with GitHub. This sponsored service provides:
+
+  - testing with multiple versions of Python
+  - testing with multiple versions of project dependencies (numpy and scipy)
+  - `build history`_
+  - integrated GitHub commit hooks
+  - testing against multiple `database services`_
+
+Configuration is achieved with a single YAML file, reducing development
+overhead, maintenance, and monitoring.
+
+Code Sprint for GitHub migration
+--------------------------------
+The proposal is to organize a future sprint to focus on this migration.
+
+
+
+.. _discussing: http://groups.google.com/group/networkx-devel/browse_thread/thread/6b82286cdd5e434a
+.. _tratihubus: https://GitHub.com/roskakori/tratihubis
+.. _Git: http://git-scm.com
+.. _many others.: http://www.youtube.com/watch?v=4XpnKHJAok8
+.. _GitHub: https://GitHub.com
+.. _svn2git: https://help.GitHub.com/articles/importing-from-subversion
+.. _Post-Receive Hooks: https://help.GitHub.com/articles/post-receive-hooks/
+.. _book.: http://git-scm.com/book
+.. _Travis-CI: http://travis-ci.org/
+.. _build history: http://travis-ci.org/#!/zendframework/zf2
+.. _database services: http://about.travis-ci.org/docs/user/database-setup/

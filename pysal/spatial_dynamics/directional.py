@@ -55,8 +55,7 @@ def rose(Y, w, k=8, permutations=0):
 
     Constructing data for illustration of directional LISA analytics.
     Data is for the 48 lower US states over the period 1969-2009 and
-    includes per capita income normalized to the national average. For
-    further details see Rey, Murray, and Anselin (2011) [1]_
+    includes per capita income normalized to the national average. 
 
     Load comma delimited data file in and convert to a numpy array
 
@@ -146,8 +145,7 @@ def rose(Y, w, k=8, permutations=0):
     ----------
 
     .. [1] Rey, S.J., A.T. Murray and L. Anselin. 2011. "Visualizing
-    regional income distribution dynamics." Letters in Spatial and Resource
-    Sciences, 4: 81-90.
+        regional income distribution dynamics." Letters in Spatial and Resource Sciences, 4: 81-90.
 
     """
     results = {}

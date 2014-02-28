@@ -18,36 +18,33 @@ class ArcGISSwmIO(FileIO.FileIO):
     Spatial weights objects in the ArcGIS swm format are used in
     ArcGIS Spatial Statistics tools.
     Particularly, this format can be directly used with the tools under
-    the category of "Mapping Clusters."
+    the category of Mapping Clusters.
 
-    An exemplary structure of an ArcGIS swm file is as follows:
-    [ID_VAR_NAME];[ESRI_SRS]\n[NO_OBS][ROW_STD][WGT_1]...[WGT_i]...[WGT_n]
-    where [WGT_i] takes the form of [ORG_i][NO_NGH_i][NGHS_i]
-    and [NGHS_i] takes the form of [DSTS_i][WS_i][W_SUM_i].
-    Here, n is the number of observations.
     The values for [ORG_i] and [DST_i] should be integers,
     as ArcGIS Spatial Statistics tools support only unique integer IDs.
     For the case where a weights object uses non-integer IDs,
     ArcGISSwmIO allows users to use internal ids corresponding to record numbers,
     instead of original ids.
 
-    The specifics of each part of the above structure is as follows:
-    Part	    Data type		   Desription				Length
-    [ID_VAR_NAME]   ASCII TEXT		   ID variable name			Flexible (Up to the 1st ;)
-    [ESRI_SRS]	    ASCII TEXT		   ESRI spatial reference system	Flexible (Btw the 1st ; and \n)
-    [NO_OBS]	    little endian integer  Number of observations		4
-    [ROW_STD]	    little endian integer  Whether or not row-standardized 	4
-    [WGT_i]
-      [ORG_i]  	    little endian integer  ID of observaiton i 		   	4
-      [NO_NGH_i]    little endian integer  Number of neighbors for obs. i (m)	4
-      [NGHS_i]
-        [DSTS_i]    little endian integer  IDs of all neighbors of obs. i	4*m
-        [WS_i]      little endian float    Weights for obs. i and its neighbors 8*m
-        [W_SUM_i]   little endian float    Sum of weights for "                 8
+    The specifics of each part of the above structure is as follows.
 
-    References
-    ----------
-    ArcGIS 9.3 SWM2Table.py
+  .. table:: ArcGIS SWM Components
+
+    ============ ============ ==================================== ================================
+        Part      Data type           Description                   Length                        
+    ============ ============ ==================================== ================================
+     ID_VAR_NAME  ASCII TEXT  ID variable name                     Flexible (Up to the 1st ;)     
+     ESRI_SRS     ASCII TEXT  ESRI spatial reference system        Flexible (Btw the 1st ; and \\n)  
+     NO_OBS       l.e. int    Number of observations               4                         
+     ROW_STD      l.e. int    Whether or not row-standardized      4                         
+     WGT_i                                                                                   
+     ORG_i        l.e. int    ID of observaiton i                  4                         
+     NO_NGH_i     l.e. int    Number of neighbors for obs. i (m)   4                         
+     NGHS_i                                                                                  
+     DSTS_i       l.e. int    IDs of all neighbors of obs. i       4*m                       
+     WS_i         l.e. float  Weights for obs. i and its neighbors 8*m                       
+     W_SUM_i      l.e. float  Sum of weights for "                 8                         
+    ============ ============ ==================================== ================================
 
     """
 
@@ -77,7 +74,8 @@ class ArcGISSwmIO(FileIO.FileIO):
             self.pos = 0
 
     def _read(self):
-        """Reads ArcGIS swm file
+        """
+        Reads ArcGIS swm file.
         Returns a pysal.weights.weights.W object
 
         Examples
@@ -104,6 +102,7 @@ class ArcGISSwmIO(FileIO.FileIO):
         {2: 1.0, 11: 1.0, 6: 1.0, 7: 1.0}
 
         """
+
         if self.pos > 0:
             raise StopIteration
 
@@ -131,6 +130,7 @@ class ArcGISSwmIO(FileIO.FileIO):
 
     def write(self, obj, useIdIndex=False):
         """
+        Writes a spatial weights matrix data file in swm format.
 
         Parameters
         ----------
@@ -138,7 +138,7 @@ class ArcGISSwmIO(FileIO.FileIO):
         accepts a weights object
 
         Returns
-        ------
+        -------
 
         an ArcGIS swm file
         write a weights object to the opened swm file.
@@ -173,7 +173,7 @@ class ArcGISSwmIO(FileIO.FileIO):
 
         Read in the newly created text file
 
-        >>> wnew =  pysal.open(fname,'r').read()
+        >>> wnew = pysal.open(fname,'r').read()
 
         Compare values from old to new
 
@@ -182,9 +182,8 @@ class ArcGISSwmIO(FileIO.FileIO):
 
         Clean up temporary file created for this example
 
-        >>> os.remove(fname)
+        >>> os.remove(fname) """
 
-        """
         self._complain_ifclosed(self.closed)
         if issubclass(type(obj), W):
             if not (type(obj.id_order[0]) in (np.int32, np.int64, int)) and not useIdIndex:
@@ -211,5 +210,3 @@ class ArcGISSwmIO(FileIO.FileIO):
     def close(self):
         self.file.close()
         FileIO.FileIO.close(self)
-
-
