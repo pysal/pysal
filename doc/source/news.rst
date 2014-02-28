@@ -2,6 +2,8 @@
 
 News
 ====
+
+(2014-01-31) `PySAL 1.7.0 released <https://github.com/pysal/pysal/wiki/PySAL-1.7-Release-(2014-01-31)>`_
   
 (2013-11-13) `PySAL Workshop at North American Regional Science Association Meetings, Atlanta, GA <http://www.narsc.org/newsite/?page_id=2547>`_ 
 
