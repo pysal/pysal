@@ -29,7 +29,8 @@ You can start using pysal right away on the web with Wakari or
 PythonAnywhere. 
 
 wakari http://continuum.io/wakari
-pythonanywhere
+
+PythonAnywhere https://www.pythonanywhere.com/
 
 
 Download and install 
