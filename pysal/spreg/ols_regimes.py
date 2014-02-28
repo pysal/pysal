@@ -1,7 +1,7 @@
 """
 Ordinary Least Squares regression with regimes.
 """
- 
+
 __author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.edu, Daniel Arribas-Bel darribas@asu.edu"
 
 import regimes as REGI
@@ -17,6 +17,7 @@ import scipy.sparse as SP
 
 
 class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
+
     """
     Ordinary least squares with results and diagnostics.
     
@@ -349,14 +350,15 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
     >>> olsr.cols2regi
     'all'
     """
-    def __init__(self, y, x, regimes,\
-                 w=None, robust=None, gwk=None, sig2n_k=True,\
-                 nonspat_diag=True, spat_diag=False, moran=False, white_test=False,\
-                 vm=False, constant_regi='many', cols2regi='all',\
-                 regime_err_sep=True, cores=None,\
-                 name_y=None, name_x=None, name_regimes=None,\
-                 name_w=None, name_gwk=None, name_ds=None):         
-        
+
+    def __init__(self, y, x, regimes,
+                 w=None, robust=None, gwk=None, sig2n_k=True,
+                 nonspat_diag=True, spat_diag=False, moran=False, white_test=False,
+                 vm=False, constant_regi='many', cols2regi='all',
+                 regime_err_sep=True, cores=None,
+                 name_y=None, name_x=None, name_regimes=None,
+                 name_w=None, name_gwk=None, name_ds=None):
+
         n = USER.check_arrays(y, x)
         USER.check_y(y, n)
         USER.check_weights(w, y)
@@ -364,124 +366,140 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
         USER.check_spat_diag(spat_diag, w)
         self.name_x_r = USER.set_name_x(name_x, x)
         self.constant_regi = constant_regi
-        self.cols2regi = cols2regi        
+        self.cols2regi = cols2regi
         self.name_w = USER.set_name_w(name_w, w)
         self.name_gwk = USER.set_name_w(name_gwk, gwk)
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_regimes = USER.set_name_ds(name_regimes)
-        self.n = n 
-        cols2regi = REGI.check_cols2regi(constant_regi, cols2regi, x, add_cons=False)
+        self.n = n
+        cols2regi = REGI.check_cols2regi(
+            constant_regi, cols2regi, x, add_cons=False)
         self.regimes_set = REGI._get_regimes_set(regimes)
         self.regimes = regimes
-        USER.check_regimes(self.regimes_set,self.n,x.shape[1])
+        USER.check_regimes(self.regimes_set, self.n, x.shape[1])
         if regime_err_sep == True and robust == 'hac':
-            set_warn(self,"Error by regimes is incompatible with HAC estimation. Hence, error by regimes has been disabled for this model.")
+            set_warn(
+                self, "Error by regimes is incompatible with HAC estimation. Hence, error by regimes has been disabled for this model.")
             regime_err_sep = False
         self.regime_err_sep = regime_err_sep
         if regime_err_sep == True and set(cols2regi) == set([True]) and constant_regi == 'many':
             self.y = y
             name_x = USER.set_name_x(name_x, x)
-            regi_ids = dict((r, list(np.where(np.array(regimes) == r)[0])) for r in self.regimes_set)
-            self._ols_regimes_multi(x, w, regi_ids, cores,\
-             gwk, sig2n_k, robust, nonspat_diag, spat_diag, vm, name_x, moran, white_test)
+            regi_ids = dict((r, list(np.where(np.array(regimes) == r)[0]))
+                            for r in self.regimes_set)
+            self._ols_regimes_multi(x, w, regi_ids, cores,
+                                    gwk, sig2n_k, robust, nonspat_diag, spat_diag, vm, name_x, moran, white_test)
         else:
-            name_x = USER.set_name_x(name_x, x,constant=True)
-            x, self.name_x = REGI.Regimes_Frame.__init__(self, x,\
-                    regimes, constant_regi, cols2regi, name_x)
-            BaseOLS.__init__(self, y=y, x=x, robust=robust, gwk=gwk, sig2n_k=sig2n_k)
+            name_x = USER.set_name_x(name_x, x, constant=True)
+            x, self.name_x = REGI.Regimes_Frame.__init__(self, x,
+                                                         regimes, constant_regi, cols2regi, name_x)
+            BaseOLS.__init__(self, y=y, x=x, robust=robust,
+                             gwk=gwk, sig2n_k=sig2n_k)
             if regime_err_sep == True and robust == None:
-                y2, x2 = REGI._get_weighted_var(regimes,self.regimes_set,sig2n_k,self.u,y,x)
+                y2, x2 = REGI._get_weighted_var(
+                    regimes, self.regimes_set, sig2n_k, self.u, y, x)
                 ols2 = BaseOLS(y=y2, x=x2, sig2n_k=sig2n_k)
-                RegressionProps_basic(self,betas=ols2.betas,vm=ols2.vm)
+                RegressionProps_basic(self, betas=ols2.betas, vm=ols2.vm)
                 self.title = "ORDINARY LEAST SQUARES - REGIMES (Group-wise heteroskedasticity)"
                 nonspat_diag = None
-                set_warn(self,"Residuals treated as homoskedastic for the purpose of diagnostics.")
+                set_warn(
+                    self, "Residuals treated as homoskedastic for the purpose of diagnostics.")
             else:
                 self.title = "ORDINARY LEAST SQUARES - REGIMES"
             self.robust = USER.set_robust(robust)
             self.chow = REGI.Chow(self)
-            SUMMARY.OLS(reg=self, vm=vm, w=w, nonspat_diag=nonspat_diag,\
+            SUMMARY.OLS(reg=self, vm=vm, w=w, nonspat_diag=nonspat_diag,
                         spat_diag=spat_diag, moran=moran, white_test=white_test, regimes=True)
 
-    def _ols_regimes_multi(self, x, w, regi_ids, cores,\
-                 gwk, sig2n_k, robust, nonspat_diag, spat_diag, vm, name_x, moran, white_test):
+    def _ols_regimes_multi(self, x, w, regi_ids, cores,
+                           gwk, sig2n_k, robust, nonspat_diag, spat_diag, vm, name_x, moran, white_test):
         results_p = {}
         for r in self.regimes_set:
             if system() == 'Windows':
                 is_win = True
-                results_p[r] = _work(*(self.y,x,w,regi_ids,r,robust,sig2n_k,self.name_ds,self.name_y,name_x,self.name_w,self.name_regimes))
+                results_p[r] = _work(
+                    *(self.y, x, w, regi_ids, r, robust, sig2n_k,
+                      self.name_ds, self.name_y, name_x, self.name_w, self.name_regimes))
             else:
                 pool = mp.Pool(cores)
-                results_p[r] = pool.apply_async(_work,args=(self.y,x,w,regi_ids,r,robust,sig2n_k,self.name_ds,self.name_y,name_x,self.name_w,self.name_regimes))
+                results_p[r] = pool.apply_async(_work, args=(
+                    self.y, x, w, regi_ids, r, robust, sig2n_k, self.name_ds, self.name_y, name_x, self.name_w, self.name_regimes))
                 is_win = False
         self.kryd = 0
-        self.kr = x.shape[1]+1
+        self.kr = x.shape[1] + 1
         self.kf = 0
         self.nr = len(self.regimes_set)
-        self.vm = np.zeros((self.nr*self.kr,self.nr*self.kr),float)
-        self.betas = np.zeros((self.nr*self.kr,1),float)
-        self.u = np.zeros((self.n,1),float)
-        self.predy = np.zeros((self.n,1),float)
+        self.vm = np.zeros((self.nr * self.kr, self.nr * self.kr), float)
+        self.betas = np.zeros((self.nr * self.kr, 1), float)
+        self.u = np.zeros((self.n, 1), float)
+        self.predy = np.zeros((self.n, 1), float)
         if not is_win:
             pool.close()
             pool.join()
         results = {}
-        self.name_y, self.name_x = [],[]
+        self.name_y, self.name_x = [], []
         counter = 0
         for r in self.regimes_set:
             if is_win:
                 results[r] = results_p[r]
             else:
                 results[r] = results_p[r].get()
-            self.vm[(counter*self.kr):((counter+1)*self.kr),(counter*self.kr):((counter+1)*self.kr)] = results[r].vm
-            self.betas[(counter*self.kr):((counter+1)*self.kr),] = results[r].betas
-            self.u[regi_ids[r],]=results[r].u
-            self.predy[regi_ids[r],]=results[r].predy
+            self.vm[(counter * self.kr):((counter + 1) * self.kr),
+                    (counter * self.kr):((counter + 1) * self.kr)] = results[r].vm
+            self.betas[(counter * self.kr):((counter + 1) * self.kr),
+                       ] = results[r].betas
+            self.u[regi_ids[r], ] = results[r].u
+            self.predy[regi_ids[r], ] = results[r].predy
             self.name_y += results[r].name_y
             self.name_x += results[r].name_x
             counter += 1
         self.multi = results
         self.hac_var = x
         if robust == 'hac':
-            hac_multi(self,gwk)
+            hac_multi(self, gwk)
         self.chow = REGI.Chow(self)
         if spat_diag:
             self._get_spat_diag_props(x, sig2n_k)
-        SUMMARY.OLS_multi(reg=self, multireg=self.multi, vm=vm, nonspat_diag=nonspat_diag, spat_diag=spat_diag, moran=moran, white_test=white_test, regimes=True, w=w)
+        SUMMARY.OLS_multi(
+            reg=self, multireg=self.multi, vm=vm, nonspat_diag=nonspat_diag,
+            spat_diag=spat_diag, moran=moran, white_test=white_test, regimes=True, w=w)
 
     def _get_spat_diag_props(self, x, sig2n_k):
         self.k = self.kr
         self._cache = {}
         x = np.hstack((np.ones((x.shape[0], 1)), x))
-        self.x = REGI.regimeX_setup(x, self.regimes, [True] * x.shape[1], self.regimes_set)
+        self.x = REGI.regimeX_setup(
+            x, self.regimes, [True] * x.shape[1], self.regimes_set)
         self.xtx = spdot(self.x.T, self.x)
-        self.xtxi = np.linalg.inv(self.xtx)                
+        self.xtxi = np.linalg.inv(self.xtx)
 
-def _work(y,x,w,regi_ids,r,robust,sig2n_k,name_ds,name_y,name_x,name_w,name_regimes):
+
+def _work(y, x, w, regi_ids, r, robust, sig2n_k, name_ds, name_y, name_x, name_w, name_regimes):
     y_r = y[regi_ids[r]]
     x_r = x[regi_ids[r]]
     x_constant = USER.check_constant(x_r)
     if robust == 'hac':
         robust = None
     model = BaseOLS(y_r, x_constant, robust=robust, sig2n_k=sig2n_k)
-    model.title = "ORDINARY LEAST SQUARES ESTIMATION - REGIME %s" %r
+    model.title = "ORDINARY LEAST SQUARES ESTIMATION - REGIME %s" % r
     model.robust = USER.set_robust(robust)
     model.name_ds = name_ds
-    model.name_y = '%s_%s'%(str(r), name_y)
-    model.name_x = ['%s_%s'%(str(r), i) for i in name_x]
+    model.name_y = '%s_%s' % (str(r), name_y)
+    model.name_x = ['%s_%s' % (str(r), i) for i in name_x]
     model.name_w = name_w
     model.name_regimes = name_regimes
     if w:
-        w_r,warn = REGI.w_regime(w, regi_ids[r], r, transform=True)
+        w_r, warn = REGI.w_regime(w, regi_ids[r], r, transform=True)
         set_warn(model, warn)
-        model.w = w_r        
+        model.w = w_r
     return model
-            
+
+
 def _test():
     import doctest
     start_suppress = np.get_printoptions()['suppress']
-    np.set_printoptions(suppress=True)    
+    np.set_printoptions(suppress=True)
     doctest.testmod()
     np.set_printoptions(suppress=start_suppress)
 
@@ -489,16 +507,16 @@ if __name__ == '__main__':
     _test()
     import numpy as np
     import pysal
-    db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
+    db = pysal.open(pysal.examples.get_path('columbus.dbf'), 'r')
     y_var = 'CRIME'
-    y = np.array([db.by_col(y_var)]).reshape(49,1)
-    x_var = ['INC','HOVAL']
+    y = np.array([db.by_col(y_var)]).reshape(49, 1)
+    x_var = ['INC', 'HOVAL']
     x = np.array([db.by_col(name) for name in x_var]).T
     r_var = 'NSA'
     regimes = db.by_col(r_var)
     w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
     w.transform = 'r'
-    olsr = OLS_Regimes(y, x, regimes, w=w, constant_regi='many', nonspat_diag=False, spat_diag=False, name_y=y_var, name_x=['INC','HOVAL'], \
-                       name_ds='columbus', name_regimes=r_var, name_w='columbus.gal', regime_err_sep=True, cols2regi=[True,True], sig2n_k=True, robust='white')
+    olsr = OLS_Regimes(
+        y, x, regimes, w=w, constant_regi='many', nonspat_diag=False, spat_diag=False, name_y=y_var, name_x=['INC', 'HOVAL'],
+        name_ds='columbus', name_regimes=r_var, name_w='columbus.gal', regime_err_sep=True, cols2regi=[True, True], sig2n_k=True, robust='white')
     print olsr.summary
-

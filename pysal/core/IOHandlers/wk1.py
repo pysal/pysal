@@ -11,6 +11,8 @@ __all__ = ["Wk1IO"]
 
 class Wk1IO(FileIO.FileIO):
     """
+    MATLAB wk1read.m and wk1write.m that were written by Brian M. Bourgault in 10/22/93
+
     Opens, reads, and writes weights file objects in Lotus Wk1 format.
 
     Lotus Wk1 file is used in Dr. LeSage's MATLAB Econometrics library.
@@ -21,7 +23,7 @@ class Wk1IO(FileIO.FileIO):
     Wk1 starts the row (column) number from 0 and
     uses little endian binary endcoding.
     In PySAL, when the number of observations is n,
-    it is assumed that each cell of a n*n(=m) matrix either is a blank or
+    it is assumed that each cell of a n\*n(=m) matrix either is a blank or
     have a number.
 
     The internal structure of a Wk1 file written by PySAL is as follows:
@@ -33,78 +35,106 @@ class Wk1IO(FileIO.FileIO):
     PySAL ignores them.
     Each part of this structure is detailed below.
 
-    Part	  Description		Data Type		  Length  Value
-    [BOF]	  Begining of fiel	unsigned character        6       0,0,2,0,6,4
-    [DIM]         Matrix dimension
-      [DIMDTYPE]  Type of dim. rec      unsigned short            2       6
-      [DIMLEN]    Length of dim. rec    unsigned short            2       8
-      [DIMVAL]    Value of dim. rec     unsigned short            8       0,0,n,n
-    [CPI]         CPI
-      [CPITYPE]   Type of cpi rec       unsigned short            2       150
-      [CPILEN]    Length of cpi rec     unsigned short            2       6
-      [CPIVAL]    Value of cpi rec      unsigned char             6       0,0,0,0,0,0
-    [CAL]         calcount
-      [CALTYPE]   Type of calcount rec  unsigned short            2       47
-      [CALLEN]    Length of calcount rec unsigned short           2       1
-      [CALVAL]    Value of calcount rec unsigned char             1       0
-    [CMODE]       calmode
-      [CMODETYP]  Type of calmode rec   unsigned short            2       2
-      [CMODELEN]  Length of calmode rec unsigned short            2       1
-      [CMODEVAL]  Value of calmode rec  signed char               1       0
-    [CORD]        calorder
-      [CORDTYPE]  Type of calorder rec  unsigned short            2       3
-      [CORDLEN]   Length of calorder rec unsigned short           2       1
-      [CORDVAL]   Value of calorder rec signed char               1       0
-    [SPLIT]       split
-      [SPLTYPE]   Type of split rec     unsigned short            2       4
-      [SPLLEN]    Length of split rec   unsigned short            2       1
-      [SPLVAL]    Value of split rec    signed char               1       0
-    [SYNC]        sync
-      [SYNCTYP]   Type of sync rec      unsigned short            2       5
-      [SYNCLEN]   Length of sync rec    unsigned short            2       1
-      [SYNCVAL]   Value of sync rec     singed char               1       0
-    [CURS]        cursor
-      [CURSTYP]   Type of cursor rec    unsigned short            2       49
-      [CURSLEN]   Length of cursor rec  unsigned short            2       1
-      [CURSVAL]   Value of cursor rec   signed char               1       1
-    [WIN]         window
-      [WINTYPE]   Type of window rec    unsigned short            2       7
-      [WINLEN]    Length of window rec  unsigned short            2       32
-      [WINVAL1]   Value 1 of window rec unsigned short            4       0,0
-      [WINVAL2]   Value 2 of window rec signed char               2       113,0
-      [WINVAL3]   Value 3 of window rec unsigned short            26      10,n,n,0,0,0,0,0,0,0,0,72,0
-    [HCOL]        hidcol
-      [HCOLTYP]   Type of hidcol rec    unsigned short            2       100
-      [HCOLLEN]   Length of hidcol rec  unsigned short            2       32
-      [HCOLVAL]   Value of hidcol rec   signed char               32      0*32
-    [MRG]         margins
-      [MRGTYPE]   Type of margins rec   unsigned short            2       40
-      [MRGLEN]    Length of margins rec unsigned short            2       10
-      [MRGVAL]    Value of margins rec  unsigned short            10      4,76,66,2,2
-    [LBL]         labels
-      [LBLTYPE]   Type of labels rec    unsigned short            2       41
-      [LBLLEN]    Length of labels rec  unsigned short            2       1
-      [LBLVAL]    Value of labels rec   char                      1       '
-    [CELL_k]
-      [DTYPE]     Type of cell data 	unsigned short            2       [DTYPE][0]==0: end of file
-                                                                                    ==14: number
-                                                                                    ==16: formula
-                                                                                    ==13: integer
-                                                                                    ==11: nrange
-                                                                                    ==else: unknown
-      [DLEN]      Length of cell data   unsigned short            2
-      [DFORMAT]   Format of cell data	not sure		  1
-      [CINDEX]    Row, column of cell   unsigned short            4
-      [CVALUE]    Value of cell         double, [DTYPE][0]==14    8
-                                        formula,[DTYPE][0]==16    8 + [DTYPE][1] - 13
-                                        integer,[DTYPE][0]==13    2
-                                        nrange, [DTYPE][0]==11    24
-                                        else,   [DTYPE][0]==else  [DTYPE][1]
-      [EOF]       End of file           unsigned short            4	1,0,0,0
+ .. table:: Lotus WK1 fields
 
-    References
-    ----------
-    MATLAB wk1read.m and wk1write.m that were written by Brian M. Bourgault in 10/22/93
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |Part         |Description          |Data Type                |Length |Value                        |
+   +=============+=====================+=========================+=======+=============================+
+   |[BOF]        |Begining of field    |unsigned character       |6      |0,0,2,0,6,4                  |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |[DIM]        |Matrix dimension                                                                     |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |  [DIMDTYPE] |Type of dim. rec     |unsigned short           |2      |6                            |
+   |  [DIMLEN]   |Length of dim. rec   |unsigned short           |2      |8                            |
+   |  [DIMVAL]   |Value of dim. rec    |unsigned short           |8      |0,0,n,n                      |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |[CPI]        |CPI                                                                                  |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |  [CPITYPE]  |Type of cpi rec      |unsigned short           |2      |150                          |
+   |  [CPILEN]   |Length of cpi rec    |unsigned short           |2      |6                            |
+   |  [CPIVAL]   |Value of cpi rec     |unsigned char            |6      |0,0,0,0,0,0                  |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |[CAL]        |calcount                                                                             |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |  [CALTYPE]  |Type of calcount rec |unsigned short           |2      |47                           |
+   |  [CALLEN]   |Length calcount rec  |unsigned short           |2      |1                            |
+   |  [CALVAL]   |Value of calcount rec|unsigned char            |1      |0                            |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |[CMODE]      |calmode                                                                              |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |  [CMODETYP] |Type of calmode rec  |unsigned short           |2      |2                            |
+   |  [CMODELEN] |Length of calmode rec|unsigned short           |2      |1                            |
+   |  [CMODEVAL] |Value of calmode rec |signed char              |1      |0                            |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |[CORD]       |calorder                                                                             |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |  [CORDTYPE] |Type of calorder rec |unsigned short           |2      |3                            |
+   |  [CORDLEN]  |Length calorder rec  |unsigned short           |2      |1                            |
+   |  [CORDVAL]  |Value of calorder rec|signed char              |1      |0                            |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |[SPLIT]      |split                                                                                |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |  [SPLTYPE]  |Type of split rec    |unsigned short           |2      |4                            |
+   |  [SPLLEN]   |Length of split rec  |unsigned short           |2      |1                            |
+   |  [SPLVAL]   |Value of split rec   |signed char              |1      |0                            |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |[SYNC]       |sync                                                                                 |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |  [SYNCTYP]  |Type of sync rec     |unsigned short           |2      |5                            |
+   |  [SYNCLEN]  |Length of sync rec   |unsigned short           |2      |1                            |
+   |  [SYNCVAL]  |Value of sync rec    |singed char              |1      |0                            |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |[CURS]       |cursor                                                                               |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |  [CURSTYP]  |Type of cursor rec   |unsigned short           |2      |49                           |
+   |  [CURSLEN]  |Length of cursor rec |unsigned short           |2      |1                            |
+   |  [CURSVAL]  |Value of cursor rec  |signed char              |1      |1                            |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |[WIN]        |window                                                                               |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |  [WINTYPE]  |Type of window rec   |unsigned short           |2      |7                            |
+   |  [WINLEN]   |Length of window rec |unsigned short           |2      |32                           |
+   |  [WINVAL1]  |Value 1 of window rec|unsigned short           |4      |0,0                          |
+   |  [WINVAL2]  |Value 2 of window rec|signed char              |2      |113,0                        |
+   |  [WINVAL3]  |Value 3 of window rec|unsigned short           |26     |10,n,n,0,0,0,0,0,0,0,0,72,0  |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |[HCOL]       |hidcol                                                                               |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |  [HCOLTYP]  |Type of hidcol rec   |unsigned short           |2      |100                          |
+   |  [HCOLLEN]  |Length of hidcol rec |unsigned short           |2      |32                           |
+   |  [HCOLVAL]  |Value of hidcol rec  |signed char              |32     |0*32                         |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |[MRG]        |margins                                                                              |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |  [MRGTYPE]  |Type of margins rec  |unsigned short           |2      |40                           |
+   |  [MRGLEN]   |Length of margins rec|unsigned short           |2      |10                           |
+   |  [MRGVAL]   |Value of margins rec |unsigned short           |10     |4,76,66,2,2                  |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |[LBL]        |labels                                                                               |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |  [LBLTYPE]  |Type of labels rec   |unsigned short           |2      |41                           |
+   |  [LBLLEN]   |Length of labels rec |unsigned short           |2      |1                            |
+   |  [LBLVAL]   |Value of labels rec  |char                     |1      |'                            |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |[CELL_k]                                                                                           |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+   |  [DTYPE]    |Type of cell data    |unsigned short           |2      |[DTYPE][0]==0: end of file   |
+   |             |                     |                         |       |          ==14: number       |
+   |             |                     |                         |       |          ==16: formula      |
+   |             |                     |                         |       |          ==13: integer      |
+   |             |                     |                         |       |          ==11: nrange       |
+   |             |                     |                         |       |          ==else: unknown    |
+   |  [DLEN]     |Length of cell data  |unsigned short           |2      |                             |
+   |  [DFORMAT]  |Format of cell data  |not sure                 |1      |                             |
+   |  [CINDEX]   |Row, column of cell  |unsigned short           |4      |                             |
+   |  [CVALUE]   |Value of cell        |double, [DTYPE][0]==14   |8      |                             |
+   |             |                     |formula,[DTYPE][0]==16   |8 +    |[DTYPE][1] - 13              |
+   |             |                     |integer,[DTYPE][0]==13   |2      |                             |
+   |             |                     |nrange, [DTYPE][0]==11   |24     |                             |
+   |             |                     |else,   [DTYPE][0]==else |       |[DTYPE][1]                   |
+   |  [EOF]      |End of file          |unsigned short           |4      |1,0,0,0                      |
+   +-------------+---------------------+-------------------------+-------+-----------------------------+
+
 
     """
 
@@ -134,8 +164,12 @@ class Wk1IO(FileIO.FileIO):
             self.pos = 0
 
     def _read(self):
-        """Reads Lotus Wk1 file
-        Returns a pysal.weights.weights.W object
+        """
+        Reads Lotus Wk1 file
+
+        Returns
+        -------
+        A pysal.weights.weights.W object
 
         Examples
         --------

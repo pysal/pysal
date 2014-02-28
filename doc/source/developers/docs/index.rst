@@ -3,6 +3,7 @@
 *******************
 PySAL Documentation
 *******************
+.. contents::
 
 .. _compiling-doc-label:
 

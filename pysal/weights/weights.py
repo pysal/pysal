@@ -6,7 +6,7 @@ import math
 import numpy as np
 import scipy.sparse
 from os.path import basename as BASENAME
-from pysal.weights import  util
+from pysal.weights import util
 
 
 class W(object):
@@ -63,10 +63,6 @@ class W(object):
     trcWtW_WW
     transform
 
-
-
-
-
     Examples
     --------
     >>> from pysal import W, lat2W
@@ -115,6 +111,7 @@ class W(object):
     Island ids:  [2, 3]
 
     """
+
     def __init__(self, neighbors, weights=None, id_order=None, silent_island_warning=False):
         self.silent_island_warning = silent_island_warning
         self.transformations = {}
@@ -139,10 +136,10 @@ class W(object):
             ni = len(self.islands)
             if ni == 1:
                 print "WARNING: there is one disconnected observation (no neighbors)"
-                print "Island id: ",self.islands
+                print "Island id: ", self.islands
             else:
-                print "WARNING: there are %d disconnected observations"%ni
-                print "Island ids: ",self.islands
+                print "WARNING: there are %d disconnected observations" % ni
+                print "Island ids: ", self.islands
 
     def _reset(self):
         """
@@ -182,7 +179,6 @@ class W(object):
         data = np.array(data)
         s = scipy.sparse.csr_matrix((data, (row, col)), shape=(self.n, self.n))
         return s
-
 
     @property
     def id2i(self):
@@ -246,7 +242,6 @@ class W(object):
         """
         individual elements comprising s2
 
-
         See Also
         --------
         s2
@@ -262,7 +257,6 @@ class W(object):
     def s2(self):
         """
         float
-
 
         .. math::
 
@@ -503,6 +497,7 @@ class W(object):
         >>>
         """
         class _W_iter:
+
             def __init__(self, w):
                 self.w = w
                 self.n = len(w._id_order)
@@ -585,15 +580,18 @@ class W(object):
             raise Exception('ordered_ids do not align with W ids')
 
     def __get_id_order(self):
-        """returns the ids for the observations in the order in which they
-        would be encountered if iterating over the weights."""
+        """
+        Returns the ids for the observations in the order in which they
+        would be encountered if iterating over the weights .
+        """
         return self._id_order
 
     id_order = property(__get_id_order, __set_id_order)
 
     @property
     def id_order_set(self):
-        """returns True if user has set id_order, False if not.
+        """
+        Returns True if user has set id_order, False if not.
 
         Examples
         --------
@@ -671,11 +669,18 @@ class W(object):
         Parameters
         ----------
         transform : string (not case sensitive)
-                    B: Binary
-                    R: Row-standardization (global sum=n)
-                    D: Double-standardization (global sum=1)
-                    V: Variance stabilizing
-                    O: Restore original transformation (from instantiation)
+
+        .. table::
+
+            ================   ======================================================
+            transform string   value
+            ================   ======================================================
+            B                  Binary
+            R                  Row-standardization (global sum=n)
+            D                  Double-standardization (global sum=1)
+            V                  Variance stabilizing
+            O                  Restore original transformation (from instantiation)
+            ================   ======================================================
 
         Examples
         --------
@@ -708,7 +713,7 @@ class W(object):
                     row_sum = sum(wijs) * 1.0
                     if row_sum == 0.0:
                         if not self.silent_island_warning:
-                            print 'WARNING: ',i,' is an island (no neighbors)'
+                            print 'WARNING: ', i, ' is an island (no neighbors)'
                     weights[i] = [wij / row_sum for wij in wijs]
                 weights = weights
                 self.transformations[value] = weights
@@ -775,8 +780,8 @@ class W(object):
         """
         Asymmetry check
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         intrinsic: boolean (default=True)
                 
                 intrinsic symmetry:
@@ -828,7 +833,6 @@ class W(object):
             ijs.sort()
             return ijs
 
-
     def full(self):
         """
         Generate a full numpy array
@@ -839,8 +843,6 @@ class W(object):
         implicit : tuple
                    first element being the full numpy array and second element
                    keys being the ids associated with each row in the array.
-
-
 
         Examples
         --------
@@ -865,15 +867,15 @@ class W(object):
     def towsp(self):
         '''
         Generate a WSP object
-        ...
 
         Returns
         -------
-        implicit    : pysal.WSP
-                      Thin W class
+
+        implicit : pysal.WSP
+                   Thin W class
 
         Examples
-        ---------
+        --------
         >>> import pysal as ps
         >>> from pysal import W
         >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
@@ -897,17 +899,18 @@ class W(object):
         """
         Adding meta data for writing headers of gal and gwt files
 
-
         Parameters
         ----------
 
-        shapefile: (string) shapefile name used to construct weights
+        shapefile : (string) 
+                    shapefile name used to construct weights
 
-        idVariable: (string) name of attribute in shapefile to associate with
-        ids in the weights
+        idVariable : (string) 
+                    name of attribute in shapefile to associate with ids in the weights
 
-        full: (boolean) True - write out entire path for shapefile, False
-        (default) only base of shapefile without extension
+        full : (boolean) 
+                True - write out entire path for shapefile, False
+                (default) only base of shapefile without extension
 
         """
         if full:
@@ -918,10 +921,8 @@ class W(object):
         self._varName = idVariable
 
 
-
-
-
 class WSP(object):
+
     """
     Thin W class for spreg
 
@@ -961,8 +962,8 @@ class WSP(object):
     >>> w.n
     4
 
-
     """
+
     def __init__(self, sparse, id_order=None):
         if not scipy.sparse.issparse(sparse):
             raise ValueError("must pass a scipy sparse object")
@@ -973,7 +974,8 @@ class WSP(object):
         self.n = sparse.shape[0]
         if id_order:
             if len(id_order) != self.n:
-                raise ValueError("Number of values in id_order must match shape of sparse")
+                raise ValueError(
+                    "Number of values in id_order must match shape of sparse")
         self.id_order = id_order
         self._cache = {}
 
@@ -1013,4 +1015,3 @@ class WSP(object):
             self._diagWtW_WW = (wt * w + w * w).diagonal()
             self._cache['diagWtW_WW'] = self._diagWtW_WW
         return self._diagWtW_WW
-

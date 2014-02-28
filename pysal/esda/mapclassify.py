@@ -4,7 +4,12 @@ A module of classification schemes for choropleth mapping.
 __author__ = "Sergio J. Rey"
 __credits__ = "Copyright (c) 2009-10 Sergio J. Rey"
 
-__all__ = ['quantile', 'Map_Classifier', 'Box_Plot', 'Equal_Interval', 'Fisher_Jenks', 'Fisher_Jenks_Sampled', 'Jenks_Caspall', 'Jenks_Caspall_Forced', 'Jenks_Caspall_Sampled', 'Max_P_Classifier', 'Maximum_Breaks', 'Natural_Breaks', 'Quantiles', 'Percentiles', 'Std_Mean', 'User_Defined', 'gadf', 'K_classifiers']
+__all__ = ['Map_Classifier', 'quantile', 'Box_Plot', 'Equal_Interval',
+           'Fisher_Jenks', 'Fisher_Jenks_Sampled', 'Jenks_Caspall',
+           'Jenks_Caspall_Forced', 'Jenks_Caspall_Sampled', 
+           'Max_P_Classifier', 'Maximum_Breaks', 'Natural_Breaks',
+           'Quantiles', 'Percentiles', 'Std_Mean', 'User_Defined',
+           'gadf', 'K_classifiers']
 
 from pysal.common import *
 
@@ -360,7 +365,51 @@ def _fisher_jenks_means(values, classes=5, sort=True):
 
 class Map_Classifier:
     """
-    Abstract class for all map classifications """
+    Abstract class for all map classifications
+    For an array :math:`y` of :math:`n` values, a map classifier places each value
+    :math:`y_i` into one of :math:`k` mutually exclusive and exhaustive classes.
+    Each classifer defines the classes based on different criteria, but in all
+    cases the following hold for the classifiers in PySAL:
+
+    .. math::
+
+              C_j^l < y_i \le C_j^u \  forall  i \in C_j
+
+    where :math:`C_j` denotes class :math:`j` which has lower bound :math:`C_j^l` and upper bound :math:`C_j^u`.
+
+
+        
+
+    Map Classifiers Supported
+
+    * :class:`~pysal.esda.mapclassify.Box_Plot`
+    * :class:`~pysal.esda.mapclassify.Equal_Interval`
+    * :class:`~pysal.esda.mapclassify.Fisher_Jenks`
+    * :class:`~pysal.esda.mapclassify.Jenks_Caspall`
+    * :class:`~pysal.esda.mapclassify.Jenks_Caspall_Forced`
+    * :class:`~pysal.esda.mapclassify.Jenks_Caspall_Sampled`
+    * :class:`~pysal.esda.mapclassify.Max_P_Classifier`
+    * :class:`~pysal.esda.mapclassify.Maximum_Breaks`
+    * :class:`~pysal.esda.mapclassify.Natural_Breaks`
+    * :class:`~pysal.esda.mapclassify.Quantiles`
+    * :class:`~pysal.esda.mapclassify.Percentiles`
+    * :class:`~pysal.esda.mapclassify.Std_Mean`
+    * :class:`~pysal.esda.mapclassify.User_Defined`
+
+    Utilities:
+
+    In addition to the classifiers, there are several utility functions that can be used to evaluate the properties of a specific classifier for different parameter values, or for automatic selection of a classifier and number of classes.
+
+    * :func:`~pysal.esda.mapclassify.gadf`
+    * :class:`~pysal.esda.mapclassify.K_classifiers`
+
+    References
+    ----------
+
+    Slocum, T.A., R.B. McMaster, F.C. Kessler and H.H. Howard (2009) *Thematic Cartography and Geovisualization*. Pearson Prentice Hall, Upper Saddle River.
+
+    """
+
     def __init__(self, y):
         self.name = 'Map Classifier'
         if hasattr(y, 'values'):
@@ -858,6 +907,7 @@ class Maximum_Breaks(Map_Classifier):
     >>> mb.counts
     array([50,  2,  4,  1,  1])
     >>>
+
     """
     def __init__(self, y, k=K, mindiff=0):
         self.k = k
@@ -940,11 +990,12 @@ class Natural_Breaks(Map_Classifier):
 
     Notes
     -----
-    There is a tradeoff here between speed and consistency of the classification
+    There is a tradeoff here between speed and consistency of the
+    classification
     If you want more speed, set initial to a smaller value (0
     would result in the best speed, if you want more consistent classes in
-    multiple runs of Natural_Breaks on the same data, set initial to a higer
-    value.
+    multiple runs of Natural_Breaks on the same data, set initial to a
+    higher value.
 
 
     """
@@ -1030,11 +1081,10 @@ class Fisher_Jenks_Sampled(Map_Classifier):
              number of classes required
     pct    : float
              The percentage of n that should form the sample
-             If pct is specified such that n*pct > 1000, then pct = 1000./n,
-             unless truncate is False
-    truncate: binary (Default True)
+             If pct is specified such that n*pct > 1000, then 
+             pct = 1000./n, unless truncate is False
+    truncate : binary (Default True)
              truncate pct in cases where pct * n > 1000.
-
 
     Attributes
     ----------
@@ -1048,25 +1098,11 @@ class Fisher_Jenks_Sampled(Map_Classifier):
     counts  : array (k,1)
               the number of observations falling in each class
 
-
     Examples
     --------
-    # turned off due to timing being different across hardware
-    #>>> import pysal
-    #>>> import numpy as np
-    #>>> import time
-    #>>> x = np.arange(1000)
-    #>>> t0=time.time();fj=pysal.esda.mapclassify.Fisher_Jenks(x,k=4);t1=time.time()
-    #>>> t2=time.time();fjs=pysal.esda.mapclassify.Fisher_Jenks_Sampled(x,k=4);t3=time.time()
-    #>>> print t1-t0
-    #1.84405994415
-    #>>> print t3-t2
-    #0.0295069217682
-    #>>> fj.tss
-    #5208250.0
-    #>>> fjs.tss
-    #5337860.0
-    #>>>
+
+    (Turned off due to timing being different across hardware)
+
     """
 
     def __init__(self, y, k=K, pct=0.10, truncate=True):
@@ -1675,14 +1711,12 @@ def gadf(y, method="Quantiles", maxk=15, pct=0.8):
     pct    : float
              The percentage of GADF to exceed
 
-
     Returns
     -------
 
     implicit : tuple
                first value is k, second value is instance of classifier at k,
                third is the pct obtained
-
 
     Examples
     --------
@@ -1740,7 +1774,6 @@ class K_classifiers:
              values to be classified
     pct    : float
              The percentage of GADF to exceed
-
 
     Attributes
     ----------

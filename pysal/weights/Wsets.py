@@ -21,25 +21,21 @@ def w_union(w1, w2, silent_island_warning=False):
     ----------
 
     w1                      : W object
-
     w2                      : W object
     silent_island_warning   : boolean
                               Switch to turn off (default on) print statements
                               for every observation with islands
-
 
     Returns
     -------
 
     w       : W object
 
-
     Notes
     -----
     ID comparisons are performed using ==, therefore the integer ID 2 is
     equivalent to the float ID 2.0. Returns a matrix with all the unique IDs
     from w1 and w2.
-
 
     Examples
     --------
@@ -81,9 +77,7 @@ def w_intersection(w1, w2, w_shape='w1', silent_island_warning=False):
     ----------
 
     w1                      : W object
-
     w2                      : W object
-
     w_shape                 : string
                               Defines the shape of the returned weights matrix. 'w1' returns a
                               matrix with the same IDs as w1; 'all' returns a matrix with all
@@ -93,18 +87,15 @@ def w_intersection(w1, w2, w_shape='w1', silent_island_warning=False):
                               Switch to turn off (default on) print statements
                               for every observation with islands
 
-
     Returns
     -------
 
     w       : W object
 
-
     Notes
     -----
     ID comparisons are performed using ==, therefore the integer ID 2 is
     equivalent to the float ID 2.0.
-
 
     Examples
     --------
@@ -158,15 +149,12 @@ def w_difference(w1, w2, w_shape='w1', constrained=True, silent_island_warning=F
     ----------
 
     w1                      : W object
-
     w2                      : W object
-
     w_shape                 : string
                               Defines the shape of the returned weights matrix. 'w1' returns a
                               matrix with the same IDs as w1; 'all' returns a matrix with all
                               the unique IDs from w1 and w2; and 'min' returns a matrix with
                               the IDs occurring in w1 and not in w2.
-
     constrained             : boolean
                               If False then the full set of neighbor pairs in w1 that are
                               not in w2 are returned. If True then those pairs that would
@@ -176,18 +164,15 @@ def w_difference(w1, w2, w_shape='w1', constrained=True, silent_island_warning=F
                               Switch to turn off (default on) print statements
                               for every observation with islands
 
-
     Returns
     -------
 
     w       : W object
 
-
     Notes
     -----
     ID comparisons are performed using ==, therefore the integer ID 2 is
     equivalent to the float ID 2.0.
-
 
     Examples
     --------
@@ -260,14 +245,11 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True, silent_islan
     ----------
 
     w1                      : W object
-
     w2                      : W object
-
     w_shape                 : string
                               Defines the shape of the returned weights matrix. 'all' returns a
                               matrix with all the unique IDs from w1 and w2; and 'min' returns
                               a matrix with the IDs not shared by w1 and w2.
-
     constrained             : boolean
                               If False then the full set of neighbor pairs that are not
                               shared by w1 and w2 are returned. If True then those pairs
@@ -277,18 +259,15 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True, silent_islan
                               Switch to turn off (default on) print statements
                               for every observation with islands
 
-
     Returns
     -------
 
     w       : W object
 
-
     Notes
     -----
     ID comparisons are performed using ==, therefore the integer ID 2 is
     equivalent to the float ID 2.0.
-
 
     Examples
     --------
@@ -312,7 +291,6 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True, silent_islan
     >>> w.neighbors[15]
     [10, 19]
     >>>
-
 
     """
     if w_shape == 'all':
@@ -358,7 +336,6 @@ def w_subset(w1, ids, silent_island_warning=False):
     ----------
 
     w1                      : W object
-
     ids                     : list
                               A list containing the IDs to be include in the returned weights
                               object.
@@ -366,12 +343,10 @@ def w_subset(w1, ids, silent_island_warning=False):
                               Switch to turn off (default on) print statements
                               for every observation with islands
 
-
     Returns
     -------
 
     w       : W object
-
 
     Examples
     --------
@@ -414,10 +389,9 @@ def w_clip(w1, w2, outSP=True, silent_island_warning=False):
 
     Checks on w1 and w2 are performed to make sure they conform to the
     appropriate format and, if not, they are converted.
-    ...
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     w1                      : pysal.W, scipy.sparse.csr.csr_matrix
                               Potentially continuous weights matrix to be clipped. The clipped
                               matrix wc will have at most the same elements as w1.
@@ -431,6 +405,7 @@ def w_clip(w1, w2, outSP=True, silent_island_warning=False):
     silent_island_warning   : boolean
                               Switch to turn off (default on) print statements
                               for every observation with islands
+
     Returns
     -------
     wc      : pysal.W, scipy.sparse.csr.csr_matrix
@@ -512,7 +487,6 @@ def w_clip(w1, w2, outSP=True, silent_island_warning=False):
            [ True,  True,  True,  True,  True,  True],
            [ True,  True,  True,  True,  True,  True],
            [ True,  True,  True,  True,  True,  True]], dtype=bool)
-
 
     '''
     if not w1.id_order:

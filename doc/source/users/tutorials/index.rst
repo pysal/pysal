@@ -5,8 +5,8 @@ Getting Started with PySAL
 
 
 .. toctree::
-   :maxdepth: 2
-   
+   :maxdepth: 1
+       
    Introduction to the Tutorials <intro>
    File Input and Output <fileio>
    Spatial Weights <weights>
@@ -16,5 +16,5 @@ Getting Started with PySAL
    Regionalization <region>
    Spatial Dynamics <dynamics>
    Shapely Extension <shapely>
-   Next Steps <next>
    Sample Datasets <examples>
+   Next Steps <next>

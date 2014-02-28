@@ -7,7 +7,6 @@
     :synopsis: DataTable Extension for PySAL FileIO System
     :members:
     :undoc-members:
-    :inherited-members:
 
 
 

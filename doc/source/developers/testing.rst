@@ -4,6 +4,7 @@
 ************************
 PySAL Testing Procedures
 ************************
+.. contents::
 
 As of PySAL release 1.6, continuous integration testing was ported to the
 Travis-CI hosted testing framework (http://travis-ci.org).  There is integration within GitHub that

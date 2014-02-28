@@ -2,7 +2,8 @@
 =================================================
 
 .. toctree::
-   
+   :maxdepth: 1
+
    ols
    ols_regimes
    probit

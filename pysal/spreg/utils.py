@@ -16,6 +16,7 @@ import copy
 
 
 class RegressionPropsY:
+
     """
     Helper class that adds common regression properties to any regression
     class that inherits it.  It takes no parameters.  See BaseOLS for example
@@ -36,15 +37,18 @@ class RegressionPropsY:
     @property
     def mean_y(self):
         if 'mean_y' not in self._cache:
-            self._cache['mean_y']=np.mean(self.y)
+            self._cache['mean_y'] = np.mean(self.y)
         return self._cache['mean_y']
+
     @property
     def std_y(self):
         if 'std_y' not in self._cache:
-            self._cache['std_y']=np.std(self.y, ddof=1)
+            self._cache['std_y'] = np.std(self.y, ddof=1)
         return self._cache['std_y']
-    
+
+
 class RegressionPropsVM:
+
     """
     Helper class that adds common regression properties to any regression
     class that inherits it.  It takes no parameters.  See BaseOLS for example
@@ -69,24 +73,28 @@ class RegressionPropsVM:
     @property
     def utu(self):
         if 'utu' not in self._cache:
-            self._cache['utu'] = np.sum(self.u**2)
+            self._cache['utu'] = np.sum(self.u ** 2)
         return self._cache['utu']
+
     @property
     def sig2n(self):
         if 'sig2n' not in self._cache:
             self._cache['sig2n'] = self.utu / self.n
         return self._cache['sig2n']
+
     @property
     def sig2n_k(self):
         if 'sig2n_k' not in self._cache:
-            self._cache['sig2n_k'] = self.utu / (self.n-self.k)
+            self._cache['sig2n_k'] = self.utu / (self.n - self.k)
         return self._cache['sig2n_k']
+
     @property
     def vm(self):
         if 'vm' not in self._cache:
             self._cache['vm'] = np.dot(self.sig2, self.xtxi)
-        return self._cache['vm']    
-    
+        return self._cache['vm']
+
+
 def get_A1_het(S):
     """
     Builds A1 as in Arraiz et al [1]_
@@ -117,10 +125,11 @@ def get_A1_het(S):
     Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
     592-614.
     """
-    StS = S.T*S
+    StS = S.T * S
     d = SP.spdiags([StS.diagonal()], [0], S.get_shape()[0], S.get_shape()[1])
     d = d.asformat('csr')
     return StS - d
+
 
 def get_A1_hom(s, scalarKP=False):
     """
@@ -155,16 +164,17 @@ def get_A1_hom(s, scalarKP=False):
     N. 1, pp. 1-13.      
     """
     n = float(s.shape[0])
-    wpw = s.T*s
-    twpw = np.sum(wpw.diagonal()) 
+    wpw = s.T * s
+    twpw = np.sum(wpw.diagonal())
     e = SP.eye(n, n, format='csr')
     e.data = np.ones(n) * (twpw / n)
     num = wpw - e
     if not scalarKP:
         return num
     else:
-        den = 1. + (twpw / n)**2.
+        den = 1. + (twpw / n) ** 2.
         return num / den
+
 
 def get_A2_hom(s):
     """
@@ -191,6 +201,7 @@ def get_A2_hom(s):
     .. [1] Anselin (2011) "GMM Estimation of Spatial Error Autocorrelation with and without Heteroskedasticity".
     """
     return (s + s.T) / 2.
+
 
 def _moments2eqs(A1, s, u):
     '''
@@ -228,18 +239,19 @@ def _moments2eqs(A1, s, u):
     N. 1, pp. 1-13.
     '''
     n = float(s.shape[0])
-    A1u = A1*u
-    wu = s*u
+    A1u = A1 * u
+    wu = s * u
     g1 = np.dot(u.T, A1u)
-    g2 = np.dot(u.T, wu) 
-    g = np.array([[g1][0][0],[g2][0][0]]) / n
+    g2 = np.dot(u.T, wu)
+    g = np.array([[g1][0][0], [g2][0][0]]) / n
 
-    G11 = np.dot(u.T, ((A1 + A1.T)*wu))
-    G12 = -np.dot((wu.T*A1), wu)
-    G21 = np.dot(u.T, ((s + s.T)*wu))
-    G22 = -np.dot(wu.T, (s*wu))
-    G = np.array([[G11[0][0],G12[0][0]],[G21[0][0],G22[0][0]]]) / n
+    G11 = np.dot(u.T, ((A1 + A1.T) * wu))
+    G12 = -np.dot((wu.T * A1), wu)
+    G21 = np.dot(u.T, ((s + s.T) * wu))
+    G22 = -np.dot(wu.T, (s * wu))
+    G = np.array([[G11[0][0], G12[0][0]], [G21[0][0], G22[0][0]]]) / n
     return [G, g]
+
 
 def optim_moments(moments_in, vcX=np.array([0])):
     """
@@ -272,22 +284,26 @@ def optim_moments(moments_in, vcX=np.array([0])):
     moments = copy.deepcopy(moments_in)
     if vcX.any():
         Ec = np.transpose(la.cholesky(la.inv(vcX)))
-        moments[0] = np.dot(Ec,moments_in[0])
-        moments[1] = np.dot(Ec,moments_in[1])
-    scale = np.min([[np.min(moments[0]),np.min(moments[1])]])
-    moments[0],moments[1] = moments[0]/scale, moments[1]/scale
+        moments[0] = np.dot(Ec, moments_in[0])
+        moments[1] = np.dot(Ec, moments_in[1])
+    scale = np.min([[np.min(moments[0]), np.min(moments[1])]])
+    moments[0], moments[1] = moments[0] / scale, moments[1] / scale
     if moments[0].shape[0] == 2:
-        optim_par = lambda par: foptim_par(np.array([[float(par[0]),float(par[0])**2.]]).T,moments)
+        optim_par = lambda par: foptim_par(
+            np.array([[float(par[0]), float(par[0]) ** 2.]]).T, moments)
         start = [0.0]
-        bounds=[(-1.0,1.0)]
+        bounds = [(-1.0, 1.0)]
     if moments[0].shape[0] == 3:
-        optim_par = lambda par: foptim_par(np.array([[float(par[0]),float(par[0])**2.,float(par[1])]]).T,moments)
-        start = [0.0,0.0]
-        bounds=[(-1.0,1.0),(0.0,None)]        
-    lambdaX = op.fmin_l_bfgs_b(optim_par,start,approx_grad=True,bounds=bounds)
+        optim_par = lambda par: foptim_par(
+            np.array([[float(par[0]), float(par[0]) ** 2., float(par[1])]]).T, moments)
+        start = [0.0, 0.0]
+        bounds = [(-1.0, 1.0), (0.0, None)]
+    lambdaX = op.fmin_l_bfgs_b(
+        optim_par, start, approx_grad=True, bounds=bounds)
     return lambdaX[0][0]
 
-def foptim_par(par,moments):
+
+def foptim_par(par, moments):
     """ 
     Preparation of the function of moments for minimization
     ...
@@ -307,11 +323,12 @@ def foptim_par(par,moments):
                       sum of square residuals (e) of the equation system 
                       moments.g - moments.G * lambdapar = e
     """
-    vv = np.dot(moments[0],par)
-    vv2 = moments[1]-vv
-    return sum(vv2**2)
+    vv = np.dot(moments[0], par)
+    vv2 = moments[1] - vv
+    return sum(vv2 ** 2)
 
-def get_spFilter(w,lamb,sf):
+
+def get_spFilter(w, lamb, sf):
     '''
     Compute the spatially filtered variables
     
@@ -352,6 +369,7 @@ def get_spFilter(w,lamb,sf):
         result = sf - lamb * (w * sf)
     return result
 
+
 def get_lags(w, x, w_lags):
     '''
     Calculates a given order of spatial lags and all the smaller orders
@@ -373,10 +391,11 @@ def get_lags(w, x, w_lags):
     '''
     lag = lag_spatial(w, x)
     spat_lags = lag
-    for i in range(w_lags-1):
+    for i in range(w_lags - 1):
         lag = lag_spatial(w, lag)
         spat_lags = sphstack(spat_lags, lag)
     return spat_lags
+
 
 def inverse_prod(w, data, scalar, post_multiply=False, inv_method="power_exp", threshold=0.0000000001, max_iterations=None):
     """ 
@@ -432,11 +451,12 @@ def inverse_prod(w, data, scalar, post_multiply=False, inv_method="power_exp", t
     >>> np.allclose(inv_pow, inv_reg, atol=0.0001)
     True
 
-    """                      
-    if inv_method=="power_exp":
-        inv_prod = power_expansion(w, data, scalar, post_multiply=post_multiply,\
-                threshold=threshold, max_iterations=max_iterations)
-    elif inv_method=="true_inv":
+    """
+    if inv_method == "power_exp":
+        inv_prod = power_expansion(
+            w, data, scalar, post_multiply=post_multiply,
+            threshold=threshold, max_iterations=max_iterations)
+    elif inv_method == "true_inv":
         try:
             matrix = la.inv(np.eye(w.n) - (scalar * w.full()[0]))
         except:
@@ -448,6 +468,7 @@ def inverse_prod(w, data, scalar, post_multiply=False, inv_method="power_exp", t
     else:
         raise Exception, "Invalid method selected for inversion."
     return inv_prod
+
 
 def power_expansion(w, data, scalar, post_multiply=False, threshold=0.0000000001, max_iterations=None):
     """
@@ -476,10 +497,10 @@ def power_expansion(w, data, scalar, post_multiply=False, threshold=0.0000000001
     if max_iterations == None:
         max_iterations = 10000000
     while test > threshold and count <= max_iterations:
-        if post_multiply:    
-            increment = increment*ws*scalar
+        if post_multiply:
+            increment = increment * ws * scalar
         else:
-            increment = ws*increment*scalar
+            increment = ws * increment * scalar
         running_total += increment
         test_old = test
         test = la.norm(increment)
@@ -488,18 +509,20 @@ def power_expansion(w, data, scalar, post_multiply=False, threshold=0.0000000001
         count += 1
     return running_total
 
+
 def set_endog(y, x, w, yend, q, w_lags, lag_q):
     # Create spatial lag of y
     yl = lag_spatial(w, y)
-    if issubclass(type(yend), np.ndarray):  # spatial and non-spatial instruments
+    # spatial and non-spatial instruments
+    if issubclass(type(yend), np.ndarray):
         if lag_q:
             lag_vars = sphstack(x, q)
         else:
             lag_vars = x
-        spatial_inst = get_lags(w ,lag_vars, w_lags)
+        spatial_inst = get_lags(w, lag_vars, w_lags)
         q = sphstack(q, spatial_inst)
         yend = sphstack(yend, yl)
-    elif yend == None: # spatial instruments only
+    elif yend == None:  # spatial instruments only
         q = get_lags(w, x, w_lags)
         yend = yl
     else:
@@ -508,7 +531,7 @@ def set_endog(y, x, w, yend, q, w_lags, lag_q):
 
     lag = lag_spatial(w, x)
     spat_lags = lag
-    for i in range(w_lags-1):
+    for i in range(w_lags - 1):
         lag = lag_spatial(w, lag)
         spat_lags = sphstack(spat_lags, lag)
     return spat_lags
@@ -519,48 +542,54 @@ def set_endog_sparse(y, x, w, yend, q, w_lags, lag_q):
     Same as set_endog, but with a sparse object passed as weights instead of W object.
     """
     yl = w * y
-    if issubclass(type(yend), np.ndarray):  # spatial and non-spatial instruments
+    # spatial and non-spatial instruments
+    if issubclass(type(yend), np.ndarray):
         if lag_q:
             lag_vars = sphstack(x, q)
         else:
             lag_vars = x
         spatial_inst = w * lag_vars
-        for i in range(w_lags-1):
+        for i in range(w_lags - 1):
             spatial_inst = sphstack(spatial_inst, w * spatial_inst)
         q = sphstack(q, spatial_inst)
         yend = sphstack(yend, yl)
-    elif yend == None: # spatial instruments only
+    elif yend == None:  # spatial instruments only
         q = w * x
-        for i in range(w_lags-1):
-            q = sphstack(q, w * q)        
+        for i in range(w_lags - 1):
+            q = sphstack(q, w * q)
         yend = yl
     else:
         raise Exception, "invalid value passed to yend"
     return yend, q
 
-def iter_msg(iteration,max_iter):
-    if iteration==max_iter:
+
+def iter_msg(iteration, max_iter):
+    if iteration == max_iter:
         iter_stop = "Maximum number of iterations reached."
     else:
         iter_stop = "Convergence threshold (epsilon) reached."
     return iter_stop
 
-def sp_att(w,y,predy,w_y,rho):
-    xb = predy - rho*w_y
-    if np.abs(rho)<1:
+
+def sp_att(w, y, predy, w_y, rho):
+    xb = predy - rho * w_y
+    if np.abs(rho) < 1:
         predy_sp = inverse_prod(w, xb, rho)
         warn = None
-        resid_sp = y - predy_sp #Note 1: Here if omitting pseudo-R2; If not, see Note 2.
+        # Note 1: Here if omitting pseudo-R2; If not, see Note 2.
+        resid_sp = y - predy_sp
     else:
         #warn = "Warning: Estimate for rho is outside the boundary (-1, 1). Computation of true inverse of W was required (slow)."
-        #predy_sp = inverse_prod(w, xb, rho, inv_method="true_inv")        
+        #predy_sp = inverse_prod(w, xb, rho, inv_method="true_inv")
         warn = "*** WARNING: Estimate for spatial lag coefficient is outside the boundary (-1, 1). ***"
-        predy_sp = np.zeros(y.shape,float)
-        resid_sp = np.zeros(y.shape,float)
-    #resid_sp = y - predy_sp #Note 2: Here if computing true inverse; If not, see Note 1.
+        predy_sp = np.zeros(y.shape, float)
+        resid_sp = np.zeros(y.shape, float)
+    # resid_sp = y - predy_sp #Note 2: Here if computing true inverse; If not,
+    # see Note 1.
     return predy_sp, resid_sp, warn
-    
-def spdot(a,b, array_out=True):
+
+
+def spdot(a, b, array_out=True):
     """
     Matrix multiplication function to deal with sparse and dense objects
 
@@ -579,18 +608,20 @@ def spdot(a,b, array_out=True):
 
     ab : array
          product of a times b. Sparse if a and b are sparse. Dense otherwise.
-    """  
+    """
     if type(a).__name__ == 'ndarray' and type(b).__name__ == 'ndarray':
-        ab = np.dot(a,b)
+        ab = np.dot(a, b)
     elif type(a).__name__ == 'csr_matrix' or type(b).__name__ == 'csr_matrix' \
             or type(a).__name__ == 'csc_matrix' or type(b).__name__ == 'csc_matrix':
-        ab = a*b
+        ab = a * b
         if array_out:
             if type(ab).__name__ == 'csc_matrix' or type(ab).__name__ == 'csr_matrix':
                 ab = ab.toarray()
     else:
-        raise Exception, "Invalid format for 'spdot' argument: %s and %s"%(type(a).__name__, type(b).__name__)
+        raise Exception, "Invalid format for 'spdot' argument: %s and %s" % (
+            type(a).__name__, type(b).__name__)
     return ab
+
 
 def spmultiply(a, b, array_out=True):
     """
@@ -613,20 +644,22 @@ def spmultiply(a, b, array_out=True):
 
     ab : array
          elementwise multiplied object. Sparse if a is sparse. Dense otherwise.
-    """  
+    """
     if type(a).__name__ == 'ndarray' and type(b).__name__ == 'ndarray':
-        ab = a*b
+        ab = a * b
     elif (type(a).__name__ == 'csr_matrix' or type(a).__name__ == 'csc_matrix') \
-         and (type(b).__name__ == 'csr_matrix' or type(b).__name__ == 'csc_matrix'):
+            and (type(b).__name__ == 'csr_matrix' or type(b).__name__ == 'csc_matrix'):
         ab = a.multiply(b)
         if array_out:
             if type(ab).__name__ == 'csc_matrix' or type(ab).__name__ == 'csr_matrix':
                 ab = ab.toarray()
     else:
-        raise Exception, "Invalid format for 'spmultiply' argument: %s and %s"%(type(a).__name__, type(b).__name__)
+        raise Exception, "Invalid format for 'spmultiply' argument: %s and %s" % (
+            type(a).__name__, type(b).__name__)
     return ab
 
-def sphstack(a,b, array_out=False):
+
+def sphstack(a, b, array_out=False):
     """
     Horizontal stacking of vectors (or matrices) to deal with sparse and dense objects
 
@@ -647,19 +680,21 @@ def sphstack(a,b, array_out=False):
 
     ab          : array or sparse matrix
                   Horizontally stacked objects
-    """  
+    """
     if type(a).__name__ == 'ndarray' and type(b).__name__ == 'ndarray':
-        ab = np.hstack((a,b))
+        ab = np.hstack((a, b))
     elif type(a).__name__ == 'csr_matrix' or type(b).__name__ == 'csr_matrix':
-        ab = SP.hstack((a,b), format='csr')
+        ab = SP.hstack((a, b), format='csr')
         if array_out:
             if type(ab).__name__ == 'csr_matrix':
                 ab = ab.toarray()
     else:
-        raise Exception, "Invalid format for 'sphstack' argument: %s and %s"%(type(a).__name__, type(b).__name__)
+        raise Exception, "Invalid format for 'sphstack' argument: %s and %s" % (
+            type(a).__name__, type(b).__name__)
     return ab
 
-def spbroadcast(a,b, array_out=False):
+
+def spbroadcast(a, b, array_out=False):
     """
     Element-wise multiplication of a matrix and vector to deal with sparse 
     and dense objects
@@ -681,19 +716,21 @@ def spbroadcast(a,b, array_out=False):
 
     ab          : array or sparse matrix
                   Element-wise multiplication of a and b
-    """  
+    """
     if type(a).__name__ == 'ndarray' and type(b).__name__ == 'ndarray':
-        ab = a*b
+        ab = a * b
     elif type(a).__name__ == 'csr_matrix':
         b_mod = SP.lil_matrix((b.shape[0], b.shape[0]))
         b_mod.setdiag(b)
-        ab = (a.T*b_mod).T
+        ab = (a.T * b_mod).T
         if array_out:
             if type(ab).__name__ == 'csr_matrix':
                 ab = ab.toarray()
     else:
-        raise Exception, "Invalid format for 'spbroadcast' argument: %s and %s"%(type(a).__name__, type(b).__name__)
+        raise Exception, "Invalid format for 'spbroadcast' argument: %s and %s" % (
+            type(a).__name__, type(b).__name__)
     return ab
+
 
 def spmin(a):
     """
@@ -710,8 +747,7 @@ def spmin(a):
 
     min a       : int or float
                   minimum value in a
-    """  
-
+    """
 
     if type(a).__name__ == 'ndarray':
         return a.min()
@@ -724,7 +760,9 @@ def spmin(a):
             else:
                 raise Exception, "Error: could not evaluate the minimum value."
     else:
-        raise Exception, "Invalid format for 'spmultiply' argument: %s and %s"%(type(a).__name__, type(b).__name__)
+        raise Exception, "Invalid format for 'spmultiply' argument: %s and %s" % (
+            type(a).__name__, type(b).__name__)
+
 
 def spmax(a):
     """
@@ -741,7 +779,7 @@ def spmax(a):
 
     max a       : int or float
                   maximum value in a
-    """  
+    """
     if type(a).__name__ == 'ndarray':
         return a.max()
     elif type(a).__name__ == 'csr_matrix' or type(a).__name__ == 'csc_matrix':
@@ -751,21 +789,24 @@ def spmax(a):
             if np.sum(a.data) == 0:
                 return 0
             else:
-                raise Exception, "Error: could not evaluate the maximum value."    
+                raise Exception, "Error: could not evaluate the maximum value."
     else:
-        raise Exception, "Invalid format for 'spmultiply' argument: %s and %s"%(type(a).__name__, type(b).__name__)
+        raise Exception, "Invalid format for 'spmultiply' argument: %s and %s" % (
+            type(a).__name__, type(b).__name__)
 
-def set_warn(reg,warn):
+
+def set_warn(reg, warn):
     ''' Groups warning messages for printout. '''
     if warn:
         try:
-            reg.warning += "Warning: "+warn+"\n"
+            reg.warning += "Warning: " + warn + "\n"
         except:
-            reg.warning = "Warning: "+warn+"\n"
+            reg.warning = "Warning: " + warn + "\n"
     else:
         pass
 
-def RegressionProps_basic(reg,betas=None,predy=None,u=None,sig2=None,sig2n_k=None,vm=None):
+
+def RegressionProps_basic(reg, betas=None, predy=None, u=None, sig2=None, sig2n_k=None, vm=None):
     ''' Set props based on arguments passed. '''
     if betas != None:
         reg.betas = betas
@@ -779,20 +820,20 @@ def RegressionProps_basic(reg,betas=None,predy=None,u=None,sig2=None,sig2n_k=Non
     if u != None:
         reg.u = u
     else:
-        reg.u = reg.y-reg.predy
-    if sig2 !=None:
+        reg.u = reg.y - reg.predy
+    if sig2 != None:
         reg.sig2 = sig2
     elif sig2n_k:
-        reg.sig2 = np.sum(reg.u**2) / (reg.n-reg.k)
+        reg.sig2 = np.sum(reg.u ** 2) / (reg.n - reg.k)
     else:
-        reg.sig2 = np.sum(reg.u**2) / reg.n
+        reg.sig2 = np.sum(reg.u ** 2) / reg.n
     if vm != None:
         reg.vm = vm
 
-        
+
 def _test():
     import doctest
     doctest.testmod()
 
 if __name__ == '__main__':
-    _test() 
+    _test()

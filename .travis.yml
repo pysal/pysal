@@ -12,13 +12,13 @@ virtualenv:
 before_install:
   - "sudo apt-get update -qq"
   - "sudo apt-get install -qq libgeos-3.2.2 libgeos-dev python-numpy python-scipy"
-  - "sudo apt-add-repository 'deb http://us.archive.ubuntu.com/ubuntu raring main universe'"
+  - "sudo apt-add-repository 'deb http://us.archive.ubuntu.com/ubuntu/ raring main universe'"
   - "sudo apt-get update -qq"
   - "sudo apt-get --only-upgrade install -qq python-scipy"
 
 install:
   - "pip install -q -r requirements.txt --use-mirrors"
-  - "pip install coveralls --use-mirrors"
+  #- "pip install coveralls --use-mirrors"
   - "sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm"
   #- "pip install pysal --use-mirrors"
   #- "pip uninstall -y pysal"
@@ -26,9 +26,10 @@ install:
 script: 
   - python -c 'import numpy; print numpy.version.version'
   - python -c 'import scipy; print scipy.version.version'
+  - python setup.py install 
   - python -c 'import pysal; print pysal.version'
-  - nosetests 
   - python setup.py sdist >/dev/null
+  - nosetests 
   - cd doc; make pickle; make doctest
 notifications:
     email:

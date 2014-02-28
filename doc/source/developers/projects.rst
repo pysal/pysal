@@ -20,5 +20,6 @@ GeoDa Center Projects
 -----------------
 Related Projects
 -----------------
+  * `Anaconda <http://continuum.io/downloads>`_
   * `StatsModels <http://statsmodels.sourceforge.net/related.html#related>`_
   * `PythonAnywhere <http://pythonanywhere.com>`_ includes latest PySAL release

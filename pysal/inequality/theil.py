@@ -11,7 +11,8 @@ SMALL = np.finfo('float').tiny
 
 
 class Theil:
-    """Classic Theil measure of inequality
+    """
+    Classic Theil measure of inequality
 
         .. math::
 
@@ -25,13 +26,11 @@ class Theil:
           determined. If y is (n,t) then an array of inequality values are
           determined, one value for each column in y.
 
-
     Attributes
     ----------
 
     T   : array (t,) or (1,)
           Theil's T for each column of y
-
 
     Notes
     -----
@@ -128,7 +127,6 @@ class TheilD:
 class TheilDSim:
     """Random permutation based inference on Theil's inequality decomposition.
 
-
     Provides for computationally based inference regarding the inequality
     decomposition using random spatial permutations. [1]_
 
@@ -145,7 +143,6 @@ class TheilDSim:
     permutations : int
                    Number of random spatial permutations for computationally
                    based inference on the decomposition.
-
 
     Attributes
     ----------

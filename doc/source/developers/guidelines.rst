@@ -3,6 +3,7 @@
 ==========
 Guidelines
 ==========
+.. contents::
 
 PySAL is adopting many of the conventions in the larger scientific computing
 in Python community and we ask that anyone interested in joining the project
@@ -35,7 +36,6 @@ Source Code
 
 
 PySAL uses `git <http://git-scm.com/>`_ and github for our  `code repository <https://github.com/pysal/pysal.git/>`_.
-Prospective developers can check out the current version using:
 
 
 You can setup PySAL for local development following the :doc:`installation instructions </users/installation>`.

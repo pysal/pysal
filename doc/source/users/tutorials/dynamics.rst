@@ -1,7 +1,8 @@
 .. testsetup:: *
-        
-        import pysal
-        import numpy as np
+
+    import pysal
+    import numpy as np
+
 ################
 Spatial Dynamics
 ################

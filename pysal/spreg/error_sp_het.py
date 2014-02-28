@@ -21,7 +21,9 @@ from pysal import lag_spatial
 
 __all__ = ["GM_Error_Het", "GM_Endog_Error_Het", "GM_Combo_Het"]
 
+
 class BaseGM_Error_Het(RegressionPropsY):
+
     """
     GMM method for a spatial error model with heteroskedasticity (note: no
     consistency checks, diagnostics or constant added); based on Arraiz
@@ -45,7 +47,6 @@ class BaseGM_Error_Het(RegressionPropsY):
                    an additional stop condition.
     step1c       : boolean
                    If True, then include Step 1c from Arraiz et al. 
-
 
     Attributes
     ----------
@@ -81,7 +82,6 @@ class BaseGM_Error_Het(RegressionPropsY):
     xtx          : float
                    X'X
 
-
     References
     ----------
 
@@ -114,56 +114,58 @@ class BaseGM_Error_Het(RegressionPropsY):
      [  0.4118   0.168 ]]
     """
 
-    def __init__(self, y, x, w,\
+    def __init__(self, y, x, w,
                  max_iter=1, epsilon=0.00001, step1c=False):
 
         self.step1c = step1c
-        #1a. OLS --> \tilde{betas}
+        # 1a. OLS --> \tilde{betas}
         ols = OLS.BaseOLS(y=y, x=x)
         self.x, self.y, self.n, self.k, self.xtx = ols.x, ols.y, ols.n, ols.k, ols.xtx
         wA1 = UTILS.get_A1_het(w)
 
-        #1b. GMM --> \tilde{\lambda1}
+        # 1b. GMM --> \tilde{\lambda1}
         moments = UTILS._moments2eqs(wA1, w, ols.u)
         lambda1 = UTILS.optim_moments(moments)
 
         if step1c:
-            #1c. GMM --> \tilde{\lambda2}
+            # 1c. GMM --> \tilde{\lambda2}
             sigma = get_psi_sigma(w, ols.u, lambda1)
             vc1 = get_vc_het(w, wA1, sigma)
-            lambda2 = UTILS.optim_moments(moments,vc1)
+            lambda2 = UTILS.optim_moments(moments, vc1)
         else:
-            lambda2 = lambda1 
+            lambda2 = lambda1
         lambda_old = lambda2
-        
+
         self.iteration, eps = 0, 1
-        while self.iteration<max_iter and eps>epsilon:
-            #2a. reg -->\hat{betas}
+        while self.iteration < max_iter and eps > epsilon:
+            # 2a. reg -->\hat{betas}
             xs = UTILS.get_spFilter(w, lambda_old, self.x)
             ys = UTILS.get_spFilter(w, lambda_old, self.y)
             ols_s = OLS.BaseOLS(y=ys, x=xs)
             self.predy = spdot(self.x, ols_s.betas)
             self.u = self.y - self.predy
 
-            #2b. GMM --> \hat{\lambda}
+            # 2b. GMM --> \hat{\lambda}
             sigma_i = get_psi_sigma(w, self.u, lambda_old)
             vc_i = get_vc_het(w, wA1, sigma_i)
             moments_i = UTILS._moments2eqs(wA1, w, self.u)
             lambda3 = UTILS.optim_moments(moments_i, vc_i)
             eps = abs(lambda3 - lambda_old)
             lambda_old = lambda3
-            self.iteration+=1
+            self.iteration += 1
 
-        self.iter_stop = UTILS.iter_msg(self.iteration,max_iter)
+        self.iter_stop = UTILS.iter_msg(self.iteration, max_iter)
 
         sigma = get_psi_sigma(w, self.u, lambda3)
         vc3 = get_vc_het(w, wA1, sigma)
         self.vm = get_vm_het(moments_i[0], lambda3, self, w, vc3)
         self.betas = np.vstack((ols_s.betas, lambda3))
-        self.e_filtered = self.u - lambda3*w*self.u
+        self.e_filtered = self.u - lambda3 * w * self.u
         self._cache = {}
 
+
 class GM_Error_Het(BaseGM_Error_Het):
+
     """
     GMM method for a spatial error model with heteroskedasticity, with results
     and diagnostics; based on Arraiz et al [1]_, following Anselin [2]_.
@@ -197,7 +199,6 @@ class GM_Error_Het(BaseGM_Error_Het):
                    Name of weights matrix for use in output
     name_ds      : string
                    Name of dataset for use in output
-
 
     Attributes
     ----------
@@ -253,14 +254,13 @@ class GM_Error_Het(BaseGM_Error_Het):
     title        : string
                    Name of the regression method used
 
-
     References
     ----------
 
     .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
+        Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
+        Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
+        592-614.
 
     .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
@@ -281,7 +281,7 @@ class GM_Error_Het(BaseGM_Error_Het):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
-    
+
     Extract the HOVAL column (home values) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -308,7 +308,7 @@ class GM_Error_Het(BaseGM_Error_Het):
     from ``columbus.shp``.
 
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
-    
+
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other
     things, his allows to interpret the spatial lag of a variable as the
@@ -323,14 +323,14 @@ class GM_Error_Het(BaseGM_Error_Het):
     have to pass them in as well, although this is optional.
 
     >>> reg = GM_Error_Het(y, X, w=w, step1c=True, name_y='home value', name_x=['income', 'crime'], name_ds='columbus')
-   
+
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
     discover them. This class offers an error model that explicitly accounts
     for heteroskedasticity and that unlike the models from
     ``pysal.spreg.error_sp``, it allows for inference on the spatial
     parameter.
-   
+
     >>> print reg.name_x
     ['CONSTANT', 'income', 'crime', 'lambda']
 
@@ -345,18 +345,20 @@ class GM_Error_Het(BaseGM_Error_Het):
      [  0.4118   0.168 ]]
 
     """
-    def __init__(self, y, x, w,\
-                 max_iter=1, epsilon=0.00001, step1c=False,\
-                 vm=False, name_y=None, name_x=None,\
+
+    def __init__(self, y, x, w,
+                 max_iter=1, epsilon=0.00001, step1c=False,
+                 vm=False, name_y=None, name_x=None,
                  name_w=None, name_ds=None):
 
         n = USER.check_arrays(y, x)
         USER.check_y(y, n)
         USER.check_weights(w, y, w_required=True)
         x_constant = USER.check_constant(x)
-        BaseGM_Error_Het.__init__(self, y, x_constant, w.sparse, max_iter=max_iter,\
-                step1c=step1c, epsilon=epsilon)
-        self.title = "SPATIALLY WEIGHTED LEAST SQUARES (HET)"        
+        BaseGM_Error_Het.__init__(
+            self, y, x_constant, w.sparse, max_iter=max_iter,
+            step1c=step1c, epsilon=epsilon)
+        self.title = "SPATIALLY WEIGHTED LEAST SQUARES (HET)"
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
@@ -364,7 +366,9 @@ class GM_Error_Het(BaseGM_Error_Het):
         self.name_w = USER.set_name_w(name_w, w)
         SUMMARY.GM_Error_Het(reg=self, w=w, vm=vm)
 
+
 class BaseGM_Endog_Error_Het(RegressionPropsY):
+
     """
     GMM method for a spatial error model with heteroskedasticity and
     endogenous variables (note: no consistency checks, diagnostics or constant
@@ -483,34 +487,35 @@ class BaseGM_Endog_Error_Het(RegressionPropsY):
      [  0.4114   0.1777]]
     """
 
-    def __init__(self, y, x, yend, q, w,\
+    def __init__(self, y, x, yend, q, w,
                  max_iter=1, epsilon=0.00001,
                  step1c=False, inv_method='power_exp'):
-    
+
         self.step1c = step1c
-        #1a. reg --> \tilde{betas} 
+        # 1a. reg --> \tilde{betas}
         tsls = TSLS.BaseTSLS(y=y, x=x, yend=yend, q=q)
         self.x, self.z, self.h, self.y = tsls.x, tsls.z, tsls.h, tsls.y
         self.yend, self.q, self.n, self.k, self.hth = tsls.yend, tsls.q, tsls.n, tsls.k, tsls.hth
         wA1 = UTILS.get_A1_het(w)
 
-        #1b. GMM --> \tilde{\lambda1}
+        # 1b. GMM --> \tilde{\lambda1}
         moments = UTILS._moments2eqs(wA1, w, tsls.u)
         lambda1 = UTILS.optim_moments(moments)
 
         if step1c:
-            #1c. GMM --> \tilde{\lambda2}
+            # 1c. GMM --> \tilde{\lambda2}
             self.u = tsls.u
             zs = UTILS.get_spFilter(w, lambda1, self.z)
-            vc1 = get_vc_het_tsls(w, wA1, self, lambda1, tsls.pfora1a2, zs, inv_method, filt=False)
-            lambda2 = UTILS.optim_moments(moments,vc1)
+            vc1 = get_vc_het_tsls(w, wA1, self, lambda1,
+                                  tsls.pfora1a2, zs, inv_method, filt=False)
+            lambda2 = UTILS.optim_moments(moments, vc1)
         else:
             lambda2 = lambda1
         lambda_old = lambda2
-        
+
         self.iteration, eps = 0, 1
-        while self.iteration<max_iter and eps>epsilon:
-            #2a. reg -->\hat{betas}
+        while self.iteration < max_iter and eps > epsilon:
+            # 2a. reg -->\hat{betas}
             xs = UTILS.get_spFilter(w, lambda_old, self.x)
             ys = UTILS.get_spFilter(w, lambda_old, self.y)
             yend_s = UTILS.get_spFilter(w, lambda_old, self.yend)
@@ -518,25 +523,29 @@ class BaseGM_Endog_Error_Het(RegressionPropsY):
             self.predy = spdot(self.z, tsls_s.betas)
             self.u = self.y - self.predy
 
-            #2b. GMM --> \hat{\lambda}
-            vc2 = get_vc_het_tsls(w, wA1, self, lambda_old, tsls_s.pfora1a2, sphstack(xs,yend_s), inv_method)
+            # 2b. GMM --> \hat{\lambda}
+            vc2 = get_vc_het_tsls(w, wA1, self, lambda_old,
+                                  tsls_s.pfora1a2, sphstack(xs, yend_s), inv_method)
             moments_i = UTILS._moments2eqs(wA1, w, self.u)
             lambda3 = UTILS.optim_moments(moments_i, vc2)
             eps = abs(lambda3 - lambda_old)
             lambda_old = lambda3
-            self.iteration+=1
+            self.iteration += 1
 
-        self.iter_stop = UTILS.iter_msg(self.iteration,max_iter)
+        self.iter_stop = UTILS.iter_msg(self.iteration, max_iter)
 
         zs = UTILS.get_spFilter(w, lambda3, self.z)
         P = get_P_hat(self, tsls.hthi, zs)
-        vc3 = get_vc_het_tsls(w, wA1, self, lambda3, P, zs, inv_method, save_a1a2=True)
+        vc3 = get_vc_het_tsls(w, wA1, self, lambda3, P,
+                              zs, inv_method, save_a1a2=True)
         self.vm = get_Omega_GS2SLS(w, lambda3, self, moments_i[0], vc3, P)
         self.betas = np.vstack((tsls_s.betas, lambda3))
-        self.e_filtered = self.u - lambda3*w*self.u
+        self.e_filtered = self.u - lambda3 * w * self.u
         self._cache = {}
 
+
 class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
+
     """
     GMM method for a spatial error model with heteroskedasticity and
     endogenous variables, with results and diagnostics; based on Arraiz et al
@@ -664,9 +673,9 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
     ----------
 
     .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
+        Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
+        Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
+        592-614.
 
     .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
@@ -687,7 +696,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
-    
+
     Extract the HOVAL column (home values) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -729,7 +738,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
     from ``columbus.shp``.
 
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
-    
+
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other
     things, his allows to interpret the spatial lag of a variable as the
@@ -745,7 +754,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
     have to pass them in as well, although this is optional.
 
     >>> reg = GM_Endog_Error_Het(y, X, yd, q, w=w, step1c=True, name_x=['inc'], name_y='hoval', name_yend=['crime'], name_q=['discbd'], name_ds='columbus')
-   
+
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
     discover them. This class offers an error model that explicitly accounts
@@ -764,19 +773,20 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
      [  0.4114   0.1777]]
 
     """
-    def __init__(self, y, x, yend, q, w,\
+
+    def __init__(self, y, x, yend, q, w,
                  max_iter=1, epsilon=0.00001,
-                 step1c=False, inv_method='power_exp',\
-                 vm=False, name_y=None, name_x=None,\
-                 name_yend=None, name_q=None,\
+                 step1c=False, inv_method='power_exp',
+                 vm=False, name_y=None, name_x=None,
+                 name_yend=None, name_q=None,
                  name_w=None, name_ds=None):
-    
+
         n = USER.check_arrays(y, x, yend, q)
         USER.check_y(y, n)
         USER.check_weights(w, y, w_required=True)
         x_constant = USER.check_constant(x)
-        BaseGM_Endog_Error_Het.__init__(self, y=y, x=x_constant, yend=yend,\
-                                        q=q, w=w.sparse, max_iter=max_iter,\
+        BaseGM_Endog_Error_Het.__init__(self, y=y, x=x_constant, yend=yend,
+                                        q=q, w=w.sparse, max_iter=max_iter,
                                         step1c=step1c, epsilon=epsilon, inv_method=inv_method)
         self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HET)"
         self.name_ds = USER.set_name_ds(name_ds)
@@ -784,7 +794,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
         self.name_x = USER.set_name_x(name_x, x)
         self.name_yend = USER.set_name_yend(name_yend, yend)
         self.name_z = self.name_x + self.name_yend
-        self.name_z.append('lambda')  #listing lambda last
+        self.name_z.append('lambda')  # listing lambda last
         self.name_q = USER.set_name_q(name_q, q)
         self.name_h = USER.set_name_h(self.name_x, self.name_q)
         self.name_w = USER.set_name_w(name_w, w)
@@ -792,6 +802,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
 
 
 class BaseGM_Combo_Het(BaseGM_Endog_Error_Het):
+
     """
     GMM method for a spatial lag and error model with heteroskedasticity and
     endogenous variables (note: no consistency checks, diagnostics or constant
@@ -937,15 +948,18 @@ class BaseGM_Combo_Het(BaseGM_Endog_Error_Het):
      ['lambda' '0.65608' '0.15719']]
     """
 
-    def __init__(self, y, x, yend=None, q=None,\
-                 w=None, w_lags=1, lag_q=True,\
-                 max_iter=1, epsilon=0.00001,\
+    def __init__(self, y, x, yend=None, q=None,
+                 w=None, w_lags=1, lag_q=True,
+                 max_iter=1, epsilon=0.00001,
                  step1c=False, inv_method='power_exp'):
 
-        BaseGM_Endog_Error_Het.__init__(self, y=y, x=x, w=w, yend=yend, q=q, max_iter=max_iter,\
-                                        step1c=step1c, epsilon=epsilon, inv_method=inv_method)
+        BaseGM_Endog_Error_Het.__init__(
+            self, y=y, x=x, w=w, yend=yend, q=q, max_iter=max_iter,
+            step1c=step1c, epsilon=epsilon, inv_method=inv_method)
+
 
 class GM_Combo_Het(BaseGM_Combo_Het):
+
     """
     GMM method for a spatial lag and error model with heteroskedasticity and
     endogenous variables, with results and diagnostics; based on Arraiz et al
@@ -1087,9 +1101,9 @@ class GM_Combo_Het(BaseGM_Combo_Het):
     ----------
 
     .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
+        Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
+        Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
+        592-614.
 
     .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
@@ -1199,37 +1213,39 @@ class GM_Combo_Het(BaseGM_Combo_Het):
      [   0.6561]]
     
     """
-    def __init__(self, y, x, yend=None, q=None,\
-                 w=None, w_lags=1, lag_q=True,\
-                 max_iter=1, epsilon=0.00001,\
-                 step1c=False, inv_method='power_exp',\
-                 vm=False, name_y=None, name_x=None,\
-                 name_yend=None, name_q=None,\
+
+    def __init__(self, y, x, yend=None, q=None,
+                 w=None, w_lags=1, lag_q=True,
+                 max_iter=1, epsilon=0.00001,
+                 step1c=False, inv_method='power_exp',
+                 vm=False, name_y=None, name_x=None,
+                 name_yend=None, name_q=None,
                  name_w=None, name_ds=None):
-    
+
         n = USER.check_arrays(y, x, yend, q)
         USER.check_y(y, n)
         USER.check_weights(w, y, w_required=True)
         yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
         x_constant = USER.check_constant(x)
-        BaseGM_Combo_Het.__init__(self, y=y, x=x_constant, yend=yend2, q=q2,\
-                                w=w.sparse, w_lags=w_lags,\
-                                max_iter=max_iter, step1c=step1c, lag_q=lag_q,\
-                                epsilon=epsilon, inv_method=inv_method)
+        BaseGM_Combo_Het.__init__(self, y=y, x=x_constant, yend=yend2, q=q2,
+                                  w=w.sparse, w_lags=w_lags,
+                                  max_iter=max_iter, step1c=step1c, lag_q=lag_q,
+                                  epsilon=epsilon, inv_method=inv_method)
         self.rho = self.betas[-2]
-        self.predy_e, self.e_pred, warn = UTILS.sp_att(w,self.y,self.predy,\
-                            yend2[:,-1].reshape(self.n,1),self.rho)
-        UTILS.set_warn(self,warn)
-        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HET)"        
+        self.predy_e, self.e_pred, warn = UTILS.sp_att(w, self.y, self.predy,
+                                                       yend2[:, -1].reshape(self.n, 1), self.rho)
+        UTILS.set_warn(self, warn)
+        self.title = "SPATIALLY WEIGHTED TWO STAGE LEAST SQUARES (HET)"
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
         self.name_yend = USER.set_name_yend(name_yend, yend)
         self.name_yend.append(USER.set_name_yend_sp(self.name_y))
         self.name_z = self.name_x + self.name_yend
-        self.name_z.append('lambda')  #listing lambda last
+        self.name_z.append('lambda')  # listing lambda last
         self.name_q = USER.set_name_q(name_q, q)
-        self.name_q.extend(USER.set_name_q_sp(self.name_x, w_lags, self.name_q, lag_q))
+        self.name_q.extend(
+            USER.set_name_q_sp(self.name_x, w_lags, self.name_q, lag_q))
         self.name_h = USER.set_name_h(self.name_x, self.name_q)
         self.name_w = USER.set_name_w(name_w, w)
         SUMMARY.GM_Combo_Het(reg=self, w=w, vm=vm)
@@ -1253,8 +1269,9 @@ def get_psi_sigma(w, u, lamb):
     """
 
     e = (u - lamb * (w * u)) ** 2
-    E = SP.dia_matrix((e.flat,0), shape=(w.shape[0],w.shape[0]))
+    E = SP.dia_matrix((e.flat, 0), shape=(w.shape[0], w.shape[0]))
     return E.tocsr()
+
 
 def get_vc_het(w, wA1, E):
     """
@@ -1295,14 +1312,15 @@ def get_vc_het(w, wA1, E):
     592-614.
 
     """
-    aPatE = 2*wA1* E
+    aPatE = 2 * wA1 * E
     wPwtE = (w + w.T) * E
 
     psi11 = aPatE * aPatE
     psi12 = aPatE * wPwtE
-    psi22 = wPwtE * wPwtE 
+    psi22 = wPwtE * wPwtE
     psi = map(np.sum, [psi11.diagonal(), psi12.diagonal(), psi22.diagonal()])
     return np.array([[psi[0], psi[1]], [psi[1], psi[2]]]) / (2. * w.shape[0])
+
 
 def get_vm_het(G, lamb, reg, w, psi):
     """
@@ -1346,15 +1364,17 @@ def get_vm_het(G, lamb, reg, w, psi):
 
     """
 
-    J = np.dot(G, np.array([[1],[2 * lamb]]))
-    Zs = UTILS.get_spFilter(w,lamb,reg.x)
+    J = np.dot(G, np.array([[1], [2 * lamb]]))
+    Zs = UTILS.get_spFilter(w, lamb, reg.x)
     ZstEZs = spdot((Zs.T * get_psi_sigma(w, reg.u, lamb)), Zs)
-    ZsZsi = la.inv(spdot(Zs.T,Zs))
-    omega11 = w.shape[0] * np.dot(np.dot(ZsZsi,ZstEZs),ZsZsi)
-    omega22 = la.inv(np.dot(np.dot(J.T,la.inv(psi)),J))
-    zero = np.zeros((reg.k,1),float)
-    vm = np.vstack((np.hstack((omega11, zero)),np.hstack((zero.T, omega22)))) / w.shape[0]
+    ZsZsi = la.inv(spdot(Zs.T, Zs))
+    omega11 = w.shape[0] * np.dot(np.dot(ZsZsi, ZstEZs), ZsZsi)
+    omega22 = la.inv(np.dot(np.dot(J.T, la.inv(psi)), J))
+    zero = np.zeros((reg.k, 1), float)
+    vm = np.vstack((np.hstack((omega11, zero)), np.hstack((zero.T, omega22)))) / \
+        w.shape[0]
     return vm
+
 
 def get_P_hat(reg, hthi, zf):
     """
@@ -1364,7 +1384,8 @@ def get_P_hat(reg, hthi, zf):
     P1 = spdot(hthi, htzf)
     P2 = spdot(htzf.T, P1)
     P2i = la.inv(P2)
-    return reg.n*np.dot(P1, P2i)
+    return reg.n * np.dot(P1, P2i)
+
 
 def get_a1a2(w, wA1, reg, lambdapar, P, zs, inv_method, filt):
     """
@@ -1396,14 +1417,17 @@ def get_a1a2(w, wA1, reg, lambdapar, P, zs, inv_method, filt):
     
     """
     us = UTILS.get_spFilter(w, lambdapar, reg.u)
-    alpha1 = (-2.0/w.shape[0]) * (np.dot(spdot(zs.T,wA1), us))
-    alpha2 = (-1.0/w.shape[0]) * (np.dot(spdot(zs.T,(w + w.T)), us))
+    alpha1 = (-2.0 / w.shape[0]) * (np.dot(spdot(zs.T, wA1), us))
+    alpha2 = (-1.0 / w.shape[0]) * (np.dot(spdot(zs.T, (w + w.T)), us))
     a1 = np.dot(spdot(reg.h, P), alpha1)
     a2 = np.dot(spdot(reg.h, P), alpha2)
     if not filt:
-        a1 = UTILS.inverse_prod(w, a1, lambdapar, post_multiply=True, inv_method=inv_method).T
-        a2 = UTILS.inverse_prod(w, a2, lambdapar, post_multiply=True, inv_method=inv_method).T
+        a1 = UTILS.inverse_prod(
+            w, a1, lambdapar, post_multiply=True, inv_method=inv_method).T
+        a2 = UTILS.inverse_prod(
+            w, a2, lambdapar, post_multiply=True, inv_method=inv_method).T
     return [a1, a2]
+
 
 def get_vc_het_tsls(w, wA1, reg, lambdapar, P, zs, inv_method, filt=True, save_a1a2=False):
 
@@ -1422,6 +1446,7 @@ def get_vc_het_tsls(w, wA1, reg, lambdapar, P, zs, inv_method, filt=True, save_a
     else:
         psi = vc1 + psi0
     return psi
+
 
 def get_Omega_GS2SLS(w, lamb, reg, G, psi, P):
     """
@@ -1451,29 +1476,30 @@ def get_Omega_GS2SLS(w, lamb, reg, G, psi, P):
                   (k+1)x(k+1)                 
     """
     psi, a1, a2 = psi
-    sigma=get_psi_sigma(w, reg.u, lamb)
-    psi_dd_1=(1.0/w.shape[0]) * reg.h.T * sigma 
+    sigma = get_psi_sigma(w, reg.u, lamb)
+    psi_dd_1 = (1.0 / w.shape[0]) * reg.h.T * sigma
     psi_dd = spdot(psi_dd_1, reg.h)
-    psi_dl=spdot(psi_dd_1,np.hstack((a1,a2)))
-    psi_o=np.hstack((np.vstack((psi_dd, psi_dl.T)), np.vstack((psi_dl, psi))))
-    psii=la.inv(psi)
-   
-    j = np.dot(G, np.array([[1.], [2*lamb]]))
-    jtpsii=np.dot(j.T, psii)
-    jtpsiij=np.dot(jtpsii, j)
-    jtpsiiji=la.inv(jtpsiij)
-    omega_1=np.dot(jtpsiiji, jtpsii)
-    omega_2=np.dot(np.dot(psii, j), jtpsiiji)
-    om_1_s=omega_1.shape
-    om_2_s=omega_2.shape
-    p_s=P.shape
-    omega_left=np.hstack((np.vstack((P.T, np.zeros((om_1_s[0],p_s[0])))), 
-               np.vstack((np.zeros((p_s[1], om_1_s[1])), omega_1))))
-    omega_right=np.hstack((np.vstack((P, np.zeros((om_2_s[0],p_s[1])))), 
-               np.vstack((np.zeros((p_s[0], om_2_s[1])), omega_2))))
-    omega=np.dot(np.dot(omega_left, psi_o), omega_right)    
+    psi_dl = spdot(psi_dd_1, np.hstack((a1, a2)))
+    psi_o = np.hstack(
+        (np.vstack((psi_dd, psi_dl.T)), np.vstack((psi_dl, psi))))
+    psii = la.inv(psi)
+
+    j = np.dot(G, np.array([[1.], [2 * lamb]]))
+    jtpsii = np.dot(j.T, psii)
+    jtpsiij = np.dot(jtpsii, j)
+    jtpsiiji = la.inv(jtpsiij)
+    omega_1 = np.dot(jtpsiiji, jtpsii)
+    omega_2 = np.dot(np.dot(psii, j), jtpsiiji)
+    om_1_s = omega_1.shape
+    om_2_s = omega_2.shape
+    p_s = P.shape
+    omega_left = np.hstack((np.vstack((P.T, np.zeros((om_1_s[0], p_s[0])))),
+                           np.vstack((np.zeros((p_s[1], om_1_s[1])), omega_1))))
+    omega_right = np.hstack((np.vstack((P, np.zeros((om_2_s[0], p_s[1])))),
+                            np.vstack((np.zeros((p_s[0], om_2_s[1])), omega_2))))
+    omega = np.dot(np.dot(omega_left, psi_o), omega_right)
     return omega / w.shape[0]
-                    
+
 
 def _test():
     import doctest
@@ -1481,4 +1507,3 @@ def _test():
 
 if __name__ == '__main__':
     _test()
-

@@ -11,13 +11,15 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os
+import sys 
+import os
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.append(os.path.abspath('sphinxext'))
-sys.path.append(os.path.abspath('../../'))
+#sys.path.append(os.path.abspath('../../'))
+sys.path.append(os.path.abspath('~/anaconda/lib/python2.7/site-packages/'))
 
 # -- General configuration -----------------------------------------------------
 
@@ -26,7 +28,7 @@ sys.path.append(os.path.abspath('../../'))
 extensions = ['sphinx.ext.autodoc',
 'sphinx.ext.doctest','sphinx.ext.graphviz', 'sphinx.ext.intersphinx',
 'sphinx.ext.pngmath',
-'sphinx.ext.autosummary','sphinx.ext.viewcode','numpydoc']
+'sphinx.ext.autosummary','sphinx.ext.viewcode', 'sphinxcontrib.napoleon']
 
 #doctest extension config values
 doctest_path = '/Users/stephens/code/pysal/doc/source/users/tutorials/' 
@@ -37,8 +39,8 @@ doctest_test_doctest_blocks = ''
 templates_path = ['_templates']
 
 # The suffix of source filenames.
-#source_suffix = '.rst'
-source_suffix = '.txt'
+source_suffix = '.rst'
+#source_suffix = '.txt'
 
 # The encoding of source files.
 #source_encoding = 'utf-8'
@@ -76,6 +78,7 @@ release = '1.8.0dev'
 # for source files.
 exclude_trees = []
 
+
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None
 
@@ -99,27 +102,39 @@ pygments_style = 'sphinx'
 
 # -- Options for HTML output ---------------------------------------------------
 #custom strikethrough setup
-html_style = 'mydoc.css'
+#html_style = 'mydoc.css'
 
 # The theme to use for HTML and HTML Help pages.  Major themes that come with
 # Sphinx are currently 'default' and 'sphinxdoc'.
-#html_theme = 'default'
-html_theme = 'sphinxdoc'
+html_theme = 'default'
+#html_theme = 'sphinxdoc'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#html_theme_options = {}
+html_theme_options = {
+        "rightsidebar": "true",
+        "relbarbgcolor": "CornflowerBlue",
+        "sidebartextcolor": "black",
+        "sidebarlinkcolor": "#355f7c",
+        "sidebarbgcolor": "#F2F2F2",
+        "codebgcolor": "AliceBlue",
+        "footerbgcolor": "Black",
+        "externalrefs": "false",
+        "bodyfont": "Optima",
+        "headfont": "Optima "
+        }
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = "%s v%s Reference Guide" % (project, version)
+#html_title = "%s v%s Reference Guide" % (project, version)
+html_title = "Python Spatial Analysis Library" 
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
-#html_short_title = None
+html_short_title = "PySAL"
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
@@ -212,3 +227,4 @@ intersphinx_mapping = {'http://docs.python.org/': None}
 
 #numpydoc option
 numpydoc_show_class_members = True
+numpydoc_class_members_toctree = False

@@ -9,9 +9,11 @@ from scipy.stats import norm
 import numpy as np
 import numpy.linalg as la
 
-__all__ = ['LMtests', 'MoranRes', 'AKtest'] 
+__all__ = ['LMtests', 'MoranRes', 'AKtest']
+
 
 class LMtests:
+
     """
     Lagrange Multiplier tests. Implemented as presented in Anselin et al.
     (1996) [1]_
@@ -27,12 +29,12 @@ class LMtests:
     tests       : list
                   Lists of strings with the tests desired to be performed.
                   Values may be:
-                  
-                  * 'all': runs all the options (default)
-                  * 'lme': LM error test
-                  * 'rlme': Robust LM error test
-                  * 'lml' : LM lag test
-                  * 'rlml': Robust LM lag test
+
+                   * 'all': runs all the options (default)
+                   * 'lme': LM error test
+                   * 'rlme': Robust LM error test
+                   * 'lml' : LM lag test
+                   * 'rlml': Robust LM lag test
 
     Parameters
     ----------
@@ -95,7 +97,7 @@ class LMtests:
     model and give indication about the type of spatial model. There are five
     types: presence of a spatial lag model (simple and robust version),
     presence of a spatial error model (simple and robust version) and joint presence
-    of both a spatial lag as well as a spatial error model. 
+    of both a spatial lag as well as a spatial error model.
 
     >>> lms = pysal.spreg.diagnostics_sp.LMtests(ols, w)
 
@@ -124,10 +126,11 @@ class LMtests:
     >>> print round(lms.sarma[0],4), round(lms.sarma[1],4)
     4.1907 0.123
     """
+
     def __init__(self, ols, w, tests=['all']):
         cache = spDcache(ols, w)
         if tests == ['all']:
-            tests = ['lme', 'lml','rlme', 'rlml', 'sarma']
+            tests = ['lme', 'lml', 'rlme', 'rlml', 'sarma']
         if 'lme' in tests:
             self.lme = lmErr(ols, w, cache)
         if 'lml' in tests:
@@ -139,7 +142,9 @@ class LMtests:
         if 'sarma' in tests:
             self.sarma = lmSarma(ols, w, cache)
 
+
 class MoranRes:
+
     """
     Moran's I for spatial autocorrelation in residuals from OLS regression
     ...
@@ -229,6 +234,7 @@ class MoranRes:
     >>> print round(m.p_norm,4)
     0.0224
     """
+
     def __init__(self, ols, w, z=False):
         cache = spDcache(ols, w)
         self.I = get_mI(ols, w, cache)
@@ -237,11 +243,13 @@ class MoranRes:
             self.vI = get_vI(ols, w, self.eI, cache)
             self.zI, self.p_norm = get_zI(self.I, self.eI, self.vI)
 
+
 class AKtest:
+
     """
     Moran's I test of spatial autocorrelation for IV estimation.
     Implemented following the original reference Anselin and Kelejian
-    (1997) [1]_
+    (1997) [AK97]_
     ...
 
     Parameters
@@ -250,11 +258,12 @@ class AKtest:
     iv          : TSLS
                   Regression object from TSLS class
     w           : W
-                  Spatial weights instance 
+                  Spatial weights instance
     case        : string
                   Flag for special cases (default to 'nosp'):
-                    * 'nosp': Only NO spatial end. reg.
-                    * 'gen': General case (spatial lag + end. reg.)
+
+                   * 'nosp': Only NO spatial end. reg.
+                   * 'gen': General case (spatial lag + end. reg.)
 
     Attributes
     ----------
@@ -263,7 +272,7 @@ class AKtest:
                   Moran's I statistic for IV residuals
     ak          : float
                   Square of corrected Moran's I for residuals::
-                    
+
                   .. math::
 
                         ak = \dfrac{N \times I^*}{\phi^2}
@@ -275,15 +284,14 @@ class AKtest:
     References
     ----------
 
-    .. [1] Anselin, L., Kelejian, H. (1997) "Testing for spatial error
-    autocorrelation in the presence of endogenous regressors". Interregional
-    Regional Science Review, 20, 1.
-
+    .. [AK97] Anselin, L., Kelejian, H. (1997) "Testing for spatial error
+        autocorrelation in the presence of endogenous regressors".
+        Interregional Regional Science Review, 20, 1.
     .. [2] Kelejian, H.H., Prucha, I.R. and Yuzefovich, Y. (2004)
-    "Instrumental variable estimation of a spatial autorgressive model with
-    autoregressive disturbances: large and small sample results". Advances in
-    Econometrics, 18, 163-198.
-    
+        "Instrumental variable estimation of a spatial autorgressive model with
+        autoregressive disturbances: large and small sample results".
+        Advances in Econometrics, 18, 163-198.
+
     Examples
     --------
 
@@ -301,10 +309,10 @@ class AKtest:
     This is the DBF associated with the Columbus shapefile.  Note that
     pysal.open() also reads data in CSV format; since the actual class
     requires data to be passed in as numpy arrays, the user can read their
-    data in using any method.  
+    data in using any method.
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
-    
+
     Before being able to apply the diagnostics, we have to run a model and,
     for that, we need the input variables. Extract the CRIME column (crime
     rates) from the DBF file and make it the dependent variable for the
@@ -354,7 +362,7 @@ class AKtest:
     existing gal file or create a new one. In this case, we will create one
     from ``columbus.shp``.
 
-    >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp")) 
+    >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
 
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other
@@ -386,13 +394,13 @@ class AKtest:
     >>> ak_sp = AKtest(reg, w, case='gen')
     >>> print('AK test: %f\tP-value: %f'%(ak_sp.ak, ak_sp.p))
     AK test: 1.157593      P-value: 0.281965
-    
-            """
+
+    """
 
     def __init__(self, iv, w, case='nosp'):
         if case == 'gen':
             cache = spDcache(iv, w)
-            self.mi, self.ak, self.p = akTest(iv, w, cache) 
+            self.mi, self.ak, self.p = akTest(iv, w, cache)
         elif case == 'nosp':
             cache = spDcache(iv, w)
             self.mi = get_mI(iv, w, cache)
@@ -404,7 +412,9 @@ class AKtest:
                 * 'nosp': No spatial end. reg.
             \n"""
 
+
 class spDcache:
+
     """
     Helper class to compute reusable pieces in the spatial diagnostics module
     ...
@@ -456,10 +466,12 @@ class spDcache:
                   Trace of A as in Cliff & Ord (1981)
 
     """
-    def __init__(self,reg, w):
+
+    def __init__(self, reg, w):
         self.reg = reg
         self.w = w
         self._cache = {}
+
     @property
     def j(self):
         if 'j' not in self._cache:
@@ -471,29 +483,34 @@ class spDcache:
             den = self.reg.n * self.reg.sig2n
             self._cache['j'] = num / den
         return self._cache['j']
+
     @property
     def wu(self):
         if 'wu' not in self._cache:
             self._cache['wu'] = self.w.sparse * self.reg.u
         return self._cache['wu']
+
     @property
     def utwuDs(self):
         if 'utwuDs' not in self._cache:
             res = np.dot(self.reg.u.T, self.wu) / self.reg.sig2n
             self._cache['utwuDs'] = res
         return self._cache['utwuDs']
+
     @property
     def utwyDs(self):
         if 'utwyDs' not in self._cache:
             res = np.dot(self.reg.u.T, self.w.sparse * self.reg.y)
             self._cache['utwyDs'] = res / self.reg.sig2n
         return self._cache['utwyDs']
+
     @property
     def t(self):
         if 't' not in self._cache:
-            prod = (self.w.sparse.T + self.w.sparse) * self.w.sparse 
+            prod = (self.w.sparse.T + self.w.sparse) * self.w.sparse
             self._cache['t'] = np.sum(prod.diagonal())
         return self._cache['t']
+
     @property
     def trA(self):
         if 'trA' not in self._cache:
@@ -501,6 +518,7 @@ class spDcache:
             mw = np.dot(self.reg.xtxi, xtwx)
             self._cache['trA'] = np.sum(mw.diagonal())
         return self._cache['trA']
+
     @property
     def AB(self):
         """
@@ -542,13 +560,14 @@ def lmErr(reg, w, spDcache):
 
     References
     ----------
-    .. [1] Anselin, L., Bera, A. K., Florax, R., Yoon, M. J. (1996) "Simple
+    .. _ Anselin, L., Bera, A. K., Florax, R., Yoon, M. J. (1996) "Simple
        diagnostic tests for spatial dependence". Regional Science and Urban
        Economics, 26, 77-104.
     """
-    lm = spDcache.utwuDs**2 / spDcache.t
+    lm = spDcache.utwuDs ** 2 / spDcache.t
     pval = chisqprob(lm, 1)
     return (lm[0][0], pval[0][0])
+
 
 def lmLag(ols, w, spDcache):
     """
@@ -560,9 +579,9 @@ def lmLag(ols, w, spDcache):
     ----------
 
     ols         : OLS_dev
-                  Instance from an OLS_dev regression 
+                  Instance from an OLS_dev regression
     w           : W
-                  Spatial weights instance 
+                  Spatial weights instance
     spDcache     : spDcache
                   Instance of spDcache class
 
@@ -574,17 +593,18 @@ def lmLag(ols, w, spDcache):
 
     References
     ----------
-    .. [1] Anselin, L., Bera, A. K., Florax, R., Yoon, M. J. (1996) "Simple
+    .. _ Anselin, L., Bera, A. K., Florax, R., Yoon, M. J. (1996) "Simple
        diagnostic tests for spatial dependence". Regional Science and Urban
        Economics, 26, 77-104.
     """
-    lm = spDcache.utwyDs**2 / (ols.n * spDcache.j)
+    lm = spDcache.utwyDs ** 2 / (ols.n * spDcache.j)
     pval = chisqprob(lm, 1)
     return (lm[0][0], pval[0][0])
 
+
 def rlmErr(ols, w, spDcache):
     """
-    Robust LM error test. Implemented as presented in eq. (8) of Anselin et al. (1996) [1]_ 
+    Robust LM error test. Implemented as presented in eq. (8) of Anselin et al. (1996) [1]_
 
     NOTE: eq. (8) has an errata, the power -1 in the denominator should be inside the square bracket.
     ...
@@ -593,7 +613,7 @@ def rlmErr(ols, w, spDcache):
     ----------
 
     ols         : OLS_dev
-                  Instance from an OLS_dev regression 
+                  Instance from an OLS_dev regression
     w           : W
                   Spatial weights instance
     spDcache     : spDcache
@@ -607,16 +627,17 @@ def rlmErr(ols, w, spDcache):
 
     References
     ----------
-    .. [1] Anselin, L., Bera, A. K., Florax, R., Yoon, M. J. (1996) "Simple
+    .. _ Anselin, L., Bera, A. K., Florax, R., Yoon, M. J. (1996) "Simple
        diagnostic tests for spatial dependence". Regional Science and Urban
        Economics, 26, 77-104.
     """
     nj = ols.n * spDcache.j
-    num = (spDcache.utwuDs - (spDcache.t * spDcache.utwyDs) / nj)**2
+    num = (spDcache.utwuDs - (spDcache.t * spDcache.utwyDs) / nj) ** 2
     den = spDcache.t * (1. - (spDcache.t / nj))
     lm = num / den
     pval = chisqprob(lm, 1)
     return (lm[0][0], pval[0][0])
+
 
 def rlmLag(ols, w, spDcache):
     """
@@ -628,9 +649,9 @@ def rlmLag(ols, w, spDcache):
     ----------
 
     ols             : OLS_dev
-                      Instance from an OLS_dev regression 
+                      Instance from an OLS_dev regression
     w               : W
-                      Spatial weights instance 
+                      Spatial weights instance
     spDcache        : spDcache
                       Instance of spDcache class
 
@@ -642,13 +663,15 @@ def rlmLag(ols, w, spDcache):
 
     References
     ----------
-    .. [1] Anselin, L., Bera, A. K., Florax, R., Yoon, M. J. (1996) "Simple
+    .. _ Anselin, L., Bera, A. K., Florax, R., Yoon, M. J. (1996) "Simple
        diagnostic tests for spatial dependence". Regional Science and Urban
        Economics, 26, 77-104.
     """
-    lm = (spDcache.utwyDs - spDcache.utwuDs)**2 / ((ols.n * spDcache.j) - spDcache.t)
+    lm = (spDcache.utwyDs - spDcache.utwuDs) ** 2 / \
+        ((ols.n * spDcache.j) - spDcache.t)
     pval = chisqprob(lm, 1)
     return (lm[0][0], pval[0][0])
+
 
 def lmSarma(ols, w, spDcache):
     """
@@ -660,7 +683,7 @@ def lmSarma(ols, w, spDcache):
     ----------
 
     ols         : OLS_dev
-                  Instance from an OLS_dev regression 
+                  Instance from an OLS_dev regression
     w           : W
                   Spatial weights instance
     spDcache     : spDcache
@@ -674,21 +697,23 @@ def lmSarma(ols, w, spDcache):
 
     References
     ----------
-    .. [1] Anselin, L., Bera, A. K., Florax, R., Yoon, M. J. (1996) "Simple
+    .. _ Anselin, L., Bera, A. K., Florax, R., Yoon, M. J. (1996) "Simple
        diagnostic tests for spatial dependence". Regional Science and Urban
        Economics, 26, 77-104.
     """
 
-    first = (spDcache.utwyDs - spDcache.utwuDs)**2 / (w.n * spDcache.j - spDcache.t)
-    secnd = spDcache.utwuDs**2 / spDcache.t
+    first = (spDcache.utwyDs - spDcache.utwuDs) ** 2 / \
+        (w.n * spDcache.j - spDcache.t)
+    secnd = spDcache.utwuDs ** 2 / spDcache.t
     lm = first + secnd
     pval = chisqprob(lm, 2)
     return (lm[0][0], pval[0][0])
 
+
 def get_mI(reg, w, spDcache):
     """
     Moran's I statistic of spatial autocorrelation as showed in Cliff & Ord
-    (1981) [1], p. 201-203
+    (1981) [CO81]_, p. 201-203
     ...
 
     Attributes
@@ -709,11 +734,12 @@ def get_mI(reg, w, spDcache):
 
     References
     ----------
-    .. [1] Cliff, AD., Ord, JK. (1981) "Spatial processes: models & applications".
+    .. [CO81] Cliff, AD., Ord, JK. (1981) "Spatial processes: models & applications".
        Pion London
     """
     mi = (w.n * np.dot(reg.u.T, spDcache.wu)) / (w.s0 * reg.utu)
     return mi[0][0]
+
 
 def get_vI(ols, w, ei, spDcache):
     """
@@ -725,15 +751,18 @@ def get_vI(ols, w, ei, spDcache):
 
     B = spDcache.AB[1]
     trB = np.sum(B.diagonal()) * 4.
-    vi = (w.n**2 / (w.s0**2 * (w.n - ols.k) * (w.n - ols.k + 2.))) * \
-            (w.s1 + 2. * trA2 - trB - ((2. * (spDcache.trA**2)) / (w.n - ols.k)))
+    vi = (w.n ** 2 / (w.s0 ** 2 * (w.n - ols.k) * (w.n - ols.k + 2.))) * \
+         (w.s1 + 2. * trA2 - trB -
+          ((2. * (spDcache.trA ** 2)) / (w.n - ols.k)))
     return vi
+
 
 def get_eI(ols, w, spDcache):
     """
     Moran's I expectation using matrix M
     """
     return - (w.n * spDcache.trA) / (w.s0 * (w.n - ols.k))
+
 
 def get_zI(I, ei, vi):
     """
@@ -744,6 +773,7 @@ def get_zI(I, ei, vi):
     z = abs((I - ei) / np.sqrt(vi))
     pval = norm.sf(z) * 2.
     return (z, pval)
+
 
 def akTest(iv, w, spDcache):
     """
@@ -756,7 +786,7 @@ def akTest(iv, w, spDcache):
     iv          : STSLS_dev
                   Instance from spatial 2SLS regression
     w           : W
-                  Spatial weights instance 
+                  Spatial weights instance
    spDcache     : spDcache
                   Instance of spDcache class
 
@@ -766,9 +796,8 @@ def akTest(iv, w, spDcache):
                   Moran's I statistic for IV residuals
     ak          : float
                   Square of corrected Moran's I for residuals::
-                    
-                  .. math::
 
+                  .. math::
                         ak = \dfrac{N \times I^*}{\phi^2}
 
     p           : float
@@ -781,12 +810,13 @@ def akTest(iv, w, spDcache):
     mi = get_mI(iv, w, spDcache)
     # Phi2
     etwz = spdot(iv.u.T, spdot(w.sparse, iv.z))
-    a = np.dot(etwz,np.dot(iv.varb,etwz.T))
-    s12 = (w.s0 / w.n)**2
-    phi2 = ( spDcache.t + (4.0 / iv.sig2n) * a ) / (s12 * w.n)
-    ak = w.n * mi**2 / phi2
+    a = np.dot(etwz, np.dot(iv.varb, etwz.T))
+    s12 = (w.s0 / w.n) ** 2
+    phi2 = (spDcache.t + (4.0 / iv.sig2n) * a) / (s12 * w.n)
+    ak = w.n * mi ** 2 / phi2
     pval = chisqprob(ak, 1)
     return (mi, ak[0][0], pval[0][0])
+
 
 def _test():
     import doctest
@@ -794,4 +824,3 @@ def _test():
 
 if __name__ == '__main__':
     _test()
-
