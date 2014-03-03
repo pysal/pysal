@@ -5,7 +5,7 @@ Using pysal
 ============
 
 
-Pysal is built upon the Python scientific stack, primarily numpy and
+PySAL is built upon the Python scientific stack, primarily numpy and
 scipy. While these libraries are packaged for several platforms, the
 Anaconda and Enthought Python distributions include them along with the core
 Python library. Anaconda not only ships numpy and scipy, but pysal as well! 
@@ -20,7 +20,7 @@ available on your machine:
 
 * `Python <http://www.python.org/download>`_ 2.6, or 2.7 
 * `numpy <http://new.scipy.org/download.html>`_ 1.3 or later
-* `scipy <http://new.scipy.org/download.html>`_ 0.7 or later
+* `scipy <http://new.scipy.org/download.html>`_ 0.11 or later
 
 Getting your feet wet
 ----------------------
