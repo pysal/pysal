@@ -535,7 +535,7 @@ class Moran_Local:
     permutations : int
                    number of random permutations for calculation of pseudo
                    p_values
-    I            : float
+    Is           : float
                    value of Moran's I
     q            : array (if permutations>0)
                    values indicate quadrat location 1 HH,  2 LH,  3 LL,  4 HL
