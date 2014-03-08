@@ -1,7 +1,7 @@
 # Network Module
 
 This document will serve as the design guideline for the implementation of the
-network module targeted for PySAL 1.7 release (January 31, 2014).
+network module targeted for PySAL 1.~~7~~8 release ~~(January 31, 2014)~~ (July 31, 2014).
 
 ## Origins
 
@@ -42,7 +42,7 @@ PySAL network will include the following spatial analytical methods
 
 ### Data Structures (j)
 
- - ~~Winged Edge Data Structure~~
+ - ~~Winged Edge Data Structure~~  This could really use a major alteration: insertion of filaments performs a local 'reprojection' to polar coordinates cenetered on the node the filament is added to.  This makes the identification of the pointers possible.  We do NOT use this method when deriving the initial WED and instead store double edges.  As far as I can tell, Okabe stores single edges and the way to do this is to utilize the same logic for determining CC and CW most edges.  Without considering computational performance, this should be a major reduction in code complexity.  I would suggest that this will require a fair amount of coding and debugging time, but can, potentially, be pushed until later in the development cycles assuming that analytics never assume double edges.
  - ~~Extraction of WED from a planar polyine shapefile~~
  - ~~Spatial Weights for Networks~~
      - Link Contiguity
@@ -55,7 +55,7 @@ PySAL network will include the following spatial analytical methods
 ### FileIO
 
 #### Input
- - ~~reading polyline shapefiles~~
+ - ~~reading polyline shapefiles~~  Assumes that the shapefiles are topologically correct and planar
  - point shapefiles
  - polygon files
  - wed
