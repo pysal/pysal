@@ -10,14 +10,15 @@ PySAL Documentation
 Compiling Documentation
 =======================
  
-PySAL documentation is built using `Sphinx`_ and the `numpydoc`_
-extension to Sphinx, which formats PySAL's docstrings. You'll need numpydoc version 0.4 or later and Sphinx version 1.0 or later to compile the documentation. 
-Both modules are available at the
+PySAL documentation is built using `Sphinx`_  together with  the  `numpydoc`_  and `napoleon`_
+extensions to Sphinx, which format PySAL's docstrings. You'll need numpydoc version 0.4 or later and Sphinx version 1.0 or later to compile the documentation. 
+These are available at the
 Python Package Index, and can be downloaded and installed from the command line
 using *pip* or *easy_install*.::
 
        serge@think:~/ sudo easy_install sphinx
        serge@think:~/ sudo easy_install numpydoc
+       serge@think:~/ sudo pip install  sphinxcontrib-napoleon
 
 The source for the docs is in `trunk/doc`. Building the documentation is
 done as follows (assuming
@@ -261,3 +262,4 @@ recompile until you are set with the content.
 .. _reStructuredText: http://sphinx.pocoo.org/rest.html
 .. _Sphinx markup guide: http://sphinx.pocoo.org/contents.html
 .. _pysal.geodacenter.org/dev: http://pysal.geodacenter.org/dev
+.. _napoleon: http://sphinxcontrib-napoleon.readthedocs.org/en/latest/sphinxcontrib.napoleon.html
