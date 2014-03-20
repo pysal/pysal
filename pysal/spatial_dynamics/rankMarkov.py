@@ -3,7 +3,7 @@ Rank-based Markov chains for spatial distribution
 dynamics.
 """
 
-_author_ = "Serge Rey <sjsrey@gmail.com>, Wang Sizhe <wsizhe@asu.edu>"
+_author_ = "Serge Rey <sjsrey@gmail.com>, Wang Sizhe <wsizhe@asu.edu, saguswang@gmail.com>"
 
 
 class FullRankMarkov:
