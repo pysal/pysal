@@ -15,5 +15,6 @@ class FullRankMarkov:
 class GeographicRankMarkov:
     """ """
     def __init__(self):
+        pass
 
 
