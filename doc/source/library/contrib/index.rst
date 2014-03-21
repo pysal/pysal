@@ -48,5 +48,9 @@ Currently the following contribs are available:
     - Path: pysal.contrib.shared_perimeter_weights
     - Requires: shapely
 
+ 5. Visualization -- Lightweight visualization layer.
 
+    - .. versionadded:: 1.7
+    - Path: pysal.contrib.viz
+    - Requires: matplotlib
 
