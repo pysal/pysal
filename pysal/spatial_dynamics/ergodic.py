@@ -1,11 +1,9 @@
 """
-:mod:`ergodic` --- summary measures for ergodic Markov chains
-=============================================================
-
+Summary measures for ergodic Markov chains
 """
 __author__ = "Sergio J. Rey <srey@asu.edu>"
 
-__all__ = ['steady_state', 'fmpt']
+__all__ = ['steady_state', 'fmpt', 'var_fmpt']
 
 import numpy as np
 import numpy.linalg as la
@@ -19,8 +17,8 @@ def steady_state(P):
     Parameters
     ----------
 
-    P        : matrix (kxk)
-               an ergodic Markov transition probability matrix
+    P  : matrix (kxk)
+         an ergodic Markov transition probability matrix
 
     Returns
     -------
@@ -30,8 +28,8 @@ def steady_state(P):
 
     Examples
     --------
-    Taken from Kemeny and Snell. [1]_ Land of Oz example where the states are
-    Rain, Nice and Snow - so there is 25 percent chance that if it
+    Taken from Kemeny and Snell.  Land of Oz example where the states are
+    Rain, Nice and Snow, so there is 25 percent chance that if it
     rained in Oz today, it will snow tomorrow, while if it snowed today in
     Oz there is a 50 percent chance of snow again tomorrow and a 25
     percent chance of a nice day (nice, like when the witch with the monkeys
@@ -83,8 +81,6 @@ def fmpt(P):
     Examples
     --------
 
-
-
     >>> import numpy as np
     >>> p=np.matrix([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])
     >>> fm=fmpt(p)
@@ -104,13 +100,14 @@ def fmpt(P):
     Notes
     -----
 
-    Uses formulation (and examples on p. 218) in Kemeny and Snell (1976) [1]_
+    Uses formulation (and examples on p. 218) in Kemeny and Snell (1976)
 
     References
     ----------
 
     .. [1] Kemeny, John, G. and J. Laurie Snell (1976) Finite Markov
-       Chains. Springer-Verlag. Berlin
+         Chains. Springer-Verlag. Berlin
+
     """
     A = np.zeros_like(P)
     ss = steady_state(P)
@@ -161,13 +158,8 @@ def var_fmpt(P):
     Notes
     -----
 
-    Uses formulation (and examples on p. 83) in Kemeny and Snell (1976) [1]_
+    Uses formulation (and examples on p. 83) in Kemeny and Snell (1976)
 
-    References
-    ----------
-
-    .. [1] Kemeny, John, G. and J. Laurie Snell (1976) Finite Markov
-       Chains. Springer-Verlag. Berlin
 
     """
     A = P ** 1000

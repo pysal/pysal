@@ -54,11 +54,13 @@ Documentation
     developers/index
     library/index
 
-Bleeding edge documentation is available for developers here >
-http://pysal.geodacenter.org/dev/ 
+Bleeding edge documentation is available for developers by selecting `latest` from the drop-down in the lower right-hand corner of this page.
 
 News
 ====
+
+(2013-11-13) `PySAL Workshop at North American Regional Science Association Meetings, Atlanta, GA <http://www.narsc.org/newsite/?page_id=2547>`_ 
+
 
 (2013-07-31) `PySAL 1.6.0 released <https://github.com/pysal/pysal/wiki/PySAL-1.6-Released-(2013-07-31)>`_ (`Install <http://pysal.geodacenter.org/1.6/users/installation.html>`_)
 

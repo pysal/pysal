@@ -4,15 +4,11 @@ Gini based Inequality Metrics
 
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 
-from pysal.common import *
+#from pysal.common import *
 import numpy as np
 from scipy.stats import norm as NORM
 
 __all__ = ['Gini', 'Gini_Spatial']
-
-
-import pysal as ps
-import numpy as np
 
 
 class Gini:
@@ -22,18 +18,18 @@ class Gini:
     Parameters
     ----------
 
-    y: array (n,1)
-       attribute 
- 
+    y : array (n,1)
+       attribute
+
     Attributes
     ----------
 
-    g: float
+    g : float
        Gini coefficient
 
-    
     """
-    def __init__(self,x):
+
+    def __init__(self, x):
 
         x.shape = (x.shape[0],)
         d = np.abs(np.array([x - xi for xi in x]))
@@ -42,6 +38,7 @@ class Gini:
         den = xbar * 2 * n**2
         dtotal = d.sum()
         self.g = dtotal/den
+
 
 class Gini_Spatial:
     """
@@ -53,51 +50,46 @@ class Gini_Spatial:
     Parameters
     ----------
 
-    y: array (n,1)
-       attribute 
-      
-    w: binary spatial weights object
+    y : array (n,1)
+       attribute
 
-    permutations: int (default = 99)
-                  number of permutations for inference
+    w : binary spatial weights object
+
+    permutations : int (default = 99)
+       number of permutations for inference
 
     Attributes
     ----------
 
-    g: float
+    g : float
        Gini coefficient
 
-    wg: float
-        Neighbor inequality component (geographic inequality)
+    wg : float
+       Neighbor inequality component (geographic inequality)
 
-    wcg: float
-        Non-neighbor inequality component (geographic complement inequality)
+    wcg : float
+       Non-neighbor inequality component (geographic complement inequality)
 
-    wcg_share: float
-               Share of inequality in non-neighbor component
+    wcg_share : float
+       Share of inequality in non-neighbor component
 
     If Permuations > 0
 
-    p_sim: float 
-           pseudo p-value for spatial gini 
+    p_sim : float
+       pseudo p-value for spatial gini
 
-    e_wcg: float
-           expected value of non-neighbor inequality component (level) from
-           permutations
+    e_wcg : float
+       expected value of non-neighbor inequality component (level) from permutations
 
-    s_wcg: float
-           standard deviation non-neighbor inequality component (level) from
-           permutations
+    s_wcg : float
+           standard deviation non-neighbor inequality component (level) from permutations
 
-    z_wcg: float
+    z_wcg : float
            z-value non-neighbor inequality component (level) from permutations
 
-    p_z_sim: float
-             pseudo  p-value based on standard normal approximation of
-             permutation based values
+    p_z_sim : float
+             pseudo  p-value based on standard normal approximation of permutation based values
 
-
-    
 
     Examples
     --------
@@ -133,27 +125,24 @@ class Gini_Spatial:
     same regime (neighbors) is significantly higher than what is expected
     under the null of random spatial inequality.
 
- 
+
     References
     ----------
 
     .. [1] Rey, S.J. and R. Smith (2012) "A spatial decomposition of the Gini
-    coefficient." Letters in Spatial and Resource Sciences. DOI
-    10.1007/s12076-012-00860z
+        coefficient." Letters in Spatial and Resource Sciences. DOI 10.1007/s12076-012-00860z
 
-
- 
     """
-    def __init__(self,x, w, permutations = 99):
+    def __init__(self, x, w, permutations=99):
         x.shape = (x.shape[0],)
         d = np.abs(np.array([x - xi for xi in x]))
         n = len(x)
         xbar = x.mean()
         den = xbar * 2 * n**2
         wg = w.sparse.multiply(d).sum()
-        self.wg = wg # spatial inequality component
+        self.wg = wg  # spatial inequality component
         dtotal = d.sum()
-        wcg = dtotal - wg # complement to spatial inequality component
+        wcg = dtotal - wg  # complement to spatial inequality component
         self.wcg = wcg
         self.g = dtotal / den
         self.wcg_share = wcg / dtotal
@@ -162,15 +151,14 @@ class Gini_Spatial:
 
         if permutations:
             ids = np.arange(n)
-
-            wcgp = np.zeros((permutations,1))
+            wcgp = np.zeros((permutations, 1))
             for perm in xrange(permutations):
                 # permute rows/cols of d
                 np.random.shuffle(ids)
-                wcgp[perm] = w.sparse.multiply(d[ids,:][:,ids]).sum()
+                wcgp[perm] = w.sparse.multiply(d[ids, :][:, ids]).sum()
             above = wcgp >= self.wcg
             larger = above.sum()
-            if (permutations -  larger) <  larger:
+            if (permutations - larger) < larger:
                 larger = permutations - larger
             self.p_sim = (larger + 1.) / (permutations + 1.)
             self.e_wcg = wcgp.mean()

@@ -17,9 +17,11 @@ class _PolyQ(dict):
         self.ids = []
 
     def __checkSize(self):
-        """ Use the objects in the Q to calculate the average size of the objects
-            Adjust Q.size to hold Q_TARGET_MEM_SIZE/avgSize object
-            This is as many average size object that fit into Q_TARGET_MEM_SIZE """
+        """
+        Use the objects in the Q to calculate the average size of the objects
+        Adjust Q.size to hold Q_TARGET_MEM_SIZE/avgSize object
+        This is as many average size object that fit into Q_TARGET_MEM_SIZE
+        """
         if len(self.ids) > 50:
             return True
         return False

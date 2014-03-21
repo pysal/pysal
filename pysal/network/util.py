@@ -99,7 +99,7 @@ def enum_edges_region(wed, region):
     return edges
 
 
-def edge_length(wed):
+def edge_length(wed, half=False):
     """
     Compute the cartesian length of all edges.  This is a helper
         function to allow for ratio data with spatial autocorrelation
@@ -107,7 +107,8 @@ def edge_length(wed):
 
     Parameters
     ----------
-    None
+    wed: PySAL Winged Edged Data structure
+    half: Double edge length by default, flag to set to single
 
     Returns
     -------
@@ -117,8 +118,13 @@ def edge_length(wed):
 
     lengths = {}
     for edge in wed.edge_list:
-        lengths[edge] = get_points_dist(wed.node_coords[edge[0]],
-                                        wed.node_coords[edge[1]])
+        if half:
+            if (edge[1], edge[0]) not in lengths.keys():
+                lengths[edge] = get_points_dist(wed.node_coords[edge[0]],
+                                                wed.node_coords[edge[1]])
+        else:
+            lengths[edge] = get_points_dist(wed.node_coords[edge[0]],
+                                            wed.node_coords[edge[1]])
     return lengths
 
 
@@ -363,8 +369,30 @@ def get_neighbor_distances(wed, v0, l):
             neighbors[e[1]] = l[e]
     return neighbors
 
+def newpointer(k,v,c):
+    '''
+    Helper function for node insertion.
 
-def insert_node(wed, edge, distance):
+    Parameters
+    ----------
+    k: key of the pointer to update
+    v: current value of the key
+    c: value to replace the non-shared (k:v) value with
+
+    Returns
+    -------
+    l: tuple new value of the pointer k
+    '''
+    mask = [(i == j) for i, j in zip(k, v)]
+    if all(x == False for x in mask):
+        mask = [(i == j) for i, j in zip(k, (v[1], v[0]))]
+    replace = mask.index(False)
+    l = list(v)
+    l[replace] = c
+    return tuple(l)
+
+
+def insert_node(wed, edge, distance, segment=False):
     """
     Insert a node into an existing edge at a fixed distance from
      the start node.
@@ -374,6 +402,7 @@ def insert_node(wed, edge, distance):
     wed: PySAL Winged Edge Data Structure
     edge: The edge to insert a node into
     distance: float, distance from the start node of the edge
+    segment: a flag that returns the modified WED and the new node id
 
     Returns
     -------
@@ -390,16 +419,17 @@ def insert_node(wed, edge, distance):
         wed.region_edge[new_edge] = wed.region_edge.pop(edge)
     if (edge[1], edge[0]) in wed.region_edge.keys():
         wed.region_edge[(new_edge[1], new_edge[0])] = wed.region_edge.pop((edge[1], edge[0]))
-    #Update the edge list
+
     a = edge[0]
     b = edge[1]
     c = newcoord_id
+    #Update the edge list
     idx = wed.edge_list.index(edge)
     wed.edge_list.pop(idx)
     wed.edge_list += [(a, c), (c, a)]
     idx = wed.edge_list.index((b, a))
     wed.edge_list.pop(idx)
-    wed.edge_list += [(b, c),(c, b)]
+    wed.edge_list += [(b, c), (c, b)]
     #Update the start and end nodes
         #Remove the old start and end node pointers
     wed.start_node.pop(edge)
@@ -431,49 +461,105 @@ def insert_node(wed, edge, distance):
     wed.start_cc[(c, a)] = (c, b)
     wed.end_c[(a, c)] = (c, b)
     wed.end_cc[(a, c)] = (c, b)
-    wed.start_c[(c, b)] = (a, c)
-    wed.start_c[(c, b)] = (a, c)
+    wed.start_c[(c, b)] = (c, a)
+    wed.start_cc[(c, b)] = (c, a)
     wed.end_c[(b, c)] = (c, a)
     wed.end_cc[(b, c)] = (c, a)
     #Update the pointer to the nodes incident to start / end of the original link
     for k, v in wed.start_c.iteritems():
         if v == edge:
-            wed.start_c[k] = (v[0], c)
+            wed.start_c[k] = newpointer(k,v,c)
         elif v == rev_edge:
-            wed.start_c[k] = (v[1], c)
+            wed.start_c[k] = newpointer(k,v,c)
     for k, v in wed.start_cc.iteritems():
         if v == edge:
-            wed.start_cc[k] = (v[0], c)
+            wed.start_cc[k] = newpointer(k,v,c)
         elif v == rev_edge:
-            wed.start_cc[k] = (v[1], c)
+            wed.start_cc[k] = newpointer(k,v,c)
     for k, v in wed.end_c.iteritems():
         if v == edge:
-            wed.end_c[k] = (v[1], c)
+            wed.end_c[k] = newpointer(k,v,c)
         elif v == rev_edge:
-            wed.end_c[k] = (v[0], c)
+            wed.end_c[k] = newpointer(k,v,c)
     for k, v in wed.end_cc.iteritems():
         if v == edge:
-            wed.end_cc[k] = (v[1], c)
+            wed.end_cc[k] = newpointer(k,v,c)
         elif v == rev_edge:
-            wed.end_cc[k] = (v[0], c)
+            wed.end_cc[k] = newpointer(k,v,c)
     #Update the node_edge pointer
     wed.node_edge[c] = (a, c)
     wed.node_edge[a] = (a, c)
     wed.node_edge[b] = (b, c)
     #update right and left polygon regions
-    right = wed.right_polygon.pop(edge)
-    left = wed.left_polygon.pop(edge)
-    wed.right_polygon[(a, c)] = right
-    wed.left_polygon[(a, c)] = left
-    wed.right_polygon[(c, b)] = right
-    wed.left_polygon[(c, b)] = left
-    right = wed.right_polygon.pop(rev_edge)
-    left = wed.left_polygon.pop(rev_edge)
-    wed.right_polygon[(b, c)] = right
-    wed.left_polygon[(b, c)] = left
-    wed.right_polygon[(c, a)] = right
-    wed.left_polygon[(c, a)] = left
+    if edge in wed.right_polygon.keys():
+        right = wed.right_polygon.pop(edge)
+        wed.right_polygon[(a, c)] = right
+        wed.right_polygon[(c, b)] = right
+    if edge in wed.left_polygon.keys():
+        left = wed.left_polygon.pop(edge)
+        wed.left_polygon[(a, c)] = left
+        wed.left_polygon[(c, b)] = left
+    if rev_edge in wed.right_polygon.keys():
+        right = wed.right_polygon.pop(rev_edge)
+        wed.right_polygon[(b, c)] = right
+        wed.right_polygon[(c, a)] = right
+    if rev_edge in wed.left_polygon.keys():
+        left = wed.left_polygon.pop(rev_edge)
+        wed.left_polygon[(b, c)] = left
+        wed.left_polygon[(c, a)] = left
 
+    if segment:
+        return wed, c
+    else:
+        return wed
+
+
+def segment_edges(wed, distance=None, count=None):
+    '''
+    Segment all of the edges in the network at either
+    a fixed distance or a fixed number of segments.
+
+    Parameters
+    ----------
+    wed: PySAL Winged Edged Data Structure
+    distance: float distance at which edges are split
+    count: integer count of the number of desired segments
+    '''
+    if count != None:
+        assert(type(count) == int)
+
+    def segment(count, distance, wed, start, end):
+        '''
+        Recursive segmentation of each edge until count is reached.
+        '''
+        if count == 1:
+            return wed
+
+        edge = (start, end)
+        wed, start = insert_node(wed, edge, distance, segment=True)
+        segment(count - 1, distance, wed, start, end)
+        return wed
+
+    #Any segmentation has float inconsistencies.  On the order of 1x10^-14
+    if count == None and distance == None or count != None and distance != None:
+        print '''
+        Please supply either a distance at which to
+        segment edges or a count of the number of
+        segments to generate per edge.
+        '''
+        return
+    lengths = edge_length(wed, half=True)
+    if count != None:
+        for k, l in lengths.iteritems():
+            interval = l / count
+            wed = segment(count, interval, wed, k[0], k[1])
+    elif distance:
+        for k, l in lengths.iteritems():
+            if distance >= l or l / distance == 0:
+                continue
+            count = l / distance
+            print count
+            wed = segment(count, distance, wed, k[0], k[1])
     return wed
 
 
