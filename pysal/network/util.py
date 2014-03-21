@@ -697,6 +697,175 @@ def polyShp2Network(shpFile):
     return {"nodes": nodes, "edges": edges.values() }
 
 
+def euler_nonplaner_test(e, v):
+    """
+    Testing for nonplanarity based on necessary condition for planarity
+
+    Parameters
+    ----------
+
+    e: int
+       number of edges
+    v: int
+       number of vertices
+
+
+    Returns
+    -------
+
+    True if planarity condition is violated, otherwise false.
+
+    Notes
+    -----
+
+    This is only a necessary but not sufficient condition for planarity. In
+    other words violating this means the graph is nonplanar, but passing it
+    does not guarantee the graph is planar.
+
+    """
+
+    if e <= (3*v - 6):
+        return False
+    else:
+        return True
+
+def area2(A, B, C):
+    return (B[0]-A[0]) * (C[1]-A[1]) - (C[0]-A[0]) * (B[1]-A[1])
+
+def isLeft(A, B, C):
+    return area2(A,B,C) > 0
+
+def isRight(A, B, C):
+    return area2(A,B,C) < 0
+
+def isCollinear(A, B, C):
+    return area2(A, B, C) == 0
+
+def intersect(A, B, C, D):
+
+    if isLeft(A, B, D) * isRight(A, B, C):
+        return True
+    elif isLeft(A, B, C) * isRight(A, B, D):
+        return True
+    elif isCollinear(A, B, C):
+        return True
+    elif isCollinear(A, B, D):
+        return True
+    else:
+        return False
+
+
+def intersection_sweep(segments, findAll = True):
+    """
+    Plane sweep segment intersection detection.
+
+
+    Parameters
+    ----------
+
+    segments: list of lists
+              each segment is a list containing tuples of segment start/end points
+
+    findAll : boolean
+              If True return all segment intersections, otherwise stop after
+              first detection
+
+    Examples
+    --------
+
+    >>>segments = [ [(4.5,0), (4.5,4.5)], [(4.5,1), (4.5,2)], [(4,4), (1,4)], [(2,3), (5,3)], [(5,0), (5,10)] ]
+    >>>util.intersection_seep(segments)
+    [(0,3), (4,3)]
+    >>>util.intersection_seep(segments, findAll=False)
+    [(0,3)]
+
+    """               
+    Q = []
+    slopes = []
+    intercepts = []
+    for i,seg in enumerate(segments):
+        seg.sort()
+        l,r = seg
+        Q.append([l,i])
+        Q.append([r,i])
+
+        m = r[1] - l[1]  
+        dx = r[1] - r[0]
+        if dx == 0:
+            m = 0
+            intercept = r[1]
+        else:
+            m = m / dx
+            intercept = r[1] - m * r[0]
+        slopes.append(m)
+        intercepts.append(intercept)
+
+    Q.sort()  # event point que sorted on x coord
+    status = []
+
+    visited = [0] * len(segments)
+    intersections = []
+
+    while Q:
+        event_point, i = Q.pop(0)
+        if visited[i]:
+            # right end point so we are leaving
+            # check for intersection between i's left and right neighbors on
+            # the status
+            if position > 0 and position < ns-1:
+                left = sorted_y[position-1][1] 
+                right = sorted_y[position+1][1]
+                p0,p1 = segments[left]
+                p2,p3 = segments[right]
+                if intersect(p0, p1, p2, p3):
+                    intersections.append( (left,right) )
+                    if not findAll:
+                        Q = []
+            # remove i from status
+            status.remove(i)
+        else:
+            sorted_y = []
+            visited[i] = 1
+            xi = event_point[0]
+            yi = event_point[1]
+            sorted_y.append( (yi, i) )
+
+            # insert in status
+            for seg in status:
+                y = slopes[seg] * xi + intercepts[seg]
+                sorted_y.append( (y, seg) )
+            sorted_y.sort()
+            position = sorted_y.index( (yi, i) )
+            ns = len(sorted_y)
+            # check for intersection with left neighbor
+            if position  > 0:
+                left = sorted_y[position-1][1] 
+                p0,p1 = segments[left]
+                p2,p3 = segments[i]
+                if intersect(p0, p1, p2, p3):
+                    intersections.append( (left,i) )
+                    if not findAll:
+                        Q = []
+
+            # check for intersection with right neighbor
+            if position < ns-1:
+                right = sorted_y[position+1][1] 
+                p0,p1 = segments[right]
+                p2,p3 = segments[i]
+                if intersect(p0, p1, p2, p3):
+                    intersections.append( (i, right))
+                    if not findAll:
+                        Q = []
+            status.append(i)
+
+    return intersections
+
+
+
+
+
+
+
 
 def _test():
     import doctest
