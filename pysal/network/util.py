@@ -743,17 +743,25 @@ def isCollinear(A, B, C):
 
 def intersect(A, B, C, D):
 
-    if isLeft(A, B, D) * isRight(A, B, C):
+    if isCollinear(A, B, D) or isCollinear(A, B, C):
         return True
+    elif isLeft(A, B, D) * isRight(A, B, C):
+        if isLeft(C, D, A) != isLeft(C, D, B):
+            return True
+        else:
+            return False
     elif isLeft(A, B, C) * isRight(A, B, D):
-        return True
-    elif isCollinear(A, B, C):
-        return True
-    elif isCollinear(A, B, D):
-        return True
+        if isLeft(C, D, A) != isLeft(C, D, B):
+            return True
+        else:
+            return False
     else:
         return False
 
+def segIntersect(s1, s2):
+    A, B = s1
+    C, D = s2
+    return intersect(A, B, C, D)
 
 def intersection_sweep(segments, findAll = True):
     """
@@ -793,7 +801,7 @@ def intersection_sweep(segments, findAll = True):
         dx = r[1] - r[0]
         if dx == 0:
             m = 0
-            intercept = r[1]
+            intercept = r[1] # vertical segment
         else:
             m = m / dx
             intercept = r[1] - m * r[0]
@@ -805,6 +813,8 @@ def intersection_sweep(segments, findAll = True):
 
     visited = [0] * len(segments)
     intersections = []
+
+    print Q
 
     while Q:
         event_point, i = Q.pop(0)
@@ -831,6 +841,7 @@ def intersection_sweep(segments, findAll = True):
             sorted_y.append( (yi, i) )
 
             # insert in status
+            # have to handle vertical segments differently
             for seg in status:
                 y = slopes[seg] * xi + intercepts[seg]
                 sorted_y.append( (y, seg) )
@@ -861,7 +872,17 @@ def intersection_sweep(segments, findAll = True):
     return intersections
 
 
-
+def isPlanar(segments):
+    intersections = intersection_sweep(segments, findAll=True)
+    print intersections
+    proper = []
+    for intersection in intersections:
+        i,j = intersection
+        si = set(segments[i])
+        sj = set(segments[j])
+        if len(si.union(sj)) == 4:
+            proper.append(intersection)
+    return proper
 
 
 
