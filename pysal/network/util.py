@@ -781,11 +781,12 @@ def intersection_sweep(segments, findAll = True):
     Examples
     --------
 
-    >>>segments = [ [(4.5,0), (4.5,4.5)], [(4.5,1), (4.5,2)], [(4,4), (1,4)], [(2,3), (5,3)], [(5,0), (5,10)] ]
-    >>>util.intersection_seep(segments)
-    [(0,3), (4,3)]
-    >>>util.intersection_seep(segments, findAll=False)
-    [(0,3)]
+    >>> import util
+    >>> segments = [ [(4.5,0), (4.5,4.5)], [(4.5,1), (4.5,2)], [(4,4), (1,4)], [(2,3), (5,3)], [(5,0), (5,10)] ]
+    >>> util.intersection_sweep(segments)
+    [(0, 3), (4, 3)]
+    >>> util.intersection_sweep(segments, findAll=False)
+    [(0, 3)]
 
     """               
     Q = []
@@ -814,7 +815,6 @@ def intersection_sweep(segments, findAll = True):
     visited = [0] * len(segments)
     intersections = []
 
-    print Q
 
     while Q:
         event_point, i = Q.pop(0)
@@ -873,16 +873,31 @@ def intersection_sweep(segments, findAll = True):
 
 
 def isPlanar(segments):
+    """
+    Test if a sequence of segments represents a planar network
+
+    Parameters
+    ----------
+
+    segments: list of lists
+              each segment is a list containing tuples of segment start/end points
+
+    Notes
+    -----
+
+    Only proper intersections result in detection of non-planarity. Collinear
+    intersections will not result in non-planarity.
+
+    """
     intersections = intersection_sweep(segments, findAll=True)
-    print intersections
     proper = []
     for intersection in intersections:
         i,j = intersection
         si = set(segments[i])
         sj = set(segments[j])
         if len(si.union(sj)) == 4:
-            proper.append(intersection)
-    return proper
+            return False
+    return True
 
 
 
