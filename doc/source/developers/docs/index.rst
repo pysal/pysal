@@ -211,6 +211,31 @@ Point your browser to `pysal/doc/build/html/index.html`
 and check your work. You can then make changes to the `spreg.rst` file and
 recompile until you are set with the content.
 
+Proper Reference Formatting
+---------------------------
+
+For proper hypertext linking of reference material, each unique reference in a
+single python module can only be explicitly named once. Take the following example for
+instance::
+
+    References
+    ----------
+
+    .. [1] Kelejian, H.R., Prucha, I.R. (1998) "A generalized spatial
+    two-stage least squares procedure for estimating a spatial autoregressive
+    model with autoregressive disturbances". The Journal of Real State
+    Finance and Economics, 17, 1.
+
+It is "named" as "1".  Any other references (even the same paper) with the same "name" will cause a
+Duplicate Reference error when Sphinx compiles the document.  Several
+work-arounds are available but no concensus has emerged. 
+
+One possible solution is to use an anonymous reference on any subsequent
+duplicates, signified by a single underscore with no brackets.  Another solution
+is to put all document references together at the bottom of the document, rather
+than listing them at the bottom of each class, as has been done in some modules. 
+
+
 
 .. _tutorial: /users/tutorials/index
 .. _docutils: http://docutils.sourceforge.net/docs/user/tools.html
