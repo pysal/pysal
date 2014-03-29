@@ -5,9 +5,8 @@ import pysal
 import math
 import numpy as np
 import scipy.sparse
-import gc
 from os.path import basename as BASENAME
-from pysal.weights import  util
+from pysal.weights import util
 
 
 class W(object):
@@ -64,18 +63,14 @@ class W(object):
     trcWtW_WW
     transform
 
-
-
-
-
     Examples
     --------
     >>> from pysal import W, lat2W
     >>> neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
     >>> weights = {0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
     >>> w = W(neighbors, weights)
-    >>> w.pct_nonzero
-    0.29629629629629628
+    >>> "%.3f"%w.pct_nonzero
+    '0.296'
 
     Read from external gal file
 
@@ -83,15 +78,15 @@ class W(object):
     >>> w = pysal.open(pysal.examples.get_path("stl.gal")).read()
     >>> w.n
     78
-    >>> w.pct_nonzero
-    0.065417488494411577
+    >>> "%.3f"%w.pct_nonzero
+    '0.065'
 
     Set weights implicitly
 
     >>> neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
     >>> w = W(neighbors)
-    >>> w.pct_nonzero
-    0.29629629629629628
+    >>> "%.3f"%w.pct_nonzero
+    '0.296'
     >>> w = lat2W(100, 100)
     >>> w.trcW2
     39600.0
@@ -116,6 +111,7 @@ class W(object):
     Island ids:  [2, 3]
 
     """
+
     def __init__(self, neighbors, weights=None, id_order=None, silent_island_warning=False):
         self.silent_island_warning = silent_island_warning
         self.transformations = {}
@@ -140,10 +136,10 @@ class W(object):
             ni = len(self.islands)
             if ni == 1:
                 print "WARNING: there is one disconnected observation (no neighbors)"
-                print "Island id: ",self.islands
+                print "Island id: ", self.islands
             else:
-                print "WARNING: there are %d disconnected observations"%ni
-                print "Island ids: ",self.islands
+                print "WARNING: there are %d disconnected observations" % ni
+                print "Island ids: ", self.islands
 
     def _reset(self):
         """
@@ -172,20 +168,17 @@ class W(object):
         row = []
         col = []
         data = []
-        gc.disable()
         id2i = self.id2i
         for id_i, neigh_list in self.neighbor_offsets.iteritems():
             card = self.cardinalities[id_i]
             row.extend([id2i[id_i]] * card)
             col.extend(neigh_list)
             data.extend(self.weights[id_i])
-        gc.enable()
         row = np.array(row)
         col = np.array(col)
         data = np.array(data)
         s = scipy.sparse.csr_matrix((data, (row, col)), shape=(self.n, self.n))
         return s
-
 
     @property
     def id2i(self):
@@ -249,7 +242,6 @@ class W(object):
         """
         individual elements comprising s2
 
-
         See Also
         --------
         s2
@@ -265,7 +257,6 @@ class W(object):
     def s2(self):
         """
         float
-
 
         .. math::
 
@@ -506,6 +497,7 @@ class W(object):
         >>>
         """
         class _W_iter:
+
             def __init__(self, w):
                 self.w = w
                 self.n = len(w._id_order)
@@ -588,15 +580,18 @@ class W(object):
             raise Exception('ordered_ids do not align with W ids')
 
     def __get_id_order(self):
-        """returns the ids for the observations in the order in which they
-        would be encountered if iterating over the weights."""
+        """
+        Returns the ids for the observations in the order in which they
+        would be encountered if iterating over the weights .
+        """
         return self._id_order
 
     id_order = property(__get_id_order, __set_id_order)
 
     @property
     def id_order_set(self):
-        """returns True if user has set id_order, False if not.
+        """
+        Returns True if user has set id_order, False if not.
 
         Examples
         --------
@@ -674,11 +669,18 @@ class W(object):
         Parameters
         ----------
         transform : string (not case sensitive)
-                    B: Binary
-                    R: Row-standardization (global sum=n)
-                    D: Double-standardization (global sum=1)
-                    V: Variance stabilizing
-                    O: Restore original transformation (from instantiation)
+
+        .. table::
+
+            ================   ======================================================
+            transform string   value
+            ================   ======================================================
+            B                  Binary
+            R                  Row-standardization (global sum=n)
+            D                  Double-standardization (global sum=1)
+            V                  Variance stabilizing
+            O                  Restore original transformation (from instantiation)
+            ================   ======================================================
 
         Examples
         --------
@@ -711,7 +713,7 @@ class W(object):
                     row_sum = sum(wijs) * 1.0
                     if row_sum == 0.0:
                         if not self.silent_island_warning:
-                            print 'WARNING: ',i,' is an island (no neighbors)'
+                            print 'WARNING: ', i, ' is an island (no neighbors)'
                     weights[i] = [wij / row_sum for wij in wijs]
                 weights = weights
                 self.transformations[value] = weights
@@ -778,8 +780,8 @@ class W(object):
         """
         Asymmetry check
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         intrinsic: boolean (default=True)
                 
                 intrinsic symmetry:
@@ -793,8 +795,7 @@ class W(object):
         -------
         asymmetries : list
                       empty if no asymmetries are found
-                      if asymmetries, first list is row indices, second
-                      list is column indices of asymmetric cells
+                      if asymmetries, then a list of (i,j) tuples is returned 
 
         Examples
         --------
@@ -804,22 +805,16 @@ class W(object):
         >>> w.asymmetry()
         []
         >>> w.transform='r'
-        >>> result = w.asymmetry()[0:2]
-        >>> print result[0]
-        [1 3 0 2 4 1 5 0 4 6 1 3 5 7 2 4 8 3 7 4 6 8 5 7]
-        >>> print result[1]
-        [0 0 1 1 1 2 2 3 3 3 4 4 4 4 5 5 5 6 6 7 7 7 8 8]
+        >>> w.asymmetry()
+        [(0, 1), (0, 3), (1, 0), (1, 2), (1, 4), (2, 1), (2, 5), (3, 0), (3, 4), (3, 6), (4, 1), (4, 3), (4, 5), (4, 7), (5, 2), (5, 4), (5, 8), (6, 3), (6, 7), (7, 4), (7, 6), (7, 8), (8, 5), (8, 7)]
         >>> result = w.asymmetry(intrinsic=False)
         >>> result
         []
         >>> neighbors={0:[1,2,3], 1:[1,2,3], 2:[0,1], 3:[0,1]}
         >>> weights={0:[1,1,1], 1:[1,1,1], 2:[1,1], 3:[1,1]}
         >>> w=W(neighbors,weights)
-        >>> result = w.asymmetry()
-        >>> print result[0]
-        [1 0]
-        >>> print result[1]
-        [0 1]
+        >>> w.asymmetry()
+        [(0, 1), (1, 0)]
         """
 
         if intrinsic:
@@ -834,8 +829,9 @@ class W(object):
         if len(ids[0]) == 0:
             return []
         else:
-            return ids
-
+            ijs = zip(ids[0], ids[1])
+            ijs.sort()
+            return ijs
 
     def full(self):
         """
@@ -847,8 +843,6 @@ class W(object):
         implicit : tuple
                    first element being the full numpy array and second element
                    keys being the ids associated with each row in the array.
-
-
 
         Examples
         --------
@@ -873,15 +867,15 @@ class W(object):
     def towsp(self):
         '''
         Generate a WSP object
-        ...
 
         Returns
         -------
-        implicit    : pysal.WSP
-                      Thin W class
+
+        implicit : pysal.WSP
+                   Thin W class
 
         Examples
-        ---------
+        --------
         >>> import pysal as ps
         >>> from pysal import W
         >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
@@ -905,17 +899,18 @@ class W(object):
         """
         Adding meta data for writing headers of gal and gwt files
 
-
         Parameters
         ----------
 
-        shapefile: (string) shapefile name used to construct weights
+        shapefile : (string) 
+                    shapefile name used to construct weights
 
-        idVariable: (string) name of attribute in shapefile to associate with
-        ids in the weights
+        idVariable : (string) 
+                    name of attribute in shapefile to associate with ids in the weights
 
-        full: (boolean) True - write out entire path for shapefile, False
-        (default) only base of shapefile without extension
+        full : (boolean) 
+                True - write out entire path for shapefile, False
+                (default) only base of shapefile without extension
 
         """
         if full:
@@ -926,10 +921,8 @@ class W(object):
         self._varName = idVariable
 
 
-
-
-
 class WSP(object):
+
     """
     Thin W class for spreg
 
@@ -969,8 +962,8 @@ class WSP(object):
     >>> w.n
     4
 
-
     """
+
     def __init__(self, sparse, id_order=None):
         if not scipy.sparse.issparse(sparse):
             raise ValueError("must pass a scipy sparse object")
@@ -981,7 +974,8 @@ class WSP(object):
         self.n = sparse.shape[0]
         if id_order:
             if len(id_order) != self.n:
-                raise ValueError("Number of values in id_order must match shape of sparse")
+                raise ValueError(
+                    "Number of values in id_order must match shape of sparse")
         self.id_order = id_order
         self._cache = {}
 
@@ -1021,4 +1015,3 @@ class WSP(object):
             self._diagWtW_WW = (wt * w + w * w).diagonal()
             self._cache['diagWtW_WW'] = self._diagWtW_WW
         return self._diagWtW_WW
-

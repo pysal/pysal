@@ -360,6 +360,14 @@ class WED(object):
                             right_polygon[(filament[n+1], filament[n])] = r
                             left_polygon[(filament[n+1], filament[n])] = r
 
+        #Fill in start_c and end_cc for external links
+        for k, v in start_cc.iteritems():
+            if k not in end_cc.keys():
+                end_cc[k] = v
+        for k, v in end_c.iteritems():
+            if k not in start_c.keys():
+                start_c[k] = v
+
         self.start_c = start_c
         self.start_cc = start_cc
         self.end_c = end_c

@@ -21,8 +21,12 @@ __all__ = ['bbcommon', 'get_bounding_box', 'get_angle_between', 'is_collinear', 
 
 
 def bbcommon(bb, bbother):
-    """ Old Stars method for bounding box overlap testing
-        Also defined in pysal.weights._cont_binning
+    """
+    Old Stars method for bounding box overlap testing
+    Also defined in pysal.weights._cont_binning
+
+    Examples
+    --------
 
     >>> b0 = [0,0,10,10]
     >>> b1 = [10,0,20,10]
@@ -38,12 +42,6 @@ def bbcommon(bb, bbother):
 
 def get_bounding_box(items):
     """
-
-    Parameters
-    ----------
-
-    Attributes
-    ----------
 
     Examples
     --------
@@ -94,17 +92,14 @@ def get_bounding_box(items):
 
 
 def get_angle_between(ray1, ray2):
-    """ Returns the angle formed between a pair of rays which share an origin
+    """
+    Returns the angle formed between a pair of rays which share an origin
     get_angle_between(Ray, Ray) -> number
 
     Parameters
     ----------
-    ray1        : a ray forming the beginning of the angle measured
-    ray2        : a ray forming the end of the angle measured
-
-
-    Attributes
-    ----------
+    ray1   : a ray forming the beginning of the angle measured
+    ray2   : a ray forming the end of the angle measured
 
     Examples
     --------
@@ -867,8 +862,8 @@ def distance_matrix(X, p=2.0, threshold=5e7):
                     If (n**2)*32 > threshold use scipy.spatial.distance_matrix instead
                     of working in ram, this is roughly the ammount of ram (in bytes) that will be used.
 
-    Example
-    -------
+    Examples
+    --------
     >>> x,y=[r.flatten() for r in np.indices((3,3))]
     >>> data = np.array([x,y]).T
     >>> d=distance_matrix(data)

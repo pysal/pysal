@@ -23,8 +23,8 @@ PySAL network will include the following spatial analytical methods
 
 ### Utility (j)
 
- - Network Edge Segmentation
- - Assignment of Counts/Rates to segments, nodes, edges
+ - ~~Network Edge Segmentation~~
+ - ~~Assignment of Counts/Rates to segments, nodes, edges~~
  - ~~Network Edge Length~~
  - ~~Snapping off-network objects to network~~ (Only internal observations)
  - ~~Single shortest path (Dijkstra's) (One node and all other nodes)~~
@@ -38,7 +38,7 @@ PySAL network will include the following spatial analytical methods
  - ~~Threshold distance~~
  - Network Center
  - Intersection with buffering (s)
- - Node insertion / deletion
+ - Node ~~insertion~~ / deletion
 
 ### Data Structures (j)
 

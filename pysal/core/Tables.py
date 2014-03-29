@@ -1,4 +1,4 @@
-__all__ = ['DataTable', 'DataRow']
+__all__ = ['DataTable']
 import FileIO
 
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"

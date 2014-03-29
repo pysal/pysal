@@ -2,6 +2,7 @@ import unittest
 import numpy as np
 import pysal
 from pysal.spreg.twosls_sp_regimes import GM_Lag_Regimes
+from pysal.spreg import utils
 from pysal.spreg.twosls_sp import GM_Lag
 
 class TestGMLag_Regimes(unittest.TestCase):
@@ -188,8 +189,8 @@ class TestGMLag_Regimes(unittest.TestCase):
         tbetas = np.array([[ 37.87698329,  -0.89426982,  31.4714777 ,  -0.71640525,
          -0.28494432,  -0.2294271 ,   0.62996544]])
         np.testing.assert_array_almost_equal(tbetas, reg.betas.T)
-        vm = np.array([ 129.37035525,    4.63280824,  112.67396677,    3.75448625,
-         -3.91212251,   -2.30111247,   -1.87644531])
+        vm = np.array([ 70.38291551,  -0.64868787,  49.25453215,  -0.62851534,
+        -0.75413453,  -0.12674433,  -0.97179236])
         np.testing.assert_array_almost_equal(reg.vm[0], vm, 6)
         e_3 = np.array([[-2.66997799],
        [-7.69786264],
@@ -207,11 +208,11 @@ class TestGMLag_Regimes(unittest.TestCase):
        [ 26.49961664],
        [ 35.02090882]])
         np.testing.assert_array_almost_equal(reg.predy_e[0:3], predy_e_3, 7)
-        chow_regi = np.array([[ 0.52346846,  0.46936587],
-       [ 0.00823219,  0.92770602],
-       [ 0.00403089,  0.94937692]])
+        chow_regi = np.array([[ 0.60091096,  0.43823066],
+       [ 0.03006744,  0.8623373 ],
+       [ 0.01943727,  0.88912016]])
         np.testing.assert_array_almost_equal(reg.chow.regi, chow_regi, 7)
-        self.assertAlmostEqual(reg.chow.joint[0], 0.65835342715685385, 7)
+        self.assertAlmostEqual(reg.chow.joint[0], 0.88634854058300516, 7)
     
     def test_all_regi_sig2(self):
         #Artficial:

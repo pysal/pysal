@@ -1,7 +1,6 @@
 """
 Convenience functions for the construction of spatial weights based on
 contiguity and distance criteria
-
 """
 
 __author__ = "Sergio J. Rey <srey@asu.edu> "
@@ -36,16 +35,15 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
     Examples
     --------
     >>> wq=queen_from_shapefile(pysal.examples.get_path("columbus.shp"))
-    >>> wq.pct_nonzero
-    0.098292378175760101
+    >>> "%.3f"%wq.pct_nonzero
+    '0.098'
     >>> wq=queen_from_shapefile(pysal.examples.get_path("columbus.shp"),"POLYID")
-    >>> wq.pct_nonzero
-    0.098292378175760101
+    >>> "%.3f"%wq.pct_nonzero
+    '0.098'
     >>> wq=queen_from_shapefile(pysal.examples.get_path("columbus.shp"), sparse=True)
-    >>> wq.sparse.nnz *1. / wq.n**2
-    0.098292378175760101
-
-
+    >>> pct_sp = wq.sparse.nnz *1. / wq.n**2
+    >>> "%.3f"%pct_sp
+    '0.098'
 
     Notes
     -----
@@ -95,11 +93,12 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
     Examples
     --------
     >>> wr=rook_from_shapefile(pysal.examples.get_path("columbus.shp"), "POLYID")
-    >>> wr.pct_nonzero
-    0.083298625572678045
+    >>> "%.3f"%wr.pct_nonzero
+    '0.083'
     >>> wr=rook_from_shapefile(pysal.examples.get_path("columbus.shp"), sparse=True)
-    >>> wr.sparse.nnz *1. / wr.n**2
-    0.083298625572678045
+    >>> pct_sp = wr.sparse.nnz *1. / wr.n**2
+    >>> "%.3f"%pct_sp
+    '0.083'
 
     Notes
     -----
@@ -185,7 +184,6 @@ def knnW_from_array(array, k=2, p=2, ids=None, radius=None):
     w         : W instance
                 Weights object with binary weights
 
-
     Examples
     --------
     >>> import numpy as np
@@ -203,8 +201,8 @@ def knnW_from_array(array, k=2, p=2, ids=None, radius=None):
     True
     >>> set([0,6]) == set(wnn2.neighbors[5])
     True
-    >>> wnn2.pct_nonzero
-    0.080000000000000002
+    >>> "%.2f"%wnn2.pct_nonzero
+    '0.08'
     >>> wnn4.pct_nonzero
     0.16
     >>> wnn4=knnW_from_array(data,k=4)
@@ -217,7 +215,6 @@ def knnW_from_array(array, k=2, p=2, ids=None, radius=None):
     >>> wnn3m=knnW(data,p=1,k=3)
     >>> set([1,5,2]) == set(wnn3m.neighbors[0])
     True
-
 
     Notes
     -----
@@ -261,15 +258,14 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
     w         : W instance
                 Weights object with binary weights
 
-
     Examples
     --------
 
     Polygon shapefile
 
     >>> wc=knnW_from_shapefile(pysal.examples.get_path("columbus.shp"))
-    >>> wc.pct_nonzero
-    0.040816326530612242
+    >>> "%.4f"%wc.pct_nonzero
+    '0.0408'
     >>> set([2,1]) == set(wc.neighbors[0])
     True
     >>> wc3=pysal.knnW_from_shapefile(pysal.examples.get_path("columbus.shp"),k=3)
@@ -295,8 +291,8 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
     >>> w.pct_nonzero
     0.011904761904761904
     >>> w1=knnW_from_shapefile(pysal.examples.get_path("juvenile.shp"),k=1)
-    >>> w1.pct_nonzero
-    0.0059523809523809521
+    >>> "%.3f"%w1.pct_nonzero
+    '0.006'
     >>>
 
     Notes
@@ -308,7 +304,6 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
     coordinates.
 
     Ties between neighbors of equal distance are arbitrarily broken.
-
 
     See Also
     --------
@@ -400,14 +395,12 @@ def threshold_binaryW_from_shapefile(shapefile, threshold, p=2, idVariable=None,
     >>> w.weights[1]
     [1, 1]
 
-
     Notes
     -----
     Supports polygon or point shapefiles. For polygon shapefiles, distance is
     based on polygon centroids. Distances are defined using coordinates in
     shapefile which are assumed to be projected and not geographical
     coordinates.
-
 
     """
     data = get_points_array_from_shapefile(shapefile)
@@ -424,7 +417,6 @@ def threshold_continuousW_from_array(array, threshold, p=2,
 
     """
     Continuous weights based on a distance threshold
-
 
     Parameters
     ----------
@@ -451,7 +443,6 @@ def threshold_continuousW_from_array(array, threshold, p=2,
     w         : W instance
                 Weights object with continuous weights
 
-
     Examples
     --------
 
@@ -471,7 +462,6 @@ def threshold_continuousW_from_array(array, threshold, p=2,
     Island id:  [2]
     >>> wid2.weights[0]
     [0.01, 0.0079999999999999984]
-
 
     """
     if radius is not None:
@@ -526,7 +516,6 @@ def threshold_continuousW_from_shapefile(shapefile, threshold, p=2,
     shapefile which are assumed to be projected and not geographical
     coordinates.
 
-
     """
     data = get_points_array_from_shapefile(shapefile)
     if radius is not None:
@@ -562,7 +551,6 @@ def kernelW(points, k=2, function='triangular', fixed=True,
                   observation).
     function    : string {'triangular','uniform','quadratic','epanechnikov',
                   'quartic','bisquare','gaussian'}
-
 
                   .. math::
 
@@ -664,7 +652,6 @@ def kernelW(points, k=2, function='triangular', fixed=True,
     >>> kqd.weights
     {0: [1.0, 0.35206533556593145, 0.3412334260702758], 1: [0.35206533556593145, 1.0, 0.2419707487162134, 0.3412334260702758, 0.31069657591175387], 2: [0.2419707487162134, 1.0, 0.31069657591175387], 3: [0.3412334260702758, 0.3412334260702758, 1.0, 0.3011374490937829, 0.26575287272131043], 4: [0.31069657591175387, 0.31069657591175387, 0.3011374490937829, 1.0, 0.35206533556593145], 5: [0.26575287272131043, 0.35206533556593145, 1.0]}
 
-
     """
     if radius is not None:
         points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
@@ -690,7 +677,6 @@ def kernelW_from_shapefile(shapefile, k=2, function='triangular',
                   observation).
     function    : string {'triangular','uniform','quadratic','epanechnikov',
                   'quartic','bisquare','gaussian'}
-
 
                   .. math::
 
@@ -750,7 +736,6 @@ def kernelW_from_shapefile(shapefile, k=2, function='triangular',
                  diagonal weights are set to value according to kernel
                  function
 
-
     Returns
     -------
 
@@ -779,7 +764,6 @@ def kernelW_from_shapefile(shapefile, k=2, function='triangular',
     shapefile which are assumed to be projected and not geographical
     coordinates.
 
-
     """
     points = get_points_array_from_shapefile(shapefile)
     if radius is not None:
@@ -796,7 +780,6 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular',
         radius=None, diagonal=False):
     """
     Kernel weights with adaptive bandwidths
-
 
     Parameters
     ----------
@@ -863,7 +846,6 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular',
     w            : W
                    instance of spatial weights
 
-
     Examples
     --------
 
@@ -924,7 +906,6 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular',
     [0.3989422804014327, 0.2674190291577696, 0.2419707487162134]
     >>> kweagd.weights[0]
     [1.0, 0.2674190291577696, 0.2419707487162134]
-
 
     """
     if radius is not None:
@@ -1005,7 +986,6 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='t
     w            : W
                    instance of spatial weights
 
-
     Examples
     --------
     >>> kwa = pysal.adaptive_kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"), function='gaussian')
@@ -1060,7 +1040,6 @@ def min_threshold_dist_from_shapefile(shapefile, radius=None, p=2):
     -------
     d            : float
                    minimum nearest neighbor distance between the n observations
-
 
     Examples
     --------

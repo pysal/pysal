@@ -16,17 +16,30 @@ from math import pi, cos, sin, asin
 __all__ = ['RADIUS_EARTH_KM', 'RADIUS_EARTH_MILES', 'arcdist', 'arcdist2linear', 'brute_knn', 'fast_knn', 'fast_threshold', 'linear2arcdist', 'toLngLat', 'toXYZ']
 
 
-RADIUS_EARTH_KM = 6371.0  # Source: http://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
+RADIUS_EARTH_KM = 6371.0  
 RADIUS_EARTH_MILES = (
     RADIUS_EARTH_KM * scipy.constants.kilo) / scipy.constants.mile
 
 
 def arcdist(pt0, pt1, radius=RADIUS_EARTH_KM):
     """
-    Returns the arc distance between pt0 and pt1 using supplied radius
-    pt0 and pt1 are assumed to be in the form (lng,lat)
+    Parameters
+    ----------
+    pt0 : point
+        assumed to be in form (lng,lat)
+    pt1 : point
+        assumed to be in form (lng,lat)
+    radius : radius of the sphere
+        defaults to Earth's radius
+
+        Source: http://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
+
+    Returns 
+    -------
+    The arc distance between pt0 and pt1 using supplied radius
 
     Examples
+    --------
     >>> pt0 = (0,0)
     >>> pt1 = (180,0)
     >>> d = arcdist(pt0,pt1,RADIUS_EARTH_MILES)
@@ -41,6 +54,7 @@ def arcdist2linear(arc_dist, radius=RADIUS_EARTH_KM):
     Convert an arc distance (spherical earth) to a linear distance (R3) in the unit sphere.
 
     Examples
+    --------
     >>> pt0 = (0,0)
     >>> pt1 = (180,0)
     >>> d = arcdist(pt0,pt1,RADIUS_EARTH_MILES)
@@ -59,6 +73,7 @@ def linear2arcdist(linear_dist, radius=RADIUS_EARTH_KM):
     Convert a linear distance in the unit sphere (R3) to an arc distance based on supplied radius
 
     Examples
+    --------
     >>> pt0 = (0,0)
     >>> pt1 = (180,0)
     >>> d = arcdist(pt0,pt1,RADIUS_EARTH_MILES)
@@ -77,11 +92,18 @@ def linear2arcdist(linear_dist, radius=RADIUS_EARTH_KM):
 
 
 def toXYZ(pt):
-    """ ASSUMPTION: pt = (lng,lat)
-        REASON: pi = 180 degrees,
-                theta+(pi/2)....
-                theta = 90 degrees,
-                180 =  90+180/2"""
+    """
+    Parameters
+    ----------
+    pt0 : point
+        assumed to be in form (lng,lat)
+    pt1 : point
+        assumed to be in form (lng,lat)
+
+    Returns
+    -------
+    x, y, z
+    """
     phi, theta = map(math.radians, pt)
     phi, theta = phi + pi, theta + (pi / 2)
     x = 1 * sin(theta) * cos(phi)
@@ -127,6 +149,25 @@ def brute_knn(pts, k, mode='arc'):
 
 
 def fast_knn(pts, k, return_dist=False):
+    """
+    Computes k nearest neighbors on a sphere.
+
+    Parameters
+    ----------
+    pts :  list of x,y pairs
+    k   :  int
+        Number of points to query
+    return_dist : bool
+        Return distances in the 'wd' container object
+
+    Returns
+    -------
+    wn  :  list
+        list of neighbors
+    wd  : list
+        list of neighbor distances (optional)
+
+    """
     pts = numpy.array(pts)
     kd = scipy.spatial.KDTree(pts)
     d, w = kd.query(pts, k + 1)
