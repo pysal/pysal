@@ -56,6 +56,8 @@ PySAL network will include the following spatial analytical methods
 
 #### Input
  - ~~reading polyline shapefiles~~  Assumes that the shapefiles are topologically correct and planar
+ - ~~test for planarity~~
+ - add test for planarity to reader
  - point shapefiles
  - polygon files
  - wed
@@ -87,7 +89,7 @@ List notebooks and their purpose
 
 ## Development Plans
 
-Prioritize components for 1.7 development
+Prioritize components for 1.8 development
 
 ## Issues
 
