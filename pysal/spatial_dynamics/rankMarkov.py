@@ -305,7 +305,8 @@ class GeographicRankMarkov(RankMarkov):
 		return _rmt_results
 
 if __name__ == "__main__":
-	f = pysal.open('../examples/usjoin.csv')
+
+	f = pysal.open(pysal.examples.get_path('usjoin.csv'))
 	m = np.array([f.by_row[i][2:] for i in xrange(48)])
 	grm = GeographicRankMarkov(m)
 	print grm.rankMat
