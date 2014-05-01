@@ -18,6 +18,7 @@ before_install:
 
 install:
   - "pip install -q -r requirements.txt --use-mirrors"
+  - "pip install pychecker --use-mirrors"
   #- "pip install coveralls --use-mirrors"
   - "sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm"
   #- "pip install pysal --use-mirrors"
@@ -28,6 +29,7 @@ script:
   - python -c 'import scipy; print scipy.version.version'
   - python setup.py install 
   - python -c 'import pysal; print pysal.version'
+  - pychecker --limit 1000 pysal
   - python setup.py sdist >/dev/null
   - nosetests 
   - cd doc; make pickle; make doctest
