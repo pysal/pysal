@@ -3,7 +3,7 @@
 News
 ====
 
-(2014-04-01) `PySAL Workshop at FOSS4G 2014, Portland - September 8-9 <https://2014.foss4g.org/schedule/workshops/>`_
+(2014-04-01) `PySAL Workshop at FOSS4G 2014, Portland - September 8-9 <https://2014.foss4g.org/schedule/workshops/#wshop-content-568>`_
 
 (2014-03-15) `PySAL Tutorial at GIScience 2014, Vienna - September 23-26 <http://www.giscience.org/workshops_tutorials.html>`_
 
