@@ -10,6 +10,7 @@ from pysal.common import *  # flake8; F403 unable to detect undefined names
 from pysal.weights import W
 from scipy import sparse  # flake8; F401 imported but unused
 import scipy.stats
+import numpy as np
 
 __all__ = ["knnW", "Kernel", "DistanceBand"]
 
@@ -112,7 +113,8 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
         info = nnq[1]
     elif type(data).__name__ == 'ndarray':
         # check if unique points are a small fraction of all points
-        u = scipy.stats._support.unique(data)
+        ind =  np.lexsort(data.T)
+        u = data[np.concatenate(([True],np.any(data[ind[1:]]!=data[ind[:-1]],axis=1)))]
         pct_u = len(u)*1. / len(data)
         if pct_u < pct_unique:
             tree = KDTree(u)
