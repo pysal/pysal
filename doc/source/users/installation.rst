@@ -1,22 +1,21 @@
 .. _installation:
 
-============
-Using pysal 
-============
+==============
+Install  PySAL 
+==============
 
 
 PySAL is built upon the Python scientific stack, primarily numpy and
 scipy. While these libraries are packaged for several platforms, the
 Anaconda and Enthought Python distributions include them along with the core
-Python library. Anaconda not only ships numpy and scipy, but pysal as well! 
+Python library. Both Anaconda and Enthought Canopy not only ship numpy and scipy, but PySAl as well! 
 
-The `Anaconda Python distribution <http://continuum.io/downloads.html>`_ ships with pysal!
+- `Anaconda Python distribution <http://continuum.io/downloads.html>`_
+- `Enthought Canopy <https://www.enthought.com/downloads>`_
 
-The `Enthought Canopy <https://www.enthought.com/downloads>`_ also ships
-numpy and scipy, but you will have to install pysal afterward.
 
-Before attempting to install pysal, make sure the following software are 
-available on your machine:
+If you do not wish to use either Anaconda or Enthought you should make sure
+that make sure the following software packages are available on your machine:
 
 * `Python <http://www.python.org/download>`_ 2.6, or 2.7 
 * `numpy <http://new.scipy.org/download.html>`_ 1.3 or later
@@ -36,7 +35,7 @@ PythonAnywhere https://www.pythonanywhere.com/
 Download and install 
 --------------------
 
-Pysal is available on the `Python Package Index
+PySAL is available on the `Python Package Index
 <http://pypi.python.org/pypi/pysal>`_, which means it can be
 downloaded and installed manually or from the command line using 
 easy_install, as follows::
