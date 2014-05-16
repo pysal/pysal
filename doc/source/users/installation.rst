@@ -8,7 +8,7 @@ Install  PySAL
 PySAL is built upon the Python scientific stack, primarily numpy and
 scipy. While these libraries are packaged for several platforms, the
 Anaconda and Enthought Python distributions include them along with the core
-Python library. Both Anaconda and Enthought Canopy not only ship numpy and scipy, but PySAl as well! 
+Python library. Both Anaconda and Enthought Canopy not only ship numpy and scipy, but PySAL as well! 
 
 - `Anaconda Python distribution <http://continuum.io/downloads.html>`_
 - `Enthought Canopy <https://www.enthought.com/downloads>`_

@@ -1153,8 +1153,12 @@ def prais(pmat):
     -------
 
     pr : 1xk matrix
-          Conditional mobility measures for each of the k classes with each
-          element obtained as follows -
+          Conditional mobility measures for each of the k classes.
+
+    Notes
+    -----
+
+    Prais' conditional mobility measure for a class is defined as:
 
     .. math::
 
@@ -1203,6 +1207,13 @@ def shorrock(pmat):
 
     sh : scalar
           Conditional mobility measure
+
+
+
+    Notes
+    -----
+
+    Shorock's mobility measure is defined as
 
     .. math::
 
