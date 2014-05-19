@@ -1,7 +1,8 @@
 {
     "input1": {
-        "type": "shp",
-        "uri": "../examples/columbus.shp"
+        "data1":{
+            "type": "shp",
+            "uri": "../examples/columbus.shp"}
     },
     "weight_type": "kernel",
     "transform": "O",
@@ -11,3 +12,6 @@
         "k": 2
     }
 }
+
+
+

@@ -7,6 +7,16 @@ Prototyping meta data functions and classes for weights provenance
 Based on Anselin, L., S.J. Rey and W. Li (2014) "Metadata and provenance for
 spatial analysis: the case of spatial weights." International Journal of
 Geographical Information Science.  DOI:10.1080/13658816.2014.917313
+
+
+
+TODO
+----
+
+- Document each public function with working doctest
+- Abstract the test files as they currently assume location is source
+  directory
+- have wmd_reader take either a wmd file or a wmd dictionary/object
 """
 __author__ = "Sergio J. Rey <srey@asu.edu>, Wenwen Li <wenwen@asu.edu>"
 import pysal as ps
@@ -20,6 +30,16 @@ import numpy as np
 def block(arg_dict):
     """
     General handler for block weights
+
+
+    Examples
+    --------
+    >>> w = wmd_reader('taz_block.wmd')
+    >>> w.n
+    4109
+    >>> w.meta_data
+    {'root': {u'input1': {u'data1': {u'type': u'dbf', u'uri': u'http://toae.org/pub/taz.dbf'}}, u'weight_type': u'block', u'transform': u'O', u'parameters': {u'block_variable': u'CNTY'}}}
+
     """
     input1 = arg_dict['input1']
     for key in input1:
@@ -48,6 +68,14 @@ def contiguity(arg_dict):
     """
     General handler for building contiguity weights from shapefiles
 
+    Examples
+    --------
+
+    >>> w = wmd_reader('wrook1.wmd')
+    >>> w.n
+    49
+    >>> w.meta_data
+    {'root': {u'input1': {u'data1': {u'type': u'shp', u'uri': u'http://toae.org/pub/columbus.shp'}}, u'weight_type': u'rook', u'transform': u'O'}}
     """
     input1 = arg_dict['input1']
     for key in input1:
@@ -88,8 +116,20 @@ def contiguity(arg_dict):
 def kernel(arg_dict):
     """
     General handler for building kernel based weights from shapefiles
+
+    Examples
+    --------
+
+    >>> w = wmd_reader('kernel.wmd')
+    >>> w.n
+    49
+    >>> w.meta_data
+    {'root': {u'input1': {u'data1': {u'type': u'shp', u'uri': u'../examples/columbus.shp'}}, u'weight_type': u'kernel', u'transform': u'O', u'parameters': {u'function': u'triangular', u'bandwidths': None, u'k': 2}}}
+
+
+
     """
-    input1 = arg_dict['input1']
+    input1 = arg_dict['input1']['data1']
     uri = input1['uri']
     weight_type = arg_dict['weight_type']
     weight_type = weight_type.lower()
@@ -274,6 +314,7 @@ def wmd_writer(wmd_object, fileName, data=False):
 def wmd_parser(wmd_object):
     weight_type = wmd_object['weight_type'].lower()
     for key in wmd_object['input1']:
+        #print key
         if wmd_object['input1'][key]['type'] == 'prov':
             #      call wmd_reader
             uri = wmd_object['input1'][key]['uri']
@@ -287,7 +328,7 @@ def wmd_parser(wmd_object):
             uri = wmd_object['input1'][key]['uri']
             try:
                 tmp = open(uri)
-                print ' tmp: ', tmp
+                #print ' tmp: ', tmp
                 wmd_object['input1'][key]['uri'] = uri
             except:
                 download_shapefiles(uri)
@@ -295,7 +336,7 @@ def wmd_parser(wmd_object):
                 wmd_object['input1'][key]['uri'] = uri # use local copy
 
     if weight_type in WEIGHT_TYPES:
-        print weight_type
+        #print weight_type
         wmd  = WEIGHT_TYPES[weight_type](wmd_object)
         wmd.meta_data = fullmeta
     else:
@@ -319,7 +360,7 @@ def getW(inputDataObject, weight_type):
         uri = inputDataObject['uri']
         try:
             tmp = open(uri) #local file
-            print ' tmp: ', tmp
+            #print ' tmp: ', tmp
             inputDataObject['uri'] = uri
         except:
             download_shapefiles(uri) #download from remote
@@ -327,7 +368,7 @@ def getW(inputDataObject, weight_type):
             inputDataObject['uri'] = uri # use local copy
         # check for weight_type
         if weight_type in WEIGHT_TYPES:
-            print weight_type
+            #print weight_type
             wmd  = WEIGHT_TYPES[weight_type](wmd_object)
         else:
             print 'Unsupported weight type: ', weight_type
@@ -344,12 +385,12 @@ def download_shapefiles(file_name):
         file_name = file_prefix + ext
         file_parts[-1] = file_name
         new_url = "/".join(file_parts)
-        print file_name, new_url
+        #print file_name, new_url
         u = urllib.urlopen(new_url)
         f = open(file_name, 'wb')
         meta = u.info()
         file_size = int(meta.getheaders("Content-Length")[0])
-        print "Downloading: %s Bytes: %s" % (file_name, file_size)
+        #print "Downloading: %s Bytes: %s" % (file_name, file_size)
         file_size_dl = 0
         block_sz = 8192
         while True:
@@ -361,7 +402,7 @@ def download_shapefiles(file_name):
             status = r"%10d [%3.2f%%]" % (file_size_dl, file_size_dl * 100. /
                     file_size)
             status = status + chr(8)* (len(status)+1)
-        print status, f.close()
+        #print status, f.close()
 
 
 class WMD(ps.W):
@@ -384,7 +425,7 @@ if __name__ == '__main__':
 
 
     # distributed file
-#    w1 = wmd_reader("wrook1.wmd")
+    w1 = wmd_reader("wrook1.wmd")
 
 ##    # order
 ##    w1o = wmd_reader('wrooko1.wmd')
@@ -392,8 +433,8 @@ if __name__ == '__main__':
 ##    w2ol = wmd_reader('wrooko2l.wmd')
 ##
 ##    # kernels
-##    ak1 = wmd_reader('akern1.wmd')
-##    kern = wmd_reader('kernel.wmd')
+    ak1 = wmd_reader('akern1.wmd')
+    kern = wmd_reader('kernel.wmd')
 ##
 ##    # knn
 ##    knn = wmd_reader('knn.wmd')
