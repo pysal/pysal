@@ -4,6 +4,9 @@ Weights Meta Data
 Prototyping meta data functions and classes for weights provenance
 
 
+Based on Anselin, L., S.J. Rey and W. Li (2014) "Metadata and provenance for
+spatial analysis: the case of spatial weights." International Journal of
+Geographical Information Science.  DOI:10.1080/13658816.2014.917313
 """
 __author__ = "Sergio J. Rey <srey@asu.edu>, Wenwen Li <wenwen@asu.edu>"
 import pysal as ps
@@ -270,33 +273,6 @@ def wmd_writer(wmd_object, fileName, data=False):
 
 def wmd_parser(wmd_object):
     weight_type = wmd_object['weight_type'].lower()
-
-    # check if data for weights and neighbors is included already
-##
-##    if 'data' in wmd_object:
-##        # check if keys got cast to strings in json writer
-##        neighbors = wmd_object['data']['neighbors']
-##        keys = neighbors.keys()
-##        ktype = type(keys[0])
-##        vtype = type(neighbors[keys[0]][0])
-##        if ktype != vtype:
-##            n_1 = {}
-##            w_1 = {}
-##            for key in keys:
-##                n_1[int(key)] = neighbors[key]
-##                w_1[int(key)] = wmd_object['data']['weights'][key]
-##            wmd_object['data']['neighbors'] = n_1
-##            wmd_object['data']['weights'] = w_1
-##        w = WMD(neighbors = wmd_object['data']['neighbors'],
-##                weights = wmd_object['data']['weights'])
-##        w.meta_data = {}
-##        w.meta_data['input1'] = wmd_object['input1']
-##        w.meta_data['weight_type'] = wmd_object['weight_type']
-##        w.meta_data['transform'] = w.transform
-##        if 'parameters' in wmd_object:
-##            w.meta_data['parameters'] = wmd_object['parameters']
-##        return w
-
     for key in wmd_object['input1']:
         if wmd_object['input1'][key]['type'] == 'prov':
             #      call wmd_reader
