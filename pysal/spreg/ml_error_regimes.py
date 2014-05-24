@@ -82,7 +82,7 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
                    Summary of regression results and diagnostics (note: use in
                    conjunction with the print command)
     betas        : array
-                   (k+1)x1 array of estimated coefficients (rho first)
+                   (k+1)x1 array of estimated coefficients (lambda last)
     lam          : float
                    estimate of spatial autoregressive coefficient
                    Only available in dictionary 'multi' when multiple regressions
