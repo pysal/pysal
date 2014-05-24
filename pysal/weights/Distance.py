@@ -6,10 +6,10 @@ __author__ = "Sergio J. Rey <srey@asu.edu> "
 
 import pysal
 import scipy.spatial
-from pysal.common import *  # flake8; F403 unable to detect undefined names
+from pysal.common import KDTree
 from pysal.weights import W
-from scipy import sparse  # flake8; F401 imported but unused
 import scipy.stats
+import numpy as np
 
 __all__ = ["knnW", "Kernel", "DistanceBand"]
 
@@ -112,7 +112,8 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
         info = nnq[1]
     elif type(data).__name__ == 'ndarray':
         # check if unique points are a small fraction of all points
-        u = scipy.stats._support.unique(data)
+        ind =  np.lexsort(data.T)
+        u = data[np.concatenate(([True],np.any(data[ind[1:]]!=data[ind[:-1]],axis=1)))]
         pct_u = len(u)*1. / len(data)
         if pct_u < pct_unique:
             tree = KDTree(u)
@@ -320,7 +321,6 @@ class Kernel(W):
         neighbors, weights = self._k_to_W(ids)
         if diagonal:
             for i in neighbors:
-                nis = neighbors[i]  # flake8; F841 local var 'nis' is assigned to but never used
                 weights[i][neighbors[i].index(i)] = 1.0
         W.__init__(self, neighbors, weights, ids)
 
@@ -363,7 +363,6 @@ class Kernel(W):
                          bwi in enumerate(self.bandwidth)]
             self.neigh = neighbors
         # get distances for neighbors
-        data = np.array(self.data)  # flake8; F841 local var 'data' is assigned to but never used
         bw = self.bandwidth
 
         kdtq = self.kdt.query
@@ -375,17 +374,17 @@ class Kernel(W):
         zs = z
         # functions follow Anselin and Rey (2010) table 5.4
         if self.function == 'triangular':
-            self.kernel = [1 - z for z in zs]  # flake8; F812 list comp redefines 'z' from line 371
+            self.kernel = [1 - zi for zi in zs]  
         elif self.function == 'uniform':
-            self.kernel = [np.ones(z.shape) * 0.5 for z in zs]
+            self.kernel = [np.ones(zi.shape) * 0.5 for zi in zs]
         elif self.function == 'quadratic':
-            self.kernel = [(3. / 4) * (1 - z ** 2) for z in zs]
+            self.kernel = [(3. / 4) * (1 - zi ** 2) for zi in zs]
         elif self.function == 'quartic':
-            self.kernel = [(15. / 16) * (1 - z ** 2) ** 2 for z in zs]
+            self.kernel = [(15. / 16) * (1 - zi ** 2) ** 2 for zi in zs]
         elif self.function == 'gaussian':
             c = np.pi * 2
             c = c ** (-0.5)
-            self.kernel = [c * np.exp(-(z ** 2) / 2.) for z in zs]
+            self.kernel = [c * np.exp(-(zi ** 2) / 2.) for zi in zs]
         else:
             print 'Unsupported kernel function', self.function
 

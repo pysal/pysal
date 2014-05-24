@@ -1,0 +1,14 @@
+{
+    "input1": {
+        "type": "shp",
+        "uri": "../examples/columbus.shp"
+    },
+    "weight_type": "knn",
+    "transform": "O",
+    "parameters": {
+        "p": 2,
+        "k": 2,
+        "radius": null,
+        "id_variable": null
+    }
+}
