@@ -27,7 +27,7 @@ script:
   - python -c 'import scipy; print scipy.version.version'
   - python setup.py install 
   - python -c 'import pysal; print pysal.version'
-  - pychecker --limit 1000 pysal
+  #- pychecker --limit 1000 pysal
   - python setup.py sdist >/dev/null
   - nosetests 
   - cd doc; make pickle; make doctest
