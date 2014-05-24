@@ -7,13 +7,16 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, Serge Rey srey@asu.edu"
 import numpy as np
 import numpy.linalg as la
 import pysal as ps
-from scipy.optimize import minimize_scalar
 from pysal.spreg.utils import RegressionPropsY, RegressionPropsVM
 import diagnostics as DIAG
 import user_output as USER
 import summary_output as SUMMARY
 import regimes as REGI
 from w_utils import symmetrize
+try:
+    from scipy.optimize import minimize_scalar
+except ImportError as e:
+    print(e, "Maximum Likelihood in PySAL requires SciPy version 0.11 or newer.")
 
 __all__ = ["ML_Error"]
 
@@ -21,9 +24,9 @@ __all__ = ["ML_Error"]
 class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
 
     """
-    ML estimation of the spatial error model (note no consistency 
+    ML estimation of the spatial error model (note no consistency
     checks, diagnostics or constants added); Anselin (1988) [1]_
-    
+
     Parameters
     ----------
     y            : array
@@ -32,7 +35,7 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, excluding the constant
     w            : Sparse matrix
-                   Spatial weights sparse matrix 
+                   Spatial weights sparse matrix
     method       : string
                    if 'full', brute force calculation (full matrix expressions)
     epsilon      : float
@@ -45,7 +48,7 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
     Attributes
     ----------
     betas        : array
-                   kx1 array of estimated coefficients 
+                   kx1 array of estimated coefficients
     lam          : float
                    estimate of spatial autoregressive coefficient
     u            : array
@@ -265,9 +268,9 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
 class ML_Error(BaseML_Error):
 
     """
-    ML estimation of the spatial lag model with all results and diagnostics; 
+    ML estimation of the spatial lag model with all results and diagnostics;
     Anselin (1988) [1]_
-    
+
     Parameters
     ----------
     y            : array
@@ -276,7 +279,7 @@ class ML_Error(BaseML_Error):
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, excluding the constant
     w            : Sparse matrix
-                   Spatial weights sparse matrix 
+                   Spatial weights sparse matrix
     method       : string
                    if 'full', brute force calculation (full matrix expressions)
                    ir 'ord', Ord eigenvalue method
@@ -340,7 +343,7 @@ class ML_Error(BaseML_Error):
     utu          : float
                    Sum of squared residuals
     std_err      : array
-                   1xk array of standard errors of the betas    
+                   1xk array of standard errors of the betas
     z_stat       : list of tuples
                    z statistic; each tuple contains the pair (statistic,
                    p-value), where each is a float
@@ -357,7 +360,7 @@ class ML_Error(BaseML_Error):
 
     Examples
     --------
-    
+
     >>> import numpy as np
     >>> import pysal as ps
     >>> np.set_printoptions(suppress=True)  #prevent scientific format
@@ -372,7 +375,7 @@ class ML_Error(BaseML_Error):
     >>> w = ww.read()
     >>> ww.close()
     >>> w_name = "south_q.gal"
-    >>> w.transform = 'r'    
+    >>> w.transform = 'r'
     >>> mlerr = ML_Error(y,x,w,name_y=y_name,name_x=x_names,\
                name_w=w_name,name_ds=ds_name)
     >>> np.around(mlerr.betas, decimals=4)
@@ -508,8 +511,7 @@ def _test():
 
 if __name__ == "__main__":
     _test()
-    import numpy as np
-    import pysal as ps
+
     db = ps.open(ps.examples.get_path("south.dbf"), 'r')
     ds_name = "south.dbf"
     y_name = "HR90"
