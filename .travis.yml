@@ -17,17 +17,17 @@ before_install:
   - "sudo apt-get --only-upgrade install -qq python-scipy"
 
 install:
-  - "pip install -q -r requirements.txt --use-mirrors"
-  #- "pip install coveralls --use-mirrors"
+  - "pip install -q -r requirements.txt"
+  - "sudo pip install http://sourceforge.net/projects/pychecker/files/pychecker/0.8.19/pychecker-0.8.19.tar.gz/download"
+  #- "pip install coveralls"
   - "sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm"
-  #- "pip install pysal --use-mirrors"
-  #- "pip uninstall -y pysal"
 
 script: 
   - python -c 'import numpy; print numpy.version.version'
   - python -c 'import scipy; print scipy.version.version'
   - python setup.py install 
   - python -c 'import pysal; print pysal.version'
+  #- pychecker --limit 1000 pysal
   - python setup.py sdist >/dev/null
   - nosetests 
   - cd doc; make pickle; make doctest
