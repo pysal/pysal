@@ -75,18 +75,49 @@ def importCsvData(filename, layer=None):
     layer.fieldNames = fields
     return layer
 
-def addRook2Layer(galfile, layer):
+clusterpy.importCsvData = importCsvData
+
+def addGal2Layer(galfile, layer, contiguity='rook'):
     gal = ps.open(galfile).read().neighbors
     w = {}
     for key in gal:
         w[int(key)] =  map(int, gal[key]) 
-    layer.Wrook = w
+    
+    if contiguity.upper()== "ROOK":
+        layer.Wrook = w
+    elif contiguity.upper() == "QUEEN":
+        layer.Wqueen = w
+    else:
+        print 'Unsupported contiguity type: ', contiguity
+
+def addRook2Layer(galfile, layer):
+    addGal2Layer(galfile, layer)
+
+def addQueen2Layer(galfile, layer):
+    addGal2Layer(galfile, layer, contiguity='QUEEN')
+
+clusterpy.addRook2Layer = addRook2Layer
+clusterpy.addQueen2Layer = addQueen2Layer
+
+
+clusterpy.addRook2Layer = addRook2Layer
 
 
 
 
+def addArray2Layer(array, layer, names=None):
+    n,k = array.shape
+    if not names:
+        names = ["X_%d"% v for v in range(k)]
+        
+    for j,name in enumerate(names):
+        v = {}
+        for i in xrange(n):
+            v[i] = array[i,j]
+        layer.addVariable([name], v)
 
 
+clusterpy.addArray2Layer = addArray2Layer
 
 if __name__ == '__main__':
     columbus = clusterpy.importArcData(ps.examples.get_path('columbus.shp').split(".")[0])
