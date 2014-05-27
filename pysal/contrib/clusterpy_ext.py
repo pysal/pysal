@@ -56,3 +56,16 @@ def importArcData(filename):
     return layer
 
 clusterpy.importArcData = importArcData
+
+
+
+if __name__ == '__main__':
+    columbus = clusterpy.importArcData(ps.examples.get_path('columbus.shp').split(".")[0])
+    
+    n = len(columbus.Wqueen)
+    columbus.generateData('Uniform', 'rook', 1, 1, 10)
+    columbus.cluster('maxpTabu', ['CRIME',  'Uniform21'], threshold=4, dissolve=0, std=0)
+    columbus.cluster('arisel', ['CRIME'], 5, wType='rook', inits=10, dissolve=0)
+    
+    
+
