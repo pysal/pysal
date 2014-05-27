@@ -57,6 +57,35 @@ def importArcData(filename):
 
 clusterpy.importArcData = importArcData
 
+def importCsvData(filename, layer=None):
+
+    if not layer:
+        layer = clusterpy.Layer()
+    csv = ps.open(filename,'r')
+    fields = csv.header
+    data = {}
+    if fields[0] != "ID":
+        fields = ["ID"] + fields
+        for i, rec in enumerate(csv.data):
+            data[i] = [i] + csv.by_row(i)
+    else:
+        for i, rec in enumerate(csv.data):
+            data[i] = csv.by_row(i) 
+    layer.Y = data
+    layer.fieldNames = fields
+    return layer
+
+def addRook2Layer(galfile, layer):
+    gal = ps.open(galfile).read().neighbors
+    w = {}
+    for key in gal:
+        w[int(key)] =  map(int, gal[key]) 
+    layer.Wrook = w
+
+
+
+
+
 
 
 if __name__ == '__main__':
