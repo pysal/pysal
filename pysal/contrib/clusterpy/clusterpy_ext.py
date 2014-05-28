@@ -29,12 +29,12 @@ def importArcData(filename):
     """
     layer = _clusterpy.Layer()
     layer.name = filename.split('/')[-1]
-    print "Loading " + filename + ".dbf"
+    #print "Loading " + filename + ".dbf"
     dbf = ps.open(filename+".dbf")
     fields = dbf.header
     #data, fields, specs = importDBF(filename + '.dbf')
     data = {}
-    print "Loading " + filename + ".shp"
+    #print "Loading " + filename + ".shp"
     if fields[0] != "ID":
         fields = ["ID"] + fields
         for y in range(dbf.n_records):
@@ -47,10 +47,10 @@ def importArcData(filename):
     layer.Y = data
     shpf = filename+".shp"
     layer.shpType = 5
-    print 'pysal reader'
+    #print 'pysal reader'
     layer.Wrook = ps.rook_from_shapefile(filename+".shp").neighbors
     layer.Wqueen = ps.queen_from_shapefile(filename+".shp").neighbors
-    print "Done"
+    #print "Done"
     return layer
 
 _clusterpy.importArcData = importArcData
@@ -58,13 +58,64 @@ _clusterpy.importArcData = importArcData
 ################# Public functions #######################
 
 def Layer():
+    """Provide a clusterpy Layer instance
+
+    Parameters
+    ==========
+
+    none
+
+    Returns
+    =======
+
+    layer: clusterpy.Layer instance
+
+    Examples
+    ========
+    >>> import pysal.contrib.clusterpy as cp
+    ClusterPy: Library of spatially constrained clustering algorithms
+    Some functions are not available, reason: No module named Polygon
+    Some functions are not available, reason: No module named Polygon
+    >>> l = cp.Layer()
+    >>> type(l)
+    <type 'instance'>
+    >>> l.Wrook
+    {}
+
+    """
     return _clusterpy.Layer()
 
 def loadArcData(shapeFileName):
+    """
+
+    Examples
+    ========
+    >>> import pysal.contrib.clusterpy as cp
+    ClusterPy: Library of spatially constrained clustering algorithms
+    Some functions are not available, reason: No module named Polygon
+    >>> import pysal as ps
+    >>> shpFile = ps.examples.get_path('columbus.shp')
+    >>> columbus = cp.loadArcData(shpFile)
+    >>> columbus.Wrook[0]
+    [1, 2]
+    >>> columbus.Wrook[1]
+    [0, 2, 3]
+    >>> columbus.fieldNames[0:10]
+    ['ID', 'AREA', 'PERIMETER', 'COLUMBUS_', 'COLUMBUS_I', 'POLYID', 'NEIG', 'HOVAL', 'INC', 'CRIME']
+    """
     base = shapeFileName.split(".")[0]
     return _clusterpy.importArcData(base)
 
 def importCsvData(filename, layer=None):
+    """
+    Read a csv file of attributes into a layer
+
+    Notes
+    =====
+
+    This assumes the csv file is organized with records on the rows and attributes on the columns
+
+    """
 
     if not layer:
         layer = Layer()
@@ -114,7 +165,8 @@ def addArray2Layer(array, layer, names=None):
 
 
 if __name__ == '__main__':
-
+    import random
+    random.seed(12345)
     columbus = loadArcData(ps.examples.get_path('columbus.shp'))
     n = len(columbus.Wqueen)
     columbus.generateData('Uniform', 'rook', 1, 1, 10)
