@@ -8,7 +8,7 @@
 
 ## Notes
 
-This is working with clusterPy 0.9.9 installed from [pip][pip]
+- 2014-05-28 This is working with clusterPy 0.9.9 installed from [pip][pip].
 
 [cp]: http://www.rise-group.org/risem/clusterpy/
 [cpr]: https://github.com/clusterpy/clusterpy
