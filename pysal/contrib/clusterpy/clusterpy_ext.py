@@ -170,9 +170,9 @@ if __name__ == '__main__':
 
     columbus = loadArcData(ps.examples.get_path('columbus.shp'))
     n = len(columbus.Wqueen)
-    columbus.generateData('Uniform', 'rook', 1, 1, 10)
+    columbus.dataOperation("CONSTANT = 1")
     np.random.seed(12345)
-    columbus.cluster('maxpTabu', ['CRIME',  'Uniform21'], threshold=4, dissolve=0, std=0)
+    columbus.cluster('maxpTabu', ['CRIME',  'CONSTANT'], threshold=4, dissolve=0, std=0)
     #np.random.seed(12345)
     #columbus.cluster('arisel', ['CRIME'], 5, wType='rook', inits=10, dissolve=0)
 
