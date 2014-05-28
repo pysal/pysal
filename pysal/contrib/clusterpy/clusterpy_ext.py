@@ -1,18 +1,16 @@
-import clusterpy
-
-import clusterpy.core.inputs
-from clusterpy.core.inputs import readPoints, readPolylines, readPolygons
+import clusterpy as _clusterpy
 import pysal as ps
 import struct
+
+__ALL__= ['Layer', 'loadArcData', 'importCsvData', 'addRook2Layer', 'addQueen2Layer', 'addArray2Layer' ]
+
 
 def importArcData(filename):
     """Creates a new Layer from a shapefile (<file>.shp)
 
-    overridden by pysal
+    modification of original function fro clusterPy to use PySAL W constructor
     
     :param filename: filename without extension 
-    :type filename: string
-    :rtype: Layer (CP project)
 
     **Description**
 
@@ -29,7 +27,7 @@ def importArcData(filename):
         china = clusterpy.importArcData("clusterpy/data_examples/china")
 
     """
-    layer = clusterpy.Layer()
+    layer = _clusterpy.Layer()
     layer.name = filename.split('/')[-1]
     print "Loading " + filename + ".dbf"
     dbf = ps.open(filename+".dbf")
@@ -55,12 +53,21 @@ def importArcData(filename):
     print "Done"
     return layer
 
-clusterpy.importArcData = importArcData
+_clusterpy.importArcData = importArcData
+
+################# Public functions #######################
+
+def Layer():
+    return _clusterpy.Layer()
+
+def loadArcData(shapeFileName):
+    base = shapeFileName.split(".")[0]
+    return _clusterpy.importArcData(base)
 
 def importCsvData(filename, layer=None):
 
     if not layer:
-        layer = clusterpy.Layer()
+        layer = Layer()
     csv = ps.open(filename,'r')
     fields = csv.header
     data = {}
@@ -74,8 +81,6 @@ def importCsvData(filename, layer=None):
     layer.Y = data
     layer.fieldNames = fields
     return layer
-
-clusterpy.importCsvData = importCsvData
 
 def addGal2Layer(galfile, layer, contiguity='rook'):
     gal = ps.open(galfile).read().neighbors
@@ -96,15 +101,6 @@ def addRook2Layer(galfile, layer):
 def addQueen2Layer(galfile, layer):
     addGal2Layer(galfile, layer, contiguity='QUEEN')
 
-clusterpy.addRook2Layer = addRook2Layer
-clusterpy.addQueen2Layer = addQueen2Layer
-
-
-clusterpy.addRook2Layer = addRook2Layer
-
-
-
-
 def addArray2Layer(array, layer, names=None):
     n,k = array.shape
     if not names:
@@ -117,15 +113,11 @@ def addArray2Layer(array, layer, names=None):
         layer.addVariable([name], v)
 
 
-clusterpy.addArray2Layer = addArray2Layer
-
 if __name__ == '__main__':
-    columbus = clusterpy.importArcData(ps.examples.get_path('columbus.shp').split(".")[0])
-    
+
+    columbus = loadArcData(ps.examples.get_path('columbus.shp'))
     n = len(columbus.Wqueen)
     columbus.generateData('Uniform', 'rook', 1, 1, 10)
     columbus.cluster('maxpTabu', ['CRIME',  'Uniform21'], threshold=4, dissolve=0, std=0)
     columbus.cluster('arisel', ['CRIME'], 5, wType='rook', inits=10, dissolve=0)
-    
-    
 
