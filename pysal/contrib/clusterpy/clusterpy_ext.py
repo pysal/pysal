@@ -165,11 +165,14 @@ def addArray2Layer(array, layer, names=None):
 
 
 if __name__ == '__main__':
-    import random
-    random.seed(12345)
+
+    import numpy as np
+
     columbus = loadArcData(ps.examples.get_path('columbus.shp'))
     n = len(columbus.Wqueen)
     columbus.generateData('Uniform', 'rook', 1, 1, 10)
+    np.random.seed(12345)
     columbus.cluster('maxpTabu', ['CRIME',  'Uniform21'], threshold=4, dissolve=0, std=0)
-    columbus.cluster('arisel', ['CRIME'], 5, wType='rook', inits=10, dissolve=0)
+    #np.random.seed(12345)
+    #columbus.cluster('arisel', ['CRIME'], 5, wType='rook', inits=10, dissolve=0)
 
