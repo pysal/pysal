@@ -43,16 +43,14 @@ def wmd_reader(fileName):
     try:
         meta_data = _uri_reader(fileName)
     except:
-        try:
-            with open(fileName, 'r') as fp:
-                meta_data = json.load(fp)
-                global fullmeta
-                fullmeta = {}
-                fullmeta['root'] =  copy.deepcopy(meta_data)
-                w = _wmd_parser(meta_data)
-                return w
-        except:
-            print 'wmd_reader failed: ', fileName
+        fp = open(fileName)
+        meta_data = json.load(fp)
+        fp.close()
+    global fullmeta
+    fullmeta = {}
+    fullmeta['root'] =  copy.deepcopy(meta_data)
+    w = _wmd_parser(meta_data)
+    return w
 
 class WMD(ps.W):
     """Weights Meta Data Class"""
@@ -345,12 +343,10 @@ def _wmd_read_only(fileName):
     try:
         meta_data = _uri_reader(fileName)
     except:
-        try:
-            with open(fileName, 'r') as fp:
-                meta_data = json.load(fp)
-                return meta_data
-        except:
-            print '_wmd_read_only failed: ', fileName
+        fp = open(fileName)
+        meta_data = json.load(fp)
+        fp.close()
+    return meta_data
 
 def _wmd_parser(wmd_object):
     if 'root' in wmd_object:
@@ -447,18 +443,18 @@ if __name__ == '__main__':
 #    print "full metadata is listed below: \n", fullmeta
     # r2 = wmd_reader('chain2.wmd')
 
-    taz_int = wmd_reader("taz_intersection.wmd")
+    #taz_int = wmd_reader("taz_intersection.wmd")
 
 
 
     ## intersection between queen and block weights
-    #import numpy as np
-    #w = ps.lat2W(4,4)
-    #block_variable = np.ones((w.n,1))
-    #block_variable[:8] = 0
-    #w_block = ps.weights.util.regime_weights(block_variable)
+    import numpy as np
+    w = ps.lat2W(4,4)
+    block_variable = np.ones((w.n,1))
+    block_variable[:8] = 0
+    w_block = ps.weights.util.regime_weights(block_variable)
 
-    #w_intersection = ps.w_intersection(w, w_block)
+    w_intersection = ps.w_intersection(w, w_block)
 
 
     ## with Columbus example using EW as the block and queen
@@ -472,5 +468,5 @@ if __name__ == '__main__':
 
     #blk = wmd_reader('block2.wmd')
 
-    #taz_int = wmd_reader("http://spatial.csf.asu.edu/taz_intersection.wmd")
+    taz_int = wmd_reader("http://spatial.csf.asu.edu/taz_intersection.wmd")
 
