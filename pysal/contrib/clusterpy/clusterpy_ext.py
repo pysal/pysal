@@ -2,29 +2,30 @@ import clusterpy as _clusterpy
 import pysal as ps
 import struct
 
+__author__ = "Sergio Rey <sjsrey@gmail.com>"
+
 __ALL__= ['Layer', 'loadArcData', 'importCsvData', 'addRook2Layer', 'addQueen2Layer', 'addArray2Layer' ]
 
 
-def importArcData(filename):
+def _importArcData(filename):
     """Creates a new Layer from a shapefile (<file>.shp)
 
-    modification of original function fro clusterPy to use PySAL W constructor
-    
-    :param filename: filename without extension 
+    This function wraps and extends a core clusterPy function to utilize PySAL
+    W constructors and dbf readers.
 
-    **Description**
 
-    `ESRI <http://www.esri.com/>`_ shapefile is a binary file used to
-    save and transport maps. During the last times it has become
-    the most used format for the spatial scientists around the world.
+    Parameters
+    ==========
 
-    On clusterPy's "data_examples" folder you can find some shapefiles. To
-    load a shapefile in clusterPy just follow the example bellow.
+    filename: string
+              suffix of shapefile (fileName not fileName.shp)
 
-    **Example** ::
 
-        import clusterpy
-        china = clusterpy.importArcData("clusterpy/data_examples/china")
+    Returns
+    =======
+    layer: clusterpy layer instance
+
+
 
     """
     layer = _clusterpy.Layer()
@@ -53,7 +54,7 @@ def importArcData(filename):
     #print "Done"
     return layer
 
-_clusterpy.importArcData = importArcData
+_clusterpy.importArcData = _importArcData
 
 ################# Public functions #######################
 
@@ -73,9 +74,6 @@ def Layer():
     Examples
     ========
     >>> import pysal.contrib.clusterpy as cp
-    ClusterPy: Library of spatially constrained clustering algorithms
-    Some functions are not available, reason: No module named Polygon
-    Some functions are not available, reason: No module named Polygon
     >>> l = cp.Layer()
     >>> type(l)
     <type 'instance'>
@@ -87,12 +85,22 @@ def Layer():
 
 def loadArcData(shapeFileName):
     """
+    Handler to use PySAL W and dbf readers in place of clusterpy's
+
+    Parameters
+    ==========
+    shapeFileName: string
+                   filename including .shp extension
+
+    Returns
+    =======
+    layer: clusterpy layer instance
+
+    
 
     Examples
     ========
     >>> import pysal.contrib.clusterpy as cp
-    ClusterPy: Library of spatially constrained clustering algorithms
-    Some functions are not available, reason: No module named Polygon
     >>> import pysal as ps
     >>> shpFile = ps.examples.get_path('columbus.shp')
     >>> columbus = cp.loadArcData(shpFile)
@@ -110,10 +118,36 @@ def importCsvData(filename, layer=None):
     """
     Read a csv file of attributes into a layer
 
+    Parameters
+    ==========
+
+    filename: string
+              csf file to load
+
+    layer: clusterpy layer instance (default: None)
+           if a layer is passed, new attributes, Ws are attached to the layer.
+               Otherwise a new layer is created and returned
+           
+
+
+    Returns
+    =======
+    layer: clusterpy layer instance
+
+
+    Examples
+    ========
+    >>> import pysal.contrib.clusterpy as cp
+    >>> l = cp.Layer()
+    >>> mexico = cp.importCsvData(ps.examples.get_path('mexico.csv'))
+    >>> mexico.fieldNames
+    ['ID', 'State', 'pcgdp1940', 'pcgdp1950', 'pcgdp1960', 'pcgdp1970', 'pcgdp1980', 'pcgdp1990', 'pcgdp2000', 'hanson03', 'hanson98', 'esquivel99', 'inegi', 'inegi2']
+
     Notes
     =====
 
     This assumes the csv file is organized with records on the rows and attributes on the columns
+
 
     """
 
@@ -134,6 +168,36 @@ def importCsvData(filename, layer=None):
     return layer
 
 def addGal2Layer(galfile, layer, contiguity='rook'):
+    """
+    Attach an adjacency object to a layer
+
+    Parameters
+    ==========
+    galfile: string
+             galfile
+
+    layer: clusterpy layer
+
+    contiguity: type of contguity ['rook'|'queen']
+
+
+    Returns
+    =======
+    None
+
+    Examples
+    ========
+    >>> import pysal as ps
+    >>> import pysal.contrib.clusterpy as cp
+    >>> csvfile = ps.examples.get_path('mexico.csv')
+    >>> galfile = ps.examples.get_path('mexico.gal')
+    >>> mexico = cp.importCsvData(csvfile)
+    >>> cp.addRook2Layer(galfile, mexico)
+    >>> mexico.Wrook[0]
+    [31, 13]
+
+
+    """
     gal = ps.open(galfile).read().neighbors
     w = {}
     for key in gal:
@@ -147,12 +211,55 @@ def addGal2Layer(galfile, layer, contiguity='rook'):
         print 'Unsupported contiguity type: ', contiguity
 
 def addRook2Layer(galfile, layer):
+    """
+    User function for adding rook to layer
+
+    See addGal2Layer
+    """
     addGal2Layer(galfile, layer)
 
 def addQueen2Layer(galfile, layer):
+    """
+    User function for adding queen to layer
+
+    See addGal2Layer
+    """
     addGal2Layer(galfile, layer, contiguity='QUEEN')
 
 def addArray2Layer(array, layer, names=None):
+    """
+    Add a numpy array to a clusterpy layer
+
+
+    Parameters
+    ==========
+    array: nd-array
+           nxk with n observations on k attributes
+
+    layer: clusterpy layer object
+
+    names: list
+           k strings for attribute names
+
+    Returns
+    =======
+    None
+
+    Examples
+    ========
+    # Note this will report as fail since clusterpy prints 'Adding variables
+    # for each variable added. But the variables will be correctly added
+    >>> #import pysal as ps
+    >>> #import pysal.contrib.clusterpy as cp
+    >>> #import numpy as np
+    >>> #uscsv = ps.examples.get_path("usjoin.csv")
+    >>> #f = ps.open(uscsv)
+    >>> #pci = np.array([f.by_col[str(y)] for y in range(1929, 2010)]).T 
+    >>> #usy = cp.Layer()
+    >>> #names = ["Y_%d"%v for v in range(1929,2010)]
+    >>> #cp.addArray2Layer(pci, usy, names)
+
+    """
     n,k = array.shape
     if not names:
         names = ["X_%d"% v for v in range(k)]
@@ -162,7 +269,6 @@ def addArray2Layer(array, layer, names=None):
         for i in xrange(n):
             v[i] = array[i,j]
         layer.addVariable([name], v)
-
 
 if __name__ == '__main__':
 
