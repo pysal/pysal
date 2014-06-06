@@ -31,7 +31,7 @@ class RegressionPropsY:
               Mean of the dependent variable
     std_y   : float
               Standard deviation of the dependent variable
-              
+
     """
 
     @property
@@ -67,7 +67,7 @@ class RegressionPropsVM:
               Sigma squared with n-k in the denominator
     vm      : array
               Variance-covariance matrix (kxk)
-              
+
     """
 
     @property
@@ -221,7 +221,7 @@ def _moments2eqs(A1, s, u):
 
     u           : array
                   Residuals. nx1 array assumed to be aligned with w
- 
+
     Attributes
     ----------
 
@@ -331,7 +331,7 @@ def foptim_par(par, moments):
 def get_spFilter(w, lamb, sf):
     '''
     Compute the spatially filtered variables
-    
+
     Parameters
     ----------
     w       : weight
@@ -344,7 +344,7 @@ def get_spFilter(w, lamb, sf):
     --------
     rs      : array
               spatially filtered variable
-    
+
     Examples
     --------
 
@@ -408,7 +408,7 @@ def inverse_prod(w, data, scalar, post_multiply=False, inv_method="power_exp", t
 
     data            : Numpy array
                       nx1 vector of data
-    
+
     scalar          : float
                       Scalar value (typically rho or lambda)
 
@@ -474,7 +474,7 @@ def power_expansion(w, data, scalar, post_multiply=False, threshold=0.0000000001
     """
     Compute the inverse of a matrix using the power expansion (Leontief
     expansion).  General form is:
-    
+
         .. math:: 
             x &= (I - \rho W)^{-1}v = [I + \rho W + \rho^2 WW + \dots]v \\
               &= v + \rho Wv + \rho^2 WWv + \dots

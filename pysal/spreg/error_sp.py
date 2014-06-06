@@ -643,7 +643,7 @@ class GM_Endog_Error(BaseGM_Endog_Error):
            [  0.3499]])
     >>> np.around(model.std_err, decimals=4)
     array([ 16.1381,   1.3545,   0.7862])
-    
+
     '''
 
     def __init__(self, y, x, yend, q, w,

@@ -101,7 +101,7 @@ class BaseGM_Error_Hom(RegressionPropsY):
     .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
     "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
- 
+
     .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
     with and without Heteroskedasticity". 
 
@@ -285,7 +285,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
     .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
     "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
- 
+
     .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
     with and without Heteroskedasticity". 
 
@@ -306,7 +306,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
-    
+
     Extract the HOVAL column (home values) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -333,7 +333,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
     from ``columbus.shp``.
 
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
-    
+
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other
     things, his allows to interpret the spatial lag of a variable as the
@@ -348,7 +348,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
     have to pass them in as well, although this is optional.
 
     >>> reg = GM_Error_Hom(y, X, w=w, A1='hom_sc', name_y='home value', name_x=['income', 'crime'], name_ds='columbus')
-   
+
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
     discover them. This class offers an error model that assumes
@@ -357,7 +357,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
     parameter. This is why you obtain as many coefficient estimates as
     standard errors, which you calculate taking the square root of the
     diagonal of the variance-covariance matrix of the parameters:
-   
+
     >>> print np.around(np.hstack((reg.betas,np.sqrt(reg.vm.diagonal()).reshape(4,1))),4)
     [[ 47.9479  12.3021]
      [  0.7063   0.4967]
@@ -474,7 +474,7 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
     .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
     "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
- 
+
     .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
     with and without Heteroskedasticity". 
 
@@ -504,7 +504,7 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
      [ -0.669    0.3943]
      [  0.4321   0.1927]]
 
-    
+
     '''
 
     def __init__(self, y, x, yend, q, w,
@@ -690,7 +690,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
     "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
- 
+
     .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
     with and without Heteroskedasticity". 
 
@@ -711,7 +711,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
-    
+
     Extract the HOVAL column (home values) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -753,7 +753,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     from ``columbus.shp``.
 
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
-    
+
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other
     things, his allows to interpret the spatial lag of a variable as the
@@ -769,7 +769,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     have to pass them in as well, although this is optional.
 
     >>> reg = GM_Endog_Error_Hom(y, X, yd, q, w=w, A1='hom_sc', name_x=['inc'], name_y='hoval', name_yend=['crime'], name_q=['discbd'], name_ds='columbus')
-   
+
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
     discover them. This class offers an error model that assumes
@@ -912,7 +912,7 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
     .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
     "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
- 
+
     .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
     with and without Heteroskedasticity". 
 
@@ -1123,7 +1123,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
     .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
     "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
     Disturbances and Endogenous Regressors". Working paper.
- 
+
     .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
     with and without Heteroskedasticity". 
 
@@ -1144,7 +1144,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
-    
+
     Extract the HOVAL column (home values) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -1170,7 +1170,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
     from ``columbus.shp``.
 
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
-    
+
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other
     things, his allows to interpret the spatial lag of a variable as the
@@ -1196,7 +1196,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
      [  1.5683   0.4407]
      [  0.1513   0.4048]
      [  0.2103   0.4226]]
-        
+
     This class also allows the user to run a spatial lag+error model with the
     extra feature of including non-spatial endogenous regressors. This means
     that, in addition to the spatial lag and error, we consider some of the
@@ -1279,7 +1279,7 @@ def moments_hom(w, wA1, wA2, u):
 
     u           : array
                   Residuals. nx1 array assumed to be aligned with w
- 
+
     Attributes
     ----------
 

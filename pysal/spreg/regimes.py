@@ -28,7 +28,7 @@ class Chow:
     reg     : regression object
               Regression object from PySAL.spreg which is assumed to have the
               following attributes:
-                    
+
                     * betas : coefficient estimates
                     * vm    : variance covariance matrix of betas
                     * kr    : Number of variables varying across regimes
@@ -155,7 +155,7 @@ class Regimes_Frame:
     constant_regi: [False, 'one', 'many']
                    Switcher controlling the constant term setup. It may take
                    the following values:
-                    
+
                      *  False: no constant term is appended in any way
                      *  'one': a vector of ones is appended to x and held
                                constant across regimes
@@ -373,7 +373,7 @@ def regimeX_setup(x, regimes, cols2regi, regimes_set, constant=False):
     constant    : [False, 'one', 'many']
                   Switcher controlling the constant term setup. It may take
                   the following values:
-                    
+
                     *  False: no constant term is appended in any way
                     *  'one': a vector of ones is appended to x and held
                               constant across regimes
@@ -427,7 +427,7 @@ def set_name_x_regimes(name_x, regimes, constant_regi, cols2regi, regimes_set):
     constant_regi   : [False, 'one', 'many']
                       Switcher controlling the constant term setup. It may take
                       the following values:
-                    
+
                          *  False: no constant term is appended in any way
                          *  'one': a vector of ones is appended to x and held
                                    constant across regimes
@@ -562,7 +562,7 @@ def w_regimes_union(w, w_regi_i, regimes_set):
             w_regi = pysal.weights.w_union(w_regi,
                                            w_regi_i[regimes_set[i]], silent_island_warning=True)
     w_regi = pysal.weights.remap_ids(w_regi, dict((i, i)
-                                     for i in w_regi.id_order), w.id_order)
+                                                  for i in w_regi.id_order), w.id_order)
     w_regi.transform = w.get_transform()
     return w_regi
 

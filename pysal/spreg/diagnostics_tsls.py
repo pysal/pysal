@@ -55,7 +55,7 @@ def t_stat(reg, z_stat=False):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
-    
+
     Before being able to apply the diagnostics, we have to run a model and,
     for that, we need the input variables. Extract the CRIME column (crime
     rates) from the DBF file and make it the dependent variable for the

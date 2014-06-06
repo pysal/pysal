@@ -1124,7 +1124,7 @@ class GM_Combo_Het(BaseGM_Combo_Het):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
-    
+
     Extract the HOVAL column (home values) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -1150,7 +1150,7 @@ class GM_Combo_Het(BaseGM_Combo_Het):
     from ``columbus.shp``.
 
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
-    
+
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other
     things, his allows to interpret the spatial lag of a variable as the
@@ -1167,7 +1167,7 @@ class GM_Combo_Het(BaseGM_Combo_Het):
     have to pass them in as well, although this is optional.
 
     >>> reg = GM_Combo_Het(y, X, w=w, step1c=True, name_y='hoval', name_x=['income'], name_ds='columbus')
-   
+
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
     discover them. This class offers an error model that explicitly accounts
@@ -1184,7 +1184,7 @@ class GM_Combo_Het(BaseGM_Combo_Het):
      [  1.5742   0.374 ]
      [  0.1535   0.3978]
      [  0.2103   0.3924]]
-        
+
     This class also allows the user to run a spatial lag+error model with the
     extra feature of including non-spatial endogenous regressors. This means
     that, in addition to the spatial lag and error, we consider some of the
@@ -1211,7 +1211,7 @@ class GM_Combo_Het(BaseGM_Combo_Het):
      [  -1.3566]
      [  -0.5766]
      [   0.6561]]
-    
+
     """
 
     def __init__(self, y, x, yend=None, q=None,
@@ -1296,7 +1296,7 @@ def get_vc_het(w, wA1, E):
 
     E           : sparse matrix
                   Sigma
- 
+
     Returns
     -------
 
@@ -1347,7 +1347,7 @@ def get_vm_het(G, lamb, reg, w, psi):
 
     psi         : array
                   2x2 array with the variance-covariance matrix of the moment equations
- 
+
     Returns
     -------
 
@@ -1400,10 +1400,10 @@ def get_a1a2(w, wA1, reg, lambdapar, P, zs, inv_method, filt):
 
     reg         : TSLS
                   Two stage least quare regression instance
-                  
+
     lambdapar   : float
                   Spatial autoregressive parameter
- 
+
     Returns
     -------
 
@@ -1414,7 +1414,7 @@ def get_a1a2(w, wA1, reg, lambdapar, P, zs, inv_method, filt):
     ----------
 
     .. [1] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
-    
+
     """
     us = UTILS.get_spFilter(w, lambdapar, reg.u)
     alpha1 = (-2.0 / w.shape[0]) * (np.dot(spdot(zs.T, wA1), us))
@@ -1461,14 +1461,14 @@ def get_Omega_GS2SLS(w, lamb, reg, G, psi, P):
 
     lamb        : float
                   Spatial autoregressive parameter
-                  
+
     reg         : GSTSLS
                   Generalized Spatial two stage least quare regression instance
     G           : array
                   Moments
     psi         : array
                   Weighting matrix
- 
+
     Returns
     -------
 
@@ -1494,9 +1494,9 @@ def get_Omega_GS2SLS(w, lamb, reg, G, psi, P):
     om_2_s = omega_2.shape
     p_s = P.shape
     omega_left = np.hstack((np.vstack((P.T, np.zeros((om_1_s[0], p_s[0])))),
-                           np.vstack((np.zeros((p_s[1], om_1_s[1])), omega_1))))
+                            np.vstack((np.zeros((p_s[1], om_1_s[1])), omega_1))))
     omega_right = np.hstack((np.vstack((P, np.zeros((om_2_s[0], p_s[1])))),
-                            np.vstack((np.zeros((p_s[0], om_2_s[1])), omega_2))))
+                             np.vstack((np.zeros((p_s[0], om_2_s[1])), omega_2))))
     omega = np.dot(np.dot(omega_left, psi_o), omega_right)
     return omega / w.shape[0]
 

@@ -16,7 +16,8 @@ from w_utils import symmetrize
 try:
     from scipy.optimize import minimize_scalar
 except ImportError as e:
-    print(e, "Maximum Likelihood in PySAL requires SciPy version 0.11 or newer.")
+    print(
+        e, "Maximum Likelihood in PySAL requires SciPy version 0.11 or newer.")
 
 __all__ = ["ML_Error"]
 
@@ -237,9 +238,9 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
         tr3 = np.trace(waiTwai)
 
         v1 = np.vstack((tr2 + tr3,
-                       tr1 / self.sig2))
+                        tr1 / self.sig2))
         v2 = np.vstack((tr1 / self.sig2,
-                       self.n / (2.0 * self.sig2 ** 2)))
+                        self.n / (2.0 * self.sig2 ** 2)))
 
         v = np.hstack((v1, v2))
 
