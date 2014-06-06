@@ -28,9 +28,11 @@ class W(object):
                       lexicographical ordering is used to iterate and the
                       id_order_set property will return False.  This can be
                       set after creation by setting the 'id_order' property.
-    silent_island_warning   : boolean
-                              Switch to turn off (default on) print statements
-                              for every observation with islands
+    silent_island_warning   : boolean 
+                            By default PySAL will print a warning if the
+                            dataset contains any disconnected observations or
+                            islands. To silence this warning set this
+                            parameter to True.
 
     Attributes
     ----------
