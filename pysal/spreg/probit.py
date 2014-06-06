@@ -37,7 +37,7 @@ class BaseProbit:
                   Alternative: 'xmean' (Marginal effects at variables mean)
     maxiter     : int
                   Maximum number of iterations until optimizer stops                  
-              
+
     Attributes
     ----------
 
@@ -115,7 +115,7 @@ class BaseProbit:
     array([[ 3.353811],
            [-0.199653],
            [-0.029514]])
-           
+
     >>> np.around(model.vm, decimals=6)
     array([[ 0.852814, -0.043627, -0.008052],
            [-0.043627,  0.004114, -0.000193],
@@ -379,7 +379,7 @@ class Probit(BaseProbit):
                    Name of weights matrix for use in output
     name_ds      : string
                    Name of dataset for use in output
-                   
+
     Attributes
     ----------
 
@@ -440,7 +440,7 @@ class Probit(BaseProbit):
                    Name of dataset for use in output
     title        : string
                    Name of the regression method used
-                   
+
     References
     ----------
     .. [1] Pinkse, J. (2004). Moran-flavored tests with nuisance parameter. In: Anselin, L., Florax, R. J., Rey, S. J. (editors) Advances in Spatial Econometrics, pages 67-77. Springer-Verlag, Heidelberg.
@@ -453,7 +453,7 @@ class Probit(BaseProbit):
     We first need to import the needed modules, namely numpy to convert the
     data we read into arrays that ``spreg`` understands and ``pysal`` to
     perform all the analysis.
-    
+
     >>> import numpy as np
     >>> import pysal
 
@@ -464,7 +464,7 @@ class Probit(BaseProbit):
     data in using any method.  
 
     >>> dbf = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
-    
+
     Extract the CRIME column (crime) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -496,7 +496,7 @@ class Probit(BaseProbit):
     append '.read()' at the end of the command.
 
     >>> w = pysal.open(pysal.examples.get_path("columbus.gal"), 'r').read() 
-    
+
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. In PySAL, this
     can be easily performed in the following way:
@@ -509,16 +509,16 @@ class Probit(BaseProbit):
     have to pass them in as well, although this is optional. 
 
     >>> model = Probit(y, x, w=w, name_y='crime', name_x=['income','home value'], name_ds='columbus', name_w='columbus.gal')
-    
+
     Once we have run the model, we can explore a little bit the output. The
     regression object we have created has many attributes so take your time to
     discover them.
-    
+
     >>> np.around(model.betas, decimals=6)
     array([[ 3.353811],
            [-0.199653],
            [-0.029514]])
-           
+
     >>> np.around(model.vm, decimals=6)
     array([[ 0.852814, -0.043627, -0.008052],
            [-0.043627,  0.004114, -0.000193],

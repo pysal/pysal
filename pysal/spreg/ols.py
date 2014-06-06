@@ -35,7 +35,7 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
                    matrix must have ones along the main diagonal.
     sig2n_k      : boolean
                    If True, then use n-k to estimate sigma^2. If False, use n.
-               
+
     Attributes
     ----------
     betas        : array
@@ -73,7 +73,7 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
     xtxi         : float
                    (X'X)^-1
 
-              
+
     Examples
     --------
 
@@ -127,7 +127,7 @@ class OLS(BaseOLS):
 
     """
     Ordinary least squares with results and diagnostics.
-    
+
     Parameters
     ----------
     y            : array
@@ -173,7 +173,7 @@ class OLS(BaseOLS):
                    Name of kernel weights matrix for use in output
     name_ds      : string
                    Name of dataset for use in output
-    
+
 
     Attributes
     ----------
@@ -285,7 +285,7 @@ class OLS(BaseOLS):
     xtxi         : float
                    (X'X)^-1
 
-    
+
     Examples
     --------
     >>> import numpy as np
@@ -298,11 +298,11 @@ class OLS(BaseOLS):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
-    
+
     Extract the HOVAL column (home values) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an nx1 numpy array.
-    
+
     >>> hoval = db.by_col("HOVAL")
     >>> y = np.array(hoval)
     >>> y.shape = (len(hoval), 1)
