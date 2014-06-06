@@ -4,7 +4,7 @@ import numpy as np
 from pysal.spreg.ml_lag_regimes import ML_Lag_Regimes
 from pysal.spreg.ml_lag import ML_Lag
 from pysal.spreg import utils
- 
+
 class TestMLError(unittest.TestCase):
     def setUp(self):
         db =  pysal.open(pysal.examples.get_path("baltim.dbf"),'r')
@@ -40,7 +40,7 @@ class TestMLError(unittest.TestCase):
         np.testing.assert_array_almost_equal(reg.predy[0],predy,4)
         n = 211
         self.assertAlmostEqual(reg.n,n,4)
-        k = 8
+        k = 9
         self.assertAlmostEqual(reg.k,k,4)
         y = np.array([ 47.])
         np.testing.assert_array_almost_equal(reg.y[0],y,4)
@@ -65,9 +65,9 @@ class TestMLError(unittest.TestCase):
         np.testing.assert_array_almost_equal(reg.std_err,std_err,4)
         logll = -864.98505596489736
         self.assertAlmostEqual(reg.logll,logll,4)
-        aic = 1745.9701119297947
+        aic = 1747.9701119297947
         self.assertAlmostEqual(reg.aic,aic,4)
-        schwarz = 1772.7849769976033
+        schwarz = 1778.1368351310794
         self.assertAlmostEqual(reg.schwarz,schwarz,4)
         chow_r = np.array([[ 1.00180776,  0.31687348],
        [ 0.05904944,  0.8080047 ],
