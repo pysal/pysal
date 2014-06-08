@@ -6,6 +6,7 @@ from scipy import sparse, float32
 import scipy.spatial
 import os
 import operator
+import scipy
 
 __all__ = ['lat2W', 'regime_weights', 'comb', 'order', 'higher_order', 'shimbel',
            'remap_ids', 'full2W', 'full', 'WSP2W', 'insert_diagonal', 'get_ids',
@@ -406,14 +407,14 @@ def higher_order(w, k=2):
     return pysal.weights.W(neighbors, weights)
 
 
-def higher_order_sp(wsp, k=2):
+def higher_order_sp(w, k=2):
     """
-    Contiguity weights for a sparse W for order k
+    Contiguity weights for either a sparse W or pysal.weights.W  for order k
 
     Parameters
     ==========
 
-    wsp:  WSP instance
+    w:  [W instance | scipy.sparse.csr.csr_instance]
 
     k: Order of contiguity
 
@@ -443,12 +444,18 @@ def higher_order_sp(wsp, k=2):
     {1: 1.0, 3: 1.0, 5: 1.0, 9: 1.0, 15: 1.0, 19: 1.0, 21: 1.0, 23: 1.0}
     >>>
     """
+    tw = type(w)
+    if tw == pysal.weights.weights.W:
+        w = w.sparse
+    elif tw != scipy.sparse.csr.csr_matrix:
+        print "Unsupported sparse argument."
+        return None
 
-    wk = wsp ** k
+    wk = w**k
     rk, ck = wk.nonzero()
     sk = set(zip(rk, ck))
     for j in range(1, k):
-        wj = wsp ** j
+        wj = w**j
         rj, cj = wj.nonzero()
         sj = set(zip(rj, cj))
         sk.difference_update(sj)
