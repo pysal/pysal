@@ -38,6 +38,7 @@ pip install -U jinja2
 pip install -U tornado
 pip install -U pygments
 pip install -U pysal
+pip install -U clusterpy
 END
 
 $ipython_notebook = <<CONF_SCRIPT
