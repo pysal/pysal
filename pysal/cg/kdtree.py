@@ -238,6 +238,6 @@ class Arc_KDTree(scipy.spatial.KDTree):
 
 def KDTree(data, leafsize=10, distance_metric='Euclidean', radius=1.0):
     if distance_metric == 'Euclidean':
-        return scipy.spatial.KDTree(data, leafsize)
+        return scipy.spatial.cKDTree(data, leafsize)
     elif distance_metric == 'Arc':
         return Arc_KDTree(data, leafsize, radius)
