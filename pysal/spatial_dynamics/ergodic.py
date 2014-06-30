@@ -118,7 +118,9 @@ def fmpt(P):
     I = np.identity(k)
     Z = la.inv(I - P + A)
     E = np.ones_like(Z)
-    D = np.diag(1. / np.diag(A))
+    A_diag = np.diag(A)
+    A_diag = A_diag + (A_diag==0)
+    D = np.diag(1. / A_diag)
     Zdg = np.diag(np.diag(Z))
     M = (I - Z + E * Zdg) * D
     return M
