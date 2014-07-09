@@ -24,7 +24,7 @@ that make sure the following software packages are available on your machine:
 Getting your feet wet
 ----------------------
 
-You can start using pysal right away on the web with Wakari or
+You can start using PySAL right away on the web with Wakari or
 PythonAnywhere. 
 
 wakari http://continuum.io/wakari
@@ -52,7 +52,7 @@ Windows users can download a graphical installer from
 Development version on GitHub 
 -----------------------------
 
-Developers can checkout pysal using **git**::
+Developers can checkout PySAL using **git**::
 
  $ git clone https://github.com/pysal/pysal.git 
 
@@ -78,7 +78,7 @@ changes::
 Windows
 ~~~~~~~~
 
-To keep up to date with pysal development, you will need a Git client that allows you to access and 
+To keep up to date with PySAL development, you will need a Git client that allows you to access and 
 update the code from our repository. We recommend 
 `GitHub Windows <http://windows.github.com/>`_ for a more graphical client, or
 `Git Bash <https://code.google.com/p/msysgit/downloads/list?q=label:Featured>`_ for a
