@@ -22,9 +22,6 @@ class W(object):
                       key is region ID, value is a list of edge weights
                       If not supplied all edge weights are assumed to have a weight of 1.
                       Example: {'a':[0.5],'b':[0.5,1.5],'c':[1.5]}
-    ids = None      : list
-                      values to use for keys of the neighbors and weights
-                      dicts
     id_order = None : list
                       An ordered list of ids, defines the order of
                       observations when iterating over W if not set,
@@ -36,6 +33,8 @@ class W(object):
                             dataset contains any disconnected observations or
                             islands. To silence this warning set this
                             parameter to True.
+    ids = None      : list
+                      values to use for keys of the neighbors and weights dicts
 
     Attributes
     ----------
