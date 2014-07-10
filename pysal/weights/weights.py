@@ -22,6 +22,9 @@ class W(object):
                       key is region ID, value is a list of edge weights
                       If not supplied all edge weights are assumed to have a weight of 1.
                       Example: {'a':[0.5],'b':[0.5,1.5],'c':[1.5]}
+    ids = None      : list
+                      values to use for keys of the neighbors and weights
+                      dicts
     id_order = None : list
                       An ordered list of ids, defines the order of
                       observations when iterating over W if not set,
@@ -114,7 +117,7 @@ class W(object):
 
     """
 
-    def __init__(self, neighbors, weights=None, id_order=None, silent_island_warning=False):
+    def __init__(self, neighbors, weights=None, ids=None, id_order=None, silent_island_warning=False):
         self.silent_island_warning = silent_island_warning
         self.transformations = {}
         self.neighbors = neighbors
@@ -498,21 +501,8 @@ class W(object):
         8 {5: 1.0, 7: 1.0}
         >>>
         """
-        class _W_iter:
-
-            def __init__(self, w):
-                self.w = w
-                self.n = len(w._id_order)
-                self._idx = 0
-
-            def next(self):
-                if self._idx >= self.n:
-                    self._idx = 0
-                    raise StopIteration
-                value = self.w.__getitem__(self.w._id_order[self._idx])
-                self._idx += 1
-                return value
-        return _W_iter(self)
+        for i in self._id_order:
+            yield i, dict(zip(self.neighbors[i], self.weights[i]))
 
     def __set_id_order(self, ordered_ids):
         """

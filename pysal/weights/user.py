@@ -61,6 +61,7 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
         ids = get_ids(shapefile, idVariable)
     else:
         ids = None
+    ids = None
     w = buildContiguity(shp, criterion='queen', ids=ids)
     shp.close()
     w.set_shapefile(shapefile, idVariable)
