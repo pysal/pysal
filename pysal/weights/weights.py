@@ -487,7 +487,6 @@ class W(object):
         --------
         >>> import pysal
         >>> w=pysal.lat2W(3,3)
-        >>> w.id_order = [0,8,2,3,4,5,6,7,1]
         >>> for i,wi in enumerate(w):
         ...     print i,wi
         ...
@@ -510,19 +509,24 @@ class W(object):
             raise Exception("W.remap_ids: length of old_ids does not match \
             that of new_ids")
         else:
+            new_neighbors = {}
+            new_weights = {}
             for o,n in zip(old_ids, new_ids):
                 o_neighbors = self.neighbors[o]
                 o_weights = self.weights[o]
                 n_neighbors = [ new_ids[old_ids.index(j)] for j in o_neighbors]
-                self.neighbors[n] = n_neighbors
-                self.weights[n] = o_weights[:]
+                new_neighbors[n] = n_neighbors
+                new_weights[n] = o_weights[:]
                 self.neighbors.pop(o)
                 self.weights.pop(o)
+            self.neighbors = new_neighbors
+            self.weights = new_weights
 
             id_order = [ self._id_order.index(o) for o in old_ids]
             for i,id_ in enumerate(id_order):
                 self.id_order[id_] = new_ids[i]
 
+            self._reset()
 
     def __set_id_order(self, ordered_ids):
         """

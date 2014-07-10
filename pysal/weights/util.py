@@ -193,7 +193,7 @@ def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
             alt_weights[key] = weights[i]
         w = alt_w
         weights = alt_weights
-    return pysal.weights.W(w, weights, ids)
+    return pysal.weights.W(w, weights, ids=ids, id_order=ids[:])
 
 
 def regime_weights(regimes):

@@ -34,8 +34,8 @@ class TestW(unittest.TestCase):
         res = {}
         for i, wi in enumerate(w):
             res[i] = wi
-        self.assertEqual(res[0], {1: 1.0, 3: 1.0})
-        self.assertEqual(res[8], {5: 1.0, 7: 1.0})
+        self.assertEqual(res[0], (0, {1: 1.0, 3: 1.0}))
+        self.assertEqual(res[8], (8, {5: 1.0, 7: 1.0}))
 
     def test_asymmetries(self):
         w = pysal.lat2W(3, 3)
@@ -252,8 +252,8 @@ class Test_WSP_Back_To_W(unittest.TestCase):
         res = {}
         for i, wi in enumerate(w):
             res[i] = wi
-        self.assertEqual(res[0], {1: 1.0, 3: 1.0})
-        self.assertEqual(res[8], {5: 1.0, 7: 1.0})
+        self.assertEqual(res[0], (0, {1: 1.0, 3: 1.0}))
+        self.assertEqual(res[8], (8, {5: 1.0, 7: 1.0}))
 
     def test_asymmetries(self):
         w = pysal.lat2W(3, 3)
