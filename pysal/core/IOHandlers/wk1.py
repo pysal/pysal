@@ -311,8 +311,8 @@ class Wk1IO(FileIO.FileIO):
             id2i = obj.id2i
             for i, w_i in enumerate(obj):
                 row = [0.0] * n
-                for k in w_i:
-                    row[id2i[k]] = w_i[k]
+                for k in w_i[1]:
+                    row[id2i[k]] = w_i[1][k]
                 for c, v in enumerate(row):
                     cell = tuple(['<2H1b2H1d', 14, 13, 113, i, c, v])
                     f.write(pack(*cell))
