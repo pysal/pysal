@@ -57,12 +57,12 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
 
     """
     shp = pysal.open(shapefile)
+    w = buildContiguity(shp, criterion='queen')
     if idVariable:
         ids = get_ids(shapefile, idVariable)
+        wnew = {}
     else:
         ids = None
-    ids = None
-    w = buildContiguity(shp, criterion='queen', ids=ids)
     shp.close()
     w.set_shapefile(shapefile, idVariable)
 

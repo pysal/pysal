@@ -327,12 +327,13 @@ def order(w, kmax=3):
     [1, -1, 1, 2, 1]
 
     """
-    ids = w.neighbors.keys()
+    #ids = w.neighbors.keys()
+    ids = w.id_order
     info = {}
-    for id in ids:
+    for id_ in ids:
         s = [0] * w.n
-        s[ids.index(id)] = -1
-        for j in w.neighbors[id]:
+        s[ids.index(id_)] = -1
+        for j in w.neighbors[id_]:
             s[ids.index(j)] = 1
         k = 1
         while k < kmax:
@@ -348,7 +349,7 @@ def order(w, kmax=3):
                         if s[nid] == 0:
                             s[nid] = knext
             k = knext
-        info[id] = s
+        info[id_] = s
     return info
 
 
@@ -397,14 +398,14 @@ def higher_order(w, k=2):
        Regional Science, 36, 67-89.
     """
     info = order(w, k)
-    ids = info.keys()
+    ids = w.id_order
     neighbors = {}
     weights = {}
-    for id in ids:
-        nids = [ids[j] for j, o in enumerate(info[id]) if o == k]
-        neighbors[id] = nids
-        weights[id] = [1.0] * len(nids)
-    return pysal.weights.W(neighbors, weights)
+    for id_ in ids:
+        nids = [ids[j] for j, o in enumerate(info[id_]) if o == k]
+        neighbors[id_] = nids
+        weights[id_] = [1.0] * len(nids)
+    return pysal.weights.W(neighbors, weights, id_order=ids[:])
 
 
 def higher_order_sp(w, k=2):
