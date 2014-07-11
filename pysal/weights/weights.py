@@ -503,7 +503,7 @@ class W(object):
         for i in self._id_order:
             yield i, dict(zip(self.neighbors[i], self.weights[i]))
 
-    def remap_ids(self,  old_ids, new_ids):
+    def remap_ids(self, new_ids):
         '''
         In place modification throughout `W` of id values from `old_ids` to
         `new_ids` in all
@@ -527,12 +527,13 @@ class W(object):
         >>> w.neighbors[0]
         [3, 1]
         >>> new_ids = ['id%i'%id for id in w.id_order]
-        >>> _ = w.remap_ids(w.id_order, new_ids)
+        >>> _ = w.remap_ids(new_ids)
         >>> w.id_order
         ['id0', 'id1', 'id2', 'id3', 'id4', 'id5', 'id6', 'id7', 'id8']
         >>> w.neighbors['id0']
         ['id3', 'id1']
         '''
+        old_ids = self._id_order
         if len(old_ids) != len(new_ids):
             raise Exception("W.remap_ids: length of `old_ids` does not match \
             that of new_ids")
