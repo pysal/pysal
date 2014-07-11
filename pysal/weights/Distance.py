@@ -423,12 +423,12 @@ class DistanceBand(W):
     >>> w.weights
     {0: [1, 1], 1: [1, 1], 2: [], 3: [1, 1], 4: [1], 5: [1]}
     >>> w.neighbors
-    {0: [1, 3], 1: [0, 3], 2: [], 3: [0, 1], 4: [5], 5: [4]}
+    {0: [1, 3], 1: [0, 3], 2: [], 3: [1, 0], 4: [5], 5: [4]}
     >>> w=DistanceBand(points,threshold=14.2)
     >>> w.weights
     {0: [1, 1], 1: [1, 1, 1], 2: [1], 3: [1, 1], 4: [1, 1, 1], 5: [1]}
     >>> w.neighbors
-    {0: [1, 3], 1: [0, 3, 4], 2: [4], 3: [0, 1], 4: [1, 2, 5], 5: [4]}
+    {0: [1, 3], 1: [0, 3, 4], 2: [4], 3: [1, 0], 4: [5, 1, 2], 5: [4]}
 
     inverse distance weights
 
@@ -486,45 +486,37 @@ class DistanceBand(W):
         """
         find all pairs within threshold
         """
-        kd = self.kd
-        #ns=[kd.query_ball_point(point,self.threshold) for point in self.data]
-        ns = kd.query_ball_tree(kd, self.threshold)
-        self._nmat = ns
+        self.dmat = self.kd.sparse_distance_matrix(
+                self.kd, max_distance=self.threshold)
 
     def _distance_to_W(self, ids=None):
-        allneighbors = {}
-        weights = {}
         if ids:
             ids = np.array(ids)
         else:
-            ids = np.arange(len(self._nmat))
+            ids = np.arange(self.dmat.shape[0])
+        neighbors = dict([(i,[]) for i in ids])
+        weights = dict([(i,[]) for i in ids])
         if self.binary:
-            for i, neighbors in enumerate(self._nmat):
-                ns = [ni for ni in neighbors if ni != i]
-                neigh = list(ids[ns])
-                if len(neigh) == 0:
-                    allneighbors[ids[i]] = []
-                    weights[ids[i]] = []
-                else:
-                    allneighbors[ids[i]] = neigh
-                    weights[ids[i]] = [1] * len(ns)
+            for key,weight in self.dmat.items():
+                i,j = key
+                if j not in neighbors[i]:
+                    weights[i].append(1)
+                    neighbors[i].append(j)
+                if i not in neighbors[j]:
+                    weights[j].append(1)
+                    neighbors[j].append(i)
+
         else:
-            self.dmat = self.kd.sparse_distance_matrix(
-                self.kd, max_distance=self.threshold)
-            for i, neighbors in enumerate(self._nmat):
-                ns = [ni for ni in neighbors if ni != i]
-                neigh = list(ids[ns])
-                if len(neigh) == 0:
-                    allneighbors[ids[i]] = []
-                    weights[ids[i]] = []
-                else:
-                    try:
-                        allneighbors[ids[i]] = neigh
-                        weights[ids[i]] = [self.dmat[(
-                            i, j)] ** self.alpha for j in ns]
-                    except ZeroDivisionError, e:
-                        print(e, "Cannot compute inverse distance for elements at same location (distance=0).")
-        return allneighbors, weights
+            for key,weight in self.dmat.items():
+                i,j = key
+                if j not in neighbors[i]:
+                    weights[i].append(weight**self.alpha)
+                    neighbors[i].append(j)
+                if i not in neighbors[j]:
+                    weights[j].append(weight**self.alpha)
+                    neighbors[j].append(i)
+
+        return neighbors, weights
 
 
 def _test():
