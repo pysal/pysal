@@ -30,7 +30,7 @@ script:
   - python -c 'import multiprocessing as mp; print mp.cpu_count()'
   #- pychecker --limit 1000 pysal
   #- python setup.py sdist >/dev/null
-  - nosetests 
+  - nosetests --processes=-1 --process-timeout=30
   - cd doc; make pickle; make doctest
 notifications:
     email:
