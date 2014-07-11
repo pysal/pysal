@@ -527,6 +527,69 @@ class W(object):
 
             self._reset()
 
+    def remap_ids(self, bridge):
+        """
+        Remap existing ids to a new set of values
+
+        Parameters
+        ----------
+
+        bridge: dict
+                key is the value of a current id, value is the value it should be
+                replaced by
+
+        Notes
+        -----
+
+        All ids have to be remapped, otherwise if any original ids are missing
+        as keys in bridge, remapping is not carried out.
+
+
+
+        Notes
+        -----
+        All existing ids have be listed as keys in bridge, otherwise no
+        mapping is carried out
+
+        >>> import pysal as ps
+        >>> w = ps.lat2W(3,3)
+        >>> w.neighbors
+        {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
+        >>> bridge = dict([(i,i+11) for i in w.id_order])
+        >>> bridge
+        {0: 11, 1: 12, 2: 13, 3: 14, 4: 15, 5: 16, 6: 17, 7: 18, 8: 19}
+        >>> w.remap_ids(bridge)
+        >>> w.neighbors
+        {11: [14, 12], 12: [11, 15, 13], 13: [12, 16], 14: [11, 17, 15], 15: [12, 14, 18, 16], 16: [13, 15, 19], 17: [14, 18], 18: [15, 17, 19], 19: [16, 18]}
+        >>> w.remap_ids(bridge)
+        >>> w.neighbors
+        {11: [14, 12], 12: [11, 15, 13], 13: [12, 16], 14: [11, 17, 15], 15: [12, 14, 18, 16], 16: [13, 15, 19], 17: [14, 18], 18: [15, 17, 19], 19: [16, 18]}
+
+        """
+        ids = self.neighbors.keys()
+        # sanity check
+        for i in bridge.keys():
+            if i not in ids:
+                # only remap if all ids are accounted for, otherwise leave
+                # untouched
+                return
+        w1 = {}
+        w2 = {}
+        for i in bridge:
+            i_neighbors = self.neighbors[i]
+            for c,j in enumerate(i_neighbors):
+                new_j = bridge[j]
+                i_neighbors[c] = new_j
+            w1[bridge[i]] = i_neighbors
+            self.neighbors.pop(i)
+            w2[bridge[i]] = self.weights.pop(i)
+        self.neighbors = w1
+        self.weights = w2
+        id_order = [ bridge[i] for i in self.id_order ]
+        self._id_order = id_order
+        self._reset()
+
+
     def __set_id_order(self, ordered_ids):
         """
         Set the iteration order in w.
@@ -601,6 +664,8 @@ class W(object):
 
     id_order = property(__get_id_order, __set_id_order)
 
+
+
     @property
     def id_order_set(self):
         """
@@ -614,6 +679,7 @@ class W(object):
         True
         """
         return self._id_order_set
+
 
     @property
     def neighbor_offsets(self):
