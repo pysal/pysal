@@ -243,6 +243,7 @@ with this threshold in hand, the distance band weights are obtained as:
     >>> set(wt.neighbors[0]) == set([1,2])
     True
     >>> set(wt.neighbors[1]) == set([3,0])
+    True
 
 Distance band weights can also be specified to take on continuous values rather
 than binary, with the values set to the inverse distance separating each pair
