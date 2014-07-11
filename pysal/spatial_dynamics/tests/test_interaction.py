@@ -46,7 +46,7 @@ class Jacquez_Tester(unittest.TestCase):
     def test_jacquez(self):
         result = interaction.jacquez(self.events.space,
                 self.events.t, k=3, permutations=1)
-        self.assertEquals(result['stat'], 13)
+        self.assertEquals(result['stat'], 12)
 
 
 class ModifiedKnox_Tester(unittest.TestCase):

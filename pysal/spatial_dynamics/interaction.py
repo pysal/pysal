@@ -437,7 +437,7 @@ def jacquez(s_coords, t_coords, k, permutations=99):
     >>> np.random.seed(100)
     >>> result = jacquez(events.space, events.t ,k=3,permutations=99)
     >>> print result['stat']
-    13
+    12
 
     The significance of this can be assessed by calling the p-
     value from the results dictionary, as shown below. Again, no
