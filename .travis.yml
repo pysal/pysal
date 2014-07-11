@@ -27,10 +27,10 @@ script:
   - python -c 'import scipy; print scipy.version.version'
   - python setup.py install 
   - python -c 'import pysal; print pysal.version'
-  - python -c 'import multiprocessing as mp; print mp.cpu_count()'
+  #- python -c 'import multiprocessing as mp; print mp.cpu_count()'
   #- pychecker --limit 1000 pysal
-  #- python setup.py sdist >/dev/null
-  - nosetests --processes=-1 --process-timeout=30
+  - python setup.py sdist >/dev/null
+  - nosetests
   - cd doc; make pickle; make doctest
 notifications:
     email:
