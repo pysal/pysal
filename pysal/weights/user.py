@@ -753,14 +753,15 @@ def kernelW_from_shapefile(shapefile, k=2, function='triangular',
     >>> kw = pysal.kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"),idVariable='POLYID', function = 'gaussian')
 
     >>> kwd = pysal.kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"),idVariable='POLYID', function = 'gaussian', diagonal = True)
-    >>> kw.neighbors[1]
-    [4, 2, 3, 1]
-    >>> kwd.neighbors[1]
-    [4, 2, 3, 1]
-    >>> kw.weights[1]
-    [0.2436835517263174, 0.29090631630909874, 0.29671172124745776, 0.3989422804014327]
-    >>> kwd.weights[1]
-    [0.2436835517263174, 0.29090631630909874, 0.29671172124745776, 1.0]
+    >>> set(kw.neighbors[1]) == set([4, 2, 3, 1])
+    True
+    >>> set(kwd.neighbors[1]) == set([4, 2, 3, 1])
+    True
+    >>> 
+    >>> set(kw.weights[1]) == set( [0.2436835517263174, 0.29090631630909874, 0.29671172124745776, 0.3989422804014327])
+    True
+    >>> set(kwd.weights[1]) == set( [0.2436835517263174, 0.29090631630909874, 0.29671172124745776, 1.0])
+    True
     
 
     Notes

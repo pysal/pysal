@@ -102,11 +102,11 @@ class Testuser(unittest.TestCase):
     def test_kernelW_from_shapefile(self):
         kw = pysal.kernelW_from_shapefile(pysal.examples.get_path(
             'columbus.shp'), idVariable='POLYID')
-        self.assertEquals(kw.weights[1], [0.0070787731484506233,
+        self.assertEquals(set(kw.weights[1]), set([0.0070787731484506233,
                                          0.2052478782400463,
                                          0.23051223027663237,
                                          1.0
-                                         ])
+                                         ]))
         np.testing.assert_array_almost_equal(
             kw.bandwidth[:3], np.array([[0.75333961], [0.75333961],
                                         [0.75333961]]))
