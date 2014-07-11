@@ -207,10 +207,10 @@ falling within a threshold distance of the focal unit:
 .. doctest::
 
 	>>> wthresh = pysal.threshold_binaryW_from_array(data, 2)
-	>>> wthresh.neighbors[0]
-	[1, 2, 5, 6, 10]
-	>>> wthresh.neighbors[1]
-	[0, 2, 5, 6, 7, 11, 3]
+	>>> set(wthresh.neighbors[0]) == set([1, 2, 5, 6, 10])
+    True
+	>>> set(wthresh.neighbors[1]) == set( [0, 2, 5, 6, 7, 11, 3])
+    True
 	>>> wthresh.weights[0]
 	[1, 1, 1, 1, 1]
 	>>> wthresh.weights[1]
@@ -240,10 +240,10 @@ with this threshold in hand, the distance band weights are obtained as:
     1
     >>> wt.histogram
     [(1, 4), (2, 8), (3, 6), (4, 2), (5, 5), (6, 8), (7, 6), (8, 2), (9, 6), (10, 1), (11, 1)]
-    >>> wt.neighbors[0]
-    [1, 2]
-    >>> wt.neighbors[1]
-    [3, 0]
+    >>> set(wt.neighbors[0]) == set([1,2])
+    True
+    >>> set(wt.neighbors[1]) == set([3,0])
+    True
 
 Distance band weights can also be specified to take on continuous values rather
 than binary, with the values set to the inverse distance separating each pair

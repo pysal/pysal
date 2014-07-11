@@ -85,9 +85,11 @@ class TestDistanceWeights(unittest.TestCase):
                             [14.142137037944515], [18.027758180095585]])
 
         kw = pysal.kernelW_from_shapefile(self.polyShp, idVariable='POLYID')
-        self.assertEqual(kw.weights[1], [0.2052478782400463,
-                                         0.0070787731484506233, 1.0,
-                                         0.23051223027663237])
+        self.assertEqual(set(kw.weights[1]), set([0.0070787731484506233,
+                                         0.2052478782400463,
+                                         0.23051223027663237,
+                                         1.0
+                                         ]))
         kwa = pysal.adaptive_kernelW_from_shapefile(self.polyShp)
         self.assertEqual(kwa.weights[0], [1.0, 0.03178906767736345,
                                           9.9999990066379496e-08])
