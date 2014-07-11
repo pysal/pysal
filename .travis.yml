@@ -25,9 +25,9 @@ install:
 script: 
   - python -c 'import numpy; print numpy.version.version'
   - python -c 'import scipy; print scipy.version.version'
-  - python setup.py install 
+  #- python setup.py install 
   - python -c 'import pysal; print pysal.version'
-  - python -c 'import multiprocessing as mp; print mp.cpu_count()
+  - python -c 'import multiprocessing as mp; print mp.cpu_count()'
   #- pychecker --limit 1000 pysal
   #- python setup.py sdist >/dev/null
   - nosetests 
