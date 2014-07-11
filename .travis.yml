@@ -29,7 +29,7 @@ script:
   - python -c 'import pysal; print pysal.version'
   - python -c 'import multiprocessing as mp; print mp.cpu_count()
   #- pychecker --limit 1000 pysal
-  - python setup.py sdist >/dev/null
+  #- python setup.py sdist >/dev/null
   - nosetests 
   - cd doc; make pickle; make doctest
 notifications:
