@@ -483,7 +483,7 @@ Mexican states into regions:
 .. doctest::
 
     >>> regime = np.array(f.by_col['esquivel99'])
-    >>> w = pysal.weights.regime_weights(regime)
+    >>> w = pysal.weights.block_weights(regime)
     >>> np.random.seed(12345)
 
 Now we will calculate the spatial tau for decade transitions from 1940 through

@@ -358,7 +358,7 @@ class SpatialTau:
     >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
     >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> regime=np.array(f.by_col['esquivel99'])
-    >>> w=pysal.weights.regime_weights(regime)
+    >>> w=pysal.weights.block_weights(regime)
     >>> np.random.seed(12345)
     >>> res=[SpatialTau(y[:,i],y[:,i+1],w,99) for i in range(6)]
     >>> for r in res:

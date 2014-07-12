@@ -130,7 +130,7 @@ def _block(arg_dict):
     dbf = ps.open(uri)
     block = np.array(dbf.by_col(var_name))
     dbf.close()
-    w = ps.weights.util.regime_weights(block)
+    w = ps.weights.util.block_weights(block)
     w = WMD(w.neighbors, w.weights)
     w.meta_data = {}
     w.meta_data['input1'] = {"type": 'dbf', 'uri': uri}
@@ -456,7 +456,7 @@ if __name__ == '__main__':
     #w = ps.lat2W(4,4)
     #block_variable = np.ones((w.n,1))
     #block_variable[:8] = 0
-    #w_block = ps.weights.util.regime_weights(block_variable)
+    #w_block = ps.weights.util.block_weights(block_variable)
 
     #w_intersection = ps.w_intersection(w, w_block)
 
@@ -465,7 +465,7 @@ if __name__ == '__main__':
     #dbf = ps.open("columbus.dbf")
     #ew = np.array(dbf.by_col("EW"))
     #dbf.close()
-    #w_ew = ps.weights.util.regime_weights(ew)
+    #w_ew = ps.weights.util.block_weights(ew)
     #wr = ps.rook_from_shapefile("columbus.shp")
     #w_int = ps.w_intersection(w_ew, wr)
 
