@@ -2,6 +2,9 @@ import unittest
 import pysal
 from pysal.spatial_dynamics import interaction
 import numpy as np
+import scipy
+
+scp_version = int(scipy.version.version.split(".")[1])
 
 
 class SpaceTimeEvents_Tester(unittest.TestCase):
@@ -46,7 +49,11 @@ class Jacquez_Tester(unittest.TestCase):
     def test_jacquez(self):
         result = interaction.jacquez(self.events.space,
                 self.events.t, k=3, permutations=1)
-        self.assertEquals(result['stat'], 13)
+        if scp_version > 11:
+            self.assertEquals(result['stat'], 12)
+        else:
+            self.assertEquals(result['stat'], 13)
+            
 
 
 class ModifiedKnox_Tester(unittest.TestCase):

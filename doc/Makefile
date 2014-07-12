@@ -86,3 +86,13 @@ doctest:
 	$(SPHINXBUILD) -b doctest  $(ALLSPHINXOPTS) build/doctest
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in build/doctest/output.txt."
+	rm ../pysal/examples/sids2.swm
+	rm ../pysal/examples/virginia_queen
+	rm ../pysal/examples/virginia_queen.dat
+	rm ../pysal/examples/virginia_queen.dbf
+	rm ../pysal/examples/virginia_queen.gal
+	rm ../pysal/examples/virginia_queen.mat
+	rm ../pysal/examples/virginia_queen.mtx
+	rm ../pysal/examples/virginia_queen.swm
+	rm ../pysal/examples/virginia_queen.txt
+	rm ../pysal/examples/virginia_queen.wk1

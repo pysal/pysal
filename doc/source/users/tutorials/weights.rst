@@ -124,8 +124,8 @@ weights can be obtained directly from shapefiles:
     >>> w = pysal.rook_from_shapefile("../pysal/examples/columbus.shp")
     >>> w.n
     49
-    >>> w.pct_nonzero
-    0.083298625572678045
+    >>> print "%.4f"%w.pct_nonzero
+    0.0833
     >>> w.histogram
     [(2, 7), (3, 10), (4, 17), (5, 8), (6, 3), (7, 3), (8, 0), (9, 1)]
 
@@ -134,8 +134,8 @@ If queen, rather than rook, contiguity is required then the following would work
 .. doctest::
 
     >>> w = pysal.queen_from_shapefile("../pysal/examples/columbus.shp")
-    >>> w.pct_nonzero
-    0.098292378175760101
+    >>> print "%.4f"%w.pct_nonzero
+    0.0983
     >>> w.histogram
     [(2, 5), (3, 9), (4, 12), (5, 5), (6, 9), (7, 3), (8, 4), (9, 1), (10, 1)]
     
@@ -174,23 +174,23 @@ then define the knn set as:
 
 .. doctest::
 
-	>>> wknn3 = pysal.knnW(data, k = 3)
-	>>> wknn3.neighbors[0]
-	array([1, 5, 6])
-	>>> wknn3.s0
-	75.0
-	>>> w4 = pysal.knnW(data, k = 4)
-	>>> set(w4.neighbors[0]) == set [1, 5, 6, 2])
+    >>> wknn3 = pysal.knnW(data, k = 3)
+    >>> wknn3.neighbors[0]
+    [1, 5, 6]
+    >>> wknn3.s0
+    75.0
+    >>> w4 = pysal.knnW(data, k = 4)
+    >>> set(w4.neighbors[0]) == set([1, 5, 6, 2])
     True
-	>>> w4.s0
-	100.0
-	>>> w4.weights[0]
-	[1.0, 1.0, 1.0, 1.0]
+    >>> w4.s0
+    100.0
+    >>> w4.weights[0]
+    [1.0, 1.0, 1.0, 1.0]
 
-Alternatively, we can use a utility funtion to build a knn W straight from a
+Alternatively, we can use a utility function to build a knn W straight from a
 shapefile:
 
-.. doctest:;
+.. doctest::
     
     >>> wknn5 = pysal.knnW_from_shapefile(pysal.examples.get_path('columbus.shp'), k=5)
     >>> wknn5.neighbors[0]
@@ -206,16 +206,16 @@ falling within a threshold distance of the focal unit:
 
 .. doctest::
 
-	>>> wthresh = pysal.threshold_binaryW_from_array(data, 2)
-	>>> wthresh.neighbors[0]
-	[1, 2, 5, 6, 10]
-	>>> wthresh.neighbors[1]
-	[0, 2, 5, 6, 7, 11, 3]
-	>>> wthresh.weights[0]
-	[1, 1, 1, 1, 1]
-	>>> wthresh.weights[1]
-	[1, 1, 1, 1, 1, 1, 1]
-	>>> 
+    >>> wthresh = pysal.threshold_binaryW_from_array(data, 2)
+    >>> set(wthresh.neighbors[0]) == set([1, 2, 5, 6, 10])
+    True
+    >>> set(wthresh.neighbors[1]) == set( [0, 2, 5, 6, 7, 11, 3])
+    True
+    >>> wthresh.weights[0]
+    [1, 1, 1, 1, 1]
+    >>> wthresh.weights[1]
+    [1, 1, 1, 1, 1, 1, 1]
+    >>> 
 
 As can be seen in the above example, the number of neighbors is likely to vary
 across observations with distance band weights in contrast to what holds for
@@ -240,10 +240,10 @@ with this threshold in hand, the distance band weights are obtained as:
     1
     >>> wt.histogram
     [(1, 4), (2, 8), (3, 6), (4, 2), (5, 5), (6, 8), (7, 6), (8, 2), (9, 6), (10, 1), (11, 1)]
-    >>> wt.neighbors[0]
-    [1, 2]
-    >>> wt.neighbors[1]
-    [3, 0]
+    >>> set(wt.neighbors[0]) == set([1,2])
+    True
+    >>> set(wt.neighbors[1]) == set([3,0])
+    True
 
 Distance band weights can also be specified to take on continuous values rather
 than binary, with the values set to the inverse distance separating each pair
