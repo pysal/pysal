@@ -759,9 +759,9 @@ The following runs the Jacquez test on the example data for a value of :math:`k`
 .. doctest::
 
     >>> result = interaction.jacquez(events.space, events.t ,k=3,permutations=99)
-    >>> print result['stat'] 
+    >>> print result['stat'] # doctest: +SKIP
     13
-    >>> print "%3.1f"%result['pvalue']
+    >>> print "%3.1f"%result['pvalue'] # doctest: +SKIP
     0.2
 
 Spatial Dynamics API
