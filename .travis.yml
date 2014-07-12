@@ -30,14 +30,14 @@ install:
   - sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm
 
 script: 
-  - python -c 'import numpy; print numpy.version.version'
-  - python -c 'import scipy; print scipy.version.version'
-  - python setup.py install 
+  - python -c 'import numpy; print numpy.__version__'
+  - python -c 'import scipy; print scipy.__version__'
+  - python setup.py install  >/dev/null
   - python -c 'import pysal; print pysal.version'
   #- python -c 'import multiprocessing as mp; print mp.cpu_count()'
   #- pychecker --limit 1000 pysal
   - python setup.py sdist >/dev/null
-  - nosetests -v
+  - nosetests
   - cd doc; make pickle; make doctest
 notifications:
     email:
