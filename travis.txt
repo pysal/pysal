@@ -1,0 +1,5 @@
+nose-exclude
+nose-progressive
+sphinx
+networkx
+Shapely

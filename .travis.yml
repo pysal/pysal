@@ -24,7 +24,7 @@ before_install:
   - sudo apt-get --only-upgrade install -qq python-numpy python-scipy
 
 install:
-  - pip install -q -r requirements.txt
+  - pip install -q -r travis.txt
   #- sudo pip install http://sourceforge.net/projects/pychecker/files/pychecker/0.8.19/pychecker-0.8.19.tar.gz/download
   #- pip install coveralls
   - sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm
