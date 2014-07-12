@@ -66,7 +66,7 @@ The Maxp instance s has a number of attributes regarding the solution. First is 
 .. doctest:: 
 
     >>> r.regions
-     [['44', '34', '3', '25', '1', '4', '47'], ['12', '46', '20', '24', '13'], ['14', '45', '35', '30', '39'], ['6', '27', '17', '29', '5', '43'], ['33', '40', '28', '15', '41', '9', '23', '31', '38'], ['37', '8', '0', '7', '21', '2'], ['32', '19', '11', '10', '22'], ['16', '26', '42', '18', '36']]
+    [['44', '34', '3', '25', '1', '4', '47'], ['12', '46', '20', '24', '13'], ['14', '45', '35', '30', '39'], ['6', '27', '17', '29', '5', '43'], ['33', '40', '28', '15', '41', '9', '23', '31', '38'], ['37', '8', '0', '7', '21', '2'], ['32', '19', '11', '10', '22'], ['16', '26', '42', '18', '36']]
 
 which is a list of eight lists of region ids. For example, the first nested list indicates there are seven states in the first region, while the last region has five states.  To determine which states these are we can read in the names from the original csv file:
 
