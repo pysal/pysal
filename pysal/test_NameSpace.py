@@ -28,7 +28,7 @@ class TestNameSpace(unittest.TestCase):
                           'knnW_from_shapefile', 'lag_spatial', 'lat2W',
                           'min_threshold_dist_from_shapefile', 'open',
                           'order', 'quantile', 'queen_from_shapefile',
-                          'regime_weights', 'region', 'remap_ids',
+                          'block_weights', 'region', 'remap_ids',
                           'rook_from_shapefile', 'shimbel', 'spatial_dynamics',
                           'threshold_binaryW_from_array', 'threshold_binaryW_from_shapefile',
                           'threshold_continuousW_from_array', 'threshold_continuousW_from_shapefile',

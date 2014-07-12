@@ -37,21 +37,21 @@ class Testutil(unittest.TestCase):
         self.assertEquals(data[7], [0, 0, 0, 0, 1, 0, 1, 0, 1])
         self.assertEquals(data[8], [0, 0, 0, 0, 0, 1, 0, 1, 0])
 
-    def test_regime_weights(self):
+    def test_block_weights(self):
         regimes = np.ones(25)
         regimes[range(10, 20)] = 2
         regimes[range(21, 25)] = 3
         regimes = np.array([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.,
                             2., 2., 2., 2., 2., 2., 2., 2., 2., 2., 1., 3., 3.,
                             3., 3.])
-        w = pysal.regime_weights(regimes)
+        w = pysal.block_weights(regimes)
         ww0 = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
         self.assertEquals(w.weights[0], ww0)
         wn0 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 20]
         self.assertEquals(w.neighbors[0], wn0)
         regimes = ['n', 'n', 's', 's', 'e', 'e', 'w', 'w', 'e']
         n = len(regimes)
-        w = pysal.regime_weights(regimes)
+        w = pysal.block_weights(regimes)
         wn = {0: [1], 1: [0], 2: [3], 3: [2], 4: [5, 8], 5: [4, 8],
               6: [7], 7: [6], 8: [4, 5]}
         self.assertEquals(w.neighbors, wn)
