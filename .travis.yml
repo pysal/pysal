@@ -43,5 +43,6 @@ notifications:
     email:
         recipients:
             - sjsrey@gmail.com
+            - phil.stphns@gmail.com
         on_success: always
         on_failure: always
