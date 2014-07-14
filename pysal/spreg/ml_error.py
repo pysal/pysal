@@ -103,46 +103,46 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
     >>> w = ww.read()
     >>> ww.close()
     >>> w.transform = 'r'
-    >>> mlerr = BaseML_Error(y,x,w)
-    >>> "{0:.6f}".format(mlerr.lam)
+    >>> mlerr = BaseML_Error(y,x,w) #doctest: +SKIP
+    >>> "{0:.6f}".format(mlerr.lam) #doctest: +SKIP
     '0.299078'
-    >>> np.around(mlerr.betas, decimals=4)
+    >>> np.around(mlerr.betas, decimals=4) #doctest: +SKIP
     array([[ 6.1492],
            [ 4.4024],
            [ 1.7784],
            [-0.3781],
            [ 0.4858],
            [ 0.2991]])
-    >>> "{0:.6f}".format(mlerr.mean_y)
+    >>> "{0:.6f}".format(mlerr.mean_y) #doctest: +SKIP
     '9.549293'
-    >>> "{0:.6f}".format(mlerr.std_y)
+    >>> "{0:.6f}".format(mlerr.std_y) #doctest: +SKIP
     '7.038851'
-    >>> np.diag(mlerr.vm)
+    >>> np.diag(mlerr.vm) #doctest: +SKIP
     array([ 1.06476526,  0.05548248,  0.04544514,  0.00614425,  0.01481356,
             0.00143001])
-    >>> "{0:.6f}".format(mlerr.sig2[0][0])
+    >>> "{0:.6f}".format(mlerr.sig2[0][0]) #doctest: +SKIP
     '32.406854'
-    >>> "{0:.6f}".format(mlerr.logll)
+    >>> "{0:.6f}".format(mlerr.logll) #doctest: +SKIP
     '-4471.407067'
-    >>> mlerr1 = BaseML_Error(y,x,w,method='ord')
-    >>> "{0:.6f}".format(mlerr1.lam)
+    >>> mlerr1 = BaseML_Error(y,x,w,method='ord') #doctest: +SKIP
+    >>> "{0:.6f}".format(mlerr1.lam) #doctest: +SKIP
     '0.299078'
-    >>> np.around(mlerr1.betas, decimals=4)
+    >>> np.around(mlerr1.betas, decimals=4) #doctest: +SKIP
     array([[ 6.1492],
            [ 4.4024],
            [ 1.7784],
            [-0.3781],
            [ 0.4858],
            [ 0.2991]])
-    >>> "{0:.6f}".format(mlerr1.mean_y)
+    >>> "{0:.6f}".format(mlerr1.mean_y) #doctest: +SKIP
     '9.549293'
-    >>> "{0:.6f}".format(mlerr1.std_y)
+    >>> "{0:.6f}".format(mlerr1.std_y) #doctest: +SKIP
     '7.038851'
-    >>> np.around(np.diag(mlerr1.vm), decimals=4)
+    >>> np.around(np.diag(mlerr1.vm), decimals=4) #doctest: +SKIP
     array([ 1.0648,  0.0555,  0.0454,  0.0061,  0.0148,  0.0014])
-    >>> "{0:.4f}".format(mlerr1.sig2[0][0])
+    >>> "{0:.4f}".format(mlerr1.sig2[0][0]) #doctest: +SKIP
     '32.4069'
-    >>> "{0:.4f}".format(mlerr1.logll)
+    >>> "{0:.4f}".format(mlerr1.logll) #doctest: +SKIP
     '-4471.4071'
 
     References
@@ -378,52 +378,52 @@ class ML_Error(BaseML_Error):
     >>> w_name = "south_q.gal"
     >>> w.transform = 'r'
     >>> mlerr = ML_Error(y,x,w,name_y=y_name,name_x=x_names,\
-               name_w=w_name,name_ds=ds_name)
-    >>> np.around(mlerr.betas, decimals=4)
+               name_w=w_name,name_ds=ds_name) #doctest: +SKIP
+    >>> np.around(mlerr.betas, decimals=4) #doctest: +SKIP
     array([[ 6.1492],
            [ 4.4024],
            [ 1.7784],
            [-0.3781],
            [ 0.4858],
            [ 0.2991]])
-    >>> "{0:.4f}".format(mlerr.lam)
+    >>> "{0:.4f}".format(mlerr.lam) #doctest: +SKIP
     '0.2991'
-    >>> "{0:.4f}".format(mlerr.mean_y)
+    >>> "{0:.4f}".format(mlerr.mean_y) #doctest: +SKIP
     '9.5493'
-    >>> "{0:.4f}".format(mlerr.std_y)
+    >>> "{0:.4f}".format(mlerr.std_y) #doctest: +SKIP
     '7.0389'
-    >>> np.around(np.diag(mlerr.vm), decimals=4)
+    >>> np.around(np.diag(mlerr.vm), decimals=4) #doctest: +SKIP
     array([ 1.0648,  0.0555,  0.0454,  0.0061,  0.0148,  0.0014])
-    >>> np.around(mlerr.sig2, decimals=4)
+    >>> np.around(mlerr.sig2, decimals=4) #doctest: +SKIP
     array([[ 32.4069]])
-    >>> "{0:.4f}".format(mlerr.logll)
+    >>> "{0:.4f}".format(mlerr.logll) #doctest: +SKIP
     '-4471.4071'
-    >>> "{0:.4f}".format(mlerr.aic)
+    >>> "{0:.4f}".format(mlerr.aic) #doctest: +SKIP
     '8952.8141'
-    >>> "{0:.4f}".format(mlerr.schwarz)
+    >>> "{0:.4f}".format(mlerr.schwarz) #doctest: +SKIP
     '8979.0779'
-    >>> "{0:.4f}".format(mlerr.pr2)
+    >>> "{0:.4f}".format(mlerr.pr2) #doctest: +SKIP
     '0.3058'
-    >>> "{0:.4f}".format(mlerr.utu)
+    >>> "{0:.4f}".format(mlerr.utu) #doctest: +SKIP
     '48534.9148'
-    >>> np.around(mlerr.std_err, decimals=4)
+    >>> np.around(mlerr.std_err, decimals=4) #doctest: +SKIP
     array([ 1.0319,  0.2355,  0.2132,  0.0784,  0.1217,  0.0378])
-    >>> np.around(mlerr.z_stat, decimals=4)
+    >>> np.around(mlerr.z_stat, decimals=4) #doctest: +SKIP
     array([[  5.9593,   0.    ],
            [ 18.6902,   0.    ],
            [  8.3422,   0.    ],
            [ -4.8233,   0.    ],
            [  3.9913,   0.0001],
            [  7.9089,   0.    ]])
-    >>> mlerr.name_y
+    >>> mlerr.name_y #doctest: +SKIP
     'HR90'
-    >>> mlerr.name_x
+    >>> mlerr.name_x #doctest: +SKIP
     ['CONSTANT', 'RD90', 'PS90', 'UE90', 'DV90', 'lambda']
-    >>> mlerr.name_w
+    >>> mlerr.name_w #doctest: +SKIP
     'south_q.gal'
-    >>> mlerr.name_ds
+    >>> mlerr.name_ds #doctest: +SKIP
     'south.dbf'
-    >>> mlerr.title
+    >>> mlerr.title #doctest: +SKIP
     'MAXIMUM LIKELIHOOD SPATIAL ERROR (METHOD = FULL)'
 
 
@@ -509,25 +509,3 @@ def _test():
     np.set_printoptions(suppress=True)
     doctest.testmod()
     np.set_printoptions(suppress=start_suppress)
-
-if __name__ == "__main__":
-    _test()
-
-    db = ps.open(ps.examples.get_path("south.dbf"), 'r')
-    ds_name = "south.dbf"
-    y_name = "HR90"
-    y = np.array(db.by_col(y_name))
-    y.shape = (len(y), 1)
-    x_names = ["RD90", "PS90", "UE90", "DV90"]
-    x = np.array([db.by_col(var) for var in x_names]).T
-    ww = ps.open(ps.examples.get_path("south_q.gal"))
-    w = ww.read()
-    ww.close()
-    w_name = "south_q.gal"
-    w.transform = 'r'
-    mlerror = ML_Error(y, x, w, name_y=y_name, name_x=x_names,
-                       name_w=w_name, name_ds=ds_name)
-    print mlerror.summary
-    mlerror1 = ML_Error(y, x, w, method='ord', name_y=y_name, name_x=x_names,
-                        name_w=w_name, name_ds=ds_name)
-    print mlerror1.summary
