@@ -96,3 +96,10 @@ doctest:
 	rm ../pysal/examples/virginia_queen.swm
 	rm ../pysal/examples/virginia_queen.txt
 	rm ../pysal/examples/virginia_queen.wk1
+	rm ../pysal/streets_net.dbf
+	rm ../pysal/streets_net.shp
+	rm ../pysal/streets_net.shx
+	rm ../streets_net.dbf
+	rm ../streets_net.shp
+	rm ../streets_net.shx
+
