@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pysal'
-copyright = u'2009-14, Sergio Rey'
+copyright = u'2009-14, PySAL Developers'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -201,7 +201,7 @@ htmlhelp_basename = 'pysaldoc'
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'pysal.tex', u'pysal Documentation',
-   u'Serge Rey', 'manual'),
+   u'PySAL Developers', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
