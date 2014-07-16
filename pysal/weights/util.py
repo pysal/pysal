@@ -408,7 +408,7 @@ def higher_order(w, k=2):
     return pysal.weights.W(neighbors, weights, id_order=ids[:])
 
 
-def higher_order_sp(w, k=2):
+def higher_order_sp(w, k=2, shortest_path=True, diagonal=False):
     """
     Contiguity weights for either a sparse W or pysal.weights.W  for order k
 
@@ -418,6 +418,20 @@ def higher_order_sp(w, k=2):
     w:  [W instance | scipy.sparse.csr.csr_instance]
 
     k: Order of contiguity
+
+    shortest_path: Boolean
+
+                   True: i,j and k-order neighbors if the shortest path for
+                   i,j is k
+
+                   False: i,j are k-order neighbors if there is a path from
+                   i,j of length k
+
+    diagonal:  Boolean
+                
+                False: remove k-order (i,j) joins when i==j
+
+                True:  keep k-order (i,j) joins when i==j
 
     Returns
     -------
@@ -436,14 +450,21 @@ def higher_order_sp(w, k=2):
     >>> w25 = pysal.lat2W(5,5)
     >>> w25.n
     25
-    >>> ws25 = w25.sparse
-    >>> ws25o3 = pysal.weights.higher_order_sp(ws25,3)
-    >>> w25o3 = pysal.weights.higher_order(w25,3)
-    >>> w25o3[12]
-    {1: 1.0, 3: 1.0, 5: 1.0, 9: 1.0, 15: 1.0, 19: 1.0, 21: 1.0, 23: 1.0}
-    >>> pysal.weights.WSP2W(ws25o3)[12]
-    {1: 1.0, 3: 1.0, 5: 1.0, 9: 1.0, 15: 1.0, 19: 1.0, 21: 1.0, 23: 1.0}
-    >>>
+    >>> w25[0]
+    {1: 1.0, 5: 1.0}
+    >>> w25_2 = pysal.weights.util.higher_order_sp(w25, 2)
+    >>> w25_2[0]
+    {10: 1.0, 2: 1.0, 6: 1.0}
+    >>> w25_2 = pysal.weights.util.higher_order_sp(w25, 2, diagonal=True)
+    >>> w25_2[0]
+    {0: 1.0, 10: 1.0, 2: 1.0, 6: 1.0}
+    >>> w25_3 = pysal.weights.util.higher_order_sp(w25, 3)
+    >>> w25_3[0]
+    {15: 1.0, 3: 1.0, 11: 1.0, 7: 1.0}
+    >>> w25_3 = pysal.weights.util.higher_order_sp(w25, 3, shortest_path=False)
+    >>> w25_3[0]
+    {1: 1.0, 3: 1.0, 5: 1.0, 7: 1.0, 11: 1.0, 15: 1.0}
+
     """
     tw = type(w)
     id_order = None
@@ -457,11 +478,17 @@ def higher_order_sp(w, k=2):
     wk = w**k
     rk, ck = wk.nonzero()
     sk = set(zip(rk, ck))
-    for j in range(1, k):
-        wj = w**j
-        rj, cj = wj.nonzero()
-        sj = set(zip(rj, cj))
-        sk.difference_update(sj)
+
+    if shortest_path:
+        for j in range(1, k):
+            wj = w**j
+            rj, cj = wj.nonzero()
+            sj = set(zip(rj, cj))
+            sk.difference_update(sj)
+
+    if not diagonal:
+        sk = set([(i,j) for i,j in sk if i!=j])
+
     d = {}
     if id_order:
         for pair in sk:
@@ -469,11 +496,10 @@ def higher_order_sp(w, k=2):
             #if d.has_key(k):
             k = id_order[k]
             v = id_order[v]
-            if k != v:  # diagonal
-                if k in d:
-                    d[k].append(v)
-                else:
-                    d[k] = [v]
+            if k in d:
+                d[k].append(v)
+            else:
+                d[k] = [v]
         return pysal.W(neighbors=d)
     else:
         for pair in sk:
