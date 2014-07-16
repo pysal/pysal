@@ -422,8 +422,8 @@ def higher_order_sp(w, k=2):
     Returns
     -------
 
-    wk: WSP instance
-        binary sparse contiguity of order k
+    wk: [W instance | WSP instance] type matches type of w argument
+
 
     Notes
     -----
@@ -446,7 +446,9 @@ def higher_order_sp(w, k=2):
     >>>
     """
     tw = type(w)
+    id_order = None
     if tw == pysal.weights.weights.W:
+        id_order = w.id_order
         w = w.sparse
     elif tw != scipy.sparse.csr.csr_matrix:
         print "Unsupported sparse argument."
@@ -461,14 +463,27 @@ def higher_order_sp(w, k=2):
         sj = set(zip(rj, cj))
         sk.difference_update(sj)
     d = {}
-    for pair in sk:
-        k, v = pair
-        #if d.has_key(k):
-        if k in d:
-            d[k].append(v)
-        else:
-            d[k] = [v]
-    return pysal.weights.WSP(pysal.W(neighbors=d).sparse)
+    if id_order:
+        for pair in sk:
+            k, v = pair
+            #if d.has_key(k):
+            k = id_order[k]
+            v = id_order[v]
+            if k != v:  # diagonal
+                if k in d:
+                    d[k].append(v)
+                else:
+                    d[k] = [v]
+        return pysal.W(neighbors=d)
+    else:
+        for pair in sk:
+            k, v = pair
+            #if d.has_key(k):
+            if k in d:
+                d[k].append(v)
+            else:
+                d[k] = [v]
+        return pysal.weights.WSP(pysal.W(neighbors=d).sparse)
 
 
 def w_local_cluster(w):
