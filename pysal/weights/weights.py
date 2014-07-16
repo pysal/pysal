@@ -506,7 +506,7 @@ class W(object):
 
     def remap_ids(self, new_ids):
         '''
-        In place modification throughout `W` of id values from `old_ids` to
+        In place modification throughout `W` of id values from `w.id_order` to
         `new_ids` in all
         ...
 
@@ -514,7 +514,10 @@ class W(object):
         ---------
 
         new_ids     : list/ndarray
-                      Aligned list of new ids to be inserted
+                      Aligned list of new ids to be inserted. Note that first
+                      element of new_ids will replace first element of
+                      w.id_order, second element of new_ids replaces second
+                      element of w.id_order and so on.
 
         Example
         -------
