@@ -8,9 +8,6 @@ python:
   #
 env:
   - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ precise main universe"
-  - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ quantal main universe"
-  - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ raring main universe"
-  - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ saucy main universe"
   - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ trusty main universe"
 
 virtualenv:
