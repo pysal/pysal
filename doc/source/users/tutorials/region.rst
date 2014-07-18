@@ -1,9 +1,9 @@
 ..
 
 .. testsetup:: *
-        
-        import pysal
-        import numpy as np
+
+    import pysal
+    import numpy as np
 
 ***************
 Regionalization
@@ -39,25 +39,25 @@ states displaying similar levels of income throughout this period:
     >>> import pysal
     >>> import numpy as np
     >>> import random
-	>>> f = pysal.open("../pysal/examples/usjoin.csv")
-	>>> pci = np.array([f.by_col[str(y)] for y in range(1929, 2010)])
-	>>> pci = pci.transpose()
-	>>> pci.shape
-	(48, 81)
+    >>> f = pysal.open("../pysal/examples/usjoin.csv")
+    >>> pci = np.array([f.by_col[str(y)] for y in range(1929, 2010)])
+    >>> pci = pci.transpose()
+    >>> pci.shape
+    (48, 81)
 
 We also require set of binary contiguity :ref:`weights<weights>` for the Maxp class:
 
 .. doctest:: 
 
-	>>> w = pysal.open("../pysal/examples/states48.gal").read()
+    >>> w = pysal.open("../pysal/examples/states48.gal").read()
 
 Once we have the attribute data and our weights object we can create an instance of Maxp:
 
 .. doctest:: 
 
-	>>> np.random.seed(100)
+    >>> np.random.seed(100)
     >>> random.seed(10)
-	>>> r = pysal.Maxp(w, pci, floor = 5, floor_variable = np.ones((48, 1)), initial = 99)
+    >>> r = pysal.Maxp(w, pci, floor = 5, floor_variable = np.ones((48, 1)), initial = 99)
 
 Here we are forming regions with a minimum of 5 states in each region, so we set the floor_variable to a simple unit vector to ensure this floor constraint is satisfied. We also specify the initial number of feasible solutions to 99 - which are then searched over to pick the optimal feasible solution to then commence with the more expensive swapping component of the algorithm. [#]_
 
@@ -65,36 +65,36 @@ The Maxp instance s has a number of attributes regarding the solution. First is 
 
 .. doctest:: 
 
-	>>> r.regions
-     [['44', '34', '3', '25', '1', '4', '47'], ['12', '46', '20', '24', '13'], ['14', '45', '35', '30', '39'], ['6', '27', '17', '29', '5', '43'], ['33', '40', '28', '15', '41', '9', '23', '31', '38'], ['37', '8', '0', '7', '21', '2'], ['32', '19', '11', '10', '22'], ['16', '26', '42', '18', '36']]
+    >>> r.regions
+    [['44', '34', '3', '25', '1', '4', '47'], ['12', '46', '20', '24', '13'], ['14', '45', '35', '30', '39'], ['6', '27', '17', '29', '5', '43'], ['33', '40', '28', '15', '41', '9', '23', '31', '38'], ['37', '8', '0', '7', '21', '2'], ['32', '19', '11', '10', '22'], ['16', '26', '42', '18', '36']]
 
 which is a list of eight lists of region ids. For example, the first nested list indicates there are seven states in the first region, while the last region has five states.  To determine which states these are we can read in the names from the original csv file:
 
 .. doctest:: 
 
-	>>> f.header
-	['Name', 'STATE_FIPS', '1929', '1930', '1931', '1932', '1933', '1934', '1935', '1936', '1937', '1938', '1939', '1940', '1941', '1942', '1943', '1944', '1945', '1946', '1947', '1948', '1949', '1950', '1951', '1952', '1953', '1954', '1955', '1956', '1957', '1958', '1959', '1960', '1961', '1962', '1963', '1964', '1965', '1966', '1967', '1968', '1969', '1970', '1971', '1972', '1973', '1974', '1975', '1976', '1977', '1978', '1979', '1980', '1981', '1982', '1983', '1984', '1985', '1986', '1987', '1988', '1989', '1990', '1991', '1992', '1993', '1994', '1995', '1996', '1997', '1998', '1999', '2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009']
-	>>> names = f.by_col('Name')
-	>>> names = np.array(names)
-	>>> print names
-	['Alabama' 'Arizona' 'Arkansas' 'California' 'Colorado' 'Connecticut'
-	 'Delaware' 'Florida' 'Georgia' 'Idaho' 'Illinois' 'Indiana' 'Iowa'
-	 'Kansas' 'Kentucky' 'Louisiana' 'Maine' 'Maryland' 'Massachusetts'
-	 'Michigan' 'Minnesota' 'Mississippi' 'Missouri' 'Montana' 'Nebraska'
-	 'Nevada' 'New Hampshire' 'New Jersey' 'New Mexico' 'New York'
-	 'North Carolina' 'North Dakota' 'Ohio' 'Oklahoma' 'Oregon' 'Pennsylvania'
-	 'Rhode Island' 'South Carolina' 'South Dakota' 'Tennessee' 'Texas' 'Utah'
-	 'Vermont' 'Virginia' 'Washington' 'West Virginia' 'Wisconsin' 'Wyoming']
-	
+    >>> f.header
+    ['Name', 'STATE_FIPS', '1929', '1930', '1931', '1932', '1933', '1934', '1935', '1936', '1937', '1938', '1939', '1940', '1941', '1942', '1943', '1944', '1945', '1946', '1947', '1948', '1949', '1950', '1951', '1952', '1953', '1954', '1955', '1956', '1957', '1958', '1959', '1960', '1961', '1962', '1963', '1964', '1965', '1966', '1967', '1968', '1969', '1970', '1971', '1972', '1973', '1974', '1975', '1976', '1977', '1978', '1979', '1980', '1981', '1982', '1983', '1984', '1985', '1986', '1987', '1988', '1989', '1990', '1991', '1992', '1993', '1994', '1995', '1996', '1997', '1998', '1999', '2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009']
+    >>> names = f.by_col('Name')
+    >>> names = np.array(names)
+    >>> print names
+    ['Alabama' 'Arizona' 'Arkansas' 'California' 'Colorado' 'Connecticut'
+     'Delaware' 'Florida' 'Georgia' 'Idaho' 'Illinois' 'Indiana' 'Iowa'
+     'Kansas' 'Kentucky' 'Louisiana' 'Maine' 'Maryland' 'Massachusetts'
+     'Michigan' 'Minnesota' 'Mississippi' 'Missouri' 'Montana' 'Nebraska'
+     'Nevada' 'New Hampshire' 'New Jersey' 'New Mexico' 'New York'
+     'North Carolina' 'North Dakota' 'Ohio' 'Oklahoma' 'Oregon' 'Pennsylvania'
+     'Rhode Island' 'South Carolina' 'South Dakota' 'Tennessee' 'Texas' 'Utah'
+     'Vermont' 'Virginia' 'Washington' 'West Virginia' 'Wisconsin' 'Wyoming']
+    
 
 and then loop over the region definitions to identify the specific states comprising each of the regions:
 
 .. doctest:: 
 
-	>>> for region in r.regions:
-	...     ids = map(int,region)
-	...     print names[ids]
-	...     
+    >>> for region in r.regions:
+    ...     ids = map(int,region)
+    ...     print names[ids]
+    ...     
     ['Washington' 'Oregon' 'California' 'Nevada' 'Arizona' 'Colorado' 'Wyoming']
     ['Iowa' 'Wisconsin' 'Minnesota' 'Nebraska' 'Kansas']
     ['Kentucky' 'West Virginia' 'Pennsylvania' 'North Carolina' 'Tennessee']
@@ -114,9 +114,9 @@ Maxp instance has been created:
 
 .. doctest:: 
 
-	>>> r.inference()
-	>>> r.pvalue
-	0.01
+    >>> r.inference()
+    >>> r.pvalue
+    0.01
 
 so we see we have a regionalization that is significantly different than a chance partitioning.
 

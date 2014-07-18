@@ -7,10 +7,7 @@ python:
   #- "2.6"
   #
 env:
-  - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ precise main universe"
-  - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ quantal main universe"
-  - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ raring main universe"
-  - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ saucy main universe"
+  #- SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ precise main universe"
   - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ trusty main universe"
 
 virtualenv:
@@ -37,11 +34,13 @@ script:
   #- python -c 'import multiprocessing as mp; print mp.cpu_count()'
   #- pychecker --limit 1000 pysal
   - python setup.py sdist >/dev/null
+  #- nosetests --processes=-1 --process-timeout=60 --verbosity=1 --ignore-files=collection --exclude-dir=pysal/contrib  
   - nosetests
   - cd doc; make pickle; make doctest
 notifications:
     email:
         recipients:
             - sjsrey@gmail.com
+            - phil.stphns@gmail.com
         on_success: always
         on_failure: always
