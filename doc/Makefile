@@ -96,4 +96,3 @@ doctest:
 	rm ../pysal/examples/virginia_queen.swm
 	rm ../pysal/examples/virginia_queen.txt
 	rm ../pysal/examples/virginia_queen.wk1
-
