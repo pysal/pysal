@@ -35,7 +35,7 @@ script:
   #- pychecker --limit 1000 pysal
   - python setup.py sdist >/dev/null
   #- nosetests --processes=-1 --process-timeout=60 --verbosity=1 --ignore-files=collection --exclude-dir=pysal/contrib
-  - nosetests --verbosity=1 --ignore-files=collection --exclude-dir=pysal/contrib
+  - nosetests
   - cd doc; make pickle; make doctest
 notifications:
     email:
