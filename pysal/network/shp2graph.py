@@ -3,6 +3,7 @@
 
 import pysal as ps
 import numpy as np
+import os
 shpf = ps.open(ps.examples.get_path("geodanet/streets.shp"))
 shps = []
 for shp in shpf:
@@ -79,4 +80,7 @@ regions = wed_streets.region_edge.keys()
 
 
 
-
+# cleanup
+files = [ "streets_net."+suffix for suffix in "shp","dbf","shx"]
+for f in files:
+    os.remove(f)
