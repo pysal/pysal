@@ -5,6 +5,13 @@ try:
 except ImportError:
     from distutils.core import setup
 
+from distutils.extension import Extension
+
+try:
+    from Cython.Distutils import build_ext
+except ImportError:
+    raise ImportError("Cython must be installed to build from source.")
+
 import sys
 import shutil
 import os
@@ -13,7 +20,7 @@ if sys.version_info[0] < 3:
 else:
     import builtins
 
-from pysal.version import version as dversion
+#from pysal.version import version as dversion
 
 with open('README.txt') as file:
     long_description = file.read()
@@ -84,7 +91,7 @@ def setup_package():
 
     setup(
         name='PySAL',
-        version=dversion,
+        version=VERSION,
         description="A library of spatial analysis functions.",
         long_description=long_description,
         maintainer="PySAL Developers",
@@ -111,7 +118,10 @@ def setup_package():
         ],
         packages=find_packages(exclude=["*.network", "*.network.*", "network.*", "network"]),
         package_data={'pysal': list(example_data_files)},
-        requires=['scipy']
+        requires=['scipy'],
+        cmdclass = {'build_ext' : build_ext},
+        ext_modules = [Extension('pysal.esda.fast_geary',
+                                 ['pysal/esda/fast_geary.pyx'])],
     )
 
 
