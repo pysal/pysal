@@ -116,7 +116,8 @@ class W(object):
 
     """
 
-    def __init__(self, neighbors, weights=None, ids=None, id_order=None, silent_island_warning=False):
+    def __init__(self, neighbors, weights=None, id_order=None,
+        silent_island_warning=False, ids=None):
         self.silent_island_warning = silent_island_warning
         self.transformations = {}
         self.neighbors = neighbors
@@ -125,7 +126,7 @@ class W(object):
             for key in neighbors:
                 weights[key] = [1.] * len(neighbors[key])
         self.weights = weights
-        self.transformations['O'] = self.weights  # original weights
+        self.transformations['O'] = self.weights.copy()  # original weights
         self.transform = 'O'
         if id_order is None:
             self._id_order = self.neighbors.keys()
@@ -505,17 +506,18 @@ class W(object):
 
     def remap_ids(self, new_ids):
         '''
-        In place modification throughout `W` of id values from `old_ids` to
+        In place modification throughout `W` of id values from `w.id_order` to
         `new_ids` in all
         ...
 
         Arguments
         ---------
 
-        old_ids     : list/ndarray
-                      Aligned list of current ids before remapping
         new_ids     : list/ndarray
-                      Aligned list of new ids to be inserted
+                      Aligned list of new ids to be inserted. Note that first
+                      element of new_ids will replace first element of
+                      w.id_order, second element of new_ids replaces second
+                      element of w.id_order and so on.
 
         Example
         -------
@@ -542,16 +544,18 @@ class W(object):
         else:
             new_neighbors = {}
             new_weights = {}
+            old_transformations = self.transformations['O'].copy()
+            new_transformations = {}
             for o,n in zip(old_ids, new_ids):
                 o_neighbors = self.neighbors[o]
                 o_weights = self.weights[o]
                 n_neighbors = [ new_ids[old_ids.index(j)] for j in o_neighbors]
                 new_neighbors[n] = n_neighbors
                 new_weights[n] = o_weights[:]
-                self.neighbors.pop(o)
-                self.weights.pop(o)
+                new_transformations[n] = old_transformations[o]
             self.neighbors = new_neighbors
             self.weights = new_weights
+            self.transformations["O"] = new_transformations
 
             id_order = [ self._id_order.index(o) for o in old_ids]
             for i,id_ in enumerate(id_order):
