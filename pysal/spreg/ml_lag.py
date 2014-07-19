@@ -15,9 +15,9 @@ import summary_output as SUMMARY
 from w_utils import symmetrize
 try:
     from scipy.optimize import minimize_scalar
-except ImportError as e:
-    print(
-        e, "Maximum Likelihood in PySAL requires SciPy version 0.11 or newer.")
+    minimize_scalar_available = True
+except ImportError:
+    minimize_scalar_available = False
 
 __all__ = ["ML_Lag"]
 
