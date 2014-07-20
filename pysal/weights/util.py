@@ -235,6 +235,7 @@ def regime_weights(regimes):
     >>> regimes = ['n','n','s','s','e','e','w','w','e']
     >>> n = len(regimes)
     >>> w = regime_weights(regimes)
+    PendingDepricationWarning: regime_weights will be reamed to block_weights in PySAL 2.0
     >>> w.neighbors
     {0: [1], 1: [0], 2: [3], 3: [2], 4: [5, 8], 5: [4, 8], 6: [7], 7: [6], 8: [4, 5]}
 
