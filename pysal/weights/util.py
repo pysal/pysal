@@ -8,10 +8,11 @@ import os
 import operator
 import scipy
 
-__all__ = ['lat2W', 'block_weights', 'comb', 'order', 'higher_order', 'shimbel',
-           'remap_ids', 'full2W', 'full', 'WSP2W', 'insert_diagonal', 'get_ids',
-           'get_points_array_from_shapefile', 'min_threshold_distance', 'lat2SW', 'w_local_cluster',
-           'higher_order_sp', 'hexLat2W']
+__all__ = ['lat2W', 'block_weights', 'comb', 'order', 'higher_order',
+           'shimbel', 'remap_ids', 'full2W', 'full', 'WSP2W',
+           'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile',
+           'min_threshold_distance', 'lat2SW', 'w_local_cluster',
+           'higher_order_sp', 'hexLat2W', 'regime_weights']
 
 
 def hexLat2W(nrows=5, ncols=5):
@@ -194,6 +195,59 @@ def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
         w = alt_w
         weights = alt_weights
     return pysal.weights.W(w, weights, ids=ids, id_order=ids[:])
+
+def regime_weights(regimes):
+    """
+    Construct spatial weights for regime neighbors.
+
+    Block contiguity structures are relevant when defining neighbor relations
+    based on membership in a regime. For example, all counties belonging to
+    the same state could be defined as neighbors, in an analysis of all
+    counties in the US.
+
+    Parameters
+    ----------
+    regimes : list or array
+           ids of which regime an observation belongs to
+
+    Returns
+    -------
+
+    W : spatial weights instance
+
+    Examples
+    --------
+
+    >>> from pysal import regime_weights
+    >>> import numpy as np
+    >>> regimes = np.ones(25)
+    >>> regimes[range(10,20)] = 2
+    >>> regimes[range(21,25)] = 3
+    >>> regimes
+    array([ 1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  2.,  2.,  2.,
+            2.,  2.,  2.,  2.,  2.,  2.,  2.,  1.,  3.,  3.,  3.,  3.])
+    >>> w = regime_weights(regimes)
+    PendingDepricationWarning: regime_weights will be reamed to block_weights in PySAL 2.0
+    >>> w.weights[0]
+    [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    >>> w.neighbors[0]
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 20]
+    >>> regimes = ['n','n','s','s','e','e','w','w','e']
+    >>> n = len(regimes)
+    >>> w = regime_weights(regimes)
+    >>> w.neighbors
+    {0: [1], 1: [0], 2: [3], 3: [2], 4: [5, 8], 5: [4, 8], 6: [7], 7: [6], 8: [4, 5]}
+
+    Notes
+    -----
+    regime_weights will be deprecated in PySAL 2.0 and renamed to block_weights.
+
+    """
+    msg = "PendingDepricationWarning: regime_weights will be "
+    msg += "reamed to block_weights in PySAL 2.0"
+    print msg
+    return block_weights(regimes)
+
 
 
 def block_weights(regimes):
