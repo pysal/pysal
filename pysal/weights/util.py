@@ -542,6 +542,8 @@ def higher_order_sp(w, k=2, shortest_path=True, diagonal=False):
                 d[k].append(v)
             else:
                 d[k] = [v]
+        for island in [j for j in id_order if j not in d]:
+            d[island] = []
         return pysal.W(neighbors=d)
     else:
         for pair in sk:
