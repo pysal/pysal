@@ -428,7 +428,8 @@ def higher_order(w, k=2):
 
     Notes
     -----
-    Implements the algorithm in Anselin and Smirnov (1996) [1]_
+    Proper higher order neighbors are returned such that i and j are k-order
+    neighbors iff the shortest path from i-j is of length k.
 
     Examples
     --------
@@ -444,23 +445,9 @@ def higher_order(w, k=2):
     {0: 1.0, 2: 1.0, 6: 1.0}
     >>> w5_2 = higher_order(w5,2)
     >>> w5_2[0]
-    {2: 1.0, 10: 1.0, 6: 1.0}
-
-    References
-    ----------
-    .. [1] Anselin, L. and O. Smirnov (1996) "Efficient algorithms for
-       constructing proper higher order spatial lag operators. Journal of
-       Regional Science, 36, 67-89.
+    {10: 1.0, 2: 1.0, 6: 1.0}
     """
-    info = order(w, k)
-    ids = w.id_order
-    neighbors = {}
-    weights = {}
-    for id_ in ids:
-        nids = [ids[j] for j, o in enumerate(info[id_]) if o == k]
-        neighbors[id_] = nids
-        weights[id_] = [1.0] * len(nids)
-    return pysal.weights.W(neighbors, weights, id_order=ids[:])
+    return higher_order_sp(w, k)
 
 
 def higher_order_sp(w, k=2, shortest_path=True, diagonal=False):
@@ -544,22 +531,18 @@ def higher_order_sp(w, k=2, shortest_path=True, diagonal=False):
     if not diagonal:
         sk = set([(i,j) for i,j in sk if i!=j])
 
-    d = {}
     if id_order:
+        d = dict([(i,[]) for i in id_order])
         for pair in sk:
             k, v = pair
-            #if d.has_key(k):
             k = id_order[k]
             v = id_order[v]
-            if k in d:
-                d[k].append(v)
-            else:
-                d[k] = [v]
+            d[k].append(v)
         return pysal.W(neighbors=d)
     else:
+        d = {}
         for pair in sk:
             k, v = pair
-            #if d.has_key(k):
             if k in d:
                 d[k].append(v)
             else:
