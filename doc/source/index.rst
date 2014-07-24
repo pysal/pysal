@@ -13,10 +13,8 @@ PySAL
 .. raw:: html
 
  <div class="section" id="showcase">
-      <a href="/_images/socal_1.png" />
-      <a href="http://nbviewer.ipython.org/github/pysal/pysal/blob/master/pysal/contrib/viz/taz_example.ipynb?create=1"><img     src="_static/images/socal_1.jpg" border="0" alt="integral_demo"/></a>
-      <a href="http://nbviewer.ipython.org/github/pysal/pysal/blob/master/pysal/contrib/viz/taz_example.ipynb?create=1"><img     src="_static/images/socal_2.jpg" border="0" alt="integral_demo"/></a>
-      <a href="http://nbviewer.ipython.org/github/pysal/pysal/blob/master/pysal/contrib/viz/taz_example.ipynb?create=1"><img     src="_static/images/socal_3.jpg" border="0" alt="integral_demo"/></a>
+      <a href="http://nbviewer.ipython.org/github/pysal/pysal/blob/master/pysal/contrib/viz/taz_example.ipynb?create=1"><img     src="_static/images/socal_2.jpg" border="0" alt="So. Cal. taz network"/></a>
+      <a href="http://nbviewer.ipython.org/github/pysal/pysal/blob/master/pysal/contrib/viz/taz_example.ipynb?create=1"><img     src="_static/images/socal_3.jpg" border="0" alt="County components"/></a>
   </div>
 
 
