@@ -1,4 +1,237 @@
+v<1.8.0>, 2014-07-25
+
+4dce605 Sergio Rey -Merge pull request #500 from sjsrey/higher_order
+891de64 Serge Rey -ENH opt for higher_order
+52fd679 Serge Rey -ENH handle islands in new higher_order
+88f8ee3 Serge Rey -ENH Faster higher order operations
+652cc38 Sergio Rey -Merge pull request #499 from sjsrey/452
+0461fbb Serge Rey -renamed nat_queen.gal for #452
+7eae327 Sergio Rey -Merge pull request #497 from sjsrey/486
+a6cc951 Sergio Rey -ENH fixing doctest for regime_weights deprecation warning
+9a60525 Sergio Rey -ENH Deprecation warning for regime_regime weights #486
+849fec7 Sergio Rey -Merge pull request #494 from pastephens/master
+026c1dd Sergio Rey -Merge pull request #490 from sjsrey/487
+55ae471 Sergio Rey -Update .travis.yml
+d03a4b0 Philip Stephens -Merge branch 'master' of https://github.com/pysal/pysal
+f7319e0 Philip Stephens -turning on testing against scipy 0.9
+144734e Philip Stephens -Merge pull request #492 from sjsrey/b398
+e325284 Philip Stephens -Merge pull request #493 from pedrovma/spreg18
+dd03bdf Serge Rey -BUG cleaning up temporary files for #398
+aab73fe pedrovma -Phil: Skipping several tests that fail due to precision under older scipy.
+a6435df Serge Rey -Merge branch 'master' of github.com:pysal/pysal into 487
+2dd6031 Sergio Rey -Merge pull request #489 from pastephens/master
+bcef484 Philip Stephens -testing suite tweaks
+60e0fea Philip Stephens -ahem
+39e40a2 Philip Stephens -adding in doctests
+9acf1c7 Philip Stephens -turning off mp for testing
+b6b1ba5 Philip Stephens -Only testing trusty
+31e458d Philip Stephens -Merge branch 'master' of https://github.com/pysal/pysal
+41a7891 Sergio Rey -Merge pull request #488 from pedrovma/spreg18
+55c2feb pedrovma -Fixing imports.
+d7eb147 pedrovma -Serge: More tests to skip if scipy less than 11
+290685c Philip Stephens -just doing 2 Ubuntu LTS releases
+c3c0173 Philip Stephens -setting nose call for mp timeouts to 60
+25d3fbf Philip Stephens -tweaking nose call for mp timeouts
+54dfc07 Serge Rey -ENH new kw args for higher_order_sp.
+03e4adf Serge Rey -comparing higher_order_sp as a replacement for implementation of higher_order
+86b71e2 Serge Rey -ENH travis.txt
+d64f10f Serge Rey -ENH new .travis.yml
+62716da Serge Rey -DOC: clarifying remap_ids
+a105cba Serge Rey -BUG: working on a fix for #487.
+51423ae Philip Stephens -Merge branch 'master' of https://github.com/pysal/pysal
+0598d19 Sergio Rey -Merge pull request #484 from sjsrey/docs
+b54778e Serge Rey -ENH errant files only created locally not on travis
+e69daa4 Serge Rey -DOC developers
+87fb4e6 Serge Rey -ENH: cleaning up more test generated files
+a3575cc Sergio Rey -Merge pull request #483 from pedrovma/spreg18
+c582f74 pedrovma -Forwarding Phil's commit: skipping doctests, conditional skip of unit tests
+ead9db2 Philip Stephens -adding my email address
+3382046 Philip Stephens -fixing spacing
+ceab209 Philip Stephens -merging upstream
+545c24c Philip Stephens -Merge branch 'master' of https://github.com/pastephens/pysal
+659c44f Philip Stephens -removing tabs
+90e651b Philip Stephens -increasing process-timeout time
+ff07003 Philip Stephens -adding napoleon back in
+37f4409 Philip Stephens -changes to test suite
+ae9c6b4 Sergio Rey -Merge pull request #482 from sjsrey/remove_test_files
+768191b Sergio Rey -Merge pull request #481 from sjsrey/docs
+55028e3 Philip Stephens -tweaks to travis system
+92033c3 Sergio Rey -DOC cleaning up files after running doctests #398
+1350793 Philip Stephens -Turning off doctests (docstring tests)
+d98bd23 Sergio Rey -DOC contrib updates and links
+9427505 Sergio Rey -Merge pull request #480 from sjsrey/docs
+af4341f Philip Stephens -Merge pull request #479 from sjsrey/block
+da59639 Sergio Rey -DOC cleaning up doctests
+ad6b63e Philip Stephens -Merge pull request #478 from sjsrey/docs
+9ca4012 Philip Stephens -adding more ubuntu repos to test against scipy
+e8cc1a1 Philip Stephens -fix for string sub
+c5bc41a Sergio Rey -ENH Changing regime_weights to block_weights for #455
+cebefd2 Sergio Rey -DOC: link fixes
+d1b6a42 Philip Stephens -testing apt-add
+69f34d5 Philip Stephens -testing apt-add
+1ad3141 Philip Stephens -trying fixes for apt-add
+88783c3 Philip Stephens -Merge pull request #1 from pastephens/scipy
+e8d6b49 Philip Stephens -testing against multiple versions of scipy
+c3f64f4 Sergio Rey -Update setup.cfg
+0bfdda8 Philip Stephens -Merge pull request #477 from sjsrey/kdtree
+d1162ce Philip Stephens -making nose verbose
+938595d Sergio Rey -ENH missing True in example
+c64d6dc Sergio Rey -ENH more checks to handle kdtree changes since scipy 0.11.0
+9c79c98 Philip Stephens -turning on spreg testing
+5e7be37 Philip Stephens -adding multicore processing to unit tests
+8e44dac Sergio Rey -handling check for scipy version and support for older KDTree
+ac7f9f4 Sergio Rey -Merge branch 'kdtree' of github.com:sjsrey/pysal into kdtree
+20da35a Sergio Rey -ENH: for cKDTree #460
+28033fe Philip Stephens -calling process from nosetests command line
+c55ca94 Philip Stephens -testing mp on travis
+b39a43d Sergio Rey -cKDTree working with Distance
+3f5d2bd Philip Stephens -installing
+a672db9 Philip Stephens -fix
+f172b08 Philip Stephens -quick comment to test service hook
+7311d36 Philip Stephens -checking number of cores on travis
+ca52010 Philip Stephens -proper syntax
+601f6bb Philip Stephens -turning off spreg tests for sprints
+28dec2b Dani Arribas-Bel -Merge pull request #476 from sjsrey/e473
+441910d Sergio Rey -redefining w.remap_ids to take only a single arg
+e09c4b3 Sergio Rey -Merge pull request #475 from darribas/fix471
+0a66236 Dani Arribas-Bel -Adding docstrings and error check to fix #471
+5c4dfc9 Philip Stephens -Merge pull request #470 from sjsrey/wsig
+0ce916b Sergio Rey -fixing order of args for api consistency. new keyword args should be added to the end of the function arg list.
+c374bad Philip Stephens -Merge pull request #469 from sjsrey/idfix
+f92d490 Sergio Rey -adjusting for side effects induced by fixing #449
+de852bf Sergio Rey -Fixed remapping and updating the cache when remapping ids
+ec4de59 Sergio Rey -Fixing #449 for regular weights - need to check for sparse class (wsp)
+4513758 Sergio Rey -BUG: remapping ids and fixing mismatch of ids in higher_order
+3ef349d Sergio Rey -made the __iter__ method us a generator
+ab27341 Sergio Rey -Update installation.rst
+3399c59 jlaura -Merge pull request #463 from sjsrey/ignore_git
+8b36a33 Sergio Rey -updating gitignore
+3f4cdb1 Sergio Rey -Merge pull request #462 from sjsrey/sm
+287365e Sergio Rey -ENH: handle the case of an ergodic distribution where one state has 0 probability
+52514ac Serge Rey -ENH: Moving from KDTree to cKDTree
+3311714 jlaura -Merge pull request #458 from sjsrey/vagrant
+1ca6668 Serge Rey -ENH: clusterpy dependency for contrib/clusterpy
+124116b Serge Rey -Merge branch 'master' of github.com:pysal/pysal into vagrant
+813fc8d Sergio Rey -Merge pull request #447 from sjsrey/clusterpy
+04d2bee Serge Rey -ENH: Vagrantfile for PySAL devs and workshops
+ae4d27f Sergio Rey -Merge pull request #456 from sjsrey/B451
+b7a0a6e Serge Rey -BUG: fix for #451 handling W or WSP in higher_order_sp
+9b8c2dd Sergio Rey -Merge pull request #454 from pastephens/foobar
+efb9c5b Philip Stephens -Doing Pep8 again
+fae1747 Philip Stephens -Merge branch 'master' of https://github.com/pysal/pysal
+d4d94ee Philip Stephens -Merge pull request #453 from sjsrey/master
+80a4db5 Sergio Rey -Merge branch 'pedrovma-spreg_up'
+845574d Philip Stephens -Merge branch 'pedrovma-spreg_up'
+8518005 Philip Stephens -Merging conflicts
+df2901d Sergio Rey -Merge branch 'spreg_up' of github.com:pedrovma/pysal into pedrovma-spreg_up
+3538c06 Sergio Rey -Merge pull request #448 from sjsrey/wsp
+978f876 Sergio Rey -DOC: clarifying the role of silent_island_warning
+95d75c7 Sergio Rey -ENH: putting WSP in toplevel namespace
+377ce14 Sergio Rey -ENH: draft api for clusterpy extension
+130ce5b Sergio Rey -Merge branch 'clusterpy' of github.com:sjsrey/pysal into clusterpy
+98dd709 Serge Rey -Merge branch 'master' of github.com:pysal/pysal into clusterpy
+5e006f1 Sergio Rey -Merge pull request #445 from sjsrey/vizcolor
+ccabc00 Sergio Rey -ENH: deprecation of --pylab=inline
+9f2f9b4 Sergio Rey -ENH: unique qualitative color ramp. Also refactoring for future ipython deprecation of --pylab=inline
+9397bd5 Sergio Rey -DOC: update contrib index
+f519c5d Sergio Rey -ENH: south example
+c5d326a Sergio Rey -ENH: maxptabu on all years of pcy us states
+4a92080 Sergio Rey -MNT: Removing personal Vagrantfile
+a5d144f Sergio Rey -ENH: Vagrant file for clusterpy branch
+3c2991c Sergio Rey -ENH: using constant to set threshold in maxptabu
+f1eb15b Sergio Rey -DOC: updating clusterpy docs
+bed898b Sergio Rey -ENH: Fixed CONSTANT variable attachment in cp.Layer
+40ae0b8 Sergio Rey -ENH: working maxp from pipi
+822c1f2 Sergio Rey -ENH: using clusterpy installed from pip
+20ac882 Serge Rey -ENH: update example notebook for clusterpy alias on import
+d4e2899 Serge Rey -ENH: docs for clusterpy contrib
+95d098d Serge Rey -ENH: public api for clusterpy contrib
+ea57873 Serge Rey -ENH: docos
+a04ad1f Serge Rey -ENH: directory reorg
+4970528 Serge Rey -ENH: directory for contrib
+0308920 Serge Rey -ENH more plots
+0931aa4 Serge Rey -ENH clusterpy with viz in progress
+bd49c49 Serge Rey -ENH Adding handlers for gal and csv files
+a4ab452 Serge Rey -ENH: examples (assumes clusterpy is in PYTHONPATH)
+98f2511 Serge Rey -ENH start of contrib module for clusterpy
+7308dbd Sergio Rey -Merge pull request #444 from pastephens/scipy_dependency
+cb20da1 Philip Stephens -pychecker
+021f6da Philip Stephens -scipy dependency handling
+fcbefdb Philip Stephens -Merge remote-tracking branch 'upstream/master'
+69a09d9 pedrovma -Fixing Chow's test output and docs.
+795560d pedrovma -Updating spreg: several minor bug and documentation fixes.
+64ac61c jlaura -Merge pull request #442 from sjsrey/wmd
+be6d8df Sergio Rey -ENH Marking private functions and changing file opening  to use with
+d23ba79 Sergio Rey -fixed kernel wmd for updated wmd structure
+551f85a Sergio Rey -update source
+0facb97 Sergio Rey -intersection example
+fefeff5 Sergio Rey -- initial commits of wmd work from anselin, rey and li 2014
+81451b8 Sergio Rey -Merge pull request #440 from sjsrey/side
+36629e4 Sergio Rey -ENH: math fixes and typo corrections
+e37c857 Sergio Rey -ENH: sidebar for Releases and installation doc update
+01a6f46 Sergio Rey -Merge pull request #439 from sjsrey/events
+47f6311 Sergio Rey -- events
+13be2b8 Sergio Rey -Merge pull request #438 from sjsrey/flake
+38b747b Philip Stephens -fixing broken link
+b7cf59b Sergio Rey -Update news.rst
+08da796 Serge Rey -ENH: pruning to respect flake8
+d9bd43f jlaura -Merge pull request #437 from sjsrey/b436
+34b9f12 Serge Rey -BUG: fix for removal of scipy.stat._support #436
+3f8c6fb Philip Stephens -pychecker not available from pypi
+9cca46a Philip Stephens -Adding pychecker output to Travis script
+ef43049 Dani Arribas-Bel -Merge pull request #431 from sjsrey/ws
+b7efce5 Serge Rey -FOSS4G
+4a50b41 jlaura -Merge pull request #430 from jlaura/network
+c7d7a27 Jay -Updated tests, fixed distance segmentation
+1242b33 jlaura -Merge pull request #429 from sjsrey/network
+ab0415f Sergio Rey -moving analytics out of wed class and into their own module
+7f293bd jlaura -Merge pull request #428 from sjsrey/network
+54cb6b8 Sergio Rey -fixing doctest
+c9d7cc2 Sergio Rey -testing for planarity
+57508ce Sergio Rey -Merge branch 'master' of github.com:pysal/pysal into network
+ace30cd Sergio Rey -Merge pull request #427 from pastephens/master
+c0fe6c8 Philip Stephens -merging conflicts
+2d4d23c Philip Stephens -a note about using reference citations
+d124bbb Philip Stephens -changes to dev docs
+66a508c Serge Rey -update - need to work on plane sweep for a grid network
+3caceb1 Serge Rey -plane sweep for intersection detection
+d9750eb Serge Rey -Merge branch 'master' of github.com:pysal/pysal into network
+8fde78c Sergio Rey -Merge pull request #425 from darribas/viz2contrib
+ada1a52 Dani Arribas-Bel -Adding link to wiki in github
+df027d8 Dani Arribas-Bel -Changes in documentation to include viz in contrib page
+a27aee4 Dani Arribas-Bel -Apparent diffs without effect from moving machines
+f3580e2 Sergio Rey -Merge pull request #423 from sjsrey/master
+3ea92d6 Sergio Rey -Update news.rst
+52ac216 Sergio Rey -Merge pull request #422 from sjsrey/napoleon
+ba65530 Sergio Rey -ENH: Update doc instructions for napoleon dependency
+b8cc1c4 Philip Stephens -Merge pull request #421 from pedrovma/examples
+005ca6c pedrovma -Adding files used in some examples as per Luc's request.
+b849264 jlaura -Update README.md
+3ab905b jlaura -Updated LocalMoransI Docs to match code.
+a900055 Philip Stephens -Updating scipy requirement
+6e506c2 Sergio Rey -Update news.rst
+506cead Philip Stephens -fixed link to pythonanywhere
+3c6b35a Sergio Rey -Merge pull request #419 from pysal/doc-fixes-1.7
+c2eff27 Sergio Rey -Merge pull request #393 from pastephens/doc-fixes-1.7
+feac85d Philip Stephens -doctest fix
+4da37c5 Philip Stephens -merging master to local
+294bddf Philip Stephens -installing pysal to Travis python environment
+aec1609 jlaura -Merge pull request #417 from sjsrey/hex
+bc2a09b Sergio Rey -ENH hex lattice W for #416
+d6e3a11 Philip Stephens -Merge branch 'master' of https://github.com/pysal/pysal into doc-fixes-1.7
+b256f9c Sergio Rey -Merge pull request #415 from pedrovma/spreg17
+47f7296 pedrovma -Commenting out tests that are blocking Travis.
+a384828 Sergio Rey -Merge pull request #407 from sjsrey/viz
+3143223 Sergio Rey -Update LICENSE.txt
+d01153e sjsrey -removing legacy
+b52d293 sjsrey -update paths
+9b9f900 sjsrey -adding example for taz
+bb273db sjsrey -TAZ example of three layers
+76c0db6 sjsrey -Removing legacy code
+108009a Sergio Rey -Merge branch 'master' of github.com:pysal/pysal
+
 v<1.7.0>, 2014-01-29
+
 36d268f Philip Stephens -Merge pull request #400 from sjsrey/mldoc
 c2c4741 Serge Rey -Formatting ml docs
 685f5e3 Sergio Rey -Merge pull request #399 from sjsrey/master
