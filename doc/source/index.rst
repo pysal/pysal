@@ -12,6 +12,35 @@ PySAL
 
 .. raw:: html
 
+ <div class="section" id="showcase">
+      <a href="http://nbviewer.ipython.org/github/pysal/pysal/blob/master/pysal/contrib/viz/taz_example.ipynb?create=1"><img     src="_static/images/socal_2.jpg" border="0" alt="So. Cal. taz network"/></a>
+      <a href="http://nbviewer.ipython.org/github/pysal/pysal/blob/master/pysal/contrib/viz/taz_example.ipynb?create=1"><img     src="_static/images/socal_3.jpg" border="0" alt="County components"/></a>
+  </div>
+
+
+.. sidebar:: Releases
+
+    - `Stable 1.7.0 - Januay 2014 <users/installation.html>`_
+    - `Development 1.8.0dev  <http://github.com/pysal/pysal/>`_
+
+PySAL is an open source library of spatial analysis functions written in
+Python intended to support the development of high level applications.
+PySAL is open source under the `BSD License`_.
+
+.. _BSD License: license.html
+
+
+.. toctree::
+    :maxdepth: 1
+
+    News <news>
+    Funding <funding>
+    users/index
+    developers/index
+    library/index
+
+.. raw:: html
+
   <style type="text/css">
   table.linktable {
       margin: 10px;
@@ -53,25 +82,4 @@ PySAL
     <td><strong><small><a href="http://github.com/pysal/pysal/issues?state=open">Report Bugs</a></small></strong></td>
   </tr>
   </table>
-
-.. sidebar:: Releases
-
-    - `Stable 1.7.0 - Januay 2014 <users/installation.html>`_
-    - `Development 1.8.0dev  <http://github.com/pysal/pysal/>`_
-
-PySAL is an open source library of spatial analysis functions written in
-Python intended to support the development of high level applications.
-PySAL is licensed under the `BSD License`_.
-
-.. _BSD License: http://opensource.org/licenses/bsd-license.php 
-
-
-.. toctree::
-    :maxdepth: 1
-
-    News <news>
-    Funding <funding>
-    users/index
-    developers/index
-    library/index
 

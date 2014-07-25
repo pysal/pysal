@@ -1,5 +1,8 @@
-Copyright (c) 2007-2014, PySAL Developers
-All rights reserved.
+PySAL License
+=============
+
+| Copyright (c) 2007-2014, PySAL Developers
+| All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -12,7 +15,7 @@ modification, are permitted provided that the following conditions are met:
   documentation and/or other materials provided with the distribution.
 
 * Neither the name of the GeoDa Center for Geospatial Analysis and Computation
-  nor the names of its contributors may be used to endorse or promote products
+  nor the names of PySAL contributors may be used to endorse or promote products
   derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
