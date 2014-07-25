@@ -186,8 +186,8 @@ Issues (100):
 * :ghissue:`388`: update testing procedures docs
 * :ghissue:`402`: release changes
 
-
 v<1.7.0>, 2014-01-29
+
 36d268f Philip Stephens -Merge pull request #400 from sjsrey/mldoc
 c2c4741 Serge Rey -Formatting ml docs
 685f5e3 Sergio Rey -Merge pull request #399 from sjsrey/master
