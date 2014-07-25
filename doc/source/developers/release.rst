@@ -80,6 +80,7 @@ Put master back to dev
 - Change MAJOR, MINOR version in setup script.
 - Change pysal/version.py to dev number
 - Change the docs version from X.x to X.xdev by editing doc/source/conf.py in two places.
+- Update the release schedule in doc/source/developers/guidelines.rst
 
 .. _upload: http://docs.python.org/2.7/distutils/uploading.html
 .. _registered: http://docs.python.org/2.7/distutils/packageindex.html
