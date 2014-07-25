@@ -12,10 +12,9 @@ Prepare the release
 - Check all tests pass.
 - Update CHANGELOG::
 
-     $ git log --pretty="%h %an -%s" --since="2013-02-01" >> cghlog
+     $ python tools/github_stats.py >> chglog
 
-  - Prepend `chglog` to `CHANGELOG` and edit
-
+- Prepend `chglog` to `CHANGELOG` and edit
 - Edit THANKS and README and README.md if needed.
 - Change MAJOR, MINOR version in setup script.
 - Change pysal/version.py to non-dev number
