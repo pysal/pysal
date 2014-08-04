@@ -118,8 +118,9 @@ def map_poly_shp(shp, which='all', setup=True):
     ---------
 
     shp             : iterable
-                      PySAL polygon iterable with the attribute `bbox` (e.g.
-                      shape object from `ps.open` a poly shapefile)
+                      PySAL polygon iterable (e.g. shape object from `ps.open`
+                      a poly shapefile). If setup=True, `shp` requires the
+                      attribute `bbox`
     which           : str/list
                       List of booleans for which polygons of the shapefile to
                       be included (True) or excluded (False)
@@ -159,6 +160,30 @@ def map_poly_shp(shp, which='all', setup=True):
     if setup:
         _ = _add_axes2col(pc, shp.bbox)
     pc.shp2dbf_row = rows
+    return pc
+
+def polys2col(polys):
+    '''
+    Barebones utility to convert PySAL `Polygon` into Matplotlib
+    `PolyCollection`
+    ...
+
+    Arguments
+    ---------
+    polys       : list/iteratble
+                  Sequence of `pysal.Polygon` objects
+
+    Returns
+    -------
+    pc          : PolyCollection
+                  Matplotlib object containing the patch with polygons in `polys`
+    '''
+    patches = []
+    for shape in polys:
+        for ring in shape.parts:
+            xy = np.array(ring)
+            patches.append(xy)
+    pc = PolyCollection(patches)
     return pc
 
 def setup_ax(polyCos_list, ax=None):
@@ -551,9 +576,36 @@ def _expand_values(values, shp2dbf_row):
     
 
 if __name__ == '__main__':
+    import cartopy.crs as ccrs
 
-    shp_link = ps.examples.get_paht('natregimes.shp')
+    shp_link = '/Users/dani/Desktop/Untitled.shp'
+    shp_link = '/Users/dani/Desktop/london/boroughs.shp'
+    shp = ps.open(shp_link)
+    for poly in shp:
+        polyC = poly2col([poly])
+        f = plt.figure()
+        extent = [poly.bbox[0], poly.bbox[2], poly.bbox[1], poly.bbox[3]]
+        ax = plt.subplot(1, 1, 1)
+        ax.add_collection(polyC)
+        ax.set_xlim((poly.bbox[0], poly.bbox[2]))
+        ax.set_ylim((poly.bbox[1], poly.bbox[3]))
+        f.add_axes(ax)
+        break
+    plt.show()
     '''
+    shp_link = ps.examples.get_path('/Users/dani/Desktop/london/boroughs.shp')
+    f = plt.figure()
+    for i, poly in enumerate(ps.open(shp_link)):
+        extent = [poly.bbox[0], poly.bbox[2], poly.bbox[1], poly.bbox[3]]
+        polyP = map_poly_shp([poly], setup=False)
+        polyP.set_transform(ccrs.Geodetic())
+        ax = plt.subplot(1, 1, i+1, projection=ccrs.PlateCarree())
+        ax.set_extent(extent)
+        ax.add_collection(polyP)
+        f.add_axes(ax)
+        break
+    plt.show()
+
     data = 'none'
     if data == 'poly':
         shp_link = ps.examples.get_path("sids2.shp")
