@@ -34,6 +34,9 @@ def map_point_shp(shp, which='all'):
                       PySAL point iterable with the attribute `bbox` (e.g.
                       shape object from `ps.open` a poly shapefile)
     which           : str/list
+    setup           : True
+                      [Optional. Default=True] If True, adds axes with proper
+                      limits
 
     Returns
     -------
@@ -52,7 +55,8 @@ def map_point_shp(shp, which='all'):
                     pts.append(pt)
     pts = np.array(pts)
     sc = plt.scatter(pts[:, 0], pts[:, 1])
-    _ = _add_axes2col(sc, shp.bbox)
+    if setup:
+        _ = _add_axes2col(sc, shp.bbox)
     return sc
 
 def map_line_shp(shp, which='all'):
@@ -67,6 +71,11 @@ def map_line_shp(shp, which='all'):
                       PySAL line iterable with the attribute `bbox` (e.g.
                       shape object from `ps.open` a poly shapefile)
     which           : str/list
+                      List of booleans for which polygons of the shapefile to
+                      be included (True) or excluded (False)
+    setup           : True
+                      [Optional. Default=True] If True, adds axes with proper
+                      limits
 
     Returns
     -------
@@ -95,11 +104,12 @@ def map_line_shp(shp, which='all'):
                     rows.append(i)
                 i += 1
     lc = LineCollection(patches)
-    _ = _add_axes2col(lc, shp.bbox)
+    if setup:
+        _ = _add_axes2col(lc, shp.bbox)
     lc.shp2dbf_row = rows
     return lc
 
-def map_poly_shp(shp, which='all'):
+def map_poly_shp(shp, which='all', setup=True):
     '''
     Create a map object from a polygon shape
     ...
@@ -113,6 +123,9 @@ def map_poly_shp(shp, which='all'):
     which           : str/list
                       List of booleans for which polygons of the shapefile to
                       be included (True) or excluded (False)
+    setup           : True
+                      [Optional. Default=True] If True, adds axes with proper
+                      limits
 
     Returns
     -------
@@ -143,7 +156,8 @@ def map_poly_shp(shp, which='all'):
                     rows.append(i)
                 i += 1
     pc = PolyCollection(patches)
-    _ = _add_axes2col(pc, shp.bbox)
+    if setup:
+        _ = _add_axes2col(pc, shp.bbox)
     pc.shp2dbf_row = rows
     return pc
 
@@ -538,16 +552,16 @@ def _expand_values(values, shp2dbf_row):
 
 if __name__ == '__main__':
 
+    shp_link = ps.examples.get_paht('natregimes.shp')
+    '''
     data = 'none'
     if data == 'poly':
         shp_link = ps.examples.get_path("sids2.shp")
         shp_link = ps.examples.get_path("Polygon.shp")
         dbf = ps.open(shp_link.replace('.shp', '.dbf'))
-        '''
-        values = np.array(dbf.by_col("SIDR74"))
+        #values = np.array(dbf.by_col("SIDR74"))
         #values[: values.shape[0]/2] = 1
         #values[values.shape[0]/2: ] = 0
-        '''
         patchco = map_poly_shp(ps.open(shp_link))
         #patchco = base_choropleth_classif(shp_link, np.random.random(3))
         #patchco = plot_choropleth(shp_link, np.random.random(3), 'quantiles')
@@ -564,20 +578,20 @@ if __name__ == '__main__':
         mobj = map_line_shp(ps.open(shp_link))
         patchco = base_choropleth_unique(mobj, values)
 
-    '''
-    which = values > 1.
+    which = False
+    if which:
+        which = values > 1.
 
-    for shp_link in [shp_link]:
+        for shp_link in [shp_link]:
 
-        fig = plt.figure()
-        patchco = map_poly_shp(shp_link)
-        patchcoB = map_poly_shp(shp_link, which=which)
-        patchco.set_facecolor('none')
-        ax = setup_ax([patchco, patchcoB])
-        fig.add_axes(ax)
-        plt.show()
-        break
-    '''
+            fig = plt.figure()
+            patchco = map_poly_shp(shp_link)
+            patchcoB = map_poly_shp(shp_link, which=which)
+            patchco.set_facecolor('none')
+            ax = setup_ax([patchco, patchcoB])
+            fig.add_axes(ax)
+            plt.show()
+            break
 
     xy = (((0, 0), (0, 0)), ((2, 1), (2, 1)), ((3, 1), (3, 1)), ((2, 5), (2, 5)))
     xy = np.array([[10, 30], [20, 20]])
@@ -595,4 +609,5 @@ if __name__ == '__main__':
     fig.add_axes(ax)
     #ax = setup_ax([pc], ax)
     plt.show()
+    '''
 
