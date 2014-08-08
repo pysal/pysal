@@ -22,7 +22,7 @@ from matplotlib.patches import Polygon
 from matplotlib.path import Path
 from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection
 
-def map_point_shp(shp, which='all'):
+def map_point_shp(shp, which='all', setup=True):
     '''
     Create a map object from a point shape
     ...
@@ -59,7 +59,7 @@ def map_point_shp(shp, which='all'):
         _ = _add_axes2col(sc, shp.bbox)
     return sc
 
-def map_line_shp(shp, which='all'):
+def map_line_shp(shp, which='all', setup=True):
     '''
     Create a map object from a line shape
     ...
@@ -521,7 +521,7 @@ def base_choropleth_classif(map_obj, values, classification='quantiles', \
             classification = ps.esda.mapclassify.Fisher_Jenks_Sampled(values,k)
         else:
             classification = ps.Fisher_Jenks(values,k)
-        boundaries = classification.bins[:]
+        boundaries = classification.bins[:].tolist()
 
     map_obj.set_alpha(0.4)
 
