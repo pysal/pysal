@@ -251,8 +251,8 @@ class TestFisherJenks(unittest.TestCase):
     def test_Fisher_Jenks(self):
         fj = Fisher_Jenks(self.V)
         self.assertEquals(fj.adcm, 799.24000000000001)
-        self.assertEquals(fj.bins, [75.290000000000006, 192.05000000000001,
-                                    370.5, 722.85000000000002, 4111.45])
+        np.testing.assert_array_almost_equal(fj.bins, np.array([   75.29,   192.05,   370.5 ,
+                                                                722.85,  4111.45]))
         np.testing.assert_array_almost_equal(fj.counts, np.array([49, 3, 4,
                                                                   1, 1]))
 
