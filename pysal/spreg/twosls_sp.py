@@ -16,7 +16,9 @@ from utils import get_lags, set_endog, sp_att, set_warn
 
 __all__ = ["GM_Lag"]
 
+
 class BaseGM_Lag(TSLS.BaseTSLS):
+
     """
     Spatial two stage least squares (S2SLS) (note: no consistency checks,
     diagnostics or constant added); Anselin (1988) [1]_
@@ -139,18 +141,18 @@ class BaseGM_Lag(TSLS.BaseTSLS):
     >>> X = np.hstack((np.ones(y.shape),X))
     >>> reg=BaseGM_Lag(y, X, yend=yd2, q=q2, w=w.sparse, w_lags=w_lags)
     >>> reg.betas
-    array([[  4.53017056e+01],
-           [  6.20888617e-01],
-           [ -4.80723451e-01],
-           [  2.83622122e-02]])
+    array([[ 45.30170561],
+           [  0.62088862],
+           [ -0.48072345],
+           [  0.02836221]])
     >>> D.se_betas(reg)
     array([ 17.91278862,   0.52486082,   0.1822815 ,   0.31740089])
     >>> reg=BaseGM_Lag(y, X, yend=yd2, q=q2, w=w.sparse, w_lags=w_lags, robust='white')
     >>> reg.betas
-    array([[  4.53017056e+01],
-           [  6.20888617e-01],
-           [ -4.80723451e-01],
-           [  2.83622122e-02]])
+    array([[ 45.30170561],
+           [  0.62088862],
+           [ -0.48072345],
+           [  0.02836221]])
     >>> D.se_betas(reg)
     array([ 20.47077481,   0.50613931,   0.20138425,   0.38028295])
     >>> # instrument for HOVAL with DISCBD
@@ -173,15 +175,16 @@ class BaseGM_Lag(TSLS.BaseTSLS):
 
     """
 
-    def __init__(self, y, x, yend=None, q=None,\
-                 w=None, w_lags=1, lag_q=True,\
+    def __init__(self, y, x, yend=None, q=None,
+                 w=None, w_lags=1, lag_q=True,
                  robust=None, gwk=None, sig2n_k=False):
 
-        TSLS.BaseTSLS.__init__(self, y=y, x=x, yend=yend, q=q,\
-                               robust=robust, gwk=gwk, sig2n_k=sig2n_k)        
+        TSLS.BaseTSLS.__init__(self, y=y, x=x, yend=yend, q=q,
+                               robust=robust, gwk=gwk, sig2n_k=sig2n_k)
 
 
 class GM_Lag(BaseGM_Lag):
+
     """
     Spatial two stage least squares (S2SLS) with results and diagnostics; 
     Anselin (1988) [1]_
@@ -345,7 +348,7 @@ class GM_Lag(BaseGM_Lag):
     .. [1] Anselin, L. (1988) "Spatial Econometrics: Methods and Models".
     Kluwer Academic Publishers. Dordrecht.
 
-    
+
     Examples
     --------
 
@@ -365,7 +368,7 @@ class GM_Lag(BaseGM_Lag):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
-    
+
     Extract the HOVAL column (home value) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -401,7 +404,7 @@ class GM_Lag(BaseGM_Lag):
     easily performed in the following way:
 
     >>> w.transform = 'r'
-    
+
     This class runs a lag model, which means that includes the spatial lag of
     the dependent variable on the right-hand side of the equation. If we want
     to have the names of the variables printed in the
@@ -410,10 +413,10 @@ class GM_Lag(BaseGM_Lag):
 
     >>> reg=GM_Lag(y, X, w=w, w_lags=2, name_x=['inc', 'crime'], name_y='hoval', name_ds='columbus')
     >>> reg.betas
-    array([[  4.53017056e+01],
-           [  6.20888617e-01],
-           [ -4.80723451e-01],
-           [  2.83622122e-02]])
+    array([[ 45.30170561],
+           [  0.62088862],
+           [ -0.48072345],
+           [  0.02836221]])
 
     Once the model is run, we can obtain the standard error of the coefficient
     estimates by calling the diagnostics module:
@@ -427,10 +430,10 @@ class GM_Lag(BaseGM_Lag):
 
     >>> reg=GM_Lag(y, X, w=w, w_lags=2, robust='white', name_x=['inc', 'crime'], name_y='hoval', name_ds='columbus')
     >>> reg.betas
-    array([[  4.53017056e+01],
-           [  6.20888617e-01],
-           [ -4.80723451e-01],
-           [  2.83622122e-02]])
+    array([[ 45.30170561],
+           [  0.62088862],
+           [ -0.48072345],
+           [  0.02836221]])
 
     And we can access the standard errors from the model object:
 
@@ -467,12 +470,13 @@ class GM_Lag(BaseGM_Lag):
     array([ 53.0829123 ,   1.02511494,   0.57589064,   0.59891744])
 
     """
-    def __init__(self, y, x, yend=None, q=None,\
-                 w=None, w_lags=1, lag_q=True,\
-                 robust=None, gwk=None, sig2n_k=False,\
-                 spat_diag=False,\
-                 vm=False, name_y=None, name_x=None,\
-                 name_yend=None, name_q=None,\
+
+    def __init__(self, y, x, yend=None, q=None,
+                 w=None, w_lags=1, lag_q=True,
+                 robust=None, gwk=None, sig2n_k=False,
+                 spat_diag=False,
+                 vm=False, name_y=None, name_x=None,
+                 name_yend=None, name_q=None,
                  name_w=None, name_gwk=None, name_ds=None):
 
         n = USER.check_arrays(x, yend, q)
@@ -481,13 +485,15 @@ class GM_Lag(BaseGM_Lag):
         USER.check_robust(robust, gwk)
         yend2, q2 = set_endog(y, x, w, yend, q, w_lags, lag_q)
         x_constant = USER.check_constant(x)
-        BaseGM_Lag.__init__(self, y=y, x=x_constant, w=w.sparse, yend=yend2, q=q2,\
-                            w_lags=w_lags, robust=robust, gwk=gwk,\
-                            lag_q=lag_q, sig2n_k=sig2n_k)
-        self.predy_e, self.e_pred, warn = sp_att(w,self.y,self.predy,\
-                      yend2[:,-1].reshape(self.n,1),self.betas[-1])
-        set_warn(self,warn)
-        self.title = "SPATIAL TWO STAGE LEAST SQUARES"        
+        BaseGM_Lag.__init__(
+            self, y=y, x=x_constant, w=w.sparse, yend=yend2, q=q2,
+            w_lags=w_lags, robust=robust, gwk=gwk,
+            lag_q=lag_q, sig2n_k=sig2n_k)
+        self.rho = self.betas[-1]
+        self.predy_e, self.e_pred, warn = sp_att(w, self.y, self.predy,
+                                                 yend2[:, -1].reshape(self.n, 1), self.rho)
+        set_warn(self, warn)
+        self.title = "SPATIAL TWO STAGE LEAST SQUARES"
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
@@ -495,7 +501,8 @@ class GM_Lag(BaseGM_Lag):
         self.name_yend.append(USER.set_name_yend_sp(self.name_y))
         self.name_z = self.name_x + self.name_yend
         self.name_q = USER.set_name_q(name_q, q)
-        self.name_q.extend(USER.set_name_q_sp(self.name_x, w_lags, self.name_q, lag_q))
+        self.name_q.extend(
+            USER.set_name_q_sp(self.name_x, w_lags, self.name_q, lag_q))
         self.name_h = USER.set_name_h(self.name_x, self.name_q)
         self.robust = USER.set_robust(robust)
         self.name_w = USER.set_name_w(name_w, w)
@@ -506,7 +513,7 @@ class GM_Lag(BaseGM_Lag):
 def _test():
     import doctest
     start_suppress = np.get_printoptions()['suppress']
-    np.set_printoptions(suppress=True)    
+    np.set_printoptions(suppress=True)
     doctest.testmod()
     np.set_printoptions(suppress=start_suppress)
 
@@ -516,9 +523,9 @@ if __name__ == '__main__':
 
     import numpy as np
     import pysal
-    db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
+    db = pysal.open(pysal.examples.get_path("columbus.dbf"), 'r')
     y_var = 'CRIME'
-    y = np.array([db.by_col(y_var)]).reshape(49,1)
+    y = np.array([db.by_col(y_var)]).reshape(49, 1)
     x_var = ['INC']
     x = np.array([db.by_col(name) for name in x_var]).T
     yd_var = ['HOVAL']
@@ -527,7 +534,7 @@ if __name__ == '__main__':
     q = np.array([db.by_col(name) for name in q_var]).T
     w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
     w.transform = 'r'
-    model = GM_Lag(y, x, yd, q, w=w, spat_diag=True, name_y=y_var, name_x=x_var, name_yend=yd_var, name_q=q_var, name_ds='columbus', name_w='columbus.gal')
+    model = GM_Lag(
+        y, x, yd, q, w=w, spat_diag=True, name_y=y_var, name_x=x_var,
+        name_yend=yd_var, name_q=q_var, name_ds='columbus', name_w='columbus.gal')
     print model.summary
-
-

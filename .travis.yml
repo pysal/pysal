@@ -1,32 +1,46 @@
 language: python
+branches:
+only:
+  - master
 python:
   - "2.7"
   #- "2.6"
   #
+env:
+  - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ precise main universe"
+  - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ trusty main universe"
+
 virtualenv:
   system_site_packages: true
 
 before_install:
-  - "sudo apt-get update -qq"
-  - "sudo apt-get install -qq libgeos-3.2.2 libgeos-dev python-numpy python-scipy"
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq libgeos-3.2.2 libgeos-dev python-numpy python-scipy
+  - sudo apt-add-repository "$SCIPY_VERSION"
+  - sudo apt-get update -qq
+  - sudo apt-get --only-upgrade install -qq python-numpy python-scipy
 
 install:
-  - "pip install -q -r requirements.txt --use-mirrors"
-  - "pip install coveralls --use-mirrors"
-  - "sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm"
-  #- "pip install pysal --use-mirrors"
-  #- "pip uninstall -y pysal"
+  - pip install -q -r travis.txt
+  #- sudo pip install http://sourceforge.net/projects/pychecker/files/pychecker/0.8.19/pychecker-0.8.19.tar.gz/download
+  #- pip install coveralls
+  - sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm
 
 script: 
-  - python -c 'import numpy; print numpy.version.version'
-  - python -c 'import scipy; print scipy.version.version'
+  - python -c 'import numpy; print numpy.__version__'
+  - python -c 'import scipy; print scipy.__version__'
+  - python setup.py install  >/dev/null
   - python -c 'import pysal; print pysal.version'
-  - nosetests 
+  #- python -c 'import multiprocessing as mp; print mp.cpu_count()'
+  #- pychecker --limit 1000 pysal
   - python setup.py sdist >/dev/null
+  #- nosetests --processes=-1 --process-timeout=60 --verbosity=1 --ignore-files=collection --exclude-dir=pysal/contrib
+  - nosetests
   - cd doc; make pickle; make doctest
 notifications:
     email:
         recipients:
             - sjsrey@gmail.com
+            - phil.stphns@gmail.com
         on_success: always
         on_failure: always

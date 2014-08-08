@@ -55,7 +55,7 @@ class Geary:
                      p-value based on permutations (one-tailed)
                      null: sptial randomness
                      alternative: the observed C is extreme
-                                  it is either extremely high or extremely low
+                     it is either extremely high or extremely low
     EC_sim         : float (if permutations!=0)
                      average value of C from permutations
     VC_sim         : float (if permutations!=0)

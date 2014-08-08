@@ -15,7 +15,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
     as an R object and writes it out as an ASCII text representation of
     the R object.
 
-    An exemplary GeoBUGS text file is as follows:
+    An exemplary GeoBUGS text file is as follows.
     list([CARD],[ADJ],[WGT],[SUMNUMNEIGH])
     where [CARD] and [ADJ] are required but the others are optional.
     PySAL assumes [CARD] and [ADJ] always exist in an input text file.
@@ -25,17 +25,25 @@ class GeoBUGSTextIO(FileIO.FileIO):
     PySAL does not apply text wrapping during file writing.
 
     In the above example,
-    [CARD]: num=c([a list of comma-splitted neighbor cardinalities])
-    [ADJ]: adj=c([a list of comma-splitted neighbor IDs])
-           if caridnality is zero, neighbor IDs are skipped.
-           The ordering of observations is the same in both [CARD] and
-           [ADJ].
-           Neighbor IDs are record numbers starting from one.
-    [WGT]: weights=c([a list of comma-splitted weights])
-           The restrictions for [ADJ] also apply to [WGT].
-    [SUMNUMNEIGH]: sumNumNeigh=[The total number of neighbor pairs]
-                   the total number of neighbor pairs  is an integer
-                   value and the same as the sum of neighbor cardinalities.
+
+    [CARD]:
+        num=c([a list of comma-splitted neighbor cardinalities])
+
+    [ADJ]:
+        adj=c([a list of comma-splitted neighbor IDs])
+        if caridnality is zero, neighbor IDs are skipped.
+        The ordering of observations is the same in both [CARD] and
+        [ADJ].
+        Neighbor IDs are record numbers starting from one.
+
+    [WGT]:
+        weights=c([a list of comma-splitted weights])
+        The restrictions for [ADJ] also apply to [WGT].
+
+    [SUMNUMNEIGH]: 
+        sumNumNeigh=[The total number of neighbor pairs]
+        the total number of neighbor pairs  is an integer
+        value and the same as the sum of neighbor cardinalities.
 
     Notes
     -----
@@ -46,7 +54,9 @@ class GeoBUGSTextIO(FileIO.FileIO):
     References
     ----------
     Thomas, A., Best, N., Lunn, D., Arnold, R., and Spiegelhalter, D.
+
     (2004) GeoBUGS User Manual.
+
     R spdep nb2WB function help file.
 
     """
@@ -60,17 +70,12 @@ class GeoBUGSTextIO(FileIO.FileIO):
         self.file = open(self.dataPath, self.mode)
 
     def read(self, n=-1):
-        self._complain_ifclosed(self.closed)
-        return self._read()
+        """
+        Reads GeoBUGS text file
 
-    def seek(self, pos):
-        if pos == 0:
-            self.file.seek(0)
-            self.pos = 0
-
-    def _read(self):
-        """Reads GeoBUGS text file
-        Returns a pysal.weights.weights.W object
+        Returns
+        -------
+        a pysal.weights.weights.W object
 
         Examples
         --------
@@ -98,6 +103,15 @@ class GeoBUGSTextIO(FileIO.FileIO):
         {9: 1.0, 19: 1.0, 5: 1.0}
 
         """
+        self._complain_ifclosed(self.closed)
+        return self._read()
+
+    def seek(self, pos):
+        if pos == 0:
+            self.file.seek(0)
+            self.pos = 0
+
+    def _read(self):
         if self.pos > 0:
             raise StopIteration
 
@@ -157,6 +171,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
 
     def write(self, obj):
         """
+        Writes a weights object to the opened text file.
 
         Parameters
         ----------
@@ -167,7 +182,6 @@ class GeoBUGSTextIO(FileIO.FileIO):
         ------
 
         a GeoBUGS text file
-        write a weights object to the opened text file.
 
         Examples
         --------

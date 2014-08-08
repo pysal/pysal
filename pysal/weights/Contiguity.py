@@ -22,13 +22,10 @@ def buildContiguity(polygons, criterion="rook", ids=None):
 
     polygons   : an instance of a pysal geo file handler
                  Any thing returned by pysal.open that is explicitly polygons
-
     criterion  : string
                  contiguity criterion ("rook","queen")
-
     ids        : list
                  identifiers for i,j
-
 
     Returns
     -------
@@ -36,9 +33,9 @@ def buildContiguity(polygons, criterion="rook", ids=None):
     w         : W instance
                 Contiguity weights object
 
-
     Examples
-    -------
+    --------
+
     >>> w = buildContiguity(pysal.open(pysal.examples.get_path('10740.shp'),'r'))
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [163]
@@ -77,7 +74,7 @@ def buildContiguity(polygons, criterion="rook", ids=None):
     wt_type = WT_TYPE[criterion.lower()]
     geo = polygons
     if issubclass(type(geo), pysal.open):
-        geo.seek(0)  # Make sure we read from the beinging of the file.
+        geo.seek(0)  # Make sure we read from the beginging of the file.
         geoObj = geo
     else:
         raise TypeError(

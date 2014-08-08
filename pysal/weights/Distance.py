@@ -6,11 +6,10 @@ __author__ = "Sergio J. Rey <srey@asu.edu> "
 
 import pysal
 import scipy.spatial
-from pysal.common import *
+from pysal.common import KDTree
 from pysal.weights import W
-
-from scipy import sparse
 import scipy.stats
+import numpy as np
 
 __all__ = ["knnW", "Kernel", "DistanceBand"]
 
@@ -35,15 +34,15 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
                  1: Manhattan distance
     ids        : list
                  identifiers to attach to each observation
-    pct_unique : float 
+    pct_unique : float
                  threshold percentage of unique points in data. Below this
                  threshold tree is built on unique values only
+
     Returns
     -------
 
     w         : W instance
                 Weights object with binary weights
-
 
     Examples
     --------
@@ -62,8 +61,8 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
     True
     >>> set([0,6]) == set(wnn2.neighbors[5])
     True
-    >>> wnn2.pct_nonzero
-    0.080000000000000002
+    >>> "%.2f"%wnn2.pct_nonzero
+    '0.08'
     >>> wnn4.pct_nonzero
     0.16
     >>> wnn3e=knnW(data,p=2,k=3)
@@ -95,7 +94,6 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
     >>> 0 in wnn2.neighbors
     False
 
-
     Notes
     -----
 
@@ -114,16 +112,17 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
         info = nnq[1]
     elif type(data).__name__ == 'ndarray':
         # check if unique points are a small fraction of all points
-        u = scipy.stats._support.unique(data)
+        ind =  np.lexsort(data.T)
+        u = data[np.concatenate(([True],np.any(data[ind[1:]]!=data[ind[:-1]],axis=1)))]
         pct_u = len(u)*1. / len(data)
         if pct_u < pct_unique:
             tree = KDTree(u)
             nnq = tree.query(data, k=k+1, p=p)
             info = nnq[1]
-            uid = [ np.where((data==ui).all(axis=1))[0][0] for ui in u]
-            new_info = np.zeros((len(data),k+1),'int')
-            for i,row in enumerate(info):
-                new_info[i] = [ uid[j] for j in row]
+            uid = [np.where((data == ui).all(axis=1))[0][0] for ui in u]
+            new_info = np.zeros((len(data), k + 1), 'int')
+            for i, row in enumerate(info):
+                new_info[i] = [uid[j] for j in row]
             info = new_info
         else:
             kd = KDTree(data)
@@ -150,7 +149,6 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
 class Kernel(W):
     """Spatial weights based on kernel functions
 
-
     Parameters
     ----------
 
@@ -174,7 +172,6 @@ class Kernel(W):
                   function.
     function    : string {'triangular','uniform','quadratic','quartic','gaussian'}
                   kernel function defined as follows with
-                 
 
                   .. math::
 
@@ -198,13 +195,11 @@ class Kernel(W):
 
                       K(z) = (3/4)(1-z^2) \ if |z| \le 1
 
-
                   quartic
 
                   .. math::
 
                       K(z) = (15/16)(1-z^2)^2 \ if |z| \le 1
-
 
                   gaussian
 
@@ -289,7 +284,6 @@ class Kernel(W):
            [ 14.14213704],
            [ 18.02775818]])
 
-
     Diagonals to 1.0
 
     >>> kq = Kernel(points,function='gaussian')
@@ -327,7 +321,6 @@ class Kernel(W):
         neighbors, weights = self._k_to_W(ids)
         if diagonal:
             for i in neighbors:
-                nis = neighbors[i]
                 weights[i][neighbors[i].index(i)] = 1.0
         W.__init__(self, neighbors, weights, ids)
 
@@ -370,7 +363,6 @@ class Kernel(W):
                          bwi in enumerate(self.bandwidth)]
             self.neigh = neighbors
         # get distances for neighbors
-        data = np.array(self.data)
         bw = self.bandwidth
 
         kdtq = self.kdt.query
@@ -382,17 +374,17 @@ class Kernel(W):
         zs = z
         # functions follow Anselin and Rey (2010) table 5.4
         if self.function == 'triangular':
-            self.kernel = [1 - z for z in zs]
+            self.kernel = [1 - zi for zi in zs]  
         elif self.function == 'uniform':
-            self.kernel = [np.ones(z.shape) * 0.5 for z in zs]
+            self.kernel = [np.ones(zi.shape) * 0.5 for zi in zs]
         elif self.function == 'quadratic':
-            self.kernel = [(3. / 4) * (1 - z ** 2) for z in zs]
+            self.kernel = [(3. / 4) * (1 - zi ** 2) for zi in zs]
         elif self.function == 'quartic':
-            self.kernel = [(15. / 16) * (1 - z ** 2) ** 2 for z in zs]
+            self.kernel = [(15. / 16) * (1 - zi ** 2) ** 2 for zi in zs]
         elif self.function == 'gaussian':
             c = np.pi * 2
             c = c ** (-0.5)
-            self.kernel = [c * np.exp(-(z ** 2) / 2.) for z in zs]
+            self.kernel = [c * np.exp(-(zi ** 2) / 2.) for zi in zs]
         else:
             print 'Unsupported kernel function', self.function
 
@@ -431,12 +423,12 @@ class DistanceBand(W):
     >>> w.weights
     {0: [1, 1], 1: [1, 1], 2: [], 3: [1, 1], 4: [1], 5: [1]}
     >>> w.neighbors
-    {0: [1, 3], 1: [0, 3], 2: [], 3: [0, 1], 4: [5], 5: [4]}
+    {0: [1, 3], 1: [0, 3], 2: [], 3: [1, 0], 4: [5], 5: [4]}
     >>> w=DistanceBand(points,threshold=14.2)
     >>> w.weights
     {0: [1, 1], 1: [1, 1, 1], 2: [1], 3: [1, 1], 4: [1, 1, 1], 5: [1]}
     >>> w.neighbors
-    {0: [1, 3], 1: [0, 3, 4], 2: [4], 3: [0, 1], 4: [1, 2, 5], 5: [4]}
+    {0: [1, 3], 1: [0, 3, 4], 2: [4], 3: [1, 0], 4: [5, 1, 2], 5: [4]}
 
     inverse distance weights
 
@@ -456,7 +448,6 @@ class DistanceBand(W):
     Island id:  [2]
     >>> w.weights[0]
     [0.01, 0.0079999999999999984]
-
 
     Notes
     -----
@@ -495,45 +486,37 @@ class DistanceBand(W):
         """
         find all pairs within threshold
         """
-        kd = self.kd
-        #ns=[kd.query_ball_point(point,self.threshold) for point in self.data]
-        ns = kd.query_ball_tree(kd, self.threshold)
-        self._nmat = ns
+        self.dmat = self.kd.sparse_distance_matrix(
+                self.kd, max_distance=self.threshold)
 
     def _distance_to_W(self, ids=None):
-        allneighbors = {}
-        weights = {}
         if ids:
             ids = np.array(ids)
         else:
-            ids = np.arange(len(self._nmat))
+            ids = np.arange(self.dmat.shape[0])
+        neighbors = dict([(i,[]) for i in ids])
+        weights = dict([(i,[]) for i in ids])
         if self.binary:
-            for i, neighbors in enumerate(self._nmat):
-                ns = [ni for ni in neighbors if ni != i]
-                neigh = list(ids[ns])
-                if len(neigh) == 0:
-                    allneighbors[ids[i]] = []
-                    weights[ids[i]] = []
-                else:
-                    allneighbors[ids[i]] = neigh
-                    weights[ids[i]] = [1] * len(ns)
+            for key,weight in self.dmat.items():
+                i,j = key
+                if j not in neighbors[i]:
+                    weights[i].append(1)
+                    neighbors[i].append(j)
+                if i not in neighbors[j]:
+                    weights[j].append(1)
+                    neighbors[j].append(i)
+
         else:
-            self.dmat = self.kd.sparse_distance_matrix(
-                self.kd, max_distance=self.threshold)
-            for i, neighbors in enumerate(self._nmat):
-                ns = [ni for ni in neighbors if ni != i]
-                neigh = list(ids[ns])
-                if len(neigh) == 0:
-                    allneighbors[ids[i]] = []
-                    weights[ids[i]] = []
-                else:
-                    try:
-                        allneighbors[ids[i]] = neigh
-                        weights[ids[i]] = [self.dmat[(
-                            i, j)] ** self.alpha for j in ns]
-                    except ZeroDivisionError:
-                        raise Exception, "Cannot compute inverse distance for elements at same location (distance=0)."
-        return allneighbors, weights
+            for key,weight in self.dmat.items():
+                i,j = key
+                if j not in neighbors[i]:
+                    weights[i].append(weight**self.alpha)
+                    neighbors[i].append(j)
+                if i not in neighbors[j]:
+                    weights[j].append(weight**self.alpha)
+                    neighbors[j].append(i)
+
+        return neighbors, weights
 
 
 def _test():
@@ -543,8 +526,7 @@ def _test():
     start_suppress = np.get_printoptions()['suppress']
     np.set_printoptions(suppress=True)
     doctest.testmod()
-    np.set_printoptions(suppress=start_suppress)    
+    np.set_printoptions(suppress=start_suppress)
 
 if __name__ == '__main__':
     _test()
-

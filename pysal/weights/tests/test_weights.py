@@ -34,15 +34,14 @@ class TestW(unittest.TestCase):
         res = {}
         for i, wi in enumerate(w):
             res[i] = wi
-        self.assertEqual(res[0], {1: 1.0, 3: 1.0})
-        self.assertEqual(res[8], {5: 1.0, 7: 1.0})
+        self.assertEqual(res[0], (0, {1: 1.0, 3: 1.0}))
+        self.assertEqual(res[8], (8, {5: 1.0, 7: 1.0}))
 
     def test_asymmetries(self):
         w = pysal.lat2W(3, 3)
         w.transform = 'r'
-        result = w.asymmetry()[0:2]
-        NPTA3E(result[0], np.array([1, 3, 0, 2, 4, 1,
-                                    5, 0, 4, 6, 1, 3, 5, 7, 2, 4, 8, 3, 7, 4, 6, 8, 5, 7]))
+        result = w.asymmetry()
+        self.assertEqual(result, [(0, 1), (0, 3), (1, 0), (1, 2), (1, 4), (2, 1), (2, 5), (3, 0), (3, 4), (3, 6), (4, 1), (4, 3), (4, 5), (4, 7), (5, 2), (5, 4), (5, 8), (6, 3), (6, 7), (7, 4), (7, 6), (7, 8), (8, 5), (8, 7)])
 
     def test_asymmetry(self):
         w = pysal.lat2W(3, 3)
@@ -93,9 +92,9 @@ class TestW(unittest.TestCase):
         weights = {0: [1.0, 1.0, 1.0], 1: [1.0, 1.0, 1.0], 2: [1.0, 1.0, 1.0], 3: [1.0, 1.0,
                                                                                    1.0], 4: [1.0, 1.0, 1.0, 1.0], 5: [1.0, 1.0, 1.0], 6: [1.0, 1.0, 1.0], 7:
                    [1.0, 1.0, 1.0], 8: [1.0, 1.0, 1.0]}
-        neighbors = {0: [2, 4, 6], 1: [3, 5, 7], 2: [0, 4, 8], 3: [1, 5, 7],
-                     4: [0, 2, 6, 8], 5: [1, 3, 7], 6: [0, 4, 8], 7: [1, 3, 5], 8:
-                     [2, 4, 6]}
+        neighbors = {0: [4, 6, 2], 1: [3, 5, 7], 2: [8, 0, 4], 3: [7, 1, 5],
+                     4: [8, 0, 2, 6], 5: [1, 3, 7], 6: [4, 0, 8], 7: [3, 1, 5], 8:
+                     [6, 2, 4]}
         w2 = pysal.higher_order(self.w3x3, 2)
         self.assertEqual(w2.neighbors, neighbors)
         self.assertEqual(w2.weights, weights)
@@ -253,16 +252,14 @@ class Test_WSP_Back_To_W(unittest.TestCase):
         res = {}
         for i, wi in enumerate(w):
             res[i] = wi
-        self.assertEqual(res[0], {1: 1.0, 3: 1.0})
-        self.assertEqual(res[8], {5: 1.0, 7: 1.0})
+        self.assertEqual(res[0], (0, {1: 1.0, 3: 1.0}))
+        self.assertEqual(res[8], (8, {5: 1.0, 7: 1.0}))
 
     def test_asymmetries(self):
         w = pysal.lat2W(3, 3)
         w.transform = 'r'
-        result = w.asymmetry()[0:2]
-        NPTA3E(result[0], np.array([1, 3, 0, 2, 4, 1,
-                                    5, 0, 4, 6, 1, 3, 5, 7, 2, 4, 8, 3, 7, 4, 6, 8, 5, 7]))
-
+        result = w.asymmetry()
+        self.assertEqual(result, [(0, 1), (0, 3), (1, 0), (1, 2), (1, 4), (2, 1), (2, 5), (3, 0), (3, 4), (3, 6), (4, 1), (4, 3), (4, 5), (4, 7), (5, 2), (5, 4), (5, 8), (6, 3), (6, 7), (7, 4), (7, 6), (7, 8), (8, 5), (8, 7)])
     def test_asymmetry(self):
         w = pysal.lat2W(3, 3)
         self.assertEqual(w.asymmetry(), [])
@@ -312,9 +309,9 @@ class Test_WSP_Back_To_W(unittest.TestCase):
         weights = {0: [1.0, 1.0, 1.0], 1: [1.0, 1.0, 1.0], 2: [1.0, 1.0, 1.0], 3: [1.0, 1.0,
                                                                                    1.0], 4: [1.0, 1.0, 1.0, 1.0], 5: [1.0, 1.0, 1.0], 6: [1.0, 1.0, 1.0], 7:
                    [1.0, 1.0, 1.0], 8: [1.0, 1.0, 1.0]}
-        neighbors = {0: [2, 4, 6], 1: [3, 5, 7], 2: [0, 4, 8], 3: [1, 5, 7],
-                     4: [0, 2, 6, 8], 5: [1, 3, 7], 6: [0, 4, 8], 7: [1, 3, 5], 8:
-                     [2, 4, 6]}
+        neighbors = {0: [4, 6, 2], 1: [3, 5, 7], 2: [8, 0, 4], 3: [7, 1, 5],
+                     4: [8, 0, 2, 6], 5: [1, 3, 7], 6: [4, 0, 8], 7: [3, 1, 5], 8:
+                     [6, 2, 4]}
         w2 = pysal.higher_order(self.w3x3, 2)
         self.assertEqual(w2.neighbors, neighbors)
         self.assertEqual(w2.weights, weights)

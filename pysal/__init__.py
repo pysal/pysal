@@ -59,8 +59,8 @@ from pysal.spatial_dynamics import Markov, Spatial_Markov, LISA_Markov, \
     SpatialTau, Theta, Tau
 from pysal.spatial_dynamics import ergodic
 from pysal.spatial_dynamics import directional
-from pysal.weights import W, lat2W, regime_weights, comb, full, shimbel, \
-    order, higher_order, remap_ids
+from pysal.weights import W, lat2W, block_weights, comb, full, shimbel, \
+    order, higher_order, higher_order_sp, remap_ids, hexLat2W, WSP, regime_weights
 from pysal.weights.Distance import knnW, Kernel, DistanceBand
 from pysal.weights.Contiguity import buildContiguity
 from pysal.weights.spatial_lag import lag_spatial

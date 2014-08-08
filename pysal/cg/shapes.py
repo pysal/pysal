@@ -16,8 +16,9 @@ __all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon',
 
 
 def asShape(obj):
-    """ Returns a pysal shape object from obj.
-        obj must support the __geo_interface__.
+    """
+    Returns a pysal shape object from obj.
+    obj must support the __geo_interface__.
     """
     if hasattr(obj, '__geo_interface__'):
         geo = obj.__geo_interface__
@@ -344,7 +345,6 @@ class Point(object):
 class LineSegment(object):
     """
     Geometric representation of line segment objects.
-    ...
 
     Parameters
     ----------
@@ -382,6 +382,7 @@ class LineSegment(object):
 
         Attributes
         ----------
+        None
 
         Examples
         --------
@@ -399,7 +400,7 @@ class LineSegment(object):
         Returns true if self and other are the same line segment
 
         Examples
-        ________
+        --------
         >>> l1 = LineSegment(Point((1, 2)), Point((5, 6)))
         >>> l2 = LineSegment(Point((5, 6)), Point((1, 2)))
         >>> l1 == l2
@@ -422,7 +423,7 @@ class LineSegment(object):
         Handles endpoints of segments being on other segment
 
         Examples
-        -------
+        --------
 
         >>> ls = LineSegment(Point((5,0)), Point((10,0)))
         >>> ls1 = LineSegment(Point((5,0)), Point((10,1)))
@@ -616,11 +617,13 @@ class LineSegment(object):
         Sedgewick test for pt being ccw of segment
 
         Returns
-         1 if turn from self.p1 to self.p2 to pt is ccw
+        -------
+
+        1 if turn from self.p1 to self.p2 to pt is ccw
         -1 if turn from self.p1 to self.p2 to pt is cw
         -1 if the points are collinear and self.p1 is in the middle
-         1 if the points are collinear and self.p2 is in the middle
-         0 if the points are collinear and pt is in the middle
+        1 if the points are collinear and self.p2 is in the middle
+        0 if the points are collinear and pt is in the middle
         
         """
 

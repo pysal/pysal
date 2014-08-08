@@ -1,10 +1,11 @@
-""" FileIO: Module for reading and writing various file types in a Pythonic way.
-    This module should not be used directly, instead...
-    import pysal.core.FileIO as FileIO
-    Readers and Writers will mimic python file objects.
-    .seek(n) seeks to the n'th object
-    .read(n) reads n objects, default == all
-    .next() reads the next object
+"""
+FileIO: Module for reading and writing various file types in a Pythonic way.
+This module should not be used directly, instead...
+import pysal.core.FileIO as FileIO
+Readers and Writers will mimic python file objects.
+.seek(n) seeks to the n'th object
+.read(n) reads n objects, default == all
+.next() reads the next object
 """
 
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
@@ -17,9 +18,10 @@ import pysal
 
 
 class FileIO_MetaCls(type):
-    """ This Meta Class is instantiated when the class is first defined.
-        All subclasses of FileIO also inherit this meta class, which registers their abilities with the FileIO registry.
-        Subclasses must contain FORMATS and MODES (both are type(list))
+    """
+    This Meta Class is instantiated when the class is first defined.
+    All subclasses of FileIO also inherit this meta class, which registers their abilities with the FileIO registry.
+    Subclasses must contain FORMATS and MODES (both are type(list))
     """
     def __new__(mcs, name, bases, dict):
         cls = type.__new__(mcs, name, bases, dict)
@@ -34,22 +36,20 @@ class FileIO_MetaCls(type):
 
 class FileIO(object):  # should be a type?
     """
-        How this works,
-        FileIO.open(*args) == FileIO(*args)
-        When creating a new instance of FileIO the .__new__ method intercepts
-        .__new__ parses the filename to determine the fileType
-        next, .__registry and checked for that type.
-        Each type supports one or more modes ['r','w','a',etc]
-        If we support the type and mode, an instance of the appropriate handler
-          is created and returned.
-
-        All handlers must inherit from this class, and by doing so are automatically
-          added to the .__registry and are forced to conform to the prescribed API.
-        The metaclass takes cares of the registration by parsing the class definition.
-
-        It doesn't make much sense to treat weights in the same way as shapefiles and dbfs,
-        ....for now we'll just return an instance of W on mode='r'
-        .... on mode='w', .write will expect an instance of W
+    How this works:
+    FileIO.open(\*args) == FileIO(\*args)
+    When creating a new instance of FileIO the .__new__ method intercepts
+    .__new__ parses the filename to determine the fileType
+    next, .__registry and checked for that type.
+    Each type supports one or more modes ['r','w','a',etc]
+    If we support the type and mode, an instance of the appropriate handler
+    is created and returned.
+    All handlers must inherit from this class, and by doing so are automatically
+    added to the .__registry and are forced to conform to the prescribed API.
+    The metaclass takes cares of the registration by parsing the class definition.
+    It doesn't make much sense to treat weights in the same way as shapefiles and dbfs,
+    ....for now we'll just return an instance of W on mode='r'
+    .... on mode='w', .write will expect an instance of W
     """
     __metaclass__ = FileIO_MetaCls
     __registry = {}  # {'shp':{'r':[OGRshpReader,pysalShpReader]}}
@@ -96,7 +96,7 @@ class FileIO(object):  # should be a type?
     @classmethod
     def _register(cls, parser, formats, modes):
         """ This method is called automatically via the MetaClass of FileIO subclasses
-            This should be private, but that hides it from the MetaClass
+        This should be private, but that hides it from the MetaClass
         """
         assert cls is FileIO
         for format in formats:
@@ -171,9 +171,9 @@ class FileIO(object):  # should be a type?
 
     def __setIds(self, ids):
         """ Property Method for .ids
-            Takes a list of ids and maps then to a 0 based index
-            Need to provide a method to set ID's based on a fieldName
-                preferably without reading the whole file.
+        Takes a list of ids and maps then to a 0 based index
+        Need to provide a method to set ID's based on a fieldName
+        preferably without reading the whole file.
         """
         if isinstance(ids, list):
             try:
@@ -262,8 +262,8 @@ class FileIO(object):  # should be a type?
 
     def get(self, n):
         """ Seeks the file to n and returns n
-            If .ids is set n should be an id,
-            else, n should be an offset
+        If .ids is set n should be an id,
+        else, n should be an offset
         """
         prevPos = self.tell()
         self.seek(n)
@@ -284,8 +284,8 @@ class FileIO(object):  # should be a type?
 
     def read(self, n=-1):
         """ Read at most n objects, less if read hits EOF
-            if size is negative or omitted read all objects until EOF
-            returns None if EOF is reached before any objects.
+        if size is negative or omitted read all objects until EOF
+        returns None if EOF is reached before any objects.
         """
         self._complain_ifclosed(self.closed)
         if n < 0:
@@ -318,24 +318,24 @@ class FileIO(object):  # should be a type?
 
     def _read(self):
         """ Must be implemented by subclasses that support 'r'
-            subclasses should increment .pos
-            and redefine this doc string
+        subclasses should increment .pos
+        and redefine this doc string
         """
         self._complain_ifclosed(self.closed)
         raise NotImplementedError
 
     def truncate(self, size=None):
         """ Should be implemented by subclasses
-            and redefine this doc string
+        and redefine this doc string
         """
         self._complain_ifclosed(self.closed)
         raise NotImplementedError
 
     def write(self, obj):
         """ Must be implemented by subclasses that support 'w'
-            subclasses should increment .pos
-            subclasses should also check if obj is an instance of type(list)
-            and redefine this doc string
+        subclasses should increment .pos
+        subclasses should also check if obj is an instance of type(list)
+        and redefine this doc string
         """
         self._complain_ifclosed(self.closed)
         "Write obj to dataObj"
