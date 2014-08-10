@@ -576,13 +576,19 @@ def _expand_values(values, shp2dbf_row):
     
 
 if __name__ == '__main__':
+    """
+    Requires cartopy
+
+    If using anaconda:
+
+    conda install -c https://conda.binstar.org/rsignell cartopy
+    """
     import cartopy.crs as ccrs
 
-    shp_link = '/Users/dani/Desktop/Untitled.shp'
-    shp_link = '/Users/dani/Desktop/london/boroughs.shp'
+    shp_link = ps.examples.get_path('boroughs.shp')
     shp = ps.open(shp_link)
     for poly in shp:
-        polyC = poly2col([poly])
+        polyC = polys2col([poly])
         f = plt.figure()
         extent = [poly.bbox[0], poly.bbox[2], poly.bbox[1], poly.bbox[3]]
         ax = plt.subplot(1, 1, 1)
