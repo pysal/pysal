@@ -480,54 +480,6 @@ def base_choropleth_unique(map_obj, values,  cmap='hot_r'):
         map_obj.set_array(values)
     return map_obj
 
-def base_choropleth_user_defined(map_obj, values, bins, cmap='hot_r'):
-    '''
-    Set coloring based on user defined bins and  values from a map object
-    ...
-
-    Arguments
-    ---------
-
-    map_obj         : Poly/Line collection
-                      Output from map_X_shp
-    values          : array
-                      Numpy array with values to map
-    bins            : array
-                      Numpy array with upper bounds of each class
-    cmap            : str
-                      Matplotlib coloring scheme
-
-    Returns
-    -------
-
-    map             : PatchCollection
-                      Map object with the polygons from the shapefile and
-                      unique value coloring
-
-    '''
-    classification = ps.User_Defined(values, bins)
-    boundaries = classification.bins.tolist()
-    map_obj.set_alpha(0.4)
-    k=len(boundaries)
-    cmap = cm.get_cmap(cmap, k+1)
-    map_obj.set_cmap(cmap)
-    boundaries.insert(0, values.min())
-    norm = clrs.BoundaryNorm(boundaries, cmap.N)
-    map_obj.set_norm(norm)
-
-    if isinstance(map_obj, mpl.collections.PolyCollection):
-        pvalues = _expand_values(values, map_obj.shp2dbf_row)
-        map_obj.set_color([colormatch[i] for i in pvalues])
-        map_obj.set_edgecolor('k')
-    elif isinstance(map_obj, mpl.collections.LineCollection):
-        pvalues = _expand_values(values, map_obj.shp2dbf_row)
-        map_obj.set_color([colormatch[i] for i in pvalues])
-    elif isinstance(map_obj, mpl.collections.PathCollection):
-        if not hasattr(map_obj, 'shp2dbf_row'):
-            map_obj.shp2dbf_row = np.arange(values.shape[0])
-        map_obj.set_array(values)
-    return map_obj
-
 
 def base_choropleth_classif(map_obj, values, classification='quantiles', \
         k=5, cmap='hot_r', sample_fisher=True, bins=[]):
@@ -589,11 +541,12 @@ def base_choropleth_classif(map_obj, values, classification='quantiles', \
         boundaries = classification.bins.tolist()
 
     map_obj.set_alpha(0.4)
-
     cmap = cm.get_cmap(cmap, k+1)
     map_obj.set_cmap(cmap)
-
-    boundaries.insert(0, values.min())
+    # check if lower bound needs to be set to min of values
+    v_min = values.min()
+    if v_min < boundaries[0]:
+        boundaries.insert(0, v_min)
     norm = clrs.BoundaryNorm(boundaries, cmap.N)
     map_obj.set_norm(norm)
 
