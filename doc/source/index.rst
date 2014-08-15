@@ -35,6 +35,7 @@ PySAL is open source under the `BSD License`_.
 
     News <news>
     Funding <funding>
+    Gallery <http://pysal.github.io/grid.html>
     users/index
     developers/index
     library/index
