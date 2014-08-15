@@ -285,9 +285,9 @@ def plot_poly_lines(shp_link,  savein=None, poly_col='none'):
         plt.show()
     return None
 
-def plot_choropleth(shp_link, values, type, k=5, cmap=None, \
+def plot_choropleth(shp_link, values, m_type, k=5, cmap=None, \
         shp_type='poly', sample_fisher=True, title='', \
-        savein=None, figsize=None, dpi=300):
+        savein=None, figsize=None, dpi=300, bins=None):
     '''
     Wrapper to quickly create and plot from a lat/lon shapefile
     ...
@@ -299,13 +299,14 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None, \
                       Path to shapefile
     values          : array
                       Numpy array with values to map
-    type            : str
+    m_type            : str
                       Type of choropleth. Supported methods:
                         * 'classless'
                         * 'unique_values'
                         * 'quantiles' (default)
                         * 'fisher_jenks'
                         * 'equal_interval'
+                        * 'user_defined'
     k               : int
                       Number of bins to classify values in and assign a color
                       to (defaults to 5)
@@ -332,6 +333,8 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None, \
                       Figure dimensions
     dpi             : int
                       resolution of graphic file
+    bins            : list
+                      upper bounds for User Defined classification
 
     Returns
     -------
@@ -347,37 +350,44 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None, \
     if shp_type == 'line':
         map_obj = map_line_shp(shp)
 
-    if type == 'classless':
+    if m_type == 'classless':
         if not cmap:
             cmap = 'Greys'
         map_obj = base_choropleth_classless(map_obj, values, cmap=cmap)
-    if type == 'unique_values':
+    if m_type == 'unique_values':
         if not cmap:
             cmap = 'Paired'
         map_obj = base_choropleth_unique(map_obj, values, cmap=cmap)
-    if type == 'quantiles':
+    if m_type == 'quantiles':
         if not cmap:
             cmap = 'hot_r'
         map_obj = base_choropleth_classif(map_obj, values, k=k, \
                 classification='quantiles', cmap=cmap)
-    if type == 'fisher_jenks':
+    if m_type == 'fisher_jenks':
         if not cmap:
             cmap = 'hot_r'
         map_obj = base_choropleth_classif(map_obj, values, k=k, \
                 classification='fisher_jenks', cmap=cmap, \
                 sample_fisher=sample_fisher)
-    if type == 'equal_interval':
+    if m_type == 'equal_interval':
         if not cmap:
             cmap = 'hot_r'
         map_obj = base_choropleth_classif(map_obj, values, k=k, \
                 classification='equal_interval', cmap=cmap)
+    if m_type == 'user_defined':
+        if not cmap:
+            cmap = 'hot_r'
+        map_obj = base_choropleth_classif(map_obj, values, bins=bins, \
+                classification='user_defined', cmap=cmap )
+
 
     fig = plt.figure(figsize=figsize)
     ax = fig.add_subplot(111)
     ax = setup_ax([map_obj], ax)
     if title:
         ax.set_title(title)
-    if type=='quantiles' or type=='fisher_jenks' or type=='equal_interval':
+    m_types = 'quantiles', 'fisher_jenks', 'equal_interval', 'user_defined'
+    if m_type in m_types:
         cmap = map_obj.get_cmap()
         norm = map_obj.norm
         boundaries = np.round(map_obj.norm.boundaries, decimals=3)
@@ -470,8 +480,57 @@ def base_choropleth_unique(map_obj, values,  cmap='hot_r'):
         map_obj.set_array(values)
     return map_obj
 
+def base_choropleth_user_defined(map_obj, values, bins, cmap='hot_r'):
+    '''
+    Set coloring based on user defined bins and  values from a map object
+    ...
+
+    Arguments
+    ---------
+
+    map_obj         : Poly/Line collection
+                      Output from map_X_shp
+    values          : array
+                      Numpy array with values to map
+    bins            : array
+                      Numpy array with upper bounds of each class
+    cmap            : str
+                      Matplotlib coloring scheme
+
+    Returns
+    -------
+
+    map             : PatchCollection
+                      Map object with the polygons from the shapefile and
+                      unique value coloring
+
+    '''
+    classification = ps.User_Defined(values, bins)
+    boundaries = classification.bins.tolist()
+    map_obj.set_alpha(0.4)
+    k=len(boundaries)
+    cmap = cm.get_cmap(cmap, k+1)
+    map_obj.set_cmap(cmap)
+    boundaries.insert(0, values.min())
+    norm = clrs.BoundaryNorm(boundaries, cmap.N)
+    map_obj.set_norm(norm)
+
+    if isinstance(map_obj, mpl.collections.PolyCollection):
+        pvalues = _expand_values(values, map_obj.shp2dbf_row)
+        map_obj.set_color([colormatch[i] for i in pvalues])
+        map_obj.set_edgecolor('k')
+    elif isinstance(map_obj, mpl.collections.LineCollection):
+        pvalues = _expand_values(values, map_obj.shp2dbf_row)
+        map_obj.set_color([colormatch[i] for i in pvalues])
+    elif isinstance(map_obj, mpl.collections.PathCollection):
+        if not hasattr(map_obj, 'shp2dbf_row'):
+            map_obj.shp2dbf_row = np.arange(values.shape[0])
+        map_obj.set_array(values)
+    return map_obj
+
+
 def base_choropleth_classif(map_obj, values, classification='quantiles', \
-        k=5, cmap='hot_r', sample_fisher=True):
+        k=5, cmap='hot_r', sample_fisher=True, bins=[]):
     '''
     Set coloring based based on different classification
     methods
@@ -489,6 +548,7 @@ def base_choropleth_classif(map_obj, values, classification='quantiles', \
                         * 'quantiles' (default)
                         * 'fisher_jenks'
                         * 'equal_interval'
+                        * 'user_defined'
 
     k               : int
                       Number of bins to classify values in and assign a color
@@ -499,6 +559,8 @@ def base_choropleth_classif(map_obj, values, classification='quantiles', \
                       Defaults to True, controls whether Fisher-Jenks
                       classification uses a sample (faster) or the entire
                       array of values. Ignored if 'classification'!='fisher_jenks'
+    bins            : list
+                      upper bounds for user_defined classification
 
     Returns
     -------
@@ -522,6 +584,9 @@ def base_choropleth_classif(map_obj, values, classification='quantiles', \
         else:
             classification = ps.Fisher_Jenks(values,k)
         boundaries = classification.bins[:].tolist()
+    if classification == 'user_defined':
+        classification = ps.User_Defined(values, bins)
+        boundaries = classification.bins.tolist()
 
     map_obj.set_alpha(0.4)
 
