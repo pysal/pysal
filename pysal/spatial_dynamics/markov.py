@@ -1206,7 +1206,7 @@ def shorrock(pmat):
     -------
 
     sh : scalar
-          Conditional mobility measure
+          Shorrock mobility measure
 
 
 
