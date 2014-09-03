@@ -1162,7 +1162,7 @@ def prais(pmat):
 
     .. math::
 
-            pr_i = 1 - \sum_j p_{i,j}
+            pr_i = 1 -  p_{i,i}
 
     Examples
     --------
@@ -1206,7 +1206,7 @@ def shorrock(pmat):
     -------
 
     sh : scalar
-          Conditional mobility measure
+          Shorrock mobility measure
 
 
 
