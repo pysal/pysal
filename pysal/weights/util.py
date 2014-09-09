@@ -245,7 +245,7 @@ def regime_weights(regimes):
 
     """
     msg = "PendingDepricationWarning: regime_weights will be "
-    msg += "reamed to block_weights in PySAL 2.0"
+    msg += "renamed to block_weights in PySAL 2.0"
     print msg
     return block_weights(regimes)
 
