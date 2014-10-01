@@ -24,7 +24,7 @@ TYPE_TO_STRING = {cg.Polygon: 'POLYGON', cg.Point: 'POINT', cg.Chain:
 
 class PurePyShpWrapper(pysal.core.FileIO.FileIO):
     """
-    FileIO handeler for ESRI ShapeFiles.
+    FileIO handler for ESRI ShapeFiles.
 
     Notes
     -----
