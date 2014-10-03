@@ -66,7 +66,9 @@ class DBF(pysal.core.Tables.DataTable):
             for fieldno in xrange(numfields):
                 name, typ, size, deci = struct.unpack(
                     '<11sc4xBB14x', f.read(32))
-                name = name.replace('\0', '')
+        
+                #name = name.replace('\0', '')
+                name = "".join([ x for x in name if x != '\0'])
                     # eliminate NULs from string
                 self._col_index[name] = (idx, record_size)
                 idx += 1
