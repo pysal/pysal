@@ -33,8 +33,9 @@ PySAL is open source under the `BSD License`_.
 .. toctree::
     :maxdepth: 1
 
-    News <news>
-    Funding <funding>
+    News <http://pysal.github.io/news.html>
+    Events <http://pysal.github.io/upcoming_events.html>
+    Funding <http://pysal.github.io/funding.html>
     Gallery <http://pysal.github.io/grid.html>
     users/index
     developers/index
