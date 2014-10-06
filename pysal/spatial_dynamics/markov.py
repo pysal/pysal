@@ -11,7 +11,7 @@ import pysal
 from operator import gt
 
 __all__ = ["Markov", "LISA_Markov", "Spatial_Markov", "kullback",
-           "prais", "shorrock"]
+           "prais", "shorrock", "homogeneity_test"]
 
 # TT predefine LISA transitions
 # TT[i,j] is the transition type from i to j
@@ -1248,4 +1248,132 @@ def shorrock(pmat):
     sh = (k - t) / (k - 1)
     return sh
 
+def homogeneity_test(transition_matrices, regime_names=[]):
+    """
+    Test for homogeneity of Markov transition probabilities across regimes.
 
+    Parameters
+    ==========
+
+    transition_matrices: ndarray (m,r,c)
+                         Three dimensional numpy array where first dimension
+                         pertains to the m regimes, r is the number of rows in
+                         the transition matrix and c is the number of columns
+                         in the transition matrix.
+
+    Returns
+    =======
+
+    implicit: an instance of Homogeneity_Results
+    """
+
+    return Homogeneity_Results(transition_matrices, regime_names=regime_names)
+
+class Homogeneity_Results:
+    """
+    Wrapper class to present homogeneity results
+    
+    """
+
+    def __init__(self, transition_matrices, regime_names=[]):
+        self._homogeneity(transition_matrices)
+        self.regime_names=regime_names
+
+    def _homogeneity(self, transition_matrices):
+        # form null transition probability matrix
+        M = np.array(transition_matrices)
+        m,r,k = M.shape
+        self.k = k
+        B = np.zeros((r,m))
+        T = M.sum(axis=0)
+        self.t_total = T.sum()
+        n_i = T.sum(axis=1)
+        A_i = (T>0).sum(axis=1)
+        A_im = np.zeros((r,m))
+        p_ij = np.dot(np.diag(1./(n_i + (n_i==0)*1.)), T)
+        den = p_ij + 1. * (p_ij==0)
+        b_i = np.zeros_like(A_i)
+        p_ijm = np.zeros_like(M)
+        # get dimensions
+        m, n_rows, n_cols = M.shape
+        m = 0
+        Q = 0.0
+        LR = 0.0
+        lr_table = np.zeros_like(M)
+        q_table = np.zeros_like(M)
+        
+        for nijm in M:
+            nim = nijm.sum(axis=1)
+            B[:,m] = 1.*(nim>0)
+            b_i = b_i + 1. * (nim>0)
+            p_ijm[m] = np.dot(np.diag(1./(nim + (nim==0)*1.)),nijm)
+            num = (p_ijm[m]-p_ij)**2
+            ratio = num / den
+            qijm = np.dot(np.diag(nim), ratio)
+            q_table[m] = qijm
+            Q = Q + qijm.sum()
+            # only use nonzero pijm in lr test
+            mask = (nijm > 0) * (p_ij > 0)
+            A_im[:,m] = (nijm>0).sum(axis=1)
+            unmask = 1.0 * (mask==0)
+            ratio = (mask * p_ijm[m] + unmask) / (mask * p_ij + unmask)
+            lr = nijm * np.log(ratio)
+            LR = LR + lr.sum()
+            lr_table[m] = 2 * lr
+            m += 1
+        # b_i is the number of regimes that have non-zero observations in row i
+        # A_i is the number of non-zero elements in row i of the aggregated
+        # transition matrix
+        self.dof = int(((b_i-1) * (A_i-1)).sum())
+        self.Q = Q
+        self.Q_p_value = 1 - stats.chi2.cdf(self.Q, self.dof)
+        self.LR = LR * 2.
+        self.LR_p_value = 1 - stats.chi2.cdf(self.LR, self.dof)
+        self.A = A_i
+        self.A_im = A_im
+        self.B = B
+        self.b_i = b_i
+        self.LR_table = lr_table
+        self.Q_table = q_table
+        self.m = m
+        self.p_h0 = p_ij
+        self.p_h1 = p_ijm
+
+    def summary(self):
+        width = 72 
+        lead = "-"* width
+        head = "Markov Homogeneity Test".center(width)
+        contents = [lead,head,lead]
+        l = "Number of regimes: %d" % int(self.m)
+        k = "Number of classes: %d" % int(self.k)
+        t = "Number of transitions: %d" % int(self.t_total)
+        contents.append(l)
+        contents.append(k)
+        contents.append(t)
+        contents.append(lead)
+        h = "%7s %20s %20s"%('Test', 'LR', 'Chi-2')
+        contents.append(h)
+        stat = "%7s %20.3f %20.3f"%('Stat.', self.LR, self.Q)
+        contents.append(stat)
+        stat = "%7s %20d %20d"%('DOF', self.dof, self.dof)
+        contents.append(stat)
+        stat = "%7s %20.3f %20.3f"%('p-value', self.LR_p_value,
+            self.Q_p_value)
+        contents.append(stat)
+        contents.append(lead)
+        contents.append("P(H0)")
+        print "\n".join(contents)
+        np.set_printoptions(formatter={'float': '{: 8.3f}'.format})
+        print self.p_h0
+        regime_names = ["%d"%i for i in range(self.m)]
+        if self.regime_names:
+            regime_names = self.regime_names
+
+        for m in range(self.m):
+            contents = [lead]
+            contents.append("P(%s)"%regime_names[m])
+            print "\n".join(contents)
+            np.set_printoptions(formatter={'float': '{: 8.3f}'.format})
+            print self.p_h1[m]
+        print lead
+    
