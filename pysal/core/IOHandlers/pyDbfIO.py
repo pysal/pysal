@@ -68,15 +68,16 @@ class DBF(pysal.core.Tables.DataTable):
                     '<11sc4xBB14x', f.read(32))
         
                 #name = name.replace('\0', '')
-                name = "".join([ x for x in name if x != '\0'])
+                name = "".join([ str(x) for x in name if x != '\0'])
                     # eliminate NULs from string
                 self._col_index[name] = (idx, record_size)
                 idx += 1
                 fmt += '%ds' % size
                 record_size += size
                 self.field_info.append((name, typ, size, deci))
+                print name
             terminator = f.read(1)
-            assert terminator == '\r'
+            #assert terminator == '\r'
             self.header_size = self.f.tell()
             self.record_size = record_size
             self.record_fmt = fmt
@@ -291,7 +292,8 @@ class DBF(pysal.core.Tables.DataTable):
 
 if __name__ == '__main__':
     import pysal
-    file_name = pysal.examples.get_path("10740.dbf")
+    #file_name = pysal.examples.get_path("10740.dbf")
+    file_name = pysal.examples.get_path("columbus.dbf")
     f = pysal.open(file_name, 'r')
     newDB = pysal.open('copy.dbf', 'w')
     newDB.header = f.header
