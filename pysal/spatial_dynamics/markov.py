@@ -418,6 +418,7 @@ class Spatial_Markov:
         dof = k * (k - 1) * (k - 1)
         self.x2_pvalue = 1 - stats.chi2.cdf(self.x2, dof)
         self.x2_dof = dof
+        self.k = k
 
         if permutations:
             nrp = np.random.permutation
@@ -532,6 +533,17 @@ class Spatial_Markov:
         rn = range(n0)
         mat = [chi2(self.T[i], self.transitions) for i in rn]
         return mat
+
+    def summary(self, file_name=None):
+        class_names = ["C%d"%i for i in range(self.k)]
+        regime_names = ["LAG_%d"%i for i in range(self.k)]
+        ht = homogeneity_test(self.T, class_names=class_names,
+            regime_names=regime_names)
+        if file_name:
+            ht.summary(file_name=file_name)
+        else:
+            ht.summary()
+
 
 
 def chi2(T1, T2):
@@ -1248,7 +1260,7 @@ def shorrock(pmat):
     sh = (k - t) / (k - 1)
     return sh
 
-def homogeneity_test(transition_matrices, regime_names=[]):
+def homogeneity_test(transition_matrices, regime_names=[], class_names=[]):
     """
     Test for homogeneity of Markov transition probabilities across regimes.
 
@@ -1260,6 +1272,11 @@ def homogeneity_test(transition_matrices, regime_names=[]):
                          pertains to the m regimes, r is the number of rows in
                          the transition matrix and c is the number of columns
                          in the transition matrix.
+    regime_names: sequence
+                Labels for the regimes
+
+    class_names: sequence
+                Labels for the classes/states of the Markov chain
 
     Returns
     =======
@@ -1267,17 +1284,33 @@ def homogeneity_test(transition_matrices, regime_names=[]):
     implicit: an instance of Homogeneity_Results
     """
 
-    return Homogeneity_Results(transition_matrices, regime_names=regime_names)
+    return Homogeneity_Results(transition_matrices, regime_names=regime_names,
+                                 class_names= class_names)
 
 class Homogeneity_Results:
     """
     Wrapper class to present homogeneity results
-    
+ 
+    Parameters
+    ==========
+
+    transition_matrices: ndarray (m,r,c)
+                         Three dimensional numpy array where first dimension
+                         pertains to the m regimes, r is the number of rows in
+                         the transition matrix and c is the number of columns
+                         in the transition matrix.
+    regime_names: sequence
+                Labels for the regimes
+
+    class_names: sequence
+                Labels for the classes/states of the Markov chain
+   
     """
 
-    def __init__(self, transition_matrices, regime_names=[]):
+    def __init__(self, transition_matrices, regime_names=[], class_names = []):
         self._homogeneity(transition_matrices)
         self.regime_names=regime_names
+        self.class_names = class_names
 
     def _homogeneity(self, transition_matrices):
         # form null transition probability matrix
@@ -1339,17 +1372,23 @@ class Homogeneity_Results:
         self.p_h0 = p_ij
         self.p_h1 = p_ijm
 
-    def summary(self):
+    def summary(self, file_name=None):
+        regime_names = ["%d"%i for i in range(self.m)]
+        if self.regime_names:
+            regime_names = self.regime_names
         width = 72 
         lead = "-"* width
         head = "Markov Homogeneity Test".center(width)
         contents = [lead,head,lead]
         l = "Number of regimes: %d" % int(self.m)
         k = "Number of classes: %d" % int(self.k)
+        r = "Regime names: "
+        r += ", ".join(regime_names)
         t = "Number of transitions: %d" % int(self.t_total)
-        contents.append(l)
         contents.append(k)
         contents.append(t)
+        contents.append(l)
+        contents.append(r)
         contents.append(lead)
         h = "%7s %20s %20s"%('Test', 'LR', 'Chi-2')
         contents.append(h)
@@ -1360,20 +1399,111 @@ class Homogeneity_Results:
         stat = "%7s %20.3f %20.3f"%('p-value', self.LR_p_value,
             self.Q_p_value)
         contents.append(stat)
-        contents.append(lead)
-        contents.append("P(H0)")
         print "\n".join(contents)
-        np.set_printoptions(formatter={'float': '{: 8.3f}'.format})
-        print self.p_h0
-        regime_names = ["%d"%i for i in range(self.m)]
-        if self.regime_names:
-            regime_names = self.regime_names
-
-        for m in range(self.m):
-            contents = [lead]
-            contents.append("P(%s)"%regime_names[m])
-            print "\n".join(contents)
-            np.set_printoptions(formatter={'float': '{: 8.3f}'.format})
-            print self.p_h1[m]
         print lead
+
+        cols = ["P(%s)"%str(regime) for regime in self.regime_names]
+        if not self.class_names:
+            self.class_names = range(self.k)
+        cols.extend(["%s"%str(cname) for cname in self.class_names])
+
+        max_col = max([len(col) for col in cols])
+        print max_col
+        print cols
+        col_width = max([5, max_col]) #probabilities have 5 chars
+        p0 = []
+        line0 = ["P(H0)"]
+        line0.extend([ "%*s"%(col_width,cname) for cname in self.class_names])
+        print "\t".join(line0)
+        p0.append("&".join(line0))
+        for i,row in enumerate(self.p_h0):
+            line = ["%*s"%(col_width, str(self.class_names[i]))]
+            line.extend(["%*.3f"%(col_width,v) for v in row])
+            print  "\t".join(line)
+            p0.append("&".join(line))
+        pmats = [p0]
+
+        print lead
+        for r, p1 in enumerate(self.p_h1):
+            p0 = []
+            line0 = ["P(%s)"%regime_names[r]]
+            line0.extend([ "%*s"%(col_width,cname) for cname in self.class_names])
+            print "\t".join(line0)
+            p0.append("&".join(line0))
+            for i,row in enumerate(p1):
+                line = ["%*s"%(col_width, str(self.class_names[i]))]
+                line.extend(["%*.3f"%(col_width,v) for v in row])
+                print  "\t".join(line)
+                p0.append("&".join(line))
+            pmats.append(p0) 
+            print lead
+
+        if file_name:
+            k = self.k
+            ks = str(k)
+            with open(file_name, 'w') as f:
+                c = []
+                fmt = "r"*k
+                s="\\begin{tabular}{|%s|}\\hline\n"%fmt
+                s+= "\\multicolumn{%s}{|c|}{Markov Homogeneity Test}\\hline"%ks
+                c.append(s)
+                s = "Number of classes: %d"%int(self.k)
+                c.append("\\multicolumn{%s}{|l|}{%s}"%(ks,s))
+                s = "Number of transitions: %d"%int(self.t_total)
+                c.append("\\multicolumn{%s}{|l|}{%s}"%(ks,s))
+                s = "Number of regimes: %d"%int(self.m)
+                c.append("\\multicolumn{%s}{|l|}{%s}"%(ks,s))
+                s = "Regime names: "
+                s += ", ".join(regime_names)
+                c.append("\\multicolumn{%s}{|l|}{%s}\\hline"%(ks,s))
+                s = "Test&"
+                s += "\\multicolumn{2}{r}{LR}&\\multicolumn{2|}{r}{Q}"
+                c.append(s)
+                s = "Stat.&"
+                s += "\\multicolumn{2}{r}{%.3f}"%self.LR
+                s += "&\\multicolumn{2}{r|}{%.3f}"%self.Q
+                c.append(s)
+                s = "dof&"
+                s += "\\multicolumn{2}{r}{%d}"%int(self.dof)
+                s += "&\\multicolumn{2}{r|}{%d}"%int(self.dof)
+                c.append(s)
+                s = "p-value&"
+                s += "\\multicolumn{2}{r}{%.3f}"%self.LR_p_value
+                s += "&\\multicolumn{2}{r|}{%.3f}\\hline"%self.Q_p_value
+                c.append(s)
+                s = "P(H0)"
+                s = "\\multicolumn{%s}{|l|}{%s}"%(ks,s)
+                c.append(s)
+                c.append("\\hline")
+                for mat in pmats:
+                    for row in mat:
+                        c.append(row)
+                    c.append("\\hline")
+
+
+
+                #for row in self.p_h0:
+                #    row = [ "%8.3f"%v for v in row.tolist()]
+                #    row = "&".join(row)
+                #    c.append(row)
+                #c.append("\\hline")
+                #for m in range(self.m):
+                #    s = "P(%s)"%regime_names[m]
+                #    s = "\\multicolumn{%s}{|l|}{%s}"%(ks,s)
+                #    c.append(s)
+                #    for row in self.p_h1[m]:
+                #        row = [ "%8.3f"%v for v in row.tolist()]
+                #        row = "&".join(row)
+                #        c.append(row)
+                #    c.append("\\hline")
+
+                c.append("\\end{tabular}")
+                f.write("\\\\\n".join(c))
+
+
+
+
+
+
+            
     
