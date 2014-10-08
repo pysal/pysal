@@ -1372,13 +1372,21 @@ class Homogeneity_Results:
         self.p_h0 = p_ij
         self.p_h1 = p_ijm
 
-    def summary(self, file_name=None):
+    def summary(self, file_name=None, title="Markov Homogeneity Test"):
         regime_names = ["%d"%i for i in range(self.m)]
         if self.regime_names:
             regime_names = self.regime_names
-        width = 72 
+        cols = ["P(%s)"%str(regime) for regime in regime_names]
+        if not self.class_names:
+            self.class_names = range(self.k)
+
+        max_col = max([len(col) for col in cols])
+        col_width = max([5, max_col]) #probabilities have 5 chars
+        n_tabs = self.k
+
+        width = n_tabs * 4 + (self.k+1)*col_width
         lead = "-"* width
-        head = "Markov Homogeneity Test".center(width)
+        head = title.center(width)
         contents = [lead,head,lead]
         l = "Number of regimes: %d" % int(self.m)
         k = "Number of classes: %d" % int(self.k)
@@ -1408,32 +1416,30 @@ class Homogeneity_Results:
         cols.extend(["%s"%str(cname) for cname in self.class_names])
 
         max_col = max([len(col) for col in cols])
-        print max_col
-        print cols
         col_width = max([5, max_col]) #probabilities have 5 chars
         p0 = []
-        line0 = ["P(H0)"]
-        line0.extend([ "%*s"%(col_width,cname) for cname in self.class_names])
-        print "\t".join(line0)
+        line0 = [  '{s: <{w}}'.format(s="P(H0)",w=col_width)   ]
+        line0.extend([ '{s: >{w}}'.format(s=cname,w=col_width) for cname in self.class_names])
+        print "    ".join(line0)
         p0.append("&".join(line0))
         for i,row in enumerate(self.p_h0):
             line = ["%*s"%(col_width, str(self.class_names[i]))]
             line.extend(["%*.3f"%(col_width,v) for v in row])
-            print  "\t".join(line)
+            print  "    ".join(line)
             p0.append("&".join(line))
         pmats = [p0]
 
         print lead
         for r, p1 in enumerate(self.p_h1):
             p0 = []
-            line0 = ["P(%s)"%regime_names[r]]
-            line0.extend([ "%*s"%(col_width,cname) for cname in self.class_names])
-            print "\t".join(line0)
+            line0 = [  '{s: <{w}}'.format(s="P(%s)"%regime_names[r],w=col_width)   ]
+            line0.extend([ '{s: >{w}}'.format(s=cname,w=col_width) for cname in self.class_names])
+            print "    ".join(line0)
             p0.append("&".join(line0))
             for i,row in enumerate(p1):
                 line = ["%*s"%(col_width, str(self.class_names[i]))]
                 line.extend(["%*.3f"%(col_width,v) for v in row])
-                print  "\t".join(line)
+                print  "    ".join(line)
                 p0.append("&".join(line))
             pmats.append(p0) 
             print lead
