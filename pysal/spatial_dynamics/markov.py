@@ -1446,65 +1446,49 @@ class Homogeneity_Results:
 
         if file_name:
             k = self.k
-            ks = str(k)
+            ks = str(k+1)
             with open(file_name, 'w') as f:
                 c = []
-                fmt = "r"*k
+                fmt = "r"*(k+1)
                 s="\\begin{tabular}{|%s|}\\hline\n"%fmt
-                s+= "\\multicolumn{%s}{|c|}{Markov Homogeneity Test}\\hline"%ks
+                s+= "\\multicolumn{%s}{|c|}{Markov Homogeneity Test}"%ks
                 c.append(s)
                 s = "Number of classes: %d"%int(self.k)
-                c.append("\\multicolumn{%s}{|l|}{%s}"%(ks,s))
+                c.append("\\hline\\multicolumn{%s}{|l|}{%s}"%(ks,s))
                 s = "Number of transitions: %d"%int(self.t_total)
                 c.append("\\multicolumn{%s}{|l|}{%s}"%(ks,s))
                 s = "Number of regimes: %d"%int(self.m)
                 c.append("\\multicolumn{%s}{|l|}{%s}"%(ks,s))
                 s = "Regime names: "
                 s += ", ".join(regime_names)
-                c.append("\\multicolumn{%s}{|l|}{%s}\\hline"%(ks,s))
-                s = "Test&"
-                s += "\\multicolumn{2}{r}{LR}&\\multicolumn{2|}{r}{Q}"
+                c.append("\\multicolumn{%s}{|l|}{%s}"%(ks,s))
+                s = "\\hline\\multicolumn{2}{|l}{%s}"%("Test")
+                s += "&\\multicolumn{2}{r}{LR}&\\multicolumn{2}{r|}{Q}"
                 c.append(s)
-                s = "Stat.&"
-                s += "\\multicolumn{2}{r}{%.3f}"%self.LR
+                s = "Stat."
+                s = "\\multicolumn{2}{|l}{%s}"%(s)
+                s += "&\\multicolumn{2}{r}{%.3f}"%self.LR
                 s += "&\\multicolumn{2}{r|}{%.3f}"%self.Q
                 c.append(s)
-                s = "dof&"
-                s += "\\multicolumn{2}{r}{%d}"%int(self.dof)
+                s = "\\multicolumn{2}{|l}{%s}"%("DOF")
+                s += "&\\multicolumn{2}{r}{%d}"%int(self.dof)
                 s += "&\\multicolumn{2}{r|}{%d}"%int(self.dof)
                 c.append(s)
-                s = "p-value&"
-                s += "\\multicolumn{2}{r}{%.3f}"%self.LR_p_value
-                s += "&\\multicolumn{2}{r|}{%.3f}\\hline"%self.Q_p_value
+                s = "\\multicolumn{2}{|l}{%s}"%("p-value")
+                s += "&\\multicolumn{2}{r}{%.3f}"%self.LR_p_value
+                s += "&\\multicolumn{2}{r|}{%.3f}"%self.Q_p_value
                 c.append(s)
-                s = "P(H0)"
-                s = "\\multicolumn{%s}{|l|}{%s}"%(ks,s)
-                c.append(s)
-                c.append("\\hline")
+                s1 =  "\\\\\n".join(c)
+                s1 += "\\\\\n"
+                c = []
                 for mat in pmats:
+                    c.append("\\hline\n")
                     for row in mat:
-                        c.append(row)
-                    c.append("\\hline")
-
-
-
-                #for row in self.p_h0:
-                #    row = [ "%8.3f"%v for v in row.tolist()]
-                #    row = "&".join(row)
-                #    c.append(row)
-                #c.append("\\hline")
-                #for m in range(self.m):
-                #    s = "P(%s)"%regime_names[m]
-                #    s = "\\multicolumn{%s}{|l|}{%s}"%(ks,s)
-                #    c.append(s)
-                #    for row in self.p_h1[m]:
-                #        row = [ "%8.3f"%v for v in row.tolist()]
-                #        row = "&".join(row)
-                #        c.append(row)
-                #    c.append("\\hline")
-
+                        c.append(row+"\\\\\n")
+                c.append("\\hline\n")
                 c.append("\\end{tabular}")
-                f.write("\\\\\n".join(c))
+                s2 = "".join(c)
+                f.write(s1+s2)
 
 
 
