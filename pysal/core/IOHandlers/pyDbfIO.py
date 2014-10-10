@@ -67,15 +67,13 @@ class DBF(pysal.core.Tables.DataTable):
                 name, typ, size, deci = struct.unpack(
                     '<11sc4xBB14x', f.read(32))
         
-                #name = name.replace('\0', '')
-                name = "".join([ str(x) for x in name if x != '\0'])
-                    # eliminate NULs from string
+                strname = str(name, 'utf-8')
+                name = bytes(strname, 'utf-8')
                 self._col_index[name] = (idx, record_size)
                 idx += 1
                 fmt += '%ds' % size
                 record_size += size
                 self.field_info.append((name, typ, size, deci))
-                print name
             terminator = f.read(1)
             #assert terminator == '\r'
             self.header_size = self.f.tell()
@@ -298,13 +296,13 @@ if __name__ == '__main__':
     newDB = pysal.open('copy.dbf', 'w')
     newDB.header = f.header
     newDB.field_spec = f.field_spec
-    print f.header
+    #print f.header
     for row in f:
         print row
         newDB.write(row)
     newDB.close()
     copy = pysal.open('copy.dbf', 'r')
     f.seek(0)
-    print "HEADER: ", copy.header == f.header
-    print "SPEC: ", copy.field_spec == f.field_spec
-    print "DATA: ", list(copy) == list(f)
+    #print "HEADER: ", copy.header == f.header
+    #print "SPEC: ", copy.field_spec == f.field_spec
+    #print "DATA: ", list(copy) == list(f)
