@@ -70,8 +70,8 @@ class DBF(pysal.core.Tables.DataTable):
                 name, typ, size, deci = struct.unpack(
                     '<11sc4xBB14x', f.read(32))
                 if PY3:
-                    strname = str(name, 'utf-8')
-                    name = bytes(strname, 'utf-8')
+                    name = str(name, 'utf-8')
+                    name = name.strip('\x00')
                 else:
                     name = name.replace('\0', '')
                 self._col_index[name] = (idx, record_size)
