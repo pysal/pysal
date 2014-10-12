@@ -4,6 +4,9 @@ import struct
 import itertools
 from warnings import warn
 import pysal
+import sys
+
+PY3 = sys.version > '3'
 
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ['DBF']
@@ -66,9 +69,11 @@ class DBF(pysal.core.Tables.DataTable):
             for fieldno in xrange(numfields):
                 name, typ, size, deci = struct.unpack(
                     '<11sc4xBB14x', f.read(32))
-        
-                strname = str(name, 'utf-8')
-                name = bytes(strname, 'utf-8')
+                if PY3:
+                    strname = str(name, 'utf-8')
+                    name = bytes(strname, 'utf-8')
+                else:
+                    name = name.replace('\0', '')
                 self._col_index[name] = (idx, record_size)
                 idx += 1
                 fmt += '%ds' % size
