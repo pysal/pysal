@@ -71,6 +71,7 @@ class DBF(pysal.core.Tables.DataTable):
                     '<11sc4xBB14x', f.read(32))
                 if PY3:
                     strname = str(name, 'utf-8')
+                    strname = strname.strip('\0')
                     name = bytes(strname, 'utf-8')
                 else:
                     name = name.replace('\0', '')
