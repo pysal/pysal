@@ -534,13 +534,16 @@ class Spatial_Markov:
         mat = [chi2(self.T[i], self.transitions) for i in rn]
         return mat
 
-    def summary(self, file_name=None):
+    def summary(self, file_name=None, variable_name="None"):
         class_names = ["C%d"%i for i in range(self.k)]
-        regime_names = ["LAG_%d"%i for i in range(self.k)]
+        regime_names = ["LAG%d"%i for i in range(self.k)]
         ht = homogeneity_test(self.T, class_names=class_names,
             regime_names=regime_names)
+        title = "Spatial Markov Test"
+        if variable_name:
+            title = title + " " + variable_name
         if file_name:
-            ht.summary(file_name=file_name)
+            ht.summary(file_name=file_name, title=title)
         else:
             ht.summary()
 
@@ -1260,7 +1263,8 @@ def shorrock(pmat):
     sh = (k - t) / (k - 1)
     return sh
 
-def homogeneity_test(transition_matrices, regime_names=[], class_names=[]):
+def homogeneity_test(transition_matrices, regime_names=[], class_names=[],
+    title="Markov Homogeneity Test"):
     """
     Test for homogeneity of Markov transition probabilities across regimes.
 
@@ -1451,7 +1455,7 @@ class Homogeneity_Results:
                 c = []
                 fmt = "r"*(k+1)
                 s="\\begin{tabular}{|%s|}\\hline\n"%fmt
-                s+= "\\multicolumn{%s}{|c|}{Markov Homogeneity Test}"%ks
+                s+= "\\multicolumn{%s}{|c|}{%s}"%(ks,title)
                 c.append(s)
                 s = "Number of classes: %d"%int(self.k)
                 c.append("\\hline\\multicolumn{%s}{|l|}{%s}"%(ks,s))
