@@ -593,12 +593,12 @@ with all the terms defined as above. Applying this to the St. Louis data:
     >>> y = np.array(f.by_col['HR8893'])
     >>> w = pysal.open(pysal.examples.get_path("stl.gal")).read()
     >>> gc = pysal.Geary(y, w)
-    >>> gc.C
-    0.59712821589368859
+    >>> "%.3f"%gc.C
+    '0.597'
     >>> gc.EC
     1.0
-    >>> gc.z_norm
-    -5.4492977418541138
+    >>> ".3f"%gc.z_norm
+    '-5.449'
 
 we see that the statistic :math:`C` is significantly lower than its expected
 value :math:`EC`. Although the sign of the standardized statistic is negative (in contrast to what held for :math:`I`, the interpretation is the same, namely evidence of strong positive spatial autocorrelation in the homicide rates.
