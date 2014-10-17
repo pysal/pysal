@@ -209,8 +209,8 @@ criteria are equivalent for 0-1 values.
         >>> g2 = pysal.Gamma(y,w,operation='a')
         >>> g2.g
         8.0
-        >>> g2.g_z
-        -3.7057554345954791
+        >>> "%.3f"%g2.g_z
+        '-3.706'
         >>> g2.p_sim_g
         0.001
         >>> g2.min_g
@@ -454,8 +454,8 @@ The instance of Moran's I can then be obtained with:
         '0.244'
         >>> mi.EI
         -0.012987012987012988
-        >>> mi.p_norm
-	    0.00013573931385468807
+        >>> "%.5f"%mi.p_norm
+	    '0.00014'
 
 From these results, we see that the observed value for I is significantly above its expected value, under the assumption of normality for the homicide rates. 
 
