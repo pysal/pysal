@@ -455,7 +455,7 @@ The instance of Moran's I can then be obtained with:
         >>> mi.EI
         -0.012987012987012988
         >>> "%.5f"%mi.p_norm
-	    '0.00014'
+        '0.00014'
 
 From these results, we see that the observed value for I is significantly above its expected value, under the assumption of normality for the homicide rates. 
 
