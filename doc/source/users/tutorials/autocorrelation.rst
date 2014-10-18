@@ -154,8 +154,8 @@ and mean (``mean_g``) of the reference distribution are available as well.
         >>> g = pysal.Gamma(y,w)
         >>> g.g
         20.0
-        >>> g.g_z
-        3.1879280354548638
+        >>> "%.3f"%g.g_z
+        '3.188'
         >>> g.p_sim_g
         0.0030000000000000001
         >>> g.min_g
@@ -181,8 +181,8 @@ keep comparability of the results.
         >>> g1 = pysal.Gamma(y,w,operation='s')
         >>> g1.g
         8.0
-        >>> g1.g_z
-        -3.7057554345954791
+        >>> "%.3f"%g1.g_z
+        '-3.706'
         >>> g1.p_sim_g
         0.001
         >>> g1.min_g
@@ -209,8 +209,8 @@ criteria are equivalent for 0-1 values.
         >>> g2 = pysal.Gamma(y,w,operation='a')
         >>> g2.g
         8.0
-        >>> g2.g_z
-        -3.7057554345954791
+        >>> "%.3f"%g2.g_z
+        '-3.706'
         >>> g2.p_sim_g
         0.001
         >>> g2.min_g
@@ -230,16 +230,16 @@ form, but the inference is equivalent.
         >>> g3 = pysal.Gamma(y,w,standardize='y')
         >>> g3.g
         32.0
-        >>> g3.g_z
-        3.7057554345954791
+        >>> "%.3f"%g3.g_z
+        '3.706'
         >>> g3.p_sim_g
         0.001
         >>> g3.min_g
         -48.0
         >>> g3.max_g
         20.0
-        >>> g3.mean_g
-        -3.2472472472472473
+        >>> "%.3f"%g3.mean_g
+        '-3.247'
 
 Note that all the tests shown here have used the weights matrix in binary form.
 However, since the Gamma index is perfectly general,
@@ -260,8 +260,8 @@ to the ``operation`` argument of the Gamma index.
         >>> g4 = pysal.Gamma(y,w,operation=func)
         >>> g4.g
         20.0
-        >>> g4.g_z
-        3.1879280354548638
+        >>> "%.3f"%g4.g_z
+        '3.188'
         >>> g4.p_sim_g
         0.0030000000000000001
 
@@ -450,12 +450,12 @@ The instance of Moran's I can then be obtained with:
 .. doctest::
 
         >>> mi = pysal.Moran(y, w, two_tailed=False)
-        >>> mi.I
-        0.24365582621771659
+        >>> "%.3f"%mi.I
+        '0.244'
         >>> mi.EI
         -0.012987012987012988
-        >>> mi.p_norm
-	0.00013573931385468807
+        >>> "%.5f"%mi.p_norm
+        '0.00014'
 
 From these results, we see that the observed value for I is significantly above its expected value, under the assumption of normality for the homicide rates. 
 
@@ -593,12 +593,12 @@ with all the terms defined as above. Applying this to the St. Louis data:
     >>> y = np.array(f.by_col['HR8893'])
     >>> w = pysal.open(pysal.examples.get_path("stl.gal")).read()
     >>> gc = pysal.Geary(y, w)
-    >>> gc.C
-    0.59712821589368859
+    >>> "%.3f"%gc.C
+    '0.597'
     >>> gc.EC
     1.0
-    >>> gc.z_norm
-    -5.4492977418541138
+    >>> "%.3f"%gc.z_norm
+    '-5.449'
 
 we see that the statistic :math:`C` is significantly lower than its expected
 value :math:`EC`. Although the sign of the standardized statistic is negative (in contrast to what held for :math:`I`, the interpretation is the same, namely evidence of strong positive spatial autocorrelation in the homicide rates.
