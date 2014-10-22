@@ -1065,9 +1065,9 @@ class Fisher_Jenks(Map_Classifier):
         nu = len(np.unique(y))
         if nu < k:
             raise ValueError("Fewer unique values than specified classes.")
-        self.name = "Fisher_Jenks"
         self.k = k
         Map_Classifier.__init__(self, y)
+        self.name = "Fisher_Jenks"
 
 
     def _set_bins(self):
