@@ -2,7 +2,6 @@
 A module of classification schemes for choropleth mapping.
 """
 __author__ = "Sergio J. Rey"
-__credits__ = "Copyright (c) 2009-10 Sergio J. Rey"
 
 __all__ = ['Map_Classifier', 'quantile', 'Box_Plot', 'Equal_Interval',
            'Fisher_Jenks', 'Fisher_Jenks_Sampled', 'Jenks_Caspall',
@@ -291,6 +290,7 @@ def natural_breaks(values, k=5, itmax=100):
     class_ids = c1
     cuts = [max(values[c1 == c]) for c in rk]
     return sids, seeds, diffs, class_ids, solved, it, cuts
+
 
 
 def _fisher_jenks_means(values, classes=5, sort=True):
@@ -1061,9 +1061,14 @@ class Fisher_Jenks(Map_Classifier):
     """
 
     def __init__(self, y, k=K):
+
+        nu = len(np.unique(y))
+        if nu < k:
+            raise ValueError("Fewer unique values than specified classes.")
+        self.name = "Fisher_Jenks"
         self.k = k
         Map_Classifier.__init__(self, y)
-        self.name = "Fisher_Jenks"
+
 
     def _set_bins(self):
         x = self.y.copy()
