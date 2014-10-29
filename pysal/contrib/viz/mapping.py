@@ -489,7 +489,7 @@ def base_choropleth_classif(map_obj, values, classification='quantiles', \
     cmap = cm.get_cmap(cmap, k+1)
     map_obj.set_cmap(cmap)
 
-    boundaries.insert(0,0)
+    boundaries.insert(0, values.min())
     norm = clrs.BoundaryNorm(boundaries, cmap.N)
     map_obj.set_norm(norm)
 
