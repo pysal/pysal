@@ -15,8 +15,7 @@ http://geodacenter.asu.edu
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 
 from struct import calcsize, unpack, pack
-#from cStringIO import StringIO
-import io
+from cStringIO import StringIO
 from itertools import izip, islice
 import array
 import sys
@@ -341,8 +340,7 @@ class shp_file:
         self.__seek(fPosition)
         #the index does not include the 2 byte record header (which contains, Record ID and Content Length)
         rec_id, con_len = _unpackDict(URHEADERSTRUCT, self.fileObj)
-        #return self.shape.unpack(StringIO(self.fileObj.read(bytes)))
-        return self.shape.unpack(io.BytesIO(self.fileObj.read(bytes)))
+        return self.shape.unpack(StringIO(self.fileObj.read(bytes)))
         #return self.shape.unpack(self.fileObj.read(bytes))
 
     def __update_bbox(self, s):

@@ -4,9 +4,6 @@ import struct
 import itertools
 from warnings import warn
 import pysal
-import sys
-
-PY3 = sys.version > '3'
 
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ['DBF']
@@ -69,18 +66,15 @@ class DBF(pysal.core.Tables.DataTable):
             for fieldno in xrange(numfields):
                 name, typ, size, deci = struct.unpack(
                     '<11sc4xBB14x', f.read(32))
-                if PY3:
-                    name = str(name, 'utf-8')
-                    name = name.strip('\x00')
-                else:
-                    name = name.replace('\0', '')
+                name = name.replace('\0', '')
+                    # eliminate NULs from string
                 self._col_index[name] = (idx, record_size)
                 idx += 1
                 fmt += '%ds' % size
                 record_size += size
                 self.field_info.append((name, typ, size, deci))
             terminator = f.read(1)
-            #assert terminator == '\r'
+            assert terminator == '\r'
             self.header_size = self.f.tell()
             self.record_size = record_size
             self.record_fmt = fmt
@@ -295,19 +289,18 @@ class DBF(pysal.core.Tables.DataTable):
 
 if __name__ == '__main__':
     import pysal
-    #file_name = pysal.examples.get_path("10740.dbf")
-    file_name = pysal.examples.get_path("columbus.dbf")
+    file_name = pysal.examples.get_path("10740.dbf")
     f = pysal.open(file_name, 'r')
     newDB = pysal.open('copy.dbf', 'w')
     newDB.header = f.header
     newDB.field_spec = f.field_spec
-    #print f.header
+    print f.header
     for row in f:
         print row
         newDB.write(row)
     newDB.close()
     copy = pysal.open('copy.dbf', 'r')
     f.seek(0)
-    #print "HEADER: ", copy.header == f.header
-    #print "SPEC: ", copy.field_spec == f.field_spec
-    #print "DATA: ", list(copy) == list(f)
+    print "HEADER: ", copy.header == f.header
+    print "SPEC: ", copy.field_spec == f.field_spec
+    print "DATA: ", list(copy) == list(f)
