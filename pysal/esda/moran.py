@@ -695,7 +695,9 @@ class Moran_Local_Rate(Moran_Local):
                      "V": variance-stabilizing.
     permutations   : number of random permutations for calculation of pseudo
                      p_values
-
+    geoda_quads    : boolean (default=False)
+                     If True use GeoDa scheme: HH=1, LL=2, LH=3, HL=4
+                     If False use PySAL Scheme: HH=1, LH=2, LL=3, HL=4
     Attributes
     ----------
     y            : array

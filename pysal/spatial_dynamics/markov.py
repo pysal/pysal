@@ -199,6 +199,8 @@ class Spatial_Markov:
                       If true, quantiles are taken over the entire n*t
                       pooled series. If false, quantiles are taken each
                       time period over n.
+    variable_name   : string
+                      name of variable
 
     Attributes
     ----------
@@ -251,6 +253,18 @@ class Spatial_Markov:
                       of the rows of the original transitions
     x2_realizations : array (permutations,1)
                       the values of x2 for the random permutations
+    Q               : float
+                      Chi-square test of homogeneity across lag classes based
+                      on Bickenbach and Bode (2003) [3]_
+    Q_p_value       : float
+                      p-value for Q
+    LR              : float
+                      Likelihood ratio statistic for homogeneity across lag
+                      classes based on Bickenback and Bode (2003) [3]_
+    LR_p_value      : float
+                      p-value for LR
+    dof_hom         : int
+                      degrees of freedom for LR and Q, corrected for 0 cells.
 
     Notes
     -----
@@ -271,7 +285,7 @@ class Spatial_Markov:
     >>> rpci = pci/(pci.mean(axis=0))
     >>> w = ps.open(ps.examples.get_path("states48.gal")).read()
     >>> w.transform = 'r'
-    >>> sm = ps.Spatial_Markov(rpci, w, fixed=True, k=5)
+    >>> sm = ps.Spatial_Markov(rpci, w, fixed=True, k=5, variable_name='rpci')
     >>> for p in sm.P:
     ...     print p
     ...
@@ -301,20 +315,31 @@ class Spatial_Markov:
      [ 0.          0.01036269  0.06217617  0.89637306  0.03108808]
      [ 0.          0.          0.          0.02352941  0.97647059]]
 
+
     The probability of a poor state remaining poor is 0.963 if their
     neighbors are in the 1st quintile and 0.798 if their neighbors are
     in the 2nd quintile. The probability of a rich economy remaining
-    rich is 0.977 if their neighbors are in the 5th quintile, but if their
+    rich is 0.976 if their neighbors are in the 5th quintile, but if their
     neighbors are in the 4th quintile this drops to 0.903.
 
-    Test if the transitional dynamics are homogeneous across the lag classes
+    The Q  and likelihood ratio statistics are both significant indicating
+    the dynamics are not homogeneous across the lag classes:
 
-    >>> sm.x2
-    200.8911757045552
-    >>> sm.x2_dof
-    80
-    >>> sm.x2_pvalue
-    2.2487567363782546e-12
+    >>> "%.3f"%sm.LR
+    '170.659'
+    >>> "%.3f"%sm.Q
+    '200.624'
+    >>> "%.3f"%sm.LR_p_value
+    '0.000'
+    >>> "%.3f"%sm.Q_p_value
+    '0.000'
+    >>> sm.dof_hom
+    60
+
+    The long run distribution for states with poor (rich) neighbors has
+    0.435 (0.018) of the values in the first quintile, 0.263 (0.200) in
+    the second quintile, 0.204 (0.190) in the third, 0.0684 (0.255) in the
+    fourth and 0.029 (0.337) in the fifth quintile.
 
     >>> sm.S
     array([[ 0.43509425,  0.2635327 ,  0.20363044,  0.06841983,  0.02932278],
@@ -323,10 +348,13 @@ class Spatial_Markov:
            [ 0.0776413 ,  0.19748806,  0.25352636,  0.22480415,  0.24654013],
            [ 0.01776781,  0.19964349,  0.19009833,  0.25524697,  0.3372434 ]])
 
-    The long run distribution for states with poor (rich) neighbors has
-    0.435 (0.018) of the values in the first quintile, 0.263 (0.200) in
-    the second quintile, 0.204 (0.190) in the third, 0.0684 (0.255) in the
-    fourth and 0.029 (0.337) in the fifth quintile.
+    States with incomes in the first quintile with neighbors in the
+    first quintile return to the first quartile after 2.298 years, after
+    leaving the first quintile. They enter the fourth quintile after
+    80.810 years after leaving the first quintile, on average.
+    Poor states within neighbors in the fourth quintile return to the
+    first quintile, on average, after 12.88 years, and would enter the
+    fourth quintile after 28.473 years.
 
     >>> for f in sm.F:
     ...     print f
@@ -357,36 +385,19 @@ class Spatial_Markov:
      [ 127.1407767    48.74107143   33.29605263    3.91777427   83.52173913]
      [ 169.6407767    91.24107143   75.79605263   42.5           2.96521739]]
 
-    States with incomes in the first quintile with neighbors in the
-    first quintile return to the first quartile after 2.298 years, after
-    leaving the first quintile. They enter the fourth quintile after
-    80.810 years after leaving the first quintile, on average.
-    Poor states within neighbors in the fourth quintile return to the
-    first quintile, on average, after 12.88 years, and would enter the
-    fourth quintile after 28.473 years.
-
-    >>> np.matrix(sm.chi2)
-    matrix([[  4.06139105e+01,   6.32961385e-04,   1.60000000e+01],
-            [  5.55485793e+01,   2.88879565e-06,   1.60000000e+01],
-            [  1.77772638e+01,   3.37100315e-01,   1.60000000e+01],
-            [  4.00925436e+01,   7.54729084e-04,   1.60000000e+01],
-            [  4.68588786e+01,   7.16364084e-05,   1.60000000e+01]])
-    >>> np.matrix(sm.shtest)
-    matrix([[  4.61209613e+02,   0.00000000e+00,   4.00000000e+00],
-            [  1.48140694e+02,   0.00000000e+00,   4.00000000e+00],
-            [  6.33129261e+01,   5.83089133e-13,   4.00000000e+00],
-            [  7.22778509e+01,   7.54951657e-15,   4.00000000e+00],
-            [  2.32659201e+02,   0.00000000e+00,   4.00000000e+00]])
-
 
     References
     ----------
 
-    .. [1] Rey, S.J. 2001. "Spatial empirics for economic growth
-       and convergence", 34 Geographical Analysis, 33, 195-214.
+    .. [3] Bickenbach, F. and E. Bode (2003) "Evaluating the Markov property in studies of economic convergence. International Regional Science Review: 3, 363-392.
 
+    .. [1] Rey, S. (2001) "Spatial empirics for economic growth and convergence." Geographical Analysis, 33: 194-214.
+
+
+   
     """
-    def __init__(self, y, w, k=4, permutations=0, fixed=False):
+    def __init__(self, y, w, k=4, permutations=0, fixed=False,
+                 variable_name=None):
 
         self.y = y
         rows, cols = y.shape
@@ -394,6 +405,7 @@ class Spatial_Markov:
         npm = np.matrix
         npa = np.array
         self.fixed = fixed
+        self.variable_name = variable_name
         if fixed:
             yf = y.flatten()
             yb = pysal.Quantiles(yf, k=k).yb
@@ -419,6 +431,15 @@ class Spatial_Markov:
         self.x2_pvalue = 1 - stats.chi2.cdf(self.x2, dof)
         self.x2_dof = dof
         self.k = k
+
+        # bickenbach and bode tests
+        ht = homogeneity(self.T)
+        self.Q = ht.Q
+        self.Q_p_value = ht.Q_p_value
+        self.LR = ht.LR
+        self.LR_p_value = ht.LR_p_value
+        self.dof_hom = ht.dof
+
 
         if permutations:
             nrp = np.random.permutation
@@ -534,14 +555,14 @@ class Spatial_Markov:
         mat = [chi2(self.T[i], self.transitions) for i in rn]
         return mat
 
-    def summary(self, file_name=None, variable_name=None):
+    def summary(self, file_name=None):
         class_names = ["C%d"%i for i in range(self.k)]
         regime_names = ["LAG%d"%i for i in range(self.k)]
         ht = homogeneity(self.T, class_names=class_names,
             regime_names=regime_names)
         title = "Spatial Markov Test"
-        if variable_name:
-            title = title + " " + variable_name
+        if self.variable_name:
+            title = title + ": " + self.variable_name
         if file_name:
             ht.summary(file_name=file_name, title=title)
         else:
@@ -850,6 +871,16 @@ class LISA_Markov(Markov):
               9.72266513e+00],
            [  9.60775143e+00,   9.86856346e-02,   6.23537392e+00,
               6.07058189e+02]])
+
+    If the LISA classes are to be defined according to GeoDa, the `geoda_quad`
+    option has to be set to true
+
+    >>> lm.q[0:5,0]
+    array([3, 2, 3, 1, 4])
+    >>> lm = ps.LISA_Markov(pci,w, geoda_quads=True)
+    >>> lm.q[0:5,0]
+    array([2, 3, 2, 1, 4])
+
     """
     def __init__(self, y, w, permutations=0,
                  significance_level=0.05, geoda_quads=False):
@@ -1120,9 +1151,7 @@ def kullback(F):
 
     References
     ----------
-
-    .. [2] Kullback, S. Kupperman, M. and H.H. Ku. (1962) "Tests for
-       contigency tables and Markov chains", Technometrics : 4, 573--608.
+    .. [2] Kullback, S. Kupperman, M. and H.H. Ku. (1962) "Tests for contigency tables and Markov chains", Technometrics: 4, 573--608.
 
     """
 
@@ -1275,7 +1304,7 @@ def homogeneity(transition_matrices, regime_names=[], class_names=[], \
     Test for homogeneity of Markov transition probabilities across regimes.
 
     Parameters
-    ==========
+    ----------
 
     transition_matrices: list of transition matrices for regimes
                          all matrices must have same size (r,c)
@@ -1293,7 +1322,7 @@ def homogeneity(transition_matrices, regime_names=[], class_names=[], \
             name of test
 
     Returns
-    =======
+    ------- 
 
     implicit: an instance of Homogeneity_Results
     """
@@ -1307,7 +1336,7 @@ class Homogeneity_Results:
     Wrapper class to present homogeneity results
  
     Parameters
-    ==========
+    ----------
 
     transition_matrices: list of transition matrices for regimes
                          all matrices must have same size (r,c)
@@ -1322,7 +1351,15 @@ class Homogeneity_Results:
                 Labels for the classes/states of the Markov chain
     title: string
            Title of the table
-   
+
+    Notes
+    -----
+    Degrees of freedom adjustment follow the approach in Bickenbach and Bode (2003) [3]_
+
+    Examples
+    --------
+    See Spatial_Markov above.
+
     """
 
     def __init__(self, transition_matrices, regime_names=[], class_names = [],
@@ -1508,3 +1545,4 @@ class Homogeneity_Results:
                 c.append("\\end{tabular}")
                 s2 = "".join(c)
                 f.write(s1+s2)
+
