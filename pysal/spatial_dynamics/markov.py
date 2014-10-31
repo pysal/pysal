@@ -11,7 +11,7 @@ import pysal
 from operator import gt
 
 __all__ = ["Markov", "LISA_Markov", "Spatial_Markov", "kullback",
-           "prais", "shorrock", "homogeneity_test"]
+           "prais", "shorrock", "homogeneity"]
 
 # TT predefine LISA transitions
 # TT[i,j] is the transition type from i to j
@@ -264,14 +264,14 @@ class Spatial_Markov:
 
     Examples
     --------
-    >>> import pysal
-    >>> f = pysal.open(pysal.examples.get_path("usjoin.csv"))
+    >>> import pysal as ps
+    >>> f = ps.open(ps.examples.get_path("usjoin.csv"))
     >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)])
     >>> pci = pci.transpose()
     >>> rpci = pci/(pci.mean(axis=0))
-    >>> w = pysal.open(pysal.examples.get_path("states48.gal")).read()
+    >>> w = ps.open(ps.examples.get_path("states48.gal")).read()
     >>> w.transform = 'r'
-    >>> sm = Spatial_Markov(rpci, w, fixed=True, k=5)
+    >>> sm = ps.Spatial_Markov(rpci, w, fixed=True, k=5)
     >>> for p in sm.P:
     ...     print p
     ...
@@ -534,10 +534,10 @@ class Spatial_Markov:
         mat = [chi2(self.T[i], self.transitions) for i in rn]
         return mat
 
-    def summary(self, file_name=None, variable_name="None"):
+    def summary(self, file_name=None, variable_name=None):
         class_names = ["C%d"%i for i in range(self.k)]
         regime_names = ["LAG%d"%i for i in range(self.k)]
-        ht = homogeneity_test(self.T, class_names=class_names,
+        ht = homogeneity(self.T, class_names=class_names,
             regime_names=regime_names)
         title = "Spatial Markov Test"
         if variable_name:
@@ -545,7 +545,7 @@ class Spatial_Markov:
         if file_name:
             ht.summary(file_name=file_name, title=title)
         else:
-            ht.summary()
+            ht.summary(title=title)
 
 
 
@@ -646,6 +646,9 @@ class LISA_Markov(Markov):
                          significance level (two-sided) for filtering significant LISA end
                          points in a transition
                          default = 0.05
+    geoda_quads    : boolean (default=False)
+                     If True use GeoDa scheme: HH=1, LL=2, LH=3, HL=4
+                     If False use PySAL Scheme: HH=1, LH=2, LL=3, HL=4
 
     Attributes
     ----------
@@ -655,7 +658,8 @@ class LISA_Markov(Markov):
                    degrees of freedom
                    for test that dynamics of y are independent of dynamics of wy
     classes      : array (4, 1)
-                   1=HH, 2=LH, 3=LL, 4=HL (own, lag)
+                   1=HH, 2=LH, 3=LL, 4=HL (own, lag) 
+                   1=HH, 2=LL, 3=LH, 4=HL (own, lag) (if geoda_quads=True)
     expected_t   : array (4, 4)
                    expected number of transitions under the null that dynamics
                    of y are independent of dynamics of wy
@@ -760,11 +764,12 @@ class LISA_Markov(Markov):
     Examples
     --------
 
+    >>> import pysal as ps
     >>> import numpy as np
-    >>> f = pysal.open(pysal.examples.get_path("usjoin.csv"))
+    >>> f = ps.open(ps.examples.get_path("usjoin.csv"))
     >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
-    >>> w = pysal.open(pysal.examples.get_path("states48.gal")).read()
-    >>> lm = LISA_Markov(pci,w)
+    >>> w = ps.open(ps.examples.get_path("states48.gal")).read()
+    >>> lm = ps.LISA_Markov(pci,w)
     >>> lm.classes
     array([1, 2, 3, 4])
     >>> lm.steady_state
@@ -818,8 +823,8 @@ class LISA_Markov(Markov):
 
     Test whether the moves of y are independent of the moves of wy
 
-    >>> lm.chi_2
-    (162.47505958346289, 0.0, 9)
+    >>> "Chi2: %8.3f, p: %5.2f, dof: %d" % lm.chi_2
+    'Chi2:  162.475, p:  0.00, dof: 9'
 
     Actual transitions of LISAs
 
@@ -847,14 +852,15 @@ class LISA_Markov(Markov):
               6.07058189e+02]])
     """
     def __init__(self, y, w, permutations=0,
-                 significance_level=0.05):
+                 significance_level=0.05, geoda_quads=False):
         y = y.transpose()
         pml = pysal.Moran_Local
+        gq = geoda_quads
 
         #################################################################
         # have to optimize conditional spatial permutations over a
         # time series - this is a place holder for the foreclosure paper
-        ml = [pml(yi, w, permutations=permutations) for yi in y]
+        ml = [pml(yi, w, permutations=permutations, geoda_quads=gq) for yi in y]
         #################################################################
 
         q = np.array([mli.q for mli in ml]).transpose()
@@ -1105,12 +1111,12 @@ def kullback(F):
     >>>
     >>> F = np.array([s1, s2])
     >>> res = kullback(F)
-    >>> res['Conditional homogeneity']
-    160.96060031170782
-    >>> res['Conditional homogeneity dof']
-    30
-    >>> res['Conditional homogeneity pvalue']
-    0.0
+    >>> "%8.3f"%res['Conditional homogeneity']
+    ' 160.961'
+    >>> "%d"%res['Conditional homogeneity dof']
+    '30'
+    >>> "%3.1f"%res['Conditional homogeneity pvalue']
+    '0.0'
 
     References
     ----------
@@ -1209,7 +1215,7 @@ def prais(pmat):
 
 def shorrock(pmat):
     """
-    Shorrocks mobility measure
+    Shorrock's mobility measure
 
     Parameters
     ----------
@@ -1263,24 +1269,28 @@ def shorrock(pmat):
     sh = (k - t) / (k - 1)
     return sh
 
-def homogeneity_test(transition_matrices, regime_names=[], class_names=[],
-    title="Markov Homogeneity Test"):
+def homogeneity(transition_matrices, regime_names=[], class_names=[], \
+                     title="Markov Homogeneity Test"):
     """
     Test for homogeneity of Markov transition probabilities across regimes.
 
     Parameters
     ==========
 
-    transition_matrices: ndarray (m,r,c)
-                         Three dimensional numpy array where first dimension
-                         pertains to the m regimes, r is the number of rows in
+    transition_matrices: list of transition matrices for regimes
+                         all matrices must have same size (r,c)
+                         r is the number of rows in
                          the transition matrix and c is the number of columns
                          in the transition matrix.
+
     regime_names: sequence
                 Labels for the regimes
 
     class_names: sequence
                 Labels for the classes/states of the Markov chain
+
+    title: string
+            name of test
 
     Returns
     =======
@@ -1289,7 +1299,8 @@ def homogeneity_test(transition_matrices, regime_names=[], class_names=[],
     """
 
     return Homogeneity_Results(transition_matrices, regime_names=regime_names,
-                                 class_names= class_names)
+                                 class_names= class_names,
+                                 title=title)
 
 class Homogeneity_Results:
     """
@@ -1298,23 +1309,28 @@ class Homogeneity_Results:
     Parameters
     ==========
 
-    transition_matrices: ndarray (m,r,c)
-                         Three dimensional numpy array where first dimension
-                         pertains to the m regimes, r is the number of rows in
+    transition_matrices: list of transition matrices for regimes
+                         all matrices must have same size (r,c)
+                         r is the number of rows in
                          the transition matrix and c is the number of columns
                          in the transition matrix.
+                         
     regime_names: sequence
                 Labels for the regimes
 
     class_names: sequence
                 Labels for the classes/states of the Markov chain
+    title: string
+           Title of the table
    
     """
 
-    def __init__(self, transition_matrices, regime_names=[], class_names = []):
+    def __init__(self, transition_matrices, regime_names=[], class_names = [],
+            title="Markov Homogeneity Test"):
         self._homogeneity(transition_matrices)
         self.regime_names=regime_names
         self.class_names = class_names
+        self.title = title
 
     def _homogeneity(self, transition_matrices):
         # form null transition probability matrix
@@ -1387,7 +1403,6 @@ class Homogeneity_Results:
         max_col = max([len(col) for col in cols])
         col_width = max([5, max_col]) #probabilities have 5 chars
         n_tabs = self.k
-
         width = n_tabs * 4 + (self.k+1)*col_width
         lead = "-"* width
         head = title.center(width)
@@ -1493,11 +1508,3 @@ class Homogeneity_Results:
                 c.append("\\end{tabular}")
                 s2 = "".join(c)
                 f.write(s1+s2)
-
-
-
-
-
-
-            
-    
