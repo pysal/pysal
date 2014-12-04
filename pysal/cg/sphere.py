@@ -392,7 +392,78 @@ def geointerpolate(p0,p1,t,lonx=True):
     if not(lonx):
         return newpy,newpx
     return newpx,newpy
+ 
+def geogrid(pup,pdown,k,lonx=True):
+    """
+    Computes a k+1 by k+1 set of grid points for a bounding box in lat-lon
+    uses geointerpolate
     
+    Parameters
+    ----------
+    pup     : tuple with lat-lon or lon-lat for upper left corner of bounding box
+    pdown   : tuple with lat-lon or lon-lat for lower right corner of bounding box
+    k       : number of grid cells (grid points will be one more)
+    lonx    : boolean to assess the order of the coordinates, 
+              for lon,lat (default) = True, for lat,lon = False
+    
+    Returns
+    -------
+    grid    : list of tuples with lat-lon or lon-lat for grid points, row by row,
+              starting with the top row and moving to the bottom; coordinate tuples
+              are returned in same order as input
+              
+    Example
+    -------
+    >>> pup = (42.023768,-87.946389)    # Arlington Heights IL
+    >>> pdown = (41.644415,-87.524102)  # Hammond, IN
+    >>> geogrid(pup,pdown,3,lonx=False)
+    [(42.023768, -87.946389),
+     (42.02393997819538, -87.80562679358316),
+     (42.02393997819538, -87.66486420641684),
+     (42.023768, -87.524102),
+     (41.897317, -87.94638900000001),
+     (41.8974888973743, -87.80562679296166),
+     (41.8974888973743, -87.66486420703835),
+     (41.897317, -87.524102),
+     (41.770866000000005, -87.94638900000001),
+     (41.77103781320412, -87.80562679234043),
+     (41.77103781320412, -87.66486420765956),
+     (41.770866000000005, -87.524102),
+     (41.644415, -87.946389),
+     (41.64458672568646, -87.80562679171955),
+     (41.64458672568646, -87.66486420828045),
+     (41.644415, -87.524102)]
+    
+    """
+    if lonx:
+        corners = [pup,pdown]
+    else:
+        corners = lonlat([pup,pdown])
+    tpoints = [float(i)/k for i in range(k)[1:]]
+    leftcorners = [corners[0],(corners[0][0],corners[1][1])]
+    rightcorners = [(corners[1][0],corners[0][1]),corners[1]]
+    leftside = [leftcorners[0]]
+    rightside = [rightcorners[0]]
+    for t in tpoints:
+        newpl = geointerpolate(leftcorners[0],leftcorners[1],t)
+        leftside.append(newpl)
+        newpr = geointerpolate(rightcorners[0],rightcorners[1],t)
+        rightside.append(newpr)
+    leftside.append(leftcorners[1])
+    rightside.append(rightcorners[1])
+    
+    grid = []
+    for i in range(len(leftside)):
+        grid.append(leftside[i])
+        for t in tpoints:
+            newp = geointerpolate(leftside[i],rightside[i],t)
+            grid.append(newp)
+        grid.append(rightside[i])
+    if not(lonx):
+        grid = lonlat(grid)
+    return grid
+    
+       
 
 if __name__ == '__main__':
     def random_ll():
@@ -440,3 +511,8 @@ if __name__ == '__main__':
     print "pn1",pn1
     pn2 = geointerpolate(p3,p4,0.1,lonx=False)
     print "pn2",pn2
+    pup = (42.023768,-87.946389)    # Arlington Heights IL
+    pdown = (41.644415,-87.524102)  # Hammond, IN
+    grid=geogrid(pup,pdown,3,lonx=False)
+    print "grid",grid
+    
