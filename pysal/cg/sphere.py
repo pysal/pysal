@@ -18,7 +18,7 @@ import scipy.constants
 from scipy.spatial.distance import euclidean
 from math import pi, cos, sin, asin
 
-__all__ = ['RADIUS_EARTH_KM', 'RADIUS_EARTH_MILES', 'arcdist', 'arcdist2linear', 'brute_knn', 'fast_knn', 'fast_threshold', 'linear2arcdist', 'toLngLat', 'toXYZ', 'lonlat','harcdist','geointerpolate']
+__all__ = ['RADIUS_EARTH_KM', 'RADIUS_EARTH_MILES', 'arcdist', 'arcdist2linear', 'brute_knn', 'fast_knn', 'fast_threshold', 'linear2arcdist', 'toLngLat', 'toXYZ', 'lonlat','harcdist','geointerpolate','geogrid']
 
 
 RADIUS_EARTH_KM = 6371.0  
