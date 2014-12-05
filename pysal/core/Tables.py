@@ -67,7 +67,10 @@ class DataTable(FileIO.FileIO):
         -----
 
         If the variables are not all of the same data type, then numpy rules
-        for casting will result in a unform type applied to all variables.
+        for casting will result in a uniform type applied to all variables.
+
+        Examples
+        --------
 
         >>> import pysal as ps
         >>> dbf = ps.open(ps.examples.get_path('NAT.dbf'))
