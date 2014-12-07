@@ -136,9 +136,8 @@ def googlepoints(querypoints,apikey,sradius,stype,newid=True,verbose=True):
             results = data['results']
             if verbose:
                 print data['status'], len(results)
-            else:
-                if len(results) == 200:
-                    print "WARNING: query truncated at 200"
+            if len(results) == 200:
+                print "WARNING: query truncated at 200"
             for item in results:
                 place_id = item['place_id']
                 loc = item['geometry']['location']
@@ -191,7 +190,8 @@ def ptdict2geojson(d,location=["lng","lat"],values=[],ofile="output.geojson"):
     geo = {"type": "FeatureCollection","features":[]}
     # loop over dictionary
     for id,loc in d.iteritems():
-        feature = { "type" : "Feature", "geometry": { "type": "Point", "coordinates": [ loc['lng'],loc['lat']]}}
+        feature = { "type" : "Feature", 
+        "geometry": { "type": "Point", "coordinates": [ loc['lng'],loc['lat']]}}
         properties = {"id": id}
         for info in values:
             properties[info] = loc[info]
@@ -203,5 +203,85 @@ def ptdict2geojson(d,location=["lng","lat"],values=[],ofile="output.geojson"):
     outfile.close()
     return
     
-
+def googlept(pointlist,stype,apikey,lonx=False,bbox=True,k=5,sradius=5000,verbose=True,ofile="output.geojson"):
+    """
+    User function to query google points
+    
+    Parameters
+    ----------
+    pointlist   : a list of tuples with lat-lon (or lon-lat) for query points
+                  or a list with the upper left and lower right points of a bounding box
+    stype       : string with the type of query from the list of supported queries
+                  by the Google Places API
+    apikey      : user's Google Places API key
+    lonx        : flag for order or lat-lon points in tuple
+                  default = False for lat-lon order (lon-lat is True)
+    bbox        : flag for use of bounding box as input
+                  default = True for bounding box; False is list of points
+                  when using a single point, must be in a list [(lat,lon)]
+    k           : default size for the search grid (for bbox=True)
+    sradius     : default search radius, for point list only
+                  with bbox=True search radius is determined internally
+    verbose     : flag for details in google query
+                  default is True for query status and number of points returned
+    ofile       : output file name
+    
+    Returns
+    -------
+                : geojson point file
+    
+    """
+    # create the grid search box
+    grid = querypoints(pointlist,bbox=bbox,lonx=lonx,k=k)
+    # compute search radius (only when bounding box specified)
+    if bbox:
+        sradius = queryradius(grid,k=k,lonx=lonx)
+    # query google places
+    ptdict = googlepoints(grid,apikey,sradius,stype,newid=True,verbose=verbose)
+    # create output file
+    ptdict2geojson(ptdict,location=["lng","lat"],values=["placeid"],ofile=ofile)
+    return
+    
+if __name__ == '__main__':
+    print "Welcome to PySAL Google Points Query"
+    apikey = raw_input("Enter your API key: ")
+    stype = raw_input("Enter the type of query: ")
+    print "For each query point, enter the lat,lon separated by a comma"
+    print "For a bounding box, enter the upper left corner first,\nthen the lower right"
+    plist = []
+    while True:
+        p = raw_input("Enter lat,lon: ")
+        if p:
+            pp = tuple(map(float,p.split(",")))
+            print pp
+            plist.append(pp)
+        else:
+            break
+    if len(plist) == 2:
+        bb = raw_input("Is this a bounding box (enter Yes or No): ")
+        if bb.upper() == 'NO' or bb.upper() == 'N':
+            bbox = False
+        else:
+            bbox = True
+    else:
+        bbox = False
+    k = 5
+    sr = 5000.0
+    if bbox:
+        gp = raw_input("Enter the number of grid points or return for default: ")
+        if gp:
+            k = int(gp)
+    else:
+        sr = raw_input("Enter the search radius in meters\nor return for default: ")
+        if sr:
+            sradius = float(sr)
+    
+    outfile = raw_input("Enter the name for the output file : ")
+    googlept(plist,stype,apikey,lonx=False,bbox=bbox,k=k,sradius=sr,
+          verbose=True,ofile=outfile)
+    print "Output is in file %s " % outfile
+    
+    
+        
+    
     
