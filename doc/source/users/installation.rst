@@ -33,6 +33,8 @@ wakari http://continuum.io/wakari
 
 PythonAnywhere https://www.pythonanywhere.com/
 
+SageMathCloud https://cloud.sagemath.com/
+
 
 Download and install 
 --------------------
@@ -40,9 +42,9 @@ Download and install
 PySAL is available on the `Python Package Index
 <http://pypi.python.org/pypi/pysal>`_, which means it can be
 downloaded and installed manually or from the command line using 
-easy_install, as follows::
+`pip`, as follows::
 
- $ easy_install pysal
+ $ pip install pysal
 
 Alternatively, grab the source distribution (.tar.gz) and decompress it to your selected destination. Open a command shell and navigate to the decompressed pysal folder. Type::
 
