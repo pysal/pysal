@@ -26,8 +26,8 @@ If you do not wish to use either Anaconda or Enthought, ensure the following sof
 Getting your feet wet
 ----------------------
 
-You can start using PySAL right away on the web with Wakari or
-PythonAnywhere. 
+You can start using PySAL right away on the web with Wakari, 
+PythonAnywhere, or SageMathCloud. 
 
 wakari http://continuum.io/wakari
 
