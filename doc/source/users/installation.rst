@@ -16,6 +16,19 @@ Python library.
 - `Anaconda Python distribution <http://continuum.io/downloads.html>`_
 - `Enthought Canopy <https://www.enthought.com/downloads>`_
 
+Note that while both Anaconda and Enthought Canopy will satisfy the
+dependencies for PySAL, the version of PySAL included in these distributions
+might be behind the latest stable release of PySAL.  You can update to the latest
+stable version of PySAL with either of these distributions as follows:
+
+1. In a terminal start the python version associated with the distribution.
+   Make sure you are not using a different (system) version of Python. To
+   check this use `which python` from a terminal to see if Anaconda or
+   Enthought appear in the output.
+2. `pip install -U pysal`
+
+
+
 
 If you do not wish to use either Anaconda or Enthought, ensure the following software packages are available on your machine:
 
