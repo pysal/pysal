@@ -1,7 +1,8 @@
 from collections import defaultdict, OrderedDict
+import cPickle
+import copy
 import math
 import os
-import copy
 
 import numpy as np
 import pysal as ps
@@ -222,6 +223,10 @@ class Network:
         """
         Create distance based weights
 
+        Parameters
+        ----------
+        threshold   float Distance to which nodes are considered neighbors
+
         """
         self.wtype='Distance: {}'.format(threshold)
         try:
@@ -419,6 +424,11 @@ class Network:
         return counts
 
     def _newpoint_coords(self, edge, distance):
+        """
+        Private: Compute the new point coordinates for an observations
+        snapped to an edge.
+        """
+
         x1 = self.node_coords[edge[0]][0]
         y1 = self.node_coords[edge[0]][1]
         x2 = self.node_coords[edge[1]][0]
@@ -433,7 +443,11 @@ class Network:
 
     def simulate_observations(self, count, distribution='uniform'):
         """
-        Generates simulated points
+        Generates simulated points on a network by first 'flattening' the
+        network into a line and then placing points along this representation
+        using the user defined distribution.
+
+        This method is called repeatably for many analytic functions.
 
         Parameters
         ----------
@@ -486,6 +500,11 @@ class Network:
         return links
 
     def node_distance_matrix(self):
+        """
+        Generate a dense, symmetric distance matrix for all nodes in the network.
+        This is used for all distance based computations, including distances
+          between point observations.
+        """
         self.alldistances = {}
         nnodes = len(self.node_list)
         self.distancematrix = np.empty((nnodes, nnodes))
@@ -637,7 +656,6 @@ class Network:
                         distribution=distribution,lowerbound=lowerbound,
                         upperbound=upperbound)
 
-
     def allneighbordistances(self, sourcepattern, destpattern=None):
         """
         Compute the distance between all observations points and either
@@ -713,7 +731,34 @@ class Network:
         np.fill_diagonal(nearest, np.nan)
         return nearest
 
+    def savenetwork(self, filename):
+        """
+        Save a network to disk.
+
+        Parameters
+        ----------
+        filename    str The filename where the network should be saved.
+                        This should be a full PATH or the file is saved
+                         whereever this method is called from.
+
+        """
+        with open(filename, 'wb') as networkout:
+            cPickle.dump(self, networkout, protocol=2)
+
+
+    @staticmethod
+    def loadnetwork(filename):
+        with open(filename, 'rb') as networkin:
+            self = cPickle.load(networkin)
+
+        return self
+
 class PointPattern():
+    """
+    A skeleton point pattern class designed as a stop gap until a PySAL
+    point pattern module is created which, presumably will contain a class
+    for representing point patterns.
+    """
     def __init__(self, shapefile, idvariable=None, attribute=False):
         self.points = {}
         self.npoints = 0
@@ -764,6 +809,9 @@ class SimulatedPointPattern():
 
 
 class SortedEdges(OrderedDict):
+    """
+    Sorted Ordered Dict
+    """
     def next_key(self, key):
         next = self._OrderedDict__map[key][1]
         if next is self._OrderedDict__root:
