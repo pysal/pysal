@@ -5,6 +5,7 @@
 
     gamma
     geary
+    getis-ord
     join_counts
     mapclassify
     moran

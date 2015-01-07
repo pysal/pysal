@@ -4,18 +4,33 @@
 Install  PySAL 
 ==============
 
+Windows users can download an .exe installer `here on 
+Sourceforge <http://sourceforge.net/projects/pysal/files/?source=navbar>`_.
 
-PySAL is built upon the Python scientific stack, primarily numpy and
+
+PySAL is built upon the Python scientific stack including numpy and
 scipy. While these libraries are packaged for several platforms, the
 Anaconda and Enthought Python distributions include them along with the core
-Python library. Both Anaconda and Enthought Canopy not only ship numpy and scipy, but PySAL as well! 
+Python library.
 
 - `Anaconda Python distribution <http://continuum.io/downloads.html>`_
 - `Enthought Canopy <https://www.enthought.com/downloads>`_
 
+Note that while both Anaconda and Enthought Canopy will satisfy the
+dependencies for PySAL, the version of PySAL included in these distributions
+might be behind the latest stable release of PySAL.  You can update to the latest
+stable version of PySAL with either of these distributions as follows:
 
-If you do not wish to use either Anaconda or Enthought you should make sure
-that make sure the following software packages are available on your machine:
+1. In a terminal start the python version associated with the distribution.
+   Make sure you are not using a different (system) version of Python. To
+   check this use `which python` from a terminal to see if Anaconda or
+   Enthought appear in the output.
+2. `pip install -U pysal`
+
+
+
+
+If you do not wish to use either Anaconda or Enthought, ensure the following software packages are available on your machine:
 
 * `Python <http://www.python.org/download>`_ 2.6, or 2.7 
 * `numpy <http://new.scipy.org/download.html>`_ 1.3 or later
@@ -24,12 +39,14 @@ that make sure the following software packages are available on your machine:
 Getting your feet wet
 ----------------------
 
-You can start using PySAL right away on the web with Wakari or
-PythonAnywhere. 
+You can start using PySAL right away on the web with Wakari, 
+PythonAnywhere, or SageMathCloud. 
 
 wakari http://continuum.io/wakari
 
 PythonAnywhere https://www.pythonanywhere.com/
+
+SageMathCloud https://cloud.sagemath.com/
 
 
 Download and install 
@@ -38,16 +55,14 @@ Download and install
 PySAL is available on the `Python Package Index
 <http://pypi.python.org/pypi/pysal>`_, which means it can be
 downloaded and installed manually or from the command line using 
-easy_install, as follows::
+`pip`, as follows::
 
- $ easy_install pysal
+ $ pip install pysal
 
 Alternatively, grab the source distribution (.tar.gz) and decompress it to your selected destination. Open a command shell and navigate to the decompressed pysal folder. Type::
 
  $ python setup.py install
 
-Windows users can download a graphical installer from
-`Sourceforge <http://sourceforge.net/projects/pysal/files/?source=navbar>`_.
 
 Development version on GitHub 
 -----------------------------

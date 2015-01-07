@@ -1,4 +1,5 @@
 .. role:: strike
+
 *******************
 PySAL Documentation
 *******************
@@ -242,7 +243,6 @@ than listing them at the bottom of each class, as has been done in some modules.
 .. _API docs: /library/index
 .. _spreg: /library/spreg/index
 .. _Sphinx: http://pypi.python.org/pypi/Sphinx/
-.. _napoleon: https://pypi.python.org/pypi/sphinxcontrib-napoleon 
 .. _here: https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt
 .. _Github: http://github.com/pysal
 .. _spreg: /library/spreg/index

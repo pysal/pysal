@@ -14,51 +14,47 @@ class G:
     """
     Global G Autocorrelation Statistic
 
-    Parameters:
-    -----------
-    y: array
-    w: DistanceBand W
-       spatial weights based on distance band
-    permutations: int
-                  the number of random permutations for calculating
-                  pseudo p_values
+    Parameters
+    ----------
+    y             : array
+    w             : DistanceBand W spatial weights based on distance band
+    permutations  : int
+                    the number of random permutations for calculating pseudo p_values
 
-    Attributes:
-    -----------
-    y: array
-       original variable
-    w: DistanceBand W
-       spatial weights based on distance band
-    permutation: int
-                 the number of permutations
-    G: float
-       the value of statistic
-    EG: float
-        the expected value of statistic
-    VG: float
-        the variance of G under normality assumption
-    z_norm: float
-         standard normal test statistic
-    p_norm: float
-            p-value under normality assumption (one-sided)
-    sim: array (if permutations > 0)
-         vector of G values for permutated samples
-    p_sim: float
-           p-value based on permutations (one-sided)
-           null: spatial randomness
-           alternative: the observed G is extreme
-                        it is either extremely high or extremely low
-    EG_sim: float
-            average value of G from permutations
-    VG_sim: float
-            variance of G from permutations
-    seG_sim: float
-             standard deviation of G under permutations.
-    z_sim: float
-           standardized G based on permutations
-    p_z_sim: float
-             p-value based on standard normal approximation from
-             permutations (one-sided)
+    Attributes
+    ----------
+    y             : array
+                    original variable
+    w             : DistanceBand W spatial weights based on distance band
+    permutation   : int
+                    the number of permutations
+    G             : float
+                    the value of statistic
+    EG            : float
+                    the expected value of statistic
+    VG            : float
+                    the variance of G under normality assumption
+    z_norm        : float
+                    standard normal test statistic
+    p_norm        : float
+                    p-value under normality assumption (one-sided)
+    sim           : array (if permutations > 0)
+                    vector of G values for permutated samples
+    p_sim         : float
+                    p-value based on permutations (one-sided)
+                    null: spatial randomness
+                    alternative: the observed G is extreme it is either extremely high or extremely low
+    EG_sim        : float
+                    average value of G from permutations
+    VG_sim        : float
+                    variance of G from permutations
+    seG_sim       : float
+                    standard deviation of G under permutations.
+    z_sim         : float
+                    standardized G based on permutations
+    p_z_sim       : float
+                    p-value based on standard normal approximation from
+                    permutations (one-sided)
 
     Notes
     -----
@@ -71,16 +67,13 @@ class G:
     >>> numpy.random.seed(10)
 
     Preparing a point data set
-
     >>> points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
 
     Creating a weights object from points
-
     >>> w = DistanceBand(points,threshold=15)
     >>> w.transform = "B"
 
-    Prepareing a variable
-
+    Preparing a variable
     >>> y = numpy.array([2, 3, 3.2, 5, 8, 7])
 
     Applying Getis and Ord G test
@@ -94,6 +87,7 @@ class G:
     0.1729
 
     """
+
     def __init__(self, y, w, permutations=PERMUTATIONS):
         self.n = len(y)
         self.y = y
@@ -165,8 +159,8 @@ class G_Local:
     """
     Generalized Local G Autocorrelation Statistic
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     y: array
        variable
     w: DistanceBand W
@@ -181,8 +175,8 @@ class G_Local:
           whether or not to include focal observation in sums
           default is False
 
-    Attributes:
-    -----------
+    Attributes
+    ----------
     y: array
        original variable
     w: DistanceBand W

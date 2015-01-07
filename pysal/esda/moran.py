@@ -558,6 +558,9 @@ class Moran_Local:
 
     permutations   : number of random permutations for calculation of pseudo
                      p_values
+    geoda_quads    : boolean (default=False)
+                     If True use GeoDa scheme: HH=1, LL=2, LH=3, HL=4
+                     If False use PySAL Scheme: HH=1, LH=2, LL=3, HL=4
 
     Attributes
     ----------
@@ -596,23 +599,27 @@ class Moran_Local:
 
     Examples
     --------
-    >>> import pysal
+    >>> import pysal as ps
     >>> import numpy as np
     >>> np.random.seed(10)
-    >>> w = pysal.open(pysal.examples.get_path("desmith.gal")).read()
-    >>> f = pysal.open(pysal.examples.get_path("desmith.txt"))
+    >>> w = ps.open(ps.examples.get_path("desmith.gal")).read()
+    >>> f = ps.open(ps.examples.get_path("desmith.txt"))
     >>> y = np.array(f.by_col['z'])
-    >>> lm = Moran_Local(y, w, transformation = "r", permutations = 99)
+    >>> lm = ps.Moran_Local(y, w, transformation = "r", permutations = 99)
     >>> lm.q
     array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
     >>> lm.p_z_sim[0]
     0.46756830387716064
+    >>> lm = ps.Moran_Local(y, w, transformation = "r", permutations = 99, geoda_quads=True)
+    >>> lm.q
+    array([4, 4, 4, 3, 2, 2, 1, 4, 2, 2])
 
     Note random components result is slightly different values across
     architectures so the results have been removed from doctests and will be
     moved into unittests that are conditional on architectures
     """
-    def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS):
+    def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS,
+        geoda_quads=False):
         self.y = y
         n = len(y)
         self.n = n
@@ -630,6 +637,11 @@ class Moran_Local:
         self.permutations = permutations
         self.den = sum(z * z)
         self.Is = self.calc(self.w, self.z)
+        self.geoda_quads = geoda_quads
+        quads = [1, 2, 3, 4]
+        if geoda_quads:
+            quads = [1, 3, 2, 4]
+        self.quads = quads
         self.__quads()
         if permutations:
             self.__crand()
@@ -658,7 +670,7 @@ class Moran_Local:
         i (we don't want i being a neighbor of i). we have to sample without
         replacement from a set of ids that doesn't include i. numpy doesn't
         directly support sampling wo replacement and it is expensive to
-        implement this. instead we omit i from the original ids,  permutate the
+        implement this. instead we omit i from the original ids,  permute the
         ids and take the first ni elements of the permuted ids as the
         neighbors to i in each randomization.
 
@@ -690,7 +702,8 @@ class Moran_Local:
         np = (1 - zp) * lp
         nn = (1 - zp) * (1 - lp)
         pn = zp * (1 - lp)
-        self.q = 1 * pp + 2 * np + 3 * nn + 4 * pn
+        self.q = self.quads[0] * pp + self.quads[1] * np + self.quads[2] * nn + self.quads[3] * pn
+
 
 
 class Moran_Local_Rate(Moran_Local):
@@ -716,7 +729,9 @@ class Moran_Local_Rate(Moran_Local):
                      "V": variance-stabilizing.
     permutations   : number of random permutations for calculation of pseudo
                      p_values
-
+    geoda_quads    : boolean (default=False)
+                     If True use GeoDa scheme: HH=1, LL=2, LH=3, HL=4
+                     If False use PySAL Scheme: HH=1, LH=2, LL=3, HL=4
     Attributes
     ----------
     y            : array
@@ -760,20 +775,26 @@ class Moran_Local_Rate(Moran_Local):
 
     Examples
     --------
-    >>> import pysal
+    >>> import pysal as ps
     >>> import numpy as np
     >>> np.random.seed(10)
-    >>> w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
-    >>> f = pysal.open(pysal.examples.get_path("sids2.dbf"))
+    >>> w = ps.open(ps.examples.get_path("sids2.gal")).read()
+    >>> f = ps.open(ps.examples.get_path("sids2.dbf"))
     >>> e = np.array(f.by_col('SID79'))
     >>> b = np.array(f.by_col('BIR79'))
-    >>> lm = pysal.esda.moran.Moran_Local_Rate(e, b, w, \
+    >>> lm = ps.esda.moran.Moran_Local_Rate(e, b, w, \
                                                transformation = "r", \
                                                permutations = 99)
     >>> lm.q[:10]
     array([2, 4, 3, 1, 2, 1, 1, 4, 2, 4])
     >>> lm.p_z_sim[0]
     0.39319552026912641
+    >>> lm = ps.esda.moran.Moran_Local_Rate(e, b, w, \
+                                               transformation = "r", \
+                                               permutations = 99, \
+                                               geoda_quads=True)
+    >>> lm.q[:10]
+    array([3, 4, 2, 1, 3, 1, 1, 4, 3, 4])
 
     Note random components result is slightly different values across
     architectures so the results have been removed from doctests and will be
@@ -781,14 +802,15 @@ class Moran_Local_Rate(Moran_Local):
     """
 
     def __init__(self, e, b, w, adjusted=True, transformation="r",
-                 permutations=PERMUTATIONS):
+                 permutations=PERMUTATIONS, geoda_quads=False):
         if adjusted:
             y = assuncao_rate(e, b)
         else:
             y = e * 1.0 / b
         Moran_Local.__init__(self, y, w,
                              transformation=transformation,
-                             permutations=permutations)
+                             permutations=permutations,
+                             geoda_quads=geoda_quads)
 
 
 def _test():
