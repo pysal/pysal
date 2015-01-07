@@ -656,7 +656,7 @@ class Network:
                         distribution=distribution,lowerbound=lowerbound,
                         upperbound=upperbound)
 
-    def allneighbordistances(self, sourcepattern, destpattern=None):
+     def allneighbordistances(self, sourcepattern, destpattern=None):
         """
         Compute the distance between all observations points and either
          (a) all other observation points within the same set or
@@ -664,8 +664,8 @@ class Network:
 
         Parameters
         ----------
-        sourcepattern   str The key of a point pattern snapped to the network.
-        destpatter      str (Optional) The key of a point pattern snapped to the network.
+        sourcepattern   str A source point pattern (snapped to the network).
+        destpatter      str (Optional) A destination pattern (snapped to the network).
 
         Returns
         -------
