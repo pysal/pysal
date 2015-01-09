@@ -47,7 +47,6 @@ ehthumbs.db
 Thumbs.db
 
 # pysal
-#
 lattice.*
 .vagrant/
 pysal/contrib/viz/.ipynb_checkpoints/
