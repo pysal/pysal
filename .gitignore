@@ -45,3 +45,6 @@ nosetests.xml
 Icon?
 ehthumbs.db
 Thumbs.db
+
+#Vim
+*.py.swp
