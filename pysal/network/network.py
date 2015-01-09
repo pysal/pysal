@@ -9,11 +9,7 @@ import pysal as ps
 from pysal.weights.util import get_ids
 
 import util
-<<<<<<< HEAD
-from analysis import NetworkG, NetworkK
-=======
 from analysis import NetworkG, NetworkK, NetworkF
->>>>>>> 71908740d06cc1fdef61c201178e8192c247e536
 class Network:
 
     """
