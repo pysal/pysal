@@ -42,7 +42,7 @@ class NetworkBase(object):
 
     def setbounds(self, nearest):
         if self.lowerbound == None:
-            self.lowerbound = np.nanmin(nearest)
+            self.lowerbound = 0
         if self.upperbound == None:
             self.upperbound = np.nanmax(nearest)
 
@@ -115,8 +115,8 @@ class NetworkF(NetworkBase):
     def computeobserved(self):
         self.fsim = self.ntw.simulate_observations(self.npts)
         #Nearest neighbor distances from the simulated to the observed
-        nearest = self.ntw.allneighbordistance(self.fsim, self.pointpattern)
-        self.setbound(nearest)
+        nearest = np.nanmin(self.ntw.allneighbordistances(self.fsim, self.pointpattern), axis=1)
+        self.setbounds(nearest)
         #Generate a random distribution of points
         observedx, observedy = ffunction(nearest, self.lowerbound, self.upperbound,
                                          nsteps=self.nsteps, npts=self.npts)
@@ -127,15 +127,26 @@ class NetworkF(NetworkBase):
         for p in xrange(self.permutations):
             sim = self.ntw.simulate_observations(self.npts,
                                                  distribution=self.distribution)
-            nearest = self.ntw.allneighbordistances(sim, self.fsim)
+            nearest = np.nanmin(self.ntw.allneighbordistances(sim, self.fsim), axis=1)
             simx, simy = ffunction(nearest, self.lowerbound, self.upperbound,
-                                   nsteps=self.nsteps, npts=self.npts)
-            sim[p] = simy
+                                   self.npts, nsteps=self.nsteps)
+            self.sim[p] = simy
 
 
+def ffunction(nearest, lowerbound, upperbound, npts, nsteps = 10):
+    nobs = len(nearest)
+    x = np.linspace(lowerbound, upperbound, nsteps)
+    nearest = np.sort(nearest)
+    y = np.empty(len(x))
+    for i,r in enumerate(x):
+        cnt = len(nearest[nearest <= r])
+        if cnt > 0:
+            g = cnt / float(npts)
+        else:
+            g = 0
+        y[i] = g
+    return x, y
 
-def ffunction(nearest, lowerbound, upperbound, nsteps, npts):
-    pass
 
 def gfunction(nearest, lowerbound, upperbound, nsteps = 10):
     """

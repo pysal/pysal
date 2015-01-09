@@ -9,7 +9,7 @@ import pysal as ps
 from pysal.weights.util import get_ids
 
 import util
-from analysis import NetworkG, NetworkK
+from analysis import NetworkG, NetworkK, NetworkF
 class Network:
 
     """
@@ -601,6 +601,15 @@ class Network:
 
         return nearest
 
+    def NetworkF(self, pointpattern, nsteps=10, permutations=99,
+                 threshold=0.2, distribution='uniform',
+                 lowerbound=None, upperbound=None):
+
+        return NetworkF(self, pointpattern, nsteps=nsteps,
+                        permutations=permutations,threshold=threshold,
+                        distribution=distribution,lowerbound=lowerbound,
+                        upperbound=upperbound)
+
     def NetworkG(self, pointpattern, nsteps=10, permutations=99,
                  threshold=0.5, distribution='uniform',
                  lowerbound=None, upperbound=None):
@@ -656,7 +665,7 @@ class Network:
                         distribution=distribution,lowerbound=lowerbound,
                         upperbound=upperbound)
 
-     def allneighbordistances(self, sourcepattern, destpattern=None):
+    def allneighbordistances(self, sourcepattern, destpattern=None):
         """
         Compute the distance between all observations points and either
          (a) all other observation points within the same set or
