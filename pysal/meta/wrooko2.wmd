@@ -1,0 +1,12 @@
+{
+    "input1": {
+        "type": "shp",
+        "uri": "../examples/columbus.shp"
+    },
+    "weight_type": "rook",
+    "transform": "O",
+    "parameters": {
+        "order":2,
+        "lower":0
+    }
+}

@@ -1,4 +1,193 @@
+v<1.8.0>, 2014-07-25
+
+GitHub stats for 2014/01/29 - 2014/07/25 (tag: v1.7)
+
+These lists are automatically generated, and may be incomplete or contain duplicates.
+
+The following 8 authors contributed 281 commits.
+
+* Dani Arribas-Bel
+* Jay
+* Philip Stephens
+* Serge Rey
+* Sergio Rey
+* jlaura
+* pedrovma
+* sjsrey
+
+
+We closed a total of 160 issues, 60 pull requests and 100 regular issues;
+this is the full list (generated with the script 
+:file:`tools/github_stats.py`):
+
+Pull Requests (60):
+
+* :ghpull:`503`: Grid for landing page
+* :ghpull:`501`: Two figs rather than three
+* :ghpull:`500`: More efficient higher order operations
+* :ghpull:`499`: renamed nat_queen.gal for #452
+* :ghpull:`497`: ENH Deprecation warning for regime_weights #486
+* :ghpull:`494`: Enables testing against two versions of SciPy shipped with the last two Ubuntu LTS versions.
+* :ghpull:`490`: Fix for #487
+* :ghpull:`492`: BUG cleaning up temporary files for #398
+* :ghpull:`493`: Phil: Skipping several tests that fail due to precision under older scipy
+* :ghpull:`489`: test suite fixes
+* :ghpull:`488`: More tests to skip if scipy less than 11
+* :ghpull:`484`: ENH: cleaning up more test generated files
+* :ghpull:`483`: Forwarding Phil's commit: skipping doctests, conditional skip of unit tests
+* :ghpull:`482`: DOC cleaning up files after running doctests #398
+* :ghpull:`481`: DOC contrib updates and links
+* :ghpull:`480`: DOC cleaning up doctests
+* :ghpull:`479`: ENH Changing regime_weights to block_weights for #455
+* :ghpull:`478`: DOC: link fixes
+* :ghpull:`477`: cKDTree for #460
+* :ghpull:`476`: redefining w.remap_ids to take only a single arg
+* :ghpull:`475`: Adding docstrings and error check to fix #471
+* :ghpull:`470`: fixing order of args for api consistency. 
+* :ghpull:`469`: Idfix for #449
+* :ghpull:`463`: updating gitignore
+* :ghpull:`462`: ENH: handle the case of an ergodic distribution where one state has 0 probability
+* :ghpull:`458`: ENH: Vagrantfile for PySAL devs and workshops
+* :ghpull:`447`: Clusterpy
+* :ghpull:`456`: BUG: fix for #451 handling W or WSP in higher_order_sp
+* :ghpull:`454`: Foobar
+* :ghpull:`443`: Updating spreg: several minor bug and documentation fixes.
+* :ghpull:`453`: Resolving conflicts
+* :ghpull:`448`: Wsp
+* :ghpull:`445`: ENH: unique qualitative color ramp. Also refactoring for future ipython deprecation of --pylab=inline
+* :ghpull:`446`: Wmd
+* :ghpull:`444`: Scipy dependency
+* :ghpull:`442`: Wmd
+* :ghpull:`441`: fixed kernel wmd for updated wmd structure
+* :ghpull:`440`: ENH: sidebar for Releases and installation doc update
+* :ghpull:`439`: - events
+* :ghpull:`438`: ENH: pruning to respect flake8
+* :ghpull:`437`: BUG: fix for removal of scipy.stat._support #436
+* :ghpull:`433`: Rank markov
+* :ghpull:`424`: testing
+* :ghpull:`431`: FOSS4G
+* :ghpull:`430`: Network
+* :ghpull:`429`: moving analytics out of wed class and into their own module
+* :ghpull:`428`: Network
+* :ghpull:`427`: devel docs
+* :ghpull:`425`: Viz2contrib
+* :ghpull:`423`: Update news.rst
+* :ghpull:`422`: ENH: Update doc instructions for napoleon dependency
+* :ghpull:`421`: Adding files used in some examples as per Luc's request.
+* :ghpull:`419`: Doc fixes 1.7
+* :ghpull:`393`: Doc fixes 1.7
+* :ghpull:`417`: ENH hex lattice W for #416
+* :ghpull:`415`: Temporarily commenting out tests that are blocking Travis.
+* :ghpull:`407`: Viz: Moving into contrib/viz in master
+* :ghpull:`404`: version change
+* :ghpull:`401`: fixes #388
+* :ghpull:`402`: release changes
+
+Issues (100):
+
+* :ghissue:`503`: Grid for landing page
+* :ghissue:`501`: Two figs rather than three
+* :ghissue:`500`: More efficient higher order operations
+* :ghissue:`452`: nat_queen.gal example file
+* :ghissue:`499`: renamed nat_queen.gal for #452
+* :ghissue:`486`: add a deprecation warning on regime_weights
+* :ghissue:`497`: ENH Deprecation warning for regime_weights #486
+* :ghissue:`449`: Lower order neighbor included in higher order
+* :ghissue:`487`: Issue with w.weights when row-standardizing
+* :ghissue:`398`: running test suite generates files
+* :ghissue:`358`: Graph weights
+* :ghissue:`338`: ENH: Move Geary's C calculations to Cython.
+* :ghissue:`494`: Enables testing against two versions of SciPy shipped with the last two Ubuntu LTS versions.
+* :ghissue:`490`: Fix for #487
+* :ghissue:`492`: BUG cleaning up temporary files for #398
+* :ghissue:`493`: Phil: Skipping several tests that fail due to precision under older scipy
+* :ghissue:`489`: test suite fixes
+* :ghissue:`485`: Revert "ENH: cleaning up more test generated files"
+* :ghissue:`488`: More tests to skip if scipy less than 11
+* :ghissue:`484`: ENH: cleaning up more test generated files
+* :ghissue:`483`: Forwarding Phil's commit: skipping doctests, conditional skip of unit tests
+* :ghissue:`482`: DOC cleaning up files after running doctests #398
+* :ghissue:`481`: DOC contrib updates and links
+* :ghissue:`480`: DOC cleaning up doctests
+* :ghissue:`455`: regime weights vs block weights
+* :ghissue:`479`: ENH Changing regime_weights to block_weights for #455
+* :ghissue:`478`: DOC: link fixes
+* :ghissue:`460`: Optimize KDTree
+* :ghissue:`477`: cKDTree for #460
+* :ghissue:`472`: Check for any side effects from new id remapping in w.sparse
+* :ghissue:`473`: update all user space functions for new w.remap_ids
+* :ghissue:`476`: redefining w.remap_ids to take only a single arg
+* :ghissue:`263`: Transition to scipy.spatial.cKDTree from scipy.spatial.KDTree
+* :ghissue:`414`: Travis build is killing nosetests
+* :ghissue:`335`: Weights transformation docs
+* :ghissue:`471`: add docstring example for w.remap_ids
+* :ghissue:`475`: Adding docstrings and error check to fix #471
+* :ghissue:`405`: ENH: Handling ids in W (Leave open for discussion)
+* :ghissue:`470`: fixing order of args for api consistency. 
+* :ghissue:`469`: Idfix for #449
+* :ghissue:`467`: redirect pysal.org to new dynamic landing page
+* :ghissue:`466`: design the grid for the notebooks
+* :ghissue:`464`: design new dynamic landing page for github.io
+* :ghissue:`465`: move news out of docs and into dynamic landing page
+* :ghissue:`468`: Move dynamic items out of sphinx docs and into dynamic landing page
+* :ghissue:`463`: updating gitignore
+* :ghissue:`451`: docs for higher_order_sp have wrong argument types
+* :ghissue:`462`: ENH: handle the case of an ergodic distribution where one state has 0 probability
+* :ghissue:`458`: ENH: Vagrantfile for PySAL devs and workshops
+* :ghissue:`447`: Clusterpy
+* :ghissue:`456`: BUG: fix for #451 handling W or WSP in higher_order_sp
+* :ghissue:`457`: This is a test to see if pull request notifications get sent out to the list
+* :ghissue:`454`: Foobar
+* :ghissue:`443`: Updating spreg: several minor bug and documentation fixes.
+* :ghissue:`453`: Resolving conflicts
+* :ghissue:`412`: On travis and darwin test_ml_error_regimes.py hangs 
+* :ghissue:`448`: Wsp
+* :ghissue:`435`: Will spatial durbin model be added in the near future?
+* :ghissue:`445`: ENH: unique qualitative color ramp. Also refactoring for future ipython deprecation of --pylab=inline
+* :ghissue:`446`: Wmd
+* :ghissue:`444`: Scipy dependency
+* :ghissue:`442`: Wmd
+* :ghissue:`441`: fixed kernel wmd for updated wmd structure
+* :ghissue:`440`: ENH: sidebar for Releases and installation doc update
+* :ghissue:`439`: - events
+* :ghissue:`438`: ENH: pruning to respect flake8
+* :ghissue:`436`: Scipy 0.14 induced breakage
+* :ghissue:`437`: BUG: fix for removal of scipy.stat._support #436
+* :ghissue:`408`: Use of `platform.system()` to determine platform
+* :ghissue:`403`: Scipy dependency
+* :ghissue:`434`: W Object Metadata Attribute
+* :ghissue:`433`: Rank markov
+* :ghissue:`424`: testing
+* :ghissue:`432`: Implementation of rank Markov classes
+* :ghissue:`431`: FOSS4G
+* :ghissue:`430`: Network
+* :ghissue:`429`: moving analytics out of wed class and into their own module
+* :ghissue:`420`: Local Moran's I,  I Attribute Undefined
+* :ghissue:`418`: Extended pysal.weights.user.build_lattice_shapefile 
+* :ghissue:`428`: Network
+* :ghissue:`427`: devel docs
+* :ghissue:`426`: dev docs
+* :ghissue:`425`: Viz2contrib
+* :ghissue:`423`: Update news.rst
+* :ghissue:`422`: ENH: Update doc instructions for napoleon dependency
+* :ghissue:`421`: Adding files used in some examples as per Luc's request.
+* :ghissue:`419`: Doc fixes 1.7
+* :ghissue:`393`: Doc fixes 1.7
+* :ghissue:`416`: Add hexagonal lattice option for lat2W
+* :ghissue:`417`: ENH hex lattice W for #416
+* :ghissue:`409`: add wiki page on viz module design
+* :ghissue:`413`: Temporary fix for https://github.com/pysal/pysal/issues/412
+* :ghissue:`415`: Temporarily commenting out tests that are blocking Travis.
+* :ghissue:`407`: Viz: Moving into contrib/viz in master
+* :ghissue:`406`: Viz: pruning old code and adding more examples for TAZ paper
+* :ghissue:`380`: Pep 8 and Line Length
+* :ghissue:`404`: version change
+* :ghissue:`401`: fixes #388
+* :ghissue:`388`: update testing procedures docs
+* :ghissue:`402`: release changes
+
 v<1.7.0>, 2014-01-29
+
 36d268f Philip Stephens -Merge pull request #400 from sjsrey/mldoc
 c2c4741 Serge Rey -Formatting ml docs
 685f5e3 Sergio Rey -Merge pull request #399 from sjsrey/master

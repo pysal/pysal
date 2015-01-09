@@ -2,7 +2,6 @@
 A module of classification schemes for choropleth mapping.
 """
 __author__ = "Sergio J. Rey"
-__credits__ = "Copyright (c) 2009-10 Sergio J. Rey"
 
 __all__ = ['Map_Classifier', 'quantile', 'Box_Plot', 'Equal_Interval',
            'Fisher_Jenks', 'Fisher_Jenks_Sampled', 'Jenks_Caspall',
@@ -293,6 +292,7 @@ def natural_breaks(values, k=5, itmax=100):
     return sids, seeds, diffs, class_ids, solved, it, cuts
 
 
+
 def _fisher_jenks_means(values, classes=5, sort=True):
     """
     Jenks Optimal (Natural Breaks) algorithm implemented in Python.
@@ -385,6 +385,7 @@ class Map_Classifier:
     * :class:`~pysal.esda.mapclassify.Box_Plot`
     * :class:`~pysal.esda.mapclassify.Equal_Interval`
     * :class:`~pysal.esda.mapclassify.Fisher_Jenks`
+    * :class:`~pysal.esda.mapclassify.Fisher_Jenks_Sampled`
     * :class:`~pysal.esda.mapclassify.Jenks_Caspall`
     * :class:`~pysal.esda.mapclassify.Jenks_Caspall_Forced`
     * :class:`~pysal.esda.mapclassify.Jenks_Caspall_Sampled`
@@ -976,14 +977,15 @@ class Natural_Breaks(Map_Classifier):
     >>> nb.counts
     array([14, 13, 14, 10,  7])
     >>> nb.bins
-    [1.8100000000000001, 7.5999999999999996, 29.82, 181.27000000000001, 4111.4499999999998]
+    array([  1.81000000e+00,   7.60000000e+00,   2.98200000e+01,
+             1.81270000e+02,   4.11145000e+03])
     >>> x = np.array([1] * 50)
     >>> x[-1] = 20
     >>> nb = Natural_Breaks(x, k = 5, initial = 0)
     Warning: Not enough unique values in array to form k classes
     Warning: setting k to 2
     >>> nb.bins
-    [1, 20]
+    array([ 1, 20])
     >>> nb.counts
     array([49,  1])
 
@@ -1016,7 +1018,7 @@ class Natural_Breaks(Map_Classifier):
             fit_i = res[2].sum()
             if fit_i < fit:
                 res0 = res
-        self.bins = res0[-1]
+        self.bins = np.array(res0[-1])
         self.k = len(self.bins)
         self.iterations = res0[-2]
 
@@ -1053,20 +1055,25 @@ class Fisher_Jenks(Map_Classifier):
     >>> fj.adcm
     799.24000000000001
     >>> fj.bins
-    [75.290000000000006, 192.05000000000001, 370.5, 722.85000000000002, 4111.45]
+    array([   75.29,   192.05,   370.5 ,   722.85,  4111.45])
     >>> fj.counts
     array([49,  3,  4,  1,  1])
     >>>
     """
 
     def __init__(self, y, k=K):
+
+        nu = len(np.unique(y))
+        if nu < k:
+            raise ValueError("Fewer unique values than specified classes.")
         self.k = k
         Map_Classifier.__init__(self, y)
         self.name = "Fisher_Jenks"
 
+
     def _set_bins(self):
         x = self.y.copy()
-        self.bins = _fisher_jenks_means(x, classes=self.k)[1:]
+        self.bins = np.array(_fisher_jenks_means(x, classes=self.k)[1:])
 
 
 class Fisher_Jenks_Sampled(Map_Classifier):
@@ -1532,7 +1539,7 @@ class Max_P_Classifier(Map_Classifier):
     >>> cal = pysal.esda.mapclassify.load_example()
     >>> mp = pysal.Max_P_Classifier(cal)
     >>> mp.bins
-    [8.6999999999999993, 16.699999999999999, 20.469999999999999, 66.260000000000005, 4111.4499999999998]
+    array([    8.7 ,    16.7 ,    20.47,    66.26,  4111.45])
     >>> mp.counts
     array([29,  8,  1, 10, 10])
 
@@ -1640,7 +1647,7 @@ class Max_P_Classifier(Map_Classifier):
                 swapping = False
         xs = self.y.copy()
         xs.sort()
-        self.bins = [xs[cl][-1] for cl in classes]
+        self.bins = np.array([xs[cl][-1] for cl in classes])
 
     def _ss(self, class_def):
         """calculates sum of squares for a class"""

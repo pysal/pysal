@@ -14,7 +14,7 @@ def symmetrize(w):
     Returns
     -------
     a sparse symmetric matrix with same eigenvalues as w
-    
+
     """
     current = w.transform
     w.transform = 'B'

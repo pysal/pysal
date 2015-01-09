@@ -27,9 +27,9 @@ def set_name_ds(name_ds):
 
     Returns
     -------
-    
+
     name_ds     : string
-                  
+
     """
     if not name_ds:
         name_ds = 'unknown'
@@ -48,9 +48,9 @@ def set_name_y(name_y):
 
     Returns
     -------
-    
+
     name_ds     : string
-                  
+
     """
     if not name_y:
         name_y = 'dep_var'
@@ -75,9 +75,9 @@ def set_name_x(name_x, x, constant=False):
 
     Returns
     -------
-    
+
     name_x      : list of strings
-                  
+
     """
     if not name_x:
         name_x = ['var_' + str(i + 1) for i in range(x.shape[1])]
@@ -100,9 +100,9 @@ def set_name_yend(name_yend, yend):
 
     Returns
     -------
-    
+
     name_yend   : list of strings
-                  
+
     """
     if yend != None:
         if not name_yend:
@@ -127,9 +127,9 @@ def set_name_q(name_q, q):
 
     Returns
     -------
-    
+
     name_q      : list of strings
-                  
+
     """
     if q != None:
         if not name_q:
@@ -152,9 +152,9 @@ def set_name_yend_sp(name_y):
 
     Returns
     -------
-    
+
     name_yend_sp : string
-                  
+
     """
     return 'W_' + name_y
 
@@ -174,9 +174,9 @@ def set_name_q_sp(name_x, w_lags, name_q, lag_q, force_all=False):
 
     Returns
     -------
-    
+
     name_q_sp   : list of strings
-                  
+
     """
     if force_all:
         names = name_x
@@ -208,9 +208,9 @@ def set_name_h(name_x, name_q):
 
     Returns
     -------
-    
+
     name_h      : list of strings
-                  
+
     """
     return name_x + name_q
 
@@ -228,9 +228,9 @@ def set_robust(robust):
 
     Returns
     -------
-    
+
     robust      : string
-                  
+
     """
     if not robust:
         return 'unadjusted'
@@ -252,9 +252,9 @@ def set_name_w(name_w, w):
 
     Returns
     -------
-    
+
     name_w      : string
-                  
+
     """
     if w != None:
         if name_w != None:
@@ -318,7 +318,7 @@ def check_arrays(*arrays):
     *arrays : anything
               Objects passed by the user to a regression class; any type
               object can be passed and any number of objects can be passed
-     
+
     Returns
     -------
 
@@ -378,7 +378,7 @@ def check_y(y, n):
 
     n       : int
               number of observations
-     
+
     Returns
     -------
 
@@ -430,7 +430,7 @@ def check_weights(w, y, w_required=False):
 
     Returns : nothing
               Nothing is returned
-              
+
     Examples
     --------
 
@@ -483,7 +483,7 @@ def check_robust(robust, wk):
 
     Returns : nothing
               Nothing is returned
-              
+
     Examples
     --------
 
@@ -550,7 +550,7 @@ def check_spat_diag(spat_diag, w):
 
     Returns : nothing
               Nothing is returned
-              
+
     Examples
     --------
 
@@ -588,7 +588,7 @@ def check_regimes(reg_set, N=None, K=None):
 
     Returns : nothing
               Nothing is returned
-              
+
     """
     if len(reg_set) < 2:
         raise Exception, "At least 2 regimes are needed to run regimes methods. Please check your regimes variable."
@@ -611,7 +611,7 @@ def check_constant(x):
 
     Returns : nothing
               Nothing is returned
-              
+
     Examples
     --------
 

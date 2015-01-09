@@ -57,11 +57,12 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
 
     """
     shp = pysal.open(shapefile)
+    w = buildContiguity(shp, criterion='queen')
     if idVariable:
         ids = get_ids(shapefile, idVariable)
+        w.remap_ids(ids)
     else:
         ids = None
-    w = buildContiguity(shp, criterion='queen', ids=ids)
     shp.close()
     w.set_shapefile(shapefile, idVariable)
 
@@ -112,13 +113,15 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
 
     """
     shp = pysal.open(shapefile)
+    w = buildContiguity(shp, criterion='rook')
     if idVariable:
         ids = get_ids(shapefile, idVariable)
+        w.remap_ids(ids)
     else:
         ids = None
-    w = buildContiguity(shp, criterion='rook', ids=ids)
     shp.close()
     w.set_shapefile(shapefile, idVariable)
+
     if sparse:
         w = pysal.weights.WSP(w.sparse, id_order=ids)
 
@@ -354,7 +357,7 @@ def threshold_binaryW_from_array(array, threshold, p=2, radius=None):
     >>> w.weights
     {0: [1, 1], 1: [1, 1], 2: [], 3: [1, 1], 4: [1], 5: [1]}
     >>> w.neighbors
-    {0: [1, 3], 1: [0, 3], 2: [], 3: [0, 1], 4: [5], 5: [4]}
+    {0: [1, 3], 1: [0, 3], 2: [], 3: [1, 0], 4: [5], 5: [4]}
     >>>
     """
     if radius is not None:
@@ -408,7 +411,9 @@ def threshold_binaryW_from_shapefile(shapefile, threshold, p=2, idVariable=None,
         data = pysal.cg.KDTree(data, distance_metric='Arc', radius=radius)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
-        return DistanceBand(data, threshold=threshold, p=p, ids=ids)
+        w = DistanceBand(data, threshold=threshold, p=p)
+        w.remap_ids(ids)
+        return w
     return threshold_binaryW_from_array(data, threshold, p=p)
 
 
@@ -522,7 +527,8 @@ def threshold_continuousW_from_shapefile(shapefile, threshold, p=2,
         data = pysal.cg.KDTree(data, distance_metric='Arc', radius=radius)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
-        w = DistanceBand(data, threshold=threshold, p=p, alpha=alpha, binary=False, ids=ids)
+        w = DistanceBand(data, threshold=threshold, p=p, alpha=alpha, binary=False)
+        w.remap_ids(ids)
     else:
         w =  threshold_continuousW_from_array(data, threshold, p=p, alpha=alpha)
     w.set_shapefile(shapefile,idVariable)
@@ -747,14 +753,15 @@ def kernelW_from_shapefile(shapefile, k=2, function='triangular',
     >>> kw = pysal.kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"),idVariable='POLYID', function = 'gaussian')
 
     >>> kwd = pysal.kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"),idVariable='POLYID', function = 'gaussian', diagonal = True)
-    >>> kw.neighbors[1]
-    [2, 4, 1, 3]
-    >>> kwd.neighbors[1]
-    [2, 4, 1, 3]
-    >>> kw.weights[1]
-    [0.29090631630909874, 0.2436835517263174, 0.3989422804014327, 0.29671172124745776]
-    >>> kwd.weights[1]
-    [0.29090631630909874, 0.2436835517263174, 1.0, 0.29671172124745776]
+    >>> set(kw.neighbors[1]) == set([4, 2, 3, 1])
+    True
+    >>> set(kwd.neighbors[1]) == set([4, 2, 3, 1])
+    True
+    >>> 
+    >>> set(kw.weights[1]) == set( [0.2436835517263174, 0.29090631630909874, 0.29671172124745776, 0.3989422804014327])
+    True
+    >>> set(kwd.weights[1]) == set( [0.2436835517263174, 0.29090631630909874, 0.29671172124745776, 1.0])
+    True
     
 
     Notes

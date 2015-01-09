@@ -12,10 +12,10 @@ from user_output import check_constant
 def robust_vm(reg, gwk=None, sig2n_k=False):
     """
     Robust estimation of the variance-covariance matrix. Estimated by White (default) or HAC (if wk is provided). 
-        
+
     Parameters
     ----------
-    
+
     reg             : Regression object (OLS or TSLS)
                       output instance from a regression model
 
@@ -25,16 +25,16 @@ def robust_vm(reg, gwk=None, sig2n_k=False):
     sig2n_k         : boolean
                       If True, then use n-k to rescale the vc matrix.
                       If False, use n. (White only)
-                      
+
     Returns
     --------
-    
+
     psi             : kxk array
                       Robust estimation of the variance-covariance
-                      
+
     Examples
     --------
-    
+
     >>> import numpy as np
     >>> import pysal
     >>> from ols import OLS
@@ -56,13 +56,13 @@ def robust_vm(reg, gwk=None, sig2n_k=False):
            [-0.02243898, -0.00031638,  0.00313386]])
 
     Example with OLS and White
-    
+
     >>> ols = OLS(y,X, robust='white')
     >>> ols.vm
     array([[ 0.24515481,  0.01093322, -0.03441966],
            [ 0.01093322,  0.01798616, -0.00071414],
            [-0.03441966, -0.00071414,  0.0050153 ]])
-    
+
     Example with OLS and HAC
 
     >>> wk = pysal.kernelW_from_shapefile(pysal.examples.get_path('NAT.shp'),k=15,function='triangular', fixed=False)
@@ -124,19 +124,19 @@ def robust_vm(reg, gwk=None, sig2n_k=False):
 def hac_multi(reg, gwk, constant=False):
     """
     HAC robust estimation of the variance-covariance matrix for multi-regression object 
-        
+
     Parameters
     ----------
-    
+
     reg             : Regression object (OLS or TSLS)
                       output instance from a regression model
 
     gwk             : PySAL weights object
                       Spatial weights based on kernel functions
-                      
+
     Returns
     --------
-    
+
     psi             : kxk array
                       Robust estimation of the variance-covariance
 
@@ -156,7 +156,8 @@ def hac_multi(reg, gwk, constant=False):
         except:
             reg.multi[m].vm = spdot(
                 reg.multi[m].xtxi, np.dot(psi0, reg.multi[m].xtxi))
-        reg.vm[(counter*reg.kr):((counter+1)*reg.kr), (counter*reg.kr)               :((counter+1)*reg.kr)] = reg.multi[m].vm
+        reg.vm[(counter * reg.kr):((counter + 1) * reg.kr),
+               (counter * reg.kr):((counter + 1) * reg.kr)] = reg.multi[m].vm
         counter += 1
 
 

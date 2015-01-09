@@ -1,6 +1,1 @@
-nose-exclude
-nose-progressive
-sphinx
-sphinxcontrib-napoleon
-networkx
-Shapely
+scipy>=0.11

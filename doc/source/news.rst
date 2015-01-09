@@ -1,9 +1,23 @@
 .. news:
 
+Upcoming Events
+===============
+
+`2014-11-12: PySAL Workshop at the North American Meetings of the Regional Science Association Meetings, Bethesda <http://www.narsc.org/newsite/?page_id=67>`_ 
+
+
 News
 ====
 
-(2014-03-15) `PySAL Tutorial at GIScience 2014, Vienna - September, 23-26 <http://www.giscience.org/workshops_tutorials.html>`_
+(2014-09-23) `PySAL Tutorial at GIScience 2014,
+Vienna <http://www.giscience.org/workshops_tutorials.html>`__
+
+(2014-09-08) `PySAL Workshop at FOSS4G 2014,
+Portland <https://2014.foss4g.org/schedule/workshops/#wshop-content-568>`__
+
+(2014-08-08) `National Science Foundation Funding for New Approaches to Spatial Distribution Dynamics <https://geoplan.asu.edu/research-projects/new-approaches-spatial-distribution-dynamics>`_
+
+(2014-07-25) `PySAL 1.8.0 released <http://PySAL.readthedocs.org/en/v1.8/users/installation.html>`_
 
 (2014-01-31) `PySAL 1.7.0 released <https://github.com/pysal/pysal/wiki/PySAL-1.7-Release-(2014-01-31)>`_
   

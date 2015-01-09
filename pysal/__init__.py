@@ -19,6 +19,8 @@ esda
     Tools for Exploratory Spatial Data Analysis
 examples
     Example data sets used by several sub-packages for examples and testing
+network
+    Network constrained spatial regionalization
 region
     Regionalization algorithms and spatially constrained clustering
 spatial_dynamics
@@ -59,8 +61,8 @@ from pysal.spatial_dynamics import Markov, Spatial_Markov, LISA_Markov, \
     SpatialTau, Theta, Tau
 from pysal.spatial_dynamics import ergodic
 from pysal.spatial_dynamics import directional
-from pysal.weights import W, lat2W, regime_weights, comb, full, shimbel, \
-    order, higher_order, remap_ids, hexLat2W
+from pysal.weights import W, lat2W, block_weights, comb, full, shimbel, \
+    order, higher_order, higher_order_sp, remap_ids, hexLat2W, WSP, regime_weights
 from pysal.weights.Distance import knnW, Kernel, DistanceBand
 from pysal.weights.Contiguity import buildContiguity
 from pysal.weights.spatial_lag import lag_spatial
@@ -75,6 +77,7 @@ from pysal.weights.user import queen_from_shapefile, rook_from_shapefile, \
 from pysal.core.util.weight_converter import weight_convert
 import pysal.spreg
 import pysal.examples
+import pysal.network
 
 # Load the IOHandlers
 from pysal.core import IOHandlers

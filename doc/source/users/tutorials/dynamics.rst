@@ -483,7 +483,7 @@ Mexican states into regions:
 .. doctest::
 
     >>> regime = np.array(f.by_col['esquivel99'])
-    >>> w = pysal.weights.regime_weights(regime)
+    >>> w = pysal.weights.block_weights(regime)
     >>> np.random.seed(12345)
 
 Now we will calculate the spatial tau for decade transitions from 1940 through
@@ -759,9 +759,9 @@ The following runs the Jacquez test on the example data for a value of :math:`k`
 .. doctest::
 
     >>> result = interaction.jacquez(events.space, events.t ,k=3,permutations=99)
-    >>> print result['stat'] 
+    >>> print result['stat'] # doctest: +SKIP
     13
-    >>> print "%3.1f"%result['pvalue']
+    >>> print "%3.1f"%result['pvalue'] # doctest: +SKIP
     0.2
 
 Spatial Dynamics API

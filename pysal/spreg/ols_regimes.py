@@ -20,7 +20,7 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
 
     """
     Ordinary least squares with results and diagnostics.
-    
+
     Parameters
     ----------
     y            : array
@@ -75,10 +75,10 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
                    If 'all' (default), all the variables vary by regime.
     regime_err_sep  : boolean
                    If True, a separate regression is run for each regime.
-    cores        : integer
-                   Specifies the number of cores to be used in multiprocessing
-                   Default: all cores available (specified as cores=None).
-                   Note: Multiprocessing currently not available on Windows.
+    cores        : boolean
+                   Specifies if multiprocessing is to be used
+                   Default: no multiprocessing, cores = False
+                   Note: Multiprocessing may not work on all platforms.
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -91,7 +91,7 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
                    Name of dataset for use in output
     name_regimes : string
                    Name of regime variable for use in the output
-    
+
 
     Attributes
     ----------
@@ -292,7 +292,7 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
                    i.e. when regime_err_sep=True and no variable is fixed
                    across regimes.
                    Contains all attributes of each individual regression
-    
+
     Examples
     --------
     >>> import numpy as np
@@ -305,12 +305,12 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("NAT.dbf"),'r')
- 
+
     Extract the HR90 column (homicide rates in 1990) from the DBF file and make it
     the dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
     that other packages accept.
-    
+
     >>> y_var = 'HR90'
     >>> y = db.by_col(y_var)
     >>> y = np.array(y).reshape(len(y), 1)
@@ -355,7 +355,7 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
                  w=None, robust=None, gwk=None, sig2n_k=True,
                  nonspat_diag=True, spat_diag=False, moran=False, white_test=False,
                  vm=False, constant_regi='many', cols2regi='all',
-                 regime_err_sep=True, cores=None,
+                 regime_err_sep=True, cores=False,
                  name_y=None, name_x=None, name_regimes=None,
                  name_w=None, name_gwk=None, name_ds=None):
 
@@ -386,16 +386,16 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
         if regime_err_sep == True and set(cols2regi) == set([True]) and constant_regi == 'many':
             self.y = y
             name_x = USER.set_name_x(name_x, x)
-            regi_ids = dict((r, list(np.where(np.array(regimes) == r)[0]))
-                            for r in self.regimes_set)
+            regi_ids = dict(
+                (r, list(np.where(np.array(regimes) == r)[0])) for r in self.regimes_set)
             self._ols_regimes_multi(x, w, regi_ids, cores,
                                     gwk, sig2n_k, robust, nonspat_diag, spat_diag, vm, name_x, moran, white_test)
         else:
             name_x = USER.set_name_x(name_x, x, constant=True)
             x, self.name_x = REGI.Regimes_Frame.__init__(self, x,
                                                          regimes, constant_regi, cols2regi, name_x)
-            BaseOLS.__init__(self, y=y, x=x, robust=robust,
-                             gwk=gwk, sig2n_k=sig2n_k)
+            BaseOLS.__init__(
+                self, y=y, x=x, robust=robust, gwk=gwk, sig2n_k=sig2n_k)
             if regime_err_sep == True and robust == None:
                 y2, x2 = REGI._get_weighted_var(
                     regimes, self.regimes_set, sig2n_k, self.u, y, x)
@@ -415,17 +415,25 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
     def _ols_regimes_multi(self, x, w, regi_ids, cores,
                            gwk, sig2n_k, robust, nonspat_diag, spat_diag, vm, name_x, moran, white_test):
         results_p = {}
+        """
         for r in self.regimes_set:
             if system() == 'Windows':
                 is_win = True
-                results_p[r] = _work(
-                    *(self.y, x, w, regi_ids, r, robust, sig2n_k,
-                      self.name_ds, self.name_y, name_x, self.name_w, self.name_regimes))
+                results_p[r] = _work(*(self.y,x,w,regi_ids,r,robust,sig2n_k,self.name_ds,self.name_y,name_x,self.name_w,self.name_regimes))
             else:
                 pool = mp.Pool(cores)
+                results_p[r] = pool.apply_async(_work,args=(self.y,x,w,regi_ids,r,robust,sig2n_k,self.name_ds,self.name_y,name_x,self.name_w,self.name_regimes))
+                is_win = False
+        """
+        for r in self.regimes_set:
+            if cores:
+                pool = mp.Pool(None)
                 results_p[r] = pool.apply_async(_work, args=(
                     self.y, x, w, regi_ids, r, robust, sig2n_k, self.name_ds, self.name_y, name_x, self.name_w, self.name_regimes))
-                is_win = False
+            else:
+                results_p[r] = _work(*(self.y, x, w, regi_ids, r, robust, sig2n_k,
+                                       self.name_ds, self.name_y, name_x, self.name_w, self.name_regimes))
+
         self.kryd = 0
         self.kr = x.shape[1] + 1
         self.kf = 0
@@ -434,21 +442,34 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
         self.betas = np.zeros((self.nr * self.kr, 1), float)
         self.u = np.zeros((self.n, 1), float)
         self.predy = np.zeros((self.n, 1), float)
+        """
         if not is_win:
             pool.close()
             pool.join()
+        """
+        if cores:
+            pool.close()
+            pool.join()
+
         results = {}
         self.name_y, self.name_x = [], []
         counter = 0
         for r in self.regimes_set:
+            """
             if is_win:
                 results[r] = results_p[r]
             else:
                 results[r] = results_p[r].get()
+            """
+            if not cores:
+                results[r] = results_p[r]
+            else:
+                results[r] = results_p[r].get()
+
             self.vm[(counter * self.kr):((counter + 1) * self.kr),
                     (counter * self.kr):((counter + 1) * self.kr)] = results[r].vm
-            self.betas[(counter * self.kr):((counter + 1) * self.kr),
-                       ] = results[r].betas
+            self.betas[
+                (counter * self.kr):((counter + 1) * self.kr), ] = results[r].betas
             self.u[regi_ids[r], ] = results[r].u
             self.predy[regi_ids[r], ] = results[r].predy
             self.name_y += results[r].name_y
@@ -461,9 +482,8 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
         self.chow = REGI.Chow(self)
         if spat_diag:
             self._get_spat_diag_props(x, sig2n_k)
-        SUMMARY.OLS_multi(
-            reg=self, multireg=self.multi, vm=vm, nonspat_diag=nonspat_diag,
-            spat_diag=spat_diag, moran=moran, white_test=white_test, regimes=True, w=w)
+        SUMMARY.OLS_multi(reg=self, multireg=self.multi, vm=vm, nonspat_diag=nonspat_diag,
+                          spat_diag=spat_diag, moran=moran, white_test=white_test, regimes=True, w=w)
 
     def _get_spat_diag_props(self, x, sig2n_k):
         self.k = self.kr
@@ -516,7 +536,6 @@ if __name__ == '__main__':
     regimes = db.by_col(r_var)
     w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
     w.transform = 'r'
-    olsr = OLS_Regimes(
-        y, x, regimes, w=w, constant_regi='many', nonspat_diag=False, spat_diag=False, name_y=y_var, name_x=['INC', 'HOVAL'],
-        name_ds='columbus', name_regimes=r_var, name_w='columbus.gal', regime_err_sep=True, cols2regi=[True, True], sig2n_k=True, robust='white')
+    olsr = OLS_Regimes(y, x, regimes, w=w, constant_regi='many', nonspat_diag=False, spat_diag=False, name_y=y_var, name_x=['INC', 'HOVAL'],
+                       name_ds='columbus', name_regimes=r_var, name_w='columbus.gal', regime_err_sep=True, cols2regi=[True, True], sig2n_k=True, robust='white')
     print olsr.summary

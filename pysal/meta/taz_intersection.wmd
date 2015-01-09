@@ -1,0 +1,16 @@
+
+{
+    "input1":{
+        "data1": {
+                "type": "prov",
+                "uri": "taz_rook.wmd"},
+        "data2": {
+                "type": "prov",
+                "uri": "taz_block.wmd"}
+    },
+    "weight_type": "intersection",
+    "transform": "O",
+    "parameters": {
+    }
+}
+

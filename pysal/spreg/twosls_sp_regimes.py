@@ -89,10 +89,10 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
-    cores        : integer
-                   Specifies the number of cores to be used in multiprocessing
-                   Default: all cores available (specified as cores=None).
-                   Note: Multiprocessing currently not available on Windows.
+    cores        : boolean
+                   Specifies if multiprocessing is to be used
+                   Default: no multiprocessing, cores = False
+                   Note: Multiprocessing may not work on all platforms.
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -313,7 +313,7 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("NAT.dbf"),'r')
-    
+
     Extract the HR90 column (homicide rates in 1990) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -321,7 +321,7 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
 
     >>> y_var = 'HR90'
     >>> y = np.array([db.by_col(y_var)]).reshape(3085,1)
-    
+
     Extract UE90 (unemployment rate) and PS90 (population structure) vectors from
     the DBF to be used as independent variables in the regression. Other variables
     can be inserted by adding their names to x_var, such as x_var = ['Var1','Var2','...]
@@ -352,7 +352,7 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
     easily performed in the following way:
 
     >>> w.transform = 'r'
-    
+
     This class runs a lag model, which means that includes the spatial lag of
     the dependent variable on the right-hand side of the equation. If we want
     to have the names of the variables printed in the output summary, we will
@@ -433,7 +433,7 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
                  robust=None, gwk=None, sig2n_k=False,
                  spat_diag=False, constant_regi='many',
                  cols2regi='all', regime_lag_sep=False, regime_err_sep=True,
-                 cores=None, vm=False, name_y=None, name_x=None,
+                 cores=False, vm=False, name_y=None, name_x=None,
                  name_yend=None, name_q=None, name_regimes=None,
                  name_w=None, name_gwk=None, name_ds=None):
 
@@ -446,8 +446,8 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
         name_y = USER.set_name_y(name_y)
         name_yend = USER.set_name_yend(name_yend, yend)
         name_q = USER.set_name_q(name_q, q)
-        name_q.extend(USER.set_name_q_sp(name_x, w_lags, name_q, lag_q,
-                      force_all=True))
+        name_q.extend(
+            USER.set_name_q_sp(name_x, w_lags, name_q, lag_q, force_all=True))
         self.name_regimes = USER.set_name_ds(name_regimes)
         self.constant_regi = constant_regi
         self.n = n
@@ -504,35 +504,42 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
                 set_warn(self, warn)
             self.regime_lag_sep = regime_lag_sep
             self.title = "SPATIAL " + self.title
-            SUMMARY.GM_Lag(reg=self, w=w, vm=vm,
-                           spat_diag=spat_diag, regimes=True)
+            SUMMARY.GM_Lag(
+                reg=self, w=w, vm=vm, spat_diag=spat_diag, regimes=True)
 
-    def GM_Lag_Regimes_Multi(self, y, x, w_i, w, regi_ids, cores=None,
+    def GM_Lag_Regimes_Multi(self, y, x, w_i, w, regi_ids, cores=False,
                              yend=None, q=None, w_lags=1, lag_q=True,
                              robust=None, gwk=None, sig2n_k=False, cols2regi='all',
                              spat_diag=False, vm=False, name_y=None, name_x=None,
                              name_yend=None, name_q=None, name_regimes=None,
                              name_w=None, name_gwk=None, name_ds=None):
-        pool = mp.Pool(cores)
+        #        pool = mp.Pool(cores)
         self.name_ds = USER.set_name_ds(name_ds)
         name_x = USER.set_name_x(name_x, x)
         name_yend.append(USER.set_name_yend_sp(name_y))
         self.name_w = USER.set_name_w(name_w, w_i)
         self.name_gwk = USER.set_name_w(name_gwk, gwk)
         results_p = {}
+        """
         for r in self.regimes_set:
             w_r = w_i[r].sparse
             if system() == 'Windows':
                 is_win = True
-                results_p[r] = _work(
-                    *(y, x, regi_ids, r, yend, q, w_r, w_lags, lag_q, robust, sig2n_k,
-                      self.name_ds, name_y, name_x, name_yend, name_q, self.name_w, name_regimes))
-            else:
-                results_p[r] = pool.apply_async(
-                    _work, args=(
-                        y, x, regi_ids, r, yend, q, w_r, w_lags, lag_q,
-                        robust, sig2n_k, self.name_ds, name_y, name_x, name_yend, name_q, self.name_w, name_regimes, ))
+                results_p[r] = _work(*(y,x,regi_ids,r,yend,q,w_r,w_lags,lag_q,robust,sig2n_k,self.name_ds,name_y,name_x,name_yend,name_q,self.name_w,name_regimes))
+            else:                
+                results_p[r] = pool.apply_async(_work,args=(y,x,regi_ids,r,yend,q,w_r,w_lags,lag_q,robust,sig2n_k,self.name_ds,name_y,name_x,name_yend,name_q,self.name_w,name_regimes, ))
                 is_win = False
+        """
+        for r in self.regimes_set:
+            w_r = w_i[r].sparse
+            if cores:
+                pool = mp.Pool(None)
+                results_p[r] = pool.apply_async(_work, args=(
+                    y, x, regi_ids, r, yend, q, w_r, w_lags, lag_q, robust, sig2n_k, self.name_ds, name_y, name_x, name_yend, name_q, self.name_w, name_regimes, ))
+            else:
+                results_p[r] = _work(*(y, x, regi_ids, r, yend, q, w_r, w_lags, lag_q, robust,
+                                       sig2n_k, self.name_ds, name_y, name_x, name_yend, name_q, self.name_w, name_regimes))
+
         self.kryd = 0
         self.kr = len(cols2regi) + 1
         self.kf = 0
@@ -545,7 +552,12 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
         self.predy = np.zeros((self.n, 1), float)
         self.predy_e = np.zeros((self.n, 1), float)
         self.e_pred = np.zeros((self.n, 1), float)
+        """
         if not is_win:
+            pool.close()
+            pool.join()
+        """
+        if cores:
             pool.close()
             pool.join()
         results = {}
@@ -553,18 +565,24 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
         ], [], [], [], [], []
         counter = 0
         for r in self.regimes_set:
+            """
             if is_win:
                 results[r] = results_p[r]
             else:
                 results[r] = results_p[r].get()
-            results[r].predy_e, results[r].e_pred, warn = sp_att(
-                w_i[r], results[r].y, results[r].predy, results[r].yend[:, -1].reshape(results[r].n, 1), results[r].rho)
+            """
+            if not cores:
+                results[r] = results_p[r]
+            else:
+                results[r] = results_p[r].get()
+            results[r].predy_e, results[r].e_pred, warn = sp_att(w_i[r], results[r].y, results[
+                                                                 r].predy, results[r].yend[:, -1].reshape(results[r].n, 1), results[r].rho)
             set_warn(results[r], warn)
             results[r].w = w_i[r]
             self.vm[(counter * self.kr):((counter + 1) * self.kr),
                     (counter * self.kr):((counter + 1) * self.kr)] = results[r].vm
-            self.betas[(counter * self.kr):((counter + 1) * self.kr),
-                       ] = results[r].betas
+            self.betas[
+                (counter * self.kr):((counter + 1) * self.kr), ] = results[r].betas
             self.u[regi_ids[r], ] = results[r].u
             self.predy[regi_ids[r], ] = results[r].predy
             self.predy_e[regi_ids[r], ] = results[r].predy_e
@@ -589,8 +607,8 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
         if spat_diag:
             pass
             #self._get_spat_diag_props(y, x, w, yend, q, w_lags, lag_q)
-        SUMMARY.GM_Lag_multi(reg=self, multireg=self.multi,
-                             vm=vm, spat_diag=spat_diag, regimes=True, w=w)
+        SUMMARY.GM_Lag_multi(
+            reg=self, multireg=self.multi, vm=vm, spat_diag=spat_diag, regimes=True, w=w)
 
     def sp_att_reg(self, w_i, regi_ids, wy):
         predy_e_r, e_pred_r = {}, {}
@@ -598,14 +616,12 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
         self.e_pred = np.zeros((self.n, 1), float)
         counter = 1
         for r in self.regimes_set:
-            self.rho = self.betas[(self.kr - self.kryd) * self.nr + self.kf -
-                                  (self.yend.shape[1] - self.nr * self.kryd) + self.kryd * counter - 1]
-            self.predy_e[regi_ids[r], ], self.e_pred[regi_ids[r], ], warn = sp_att(
-                w_i[r],
-                self.y[regi_ids[r]], self.predy[
-                    regi_ids[
-                        r]],
-                wy[regi_ids[r]], self.rho)
+            self.rho = self.betas[(self.kr - self.kryd) * self.nr + self.kf - (
+                self.yend.shape[1] - self.nr * self.kryd) + self.kryd * counter - 1]
+            self.predy_e[regi_ids[r], ], self.e_pred[regi_ids[r], ], warn = sp_att(w_i[r],
+                                                                                   self.y[regi_ids[r]], self.predy[
+                                                                                       regi_ids[r]],
+                                                                                   wy[regi_ids[r]], self.rho)
             counter += 1
 
     def _get_spat_diag_props(self, y, x, w, yend, q, w_lags, lag_q):
@@ -640,8 +656,8 @@ def _work(y, x, regi_ids, r, yend, q, w_r, w_lags, lag_q, robust, sig2n_k, name_
         robust2 = None
     else:
         robust2 = robust
-    model = BaseTSLS(y_r, x_constant, yend_r, q_r,
-                     robust=robust2, sig2n_k=sig2n_k)
+    model = BaseTSLS(
+        y_r, x_constant, yend_r, q_r, robust=robust2, sig2n_k=sig2n_k)
     model.title = "SPATIAL TWO STAGE LEAST SQUARES ESTIMATION - REGIME %s" % r
     if robust == 'ogmm':
         _optimal_weight(model, sig2n_k, warn=False)
@@ -684,7 +700,6 @@ if __name__ == '__main__':
     regimes = db.by_col(r_var)
     w = pysal.queen_from_shapefile(pysal.examples.get_path("columbus.shp"))
     w.transform = 'r'
-    model = GM_Lag_Regimes(
-        y, x, regimes, yend=yd, q=q, w=w, constant_regi='many', spat_diag=True, sig2n_k=False, lag_q=True, name_y=y_var,
-        name_x=x_var, name_yend=yd_var, name_q=q_var, name_regimes=r_var, name_ds='columbus', name_w='columbus.gal', regime_err_sep=True, robust='white')
+    model = GM_Lag_Regimes(y, x, regimes, yend=yd, q=q, w=w, constant_regi='many', spat_diag=True, sig2n_k=False, lag_q=True, name_y=y_var,
+                           name_x=x_var, name_yend=yd_var, name_q=q_var, name_regimes=r_var, name_ds='columbus', name_w='columbus.gal', regime_err_sep=True, robust='white')
     print model.summary

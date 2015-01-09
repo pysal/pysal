@@ -378,7 +378,7 @@ def log_likelihood(reg):
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data. 
-    
+
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
 
     Create the dependent variable vector. 
@@ -765,7 +765,7 @@ def breusch_pagan(reg, z=None):
     Read the DBF associated with the Columbus data.
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"), "r")
- 
+
     Create the dependent variable vector. 
 
     >>> y = np.array(db.by_col("CRIME"))
@@ -1345,13 +1345,13 @@ def likratiotest(reg0, reg1):
 
     Parameters
     ----------
-    
+
     reg0         : regression object for constrained model (H0)
     reg1         : regression object for unconstrained model (H1)
-    
+
     Returns
     -------
-    
+
     likratio     : dictionary
                    contains the statistic (likr), the degrees of
                    freedom (df) and the p-value (pvalue)
@@ -1361,12 +1361,12 @@ def likratiotest(reg0, reg1):
                    degrees of freedom
     p-value      : float
                    p-value
-                   
+
     References
     ----------
     .. [1] W. Greene. 2012. Econometric Analysis. Prentice Hall, Upper
        Saddle River.
-       
+
     Examples
     --------
 
@@ -1374,9 +1374,9 @@ def likratiotest(reg0, reg1):
     >>> import pysal as ps
     >>> import scipy.stats as stats
     >>> import pysal.spreg.ml_lag as lag
-    
+
     Use the baltim sample data set
-    
+
     >>> db =  ps.open(ps.examples.get_path("baltim.dbf"),'r')
     >>> y_name = "PRICE"
     >>> y = np.array(db.by_col(y_name)).T
@@ -1387,20 +1387,20 @@ def likratiotest(reg0, reg1):
     >>> w = ww.read()
     >>> ww.close()
     >>> w.transform = 'r'
-    
+
     OLS regression
-    
+
     >>> ols1 = ps.spreg.OLS(y,x)
-    
+
     ML Lag regression
-    
+
     >>> mllag1 = lag.ML_Lag(y,x,w)
-    
+
     >>> lr = likratiotest(ols1,mllag1)
-    
+
     >>> print "Likelihood Ratio Test: {0:.4f}       df: {1}        p-value: {2:.4f}".format(lr["likr"],lr["df"],lr["p-value"])
     Likelihood Ratio Test: 44.5721       df: 1        p-value: 0.0000
-  
+
     """
 
     likratio = {}

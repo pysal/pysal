@@ -34,24 +34,40 @@ Currently the following contribs are available:
 
     - .. versionadded:: 1.3
     - Path: pysal.contrib.weights_viewer.weights_viewer
-    - Requires: wxPython
+    - Requires: `wxPython`_
 
  3. Shapely Extension -- Exposes shapely methods as standalone functions
 
     - .. versionadded:: 1.3
     - Path: pysal.contrib.shapely_ext
-    - Requires: shapely
+    - Requires: `shapely`_
 
  4. Shared Perimeter Weights -- calculate shared perimeters weights.
 
     - .. versionadded:: 1.3
     - Path: pysal.contrib.shared_perimeter_weights
-    - Requires: shapely
+    - Requires: `shapely`_
 
- 5. Visualization -- Lightweight visualization layer ([project
-    page](https://github.com/pysal/pysal/wiki/PySAL-Visualization-Project)).
+ 5. Visualization -- Lightweight visualization layer (`Project page`_).
 
     - .. versionadded:: 1.7
     - Path: pysal.contrib.viz
-    - Requires: matplotlib
+    - Requires: `matplotlib`_
 
+ 6. Clusterpy -- Spatially constrained clustering.
+
+    - .. versionadded:: 1.8
+    - Path: pysal.contrib.clusterpy
+    - Requires: `clusterpy`_
+
+
+
+
+
+
+
+.. _clusterpy: https://pypi.python.org/pypi/clusterPy/0.9.9
+.. _matplotlib: http://matplotlib.org/
+.. _project page: https://github.com/pysal/pysal/wiki/PySAL-Visualization-Project
+.. _shapely: https://pypi.python.org/pypi/Shapely
+.. _wxPython: http://www.wxpython.org/

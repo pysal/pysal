@@ -429,7 +429,7 @@ def w_clip(w1, w2, outSP=True, silent_island_warning=False):
     to interact with each other in our weights (i.e. w_ij = 0 if i and j in
     different groups). For that, we use the following method:
 
-    >>> w2 = ps.regime_weights(['r1', 'r2', 'r1', 'r1', 'r1', 'r2'])
+    >>> w2 = ps.block_weights(['r1', 'r2', 'r1', 'r1', 'r1', 'r2'])
 
     To illustrate that w2 will only be considered as binary even when the
     object passed is not, we can row-standardize it

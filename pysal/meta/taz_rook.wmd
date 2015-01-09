@@ -1,0 +1,10 @@
+
+{
+    "input1": {
+        "data1":{
+            "type": "shp",
+            "uri": "http://toae.org/pub/taz.shp"}
+    },
+    "weight_type": "rook",
+    "transform": "O"
+}

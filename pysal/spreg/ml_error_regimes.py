@@ -23,7 +23,7 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
     """
     ML estimation of the spatial error model with regimes (note no consistency 
     checks, diagnostics or constants added); Anselin (1988) [1]_
-    
+
     Parameters
     ----------
     y            : array
@@ -34,15 +34,13 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
     regimes      : list
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
-    constant_regi : ['one', 'many']
-                    Switcher controlling the constant term setup. It may take
-                    the following values:
-
+    constant_regi: ['one', 'many']
+                   Switcher controlling the constant term setup. It may take
+                   the following values:
                      *  'one': a vector of ones is appended to x and held
                                constant across regimes
                      * 'many': a vector of ones is appended to x and considered
                                different per regime (default)
-
     cols2regi    : list, 'all'
                    Argument indicating whether each
                    column of x should be considered as different per regime
@@ -58,10 +56,12 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
                    tolerance criterion in mimimize_scalar function and inverse_product
     regime_err_sep : boolean
                    If True, a separate regression is run for each regime.
-    cores        : integer
-                   Specifies the number of cores to be used in multiprocessing
-                   Default: all cores available (specified as cores=None).
-                   Note: Multiprocessing currently not available on Windows.
+    regime_lag_sep : boolean
+                   Always False, kept for consistency in function call, ignored.
+    cores        : boolean
+                   Specifies if multiprocessing is to be used
+                   Default: no multiprocessing, cores = False
+                   Note: Multiprocessing may not work on all platforms.
     spat_diag    : boolean
                    if True, include spatial diagnostics
     vm           : boolean
@@ -84,7 +84,7 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
                    Summary of regression results and diagnostics (note: use in
                    conjunction with the print command)
     betas        : array
-                   (k+1)x1 array of estimated coefficients (rho first)
+                   (k+1)x1 array of estimated coefficients (lambda last)
     lam          : float
                    estimate of spatial autoregressive coefficient
                    Only available in dictionary 'multi' when multiple regressions
@@ -202,10 +202,10 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
     ----------
 
     .. [1] Anselin, L. (1988) "Spatial Econometrics: Methods and Models".
-        Kluwer Academic Publishers. Dordrecht.
+    Kluwer Academic Publishers. Dordrecht.
 
-    Examples
-    --------
+    Example
+    ________
 
     Open data baltim.dbf using pysal and create the variables matrices and weights matrix.
 
@@ -222,10 +222,10 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
     >>> w = ww.read()
     >>> ww.close()
     >>> w_name = "baltim_q.gal"
-    >>> w.transform = 'r'
+    >>> w.transform = 'r'    
 
     Since in this example we are interested in checking whether the results vary
-    by regimes, we use CITCOU to define whether the location is in the city or
+    by regimes, we use CITCOU to define whether the location is in the city or 
     outside the city (in the county):
 
     >>> regimes = db.by_col("CITCOU")
@@ -270,7 +270,7 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
 
     def __init__(self, y, x, regimes, w=None, constant_regi='many',
                  cols2regi='all', method='full', epsilon=0.0000001,
-                 regime_err_sep=False, cores=None, spat_diag=False,
+                 regime_err_sep=False, regime_lag_sep=False, cores=False, spat_diag=False,
                  vm=False, name_y=None, name_x=None,
                  name_w=None, name_ds=None, name_regimes=None):
 
@@ -324,25 +324,34 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
             self.aic = DIAG.akaike(reg=self)
             self.schwarz = DIAG.schwarz(reg=self)
             self._cache = {}
-            SUMMARY.ML_Error(reg=self, w=w, vm=vm,
-                             spat_diag=spat_diag, regimes=True)
+            SUMMARY.ML_Error(
+                reg=self, w=w, vm=vm, spat_diag=spat_diag, regimes=True)
 
     def _error_regimes_multi(self, y, x, regimes, w, cores,
                              method, epsilon, cols2regi, vm, name_x, spat_diag):
 
-        regi_ids = dict((r, list(np.where(np.array(regimes) == r)[0]))
-                        for r in self.regimes_set)
+        regi_ids = dict(
+            (r, list(np.where(np.array(regimes) == r)[0])) for r in self.regimes_set)
         results_p = {}
+        """
         for r in self.regimes_set:
             if system() == 'Windows':
                 is_win = True
-                results_p[r] = _work_error(
-                    *(y, x, regi_ids, r, w, method, epsilon, self.name_ds, self.name_y, name_x + ['lambda'], self.name_w, self.name_regimes))
+                results_p[r] = _work_error(*(y,x,regi_ids,r,w,method,epsilon,self.name_ds,self.name_y,name_x+['lambda'],self.name_w,self.name_regimes))
             else:
                 pool = mp.Pool(cores)
+                results_p[r] = pool.apply_async(_work_error,args=(y,x,regi_ids,r,w,method,epsilon,self.name_ds,self.name_y,name_x+['lambda'],self.name_w,self.name_regimes, ))
+                is_win = False
+        """
+        for r in self.regimes_set:
+            if cores:
+                pool = mp.Pool(None)
                 results_p[r] = pool.apply_async(_work_error, args=(
                     y, x, regi_ids, r, w, method, epsilon, self.name_ds, self.name_y, name_x + ['lambda'], self.name_w, self.name_regimes, ))
-                is_win = False
+            else:
+                results_p[r] = _work_error(
+                    *(y, x, regi_ids, r, w, method, epsilon, self.name_ds, self.name_y, name_x + ['lambda'], self.name_w, self.name_regimes))
+
         self.kryd = 0
         self.kr = len(cols2regi) + 1
         self.kf = 0
@@ -353,20 +362,33 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
         self.predy = np.zeros((self.n, 1), float)
         self.e_filtered = np.zeros((self.n, 1), float)
         self.name_y, self.name_x = [], []
+        """
         if not is_win:
             pool.close()
             pool.join()
+        """
+        if cores:
+            pool.close()
+            pool.join()
+
         results = {}
         counter = 0
         for r in self.regimes_set:
+            """
             if is_win:
                 results[r] = results_p[r]
             else:
                 results[r] = results_p[r].get()
+            """
+            if not cores:
+                results[r] = results_p[r]
+            else:
+                results[r] = results_p[r].get()
+
             self.vm[(counter * self.kr):((counter + 1) * self.kr),
                     (counter * self.kr):((counter + 1) * self.kr)] = results[r].vm
-            self.betas[(counter * self.kr):((counter + 1) * self.kr),
-                       ] = results[r].betas
+            self.betas[
+                (counter * self.kr):((counter + 1) * self.kr), ] = results[r].betas
             self.u[regi_ids[r], ] = results[r].u
             self.predy[regi_ids[r], ] = results[r].predy
             self.e_filtered[regi_ids[r], ] = results[r].e_filtered
@@ -375,8 +397,8 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
             counter += 1
         self.chow = REGI.Chow(self)
         self.multi = results
-        SUMMARY.ML_Error_multi(reg=self, multireg=self.multi,
-                               vm=vm, spat_diag=spat_diag, regimes=True, w=w)
+        SUMMARY.ML_Error_multi(
+            reg=self, multireg=self.multi, vm=vm, spat_diag=spat_diag, regimes=True, w=w)
 
 
 def _work_error(y, x, regi_ids, r, w, method, epsilon, name_ds, name_y, name_x, name_w, name_regimes):
@@ -384,8 +406,8 @@ def _work_error(y, x, regi_ids, r, w, method, epsilon, name_ds, name_y, name_x, 
     y_r = y[regi_ids[r]]
     x_r = x[regi_ids[r]]
     x_constant = USER.check_constant(x_r)
-    model = BaseML_Error(y=y_r, x=x_constant, w=w_r,
-                         method=method, epsilon=epsilon)
+    model = BaseML_Error(
+        y=y_r, x=x_constant, w=w_r, method=method, epsilon=epsilon)
     set_warn(model, warn)
     model.w = w_r
     model.title = "MAXIMUM LIKELIHOOD SPATIAL ERROR - REGIME " + \
@@ -434,7 +456,7 @@ if __name__ == "__main__":
         else:
             regimes.append("South")
 
-    mlerror = ML_Error_Regimes(
-        y, x, regimes, w=w, method='full', name_y=y_name,
-        name_x=x_names, name_w=w_name, name_ds=ds_name, regime_err_sep=False)
+    mlerror = ML_Error_Regimes(y, x, regimes, w=w, method='full', name_y=y_name,
+                               name_x=x_names, name_w=w_name, name_ds=ds_name, regime_err_sep=False,
+                               name_regimes="North")
     print mlerror.summary

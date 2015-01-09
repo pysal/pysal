@@ -35,7 +35,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
     w            : pysal W object
-                   Spatial weights object
+                   Spatial weights object   
     constant_regi: ['one', 'many']
                    Switcher controlling the constant term setup. It may take
                    the following values:
@@ -52,6 +52,8 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    If 'all' (default), all the variables vary by regime.
     regime_err_sep: boolean
                    If True, a separate regression is run for each regime.
+    regime_lag_sep : boolean
+                   Always False, kept for consistency, ignored.
     max_iter     : int
                    Maximum number of iterations of steps 2a and 2b from Arraiz
                    et al. Note: epsilon provides an additional stop condition.
@@ -60,14 +62,14 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    steps 2a and 2b from Arraiz et al. Note: max_iter provides
                    an additional stop condition.
     step1c       : boolean
-                   If True, then include Step 1c from Arraiz et al.
+                   If True, then include Step 1c from Arraiz et al. 
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
-    cores        : integer
-                   Specifies the number of cores to be used in multiprocessing
-                   Default: all cores available (specified as cores=None).
-                   Note: Multiprocessing currently not available on Windows.
+    cores        : boolean
+                   Specifies if multiprocessing is to be used
+                   Default: no multiprocessing, cores = False
+                   Note: Multiprocessing may not work on all platforms.
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -130,7 +132,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    Only available in dictionary 'multi' when multiple regressions
                    (see 'multi' below for details)
     std_err      : array
-                   1xk array of standard errors of the betas
+                   1xk array of standard errors of the betas    
                    Only available in dictionary 'multi' when multiple regressions
                    (see 'multi' below for details)
     z_stat       : list of tuples
@@ -158,7 +160,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     constant_regi: ['one', 'many']
                    Ignored if regimes=False. Constant option for regimes.
                    Switcher controlling the constant term setup. It may take
-                   the following values:
+                   the following values:                    
                      *  'one': a vector of ones is appended to x and held
                                constant across regimes
                      * 'many': a vector of ones is appended to x and considered
@@ -193,9 +195,9 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     ----------
 
     .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-        Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-        Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-        592-614.
+    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
+    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
+    592-614.
 
     .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
@@ -213,7 +215,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     This is the DBF associated with the NAT shapefile.  Note that
     pysal.open() also reads data in CSV format; since the actual class
     requires data to be passed in as numpy arrays, the user can read their
-    data in using any method.
+    data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("NAT.dbf"),'r')
 
@@ -235,7 +237,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     >>> x_var = ['PS90','UE90']
     >>> x = np.array([db.by_col(name) for name in x_var]).T
 
-    The different regimes in this data are given according to the North and
+    The different regimes in this data are given according to the North and 
     South dummy (SOUTH).
 
     >>> r_var = 'SOUTH'
@@ -243,7 +245,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
     Since we want to run a spatial error model, we need to specify
     the spatial weights matrix that includes the spatial configuration of the
-    observations. To do that, we can open an already existing gal file or
+    observations. To do that, we can open an already existing gal file or 
     create a new one. In this case, we will create one from ``NAT.shp``.
 
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("NAT.shp"))
@@ -287,11 +289,11 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
     """
 
-    def __init__(
-        self, y, x, regimes, w, max_iter=1, epsilon=0.00001, step1c=False,
-        constant_regi='many', cols2regi='all', regime_err_sep=False,
-        cores=None, vm=False, name_y=None, name_x=None, name_w=None,
-            name_ds=None, name_regimes=None):
+    def __init__(self, y, x, regimes, w, max_iter=1, epsilon=0.00001, step1c=False,
+                 constant_regi='many', cols2regi='all', regime_err_sep=False,
+                 regime_lag_sep=False,
+                 cores=False, vm=False, name_y=None, name_x=None, name_w=None,
+                 name_ds=None, name_regimes=None):
 
         n = USER.check_arrays(y, x)
         USER.check_y(y, n)
@@ -381,20 +383,28 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     def _error_regimes_multi(self, y, x, regimes, w, cores,
                              max_iter, epsilon, step1c, cols2regi, vm, name_x):
 
-        regi_ids = dict((r, list(np.where(np.array(regimes) == r)[0]))
-                        for r in self.regimes_set)
+        regi_ids = dict(
+            (r, list(np.where(np.array(regimes) == r)[0])) for r in self.regimes_set)
         results_p = {}
+        """
         for r in self.regimes_set:
             if system() == 'Windows':
                 is_win = True
-                results_p[r] = _work_error(
-                    *(y, x, regi_ids, r, w, max_iter, epsilon, step1c,
-                      self.name_ds, self.name_y, name_x + ['lambda'], self.name_w, self.name_regimes))
+                results_p[r] = _work_error(*(y,x,regi_ids,r,w,max_iter,epsilon,step1c,self.name_ds,self.name_y,name_x+['lambda'],self.name_w,self.name_regimes))
             else:
                 pool = mp.Pool(cores)
+                results_p[r] = pool.apply_async(_work_error,args=(y,x,regi_ids,r,w,max_iter,epsilon,step1c,self.name_ds,self.name_y,name_x+['lambda'],self.name_w,self.name_regimes, ))
+                is_win = False
+        """
+        for r in self.regimes_set:
+            if cores:
+                pool = mp.Pool(None)
                 results_p[r] = pool.apply_async(_work_error, args=(
                     y, x, regi_ids, r, w, max_iter, epsilon, step1c, self.name_ds, self.name_y, name_x + ['lambda'], self.name_w, self.name_regimes, ))
-                is_win = False
+            else:
+                results_p[r] = _work_error(*(y, x, regi_ids, r, w, max_iter, epsilon, step1c,
+                                             self.name_ds, self.name_y, name_x + ['lambda'], self.name_w, self.name_regimes))
+
         self.kryd = 0
         self.kr = len(cols2regi) + 1
         self.kf = 0
@@ -404,21 +414,34 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         self.u = np.zeros((self.n, 1), float)
         self.predy = np.zeros((self.n, 1), float)
         self.e_filtered = np.zeros((self.n, 1), float)
+        """
         if not is_win:
             pool.close()
             pool.join()
+        """
+        if cores:
+            pool.close()
+            pool.join()
+
         results = {}
         self.name_y, self.name_x = [], []
         counter = 0
         for r in self.regimes_set:
+            """
             if is_win:
                 results[r] = results_p[r]
             else:
                 results[r] = results_p[r].get()
+            """
+            if not cores:
+                results[r] = results_p[r]
+            else:
+                results[r] = results_p[r].get()
+
             self.vm[(counter * self.kr):((counter + 1) * self.kr),
                     (counter * self.kr):((counter + 1) * self.kr)] = results[r].vm
-            self.betas[(counter * self.kr):((counter + 1) * self.kr),
-                       ] = results[r].betas
+            self.betas[
+                (counter * self.kr):((counter + 1) * self.kr), ] = results[r].betas
             self.u[regi_ids[r], ] = results[r].u
             self.predy[regi_ids[r], ] = results[r].predy
             self.e_filtered[regi_ids[r], ] = results[r].e_filtered
@@ -450,13 +473,13 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable to use as instruments (note:
+                   external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
     regimes      : list
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
     w            : pysal W object
-                   Spatial weights object
+                   Spatial weights object   
     constant_regi: ['one', 'many']
                    Switcher controlling the constant term setup. It may take
                    the following values:
@@ -473,6 +496,8 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    If 'all' (default), all the variables vary by regime.
     regime_err_sep : boolean
                    If True, a separate regression is run for each regime.
+    regime_lag_sep : boolean
+                     Always False, kept for consistency, ignored.
     max_iter     : int
                    Maximum number of iterations of steps 2a and 2b from Arraiz
                    et al. Note: epsilon provides an additional stop condition.
@@ -481,7 +506,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    steps 2a and 2b from Arraiz et al. Note: max_iter provides
                    an additional stop condition.
     step1c       : boolean
-                   If True, then include Step 1c from Arraiz et al.
+                   If True, then include Step 1c from Arraiz et al. 
     inv_method   : string
                    If "power_exp", then compute inverse using the power
                    expansion. If "true_inv", then compute the true inverse.
@@ -489,10 +514,10 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
-    cores        : integer
-                   Specifies the number of cores to be used in multiprocessing
-                   Default: all cores available (specified as cores=None).
-                   Note: Multiprocessing currently not available on Windows.
+    cores        : boolean
+                   Specifies if multiprocessing is to be used
+                   Default: no multiprocessing, cores = False
+                   Note: Multiprocessing may not work on all platforms.
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -542,7 +567,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    (see 'multi' below for details)
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable used as instruments
+                   external exogenous variable used as instruments 
                    Only available in dictionary 'multi' when multiple regressions
                    (see 'multi' below for details)
     z            : array
@@ -573,7 +598,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    Only available in dictionary 'multi' when multiple regressions
                    (see 'multi' below for details)
     std_err      : array
-                   1xk array of standard errors of the betas
+                   1xk array of standard errors of the betas    
                    Only available in dictionary 'multi' when multiple regressions
                    (see 'multi' below for details)
     z_stat       : list of tuples
@@ -588,7 +613,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     name_yend     : list of strings
                     Names of endogenous variables for use in output
     name_z        : list of strings
-                    Names of exogenous and endogenous variables for use in
+                    Names of exogenous and endogenous variables for use in 
                     output
     name_q        : list of strings
                     Names of external instruments
@@ -645,9 +670,9 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     ----------
 
     .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-        Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-        Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-        592-614.
+    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
+    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
+    592-614.
 
     .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
@@ -665,7 +690,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     This is the DBF associated with the NAT shapefile.  Note that
     pysal.open() also reads data in CSV format; since the actual class
     requires data to be passed in as numpy arrays, the user can read their
-    data in using any method.
+    data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("NAT.dbf"),'r')
 
@@ -695,7 +720,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     >>> q_var = ['FP89']
     >>> q = np.array([db.by_col(name) for name in q_var]).T
 
-    The different regimes in this data are given according to the North and
+    The different regimes in this data are given according to the North and 
     South dummy (SOUTH).
 
     >>> r_var = 'SOUTH'
@@ -703,8 +728,8 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
     Since we want to run a spatial error model, we need to specify the spatial
     weights matrix that includes the spatial configuration of the observations
-    into the error component of the model. To do that, we can open an already
-    existing gal file or create a new one. In this case, we will create one
+    into the error component of the model. To do that, we can open an already 
+    existing gal file or create a new one. In this case, we will create one 
     from ``NAT.shp``.
 
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("NAT.shp"))
@@ -757,7 +782,8 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     def __init__(self, y, x, yend, q, regimes, w,
                  max_iter=1, epsilon=0.00001, step1c=False,
                  constant_regi='many', cols2regi='all', regime_err_sep=False,
-                 inv_method='power_exp', cores=None,
+                 regime_lag_sep=False,
+                 inv_method='power_exp', cores=False,
                  vm=False, name_y=None, name_x=None,
                  name_yend=None, name_q=None, name_w=None, name_ds=None,
                  name_regimes=None, summ=True, add_lag=False):
@@ -789,10 +815,9 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
         if regime_err_sep == True:
             if set(cols2regi) == set([True]):
-                self._endog_error_regimes_multi(
-                    y, x, regimes, w, yend, q, cores,
-                    max_iter, epsilon, step1c, inv_method, cols2regi, vm,
-                    name_x, name_yend, name_q, add_lag)
+                self._endog_error_regimes_multi(y, x, regimes, w, yend, q, cores,
+                                                max_iter, epsilon, step1c, inv_method, cols2regi, vm,
+                                                name_x, name_yend, name_q, add_lag)
             else:
                 raise Exception, "All coefficients must vary accross regimes if regime_err_sep = True."
         else:
@@ -844,8 +869,8 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                 self.u = self.y - self.predy
 
                 # 2b. GMM --> \hat{\lambda}
-                vc2 = get_vc_het_tsls(w.sparse, wA1, self, lambda_old,
-                                      tsls_s.pfora1a2, sphstack(xs, yend_s), inv_method)
+                vc2 = get_vc_het_tsls(
+                    w.sparse, wA1, self, lambda_old, tsls_s.pfora1a2, sphstack(xs, yend_s), inv_method)
                 moments_i = UTILS._moments2eqs(wA1, w.sparse, self.u)
                 lambda3 = UTILS.optim_moments(moments_i, vc2)
                 eps = abs(lambda3 - lambda_old)
@@ -856,8 +881,8 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
             zs = UTILS.get_spFilter(w, lambda3, self.z)
             P = get_P_hat(self, tsls.hthi, zs)
-            vc3 = get_vc_het_tsls(w.sparse, wA1, self,
-                                  lambda3, P, zs, inv_method, save_a1a2=True)
+            vc3 = get_vc_het_tsls(
+                w.sparse, wA1, self, lambda3, P, zs, inv_method, save_a1a2=True)
             self.vm = get_Omega_GS2SLS(
                 w.sparse, lambda3, self, moments_i[0], vc3, P)
             self.betas = np.vstack((tsls_s.betas, lambda3))
@@ -879,27 +904,33 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                                    max_iter, epsilon, step1c, inv_method, cols2regi, vm,
                                    name_x, name_yend, name_q, add_lag):
 
-        regi_ids = dict((r, list(np.where(np.array(regimes) == r)[0]))
-                        for r in self.regimes_set)
+        regi_ids = dict(
+            (r, list(np.where(np.array(regimes) == r)[0])) for r in self.regimes_set)
         if add_lag != False:
             self.cols2regi += [True]
             cols2regi += [True]
             self.predy_e = np.zeros((self.n, 1), float)
             self.e_pred = np.zeros((self.n, 1), float)
         results_p = {}
+        """
         for r in self.regimes_set:
             if system() == 'Windows':
                 is_win = True
-                results_p[r] = _work_endog_error(
-                    *(y, x, yend, q, regi_ids, r, w, max_iter, epsilon, step1c, inv_method,
-                      self.name_ds, self.name_y, name_x, name_yend, name_q, self.name_w, self.name_regimes, add_lag))
+                results_p[r] = _work_endog_error(*(y,x,yend,q,regi_ids,r,w,max_iter,epsilon,step1c,inv_method,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes,add_lag))
             else:
-                pool = mp.Pool(cores)
-                results_p[r] = pool.apply_async(
-                    _work_endog_error, args=(
-                        y, x, yend, q, regi_ids, r, w, max_iter, epsilon, step1c,
-                        inv_method, self.name_ds, self.name_y, name_x, name_yend, name_q, self.name_w, self.name_regimes, add_lag, ))
+                pool = mp.Pool(cores)        
+                results_p[r] = pool.apply_async(_work_endog_error,args=(y,x,yend,q,regi_ids,r,w,max_iter,epsilon,step1c,inv_method,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes,add_lag, ))
                 is_win = False
+        """
+        for r in self.regimes_set:
+            if cores:
+                pool = mp.Pool(None)
+                results_p[r] = pool.apply_async(_work_endog_error, args=(y, x, yend, q, regi_ids, r, w, max_iter, epsilon, step1c,
+                                                                         inv_method, self.name_ds, self.name_y, name_x, name_yend, name_q, self.name_w, self.name_regimes, add_lag, ))
+            else:
+                results_p[r] = _work_endog_error(*(y, x, yend, q, regi_ids, r, w, max_iter, epsilon, step1c, inv_method,
+                                                   self.name_ds, self.name_y, name_x, name_yend, name_q, self.name_w, self.name_regimes, add_lag))
+
         self.kryd, self.kf = 0, 0
         self.kr = len(cols2regi) + 1
         self.nr = len(self.regimes_set)
@@ -908,22 +939,35 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         self.u = np.zeros((self.n, 1), float)
         self.predy = np.zeros((self.n, 1), float)
         self.e_filtered = np.zeros((self.n, 1), float)
+        """
         if not is_win:
             pool.close()
             pool.join()
+        """
+        if cores:
+            pool.close()
+            pool.join()
+
         results = {}
         self.name_y, self.name_x, self.name_yend, self.name_q, self.name_z, self.name_h = [
         ], [], [], [], [], []
         counter = 0
         for r in self.regimes_set:
+            """
             if is_win:
                 results[r] = results_p[r]
             else:
                 results[r] = results_p[r].get()
+            """
+            if not cores:
+                results[r] = results_p[r]
+            else:
+                results[r] = results_p[r].get()
+
             self.vm[(counter * self.kr):((counter + 1) * self.kr),
                     (counter * self.kr):((counter + 1) * self.kr)] = results[r].vm
-            self.betas[(counter * self.kr):((counter + 1) * self.kr),
-                       ] = results[r].betas
+            self.betas[
+                (counter * self.kr):((counter + 1) * self.kr), ] = results[r].betas
             self.u[regi_ids[r], ] = results[r].u
             self.predy[regi_ids[r], ] = results[r].predy
             self.e_filtered[regi_ids[r], ] = results[r].e_filtered
@@ -966,16 +1010,16 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable to use as instruments (note:
+                   external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
     regimes      : list
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
     w            : pysal W object
-                   Spatial weights object (always needed)
-    constant_regi : ['one', 'many']
-                    Switcher controlling the constant term setup. It may take
-                    the following values:
+                   Spatial weights object (always needed)   
+    constant_regi: ['one', 'many']
+                   Switcher controlling the constant term setup. It may take
+                   the following values:
                      *  'one': a vector of ones is appended to x and held
                                constant across regimes
                      * 'many': a vector of ones is appended to x and considered
@@ -988,17 +1032,17 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                    option (True if one per regime, False to be held constant).
                    If 'all' (default), all the variables vary by regime.
     regime_err_sep : boolean
-                     If True, a separate regression is run for each regime.
+                   If True, a separate regression is run for each regime.
     regime_lag_sep   : boolean
-                       If True, the spatial parameter for spatial lag is also
-                       computed according to different regimes. If False (default),
-                       the spatial parameter is fixed accross regimes.
+                   If True, the spatial parameter for spatial lag is also
+                   computed according to different regimes. If False (default), 
+                   the spatial parameter is fixed accross regimes.
     w_lags       : integer
                    Orders of W to include as instruments for the spatially
                    lagged dependent variable. For example, w_lags=1, then
                    instruments are WX; if w_lags=2, then WX, WWX; and so on.
     lag_q        : boolean
-                   If True, then include spatial lags of the additional
+                   If True, then include spatial lags of the additional 
                    instruments (q).
     max_iter     : int
                    Maximum number of iterations of steps 2a and 2b from Arraiz
@@ -1008,7 +1052,7 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                    steps 2a and 2b from Arraiz et al. Note: max_iter provides
                    an additional stop condition.
     step1c       : boolean
-                   If True, then include Step 1c from Arraiz et al.
+                   If True, then include Step 1c from Arraiz et al. 
     inv_method   : string
                    If "power_exp", then compute inverse using the power
                    expansion. If "true_inv", then compute the true inverse.
@@ -1016,10 +1060,10 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
-    cores        : integer
-                   Specifies the number of cores to be used in multiprocessing
-                   Default: all cores available (specified as cores=None).
-                   Note: Multiprocessing currently not available on Windows.
+    cores        : boolean
+                   Specifies if multiprocessing is to be used
+                   Default: no multiprocessing, cores = False
+                   Note: Multiprocessing may not work on all platforms.
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -1073,7 +1117,7 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                    (see 'multi' below for details)
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable used as instruments
+                   external exogenous variable used as instruments 
                    Only available in dictionary 'multi' when multiple regressions
                    (see 'multi' below for details)
     z            : array
@@ -1109,7 +1153,7 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                    Only available in dictionary 'multi' when multiple regressions
                    (see 'multi' below for details)
     std_err      : array
-                   1xk array of standard errors of the betas
+                   1xk array of standard errors of the betas    
                    Only available in dictionary 'multi' when multiple regressions
                    (see 'multi' below for details)
     z_stat       : list of tuples
@@ -1124,7 +1168,7 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
     name_yend     : list of strings
                     Names of endogenous variables for use in output
     name_z        : list of strings
-                    Names of exogenous and endogenous variables for use in
+                    Names of exogenous and endogenous variables for use in 
                     output
     name_q        : list of strings
                     Names of external instruments
@@ -1138,8 +1182,8 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                     Name of regimes variable for use in output
     title         : string
                     Name of the regression method used
-                    Only available in dictionary 'multi' when multiple regressions
-                    (see 'multi' below for details)
+                   Only available in dictionary 'multi' when multiple regressions
+                   (see 'multi' below for details)
     regimes       : list
                     List of n values with the mapping of each
                     observation to a regime. Assumed to be aligned with 'x'.
@@ -1158,12 +1202,12 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                     If a list, k booleans indicating for each variable the
                     option (True if one per regime, False to be held constant).
                     If 'all', all the variables vary by regime.
-    regime_err_sep : boolean
-                     If True, a separate regression is run for each regime.
-    regime_lag_sep : boolean
-                     If True, the spatial parameter for spatial lag is also
-                     computed according to different regimes. If False (default),
-                     the spatial parameter is fixed accross regimes.
+    regime_err_sep: boolean
+                    If True, a separate regression is run for each regime.
+    regime_lag_sep: boolean
+                    If True, the spatial parameter for spatial lag is also
+                    computed according to different regimes. If False (default), 
+                    the spatial parameter is fixed accross regimes.
     kr            : int
                     Number of variables/columns to be "regimized" or subject
                     to change by regime. These will result in one parameter
@@ -1185,9 +1229,9 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
     ----------
 
     .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-        Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-        Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-        592-614.
+    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
+    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
+    592-614.
 
     .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
@@ -1205,7 +1249,7 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
     This is the DBF associated with the NAT shapefile.  Note that
     pysal.open() also reads data in CSV format; since the actual class
     requires data to be passed in as numpy arrays, the user can read their
-    data in using any method.
+    data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("NAT.dbf"),'r')
 
@@ -1227,7 +1271,7 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
     >>> x_var = ['PS90','UE90']
     >>> x = np.array([db.by_col(name) for name in x_var]).T
 
-    The different regimes in this data are given according to the North and
+    The different regimes in this data are given according to the North and 
     South dummy (SOUTH).
 
     >>> r_var = 'SOUTH'
@@ -1235,7 +1279,7 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
 
     Since we want to run a spatial combo model, we need to specify
     the spatial weights matrix that includes the spatial configuration of the
-    observations. To do that, we can open an already existing gal file or
+    observations. To do that, we can open an already existing gal file or 
     create a new one. In this case, we will create one from ``NAT.shp``.
 
     >>> w = pysal.rook_from_shapefile(pysal.examples.get_path("NAT.shp"))
@@ -1260,8 +1304,8 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
     spatial effects as well as exogenous variables. Since it is a spatial
     model, we have to pass in the weights matrix. If we want to
     have the names of the variables printed in the output summary, we will
-    have to pass them in as well, although this is optional.  We can have a
-    summary of the output by typing: model.summary
+    have to pass them in as well, although this is optional.  We can have a 
+    summary of the output by typing: model.summary 
     Alternatively, we can check the betas:
 
     >>> reg = GM_Combo_Het_Regimes(y, x, regimes, w=w, step1c=True, name_y=y_var, name_x=x_var, name_regimes=r_var, name_ds='NAT')
@@ -1317,7 +1361,7 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
     def __init__(self, y, x, regimes, yend=None, q=None,
                  w=None, w_lags=1, lag_q=True,
                  max_iter=1, epsilon=0.00001, step1c=False,
-                 cores=None, inv_method='power_exp',
+                 cores=False, inv_method='power_exp',
                  constant_regi='many', cols2regi='all',
                  regime_err_sep=False, regime_lag_sep=False,
                  vm=False, name_y=None, name_x=None,
@@ -1332,8 +1376,8 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
         self.name_y = USER.set_name_y(name_y)
         name_yend = USER.set_name_yend(name_yend, yend)
         name_q = USER.set_name_q(name_q, q)
-        name_q.extend(USER.set_name_q_sp(name_x, w_lags, name_q, lag_q,
-                      force_all=True))
+        name_q.extend(
+            USER.set_name_q_sp(name_x, w_lags, name_q, lag_q, force_all=True))
 
         cols2regi = REGI.check_cols2regi(
             constant_regi, cols2regi, x, yend=yend, add_cons=False)
@@ -1379,8 +1423,8 @@ def _work_error(y, x, regi_ids, r, w, max_iter, epsilon, step1c, name_ds, name_y
     y_r = y[regi_ids[r]]
     x_r = x[regi_ids[r]]
     x_constant = USER.check_constant(x_r)
-    model = BaseGM_Error_Het(y_r, x_constant, w_r.sparse,
-                             max_iter=max_iter, epsilon=epsilon, step1c=step1c)
+    model = BaseGM_Error_Het(
+        y_r, x_constant, w_r.sparse, max_iter=max_iter, epsilon=epsilon, step1c=step1c)
     set_warn(model, warn)
     model.w = w_r
     model.title = "SPATIALLY WEIGHTED LEAST SQUARES ESTIMATION (HET) - REGIME %s" % r

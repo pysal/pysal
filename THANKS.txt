@@ -36,7 +36,7 @@ Simulation Technologies to Enhance Criminal Justice Decision Support Systems
 National Institutes of Health Geospatial Factors and Impacts: Measurement and
 Use (R01CA126858-02)
 
-National Science Foundation An Exploratory Space-Time Data Analysis Toolit for
+National Science Foundation An Exploratory Space-Time Data Analysis Toolkit for
 Spatial Social Science Research (0433132)
 
 National Science Foundation Hedonic Models of Location Decisions with

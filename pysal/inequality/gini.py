@@ -105,7 +105,7 @@ class Gini_Spatial:
     Define regime neighbors
 
     >>> regimes=np.array(f.by_col('hanson98'))
-    >>> w = pysal.regime_weights(regimes)
+    >>> w = pysal.block_weights(regimes)
     >>> np.random.seed(12345)
     >>> gs = pysal.inequality.gini.Gini_Spatial(y[:,0],w)
     >>> gs.p_sim
