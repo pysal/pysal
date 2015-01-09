@@ -109,9 +109,8 @@ def setup_package():
             'Programming Language :: Python :: 2.6',
             'Programming Language :: Python :: 2.7'
         ],
-        packages=find_packages(exclude=["*.network", "*.network.*", 
-            "network.*", "network", ".meta", "*.meta.*", "meta.*",
-            "meta"]),
+        packages=find_packages(exclude=[".meta", "*.meta.*",
+                                        "meta.*","meta"]),
         package_data={'pysal': list(example_data_files)},
         requires=['scipy']
     )
