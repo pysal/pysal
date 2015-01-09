@@ -174,5 +174,3 @@ def kfunction(nearest, upperbound, intensity, nsteps=10):
         y[i] = len(nearest[nearest <= s])
     y *= (intensity ** -1)
     return x, y
-
-
