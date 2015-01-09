@@ -1,0 +1,11 @@
+
+{
+    "input1": {
+        "data1":{
+            "type": "dbf",
+            "uri": "http://toae.org/pub/taz.dbf"}
+    },
+    "weight_type": "block",
+    "parameters": {"block_variable": "CNTY"},
+    "transform": "O"
+}

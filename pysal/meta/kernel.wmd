@@ -1,0 +1,17 @@
+{
+    "input1": {
+        "data1":{
+            "type": "shp",
+            "uri": "../examples/columbus.shp"}
+    },
+    "weight_type": "kernel",
+    "transform": "O",
+    "parameters": {
+        "function": "triangular",
+        "bandwidths": null,
+        "k": 2
+    }
+}
+
+
+

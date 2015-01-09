@@ -42,7 +42,7 @@ Getting PySAL
 
 PySAL is available on the `Python Package Index
 <http://pypi.python.org/pypi/PySAL>`_, which means it can be
-downloaded and installed manually or from the command line using easy_install or pip, as
+downloaded and installed manually or from the command line using pip or easy_install, as
 follows::
 
  $ pip install pysal

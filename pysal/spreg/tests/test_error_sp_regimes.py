@@ -1,9 +1,12 @@
 import unittest
+import scipy
 import pysal
 import numpy as np
 from pysal.spreg import error_sp_regimes as SP
 from pysal.spreg.error_sp import GM_Error, GM_Endog_Error, GM_Combo
 
+@unittest.skipIf(int(scipy.__version__.split(".")[1]) < 11,
+"Maximum Likelihood requires SciPy version 11 or newer.")
 class TestGM_Error_Regimes(unittest.TestCase):
     def setUp(self):
         db=pysal.open(pysal.examples.get_path("columbus.dbf"),"r")

@@ -37,7 +37,7 @@ class SpatialTau_Tester(unittest.TestCase):
         vnames = ["pcgdp%d" % dec for dec in range(1940, 2010, 10)]
         self.y = np.transpose(np.array([f.by_col[v] for v in vnames]))
         regime = np.array(f.by_col['esquivel99'])
-        self.w = pysal.weights.regime_weights(regime)
+        self.w = pysal.weights.block_weights(regime)
 
     def test_SpatialTau(self):
         np.random.seed(12345)

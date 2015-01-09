@@ -1,0 +1,14 @@
+
+{
+    "input1": {
+        "type": "prov",
+        "uri": "chain.wmd"
+    },
+    "weight_type": "higher_order",
+    "transform": "O",
+    "parameters": {
+        "order":2,
+        "lower":0
+    }
+}
+

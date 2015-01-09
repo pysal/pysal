@@ -348,7 +348,7 @@ class GM_Lag(BaseGM_Lag):
     .. [1] Anselin, L. (1988) "Spatial Econometrics: Methods and Models".
     Kluwer Academic Publishers. Dordrecht.
 
-    
+
     Examples
     --------
 
@@ -368,7 +368,7 @@ class GM_Lag(BaseGM_Lag):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
-    
+
     Extract the HOVAL column (home value) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -404,7 +404,7 @@ class GM_Lag(BaseGM_Lag):
     easily performed in the following way:
 
     >>> w.transform = 'r'
-    
+
     This class runs a lag model, which means that includes the spatial lag of
     the dependent variable on the right-hand side of the equation. If we want
     to have the names of the variables printed in the

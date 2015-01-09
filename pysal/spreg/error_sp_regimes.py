@@ -53,13 +53,15 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    If 'all' (default), all the variables vary by regime.
     regime_err_sep : boolean
                    If True, a separate regression is run for each regime.
+    regime_lag_sep : boolean
+                   Always False, kept for consistency, ignored.
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
-    cores        : integer
-                   Specifies the number of cores to be used in multiprocessing
-                   Default: all cores available (specified as cores=None).
-                   Note: Multiprocessing currently not available on Windows.
+    cores        : boolean
+                   Specifies if multiprocessing is to be used
+                   Default: no multiprocessing, cores = False
+                   Note: Multiprocessing may not work on all platforms.
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -202,7 +204,7 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("NAT.dbf"),'r')
-    
+
     Extract the HR90 column (homicide rates in 1990) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -210,7 +212,7 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
     >>> y_var = 'HR90'
     >>> y = np.array([db.by_col(y_var)]).reshape(3085,1)
-    
+
     Extract UE90 (unemployment rate) and PS90 (population structure) vectors from
     the DBF to be used as independent variables in the regression. Other variables
     can be inserted by adding their names to x_var, such as x_var = ['Var1','Var2','...]
@@ -257,7 +259,7 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     model.betas), you cannot perform inference on it (there are only three
     values in model.se_betas). Alternatively, we can have a summary of the
     output by typing: model.summary
-    
+
     >>> print model.name_x
     ['0_CONSTANT', '0_PS90', '0_UE90', '1_CONSTANT', '1_PS90', '1_UE90', 'lambda']
     >>> np.around(model.betas, decimals=6)
@@ -285,7 +287,8 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     def __init__(self, y, x, regimes, w,
                  vm=False, name_y=None, name_x=None, name_w=None,
                  constant_regi='many', cols2regi='all', regime_err_sep=False,
-                 cores=None, name_ds=None, name_regimes=None):
+                 regime_lag_sep=False,
+                 cores=False, name_ds=None, name_regimes=None):
 
         n = USER.check_arrays(y, x)
         USER.check_y(y, n)
@@ -343,19 +346,28 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
     def _error_regimes_multi(self, y, x, regimes, w, cores,
                              cols2regi, vm, name_x):
-        regi_ids = dict((r, list(np.where(np.array(regimes) == r)[0]))
-                        for r in self.regimes_set)
+        regi_ids = dict(
+            (r, list(np.where(np.array(regimes) == r)[0])) for r in self.regimes_set)
         results_p = {}
+        """
         for r in self.regimes_set:
             if system() == 'Windows':
-                results_p[r] = _work_error(
-                    *(y, x, regi_ids, r, w, self.name_ds, self.name_y, name_x + ['lambda'], self.name_w, self.name_regimes))
+                results_p[r] = _work_error(*(y,x,regi_ids,r,w,self.name_ds,self.name_y,name_x+['lambda'],self.name_w,self.name_regimes))
                 is_win = True
             else:
-                pool = mp.Pool(cores)
+                pool = mp.Pool(cores)                
+                results_p[r] = pool.apply_async(_work_error,args=(y,x,regi_ids,r,w,self.name_ds,self.name_y,name_x+['lambda'],self.name_w,self.name_regimes, ))
+                is_win = False
+        """
+        for r in self.regimes_set:
+            if cores:
+                pool = mp.Pool(None)
                 results_p[r] = pool.apply_async(_work_error, args=(
                     y, x, regi_ids, r, w, self.name_ds, self.name_y, name_x + ['lambda'], self.name_w, self.name_regimes, ))
-                is_win = False
+            else:
+                results_p[r] = _work_error(
+                    *(y, x, regi_ids, r, w, self.name_ds, self.name_y, name_x + ['lambda'], self.name_w, self.name_regimes))
+
         self.kryd = 0
         self.kr = len(cols2regi)
         self.kf = 0
@@ -365,21 +377,34 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         self.u = np.zeros((self.n, 1), float)
         self.predy = np.zeros((self.n, 1), float)
         self.e_filtered = np.zeros((self.n, 1), float)
+        """
         if not is_win:
             pool.close()
             pool.join()
+        """
+        if cores:
+            pool.close()
+            pool.join()
+
         results = {}
         self.name_y, self.name_x = [], []
         counter = 0
         for r in self.regimes_set:
+            """
             if is_win:
                 results[r] = results_p[r]
             else:
                 results[r] = results_p[r].get()
+            """
+            if not cores:
+                results[r] = results_p[r]
+            else:
+                results[r] = results_p[r].get()
+
             self.vm[(counter * self.kr):((counter + 1) * self.kr),
                     (counter * self.kr):((counter + 1) * self.kr)] = results[r].vm
-            self.betas[(counter * (self.kr + 1)):
-                       ((counter + 1) * (self.kr + 1)), ] = results[r].betas
+            self.betas[
+                (counter * (self.kr + 1)):((counter + 1) * (self.kr + 1)), ] = results[r].betas
             self.u[regi_ids[r], ] = results[r].u
             self.predy[regi_ids[r], ] = results[r].predy
             self.e_filtered[regi_ids[r], ] = results[r].e_filtered
@@ -433,13 +458,15 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    If 'all' (default), all the variables vary by regime.
     regime_err_sep : boolean
                    If True, a separate regression is run for each regime.
+    regime_lag_sep : boolean
+                   Always False, kept for consistency, ignored.
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
-    cores        : integer
-                   Specifies the number of cores to be used in multiprocessing
-                   Default: all cores available (specified as cores=None).
-                   Note: Multiprocessing currently not available on Windows.
+    cores        : boolean
+                   Specifies if multiprocessing is to be used
+                   Default: no multiprocessing, cores = False
+                   Note: Multiprocessing may not work on all platforms.
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -603,7 +630,7 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("NAT.dbf"),'r')
-    
+
     Extract the HR90 column (homicide rates in 1990) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -611,7 +638,7 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
     >>> y_var = 'HR90'
     >>> y = np.array([db.by_col(y_var)]).reshape(3085,1)
-    
+
     Extract UE90 (unemployment rate) and PS90 (population structure) vectors from
     the DBF to be used as independent variables in the regression. Other variables
     can be inserted by adding their names to x_var, such as x_var = ['Var1','Var2','...]
@@ -686,12 +713,12 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     >>> np.around(model.std_err, decimals=6)
     array([ 0.522633,  0.137555,  0.063054,  0.473654,  0.18335 ,  0.072786,
             0.300711,  0.240413])
-    
+
     '''
 
-    def __init__(self, y, x, yend, q, regimes, w, cores=None,
+    def __init__(self, y, x, yend, q, regimes, w, cores=False,
                  vm=False, constant_regi='many', cols2regi='all',
-                 regime_err_sep=False, name_y=None,
+                 regime_err_sep=False, regime_lag_sep=False, name_y=None,
                  name_x=None, name_yend=None, name_q=None, name_w=None,
                  name_ds=None, name_regimes=None, summ=True, add_lag=False):
 
@@ -722,9 +749,8 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
         if regime_err_sep == True:
             if set(cols2regi) == set([True]):
-                self._endog_error_regimes_multi(
-                    y, x, regimes, w, yend, q, cores,
-                    cols2regi, vm, name_x, name_yend, name_q, add_lag)
+                self._endog_error_regimes_multi(y, x, regimes, w, yend, q, cores,
+                                                cols2regi, vm, name_x, name_yend, name_q, add_lag)
             else:
                 raise Exception, "All coefficients must vary accross regimes if regime_err_sep = True."
         else:
@@ -777,8 +803,8 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     def _endog_error_regimes_multi(self, y, x, regimes, w, yend, q, cores,
                                    cols2regi, vm, name_x, name_yend, name_q, add_lag):
 
-        regi_ids = dict((r, list(np.where(np.array(regimes) == r)[0]))
-                        for r in self.regimes_set)
+        regi_ids = dict(
+            (r, list(np.where(np.array(regimes) == r)[0])) for r in self.regimes_set)
         if add_lag != False:
             self.cols2regi += [True]
             cols2regi += [True]
@@ -786,15 +812,24 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
             self.e_pred = np.zeros((self.n, 1), float)
         results_p = {}
         for r in self.regimes_set:
+            """
             if system() == 'Windows':
-                results_p[r] = _work_endog_error(
-                    *(y, x, yend, q, regi_ids, r, w, self.name_ds, self.name_y, name_x, name_yend, name_q, self.name_w, self.name_regimes, add_lag))
+                results_p[r] = _work_endog_error(*(y,x,yend,q,regi_ids,r,w,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes,add_lag))
                 is_win = True
             else:
-                pool = mp.Pool(cores)
+                pool = mp.Pool(cores)        
+                results_p[r] = pool.apply_async(_work_endog_error,args=(y,x,yend,q,regi_ids,r,w,self.name_ds,self.name_y,name_x,name_yend,name_q,self.name_w,self.name_regimes,add_lag, ))
+                is_win = False
+            """
+        for r in self.regimes_set:
+            if cores:
+                pool = mp.Pool(None)
                 results_p[r] = pool.apply_async(_work_endog_error, args=(
                     y, x, yend, q, regi_ids, r, w, self.name_ds, self.name_y, name_x, name_yend, name_q, self.name_w, self.name_regimes, add_lag, ))
-                is_win = False
+            else:
+                results_p[r] = _work_endog_error(
+                    *(y, x, yend, q, regi_ids, r, w, self.name_ds, self.name_y, name_x, name_yend, name_q, self.name_w, self.name_regimes, add_lag))
+
         self.kryd, self.kf = 0, 0
         self.kr = len(cols2regi)
         self.nr = len(self.regimes_set)
@@ -803,22 +838,35 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         self.u = np.zeros((self.n, 1), float)
         self.predy = np.zeros((self.n, 1), float)
         self.e_filtered = np.zeros((self.n, 1), float)
+        """
         if not is_win:
             pool.close()
             pool.join()
+        """
+        if cores:
+            pool.close()
+            pool.join()
+
         results = {}
         self.name_y, self.name_x, self.name_yend, self.name_q, self.name_z, self.name_h = [
         ], [], [], [], [], []
         counter = 0
         for r in self.regimes_set:
+            """
             if is_win:
                 results[r] = results_p[r]
             else:
                 results[r] = results_p[r].get()
+            """
+            if not cores:
+                results[r] = results_p[r]
+            else:
+                results[r] = results_p[r].get()
+
             self.vm[(counter * self.kr):((counter + 1) * self.kr),
                     (counter * self.kr):((counter + 1) * self.kr)] = results[r].vm
-            self.betas[(counter * (self.kr + 1)):
-                       ((counter + 1) * (self.kr + 1)), ] = results[r].betas
+            self.betas[
+                (counter * (self.kr + 1)):((counter + 1) * (self.kr + 1)), ] = results[r].betas
             self.u[regi_ids[r], ] = results[r].u
             self.predy[regi_ids[r], ] = results[r].predy
             self.e_filtered[regi_ids[r], ] = results[r].e_filtered
@@ -898,10 +946,10 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
     vm           : boolean
                    If True, include variance-covariance matrix in summary
                    results
-    cores        : integer
-                   Specifies the number of cores to be used in multiprocessing
-                   Default: all cores available (specified as cores=None).
-                   Note: Multiprocessing currently not available on Windows.
+    cores        : boolean
+                   Specifies if multiprocessing is to be used
+                   Default: no multiprocessing, cores = False
+                   Note: Multiprocessing may not work on all platforms.
     name_y       : string
                    Name of dependent variable for use in output
     name_x       : list of strings
@@ -1079,7 +1127,7 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("NAT.dbf"),'r')
-    
+
     Extract the HR90 column (homicide rates in 1990) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
@@ -1087,7 +1135,7 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
 
     >>> y_var = 'HR90'
     >>> y = np.array([db.by_col(y_var)]).reshape(3085,1)
-    
+
     Extract UE90 (unemployment rate) and PS90 (population structure) vectors from
     the DBF to be used as independent variables in the regression. Other variables
     can be inserted by adding their names to x_var, such as x_var = ['Var1','Var2','...]
@@ -1156,7 +1204,7 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
 
     >>> print 'lambda: ', np.around(model.betas[-1], 4)
     lambda:  [ 0.6136]
-        
+
     This class also allows the user to run a spatial lag+error model with the
     extra feature of including non-spatial endogenous regressors. This means
     that, in addition to the spatial lag and error, we consider some of the
@@ -1194,7 +1242,7 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
     """
 
     def __init__(self, y, x, regimes, yend=None, q=None,
-                 w=None, w_lags=1, lag_q=True, cores=None,
+                 w=None, w_lags=1, lag_q=True, cores=False,
                  constant_regi='many', cols2regi='all',
                  regime_err_sep=False, regime_lag_sep=False,
                  vm=False, name_y=None, name_x=None,
@@ -1208,8 +1256,8 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
         self.name_y = USER.set_name_y(name_y)
         name_yend = USER.set_name_yend(name_yend, yend)
         name_q = USER.set_name_q(name_q, q)
-        name_q.extend(USER.set_name_q_sp(name_x, w_lags, name_q, lag_q,
-                      force_all=True))
+        name_q.extend(
+            USER.set_name_q_sp(name_x, w_lags, name_q, lag_q, force_all=True))
 
         cols2regi = REGI.check_cols2regi(
             constant_regi, cols2regi, x, yend=yend, add_cons=False)

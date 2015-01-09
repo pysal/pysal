@@ -12,10 +12,9 @@ Prepare the release
 - Check all tests pass.
 - Update CHANGELOG::
 
-     $ git log --pretty="%h %an -%s" --since="2013-02-01" >> cghlog
+     $ python tools/github_stats.py >> chglog
 
-  - Prepend `chglog` to `CHANGELOG` and edit
-
+- Prepend `chglog` to `CHANGELOG` and edit
 - Edit THANKS and README and README.md if needed.
 - Change MAJOR, MINOR version in setup script.
 - Change pysal/version.py to non-dev number
@@ -28,6 +27,8 @@ Tag
 Make the Tag::
 
   $ git tag -a v1.4 -m 'my version 1.4'
+
+  $ git push upstream v1.4
 
 On each build machine, clone and checkout the newly created tag::
 
@@ -79,6 +80,7 @@ Put master back to dev
 - Change MAJOR, MINOR version in setup script.
 - Change pysal/version.py to dev number
 - Change the docs version from X.x to X.xdev by editing doc/source/conf.py in two places.
+- Update the release schedule in doc/source/developers/guidelines.rst
 
 .. _upload: http://docs.python.org/2.7/distutils/uploading.html
 .. _registered: http://docs.python.org/2.7/distutils/packageindex.html

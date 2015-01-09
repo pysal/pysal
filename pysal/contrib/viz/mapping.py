@@ -273,7 +273,7 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None, \
     cmap            : str
                       Matplotlib coloring scheme. If None (default), uses:
                         * 'classless': 'Greys'
-                        * 'unique_values': 'hot_r'
+                        * 'unique_values': 'Paired'
                         * 'quantiles': 'hot_r'
                         * 'fisher_jenks': 'hot_r'
                         * 'equal_interval': 'hot_r'
@@ -314,7 +314,7 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None, \
         map_obj = base_choropleth_classless(map_obj, values, cmap=cmap)
     if type == 'unique_values':
         if not cmap:
-            cmap = 'hot_r'
+            cmap = 'Paired'
         map_obj = base_choropleth_unique(map_obj, values, cmap=cmap)
     if type == 'quantiles':
         if not cmap:
@@ -489,7 +489,7 @@ def base_choropleth_classif(map_obj, values, classification='quantiles', \
     cmap = cm.get_cmap(cmap, k+1)
     map_obj.set_cmap(cmap)
 
-    boundaries.insert(0,0)
+    boundaries.insert(0, values.min())
     norm = clrs.BoundaryNorm(boundaries, cmap.N)
     map_obj.set_norm(norm)
 

@@ -103,7 +103,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
     pfora1a2     : array
                    n(zthhthi)'varb
 
-    
+
     Examples
     --------
 
@@ -128,7 +128,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
      [  0.5200379 ]
      [ -1.58216593]]
     >>> reg = BaseTSLS(y, X, yd, q=q, robust="white")
-    
+
     """
 
     def __init__(self, y, x, yend, q=None, h=None,
@@ -349,7 +349,7 @@ class TSLS(BaseTSLS):
     pfora1a2     : array
                    n(zthhthi)'varb
 
-    
+
     Examples
     --------
 
@@ -367,7 +367,7 @@ class TSLS(BaseTSLS):
     data in using any method.  
 
     >>> db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
-    
+
     Extract the CRIME column (crime rates) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )

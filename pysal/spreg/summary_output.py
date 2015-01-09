@@ -15,9 +15,9 @@ from scipy.sparse.csr import csr_matrix
 __all__ = []
 
 
-#
-# Primary functions for running summary diagnostics #############
-#
+###############################################################################
+############### Primary functions for running summary diagnostics #############
+###############################################################################
 
 """
 This section contains one function for each user level regression class. These
@@ -199,12 +199,12 @@ def ML_Lag(reg, w, vm, spat_diag, regimes=False):  # extra space d
     reg.__summary = {}
     # compute diagnostics and organize summary output
     beta_diag_lag(reg, robust=None, error=False)
-    reg.__summary[
-        'summary_r2'] += "%-20s:%12.3f                %-22s:%12.3f\n" % ('Sigma-square ML', reg.sig2, 'Log likelihood', reg.logll)
+    reg.__summary['summary_r2'] += "%-20s:%12.3f                %-22s:%12.3f\n" % (
+        'Sigma-square ML', reg.sig2, 'Log likelihood', reg.logll)
     reg.__summary['summary_r2'] += "%-20s:%12.3f                %-22s:%12.3f\n" % (
         'S.E of regression', np.sqrt(reg.sig2), 'Akaike info criterion', reg.aic)
-    reg.__summary[
-        'summary_r2'] += "                                                 %-22s:%12.3f\n" % ('Schwarz criterion', reg.schwarz)
+    reg.__summary['summary_r2'] += "                                                 %-22s:%12.3f\n" % (
+        'Schwarz criterion', reg.schwarz)
     # build coefficients table body
     summary_coefs_allx(reg, reg.z_stat)
     if regimes:
@@ -213,21 +213,20 @@ def ML_Lag(reg, w, vm, spat_diag, regimes=False):  # extra space d
     summary(reg=reg, vm=vm, instruments=False,
             nonspat_diag=False, spat_diag=spat_diag)
 
+
 # extra space d
-
-
 def ML_Lag_multi(reg, multireg, vm, spat_diag, regimes=False, sur=False, w=False):
     for m in multireg:
         mreg = multireg[m]
         mreg.__summary = {}
         # compute diagnostics and organize summary output
         beta_diag_lag(mreg, robust=None, error=False)
-        mreg.__summary[
-            'summary_r2'] += "%-20s:%12.3f                %-22s:%12.3f\n" % ('Sigma-square ML', mreg.sig2, 'Log likelihood', mreg.logll)
+        mreg.__summary['summary_r2'] += "%-20s:%12.3f                %-22s:%12.3f\n" % (
+            'Sigma-square ML', mreg.sig2, 'Log likelihood', mreg.logll)
         mreg.__summary['summary_r2'] += "%-20s:%12.3f                %-22s:%12.3f\n" % (
             'S.E of regression', np.sqrt(mreg.sig2), 'Akaike info criterion', mreg.aic)
-        mreg.__summary[
-            'summary_r2'] += "                                                 %-22s:%12.3f\n" % ('Schwarz criterion', mreg.schwarz)
+        mreg.__summary['summary_r2'] += "                                                 %-22s:%12.3f\n" % (
+            'Schwarz criterion', mreg.schwarz)
         # build coefficients table body
         summary_coefs_allx(mreg, mreg.z_stat)
         if regimes:
@@ -246,12 +245,12 @@ def ML_Error(reg, w, vm, spat_diag, regimes=False):   # extra space d
     reg.__summary = {}
     # compute diagnostics and organize summary output
     beta_diag(reg, robust=None)
-    reg.__summary[
-        'summary_r2'] += "%-20s:%12.3f                %-22s:%12.3f\n" % ('Sigma-square ML', reg.sig2, 'Log likelihood', reg.logll)
+    reg.__summary['summary_r2'] += "%-20s:%12.3f                %-22s:%12.3f\n" % (
+        'Sigma-square ML', reg.sig2, 'Log likelihood', reg.logll)
     reg.__summary['summary_r2'] += "%-20s:%12.3f                %-22s:%12.3f\n" % (
         'S.E of regression', np.sqrt(reg.sig2), 'Akaike info criterion', reg.aic)
-    reg.__summary[
-        'summary_r2'] += "                                                 %-22s:%12.3f\n" % ('Schwarz criterion', reg.schwarz)
+    reg.__summary['summary_r2'] += "                                                 %-22s:%12.3f\n" % (
+        'Schwarz criterion', reg.schwarz)
     # build coefficients table body
     summary_coefs_allx(reg, reg.z_stat)
     if regimes:
@@ -260,21 +259,20 @@ def ML_Error(reg, w, vm, spat_diag, regimes=False):   # extra space d
     summary(reg=reg, vm=vm, instruments=False,
             nonspat_diag=False, spat_diag=spat_diag)
 
+
 # extra space d
-
-
 def ML_Error_multi(reg, multireg, vm, spat_diag, regimes=False, sur=False, w=False):
     for m in multireg:
         mreg = multireg[m]
         mreg.__summary = {}
         # compute diagnostics and organize summary output
         beta_diag(mreg, robust=None)
-        mreg.__summary[
-            'summary_r2'] += "%-20s:%12.3f                %-22s:%12.3f\n" % ('Sigma-square ML', mreg.sig2, 'Log likelihood', mreg.logll)
+        mreg.__summary['summary_r2'] += "%-20s:%12.3f                %-22s:%12.3f\n" % (
+            'Sigma-square ML', mreg.sig2, 'Log likelihood', mreg.logll)
         mreg.__summary['summary_r2'] += "%-20s:%12.3f                %-22s:%12.3f\n" % (
             'S.E of regression', np.sqrt(mreg.sig2), 'Akaike info criterion', mreg.aic)
-        mreg.__summary[
-            'summary_r2'] += "                                                 %-22s:%12.3f\n" % ('Schwarz criterion', mreg.schwarz)
+        mreg.__summary['summary_r2'] += "                                                 %-22s:%12.3f\n" % (
+            'Schwarz criterion', mreg.schwarz)
         # build coefficients table body
         summary_coefs_allx(mreg, mreg.z_stat)
         if regimes:
@@ -283,7 +281,7 @@ def ML_Error_multi(reg, multireg, vm, spat_diag, regimes=False, sur=False, w=Fal
         multireg[m].__summary = mreg.__summary
     reg.__summary = {}
     if regimes:
-        summary_chow(reg)
+        summary_chow(reg, lambd=True)
     summary_warning(reg)
     summary_multi(reg=reg, multireg=multireg, vm=vm,
                   instruments=False, nonspat_diag=False, spat_diag=spat_diag)
@@ -317,7 +315,7 @@ def GM_Error_multi(reg, multireg, vm, regimes=False):
         summary_warning(mreg)
         multireg[m].__summary = mreg.__summary
     reg.__summary = {}
-    summary_chow(reg)
+    summary_chow(reg, lambd=False)
     summary_warning(reg)
     summary_multi(reg=reg, multireg=multireg, vm=vm,
                   instruments=False, nonspat_diag=False, spat_diag=False)
@@ -353,7 +351,7 @@ def GM_Endog_Error_multi(reg, multireg, vm, regimes=False):
         summary_warning(mreg)
         multireg[m].__summary = mreg.__summary
     reg.__summary = {}
-    summary_chow(reg)
+    summary_chow(reg, lambd=False)
     summary_warning(reg)
     summary_multi(reg=reg, multireg=multireg, vm=vm,
                   instruments=True, nonspat_diag=False, spat_diag=False)
@@ -539,7 +537,7 @@ def GM_Combo_multi(reg, multireg, vm, regimes=False):
         multireg[m].__summary = mreg.__summary
     reg.__summary = {}
     if regimes:
-        summary_chow(reg)
+        summary_chow(reg, lambd=False)
     summary_warning(reg)
     summary_multi(reg=reg, multireg=multireg, vm=vm,
                   instruments=True, nonspat_diag=False, spat_diag=False)
@@ -578,7 +576,7 @@ def GM_Combo_Hom_multi(reg, multireg, vm, regimes=False):
         multireg[m].__summary = mreg.__summary
     reg.__summary = {}
     if regimes:
-        summary_chow(reg)
+        summary_chow(reg, lambd=True)
     summary_warning(reg)
     summary_multi(reg=reg, multireg=multireg, vm=vm,
                   instruments=True, nonspat_diag=False, spat_diag=False)
@@ -617,7 +615,7 @@ def GM_Combo_Het_multi(reg, multireg, vm, regimes=False):
         multireg[m].__summary = mreg.__summary
     reg.__summary = {}
     if regimes:
-        summary_regimes(reg)
+        summary_chow(reg, lambd=True)
     summary_warning(reg)
     summary_multi(reg=reg, multireg=multireg, vm=vm,
                   instruments=True, nonspat_diag=False, spat_diag=False)
@@ -646,12 +644,13 @@ def Probit(reg, vm, w, spat_diag):
     summary(reg=reg, vm=vm, instruments=False,
             short_intro=True, spat_diag=spat_diag)
 
-#
+##############################################################################
 
 
-#
-# Helper functions for running summary diagnostics #############
-#
+##############################################################################
+############### Helper functions for running summary diagnostics #############
+##############################################################################
+
 def beta_diag_ols(reg, robust):
     # compute diagnostics
     reg.std_err = diagnostics.se_betas(reg)
@@ -661,8 +660,8 @@ def beta_diag_ols(reg, robust):
     # organize summary output
     reg.__summary['summary_std_err'] = robust
     reg.__summary['summary_zt'] = 't'
-    reg.__summary[
-        'summary_r2'] = "%-20s:%12.4f\n%-20s:%12.4f\n" % ('R-squared', reg.r2, 'Adjusted R-squared', reg.ar2)
+    reg.__summary['summary_r2'] = "%-20s:%12.4f\n%-20s:%12.4f\n" % (
+        'R-squared', reg.r2, 'Adjusted R-squared', reg.ar2)
     # build coefficients table body
     position = summary_coefs_allx(reg, reg.t_stat)
 
@@ -725,8 +724,8 @@ def spat_diag_instruments(reg, w):
     mi, ak, ak_p = diagnostics_sp.akTest(reg, w, cache)
     reg.ak_test = ak, ak_p
     # organize summary output
-    reg.__summary[
-        'summary_spat_diag'] = "%-27s      %2d    %12.3f       %9.4f\n" % ("Anselin-Kelejian Test", 1, reg.ak_test[0], reg.ak_test[1])
+    reg.__summary['summary_spat_diag'] = "%-27s      %2d    %12.3f       %9.4f\n" % (
+        "Anselin-Kelejian Test", 1, reg.ak_test[0], reg.ak_test[1])
 
 
 def summary(reg, vm, instruments, short_intro=False, nonspat_diag=False, spat_diag=False, other_end=False):
@@ -855,20 +854,21 @@ def _get_var_indices(reg, lambd=False):
         if reg.constant_regi == 'one':
             indices += [krex * reg.nr]
         if len(indices) < last_v:
-            name_reg = var_names[krex * reg.nr + 1 - j_con:krex * reg.nr + kf - kfyd] + \
-                var_names[reg.kr * reg.nr + kf - kfyd:reg.kr * reg.nr + kf]
+            name_reg = var_names[krex * reg.nr + 1 - j_con:krex * reg.nr + kf -
+                                 kfyd] + var_names[reg.kr * reg.nr + kf - kfyd:reg.kr * reg.nr + kf]
             name_reg.sort()
             indices += [var_names.index(ind) for ind in name_reg]
     except:
         indices = [0] + (np.argsort(var_names[1:last_v]) + 1).tolist()
     return var_names, indices
 
-#
+##############################################################################
 
 
-#
-# Guts of the summary printout #################################
-#
+##############################################################################
+############### Guts of the summary printout #################################
+##############################################################################
+
 """
 This section contains the pieces needed to put together the summary printout.
 """
@@ -889,13 +889,13 @@ def summary_intro(reg, short):  # extra space d
     strSummary += "%-20s:%12s\n" % ('Data set', reg.name_ds)
     if reg.name_w:
         strSummary += "%-20s:%12s\n" % ('Weights matrix', reg.name_w)
-    strSummary += "%-20s:%12s                %-22s:%12d\n" % ('Dependent Variable',
-                                                              reg.name_y, 'Number of Observations', reg.n)
+    strSummary += "%-20s:%12s                %-22s:%12d\n" % (
+        'Dependent Variable', reg.name_y, 'Number of Observations', reg.n)
     if not short:
-        strSummary += "%-20s:%12.4f                %-22s:%12d\n" % ('Mean dependent var',
-                                                                    reg.mean_y, 'Number of Variables', reg.k)
-        strSummary += "%-20s:%12.4f                %-22s:%12d\n" % ('S.D. dependent var',
-                                                                    reg.std_y, 'Degrees of Freedom', reg.n - reg.k)
+        strSummary += "%-20s:%12.4f                %-22s:%12d\n" % (
+            'Mean dependent var', reg.mean_y, 'Number of Variables', reg.k)
+        strSummary += "%-20s:%12.4f                %-22s:%12d\n" % (
+            'S.D. dependent var', reg.std_y, 'Degrees of Freedom', reg.n - reg.k)
     #strSummary += '\n'
     return strSummary
 
@@ -989,8 +989,8 @@ def summary_iteration(reg):  # extra space d
             step1c = 'Yes'
         else:
             step1c = 'No'
-        txt = "%-20s:%12s                %-22s:%12s\n" % ('N. of iterations',
-                                                          reg.iteration, 'Step1c computed', step1c)
+        txt = "%-20s:%12s                %-22s:%12s\n" % (
+            'N. of iterations', reg.iteration, 'Step1c computed', step1c)
     except:
         txt = "%-20s:%12s\n" % ('N. of iterations', reg.iteration)
     try:
@@ -1056,8 +1056,8 @@ def summary_chow(reg, lambd=False):
         indices += [-1]
         names_chow += ['lambda']
     for i in indices:
-        reg.__summary[
-            'summary_chow'] += "%25s        %2d    %12.3f        %9.4f\n" % (names_chow[i], reg.nr - 1, reg.chow.regi[i, 0], reg.chow.regi[i, 1])
+        reg.__summary['summary_chow'] += "%25s        %2d    %12.3f        %9.4f\n" % (
+            names_chow[i], reg.nr - 1, reg.chow.regi[i, 0], reg.chow.regi[i, 1])
     reg.__summary['summary_chow'] += "%25s        %2d    %12.3f        %9.4f\n" % (
         'Global test', reg.kr * (reg.nr - 1), reg.chow.joint[0], reg.chow.joint[1])
 
@@ -1103,14 +1103,14 @@ def summary_r2(reg, ols, spatial_lag):
 
 def summary_nonspat_diag_1(reg):  # extra space d
     strSummary = ""
-    strSummary += "%-20s:%12.3f                %-22s:%12.4f\n" % ('Sum squared residual',
-                                                                  reg.utu, 'F-statistic', reg.f_stat[0])
-    strSummary += "%-20s:%12.3f                %-22s:%12.4g\n" % ('Sigma-square',
-                                                                  reg.sig2, 'Prob(F-statistic)', reg.f_stat[1])
-    strSummary += "%-20s:%12.3f                %-22s:%12.3f\n" % ('S.E. of regression',
-                                                                  np.sqrt(reg.sig2), 'Log likelihood', reg.logll)
-    strSummary += "%-20s:%12.3f                %-22s:%12.3f\n" % ('Sigma-square ML',
-                                                                  reg.sig2ML, 'Akaike info criterion', reg.aic)
+    strSummary += "%-20s:%12.3f                %-22s:%12.4f\n" % (
+        'Sum squared residual', reg.utu, 'F-statistic', reg.f_stat[0])
+    strSummary += "%-20s:%12.3f                %-22s:%12.4g\n" % (
+        'Sigma-square', reg.sig2, 'Prob(F-statistic)', reg.f_stat[1])
+    strSummary += "%-20s:%12.3f                %-22s:%12.3f\n" % (
+        'S.E. of regression', np.sqrt(reg.sig2), 'Log likelihood', reg.logll)
+    strSummary += "%-20s:%12.3f                %-22s:%12.3f\n" % (
+        'Sigma-square ML', reg.sig2ML, 'Akaike info criterion', reg.aic)
     strSummary += "%-20s:%12.4f                %-22s:%12.3f\n" % (
         'S.E of regression ML', np.sqrt(reg.sig2ML), 'Schwarz criterion', reg.schwarz)
     return strSummary
@@ -1120,18 +1120,19 @@ def summary_nonspat_diag_2(reg):
     strSummary = ""
     strSummary += "\nREGRESSION DIAGNOSTICS\n"
     if reg.mulColli:
-        strSummary += "MULTICOLLINEARITY CONDITION NUMBER %16.3f\n\n" % (reg.mulColli)
+        strSummary += "MULTICOLLINEARITY CONDITION NUMBER %16.3f\n\n" % (
+            reg.mulColli)
     strSummary += "TEST ON NORMALITY OF ERRORS\n"
     strSummary += "TEST                             DF        VALUE           PROB\n"
-    strSummary += "%-27s      %2d  %14.3f        %9.4f\n\n" % ('Jarque-Bera',
-                                                               reg.jarque_bera['df'], reg.jarque_bera['jb'], reg.jarque_bera['pvalue'])
+    strSummary += "%-27s      %2d  %14.3f        %9.4f\n\n" % (
+        'Jarque-Bera', reg.jarque_bera['df'], reg.jarque_bera['jb'], reg.jarque_bera['pvalue'])
     strSummary += "DIAGNOSTICS FOR HETEROSKEDASTICITY\n"
     strSummary += "RANDOM COEFFICIENTS\n"
     strSummary += "TEST                             DF        VALUE           PROB\n"
-    strSummary += "%-27s      %2d    %12.3f        %9.4f\n" % ('Breusch-Pagan test',
-                                                               reg.breusch_pagan['df'], reg.breusch_pagan['bp'], reg.breusch_pagan['pvalue'])
-    strSummary += "%-27s      %2d    %12.3f        %9.4f\n" % ('Koenker-Bassett test',
-                                                               reg.koenker_bassett['df'], reg.koenker_bassett['kb'], reg.koenker_bassett['pvalue'])
+    strSummary += "%-27s      %2d    %12.3f        %9.4f\n" % (
+        'Breusch-Pagan test', reg.breusch_pagan['df'], reg.breusch_pagan['bp'], reg.breusch_pagan['pvalue'])
+    strSummary += "%-27s      %2d    %12.3f        %9.4f\n" % (
+        'Koenker-Bassett test', reg.koenker_bassett['df'], reg.koenker_bassett['kb'], reg.koenker_bassett['pvalue'])
     try:
         if reg.white:
             strSummary += "\nSPECIFICATION ROBUST TEST\n"
@@ -1139,8 +1140,8 @@ def summary_nonspat_diag_2(reg):
                 strSummary += reg.white + '\n'
             else:
                 strSummary += "TEST                             DF        VALUE           PROB\n"
-                strSummary += "%-27s      %2d    %12.3f        %9.4f\n" % ('White',
-                                                                           reg.white['df'], reg.white['wh'], reg.white['pvalue'])
+                strSummary += "%-27s      %2d    %12.3f        %9.4f\n" % (
+                    'White', reg.white['df'], reg.white['wh'], reg.white['pvalue'])
     except:
         pass
     return strSummary
@@ -1164,16 +1165,16 @@ def summary_spat_diag_intro_global():
 def summary_spat_diag_ols(reg, moran):
     strSummary = ""
     if moran:
-        strSummary += "%-27s  %8.4f     %9.3f        %9.4f\n" % ("Moran's I (error)",
-                                                                 reg.moran_res[0], reg.moran_res[1], reg.moran_res[2])
-    strSummary += "%-27s      %2d    %12.3f        %9.4f\n" % ("Lagrange Multiplier (lag)",
-                                                               1, reg.lm_lag[0], reg.lm_lag[1])
-    strSummary += "%-27s      %2d    %12.3f        %9.4f\n" % ("Robust LM (lag)",
-                                                               1, reg.rlm_lag[0], reg.rlm_lag[1])
-    strSummary += "%-27s      %2d    %12.3f        %9.4f\n" % ("Lagrange Multiplier (error)",
-                                                               1, reg.lm_error[0], reg.lm_error[1])
-    strSummary += "%-27s      %2d    %12.3f        %9.4f\n" % ("Robust LM (error)",
-                                                               1, reg.rlm_error[0], reg.rlm_error[1])
+        strSummary += "%-27s  %8.4f     %9.3f        %9.4f\n" % (
+            "Moran's I (error)", reg.moran_res[0], reg.moran_res[1], reg.moran_res[2])
+    strSummary += "%-27s      %2d    %12.3f        %9.4f\n" % (
+        "Lagrange Multiplier (lag)", 1, reg.lm_lag[0], reg.lm_lag[1])
+    strSummary += "%-27s      %2d    %12.3f        %9.4f\n" % (
+        "Robust LM (lag)", 1, reg.rlm_lag[0], reg.rlm_lag[1])
+    strSummary += "%-27s      %2d    %12.3f        %9.4f\n" % (
+        "Lagrange Multiplier (error)", 1, reg.lm_error[0], reg.lm_error[1])
+    strSummary += "%-27s      %2d    %12.3f        %9.4f\n" % (
+        "Robust LM (error)", 1, reg.rlm_error[0], reg.rlm_error[1])
     strSummary += "%-27s      %2d    %12.3f        %9.4f\n\n" % (
         "Lagrange Multiplier (SARMA)", 2, reg.lm_sarma[0], reg.lm_sarma[1])
     return strSummary
@@ -1181,12 +1182,12 @@ def summary_spat_diag_ols(reg, moran):
 
 def summary_spat_diag_probit(reg):
     strSummary = ""
-    strSummary += "%-27s      %2d    %12.3f       %9.4f\n" % ("Kelejian-Prucha (error)",
-                                                              1, reg.KP_error[0], reg.KP_error[1])
-    strSummary += "%-27s      %2d    %12.3f       %9.4f\n" % ("Pinkse (error)",
-                                                              1, reg.Pinkse_error[0], reg.Pinkse_error[1])
-    strSummary += "%-27s      %2d    %12.3f       %9.4f\n\n" % ("Pinkse-Slade (error)",
-                                                                1, reg.PS_error[0], reg.PS_error[1])
+    strSummary += "%-27s      %2d    %12.3f       %9.4f\n" % (
+        "Kelejian-Prucha (error)", 1, reg.KP_error[0], reg.KP_error[1])
+    strSummary += "%-27s      %2d    %12.3f       %9.4f\n" % (
+        "Pinkse (error)", 1, reg.Pinkse_error[0], reg.Pinkse_error[1])
+    strSummary += "%-27s      %2d    %12.3f       %9.4f\n\n" % (
+        "Pinkse-Slade (error)", 1, reg.PS_error[0], reg.PS_error[1])
     return strSummary
 
 
@@ -1215,15 +1216,15 @@ def summary_pred(reg):
     strPred += "%16s%16s%16s%16s\n" % ('OBS',
                                        reg.name_y, 'PREDICTED', 'RESIDUAL')
     for i in range(reg.n):
-        strPred += "%16d%16.5f%16.5f%16.5f\n" % (i + 1,
-                                                 reg.y[i][0], reg.predy[i][0], reg.u[i][0])
+        strPred += "%16d%16.5f%16.5f%16.5f\n" % (
+            i + 1, reg.y[i][0], reg.predy[i][0], reg.u[i][0])
     return strPred
 
 
 def summary_close():
     return "================================ END OF REPORT ====================================="
 
-#
+##############################################################################
 
 
 def _test():

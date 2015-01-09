@@ -1,5 +1,6 @@
 __all__ = ['DataTable']
 import FileIO
+import numpy as np
 
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 
@@ -46,6 +47,70 @@ class DataTable(FileIO.FileIO):
             return self[:, self.header.index(key)]
         else:
             raise AttributeError('Field: % s does not exist in header' % key)
+
+    def by_col_array(self, variable_names):
+        """
+        Return columns of table as a numpy array
+
+        Parameters
+        ----------
+
+        variable_names:  list of strings of length k
+                         names of variables to extract
+
+        Returns
+        -------
+        implicit:    numpy array of shape (n,k)
+
+
+        Notes
+        -----
+
+        If the variables are not all of the same data type, then numpy rules
+        for casting will result in a uniform type applied to all variables.
+
+        Examples
+        --------
+
+        >>> import pysal as ps
+        >>> dbf = ps.open(ps.examples.get_path('NAT.dbf'))
+        >>> hr = dbf.by_col_array(['HR70', 'HR80'])
+        >>> hr[0:5]
+        array([[  0.        ,   8.85582713],
+               [  0.        ,  17.20874204],
+               [  1.91515848,   3.4507747 ],
+               [  1.28864319,   3.26381409],
+               [  0.        ,   7.77000777]])
+        >>> hr = dbf.by_col_array(['HR80', 'HR70'])
+        >>> hr[0:5]
+        array([[  8.85582713,   0.        ],
+               [ 17.20874204,   0.        ],
+               [  3.4507747 ,   1.91515848],
+               [  3.26381409,   1.28864319],
+               [  7.77000777,   0.        ]])
+        >>> hr = dbf.by_col_array(['HR80'])
+        >>> hr[0:5]
+        array([[  8.85582713],
+               [ 17.20874204],
+               [  3.4507747 ],
+               [  3.26381409],
+               [  7.77000777]])
+        
+        Numpy only supports homogeneous arrays. See Notes above.
+
+        >>> hr = dbf.by_col_array(['STATE_NAME', 'HR80'])
+        >>> hr[0:5]
+        array([['Minnesota', '8.8558271343'],
+               ['Washington', '17.208742041'],
+               ['Washington', '3.4507746989'],
+               ['Washington', '3.2638140931'],
+               ['Washington', '7.77000777']], 
+              dtype='|S20')
+
+
+        """
+        lst = [self._get_col(variable) for variable in variable_names]
+        return np.array(lst).T
 
     def __getitem__(self, key):
         """ DataTables fully support slicing in 2D,

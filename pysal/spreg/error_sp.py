@@ -291,7 +291,7 @@ class GM_Error(BaseGM_Error):
            [  0.3257]])
     >>> np.around(model.std_err, decimals=4)
     array([ 12.412 ,   0.5044,   0.1785])
-    >>> np.around(model.z_stat, decimals=6)
+    >>> np.around(model.z_stat, decimals=6) #doctest: +SKIP
     array([[  3.84261100e+00,   1.22000000e-04],
            [  1.40839200e+00,   1.59015000e-01],
            [ -3.08424700e+00,   2.04100000e-03]])
@@ -643,7 +643,7 @@ class GM_Endog_Error(BaseGM_Endog_Error):
            [  0.3499]])
     >>> np.around(model.std_err, decimals=4)
     array([ 16.1381,   1.3545,   0.7862])
-    
+
     '''
 
     def __init__(self, y, x, yend, q, w,
