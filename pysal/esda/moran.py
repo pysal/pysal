@@ -164,6 +164,40 @@ class Moran:
                 self.p_z_sim = 1 - stats.norm.cdf(self.z_sim)
             else:
                 self.p_z_sim = stats.norm.cdf(self.z_sim)
+    
+    def __repr__(self):
+        return '''
+        Moran's I: {}
+
+        Normality Assumption
+        --------------------
+        Expected Value: {}
+        Variance of I: {}
+        Standard Dev. of I: {}
+        Z-Value: {}
+        P-Value: {}
+
+        Randomization Assumption
+        ------------------------
+        Variance of I: {}
+        Standard Dev. of I: {}
+        Z-Value: {}
+        P-Value: {}
+
+        Permutation Results
+        -------------------
+        Number of Permutations: {}
+        Average Expected Value: {}
+        Variance of I: {}
+        Standard Dev. of I: {}
+        Standardized I: {}
+        P-Value: {}
+        '''.format(self.I, self.EI, self.VI_norm, self.seI_norm,
+                self.z_norm, self.p_norm, self.VI_rand, self.seI_rand,
+                self.z_rand, self.p_rand, self.permutations,
+                self.EI_sim, self.VI_sim, self.seI_sim, self.z_sim,
+                self.p_z_sim)
+
 
     def __moments(self):
         self.n = len(self.y)
