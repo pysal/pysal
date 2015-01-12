@@ -724,26 +724,24 @@ class Network:
                 d12 = self.alldistances[source1][0][dest2]
                 d22 = self.alldistances[source2][0][dest2]
                 
-                # find shortest distance from two origin nodes to first destination
-                # node
-                sd_1 = d11
-                a = 0
-                if d11 > d21:
-                    sd_1 = d21
-                    a = 1
-                # now add point to node distance for both source and dest edges
-                # given we know the origin and destination nodes
-                len_1 = sdist[a] + sd_1 + ddist1
+                # find shortest distance from path passing through each of two origin nodes
+                # to first destination node
+                sd_1 = d11 + sdist1
+                sd_21 = d21 + sdist2
+                if sd_1 > sd_21:
+                    sd_1 = sd_21
+                # now add point to node one distance on destination edge
+                len_1 = sd_1 + ddist1
 
 
-                # repeat but now for paths ending at second node of second edge
-                sd_2 = d12
+                # repeat but now for paths entering at second node of second edge
+                sd_2 = d12 + sdist1
+                sd_22 = d22 + sdist2
                 b = 0
-                if d12 > d22:
-                    sd_2 = d22
+                if sd_2 > sd_22:
+                    sd_2 = sd_22
                     b = 1
-                len_2 = sdist[b] + sd_2 + ddist2
-
+                len_2 = sd_2 + ddist2
 
                 # now find shortest length path between the point 1 on edge 1 and
                 # point 2 on edge 2, and assign
