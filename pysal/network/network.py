@@ -438,7 +438,8 @@ class Network:
         Parameters
         ----------
         count: integer number of points to create
-        distirbution: distribution of random points
+
+        distribution: distribution of random points
 
         Returns
         -------
@@ -505,7 +506,8 @@ class Network:
         Parameters
         ----------
         sourcepattern   str The key of a point pattern snapped to the network.
-        destpatter      str (Optional) The key of a point pattern snapped to the network.
+
+        destpattern      str (Optional) The key of a point pattern snapped to the network.
 
         Returns
         -------
@@ -585,7 +587,7 @@ class Network:
         return nearest
 
 
-    def allneighbordistances(self, sourcepattern, destpattern=None):
+    def allNeighborDistances(self, sourcepattern, destpattern=None):
         """
         Compute the distance between all observations points and either
          (a) all other observation points within the same set or
@@ -662,6 +664,95 @@ class Network:
                     nearest[p1, p2] = source2_to_dest2
                 if source2_to_dest2 < nearest[p2, p1]:
                     nearest[p2, p1] = source2_to_dest2
+        np.fill_diagonal(nearest, np.nan)
+        return nearest
+
+
+    def allNeighborDistances1(self, sourcepattern, destpattern=None):
+        """
+        Compute the shortest distance between all observations points and either
+         (a) all other observation points within the same set or
+         (b) all other observation points from another set
+
+        Parameters
+        ----------
+        sourcepattern   str The key of a point pattern snapped to the network.
+
+        destpattern     str (Optional) The key of a point pattern snapped to the network.
+
+        Returns
+        -------
+        nearest         ndarray (n,2) With column[:,0] containing the id of the nearest
+                        neighbor and column [:,1] containing the distance.
+        """
+
+        try:
+            hasattr(self.alldistances)
+        except:
+            self.node_distance_matrix()
+
+        src_indices = sourcepattern.points.keys()
+        nsource_pts = len(src_indices)
+        dist_to_node = sourcepattern.dist_to_node
+        if destpattern == None:
+            destpattern = sourcepattern
+        dest_indices = destpattern.points.keys()
+        ndest_pts = len(dest_indices)
+
+        searchpts = copy.deepcopy(dest_indices)
+        nearest  = np.empty((nsource_pts, ndest_pts))
+        nearest[:] = np.inf
+
+        searchnodes = {}
+        for s in searchpts:
+            e1, e2 = dist_to_node[s].keys()
+            searchnodes[s] = (e1, e2)
+
+        for p1 in src_indices:
+            #Get the source nodes and dist to source nodes
+            source1, source2 = searchnodes[p1]
+            # distance from node1 to p, distance from node2 to p
+            sdist1, sdist2 = dist_to_node[p1].values()
+            sdist = sdist1, sdist2
+
+            searchpts.remove(p1)
+            for p2 in searchpts:
+                dest1, dest2 = searchnodes[p2]
+                ddist1, ddist2 = dist_to_node[p2].values()
+                d11 = self.alldistances[source1][0][dest1]
+                d21 = self.alldistances[source2][0][dest1]
+                d12 = self.alldistances[source1][0][dest2]
+                d22 = self.alldistances[source2][0][dest2]
+                
+                # find shortest distance from two origin nodes to first destination
+                # node
+                sd_1 = d11
+                a = 0
+                if d11 > d21:
+                    sd_1 = d21
+                    a = 1
+                # now add point to node distance for both source and dest edges
+                # given we know the origin and destination nodes
+                len_1 = sdist[a] + sd_1 + ddist1
+
+
+                # repeat but now for paths ending at second node of second edge
+                sd_2 = d12
+                b = 0
+                if d12 > d22:
+                    sd_2 = d22
+                    b = 1
+                len_2 = sdist[b] + sd_2 + ddist2
+
+
+                # now find shortest length path between the point 1 on edge 1 and
+                # point 2 on edge 2, and assign
+                sp_12 = len_1
+                if len_1 > len_2:
+                    sp_12 = len_2
+                nearest[p1, p2] =  sp_12
+                nearest[p2, p1] = sp_12
+                #print p1,p2, sp_12
         np.fill_diagonal(nearest, np.nan)
         return nearest
 
