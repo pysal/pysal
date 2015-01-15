@@ -56,7 +56,7 @@ class Moran:
     z_norm       : float
                    z-value of I under normality assumption
     p_norm       : float
-                   p-value of I under normality assumption 
+                   p-value of I under normality assumption
     VI_rand      : float
                    variance of I under randomization assumption
     seI_rand     : float
@@ -64,7 +64,7 @@ class Moran:
     z_rand       : float
                    z-value of I under randomization assumption
     p_rand       : float
-                   p-value of I under randomization assumption 
+                   p-value of I under randomization assumption
     two_tailed   : Boolean
                    If True p_norm and p_rand are two-tailed, otherwise they
                    are one-tailed.
@@ -164,7 +164,7 @@ class Moran:
                 self.p_z_sim = 1 - stats.norm.cdf(self.z_sim)
             else:
                 self.p_z_sim = stats.norm.cdf(self.z_sim)
-    
+
     def __repr__(self):
         return '''
         Moran's I: {}
@@ -478,7 +478,7 @@ class Moran_Rate(Moran):
     z_norm       : float
                    z-value of I under normality assumption
     p_norm       : float
-                   p-value of I under normality assumption 
+                   p-value of I under normality assumption
     VI_rand      : float
                    variance of I under randomization assumption
     seI_rand     : float
@@ -544,9 +544,11 @@ class Moran_Local:
 
     Parameters
     ----------
-    y : n*1 array
+    y : array (n,1)
+        attribute array
 
-    w : weight instance assumed to be aligned with y
+    w : W
+        weight instance assumed to be aligned with y
 
     transformation : string
                      weights transformation,  default is row-standardized "r".
@@ -712,12 +714,13 @@ class Moran_Local_Rate(Moran_Local):
 
     Parameters
     ----------
-    e : n*1 array
+    e : array (n,1)
         an event variable across n spatial units
-    b : n*1 array
+    b : array (n,1)
         a population-at-risk variable across n spatial units
-    w : weight instance assumed to be aligned with y
-    adjusted: boolean
+    w : W
+        weight instance assumed to be aligned with y
+    adjusted : boolean
               whether or not local Moran statistics need to be adjusted for
               rate variable
     transformation : string
