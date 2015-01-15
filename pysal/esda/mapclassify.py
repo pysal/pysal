@@ -878,11 +878,14 @@ class Maximum_Breaks(Map_Classifier):
 
     Parameters
     ----------
-    y  : array (n x 1)
+    y  : array (n, 1)
          values to classify
 
     k  : int
          number of classes required
+
+    mindiff : float
+             The minimum difference between class breaks
 
     Attributes
     ----------
@@ -911,7 +914,7 @@ class Maximum_Breaks(Map_Classifier):
     >>>
 
     """
-    def __init__(self, y, k=K, mindiff=0):
+    def __init__(self, y, k=5, mindiff=0):
         self.k = k
         self.mindiff = mindiff
         Map_Classifier.__init__(self, y)
