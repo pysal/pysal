@@ -5,7 +5,7 @@ __author__ = "Sergio J. Rey"
 
 __all__ = ['Map_Classifier', 'quantile', 'Box_Plot', 'Equal_Interval',
            'Fisher_Jenks', 'Fisher_Jenks_Sampled', 'Jenks_Caspall',
-           'Jenks_Caspall_Forced', 'Jenks_Caspall_Sampled', 
+           'Jenks_Caspall_Forced', 'Jenks_Caspall_Sampled',
            'Max_P_Classifier', 'Maximum_Breaks', 'Natural_Breaks',
            'Quantiles', 'Percentiles', 'Std_Mean', 'User_Defined',
            'gadf', 'K_classifiers']
@@ -195,7 +195,7 @@ def bin1d(x, bins):
 
     Parameters
     ----------
-    y : 1-d array
+    x : 1-d array
         values to bin
     bins : array (k,1)
         upper bounds of each bin (monotonic)
@@ -378,7 +378,8 @@ class Map_Classifier:
     where :math:`C_j` denotes class :math:`j` which has lower bound :math:`C_j^l` and upper bound :math:`C_j^u`.
 
 
-        
+
+
 
     Map Classifiers Supported
 
@@ -1088,7 +1089,7 @@ class Fisher_Jenks_Sampled(Map_Classifier):
              number of classes required
     pct    : float
              The percentage of n that should form the sample
-             If pct is specified such that n*pct > 1000, then 
+             If pct is specified such that n*pct > 1000, then
              pct = 1000./n, unless truncate is False
     truncate : binary (Default True)
              truncate pct in cases where pct * n > 1000.
