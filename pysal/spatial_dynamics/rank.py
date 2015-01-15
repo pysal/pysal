@@ -353,24 +353,25 @@ class SpatialTau:
 
     Examples
     --------
-    >>> import pysal
+    >>> import pysal 
+    >>> import numpy as np
     >>> f=pysal.open(pysal.examples.get_path("mexico.csv"))
     >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
     >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> regime=np.array(f.by_col['esquivel99'])
     >>> w=pysal.weights.block_weights(regime)
     >>> np.random.seed(12345)
-    >>> res=[SpatialTau(y[:,i],y[:,i+1],w,99) for i in range(6)]
+    >>> res=[pysal.SpatialTau(y[:,i],y[:,i+1],w,99) for i in range(6)]
     >>> for r in res:
     ...     ev = r.taus.mean()
     ...     "%8.3f %8.3f %8.3f"%(r.tau_spatial, ev, r.tau_spatial_psim)
     ...
-    '   0.281    0.466    0.010'
-    '   0.348    0.499    0.010'
-    '   0.460    0.546    0.020'
-    '   0.505    0.532    0.210'
-    '   0.483    0.499    0.270'
-    '   0.572    0.579    0.280'
+    '   0.397    0.659    0.010'
+    '   0.492    0.706    0.010'
+    '   0.651    0.772    0.020'
+    '   0.714    0.752    0.210'
+    '   0.683    0.705    0.270'
+    '   0.810    0.819    0.280'
     """
 
     def __init__(self, x, y, w, permutations=0):
@@ -416,7 +417,7 @@ class SpatialTau:
                     dxdy = dx * dy
                     if dxdy != 0:
                         n1 += 1
-                        n2 += 2
+                        n2 += 1
                         if dxdy > 0.0:
                             gc += 1
                             iS += 1
