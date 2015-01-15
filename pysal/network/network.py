@@ -10,6 +10,7 @@ from pysal.weights.util import get_ids
 
 import random
 
+from analysis import NetworkG, NetworkK, NetworkF
 import util
 
 class Network:
@@ -665,6 +666,70 @@ class Network:
                     nearest[p2, p1] = source2_to_dest2
         np.fill_diagonal(nearest, np.nan)
         return nearest
+
+    def NetworkF(self, pointpattern, nsteps=10, permutations=99,
+                 threshold=0.2, distribution='uniform',
+                 lowerbound=None, upperbound=None):
+
+        return NetworkF(self, pointpattern, nsteps=nsteps,
+                        permutations=permutations,threshold=threshold,
+                        distribution=distribution,lowerbound=lowerbound,
+                        upperbound=upperbound)
+
+    def NetworkG(self, pointpattern, nsteps=10, permutations=99,
+                 threshold=0.5, distribution='uniform',
+                 lowerbound=None, upperbound=None):
+        """
+        Computes a network constrained G-Function
+
+        Parameters
+        ----------
+        pointpattern    object A pysal point pattern object snapped to the network.
+        nsteps          int The number of steps at which the count of nearest neighbors is computer
+        permutations    int The number of permutations to perform (default 99)
+        threshold       float The level at which significance is computed.  0.5 would be 97.5% and 2.5%
+        distribution    str The distirbution from which random points are sampled: uniform or poisson
+        lowerbound      float The lower bound at which the G-function is computed.
+                            Defaults to the min nearest neighbor distance from the observed point pattern.
+        upperbound      float The upper bound at which the G-function is computed.
+                            Defaults to the maximum pbserved nearest neighbor distance.
+
+        Returns
+        --------
+        NetworkG    object A NetworkG class object
+        """
+
+        return NetworkG(self, pointpattern, nsteps=nsteps,
+                        permutations=permutations,threshold=threshold,
+                        distribution=distribution,lowerbound=lowerbound,
+                        upperbound=upperbound)
+
+    def NetworkK(self, pointpattern, nsteps=10, permutations=99,
+                 threshold=0.5, distribution='uniform',
+                 lowerbound=None, upperbound=None):
+        """
+        Computes a network constrained G-Function
+
+        Parameters
+        ----------
+        pointpattern    object A pysal point pattern object snapped to the network.
+        nsteps          int The number of steps at which the count of nearest neighbors is computer
+        permutations    int The number of permutations to perform (default 99)
+        threshold       float The level at which significance is computed.  0.5 would be 97.5% and 2.5%
+        distribution    str The distirbution from which random points are sampled: uniform or poisson
+        lowerbound      float The lower bound at which the G-function is computed.
+                            Defaults to the min nearest neighbor distance from the observed point pattern.
+        upperbound      float The upper bound at which the G-function is computed.
+                            Defaults to the maximum pbserved nearest neighbor distance.
+
+        Returns
+        -------
+        NetworkK        object A network K class object
+        """
+        return NetworkK(self, pointpattern, nsteps=nsteps,
+                        permutations=permutations,threshold=threshold,
+                        distribution=distribution,lowerbound=lowerbound,
+                        upperbound=upperbound)
 
     def savenetwork(self, filename):
         """
