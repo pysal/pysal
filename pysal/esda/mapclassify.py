@@ -1853,6 +1853,13 @@ def fj(x, k=5):
 def opt_part(x):
     """
     Find optimal bi-partition of x values
+
+    Parameters
+    -----------
+
+    x : array (n,1)
+        Array of attribute values
+
     """
 
     n = len(x)
