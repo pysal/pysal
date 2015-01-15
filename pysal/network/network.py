@@ -665,6 +665,28 @@ class Network:
         np.fill_diagonal(nearest, np.nan)
         return nearest
 
+    def savenetwork(self, filename):
+        """
+        Save a network to disk.
+
+        Parameters
+        ----------
+        filename    str The filename where the network should be saved.
+                    This should be a full PATH or the file is saved
+                    whereever this method is called from.
+
+        """
+        with open(filename, 'wb') as networkout:
+            cPickle.dump(self, networkout, protocol=2)
+
+
+    @staticmethod
+    def loadnetwork(filename):
+        with open(filename, 'rb') as networkin:
+            self = cPickle.load(networkin)
+
+        return self
+
 class PointPattern():
     def __init__(self, shapefile, idvariable=None, attribute=False):
         self.points = {}
