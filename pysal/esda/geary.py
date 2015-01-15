@@ -15,7 +15,8 @@ class Geary:
 
     Parameters
     ----------
-    y              : array
+    y              : array (n,1)
+                     attribute vector
     w              : W
                      spatial weights
     transformation : string
