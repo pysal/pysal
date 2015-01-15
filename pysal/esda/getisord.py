@@ -16,8 +16,10 @@ class G:
 
     Parameters
     ----------
-    y             : array
-    w             : DistanceBand W spatial weights based on distance band
+    y             : array (n,1)
+                    Attribute values
+    w             : W
+                   DistanceBand W spatial weights based on distance band
     permutations  : int
                     the number of random permutations for calculating pseudo p_values
 
@@ -25,7 +27,8 @@ class G:
     ----------
     y             : array
                     original variable
-    w             : DistanceBand W spatial weights based on distance band
+    w             : W
+                   DistanceBand W spatial weights based on distance band
     permutation   : int
                     the number of permutations
     G             : float
@@ -161,17 +164,17 @@ class G_Local:
 
     Parameters
     ----------
-    y: array
+    y : array
        variable
-    w: DistanceBand W
+    w : DistanceBand W
        weights instance that is based on threshold distance
        and is assumed to be aligned with y
-    transform: string
-       the type of w, either 'B' (binary) or 'R' (row-standardized)
-    permutations: int
+    transform : string
+                the type of w, either 'B' (binary) or 'R' (row-standardized)
+    permutations : int
                   the number of random permutations for calculating
                   pseudo p values
-    star: boolean
+    star : boolean
           whether or not to include focal observation in sums
           default is False
 
@@ -200,9 +203,8 @@ class G_Local:
          vector of I values for permutated samples
     p_sim: array of floats
            p-value based on permutations (one-sided)
-           null: spatial randomness
-           alternative: the observed G is extreme
-                        it is either extremely high or extremely low
+           null - spatial randomness
+           alternative - the observed G is extreme it is either extremely high or extremely low
     EG_sim: array of floats
             average value of G from permutations
     VG_sim: array of floats
