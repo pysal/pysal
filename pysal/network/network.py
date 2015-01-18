@@ -499,7 +499,7 @@ class Network:
             self.alldistances[node] = (distance, tree)
             self.distancematrix[node] = distance
 
- def allNeighborDistances(self, sourcepattern, destpattern=None):
+    def allNeighborDistances(self, sourcepattern, destpattern=None):
         """
         Compute the shortest distance between all observations points and either
          (a) all other observation points within the same set or
@@ -675,7 +675,7 @@ class Network:
 
 
 
-        def NetworkF(self, pointpattern, nsteps=10, permutations=99,
+    def NetworkF(self, pointpattern, nsteps=10, permutations=99,
                  threshold=0.2, distribution='uniform',
                  lowerbound=None, upperbound=None):
 
