@@ -313,7 +313,7 @@ class Network:
 
                 num = ((yi1 - yi)*(x0-xi)-(xi1-xi)*(y0-yi))
                 denom = ((yi1-yi)**2 + (xi1-xi)**2)
-                k = num / denom
+                k = num / float(denom)
                 distance = abs(num) / math.sqrt(((yi1-yi)**2 + (xi1-xi)**2))
                 vectors[c] = (xi, xi1, yi, yi1,k,edge)
                 d[distance] = c
@@ -499,22 +499,25 @@ class Network:
             self.alldistances[node] = (distance, tree)
             self.distancematrix[node] = distance
 
-    def allNeighborDistances(self, sourcepattern, destpattern=None):
+    def allneighbordistances(self, sourcepattern, destpattern=None):
         """
-        Compute the shortest distance between all observations points and either
-         (a) all other observation points within the same set or
-         (b) all other observation points from another set
+        Compute either all distances between i and j in a single point pattern
+        or all distances between each i from a source pattern and all j
+        from a destination pattern
 
         Parameters
         ----------
-        sourcepattern   str The key of a point pattern snapped to the network.
+        sourcepattern : str
+                        The key of a point pattern snapped to the network.
 
-        destpattern     str (Optional) The key of a point pattern snapped to the network.
+        destpattern :str
+                    (Optional) The key of a point pattern snapped to the network.
 
         Returns
         -------
-        nearest         ndarray (n,2) With column[:,0] containing the id of the nearest
-                        neighbor and column [:,1] containing the distance.
+        nearest : array (n,n)
+                  An array or shape n,n storing distances between all points
+
         """
 
         try:
@@ -678,7 +681,41 @@ class Network:
     def NetworkF(self, pointpattern, nsteps=10, permutations=99,
                  threshold=0.2, distribution='uniform',
                  lowerbound=None, upperbound=None):
+        """
+        Computes a network constrained F-Function
 
+        Parameters
+        ----------
+        pointpattern : object
+                       A PySAL point pattern object
+
+        nsteps : int
+                 The number of steps at which the count of the nearest
+                 neighbors is computed
+
+        permutations : int
+                       The number of permutations to perform (default 99)
+
+        threshold : float
+                    The level at which significance is computed.  0.5 would be 97.5% and 2.5%
+
+        distribution : str
+                       The distirbution from which random points are sampled: uniform or poisson
+
+        lowerbound : float
+                     The lower bound at which the G-function is computed. (default 0)
+
+        upperbound : float
+                     The upper bound at which the G-function is computed.
+                     Defaults to the maximum pbserved nearest neighbor distance.
+
+        Returns
+        --------
+        NetworkF : object
+                   A NetworkF class instance
+
+
+        """
         return NetworkF(self, pointpattern, nsteps=nsteps,
                         permutations=permutations,threshold=threshold,
                         distribution=distribution,lowerbound=lowerbound,
@@ -692,19 +729,33 @@ class Network:
 
         Parameters
         ----------
-        pointpattern    object A pysal point pattern object snapped to the network.
-        nsteps          int The number of steps at which the count of nearest neighbors is computer
-        permutations    int The number of permutations to perform (default 99)
-        threshold       float The level at which significance is computed.  0.5 would be 97.5% and 2.5%
-        distribution    str The distirbution from which random points are sampled: uniform or poisson
-        lowerbound      float The lower bound at which the G-function is computed.
-                            Defaults to the min nearest neighbor distance from the observed point pattern.
-        upperbound      float The upper bound at which the G-function is computed.
-                            Defaults to the maximum pbserved nearest neighbor distance.
+        pointpattern : object
+                       A PySAL point pattern object
+
+        nsteps : int
+                 The number of steps at which the count of the nearest
+                 neighbors is computed
+
+        permutations : int
+                       The number of permutations to perform (default 99)
+
+        threshold : float
+                    The level at which significance is computed.  0.5 would be 97.5% and 2.5%
+
+        distribution : str
+                       The distirbution from which random points are sampled: uniform or poisson
+
+        lowerbound : float
+                     The lower bound at which the G-function is computed. (default 0)
+
+        upperbound : float
+                     The upper bound at which the G-function is computed.
+                     Defaults to the maximum pbserved nearest neighbor distance.
 
         Returns
         --------
-        NetworkG    object A NetworkG class object
+        NetworkG : object
+                   A NetworkG class object
         """
 
         return NetworkG(self, pointpattern, nsteps=nsteps,
@@ -720,40 +771,59 @@ class Network:
 
         Parameters
         ----------
-        pointpattern    object A pysal point pattern object snapped to the network.
-        nsteps          int The number of steps at which the count of nearest neighbors is computer
-        permutations    int The number of permutations to perform (default 99)
-        threshold       float The level at which significance is computed.  0.5 would be 97.5% and 2.5%
-        distribution    str The distirbution from which random points are sampled: uniform or poisson
-        lowerbound      float The lower bound at which the G-function is computed.
-                            Defaults to the min nearest neighbor distance from the observed point pattern.
-        upperbound      float The upper bound at which the G-function is computed.
-                            Defaults to the maximum pbserved nearest neighbor distance.
+        pointpattern : object
+                       A PySAL point pattern object
+
+        nsteps : int
+                 The number of steps at which the count of the nearest
+                 neighbors is computed
+
+        permutations : int
+                       The number of permutations to perform (default 99)
+
+        threshold : float
+                    The level at which significance is computed.  0.5 would be 97.5% and 2.5%
+
+        distribution : str
+                       The distirbution from which random points are sampled: uniform or poisson
+
+        lowerbound : float
+                     The lower bound at which the G-function is computed. (default 0)
+
+        upperbound : float
+                     The upper bound at which the G-function is computed.
+                     Defaults to the maximum pbserved nearest neighbor distance.
 
         Returns
         -------
-        NetworkK        object A network K class object
+        NetworkK : object
+                   A network K class object
         """
         return NetworkK(self, pointpattern, nsteps=nsteps,
                         permutations=permutations,threshold=threshold,
                         distribution=distribution,lowerbound=lowerbound,
                         upperbound=upperbound)
 
-    def segment_edges(self, distance=None, count=None):
+    def segment_edges(self, distance):
         """
         Segment all of the edges in the network at either
         a fixed distance or a fixed number of segments.
 
         Parameters
         -----------
-        distance : float The distance at which edges are split
-        count : int Count of the number of desired segments per edge
+        distance : float
+                   The distance at which edges are split
+
+        Returns
+        -------
+        sn : object
+             PySAL Network Object
         """
 
         sn = Network()
         sn.adjacencylist = copy.deepcopy(self.adjacencylist)
         sn.edge_lengths = copy.deepcopy(self.edge_lengths)
-        sn.edges = copy.deepcopy(self.edges)
+        sn.edges = set(copy.deepcopy(self.edges))
         sn.node_coords = copy.deepcopy(self.node_coords)
         sn.node_list = copy.deepcopy(self.node_list)
         sn.nodes = copy.deepcopy(self.nodes)
@@ -762,14 +832,11 @@ class Network:
 
         current_node_id = max(self.nodes.values())
 
-        newedges = []
-        removeedges = []
-        for e in self.edges:
-            length = self.edge_lengths[e]
-            if count != None:
-                interval = length / float(count)
-            elif distance != None:
-                interval = distance
+        newedges = set()
+        removeedges = set()
+        for e in sn.edges:
+            length = sn.edge_lengths[e]
+            interval = distance
 
             totallength = 0
             currentstart = startnode = e[0]
@@ -781,7 +848,9 @@ class Network:
                 sn.adjacencylist[e[0]].remove(e[1])
                 sn.adjacencylist[e[1]].remove(e[0])
                 sn.edge_lengths.pop(e, None)
-                removeedges.append(e)
+                removeedges.add(e)
+            else:
+                continue
 
             while totallength < length:
                 currentstop = current_node_id
@@ -805,24 +874,24 @@ class Network:
                     sn.node_coords[currentstop] = newx, newy
                     sn.nodes[(newx, newy)] = currentstop
 
-                #Add the new edge to the edge dict
-                #Iterating over this, so we need to add after iterating
-                newedges.append((currentstart, currentstop))
-
                 #Update the adjacencylist
                 sn.adjacencylist[currentstart].append(currentstop)
                 sn.adjacencylist[currentstop].append(currentstart)
 
-                #Modify edge_lengths
-                sn.edge_lengths[(currentstart, currentstop)] = interval
 
+                #Add the new edge to the edge dict
+                #Iterating over this, so we need to add after iterating
+                newedges.add(tuple(sorted([currentstart, currentstop])))
+
+                #Modify edge_lengths
+                sn.edge_lengths[tuple(sorted([currentstart, currentstop]))] = interval
 
                 #Increment the start to the stop
                 currentstart = currentstop
-        for i in removeedges:
-            sn.edges.remove(i)
-        sn.edges += newedges
 
+        sn.edges.update(newedges)
+        sn.edges.difference_update(removeedges)
+        sn.edges = list(sn.edges)
         #Update the point pattern snapping
         for instance in sn.pointpatterns.itervalues():
             sn.snap_to_edge(instance)
@@ -842,7 +911,6 @@ class Network:
         """
         with open(filename, 'wb') as networkout:
             cPickle.dump(self, networkout, protocol=2)
-
 
     @staticmethod
     def loadnetwork(filename):
