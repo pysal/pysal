@@ -37,26 +37,27 @@ class Network:
     (1) Edges are stored sorted.  Use skip-lists to speed iteration.
     """
 
-    def __init__(self, in_shp):
-        self.in_shp = in_shp
+    def __init__(self, in_shp=None):
+        if in_shp:
+            self.in_shp = in_shp
 
-        self.adjacencylist = defaultdict(list)
-        self.nodes = {}
-        self.edge_lengths = {}
-        self.edges = []
+            self.adjacencylist = defaultdict(list)
+            self.nodes = {}
+            self.edge_lengths = {}
+            self.edges = []
 
-        self.pointpatterns = {}
+            self.pointpatterns = {}
 
-        self.extractnetwork()
-        self.node_coords = dict((value, key) for key, value in self.nodes.iteritems())
+            self.extractnetwork()
+            self.node_coords = dict((value, key) for key, value in self.nodes.iteritems())
 
-        #This is a spatial representation of the network.
-        self.edges = sorted(self.edges)
+            #This is a spatial representation of the network.
+            self.edges = sorted(self.edges)
 
-        #Extract the graph
-        self.extractgraph()
+            #Extract the graph
+            self.extractgraph()
 
-        self.node_list = sorted(self.nodes.values())
+            self.node_list = sorted(self.nodes.values())
 
     def extractnetwork(self):
         """
@@ -240,8 +241,6 @@ class Network:
         self.w = ps.weights.W(neighbors)
 
     def snapobservations(self, shapefile, name, idvariable=None, attribute=None):
-        #Explicitly defined kwargs, if it cleaner to just take **kwargs and
-        # them to the Point Pattern constructor?
         """
         Snap a point pattern shapefile to a network shapefile.
 
@@ -586,7 +585,6 @@ class Network:
 
         return nearest
 
-
     def allneighbordistances(self, sourcepattern, destpattern=None):
         """
         Compute the distance between all observations points and either
@@ -730,6 +728,96 @@ class Network:
                         permutations=permutations,threshold=threshold,
                         distribution=distribution,lowerbound=lowerbound,
                         upperbound=upperbound)
+
+    def segment_edges(self, distance=None, count=None):
+        """
+        Segment all of the edges in the network at either
+        a fixed distance or a fixed number of segments.
+
+        Parameters
+        -----------
+        distance : float The distance at which edges are split
+        count : int Count of the number of desired segments per edge
+        """
+
+        sn = Network()
+        sn.adjacencylist = copy.deepcopy(self.adjacencylist)
+        sn.edge_lengths = copy.deepcopy(self.edge_lengths)
+        sn.edges = copy.deepcopy(self.edges)
+        sn.node_coords = copy.deepcopy(self.node_coords)
+        sn.node_list = copy.deepcopy(self.node_list)
+        sn.nodes = copy.deepcopy(self.nodes)
+        sn.pointpatterns = copy.deepcopy(self.pointpatterns)
+        sn.in_shp = self.in_shp
+
+        current_node_id = max(self.nodes.values())
+
+        newedges = []
+        removeedges = []
+        for e in self.edges:
+            length = self.edge_lengths[e]
+            if count != None:
+                interval = length / float(count)
+            elif distance != None:
+                interval = distance
+
+            totallength = 0
+            currentstart = startnode = e[0]
+            endnode = e[1]
+
+            #If the edge will be segmented, remove the
+            # current edge from the adjacency list
+            if interval < length:
+                sn.adjacencylist[e[0]].remove(e[1])
+                sn.adjacencylist[e[1]].remove(e[0])
+                sn.edge_lengths.pop(e, None)
+                removeedges.append(e)
+
+            while totallength < length:
+                currentstop = current_node_id
+                if totallength + interval > length:
+                    currentstop = endnode
+                    interval = length - totallength
+                    totallength = length
+                else:
+                    current_node_id += 1
+                    currentstop = current_node_id
+                    totallength += interval
+
+                    #Compute the new node coordinate
+                    newx, newy = self._newpoint_coords(e, totallength)
+
+                    #Update node_list
+                    if currentstop not in sn.node_list:
+                        sn.node_list.append(currentstop)
+
+                    #Update nodes and node_coords
+                    sn.node_coords[currentstop] = newx, newy
+                    sn.nodes[(newx, newy)] = currentstop
+
+                #Add the new edge to the edge dict
+                #Iterating over this, so we need to add after iterating
+                newedges.append((currentstart, currentstop))
+
+                #Update the adjacencylist
+                sn.adjacencylist[currentstart].append(currentstop)
+                sn.adjacencylist[currentstop].append(currentstart)
+
+                #Modify edge_lengths
+                sn.edge_lengths[(currentstart, currentstop)] = interval
+
+
+                #Increment the start to the stop
+                currentstart = currentstop
+        for i in removeedges:
+            sn.edges.remove(i)
+        sn.edges += newedges
+
+        #Update the point pattern snapping
+        for instance in sn.pointpatterns.itervalues():
+            sn.snap_to_edge(instance)
+
+        return sn
 
     def savenetwork(self, filename):
         """
