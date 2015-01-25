@@ -13,7 +13,6 @@ import random
 from analysis import NetworkG, NetworkK, NetworkF
 import util
 
-from scipy.spatial.distance import cdist as CDIST
 
 class Network:
 
@@ -599,90 +598,6 @@ class Network:
                     nearest[p2, p1] = sp_12
                     #print p1,p2, sp_12
         
-        np.fill_diagonal(nearest, np.nan)
-        return nearest
-
-    def allneighbordistances1(self, sourcepattern, destpattern=None):
-        """
-        Compute either all distances between i and j in a single point pattern
-        or all distances between each i from a source pattern and all j
-        from a destination pattern
-
-        Parameters
-        ----------
-        sourcepattern : str
-                        The key of a point pattern snapped to the network.
-
-        destpattern :str
-                    (Optional) The key of a point pattern snapped to the network.
-
-        Returns
-        -------
-        nearest : array (n,n)
-                  An array or shape n,n storing distances between all points
-
-        """
-
-        if not hasattr(self,'alldistances'):
-            self.node_distance_matrix()
-
-        src_indices = sourcepattern.points.keys()
-        nsource_pts = len(src_indices)
-        dist_to_node = sourcepattern.dist_to_node
-        if destpattern == None:
-            destpattern = sourcepattern
-        dest_indices = destpattern.points.keys()
-        ndest_pts = len(dest_indices)
-
-        searchpts = copy.deepcopy(dest_indices)
-        nearest  = np.empty((nsource_pts, ndest_pts))
-        nearest[:] = 0.0
-
-        # only handles point-point for pairs in sourcepattern currently
-        d = self.distancematrix
-        ptn = sourcepattern.dist_to_node
-        p2n = np.array([ptn[i].keys() for i in ptn])
-        dpn = np.array([ptn[i].values() for i in ptn])
-        n = len(dpn)
-        orow = np.hstack([np.tile(np.repeat(i,4),n-1-i)  for i in range(n-1)])
-        ocol = np.tile([0,0,1,1], n*(n-1)/2.)
-        nrow = np.hstack([np.tile([p2n[i,0],p2n[i,0],p2n[i,1],p2n[i,1]], n-1-i) for i in range(n-1)])
-        ncol = np.hstack(np.hstack(np.tile(p2n[j],2)) for j in [ range(i,n) for i in range(1,n)])
-        x = range(n)
-        #drow = np.hstack(np.hstack(np.repeat(j,4)) for j in [ range(i,n) for i in range(1,n)])
-        nn2 = n*(n-1)/2
-        block = np.ones((nn2,4),int)
-        js = np.triu_indices(n,1)[1]
-        drow = (js.reshape((nn2,1))*block).flatten()
-        dcol = np.tile([0,1,0,1], n*(n-1)/2.)
-        # dpn is nx2 ordered by points on row, column 1 is distance to its left node on its edge, column 2 is distance to right node
-        # d is the node to node shortest path distance matrix (precaluclated for the nework)
-        # four network distances are calculated for each pair of points
-        # d0 = dpn[i,0] + d[il,jl] + dpn[j,0]
-        # d1 = dpn[i,0] + d[il,jr] + dpn[j,1]
-        # d2 = dpn[i,1] + d[ir,jl] + dpn[j,0]
-        # d3 = dpn[i,1] + d[ir,jr] + dpn[j,1]
-        # and the minimum of the four is taken as the network distance between the pair
-        # this is vectorized so that res1 is of size (4*n*(n-1)/2), first four elements or d0,d1,d2,d3 for the first pair (0,1)
-        # next four are for pair (0,2) and so on until pair (n-2,n-1)
-        res1 = dpn[orow,ocol] + d[nrow,ncol] + dpn[drow,dcol] 
-        upper_tri = res1.reshape(n*(n-1)/2,4).min(axis=1)
-        nearest[np.triu_indices_from(nearest,1)] = upper_tri
-        nearest = nearest + nearest.T
-
-        # for points on same edge use euclidean distance not node based net
-        # distance
-        p2e = sourcepattern.obs_to_edge
-        multi_point = [ key for key in p2e if len(p2e[key]) > 1]
-        coords = np.array(sourcepattern.snapped_coordinates.values())
-        ijs = sourcepattern.snapped_coordinates.keys()
-        DIJ = CDIST(coords, coords) # full euclidean distance p-p matrix
-        all_neighs = [ p2e[e].keys() for e in multi_point ]
-        rows = np.hstack([np.repeat(neighs[i], len(neighs)-1-i) for neighs in all_neighs for i in range(len(neighs)-1) ])
-        cols = np.hstack([neighs[i:]  for neighs in all_neighs for i in range(1,len(neighs))])
-        DIJ0 = np.ones_like(DIJ) * np.inf
-        DIJ0[rows, cols] = DIJ[rows, cols] # filter for pairs of points on same edge
-        nearest = np.minimum(nearest, DIJ0)
         np.fill_diagonal(nearest, np.nan)
         return nearest
 
