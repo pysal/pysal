@@ -1,6 +1,7 @@
 from collections import defaultdict, OrderedDict, namedtuple
 import math
 import os
+import cPickle
 import copy
 
 import numpy as np
@@ -9,6 +10,7 @@ from pysal.weights.util import get_ids
 
 import random
 
+from analysis import NetworkG, NetworkK, NetworkF
 import util
 
 class Network:
@@ -35,26 +37,27 @@ class Network:
     (1) Edges are stored sorted.  Use skip-lists to speed iteration.
     """
 
-    def __init__(self, in_shp):
-        self.in_shp = in_shp
+    def __init__(self, in_shp=None):
+        if in_shp:
+            self.in_shp = in_shp
 
-        self.adjacencylist = defaultdict(list)
-        self.nodes = {}
-        self.edge_lengths = {}
-        self.edges = []
+            self.adjacencylist = defaultdict(list)
+            self.nodes = {}
+            self.edge_lengths = {}
+            self.edges = []
 
-        self.pointpatterns = {}
+            self.pointpatterns = {}
 
-        self.extractnetwork()
-        self.node_coords = dict((value, key) for key, value in self.nodes.iteritems())
+            self.extractnetwork()
+            self.node_coords = dict((value, key) for key, value in self.nodes.iteritems())
 
-        #This is a spatial representation of the network.
-        self.edges = sorted(self.edges)
+            #This is a spatial representation of the network.
+            self.edges = sorted(self.edges)
 
-        #Extract the graph
-        self.extractgraph()
+            #Extract the graph
+            self.extractgraph()
 
-        self.node_list = sorted(self.nodes.values())
+            self.node_list = sorted(self.nodes.values())
 
     def extractnetwork(self):
         """
@@ -238,8 +241,6 @@ class Network:
         self.w = ps.weights.W(neighbors)
 
     def snapobservations(self, shapefile, name, idvariable=None, attribute=None):
-        #Explicitly defined kwargs, if it cleaner to just take **kwargs and
-        # them to the Point Pattern constructor?
         """
         Snap a point pattern shapefile to a network shapefile.
 
@@ -312,7 +313,7 @@ class Network:
 
                 num = ((yi1 - yi)*(x0-xi)-(xi1-xi)*(y0-yi))
                 denom = ((yi1-yi)**2 + (xi1-xi)**2)
-                k = num / denom
+                k = num / float(denom)
                 distance = abs(num) / math.sqrt(((yi1-yi)**2 + (xi1-xi)**2))
                 vectors[c] = (xi, xi1, yi, yi1,k,edge)
                 d[distance] = c
@@ -498,6 +499,95 @@ class Network:
             self.alldistances[node] = (distance, tree)
             self.distancematrix[node] = distance
 
+    def allneighbordistances(self, sourcepattern, destpattern=None):
+        """
+        Compute either all distances between i and j in a single point pattern
+        or all distances between each i from a source pattern and all j
+        from a destination pattern
+
+        Parameters
+        ----------
+        sourcepattern : str
+                        The key of a point pattern snapped to the network.
+
+        destpattern :str
+                    (Optional) The key of a point pattern snapped to the network.
+
+        Returns
+        -------
+        nearest : array (n,n)
+                  An array or shape n,n storing distances between all points
+
+        """
+
+        try:
+            hasattr(self.alldistances)
+        except:
+            self.node_distance_matrix()
+
+        src_indices = sourcepattern.points.keys()
+        nsource_pts = len(src_indices)
+        dist_to_node = sourcepattern.dist_to_node
+        if destpattern == None:
+            destpattern = sourcepattern
+        dest_indices = destpattern.points.keys()
+        ndest_pts = len(dest_indices)
+
+        searchpts = copy.deepcopy(dest_indices)
+        nearest  = np.empty((nsource_pts, ndest_pts))
+        nearest[:] = np.inf
+
+        searchnodes = {}
+        for s in searchpts:
+            e1, e2 = dist_to_node[s].keys()
+            searchnodes[s] = (e1, e2)
+
+        for p1 in src_indices:
+            #Get the source nodes and dist to source nodes
+            source1, source2 = searchnodes[p1]
+            # distance from node1 to p, distance from node2 to p
+            sdist1, sdist2 = dist_to_node[p1].values()
+            sdist = sdist1, sdist2
+
+            searchpts.remove(p1)
+            for p2 in searchpts:
+                dest1, dest2 = searchnodes[p2]
+                ddist1, ddist2 = dist_to_node[p2].values()
+                d11 = self.alldistances[source1][0][dest1]
+                d21 = self.alldistances[source2][0][dest1]
+                d12 = self.alldistances[source1][0][dest2]
+                d22 = self.alldistances[source2][0][dest2]
+
+                # find shortest distance from path passing through each of two origin nodes
+                # to first destination node
+                sd_1 = d11 + sdist1
+                sd_21 = d21 + sdist2
+                if sd_1 > sd_21:
+                    sd_1 = sd_21
+                # now add point to node one distance on destination edge
+                len_1 = sd_1 + ddist1
+
+
+                # repeat but now for paths entering at second node of second edge
+                sd_2 = d12 + sdist1
+                sd_22 = d22 + sdist2
+                b = 0
+                if sd_2 > sd_22:
+                    sd_2 = sd_22
+                    b = 1
+                len_2 = sd_2 + ddist2
+
+                # now find shortest length path between the point 1 on edge 1 and
+                # point 2 on edge 2, and assign
+                sp_12 = len_1
+                if len_1 > len_2:
+                    sp_12 = len_2
+                nearest[p1, p2] =  sp_12
+                nearest[p2, p1] = sp_12
+                #print p1,p2, sp_12
+        np.fill_diagonal(nearest, np.nan)
+        return nearest
+
     def nearestneighbordistances(self, sourcepattern, destpattern=None):
         """
         Compute the interpattern nearest neighbor distances or the intrapattern
@@ -587,172 +677,248 @@ class Network:
         return nearest
 
 
-    def allNeighborDistances(self, sourcepattern, destpattern=None):
+
+    def NetworkF(self, pointpattern, nsteps=10, permutations=99,
+                 threshold=0.2, distribution='uniform',
+                 lowerbound=None, upperbound=None):
         """
-        Compute the distance between all observations points and either
-         (a) all other observation points within the same set or
-         (b) all other observation points from another set
+        Computes a network constrained F-Function
 
         Parameters
         ----------
-        sourcepattern   str The key of a point pattern snapped to the network.
-        destpatter      str (Optional) The key of a point pattern snapped to the network.
+        pointpattern : object
+                       A PySAL point pattern object
+
+        nsteps : int
+                 The number of steps at which the count of the nearest
+                 neighbors is computed
+
+        permutations : int
+                       The number of permutations to perform (default 99)
+
+        threshold : float
+                    The level at which significance is computed.  0.5 would be 97.5% and 2.5%
+
+        distribution : str
+                       The distirbution from which random points are sampled: uniform or poisson
+
+        lowerbound : float
+                     The lower bound at which the G-function is computed. (default 0)
+
+        upperbound : float
+                     The upper bound at which the G-function is computed.
+                     Defaults to the maximum pbserved nearest neighbor distance.
 
         Returns
-        -------
-        nearest         ndarray (n,2) With column[:,0] containing the id of the nearest
-                        neighbor and column [:,1] containing the distance.
+        --------
+        NetworkF : object
+                   A NetworkF class instance
+
+
         """
+        return NetworkF(self, pointpattern, nsteps=nsteps,
+                        permutations=permutations,threshold=threshold,
+                        distribution=distribution,lowerbound=lowerbound,
+                        upperbound=upperbound)
 
-        try:
-            hasattr(self.alldistances)
-        except:
-            self.node_distance_matrix()
-
-        src_indices = sourcepattern.points.keys()
-        nsource_pts = len(src_indices)
-        dist_to_node = sourcepattern.dist_to_node
-        if destpattern == None:
-            destpattern = sourcepattern
-        dest_indices = destpattern.points.keys()
-        ndest_pts = len(dest_indices)
-
-        searchpts = copy.deepcopy(dest_indices)
-        nearest  = np.empty((nsource_pts, ndest_pts))
-        nearest[:] = np.inf
-
-        searchnodes = {}
-        for s in searchpts:
-            e1, e2 = dist_to_node[s].keys()
-            searchnodes[s] = (e1, e2)
-
-        for p1 in src_indices:
-            #Get the source nodes and dist to source nodes
-            source1, source2 = searchnodes[p1]
-            sdist1, sdist2 = dist_to_node[p1].values()
-
-            searchpts.remove(p1)
-            for p2 in searchpts:
-                dest1, dest2 = searchnodes[p2]
-                ddist1, ddist2 = dist_to_node[p2].values()
-                source1_to_dest1 = sdist1 + self.alldistances[source1][0][dest1] + ddist1
-                source1_to_dest2 = sdist1 + self.alldistances[source1][0][dest2] + ddist2
-                source2_to_dest1 = sdist2 + self.alldistances[source2][0][dest1] + ddist1
-                source2_to_dest2 = sdist2 + self.alldistances[source2][0][dest2] + ddist2
-
-                p1row = nearest[p1]
-                p1col = nearest[:,p1]
-                p2row = nearest[p2]
-                p2col = nearest[:,p2]
-
-                if source1_to_dest1 < nearest[p1, p2]:
-                    nearest[p1, p2] = source1_to_dest1
-                if source1_to_dest1 < nearest[p2, p1]:
-                    nearest[p2, p1] = source1_to_dest1
-
-                if source1_to_dest2 < nearest[p1, p2]:
-                    nearest[p1, p2] = source1_to_dest2
-                if source1_to_dest1 < nearest[p2, p1]:
-                    nearest[p2, p1] = source1_to_dest2
-
-                if source2_to_dest1 < nearest[p1, p2]:
-                    nearest[p1, p2] = source2_to_dest1
-                if source2_to_dest1 < nearest[p2, p1]:
-                    nearest[p2, p2] = source2_to_dest1
-
-                if source2_to_dest2 < nearest[p1, p2]:
-                    nearest[p1, p2] = source2_to_dest2
-                if source2_to_dest2 < nearest[p2, p1]:
-                    nearest[p2, p1] = source2_to_dest2
-        np.fill_diagonal(nearest, np.nan)
-        return nearest
-
-
-    def allNeighborDistances1(self, sourcepattern, destpattern=None):
+    def NetworkG(self, pointpattern, nsteps=10, permutations=99,
+                 threshold=0.5, distribution='uniform',
+                 lowerbound=None, upperbound=None):
         """
-        Compute the shortest distance between all observations points and either
-         (a) all other observation points within the same set or
-         (b) all other observation points from another set
+        Computes a network constrained G-Function
 
         Parameters
         ----------
-        sourcepattern   str The key of a point pattern snapped to the network.
+        pointpattern : object
+                       A PySAL point pattern object
 
-        destpattern     str (Optional) The key of a point pattern snapped to the network.
+        nsteps : int
+                 The number of steps at which the count of the nearest
+                 neighbors is computed
+
+        permutations : int
+                       The number of permutations to perform (default 99)
+
+        threshold : float
+                    The level at which significance is computed.  0.5 would be 97.5% and 2.5%
+
+        distribution : str
+                       The distirbution from which random points are sampled: uniform or poisson
+
+        lowerbound : float
+                     The lower bound at which the G-function is computed. (default 0)
+
+        upperbound : float
+                     The upper bound at which the G-function is computed.
+                     Defaults to the maximum pbserved nearest neighbor distance.
+
+        Returns
+        --------
+        NetworkG : object
+                   A NetworkG class object
+        """
+
+        return NetworkG(self, pointpattern, nsteps=nsteps,
+                        permutations=permutations,threshold=threshold,
+                        distribution=distribution,lowerbound=lowerbound,
+                        upperbound=upperbound)
+
+    def NetworkK(self, pointpattern, nsteps=10, permutations=99,
+                 threshold=0.5, distribution='uniform',
+                 lowerbound=None, upperbound=None):
+        """
+        Computes a network constrained G-Function
+
+        Parameters
+        ----------
+        pointpattern : object
+                       A PySAL point pattern object
+
+        nsteps : int
+                 The number of steps at which the count of the nearest
+                 neighbors is computed
+
+        permutations : int
+                       The number of permutations to perform (default 99)
+
+        threshold : float
+                    The level at which significance is computed.  0.5 would be 97.5% and 2.5%
+
+        distribution : str
+                       The distirbution from which random points are sampled: uniform or poisson
+
+        lowerbound : float
+                     The lower bound at which the G-function is computed. (default 0)
+
+        upperbound : float
+                     The upper bound at which the G-function is computed.
+                     Defaults to the maximum pbserved nearest neighbor distance.
 
         Returns
         -------
-        nearest         ndarray (n,2) With column[:,0] containing the id of the nearest
-                        neighbor and column [:,1] containing the distance.
+        NetworkK : object
+                   A network K class object
+        """
+        return NetworkK(self, pointpattern, nsteps=nsteps,
+                        permutations=permutations,threshold=threshold,
+                        distribution=distribution,lowerbound=lowerbound,
+                        upperbound=upperbound)
+
+    def segment_edges(self, distance):
+        """
+        Segment all of the edges in the network at either
+        a fixed distance or a fixed number of segments.
+
+        Parameters
+        -----------
+        distance : float
+                   The distance at which edges are split
+
+        Returns
+        -------
+        sn : object
+             PySAL Network Object
         """
 
-        try:
-            hasattr(self.alldistances)
-        except:
-            self.node_distance_matrix()
+        sn = Network()
+        sn.adjacencylist = copy.deepcopy(self.adjacencylist)
+        sn.edge_lengths = copy.deepcopy(self.edge_lengths)
+        sn.edges = set(copy.deepcopy(self.edges))
+        sn.node_coords = copy.deepcopy(self.node_coords)
+        sn.node_list = copy.deepcopy(self.node_list)
+        sn.nodes = copy.deepcopy(self.nodes)
+        sn.pointpatterns = copy.deepcopy(self.pointpatterns)
+        sn.in_shp = self.in_shp
 
-        src_indices = sourcepattern.points.keys()
-        nsource_pts = len(src_indices)
-        dist_to_node = sourcepattern.dist_to_node
-        if destpattern == None:
-            destpattern = sourcepattern
-        dest_indices = destpattern.points.keys()
-        ndest_pts = len(dest_indices)
+        current_node_id = max(self.nodes.values())
 
-        searchpts = copy.deepcopy(dest_indices)
-        nearest  = np.empty((nsource_pts, ndest_pts))
-        nearest[:] = np.inf
+        newedges = set()
+        removeedges = set()
+        for e in sn.edges:
+            length = sn.edge_lengths[e]
+            interval = distance
 
-        searchnodes = {}
-        for s in searchpts:
-            e1, e2 = dist_to_node[s].keys()
-            searchnodes[s] = (e1, e2)
+            totallength = 0
+            currentstart = startnode = e[0]
+            endnode = e[1]
 
-        for p1 in src_indices:
-            #Get the source nodes and dist to source nodes
-            source1, source2 = searchnodes[p1]
-            # distance from node1 to p, distance from node2 to p
-            sdist1, sdist2 = dist_to_node[p1].values()
-            sdist = sdist1, sdist2
+            #If the edge will be segmented, remove the
+            # current edge from the adjacency list
+            if interval < length:
+                sn.adjacencylist[e[0]].remove(e[1])
+                sn.adjacencylist[e[1]].remove(e[0])
+                sn.edge_lengths.pop(e, None)
+                removeedges.add(e)
+            else:
+                continue
 
-            searchpts.remove(p1)
-            for p2 in searchpts:
-                dest1, dest2 = searchnodes[p2]
-                ddist1, ddist2 = dist_to_node[p2].values()
-                d11 = self.alldistances[source1][0][dest1]
-                d21 = self.alldistances[source2][0][dest1]
-                d12 = self.alldistances[source1][0][dest2]
-                d22 = self.alldistances[source2][0][dest2]
-                
-                # find shortest distance from path passing through each of two origin nodes
-                # to first destination node
-                sd_1 = d11 + sdist1
-                sd_21 = d21 + sdist2
-                if sd_1 > sd_21:
-                    sd_1 = sd_21
-                # now add point to node one distance on destination edge
-                len_1 = sd_1 + ddist1
+            while totallength < length:
+                currentstop = current_node_id
+                if totallength + interval > length:
+                    currentstop = endnode
+                    interval = length - totallength
+                    totallength = length
+                else:
+                    current_node_id += 1
+                    currentstop = current_node_id
+                    totallength += interval
+
+                    #Compute the new node coordinate
+                    newx, newy = self._newpoint_coords(e, totallength)
+
+                    #Update node_list
+                    if currentstop not in sn.node_list:
+                        sn.node_list.append(currentstop)
+
+                    #Update nodes and node_coords
+                    sn.node_coords[currentstop] = newx, newy
+                    sn.nodes[(newx, newy)] = currentstop
+
+                #Update the adjacencylist
+                sn.adjacencylist[currentstart].append(currentstop)
+                sn.adjacencylist[currentstop].append(currentstart)
 
 
-                # repeat but now for paths entering at second node of second edge
-                sd_2 = d12 + sdist1
-                sd_22 = d22 + sdist2
-                b = 0
-                if sd_2 > sd_22:
-                    sd_2 = sd_22
-                    b = 1
-                len_2 = sd_2 + ddist2
+                #Add the new edge to the edge dict
+                #Iterating over this, so we need to add after iterating
+                newedges.add(tuple(sorted([currentstart, currentstop])))
 
-                # now find shortest length path between the point 1 on edge 1 and
-                # point 2 on edge 2, and assign
-                sp_12 = len_1
-                if len_1 > len_2:
-                    sp_12 = len_2
-                nearest[p1, p2] =  sp_12
-                nearest[p2, p1] = sp_12
-                #print p1,p2, sp_12
-        np.fill_diagonal(nearest, np.nan)
-        return nearest
+                #Modify edge_lengths
+                sn.edge_lengths[tuple(sorted([currentstart, currentstop]))] = interval
+
+                #Increment the start to the stop
+                currentstart = currentstop
+
+        sn.edges.update(newedges)
+        sn.edges.difference_update(removeedges)
+        sn.edges = list(sn.edges)
+        #Update the point pattern snapping
+        for instance in sn.pointpatterns.itervalues():
+            sn.snap_to_edge(instance)
+
+        return sn
+
+    def savenetwork(self, filename):
+        """
+        Save a network to disk.
+
+        Parameters
+        ----------
+        filename    str The filename where the network should be saved.
+                    This should be a full PATH or the file is saved
+                    whereever this method is called from.
+
+        """
+        with open(filename, 'wb') as networkout:
+            cPickle.dump(self, networkout, protocol=2)
+
+    @staticmethod
+    def loadnetwork(filename):
+        with open(filename, 'rb') as networkin:
+            self = cPickle.load(networkin)
+
+        return self
+
 
 class PointPattern():
     def __init__(self, shapefile, idvariable=None, attribute=False):
