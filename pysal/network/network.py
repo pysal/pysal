@@ -1,4 +1,4 @@
-from collections import defaultdict, OrderedDict, namedtuple
+from collections import defaultdict, OrderedDict
 import math
 import os
 import cPickle
@@ -7,8 +7,6 @@ import copy
 import numpy as np
 import pysal as ps
 from pysal.weights.util import get_ids
-
-import random
 
 from analysis import NetworkG, NetworkK, NetworkF
 import util
@@ -65,7 +63,6 @@ class Network:
         extract the network from the edges / vertices.
         """
         nodecount = 0
-        edgetpl = namedtuple('Edge', ['source', 'destination'])
         shps = ps.open(self.in_shp)
         for shp in shps:
             vertices = shp.vertices
@@ -385,7 +382,6 @@ class Network:
             obs_to_node[k[0]] = keys
             obs_to_node[k[1]] = keys
 
-        edge_to_obs = {}
         pointpattern.obs_to_edge = obs_to_edge
         pointpattern.dist_to_node = dist_to_node
         pointpattern.obs_to_node = obs_to_node
@@ -424,7 +420,6 @@ class Network:
         x2 = self.node_coords[edge[1]][0]
         y2 = self.node_coords[edge[1]][1]
         m = (y2 - y1) / (x2 - x1)
-        b1 = y1 - m * (x1)
         if x1 > x2:
             x0 = x1 - distance / math.sqrt(1 + m**2)
         elif x1 < x2:
@@ -495,7 +490,6 @@ class Network:
             distance, pred = util.dijkstra(self, self.edge_lengths, node, n=float('inf'))
             pred = np.array(pred)
             tree = util.generatetree(pred)
-            cumdist = util.cumulativedistances(np.array(distance), tree)
             self.alldistances[node] = (distance, tree)
             self.distancematrix[node] = distance
 
@@ -547,7 +541,6 @@ class Network:
             source1, source2 = searchnodes[p1]
             # distance from node1 to p, distance from node2 to p
             sdist1, sdist2 = dist_to_node[p1].values()
-            sdist = sdist1, sdist2
 
             searchpts.remove(p1)
             for p2 in searchpts:
@@ -574,7 +567,6 @@ class Network:
                 b = 0
                 if sd_2 > sd_22:
                     sd_2 = sd_22
-                    b = 1
                 len_2 = sd_2 + ddist2
 
                 # now find shortest length path between the point 1 on edge 1 and
@@ -621,7 +613,6 @@ class Network:
 
         if destpattern == None:
             destpattern = sourcepattern
-        obs_to_node = self.pointpatterns[destpattern].obs_to_node
 
         searchpts = copy.deepcopy(pt_indices)
 
