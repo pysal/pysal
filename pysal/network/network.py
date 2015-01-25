@@ -550,57 +550,55 @@ class Network:
             # distance from node1 to p, distance from node2 to p
             sdist1, sdist2 = dist_to_node[p1].values()
             sdist = sdist1, sdist2
+            set1 = set(searchnodes[p1])
 
             searchpts.remove(p1)
             for p2 in searchpts:
                 dest1, dest2 = searchnodes[p2]
-                ddist1, ddist2 = dist_to_node[p2].values()
-                d11 = self.alldistances[source1][0][dest1]
-                d21 = self.alldistances[source2][0][dest1]
-                d12 = self.alldistances[source1][0][dest2]
-                d22 = self.alldistances[source2][0][dest2]
+                set2 = set(searchnodes[p2])
+                if set1 == set2: #same edge
+                    x1,y1 = sourcepattern.snapped_coordinates[p1]
+                    x2,y2 = destpattern.snapped_coordinates[p2]
+                    xd = x1-x2
+                    yd = y1-y2 
+                    nearest[p1,p2] = np.sqrt(xd*xd + yd*yd)
+                    nearest[p2,p1] = nearest[p1,p2]
 
-                # find shortest distance from path passing through each of two origin nodes
-                # to first destination node
-                sd_1 = d11 + sdist1
-                sd_21 = d21 + sdist2
-                if sd_1 > sd_21:
-                    sd_1 = sd_21
-                # now add point to node one distance on destination edge
-                len_1 = sd_1 + ddist1
+                else:
+                    ddist1, ddist2 = dist_to_node[p2].values()
+                    d11 = self.alldistances[source1][0][dest1]
+                    d21 = self.alldistances[source2][0][dest1]
+                    d12 = self.alldistances[source1][0][dest2]
+                    d22 = self.alldistances[source2][0][dest2]
+
+                    # find shortest distance from path passing through each of two origin nodes
+                    # to first destination node
+                    sd_1 = d11 + sdist1
+                    sd_21 = d21 + sdist2
+                    if sd_1 > sd_21:
+                        sd_1 = sd_21
+                    # now add point to node one distance on destination edge
+                    len_1 = sd_1 + ddist1
 
 
-                # repeat but now for paths entering at second node of second edge
-                sd_2 = d12 + sdist1
-                sd_22 = d22 + sdist2
-                b = 0
-                if sd_2 > sd_22:
-                    sd_2 = sd_22
-                    b = 1
-                len_2 = sd_2 + ddist2
+                    # repeat but now for paths entering at second node of second edge
+                    sd_2 = d12 + sdist1
+                    sd_22 = d22 + sdist2
+                    b = 0
+                    if sd_2 > sd_22:
+                        sd_2 = sd_22
+                        b = 1
+                    len_2 = sd_2 + ddist2
 
-                # now find shortest length path between the point 1 on edge 1 and
-                # point 2 on edge 2, and assign
-                sp_12 = len_1
-                if len_1 > len_2:
-                    sp_12 = len_2
-                nearest[p1, p2] =  sp_12
-                nearest[p2, p1] = sp_12
-                #print p1,p2, sp_12
+                    # now find shortest length path between the point 1 on edge 1 and
+                    # point 2 on edge 2, and assign
+                    sp_12 = len_1
+                    if len_1 > len_2:
+                        sp_12 = len_2
+                    nearest[p1, p2] =  sp_12
+                    nearest[p2, p1] = sp_12
+                    #print p1,p2, sp_12
         
-        # for points on same edge use euclidean distance not node based net
-        # distance
-        p2e = sourcepattern.obs_to_edge
-        multi_point = [ key for key in p2e if len(p2e[key]) > 1]
-        coords = np.array(sourcepattern.snapped_coordinates.values())
-        ijs = sourcepattern.snapped_coordinates.keys()
-        DIJ = CDIST(coords, coords) # full euclidean distance p-p matrix
-        all_neighs = [ p2e[e].keys() for e in multi_point ]
-        rows = np.hstack([np.repeat(neighs[i], len(neighs)-1-i) for neighs in all_neighs for i in range(len(neighs)-1) ])
-        cols = np.hstack([neighs[i:]  for neighs in all_neighs for i in range(1,len(neighs))])
-        DIJ0 = np.ones_like(DIJ) * np.inf
-        DIJ0[rows, cols] = DIJ[rows, cols] # filter for pairs of points on same edge
-        nearest = np.minimum(nearest, DIJ0)
         np.fill_diagonal(nearest, np.nan)
         return nearest
 
