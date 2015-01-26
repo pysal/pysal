@@ -497,16 +497,16 @@ changes were randomly distributed in space by using 99 permutations:
     ...     ev = r.taus.mean()
     ...     "%8.3f %8.3f %8.3f"%(r.tau_spatial, ev, r.tau_spatial_psim)
     ...     
-    '   0.281    0.466    0.010'
-    '   0.348    0.499    0.010'
-    '   0.460    0.546    0.020'
-    '   0.505    0.532    0.210'
-    '   0.483    0.499    0.270'
-    '   0.572    0.579    0.280'
+    '   0.397    0.659    0.010'
+    '   0.492    0.706    0.010'
+    '   0.651    0.772    0.020'
+    '   0.714    0.752    0.210'
+    '   0.683    0.705    0.270'
+    '   0.810    0.819    0.280'
 
 The observed level of spatial concordance during the 1940-50 transition was
-0.281 which is significantly lower (p=0.010) than the average level of spatial
-concordance (0.466) from randomly permuted incomes in Mexico. Similar patterns
+0.397 which is significantly lower (p=0.010) than the average level of spatial
+concordance (0.659) from randomly permuted incomes in Mexico. Similar patterns
 are found for the next two transition periods as well. In other words the
 amount of rank concordance is significantly distinct between pairs of
 observations that are geographical neighbors and those that are not in these

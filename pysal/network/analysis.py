@@ -56,7 +56,7 @@ class NetworkG(NetworkBase):
     """
 
     def computeobserved(self):
-        nearest = np.nanmin(self.ntw.allNeighborDistances(self.pointpattern), axis=1)
+        nearest = np.nanmin(self.ntw.allneighbordistances(self.pointpattern), axis=1)
         self.setbounds(nearest)
         observedx, observedy = gfunction(nearest,self.lowerbound,self.upperbound,
                                      nsteps=self.nsteps)
@@ -67,7 +67,7 @@ class NetworkG(NetworkBase):
         for p in xrange(self.permutations):
             sim = self.ntw.simulate_observations(self.npts,
                                                  distribution=self.distirbution)
-            nearest = np.nanmin(self.ntw.allNeighborDistances(sim), axis=1)
+            nearest = np.nanmin(self.ntw.allneighbordistances(sim), axis=1)
 
             simx, simy = gfunction(nearest,
                                    self.lowerbound,
@@ -82,7 +82,7 @@ class NetworkK(NetworkBase):
     """
 
     def computeobserved(self):
-        nearest = self.ntw.allNeighborDistances(self.pointpattern)
+        nearest = self.ntw.allneighbordistances(self.pointpattern)
         self.setbounds(nearest)
 
         self.lam = self.npts / np.sum(np.array(self.ntw.edge_lengths.values()))
@@ -97,7 +97,7 @@ class NetworkK(NetworkBase):
         for p in xrange(self.permutations):
             sim = self.ntw.simulate_observations(self.npts,
                                                  distribution=self.distirbution)
-            nearest = self.ntw.allNeighborDistances(sim)
+            nearest = self.ntw.allneighbordistances(sim)
 
             simx, simy = kfunction(nearest,
                                    self.upperbound,
