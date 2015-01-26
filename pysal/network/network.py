@@ -11,6 +11,7 @@ from pysal.weights.util import get_ids
 from analysis import NetworkG, NetworkK, NetworkF
 import util
 
+
 class Network:
 
     """
@@ -339,10 +340,11 @@ class Network:
         ----------
         x : float
             x-coordinate of the snapped point
+
         y : float
             y-coordiante of the snapped point
 
-       edge : tuple
+        edge : tuple
               (node0, node1) representation of the network edge
 
         Returns
@@ -644,10 +646,10 @@ class Network:
 
         """
 
-        try:
-            hasattr(self.alldistances)
-        except:
+        if not hasattr(self,'alldistances'):
             self.node_distance_matrix()
+
+
 
         src_indices = sourcepattern.points.keys()
         nsource_pts = len(src_indices)
@@ -675,38 +677,49 @@ class Network:
             searchpts.remove(p1)
             for p2 in searchpts:
                 dest1, dest2 = searchnodes[p2]
-                ddist1, ddist2 = dist_to_node[p2].values()
-                d11 = self.alldistances[source1][0][dest1]
-                d21 = self.alldistances[source2][0][dest1]
-                d12 = self.alldistances[source1][0][dest2]
-                d22 = self.alldistances[source2][0][dest2]
+                set2 = set(searchnodes[p2])
+                if set1 == set2: #same edge
+                    x1,y1 = sourcepattern.snapped_coordinates[p1]
+                    x2,y2 = destpattern.snapped_coordinates[p2]
+                    xd = x1-x2
+                    yd = y1-y2
+                    nearest[p1,p2] = np.sqrt(xd*xd + yd*yd)
+                    nearest[p2,p1] = nearest[p1,p2]
 
-                # find shortest distance from path passing through each of two origin nodes
-                # to first destination node
-                sd_1 = d11 + sdist1
-                sd_21 = d21 + sdist2
-                if sd_1 > sd_21:
-                    sd_1 = sd_21
-                # now add point to node one distance on destination edge
-                len_1 = sd_1 + ddist1
+                else:
+                    ddist1, ddist2 = dist_to_node[p2].values()
+                    d11 = self.alldistances[source1][0][dest1]
+                    d21 = self.alldistances[source2][0][dest1]
+                    d12 = self.alldistances[source1][0][dest2]
+                    d22 = self.alldistances[source2][0][dest2]
+
+                    # find shortest distance from path passing through each of two origin nodes
+                    # to first destination node
+                    sd_1 = d11 + sdist1
+                    sd_21 = d21 + sdist2
+                    if sd_1 > sd_21:
+                        sd_1 = sd_21
+                    # now add point to node one distance on destination edge
+                    len_1 = sd_1 + ddist1
 
 
-                # repeat but now for paths entering at second node of second edge
-                sd_2 = d12 + sdist1
-                sd_22 = d22 + sdist2
-                b = 0
-                if sd_2 > sd_22:
-                    sd_2 = sd_22
-                len_2 = sd_2 + ddist2
+                    # repeat but now for paths entering at second node of second edge
+                    sd_2 = d12 + sdist1
+                    sd_22 = d22 + sdist2
+                    b = 0
+                    if sd_2 > sd_22:
+                        sd_2 = sd_22
+                        b = 1
+                    len_2 = sd_2 + ddist2
 
-                # now find shortest length path between the point 1 on edge 1 and
-                # point 2 on edge 2, and assign
-                sp_12 = len_1
-                if len_1 > len_2:
-                    sp_12 = len_2
-                nearest[p1, p2] =  sp_12
-                nearest[p2, p1] = sp_12
-                #print p1,p2, sp_12
+                    # now find shortest length path between the point 1 on edge 1 and
+                    # point 2 on edge 2, and assign
+                    sp_12 = len_1
+                    if len_1 > len_2:
+                        sp_12 = len_2
+                    nearest[p1, p2] =  sp_12
+                    nearest[p2, p1] = sp_12
+                    #print p1,p2, sp_12
         np.fill_diagonal(nearest, np.nan)
         return nearest
 
@@ -731,10 +744,9 @@ class Network:
             print "Key Error: Available point patterns are {}".format(self.pointpatterns.key())
             return
 
-        try:
-            hasattr(self.alldistances)
-        except:
+        if not hasattr(self,'alldistances'):
             self.node_distance_matrix()
+
         print sourcepattern
         pt_indices = self.pointpatterns[sourcepattern].points.keys()
         dist_to_node = self.pointpatterns[sourcepattern].dist_to_node
