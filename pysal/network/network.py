@@ -14,25 +14,61 @@ import util
 class Network:
 
     """
-    A class to store two representations of a network extracted from a polyline shapefile.
+    Spatially constrained network representation and analytical functionality.
 
-    (1) A spatial retpresentation, stored in self.edges.  The spatial
-        representation is used to generate edge lengths and used for snapping
-        points to the network.
+    Parameters
+    -----------
+    in_shp : string
+             A topoligically correct input shapefile
 
-    (2) A graph representation, stored in self.graphedges.  The graph
-        representation is used to generate adjacency measures as the
-        connectivity of a street is a function of the number of
-        intersections with other other streets and not the sinuiosity.
+    Attributes
+    ----------
+    in_shp : string
+             input shapefile name
 
-        The logic behind extraction is that an intersection must have
-        neighbor cardinality >= 3, while a segment of an edge will have neighbor
-        cardinality of 2.  The former are of interest, while the latter are
-        considered artifacts of the digitization process.
+    adjacencylist : list
+                    of lists storing node adjacency
 
-    Performance Ideas:
-    These are just, if needed ideas as I get this coded.
-    (1) Edges are stored sorted.  Use skip-lists to speed iteration.
+    nodes : dict
+            key are tuple of node coords and value is the node ID
+
+    edge_lengths : dict
+                   key is a tuple of sorted node IDs representing an edge
+                   value is the length
+
+    pointpatterns : dict
+                    key is a string name of the pattern
+                    value is a point pattern class instance
+
+    node_coords : dict
+                  key is th node ID and value are the (x,y) coordinates
+                  inverse to nodes
+
+    edges : list
+            of edges, where each edge is a sorted tuple of node IDs
+
+    node_list : list
+                node IDs
+
+    alldistances : dict
+                   key is the node ID
+                   value is a list of all distances from the source to all destinations
+
+    Examples
+    --------
+
+    Instantiate an instance of a network
+
+    >>> ntw = network.Network(ps.examples.get_path('geodanet/streets.shp'))
+
+    Snap point observations to the network with attribute information
+
+    >>> ntw.snapobservations(ps.examples.get_path('geodanet/crimes.shp'), 'crimes', attribute=True)
+
+    And without attribute information
+
+    >>> ntw.snapobservations(ps.examples.get_path('geodanet/schools.shp'), 'schools', attribute=False)
+
     """
 
     def __init__(self, in_shp=None):
@@ -46,7 +82,7 @@ class Network:
 
             self.pointpatterns = {}
 
-            self.extractnetwork()
+            self._extractnetwork()
             self.node_coords = dict((value, key) for key, value in self.nodes.iteritems())
 
             #This is a spatial representation of the network.
@@ -57,10 +93,9 @@ class Network:
 
             self.node_list = sorted(self.nodes.values())
 
-    def extractnetwork(self):
+    def _extractnetwork(self):
         """
-        Using the same logic as the high efficiency areal unit weights creation
-        extract the network from the edges / vertices.
+        Used internally, to extract a network from a polyline shapefile
         """
         nodecount = 0
         shps = ps.open(self.in_shp)
@@ -90,7 +125,9 @@ class Network:
 
     def extractgraph(self):
         """
-        Extract a graph representation of a network
+        Using the existing network representation, create a graph based representation,
+        by removing all nodes with neighbor incidence of two.  That is, we assume these
+        nodes are bridges between nodes with higher incidence.
         """
         self.graphedges = []
         self.edge_to_graph = {}
@@ -114,12 +151,12 @@ class Network:
         bridges = []
         for s in segment_nodes:
             bridge = [s]
-            neighbors = self.yieldneighbor(s, segment_nodes, bridge)
+            neighbors = self._yieldneighbor(s, segment_nodes, bridge)
             while neighbors:
                 cnode = neighbors.pop()
                 segment_nodes.remove(cnode)
                 bridge.append(cnode)
-                newneighbors = self.yieldneighbor(cnode, segment_nodes, bridge)
+                newneighbors = self._yieldneighbor(cnode, segment_nodes, bridge)
                 neighbors += newneighbors
             bridges.append(bridge)
 
@@ -167,7 +204,11 @@ class Network:
             self.graphedges.append(newedge)
         self.graphedges = sorted(self.graphedges)
 
-    def yieldneighbor(self, node, segment_nodes, bridge):
+    def _yieldneighbor(self, node, segment_nodes, bridge):
+        """
+        Used internally, this method traverses a bridge segement
+        to find the source and destination nodes.
+        """
         n = []
         for i in self.adjacencylist[node]:
             if i in segment_nodes and i not in bridge:
@@ -179,14 +220,39 @@ class Network:
         Create a contiguity based W object
 
         Parameters
-        -----------
-        graph           boolean
-                        controls whether the W is generated using the spatial
-                        representation or the graph representation (default True)
-        weightings      dict of lists of weightings for each edge
+        ----------
+        graph : boolean
+                {True, False } controls whether the W is generated using the spatial
+                representation or the graph representation
+
+        weightings : dict
+                     of lists of weightings for each edge
+
+        Returns
+        -------
+         : W
+           A PySAL W Object representing the binary adjacency of the network
+
+        Examples
+        --------
+        >>> w = ntw.contiguityweights(graph=False)
+
+        Using the W object, access to ESDA functionality is provided.  First,
+        a vector of attributes is created for all edges with observations.
+
+        >>> w = ntw.contiguityweights(graph=False)
+        >>> edges = w.neighbors.keys()
+        >>> y = np.zeros(len(edges))
+        >>> for i, e in enumerate(edges):
+        >>>     if e in counts.keys():
+        >>>         y[i] = counts[e]
+
+        Next, a standard call ot Moran is made and the result placed into `res`
+
+        >>> res = ps.esda.moran.Moran(y, ntw.w, permutations=99)
+
         """
 
-        self.wtype = 'Contiguity'
         neighbors = {}
         neighbors = OrderedDict()
 
@@ -216,13 +282,12 @@ class Network:
                 #if key[1] > neigh[1]:  #NOT THIS
                     #break
 
-        self.w = ps.weights.W(neighbors, weights=weights)
+        return ps.weights.W(neighbors, weights=weights)
 
     def distancebandweights(self, threshold):
         """
         Create distance based weights
         """
-        self.wtype='Distance: {}'.format(threshold)
         try:
             hasattr(self.alldistances)
         except:
@@ -239,18 +304,31 @@ class Network:
 
     def snapobservations(self, shapefile, name, idvariable=None, attribute=None):
         """
-        Snap a point pattern shapefile to a network shapefile.
+        Snap a point pattern shapefile to this network object.  The point pattern
+        is the stored in the network.pointpattern['key'] attribute of the network
+        object.
 
         Parameters
         ----------
-        shapefile   str The PATH to the shapefile
-        name        str Name to be assigned to the point dataset
-        idvariable  str Column name to be used as ID variable
-        attribute   bool Defines whether attributes should be extracted
+        shapefile : str
+                    The PATH to the shapefile
+
+        name : str
+               Name to be assigned to the point dataset
+
+        idvariable : str
+                     Column name to be used as ID variable
+
+        attribute : bool
+                    Defines whether attributes should be extracted
+
+        Returns
+        -------
+
         """
 
         self.pointpatterns[name] = PointPattern(shapefile, idvariable=idvariable, attribute=attribute)
-        self.snap_to_edge(self.pointpatterns[name])
+        self._snap_to_edge(self.pointpatterns[name])
 
     def compute_distance_to_nodes(self, x, y, edge):
         """
@@ -259,33 +337,46 @@ class Network:
 
         Parameters
         ----------
-        network      obj    PySAL network object
-        x            float  x-coordinate of the snapped point
-        y            float  y-coordiante of the snapped point
-        edge         tuple  (node0, node1) representation of the network edge
+        x : float
+            x-coordinate of the snapped point
+        y : float
+            y-coordiante of the snapped point
+
+       edge : tuple
+              (node0, node1) representation of the network edge
 
         Returns
         --------
-        d1          float  the distance to node0, always the node with the lesser id
-        d2          float  the distance to node1, always the node with the greater id
+        d1 : float
+             the distance to node0, always the node with the lesser id
+
+        d2 : float
+             the distance to node1, always the node with the greater id
         """
 
         d1 = util.compute_length((x,y), self.node_coords[edge[0]])
         d2 = util.compute_length((x,y), self.node_coords[edge[1]])
         return d1, d2
 
-    def snap_to_edge(self, pointpattern):
+    def _snap_to_edge(self, pointpattern):
         """
-        Snap point observations to network edges.
+        Used internally to snap point observations to network edges.
 
         Parameters
         -----------
-        pointpattern  obj PySAL Point Pattern Object
+        pointpattern : obj
+                       PySAL Point Pattern Object
 
         Returns
-        obs_to_edge   dict with edge as key and list of points as value
-        edge_to_obs   dict with point id as key and edge tuple as value
-        dist_to_node  dict with edge as key and tuple of distances to nodes as value
+        --------
+        obs_to_edge : dict
+                      with edge as key and list of points as value
+
+        edge_to_obs : dict
+                      with point id as key and edge tuple as value
+
+        dist_to_node : dict
+                       with edge as key and tuple of distances to nodes as value
         """
 
         obs_to_edge = {}
@@ -375,7 +466,6 @@ class Network:
                         pointpattern.snapped_coordinates[pt_index] = (x,y)
                         break
 
-
         obs_to_node = defaultdict(list)
         for k, v in obs_to_edge.iteritems():
             keys = v.keys()
@@ -388,16 +478,26 @@ class Network:
 
     def count_per_edge(self, obs_on_network, graph=True):
         """
-        Snaps observations to the nearest edge and then counts
-            the number of observations per edge.
+        Compute the counts per edge.
 
         Parameters
         ----------
-        obs_on_network: dict of observations on the network
-            {(edge): {pt_id: (coords)}} or {edge: [(coord), (coord), (coord)]}
+        obs_on_network : dict
+                         of observations on the network
+                         {(edge): {pt_id: (coords)}} or {edge: [(coord), (coord), (coord)]}
         Returns
         -------
         counts: dict {(edge):count}
+
+        Example
+        -------
+
+        Note that this passes the obs_to_edge attribute of a point pattern
+        snapped to the network.
+
+        >>> counts = ntw.count_per_edge(ntw.pointpatterns['crimes'].obs_to_edge,
+                            graph=False)
+
         """
         counts = {}
         if graph:
@@ -415,6 +515,9 @@ class Network:
         return counts
 
     def _newpoint_coords(self, edge, distance):
+        """
+        Used internally to compute new point coordinates during snapping
+        """
         x1 = self.node_coords[edge[0]][0]
         y1 = self.node_coords[edge[0]][1]
         x2 = self.node_coords[edge[1]][0]
@@ -429,17 +532,31 @@ class Network:
 
     def simulate_observations(self, count, distribution='uniform'):
         """
-        Generates simulated points
+        Generate a simulated point pattern on the network.
 
         Parameters
         ----------
-        count: integer number of points to create
+        count : integer
+                number of points to create or mean of the distribution
+                if not 'uniform'
 
-        distribution: distribution of random points
+        distribution : string
+                       {'uniform', 'poisson'} distribution of random points
 
         Returns
         -------
-        random_pts: dict with {(edge):[(x,y), (x1, y1), ... , (xn,yn)]}
+        random_pts : dict
+                     key is the edge tuple
+                     value is a list of new point coordinates
+
+        Example
+        -------
+
+        >>> npts = ntw.pointpatterns['crimes'].npoints
+        >>> sim = ntw.simulate_observations(npts)
+        >>> sim
+        <network.SimulatedPointPattern instance at 0x1133d8710>
+
         """
         simpts = SimulatedPointPattern()
 
@@ -476,6 +593,19 @@ class Network:
         return simpts
 
     def enum_links_node(self, v0):
+        """
+        Returns the edges (links) around node
+
+        Parameters
+        -----------
+        v0 : int
+             node id
+
+        Returns
+        --------
+        links : list
+                list of tuple edge adjacent to the node
+        """
         links = []
         neighbornodes =  self.adjacencylist[v0]
         for n in neighbornodes:
@@ -667,8 +797,6 @@ class Network:
 
         return nearest
 
-
-
     def NetworkF(self, pointpattern, nsteps=10, permutations=99,
                  threshold=0.2, distribution='uniform',
                  lowerbound=None, upperbound=None):
@@ -809,6 +937,12 @@ class Network:
         -------
         sn : object
              PySAL Network Object
+
+        Example
+        -------
+
+        >>> n200 = ntw.segment_edges(200.0)
+
         """
 
         sn = Network()
@@ -885,19 +1019,25 @@ class Network:
         sn.edges = list(sn.edges)
         #Update the point pattern snapping
         for instance in sn.pointpatterns.itervalues():
-            sn.snap_to_edge(instance)
+            sn._snap_to_edge(instance)
 
         return sn
 
     def savenetwork(self, filename):
         """
-        Save a network to disk.
+        Save a network to disk as a binary file
 
         Parameters
         ----------
-        filename    str The filename where the network should be saved.
-                    This should be a full PATH or the file is saved
-                    whereever this method is called from.
+        filename : str
+                   The filename where the network should be saved.
+                   This should be a full PATH or the file is saved
+                   whereever this method is called from.
+
+        Example
+        --------
+
+        >>> ntw.savenetwork('mynetwork.pkl')
 
         """
         with open(filename, 'wb') as networkout:
