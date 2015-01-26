@@ -19,6 +19,8 @@ esda
     Tools for Exploratory Spatial Data Analysis
 examples
     Example data sets used by several sub-packages for examples and testing
+network
+    Spatial analysis on networks
 region
     Regionalization algorithms and spatially constrained clustering
 spatial_dynamics
@@ -75,7 +77,8 @@ from pysal.weights.user import queen_from_shapefile, rook_from_shapefile, \
 from pysal.core.util.weight_converter import weight_convert
 import pysal.spreg
 import pysal.examples
-import pysal.network
+from pysal.network.network import Network, NetworkG, NetworkK, NetworkF
+
 
 # Load the IOHandlers
 from pysal.core import IOHandlers
