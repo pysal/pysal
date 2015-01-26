@@ -348,7 +348,7 @@ class Network:
               (node0, node1) representation of the network edge
 
         Returns
-        --------
+        -------
         d1 : float
              the distance to node0, always the node with the lesser id
 
@@ -370,7 +370,7 @@ class Network:
                        PySAL Point Pattern Object
 
         Returns
-        --------
+        -------
         obs_to_edge : dict
                       with edge as key and list of points as value
 
@@ -604,7 +604,7 @@ class Network:
              node id
 
         Returns
-        --------
+        -------
         links : list
                 list of tuple edge adjacent to the node
         """
@@ -841,10 +841,9 @@ class Network:
                      Defaults to the maximum pbserved nearest neighbor distance.
 
         Returns
-        --------
+        -------
         NetworkF : object
-                   A NetworkF class instance
-
+                   A network F class instance
 
         """
         return NetworkF(self, pointpattern, nsteps=nsteps,
@@ -884,9 +883,10 @@ class Network:
                      Defaults to the maximum pbserved nearest neighbor distance.
 
         Returns
-        --------
+        -------
         NetworkG : object
-                   A NetworkG class object
+                   A network G class object
+
         """
 
         return NetworkG(self, pointpattern, nsteps=nsteps,
@@ -929,6 +929,7 @@ class Network:
         -------
         NetworkK : object
                    A network K class object
+
         """
         return NetworkK(self, pointpattern, nsteps=nsteps,
                         permutations=permutations,threshold=threshold,
@@ -1064,6 +1065,37 @@ class Network:
 
 
 class PointPattern():
+    """
+    A stub point pattern class used to store a point pattern.
+    This class is monkey patched with network specific attributes
+    when the points are snapped to a network.
+
+    In the future this class may be replaced with a generic point
+    pattern class.
+
+    Parameters
+    ----------
+    shapefile : string
+                input shapefile
+
+    idvariable : string
+                 field in the shapefile to use as an idvariable
+
+    attribute : boolean
+                {False, True} A flag to indicate whether all attributes
+                are tagged to this class.
+
+    Attributes
+    ----------
+    points : dict
+             key is the point id
+             value are the coordiantes
+
+    npoints : integer
+              the number of points
+
+
+    """
     def __init__(self, shapefile, idvariable=None, attribute=False):
         self.points = {}
         self.npoints = 0
@@ -1104,6 +1136,9 @@ class SimulatedPointPattern():
 
     If the PointPattern class has methods, it might make sense to
     make this a child of that class.
+
+    This class is not intended to be used by the external user.
+
     """
     def __init__(self):
         self.npoints = 0
