@@ -75,6 +75,7 @@ from pysal.weights.user import queen_from_shapefile, rook_from_shapefile, \
 from pysal.core.util.weight_converter import weight_convert
 import pysal.spreg
 import pysal.examples
+import pysal.network
 
 # Load the IOHandlers
 from pysal.core import IOHandlers

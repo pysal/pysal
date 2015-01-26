@@ -74,3 +74,6 @@ pysal/contrib/viz/south_base.html
 pysal/contrib/viz/sp.tex
 pysal/contrib/viz/sss.tex
 pysal/examples/south.prj
+
+#Vi
+*.swp
