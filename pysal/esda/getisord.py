@@ -175,8 +175,8 @@ class G_Local:
     permutations : int
                   the number of random permutations for calculating
                   pseudo p values
-    star : {False, True}
-           whether or not to include focal observation in sums
+    star : boolean
+           whether or not to include focal observation in sums (default: False)
 
     Attributes
     ----------
