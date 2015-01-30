@@ -272,14 +272,3 @@ def choropleth_map(jsonpath, key, attribute, df = None,
     
     return inline_map(choromap)
 
-if __name__ == '__main__':
-    import pysal as ps
-    import json
-
-    shp = ps.open('jsontest/test.shp')
-    dbf = ps.open('jsontest/test.dbf')
-
-    control = json.load(open('./jsontest/ogr.json'))
-
-    test = build_features(shp, dbf)
-    
