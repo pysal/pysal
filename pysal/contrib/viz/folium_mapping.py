@@ -1,6 +1,4 @@
 import numpy as np
-import GeoDaSandboxIO as gsb
-import json as js
 import folium as fm
 import pysal as ps
 import pandas as pd
