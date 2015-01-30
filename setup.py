@@ -19,7 +19,7 @@ with open('README.md') as file:
     long_description = file.read()
 
 MAJOR = 1
-MINOR = 9
+MINOR = 10
 MICRO = 0
 ISRELEASED = False
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
