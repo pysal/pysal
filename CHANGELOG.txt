@@ -1,3 +1,36 @@
+v<1.9.1>, 2015-01-31
+
+GitHub stats for 2015/01/30 - 2015/01/31 
+
+These lists are automatically generated, and may be incomplete or contain duplicates.
+
+The following 4 authors contributed 14 commits.
+
+* Dani Arribas-Bel
+* Serge Rey
+* Sergio Rey
+* jlaura
+
+
+We closed a total of 8 issues, 3 pull requests and 5 regular issues;
+this is the full list (generated with the script 
+:file:`tools/github_stats.py`):
+
+Pull Requests (3):
+
+* :ghpull:`566`: Fix for 1.9.0 missing file in setup.py
+* :ghpull:`563`: Updating release instructions
+* :ghpull:`561`: Rolling over to 1.10
+
+Issues (5):
+
+* :ghissue:`566`: Fix for 1.9.0 missing file in setup.py
+* :ghissue:`565`: Bsetup
+* :ghissue:`563`: Updating release instructions
+* :ghissue:`562`: adjustments to release management
+* :ghissue:`561`: Rolling over to 1.10
+
+
 v<1.9.0>, 2015-01-30
 
 GitHub stats for 2014/07/25 - 2015/01/30 
