@@ -20,7 +20,7 @@ PySAL
 
 .. sidebar:: Releases
 
-    - `Stable 1.9.0 - January 30, 2015 <users/installation.html>`_
+    - `Stable 1.9.0 - January 2015 <users/installation.html>`_
     - `Development 1.10.0dev  <http://github.com/pysal/pysal/>`_
 
 PySAL is an open source library of spatial analysis functions written in
