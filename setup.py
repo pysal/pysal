@@ -18,6 +18,7 @@ from pysal.version import version as dversion
 with open('README.txt') as file:
     long_description = file.read()
 
+MAJOR = 1
 MINOR = 9
 MICRO = 1
 ISRELEASED = False
