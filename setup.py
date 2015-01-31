@@ -15,12 +15,12 @@ else:
 
 from pysal.version import version as dversion
 
-with open('README.md') as file:
+with open('README.txt') as file:
     long_description = file.read()
 
 MAJOR = 1
-MINOR = 10
-MICRO = 0
+MINOR = 9
+MICRO = 1
 ISRELEASED = False
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
