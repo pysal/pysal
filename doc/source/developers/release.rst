@@ -19,6 +19,7 @@ Prepare the release
 - Change MAJOR, MINOR version in setup script.
 - Change pysal/version.py to non-dev number
 - Change the docs version from X.xdev to X.x by editing doc/source/conf.py in two places.
+- Change docs/index.rst to update Stable version and date, and Development version
 - Commit all changes.
 
 Tag 
@@ -81,6 +82,10 @@ Put master back to dev
 - Change pysal/version.py to dev number
 - Change the docs version from X.x to X.xdev by editing doc/source/conf.py in two places.
 - Update the release schedule in doc/source/developers/guidelines.rst
+
+
+Update the `github.io news page <https://github.com/pysal/pysal.github.io/blob/master/_includes/news.md>`_
+to  announce the release.
 
 .. _upload: http://docs.python.org/2.7/distutils/uploading.html
 .. _registered: http://docs.python.org/2.7/distutils/packageindex.html
