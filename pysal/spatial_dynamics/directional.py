@@ -12,47 +12,42 @@ import pysal
 
 def rose(Y, w, k=8, permutations=0):
     """
-    Calculation of rose diagram for local indicators of spatial association
+    Calculation of rose diagram for local indicators of spatial association.
 
     Parameters
     ----------
-
-    Y: array (n,2)
-       variable observed on n spatial units over 2 time periods
-
-    w: spatial weights object
-
-    k: int
-       number of circular sectors in rose diagram
-
-    permutations: int
-       number of random spatial permutations for calculation of pseudo
-       p-values
+    Y             : array 
+                    (n, 2), variable observed on n spatial units over 2 time. 
+                    periods
+    w             : W
+                    spatial weights object.
+    k             : int, optional
+                    number of circular sectors in rose diagram (the default is 
+                    8).
+    permutations  : int, optional
+                    number of random spatial permutations for calculation of 
+                    pseudo p-values (the default is 0).
 
     Returns
     -------
-
-    results: dictionary (keys defined below)
-
-    counts:  array (k,1)
-        number of vectors with angular movement falling in each sector
-
-    cuts: array (k,1)
-        intervals defining circular sectors (in radians)
-
-    random_counts: array (permutations,k)
-        counts from random permutations
-
-    pvalues: array (kx1)
-        one sided (upper tail) pvalues for observed counts
+    results       : dictionary 
+                    (keys defined below)
+    counts        : array 
+                    (k, 1), number of vectors with angular movement falling in 
+                    each sector.
+    cuts          : array 
+                    (k, 1), intervals defining circular sectors (in radians).
+    random_counts : array 
+                    (permutations, k), counts from random permutations.
+    pvalues       : array 
+                    (k, 1), one sided (upper tail) pvalues for observed counts.
 
     Notes
     -----
-    Based on Rey, Murray, and Anselin (2011) [1]_
+    Based on Rey, Murray, and Anselin (2011) [1]_ .
 
     Examples
     --------
-
     Constructing data for illustration of directional LISA analytics.
     Data is for the 48 lower US states over the period 1969-2009 and
     includes per capita income normalized to the national average. 
@@ -143,9 +138,9 @@ def rose(Y, w, k=8, permutations=0):
 
     References
     ----------
-
-    .. [1] Rey, S.J., A.T. Murray and L. Anselin. 2011. "Visualizing
-        regional income distribution dynamics." Letters in Spatial and Resource Sciences, 4: 81-90.
+    .. [1] Rey, S.J., A.T. Murray and L. Anselin. 2011. "Visualizing regional 
+       income distribution dynamics." Letters in Spatial and Resource Sciences, 
+       4: 81-90.
 
     """
     results = {}
