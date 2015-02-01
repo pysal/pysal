@@ -1,5 +1,5 @@
 """
-Spatial Weights.
+Weights.
 """
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 
@@ -15,7 +15,7 @@ __all__ = ['W', 'WSP']
 
 class W(object):
     """
-    Spatial weights
+    Spatial weights.
 
     Parameters
     ----------
@@ -56,7 +56,7 @@ class W(object):
     max_neighbors
     mean_neighbors
     min_neighbors
-    n
+    n                   : int
     neighbor_offsets
     nonzero
     pct_nonzero
@@ -261,7 +261,7 @@ class W(object):
 
     @property
     def s2(self):
-        """Defined as: 
+        """s2 is defined as 
 
         .. math::
 
@@ -475,7 +475,8 @@ class W(object):
         return dict(zip(self.neighbors[key], self.weights[key]))
 
     def __iter__(self):
-        """Support iteration over weights.
+        """
+        Support iteration over weights.
 
         Examples
         --------
@@ -499,7 +500,8 @@ class W(object):
             yield i, dict(zip(self.neighbors[i], self.weights[i]))
 
     def remap_ids(self, new_ids):
-        '''In place modification throughout `W` of id values from `w.id_order` to
+        '''
+        In place modification throughout `W` of id values from `w.id_order` to
         `new_ids` in all
 
         ...
@@ -559,7 +561,8 @@ class W(object):
             self._reset()
 
     def __set_id_order(self, ordered_ids):
-        """Set the iteration order in w.
+        """
+        Set the iteration order in w.
 
         W can be iterated over. On construction the iteration order is set to
         the lexicographic order of the keys in the w.weights dictionary. If a specific order
@@ -615,6 +618,7 @@ class W(object):
         >>>
 
         """
+
         if set(self._id_order) == set(ordered_ids):
             self._id_order = ordered_ids
             self._id_order_set = True
@@ -633,7 +637,8 @@ class W(object):
 
     @property
     def id_order_set(self):
-        """Returns True if user has set id_order, False if not.
+        """
+        Returns True if user has set id_order, False if not.
 
         Examples
         --------
@@ -646,7 +651,8 @@ class W(object):
 
     @property
     def neighbor_offsets(self):
-        """Given the current id_order, neighbor_offsets[id] is the offsets of the
+        """
+        Given the current id_order, neighbor_offsets[id] is the offsets of the
         id's neighbors in id_order.
 
         Examples
@@ -672,7 +678,8 @@ class W(object):
         return self.__neighbors_0
 
     def get_transform(self):
-        """Getter for transform property.
+        """
+        Getter for transform property.
 
         Returns
         -------
@@ -699,7 +706,8 @@ class W(object):
         return self._transform
 
     def set_transform(self, value="B"):
-        """Transformations of weights.
+        """
+        Transformations of weights.
 
         Notes
         -----
@@ -820,7 +828,8 @@ class W(object):
     transform = property(get_transform, set_transform)
 
     def asymmetry(self, intrinsic=True):
-        """Asymmetry check.
+        """
+        Asymmetry check.
 
         Parameters
         ----------
@@ -877,7 +886,8 @@ class W(object):
             return ijs
 
     def full(self):
-        """Generate a full numpy array.
+        """
+        Generate a full numpy array.
 
         Returns
         -------
@@ -908,7 +918,8 @@ class W(object):
         return util.full(self)
 
     def towsp(self):
-        '''Generate a WSP object.
+        '''
+        Generate a WSP object.
 
         Returns
         -------
@@ -939,7 +950,8 @@ class W(object):
         return WSP(self.sparse, self._id_order)
 
     def set_shapefile(self, shapefile, idVariable=None, full=False):
-        """Adding meta data for writing headers of gal and gwt files.
+        """
+        Adding meta data for writing headers of gal and gwt files.
 
         Parameters
         ----------
@@ -955,6 +967,7 @@ class W(object):
                         (default) only base of shapefile without extension
 
         """
+
         if full:
             self._shpName = shapefile
         else:
@@ -965,7 +978,8 @@ class W(object):
 
 class WSP(object):
 
-    """Thin W class for spreg.
+    """
+    Thin W class for spreg.
 
     Parameters
     ----------
@@ -980,9 +994,9 @@ class WSP(object):
     Attributes
     ----------
 
-    n
-    s0
-    trcWtW_WW
+    n           : int  
+    s0          : float
+    trcWtW_WW   : float
 
     Examples
     --------
