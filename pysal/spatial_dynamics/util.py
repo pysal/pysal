@@ -1,10 +1,10 @@
 """
 Utilities for the spatial dynamics module.
 """
-import numpy as np
 
 __all__ = ['shuffle_matrix', 'get_lower']
 
+import numpy as np
 
 def shuffle_matrix(X, ids):
     """
@@ -12,14 +12,15 @@ def shuffle_matrix(X, ids):
 
     Parameters
     ----------
-    X   : array (k,k)
-          array to be permutated
-    ids : range (k,)
+    X   : array 
+          (k, k), array to be permutated.
+    ids : array
+          range (k, ).
 
     Returns
     -------
-    X   : array (k,k)
-          with rows and columns randomly shuffled
+    X   : array 
+          (k, k) with rows and columns randomly shuffled.
 
     Examples
     --------
@@ -43,14 +44,14 @@ def get_lower(matrix):
 
     Parameters
     ----------
-    matrix          : numpy array
-                      a distance matrix (n x n)
+    matrix  : array
+              (n, n) numpy array, a distance matrix.
 
     Returns
     -------
-    lowvec          : numpy array
-                      the lower half of the distance matrix flattened into
-                      a vector of length n*(n-1)/2
+    lowvec  : array
+              numpy array, the lower half of the distance matrix flattened into 
+              a vector of length n*(n-1)/2.
 
     Examples
     --------
