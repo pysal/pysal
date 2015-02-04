@@ -167,8 +167,8 @@ class G_Local:
     ----------
     y : array
         variable
-    w : DistanceBand W
-        weights instance that is based on threshold distance
+    w : W
+        DistanceBand, weights instance that is based on threshold distance
         and is assumed to be aligned with y
     transform : {'R', B'}
                 the type of w, either 'B' (binary) or 'R' (row-standardized)
@@ -180,41 +180,41 @@ class G_Local:
 
     Attributes
     ----------
-    y: array
+    y : array
        original variable
-    w: DistanceBand W
+    w : DistanceBand W
        original weights object
     permutations: int
                   the number of permutations
-    Gs: array
+    Gs : array
         of floats, the value of the orginal G statistic in Getis & Ord (1992)
-    EGs: float
+    EGs : float
          expected value of Gs under normality assumption
          the values is scalar, since the expectation is identical
          across all observations
-    VGs: array
+    VGs : array
          of floats, variance values of Gs under normality assumption
-    Zs: array
+    Zs : array
         of floats, standardized Gs
-    p_norm: array
+    p_norm : array
             of floats, p-value under normality assumption (one-sided)
             for two-sided tests, this value should be multiplied by 2
-    sim: array
+    sim : array
          of arrays of floats (if permutations>0), vector of I values
          for permutated samples
-    p_sim: array
+    p_sim : array
            of floats, p-value based on permutations (one-sided)
            null - spatial randomness
            alternative - the observed G is extreme it is either extremely high or extremely low
-    EG_sim: array
+    EG_sim : array
             of floats, average value of G from permutations
-    VG_sim: array
+    VG_sim : array
             of floats, variance of G from permutations
-    seG_sim: array
+    seG_sim : array
              of floats, standard deviation of G under permutations.
-    z_sim: array
+    z_sim : array
            of floats, standardized G based on permutations
-    p_z_sim: array
+    p_z_sim : array
              of floats, p-value based on standard normal approximation from
              permutations (one-sided)
     Notes
