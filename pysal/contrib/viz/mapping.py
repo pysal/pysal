@@ -389,7 +389,7 @@ def base_choropleth_classless(map_obj, values, cmap='Greys' ):
         map_obj.set_array(values)
     return map_obj
 
-def base_choropleth_unique(map_obj, values,  clrs='hot_r'):
+def base_choropleth_unique(map_obj, values,  cmap='hot_r'):
     '''
     Set coloring based on unique values from a map object
     ...
