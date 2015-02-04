@@ -15,8 +15,8 @@ class Geary:
 
     Parameters
     ----------
-    y              : array (n,1)
-                     attribute vector
+    y              : array
+                     (n, 1) attribute vector
     w              : W
                      spatial weights
     transformation : {'B', 'R', 'D', 'U', 'V'}
