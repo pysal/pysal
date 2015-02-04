@@ -44,32 +44,63 @@ class W(object):
     ----------
 
     asymmetries         : list
+                          of
     cardinalities       : dictionary
+                          of
     diagW2              : array
+                          of
     diagWtW             : array
+                          of
     diagWtW_WW          : array
+                          of
     histogram           : dictionary
+                          of
     id2i                : dictionary
+                          of
     id_order            : list
-    id_order_set
+                          of
+    id_order_set        : boolean
+                          True if
     islands             : list
-    max_neighbors
-    mean_neighbors
-    min_neighbors
+                          of
+
+    max_neighbors       : int
+                          maximum number of neighbors
+
+    mean_neighbors      : int
+                          mean number of neighbors
+
+    min_neighbors       : int
+                          minimum neighbor count
     n                   : int
-    neighbor_offsets
-    nonzero
-    pct_nonzero
+                          of
+
+    neighbor_offsets    : list
+                          ids of neighbors to a region in id_order
+    nonzero             : int
+                          Number of non-zero entries
+    pct_nonzero         : float
+                          Percentage of nonzero neighbor counts
     s0                  : float
+                          of
     s1                  : float
+                          of
     s2                  : float
+                          of
     s2array             : array
+                          of
     sd                  : float
-    sparse
+                          of
+    sparse              : sparse_matrix
+                          SciPy sparse matrix instance
     trcW2               : float
+                          of
     trcWtW              : float
+                          of
     trcWtW_WW           : float
+                          of
     transform           : string
+                          of
 
     Examples
     --------
@@ -655,6 +686,11 @@ class W(object):
         Given the current id_order, neighbor_offsets[id] is the offsets of the
         id's neighbors in id_order.
 
+        Returns
+        -------
+        list
+                offsets of the id's neighbors in id_order
+
         Examples
         --------
         >>> from pysal import W
@@ -984,7 +1020,7 @@ class WSP(object):
     Parameters
     ----------
 
-    sparse   : scipy sparse object
+    sparse   : sparse_matrix
                NxN object from scipy.sparse
 
     id_order : list
@@ -995,8 +1031,11 @@ class WSP(object):
     ----------
 
     n           : int
+                  description
     s0          : float
+                  description
     trcWtW_WW   : float
+                  description
 
     Examples
     --------
