@@ -11,6 +11,8 @@ from pysal.weights.util import get_ids
 from analysis import NetworkG, NetworkK, NetworkF
 import util
 
+__all__ = ["Network", "PointPattern", "NetworkG", "NetworkK", "NetworkF"  ]
+
 
 class Network:
 
@@ -671,6 +673,7 @@ class Network:
         for p1 in src_indices:
             #Get the source nodes and dist to source nodes
             source1, source2 = searchnodes[p1]
+            set1 = set(searchnodes[p1])
             # distance from node1 to p, distance from node2 to p
             sdist1, sdist2 = dist_to_node[p1].values()
 

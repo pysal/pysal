@@ -1,9 +1,12 @@
 """
 Methods for identifying space-time interaction in spatio-temporal event
 data.
+
 """
 __author__ = "Nicholas Malizia <nmalizia@asu.edu>", "Sergio J. Rey \
 <srey@asu.edu>", "Philip Stephens <philip.stephens@asu.edu"
+
+__all__ = ['SpaceTimeEvents', 'knox', 'mantel', 'jacquez', 'modified_knox']
 
 import pysal
 import numpy as np
@@ -12,9 +15,6 @@ import pysal.weights.Distance as Distance
 from pysal import cg
 from pysal.spatial_dynamics import util
 from datetime import date
-
-__all__ = ['SpaceTimeEvents', 'knox', 'mantel', 'jacquez', 'modified_knox']
-
 
 class SpaceTimeEvents:
     """
@@ -25,34 +25,34 @@ class SpaceTimeEvents:
     ----------
     path            : string
                       the path to the appropriate shapefile, including the
-                      file name, but excluding the extension
+                      file name, but excluding the extension.
     time            : string
                       column header in the DBF file indicating the column
-                      containing the time stamp
-    infer_timestamp : boolean
+                      containing the time stamp.
+    infer_timestamp : bool, optional
                       if the column containing the timestamp is formatted as
-                      calendar dates, try to coerce them into Python datetime objects
+                      calendar dates, try to coerce them into Python datetime 
+                      objects (the default is False).
 
     Attributes
     ----------
     n               : int
-                      number of events
+                      number of events.
     x               : array
-                      n x 1 array of the x coordinates for the events
+                      (n, 1), array of the x coordinates for the events.
     y               : array
-                      n x 1 array of the y coordinates for the events
+                      (n, 1), array of the y coordinates for the events.
     t               : array
-                      n x 1 array of the temporal coordinates for the events
+                      (n, 1), array of the temporal coordinates for the events.
     space           : array
-                      n x 2 array of the spatial coordinates (x,y) for the
-                      events
+                      (n, 1), array of the spatial coordinates (x,y) for the
+                      events.
     time            : array
-                      n x 2 array of the temporal coordinates (t,1) for the
-                      events, the second column is a vector of ones
+                      (n, 1), array of the temporal coordinates (t,1) for the
+                      events, the second column is a vector of ones.
 
     Examples
     --------
-
     Read in the example shapefile data, ensuring to omit the file
     extension. In order to successfully create the event data the .dbf file
     associated with the shapefile should have a column of values that are a
@@ -159,30 +159,31 @@ def knox(s_coords, t_coords, delta, tau, permutations=99, debug=False):
     Parameters
     ----------
     s_coords        : array
-                      nx2 spatial coordinates
+                      (n, 2), spatial coordinates.
     t_coords        : array
-                      nx1 temporal coordinates
+                      (n, 1), temporal coordinates.
     delta           : float
-                      threshold for proximity in space
+                      threshold for proximity in space.
     tau             : float
-                      threshold for proximity in time
-    permutations    : int
+                      threshold for proximity in time.
+    permutations    : int, optional
                       the number of permutations used to establish pseudo-
-                      significance (default is 99)
-    debug           : bool
-                      if true, debugging information is printed
+                      significance (the default is 99).
+    debug           : bool, optional
+                      if true, debugging information is printed (the default is 
+                      False).
 
     Returns
     -------
     knox_result     : dictionary
                       contains the statistic (stat) for the test and the
-                      associated p-value (pvalue)
+                      associated p-value (pvalue).
     stat            : float
-                      value of the knox test for the dataset
+                      value of the knox test for the dataset.
     pvalue          : float
-                      pseudo p-value associated with the statistic
+                      pseudo p-value associated with the statistic.
     counts          : int
-                      count of space time neighbors
+                      count of space time neighbors.
 
     References
     ----------
@@ -267,42 +268,37 @@ def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, t
     Parameters
     ----------
     s_coords        : array
-                      nx2 spatial coordinates
-
+                      (n, 2), spatial coordinates.
     t_coords        : array
-                      nx1 temporal coordinates
-
-    permutations    : int
+                      (n, 1), temporal coordinates.
+    permutations    : int, optional
                       the number of permutations used to establish pseudo-
-                      significance (default is 99)
-
-    scon            : float
-                      constant added to spatial distances
-
-    spow            : float
-                      value for power transformation for spatial distances
-
-    tcon            : float
-                      constant added to temporal distances
-
-    tpow            : float
-                      value for power transformation for temporal distances
-
+                      significance (the default is 99).
+    scon            : float, optional
+                      constant added to spatial distances (the default is 1.0).
+    spow            : float, optional
+                      value for power transformation for spatial distances 
+                      (the default is -1.0).
+    tcon            : float, optional
+                      constant added to temporal distances (the default is 1.0).
+    tpow            : float, optional
+                      value for power transformation for temporal distances 
+                      (the default is -1.0).
 
     Returns
     -------
     mantel_result   : dictionary
                       contains the statistic (stat) for the test and the
-                      associated p-value (pvalue)
+                      associated p-value (pvalue).
     stat            : float
-                      value of the knox test for the dataset
+                      value of the knox test for the dataset.
     pvalue          : float
-                      pseudo p-value associated with the statistic
+                      pseudo p-value associated with the statistic.
 
     References
     ----------
     .. [2] N. Mantel. 1967. The detection of disease clustering and a
-        generalized regression approach. Cancer Research, 27(2):209-220.
+       generalized regression approach. Cancer Research, 27(2):209-220.
 
     Examples
     --------
@@ -341,7 +337,6 @@ def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, t
 
     >>> print("%2.2f"%result['pvalue'])
     0.01
-
 
     """
 
@@ -388,35 +383,31 @@ def jacquez(s_coords, t_coords, k, permutations=99):
     Parameters
     ----------
     s_coords        : array
-                      nx2 spatial coordinates
-
+                      (n, 2), spatial coordinates.
     t_coords        : array
-                      nx1 temporal coordinates
-
+                      (n, 1), temporal coordinates.
     k               : int
-                      the number of nearest neighbors to be searched
-
-    permutations    : int
+                      the number of nearest neighbors to be searched.
+    permutations    : int, optional
                       the number of permutations used to establish pseudo-
-                      significance (default is 99)
+                      significance (the default is 99).
 
     Returns
     -------
     jacquez_result  : dictionary
                       contains the statistic (stat) for the test and the
-                      associated p-value (pvalue)
+                      associated p-value (pvalue).
     stat            : float
                       value of the Jacquez k nearest neighbors test for the
-                      dataset
+                      dataset.
     pvalue          : float
                       p-value associated with the statistic (normally
-                      distributed with k-1 df)
+                      distributed with k-1 df).
 
     References
     ----------
     .. [3] G. Jacquez. 1996. A k nearest neighbour test for space-time
        interaction. Statistics in Medicine, 15(18):1935-1949.
-
 
     Examples
     --------
@@ -510,31 +501,31 @@ def modified_knox(s_coords, t_coords, delta, tau, permutations=99):
     Parameters
     ----------
     s_coords        : array
-                      nx2 spatial coordinates
+                      (n, 2), spatial coordinates.
     t_coords        : array
-                      nx1 temporal coordinates
+                      (n, 1), temporal coordinates.
     delta           : float
-                      threshold for proximity in space
+                      threshold for proximity in space.
     tau             : float
-                      threshold for proximity in time
-    permutations    : int
+                      threshold for proximity in time.
+    permutations    : int, optional
                       the number of permutations used to establish pseudo-
-                      significance (default is 99)
+                      significance (the default is 99).
 
     Returns
     -------
     modknox_result  : dictionary
                       contains the statistic (stat) for the test and the
-                      associated p-value (pvalue)
+                      associated p-value (pvalue).
     stat            : float
-                      value of the modified knox test for the dataset
+                      value of the modified knox test for the dataset.
     pvalue          : float
-                      pseudo p-value associated with the statistic
+                      pseudo p-value associated with the statistic.
 
     References
     ----------
     .. [4] R.D. Baker. Identifying space-time disease clusters. Acta Tropica,
-       91(3):291-299, 2004
+       91(3):291-299, 2004.
 
     Examples
     --------

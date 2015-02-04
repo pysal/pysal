@@ -1,5 +1,6 @@
 """
-Distance based spatial weights
+Distance based spatial weights.
+
 """
 
 __author__ = "Sergio J. Rey <srey@asu.edu> "
@@ -22,26 +23,28 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
     Parameters
     ----------
 
-    data       : array (n,k) or KDTree where KDtree.data is array (n,k)
-                 n observations on k characteristics used to measure
-                 distances between the n objects
-    k          : int
-                 number of nearest neighbors
-    p          : float
-                 Minkowski p-norm distance metric parameter:
-                 1<=p<=infinity
-                 2: Euclidean distance
-                 1: Manhattan distance
-    ids        : list
-                 identifiers to attach to each observation
-    pct_unique : float
-                 threshold percentage of unique points in data. Below this
-                 threshold tree is built on unique values only
+    data        : array 
+                  (n,k) or KDTree where KDtree.data is array (n,k)
+                  n observations on k characteristics used to measure
+                  distances between the n objects
+    k           : int
+                  number of nearest neighbors
+    p           : float
+                  Minkowski p-norm distance metric parameter:
+                  1<=p<=infinity
+                  2: Euclidean distance
+                  1: Manhattan distance
+    ids         : list
+                  identifiers to attach to each observation
+    pct_unique  : float
+                  threshold percentage of unique points in data. Below this
+                  threshold tree is built on unique values only
 
     Returns
     -------
 
-    w         : W instance
+    w         : W 
+                instance
                 Weights object with binary weights
 
     Examples
@@ -147,15 +150,18 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
 
 
 class Kernel(W):
-    """Spatial weights based on kernel functions
+    """
+    Spatial weights based on kernel functions.
 
     Parameters
     ----------
 
-    data        : array (n,k) or KDTree where KDtree.data is array (n,k)
+    data        : array 
+                  (n,k) or KDTree where KDtree.data is array (n,k)
                   n observations on k characteristics used to measure
                   distances between the n objects
-    bandwidth   : float or array-like (optional)
+    bandwidth   : float 
+                  or array-like (optional)
                   the bandwidth :math:`h_i` for the kernel.
     fixed       : binary
                   If true then :math:`h_i=h \\forall i`. If false then
@@ -170,8 +176,9 @@ class Kernel(W):
                   If true, set diagonal weights = 1.0, if false (default),
                   diagonals weights are set to value according to kernel
                   function.
-    function    : string {'triangular','uniform','quadratic','quartic','gaussian'}
-                  kernel function defined as follows with
+    function    : string 
+                  {'triangular','uniform','quadratic','quartic','gaussian'}
+                  kernel function defined as follows with:
 
                   .. math::
 
@@ -292,6 +299,7 @@ class Kernel(W):
     >>> kqd = Kernel(points, function='gaussian', diagonal=True)
     >>> kqd.weights
     {0: [1.0, 0.35206533556593145, 0.3412334260702758], 1: [0.35206533556593145, 1.0, 0.2419707487162134, 0.3412334260702758, 0.31069657591175387], 2: [0.2419707487162134, 1.0, 0.31069657591175387], 3: [0.3412334260702758, 0.3412334260702758, 1.0, 0.3011374490937829, 0.26575287272131043], 4: [0.31069657591175387, 0.31069657591175387, 0.3011374490937829, 1.0, 0.35206533556593145], 5: [0.26575287272131043, 0.35206533556593145, 1.0]}
+    
     """
     def __init__(self, data, bandwidth=None, fixed=True, k=2,
                  function='triangular', eps=1.0000001, ids=None,
@@ -390,12 +398,14 @@ class Kernel(W):
 
 
 class DistanceBand(W):
-    """Spatial weights based on distance band
+    """
+    Spatial weights based on distance band.
 
     Parameters
     ----------
 
-    data        : array (n,k) or KDTree where KDtree.data is array (n,k)
+    data        : array 
+                  (n,k) or KDTree where KDtree.data is array (n,k)
                   n observations on k characteristics used to measure
                   distances between the n objects
     threshold  : float
@@ -452,14 +462,16 @@ class DistanceBand(W):
     Notes
     -----
 
-    this was initially implemented running scipy 0.8.0dev (in epd 6.1).
+    This was initially implemented running scipy 0.8.0dev (in epd 6.1).
     earlier versions of scipy (0.7.0) have a logic bug in scipy/sparse/dok.py
-    so serge changed line 221 of that file on sal-dev to fix the logic bug
+    so serge changed line 221 of that file on sal-dev to fix the logic bug.
 
     """
+    
     def __init__(self, data, threshold, p=2, alpha=-1.0, binary=True, ids=None):
-        """
-        Casting to floats is a work around for a bug in scipy.spatial.  See detail in pysal issue #126
+        """Casting to floats is a work around for a bug in scipy.spatial.  
+        See detail in pysal issue #126.
+
         """
         if issubclass(type(data), scipy.spatial.KDTree):
             self.kd = data
@@ -483,8 +495,8 @@ class DistanceBand(W):
         W.__init__(self, neighbors, weights, ids)
 
     def _band(self):
-        """
-        find all pairs within threshold
+        """Find all pairs within threshold.
+
         """
         self.dmat = self.kd.sparse_distance_matrix(
                 self.kd, max_distance=self.threshold)

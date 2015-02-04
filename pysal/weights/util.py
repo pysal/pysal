@@ -410,7 +410,7 @@ def order(w, kmax=3):
 
 def higher_order(w, k=2):
     """
-    Contiguity weights object of order k
+    Contiguity weights object of order k.
 
     Parameters
     ----------
@@ -452,33 +452,31 @@ def higher_order(w, k=2):
 
 def higher_order_sp(w, k=2, shortest_path=True, diagonal=False):
     """
-    Contiguity weights for either a sparse W or pysal.weights.W  for order k
+    Contiguity weights for either a sparse W or pysal.weights.W  for order k.
 
     Parameters
     ==========
 
-    w:  [W instance | scipy.sparse.csr.csr_instance]
+    w           :   [W instance | scipy.sparse.csr.csr_instance]
 
-    k: Order of contiguity
+    k           :   int
+                    Order of contiguity
 
-    shortest_path: Boolean
+    shortest_path:  boolean
+                    True: i,j and k-order neighbors if the 
+                    shortest path for i,j is k
+                    False: i,j are k-order neighbors if there 
+                    is a path from i,j of length k
 
-                   True: i,j and k-order neighbors if the shortest path for
-                   i,j is k
-
-                   False: i,j are k-order neighbors if there is a path from
-                   i,j of length k
-
-    diagonal:  Boolean
-                
-                False: remove k-order (i,j) joins when i==j
-
-                True:  keep k-order (i,j) joins when i==j
+    diagonal    :   boolean
+                    True:  keep k-order (i,j) joins when i==j
+                    False: remove k-order (i,j) joins when i==j
 
     Returns
     -------
 
-    wk: [W instance | WSP instance] type matches type of w argument
+    wk: [W instance | WSP instance] 
+        type matches type of w argument
 
 
     Notes
@@ -508,6 +506,7 @@ def higher_order_sp(w, k=2, shortest_path=True, diagonal=False):
     {1: 1.0, 3: 1.0, 5: 1.0, 7: 1.0, 11: 1.0, 15: 1.0}
 
     """
+
     tw = type(w)
     id_order = None
     if tw == pysal.weights.weights.W:
@@ -563,7 +562,8 @@ def w_local_cluster(w):
     Returns
     -------
 
-    c     : array (w.n,1)
+    c     : array 
+            (w.n,1)
             local clustering coefficients
 
     Notes
@@ -620,12 +620,13 @@ def shimbel(w):
     ----------
     w     : W
             spatial weights object
+
     Returns
     -------
 
-    info  : list of lists
-            one list for each observation which stores the shortest
-            order between it and each of the the other observations.
+    info  : list 
+            list of lists; one list for each observation which stores 
+            the shortest order between it and each of the the other observations.
 
     Examples
     --------
@@ -638,6 +639,7 @@ def shimbel(w):
     [-1, 1, 2, 3]
     >>>
     """
+
     info = {}
     ids = w.id_order
     for id in ids:
@@ -666,7 +668,7 @@ def shimbel(w):
 
 def full(w):
     """
-    Generate a full numpy array
+    Generate a full numpy array.
 
     Parameters
     ----------
@@ -709,7 +711,7 @@ def full(w):
 
 def full2W(m, ids=None):
     '''
-    Create a PySAL W object from a full array
+    Create a PySAL W object from a full array.
     ...
 
     Parameters
@@ -890,6 +892,7 @@ def insert_diagonal(w, diagonal=1.0, wsp=False):
     {'id5': 1.0, 'id0': 100.0, 'id1': 1.0}
 
     """
+
     w_new = copy.deepcopy(w.sparse)
     w_new = w_new.tolil()
     if issubclass(type(diagonal), np.ndarray):
@@ -909,7 +912,7 @@ def insert_diagonal(w, diagonal=1.0, wsp=False):
 
 def remap_ids(w, old2new, id_order=[]):
     """
-    Remaps the IDs in a spatial weights object
+    Remaps the IDs in a spatial weights object.
 
     Parameters
     ----------
@@ -947,6 +950,7 @@ def remap_ids(w, old2new, id_order=[]):
     ['c', 'b']
 
     """
+
     if not isinstance(w, pysal.weights.W):
         raise Exception("w must be a spatial weights object")
     new_neigh = {}
@@ -968,7 +972,7 @@ def remap_ids(w, old2new, id_order=[]):
 
 def get_ids(shapefile, idVariable):
     """
-    Gets the IDs from the DBF file that moves with a given shape file
+    Gets the IDs from the DBF file that moves with a given shape file.
 
     Parameters
     ----------
@@ -1008,7 +1012,7 @@ def get_ids(shapefile, idVariable):
 
 def get_points_array_from_shapefile(shapefile):
     """
-    Gets a data array of x and y coordinates from a given shape file
+    Gets a data array of x and y coordinates from a given shapefile.
 
     Parameters
     ----------
@@ -1017,7 +1021,8 @@ def get_points_array_from_shapefile(shapefile):
 
     Returns
     -------
-    points        : array (n, 2)
+    points        : array 
+                    (n, 2)
                     a data array of x and y coordinates
 
     Notes
@@ -1056,12 +1061,13 @@ def get_points_array_from_shapefile(shapefile):
 
 def min_threshold_distance(data, p=2):
     """
-    Get the maximum nearest neighbor distance
+    Get the maximum nearest neighbor distance.
 
     Parameters
     ----------
 
-    data    : array (n,k) or KDTree where KDtree.data is array (n,k)
+    data    : array 
+              (n,k) or KDTree where KDtree.data is array (n,k)
               n observations on k attributes
     p       : float
               Minkowski p-norm distance metric parameter:
@@ -1107,7 +1113,8 @@ def lat2SW(nrows=3, ncols=5, criterion="rook", row_st=False):
               number of rows
     ncols   : int
               number of columns
-    rook    : "rook", "queen", or "bishop"
+    rook    : string
+              "rook", "queen", or "bishop"
               type of contiguity. Default is rook.
     row_st  : boolean
               If True, the created sparse W object is row-standardized so
@@ -1138,6 +1145,7 @@ def lat2SW(nrows=3, ncols=5, criterion="rook", row_st=False):
     >>> w9r[3,6]
     0.33333333333333331
     """
+    
     n = nrows * ncols
     diagonals = []
     offsets = []
