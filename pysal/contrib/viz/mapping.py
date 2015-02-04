@@ -389,7 +389,7 @@ def base_choropleth_classless(map_obj, values, cmap='Greys' ):
         map_obj.set_array(values)
     return map_obj
 
-def base_choropleth_unique(map_obj, values,  cmap='hot_r'):
+def base_choropleth_unique(map_obj, values,  clrs='hot_r'):
     '''
     Set coloring based on unique values from a map object
     ...
@@ -401,8 +401,11 @@ def base_choropleth_unique(map_obj, values,  cmap='hot_r'):
                       Output from map_X_shp
     values          : array
                       Numpy array with values to map
-    cmap            : str
-                      Matplotlib coloring scheme
+    clrs            : dict/str
+                      [Optional. Default='hot_r'] Dictionary mapping {value:
+                      color}. Alternatively, a string can be passed specifying
+                      the Matplotlib coloring scheme for a random assignment
+                      of {value: color}
 
     Returns
     -------
@@ -412,11 +415,16 @@ def base_choropleth_unique(map_obj, values,  cmap='hot_r'):
                       unique value coloring
 
     '''
-    uvals = np.unique(values)
-    colormap = getattr(plt.cm, cmap)
-    colors = [colormap(i) for i in np.linspace(0, 0.9, len(uvals))]
-    colors = np.random.permutation(colors)
-    colormatch = {val: col for val, col in zip(uvals, colors)}
+    if type(clrs) == str:
+        uvals = np.unique(values)
+        colormap = getattr(plt.cm, clrs)
+        colors = [colormap(i) for i in np.linspace(0, 0.9, len(uvals))]
+        colors = np.random.permutation(colors)
+        colormatch = {val: col for val, col in zip(uvals, colors)}
+    elif type(clrs) == dict:
+        colormatch = clrs
+    else:
+        raise Exception("`clrs` can only take a str or a dict")
 
     if isinstance(map_obj, mpl.collections.PolyCollection):
         pvalues = _expand_values(values, map_obj.shp2dbf_row)
