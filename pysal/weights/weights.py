@@ -32,7 +32,7 @@ class W(object):
                       lexicographical ordering is used to iterate and the
                       id_order_set property will return False.  This can be
                       set after creation by setting the 'id_order' property.
-    silent_island_warning   : boolean 
+    silent_island_warning   : boolean
                             By default PySAL will print a warning if the
                             dataset contains any disconnected observations or
                             islands. To silence this warning set this
@@ -215,7 +215,7 @@ class W(object):
 
     @property
     def s0(self):
-        """s0 is defined as 
+        """s0 is defined as
 
         .. math::
 
@@ -261,7 +261,7 @@ class W(object):
 
     @property
     def s2(self):
-        """s2 is defined as 
+        """s2 is defined as
 
         .. math::
 
@@ -289,7 +289,7 @@ class W(object):
 
     @property
     def diagW2(self):
-        """Diagonal of :math:`WW`. 
+        """Diagonal of :math:`WW`.
 
         See Also
         --------
@@ -317,7 +317,7 @@ class W(object):
 
     @property
     def trcWtW(self):
-        """Trace of :math:`W^{'}W`. 
+        """Trace of :math:`W^{'}W`.
 
         See Also
         --------
@@ -447,7 +447,7 @@ class W(object):
 
     @property
     def histogram(self):
-        """Cardinality histogram as a dictionary where key is the id and 
+        """Cardinality histogram as a dictionary where key is the id and
         value is the number of neighbors for that unit.
 
         """
@@ -537,7 +537,7 @@ class W(object):
             raise Exception("W.remap_ids: length of `old_ids` does not match \
             that of new_ids")
         if len(set(new_ids)) != len(new_ids):
-            raise Exception("W.remap_ids: list `new_ids` contains duplicates") 
+            raise Exception("W.remap_ids: list `new_ids` contains duplicates")
         else:
             new_neighbors = {}
             new_weights = {}
@@ -718,7 +718,7 @@ class W(object):
 
         Parameters
         ----------
-        transform   :   string 
+        transform   :   string
                         not case sensitive)
 
         .. table::
@@ -833,21 +833,21 @@ class W(object):
 
         Parameters
         ----------
-        intrinsic   :   boolean 
+        intrinsic   :   boolean
                         default=True
-                
+
                 intrinsic symmetry:
                       :math:`w_{i,j} == w_{j,i}`
 
                 if intrisic is False:
                     symmetry is defined as :math:`i \in N_j \ AND \ j \in N_i` where
                     :math:`N_j` is the set of neighbors for j.
-            
+
         Returns
         -------
         asymmetries : list
                       empty if no asymmetries are found
-                      if asymmetries, then a list of (i,j) tuples is returned 
+                      if asymmetries, then a list of (i,j) tuples is returned
 
         Examples
         --------
@@ -956,13 +956,13 @@ class W(object):
         Parameters
         ----------
 
-        shapefile :     string 
+        shapefile :     string
                         shapefile name used to construct weights
 
         idVariable :    string
                         name of attribute in shapefile to associate with ids in the weights
 
-        full :          boolean 
+        full :          boolean
                         True - write out entire path for shapefile, False
                         (default) only base of shapefile without extension
 
@@ -994,7 +994,7 @@ class WSP(object):
     Attributes
     ----------
 
-    n           : int  
+    n           : int
     s0          : float
     trcWtW_WW   : float
 
@@ -1061,7 +1061,7 @@ class WSP(object):
     @property
     def diagWtW_WW(self):
         """Diagonal of :math:`W^{'}W + WW`.
-        
+
         """
         if 'diagWtW_WW' not in self._cache:
             wt = self.sparse.transpose()
