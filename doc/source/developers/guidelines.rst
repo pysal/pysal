@@ -56,24 +56,7 @@ Release Schedule
 PySAL development follows a six-month release schedule that is aligned with
 the academic calendar.
 
-1.9 Cycle
-=========
-
-========   ========   ================= ====================================================
-Start      End        Phase             Notes
-========   ========   ================= ====================================================
-8/1/14      8/14/14   Module Proposals  Developers draft PEPs and prototype
-8/15/14     8/15/14   Developer vote    All developers vote on PEPs 
-8/16/14     8/16/14   Module Approval   BDFL announces final approval
-8/17/14    12/30/14   Development       Implementation and testing of approved modules
-1/1/15       1/1/15   Code Freeze       APIs fixed, bug and testing changes only
-1/23/15     1/30/15   Release Prep      Test release builds, updating svn 
-1/31/15     1/31/15   Release           Official release of 1.9
-========   ========   ================= ====================================================
-
-
-
-2.0 Cycle
+1.10 Cycle
 =========
 
 ========   ========   ================= ====================================================
@@ -85,8 +68,25 @@ Start      End        Phase             Notes
 2/17/15     6/30/15   Development       Implementation and testing of approved modules
 7/1/15      7/27/15   Code Freeze       APIs fixed, bug and testing changes only
 7/23/15     7/30/15   Release Prep      Test release builds, updating svn 
-7/31/15     7/31/15   Release           Official release of 2.0
+7/31/15     7/31/15   Release           Official release of 1.10
 ========   ========   ================= ====================================================
+
+
+1.11 Cycle
+=========
+
+========   ========   ================= ====================================================
+Start      End        Phase             Notes
+========   ========   ================= ====================================================
+8/1/15      8/14/15   Module Proposals  Developers draft PEPs and prototype
+8/15/15     8/15/15   Developer vote    All developers vote on PEPs 
+8/16/15     8/16/15   Module Approval   BDFL announces final approval
+8/17/15    12/30/15   Development       Implementation and testing of approved modules
+1/1/16       1/1/16   Code Freeze       APIs fixed, bug and testing changes only
+1/23/16     1/30/16   Release Prep      Test release builds, updating svn 
+1/31/16     1/31/16   Release           Official release of 1.11
+========   ========   ================= ====================================================
+
 
 
 
