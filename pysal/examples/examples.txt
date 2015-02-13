@@ -16,6 +16,15 @@ Polygon shapefile for Albuquerque New Mexico.
 * 10740_queen.gal: queen contiguity GAL format
 * 10740_rook.gal: rook contiguity GAL format
 
+baltim
+=========
+Point shapefile for Baltimore, MD.
+
+* baltim.dbf: attribute database file
+* baltim.shp: shapefile
+* baltim.shx: spatial index
+* baltim_k4.gal: 4 nearest neighbors GAL format
+* baltim_q.gal: queen contiguity GAL format
 
 book
 ====
@@ -24,6 +33,14 @@ progress) Spatial Econometrics: Foundations.
 
 * book.gal: rook contiguity for regular lattice
 * book.txt: attribute data for regular lattice
+
+burkitt
+=======
+Point shapefile
+
+* burkitt.dbf: attribute database file
+* burkitt.shp: shapefile
+* burkitt.shx: spatial index
 
 calempdensity
 =============
@@ -38,7 +55,7 @@ chicago77
 Chicago Community Areas (n=77). Source: Anselin, L. and S.J. Rey (in
 progress) Spatial Econometrics: Foundations.
 
-* Chicago77.dbf: attribute data
+* Chicago77.dbf: attribute database file
 * Chicago77.shp: shapefile
 * Chicago77.shx: spatial index
 
@@ -53,6 +70,22 @@ with permission)
 * desmith.txt: attribute data for 10 spatial units
 * desmith.gal: spatial weights in GAL format
 
+eberly_net
+==========
+Example data for network analysis. Source: Eberly (2005)
+`<http://www.geometrictools.com/Documentation/MinimalCycleBasis.pdf>`_ (Used
+pending permission)
+
+* eberly_net.dbf: attribute database file
+* eberly_net.shp: shapefile
+* eberly_net.shx: spatial index
+* eberly_net_pts_offnetwork.dbf: attribute database file
+* eberly_net_pts_offnetwork.shp: shapefile
+* eberly_net_pts_offnetwork.shx: spatial index
+* eberly_net_pts_onnetwork.dbf: attribute database file
+* eberly_net_pts_onnetwork.shp: shapefile
+* eberly_net_pts_onnetwork.shx: spatial index
+
 juvenile
 ========
 Cardiff juvenile delinquent residences.
@@ -61,6 +94,13 @@ Cardiff juvenile delinquent residences.
 * juvenile.html: documentation
 * juvenile.shp: shapefile
 * juvenile.shx: spatial index
+
+lattice10x10
+============
+An example data set for lattice calculations.
+
+* lattice10x10.shp: shapefile
+* lattice10x10.shx: spatial index
 
 mexico
 ======
@@ -71,12 +111,22 @@ Economic Analysis. Forthcoming.
 * mexico.csv: attribute data
 * mexico.gal: spatial weights in GAL format
 
+nonplanarsegments
+=================
+Non-planar network for testing purposes
+
+* nonplanarsegments.dbf: attribute database file
+* nonplanarsegments.shp: shapefile
+* nonplanarsegments.shx: spatial index
+* nonplanarsegments.prj: ESRI projection WKT file
+* nonplanarsegments.qpj: QGIS projection WKT file
+
 rook31
 ======
 Small test shapefile
 
 * rook31.dbf: attribute data
-* rook31.gal: spatia weights in GAL format
+* rook31.gal: spatial weights in GAL format
 * rook31.shp: shapefile
 * rook31.shx: spatial index
 
@@ -111,16 +161,56 @@ North Carolina county SIDS death counts and rates
  * sids2.shx:  spatial index
  * sids2.gal:  GAL file for spatial weights
 
+snow_maps
+=========
+Data to recreate John Snow's famous cholera map.
+
+* Soho_Network.dbf: attribute database file
+* Soho_Network.shp: shapefile 
+* Soho_Network.shx: spatial index
+* Soho_Network.sbn: spatial index
+* Soho_Network.sbx: spatial index
+* SohoPeople.dbf: attribute database file
+* SohoPeople.shp: shapefile 
+* SohoPeople.shx: spatial index
+* SohoPeople.sbn: spatial index
+* SohoPeople.sbx: spatial index
+* SohoWater.dbf: attribute database file
+* SohoWater.shp: shapefile 
+* SohoWater.shx: spatial index
+* SohoWater.sbn: spatial index
+* SohoWater.sbx: spatial index
+
+south
+=====
+Data for counties in the US South
+
+* south.dbf: attribute database file
+* south.shp: shapefile
+* south.shx: spatial index
+* south_q.gal: queen contiguity in GAL format
+
 stl_hom
 =======
 Homicides and selected socio-economic characteristics for counties surrounding St Louis, MO. Data aggregated for three time periods: 1979-84 (steady decline in homicides), 1984-88 (stable period), and 1988-93 (steady increase in homicides). Source: S. Messner, L. Anselin, D. Hawkins, G. Deane, S. Tolnay, R. Baller (2000). An Atlas of the Spatial Patterning of County-Level Homicide, 1960-1990. Pittsburgh, PA, National Consortium on Violence Research (NCOVR).
 
- * stl_hom.html: Metadata
- * stl_hom.txt: txt file with attribute data
- * stl_hom.wkt: A Well-Known-Text representation of the geometry.
- * stl_hom.csv: attribute data and WKT geometry.
- * stl.hom.gal: GAL file for spatial weights
- 
+* stl_hom.dbf: attribute database file
+* stl_hom.shp: shapefile
+* stl_hom.shx: spatial index
+* stl_hom.html: Metadata
+* stl_hom.txt: txt file with attribute data
+* stl_hom.wkt: A Well-Known-Text representation of the geometry.
+* stl_hom.csv: attribute data and WKT geometry.
+* stl_hom_rook.gal: rook contiguity in GAL format
+* stl.gal: weights matrix in GAL format
+
+taz
+===
+Transit area zones data for the greater LA area
+
+* taz.dbf: attribute database file
+* taz.shp: attribute database file
+* taz.shx: attribute database file
 
 US Regional Incomes
 ===================
@@ -139,3 +229,5 @@ Virginia Counties Shapefile.
   * virginia.shx: shapefile index
   * virginia.dbf: attributes
   * virginia.prj: shapefile projection
+  * virginia_rook.gal: rook contiguity in GAL format
+  * virginia.gal: weights in GAL format
