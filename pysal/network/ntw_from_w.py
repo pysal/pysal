@@ -24,9 +24,9 @@ def ntw_from_w(path, W = None):
     shp = ps.open(shp)
     
     if 'rook' in W:
-        W = ps.rook_from_shapefile
+        W = ps.rook_from_shapefile(path)
     elif not W or 'queen' in W:
-        W = ps.rook_from_shapefile
+        W = ps.queen_from_shapefile(path)
   
     #set node_list and edges using the weights
     ed = set()
