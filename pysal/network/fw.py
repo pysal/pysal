@@ -2,9 +2,36 @@ from collections import defaultdict
 import pysal as ps
 import numpy as np
 
-ntw = ps.network.network.Network(ps.examples.get_path('geodanet/streets.shp'))
-
 def floyd_warshall(ntw, cost = None, directed = False):
+    """
+    Uses Floyd & Warshall's algorithm in O(n^3) time using O(nm) initialization
+    and O(n^2) space. 
+
+    Parameters
+    ----------
+    ntw : pysal network object
+    cost : dict
+           key is tuple of start,end nodes of the edge
+           value is the cost of traversing the arc
+           if not set, defaults to the self.edge_lengths value of ntw
+    directed : bool
+               True if the network is directed
+               False if the network is not directed
+               default is False, meaning the edges are added both forwards and
+               backwards, i.e. (2,3) contains edges (2,3) and (3,2). 
+
+    Returns
+    -------
+    dist: dict of dicts
+          outer dictinoary key is the node id at the start of the path (start)
+          inner dictionary key is the node id at the end of the path (dest)
+          inner dictionary value is the distance from outer key to inner key
+
+    pred: dict of dicts
+          outer dictionary key is the node id at the start of the path (start)
+          inner dictionary key is the node id at the end of the path (dest)
+          inner dictionary value lists steps from start ending at dest
+    """
     dist = defaultdict(lambda : defaultdict(lambda : np.inf)) #defaultdict requires callable
     pred = defaultdict(dict)
     
