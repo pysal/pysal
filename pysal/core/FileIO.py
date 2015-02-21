@@ -215,7 +215,7 @@ class FileIO(object):  # should be a type?
         """cast key as typ"""
         if key in self.header:
             if not self._spec:
-                self._spec = [lambda x:x for key in self.header]
+                self._spec = [lambda x:x for k in self.header]
             if typ is None:
                 self._spec[self.header.index(key)] = lambda x: x
             else:
