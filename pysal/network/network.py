@@ -55,7 +55,10 @@ class Network:
 
     alldistances : dict
                    key is the node ID
-                   value is a list of all distances from the source to all destinations
+                   value is a tuple with two elements, first is a list of the
+                   shortest path distances, second is a dict with
+                   the key being the id of the destination node and the value
+                   is a list of the shortest path.
 
     Examples
     --------
