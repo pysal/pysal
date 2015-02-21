@@ -654,8 +654,6 @@ class Network:
         if not hasattr(self,'alldistances'):
             self.node_distance_matrix()
 
-
-
         src_indices = sourcepattern.points.keys()
         nsource_pts = len(src_indices)
         dist_to_node = sourcepattern.dist_to_node

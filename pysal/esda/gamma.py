@@ -25,12 +25,14 @@ class Gamma:
     w               : W
                       spatial weights instance
                       can be binary or row-standardized
-    operation       : attribute similarity function
-                      'c' cross product (default)
+    operation       : {'c', 's', 'a'}
+                      attribute similarity function where,
+                      'c' cross product
                       's' squared difference
                       'a' absolute difference
-    standardize     : standardize variables first
-                      'no' keep as is (default)
+    standardize     : {'no', 'yes'}
+                      standardize variables first
+                      'no' keep as is
                       'yes' or 'y' standardize to mean zero and variance one
     permutations    : int
                       number of random permutations for calculation of pseudo-p_values
@@ -41,22 +43,30 @@ class Gamma:
                    original variable
     w            : W
                    original w object
-    op           : attribute similarity function
-    stand        : standardization
+    op           : {'c', 's', 'a'}
+                   attribute similarity function, as per parameters
+                   attribute similarity function
+    stand        : {'no', 'yes'}
+                   standardization
     permutations : int
                    number of permutations
     gamma        : float
                    value of Gamma index
-    sim_g        : array (if permutations>0)
+    sim_g        : array
+                   (if permutations>0)
                    vector of Gamma index values for permuted samples
-    p_sim_g      : array (if permutations>0)
+    p_sim_g      : array
+                   (if permutations>0)
                    p-value based on permutations (one-sided)
                    null: spatial randomness
                    alternative: the observed Gamma is more extreme than under randomness
                    implemented as a two-sided test
-    mean_g       : average of permuted Gamma values
-    min_g        : minimum of permuted Gamma values
-    max_g        : maximum of permuted Gamma values
+    mean_g       : float
+                   average of permuted Gamma values
+    min_g        : float
+                   minimum of permuted Gamma values
+    max_g        : float
+                   maximum of permuted Gamma values
 
 
     Examples
