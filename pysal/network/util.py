@@ -59,16 +59,19 @@ def get_neighbor_distances(ntw, v0, l):
 
 def generatetree(pred):
     tree = {}
-    for p in pred:
+    for i, p in enumerate(pred):
+        if p == -1:
+            #root node
+            tree[i] = [i]
+            continue
         idx = p
         path = [idx]
-        while idx > 0:
+        while idx >= 0:
             nextnode = pred[idx]
             idx = nextnode
-            if idx > 0:
+            if idx >= 0:
                 path.append(nextnode)
-        if p > 0:
-            tree[p] = path
+        tree[i] = path
     return tree
 
 
