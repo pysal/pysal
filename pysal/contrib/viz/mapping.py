@@ -248,7 +248,7 @@ def plot_poly_lines(shp_link,  savein=None, poly_col='none'):
 
 def plot_choropleth(shp_link, values, type, k=5, cmap=None,
         shp_type='poly', sample_fisher=True, title='',
-        savein=None, figsize=None, dpi=300):
+        savein=None, figsize=None, dpi=300, alpha=0.4):
     '''
     Wrapper to quickly create and plot from a lat/lon shapefile
     ...
@@ -293,6 +293,8 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None,
                       Figure dimensions
     dpi             : int
                       resolution of graphic file
+    alpha           : float
+                      [Optional. Default=0.4] Transparency of the map.
 
     Returns
     -------
@@ -333,6 +335,7 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None,
         map_obj = base_choropleth_classif(map_obj, values, k=k, \
                 classification='equal_interval', cmap=cmap)
 
+    map_obj.set_alpha(alpha)
     fig = plt.figure(figsize=figsize)
     ax = fig.add_subplot(111)
     ax = setup_ax([map_obj], ax)
