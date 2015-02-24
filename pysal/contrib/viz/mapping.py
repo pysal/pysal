@@ -246,8 +246,8 @@ def plot_poly_lines(shp_link,  savein=None, poly_col='none'):
         plt.show()
     return None
 
-def plot_choropleth(shp_link, values, type, k=5, cmap=None, \
-        shp_type='poly', sample_fisher=True, title='', \
+def plot_choropleth(shp_link, values, type, k=5, cmap=None,
+        shp_type='poly', sample_fisher=True, title='',
         savein=None, figsize=None, dpi=300):
     '''
     Wrapper to quickly create and plot from a lat/lon shapefile
@@ -439,7 +439,7 @@ def base_choropleth_unique(map_obj, values,  cmap='hot_r'):
         map_obj.set_array(values)
     return map_obj
 
-def base_choropleth_classif(map_obj, values, classification='quantiles', \
+def base_choropleth_classif(map_obj, values, classification='quantiles',
         k=5, cmap='hot_r', sample_fisher=True):
     '''
     Set coloring based based on different classification
