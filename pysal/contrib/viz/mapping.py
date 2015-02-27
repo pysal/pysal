@@ -247,7 +247,7 @@ def plot_poly_lines(shp_link,  savein=None, poly_col='none'):
     return None
 
 def plot_choropleth(shp_link, values, type, k=5, cmap=None,
-        shp_type='poly', sample_fisher=True, title='',
+        shp_type='poly', sample_fisher=False, title='',
         savein=None, figsize=None, dpi=300, alpha=0.4):
     '''
     Wrapper to quickly create and plot from a lat/lon shapefile
@@ -281,9 +281,10 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None,
                       'poly' (default) or 'line', for the kind of shapefile
                       passed
     sample_fisher   : Boolean
-                      Defaults to True, controls whether Fisher-Jenks
+                      Defaults to False, controls whether Fisher-Jenks
                       classification uses a sample (faster) or the entire
                       array of values. Ignored if 'classification'!='fisher_jenks'
+                      The percentage of the sample that takes at a time is 10%
     title           : str
                       Optional string for the title
     savein          : str
@@ -443,7 +444,7 @@ def base_choropleth_unique(map_obj, values,  cmap='hot_r'):
     return map_obj
 
 def base_choropleth_classif(map_obj, values, classification='quantiles',
-        k=5, cmap='hot_r', sample_fisher=True):
+        k=5, cmap='hot_r', sample_fisher=False):
     '''
     Set coloring based based on different classification
     methods
@@ -468,9 +469,10 @@ def base_choropleth_classif(map_obj, values, classification='quantiles',
     cmap            : str
                       Matplotlib coloring scheme
     sample_fisher   : Boolean
-                      Defaults to True, controls whether Fisher-Jenks
+                      Defaults to False, controls whether Fisher-Jenks
                       classification uses a sample (faster) or the entire
                       array of values. Ignored if 'classification'!='fisher_jenks'
+                      The percentage of the sample that takes at a time is 10%
 
     Returns
     -------
@@ -500,7 +502,7 @@ def base_choropleth_classif(map_obj, values, classification='quantiles',
     cmap = cm.get_cmap(cmap, k+1)
     map_obj.set_cmap(cmap)
 
-    boundaries.insert(0, values.min())
+    boundaries = np.insert(boundaries, 0, values.min())
     norm = clrs.BoundaryNorm(boundaries, cmap.N)
     map_obj.set_norm(norm)
 
@@ -588,7 +590,6 @@ if __name__ == '__main__':
         fig.add_axes(ax)
         plt.show()
         break
-    '''
 
     xy = (((0, 0), (0, 0)), ((2, 1), (2, 1)), ((3, 1), (3, 1)), ((2, 5), (2, 5)))
     xy = np.array([[10, 30], [20, 20]])
@@ -606,4 +607,9 @@ if __name__ == '__main__':
     fig.add_axes(ax)
     #ax = setup_ax([pc], ax)
     plt.show()
+    '''
+    
+    shp_link = ps.examples.get_path('columbus.shp')
+    values = np.array(ps.open(ps.examples.get_path('columbus.dbf')).by_col('HOVAL'))
+    _ = plot_choropleth(shp_link, values, 'fisher_jenks')
 
