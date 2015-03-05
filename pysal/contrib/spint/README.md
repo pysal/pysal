@@ -1,4 +1,4 @@
-Spatial Interaction Modeling Module
+Spatial Interaction Modeling Package
 ===========================================
 
 The **Sp**atial **Int**eraction Modeling (SpInt) package seeks to provide a collection of tools to study spatial interaction processes.
