@@ -1,7 +1,7 @@
-**Sp**atial **Int**eraction Modeling Module
+Spatial Interaction Modeling Module
 ===========================================
 
-The SpInt package seeks to provide a collection of tools for
+The **Sp**atial **Int**eraction Modeling (SpInt) package seeks to provide a collection of tools for
 calibrating and predicting spatial interaction.
 
 It currently support the calibration of the 'family' of spatial interaction model (Wilson, 1971) which are derived using an entropy maximizing (EM) framework or the equivalent information minimizing (IM) framework. As such, it is able to derive parameters for the following models:
@@ -12,7 +12,7 @@ It currently support the calibration of the 'family' of spatial interaction mode
 - doubly-constrained model
 
 
-Calibration is carried out using maximum likelihood estimation routine outline in (Fotheringham and O’Kelly, 1989; Willimans and Fotheringham, 1984). Optimization is achieved using scipy.optimize.fsolve(). Overall, the package is currently dependent upon bumpy, spicy, and pandas.
+Calibration is carried out using maximum likelihood estimation routine outline in (Fotheringham and O’Kelly, 1989; Willimans and Fotheringham, 1984). Optimization is achieved using scipy.optimize.fsolve(). Overall, the package is currently dependent upon numpy, spicy, and pandas.
 
 Fotheringham, A. S. and O'Kelly, M. E. (1989). Spatial Interaction Models: Formulations and Applications. London: Kluwer Academic Publishers.
 
