@@ -1,10 +1,9 @@
 Spatial Interaction Modeling Module
 ===========================================
 
-The **Sp**atial **Int**eraction Modeling (SpInt) package seeks to provide a collection of tools for
-calibrating and predicting spatial interaction.
+The **Sp**atial **Int**eraction Modeling (SpInt) package seeks to provide a collection of tools to study spatial interaction phenomenon.
 
-It currently support the calibration of the 'family' of spatial interaction model (Wilson, 1971) which are derived using an entropy maximizing (EM) framework or the equivalent information minimizing (IM) framework. As such, it is able to derive parameters for the following models:
+It currently supports the calibration of the 'family' of spatial interaction model (Wilson, 1971) which are derived using an entropy maximizing (EM) framework or the equivalent information minimizing (IM) framework. As such, it is able to derive parameters for the following models:
 
 - unconstrained gravity model
 - production-constrained model (origin-constrained)
