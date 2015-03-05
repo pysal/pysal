@@ -145,10 +145,7 @@ class TestDoublyConstrained(unittest.TestCase):
         model = grav.DoublyConstrained(self.dt, 'Origin', 'Destination', 'flows', 'Dij', 'exp')
         beta = -0.0007369
         self.assertAlmostEqual(model.p['beta'], beta, delta=.0000001)
-        print model.system_stats
-        print model.parameter_stats
-        print model.model_fit_stats
-        print model.entropy_stats
+
 
 
 if __name__ == '__main__':
