@@ -37,15 +37,15 @@ class SpatialTau_Tester(unittest.TestCase):
         vnames = ["pcgdp%d" % dec for dec in range(1940, 2010, 10)]
         self.y = np.transpose(np.array([f.by_col[v] for v in vnames]))
         regime = np.array(f.by_col['esquivel99'])
-        self.w = pysal.weights.regime_weights(regime)
+        self.w = pysal.weights.block_weights(regime)
 
     def test_SpatialTau(self):
         np.random.seed(12345)
         k = self.y.shape[1]
         obs = [rank.SpatialTau(self.y[:, i], self.y[:, i + 1],
                                self.w, 99) for i in range(k - 1)]
-        tau_s = [0.281, 0.348, 0.460, 0.505, 0.483, 0.572]
-        ev_tau_s = [0.466, 0.499, 0.546, 0.532, 0.499, 0.579]
+        tau_s = [0.397, 0.492, 0.651, 0.714, 0.683, 0.810]
+        ev_tau_s = [0.659, 0.706, 0.772, 0.752, 0.705, 0.819]
         p_vals = [0.010, 0.010, 0.020, 0.210, 0.270, 0.280]
         for i in range(k - 1):
             self.assertAlmostEqual(tau_s[i], obs[i].tau_spatial, 3)

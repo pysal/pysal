@@ -1,5 +1,6 @@
 """
-Contiguity based spatial weights
+Contiguity based spatial weights.
+
 """
 
 __author__ = "Sergio J. Rey <srey@asu.edu> "
@@ -15,30 +16,28 @@ WT_TYPE = {'rook': 2, 'queen': 1}  # for _contW_Binning
 
 def buildContiguity(polygons, criterion="rook", ids=None):
     """
-    Build contiguity weights from a source
+    Build contiguity weights from a source.
 
     Parameters
     ----------
 
-    polygons   : an instance of a pysal geo file handler
+    polygons   : 
+                 an instance of a pysal geo file handler
                  Any thing returned by pysal.open that is explicitly polygons
-
     criterion  : string
                  contiguity criterion ("rook","queen")
-
     ids        : list
                  identifiers for i,j
-
 
     Returns
     -------
 
-    w         : W instance
-                Contiguity weights object
-
+    w         : W 
+                instance; Contiguity weights object
 
     Examples
-    -------
+    --------
+
     >>> w = buildContiguity(pysal.open(pysal.examples.get_path('10740.shp'),'r'))
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [163]
@@ -71,17 +70,18 @@ def buildContiguity(polygons, criterion="rook", ids=None):
     pysal.weights.W # need to fix sphinx links
 
     """
+
     if ids and len(ids) != len(set(ids)):
         raise ValueError("The argument to the ids parameter contains duplicate entries.")
 
     wt_type = WT_TYPE[criterion.lower()]
     geo = polygons
     if issubclass(type(geo), pysal.open):
-        geo.seek(0)  # Make sure we read from the beinging of the file.
+        geo.seek(0)  # Make sure we read from the beginging of the file.
         geoObj = geo
     else:
         raise TypeError(
-            "Argument must be a FileIO handler or connection string")
+            "Argument must be a FileIO handler or connection string.")
     neighbor_data = ContiguityWeights(geoObj, wt_type).w
     neighbors = {}
     #weights={}

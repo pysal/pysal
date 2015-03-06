@@ -11,17 +11,17 @@ class Moran_Tester(unittest.TestCase):
         self.y = np.array(f.by_col['HR8893'])
 
     def test_moran(self):
-        mi = moran.Moran(self.y, self.w)
+        mi = moran.Moran(self.y, self.w, two_tailed=False)
         self.assertAlmostEquals(mi.I, 0.24365582621771659, 7)
-        self.assertAlmostEquals(mi.p_norm, 0.00027147862770937614)
+        self.assertAlmostEquals(mi.p_norm,0.00013573931385468807)
 
     def test_sids(self):
         w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
         f = pysal.open(pysal.examples.get_path("sids2.dbf"))
         SIDR = np.array(f.by_col("SIDR74"))
-        mi = pysal.Moran(SIDR, w)
+        mi = pysal.Moran(SIDR, w, two_tailed=False)
         self.assertAlmostEquals(mi.I, 0.24772519320480135)
-        self.assertAlmostEquals(mi.p_norm, 0.00011583330781)
+        self.assertAlmostEquals(mi.p_norm,  5.7916539074498452e-05)
 
 
 class Moran_Rate_Tester(unittest.TestCase):
@@ -32,9 +32,9 @@ class Moran_Rate_Tester(unittest.TestCase):
         self.b = np.array(f.by_col['BIR79'])
 
     def test_moran_rate(self):
-        mi = moran.Moran_Rate(self.e, self.b, self.w)
+        mi = moran.Moran_Rate(self.e, self.b, self.w, two_tailed=False)
         self.assertAlmostEquals(mi.I, 0.16622343552567395, 7)
-        self.assertAlmostEquals(mi.p_norm, 0.0083829990097843421)
+        self.assertAlmostEquals(mi.p_norm, 0.004191499504892171)
 
 
 class Moran_BV_matrix_Tester(unittest.TestCase):

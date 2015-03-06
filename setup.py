@@ -19,8 +19,8 @@ with open('README.txt') as file:
     long_description = file.read()
 
 MAJOR = 1
-MINOR = 7
-MICRO = 0
+MINOR = 10
+MICRO = 1
 ISRELEASED = False
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
@@ -65,6 +65,23 @@ def setup_package():
     os.chdir(src_path)
     sys.path.insert(0, src_path)
 
+
+    # get all file endings and copy whole file names without a file suffix
+    # assumes nested directories are only down one level
+    example_data_files = set()
+    for i in os.listdir("pysal/examples"):
+        if i.endswith(('py', 'pyc')):
+            continue
+        if not os.path.isdir("pysal/examples/" + i):
+            if "." in i:
+                glob_name = "examples/*." + i.split(".")[-1]
+            else:
+                glob_name = "examples/" + i
+        else:
+            glob_name = "examples/" + i + "/*"
+
+        example_data_files.add(glob_name)
+
     setup(
         name='PySAL',
         version=dversion,
@@ -75,6 +92,7 @@ def setup_package():
         url='http://pysal.org',
         download_url='https://pypi.python.org/pypi/PySAL',
         license='BSD',
+        py_modules=['pysal'],
         test_suite='nose.collector',
         tests_require=['nose'],
         keywords='spatial statistics',
@@ -91,9 +109,10 @@ def setup_package():
             'Programming Language :: Python :: 2.6',
             'Programming Language :: Python :: 2.7'
         ],
-        packages=find_packages(exclude=["*.network", "*.network.*", "network.*", "network"]),
-        package_data={'pysal': ['examples/*']},
-        requires=['scipy', 'geojson','fiona']
+        packages=find_packages(exclude=[".meta", "*.meta.*", "meta.*",
+                                        "meta"]),
+        package_data={'pysal': list(example_data_files)},
+        requires=['scipy']
     )
 
 

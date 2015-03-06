@@ -1,0 +1,12 @@
+:mod:`Tables` -- DataTable Extension
+==========================================
+
+.. versionadded:: 1.0
+
+.. automodule:: pysal.core.Tables
+    :synopsis: DataTable Extension for PySAL FileIO System
+    :members:
+    :undoc-members:
+
+
+

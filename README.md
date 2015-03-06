@@ -39,7 +39,7 @@ Currently PySAL consists of the following files and directories:
     PySAL prerequisites, installation, testing, and troubleshooting.
 
   THANKS.txt
-    PySAL developers and contributors. Please keep it up to date!!
+    PySAL developers and contributors. 
 
   README.txt
     PySAL structure (this document).
@@ -62,16 +62,17 @@ Currently PySAL consists of the following files and directories:
 PySAL modules
 -------------
 
-* pysal.cg — Computational Geometry
+* pysal.cg — Computational geometry
 * pysal.contrib - Contributed modules
-* pysal.core — Core Data Structures and IO
-* pysal.esda — Exploratory Spatial Data Analysis
-* pysal.examples — Data Sets
-* pysal.inequality — Spatial Inequality Analysis
+* pysal.core — Core data structures and IO
+* pysal.esda — Exploratory spatial data analysis
+* pysal.examples — Data sets
+* pysal.inequality — Spatial inequality analysis
+* pysal.network - Spatial analysis on networks
 * pysal.region — Spatially constrained clustering
-* pysal.spatial_dynamics — Spatial Dynamics
+* pysal.spatial_dynamics — Spatial dynamics
 * pysal.spreg — Regression and diagnostics
-* pysal.weights — Spatial Weights
+* pysal.weights — Spatial weights
 
 Website
 -------
@@ -96,3 +97,5 @@ License information
 See the file "LICENSE.txt" for information on the history of this
 software, terms & conditions for usage, and a DISCLAIMER OF ALL
 WARRANTIES.
+
+

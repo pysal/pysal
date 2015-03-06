@@ -2,9 +2,13 @@
 A module of classification schemes for choropleth mapping.
 """
 __author__ = "Sergio J. Rey"
-__credits__ = "Copyright (c) 2009-10 Sergio J. Rey"
 
-__all__ = ['quantile', 'Map_Classifier', 'Box_Plot', 'Equal_Interval', 'Fisher_Jenks', 'Fisher_Jenks_Sampled', 'Jenks_Caspall', 'Jenks_Caspall_Forced', 'Jenks_Caspall_Sampled', 'Max_P_Classifier', 'Maximum_Breaks', 'Natural_Breaks', 'Quantiles', 'Percentiles', 'Std_Mean', 'User_Defined', 'gadf', 'K_classifiers']
+__all__ = ['Map_Classifier', 'quantile', 'Box_Plot', 'Equal_Interval',
+           'Fisher_Jenks', 'Fisher_Jenks_Sampled', 'Jenks_Caspall',
+           'Jenks_Caspall_Forced', 'Jenks_Caspall_Sampled', 
+           'Max_P_Classifier', 'Maximum_Breaks', 'Natural_Breaks',
+           'Quantiles', 'Percentiles', 'Std_Mean', 'User_Defined',
+           'gadf', 'K_classifiers']
 
 from pysal.common import *
 
@@ -288,6 +292,7 @@ def natural_breaks(values, k=5, itmax=100):
     return sids, seeds, diffs, class_ids, solved, it, cuts
 
 
+
 def _fisher_jenks_means(values, classes=5, sort=True):
     """
     Jenks Optimal (Natural Breaks) algorithm implemented in Python.
@@ -360,9 +365,56 @@ def _fisher_jenks_means(values, classes=5, sort=True):
 
 class Map_Classifier:
     """
-    Abstract class for all map classifications """
+    Abstract class for all map classifications
+    For an array :math:`y` of :math:`n` values, a map classifier places each value
+    :math:`y_i` into one of :math:`k` mutually exclusive and exhaustive classes.
+    Each classifer defines the classes based on different criteria, but in all
+    cases the following hold for the classifiers in PySAL:
+
+    .. math::
+
+              C_j^l < y_i \le C_j^u \  forall  i \in C_j
+
+    where :math:`C_j` denotes class :math:`j` which has lower bound :math:`C_j^l` and upper bound :math:`C_j^u`.
+
+
+        
+
+    Map Classifiers Supported
+
+    * :class:`~pysal.esda.mapclassify.Box_Plot`
+    * :class:`~pysal.esda.mapclassify.Equal_Interval`
+    * :class:`~pysal.esda.mapclassify.Fisher_Jenks`
+    * :class:`~pysal.esda.mapclassify.Fisher_Jenks_Sampled`
+    * :class:`~pysal.esda.mapclassify.Jenks_Caspall`
+    * :class:`~pysal.esda.mapclassify.Jenks_Caspall_Forced`
+    * :class:`~pysal.esda.mapclassify.Jenks_Caspall_Sampled`
+    * :class:`~pysal.esda.mapclassify.Max_P_Classifier`
+    * :class:`~pysal.esda.mapclassify.Maximum_Breaks`
+    * :class:`~pysal.esda.mapclassify.Natural_Breaks`
+    * :class:`~pysal.esda.mapclassify.Quantiles`
+    * :class:`~pysal.esda.mapclassify.Percentiles`
+    * :class:`~pysal.esda.mapclassify.Std_Mean`
+    * :class:`~pysal.esda.mapclassify.User_Defined`
+
+    Utilities:
+
+    In addition to the classifiers, there are several utility functions that can be used to evaluate the properties of a specific classifier for different parameter values, or for automatic selection of a classifier and number of classes.
+
+    * :func:`~pysal.esda.mapclassify.gadf`
+    * :class:`~pysal.esda.mapclassify.K_classifiers`
+
+    References
+    ----------
+
+    Slocum, T.A., R.B. McMaster, F.C. Kessler and H.H. Howard (2009) *Thematic Cartography and Geovisualization*. Pearson Prentice Hall, Upper Saddle River.
+
+    """
+
     def __init__(self, y):
         self.name = 'Map Classifier'
+        if hasattr(y, 'values'):
+            y = y.values # fix for pandas
         self.y = y
         self._classify()
         self._summary()
@@ -856,6 +908,7 @@ class Maximum_Breaks(Map_Classifier):
     >>> mb.counts
     array([50,  2,  4,  1,  1])
     >>>
+
     """
     def __init__(self, y, k=K, mindiff=0):
         self.k = k
@@ -924,25 +977,27 @@ class Natural_Breaks(Map_Classifier):
     >>> nb.counts
     array([14, 13, 14, 10,  7])
     >>> nb.bins
-    [1.8100000000000001, 7.5999999999999996, 29.82, 181.27000000000001, 4111.4499999999998]
+    array([  1.81000000e+00,   7.60000000e+00,   2.98200000e+01,
+             1.81270000e+02,   4.11145000e+03])
     >>> x = np.array([1] * 50)
     >>> x[-1] = 20
     >>> nb = Natural_Breaks(x, k = 5, initial = 0)
     Warning: Not enough unique values in array to form k classes
     Warning: setting k to 2
     >>> nb.bins
-    [1, 20]
+    array([ 1, 20])
     >>> nb.counts
     array([49,  1])
 
 
     Notes
     -----
-    There is a tradeoff here between speed and consistency of the classification
+    There is a tradeoff here between speed and consistency of the
+    classification
     If you want more speed, set initial to a smaller value (0
     would result in the best speed, if you want more consistent classes in
-    multiple runs of Natural_Breaks on the same data, set initial to a higer
-    value.
+    multiple runs of Natural_Breaks on the same data, set initial to a
+    higher value.
 
 
     """
@@ -963,7 +1018,7 @@ class Natural_Breaks(Map_Classifier):
             fit_i = res[2].sum()
             if fit_i < fit:
                 res0 = res
-        self.bins = res0[-1]
+        self.bins = np.array(res0[-1])
         self.k = len(self.bins)
         self.iterations = res0[-2]
 
@@ -1000,20 +1055,25 @@ class Fisher_Jenks(Map_Classifier):
     >>> fj.adcm
     799.24000000000001
     >>> fj.bins
-    [75.290000000000006, 192.05000000000001, 370.5, 722.85000000000002, 4111.45]
+    array([   75.29,   192.05,   370.5 ,   722.85,  4111.45])
     >>> fj.counts
     array([49,  3,  4,  1,  1])
     >>>
     """
 
     def __init__(self, y, k=K):
+
+        nu = len(np.unique(y))
+        if nu < k:
+            raise ValueError("Fewer unique values than specified classes.")
         self.k = k
         Map_Classifier.__init__(self, y)
         self.name = "Fisher_Jenks"
 
+
     def _set_bins(self):
         x = self.y.copy()
-        self.bins = _fisher_jenks_means(x, classes=self.k)[1:]
+        self.bins = np.array(_fisher_jenks_means(x, classes=self.k)[1:])
 
 
 class Fisher_Jenks_Sampled(Map_Classifier):
@@ -1028,11 +1088,10 @@ class Fisher_Jenks_Sampled(Map_Classifier):
              number of classes required
     pct    : float
              The percentage of n that should form the sample
-             If pct is specified such that n*pct > 1000, then pct = 1000./n,
-             unless truncate is False
-    truncate: binary (Default True)
+             If pct is specified such that n*pct > 1000, then 
+             pct = 1000./n, unless truncate is False
+    truncate : binary (Default True)
              truncate pct in cases where pct * n > 1000.
-
 
     Attributes
     ----------
@@ -1046,25 +1105,11 @@ class Fisher_Jenks_Sampled(Map_Classifier):
     counts  : array (k,1)
               the number of observations falling in each class
 
-
     Examples
     --------
-    # turned off due to timing being different across hardware
-    #>>> import pysal
-    #>>> import numpy as np
-    #>>> import time
-    #>>> x = np.arange(1000)
-    #>>> t0=time.time();fj=pysal.esda.mapclassify.Fisher_Jenks(x,k=4);t1=time.time()
-    #>>> t2=time.time();fjs=pysal.esda.mapclassify.Fisher_Jenks_Sampled(x,k=4);t3=time.time()
-    #>>> print t1-t0
-    #1.84405994415
-    #>>> print t3-t2
-    #0.0295069217682
-    #>>> fj.tss
-    #5208250.0
-    #>>> fjs.tss
-    #5337860.0
-    #>>>
+
+    (Turned off due to timing being different across hardware)
+
     """
 
     def __init__(self, y, k=K, pct=0.10, truncate=True):
@@ -1121,11 +1166,8 @@ class Jenks_Caspall(Map_Classifier):
     >>> cal = load_example()
     >>> jc = Jenks_Caspall(cal, k = 5)
     >>> jc.bins
-    array([[  1.81000000e+00],
-           [  7.60000000e+00],
-           [  2.98200000e+01],
-           [  1.81270000e+02],
-           [  4.11145000e+03]])
+    array([  1.81000000e+00,   7.60000000e+00,   2.98200000e+01,
+             1.81270000e+02,   4.11145000e+03])
     >>> jc.counts
     array([14, 13, 14, 10,  7])
 
@@ -1161,8 +1203,9 @@ class Jenks_Caspall(Map_Classifier):
                 xb0 = xb
             it += 1
             q = np.array([np.median(x[xb == i]) for i in rk])
-        cuts = [max(x[xb == i]) for i in sp.unique(xb)]
-        self.bins = np.array(cuts)
+        cuts = np.array([max(x[xb == i]) for i in sp.unique(xb)])
+        cuts.shape = (len(cuts),)
+        self.bins = cuts
         self.iterations = it
 
 
@@ -1202,17 +1245,9 @@ class Jenks_Caspall_Sampled(Map_Classifier):
     >>> jc = Jenks_Caspall(x)
     >>> jcs = Jenks_Caspall_Sampled(x)
     >>> jc.bins
-    array([[ 0.19770952],
-           [ 0.39695769],
-           [ 0.59588617],
-           [ 0.79716865],
-           [ 0.99999425]])
+    array([ 0.19770952,  0.39695769,  0.59588617,  0.79716865,  0.99999425])
     >>> jcs.bins
-    array([[ 0.18877882],
-           [ 0.39341638],
-           [ 0.6028286 ],
-           [ 0.80070925],
-           [ 0.99999425]])
+    array([ 0.18877882,  0.39341638,  0.6028286 ,  0.80070925,  0.99999425])
     >>> jc.counts
     array([19804, 20005, 19925, 20178, 20088])
     >>> jcs.counts
@@ -1504,7 +1539,7 @@ class Max_P_Classifier(Map_Classifier):
     >>> cal = pysal.esda.mapclassify.load_example()
     >>> mp = pysal.Max_P_Classifier(cal)
     >>> mp.bins
-    [8.6999999999999993, 16.699999999999999, 20.469999999999999, 66.260000000000005, 4111.4499999999998]
+    array([    8.7 ,    16.7 ,    20.47,    66.26,  4111.45])
     >>> mp.counts
     array([29,  8,  1, 10, 10])
 
@@ -1612,7 +1647,7 @@ class Max_P_Classifier(Map_Classifier):
                 swapping = False
         xs = self.y.copy()
         xs.sort()
-        self.bins = [xs[cl][-1] for cl in classes]
+        self.bins = np.array([xs[cl][-1] for cl in classes])
 
     def _ss(self, class_def):
         """calculates sum of squares for a class"""
@@ -1683,14 +1718,12 @@ def gadf(y, method="Quantiles", maxk=15, pct=0.8):
     pct    : float
              The percentage of GADF to exceed
 
-
     Returns
     -------
 
     implicit : tuple
                first value is k, second value is instance of classifier at k,
                third is the pct obtained
-
 
     Examples
     --------
@@ -1748,7 +1781,6 @@ class K_classifiers:
              values to be classified
     pct    : float
              The percentage of GADF to exceed
-
 
     Attributes
     ----------

@@ -1,8 +1,1 @@
-nose-exclude
-nose-progressive
-sphinx
-numpydoc
-networkx
-Shapely
-geojson
-fiona
+scipy>=0.11

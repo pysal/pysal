@@ -1,11 +1,9 @@
 """
-:mod:`ergodic` --- summary measures for ergodic Markov chains
-=============================================================
-
+Summary measures for ergodic Markov chains
 """
 __author__ = "Sergio J. Rey <srey@asu.edu>"
 
-__all__ = ['steady_state', 'fmpt']
+__all__ = ['steady_state', 'fmpt', 'var_fmpt']
 
 import numpy as np
 import numpy.linalg as la
@@ -14,24 +12,22 @@ import numpy.linalg as la
 def steady_state(P):
     """
     Calculates the steady state probability vector for a regular Markov
-    transition matrix P
+    transition matrix P.
 
     Parameters
     ----------
-
-    P        : matrix (kxk)
-               an ergodic Markov transition probability matrix
+    P        : matrix 
+               (k, k), an ergodic Markov transition probability matrix.
 
     Returns
     -------
-
-    implicit : matrix (kx1)
-               steady state distribution
+    matrix 
+               (k, 1), steady state distribution.
 
     Examples
     --------
-    Taken from Kemeny and Snell. [1]_ Land of Oz example where the states are
-    Rain, Nice and Snow - so there is 25 percent chance that if it
+    Taken from Kemeny and Snell.  Land of Oz example where the states are
+    Rain, Nice and Snow, so there is 25 percent chance that if it
     rained in Oz today, it will snow tomorrow, while if it snowed today in
     Oz there is a 50 percent chance of snow again tomorrow and a 25
     percent chance of a nice day (nice, like when the witch with the monkeys
@@ -63,28 +59,23 @@ def steady_state(P):
 
 def fmpt(P):
     """
-    Calculates the matrix of first mean passage times for an
-    ergodic transition probability matrix.
+    Calculates the matrix of first mean passage times for an ergodic transition 
+    probability matrix.
 
     Parameters
     ----------
-
-    P    : matrix (kxk)
-           an ergodic Markov transition probability matrix
+    P    : matrix 
+           (k, k), an ergodic Markov transition probability matrix.
 
     Returns
     -------
-
-    M    : matrix (kxk)
-           elements are the expected value for the number of intervals
-           required for  a chain starting in state i to first enter state j
+    M    : matrix 
+           (k, k), elements are the expected value for the number of intervals
+           required for a chain starting in state i to first enter state j.
            If i=j then this is the recurrence time.
 
     Examples
     --------
-
-
-
     >>> import numpy as np
     >>> p=np.matrix([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])
     >>> fm=fmpt(p)
@@ -92,7 +83,6 @@ def fmpt(P):
     matrix([[ 2.5       ,  4.        ,  3.33333333],
             [ 2.66666667,  5.        ,  2.66666667],
             [ 3.33333333,  4.        ,  2.5       ]])
-
 
     Thus, if it is raining today in Oz we can expect a nice day to come
     along in another 4 days, on average, and snow to hit in 3.33 days. We can
@@ -103,14 +93,13 @@ def fmpt(P):
 
     Notes
     -----
-
-    Uses formulation (and examples on p. 218) in Kemeny and Snell (1976) [1]_
+    Uses formulation (and examples on p. 218) in Kemeny and Snell (1976).
 
     References
     ----------
+    .. [1] Kemeny, John, G. and J. Laurie Snell (1976) Finite Markov Chains. 
+       Springer-Verlag. Berlin.
 
-    .. [1] Kemeny, John, G. and J. Laurie Snell (1976) Finite Markov
-       Chains. Springer-Verlag. Berlin
     """
     A = np.zeros_like(P)
     ss = steady_state(P)
@@ -121,7 +110,9 @@ def fmpt(P):
     I = np.identity(k)
     Z = la.inv(I - P + A)
     E = np.ones_like(Z)
-    D = np.diag(1. / np.diag(A))
+    A_diag = np.diag(A)
+    A_diag = A_diag + (A_diag==0)
+    D = np.diag(1. / A_diag)
     Zdg = np.diag(np.diag(Z))
     M = (I - Z + E * Zdg) * D
     return M
@@ -130,24 +121,21 @@ def fmpt(P):
 def var_fmpt(P):
     """
     Variances of first mean passage times for an ergodic transition
-    probability matrix
+    probability matrix.
 
     Parameters
     ----------
-
-    P    : matrix (kxk)
-           an ergodic Markov transition probability matrix
+    P      : matrix 
+             (k, k), an ergodic Markov transition probability matrix.
 
     Returns
     -------
-
-    implic : matrix (kxk)
-             elements are the variances for the number of intervals
-             required for  a chain starting in state i to first enter state j
+    matrix 
+             (k, k), elements are the variances for the number of intervals
+             required for a chain starting in state i to first enter state j.
 
     Examples
     --------
-
     >>> import numpy as np
     >>> p=np.matrix([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])
     >>> vfm=var_fmpt(p)
@@ -156,18 +144,10 @@ def var_fmpt(P):
             [  6.22222222,  12.        ,   6.22222222],
             [  6.88888889,  12.        ,   5.58333333]])
 
-
-
     Notes
     -----
+    Uses formulation (and examples on p. 83) in Kemeny and Snell (1976).
 
-    Uses formulation (and examples on p. 83) in Kemeny and Snell (1976) [1]_
-
-    References
-    ----------
-
-    .. [1] Kemeny, John, G. and J. Laurie Snell (1976) Finite Markov
-       Chains. Springer-Verlag. Berlin
 
     """
     A = P ** 1000

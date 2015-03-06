@@ -48,5 +48,10 @@ Currently the following contribs are available:
     - Path: pysal.contrib.shared_perimeter_weights
     - Requires: shapely
 
+5. Clusterpy Extension -- spatially constrained clustering algorithms.
+
+	- .. versionadded:: 1.8
+	- Path: pysal.contrib.clusterpy
+	- Requires: clusterpy
 
 
