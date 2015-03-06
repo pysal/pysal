@@ -19,7 +19,7 @@ from Contiguity import buildContiguity
 from Distance import knnW, Kernel, DistanceBand
 from util import get_ids, get_points_array_from_shapefile, min_threshold_distance
 import numpy as np
-import geojson
+import json
 import urllib
 
 
