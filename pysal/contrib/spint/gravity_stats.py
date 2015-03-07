@@ -22,7 +22,7 @@ __author__ = "Taylor Oshan tayoshan@gmail.com"
 import pandas as pd
 import numpy as np
 from scipy.stats.stats import pearsonr
-import gravity2 as gv
+import gravity as gv
 
 
 def sys_stats(gm):

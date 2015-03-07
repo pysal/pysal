@@ -7,7 +7,7 @@ __author__ = 'toshan'
 import unittest
 import numpy as np
 import pandas as pd
-import gravity2 as grav
+import gravity as grav
 
 
 
