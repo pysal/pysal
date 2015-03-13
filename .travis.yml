@@ -7,8 +7,8 @@ python:
   #- "2.6"
   #
 env:
-  - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ precise main universe"
   - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ trusty main universe"
+  - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ precise main universe"
 
 virtualenv:
   system_site_packages: true
@@ -23,11 +23,13 @@ before_install:
 install:
   - pip install -q -r travis.txt
   #- sudo pip install http://sourceforge.net/projects/pychecker/files/pychecker/0.8.19/pychecker-0.8.19.tar.gz/download
-  #- pip install coveralls
+  - pip install coveralls
+  - pip install -I sphinx==1.2.3
   - sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm
 
 script: 
   - python -c 'import numpy; print numpy.__version__'
+  - python -c 'import functools'
   - python -c 'import scipy; print scipy.__version__'
   - python setup.py install  >/dev/null
   - python -c 'import pysal; print pysal.version'
@@ -35,7 +37,8 @@ script:
   #- pychecker --limit 1000 pysal
   - python setup.py sdist >/dev/null
   #- nosetests --processes=-1 --process-timeout=60 --verbosity=1 --ignore-files=collection --exclude-dir=pysal/contrib
-  - nosetests
+  #- nosetests
+  - nosetests --with-coverage --cover-package=pysal 
   - cd doc; make pickle; make doctest
 notifications:
     email:
@@ -44,3 +47,6 @@ notifications:
             - phil.stphns@gmail.com
         on_success: always
         on_failure: always
+
+after_success:
+  - coveralls
