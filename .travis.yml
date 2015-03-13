@@ -23,7 +23,7 @@ before_install:
 install:
   - pip install -q -r travis.txt
   #- sudo pip install http://sourceforge.net/projects/pychecker/files/pychecker/0.8.19/pychecker-0.8.19.tar.gz/download
-  #- pip install coveralls
+  - pip install coveralls
   - sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm
 
 script: 
@@ -35,7 +35,8 @@ script:
   #- pychecker --limit 1000 pysal
   - python setup.py sdist >/dev/null
   #- nosetests --processes=-1 --process-timeout=60 --verbosity=1 --ignore-files=collection --exclude-dir=pysal/contrib
-  - nosetests
+  #- nosetests
+  - nosetests --with-coverage --cover-package=pysal --cover-tests 
   - cd doc; make pickle; make doctest
 notifications:
     email:
@@ -44,3 +45,6 @@ notifications:
             - phil.stphns@gmail.com
         on_success: always
         on_failure: always
+
+after_success:
+  - coveralls
