@@ -1,2 +1,1 @@
 scipy>=0.11
-sphinxcontrib-napoleon==0.2.11
