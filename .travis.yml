@@ -49,4 +49,4 @@ notifications:
         on_failure: always
 
 after_success:
-  - coveralls
+  coveralls
