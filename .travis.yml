@@ -2,6 +2,7 @@ language: python
 branches:
 only:
   - master
+  - coveralls
 python:
   - "2.7"
   #- "2.6"
