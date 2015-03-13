@@ -38,7 +38,7 @@ script:
   - python setup.py sdist >/dev/null
   #- nosetests --processes=-1 --process-timeout=60 --verbosity=1 --ignore-files=collection --exclude-dir=pysal/contrib
   #- nosetests
-  - nosetests --with-coverage --cover-package=pysal --cover-tests 
+  - nosetests --with-coverage --cover-package=pysal 
   - cd doc; make pickle; make doctest
 notifications:
     email:
