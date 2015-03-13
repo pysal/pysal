@@ -2,8 +2,6 @@ language: python
 branches:
 only:
   - master
-  - coveralls
-  # Test line to try and force a travis build 
 python:
   - "2.7"
   #- "2.6"
