@@ -31,6 +31,7 @@ install:
 
 script: 
   - python -c 'import numpy; print numpy.__version__'
+  - python -c 'import functools'
   - python -c 'import scipy; print scipy.__version__'
   - python setup.py install  >/dev/null
   - python -c 'import pysal; print pysal.version'
