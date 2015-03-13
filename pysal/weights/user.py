@@ -10,7 +10,7 @@ __all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array',
 'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile',
 'adaptive_kernelW', 'adaptive_kernelW_from_shapefile',
 'min_threshold_dist_from_shapefile', 'build_lattice_shapefile',
-'queen_from_geojson', 'queen_from_geojsons', 'queen_from_geojsonf']
+'rook_from_geojsonf', 'rook_from_geojsons','queen_from_geojsons', 'queen_from_geojsonf']
 
 
 
@@ -21,6 +21,7 @@ from util import get_ids, get_points_array_from_shapefile, min_threshold_distanc
 import numpy as np
 import json
 import urllib
+from pysal.weights.util import contiguity_from_geojson
 
 __all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array', 'knnW_from_shapefile', 'threshold_binaryW_from_array', 'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array', 'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile', 'adaptive_kernelW', 'adaptive_kernelW_from_shapefile', 'min_threshold_dist_from_shapefile', 'build_lattice_shapefile']
 
@@ -1144,49 +1145,132 @@ def build_lattice_shapefile(nrows, ncols, outFileName):
     d.close()
     o.close()
 
-
-def _queen_geojson(gjobj):
+def queen_from_geojsonf(uri):
     """
-    Constructs a PySAL queen contiguity W from a GeoJSON feature collection consisting of Polygons and/or Multipolygons
+    Construction of a Queen Contiguity W from a geojson file
+
+    Parameters
+    ----------
+
+    uri       :  str
+                 the uri for the geojson file
+
+    Returns
+    -------
+    w         : W
+                a PySAL W instance
+
+    Examples
+    --------
+
+    >>> w = pysal.weights.user.queen_from_geojsonf("http://toae.org/pub/columbus.json")
+    setting bounding box for FeatureCollection
+    >>> w.n
+    49
+    >>> type(w)
+    <class 'pysal.weights.weights.W'>
+    >>> "%.3f"%w.pct_nonzero
+    '0.098'
 
     """
-    fc_bbox = None
-    if 'bbox' in gjobj:
-        fc_bbox = gjobj['bbox']
-    
-    first = gjobj['features'][0]['geometry']['type']
-    if first == 'Polygon' or first =='MultiPolygon':
-        polys = []
-        ids = []
-        i = 0
-        for feature in gjobj['features']:
-            if feature['geometry']['type'] == 'Polygon':
-                polys.append(pysal.cg.asShape(geojson.Polygon(feature['geometry']['coordinates'])))
-            else:               
-                polys.append(pysal.cg.asShape(geojson.MultiPolygon(feature['geometry']['coordinates'])))
-            ids.append(i)
-            i += 1
-        polygons = pysal.cg.shapes.PolygonCollection(dict(zip(ids,polys)),
-                bbox=fc_bbox)
-        neighbors = pysal.weights.Contiguity.ContiguityWeightsPolygons(polygons).w
-        return pysal.W(neighbors)
-    else:
-        print "GeoJSON feature type must be 'Polygon' or 'MultiPolygon'"
-        return None
-
-
-def queen_from_geojson(uri):
-    gjobj = geojson.load(urllib.urlopen(uri))
-    return _queen_geojson(gjobj)
+    fs = urllib.urlopen(uri)
+    return contiguity_from_geojson(fs, wtype="QUEEN")
 
 def queen_from_geojsons(s):
-    return _queen_geojson(info)
+    """
+    Construction of a Queen Contiguity W from a geojson string
 
-def queen_from_geojsonf(fileName):
-    fp = open(fileName)
-    obj = geojson.load(fp)
-    fp.close()
-    return _queen_geojson(obj)
+    Parameters
+    ----------
+
+    s       :  str
+               the json string object
+
+    Returns
+    -------
+    w         : W
+                a PySAL W instance
+
+    Examples
+    --------
+    >>> js = json.dumps(json.load(urllib.urlopen("http://toae.org/pub/columbus.json")),separators=(',',':') )
+    >>> w = pysal.weights.user.queen_from_geojsons(js)
+    setting bounding box for FeatureCollection
+    >>> w.n
+    49
+    >>> type(w)
+    <class 'pysal.weights.weights.W'>
+    >>> "%.3f"%w.pct_nonzero
+    '0.098'
+
+
+    """
+    return contiguity_from_geojson(s, wtype="QUEEN")
+
+
+def rook_from_geojsonf(uri):
+    """
+    Construction of a Rook Contiguity W from a geojson file
+
+    Parameters
+    ----------
+
+    uri       :  str
+                 the uri for the geojson file
+
+    Returns
+    -------
+    w         : W
+                a PySAL W instance
+
+    Examples
+    --------
+
+    >>> w = pysal.weights.user.rook_from_geojsonf("http://toae.org/pub/columbus.json")
+    setting bounding box for FeatureCollection
+    >>> w.n
+    49
+    >>> type(w)
+    <class 'pysal.weights.weights.W'>
+    >>> "%.3f"%w.pct_nonzero
+    '0.083'
+
+    """
+    fs = urllib.urlopen(uri)
+    return contiguity_from_geojson(fs, wtype="ROOK")
+
+def rook_from_geojsons(s):
+    """
+    Construction of a Rook Contiguity W from a geojson string
+
+    Parameters
+    ----------
+
+    s       :  str
+               the json string object
+
+    Returns
+    -------
+    w         : W
+                a PySAL W instance
+
+    Examples
+    --------
+    >>> js = json.dumps(json.load(urllib.urlopen("http://toae.org/pub/columbus.json")),separators=(',',':') )
+    >>> w = pysal.weights.user.rook_from_geojsons(js)
+    setting bounding box for FeatureCollection
+    >>> w.n
+    49
+    >>> type(w)
+    <class 'pysal.weights.weights.W'>
+    >>> "%.3f"%w.pct_nonzero
+    '0.083'
+
+    """
+    return contiguity_from_geojson(s, wtype="ROOK")
+
+
+
 
 
 def _test():

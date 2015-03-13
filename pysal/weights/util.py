@@ -7,6 +7,7 @@ import scipy.spatial
 import os
 import operator
 import scipy
+import json
 
 __all__ = ['lat2W', 'block_weights', 'comb', 'order', 'higher_order',
            'shimbel', 'remap_ids', 'full2W', 'full', 'WSP2W',
@@ -1191,6 +1192,32 @@ def write_gal(file, k=10):
         f.write("\n%d %d\n" % (i, len(neighs)))
         f.write(" ".join(map(str, neighs)))
     f.close()
+
+def contiguity_from_geojson(gj_input, wtype='rook'):
+    WTYPE = wtype.upper()
+    if WTYPE not in ['QUEEN', 'ROOK']:
+        print "wtype must be 'QUEEN' or 'ROOK'"
+    WTYPE =["QUEEN", 'ROOK'].index(WTYPE)+1
+    if type(gj_input) == str:
+        collection = json.loads(gj_input)
+    else:
+        collection = json.load(gj_input)
+    n = len(collection)
+    collection_type = collection['features'][0]['geometry']['type']
+    if collection_type in ['Polygon', 'MultiPolygon']:
+        polys = []
+        ids = []
+        i = 0
+        for feature in collection['features']:
+            #print feature
+            polys.append(pysal.cg.asShape(feature['geometry']))
+            ids.append(i)
+            i +=1
+        pcollection = pysal.cg.shapes.PolygonCollection(dict(zip(ids,polys)))
+        neighbors = pysal.weights.Contiguity.ContiguityWeightsPolygons(pcollection, wttype=WTYPE).w
+        return pysal.W(neighbors)
+    else:
+        print "GeoJSON feature type must be 'Polygon' or 'MultiPolygon'"
 
 if __name__ == "__main__":
     from pysal import lat2W
