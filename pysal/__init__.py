@@ -41,6 +41,8 @@ import pysal.cg
 import pysal.core
 
 from pysal.version import version
+import urllib2, json
+tell_me = True
 
 # toplevel imports to be explicit
 from pysal.esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local
@@ -92,3 +94,29 @@ open = pysal.core.FileIO.FileIO
 
 # Constants
 MISSINGVALUE = None  # used by fileIO to flag missing values.
+
+# Load stale and other possible messages at import
+this_version = version
+def check_version():
+    this = 'This is PySAL version %s.\n' %this_version 
+    print(this)
+    try:
+        url = 'http://pypi.python.org/pypi/pysal/json'
+        request = urllib2.urlopen(url)
+        data = json.load(request)
+        newest = data['info']['version']
+        late = 'The most recent stable release is %s.' %newest
+        print(late)
+    except:
+        print("Machine is offline. I am unable to check for the latest version of PySAL")
+
+if tell_me:
+    check_version()
+else:
+    pass
+
+
+
+
+
+
