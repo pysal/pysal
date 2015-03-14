@@ -1,2 +1,4 @@
 [run]
-    omit = __init__.py
+    omit = 
+        __init__.py
+        */contrib/*
