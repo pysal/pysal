@@ -98,7 +98,7 @@ MISSINGVALUE = None  # used by fileIO to flag missing values.
 # Load stale and other possible messages at import
 this_version = version
 def check_version():
-    this = 'This is PySAL version %s.\n' %this_version 
+    this = 'This is PySAL version %s.' %this_version 
     print(this)
     try:
         url = 'http://pypi.python.org/pypi/pysal/json'
@@ -114,9 +114,3 @@ if config.check_stable:
     check_version()
 else:
     pass
-
-
-
-
-
-
