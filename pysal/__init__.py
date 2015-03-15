@@ -42,7 +42,7 @@ import pysal.core
 
 from pysal.version import version
 import urllib2, json
-tell_me = True
+import config
 
 # toplevel imports to be explicit
 from pysal.esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local
@@ -110,7 +110,7 @@ def check_version():
     except:
         print("Machine is offline. I am unable to check for the latest version of PySAL")
 
-if tell_me:
+if config.check_stable:
     check_version()
 else:
     pass
