@@ -22,7 +22,7 @@ from matplotlib.patches import Polygon
 from matplotlib.path import Path
 from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection
 
-def map_point_shp(shp, which='all'):
+def map_point_shp(shp, which='all', bbox=None):
     '''
     Create a map object from a point shape
     ...
@@ -31,9 +31,17 @@ def map_point_shp(shp, which='all'):
     ---------
 
     shp             : iterable
-                      PySAL point iterable with the attribute `bbox` (e.g.
-                      shape object from `ps.open` a poly shapefile)
+                      PySAL point iterable (e.g.
+                      shape object from `ps.open` a point shapefile) If it does
+                      not contain the attribute `bbox`, it must be passed
+                      separately in `bbox`.
     which           : str/list
+                      List of booleans for which polygons of the shapefile to
+                      be included (True) or excluded (False)
+    bbox            : None/list
+                      [Optional. Default=None] List with bounding box as in a
+                      PySAL object. If nothing is passed, it tries to obtain
+                      it as an attribute from `shp`.
 
     Returns
     -------
@@ -42,6 +50,8 @@ def map_point_shp(shp, which='all'):
                       Map object with the points from the shape
 
     '''
+    if not bbox:
+        bbox = shp.bbox
     pts = []
     if which == 'all':
         for pt in shp:
@@ -52,10 +62,10 @@ def map_point_shp(shp, which='all'):
                     pts.append(pt)
     pts = np.array(pts)
     sc = plt.scatter(pts[:, 0], pts[:, 1])
-    _ = _add_axes2col(sc, shp.bbox)
+    _ = _add_axes2col(sc, bbox)
     return sc
 
-def map_line_shp(shp, which='all'):
+def map_line_shp(shp, which='all', bbox=None):
     '''
     Create a map object from a line shape
     ...
@@ -64,9 +74,17 @@ def map_line_shp(shp, which='all'):
     ---------
 
     shp             : iterable
-                      PySAL line iterable with the attribute `bbox` (e.g.
-                      shape object from `ps.open` a poly shapefile)
+                      PySAL line iterable (e.g.
+                      shape object from `ps.open` a line shapefile) If it does
+                      not contain the attribute `bbox`, it must be passed
+                      separately in `bbox`.
     which           : str/list
+                      List of booleans for which polygons of the shapefile to
+                      be included (True) or excluded (False)
+    bbox            : None/list
+                      [Optional. Default=None] List with bounding box as in a
+                      PySAL object. If nothing is passed, it tries to obtain
+                      it as an attribute from `shp`.
 
     Returns
     -------
@@ -78,6 +96,8 @@ def map_line_shp(shp, which='all'):
                       (zero-offset)
 
     '''
+    if not bbox:
+        bbox = shp.bbox
     patches = []
     rows = []
     i = 0
@@ -95,11 +115,11 @@ def map_line_shp(shp, which='all'):
                     rows.append(i)
                 i += 1
     lc = LineCollection(patches)
-    _ = _add_axes2col(lc, shp.bbox)
+    _ = _add_axes2col(lc, bbox)
     lc.shp2dbf_row = rows
     return lc
 
-def map_poly_shp(shp, which='all'):
+def map_poly_shp(shp, which='all', bbox=None):
     '''
     Create a map object from a polygon shape
     ...
@@ -108,11 +128,17 @@ def map_poly_shp(shp, which='all'):
     ---------
 
     shp             : iterable
-                      PySAL polygon iterable with the attribute `bbox` (e.g.
-                      shape object from `ps.open` a poly shapefile)
+                      PySAL polygon iterable (e.g.
+                      shape object from `ps.open` a poly shapefile) If it does
+                      not contain the attribute `bbox`, it must be passed
+                      separately in `bbox`.
     which           : str/list
                       List of booleans for which polygons of the shapefile to
                       be included (True) or excluded (False)
+    bbox            : None/list
+                      [Optional. Default=None] List with bounding box as in a
+                      PySAL object. If nothing is passed, it tries to obtain
+                      it as an attribute from `shp`.
 
     Returns
     -------
@@ -124,6 +150,8 @@ def map_poly_shp(shp, which='all'):
                       (zero-offset)
 
     '''
+    if not bbox:
+        bbox = shp.bbox
     patches = []
     rows = []
     i = 0
@@ -143,7 +171,7 @@ def map_poly_shp(shp, which='all'):
                     rows.append(i)
                 i += 1
     pc = PolyCollection(patches)
-    _ = _add_axes2col(pc, shp.bbox)
+    _ = _add_axes2col(pc, bbox)
     pc.shp2dbf_row = rows
     return pc
 
