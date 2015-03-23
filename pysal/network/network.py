@@ -17,23 +17,22 @@ __all__ = ["Network", "PointPattern", "NetworkG", "NetworkK", "NetworkF"  ]
 class Network:
 
     """
-    Spatially constrained network representation with analytical functionality.
+    Spatially constrained network representation and analytical functionality.
 
     Parameters
     -----------
     in_shp : string
-             A topologically correct input shapefile
+             A topoligically correct input shapefile
 
     Attributes
     ----------
     in_shp : string
              input shapefile name
-    
-    adjacencylist : dict
-                    key is the id of the node
-                    value is a list containing nodes adjacent to key
 
-nodes : dict
+    adjacencylist : list
+                    of lists storing node adjacency
+
+    nodes : dict
             key are tuple of node coords and value is the node ID
 
     edge_lengths : dict
