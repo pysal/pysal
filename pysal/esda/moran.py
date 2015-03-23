@@ -152,11 +152,11 @@ class Moran:
                    for i in xrange(permutations)]
             self.sim = sim = np.array(sim)
             above = sim >= self.I
-            larger = sum(above)
+            larger = above.sum()
             if (self.permutations - larger) < larger:
                 larger = self.permutations - larger
             self.p_sim = (larger + 1.) / (permutations + 1.)
-            self.EI_sim = sum(sim) / permutations
+            self.EI_sim = sim.sum() / permutations
             self.seI_sim = np.array(sim).std()
             self.VI_sim = self.seI_sim ** 2
             self.z_sim = (self.I - self.EI_sim) / self.seI_sim
@@ -171,7 +171,7 @@ class Moran:
         #z = (y-y.mean())/y.std()
         z = y - y.mean()
         self.z = z
-        self.z2ss = sum(z * z)
+        self.z2ss = (z * z).sum()
         self.EI = -1. / (self.n - 1)
         n = self.n
         s1 = self.w.s1
@@ -183,7 +183,7 @@ class Moran:
         self.VI_norm = v_num / v_den - (1.0 / (n - 1)) ** 2
         self.seI_norm = self.VI_norm ** (1 / 2.)
 
-        k = (1 / (sum(z ** 4)) * ((sum(z ** 2)) ** 2))
+        k = (1 / ((z ** 4).sum()) * (((z ** 2).sum()) ** 2))
         vi = (1 / (((n - 1) ** 3) * s02)) * ((n * ((n * n - 3 * n + 3)
                                                    * s1 - n * s2 + 3 * s02))
                                              - (k * ((n * n - n) * s1 - 2 * n *
@@ -193,7 +193,7 @@ class Moran:
 
     def __calc(self, z):
         zl = slag(self.w, z)
-        inum = sum(z * zl)
+        inum = (z * zl).sum()
         return self.n / self.w.s0 * inum / self.z2ss
 
 
@@ -306,11 +306,11 @@ class Moran_BV:
             sim = [self.__calc(nrp(zy)) for i in xrange(permutations)]
             self.sim = sim = np.array(sim)
             above = sim >= self.I
-            larger = sum(above)
+            larger = above.sum()
             if (permutations - larger) < larger:
                 larger = permutations - larger
             self.p_sim = (larger + 1.) / (permutations + 1.)
-            self.EI_sim = sum(sim) / permutations
+            self.EI_sim = sim.sum() / permutations
             self.seI_sim = np.array(sim).std()
             self.VI_sim = self.seI_sim ** 2
             self.z_sim = (self.I - self.EI_sim) / self.seI_sim
@@ -321,8 +321,8 @@ class Moran_BV:
 
     def __calc(self, zy):
         wzy = slag(self.w, zy)
-        self.num = sum(self.zx * wzy)
-        self.den = sum(zy * zy)
+        self.num = (self.zx * wzy).sum()
+        self.den = (zy * zy).sum()
         return self.num / self.den
 
 
@@ -601,7 +601,7 @@ class Moran_Local:
         w.transform = transformation
         self.w = w
         self.permutations = permutations
-        self.den = sum(z * z)
+        self.den = (z * z).sum()
         self.Is = self.calc(self.w, self.z)
         self.geoda_quads = geoda_quads
         quads = [1, 2, 3, 4]
@@ -613,7 +613,7 @@ class Moran_Local:
             self.__crand()
             sim = np.transpose(self.rlisas)
             above = sim >= self.Is
-            larger = np.sum(above, axis=0)
+            larger = above.sum(0)
             low_extreme = (self.permutations - larger) < larger
             larger[low_extreme] = self.permutations - larger[low_extreme]
             self.p_sim = (larger + 1.0) / (permutations + 1.0)

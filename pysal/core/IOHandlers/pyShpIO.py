@@ -70,7 +70,7 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
             self.__create()
 
     def __len__(self):
-        if self.dataObj:
+        if self.dataObj != None:
             return len(self.dataObj)
         else:
             return 0
@@ -127,7 +127,7 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
                 rec['NumParts'] = len(shape.parts)
                 all_parts = shape.parts
             partsIndex = [0]
-            for l in map(len, all_parts)[:-1]:
+            for l in [len(part) for part in all_parts][:-1]:
                 partsIndex.append(partsIndex[-1] + l)
             rec['Parts Index'] = partsIndex
             verts = sum(all_parts, [])
@@ -156,7 +156,7 @@ class PurePyShpWrapper(pysal.core.FileIO.FileIO):
                 parts = [rec['Vertices'][partsIndex[i]:partsIndex[
                     i + 1]] for i in xrange(rec['NumParts'])]
                 if self.dataObj.type() == 'POLYGON':
-                    is_cw = map(pysal.cg.is_clockwise, parts)
+                    is_cw = [pysal.cg.is_clockwise(part) for part in parts]
                     vertices = [part for part, cw in zip(parts, is_cw) if cw]
                     holes = [part for part, cw in zip(parts, is_cw) if not cw]
                     if not holes:
