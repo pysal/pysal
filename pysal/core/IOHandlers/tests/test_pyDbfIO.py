@@ -1,7 +1,11 @@
+
+
 import unittest
 import pysal
 import tempfile
 import os
+from six.moves import range
+from six.moves import zip
 
 
 class test_DBF(unittest.TestCase):
@@ -10,51 +14,56 @@ class test_DBF(unittest.TestCase):
         self.dbObj = pysal.core.IOHandlers.pyDbfIO.DBF(test_file, 'r')
 
     def test_len(self):
-        self.assertEquals(len(self.dbObj), 195)
+        self.assertEqual(len(self.dbObj), 195)
 
     def test_tell(self):
-        self.assertEquals(self.dbObj.tell(), 0)
+        self.assertEqual(self.dbObj.tell(), 0)
         self.dbObj.read(1)
-        self.assertEquals(self.dbObj.tell(), 1)
+        self.assertEqual(self.dbObj.tell(), 1)
         self.dbObj.read(50)
-        self.assertEquals(self.dbObj.tell(), 51)
+        self.assertEqual(self.dbObj.tell(), 51)
         self.dbObj.read()
-        self.assertEquals(self.dbObj.tell(), 195)
+        self.assertEqual(self.dbObj.tell(), 195)
+    
+    def test_cast(self):
+        self.assertEqual(self.dbObj._spec, [])
+        self.dbObj.cast('FIPSSTCO', float)
+        self.assertEqual(self.dbObj._spec[1], float)
 
     def test_seek(self):
         self.dbObj.seek(0)
-        self.assertEquals(self.dbObj.tell(), 0)
+        self.assertEqual(self.dbObj.tell(), 0)
         self.dbObj.seek(55)
-        self.assertEquals(self.dbObj.tell(), 55)
+        self.assertEqual(self.dbObj.tell(), 55)
         self.dbObj.read(1)
-        self.assertEquals(self.dbObj.tell(), 56)
+        self.assertEqual(self.dbObj.tell(), 56)
 
     def test_read(self):
         self.dbObj.seek(0)
         objs = self.dbObj.read()
-        self.assertEquals(len(objs), 195)
+        self.assertEqual(len(objs), 195)
         self.dbObj.seek(0)
         objsB = list(self.dbObj)
-        self.assertEquals(len(objsB), 195)
+        self.assertEqual(len(objsB), 195)
         for rowA, rowB in zip(objs, objsB):
-            self.assertEquals(rowA, rowB)
+            self.assertEqual(rowA, rowB)
 
     def test_random_access(self):
         self.dbObj.seek(0)
         db0 = self.dbObj.read(1)[0]
-        self.assertEquals(db0, [1, '35001', '000107', '35001000107', '1.07'])
+        self.assertEqual(db0, [1, '35001', '000107', '35001000107', '1.07'])
         self.dbObj.seek(57)
         db57 = self.dbObj.read(1)[0]
-        self.assertEquals(db57, [58, '35001', '001900', '35001001900', '19'])
+        self.assertEqual(db57, [58, '35001', '001900', '35001001900', '19'])
         self.dbObj.seek(32)
         db32 = self.dbObj.read(1)[0]
-        self.assertEquals(db32, [33, '35001', '000500', '35001000500', '5'])
+        self.assertEqual(db32, [33, '35001', '000500', '35001000500', '5'])
         self.dbObj.seek(0)
-        self.assertEquals(self.dbObj.next(), db0)
+        self.assertEqual(next(self.dbObj), db0)
         self.dbObj.seek(57)
-        self.assertEquals(self.dbObj.next(), db57)
+        self.assertEqual(next(self.dbObj), db57)
         self.dbObj.seek(32)
-        self.assertEquals(self.dbObj.next(), db32)
+        self.assertEqual(next(self.dbObj), db32)
 
     def test_write(self):
         f = tempfile.NamedTemporaryFile(suffix='.dbf')
@@ -76,7 +85,7 @@ class test_DBF(unittest.TestCase):
 
         #PySAL writes proper DBF files with a terminator at the end, not everyone does.
         n = self.dbObj.record_size * self.dbObj.n_records  # bytes to read.
-        self.assertEquals(orig.read(n), copy.read(n))
+        self.assertEqual(orig.read(n), copy.read(n))
         #self.assertEquals(orig.read(1), copy.read(1)) # last byte may fail
         orig.close()
         copy.close()
@@ -103,7 +112,7 @@ class test_DBF(unittest.TestCase):
             db.write(rec)
         db.close()
         db2 = pysal.core.IOHandlers.pyDbfIO.DBF(fname, 'r')
-        self.assertEquals(records, db2.read())
+        self.assertEqual(records, db2.read())
 
         os.remove(fname)
 
