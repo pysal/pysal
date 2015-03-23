@@ -54,26 +54,28 @@ class DBF(pysal.core.Tables.DataTable):
         pysal.core.Tables.DataTable.__init__(self, *args, **kwargs)
         if self.mode == 'r':
             self.f = f = open(self.dataPath, 'rb')
-            numrec, lenheader = struct.unpack('<xxxxLH22x', f.read(32))
-            numfields = (lenheader - 33) // 32
+            numrec, lenheader = struct.unpack('<xxxxLH22x', f.read(32)) #from dbf file standards
+            numfields = (lenheader - 33) // 32 #each field is 32 bytes
             self.n_records = numrec
             self.n_fields = numfields
             self.field_info = [('DeletionFlag', 'C', 1, 0)]
             record_size = 1
-            fmt = 's'
+            fmt = 's' #each record is a string
             self._col_index = {}
             idx = 0
             for fieldno in xrange(numfields):
                 name, typ, size, deci = struct.unpack(
-                    '<11sc4xBB14x', f.read(32))
-                name = name.replace('\0', '')
-                    # eliminate NULs from string
+                    '<11sc4xBB14x', f.read(32)) #again, check struct for fmt def.
+                name = name.decode() #forces to unicode in 2, to str in 3
+                typ = typ.decode() 
+                name = name.replace('\0', '') #same as NULs, \x00
+                     #eliminate NULs from string
                 self._col_index[name] = (idx, record_size)
                 idx += 1
-                fmt += '%ds' % size
+                fmt += '%ds' % size #alt: str(size) + 's'
                 record_size += size
                 self.field_info.append((name, typ, size, deci))
-            terminator = f.read(1)
+            terminator = f.read(1).decode()
             assert terminator == '\r'
             self.header_size = self.f.tell()
             self.record_size = record_size
@@ -115,6 +117,7 @@ class DBF(pysal.core.Tables.DataTable):
         col = [0] * self.n_records
         for i in xrange(self.n_records):
             value = f.read(size)
+            value = value.decode()
             f.seek(gap, 1)
             if typ == 'N':
                 value = value.replace('\0', '').lstrip()
@@ -145,7 +148,7 @@ class DBF(pysal.core.Tables.DataTable):
                     value = pysal.MISSINGVALUE
                 else:
                     value = float(value)
-            if isinstance(value, str):
+            if isinstance(value, str) or isinstance(value, unicode):
                 value = value.rstrip()
             col[i] = value
         self.seek(prevPos)
@@ -155,6 +158,7 @@ class DBF(pysal.core.Tables.DataTable):
         self.seek(i)
         rec = list(struct.unpack(
             self.record_fmt, self.f.read(self.record_size)))
+        rec = [entry.decode() for entry in rec]
         if rec[0] != ' ':
             return self.read_record(i + 1)
         result = []
@@ -191,7 +195,7 @@ class DBF(pysal.core.Tables.DataTable):
                     value = pysal.MISSINGVALUE
                 else:
                     value = float(value)
-            if isinstance(value, str):
+            if isinstance(value, str) or isinstance(value, unicode):
                 value = value.rstrip()
             result.append(value)
         return result
@@ -215,7 +219,7 @@ class DBF(pysal.core.Tables.DataTable):
         if len(obj) != len(self.header):
             raise TypeError("Rows must contains %d fields" % len(self.header))
         self.numrec += 1
-        self.f.write(' ')                        # deletion flag
+        self.f.write(' '.encode())                        # deletion flag
         for (typ, size, deci), value in itertools.izip(self.field_spec, obj):
             if value is None:
                 if typ == 'C':
@@ -239,7 +243,7 @@ class DBF(pysal.core.Tables.DataTable):
             except:
                 print value, len(value), size
                 raise
-            self.f.write(value)
+            self.f.write(value.encode())
             self.pos += 1
 
     def flush(self):
@@ -251,7 +255,7 @@ class DBF(pysal.core.Tables.DataTable):
         if self.mode == 'w':
             self.flush()
             # End of file
-            self.f.write('\x1A')
+            self.f.write('\x1A'.encode())
         self.f.close()
         pysal.core.Tables.DataTable.close(self)
 
@@ -279,11 +283,14 @@ class DBF(pysal.core.Tables.DataTable):
         self.f.write(hdr)
         # field specs
         for name, (typ, size, deci) in itertools.izip(self.header, self.field_spec):
+            typ = typ.encode()
             name = name.ljust(11, '\x00')
+            name = name.encode()
             fld = struct.pack('<11sc4xBB14x', name, typ, size, deci)
             self.f.write(fld)
         # terminator
-        self.f.write('\r')
+        term = '\r'.encode()
+        self.f.write(term)
         if self.f.tell() != POS and not self.FIRST_WRITE:
             self.f.seek(POS)
 
