@@ -1,3 +1,5 @@
-[run]
-branch = True
-omit = __init__.py pysal/contrib/* */test/*
+[report]
+omit = 
+    __init__.py 
+    */contrib/* 
+    */test/*
