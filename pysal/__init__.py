@@ -40,7 +40,8 @@ Utilities
 import pysal.cg
 import pysal.core
 
-from pysal.version import version, release_date 
+from pysal.version import version
+from pysal.version import stable_release_date
 import urllib2, json
 import config
 import datetime
@@ -101,9 +102,9 @@ MISSINGVALUE = None  # used by fileIO to flag missing values.
 def check_version():
     today = datetime.date.today()
     delta = datetime.timedelta(days=180)
-    diff = (today - release_date).days
+    diff = (today - stable_release_date).days
     releases = int(diff)/180
-    if today - delta > release_date:
+    if today - delta > stable_release_date:
 	print("Your version of PySAL is %d days old.") % diff 
 	print("There have likely been %d new release(s).") % releases 
 	print("Suppress this message by setting check_stable to False in config.py.")
@@ -111,7 +112,7 @@ def check_version():
 	pass
 
 def check_remote_version():
-    print("Checking web for latest stable release....")
+    print("Checking web for last stable release....")
     try:
         url = 'http://pypi.python.org/pypi/pysal/json'
         request = urllib2.urlopen(url)
