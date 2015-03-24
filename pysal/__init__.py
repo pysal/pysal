@@ -40,9 +40,10 @@ Utilities
 import pysal.cg
 import pysal.core
 
-from pysal.version import version
+from pysal.version import version, release_date 
 import urllib2, json
 import config
+import datetime
 
 # toplevel imports to be explicit
 from pysal.esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local
@@ -96,10 +97,21 @@ open = pysal.core.FileIO.FileIO
 MISSINGVALUE = None  # used by fileIO to flag missing values.
 
 # Load stale and other possible messages at import
-this_version = version
+
 def check_version():
-    this = 'This is PySAL version %s.' %this_version 
-    print(this)
+    today = datetime.date.today()
+    delta = datetime.timedelta(days=180)
+    diff = (today - release_date).days
+    releases = int(diff)/180
+    if today - delta > release_date:
+	print("Your version of PySAL is %d days old.") % diff 
+	print("There have likely been %d new release(s).") % releases 
+	print("Suppress this message by setting check_stable to False in config.py.")
+    else:
+	pass
+
+def check_remote_version():
+    print("Checking web for latest stable release....")
     try:
         url = 'http://pypi.python.org/pypi/pysal/json'
         request = urllib2.urlopen(url)
@@ -113,4 +125,5 @@ def check_version():
 if config.check_stable:
     check_version()
 else:
+    #print_version()
     pass
