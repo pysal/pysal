@@ -573,9 +573,7 @@ def kernelW(points, k=2, function='triangular', fixed=True,
                   where :math:`dknn` is a vector of k-nearest neighbor
                   distances (the distance to the kth nearest neighbor for each
                   observation).
-    function    : {'triangular','uniform','quadratic','epanechnikov',
-                  'quartic','bisquare','gaussian'}
-
+    function    : {'triangular','uniform','quadratic','epanechnikov','quartic','bisquare','gaussian'}
                   .. math::
 
                       z_{i,j} = d_{i,j}/h_i
@@ -701,9 +699,7 @@ def kernelW_from_shapefile(shapefile, k=2, function='triangular',
                   where :math:`dknn` is a vector of k-nearest neighbor
                   distances (the distance to the kth nearest neighbor for each
                   observation).
-    function    : {'triangular','uniform','quadratic','epanechnikov',
-                  'quartic','bisquare','gaussian'}
-
+    function    : {'triangular','uniform','quadratic','epanechnikov', 'quartic','bisquare','gaussian'}
 
                   .. math::
 

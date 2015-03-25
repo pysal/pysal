@@ -170,7 +170,7 @@ class G_Local:
     w : W
         DistanceBand, weights instance that is based on threshold distance
         and is assumed to be aligned with y
-    transform : {'R', B'}
+    transform : {'R', 'B'}
                 the type of w, either 'B' (binary) or 'R' (row-standardized)
     permutations : int
                   the number of random permutations for calculating

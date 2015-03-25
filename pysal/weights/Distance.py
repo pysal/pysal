@@ -177,7 +177,7 @@ class Kernel(W):
                   diagonals weights are set to value according to kernel
                   function.
     function    : {'triangular','uniform','quadratic','quartic','gaussian'}
-                  kernel function defined as follows with:
+                  kernel function defined as follows with
 
                   .. math::
 
@@ -421,6 +421,9 @@ class DistanceBand(W):
                  distance decay parameter for weight (default -1.0)
                  if alpha is positive the weights will not decline with
                  distance. If binary is True, alpha is ignored
+
+    ids         : list
+                  values to use for keys of the neighbors and weights dicts
 
     Examples
     --------
