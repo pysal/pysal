@@ -12,6 +12,10 @@ class test_DBF(unittest.TestCase):
     def test_len(self):
         self.assertEquals(len(self.dbObj), 195)
 
+    def test_cast(self):
+        self.assertEquals(self.dbObj._spec, [])
+        self.dbObj.cast('FIPSSTCO', float)
+        self.assertEquals(self.dbObj._spec[1], float)
     def test_tell(self):
         self.assertEquals(self.dbObj.tell(), 0)
         self.dbObj.read(1)

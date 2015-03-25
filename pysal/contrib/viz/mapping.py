@@ -22,7 +22,7 @@ from matplotlib.patches import Polygon
 from matplotlib.path import Path
 from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection
 
-def map_point_shp(shp, which='all'):
+def map_point_shp(shp, which='all', bbox=None):
     '''
     Create a map object from a point shape
     ...
@@ -31,9 +31,17 @@ def map_point_shp(shp, which='all'):
     ---------
 
     shp             : iterable
-                      PySAL point iterable with the attribute `bbox` (e.g.
-                      shape object from `ps.open` a poly shapefile)
+                      PySAL point iterable (e.g.
+                      shape object from `ps.open` a point shapefile) If it does
+                      not contain the attribute `bbox`, it must be passed
+                      separately in `bbox`.
     which           : str/list
+                      List of booleans for which polygons of the shapefile to
+                      be included (True) or excluded (False)
+    bbox            : None/list
+                      [Optional. Default=None] List with bounding box as in a
+                      PySAL object. If nothing is passed, it tries to obtain
+                      it as an attribute from `shp`.
 
     Returns
     -------
@@ -42,6 +50,8 @@ def map_point_shp(shp, which='all'):
                       Map object with the points from the shape
 
     '''
+    if not bbox:
+        bbox = shp.bbox
     pts = []
     if which == 'all':
         for pt in shp:
@@ -52,10 +62,10 @@ def map_point_shp(shp, which='all'):
                     pts.append(pt)
     pts = np.array(pts)
     sc = plt.scatter(pts[:, 0], pts[:, 1])
-    _ = _add_axes2col(sc, shp.bbox)
+    _ = _add_axes2col(sc, bbox)
     return sc
 
-def map_line_shp(shp, which='all'):
+def map_line_shp(shp, which='all', bbox=None):
     '''
     Create a map object from a line shape
     ...
@@ -64,9 +74,17 @@ def map_line_shp(shp, which='all'):
     ---------
 
     shp             : iterable
-                      PySAL line iterable with the attribute `bbox` (e.g.
-                      shape object from `ps.open` a poly shapefile)
+                      PySAL line iterable (e.g.
+                      shape object from `ps.open` a line shapefile) If it does
+                      not contain the attribute `bbox`, it must be passed
+                      separately in `bbox`.
     which           : str/list
+                      List of booleans for which polygons of the shapefile to
+                      be included (True) or excluded (False)
+    bbox            : None/list
+                      [Optional. Default=None] List with bounding box as in a
+                      PySAL object. If nothing is passed, it tries to obtain
+                      it as an attribute from `shp`.
 
     Returns
     -------
@@ -78,6 +96,8 @@ def map_line_shp(shp, which='all'):
                       (zero-offset)
 
     '''
+    if not bbox:
+        bbox = shp.bbox
     patches = []
     rows = []
     i = 0
@@ -95,11 +115,11 @@ def map_line_shp(shp, which='all'):
                     rows.append(i)
                 i += 1
     lc = LineCollection(patches)
-    _ = _add_axes2col(lc, shp.bbox)
+    _ = _add_axes2col(lc, bbox)
     lc.shp2dbf_row = rows
     return lc
 
-def map_poly_shp(shp, which='all'):
+def map_poly_shp(shp, which='all', bbox=None):
     '''
     Create a map object from a polygon shape
     ...
@@ -108,11 +128,17 @@ def map_poly_shp(shp, which='all'):
     ---------
 
     shp             : iterable
-                      PySAL polygon iterable with the attribute `bbox` (e.g.
-                      shape object from `ps.open` a poly shapefile)
+                      PySAL polygon iterable (e.g.
+                      shape object from `ps.open` a poly shapefile) If it does
+                      not contain the attribute `bbox`, it must be passed
+                      separately in `bbox`.
     which           : str/list
                       List of booleans for which polygons of the shapefile to
                       be included (True) or excluded (False)
+    bbox            : None/list
+                      [Optional. Default=None] List with bounding box as in a
+                      PySAL object. If nothing is passed, it tries to obtain
+                      it as an attribute from `shp`.
 
     Returns
     -------
@@ -124,6 +150,8 @@ def map_poly_shp(shp, which='all'):
                       (zero-offset)
 
     '''
+    if not bbox:
+        bbox = shp.bbox
     patches = []
     rows = []
     i = 0
@@ -143,7 +171,7 @@ def map_poly_shp(shp, which='all'):
                     rows.append(i)
                 i += 1
     pc = PolyCollection(patches)
-    _ = _add_axes2col(pc, shp.bbox)
+    _ = _add_axes2col(pc, bbox)
     pc.shp2dbf_row = rows
     return pc
 
@@ -246,9 +274,9 @@ def plot_poly_lines(shp_link,  savein=None, poly_col='none'):
         plt.show()
     return None
 
-def plot_choropleth(shp_link, values, type, k=5, cmap=None, \
-        shp_type='poly', sample_fisher=True, title='', \
-        savein=None, figsize=None, dpi=300):
+def plot_choropleth(shp_link, values, type, k=5, cmap=None,
+        shp_type='poly', sample_fisher=False, title='',
+        savein=None, figsize=None, dpi=300, alpha=0.4):
     '''
     Wrapper to quickly create and plot from a lat/lon shapefile
     ...
@@ -281,9 +309,10 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None, \
                       'poly' (default) or 'line', for the kind of shapefile
                       passed
     sample_fisher   : Boolean
-                      Defaults to True, controls whether Fisher-Jenks
+                      Defaults to False, controls whether Fisher-Jenks
                       classification uses a sample (faster) or the entire
                       array of values. Ignored if 'classification'!='fisher_jenks'
+                      The percentage of the sample that takes at a time is 10%
     title           : str
                       Optional string for the title
     savein          : str
@@ -293,6 +322,8 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None, \
                       Figure dimensions
     dpi             : int
                       resolution of graphic file
+    alpha           : float
+                      [Optional. Default=0.4] Transparency of the map.
 
     Returns
     -------
@@ -333,6 +364,7 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None, \
         map_obj = base_choropleth_classif(map_obj, values, k=k, \
                 classification='equal_interval', cmap=cmap)
 
+    map_obj.set_alpha(alpha)
     fig = plt.figure(figsize=figsize)
     ax = fig.add_subplot(111)
     ax = setup_ax([map_obj], ax)
@@ -439,8 +471,8 @@ def base_choropleth_unique(map_obj, values,  cmap='hot_r'):
         map_obj.set_array(values)
     return map_obj
 
-def base_choropleth_classif(map_obj, values, classification='quantiles', \
-        k=5, cmap='hot_r', sample_fisher=True):
+def base_choropleth_classif(map_obj, values, classification='quantiles',
+        k=5, cmap='hot_r', sample_fisher=False):
     '''
     Set coloring based based on different classification
     methods
@@ -465,9 +497,10 @@ def base_choropleth_classif(map_obj, values, classification='quantiles', \
     cmap            : str
                       Matplotlib coloring scheme
     sample_fisher   : Boolean
-                      Defaults to True, controls whether Fisher-Jenks
+                      Defaults to False, controls whether Fisher-Jenks
                       classification uses a sample (faster) or the entire
                       array of values. Ignored if 'classification'!='fisher_jenks'
+                      The percentage of the sample that takes at a time is 10%
 
     Returns
     -------
@@ -497,7 +530,7 @@ def base_choropleth_classif(map_obj, values, classification='quantiles', \
     cmap = cm.get_cmap(cmap, k+1)
     map_obj.set_cmap(cmap)
 
-    boundaries.insert(0, values.min())
+    boundaries = np.insert(boundaries, 0, values.min())
     norm = clrs.BoundaryNorm(boundaries, cmap.N)
     map_obj.set_norm(norm)
 
@@ -585,7 +618,6 @@ if __name__ == '__main__':
         fig.add_axes(ax)
         plt.show()
         break
-    '''
 
     xy = (((0, 0), (0, 0)), ((2, 1), (2, 1)), ((3, 1), (3, 1)), ((2, 5), (2, 5)))
     xy = np.array([[10, 30], [20, 20]])
@@ -603,4 +635,9 @@ if __name__ == '__main__':
     fig.add_axes(ax)
     #ax = setup_ax([pc], ax)
     plt.show()
+    '''
+    
+    shp_link = ps.examples.get_path('columbus.shp')
+    values = np.array(ps.open(ps.examples.get_path('columbus.dbf')).by_col('HOVAL'))
+    _ = plot_choropleth(shp_link, values, 'fisher_jenks')
 

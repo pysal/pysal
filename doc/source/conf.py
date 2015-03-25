@@ -11,7 +11,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys 
+import sys
 import os
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -27,13 +27,13 @@ sys.path.append(os.path.abspath('~/anaconda/lib/python2.7/site-packages/'))
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc',
 'sphinx.ext.doctest','sphinx.ext.graphviz', 'sphinx.ext.intersphinx',
-'sphinx.ext.pngmath',
-'sphinx.ext.autosummary','sphinx.ext.viewcode', 'sphinxcontrib.napoleon']
+'sphinx.ext.autosummary',
+'sphinx.ext.pngmath','sphinx.ext.viewcode', 'sphinxcontrib.napoleon']
 
 #doctest extension config values
-doctest_path = '/Users/stephens/code/pysal/doc/source/users/tutorials/' 
+doctest_path = '/Users/stephens/code/pysal/doc/source/users/tutorials/'
 doctest_test_doctest_blocks = ''
-#doctest_global_setup = 
+#doctest_global_setup =
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -131,7 +131,7 @@ html_theme_options = {
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
 #html_title = "%s v%s Reference Guide" % (project, version)
-html_title = "Python Spatial Analysis Library" 
+html_title = "Python Spatial Analysis Library"
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 html_short_title = "PySAL"
