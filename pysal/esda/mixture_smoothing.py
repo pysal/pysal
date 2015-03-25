@@ -24,10 +24,10 @@ class NP_Mixture_Smoother(object):
 
     Parameters
     ----------
-    e           : array (n, 1)
-                  event variable measured across n spatial units
-    b           : array (n, 1)
-                  population at risk variable measured across n spatial units
+    e           : array
+                  (n, 1), event variable measured across n spatial units
+    b           : array
+                  (n, 1), population at risk variable measured across n spatial units
     k           : integer
                   a seed number to specify the number of subpopulations
     acc         : float
@@ -41,25 +41,30 @@ class NP_Mixture_Smoother(object):
 
     Attributes
     ----------
-    e           : same as e in parameters
-    b           : same as b in parameters
+    e           : array
+                  same as e in parameters
+    b           : array
+                  same as b in parameters
     n           : integer
                   the number of observations
     w           : float
                   a global weight value, 1 devided by n
     k           : integer
                   the number of subpopulations
-    acc         : same as acc in parameters
-    numiter     : same as numiter in parameters
-    limit       : same as limit in parameters
-    p           : array (k, 1)
-                  the proportions of individual subpopulations
-    t           : array (k, 1)
-                  prior risks of individual subpopulations
-    r           : array (n, 1)
-                  estimated rate values
-    category    : array (n, 1)
-                  indices of subpopulations to which each observation belongs
+    acc         : float
+                  same as acc in parameters
+    numiter     : integer
+                  same as numiter in parameters
+    limit       : float
+                  same as limit in parameters
+    p           : array
+                  (k, 1), the proportions of individual subpopulations
+    t           : array
+                  (k, 1), prior risks of individual subpopulations
+    r           : array
+                  (n, 1), estimated rate values
+    category    : array
+                  (n, 1), indices of subpopulations to which each observation belongs
 
     Examples
     --------

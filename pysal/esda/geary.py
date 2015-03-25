@@ -16,9 +16,10 @@ class Geary:
     Parameters
     ----------
     y              : array
+                     (n, 1) attribute vector
     w              : W
                      spatial weights
-    transformation : string
+    transformation : {'B', 'R', 'D', 'U', 'V'}
                      weights transformation, default is binary.
                      Other options include "R": row-standardized, "D":
                      doubly-standardized, "U": untransformed (general
@@ -49,22 +50,29 @@ class Geary:
                      p-value under normality assumption (one-tailed)
     p_rand         : float
                      p-value under randomization assumption (one-tailed)
-    sim            : array (if permutations!=0)
+    sim            : array
+                     (if permutations!=0)
                      vector of I values for permutated samples
-    p_sim          : float (if permutations!=0)
+    p_sim          : float
+                     (if permutations!=0)
                      p-value based on permutations (one-tailed)
                      null: sptial randomness
                      alternative: the observed C is extreme
                      it is either extremely high or extremely low
-    EC_sim         : float (if permutations!=0)
+    EC_sim         : float
+                     (if permutations!=0)
                      average value of C from permutations
-    VC_sim         : float (if permutations!=0)
+    VC_sim         : float
+                     (if permutations!=0)
                      variance of C from permutations
-    seC_sim        : float (if permutations!=0)
+    seC_sim        : float
+                     (if permutations!=0)
                      standard deviation of C under permutations.
-    z_sim          : float (if permutations!=0)
+    z_sim          : float
+                     (if permutations!=0)
                      standardized C based on permutations
-    p_z_sim        : float (if permutations!=0)
+    p_z_sim        : float
+                     (if permutations!=0)
                      p-value based on standard normal approximation from
                      permutations (one-tailed)
 
