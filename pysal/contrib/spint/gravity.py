@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 MLE calibration for Wilson (1967) family of gravity models
 
@@ -22,7 +23,7 @@ __author__ = "Taylor Oshan tayoshan@gmail.com"
 import pandas as pd
 import numpy as np
 from scipy.optimize import fsolve
-import mle_stats as stats
+import gravity_stats as stats
 
 
 class Unconstrained:
@@ -151,7 +152,7 @@ class Unconstrained:
         stats = statistics(self)
         self.system_stats = stats[0]
         self.entropy_stats = stats[1]
-        self.model_fit_stats = stats[2]
+        self.fit_stats = stats[2]
         self.parameter_stats = stats[3]
 
     def calc_dcy(self, c, cf, p):
@@ -320,7 +321,7 @@ class ProductionConstrained(Unconstrained):
         stats = statistics(self)
         self.system_stats = stats[0]
         self.entropy_stats = stats[1]
-        self.model_fit_stats = stats[2]
+        self.fit_stats = stats[2]
         self.parameter_stats = stats[3]
 
     def estimate_flows(self, c, cf, of, df, p):
@@ -494,7 +495,7 @@ class AttractionConstrained(Unconstrained):
         stats = statistics(self)
         self.system_stats = stats[0]
         self.entropy_stats = stats[1]
-        self.model_fit_stats = stats[2]
+        self.fit_stats = stats[2]
         self.parameter_stats = stats[3]
 
     def estimate_flows(self, c, cf, of, df, p):
@@ -670,7 +671,7 @@ class DoublyConstrained(ProductionConstrained, AttractionConstrained):
         stats = statistics(self)
         self.system_stats = stats[0]
         self.entropy_stats = stats[1]
-        self.model_fit_stats = stats[2]
+        self.fit_stats = stats[2]
         self.parameter_stats = stats[3]
 
     def estimate_flows(self, c, cf, of, df, p):
@@ -804,7 +805,7 @@ def statistics(gm):
 
     system_stats = stats.sys_stats(gm)
     entropy_stats = stats.ent_stats(gm)
-    model_fit_stats = stats.fit_stats(gm)
+    fit_stats = stats.fit_stats(gm)
     parameter_statistics = stats.param_stats(gm)
 
     if 'Ai' in gm.dt.columns:
@@ -812,6 +813,7 @@ def statistics(gm):
     if 'Bj' in gm.dt.columns:
         gm.dt.Bj = Bj
     gm.ests = ests
+    gm.dt.ests = ests
     gm.p = p
 
-    return system_stats, entropy_stats, model_fit_stats, parameter_statistics
+    return system_stats, entropy_stats, fit_stats, parameter_statistics

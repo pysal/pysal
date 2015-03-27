@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 Statistics for gravity models
 
@@ -84,12 +85,12 @@ def fit_stats(gm):
     """
     calculate the goodness-of-fit statistics
     """
-    model_fit_stats = {}
+    fit_stats = {}
     srmse = ((np.sum((gm.f-gm.ests)**2)/len(gm.dt))**.5)/(np.sum(gm.f)/len(gm.dt))
-    model_fit_stats['srmse'] = srmse
+    fit_stats['srmse'] = srmse
     pearson_r = pearsonr(gm.ests, gm.f)[0]
-    model_fit_stats['r_squared'] = pearson_r**2
-    return model_fit_stats
+    fit_stats['r_squared'] = pearson_r**2
+    return fit_stats
 
 
 def param_stats(gm):
