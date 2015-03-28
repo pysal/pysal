@@ -61,13 +61,13 @@ class ContiguityWeights_binning:
 
         # bucket size
         if (numPoly < SHP_SMALL):
-            bucketmin = numPoly / BUCK_SM + 2
+            bucketmin = numPoly // BUCK_SM + 2
         else:
-            bucketmin = numPoly / BUCK_LG + 2
+            bucketmin = numPoly // BUCK_LG + 2
             # print 'bucketmin: ', bucketmin
         # bucket length
-        lengthx = ((shapebox[2] + DELTA) - shapebox[0]) / bucketmin
-        lengthy = ((shapebox[3] + DELTA) - shapebox[1]) / bucketmin
+        lengthx = ((shapebox[2] + DELTA) - shapebox[0]) // bucketmin
+        lengthy = ((shapebox[3] + DELTA) - shapebox[1]) // bucketmin
 
         # print lengthx, lengthy
 
@@ -220,13 +220,13 @@ class ContiguityWeightsPolygons:
 
         # bucket size
         if (numPoly < SHP_SMALL):
-            bucketmin = numPoly / BUCK_SM + 2
+            bucketmin = numPoly // BUCK_SM + 2
         else:
-            bucketmin = numPoly / BUCK_LG + 2
+            bucketmin = numPoly // BUCK_LG + 2
             # print 'bucketmin: ', bucketmin
         # bucket length
-        lengthx = ((shapebox[2] + DELTA) - shapebox[0]) / bucketmin
-        lengthy = ((shapebox[3] + DELTA) - shapebox[1]) / bucketmin
+        lengthx = ((shapebox[2] + DELTA) - shapebox[0]) // bucketmin
+        lengthy = ((shapebox[3] + DELTA) - shapebox[1]) // bucketmin
 
         # print lengthx, lengthy
 
