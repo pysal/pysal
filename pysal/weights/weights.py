@@ -109,7 +109,7 @@ class W(object):
     >>> weights = {0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
     >>> w = W(neighbors, weights)
     >>> "%.3f"%w.pct_nonzero
-    '0.296'
+    '29.630'
 
     Read from external gal file
 
@@ -118,14 +118,14 @@ class W(object):
     >>> w.n
     78
     >>> "%.3f"%w.pct_nonzero
-    '0.065'
+    '6.542'
 
     Set weights implicitly
 
     >>> neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
     >>> w = W(neighbors)
     >>> "%.3f"%w.pct_nonzero
-    '0.296'
+    '29.630'
     >>> w = lat2W(100, 100)
     >>> w.trcW2
     39600.0
@@ -388,7 +388,7 @@ class W(object):
 
         """
         if 'pct_nonzero' not in self._cache:
-            self._pct_nonzero = self.sparse.nnz / (1. * self._n ** 2)
+            self._pct_nonzero = 100. * self.sparse.nnz / (1. * self._n ** 2)
             self._cache['pct_nonzero'] = self._pct_nonzero
         return self._pct_nonzero
 

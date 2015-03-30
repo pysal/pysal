@@ -47,12 +47,12 @@ def buildContiguity(polygons, criterion="rook", ids=None):
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [163]
     >>> w.pct_nonzero
-    0.031926364234056544
+    3.1926364234056543
     >>> w = buildContiguity(pysal.open(pysal.examples.get_path('10740.shp'),'r'),criterion='rook')
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [163]
     >>> w.pct_nonzero
-    0.026351084812623275
+    2.6351084812623276
     >>> fips = pysal.open(pysal.examples.get_path('10740.dbf')).by_col('STFID')
     >>> w = buildContiguity(pysal.open(pysal.examples.get_path('10740.shp'),'r'),ids=fips)
     WARNING: there is one disconnected observation (no neighbors)
