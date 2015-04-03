@@ -19,7 +19,7 @@ class TestW(unittest.TestCase):
 
     def test_W(self):
         w = pysal.W(self.neighbors, self.weights)
-        self.assertEqual(w.pct_nonzero, 0.29629629629629628)
+        self.assertEqual(w.pct_nonzero, 29.62962962962963)
 
     def test___getitem__(self):
         self.assertEqual(
@@ -27,7 +27,7 @@ class TestW(unittest.TestCase):
 
     def test___init__(self):
         w = pysal.W(self.neighbors, self.weights)
-        self.assertEqual(w.pct_nonzero, 0.29629629629629628)
+        self.assertEqual(w.pct_nonzero, 29.62962962962963)
 
     def test___iter__(self):
         w = pysal.lat2W(3, 3)
@@ -167,7 +167,7 @@ class TestW(unittest.TestCase):
         self.assertEquals(pysal.order(w), o)
 
     def test_pct_nonzero(self):
-        self.assertEqual(self.w3x3.pct_nonzero, 0.29629629629629628)
+        self.assertEqual(self.w3x3.pct_nonzero, 29.62962962962963)
 
     def test_s0(self):
         self.assertEqual(self.w3x3.s0, 24.0)
@@ -237,7 +237,7 @@ class Test_WSP_Back_To_W(unittest.TestCase):
 
     def test_W(self):
         w = pysal.W(self.neighbors, self.weights)
-        self.assertEqual(w.pct_nonzero, 0.29629629629629628)
+        self.assertEqual(w.pct_nonzero, 29.62962962962963)
 
     def test___getitem__(self):
         self.assertEqual(
@@ -245,7 +245,7 @@ class Test_WSP_Back_To_W(unittest.TestCase):
 
     def test___init__(self):
         w = pysal.W(self.neighbors, self.weights)
-        self.assertEqual(w.pct_nonzero, 0.29629629629629628)
+        self.assertEqual(w.pct_nonzero, 29.62962962962963)
 
     def test___iter__(self):
         w = pysal.lat2W(3, 3)
@@ -371,7 +371,7 @@ class Test_WSP_Back_To_W(unittest.TestCase):
         self.assertEquals(pysal.order(w), o)
 
     def test_pct_nonzero(self):
-        self.assertEqual(self.w3x3.pct_nonzero, 0.29629629629629628)
+        self.assertEqual(self.w3x3.pct_nonzero, 29.62962962962963)
 
     def test_s0(self):
         self.assertEqual(self.w3x3.s0, 24.0)

@@ -22,54 +22,85 @@ class W(object):
     neighbors       : dictionary
                       key is region ID, value is a list of neighbor IDS
                       Example:  {'a':['b'],'b':['a','c'],'c':['b']}
-    weights = None  : dictionary
+    weights : dictionary
                       key is region ID, value is a list of edge weights
                       If not supplied all edge weights are assumed to have a weight of 1.
                       Example: {'a':[0.5],'b':[0.5,1.5],'c':[1.5]}
-    id_order = None : list
+    id_order : list
                       An ordered list of ids, defines the order of
                       observations when iterating over W if not set,
                       lexicographical ordering is used to iterate and the
                       id_order_set property will return False.  This can be
                       set after creation by setting the 'id_order' property.
-    silent_island_warning   : boolean 
+    silent_island_warning   : boolean
                             By default PySAL will print a warning if the
                             dataset contains any disconnected observations or
                             islands. To silence this warning set this
                             parameter to True.
-    ids = None      : list
+    ids : list
                       values to use for keys of the neighbors and weights dicts
 
     Attributes
     ----------
 
     asymmetries         : list
+                          of
     cardinalities       : dictionary
+                          of
     diagW2              : array
+                          of
     diagWtW             : array
+                          of
     diagWtW_WW          : array
+                          of
     histogram           : dictionary
+                          of
     id2i                : dictionary
+                          of
     id_order            : list
-    id_order_set
+                          of
+    id_order_set        : boolean
+                          True if
     islands             : list
-    max_neighbors
-    mean_neighbors
-    min_neighbors
+                          of
+
+    max_neighbors       : int
+                          maximum number of neighbors
+
+    mean_neighbors      : int
+                          mean number of neighbors
+
+    min_neighbors       : int
+                          minimum neighbor count
     n                   : int
-    neighbor_offsets
-    nonzero
-    pct_nonzero
+                          of
+
+    neighbor_offsets    : list
+                          ids of neighbors to a region in id_order
+    nonzero             : int
+                          Number of non-zero entries
+    pct_nonzero         : float
+                          Percentage of nonzero neighbor counts
     s0                  : float
+                          of
     s1                  : float
+                          of
     s2                  : float
+                          of
     s2array             : array
+                          of
     sd                  : float
-    sparse
+                          of
+    sparse              : sparse_matrix
+                          SciPy sparse matrix instance
     trcW2               : float
+                          of
     trcWtW              : float
+                          of
     trcWtW_WW           : float
+                          of
     transform           : string
+                          of
 
     Examples
     --------
@@ -78,7 +109,7 @@ class W(object):
     >>> weights = {0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
     >>> w = W(neighbors, weights)
     >>> "%.3f"%w.pct_nonzero
-    '0.296'
+    '29.630'
 
     Read from external gal file
 
@@ -87,14 +118,14 @@ class W(object):
     >>> w.n
     78
     >>> "%.3f"%w.pct_nonzero
-    '0.065'
+    '6.542'
 
     Set weights implicitly
 
     >>> neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
     >>> w = W(neighbors)
     >>> "%.3f"%w.pct_nonzero
-    '0.296'
+    '29.630'
     >>> w = lat2W(100, 100)
     >>> w.trcW2
     39600.0
@@ -215,7 +246,7 @@ class W(object):
 
     @property
     def s0(self):
-        """s0 is defined as 
+        """s0 is defined as
 
         .. math::
 
@@ -261,7 +292,7 @@ class W(object):
 
     @property
     def s2(self):
-        """s2 is defined as 
+        """s2 is defined as
 
         .. math::
 
@@ -289,7 +320,7 @@ class W(object):
 
     @property
     def diagW2(self):
-        """Diagonal of :math:`WW`. 
+        """Diagonal of :math:`WW`.
 
         See Also
         --------
@@ -317,7 +348,7 @@ class W(object):
 
     @property
     def trcWtW(self):
-        """Trace of :math:`W^{'}W`. 
+        """Trace of :math:`W^{'}W`.
 
         See Also
         --------
@@ -357,7 +388,7 @@ class W(object):
 
         """
         if 'pct_nonzero' not in self._cache:
-            self._pct_nonzero = self.sparse.nnz / (1. * self._n ** 2)
+            self._pct_nonzero = 100. * self.sparse.nnz / (1. * self._n ** 2)
             self._cache['pct_nonzero'] = self._pct_nonzero
         return self._pct_nonzero
 
@@ -447,7 +478,7 @@ class W(object):
 
     @property
     def histogram(self):
-        """Cardinality histogram as a dictionary where key is the id and 
+        """Cardinality histogram as a dictionary where key is the id and
         value is the number of neighbors for that unit.
 
         """
@@ -537,7 +568,7 @@ class W(object):
             raise Exception("W.remap_ids: length of `old_ids` does not match \
             that of new_ids")
         if len(set(new_ids)) != len(new_ids):
-            raise Exception("W.remap_ids: list `new_ids` contains duplicates") 
+            raise Exception("W.remap_ids: list `new_ids` contains duplicates")
         else:
             new_neighbors = {}
             new_weights = {}
@@ -655,6 +686,11 @@ class W(object):
         Given the current id_order, neighbor_offsets[id] is the offsets of the
         id's neighbors in id_order.
 
+        Returns
+        -------
+        list
+                offsets of the id's neighbors in id_order
+
         Examples
         --------
         >>> from pysal import W
@@ -718,7 +754,7 @@ class W(object):
 
         Parameters
         ----------
-        transform   :   string 
+        transform   :   string
                         not case sensitive)
 
         .. table::
@@ -833,21 +869,21 @@ class W(object):
 
         Parameters
         ----------
-        intrinsic   :   boolean 
+        intrinsic   :   boolean
                         default=True
-                
+
                 intrinsic symmetry:
                       :math:`w_{i,j} == w_{j,i}`
 
                 if intrisic is False:
                     symmetry is defined as :math:`i \in N_j \ AND \ j \in N_i` where
                     :math:`N_j` is the set of neighbors for j.
-            
+
         Returns
         -------
         asymmetries : list
                       empty if no asymmetries are found
-                      if asymmetries, then a list of (i,j) tuples is returned 
+                      if asymmetries, then a list of (i,j) tuples is returned
 
         Examples
         --------
@@ -956,13 +992,13 @@ class W(object):
         Parameters
         ----------
 
-        shapefile :     string 
+        shapefile :     string
                         shapefile name used to construct weights
 
         idVariable :    string
                         name of attribute in shapefile to associate with ids in the weights
 
-        full :          boolean 
+        full :          boolean
                         True - write out entire path for shapefile, False
                         (default) only base of shapefile without extension
 
@@ -984,7 +1020,7 @@ class WSP(object):
     Parameters
     ----------
 
-    sparse   : scipy sparse object
+    sparse   : sparse_matrix
                NxN object from scipy.sparse
 
     id_order : list
@@ -994,9 +1030,12 @@ class WSP(object):
     Attributes
     ----------
 
-    n           : int  
+    n           : int
+                  description
     s0          : float
+                  description
     trcWtW_WW   : float
+                  description
 
     Examples
     --------
@@ -1061,7 +1100,7 @@ class WSP(object):
     @property
     def diagWtW_WW(self):
         """Diagonal of :math:`W^{'}W + WW`.
-        
+
         """
         if 'diagWtW_WW' not in self._cache:
             wt = self.sparse.transpose()

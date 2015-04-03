@@ -13,10 +13,10 @@ class TestContiguity(unittest.TestCase):
         self.assertEqual(w[0], {1: 1.0, 4: 1.0, 101: 1.0, 85: 1.0, 5: 1.0})
         w = pysal.buildContiguity(
             pysal.open(self.polyShp, 'r'), criterion='queen')
-        self.assertEqual(w.pct_nonzero, 0.031926364234056544)
+        self.assertEqual(w.pct_nonzero, 3.1926364234056544)
         w = pysal.buildContiguity(
             pysal.open(self.polyShp, 'r'), criterion='rook')
-        self.assertEqual(w.pct_nonzero, 0.026351084812623275)
+        self.assertEqual(w.pct_nonzero, 2.6351084812623275)
         fips = pysal.open(pysal.examples.get_path('10740.dbf')).by_col('STFID')
         w = pysal.buildContiguity(pysal.open(self.polyShp, 'r'), ids=fips)
         self.assertEqual(w['35001000107'], {'35001003805': 1.0, '35001003721':

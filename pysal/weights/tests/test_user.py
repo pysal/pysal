@@ -12,10 +12,10 @@ class Testuser(unittest.TestCase):
             pysal.examples.get_path("columbus.shp"))
 
     def test_queen_from_shapefile(self):
-        self.assertAlmostEquals(self.wq.pct_nonzero, 0.098292378175760101)
+        self.assertAlmostEquals(self.wq.pct_nonzero, 9.82923781757601)
 
     def test_rook_from_shapefile(self):
-        self.assertAlmostEquals(self.wr.pct_nonzero, 0.083298625572678045)
+        self.assertAlmostEquals(self.wr.pct_nonzero, 8.329862557267806)
 
     def test_knnW_from_array(self):
         import numpy as np
@@ -29,8 +29,8 @@ class Testuser(unittest.TestCase):
         self.assertEquals(set(wnn4.neighbors[5]), set([0, 6, 10, 1]))
         self.assertEquals(set(wnn2.neighbors[0]), set([1, 5]))
         self.assertEquals(set(wnn2.neighbors[5]), set([0, 6]))
-        self.assertAlmostEquals(wnn2.pct_nonzero, 0.080000000000000002)
-        self.assertAlmostEquals(wnn4.pct_nonzero, 0.16)
+        self.assertAlmostEquals(wnn2.pct_nonzero, 8.0)
+        self.assertAlmostEquals(wnn4.pct_nonzero, 16.0)
         wnn4 = pysal.knnW_from_array(data, k=4)
         self.assertEquals(set(wnn4.neighbors[0]), set([1, 5, 6, 2]))
         wnn3e = pysal.knnW(data, p=2, k=3)
@@ -40,17 +40,17 @@ class Testuser(unittest.TestCase):
 
     def test_knnW_from_shapefile(self):
         wc = pysal.knnW_from_shapefile(pysal.examples.get_path("columbus.shp"))
-        self.assertAlmostEquals(wc.pct_nonzero, 0.040816326530612242)
+        self.assertAlmostEquals(wc.pct_nonzero, 4.081632653061225)
         wc3 = pysal.knnW_from_shapefile(pysal.examples.get_path(
             "columbus.shp"), k=3)
         self.assertEquals(wc3.weights[1], [1, 1, 1])
         self.assertEquals(set(wc3.neighbors[1]), set([3, 0, 7]))
         self.assertEquals(set(wc.neighbors[0]), set([2, 1]))
         w = pysal.knnW_from_shapefile(pysal.examples.get_path('juvenile.shp'))
-        self.assertAlmostEquals(w.pct_nonzero, 0.011904761904761904)
+        self.assertAlmostEquals(w.pct_nonzero, 1.1904761904761904)
         w1 = pysal.knnW_from_shapefile(
             pysal.examples.get_path('juvenile.shp'), k=1)
-        self.assertAlmostEquals(w1.pct_nonzero, 0.0059523809523809521)
+        self.assertAlmostEquals(w1.pct_nonzero, 0.5952380952380952)
 
     def test_threshold_binaryW_from_array(self):
         points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]

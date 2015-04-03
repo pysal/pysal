@@ -42,24 +42,34 @@ class Join_Counts:
                    number of black-white joins
     J            : float
                    number of joins
-    sim_bb       : array (if permutations>0)
+    sim_bb       : array
+                   (if permutations>0)
                    vector of bb values for permuted samples
-    p_sim_bb     : array (if permutations>0)
+    p_sim_bb     : array
+                  (if permutations>0)
                    p-value based on permutations (one-sided)
                    null: spatial randomness
                    alternative: the observed bb is greater than under randomness
-    mean_bb      : average of permuted bb values
-    min_bb       : minimum of permuted bb values
-    max_bb       : maximum of permuted bb values
-    sim_bw       : array (if permutations>0)
+    mean_bb      : float
+                   average of permuted bb values
+    min_bb       : float
+                   minimum of permuted bb values
+    max_bb       : float
+                   maximum of permuted bb values
+    sim_bw       : array
+                   (if permutations>0)
                    vector of bw values for permuted samples
-    p_sim_bw     : array (if permutations>0)
+    p_sim_bw     : array
+                   (if permutations>0)
                    p-value based on permutations (one-sided)
                    null: spatial randomness
                    alternative: the observed bw is greater than under randomness
-    mean_bw      : average of permuted bw values
-    min_bw       : minimum of permuted bw values
-    max_bw       : maximum of permuted bw values
+    mean_bw      : float
+                   average of permuted bw values
+    min_bw       : float
+                   minimum of permuted bw values
+    max_bw       : float
+                   maximum of permuted bw values
 
 
     Examples
