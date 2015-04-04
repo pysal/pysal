@@ -1318,6 +1318,34 @@ class Ring(object):
             self._centroid = Point((cx, cy))
         return self._centroid
 
+    def contains_point(self, point):
+
+        if point[0] < self.bounding_box.left:
+            return False
+        if point[0] > self.bounding_box.right:
+            return False
+        if point[1] < self.bounding_box.lower:
+            return False
+        if point[1] > self.bounding_box.upper:
+            return False
+
+        left = self.bounding_box.left - 0.000001
+        cy = point[1]
+        cx = point[0]
+        n_edges = 0
+        n_sided = 0
+        for i in xrange(len(self.vertices) - 1):
+            ax,ay = self.vertices[i]
+            bx,by = self.vertices[i+1]
+            if ((bx-ax) * (cy-ay)) - ((by-ay)* (cx-ax)) > 0:
+                n_sided += 1
+            n_edges += 1
+        if n_sided == n_edges or n_sided==0:
+            return True
+        else:
+            return False
+
+
 
 class Polygon(object):
     """
@@ -1664,13 +1692,11 @@ class Polygon(object):
 
         Handles holes
 
-        >>> p = Polygon([Point((0, 0)), Point((10, 0)), Point((10, 10)), Point((0, 10))], [Point((1, 2)), Point((2, 2)), Point((2, 1)), Point((1, 1))])
+        >>> p = Polygon([Point((0, 0)), Point((0, 10)), Point((10, 10)), Point((10, 0))], [Point((2, 2)), Point((4, 2)), Point((4, 4)), Point((2, 4))])
+        >>> p.contains_point((3.0,3.0))
+        False
         >>> p.contains_point((1.0,1.0))
-        0
-        >>> p.contains_point((2.0,2.0))
-        1
-        >>> p.contains_point((10,10))
-        0
+        True
         >>>
 
 
@@ -1680,28 +1706,16 @@ class Polygon(object):
         results
         """
 
-        # ray from point to just outside left edge of bb
-        left = self.bounding_box.left - 0.000001
-        y = point[1]
-        right = point[0]
-        cn = 0
-        verts = self.vertices
-        c = Point((left, y))
-        d = Point((right, y))
-        ray = LineSegment(c, d)
-        for i in xrange(-1, len(self.vertices) - 1):
-            a = verts[i]
-            b = verts[i + 1]
-            ab = LineSegment(a, b)
-            ac = LineSegment(a, c)
-            bc = LineSegment(b, c)
-            if ac.is_ccw(d) == bc.is_ccw(d):
-                pass
-            elif ab.is_ccw(c) == ab.is_ccw(d):
-                pass
-            else:
-                cn += 1
-        return cn % 2
+        for ring in self._hole_rings:
+            if ring.contains_point(point):
+                return False
+
+        for ring in self._part_rings:
+            if ring.contains_point(point):
+                return True
+
+        return False
+
 
 
 class Rectangle:
