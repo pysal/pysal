@@ -1319,31 +1319,56 @@ class Ring(object):
         return self._centroid
 
     def contains_point(self, point):
+        """
+        Point containment using winding number
 
-        if point[0] < self.bounding_box.left:
+        Implementation based on: http://www.engr.colostate.edu/~dga/dga/papers/point_in_polygon.pdf
+        """
+
+        x, y = point
+
+        # bbox check
+        if x < self.bounding_box.left:
             return False
-        if point[0] > self.bounding_box.right:
+        if x > self.bounding_box.right:
             return False
-        if point[1] < self.bounding_box.lower:
+        if y < self.bounding_box.lower:
             return False
-        if point[1] > self.bounding_box.upper:
+        if y > self.bounding_box.upper:
             return False
 
-        left = self.bounding_box.left - 0.000001
-        cy = point[1]
-        cx = point[0]
-        n_edges = 0
-        n_sided = 0
+
+        rn = len(self.vertices)
+        xs = [ self.vertices[i][0] - point[0] for i in xrange(rn) ]
+        ys = [ self.vertices[i][1] - point[1] for i in xrange(rn) ]
+        w = 0
         for i in xrange(len(self.vertices) - 1):
-            ax,ay = self.vertices[i]
-            bx,by = self.vertices[i+1]
-            if ((bx-ax) * (cy-ay)) - ((by-ay)* (cx-ax)) > 0:
-                n_sided += 1
-            n_edges += 1
-        if n_sided == n_edges or n_sided==0:
-            return True
-        else:
+            yi = ys[i]
+            yj = ys[i+1]
+            xi = xs[i]
+            xj = xs[i+1]
+            if yi*yj < 0:
+                r = xi + yi * (xj-xi) / (yi - yj)
+                if r > 0:
+                    if yi < 0:
+                        w += 1
+                    else:
+                        w -= 1
+            elif yi==0 and xi > 0:
+                if yj > 0:
+                    w += 0.5
+                else:
+                    w -= 0.5
+            elif yj == 0 and xj > 0:
+                if yi < 0:
+                    w += 0.5
+                else:
+                    w -= 0.5
+        if w==0:
             return False
+        else:
+            return True
+
 
 
 
@@ -1680,14 +1705,14 @@ class Polygon(object):
         >>> p = Polygon([Point((0,0)), Point((4,0)), Point((4,5)), Point((2,3)), Point((0,5))])
         >>> p.contains_point((3,3))
         1
-        >>> p.contains_point((0,5))
+        >>> p.contains_point((0,6))
         0
-        >>> p.contains_point((2,3))
-        0
+        >>> p.contains_point((2,2.9))
+        1
         >>> p.contains_point((4,5))
         0
         >>> p.contains_point((4,0))
-        1
+        0
         >>>
 
         Handles holes
