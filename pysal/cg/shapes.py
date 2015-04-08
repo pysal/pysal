@@ -11,7 +11,6 @@ import math
 import numpy as np
 from warnings import warn
 from sphere import arcdist
-from collections import defaultdict
 
 __all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon',
            'Rectangle', 'asShape']
