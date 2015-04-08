@@ -8,9 +8,10 @@ __credits__ = "Copyright (c) 2005-2009 Sergio J. Rey"
 
 import doctest
 import math
+import numpy as np
 from warnings import warn
 from sphere import arcdist
-import numpy as np
+from collections import defaultdict
 
 __all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon',
            'Rectangle', 'asShape']
@@ -1985,6 +1986,11 @@ class PolygonCollection:
     def __getitem__(self, index):
         return self.polygons[index]
             
+
+
+
+
+
 _geoJSON_type_to_Pysal_type = {'point': Point, 'linestring': Chain,
                                'polygon': Polygon, 'multipolygon': Polygon}
 import standalone  # moving this to top breaks unit tests !
