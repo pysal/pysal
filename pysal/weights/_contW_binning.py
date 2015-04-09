@@ -103,19 +103,19 @@ class ContiguityWeights_binning:
                     vertCache[polyId] = set(shpFileObject.get(polyId).vertices)
                 idRows = poly2Row[polyId]
                 idCols = poly2Column[polyId]
-                rowPotentialNeighbors = set()
-                colPotentialNeighbors = set()
+                row_neighbors = set()
+                column_neighbors = set()
                 for row in idRows:
-                    rowPotentialNeighbors = rowPotentialNeighbors.union(
+                    row_neighbors = row_neighbors.union(
                         rows[row])
                 for col in idCols:
-                    colPotentialNeighbors = colPotentialNeighbors.union(
+                    column_neighbors = column_neighbors.union(
                         columns[col])
-                potentialNeighbors = rowPotentialNeighbors.intersection(
-                    colPotentialNeighbors)
+                candidates = row_neighbors.intersection(
+                    column_neighbors)
                 if polyId not in w:
                     w[polyId] = set()
-                for j in potentialNeighbors:
+                for j in candidates:
                     if polyId < j:
                         if bbcommon(bbcache[polyId], bbcache[j]):
                             if j not in vertCache:
@@ -147,19 +147,19 @@ class ContiguityWeights_binning:
                 iEdgeSet = set(edgeCache[polyId].keys())
                 idRows = poly2Row[polyId]
                 idCols = poly2Column[polyId]
-                rowPotentialNeighbors = set()
-                colPotentialNeighbors = set()
+                row_neighbors = set()
+                column_neighbors = set()
                 for row in idRows:
-                    rowPotentialNeighbors = rowPotentialNeighbors.union(
+                    row_neighbors = row_neighbors.union(
                         rows[row])
                 for col in idCols:
-                    colPotentialNeighbors = colPotentialNeighbors.union(
+                    column_neighbors = column_neighbors.union(
                         columns[col])
-                potentialNeighbors = rowPotentialNeighbors.intersection(
-                    colPotentialNeighbors)
+                candidates = row_neighbors.intersection(
+                    column_neighbors)
                 if polyId not in w:
                     w[polyId] = set()
-                for j in potentialNeighbors:
+                for j in candidates:
                     if polyId < j:
                         if bbcommon(bbcache[polyId], bbcache[j]):
                             if j not in edgeCache:
@@ -262,19 +262,19 @@ class ContiguityWeightsPolygons:
                     vertCache[polyId] = set(self.collection[polyId].vertices)
                 idRows = poly2Row[polyId]
                 idCols = poly2Column[polyId]
-                rowPotentialNeighbors = set()
-                colPotentialNeighbors = set()
+                row_neighbors = set()
+                column_neighbors = set()
                 for row in idRows:
-                    rowPotentialNeighbors = rowPotentialNeighbors.union(
+                    row_neighbors = row_neighbors.union(
                         rows[row])
                 for col in idCols:
-                    colPotentialNeighbors = colPotentialNeighbors.union(
+                    column_neighbors = column_neighbors.union(
                         columns[col])
-                potentialNeighbors = rowPotentialNeighbors.intersection(
-                    colPotentialNeighbors)
+                candidates = row_neighbors.intersection(
+                    column_neighbors)
                 if polyId not in w:
                     w[polyId] = set()
-                for j in potentialNeighbors:
+                for j in candidates:
                     if polyId < j:
                         if j not in vertCache:
                             vertCache[j] = set(self.collection[j].vertices)
@@ -306,19 +306,19 @@ class ContiguityWeightsPolygons:
                 iEdgeSet = set(edgeCache[polyId].keys())
                 idRows = poly2Row[polyId]
                 idCols = poly2Column[polyId]
-                rowPotentialNeighbors = set()
-                colPotentialNeighbors = set()
+                row_neighbors = set()
+                column_neighbors = set()
                 for row in idRows:
-                    rowPotentialNeighbors = rowPotentialNeighbors.union(
+                    row_neighbors = row_neighbors.union(
                         rows[row])
                 for col in idCols:
-                    colPotentialNeighbors = colPotentialNeighbors.union(
+                    column_neighbors = column_neighbors.union(
                         columns[col])
-                potentialNeighbors = rowPotentialNeighbors.intersection(
-                    colPotentialNeighbors)
+                candidates = row_neighbors.intersection(
+                    column_neighbors)
                 if polyId not in w:
                     w[polyId] = set()
-                for j in potentialNeighbors:
+                for j in candidates:
                     if polyId < j:
                         if bbcommon(bbcache[polyId], bbcache[j]):
                             if j not in edgeCache:
@@ -417,10 +417,12 @@ def contiguity_from_json(source, binning=True, wtype='QUEEN'):
 
     if wtype.upper() == 'QUEEN':
         wttype = 1
-
+    elif wtype.upper() == 'ROOK':
+        wttype = 2
+    else:
+        wttype = -9
 
     if binning:
-        print 'binning'
         def get_vertices(feature_id, js):
             vertices = []
             feature = js.get_feature(feature_id)
@@ -434,6 +436,28 @@ def contiguity_from_json(source, binning=True, wtype='QUEEN'):
                 for ring in feature['geometry']['coordinates']:
                     vertices.extend([tuple(v) for v in ring])
             return set(vertices)
+
+        def get_edges(feature_id, js):
+            edges = []
+            feature = js.get_feature(feature_id)
+            feature_type = feature['geometry']['type']
+            if feature_type == u"MultiPolygon":
+                for polygon in feature['geometry']['coordinates']:
+                    for ring in polygon:
+                        vertices = [tuple(v) for v in ring]
+                        nv = len(vertices)
+                        for i in xrange(nv-1):
+                            j = i + 1
+                            edges.append( (vertices[i], vertices[j]))
+
+            elif feature_type == u"Polygon":
+                for ring in feature['geometry']['coordinates']:
+                        vertices = [tuple(v) for v in ring]
+                        nv = len(vertices)
+                        for i in xrange(nv-1):
+                            j = i + 1
+                            edges.append( (vertices[i], vertices[j]))
+            return set(edges)
 
 
         if not js.content.has_key('bbox'):
@@ -481,19 +505,19 @@ def contiguity_from_json(source, binning=True, wtype='QUEEN'):
                     vertCache[feature_id] = set(vertices)
                 id_rows = feature_rows[feature_id]
                 id_cols = feature_columns[feature_id]
-                rowPotentialNeighbors = set()
-                colPotentialNeighbors = set()
+                row_neighbors = set()
+                column_neighbors = set()
                 for row in id_rows:
-                    rowPotentialNeighbors = rowPotentialNeighbors.union(
+                    row_neighbors = row_neighbors.union(
                         row_features[row])
                 for col in id_cols:
-                    colPotentialNeighbors = colPotentialNeighbors.union(
+                    column_neighbors = column_neighbors.union(
                         column_features[col])
-                potentialNeighbors = rowPotentialNeighbors.intersection(
-                    colPotentialNeighbors)
+                candidates = row_neighbors.intersection(
+                    column_neighbors)
                 if feature_id not in w:
                     w[feature_id] = set()
-                for j in potentialNeighbors:
+                for j in candidates:
                     if feature_id < j:
                         if j not in vertCache:
                             vertices = get_vertices(j, js)
@@ -507,60 +531,53 @@ def contiguity_from_json(source, binning=True, wtype='QUEEN'):
                                 w[j].add(feature_id)
         elif wttype == ROOK:
             # check for a shared edge
-            edgeCache = {}
+            feature_edges = defaultdict(list) 
             # loop over polygons rather than bins
-            for polyId in xrange(numPoly):
-                if polyId not in edgeCache:
-                    iEdges = {}
-                    iVerts = self.collection[polyId].vertices
-                    nv = len(iVerts)
-                    ne = nv - 1
-                    for i in xrange(ne):
-                        l = iVerts[i]
-                        r = iVerts[i + 1]
-                        iEdges[(l, r)] = []
-                        iEdges[(r, l)] = []
-                    edgeCache[polyId] = iEdges
-                iEdgeSet = set(edgeCache[polyId].keys())
-                idRows = poly2Row[polyId]
-                idCols = poly2Column[polyId]
-                rowPotentialNeighbors = set()
-                colPotentialNeighbors = set()
-                for row in idRows:
-                    rowPotentialNeighbors = rowPotentialNeighbors.union(
-                        rows[row])
-                for col in idCols:
-                    colPotentialNeighbors = colPotentialNeighbors.union(
-                        columns[col])
-                potentialNeighbors = rowPotentialNeighbors.intersection(
-                    colPotentialNeighbors)
-                if polyId not in w:
-                    w[polyId] = set()
-                for j in potentialNeighbors:
-                    if polyId < j:
-                        if bbcommon(bbcache[polyId], bbcache[j]):
-                            if j not in edgeCache:
-                                jVerts = self.collection[j].vertices
-                                jEdges = {}
-                                nv = len(jVerts)
-                                ne = nv - 1
-                                for e in xrange(ne):
-                                    l = jVerts[e]
-                                    r = jVerts[e + 1]
-                                    jEdges[(l, r)] = []
-                                    jEdges[(r, l)] = []
-                                edgeCache[j] = jEdges
-                            # for edge in edgeCache[j]:
-                            if iEdgeSet.intersection(edgeCache[j].keys()):
-                                w[polyId].add(j)
+            for feature_id in xrange(n_features):
+                # could aready be in the cache, if not add it
+                if feature_id not in feature_edges:
+                    edges = get_edges(feature_id, js)
+                    for edge in edges:
+                        o,d = edge
+                        s_edge = tuple(sorted([o,d], key=lambda e: (e[0], e[1])))
+                        feature_edges[feature_id].append(s_edge)
+                id_rows = feature_rows[feature_id]
+                id_cols = feature_columns[feature_id]
+                row_neighbors = set()
+                column_neighbors = set()
+                for row in id_rows:
+                    row_neighbors = row_neighbors.union(
+                        row_features[row])
+                for col in id_cols:
+                    column_neighbors = column_neighbors.union(
+                        column_features[col])
+                candidates = row_neighbors.intersection(
+                    column_neighbors)
+                if feature_id not in w:
+                    w[feature_id] = set()
+                for j in candidates:
+                    wij = 0
+                    if feature_id < j:
+                        if bbcommon(bbcache[feature_id], bbcache[j]):
+                            if j not in feature_edges:
+                                edges = get_edges(j, js)
+                                for edge in edges:
+                                    o,d = edge
+                                    s_edge = tuple(sorted([o,d], key=lambda e: (e[0], e[1])))
+                                    feature_edges[j].append(s_edge)
+                            for edge in feature_edges[j]:
+                                if edge in feature_edges[feature_id]:
+                                    wij = 1
+                                    break
+                            if wij:
+                                w[feature_id].add(j)
                                 if j not in w:
                                     w[j] = set()
-                                w[j].add(polyId)
-                                # break
+                                w[j].add(feature_id)
         else:
             print "Unsupported weight type."
 
-    return w 
+    return w
 
 
 
@@ -615,6 +632,8 @@ if __name__ == "__main__":
 
     import pysal as ps
     w = contiguity_from_json(ps.examples.get_path("virginia.json"))
+    wr = contiguity_from_json(ps.examples.get_path("virginia.json"), wtype='rook')
+
     
     pth = ps.examples.get_path("virginia.json")
     with open(pth) as source:

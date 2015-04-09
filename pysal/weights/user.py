@@ -1170,7 +1170,7 @@ def queen_from_geojsonf(uri):
     >>> type(w)
     <class 'pysal.weights.weights.W'>
     >>> "%.3f"%w.pct_nonzero
-    '0.098'
+    '9.829'
 
     """
     fs = urllib.urlopen(uri)
@@ -1201,7 +1201,7 @@ def queen_from_geojsons(s):
     >>> type(w)
     <class 'pysal.weights.weights.W'>
     >>> "%.3f"%w.pct_nonzero
-    '0.098'
+    '9.829'
 
 
     """
@@ -1233,7 +1233,7 @@ def rook_from_geojsonf(uri):
     >>> type(w)
     <class 'pysal.weights.weights.W'>
     >>> "%.3f"%w.pct_nonzero
-    '0.083'
+    '8.330'
 
     """
     fs = urllib.urlopen(uri)
@@ -1264,7 +1264,7 @@ def rook_from_geojsons(s):
     >>> type(w)
     <class 'pysal.weights.weights.W'>
     >>> "%.3f"%w.pct_nonzero
-    '0.083'
+    '8.330'
 
     """
     return contiguity_from_geojson(s, wtype="ROOK")
