@@ -813,7 +813,7 @@ def statistics(gm):
     if 'Bj' in gm.dt.columns:
         gm.dt.Bj = Bj
     gm.ests = ests
-    gm.dt.ests = ests
+    gm.dt['ests'] = ests
     gm.p = p
 
     return system_stats, entropy_stats, fit_stats, parameter_statistics
