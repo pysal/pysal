@@ -1988,8 +1988,6 @@ class PolygonCollection:
 
 
 
-
-
 _geoJSON_type_to_Pysal_type = {'point': Point, 'linestring': Chain,
                                'polygon': Polygon, 'multipolygon': Polygon}
 import standalone  # moving this to top breaks unit tests !
