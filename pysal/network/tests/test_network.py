@@ -123,7 +123,6 @@ class TestNetworkUtils(unittest.TestCase):
 
     def setUp(self):
         self.ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
-        self.ntw.snapobservations(ps.examples.get_path('geodanet/schools.shp'), 'schools', attribute=True)
 
     def test_dijkstra(self):
         self.distance, self.pred = util.dijkstra(self.ntw, self.ntw.edge_lengths, 0)
