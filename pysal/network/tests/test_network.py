@@ -4,6 +4,8 @@ import unittest
 import numpy as np
 import pysal as ps
 
+from .. import util
+
 class TestNetwork(unittest.TestCase):
 
     def setUp(self):
@@ -55,7 +57,6 @@ class TestNetwork(unittest.TestCase):
         coincident = self.ntw.enum_links_node(24)
         self.assertIn((24,48), coincident)
 
-
 class TestNetworkPointPattern(unittest.TestCase):
 
     def setUp(self):
@@ -96,6 +97,14 @@ class TestNetworkPointPattern(unittest.TestCase):
         distancematrix = self.ntw.allneighbordistances(self.schools)
         self.assertAlmostEqual(np.nansum(distancematrix[0]), 17682.436988, places=5)
 
+        for k, (distances, predlist) in self.ntw.alldistances.iteritems():
+            self.assertEqual(distances[k], 0)
+
+            for p, plists in predlist.iteritems():
+                self.assertEqual(plists[-1], k)
+
+            self.assertEqual(self.ntw.node_list, predlist.keys())
+
     def test_nearest_neighbor_distances(self):
 
         with self.assertRaises(KeyError):
@@ -103,7 +112,22 @@ class TestNetworkPointPattern(unittest.TestCase):
 
         nnd = self.ntw.nearestneighbordistances('schools')
         nnd2 = self.ntw.nearestneighbordistances('schools',
-                                                'schools')
+                                                 'schools')
         np.testing.assert_array_equal(nnd, nnd2)
+
+    def test_nearest_neighbor_search(self):
+        pass
+
+
+class TestNetworkUtils(unittest.TestCase):
+
+    def setUp(self):
+        self.ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
+        self.ntw.snapobservations(ps.examples.get_path('geodanet/schools.shp'), 'schools', attribute=True)
+
+    def test_dijkstra(self):
+        self.distance, self.pred = util.dijkstra(self.ntw, self.ntw.edge_lengths, 0)
+        self.assertAlmostEqual(self.distance[196], 5505.668247, places=5)
+        self.assertEqual(self.pred[196], 133)
 
 
