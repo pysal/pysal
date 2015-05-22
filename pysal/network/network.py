@@ -293,6 +293,11 @@ class Network:
     def distancebandweights(self, threshold):
         """
         Create distance based weights
+
+        Parameters
+        ----------
+        threshold : float
+                    Distance threshold value
         """
         try:
             hasattr(self.alldistances)
@@ -306,7 +311,7 @@ class Network:
             if n != neigh:
                 neighbors[n].append(neighbor_query[1][i])
 
-        self.w = ps.weights.W(neighbors)
+        return ps.weights.W(neighbors)
 
     def snapobservations(self, shapefile, name, idvariable=None, attribute=None):
         """
@@ -596,6 +601,7 @@ class Network:
                     assignment_edge[1] : self.edge_lengths[edges[idx]] - distance_from_start}
 
             simpts.points = simpts.snapped_coordinates
+            simpts.npoints = len(simpts.points)
 
         return simpts
 
@@ -745,13 +751,11 @@ class Network:
         """
 
         if not sourcepattern in self.pointpatterns.keys():
-            print "Key Error: Available point patterns are {}".format(self.pointpatterns.key())
-            return
+            raise KeyError("Available point patterns are {}".format(self.pointpatterns.keys()))
 
         if not hasattr(self,'alldistances'):
             self.node_distance_matrix()
 
-        print sourcepattern
         pt_indices = self.pointpatterns[sourcepattern].points.keys()
         dist_to_node = self.pointpatterns[sourcepattern].dist_to_node
         nearest = np.zeros((len(pt_indices), 2), dtype=np.float32)
