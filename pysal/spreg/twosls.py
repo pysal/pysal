@@ -136,7 +136,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
 
         if issubclass(type(q), np.ndarray) and issubclass(type(h), np.ndarray):
             raise Exception, "Please do not provide 'q' and 'h' together"
-        if q == None and h == None:
+        if q is None and h is None:
             raise Exception, "Please provide either 'q' or 'h'"
 
         self.y = y
