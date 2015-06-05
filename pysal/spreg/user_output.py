@@ -346,7 +346,7 @@ def check_arrays(*arrays):
     allowed = ['ndarray', 'csr_matrix']
     rows = []
     for i in arrays:
-        if i == None:
+        if i is None:
             continue
         if i.__class__.__name__ not in allowed:
             raise Exception, "all input data must be either numpy arrays or sparse csr matrices"
