@@ -22,7 +22,16 @@ class Network:
     Parameters
     -----------
     in_shp : string
-             A topoligically correct input shapefile
+             input shapefile
+
+    node_sig : int
+               round the x and y coordinates of all nodes to node_sig 
+               significant digits (combined significant digits on left and right 
+               of decimal place); default is 11; set to None for no rounding
+
+    unique_segs : boolean
+                  if True (default), keep only unique segments (i.e., prune
+                  out any duplicated segments); if False keep all segments
 
     Attributes
     ----------
@@ -77,9 +86,11 @@ class Network:
 
     """
 
-    def __init__(self, in_shp=None):
+    def __init__(self, in_shp=None, node_sig=11, unique_segs=True):
         if in_shp:
             self.in_shp = in_shp
+            self.node_sig = node_sig
+            self.unique_segs = unique_segs
 
             self.adjacencylist = defaultdict(list)
             self.nodes = {}
@@ -99,6 +110,21 @@ class Network:
 
             self.node_list = sorted(self.nodes.values())
 
+    def _round_sig(self, v):
+        """
+        Used internally to round vertex to a set number of significant
+        digits. If sig is set to 4, then the following are some possible
+        results for a coordinate: 0.0xxxx, 0.xxxx, x.xxx, xx.xx, xxx.x, 
+        xxxx.0, xxxx0.0
+        """
+        sig = self.node_sig
+        if sig is None:
+            return v
+        out_v = [val if 0 \
+                     else round(val, -int(math.floor(math.log10(math.fabs(val)))) + (sig-1)) \
+                 for val in v]
+        return tuple(out_v)
+        
     def _extractnetwork(self):
         """
         Used internally, to extract a network from a polyline shapefile
@@ -108,15 +134,17 @@ class Network:
         for shp in shps:
             vertices = shp.vertices
             for i, v in enumerate(vertices[:-1]):
+                v = self._round_sig(v)
                 try:
                     vid = self.nodes[v]
                 except:
                     self.nodes[v] = vid = nodecount
                     nodecount += 1
+                v2 = self._round_sig(vertices[i+1])
                 try:
-                    nvid = self.nodes[vertices[i+1]]
+                    nvid = self.nodes[v2]
                 except:
-                    self.nodes[vertices[i+1]] = nvid = nodecount
+                    self.nodes[v2] = nvid = nodecount
                     nodecount += 1
 
                 self.adjacencylist[vid].append(nvid)
@@ -128,6 +156,11 @@ class Network:
                 self.edges.append(edge)
                 length = util.compute_length(v, vertices[i+1])
                 self.edge_lengths[edge] = length
+        if self.unique_segs == True:
+            # remove duplicate edges and duplicate adjacent nodes
+            self.edges = list(set(self.edges))
+            for k, v in self.adjacencylist.iteritems():
+                self.adjacencylist[k] = list(set(v))
 
     def extractgraph(self):
         """
