@@ -137,7 +137,7 @@ def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
     >>> from pysal import lat2W
     >>> w9 = lat2W(3,3)
     >>> "%.3f"%w9.pct_nonzero
-    '0.296'
+    '29.630'
     >>> w9[0]
     {1: 1.0, 3: 1.0}
     >>> w9[3]
@@ -207,8 +207,8 @@ def regime_weights(regimes):
 
     Parameters
     ----------
-    regimes : list or array
-           ids of which regime an observation belongs to
+    regimes : array, list
+              ids of which regime an observation belongs to
 
     Returns
     -------
@@ -262,7 +262,7 @@ def block_weights(regimes):
 
     Parameters
     ----------
-    regimes : list or array
+    regimes : list, array
            ids of which regime an observation belongs to
 
     Returns
@@ -310,7 +310,8 @@ def comb(items, n=None):
     Parameters
     ----------
 
-    items : sequence
+    items : list
+            items to be drawn from
     n     : integer
             size of combinations to take from items
 
@@ -457,15 +458,16 @@ def higher_order_sp(w, k=2, shortest_path=True, diagonal=False):
     Parameters
     ==========
 
-    w           :   [W instance | scipy.sparse.csr.csr_instance]
+    w           :   W, sparse_matrix
+                    spatial weights object or scipy.sparse.csr.csr_instance
 
     k           :   int
                     Order of contiguity
 
     shortest_path:  boolean
-                    True: i,j and k-order neighbors if the 
+                    True: i,j and k-order neighbors if the
                     shortest path for i,j is k
-                    False: i,j are k-order neighbors if there 
+                    False: i,j are k-order neighbors if there
                     is a path from i,j of length k
 
     diagonal    :   boolean
@@ -475,7 +477,7 @@ def higher_order_sp(w, k=2, shortest_path=True, diagonal=False):
     Returns
     -------
 
-    wk: [W instance | WSP instance] 
+    wk: W, WSP
         type matches type of w argument
 
 
@@ -562,7 +564,7 @@ def w_local_cluster(w):
     Returns
     -------
 
-    c     : array 
+    c     : array
             (w.n,1)
             local clustering coefficients
 
@@ -624,8 +626,8 @@ def shimbel(w):
     Returns
     -------
 
-    info  : list 
-            list of lists; one list for each observation which stores 
+    info  : list
+            list of lists; one list for each observation which stores
             the shortest order between it and each of the the other observations.
 
     Examples
@@ -678,7 +680,7 @@ def full(w):
     Returns
     -------
 
-    implicit : tuple
+    tuple
                first element being the full numpy array and second element
                keys being the ids associated with each row in the array.
 
@@ -1021,7 +1023,7 @@ def get_points_array_from_shapefile(shapefile):
 
     Returns
     -------
-    points        : array 
+    points        : array
                     (n, 2)
                     a data array of x and y coordinates
 
@@ -1066,7 +1068,7 @@ def min_threshold_distance(data, p=2):
     Parameters
     ----------
 
-    data    : array 
+    data    : array
               (n,k) or KDTree where KDtree.data is array (n,k)
               n observations on k attributes
     p       : float
@@ -1113,8 +1115,7 @@ def lat2SW(nrows=3, ncols=5, criterion="rook", row_st=False):
               number of rows
     ncols   : int
               number of columns
-    rook    : string
-              "rook", "queen", or "bishop"
+    rook    : {"rook", "queen", "bishop"}
               type of contiguity. Default is rook.
     row_st  : boolean
               If True, the created sparse W object is row-standardized so
@@ -1145,7 +1146,7 @@ def lat2SW(nrows=3, ncols=5, criterion="rook", row_st=False):
     >>> w9r[3,6]
     0.33333333333333331
     """
-    
+
     n = nrows * ncols
     diagonals = []
     offsets = []

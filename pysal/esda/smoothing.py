@@ -30,13 +30,15 @@ def flatten(l, unique=True):
 
     Parameters
     ----------
-    l          : list of lists
+    l          : list
+                 of lists
     unique     : boolean
-                 whether or not only unique items are wanted
+                 whether or not only unique items are wanted (default=True)
 
     Returns
     -------
-               : list of single items
+    list
+        of single items
 
     Examples
     --------
@@ -62,10 +64,10 @@ def weighted_median(d, w):
 
     Parameters
     ----------
-    d          : array (n, 1)
-                 variable for which median will be found
-    w          : array (n, 1)
-                 variable on which d's medain will be decided
+    d          : array
+                 (n, 1), variable for which median will be found
+    w          : array
+                 (n, 1), variable on which d's medain will be decided
 
     Notes
     -----
@@ -73,8 +75,8 @@ def weighted_median(d, w):
 
     Returns
     -------
-               : numeric
-                 median of d
+    float
+        median of d
 
     Examples
     --------
@@ -113,18 +115,18 @@ def sum_by_n(d, w, n):
 
     Parameters
     ----------
-    d          : array(t, 1)
-                 numerical values
-    w          : array(t, 1)
-                 numerical values for weighting
+    d          : array
+                 (t, 1), numerical values
+    w          : array
+                 (t, 1), numerical values for weighting
     n          : integer
                  the number of groups
                  t = c*n (c is a constant)
 
     Returns
     -------
-               : array(n, 1)
-                 an array with summarized values
+               : array
+                 (n, 1), an array with summarized values
 
     Examples
     --------
@@ -159,10 +161,10 @@ def crude_age_standardization(e, b, n):
 
     Parameters
     ----------
-    e          : array(n*h, 1)
-                 event variable measured for each age group across n spatial units
-    b          : array(n*h, 1)
-                 population at risk variable measured for each age group across n spatial units
+    e          : array
+                 (n*h, 1), event variable measured for each age group across n spatial units
+    b          : array
+                 (n*h, 1), population at risk variable measured for each age group across n spatial units
     n          : integer
                  the number of spatial units
 
@@ -172,8 +174,8 @@ def crude_age_standardization(e, b, n):
 
     Returns
     -------
-               : array(n, 1)
-                 age standardized rate
+               : array
+                 (n, 1), age standardized rate
 
     Examples
     --------
@@ -212,12 +214,12 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
 
     Parameters
     ----------
-    e          : array(n*h, 1)
-                 event variable measured for each age group across n spatial units
-    b          : array(n*h, 1)
-                 population at risk variable measured for each age group across n spatial units
-    s          : array(n*h, 1)
-                 standard population for each age group across n spatial units
+    e          : array
+                 (n*h, 1), event variable measured for each age group across n spatial units
+    b          : array
+                 (n*h, 1), population at risk variable measured for each age group across n spatial units
+    s          : array
+                 (n*h, 1), standard population for each age group across n spatial units
     n          : integer
                  the number of spatial units
     alpha      : float
@@ -229,8 +231,9 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
 
     Returns
     -------
-               : a list of n tuples; a tuple has a rate and its lower and upper limits
-                 age standardized rates and confidence intervals
+    list
+        a list of n tuples; a tuple has a rate and its lower and upper limits
+        age standardized rates and confidence intervals
 
     Examples
     --------
@@ -293,14 +296,14 @@ def indirect_age_standardization(e, b, s_e, s_b, n, alpha=0.05):
 
     Parameters
     ----------
-    e          : array(n*h, 1)
-                 event variable measured for each age group across n spatial units
-    b          : array(n*h, 1)
-                 population at risk variable measured for each age group across n spatial units
-    s_e        : array(n*h, 1)
-                 event variable measured for each age group across n spatial units in a standard population
-    s_b        : array(n*h, 1)
-                 population variable measured for each age group across n spatial units in a standard population
+    e          : array
+                 (n*h, 1), event variable measured for each age group across n spatial units
+    b          : array
+                 (n*h, 1), population at risk variable measured for each age group across n spatial units
+    s_e        : array
+                 (n*h, 1), event variable measured for each age group across n spatial units in a standard population
+    s_b        : array
+                 (n*h, 1), population variable measured for each age group across n spatial units in a standard population
     n          : integer
                  the number of spatial units
     alpha      : float
@@ -312,8 +315,9 @@ def indirect_age_standardization(e, b, s_e, s_b, n, alpha=0.05):
 
     Returns
     -------
-               : a list of n tuples; a tuple has a rate and its lower and upper limits
-                 age standardized rate
+    list
+        a list of n tuples; a tuple has a rate and its lower and upper limits
+        age standardized rate
 
     Examples
     --------
@@ -373,14 +377,14 @@ def standardized_mortality_ratio(e, b, s_e, s_b, n):
 
     Parameters
     ----------
-    e          : array(n*h, 1)
-                 event variable measured for each age group across n spatial units
-    b          : array(n*h, 1)
-                 population at risk variable measured for each age group across n spatial units
-    s_e        : array(n*h, 1)
-                 event variable measured for each age group across n spatial units in a standard population
-    s_b        : array(n*h, 1)
-                 population variable measured for each age group across n spatial units in a standard population
+    e          : array
+                 (n*h, 1), event variable measured for each age group across n spatial units
+    b          : array
+                 (n*h, 1), population at risk variable measured for each age group across n spatial units
+    s_e        : array
+                 (n*h, 1), event variable measured for each age group across n spatial units in a standard population
+    s_b        : array
+                 (n*h, 1), population variable measured for each age group across n spatial units in a standard population
     n          : integer
                  the number of spatial units
 
@@ -390,7 +394,8 @@ def standardized_mortality_ratio(e, b, s_e, s_b, n):
 
     Returns
     -------
-               : array (nx1)
+    array
+        (nx1)
 
     Examples
     --------

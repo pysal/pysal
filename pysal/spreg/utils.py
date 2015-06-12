@@ -808,26 +808,26 @@ def set_warn(reg, warn):
 
 def RegressionProps_basic(reg, betas=None, predy=None, u=None, sig2=None, sig2n_k=None, vm=None):
     ''' Set props based on arguments passed. '''
-    if betas != None:
+    if betas is not None:
         reg.betas = betas
-    if predy != None:
+    if predy is not None:
         reg.predy = predy
     else:
         try:
             reg.predy = spdot(reg.z, reg.betas)
         except:
             reg.predy = spdot(reg.x, reg.betas)
-    if u != None:
+    if u is not None:
         reg.u = u
     else:
         reg.u = reg.y - reg.predy
-    if sig2 != None:
+    if sig2 is not None:
         reg.sig2 = sig2
     elif sig2n_k:
         reg.sig2 = np.sum(reg.u ** 2) / (reg.n - reg.k)
     else:
         reg.sig2 = np.sum(reg.u ** 2) / reg.n
-    if vm != None:
+    if vm is not None:
         reg.vm = vm
 
 

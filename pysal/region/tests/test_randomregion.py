@@ -1,6 +1,7 @@
 
 import unittest
 import pysal
+from pysal.region.components import is_component
 import numpy as np
 import random
 
@@ -26,11 +27,14 @@ class Test_Random_Regions(unittest.TestCase):
         np.random.seed(60)
         t0 = pysal.region.Random_Regions(self.ids, num_regions=self.nregs,
                                          cardinality=self.cards, contiguity=self.w, permutations=2)
-        result = [88, 97, 98, 89, 99, 86, 78, 59, 49, 69, 68, 79, 77]
+        result = [88, 97, 98, 89, 99, 86, 77, 68, 79, 78, 59, 49, 69]
         for i in range(len(result)):
             self.assertEquals(t0.solutions[0].regions[0][i], result[i])
         for i in range(len(t0.solutions)):
             self.assertEquals(t0.solutions_feas[i], t0.solutions[i])
+        for solution in t0.solutions:
+            for region in solution.regions:
+                self.assertTrue(is_component(self.w, region))
 
         random.seed(100)
         np.random.seed(100)
@@ -46,21 +50,27 @@ class Test_Random_Regions(unittest.TestCase):
         np.random.seed(100)
         t0 = pysal.region.Random_Regions(self.ids,
                                          num_regions=self.nregs, contiguity=self.w, permutations=2)
-        result = [71, 72, 70, 93, 51, 91, 85, 74, 63, 73, 61, 62, 82]
+        result = [73, 83, 94, 95, 64, 92, 70, 82, 81, 60, 74, 93, 71]
         for i in range(len(result)):
             self.assertEquals(t0.solutions[0].regions[1][i], result[i])
         for i in range(len(t0.solutions)):
             self.assertEquals(t0.solutions_feas[i], t0.solutions[i])
+        for solution in t0.solutions:
+            for region in solution.regions:
+                self.assertTrue(is_component(self.w, region))
 
         random.seed(60)
         np.random.seed(60)
         t0 = pysal.region.Random_Regions(self.ids,
                                          cardinality=self.cards, contiguity=self.w, permutations=2)
-        result = [88, 97, 98, 89, 99, 86, 78, 59, 49, 69, 68, 79, 77]
+        result = [88, 97, 98, 89, 99, 86, 77, 68, 79, 78, 59, 49, 69]
         for i in range(len(result)):
             self.assertEquals(t0.solutions[0].regions[0][i], result[i])
         for i in range(len(t0.solutions)):
             self.assertEquals(t0.solutions_feas[i], t0.solutions[i])
+        for solution in t0.solutions:
+            for region in solution.regions:
+                self.assertTrue(is_component(self.w, region))
 
         random.seed(100)
         np.random.seed(100)
@@ -91,6 +101,9 @@ class Test_Random_Regions(unittest.TestCase):
             self.assertEquals(t0.solutions[0].regions[1][i], result[i])
         for i in range(len(t0.solutions)):
             self.assertEquals(t0.solutions_feas[i], t0.solutions[i])
+        for solution in t0.solutions:
+            for region in solution.regions:
+                self.assertTrue(is_component(self.w, region))
 
     def test_Random_Region(self):
         random.seed(10)
@@ -107,10 +120,12 @@ class Test_Random_Regions(unittest.TestCase):
         t0 = pysal.region.Random_Region(self.ids, num_regions=self.nregs,
                                         cardinality=self.cards, contiguity=self.w)
         t0.regions[0]
-        result = [88, 97, 98, 89, 99, 86, 78, 59, 49, 69, 68, 79, 77]
+        result = [88, 97, 98, 89, 99, 86, 77, 68, 79, 78, 59, 49, 69]
         for i in range(len(result)):
             self.assertEquals(t0.regions[0][i], result[i])
         self.assertEquals(t0.feasible, True)
+        for region in t0.regions:
+            self.assertTrue(is_component(self.w, region))
 
         random.seed(100)
         np.random.seed(100)
@@ -127,20 +142,24 @@ class Test_Random_Regions(unittest.TestCase):
         t0 = pysal.region.Random_Region(
             self.ids, num_regions=self.nregs, contiguity=self.w)
         t0.regions[1]
-        result = [71, 72, 70, 93, 51, 91, 85, 74, 63, 73, 61, 62, 82]
+        result = [73, 83, 94, 95, 64, 92, 70, 82, 81, 60, 74, 93, 71]
         for i in range(len(result)):
             self.assertEquals(t0.regions[1][i], result[i])
         self.assertEquals(t0.feasible, True)
+        for region in t0.regions:
+            self.assertTrue(is_component(self.w, region))
 
         random.seed(60)
         np.random.seed(60)
         t0 = pysal.region.Random_Region(
             self.ids, cardinality=self.cards, contiguity=self.w)
         t0.regions[0]
-        result = [88, 97, 98, 89, 99, 86, 78, 59, 49, 69, 68, 79, 77]
+        result = [88, 97, 98, 89, 99, 86, 77, 68, 79, 78, 59, 49, 69]
         for i in range(len(result)):
             self.assertEquals(t0.regions[0][i], result[i])
         self.assertEquals(t0.feasible, True)
+        for region in t0.regions:
+            self.assertTrue(is_component(self.w, region))
 
         random.seed(100)
         np.random.seed(100)
@@ -168,6 +187,8 @@ class Test_Random_Regions(unittest.TestCase):
         for i in range(len(result)):
             self.assertEquals(t0.regions[0][i], result[i])
         self.assertEquals(t0.feasible, True)
+        for region in t0.regions:
+            self.assertTrue(is_component(self.w, region))
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(Test_Random_Regions)

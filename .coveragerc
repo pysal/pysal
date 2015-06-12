@@ -1,0 +1,10 @@
+[run]
+omit = 
+    __init__.py
+    */contrib/*
+    */test/*
+[report]
+omit = 
+    __init__.py 
+    */contrib/* 
+    */test/*
