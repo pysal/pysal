@@ -7,6 +7,7 @@ import copy
 import numpy as np
 import pysal as ps
 from pysal.weights.util import get_ids
+from pysal.cg.shapes import Chain
 
 from analysis import NetworkG, NetworkK, NetworkF
 import util
@@ -81,7 +82,9 @@ class Network:
         if in_shp:
             self.in_shp = in_shp
 
-            self.adjacencylist = defaultdict(list)
+            self.chains = {}
+
+            self.adjacencylist = defaultdict(set)
             self.nodes = {}
             self.edge_lengths = {}
             self.edges = []
@@ -94,19 +97,37 @@ class Network:
             #This is a spatial representation of the network.
             self.edges = sorted(self.edges)
 
-            #Extract the graph
-            self.extractgraph()
-
             self.node_list = sorted(self.nodes.values())
+
+    @property
+    def nnodes(self):
+        if not getattr(self, '_nnodes', None):
+            self._nnodes = len(self.nodes)
+        return self._nnodes
+
+    @property
+    def nedges(self):
+        if not getattr(self, '_nedges', None):
+            self._nedges = len(self.edges)
+        return self._nedges
+
+    @property
+    def nchains(self):
+        if not getattr(self, '_nchains', None):
+            self._nchains = len(self.chains)
+        return self._nchains
 
     def _extractnetwork(self):
         """
-        Used internally, to extract a network from a polyline shapefile
+        Used internally, to extract a network from a polyline shapefile.
+
+        Given any iterable with a vertices attribute, iterate through
+        and extract the topology.
         """
         nodecount = 0
-        shps = ps.open(self.in_shp)
-        for shp in shps:
-            vertices = shp.vertices
+        iterable = ps.open(self.in_shp)
+        for geom in iterable:
+            vertices = geom.vertices
             for i, v in enumerate(vertices[:-1]):
                 try:
                     vid = self.nodes[v]
@@ -119,8 +140,8 @@ class Network:
                     self.nodes[vertices[i+1]] = nvid = nodecount
                     nodecount += 1
 
-                self.adjacencylist[vid].append(nvid)
-                self.adjacencylist[nvid].append(vid)
+                self.adjacencylist[vid].add(nvid)
+                self.adjacencylist[nvid].add(vid)
 
                 #Sort the edges so that mono-directional keys can be stored.
                 edgenodes = sorted([vid, nvid])
