@@ -376,6 +376,9 @@ class Kernel(W):
         z = []
         for i, nids in enumerate(self.neigh):
             di, ni = kdtq(self.data[i], k=len(nids))
+            if not isinstance(di, np.ndarray):
+            	di = np.asarray([di] * len(nids))
+                ni = np.asarray([ni] * len(nids))
             zi = np.array([dict(zip(ni, di))[nid] for nid in nids]) / bw[i]
             z.append(zi)
         zs = z
