@@ -25,8 +25,8 @@ class Network:
              input shapefile
 
     node_sig : int
-               round the x and y coordinates of all nodes to node_sig 
-               significant digits (combined significant digits on left and right 
+               round the x and y coordinates of all nodes to node_sig
+               significant digits (combined significant digits on left and right
                of decimal place); default is 11; set to None for no rounding
 
     unique_segs : boolean
@@ -74,7 +74,7 @@ class Network:
 
     Instantiate an instance of a network
 
-    >>> ntw = network.Network(ps.examples.get_path('geodanet/streets.shp'))
+    >>> ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
 
     Snap point observations to the network with attribute information
 
@@ -114,7 +114,7 @@ class Network:
         """
         Used internally to round vertex to a set number of significant
         digits. If sig is set to 4, then the following are some possible
-        results for a coordinate: 0.0xxxx, 0.xxxx, x.xxx, xx.xx, xxx.x, 
+        results for a coordinate: 0.0xxxx, 0.xxxx, x.xxx, xx.xx, xxx.x,
         xxxx.0, xxxx0.0
         """
         sig = self.node_sig
@@ -124,7 +124,7 @@ class Network:
                      else round(val, -int(math.floor(math.log10(math.fabs(val)))) + (sig-1)) \
                  for val in v]
         return tuple(out_v)
-        
+
     def _extractnetwork(self):
         """
         Used internally, to extract a network from a polyline shapefile
@@ -274,7 +274,10 @@ class Network:
 
         Examples
         --------
+        >>> ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
         >>> w = ntw.contiguityweights(graph=False)
+        >>> ntw.snapobservations(ps.examples.get_path('geodanet/crimes.shp'), 'crimes', attribute=True)
+        >>> counts = ntw.count_per_edge(ntw.pointpatterns['crimes'].obs_to_edge, graph=False)
 
         Using the W object, access to ESDA functionality is provided.  First,
         a vector of attributes is created for all edges with observations.
@@ -283,12 +286,12 @@ class Network:
         >>> edges = w.neighbors.keys()
         >>> y = np.zeros(len(edges))
         >>> for i, e in enumerate(edges):
-        >>>     if e in counts.keys():
-        >>>         y[i] = counts[e]
+        ...     if e in counts.keys():
+        ...         y[i] = counts[e]
 
         Next, a standard call ot Moran is made and the result placed into `res`
 
-        >>> res = ps.esda.moran.Moran(y, ntw.w, permutations=99)
+        >>> res = ps.esda.moran.Moran(y, w, permutations=99)
 
         """
 
@@ -540,8 +543,12 @@ class Network:
         Note that this passes the obs_to_edge attribute of a point pattern
         snapped to the network.
 
-        >>> counts = ntw.count_per_edge(ntw.pointpatterns['crimes'].obs_to_edge,
-                            graph=False)
+        >>> ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
+        >>> ntw.snapobservations(ps.examples.get_path('geodanet/crimes.shp'), 'crimes', attribute=True)
+        >>> counts = ntw.count_per_edge(ntw.pointpatterns['crimes'].obs_to_edge,graph=False)
+        >>> s = sum([v for v in counts.itervalues()])
+        >>> s
+        287
 
         """
         counts = {}
@@ -597,11 +604,12 @@ class Network:
         Example
         -------
 
+        >>> ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
+        >>> ntw.snapobservations(ps.examples.get_path('geodanet/crimes.shp'), 'crimes', attribute=True)
         >>> npts = ntw.pointpatterns['crimes'].npoints
         >>> sim = ntw.simulate_observations(npts)
-        >>> sim
-        <network.SimulatedPointPattern instance at 0x1133d8710>
-
+        >>> isinstance(sim, ps.network.network.SimulatedPointPattern)
+        True
         """
         simpts = SimulatedPointPattern()
 
@@ -995,8 +1003,10 @@ class Network:
         Example
         -------
 
+        >>> ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
         >>> n200 = ntw.segment_edges(200.0)
-
+        >>> len(n200.edges)
+        688
         """
 
         sn = Network()
@@ -1090,7 +1100,7 @@ class Network:
 
         Example
         --------
-
+        >>> ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
         >>> ntw.savenetwork('mynetwork.pkl')
 
         """
