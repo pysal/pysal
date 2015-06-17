@@ -70,7 +70,7 @@ class Chow:
     >>> print 'Joint test:'
     Joint test:
     >>> print olsr.chow.joint
-    (0.6339319928978806, 0.8886223520178802)
+    (0.63393199289787527, 0.88862235201788142)
     '''
 
     def __init__(self, reg):

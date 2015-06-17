@@ -158,7 +158,7 @@ class TestGM_Error_Regimes(unittest.TestCase):
         np.testing.assert_array_almost_equal(reg.vm[0],vm,4)
         pr2 = 0.19623994206233333
         self.assertAlmostEqual(reg.pr2,pr2,4)
-        sig2 = 649.4011
+        sig2 = 649.4005
         self.assertAlmostEqual(round(reg.sig2,4),round(sig2,4),4)
         std_err = np.array([ 19.77074866,   6.07667394,  24.32254786,   2.17776972,
          2.97078606,   0.94392418])
@@ -167,7 +167,7 @@ class TestGM_Error_Regimes(unittest.TestCase):
        [ 0.40499741,  0.5245196 ],
        [ 0.4498365 ,  0.50241261]])
         np.testing.assert_array_almost_equal(reg.chow.regi,chow_r,4)
-        chow_j = 1.2885590185243503
+        chow_j = 1.2885587585334619
         self.assertAlmostEqual(reg.chow.joint[0],chow_j)
 
     def test_model_endog_regi_error(self):
