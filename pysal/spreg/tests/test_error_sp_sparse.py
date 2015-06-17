@@ -145,11 +145,11 @@ class TestBaseGMEndogError(unittest.TestCase):
         sy = 18.466069465206047
         self.assertAlmostEqual(reg.std_y,sy)
         #vm
-        vm = np.array([[ 529.15840986,  -15.78336736,   -8.38021053],
-       [ -15.78336736,    0.54023504,    0.23112032],
-       [  -8.38021053,    0.23112032,    0.14497738]])
+        vm = np.array([[ 529.15646434,  -15.78333846,   -8.3801693 ],
+       [ -15.78333846,    0.54023466,    0.23111961],
+       [  -8.3801693 ,    0.23111961,    0.14497648]])
         np.testing.assert_array_almost_equal(reg.vm,vm,4)
-        sig2 = 192.5002
+        sig2 = 192.5004
         self.assertAlmostEqual(round(reg.sig2,4),round(sig2,4),4)
 
 @unittest.skipIf(int(scipy.__version__.split(".")[1]) < 11,
@@ -198,13 +198,13 @@ class TestGMEndogError(unittest.TestCase):
         self.assertAlmostEqual(reg.mean_y,my)
         sy = 18.466069465206047
         self.assertAlmostEqual(reg.std_y,sy)
-        vm = np.array([[ 529.15840986,  -15.78336736,   -8.38021053],
-       [ -15.78336736,    0.54023504,    0.23112032],
-       [  -8.38021053,    0.23112032,    0.14497738]])
+        vm = np.array([[ 529.15646434,  -15.78333846,   -8.3801693 ],
+       [ -15.78333846,    0.54023466,    0.23111961],
+       [  -8.3801693 ,    0.23111961,    0.14497648]])
         np.testing.assert_array_almost_equal(reg.vm,vm,4)
         pr2 = 0.346472557570858
         self.assertAlmostEqual(reg.pr2,pr2)
-        sig2 = 192.5002
+        sig2 = 192.5004
         self.assertAlmostEqual(round(reg.sig2,4),round(sig2,4),4)
         std_err = np.array([ 23.003401  ,   0.73500657,   0.38075777])
         np.testing.assert_array_almost_equal(reg.std_err,std_err,4)
