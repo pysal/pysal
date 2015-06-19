@@ -659,45 +659,56 @@ class Network:
 
         if not hasattr(self,'alldistances'):
             self.node_distance_matrix()
-
+            
+        # source setup
         src_indices = sourcepattern.points.keys()
         nsource_pts = len(src_indices)
-        dist_to_node = sourcepattern.dist_to_node
-        if destpattern == None:
+        src_dist_to_node = sourcepattern.dist_to_node
+        src_nodes = {}
+        for s in src_indices:
+            e1, e2 = src_dist_to_node[s].keys()
+            src_nodes[s] = (e1, e2)
+
+        # destination setup
+        symmetric = False
+        if destpattern is None:
+            symmetric = True
             destpattern = sourcepattern
         dest_indices = destpattern.points.keys()
         ndest_pts = len(dest_indices)
-
-        searchpts = copy.deepcopy(dest_indices)
-        nearest  = np.empty((nsource_pts, ndest_pts))
+        dest_dist_to_node = destpattern.dist_to_node
+        dest_searchpts = copy.deepcopy(dest_indices)
+        dest_nodes = {}
+        for s in dest_indices:
+            e1, e2 = dest_dist_to_node[s].keys()
+            dest_nodes[s] = (e1, e2)
+        
+        # output setup
+        nearest = np.empty((nsource_pts, ndest_pts))
         nearest[:] = np.inf
-
-        searchnodes = {}
-        for s in searchpts:
-            e1, e2 = dist_to_node[s].keys()
-            searchnodes[s] = (e1, e2)
 
         for p1 in src_indices:
             #Get the source nodes and dist to source nodes
-            source1, source2 = searchnodes[p1]
-            set1 = set(searchnodes[p1])
+            source1, source2 = src_nodes[p1]
+            set1 = set(src_nodes[p1])
             # distance from node1 to p, distance from node2 to p
-            sdist1, sdist2 = dist_to_node[p1].values()
+            sdist1, sdist2 = src_dist_to_node[p1].values()
 
-            searchpts.remove(p1)
-            for p2 in searchpts:
-                dest1, dest2 = searchnodes[p2]
-                set2 = set(searchnodes[p2])
+            if symmetric:
+                # only compute the upper triangle if symmetric
+                dest_searchpts.remove(p1)
+            for p2 in dest_searchpts:
+                dest1, dest2 = dest_nodes[p2]
+                set2 = set(dest_nodes[p2])
                 if set1 == set2: #same edge
                     x1,y1 = sourcepattern.snapped_coordinates[p1]
                     x2,y2 = destpattern.snapped_coordinates[p2]
                     xd = x1-x2
                     yd = y1-y2
                     nearest[p1,p2] = np.sqrt(xd*xd + yd*yd)
-                    nearest[p2,p1] = nearest[p1,p2]
 
                 else:
-                    ddist1, ddist2 = dist_to_node[p2].values()
+                    ddist1, ddist2 = dest_dist_to_node[p2].values()
                     d11 = self.alldistances[source1][0][dest1]
                     d21 = self.alldistances[source2][0][dest1]
                     d12 = self.alldistances[source1][0][dest2]
@@ -711,7 +722,6 @@ class Network:
                         sd_1 = sd_21
                     # now add point to node one distance on destination edge
                     len_1 = sd_1 + ddist1
-
 
                     # repeat but now for paths entering at second node of second edge
                     sd_2 = d12 + sdist1
@@ -727,10 +737,14 @@ class Network:
                     sp_12 = len_1
                     if len_1 > len_2:
                         sp_12 = len_2
-                    nearest[p1, p2] =  sp_12
-                    nearest[p2, p1] = sp_12
-                    #print p1,p2, sp_12
-        np.fill_diagonal(nearest, np.nan)
+                    nearest[p1, p2] = sp_12
+                if symmetric:
+                    # mirror the upper and lower triangle when symmetric
+                    nearest[p2,p1] = nearest[p1,p2]                    
+        if symmetric:
+            # populate the main diagonal when symmetric
+            #np.fill_diagonal(nearest, 0)
+            np.fill_diagonal(nearest, np.nan)
         return nearest
 
     def nearestneighbordistances(self, sourcepattern, destpattern=None):
