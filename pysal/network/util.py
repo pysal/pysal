@@ -93,6 +93,7 @@ def dijkstra(ntw, cost, node, n=float('inf')):
                 a.add(v1)
     return distance, np.array(pred, dtype=np.int)
 
+
 def squaredDistancePointSegment(point, segment):
     """Find the squared distance between a point and a segment
     
@@ -101,7 +102,7 @@ def squaredDistancePointSegment(point, segment):
     
     point: tuple (x,y)
     
-    segment: list of tuples [(x0,y0), (x1,y1)]
+    segment: list of 2 tuples [(x0,y0), (x1,y1)]
     
     Returns
     =======
@@ -142,16 +143,18 @@ def snapPointsOnSegments(points, segments):
     Arguments
     =========
     
-    points: sequence of (x,y) 2-d points
+    points: dict
+            with point id as key and (x,y) coordinate as value
     
-    segments: sequence of pysal.cg.shapes.Chain
-              Note that the each segment is a chain with *one head and one tail node*, in other words one link only.
+    segments: list
+              elements are of type pysal.cg.shapes.Chain 
+              Note that the each element is a segment represented as a chain with *one head and one tail node*, in other words one link only.
               
     Returns
     =======
     
     p2s: dictionary
-         key: a point (see points in arguments)
+         key:  point id (see points in arguments)
          
          value:  a 2-tuple: ((head, tail), point)
                  where (head, tail) is the target segment, and point is the snapped location on the segment
@@ -186,9 +189,8 @@ def snapPointsOnSegments(points, segments):
     # Build a KDtree on segment nodes
     kt = ps.cg.KDTree(node2segs.keys())
     p2s = {}
-    points.sort()
 
-    for point in points:
+    for ptIdx, point in points.iteritems():
         # first find nearest neighbor segment node for point
         dmin, node = kt.query(point, k=1)
         node = tuple(kt.data[node])
@@ -196,7 +198,7 @@ def snapPointsOnSegments(points, segments):
         
         # use this segment as the candidate closest segment: closest
         # use the distance as the distance to beat: dmin
-        p2s[point] = (closest, node) # sna
+        p2s[ptIdx] = (closest, node) # sna
         x0 = point[0] - dmin
         y0 = point[1] - dmin
         x1 = point[0] + dmin
@@ -214,7 +216,7 @@ def snapPointsOnSegments(points, segments):
             if dnc <= dmin2:
                 closest = candidate.vertices
                 dmin2 = dnc
-                p2s[point] = (closest, p2b)
+                p2s[ptIdx] = (closest, p2b)
         
     return p2s
     

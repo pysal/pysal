@@ -424,7 +424,9 @@ class Network:
                       with point id as key and edge tuple as value
 
         dist_to_node : dict
-                       with edge as key and tuple of distances to nodes as value
+                       with point id as key and value as a dict with key for
+                       node id, and value distance from point to node
+
         """
 
         obs_to_edge = {}
@@ -440,23 +442,22 @@ class Network:
             s2e[(head,tail)] = edge
             
 
-        points = []
+        points = {}
         p2id = {}
         for pointIdx, point in pointpattern.points.iteritems(): 
-            points.append(point['coordinates'])
+            points[pointIdx] = point['coordinates']
 
         snapped = util.snapPointsOnSegments(points, segments)
 
-        for point, snapInfo in snapped.iteritems():
+        for pointIdx, snapInfo in snapped.iteritems():
             x,y = snapInfo[1].tolist()
             edge = s2e[tuple(snapInfo[0])]
             if edge not in obs_to_edge:
                 obs_to_edge[edge] = {}
-            obs_to_edge[edge][point] = (x,y)
-
-            pointpattern.snapped_coordinates[point] = (x,y)
+            obs_to_edge[edge][pointIdx] = (x,y)
+            pointpattern.snapped_coordinates[pointIdx] = (x,y)
             d1,d2 = self.compute_distance_to_nodes(x, y, edge)
-            dist_to_node[point] = {edge[0]:d1, edge[1]:d2}
+            dist_to_node[pointIdx] = {edge[0]:d1, edge[1]:d2}
 
         obs_to_node = defaultdict(list)
         for k, v in obs_to_edge.iteritems():
@@ -468,123 +469,6 @@ class Network:
         pointpattern.dist_to_node = dist_to_node
         pointpattern.obs_to_node = obs_to_node
 
-    def _snap_to_edgeold(self, pointpattern):
-        """
-        Used internally to snap point observations to network edges.
-
-        Parameters
-        -----------
-        pointpattern : obj
-                       PySAL Point Pattern Object
-
-        Returns
-        -------
-        obs_to_edge : dict
-                      with edge as key and list of points as value
-
-        edge_to_obs : dict
-                      with point id as key and edge tuple as value
-
-        dist_to_node : dict
-                       with edge as key and tuple of distances to nodes as value
-        """
-
-        obs_to_edge = {}
-        dist_to_node = {}
-
-        pointpattern.snapped_coordinates = {}
-
-        for pt_index, point in pointpattern.points.iteritems():
-            x0 = point['coordinates'][0]
-            y0 = point['coordinates'][1]
-
-            d = {}
-            vectors = {}
-            c = 0
-
-            #Components of this for loop can be pre computed and cached, like denom to distance =
-            for edge in self.edges:
-                xi = self.node_coords[edge[0]][0]
-                yi = self.node_coords[edge[0]][1]
-                xi1 = self.node_coords[edge[1]][0]
-                yi1 = self.node_coords[edge[1]][1]
-
-                num = ((yi1 - yi)*(x0-xi)-(xi1-xi)*(y0-yi))
-                denom = ((yi1-yi)**2 + (xi1-xi)**2)
-                k = num / float(denom)
-                distance = abs(num) / math.sqrt(((yi1-yi)**2 + (xi1-xi)**2))
-                vectors[c] = (xi, xi1, yi, yi1,k,edge)
-                d[distance] = c
-                c += 1
-
-            min_dist = SortedEdges(sorted(d.items()))
-
-            for dist, vector_id in min_dist.iteritems():
-                value = vectors[vector_id]
-                xi = value[0]
-                xi1 = value[1]
-                yi = value[2]
-                yi1 = value[3]
-                k = value[4]
-                edge = value[5]
-
-                #Okabe Method
-                x = x0 - k * (yi1 - yi)
-                y = y0 + k * (xi1 - xi)
-
-                #Compute the distance from the new point to the nodes
-                d1, d2 = self.compute_distance_to_nodes(x, y, edge)
-
-                if xi <= x <= xi1 or xi1 <= x <= xi and yi <= y <= yi1 or yi1 <=y <= yi:
-                    #print "{} intersections edge {} at {}".format(pt_index, edge, (x,y))
-                    #We are assuming undirected - this should never be true.
-                    if edge not in obs_to_edge.keys():
-                        obs_to_edge[edge] = {pt_index: (x,y)}
-                    else:
-                        obs_to_edge[edge][pt_index] =  (x,y)
-                    dist_to_node[pt_index] = {edge[0]:d1, edge[1]:d2}
-                    pointpattern.snapped_coordinates[pt_index] = (x,y)
-
-                    break
-                else:
-                    #either pi or pi+1 are the nearest point on that edge.
-                    #If this point is closer than the next distance, we can break, the
-                    # observation intersects the node with the shorter
-                    # distance.
-                    pi = (xi, yi)
-                    pi1 = (xi1, yi1)
-                    p0 = (x0,y0)
-                    #Maybe this call to ps.cg should go as well - as per the call in the class above
-                    dist_pi = ps.cg.standalone.get_points_dist(p0, pi)
-                    dist_pi1 = ps.cg.standalone.get_points_dist(p0, pi1)
-
-                    if dist_pi < dist_pi1:
-                        node_dist = dist_pi
-                        (x,y) = pi
-                    else:
-                        node_dist = dist_pi1
-                        (x,y) = pi1
-
-                    d1, d2 = self.compute_distance_to_nodes(x, y, edge)
-
-                    if node_dist < min_dist.next_key(dist):
-                        if edge not in obs_to_edge.keys():
-                            obs_to_edge[edge] = {pt_index: (x, y)}
-                        else:
-                            obs_to_edge[edge][pt_index] =  (x, y)
-                        dist_to_node[pt_index] = {edge[0]:d1, edge[1]:d2}
-                        pointpattern.snapped_coordinates[pt_index] = (x,y)
-                        break
-
-        obs_to_node = defaultdict(list)
-        for k, v in obs_to_edge.iteritems():
-            keys = v.keys()
-            obs_to_node[k[0]] = keys
-            obs_to_node[k[1]] = keys
-
-        pointpattern.obs_to_edge = obs_to_edge
-        pointpattern.dist_to_node = dist_to_node
-        pointpattern.obs_to_node = obs_to_node
 
     def count_per_edge(self, obs_on_network, graph=True):
         """
@@ -610,7 +494,7 @@ class Network:
         >>> counts = ntw.count_per_edge(ntw.pointpatterns['crimes'].obs_to_edge,graph=False)
         >>> s = sum([v for v in counts.itervalues()])
         >>> s
-        194
+        287
         """
         counts = {}
         if graph:
