@@ -1,8 +1,10 @@
 from collections import OrderedDict
 import math
 import operator
-
+import pysal as ps
 import numpy as np
+
+
 
 def compute_length(v0, v1):
     """
@@ -91,4 +93,128 @@ def dijkstra(ntw, cost, node, n=float('inf')):
                 a.add(v1)
     return distance, np.array(pred, dtype=np.int)
 
+def squaredDistancePointSegment(point, segment):
+    """Find the squared distance between a point and a segment
+    
+    Arguments
+    =========
+    
+    point: tuple (x,y)
+    
+    segment: list of tuples [(x0,y0), (x1,y1)]
+    
+    Returns
+    =======
+    
+    tuple: 2 elements
+    
+           distance squared between point and segment
+    
+           array(xb, yb): the nearest point on the segment
+    
+    """
+    p0,p1 = [np.array(p) for p in segment]
+    v = p1 - p0
+    p = np.array(point)
+    w = p - p0
+    c1 = np.dot(w,v)
+    if c1 <= 0.:
+        # print 'before p0'
+        return np.dot(w.T,w), p0
+    c2 = np.dot(v,v)
+    if c2 <= c1:
+        dp1 = p - p1
+        # print 'after p1'
+        return np.dot(dp1.T,dp1), p1
+    
+    b = c1 / c2
+    bv = np.dot(b,v)
+    pb = p0 + bv
+    d2 = p - pb
+    
+    return np.dot(d2,d2), pb
+    
 
+
+def snapPointsOnSegments(points, segments):
+    """Place points onto closet segment in a set of segments
+    
+    Arguments
+    =========
+    
+    points: sequence of (x,y) 2-d points
+    
+    segments: sequence of pysal.cg.shapes.Chain
+              Note that the each segment is a chain with *one head and one tail node*, in other words one link only.
+              
+    Returns
+    =======
+    
+    p2s: dictionary
+         key: a point (see points in arguments)
+         
+         value:  a 2-tuple: ((head, tail), point)
+                 where (head, tail) is the target segment, and point is the snapped location on the segment
+              
+    """
+    
+    # Put segments in an Rtree
+    rt = ps.cg.Rtree()
+    SMALL = 0.01
+    node2segs = {}
+    
+    for segment in segments:
+        head,tail = segment.vertices
+        x0,y0 = head
+        x1,y1 = tail
+        if (x0,y0) not in node2segs:
+            node2segs[(x0,y0)] = []
+        if (x1,y1) not in node2segs:
+            node2segs[(x1,y1)] = []
+        node2segs[(x0,y0)].append(segment)
+        node2segs[(x1,y1)].append(segment)
+        x0,y0,x1,y1 =  segment.bounding_box
+        x0 -= SMALL
+        y0 -= SMALL
+        x1 += SMALL
+        y1 += SMALL
+        r = ps.cg.Rect(x0,y0,x1,y1)
+        rt.insert(segment, r)
+        
+        
+        
+    # Build a KDtree on segment nodes
+    kt = ps.cg.KDTree(node2segs.keys())
+    p2s = {}
+    points.sort()
+
+    for point in points:
+        # first find nearest neighbor segment node for point
+        dmin, node = kt.query(point, k=1)
+        node = tuple(kt.data[node])
+        closest = node2segs[node][0].vertices
+        
+        # use this segment as the candidate closest segment: closest
+        # use the distance as the distance to beat: dmin
+        p2s[point] = (closest, node) # sna
+        x0 = point[0] - dmin
+        y0 = point[1] - dmin
+        x1 = point[0] + dmin
+        y1 = point[1] + dmin
+        
+        # find all segments with bounding boxes that intersect
+        # a query rectangle centered on the point with sides of length 2*dmin
+        candidates = [ cand for cand in rt.intersection([x0,y0,x1,y1])]
+        dmin += SMALL
+        dmin2 = dmin * dmin
+        
+        # of the candidate segments, find the one that is the minimum distance to the query point
+        for candidate in candidates:
+            dnc, p2b = squaredDistancePointSegment(point, candidate.vertices)
+            if dnc <= dmin2:
+                closest = candidate.vertices
+                dmin2 = dnc
+                p2s[point] = (closest, p2b)
+        
+    return p2s
+    

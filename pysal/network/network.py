@@ -431,6 +431,68 @@ class Network:
         dist_to_node = {}
 
         pointpattern.snapped_coordinates = {}
+        segments = []
+        s2e = {}
+        for edge in self.edges:
+            head = self.node_coords[edge[0]]
+            tail = self.node_coords[edge[1]]
+            segments.append(ps.cg.Chain([head,tail]))
+            s2e[(head,tail)] = edge
+            
+
+        points = []
+        p2id = {}
+        for pointIdx, point in pointpattern.points.iteritems(): 
+            points.append(point['coordinates'])
+
+        snapped = util.snapPointsOnSegments(points, segments)
+
+        for point, snapInfo in snapped.iteritems():
+            x,y = snapInfo[1].tolist()
+            edge = s2e[tuple(snapInfo[0])]
+            if edge not in obs_to_edge:
+                obs_to_edge[edge] = {}
+            obs_to_edge[edge][point] = (x,y)
+
+            pointpattern.snapped_coordinates[point] = (x,y)
+            d1,d2 = self.compute_distance_to_nodes(x, y, edge)
+            dist_to_node[point] = {edge[0]:d1, edge[1]:d2}
+
+        obs_to_node = defaultdict(list)
+        for k, v in obs_to_edge.iteritems():
+            keys = v.keys()
+            obs_to_node[k[0]] = keys
+            obs_to_node[k[1]] = keys
+
+        pointpattern.obs_to_edge = obs_to_edge
+        pointpattern.dist_to_node = dist_to_node
+        pointpattern.obs_to_node = obs_to_node
+
+    def _snap_to_edgeold(self, pointpattern):
+        """
+        Used internally to snap point observations to network edges.
+
+        Parameters
+        -----------
+        pointpattern : obj
+                       PySAL Point Pattern Object
+
+        Returns
+        -------
+        obs_to_edge : dict
+                      with edge as key and list of points as value
+
+        edge_to_obs : dict
+                      with point id as key and edge tuple as value
+
+        dist_to_node : dict
+                       with edge as key and tuple of distances to nodes as value
+        """
+
+        obs_to_edge = {}
+        dist_to_node = {}
+
+        pointpattern.snapped_coordinates = {}
 
         for pt_index, point in pointpattern.points.iteritems():
             x0 = point['coordinates'][0]
@@ -548,8 +610,7 @@ class Network:
         >>> counts = ntw.count_per_edge(ntw.pointpatterns['crimes'].obs_to_edge,graph=False)
         >>> s = sum([v for v in counts.itervalues()])
         >>> s
-        287
-
+        194
         """
         counts = {}
         if graph:
@@ -1140,7 +1201,7 @@ class PointPattern():
     ----------
     points : dict
              key is the point id
-             value are the coordiantes
+             value are the coordinates
 
     npoints : integer
               the number of points
