@@ -627,7 +627,8 @@ class Network:
         for node in self.node_list:
             distance, pred = util.dijkstra(self, self.edge_lengths, node, n=float('inf'))
             pred = np.array(pred)
-            tree = util.generatetree(pred)
+            #tree = util.generatetree(pred)
+            tree = None
             self.alldistances[node] = (distance, tree)
             self.distancematrix[node] = distance
 
