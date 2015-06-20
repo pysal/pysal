@@ -519,6 +519,15 @@ class Network:
         y1 = self.node_coords[edge[0]][1]
         x2 = self.node_coords[edge[1]][0]
         y2 = self.node_coords[edge[1]][1]
+        if x1 == x2:  # vertical line case
+            x0 = x1
+            if y1 < y2:
+                y0 = y1 + distance
+            elif y1 > y2:
+                y0 = y2 + distance
+            else:    # zero length edge
+                y0 = y1
+            return x0, y0        
         m = (y2 - y1) / (x2 - x1)
         if x1 > x2:
             x0 = x1 - distance / math.sqrt(1 + m**2)
