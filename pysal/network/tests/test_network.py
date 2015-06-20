@@ -100,10 +100,12 @@ class TestNetworkPointPattern(unittest.TestCase):
         for k, (distances, predlist) in self.ntw.alldistances.iteritems():
             self.assertEqual(distances[k], 0)
 
-            for p, plists in predlist.iteritems():
-                self.assertEqual(plists[-1], k)
+            # turning off the tests associated with util.generatetree() for now,
+            # these can be restarted if that functionality is used in the future 
+            #for p, plists in predlist.iteritems():
+            #    self.assertEqual(plists[-1], k)
 
-            self.assertEqual(self.ntw.node_list, predlist.keys())
+            #self.assertEqual(self.ntw.node_list, predlist.keys())
 
     def test_nearest_neighbor_distances(self):
 
