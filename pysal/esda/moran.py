@@ -11,7 +11,7 @@ import numpy as np
 __all__ = ["Moran", "Moran_Local", "Moran_BV", "Moran_BV_matrix",
            "Moran_Rate", "Moran_Local_Rate"]
 
-
+np.seterr(invalid='ignore')
 PERMUTATIONS = 999
 
 

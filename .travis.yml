@@ -31,19 +31,20 @@ script:
   - python -c 'import numpy; print numpy.__version__'
   - python -c 'import scipy; print scipy.__version__'
   - python setup.py install  >/dev/null
-  - python -c 'import pysal; print pysal.version'
+  - python -c 'import pysal'
   #- python -c 'import multiprocessing as mp; print mp.cpu_count()'
   #- pychecker --limit 1000 pysal
   - python setup.py sdist >/dev/null
   #- nosetests --processes=-1 --process-timeout=60 --verbosity=1 --ignore-files=collection --exclude-dir=pysal/contrib
   #- nosetests
+  - echo "check_stable=False" >pysal/config.py
   - nosetests --with-coverage --cover-package=pysal 
   #- cd doc; make pickle; make doctest
 notifications:
     email:
         recipients:
             - sjsrey@gmail.com
-            - phil.stphns@gmail.com
+            - levi.john.wolf@gmail.com
         on_success: always
         on_failure: always
 
