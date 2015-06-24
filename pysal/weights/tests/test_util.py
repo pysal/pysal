@@ -16,7 +16,7 @@ class Testutil(unittest.TestCase):
 
     def test_lat2W(self):
         w9 = pysal.lat2W(3, 3)
-        self.assertEquals(w9.pct_nonzero, 0.29629629629629628)
+        self.assertEquals(w9.pct_nonzero, 29.62962962962963)
         self.assertEquals(w9[0], {1: 1.0, 3: 1.0})
         self.assertEquals(w9[3], {0: 1.0, 4: 1.0, 6: 1.0})
 

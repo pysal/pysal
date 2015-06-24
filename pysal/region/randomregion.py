@@ -5,9 +5,10 @@ Randomly form regions given various types of constraints on cardinality and
 composition.
 """
 
-__author__ = "David Folch dfolch@asu.edu, Serge Rey srey@asu.edu"
+__author__ = "David Folch dfolch@fsu.edu, Serge Rey srey@asu.edu"
 
 import numpy as np
+from pysal.region.components import check_contiguity
 from pysal.common import copy
 
 __all__ = ["Random_Regions", "Random_Region"]
@@ -74,7 +75,7 @@ class Random_Regions:
     >>> import pysal
     >>> nregs = 13
     >>> cards = range(2,14) + [10]
-    >>> w = pysal.lat2W(10,10,rook=False)
+    >>> w = pysal.lat2W(10,10,rook=True)
     >>> ids = w.id_order
 
     Unconstrained
@@ -91,7 +92,7 @@ class Random_Regions:
     >>> np.random.seed(60)
     >>> t1 = pysal.region.Random_Regions(ids, num_regions=nregs, cardinality=cards, contiguity=w, permutations=2)
     >>> t1.solutions[0].regions[0]
-    [88, 97, 98, 89, 99, 86, 78, 59, 49, 69, 68, 79, 77]
+    [62, 61, 81, 71, 64, 90, 72, 51, 80, 63, 50, 73, 52]
 
     Cardinality constrained (num_regions implied)
 
@@ -107,7 +108,7 @@ class Random_Regions:
     >>> np.random.seed(100)
     >>> t3 = pysal.region.Random_Regions(ids, num_regions=nregs, contiguity=w, permutations=2)
     >>> t3.solutions[0].regions[1]
-    [71, 72, 70, 93, 51, 91, 85, 74, 63, 73, 61, 62, 82]
+    [62, 52, 51, 63, 61, 73, 41, 53, 60, 83, 42, 31, 32]
 
     Cardinality and contiguity constrained
 
@@ -115,7 +116,7 @@ class Random_Regions:
     >>> np.random.seed(60)
     >>> t4 = pysal.region.Random_Regions(ids, cardinality=cards, contiguity=w, permutations=2)
     >>> t4.solutions[0].regions[0]
-    [88, 97, 98, 89, 99, 86, 78, 59, 49, 69, 68, 79, 77]
+    [62, 61, 81, 71, 64, 90, 72, 51, 80, 63, 50, 73, 52]
 
     Number of regions constrained
 
@@ -139,7 +140,7 @@ class Random_Regions:
     >>> np.random.seed(100)
     >>> t7 = pysal.region.Random_Regions(ids, contiguity=w, permutations=2)
     >>> t7.solutions[0].regions[1]
-    [62, 52, 51, 50]
+    [62, 61, 71, 63]
 
     """
     def __init__(
@@ -217,7 +218,7 @@ class Random_Region:
     >>> import pysal
     >>> nregs = 13
     >>> cards = range(2,14) + [10]
-    >>> w = pysal.weights.lat2W(10,10,rook=False)
+    >>> w = pysal.weights.lat2W(10,10,rook=True)
     >>> ids = w.id_order
 
     Unconstrained
@@ -234,7 +235,7 @@ class Random_Region:
     >>> np.random.seed(60)
     >>> t1 = pysal.region.Random_Region(ids, num_regions=nregs, cardinality=cards, contiguity=w)
     >>> t1.regions[0]
-    [88, 97, 98, 89, 99, 86, 78, 59, 49, 69, 68, 79, 77]
+    [62, 61, 81, 71, 64, 90, 72, 51, 80, 63, 50, 73, 52]
 
     Cardinality constrained (num_regions implied)
 
@@ -250,7 +251,7 @@ class Random_Region:
     >>> np.random.seed(100)
     >>> t3 = pysal.region.Random_Region(ids, num_regions=nregs, contiguity=w)
     >>> t3.regions[1]
-    [71, 72, 70, 93, 51, 91, 85, 74, 63, 73, 61, 62, 82]
+    [62, 52, 51, 63, 61, 73, 41, 53, 60, 83, 42, 31, 32]
 
     Cardinality and contiguity constrained
 
@@ -258,7 +259,7 @@ class Random_Region:
     >>> np.random.seed(60)
     >>> t4 = pysal.region.Random_Region(ids, cardinality=cards, contiguity=w)
     >>> t4.regions[0]
-    [88, 97, 98, 89, 99, 86, 78, 59, 49, 69, 68, 79, 77]
+    [62, 61, 81, 71, 64, 90, 72, 51, 80, 63, 50, 73, 52]
 
     Number of regions constrained
 
@@ -282,7 +283,7 @@ class Random_Region:
     >>> np.random.seed(100)
     >>> t7 = pysal.region.Random_Region(ids, contiguity=w)
     >>> t7.regions[0]
-    [37, 27, 36, 17]
+    [37, 36, 38, 39]
 
     """
     def __init__(
@@ -466,7 +467,9 @@ class Random_Region:
                                 swap_region = regions[swap_index]
                                 swap_region = list(np.random.permutation(swap_region))
                                 for j in swap_region:
-                                    if j != join:  # leave the join area to ensure regional connectivity
+                                    # test to ensure region connectivity after removing area
+                                    swap_region_test = swap_region[:] + [swap_out]
+                                    if check_contiguity(w, swap_region_test, j):
                                         swap_in = j
                                         break
                             if swap_in is not None:  # PEP8 E711
@@ -512,7 +515,6 @@ class Random_Region:
                     region_index = len(regions) - 1
                     for i in region:
                         area2region[i] = region_index   # area2region needed for swapping
-
             # handling of regionalization result
             if len(regions) < num_regions:
                 # regionalization failed

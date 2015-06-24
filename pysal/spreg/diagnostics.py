@@ -951,8 +951,8 @@ def white(reg):
 
     """
     e = reg.u ** 2
-    k = reg.k
-    n = reg.n
+    k = int(reg.k)
+    n = int(reg.n)
     y = reg.y
     X = reg.x
     #constant = constant_check(X)
@@ -969,10 +969,10 @@ def white(reg):
 
     # Compute cross-products and squares of the regression variables
     if type(X).__name__ == 'ndarray':
-        A = np.zeros((n, (k * (k + 1)) / 2.))
+        A = np.zeros((n, (k * (k + 1)) / 2))
     elif type(X).__name__ == 'csc_matrix' or type(X).__name__ == 'csr_matrix':
         # this is probably inefficient
-        A = SP.lil_matrix((n, (k * (k + 1)) / 2.))
+        A = SP.lil_matrix((n, (k * (k + 1)) / 2))
     else:
         raise Exception, "unknown X type, %s" % type(X).__name__
     counter = 0

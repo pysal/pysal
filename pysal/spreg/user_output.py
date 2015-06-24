@@ -104,7 +104,7 @@ def set_name_yend(name_yend, yend):
     name_yend   : list of strings
 
     """
-    if yend != None:
+    if yend is not None:
         if not name_yend:
             return ['endogenous_' + str(i + 1) for i in range(len(yend[0]))]
         else:
@@ -131,7 +131,7 @@ def set_name_q(name_q, q):
     name_q      : list of strings
 
     """
-    if q != None:
+    if q is not None:
         if not name_q:
             return ['instrument_' + str(i + 1) for i in range(len(q[0]))]
         else:
@@ -346,7 +346,7 @@ def check_arrays(*arrays):
     allowed = ['ndarray', 'csr_matrix']
     rows = []
     for i in arrays:
-        if i == None:
+        if i is None:
             continue
         if i.__class__.__name__ not in allowed:
             raise Exception, "all input data must be either numpy arrays or sparse csr matrices"

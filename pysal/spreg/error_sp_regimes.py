@@ -1316,7 +1316,7 @@ def _work_endog_error(y, x, yend, q, regi_ids, r, w, name_ds, name_y, name_x, na
     w_r, warn = REGI.w_regime(w, regi_ids[r], r, transform=True)
     y_r = y[regi_ids[r]]
     x_r = x[regi_ids[r]]
-    if yend != None:
+    if yend is not None:
         yend_r = yend[regi_ids[r]]
         q_r = q[regi_ids[r]]
     else:

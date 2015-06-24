@@ -65,9 +65,9 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
     >>> set([0,6]) == set(wnn2.neighbors[5])
     True
     >>> "%.2f"%wnn2.pct_nonzero
-    '0.08'
+    '8.00'
     >>> wnn4.pct_nonzero
-    0.16
+    16.0
     >>> wnn3e=knnW(data,p=2,k=3)
     >>> set([1,5,6]) == set(wnn3e.neighbors[0])
     True
@@ -387,6 +387,9 @@ class Kernel(W):
         z = []
         for i, nids in enumerate(self.neigh):
             di, ni = kdtq(self.data[i], k=len(nids))
+            if not isinstance(di, np.ndarray):
+            	di = np.asarray([di] * len(nids))
+                ni = np.asarray([ni] * len(nids))
             zi = np.array([dict(zip(ni, di))[nid] for nid in nids]) / bw[i]
             z.append(zi)
         zs = z

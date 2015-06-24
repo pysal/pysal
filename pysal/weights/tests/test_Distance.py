@@ -23,11 +23,11 @@ class TestDistanceWeights(unittest.TestCase):
         wnn4.neighbors[0]
         self.assertEqual(set(wnn4.neighbors[0]), set([1, 5, 6, 2]))
         self.assertEqual(set(wnn2.neighbors[5]), set([0, 6]))
-        self.assertEqual(wnn2.pct_nonzero, 0.080000000000000002)
+        self.assertEqual(wnn2.pct_nonzero, 8.0)
         wnn3e = pysal.knnW(data, p=2, k=3)
         self.assertEqual(set(wnn3e.neighbors[0]), set([1, 5, 6]))
         wc = pysal.knnW_from_shapefile(self.polyShp)
-        self.assertEqual(wc.pct_nonzero, 0.040816326530612242)
+        self.assertEqual(wc.pct_nonzero, 4.081632653061225)
         self.assertEqual(set(wc.neighbors[0]), set([2, 1]))
         wc3 = pysal.knnW_from_shapefile(self.polyShp, k=3)
         self.assertEqual(wc3.weights[1], [1, 1, 1])

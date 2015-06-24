@@ -1318,6 +1318,59 @@ class Ring(object):
             self._centroid = Point((cx, cy))
         return self._centroid
 
+    def contains_point(self, point):
+        """
+        Point containment using winding number
+
+        Implementation based on: http://www.engr.colostate.edu/~dga/dga/papers/point_in_polygon.pdf
+        """
+
+        x, y = point
+
+        # bbox check
+        if x < self.bounding_box.left:
+            return False
+        if x > self.bounding_box.right:
+            return False
+        if y < self.bounding_box.lower:
+            return False
+        if y > self.bounding_box.upper:
+            return False
+
+
+        rn = len(self.vertices)
+        xs = [ self.vertices[i][0] - point[0] for i in xrange(rn) ]
+        ys = [ self.vertices[i][1] - point[1] for i in xrange(rn) ]
+        w = 0
+        for i in xrange(len(self.vertices) - 1):
+            yi = ys[i]
+            yj = ys[i+1]
+            xi = xs[i]
+            xj = xs[i+1]
+            if yi*yj < 0:
+                r = xi + yi * (xj-xi) / (yi - yj)
+                if r > 0:
+                    if yi < 0:
+                        w += 1
+                    else:
+                        w -= 1
+            elif yi==0 and xi > 0:
+                if yj > 0:
+                    w += 0.5
+                else:
+                    w -= 0.5
+            elif yj == 0 and xj > 0:
+                if yi < 0:
+                    w += 0.5
+                else:
+                    w -= 0.5
+        if w==0:
+            return False
+        else:
+            return True
+
+
+
 
 class Polygon(object):
     """
@@ -1652,25 +1705,23 @@ class Polygon(object):
         >>> p = Polygon([Point((0,0)), Point((4,0)), Point((4,5)), Point((2,3)), Point((0,5))])
         >>> p.contains_point((3,3))
         1
-        >>> p.contains_point((0,5))
+        >>> p.contains_point((0,6))
         0
-        >>> p.contains_point((2,3))
-        0
+        >>> p.contains_point((2,2.9))
+        1
         >>> p.contains_point((4,5))
         0
         >>> p.contains_point((4,0))
-        1
+        0
         >>>
 
         Handles holes
 
-        >>> p = Polygon([Point((0, 0)), Point((10, 0)), Point((10, 10)), Point((0, 10))], [Point((1, 2)), Point((2, 2)), Point((2, 1)), Point((1, 1))])
+        >>> p = Polygon([Point((0, 0)), Point((0, 10)), Point((10, 10)), Point((10, 0))], [Point((2, 2)), Point((4, 2)), Point((4, 4)), Point((2, 4))])
+        >>> p.contains_point((3.0,3.0))
+        False
         >>> p.contains_point((1.0,1.0))
-        0
-        >>> p.contains_point((2.0,2.0))
-        1
-        >>> p.contains_point((10,10))
-        0
+        True
         >>>
 
 
@@ -1680,28 +1731,16 @@ class Polygon(object):
         results
         """
 
-        # ray from point to just outside left edge of bb
-        left = self.bounding_box.left - 0.000001
-        y = point[1]
-        right = point[0]
-        cn = 0
-        verts = self.vertices
-        c = Point((left, y))
-        d = Point((right, y))
-        ray = LineSegment(c, d)
-        for i in xrange(-1, len(self.vertices) - 1):
-            a = verts[i]
-            b = verts[i + 1]
-            ab = LineSegment(a, b)
-            ac = LineSegment(a, c)
-            bc = LineSegment(b, c)
-            if ac.is_ccw(d) == bc.is_ccw(d):
-                pass
-            elif ab.is_ccw(c) == ab.is_ccw(d):
-                pass
-            else:
-                cn += 1
-        return cn % 2
+        for ring in self._hole_rings:
+            if ring.contains_point(point):
+                return False
+
+        for ring in self._part_rings:
+            if ring.contains_point(point):
+                return True
+
+        return False
+
 
 
 class Rectangle:

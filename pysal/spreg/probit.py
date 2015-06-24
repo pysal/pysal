@@ -9,6 +9,7 @@ from scipy.stats import norm, chisqprob
 import scipy.sparse as SP
 import user_output as USER
 import summary_output as SUMMARY
+from utils import spdot, spbroadcast
 
 __all__ = ["Probit"]
 
@@ -26,7 +27,8 @@ class BaseProbit:
     y           : array
                   nx1 array of dependent binary variable
     w           : W
-                  PySAL weights instance aligned with y
+                  PySAL weights instance or spatial weights sparse matrix
+                  aligned with y
     optim       : string
                   Optimization method.
                   Default: 'newton' (Newton-Raphson).
@@ -182,14 +184,16 @@ class BaseProbit:
     @property
     def xmean(self):
         if 'xmean' not in self._cache:
-            self._cache['xmean'] = np.reshape(
-                sum(self.x) / self.n, (self.k, 1))
+            try:
+                self._cache['xmean'] = np.reshape(sum(self.x) / self.n, (self.k, 1))
+            except:
+                self._cache['xmean'] = np.reshape(sum(self.x).toarray() / self.n, (self.k, 1))
         return self._cache['xmean']
 
     @property
     def xb(self):
         if 'xb' not in self._cache:
-            self._cache['xb'] = np.dot(self.x, self.betas)
+            self._cache['xb'] = spdot(self.x, self.betas)
         return self._cache['xb']
 
     @property
@@ -238,7 +242,7 @@ class BaseProbit:
         if 'slopes_vm' not in self._cache:
             x = self.xmean
             b = self.betas
-            dfdb = np.eye(self.k) - np.dot(b.T, x) * np.dot(b, x.T)
+            dfdb = np.eye(self.k) - spdot(b.T, x) * spdot(b, x.T)
             slopes_vm = (self.scale ** 2) * \
                 np.dot(np.dot(dfdb, self.vm), dfdb.T)
             self._cache['slopes_vm'] = slopes_vm[1:, 1:]
@@ -290,8 +294,8 @@ class BaseProbit:
         return self._cache['PS_error']
 
     def par_est(self):
-        start = np.dot(la.inv(np.dot(self.x.T, self.x)),
-                       np.dot(self.x.T, self.y))
+        start = np.dot(la.inv(spdot(self.x.T, self.x)),
+                       spdot(self.x.T, self.y))
         flogl = lambda par: -self.ll(par)
         if self.optim == 'newton':
             fgrad = lambda par: self.gradient(par)
@@ -318,25 +322,25 @@ class BaseProbit:
     def ll(self, par):
         beta = np.reshape(np.array(par), (self.k, 1))
         q = 2 * self.y - 1
-        qxb = q * np.dot(self.x, beta)
+        qxb = q * spdot(self.x, beta)
         ll = sum(np.log(norm.cdf(qxb)))
         return ll
 
     def gradient(self, par):
         beta = np.reshape(np.array(par), (self.k, 1))
         q = 2 * self.y - 1
-        qxb = q * np.dot(self.x, beta)
+        qxb = q * spdot(self.x, beta)
         lamb = q * norm.pdf(qxb) / norm.cdf(qxb)
-        gradient = np.dot(lamb.T, self.x)[0]
+        gradient = spdot(lamb.T, self.x)[0]
         return gradient
 
     def hessian(self, par):
         beta = np.reshape(np.array(par), (self.k, 1))
         q = 2 * self.y - 1
-        xb = np.dot(self.x, beta)
+        xb = spdot(self.x, beta)
         qxb = q * xb
         lamb = q * norm.pdf(qxb) / norm.cdf(qxb)
-        hessian = np.dot((self.x.T), (-lamb * (lamb + xb) * self.x))
+        hessian = spdot(self.x.T, spbroadcast(self.x,-lamb * (lamb + xb)))
         return hessian
 
 
@@ -548,11 +552,14 @@ class Probit(BaseProbit):
 
         n = USER.check_arrays(y, x)
         USER.check_y(y, n)
-        if w:
+        if w != None:
             USER.check_weights(w, y)
             spat_diag = True
+            ws = w.sparse
+        else:
+            ws = None
         x_constant = USER.check_constant(x)
-        BaseProbit.__init__(self, y=y, x=x_constant, w=w,
+        BaseProbit.__init__(self, y=y, x=x_constant, w=ws,
                             optim=optim, scalem=scalem, maxiter=maxiter)
         self.title = "CLASSIC PROBIT ESTIMATOR"
         self.name_ds = USER.set_name_ds(name_ds)
@@ -607,8 +614,11 @@ def sp_tests(reg):
     reg         : regression object
                   output instance from a probit model            
     """
-    if reg.w:
-        w = reg.w.sparse
+    if reg.w != None:
+        try:
+            w = reg.w.sparse
+        except:
+            w = reg.w
         Phi = reg.predy
         phi = reg.phiy
         # Pinkse_error:
@@ -631,7 +641,7 @@ def sp_tests(reg):
         # chi-square instead of bootstrap.
         ps = np.array([ps, chisqprob(ps, 1)])
     else:
-        raise Exception, "W matrix not provided to calculate spatial test."
+        raise Exception, "W matrix must be provided to calculate spatial tests."
     return LM_err, moran, ps
 
 
@@ -649,7 +659,10 @@ def moran_KP(w, u, sig2i):
     sig2i       : array
                   nx1 array of individual variance               
     """
-    w = w.sparse
+    try:
+        w = w.sparse
+    except:
+        pass
     moran_num = np.dot(u.T, (w * u))
     E = SP.lil_matrix(w.get_shape())
     E.setdiag(sig2i.flat)
@@ -681,4 +694,4 @@ if __name__ == '__main__':
     probit1 = Probit(
         (y > 40).astype(float), x, w=w, name_x=var_x, name_y="CRIME",
         name_ds="Columbus", name_w="columbus.dbf")
-    # print probit1.summary
+    print probit1.summary

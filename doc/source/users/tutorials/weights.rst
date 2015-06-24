@@ -72,7 +72,7 @@ The w object has a number of attributes:
     >>> w.n
     25
     >>> w.pct_nonzero
-    0.128
+    12.8
     >>> w.weights[0]
     [1.0, 1.0]
     >>> w.neighbors[0]

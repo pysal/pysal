@@ -1,9 +1,19 @@
 '''
-Diversity indices as suggested in Nijkamp & Poot (2013)
+Diversity indices as suggested in Nijkamp & Poot (2013) [1] and Nijkamp & Poot
+(2015) [2]
+
+References
+----------
+
+[1]_ Nijkamp & Poot
+[2]_ Nijkamp, P. and Poot, J. "Cultural Diversity: A Matter of Measurement".
+     IZA Discussion Paper Series No. 8782
 '''
 
 import itertools
 import numpy as np
+
+SMALL = np.finfo('float').tiny
 
 def abundance(x):
     '''
@@ -115,6 +125,70 @@ def herfindahl_hd(x):
     pgs = x.sum(axis=0)
     p = pgs.sum()
     return ((pgs * 1. / p)**2).sum()
+
+def theil_th(x, ridz=True):
+    '''
+    Theil index TH as expressed in equation (32) of [2]
+    ...
+
+    Arguments
+    ---------
+    x       : array
+              N x k array containing N rows (one per neighborhood) and k columns
+              (one per cultural group)
+    ridz    : boolean
+              [Optional. Default=True] Flag to add a small amount to zero
+              values to avoid zero division problems
+    Returns
+    -------
+    a       : float
+              Theil index TH
+    '''
+    if ridz:
+        x = x + SMALL * (x == 0)  # can't have 0 values
+    pa = x.sum(axis=1).astype(float) # Area totals
+    pg = x.sum(axis=0).astype(float) # Group totals
+    p = pa.sum()
+    num = (x / pa[:, None]) * ( np.log(pg / p) - np.log(x / pa[:, None]) )
+    den = ( (pg / p) * np.log(pg / p) ).sum()
+    th = (pa / p)[:, None] * (num / den)
+    return th.sum().sum()
+
+def theil_th_brute(x, ridz=True):
+    '''
+    Theil index TH using inefficient computation
+
+    NOTE: just for result comparison, it matches `theil_th`
+    ...
+
+    Arguments
+    ---------
+    x       : array
+              N x k array containing N rows (one per neighborhood) and k columns
+              (one per cultural group)
+    ridz    : boolean
+              [Optional. Default=True] Flag to add a small amount to zero
+              values to avoid zero division problems
+    Returns
+    -------
+    a       : float
+              Theil index TH
+    '''
+    if ridz:
+        x = x + SMALL * (x == 0)  # can't have 0 values
+    pas = x.sum(axis=1).astype(float) # Area totals
+    pgs = x.sum(axis=0).astype(float) # Group totals
+    p = pas.sum()
+    th = np.zeros(x.shape)
+    for g in np.arange(x.shape[1]):
+        pg = pgs[g]
+        for a in np.arange(x.shape[0]):
+            pa = pas[a]
+            pga = x[a, g]
+            num = (pga / pa) * ((np.log(pg/p)) - np.log(pga/pa))
+            den = ((pgs / p) * np.log(pgs / p) ).sum()
+            th[a, g] = (pa / p) * (num / den)
+    return th.sum().sum()
 
 def fractionalization_gs(x):
     '''
@@ -342,6 +416,32 @@ def isolation_isg(x):
     pgp = x.sum(axis=0) * 1. / x.sum()
     return (ws * pgapa / pgp).sum(axis=0)
 
+def isolation_ii(x):
+    '''
+    Isolation index II_g as in equation (23) of [2].
+
+    ...
+
+    Arguments
+    ---------
+    x       : array
+              N x k array containing N rows (one per neighborhood) and k columns
+              (one per cultural group)
+    Returns
+    -------
+    a       : array
+              Array with IIg indices for the k groups
+    '''
+    pa = x.sum(axis=1).astype(float) # Area totals
+    pg = x.sum(axis=0).astype(float) # Group totals
+    p = pa.sum()
+    ws = x / pg
+
+    block = ( ws * (x / pa[:, None]) ).sum(axis=0)
+    num = ( block / (pg / p) ) - (pg / p)
+    den = 1. - (pg / p)
+    return num / den
+
 def gini_gig(x):
     '''
     Gini GI index
@@ -547,25 +647,29 @@ if __name__=='__main__':
     np.random.seed(1)
     x = np.round(np.random.random((10, 3)) * 100).astype(int)
     #x[:, 2] = 0
-    ids = [abundance, \
-            margalev_md, \
-            menhinick_mi, \
-            simpson_so, \
-            simpson_sd, \
-            fractionalization_gs, \
-            herfindahl_hd, \
-            shannon_se, \
-            gini_gi, \
-            gini_gi_m, \
-            hoover_hi, \
-            segregation_gsg, \
-            modified_segregation_msg, \
-            isolation_isg, \
-            gini_gig, \
-            ellison_glaeser_egg, \
-            ellison_glaeser_egg_pop, \
-            maurel_sedillot_msg, \
-            maurel_sedillot_msg_pop, \
+    ids = [ \
+           #abundance, \
+           #margalev_md, \
+           #menhinick_mi, \
+           #simpson_so, \
+           #simpson_sd, \
+           #fractionalization_gs, \
+           #herfindahl_hd, \
+           #shannon_se, \
+           #gini_gi, \
+           #gini_gi_m, \
+           #hoover_hi, \
+           #segregation_gsg, \
+           #modified_segregation_msg, \
+           #isolation_isg, \
+            isolation_ii, \
+           #gini_gig, \
+           #ellison_glaeser_egg, \
+           #ellison_glaeser_egg_pop, \
+           #maurel_sedillot_msg, \
+           #maurel_sedillot_msg_pop, \
+           #theil_th, \
+           #theil_th_brute, \
             ]
     res = [(f_i.func_name, f_i(x)) for f_i in ids]
     print '\nIndices'
@@ -575,5 +679,5 @@ if __name__=='__main__':
     tau = np.random.random((x.shape[1], x.shape[1]))
     for i in range(tau.shape[0]):
         tau[i, i] = 1.
-    print similarity_w_wd(x, tau)
+    #print similarity_w_wd(x, tau)
 
