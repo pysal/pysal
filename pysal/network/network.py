@@ -22,7 +22,16 @@ class Network:
     Parameters
     -----------
     in_shp : string
-             A topoligically correct input shapefile
+             input shapefile
+
+    node_sig : int
+               round the x and y coordinates of all nodes to node_sig
+               significant digits (combined significant digits on left and right
+               of decimal place); default is 11; set to None for no rounding
+
+    unique_segs : boolean
+                  if True (default), keep only unique segments (i.e., prune
+                  out any duplicated segments); if False keep all segments
 
     Attributes
     ----------
@@ -65,7 +74,7 @@ class Network:
 
     Instantiate an instance of a network
 
-    >>> ntw = network.Network(ps.examples.get_path('geodanet/streets.shp'))
+    >>> ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
 
     Snap point observations to the network with attribute information
 
@@ -77,9 +86,11 @@ class Network:
 
     """
 
-    def __init__(self, in_shp=None):
+    def __init__(self, in_shp=None, node_sig=11, unique_segs=True):
         if in_shp:
             self.in_shp = in_shp
+            self.node_sig = node_sig
+            self.unique_segs = unique_segs
 
             self.adjacencylist = defaultdict(list)
             self.nodes = {}
@@ -99,6 +110,21 @@ class Network:
 
             self.node_list = sorted(self.nodes.values())
 
+    def _round_sig(self, v):
+        """
+        Used internally to round vertex to a set number of significant
+        digits. If sig is set to 4, then the following are some possible
+        results for a coordinate: 0.0xxxx, 0.xxxx, x.xxx, xx.xx, xxx.x,
+        xxxx.0, xxxx0.0
+        """
+        sig = self.node_sig
+        if sig is None:
+            return v
+        out_v = [val if 0 \
+                     else round(val, -int(math.floor(math.log10(math.fabs(val)))) + (sig-1)) \
+                 for val in v]
+        return tuple(out_v)
+
     def _extractnetwork(self):
         """
         Used internally, to extract a network from a polyline shapefile
@@ -108,15 +134,17 @@ class Network:
         for shp in shps:
             vertices = shp.vertices
             for i, v in enumerate(vertices[:-1]):
+                v = self._round_sig(v)
                 try:
                     vid = self.nodes[v]
                 except:
                     self.nodes[v] = vid = nodecount
                     nodecount += 1
+                v2 = self._round_sig(vertices[i+1])
                 try:
-                    nvid = self.nodes[vertices[i+1]]
+                    nvid = self.nodes[v2]
                 except:
-                    self.nodes[vertices[i+1]] = nvid = nodecount
+                    self.nodes[v2] = nvid = nodecount
                     nodecount += 1
 
                 self.adjacencylist[vid].append(nvid)
@@ -128,6 +156,11 @@ class Network:
                 self.edges.append(edge)
                 length = util.compute_length(v, vertices[i+1])
                 self.edge_lengths[edge] = length
+        if self.unique_segs == True:
+            # remove duplicate edges and duplicate adjacent nodes
+            self.edges = list(set(self.edges))
+            for k, v in self.adjacencylist.iteritems():
+                self.adjacencylist[k] = list(set(v))
 
     def extractgraph(self):
         """
@@ -241,7 +274,10 @@ class Network:
 
         Examples
         --------
+        >>> ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
         >>> w = ntw.contiguityweights(graph=False)
+        >>> ntw.snapobservations(ps.examples.get_path('geodanet/crimes.shp'), 'crimes', attribute=True)
+        >>> counts = ntw.count_per_edge(ntw.pointpatterns['crimes'].obs_to_edge, graph=False)
 
         Using the W object, access to ESDA functionality is provided.  First,
         a vector of attributes is created for all edges with observations.
@@ -250,12 +286,12 @@ class Network:
         >>> edges = w.neighbors.keys()
         >>> y = np.zeros(len(edges))
         >>> for i, e in enumerate(edges):
-        >>>     if e in counts.keys():
-        >>>         y[i] = counts[e]
+        ...     if e in counts.keys():
+        ...         y[i] = counts[e]
 
         Next, a standard call ot Moran is made and the result placed into `res`
 
-        >>> res = ps.esda.moran.Moran(y, ntw.w, permutations=99)
+        >>> res = ps.esda.moran.Moran(y, w, permutations=99)
 
         """
 
@@ -388,95 +424,40 @@ class Network:
                       with point id as key and edge tuple as value
 
         dist_to_node : dict
-                       with edge as key and tuple of distances to nodes as value
+                       with point id as key and value as a dict with key for
+                       node id, and value distance from point to node
+
         """
 
         obs_to_edge = {}
         dist_to_node = {}
 
         pointpattern.snapped_coordinates = {}
+        segments = []
+        s2e = {}
+        for edge in self.edges:
+            head = self.node_coords[edge[0]]
+            tail = self.node_coords[edge[1]]
+            segments.append(ps.cg.Chain([head,tail]))
+            s2e[(head,tail)] = edge
+            
 
-        for pt_index, point in pointpattern.points.iteritems():
-            x0 = point['coordinates'][0]
-            y0 = point['coordinates'][1]
+        points = {}
+        p2id = {}
+        for pointIdx, point in pointpattern.points.iteritems(): 
+            points[pointIdx] = point['coordinates']
 
-            d = {}
-            vectors = {}
-            c = 0
+        snapped = util.snapPointsOnSegments(points, segments)
 
-            #Components of this for loop can be pre computed and cached, like denom to distance =
-            for edge in self.edges:
-                xi = self.node_coords[edge[0]][0]
-                yi = self.node_coords[edge[0]][1]
-                xi1 = self.node_coords[edge[1]][0]
-                yi1 = self.node_coords[edge[1]][1]
-
-                num = ((yi1 - yi)*(x0-xi)-(xi1-xi)*(y0-yi))
-                denom = ((yi1-yi)**2 + (xi1-xi)**2)
-                k = num / float(denom)
-                distance = abs(num) / math.sqrt(((yi1-yi)**2 + (xi1-xi)**2))
-                vectors[c] = (xi, xi1, yi, yi1,k,edge)
-                d[distance] = c
-                c += 1
-
-            min_dist = SortedEdges(sorted(d.items()))
-
-            for dist, vector_id in min_dist.iteritems():
-                value = vectors[vector_id]
-                xi = value[0]
-                xi1 = value[1]
-                yi = value[2]
-                yi1 = value[3]
-                k = value[4]
-                edge = value[5]
-
-                #Okabe Method
-                x = x0 - k * (yi1 - yi)
-                y = y0 + k * (xi1 - xi)
-
-                #Compute the distance from the new point to the nodes
-                d1, d2 = self.compute_distance_to_nodes(x, y, edge)
-
-                if xi <= x <= xi1 or xi1 <= x <= xi and yi <= y <= yi1 or yi1 <=y <= yi:
-                    #print "{} intersections edge {} at {}".format(pt_index, edge, (x,y))
-                    #We are assuming undirected - this should never be true.
-                    if edge not in obs_to_edge.keys():
-                        obs_to_edge[edge] = {pt_index: (x,y)}
-                    else:
-                        obs_to_edge[edge][pt_index] =  (x,y)
-                    dist_to_node[pt_index] = {edge[0]:d1, edge[1]:d2}
-                    pointpattern.snapped_coordinates[pt_index] = (x,y)
-
-                    break
-                else:
-                    #either pi or pi+1 are the nearest point on that edge.
-                    #If this point is closer than the next distance, we can break, the
-                    # observation intersects the node with the shorter
-                    # distance.
-                    pi = (xi, yi)
-                    pi1 = (xi1, yi1)
-                    p0 = (x0,y0)
-                    #Maybe this call to ps.cg should go as well - as per the call in the class above
-                    dist_pi = ps.cg.standalone.get_points_dist(p0, pi)
-                    dist_pi1 = ps.cg.standalone.get_points_dist(p0, pi1)
-
-                    if dist_pi < dist_pi1:
-                        node_dist = dist_pi
-                        (x,y) = pi
-                    else:
-                        node_dist = dist_pi1
-                        (x,y) = pi1
-
-                    d1, d2 = self.compute_distance_to_nodes(x, y, edge)
-
-                    if node_dist < min_dist.next_key(dist):
-                        if edge not in obs_to_edge.keys():
-                            obs_to_edge[edge] = {pt_index: (x, y)}
-                        else:
-                            obs_to_edge[edge][pt_index] =  (x, y)
-                        dist_to_node[pt_index] = {edge[0]:d1, edge[1]:d2}
-                        pointpattern.snapped_coordinates[pt_index] = (x,y)
-                        break
+        for pointIdx, snapInfo in snapped.iteritems():
+            x,y = snapInfo[1].tolist()
+            edge = s2e[tuple(snapInfo[0])]
+            if edge not in obs_to_edge:
+                obs_to_edge[edge] = {}
+            obs_to_edge[edge][pointIdx] = (x,y)
+            pointpattern.snapped_coordinates[pointIdx] = (x,y)
+            d1,d2 = self.compute_distance_to_nodes(x, y, edge)
+            dist_to_node[pointIdx] = {edge[0]:d1, edge[1]:d2}
 
         obs_to_node = defaultdict(list)
         for k, v in obs_to_edge.iteritems():
@@ -487,6 +468,7 @@ class Network:
         pointpattern.obs_to_edge = obs_to_edge
         pointpattern.dist_to_node = dist_to_node
         pointpattern.obs_to_node = obs_to_node
+
 
     def count_per_edge(self, obs_on_network, graph=True):
         """
@@ -507,9 +489,12 @@ class Network:
         Note that this passes the obs_to_edge attribute of a point pattern
         snapped to the network.
 
-        >>> counts = ntw.count_per_edge(ntw.pointpatterns['crimes'].obs_to_edge,
-                            graph=False)
-
+        >>> ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
+        >>> ntw.snapobservations(ps.examples.get_path('geodanet/crimes.shp'), 'crimes', attribute=True)
+        >>> counts = ntw.count_per_edge(ntw.pointpatterns['crimes'].obs_to_edge,graph=False)
+        >>> s = sum([v for v in counts.itervalues()])
+        >>> s
+        287
         """
         counts = {}
         if graph:
@@ -534,6 +519,15 @@ class Network:
         y1 = self.node_coords[edge[0]][1]
         x2 = self.node_coords[edge[1]][0]
         y2 = self.node_coords[edge[1]][1]
+        if x1 == x2:  # vertical line case
+            x0 = x1
+            if y1 < y2:
+                y0 = y1 + distance
+            elif y1 > y2:
+                y0 = y2 + distance
+            else:    # zero length edge
+                y0 = y1
+            return x0, y0        
         m = (y2 - y1) / (x2 - x1)
         if x1 > x2:
             x0 = x1 - distance / math.sqrt(1 + m**2)
@@ -564,11 +558,12 @@ class Network:
         Example
         -------
 
+        >>> ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
+        >>> ntw.snapobservations(ps.examples.get_path('geodanet/crimes.shp'), 'crimes', attribute=True)
         >>> npts = ntw.pointpatterns['crimes'].npoints
         >>> sim = ntw.simulate_observations(npts)
-        >>> sim
-        <network.SimulatedPointPattern instance at 0x1133d8710>
-
+        >>> isinstance(sim, ps.network.network.SimulatedPointPattern)
+        True
         """
         simpts = SimulatedPointPattern()
 
@@ -632,7 +627,8 @@ class Network:
         for node in self.node_list:
             distance, pred = util.dijkstra(self, self.edge_lengths, node, n=float('inf'))
             pred = np.array(pred)
-            tree = util.generatetree(pred)
+            #tree = util.generatetree(pred)
+            tree = None
             self.alldistances[node] = (distance, tree)
             self.distancematrix[node] = distance
 
@@ -659,45 +655,56 @@ class Network:
 
         if not hasattr(self,'alldistances'):
             self.node_distance_matrix()
-
+            
+        # source setup
         src_indices = sourcepattern.points.keys()
         nsource_pts = len(src_indices)
-        dist_to_node = sourcepattern.dist_to_node
-        if destpattern == None:
+        src_dist_to_node = sourcepattern.dist_to_node
+        src_nodes = {}
+        for s in src_indices:
+            e1, e2 = src_dist_to_node[s].keys()
+            src_nodes[s] = (e1, e2)
+
+        # destination setup
+        symmetric = False
+        if destpattern is None:
+            symmetric = True
             destpattern = sourcepattern
         dest_indices = destpattern.points.keys()
         ndest_pts = len(dest_indices)
-
-        searchpts = copy.deepcopy(dest_indices)
-        nearest  = np.empty((nsource_pts, ndest_pts))
+        dest_dist_to_node = destpattern.dist_to_node
+        dest_searchpts = copy.deepcopy(dest_indices)
+        dest_nodes = {}
+        for s in dest_indices:
+            e1, e2 = dest_dist_to_node[s].keys()
+            dest_nodes[s] = (e1, e2)
+        
+        # output setup
+        nearest = np.empty((nsource_pts, ndest_pts))
         nearest[:] = np.inf
-
-        searchnodes = {}
-        for s in searchpts:
-            e1, e2 = dist_to_node[s].keys()
-            searchnodes[s] = (e1, e2)
 
         for p1 in src_indices:
             #Get the source nodes and dist to source nodes
-            source1, source2 = searchnodes[p1]
-            set1 = set(searchnodes[p1])
+            source1, source2 = src_nodes[p1]
+            set1 = set(src_nodes[p1])
             # distance from node1 to p, distance from node2 to p
-            sdist1, sdist2 = dist_to_node[p1].values()
+            sdist1, sdist2 = src_dist_to_node[p1].values()
 
-            searchpts.remove(p1)
-            for p2 in searchpts:
-                dest1, dest2 = searchnodes[p2]
-                set2 = set(searchnodes[p2])
+            if symmetric:
+                # only compute the upper triangle if symmetric
+                dest_searchpts.remove(p1)
+            for p2 in dest_searchpts:
+                dest1, dest2 = dest_nodes[p2]
+                set2 = set(dest_nodes[p2])
                 if set1 == set2: #same edge
                     x1,y1 = sourcepattern.snapped_coordinates[p1]
                     x2,y2 = destpattern.snapped_coordinates[p2]
                     xd = x1-x2
                     yd = y1-y2
                     nearest[p1,p2] = np.sqrt(xd*xd + yd*yd)
-                    nearest[p2,p1] = nearest[p1,p2]
 
                 else:
-                    ddist1, ddist2 = dist_to_node[p2].values()
+                    ddist1, ddist2 = dest_dist_to_node[p2].values()
                     d11 = self.alldistances[source1][0][dest1]
                     d21 = self.alldistances[source2][0][dest1]
                     d12 = self.alldistances[source1][0][dest2]
@@ -711,7 +718,6 @@ class Network:
                         sd_1 = sd_21
                     # now add point to node one distance on destination edge
                     len_1 = sd_1 + ddist1
-
 
                     # repeat but now for paths entering at second node of second edge
                     sd_2 = d12 + sdist1
@@ -727,10 +733,14 @@ class Network:
                     sp_12 = len_1
                     if len_1 > len_2:
                         sp_12 = len_2
-                    nearest[p1, p2] =  sp_12
-                    nearest[p2, p1] = sp_12
-                    #print p1,p2, sp_12
-        np.fill_diagonal(nearest, np.nan)
+                    nearest[p1, p2] = sp_12
+                if symmetric:
+                    # mirror the upper and lower triangle when symmetric
+                    nearest[p2,p1] = nearest[p1,p2]                    
+        if symmetric:
+            # populate the main diagonal when symmetric
+            #np.fill_diagonal(nearest, 0)
+            np.fill_diagonal(nearest, np.nan)
         return nearest
 
     def nearestneighbordistances(self, sourcepattern, destpattern=None):
@@ -962,8 +972,10 @@ class Network:
         Example
         -------
 
+        >>> ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
         >>> n200 = ntw.segment_edges(200.0)
-
+        >>> len(n200.edges)
+        688
         """
 
         sn = Network()
@@ -1057,7 +1069,7 @@ class Network:
 
         Example
         --------
-
+        >>> ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
         >>> ntw.savenetwork('mynetwork.pkl')
 
         """
@@ -1097,7 +1109,7 @@ class PointPattern():
     ----------
     points : dict
              key is the point id
-             value are the coordiantes
+             value are the coordinates
 
     npoints : integer
               the number of points

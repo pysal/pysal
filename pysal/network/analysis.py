@@ -4,7 +4,7 @@ import numpy as np
 class NetworkBase(object):
     def __init__(self, ntw, pointpattern,nsteps=10,
                  permutations=99, threshold=0.5,
-                 distirbution='poisson',
+                 distribution='poisson',
                  lowerbound=None,upperbound=None):
 
         self.ntw = ntw
@@ -13,7 +13,7 @@ class NetworkBase(object):
         self.permutations = permutations
         self.threshold = threshold
 
-        self.distirbution = distirbution
+        self.distribution = distribution
         self.validatedistribution()
 
         self.sim = np.empty((permutations, nsteps))
@@ -31,7 +31,7 @@ class NetworkBase(object):
 
     def validatedistribution(self):
         valid_distributions = ['uniform', 'poisson']
-        assert(self.distirbution in valid_distributions),"Disstribution not in {}".format(valid_distributions)
+        assert(self.distribution in valid_distributions),"Disstribution not in {}".format(valid_distributions)
 
     def computeenvelope(self):
         upper = 1.0 - self.threshold / 2.0
@@ -66,7 +66,7 @@ class NetworkG(NetworkBase):
     def computepermutations(self):
         for p in xrange(self.permutations):
             sim = self.ntw.simulate_observations(self.npts,
-                                                 distribution=self.distirbution)
+                                                 distribution=self.distribution)
             nearest = np.nanmin(self.ntw.allneighbordistances(sim), axis=1)
 
             simx, simy = gfunction(nearest,
@@ -96,7 +96,7 @@ class NetworkK(NetworkBase):
     def computepermutations(self):
         for p in xrange(self.permutations):
             sim = self.ntw.simulate_observations(self.npts,
-                                                 distribution=self.distirbution)
+                                                 distribution=self.distribution)
             nearest = self.ntw.allneighbordistances(sim)
 
             simx, simy = kfunction(nearest,

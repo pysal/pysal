@@ -47,7 +47,7 @@ def df2dbf(df, dbf_path, my_specs=None):
     '''
     Convert a pandas.DataFrame into a dbf.
 
-    __author__  = "Dani Arribas-Bel <darribas@asu.edu> "
+    __author__  = "Dani Arribas-Bel <darribas@asu.edu>, Luc Anselin <luc.anselin@asu.edu>"
     ...
 
     Arguments
@@ -59,24 +59,44 @@ def df2dbf(df, dbf_path, my_specs=None):
     my_specs    : list
                   List with the field_specs to use for each column.
                   Defaults to None and applies the following scheme:
-                    * int: ('N', 14, 0)
-                    * float: ('N', 14, 14)
-                    * str: ('C', 14, 0)
+                    * int: ('N', 14, 0) - for all ints
+                    * float: ('N', 14, 14) - for all floats
+                    * str: ('C', 14, 0) - for string, object and category
+                  with all variants for different type sizes
+                  
+    Note: use of dtypes.name may not be fully robust, but preferred apprach of using
+    isinstance seems too clumsy
     '''
     if my_specs:
         specs = my_specs
     else:
+        """
         type2spec = {int: ('N', 20, 0),
                      np.int64: ('N', 20, 0),
                      np.int32: ('N', 20, 0),
                      np.int16: ('N', 20, 0),
-                     np.int8:  ('N', 20, 0),
+                     np.int8: ('N', 20, 0),
                      float: ('N', 36, 15),
                      np.float64: ('N', 36, 15),
                      np.float32: ('N', 36, 15),
                      str: ('C', 14, 0)
                      }
         types = [type(df[i].iloc[0]) for i in df.columns]
+        """
+        # new approach using dtypes.name to avoid numpy name issue in type
+        type2spec = {'int': ('N', 20, 0),
+                     'int8': ('N', 20, 0),
+                     'int16': ('N', 20, 0),
+                     'int32': ('N', 20, 0),
+                     'int64': ('N', 20, 0),
+                     'float': ('N', 36, 15),
+                     'float32': ('N', 36, 15),
+                     'float64': ('N', 36, 15),
+                     'str': ('C', 14, 0),
+                     'object': ('C', 14, 0),
+                     'category': ('C', 14, 0)
+                     }
+        types = [df[i].dtypes.name for i in df.columns]
         specs = [type2spec[t] for t in types]
     db = ps.open(dbf_path, 'w')
     db.header = list(df.columns)
@@ -85,6 +105,9 @@ def df2dbf(df, dbf_path, my_specs=None):
         db.write(row)
     db.close()
     return dbf_path
+
+
+
     
 def dbf2df(dbf_path, index=None, cols=False, incl_index=False):
     '''
