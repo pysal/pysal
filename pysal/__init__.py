@@ -41,6 +41,11 @@ import pysal.cg
 import pysal.core
 
 from pysal.version import version
+from pysal.version import stable_release_date
+import urllib2, json
+import config
+import datetime
+import os, sys
 
 # toplevel imports to be explicit
 from pysal.esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local
@@ -92,3 +97,62 @@ open = pysal.core.FileIO.FileIO
 
 # Constants
 MISSINGVALUE = None  # used by fileIO to flag missing values.
+
+# Load stale and other possible messages at import
+
+base_path = os.path.split(pysal.__file__)[0]
+config_path = os.path.join(base_path, 'config.py')
+
+def query_yes_no(question):
+    yes = set(['yes','y', 'ye', ''])
+    no = set(['no','n'])
+    while True:
+        sys.stdout.write(question)
+        choice = raw_input().lower()
+        if choice in yes:
+            turn_off_check()
+            break
+        elif choice in no:
+            break
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no'.\n")
+
+def turn_off_check():
+    if os.path.isfile(config_path):
+        f = open(config_path, 'w')
+        f.write("check_stable=False")
+        f.close()
+        pass
+    else:
+        print('Cannot find config.py. Please set value manually.')
+
+def check_version():
+    today = datetime.date.today()
+    delta = datetime.timedelta(days=180)
+    diff = (today - stable_release_date).days
+    releases = int(diff)/180
+    if today - delta > stable_release_date:
+	    print("Your version of PySAL is %d days old.") % diff 
+	    print("There have likely been %d new release(s).") % releases 
+	    query_yes_no("Disable this check? [Y/n]")
+    else:
+        pass
+
+"""
+def check_remote_version():
+    print("Checking web for last stable release....")
+    try:
+        url = 'http://pypi.python.org/pypi/pysal/json'
+        request = urllib2.urlopen(url)
+        data = json.load(request)
+        newest = data['info']['version']
+        late = 'The most recent stable release is %s.' %newest
+        print(late)
+    except:
+        print("Machine is offline. I am unable to check for the latest version of PySAL")
+"""
+
+if config.check_stable:
+    check_version()
+else:
+    pass
