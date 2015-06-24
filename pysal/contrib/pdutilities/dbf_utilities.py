@@ -97,9 +97,7 @@ def df2dbf(df, dbf_path, my_specs=None):
                      'category': ('C', 14, 0)
                      }
         types = [df[i].dtypes.name for i in df.columns]
-        print "types",types
         specs = [type2spec[t] for t in types]
-        print "specs",specs
     db = ps.open(dbf_path, 'w')
     db.header = list(df.columns)
     db.field_spec = specs
