@@ -21,7 +21,7 @@ def steady_state(P):
 
     Returns
     -------
-    matrix 
+    	     : matrix 
                (k, 1), steady state distribution.
 
     Examples
@@ -125,12 +125,12 @@ def var_fmpt(P):
 
     Parameters
     ----------
-    P      : matrix 
+    P      : matrix
              (k, k), an ergodic Markov transition probability matrix.
 
     Returns
     -------
-    matrix 
+    	   : matrix 
              (k, k), elements are the variances for the number of intervals
              required for a chain starting in state i to first enter state j.
 

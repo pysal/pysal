@@ -269,7 +269,7 @@ class Tau:
         return tau, pval, Concordant, Discordant, ExtraX, ExtraY
 
 
-class SpatialTau:
+class SpatialTau(object):
     """
     Spatial version of Kendall's rank correlation statistic.
 
@@ -333,13 +333,16 @@ class SpatialTau:
     ----------
     .. [3] Christensen, D. (2005) "Fast algorithms for the calculation of
        Kendall's tau." Computational Statistics, 20: 51-62.
+  
     .. [4] Press, W.H, S. A Teukolsky, W.T. Vetterling and B. P. Flannery (2007).
        Numerical Recipes: The Art of Scientific Computing. Cambridge. Pg 752.
+    
     .. [5] Rey, S.J. (2004) "Spatial dependence in the evolution of regional income
        distributions," in A. Getis, J. Mur and H.Zoeller (eds). Spatial
        Econometrics and Spatial Statistics. Palgrave, London, pp. 194-213.
+
     .. [6] Rey, S.J. (2014) "Fast algorithms for calculation of a space-time
-       concordance measure." Computational Statistics, 29(3-4):799–811.
+       concordance measure." Computational Statistics, 29(3-4): 799-811.
 
     Examples
     --------

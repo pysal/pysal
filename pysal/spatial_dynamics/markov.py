@@ -574,7 +574,7 @@ def chi2(T1, T2):
  
     Returns
     -------
-    tuple 
+    	  : tuple 
             (3 elements).
             (chi2 value, pvalue, degrees of freedom).
 
@@ -1288,7 +1288,7 @@ def homogeneity(transition_matrices, regime_names=[], class_names=[], \
 
     Returns
     -------     
-    implicit            
+    			: implicit            
                           an instance of Homogeneity_Results.
     """
 
@@ -1313,6 +1313,9 @@ class Homogeneity_Results:
                           Labels for the classes/states of the Markov chain.
     title               : string
                           Title of the table.
+
+    Attributes
+    -----------
 
     Notes
     -----
