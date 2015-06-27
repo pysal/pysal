@@ -21,11 +21,23 @@ import sys
 import math
 import random
 import numpy as np
+import pysal
 
 MAXD = sys.float_info.max
 MIND = sys.float_info.min
 
 def nn_distances(points):
+    tree = pysal.cg.KDTree(points)
+    nn = tree.query(tree.data ,k=2)
+    return nn[0][:,1]
+
+def nn_ids(points):
+    tree = pysal.cg.KDTree(points)
+    nn = tree.query(tree.data ,k=2)
+    return nn[1][:,1]
+
+
+def nn_distances_bf(points):
     """
     Brute force nearest neighbors
     """
