@@ -217,6 +217,17 @@ class Kernel(W):
                   adjustment to ensure knn distance range is closed on the
                   knnth observations
 
+    Attributes
+    ----------
+    weights : dict
+	      Dictionary keyed by id with a list of weights for each neighbor
+
+    neighbors : dict
+		of lists of neighbors keyed by observation id
+
+    bandwidth : array
+ 		array of bandwidths
+
     Examples
     --------
 
@@ -428,6 +439,14 @@ class DistanceBand(W):
     ids         : list
                   values to use for keys of the neighbors and weights dicts
 
+    Attributes
+    ----------
+    weights : dict
+	      of neighbor weights keyed by observation id
+
+    neighbors : dict
+		of neighbors keyed by observation id
+    
     Examples
     --------
 

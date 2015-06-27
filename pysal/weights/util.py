@@ -456,15 +456,15 @@ def higher_order_sp(w, k=2, shortest_path=True, diagonal=False):
     Contiguity weights for either a sparse W or pysal.weights.W  for order k.
 
     Parameters
-    ==========
+    ----------
 
-    w           :   W, sparse_matrix
-                    spatial weights object or scipy.sparse.csr.csr_instance
+    w           :   W
+		    sparse_matrix, spatial weights object or scipy.sparse.csr.csr_instance
 
     k           :   int
                     Order of contiguity
 
-    shortest_path:  boolean
+    shortest_path :  boolean
                     True: i,j and k-order neighbors if the
                     shortest path for i,j is k
                     False: i,j are k-order neighbors if there
@@ -476,10 +476,8 @@ def higher_order_sp(w, k=2, shortest_path=True, diagonal=False):
 
     Returns
     -------
-
-    wk: W, WSP
-        type matches type of w argument
-
+    wk : W
+	 WSP, type matches type of w argument
 
     Notes
     -----
@@ -679,10 +677,9 @@ def full(w):
 
     Returns
     -------
-
-    tuple
-               first element being the full numpy array and second element
-               keys being the ids associated with each row in the array.
+    (fullw, keys) : tuple
+                    first element being the full numpy array and second element
+                    keys being the ids associated with each row in the array.
 
     Examples
     --------
@@ -714,7 +711,6 @@ def full(w):
 def full2W(m, ids=None):
     '''
     Create a PySAL W object from a full array.
-    ...
 
     Parameters
     ----------
@@ -781,6 +777,7 @@ def full2W(m, ids=None):
 
 
 def WSP2W(wsp, silent_island_warning=False):
+    
     """
     Convert a pysal WSP object (thin weights matrix) to a pysal W object.
 
