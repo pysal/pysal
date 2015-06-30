@@ -15,7 +15,7 @@ import numpy as np
 __all__ = ["knnW", "Kernel", "DistanceBand"]
 
 
-def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
+def knnW(kdtree, k=2, p=2, ids=None):
     """
     Creates nearest neighbor weights matrix based on k nearest
     neighbors.
@@ -23,8 +23,8 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
     Parameters
     ----------
 
-    data        : array
-                  (n,k) or KDTree where KDtree.data is array (n,k)
+    kdtree      : object
+                  PySAL KDTree or ArcKDTree where KDtree.data is array (n,k)
                   n observations on k characteristics used to measure
                   distances between the n objects
     k           : int
@@ -34,11 +34,9 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
                   1<=p<=infinity
                   2: Euclidean distance
                   1: Manhattan distance
+                  Ignored if the KDTree is an ArcKDTree
     ids         : list
                   identifiers to attach to each observation
-    pct_unique  : float
-                  threshold percentage of unique points in data. Below this
-                  threshold tree is built on unique values only
 
     Returns
     -------
@@ -50,50 +48,27 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
     Examples
     --------
 
-    >>> x,y=np.indices((5,5))
-    >>> x.shape=(25,1)
-    >>> y.shape=(25,1)
-    >>> data=np.hstack([x,y])
-    >>> wnn2=knnW(data,k=2)
-    >>> wnn4=knnW(data,k=4)
-    >>> set([1,5,6,2]) == set(wnn4.neighbors[0])
-    True
-    >>> set([0,6,10,1]) == set(wnn4.neighbors[5])
-    True
-    >>> set([1,5]) == set(wnn2.neighbors[0])
-    True
-    >>> set([0,6]) == set(wnn2.neighbors[5])
-    True
-    >>> "%.2f"%wnn2.pct_nonzero
-    '8.00'
-    >>> wnn4.pct_nonzero
-    16.0
-    >>> wnn3e=knnW(data,p=2,k=3)
-    >>> set([1,5,6]) == set(wnn3e.neighbors[0])
-    True
-    >>> wnn3m=knnW(data,p=1,k=3)
-    >>> a = set([1,5,2])
-    >>> b = set([1,5,6])
-    >>> c = set([1,5,10])
-    >>> w0n = set(wnn3m.neighbors[0])
-    >>> a==w0n or b==w0n or c==w0n
+    >>> points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+    >>> kd = pysal.cg.kdtree.KDTree(np.array(points))
+    >>> wnn2 = pysal.knnW(kd, 2)
+    >>> [1,3] == wnn2.neighbors[0]
     True
 
     ids
 
-    >>> wnn2 = knnW(data,2)
+    >>> wnn2 = knnW(kd,2)
     >>> wnn2[0]
-    {1: 1.0, 5: 1.0}
+    {1: 1.0, 3: 1.0}
     >>> wnn2[1]
-    {0: 1.0, 2: 1.0}
+    {0: 1.0, 3: 1.0}
 
     now with 1 rather than 0 offset
 
-    >>> wnn2 = knnW(data,2, ids = range(1,26))
+    >>> wnn2 = knnW(kd, 2, ids=range(1,7))
     >>> wnn2[1]
-    {2: 1.0, 6: 1.0}
+    {2: 1.0, 4: 1.0}
     >>> wnn2[2]
-    {1: 1.0, 3: 1.0}
+    {1: 1.0, 4: 1.0}
     >>> 0 in wnn2.neighbors
     False
 
@@ -107,34 +82,9 @@ def knnW(data, k=2, p=2, ids=None, pct_unique=0.25):
     pysal.weights.W
 
     """
-
-    if issubclass(type(data), scipy.spatial.KDTree):
-        kd = data
-        data = kd.data
-        nnq = kd.query(data, k=k+1, p=p)
-        info = nnq[1]
-    elif type(data).__name__ == 'ndarray':
-        # check if unique points are a small fraction of all points
-        ind =  np.lexsort(data.T)
-        u = data[np.concatenate(([True],np.any(data[ind[1:]]!=data[ind[:-1]],axis=1)))]
-        pct_u = len(u)*1. / len(data)
-        if pct_u < pct_unique:
-            tree = KDTree(u)
-            nnq = tree.query(data, k=k+1, p=p)
-            info = nnq[1]
-            uid = [np.where((data == ui).all(axis=1))[0][0] for ui in u]
-            new_info = np.zeros((len(data), k + 1), 'int')
-            for i, row in enumerate(info):
-                new_info[i] = [uid[j] for j in row]
-            info = new_info
-        else:
-            kd = KDTree(data)
-            # calculate
-            nnq = kd.query(data, k=k + 1, p=p)
-            info = nnq[1]
-    else:
-        print 'Unsupported type'
-        return None
+    data = kdtree.data
+    nnq = kdtree.query(data, k=k+1, p=p)
+    info = nnq[1]
 
     neighbors = {}
     for i, row in enumerate(info):
@@ -446,7 +396,7 @@ class DistanceBand(W):
 
     neighbors : dict
 		of neighbors keyed by observation id
-    
+
     Examples
     --------
 

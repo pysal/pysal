@@ -13,25 +13,15 @@ class TestDistanceWeights(unittest.TestCase):
             10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
 
     def test_knnW(self):
-        x = np.indices((5, 5))
-        x, y = np.indices((5, 5))
-        x.shape = (25, 1)
-        y.shape = (25, 1)
-        data = np.hstack([x, y])
-        wnn2 = pysal.knnW(data, k=2)
-        wnn4 = pysal.knnW(data, k=4)
-        wnn4.neighbors[0]
-        self.assertEqual(set(wnn4.neighbors[0]), set([1, 5, 6, 2]))
-        self.assertEqual(set(wnn2.neighbors[5]), set([0, 6]))
-        self.assertEqual(wnn2.pct_nonzero, 8.0)
-        wnn3e = pysal.knnW(data, p=2, k=3)
-        self.assertEqual(set(wnn3e.neighbors[0]), set([1, 5, 6]))
-        wc = pysal.knnW_from_shapefile(self.polyShp)
-        self.assertEqual(wc.pct_nonzero, 4.081632653061225)
-        self.assertEqual(set(wc.neighbors[0]), set([2, 1]))
-        wc3 = pysal.knnW_from_shapefile(self.polyShp, k=3)
-        self.assertEqual(wc3.weights[1], [1, 1, 1])
-        self.assertEqual(set(wc3.neighbors[1]), set([0,3,7]))
+        kd = pysal.cg.kdtree.KDTree(np.array(self.points), distance_metric='euclidean')
+        wnn2 = pysal.knnW(kd, 2)
+        self.assertEqual(wnn2.neighbors[0], [1,3])
+
+        pts = [i.centroid for i in pysal.open(self.polyShp)]
+        kd = pysal.cg.kdtree.KDTree(pts)
+        wnn4 = pysal.knnW(kd, 4)
+        self.assertEqual(wnn4.neighbors[0], [2,1,3,7])
+        self.assertEqual(wnn4.neighbors[7], [3,6,12,11])
 
     def test_knnW_arc(self):
         pts = [x.centroid for x in pysal.open(self.arcShp)]
