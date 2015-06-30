@@ -1,7 +1,7 @@
 import unittest
 import pysal
 from pysal.esda import smoothing as sm
-from pysal import knnW
+from pysal import knnW_from_array
 import numpy as np
 
 
@@ -122,7 +122,7 @@ class TestHB(unittest.TestCase):
         sids = pysal.open(pysal.examples.get_path('sids2.shp'), 'r')
         self.sids = sids
         self.d = np.array([i.centroid for i in sids])
-        self.w = knnW(self.d, k=5)
+        self.w = knnW_from_array(self.d, k=5)
         if not self.w.id_order_set:
             self.w.id_order = self.w.id_order
         sids_db = pysal.open(pysal.examples.get_path('sids2.dbf'), 'r')
@@ -141,7 +141,7 @@ class TestHB(unittest.TestCase):
 
     def test_Headbanging_Median_Rate(self):
         sids_d = np.array([i.centroid for i in self.sids])
-        sids_w = pysal.knnW(sids_d, k=5)
+        sids_w = pysal.knnW_from_array(sids_d, k=5)
         if not sids_w.id_order_set:
             sids_w.id_order = sids_w.id_order
         s_ht = sm.Headbanging_Triples(sids_d, sids_w, k=5)

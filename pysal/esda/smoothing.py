@@ -1259,7 +1259,7 @@ class Headbanging_Triples:
 
     importing k-nearest neighbor weights creator
 
-    >>> from pysal import knnW
+    >>> from pysal import knnW_from_array
 
     Reading data in stl_hom.csv into stl_db to extract values
     for event and population-at-risk variables
@@ -1278,7 +1278,7 @@ class Headbanging_Triples:
 
     Using the centroids, we create a 5-nearst neighbor weights
 
-    >>> w = knnW(d,k=5)
+    >>> w = knnW_from_array(d,k=5)
 
     Ensuring that the elements in the spatial weights instance are ordered
     by the order of stl_db's IDs
@@ -1308,7 +1308,7 @@ class Headbanging_Triples:
 
     Creating a 5-nearest neighbors weights from the sids centroids
 
-    >>> sids_w = knnW(sids_d,k=5)
+    >>> sids_w = knnW_from_array(sids_d,k=5)
 
     Ensuring that the members in sids_w are ordered by
     the order of sids_d's ID
@@ -1442,7 +1442,7 @@ class Headbanging_Median_Rate:
 
     importing k-nearest neighbor weights creator
 
-    >>> from pysal import knnW
+    >>> from pysal import knnW_from_array
 
     opening the sids2 shapefile
 
@@ -1454,7 +1454,7 @@ class Headbanging_Median_Rate:
 
     creating a 5-nearest neighbors weights from the centroids
 
-    >>> sids_w = knnW(sids_d,k=5)
+    >>> sids_w = knnW_from_array(sids_d,k=5)
 
     ensuring that the members in sids_w are ordered
 
