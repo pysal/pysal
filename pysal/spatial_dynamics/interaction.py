@@ -11,7 +11,8 @@ __all__ = ['SpaceTimeEvents', 'knox', 'mantel', 'jacquez', 'modified_knox']
 import pysal
 import numpy as np
 import scipy.stats as stats
-import pysal.weights.Distance as Distance
+#import pysal.weights.Distance as Distance
+from pysal.weights.user import knnW_from_array
 from pysal import cg
 from pysal.spatial_dynamics import util
 from datetime import date
@@ -31,7 +32,7 @@ class SpaceTimeEvents:
                       containing the time stamp.
     infer_timestamp : bool, optional
                       if the column containing the timestamp is formatted as
-                      calendar dates, try to coerce them into Python datetime 
+                      calendar dates, try to coerce them into Python datetime
                       objects (the default is False).
 
     Attributes
@@ -170,7 +171,7 @@ def knox(s_coords, t_coords, delta, tau, permutations=99, debug=False):
                       the number of permutations used to establish pseudo-
                       significance (the default is 99).
     debug           : bool, optional
-                      if true, debugging information is printed (the default is 
+                      if true, debugging information is printed (the default is
                       False).
 
     Returns
@@ -277,12 +278,12 @@ def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, t
     scon            : float, optional
                       constant added to spatial distances (the default is 1.0).
     spow            : float, optional
-                      value for power transformation for spatial distances 
+                      value for power transformation for spatial distances
                       (the default is -1.0).
     tcon            : float, optional
                       constant added to temporal distances (the default is 1.0).
     tpow            : float, optional
-                      value for power transformation for temporal distances 
+                      value for power transformation for temporal distances
                       (the default is -1.0).
 
     Returns
@@ -444,8 +445,8 @@ def jacquez(s_coords, t_coords, k, permutations=99):
     n = len(time)
 
     # calculate the nearest neighbors in space and time separately
-    knnt = Distance.knnW(time, k)
-    knns = Distance.knnW(space, k)
+    knnt = knnW_from_array(time, k)
+    knns = knnW_from_array(space, k)
 
     nnt = knnt.neighbors
     nns = knns.neighbors
@@ -471,7 +472,7 @@ def jacquez(s_coords, t_coords, k, permutations=99):
     for p in range(permutations):
         j = 0
         trand = np.random.permutation(time)
-        knnt = Distance.knnW(trand, k)
+        knnt = knnW_from_array(trand, k)
         nnt = knnt.neighbors
         for i in range(n):
             t_neighbors = nnt[i]

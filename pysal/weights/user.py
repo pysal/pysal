@@ -217,13 +217,6 @@ def knnW_from_array(array, k=2, p=2, ids=None, radius=None):
     >>> wnn4=knnW_from_array(data,k=4)
     >>> set([ 1,5,6,2]) == set(wnn4.neighbors[0])
     True
-    >>> wnn4=knnW_from_array(data,k=4)
-    >>> wnn3e=knnW(data,p=2,k=3)
-    >>> set([1,5,6]) == set(wnn3e.neighbors[0])
-    True
-    >>> wnn3m=knnW(data,p=1,k=3)
-    >>> set([1,5,2]) == set(wnn3m.neighbors[0])
-    True
 
     Notes
     -----
@@ -236,8 +229,10 @@ def knnW_from_array(array, k=2, p=2, ids=None, radius=None):
 
     """
     if radius is not None:
-        array = pysal.cg.KDTree(array, distance_metric='Arc', radius=radius)
-    return knnW(array, k=k, p=p, ids=ids)
+        kdtree = pysal.cg.KDTree(array, distance_metric='Arc', radius=radius)
+    else:
+        kdtree = pysal.cg.KDTree(array)
+    return knnW(kdtree, k=k, p=p, ids=ids)
 
 
 def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
@@ -322,12 +317,15 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
     """
 
     data = get_points_array_from_shapefile(shapefile)
+
     if radius is not None:
-        data = pysal.cg.KDTree(data, distance_metric='Arc', radius=radius)
+        kdtree = pysal.cg.KDTree(data, distance_metric='Arc', radius=radius)
+    else:
+        kdtree = pysal.cg.KDTree(data)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
-        return knnW(data, k=k, p=p, ids=ids)
-    return knnW(data, k=k, p=p)
+        return knnW(kdtree, k=k, p=p, ids=ids)
+    return knnW(kdtree, k=k, p=p)
 
 
 def threshold_binaryW_from_array(array, threshold, p=2, radius=None):
