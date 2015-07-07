@@ -15,7 +15,10 @@ http://geodacenter.asu.edu
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 
 from struct import calcsize, unpack, pack
-from cStringIO import StringIO
+import six
+import io
+if six.PY2:
+    from cStringIO import StringIO
 from itertools import izip, islice
 import array
 import sys
@@ -336,11 +339,14 @@ class shp_file:
         self.__isreadable()
         if shpId + 1 > self.__numRecords:
             raise IndexError
-        fPosition, bytes = self._shx.index[shpId]
+        fPosition, byts = self._shx.index[shpId]
         self.__seek(fPosition)
         #the index does not include the 2 byte record header (which contains, Record ID and Content Length)
         rec_id, con_len = _unpackDict(URHEADERSTRUCT, self.fileObj)
-        return self.shape.unpack(StringIO(self.fileObj.read(bytes)))
+        if six.PY2:
+            return self.shape.unpack(StringIO(self.fileObj.read(byts)))
+        elif six.PY3:
+            return self.shape.unpack(io.BytesIO(self.fileObj.read(byts)))
         #return self.shape.unpack(self.fileObj.read(bytes))
 
     def __update_bbox(self, s):
@@ -378,13 +384,13 @@ class shp_file:
         self.__file_Length += con_len + 8
         rec_id, pos = self._shx.add_record(con_len)
         self.__seek(pos)
-        self.fileObj.write(pack('>ii', rec_id, con_len / 2))
+        self.fileObj.write(pack('>ii', rec_id, con_len // 2))
         self.fileObj.write(rec)
 
     def close(self):
         self._shx.close(self.header)
         if self.__mode == 'w':
-            self.header['File Length'] = self.__file_Length / 2
+            self.header['File Length'] = self.__file_Length // 2
             self.__seek(0)
             self.fileObj.write(_packDict(HEADERSTRUCT, self.header))
         self.fileObj.close()
@@ -444,7 +450,7 @@ class shx_file:
         self.__isreadable()
         self.fileObj = open(self.fileName + '.shx', 'rb')
         self._header = _unpackDict(UHEADERSTRUCT, self.fileObj)
-        self.numRecords = numRecords = (self._header['File Length'] - 50) / 4
+        self.numRecords = numRecords = (self._header['File Length'] - 50) // 4
         index = {}
         fmt = '>%di' % (2 * numRecords)
         size = calcsize(fmt)
@@ -515,13 +521,13 @@ class shx_file:
         if self.__mode == 'w':
             self.__iswritable()
             header['File Length'] = (
-                self.numRecords * calcsize('>ii') + 100) / 2
+                self.numRecords * calcsize('>ii') + 100) // 2
             self.fileObj.seek(0)
             self.fileObj.write(_packDict(HEADERSTRUCT, header))
             fmt = '>%di' % (2 * self.numRecords)
             values = []
             for off, size in self.index:
-                values.extend([off / 2, size / 2])
+                values.extend([off // 2, size // 2])
             self.fileObj.write(pack(fmt, *values))
         self.fileObj.close()
 

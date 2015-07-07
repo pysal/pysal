@@ -6,13 +6,12 @@ __all__ = ['csvWrapper']
 
 
 class csvWrapper(Tables.DataTable):
-
+    
     __doc__ = Tables.DataTable.__doc__
-
     FORMATS = ['csv']
     READ_MODES = ['r','Ur','rU','U']
     MODES = READ_MODES[:]
-
+    
     def __init__(self, *args, **kwargs):
         """
 
