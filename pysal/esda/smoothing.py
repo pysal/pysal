@@ -151,7 +151,7 @@ def sum_by_n(d, w, n):
 
     """
     t = len(d)
-    h = t / n
+    h = t // n #must be floor!
     d = d * w
     return np.array([sum(d[i: i + h]) for i in range(0, t, h)])
 
