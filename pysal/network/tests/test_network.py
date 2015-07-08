@@ -4,7 +4,7 @@ import unittest
 import numpy as np
 import pysal as ps
 
-from .. import util
+from pysal.network import util
 
 class TestNetwork(unittest.TestCase):
 
