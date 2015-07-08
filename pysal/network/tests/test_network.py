@@ -131,4 +131,5 @@ class TestNetworkUtils(unittest.TestCase):
         self.assertAlmostEqual(self.distance[196], 5505.668247, places=4)
         self.assertEqual(self.pred[196], 133)
 
-
+if __name__ == 'main':
+    unittest.main()
