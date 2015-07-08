@@ -1,6 +1,8 @@
 Python Spatial Analysis Library
 ==============================
 
+[![Join the chat at https://gitter.im/pysal/pysal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pysal/pysal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 What is PySAL
 --------------
 [![Build Status](https://travis-ci.org/pysal/pysal.svg?branch=master)](https://travis-ci.org/pysal/pysal)
