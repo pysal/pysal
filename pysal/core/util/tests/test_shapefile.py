@@ -255,7 +255,7 @@ class TestPolygonZ(unittest.TestCase):
             'Mmax': 4,
             'Marray': [2, 4, 2, 2]
         }
-        dat = StringIO(PolygonZ.pack(record))
+        dat = bufferIO(PolygonZ.pack(record))
         self.assertEqual(record, PolygonZ.unpack(dat))
 
 
