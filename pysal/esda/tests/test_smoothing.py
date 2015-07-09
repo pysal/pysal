@@ -230,8 +230,8 @@ class TestUtils(unittest.TestCase):
     def test_assuncao_rate(self):
         e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
         b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
-        exp_assuncao = np.array(
-            [1.04319254, -0.04117865, -0.56539054, -1.73762547])
+        exp_assuncao = np.array([1.03843594, -0.04099089, -0.56250375,
+            -1.73061861])
         np.testing.assert_array_almost_equal(
             exp_assuncao, sm.assuncao_rate(e, b)[:4])
 
