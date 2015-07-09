@@ -266,12 +266,14 @@ class Spatial_Markov:
 
     Notes
     -----
-    Based on  Rey (2001) [1]_.
+    Based on  Rey (2001) [Rey2001]_.
 
     The shtest and chi2 tests should be used with caution as they are based on
     classic theory assuming random transitions. The x2 based test is
     preferable since it simulates the randomness under the null. It is an
     experimental test requiring further analysis.
+
+	This is new
 
     Examples
     --------
