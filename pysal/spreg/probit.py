@@ -352,9 +352,9 @@ class Probit(BaseProbit):
 
     The diagnostics for spatial dependence currently implemented are:
 
-        * Pinkse Error [1]_
-        * Kelejian and Prucha Moran's I [2]_
-        * Pinkse & Slade Error [3]_
+        * Pinkse Error [pinkse04]_
+        * Kelejian and Prucha Moran's I [KPmI]_
+        * Pinkse & Slade Error [PSErr]_
 
     Parameters
     ----------
@@ -444,12 +444,6 @@ class Probit(BaseProbit):
                    Name of dataset for use in output
     title        : string
                    Name of the regression method used
-
-    References
-    ----------
-    .. [1] Pinkse, J. (2004). Moran-flavored tests with nuisance parameter. In: Anselin, L., Florax, R. J., Rey, S. J. (editors) Advances in Spatial Econometrics, pages 67-77. Springer-Verlag, Heidelberg.
-    .. [2] Kelejian, H., Prucha, I. (2001) "On the asymptotic distribution of the Moran I test statistic with applications". Journal of Econometrics, 104(2):219-57.
-    .. [3] Pinkse, J., Slade, M. E. (1998) "Contracting in space: an application of spatial statistics to discrete-choice models". Journal of Econometrics, 85(1):125-54.
 
     Examples
     --------
