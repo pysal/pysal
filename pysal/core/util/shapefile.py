@@ -16,8 +16,9 @@ __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 
 from struct import calcsize, unpack, pack
 import six
-import io
-if six.PY2:
+if six.PY3:
+    import io
+elif six.PY2:
     from cStringIO import StringIO
 from itertools import izip, islice
 import array
@@ -34,6 +35,14 @@ __all__ = ['shp_file', 'shx_file']
 
 #SHAPEFILE Globals
 
+def bufferIO(buf):
+    """
+    Helper function for 2-3 compatibility
+    """
+    if six.PY2:
+        return StringIO(buf)
+    elif six.PY3:
+        return io.BytesIO(buf)
 
 def struct2arrayinfo(struct):
     struct = list(struct)
@@ -343,10 +352,7 @@ class shp_file:
         self.__seek(fPosition)
         #the index does not include the 2 byte record header (which contains, Record ID and Content Length)
         rec_id, con_len = _unpackDict(URHEADERSTRUCT, self.fileObj)
-        if six.PY2:
-            return self.shape.unpack(StringIO(self.fileObj.read(byts)))
-        elif six.PY3:
-            return self.shape.unpack(io.BytesIO(self.fileObj.read(byts)))
+        return self.shape.unpack(bufferIO(self.fileObj.read(byts)))
         #return self.shape.unpack(self.fileObj.read(bytes))
 
     def __update_bbox(self, s):
