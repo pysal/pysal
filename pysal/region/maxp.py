@@ -11,7 +11,6 @@ __author__ = "Serge Rey <srey@asu.edu>, David Folch <david.folch@asu.edu>"
 import pysal
 from components import check_contiguity
 import copy
-import random
 import numpy as np
 #from pysal.common import *
 from pysal.region import randomregion as RR
@@ -75,10 +74,8 @@ class Maxp:
     Setup imports and set seeds for random number generators to insure the
     results are identical for each run.
 
-    >>> import random
     >>> import numpy as np
     >>> import pysal
-    >>> random.seed(100)
     >>> np.random.seed(100)
 
     Setup a spatial weights matrix describing the connectivity of a square
@@ -89,10 +86,8 @@ class Maxp:
     that each region will contain at least three areas.  In other cases the
     floor may be computed based on a minimum population count for example.
 
-    >>> import random
     >>> import numpy as np
     >>> import pysal
-    >>> random.seed(100)
     >>> np.random.seed(100)
     >>> w = pysal.lat2W(10,10)
     >>> z = np.random.random_sample((w.n,2))
@@ -184,7 +179,7 @@ class Maxp:
                             potential.extend(neighbors)
                         if potential:
                             # add a random neighbor
-                            neigID = random.randint(0, len(potential) - 1)
+                            neigID = np.random.randint(0, len(potential))
                             neigAdd = potential.pop(neigID)
                             region.append(neigAdd)
                             # remove it from candidates
@@ -218,7 +213,7 @@ class Maxp:
                         candidates.append(region)
                 if candidates:
                     # add enclave to random region
-                    regID = random.randint(0, len(candidates) - 1)
+                    regID = np.random.randint(0, len(candidates))
                     rid = candidates[regID]
                     regions[rid].append(enclave)
                     a2r[enclave] = rid
@@ -379,10 +374,8 @@ class Maxp:
 
         Setup is the same as shown above except using a 5x5 community.
 
-        >>> import random
         >>> import numpy as np
         >>> import pysal
-        >>> random.seed(100)
         >>> np.random.seed(100)
         >>> w=pysal.weights.lat2W(5,5)
         >>> z=np.random.random_sample((w.n,2))
@@ -456,10 +449,8 @@ class Maxp:
 
         Setup is the same as shown above except using a 5x5 community.
 
-        >>> import random
         >>> import numpy as np
         >>> import pysal
-        >>> random.seed(100)
         >>> np.random.seed(100)
         >>> w=pysal.weights.lat2W(5,5)
         >>> z=np.random.random_sample((w.n,2))
@@ -552,10 +543,8 @@ class Maxp_LISA(Maxp):
     Setup imports and set seeds for random number generators to insure the
     results are identical for each run.
 
-    >>> import random
     >>> import numpy as np
     >>> import pysal
-    >>> random.seed(100)
     >>> np.random.seed(100)
 
     Setup a spatial weights matrix describing the connectivity of a square
