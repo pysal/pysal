@@ -5,14 +5,13 @@ Heuristically form the maximum number (p) of regions given a set of n
 areas and a floor constraint.
 """
 
-__author__ = "Serge Rey <srey@asu.edu>, David Folch <david.folch@asu.edu>"
+__author__ = "Serge Rey <srey@asu.edu>, David Folch <dfolch@fsu.edu>"
 
 
 import pysal
 from components import check_contiguity
 import copy
 import numpy as np
-#from pysal.common import *
 from pysal.region import randomregion as RR
 
 __all__ = ["Maxp", "Maxp_LISA"]
@@ -99,7 +98,7 @@ class Maxp:
     >>> min([len(region) for region in solution.regions])
     3
     >>> solution.regions[0]
-    [4, 14, 5, 24, 3]
+    [76, 66, 56]
     >>>
 
     """
@@ -390,7 +389,7 @@ class Maxp:
 
         >>> solution.inference(nperm=9)
         >>> solution.pvalue
-        0.2
+        0.1
 
         """
         ids = self.w.id_order
@@ -560,9 +559,9 @@ class Maxp_LISA(Maxp):
     >>> p=np.ones(w.n)
     >>> mpl=pysal.region.Maxp_LISA(w,z,p,floor=3,floor_variable=p)
     >>> mpl.p
-    31
+    30
     >>> mpl.regions[0]
-    [99, 89, 98]
+    [99, 98, 89]
 
     """
     def __init__(self, w, z, y, floor, floor_variable, initial=100):
