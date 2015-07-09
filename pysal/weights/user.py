@@ -4,23 +4,6 @@ contiguity and distance criteria.
 """
 
 __author__ = "Sergio J. Rey <srey@asu.edu> "
-__all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array',
-'knnW_from_shapefile', 'threshold_binaryW_from_array',
-'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array',
-'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile',
-'adaptive_kernelW', 'adaptive_kernelW_from_shapefile',
-'min_threshold_dist_from_shapefile', 'build_lattice_shapefile',
-'rook_from_geojsonf', 'rook_from_geojsons','queen_from_geojsons', 'queen_from_geojsonf']
-
-
-
-__all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array',
-'knnW_from_shapefile', 'threshold_binaryW_from_array',
-'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array',
-'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile',
-'adaptive_kernelW', 'adaptive_kernelW_from_shapefile',
-'min_threshold_dist_from_shapefile', 'build_lattice_shapefile',
-'rook_from_geojsonf', 'rook_from_geojsons','queen_from_geojsons', 'queen_from_geojsonf']
 
 
 import pysal
@@ -32,7 +15,15 @@ import json
 import urllib
 from pysal.weights.util import contiguity_from_geojson
 
-__all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array', 'knnW_from_shapefile', 'threshold_binaryW_from_array', 'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array', 'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile', 'adaptive_kernelW', 'adaptive_kernelW_from_shapefile', 'min_threshold_dist_from_shapefile', 'build_lattice_shapefile']
+
+__all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array',
+'knnW_from_shapefile', 'threshold_binaryW_from_array',
+'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array',
+'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile',
+'adaptive_kernelW', 'adaptive_kernelW_from_shapefile',
+'min_threshold_dist_from_shapefile', 'build_lattice_shapefile',
+'rook_from_geojsonf', 'rook_from_geojsons','queen_from_geojsons', 'queen_from_geojsonf']
+
 
 
 def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
