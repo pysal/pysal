@@ -556,7 +556,7 @@ def assuncao_rate(e, b):
     e_sum, b_sum = sum(e), sum(b)
     ebi_b = e_sum * 1.0 / b_sum
     s2 = sum(b * ((y - ebi_b) ** 2)) / b_sum
-    ebi_a = s2 - ebi_b / (b_sum / len(e))
+    ebi_a = s2 - ebi_b / (float(b_sum) / len(e))
     ebi_v = ebi_a + ebi_b / b
     return (y - ebi_b) / np.sqrt(ebi_v)
 
