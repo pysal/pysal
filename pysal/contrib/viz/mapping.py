@@ -22,6 +22,8 @@ from matplotlib.patches import Polygon
 from matplotlib.path import Path
 from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection
 
+# Low-level pieces
+
 def map_point_shp(shp, which='all', bbox=None):
     '''
     Create a map object from a point shape
@@ -175,6 +177,8 @@ def map_poly_shp(shp, which='all', bbox=None):
     pc.shp2dbf_row = rows
     return pc
 
+# Mid-level pieces
+
 def setup_ax(polyCos_list, ax=None):
     '''
     Generate an Axes object for a list of collections
@@ -245,143 +249,6 @@ def _add_axes2col(col, bbox):
     col.set_axes(ax)
     plt.close(tf)
     return None
-
-def plot_poly_lines(shp_link,  savein=None, poly_col='none'):
-    '''
-    Quick plotting of shapefiles
-    ...
-
-    Arguments
-    ---------
-    shp_link        : str
-                      Path to shapefile
-    savein          : str
-                      Path to png file where to dump the plot. Optional,
-                      defaults to None
-    poly_col        : str
-                      Face color of polygons
-    '''
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    shp = ps.open(shp_link)
-    patchco = map_poly_shp(shp)
-    patchco.set_facecolor('none')
-    patchco.set_edgecolor('0.8')
-    ax = setup_ax([patchco], ax)
-    if savein:
-        plt.savefig(savein)
-    else:
-        plt.show()
-    return None
-
-def plot_choropleth(shp_link, values, type, k=5, cmap=None,
-        shp_type='poly', sample_fisher=False, title='',
-        savein=None, figsize=None, dpi=300, alpha=0.4):
-    '''
-    Wrapper to quickly create and plot from a lat/lon shapefile
-    ...
-
-    Arguments
-    ---------
-
-    shp_link        : str
-                      Path to shapefile
-    values          : array
-                      Numpy array with values to map
-    type            : str
-                      Type of choropleth. Supported methods:
-                        * 'classless'
-                        * 'unique_values'
-                        * 'quantiles' (default)
-                        * 'fisher_jenks'
-                        * 'equal_interval'
-    k               : int
-                      Number of bins to classify values in and assign a color
-                      to (defaults to 5)
-    cmap            : str
-                      Matplotlib coloring scheme. If None (default), uses:
-                        * 'classless': 'Greys'
-                        * 'unique_values': 'Paired'
-                        * 'quantiles': 'hot_r'
-                        * 'fisher_jenks': 'hot_r'
-                        * 'equal_interval': 'hot_r'
-    shp_type        : str
-                      'poly' (default) or 'line', for the kind of shapefile
-                      passed
-    sample_fisher   : Boolean
-                      Defaults to False, controls whether Fisher-Jenks
-                      classification uses a sample (faster) or the entire
-                      array of values. Ignored if 'classification'!='fisher_jenks'
-                      The percentage of the sample that takes at a time is 10%
-    title           : str
-                      Optional string for the title
-    savein          : str
-                      Path to png file where to dump the plot. Optional,
-                      defaults to None
-    figsize         : tuple
-                      Figure dimensions
-    dpi             : int
-                      resolution of graphic file
-    alpha           : float
-                      [Optional. Default=0.4] Transparency of the map.
-
-    Returns
-    -------
-
-    map             : PatchCollection
-                      Map object with the polygons from the shapefile and
-                      unique value coloring
-
-    '''
-    shp = ps.open(shp_link)
-    if shp_type == 'poly':
-        map_obj = map_poly_shp(shp)
-    if shp_type == 'line':
-        map_obj = map_line_shp(shp)
-
-    if type == 'classless':
-        if not cmap:
-            cmap = 'Greys'
-        map_obj = base_choropleth_classless(map_obj, values, cmap=cmap)
-    if type == 'unique_values':
-        if not cmap:
-            cmap = 'Paired'
-        map_obj = base_choropleth_unique(map_obj, values, cmap=cmap)
-    if type == 'quantiles':
-        if not cmap:
-            cmap = 'hot_r'
-        map_obj = base_choropleth_classif(map_obj, values, k=k, \
-                classification='quantiles', cmap=cmap)
-    if type == 'fisher_jenks':
-        if not cmap:
-            cmap = 'hot_r'
-        map_obj = base_choropleth_classif(map_obj, values, k=k, \
-                classification='fisher_jenks', cmap=cmap, \
-                sample_fisher=sample_fisher)
-    if type == 'equal_interval':
-        if not cmap:
-            cmap = 'hot_r'
-        map_obj = base_choropleth_classif(map_obj, values, k=k, \
-                classification='equal_interval', cmap=cmap)
-
-    map_obj.set_alpha(alpha)
-    fig = plt.figure(figsize=figsize)
-    ax = fig.add_subplot(111)
-    ax = setup_ax([map_obj], ax)
-    if title:
-        ax.set_title(title)
-    if type=='quantiles' or type=='fisher_jenks' or type=='equal_interval':
-        cmap = map_obj.get_cmap()
-        norm = map_obj.norm
-        boundaries = np.round(map_obj.norm.boundaries, decimals=3)
-        cbar = plt.colorbar(map_obj, cmap=cmap, norm=norm, boundaries=boundaries, \
-                ticks=boundaries, orientation='horizontal', shrink=0.5)
-    if savein:
-        plt.savefig(savein, dpi=dpi)
-    else:
-        plt.show()
-    return None
-
 
 def base_choropleth_classless(map_obj, values, cmap='Greys' ):
     '''
@@ -574,6 +441,145 @@ def _expand_values(values, shp2dbf_row):
     pvalues = pd.Series(values, index=np.arange(values.shape[0]))\
             .reindex(shp2dbf_row)#Expand values to every poly
     return pvalues.values
+
+# High-level pieces
+
+def plot_poly_lines(shp_link,  savein=None, poly_col='none'):
+    '''
+    Quick plotting of shapefiles
+    ...
+
+    Arguments
+    ---------
+    shp_link        : str
+                      Path to shapefile
+    savein          : str
+                      Path to png file where to dump the plot. Optional,
+                      defaults to None
+    poly_col        : str
+                      Face color of polygons
+    '''
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    shp = ps.open(shp_link)
+    patchco = map_poly_shp(shp)
+    patchco.set_facecolor('none')
+    patchco.set_edgecolor('0.8')
+    ax = setup_ax([patchco], ax)
+    if savein:
+        plt.savefig(savein)
+    else:
+        plt.show()
+    return None
+
+def plot_choropleth(shp_link, values, type, k=5, cmap=None,
+        shp_type='poly', sample_fisher=False, title='',
+        savein=None, figsize=None, dpi=300, alpha=0.4):
+    '''
+    Wrapper to quickly create and plot from a lat/lon shapefile
+    ...
+
+    Arguments
+    ---------
+
+    shp_link        : str
+                      Path to shapefile
+    values          : array
+                      Numpy array with values to map
+    type            : str
+                      Type of choropleth. Supported methods:
+                        * 'classless'
+                        * 'unique_values'
+                        * 'quantiles' (default)
+                        * 'fisher_jenks'
+                        * 'equal_interval'
+    k               : int
+                      Number of bins to classify values in and assign a color
+                      to (defaults to 5)
+    cmap            : str
+                      Matplotlib coloring scheme. If None (default), uses:
+                        * 'classless': 'Greys'
+                        * 'unique_values': 'Paired'
+                        * 'quantiles': 'hot_r'
+                        * 'fisher_jenks': 'hot_r'
+                        * 'equal_interval': 'hot_r'
+    shp_type        : str
+                      'poly' (default) or 'line', for the kind of shapefile
+                      passed
+    sample_fisher   : Boolean
+                      Defaults to False, controls whether Fisher-Jenks
+                      classification uses a sample (faster) or the entire
+                      array of values. Ignored if 'classification'!='fisher_jenks'
+                      The percentage of the sample that takes at a time is 10%
+    title           : str
+                      Optional string for the title
+    savein          : str
+                      Path to png file where to dump the plot. Optional,
+                      defaults to None
+    figsize         : tuple
+                      Figure dimensions
+    dpi             : int
+                      resolution of graphic file
+    alpha           : float
+                      [Optional. Default=0.4] Transparency of the map.
+
+    Returns
+    -------
+
+    map             : PatchCollection
+                      Map object with the polygons from the shapefile and
+                      unique value coloring
+
+    '''
+    shp = ps.open(shp_link)
+    if shp_type == 'poly':
+        map_obj = map_poly_shp(shp)
+    if shp_type == 'line':
+        map_obj = map_line_shp(shp)
+
+    if type == 'classless':
+        if not cmap:
+            cmap = 'Greys'
+        map_obj = base_choropleth_classless(map_obj, values, cmap=cmap)
+    if type == 'unique_values':
+        if not cmap:
+            cmap = 'Paired'
+        map_obj = base_choropleth_unique(map_obj, values, cmap=cmap)
+    if type == 'quantiles':
+        if not cmap:
+            cmap = 'hot_r'
+        map_obj = base_choropleth_classif(map_obj, values, k=k, \
+                classification='quantiles', cmap=cmap)
+    if type == 'fisher_jenks':
+        if not cmap:
+            cmap = 'hot_r'
+        map_obj = base_choropleth_classif(map_obj, values, k=k, \
+                classification='fisher_jenks', cmap=cmap, \
+                sample_fisher=sample_fisher)
+    if type == 'equal_interval':
+        if not cmap:
+            cmap = 'hot_r'
+        map_obj = base_choropleth_classif(map_obj, values, k=k, \
+                classification='equal_interval', cmap=cmap)
+
+    map_obj.set_alpha(alpha)
+    fig = plt.figure(figsize=figsize)
+    ax = fig.add_subplot(111)
+    ax = setup_ax([map_obj], ax)
+    if title:
+        ax.set_title(title)
+    if type=='quantiles' or type=='fisher_jenks' or type=='equal_interval':
+        cmap = map_obj.get_cmap()
+        norm = map_obj.norm
+        boundaries = np.round(map_obj.norm.boundaries, decimals=3)
+        cbar = plt.colorbar(map_obj, cmap=cmap, norm=norm, boundaries=boundaries, \
+                ticks=boundaries, orientation='horizontal', shrink=0.5)
+    if savein:
+        plt.savefig(savein, dpi=dpi)
+    else:
+        plt.show()
+    return None
+
 
     
 
