@@ -14,6 +14,15 @@ __all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array',
 
 
 
+__all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array',
+'knnW_from_shapefile', 'threshold_binaryW_from_array',
+'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array',
+'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile',
+'adaptive_kernelW', 'adaptive_kernelW_from_shapefile',
+'min_threshold_dist_from_shapefile', 'build_lattice_shapefile',
+'rook_from_geojsonf', 'rook_from_geojsons','queen_from_geojsons', 'queen_from_geojsonf']
+
+
 import pysal
 from Contiguity import buildContiguity
 from Distance import knnW, Kernel, DistanceBand
