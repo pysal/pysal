@@ -352,7 +352,7 @@ class Probit(BaseProbit):
 
     The diagnostics for spatial dependence currently implemented are:
 
-        * Pinkse Error [1]_
+        * Pinkse Error [Pinkse2004]_
         * Kelejian and Prucha Moran's I [2]_
         * Pinkse & Slade Error [3]_
 
