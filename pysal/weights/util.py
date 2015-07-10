@@ -1,3 +1,4 @@
+import warnings
 import pysal
 from pysal.common import *
 import pysal.weights
@@ -13,6 +14,12 @@ __all__ = ['lat2W', 'block_weights', 'comb', 'order', 'higher_order',
            'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile',
            'min_threshold_distance', 'lat2SW', 'w_local_cluster',
            'higher_order_sp', 'hexLat2W', 'regime_weights']
+
+
+def custom_formatwarning(msg, *a):
+    # ignore everything except the message
+    return str(msg) + '\n'
+warnings.formatwarning = custom_formatwarning
 
 
 def hexLat2W(nrows=5, ncols=5):
@@ -1065,8 +1072,8 @@ def min_threshold_distance(data, p=2):
     Parameters
     ----------
 
-    data    : array
-              (n,k) or KDTree where KDtree.data is array (n,k)
+    data    : object
+              PySAL KDTree where KDtree.data is array (n,k)
               n observations on k attributes
     p       : float
               Minkowski p-norm distance metric parameter:
@@ -1087,15 +1094,15 @@ def min_threshold_distance(data, p=2):
     >>> x.shape = (25, 1)
     >>> y.shape = (25, 1)
     >>> data = np.hstack([x, y])
-    >>> min_threshold_distance(data)
+    >>> min_threshold_distance(pysal.KDTree(data))
     1.0
 
     """
-    if issubclass(type(data), scipy.spatial.KDTree):
-        kd = data
-        data = kd.data
-    else:
-        kd = KDTree(data)
+    if issubclass(type(data), np.ndarray):
+        data = KDTree(data)
+        warnings.warn("Deprecation warning: array converted to euclidean distance pysal.KDTree; pysal.KDTree will be required in the future.")
+    kd = data
+    data = kd.data
     nn = kd.query(data, k=2, p=p)
     nnd = nn[0].max(axis=0)[1]
     return nnd

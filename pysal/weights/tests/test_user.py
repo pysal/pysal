@@ -56,6 +56,10 @@ class Testuser(unittest.TestCase):
 
     def test_threshold_binaryW_from_array(self):
         points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+        points = np.array(points)
+        w = pysal.threshold_binaryW_from_array(np.array(points), threshold=11.2)
+        self.assertEquals(w.weights, {0: [1, 1], 1: [1, 1], 2: [],
+                                      3: [1, 1], 4: [1], 5: [1]})
         w = pysal.threshold_binaryW_from_array(points, threshold=11.2)
         self.assertEquals(w.weights, {0: [1, 1], 1: [1, 1], 2: [],
                                       3: [1, 1], 4: [1], 5: [1]})
@@ -70,6 +74,7 @@ class Testuser(unittest.TestCase):
 
     def test_threshold_continuousW_from_array(self):
         points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+        points = np.array(points)
         wid = pysal.threshold_continuousW_from_array(points, 11.2)
         self.assertEquals(wid.weights[0], [0.10000000000000001,
                                            0.089442719099991588])
@@ -84,7 +89,10 @@ class Testuser(unittest.TestCase):
 
     def test_kernelW(self):
         points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
-        kw = pysal.kernelW(points)
+        kw = pysal.kernelW(np.array(points))
+        self.assertEquals(kw.weights[0], [1.0, 0.50000004999999503,
+                                          0.44098306152674649])
+        kw = pysal.kernelW(pysal.KDTree(points))
         self.assertEquals(kw.weights[0], [1.0, 0.50000004999999503,
                                           0.44098306152674649])
         self.assertEquals(kw.neighbors[0], [0, 1, 3])
@@ -115,8 +123,13 @@ class Testuser(unittest.TestCase):
 
     def test_adaptive_kernelW(self):
         points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+        points = np.array(points)   
         bw = [25.0, 15.0, 25.0, 16.0, 14.5, 25.0]
         kwa = pysal.adaptive_kernelW(points, bandwidths=bw)
+        self.assertEqual(kwa.weights[0], [1.0, 0.59999999999999998,
+                                          0.55278640450004202,
+                                          0.10557280900008403])
+        kwa = pysal.adaptive_kernelW(pysal.KDTree(points), bandwidths=bw)
         self.assertEqual(kwa.weights[0], [1.0, 0.59999999999999998,
                                           0.55278640450004202,
                                           0.10557280900008403])

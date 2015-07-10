@@ -5,6 +5,7 @@ Distance based spatial weights.
 
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 
+import warnings
 import pysal
 import scipy.spatial
 from pysal.common import KDTree
@@ -15,7 +16,13 @@ import numpy as np
 __all__ = ["knnW", "Kernel", "DistanceBand"]
 
 
-def knnW(kdtree, k=2, p=2, ids=None):
+def custom_formatwarning(msg, *a):
+    # ignore everything except the message
+    return str(msg) + '\n'
+warnings.formatwarning = custom_formatwarning
+
+
+def knnW(data, k=2, p=2, ids=None):
     """
     Creates nearest neighbor weights matrix based on k nearest
     neighbors.
@@ -23,8 +30,8 @@ def knnW(kdtree, k=2, p=2, ids=None):
     Parameters
     ----------
 
-    kdtree      : object
-                  PySAL KDTree or ArcKDTree where KDtree.data is array (n,k)
+    data        : object
+                  PySAL KDTree where KDtree.data is array (n,k)
                   n observations on k characteristics used to measure
                   distances between the n objects
     k           : int
@@ -34,7 +41,7 @@ def knnW(kdtree, k=2, p=2, ids=None):
                   1<=p<=infinity
                   2: Euclidean distance
                   1: Manhattan distance
-                  Ignored if the KDTree is an ArcKDTree
+                  Ignored if the KDTree uses "Arc" distances
     ids         : list
                   identifiers to attach to each observation
 
@@ -49,7 +56,7 @@ def knnW(kdtree, k=2, p=2, ids=None):
     --------
 
     >>> points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
-    >>> kd = pysal.cg.kdtree.KDTree(np.array(points))
+    >>> kd = pysal.KDTree(np.array(points))
     >>> wnn2 = pysal.knnW(kd, 2)
     >>> [1,3] == wnn2.neighbors[0]
     True
@@ -82,8 +89,12 @@ def knnW(kdtree, k=2, p=2, ids=None):
     pysal.weights.W
 
     """
-    data = kdtree.data
-    nnq = kdtree.query(data, k=k+1, p=p)
+    if issubclass(type(data), np.ndarray):
+        data = KDTree(data)
+        warnings.warn("Deprecation warning: array converted to euclidean distance pysal.KDTree; pysal.KDTree will be required in the future.")
+    kdt = data
+    data = kdt.data
+    nnq = kdt.query(data, k=k+1, p=p)
     info = nnq[1]
 
     neighbors = {}
@@ -106,8 +117,8 @@ class Kernel(W):
     Parameters
     ----------
 
-    data        : array
-                  (n,k) or KDTree where KDtree.data is array (n,k)
+    data        : object
+                  PySAL KDTree where KDtree.data is array (n,k)
                   n observations on k characteristics used to measure
                   distances between the n objects
     bandwidth   : float
@@ -182,7 +193,8 @@ class Kernel(W):
     --------
 
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
-    >>> kw=Kernel(points)
+    >>> kd = pysal.KDTree(points)
+    >>> kw=Kernel(kd)
     >>> kw.weights[0]
     [1.0, 0.500000049999995, 0.4409830615267465]
     >>> kw.neighbors[0]
@@ -194,7 +206,7 @@ class Kernel(W):
            [ 20.000002],
            [ 20.000002],
            [ 20.000002]])
-    >>> kw15=Kernel(points,bandwidth=15.0)
+    >>> kw15=Kernel(kd,bandwidth=15.0)
     >>> kw15[0]
     {0: 1.0, 1: 0.33333333333333337, 3: 0.2546440075000701}
     >>> kw15.neighbors[0]
@@ -210,7 +222,7 @@ class Kernel(W):
     Adaptive bandwidths user specified
 
     >>> bw=[25.0,15.0,25.0,16.0,14.5,25.0]
-    >>> kwa=Kernel(points,bandwidth=bw)
+    >>> kwa=Kernel(kd,bandwidth=bw)
     >>> kwa.weights[0]
     [1.0, 0.6, 0.552786404500042, 0.10557280900008403]
     >>> kwa.neighbors[0]
@@ -225,7 +237,7 @@ class Kernel(W):
 
     Endogenous adaptive bandwidths
 
-    >>> kwea=Kernel(points,fixed=False)
+    >>> kwea=Kernel(kd,fixed=False)
     >>> kwea.weights[0]
     [1.0, 0.10557289844279438, 9.99999900663795e-08]
     >>> kwea.neighbors[0]
@@ -240,7 +252,7 @@ class Kernel(W):
 
     Endogenous adaptive bandwidths with Gaussian kernel
 
-    >>> kweag=Kernel(points,fixed=False,function='gaussian')
+    >>> kweag=Kernel(kd,fixed=False,function='gaussian')
     >>> kweag.weights[0]
     [0.3989422804014327, 0.2674190291577696, 0.2419707487162134]
     >>> kweag.bandwidth
@@ -253,10 +265,10 @@ class Kernel(W):
 
     Diagonals to 1.0
 
-    >>> kq = Kernel(points,function='gaussian')
+    >>> kq = Kernel(kd,function='gaussian')
     >>> kq.weights
     {0: [0.3989422804014327, 0.35206533556593145, 0.3412334260702758], 1: [0.35206533556593145, 0.3989422804014327, 0.2419707487162134, 0.3412334260702758, 0.31069657591175387], 2: [0.2419707487162134, 0.3989422804014327, 0.31069657591175387], 3: [0.3412334260702758, 0.3412334260702758, 0.3989422804014327, 0.3011374490937829, 0.26575287272131043], 4: [0.31069657591175387, 0.31069657591175387, 0.3011374490937829, 0.3989422804014327, 0.35206533556593145], 5: [0.26575287272131043, 0.35206533556593145, 0.3989422804014327]}
-    >>> kqd = Kernel(points, function='gaussian', diagonal=True)
+    >>> kqd = Kernel(kd, function='gaussian', diagonal=True)
     >>> kqd.weights
     {0: [1.0, 0.35206533556593145, 0.3412334260702758], 1: [0.35206533556593145, 1.0, 0.2419707487162134, 0.3412334260702758, 0.31069657591175387], 2: [0.2419707487162134, 1.0, 0.31069657591175387], 3: [0.3412334260702758, 0.3412334260702758, 1.0, 0.3011374490937829, 0.26575287272131043], 4: [0.31069657591175387, 0.31069657591175387, 0.3011374490937829, 1.0, 0.35206533556593145], 5: [0.26575287272131043, 0.35206533556593145, 1.0]}
 
@@ -264,13 +276,14 @@ class Kernel(W):
     def __init__(self, data, bandwidth=None, fixed=True, k=2,
                  function='triangular', eps=1.0000001, ids=None,
                  diagonal=False):
-        if issubclass(type(data), scipy.spatial.KDTree):
-            self.kdt = data
-            self.data = self.kdt.data
-            data = self.data
-        else:
-            self.data = data
-            self.kdt = KDTree(self.data)
+
+        if issubclass(type(data), np.ndarray):
+            data = KDTree(data)
+            warnings.warn("Deprecation warning: array converted to euclidean distance pysal.KDTree; pysal.KDTree will be required in the future.")
+
+        self.kdt = data
+        self.data = self.kdt.data
+        data = self.data
         self.k = k + 1
         self.function = function.lower()
         self.fixed = fixed
@@ -367,10 +380,10 @@ class DistanceBand(W):
     Parameters
     ----------
 
-    data        : array
-                  (n,k) or KDTree where KDtree.data is array (n,k)
-                  n observations on k characteristics used to measure
-                  distances between the n objects
+    data       : object
+                 PySAL KDTree where KDtree.data is array (n,k)
+                 n observations on k characteristics used to measure
+                 distances between the n objects
     threshold  : float
                  distance band
     p          : float
@@ -385,14 +398,13 @@ class DistanceBand(W):
                  distance decay parameter for weight (default -1.0)
                  if alpha is positive the weights will not decline with
                  distance. If binary is True, alpha is ignored
-
-    ids         : list
-                  values to use for keys of the neighbors and weights dicts
+    ids        : list
+                 values to use for keys of the neighbors and weights dicts
 
     Attributes
     ----------
-    weights : dict
-	      of neighbor weights keyed by observation id
+    weights   : dict
+	        of neighbor weights keyed by observation id
 
     neighbors : dict
 		of neighbors keyed by observation id
@@ -401,6 +413,7 @@ class DistanceBand(W):
     --------
 
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+    >>> points=np.array(points)
     >>> w=DistanceBand(points,threshold=11.2)
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
@@ -433,33 +446,16 @@ class DistanceBand(W):
     >>> w.weights[0]
     [0.01, 0.0079999999999999984]
 
-    Notes
-    -----
-
-    This was initially implemented running scipy 0.8.0dev (in epd 6.1).
-    earlier versions of scipy (0.7.0) have a logic bug in scipy/sparse/dok.py
-    so serge changed line 221 of that file on sal-dev to fix the logic bug.
-
     """
 
     def __init__(self, data, threshold, p=2, alpha=-1.0, binary=True, ids=None):
-        """Casting to floats is a work around for a bug in scipy.spatial.
-        See detail in pysal issue #126.
 
-        """
-        if issubclass(type(data), scipy.spatial.KDTree):
-            self.kd = data
-            self.data = self.kd.data
-        else:
-            try:
-                data = np.asarray(data)
-                if data.dtype.kind != 'f':
-                    data = data.astype(float)
-                self.data = data
-                self.kd = KDTree(self.data)
-            except:
-                raise ValueError("Could not make array from data")
+        if issubclass(type(data), np.ndarray):
+            data = KDTree(data)
+            warnings.warn("Deprecation warning: array converted to euclidean distance pysal.KDTree; pysal.KDTree will be required in the future.")
 
+        self.kd = data
+        self.data = self.kd.data
         self.p = p
         self.threshold = threshold
         self.binary = binary

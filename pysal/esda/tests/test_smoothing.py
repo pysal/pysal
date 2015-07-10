@@ -168,8 +168,8 @@ class TestKernel_AgeAdj_SM(unittest.TestCase):
         self.e1 = np.array([10, 8, 1, 4, 3, 5, 4, 3, 2, 1, 5, 3])
         self.b1 = np.array([100, 90, 15, 30, 25, 20, 30, 20, 80, 80, 90, 60])
         self.s = np.array([98, 88, 15, 29, 20, 23, 33, 25, 76, 80, 89, 66])
-        self.points = [(
-            10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+        self.points = [( 10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+        self.points = np.array(self.points)
         self.kw = pysal.weights.Kernel(self.points)
         if not self.kw.id_order_set:
             self.kw.id_order = range(0, len(self.points))

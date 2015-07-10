@@ -66,7 +66,7 @@ class G:
 
     Examples
     --------
-    >>> from pysal.weights.Distance import DistanceBand
+    >>> from pysal.weights.Distance import DistanceBand, KDTree
     >>> import numpy
     >>> numpy.random.seed(10)
 
@@ -74,7 +74,8 @@ class G:
     >>> points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
 
     Creating a weights object from points
-    >>> w = DistanceBand(points,threshold=15)
+    >>> kdt = KDTree(points)
+    >>> w = DistanceBand(kdt,threshold=15)
     >>> w.transform = "B"
 
     Preparing a variable
@@ -237,7 +238,7 @@ class G_Local:
 
     Examples
     --------
-    >>> from pysal.weights.Distance import DistanceBand
+    >>> from pysal.weights.Distance import DistanceBand, KDTree
     >>> import numpy
     >>> numpy.random.seed(10)
 
@@ -247,7 +248,8 @@ class G_Local:
 
     Creating a weights object from points
 
-    >>> w = DistanceBand(points,threshold=15)
+    >>> kdt = KDTree(points)
+    >>> w = DistanceBand(kdt,threshold=15)
 
     Prepareing a variable
 

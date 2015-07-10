@@ -13,8 +13,11 @@ class TestDistanceWeights(unittest.TestCase):
             10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
 
     def test_knnW(self):
-        kd = pysal.cg.kdtree.KDTree(np.array(self.points), distance_metric='euclidean')
+        kd = pysal.KDTree(np.array(self.points), distance_metric='euclidean')
         wnn2 = pysal.knnW(kd, 2)
+        self.assertEqual(wnn2.neighbors[0], [1,3])
+
+        wnn3 = pysal.knnW(np.array(self.points), 2) # this form is to be deprecated
         self.assertEqual(wnn2.neighbors[0], [1,3])
 
         pts = [i.centroid for i in pysal.open(self.polyShp)]
@@ -38,16 +41,19 @@ class TestDistanceWeights(unittest.TestCase):
         #    [w.neighbors[x] for x in range(len(pts))])).all())
 
     def test_Kernel(self):
-        kw = pysal.Kernel(self.points)
+        kw = pysal.Kernel(pysal.KDTree(np.array(self.points)))
         self.assertEqual(kw.weights[0], [1.0, 0.50000004999999503,
                                          0.44098306152674649])
-        kw15 = pysal.Kernel(self.points, bandwidth=15.0)
+        kw = pysal.Kernel(np.array(self.points)) # to be deprecated
+        self.assertEqual(kw.weights[0], [1.0, 0.50000004999999503,
+                                         0.44098306152674649])
+        kw15 = pysal.Kernel(pysal.KDTree(self.points), bandwidth=15.0)
         self.assertEqual(kw15[0], {0: 1.0, 1: 0.33333333333333337,
                                    3: 0.2546440075000701})
         self.assertEqual(kw15.bandwidth[0], 15.)
         self.assertEqual(kw15.bandwidth[-1], 15.)
         bw = [25.0, 15.0, 25.0, 16.0, 14.5, 25.0]
-        kwa = pysal.Kernel(self.points, bandwidth=bw)
+        kwa = pysal.Kernel(pysal.KDTree(self.points), bandwidth=bw)
         self.assertEqual(kwa.weights[0], [1.0, 0.59999999999999998,
                                           0.55278640450004202,
                                           0.10557280900008403])
@@ -58,14 +64,14 @@ class TestDistanceWeights(unittest.TestCase):
         self.assertEqual(kwa.bandwidth[3], 16.)
         self.assertEqual(kwa.bandwidth[4], 14.5)
         self.assertEqual(kwa.bandwidth[5], 25.)
-        kwea = pysal.Kernel(self.points, fixed=False)
+        kwea = pysal.Kernel(pysal.KDTree(self.points), fixed=False)
         self.assertEqual(kwea.weights[0], [1.0, 0.10557289844279438,
                                            9.9999990066379496e-08])
         l = kwea.bandwidth.tolist()
         self.assertEqual(l, [[11.180341005532938], [11.180341005532938],
                              [20.000002000000002], [11.180341005532938],
                              [14.142137037944515], [18.027758180095585]])
-        kweag = pysal.Kernel(self.points, fixed=False, function='gaussian')
+        kweag = pysal.Kernel(pysal.KDTree(self.points), fixed=False, function='gaussian')
         self.assertEqual(kweag.weights[0], [0.3989422804014327,
                                             0.26741902915776961,
                                             0.24197074871621341])
@@ -87,11 +93,14 @@ class TestDistanceWeights(unittest.TestCase):
     def test_threshold(self):
         md = pysal.min_threshold_dist_from_shapefile(self.polyShp)
         self.assertEqual(md, 0.61886415807685413)
-        wid = pysal.threshold_continuousW_from_array(self.points, 11.2)
+        wid = pysal.threshold_continuousW_from_array(pysal.KDTree(self.points), 11.2)
+        self.assertEqual(wid.weights[0], [0.10000000000000001,
+                                          0.089442719099991588])
+        wid = pysal.threshold_continuousW_from_array(np.array(self.points), 11.2) #to be deprecated
         self.assertEqual(wid.weights[0], [0.10000000000000001,
                                           0.089442719099991588])
         wid2 = pysal.threshold_continuousW_from_array(
-            self.points, 11.2, alpha=-2.0)
+            pysal.KDTree(self.points), 11.2, alpha=-2.0)
         self.assertEqual(wid2.weights[0], [0.01, 0.0079999999999999984])
         w = pysal.threshold_continuousW_from_shapefile(
             self.polyShp, 0.62, idVariable="POLYID")
@@ -105,18 +114,25 @@ class TestDistanceWeights(unittest.TestCase):
         polygons = pysal.open(
             pysal.examples.get_path("lattice10x10.shp"), "r").read()
         points1 = [poly.centroid for poly in polygons]
-        w1 = pysal.DistanceBand(points1, 1)
+        kd = pysal.KDTree(np.array(points1), distance_metric='euclidean')
+        w1 = pysal.DistanceBand(kd, 1)
+        for k in range(w.n):
+            self.assertEqual(w[k], w1[k])
+
+        w1 = pysal.DistanceBand(np.array(points1), 1)
         for k in range(w.n):
             self.assertEqual(w[k], w1[k])
 
     def test_DistanceBand_ints(self):
         """ see issue #126 """
+        """ we now require scipy 0.11, which is after the fix of this bug
+            https://github.com/scipy/scipy/issues/1898"""
         w = pysal.rook_from_shapefile(
             pysal.examples.get_path("lattice10x10.shp"))
         polygons = pysal.open(
             pysal.examples.get_path("lattice10x10.shp"), "r").read()
         points2 = [tuple(map(int, poly.vertices[0])) for poly in polygons]
-        w2 = pysal.DistanceBand(points2, 1)
+        w2 = pysal.DistanceBand(np.array(points2), 1)
         for k in range(w.n):
             self.assertEqual(w[k], w2[k])
 
@@ -126,10 +142,11 @@ class TestDistanceWeights(unittest.TestCase):
         full = np.matrix([[dist(pts[i], pts[j]) for j in xrange(
             len(pts))] for i in xrange(len(pts))])
 
-        kd = pysal.cg.kdtree.KDTree(pts, distance_metric='Arc',
+        kd = pysal.cg.kdtree.KDTree(np.array(pts), distance_metric='Arc',
                                     radius=pysal.cg.sphere.RADIUS_EARTH_KM)
         w = pysal.DistanceBand(kd, full.max(), binary=False, alpha=1.0)
         self.assertTrue((w.sparse.todense() == full).all())
+        #np.allclose(w.sparse.todense(), full)
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestDistanceWeights)
