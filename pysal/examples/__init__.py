@@ -6,7 +6,7 @@ __all__ = ['get_path']
 
 base = os.path.split(pysal.__file__)[0]
 example_dir = os.path.join(base,"examples")
-dirs = next(os.walk(example_dir))[1][2:]
+dirs = next(os.walk(example_dir))[1]
 file_2_dir = {}
 
 for d in dirs:
