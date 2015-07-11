@@ -73,34 +73,30 @@ class BaseProbit:
                   Scale of the marginal effects.
     slopes      : array
                   Marginal effects of the independent variables (k-1x1)
-                  Note: Disregards the presence of dummies.
+                  
+		  Note: Disregards the presence of dummies.
     slopes_vm   : array
                   Variance-covariance matrix of the slopes (k-1xk-1)
     LR          : tuple
                   Likelihood Ratio test of all coefficients = 0
-                  (test statistics, p-value)
+                  
+		  (test statistics, p-value)
     Pinkse_error: float
                   Lagrange Multiplier test against spatial error correlation.
-                  Implemented as presented in Pinkse (2004)              
+                  
+		  Implemented as presented in Pinkse (2004) [Pinske2004]_              
     KP_error    : float
                   Moran's I type test against spatial error correlation.
-                  Implemented as presented in Kelejian and Prucha (2001)
+                  
+		  Implemented as presented in Kelejian and Prucha
+		  (2001) [Kelejian2001]_
     PS_error    : float
                   Lagrange Multiplier test against spatial error correlation.
-                  Implemented as presented in Pinkse and Slade (1998)
+                  Implemented as presented in Pinkse 
+		  and Slade (1998) [Pinkse1998]_
     warning     : boolean
                   if True Maximum number of iterations exceeded or gradient 
                   and/or function calls not changing.
-
-    References
-    ----------
-    .. [1] Pinkse, J. (2004). Moran-flavored tests with nuisance parameter. In: Anselin,
-    L., Florax, R. J., Rey, S. J. (editors) Advances in Spatial Econometrics,
-    pages 67-77. Springer-Verlag, Heidelberg.
-    .. [2] Kelejian, H., Prucha, I. (2001) "On the asymptotic distribution of the
-    Moran I test statistic with applications". Journal of Econometrics, 104(2):219-57.
-    .. [3] Pinkse, J., Slade, M. E. (1998) "Contracting in space: an application of
-    spatial statistics to discrete-choice models". Journal of Econometrics, 85(1):125-54.
 
     Examples
     --------
@@ -424,13 +420,15 @@ class Probit(BaseProbit):
                   (test statistics, p-value)
     Pinkse_error: float
                   Lagrange Multiplier test against spatial error correlation.
-                  Implemented as presented in Pinkse (2004)              
+                  Implemented as presented in Pinkse (2004) [Pinske2004]_             
     KP_error    : float
                   Moran's I type test against spatial error correlation.
                   Implemented as presented in Kelejian and Prucha (2001)
+		  [Kelejian2001]_
     PS_error    : float
                   Lagrange Multiplier test against spatial error correlation.
                   Implemented as presented in Pinkse and Slade (1998)
+		  [Pinkse1998]_
     warning     : boolean
                   if True Maximum number of iterations exceeded or gradient 
                   and/or function calls not changing.
@@ -444,12 +442,6 @@ class Probit(BaseProbit):
                    Name of dataset for use in output
     title        : string
                    Name of the regression method used
-
-    References
-    ----------
-    .. [1] Pinkse, J. (2004). Moran-flavored tests with nuisance parameter. In: Anselin, L., Florax, R. J., Rey, S. J. (editors) Advances in Spatial Econometrics, pages 67-77. Springer-Verlag, Heidelberg.
-    .. [2] Kelejian, H., Prucha, I. (2001) "On the asymptotic distribution of the Moran I test statistic with applications". Journal of Econometrics, 104(2):219-57.
-    .. [3] Pinkse, J., Slade, M. E. (1998) "Contracting in space: an application of spatial statistics to discrete-choice models". Journal of Econometrics, 85(1):125-54.
 
     Examples
     --------
