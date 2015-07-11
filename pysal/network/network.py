@@ -74,15 +74,15 @@ class Network:
 
     Instantiate an instance of a network
 
-    >>> ntw = ps.Network(ps.examples.get_path('gcstreets.shp'))
+    >>> ntw = ps.Network(ps.examples.get_path('streets.shp'))
 
     Snap point observations to the network with attribute information
 
-    >>> ntw.snapobservations(ps.examples.get_path('gccrimes.shp'), 'crimes', attribute=True)
+    >>> ntw.snapobservations(ps.examples.get_path('crimes.shp'), 'crimes', attribute=True)
 
     And without attribute information
 
-    >>> ntw.snapobservations(ps.examples.get_path('gcschools.shp'), 'schools', attribute=False)
+    >>> ntw.snapobservations(ps.examples.get_path('schools.shp'), 'schools', attribute=False)
 
     """
 
@@ -274,9 +274,9 @@ class Network:
 
         Examples
         --------
-        >>> ntw = ps.Network(ps.examples.get_path('gcstreets.shp'))
+        >>> ntw = ps.Network(ps.examples.get_path('streets.shp'))
         >>> w = ntw.contiguityweights(graph=False)
-        >>> ntw.snapobservations(ps.examples.get_path('gccrimes.shp'), 'crimes', attribute=True)
+        >>> ntw.snapobservations(ps.examples.get_path('crimes.shp'), 'crimes', attribute=True)
         >>> counts = ntw.count_per_edge(ntw.pointpatterns['crimes'].obs_to_edge, graph=False)
 
         Using the W object, access to ESDA functionality is provided.  First,
@@ -489,8 +489,8 @@ class Network:
         Note that this passes the obs_to_edge attribute of a point pattern
         snapped to the network.
 
-        >>> ntw = ps.Network(ps.examples.get_path('gcstreets.shp'))
-        >>> ntw.snapobservations(ps.examples.get_path('gccrimes.shp'), 'crimes', attribute=True)
+        >>> ntw = ps.Network(ps.examples.get_path('streets.shp'))
+        >>> ntw.snapobservations(ps.examples.get_path('crimes.shp'), 'crimes', attribute=True)
         >>> counts = ntw.count_per_edge(ntw.pointpatterns['crimes'].obs_to_edge,graph=False)
         >>> s = sum([v for v in counts.itervalues()])
         >>> s
@@ -558,8 +558,8 @@ class Network:
         Example
         -------
 
-        >>> ntw = ps.Network(ps.examples.get_path('gcstreets.shp'))
-        >>> ntw.snapobservations(ps.examples.get_path('gccrimes.shp'), 'crimes', attribute=True)
+        >>> ntw = ps.Network(ps.examples.get_path('streets.shp'))
+        >>> ntw.snapobservations(ps.examples.get_path('crimes.shp'), 'crimes', attribute=True)
         >>> npts = ntw.pointpatterns['crimes'].npoints
         >>> sim = ntw.simulate_observations(npts)
         >>> isinstance(sim, ps.network.network.SimulatedPointPattern)
@@ -972,7 +972,7 @@ class Network:
         Example
         -------
 
-        >>> ntw = ps.Network(ps.examples.get_path('gcstreets.shp'))
+        >>> ntw = ps.Network(ps.examples.get_path('streets.shp'))
         >>> n200 = ntw.segment_edges(200.0)
         >>> len(n200.edges)
         688
@@ -1069,7 +1069,7 @@ class Network:
 
         Example
         --------
-        >>> ntw = ps.Network(ps.examples.get_path('gcstreets.shp'))
+        >>> ntw = ps.Network(ps.examples.get_path('streets.shp'))
         >>> ntw.savenetwork('mynetwork.pkl')
 
         """
@@ -1177,3 +1177,4 @@ class SortedEdges(OrderedDict):
     def first_key(self):
         for key in self: return key
         raise ValueError("No sorted edges remain.")
+
