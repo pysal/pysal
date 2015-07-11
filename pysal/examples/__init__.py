@@ -7,7 +7,6 @@ base = os.path.split(pysal.__file__)[0]
 example_dir = os.path.join(base,"examples")
 dirs = next(os.walk(example_dir))[1]
 file_2_dir = {}
-print dirs
 
 for d in dirs:
     tmp = os.path.join(example_dir, d)
@@ -25,15 +24,3 @@ def get_path(example_name):
         return os.path.join(base,'examples', example_name)
     else:
         print(example_name+ ' not found in PySAL built-in examples.')
-
-"""
-import os
-import pysal
-
-__all__ = ['get_path']
-
-
-def get_path(example_name):
-        base = os.path.split(pysal.__file__)[0]
-            return os.path.join(base, 'examples', example_name)
-"""
