@@ -408,7 +408,8 @@ def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
 
 class Moran_Rate(Moran):
     """
-    Adjusted Moran's I Global Autocorrelation Statistic for Rate Variables
+    Adjusted Moran's I Global Autocorrelation Statistic for Rate
+    Variables[Assuncao1999]_
 
     Parameters
     ----------
@@ -495,11 +496,6 @@ class Moran_Rate(Moran):
     p_z_sim      : float
                    (if permutations>0)
                    p-value based on standard normal approximation from
-
-    References
-    ----------
-    Assuncao, R. E. and Reis, E. A. 1999. A new proposal to adjust Moran's I
-    for population density. Statistics in Medicine. 18, 2147-2162
 
     Examples
     --------
@@ -704,7 +700,7 @@ class Moran_Local:
 
 class Moran_Local_Rate(Moran_Local):
     """
-    Adjusted Local Moran Statistics for Rate Variables
+    Adjusted Local Moran Statistics for Rate Variables[Assuncao1999]_
 
     Parameters
     ----------
@@ -774,11 +770,6 @@ class Moran_Local_Rate(Moran_Local):
                    p-value based on standard normal approximation from
                    permutations (one-sided)
                    for two-sided tests, these values should be multiplied by 2
-
-    References
-    ----------
-    Assuncao, R. E. and Reis, E. A. 1999. A new proposal to adjust Moran's I
-    for population density. Statistics in Medicine. 18, 2147-2162
 
     Examples
     --------

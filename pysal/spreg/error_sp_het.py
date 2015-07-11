@@ -27,7 +27,7 @@ class BaseGM_Error_Het(RegressionPropsY):
     """
     GMM method for a spatial error model with heteroskedasticity (note: no
     consistency checks, diagnostics or constant added); based on Arraiz
-    et al [1]_, following Anselin [2]_.
+    et al [Arraiz2010]_, following Anselin [Anselin2011]_.
 
     Parameters
     ----------
@@ -81,16 +81,6 @@ class BaseGM_Error_Het(RegressionPropsY):
                    Variance covariance matrix (kxk)
     xtx          : float
                    X'X
-
-    References
-    ----------
-
-    .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
-
-    .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
     Examples
     --------
@@ -168,7 +158,8 @@ class GM_Error_Het(BaseGM_Error_Het):
 
     """
     GMM method for a spatial error model with heteroskedasticity, with results
-    and diagnostics; based on Arraiz et al [1]_, following Anselin [2]_.
+    and diagnostics; based on Arraiz et al [Arraiz2010]_, following Anselin
+    [Anselin2011]_.
 
     Parameters
     ----------
@@ -253,16 +244,6 @@ class GM_Error_Het(BaseGM_Error_Het):
                    Name of dataset for use in output
     title        : string
                    Name of the regression method used
-
-    References
-    ----------
-
-    .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-        Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-        Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-        592-614.
-
-    .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
     Examples
     --------
@@ -372,7 +353,8 @@ class BaseGM_Endog_Error_Het(RegressionPropsY):
     """
     GMM method for a spatial error model with heteroskedasticity and
     endogenous variables (note: no consistency checks, diagnostics or constant
-    added); based on Arraiz et al [1]_, following Anselin [2]_.
+    added); based on Arraiz et al [Arraiz2010]_, following Anselin
+    [Anselin2011]_.
 
     Parameters
     ----------
@@ -448,17 +430,6 @@ class BaseGM_Endog_Error_Het(RegressionPropsY):
                    Variance covariance matrix (kxk)
     hth          : float
                    H'H
-
-
-    References
-    ----------
-
-    .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
-
-    .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
     Examples
     --------
@@ -549,7 +520,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
     """
     GMM method for a spatial error model with heteroskedasticity and
     endogenous variables, with results and diagnostics; based on Arraiz et al
-    [1]_, following Anselin [2]_.
+    [Arraiz2010]_, following Anselin [Anselin2011]_.
 
     Parameters
     ----------
@@ -668,16 +639,6 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
                     Name of the regression method used
     hth          : float
                    H'H
-
-    References
-    ----------
-
-    .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-        Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-        Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-        592-614.
-
-    .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
     Examples
     --------
@@ -806,7 +767,7 @@ class BaseGM_Combo_Het(BaseGM_Endog_Error_Het):
     """
     GMM method for a spatial lag and error model with heteroskedasticity and
     endogenous variables (note: no consistency checks, diagnostics or constant
-    added); based on Arraiz et al [1]_, following Anselin [2]_.
+    added); based on Arraiz et al [Arraiz2010]_, following Anselin [Anselin2011]_.
 
     Parameters
     ----------
@@ -890,16 +851,6 @@ class BaseGM_Combo_Het(BaseGM_Endog_Error_Het):
     hth          : float
                    H'H
 
-    References
-    ----------
-
-    .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
-
-    .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
-
     Examples
     --------
     >>> import numpy as np
@@ -963,7 +914,7 @@ class GM_Combo_Het(BaseGM_Combo_Het):
     """
     GMM method for a spatial lag and error model with heteroskedasticity and
     endogenous variables, with results and diagnostics; based on Arraiz et al
-    [1]_, following Anselin [2]_.
+    [Arraiz2010]_, following Anselin [Anselin2011]_.
 
     Parameters
     ----------
@@ -1096,16 +1047,6 @@ class GM_Combo_Het(BaseGM_Combo_Het):
                     Name of the regression method used
     hth          : float
                    H'H
-
-    References
-    ----------
-
-    .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-        Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-        Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-        592-614.
-
-    .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
     Examples
     --------
@@ -1275,7 +1216,7 @@ def get_psi_sigma(w, u, lamb):
 
 def get_vc_het(w, wA1, E):
     """
-    Computes the VC matrix Psi based on lambda as in Arraiz et al [1]_:
+    Computes the VC matrix Psi based on lambda as in Arraiz et al [Arraiz2010]_:
 
     ..math::
 
@@ -1303,14 +1244,6 @@ def get_vc_het(w, wA1, E):
     Psi         : array
                   2x2 array with estimator of the variance-covariance matrix
 
-    References
-    ----------
-
-    .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
-
     """
     aPatE = 2 * wA1 * E
     wPwtE = (w + w.T) * E
@@ -1324,7 +1257,8 @@ def get_vc_het(w, wA1, E):
 
 def get_vm_het(G, lamb, reg, w, psi):
     """
-    Computes the variance-covariance matrix Omega as in Arraiz et al [1]_:
+    Computes the variance-covariance matrix Omega as in Arraiz et al
+    [Arraiz2010]_:
     ...
 
     Parameters
@@ -1354,14 +1288,6 @@ def get_vm_het(G, lamb, reg, w, psi):
     vm          : array
                   (k+1)x(k+1) array with the variance-covariance matrix of the parameters
 
-    References
-    ----------
-
-    .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
-
     """
 
     J = np.dot(G, np.array([[1], [2 * lamb]]))
@@ -1389,7 +1315,8 @@ def get_P_hat(reg, hthi, zf):
 
 def get_a1a2(w, wA1, reg, lambdapar, P, zs, inv_method, filt):
     """
-    Computes the a1 in psi assuming residuals come from original regression
+    Computes the a1 in psi assuming residuals come from original regression.
+    [Anselin2011]_
     ...
 
     Parameters
@@ -1409,11 +1336,6 @@ def get_a1a2(w, wA1, reg, lambdapar, P, zs, inv_method, filt):
 
     [a1, a2]    : list
                   a1 and a2 are two nx1 array in psi equation
-
-    References
-    ----------
-
-    .. [1] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
     """
     us = UTILS.get_spFilter(w, lambdapar, reg.u)

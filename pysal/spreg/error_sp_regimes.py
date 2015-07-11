@@ -23,7 +23,7 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
     """
     GMM method for a spatial error model with regimes, with results and diagnostics;
-    based on Kelejian and Prucha (1998, 1999)[1]_ [2]_.
+    based on Kelejian and Prucha (1998, 1999)[Kelejian1998]_ [Kelejian1999]_.
 
     Parameters
     ----------
@@ -174,18 +174,6 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    i.e. when regime_err_sep=True and no variable is fixed
                    across regimes.
                    Contains all attributes of each individual regression
-
-    References
-    ----------
-
-    .. [1] Kelejian, H.R., Prucha, I.R. (1998) "A generalized spatial
-    two-stage least squares procedure for estimating a spatial autoregressive
-    model with autoregressive disturbances". The Journal of Real State
-    Finance and Economics, 17, 1.
-
-    .. [2] Kelejian, H.R., Prucha, I.R. (1999) "A Generalized Moments
-    Estimator for the Autoregressive Parameter in a Spatial Model".
-    International Economic Review, 40, 2.
 
     Examples
     --------
@@ -421,7 +409,8 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
     '''
     GMM method for a spatial error model with regimes and endogenous variables, with
-    results and diagnostics; based on Kelejian and Prucha (1998, 1999)[1]_[2]_.
+    results and diagnostics; based on Kelejian and Prucha (1998,
+    1999)[Kelejian1998]_[Kelejian1999]_.
 
     Parameters
     ----------
@@ -600,18 +589,6 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    i.e. when regime_err_sep=True and no variable is fixed
                    across regimes.
                    Contains all attributes of each individual regression
-
-    References
-    ----------
-
-    .. [1] Kelejian, H.R., Prucha, I.R. (1998) "A generalized spatial
-    two-stage least squares procedure for estimating a spatial autoregressive
-    model with autoregressive disturbances". The Journal of Real State
-    Finance and Economics, 17, 1.
-
-    .. [2] Kelejian, H.R., Prucha, I.R. (1999) "A Generalized Moments
-    Estimator for the Autoregressive Parameter in a Spatial Model".
-    International Economic Review, 40, 2.
 
     Examples
     --------
@@ -895,7 +872,7 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
     """
     GMM method for a spatial lag and error model with regimes and endogenous
     variables, with results and diagnostics; based on Kelejian and Prucha (1998,
-    1999)[1]_[2]_.
+    1999)[Kelejian1998]_[Kelejian1999]_.
 
     Parameters
     ----------
@@ -1097,18 +1074,6 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
                    i.e. when regime_err_sep=True and no variable is fixed
                    across regimes.
                    Contains all attributes of each individual regression
-
-    References
-    ----------
-
-    .. [1] Kelejian, H.R., Prucha, I.R. (1998) "A generalized spatial
-    two-stage least squares procedure for estimating a spatial autoregressive
-    model with autoregressive disturbances". The Journal of Real State
-    Finance and Economics, 17, 1.
-
-    .. [2] Kelejian, H.R., Prucha, I.R. (1999) "A Generalized Moments
-    Estimator for the Autoregressive Parameter in a Spatial Model".
-    International Economic Review, 40, 2.
 
     Examples
     --------

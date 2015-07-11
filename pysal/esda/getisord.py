@@ -161,7 +161,8 @@ class G:
 
 class G_Local:
     """
-    Generalized Local G Autocorrelation Statistic
+    Generalized Local G Autocorrelation
+    Statistic[Getis1992,Ord1995,Getis1996]_ .
 
     Parameters
     ----------
@@ -224,16 +225,6 @@ class G_Local:
     For binary weights object, the weight value for self is 1
     For row-standardized weights object, the weight value for self is
     1/(the number of its neighbors + 1).
-
-    References
-    ----------
-    Getis, A. and Ord., J.K. (1992) The analysis of spatial association by use of
-    distance statistics. Geographical Analysis, 24(3):189-206
-    Ord, J.K. and Getis, A. (1995) Local spatial autocorrelation statistics:
-    distributional issues and an application. Geographical Analysis, 27(4):286-306
-    Getis, A. and Ord, J. K. (1996) Local spatial statistics: an overview,
-    in Spatial Analysis: Modelling in a GIS Environment, edited by Longley, P.
-    and Batty, M.
 
     Examples
     --------

@@ -102,7 +102,7 @@ class Wald:
 
     '''
     Chi sq. Wald statistic to test for restriction of coefficients.
-    Implementation following Greene [1]_ eq. (17-24), p. 488
+    Implementation following Greene [Greene2003]_ eq. (17-24), p. 488
     ...
 
     Parameters
@@ -123,10 +123,6 @@ class Wald:
               P value for Wald statistic calculated as a Chi sq. distribution
               with R degrees of freedom
 
-    References
-    ==========
-    .. [1] W. Greene. 2003. Econometric Analysis (Fifth Edtion). Prentice Hall, Upper
-       Saddle River. 
     '''
 
     def __init__(self, reg, r, q=None):
@@ -242,7 +238,7 @@ class Regimes_Frame:
 def wald_test(betas, r, q, vm):
     '''
     Chi sq. Wald statistic to test for restriction of coefficients.
-    Implementation following Greene [1]_ eq. (17-24), p. 488
+    Implementation following Greene [Greene2003]_ eq. (17-24), p. 488
     ...
 
     Parameters
@@ -265,10 +261,6 @@ def wald_test(betas, r, q, vm):
               P value for Wald statistic calculated as a Chi sq. distribution
               with R degrees of freedom
 
-    References
-    ==========
-    .. [1] W. Greene. 2003. Econometric Analysis (Fifth Edtion). Prentice Hall, Upper
-       Saddle River. 
     '''
     rbq = np.dot(r, betas) - q
     rvri = la.inv(np.dot(r, np.dot(vm, r.T)))
