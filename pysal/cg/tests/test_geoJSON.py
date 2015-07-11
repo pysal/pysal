@@ -10,7 +10,7 @@ class test_MultiPloygon(unittest.TestCase):
         Tests conversion of polygons with multiple shells to 
         geoJSON multipolygons. and back.
         """
-        shp = pysal.open(pysal.examples.get_path("NAT.SHP"),'r')
+        shp = pysal.open(pysal.examples.get_path("nat.shp"),'r')
         multipolygons = [p for p in shp if len(p.parts) > 1]
         geoJSON = [p.__geo_interface__ for p in multipolygons]
         for poly in multipolygons:
