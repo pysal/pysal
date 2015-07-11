@@ -29,7 +29,7 @@ for i in range(1, 5):
 # filtered on the significance of the LISA end points
 # True indicates significant LISA in a particular period
 # e.g. a key of (1, 3, True, False) indicates a significant LISA located in
-I# quadrant 1 in period 0 moved to quadrant 3 in period 1 but was not
+# quadrant 1 in period 0 moved to quadrant 3 in period 1 but was not
 # significant in quadrant 3.
 
 MOVE_TYPES = {}
