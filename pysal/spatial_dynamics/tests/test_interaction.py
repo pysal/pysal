@@ -9,7 +9,7 @@ scp_version = int(scipy.version.version.split(".")[1])
 
 class SpaceTimeEvents_Tester(unittest.TestCase):
     def setUp(self):
-        self.path = pysal.examples.get_path("burkitt")
+        self.path = pysal.examples.get_path("burkitt.shp")
 
     def test_SpaceTimeEvents(self):
         events = interaction.SpaceTimeEvents(self.path, 'T')
@@ -20,7 +20,7 @@ class SpaceTimeEvents_Tester(unittest.TestCase):
 
 class Knox_Tester(unittest.TestCase):
     def setUp(self):
-        path = pysal.examples.get_path("burkitt")
+        path = pysal.examples.get_path("burkitt.shp")
         self.events = interaction.SpaceTimeEvents(path, 'T')
 
     def test_knox(self):
@@ -32,7 +32,7 @@ class Knox_Tester(unittest.TestCase):
 
 class Mantel_Tester(unittest.TestCase):
     def setUp(self):
-        path = pysal.examples.get_path("burkitt")
+        path = pysal.examples.get_path("burkitt.shp")
         self.events = interaction.SpaceTimeEvents(path, 'T')
 
     def test_mantel(self):
@@ -43,7 +43,7 @@ class Mantel_Tester(unittest.TestCase):
 
 class Jacquez_Tester(unittest.TestCase):
     def setUp(self):
-        path = pysal.examples.get_path("burkitt")
+        path = pysal.examples.get_path("burkitt.shp")
         self.events = interaction.SpaceTimeEvents(path, 'T')
 
     def test_jacquez(self):
@@ -58,7 +58,7 @@ class Jacquez_Tester(unittest.TestCase):
 
 class ModifiedKnox_Tester(unittest.TestCase):
     def setUp(self):
-        path = pysal.examples.get_path("burkitt")
+        path = pysal.examples.get_path("burkitt.shp")
         self.events = interaction.SpaceTimeEvents(path, 'T')
 
     def test_modified_knox(self):

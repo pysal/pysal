@@ -108,11 +108,11 @@ class test_shp_file(unittest.TestCase):
 
 class test_shx_file(unittest.TestCase):
     def test___init__(self):
-        shx = shx_file(pysal.examples.get_path('Point'))
+        shx = shx_file(pysal.examples.get_path('Point.shx'))
         assert isinstance(shx, shx_file)
 
     def test_add_record(self):
-        shx = shx_file(pysal.examples.get_path('Point'))
+        shx = shx_file(pysal.examples.get_path('Point.shx'))
         expectedIndex = [(100, 20), (128, 20), (156, 20),
                          (184, 20), (212, 20), (240, 20),
                          (268, 20), (296, 20), (324, 20)]
@@ -130,7 +130,7 @@ class test_shx_file(unittest.TestCase):
         os.remove('test.shx')
 
     def test_close(self):
-        shx = shx_file(pysal.examples.get_path('Point'))
+        shx = shx_file(pysal.examples.get_path('Point.shx'))
         shx.close(None)
         self.assertEqual(shx.fileObj.closed, True)
 
