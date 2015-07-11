@@ -22,7 +22,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
     """
     GMM method for a spatial error model with heteroskedasticity and regimes;
-    based on Arraiz et al [1]_, following Anselin [2]_.
+    based on Arraiz et al [Arraiz2010]_, following Anselin [Anselin2011]_.
 
     Parameters
     ----------
@@ -190,16 +190,6 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                     i.e. when regime_err_sep=True and no variable is fixed
                     across regimes.
                     Contains all attributes of each individual regression
-
-    References
-    ----------
-
-    .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
-
-    .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
     Examples
     --------
@@ -459,7 +449,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     """
     GMM method for a spatial error model with heteroskedasticity, regimes and
     endogenous variables, with results and diagnostics; based on Arraiz et al
-    [1]_, following Anselin [2]_.
+    [Arraiz2010]_, following Anselin [Anselin2011]_.
 
     Parameters
     ----------
@@ -665,16 +655,6 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                     i.e. when regime_err_sep=True and no variable is fixed
                     across regimes.
                     Contains all attributes of each individual regression
-
-    References
-    ----------
-
-    .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
-
-    .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
     Examples
     --------
@@ -996,7 +976,7 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
     """
     GMM method for a spatial lag and error model with heteroskedasticity,
     regimes and endogenous variables, with results and diagnostics;
-    based on Arraiz et al [1]_, following Anselin [2]_.
+    based on Arraiz et al [Arraiz2010]_, following Anselin [Anselin2011]_.
 
     Parameters
     ----------
@@ -1224,16 +1204,6 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
                     i.e. when regime_err_sep=True and no variable is fixed
                     across regimes.
                     Contains all attributes of each individual regression
-
-    References
-    ----------
-
-    .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
-
-    .. [2] Anselin, L. GMM Estimation of Spatial Error Autocorrelation with Heteroskedasticity
 
     Examples
     --------

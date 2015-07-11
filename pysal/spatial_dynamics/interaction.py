@@ -155,7 +155,7 @@ class SpaceTimeEvents:
 
 def knox(s_coords, t_coords, delta, tau, permutations=99, debug=False):
     """
-    Knox test for spatio-temporal interaction. [1]_
+    Knox test for spatio-temporal interaction. [Knox1964]_
 
     Parameters
     ----------
@@ -185,12 +185,6 @@ def knox(s_coords, t_coords, delta, tau, permutations=99, debug=False):
                       pseudo p-value associated with the statistic.
     counts          : int
                       count of space time neighbors.
-
-    References
-    ----------
-    .. [1] E. Knox. 1964. The detection of space-time
-       interactions. Journal of the Royal Statistical Society. Series C
-       (Applied Statistics), 13(1):25-30.
 
     Examples
     --------
@@ -264,7 +258,7 @@ def knox(s_coords, t_coords, delta, tau, permutations=99, debug=False):
 
 def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0):
     """
-    Standardized Mantel test for spatio-temporal interaction. [2]_
+    Standardized Mantel test for spatio-temporal interaction. [Mantel1967]_
 
     Parameters
     ----------
@@ -295,11 +289,6 @@ def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, t
                       value of the knox test for the dataset.
     pvalue          : float
                       pseudo p-value associated with the statistic.
-
-    References
-    ----------
-    .. [2] N. Mantel. 1967. The detection of disease clustering and a
-       generalized regression approach. Cancer Research, 27(2):209-220.
 
     Examples
     --------
@@ -379,7 +368,8 @@ def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, t
 
 def jacquez(s_coords, t_coords, k, permutations=99):
     """
-    Jacquez k nearest neighbors test for spatio-temporal interaction. [3]_
+    Jacquez k nearest neighbors test for spatio-temporal interaction.
+    [Jacquez1996]_
 
     Parameters
     ----------
@@ -404,11 +394,6 @@ def jacquez(s_coords, t_coords, k, permutations=99):
     pvalue          : float
                       p-value associated with the statistic (normally
                       distributed with k-1 df).
-
-    References
-    ----------
-    .. [3] G. Jacquez. 1996. A k nearest neighbour test for space-time
-       interaction. Statistics in Medicine, 15(18):1935-1949.
 
     Examples
     --------
@@ -497,7 +482,7 @@ def jacquez(s_coords, t_coords, k, permutations=99):
 
 def modified_knox(s_coords, t_coords, delta, tau, permutations=99):
     """
-    Baker's modified Knox test for spatio-temporal interaction. [4]_
+    Baker's modified Knox test for spatio-temporal interaction. [Baker2004]_
 
     Parameters
     ----------
@@ -522,11 +507,6 @@ def modified_knox(s_coords, t_coords, delta, tau, permutations=99):
                       value of the modified knox test for the dataset.
     pvalue          : float
                       pseudo p-value associated with the statistic.
-
-    References
-    ----------
-    .. [4] R.D. Baker. Identifying space-time disease clusters. Acta Tropica,
-       91(3):291-299, 2004.
 
     Examples
     --------

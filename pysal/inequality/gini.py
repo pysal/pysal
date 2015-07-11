@@ -45,8 +45,8 @@ class Gini_Spatial:
     Spatial Gini coefficient
 
     Provides for computationally based inference regarding the contribution of
-    spatial neighbor pairs to overall inequality across a set of regions. [1]_
-
+    spatial neighbor pairs to overall inequality across a set of regions.
+    [Rey2013]_
     Parameters
     ----------
 
@@ -124,13 +124,6 @@ class Gini_Spatial:
     Thus, the amount of inequality between pairs of states that are not in the
     same regime (neighbors) is significantly higher than what is expected
     under the null of random spatial inequality.
-
-
-    References
-    ----------
-
-    .. [1] Rey, S.J. and R. Smith (2012) "A spatial decomposition of the Gini
-        coefficient." Letters in Spatial and Resource Sciences. DOI 10.1007/s12076-012-00860z
 
     """
     def __init__(self, x, w, permutations=99):

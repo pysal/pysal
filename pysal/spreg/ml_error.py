@@ -26,7 +26,7 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
 
     """
     ML estimation of the spatial error model (note no consistency
-    checks, diagnostics or constants added); Anselin (1988) [1]_
+    checks, diagnostics or constants added); Anselin (1988) [Anselin1988]_
 
     Parameters
     ----------
@@ -144,12 +144,6 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
     '32.4069'
     >>> "{0:.4f}".format(mlerr1.logll) #doctest: +SKIP
     '-4471.4071'
-
-    References
-    ----------
-
-    .. [1] Anselin, L. (1988) "Spatial Econometrics: Methods and Models".
-    Kluwer Academic Publishers. Dordrecht.
 
     """
 
@@ -270,7 +264,7 @@ class ML_Error(BaseML_Error):
 
     """
     ML estimation of the spatial lag model with all results and diagnostics;
-    Anselin (1988) [1]_
+    Anselin (1988) [Anselin1988]_
 
     Parameters
     ----------
@@ -426,12 +420,6 @@ class ML_Error(BaseML_Error):
     >>> mlerr.title #doctest: +SKIP
     'MAXIMUM LIKELIHOOD SPATIAL ERROR (METHOD = FULL)'
 
-
-    References
-    ----------
-
-    .. [1] Anselin, L. (1988) "Spatial Econometrics: Methods and Models".
-    Kluwer Academic Publishers. Dordrecht.
 
     """
 

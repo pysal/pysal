@@ -29,7 +29,7 @@ for i in range(1, 5):
 # filtered on the significance of the LISA end points
 # True indicates significant LISA in a particular period
 # e.g. a key of (1, 3, True, False) indicates a significant LISA located in
-# quadrant 1 in period 0 moved to quadrant 3 in period 1 but was not
+I# quadrant 1 in period 0 moved to quadrant 3 in period 1 but was not
 # significant in quadrant 3.
 
 MOVE_TYPES = {}
@@ -252,13 +252,14 @@ class Spatial_Markov:
                       (permutations,1), the values of x2 for the random 
                       permutations.
     Q               : float
-                      Chi-square test of homogeneity across lag classes based
-                      on Bickenbach and Bode (2003) [3]_.
+                      Chi-square Otest of homogeneity across lag classes based
+                      on Bickenbach and Bode (2003) [Bickenbach2003]_.
     Q_p_value       : float
                       p-value for Q.
     LR              : float
-                      Likelihood ratio statistic for homogeneity across lag
-                      classes based on Bickenback and Bode (2003) [3]_.
+                      Likelihood ratio statistic for homogeneity aczoross lag
+                      classes based on Bickenback and Bode (2003)
+		      [Bickenbach2003]_.
     LR_p_value      : float
                       p-value for LR.
     dof_hom         : int
@@ -384,14 +385,6 @@ class Spatial_Markov:
      [ 127.1407767    48.74107143   33.29605263    3.91777427   83.52173913]
      [ 169.6407767    91.24107143   75.79605263   42.5           2.96521739]]
 
-
-    References
-    ----------
-    .. [3] Bickenbach, F. and E. Bode (2003) "Evaluating the Markov property 
-       in studies of economic convergence. International Regional Science 
-       Review: 3, 363-392.
-    .. [1] Rey, S. (2001) "Spatial empirics for economic growth and 
-       convergence." Geographical Analysis, 33: 194-214.
    
     """
     def __init__(self, y, w, k=4, permutations=0, fixed=False,
@@ -1096,7 +1089,7 @@ def kullback(F):
 
     Notes
     -----
-    Based on  Kullback, Kupperman and Ku (1962) [2]_.
+    Based on  Kullback, Kupperman and Ku (1962) [Kullback1962]_.
     Example below is taken from Table 9.2 .
 
     Examples
@@ -1126,11 +1119,6 @@ def kullback(F):
     '30'
     >>> "%3.1f"%res['Conditional homogeneity pvalue']
     '0.0'
-
-    References
-    ----------
-    .. [2] Kullback, S. Kupperman, M. and H.H. Ku. (1962) "Tests for contigency 
-       tables and Markov chains", Technometrics: 4, 573--608.
 
     """
 
@@ -1321,7 +1309,8 @@ class Homogeneity_Results:
 
     Notes
     -----
-    Degrees of freedom adjustment follow the approach in Bickenbach and Bode (2003) [3]_.
+    Degrees of freedom adjustment follow the approach in Bickenbach and Bode
+    (2003) [Bickenbach2003]_.
 
     Examples
     -------- 

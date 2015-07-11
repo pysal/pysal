@@ -16,7 +16,7 @@ from numpy.random import permutation as NRP
 
 class Theta:
     """
-    Regime mobility measure.
+    Regime mobility measure. [Rey2004a]_
 
     For sequence of time periods Theta measures the extent to which rank
     changes for a variable measured over n locations are in the same direction
@@ -60,12 +60,6 @@ class Theta:
                    p-value for test that observed theta is significantly
                    greater than its expectation under complete spatial randomness.
                    
-    References
-    ----------
-    .. [1] Rey, S.J. (2004) "Spatial dependence in the evolution of regional 
-       income distributions," in A. Getis, J. Mur and H.Zoeller (eds). Spatial
-       Econometrics and Spatial Statistics. Palgrave, London, pp. 194-213.
-
     Examples
     --------
     >>> import pysal
@@ -139,15 +133,11 @@ class Tau:
     Notes
     -----
     Modification of algorithm suggested by Christensen (2005).
+    [Christensen2005]_
     PySAL implementation uses a list based representation of a binary tree for
     the accumulation of the concordance measures. Ties are handled by this
     implementation (in other words, if there are ties in either x, or y, or
     both, the calculation returns Tau_b, if no ties classic Tau is returned.)
-
-    References
-    ----------
-    .. [2] Christensen, D. (2005) Fast algorithms for the calculation of
-       Kendall's tau. Computational Statistics, 20: 51-62.
 
     Examples
     --------
@@ -324,25 +314,11 @@ class SpatialTau(object):
     Notes
     -----
     Algorithm has two stages. The first calculates classic Tau using a list
-    based implementation of the algorithm from Christensen (2005). Second
+    based implementation of the algorithm from Christensen
+    (2005)[Christensen2005]_. Second
     stage calculates concordance measures for neighboring pairs of locations
-    using a modification of the algorithm from Press et al (2007). See Rey
-    (2014) for details.
-
-    References
-    ----------
-    .. [3] Christensen, D. (2005) "Fast algorithms for the calculation of
-       Kendall's tau." Computational Statistics, 20: 51-62.
-  
-    .. [4] Press, W.H, S. A Teukolsky, W.T. Vetterling and B. P. Flannery (2007).
-       Numerical Recipes: The Art of Scientific Computing. Cambridge. Pg 752.
-    
-    .. [5] Rey, S.J. (2004) "Spatial dependence in the evolution of regional income
-       distributions," in A. Getis, J. Mur and H.Zoeller (eds). Spatial
-       Econometrics and Spatial Statistics. Palgrave, London, pp. 194-213.
-
-    .. [6] Rey, S.J. (2014) "Fast algorithms for calculation of a space-time
-       concordance measure." Computational Statistics, 29(3-4): 799-811.
+    using a modification of the algorithm from Press et al (2007)[Press2007]_. See Rey
+    (2014)[Rey2014]_ for details.
 
     Examples
     --------

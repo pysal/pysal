@@ -16,7 +16,7 @@ class LMtests:
 
     """
     Lagrange Multiplier tests. Implemented as presented in Anselin et al.
-    (1996) [1]_
+    (1996) [Anselin1996]_
     ...
 
     Attributes
@@ -54,12 +54,6 @@ class LMtests:
     sarma       : tuple
                   (Only if 'rlml' or 'all' was in tests). Pair of statistic
                   and p-value for the SARMA test.
-
-    References
-    ----------
-    .. [1] Anselin, L., Bera, A. K., Florax, R., Yoon, M. J. (1996) "Simple
-       diagnostic tests for spatial dependence". Regional Science and Urban
-       Economics, 26, 77-104.
 
     Examples
     --------
@@ -249,7 +243,7 @@ class AKtest:
     """
     Moran's I test of spatial autocorrelation for IV estimation.
     Implemented following the original reference Anselin and Kelejian
-    (1997) [AK97]_
+    (1997) [Anselin1997]_ [Kelejian2004]
     ...
 
     Parameters
@@ -280,17 +274,6 @@ class AKtest:
                   Note: if case='nosp' then it simplifies to the LMerror
     p           : float
                   P-value of the test
-
-    References
-    ----------
-
-    .. [AK97] Anselin, L., Kelejian, H. (1997) "Testing for spatial error
-        autocorrelation in the presence of endogenous regressors".
-        Interregional Regional Science Review, 20, 1.
-    .. [2] Kelejian, H.H., Prucha, I.R. and Yuzefovich, Y. (2004)
-        "Instrumental variable estimation of a spatial autorgressive model with
-        autoregressive disturbances: large and small sample results".
-        Advances in Econometrics, 18, 163-198.
 
     Examples
     --------
@@ -539,7 +522,7 @@ class spDcache:
 def lmErr(reg, w, spDcache):
     """
     LM error test. Implemented as presented in eq. (9) of Anselin et al.
-    (1996) [1]_
+    (1996) [Anselin1996]_
     ...
 
     Attributes
@@ -558,11 +541,6 @@ def lmErr(reg, w, spDcache):
     lme         : tuple
                   Pair of statistic and p-value for the LM error test.
 
-    References
-    ----------
-    .. _ Anselin, L., Bera, A. K., Florax, R., Yoon, M. J. (1996) "Simple
-       diagnostic tests for spatial dependence". Regional Science and Urban
-       Economics, 26, 77-104.
     """
     lm = spDcache.utwuDs ** 2 / spDcache.t
     pval = chisqprob(lm, 1)
@@ -572,7 +550,7 @@ def lmErr(reg, w, spDcache):
 def lmLag(ols, w, spDcache):
     """
     LM lag test. Implemented as presented in eq. (13) of Anselin et al.
-    (1996) [1]_
+    (1996) [Anselin1996]_
     ...
 
     Attributes
@@ -591,11 +569,6 @@ def lmLag(ols, w, spDcache):
     lml         : tuple
                   Pair of statistic and p-value for the LM lag test.
 
-    References
-    ----------
-    .. _ Anselin, L., Bera, A. K., Florax, R., Yoon, M. J. (1996) "Simple
-       diagnostic tests for spatial dependence". Regional Science and Urban
-       Economics, 26, 77-104.
     """
     lm = spDcache.utwyDs ** 2 / (ols.n * spDcache.j)
     pval = chisqprob(lm, 1)
@@ -604,7 +577,8 @@ def lmLag(ols, w, spDcache):
 
 def rlmErr(ols, w, spDcache):
     """
-    Robust LM error test. Implemented as presented in eq. (8) of Anselin et al. (1996) [1]_
+    Robust LM error test. Implemented as presented in eq. (8) of Anselin et
+    al. (1996) [Anselin1996]_
 
     NOTE: eq. (8) has an errata, the power -1 in the denominator should be inside the square bracket.
     ...
@@ -625,11 +599,6 @@ def rlmErr(ols, w, spDcache):
     rlme        : tuple
                   Pair of statistic and p-value for the Robust LM error test.
 
-    References
-    ----------
-    .. _ Anselin, L., Bera, A. K., Florax, R., Yoon, M. J. (1996) "Simple
-       diagnostic tests for spatial dependence". Regional Science and Urban
-       Economics, 26, 77-104.
     """
     nj = ols.n * spDcache.j
     num = (spDcache.utwuDs - (spDcache.t * spDcache.utwyDs) / nj) ** 2
@@ -642,7 +611,7 @@ def rlmErr(ols, w, spDcache):
 def rlmLag(ols, w, spDcache):
     """
     Robust LM lag test. Implemented as presented in eq. (12) of Anselin et al.
-    (1996) [1]_
+    (1996) [Anselin1996]_
     ...
 
     Attributes
@@ -661,11 +630,6 @@ def rlmLag(ols, w, spDcache):
     rlml            : tuple
                       Pair of statistic and p-value for the Robust LM lag test.
 
-    References
-    ----------
-    .. _ Anselin, L., Bera, A. K., Florax, R., Yoon, M. J. (1996) "Simple
-       diagnostic tests for spatial dependence". Regional Science and Urban
-       Economics, 26, 77-104.
     """
     lm = (spDcache.utwyDs - spDcache.utwuDs) ** 2 / \
         ((ols.n * spDcache.j) - spDcache.t)
@@ -676,7 +640,7 @@ def rlmLag(ols, w, spDcache):
 def lmSarma(ols, w, spDcache):
     """
     LM error test. Implemented as presented in eq. (15) of Anselin et al.
-    (1996) [1]_
+    (1996) [Anselin1996]_
     ...
 
     Attributes
@@ -695,11 +659,6 @@ def lmSarma(ols, w, spDcache):
     sarma       : tuple
                   Pair of statistic and p-value for the LM sarma test.
 
-    References
-    ----------
-    .. _ Anselin, L., Bera, A. K., Florax, R., Yoon, M. J. (1996) "Simple
-       diagnostic tests for spatial dependence". Regional Science and Urban
-       Economics, 26, 77-104.
     """
 
     first = (spDcache.utwyDs - spDcache.utwuDs) ** 2 / \
@@ -713,7 +672,7 @@ def lmSarma(ols, w, spDcache):
 def get_mI(reg, w, spDcache):
     """
     Moran's I statistic of spatial autocorrelation as showed in Cliff & Ord
-    (1981) [CO81]_, p. 201-203
+    (1981) [Cliff1981]_, p. 201-203
     ...
 
     Attributes
@@ -732,10 +691,6 @@ def get_mI(reg, w, spDcache):
     moran           : float
                       Statistic Moran's I test.
 
-    References
-    ----------
-    .. [CO81] Cliff, AD., Ord, JK. (1981) "Spatial processes: models & applications".
-       Pion London
     """
     mi = (w.n * np.dot(reg.u.T, spDcache.wu)) / (w.s0 * reg.utu)
     return mi[0][0]

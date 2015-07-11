@@ -22,7 +22,7 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
 
     """
     ML estimation of the spatial error model with regimes (note no consistency 
-    checks, diagnostics or constants added); Anselin (1988) [1]_
+    checks, diagnostics or constants added); Anselin (1988) [Anselin1988]_
 
     Parameters
     ----------
@@ -197,12 +197,6 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
                    i.e. when regime_err_sep=True and no variable is fixed
                    across regimes.
                    Contains all attributes of each individual regression
-
-    References
-    ----------
-
-    .. [1] Anselin, L. (1988) "Spatial Econometrics: Methods and Models".
-    Kluwer Academic Publishers. Dordrecht.
 
     Example
     ________
