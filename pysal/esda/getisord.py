@@ -162,7 +162,7 @@ class G:
 class G_Local:
     """
     Generalized Local G Autocorrelation
-    Statistic[Getis1992,Ord1995,Getis1996]_ .
+    Statistic [Getis1992]_, [Ord1995]_, [Getis1996]_ .
 
     Parameters
     ----------

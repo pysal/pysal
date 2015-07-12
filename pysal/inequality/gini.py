@@ -45,8 +45,8 @@ class Gini_Spatial:
     Spatial Gini coefficient
 
     Provides for computationally based inference regarding the contribution of
-    spatial neighbor pairs to overall inequality across a set of regions.
-    [Rey2013]_
+    spatial neighbor pairs to overall inequality across a set of regions. [Rey2013]_
+    
     Parameters
     ----------
 

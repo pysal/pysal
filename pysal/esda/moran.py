@@ -409,7 +409,7 @@ def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
 class Moran_Rate(Moran):
     """
     Adjusted Moran's I Global Autocorrelation Statistic for Rate
-    Variables[Assuncao1999]_
+    Variables [Assuncao1999]_
 
     Parameters
     ----------
@@ -700,7 +700,7 @@ class Moran_Local:
 
 class Moran_Local_Rate(Moran_Local):
     """
-    Adjusted Local Moran Statistics for Rate Variables[Assuncao1999]_
+    Adjusted Local Moran Statistics for Rate Variables [Assuncao1999]_
 
     Parameters
     ----------
