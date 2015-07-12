@@ -8,6 +8,7 @@ __author__ = "Nicholas Malizia <nmalizia@asu.edu>", "Sergio J. Rey \
 
 __all__ = ['SpaceTimeEvents', 'knox', 'mantel', 'jacquez', 'modified_knox']
 
+import os
 import pysal
 import numpy as np
 import scipy.stats as stats
@@ -26,7 +27,7 @@ class SpaceTimeEvents:
     ----------
     path            : string
                       the path to the appropriate shapefile, including the
-                      file name, but excluding the extension.
+                      file name and extension
     time            : string
                       column header in the DBF file indicating the column
                       containing the time stamp.
@@ -60,7 +61,7 @@ class SpaceTimeEvents:
     timestamp for the events. This timestamp may be a numerical value
     or a date. Date inference was added in version 1.6.
 
-    >>> path = pysal.examples.get_path("burkitt")
+    >>> path = pysal.examples.get_path("burkitt.shp")
 
     Create an instance of SpaceTimeEvents from a shapefile, where the
     temporal information is stored in a column named "T".
@@ -117,8 +118,10 @@ class SpaceTimeEvents:
 
     """
     def __init__(self, path, time_col, infer_timestamp=False):
-        shp = pysal.open(path + '.shp')
-        dbf = pysal.open(path + '.dbf')
+        shp = pysal.open(path)
+        head, tail = os.path.split(path)
+        dbf_tail = tail.split(".")[0]+".dbf"
+        dbf = pysal.open(pysal.examples.get_path(dbf_tail))
 
         # extract the spatial coordinates from the shapefile
         x = [coords[0] for coords in shp]
@@ -199,7 +202,7 @@ def knox(s_coords, t_coords, delta, tau, permutations=99, debug=False):
 
     Read in the example data and create an instance of SpaceTimeEvents.
 
-    >>> path = pysal.examples.get_path("burkitt")
+    >>> path = pysal.examples.get_path("burkitt.shp")
     >>> events = SpaceTimeEvents(path,'T')
 
     Set the random seed generator. This is used by the permutation based
@@ -308,7 +311,7 @@ def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, t
 
     Read in the example data and create an instance of SpaceTimeEvents.
 
-    >>> path = pysal.examples.get_path("burkitt")
+    >>> path = pysal.examples.get_path("burkitt.shp")
     >>> events = SpaceTimeEvents(path,'T')
 
     Set the random seed generator. This is used by the permutation based
@@ -417,7 +420,7 @@ def jacquez(s_coords, t_coords, k, permutations=99):
 
     Read in the example data and create an instance of SpaceTimeEvents.
 
-    >>> path = pysal.examples.get_path("burkitt")
+    >>> path = pysal.examples.get_path("burkitt.shp")
     >>> events = SpaceTimeEvents(path,'T')
 
     The Jacquez test counts the number of events that are k nearest
@@ -535,7 +538,7 @@ def modified_knox(s_coords, t_coords, delta, tau, permutations=99):
 
     Read in the example data and create an instance of SpaceTimeEvents.
 
-    >>> path = pysal.examples.get_path("burkitt")
+    >>> path = pysal.examples.get_path("burkitt.shp")
     >>> events = SpaceTimeEvents(path, 'T')
 
     Set the random seed generator. This is used by the permutation based

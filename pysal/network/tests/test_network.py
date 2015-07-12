@@ -9,7 +9,7 @@ from pysal.network import util
 class TestNetwork(unittest.TestCase):
 
     def setUp(self):
-        self.ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
+        self.ntw = ps.Network(ps.examples.get_path('streets.shp'))
 
     def tearDown(self):
         pass
@@ -60,9 +60,9 @@ class TestNetwork(unittest.TestCase):
 class TestNetworkPointPattern(unittest.TestCase):
 
     def setUp(self):
-        self.ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
+        self.ntw = ps.Network(ps.examples.get_path('streets.shp'))
         for obs in ['schools', 'crimes']:
-            self.ntw.snapobservations(ps.examples.get_path('geodanet/{}.shp'.format(obs)), obs, attribute=True)
+            self.ntw.snapobservations(ps.examples.get_path('{}.shp'.format(obs)), obs, attribute=True)
             setattr(self, obs, self.ntw.pointpatterns[obs])
 
     def tearDown(self):
@@ -124,7 +124,7 @@ class TestNetworkPointPattern(unittest.TestCase):
 class TestNetworkUtils(unittest.TestCase):
 
     def setUp(self):
-        self.ntw = ps.Network(ps.examples.get_path('geodanet/streets.shp'))
+        self.ntw = ps.Network(ps.examples.get_path('streets.shp'))
 
     def test_dijkstra(self):
         self.distance, self.pred = util.dijkstra(self.ntw, self.ntw.edge_lengths, 0)
