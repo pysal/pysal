@@ -5,7 +5,8 @@ References
 
 .. [Akaike1974] Akaike, H. (1974). A new look at the statistical model identification. Automatic Control, IEEE Transactions on, 19(6):716–723.
 .. [Anselin1988] Anselin, L. (1988). Spatial Econometrics: Methods and Models. Kluwer Academic Publishers. Dordrecht.
-.. [Anselin1996] Anselin, L., Bera, A., Florax, R. J. G. M., and Yoon, M. (1996). Simple diagnostic tests for spatial dependence. Regional Science and Urban Economics, 26:77–104.
+.. [Anselin1996a] Anselin, L., Bera, A., Florax, R. J. G. M., and Yoon, M. (1996). Simple diagnostic tests for spatial dependence. Regional Science and Urban Economics, 26:77–104.
+.. [Anselin1996b] Anselin, L. and Smirnov, O. (1996). Efficient algorithms for constructing proper higher order spatial lag operators*. Journal of Regional Science, 36(1):67–89.
 .. [Anselin1997] Anselin, L. and Kelejian, H. H. (1997). Testing for spatial error autocorrelation in the presence of endogenous regressors. International Regional Science Review, 20(1-2):153–182.
 .. [Anselin2011] Anselin, L. (2011). GMM Estimation of Spatial Error Autocorrelation with and without Heteroskedasticity.
 .. [Arraiz2010] Arraiz, I., Drukker, D. M., Kelejian, H. H., and Prucha, I. R. (2010). A spatial Cliff-Ord-type model with heteroskedastic innovations: Small and large sample results. Journal of Regional Science, 50(2):592–614.
@@ -17,6 +18,7 @@ References
 .. [Choynowski1959] Choynowski, M. (1959). Maps based on probabilities. Journal of the American Statistical Association, 54(286):385–388.
 .. [Christensen2005] Christensen, D. (2005). Fast algorithms for the calculation of kendalls τ. Computational Statistics, 20(1):51–62.
 .. [Cliff1981] Cliff, A. D. and Ord, J. K. (1981). Spatial processes, models & applications. Pion, London.
+.. [DeBerg2008] De Berg, M., Cheong, O., Van Kreveld, M., and Overmars, M. (2008). Computational geometry: algorithms and applications. Springer.
 .. [Drukker2011] Drukker, D., Prucha, I., and Raciborski, R. (2011). A command for estimating spatial-autoregressive models with spatial-autoregressive disturbances and additional endogenous variables. Technical report, Technical report, Stata.
 .. [Drukker2013] Drukker, D. M., Egger, P., and Prucha, I. R. (2013). On two-step estimation of a spatial autoregressive model with autoregressive disturbances and endogenous regressors. Econometric Reviews, 32(5-6):686–733.
 .. [Getis1992] Getis, A. and Ord, J. K. (1992). The analysis of spatial association by use of distance statistics. Geographical Analysis, 24(3):189–206.
