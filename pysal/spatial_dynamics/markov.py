@@ -29,7 +29,7 @@ for i in range(1, 5):
 # filtered on the significance of the LISA end points
 # True indicates significant LISA in a particular period
 # e.g. a key of (1, 3, True, False) indicates a significant LISA located in
-I# quadrant 1 in period 0 moved to quadrant 3 in period 1 but was not
+# quadrant 1 in period 0 moved to quadrant 3 in period 1 but was not
 # significant in quadrant 3.
 
 MOVE_TYPES = {}
@@ -252,12 +252,12 @@ class Spatial_Markov:
                       (permutations,1), the values of x2 for the random 
                       permutations.
     Q               : float
-                      Chi-square Otest of homogeneity across lag classes based
+                      Chi-square test of homogeneity across lag classes based
                       on Bickenbach and Bode (2003) [Bickenbach2003]_.
     Q_p_value       : float
                       p-value for Q.
     LR              : float
-                      Likelihood ratio statistic for homogeneity aczoross lag
+                      Likelihood ratio statistic for homogeneity across lag
                       classes based on Bickenback and Bode (2003) [Bickenbach2003]_.
     LR_p_value      : float
                       p-value for LR.
