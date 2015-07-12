@@ -132,8 +132,7 @@ class Tau:
 
     Notes
     -----
-    Modification of algorithm suggested by Christensen (2005).
-    [Christensen2005]_
+    Modification of algorithm suggested by Christensen (2005). [Christensen2005]_
     PySAL implementation uses a list based representation of a binary tree for
     the accumulation of the concordance measures. Ties are handled by this
     implementation (in other words, if there are ties in either x, or y, or
@@ -315,10 +314,10 @@ class SpatialTau(object):
     -----
     Algorithm has two stages. The first calculates classic Tau using a list
     based implementation of the algorithm from Christensen
-    (2005)[Christensen2005]_. Second
+    (2005) [Christensen2005]_. Second
     stage calculates concordance measures for neighboring pairs of locations
-    using a modification of the algorithm from Press et al (2007)[Press2007]_. See Rey
-    (2014)[Rey2014]_ for details.
+    using a modification of the algorithm from Press et al (2007) [Press2007]_. See Rey
+    (2014) [Rey2014]_ for details.
 
     Examples
     --------

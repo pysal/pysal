@@ -16,7 +16,7 @@ class LMtests:
 
     """
     Lagrange Multiplier tests. Implemented as presented in Anselin et al.
-    (1996) [Anselin1996]_
+    (1996) [Anselin1996a]_
     ...
 
     Attributes
@@ -522,7 +522,7 @@ class spDcache:
 def lmErr(reg, w, spDcache):
     """
     LM error test. Implemented as presented in eq. (9) of Anselin et al.
-    (1996) [Anselin1996]_
+    (1996) [Anselin1996a]_
     ...
 
     Attributes
@@ -550,7 +550,7 @@ def lmErr(reg, w, spDcache):
 def lmLag(ols, w, spDcache):
     """
     LM lag test. Implemented as presented in eq. (13) of Anselin et al.
-    (1996) [Anselin1996]_
+    (1996) [Anselin1996a]_
     ...
 
     Attributes
@@ -578,7 +578,7 @@ def lmLag(ols, w, spDcache):
 def rlmErr(ols, w, spDcache):
     """
     Robust LM error test. Implemented as presented in eq. (8) of Anselin et
-    al. (1996) [Anselin1996]_
+    al. (1996) [Anselin1996a]_
 
     NOTE: eq. (8) has an errata, the power -1 in the denominator should be inside the square bracket.
     ...
@@ -611,7 +611,7 @@ def rlmErr(ols, w, spDcache):
 def rlmLag(ols, w, spDcache):
     """
     Robust LM lag test. Implemented as presented in eq. (12) of Anselin et al.
-    (1996) [Anselin1996]_
+    (1996) [Anselin1996a]_
     ...
 
     Attributes
@@ -640,7 +640,7 @@ def rlmLag(ols, w, spDcache):
 def lmSarma(ols, w, spDcache):
     """
     LM error test. Implemented as presented in eq. (15) of Anselin et al.
-    (1996) [Anselin1996]_
+    (1996) [Anselin1996a]_
     ...
 
     Attributes

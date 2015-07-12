@@ -438,7 +438,7 @@ def standardized_mortality_ratio(e, b, s_e, s_b, n):
 
 
 def choynowski(e, b, n, threshold=None):
-    """Choynowski map probabilities[Choynowski1959]_ .
+    """Choynowski map probabilities [Choynowski1959]_ .
 
     Parameters
     ----------
@@ -504,7 +504,7 @@ def assuncao_rate(e, b):
     """The standardized rates where the mean and stadard deviation used for
     the standardization are those of Empirical Bayes rate estimates
     The standardized rates resulting from this function are used to compute
-    Moran's I corrected for rate variables[Choynowski1959]_ .
+    Moran's I corrected for rate variables [Choynowski1959]_ .
 
     Parameters
     ----------

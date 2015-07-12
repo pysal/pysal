@@ -258,8 +258,7 @@ class Spatial_Markov:
                       p-value for Q.
     LR              : float
                       Likelihood ratio statistic for homogeneity aczoross lag
-                      classes based on Bickenback and Bode (2003)
-		      [Bickenbach2003]_.
+                      classes based on Bickenback and Bode (2003) [Bickenbach2003]_.
     LR_p_value      : float
                       p-value for LR.
     dof_hom         : int
