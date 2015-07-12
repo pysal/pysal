@@ -1,5 +1,6 @@
 us_income
 =========
+
 Per-capita income for the lower 47 US states 1929-2010
 ------------------------------------------------------
 

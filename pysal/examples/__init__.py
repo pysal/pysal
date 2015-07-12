@@ -15,6 +15,14 @@ for d in dirs:
         file_2_dir[f] = tmp
 
 def get_path(example_name):
+    """
+    Get path of pysal or example folders
+    """
+    if type(example_name) != str:
+        try:
+            example_name = str(example_name)
+        except:
+            raise KeyError('Cannot coerce requested example name to string')
     if example_name in dirs:
         return os.path.join(example_dir,example_name, example_name)
     elif example_name in file_2_dir:
@@ -23,4 +31,42 @@ def get_path(example_name):
     elif example_name == "":
         return os.path.join(base,'examples', example_name)
     else:
-        print(example_name+ ' not found in PySAL built-in examples.')
+        raise KeyError(example_name + ' not found in PySAL built-in examples.')
+
+def available(verbose=False):
+    """
+    List available datasets in pysal.examples
+    """
+    examples = [os.path.join(get_path(''), d) for d in os.listdir(get_path(''))]
+    examples = [d for d in examples if os.path.isdir(d) and '__' not in d]
+    if not verbose:
+        return [os.path.split(d)[-1] for d in examples]
+    
+    examples = [os.path.join(dty, 'README.md') for dty in examples]
+    descs = [_read_example(path) for path in examples]
+    return [{desc['name']:desc['description'] for desc in descs}]
+
+def _read_example(pth):
+    try:
+        with open(pth, 'r') as io:
+            title = io.readline().strip('\n')
+            sep_eq = io.readline()
+            io.readline() #pad
+            short = io.readline().strip('\n')
+            sep_dash = io.readline()
+            rest = io.readlines()
+            rest = [l.strip('\n') for l in rest if l.strip('\n')!= '']
+            d = {'name':title, 'description':short, 'explanation':rest}
+    except IOError:
+        basename = os.path.split(pth)[-2]
+        dirname = os.path.split(basename)[-1]
+        d = {'name':dirname, 'description':None, 'explanation':None}
+    return d
+
+def explain(name): #would be nice to use pandas for display here
+    """
+    Explain a dataset by name
+    """
+    path = os.path.split(pysal.examples.get_path(name))[0]
+    fpath = os.path.join(path, 'README.md')
+    return _read_example(fpath)
