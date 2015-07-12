@@ -252,12 +252,12 @@ class Spatial_Markov:
                       (permutations,1), the values of x2 for the random 
                       permutations.
     Q               : float
-                      Chi-square Otest of homogeneity across lag classes based
+                      Chi-square test of homogeneity across lag classes based
                       on Bickenbach and Bode (2003) [Bickenbach2003]_.
     Q_p_value       : float
                       p-value for Q.
     LR              : float
-                      Likelihood ratio statistic for homogeneity aczoross lag
+                      Likelihood ratio statistic for homogeneity across lag
                       classes based on Bickenback and Bode (2003) [Bickenbach2003]_.
     LR_p_value      : float
                       p-value for LR.
