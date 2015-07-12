@@ -243,7 +243,7 @@ class AKtest:
     """
     Moran's I test of spatial autocorrelation for IV estimation.
     Implemented following the original reference Anselin and Kelejian
-    (1997) [Anselin1997]_ [Kelejian2004]
+    (1997) [Anselin1997]_
     ...
 
     Parameters

@@ -20,7 +20,7 @@ class IntervalTree:
     """
     Representation of an interval tree. An interval tree is a data structure which is used to
     quickly determine which intervals in a set contain a value or overlap with
-    a query interval. [DeBerg2008]
+    a query interval. [DeBerg2008]_
 
     """
 
