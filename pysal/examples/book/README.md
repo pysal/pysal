@@ -1,5 +1,6 @@
 book
 ====
+
 Synthetic data to illustrate spatial weights 
 --------------------------------------------
 

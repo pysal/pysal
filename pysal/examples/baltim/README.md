@@ -1,5 +1,6 @@
 baltim
 ======
+
 Baltimore house sales prices and hedonics
 -----------------------------------------
 
