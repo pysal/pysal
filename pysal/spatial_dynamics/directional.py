@@ -16,30 +16,30 @@ def rose(Y, w, k=8, permutations=0):
 
     Parameters
     ----------
-    Y             : array 
-                    (n, 2), variable observed on n spatial units over 2 time. 
+    Y             : array
+                    (n, 2), variable observed on n spatial units over 2 time
                     periods
     w             : W
                     spatial weights object.
     k             : int, optional
-                    number of circular sectors in rose diagram (the default is 
+                    number of circular sectors in rose diagram (the default is
                     8).
     permutations  : int, optional
-                    number of random spatial permutations for calculation of 
+                    number of random spatial permutations for calculation of
                     pseudo p-values (the default is 0).
 
     Returns
     -------
-    results       : dictionary 
+    results       : dictionary
                     (keys defined below)
-    counts        : array 
-                    (k, 1), number of vectors with angular movement falling in 
+    counts        : array
+                    (k, 1), number of vectors with angular movement falling in
                     each sector.
-    cuts          : array 
+    cuts          : array
                     (k, 1), intervals defining circular sectors (in radians).
-    random_counts : array 
+    random_counts : array
                     (permutations, k), counts from random permutations.
-    pvalues       : array 
+    pvalues       : array
                     (k, 1), one sided (upper tail) pvalues for observed counts.
 
     Notes
@@ -50,7 +50,7 @@ def rose(Y, w, k=8, permutations=0):
     --------
     Constructing data for illustration of directional LISA analytics.
     Data is for the 48 lower US states over the period 1969-2009 and
-    includes per capita income normalized to the national average. 
+    includes per capita income normalized to the national average.
 
     Load comma delimited data file in and convert to a numpy array
 
@@ -138,8 +138,8 @@ def rose(Y, w, k=8, permutations=0):
 
     References
     ----------
-    .. [1] Rey, S.J., A.T. Murray and L. Anselin. 2011. "Visualizing regional 
-       income distribution dynamics." Letters in Spatial and Resource Sciences, 
+    .. [1] Rey, S.J., A.T. Murray and L. Anselin. 2011. "Visualizing regional
+       income distribution dynamics." Letters in Spatial and Resource Sciences,
        4: 81-90.
 
     """

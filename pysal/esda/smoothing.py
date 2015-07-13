@@ -728,8 +728,6 @@ class Spatial_Empirical_Bayes:
     >>> if not stl_w.id_order_set: stl_w.id_order = range(1,len(stl) + 1)
 
     Creating an instance of Spatial_Empirical_Bayes class using stl_e, stl_b,
-    and stl_w
-
     >>> s_eb = Spatial_Empirical_Bayes(stl_e, stl_b, stl_w)
 
     Extracting the risk values through the property r of s_eb

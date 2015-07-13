@@ -12,11 +12,11 @@ import os
 import pysal
 import numpy as np
 import scipy.stats as stats
-#import pysal.weights.Distance as Distance
 from pysal.weights.user import knnW_from_array
 from pysal import cg
 from pysal.spatial_dynamics import util
 from datetime import date
+
 
 class SpaceTimeEvents:
     """
@@ -265,7 +265,8 @@ def knox(s_coords, t_coords, delta, tau, permutations=99, debug=False):
     return knox_result
 
 
-def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0):
+def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0,
+           tcon=1.0, tpow=-1.0):
     """
     Standardized Mantel test for spatio-temporal interaction. [2]_
 
@@ -284,7 +285,8 @@ def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, t
                       value for power transformation for spatial distances
                       (the default is -1.0).
     tcon            : float, optional
-                      constant added to temporal distances (the default is 1.0).
+                      constant added to temporal distances (the default is
+                      1.0).
     tpow            : float, optional
                       value for power transformation for temporal distances
                       (the default is -1.0).
@@ -327,7 +329,8 @@ def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, t
     should be added by the user. This can be done by adjusting the constant
     and power parameters.
 
-    >>> result = mantel(events.space, events.t, 99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0)
+    >>> result = mantel(events.space, events.t, 99, scon=1.0, spow=-1.0,
+    ...                 tcon=1.0, tpow=-1.0)
 
     Next, we examine the result of the test.
 
@@ -369,7 +372,7 @@ def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, t
         m = stats.pearsonr(timevec, distvec)[0].sum()
         dist.append(m)
 
-    ## establish the pseudo significance of the observed statistic
+    # establish the pseudo significance of the observed statistic
     distribution = np.array(dist)
     greater = np.ma.masked_greater_equal(distribution, stat)
     count = np.ma.count_masked(greater)
@@ -551,7 +554,8 @@ def modified_knox(s_coords, t_coords, delta, tau, permutations=99):
     respectively. This counts the events that are closer than 20 units in
     space, and 5 units in time.
 
-    >>> result = modified_knox(events.space, events.t, delta=20, tau=5, permutations=99)
+    >>> result = modified_knox(events.space, events.t, delta=20, tau=5,
+    ...                        permutations=99)
 
     Next, we examine the results. First, we call the statistic from the
     results dictionary. This reports the difference between the observed

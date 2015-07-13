@@ -16,12 +16,12 @@ def steady_state(P):
 
     Parameters
     ----------
-    P        : matrix 
+    P        : matrix
                (k, k), an ergodic Markov transition probability matrix.
 
     Returns
     -------
-    	     : matrix 
+             : matrix
                (k, 1), steady state distribution.
 
     Examples
@@ -59,17 +59,17 @@ def steady_state(P):
 
 def fmpt(P):
     """
-    Calculates the matrix of first mean passage times for an ergodic transition 
+    Calculates the matrix of first mean passage times for an ergodic transition
     probability matrix.
 
     Parameters
     ----------
-    P    : matrix 
+    P    : matrix
            (k, k), an ergodic Markov transition probability matrix.
 
     Returns
     -------
-    M    : matrix 
+    M    : matrix
            (k, k), elements are the expected value for the number of intervals
            required for a chain starting in state i to first enter state j.
            If i=j then this is the recurrence time.
@@ -97,7 +97,7 @@ def fmpt(P):
 
     References
     ----------
-    .. [1] Kemeny, John, G. and J. Laurie Snell (1976) Finite Markov Chains. 
+    .. [1] Kemeny, John, G. and J. Laurie Snell (1976) Finite Markov Chains.
        Springer-Verlag. Berlin.
 
     """
@@ -111,7 +111,7 @@ def fmpt(P):
     Z = la.inv(I - P + A)
     E = np.ones_like(Z)
     A_diag = np.diag(A)
-    A_diag = A_diag + (A_diag==0)
+    A_diag = A_diag + (A_diag == 0)
     D = np.diag(1. / A_diag)
     Zdg = np.diag(np.diag(Z))
     M = (I - Z + E * Zdg) * D
@@ -130,7 +130,7 @@ def var_fmpt(P):
 
     Returns
     -------
-    	   : matrix 
+           : matrix
              (k, k), elements are the variances for the number of intervals
              required for a chain starting in state i to first enter state j.
 
@@ -162,4 +162,3 @@ def var_fmpt(P):
     ZMdg = np.diag(np.diag(ZM))
     W = M * (2 * Zdg * D - I) + 2 * (ZM - E * ZMdg)
     return W - np.multiply(M, M)
-
