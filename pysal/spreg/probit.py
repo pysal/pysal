@@ -84,16 +84,14 @@ class BaseProbit:
     Pinkse_error: float
                   Lagrange Multiplier test against spatial error correlation.
                   
-		  Implemented as presented in Pinkse (2004) [Pinske2004]_              
+		  Implemented as presented in [Pinkse2004]_              
     KP_error    : float
                   Moran's I type test against spatial error correlation.
                   
-		  Implemented as presented in Kelejian and Prucha
-		  (2001) [Kelejian2001]_
+		  Implemented as presented in  [Kelejian2001]_
     PS_error    : float
                   Lagrange Multiplier test against spatial error correlation.
-                  Implemented as presented in Pinkse 
-		  and Slade (1998) [Pinkse1998]_
+                  Implemented as presented in  [Pinkse1998]_
     warning     : boolean
                   if True Maximum number of iterations exceeded or gradient 
                   and/or function calls not changing.
@@ -349,8 +347,8 @@ class Probit(BaseProbit):
     The diagnostics for spatial dependence currently implemented are:
 
         * Pinkse Error [Pinkse2004]_
-        * Kelejian and Prucha Moran's I [2]_
-        * Pinkse & Slade Error [3]_
+        * Kelejian and Prucha Moran's I [Kelejian2001]_
+        * Pinkse & Slade Error [Pinkse1998]_
 
     Parameters
     ----------
@@ -420,15 +418,13 @@ class Probit(BaseProbit):
                   (test statistics, p-value)
     Pinkse_error: float
                   Lagrange Multiplier test against spatial error correlation.
-                  Implemented as presented in Pinkse (2004) [Pinske2004]_             
+                  Implemented as presented in  [Pinkse2004]_             
     KP_error    : float
                   Moran's I type test against spatial error correlation.
-                  Implemented as presented in Kelejian and Prucha (2001)
-		  [Kelejian2001]_
+                  Implemented as presented in [Kelejian2001]_
     PS_error    : float
                   Lagrange Multiplier test against spatial error correlation.
-                  Implemented as presented in Pinkse and Slade (1998)
-		  [Pinkse1998]_
+                  Implemented as presented in [Pinkse1998]_
     warning     : boolean
                   if True Maximum number of iterations exceeded or gradient 
                   and/or function calls not changing.
@@ -466,8 +462,7 @@ class Probit(BaseProbit):
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
     that other packages accept. Since we want to run a probit model and for this
     example we use the Columbus data, we also need to transform the continuous
-    CRIME variable into a binary variable. As in McMillen, D. (1992) "Probit with
-    spatial autocorrelation". Journal of Regional Science 32(3):335-48, we define
+    CRIME variable into a binary variable. As in [McMillen1992]_, we define
     y = 1 if CRIME > 40.
 
     >>> y = np.array([dbf.by_col('CRIME')]).T

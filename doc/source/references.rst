@@ -28,16 +28,17 @@ References
 .. [Jarque1980] Jarque, C. M. and Bera, A. K. (1980). Efficient tests for normality, homoscedasticity and serial independence of regression residuals. Economics letters, 6(3):255–259.
 .. [Kelejian1998] Kelejian, H. H. and Prucha, I. R. (1998). A generalized spatial two-stage least squares procedure for estimating a spatial autoregressive model with autoregressive disturbances. The Journal of Real Estate Finance and Economics, 17(1):99–121.
 .. [Kelejian1999] Kelejian, H. H. and Prucha, I. R. (1999). A generalized moments estimator for the autoregressive parameter in a spatial model. International Economic Review, 40:509–534.
-.. [Kelejian2001] Kelejian, H. H. and Prucha, I. R. (2001). On the asymptotic distribution ofthe moran i test statistic with applications. Journal of Econometrics, 104(2):219–257.
+.. [Kelejian2001] Kelejian, H. H. and Prucha, I. R. (2001). On the asymptotic distribution of the Moran I test statistic with applications. Journal of Econometrics, 104(2):219–257.
 .. [Kelejian2004] Kelejian, H. H., Prucha, I. R., and Yuzefovich, Y. (2004). Instrumental variable estimation of a spatial autoregressive model with autoregressive disturbances: Large and small sample results. Advances in Econometrics: Spatial and Spatio-Temporal econometrics, pages 163–198.
 .. [Kemeny1967] Kemeny, J. G. and Snell, J. L. (1967). Finite markov chains. Van Nostrand.
 .. [Knox1964] Knox, G. (1964). The detection of space-time interactions. Applied Statistics, 13:25–29.
 .. [Koenker1982] Koenker, R. and Bassett Jr, G. (1982). Robust tests for heteroscedasticity based on regression quantiles. Econometrica: Journal of the Econometric Society, pages 43–61.
 .. [Kullback1962] Kullback, S., Kupperman, M., and Ku, H. (1962). Tests for contingency tables and markov chains. Technometrics, 4(4):573–608.
 .. [Mantel1967] Mantel, N. (1967). The detection of disease clustering and a generalized regression approach. Cancer research, 27(2 Part 1):209–220. 
+.. [McMillen1992] McMillen, D. (1992) Probit with spatial autocorrelation. Journal of Regional Science 32(3):335-48.
 .. [Ord1995] Ord, J. K. and Getis, A. (1995). Local spatial autocorrelation statistics: distributional issues and an application. Geographical Analysis, 27(4):286–306.
 .. [Pinkse1998] Pinkse, J. and Slade, M. E. (1998). Contracting in space: An application of spatial statistics to discrete-choice models. Journal of Econometrics, 85(1):125–154.
-.. [Pinske2004] Pinske, J. (2004). Moran-flavored tests with nuisance parameters: Examples. In Anselin, L., Florax, R. J. G. M., and Rey, S. J., editors, Advances in Spatial Econometrics: Methodology, Tools and Applications, pages 67–77. Springer, Berlin. 
+.. [Pinkse2004] Pinske, J. (2004). Moran-flavored tests with nuisance parameters: Examples. In Anselin, L., Florax, R. J. G. M., and Rey, S. J., editors, Advances in Spatial Econometrics: Methodology, Tools and Applications, pages 67–77. Springer, Berlin. 
 .. [Press2007] Press, W., Teukolsky, S., Vetterling, W., and Flannery, B. (2007). Numerical recipes: the art of scientific computing. Cambridge Univ Pr, Cambridge, 3rd edition.
 .. [Rey2001] Rey, S. J. (2001). Spatial empirics for economic growth and convergence. Geographical Analysis, 33(3):195–214.
 .. [Rey2004a] Rey, S. J. (2004). Spatial dependence in the evolution of regional income distributions. In Getis, A., Múr, J., and Zoeller, H., editors, Spatial econometrics and spatial statistics, pages 193–213. Palgrave, Hampshire.
@@ -47,5 +48,5 @@ References
 .. [Rey2014] Rey, S. J. (2014). Fast algorithms for a space-time concordance measure. Computational Statistics, 29(3-4):799–811.
 .. [Schwarz1978] Schwarz, G. et al. (1978). Estimating the dimension of a model. The annals of statistics, 6(2):461–464. 
 .. [Slocum2008] Slocum, T., McMaster, R., Kessler, F., and Howard, H. (2008). Thematic cartography and geovisualization. Prentice Hall.
-.. [Watts1998] Watts, D. J. and Strogatz, S. H. (1998). Collective dynamics of ‘small-world’ networks. nature, 393(6684):440–442.
+.. [Watts1998] Watts, D. J. and Strogatz, S. H. (1998). Collective dynamics of ‘small-world’ networks. Nature, 393(6684):440–442.
 .. [White1980] White, H. (1980). A heteroskedasticity-consistent covariance matrix estimator and a direct test for heteroskedasticity. Econometrica: Journal of the Econometric Society, pages 817–838.
