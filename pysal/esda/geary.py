@@ -114,7 +114,6 @@ class Geary:
             self.p_norm = stats.norm.cdf(self.z_norm)
             self.p_rand = stats.norm.cdf(self.z_rand)
 
-
         if permutations:
             sim = [self.__calc(np.random.permutation(self.y))
                    for i in xrange(permutations)]
@@ -165,5 +164,3 @@ class Geary:
                          for j, wij in z])
         a = (self.n - 1) * sum(ys)
         return a / self.den
-
-

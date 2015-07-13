@@ -24,7 +24,8 @@ class Join_Counts:
     w               : W
                       spatial weights instance
     permutations    : int
-                      number of random permutations for calculation of pseudo-p_values
+                      number of random permutations for calculation of
+                      pseudo-p_values
 
     Attributes
     ----------
@@ -49,7 +50,8 @@ class Join_Counts:
                   (if permutations>0)
                    p-value based on permutations (one-sided)
                    null: spatial randomness
-                   alternative: the observed bb is greater than under randomness
+                   alternative: the observed bb is greater than under
+                   randomness
     mean_bb      : float
                    average of permuted bb values
     min_bb       : float
@@ -63,7 +65,8 @@ class Join_Counts:
                    (if permutations>0)
                    p-value based on permutations (one-sided)
                    null: spatial randomness
-                   alternative: the observed bw is greater than under randomness
+                   alternative: the observed bw is greater than under
+                   randomness
     mean_bw      : float
                    average of permuted bw values
     min_bw       : float

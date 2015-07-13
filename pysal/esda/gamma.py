@@ -35,7 +35,8 @@ class Gamma:
                       'no' keep as is
                       'yes' or 'y' standardize to mean zero and variance one
     permutations    : int
-                      number of random permutations for calculation of pseudo-p_values
+                      number of random permutations for calculation of
+                      pseudo-p_values
 
     Attributes
     ----------
@@ -59,8 +60,8 @@ class Gamma:
                    (if permutations>0)
                    p-value based on permutations (one-sided)
                    null: spatial randomness
-                   alternative: the observed Gamma is more extreme than under randomness
-                   implemented as a two-sided test
+                   alternative: the observed Gamma is more extreme than under
+                   randomness implemented as a two-sided test
     mean_g       : float
                    average of permuted Gamma values
     min_g        : float
@@ -148,7 +149,8 @@ class Gamma:
     0.0030000000000000001
 
     """
-    def __init__(self, y, w, operation='c', standardize='no', permutations=PERMUTATIONS):
+    def __init__(self, y, w, operation='c', standardize='no',
+                 permutations=PERMUTATIONS):
         self.w = w
         self.y = y
         self.op = operation
@@ -211,4 +213,3 @@ class Gamma:
         if psim > 0.5:
             psim = (self.permutations - larger + 1.) / (self.permutations + 1.)
         return psim
-
