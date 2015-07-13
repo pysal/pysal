@@ -414,6 +414,36 @@ def base_choropleth_classif(map_obj, values, classification='quantiles',
         map_obj.set_array(values)
     return map_obj
 
+def base_lisa_cluster(map_obj, lisa, p_thres=0.01, set_trans=False):
+    '''
+    Set coloring on a map object based on LISA results
+    ...
+
+    Arguments
+    ---------
+
+    map_obj         : Poly/Line collection
+                      Output from map_X_shp
+    lisa            : Moran_Local
+                      LISA object  from PySAL
+    p_thres         : float
+                      Significant threshold for clusters
+
+    Returns
+    -------
+
+    map             : PatchCollection
+                      Map object with the polygons from the shapefile and
+                      unique value coloring
+
+    '''
+    sign = lisa.p_sim < p_thres
+    quadS = lisa.q * sign
+    sig_quadS = pd.Series(quadS).values
+    lisa_patch = base_choropleth_unique(map_obj, sig_quadS, lisa_clrs)
+    lisa_patch.set_alpha(1)
+    return lisa_patch
+
 def _expand_values(values, shp2dbf_row):
     '''
     Expand series of values based on dbf order to polygons (to allow plotting
@@ -580,7 +610,85 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None,
         plt.show()
     return None
 
+# Coding to be used with PySAL scheme
+# HH=1, LH=2, LL=3, HL=4
+lisa_clrs = {1: '#FF0000', 2: '#66CCFF', 3: '#003399', 4: '#CD5C5C', \
+             0: '#D3D3D3'}
+lisa_lbls = {1: 'HH', 2: 'LH', 3: 'LL', 4: 'HL', \
+             0: 'Non-significant'}
 
+def plot_lisa_cluster(shp_link, lisa, p_thres=0.01, shp_type='poly', 
+        title='', legend=True, savein=None, figsize=None, dpi=300, alpha=1.):
+    '''
+    Plot LISA cluster maps easily
+    ...
+
+    Arguments
+    ---------
+
+    shp_link        : str
+                      Path to shapefile
+    lisa            : Moran_Local
+                      LISA object  from PySAL. NOTE: assumes
+                      `geoda_quads=False`
+    p_thres         : float
+                      Significant threshold for clusters
+    shp_type        : str
+                      'poly' (default) or 'line', for the kind of shapefile
+                      passed
+    title           : str
+                      Optional string for the title
+    legend          : Boolean
+                      [Optional. Default=True] Flag to add a legend to the map
+    savein          : str
+                      Path to png file where to dump the plot. Optional,
+                      defaults to None
+    figsize         : tuple
+                      Figure dimensions
+    dpi             : int
+                      resolution of graphic file
+    alpha           : float
+                      [Optional. Default=0.4] Transparency of the map.
+
+    Returns
+    -------
+
+    map             : PatchCollection
+                      Map object with the polygons from the shapefile and
+                      unique value coloring
+
+    '''
+    shp = ps.open(shp_link)
+    # Base layer
+    # Lisa layer
+    lisa_obj = map_poly_shp(shp)
+    lisa_obj = base_lisa_cluster(lisa_obj, lisa)
+    lisa_obj.set_alpha(alpha)
+    # Figure
+    fig = plt.figure(figsize=figsize)
+    ax = fig.add_subplot(111)
+    ax = setup_ax([lisa_obj], ax)
+    # Legend
+    if legend:
+        sign = lisa.p_sim < p_thres
+        quadS = lisa.q * sign
+        cls = list(set(quadS))
+        boxes = []
+        labels = []
+        np.sort(cls)
+        for cl in cls:
+            boxes.append(mpl.patches.Rectangle((0, 0), 1, 1,
+                facecolor=lisa_clrs[cl]))
+            labels.append(lisa_lbls[cl])
+        plt.legend(boxes, labels, loc='lower left', bbox_to_anchor=(0.025, -0.1),
+                fancybox=True)
+    if title:
+        ax.set_title(title)
+    if savein:
+        plt.savefig(savein, dpi=dpi)
+    else:
+        plt.show()
+    return None
     
 
 if __name__ == '__main__':
@@ -645,5 +753,8 @@ if __name__ == '__main__':
     
     shp_link = ps.examples.get_path('columbus.shp')
     values = np.array(ps.open(ps.examples.get_path('columbus.dbf')).by_col('HOVAL'))
-    _ = plot_choropleth(shp_link, values, 'fisher_jenks')
+    w = ps.queen_from_shapefile(shp_link)
+    lisa = ps.Moran_Local(values, w, permutations=999)
+    _ = plot_lisa_cluster(shp_link, lisa)
+    #_ = plot_choropleth(shp_link, values, 'fisher_jenks')
 
