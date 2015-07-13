@@ -132,7 +132,7 @@ class Moran:
     5.7916539074498452e-05
     """
     def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS,
-        two_tailed=True):
+                 two_tailed=True):
         self.y = y
         w.transform = transformation
         self.w = w
@@ -152,7 +152,6 @@ class Moran:
         if two_tailed:
             self.p_norm *= 2.
             self.p_rand *= 2.
-
 
         if permutations:
             sim = [self.__calc(np.random.permutation(self.z))
@@ -175,7 +174,6 @@ class Moran:
     def __moments(self):
         self.n = len(self.y)
         y = self.y
-        #z = (y-y.mean())/y.std()
         z = y - y.mean()
         self.z = z
         self.z2ss = (z * z).sum()
@@ -606,7 +604,8 @@ class Moran_Local:
     array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
     >>> lm.p_z_sim[0]
     0.46756830387716064
-    >>> lm = ps.Moran_Local(y, w, transformation = "r", permutations = 99, geoda_quads=True)
+    >>> lm = ps.Moran_Local(y, w, transformation = "r", permutations = 99,
+    ...                     geoda_quads=True)
     >>> lm.q
     array([4, 4, 4, 3, 2, 2, 1, 4, 2, 2])
 
@@ -615,7 +614,7 @@ class Moran_Local:
     moved into unittests that are conditional on architectures
     """
     def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS,
-        geoda_quads=False):
+                 geoda_quads=False):
         self.y = y
         n = len(y)
         self.n = n
@@ -698,8 +697,11 @@ class Moran_Local:
         np = (1 - zp) * lp
         nn = (1 - zp) * (1 - lp)
         pn = zp * (1 - lp)
-        self.q = self.quads[0] * pp + self.quads[1] * np + self.quads[2] * nn + self.quads[3] * pn
-
+        a = self.quads[0] * pp
+        b = self.quads[1] * np
+        c = self.quads[2] * nn
+        d = self.quads[3] * pn
+        self.q = a + b + c + d
 
 
 class Moran_Local_Rate(Moran_Local):

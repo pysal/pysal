@@ -11,9 +11,11 @@ Author(s):
 
 """
 
-__author__ = "Myunghwa Hwang <mhwang4@gmail.com>, David Folch <dfolch@asu.edu>, Luc Anselin <luc.anselin@asu.edu>, Serge Rey <srey@asu.edu"
+__author__ = "Myunghwa Hwang <mhwang4@gmail.com>, \
+              David Folch <dfolch@asu.edu>, \
+              Luc Anselin <luc.anselin@asu.edu>, \
+              Serge Rey <srey@asu.edu"
 
-import pysal
 from pysal.weights import comb, Kernel
 from pysal.cg import Point, Ray, LineSegment
 from pysal.cg import get_angle_between, get_points_dist, get_segment_point_dist
@@ -22,7 +24,13 @@ from pysal.common import np, KDTree
 from pysal.weights.spatial_lag import lag_spatial as slag
 from scipy.stats import gamma, norm, chi2, poisson
 
-__all__ = ['Excess_Risk', 'Empirical_Bayes', 'Spatial_Empirical_Bayes', 'Spatial_Rate', 'Kernel_Smoother', 'Age_Adjusted_Smoother', 'Disk_Smoother', 'Spatial_Median_Rate', 'Spatial_Filtering', 'Headbanging_Triples', 'Headbanging_Median_Rate', 'flatten', 'weighted_median', 'sum_by_n', 'crude_age_standardization', 'direct_age_standardization', 'indirect_age_standardization', 'standardized_mortality_ratio', 'choynowski', 'assuncao_rate']
+__all__ = ['Excess_Risk', 'Empirical_Bayes', 'Spatial_Empirical_Bayes',
+           'Spatial_Rate', 'Kernel_Smoother', 'Age_Adjusted_Smoother',
+           'Disk_Smoother', 'Spatial_Median_Rate', 'Spatial_Filtering',
+           'Headbanging_Triples', 'Headbanging_Median_Rate', 'flatten',
+           'weighted_median', 'sum_by_n', 'crude_age_standardization',
+           'direct_age_standardization', 'indirect_age_standardization',
+           'standardized_mortality_ratio', 'choynowski', 'assuncao_rate']
 
 
 def flatten(l, unique=True):
@@ -162,9 +170,11 @@ def crude_age_standardization(e, b, n):
     Parameters
     ----------
     e          : array
-                 (n*h, 1), event variable measured for each age group across n spatial units
+                 (n*h, 1), event variable measured for each age group across n
+                 spatial units
     b          : array
-                 (n*h, 1), population at risk variable measured for each age group across n spatial units
+                 (n*h, 1), population at risk variable measured for each age
+                 group across n spatial units
     n          : integer
                  the number of spatial units
 
@@ -180,16 +190,16 @@ def crude_age_standardization(e, b, n):
     Examples
     --------
 
-    Creating an array of an event variable (e.g., the number of cancer patients)
-    for 2 regions in each of which 4 age groups are available.
-    The first 4 values are event values for 4 age groups in the region 1,
-    and the next 4 values are for 4 age groups in the region 2.
+    Creating an array of an event variable (e.g., the number of cancer
+    patients) for 2 regions in each of which 4 age groups are available.  The
+    first 4 values are event values for 4 age groups in the region 1, and the
+    next 4 values are for 4 age groups in the region 2.
 
     >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
 
-    Creating another array of a population-at-risk variable (e.g., total population)
-    for the same two regions.
-    The order for entering values is the same as the case of e.
+    Creating another array of a population-at-risk variable (e.g., total
+    population) for the same two regions.  The order for entering values is
+    the same as the case of e.
 
     >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
 
@@ -215,11 +225,14 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
     Parameters
     ----------
     e          : array
-                 (n*h, 1), event variable measured for each age group across n spatial units
+                 (n*h, 1), event variable measured for each age group across n
+                 spatial units
     b          : array
-                 (n*h, 1), population at risk variable measured for each age group across n spatial units
+                 (n*h, 1), population at risk variable measured for each age
+                 group across n spatial units
     s          : array
-                 (n*h, 1), standard population for each age group across n spatial units
+                 (n*h, 1), standard population for each age group across n
+                 spatial units
     n          : integer
                  the number of spatial units
     alpha      : float
@@ -238,24 +251,25 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
     Examples
     --------
 
-    Creating an array of an event variable (e.g., the number of cancer patients)
-    for 2 regions in each of which 4 age groups are available.
-    The first 4 values are event values for 4 age groups in the region 1,
-    and the next 4 values are for 4 age groups in the region 2.
+    Creating an array of an event variable (e.g., the number of cancer
+    patients) for 2 regions in each of which 4 age groups are available.  The
+    first 4 values are event values for 4 age groups in the region 1, and the
+    next 4 values are for 4 age groups in the region 2.
 
     >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
 
-    Creating another array of a population-at-risk variable (e.g., total population)
-    for the same two regions.
-    The order for entering values is the same as the case of e.
+    Creating another array of a population-at-risk variable (e.g., total
+    population) for the same two regions.  The order for entering values is
+    the same as the case of e.
 
     >>> b = np.array([1000, 1000, 1100, 900, 1000, 900, 1100, 900])
 
-    For direct age standardization, we also need the data for standard population.
-    Standard population is a reference population-at-risk (e.g., population distribution for the U.S.)
-    whose age distribution can be used as a benchmarking point for comparing age distributions
-    across regions (e.g., popoulation distribution for Arizona and California).
-    Another array including standard population is created.
+    For direct age standardization, we also need the data for standard
+    population.  Standard population is a reference population-at-risk (e.g.,
+    population distribution for the U.S.) whose age distribution can be used
+    as a benchmarking point for comparing age distributions across regions
+    (e.g., popoulation distribution for Arizona and California).  Another
+    array including standard population is created.
 
     >>> s = np.array([1000, 900, 1000, 900, 1000, 900, 1000, 900])
 
@@ -278,7 +292,6 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
                                                            len(b) / n)]
     g_a_k = np.square(adjusted_r + k) / (var_estimate + np.square(k))
     g_b_k = (var_estimate + np.square(k)) / (adjusted_r + k)
-    summed_b = sum_by_n(b, 1.0, n)
     res = []
     for i in range(len(adjusted_r)):
         if adjusted_r[i] == 0:
@@ -297,13 +310,17 @@ def indirect_age_standardization(e, b, s_e, s_b, n, alpha=0.05):
     Parameters
     ----------
     e          : array
-                 (n*h, 1), event variable measured for each age group across n spatial units
+                 (n*h, 1), event variable measured for each age group across n
+                 spatial units
     b          : array
-                 (n*h, 1), population at risk variable measured for each age group across n spatial units
+                 (n*h, 1), population at risk variable measured for each age
+                 group across n spatial units
     s_e        : array
-                 (n*h, 1), event variable measured for each age group across n spatial units in a standard population
+                 (n*h, 1), event variable measured for each age group across n
+                 spatial units in a standard population
     s_b        : array
-                 (n*h, 1), population variable measured for each age group across n spatial units in a standard population
+                 (n*h, 1), population variable measured for each age group
+                 across n spatial units in a standard population
     n          : integer
                  the number of spatial units
     alpha      : float
@@ -322,26 +339,28 @@ def indirect_age_standardization(e, b, s_e, s_b, n, alpha=0.05):
     Examples
     --------
 
-    Creating an array of an event variable (e.g., the number of cancer patients)
-    for 2 regions in each of which 4 age groups are available.
-    The first 4 values are event values for 4 age groups in the region 1,
-    and the next 4 values are for 4 age groups in the region 2.
+    Creating an array of an event variable (e.g., the number of cancer
+    patients) for 2 regions in each of which 4 age groups are available.  The
+    first 4 values are event values for 4 age groups in the region 1, and the
+    next 4 values are for 4 age groups in the region 2.
 
     >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
 
-    Creating another array of a population-at-risk variable (e.g., total population)
-    for the same two regions.
-    The order for entering values is the same as the case of e.
+    Creating another array of a population-at-risk variable (e.g., total
+    population) for the same two regions.  The order for entering values is
+    the same as the case of e.
 
     >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
 
-    For indirect age standardization, we also need the data for standard population and event.
-    Standard population is a reference population-at-risk (e.g., population distribution for the U.S.)
-    whose age distribution can be used as a benchmarking point for comparing age distributions
-    across regions (e.g., popoulation distribution for Arizona and California).
-    When the same concept is applied to the event variable,
-    we call it standard event (e.g., the number of cancer patients in the U.S.).
-    Two additional arrays including standard population and event are created.
+    For indirect age standardization, we also need the data for standard
+    population and event.  Standard population is a reference
+    population-at-risk (e.g., population distribution for the U.S.) whose age
+    distribution can be used as a benchmarking point for comparing age
+    distributions across regions (e.g., popoulation distribution for Arizona
+    and California).  When the same concept is applied to the event variable,
+    we call it standard event (e.g., the number of cancer patients in the
+    U.S.).  Two additional arrays including standard population and event are
+    created.
 
     >>> s_e = np.array([100, 45, 120, 100, 50, 30, 200, 80])
     >>> s_b = np.array([1000, 900, 1000, 900, 1000, 900, 1000, 900])
@@ -378,13 +397,17 @@ def standardized_mortality_ratio(e, b, s_e, s_b, n):
     Parameters
     ----------
     e          : array
-                 (n*h, 1), event variable measured for each age group across n spatial units
+                 (n*h, 1), event variable measured for each age group across n
+                 spatial units
     b          : array
-                 (n*h, 1), population at risk variable measured for each age group across n spatial units
+                 (n*h, 1), population at risk variable measured for each age
+                 group across n spatial units
     s_e        : array
-                 (n*h, 1), event variable measured for each age group across n spatial units in a standard population
+                 (n*h, 1), event variable measured for each age group across n
+                 spatial units in a standard population
     s_b        : array
-                 (n*h, 1), population variable measured for each age group across n spatial units in a standard population
+                 (n*h, 1), population variable measured for each age group
+                 across n spatial units in a standard population
     n          : integer
                  the number of spatial units
 
@@ -400,16 +423,16 @@ def standardized_mortality_ratio(e, b, s_e, s_b, n):
     Examples
     --------
 
-    Creating an array of an event variable (e.g., the number of cancer patients)
-    for 2 regions in each of which 4 age groups are available.
-    The first 4 values are event values for 4 age groups in the region 1,
-    and the next 4 values are for 4 age groups in the region 2.
+    Creating an array of an event variable (e.g., the number of cancer
+    patients) for 2 regions in each of which 4 age groups are available.  The
+    first 4 values are event values for 4 age groups in the region 1, and the
+    next 4 values are for 4 age groups in the region 2.
 
     >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
 
-    Creating another array of a population-at-risk variable (e.g., total population)
-    for the same two regions.
-    The order for entering values is the same as the case of e.
+    Creating another array of a population-at-risk variable (e.g., total
+    population) for the same two regions.  The order for entering values is
+    the same as the case of e.
 
     >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
 
@@ -443,9 +466,11 @@ def choynowski(e, b, n, threshold=None):
     Parameters
     ----------
     e          : array(n*h, 1)
-                 event variable measured for each age group across n spatial units
+                 event variable measured for each age group across n spatial
+                 units
     b          : array(n*h, 1)
-                 population at risk variable measured for each age group across n spatial units
+                 population at risk variable measured for each age group
+                 across n spatial units
     n          : integer
                  the number of spatial units
     threshold  : float
@@ -467,16 +492,16 @@ def choynowski(e, b, n, threshold=None):
     Examples
     --------
 
-    Creating an array of an event variable (e.g., the number of cancer patients)
-    for 2 regions in each of which 4 age groups are available.
-    The first 4 values are event values for 4 age groups in the region 1,
-    and the next 4 values are for 4 age groups in the region 2.
+    Creating an array of an event variable (e.g., the number of cancer
+    patients) for 2 regions in each of which 4 age groups are available.  The
+    first 4 values are event values for 4 age groups in the region 1, and the
+    next 4 values are for 4 age groups in the region 2.
 
     >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
 
-    Creating another array of a population-at-risk variable (e.g., total population)
-    for the same two regions.
-    The order for entering values is the same as the case of e.
+    Creating another array of a population-at-risk variable (e.g., total
+    population) for the same two regions.  The order for entering values is
+    the same as the case of e.
 
     >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
 
@@ -534,21 +559,21 @@ def assuncao_rate(e, b):
     Examples
     --------
 
-    Creating an array of an event variable (e.g., the number of cancer patients)
-    for 8 regions.
+    Creating an array of an event variable (e.g., the number of cancer
+    patients) for 8 regions.
 
     >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
 
-    Creating another array of a population-at-risk variable (e.g., total population)
-    for the same 8 regions.
-    The order for entering values is the same as the case of e.
+    Creating another array of a population-at-risk variable (e.g., total
+    population) for the same 8 regions.  The order for entering values is the
+    same as the case of e.
 
     >>> b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
 
     Computing the rates
 
     >>> print assuncao_rate(e, b)[:4]
-    [ 1.04319254 -0.04117865 -0.56539054 -1.73762547]
+    [ 1.03843594 -0.04099089 -0.56250375 -1.73061861]
 
     """
 
@@ -582,10 +607,11 @@ class Excess_Risk:
     Reading data in stl_hom.csv into stl to extract values
     for event and population-at-risk variables
 
+    >>> import pysal
     >>> stl = pysal.open(pysal.examples.get_path('stl_hom.csv'), 'r')
 
-    The 11th and 14th columns in stl_hom.csv includes the number of homocides and population.
-    Creating two arrays from these columns.
+    The 11th and 14th columns in stl_hom.csv includes the number of homicides
+    and population.  Creating two arrays from these columns.
 
     >>> stl_e, stl_b = np.array(stl[:,10]), np.array(stl[:,13])
 
@@ -593,7 +619,8 @@ class Excess_Risk:
 
     >>> er = Excess_Risk(stl_e, stl_b)
 
-    Extracting the excess risk values through the property r of the Excess_Risk instance, er
+    Extracting the excess risk values through the property r of the
+    Excess_Risk instance, er
 
     >>> er.r[:10]
     array([ 0.20665681,  0.43613787,  0.42078261,  0.22066928,  0.57981596,
@@ -626,10 +653,11 @@ class Empirical_Bayes:
     Reading data in stl_hom.csv into stl to extract values
     for event and population-at-risk variables
 
+    >>> import pysal
     >>> stl = pysal.open(pysal.examples.get_path('stl_hom.csv'), 'r')
 
-    The 11th and 14th columns in stl_hom.csv includes the number of homocides and population.
-    Creating two arrays from these columns.
+    The 11th and 14th columns in stl_hom.csv includes the number of homicides
+    and population.  Creating two arrays from these columns.
 
     >>> stl_e, stl_b = np.array(stl[:,10]), np.array(stl[:,13])
 
@@ -637,7 +665,8 @@ class Empirical_Bayes:
 
     >>> eb = Empirical_Bayes(stl_e, stl_b)
 
-    Extracting the risk values through the property r of the Empirical_Bayes instance, eb
+    Extracting the risk values through the property r of the Empirical_Bayes
+    instance, eb
 
     >>> eb.r[:10]
     array([  2.36718950e-05,   4.54539167e-05,   4.78114019e-05,
@@ -680,10 +709,11 @@ class Spatial_Empirical_Bayes:
     Reading data in stl_hom.csv into stl to extract values
     for event and population-at-risk variables
 
+    >>> import pysal
     >>> stl = pysal.open(pysal.examples.get_path('stl_hom.csv'), 'r')
 
-    The 11th and 14th columns in stl_hom.csv includes the number of homocides and population.
-    Creating two arrays from these columns.
+    The 11th and 14th columns in stl_hom.csv includes the number of homicides
+    and population.  Creating two arrays from these columns.
 
     >>> stl_e, stl_b = np.array(stl[:,10]), np.array(stl[:,13])
 
@@ -691,12 +721,14 @@ class Spatial_Empirical_Bayes:
 
     >>> stl_w = pysal.open(pysal.examples.get_path('stl.gal'), 'r').read()
 
-    Ensuring that the elements in the spatial weights instance are ordered
-    by the given sequential numbers from 1 to the number of observations in stl_hom.csv
+    Ensuring that the elements in the spatial weights instance are ordered by
+    the given sequential numbers from 1 to the number of observations in
+    stl_hom.csv
 
     >>> if not stl_w.id_order_set: stl_w.id_order = range(1,len(stl) + 1)
 
-    Creating an instance of Spatial_Empirical_Bayes class using stl_e, stl_b, and stl_w
+    Creating an instance of Spatial_Empirical_Bayes class using stl_e, stl_b,
+    and stl_w
 
     >>> s_eb = Spatial_Empirical_Bayes(stl_e, stl_b, stl_w)
 
@@ -710,7 +742,8 @@ class Spatial_Empirical_Bayes:
     """
     def __init__(self, e, b, w):
         if not w.id_order_set:
-            raise ValueError("w id_order must be set to align with the order of e an b")
+            raise ValueError("w id_order must be set \
+                             to align with the order of e an b")
         r_mean = Spatial_Rate(e, b, w).r
         rate = e * 1.0 / b
         r_var_left = np.ones(len(e)) * 1.
@@ -751,10 +784,11 @@ class Spatial_Rate:
     Reading data in stl_hom.csv into stl to extract values
     for event and population-at-risk variables
 
+    >>> import pysal
     >>> stl = pysal.open(pysal.examples.get_path('stl_hom.csv'), 'r')
 
-    The 11th and 14th columns in stl_hom.csv includes the number of homocides and population.
-    Creating two arrays from these columns.
+    The 11th and 14th columns in stl_hom.csv includes the number of homicides
+    and population.  Creating two arrays from these columns.
 
     >>> stl_e, stl_b = np.array(stl[:,10]), np.array(stl[:,13])
 
@@ -763,7 +797,8 @@ class Spatial_Rate:
     >>> stl_w = pysal.open(pysal.examples.get_path('stl.gal'), 'r').read()
 
     Ensuring that the elements in the spatial weights instance are ordered
-    by the given sequential numbers from 1 to the number of observations in stl_hom.csv
+    by the given sequential numbers from 1 to the number of observations in
+    stl_hom.csv
 
     >>> if not stl_w.id_order_set: stl_w.id_order = range(1,len(stl) + 1)
 
@@ -781,7 +816,8 @@ class Spatial_Rate:
     """
     def __init__(self, e, b, w):
         if not w.id_order_set:
-            raise ValueError("w id_order must be set to align with the order of e and b")
+            raise ValueError("w id_order must be set to align with \
+                              the order of e and b")
         else:
             w.transform = 'b'
             w_e, w_b = slag(w, e), slag(w, b)
@@ -812,11 +848,13 @@ class Kernel_Smoother:
 
     >>> e = np.array([10, 1, 3, 4, 2, 5])
 
-    Creating another array including population-at-risk values for the 6 regions
+    Creating another array including population-at-risk values for the 6
+    regions
 
     >>> b = np.array([100, 15, 20, 20, 80, 90])
 
-    Creating a list containing geographic coordinates of the 6 regions' centroids
+    Creating a list containing geographic coordinates of the 6 regions'
+    centroids
 
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
 
@@ -833,7 +871,8 @@ class Kernel_Smoother:
 
     >>> kr = Kernel_Smoother(e, b, kw)
 
-    Extracting the smoothed rates through the property r of the Kernel_Smoother instance
+    Extracting the smoothed rates through the property r of the
+    Kernel_Smoother instance
 
     >>> kr.r
     array([ 0.10543301,  0.0858573 ,  0.08256196,  0.09884584,  0.04756872,
@@ -841,9 +880,10 @@ class Kernel_Smoother:
     """
     def __init__(self, e, b, w):
         if type(w) != Kernel:
-            raise Error('w must be an instance of Kernel weights')
+            raise TypeError('w must be an instance of Kernel weights')
         if not w.id_order_set:
-            raise ValueError("w id_order must be set to align with the order of e and b")
+            msg = "w id_order must be set to align with the order of e and b"
+            raise ValueError(msg)
         else:
             w_e, w_b = slag(w, e), slag(w, b)
             self.r = w_e / w_b
@@ -855,9 +895,11 @@ class Age_Adjusted_Smoother:
     Parameters
     ----------
     e           : array (n*h, 1)
-                  event variable measured for each age group across n spatial units
+                  event variable measured for each age group across n spatial
+                  units
     b           : array (n*h, 1)
-                  population at risk variable measured for each age group across n spatial units
+                  population at risk variable measured for each age group
+                  across n spatial units
     w           : spatial weights instance
     s           : array (n*h, 1)
                   standard population for each age group across n spatial units
@@ -869,7 +911,8 @@ class Age_Adjusted_Smoother:
 
     Notes
     -----
-    Weights used to smooth age-specific events and populations are simple binary weights
+    Weights used to smooth age-specific events and populations are simple
+    binary weights
 
     Examples
     --------
@@ -878,16 +921,18 @@ class Age_Adjusted_Smoother:
 
     >>> e = np.array([10, 8, 1, 4, 3, 5, 4, 3, 2, 1, 5, 3])
 
-    Creating another array including 12 population-at-risk values for the 6 regions
+    Creating another array including 12 population-at-risk values for the 6
+    regions
 
     >>> b = np.array([100, 90, 15, 30, 25, 20, 30, 20, 80, 80, 90, 60])
 
-    For age adjustment, we need another array of values containing standard population
-    s includes standard population data for the 6 regions
+    For age adjustment, we need another array of values containing standard
+    population s includes standard population data for the 6 regions
 
     >>> s = np.array([98, 88, 15, 29, 20, 23, 33, 25, 76, 80, 89, 66])
 
-    Creating a list containing geographic coordinates of the 6 regions' centroids
+    Creating a list containing geographic coordinates of the 6 regions'
+    centroids
 
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
 
@@ -904,7 +949,8 @@ class Age_Adjusted_Smoother:
 
     >>> ar = Age_Adjusted_Smoother(e, b, kw, s)
 
-    Extracting the smoothed rates through the property r of the Age_Adjusted_Smoother instance
+    Extracting the smoothed rates through the property r of the
+    Age_Adjusted_Smoother instance
 
     >>> ar.r
     array([ 0.10519625,  0.08494318,  0.06440072,  0.06898604,  0.06952076,
@@ -947,10 +993,11 @@ class Disk_Smoother:
     Reading data in stl_hom.csv into stl to extract values
     for event and population-at-risk variables
 
+    >>> import pysal
     >>> stl = pysal.open(pysal.examples.get_path('stl_hom.csv'), 'r')
 
-    The 11th and 14th columns in stl_hom.csv includes the number of homocides and population.
-    Creating two arrays from these columns.
+    The 11th and 14th columns in stl_hom.csv includes the number of homicides
+    and population.  Creating two arrays from these columns.
 
     >>> stl_e, stl_b = np.array(stl[:,10]), np.array(stl[:,13])
 
@@ -959,7 +1006,8 @@ class Disk_Smoother:
     >>> stl_w = pysal.open(pysal.examples.get_path('stl.gal'), 'r').read()
 
     Ensuring that the elements in the spatial weights instance are ordered
-    by the given sequential numbers from 1 to the number of observations in stl_hom.csv
+    by the given sequential numbers from 1 to the number of observations in
+    stl_hom.csv
 
     >>> if not stl_w.id_order_set: stl_w.id_order = range(1,len(stl) + 1)
 
@@ -978,7 +1026,8 @@ class Disk_Smoother:
 
     def __init__(self, e, b, w):
         if not w.id_order_set:
-            raise ValueError("w id_order must be set to align with the order of e and b")
+            msg = "w id_order must be set to align with the order of e and b"
+            raise ValueError(msg)
         else:
             r = e * 1.0 / b
             weight_sum = []
@@ -1016,10 +1065,11 @@ class Spatial_Median_Rate:
     Reading data in stl_hom.csv into stl to extract values
     for event and population-at-risk variables
 
+    >>> import pysal
     >>> stl = pysal.open(pysal.examples.get_path('stl_hom.csv'), 'r')
 
-    The 11th and 14th columns in stl_hom.csv includes the number of homocides and population.
-    Creating two arrays from these columns.
+    The 11th and 14th columns in stl_hom.csv includes the number of homicides
+    and population.  Creating two arrays from these columns.
 
     >>> stl_e, stl_b = np.array(stl[:,10]), np.array(stl[:,13])
 
@@ -1028,7 +1078,8 @@ class Spatial_Median_Rate:
     >>> stl_w = pysal.open(pysal.examples.get_path('stl.gal'), 'r').read()
 
     Ensuring that the elements in the spatial weights instance are ordered
-    by the given sequential numbers from 1 to the number of observations in stl_hom.csv
+    by the given sequential numbers from 1 to the number of observations in
+    stl_hom.csv
 
     >>> if not stl_w.id_order_set: stl_w.id_order = range(1,len(stl) + 1)
 
@@ -1036,7 +1087,8 @@ class Spatial_Median_Rate:
 
     >>> smr0 = Spatial_Median_Rate(stl_e,stl_b,stl_w)
 
-    Extracting the computed rates through the property r of the Spatial_Median_Rate instance
+    Extracting the computed rates through the property r of the
+    Spatial_Median_Rate instance
 
     >>> smr0.r[:10]
     array([  3.96047383e-05,   3.55386859e-05,   3.28308921e-05,
@@ -1048,7 +1100,8 @@ class Spatial_Median_Rate:
 
     >>> smr1 = Spatial_Median_Rate(stl_e,stl_b,stl_w,iteration=5)
 
-    Extracting the computed rates through the property r of the Spatial_Median_Rate instance
+    Extracting the computed rates through the property r of the
+    Spatial_Median_Rate instance
 
     >>> smr1.r[:10]
     array([  3.11293620e-05,   2.95956330e-05,   3.11293620e-05,
@@ -1056,12 +1109,13 @@ class Spatial_Median_Rate:
              3.10159267e-05,   2.94788171e-05,   2.99460806e-05,
              2.96981070e-05])
 
-    Computing spatial median rates by using the base variable as auxilliary weights
-    without iteration
+    Computing spatial median rates by using the base variable as auxiliary
+    weights without iteration
 
     >>> smr2 = Spatial_Median_Rate(stl_e,stl_b,stl_w,aw=stl_b)
 
-    Extracting the computed rates through the property r of the Spatial_Median_Rate instance
+    Extracting the computed rates through the property r of the
+    Spatial_Median_Rate instance
 
     >>> smr2.r[:10]
     array([  5.77412020e-05,   4.46449551e-05,   5.77412020e-05,
@@ -1069,12 +1123,13 @@ class Spatial_Median_Rate:
              3.61363528e-05,   4.46449551e-05,   5.77412020e-05,
              4.03987355e-05])
 
-    Recomputing spatial median rates by using the base variable as auxilliary weights
-    with 5 iterations
+    Recomputing spatial median rates by using the base variable as auxiliary
+    weights with 5 iterations
 
     >>> smr3 = Spatial_Median_Rate(stl_e,stl_b,stl_w,aw=stl_b,iteration=5)
 
-    Extracting the computed rates through the property r of the Spatial_Median_Rate instance
+    Extracting the computed rates through the property r of the
+    Spatial_Median_Rate instance
 
     >>> smr3.r[:10]
     array([  3.61363528e-05,   4.46449551e-05,   3.61363528e-05,
@@ -1085,7 +1140,8 @@ class Spatial_Median_Rate:
     """
     def __init__(self, e, b, w, aw=None, iteration=1):
         if not w.id_order_set:
-            raise ValueError("w id_order must be set to align with the order of e and b")
+            msg = "w id_order must be set to align with the order of e and b"
+            raise ValueError(msg)
         self.r = e * 1.0 / b
         self.aw, self.w = aw, w
         while iteration:
@@ -1146,6 +1202,7 @@ class Spatial_Filtering:
     Reading data in stl_hom.csv into stl to extract values
     for event and population-at-risk variables
 
+    >>> import pysal
     >>> stl = pysal.open(pysal.examples.get_path('stl_hom.csv'), 'r')
 
     Reading the stl data in the WKT format so that
@@ -1159,12 +1216,13 @@ class Spatial_Filtering:
     >>> d = np.array([i.centroid for i in stl[:,0]])
 
     Specifying the bounding box for the stl_hom data.
-    The bbox should includes two points for the left-bottom and the right-top corners
+    The bbox should includes two points for the left-bottom and the right-top
+    corners
 
     >>> bbox = [[-92.700676, 36.881809], [-87.916573, 40.3295669]]
 
-    The 11th and 14th columns in stl_hom.csv includes the number of homocides and population.
-    Creating two arrays from these columns.
+    The 11th and 14th columns in stl_hom.csv includes the number of homicides
+    and population.  Creating two arrays from these columns.
 
     >>> stl_e, stl_b = np.array(stl[:,10]), np.array(stl[:,13])
 
@@ -1173,7 +1231,8 @@ class Spatial_Filtering:
 
     >>> sf_0 = Spatial_Filtering(bbox,d,stl_e,stl_b,10,10,r=2)
 
-    Extracting the resulting rates through the property r of the Spatial_Filtering instance
+    Extracting the resulting rates through the property r of the
+    Spatial_Filtering instance
 
     >>> sf_0.r[:10]
     array([  4.23561763e-05,   4.45290850e-05,   4.56456221e-05,
@@ -1181,8 +1240,8 @@ class Spatial_Filtering:
              4.19845497e-05,   4.11936548e-05,   3.93463504e-05,
              4.04376345e-05])
 
-    Applying another spatial filtering by allowing the moving window to grow until
-    600000 people are found in the window
+    Applying another spatial filtering by allowing the moving window to grow
+    until 600000 people are found in the window
 
     >>> sf = Spatial_Filtering(bbox,d,stl_e,stl_b,10,10,pop=600000)
 
@@ -1191,7 +1250,8 @@ class Spatial_Filtering:
     >>> sf.r.shape
     (100,)
 
-    Extracting the resulting rates through the property r of the Spatial_Filtering instance
+    Extracting the resulting rates through the property r of the
+    Spatial_Filtering instance
 
     >>> sf.r[:10]
     array([  3.73728738e-05,   4.04456300e-05,   4.04456300e-05,
@@ -1247,12 +1307,13 @@ class Headbanging_Triples:
     Attributes
     ----------
     triples     : dictionary
-                  key is observation record id, value is a list of lists of triple ids
+                  key is observation record id, value is a list of lists of
+                  triple ids
     extra       : dictionary
-                  key is observation record id, value is a list of the following:
-                  tuple of original triple observations
-                  distance between original triple observations
-                  distance between an original triple observation and its extrapolated point
+                  key is observation record id, value is a list of the
+                  following: tuple of original triple observations distance
+                  between original triple observations distance between an
+                  original triple observation and its extrapolated point
 
     Examples
     --------
@@ -1264,6 +1325,7 @@ class Headbanging_Triples:
     Reading data in stl_hom.csv into stl_db to extract values
     for event and population-at-risk variables
 
+    >>> import pysal
     >>> stl_db = pysal.open(pysal.examples.get_path('stl_hom.csv'),'r')
 
     Reading the stl data in the WKT format so that
@@ -1300,6 +1362,7 @@ class Headbanging_Triples:
 
     Opening sids2.shp file
 
+    >>> import pysal
     >>> sids = pysal.open(pysal.examples.get_path('sids2.shp'),'r')
 
     Extracting the centroids of polygons in the sids data
@@ -1328,7 +1391,8 @@ class Headbanging_Triples:
     3 [(16, 6), (19, 6), (20, 6)]
     4 [(5, 15), (27, 15), (35, 15)]
 
-    Finding headbanging tirpes by using 5 nearest neighbors with edge correction
+    Finding headbanging triples by using 5 nearest neighbors with edge
+    correction
 
     >>> s_ht2 = Headbanging_Triples(sids_d,sids_w,k=5,edgecor=True)
 
@@ -1351,16 +1415,20 @@ class Headbanging_Triples:
     >>> extrapolated[0]
     (89, 77)
 
-    Checking the distances between the exploated point and the observation 89 and 77
+    Checking the distances between the extrapolated point and the observation
+    89 and 77
 
     >>> round(extrapolated[1],5), round(extrapolated[2],6)
     (0.33753, 0.302707)
     """
     def __init__(self, data, w, k=5, t=3, angle=135.0, edgecor=False):
         if k < 3:
-            raise ValueError("w should be NeareastNeighbors instance & the number of neighbors should be more than 3.")
+            msg = "w should be NeareastNeighbors instance & the number of \
+                   neighbors should be more than 3."
+            raise ValueError(msg)
         if not w.id_order_set:
-            raise ValueError("w id_order must be set to align with the order of data")
+            msg = "w id_order must be set to align with the order of data"
+            raise ValueError(msg)
         self.triples, points = {}, {}
         for i, pnt in enumerate(data):
             ng = w.neighbor_offsets[i]
@@ -1403,11 +1471,22 @@ class Headbanging_Triples:
                         dist_p_p2 = get_points_dist(point, p2)
                         dist_p_p3 = get_points_dist(point, p3)
                         if dist_p_p2 <= dist_p_p3:
-                            ray1, ray2, s_pnt, dist, c = Ray(p2, point), Ray(p2, p3), p2, dist_p_p2, (ps[p2], ps[p3])
+                            ray1 = Ray(p2, point)
+                            ray2 = Ray(p2, p3)
+                            s_pnt = p2
+                            dist = dist_p_p2
+                            c = (ps[p2], ps[p3])
                         else:
-                            ray1, ray2, s_pnt, dist, c = Ray(p3, point), Ray(p3, p2), p3, dist_p_p3, (ps[p3], ps[p2])
+                            ray1 = Ray(p3, point)
+                            ray2 = Ray(p3, p2)
+                            s_pnt = p3
+                            dist = dist_p_p3
+                            c = (ps[p3], ps[p2])
+
                         ang = get_angle_between(ray1, ray2)
-                        if ang >= 90 + angle / 2 or (ang < 0 and ang + 360 >= 90 + angle / 2):
+                        c1 = ang >= 90 + angle / 2
+                        c2 = (ang < 0 and ang + 360 >= 90 + angle / 2)
+                        if c1 or c2:
                             ex_point = get_point_at_angle_and_dist(
                                 ray1, angle, dist)
                             extra = [c, dist_p2_p3, get_points_dist(
@@ -1446,6 +1525,7 @@ class Headbanging_Median_Rate:
 
     opening the sids2 shapefile
 
+    >>> import pysal
     >>> sids = pysal.open(pysal.examples.get_path('sids2.shp'), 'r')
 
     extracting the centroids of polygons in the sids2 data
@@ -1477,7 +1557,8 @@ class Headbanging_Median_Rate:
 
     >>> sids_hb_r = Headbanging_Median_Rate(s_e,s_b,s_ht)
 
-    extracting the computed rates through the property r of the Headbanging_Median_Rate instance
+    extracting the computed rates through the property r of the
+    Headbanging_Median_Rate instance
 
     >>> sids_hb_r.r[:5]
     array([ 0.00075586,  0.        ,  0.0008285 ,  0.0018315 ,  0.00498891])
@@ -1486,16 +1567,19 @@ class Headbanging_Median_Rate:
 
     >>> sids_hb_r2 = Headbanging_Median_Rate(s_e,s_b,s_ht,iteration=5)
 
-    extracting the computed rates through the property r of the Headbanging_Median_Rate instance
+    extracting the computed rates through the property r of the
+    Headbanging_Median_Rate instance
 
     >>> sids_hb_r2.r[:5]
     array([ 0.0008285 ,  0.00084331,  0.00086896,  0.0018315 ,  0.00498891])
 
-    recomputing headbanging median rates by considring a set of auxilliary weights
+    recomputing headbanging median rates by considering a set of auxiliary
+    weights
 
     >>> sids_hb_r3 = Headbanging_Median_Rate(s_e,s_b,s_ht,aw=s_b)
 
-    extracting the computed rates through the property r of the Headbanging_Median_Rate instance
+    extracting the computed rates through the property r of the
+    Headbanging_Median_Rate instance
 
     >>> sids_hb_r3.r[:5]
     array([ 0.00091659,  0.        ,  0.00156838,  0.0018315 ,  0.00498891])
@@ -1510,7 +1594,7 @@ class Headbanging_Median_Rate:
             iteration -= 1
 
     def __get_screens(self, id, triples, weighted=False):
-        r, tr = self.r, self.tr
+        r = self.r
         if len(triples) == 0:
             return r[id]
         if hasattr(self, 'extra') and id in self.extra:
@@ -1522,9 +1606,9 @@ class Headbanging_Median_Rate:
             if not weighted:
                 return r, trp_r[0], trp_r[-1]
             else:
-                trp_aw = self.aw[trp]
-                extra_w = trp_aw[0] + (trp_aw[0] - trp_aw[-
-                                                          1]) * (extra[id][-1] * 1.0 / extra[id][1])
+                trp_aw = self.aw[trp_r]
+                extra_w = trp_aw[0] + (trp_aw[0] - trp_aw[- 1])
+                extra_w *= (extra[id][-1] * 1.0 / extra[id][1])
                 return r, trp_r[0], trp_r[-1], self.aw[id], trp_aw[0] + extra_w
         if not weighted:
             lowest, highest = [], []
@@ -1532,7 +1616,10 @@ class Headbanging_Median_Rate:
                 trp_r = np.sort(r[list(trp)])
                 lowest.append(trp_r[0])
                 highest.append(trp_r[-1])
-            return r[id], np.median(np.array(lowest)), np.median(np.array(highest))
+            a = r[id]
+            b = np.median(np.array(lowest))
+            c = np.median(np.array(highest))
+            return a, b, c
         if weighted:
             lowest, highest = [], []
             lowest_aw, highest_aw = [], []
@@ -1550,7 +1637,12 @@ class Headbanging_Median_Rate:
             wm_highest = weighted_median(
                 np.array(highest), np.array(highest_aw))
             triple_members = flatten(triples, unique=False)
-            return r[id], wm_lowest, wm_highest, self.aw[id] * len(triples), self.aw[triple_members].sum()
+            a = r[id]
+            b = wm_lowest
+            c = wm_highest
+            d = self.aw[id] * len(triples)
+            e = self.aw[triple_members].sum()
+            return a, b, c, d, e
 
     def __get_median_from_screens(self, screens):
         if isinstance(screens, float):
@@ -1569,7 +1661,7 @@ class Headbanging_Median_Rate:
                 return rk
 
     def __search_headbanging_median(self):
-        r, tr = self.r, self.tr
+        tr = self.tr
         new_r = []
         for k in tr.keys():
             screens = self.__get_screens(

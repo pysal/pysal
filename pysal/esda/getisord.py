@@ -1,7 +1,7 @@
 """
 Getis and Ord G statistic for spatial autocorrelation
 """
-__author__ = "Sergio J. Rey <srey@asu.edu>, Myunghwa Hwang <mhwang4@gmail.com> "
+__author__ = "Sergio J. Rey <srey@asu.edu>, Myunghwa Hwang <mhwang4@gmail.com>"
 __all__ = ['G', 'G_Local']
 
 from pysal.common import np, stats, math
@@ -21,7 +21,8 @@ class G:
     w             : W
                    DistanceBand W spatial weights based on distance band
     permutations  : int
-                    the number of random permutations for calculating pseudo p_values
+                    the number of random permutations for calculating pseudo
+                    p_values
 
     Attributes
     ----------
@@ -47,7 +48,8 @@ class G:
     p_sim         : float
                     p-value based on permutations (one-sided)
                     null: spatial randomness
-                    alternative: the observed G is extreme it is either extremely high or extremely low
+                    alternative: the observed G is extreme it is either
+                    extremely high or extremely low
     EG_sim        : float
                     average value of G from permutations
     VG_sim        : float
@@ -100,7 +102,8 @@ class G:
         self.permutations = permutations
         self.__moments()
         self.y2 = y * y
-        y = y.reshape(len(y), 1)  # Ensure that y is an n by 1 vector, otherwise y*y.T == y*y
+        # Ensure that y is an n by 1 vector, otherwise y*y.T == y*y
+        y = y.reshape(len(y), 1)
         self.den_sum = (y * y.T).sum() - (y * y).sum()
         self.G = self.__calc(self.y)
         self.z_norm = (self.G - self.EG) / math.sqrt(self.VG)
@@ -205,7 +208,8 @@ class G_Local:
     p_sim : array
            of floats, p-value based on permutations (one-sided)
            null - spatial randomness
-           alternative - the observed G is extreme it is either extremely high or extremely low
+           alternative - the observed G is extreme it is either extremely high
+           or extremely low
     EG_sim : array
             of floats, average value of G from permutations
     VG_sim : array
@@ -227,12 +231,15 @@ class G_Local:
 
     References
     ----------
-    Getis, A. and Ord., J.K. (1992) The analysis of spatial association by use of
-    distance statistics. Geographical Analysis, 24(3):189-206
+    Getis, A. and Ord., J.K. (1992) The analysis of spatial association by use
+    of distance statistics. Geographical Analysis, 24(3):189-206
+
     Ord, J.K. and Getis, A. (1995) Local spatial autocorrelation statistics:
-    distributional issues and an application. Geographical Analysis, 27(4):286-306
-    Getis, A. and Ord, J. K. (1996) Local spatial statistics: an overview,
-    in Spatial Analysis: Modelling in a GIS Environment, edited by Longley, P.
+    distributional issues and an application. Geographical Analysis,
+    27(4):286-306
+
+    Getis, A. and Ord, J. K. (1996) Local spatial statistics: an overview, in
+    Spatial Analysis: Modelling in a GIS Environment, edited by Longley, P.
     and Batty, M.
 
     Examples
@@ -289,7 +296,9 @@ class G_Local:
 
     >>> numpy.random.seed(10)
 
-    Applying Getis and Ord local G* test using a row-standardized weights object
+    Applying Getis and Ord local G* test using a row-standardized weights
+    object
+
     >>> lg_star = G_Local(y,w,transform='R',star=True)
 
     Examining the results
@@ -300,7 +309,9 @@ class G_Local:
     0.10100000000000001
 
     """
-    def __init__(self, y, w, transform='R', permutations=PERMUTATIONS, star=False):
+    def __init__(self, y, w, transform='R', permutations=PERMUTATIONS,
+                 star=False):
+
         self.n = len(y)
         self.y = y
         self.w = w
@@ -335,7 +346,6 @@ class G_Local:
         k = self.w.max_neighbors + 1
         rids = np.array([np.random.permutation(rid)[0:k] for i in prange])
         ids = np.arange(self.w.n)
-        ido = self.w.id_order
         wc = self.__getCardinalities()
         if self.w_transform == 'r':
             den = np.array(wc) + self.star
@@ -391,6 +401,4 @@ class G_Local:
         self.EGs = (EGs_num * 1.0) / N
         self.VGs = (VGs_num) * (1.0 / (N ** 2)) * ((s2 * 1.0) / (yl_mean ** 2))
         self.Zs = (self.Gs - self.EGs) / np.sqrt(self.VGs)
-
         self.w.transform = self.w_original
-
