@@ -26,8 +26,8 @@ class GM_Error_Hom_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
     '''
     GMM method for a spatial error model with homoskedasticity, with regimes, 
-    results and diagnostics; based on Drukker et al. (2010) [1]_, following
-    Anselin (2011) [2]_.
+    results and diagnostics; based on Drukker et al. (2013) [Drukker2013]_, following
+    Anselin (2011) [Anselin2011]_.
 
     Parameters
     ----------
@@ -202,16 +202,6 @@ class GM_Error_Hom_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                    i.e. when regime_err_sep=True and no variable is fixed
                    across regimes.
                    Contains all attributes of each individual regression
-
-    References
-    ----------
-
-    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
-    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
-    Disturbances and Endogenous Regressors". Working paper.
-
-    .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity". 
 
     Examples
     --------
@@ -473,7 +463,8 @@ class GM_Endog_Error_Hom_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     '''
     GMM method for a spatial error model with homoskedasticity, regimes and
     endogenous variables.
-    Based on Drukker et al. (2010) [1]_, following Anselin (2011) [2]_.
+    Based on Drukker et al. (2013) [Drukker2013]_, following Anselin (2011)
+    [Anselin2011]_.
 
     Parameters
     ----------
@@ -683,17 +674,6 @@ class GM_Endog_Error_Hom_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                     i.e. when regime_err_sep=True and no variable is fixed
                     across regimes.
                     Contains all attributes of each individual regression
-
-    References
-    ----------
-
-    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
-    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
-    Disturbances and Endogenous Regressors". Working paper.
-
-    .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity". 
-
 
     Examples
     --------
@@ -1009,7 +989,8 @@ class GM_Combo_Hom_Regimes(GM_Endog_Error_Hom_Regimes):
     '''
     GMM method for a spatial lag and error model with homoskedasticity,
     regimes and endogenous variables, with results and diagnostics;
-    based on Drukker et al. (2010) [1]_, following Anselin (2011) [2]_.
+    based on Drukker et al. (2013) [Drukker2013]_, following Anselin (2011)
+    [Anselin2011]_.
 
     Parameters
     ----------
@@ -1241,17 +1222,6 @@ class GM_Combo_Hom_Regimes(GM_Endog_Error_Hom_Regimes):
                     i.e. when regime_err_sep=True and no variable is fixed
                     across regimes.
                     Contains all attributes of each individual regression
-
-
-    References
-    ----------
-
-    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
-    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
-    Disturbances and Endogenous Regressors". Working paper.
-
-    .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity". 
 
     Examples
     --------

@@ -97,7 +97,7 @@ class RegressionPropsVM:
 
 def get_A1_het(S):
     """
-    Builds A1 as in Arraiz et al [1]_
+    Builds A1 as in Arraiz et al [Arraiz2010]_
 
     .. math::
 
@@ -117,13 +117,6 @@ def get_A1_het(S):
     Implicit        : csr_matrix
                       A1 matrix in scipy sparse format
 
-    References
-    ----------
-
-    .. [1] Arraiz, I., Drukker, D. M., Kelejian, H., Prucha, I. R. (2010) "A
-    Spatial Cliff-Ord-Type Model with Heteroskedastic Innovations: Small and
-    Large Sample Results". Journal of Regional Science, Vol. 60, No. 2, pp.
-    592-614.
     """
     StS = S.T * S
     d = SP.spdiags([StS.diagonal()], [0], S.get_shape()[0], S.get_shape()[1])
@@ -133,7 +126,8 @@ def get_A1_het(S):
 
 def get_A1_hom(s, scalarKP=False):
     """
-    Builds A1 for the spatial error GM estimation with homoscedasticity as in Drukker et al. [1]_ (p. 9).
+    Builds A1 for the spatial error GM estimation with homoscedasticity as in
+    Drukker et al. [Drukker2011]_ (p. 9).
 
     .. math::
 
@@ -155,13 +149,6 @@ def get_A1_hom(s, scalarKP=False):
 
     Implicit        : csr_matrix
                       A1 matrix in scipy sparse format
-    References
-    ----------
-
-    .. [1] Drukker, Prucha, I. R., Raciborski, R. (2010) "A command for
-    estimating spatial-autoregressive models with spatial-autoregressive
-    disturbances and additional endogenous variables". The Stata Journal, 1,
-    N. 1, pp. 1-13.      
     """
     n = float(s.shape[0])
     wpw = s.T * s
@@ -179,7 +166,7 @@ def get_A1_hom(s, scalarKP=False):
 def get_A2_hom(s):
     """
     Builds A2 for the spatial error GM estimation with homoscedasticity as in
-    Anselin (2011) [1]_ 
+    Anselin (2011) [Anselin2011]_ 
 
     .. math::
 
@@ -195,10 +182,6 @@ def get_A2_hom(s):
     -------
     Implicit        : csr_matrix
                       A2 matrix in scipy sparse format
-    References
-    ----------
-
-    .. [1] Anselin (2011) "GMM Estimation of Spatial Error Autocorrelation with and without Heteroskedasticity".
     """
     return (s + s.T) / 2.
 
@@ -206,7 +189,7 @@ def get_A2_hom(s):
 def _moments2eqs(A1, s, u):
     '''
     Helper to compute G and g in a system of two equations as in
-    the heteroskedastic error models from Drukker et al. [1]_
+    the heteroskedastic error models from Drukker et al. [Drukker2011]_
     ...
 
     Parameters
@@ -230,13 +213,6 @@ def _moments2eqs(A1, s, u):
                   'g', respectively.
 
 
-    References
-    ----------
-
-    .. [1] Drukker, Prucha, I. R., Raciborski, R. (2010) "A command for
-    estimating spatial-autoregressive models with spatial-autoregressive
-    disturbances and additional endogenous variables". The Stata Journal, 1,
-    N. 1, pp. 1-13.
     '''
     n = float(s.shape[0])
     A1u = A1 * u
