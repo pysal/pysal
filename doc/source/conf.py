@@ -28,7 +28,7 @@ sys.path.append(os.path.abspath('~/anaconda/lib/python2.7/site-packages/'))
 extensions = ['sphinx.ext.autodoc',
 'sphinx.ext.doctest','sphinx.ext.graphviz', 'sphinx.ext.intersphinx',
 'sphinx.ext.autosummary',
-'sphinx.ext.pngmath','sphinx.ext.viewcode', 'sphinx.ext.napoleon']
+'sphinx.ext.pngmath','sphinx.ext.viewcode', 'sphinxcontrib.napoleon']
 
 #doctest extension config values
 doctest_path = '/Users/stephens/code/pysal/doc/source/users/tutorials/'

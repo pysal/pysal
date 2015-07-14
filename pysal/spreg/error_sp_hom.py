@@ -189,8 +189,6 @@ class GM_Error_Hom(BaseGM_Error_Hom):
     and diagnostics; based on Drukker et al. (2010) [1]_, following Anselin
     (2011) [2]_.
 
-    This is new.
-
     Parameters
     ----------
     y            : array
