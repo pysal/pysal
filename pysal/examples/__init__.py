@@ -42,7 +42,6 @@ def available(verbose=False):
     base = get_path('')
     examples = [os.path.join(get_path(''), d) for d in os.listdir(base)]
     examples = [d for d in examples if os.path.isdir(d) and '__' not in d]
-    examples = [d for d in examples if ".ipynb" not in d]
     if not verbose:
         return [os.path.split(d)[-1] for d in examples]
     examples = [os.path.join(dty, 'README.md') for dty in examples]
@@ -54,8 +53,11 @@ def _read_example(pth):
     try:
         with open(pth, 'r') as io:
             title = io.readline().strip('\n')
+            io.readline()  # titling
             io.readline()  # pad
             short = io.readline().strip('\n')
+            io.readline()  # subtitling
+            io.readline()  # pad
             rest = io.readlines()
             rest = [l.strip('\n') for l in rest if l.strip('\n') != '']
             d = {'name': title, 'description': short, 'explanation': rest}
