@@ -27,7 +27,7 @@ analysis should not turn to PySAL directly. Instead, we would direct them to
 projects like STARS and the GeoDaX suite of software products which wrap PySAL
 functionality in GUIs. At the same time, we expect that with developments such
 as the Python based plug-in architectures for QGIS, GRASS, and the toolbox
-extensions for ArcGIS, that end user access to PySAL functionality will be
+extensions for ArcGIS, end user access to PySAL functionality will be
 widening in the near future.
 
 PySAL package structure
