@@ -444,6 +444,44 @@ def base_lisa_cluster(map_obj, lisa, p_thres=0.01, set_trans=False):
     lisa_patch.set_alpha(1)
     return lisa_patch
 
+def lisa_legend_components(lisa, p_thres):
+    '''
+    Generate the lists `boxes` and `labels` required to build LISA legend
+
+    NOTE: if non-significant values, they're consistently assigned at the end
+    ...
+
+    Arguments
+    ---------
+    lisa            : Moran_Local
+                      LISA object  from PySAL
+    p_thres         : float
+                      Significant threshold for clusters
+
+    Returns
+    -------
+    boxes           : list
+                      List with colors of the boxes to draw on the legend
+    labels          : list
+                      List with labels to anotate the legend colors, aligned
+                      with `boxes`
+    '''
+    sign = lisa.p_sim < p_thres
+    quadS = lisa.q * sign
+    cls = list(set(quadS))
+    boxes = []
+    labels = []
+    np.sort(cls)
+    for cl in cls:
+        boxes.append(mpl.patches.Rectangle((0, 0), 1, 1,
+            facecolor=lisa_clrs[cl]))
+        labels.append(lisa_lbls[cl])
+    if 0 in cls:
+        i = labels.index('Non-significant')
+        boxes = boxes[:i] + boxes[i+1:] + [boxes[i]]
+        labels = labels[:i] + labels[i+1:] + [labels[i]]
+    return boxes, labels
+
 def _expand_values(values, shp2dbf_row):
     '''
     Expand series of values based on dbf order to polygons (to allow plotting
@@ -659,7 +697,6 @@ def plot_lisa_cluster(shp_link, lisa, p_thres=0.01, shp_type='poly',
 
     '''
     shp = ps.open(shp_link)
-    # Base layer
     # Lisa layer
     lisa_obj = map_poly_shp(shp)
     lisa_obj = base_lisa_cluster(lisa_obj, lisa)
@@ -670,18 +707,8 @@ def plot_lisa_cluster(shp_link, lisa, p_thres=0.01, shp_type='poly',
     ax = setup_ax([lisa_obj], ax)
     # Legend
     if legend:
-        sign = lisa.p_sim < p_thres
-        quadS = lisa.q * sign
-        cls = list(set(quadS))
-        boxes = []
-        labels = []
-        np.sort(cls)
-        for cl in cls:
-            boxes.append(mpl.patches.Rectangle((0, 0), 1, 1,
-                facecolor=lisa_clrs[cl]))
-            labels.append(lisa_lbls[cl])
-        plt.legend(boxes, labels, loc='lower left', bbox_to_anchor=(0.025, -0.1),
-                fancybox=True)
+        boxes, labels = lisa_legend_components(lisa, p_thres)
+        plt.legend(boxes, labels, loc=0, fancybox=True)
     if title:
         ax.set_title(title)
     if savein:
