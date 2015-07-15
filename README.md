@@ -54,7 +54,7 @@ Currently PySAL consists of the following files and directories:
     Additions to distutils-generated PySAL tar-balls.
 
   CHANGELOG.txt
-    Changes since the last release
+    Changes since the last release.
 
   pysal/
     Contains PySAL __init__.py and the directories of PySAL modules.
