@@ -17,6 +17,7 @@ class LMtests:
     """
     Lagrange Multiplier tests. Implemented as presented in Anselin et al.
     (1996) [Anselin1996a]_
+
     ...
 
     Attributes
@@ -141,6 +142,7 @@ class MoranRes:
 
     """
     Moran's I for spatial autocorrelation in residuals from OLS regression
+
     ...
 
     Parameters
