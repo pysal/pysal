@@ -370,6 +370,7 @@ def _fisher_jenks_means(values, classes=5, sort=True):
 class Map_Classifier:
     """
     Abstract class for all map classifications [Slocum2008]_
+
     For an array :math:`y` of :math:`n` values, a map classifier places each value
     :math:`y_i` into one of :math:`k` mutually exclusive and exhaustive classes.
     Each classifer defines the classes based on different criteria, but in all
