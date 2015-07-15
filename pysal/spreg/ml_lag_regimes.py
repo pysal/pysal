@@ -217,7 +217,7 @@ class ML_Lag_Regimes(BaseML_Lag, REGI.Regimes_Frame):
                    across regimes.
                    Contains all attributes of each individual regression
 
-    Example
+    Examples
     ________
 
     Open data baltim.dbf using pysal and create the variables matrices and weights matrix.
@@ -311,7 +311,7 @@ class ML_Lag_Regimes(BaseML_Lag, REGI.Regimes_Frame):
         self.name_w = USER.set_name_w(name_w, w)
         USER.check_regimes(self.regimes_set, self.n, x.shape[1])
 
-# regime_err_sep is ignored, always False
+        # regime_err_sep is ignored, always False
 
         if regime_lag_sep == True:
             if not (set(cols2regi) == set([True]) and constant_regi == 'many'):
