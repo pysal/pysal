@@ -198,7 +198,7 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
                    across regimes.
                    Contains all attributes of each individual regression
 
-    Example
+    Examples
     ________
 
     Open data baltim.dbf using pysal and create the variables matrices and weights matrix.
