@@ -44,7 +44,7 @@ def rose(Y, w, k=8, permutations=0):
 
     Notes
     -----
-    Based on Rey, Murray, and Anselin (2011) [1]_ .
+    Based on [Rey2011]_ .
 
     Examples
     --------
@@ -136,11 +136,6 @@ def rose(Y, w, k=8, permutations=0):
     >>> r8['pvalues']
     array([ 0.445,  0.042,  0.079,  0.003,  0.005,  0.1  ,  0.269,  0.002])
 
-    References
-    ----------
-    .. [1] Rey, S.J., A.T. Murray and L. Anselin. 2011. "Visualizing regional 
-       income distribution dynamics." Letters in Spatial and Resource Sciences, 
-       4: 81-90.
 
     """
     results = {}

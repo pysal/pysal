@@ -26,7 +26,7 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
 
     """
     ML estimation of the spatial lag model (note no consistency
-    checks, diagnostics or constants added); Anselin (1988) [1]_
+    checks, diagnostics or constants added); Anselin (1988) [Anselin1988]_
 
     Parameters
     ----------
@@ -165,12 +165,6 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
     '-832.937174'
 
 
-    References
-    ----------
-
-    .. [1] Anselin, L. (1988) "Spatial Econometrics: Methods and Models".
-    Kluwer Academic Publishers. Dordrecht.
-
     """
 
     def __init__(self, y, x, w, method='full', epsilon=0.0000001):
@@ -277,7 +271,7 @@ class ML_Lag(BaseML_Lag):
 
     """
     ML estimation of the spatial lag model with all results and diagnostics;
-    Anselin (1988) [1]_
+    Anselin (1988) [Anselin1988]_
 
     Parameters
     ----------
@@ -523,11 +517,6 @@ class ML_Lag(BaseML_Lag):
     >>> mllag.title #doctest: +SKIP
     'MAXIMUM LIKELIHOOD SPATIAL LAG (METHOD = ORD)'
 
-    References
-    ----------
-
-    .. [1] Anselin, L. (1988) "Spatial Econometrics: Methods and Models".
-    Kluwer Academic Publishers. Dordrecht.
 
     """
 
