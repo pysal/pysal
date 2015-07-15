@@ -369,13 +369,11 @@ def _fisher_jenks_means(values, classes=5, sort=True):
 
 class Map_Classifier:
     """
-    Abstract class for all map classifications
-
-    For an array :math:`y` of :math:`n` values, a map classifier places
-    each value :math:`y_i` into one of :math:`k` mutually exclusive and
-    exhaustive classes.  Each classifier defines the classes based on
-    different criteria, but in all cases the following hold for the
-    classifiers in PySAL:
+    Abstract class for all map classifications [Slocum2008]_
+    For an array :math:`y` of :math:`n` values, a map classifier places each value
+    :math:`y_i` into one of :math:`k` mutually exclusive and exhaustive classes.
+    Each classifer defines the classes based on different criteria, but in all
+    cases the following hold for the classifiers in PySAL:
 
     .. math::
 
@@ -414,13 +412,6 @@ class Map_Classifier:
 
     * :func:`~pysal.esda.mapclassify.gadf`
     * :class:`~pysal.esda.mapclassify.K_classifiers`
-
-    References
-    ----------
-
-    Slocum, T.A., R.B. McMaster, F.C. Kessler and H.H. Howard (2009)
-    *Thematic Cartography and Geovisualization*. Pearson Prentice Hall, Upper
-    Saddle River.
 
     """
 

@@ -129,7 +129,7 @@ class TheilDSim:
     """Random permutation based inference on Theil's inequality decomposition.
 
     Provides for computationally based inference regarding the inequality
-    decomposition using random spatial permutations. [1]_
+    decomposition using random spatial permutations. [Rey2004b]_
 
     Parameters
     ----------
@@ -174,13 +174,6 @@ class TheilDSim:
     >>> theil_ds=TheilDSim(y,regimes,999)
     >>> theil_ds.bg_pvalue
     array([ 0.4  ,  0.344,  0.001,  0.001,  0.034,  0.072,  0.032])
-
-    References
-    ----------
-    .. [1] Rey, S.J. (2004) "Spatial analysis of regional economic growth,
-       inequality and change," in  M.F. Goodchild and D.G. Jannelle (eds.)
-       Spatially Integrated Social Science. Oxford University Press: Oxford.
-       Pages 280-299.
 
     """
     def __init__(self, y, partition, permutations=99):

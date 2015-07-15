@@ -21,6 +21,7 @@ class Chow:
     Chow test of coefficient stability across regimes. The test is a
     particular case of the Wald statistic in which the constraint are setup
     according to the spatial or other type of regime structure
+
     ...
 
     Parameters
@@ -102,7 +103,8 @@ class Wald:
 
     '''
     Chi sq. Wald statistic to test for restriction of coefficients.
-    Implementation following Greene [1]_ eq. (17-24), p. 488
+    Implementation following Greene [Greene2003]_ eq. (17-24), p. 488
+
     ...
 
     Parameters
@@ -123,10 +125,6 @@ class Wald:
               P value for Wald statistic calculated as a Chi sq. distribution
               with R degrees of freedom
 
-    References
-    ==========
-    .. [1] W. Greene. 2003. Econometric Analysis (Fifth Edtion). Prentice Hall, Upper
-       Saddle River. 
     '''
 
     def __init__(self, reg, r, q=None):
@@ -142,6 +140,7 @@ class Regimes_Frame:
         * Dealing with the constant in a regimes world
         * Creating a sparse representation of X 
         * Generating a list of names of X taking into account regimes
+
     ...
 
     Parameters
@@ -242,7 +241,8 @@ class Regimes_Frame:
 def wald_test(betas, r, q, vm):
     '''
     Chi sq. Wald statistic to test for restriction of coefficients.
-    Implementation following Greene [1]_ eq. (17-24), p. 488
+    Implementation following Greene [Greene2003]_ eq. (17-24), p. 488
+
     ...
 
     Parameters
@@ -265,10 +265,6 @@ def wald_test(betas, r, q, vm):
               P value for Wald statistic calculated as a Chi sq. distribution
               with R degrees of freedom
 
-    References
-    ==========
-    .. [1] W. Greene. 2003. Econometric Analysis (Fifth Edtion). Prentice Hall, Upper
-       Saddle River. 
     '''
     rbq = np.dot(r, betas) - q
     rvri = la.inv(np.dot(r, np.dot(vm, r.T)))
@@ -283,6 +279,7 @@ def buildR(kr, kf, nr):
     Build R matrix to globally test for spatial heterogeneity across regimes.
     The constraint setup reflects the null every beta is the same
     across regimes
+
     ...
 
     Parameters
@@ -309,6 +306,7 @@ def buildR1var(vari, kr, kf, kryd, nr):
     Build R matrix to test for spatial heterogeneity across regimes in one
     variable. The constraint setup reflects the null betas for variable 'vari'
     are the same across regimes
+
     ...
 
     Parameters
@@ -353,6 +351,7 @@ def regimeX_setup(x, regimes, cols2regi, regimes_set, constant=False):
 
     NOTE: constant term, if desired in the model, should be included in the x
     already
+
     ...
 
     Parameters
@@ -412,6 +411,7 @@ def set_name_x_regimes(name_x, regimes, constant_regi, cols2regi, regimes_set):
 
     NOTE: constant term, if desired in the model, should be included in the x
     already
+
     ...
 
     Parameters
@@ -465,6 +465,7 @@ def set_name_x_regimes(name_x, regimes, constant_regi, cols2regi, regimes_set):
 def w_regime(w, regi_ids, regi_i, transform=True, min_n=None):
     '''
     Returns the subset of W matrix according to a given regime ID
+
     ...
 
     Attributes
@@ -498,6 +499,7 @@ def w_regimes(w, regimes, regimes_set, transform=True, get_ids=None, min_n=None)
     '''
     ######### DEPRECATED ##########
     Subsets W matrix according to regimes
+
     ...
 
     Attributes
@@ -539,6 +541,7 @@ def w_regimes(w, regimes, regimes_set, transform=True, get_ids=None, min_n=None)
 def w_regimes_union(w, w_regi_i, regimes_set):
     '''
     Combines the subsets of the W matrix according to regimes
+
     ...
 
     Attributes
@@ -571,6 +574,7 @@ def x2xsp(x, regimes, regimes_set):
     '''
     Convert X matrix with regimes into a sparse X matrix that accounts for the
     regimes
+
     ...
 
     Attributes

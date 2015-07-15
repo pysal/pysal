@@ -93,12 +93,7 @@ def fmpt(P):
 
     Notes
     -----
-    Uses formulation (and examples on p. 218) in Kemeny and Snell (1976).
-
-    References
-    ----------
-    .. [1] Kemeny, John, G. and J. Laurie Snell (1976) Finite Markov Chains. 
-       Springer-Verlag. Berlin.
+    Uses formulation (and examples on p. 218) in [Kemeny1967]_.
 
     """
     A = np.zeros_like(P)
@@ -146,7 +141,7 @@ def var_fmpt(P):
 
     Notes
     -----
-    Uses formulation (and examples on p. 83) in Kemeny and Snell (1976).
+    Uses formulation (and examples on p. 83) in [Kemeny1967]_.
 
 
     """

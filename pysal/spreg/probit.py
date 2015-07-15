@@ -73,34 +73,28 @@ class BaseProbit:
                   Scale of the marginal effects.
     slopes      : array
                   Marginal effects of the independent variables (k-1x1)
-                  Note: Disregards the presence of dummies.
+                  
+		  Note: Disregards the presence of dummies.
     slopes_vm   : array
                   Variance-covariance matrix of the slopes (k-1xk-1)
     LR          : tuple
                   Likelihood Ratio test of all coefficients = 0
-                  (test statistics, p-value)
+                  
+		  (test statistics, p-value)
     Pinkse_error: float
                   Lagrange Multiplier test against spatial error correlation.
-                  Implemented as presented in Pinkse (2004)              
+                  
+		  Implemented as presented in [Pinkse2004]_              
     KP_error    : float
                   Moran's I type test against spatial error correlation.
-                  Implemented as presented in Kelejian and Prucha (2001)
+                  
+		  Implemented as presented in  [Kelejian2001]_
     PS_error    : float
                   Lagrange Multiplier test against spatial error correlation.
-                  Implemented as presented in Pinkse and Slade (1998)
+                  Implemented as presented in  [Pinkse1998]_
     warning     : boolean
                   if True Maximum number of iterations exceeded or gradient 
                   and/or function calls not changing.
-
-    References
-    ----------
-    .. [1] Pinkse, J. (2004). Moran-flavored tests with nuisance parameter. In: Anselin,
-    L., Florax, R. J., Rey, S. J. (editors) Advances in Spatial Econometrics,
-    pages 67-77. Springer-Verlag, Heidelberg.
-    .. [2] Kelejian, H., Prucha, I. (2001) "On the asymptotic distribution of the
-    Moran I test statistic with applications". Journal of Econometrics, 104(2):219-57.
-    .. [3] Pinkse, J., Slade, M. E. (1998) "Contracting in space: an application of
-    spatial statistics to discrete-choice models". Journal of Econometrics, 85(1):125-54.
 
     Examples
     --------
@@ -352,9 +346,9 @@ class Probit(BaseProbit):
 
     The diagnostics for spatial dependence currently implemented are:
 
-        * Pinkse Error [1]_
-        * Kelejian and Prucha Moran's I [2]_
-        * Pinkse & Slade Error [3]_
+        * Pinkse Error [Pinkse2004]_
+        * Kelejian and Prucha Moran's I [Kelejian2001]_
+        * Pinkse & Slade Error [Pinkse1998]_
 
     Parameters
     ----------
@@ -424,13 +418,13 @@ class Probit(BaseProbit):
                   (test statistics, p-value)
     Pinkse_error: float
                   Lagrange Multiplier test against spatial error correlation.
-                  Implemented as presented in Pinkse (2004)              
+                  Implemented as presented in  [Pinkse2004]_             
     KP_error    : float
                   Moran's I type test against spatial error correlation.
-                  Implemented as presented in Kelejian and Prucha (2001)
+                  Implemented as presented in [Kelejian2001]_
     PS_error    : float
                   Lagrange Multiplier test against spatial error correlation.
-                  Implemented as presented in Pinkse and Slade (1998)
+                  Implemented as presented in [Pinkse1998]_
     warning     : boolean
                   if True Maximum number of iterations exceeded or gradient 
                   and/or function calls not changing.
@@ -444,12 +438,6 @@ class Probit(BaseProbit):
                    Name of dataset for use in output
     title        : string
                    Name of the regression method used
-
-    References
-    ----------
-    .. [1] Pinkse, J. (2004). Moran-flavored tests with nuisance parameter. In: Anselin, L., Florax, R. J., Rey, S. J. (editors) Advances in Spatial Econometrics, pages 67-77. Springer-Verlag, Heidelberg.
-    .. [2] Kelejian, H., Prucha, I. (2001) "On the asymptotic distribution of the Moran I test statistic with applications". Journal of Econometrics, 104(2):219-57.
-    .. [3] Pinkse, J., Slade, M. E. (1998) "Contracting in space: an application of spatial statistics to discrete-choice models". Journal of Econometrics, 85(1):125-54.
 
     Examples
     --------
@@ -474,8 +462,7 @@ class Probit(BaseProbit):
     an numpy array of shape (n, 1) as opposed to the also common shape of (n, )
     that other packages accept. Since we want to run a probit model and for this
     example we use the Columbus data, we also need to transform the continuous
-    CRIME variable into a binary variable. As in McMillen, D. (1992) "Probit with
-    spatial autocorrelation". Journal of Regional Science 32(3):335-48, we define
+    CRIME variable into a binary variable. As in [McMillen1992]_, we define
     y = 1 if CRIME > 40.
 
     >>> y = np.array([dbf.by_col('CRIME')]).T
