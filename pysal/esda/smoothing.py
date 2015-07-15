@@ -438,7 +438,7 @@ def standardized_mortality_ratio(e, b, s_e, s_b, n):
 
 
 def choynowski(e, b, n, threshold=None):
-    """Choynowski map probabilities.
+    """Choynowski map probabilities [Choynowski1959]_ .
 
     Parameters
     ----------
@@ -458,11 +458,6 @@ def choynowski(e, b, n, threshold=None):
     Returns
     -------
                : array (nx1)
-
-    References
-    ----------
-    [1] M. Choynowski. 1959. Maps based on probabilities. Journal of the
-        American Statistical Association, 54, 385-388.
 
     Examples
     --------
@@ -509,7 +504,7 @@ def assuncao_rate(e, b):
     """The standardized rates where the mean and stadard deviation used for
     the standardization are those of Empirical Bayes rate estimates
     The standardized rates resulting from this function are used to compute
-    Moran's I corrected for rate variables.
+    Moran's I corrected for rate variables [Choynowski1959]_ .
 
     Parameters
     ----------
@@ -525,11 +520,6 @@ def assuncao_rate(e, b):
     Returns
     -------
                : array (nx1)
-
-    References
-    ----------
-    [1] Assuncao R. M. and Reis E. A., 1999, A new proposal to adjust Moran's I
-    for population density. Statistics in Medicine, 18, 2147-2162.
 
     Examples
     --------

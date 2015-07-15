@@ -22,7 +22,7 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
 
     """
     ML estimation of the spatial error model with regimes (note no consistency 
-    checks, diagnostics or constants added); Anselin (1988) [1]_
+    checks, diagnostics or constants added); Anselin (1988) [Anselin1988]_
 
     Parameters
     ----------
@@ -198,13 +198,7 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
                    across regimes.
                    Contains all attributes of each individual regression
 
-    References
-    ----------
-
-    .. [1] Anselin, L. (1988) "Spatial Econometrics: Methods and Models".
-    Kluwer Academic Publishers. Dordrecht.
-
-    Example
+    Examples
     ________
 
     Open data baltim.dbf using pysal and create the variables matrices and weights matrix.

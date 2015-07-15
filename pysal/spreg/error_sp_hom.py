@@ -1,14 +1,6 @@
 '''
-Hom family of models based on: 
-
-    Drukker, D. M., Egger, P., Prucha, I. R. (2010)
-    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
-    Disturbances and Endogenous Regressors". Working paper.
-    
-Following:
-
-    Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation with
-    and without Heteroskedasticity".
+Hom family of models based on: [Drukker2013]_ 
+Following: [Anselin2011]_
 
 '''
 
@@ -35,7 +27,7 @@ class BaseGM_Error_Hom(RegressionPropsY):
     '''
     GMM method for a spatial error model with homoskedasticity (note: no
     consistency checks, diagnostics or constant added); based on 
-    Drukker et al. (2010) [1]_, following Anselin (2011) [2]_.
+    Drukker et al. (2013) [Drukker2013]_, following Anselin (2011) [Anselin2011]_.
 
     Parameters
     ----------
@@ -94,16 +86,6 @@ class BaseGM_Error_Hom(RegressionPropsY):
                    Sigma squared used in computations
     xtx          : float
                    X'X
-
-    References
-    ----------
-
-    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
-    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
-    Disturbances and Endogenous Regressors". Working paper.
-
-    .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity". 
 
     Examples
     --------
@@ -186,8 +168,8 @@ class GM_Error_Hom(BaseGM_Error_Hom):
 
     '''
     GMM method for a spatial error model with homoskedasticity, with results
-    and diagnostics; based on Drukker et al. (2010) [1]_, following Anselin
-    (2011) [2]_.
+    and diagnostics; based on Drukker et al. (2013) [Drukker2013]_, following Anselin
+    (2011) [Anselin2011]_.
 
     Parameters
     ----------
@@ -278,16 +260,6 @@ class GM_Error_Hom(BaseGM_Error_Hom):
                    Name of dataset for use in output
     title        : string
                    Name of the regression method used
-
-    References
-    ----------
-
-    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
-    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
-    Disturbances and Endogenous Regressors". Working paper.
-
-    .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity". 
 
     Examples
     --------
@@ -391,7 +363,8 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
     '''
     GMM method for a spatial error model with homoskedasticity and
     endogenous variables (note: no consistency checks, diagnostics or constant
-    added); based on Drukker et al. (2010) [1]_, following Anselin (2011) [2]_.
+    added); based on Drukker et al. (2013) [Drukker2013]_, following Anselin (2011)
+    [Anselin2011]_.
 
     Parameters
     ----------
@@ -467,16 +440,6 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
                    Sigma squared used in computations
     hth          : float
                    H'H
-
-    References
-    ----------
-
-    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
-    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
-    Disturbances and Endogenous Regressors". Working paper.
-
-    .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity". 
 
     Examples
     --------
@@ -561,8 +524,8 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
 
     '''
     GMM method for a spatial error model with homoskedasticity and endogenous
-    variables, with results and diagnostics; based on Drukker et al. (2010) [1]_,
-    following Anselin (2011) [2]_.
+    variables, with results and diagnostics; based on Drukker et al. (2013)
+    [Drukker2013]_, following Anselin (2011) [Anselin2011]_.
 
     Parameters
     ----------
@@ -683,16 +646,6 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     hth          : float
                    H'H
 
-
-    References
-    ----------
-
-    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
-    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
-    Disturbances and Endogenous Regressors". Working paper.
-
-    .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity". 
 
     Examples
     --------
@@ -820,7 +773,8 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
     '''
     GMM method for a spatial lag and error model with homoskedasticity and
     endogenous variables (note: no consistency checks, diagnostics or constant
-    added); based on Drukker et al. (2010) [1]_, following Anselin (2011) [2]_.
+    added); based on Drukker et al. (2013) [Drukker2013]_, following Anselin (2011)
+    [Anselin2011]_.
 
     Parameters
     ----------
@@ -906,16 +860,6 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
                    H'H
 
 
-    References
-    ----------
-
-    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
-    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
-    Disturbances and Endogenous Regressors". Working paper.
-
-    .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity". 
-
     Examples
     --------
     >>> import numpy as np
@@ -980,7 +924,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
     '''
     GMM method for a spatial lag and error model with homoskedasticity and
     endogenous variables, with results and diagnostics; based on Drukker et
-    al. (2010) [1]_, following Anselin (2011) [2]_.
+    al. (2013) [Drukker2013]_, following Anselin (2011) [Anselin2011]_.
 
     Parameters
     ----------
@@ -1116,16 +1060,6 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
     hth          : float
                    H'H
 
-
-    References
-    ----------
-
-    .. [1] Drukker, D. M., Egger, P., Prucha, I. R. (2010)
-    "On Two-step Estimation of a Spatial Autoregressive Model with Autoregressive
-    Disturbances and Endogenous Regressors". Working paper.
-
-    .. [2] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity". 
 
     Examples
     --------
@@ -1268,7 +1202,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
 def moments_hom(w, wA1, wA2, u):
     '''
     Compute G and g matrices for the spatial error model with homoscedasticity
-    as in Anselin [1]_ (2011).
+    as in Anselin [Anselin2011]_ (2011).
     ...
 
     Parameters
@@ -1288,11 +1222,6 @@ def moments_hom(w, wA1, wA2, u):
                   'g', respectively.
 
 
-    References
-    ----------
-
-    .. [1] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity". 
     '''
     n = w.shape[0]
     A1u = wA1 * u
@@ -1314,7 +1243,7 @@ def moments_hom(w, wA1, wA2, u):
 def get_vc_hom(w, wA1, wA2, reg, lambdapar, z_s=None, for_omegaOLS=False):
     '''
     VC matrix \psi of Spatial error with homoscedasticity. As in 
-    Anselin (2011) [1]_ (p. 20)
+    Anselin (2011) [Anselin2011]_ (p. 20)
     ...
 
     Parameters
@@ -1344,12 +1273,6 @@ def get_vc_hom(w, wA1, wA2, reg, lambdapar, z_s=None, for_omegaOLS=False):
                   nx1 vector a2. If z_s=None, a2 = 0.
     p           : array
                   P matrix. If z_s=None or for_omegaOLS=False, p=0.
-
-    References
-    ----------
-
-    .. [1] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity". 
 
     '''
     u_s = get_spFilter(w, lambdapar, reg.u)
@@ -1409,7 +1332,7 @@ def get_vc_hom(w, wA1, wA2, reg, lambdapar, z_s=None, for_omegaOLS=False):
 def get_omega_hom(w, wA1, wA2, reg, lamb, G):
     '''
     Omega VC matrix for Hom models with endogenous variables computed as in
-    Anselin (2011) [1]_ (p. 21).
+    Anselin (2011) [Anselin2011]_ (p. 21).
     ...
 
     Parameters
@@ -1428,12 +1351,6 @@ def get_omega_hom(w, wA1, wA2, reg, lamb, G):
     -------
     omega   :   array
                 Omega matrix of VC of the model
-
-    References
-    ----------
-
-    .. [1] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity". 
 
     '''
     n = float(w.shape[0])
@@ -1462,7 +1379,7 @@ def get_omega_hom(w, wA1, wA2, reg, lamb, G):
 def get_omega_hom_ols(w, wA1, wA2, reg, lamb, G):
     '''
     Omega VC matrix for Hom models without endogenous variables (OLS) computed
-    as in Anselin (2011) [1]_.
+    as in Anselin (2011) [Anselin2011]_.
     ...
 
     Parameters
@@ -1481,12 +1398,6 @@ def get_omega_hom_ols(w, wA1, wA2, reg, lamb, G):
     -------
     omega   :   array
                 Omega matrix of VC of the model
-
-    References
-    ----------
-
-    .. [1] Anselin, L. (2011) "GMM Estimation of Spatial Error Autocorrelation
-    with and without Heteroskedasticity". 
 
     '''
     n = float(w.shape[0])
