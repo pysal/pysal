@@ -558,7 +558,7 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None,
                       Type of choropleth. Supported methods:
                         * 'classless'
                         * 'unique_values'
-                        * 'quantiles' (default)
+                        * 'quantiles'
                         * 'fisher_jenks'
                         * 'equal_interval'
     k               : int
