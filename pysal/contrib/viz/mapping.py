@@ -414,7 +414,7 @@ def base_choropleth_classif(map_obj, values, classification='quantiles',
         map_obj.set_array(values)
     return map_obj
 
-def base_lisa_cluster(map_obj, lisa, p_thres=0.01, set_trans=False):
+def base_lisa_cluster(map_obj, lisa, p_thres=0.01):
     '''
     Set coloring on a map object based on LISA results
     ...
