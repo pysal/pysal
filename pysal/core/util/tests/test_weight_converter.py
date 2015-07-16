@@ -10,10 +10,11 @@ import warnings
 class test_WeightConverter(unittest.TestCase):
     def setUp(self):
         self.base_dir = pysal.examples.get_path('')
-        self.test_files = ['arcgis_ohio.dbf', 'arcgis_txt.txt', 'ohio.swm',
+        test_files = ['arcgis_ohio.dbf', 'arcgis_txt.txt', 'ohio.swm',
                            'wmat.dat', 'wmat.mtx', 'sids2.gal', 'juvenile.gwt',
                            'geobugs_scot', 'stata_full.txt', 'stata_sparse.txt',
                            'spat-sym-us.mat', 'spat-sym-us.wk1']
+        self.test_files = [pysal.examples.get_path(f) for f in test_files]
         dataformats = ['arcgis_dbf', 'arcgis_text', None, None, None, None, None,
                        'geobugs_text', 'stata_text', 'stata_text', None, None]
         ns = [88, 3, 88, 49, 49, 100, 168, 56, 56, 56, 46, 46]
@@ -30,7 +31,7 @@ class test_WeightConverter(unittest.TestCase):
                 # note: we are just suppressing the warnings here; individual warnings
                 #       are tested in their specific readers
                 warnings.simplefilter("always")
-                wc = WeightConverter(self.base_dir + f,
+                wc = WeightConverter(f,
                                      dataFormat=self.dataformats[f])
             self.assertEqual(wc.w_set(), True)
             self.assertEqual(wc.w.n, self.ns[f])
@@ -41,7 +42,7 @@ class test_WeightConverter(unittest.TestCase):
                 # note: we are just suppressing the warnings here; individual warnings
                 #       are tested in their specific readers
                 warnings.simplefilter("always")
-                wc = WeightConverter(self.base_dir + f,
+                wc = WeightConverter(f,
                                      dataFormat=self.dataformats[f])
 
             for ext, dataformat in self.fileformats:
@@ -86,7 +87,7 @@ class test_WeightConverter(unittest.TestCase):
 
     def test_weight_convert(self):
         for f in self.test_files:
-            inFile = self.base_dir + f
+            inFile =  f
             inDataFormat = self.dataformats[f]
             with warnings.catch_warnings(record=True) as warn:
                 # note: we are just suppressing the warnings here; individual warnings

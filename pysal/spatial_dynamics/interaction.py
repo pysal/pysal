@@ -8,6 +8,7 @@ __author__ = "Nicholas Malizia <nmalizia@asu.edu>", "Sergio J. Rey \
 
 __all__ = ['SpaceTimeEvents', 'knox', 'mantel', 'jacquez', 'modified_knox']
 
+import os
 import pysal
 import numpy as np
 import scipy.stats as stats
@@ -26,7 +27,7 @@ class SpaceTimeEvents:
     ----------
     path            : string
                       the path to the appropriate shapefile, including the
-                      file name, but excluding the extension.
+                      file name and extension
     time            : string
                       column header in the DBF file indicating the column
                       containing the time stamp.
@@ -60,7 +61,7 @@ class SpaceTimeEvents:
     timestamp for the events. This timestamp may be a numerical value
     or a date. Date inference was added in version 1.6.
 
-    >>> path = pysal.examples.get_path("burkitt")
+    >>> path = pysal.examples.get_path("burkitt.shp")
 
     Create an instance of SpaceTimeEvents from a shapefile, where the
     temporal information is stored in a column named "T".
@@ -117,8 +118,10 @@ class SpaceTimeEvents:
 
     """
     def __init__(self, path, time_col, infer_timestamp=False):
-        shp = pysal.open(path + '.shp')
-        dbf = pysal.open(path + '.dbf')
+        shp = pysal.open(path)
+        head, tail = os.path.split(path)
+        dbf_tail = tail.split(".")[0]+".dbf"
+        dbf = pysal.open(pysal.examples.get_path(dbf_tail))
 
         # extract the spatial coordinates from the shapefile
         x = [coords[0] for coords in shp]
@@ -155,7 +158,7 @@ class SpaceTimeEvents:
 
 def knox(s_coords, t_coords, delta, tau, permutations=99, debug=False):
     """
-    Knox test for spatio-temporal interaction. [1]_
+    Knox test for spatio-temporal interaction. [Knox1964]_
 
     Parameters
     ----------
@@ -186,12 +189,6 @@ def knox(s_coords, t_coords, delta, tau, permutations=99, debug=False):
     counts          : int
                       count of space time neighbors.
 
-    References
-    ----------
-    .. [1] E. Knox. 1964. The detection of space-time
-       interactions. Journal of the Royal Statistical Society. Series C
-       (Applied Statistics), 13(1):25-30.
-
     Examples
     --------
     >>> import numpy as np
@@ -199,7 +196,7 @@ def knox(s_coords, t_coords, delta, tau, permutations=99, debug=False):
 
     Read in the example data and create an instance of SpaceTimeEvents.
 
-    >>> path = pysal.examples.get_path("burkitt")
+    >>> path = pysal.examples.get_path("burkitt.shp")
     >>> events = SpaceTimeEvents(path,'T')
 
     Set the random seed generator. This is used by the permutation based
@@ -264,7 +261,7 @@ def knox(s_coords, t_coords, delta, tau, permutations=99, debug=False):
 
 def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, tpow=-1.0):
     """
-    Standardized Mantel test for spatio-temporal interaction. [2]_
+    Standardized Mantel test for spatio-temporal interaction. [Mantel1967]_
 
     Parameters
     ----------
@@ -296,11 +293,6 @@ def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, t
     pvalue          : float
                       pseudo p-value associated with the statistic.
 
-    References
-    ----------
-    .. [2] N. Mantel. 1967. The detection of disease clustering and a
-       generalized regression approach. Cancer Research, 27(2):209-220.
-
     Examples
     --------
     >>> import numpy as np
@@ -308,7 +300,7 @@ def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, t
 
     Read in the example data and create an instance of SpaceTimeEvents.
 
-    >>> path = pysal.examples.get_path("burkitt")
+    >>> path = pysal.examples.get_path("burkitt.shp")
     >>> events = SpaceTimeEvents(path,'T')
 
     Set the random seed generator. This is used by the permutation based
@@ -379,7 +371,8 @@ def mantel(s_coords, t_coords, permutations=99, scon=1.0, spow=-1.0, tcon=1.0, t
 
 def jacquez(s_coords, t_coords, k, permutations=99):
     """
-    Jacquez k nearest neighbors test for spatio-temporal interaction. [3]_
+    Jacquez k nearest neighbors test for spatio-temporal interaction.
+    [Jacquez1996]_
 
     Parameters
     ----------
@@ -405,11 +398,6 @@ def jacquez(s_coords, t_coords, k, permutations=99):
                       p-value associated with the statistic (normally
                       distributed with k-1 df).
 
-    References
-    ----------
-    .. [3] G. Jacquez. 1996. A k nearest neighbour test for space-time
-       interaction. Statistics in Medicine, 15(18):1935-1949.
-
     Examples
     --------
     >>> import numpy as np
@@ -417,7 +405,7 @@ def jacquez(s_coords, t_coords, k, permutations=99):
 
     Read in the example data and create an instance of SpaceTimeEvents.
 
-    >>> path = pysal.examples.get_path("burkitt")
+    >>> path = pysal.examples.get_path("burkitt.shp")
     >>> events = SpaceTimeEvents(path,'T')
 
     The Jacquez test counts the number of events that are k nearest
@@ -497,7 +485,7 @@ def jacquez(s_coords, t_coords, k, permutations=99):
 
 def modified_knox(s_coords, t_coords, delta, tau, permutations=99):
     """
-    Baker's modified Knox test for spatio-temporal interaction. [4]_
+    Baker's modified Knox test for spatio-temporal interaction. [Baker2004]_
 
     Parameters
     ----------
@@ -523,11 +511,6 @@ def modified_knox(s_coords, t_coords, delta, tau, permutations=99):
     pvalue          : float
                       pseudo p-value associated with the statistic.
 
-    References
-    ----------
-    .. [4] R.D. Baker. Identifying space-time disease clusters. Acta Tropica,
-       91(3):291-299, 2004.
-
     Examples
     --------
     >>> import numpy as np
@@ -535,7 +518,7 @@ def modified_knox(s_coords, t_coords, delta, tau, permutations=99):
 
     Read in the example data and create an instance of SpaceTimeEvents.
 
-    >>> path = pysal.examples.get_path("burkitt")
+    >>> path = pysal.examples.get_path("burkitt.shp")
     >>> events = SpaceTimeEvents(path, 'T')
 
     Set the random seed generator. This is used by the permutation based

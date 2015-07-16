@@ -371,7 +371,7 @@ def order(w, kmax=3):
 
     Notes
     -----
-    Implements the algorithm in Anselin and Smirnov (1996) [1]_
+    Implements the algorithm in Anselin and Smirnov (1996) [Anselin1996b]_
 
     Examples
     --------
@@ -579,12 +579,7 @@ def w_local_cluster(w):
 
     where :math:`N_i` is the set of neighbors to :math:`i`, :math:`k_i =
     |N_i|` and :math:`\{w_{j,k}\}` is the set of non-zero elements of the
-    weights between pairs in :math:`N_i`.
-
-    References
-    ----------
-
-    .. [ws] Watts, D.J. and S.H. Strogatz (1988) "Collective dynamics of 'small-world' networks". Nature, 393: 440-442.
+    weights between pairs in :math:`N_i`. [Watts1998]_
 
     Examples
     --------

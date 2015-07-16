@@ -14,6 +14,7 @@ __all__ = ["t_stat", "pr2_aspatial", "pr2_spatial"]
 def t_stat(reg, z_stat=False):
     """
     Calculates the t-statistics (or z-statistics) and associated p-values.
+    [Greene2003]_
 
     Parameters
     ----------
@@ -27,11 +28,6 @@ def t_stat(reg, z_stat=False):
     ts_result       : list of tuples
                       each tuple includes value of t statistic (or z
                       statistic) and associated p-value
-
-    References
-    ----------
-    .. [1] W. Greene. 2003. Econometric Analysis. Prentice Hall, Upper
-       Saddle River.
 
     Examples
     --------

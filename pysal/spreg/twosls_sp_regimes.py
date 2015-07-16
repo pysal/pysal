@@ -21,7 +21,7 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
 
     """
     Spatial two stage least squares (S2SLS) with regimes; 
-    Anselin (1988) [1]_
+    Anselin (1988) [Anselin1988]_
 
     Parameters
     ----------
@@ -289,12 +289,6 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
                    i.e. when regime_err_sep=True and no variable is fixed
                    across regimes.
                    Contains all attributes of each individual regression
-
-    References
-    ----------
-
-    .. [1] Anselin, L. (1988) "Spatial Econometrics: Methods and Models".
-    Kluwer Academic Publishers. Dordrecht.
 
     Examples
     --------
