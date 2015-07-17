@@ -161,18 +161,18 @@ class TestGM_Error_Regimes(unittest.TestCase):
         self.assertAlmostEqual(reg.pr2,pr2,4)
         sig2 = 649.4011
         #self.assertAlmostEqual(round(reg.sig2,4),round(sig2,4),4)
-        np.allclose(sig2, reg.sig2)
+        np.testing.assert_allclose(sig2, reg.sig2, rtol=1e-05)
         std_err = np.array([ 19.77074866,   6.07667394,  24.32254786,   2.17776972,
          2.97078606,   0.94392418])
         #np.testing.assert_array_almost_equal(reg.std_err,std_err,4)
-        np.allclose(reg.std_err, std_err)
+        np.testing.assert_allclose(reg.std_err, std_err, rtol=1e-05)
         chow_r = np.array([[ 0.0021348 ,  0.96314775],
        [ 0.40499741,  0.5245196 ],
        [ 0.4498365 ,  0.50241261]])
         np.testing.assert_array_almost_equal(reg.chow.regi,chow_r,4)
         chow_j = 1.2885590185243503
         #self.assertAlmostEqual(reg.chow.joint[0],chow_j)
-        np.allclose(reg.chow.joint[0], chow_j)
+        np.testing.assert_allclose(reg.chow.joint[0], chow_j, rtol=1e-05)
 
     def test_model_endog_regi_error(self):
         #Columbus:
@@ -201,7 +201,7 @@ class TestGM_Error_Regimes(unittest.TestCase):
         np.testing.assert_array_almost_equal(reg.chow.regi,chow_r,4)
         chow_j = 1.1184631131987004
         #self.assertAlmostEqual(reg.chow.joint[0],chow_j)
-        np.allclose(reg.chow.joint[0], chow_j)
+        np.testing.assert_allclose(reg.chow.joint[0], chow_j)
         #Artficial:
         model = SP.GM_Endog_Error_Regimes(self.y_a, self.x_a1, yend=self.x_a2, q=self.q_a, regimes=self.regi_a, w=self.w_a, regime_err_sep=True)
         model1 = GM_Endog_Error(self.y_a[0:(self.n2)].reshape((self.n2),1), self.x_a1[0:(self.n2)], yend=self.x_a2[0:(self.n2)], q=self.q_a[0:(self.n2)], w=self.w_a1)
