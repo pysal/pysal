@@ -1,7 +1,9 @@
 #!/usr/bin/python
 #import math
 import pysal
+import numpy as np
 from pysal.cg.standalone import get_shared_segments
+from collections import defaultdict
 
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 __all__ = ["QUEEN", "ROOK", "ContiguityWeights_binning",
@@ -101,19 +103,19 @@ class ContiguityWeights_binning:
                     vertCache[polyId] = set(shpFileObject.get(polyId).vertices)
                 idRows = poly2Row[polyId]
                 idCols = poly2Column[polyId]
-                rowPotentialNeighbors = set()
-                colPotentialNeighbors = set()
+                row_neighbors = set()
+                column_neighbors = set()
                 for row in idRows:
-                    rowPotentialNeighbors = rowPotentialNeighbors.union(
+                    row_neighbors = row_neighbors.union(
                         rows[row])
                 for col in idCols:
-                    colPotentialNeighbors = colPotentialNeighbors.union(
+                    column_neighbors = column_neighbors.union(
                         columns[col])
-                potentialNeighbors = rowPotentialNeighbors.intersection(
-                    colPotentialNeighbors)
+                candidates = row_neighbors.intersection(
+                    column_neighbors)
                 if polyId not in w:
                     w[polyId] = set()
-                for j in potentialNeighbors:
+                for j in candidates:
                     if polyId < j:
                         if bbcommon(bbcache[polyId], bbcache[j]):
                             if j not in vertCache:
@@ -145,19 +147,19 @@ class ContiguityWeights_binning:
                 iEdgeSet = set(edgeCache[polyId].keys())
                 idRows = poly2Row[polyId]
                 idCols = poly2Column[polyId]
-                rowPotentialNeighbors = set()
-                colPotentialNeighbors = set()
+                row_neighbors = set()
+                column_neighbors = set()
                 for row in idRows:
-                    rowPotentialNeighbors = rowPotentialNeighbors.union(
+                    row_neighbors = row_neighbors.union(
                         rows[row])
                 for col in idCols:
-                    colPotentialNeighbors = colPotentialNeighbors.union(
+                    column_neighbors = column_neighbors.union(
                         columns[col])
-                potentialNeighbors = rowPotentialNeighbors.intersection(
-                    colPotentialNeighbors)
+                candidates = row_neighbors.intersection(
+                    column_neighbors)
                 if polyId not in w:
                     w[polyId] = set()
-                for j in potentialNeighbors:
+                for j in candidates:
                     if polyId < j:
                         if bbcommon(bbcache[polyId], bbcache[j]):
                             if j not in edgeCache:
@@ -260,19 +262,19 @@ class ContiguityWeightsPolygons:
                     vertCache[polyId] = set(self.collection[polyId].vertices)
                 idRows = poly2Row[polyId]
                 idCols = poly2Column[polyId]
-                rowPotentialNeighbors = set()
-                colPotentialNeighbors = set()
+                row_neighbors = set()
+                column_neighbors = set()
                 for row in idRows:
-                    rowPotentialNeighbors = rowPotentialNeighbors.union(
+                    row_neighbors = row_neighbors.union(
                         rows[row])
                 for col in idCols:
-                    colPotentialNeighbors = colPotentialNeighbors.union(
+                    column_neighbors = column_neighbors.union(
                         columns[col])
-                potentialNeighbors = rowPotentialNeighbors.intersection(
-                    colPotentialNeighbors)
+                candidates = row_neighbors.intersection(
+                    column_neighbors)
                 if polyId not in w:
                     w[polyId] = set()
-                for j in potentialNeighbors:
+                for j in candidates:
                     if polyId < j:
                         if j not in vertCache:
                             vertCache[j] = set(self.collection[j].vertices)
@@ -292,7 +294,7 @@ class ContiguityWeightsPolygons:
             for polyId in xrange(numPoly):
                 if polyId not in edgeCache:
                     iEdges = {}
-                    iVerts = shpFileObject.get(polyId).vertices
+                    iVerts = self.collection[polyId].vertices
                     nv = len(iVerts)
                     ne = nv - 1
                     for i in xrange(ne):
@@ -304,23 +306,23 @@ class ContiguityWeightsPolygons:
                 iEdgeSet = set(edgeCache[polyId].keys())
                 idRows = poly2Row[polyId]
                 idCols = poly2Column[polyId]
-                rowPotentialNeighbors = set()
-                colPotentialNeighbors = set()
+                row_neighbors = set()
+                column_neighbors = set()
                 for row in idRows:
-                    rowPotentialNeighbors = rowPotentialNeighbors.union(
+                    row_neighbors = row_neighbors.union(
                         rows[row])
                 for col in idCols:
-                    colPotentialNeighbors = colPotentialNeighbors.union(
+                    column_neighbors = column_neighbors.union(
                         columns[col])
-                potentialNeighbors = rowPotentialNeighbors.intersection(
-                    colPotentialNeighbors)
+                candidates = row_neighbors.intersection(
+                    column_neighbors)
                 if polyId not in w:
                     w[polyId] = set()
-                for j in potentialNeighbors:
+                for j in candidates:
                     if polyId < j:
                         if bbcommon(bbcache[polyId], bbcache[j]):
                             if j not in edgeCache:
-                                jVerts = shpFileObject.get(j).vertices
+                                jVerts = self.collection[j].vertices
                                 jEdges = {}
                                 nv = len(jVerts)
                                 ne = nv - 1
@@ -342,7 +344,245 @@ class ContiguityWeightsPolygons:
 
         self.w = w
 
+import json
+class GeoJsonHandler:
+    """ """
+    def __init__(self, datasource):
+        if datasource[0] == "{":
+            self.content = json.loads(datasource)
+        else:
+            with open(datasource) as f:
+                 self.content = json.load(f)
+
+        self.n = len(self.content['features'])
+        properties = self.content['features'][0]["properties"]
+        self.n_properties = len(properties)
+        self.property_types = dict([ (prop, type(properties[prop])) for prop in properties])
+
+
+    def by_property(self, property_name):
+        return [ feature["properties"][property_name] for feature in self.content['features']]
+
+    def get_geometry(self, i):
+        return self.content['features'][i]['geometry']["coordinates"]
+
+    def get_geometries(self, ids = []):
+        if not ids:
+            ids = xrange(self.n)
+        return [ self.get_geometry(i) for i in ids ]
+
+    def set_feature_collection_bbox(self):
+        feature_bboxes = []
+        for feature in self.content['features']:
+            gtype = feature['geometry']['type']
+            if gtype == u"MultiPolygon":
+                bboxes = []
+                for polygon in feature['geometry']['coordinates']:
+                    for ring in polygon:
+                        bboxes.append(self._list_bb(ring))
+                bboxes = np.array(bboxes)
+                bbox = [ bboxes[:,0].min(), bboxes[:,1].min(),
+                        bboxes[:,2].max(), bboxes[:,3].max() ]
+            elif gtype == u"Polygon":
+                bboxes = []
+                for ring in feature['geometry']['coordinates']:
+                        bboxes.append(self._list_bb(ring))
+                bboxes = np.array(bboxes)
+                bbox = [ bboxes[:,0].min(), bboxes[:,1].min(),
+                        bboxes[:,2].max(), bboxes[:,3].max() ]
+            feature['bbox'] = bbox
+            feature_bboxes.append(bbox)
+        bboxes = np.array(feature_bboxes)
+        self.content['bbox'] =  [ bboxes[:,0].min(), bboxes[:,1].min(),
+                bboxes[:,2].max(), bboxes[:,3].max() ]
+            
+
+    def get_feature(self, i):
+        return self.content['features'][i]
+
+
+    def _list_bb(self, lst):
+        xs = [ v[0] for v in lst]
+        ys = [ v[1] for v in lst]
+        return [ min(xs), min(ys), max(xs), max(ys) ]
+
+
+        
+
+
+
+def contiguity_from_json(source, binning=True, wtype='QUEEN'):
+
+    js = GeoJsonHandler(source)
+
+    if wtype.upper() == 'QUEEN':
+        wttype = 1
+    elif wtype.upper() == 'ROOK':
+        wttype = 2
+    else:
+        wttype = -9
+
+    if binning:
+        def get_vertices(feature_id, js):
+            vertices = []
+            feature = js.get_feature(feature_id)
+            feature_type = feature['geometry']['type']
+            vertices = []
+            if feature_type == u"MultiPolygon":
+                for polygon in feature['geometry']['coordinates']:
+                    for ring in polygon:
+                        vertices.extend([tuple(v) for v in ring])
+            elif feature_type == u"Polygon":
+                for ring in feature['geometry']['coordinates']:
+                    vertices.extend([tuple(v) for v in ring])
+            return set(vertices)
+
+        def get_edges(feature_id, js):
+            edges = []
+            feature = js.get_feature(feature_id)
+            feature_type = feature['geometry']['type']
+            if feature_type == u"MultiPolygon":
+                for polygon in feature['geometry']['coordinates']:
+                    for ring in polygon:
+                        vertices = [tuple(v) for v in ring]
+                        nv = len(vertices)
+                        for i in xrange(nv-1):
+                            j = i + 1
+                            edges.append( (vertices[i], vertices[j]))
+
+            elif feature_type == u"Polygon":
+                for ring in feature['geometry']['coordinates']:
+                        vertices = [tuple(v) for v in ring]
+                        nv = len(vertices)
+                        for i in xrange(nv-1):
+                            j = i + 1
+                            edges.append( (vertices[i], vertices[j]))
+            return set(edges)
+
+
+        if not js.content.has_key('bbox'):
+            js.set_feature_collection_bbox()
+
+        collection_bbox = js.content['bbox']
+        n_features = len(js.content['features'])
+        if (n_features < SHP_SMALL):
+            bucketmin = n_features /BUCK_SM + 2
+        else:
+            bucketmin = n_features /BUCK_LG + 2
+        # bucket length
+        lengthx = ((collection_bbox[2] + DELTA) - collection_bbox[0]) / bucketmin
+        lengthy = ((collection_bbox[3] + DELTA) - collection_bbox[1]) / bucketmin
+
+        # initialize buckets
+        column_features = [set() for i in range(bucketmin)]
+        row_features = [set() for i in range(bucketmin)]
+
+        minbox = collection_bbox[:2] * 2             # minx,miny,minx,miny
+        binWidth = [lengthx, lengthy] * 2      # lenx,leny,lenx,leny
+        bbcache = {}
+        feature_columns = [set() for i in xrange(n_features)]
+        feature_rows = [set() for i in xrange(n_features)]
+        for i in xrange(n_features):
+            feature = js.get_feature(i)
+            bbcache[i] = feature['bbox']
+            bbox = feature['bbox']
+            projBBox = [int((bbox[:][j] -
+                             minbox[j]) / binWidth[j]) for j in xrange(4)]
+            for j in range(projBBox[0], projBBox[2] + 1):
+                column_features[j].add(i)
+                feature_columns[i].add(j)
+            for j in range(projBBox[1], projBBox[3] + 1):
+                row_features[j].add(i)
+                feature_rows[i].add(j)
+
+        w = {}
+        if wttype == QUEEN:
+            # loop over polygons rather than bins
+            vertCache = {}
+            for feature_id in xrange(n_features):
+                if feature_id not in vertCache:
+                    vertices = get_vertices(feature_id, js)
+                    vertCache[feature_id] = set(vertices)
+                id_rows = feature_rows[feature_id]
+                id_cols = feature_columns[feature_id]
+                row_neighbors = set()
+                column_neighbors = set()
+                for row in id_rows:
+                    row_neighbors = row_neighbors.union(
+                        row_features[row])
+                for col in id_cols:
+                    column_neighbors = column_neighbors.union(
+                        column_features[col])
+                candidates = row_neighbors.intersection(
+                    column_neighbors)
+                if feature_id not in w:
+                    w[feature_id] = set()
+                for j in candidates:
+                    if feature_id < j:
+                        if j not in vertCache:
+                            vertices = get_vertices(j, js)
+                            vertCache[j] = set(vertices)
+                        if bbcommon(bbcache[feature_id], bbcache[j]):
+                            common = vertCache[feature_id].intersection(vertCache[j])
+                            if len(common) > 0:
+                                w[feature_id].add(j)
+                                if j not in w:
+                                    w[j] = set()
+                                w[j].add(feature_id)
+        elif wttype == ROOK:
+            # check for a shared edge
+            feature_edges = defaultdict(list) 
+            # loop over polygons rather than bins
+            for feature_id in xrange(n_features):
+                # could aready be in the cache, if not add it
+                if feature_id not in feature_edges:
+                    edges = get_edges(feature_id, js)
+                    for edge in edges:
+                        o,d = edge
+                        s_edge = tuple(sorted([o,d], key=lambda e: (e[0], e[1])))
+                        feature_edges[feature_id].append(s_edge)
+                id_rows = feature_rows[feature_id]
+                id_cols = feature_columns[feature_id]
+                row_neighbors = set()
+                column_neighbors = set()
+                for row in id_rows:
+                    row_neighbors = row_neighbors.union(
+                        row_features[row])
+                for col in id_cols:
+                    column_neighbors = column_neighbors.union(
+                        column_features[col])
+                candidates = row_neighbors.intersection(
+                    column_neighbors)
+                if feature_id not in w:
+                    w[feature_id] = set()
+                for j in candidates:
+                    wij = 0
+                    if feature_id < j:
+                        if bbcommon(bbcache[feature_id], bbcache[j]):
+                            if j not in feature_edges:
+                                edges = get_edges(j, js)
+                                for edge in edges:
+                                    o,d = edge
+                                    s_edge = tuple(sorted([o,d], key=lambda e: (e[0], e[1])))
+                                    feature_edges[j].append(s_edge)
+                            for edge in feature_edges[j]:
+                                if edge in feature_edges[feature_id]:
+                                    wij = 1
+                                    break
+                            if wij:
+                                w[feature_id].add(j)
+                                if j not in w:
+                                    w[j] = set()
+                                w[j].add(feature_id)
+        else:
+            print "Unsupported weight type."
+
+    return w
+
+
+
 if __name__ == "__main__":
+    """
     import time
     fname = pysal.examples.get_path('NAT.shp')
     print 'QUEEN binning'
@@ -387,3 +627,20 @@ if __name__ == "__main__":
     knn = pysal.rook_from_shapefile(fname)
     t1 = time.time()
     print t1 - t0
+
+    """
+
+    import pysal as ps
+    w = contiguity_from_json(ps.examples.get_path("virginia.json"))
+    wr = contiguity_from_json(ps.examples.get_path("virginia.json"), wtype='rook')
+
+    
+    pth = ps.examples.get_path("virginia.json")
+    with open(pth) as source:
+        d = json.load(source)
+        source.close()
+        w1 = contiguity_from_json(json.dumps(d))
+
+
+
+

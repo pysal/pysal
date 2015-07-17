@@ -8,6 +8,7 @@ __credits__ = "Copyright (c) 2005-2009 Sergio J. Rey"
 
 import doctest
 import math
+import numpy as np
 from warnings import warn
 from sphere import arcdist
 
@@ -1943,6 +1944,48 @@ class Rectangle:
         4.0
         """
         return self.upper - self.lower
+
+class PolygonCollection:
+    def __init__(self, polygons, bbox=None):
+        """
+
+        Parameters
+        ==========
+        polygons: dict
+                  key is polygon Id, value is PySAL Polygon object
+        bbox: list (optional)
+              [left, lower, right, upper]
+
+        Notes
+        =====
+        bbox is supported in geojson specification at both the feature and feature collection level. However, not all GeoJSON writers generate the bbox at the feature collection level. 
+        In those cases, the bbox property will be set on initial access.
+
+        """
+              
+        self.type = Polygon
+        self.n = len(polygons)
+        self.polygons = polygons
+        if bbox is None:
+            self._bbox = None
+        else:
+            self._bbox = bbox
+            
+    @property
+    def bbox(self):
+        if self._bbox is None:
+            print 'setting bounding box for FeatureCollection'
+            bboxes = np.array([self.polygons[p].bbox for p in self.polygons])
+            mins = bboxes.min(axis=0)
+            maxs = bboxes.max(axis=0)
+            self._bbox = [ mins[0], mins[1], maxs[2], maxs[3] ]
+        return self._bbox
+        
+    
+    def __getitem__(self, index):
+        return self.polygons[index]
+            
+
 
 
 _geoJSON_type_to_Pysal_type = {'point': Point, 'linestring': Chain,
