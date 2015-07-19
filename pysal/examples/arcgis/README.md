@@ -4,4 +4,7 @@ arcgis
 arcgis testing files
 --------------------
 
-Files used for internal testing
+* arcgis_ohio.dbf: spatial weights in ArcGIS DBF format.
+* arcgis_txt.txt: spatial weights in ArcGIS TXT format.
+
+Files used for internal testing.

@@ -4,11 +4,9 @@ juvenile
 Residences of juvenile offenders in Cardiff, UK
 -----------------------------------------------
 
- * juvenile.dbf attribute file
- * juvenile.gwt spatial weights
- * juvenile.shp shapefile
- * juvenile.shx spatial index
-
-Point data, unknown coordinates, n=168, k=3. 
+* juvenile.dbf: attribute data. (k=3)
+* juvenile.gwt: spatial weights in GWT format.
+* juvenile.shp: Point shapefile. (n=168)
+* juvenile.shx: spatial index.
 
 Source: http://geodacenter.org/downloads/data-files/juvenile.zip

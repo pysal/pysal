@@ -1,13 +1,11 @@
 10740
 =====
 
-Albuquerque Census 2000 Tract Data
-----------------------------------
+Albuquerque, New Mexico, Census 2000 Tract Data
+-----------------------------------------------
 
-Albuquerque, New Mexico, 2000 Census Tracts (n = 141)
-
-* 10740.dbf: attribute database file
-* 10740.shp: shapefile
-* 10740.shx: spatial index
-* 10740_queen.gal: queen contiguity GAL format
-* 10740_rook.gal: rook contiguity GAL format
+* 10740.dbf: attribute data. (k=5) 
+* 10740.shp: shapefile. (n=195)
+* 10740.shx: spatial index.
+* 10740_queen.gal: queen contiguity weights in GAL format.
+* 10740_rook.gal: rook contiguity weights in GAL format.
