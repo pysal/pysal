@@ -57,11 +57,11 @@ PySAL is available on the `Python Package Index
 downloaded and installed manually or from the command line using 
 `pip`, as follows::
 
- $ pip install pysal
+  pip install pysal
 
 Alternatively, grab the source distribution (.tar.gz) and decompress it to your selected destination. Open a command shell and navigate to the decompressed pysal folder. Type::
 
- $ python setup.py install
+  python setup.py install
 
 
 Development version on GitHub 
@@ -69,12 +69,12 @@ Development version on GitHub
 
 Developers can checkout PySAL using **git**::
 
- $ git clone https://github.com/pysal/pysal.git 
+  git clone https://github.com/pysal/pysal.git 
 
 Open a command shell and navigate to the cloned pysal
 directory. Type::
 
- $ python setup.py develop
+  python setup.py develop
 
 The 'develop' subcommand builds the modules in place 
 and modifies sys.path to include the code.
@@ -88,7 +88,7 @@ To test your setup, start a Python session and type::
 Keep up to date with pysal development by 'pulling' the latest
 changes::
 
- $ git pull
+  git pull
 
 Windows
 ~~~~~~~~
@@ -107,7 +107,7 @@ After cloning pysal, install it in develop mode so Python knows where to find it
 Open a command shell and navigate to the cloned pysal
 directory. Type::
 
- $ python setup.py develop
+  python setup.py develop
 
 To test your setup, start a Python session and type::
 
@@ -116,7 +116,7 @@ To test your setup, start a Python session and type::
 Keep up to date with pysal development by 'pulling' the latest
 changes::
 
- $ git pull
+  git pull
 
 
 Troubleshooting

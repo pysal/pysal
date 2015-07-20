@@ -19,13 +19,9 @@ __all__ = ["IntervalTree", "Grid", "BruteForcePointLocator",
 class IntervalTree:
     """
     Representation of an interval tree. An interval tree is a data structure which is used to
-    quickly determine which intervals in a set contain a value or overlap with a query interval.
+    quickly determine which intervals in a set contain a value or overlap with
+    a query interval. [DeBerg2008]_
 
-    References
-    ----------
-
-    de Berg, van Kreveld, Overmars, Schwarzkopf. Computational Geometry: Algorithms and Application.
-    212-217. Springer-Verlag, Berlin, 2000.
     """
 
     class _Node:

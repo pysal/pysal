@@ -21,7 +21,7 @@ class BaseGM_Lag(TSLS.BaseTSLS):
 
     """
     Spatial two stage least squares (S2SLS) (note: no consistency checks,
-    diagnostics or constant added); Anselin (1988) [1]_
+    diagnostics or constant added); Anselin (1988) [Anselin1988]_
 
     Parameters
     ----------
@@ -114,12 +114,6 @@ class BaseGM_Lag(TSLS.BaseTSLS):
     pfora1a2     : array
                    n(zthhthi)'varb
 
-    References
-    ----------
-
-    .. [1] Anselin, L. (1988) "Spatial Econometrics: Methods and Models".
-    Kluwer Academic Publishers. Dordrecht.
-
     Examples
     --------
 
@@ -187,7 +181,7 @@ class GM_Lag(BaseGM_Lag):
 
     """
     Spatial two stage least squares (S2SLS) with results and diagnostics; 
-    Anselin (1988) [1]_
+    Anselin (1988) [Anselin1988]_
 
     Parameters
     ----------
@@ -340,13 +334,6 @@ class GM_Lag(BaseGM_Lag):
                    Z'H(H'H)^-1
     pfora1a2     : array
                    n(zthhthi)'varb
-
-
-    References
-    ----------
-
-    .. [1] Anselin, L. (1988) "Spatial Econometrics: Methods and Models".
-    Kluwer Academic Publishers. Dordrecht.
 
 
     Examples

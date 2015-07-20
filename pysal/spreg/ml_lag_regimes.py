@@ -22,7 +22,7 @@ class ML_Lag_Regimes(BaseML_Lag, REGI.Regimes_Frame):
 
     """
     ML estimation of the spatial lag model with regimes (note no consistency 
-    checks, diagnostics or constants added); Anselin (1988) [1]_
+    checks, diagnostics or constants added); Anselin (1988) [Anselin1988]_
 
     Parameters
     ----------
@@ -217,13 +217,7 @@ class ML_Lag_Regimes(BaseML_Lag, REGI.Regimes_Frame):
                    across regimes.
                    Contains all attributes of each individual regression
 
-    References
-    ----------
-
-    .. [1] Anselin, L. (1988) "Spatial Econometrics: Methods and Models".
-    Kluwer Academic Publishers. Dordrecht.
-
-    Example
+    Examples
     ________
 
     Open data baltim.dbf using pysal and create the variables matrices and weights matrix.
@@ -317,7 +311,7 @@ class ML_Lag_Regimes(BaseML_Lag, REGI.Regimes_Frame):
         self.name_w = USER.set_name_w(name_w, w)
         USER.check_regimes(self.regimes_set, self.n, x.shape[1])
 
-# regime_err_sep is ignored, always False
+        # regime_err_sep is ignored, always False
 
         if regime_lag_sep == True:
             if not (set(cols2regi) == set([True]) and constant_regi == 'many'):
