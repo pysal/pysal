@@ -1,11 +1,12 @@
 language: python
+sudo: false
 branches:
 only:
   - master
 python:
-  - "2.7"
+  - 2.7
   #- "2.6"
-  #
+  # - 3.4
 env:
   - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ precise main universe"
   - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ trusty main universe"
@@ -14,18 +15,17 @@ virtualenv:
   system_site_packages: true
 
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libgeos-3.2.2 libgeos-dev python-numpy python-scipy
-  - sudo apt-add-repository "$SCIPY_VERSION"
-  - sudo apt-get update -qq
-  - sudo apt-get --only-upgrade install -qq python-numpy python-scipy
+  - wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+  - chmod +x miniconda.sh
+  - ./miniconda.sh -b
+  - export PATH=/home/travis/miniconda/bin:$PATH
+  - conda update --yes conda
+  - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION
+  - source activate test-env
 
 install:
-  - pip install -q -r travis.txt
-  #- sudo pip install http://sourceforge.net/projects/pychecker/files/pychecker/0.8.19/pychecker-0.8.19.tar.gz/download
-  - pip install coveralls
-  - pip install -I sphinx==1.2.3
-  - sudo rm -rf /dev/shm && sudo ln -s /run/shm /dev/shm
+  - conda install --yes numpy scipy nose pip
+  - pip install -r travis.txt
 
 script: 
   - python -c 'import numpy; print numpy.__version__'
