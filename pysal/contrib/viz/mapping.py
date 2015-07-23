@@ -656,7 +656,8 @@ lisa_lbls = {1: 'HH', 2: 'LH', 3: 'LL', 4: 'HL', \
              0: 'Non-significant'}
 
 def plot_lisa_cluster(shp_link, lisa, p_thres=0.01, shp_type='poly', 
-        title='', legend=True, savein=None, figsize=None, dpi=300, alpha=1.):
+        title='', legend=True, savein=None, figsize=None, dpi=300, alpha=1., 
+        leg_loc=0):
     '''
     Plot LISA cluster maps easily
     ...
@@ -687,6 +688,11 @@ def plot_lisa_cluster(shp_link, lisa, p_thres=0.01, shp_type='poly',
                       resolution of graphic file
     alpha           : float
                       [Optional. Default=0.4] Transparency of the map.
+    leg_loc         : int
+                      [Optional. Default=0] Location of legend. 0: best, 1:
+                      upper right, 2: upper left, 3: lower left, 4: lower
+                      right, 5: right, 6: center left, 7: center right, 8: lower
+                      center, 9: upper center, 10: center.
 
     Returns
     -------
@@ -708,7 +714,7 @@ def plot_lisa_cluster(shp_link, lisa, p_thres=0.01, shp_type='poly',
     # Legend
     if legend:
         boxes, labels = lisa_legend_components(lisa, p_thres)
-        plt.legend(boxes, labels, loc=0, fancybox=True)
+        plt.legend(boxes, labels, loc=leg_loc, fancybox=True)
     if title:
         ax.set_title(title)
     if savein:
