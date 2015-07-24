@@ -312,7 +312,8 @@ class TestGMCombo(unittest.TestCase):
        [  -6.07256915,    0.23801287,    0.0470161 ,    0.02809628],
        [  -1.91429117,    0.0470161 ,    0.03209242,    0.00314973],
        [  -8.97133162,    0.02809628,    0.00314973,    0.21575363]])
-        np.testing.assert_array_almost_equal(reg.vm,vm,4)
+        #np.testing.assert_array_almost_equal(reg.vm,vm,4)
+        np.testing.assert_allclose(reg.vm, vm, rtol=1e-05)
         sig2 = 181.78650186468832
         self.assertAlmostEqual(reg.sig2,sig2,4)
         pr2 = 0.3018280166937799
