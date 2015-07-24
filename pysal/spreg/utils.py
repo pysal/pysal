@@ -34,9 +34,23 @@ class RegressionPropsY(object):
 
     """
 
+#I think all this caching stuff could get rewritten into a decorator of some kind. 
+# def cache_propset(func, val=default):
+#   def getset(self):
+#       try to get cached value
+#       if cache doesnt exist, init cache[func] @ val
+#       if cache exists but func doesn't, init cache[func] @ val
+#       return cache[func]
+#   return property(func)
+
     @property
     def mean_y(self):
-        if 'mean_y' not in self._cache:
+        try:
+            return self._cache['mean_y']
+        except AttributeError:
+            self._cache = {}
+            self._cache['mean_y'] = np.mean(self.y)
+        except KeyError:
             self._cache['mean_y'] = np.mean(self.y)
         return self._cache['mean_y']
     
@@ -52,8 +66,13 @@ class RegressionPropsY(object):
 
     @property
     def std_y(self):
-        if 'std_y' not in self._cache:
-            self._cache['std_y'] = np.std(self.y, ddof=1)
+        try:
+            return self._cache['mean_y']
+        except AttributeError:
+            self._cache = {}
+            self._cache['mean_y'] = np.std(self.y, ddof=1)
+        except KeyError:
+            self._cache['mean_y'] = np.std(self.y, ddof=1)
         return self._cache['std_y']
     
     @std_y.setter
