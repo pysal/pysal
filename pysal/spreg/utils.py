@@ -67,12 +67,12 @@ class RegressionPropsY(object):
     @property
     def std_y(self):
         try:
-            return self._cache['mean_y']
+            return self._cache['std_y']
         except AttributeError:
             self._cache = {}
-            self._cache['mean_y'] = np.std(self.y, ddof=1)
+            self._cache['std_y'] = np.std(self.y, ddof=1)
         except KeyError:
-            self._cache['mean_y'] = np.std(self.y, ddof=1)
+            self._cache['std_y'] = np.std(self.y, ddof=1)
         return self._cache['std_y']
     
     @std_y.setter
