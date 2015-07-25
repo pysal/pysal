@@ -30,9 +30,9 @@ class TestMLError(unittest.TestCase):
         predy = np.array([ 6.92258051])
         np.testing.assert_array_almost_equal(reg.predy[0],predy,4)
         n = 1412
-        self.assertAlmostEqual(reg.n,n,4)
+        np.allclose(reg.n,n,4)
         k = 5
-        self.assertAlmostEqual(reg.k,k,4)
+        np.allclose(reg.k,k,4)
         y = np.array([ 0.94608274])
         np.testing.assert_array_almost_equal(reg.y[0],y,4)
         x = np.array([ 1.        , -0.39902838,  0.89645344,  6.85780705,  7.2636377 ])
@@ -40,16 +40,16 @@ class TestMLError(unittest.TestCase):
         e = np.array([-4.92843327])
         np.testing.assert_array_almost_equal(reg.e_filtered[0],e,4)
         my = 9.5492931620846928
-        self.assertAlmostEqual(reg.mean_y,my)
+        np.allclose(reg.mean_y,my)
         sy = 7.0388508798387219
-        self.assertAlmostEqual(reg.std_y,sy)
+        np.allclose(reg.std_y,sy)
         vm = np.array([ 1.06476526,  0.05548248,  0.04544514,  0.00614425,  0.01481356,
         0.00143001])
         np.testing.assert_array_almost_equal(reg.vm.diagonal(),vm,4)
         sig2 = [ 32.40685441]
-        self.assertAlmostEqual(reg.sig2,sig2,4)
+        np.allclose(reg.sig2,sig2,4)
         pr2 = 0.3057664820364818
-        self.assertAlmostEqual(reg.pr2,pr2)
+        np.allclose(reg.pr2,pr2)
         std_err = np.array([ 1.03187463,  0.23554719,  0.21317867,  0.07838525,  0.12171098,
         0.03781546])
         np.testing.assert_array_almost_equal(reg.std_err,std_err,4)
@@ -61,11 +61,11 @@ class TestMLError(unittest.TestCase):
  (7.9088780724028922, 2.5971882547279339e-15)]
         np.testing.assert_array_almost_equal(reg.z_stat,z_stat,4)
         logll = -4471.407066887894
-        self.assertAlmostEqual(reg.logll,logll,4)
+        np.allclose(reg.logll,logll,4)
         aic = 8952.8141337757879
-        self.assertAlmostEqual(reg.aic,aic,4)
+        np.allclose(reg.aic,aic,4)
         schwarz = 8979.0779458660545
-        self.assertAlmostEqual(reg.schwarz,schwarz,4)
+        np.allclose(reg.schwarz,schwarz,4)
 
 if __name__ == '__main__':
     unittest.main()
