@@ -6,7 +6,7 @@ only:
 python:
   - 2.7
   #- "2.6"
-  # - 3.4
+  - 3.4
 env:
   - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ precise main universe"
   - SCIPY_VERSION="deb http://us.archive.ubuntu.com/ubuntu/ trusty main universe"
