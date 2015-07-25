@@ -56,9 +56,9 @@ class TestMLError(unittest.TestCase):
         predy = np.array([ 16.53400991])
         np.allclose(reg.predy[0],predy,4)
         n = 211
-        self.assertAlmostEqual(reg.n,n,4)
+        np.allclose(reg.n,n,4)
         k = 8
-        self.assertAlmostEqual(reg.k,k,4)
+        np.allclose(reg.k,k,4)
         y = np.array([ 47.])
         np.allclose(reg.y[0],y,4)
         x = np.array([   1.  ,    4.  ,  148.  ,   11.25,    0.  ,    0.  ,    0.  ,    0.  ])
@@ -66,32 +66,32 @@ class TestMLError(unittest.TestCase):
         e = np.array([ 34.69181334])
         np.allclose(reg.e_filtered[0],e,4)
         my = 44.307180094786695
-        self.assertAlmostEqual(reg.mean_y,my)
+        np.allclose(reg.mean_y,my)
         sy = 23.606076835380495
-        self.assertAlmostEqual(reg.std_y,sy)
+        np.allclose(reg.std_y,sy)
         vm = np.array([ 58.50551173,   2.42952002,   0.00721525,   0.06391736,
         80.59249161,   3.1610047 ,   0.0119782 ,   0.0499432 ,   0.00502785])
         np.allclose(reg.vm.diagonal(),vm,4)
         sig2 = np.array([[ 209.60639741]])
-        self.assertAlmostEqual(reg.sig2,sig2,4)
+        np.allclose(reg.sig2,sig2,4)
         pr2 = 0.43600837301477025
-        self.assertAlmostEqual(reg.pr2,pr2)
+        np.allclose(reg.pr2,pr2)
         std_err = np.array([ 7.64888957,  1.55869177,  0.08494262,  0.25281882,  8.9773321 ,
         1.77792146,  0.10944497,  0.22347975,  0.07090735])
         np.allclose(reg.std_err,std_err,4)
         logll = -870.3331059537576
-        self.assertAlmostEqual(reg.logll,logll,4)
+        np.allclose(reg.logll,logll,4)
         aic = 1756.6662119075154
-        self.assertAlmostEqual(reg.aic,aic,4)
+        np.allclose(reg.aic,aic,4)
         schwarz = 1783.481076975324
-        self.assertAlmostEqual(reg.schwarz,schwarz,4)
+        np.allclose(reg.schwarz,schwarz,4)
         chow_r = np.array([[ 8.40437046,  0.0037432 ],
        [ 0.64080535,  0.42341932],
        [ 2.25389396,  0.13327865],
        [ 1.96544702,  0.16093197]])
         np.allclose(reg.chow.regi,chow_r,4)
         chow_j = 25.367913028011799
-        self.assertAlmostEqual(reg.chow.joint[0],chow_j,4)
+        np.allclose(reg.chow.joint[0],chow_j,4)
 
     def test_model2(self):
         reg = ML_Error_Regimes(self.y,self.x,self.regimes,w=self.w,name_y=self.y_name,name_x=self.x_names,\
@@ -124,7 +124,7 @@ class TestMLError(unittest.TestCase):
        [ 12.18358581,   0.00048212]])
         np.allclose(reg.chow.regi,chow_r,4)
         chow_j = 26.673798071789673
-        self.assertAlmostEqual(reg.chow.joint[0],chow_j,4)
+        np.allclose(reg.chow.joint[0],chow_j,4)
         #Artficial:
         model = ML_Error_Regimes(self.y_a, self.x_a, self.regi_a, w=self.w_a, regime_err_sep=True)
         model1 = ML_Error(self.y_a[0:(self.n2)].reshape((self.n2),1), self.x_a[0:(self.n2)], w=self.w_a1)
