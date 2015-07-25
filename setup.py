@@ -112,7 +112,8 @@ def setup_package():
         packages=find_packages(exclude=[".meta", "*.meta.*", "meta.*",
                                         "meta"]),
         package_data={'pysal': list(example_data_files)},
-        requires=['scipy']
+        requires=['scipy'],
+        use2to3=True
     )
 
 
