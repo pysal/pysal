@@ -206,8 +206,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
             self._cache['vm'] = np.dot(self.sig2, self.varb)
         except KeyError:
             self._cache['vm'] = np.dot(self.sig2, self.varb)
-        finally:
-            return self._cache['vm']
+        return self._cache['vm']
 
     @vm.setter
     def vm(self, val):
