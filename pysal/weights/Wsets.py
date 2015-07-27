@@ -530,4 +530,71 @@ def w_clip(w1, w2, outSP=True, silent_island_warning=False):
         wc = pysal.weights.WSP2W(wc, silent_island_warning=silent_island_warning)
     return wc
 
+def w_stitch(ws, silent_island_warning=False):
+    '''
+    Generate a weights object, `w`, that stacks every elements of `ws`
+    in the passed index and connects each observation with its original
+    neighbors across `back` 
+    
+    ...
+
+    Arguments
+    ---------
+    ws                      : list
+                              Sequence of `ps.W` objects to be stitched
+    silent_island_warning   : boolean
+                              Switch to turn off (default on) print statements
+                              for every observation with islands
+
+    Returns
+    -------
+    w                       : W
+                              Resulting `ps.W` object
+
+    Notes
+    -----
+    The resulting `w` contains the original indices, converted to strings if
+    necessary and preceded by 'X-', where X is the order of the original `W`
+    object in `ws`.
+
+    IMPORTANT: Weights are copied from the original weights object and do not
+    have any further check. Make sure you do not pass standardized weights!
+
+    Examples
+    --------
+
+    Build the weights for a standard lattice:
+
+    >>> import pysal as ps
+    >>> w = ps.lat2W(3, 3)
+    >>> w.n
+    9
+    >>> w[0]
+    {1: 1.0, 3: 1.0}
+    >>>
+
+    Stack it three times, so we obtain a resulting matrix that is three
+    repetitions of `w`:
+
+    >>> w_stacked = w_stack([w, w, w])
+    >>> w_stacked.n
+    27
+    >>> w_stacked['0-0']
+    {'0-1': 1.0, '0-3': 1.0}
+    >>>
+    '''
+    out_neigh = {}
+    out_weigh = {}
+    out_ids = []
+    for i, w in enumerate(ws):
+        for el in w.neighbors:
+            out_neigh['%i-%s'%(i, str(el))] = ['%i-%s'%(i, str(j)) \
+                                            for j in w.neighbors[el]]
+            out_weigh['%i-%s'%(i, str(el))] = w.weights[el]
+        wid = ['%i-%s'%(i, str(j)) for j in w.id_order]
+        out_ids.extend(wid)
+    outW = ps.W(out_neigh, out_weigh, id_order=out_ids, \
+            silent_island_warning=silent_island_warning) 
+    return outW
+
 
