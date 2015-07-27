@@ -597,4 +597,37 @@ def w_stitch(ws, silent_island_warning=False):
             silent_island_warning=silent_island_warning) 
     return outW
 
+def w_stack_sp(ws, outSP=True, silent_island_warning=False):
+    '''
+    LEGACY: included only for legacy, it performs significantly worse than the
+    `W`-based method `w_stack`
+
+    Sparse source: http://wiki.scipy.org/Wiki/SciPyPackages/Sparse
+    '''
+    ns = [w.n for w in ws]
+    n = np.sum(ns)
+    out = lil_matrix((n, n), dtype=int)
+    out_ids = []
+    for i in range(len(ws)):
+        w = ws[i]
+        w_n = ns[i]
+
+        if not w.id_order:
+            w.id_order = np.arange(w.n)
+        wid = ['%i-%s'%(i, str(j)) for j in w.id_order]
+        out_ids.extend(wid)
+
+        if not isspmatrix_csr(w):
+            w = w.sparse
+        w = w.tolil()
+        beg = np.sum(ns[:i]).astype(int)
+        out[beg:beg+w_n, beg:beg+w_n] = w
+    out = ps.weights.WSP(out.tocsr(), id_order=out_ids)
+    if outSP:
+        return out
+    else:
+        out = ps.weights.WSP2W(out, \
+                silent_island_warning=silent_island_warning)
+        return out
+
 
