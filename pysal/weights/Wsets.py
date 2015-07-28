@@ -530,11 +530,11 @@ def w_clip(w1, w2, outSP=True, silent_island_warning=False):
         wc = pysal.weights.WSP2W(wc, silent_island_warning=silent_island_warning)
     return wc
 
-def w_stitch(ws, silent_island_warning=False):
+
+def w_stack(ws, silent_island_warning=False):
     '''
-    Generate a weights object, `w`, that stacks every elements of `ws`
-    in the passed index and connects each observation with its original
-    neighbors across `back` 
+    Generate a weights object, `w`, that stacks every element of `ws`
+    in the passed index 
     
     ...
 
@@ -545,12 +545,6 @@ def w_stitch(ws, silent_island_warning=False):
     silent_island_warning   : boolean
                               Switch to turn off (default on) print statements
                               for every observation with islands
-    back                    : int
-                              [Optional. Default=0] Number of periods an
-                              observation is connected backwards.
-    forth                   : int
-                              [Optional. Default=0] Number of periods an
-                              observation is connected forwards.
 
     Returns
     -------
@@ -582,9 +576,11 @@ def w_stitch(ws, silent_island_warning=False):
     Stack it three times, so we obtain a resulting matrix that is three
     repetitions of `w`:
 
-    >>> w_stacked = w_stack([w, w, w])
+    >>> w_stacked = ps.weights.Wsets.w_stack([w, w, w])
     >>> w_stacked.n
     27
+    >>> w_stacked.id_order
+    ['0-0', '0-1', '0-2', '0-3', '0-4', '0-5', '0-6', '0-7', '0-8', '1-0', '1-1', '1-2', '1-3', '1-4', '1-5', '1-6', '1-7', '1-8', '2-0', '2-1', '2-2', '2-3', '2-4', '2-5', '2-6', '2-7', '2-8']
     >>> w_stacked['0-0']
     {'0-1': 1.0, '0-3': 1.0}
     >>>
@@ -599,7 +595,259 @@ def w_stitch(ws, silent_island_warning=False):
             out_weigh['%i-%s'%(i, str(el))] = w.weights[el]
         wid = ['%i-%s'%(i, str(j)) for j in w.id_order]
         out_ids.extend(wid)
-    outW = ps.W(out_neigh, out_weigh, id_order=out_ids, \
+    outW = pysal.W(out_neigh, out_weigh, id_order=out_ids, \
             silent_island_warning=silent_island_warning) 
     return outW
+
+
+def w_stitch(ws, back=0, forth=0, silent_island_warning=False):
+    '''
+    Generate a space-time weights object, `w`, that stacks a sequence of
+    weights stored in `ws` and connects each observation with its contemporary
+    neighbors across `back` and `forth` steps (in the `ws` order)
+    
+    ...
+
+    Arguments
+    ---------
+    ws                      : list
+                              Sequence of `ps.W` objects to be stitched
+                              for every observation with islands
+    back                    : int
+                              [Optional. Default=0] Number of periods an
+                              observation is connected backwards.
+    forth                   : int
+                              [Optional. Default=0] Number of periods an
+                              observation is connected forwards.
+    silent_island_warning   : boolean
+                              Switch to turn off (default on) print statements
+
+    Returns
+    -------
+    w                       : W
+                              Resulting `ps.W` object
+
+    Notes
+    -----
+    Every weights matrix in `ws` is assumed to represent a cross-section of
+    the same geography and hence to be indexed on the same IDs. These IDs are
+    used to connect an observation with its contemporary neighbors across
+    `back` periods backwards and `forth` periods forward. In the head and tail
+    cases, the observation is only connected as many periods as allowed. See
+    examples for a practical. 
+
+    The resulting `w` contains the original indices, converted to strings if
+    necessary and preceded by 'X-', where X is the order of the original `W`
+    object in `ws`.
+
+    IMPORTANT: Weights are copied from the original weights object and do not
+    have any further check. Make sure you do not pass standardized weights!
+
+    Examples
+    --------
+
+    Build the weights for a standard lattice:
+
+    >>> import pysal as ps
+    >>> w = ps.lat2W(3, 3)
+    >>> w.n
+    9
+    >>> w[0]
+    {1: 1.0, 3: 1.0}
+    >>>
+
+    Let us stitch a sequence composed of `w` three times and connect
+    observations with its neighbors one period back in time:
+
+    >>> w_stitched1b = ps.weights.Wsets.w_stitch([w]*3, back=1)
+
+    First, we can check that the order of the observations is created as
+    estipulated:
+
+    >>> w_stitched1b.id_order
+    ['0-0', '0-1', '0-2', '0-3', '0-4', '0-5', '0-6', '0-7', '0-8', '1-0', '1-1', '1-2', '1-3', '1-4', '1-5', '1-6', '1-7', '1-8', '2-0', '2-1', '2-2', '2-3', '2-4', '2-5', '2-6', '2-7', '2-8']
+
+    Observation 0 in the same period has a new id but has the same neighbors
+    as before as there are no backward neighbors to "stitch" it to:
+
+    >>> w_stitched1b['0-0']
+    {'0-1': 1.0, '0-3': 1.0}
+
+    However, the same observation, in the second period is connected to its
+    contemporary neighbors, but also to its neighbors one period before:
+
+    >>> w_stitched1b['1-0']
+    {'0-1': 1.0, '0-3': 1.0, '1-1': 1.0, '1-3': 1.0}
+
+    Now let's stitch the same sequence one period back and one period forward:
+
+    >>> w_stitched1b1f = ps.weights.Wsets.w_stitch([w]*3, back=1, forth=1)
+
+    The logic applies equally, so both the first and last time periods are
+    stitched only when possible:
+
+    >>> w_stitched1b1f['0-0']
+    {'0-1': 1.0, '0-3': 1.0, '1-1': 1.0, '1-3': 1.0}
+    >>> w_stitched1b1f['2-0']
+    {'1-1': 1.0, '1-3': 1.0, '2-1': 1.0, '2-3': 1.0}
+
+    But the observations in the middle period are stitched both back and
+    forth:
+
+    >>> w_stitched1b1f['1-0']
+    {'0-1': 1.0, '0-3': 1.0, '1-1': 1.0, '1-3': 1.0, '2-1': 1.0, '2-3': 1.0}
+    '''
+    out_neigh = {}
+    out_weigh = {}
+    out_ids = []
+    for i, w in enumerate(ws):
+        for el in w.neighbors:
+            # Contemporary neighbors
+            out_neigh['%i-%s'%(i, str(el))] = ['%i-%s'%(i, str(j)) \
+                                            for j in w.neighbors[el]]
+            out_weigh['%i-%s'%(i, str(el))] = w.weights[el]
+            # Backward neighbors
+            for t in range(1, back+1):
+                if i-t in range(len(ws)):
+                    wt = ws[i-t]
+                    back_neigh = ['%i-%s'%(i-t, str(j)) \
+                                for j in wt.neighbors[el]]
+                    back_weigh = wt.weights[el]
+                    out_neigh['%i-%s'%(i, str(el))] += back_neigh
+                    out_weigh['%i-%s'%(i, str(el))] += back_weigh
+            # Forward neighbors
+            for t in range(1, forth+1):
+                if i+t in range(len(ws)):
+                    wt = ws[i+t]
+                    forth_neigh = ['%i-%s'%(i+t, str(j)) \
+                                for j in wt.neighbors[el]]
+                    forth_weigh = wt.weights[el]
+                    out_neigh['%i-%s'%(i, str(el))] += forth_neigh
+                    out_weigh['%i-%s'%(i, str(el))] += forth_weigh
+        wid = ['%i-%s'%(i, str(j)) for j in w.id_order]
+        out_ids.extend(wid)
+    outW = pysal.W(out_neigh, out_weigh, id_order=out_ids, \
+            silent_island_warning=silent_island_warning) 
+    return outW
+
+
+def w_stitch_single(w, t, back=0, forth=0, silent_island_warning=False):
+    '''
+    Generate a space-time weights object, `w`, that stacks the weights matrix
+    (`w`) `t` number of times and connects each observation with its
+    contemporary neighbors across `back` and `forth` steps
+    
+    ...
+
+    Arguments
+    ---------
+    w                       : W
+                              Weights matrix to be replicated over `t`
+                              periods.
+    t                       : int
+                              Number of periods to replicate `w` over.
+    back                    : int
+                              [Optional. Default=0] Number of periods an
+                              observation is connected backwards.
+    forth                   : int
+                              [Optional. Default=0] Number of periods an
+                              observation is connected forwards.
+    silent_island_warning   : boolean
+                              Switch to turn off (default on) print statements
+
+    Returns
+    -------
+    w_out                   : W
+                              Resulting `ps.W` object
+
+    Notes
+    -----
+    This is a more memory efficient version of `w_stitch` for the particular
+    case in which the geography in every period is the same.
+
+    The resulting `w` contains the original indices, converted to strings if
+    necessary and preceded by 'X-', where X is the order of the original `W`
+    object in `ws`.
+
+    IMPORTANT: Weights are copied from the original weights object and do not
+    have any further check. Make sure you do not pass standardized weights!
+
+    Examples
+    --------
+
+    Build the weights for a standard lattice:
+
+    >>> import pysal as ps
+    >>> w = ps.lat2W(3, 3)
+    >>> w.n
+    9
+    >>> w[0]
+    {1: 1.0, 3: 1.0}
+    >>>
+
+    Let us stitch `w` over three periods without any connection:
+
+    >>> w_stitched = ps.weights.Wsets.w_stitch_single(w, 3)
+
+    First, we can check tha the order of the observations is created as
+    estipulated:
+
+    >>> w_stitched.id_order
+    ['0-0', '0-1', '0-2', '0-3', '0-4', '0-5', '0-6', '0-7', '0-8', '1-0', '1-1', '1-2', '1-3', '1-4', '1-5', '1-6', '1-7', '1-8', '2-0', '2-1', '2-2', '2-3', '2-4', '2-5', '2-6', '2-7', '2-8']
+
+    Observation 0 in the same period has a new id but has the same neighbors
+    as before:
+
+    >>> w_stitched['0-0']
+    {'0-1': 1.0, '0-3': 1.0}
+ 
+    Now let's stitch the same sequence one period back and one period forward:
+
+    >>> w_stitched1b1f = ps.weights.Wsets.w_stitch_single(w, 3, back=1, forth=1)
+
+    The logic applies equally, so both the first and last time periods are
+    stitched only when possible:
+
+    >>> w_stitched1b1f['0-0']
+    {'0-1': 1.0, '0-3': 1.0, '1-1': 1.0, '1-3': 1.0}
+    >>> w_stitched1b1f['2-0']
+    {'1-1': 1.0, '1-3': 1.0, '2-1': 1.0, '2-3': 1.0}
+
+    But the observations in the middle period are stitched both back and
+    forth:
+
+    >>> w_stitched1b1f['1-0']
+    {'0-1': 1.0, '0-3': 1.0, '1-1': 1.0, '1-3': 1.0, '2-1': 1.0, '2-3': 1.0}
+    '''
+    out_neigh = {}
+    out_weigh = {}
+    out_ids = []
+    for i in range(t):
+        for el in w.neighbors:
+            # Contemporary neighbors
+            out_neigh['%i-%s'%(i, str(el))] = ['%i-%s'%(i, str(j)) \
+                                            for j in w.neighbors[el]]
+            out_weigh['%i-%s'%(i, str(el))] = w.weights[el]
+            # Backward neighbors
+            for tb in range(1, back+1):
+                if i-tb in range(t):
+                    back_neigh = ['%i-%s'%(i-tb, str(j)) \
+                                for j in w.neighbors[el]]
+                    back_weigh = w.weights[el]
+                    out_neigh['%i-%s'%(i, str(el))] += back_neigh
+                    out_weigh['%i-%s'%(i, str(el))] += back_weigh
+            # Forward neighbors
+            for tf in range(1, forth+1):
+                if i+tf in range(t):
+                    forth_neigh = ['%i-%s'%(i+tf, str(j)) \
+                                for j in w.neighbors[el]]
+                    forth_weigh = w.weights[el]
+                    out_neigh['%i-%s'%(i, str(el))] += forth_neigh
+                    out_weigh['%i-%s'%(i, str(el))] += forth_weigh
+        wid = ['%i-%s'%(i, str(j)) for j in w.id_order]
+        out_ids.extend(wid)
+    outW = pysal.W(out_neigh, out_weigh, id_order=out_ids, \
+            silent_island_warning=silent_island_warning) 
+    return outW
+
 
