@@ -9,7 +9,7 @@ PySAL Release Management
 Prepare the release
 -------------------
 
-- Check all tests pass.
+- Check all tests pass. See :doc:`testing`.
 - Update CHANGELOG::
 
      $ python tools/github_stats.py >> chglog

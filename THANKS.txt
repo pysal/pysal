@@ -12,21 +12,27 @@ Luc Anselin
 Daniel Arribas-Bel
 David C. Folch
 Myunghwa Hwang
+Wei Kang
+Marynia Kolak
 Julia Koschinsky
 Jason Laura
 Xun Li
 Nicholas Malizia
 Mark McCann
+Taylor Oshan
 Serge Rey
 Charles R. Schmidt
 Philip Stephens
 Bohumil Svoma
 Ran Wei
 Andrew Winslow
+Levi Wolf
 Jing Yao
 Xinyue Ye
 
 Funding from the following sources has supported PySAL development:
+
+National Science Foundation New Approaches for Spatial Distribution Dynamics
 
 National Science Foundation CyberGIS Software Integration for Sustained Geospatial Innovation
 
