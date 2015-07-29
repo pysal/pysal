@@ -20,7 +20,7 @@ with open('README.txt') as file:
 
 MAJOR = 1
 MINOR = 10
-MICRO = 1
+MICRO = 0
 ISRELEASED = False
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
