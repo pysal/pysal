@@ -592,7 +592,8 @@ def w_stack(ws, silent_island_warning=False):
         for el in w.neighbors:
             out_neigh['%i-%s'%(i, str(el))] = ['%i-%s'%(i, str(j)) \
                                             for j in w.neighbors[el]]
-            out_weigh['%i-%s'%(i, str(el))] = w.weights[el]
+            out_weigh['%i-%s'%(i, str(el))] = []
+            out_weigh['%i-%s'%(i, str(el))] += w.weights[el]
         wid = ['%i-%s'%(i, str(j)) for j in w.id_order]
         out_ids.extend(wid)
     outW = pysal.W(out_neigh, out_weigh, id_order=out_ids, \
@@ -705,7 +706,8 @@ def w_stitch(ws, back=0, forth=0, silent_island_warning=False):
             # Contemporary neighbors
             out_neigh['%i-%s'%(i, str(el))] = ['%i-%s'%(i, str(j)) \
                                             for j in w.neighbors[el]]
-            out_weigh['%i-%s'%(i, str(el))] = w.weights[el]
+            out_weigh['%i-%s'%(i, str(el))] = []
+            out_weigh['%i-%s'%(i, str(el))] += w.weights[el]
             # Backward neighbors
             for t in range(1, back+1):
                 if i-t in range(len(ws)):
@@ -827,7 +829,8 @@ def w_stitch_single(w, t, back=0, forth=0, silent_island_warning=False):
             # Contemporary neighbors
             out_neigh['%i-%s'%(i, str(el))] = ['%i-%s'%(i, str(j)) \
                                             for j in w.neighbors[el]]
-            out_weigh['%i-%s'%(i, str(el))] = w.weights[el]
+            out_weigh['%i-%s'%(i, str(el))] = []
+            out_weigh['%i-%s'%(i, str(el))] += w.weights[el]
             # Backward neighbors
             for tb in range(1, back+1):
                 if i-tb in range(t):
