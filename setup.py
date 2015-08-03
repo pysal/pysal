@@ -86,7 +86,6 @@ def setup_package():
                                         "meta"]),
         package_data={'pysal': list(example_data_files)},
         requires=['scipy'],
-        use2to3=True,
         cmdclass= {'build_py': build_py}
     )
 
