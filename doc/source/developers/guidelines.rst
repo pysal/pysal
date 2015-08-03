@@ -56,24 +56,9 @@ Release Schedule
 PySAL development follows a six-month release schedule that is aligned with
 the academic calendar.
 
-1.10 Cycle
-=========
-
-========   ========   ================= ====================================================
-Start      End        Phase             Notes
-========   ========   ================= ====================================================
-2/1/15      2/14/15   Module Proposals  Developers draft PEPs and prototype
-2/15/15     2/15/15   Developer vote    All developers vote on PEPs 
-2/16/15     2/16/15   Module Approval   BDFL announces final approval
-2/17/15     6/30/15   Development       Implementation and testing of approved modules
-7/1/15      7/27/15   Code Freeze       APIs fixed, bug and testing changes only
-7/23/15     7/30/15   Release Prep      Test release builds, updating svn 
-7/31/15     7/31/15   Release           Official release of 1.10
-========   ========   ================= ====================================================
-
 
 1.11 Cycle
-=========
+==========
 
 ========   ========   ================= ====================================================
 Start      End        Phase             Notes
@@ -87,14 +72,26 @@ Start      End        Phase             Notes
 1/31/16     1/31/16   Release           Official release of 1.11
 ========   ========   ================= ====================================================
 
+1.12 Cycle
+==========
+
+========   ========   ================= ====================================================
+Start      End        Phase             Notes
+========   ========   ================= ====================================================
+2/1/16      2/14/16   Module Proposals  Developers draft PEPs and prototype
+2/15/16     2/15/16   Developer vote    All developers vote on PEPs 
+2/16/16     2/16/16   Module Approval   BDFL announces final approval
+2/17/16     6/30/16   Development       Implementation and testing of approved modules
+7/1/16      7/27/16   Code Freeze       APIs fixed, bug and testing changes only
+7/23/16     7/30/16   Release Prep      Test release builds, updating svn 
+7/31/16     7/31/16   Release           Official release of 1.12
+========   ========   ================= ====================================================
 
 
 
-
-
------------------------
+----------
 Governance
------------------------
+----------
 
 PySAL is organized around the Benevolent Dictator for Life (BDFL) model of project management.
 The BDFL is responsible for overall project management and direction. Developers have a critical role in shaping that

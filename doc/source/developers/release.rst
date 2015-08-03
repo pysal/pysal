@@ -9,7 +9,8 @@ PySAL Release Management
 Prepare the release
 -------------------
 
-- Check all tests pass.
+- Create a branch_.
+- Check all tests pass. See :doc:`testing`.
 - Update CHANGELOG::
 
      $ python tools/github_stats.py >> chglog
@@ -21,29 +22,34 @@ Prepare the release
 - Change the docs version from X.xdev to X.x by editing doc/source/conf.py in two places.
 - Change docs/index.rst to update Stable version and date, and Development version
 - Commit all changes.
+- Push_ your branch up to your GitHub repos
+- On github issue a pull request. Add a comment that this is for release.
+
 
 Tag 
 ---
 
-Make the Tag::
+With version 1.10 we changed the way the tags are created to reflect our
+policy_ of not pushing directly to upstream.
 
-  $ git tag -a v1.4 -m 'my version 1.4'
+After you have issued a pull request, the project maintainer can `create the release`_ on GitHub. 
 
-  $ git push upstream v1.4
-
-On each build machine, clone and checkout the newly created tag::
-
-  $ git clone http://github.com/pysal/pysal.git
-  $ git fetch --tags
-  $ git checkout v1.4
 
 Make docs
 ---------
 
-As of verison 1.6, docs are automatically compiled and hosted_.
+As of version 1.6, docs are automatically compiled and hosted_.
 
 Make and Upload distributions
 -------------------------------
+
+On each build machine, clone and checkout the newly created tag (assuming that
+is `v1.10` in what follows)::
+
+  $ git clone http://github.com/pysal/pysal.git
+  $ cd pysal
+  $ git fetch --tags
+  $ git checkout v1.10
 
 - Make and upload_ to the Python Package Index in one shot!::
 
@@ -91,3 +97,7 @@ to  announce the release.
 .. _registered: http://docs.python.org/2.7/distutils/packageindex.html
 .. _source: http://docs.python.org/distutils/sourcedist.html
 .. _hosted: http://pysal.readthedocs.org
+.. _branch: https://github.com/pysal/pysal/wiki/GitHub-Standard-Operating-Procedures
+.. _policy: https://github.com/pysal/pysal/wiki/Example-git-config
+.. _create the release: https://help.github.com/articles/creating-releases/
+.. _Push: https://github.com/pysal/pysal/wiki/GitHub-Standard-Operating-Procedures
