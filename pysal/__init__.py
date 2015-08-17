@@ -41,11 +41,11 @@ import pysal.cg
 import pysal.core
 
 from pysal.version import version
-from pysal.version import stable_release_date
-import urllib2, json
-import config
-import datetime
-import os, sys
+#from pysal.version import stable_release_date
+#import urllib2, json
+#import config
+#import datetime
+#import os, sys
 
 # toplevel imports to be explicit
 from pysal.esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local
@@ -100,6 +100,7 @@ MISSINGVALUE = None  # used by fileIO to flag missing values.
 
 # Load stale and other possible messages at import
 
+"""
 base_path = os.path.split(pysal.__file__)[0]
 config_path = os.path.join(base_path, 'config.py')
 
@@ -134,11 +135,11 @@ def check_version():
     if today - delta > stable_release_date:
 	    print("Your version of PySAL is %d days old.") % diff 
 	    print("There have likely been %d new release(s).") % releases 
-	    query_yes_no("Disable this check? [Y/n]")
+	    print("Suppress this by setting check_stable=False in config.py.")  
+	    #query_yes_no("Disable this check? [Y/n]")
     else:
         pass
 
-"""
 def check_remote_version():
     print("Checking web for last stable release....")
     try:
@@ -150,9 +151,9 @@ def check_remote_version():
         print(late)
     except:
         print("Machine is offline. I am unable to check for the latest version of PySAL")
-"""
 
 if config.check_stable:
     check_version()
 else:
     pass
+"""
