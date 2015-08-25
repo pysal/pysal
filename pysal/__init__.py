@@ -83,7 +83,7 @@ from pysal.core.util.weight_converter import weight_convert
 import pysal.spreg
 import pysal.examples
 from pysal.network.network import Network, NetworkG, NetworkK, NetworkF
-
+import pysal.check
 
 # Load the IOHandlers
 from pysal.core import IOHandlers
