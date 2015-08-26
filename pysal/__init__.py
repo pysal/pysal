@@ -84,7 +84,7 @@ import pysal.spreg
 import pysal.examples
 from pysal.network.network import Network, NetworkG, NetworkK, NetworkF
 import pysal.check
-
+import pysal.spint
 # Load the IOHandlers
 from pysal.core import IOHandlers
 # Assign pysal.open to dispatcher
