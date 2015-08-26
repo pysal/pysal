@@ -8,7 +8,7 @@ import unittest
 import numpy as np
 from pysal.check import safe_pandas
 
-pd = safe_pandas()
+pd = safe_pandas(silent=True)
 
 from pysal.spint import gravity as grav
 

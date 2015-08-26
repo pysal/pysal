@@ -21,7 +21,7 @@ Wilson, A. G. (1967). A statistical theory of spatial distribution models.
 __author__ = "Taylor Oshan tayoshan@gmail.com"
 
 from pysal.check import safe_pandas
-pd = safe_pandas()
+pd = safe_pandas(silent=True)
 import numpy as np
 from scipy.stats.stats import pearsonr
 import gravity as gv
