@@ -6,8 +6,11 @@ __author__ = 'toshan'
 
 import unittest
 import numpy as np
-import pandas as pd
-import gravity as grav
+from pysal.check import safe_pandas
+
+pd = safe_pandas(silent=True)
+
+from pysal.spint import gravity as grav
 
 
 
