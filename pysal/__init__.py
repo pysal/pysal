@@ -48,7 +48,7 @@ from pysal.version import version
 #import os, sys
 
 # toplevel imports to be explicit
-from pysal.esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local
+from pysal.esda.moran import Moran, Moran_BV, Moran_BV_matrix, Moran_Local, Moran_Local_BV
 from pysal.esda.geary import Geary
 from pysal.esda.join_counts import Join_Counts
 from pysal.esda.gamma import Gamma
