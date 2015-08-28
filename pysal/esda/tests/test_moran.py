@@ -76,7 +76,8 @@ class Moran_Local_BV_Tester(unittest.TestCase):
         self.y = np.array(f.by_col['SIDR74'])
 
     def test_Moran_Local_BV(self):
-        lm = moran.Moran_Local_BV(x, y, w, transformation = "r", permutations = 99)
+        lm = moran.Moran_Local_BV(self.x, self.y, self.w, \
+                transformation = "r", permutations = 99)
         self.assertAlmostEquals(lm.Is[0], 1.4649221250620736)
         self.assertAlmostEquals(lm.z_sim[0], 2.9246889997781773)
         self.assertAlmostEquals(lm.p_z_sim[0], 0.0017240031348827456)
