@@ -785,7 +785,7 @@ class Moran_Local_BV:
     >>> lm.p_z_sim[0]
     0.0017240031348827456
     >>> lm = ps.Moran_Local_BV(x, y, w, transformation = "r", permutations = 99, geoda_quads=True)
-    >>> lm.q
+    >>> lm.q[:10]
     array([2, 4, 2, 4, 3, 1, 4, 4, 3, 4])
 
     Note random components result is slightly different values across
