@@ -10,7 +10,7 @@ import scipy.stats as stats
 import numpy as np
 
 __all__ = ["Moran", "Moran_Local", "Moran_BV", "Moran_BV_matrix",
-           "Moran_Rate", "Moran_Local_Rate"]
+           "Moran_Local_BV", "Moran_Rate", "Moran_Local_Rate"]
 
 np.seterr(invalid='ignore')
 PERMUTATIONS = 999
@@ -775,17 +775,18 @@ class Moran_Local_BV:
     >>> import pysal as ps
     >>> import numpy as np
     >>> np.random.seed(10)
-    >>> w = ps.open(ps.examples.get_path("desmith.gal")).read()
-    >>> f = ps.open(ps.examples.get_path("desmith.txt"))
-    >>> y = np.array(f.by_col['z'])
-    >>> lm = ps.Moran_Local(y, w, transformation = "r", permutations = 99)
-    >>> lm.q
-    array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
+    >>> w = ps.open(ps.examples.get_path("sids2.gal")).read()
+    >>> f = ps.open(ps.examples.get_path("sids2.dbf"))
+    >>> x = np.array(f.by_col['SIDR79'])
+    >>> y = np.array(f.by_col['SIDR74'])
+    >>> lm = ps.Moran_Local_BV(y, w, transformation = "r", permutations = 99)
+    >>> lm.q[:10]
+    array([3, 4, 3, 4, 2, 1, 4, 4, 2, 4])
     >>> lm.p_z_sim[0]
-    0.46756830387716064
+    0.0020309075127326048
     >>> lm = ps.Moran_Local(y, w, transformation = "r", permutations = 99, geoda_quads=True)
     >>> lm.q
-    array([4, 4, 4, 3, 2, 2, 1, 4, 2, 2])
+    array([2, 4, 2, 4, 3, 1, 4, 4, 3, 4])
 
     Note random components result is slightly different values across
     architectures so the results have been removed from doctests and will be
