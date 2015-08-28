@@ -779,12 +779,12 @@ class Moran_Local_BV:
     >>> f = ps.open(ps.examples.get_path("sids2.dbf"))
     >>> x = np.array(f.by_col['SIDR79'])
     >>> y = np.array(f.by_col['SIDR74'])
-    >>> lm = ps.Moran_Local_BV(y, w, transformation = "r", permutations = 99)
+    >>> lm = ps.Moran_Local_BV(x, y, w, transformation = "r", permutations = 99)
     >>> lm.q[:10]
     array([3, 4, 3, 4, 2, 1, 4, 4, 2, 4])
     >>> lm.p_z_sim[0]
-    0.0020309075127326048
-    >>> lm = ps.Moran_Local(y, w, transformation = "r", permutations = 99, geoda_quads=True)
+    0.0017240031348827456
+    >>> lm = ps.Moran_Local_BV(x, y, w, transformation = "r", permutations = 99, geoda_quads=True)
     >>> lm.q
     array([2, 4, 2, 4, 3, 1, 4, 4, 3, 4])
 
