@@ -16,6 +16,7 @@ except:
     print 'scipy 0.7+ is required'
     raise
 
+RTOL = .0000001
 
 import copy
 import math
