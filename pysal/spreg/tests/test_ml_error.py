@@ -33,7 +33,7 @@ class TestMLError(unittest.TestCase):
         np.testing.assert_allclose(reg.n,n,4)
         k = 5
         np.testing.assert_allclose(reg.k,k,4)
-        y = np.array([[ 0.94608274]])
+        y = np.array([ 0.94608274])
         np.testing.assert_allclose(reg.y[0],y,4)
         x = np.array([ 1.        , -0.39902838,  0.89645344,  6.85780705,  7.2636377 ])
         np.testing.assert_allclose(reg.x[0],x,4)
