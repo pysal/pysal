@@ -12,7 +12,6 @@ import numpy as np
 __all__ = ["Moran", "Moran_Local", "Moran_BV", "Moran_BV_matrix",
            "Moran_Local_BV", "Moran_Rate", "Moran_Local_Rate"]
 
-np.seterr(invalid='ignore')
 PERMUTATIONS = 999
 
 
@@ -129,11 +128,9 @@ class Moran:
     >>> mi_1.p_norm
     5.7916539074498452e-05
 
-
-    5.7916539074498452e-05
     """
     def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS,
-        two_tailed=True):
+                 two_tailed=True):
         self.y = y
         w.transform = transformation
         self.w = w
@@ -153,7 +150,6 @@ class Moran:
         if two_tailed:
             self.p_norm *= 2.
             self.p_rand *= 2.
-
 
         if permutations:
             sim = [self.__calc(np.random.permutation(self.z))
@@ -176,7 +172,6 @@ class Moran:
     def __moments(self):
         self.n = len(self.y)
         y = self.y
-        #z = (y-y.mean())/y.std()
         z = y - y.mean()
         self.z = z
         self.z2ss = (z * z).sum()
@@ -603,7 +598,8 @@ class Moran_Local:
     array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
     >>> lm.p_z_sim[0]
     0.46756830387716064
-    >>> lm = ps.Moran_Local(y, w, transformation = "r", permutations = 99, geoda_quads=True)
+    >>> lm = ps.Moran_Local(y, w, transformation = "r", permutations = 99, \
+                            geoda_quads=True)
     >>> lm.q
     array([4, 4, 4, 3, 2, 2, 1, 4, 2, 2])
 
@@ -612,7 +608,7 @@ class Moran_Local:
     moved into unittests that are conditional on architectures
     """
     def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS,
-        geoda_quads=False):
+                 geoda_quads=False):
         self.y = y
         n = len(y)
         self.n = n
@@ -695,7 +691,8 @@ class Moran_Local:
         np = (1 - zp) * lp
         nn = (1 - zp) * (1 - lp)
         pn = zp * (1 - lp)
-        self.q = self.quads[0] * pp + self.quads[1] * np + self.quads[2] * nn + self.quads[3] * pn
+        self.q = self.quads[0] * pp + self.quads[1] * np + self.quads[2] * nn \
+            + self.quads[3] * pn
 
 
 class Moran_Local_BV:
@@ -779,12 +776,14 @@ class Moran_Local_BV:
     >>> f = ps.open(ps.examples.get_path("sids2.dbf"))
     >>> x = np.array(f.by_col['SIDR79'])
     >>> y = np.array(f.by_col['SIDR74'])
-    >>> lm = ps.Moran_Local_BV(x, y, w, transformation = "r", permutations = 99)
+    >>> lm = ps.Moran_Local_BV(x, y, w, transformation = "r", \
+                               permutations = 99)
     >>> lm.q[:10]
     array([3, 4, 3, 4, 2, 1, 4, 4, 2, 4])
     >>> lm.p_z_sim[0]
     0.0017240031348827456
-    >>> lm = ps.Moran_Local_BV(x, y, w, transformation = "r", permutations = 99, geoda_quads=True)
+    >>> lm = ps.Moran_Local_BV(x, y, w, transformation = "r", \
+                               permutations = 99, geoda_quads=True)
     >>> lm.q[:10]
     array([2, 4, 2, 4, 3, 1, 4, 4, 3, 4])
 
@@ -793,7 +792,7 @@ class Moran_Local_BV:
     moved into unittests that are conditional on architectures
     """
     def __init__(self, x, y, w, transformation="r", permutations=PERMUTATIONS,
-        geoda_quads=False):
+                 geoda_quads=False):
         self.y = y
         n = len(y)
         self.n = n
@@ -881,7 +880,8 @@ class Moran_Local_BV:
         np = (1 - zp) * lp
         nn = (1 - zp) * (1 - lp)
         pn = zp * (1 - lp)
-        self.q = self.quads[0] * pp + self.quads[1] * np + self.quads[2] * nn + self.quads[3] * pn
+        self.q = self.quads[0] * pp + self.quads[1] * np + self.quads[2] * nn \
+            + self.quads[3] * pn
 
 
 class Moran_Local_Rate(Moran_Local):
@@ -995,17 +995,3 @@ class Moran_Local_Rate(Moran_Local):
                              transformation=transformation,
                              permutations=permutations,
                              geoda_quads=geoda_quads)
-
-
-def _test():
-    import doctest
-    # the following line could be used to define an alternative to the
-    # '<BLANKLINE>' flag
-    # doctest.BLANKLINE_MARKER = 'something better than <BLANKLINE>'
-    start_suppress = np.get_printoptions()['suppress']
-    np.set_printoptions(suppress=True)
-    doctest.testmod()
-    np.set_printoptions(suppress=start_suppress)
-
-if __name__ == '__main__':
-    _test()
