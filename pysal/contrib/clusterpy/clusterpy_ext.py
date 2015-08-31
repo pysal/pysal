@@ -4,7 +4,7 @@ import struct
 
 __author__ = "Sergio Rey <sjsrey@gmail.com>"
 
-__ALL__= ['Layer', 'loadArcData', 'importCsvData', 'addRook2Layer', 'addQueen2Layer', 'addArray2Layer' ]
+__ALL__= ['Layer', 'loadArcData', 'importCsvData', 'addRook2Layer', 'addQueen2Layer', 'addArray2Layer', 'addW2Layer']
 
 
 def _importArcData(filename):
@@ -294,6 +294,13 @@ def addW2Layer(w, layer, contiguity='rook'):
 
     Example
     -------
+    >>> import pysal as ps
+    >>> import pysal.contrib.clusterpy as cp
+    >>> w = ps.queen_from_shapefile(ps.examples.get_path('columbus.shp'))
+    >>> layer = cp.Layer()
+    >>> cp.addW2Layer(w, layer, contiguity='queen')
+    >>> layer.Wqueen[0]
+    [1, 2]
     '''
     if contiguity.upper()== "ROOK":
         layer.Wrook = w.neighbors
