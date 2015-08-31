@@ -215,7 +215,7 @@ def bin(y, bins):
 
 def bin1d(x, bins):
     """
-    place values of a 1-d array into bins and determine counts of values in
+    Place values of a 1-d array into bins and determine counts of values in
     each bin
 
     Parameters
@@ -230,7 +230,7 @@ def bin1d(x, bins):
     binIds : array
              1-d array of integer bin Ids
 
-    counts: int
+    countsi : int
             number of elements of x falling in each bin
 
     Examples
