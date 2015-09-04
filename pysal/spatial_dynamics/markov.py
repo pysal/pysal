@@ -894,7 +894,7 @@ class LISA_Markov(Markov):
             origin = q[:, t]
             dest = q[:, t + 1]
             p_origin = pb[:, t]
-            p_dest = pb[:, t]
+            p_dest = pb[:, t + 1]
             for r in range(n):
                 move_types[r, t] = TT[origin[r], dest[r]]
                 key = (origin[r], dest[r], p_origin[r], p_dest[r])
