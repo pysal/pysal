@@ -151,7 +151,7 @@ def sum_by_n(d, w, n):
 
     """
     t = len(d)
-    h = t / n
+    h = t // n #must be floor!
     d = d * w
     return np.array([sum(d[i: i + h]) for i in range(0, t, h)])
 
@@ -205,7 +205,7 @@ def crude_age_standardization(e, b, n):
     """
     r = e * 1.0 / b
     b_by_n = sum_by_n(b, 1.0, n)
-    age_weight = b * 1.0 / b_by_n.repeat(len(e) / n)
+    age_weight = b * 1.0 / b_by_n.repeat(len(e) // n)
     return sum_by_n(r, age_weight, n)
 
 
@@ -269,13 +269,13 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
     [0.023744019138755977, 0.026650717703349279]
 
     """
-    age_weight = (1.0 / b) * (s * 1.0 / sum_by_n(s, 1.0, n).repeat(len(s) / n))
+    age_weight = (1.0 / b) * (s * 1.0 / sum_by_n(s, 1.0, n).repeat(len(s) // n))
     adjusted_r = sum_by_n(e, age_weight, n)
     var_estimate = sum_by_n(e, np.square(age_weight), n)
     g_a = np.square(adjusted_r) / var_estimate
     g_b = var_estimate / adjusted_r
-    k = [age_weight[i:i + len(b) / n].max() for i in range(0, len(b),
-                                                           len(b) / n)]
+    k = [age_weight[i:i + len(b) // n].max() for i in range(0, len(b),
+                                                           len(b) // n)]
     g_a_k = np.square(adjusted_r + k) / (var_estimate + np.square(k))
     g_b_k = (var_estimate + np.square(k)) / (adjusted_r + k)
     summed_b = sum_by_n(b, 1.0, n)
@@ -902,7 +902,7 @@ class Age_Adjusted_Smoother:
     """
     def __init__(self, e, b, w, s, alpha=0.05):
         t = len(e)
-        h = t / w.n
+        h = t // w.n
         w.transform = 'b'
         e_n, b_n = [], []
         for i in range(h):
@@ -1194,8 +1194,8 @@ class Spatial_Filtering:
         data_tree = KDTree(data)
         x_range = bbox[1][0] - bbox[0][0]
         y_range = bbox[1][1] - bbox[0][1]
-        x, y = np.mgrid[bbox[0][0]:bbox[1][0]:x_range / x_grid,
-                        bbox[0][1]:bbox[1][1]:y_range / y_grid]
+        x, y = np.mgrid[bbox[0][0]:bbox[1][0]:x_range // x_grid,
+                        bbox[0][1]:bbox[1][1]:y_range // y_grid]
         self.grid = zip(x.ravel(), y.ravel())
         self.r = []
         if r is None and pop is None:

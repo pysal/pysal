@@ -306,7 +306,7 @@ class Wk1IO(FileIO.FileIO):
             hidcol = tuple(['<2H32b', 100, 32] + [0] * 32)
             f.write(pack(*hidcol))
             f.write(pack('<7H', 40, 10, 4, 76, 66, 2, 2))
-            f.write(pack('<2H1c', 41, 1, "'"))
+            f.write(pack('<2H1c', 41, 1, "'".encode()))
 
             id2i = obj.id2i
             for i, w_i in enumerate(obj):

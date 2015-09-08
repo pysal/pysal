@@ -317,7 +317,6 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
             self.chow = REGI.Chow(self)
             self.aic = DIAG.akaike(reg=self)
             self.schwarz = DIAG.schwarz(reg=self)
-            self._cache = {}
             SUMMARY.ML_Error(
                 reg=self, w=w, vm=vm, spat_diag=spat_diag, regimes=True)
 

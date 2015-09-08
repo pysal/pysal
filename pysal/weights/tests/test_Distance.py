@@ -20,8 +20,8 @@ class TestDistanceWeights(unittest.TestCase):
         pts = [i.centroid for i in pysal.open(self.polyShp)]
         kd = pysal.cg.kdtree.KDTree(pts)
         wnn4 = pysal.knnW(kd, 4)
-        self.assertEqual(wnn4.neighbors[0], [2,1,3,7])
-        self.assertEqual(wnn4.neighbors[7], [3,6,12,11])
+        self.assertEqual(set(wnn4.neighbors[0]), set([2,1,3,7]))
+        self.assertEqual(set(wnn4.neighbors[7]), set([3,6,12,11]))
 
     def test_knnW_arc(self):
         pts = [x.centroid for x in pysal.open(self.arcShp)]
@@ -32,15 +32,15 @@ class TestDistanceWeights(unittest.TestCase):
         kd = pysal.cg.kdtree.KDTree(pts, distance_metric='Arc',
                                     radius=pysal.cg.sphere.RADIUS_EARTH_KM)
         w = pysal.knnW(kd, 4)
-        self.assertEqual(set(w.neighbors[4]), set([1,3,9,12]))
-        self.assertEqual(set(w.neighbors[40]), set([31,38,45,49]))
-        #self.assertTrue((full.argsort()[:, 1:5] == np.array(
+        self.assertEqual(set(w.neighbors[4]), set([1, 3, 9, 12]))
+        self.assertEqual(set(w.neighbors[40]), set([31, 38, 45, 49]))
+        # self.assertTrue((full.argsort()[:, 1:5] == np.array(
         #    [w.neighbors[x] for x in range(len(pts))])).all())
 
     def test_Kernel(self):
         kw = pysal.Kernel(self.points)
-        self.assertEqual(kw.weights[0], [1.0, 0.50000004999999503,
-                                         0.44098306152674649])
+        wds = {kw.neighbors[0][i]: v for i, v in enumerate(kw.weights[0])}
+        self.assertEqual(wds, {0: 1, 1: 0.500000049999995, 3: 0.4409830615267465})
         kw15 = pysal.Kernel(self.points, bandwidth=15.0)
         self.assertEqual(kw15[0], {0: 1.0, 1: 0.33333333333333337,
                                    3: 0.2546440075000701})
@@ -48,10 +48,9 @@ class TestDistanceWeights(unittest.TestCase):
         self.assertEqual(kw15.bandwidth[-1], 15.)
         bw = [25.0, 15.0, 25.0, 16.0, 14.5, 25.0]
         kwa = pysal.Kernel(self.points, bandwidth=bw)
-        self.assertEqual(kwa.weights[0], [1.0, 0.59999999999999998,
-                                          0.55278640450004202,
-                                          0.10557280900008403])
-        self.assertEqual(kwa.neighbors[0], [0, 1, 3, 4])
+        wds = {kwa.neighbors[0][i]: v for i, v in enumerate(kwa.weights[0])}
+        self.assertEqual(wds, {0: 1.0, 1: 0.59999999999999998,
+                               3: 0.55278640450004202, 4: 0.10557280900008403})
         self.assertEqual(kwa.bandwidth[0], 25.)
         self.assertEqual(kwa.bandwidth[1], 15.)
         self.assertEqual(kwa.bandwidth[2], 25.)
@@ -59,44 +58,50 @@ class TestDistanceWeights(unittest.TestCase):
         self.assertEqual(kwa.bandwidth[4], 14.5)
         self.assertEqual(kwa.bandwidth[5], 25.)
         kwea = pysal.Kernel(self.points, fixed=False)
+        wds = {kwea.neighbors[0][i]: v for i, v in enumerate(kw.weights[0])}
         self.assertEqual(kwea.weights[0], [1.0, 0.10557289844279438,
                                            9.9999990066379496e-08])
         l = kwea.bandwidth.tolist()
-        self.assertEqual(l, [[11.180341005532938], [11.180341005532938],
-                             [20.000002000000002], [11.180341005532938],
-                             [14.142137037944515], [18.027758180095585]])
+        np.allclose(l, [[11.180341005532938], [11.180341005532938],
+                        [20.000002000000002], [11.180341005532938],
+                        [14.142137037944515], [18.027758180095585]])
         kweag = pysal.Kernel(self.points, fixed=False, function='gaussian')
-        self.assertEqual(kweag.weights[0], [0.3989422804014327,
-                                            0.26741902915776961,
-                                            0.24197074871621341])
+        wds = {kweag.neighbors[0][i]: v for i, v in enumerate(kweag.weights[0])}
+        self.assertEqual(wds, {0: 0.3989422804014327,
+                               1: 0.26741902915776961,
+                               3: 0.24197074871621341})
         l = kweag.bandwidth.tolist()
-        self.assertEqual(l, [[11.180341005532938], [11.180341005532938],
-                            [20.000002000000002], [11.180341005532938],
-                            [14.142137037944515], [18.027758180095585]])
+        np.allclose(l, [[11.180341005532938], [11.180341005532938],
+                        [20.000002000000002], [11.180341005532938],
+                        [14.142137037944515], [18.027758180095585]])
 
         kw = pysal.kernelW_from_shapefile(self.polyShp, idVariable='POLYID')
-        self.assertEqual(set(kw.weights[1]), set([0.0070787731484506233,
-                                         0.2052478782400463,
-                                         0.23051223027663237,
-                                         1.0
-                                         ]))
+        wds = {kw.neighbors[1][i]: v for i, v in enumerate(kw.weights[1])}
+        self.assertEqual(wds, {4: 0.0070787731484506233,
+                               2: 0.2052478782400463,
+                               3: 0.23051223027663237,
+                               1: 1.0})
         kwa = pysal.adaptive_kernelW_from_shapefile(self.polyShp)
-        self.assertEqual(kwa.weights[0], [1.0, 0.03178906767736345,
-                                          9.9999990066379496e-08])
+        wds = {kwa.neighbors[0][i]: v for i, v in enumerate(kwa.weights[0])}
+        self.assertEqual(wds, {0: 1.0, 2: 0.03178906767736345,
+                               1: 9.9999990066379496e-08})
 
     def test_threshold(self):
         md = pysal.min_threshold_dist_from_shapefile(self.polyShp)
         self.assertEqual(md, 0.61886415807685413)
         wid = pysal.threshold_continuousW_from_array(self.points, 11.2)
-        self.assertEqual(wid.weights[0], [0.10000000000000001,
-                                          0.089442719099991588])
+        wds = {wid.neighbors[0][i]: v for i, v in enumerate(wid.weights[0])}
+        self.assertEqual(wds, {1: 0.10000000000000001,
+                               3: 0.089442719099991588})
         wid2 = pysal.threshold_continuousW_from_array(
             self.points, 11.2, alpha=-2.0)
-        self.assertEqual(wid2.weights[0], [0.01, 0.0079999999999999984])
+        wds = {wid2.neighbors[0][i]: v for i, v in enumerate(wid2.weights[0])}
+        self.assertEqual(wds, {1: 0.01, 3: 0.0079999999999999984})
         w = pysal.threshold_continuousW_from_shapefile(
             self.polyShp, 0.62, idVariable="POLYID")
-        self.assertEqual(w.weights[1], [1.6702346893743334,
-                                        1.7250729841938093])
+        wds = {w.neighbors[1][i]: v for i, v in enumerate(w.weights[1])}
+        self.assertEqual(wds, {2: 1.6702346893743334,
+                               3: 1.7250729841938093})
 
     def test_DistanceBand(self):
         """ see issue #126 """
