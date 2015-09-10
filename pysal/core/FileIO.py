@@ -27,7 +27,7 @@ class FileIO_MetaCls(type):
         cls = type.__new__(mcs, name, bases, dict)
         if name != 'FileIO' and name != 'DataTable':
             if "FORMATS" in dict and "MODES" in dict:
-                print "Registering %s with FileIO.\n\tFormats: %r\n\tModes: %r"%(name,dict['FORMATS'],dict['MODES'])
+                #print "Registering %s with FileIO.\n\tFormats: %r\n\tModes: %r"%(name,dict['FORMATS'],dict['MODES'])
                 FileIO._register(cls, dict['FORMATS'], dict['MODES'])
             else:
                 raise TypeError("FileIO subclasses must have FORMATS and MODES defined")
