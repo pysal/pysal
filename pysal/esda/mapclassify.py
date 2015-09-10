@@ -230,7 +230,7 @@ def bin1d(x, bins):
     binIds : array
              1-d array of integer bin Ids
 
-    countsi : int
+    counts : int
             number of elements of x falling in each bin
 
     Examples
