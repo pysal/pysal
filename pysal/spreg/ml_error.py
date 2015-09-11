@@ -247,8 +247,6 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
 
         self.vm = np.vstack((vv, vv1))
 
-        self._cache = {}
-
     def get_x_lag(self, w, regimes_att):
         if regimes_att:
             xlag = ps.lag_spatial(w, regimes_att['x'])

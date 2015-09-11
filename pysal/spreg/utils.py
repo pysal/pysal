@@ -15,7 +15,7 @@ from pysal import lag_spatial
 import copy
 
 
-class RegressionPropsY:
+class RegressionPropsY(object):
 
     """
     Helper class that adds common regression properties to any regression
@@ -34,20 +34,59 @@ class RegressionPropsY:
 
     """
 
+#I think all this caching stuff could get rewritten into a decorator of some kind. 
+# def cache_propset(func, val=default):
+#   def getset(self):
+#       try to get cached value
+#       if cache doesnt exist, init cache[func] @ val
+#       if cache exists but func doesn't, init cache[func] @ val
+#       return cache[func]
+#   return property(func)
+
     @property
     def mean_y(self):
-        if 'mean_y' not in self._cache:
+        try:
+            return self._cache['mean_y']
+        except AttributeError:
+            self._cache = {}
+            self._cache['mean_y'] = np.mean(self.y)
+        except KeyError:
             self._cache['mean_y'] = np.mean(self.y)
         return self._cache['mean_y']
+    
+    @mean_y.setter
+    def mean_y(self, val):
+        try:
+            self._cache['mean_y'] = val
+        except AttributeError:
+            self._cache = {}
+            self._cache['mean_y'] = val
+        except KeyError:
+            self._cache['mean_y'] = val
 
     @property
     def std_y(self):
-        if 'std_y' not in self._cache:
+        try:
+            return self._cache['std_y']
+        except AttributeError:
+            self._cache = {}
+            self._cache['std_y'] = np.std(self.y, ddof=1)
+        except KeyError:
             self._cache['std_y'] = np.std(self.y, ddof=1)
         return self._cache['std_y']
+    
+    @std_y.setter
+    def std_y(self, val):
+        try:
+            self._cache['std_y'] = val
+        except AttributeError:
+            self._cache = {}
+            self._cache['std_y'] = val
+        except KeyError:
+            self._cache['std_y'] = val
 
 
-class RegressionPropsVM:
+class RegressionPropsVM(object):
 
     """
     Helper class that adds common regression properties to any regression
@@ -72,27 +111,88 @@ class RegressionPropsVM:
 
     @property
     def utu(self):
-        if 'utu' not in self._cache:
+        try:
+            return self._cache['utu']
+        except AttributeError:
+            self._cache = {}
+            self._cache['utu'] = np.sum(self.u ** 2)
+        except KeyError:
             self._cache['utu'] = np.sum(self.u ** 2)
         return self._cache['utu']
 
+    @utu.setter
+    def utu(self, val):
+        try:
+            self._cache['utu'] = val
+        except AttributeError:
+            self._cache = {}
+            self._cache['utu'] = val
+        except KeyError:
+            self._cache['utu'] = val
+
     @property
     def sig2n(self):
-        if 'sig2n' not in self._cache:
+        try:
+            return self._cache['sig2n']
+        except AttributeError:
+            self._cache = {}
+            self._cache['sig2n'] = self.utu / self.n
+        except KeyError:
             self._cache['sig2n'] = self.utu / self.n
         return self._cache['sig2n']
 
+    @sig2n.setter
+    def sig2n(self, val):
+        try:
+            self._cache['sig2n'] = val
+        except AttributeError:
+            self._cache = {}
+            self._cache['sig2n'] = val
+        except KeyError:
+            self._cache['sig2n'] = val
+
     @property
     def sig2n_k(self):
-        if 'sig2n_k' not in self._cache:
+        try:
+            return self._cache['sig2n_k']
+        except AttributeError:
+            self._cache = {}
+            self._cache['sig2n_k'] = self.utu / (self.n - self.k)
+        except KeyError:
             self._cache['sig2n_k'] = self.utu / (self.n - self.k)
         return self._cache['sig2n_k']
+    
+    @sig2n_k.setter
+    def sig2n_k(self, val):
+        try:
+            self._cache['sig2n_k'] = val
+        except AttributeError:
+            self._cache = {}
+            self._cache['sig2n_k'] = val
+        except KeyError:
+            self._cache['sig2n_k'] = val
 
     @property
     def vm(self):
-        if 'vm' not in self._cache:
+        try:
+            return self._cache['vm']
+        except AttributeError:
+            self._cache = {}
             self._cache['vm'] = np.dot(self.sig2, self.xtxi)
-        return self._cache['vm']
+        except KeyError:
+            self._cache['vm'] = np.dot(self.sig2, self.xtxi)
+        finally:
+            return self._cache['vm']
+
+    @vm.setter
+    def vm(self, val):
+        try:
+            self._cache['vm'] = val
+        except AttributeError:
+            self._cache = {}
+            self._cache['vm'] = val
+        except KeyError:
+            self._cache['vm'] = val
 
 
 def get_A1_het(S):
