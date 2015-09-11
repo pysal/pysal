@@ -97,8 +97,7 @@ class TestBaseOLS(unittest.TestCase):
         np.testing.assert_string_equal(ols.name_ds,  'columbus')
         np.testing.assert_equal(ols.name_gwk,  None)
         np.testing.assert_string_equal(ols.name_w,  'unknown')
-        np.testing.assert_string_equal(ols.name_x, ['CONSTANT', 'income','crime'])
-        np.testing.assert_(ols.name_x[i],  name)
+        np.testing.assert_equal(ols.name_x, ['CONSTANT', 'income','crime'])
         np.testing.assert_string_equal(ols.name_y,  'home value')
         np.testing.assert_allclose(ols.predy[3], np.array([
             33.53969014]),RTOL)
