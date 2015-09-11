@@ -7,7 +7,7 @@ from pysal.spreg.ols import OLS as OLS
 from pysal.spreg.twosls import TSLS as TSLS
 from pysal.spreg.twosls_sp import GM_Lag
 from scipy.stats import pearsonr
-
+from pysal.common import RTOL
 
 # create regression object used by the apatial tests
 db = pysal.open(pysal.examples.get_path("columbus.dbf"),'r')
@@ -45,21 +45,19 @@ class TestTStat(unittest.TestCase):
         exp = [(5.8452644704588588, 4.9369075950019865e-07),
                (0.36760156683572748, 0.71485634049075841),
                (-1.9946891307832111, 0.052021795864651159)]
-        for i in range(3):
-            for j in range(2):
-                self.assertAlmostEquals(obs[i][j],exp[i][j])
+        np.testing.assert_allclose(obs, exp, RTOL)
 
 class TestPr2Aspatial(unittest.TestCase):
     def test_pr2_aspatial(self):
         obs = diagnostics_tsls.pr2_aspatial(reg)
         exp = 0.2793613712817381
-        self.assertAlmostEquals(obs,exp)
+        np.testing.assert_allclose(obs,exp, RTOL)
 
 class TestPr2Spatial(unittest.TestCase):
     def test_pr2_spatial(self):
         obs = diagnostics_tsls.pr2_spatial(regsp)
         exp = 0.29964855438065163
-        self.assertAlmostEquals(obs,exp)
+        np.testing.assert_allclose(obs,exp, RTOL)
 
 
 if __name__ == '__main__':
