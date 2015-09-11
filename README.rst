@@ -33,7 +33,7 @@ applications for spatial analysis.
 .. image:: figs/lisamaps7.png
         :width: 25%
         :scale: 25%
-        :target: http://nbviewer.ipython.org/github/pysal/pysal/blob/master/pysal/contrib/viz/taz_example.ipynb?create=1
+        :target: http://nbviewer.ipython.org/urls/gist.githubusercontent.com/darribas/657e0568df7a63362762/raw/pysal_lisa_maps.ipynb
         :alt: LISA Maps of US County Homicide Rates
 
 
