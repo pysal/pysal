@@ -20,7 +20,7 @@ else:
 
 from version import version as dversion
 
-with open('README.txt') as file:
+with open('README.rst') as file:
     long_description = file.read()
 
 MAJOR = 1
