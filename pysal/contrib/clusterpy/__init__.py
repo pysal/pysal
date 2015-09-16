@@ -10,3 +10,4 @@ else:
     from clusterpy_ext import addRook2Layer
     from clusterpy_ext import addQueen2Layer
     from clusterpy_ext import addArray2Layer
+    from clusterpy_ext import addW2Layer

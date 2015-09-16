@@ -2,16 +2,16 @@
 Moran's I Spatial Autocorrelation Statistics
 
 """
-__author__ = "Sergio J. Rey <srey@asu.edu>"
+__author__ = "Sergio J. Rey <srey@asu.edu>, \
+        Dani Arribas-Bel <daniel.arribas.bel@gmail.com>"
 from pysal.weights.spatial_lag import lag_spatial as slag
 from pysal.esda.smoothing import assuncao_rate
 import scipy.stats as stats
 import numpy as np
 
 __all__ = ["Moran", "Moran_Local", "Moran_BV", "Moran_BV_matrix",
-           "Moran_Rate", "Moran_Local_Rate"]
+           "Moran_Local_BV", "Moran_Rate", "Moran_Local_Rate"]
 
-np.seterr(invalid='ignore')
 PERMUTATIONS = 999
 
 
@@ -128,11 +128,9 @@ class Moran:
     >>> mi_1.p_norm
     5.7916539074498452e-05
 
-
-    5.7916539074498452e-05
     """
     def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS,
-        two_tailed=True):
+                 two_tailed=True):
         self.y = y
         w.transform = transformation
         self.w = w
@@ -152,7 +150,6 @@ class Moran:
         if two_tailed:
             self.p_norm *= 2.
             self.p_rand *= 2.
-
 
         if permutations:
             sim = [self.__calc(np.random.permutation(self.z))
@@ -175,7 +172,6 @@ class Moran:
     def __moments(self):
         self.n = len(self.y)
         y = self.y
-        #z = (y-y.mean())/y.std()
         z = y - y.mean()
         self.z = z
         self.z2ss = (z * z).sum()
@@ -602,7 +598,8 @@ class Moran_Local:
     array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
     >>> lm.p_z_sim[0]
     0.46756830387716064
-    >>> lm = ps.Moran_Local(y, w, transformation = "r", permutations = 99, geoda_quads=True)
+    >>> lm = ps.Moran_Local(y, w, transformation = "r", permutations = 99, \
+                            geoda_quads=True)
     >>> lm.q
     array([4, 4, 4, 3, 2, 2, 1, 4, 2, 2])
 
@@ -611,7 +608,7 @@ class Moran_Local:
     moved into unittests that are conditional on architectures
     """
     def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS,
-        geoda_quads=False):
+                 geoda_quads=False):
         self.y = y
         n = len(y)
         self.n = n
@@ -694,8 +691,197 @@ class Moran_Local:
         np = (1 - zp) * lp
         nn = (1 - zp) * (1 - lp)
         pn = zp * (1 - lp)
-        self.q = self.quads[0] * pp + self.quads[1] * np + self.quads[2] * nn + self.quads[3] * pn
+        self.q = self.quads[0] * pp + self.quads[1] * np + self.quads[2] * nn \
+            + self.quads[3] * pn
 
+
+class Moran_Local_BV:
+    """Bivariate Local Moran Statistics
+
+
+    Parameters
+    ----------
+    x : array
+        x-axis variable
+    y : array
+        (n,1), wy will be on y axis
+    w : W
+        weight instance assumed to be aligned with y
+    transformation : {'R', 'B', 'D', 'U', 'V'}
+                     weights transformation,  default is row-standardized "r".
+                     Other options include
+                     "B": binary,
+                     "D": doubly-standardized,
+                     "U": untransformed (general weights),
+                     "V": variance-stabilizing.
+    permutations   : int
+                     number of random permutations for calculation of pseudo
+                     p_values
+    geoda_quads    : boolean
+                     (default=False)
+                     If True use GeoDa scheme: HH=1, LL=2, LH=3, HL=4
+                     If False use PySAL Scheme: HH=1, LH=2, LL=3, HL=4
+
+    Attributes
+    ----------
+
+    zx           : array
+                   original x variable standardized by mean and std
+    zy           : array
+                   original y variable standardized by mean and std
+    w            : W
+                   original w object
+    permutations : int
+                   number of random permutations for calculation of pseudo
+                   p_values
+    Is           : float
+                   value of Moran's I
+    q            : array
+                   (if permutations>0)
+                   values indicate quadrat location 1 HH,  2 LH,  3 LL,  4 HL
+    sim          : array
+                   (if permutations>0)
+                   vector of I values for permuted samples
+    p_sim        : array
+                   (if permutations>0)
+                   p-value based on permutations (one-sided)
+                   null: spatial randomness
+                   alternative: the observed Ii is further away or extreme
+                   from the median of simulated values. It is either extremelyi
+                   high or extremely low in the distribution of simulated Is.
+    EI_sim       : float
+                   (if permutations>0)
+                   average value of I from permutations
+    VI_sim       : float
+                   (if permutations>0)
+                   variance of I from permutations
+    seI_sim      : float
+                   (if permutations>0)
+                   standard deviation of I under permutations.
+    z_sim        : float
+                   (if permutations>0)
+                   standardized I based on permutations
+    p_z_sim      : float
+                   (if permutations>0)
+                   p-value based on standard normal approximation from
+                   permutations (one-sided)
+                   for two-sided tests, these values should be multiplied by 2
+
+    Examples
+    --------
+    >>> import pysal as ps
+    >>> import numpy as np
+    >>> np.random.seed(10)
+    >>> w = ps.open(ps.examples.get_path("sids2.gal")).read()
+    >>> f = ps.open(ps.examples.get_path("sids2.dbf"))
+    >>> x = np.array(f.by_col['SIDR79'])
+    >>> y = np.array(f.by_col['SIDR74'])
+    >>> lm = ps.Moran_Local_BV(x, y, w, transformation = "r", \
+                               permutations = 99)
+    >>> lm.q[:10]
+    array([3, 4, 3, 4, 2, 1, 4, 4, 2, 4])
+    >>> lm.p_z_sim[0]
+    0.0017240031348827456
+    >>> lm = ps.Moran_Local_BV(x, y, w, transformation = "r", \
+                               permutations = 99, geoda_quads=True)
+    >>> lm.q[:10]
+    array([2, 4, 2, 4, 3, 1, 4, 4, 3, 4])
+
+    Note random components result is slightly different values across
+    architectures so the results have been removed from doctests and will be
+    moved into unittests that are conditional on architectures
+    """
+    def __init__(self, x, y, w, transformation="r", permutations=PERMUTATIONS,
+                 geoda_quads=False):
+        self.y = y
+        n = len(y)
+        self.n = n
+        self.n_1 = n - 1
+        zx = x - x.mean()
+        zy = y - y.mean()
+        # setting for floating point noise
+        orig_settings = np.seterr()
+        np.seterr(all="ignore")
+        sx = x.std()
+        zx /= sx
+        sy = y.std()
+        zy /= sy
+        np.seterr(**orig_settings)
+        self.zx = zx
+        self.zy = zy
+        w.transform = transformation
+        self.w = w
+        self.permutations = permutations
+        self.den = (zx * zx).sum()
+        self.Is = self.calc(self.w, self.zx, self.zy)
+        self.geoda_quads = geoda_quads
+        quads = [1, 2, 3, 4]
+        if geoda_quads:
+            quads = [1, 3, 2, 4]
+        self.quads = quads
+        self.__quads()
+        if permutations:
+            self.__crand()
+            sim = np.transpose(self.rlisas)
+            above = sim >= self.Is
+            larger = above.sum(0)
+            low_extreme = (self.permutations - larger) < larger
+            larger[low_extreme] = self.permutations - larger[low_extreme]
+            self.p_sim = (larger + 1.0) / (permutations + 1.0)
+            self.sim = sim
+            self.EI_sim = sim.mean()
+            self.seI_sim = sim.std()
+            self.VI_sim = self.seI_sim * self.seI_sim
+            self.z_sim = (self.Is - self.EI_sim) / self.seI_sim
+            self.p_z_sim = 1 - stats.norm.cdf(np.abs(self.z_sim))
+
+    def calc(self, w, zx, zy):
+        zly = slag(w, zy)
+        return self.n_1 * self.zx * zly / self.den
+
+    def __crand(self):
+        """
+        conditional randomization
+
+        for observation i with ni neighbors,  the candidate set cannot include
+        i (we don't want i being a neighbor of i). we have to sample without
+        replacement from a set of ids that doesn't include i. numpy doesn't
+        directly support sampling wo replacement and it is expensive to
+        implement this. instead we omit i from the original ids,  permute the
+        ids and take the first ni elements of the permuted ids as the
+        neighbors to i in each randomization.
+
+        """
+        lisas = np.zeros((self.n, self.permutations))
+        n_1 = self.n - 1
+        prange = range(self.permutations)
+        k = self.w.max_neighbors + 1
+        nn = self.n - 1
+        rids = np.array([np.random.permutation(nn)[0:k] for i in prange])
+        ids = np.arange(self.w.n)
+        ido = self.w.id_order
+        w = [self.w.weights[ido[i]] for i in ids]
+        wc = [self.w.cardinalities[ido[i]] for i in ids]
+
+        zx = self.zx
+        zy = self.zy
+        for i in xrange(self.w.n):
+            idsi = ids[ids != i]
+            np.random.shuffle(idsi)
+            tmp = zy[idsi[rids[:, 0:wc[i]]]]
+            lisas[i] = zx[i] * (w[i] * tmp).sum(1)
+        self.rlisas = (n_1 / self.den) * lisas
+
+    def __quads(self):
+        zl = slag(self.w, self.zy)
+        zp = self.zx > 0
+        lp = zl > 0
+        pp = zp * lp
+        np = (1 - zp) * lp
+        nn = (1 - zp) * (1 - lp)
+        pn = zp * (1 - lp)
+        self.q = self.quads[0] * pp + self.quads[1] * np + self.quads[2] * nn \
+            + self.quads[3] * pn
 
 
 class Moran_Local_Rate(Moran_Local):
@@ -809,17 +995,3 @@ class Moran_Local_Rate(Moran_Local):
                              transformation=transformation,
                              permutations=permutations,
                              geoda_quads=geoda_quads)
-
-
-def _test():
-    import doctest
-    # the following line could be used to define an alternative to the
-    # '<BLANKLINE>' flag
-    # doctest.BLANKLINE_MARKER = 'something better than <BLANKLINE>'
-    start_suppress = np.get_printoptions()['suppress']
-    np.set_printoptions(suppress=True)
-    doctest.testmod()
-    np.set_printoptions(suppress=start_suppress)
-
-if __name__ == '__main__':
-    _test()
