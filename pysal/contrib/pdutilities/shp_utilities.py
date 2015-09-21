@@ -5,7 +5,10 @@ def shp2series(filepath):
     """
     reads a shapefile, stuffing each shape into an element of a Pandas Series
     """
-    return pd.Series(poly for poly in ps.open(filepath))
+    f = ps.open(filepath)
+    s = pd.Series(poly for poly in f)
+    f.close()
+    return s
 
 def series2shp(series, filepath):
     """
@@ -14,3 +17,5 @@ def series2shp(series, filepath):
     f = ps.open(filepath, 'w')
     for poly in series:
         f.write(poly)
+    f.close()
+    return filepath

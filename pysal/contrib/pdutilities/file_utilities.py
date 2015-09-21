@@ -49,10 +49,10 @@ def write_files(df, filepath, **kwargs):
         dbf_out = df2dbf(df[not_geom], dbf_path, **kwargs)
         if hasattr(df, 'W'):
             W_path = os.path.splitext(filepath)[0] + '.' + weights
-            ps.open(W_path).write(df.W)
+            ps.open(W_path, 'w').write(df.W)
         else:
             W_path = 'no weights written'
-        return outshp, outdbf, W_path
+        return dbf_out, shp_out, W_path
             
 
 
