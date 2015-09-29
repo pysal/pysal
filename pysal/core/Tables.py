@@ -48,14 +48,14 @@ class DataTable(FileIO.FileIO):
         else:
             raise AttributeError('Field: % s does not exist in header' % key)
 
-    def by_col_array(self, variable_names):
+    def by_col_array(self, *args):
         """
-        Return columns of table as a numpy array
+        Return columns of table as a numpy array.
 
         Parameters
         ----------
 
-        variable_names:  list of strings of length k
+        *args:  any number of strings of length k
                          names of variables to extract
 
         Returns
@@ -69,12 +69,22 @@ class DataTable(FileIO.FileIO):
         If the variables are not all of the same data type, then numpy rules
         for casting will result in a uniform type applied to all variables.
 
+        If only strings are passed to the function, then an array with those
+        columns will be constructed. 
+        
+        If only one list of strings is passed, the output is identical to those
+        strings being passed. 
+
+        If at least one list is passed and other strings or lists are passed,
+        this returns a tuple containing arrays constructed from each positional
+        argument.
+
         Examples
         --------
 
         >>> import pysal as ps
         >>> dbf = ps.open(ps.examples.get_path('NAT.dbf'))
-        >>> hr = dbf.by_col_array(['HR70', 'HR80'])
+        >>> hr = dbf.by_col_array('HR70', 'HR80')
         >>> hr[0:5]
         array([[  0.        ,   8.85582713],
                [  0.        ,  17.20874204],
@@ -98,7 +108,7 @@ class DataTable(FileIO.FileIO):
         
         Numpy only supports homogeneous arrays. See Notes above.
 
-        >>> hr = dbf.by_col_array(['STATE_NAME', 'HR80'])
+        >>> hr = dbf.by_col_array('STATE_NAME', 'HR80')
         >>> hr[0:5]
         array([['Minnesota', '8.8558271343'],
                ['Washington', '17.208742041'],
@@ -107,10 +117,35 @@ class DataTable(FileIO.FileIO):
                ['Washington', '7.77000777']], 
               dtype='|S20')
 
+        >>> y, X = dbf.by_col_array('STATE_NAME', ['HR80', 'HR70'])
+        >>> y[0:5]
+        array([['Minnesota'],
+               ['Washington'],
+               ['Washington'],
+               ['Washington'],
+               ['Washington']], 
+              dtype='|S20')
+        >>> X[0:5]
+        array([[  8.85582713,   0.        ],
+               [ 17.20874204,   0.        ],
+               [  3.4507747 ,   1.91515848],
+               [  3.26381409,   1.28864319],
+               [  7.77000777,   0.        ]])
 
         """
-        lst = [self._get_col(variable) for variable in variable_names]
-        return np.array(lst).T
+        if any([isinstance(arg, list) for arg in args]):
+            results = []
+            for namelist in args:
+                if isinstance(namelist, str):
+                    results.append([self._get_col(namelist)])
+                else:
+                    results.append([self._get_col(vbl) for vbl in namelist])
+            if len(results) == 1:
+                return np.array(results[0]).T
+            else:
+                return tuple(np.array(lst).T for lst in results)
+        else:
+            return np.array([self._get_col(name) for name in args]).T
 
     def __getitem__(self, key):
         """ DataTables fully support slicing in 2D,
