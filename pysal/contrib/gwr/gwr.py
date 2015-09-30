@@ -15,7 +15,7 @@ class BaseGWR(object):
         self.yhats = []
         
         for i in range(self.n):
-            Wuv = np.diag(np.sqrt(self.W.full()[0][i,:]))
+            Wuv = np.diag(self.W[i])
             xtw = np.dot(self.X.T, Wuv)
             xtwx = np.dot(xtw, self.X)
             xtwx_inv = la.inv(xtwx)
