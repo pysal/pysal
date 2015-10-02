@@ -4,7 +4,7 @@ import struct
 
 __author__ = "Sergio Rey <sjsrey@gmail.com>"
 
-__ALL__= ['Layer', 'loadArcData', 'importCsvData', 'addRook2Layer', 'addQueen2Layer', 'addArray2Layer' ]
+__ALL__= ['Layer', 'loadArcData', 'importCsvData', 'addRook2Layer', 'addQueen2Layer', 'addArray2Layer', 'addW2Layer']
 
 
 def _importArcData(filename):
@@ -270,15 +270,65 @@ def addArray2Layer(array, layer, names=None):
             v[i] = array[i,j]
         layer.addVariable([name], v)
 
+def addW2Layer(w, layer, contiguity='rook'):
+    '''
+    Attach a contiguity PySAL W object to a layer
+    
+    NOTE: given clusterpy's requirements, this method only extracts the
+    `neighbors` dictionary.
+
+    ...
+
+    Parameters
+    ----------
+    w         : ps.W
+                PySAL weights object
+    layer     : clusterpy.Layer
+                Layer to attach the weights to
+    contiguity: str ['rook'|'queen']
+                Type of contguity expressed in `w`
+
+    Returns
+    -------
+    None
+
+    Example
+    -------
+    >>> import pysal as ps
+    >>> import pysal.contrib.clusterpy as cp
+    >>> w = ps.queen_from_shapefile(ps.examples.get_path('columbus.shp'))
+    >>> layer = cp.Layer()
+    >>> cp.addW2Layer(w, layer, contiguity='queen')
+    >>> layer.Wqueen[0]
+    [1, 2]
+    '''
+    if contiguity.upper()== "ROOK":
+        layer.Wrook = w.neighbors
+    elif contiguity.upper() == "QUEEN":
+        layer.Wqueen = w.neighbors
+    else:
+        print 'Unsupported contiguity type: ', contiguity
+    return None
+
 if __name__ == '__main__':
 
     import numpy as np
 
+    w = ps.queen_from_shapefile(ps.examples.get_path('columbus.shp'))
+    db = ps.open(ps.examples.get_path('columbus.dbf'))
+    vars = ['CRIME',  'HOVAL']
+    x = np.array([db.by_col(i) for i in vars]).T
+    layer = Layer()
+    _ = addArray2Layer(x, layer, names=vars)
+    _ = addW2Layer(w, layer)
+    layer.cluster('arisel', ['CRIME',  'CONSTANT'], 2, dissolve=0, std=0)
+    '''
     columbus = loadArcData(ps.examples.get_path('columbus.shp'))
     n = len(columbus.Wqueen)
     columbus.dataOperation("CONSTANT = 1")
     np.random.seed(12345)
     columbus.cluster('maxpTabu', ['CRIME',  'CONSTANT'], threshold=4, dissolve=0, std=0)
+    '''
     #np.random.seed(12345)
     #columbus.cluster('arisel', ['CRIME'], 5, wType='rook', inits=10, dissolve=0)
 
