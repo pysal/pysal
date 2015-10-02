@@ -594,7 +594,7 @@ def chi2(T1, T2):
            [   1.,   92.,  815.,   51.],
            [   1.,    0.,   60.,  903.]])
     >>> chi2(T1,T2)
-    (23.422628044813656, 0.0053137895983268457, 9)
+    (23.397284414732951, 0.0053631167048613371, 9)
 
     Notes
     -----
@@ -616,7 +616,7 @@ def chi2(T1, T2):
     rs1nz = rs1 > 0
     dof1 = sum(rs1nz)
     dof2 = sum(rs2nz)
-    rs2 = rs2 + rs2nz
+    rs2 = rs2 + (rs2 == 0)
     dof = (dof1 - 1) * (dof2 - 1)
     p = np.diag(1 / rs2) * np.matrix(T2)
     E = np.diag(rs1) * np.matrix(p)
@@ -824,7 +824,7 @@ class LISA_Markov(Markov):
     Test whether the moves of y are independent of the moves of wy
 
     >>> "Chi2: %8.3f, p: %5.2f, dof: %d" % lm.chi_2
-    'Chi2:  162.475, p:  0.00, dof: 9'
+    'Chi2: 1059.678, p:  0.00, dof: 9'
 
     Actual transitions of LISAs
 
@@ -923,7 +923,7 @@ class LISA_Markov(Markov):
         t1 = np.diag(trans) * kp
         t2 = self.transitions
         t1 = t1.getA()
-        self.chi_2 = pysal.spatial_dynamics.markov.chi2(t1, t2)
+        self.chi_2 = pysal.spatial_dynamics.markov.chi2(t2, t1)
         self.expected_t = t1
         self.permutations = permutations
 
