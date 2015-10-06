@@ -4,8 +4,18 @@ Unittests for spreg.error_sp_hom module
 '''
 import unittest
 import pysal
-from pysal.spreg import error_sp_hom as HOM
+#from pysal.spreg import error_sp_hom as HOM
 import numpy as np
+from pysal.contrib.handler import Model
+from functools import partial
+
+GM_Combo_Hom = partial(Model, mtype='GM_Combo_Hom')
+GM_Error_Hom = partial(Model, mtype='GM_Error_Hom')
+GM_Endog_Error_Hom = partial(Model, mtype='GM_Endog_Error_Hom')
+
+BaseGM_Combo_Hom = partial(Model, mtype='BaseGM_Combo_Hom')
+BaseGM_Error_Hom = partial(Model, mtype='BaseGM_Error_Hom')
+BaseGM_Endog_Error_Hom = partial(Model, mtype='BaseGM_Endog_Error_Hom')
 
 class BaseGM_Error_Hom_Tester(unittest.TestCase):
     def setUp(self):
@@ -20,7 +30,7 @@ class BaseGM_Error_Hom_Tester(unittest.TestCase):
         self.w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
     def test_model(self):
-        reg = HOM.BaseGM_Error_Hom(self.y, self.X, self.w.sparse, A1='hom_sc')
+        reg = BaseGM_Error_Hom(self.y, self.X, self.w.sparse, A1='hom_sc')
         np.testing.assert_array_almost_equal(reg.y[0],np.array([80.467003]),7)
         x = np.array([  1.     ,  19.531  ,  15.72598])
         np.testing.assert_array_almost_equal(reg.x[0],x,7)
@@ -52,7 +62,7 @@ class GM_Error_Hom_Tester(unittest.TestCase):
         self.w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
     def test_model(self):
-        reg = HOM.GM_Error_Hom(self.y, self.X, self.w, A1='hom_sc')
+        reg = GM_Error_Hom(self.y, self.X, self.w, A1='hom_sc')
         np.testing.assert_array_almost_equal(reg.y[0],np.array([80.467003]),7)
         x = np.array([  1.     ,  19.531  ,  15.72598])
         np.testing.assert_array_almost_equal(reg.x[0],x,7)
@@ -102,7 +112,7 @@ class BaseGM_Endog_Error_Hom_Tester(unittest.TestCase):
         self.w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
     def test_model(self):
-        reg = HOM.BaseGM_Endog_Error_Hom(self.y, self.X, self.yd, self.q, self.w.sparse, A1='hom_sc')
+        reg = BaseGM_Endog_Error_Hom(self.y, self.X, self.yd, self.q, self.w.sparse, A1='hom_sc')
         np.testing.assert_array_almost_equal(reg.y[0],np.array([ 80.467003]),7)
         x = np.array([  1.     ,  19.531])
         np.testing.assert_array_almost_equal(reg.x[0],x,7)
@@ -157,7 +167,7 @@ class GM_Endog_Error_Hom_Tester(unittest.TestCase):
         self.w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
     def test_model(self):
-        reg = HOM.GM_Endog_Error_Hom(self.y, self.X, self.yd, self.q, self.w, A1='hom_sc')
+        reg = GM_Endog_Error_Hom(self.y, self.X, self.yd, self.q, self.w, A1='hom_sc')
         np.testing.assert_array_almost_equal(reg.y[0],np.array([ 80.467003]),7)
         x = np.array([  1.     ,  19.531])
         np.testing.assert_array_almost_equal(reg.x[0],x,7)
@@ -212,7 +222,7 @@ class BaseGM_Combo_Hom_Tester(unittest.TestCase):
     def test_model(self):
         yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 1, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
-        reg = HOM.BaseGM_Combo_Hom(self.y, self.X, yend=yd2, q=q2, w=self.w.sparse, A1='hom_sc')
+        reg = BaseGM_Combo_Hom(self.y, self.X, yend=yd2, q=q2, w=self.w.sparse, A1='hom_sc')
         np.testing.assert_array_almost_equal(reg.y[0],np.array([80.467003]),7)
         x = np.array([  1.     ,  19.531])
         np.testing.assert_array_almost_equal(reg.x[0],x,7)
@@ -259,7 +269,7 @@ class GM_Combo_Hom_Tester(unittest.TestCase):
         self.w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
     def test_model(self):
-        reg = HOM.GM_Combo_Hom(self.y, self.X, w=self.w, A1='hom_sc')
+        reg = GM_Combo_Hom(self.y, self.X, w=self.w, A1='hom_sc')
         np.testing.assert_array_almost_equal(reg.y[0],np.array([80.467003]),7)
         x = np.array([  1.     ,  19.531])
         np.testing.assert_array_almost_equal(reg.x[0],x,7)

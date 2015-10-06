@@ -1,2 +1,2 @@
-- figure out how to get summary to redirect to the current object, not the
-  nested object
+Fix summary work
+Figure out why GM_Error_Hom_regimes doesn't have a mean_y to work wit
