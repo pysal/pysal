@@ -1,5 +1,5 @@
 import copy
-import pysal.spreg as sr
+import registry as sr
 from pysal.weights import W
 import patsy as p
 from numpy import array, ndarray, asarray
@@ -39,10 +39,10 @@ class Model(object):
         >>> Model(y,X,W, mytpe='OLS_Regimes')
     """
     def __init__(self, *args, **kwargs):
-        mtype = kwargs.pop('mtype', sr.OLS)
+        mtype = kwargs.pop('mtype', sr.user['OLS'])
         self._mtype = mtype
         if isinstance(mtype, str):
-            mtype = sr.__dict__[mtype] 
+            mtype = sr.__all__[mtype] 
         self._fit = kwargs.pop('fit', True)
 
         if isinstance(args[0], str):

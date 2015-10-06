@@ -1,10 +1,15 @@
 import unittest
 import numpy as np
 import pysal
+from pysal.contrib.handler import Model
+from functools import partial
 from pysal.spreg import diagnostics
-from pysal.spreg.ols import OLS as OLS
-from pysal.spreg.twosls import TSLS as TSLS
-from pysal.spreg.twosls_sp import GM_Lag
+#from pysal.spreg.ols import OLS as OLS
+OLS = Model
+#from pysal.spreg.twosls import TSLS as TSLS
+TSLS = partial(Model, mtype='TSLS')
+#from pysal.spreg.twosls_sp import GM_Lag
+GM_Lag = partial(Model, mtype='GM_Lag')
 from pysal.spreg.diagnostics_sp import LMtests, MoranRes, spDcache, AKtest
 
 

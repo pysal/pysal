@@ -2,7 +2,17 @@ import unittest
 import pysal
 import numpy as np
 from pysal.spreg import error_sp_het_regimes as SP
-from pysal.spreg.error_sp_het import GM_Error_Het, GM_Endog_Error_Het, GM_Combo_Het
+#from pysal.spreg.error_sp_het import GM_Error_Het, GM_Endog_Error_Het, GM_Combo_Het
+from pysal.contrib.handler import Model
+from functools import partial
+
+GM_Error_Het = partial(Model, mtype='GM_Error_Het')
+GM_Endog_Error_Het = partial(Model, mtype='GM_Endog_Error_Het')
+GM_Combo_Het = partial(Model, mtype='GM_Combo_Het')
+
+GM_Error_Het_Regimes = partial(Model, mtype='GM_Error_Het_Regimes')
+GM_Endog_Error_Het_Regimes = partial(Model, mtype='GM_Endog_Error_Het_Regimes')
+GM_Combo_Het_Regimes = partial(Model, mtyle='GM_Combo_Het_Regimes')
 
 class TestGM_Error_Het_Regimes(unittest.TestCase):
     def setUp(self):

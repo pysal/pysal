@@ -2,7 +2,17 @@ import unittest
 import pysal
 import numpy as np
 from scipy import sparse
-from pysal.spreg import error_sp_het as HET
+#from pysal.spreg import error_sp_het as HET
+from functools import partial
+from pysal.contrib.handler import Model
+
+GM_Error_Het = partial(Model, mtype='GM_Error_Het')
+GM_Endog_Error_Het = partial(Model, mtype='GM_Endog_Error_Het')
+GM_Combo_Het = partial(Model, mtype='GM_Combo_Het')
+
+BaseGM_Error_Het = partial(Model, mtype='BaseGM_Error_Het')
+BaseGM_Endog_Error_Het = partial(Model, mtype='BaseGM_Endog_Error_Het')
+BaseGM_Combo_Het = partial(Model, mtype='BaseGM_Combo_Het')
 
 class TestBaseGMErrorHet(unittest.TestCase):
     def setUp(self):
@@ -19,7 +29,7 @@ class TestBaseGMErrorHet(unittest.TestCase):
         self.w.transform = 'r'
 
     def test_model(self):
-        reg = HET.BaseGM_Error_Het(self.y, self.X, self.w.sparse, step1c=True)
+        reg = BaseGM_Error_Het(self.y, self.X, self.w.sparse, step1c=True)
         betas = np.array([[ 47.99626638], [  0.71048989], [ -0.55876126], [  0.41178776]])
         np.testing.assert_array_almost_equal(reg.betas,betas,7)
         u = np.array([ 27.38122697])
@@ -72,7 +82,7 @@ class TestGMErrorHet(unittest.TestCase):
         self.w.transform = 'r'
 
     def test_model(self):
-        reg = HET.GM_Error_Het(self.y, self.X, self.w, step1c=True)
+        reg = GM_Error_Het(self.y, self.X, self.w, step1c=True)
         betas = np.array([[ 47.99626638], [  0.71048989], [ -0.55876126], [  0.41178776]])
         np.testing.assert_array_almost_equal(reg.betas,betas,7)
         u = np.array([ 27.38122697])
@@ -140,7 +150,7 @@ class TestBaseGMEndogErrorHet(unittest.TestCase):
         self.w.transform = 'r'
 
     def test_model(self):
-        reg = HET.BaseGM_Endog_Error_Het(self.y, self.X, self.yd, self.q, self.w.sparse, step1c=True)
+        reg = BaseGM_Endog_Error_Het(self.y, self.X, self.yd, self.q, self.w.sparse, step1c=True)
         betas = np.array([[ 55.39707924], [  0.46563046], [ -0.67038326], [  0.41135023]])
         np.testing.assert_array_almost_equal(reg.betas,betas,7)
         u = np.array([ 26.51812895])
@@ -206,7 +216,7 @@ class TestGMEndogErrorHet(unittest.TestCase):
         self.w.transform = 'r'
 
     def test_model(self):
-        reg = HET.GM_Endog_Error_Het(self.y, self.X, self.yd, self.q, self.w, step1c=True)
+        reg = GM_Endog_Error_Het(self.y, self.X, self.yd, self.q, self.w, step1c=True)
         betas = np.array([[ 55.39707924], [  0.46563046], [ -0.67038326], [  0.41135023]])
         np.testing.assert_array_almost_equal(reg.betas,betas,7)
         u = np.array([ 26.51812895])
@@ -275,7 +285,7 @@ class TestBaseGMComboHet(unittest.TestCase):
         yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 1, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         self.X = sparse.csr_matrix(self.X)
-        reg = HET.BaseGM_Combo_Het(self.y, self.X, yend=yd2, q=q2, w=self.w.sparse, step1c=True)
+        reg = BaseGM_Combo_Het(self.y, self.X, yend=yd2, q=q2, w=self.w.sparse, step1c=True)
         betas = np.array([[ 57.7778574 ], [  0.73034922], [ -0.59257362], [ -0.2230231 ], [  0.56636724]])
         np.testing.assert_array_almost_equal(reg.betas,betas,7)
         u = np.array([ 25.65156033])
@@ -344,7 +354,7 @@ class TestGMComboHet(unittest.TestCase):
 
     def test_model(self):
         # Only spatial lag
-        reg = HET.GM_Combo_Het(self.y, self.X, w=self.w, step1c=True)
+        reg = GM_Combo_Het(self.y, self.X, w=self.w, step1c=True)
         betas = np.array([[ 57.7778574 ], [  0.73034922], [ -0.59257362], [ -0.2230231 ], [  0.56636724]])
         np.testing.assert_array_almost_equal(reg.betas,betas,7)
         u = np.array([ 25.65156033])
