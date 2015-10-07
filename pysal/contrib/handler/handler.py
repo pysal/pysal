@@ -39,10 +39,10 @@ class Model(object):
         >>> Model(y,X,W, mytpe='OLS_Regimes')
     """
     def __init__(self, *args, **kwargs):
-        mtype = kwargs.pop('mtype', sr.user['OLS'])
+        self._cache = {}
+        mtype = kwargs.pop('mtype', 'OLS')
         self._mtype = mtype
-        if isinstance(mtype, str):
-            mtype = sr.__all__[mtype] 
+        self._mfunc = sr._everything[mtype] 
         self._fit = kwargs.pop('fit', True)
 
         if isinstance(args[0], str):
@@ -59,10 +59,15 @@ class Model(object):
         args = matrices + [arg for arg in args if isinstance(arg, W)]
 
         if self._fit:
-            self._called = mtype(*args, **kwargs)
+            self._called = self._mfunc(*args, **kwargs)
             for name in dir(self._called):
-                exec('self.{n} = self._called.{n}'.format(n=name))
-
+                try:
+                    exec('self.{n} = self._called.{n}'.format(n=name))
+                except:
+                    print("Assigning {a} from {s} to {d} failed!".format(a=name,
+                                                                         s=self._called,
+                                                                         d=self))
+    
 #need to still pass names down from formula into relevant pysal arguments
 
 if __name__ == '__main__':

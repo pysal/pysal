@@ -31,10 +31,13 @@ def _find_bcs():
                     pass
     ucs.update({k:v for k,v in diter(classes) if (
                 any([issubclass(v, bc) for bc in bcs.values()])
-                and (k not in bcs))})
+                and (k not in bcs))
+                or k.endswith('Regimes')})
     return bcs, ucs
 
 base, user = _find_bcs()
+_everything = base.copy()
+_everything.update(user)
 
 for k,v in diter(base):
     exec('{k} = {v}'.format(k=k,v=v))

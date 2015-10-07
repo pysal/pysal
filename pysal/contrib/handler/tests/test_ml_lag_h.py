@@ -2,8 +2,13 @@ import unittest
 import pysal
 import scipy
 import numpy as np
-from pysal.spreg.ml_lag import ML_Lag
+#from pysal.spreg.ml_lag import ML_Lag
 from pysal.spreg import utils
+
+from functools import partial
+from pysal.contrib.handler import Model
+
+ML_Lag = partial(Model, mtype='ML_Lag')
 
 @unittest.skipIf(int(scipy.__version__.split(".")[1]) < 11,
         "Max Likelihood requires SciPy version 11 or newer.")

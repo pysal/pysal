@@ -2,9 +2,15 @@ import unittest
 import scipy
 import pysal
 import numpy as np
-from pysal.spreg.ml_lag_regimes import ML_Lag_Regimes
-from pysal.spreg.ml_lag import ML_Lag
+#from pysal.spreg.ml_lag_regimes import ML_Lag_Regimes
+#from pysal.spreg.ml_lag import ML_Lag
 from pysal.spreg import utils
+
+from functools import partial
+from pysal.contrib.handler import Model
+
+ML_Lag = partial(Model, mtype='ML_Lag')
+ML_Lag_Regimes = partial(Model, mtype='ML_Lag_Regimes')
 
 @unittest.skipIf(int(scipy.__version__.split(".")[1]) < 11,
          "Max Likelihood requires SciPy version 11 or newer.")

@@ -1,8 +1,14 @@
 import unittest
 import numpy as np
 import pysal
-from pysal.spreg.twosls_regimes import TSLS_Regimes
-from pysal.spreg.twosls import TSLS
+#from pysal.spreg.twosls_regimes import TSLS_Regimes
+#from pysal.spreg.twosls import TSLS
+
+from pysal.contrib.handler import Model
+from functools import partial
+
+TSLS_Regimes = partial(Model, mtype='TSLS_Regimes')
+TSLS = partial(Model, mtype='TSLS')
 
 class TestTSLS(unittest.TestCase):
     def setUp(self):

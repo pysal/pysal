@@ -1,7 +1,13 @@
 import unittest
 import pysal
 import numpy as np
-from pysal.spreg import probit as PB
+#from pysal.spreg import probit as PB
+
+from pysal.contrib.handler import Model
+from functools import partial
+
+Probit = partial(Model, mtype='Probit')
+BaseProbit = partial(Model, mtype='BaseProbit')
 
 class TestBaseProbit(unittest.TestCase):
     def setUp(self):
@@ -18,7 +24,7 @@ class TestBaseProbit(unittest.TestCase):
         self.w.transform = 'r'
 
     def test_model(self):
-        reg = PB.BaseProbit(self.y, self.X, w=self.w)
+        reg = BaseProbit(self.y, self.X, w=self.w)
         betas = np.array([[ 3.35381078], [-0.1996531 ], [-0.02951371]])
         np.testing.assert_array_almost_equal(reg.betas,betas,6)
         predy = np.array([ 0.00174739])
@@ -68,7 +74,7 @@ class TestProbit(unittest.TestCase):
         self.w.transform = 'r'
 
     def test_model(self):
-        reg = PB.Probit(self.y, self.X, w=self.w)
+        reg = Probit(self.y, self.X, w=self.w)
         betas = np.array([[ 3.35381078], [-0.1996531 ], [-0.02951371]])
         np.testing.assert_array_almost_equal(reg.betas,betas,6)
         predy = np.array([ 0.00174739])

@@ -1,7 +1,12 @@
 import unittest
 import numpy as np
 import pysal
-from pysal.spreg.twosls import BaseTSLS, TSLS
+#from pysal.spreg.twosls import BaseTSLS, TSLS
+from pysal.contrib.handler import Model
+from functools import partial
+
+BaseTSLS = partial(Model, mtype='BaseTSLS')
+TSLS = partial(Model, mtype='TSLS')
 
 class TestBaseTSLS(unittest.TestCase):
     def setUp(self):

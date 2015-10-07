@@ -2,8 +2,13 @@ import unittest
 import pysal
 import scipy
 import numpy as np
-from pysal.spreg.ml_error import ML_Error
+#from pysal.spreg.ml_error import ML_Error
 from pysal.spreg import utils
+
+from functools import partial
+from pysal.contrib.handler import Model
+
+ML_Error = partial(Model, mtype='ML_Error')
 
 @unittest.skipIf(int(scipy.__version__.split(".")[1]) < 11,
         "Max Likelihood requires SciPy version 11 or newer.")

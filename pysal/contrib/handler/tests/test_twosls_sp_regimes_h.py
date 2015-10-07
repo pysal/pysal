@@ -1,9 +1,15 @@
 import unittest
 import numpy as np
 import pysal
-from pysal.spreg.twosls_sp_regimes import GM_Lag_Regimes
+#from pysal.spreg.twosls_sp_regimes import GM_Lag_Regimes
 from pysal.spreg import utils
-from pysal.spreg.twosls_sp import GM_Lag
+#from pysal.spreg.twosls_sp import GM_Lag
+
+from pysal.contrib.handler import Model
+from functools import partial
+
+GM_Lag_Regimes = partial(Model, mtype='GM_Lag_Regimes')
+GM_Lag = partial(Model, mtype='GM_Lag')
 
 class TestGMLag_Regimes(unittest.TestCase):
     def setUp(self):

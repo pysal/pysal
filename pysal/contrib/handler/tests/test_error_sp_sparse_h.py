@@ -1,9 +1,19 @@
 import unittest
 import pysal
 import numpy as np
-from pysal.spreg import error_sp as SP
+#from pysal.spreg import error_sp as SP
 import scipy
 from scipy import sparse
+
+from functools import partial
+from pysal.contrib.handler import Model
+
+GM_Error = partial(Model, mtype='GM_Error')
+GM_Endog_Error = partial(Model, mtype='GM_Endog_Error')
+GM_Combo = partial(Model, mtype='GM_Combo')
+BaseGM_Error = partial(Model, mtype='BaseGM_Error')
+BaseGM_Endog_Error = partial(Model, mtype='BaseGM_Endog_Error')
+BaseGM_Combo = partial(Model, mtype='BaseGM_Combo')
 
 class TestBaseGMError(unittest.TestCase):
     def setUp(self):
@@ -20,7 +30,7 @@ class TestBaseGMError(unittest.TestCase):
         self.w.transform = 'r'
 
     def test_model(self):
-        reg = SP.BaseGM_Error(self.y, self.X, self.w.sparse)
+        reg = BaseGM_Error(self.y, self.X, self.w.sparse)
         betas = np.array([[ 47.94371455], [  0.70598088], [ -0.55571746], [  0.37230161]])
         np.allclose(reg.betas,betas,4)
         u = np.array([ 27.4739775])
@@ -62,7 +72,7 @@ class TestGMError(unittest.TestCase):
         self.w.transform = 'r'
 
     def test_model(self):
-        reg = SP.GM_Error(self.y, self.X, self.w)
+        reg = GM_Error(self.y, self.X, self.w)
         betas = np.array([[ 47.94371455], [  0.70598088], [ -0.55571746], [  0.37230161]])
         np.allclose(reg.betas,betas,4)
         u = np.array([ 27.4739775])
@@ -118,7 +128,7 @@ class TestBaseGMEndogError(unittest.TestCase):
         self.w.transform = 'r'
 
     def test_model(self):
-        reg = SP.BaseGM_Endog_Error(self.y, self.X, self.yd, self.q, self.w.sparse)
+        reg = BaseGM_Endog_Error(self.y, self.X, self.yd, self.q, self.w.sparse)
         betas = np.array([[ 55.36095292], [  0.46411479], [ -0.66883535], [  0.38989939]])
         np.allclose(reg.betas,betas,4)
         u = np.array([ 26.55951566])
@@ -173,7 +183,7 @@ class TestGMEndogError(unittest.TestCase):
         self.w.transform = 'r'
 
     def test_model(self):
-        reg = SP.GM_Endog_Error(self.y, self.X, self.yd, self.q, self.w)
+        reg = GM_Endog_Error(self.y, self.X, self.yd, self.q, self.w)
         betas = np.array([[ 55.36095292], [  0.46411479], [ -0.66883535], [  0.38989939]])
         np.allclose(reg.betas,betas,4)
         u = np.array([ 26.55951566])
@@ -230,7 +240,7 @@ class TestBaseGMCombo(unittest.TestCase):
         yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 1, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         self.X = sparse.csr_matrix(self.X)
-        reg = SP.BaseGM_Combo(self.y, self.X, yend=yd2, q=q2, w=self.w.sparse)
+        reg = BaseGM_Combo(self.y, self.X, yend=yd2, q=q2, w=self.w.sparse)
         betas = np.array([[ 57.61123461],[  0.73441314], [ -0.59459416], [ -0.21762921], [  0.54732051]])
         np.allclose(reg.betas,betas,4)
         u = np.array([ 25.57932637])
@@ -279,7 +289,7 @@ class TestGMCombo(unittest.TestCase):
         self.w.transform = 'r'
     def test_model(self):
         # Only spatial lag
-        reg = SP.GM_Combo(self.y, self.X, w=self.w)
+        reg = GM_Combo(self.y, self.X, w=self.w)
         e_reduced = np.array([ 28.18617481])
         np.allclose(reg.e_pred[0],e_reduced,4)
         predy_e = np.array([ 52.28082782])

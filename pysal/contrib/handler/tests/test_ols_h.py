@@ -2,7 +2,13 @@ import unittest
 import numpy as np
 import pysal
 from pysal.spreg import utils
-import pysal.spreg as EC
+#import pysal.spreg as EC
+
+from functools import partial
+from pysal.contrib.handler import Model
+
+OLS = partial(Model, mtype='OLS')
+BaseOLS = partial(Model, mtype='BaseOLS')
 
 PEGP = pysal.examples.get_path
 
@@ -19,7 +25,7 @@ class TestBaseOLS(unittest.TestCase):
 
     def test_ols(self):
         self.X = np.hstack((np.ones(self.y.shape),self.X))
-        ols = EC.ols.BaseOLS(self.y,self.X)
+        ols = BaseOLS(self.y,self.X)
         np.testing.assert_array_almost_equal(ols.betas, np.array([[
             46.42818268], [  0.62898397], [ -0.48488854]]))
         vm = np.array([[  1.74022453e+02,  -6.52060364e+00,  -2.15109867e+00],
@@ -29,7 +35,7 @@ class TestBaseOLS(unittest.TestCase):
 
     def test_ols_white1(self):
         self.X = np.hstack((np.ones(self.y.shape),self.X))
-        ols = EC.ols.BaseOLS(self.y,self.X,robust='white', sig2n_k=True)
+        ols = BaseOLS(self.y,self.X,robust='white', sig2n_k=True)
         np.testing.assert_array_almost_equal(ols.betas, np.array([[
             46.42818268], [  0.62898397], [ -0.48488854]]))
         vm = np.array([[  2.05819450e+02,  -6.83139266e+00,  -2.64825846e+00],
@@ -39,7 +45,7 @@ class TestBaseOLS(unittest.TestCase):
 
     def test_ols_white2(self):
         self.X = np.hstack((np.ones(self.y.shape),self.X))
-        ols = EC.ols.BaseOLS(self.y,self.X,robust='white', sig2n_k=False)
+        ols = BaseOLS(self.y,self.X,robust='white', sig2n_k=False)
         np.testing.assert_array_almost_equal(ols.betas, np.array([[
             46.42818268], [  0.62898397], [ -0.48488854]]))
         vm = np.array([[  1.93218259e+02,  -6.41314413e+00,  -2.48612018e+00],
@@ -48,7 +54,7 @@ class TestBaseOLS(unittest.TestCase):
         np.testing.assert_array_almost_equal(ols.vm, vm,6)
 
     def test_OLS(self):
-        ols = EC.OLS(self.y, self.X, self.w, spat_diag=True, moran=True, \
+        ols = OLS(self.y, self.X, self.w, spat_diag=True, moran=True, \
                 white_test=True, name_y='home value', name_x=['income','crime'], \
                 name_ds='columbus')
         

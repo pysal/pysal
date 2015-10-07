@@ -1,10 +1,15 @@
 import unittest
 import numpy as np
 import pysal
-from pysal.spreg.twosls_sp import BaseGM_Lag, GM_Lag
+#from pysal.spreg.twosls_sp import BaseGM_Lag, GM_Lag
 import pysal.spreg.diagnostics as D
 from scipy import sparse as SP
 
+from functools import partial
+from pysal.contrib.handler import Model
+
+GM_Lag = partial(Model, mtype='GM_Lag')
+BaseGM_Lag = partial(Model, mtype='BaseGM_Lag')
 
 class TestBaseGMLag(unittest.TestCase):
     def setUp(self):
