@@ -308,6 +308,8 @@ class Moran_BV:
         zx = (x - x.mean()) / x.std(ddof=1)
         self.zx = zx
         self.zy = zy
+        n = x.shape[0]
+        self.den =  n - 1.  # zx'zx = zy'zy = n-1
         w.transform = transformation
         self.w = w
         self.I = self.__calc(zy)
@@ -332,7 +334,6 @@ class Moran_BV:
     def __calc(self, zy):
         wzy = slag(self.w, zy)
         self.num = (self.zx * wzy).sum()
-        self.den = (zy * zy).sum()
         return self.num / self.den
 
 
