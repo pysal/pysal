@@ -1,10 +1,14 @@
 import copy
 import registry as sr
 from pysal.weights import W
-import patsy as p
+try:
+    import patsy as p
+except:
+    p = None
 from numpy import array, ndarray, asarray
 from six import iteritems as diter
 
+#would like to just wrap this in the opt decorator...
 def pandashandler(formula_like, data):
     """
     process a pysal model signature and convert an equation/formula pair into a
@@ -70,28 +74,28 @@ class Model(object):
     
 #need to still pass names down from formula into relevant pysal arguments
 
-if __name__ == '__main__':
-    import pysal as ps
-
-    dbf = ps.open(ps.examples.get_path('columbus.dbf'))
-    y, X = dbf.by_col_array(['HOVAL']), dbf.by_col_array(['INC', 'CRIME'])
-    W = ps.open(ps.examples.get_path('columbus.gal')).read()
-    mod1 = sr.OLS(y,X)
-    hmod1 = Model(y,X)
-
-    mod2 = sr.OLS(y,X,W)
-    hmod2 = Model(y,X,W)
-
-    mod3 = sr.ML_Lag(y,X,W)
-    hmod3 = Model(y,X,W, mtype='ML_Lag')
-
-    mod4 = sr.ML_Error(y,X,W)
-    hmod4 = Model(y,X,W,mtype='ML_Error')
-
-    #real power comes from this, though
-    import geopandas as gpd
-    
-    df = gpd.read_file(ps.examples.get_path('columbus.dbf'))
-
-    hmod1_pd = Model('HOVAL ~ INC + CRIME', data=data)
-    mod5 = sr.TSLS('HOVAL ~ INC + CRIME')
+#if __name__ == '__main__':
+#    import pysal as ps
+#
+#    dbf = ps.open(ps.examples.get_path('columbus.dbf'))
+#    y, X = dbf.by_col_array(['HOVAL']), dbf.by_col_array(['INC', 'CRIME'])
+#    W = ps.open(ps.examples.get_path('columbus.gal')).read()
+#    mod1 = sr.OLS(y,X)
+#    hmod1 = Model(y,X)
+#
+#    mod2 = sr.OLS(y,X,W)
+#    hmod2 = Model(y,X,W)
+#
+#    mod3 = sr.ML_Lag(y,X,W)
+#    hmod3 = Model(y,X,W, mtype='ML_Lag')
+#
+#    mod4 = sr.ML_Error(y,X,W)
+#    hmod4 = Model(y,X,W,mtype='ML_Error')
+#
+#    #real power comes from this, though
+#    import geopandas as gpd
+#    
+#    df = gpd.read_file(ps.examples.get_path('columbus.dbf'))
+#
+#    hmod1_pd = Model('HOVAL ~ INC + CRIME', data=data)
+#    mod5 = sr.TSLS('HOVAL ~ INC + CRIME')
