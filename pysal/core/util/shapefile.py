@@ -15,14 +15,18 @@ http://geodacenter.asu.edu
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 
 from struct import calcsize, unpack, pack
-import six
-if six.PY3:
-    import io
-elif six.PY2:
-    from cStringIO import StringIO
+
 from itertools import izip, islice
 import array
 import sys
+
+PY3 = int(sys.version[0]) > 2
+
+if PY3:
+    import io
+else:
+    from cStringIO import StringIO
+
 if sys.byteorder == 'little':
     SYS_BYTE_ORDER = '<'
 else:
@@ -39,10 +43,10 @@ def bufferIO(buf):
     """
     Helper function for 2-3 compatibility
     """
-    if six.PY2:
-        return StringIO(buf)
-    elif six.PY3:
+    if PY3:
         return io.BytesIO(buf)
+    else:
+        return StringIO(buf)
 
 def struct2arrayinfo(struct):
     struct = list(struct)

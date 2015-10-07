@@ -1,9 +1,10 @@
 import unittest
-import six
 
-if six.PY3:
+import sys
+PY3 = int(sys.version[0]) > 2
+if PY3:
     import io
-elif six.PY2:
+else:
     from cStringIO import StringIO
 
 from pysal.core.util.shapefile import noneMax, noneMin, shp_file, shx_file, NullShape, Point, PolyLine, MultiPoint, PointZ, PolyLineZ, PolygonZ, MultiPointZ, PointM, PolyLineM, PolygonM, MultiPointM, MultiPatch
@@ -14,9 +15,9 @@ def bufferIO(buf):
     """
     Temp stringIO function to force compat
     """
-    if six.PY3:
+    if PY3:
         return io.BytesIO(buf)
-    elif six.PY2:
+    else:
         return StringIO(buf)
 
 class TestNoneMax(unittest.TestCase):

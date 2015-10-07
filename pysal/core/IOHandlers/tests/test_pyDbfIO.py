@@ -4,9 +4,6 @@ import unittest
 import pysal
 import tempfile
 import os
-from six.moves import range
-from six.moves import zip
-
 
 class test_DBF(unittest.TestCase):
     def setUp(self):
