@@ -1,0 +1,6 @@
+#!/bin/bash
+
+NOCHANGE='^pysal/spreg'
+git diff --cached --name-only | grep -E $NOCHANGE && \
+    echo "COMMIT REJECTED: Contains changes to pysal/spreg." && exit 1
+exit 0
