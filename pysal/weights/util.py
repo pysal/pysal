@@ -251,7 +251,7 @@ def regime_weights(regimes):
 
 
 
-def block_weights(regimes):
+def block_weights(regimes, ids=None, sparse=False):
     """
     Construct spatial weights for regime neighbors.
 
@@ -262,8 +262,13 @@ def block_weights(regimes):
 
     Parameters
     ----------
-    regimes : list, array
-           ids of which regime an observation belongs to
+    regimes     : list, array
+                  ids of which regime an observation belongs to
+    ids         : list, array
+                  Ordered sequence of IDs for the observations
+    sparse      : boolean
+                  If True return WSP instance
+                  If False return W instance
 
     Returns
     -------
@@ -300,7 +305,12 @@ def block_weights(regimes):
         members = NPNZ(regimes == rid)[0]
         for member in members:
             neighbors[member] = members[NPNZ(members != member)[0]].tolist()
-    return pysal.weights.W(neighbors)
+    w = pysal.weights.W(neighbors)
+    if ids is not None:
+        w.remap_ids(ids)
+    if sparse:
+        w = pysal.weights.WSP(w.sparse, id_order=ids)
+    return w
 
 
 def comb(items, n=None):
