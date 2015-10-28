@@ -8,7 +8,7 @@ __all__ = ['Map_Classifier', 'quantile', 'Box_Plot', 'Equal_Interval',
            'Jenks_Caspall_Forced', 'Jenks_Caspall_Sampled',
            'Max_P_Classifier', 'Maximum_Breaks', 'Natural_Breaks',
            'Quantiles', 'Percentiles', 'Std_Mean', 'User_Defined',
-           'gadf', 'K_classifiers']
+           'gadf', 'K_classifiers', 'HeadTail_Breaks']
 
 
 K = 5  # default number of classes in any map scheme with this as an argument
@@ -18,7 +18,17 @@ import scipy as sp
 import copy
 import sys
 
-
+def headTail_breaks(values, cuts):
+    """
+    head tail breaks helper function
+    """
+    values = np.array(values)
+    mean = np.mean(values)
+    cuts.append(mean)
+    if (len(values) > 1):
+        return headTail_breaks(values[values >= mean], cuts)
+    return cuts
+ 
 def quantile(y, k=4):
     """
     Calculates the quantiles for an array
@@ -529,6 +539,68 @@ class Map_Classifier:
         table.insert(1, " ")
         table = "\n".join(table)
         return table
+
+
+class HeadTail_Breaks(Map_Classifier):
+    """
+    Head/tail Breaks Map Classification for Heavy-tailed Distributions 
+Hi
+    Parameters
+    ----------
+    y       : array
+              (n,1), values to classify
+    Attributes
+    ----------
+    yb      : array
+              (n,1), bin ids for observations,
+    bins    : array
+              (k,1), the upper bounds of each class
+    k       : int
+              the number of classes
+    counts  : array
+              (k,1), the number of observations falling in each class
+    Examples
+    --------
+    >>> import numpy as np
+    >>> np.random.seed(10)
+    >>> cal = load_example()
+    >>> htb = HeadTail_Breaks(cal)
+    >>> htb.k
+    3
+    >>> htb.counts
+    array([50,  7,  1])
+    >>> htb.bins
+    array([  125.92810345,   811.26      ,  4111.45      ])
+    >>> np.random.seed(123456)
+    >>> x = np.random.lognormal(3, 1, 1000)
+    >>> htb = HeadTail_Breaks(x)
+    >>> htb.bins
+    array([  32.26204423,   72.50205622,  128.07150107,  190.2899093 ,
+            264.82847377,  457.88157946,  576.76046949])
+    >>> htb.counts
+    array([695, 209,  62,  22,  10,   1,   1])
+
+    Notes
+    -----
+    
+    Head/tail Breaks is a relatively new classification method developed 
+    and introduced by [Jiang2013]_ for data with a heavy-tailed distribution.
+
+
+    Based on contributions by Alessandra Sozzi <alessandra.sozi@gmail.com>.
+    
+    """
+    def __init__(self, y):
+        Map_Classifier.__init__(self, y)
+        self.name = 'HeadTail_Breaks'
+
+    def _set_bins(self):
+
+        x = self.y.copy()
+        bins = []
+        bins = headTail_breaks(x, bins)
+        self.bins = np.array(bins)
+        self.k = len(self.bins)
 
 
 class Equal_Interval(Map_Classifier):

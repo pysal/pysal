@@ -26,6 +26,7 @@ References
 .. [Greene2003] Greene, W. H. (2003). Econometric analysis. Pearson Education India. 
 .. [Jacquez1996] Jacquez, G. M. (1996). A k nearest neighbour test for space–time interaction. Statistics in medicine, 15(18):1935–1949.
 .. [Jarque1980] Jarque, C. M. and Bera, A. K. (1980). Efficient tests for normality, homoscedasticity and serial independence of regression residuals. Economics letters, 6(3):255–259.
+.. [Jiang2013] Jian, B. (2013). Head/Tail breaks: A new classification scheme for data with a heavy-tailed distribution. The Professional Geographer, 65(3): 482-494.
 .. [Kelejian1998] Kelejian, H. H. and Prucha, I. R. (1998). A generalized spatial two-stage least squares procedure for estimating a spatial autoregressive model with autoregressive disturbances. The Journal of Real Estate Finance and Economics, 17(1):99–121.
 .. [Kelejian1999] Kelejian, H. H. and Prucha, I. R. (1999). A generalized moments estimator for the autoregressive parameter in a spatial model. International Economic Review, 40:509–534.
 .. [Kelejian2001] Kelejian, H. H. and Prucha, I. R. (2001). On the asymptotic distribution of the Moran I test statistic with applications. Journal of Econometrics, 104(2):219–257.
