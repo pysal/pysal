@@ -588,7 +588,7 @@ Hi
     and introduced by [Jiang2013]_ for data with a heavy-tailed distribution.
 
 
-    Based on contributions by Alessandra Sozzi <alessandra.sozi@gmail.com>.
+    Based on contributions by Alessandra Sozzi <alessandra.sozzi@gmail.com>.
     
     """
     def __init__(self, y):
