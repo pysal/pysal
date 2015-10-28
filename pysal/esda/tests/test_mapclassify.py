@@ -125,6 +125,23 @@ class TestNaturalBreaks(unittest.TestCase):
             self.assertEquals(len(nb.counts), 5)
 
 
+
+class TestHeadTailBreaks(unittest.TestCase):
+    def setUp(self):
+        x = range(1,1000)
+        y = []
+        for i in x:
+            y.append(i**(-2))
+        self.V = np.array(y)
+
+    def test_HeadTail_Breaks(self):
+        htb = HeadTail_Breaks(self.V)
+        self.assertEquals(htb.k, 4)
+        self.assertEquals(len(htb.counts), 4)
+        np.testing.assert_array_almost_equal(
+            htb.counts, np.array([975,  21,   2,   1]))
+
+
 class TestMapClassifier(unittest.TestCase):
     def test_Map_Classifier(self):
         # map__classifier = Map_Classifier(y)
