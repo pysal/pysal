@@ -55,6 +55,13 @@ class Testutil(unittest.TestCase):
         wn = {0: [1], 1: [0], 2: [3], 3: [2], 4: [5, 8], 5: [4, 8],
               6: [7], 7: [6], 8: [4, 5]}
         self.assertEquals(w.neighbors, wn)
+        ids = ['id-%i'%i for i in range(len(regimes))]
+        w = pysal.block_weights(regimes, ids=np.array(ids))
+        w0 = {'id-1': 1.0}
+        self.assertEquals(w['id-0'], w0)
+        w = pysal.block_weights(regimes, ids=ids)
+        w0 = {'id-1': 1.0}
+        self.assertEquals(w['id-0'], w0)
 
     def test_comb(self):
         x = range(4)
