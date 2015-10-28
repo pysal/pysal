@@ -403,6 +403,7 @@ class Map_Classifier:
     * :class:`~pysal.esda.mapclassify.Equal_Interval`
     * :class:`~pysal.esda.mapclassify.Fisher_Jenks`
     * :class:`~pysal.esda.mapclassify.Fisher_Jenks_Sampled`
+    * :class:`~pysal.esda.mapclassify.HeadTail_Breaks`
     * :class:`~pysal.esda.mapclassify.Jenks_Caspall`
     * :class:`~pysal.esda.mapclassify.Jenks_Caspall_Forced`
     * :class:`~pysal.esda.mapclassify.Jenks_Caspall_Sampled`
