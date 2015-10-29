@@ -4,6 +4,7 @@ from pysal.esda import getisord
 import numpy as np
 
 POINTS = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+POINTS = np.array(POINTS)
 W = DistanceBand(POINTS, threshold=15)
 Y = np.array([2, 3, 3.2, 5, 8, 7])
 

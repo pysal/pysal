@@ -5,13 +5,13 @@ Apply smoothing to rate computation
 
 Author(s):
     Myunghwa Hwang mhwang4@gmail.com
-    David Folch dfolch@asu.edu
+    David Folch dfolch@fsu.edu
     Luc Anselin luc.anselin@asu.edu
     Serge Rey srey@asu.edu
 
 """
 
-__author__ = "Myunghwa Hwang <mhwang4@gmail.com>, David Folch <dfolch@asu.edu>, Luc Anselin <luc.anselin@asu.edu>, Serge Rey <srey@asu.edu"
+__author__ = "Myunghwa Hwang <mhwang4@gmail.com>, David Folch <dfolch@fsu.edu>, Luc Anselin <luc.anselin@asu.edu>, Serge Rey <srey@asu.edu"
 
 import pysal
 from pysal.weights import comb, Kernel
@@ -538,7 +538,7 @@ def assuncao_rate(e, b):
     Computing the rates
 
     >>> print assuncao_rate(e, b)[:4]
-    [ 1.04319254 -0.04117865 -0.56539054 -1.73762547]
+    [ 1.03843594 -0.04099089 -0.56250375 -1.73061861]
 
     """
 
@@ -812,7 +812,8 @@ class Kernel_Smoother:
 
     Creating a kernel-based spatial weights instance by using the above points
 
-    >>> kw=Kernel(points)
+    >>> kdt = pysal.KDTree(points)
+    >>> kw=Kernel(kdt)
 
     Ensuring that the elements in the kernel-based weights are ordered
     by the given sequential numbers from 0 to 5
@@ -883,7 +884,8 @@ class Age_Adjusted_Smoother:
 
     Creating a kernel-based spatial weights instance by using the above points
 
-    >>> kw=Kernel(points)
+    >>> kdt = pysal.KDTree(points)
+    >>> kw=Kernel(kdt)
 
     Ensuring that the elements in the kernel-based weights are ordered
     by the given sequential numbers from 0 to 5

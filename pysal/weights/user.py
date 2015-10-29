@@ -229,9 +229,9 @@ def knnW_from_array(array, k=2, p=2, ids=None, radius=None):
 
     """
     if radius is not None:
-        kdtree = pysal.cg.KDTree(array, distance_metric='Arc', radius=radius)
+        kdtree = pysal.KDTree(array, distance_metric='Arc', radius=radius)
     else:
-        kdtree = pysal.cg.KDTree(array)
+        kdtree = pysal.KDTree(array)
     return knnW(kdtree, k=k, p=p, ids=ids)
 
 
@@ -319,9 +319,9 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
     data = get_points_array_from_shapefile(shapefile)
 
     if radius is not None:
-        kdtree = pysal.cg.KDTree(data, distance_metric='Arc', radius=radius)
+        kdtree = pysal.KDTree(data, distance_metric='Arc', radius=radius)
     else:
-        kdtree = pysal.cg.KDTree(data)
+        kdtree = pysal.KDTree(data)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
         return knnW(kdtree, k=k, p=p, ids=ids)
@@ -359,6 +359,7 @@ def threshold_binaryW_from_array(array, threshold, p=2, radius=None):
     Examples
     --------
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+    >>> points=np.array(points)
     >>> w=threshold_binaryW_from_array(points,threshold=11.2)
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
@@ -369,7 +370,7 @@ def threshold_binaryW_from_array(array, threshold, p=2, radius=None):
     >>>
     """
     if radius is not None:
-        array = pysal.cg.KDTree(array, distance_metric='Arc', radius=radius)
+        array = pysal.KDTree(array, distance_metric='Arc', radius=radius)
     return DistanceBand(array, threshold=threshold, p=p)
 
 
@@ -419,7 +420,7 @@ def threshold_binaryW_from_shapefile(shapefile, threshold, p=2, idVariable=None,
 
     data = get_points_array_from_shapefile(shapefile)
     if radius is not None:
-        data = pysal.cg.KDTree(data, distance_metric='Arc', radius=radius)
+        data = pysal.KDTree(data, distance_metric='Arc', radius=radius)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
         w = DistanceBand(data, threshold=threshold, p=p)
@@ -466,6 +467,7 @@ def threshold_continuousW_from_array(array, threshold, p=2,
     inverse distance weights
 
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+    >>> points=np.array(points)
     >>> wid=threshold_continuousW_from_array(points,11.2)
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
@@ -483,7 +485,7 @@ def threshold_continuousW_from_array(array, threshold, p=2,
     """
 
     if radius is not None:
-        array = pysal.cg.KDTree(array, distance_metric='Arc', radius=radius)
+        array = pysal.KDTree(array, distance_metric='Arc', radius=radius)
     w = DistanceBand(
         array, threshold=threshold, p=p, alpha=alpha, binary=False)
     return w
@@ -539,13 +541,13 @@ def threshold_continuousW_from_shapefile(shapefile, threshold, p=2,
 
     data = get_points_array_from_shapefile(shapefile)
     if radius is not None:
-        data = pysal.cg.KDTree(data, distance_metric='Arc', radius=radius)
+        data = pysal.KDTree(data, distance_metric='Arc', radius=radius)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
         w = DistanceBand(data, threshold=threshold, p=p, alpha=alpha, binary=False)
         w.remap_ids(ids)
     else:
-        w =  threshold_continuousW_from_array(data, threshold, p=p, alpha=alpha)
+        w = threshold_continuousW_from_array(data, threshold, p=p, alpha=alpha)
     w.set_shapefile(shapefile,idVariable)
     return w
 
@@ -638,6 +640,7 @@ def kernelW(points, k=2, function='triangular', fixed=True,
     Examples
     --------
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+    >>> points=np.array(points)
     >>> kw=kernelW(points)
     >>> kw.weights[0]
     [1.0, 0.500000049999995, 0.4409830615267465]
@@ -676,7 +679,7 @@ def kernelW(points, k=2, function='triangular', fixed=True,
     """
 
     if radius is not None:
-        points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
+        points = pysal.KDTree(points, distance_metric='Arc', radius=radius)
     return Kernel(points, function=function, k=k, fixed=fixed,
             diagonal=diagonal)
 
@@ -791,7 +794,7 @@ def kernelW_from_shapefile(shapefile, k=2, function='triangular',
 
     points = get_points_array_from_shapefile(shapefile)
     if radius is not None:
-        points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
+        points = pysal.KDTree(points, distance_metric='Arc', radius=radius)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
         return Kernel(points, function=function, k=k, ids=ids, fixed=fixed,
@@ -879,6 +882,7 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular',
     User specified bandwidths
 
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+    >>> points=np.array(points)
     >>> bw=[25.0,15.0,25.0,16.0,14.5,25.0]
     >>> kwa=adaptive_kernelW(points,bandwidths=bw)
     >>> kwa.weights[0]
@@ -936,7 +940,7 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular',
 
     """
     if radius is not None:
-        points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
+        points = pysal.KDTree(points, distance_metric='Arc', radius=radius)
     return Kernel(points, bandwidth=bandwidths, fixed=False, k=k,
             function=function, diagonal=diagonal)
 
@@ -1039,7 +1043,7 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='t
     """
     points = get_points_array_from_shapefile(shapefile)
     if radius is not None:
-        points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
+        points = pysal.KDTree(points, distance_metric='Arc', radius=radius)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
         return Kernel(points, bandwidth=bandwidths, fixed=False, k=k,
@@ -1089,7 +1093,7 @@ def min_threshold_dist_from_shapefile(shapefile, radius=None, p=2):
     """
     points = get_points_array_from_shapefile(shapefile)
     if radius is not None:
-        points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
+        points = pysal.KDTree(points, distance_metric='Arc', radius=radius)
     return min_threshold_distance(points,p)
 
 
