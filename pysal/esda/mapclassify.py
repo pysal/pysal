@@ -247,7 +247,7 @@ def bin1d(x, bins):
         k -= 1
         l, r = cuts.pop(-1)
         binIds += (x > l) * (x <= r) * k
-    counts = np.bincount(binIds)
+    counts = np.bincount(binIds, minlength=len(bins))
     return (binIds, counts)
 
 
