@@ -109,7 +109,7 @@ class TestNaturalBreaks(unittest.TestCase):
         self.assertEquals(nb.k, 5)
         self.assertEquals(len(nb.counts), 5)
         np.testing.assert_array_almost_equal(
-            nb.counts, np.array([14, 13, 14, 10, 7]))
+            nb.counts, np.array([41, 9, 6, 1, 1]))
 
     def test_Natural_Breaks_stability(self):
         for i in range(10):
