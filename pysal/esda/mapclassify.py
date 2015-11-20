@@ -1078,11 +1078,10 @@ class Natural_Breaks(Map_Classifier):
     Notes
     -----
     There is a tradeoff here between speed and consistency of the
-    classification
-    If you want more speed, set initial to a smaller value (0
+    classification If you want more speed, set initial to a smaller value (0
     would result in the best speed, if you want more consistent classes in
-    multiple runs of Natural_Breaks on the same data, set initial to a
-    higher value.
+    multiple runs of Natural_Breaks on the same data, set initial to a higher
+    value.
 
 
     """
