@@ -1070,7 +1070,7 @@ class Natural_Breaks(Map_Classifier):
     Warning: Not enough unique values in array to form k classes
     Warning: setting k to 2
     >>> nb.bins
-    array([ 1., 20.])
+    array([ 1, 20])
     >>> nb.counts
     array([49,  1])
 
@@ -1102,8 +1102,13 @@ class Natural_Breaks(Map_Classifier):
             print 'Warning: Not enough unique values in array to form k classes'
             print "Warning: setting k to %d" % uvk
             k = uvk
-            res0 = natural_breaks(x, k)
+            uv.sort()
+            # we set the bins equal to the sorted unique values and ramp k
+            # downwards. no need to call kmeans.
+            self.bins = uv
+            self.k = k
         else:
+            # find an initial solution and then try to find an improvement
             res0 = natural_breaks(x, k)
             fit = res0[2]
             for i in xrange(self.initial):
@@ -1111,8 +1116,8 @@ class Natural_Breaks(Map_Classifier):
                 fit_i = res[2]
                 if fit_i < fit:
                     res0 = res
-        self.bins = np.array(res0[-1])
-        self.k = len(self.bins)
+            self.bins = np.array(res0[-1])
+            self.k = len(self.bins)
 
 
 class Fisher_Jenks(Map_Classifier):
@@ -1965,7 +1970,6 @@ def opt_part(x):
     tss = np.inf
     opt_i = -999
     for i in xrange(1, n):
-        print i
         left = x[:i].var() * i
         right = x[i:].var() * (n - i)
         tss_i = left + right
