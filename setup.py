@@ -1,24 +1,13 @@
 # coding: utf-8
 
-try:
-    from setuptools import setup, find_packages
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup, find_packages
 
 try:
     from distutils.command.build_py import build_py_2to3 as build_py
 except ImportError:
     from distutils.command.build_py import build_py
 
-import sys
-import shutil
 import os
-if sys.version_info[0] < 3:
-    import __builtin__ as builtins
-else:
-    import builtins
-
-from version import version as dversion
 
 with open('README.rst') as file:
     long_description = file.read()
@@ -56,7 +45,7 @@ def setup_package():
 
     setup(
         name='PySAL',
-        version=dversion,
+        version=VERSION,
         description="A library of spatial analysis functions.",
         long_description=long_description,
         maintainer="PySAL Developers",
