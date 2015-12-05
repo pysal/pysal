@@ -78,8 +78,6 @@ pysal/examples/south.prj
 #Vi
 *.swp
 
-<<<<<<< .merge_file_kJMymW
-=======
 .eggs/
 pysal/contrib/planar/
 pysal/esda/.ropeproject/
@@ -103,4 +101,3 @@ pysal/examples/snow_maps/soho_graph.prj
 pysal/examples/snow_maps/soho_graph.qpj
 pysal/examples/snow_maps/soho_graph.shp
 pysal/examples/snow_maps/soho_graph.shx
->>>>>>> .merge_file_PQx9xW
