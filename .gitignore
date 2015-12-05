@@ -101,10 +101,7 @@ pysal/examples/snow_maps/soho_graph.prj
 pysal/examples/snow_maps/soho_graph.qpj
 pysal/examples/snow_maps/soho_graph.shp
 pysal/examples/snow_maps/soho_graph.shx
-<<<<<<< .merge_file_UtNoPB
 pysal/points/.ropeproject/
 pysal/spatial_dynamics/.ropeproject/
 pysal/spatial_dynamics/markov_tests.ipynb
 .ropeprojec*
-=======
->>>>>>> .merge_file_3zTfpB
