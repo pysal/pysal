@@ -26,15 +26,17 @@ import pysal
 MAXD = sys.float_info.max
 MIND = sys.float_info.min
 
+
 def nn_distances(points):
     tree = pysal.cg.KDTree(points)
-    nn = tree.query(tree.data ,k=2)
-    return nn[0][:,1]
+    nn = tree.query(tree.data, k=2)
+    return nn[0][:, 1]
+
 
 def nn_ids(points):
     tree = pysal.cg.KDTree(points)
-    nn = tree.query(tree.data ,k=2)
-    return nn[1][:,1]
+    nn = tree.query(tree.data, k=2)
+    return nn[1][:, 1]
 
 
 def nn_distances_bf(points):
@@ -45,7 +47,6 @@ def nn_distances_bf(points):
     d_mins = [MAXD] * n
     neighbors = [-1] * n
     for i, point_i in enumerate(points[:-1]):
-        d_i_min = MAXD
         i_x, i_y = point_i
         for j in range(i+1, n):
             point_j = points[j]
@@ -55,12 +56,13 @@ def nn_distances_bf(points):
             d_ij = dx*dx + dy*dy
             if d_ij < d_mins[i]:
                 d_mins[i] = d_ij
-                neighbors[i] = j 
+                neighbors[i] = j
             if d_ij < d_mins[j]:
                 d_mins[j] = d_ij
-                neighbors[j] = i 
+                neighbors[j] = i
     d_mins = [math.sqrt(d_i) for d_i in d_mins]
     return neighbors, d_mins
+
 
 def d_min_bf(points):
     """
@@ -83,12 +85,12 @@ def G_bf(points, k=10):
     w = d_max/k
     n = len(d_mins)
 
-    d = [ w*i for i in range(k+2)]
+    d = [w*i for i in range(k+2)]
     cdf = [0] * len(d)
     for i, d_i in enumerate(d):
-        smaller = [ d_i_min for d_i_min in d_mins if d_i_min <= d_i]
+        smaller = [d_i_min for d_i_min in d_mins if d_i_min <= d_i]
         cdf[i] = len(smaller)*1./n
-    return d,cdf
+    return d, cdf
 
 
 def mbr_bf(points):
@@ -98,7 +100,7 @@ def mbr_bf(points):
     min_x = min_y = MAXD
     max_x = max_y = MIND
     for point in points:
-        x,y = point
+        x, y = point
         if x > max_x:
             max_x = x
         if x < min_x:
@@ -111,16 +113,16 @@ def mbr_bf(points):
 
 
 def F_bf(points, n=100):
-    x0,y0,x1,y1 = mbr_bf(points)
+    x0, y0, x1, y1 = mbr_bf(points)
     ru = random.uniform
-    r_points = [ (ru(x0,x1),ru(y0,y1)) for i in xrange(n) ]
+    r_points = [(ru(x0, x1), ru(y0, y1)) for i in xrange(n)]
     d_mins = [MAXD] * n
     neighbors = [-9] * n
     for i, r_point in enumerate(r_points):
         d_i = MAXD
-        x0,y0 = r_point
+        x0, y0 = r_point
         for j, point in enumerate(points):
-            x1,y1 = point
+            x1, y1 = point
             dx = x0-x1
             dy = y0-y1
             d = dx*dx + dy*dy
@@ -128,33 +130,35 @@ def F_bf(points, n=100):
                 d_mins[i] = d
                 neighbors[i] = j
                 d_i = d
-    return [math.sqrt(d_i) for d_i in d_mins], neighbors
+    return [math.sqrt(d_min_i) for d_min_i in d_mins], neighbors
+
 
 def F_cdf_bf(points, n=100, k=10,):
-    d, g_cdf = G_bf(points, k = k) 
+    d, g_cdf = G_bf(points, k=k)
     d_mins, neighbors = F_bf(points, n)
     cdf = [0] * len(d)
     for i, d_i in enumerate(d):
-        smaller = [ d_i_min for d_i_min in d_mins if d_i_min <= d_i]
+        smaller = [d_i_min for d_i_min in d_mins if d_i_min <= d_i]
         cdf[i] = len(smaller)*1./n
-    return d,cdf
+    return d, cdf
+
 
 def k_bf(points, n_bins=100):
     n = len(points)
-    x0,y0,x1,y1 = mbr_bf(points)
+    x0, y0, x1, y1 = mbr_bf(points)
     d_max = (x1-x0)**2 + (y1-y0)**2
     d_max = math.sqrt(d_max)
     w = d_max / (n_bins-1)
-    d = [ w*i for i in range(n_bins) ]
+    d = [w*i for i in range(n_bins)]
     ks = [0] * len(d)
     for i, p_i in enumerate(points[:-1]):
         x0, y0 = p_i
-        for j in xrange(i+1,n):
-            x1,y1 = points[j]
+        for j in xrange(i+1, n):
+            x1, y1 = points[j]
             dx = x1-x0
             dy = y1-y0
             dij = math.sqrt(dx*dx + dy*dy)
-            uppers = [ di for di in d if di >= dij]
+            uppers = [di for di in d if di >= dij]
             for upper in uppers:
                 ki = d.index(upper)
                 ks[ki] += 2
@@ -163,13 +167,13 @@ def k_bf(points, n_bins=100):
 
 def csr_bf(bb, n=100, n_conditioned=True):
 
-    x0,y0,x1,y1 = bb
+    x0, y0, x1, y1 = bb
     ru = random.uniform
     if n_conditioned:
-        points = [ (ru(x0,x1), ru(y0,y1)) for i in xrange(n) ]
+        points = [(ru(x0, x1), ru(y0, y1)) for i in xrange(n)]
     else:
         ns = np.random.poisson(n)
-        points = [ (ru(x0,x1), ru(y0,y1)) for i in xrange(ns) ]
+        points = [(ru(x0, x1), ru(y0, y1)) for i in xrange(ns)]
     return points
 
 
@@ -178,16 +182,6 @@ if __name__ == '__main__':
     # table 4.9 O'Sullivan and Unwin 2nd edition. Note observation 9 is
     # incorrect on its coordinates. Have to update (approximation for now)
 
-    points = [ [66.22, 32.54],
-               [22.52, 22.39],
-               [31.01, 81.21],
-               [ 9.47, 31.02],
-               [30.78, 60.10],
-               [75.21, 58.93],
-               [79.26,  7.68],
-               [ 8.23, 39.93],
-               [98.73, 80.53],
-               [89.78, 42.53],
-               [65.19, 92.08],
-               [54.46,  8.48] ]
-    
+    points = [[66.22, 32.54], [22.52, 22.39], [31.01, 81.21], [9.47, 31.02],
+              [30.78, 60.10], [75.21, 58.93], [79.26,  7.68], [8.23, 39.93],
+              [98.73, 80.53], [89.78, 42.53], [65.19, 92.08], [54.46, 8.48]]
