@@ -104,4 +104,4 @@ pysal/examples/snow_maps/soho_graph.shx
 pysal/points/.ropeproject/
 pysal/spatial_dynamics/.ropeproject/
 pysal/spatial_dynamics/markov_tests.ipynb
-
+.ropeprojec*
