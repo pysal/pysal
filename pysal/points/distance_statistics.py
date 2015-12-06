@@ -59,6 +59,32 @@ class Point_Pattern(object):
         self.points = np.array(points)
         self.n, self.p = self.points.shape
 
+    def _mbb(self):
+        """
+        Minumum bounding box
+        """
+        mins = self.points.min(axis=0)
+        maxs = self.points.max(axis=0)
+        return np.vstack((mins, maxs)).T
+
+    mbb = cached_property(_mbb)
+
+    def _mbb_area(self):
+        """
+        Area of minimum bounding box
+        """
+        return np.product(self.mbb[:, -1]-self.mbb[:, 0])
+
+    mbb_area = cached_property(_mbb_area)
+
+    def _lambda_bb(self):
+        """
+        Intensity based on minimum bounding box
+        """
+        return self.n * 1. / self.mbb_area
+
+    lambda_bb = cached_property(_lambda_bb)
+
     def _build_tree(self):
         return pysal.cg.KDTree(self.points)
 
@@ -116,7 +142,7 @@ class Point_Pattern(object):
 
     mean_nnd = cached_property(_mean_nnd)
 
-    def G(self, intervals=10):
+    def G(self, intervals=10, dmin=0.0, dmax=None):
         """
         G function: cdf for nearest neighbor distances
 
@@ -139,29 +165,26 @@ class Point_Pattern(object):
             cdf[i] = len(smaller)*1./n
         return np.vstack((d, cdf)).T
 
-
-    ### Pick up here
-
-    def csr(self, n, ranges):
+    def csr(self, n):
         """
-        Generate a CSR pattern of size n in p space
+        Generate a CSR pattern of size n in the minimum bounding box for the
+        pattern
 
         Arguments
         ---------
         n: int
            number of points to generate
 
-        range: array (2 x p)
-            column i has the min and max value of dimension i
-
         Returns
         -------
         y: array (n x p)
-           csr realization of size n in p-space
+           csr realization of size n in p-space minium bounding box
         """
-        return NotImplemented
 
-    def F(self, n=100, intervals=10):
+        return np.hstack([np.random.uniform(d[0], d[1], (n, 1)) for d in
+                         self.mbb])
+
+    def F(self, n=100, intervals=10, dmin=0.0, dmax=None, window='mbb'):
         """
         F: empty space function
 
@@ -171,6 +194,11 @@ class Point_Pattern(object):
            number of empty space points
         intevals: int
             number of intervals to evalue F over
+        dmin: float
+               lower limit of distance range
+        dmax: float
+               upper limit of distance range
+               if dmax is None dmax will be set to maxnnd
 
         Returns
         -------
@@ -178,9 +206,25 @@ class Point_Pattern(object):
              first column is d, second column is cdf(d)
 
         """
-        return NotImplemented
 
-    def J(self, n=100, intervals=10):
+        if window.lower() == 'mbb':
+            p = Point_Pattern(self.csr(n))
+            nnids, nnds = self.knn_other(p, k=1)
+            if dmax is None:
+                max_nnds = self.max_nnd
+            else:
+                max_nnds = dmax
+            w = max_nnds / intervals
+            d = [w*i for i in range(intervals + 2)]
+            cdf = [0] * len(d)
+            for i, d_i in enumerate(d):
+                smaller = [nndi for nndi in nnds if nndi <= d_i]
+                cdf[i] = len(smaller)*1./n
+            return np.vstack((d, cdf)).T
+        else:
+            return NotImplemented
+
+    def J(self, n=100, intervals=10, dmin=0.0, dmax=None):
         """
         J: scaled G function
 
@@ -196,7 +240,18 @@ class Point_Pattern(object):
         cdf: array (intervals x 2)
              first column is d, second column is cdf(d)
         """
-        return NotImplemented
+        F = self.F(n, intervals)
+        G = self.G(intervals)
+        FC = 1 - F[:, 1]
+        GC = 1 - G[:, 1]
+        last_id = len(GC) + 1
+        if np.any(FC==0):
+            last_id = np.where(FC==0)[0][0]
+
+        return np.vstack((F[:last_id,0],FC[:last_id]/GC[:last_id]))
+
+
+
 
     def K(self, intervals=10):
         """
@@ -207,8 +262,6 @@ class Point_Pattern(object):
 
         """
         return NotImplemented
-
-
 
     def find_pairs(self, r):
         """
@@ -250,13 +303,8 @@ class Point_Pattern(object):
                nearest neighbor
         """
 
-        nn = self.tree.query(other.points, k=k+1)
-        return nn[1][:, 1:], nn[0][:, 1:]
-
-
-
-
-
+        nn = self.tree.query(other.points, k=k)
+        return nn[1], nn[0]
 
 def nn_distances(points):
     tree = pysal.cg.KDTree(points)
