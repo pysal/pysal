@@ -1,15 +1,12 @@
 """
 Distance based point pattern statistics
 
-Initial implementation using brute force intended for use in testing for more
-optimal implementations.
-
-
 Author: Serge Rey <sjsrey@gmail.com>
 
 
 TODO
 
+- flesh out Point_Pattern class
 - doc strings
 - unit tests
 - simulation based inference
@@ -25,6 +22,240 @@ import pysal
 
 MAXD = sys.float_info.max
 MIND = sys.float_info.min
+
+import functools
+
+
+def cached_property(fun):
+    """A memoize decorator for class properties.
+
+    Adapted from: http://code.activestate.com/recipes/576563-cached-property/
+    """
+    @functools.wraps(fun)
+    def get(self):
+        try:
+            return self._cache[fun]
+        except AttributeError:
+            self._cache = {}
+        except KeyError:
+            pass
+        ret = self._cache[fun] = fun(self)
+        return ret
+    return property(get)
+
+
+class Point_Pattern(object):
+    """
+    Point Pattern
+
+    """
+    def __init__(self, points):
+        """
+
+        Arguments
+        ---------
+        points:  array (n x p)
+        """
+        self.points = np.array(points)
+        self.n, self.p = self.points.shape
+
+    def _build_tree(self):
+        return pysal.cg.KDTree(self.points)
+
+    tree = cached_property(_build_tree)
+
+    def knn(self, k=1):
+        """
+        Find k nearest neighbors for each point in the pattern
+
+        Arguments
+        ---------
+        k:      int
+                number of nearest neighbors to find
+
+        Returns
+        -------
+        nn:    array (n x k)
+               row i  column j contains the id for i's jth nearest neighbor
+
+        nnd:   array(n x k)
+               row i column j contains the distance between i and its jth
+               nearest neighbor
+        """
+
+        nn = self.tree.query(self.tree.data, k=k+1)
+        return nn[1][:, 1:], nn[0][:, 1:]
+
+    def _nn_sum(self):
+        """
+        Nearest neighbor distances
+        """
+        ids, nnd = self.knn(1)
+        return nnd
+
+    nnd = cached_property(_nn_sum)  # nearest neighbor distances
+
+    def _min_nnd(self):
+        """
+        Min nearest neighbor distance
+        """
+        return self.nnd.min()
+
+    min_nnd = cached_property(_min_nnd)
+
+    def _max_nnd(self):
+        """
+        Max nearest neighbor distance
+        """
+        return self.nnd.max()
+
+    max_nnd = cached_property(_max_nnd)
+
+    def _mean_nnd(self):
+        return self.nnd.mean()
+
+    mean_nnd = cached_property(_mean_nnd)
+
+    def G(self, intervals=10):
+        """
+        G function: cdf for nearest neighbor distances
+
+        Arguments
+        ---------
+        intervals: int
+                   number of intervals to evaluate G over
+
+        Returns
+        -------
+        cdf: array (intervals x 2)
+             first column is d, second column is cdf(d)
+        """
+        w = self.max_nnd/intervals
+        n = len(self.nnd)
+        d = [w*i for i in range(intervals + 2)]
+        cdf = [0] * len(d)
+        for i, d_i in enumerate(d):
+            smaller = [nndi for nndi in self.nnd if nndi <= d_i]
+            cdf[i] = len(smaller)*1./n
+        return np.vstack((d, cdf)).T
+
+
+    ### Pick up here
+
+    def csr(self, n, ranges):
+        """
+        Generate a CSR pattern of size n in p space
+
+        Arguments
+        ---------
+        n: int
+           number of points to generate
+
+        range: array (2 x p)
+            column i has the min and max value of dimension i
+
+        Returns
+        -------
+        y: array (n x p)
+           csr realization of size n in p-space
+        """
+        return NotImplemented
+
+    def F(self, n=100, intervals=10):
+        """
+        F: empty space function
+
+        Arguments
+        ---------
+        n: int
+           number of empty space points
+        intevals: int
+            number of intervals to evalue F over
+
+        Returns
+        -------
+        cdf: array (intervals x 2)
+             first column is d, second column is cdf(d)
+
+        """
+        return NotImplemented
+
+    def J(self, n=100, intervals=10):
+        """
+        J: scaled G function
+
+        Arguments
+        ---------
+        n: int
+           number of empty space points
+        intevals: int
+            number of intervals to evalue F over
+
+        Returns
+        -------
+        cdf: array (intervals x 2)
+             first column is d, second column is cdf(d)
+        """
+        return NotImplemented
+
+    def K(self, intervals=10):
+        """
+        Ripley's K function
+
+        Arguments
+        ---------
+
+        """
+        return NotImplemented
+
+
+
+    def find_pairs(self, r):
+        """
+        Find all pairs of points in the pattern that are within r units of each
+        other
+
+        Arguments
+        ---------
+        r: float
+           diameter of pair circle
+
+        Returns
+        ------
+        s: set
+           pairs of points within r units of each other
+
+        """
+        return self.tree.query_pairs(r)
+
+    def knn_other(self, other, k=1):
+        """
+        Find k nearest neighbors in the pattern for each point in other
+
+        Arguments
+        ---------
+        other: Point_Pattern
+                n points on p dimensions
+
+        k:      int
+                number of nearest neighbors to find
+
+        Returns
+        -------
+        nn:    array (n x k)
+               row i  column j contains the id for i's jth nearest neighbor
+
+        nnd:   array(n x k)
+               row i column j contains the distance between i and its jth
+               nearest neighbor
+        """
+
+        nn = self.tree.query(other.points, k=k+1)
+        return nn[1][:, 1:], nn[0][:, 1:]
+
+
+
+
 
 
 def nn_distances(points):
@@ -79,7 +310,7 @@ def G_bf(points, k=10):
     Brute force cumulative frequency distribution of nearest neighbor
     distances
     """
-    neighbors, d_mins = nn_distances(points)
+    neighbors, d_mins = knn(points, k=1)
 
     d_max = max(d_mins)
     w = d_max/k
@@ -185,3 +416,9 @@ if __name__ == '__main__':
     points = [[66.22, 32.54], [22.52, 22.39], [31.01, 81.21], [9.47, 31.02],
               [30.78, 60.10], [75.21, 58.93], [79.26,  7.68], [8.23, 39.93],
               [98.73, 80.53], [89.78, 42.53], [65.19, 92.08], [54.46, 8.48]]
+
+    p1 = np.array(points)
+    p2 = p1[:5:,:]  + 100
+
+    p1 = Point_Pattern(p1)
+    p2 = Point_Pattern(p2)
