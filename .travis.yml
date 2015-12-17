@@ -21,7 +21,7 @@ before_install:
   - source activate test-env
 
 install:
-  - conda install --yes numpy scipy nose pip
+  - conda install --yes numpy=1.10.2 scipy=0.16.0 nose pip
   - pip install -r travis.txt
 
 script: 
