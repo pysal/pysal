@@ -101,7 +101,9 @@ class Moran_Local_Rate_Tester(unittest.TestCase):
 
 
 suite = unittest.TestSuite()
-test_classes = [Moran_Tester, Moran_BV_matrix_Tester, Moran_Local_Tester]
+test_classes = [Moran_Tester, Moran_Rate_Tester, 
+                Moran_BV_matrix_Tester, Moran_Local_Tester,
+                Moran_Local_BV_Tester, Moran_Local_Rate_Tester]
 for i in test_classes:
     a = unittest.TestLoader().loadTestsFromTestCase(i)
     suite.addTest(a)
