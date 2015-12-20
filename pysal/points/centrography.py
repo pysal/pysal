@@ -27,6 +27,7 @@ def mbr(points):
     """
     Minimum bounding rectangle
     """
+    points = np.asarray(points)
     min_x = min_y = MAXD
     max_x = max_y = MIND
     for point in points:
@@ -56,25 +57,25 @@ def hull(points):
     _ : array (h x 2)
         points defining the hull in counterclockwise order
     """
-
+    points = np.asarray(points)
     h = ConvexHull(points)
     return points[h.vertices]
 
 
 def mean_center(points):
-    try:
-        return points.mean(axis=0)
-    except:
-        return np.array(points).mean(axis=0)
+    points = np.asarray(points)
+    points.mean(axis=0)
 
 
 def weighted_mean_center(points, weights):
+    points, weights = np.asarray(points), np.asarray(weights)
     w = weights * 1. / weights.sum()
     w.shape = (1, len(points))
     return np.dot(w, points)[0]
 
 
 def manhattan_median(points):
+    points = np.asarray(points)
     if not len(points) % 2:
         s = "Manhattan Median is not unique for even point patterns."
         warnings.warn(s)

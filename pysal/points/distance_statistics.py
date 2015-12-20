@@ -53,7 +53,7 @@ class Point_Pattern(object):
         ---------
         points:  array (n x p)
         """
-        self.points = np.array(points)
+        self.points = np.asrray(points)
         self.n, self.p = self.points.shape
 
     def _mbb(self):
@@ -311,13 +311,13 @@ def nn_distances(points):
 
 
 def nn_ids(points):
+    points = np.asarray(points)
     tree = pysal.cg.KDTree(points)
     nn = tree.query(tree.data, k=2)
     return nn[1][:, 1]
 
 
 def csr(bb, n=100, n_conditioned=True):
-
     x0, y0, x1, y1 = bb
     ru = random.uniform
     if n_conditioned:
