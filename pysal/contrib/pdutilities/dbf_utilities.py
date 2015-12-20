@@ -106,9 +106,6 @@ def df2dbf(df, dbf_path, my_specs=None):
     db.close()
     return dbf_path
 
-
-
-    
 def dbf2df(dbf_path, index=None, cols=False, incl_index=False):
     '''
     Read a dbf file as a pandas.DataFrame, optionally selecting the index
@@ -218,4 +215,3 @@ def dta2dbf(dta_path,dbf_path):
     db = pd.read_stata(dta_path)
     dp = df2dbf(db,dbf_path)
     return dp    
-    
