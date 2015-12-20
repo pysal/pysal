@@ -13,17 +13,14 @@ TODO
 - analytical inference
 """
 
-
 import sys
-import math
 import random
 import numpy as np
+import functools
 import pysal
 
-MAXD = sys.float_info.max
-MIND = sys.float_info.min
-
-import functools
+if sys.version_info[0] > 2:
+    xrange = range
 
 
 def cached_property(fun):
@@ -245,13 +242,10 @@ class Point_Pattern(object):
         FC = 1 - F[:, 1]
         GC = 1 - G[:, 1]
         last_id = len(GC) + 1
-        if np.any(FC==0):
-            last_id = np.where(FC==0)[0][0]
+        if np.any(FC == 0):
+            last_id = np.where(FC == 0)[0][0]
 
-        return np.vstack((F[:last_id,0],FC[:last_id]/GC[:last_id]))
-
-
-
+        return np.vstack((F[:last_id, 0], FC[:last_id]/GC[:last_id]))
 
     def K(self, intervals=10):
         """
@@ -303,8 +297,12 @@ class Point_Pattern(object):
                nearest neighbor
         """
 
-        nn = self.tree.query(other.points, k=k)
+        try:
+            nn = self.tree.query(other.points, k=k)
+        except:
+            nn = self.tree.query(other, k=k)
         return nn[1], nn[0]
+
 
 def nn_distances(points):
     tree = pysal.cg.KDTree(points)
@@ -318,143 +316,15 @@ def nn_ids(points):
     return nn[1][:, 1]
 
 
-def nn_distances_bf(points):
-    """
-    Brute force nearest neighbors
-    """
-    n = len(points)
-    d_mins = [MAXD] * n
-    neighbors = [-1] * n
-    for i, point_i in enumerate(points[:-1]):
-        i_x, i_y = point_i
-        for j in range(i+1, n):
-            point_j = points[j]
-            j_x, j_y = point_j
-            dx = i_x - j_x
-            dy = i_y - j_y
-            d_ij = dx*dx + dy*dy
-            if d_ij < d_mins[i]:
-                d_mins[i] = d_ij
-                neighbors[i] = j
-            if d_ij < d_mins[j]:
-                d_mins[j] = d_ij
-                neighbors[j] = i
-    d_mins = [math.sqrt(d_i) for d_i in d_mins]
-    return neighbors, d_mins
-
-
-def d_min_bf(points):
-    """
-    Brute force mean nearest neighbor statistic
-
-    """
-    neighbors, d_mins = nn_distances(points)
-    n = len(d_mins)
-    return sum(d_mins)/n
-
-
-def G_bf(points, k=10):
-    """
-    Brute force cumulative frequency distribution of nearest neighbor
-    distances
-    """
-    neighbors, d_mins = knn(points, k=1)
-
-    d_max = max(d_mins)
-    w = d_max/k
-    n = len(d_mins)
-
-    d = [w*i for i in range(k+2)]
-    cdf = [0] * len(d)
-    for i, d_i in enumerate(d):
-        smaller = [d_i_min for d_i_min in d_mins if d_i_min <= d_i]
-        cdf[i] = len(smaller)*1./n
-    return d, cdf
-
-
-def mbr_bf(points):
-    """
-    Minimum bounding rectangle, brute force
-    """
-    min_x = min_y = MAXD
-    max_x = max_y = MIND
-    for point in points:
-        x, y = point
-        if x > max_x:
-            max_x = x
-        if x < min_x:
-            min_x = x
-        if y > max_y:
-            max_y = y
-        if y < min_y:
-            min_y = y
-    return min_x, min_y, max_x, max_y
-
-
-def F_bf(points, n=100):
-    x0, y0, x1, y1 = mbr_bf(points)
-    ru = random.uniform
-    r_points = [(ru(x0, x1), ru(y0, y1)) for i in xrange(n)]
-    d_mins = [MAXD] * n
-    neighbors = [-9] * n
-    for i, r_point in enumerate(r_points):
-        d_i = MAXD
-        x0, y0 = r_point
-        for j, point in enumerate(points):
-            x1, y1 = point
-            dx = x0-x1
-            dy = y0-y1
-            d = dx*dx + dy*dy
-            if d < d_i:
-                d_mins[i] = d
-                neighbors[i] = j
-                d_i = d
-    return [math.sqrt(d_min_i) for d_min_i in d_mins], neighbors
-
-
-def F_cdf_bf(points, n=100, k=10,):
-    d, g_cdf = G_bf(points, k=k)
-    d_mins, neighbors = F_bf(points, n)
-    cdf = [0] * len(d)
-    for i, d_i in enumerate(d):
-        smaller = [d_i_min for d_i_min in d_mins if d_i_min <= d_i]
-        cdf[i] = len(smaller)*1./n
-    return d, cdf
-
-
-def k_bf(points, n_bins=100):
-    n = len(points)
-    x0, y0, x1, y1 = mbr_bf(points)
-    d_max = (x1-x0)**2 + (y1-y0)**2
-    d_max = math.sqrt(d_max)
-    w = d_max / (n_bins-1)
-    d = [w*i for i in range(n_bins)]
-    ks = [0] * len(d)
-    for i, p_i in enumerate(points[:-1]):
-        x0, y0 = p_i
-        for j in xrange(i+1, n):
-            x1, y1 = points[j]
-            dx = x1-x0
-            dy = y1-y0
-            dij = math.sqrt(dx*dx + dy*dy)
-            uppers = [di for di in d if di >= dij]
-            for upper in uppers:
-                ki = d.index(upper)
-                ks[ki] += 2
-    return ks, d
-
-
-def csr_bf(bb, n=100, n_conditioned=True):
+def csr(bb, n=100, n_conditioned=True):
 
     x0, y0, x1, y1 = bb
     ru = random.uniform
     if n_conditioned:
-        points = [(ru(x0, x1), ru(y0, y1)) for i in xrange(n)]
-    else:
-        ns = np.random.poisson(n)
-        points = [(ru(x0, x1), ru(y0, y1)) for i in xrange(ns)]
-    return points
+        n = np.random.poisson(n)
+    points = [(ru(x0, x1), ru(y0, y1)) for i in xrange(n)]
 
+    return points
 
 if __name__ == '__main__':
 
@@ -466,7 +336,7 @@ if __name__ == '__main__':
               [98.73, 80.53], [89.78, 42.53], [65.19, 92.08], [54.46, 8.48]]
 
     p1 = np.array(points)
-    p2 = p1[:5:,:]  + 100
+    p2 = p1[:5:, :] + 100
 
     p1 = Point_Pattern(p1)
     p2 = Point_Pattern(p2)
