@@ -1,5 +1,6 @@
 import numpy as np
 import pysal as ps
+from numpy.random import poisson
 
 
 class PointProcess(object):
@@ -21,35 +22,47 @@ class PointProcess(object):
         self.samples = samples
         self.args = args
         self.realizations = {}
+        self.setup()
         for sample in range(samples):
-            self.realizations[sample] = self.draw()
+            self.realizations[sample] = self.draw(self.parameters[sample])
 
-    def draw(self):
+    def draw(self, parameters):
         c = 0
         realization = []
-        while c < self.n:
-            pnts = self.realize()
+        n = parameters['n']
+        while c < n:
+            pnts = self.realize(n)
             pnts = [ps.cg.shapes.Point((x, y)) for x, y in pnts]
             pins = self.window.filter_contained(pnts)
-            # pins = [pnt for pnt in pnts if self.contains_point(pnt)]
             realization.extend(pins)
             c = len(realization)
-        return np.array([np.asarray(p) for p in realization[:self.n]])
+        return np.array([np.asarray(p) for p in realization[:n]])
 
     def realize(self):
+        pass
+
+    def setup(self):
         pass
 
 
 class PoissonPointProcess(PointProcess):
     """docstring for PoissonPointProcess"""
-    def __init__(self, window, n, samples,  conditioning=False):
+    def __init__(self, window, n, samples, conditioning=False):
         self.conditioning = conditioning
-        if conditioning:
-            print('conditioning')
         super(PoissonPointProcess, self).__init__(window, n, samples)
 
-    def realize(self):
+    def setup(self):
+        self.parameters = {}
+        if self.conditioning:
+            lambdas = poisson(self.n, self.samples)
+            for i, l in enumerate(lambdas):
+                self.parameters[i] = {'n': l}
+        else:
+            for i in range(self.samples):
+                self.parameters[i] = {'n': self.n}
+
+    def realize(self, n):
         l, b, r, t = self.window.bbox
-        xs = np.random.uniform(l, r, (self.n, 1))
-        ys = np.random.uniform(b, t, (self.n, 1))
+        xs = np.random.uniform(l, r, (n, 1))
+        ys = np.random.uniform(b, t, (n, 1))
         return zip(xs, ys)
