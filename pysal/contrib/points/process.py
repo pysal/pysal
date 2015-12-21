@@ -66,3 +66,41 @@ class PoissonPointProcess(PointProcess):
         xs = np.random.uniform(l, r, (n, 1))
         ys = np.random.uniform(b, t, (n, 1))
         return zip(xs, ys)
+
+
+class PoissonClusterPointProcess(PointProcess):
+    """docstring for PoissonPointProcess"""
+    def __init__(self, window, n, parents, radius, samples, keep=False):
+        self.parents = parents
+        self.children = np.ceil(n * 1. / parents)
+        self.radius = radius
+        self.keep = keep
+        super(PoissonClusterPointProcess, self).__init__(window, n, samples)
+
+    def setup(self):
+        parameters = {}
+        for i in range(self.samples):
+            parameters[i] = {'n': self.n}
+        self.parameters = parameters
+
+    def realize(self, n):
+        l, b, r, t = self.window.bbox
+        d = self.radius
+        pxs = np.random.uniform(l, r, (self.parents, 1))
+        pys = np.random.uniform(b, t, (self.parents, 1))
+        cxs = [np.random.uniform(px-d, px+d, (self.children, 1)) for px in pxs]
+        cys = [np.random.uniform(py-d, py+d, (self.children, 1)) for py in pys]
+        # Need to filter for ensuring children are within d units of parent
+        n_points = self.children * self.parents
+        xs = []
+        ys = []
+        if self.keep:
+            n_points += self.parents
+            xs.extend(pxs)
+            ys.extend(pys)
+        for p in range(self.parents):
+            xs.extend(cxs[p])
+            ys.extend(cys[p])
+        res = np.hstack((np.asarray(xs), np.asarray(ys)))
+        np.random.shuffle(res)
+        return res
