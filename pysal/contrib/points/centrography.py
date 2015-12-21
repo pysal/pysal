@@ -16,6 +16,7 @@ documentation
 import sys
 import numpy as np
 import warnings
+import shapely
 from scipy.spatial import ConvexHull
 
 
