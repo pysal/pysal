@@ -177,29 +177,6 @@ class PointPattern(object):
 
     mean_nnd = cached_property(_mean_nnd)
 
-    def G(self, intervals=10, dmin=0.0, dmax=None):
-        """
-        G function: cdf for nearest neighbor distances
-
-        Arguments
-        ---------
-        intervals: int
-                   number of intervals to evaluate G over
-
-        Returns
-        -------
-        cdf: array (intervals x 2)
-             first column is d, second column is cdf(d)
-        """
-        w = self.max_nnd/intervals
-        n = len(self.nnd)
-        d = [w*i for i in range(intervals + 2)]
-        cdf = [0] * len(d)
-        for i, d_i in enumerate(d):
-            smaller = [nndi for nndi in self.nnd if nndi <= d_i]
-            cdf[i] = len(smaller)*1./n
-        return np.vstack((d, cdf)).T
-
     def csr(self, n):
         """
         Generate a CSR pattern of size n in the minimum bounding box for the

@@ -1,6 +1,7 @@
 import numpy as np
 import pysal as ps
 from numpy.random import poisson
+from pointpattern import PointPattern as PP
 
 
 def runif_in_circle(n, radius=1.0, center=(0., 0.), burn=2, verbose=False):
@@ -29,7 +30,7 @@ def runif_in_circle(n, radius=1.0, center=(0., 0.), burn=2, verbose=False):
 
 class PointProcess(object):
     """docstring for PointProcess"""
-    def __init__(self, window, n, samples, **args):
+    def __init__(self, window, n, samples, asPP=False, **args):
         """
         Parameters
         ---------
@@ -49,6 +50,11 @@ class PointProcess(object):
         self.setup()
         for sample in range(samples):
             self.realizations[sample] = self.draw(self.parameters[sample])
+        if asPP:
+            for sample in self.realizations:
+                points = self.realizations[sample]
+                self.realizations[sample] = PP(points, window=self.window)
+
 
     def draw(self, parameters):
         c = 0
@@ -71,9 +77,9 @@ class PointProcess(object):
 
 class PoissonPointProcess(PointProcess):
     """docstring for PoissonPointProcess"""
-    def __init__(self, window, n, samples, conditioning=False):
+    def __init__(self, window, n, samples, conditioning=False, asPP=False):
         self.conditioning = conditioning
-        super(PoissonPointProcess, self).__init__(window, n, samples)
+        super(PoissonPointProcess, self).__init__(window, n, samples, asPP)
 
     def setup(self):
         self.parameters = {}
@@ -94,12 +100,12 @@ class PoissonPointProcess(PointProcess):
 
 class PoissonClusterPointProcess(PointProcess):
     """docstring for PoissonPointProcess"""
-    def __init__(self, window, n, parents, radius, samples, keep=False):
+    def __init__(self, window, n, parents, radius, samples, keep=False, asPP=False):
         self.parents = parents
         self.children = np.ceil(n * 1. / parents)
         self.radius = radius
         self.keep = keep
-        super(PoissonClusterPointProcess, self).__init__(window, n, samples)
+        super(PoissonClusterPointProcess, self).__init__(window, n, samples, asPP)
 
     def setup(self):
         parameters = {}
