@@ -3,6 +3,30 @@ import pysal as ps
 from numpy.random import poisson
 
 
+def runif_in_circle(n, radius=1.0, center=(0., 0.), burn=2, verbose=False):
+    good = np.zeros((n, 2), float)
+    c = 0
+    r = radius
+    r2 = r * r
+    it = 0
+    while c < n:
+        x = np.random.uniform(-r, r, (burn*n, 1))
+        y = np.random.uniform(-r, r, (burn*n, 1))
+        ids = np.where(x*x + y*y <= r2)
+        candidates = np.hstack((x, y))[ids[0]]
+        nc = candidates.shape[0]
+        need = n - c
+        if nc > need:  # more than we need
+            good[c:] = candidates[:need]
+        else:  # use them all and keep going
+            good[c:c+nc] = candidates
+        c += nc
+        it += 1
+    if verbose:
+        print('Iterations: {}'.format(it))
+    return good + np.asarray(center)
+
+
 class PointProcess(object):
     """docstring for PointProcess"""
     def __init__(self, window, n, samples, **args):
@@ -86,21 +110,14 @@ class PoissonClusterPointProcess(PointProcess):
     def realize(self, n):
         l, b, r, t = self.window.bbox
         d = self.radius
+        # get parent points
         pxs = np.random.uniform(l, r, (self.parents, 1))
         pys = np.random.uniform(b, t, (self.parents, 1))
-        cxs = [np.random.uniform(px-d, px+d, (self.children, 1)) for px in pxs]
-        cys = [np.random.uniform(py-d, py+d, (self.children, 1)) for py in pys]
-        # Need to filter for ensuring children are within d units of parent
-        n_points = self.children * self.parents
-        xs = []
-        ys = []
+        cents = np.hstack((pxs, pys))
+        # generate children points
+        pnts = [runif_in_circle(self.children, d, center) for center in cents]
+        res = np.vstack(np.asarray(pnts))
         if self.keep:
-            n_points += self.parents
-            xs.extend(pxs)
-            ys.extend(pys)
-        for p in range(self.parents):
-            xs.extend(cxs[p])
-            ys.extend(cys[p])
-        res = np.hstack((np.asarray(xs), np.asarray(ys)))
-        np.random.shuffle(res)
+            res = np.vstack((np.asarray(cents), res))
+        np.random.shuffle(res)  # so we don't truncate in a biased fashion
         return res
