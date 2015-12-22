@@ -92,3 +92,45 @@ def f_envelopes(pp, intervals=10, d=None, reps=99, pct=0.05):
     mean = fs.mean(axis=0)
 
     return [fs, x, fobs, mean, low, high]
+
+
+def j(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
+    """
+    J: scaled G function
+
+    Arguments
+    ---------
+    n: int
+       number of empty space points
+    intevals: int
+        number of intervals to evalue F over
+
+    Returns
+    -------
+    cdf: array (intervals x 2)
+         first column is d, second column is cdf(d)
+    """
+    F = f(pp, n, intervals=intervals, dmin=dmin, dmax=dmax, d=d)
+    G = g(pp, intervals=intervals, dmin=dmin, dmax=dmax, d=d)
+    FC = 1 - F[:, 1]
+    GC = 1 - G[:, 1]
+    last_id = len(GC) + 1
+    if np.any(FC == 0):
+        last_id = np.where(FC == 0)[0][0]
+
+    return np.vstack((F[:last_id, 0], FC[:last_id]/GC[:last_id])).T
+
+
+def j_envelopes(pp, n=100, intervals=10, d=None, reps=99, pct=0.05):
+    obs = j(pp, n, intervals=intervals, d=d)
+    sim = csr(pp.window, pp.n, reps, asPP=True)
+    js = np.asarray([j(p, n, d=obs[:, 0]) for p in sim.realizations.values()])
+    js = js[:, :, -1]
+    js.sort(axis=0)
+    low = js[np.int(reps * pct)]
+    high = js[np.int(reps * (1-pct))]
+    x = obs[:, 0]
+    gobs = obs[:, 1]
+    mean = js.mean(axis=0)
+
+    return [js, x, gobs, mean, low, high]

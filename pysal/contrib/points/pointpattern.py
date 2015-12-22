@@ -177,65 +177,6 @@ class PointPattern(object):
 
     mean_nnd = cached_property(_mean_nnd)
 
-    def csr(self, n):
-        """
-        Generate a CSR pattern of size n in the minimum bounding box for the
-        pattern
-
-        Arguments
-        ---------
-        n: int
-           number of points to generate
-
-        Returns
-        -------
-        y: array (n x p)
-           csr realization of size n in  minium bounding box
-        """
-        xs = np.random.uniform(self.mbb[0], self.mbb[2], (n, 1))
-        ys = np.random.uniform(self.mbb[1], self.mbb[3], (n, 1))
-        return np.hstack((xs, ys))
-
-    def F(self, n=100, intervals=10, dmin=0.0, dmax=None, window='mbb'):
-        """
-        F: empty space function
-
-        Arguments
-        ---------
-        n: int
-           number of empty space points
-        intevals: int
-            number of intervals to evalue F over
-        dmin: float
-               lower limit of distance range
-        dmax: float
-               upper limit of distance range
-               if dmax is None dmax will be set to maxnnd
-
-        Returns
-        -------
-        cdf: array (intervals x 2)
-             first column is d, second column is cdf(d)
-
-        """
-
-        if window.lower() == 'mbb':
-            p = PointPattern(self.csr(n))
-            nnids, nnds = self.knn_other(p, k=1)
-            if dmax is None:
-                max_nnds = self.max_nnd
-            else:
-                max_nnds = dmax
-            w = max_nnds / intervals
-            d = [w*i for i in range(intervals + 2)]
-            cdf = [0] * len(d)
-            for i, d_i in enumerate(d):
-                smaller = [nndi for nndi in nnds if nndi <= d_i]
-                cdf[i] = len(smaller)*1./n
-            return np.vstack((d, cdf)).T
-        else:
-            return NotImplemented
-
     def J(self, n=100, intervals=10, dmin=0.0, dmax=None):
         """
         J: scaled G function
