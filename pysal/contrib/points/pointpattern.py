@@ -8,6 +8,7 @@ import numpy as np
 import sys
 from pysal.cg import KDTree
 from centrography import hull
+from window import as_window,  poly_from_bbox
 from util import cached_property
 
 if sys.version_info[0] > 2:
@@ -28,15 +29,22 @@ class PointPattern(object):
         """
         self.points = np.asarray(points)
         self._n, self._p = self.points.shape
-        self.set_window(window)
+        if window is None:
+            self.set_window(as_window(poly_from_bbox(self.mbb)))
+        else:
+            self.set_window(window)
         self._marks = marks
 
     def set_window(self, window):
-        self._window = window
+        try:
+            self._window = window
+        except:
+            print("not a valid Window object")
 
     def get_window(self):
         if not hasattr(self, '_window') or self._window is None:
-            self.set_window(self.mbb)
+            # use bbox as window
+            self.set_window(as_window(poly_from_bbox(self.mbb)))
         return self._window
 
     window = property(get_window, set_window)
@@ -44,15 +52,10 @@ class PointPattern(object):
     def summary(self):
         print('Point Pattern')
         print("{} points".format(self.n))
-        """
-        if self.window is None:
-            self.window = self.mbb
-            self.window_area = self.mbb_area
-            print("Window not specified, using minimum bounding rectangle.")
-        """
         print("Bounding rectangle [({},{}), ({},{})]".format(*self.mbb))
-        print("Area of window: {}".format(self.mbb_area))
-        print("Intensity estimate for window: {}".format(self.lambda_mbb))
+        print("Area of window: {}".format(self.window.area))
+        lam_window = self.n / self.window.area
+        print("Intensity estimate for window: {}".format(lam_window))
 
     def _mbb(self):
         """
