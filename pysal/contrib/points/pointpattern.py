@@ -58,8 +58,7 @@ class PointPattern(object):
         print("{} points".format(self.n))
         print("Bounding rectangle [({},{}), ({},{})]".format(*self.mbb))
         print("Area of window: {}".format(self.window.area))
-        lam_window = self.n / self.window.area
-        print("Intensity estimate for window: {}".format(lam_window))
+        print("Intensity estimate for window: {}".format(self.lambda_window))
 
     def plot(self, window=False, title="Point Pattern", hull=False,
              get_ax=False):
@@ -127,6 +126,14 @@ class PointPattern(object):
         return hull(self.points)
 
     hull = cached_property(_hull)
+
+    def _lambda_window(self):
+        """
+        Intensity estimate based on area of window
+        """
+        return self.n / self.window.area
+
+    lambda_window = cached_property(_lambda_window)
 
     def _hull_area(self):
         """

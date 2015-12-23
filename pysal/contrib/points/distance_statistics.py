@@ -44,12 +44,29 @@ class J(DStatistic):
         super(J, self).__init__(name="J")
 
 
+class K(DStatistic):
+    """docstring for K"""
+    def __init__(self, pp, intervals=10, dmin=0.0, dmax=None, d=None):
+        res = k(pp, intervals, dmin, dmax, d)
+        self.d = res[:, 0]
+        self.k = self._stat = res[:, 1]
+        super(K, self).__init__(name="K")
+
+
+class L(DStatistic):
+    """docstring for L"""
+    def __init__(self, pp, intervals=10, dmin=0.0, dmax=None, d=None):
+        res = l(pp, intervals, dmin, dmax, d)
+        self.d = res[:, 0]
+        self.l = self._stat = res[:, 1]
+        super(L, self).__init__(name="L")
+
+
 def g(pp, intervals=10, dmin=0.0, dmax=None, d=None):
     """
     G function
     """
 
-    # res = pp.G(intervals, dmin, dmax, d)
     if d is None:
         w = pp.max_nnd/intervals
         if dmax:
@@ -131,6 +148,26 @@ def j(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
         last_id = np.where(FC == 0)[0][0]
 
     return np.vstack((F[:last_id, 0], FC[:last_id]/GC[:last_id])).T
+
+
+def k(pp, intervals=10, dmin=0.0, dmax=None, d=None):
+    if d is None:
+        # use length of bounding box diagonal as max distance
+        bb = pp.mbb
+        dbb = np.sqrt((bb[0]-bb[2])**2 + (bb[1]-bb[3])**2)
+        w = dbb/intervals
+        if dmax:
+            w = dmax/intervals
+    d = [w*i for i in range(intervals + 2)]
+    den = pp.lambda_window * pp.n * 2.
+    kcdf = np.asarray([(di, len(pp.tree.query_pairs(di))/den) for di in d])
+    return kcdf
+
+
+def l(pp, intervals=10, dmin=0.0, dmax=None, d=None):
+    kf = k(pp, intervals, dmin, dmax, d)
+    kf[:, 1] = np.sqrt(kf[:, 1] / np.pi) - kf[:, 0]
+    return kf
 
 
 class Envelopes(object):

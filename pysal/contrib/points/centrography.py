@@ -6,7 +6,6 @@ Author: Serge Rey <sjsrey@gmail.com>
 
 TODO
 
-dispersion
 ellipses
 euclidean median
 testing
