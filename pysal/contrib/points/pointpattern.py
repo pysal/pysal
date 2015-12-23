@@ -10,6 +10,10 @@ from pysal.cg import KDTree
 from centrography import hull
 from window import as_window,  poly_from_bbox
 from util import cached_property
+from matplotlib import pyplot as plt
+from matplotlib.collections import PolyCollection, PatchCollection
+from matplotlib.patches import Polygon
+
 
 if sys.version_info[0] > 2:
     xrange = range
@@ -56,6 +60,22 @@ class PointPattern(object):
         print("Area of window: {}".format(self.window.area))
         lam_window = self.n / self.window.area
         print("Intensity estimate for window: {}".format(lam_window))
+
+    def plot(self, window=False, title="Point Pattern"):
+        x, y = self.points.T
+        fig, ax = plt.subplots()
+        plt.plot(x, y, '.')
+        plt.title("Point Pattern")
+        if window:
+            patches = []
+            for part in self.window.parts:
+                p = Polygon(np.asarray(part))
+                patches.append(p)
+            ax.add_collection(PatchCollection(patches, facecolor='w',
+                              edgecolor='k'))
+            ax.autoscale_view()
+        plt.plot(x, y, '.')
+        plt.show()
 
     def _mbb(self):
         """
@@ -176,42 +196,6 @@ class PointPattern(object):
         return self.nnd.mean()
 
     mean_nnd = cached_property(_mean_nnd)
-
-    def J(self, n=100, intervals=10, dmin=0.0, dmax=None):
-        """
-        J: scaled G function
-
-        Arguments
-        ---------
-        n: int
-           number of empty space points
-        intevals: int
-            number of intervals to evalue F over
-
-        Returns
-        -------
-        cdf: array (intervals x 2)
-             first column is d, second column is cdf(d)
-        """
-        F = self.F(n, intervals)
-        G = self.G(intervals)
-        FC = 1 - F[:, 1]
-        GC = 1 - G[:, 1]
-        last_id = len(GC) + 1
-        if np.any(FC == 0):
-            last_id = np.where(FC == 0)[0][0]
-
-        return np.vstack((F[:last_id, 0], FC[:last_id]/GC[:last_id]))
-
-    def K(self, intervals=10):
-        """
-        Ripley's K function
-
-        Arguments
-        ---------
-
-        """
-        return NotImplemented
 
     def find_pairs(self, r):
         """
