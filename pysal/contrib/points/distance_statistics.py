@@ -1,5 +1,6 @@
 from process import PoissonPointProcess as csr
 import numpy as np
+from matplotlib import pyplot as plt
 
 
 def g(pp, intervals=10, dmin=0.0, dmax=None, d=None):
@@ -18,21 +19,6 @@ def g(pp, intervals=10, dmin=0.0, dmax=None, d=None):
         smaller = [nndi for nndi in pp.nnd if nndi <= d_i]
         cdf[i] = len(smaller)*1./pp.n
     return np.vstack((d, cdf)).T
-
-
-def g_envelopes(pp, intervals=10, d=None, reps=99, pct=0.05):
-    obs = g(pp, intervals=intervals, d=d)
-    sim = csr(pp.window, pp.n, reps, asPP=True)
-    gs = np.asarray([g(p, d=obs[:, 0]) for p in sim.realizations.values()])
-    gs = gs[:, :, -1]
-    gs.sort(axis=0)
-    low = gs[np.int(reps * pct)]
-    high = gs[np.int(reps * (1-pct))]
-    x = obs[:, 0]
-    gobs = obs[:, 1]
-    mean = gs.mean(axis=0)
-
-    return [gs, x, gobs, mean, low, high]
 
 
 def f(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
@@ -79,21 +65,6 @@ def f(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
     return np.vstack((d, cdf)).T
 
 
-def f_envelopes(pp, intervals=10, d=None, reps=99, pct=0.05):
-    obs = f(pp, intervals=intervals, d=d)
-    sim = csr(pp.window, pp.n, reps, asPP=True)
-    fs = np.asarray([f(p, d=obs[:, 0]) for p in sim.realizations.values()])
-    fs = fs[:, :, -1]
-    fs.sort(axis=0)
-    low = fs[np.int(reps * pct)]
-    high = fs[np.int(reps * (1-pct))]
-    x = obs[:, 0]
-    fobs = obs[:, 1]
-    mean = fs.mean(axis=0)
-
-    return [fs, x, fobs, mean, low, high]
-
-
 def j(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
     """
     J: scaled G function
@@ -119,6 +90,108 @@ def j(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
         last_id = np.where(FC == 0)[0][0]
 
     return np.vstack((F[:last_id, 0], FC[:last_id]/GC[:last_id])).T
+
+
+class Envelopes(object):
+    """docstring for Envelopes"""
+    def __init__(self, *args,  **kwargs):
+        print(args)
+        print(kwargs)
+        # setup arguments
+        self.args = args
+        self.kwargs = kwargs
+        self.name = kwargs['name']
+
+        # calculate observed function
+        self.pp = args[0]
+        self.observed = self.calc(*args, **kwargs)
+        self.d = self.observed[:, 0]  # domain to be used in all realizations
+
+        # do realizations
+        self.mapper(kwargs['realizations'])
+
+    def mapper(self, realizations):
+        reals = realizations.realizations
+        res = np.asarray([self.calc(reals[p]) for p in reals])
+        res = res[:, :, -1]
+        res.sort(axis=0)
+        nres = len(res)
+        self.low = res[np.int(nres * self.pct)]
+        self.high = res[np.int(nres * (1-self.pct))]
+        self.mean = res.mean(axis=0)
+
+    def calc(self, *args, **kwargs):
+        print('implment in subclass')
+
+    def plot(self):
+        # assuming mpl
+        x = self.d
+        plt.plot(x, self.observed[:, 1], label='G')
+        plt.plot(x, self.mean, 'g-.', label='CSR')
+        plt.plot(x, self.low, 'r-.', label='LB')
+        plt.plot(x, self.high, 'r-.', label="UB")
+        plt.ylabel("{}(d)".format(self.name))
+        plt.xlabel('d')
+        plt.title("{} Simulation Envelopes".format(self.name))
+        plt.legend(loc=0)
+
+
+class Genv(Envelopes):
+    """docstring for Genv"""
+    def __init__(self, pp, intervals=10, dmin=0.0, dmax=None, d=None, pct=0.05,
+                 realizations=None):
+        self.pp = pp
+        self.intervals = intervals
+        self.dmin = dmin
+        self.dmax = dmax
+        self.d = d
+        self.pct = pct
+        super(Genv, self).__init__(pp, realizations=realizations, name="G")
+
+    def calc(self, *args, **kwargs):
+        pp = args[0]
+        return g(pp, intervals=self.intervals, dmin=self.dmin, dmax=self.dmax,
+                 d=self.d)
+
+
+class Fenv(Envelopes):
+    """docstring for Fenv"""
+    def __init__(self, arg, *args, **kwargs):
+        print("Fenv, arg=", arg)
+        super(Fenv, self).__init__(*args, **kwargs)
+
+    def calc(self):
+        return 10
+
+
+def g_envelopes(pp, intervals=10, d=None, reps=99, pct=0.05):
+    obs = g(pp, intervals=intervals, d=d)
+    sim = csr(pp.window, pp.n, reps, asPP=True)
+    gs = np.asarray([g(p, d=obs[:, 0]) for p in sim.realizations.values()])
+    gs = gs[:, :, -1]
+    gs.sort(axis=0)
+    low = gs[np.int(reps * pct)]
+    high = gs[np.int(reps * (1-pct))]
+    x = obs[:, 0]
+    gobs = obs[:, 1]
+    mean = gs.mean(axis=0)
+
+    return [gs, x, gobs, mean, low, high]
+
+
+def f_envelopes(pp, intervals=10, d=None, reps=99, pct=0.05):
+    obs = f(pp, intervals=intervals, d=d)
+    sim = csr(pp.window, pp.n, reps, asPP=True)
+    fs = np.asarray([f(p, d=obs[:, 0]) for p in sim.realizations.values()])
+    fs = fs[:, :, -1]
+    fs.sort(axis=0)
+    low = fs[np.int(reps * pct)]
+    high = fs[np.int(reps * (1-pct))]
+    x = obs[:, 0]
+    fobs = obs[:, 1]
+    mean = fs.mean(axis=0)
+
+    return [fs, x, fobs, mean, low, high]
 
 
 def j_envelopes(pp, n=100, intervals=10, d=None, reps=99, pct=0.05):
