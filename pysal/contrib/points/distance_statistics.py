@@ -95,8 +95,6 @@ def j(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
 class Envelopes(object):
     """docstring for Envelopes"""
     def __init__(self, *args,  **kwargs):
-        print(args)
-        print(kwargs)
         # setup arguments
         self.args = args
         self.kwargs = kwargs
@@ -126,7 +124,7 @@ class Envelopes(object):
     def plot(self):
         # assuming mpl
         x = self.d
-        plt.plot(x, self.observed[:, 1], label='G')
+        plt.plot(x, self.observed[:, 1], label='{}'.format(self.name))
         plt.plot(x, self.mean, 'g-.', label='CSR')
         plt.plot(x, self.low, 'r-.', label='LB')
         plt.plot(x, self.high, 'r-.', label="UB")
@@ -155,6 +153,25 @@ class Genv(Envelopes):
 
 
 class Fenv(Envelopes):
+    """docstring for Genv"""
+    def __init__(self, pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None,
+                 pct=0.05, realizations=None):
+        self.pp = pp
+        self.npoints = n
+        self.intervals = intervals
+        self.dmin = dmin
+        self.dmax = dmax
+        self.d = d
+        self.pct = pct
+        super(Fenv, self).__init__(pp, realizations=realizations, name="F")
+
+    def calc(self, *args, **kwargs):
+        pp = args[0]
+        return f(pp, self.npoints, intervals=self.intervals, dmin=self.dmin,
+                 dmax=self.dmax, d=self.d)
+
+
+class Jenv(Envelopes):
     """docstring for Fenv"""
     def __init__(self, arg, *args, **kwargs):
         print("Fenv, arg=", arg)
