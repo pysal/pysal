@@ -27,12 +27,21 @@ class G(DStatistic):
 
 
 class F(DStatistic):
-    """docstring for G"""
+    """docstring for F"""
     def __init__(self, pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
         res = f(pp, n, intervals, dmin, dmax, d)
         self.d = res[:, 0]
         self.F = self._stat = res[:, 1]
         super(F, self).__init__(name="F")
+
+
+class J(DStatistic):
+    """docstring for J"""
+    def __init__(self, pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
+        res = j(pp, n, intervals, dmin, dmax, d)
+        self.d = res[:, 0]
+        self.j = self._stat = res[:, 1]
+        super(J, self).__init__(name="J")
 
 
 def g(pp, intervals=10, dmin=0.0, dmax=None, d=None):
@@ -128,8 +137,6 @@ class Envelopes(object):
     """docstring for Envelopes"""
     def __init__(self, *args,  **kwargs):
         # setup arguments
-        self.args = args
-        self.kwargs = kwargs
         self.name = kwargs['name']
 
         # calculate observed function
@@ -185,11 +192,11 @@ class Genv(Envelopes):
 
 
 class Fenv(Envelopes):
-    """docstring for Genv"""
+    """docstring for Fenv"""
     def __init__(self, pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None,
                  pct=0.05, realizations=None):
         self.pp = pp
-        self.npoints = n
+        self.n = n
         self.intervals = intervals
         self.dmin = dmin
         self.dmax = dmax
@@ -199,18 +206,27 @@ class Fenv(Envelopes):
 
     def calc(self, *args, **kwargs):
         pp = args[0]
-        return f(pp, self.npoints, intervals=self.intervals, dmin=self.dmin,
+        return f(pp, self.n, intervals=self.intervals, dmin=self.dmin,
                  dmax=self.dmax, d=self.d)
 
 
 class Jenv(Envelopes):
-    """docstring for Fenv"""
-    def __init__(self, arg, *args, **kwargs):
-        print("Fenv, arg=", arg)
-        super(Fenv, self).__init__(*args, **kwargs)
+    """docstring for Jenv"""
+    def __init__(self, pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None,
+                 pct=0.05, realizations=None):
+        self.pp = pp
+        self.n = n
+        self.intervals = intervals
+        self.dmin = dmin
+        self.dmax = dmax
+        self.d = d
+        self.pct = pct
+        super(Jenv, self).__init__(pp, realizations=realizations, name="J")
 
-    def calc(self):
-        return 10
+    def calc(self, *args, **kwargs):
+        pp = args[0]
+        return j(pp, self.n, intervals=self.intervals, dmin=self.dmin,
+                 dmax=self.dmax, d=self.d)
 
 
 def g_envelopes(pp, intervals=10, d=None, reps=99, pct=0.05):
