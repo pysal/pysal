@@ -11,7 +11,7 @@ from centrography import hull
 from window import as_window,  poly_from_bbox
 from util import cached_property
 from matplotlib import pyplot as plt
-from matplotlib.collections import PolyCollection, PatchCollection
+from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
 
@@ -61,21 +61,27 @@ class PointPattern(object):
         lam_window = self.n / self.window.area
         print("Intensity estimate for window: {}".format(lam_window))
 
-    def plot(self, window=False, title="Point Pattern"):
+    def plot(self, window=False, title="Point Pattern", hull=False):
         x, y = self.points.T
         fig, ax = plt.subplots()
         plt.plot(x, y, '.')
-        plt.title("Point Pattern")
+        plt.title(title)
         if window:
             patches = []
             for part in self.window.parts:
                 p = Polygon(np.asarray(part))
                 patches.append(p)
             ax.add_collection(PatchCollection(patches, facecolor='w',
-                              edgecolor='k'))
-            ax.autoscale_view()
+                              edgecolor='k', alpha=0.3))
+        if hull:
+            patches = []
+            p = Polygon(self.hull)
+            patches.append(p)
+            ax.add_collection(PatchCollection(patches, facecolor='w',
+                              edgecolor='k', alpha=0.3))
+
+        ax.autoscale_view()
         plt.plot(x, y, '.')
-        plt.show()
 
     def _mbb(self):
         """
