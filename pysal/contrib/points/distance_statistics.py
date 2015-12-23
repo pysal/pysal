@@ -7,10 +7,6 @@ class DStatistic(object):
     """docstring for DStatistic"""
     def __init__(self, name):
         self.name = name
-        self.calc()
-
-    def calc(self):
-        print("Not implemented")
 
     def plot(self):
         # assuming mpl
@@ -23,18 +19,20 @@ class DStatistic(object):
 
 class G(DStatistic):
     """docstring for G"""
-    def __init__(self, pp, intervals, dmin=0.0, dmax=None, d=None):
-        self.pp = pp
-        self.intervals = intervals
-        self.dmin = dmin
-        self.dmax = dmax
-        self.d = d
-        super(G, self).__init__(name="G")
-
-    def calc(self):
-        res = g(self.pp, self.intervals, self.dmin, self.dmax, self.d)
+    def __init__(self, pp, intervals=10, dmin=0.0, dmax=None, d=None):
+        res = g(pp, intervals, dmin, dmax, d)
         self.d = res[:, 0]
         self.G = self._stat = res[:, 1]
+        super(G, self).__init__(name="G")
+
+
+class F(DStatistic):
+    """docstring for G"""
+    def __init__(self, pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
+        res = f(pp, n, intervals, dmin, dmax, d)
+        self.d = res[:, 0]
+        self.F = self._stat = res[:, 1]
+        super(F, self).__init__(name="F")
 
 
 def g(pp, intervals=10, dmin=0.0, dmax=None, d=None):
