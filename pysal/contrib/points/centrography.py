@@ -1,17 +1,17 @@
 """
 Centrographic measures for point patterns
 
-Author: Serge Rey <sjsrey@gmail.com>
-
-
 TODO
 
-ellipses
-euclidean median
-testing
-documentation
+- ellipses
+- euclidean median
+- testing
+- documentation
 
 """
+
+__author__ = "Serge Rey sjsrey@gmail.com"
+
 import sys
 import numpy as np
 import warnings

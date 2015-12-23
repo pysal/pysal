@@ -1,3 +1,15 @@
+"""
+Simulation of planar point processes
+
+TODO
+
+- inhibition process(es)
+- optimize draws for complex windows
+- documentation
+"""
+
+__author__ = "Serge Rey sjsrey@gmail.com"
+
 import numpy as np
 import pysal as ps
 from numpy.random import poisson
@@ -55,18 +67,17 @@ class PointProcess(object):
                 points = self.realizations[sample]
                 self.realizations[sample] = PP(points, window=self.window)
 
-
     def draw(self, parameters):
         c = 0
-        realization = []
+        sample = []
         n = parameters['n']
         while c < n:
             pnts = self.realize(n)
             pnts = [ps.cg.shapes.Point((x, y)) for x, y in pnts]
             pins = self.window.filter_contained(pnts)
-            realization.extend(pins)
-            c = len(realization)
-        return np.array([np.asarray(p) for p in realization[:n]])
+            sample.extend(pins)
+            c = len(sample)
+        return np.array([np.asarray(p) for p in sample[:n]])
 
     def realize(self):
         pass
@@ -100,12 +111,14 @@ class PoissonPointProcess(PointProcess):
 
 class PoissonClusterPointProcess(PointProcess):
     """docstring for PoissonPointProcess"""
-    def __init__(self, window, n, parents, radius, samples, keep=False, asPP=False):
+    def __init__(self, window, n, parents, radius, samples, keep=False,
+                 asPP=False):
         self.parents = parents
         self.children = np.ceil(n * 1. / parents)
         self.radius = radius
         self.keep = keep
-        super(PoissonClusterPointProcess, self).__init__(window, n, samples, asPP)
+        super(PoissonClusterPointProcess, self).__init__(window, n, samples,
+                                                         asPP)
 
     def setup(self):
         parameters = {}

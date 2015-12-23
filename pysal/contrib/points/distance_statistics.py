@@ -1,10 +1,22 @@
+"""
+Distance statistics for planar point patterns
+
+
+TODO
+
+- documentation
+- testing
+
+"""
+__author__ = "Serge Rey sjsrey@gmail.com"
+
 from process import PoissonPointProcess as csr
 import numpy as np
 from matplotlib import pyplot as plt
 
 
 class DStatistic(object):
-    """docstring for DStatistic"""
+    """Abstract Base Class for distance statistics"""
     def __init__(self, name):
         self.name = name
 
@@ -158,7 +170,7 @@ def k(pp, intervals=10, dmin=0.0, dmax=None, d=None):
         w = dbb/intervals
         if dmax:
             w = dmax/intervals
-    d = [w*i for i in range(intervals + 2)]
+        d = [w*i for i in range(intervals + 2)]
     den = pp.lambda_window * pp.n * 2.
     kcdf = np.asarray([(di, len(pp.tree.query_pairs(di))/den) for di in d])
     return kcdf
@@ -171,7 +183,7 @@ def l(pp, intervals=10, dmin=0.0, dmax=None, d=None):
 
 
 class Envelopes(object):
-    """docstring for Envelopes"""
+    """Abstrace base class for simulation envelopes"""
     def __init__(self, *args,  **kwargs):
         # setup arguments
         self.name = kwargs['name']
@@ -266,46 +278,37 @@ class Jenv(Envelopes):
                  dmax=self.dmax, d=self.d)
 
 
-def g_envelopes(pp, intervals=10, d=None, reps=99, pct=0.05):
-    obs = g(pp, intervals=intervals, d=d)
-    sim = csr(pp.window, pp.n, reps, asPP=True)
-    gs = np.asarray([g(p, d=obs[:, 0]) for p in sim.realizations.values()])
-    gs = gs[:, :, -1]
-    gs.sort(axis=0)
-    low = gs[np.int(reps * pct)]
-    high = gs[np.int(reps * (1-pct))]
-    x = obs[:, 0]
-    gobs = obs[:, 1]
-    mean = gs.mean(axis=0)
+class Kenv(Envelopes):
+    """docstring for Kenv"""
+    def __init__(self, pp, intervals=10, dmin=0.0, dmax=None, d=None,
+                 pct=0.05, realizations=None):
+        self.pp = pp
+        self.intervals = intervals
+        self.dmin = dmin
+        self.dmax = dmax
+        self.d = d
+        self.pct = pct
+        super(Kenv, self).__init__(pp, realizations=realizations, name="K")
 
-    return [gs, x, gobs, mean, low, high]
-
-
-def f_envelopes(pp, intervals=10, d=None, reps=99, pct=0.05):
-    obs = f(pp, intervals=intervals, d=d)
-    sim = csr(pp.window, pp.n, reps, asPP=True)
-    fs = np.asarray([f(p, d=obs[:, 0]) for p in sim.realizations.values()])
-    fs = fs[:, :, -1]
-    fs.sort(axis=0)
-    low = fs[np.int(reps * pct)]
-    high = fs[np.int(reps * (1-pct))]
-    x = obs[:, 0]
-    fobs = obs[:, 1]
-    mean = fs.mean(axis=0)
-
-    return [fs, x, fobs, mean, low, high]
+    def calc(self, *args, **kwargs):
+        pp = args[0]
+        return k(pp, intervals=self.intervals, dmin=self.dmin,
+                 dmax=self.dmax, d=self.d)
 
 
-def j_envelopes(pp, n=100, intervals=10, d=None, reps=99, pct=0.05):
-    obs = j(pp, n, intervals=intervals, d=d)
-    sim = csr(pp.window, pp.n, reps, asPP=True)
-    js = np.asarray([j(p, n, d=obs[:, 0]) for p in sim.realizations.values()])
-    js = js[:, :, -1]
-    js.sort(axis=0)
-    low = js[np.int(reps * pct)]
-    high = js[np.int(reps * (1-pct))]
-    x = obs[:, 0]
-    gobs = obs[:, 1]
-    mean = js.mean(axis=0)
+class Lenv(Envelopes):
+    """docstring for Lenv"""
+    def __init__(self, pp, intervals=10, dmin=0.0, dmax=None, d=None,
+                 pct=0.05, realizations=None):
+        self.pp = pp
+        self.intervals = intervals
+        self.dmin = dmin
+        self.dmax = dmax
+        self.d = d
+        self.pct = pct
+        super(Lenv, self).__init__(pp, realizations=realizations, name="L")
 
-    return [js, x, gobs, mean, low, high]
+    def calc(self, *args, **kwargs):
+        pp = args[0]
+        return l(pp, intervals=self.intervals, dmin=self.dmin,
+                 dmax=self.dmax, d=self.d)

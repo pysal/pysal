@@ -1,3 +1,9 @@
+"""
+Window class for point patterns
+"""
+
+__author__ = "Serge Rey sjsrey@gmail.com"
+
 import pysal as ps
 import numpy as np
 

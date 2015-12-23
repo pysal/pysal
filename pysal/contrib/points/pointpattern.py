@@ -1,7 +1,5 @@
 """
-Point Pattern Class
-
-author: Serge Rey <sjsrey@gmail.com>
+Planar Point Pattern Class
 
 """
 import numpy as np
@@ -14,6 +12,7 @@ from matplotlib import pyplot as plt
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 
+__author__ = "Serge Rey sjsrey@gmail.com"
 
 if sys.version_info[0] > 2:
     xrange = range
