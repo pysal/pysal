@@ -16,7 +16,6 @@ documentation
 import sys
 import numpy as np
 import warnings
-import shapely
 from scipy.spatial import ConvexHull
 
 
@@ -65,7 +64,7 @@ def hull(points):
 
 def mean_center(points):
     points = np.asarray(points)
-    points.mean(axis=0)
+    return points.mean(axis=0)
 
 
 def weighted_mean_center(points, weights):
@@ -81,3 +80,10 @@ def manhattan_median(points):
         s = "Manhattan Median is not unique for even point patterns."
         warnings.warn(s)
     return np.median(points, axis=0)
+
+
+def std_distance(points):
+    points = np.asarray(points)
+    n, p = points.shape
+    m = points.mean(axis=0)
+    return np.sqrt(((points*points).sum(axis=0)/n - m*m).sum())

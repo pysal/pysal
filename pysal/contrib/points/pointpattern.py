@@ -61,7 +61,8 @@ class PointPattern(object):
         lam_window = self.n / self.window.area
         print("Intensity estimate for window: {}".format(lam_window))
 
-    def plot(self, window=False, title="Point Pattern", hull=False):
+    def plot(self, window=False, title="Point Pattern", hull=False,
+             get_ax=False):
         x, y = self.points.T
         fig, ax = plt.subplots()
         plt.plot(x, y, '.')
@@ -80,8 +81,9 @@ class PointPattern(object):
             ax.add_collection(PatchCollection(patches, facecolor='w',
                               edgecolor='k', alpha=0.3))
 
-        ax.autoscale_view()
         plt.plot(x, y, '.')
+        if get_ax:
+            return ax
 
     def _mbb(self):
         """
