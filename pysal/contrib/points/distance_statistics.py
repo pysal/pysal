@@ -3,6 +3,40 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 
+class DStatistic(object):
+    """docstring for DStatistic"""
+    def __init__(self, name):
+        self.name = name
+        self.calc()
+
+    def calc(self):
+        print("Not implemented")
+
+    def plot(self):
+        # assuming mpl
+        x = self.d
+        plt.plot(x, self._stat, label='{}'.format(self.name))
+        plt.ylabel("{}(d)".format(self.name))
+        plt.xlabel('d')
+        plt.title("{} distance function".format(self.name))
+
+
+class G(DStatistic):
+    """docstring for G"""
+    def __init__(self, pp, intervals, dmin=0.0, dmax=None, d=None):
+        self.pp = pp
+        self.intervals = intervals
+        self.dmin = dmin
+        self.dmax = dmax
+        self.d = d
+        super(G, self).__init__(name="G")
+
+    def calc(self):
+        res = g(self.pp, self.intervals, self.dmin, self.dmax, self.d)
+        self.d = res[:, 0]
+        self.G = self._stat = res[:, 1]
+
+
 def g(pp, intervals=10, dmin=0.0, dmax=None, d=None):
     """
     G function
