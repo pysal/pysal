@@ -199,6 +199,7 @@ class Envelopes(object):
     def mapper(self, realizations):
         reals = realizations.realizations
         res = np.asarray([self.calc(reals[p]) for p in reals])
+        print(res.shape)
         res = res[:, :, -1]
         res.sort(axis=0)
         nres = len(res)
@@ -276,6 +277,19 @@ class Jenv(Envelopes):
         pp = args[0]
         return j(pp, self.n, intervals=self.intervals, dmin=self.dmin,
                  dmax=self.dmax, d=self.d)
+
+    def mapper(self, realizations):
+        reals = realizations.realizations
+        res = np.asarray([self.calc(reals[p]) for p in reals])
+        # the j returns an array (nrealizations, ,) need to reshape it
+        r, c = res[0].shape
+        res.shape = (len(reals), r, c)
+        res = res[:, :, -1]
+        res.sort(axis=0)
+        nres = len(res)
+        self.low = res[np.int(nres * self.pct)]
+        self.high = res[np.int(nres * (1-self.pct))]
+        self.mean = res.mean(axis=0)
 
 
 class Kenv(Envelopes):

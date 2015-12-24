@@ -8,6 +8,7 @@ from pysal.cg import KDTree
 from centrography import hull
 from window import as_window,  poly_from_bbox
 from util import cached_property
+import pandas as pd
 from matplotlib import pyplot as plt
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
@@ -22,7 +23,7 @@ class PointPattern(object):
     """
     PointPattern Class 2-D
     """
-    def __init__(self, points, window=None, marks=None):
+    def __init__(self, points, window=None, marks=None, mark_labels=None):
 
         """
 
@@ -30,13 +31,33 @@ class PointPattern(object):
         ---------
         points:  array (n x p)
         """
-        self.points = np.asarray(points)
+        self.df = pd.DataFrame(points)  # first two series in df are x, y
+        n, p = self.df.shape
+        cnames = ['x', 'y']
+        self.n_marks = 0
+        if p > 2:
+            for m in xrange(2, p):
+                cnames.append("mark_{}".format(m-2))
+                self.n_marks += 1
+
+        self.df.columns = cnames
+        self.points = self.df.loc[:, ['x', 'y']]
         self._n, self._p = self.points.shape
         if window is None:
             self.set_window(as_window(poly_from_bbox(self.mbb)))
         else:
             self.set_window(window)
-        self._marks = marks
+
+        if marks:
+            self.marks = []
+            for m, mark in enumerate(marks):
+                m_name = 'mark_{}'.format(self.n_marks)
+                self.df[m_name] = pd.Series(mark)
+                self.marks.append(m_name)
+                self.n_marks += 1
+        if mark_labels:
+            if len(marks) != mark_labels:
+                print('misatch: ', mark_labels, len(marks))
 
     def set_window(self, window):
         try:
@@ -61,9 +82,8 @@ class PointPattern(object):
 
     def plot(self, window=False, title="Point Pattern", hull=False,
              get_ax=False):
-        x, y = self.points.T
         fig, ax = plt.subplots()
-        plt.plot(x, y, '.')
+        plt.plot(self.points['x'], self.points['y'], '.')
         plt.title(title)
         if window:
             patches = []
@@ -79,7 +99,7 @@ class PointPattern(object):
             ax.add_collection(PatchCollection(patches, facecolor='w',
                               edgecolor='k', alpha=0.3))
 
-        plt.plot(x, y, '.')
+        # plt.plot(x, y, '.')
         if get_ax:
             return ax
 
