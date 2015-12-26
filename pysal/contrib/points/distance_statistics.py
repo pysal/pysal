@@ -281,7 +281,7 @@ class Jenv(Envelopes):
     def mapper(self, realizations):
         reals = realizations.realizations
         res = np.asarray([self.calc(reals[p]) for p in reals])
-        # the j returns an array (nrealizations, ,) need to reshape it
+        # the j returns an array (nrealizations, ) need to reshape it
         r, c = res[0].shape
         res.shape = (len(reals), r, c)
         res = res[:, :, -1]

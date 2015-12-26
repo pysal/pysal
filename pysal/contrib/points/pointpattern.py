@@ -23,7 +23,7 @@ class PointPattern(object):
     """
     PointPattern Class 2-D
     """
-    def __init__(self, points, window=None, marks=None, mark_labels=None):
+    def __init__(self, points, window=None, names=None, coord_names=None):
 
         """
 
@@ -31,33 +31,33 @@ class PointPattern(object):
         ---------
         points:  array (n x p)
         """
-        self.df = pd.DataFrame(points)  # first two series in df are x, y
-        n, p = self.df.shape
-        cnames = ['x', 'y']
-        self.n_marks = 0
-        if p > 2:
-            for m in xrange(2, p):
-                cnames.append("mark_{}".format(m-2))
-                self.n_marks += 1
+        # first two series in df are x, y unless coor_names and names are
+        # specified
 
-        self.df.columns = cnames
-        self.points = self.df.loc[:, ['x', 'y']]
+        self.df = pd.DataFrame(points)
+        n, p = self.df.shape
+        self._n_marks = p - 2
+        if names is None and coord_names is None:
+            col_names = coord_names = ['x', 'y']
+            if p > 2:
+                for m in xrange(2, p):
+                    col_names.append("mark_{}".format(m-2))
+            coord_names = coord_names[:2]
+        else:
+            col_names = names
+            coord_names = coord_names
+
+        self.coord_names = coord_names
+        self._x, self._y = coord_names
+        self.df.columns = col_names
+        self.points = self.df.loc[:, [self._x, self._y]]
         self._n, self._p = self.points.shape
         if window is None:
             self.set_window(as_window(poly_from_bbox(self.mbb)))
         else:
             self.set_window(window)
 
-        if marks:
-            self.marks = []
-            for m, mark in enumerate(marks):
-                m_name = 'mark_{}'.format(self.n_marks)
-                self.df[m_name] = pd.Series(mark)
-                self.marks.append(m_name)
-                self.n_marks += 1
-        if mark_labels:
-            if len(marks) != mark_labels:
-                print('misatch: ', mark_labels, len(marks))
+        self._facade()
 
     def set_window(self, window):
         try:
@@ -79,11 +79,21 @@ class PointPattern(object):
         print("Bounding rectangle [({},{}), ({},{})]".format(*self.mbb))
         print("Area of window: {}".format(self.window.area))
         print("Intensity estimate for window: {}".format(self.lambda_window))
+        print(self.head())
+
+    def add_marks(self, marks, mark_names=None):
+        if mark_names is None:
+            nm = xrange(len(marks))
+            mark_names = ["mark_{}".format(self._n_marks+1+j) for j in nm]
+        for name, mark in zip(mark_names, marks):
+            self.df[name] = mark
+            self._n_marks += 1
 
     def plot(self, window=False, title="Point Pattern", hull=False,
              get_ax=False):
         fig, ax = plt.subplots()
-        plt.plot(self.points['x'], self.points['y'], '.')
+        plt.plot(self.df[self._x], self.df[self._y], '.')
+        # plt.scatter(self.df[self._x], self.df[self._y])
         plt.title(title)
         if window:
             patches = []
@@ -277,6 +287,17 @@ class PointPattern(object):
             nn = self.tree.query(other, k=k)
         return nn[1], nn[0]
 
+    def explode(self, mark):
+        uv = np.unique(self.df[mark])
+        pps = [self.df[self.df[mark] == v] for v in uv]
+        names = self.df.columns.values.tolist()
+        cnames = self.coord_names
+        return[PointPattern(pp, names=names, coord_names=cnames) for pp in pps]
+
+    # Pandas facade
+    def _facade(self):
+            self.head = self.df.head
+            self.tail = self.df.tail
 
 if __name__ == "__main__":
     # table 4.9 O'Sullivan and Unwin 2nd edition. Note observation 9 is
