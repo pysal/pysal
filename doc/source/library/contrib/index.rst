@@ -74,6 +74,7 @@ Currently the following contribs are available:
 
 .. _clusterpy: https://pypi.python.org/pypi/clusterPy/0.9.9
 .. _matplotlib: http://matplotlib.org/
+.. _pandas: http://pandas.pydata.org
 .. _project page: https://github.com/pysal/pysal/wiki/PySAL-Visualization-Project
 .. _shapely: https://pypi.python.org/pypi/Shapely
 .. _wxPython: http://www.wxpython.org/
