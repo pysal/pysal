@@ -60,6 +60,12 @@ Currently the following contribs are available:
     - Path: pysal.contrib.clusterpy
     - Requires: `clusterpy`_
 
+ 7. Points -- Statistical analysis of planar point patterns
+
+    - .. versionadded:: 1.11
+    - Path: pysal.contrib.points
+    - Requires: `pandas`_
+
 
 
 
