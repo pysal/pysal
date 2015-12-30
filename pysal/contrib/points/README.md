@@ -12,9 +12,8 @@ It currently works on cartesian coordinates. Users with data in geographic coord
 ### Examples
 
 * [Basic point pattern structure](pointpattern.ipynb)
-* [Visualization](visualization.ipynb)
+* [Centrography and Visualization](centrography.ipynb)
 * [Marks](marks.ipynb)
-* [Centrography](centrography.ipynb)
 * [Simulation of point processes](process.ipynb)
 * [Distance based statistics](distance_statistics.ipynb)
 
