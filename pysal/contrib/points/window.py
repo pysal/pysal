@@ -14,6 +14,12 @@ def poly_from_bbox(bbox):
     return ps.cg.shapes.Polygon(c)
 
 
+def to_ccf(poly):
+    if poly[-1] != poly[0]:
+        poly.append(poly[0])
+    return poly
+
+
 def as_window(pysal_polygon):
     if pysal_polygon.holes == [[]]:
         return Window(pysal_polygon.parts)
