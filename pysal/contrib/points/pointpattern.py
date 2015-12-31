@@ -21,16 +21,54 @@ if sys.version_info[0] > 2:
 
 class PointPattern(object):
     """
-    PointPattern Class 2-D
+    Plannar Point Pattern Class 2-D
+
+    Parameters
+    ----------
+
+    points:  array (n x p)
+             n points with p >= 2 attributes on each point. Two attributes must
+             comprise the spatial coordinate pair The default is the first two
+             attributes are the x and y spatial coordinates
+
+    window: :py:class:`~.window.Window`
+            Bounding geometric object for the point pattern. If not specified
+            window will be set to the minumum bounding rectangle of the point
+            pattern.
+
+    names:  list
+            The names of the attributes.
+
+    coord_names:  list
+                  The names of the attributes defining the two spatial
+                  coordinates.
+
+
+    Examples
+    --------
+
+    >>> from pysal.contrib.points.pointpattern import PointPattern
+    >>> points = [[66.22, 32.54], [22.52, 22.39], [31.01, 81.21],
+                  [9.47, 31.02], [30.78, 60.10], [75.21, 58.93],
+                  [79.26,  7.68], [8.23, 39.93], [98.73, 77.17],
+                  [89.78, 42.53], [65.19, 92.08], [54.46, 8.48]]
+    >>> pp = PointPattern(points)
+    >>> pp.n
+    12
+    >>> pp.mean_nnd
+    21.612139802089246
+    >>> pp.lambda_mbb
+    0.0015710507711240867
+    >>> pp.lambda_hull
+    0.0022667153468973137
+    >>> pp.hull_area
+    5294.0039500000003
+    >>> pp.mbb_area
+    7638.2000000000007
+
     """
     def __init__(self, points, window=None, names=None, coord_names=None):
 
-        """
-
-        Arguments
-        ---------
-        points:  array (n x p)
-        """
         # first two series in df are x, y unless coor_names and names are
         # specified
 
@@ -66,6 +104,11 @@ class PointPattern(object):
             print("not a valid Window object")
 
     def get_window(self):
+        """
+        Bounding geometry for the point pattern
+
+        :class:`.window.Window`
+        """
         if not hasattr(self, '_window') or self._window is None:
             # use bbox as window
             self.set_window(as_window(poly_from_bbox(self.mbb)))
@@ -159,6 +202,24 @@ class PointPattern(object):
     def _lambda_window(self):
         """
         Intensity estimate based on area of window
+
+        The intensity of a point process at point :math:`s_j` can be defined
+        as:
+
+        .. math::
+
+            \\lambda(s_j) = \\lim \\limits_{|\\mathbf{A}s_j|
+            \\to 0} \\left \\{ \\frac{E(Y(\mathbf{A}s_j)}{|\mathbf{A}s_j|}
+            \\right \\}
+
+        where :math:`\\mathbf{A}s_j` is a small region surrounding location
+        :math:`s_j` with area :math:`|\\mathbf{A}s_j|`, and
+        :math:`E(Y(\\mathbf{A}s_j))` is the expected number of event points in
+        :math:`\\mathbf{A}s_j`.
+
+        The intensity is the mean number of event points per unit of area at
+        point :math:`s_j`.
+
         """
         return self.n / self.window.area
 
@@ -193,8 +254,8 @@ class PointPattern(object):
         """
         Find k nearest neighbors for each point in the pattern
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         k:      int
                 number of nearest neighbors to find
 
@@ -237,6 +298,9 @@ class PointPattern(object):
     max_nnd = cached_property(_max_nnd)
 
     def _mean_nnd(self):
+        """
+        Mean nearest neighbor distance
+        """
         return self.nnd.mean()
 
     mean_nnd = cached_property(_mean_nnd)
@@ -246,13 +310,13 @@ class PointPattern(object):
         Find all pairs of points in the pattern that are within r units of each
         other
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         r: float
            diameter of pair circle
 
         Returns
-        ------
+        -------
         s: set
            pairs of points within r units of each other
 
@@ -263,10 +327,9 @@ class PointPattern(object):
         """
         Find k nearest neighbors in the pattern for each point in other
 
-        Arguments
-        ---------
-        other: PointPattern
-                n points on p dimensions
+        Parameters
+        ----------
+        other: :class:`PointPattern`
 
         k:      int
                 number of nearest neighbors to find
@@ -288,6 +351,22 @@ class PointPattern(object):
         return nn[1], nn[0]
 
     def explode(self, mark):
+        """
+        Explode a marked point pattern into a sequence of individual point
+        patterns. If the mark has k unique values, then the sequence will be of
+        length k.
+
+        Parameters
+        ----------
+        mark: string
+              The label of the mark to use for the subsetting
+
+        Returns
+        -------
+        pps: list
+             sequence of :class:`PointPattern` instances
+        """
+
         uv = np.unique(self.df[mark])
         pps = [self.df[self.df[mark] == v] for v in uv]
         names = self.df.columns.values.tolist()
@@ -298,13 +377,3 @@ class PointPattern(object):
     def _facade(self):
             self.head = self.df.head
             self.tail = self.df.tail
-
-if __name__ == "__main__":
-    # table 4.9 O'Sullivan and Unwin 2nd edition. Note observation 9 is
-    # incorrect on its coordinates. Have to update (approximation for now)
-
-    points = [[66.22, 32.54], [22.52, 22.39], [31.01, 81.21], [9.47, 31.02],
-              [30.78, 60.10], [75.21, 58.93], [79.26,  7.68], [8.23, 39.93],
-              [98.73, 80.53], [89.78, 42.53], [65.19, 92.08], [54.46, 8.48]]
-
-    pp = PointPattern(points)

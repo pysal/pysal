@@ -67,7 +67,9 @@ Currently the following contribs are available:
     - Requires: `pandas`_
 
 
+.. toctree::
 
+   points/index
 
 
 

@@ -30,27 +30,170 @@ class DStatistic(object):
 
 
 class G(DStatistic):
-    """docstring for G"""
+    """Estimates the nearest neighbor distance distribution function for a
+    point pattern: G(d)
+
+    Parameters
+    ----------
+
+    pp: :py:class:`~.pointpattern.PointPattern`
+        Point Pattern instance
+
+    intervals: int
+               The length of distance domain sequence
+
+    dmin: float
+          The minimum of the distance domain
+
+    dmax: float
+          The maximum of the distance domain
+
+    d: sequence
+       The distance domain sequence.
+       If d is specified, dmin and dmax are ignored
+
+
+    Attributes
+    ----------
+    d:  array
+        The distance domain sequence
+
+    G: array
+        The cumulative nearest neighbor distance distribution over d
+
+
+    Notes
+    -----
+
+    In the analysis of planar point processes, the estimate of :math:`G` is
+    typically compared to the value expected from a completely spatial
+    random (CSR) process given as:
+
+    .. math::
+
+            G(d) = 1 - e^{-\lambda \pi  d^2}
+
+    where :math:`\lambda` is the intensity (points per unit area) of the point
+    process and :math:`d` is distance.
+
+    For a clustered pattern, the empirical function will be above the
+    expectation, while for a uniform pattern the empirical function falls below
+    the expectation.
+
+
+    """
+
     def __init__(self, pp, intervals=10, dmin=0.0, dmax=None, d=None):
-        res = g(pp, intervals, dmin, dmax, d)
+        res = _g(pp, intervals, dmin, dmax, d)
         self.d = res[:, 0]
         self.G = self._stat = res[:, 1]
         super(G, self).__init__(name="G")
 
 
 class F(DStatistic):
-    """docstring for F"""
+    """Estimates the empty space   distribution function for a point pattern: F(d)
+
+    Parameters
+    ----------
+
+    pp: :py:class:`~.pointpattern.PointPattern`
+        Point Pattern instance
+
+    n: int
+       number of empty space points
+
+    intervals: int
+               The length of distance domain sequence
+
+    dmin: float
+          The minimum of the distance domain
+
+    dmax: float
+          The maximum of the distance domain
+
+    d: sequence
+       The distance domain sequence.
+       If d is specified, dmin and dmax are ignored
+
+
+    Attributes
+    ----------
+    d:  array
+        The distance domain sequence
+
+    F: array
+        The cumulative empty space nearest event distance distribution over d
+
+
+    Notes
+    -----
+
+    In the analysis of planar point processes, the estimate of :math:`F` is
+    typically compared to the value expected from a process that displays
+    complete spatial randomness (CSR):
+
+    .. math::
+
+            F(d) = 1 - e^{-\lambda \pi  d^2}
+
+    where :math:`\lambda` is the intensity (points per unit area) of the point
+    process and :math:`d` is distance.
+
+    The expectation is identical to the expectation for the :class:`G` function
+    for a CSR process.  However, for a clustered pattern, the empirical G
+    function will be below the expectation, while for a uniform pattern the
+    empirical function falls above the expectation.
+
+    """
+
     def __init__(self, pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
-        res = f(pp, n, intervals, dmin, dmax, d)
+        res = _f(pp, n, intervals, dmin, dmax, d)
         self.d = res[:, 0]
         self.F = self._stat = res[:, 1]
         super(F, self).__init__(name="F")
 
 
 class J(DStatistic):
-    """docstring for J"""
+    """Estimates the  J function for a point pattern [VanLieshout1996]_
+
+    Parameters
+    ----------
+    pp: :py:class:`~.pointpattern.PointPattern`
+        Point Pattern instance
+
+    n: int
+       number of empty space points
+
+    intevals: int
+        number of intervals to evalue J over
+
+    Returns
+    -------
+    j: array (intervals x 2)
+         first column is d, second column is j(d)
+
+
+    Notes
+    -----
+
+    The :math:`J` function is a ratio of the hazard functions defined for
+    :math:`G` and :math:`F`:
+
+    .. math::
+
+            J(d) = \\frac{1-G(d) }{1-F(d)}
+
+    where :math:`G(d)` is the nearest neighbor distance distribution function
+    (see :class:`G`)
+    and :math:`F(d)` is the empty space function (see :class:`F`).
+
+    For a CSR process the J function equals 1. Empirical values larger than 1
+    are indicative of uniformity, while values below 1 suggest clustering.
+
+
+    """
     def __init__(self, pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
-        res = j(pp, n, intervals, dmin, dmax, d)
+        res = _j(pp, n, intervals, dmin, dmax, d)
         self.d = res[:, 0]
         self.j = self._stat = res[:, 1]
         super(J, self).__init__(name="J")
@@ -74,11 +217,44 @@ class L(DStatistic):
         super(L, self).__init__(name="L")
 
 
-def g(pp, intervals=10, dmin=0.0, dmax=None, d=None):
+def _g(pp, intervals=10, dmin=0.0, dmax=None, d=None):
     """
-    G function
-    """
+    Estimate the nearest neighbor distances function
 
+
+    Parameters
+    ----------
+
+    pp: PointPattern
+
+    intervals: int
+               The length of distance domain sequence
+
+    dmin: float
+          The minimum of the distance domain
+
+    dmax: float
+          The of the distance domain
+
+    d: sequence
+       The distance domain sequence.
+       If d is specified, dmin and dmax are ignored
+
+
+    Returns
+    -------
+    d:  array
+        The distance domain sequence
+
+    G: array
+        The cumulative nearest neighbor distance distribution over d
+
+
+    Notes
+    -----
+    See :class:`G`.
+
+    """
     if d is None:
         w = pp.max_nnd/intervals
         if dmax:
@@ -91,12 +267,12 @@ def g(pp, intervals=10, dmin=0.0, dmax=None, d=None):
     return np.vstack((d, cdf)).T
 
 
-def f(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
+def _f(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
     """
     F: empty space function
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     n: int
        number of empty space points
     intevals: int
@@ -113,6 +289,10 @@ def f(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
     -------
     cdf: array (intervals x 2)
          first column is d, second column is cdf(d)
+
+    Notes
+    -----
+    See :class:`F`
 
     """
 
@@ -135,31 +315,50 @@ def f(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
     return np.vstack((d, cdf)).T
 
 
-def j(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
+def _j(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
     """
-    J: scaled G function
+    J: Ratio of hazard functions for F and G
 
-    Arguments
-    ---------
+    Parameters
+    ----------
+    pp: :py:class:`~.pointpattern.PointPattern`
+        Point Pattern instance
+
     n: int
        number of empty space points
+
     intevals: int
         number of intervals to evalue F over
+
+    dmin: float
+           lower limit of distance range
+
+    dmax: float
+           upper limit of distance range
+           if dmax is None dmax will be set to maxnnd
+    d:   array-like
+         domain for F function
 
     Returns
     -------
     cdf: array (intervals x 2)
          first column is d, second column is cdf(d)
+
+    Notes
+    -----
+    See :class:`J`
+
     """
-    F = f(pp, n, intervals=intervals, dmin=dmin, dmax=dmax, d=d)
-    G = g(pp, intervals=intervals, dmin=dmin, dmax=dmax, d=d)
+
+    F = _f(pp, n, intervals=intervals, dmin=dmin, dmax=dmax, d=d)
+    G = _g(pp, intervals=intervals, dmin=dmin, dmax=dmax, d=d)
     FC = 1 - F[:, 1]
     GC = 1 - G[:, 1]
     last_id = len(GC) + 1
     if np.any(FC == 0):
         last_id = np.where(FC == 0)[0][0]
 
-    return np.vstack((F[:last_id, 0], FC[:last_id]/GC[:last_id])).T
+    return np.vstack((F[:last_id, 0], GC[:last_id]/FC[:last_id])).T
 
 
 def k(pp, intervals=10, dmin=0.0, dmax=None, d=None):
@@ -237,8 +436,8 @@ class Genv(Envelopes):
 
     def calc(self, *args, **kwargs):
         pp = args[0]
-        return g(pp, intervals=self.intervals, dmin=self.dmin, dmax=self.dmax,
-                 d=self.d)
+        return _g(pp, intervals=self.intervals, dmin=self.dmin, dmax=self.dmax,
+                  d=self.d)
 
 
 class Fenv(Envelopes):
@@ -256,8 +455,8 @@ class Fenv(Envelopes):
 
     def calc(self, *args, **kwargs):
         pp = args[0]
-        return f(pp, self.n, intervals=self.intervals, dmin=self.dmin,
-                 dmax=self.dmax, d=self.d)
+        return _f(pp, self.n, intervals=self.intervals, dmin=self.dmin,
+                  dmax=self.dmax, d=self.d)
 
 
 class Jenv(Envelopes):
@@ -275,8 +474,8 @@ class Jenv(Envelopes):
 
     def calc(self, *args, **kwargs):
         pp = args[0]
-        return j(pp, self.n, intervals=self.intervals, dmin=self.dmin,
-                 dmax=self.dmax, d=self.d)
+        return _j(pp, self.n, intervals=self.intervals, dmin=self.dmin,
+                  dmax=self.dmax, d=self.d)
 
 
 class Kenv(Envelopes):
