@@ -86,3 +86,54 @@ def std_distance(points):
     n, p = points.shape
     m = points.mean(axis=0)
     return np.sqrt(((points*points).sum(axis=0)/n - m*m).sum())
+
+
+def ellipse(points):
+    """
+    Ellipse for a point pattern
+
+    Implements approach from:
+
+    https://www.icpsr.umich.edu/CrimeStat/files/CrimeStatChapter.4.pdf
+    """
+    points = np.asarray(points)
+    n, k = points.shape
+    x = points[:, 0]
+    y = points[:, 1]
+    xd = x - x.mean()
+    yd = y - y.mean()
+    xss = (xd * xd).sum()
+    yss = (yd * yd).sum()
+    cv = (xd * yd).sum()
+    num = (xss - yss) + np.sqrt((xss - yss)**2 + 4 * (cv)**2)
+    den = 2 * cv
+    theta = np.arctan(num / den)
+    cos_theta = np.cos(theta)
+    sin_theta = np.sin(theta)
+    n_2 = n - 2
+    sd_x = (2 * (xd * cos_theta - yd * sin_theta)**2).sum() / n_2
+    sd_y = (2 * (xd * sin_theta - yd * cos_theta)**2).sum() / n_2
+    return np.sqrt(sd_x), np.sqrt(sd_y), theta
+
+
+def dtot(coord, points):
+    """
+    Sum of Euclidean distances between points and coord
+    """
+    points = np.asarray(points)
+    xd = points[:, 0] - coord[0]
+    yd = points[:, 1] - coord[1]
+    d = np.sqrt(xd*xd + yd*yd).sum()
+    return d
+
+from scipy.optimize import minimize
+
+
+def euclidean_median(points):
+    """
+    Calculate the Euclidean median for a point pattern
+    """
+    points = np.asarray(points)
+    start = mean_center(points)
+    res = minimize(dtot, start, args=points)
+    return res['x']
