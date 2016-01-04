@@ -29,7 +29,7 @@ def pandashandler(formula_like, data):
 #def model(eqn, *args, data=df, **kwargs)
 class Model(object):
     """
-    le model manager
+    The model manager
     
     arguments that sit above the pysal model API:
 
