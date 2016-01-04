@@ -50,7 +50,7 @@ Currently the following contribs are available:
 
  5. Visualization -- Lightweight visualization layer (`Project page`_).
 
-    - .. versionadded:: 1.7
+    - .. versionadded:: 1.5
     - Path: pysal.contrib.viz
     - Requires: `matplotlib`_
 
@@ -59,6 +59,12 @@ Currently the following contribs are available:
     - .. versionadded:: 1.8
     - Path: pysal.contrib.clusterpy
     - Requires: `clusterpy`_
+
+ 7. Pandas utilities -- Tools to work with spatial file formats using `pandas`.
+
+    - .. versionadded:: 1.8
+    - Path: pysal.contrib.pdutilities
+    - Requires: `pandas`_
 
 
 
