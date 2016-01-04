@@ -50,7 +50,7 @@ Currently the following contribs are available:
 
  5. Visualization -- Lightweight visualization layer (`Project page`_).
 
-    - .. versionadded:: 1.7
+    - .. versionadded:: 1.5
     - Path: pysal.contrib.viz
     - Requires: `matplotlib`_
 
