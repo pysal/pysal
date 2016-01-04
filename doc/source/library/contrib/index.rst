@@ -60,6 +60,12 @@ Currently the following contribs are available:
     - Path: pysal.contrib.clusterpy
     - Requires: `clusterpy`_
 
+ 7. Pandas utilities -- Tools to work with spatial file formats using `pandas`.
+
+    - .. versionadded:: 1.8
+    - Path: pysal.contrib.pdutilities
+    - Requires: `pandas`_
+
 
 
 
