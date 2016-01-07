@@ -15,7 +15,6 @@ __author__ = "Serge Rey sjsrey@gmail.com"
 import sys
 import numpy as np
 import warnings
-from math import pi as PI
 from scipy.spatial import ConvexHull
 from pysal.cg import get_angle_between
 from pysal.cg.shapes import Ray
@@ -147,22 +146,13 @@ def skyum(points, is_hull=False):
     indicating the preceeding and succeeding points from p, moving clockwise, on
     the convex hull of points. 
     1. Find p in S that maximizes radius(prec(p), p, succ(p)) &
-    angle(prec(p),p,succ(p)) in lexicographical order
+    angle(prec(p),p,succ(p))
     2a. If angle(prec(p), p, succ(p)) <= 90 degrees, then finish. 
     2b. If not, remove p from set. 
     """
     if not is_hull:
         points = hull(points)
-    while len(points) > 1:
-        angles = [_angle(_prec(p, points), p, _succ(p, points)) for p in points]
-        circles = [_circle(_prec(p, points), p, _succ(p, points)) for p in points]
-        radii = [c[0] for c in circles]
-        lexmax = np.lexsort((radii, angles))[0]
-        if angles[lexmax] > PI/2.0:
-            points = points[points != points[,lexmax]]
-        else:
-            break
-    return circles[lexmax]
+    min_angle = np.argmin(_angle(_prec(p), p, _succ(p) for p in points)
 
 def _angle(p,q,r):
     return get_angle_between(Ray(q,p),Ray(q,r))
