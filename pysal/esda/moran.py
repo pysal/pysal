@@ -671,15 +671,17 @@ class Moran_Local:
         prange = range(self.permutations)
         k = self.w.max_neighbors + 1
         nn = self.n - 1
-        rids = np.array([np.random.permutation(nn)[0:k] for i in prange])
+        rids = np.random.randint(0, np.minimum(nn, self.permutations), (np.minimum(nn, self.permutations), k))
         ids = np.arange(self.w.n)
         ido = self.w.id_order
         w = [self.w.weights[ido[i]] for i in ids]
         wc = [self.w.cardinalities[ido[i]] for i in ids]
 
         for i in xrange(self.w.n):
-            idsi = ids[ids != i]
-            np.random.shuffle(idsi)
+            idsi = np.random.choice(
+                ids[ids != i], 
+                np.minimum(nn, self.permutations)
+               )
             tmp = z[idsi[rids[:, 0:wc[i]]]]
             lisas[i] = z[i] * (w[i] * tmp).sum(1)
         self.rlisas = (n_1 / self.den) * lisas
