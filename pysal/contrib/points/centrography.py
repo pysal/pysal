@@ -169,13 +169,20 @@ def skyum(points, not_hull=True):
         candidate = (_prec(points[lexmax], points), 
                      points[lexmax],
                      _succ(points[lexmax], points))
-        if angles[lexmax] <= PI/2.0 or len(points) <= 3:
+        if angles[lexmax] <= PI/2.0:
             #print("Constrained by points: {}".format(candidate))
             return _circle(*candidate), points, removed, candidate
         else:
             removed.append((points.pop(lexmax), i))
         i+=1
-#still is not mbc in columbus *45, 34, *20, *17, 8, *4, 2 
+#still is not mbc in columbus 
+#*45, 
+#34(fixed), 
+#*20(looks within rounding), 
+#*17(looks within rounding), 
+#8(fixed), 
+#*4, 
+#2 (looks within rounding)
 
 def _angle(p,q,r):
     return np.abs(get_angle_between(Ray(q,p),Ray(q,r)))
@@ -202,12 +209,11 @@ def _circle(p,q,r, dmetric=dist.euclidean):
     px,py = p
     qx,qy = q
     rx,ry = r
-    D = 2*(px*(qy - ry) + qx*(ry - py) + rx*(py - qy))
     if np.allclose(np.abs(_angle(p,q,r)), PI):
         radius = dmetric(p,r)/2.
         center_x = (px + rx)/2.
         center_y = (py + ry)/2.
-    elif np.allclose(np.abs(_angle(p,q,r)), 2*PI):
+    elif np.allclose(np.abs(_angle(p,q,r)), 0):
         radius = dmetric(p,q)/2.
         center_x = (px + qx)/2.
         center_y = (py + qy)/2.
