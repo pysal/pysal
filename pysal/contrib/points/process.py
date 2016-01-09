@@ -6,6 +6,8 @@ TODO
 - inhibition process(es)
 - optimize draws for complex windows
 - documentation
+
+- $\lambda$-conditioned CSR for parent events?
 """
 
 __author__ = "Serge Rey sjsrey@gmail.com"
