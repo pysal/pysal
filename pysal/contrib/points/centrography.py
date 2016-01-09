@@ -15,12 +15,14 @@ __author__ = "Serge Rey sjsrey@gmail.com"
 import sys
 import numpy as np
 import warnings
+import copy
 from math import pi as PI
 from scipy.spatial import ConvexHull
-from pysal.cg import get_angle_between
-from pysal.cg.shapes import Ray
+from pysal.cg import get_angle_between, Ray, is_clockwise
 from scipy.spatial import distance as dist
 from scipy.optimize import minimize
+
+not_clockwise = lambda x: not is_clockwise(x)
 
 MAXD = sys.float_info.max
 MIND = sys.float_info.min
@@ -139,39 +141,58 @@ def euclidean_median(points):
     res = minimize(dtot, start, args=points)
     return res['x']
 
-def skyum(points, is_hull=False):
+def skyum(points, not_hull=True):
     """
     Implements Skyum (1990)'s algorithm for the minimum bounding circle in R^2. 
 
-    0. Store points in a linked list where point p can find prec(p) and succ(p),
-    indicating the preceeding and succeeding points from p, moving clockwise, on
-    the convex hull of points. 
-    1. Find p in S that maximizes radius(prec(p), p, succ(p)) &
-    angle(prec(p),p,succ(p)) in lexicographical order
+    0. Store points clockwise. 
+    1. Find p in S that maximizes angle(prec(p), p, succ(p) THEN radius(prec(p),
+    p, succ(p)). This is also called the lexicographic maximum, or the last
+    entry of a list of (radius, angle) in lexicographical order. 
     2a. If angle(prec(p), p, succ(p)) <= 90 degrees, then finish. 
     2b. If not, remove p from set. 
     """
-    if not is_hull:
-        points = hull(points)
-    while len(points) > 1:
+    points = hull(points).tolist()
+    if not_clockwise(points):
+        points.reverse()
+        if not_clockwise(points):
+            raise Exception('Points are neither clockwise nor counterclockwise')
+    POINTS = copy.deepcopy(points)
+    removed = []
+    i=0
+    while True:
         angles = [_angle(_prec(p, points), p, _succ(p, points)) for p in points]
         circles = [_circle(_prec(p, points), p, _succ(p, points)) for p in points]
         radii = [c[0] for c in circles]
-        lexmax = np.lexsort((radii, angles))[0]
-        if angles[lexmax] > PI/2.0:
-            points = points[points != points[,lexmax]]
+        lexord = np.lexsort((radii, angles)) #confusing as hell defaults...
+        lexmax = lexord[-1]
+        candidate = (_prec(points[lexmax], points), 
+                     points[lexmax],
+                     _succ(points[lexmax], points))
+        if angles[lexmax] <= PI/2.0 or len(points) <= 3:
+            #print("Constrained by points: {}".format(candidate))
+            return _circle(*candidate), points, removed, candidate
         else:
-            break
-    return circles[lexmax]
+            removed.append((points.pop(lexmax), i))
+        i+=1
+#still is not mbc in columbus *45, 34, *20, *17, 8, *4, 2 
 
 def _angle(p,q,r):
-    return get_angle_between(Ray(q,p),Ray(q,r))
+    return np.abs(get_angle_between(Ray(q,p),Ray(q,r)))
 
 def _prec(p,l):
-    return l[l.index(p)-1]
+    pos = l.index(p)
+    if pos-1 < 0:
+        return l[-1]
+    else:
+        return l[pos-1]
 
 def _succ(p,l):
-    return l[l.index(p)+1]
+    pos = l.index(p)
+    if pos+1 >= len(l):
+        return l[0]
+    else:
+        return l[pos+1]
 
 def _circle(p,q,r, dmetric=dist.euclidean):
     """
@@ -182,9 +203,19 @@ def _circle(p,q,r, dmetric=dist.euclidean):
     qx,qy = q
     rx,ry = r
     D = 2*(px*(qy - ry) + qx*(ry - py) + rx*(py - qy))
-    center_x = ((px**2 + py**2)*(qy-ry) + (qx**2 + qy**2)(ry-py) 
-              + (rx**2 + ry**2)*(py-qy)) / D
-    center_y = ((px**2 + py**2)*(ry-qy) + (qx**2 + qy**2)(py-ry) 
-              + (rx**2 + ry**2)*(qy-py)) / D
-    radius = dmetric((center_x, center_y), p)
+    if np.allclose(np.abs(_angle(p,q,r)), PI):
+        radius = dmetric(p,r)/2.
+        center_x = (px + rx)/2.
+        center_y = (py + ry)/2.
+    elif np.allclose(np.abs(_angle(p,q,r)), 2*PI):
+        radius = dmetric(p,q)/2.
+        center_x = (px + qx)/2.
+        center_y = (py + qy)/2.
+    else:
+        D = 2*(px*(qy - ry) + qx*(ry - py) + rx*(py - qy))
+        center_x = ((px**2 + py**2)*(qy-ry) + (qx**2 + qy**2)*(ry-py) 
+                  + (rx**2 + ry**2)*(py-qy)) / float(D)
+        center_y = ((px**2 + py**2)*(rx-qx) + (qx**2 + qy**2)*(px-rx) 
+                  + (rx**2 + ry**2)*(qx-px)) / float(D)
+        radius = dmetric((center_x, center_y), p)
     return radius, (center_x, center_y)
