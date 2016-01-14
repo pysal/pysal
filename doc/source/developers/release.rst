@@ -9,7 +9,7 @@ PySAL Release Management
 Prepare the release
 -------------------
 
-- Create a branch_.
+- Create a branch_ out of the `dev` branch
 - Check all tests pass. See :doc:`testing`.
 - Update CHANGELOG::
 
@@ -17,10 +17,8 @@ Prepare the release
 
 - Prepend `chglog` to `CHANGELOG` and edit
 - Edit THANKS and README and README.md if needed.
-- Change MAJOR, MINOR version in setup script.
-- Change pysal/version.py to non-dev number
-- Change the docs version from X.xdev to X.x by editing doc/source/conf.py in two places.
-- Change docs/index.rst to update Stable version and date, and Development version
+- Edit the file `tools/bump.py` to update MAJOR, MINOR, MICRO, year, day, month and NEXT
+- Run `tools/bump.py`
 - Commit all changes.
 - Push_ your branch up to your GitHub repos
 - On github issue a pull request. Add a comment that this is for release.
