@@ -26,23 +26,19 @@ class PointPattern(object):
     Parameters
     ----------
 
-    points:  array (n x p)
-             n points with p >= 2 attributes on each point. Two attributes must
-             comprise the spatial coordinate pair The default is the first two
-             attributes are the x and y spatial coordinates
-
-    window: :py:class:`~.window.Window`
-            Bounding geometric object for the point pattern. If not specified
-            window will be set to the minumum bounding rectangle of the point
-            pattern.
-
-    names:  list
-            The names of the attributes.
-
+    points:       array
+                  (n,p), n points with p >= 2 attributes on each point. Two attributes must
+                  comprise the spatial coordinate pair The default is the first two
+                  attributes are the x and y spatial coordinates
+    window:       :py:class:`~.window.Window`
+                  Bounding geometric object for the point pattern. If not specified
+                  window will be set to the minumum bounding rectangle of the point
+                  pattern.
+    names:        list
+                  The names of the attributes.
     coord_names:  list
                   The names of the attributes defining the two spatial
                   coordinates.
-
 
     Examples
     --------

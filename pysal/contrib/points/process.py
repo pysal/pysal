@@ -6,6 +6,8 @@ TODO
 - inhibition process(es)
 - optimize draws for complex windows
 - documentation
+
+- $\lambda$-conditioned CSR for parent events?
 """
 
 __author__ = "Serge Rey sjsrey@gmail.com"
@@ -41,7 +43,9 @@ def runif_in_circle(n, radius=1.0, center=(0., 0.), burn=2, verbose=False):
 
 
 class PointProcess(object):
-    """docstring for PointProcess"""
+    """
+    Point Process base class.
+    """
     def __init__(self, window, n, samples, asPP=False, **args):
         """
         Parameters
