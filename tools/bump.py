@@ -54,10 +54,10 @@ with open("../doc/source/conf.py") as c_file:
     for i, line in enumerate(lines):
         tok = line[:9]
         if tok == 'version =':
-            lines[i] = "version = {}".format(version)
+            lines[i] = "version = '{}'\n".format(version)
             print lines[i]
         elif tok == 'release =':
-            lines[i] = "release = {}".format(version)
+            lines[i] = "release = '{}'\n".format(version)
             print lines[i]
 
 with open("../doc/source/conf.py", 'w') as c_file:
@@ -69,10 +69,10 @@ with open("../doc/source/index.rst") as i_file:
         if line[:13] == '    - `Stable':
             a = '    - `Stable {}'.format(version)
             b = '(Released {}-{}-{})'.format(year, month, day)
-            lines[i] = '{} {} <users/installation.html>`_'.format(a, b)
+            lines[i] = '{} {} <users/installation.html>`_\n'.format(a, b)
         if line[:13] == '    - `Develo':
             a = '    - `Development {}'.format(NEXT)
-            lines[i] = '{}  <http://github.com/pysal/pysal/>`_'.format(a)
+            lines[i] = '{}  <http://github.com/pysal/pysal/>`_\n'.format(a)
 
 with open("../doc/source/index.rst", 'w') as i_file:
     i_file.write("".join(lines))
