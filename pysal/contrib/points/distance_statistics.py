@@ -37,14 +37,28 @@ class DStatistic(object):
     def __init__(self, name):
         self.name = name
 
-    def plot(self):
+    def plot(self, qq=False):
+        """
+        Plot the distance function
+
+        Parameters
+        ----------
+        qq: Boolean
+            If False the statistic is plotted against distance. If Frue, the
+            quantile-quantile plot is generated, observed vs. CSR.
+        """
+
         # assuming mpl
         x = self.d
-        plt.plot(x, self._stat, label='{}'.format(self.name))
-        plt.ylabel("{}(d)".format(self.name))
-        plt.xlabel('d')
-        plt.plot(x, self.ev, label='CSR')
-        plt.title("{} distance function".format(self.name))
+        if qq:
+            plt.plot(self.ev, self._stat)
+            plt.plot(self.ev, self.ev)
+        else:
+            plt.plot(x, self._stat, label='{}'.format(self.name))
+            plt.ylabel("{}(d)".format(self.name))
+            plt.xlabel('d')
+            plt.plot(x, self.ev, label='CSR')
+            plt.title("{} distance function".format(self.name))
 
 
 class G(DStatistic):
@@ -278,6 +292,14 @@ class L(DStatistic):
         self.l = self._stat = res[:, 1]
         super(L, self).__init__(name="L")
 
+    def plot(self):
+        # assuming mpl
+        x = self.d
+        plt.plot(x, self._stat, label='{}'.format(self.name))
+        plt.ylabel("{}(d)".format(self.name))
+        plt.xlabel('d')
+        plt.title("{} distance function".format(self.name))
+
 
 def _g(pp, intervals=10, dmin=0.0, dmax=None, d=None):
     """
@@ -346,8 +368,9 @@ def _f(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
     Returns
     -------
              : array
-               A 2-dimensional numpy array of 2 columns. The first column is the distance domain sequence
-               for the point pattern. The second column is corresponding F function.
+               A 2-dimensional numpy array of 2 columns. The first column is
+               the distance domain sequence for the point pattern. The second
+               column is corresponding F function.
 
     Notes
     -----
@@ -389,16 +412,18 @@ def _j(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
     dmin     : float
                Lower limit of distance range.
     dmax     : float
-               Upper limit of distance range. If dmax is None, dmax will be set to maximum
-               nearest neighor distance.
+               Upper limit of distance range. If dmax is None, dmax will be set
+               to maximum nearest neighor distance.
     d        : sequence
-               The distance domain sequence. If d is specified, intervals, dmin and dmax are ignored.
+               The distance domain sequence. If d is specified, intervals, dmin
+               and dmax are ignored.
 
     Returns
     -------
              : array
-               A 2-dimensional numpy array of 2 columns. The first column is the distance domain sequence
-               for the point pattern. The second column is corresponding J function.
+               A 2-dimensional numpy array of 2 columns. The first column is
+               the distance domain sequence for the point pattern. The second
+               column is corresponding J function.
 
     Notes
     -----
@@ -432,15 +457,18 @@ def _k(pp, intervals=10, dmin=0.0, dmax=None, d=None):
     dmin     : float
                Lower limit of distance range.
     dmax     : float
-               Upper limit of distance range. If dmax is None, dmax will be set to length of bounding box diagonal.
+               Upper limit of distance range. If dmax is None, dmax will be set
+               to length of bounding box diagonal.
     d        : sequence
-               The distance domain sequence. If d is specified, intervals, dmin and dmax are ignored.
+               The distance domain sequence. If d is specified, intervals, dmin
+               and dmax are ignored.
 
     Returns
     -------
     kcdf     : array
-               A 2-dimensional numpy array of 2 columns. The first column is the distance domain sequence
-               for the point pattern. The second column is corresponding K function.
+               A 2-dimensional numpy array of 2 columns. The first column is
+               the distance domain sequence for the point pattern. The second
+               column is corresponding K function.
 
     Notes
     -----
@@ -476,15 +504,18 @@ def _l(pp, intervals=10, dmin=0.0, dmax=None, d=None):
     dmin     : float
                Lower limit of distance range.
     dmax     : float
-               Upper limit of distance range. If dmax is None, dmax will be set to length of bounding box diagonal.
+               Upper limit of distance range. If dmax is None, dmax will be set
+               to length of bounding box diagonal.
     d        : sequence
-               The distance domain sequence. If d is specified, intervals, dmin and dmax are ignored.
+               The distance domain sequence. If d is specified, intervals, dmin
+               and dmax are ignored.
 
     Returns
     -------
     kf       : array
-               A 2-dimensional numpy array of 2 columns. The first column is the distance domain sequence
-               for the point pattern. The second column is corresponding L function.
+               A 2-dimensional numpy array of 2 columns. The first column is
+               the distance domain sequence for the point pattern. The second
+               column is corresponding L function.
 
     Notes
     -----
@@ -515,7 +546,9 @@ class Envelopes(object):
                   The distance domain sequence.
                   If d is specified, intervals, dmin and dmax are ignored.
     pct         : float
-                  1-alpha, alpha is the confidence level. Default is 0.05, which means 95% confidence level.
+                  1-alpha, alpha is the significance level. Default is 0.05,
+                  1-alpha is the confidence level for the envelope.
+
     realizations: :py:class:`~.process.PointProcess`
                   Point process instance with more than 1 realizations.
 
@@ -524,15 +557,20 @@ class Envelopes(object):
     name        : string
                   Name of the function. ("G", "F", "J", "K" or "L")
     observed    : array
-                  A 2-dimensional numpy array of 2 columns. The first column is the distance domain sequence
-                  for the observed point pattern. The second column is the specific function ("G", "F", "J",
-                  "K" or "L") over the distance domain sequence for the observed point pattern.
+                  A 2-dimensional numpy array of 2 columns. The first column is
+                  the distance domain sequence for the observed point pattern.
+                  The second column is the specific function ("G", "F", "J",
+                  "K" or "L") over the distance domain sequence for the
+                  observed point pattern.
     low         : array
-                  A 1-dimensional numpy array. Lower bound of the simulation envelope.
+                  A 1-dimensional numpy array. Lower bound of the simulation
+                  envelope.
     high        : array
-                  A 1-dimensional numpy array. Higher bound of the simulation envelope.
+                  A 1-dimensional numpy array. Higher bound of the simulation
+                  envelope.
     mean        : array
-                  A 1-dimensional numpy array. Mean values of the simulation envelope.
+                  A 1-dimensional numpy array. Mean values of the simulation
+                  envelope.
 
     """
     def __init__(self, *args,  **kwargs):
@@ -551,8 +589,9 @@ class Envelopes(object):
         reals = realizations.realizations
         res = np.asarray([self.calc(reals[p]) for p in reals])
 
-        # When calculating the J function for all the simulations, the length of the returned interval domains might be
-        # different.
+        # When calculating the J function for all the simulations, the length
+        # of the returned interval domains might be different.
+
         if self.name == "J":
             res = []
             for p in reals:
@@ -560,7 +599,7 @@ class Envelopes(object):
                 if j.shape[0] < self.d.shape[0]:
                     diff = self.d.shape[0]-j.shape[0]
                     for i in range(diff):
-                        j = np.append(j, [[self.d[i+diff],np.inf]], axis=0)
+                        j = np.append(j, [[self.d[i+diff], np.inf]], axis=0)
                 res.append(j)
             res = np.array(res)
 
@@ -601,13 +640,14 @@ class Genv(Envelopes):
     dmin        : float
                   The minimum of the distance domain.
     dmax        : float
-                  Upper limit of distance range. If dmax is None, dmax will be set to maximum
-                  nearest neighbor distance.
+                  Upper limit of distance range. If dmax is None, dmax will be
+                  set to maximum nearest neighbor distance.
     d           : sequence
                   The distance domain sequence.
                   If d is specified, intervals, dmin and dmax are ignored.
     pct         : float
-                  1-alpha, alpha is the confidence level. Default is 0.05, which means 95% confidence level.
+                  1-alpha, alpha is the significance level. Default is 0.05,
+                  which means 95% confidence level for the envelopes.
     realizations: :py:class:`~.process.PointProcess`
                   Point process instance with more than 1 realizations.
 
@@ -616,15 +656,19 @@ class Genv(Envelopes):
     name        : string
                   Name of the function. ("G", "F", "J", "K" or "L")
     observed    : array
-                  A 2-dimensional numpy array of 2 columns. The first column is the distance domain sequence
-                  for the observed point pattern. The second column is cumulative nearest neighbor distance
+                  A 2-dimensional numpy array of 2 columns. The first column is
+                  the distance domain sequence for the observed point pattern.
+                  The second column is cumulative nearest neighbor distance
                   distribution (G function) for the observed point pattern.
     low         : array
-                  A 1-dimensional numpy array. Lower bound of the simulation envelope.
+                  A 1-dimensional numpy array. Lower bound of the simulation
+                  envelope.
     high        : array
-                  A 1-dimensional numpy array. Higher bound of the simulation envelope.
+                  A 1-dimensional numpy array. Higher bound of the simulation
+                  envelope.
     mean        : array
-                  A 1-dimensional numpy array. Mean values of the simulation envelope.
+                  A 1-dimensional numpy array. Mean values of the simulation
+                  envelope.
 
     Examples
     --------
@@ -636,9 +680,10 @@ class Genv(Envelopes):
     >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
-    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, asPP=True).realizations[0] # Generate the "observed" point pattern of size 100
-    >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True) # CSR point process of 100 realizations
-    >>> genv_bb = Genv(pp, realizations=csrs) # Construct the simulation envelope for G function
+    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1,
+                                 asPP=True).realizations[0]
+    >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
+    >>> genv_bb = Genv(pp, realizations=csrs)
     >>> genv_bb.plot()
 
     """
@@ -674,13 +719,15 @@ class Fenv(Envelopes):
     dmin        : float
                   The minimum of the distance domain.
     dmax        : float
-                  Upper limit of distance range. If dmax is None, dmax will be set to maximum
-                  nearest neighbor distance.
+                  Upper limit of distance range. If dmax is None, dmax will be
+                  set to maximum nearest neighbor distance.
     d           : sequence
                   The distance domain sequence.
                   If d is specified, intervals, dmin and dmax are ignored.
     pct         : float
-                  1-alpha, alpha is the confidence level. Default is 0.05, which means 95% confidence level.
+                  1-alpha, alpha is the significance level. Default is 0.05,
+                  which means 95% confidence level for the envelopes.
+
     realizations: :py:class:`~.process.PointProcess`
                   Point process instance with more than 1 realizations.
 
@@ -689,14 +736,19 @@ class Fenv(Envelopes):
     name        : string
                   Name of the function. ("G", "F", "J", "K" or "L")
     observed    : array
-                  A 2-dimensional numpy array of 2 columns. The first column is the distance domain sequence
-                  for the observed point pattern. The second column is F function for the observed point pattern.
+                  A 2-dimensional numpy array of 2 columns. The first column is
+                  the distance domain sequence for the observed point pattern.
+                  The second column is F function for the observed point
+                  pattern.
     low         : array
-                  A 1-dimensional numpy array. Lower bound of the simulation envelope.
+                  A 1-dimensional numpy array. Lower bound of the simulation
+                  envelope.
     high        : array
-                  A 1-dimensional numpy array. Higher bound of the simulation envelope.
+                  A 1-dimensional numpy array. Higher bound of the simulation
+                  envelope.
     mean        : array
-                  A 1-dimensional numpy array. Mean values of the simulation envelope.
+                  A 1-dimensional numpy array. Mean values of the simulation
+                  envelope.
 
     Examples
     --------
@@ -708,9 +760,10 @@ class Fenv(Envelopes):
     >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
-    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, asPP=True).realizations[0] # Generate the "observed" point pattern of size 100
-    >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True) # CSR point process of 100 realizations
-    >>> fenv = Fenv(pp, realizations=csrs) # Construct the simulation envelope for F function
+    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1,
+                                 asPP=True).realizations[0]
+    >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
+    >>> fenv = Fenv(pp, realizations=csrs)
     >>> fenv.plot()
 
     """
@@ -746,13 +799,15 @@ class Jenv(Envelopes):
     dmin        : float
                   The minimum of the distance domain.
     dmax        : float
-                  Upper limit of distance range. If dmax is None, dmax will be set to maximum
-                  nearest neighbor distance.
+                  Upper limit of distance range. If dmax is None, dmax will be
+                  set to maximum nearest neighbor distance.
     d           : sequence
                   The distance domain sequence.
                   If d is specified, intervals, dmin and dmax are ignored.
     pct         : float
-                  1-alpha, alpha is the confidence level. Default is 0.05, which means 95% confidence level.
+                  1-alpha, alpha is the significance level. Default is 0.05,
+                  which means 95% confidence level for the envelopes.
+
     realizations: :py:class:`~.process.PointProcess`
                   Point process instance with more than 1 realizations.
 
@@ -761,14 +816,19 @@ class Jenv(Envelopes):
     name        : string
                   Name of the function. ("G", "F", "J", "K" or "L")
     observed    : array
-                  A 2-dimensional numpy array of 2 columns. The first column is the distance domain sequence
-                  for the observed point pattern. The second column is J function for the observed point pattern.
+                  A 2-dimensional numpy array of 2 columns. The first column is
+                  the distance domain sequence for the observed point pattern.
+                  The second column is J function for the observed point
+                  pattern.
     low         : array
-                  A 1-dimensional numpy array. Lower bound of the simulation envelope.
+                  A 1-dimensional numpy array. Lower bound of the simulation
+                  envelope.
     high        : array
-                  A 1-dimensional numpy array. Higher bound of the simulation envelope.
+                  A 1-dimensional numpy array. Higher bound of the simulation
+                  envelope.
     mean        : array
-                  A 1-dimensional numpy array. Mean values of the simulation envelope.
+                  A 1-dimensional numpy array. Mean values of the simulation
+                  envelope.
 
     Examples
     --------
@@ -780,9 +840,10 @@ class Jenv(Envelopes):
     >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
-    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, asPP=True).realizations[0] # Generate the "observed" point pattern of size 100
-    >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True) # CSR point process of 100 realizations
-    >>> jenv = Jenv(pp, realizations=csrs) # Construct the simulation envelope for J function
+    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1,
+                                 asPP=True).realizations[0]
+    >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
+    >>> jenv = Jenv(pp, realizations=csrs)
     >>> jenv.plot()
 
     """
@@ -816,13 +877,15 @@ class Kenv(Envelopes):
     dmin        : float
                   The minimum of the distance domain.
     dmax        : float
-                  Upper limit of distance range. If dmax is None, dmax will be set to maximum
-                  nearest neighbor distance.
+                  Upper limit of distance range. If dmax is None, dmax will be
+                  set to maximum nearest neighbor distance.
     d           : sequence
                   The distance domain sequence.
                   If d is specified, intervals, dmin and dmax are ignored.
     pct         : float
-                  1-alpha, alpha is the confidence level. Default is 0.05, which means 95% confidence level.
+                  1-alpha, alpha is the significance level. Default is 0.05,
+                  which means 95% confidence level for the envelope.
+
     realizations: :py:class:`~.process.PointProcess`
                   Point process instance with more than 1 realizations.
 
@@ -831,14 +894,19 @@ class Kenv(Envelopes):
     name        : string
                   Name of the function. ("G", "F", "J", "K" or "L")
     observed    : array
-                  A 2-dimensional numpy array of 2 columns. The first column is the distance domain sequence
-                  for the observed point pattern. The second column is K function for the observed point pattern.
+                  A 2-dimensional numpy array of 2 columns. The first column is
+                  the distance domain sequence for the observed point pattern.
+                  The second column is K function for the observed point
+                  pattern.
     low         : array
-                  A 1-dimensional numpy array. Lower bound of the simulation envelope.
+                  A 1-dimensional numpy array. Lower bound of the simulation
+                  envelope.
     high        : array
-                  A 1-dimensional numpy array. Higher bound of the simulation envelope.
+                  A 1-dimensional numpy array. Higher bound of the simulation
+                  envelope.
     mean        : array
-                  A 1-dimensional numpy array. Mean values of the simulation envelope.
+                  A 1-dimensional numpy array. Mean values of the simulation
+                  envelope.
 
     Examples
     --------
@@ -850,9 +918,10 @@ class Kenv(Envelopes):
     >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
-    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, asPP=True).realizations[0] # Generate the "observed" point pattern of size 100
-    >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True) # CSR point process of 100 realization
-    >>> kenv = Kenv(pp, realizations=csrs) # Construct the simulation envelope for K function
+    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1,
+                                 asPP=True).realizations[0]
+    >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
+    >>> kenv = Kenv(pp, realizations=csrs)
     >>> kenv.plot()
 
     """
@@ -868,8 +937,8 @@ class Kenv(Envelopes):
 
     def calc(self, *args, **kwargs):
         pp = args[0]
-        return _k(pp, intervals=self.intervals, dmin=self.dmin,
-                 dmax=self.dmax, d=self.d)
+        return _k(pp, intervals=self.intervals, dmin=self.dmin, dmax=self.dmax,
+                  d=self.d)
 
 
 class Lenv(Envelopes):
@@ -885,13 +954,14 @@ class Lenv(Envelopes):
     dmin        : float
                   The minimum of the distance domain.
     dmax        : float
-                  Upper limit of distance range. If dmax is None, dmax will be set to maximum
-                  nearest neighbor distance.
+                  Upper limit of distance range. If dmax is None, dmax will be
+                  set to maximum nearest neighbor distance.
     d           : sequence
                   The distance domain sequence.
                   If d is specified, intervals, dmin and dmax are ignored.
     pct         : float
-                  1-alpha, alpha is the confidence level. Default is 0.05, which means 95% confidence level.
+                  1-alpha, alpha is the significance level. Default is 0.05,
+                  which means 95% confidence level for the envelopes.
     realizations: :py:class:`~.process.PointProcess`
                   Point process instance with more than 1 realizations.
 
@@ -900,14 +970,19 @@ class Lenv(Envelopes):
     name        : string
                   Name of the function. ("G", "F", "J", "K" or "L")
     observed    : array
-                  A 2-dimensional numpy array of 2 columns. The first column is the distance domain sequence
-                  for the observed point pattern. The second column is L function for the observed point pattern.
+                  A 2-dimensional numpy array of 2 columns. The first column is
+                  the distance domain sequence for the observed point pattern.
+                  The second column is L function for the observed point
+                  pattern.
     low         : array
-                  A 1-dimensional numpy array. Lower bound of the simulation envelope.
+                  A 1-dimensional numpy array. Lower bound of the simulation
+                  envelope.
     high        : array
-                  A 1-dimensional numpy array. Higher bound of the simulation envelope.
+                  A 1-dimensional numpy array. Higher bound of the simulation
+                  envelope.
     mean        : array
-                  A 1-dimensional numpy array. Mean values of the simulation envelope.
+                  A 1-dimensional numpy array. Mean values of the simulation
+                  envelope.
 
     Examples
     --------
@@ -919,9 +994,10 @@ class Lenv(Envelopes):
     >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
-    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, asPP=True).realizations[0] # Generate the "observed" point pattern of size 100
-    >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True) # CSR point process of 100 realization
-    >>> lenv = Lenv(pp, realizations=csrs) # Construct the simulation envelope for L function
+    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1,
+                                 asPP=True).realizations[0]
+    >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
+    >>> lenv = Lenv(pp, realizations=csrs)
     >>> lenv.plot()
 
     """
@@ -938,5 +1014,5 @@ class Lenv(Envelopes):
 
     def calc(self, *args, **kwargs):
         pp = args[0]
-        return _l(pp, intervals=self.intervals, dmin=self.dmin,
-                 dmax=self.dmax, d=self.d)
+        return _l(pp, intervals=self.intervals, dmin=self.dmin, dmax=self.dmax,
+                  d=self.d)
