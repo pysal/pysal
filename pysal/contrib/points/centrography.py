@@ -293,14 +293,6 @@ def skyum(points, not_hull=True):
             except IndexError:
                 raise Exception("Construction of Minimum Bounding Circle failed!")
         i+=1
-#still is not mbc in columbus 
-#*45, 
-#34(fixed), 
-#*20(looks within rounding), 
-#*17(looks within rounding), 
-#8(fixed), 
-#*4, 
-#2 (looks within rounding)
 
 def _angle(p,q,r):
     """
