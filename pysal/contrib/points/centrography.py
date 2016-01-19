@@ -30,7 +30,24 @@ MIND = sys.float_info.min
 
 def mbr(points):
     """
-    Minimum bounding rectangle
+    Find minimum bounding rectangle of a point array.
+
+    Arguments
+    ---------
+    points : arraylike
+             (n,2), (x,y) coordinates of a series of event points.
+
+    Returns
+    -------
+    min_x  : float
+             leftmost value of the vertices of minimum bounding rectangle.
+    min_y  : float
+             downmost value of the vertices of minimum bounding rectangle.
+    max_x  : float
+             rightmost value of the vertices of minimum bounding rectangle.
+    max_y  : float
+             upmost value of the vertices of minimum bounding rectangle.
+
     """
     points = np.asarray(points)
     min_x = min_y = MAXD
@@ -50,29 +67,60 @@ def mbr(points):
 
 def hull(points):
     """
-    Find convex hull of a point array
+    Find convex hull of a point array.
 
     Arguments
     ---------
-
-    points: array (n x 2)
+    points: arraylike
+            (n,2), (x,y) coordinates of a series of event points.
 
     Returns
     -------
-    _ : array (h x 2)
-        points defining the hull in counterclockwise order
+    _     : array
+            (h,2), points defining the hull in counterclockwise order.
     """
+
     points = np.asarray(points)
     h = ConvexHull(points)
     return points[h.vertices]
 
 
 def mean_center(points):
+    """
+    Find mean center of a point array.
+
+    Arguments
+    ---------
+    points: arraylike
+            (n,2), (x,y) coordinates of a series of event points.
+
+    Returns
+    -------
+    _     : array
+            (2,), (x,y) coordinates of the mean center.
+    """
+
     points = np.asarray(points)
     return points.mean(axis=0)
 
 
 def weighted_mean_center(points, weights):
+    """
+    Find weighted mean center of a marked point pattern.
+
+    Arguments
+    ---------
+    points  : arraylike
+              (n,2), (x,y) coordinates of a series of event points.
+    weights : arraylike
+              a series of attribute values of length n.
+    Returns
+    -------
+    _      : array
+             (2,), (x,y) coordinates of the weighted mean center.
+    """
+
+
     points, weights = np.asarray(points), np.asarray(weights)
     w = weights * 1. / weights.sum()
     w.shape = (1, len(points))
@@ -80,6 +128,20 @@ def weighted_mean_center(points, weights):
 
 
 def manhattan_median(points):
+    """
+    Find manhattan median of a point array.
+
+    Arguments
+    ---------
+    points  : arraylike
+              (n,2), (x,y) coordinates of a series of event points.
+
+    Returns
+    -------
+    _      : array
+             (2,), (x,y) coordinates of the manhattan median.
+    """
+
     points = np.asarray(points)
     if not len(points) % 2:
         s = "Manhattan Median is not unique for even point patterns."
@@ -88,6 +150,20 @@ def manhattan_median(points):
 
 
 def std_distance(points):
+    """
+    Calculate standard distance of a point array.
+
+    Arguments
+    ---------
+    points  : arraylike
+              (n,2), (x,y) coordinates of a series of event points.
+
+    Returns
+    -------
+    _      : float
+             standard distance.
+    """
+
     points = np.asarray(points)
     n, p = points.shape
     m = points.mean(axis=0)
@@ -96,12 +172,27 @@ def std_distance(points):
 
 def ellipse(points):
     """
-    Ellipse for a point pattern
+    Calculate parameters of standard deviational ellipse for a point pattern.
+
+    Arguments
+    ---------
+    points : arraylike
+             (n,2), (x,y) coordinates of a series of event points.
+
+    Returns
+    -------
+    _      : float
+             semi-major axis.
+    _      : float
+             semi-minor axis.
+    theta  : float
+             clockwise rotation angle of the ellipse.
 
     Implements approach from:
 
     https://www.icpsr.umich.edu/CrimeStat/files/CrimeStatChapter.4.pdf
     """
+
     points = np.asarray(points)
     n, k = points.shape
     x = points[:, 0]
@@ -124,7 +215,20 @@ def ellipse(points):
 
 def dtot(coord, points):
     """
-    Sum of Euclidean distances between points and coord
+    Sum of Euclidean distances between event points and a selected point.
+
+    Arguments
+    ---------
+    coord   : arraylike
+              (x,y) coordinates of a point.
+    points  : arraylike
+              (n,2), (x,y) coordinates of a series of event points.
+
+    Returns
+    -------
+    d       : float
+              sum of Euclidean distances.
+
     """
     points = np.asarray(points)
     xd = points[:, 0] - coord[0]
@@ -134,7 +238,18 @@ def dtot(coord, points):
 
 def euclidean_median(points):
     """
-    Calculate the Euclidean median for a point pattern
+    Calculate the Euclidean median for a point pattern.
+
+    Arguments
+    ---------
+    points: arraylike
+            (n,2), (x,y) coordinates of a series of event points.
+
+    Returns
+    -------
+    _     : array
+            (2,), (x,y) coordinates of the Euclidean median.
+
     """
     points = np.asarray(points)
     start = mean_center(points)
