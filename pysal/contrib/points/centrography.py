@@ -147,7 +147,7 @@ def skyum(points, not_hull=True):
 
     0. Store points clockwise. 
     1. Find p in S that maximizes angle(prec(p), p, succ(p) THEN radius(prec(p),
-    p, succ(p)). This is also called the lexicographic maximum, or the last
+    p, succ(p)). This is also called the lexicographic maximum, and is the last
     entry of a list of (radius, angle) in lexicographical order. 
     2a. If angle(prec(p), p, succ(p)) <= 90 degrees, then finish. 
     2b. If not, remove p from set. 
@@ -173,7 +173,10 @@ def skyum(points, not_hull=True):
             #print("Constrained by points: {}".format(candidate))
             return _circle(*candidate), points, removed, candidate
         else:
-            removed.append((points.pop(lexmax), i))
+            try:
+                removed.append((points.pop(lexmax), i))
+            except IndexError:
+                raise Exception("Construction of Minimum Bounding Circle failed!")
         i+=1
 #still is not mbc in columbus 
 #*45, 
@@ -185,9 +188,15 @@ def skyum(points, not_hull=True):
 #2 (looks within rounding)
 
 def _angle(p,q,r):
+    """
+    compute the positive angle formed by PQR
+    """
     return np.abs(get_angle_between(Ray(q,p),Ray(q,r)))
 
 def _prec(p,l):
+    """
+    retrieve the predecessor of p in list l
+    """
     pos = l.index(p)
     if pos-1 < 0:
         return l[-1]
@@ -195,6 +204,9 @@ def _prec(p,l):
         return l[pos-1]
 
 def _succ(p,l):
+    """
+    retrieve the successor of p in list l
+    """
     pos = l.index(p)
     if pos+1 >= len(l):
         return l[0]
@@ -205,6 +217,8 @@ def _circle(p,q,r, dmetric=dist.euclidean):
     """
     Returns (radius, (center_x, center_y)) of the circumscribed circle by the
     triangle pqr.
+
+    note, this does not assume that p!=q!=r
     """
     px,py = p
     qx,qy = q
