@@ -17,11 +17,15 @@ Prepare the release
 
 - Prepend `chglog` to `CHANGELOG` and edit
 - Edit THANKS and README and README.md if needed.
-- Edit the file `tools/bump.py` to update MAJOR, MINOR, MICRO, year, day, month and NEXT
-- Run `tools/bump.py`
+- Edit the file `version.py` to update MAJOR, MINOR, MICRO
+- Bump::
+
+     $ cd tools; python bump.py
+
 - Commit all changes.
 - Push_ your branch up to your GitHub repos
-- On github issue a pull request. Add a comment that this is for release.
+- On github issue a pull request, with a target of **upstream dev**. 
+  Add a comment that this is for release.
 
 
 Tag 
