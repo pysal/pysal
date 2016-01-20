@@ -107,6 +107,7 @@ class ArcGISSwmIO(FileIO.FileIO):
             raise StopIteration
 
         header01 = self.file.readline()
+        header01 = header01.decode()
         id_var, srs = header01[:-1].split(';')
         self.varName = id_var
         self.header_len = len(header01) + 8
@@ -191,7 +192,8 @@ class ArcGISSwmIO(FileIO.FileIO):
             if useIdIndex:
                 id2i = obj.id2i
                 obj = remap_ids(obj, id2i)
-            self.file.write('%s;Unknown\n' % self.varName)
+            unk = str('%s;Unknown\n' % self.varName).encode()
+            self.file.write(unk)
             self.file.write(pack('<l', obj.n))
             self.file.write(pack('<l', obj.transform.upper() == 'R'))
             for obs in obj.weights:

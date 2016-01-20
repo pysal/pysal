@@ -35,8 +35,8 @@ class TestMLError(unittest.TestCase):
         latt = int(np.sqrt(n))
         self.w_a = pysal.lat2W(latt,latt)
         self.w_a.transform='r'
-        self.regi_a = [0]*(n/2) + [1]*(n/2)
-        self.w_a1 = pysal.lat2W(latt/2,latt)
+        self.regi_a = [0]*(n//2) + [1]*(n//2) #must be floor!
+        self.w_a1 = pysal.lat2W(latt//2,latt)
         self.w_a1.transform='r'
 
     def test_model1(self):

@@ -10,10 +10,12 @@ class TestW(unittest.TestCase):
         from pysal import rook_from_shapefile
         self.w = rook_from_shapefile(pysal.examples.get_path('10740.shp'))
 
-        self.neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3,
-                                                                                7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
-        self.weights = {0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1,
-                                                                              1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
+        self.neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4],
+                          4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7],
+                          7: [4, 6, 8], 8: [5, 7]}
+        self.weights = {0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1],
+                        4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1],
+                        7: [1, 1, 1], 8: [1, 1]}
 
         self.w3x3 = pysal.lat2W(3, 3)
 
@@ -41,7 +43,12 @@ class TestW(unittest.TestCase):
         w = pysal.lat2W(3, 3)
         w.transform = 'r'
         result = w.asymmetry()
-        self.assertEqual(result, [(0, 1), (0, 3), (1, 0), (1, 2), (1, 4), (2, 1), (2, 5), (3, 0), (3, 4), (3, 6), (4, 1), (4, 3), (4, 5), (4, 7), (5, 2), (5, 4), (5, 8), (6, 3), (6, 7), (7, 4), (7, 6), (7, 8), (8, 5), (8, 7)])
+        self.assertEqual(result, [(0, 1), (0, 3), (1, 0), (1, 2),
+                                  (1, 4), (2, 1), (2, 5), (3, 0),
+                                  (3, 4), (3, 6), (4, 1), (4, 3),
+                                  (4, 5), (4, 7), (5, 2), (5, 4),
+                                  (5, 8), (6, 3), (6, 7), (7, 4),
+                                  (7, 6), (7, 8), (8, 5), (8, 7)])
 
     def test_asymmetry(self):
         w = pysal.lat2W(3, 3)
@@ -89,15 +96,19 @@ class TestW(unittest.TestCase):
         self.w3x3.transform = 'b'
 
     def test_higher_order(self):
-        weights = {0: [1.0, 1.0, 1.0], 1: [1.0, 1.0, 1.0], 2: [1.0, 1.0, 1.0], 3: [1.0, 1.0,
-                                                                                   1.0], 4: [1.0, 1.0, 1.0, 1.0], 5: [1.0, 1.0, 1.0], 6: [1.0, 1.0, 1.0], 7:
+        weights = {0: [1.0, 1.0, 1.0], 1: [1.0, 1.0, 1.0], 2: [1.0, 1.0, 1.0],
+                   3: [1.0, 1.0, 1.0], 4: [1.0, 1.0, 1.0, 1.0],
+                   5: [1.0, 1.0, 1.0], 6: [1.0, 1.0, 1.0], 7:
                    [1.0, 1.0, 1.0], 8: [1.0, 1.0, 1.0]}
         neighbors = {0: [4, 6, 2], 1: [3, 5, 7], 2: [8, 0, 4], 3: [7, 1, 5],
-                     4: [8, 0, 2, 6], 5: [1, 3, 7], 6: [4, 0, 8], 7: [3, 1, 5], 8:
-                     [6, 2, 4]}
+                     4: [8, 0, 2, 6], 5: [1, 3, 7], 6: [4, 0, 8], 7: [3, 1, 5],
+                     8: [6, 2, 4]}
+        wneighbs = {k: {neighb: weights[k][i] for i, neighb in enumerate(v)}
+                    for k, v in neighbors.iteritems()}
         w2 = pysal.higher_order(self.w3x3, 2)
-        self.assertEqual(w2.neighbors, neighbors)
-        self.assertEqual(w2.weights, weights)
+        test_wneighbs = {k: {ne: weights[k][i] for i, ne in enumerate(v)}
+                         for k, v in w2.neighbors.iteritems()}
+        self.assertEqual(test_wneighbs, wneighbs)
 
     def test_histogram(self):
         hist = [(0, 1), (1, 1), (2, 4), (3, 20), (4, 57), (5, 44), (6, 36),
@@ -226,10 +237,12 @@ class Test_WSP_Back_To_W(unittest.TestCase):
         wsp = pysal.weights.WSP(self.w.sparse, self.w.id_order)
         self.w = pysal.weights.WSP2W(wsp)
 
-        self.neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3,
-                                                                                7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
-        self.weights = {0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1,
-                                                                              1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
+        self.neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4],
+                          4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7],
+                          7: [4, 6, 8], 8: [5, 7]}
+        self.weights = {0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1],
+                        4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1],
+                        8: [1, 1]}
 
         self.w3x3 = pysal.lat2W(3, 3)
         w3x3 = pysal.weights.WSP(self.w3x3.sparse, self.w3x3.id_order)
@@ -259,7 +272,12 @@ class Test_WSP_Back_To_W(unittest.TestCase):
         w = pysal.lat2W(3, 3)
         w.transform = 'r'
         result = w.asymmetry()
-        self.assertEqual(result, [(0, 1), (0, 3), (1, 0), (1, 2), (1, 4), (2, 1), (2, 5), (3, 0), (3, 4), (3, 6), (4, 1), (4, 3), (4, 5), (4, 7), (5, 2), (5, 4), (5, 8), (6, 3), (6, 7), (7, 4), (7, 6), (7, 8), (8, 5), (8, 7)])
+        self.assertEqual(result, [(0, 1), (0, 3), (1, 0), (1, 2), (1, 4),
+                                  (2, 1), (2, 5), (3, 0), (3, 4), (3, 6),
+                                  (4, 1), (4, 3), (4, 5), (4, 7), (5, 2),
+                                  (5, 4), (5, 8), (6, 3), (6, 7), (7, 4),
+                                  (7, 6), (7, 8), (8, 5), (8, 7)])
+
     def test_asymmetry(self):
         w = pysal.lat2W(3, 3)
         self.assertEqual(w.asymmetry(), [])
@@ -306,15 +324,19 @@ class Test_WSP_Back_To_W(unittest.TestCase):
         self.w3x3.transform = 'b'
 
     def test_higher_order(self):
-        weights = {0: [1.0, 1.0, 1.0], 1: [1.0, 1.0, 1.0], 2: [1.0, 1.0, 1.0], 3: [1.0, 1.0,
-                                                                                   1.0], 4: [1.0, 1.0, 1.0, 1.0], 5: [1.0, 1.0, 1.0], 6: [1.0, 1.0, 1.0], 7:
-                   [1.0, 1.0, 1.0], 8: [1.0, 1.0, 1.0]}
+        weights = {0: [1.0, 1.0, 1.0], 1: [1.0, 1.0, 1.0], 2: [1.0, 1.0, 1.0],
+                   3: [1.0, 1.0, 1.0], 4: [1.0, 1.0, 1.0, 1.0],
+                   5: [1.0, 1.0, 1.0], 6: [1.0, 1.0, 1.0],
+                   7: [1.0, 1.0, 1.0], 8: [1.0, 1.0, 1.0]}
         neighbors = {0: [4, 6, 2], 1: [3, 5, 7], 2: [8, 0, 4], 3: [7, 1, 5],
-                     4: [8, 0, 2, 6], 5: [1, 3, 7], 6: [4, 0, 8], 7: [3, 1, 5], 8:
-                     [6, 2, 4]}
+                     4: [8, 0, 2, 6], 5: [1, 3, 7], 6: [4, 0, 8], 7: [3, 1, 5],
+                     8: [6, 2, 4]}
+        wneighbs = {k: {neighb: weights[k][i] for i, neighb in enumerate(v)}
+                    for k, v in neighbors.iteritems()}
         w2 = pysal.higher_order(self.w3x3, 2)
-        self.assertEqual(w2.neighbors, neighbors)
-        self.assertEqual(w2.weights, weights)
+        test_wneighbs = {k: {ne: w2.weights[k][i] for i, ne in enumerate(v)}
+                         for k, v in w2.neighbors.iteritems()}
+        self.assertEqual(test_wneighbs, wneighbs)
 
     def test_histogram(self):
         hist = [(0, 1), (1, 1), (2, 4), (3, 20), (4, 57), (5, 44), (6, 36),
@@ -424,7 +446,6 @@ class Test_WSP_Back_To_W(unittest.TestCase):
 
 class TestWSP(unittest.TestCase):
     def setUp(self):
-        from pysal import rook_from_shapefile
         self.w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
         self.wsp = pysal.weights.WSP(self.w.sparse, self.w.id_order)
         w3x3 = pysal.lat2W(3, 3)

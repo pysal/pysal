@@ -232,7 +232,6 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
         self.e_pred = self.y - self.predy_e
 
         # residual variance
-        self._cache = {}
         self.sig2 = self.sig2n  # no allowance for division by n-k
 
         # information matrix

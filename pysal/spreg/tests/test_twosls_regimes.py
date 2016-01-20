@@ -236,10 +236,10 @@ class TestTSLS(unittest.TestCase):
         x = np.hstack((x1,x2))
         y = np.dot(np.hstack((np.ones((n,1)),x)),np.array([[1],[0.5],[2]])) + np.random.normal(0,1,(n,1))
         latt = int(np.sqrt(n))
-        regi = [0]*(n/2) + [1]*(n/2)
+        regi = [0]*(n//2) + [1]*(n//2) ##must be floor!
         model = TSLS_Regimes(y, x1, regimes=regi, q=q, yend=x2, regime_err_sep=True, sig2n_k=False)
-        model1 = TSLS(y[0:(n/2)].reshape((n/2),1), x1[0:(n/2)], yend=x2[0:(n/2)], q=q[0:(n/2)], sig2n_k=False)
-        model2 = TSLS(y[(n/2):n].reshape((n/2),1), x1[(n/2):n], yend=x2[(n/2):n], q=q[(n/2):n], sig2n_k=False)
+        model1 = TSLS(y[0:(n//2)].reshape((n//2),1), x1[0:(n//2)],yend=x2[0:(n//2)], q=q[0:(n//2)], sig2n_k=False)
+        model2 = TSLS(y[(n//2):n].reshape((n//2),1), x1[(n//2):n], yend=x2[(n//2):n], q=q[(n//2):n], sig2n_k=False)
         tbetas = np.vstack((model1.betas, model2.betas))
         np.testing.assert_allclose(model.betas,tbetas)
         vm = np.hstack((model1.vm.diagonal(),model2.vm.diagonal()))
