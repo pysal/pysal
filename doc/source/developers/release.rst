@@ -38,8 +38,8 @@ Make docs
 
 As of version 1.6, docs are automatically compiled and hosted_.
 
-Make and Upload distributions
--------------------------------
+Make and Upload and Test Distributions
+--------------------------------------
 
 On each build machine, clone and checkout the newly created tag (assuming that
 is `v1.10` in what follows)::
@@ -48,6 +48,18 @@ is `v1.10` in what follows)::
   $ cd pysal
   $ git fetch --tags
   $ git checkout v1.10
+
+- Make and upload_ to the **Testing** Python Package Index::
+
+  $ python setup.py upload -r https://testpypi.python.org/pypi
+
+- Test that your package can install correctly::
+
+  $ pip install -i https://testpy.python.org/pypi
+
+
+If all is good, proceed, otherwise fix.
+
 
 - Make and upload_ to the Python Package Index in one shot!::
 
