@@ -55,7 +55,7 @@ is `v1.10` in what follows)::
 
 - Make and upload_ to the **Testing** Python Package Index::
 
-  $ python setup.py upload -r https://testpypi.python.org/pypi
+  $ python setup.py sdist upload -r https://testpypi.python.org/pypi
 
 - Test that your package can install correctly::
 
