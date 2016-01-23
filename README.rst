@@ -80,7 +80,7 @@ PySAL modules
 
 
 Installation
-------------
+============
 
 PySAL can be installed using pip:
 
@@ -92,7 +92,7 @@ PySAL is also available through
 `Anaconda <https://www.continuum.io/downloads>`__ and `Enthought Canopy <https://www.enthought.com/products/canopy/>`__.
 
 Documentation
--------------
+=============
 
 For help on using PySAL, check out the following resources:
 
@@ -104,34 +104,34 @@ For help on using PySAL, check out the following resources:
 
 
 Development
------------
+===========
 
 PySAL development is hosted on github_.
 
 .. _github : https://github.com/pysal/pysal
 
-Discussions of development occurs on the `developer list`__ as well as
-gitter_.
+Discussions of development occurs on the
+`developer list <http://groups.google.com/group/pysal-dev>`_
+as well as gitter_.
 
-.. __developer list :    http://groups.google.com/group/pysal-dev
 .. _gitter : https://gitter.im/pysal/pysal?
 
 Getting Involved
-----------------
+================
 
-If you are interested in contributing to PySAL  our 
-`development guidelines`__.
+If you are interested in contributing to PySAL please see our 
+`development guidelines <http://pysal.readthedocs.org/en/latest/developers/index.html>`_.
 
-.. __development guidelines : http://pysal.readthedocs.org/en/latest/developers/index.html
 
 Bug reports
------------
+===========
 To search for or report bugs, please see PySAL's issues_.
 
 .. _issues :  http://github.com/pysal/pysal/issues
 
 License information
--------------------
+===================
+
 See the file "LICENSE.txt" for information on the history of this
 software, terms & conditions for usage, and a DISCLAIMER OF ALL
 WARRANTIES.
