@@ -185,6 +185,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
         if robust:
             self.vm = ROBUST.robust_vm(reg=self, gwk=gwk, sig2n_k=sig2n_k)
 
+        self._cache = {}
         if sig2n_k:
             self.sig2 = self.sig2n_k
         else:
@@ -199,24 +200,10 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
 
     @property
     def vm(self):
-        try:
-            return self._cache['vm']
-        except AttributeError:
-            self._cache = {}
-            self._cache['vm'] = np.dot(self.sig2, self.varb)
-        except KeyError:
+        if 'vm' not in self._cache:
             self._cache['vm'] = np.dot(self.sig2, self.varb)
         return self._cache['vm']
 
-    @vm.setter
-    def vm(self, val):
-        try:
-            self._cache['vm'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['vm'] = val
-        except KeyError:
-            self._cache['vm'] = val
 
 class TSLS(BaseTSLS):
 

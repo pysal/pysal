@@ -52,6 +52,8 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
                    Spatial weights sparse matrix 
     method       : string
                    if 'full', brute force calculation (full matrix expressions)
+                   if 'ord', Ord eigenvalue computation
+                   if 'LU', LU sparse matrix decomposition
     epsilon      : float
                    tolerance criterion in mimimize_scalar function and inverse_product
     regime_err_sep : boolean
@@ -112,6 +114,8 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
     method       : string
                    log Jacobian method
                    if 'full': brute force (full matrix computations)
+                   if 'ord', Ord eigenvalue computation
+                   if 'LU', LU sparse matrix decomposition
     epsilon      : float
                    tolerance criterion used in minimize_scalar function and inverse_product
     mean_y       : float
@@ -317,6 +321,7 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
             self.chow = REGI.Chow(self)
             self.aic = DIAG.akaike(reg=self)
             self.schwarz = DIAG.schwarz(reg=self)
+            self._cache = {}
             SUMMARY.ML_Error(
                 reg=self, w=w, vm=vm, spat_diag=spat_diag, regimes=True)
 

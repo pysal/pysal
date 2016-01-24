@@ -2,13 +2,16 @@
 ML Estimation of Spatial Lag Model
 """
 
-__author__ = "Luc Anselin luc.anselin@asu.edu, Serge Rey srey@asu.edu"
+__author__ = "Luc Anselin luc.anselin@asu.edu, \
+              Serge Rey srey@asu.edu, \
+              Levi Wolf levi.john.wolf@gmail.com"
 
 import numpy as np
 import numpy.linalg as la
+from scipy import sparse as sp
+from scipy.sparse.linalg import splu as SuperLU
 import pysal as ps
-from pysal.spreg.utils import RegressionPropsY, RegressionPropsVM, inverse_prod
-from utils import spdot
+from utils import RegressionPropsY, RegressionPropsVM, inverse_prod, spdot
 import diagnostics as DIAG
 import user_output as USER
 import summary_output as SUMMARY
@@ -40,6 +43,7 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
     method       : string
                    if 'full', brute force calculation (full matrix expressions)
                    if 'ord', Ord eigenvalue method
+                   if 'LU', LU sparse matrix decomposition
     epsilon      : float
                    tolerance criterion in mimimize_scalar function and inverse_product
 
@@ -174,7 +178,8 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
         self.n, self.k = self.x.shape
         self.method = method
         self.epsilon = epsilon
-        W = w.full()[0]
+        #W = w.full()[0]
+        #Wsp = w.sparse
         ylag = ps.lag_spatial(w, y)
         # b0, b1, e0 and e1
         xtx = spdot(self.x.T, self.x)
@@ -187,12 +192,19 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
         e1 = ylag - spdot(x, b1)
         methodML = method.upper()
         # call minimizer using concentrated log-likelihood to get rho
-        if methodML in ['FULL', 'ORD']:
+        if methodML in ['FULL', 'LU', 'ORD']:
             if methodML == 'FULL':
+                W = w.full()[0]     # moved here
                 res = minimize_scalar(lag_c_loglik, 0.0, bounds=(-1.0, 1.0),
                                       args=(
                                           self.n, e0, e1, W), method='bounded',
                                       tol=epsilon)
+            elif methodML == 'LU':
+                I = sp.identity(w.n)
+                Wsp = w.sparse  # moved here
+                res = minimize_scalar(lag_c_loglik_sp, 0.0, bounds=(-1.0,1.0),
+                                      args=(self.n, e0, e1, I, Wsp),
+                                      method='bounded', tol=epsilon)
             elif methodML == 'ORD':
                 # check on symmetry structure
                 if w.asymmetry(intrinsic=False) == []:
@@ -200,6 +212,7 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
                     WW = ww.todense()
                     evals = la.eigvalsh(WW)
                 else:
+                    W = w.full()[0]     # moved here
                     evals = la.eigvals(W)
                 res = minimize_scalar(lag_c_loglik_ord, 0.0, bounds=(-1.0, 1.0),
                                       args=(
@@ -207,7 +220,7 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
                                       tol=epsilon)
         else:
             # program will crash, need to catch
-            print "{0} is an unsupported method".format(methodML)
+            print("{0} is an unsupported method".format(methodML))
             self = None
             return
 
@@ -232,6 +245,7 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
         self.e_pred = self.y - self.predy_e
 
         # residual variance
+        self._cache = {}
         self.sig2 = self.sig2n  # no allowance for division by n-k
 
         # information matrix
@@ -527,24 +541,21 @@ class ML_Lag(BaseML_Lag):
         USER.check_weights(w, y, w_required=True)
         x_constant = USER.check_constant(x)
         method = method.upper()
-        if method in ['FULL', 'ORD']:
-            BaseML_Lag.__init__(
-                self, y=y, x=x_constant, w=w, method=method, epsilon=epsilon)
-            # increase by 1 to have correct aic and sc, include rho in count
-            self.k += 1
-            self.title = "MAXIMUM LIKELIHOOD SPATIAL LAG" + \
-                " (METHOD = " + method + ")"
-            self.name_ds = USER.set_name_ds(name_ds)
-            self.name_y = USER.set_name_y(name_y)
-            self.name_x = USER.set_name_x(name_x, x)
-            name_ylag = USER.set_name_yend_sp(self.name_y)
-            self.name_x.append(name_ylag)  # rho changed to last position
-            self.name_w = USER.set_name_w(name_w, w)
-            self.aic = DIAG.akaike(reg=self)
-            self.schwarz = DIAG.schwarz(reg=self)
-            SUMMARY.ML_Lag(reg=self, w=w, vm=vm, spat_diag=spat_diag)
-        else:
-            raise Exception, "{0} is an unsupported method".format(method)
+        BaseML_Lag.__init__(
+            self, y=y, x=x_constant, w=w, method=method, epsilon=epsilon)
+        # increase by 1 to have correct aic and sc, include rho in count
+        self.k += 1
+        self.title = "MAXIMUM LIKELIHOOD SPATIAL LAG" + \
+            " (METHOD = " + method + ")"
+        self.name_ds = USER.set_name_ds(name_ds)
+        self.name_y = USER.set_name_y(name_y)
+        self.name_x = USER.set_name_x(name_x, x)
+        name_ylag = USER.set_name_yend_sp(self.name_y)
+        self.name_x.append(name_ylag)  # rho changed to last position
+        self.name_w = USER.set_name_w(name_w, w)
+        self.aic = DIAG.akaike(reg=self)
+        self.schwarz = DIAG.schwarz(reg=self)
+        SUMMARY.ML_Lag(reg=self, w=w, vm=vm, spat_diag=spat_diag)
 
 def lag_c_loglik(rho, n, e0, e1, W):
     # concentrated log-lik for lag model, no constants, brute force
@@ -558,6 +569,19 @@ def lag_c_loglik(rho, n, e0, e1, W):
     clik = nlsig2 - jacob
     return clik
 
+def lag_c_loglik_sp(rho, n, e0, e1, I, Wsp):
+    # concentrated log-lik for lag model, sparse algebra
+    if isinstance(rho, np.ndarray):
+        if rho.shape == (1,1):
+            rho = rho[0][0] #why does the interior value change?
+    er = e0 - rho * e1
+    sig2 = np.dot(er.T, er) / n
+    nlsig2 = (n / 2.0) * np.log(sig2)
+    a = I - rho * Wsp
+    LU = SuperLU(a.tocsc())
+    jacob = np.sum(np.log(np.abs(LU.U.diagonal())))
+    clike = nlsig2 - jacob
+    return clike
 
 def lag_c_loglik_ord(rho, n, e0, e1, evals):
     # concentrated log-lik for lag model, no constants, Ord eigenvalue method

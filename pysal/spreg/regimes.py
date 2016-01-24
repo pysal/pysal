@@ -279,6 +279,8 @@ def buildR(kr, kf, nr):
     Build R matrix to globally test for spatial heterogeneity across regimes.
     The constraint setup reflects the null every beta is the same
     across regimes
+    
+    Note: needs a placeholder for kryd in builR1var, set to 0
 
     ...
 
@@ -298,7 +300,8 @@ def buildR(kr, kf, nr):
               Array with constrain setup to test stability across regimes of
               one variable
     '''
-    return np.vstack(tuple(map(buildR1var, np.arange(kr), [kr] * kr, [kf] * kr, [nr] * kr)))
+    return np.vstack(tuple(map(buildR1var, np.arange(kr), [kr] * kr, [kf] * kr,\
+               [0] * kr, [nr] * kr)))
 
 
 def buildR1var(vari, kr, kf, kryd, nr):
@@ -319,6 +322,7 @@ def buildR1var(vari, kr, kf, kryd, nr):
     kf      : int
               Number of variables that do not vary across regimes ("fixed" or
               global)
+    kryd    : Number of endogenous variables varying across regimes
     nr      : int
               Number of regimes
 

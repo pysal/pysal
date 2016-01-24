@@ -5,17 +5,18 @@ Tools for different procedure estimations
 __author__ = "Luc Anselin luc.anselin@asu.edu, \
         Pedro V. Amaral pedro.amaral@asu.edu, \
         David C. Folch david.folch@asu.edu, \
-        Daniel Arribas-Bel darribas@asu.edu"
+        Daniel Arribas-Bel darribas@asu.edu,\
+        Levi Wolf levi.john.wolf@gmail.com"
 
 import numpy as np
 from scipy import sparse as SP
+from scipy.sparse import linalg as SPla
 import scipy.optimize as op
 import numpy.linalg as la
 from pysal import lag_spatial
 import copy
 
-
-class RegressionPropsY(object):
+class RegressionPropsY:
 
     """
     Helper class that adds common regression properties to any regression
@@ -34,59 +35,20 @@ class RegressionPropsY(object):
 
     """
 
-#I think all this caching stuff could get rewritten into a decorator of some kind. 
-# def cache_propset(func, val=default):
-#   def getset(self):
-#       try to get cached value
-#       if cache doesnt exist, init cache[func] @ val
-#       if cache exists but func doesn't, init cache[func] @ val
-#       return cache[func]
-#   return property(func)
-
     @property
     def mean_y(self):
-        try:
-            return self._cache['mean_y']
-        except AttributeError:
-            self._cache = {}
-            self._cache['mean_y'] = np.mean(self.y)
-        except KeyError:
+        if 'mean_y' not in self._cache:
             self._cache['mean_y'] = np.mean(self.y)
         return self._cache['mean_y']
-    
-    @mean_y.setter
-    def mean_y(self, val):
-        try:
-            self._cache['mean_y'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['mean_y'] = val
-        except KeyError:
-            self._cache['mean_y'] = val
 
     @property
     def std_y(self):
-        try:
-            return self._cache['std_y']
-        except AttributeError:
-            self._cache = {}
-            self._cache['std_y'] = np.std(self.y, ddof=1)
-        except KeyError:
+        if 'std_y' not in self._cache:
             self._cache['std_y'] = np.std(self.y, ddof=1)
         return self._cache['std_y']
-    
-    @std_y.setter
-    def std_y(self, val):
-        try:
-            self._cache['std_y'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['std_y'] = val
-        except KeyError:
-            self._cache['std_y'] = val
 
 
-class RegressionPropsVM(object):
+class RegressionPropsVM:
 
     """
     Helper class that adds common regression properties to any regression
@@ -111,88 +73,27 @@ class RegressionPropsVM(object):
 
     @property
     def utu(self):
-        try:
-            return self._cache['utu']
-        except AttributeError:
-            self._cache = {}
-            self._cache['utu'] = np.sum(self.u ** 2)
-        except KeyError:
+        if 'utu' not in self._cache:
             self._cache['utu'] = np.sum(self.u ** 2)
         return self._cache['utu']
 
-    @utu.setter
-    def utu(self, val):
-        try:
-            self._cache['utu'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['utu'] = val
-        except KeyError:
-            self._cache['utu'] = val
-
     @property
     def sig2n(self):
-        try:
-            return self._cache['sig2n']
-        except AttributeError:
-            self._cache = {}
-            self._cache['sig2n'] = self.utu / self.n
-        except KeyError:
+        if 'sig2n' not in self._cache:
             self._cache['sig2n'] = self.utu / self.n
         return self._cache['sig2n']
 
-    @sig2n.setter
-    def sig2n(self, val):
-        try:
-            self._cache['sig2n'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['sig2n'] = val
-        except KeyError:
-            self._cache['sig2n'] = val
-
     @property
     def sig2n_k(self):
-        try:
-            return self._cache['sig2n_k']
-        except AttributeError:
-            self._cache = {}
-            self._cache['sig2n_k'] = self.utu / (self.n - self.k)
-        except KeyError:
+        if 'sig2n_k' not in self._cache:
             self._cache['sig2n_k'] = self.utu / (self.n - self.k)
         return self._cache['sig2n_k']
-    
-    @sig2n_k.setter
-    def sig2n_k(self, val):
-        try:
-            self._cache['sig2n_k'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['sig2n_k'] = val
-        except KeyError:
-            self._cache['sig2n_k'] = val
 
     @property
     def vm(self):
-        try:
-            return self._cache['vm']
-        except AttributeError:
-            self._cache = {}
+        if 'vm' not in self._cache:
             self._cache['vm'] = np.dot(self.sig2, self.xtxi)
-        except KeyError:
-            self._cache['vm'] = np.dot(self.sig2, self.xtxi)
-        finally:
-            return self._cache['vm']
-
-    @vm.setter
-    def vm(self, val):
-        try:
-            self._cache['vm'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['vm'] = val
-        except KeyError:
-            self._cache['vm'] = val
+        return self._cache['vm']
 
 
 def get_A1_het(S):
@@ -836,8 +737,8 @@ def spmin(a):
             else:
                 raise Exception, "Error: could not evaluate the minimum value."
     else:
-        raise Exception, "Invalid format for 'spmultiply' argument: %s and %s" % (
-            type(a).__name__, type(b).__name__)
+        raise Exception, "Invalid format for 'spmin' argument: %s" % (
+            type(a).__name__)
 
 
 def spmax(a):
@@ -867,8 +768,8 @@ def spmax(a):
             else:
                 raise Exception, "Error: could not evaluate the maximum value."
     else:
-        raise Exception, "Invalid format for 'spmultiply' argument: %s and %s" % (
-            type(a).__name__, type(b).__name__)
+        raise Exception, "Invalid format for 'spmax' argument: %s" (
+            type(a).__name__)
 
 
 def set_warn(reg, warn):
@@ -880,6 +781,25 @@ def set_warn(reg, warn):
             reg.warning = "Warning: " + warn + "\n"
     else:
         pass
+
+def splogdet(spmat):
+    ''' Large dimension log determinant computation. '''
+    #symmetric = np.allclose(spmat.T, spmat) #could branch for cholmod
+    symmetric = False
+    if symmetric:
+        #CHOLMOD could be used like:
+        #from scikits.sparse import cholmod as CHOLMOD
+        #det = np.sum(np.log(np.abs(CHOLMOD.cholesky(spmat).D())))
+        pass #leave in for scaffolding.
+    else:
+        if isinstance(spmat, SP.csc_matrix) or isinstance(spmat, SP.csr_matrix):
+            LU = SPla.splu(spmat)
+            det = np.sum(np.log(np.abs(LU.U.diagonal())))
+        elif SP.isspmatrix(spmat):
+            return spdet(spmat.tocsc())
+        else:
+            det = la.slogdet(spmat)
+    return det
 
 
 def RegressionProps_basic(reg, betas=None, predy=None, u=None, sig2=None, sig2n_k=None, vm=None):
