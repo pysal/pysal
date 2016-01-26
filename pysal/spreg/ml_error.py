@@ -163,9 +163,10 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
         self.n, self.k = self.x.shape
         self.method = method
         self.epsilon = epsilon
-        #W = w.full()[0]
+
+        #W = w.full()[0] #wait to build pending what is needed
         #Wsp = w.sparse
-        
+
         ylag = ps.lag_spatial(w, self.y)
         xlag = self.get_x_lag(w, regimes_att)
 
@@ -173,14 +174,14 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
         methodML = method.upper()
         if methodML in ['FULL', 'LU', 'ORD']:
             if methodML == 'FULL':  
-                W = w.full()[0]      # moved here
+                W = w.full()[0]      # need dense here
                 res = minimize_scalar(err_c_loglik, 0.0, bounds=(-1.0, 1.0),
                                       args=(self.n, self.y, ylag, self.x,
                                             xlag, W), method='bounded',
                                       tol=epsilon)
             elif methodML == 'LU':
                 I = sp.identity(w.n)
-                Wsp = w.sparse   # moved here
+                Wsp = w.sparse   # need sparse here
                 res = minimize_scalar(err_c_loglik_sp, 0.0, bounds=(-1.0,1.0),
                                       args=(self.n, self.y, ylag, 
                                             self.x, xlag, I, Wsp),
@@ -192,7 +193,7 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
                     WW = ww.todense()
                     evals = la.eigvalsh(WW)
                 else:
-                    W = w.full()[0]      # moved here
+                    W = w.full()[0]      # need dense here
                     evals = la.eigvals(W)
                 res = minimize_scalar(
                     err_c_loglik_ord, 0.0, bounds=(-1.0, 1.0),
@@ -263,7 +264,6 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
 
         self.vm = np.vstack((vv, vv1))
 
-        self._cache = {}
 
     def get_x_lag(self, w, regimes_att):
         if regimes_att:

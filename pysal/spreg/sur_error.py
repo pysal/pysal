@@ -480,7 +480,7 @@ def surerrvm(n,n_eq,w,lam,sig):
     Vll = np.diagflat(trDDi) + sisjT
     
     # elements of Psi_lam_sig
-    P = n_eq * (n_eq + 1)/2
+    P = int(n_eq * (n_eq + 1)/2) #force ints to be ints
     tlist = [ (i,j) for i in range(n_eq) for j in range(i,n_eq) ]
     zog = sigi * trDi
     Vlsig = np.zeros((n_eq,P))

@@ -7,7 +7,7 @@ from pysal.common import RTOL
 
 PEGP = pysal.examples.get_path
 
-def test_dic(actual, desired, rtol):
+def dict_compare(actual, desired, rtol):
     for i in actual.keys():
         np.testing.assert_allclose(actual[i],desired[i],rtol)
 
@@ -25,11 +25,11 @@ class Test_SUR(unittest.TestCase):
         bigy0,bigX0,bigyvars0,bigXvars0 = sur_dictxy(self.db,y_var0,x_var0)
         reg = SUR(bigy0,bigX0,name_bigy=bigyvars0,name_bigX=bigXvars0)
 
-        test_dic(reg.bOLS,{0: np.array([[ 5.39719146],[ 0.6973813 ],\
+        dict_compare(reg.bOLS,{0: np.array([[ 5.39719146],[ 0.6973813 ],\
         [ 0.22566378]]), 1: np.array([[ 1.80829725],[ 1.03504143],[ 0.6582483 ]])},RTOL)
-        test_dic(reg.bSUR,{0: np.array([[ 5.13907179],[ 0.67764814],\
+        dict_compare(reg.bSUR,{0: np.array([[ 5.13907179],[ 0.67764814],\
         [ 0.26372397]]), 1: np.array([[ 3.61394031],[ 1.02607147],[ 0.38654993]])},RTOL)
-        test_dic(reg.sur_inf,{0: np.array([[  2.62467257e-01,   1.95798587e+01,   2.29656805e-85],\
+        dict_compare(reg.sur_inf,{0: np.array([[  2.62467257e-01,   1.95798587e+01,   2.29656805e-85],\
         [  1.21957836e-01,   5.55641325e+00,   2.75374482e-08],\
         [  3.43183797e-02,   7.68462769e+00,   1.53442563e-14]]),\
          1: np.array([[  2.53499643e-01,   1.42561949e+01,   4.10220329e-46],\
@@ -48,11 +48,11 @@ class Test_SUR(unittest.TestCase):
         reg = SUR(bigy0,bigX0,w=self.w,nonspat_diag=True,spat_diag=True,iter=True,verbose=False,\
             name_bigy=bigyvars0,name_bigX=bigXvars0)
 
-        test_dic(reg.bOLS,{0: np.array([[ 5.39719146],[ 0.6973813 ],\
+        dict_compare(reg.bOLS,{0: np.array([[ 5.39719146],[ 0.6973813 ],\
         [ 0.22566378]]), 1: np.array([[ 1.80829725],[ 1.03504143],[ 0.6582483 ]])},RTOL)
-        test_dic(reg.bSUR,{0: np.array([[ 5.18423225],[ 0.67757925],\
+        dict_compare(reg.bSUR,{0: np.array([[ 5.18423225],[ 0.67757925],\
         [ 0.25706498]]), 1: np.array([[ 3.79731807],[ 1.02411196],[ 0.35895674]])},RTOL)
-        test_dic(reg.sur_inf,{0: np.array([[  2.59392406e-01,   1.99860602e+01,   7.28237551e-89],\
+        dict_compare(reg.sur_inf,{0: np.array([[  2.59392406e-01,   1.99860602e+01,   7.28237551e-89],\
         [  1.21911330e-01,   5.55796781e+00,   2.72933704e-08],\
         [  3.38051365e-02,   7.60431727e+00,   2.86411830e-14]]),\
          1: np.array([[  2.53108919e-01,   1.50027035e+01,   7.04886598e-51],\
@@ -75,14 +75,14 @@ class Test_SUR(unittest.TestCase):
         reg = SUR(bigy1,bigX1,w=self.w,spat_diag=True,iter=True,verbose=False,\
             name_bigy=bigyvars1,name_bigX=bigXvars1)        
 
-        test_dic(reg.bOLS,{0: np.array([[ 4.50407527],[ 2.50426531],\
+        dict_compare(reg.bOLS,{0: np.array([[ 4.50407527],[ 2.50426531],\
         [ 0.50130802]]), 1: np.array([[ 7.41171812],[ 4.0021532 ],[ 1.32168167],\
         [-0.22786048]]), 2: np.array([[ 6.92761614],[ 3.90531039],[ 1.47413939]])},RTOL)
-        test_dic(reg.bSUR,{0: np.array([[ 4.50407527],[ 2.39199682],\
+        dict_compare(reg.bSUR,{0: np.array([[ 4.50407527],[ 2.39199682],\
         [ 0.52723694]]), 1: np.array([[ 7.44509818],
         [ 3.74968571],[ 1.28811685],[-0.23526451]]), 2: np.array([[ 6.92761614],\
         [ 3.65423052],[ 1.38247611]])},RTOL)
-        test_dic(reg.sur_inf,{0: np.array([[  9.16019177e-002,   4.91700980e+001,   0.00000000e+000],\
+        dict_compare(reg.sur_inf,{0: np.array([[  9.16019177e-002,   4.91700980e+001,   0.00000000e+000],\
         [  9.18832357e-002,   2.60330060e+001,   2.09562528e-149],\
         [  9.31668754e-002,   5.65906002e+000,   1.52204326e-008]]),\
          1: np.array([[  2.31085029e-001,   3.22180031e+001,   9.87752395e-228],\
@@ -109,9 +109,9 @@ class Test_SUR(unittest.TestCase):
         bigq1,bigqvars1 = sur_dictZ(self.db,q_var1)
         reg = ThreeSLS(bigy1,bigX1,bigyend1,bigq1)
 
-        test_dic(reg.b3SLS,{0: np.array([[  6.92426353e+00],[  1.42921826e+00],[  4.94348442e-04],\
+        dict_compare(reg.b3SLS,{0: np.array([[  6.92426353e+00],[  1.42921826e+00],[  4.94348442e-04],\
         [  3.58292750e+00]]), 1: np.array([[ 7.62385875],[ 1.65031181],[-0.21682974],[ 3.91250428]])},RTOL)
-        test_dic(reg.tsls_inf,{0: np.array([[  2.32208525e-001,   2.98191616e+001,   2.20522747e-195],\
+        dict_compare(reg.tsls_inf,{0: np.array([[  2.32208525e-001,   2.98191616e+001,   2.20522747e-195],\
         [  1.03734166e-001,   1.37777004e+001,   3.47155373e-043],\
         [  3.08619277e-002,   1.60180675e-002,   9.87219978e-001],\
         [  1.11319989e-001,   3.21858412e+001,   2.78527634e-227]]),\
@@ -138,15 +138,15 @@ class Test_SUR(unittest.TestCase):
                name_bigX=bigXvars2,name_bigyend=bigyendvars2,\
                name_bigq=bigqvars2,name_ds="natregimes")
 
-        test_dic(reg.b2SLS,{0: np.array([[-2.04160355],[ 4.5438992 ],[ 1.65007567],[-0.73163458],\
+        dict_compare(reg.b2SLS,{0: np.array([[-2.04160355],[ 4.5438992 ],[ 1.65007567],[-0.73163458],\
         [ 5.43071683]]), 1: np.array([[ 17.26252005],[  5.17297895],[  1.2893243 ],[ -0.38349609],\
         [ -2.17689289],[  4.31713382]]), 2: np.array([[-7.6809159 ],[ 3.88957396],[ 0.49973258],\
         [ 0.36476446],[ 2.63375234]])},RTOL)
-        test_dic(reg.b3SLS,{0: np.array([[-1.56830297],[ 4.07805179],[ 1.49694849],[-0.5376807 ],\
+        dict_compare(reg.b3SLS,{0: np.array([[-1.56830297],[ 4.07805179],[ 1.49694849],[-0.5376807 ],\
         [ 4.65487154]]), 1: np.array([[ 16.13792395],[  4.97265632],[  1.31962844],[ -0.32122485],\
         [ -2.12407425],[  3.91227737]]), 2: np.array([[-6.7283657 ],[ 3.79206731],[ 0.52278922],\
         [ 0.33447996],[ 2.47158609]])},RTOL)
-        test_dic(reg.tsls_inf,{0: np.array([[  9.95215966e-01,  -1.57584185e+00,   1.15062254e-01],\
+        dict_compare(reg.tsls_inf,{0: np.array([[  9.95215966e-01,  -1.57584185e+00,   1.15062254e-01],\
         [  2.26574971e-01,   1.79986861e+01,   1.99495587e-72],\
         [  1.60939740e-01,   9.30129807e+00,   1.38741353e-20],\
         [  1.19040839e-01,  -4.51677511e+00,   6.27885257e-06],\

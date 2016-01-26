@@ -7,7 +7,7 @@ from pysal.common import RTOL
 
 PEGP = pysal.examples.get_path
 
-def test_dic(actual, desired, rtol):
+def dict_compare(actual, desired, rtol):
     for i in actual.keys():
         np.testing.assert_allclose(actual[i],desired[i],rtol)
 
@@ -26,9 +26,9 @@ class Test_SURlagIV(unittest.TestCase):
         reg = SURlagIV(bigy0,bigX0,w=self.w,name_bigy=bigyvars0,name_bigX=bigXvars0,\
                name_ds="NAT",name_w="nat_queen")
 
-        test_dic(reg.b3SLS,{0: np.array([[ 4.79766641],[ 0.66900706],[ 0.45430715],\
+        dict_compare(reg.b3SLS,{0: np.array([[ 4.79766641],[ 0.66900706],[ 0.45430715],\
         [-0.13665465]]), 1: np.array([[ 2.27972563],[ 0.99252289],[ 0.52280565],[ 0.06909469]])},RTOL)
-        test_dic(reg.tsls_inf,{0: np.array([[  4.55824001e+00,   1.05252606e+00,   2.92558259e-01],\
+        dict_compare(reg.tsls_inf,{0: np.array([[  4.55824001e+00,   1.05252606e+00,   2.92558259e-01],\
         [  3.54744447e-01,   1.88588453e+00,   5.93105171e-02],\
         [  7.79071951e-02,   5.83138887e+00,   5.49679157e-09],\
         [  6.74318852e-01,  -2.02655838e-01,   8.39404043e-01]]),\
@@ -50,15 +50,15 @@ class Test_SURlagIV(unittest.TestCase):
         reg = SURlagIV(bigy1,bigX1,w=self.w,name_bigy=bigyvars1,name_bigX=bigXvars1,\
                name_ds="NAT",name_w="nat_queen")
 
-        test_dic(reg.b2SLS,{0: np.array([[ 2.42754085],[ 1.48928052],[ 0.33812558],\
+        dict_compare(reg.b2SLS,{0: np.array([[ 2.42754085],[ 1.48928052],[ 0.33812558],\
         [ 0.45567848]]), 1: np.array([[ 4.83887747],[ 2.86272903],[ 0.96950417],\
         [-0.12928124],[ 0.33328525]]), 2: np.array([[ 6.69407561],[ 3.81449588],\
         [ 1.44603996],[ 0.03355501]])},RTOL)
-        test_dic(reg.b3SLS,{0: np.array([[ 2.1646724 ],[ 1.31916307],[ 0.3398716 ],
+        dict_compare(reg.b3SLS,{0: np.array([[ 2.1646724 ],[ 1.31916307],[ 0.3398716 ],
         [ 0.51336281]]), 1: np.array([[ 4.87587006],[ 2.68927603],
         [ 0.94945336],[-0.145607  ],[ 0.33901794]]), 2: np.array([[ 6.48848271],
         [ 3.53936913],[ 1.34731149],[ 0.06309451]])},RTOL)
-        test_dic(reg.tsls_inf,{0: np.array([[  3.51568531e-01,   6.15718476e+00,   7.40494437e-10],\
+        dict_compare(reg.tsls_inf,{0: np.array([[  3.51568531e-01,   6.15718476e+00,   7.40494437e-10],\
         [  1.86875349e-01,   7.05905340e+00,   1.67640650e-12],\
         [  9.04557549e-02,   3.75732426e+00,   1.71739894e-04],\
         [  7.48661202e-02,   6.85707782e+00,   7.02833502e-12]]),\
@@ -75,10 +75,10 @@ class Test_SURlagIV(unittest.TestCase):
         reg = SURlagIV(bigy1,bigX1,w=self.w,w_lags=2,name_bigy=bigyvars1,name_bigX=bigXvars1,\
                name_ds="NAT",name_w="nat_queen")
 
-        test_dic(reg.b3SLS,{0: np.array([[ 1.77468937],[ 1.14510457],[ 0.30768813],\
+        dict_compare(reg.b3SLS,{0: np.array([[ 1.77468937],[ 1.14510457],[ 0.30768813],\
         [ 0.5989414 ]]), 1: np.array([[ 4.26823484],[ 2.43651351],[ 0.8683601 ],[-0.12672555],\
         [ 0.4208373 ]]), 2: np.array([[ 6.02334209],[ 3.38056146],[ 1.30003556],[ 0.12992573]])},RTOL)
-        test_dic(reg.tsls_inf,{0: np.array([[  3.27608281e-01,   5.41710779e+00,   6.05708284e-08],\
+        dict_compare(reg.tsls_inf,{0: np.array([[  3.27608281e-01,   5.41710779e+00,   6.05708284e-08],\
         [  1.76245578e-01,   6.49721025e+00,   8.18230736e-11],\
         [  8.95068772e-02,   3.43759205e+00,   5.86911195e-04],\
         [  6.94610221e-02,   8.62269771e+00,   6.53949186e-18]]),\
@@ -103,15 +103,15 @@ class Test_SURlagIV(unittest.TestCase):
         reg = SURlagIV(bigy2,bigX2,bigyend2,bigq2,w=self.w,name_bigy=bigyvars2,name_bigX=bigXvars2,\
                name_bigyend=bigyendvars2,name_bigq=bigqvars2,spat_diag=True,name_ds="NAT",name_w="nat_queen")
 
-        test_dic(reg.b2SLS,{0: np.array([[-2.36265226],[ 1.69785946],[ 0.65777251],[-0.07519173],[ 2.15755822],\
+        dict_compare(reg.b2SLS,{0: np.array([[-2.36265226],[ 1.69785946],[ 0.65777251],[-0.07519173],[ 2.15755822],\
         [ 0.69200015]]), 1: np.array([[ 8.13716008],[ 3.28583832],[ 0.90311859],[-0.21702098],[-1.04365606],\
         [ 2.8597322 ],[ 0.39935589]]), 2: np.array([[-5.8117312 ],[ 3.49934818],[ 0.56523782],[ 0.09653315],\
         [ 2.31166815],[ 0.20602185]])},RTOL)
-        test_dic(reg.b3SLS,{0: np.array([[-2.33115839],[ 1.43097732],[ 0.57312948],[ 0.03474891],[ 1.78825098],\
+        dict_compare(reg.b3SLS,{0: np.array([[-2.33115839],[ 1.43097732],[ 0.57312948],[ 0.03474891],[ 1.78825098],\
         [ 0.7145636 ]]), 1: np.array([[ 8.34932294],[ 3.28396774],[ 0.95119978],[-0.19323687],[-1.1750583 ],\
         [ 2.75925141],[ 0.38544424]]), 2: np.array([[-5.2395274 ],[ 3.38941755],[ 0.55897901],[ 0.08212108],\
         [ 2.19387428],[ 0.21582944]])},RTOL)
-        test_dic(reg.tsls_inf,{0: np.array([[  7.31246733e-01,  -3.18792315e+00,   1.43298614e-03],\
+        dict_compare(reg.tsls_inf,{0: np.array([[  7.31246733e-01,  -3.18792315e+00,   1.43298614e-03],\
         [  2.07089585e-01,   6.90994348e+00,   4.84846854e-12],\
         [  1.15296751e-01,   4.97090750e+00,   6.66402399e-07],\
         [  8.75272616e-02,   3.97006755e-01,   6.91362479e-01],\
@@ -146,11 +146,11 @@ class Test_SURlagIV(unittest.TestCase):
                name_bigyend=bigyendvars2,name_bigq=bigqvars2,\
                name_ds="NAT",name_w="nat_queen") 
 
-        test_dic(reg.b3SLS,{0: np.array([[-2.40071969],[ 1.2933015 ],[ 0.53165876],[ 0.04883189],[ 1.6663233 ],\
+        dict_compare(reg.b3SLS,{0: np.array([[-2.40071969],[ 1.2933015 ],[ 0.53165876],[ 0.04883189],[ 1.6663233 ],\
         [ 0.76473297]]), 1: np.array([[ 7.24987963],[ 2.96110365],[ 0.86322179],[-0.17847268],[-1.1332928 ],\
         [ 2.69573919],[ 0.48295237]]), 2: np.array([[-7.55692635],[ 3.17561152],[ 0.37487877],[ 0.1816544 ],\
         [ 2.45768258],[ 0.27716717]])},RTOL)
-        test_dic(reg.tsls_inf,{0: np.array([[  7.28635609e-01,  -3.29481522e+00,   9.84864177e-04],\
+        dict_compare(reg.tsls_inf,{0: np.array([[  7.28635609e-01,  -3.29481522e+00,   9.84864177e-04],\
         [  2.44756930e-01,   5.28402406e+00,   1.26376643e-07],\
         [  1.26021571e-01,   4.21879172e+00,   2.45615028e-05],\
         [  1.03323393e-01,   4.72612122e-01,   6.36489932e-01],\
