@@ -29,22 +29,21 @@ def as_window(pysal_polygon):
 
 class Window(ps.cg.shapes.Polygon):
     """
-    Geometric container for point patterns
+    Geometric container for point patterns.
 
     A window is used to define the area over which the pattern is observed.
     This area is used in estimating the intensity of the point pattern.
     See :py:attr:`~.pointpattern.PointPattern.lambda_window`.
 
-
     Parameters
     ----------
 
     parts: sequence
-           A sequence of rings which bound the positive space  point pattern
-
+           A sequence of rings which bound the positive space  point
+           pattern.
     holes: sequence
            A sequence of rings which bound holes in the polygons that bound the
-           point pattern
+           point pattern.
 
     """
     def __init__(self, parts, holes=[]):
