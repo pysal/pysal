@@ -5,15 +5,13 @@ Heuristically form the maximum number (p) of regions given a set of n
 areas and a floor constraint.
 """
 
-__author__ = "Serge Rey <srey@asu.edu>, David Folch <david.folch@asu.edu>"
+__author__ = "Serge Rey <srey@asu.edu>, David Folch <dfolch@fsu.edu>"
 
 
 import pysal
 from components import check_contiguity
 import copy
-import random
 import numpy as np
-#from pysal.common import *
 from pysal.region import randomregion as RR
 
 __all__ = ["Maxp", "Maxp_LISA"]
@@ -75,10 +73,8 @@ class Maxp:
     Setup imports and set seeds for random number generators to insure the
     results are identical for each run.
 
-    >>> import random
     >>> import numpy as np
     >>> import pysal
-    >>> random.seed(100)
     >>> np.random.seed(100)
 
     Setup a spatial weights matrix describing the connectivity of a square
@@ -89,10 +85,8 @@ class Maxp:
     that each region will contain at least three areas.  In other cases the
     floor may be computed based on a minimum population count for example.
 
-    >>> import random
     >>> import numpy as np
     >>> import pysal
-    >>> random.seed(100)
     >>> np.random.seed(100)
     >>> w = pysal.lat2W(10,10)
     >>> z = np.random.random_sample((w.n,2))
@@ -104,7 +98,7 @@ class Maxp:
     >>> min([len(region) for region in solution.regions])
     3
     >>> solution.regions[0]
-    [4, 14, 5, 24, 3]
+    [76, 66, 56]
     >>>
 
     """
@@ -184,7 +178,7 @@ class Maxp:
                             potential.extend(neighbors)
                         if potential:
                             # add a random neighbor
-                            neigID = random.randint(0, len(potential) - 1)
+                            neigID = np.random.randint(0, len(potential))
                             neigAdd = potential.pop(neigID)
                             region.append(neigAdd)
                             # remove it from candidates
@@ -218,7 +212,7 @@ class Maxp:
                         candidates.append(region)
                 if candidates:
                     # add enclave to random region
-                    regID = random.randint(0, len(candidates) - 1)
+                    regID = np.random.randint(0, len(candidates))
                     rid = candidates[regID]
                     regions[rid].append(enclave)
                     a2r[enclave] = rid
@@ -379,10 +373,8 @@ class Maxp:
 
         Setup is the same as shown above except using a 5x5 community.
 
-        >>> import random
         >>> import numpy as np
         >>> import pysal
-        >>> random.seed(100)
         >>> np.random.seed(100)
         >>> w=pysal.weights.lat2W(5,5)
         >>> z=np.random.random_sample((w.n,2))
@@ -397,7 +389,7 @@ class Maxp:
 
         >>> solution.inference(nperm=9)
         >>> solution.pvalue
-        0.2
+        0.1
 
         """
         ids = self.w.id_order
@@ -456,10 +448,8 @@ class Maxp:
 
         Setup is the same as shown above except using a 5x5 community.
 
-        >>> import random
         >>> import numpy as np
         >>> import pysal
-        >>> random.seed(100)
         >>> np.random.seed(100)
         >>> w=pysal.weights.lat2W(5,5)
         >>> z=np.random.random_sample((w.n,2))
@@ -552,10 +542,8 @@ class Maxp_LISA(Maxp):
     Setup imports and set seeds for random number generators to insure the
     results are identical for each run.
 
-    >>> import random
     >>> import numpy as np
     >>> import pysal
-    >>> random.seed(100)
     >>> np.random.seed(100)
 
     Setup a spatial weights matrix describing the connectivity of a square
@@ -571,9 +559,9 @@ class Maxp_LISA(Maxp):
     >>> p=np.ones(w.n)
     >>> mpl=pysal.region.Maxp_LISA(w,z,p,floor=3,floor_variable=p)
     >>> mpl.p
-    31
+    30
     >>> mpl.regions[0]
-    [99, 89, 98]
+    [99, 98, 89]
 
     """
     def __init__(self, w, z, y, floor, floor_variable, initial=100):

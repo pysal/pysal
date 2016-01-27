@@ -1,0 +1,47 @@
+#!/usr/bin/python2
+
+import subprocess as sb
+import shutil
+import sys
+
+try:
+    import click
+except ImportError:
+    print('Interface built with Click: \n\tclick.pocoo.org')
+    print('Install click to use (available via pip/conda)')
+    sys.exit()
+
+@click.command()
+@click.option('--dry_run', is_flag=True, help='avoid running copy operation')
+@click.option('--verbose', is_flag=True, help='print files being copied')
+@click.option('-v', is_flag=True, help='print files being copied')
+@click.argument('source', nargs=1)
+@click.argument('destination', nargs=1)
+def sync(source, destination,  dry_run, verbose,  v):
+    """
+    Uses git ls-files to build a list of files that DESTINATION needs to
+    synchronize from SOURCE. 
+
+    All files tracked by git in DESTINATION get copied from SOURCE to
+    DESTINATION. 
+    """
+    verbose = v or verbose
+    proc = sb.Popen('git ls-files {}'.format(destination), shell=True, stdout=sb.PIPE)
+    file_list = [s.strip().split('/')[2:] for s in proc.stdout.readlines()]
+    file_list = ['/'.join(s) for s in file_list]
+    sources = ['/'.join((source, s)) for s in file_list]
+    destinations = ['/'.join((destination, s)) for s in file_list]
+    if dry_run:
+        if verbose:
+            print('Discovered these files:')
+            for f in file_list:
+                print(f)
+        return 0
+    else:
+        for src,dst in zip(sources, destinations):
+            if verbose:
+                print("copying: {} to {}".format(src,dst))
+            shutil.copy2(src,dst)
+
+if __name__ == "__main__":
+    sync()

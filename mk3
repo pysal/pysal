@@ -1,0 +1,4 @@
+git branch -d 2to3
+git checkout -b 2to3
+python-modernize -nw -j 4 --future-unicode ./pysal
+2to3 -nw -j 4 ./pysal

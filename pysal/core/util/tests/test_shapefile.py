@@ -1,9 +1,24 @@
 import unittest
-from cStringIO import StringIO
+
+import sys
+PY3 = int(sys.version[0]) > 2
+if PY3:
+    import io
+else:
+    from cStringIO import StringIO
+
 from pysal.core.util.shapefile import noneMax, noneMin, shp_file, shx_file, NullShape, Point, PolyLine, MultiPoint, PointZ, PolyLineZ, PolygonZ, MultiPointZ, PointM, PolyLineM, PolygonM, MultiPointM, MultiPatch
 import os
 import pysal
 
+def bufferIO(buf):
+    """
+    Temp stringIO function to force compat
+    """
+    if PY3:
+        return io.BytesIO(buf)
+    else:
+        return StringIO(buf)
 
 class TestNoneMax(unittest.TestCase):
     def test_none_max(self):
@@ -152,7 +167,7 @@ class TestPoint(unittest.TestCase):
         self.assertEqual(expected, Point.pack(record))
 
     def test_unpack(self):
-        dat = StringIO(b"\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14\x40\x00\x00\x00\x00\x00\x00\x14\x40")
+        dat = bufferIO(b"\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14\x40\x00\x00\x00\x00\x00\x00\x14\x40")
         expected = {"X": 5, "Y": 5, "Shape Type": 1}
         self.assertEqual(expected, Point.unpack(dat))
 
@@ -172,7 +187,7 @@ class TestPolyLine(unittest.TestCase):
         self.assertEqual(expected, PolyLine.pack(record))
 
     def test_unpack(self):
-        dat = StringIO(b"""\x03\x00\x00\x00\xc0\x46\x52\x3a\xdd\x8a\x82\
+        dat = bufferIO(b"""\x03\x00\x00\x00\xc0\x46\x52\x3a\xdd\x8a\x82\
 \xbf\x3d\xc1\x65\xce\xc7\x92\xd0\xbf\x00\xc5\
 \xa0\xe5\x8f\xa4\x7e\x3f\x6b\x40\x7f\x60\x5c\
 \x88\xd0\xbf\x01\x00\x00\x00\x03\x00\x00\x00\
@@ -197,7 +212,7 @@ class TestPointZ(unittest.TestCase):
         self.assertEqual(expected, PointZ.pack(record))
 
     def test_unpack(self):
-        dat = StringIO(b"\x0b\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14@\x00\x00\x00\x00\x00\x00\x14@\x00\x00\x00\x00\x00\x00\x14@\x00\x00\x00\x00\x00\x00\x14@")
+        dat = bufferIO(b"\x0b\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14@\x00\x00\x00\x00\x00\x00\x14@\x00\x00\x00\x00\x00\x00\x14@\x00\x00\x00\x00\x00\x00\x14@")
         expected = {"X": 5, "Y": 5, "Z": 5, "M": 5, "Shape Type": 11}
         self.assertEqual(expected, PointZ.unpack(dat))
 
@@ -214,7 +229,7 @@ class TestPolyLineZ(unittest.TestCase):
         self.assertEqual(expected, PolyLineZ.pack(record))
 
     def test_unpack(self):
-        dat = StringIO(b"""\r\x00\x00\x00\xc0FR:\xdd\x8a\x82\xbf=\xc1e\xce\xc7\x92\xd0\xbf\x00\xc5\xa0\xe5\x8f\xa4~?k@\x7f`\\\x88\xd0\xbf\x01\x00\x00\x00\x03\x00\x00\x00\x00\x00\x00\x00\xc0FR:\xdd\x8a\x82\xbfk@\x7f`\\\x88\xd0\xbf\x00\xc5\xa0\xe5\x8f\xa4~?=\xc1e\xce\xc7\x92\xd0\xbf\x00\xc5\xa0\xe5\x8f\xa4~?=\xc1e\xce\xc7\x92\xd0\xbf\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00$@\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14@\x00\x00\x00\x00\x00\x00$@\x00\x00\x00\x00\x00\x00\x00@\x00\x00\x00\x00\x00\x00\x10@\x00\x00\x00\x00\x00\x00\x00@\x00\x00\x00\x00\x00\x00\x08@\x00\x00\x00\x00\x00\x00\x10@""")
+        dat = bufferIO(b"""\r\x00\x00\x00\xc0FR:\xdd\x8a\x82\xbf=\xc1e\xce\xc7\x92\xd0\xbf\x00\xc5\xa0\xe5\x8f\xa4~?k@\x7f`\\\x88\xd0\xbf\x01\x00\x00\x00\x03\x00\x00\x00\x00\x00\x00\x00\xc0FR:\xdd\x8a\x82\xbfk@\x7f`\\\x88\xd0\xbf\x00\xc5\xa0\xe5\x8f\xa4~?=\xc1e\xce\xc7\x92\xd0\xbf\x00\xc5\xa0\xe5\x8f\xa4~?=\xc1e\xce\xc7\x92\xd0\xbf\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00$@\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14@\x00\x00\x00\x00\x00\x00$@\x00\x00\x00\x00\x00\x00\x00@\x00\x00\x00\x00\x00\x00\x10@\x00\x00\x00\x00\x00\x00\x00@\x00\x00\x00\x00\x00\x00\x08@\x00\x00\x00\x00\x00\x00\x10@""")
         expected = {'BBOX Ymax': -0.25832280562918325, 'NumPoints': 3, 'BBOX Ymin': -0.25895877033237352, 'NumParts': 1, 'Vertices': [(-0.0090539248870159517, -0.25832280562918325), (0.0074811573959305822, -0.25895877033237352), (0.0074811573959305822, -0.25895877033237352)], 'BBOX Xmax': 0.0074811573959305822, 'BBOX Xmin': -0.0090539248870159517, 'Shape Type': 13, 'Parts Index': [0], 'Zmin': 0, 'Zmax': 10, 'Zarray': [0, 5, 10], 'Mmin': 2, 'Mmax': 4, 'Marray': [2, 3, 4]}
         self.assertEqual(expected, PolyLineZ.unpack(dat))
 
@@ -241,7 +256,7 @@ class TestPolygonZ(unittest.TestCase):
             'Mmax': 4,
             'Marray': [2, 4, 2, 2]
         }
-        dat = StringIO(PolygonZ.pack(record))
+        dat = bufferIO(PolygonZ.pack(record))
         self.assertEqual(record, PolygonZ.unpack(dat))
 
 
