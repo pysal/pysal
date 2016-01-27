@@ -64,7 +64,7 @@ def hexLat2W(nrows=5, ncols=5):
         return lat2W(nrows, ncols)
 
     n = nrows * ncols
-    rid = [i / ncols for i in xrange(n)]
+    rid = [i // ncols for i in xrange(n)]
     cid = [i % ncols for i in xrange(n)]
     r1 = nrows - 1
     c1 = ncols - 1
@@ -147,7 +147,7 @@ def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
     n = nrows * ncols
     r1 = nrows - 1
     c1 = ncols - 1
-    rid = [i / ncols for i in xrange(n)]
+    rid = [i // ncols for i in xrange(n)] #must be floor!
     cid = [i % ncols for i in xrange(n)]
     w = {}
     r = below = 0

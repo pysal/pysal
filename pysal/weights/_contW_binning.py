@@ -61,9 +61,9 @@ class ContiguityWeights_binning:
 
         # bucket size
         if (numPoly < SHP_SMALL):
-            bucketmin = numPoly / BUCK_SM + 2
+            bucketmin = numPoly // BUCK_SM + 2
         else:
-            bucketmin = numPoly / BUCK_LG + 2
+            bucketmin = numPoly // BUCK_LG + 2
             # print 'bucketmin: ', bucketmin
         # bucket length
         lengthx = ((shapebox[2] + DELTA) - shapebox[0]) / bucketmin
@@ -220,9 +220,9 @@ class ContiguityWeightsPolygons:
 
         # bucket size
         if (numPoly < SHP_SMALL):
-            bucketmin = numPoly / BUCK_SM + 2
+            bucketmin = numPoly // BUCK_SM + 2
         else:
-            bucketmin = numPoly / BUCK_LG + 2
+            bucketmin = numPoly // BUCK_LG + 2
             # print 'bucketmin: ', bucketmin
         # bucket length
         lengthx = ((shapebox[2] + DELTA) - shapebox[0]) / bucketmin
@@ -359,7 +359,7 @@ if __name__ == "__main__":
     print "using " + str(fname)
     print "time elapsed for rook... using bins: " + str(t1 - t0)
 
-    from _contW_rtree import ContiguityWeights_rtree
+    from pysal.weights._contW_rtree import ContiguityWeights_rtree
 
     t0 = time.time()
     rt = ContiguityWeights_rtree(pysal.open(fname), ROOK)

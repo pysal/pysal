@@ -50,7 +50,7 @@ Currently the following contribs are available:
 
  5. Visualization -- Lightweight visualization layer (`Project page`_).
 
-    - .. versionadded:: 1.7
+    - .. versionadded:: 1.5
     - Path: pysal.contrib.viz
     - Requires: `matplotlib`_
 
@@ -66,6 +66,25 @@ Currently the following contribs are available:
     - Path: pysal.contrib.points
     - Requires: `pandas`_
 
+ 9. Pandas utilities -- Tools to work with spatial file formats using `pandas`.
+
+    - .. versionadded:: 1.8
+    - Path: pysal.contrib.pdutilities
+    - Requires: `pandas`_
+
+ 9. Githooks -- Optional hooks for `git` to make development on `PySAL` easier
+
+    - .. versionadded:: 1.10
+    - Path: pysal.contrib.githooks (Note: not importable)
+    - Requires: `git`
+
+ 10. Handler -- A model ingester to standardize model extension
+
+    - .. versionadded:: 1.10
+    - Path: pysal.contrib.handler
+    - Requires: None
+    - Optional: `patsy`_
+
 
 .. toctree::
 
@@ -80,3 +99,4 @@ Currently the following contribs are available:
 .. _project page: https://github.com/pysal/pysal/wiki/PySAL-Visualization-Project
 .. _shapely: https://pypi.python.org/pypi/Shapely
 .. _wxPython: http://www.wxpython.org/
+.. _patsy: https://github.com/pydata/patsy

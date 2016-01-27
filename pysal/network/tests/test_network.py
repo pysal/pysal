@@ -4,7 +4,7 @@ import unittest
 import numpy as np
 import pysal as ps
 
-from .. import util
+from pysal.network import util
 
 class TestNetwork(unittest.TestCase):
 
@@ -130,3 +130,6 @@ class TestNetworkUtils(unittest.TestCase):
         self.distance, self.pred = util.dijkstra(self.ntw, self.ntw.edge_lengths, 0)
         self.assertAlmostEqual(self.distance[196], 5505.668247, places=4)
         self.assertEqual(self.pred[196], 133)
+
+if __name__ == 'main':
+    unittest.main()
