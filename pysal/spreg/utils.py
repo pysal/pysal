@@ -5,10 +5,12 @@ Tools for different procedure estimations
 __author__ = "Luc Anselin luc.anselin@asu.edu, \
         Pedro V. Amaral pedro.amaral@asu.edu, \
         David C. Folch david.folch@asu.edu, \
-        Daniel Arribas-Bel darribas@asu.edu"
+        Daniel Arribas-Bel darribas@asu.edu,\
+        Levi Wolf levi.john.wolf@gmail.com"
 
 import numpy as np
 from scipy import sparse as SP
+from scipy.sparse import linalg as SPla
 import scipy.optimize as op
 import numpy.linalg as la
 from pysal import lag_spatial
@@ -33,15 +35,6 @@ class RegressionPropsY(object):
               Standard deviation of the dependent variable
 
     """
-
-#I think all this caching stuff could get rewritten into a decorator of some kind. 
-# def cache_propset(func, val=default):
-#   def getset(self):
-#       try to get cached value
-#       if cache doesnt exist, init cache[func] @ val
-#       if cache exists but func doesn't, init cache[func] @ val
-#       return cache[func]
-#   return property(func)
 
     @property
     def mean_y(self):
@@ -880,6 +873,25 @@ def set_warn(reg, warn):
             reg.warning = "Warning: " + warn + "\n"
     else:
         pass
+
+def splogdet(spmat):
+    ''' Large dimension log determinant computation. '''
+    #symmetric = np.allclose(spmat.T, spmat) #could branch for cholmod
+    symmetric = False
+    if symmetric:
+        #CHOLMOD could be used like:
+        #from scikits.sparse import cholmod as CHOLMOD
+        #det = np.sum(np.log(np.abs(CHOLMOD.cholesky(spmat).D())))
+        pass #leave in for scaffolding.
+    else:
+        if isinstance(spmat, SP.csc_matrix) or isinstance(spmat, SP.csr_matrix):
+            LU = SPla.splu(spmat)
+            det = np.sum(np.log(np.abs(LU.U.diagonal())))
+        elif SP.isspmatrix(spmat):
+            return spdet(spmat.tocsc())
+        else:
+            det = la.slogdet(spmat)
+    return det
 
 
 def RegressionProps_basic(reg, betas=None, predy=None, u=None, sig2=None, sig2n_k=None, vm=None):

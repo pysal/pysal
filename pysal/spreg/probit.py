@@ -819,7 +819,7 @@ class Probit(BaseProbit):
         self.name_y = USER.set_name_y(name_y)
         self.name_x = USER.set_name_x(name_x, x)
         self.name_w = USER.set_name_w(name_w, w)
-        #SUMMARY.Probit(reg=self, w=w, vm=vm, spat_diag=spat_diag)
+        SUMMARY.Probit(reg=self, w=w, vm=vm, spat_diag=spat_diag)
 
 
 def newton(flogl, start, fgrad, fhess, maxiter):
