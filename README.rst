@@ -1,40 +1,25 @@
 Python Spatial Analysis Library
-===============================
+=================================
 
-.. |build| image:: https://travis-ci.org/pysal/pysal.png
-   :scale: 100%
-   :align: middle
-   :target: https://travis-ci.org/pysal/pysal
-.. |cover| image:: https://coveralls.io/repos/pysal/pysal/badge.svg?branch=master
-   :scale: 50%
-   :align: top
+.. image:: https://travis-ci.org/pysal/pysal.svg
+   :target: https://travis-ci.org/pysal
+
+.. image:: https://coveralls.io/repos/pysal/pysal/badge.svg?branch=master
    :target: https://coveralls.io/r/pysal/pysal?branch=master
-.. |docs| image:: https://readthedocs.org/projects/pysal/badge/?verison=latest
-   :scale: 50%
-   :align: top
-   :target: http://pysal.readthedocs.org/en/latest/ 
-.. |talk| image:: https://badges.gitter.im/Join%20Chat.svg
-   :scale: 50%
-   :align: top
-   :target: https://gitter.im/pysal/pysal?
-
-
-
-+---------+---------+---------+---------+
-| |build| | |cover| | |docs|  | |talk|  |        
-+---------+---------+---------+---------+
 
 
 PySAL_ is an open source cross-platform library of spatial analysis functions
 written in Python. It is intended to support the development of high level
 applications for spatial analysis.
 
-
-.. image:: figs/lisamaps7.png
+.. image:: https://farm2.staticflickr.com/1699/23937788493_1b9d147b9f_z.jpg
         :width: 25%
         :scale: 25%
         :target: http://nbviewer.ipython.org/urls/gist.githubusercontent.com/darribas/657e0568df7a63362762/raw/pysal_lisa_maps.ipynb
         :alt: LISA Maps of US County Homicide Rates
+
+*Above: Local Indicators of Spatial Association for Homicide Rates in US
+Counties 1990.*
 
 
 
@@ -59,40 +44,27 @@ widening in the near future.
 .. _GeoDaX : https://geodacenter.asu.edu/software
 
 
-PySAL package structure
------------------------
+.. |build| image:: https://travis-ci.org/pysal/pysal.png
+   :scale: 100%
+   :align: middle
+   :target: https://travis-ci.org/pysal/pysal
+.. |cover| image:: https://coveralls.io/repos/pysal/pysal/badge.svg?branch=master
+   :scale: 50%
+   :align: top
+   :target: https://coveralls.io/r/pysal/pysal?branch=master
+.. |docs| image:: https://readthedocs.org/projects/pysal/badge/?verison=latest
+   :scale: 50%
+   :align: top
+   :target: http://pysal.readthedocs.org/en/latest/ 
+.. |talk| image:: https://badges.gitter.im/Join%20Chat.svg
+   :scale: 50%
+   :align: top
+   :target: https://gitter.im/pysal/pysal?
 
-Currently PySAL consists of the following files and directories:
 
-  LICENSE.txt
-    PySAL license.
-
-  INSTALL.txt
-    PySAL prerequisites, installation, testing, and troubleshooting.
-
-  THANKS.txt
-    PySAL developers and contributors. 
-
-  README.txt
-    PySAL structure (this document).
-
-  setup.py
-    Script for building and installing PySAL.
-
-  MANIFEST.in
-    Additions to distutils-generated PySAL tar-balls.
-
-  CHANGELOG.txt
-    Changes since the last release
-
-  pysal/
-    Contains PySAL __init__.py and the directories of PySAL modules.
-
-  doc/
-    Contains PySAL documentation using the Sphinx framework.
 
 PySAL modules
--------------
+=============
 
 * pysal.cg  Computational geometry
 * pysal.contrib  Contributed modules
@@ -103,29 +75,63 @@ PySAL modules
 * pysal.network  Spatial analysis on networks
 * pysal.region  Spatially constrained clustering
 * pysal.spatial_dynamics  Spatial dynamics
-* pysal.spreg  Regression and diagnostics
+* pysal.spreg  Spatial econometrics and diagnostics
 * pysal.weights  Spatial weights
 
-Website
--------
-All things PySAL can be found here
-    http://pysal.org/
 
-Mailing Lists
--------------
-Please see the developer list here
-    http://groups.google.com/group/pysal-dev
+Installation
+============
 
-Help for users is here
-    http://groups.google.com/group/openspace-list
+PySAL can be installed using pip:
+
+.. code-block:: bash
+   
+    $ pip install pysal
+
+PySAL is also available through 
+`Anaconda <https://www.continuum.io/downloads>`__ and `Enthought Canopy <https://www.enthought.com/products/canopy/>`__.
+
+Documentation
+=============
+
+For help on using PySAL, check out the following resources:
+
+* `User Guide <http://pysal.readthedocs.org/en/latest/users/index.html>`_
+* `Tutorials and Short Courses <https://github.com/pysal/notebooks/blob/master/courses.md>`_
+* `Notebooks <https://github.com/pysal/notebooks>`_
+* `User List <http://groups.google.com/group/openspace-list>`_
+
+
+
+Development
+===========
+
+PySAL development is hosted on github_.
+
+.. _github : https://github.com/pysal/pysal
+
+Discussions of development occurs on the
+`developer list <http://groups.google.com/group/pysal-dev>`_
+as well as gitter_.
+
+.. _gitter : https://gitter.im/pysal/pysal?
+
+Getting Involved
+================
+
+If you are interested in contributing to PySAL please see our 
+`development guidelines <http://pysal.readthedocs.org/en/latest/developers/index.html>`_.
+
 
 Bug reports
------------
-To search for or report bugs, please see
-    http://github.com/pysal/pysal/issues
+===========
+To search for or report bugs, please see PySAL's issues_.
+
+.. _issues :  http://github.com/pysal/pysal/issues
 
 License information
--------------------
+===================
+
 See the file "LICENSE.txt" for information on the history of this
 software, terms & conditions for usage, and a DISCLAIMER OF ALL
 WARRANTIES.

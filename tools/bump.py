@@ -1,17 +1,22 @@
 """
 Update version numbers in a release branch
 """
-##################################################
-# Update these values before running this script #
-##################################################
-MAJOR = 1
-MINOR = 11
-MICRO = 0
-year = '2016'
-day = '13'
-month = '1'
-NEXT = '1.12.0dev'
-#################################################
+import datetime
+import os
+import sys
+import inspect
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+from pysal.version import version
+
+MAJOR, MINOR, MICRO = map(int, version.split("."))
+today = datetime.date.today()
+year = str(today.year)
+day = str(today.day)
+month = str(today.month)
 
 version = "{}.{}.{}".format(MAJOR, MINOR, MICRO)
 num = {"MAJOR": MAJOR, "MINOR": MINOR, "MICRO": MICRO}
@@ -71,8 +76,9 @@ with open("../doc/source/index.rst") as i_file:
             b = '(Released {}-{}-{})'.format(year, month, day)
             lines[i] = '{} {} <users/installation.html>`_\n'.format(a, b)
         if line[:13] == '    - `Develo':
-            a = '    - `Development {}'.format(NEXT)
-            lines[i] = '{}  <http://github.com/pysal/pysal/>`_\n'.format(a)
+            lines[i] = ('    - `Development'
+                        '  <http://github.com/pysal/pysal/tree/dev>`'
+                        '_\n')
 
 with open("../doc/source/index.rst", 'w') as i_file:
     i_file.write("".join(lines))
