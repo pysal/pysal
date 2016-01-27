@@ -27,13 +27,14 @@ class PointPattern(object):
     ----------
 
     points:       array
-                  (n,p), n points with p >= 2 attributes on each point. Two attributes must
-                  comprise the spatial coordinate pair The default is the first two
-                  attributes are the x and y spatial coordinates
+                  (n,p), n points with p >= 2 attributes on each
+                  point. Two attributes must comprise the spatial
+                  coordinate pair. Default is that the first two
+                  attributes are the x and y spatial coordinates.
     window:       :py:class:`~.window.Window`
-                  Bounding geometric object for the point pattern. If not specified
-                  window will be set to the minumum bounding rectangle of the point
-                  pattern.
+                  Bounding geometric object for the point pattern.
+                  If not specified, window will be set to the minimum
+                  bounding rectangle of the point pattern.
     names:        list
                   The names of the attributes.
     coord_names:  list
@@ -130,6 +131,25 @@ class PointPattern(object):
 
     def plot(self, window=False, title="Point Pattern", hull=False,
              get_ax=False):
+        """
+        Parameters
+        ----------
+        window  : boolean
+                  If window is True, plot window of the point
+                  pattern. If not, don't plot window.
+        title   : string
+                  Name of the figure.
+        hull    : boolean
+                  If hull is True, plot convex hull of the point
+                  pattern. If not, don't plot convex hull.
+        get_ax  : boolean
+                  If get_ax is True, return the current plot ax.
+        Returns
+        -------
+        ax      : matplotlib.axes._subplots.AxesSubplot
+                  Current plot ax. Only return it when get_ax is True.
+
+        """
         fig, ax = plt.subplots()
         plt.plot(self.df[self._x], self.df[self._y], '.')
         # plt.scatter(self.df[self._x], self.df[self._y])

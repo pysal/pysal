@@ -885,7 +885,6 @@ class Kenv(Envelopes):
     pct         : float
                   1-alpha, alpha is the significance level. Default is 0.05,
                   which means 95% confidence level for the envelope.
-
     realizations: :py:class:`~.process.PointProcess`
                   Point process instance with more than 1 realizations.
 
