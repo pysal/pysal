@@ -10,6 +10,8 @@ TODO
 
 """
 
+__author__ = 'Serge Rey, Wei Kang, Hu Shao'
+
 import numpy as np
 from matplotlib import pyplot as plt
 import math
@@ -51,6 +53,12 @@ class RectangleM:
                         Minimum bounding box for the point pattern.
     points            : array
                         x,y coordinates of the point points.
+    count_column      : integer
+                        Number of columns.
+    count_row         : integer
+                        Number of rows.
+    num               : integer
+                        Number of rectangular quadrats.
 
     """
 
@@ -75,6 +83,7 @@ class RectangleM:
             # calculate the actual width and height of cell
             self.rectangle_width = x_range/float(count_column)
             self.rectangle_height = y_range/float(count_row)
+        self.num = self.count_column * self.count_row
 
     def point_location_sta(self):
         """
@@ -148,26 +157,36 @@ class HexagonM:
     ----------
     pp                : :py:class:`~.pointpattern.PointPattern`
                         Point Pattern instance.
-    h_length          : float
+    lh                : float
                         Hexagon length (hexagon).
 
     Attributes
     ----------
     pp                : :py:class:`~.pointpattern.PointPattern`
                         Point Pattern instance.
+    h_length          : float
+                        Hexagon length (hexagon).
     mbb               : array
                         Minimum bounding box for the point pattern.
     points            : array
                         x,y coordinates of the point points.
     h_length          : float
                         Hexagon length (hexagon).
+    count_row_even    : integer
+                        Number of even rows.
+    count_row_odd     : integer
+                        Number of odd rows.
+    count_column      : integer
+                        Number of columns.
+    num               : integer
+                        Number of hexagonal quadrats.
 
     """
-    def __init__(self, pp, h_length):
+    def __init__(self, pp, lh):
 
         self.points = np.asarray(pp.points)
         self.pp = pp
-        self.h_length = h_length
+        self.h_length = lh
         self.mbb = pp.mbb
         range_x = self.mbb[2] - self.mbb[0]
         range_y = self.mbb[3] - self.mbb[1]
@@ -180,14 +199,20 @@ class HexagonM:
             self.count_column += int(temp)
 
         # calculate row count for the even columns
-        self.semi_height = h_length * math.cos(math.pi/6)
+        self.semi_height = self.h_length * math.cos(math.pi/6)
         self.count_row_even = 1
         if self.semi_height < range_y:
             temp = math.ceil((range_y-self.semi_height)/(
                 self.semi_height*2))
             self.count_row_even += int(temp)
+
         # for the odd columns
         self.count_row_odd = int(math.ceil(range_y/(self.semi_height*2)))
+
+        # quadrat number
+        self.num = self.count_row_odd * (self.count_column/2 +
+                                         self.count_column%2) + \
+                   self.count_row_even * (self.count_column/2)
 
     def point_location_sta(self):
         """
@@ -351,6 +376,8 @@ class QStatistic:
     chi2              : float
                         Chi-squared test statistic for the observed
                         point pattern pp.
+    df                : integer
+                        Degree of freedom.
     chi2_pvalue       : float
                         p-value based on analytical chi-squared
                         distribution.
@@ -377,8 +404,7 @@ class QStatistic:
         self.chi2,self.chi2_pvalue = scipy.stats.chisquare(
                 dict_id_count.values())
 
-        self.chi2_pvalue = self.chi2_pvalue * 2
-        self.df = nx * ny - 1
+        self.df = self.mr.num - 1
 
         # when realizations is specified, perform simulation based
         # inference.
@@ -405,8 +431,6 @@ class QStatistic:
             #calculate pseudo pvalue
             above_chi2 = self.chi2_realizations >= self.chi2
             larger_chi2 = sum(above_chi2)
-            if (sim_n - larger_chi2) < larger_chi2:
-                larger_chi2 = sim_n - larger_chi2
             self.chi2_r_pvalue = (larger_chi2 + 1.)/(sim_n+ 1.)
 
     def plot(self, title = "Quadrat Count"):
