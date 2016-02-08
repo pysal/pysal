@@ -553,17 +553,17 @@ class Moran_Local:
     permutations : int
                    number of random permutations for calculation of pseudo
                    p_values
-    Is           : float
-                   value of Moran's I
+    Is           : array
+                   local Moran's I values
     q            : array
                    (if permutations>0)
-                   values indicate quadrat location 1 HH,  2 LH,  3 LL,  4 HL
-    sim          : array
+                   values indicate quandrant location 1 HH,  2 LH,  3 LL,  4 HL
+    sim          : array (permutations by n)
                    (if permutations>0)
-                   vector of I values for permuted samples
+                   I values for permuted samples
     p_sim        : array
                    (if permutations>0)
-                   p-value based on permutations (one-sided)
+                   p-values based on permutations (one-sided)
                    null: spatial randomness
                    alternative: the observed Ii is further away or extreme
                    from the median of simulated values. It is either extremelyi
@@ -739,7 +739,7 @@ class Moran_Local_BV:
                    value of Moran's I
     q            : array
                    (if permutations>0)
-                   values indicate quadrat location 1 HH,  2 LH,  3 LL,  4 HL
+                   values indicate quandrant location 1 HH,  2 LH,  3 LL,  4 HL
     sim          : array
                    (if permutations>0)
                    vector of I values for permuted samples
@@ -929,7 +929,7 @@ class Moran_Local_Rate(Moran_Local):
                    value of Moran's I
     q            : array
                    (if permutations>0)
-                   values indicate quadrat location 1 HH,  2 LH,  3 LL,  4 HL
+                   values indicate quandrant location 1 HH,  2 LH,  3 LL,  4 HL
     sim          : array
                    (if permutations>0)
                    vector of I values for permuted samples
