@@ -543,6 +543,30 @@ class Map_Classifier:
         table.insert(1, " ")
         table = "\n".join(table)
         return table
+    
+    def find_bin(self, x):
+        """
+        Sort input or inputs according to the current bin estimate
+
+        Parameters
+        ----------
+        x       :   array or numeric
+                    a value or array of values to fit within the estimated
+                    bins
+
+        Returns
+        -------
+        a bin index or array of bin indices that classify the input into one of
+        the classifiers' bins
+        """
+        if not isinstance(x, np.ndarray):
+            x = np.array([x]).flatten()
+        uptos = [np.where(value < self.bins)[0] for value in x]
+        bins = [x.min() if x.size > 0 else len(self.bins)-1 for x in uptos] #bail upwards
+        if len(bins) == 1:
+            return bins[0]
+        else:
+            return bins
 
 
 class HeadTail_Breaks(Map_Classifier):
