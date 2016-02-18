@@ -739,8 +739,8 @@ class Network:
                     nearest[p2,p1] = nearest[p1,p2]                    
         if symmetric:
             # populate the main diagonal when symmetric
-            #np.fill_diagonal(nearest, 0)
-            np.fill_diagonal(nearest, np.nan)
+            np.fill_diagonal(nearest, 0)
+            #np.fill_diagonal(nearest, np.nan)
         return nearest
 
     def nearestneighbordistances(self, sourcepattern, destpattern=None):
