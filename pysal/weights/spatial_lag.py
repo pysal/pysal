@@ -1,9 +1,11 @@
 """
 Spatial lag operations.
 """
-__author__ = "Sergio J. Rey <srey@asu.edu>, David C. Folch <david.folch@asu.edu>"
-__all__ = ['lag_spatial']
+__author__ = "Sergio J. Rey <srey@asu.edu>, David C. Folch <david.folch@asu.edu>, Levi John Wolf <ljw2@asu.edu"
+__all__ = ['lag_spatial', 'lag_categorical']
 
+import numpy as np
+from six import iteritems as diter
 
 def lag_spatial(w, y):
     """
@@ -130,7 +132,7 @@ def lag_categorical(w, y, ties='tryself'):
     >>> y = ['a','b','a','b','c','b','c','b','c']
     >>> y_l = pysal.weights.spatial_lag.lag_categorical(w, y)
     >>> y_l 
-    array(['b', 'a', 'b', 'c', 'b', 'c', 'c', 'c', 'b'], dtype='|S1')
+    array(['b', 'a', 'b', 'c', 'b', 'c', 'b', 'c', 'b'], dtype='|S1')
     
     Explicitly reshape y into a (9x1) array and calculate lag again
 
@@ -142,7 +144,7 @@ def lag_categorical(w, y, ties='tryself'):
            ['c'],
            ['b'],
            ['c'],
-           ['c'],
+           ['b'],
            ['c'],
            ['b']], 
           dtype='|S1')
