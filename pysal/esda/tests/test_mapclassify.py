@@ -3,7 +3,7 @@ from pysal.esda.mapclassify import *
 from pysal.esda.mapclassify import binC, bin, bin1d
 import numpy as np
 import unittest
-
+np.random.seed(4414)
 
 class TestQuantile(unittest.TestCase):
     def test_quantile(self):
@@ -23,6 +23,19 @@ class TestQuantile(unittest.TestCase):
             np.testing.assert_almost_equal(k, len(quantile(y, k)))
             self.assertEqual(k, len(quantile(y, k)))
 
+class TestFindBin(unittest.TestCase):
+    def setUp(self):
+        dat = pysal.open(pysal.examples.get_path("calempdensity.csv"))
+        self.V = np.array([record[-1] for record in dat])
+    
+    def test_find_bin(self):
+        toclass = [0,1,3,5,50,70,101,202,390,505,800,5000,5001]
+        mc = Fisher_Jenks(self.V, k=5)
+        known = [0, 0, 0, 0, 0, 0, 1, 2, 3, 3, 4, 4, 4]
+        np.testing.assert_array_equal(known, mc.find_bin(toclass))
+        mc2 = Fisher_Jenks(self.V, k=9)
+        known = [0, 0, 0, 0, 2, 2, 3, 5, 7, 7, 8, 8, 8]
+        np.testing.assert_array_equal(known, mc2.find_bin(toclass))
 
 class TestBinC(unittest.TestCase):
     def test_bin_c(self):
@@ -172,7 +185,6 @@ class TestMapClassifier(unittest.TestCase):
         # self.assertEqual(expected, map__classifier.get_tss())
         assert True  # TODO: implement your test here
 
-
 class TestEqualInterval(unittest.TestCase):
     def setUp(self):
         dat = pysal.open(pysal.examples.get_path("calempdensity.csv"))
@@ -227,7 +239,6 @@ class TestQuantiles(unittest.TestCase):
                                                   1.32780000e+01, 5.46160000e+01, 4.11145000e+03]))
         np.testing.assert_array_almost_equal(q.counts,
                                              np.array([12, 11, 12, 11, 12]))
-
 
 class TestStdMean(unittest.TestCase):
     def setUp(self):
