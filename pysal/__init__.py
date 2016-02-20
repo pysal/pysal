@@ -84,6 +84,11 @@ import pysal.spreg
 import pysal.examples
 from pysal.network.network import Network, NetworkG, NetworkK, NetworkF
 
+try:
+    import pandas
+    from pysal.contrib import pdutilities as pdio
+except ImportError:
+    print('Pandas adapters not loaded')
 
 # Load the IOHandlers
 from pysal.core import IOHandlers
