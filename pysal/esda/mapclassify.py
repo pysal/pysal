@@ -126,7 +126,7 @@ def binC(y, bins):
     >>>
     """
 
-    if np.rank(y) == 1:
+    if np.ndim(y) == 1:
         k = 1
         n = np.shape(y)[0]
     else:
@@ -191,7 +191,7 @@ def bin(y, bins):
            [0, 0, 2]])
     >>>
     """
-    if np.rank(y) == 1:
+    if np.ndim(y) == 1:
         k = 1
         n = np.shape(y)[0]
     else:
