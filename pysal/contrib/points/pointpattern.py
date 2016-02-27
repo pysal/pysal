@@ -46,9 +46,9 @@ class PointPattern(object):
 
     >>> from pysal.contrib.points.pointpattern import PointPattern
     >>> points = [[66.22, 32.54], [22.52, 22.39], [31.01, 81.21],
-                  [9.47, 31.02], [30.78, 60.10], [75.21, 58.93],
-                  [79.26,  7.68], [8.23, 39.93], [98.73, 77.17],
-                  [89.78, 42.53], [65.19, 92.08], [54.46, 8.48]]
+    ...           [9.47, 31.02], [30.78, 60.10], [75.21, 58.93],
+    ...           [79.26,  7.68], [8.23, 39.93], [98.73, 77.17],
+    ...           [89.78, 42.53], [65.19, 92.08], [54.46, 8.48]]
     >>> pp = PointPattern(points)
     >>> pp.n
     12
@@ -93,6 +93,38 @@ class PointPattern(object):
             self.set_window(window)
 
         self._facade()
+
+    def __len__(self):
+        """Return the number of points. Use the expression 'len(pp)'.
+
+        Returns
+        -------
+        length : int
+            The number of points in the point pattern.
+
+        Examples
+        --------
+        >>> points = [[1, 3], [4, 5], [0,0]]
+        >>> pp = PointPattern(points)
+        >>> len(pp)
+        3
+
+        """
+        return len(self.df)
+
+    def __contains__(self, n):
+        """Return True if n is a point (a tuple of coordinates), False otherwise.
+        Use the expression 'n in pp'.
+
+        Examples
+        --------
+        >>> points = [[1, 3], [4, 5], [0,0]]
+        >>> pp = PointPattern(points)
+        >>> [1, 3] in pp
+        True
+        """
+        name = self.df.columns.values.tolist()
+        return ((self.df[name[0]] == n[0]) & (self.df[name[1]] == n[1])).any()
 
     def set_window(self, window):
         try:

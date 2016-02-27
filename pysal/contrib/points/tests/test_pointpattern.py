@@ -13,6 +13,8 @@ class TestPointPattern(unittest.TestCase):
                   [79.26,  7.68], [8.23, 39.93], [98.73, 77.17],
                   [89.78, 42.53], [65.19, 92.08], [54.46, 8.48]]
         self.pp = PointPattern(points)
+        self.assertEqual(len(self.pp), 12)
+        self.assertTrue([66.22, 32.54] in self.pp)
 
     def test_point_pattern_n(self):
         self.assertEqual(self.pp.n, 12)
