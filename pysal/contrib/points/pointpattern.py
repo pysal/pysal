@@ -284,7 +284,8 @@ class PointPattern(object):
                row i column j contains the distance between i and its jth
                nearest neighbor
         """
-
+        if k < 1:
+            raise ValueError('k must be at least 1')
         nn = self.tree.query(self.tree.data, k=k+1)
         return nn[1][:, 1:], nn[0][:, 1:]
 
@@ -359,7 +360,8 @@ class PointPattern(object):
                row i column j contains the distance between i and its jth
                nearest neighbor
         """
-
+        if k < 1:
+            raise ValueError('k must be at least 1')
         try:
             nn = self.tree.query(other.points, k=k)
         except:

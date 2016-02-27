@@ -55,6 +55,9 @@ class TestPointPattern(unittest.TestCase):
         np.testing.assert_array_equal(knn[0], nn)
         np.testing.assert_array_almost_equal(knn[1], nnd)
 
+    def test_point_pattern_knn_error(self):
+        self.assertRaises(ValueError, self.pp.knn, k=0)
+
     def test_point_pattern_knn_other(self):
         knn = self.pp.knn_other(self.pp)
         nn = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
@@ -69,6 +72,10 @@ class TestPointPattern(unittest.TestCase):
                        95.54731289, 99.34409545, 112.82048794, 125.31090056])
         np.testing.assert_array_equal(knn[0], nn)
         np.testing.assert_array_almost_equal(knn[1], nnd)
+
+    def test_point_pattern_knn_other_error(self):
+        knn_other = self.pp.knn_other
+        self.assertRaises(ValueError, knn_other, self.pp, k=0)
 
     def test_point_pattern_explode(self):
         explosion = self.pp.explode('x')
