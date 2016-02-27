@@ -603,7 +603,6 @@ class Envelopes(object):
                 res.append(j)
             res = np.array(res)
 
-        print(res.shape)
         res = res[:, :, -1]
         res.sort(axis=0)
         nres = len(res)
@@ -680,11 +679,10 @@ class Genv(Envelopes):
     >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
-    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1,
+    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, \
                                  asPP=True).realizations[0]
     >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
     >>> genv_bb = Genv(pp, realizations=csrs)
-    >>> genv_bb.plot()
 
     """
 
@@ -753,14 +751,14 @@ class Fenv(Envelopes):
     Examples
     --------
     >>> import pysal as ps
-    >>> from pysal.contrib.points.distance_statistics import Jenv
+    >>> from pysal.contrib.points.distance_statistics import Fenv
     >>> from pysal.contrib import shapely_ext
     >>> from pysal.contrib.points.process import PoissonPointProcess
     >>> from pysal.contrib.points.window import Window
     >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
-    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1,
+    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1,  \
                                  asPP=True).realizations[0]
     >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
     >>> fenv = Fenv(pp, realizations=csrs)
@@ -840,7 +838,7 @@ class Jenv(Envelopes):
     >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
-    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1,
+    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, \
                                  asPP=True).realizations[0]
     >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
     >>> jenv = Jenv(pp, realizations=csrs)
@@ -910,18 +908,17 @@ class Kenv(Envelopes):
     Examples
     --------
     >>> import pysal as ps
-    >>> from pysal.contrib.points.distance_statistics import Jenv
+    >>> from pysal.contrib.points.distance_statistics import Kenv
     >>> from pysal.contrib import shapely_ext
     >>> from pysal.contrib.points.process import PoissonPointProcess
     >>> from pysal.contrib.points.window import Window
     >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
-    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1,
+    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, \
                                  asPP=True).realizations[0]
     >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
     >>> kenv = Kenv(pp, realizations=csrs)
-    >>> kenv.plot()
 
     """
     def __init__(self, pp, intervals=10, dmin=0.0, dmax=None, d=None,
@@ -986,18 +983,17 @@ class Lenv(Envelopes):
     Examples
     --------
     >>> import pysal as ps
-    >>> from pysal.contrib.points.distance_statistics import Jenv
+    >>> from pysal.contrib.points.distance_statistics import Lenv
     >>> from pysal.contrib import shapely_ext
     >>> from pysal.contrib.points.process import PoissonPointProcess
     >>> from pysal.contrib.points.window import Window
     >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
-    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1,
+    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, \
                                  asPP=True).realizations[0]
     >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
     >>> lenv = Lenv(pp, realizations=csrs)
-    >>> lenv.plot()
 
     """
 
