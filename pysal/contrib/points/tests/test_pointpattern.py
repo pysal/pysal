@@ -44,6 +44,17 @@ class TestPointPattern(unittest.TestCase):
         self.assertEqual(self.pp.find_pairs(10), {(3, 7)})
         self.assertEqual(self.pp.find_pairs(20), {(3, 7), (1, 3)})
 
+    def test_point_pattern_knn(self):
+        knn = self.pp.knn(1)
+        nn = np.array([[9], [3], [4], [7], [2], [9], [11], [3], [5], [5], [5],
+                      [6]])
+        nnd = np.array([[25.59050019], [15.64542745], [21.11125292],
+                        [8.99587128], [21.11125292], [21.93729473],
+                        [24.81289987], [8.99587128], [29.76387072],
+                        [21.93729473], [34.63124168], [24.81289987]])
+        np.testing.assert_array_equal(knn[0], nn)
+        np.testing.assert_array_almost_equal(knn[1], nnd)
+
     def test_point_pattern_knn_other(self):
         knn = self.pp.knn_other(self.pp)
         nn = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
@@ -58,3 +69,9 @@ class TestPointPattern(unittest.TestCase):
                        95.54731289, 99.34409545, 112.82048794, 125.31090056])
         np.testing.assert_array_equal(knn[0], nn)
         np.testing.assert_array_almost_equal(knn[1], nnd)
+
+    def test_point_pattern_explode(self):
+        explosion = self.pp.explode('x')
+        for ppattern in explosion:
+            np.testing.assert_array_equal(ppattern.df.iloc[0],
+                                          self.pp.df.loc[ppattern.df.index[0]])
