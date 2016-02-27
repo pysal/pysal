@@ -485,22 +485,24 @@ class DistanceBand(W):
         if self.binary:
             for key,weight in self.dmat.items():
                 i,j = key
-                if j not in neighbors[i]:
-                    weights[i].append(1)
-                    neighbors[i].append(j)
-                if i not in neighbors[j]:
-                    weights[j].append(1)
-                    neighbors[j].append(i)
+                if i != j:
+                    if j not in neighbors[i]:
+                        weights[i].append(1)
+                        neighbors[i].append(j)
+                    if i not in neighbors[j]:
+                        weights[j].append(1)
+                        neighbors[j].append(i)
 
         else:
             for key,weight in self.dmat.items():
                 i,j = key
-                if j not in neighbors[i]:
-                    weights[i].append(weight**self.alpha)
-                    neighbors[i].append(j)
-                if i not in neighbors[j]:
-                    weights[j].append(weight**self.alpha)
-                    neighbors[j].append(i)
+                if i != j:
+                    if j not in neighbors[i]:
+                        weights[i].append(weight**self.alpha)
+                        neighbors[i].append(j)
+                    if i not in neighbors[j]:
+                        weights[j].append(weight**self.alpha)
+                        neighbors[j].append(i)
 
         return neighbors, weights
 
