@@ -91,8 +91,8 @@ def lag_categorical(w, y, ties='tryself'):
     Spatial lag operator for categorical variables.
 
     Constructs the most common categories of neighboring observations, weighted
-    by their weight strength. 
-    
+    by their weight strength.
+
     Parameters
     ----------
 
@@ -104,7 +104,7 @@ def lag_categorical(w, y, ties='tryself'):
     ties                : str
                           string describing the method to use when resolving
                           ties. By default, the option is "tryself",
-                          and the category of the focal observation 
+                          and the category of the focal observation
                           is included with its neighbors to try
                           and break a tie. If this does not resolve the tie,
                           a winner is chosen randomly. To just use random choice to
@@ -122,7 +122,7 @@ def lag_categorical(w, y, ties='tryself'):
 
     Examples
     --------
-    
+
     Set up a 9x9 weights matrix describing a 3x3 regular lattice. Lag one list of
     categorical variables with no ties.
 
@@ -131,13 +131,13 @@ def lag_categorical(w, y, ties='tryself'):
     >>> w = pysal.lat2W(3, 3)
     >>> y = ['a','b','a','b','c','b','c','b','c']
     >>> y_l = pysal.weights.spatial_lag.lag_categorical(w, y)
-    >>> y_l 
+    >>> y_l
     array(['b', 'a', 'b', 'c', 'b', 'c', 'b', 'c', 'b'], dtype='|S1')
-    
+
     Explicitly reshape y into a (9x1) array and calculate lag again
 
     >>> yvect = np.array(y).reshape(9,1)
-    >>> yvect_l = ps.weights.spatial_lag.lag_categorical(w,yvect)
+    >>> yvect_l = pysal.weights.spatial_lag.lag_categorical(w,yvect)
     array([['b'],
            ['a'],
            ['b'],
@@ -146,14 +146,14 @@ def lag_categorical(w, y, ties='tryself'):
            ['c'],
            ['b'],
            ['c'],
-           ['b']], 
+           ['b']],
           dtype='|S1')
 
     compute the lag of a 9x2 matrix of categories
-    
+
     >>> y2 = ['a', 'c', 'c', 'd', 'b', 'a', 'd', 'd', 'c']
     >>> ym = np.vstack((y,y2)).T
-    >>> ym_lag = ps.weights.spatial_lag.lag_categorical(w,ym)
+    >>> ym_lag = pysal.weights.spatial_lag.lag_categorical(w,ym)
     >>> ym_lag
     array([['b', 'b'],
 	   ['a', 'c'],
@@ -163,7 +163,7 @@ def lag_categorical(w, y, ties='tryself'):
 	   ['c', 'c'],
 	   ['c', 'd'],
 	   ['c', 'd'],
-	   ['b', 'b']], 
+	   ['b', 'b']],
 	  dtype='|S1')
     """
     if isinstance(y, list):
@@ -177,7 +177,7 @@ def lag_categorical(w, y, ties='tryself'):
     keys = np.unique(y)
     inty = np.zeros(y.shape, dtype=np.int)
     for i,key in enumerate(keys):
-       inty[y == key] = i 
+       inty[y == key] = i
     for idx,neighbors in w:
         vals = np.zeros(keys.shape)
         for neighb, weight in diter(neighbors):
@@ -191,13 +191,13 @@ def _resolve_ties(i,inty,vals,neighbors,method,w):
     Helper function to resolve ties if lag is multimodal
 
     first, if this function gets called when there's actually no tie, then the
-    correct value will be picked. 
+    correct value will be picked.
 
     if 'random' is selected as the method, a random tiebeaker is picked
 
     if 'tryself' is selected, then the observation's own value will be used in
     an attempt to break the tie, but if it fails, a random tiebreaker will be
-    selected. 
+    selected.
     """
     if len(vals[vals==vals.max()]) <= 1:
         return np.argmax(vals)
