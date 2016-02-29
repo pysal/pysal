@@ -11,6 +11,10 @@ TODO
 """
 
 __author__ = "Serge Rey sjsrey@gmail.com"
+__all__ = ['mbr', 'hull', 'mean_center', 'weighted_mean_center',
+           'manhattan_median', 'std_distance', 'euclidean_median', 'ellipse',
+           'skyum', 'dtot']
+
 
 import sys
 import numpy as np
@@ -258,14 +262,14 @@ def euclidean_median(points):
 
 def skyum(points, not_hull=True):
     """
-    Implements Skyum (1990)'s algorithm for the minimum bounding circle in R^2. 
+    Implements Skyum (1990)'s algorithm for the minimum bounding circle in R^2.
 
-    0. Store points clockwise. 
+    0. Store points clockwise.
     1. Find p in S that maximizes angle(prec(p), p, succ(p) THEN radius(prec(p),
     p, succ(p)). This is also called the lexicographic maximum, and is the last
-    entry of a list of (radius, angle) in lexicographical order. 
-    2a. If angle(prec(p), p, succ(p)) <= 90 degrees, then finish. 
-    2b. If not, remove p from set. 
+    entry of a list of (radius, angle) in lexicographical order.
+    2a. If angle(prec(p), p, succ(p)) <= 90 degrees, then finish.
+    2b. If not, remove p from set.
     """
     points = hull(points).tolist()
     if not_clockwise(points):
@@ -281,7 +285,7 @@ def skyum(points, not_hull=True):
         radii = [c[0] for c in circles]
         lexord = np.lexsort((radii, angles)) #confusing as hell defaults...
         lexmax = lexord[-1]
-        candidate = (_prec(points[lexmax], points), 
+        candidate = (_prec(points[lexmax], points),
                      points[lexmax],
                      _succ(points[lexmax], points))
         if angles[lexmax] <= PI/2.0:
@@ -340,9 +344,9 @@ def _circle(p,q,r, dmetric=dist.euclidean):
         center_y = (py + qy)/2.
     else:
         D = 2*(px*(qy - ry) + qx*(ry - py) + rx*(py - qy))
-        center_x = ((px**2 + py**2)*(qy-ry) + (qx**2 + qy**2)*(ry-py) 
+        center_x = ((px**2 + py**2)*(qy-ry) + (qx**2 + qy**2)*(ry-py)
                   + (rx**2 + ry**2)*(py-qy)) / float(D)
-        center_y = ((px**2 + py**2)*(rx-qx) + (qx**2 + qy**2)*(px-rx) 
+        center_y = ((px**2 + py**2)*(rx-qx) + (qx**2 + qy**2)*(px-rx)
                   + (rx**2 + ry**2)*(qx-px)) / float(D)
         radius = dmetric((center_x, center_y), p)
     return radius, (center_x, center_y)
