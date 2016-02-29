@@ -8,10 +8,10 @@ import numpy as np
 import pysal as ps
 from pysal.weights.util import get_ids
 
-from analysis import NetworkG, NetworkK, NetworkF
+from analysis import NetworkG, NetworkK, NetworkF, NetworkJ
 import util
 
-__all__ = ["Network", "PointPattern", "NetworkG", "NetworkK", "NetworkF"  ]
+__all__ = ["Network", "PointPattern", "NetworkG", "NetworkK", "NetworkF", "NetworkJ"]
 
 
 class Network:
@@ -440,11 +440,11 @@ class Network:
             tail = self.node_coords[edge[1]]
             segments.append(ps.cg.Chain([head,tail]))
             s2e[(head,tail)] = edge
-            
+
 
         points = {}
         p2id = {}
-        for pointIdx, point in pointpattern.points.iteritems(): 
+        for pointIdx, point in pointpattern.points.iteritems():
             points[pointIdx] = point['coordinates']
 
         snapped = util.snapPointsOnSegments(points, segments)
@@ -527,7 +527,7 @@ class Network:
                 y0 = y2 + distance
             else:    # zero length edge
                 y0 = y1
-            return x0, y0        
+            return x0, y0
         m = (y2 - y1) / (x2 - x1)
         if x1 > x2:
             x0 = x1 - distance / math.sqrt(1 + m**2)
@@ -655,7 +655,7 @@ class Network:
 
         if not hasattr(self,'alldistances'):
             self.node_distance_matrix()
-            
+
         # source setup
         src_indices = sourcepattern.points.keys()
         nsource_pts = len(src_indices)
@@ -678,7 +678,7 @@ class Network:
         for s in dest_indices:
             e1, e2 = dest_dist_to_node[s].keys()
             dest_nodes[s] = (e1, e2)
-        
+
         # output setup
         nearest = np.empty((nsource_pts, ndest_pts))
         nearest[:] = np.inf
@@ -736,7 +736,7 @@ class Network:
                     nearest[p1, p2] = sp_12
                 if symmetric:
                     # mirror the upper and lower triangle when symmetric
-                    nearest[p2,p1] = nearest[p1,p2]                    
+                    nearest[p2,p1] = nearest[p1,p2]
         if symmetric:
             # populate the main diagonal when symmetric
             #np.fill_diagonal(nearest, 0)
@@ -908,6 +908,14 @@ class Network:
         """
 
         return NetworkG(self, pointpattern, nsteps=nsteps,
+                        permutations=permutations,threshold=threshold,
+                        distribution=distribution,lowerbound=lowerbound,
+                        upperbound=upperbound)
+
+    def NetworkJ(self, pointpattern, nsteps=10, permutations=99,
+                 threshold=0.2, distribution='uniform',
+                 lowerbound=None, upperbound=None):
+        return NetworkJ(self, pointpattern, nsteps=nsteps,
                         permutations=permutations,threshold=threshold,
                         distribution=distribution,lowerbound=lowerbound,
                         upperbound=upperbound)
@@ -1177,4 +1185,3 @@ class SortedEdges(OrderedDict):
     def first_key(self):
         for key in self: return key
         raise ValueError("No sorted edges remain.")
-
