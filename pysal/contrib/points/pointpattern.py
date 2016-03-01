@@ -423,6 +423,44 @@ class PointPattern(object):
         cnames = self.coord_names
         return[PointPattern(pp, names=names, coord_names=cnames) for pp in pps]
 
+    def superimpose(self, point_pattern):
+        """Returns a superimposed point pattern.
+
+        Parameters
+        ----------
+        point_pattern:
+              :class:`PointPattern` instance
+
+        Returns
+        -------
+        superimposed :
+            :class:`PointPattern` instance
+
+        Examples
+        --------
+        >>> points1 = [[1, 3], [4, 5], [0, 0]]
+        >>> points2 = [[5, 6], [1, 4], [0, 0]]
+        >>> pp1 = PointPattern(points1)
+        >>> pp2 = PointPattern(points2)
+        >>> pp1.superimpose(pp2).points
+           x  y
+        0  1  3
+        1  4  5
+        2  0  0
+        0  5  6
+        1  1  4
+        """
+        names_pp1 = self.df.columns.values.tolist()
+        cnames_pp1 = self.coord_names
+        names_pp2 = point_pattern.df.columns.values.tolist()
+        cnames_pp2 = point_pattern.coord_names
+        if names_pp1 != names_pp2 or cnames_pp1 != cnames_pp2:
+            raise TypeError('Both point patterns should have similar\
+                            attributes and spatial coordinates ')
+        pp = pd.concat((self.df, point_pattern.df))
+        pp = pp.drop_duplicates()
+        return PointPattern(pp, names=names_pp1, coord_names=cnames_pp1)
+
     # Pandas facade
     def _facade(self):
             self.head = self.df.head
