@@ -22,7 +22,7 @@ class Network:
     Parameters
     -----------
     in_shp : string
-             input shapefile
+             input shapefile having only polyline shapes
 
     node_sig : int
                round the x and y coordinates of all nodes to node_sig
@@ -33,13 +33,19 @@ class Network:
                   if True (default), keep only unique segments (i.e., prune
                   out any duplicated segments); if False keep all segments
 
+    own_edges : boolean
+                if True (default), keep edges from a node to itself; if False,
+                remove edges from a node to itself; keeping this True results
+                in a node being a neighbor of itself if any polyline has
+                identical continuous vertex coordinates.
+
     Attributes
     ----------
     in_shp : string
              input shapefile name
 
-    adjacencylist : list
-                    of lists storing node adjacency
+    adjacencylist : dict
+                    key is the node id; value is a list storing node adjacency
 
     nodes : dict
             key are tuple of node coords and value is the node ID
@@ -86,11 +92,12 @@ class Network:
 
     """
 
-    def __init__(self, in_shp=None, node_sig=11, unique_segs=True):
+    def __init__(self, in_shp=None, node_sig=11, unique_segs=True, own_edges=True):
         if in_shp:
             self.in_shp = in_shp
             self.node_sig = node_sig
             self.unique_segs = unique_segs
+            self.own_edges = own_edges
 
             self.adjacencylist = defaultdict(list)
             self.nodes = {}
@@ -132,30 +139,34 @@ class Network:
         nodecount = 0
         shps = ps.open(self.in_shp)
         for shp in shps:
-            vertices = shp.vertices
-            for i, v in enumerate(vertices[:-1]):
-                v = self._round_sig(v)
-                try:
-                    vid = self.nodes[v]
-                except:
-                    self.nodes[v] = vid = nodecount
-                    nodecount += 1
-                v2 = self._round_sig(vertices[i+1])
-                try:
-                    nvid = self.nodes[v2]
-                except:
-                    self.nodes[v2] = nvid = nodecount
-                    nodecount += 1
+            for vertices in shp.parts:
+                for i, v in enumerate(vertices[:-1]):
+                    v = self._round_sig(v)
+                    try:
+                        vid = self.nodes[v]
+                    except:
+                        self.nodes[v] = vid = nodecount
+                        nodecount += 1
+                    v2 = self._round_sig(vertices[i+1])
+                    try:
+                        nvid = self.nodes[v2]
+                    except:
+                        self.nodes[v2] = nvid = nodecount
+                        nodecount += 1
 
-                self.adjacencylist[vid].append(nvid)
-                self.adjacencylist[nvid].append(vid)
+                    # Dont add an edge from a node to itself
+                    if self.own_edges == False and vid == nvid:
+                        continue
 
-                #Sort the edges so that mono-directional keys can be stored.
-                edgenodes = sorted([vid, nvid])
-                edge = tuple(edgenodes)
-                self.edges.append(edge)
-                length = util.compute_length(v, vertices[i+1])
-                self.edge_lengths[edge] = length
+                    self.adjacencylist[vid].append(nvid)
+                    self.adjacencylist[nvid].append(vid)
+
+                    #Sort the edges so that mono-directional keys can be stored.
+                    edgenodes = sorted([vid, nvid])
+                    edge = tuple(edgenodes)
+                    self.edges.append(edge)
+                    length = util.compute_length(v, vertices[i+1])
+                    self.edge_lengths[edge] = length
         if self.unique_segs == True:
             # remove duplicate edges and duplicate adjacent nodes
             self.edges = list(set(self.edges))
@@ -169,8 +180,8 @@ class Network:
         nodes are bridges between nodes with higher incidence.
         """
         self.graphedges = []
-        self.edge_to_graph = {}
         self.graph_lengths = {}
+        self.graph_to_edges = {}  #Mapping all the edges contained within a single graph represented edge
 
         #Find all nodes with cardinality 2
         segment_nodes = []
@@ -185,15 +196,19 @@ class Network:
         # remove edges deemed to be segments
         self.graphedges = copy.deepcopy(self.edges)
         self.graph_lengths = copy.deepcopy(self.edge_lengths)
-        self.graph_to_edges = {}  #Mapping all the edges contained within a single graph represented edge
 
+        # This piece of code is supposed to give us all the bridges.
         bridges = []
         for s in segment_nodes:
+            segment_nodes.remove(s)
             bridge = [s]
             neighbors = self._yieldneighbor(s, segment_nodes, bridge)
             while neighbors:
                 cnode = neighbors.pop()
-                segment_nodes.remove(cnode)
+                try:
+                    segment_nodes.remove(cnode)
+                except ValueError:
+                    pass
                 bridge.append(cnode)
                 newneighbors = self._yieldneighbor(cnode, segment_nodes, bridge)
                 neighbors += newneighbors
@@ -245,7 +260,7 @@ class Network:
 
     def _yieldneighbor(self, node, segment_nodes, bridge):
         """
-        Used internally, this method traverses a bridge segement
+        Used internally, this method traverses a bridge segment
         to find the source and destination nodes.
         """
         n = []
