@@ -2,6 +2,7 @@ import os
 import unittest
 import pysal
 import numpy as np
+from pysal.weights.util import neighbor_equality
 
 
 class Testuser(unittest.TestCase):
@@ -59,11 +60,11 @@ class Testuser(unittest.TestCase):
         w = pysal.threshold_binaryW_from_array(points, threshold=11.2)
         self.assertEquals(w.weights, {0: [1, 1], 1: [1, 1], 2: [],
                                       3: [1, 1], 4: [1], 5: [1]})
-        self.assertEquals(w.neighbors, {0: [1, 3], 1: [0, 3], 2: [
-        ], 3: [0, 1], 4: [5], 5: [4]})
+        self.assertTrue(neighbor_equality(w, pysal.W({0: [1, 3], 1: [0, 3],
+                                                        2: [ ], 3: [0, 1],
+                                                        4: [5], 5: [4]})))
 
     def test_threshold_binaryW_from_shapefile(self):
-
         w = pysal.threshold_binaryW_from_shapefile(pysal.examples.get_path(
             "columbus.shp"), 0.62, idVariable="POLYID")
         self.assertEquals(w.weights[1], [1, 1])
