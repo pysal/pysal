@@ -72,15 +72,19 @@ class PointPattern(object):
         self.df = pd.DataFrame(points)
         n, p = self.df.shape
         self._n_marks = p - 2
-        if names is None and coord_names is None:
-            col_names = coord_names = ['x', 'y']
+        if coord_names is None:
+            if names is not None:
+                coord_names = names[:2]
+            else:
+                coord_names = ['x', 'y']
+        if names is None:
+            col_names = coord_names
             if p > 2:
                 for m in xrange(2, p):
                     col_names.append("mark_{}".format(m-2))
             coord_names = coord_names[:2]
         else:
             col_names = names
-            coord_names = coord_names
 
         self.coord_names = coord_names
         self._x, self._y = coord_names
