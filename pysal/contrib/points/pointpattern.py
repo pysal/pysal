@@ -72,15 +72,19 @@ class PointPattern(object):
         self.df = pd.DataFrame(points)
         n, p = self.df.shape
         self._n_marks = p - 2
-        if names is None and coord_names is None:
-            col_names = coord_names = ['x', 'y']
+        if coord_names is None:
+            if names is not None:
+                coord_names = names[:2]
+            else:
+                coord_names = ['x', 'y']
+        if names is None:
+            col_names = coord_names
             if p > 2:
                 for m in xrange(2, p):
                     col_names.append("mark_{}".format(m-2))
             coord_names = coord_names[:2]
         else:
             col_names = names
-            coord_names = coord_names
 
         self.coord_names = coord_names
         self._x, self._y = coord_names
@@ -450,6 +454,44 @@ class PointPattern(object):
         unique_df = self.df.drop_duplicates()
         return PointPattern(unique_df, names=names, coord_names=coord_names,
                             window=window)
+
+    def superimpose(self, point_pattern):
+        """Returns a superimposed point pattern.
+
+        Parameters
+        ----------
+        point_pattern:
+              :class:`PointPattern` instance
+
+        Returns
+        -------
+        superimposed :
+            :class:`PointPattern` instance
+
+        Examples
+        --------
+        >>> points1 = [[1, 3], [4, 5], [0, 0]]
+        >>> points2 = [[5, 6], [1, 4], [0, 0]]
+        >>> pp1 = PointPattern(points1)
+        >>> pp2 = PointPattern(points2)
+        >>> pp1.superimpose(pp2).points
+           x  y
+        0  1  3
+        1  4  5
+        2  0  0
+        0  5  6
+        1  1  4
+        """
+        names_pp1 = self.df.columns.values.tolist()
+        cnames_pp1 = self.coord_names
+        names_pp2 = point_pattern.df.columns.values.tolist()
+        cnames_pp2 = point_pattern.coord_names
+        if names_pp1 != names_pp2 or cnames_pp1 != cnames_pp2:
+            raise TypeError('Both point patterns should have similar\
+                            attributes and spatial coordinates ')
+        pp = pd.concat((self.df, point_pattern.df))
+        pp = pp.drop_duplicates()
+        return PointPattern(pp, names=names_pp1, coord_names=cnames_pp1)
 
     # Pandas facade
     def _facade(self):
