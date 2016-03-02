@@ -21,7 +21,7 @@ if sys.version_info[0] > 2:
 
 class PointPattern(object):
     """
-    Plannar Point Pattern Class 2-D
+    Planar Point Pattern Class 2-D
 
     Parameters
     ----------
