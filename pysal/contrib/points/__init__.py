@@ -1,4 +1,4 @@
 import pointpattern
 import window
-import centrography
+from centrography import *
 import process
