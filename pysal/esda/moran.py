@@ -684,7 +684,6 @@ class Moran_Local:
             # idsi = ids[ids != i]
             # np.random.shuffle(idsi)
             idsi = np.random.choice(
-              np.random.shuffle(idsi)
               ids[ids != i],
               np.minimum(nn, self.permutations)
             )
