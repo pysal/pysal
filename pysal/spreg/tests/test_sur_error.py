@@ -7,6 +7,7 @@ from pysal.common import RTOL
 
 PEGP = pysal.examples.get_path
 
+
 def dict_compare(actual, desired, rtol):
     for i in actual.keys():
         np.testing.assert_allclose(actual[i],desired[i],rtol)
@@ -36,7 +37,7 @@ class Test_SUR_error(unittest.TestCase):
        [  4.267954e-02,   9.935169e+00,   2.926783e-23]]),\
          1: np.array([[  3.31399691e-01,   9.20106497e+00,   3.54419478e-20],\
         [  1.33525912e-01,   8.31094371e+00,   9.49439563e-17],\
-        [  4.00409716e-02,   1.17568780e+01,   6.50970965e-32]])},RTOL)
+        [  4.00409716e-02,   1.17568780e+01,   6.50970965e-32]])},0.0001)
         np.testing.assert_allclose(reg.lamols,np.array([[ 0.60205035],[ 0.56056348]]),RTOL)
         np.testing.assert_allclose(reg.lamsur,np.array([[ 0.54361986],[ 0.50445451]]),RTOL)
         np.testing.assert_allclose(reg.corr,np.array([[ 1.        ,  0.31763719],\
@@ -87,7 +88,7 @@ class Test_SUR_error(unittest.TestCase):
         x_var1 = [['RD60','PS60'],['RD70','PS70','UE70'],['RD80','PS80']]
         bigy1,bigX1,bigyvars1,bigXvars1 = sur_dictxy(self.db,y_var1,x_var1)
         reg = SURerrorML(bigy1,bigX1,self.w,name_bigy=bigyvars1,name_bigX=bigXvars1,\
-            name_w="natqueen",name_ds="natregimes")        
+            name_w="natqueen",name_ds="natregimes")
 
         dict_compare(reg.bSUR0,{0: np.array([[ 4.50407527],[ 2.39199682],[ 0.52723694]]), 1: np.array([[ 7.44509818],\
         [ 3.74968571],[ 1.28811685],[-0.23526451]]), 2: np.array([[ 6.92761614],[ 3.65423052],\
@@ -104,7 +105,7 @@ class Test_SUR_error(unittest.TestCase):
        [  5.378335e-002,  -3.185738e+000,   1.443854e-003]]),\
          2: np.array([[  1.500528e-001,   4.608718e+001,   0.000000e+000],\
        [  1.236340e-001,   2.987457e+001,   4.210941e-196],\
-       [  1.194989e-001,   1.174869e+001,   7.172248e-032]])},RTOL)
+       [  1.194989e-001,   1.174869e+001,   7.172248e-032]])},0.001)
         np.testing.assert_allclose(reg.lamols,np.array([[ 0.4248829 ],[ 0.46428101],[ 0.42823999]]),RTOL)
         np.testing.assert_allclose(reg.lamsur,np.array([[ 0.36137603],[ 0.38321666],[ 0.37183716]]),RTOL)
         np.testing.assert_allclose(reg.corr,np.array([[ 1.,          0.24563253,  0.14986527],\
