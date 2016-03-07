@@ -7,7 +7,7 @@ from pysal.common import RTOL
 
 PEGP = pysal.examples.get_path
 
-ATOL = 0.0001
+ATOL = 0.00001
 
 
 def dict_compare(actual, desired, rtol):
@@ -74,9 +74,9 @@ class Test_SUR_error(unittest.TestCase):
           2.11105214e-01,   6.39785285e-02],[ -5.55994101e-04,  -5.46893937e-04,   2.11105214e-01,\
           3.42890248e-01,   1.91931389e-01],[ -1.63239040e-04,  -3.10498019e-03,   6.39785285e-02,\
           1.91931389e-01,   5.86933821e-01]]),RTOL)
-        # np.testing.assert_allclose(reg.lamsetp,(np.array([[ 0.02036235],\
-        # [ 0.02129889]]), np.array([[ 26.69730489],[ 23.68454458]]), np.array([[  0.0],\
-        # [  0.0]])),0.001)
+        np.testing.assert_allclose(reg.lamsetp,(np.array([[ 0.02036235],\
+        [ 0.02129889]]), np.array([[ 26.69730489],[ 23.68454458]]), np.array([[  0.0],\
+        [  0.0]])),rtol=0.001,atol=ATOL)
         np.testing.assert_allclose(reg.joinlam,(1207.81269, 2, 0.0),atol=0.0001,rtol=0.00001)
         np.testing.assert_allclose(reg.surchow,[(5.1073696860799931, 1, 0.023824413482255974),
         (1.9524745281321374, 1, 0.16232044613203933),
