@@ -493,6 +493,14 @@ class PointPattern(object):
         pp = pp.drop_duplicates()
         return PointPattern(pp, names=names_pp1, coord_names=cnames_pp1)
 
+    def flip_coordinates(self):
+        """ Flips the coordinates of a point pattern.
+
+        Doesn't change the structure of data frame. This function swaps
+        `_x` and `_y` variables, which are used to represent coordinates.
+        """
+        self._x, self._y = self._y, self._x
+
     # Pandas facade
     def _facade(self):
             self.head = self.df.head
