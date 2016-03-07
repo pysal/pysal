@@ -75,10 +75,10 @@ class Test_SUR_error(unittest.TestCase):
         # np.testing.assert_allclose(reg.lamsetp,(np.array([[ 0.02036235],\
         # [ 0.02129889]]), np.array([[ 26.69730489],[ 23.68454458]]), np.array([[  0.0],\
         # [  0.0]])),0.001)
-        np.testing.assert_allclose(reg.joinlam,(1207.81269, 2, 0.0))
+        np.testing.assert_allclose(reg.joinlam,(1207.81269, 2, 0.0),0.0001)
         np.testing.assert_allclose(reg.surchow,[(5.1073696860799931, 1, 0.023824413482255974),
         (1.9524745281321374, 1, 0.16232044613203933),
-        (0.79663667463065702, 1, 0.37210085476281407)],RTOL)
+        (0.79663667463065702, 1, 0.37210085476281407)],0.0001)
         np.testing.assert_allclose(reg.likrlambda,(1014.0319285186415, 2, 6.3938800607190098e-221))
         np.testing.assert_allclose(reg.lrtest, (287.95821154104488, 1, 1.3849971230596533e-64))
         np.testing.assert_allclose(reg.lamtest, (1.8693306894921564, 1, 0.17155175615429052))
