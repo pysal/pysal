@@ -8,11 +8,11 @@ from pysal.common import RTOL
 class TestPointPattern(unittest.TestCase):
 
     def setUp(self):
-        points = [[66.22, 32.54], [22.52, 22.39], [31.01, 81.21],
-                  [9.47, 31.02], [30.78, 60.10], [75.21, 58.93],
-                  [79.26,  7.68], [8.23, 39.93], [98.73, 77.17],
-                  [89.78, 42.53], [65.19, 92.08], [54.46, 8.48]]
-        self.pp = PointPattern(points)
+        self.points = [[66.22, 32.54], [22.52, 22.39], [31.01, 81.21],
+                       [9.47, 31.02], [30.78, 60.10], [75.21, 58.93],
+                       [79.26,  7.68], [8.23, 39.93], [98.73, 77.17],
+                       [89.78, 42.53], [65.19, 92.08], [54.46, 8.48]]
+        self.pp = PointPattern(self.points)
         self.assertEqual(len(self.pp), 12)
         self.assertTrue([66.22, 32.54] in self.pp)
 
@@ -84,3 +84,26 @@ class TestPointPattern(unittest.TestCase):
         for ppattern in explosion:
             np.testing.assert_array_equal(ppattern.df.iloc[0],
                                           self.pp.df.loc[ppattern.df.index[0]])
+
+    def test_point_pattern_flip_coordinates(self):
+        pp_flip = PointPattern(self.points, coord_names=['The x coordinate',
+                                                        'The y coordinate'])
+        coord = pp_flip.coord_names
+        x_coord, y_coord = pp_flip._x, pp_flip._y
+        # Flip the coordinates
+        pp_flip.flip_coordinates()
+
+        coord_flipped = pp_flip.coord_names
+        x_coord_flipped, y_coord_flipped = pp_flip._x, pp_flip._y
+        self.assertEqual(x_coord, y_coord_flipped)
+        self.assertEqual(y_coord, x_coord_flipped)
+        self.assertEqual(coord, coord_flipped)
+
+        # Flip the coordinates again, they should return to the intial values.
+        pp_flip.flip_coordinates()
+
+        coord_again = pp_flip.coord_names
+        x_coord_again, y_coord_again = pp_flip._x, pp_flip._y
+        self.assertEqual(x_coord, x_coord_again)
+        self.assertEqual(y_coord, y_coord_again)
+        self.assertEqual(coord, coord_again)
