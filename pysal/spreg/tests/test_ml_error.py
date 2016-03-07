@@ -61,7 +61,7 @@ class TestMLError(unittest.TestCase):
  (-4.8232686291115678, 1.4122456582517099e-06),
  (3.9913060809142995, 6.5710406838016854e-05),
  (7.9088780724028922, 2.5971882547279339e-15)]
-        np.testing.assert_allclose(reg.z_stat,z_stat,RTOL)
+        np.testing.assert_allclose(reg.z_stat,z_stat,0.0001)
         logll = -4471.407066887894
         np.testing.assert_allclose(reg.logll,logll,RTOL)
         aic = 8952.8141337757879
