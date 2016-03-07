@@ -671,8 +671,6 @@ class Moran_Local:
         prange = range(self.permutations)
         k = self.w.max_neighbors + 1
         nn = self.n - 1
-        # orig source
-        # rids = np.array([np.random.permutation(nn)[0:k] for i in prange])
         rids = np.array([np.random.permutation(np.minimum(nn, self.permutations))[0:k] for i in prange])
         ids = np.arange(self.w.n)
         ido = self.w.id_order
@@ -680,9 +678,6 @@ class Moran_Local:
         wc = [self.w.cardinalities[ido[i]] for i in ids]
 
         for i in xrange(self.w.n):
-            # orig source
-            # idsi = ids[ids != i]
-            # np.random.shuffle(idsi)
             idsi = np.random.choice(ids[ids != i], np.minimum(nn, self.permutations))
             uvals, uidxs = np.unique(idsi, return_index= True)
             if uidxs.shape != idsi.shape:
