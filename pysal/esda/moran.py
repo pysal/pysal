@@ -683,12 +683,14 @@ class Moran_Local:
             # orig source
             # idsi = ids[ids != i]
             # np.random.shuffle(idsi)
-            idsi = np.random.choice(
-              ids[ids != i],
-              np.minimum(nn, self.permutations)
-            )
-            tmp = z[idsi[rids[:, 0:wc[i]]]]
-            lisas[i] = z[i] * (w[i] * tmp).sum(1)
+            idsi = np.random.choice(ids[ids != i], np.minimum(nn, self.permutations))
+            uvals, uidxs = np.unique(idsi, return_index= True)
+            if uidxs.shape != idsi.shape:
+                #members of pop not in {i, uvals}
+                newpop = np.setdiff1d(ids[ids != i], uvals)
+                #expensive sample the smaller set
+                idsi[~uidxs] = np.random.choice(newpop, len(uidxs), replace=False)
+
         self.rlisas = (n_1 / self.den) * lisas
 
     def __quads(self):
