@@ -21,7 +21,7 @@ def buildContiguity(polygons, criterion="rook", ids=None):
     Parameters
     ----------
 
-    polygons   : 
+    polygons   :
                  an instance of a pysal geo file handler
                  Any thing returned by pysal.open that is explicitly polygons
     criterion  : string
@@ -32,7 +32,7 @@ def buildContiguity(polygons, criterion="rook", ids=None):
     Returns
     -------
 
-    w         : W 
+    w         : W
                 instance; Contiguity weights object
 
     Examples
@@ -56,9 +56,9 @@ def buildContiguity(polygons, criterion="rook", ids=None):
     >>> fips = pysal.open(pysal.examples.get_path('10740.dbf')).by_col('STFID')
     >>> w = buildContiguity(pysal.open(pysal.examples.get_path('10740.shp'),'r'),ids=fips)
     WARNING: there is one disconnected observation (no neighbors)
-    Island id:  ['35043940300']
+    Island id:  [u'35043940300']
     >>> w['35001000107']
-    {'35001003805': 1.0, '35001003721': 1.0, '35001000111': 1.0, '35001000112': 1.0, '35001000108': 1.0}
+    {u'35001003805': 1.0, u'35001003721': 1.0, u'35001000111': 1.0, u'35001000112': 1.0, u'35001000108': 1.0}
 
     Notes
     -----
