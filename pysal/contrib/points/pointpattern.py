@@ -427,6 +427,34 @@ class PointPattern(object):
         cnames = self.coord_names
         return[PointPattern(pp, names=names, coord_names=cnames) for pp in pps]
 
+    def unique(self):
+        """ Remove duplicate points in the point pattern.
+
+        Two points in a point pattern are deemed to be identical if their
+        coordinates are the same, and their marks are the same (if any)
+
+        Returns
+        -------
+        pp: list
+            A deduplicated :class:`PointPattern` instance
+
+        Examples
+        --------
+        >>> points = [[1.2, 2.1], [1.2, 2.1], [0, 1], [1, 2]]
+        >>> pp = PointPattern(points)
+        >>> pp.unique().df
+             x    y
+        0  1.2  2.1
+        2  0.0  1.0
+        3  1.0  2.0
+        """
+        names = self.df.columns.values.tolist()
+        coord_names = self.coord_names
+        window = self.set_window
+        unique_df = self.df.drop_duplicates()
+        return PointPattern(unique_df, names=names, coord_names=coord_names,
+                            window=window)
+
     def superimpose(self, point_pattern):
         """Returns a superimposed point pattern.
 
