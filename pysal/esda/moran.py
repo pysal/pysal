@@ -684,7 +684,7 @@ class Moran_Local:
                 #members of pop not in {i, uvals}
                 newpop = np.setdiff1d(ids[ids != i], uvals)
                 #expensive sample the smaller set
-                idsi[~uidxs] = np.random.choice(newpop, len(uidxs), replace=False)
+                idsi[~uidxs] = np.random.choice(newpop, len(idsi) - len(uidxs), replace=False)
 
         self.rlisas = (n_1 / self.den) * lisas
 
