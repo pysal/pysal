@@ -676,7 +676,6 @@ class Moran_Local:
         ido = self.w.id_order
         w = [self.w.weights[ido[i]] for i in ids]
         wc = [self.w.cardinalities[ido[i]] for i in ids]
-
         for i in xrange(self.w.n):
             idsi = np.random.choice(ids[ids != i], np.minimum(nn, self.permutations))
             uvals, uidxs = np.unique(idsi, return_index= True)
@@ -685,7 +684,8 @@ class Moran_Local:
                 newpop = np.setdiff1d(ids[ids != i], uvals)
                 #expensive sample the smaller set
                 idsi[~uidxs] = np.random.choice(newpop, len(idsi) - len(uidxs), replace=False)
-
+            tmp = z[idsi[rids[:,0:wc[i]]]]
+            lisas[i] = z[i] * (w[i] * tmp).sum(1)
         self.rlisas = (n_1 / self.den) * lisas
 
     def __quads(self):
