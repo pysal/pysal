@@ -82,7 +82,7 @@ from pysal.weights.user import queen_from_shapefile, rook_from_shapefile, \
 from pysal.core.util.weight_converter import weight_convert
 import pysal.spreg
 import pysal.examples
-from pysal.network.network import Network, NetworkG, NetworkK, NetworkF
+from pysal.network.network import Network, NetworkG, NetworkK, NetworkF, NetworkJ
 
 try:
     import pandas
@@ -138,9 +138,9 @@ def check_version():
     diff = (today - stable_release_date).days
     releases = int(diff)/180
     if today - delta > stable_release_date:
-	    print("Your version of PySAL is %d days old.") % diff 
-	    print("There have likely been %d new release(s).") % releases 
-	    print("Suppress this by setting check_stable=False in config.py.")  
+	    print("Your version of PySAL is %d days old.") % diff
+	    print("There have likely been %d new release(s).") % releases
+	    print("Suppress this by setting check_stable=False in config.py.")
 	    #query_yes_no("Disable this check? [Y/n]")
     else:
         pass

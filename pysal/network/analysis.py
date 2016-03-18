@@ -133,6 +133,37 @@ class NetworkF(NetworkBase):
                                     self.npts, nsteps=self.nsteps)
              self.sim[p] = simy
 
+
+class NetworkJ(NetworkBase):
+    """
+    Network constrained J Function: Ratio of hazard functions for F and G.
+
+    This requires the capability to compute a distance matrix between two
+    point patterns.  In this case one will be observed and one will be simulated
+    """
+    def computeobserved(self):
+        self.fsim = self.ntw.simulate_observations(self.npts)
+        # Nearest neighbor distances from the simulated to the observed
+        nearest = np.nanmin(self.ntw.allneighbordistances(self.fsim, self.pointpattern), axis=1)
+        self.setbounds(nearest)
+        # Generate a random distribution of points
+        observedx, observedy = jfunction(nearest, self.lowerbound, self.upperbound,
+                                      nsteps=self.nsteps, npts=self.npts)
+        self.observed = observedy
+        self.xaxis = observedx
+
+    def computepermutations(self):
+        for p in xrange(self.permutations):
+            sim = self.ntw.simulate_observations(self.npts,
+                                                  distribution=self.distribution)
+            nearest = np.nanmin(self.ntw.allneighbordistances(sim, self.fsim), axis=1)
+            simx, simy = jfunction(nearest, self.lowerbound, self.upperbound,
+                                    self.npts, nsteps=self.nsteps)
+
+            # TODO: np.shape broadcast error, size not similar
+            # self.sim[p] = simy
+
+
 def kfunction(nearest, upperbound, intensity, nsteps=10):
     nobs = len(nearest)
     x = np.linspace(0, upperbound, nsteps)
@@ -184,3 +215,15 @@ def gfunction(nearest, lowerbound, upperbound, nsteps = 10):
             g = 0
         y[i] = g
     return x, y
+
+
+def jfunction(nearest, lowerbound, upperbound, npts, nsteps=10):
+    F_x, F_y = ffunction(nearest, lowerbound, upperbound, npts, nsteps)
+    G_x, G_y = gfunction(nearest, lowerbound, upperbound, nsteps)
+    FC = 1 - F_y
+    GC = 1 - G_y
+    last_id = len(GC) + 1
+    if np.any(FC == 0):
+        last_id = np.where(FC == 0)[0][0]
+
+    return F_x[:last_id], (GC[:last_id]/FC[:last_id])
