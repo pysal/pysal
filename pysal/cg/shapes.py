@@ -1198,7 +1198,7 @@ class Ring(object):
     """
     def __init__(self, vertices):
         if vertices[0] != vertices[-1]:
-            vertices = vertices[:] + vertices[0:1]
+            vertices = vertices[:] + vertices[0]
             #raise ValueError, "Supplied vertices do not form a closed ring, the first and last vertices are not the same"
         self.vertices = tuple(vertices)
         self._perimeter = None
@@ -1306,16 +1306,11 @@ class Ring(object):
             vertices = self.vertices
             x = [v[0] for v in vertices]
             y = [v[1] for v in vertices]
-            A = self.signed_area
-            N = len(self)
-            cx = 0
-            cy = 0
-            for i in xrange(N - 1):
-                f = (x[i] * y[i + 1] - x[i + 1] * y[i])
-                cx += (x[i] + x[i + 1]) * f
-                cy += (y[i] + y[i + 1]) * f
-            cx = 1.0 / (6 * A) * cx
-            cy = 1.0 / (6 * A) * cy
+            N = len(self) - 1
+            
+            cx = sum(x[:-1]) * 1.0 / N
+            cy = sum(y[:-1]) * 1.0 / N
+            
             self._centroid = Point((cx, cy))
         return self._centroid
 
