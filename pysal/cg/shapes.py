@@ -1198,7 +1198,7 @@ class Ring(object):
     """
     def __init__(self, vertices):
         if vertices[0] != vertices[-1]:
-            vertices = vertices[:] + vertices[0]
+            vertices = vertices[:] + vertices[0:1]
             #raise ValueError, "Supplied vertices do not form a closed ring, the first and last vertices are not the same"
         self.vertices = tuple(vertices)
         self._perimeter = None
