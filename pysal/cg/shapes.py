@@ -1280,7 +1280,7 @@ class Ring(object):
                 A += (x[i] + x[i + 1]) * \
                     (y[i] - y[i + 1])
             A = A * 0.5
-            self._area = A
+            self._area = -A
         return self._area
 
     @property
@@ -1306,11 +1306,16 @@ class Ring(object):
             vertices = self.vertices
             x = [v[0] for v in vertices]
             y = [v[1] for v in vertices]
-            N = len(self) - 1
-            
-            cx = sum(x[:-1]) * 1.0 / N
-            cy = sum(y[:-1]) * 1.0 / N
-            
+            A = self.signed_area
+            N = len(self)
+            cx = 0
+            cy = 0
+            for i in xrange(N - 1):
+                f = (x[i] * y[i + 1] - x[i + 1] * y[i])
+                cx += (x[i] + x[i + 1]) * f
+                cy += (y[i] + y[i + 1]) * f
+            cx = 1.0 / (6 * A) * cx
+            cy = 1.0 / (6 * A) * cy
             self._centroid = Point((cx, cy))
         return self._centroid
 
