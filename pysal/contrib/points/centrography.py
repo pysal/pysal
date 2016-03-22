@@ -257,7 +257,7 @@ def euclidean_median(points):
     """
     points = np.asarray(points)
     start = mean_center(points)
-    res = minimize(dtot, start, args=points)
+    res = minimize(dtot, start, args=(points,))
     return res['x']
 
 def skyum(points, not_hull=True):
