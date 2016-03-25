@@ -802,7 +802,6 @@ class W(object):
                         if not self.silent_island_warning:
                             print 'WARNING: ', i, ' is an island (no neighbors)'
                     weights[i] = [wij / row_sum for wij in wijs]
-                weights = weights
                 self.transformations[value] = weights
                 self.weights = weights
                 self._reset()
@@ -817,7 +816,6 @@ class W(object):
                 for i in self.weights:
                     wijs = self.weights[i]
                     weights[i] = [wij * ws for wij in wijs]
-                weights = weights
                 self.transformations[value] = weights
                 self.weights = weights
                 self._reset()
@@ -828,7 +826,6 @@ class W(object):
                 for i in self.weights:
                     wijs = self.weights[i]
                     weights[i] = [1.0 for wij in wijs]
-                weights = weights
                 self.transformations[value] = weights
                 self.weights = weights
                 self._reset()
@@ -844,11 +841,10 @@ class W(object):
                     wijs = self.weights[i]
                     q[i] = math.sqrt(sum([wij * wij for wij in wijs]))
                     s[i] = [wij / q[i] for wij in wijs]
-                    Q += sum([si for si in s[i]])
+                    Q += sum(s[i])
                 nQ = self.n / Q
                 for i in self.weights:
                     weights[i] = [w * nQ for w in s[i]]
-                weights = weights
                 self.transformations[value] = weights
                 self.weights = weights
                 self._reset()
