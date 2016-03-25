@@ -449,7 +449,7 @@ class Map_Classifier(object):
         self._set_bins()
         self.yb, self.counts = bin1d(self.y, self.bins)
     
-    def _update(self, data, **kwargs):
+    def _update(self, data, *args, **kwargs):
         """
         The most naive updating function for classifiers is to concatenate data
         together and reclassify all of it raw. 
@@ -461,7 +461,7 @@ class Map_Classifier(object):
             data = np.append(data.flatten(), self.y)
         else:
             data = self.y
-        self.__init__(data, **kwargs)
+        self.__init__(data, *args, **kwargs)
 
     def __str__(self):
         st = self._table_string()
@@ -470,15 +470,17 @@ class Map_Classifier(object):
     def __repr__(self):
         return self._table_string()
 
-    def __call__(self, new_data=None, inplace=False, **kwargs):
+    def __call__(self, *args, **kwargs):
         """
         This will allow the classifier to be called like a function.
         """
+        inplace = kwargs.pop('inplace', False)
+        new_data = kwargs.pop('new_data', None)
         if inplace:
-            self._update(new_data, **kwargs)
+            self._update(new_data, *args, **kwargs)
         else:
             new = copy.deepcopy(self)
-            new._update(new_data, **kwargs)
+            new._update(new_data, *args, **kwargs)
             return new
 
     def get_tss(self):
@@ -1646,7 +1648,24 @@ class User_Defined(Map_Classifier):
 
     def _set_bins(self):
         pass
+    
+    def _update(self, data=None, bins=None):
+        if bins is None:
+            bins = self.bins
+        if data is None:
+            data = self.y
+        self.__init__(data, bins)
 
+    def __call__(self, **kwargs):
+        data = kwargs.pop('new_data', None)
+        bins = kwargs.pop('new_bins', None)
+        inplace = kwargs.pop('inplace', False)
+        if inplace:
+            self._update(data, bins)
+        else:
+            new = copy.deepcopy(self)
+            new._update(data, bins)
+            return new
 
 class Max_P_Classifier(Map_Classifier):
     """
