@@ -24,7 +24,7 @@ def asShape(obj):
         geo = obj.__geo_interface__
     else:
         geo = obj
-    if hasattr(geo, 'type'):
+    if not hasattr(geo, 'type') and 'type' not in geo:
         raise TypeError('%r does not appear to be a shape object' % (obj))
     geo_type = geo['type'].lower()
     #if geo_type.startswith('multi'):
