@@ -6,16 +6,6 @@ import geojson as gj
 import os as os
 from IPython.display import HTML
 
-def inline_map(Map):
-    '''
-    Embeds the HTML source of the map directly into the IPython notebook.
-    
-    This method will not work if the map depends on any files (json data). Also this uses
-    the HTML5 srcdoc attribute, which may not be supported in all browsers.
-    '''
-    Map._build_map()
-    return HTML('<iframe srcdoc="{srcdoc}" style="width: 100%; height: 510px; border: none"></iframe>'.format(srcdoc=Map.HTML.replace('"', '&quot;')))
-
 def build_features(shp, dbf):
     '''
     Builds a GeoJSON object from a PySAL shapefile and DBF object
@@ -266,7 +256,7 @@ def choropleth_map(jsonpath, key, attribute, df = None,
 
     if save:
         fname = jsonpath.rstrip('.json') + '_' + attribute + '.html'
-        choromap.create_map(fname)
+        choromap.save(fname)
     
-    return inline_map(choromap)
+    return choromap
 

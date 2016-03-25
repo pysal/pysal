@@ -207,9 +207,13 @@ class ContiguityWeightsPolygons:
 
         self.collection = collection
         self.wttype = wttype
+        keys = collection.ids
+        self.kimap = dict(enumerate(keys)) # as PolygonCollection uses polygon ids but do_weights() does not.
         self.do_weights()
 
     def do_weights(self):
+
+        kimap = self.kimap
         if self.collection.type != pysal.cg.Polygon:
             return False
 
@@ -239,8 +243,9 @@ class ContiguityWeightsPolygons:
         bbcache = {}
         poly2Column = [set() for i in range(numPoly)]
         poly2Row = [set() for i in range(numPoly)]
+        
         for i in range(numPoly):
-            shpObj = self.collection[i]
+            shpObj = self.collection[kimap[i]]
             bbcache[i] = shpObj.bbox[:]
             projBBox = [int((shpObj.bbox[:][j] -
                              minbox[j]) / binWidth[j]) for j in xrange(4)]
@@ -257,7 +262,7 @@ class ContiguityWeightsPolygons:
             vertCache = {}
             for polyId in xrange(numPoly):
                 if polyId not in vertCache:
-                    vertCache[polyId] = set(self.collection[polyId].vertices)
+                    vertCache[polyId] = set(self.collection[kimap[polyId]].vertices)
                 idRows = poly2Row[polyId]
                 idCols = poly2Column[polyId]
                 rowPotentialNeighbors = set()
@@ -275,9 +280,9 @@ class ContiguityWeightsPolygons:
                 for j in potentialNeighbors:
                     if polyId < j:
                         if j not in vertCache:
-                            vertCache[j] = set(self.collection[j].vertices)
+                            vertCache[j] = set(self.collection[kimap[j]].vertices)
                         if bbcommon(bbcache[polyId], bbcache[j]):
-                            vertCache[j] = set(self.collection[j].vertices)
+                            vertCache[j] = set(self.collection[kimap[j]].vertices)
                             common = vertCache[
                                 polyId].intersection(vertCache[j])
                             if len(common) > 0:

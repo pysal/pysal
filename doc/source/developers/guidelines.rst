@@ -38,6 +38,11 @@ Source Code
 PySAL uses `git <http://git-scm.com/>`_ and github for our  `code repository <https://github.com/pysal/pysal.git/>`_.
 
 
+Please see `our procedures and policies for development on GitHub <https://github.com/pysal/pysal/wiki/GitHub-Standard-Operating-Procedures>`_
+as well as how to `configure your local git for development
+<https://github.com/pysal/pysal/wiki/Example-git-config>`_.
+
+
 You can setup PySAL for local development following the :doc:`installation instructions </users/installation>`.
 
 
@@ -46,7 +51,8 @@ Development Mailing List
 ------------------------
 
 Development discussions take place on `pysal-dev
-<http://groups.google.com/group/pysal-dev>`_.
+<http://groups.google.com/group/pysal-dev>`_
+and the `gitter room <https://gitter.im/pysal/pysal>`_.
 
 
 -----------------------
@@ -56,21 +62,6 @@ Release Schedule
 PySAL development follows a six-month release schedule that is aligned with
 the academic calendar.
 
-
-1.11 Cycle
-==========
-
-========   ========   ================= ====================================================
-Start      End        Phase             Notes
-========   ========   ================= ====================================================
-8/1/15      8/14/15   Module Proposals  Developers draft PEPs and prototype
-8/15/15     8/15/15   Developer vote    All developers vote on PEPs 
-8/16/15     8/16/15   Module Approval   BDFL announces final approval
-8/17/15    12/30/15   Development       Implementation and testing of approved modules
-1/1/16       1/1/16   Code Freeze       APIs fixed, bug and testing changes only
-1/23/16     1/30/16   Release Prep      Test release builds, updating svn 
-1/31/16     1/31/16   Release           Official release of 1.11
-========   ========   ================= ====================================================
 
 1.12 Cycle
 ==========
@@ -87,6 +78,21 @@ Start      End        Phase             Notes
 7/31/16     7/31/16   Release           Official release of 1.12
 ========   ========   ================= ====================================================
 
+
+1.13 Cycle
+==========
+
+========   ========   ================= ====================================================
+Start      End        Phase             Notes
+========   ========   ================= ====================================================
+8/1/16      8/14/16   Module Proposals  Developers draft PEPs and prototype
+8/16/16     8/16/16   Developer vote    All developers vote on PEPs 
+8/16/16     8/16/16   Module Approval   BDFL announces final approval
+8/17/16    12/30/16   Development       Implementation and testing of approved modules
+1/1/17       1/1/17   Code Freeze       APIs fixed, bug and testing changes only
+1/23/17     1/30/17   Release Prep      Test release builds, updating svn 
+1/31/17     1/31/17   Release           Official release of 1.13
+========   ========   ================= ====================================================
 
 
 ----------

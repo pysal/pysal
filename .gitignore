@@ -77,7 +77,7 @@ pysal/examples/south.prj
 
 #Vi
 *.swp
-
+.ropeproject/
 .eggs/
 pysal/contrib/planar/
 pysal/esda/.ropeproject/

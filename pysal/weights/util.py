@@ -782,7 +782,7 @@ def full2W(m, ids=None):
 
 
 def WSP2W(wsp, silent_island_warning=False):
-    
+
     """
     Convert a pysal WSP object (thin weights matrix) to a pysal W object.
 
@@ -1197,6 +1197,65 @@ def write_gal(file, k=10):
         f.write(" ".join(map(str, neighs)))
     f.close()
 
+def neighbor_equality(w1, w2):
+    """
+    Test if the neighbor sets are equal between two weights objects
+
+    Parameters
+    ----------
+
+    w1 : W
+        instance of spatial weights class W
+
+    w2 : W
+        instance of spatial weights class W
+
+    Returns
+    -------
+    Boolean
+
+
+    Notes
+    -----
+    Only set membership is evaluated, no check of the weight values is carried out.
+
+
+    Examples
+    --------
+    >>> from pysal.weights.util import neighbor_equality
+    >>> w1 = pysal.lat2W(3,3)
+    >>> w2 = pysal.lat2W(3,3)
+    >>> neighbor_equality(w1, w2)
+    True
+    >>> w3 = pysal.lat2W(5,5)
+    >>> neighbor_equality(w1, w3)
+    False
+    >>> n4 = w1.neighbors.copy()
+    >>> n4[0] = [1]
+    >>> n4[1] = [4, 2]
+    >>> w4 = pysal.W(n4)
+    >>> neighbor_equality(w1, w4)
+    False
+    >>> n5 = w1.neighbors.copy()
+    >>> n5[0]
+    [3, 1]
+    >>> n5[0] = [1, 3]
+    >>> w5 = pysal.W(n5)
+    >>> neighbor_equality(w1, w5)
+    True
+
+    """
+    n1 = w1.neighbors
+    n2 = w2.neighbors
+    ids_1 = set(n1.keys())
+    ids_2 = set(n2.keys())
+    if ids_1 != ids_2:
+        return False
+    for i in ids_1:
+        if set(w1.neighbors[i]) != set(w2.neighbors[i]):
+            return False
+    return True
+
 if __name__ == "__main__":
     from pysal import lat2W
 
@@ -1205,4 +1264,5 @@ if __name__ == "__main__":
     assert (lat2W(5, 3, rook=False).sparse.todense() == lat2SW(5, 3,
                                                                'queen').todense()).all()
     assert (lat2W(50, 50, rook=False).sparse.todense() == lat2SW(50,
+
                                                                  50, 'queen').todense()).all()
