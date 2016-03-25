@@ -382,7 +382,7 @@ def _fisher_jenks_means(values, classes=5, sort=True):
     return kclass
 
 
-class Map_Classifier:
+class Map_Classifier(object):
     """
     Abstract class for all map classifications [Slocum2008]_
 
@@ -448,6 +448,20 @@ class Map_Classifier:
     def _classify(self):
         self._set_bins()
         self.yb, self.counts = bin1d(self.y, self.bins)
+    
+    def _update(self, data, **kwargs):
+        """
+        The most naive updating function for classifiers is to concatenate data
+        together and reclassify all of it raw. 
+
+        This will do that, and pass any classification parameters, like `k` or
+        `pct` through to the updating function, if needed.
+        """
+        if data is not None:
+            data = np.append(data.flatten(), self.y)
+        else:
+            data = self.y
+        self.__init__(data, **kwargs)
 
     def __str__(self):
         st = self._table_string()
@@ -455,6 +469,17 @@ class Map_Classifier:
 
     def __repr__(self):
         return self._table_string()
+
+    def __call__(self, new_data=None, inplace=False, **kwargs):
+        """
+        This will allow the classifier to be called like a function.
+        """
+        if inplace:
+            self._update(new_data, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(new_data, **kwargs)
+            return new
 
     def get_tss(self):
         """
@@ -567,7 +592,6 @@ class Map_Classifier:
             return bins[0]
         else:
             return bins
-
 
 class HeadTail_Breaks(Map_Classifier):
     """
