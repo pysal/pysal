@@ -20,7 +20,7 @@ import scipy as sp
 import copy
 import sys
 from scipy.cluster.vq import kmeans as KMEANS
-
+from warnings import warn as Warn
 
 def headTail_breaks(values, cuts):
     """
@@ -139,8 +139,8 @@ def binC(y, bins):
     vals = set(y.flatten())
     for val in vals:
         if val not in bins:
-            print 'warning: value not in bin: ', val
-            print 'bins: ', bins
+            print('warning: value not in bin: '.format(val))
+            print('bins: {}'.format(bins))
 
     return b
 
@@ -301,8 +301,9 @@ def natural_breaks(values, k=5):
     uv = np.unique(values)
     uvk = len(uv)
     if uvk < k:
-        print 'Warning: Not enough unique values in array to form k classes'
-        print "Warning: setting k to %d" % uvk
+        Warn('Warning: Not enough unique values in array to form k classes', 
+                UserWarning)
+        Warn('Warning: setting k to %d' % uvk, UserWarning)
         k = uvk
     kres = _kmeans(values, k)
     sids = kres[-1]  # centroids
@@ -456,12 +457,41 @@ class Map_Classifier(object):
 
         This will do that, and pass any classification parameters, like `k` or
         `pct` through to the updating function, if needed.
+
+        All user-facing docstring & dispatching (i.e. on `pct` for Percentiles
+        or on `bins` for User_Defined should take place in the public update
+        method. 
         """
         if data is not None:
+            if hasattr(data, 'values'):
+                data = data.values
             data = np.append(data.flatten(), self.y)
         else:
             data = self.y
         self.__init__(data, *args, **kwargs)
+    
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
+
+        Parameters
+        ----------
+        y   :   array
+                    (n,1) array of data to classify
+        inplace :   bool
+                    whether to conduct the update in place or to return a copy
+                    estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'k':kwargs.pop('k', self.k)})
+        if inplace:
+            self._update(y, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, **kwargs)
+            return new
 
     def __str__(self):
         st = self._table_string()
@@ -472,16 +502,16 @@ class Map_Classifier(object):
 
     def __call__(self, *args, **kwargs):
         """
-        This will allow the classifier to be called like a function.
+        This will allow the classifier to be called like it's a function.
+
+        Whether or not we want to make this be "find_bin" or "update" is a
+        design decision. 
+
+        I like this as find_bin, since a classifier's job should be to classify
+        the data given to it using the rules estimated from the `_classify()`
+        function. 
         """
-        inplace = kwargs.pop('inplace', False)
-        new_data = kwargs.pop('new_data', None)
-        if inplace:
-            self._update(new_data, *args, **kwargs)
-        else:
-            new = copy.deepcopy(self)
-            new._update(new_data, *args, **kwargs)
-            return new
+        return self.find_bin(*args)
 
     def get_tss(self):
         """
@@ -788,6 +818,28 @@ class Percentiles(Map_Classifier):
         self.bins = np.array([stats.scoreatpercentile(y, p) for p in pct])
         self.k = len(self.bins)
 
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
+
+        Parameters
+        ----------
+        y   :   array
+                    (n,1) array of data to classify
+        inplace :   bool
+                    whether to conduct the update in place or to return a copy
+                    estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'pct':kwargs.pkp('pct', self.pct)})
+        if inplace:
+            self._update(y, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, **kwargs)
+            return new
 
 class Box_Plot(Map_Classifier):
     """
@@ -889,7 +941,29 @@ class Box_Plot(Map_Classifier):
         Map_Classifier._classify(self)
         self.low_outlier_ids = np.nonzero(self.yb == 0)[0]
         self.high_outlier_ids = np.nonzero(self.yb == 5)[0]
+    
+    def update(self, y=None,  inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
 
+        Parameters
+        ----------
+        y       :   array
+                        (n,1) array of data to classify
+        inplace     :   bool
+                        whether to conduct the update in place or to return a copy
+                        estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'hinge':kwargs.pop('hinge', self.hinge)})
+        if inplace:
+            self._update(y, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, **kwargs)
+            return new
 
 class Quantiles(Map_Classifier):
     """
@@ -1001,6 +1075,30 @@ class Std_Mean(Map_Classifier):
             cuts.append(y_max)
         self.bins = np.array(cuts)
         self.k = len(cuts)
+    
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
+
+        Parameters
+        ----------
+        y   :   array
+                    (n,1) array of data to classify
+        inplace :   bool
+                    whether to conduct the update in place or to return a copy
+                    estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'multiples':kwargs.pop('multiples', self.multiples)})
+        if inplace:
+            self._update(y, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, **kwargs)
+            return new
+
 
 
 class Maximum_Breaks(Map_Classifier):
@@ -1075,6 +1173,29 @@ class Maximum_Breaks(Map_Classifier):
         mp.sort()
         self.bins = np.array(mp)
 
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
+
+        Parameters
+        ----------
+        y   :   array
+                    (n,1) array of data to classify
+        inplace :   bool
+                    whether to conduct the update in place or to return a copy
+                    estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'k':kwargs.pop('k', self.k)})
+        kwargs.update({'mindiff':kwargs.pop('mindiff', self.mindiff)})
+        if inplace:
+            self._update(y, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, **kwargs)
+            return new
 
 class Natural_Breaks(Map_Classifier):
     """
@@ -1149,8 +1270,9 @@ class Natural_Breaks(Map_Classifier):
         uv = np.unique(values)
         uvk = len(uv)
         if uvk < k:
-            print 'Warning: Not enough unique values in array to form k classes'
-            print "Warning: setting k to %d" % uvk
+            Warn('Warning: Not enough unique values in array to form k classes',
+                    UserWarning)
+            Warn("Warning: setting k to %d" % uvk, UserWarning)
             k = uvk
             uv.sort()
             # we set the bins equal to the sorted unique values and ramp k
@@ -1169,6 +1291,29 @@ class Natural_Breaks(Map_Classifier):
             self.bins = np.array(res0[-1])
             self.k = len(self.bins)
 
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
+
+        Parameters
+        ----------
+        y           :   array
+                        (n,1) array of data to classify
+        inplace     :   bool
+                        whether to conduct the update in place or to return a copy
+                        estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'k':kwargs.pop('k', self.k)})
+        kwargs.update({'initial':kwargs.pop('initial', self.initial)})
+        if inplace:
+            self._update(y, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, **kwargs)
+            return new
 
 class Fisher_Jenks(Map_Classifier):
     """
@@ -1270,6 +1415,7 @@ class Fisher_Jenks_Sampled(Map_Classifier):
         yr[0] = min(y)  # make sure we have the min
         self.original_y = y
         self.pct = pct
+        self._truncated = truncate
         self.yr = yr
         self.yr_n = yr.size
         Map_Classifier.__init__(self, yr)
@@ -1282,6 +1428,31 @@ class Fisher_Jenks_Sampled(Map_Classifier):
         fj = Fisher_Jenks(self.y, self.k)
         self.bins = fj.bins
 
+
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
+
+        Parameters
+        ----------
+        y           :   array
+                        (n,1) array of data to classify
+        inplace     :   bool
+                        whether to conduct the update in place or to return a copy
+                        estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'k':kwargs.pop('k', self.k)})
+        kwargs.update({'pct':kwargs.pop('pct', self.pct)})
+        kwargs.update({'truncate':kwargs.pop('truncate', self._truncated)})
+        if inplace:
+            self._update(y, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, **kwargs)
+            return new
 
 class Jenks_Caspall(Map_Classifier):
     """
@@ -1353,8 +1524,7 @@ class Jenks_Caspall(Map_Classifier):
         cuts.shape = (len(cuts),)
         self.bins = cuts
         self.iterations = it
-
-
+  
 class Jenks_Caspall_Sampled(Map_Classifier):
     """
     Jenks Caspall Map Classification using a random sample
@@ -1439,7 +1609,30 @@ class Jenks_Caspall_Sampled(Map_Classifier):
         jc = Jenks_Caspall(self.y, self.k)
         self.bins = jc.bins
         self.iterations = jc.iterations
+    
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
 
+        Parameters
+        ----------
+        y           :   array
+                        (n,1) array of data to classify
+        inplace     :   bool
+                        whether to conduct the update in place or to return a copy
+                        estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'k':kwargs.pop('k', self.k)})
+        kwargs.update({'pct':kwargs.pop('pct', self.pct)})
+        if inplace:
+            self._update(y, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, **kwargs)
+            return new
 
 class Jenks_Caspall_Forced(Map_Classifier):
     """
@@ -1648,23 +1841,39 @@ class User_Defined(Map_Classifier):
 
     def _set_bins(self):
         pass
-    
-    def _update(self, data=None, bins=None):
+
+    def _update(self, y=None, bins=None):
+        if y is not None:
+            if hasattr(y, 'values'):
+                y = y.values
+            y = np.append(y.flatten(), self.y)
+        else:
+            y = self.y
         if bins is None:
             bins = self.bins
-        if data is None:
-            data = self.y
-        self.__init__(data, bins)
+        self.__init__(y, bins)
 
-    def __call__(self, **kwargs):
-        data = kwargs.pop('new_data', None)
-        bins = kwargs.pop('new_bins', None)
-        inplace = kwargs.pop('inplace', False)
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
+
+        Parameters
+        ----------
+        y           :   array
+                        (n,1) array of data to classify
+        inplace     :   bool
+                        whether to conduct the update in place or to return a copy
+                        estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        bins = kwargs.pop('bins', self.bins)
         if inplace:
-            self._update(data, bins)
+            self._update(y=y, bins=bins, **kwargs)
         else:
             new = copy.deepcopy(self)
-            new._update(data, bins)
+            new._update(y, bins, **kwargs)
             return new
 
 class Max_P_Classifier(Map_Classifier):
@@ -1833,6 +2042,28 @@ class Max_P_Classifier(Map_Classifier):
         else:
             return True
 
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
+
+        Parameters
+        ----------
+        y           :   array
+                        (n,1) array of data to classify
+        inplace     :   bool
+                        whether to conduct the update in place or to return a copy
+                        estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'initial':kwargs.pop('initial', self.initial)})
+        if inplace:
+            self._update(y, bins, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, bins, **kwargs)
+            return new
 
 def _fit(y, classes):
     """Calculate the total sum of squares for a vector y classified into
@@ -1934,7 +2165,7 @@ def gadf(y, method="Quantiles", maxk=15, pct=0.8):
     return (k, cl, gadf)
 
 
-class K_classifiers:
+class K_classifiers(object):
     """
     Evaluate all k-classifers and pick optimal based on k and GADF
 
