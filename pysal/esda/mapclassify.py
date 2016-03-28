@@ -135,12 +135,12 @@ def binC(y, bins):
     for i, bin in enumerate(bins):
         b[np.nonzero(y == bin)] = i
 
-    # check for non-binned items and print a warning if needed
+    # check for non-binned items and warn if needed
     vals = set(y.flatten())
     for val in vals:
         if val not in bins:
-            print('warning: value not in bin: '.format(val))
-            print('bins: {}'.format(bins))
+            Warn('value not in bin: {}'.format(val), UserWarning)
+            Warn('bins: {}'.format(bins), UserWarning)
 
     return b
 
