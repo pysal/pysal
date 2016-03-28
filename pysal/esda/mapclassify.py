@@ -452,15 +452,16 @@ class Map_Classifier(object):
     
     def _update(self, data, *args, **kwargs):
         """
-        The most naive updating function for classifiers is to concatenate data
-        together and reclassify all of it raw. 
+        The only thing that *should* happen in this function is 
+        1. input sanitization for pandas
+        2. classification/reclassification. 
+        
+        Using their __init__ methods, all classifiers can re-classify given
+        different input parameters or additional data. 
 
-        This will do that, and pass any classification parameters, like `k` or
-        `pct` through to the updating function, if needed.
-
-        All user-facing docstring & dispatching (i.e. on `pct` for Percentiles
-        or on `bins` for User_Defined should take place in the public update
-        method. 
+        If you've got a cleverer updating equation than the intial estimation
+        equation, remove the call to self.__init__ below and replace it with the
+        updating function. 
         """
         if data is not None:
             if hasattr(data, 'values'):
