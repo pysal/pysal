@@ -1,9 +1,9 @@
 import pysal
 from pysal.esda.mapclassify import *
 from pysal.esda.mapclassify import binC, bin, bin1d
+from pysal.common import RTOL
 import numpy as np
 import unittest
-np.random.seed(4414)
 
 class TestQuantile(unittest.TestCase):
     def test_quantile(self):
@@ -22,6 +22,36 @@ class TestQuantile(unittest.TestCase):
         for k in range(5, 10):
             np.testing.assert_almost_equal(k, len(quantile(y, k)))
             self.assertEqual(k, len(quantile(y, k)))
+
+class TestUpdate(unittest.TestCase):
+    def setUp(self):
+        np.random.seed(4414)
+        self.data = np.random.normal(0,10, size=10)
+        self.new_data = np.random.normal(0,10,size=4)
+    def test_update(self):
+        #Quantiles
+        quants = Quantiles(self.data, k=3)
+        known_yb = np.array([0,1,0,1,0,2,0,2,1,2])
+        np.testing.assert_allclose(quants.yb, known_yb, rtol=RTOL)
+        new_yb = quants.update(self.new_data, k=4).yb
+        known_new_yb = np.array([0,3,1,0,1,2,0,2,1,3,0,3,2,3])
+        np.testing.assert_allclose(new_yb, known_new_yb, rtol=RTOL)
+
+        #User-Defined
+        ud = User_Defined(self.data, [-20,0,5,20])
+        known_yb = np.array([1,2,1,1,1,2,0,2,1,3]) 
+        np.testing.assert_allclose(ud.yb, known_yb, rtol=RTOL)
+        new_yb = ud.update(self.new_data).yb
+        known_new_yb = np.array([1,3,1,1,1,2,1,1,1,2,0,2,1,3])
+        np.testing.assert_allclose(new_yb, known_new_yb, rtol=RTOL)
+
+        #Fisher-Jenks Sampled
+        fjs = Fisher_Jenks_Sampled(self.data, k=3, pct=70)
+        known_yb = np.array([1,2,0,1,1,2,0,2,1,2])
+        np.testing.assert_allclose(known_yb, fjs.yb, rtol=RTOL)
+        new_yb = fjs.update(self.new_data, k=2).yb
+        known_new_yb = np.array([0,1,0,0,0,1,0,0,0,1,0,1,0,1])
+        np.testing.assert_allclose(known_new_yb, new_yb, rtol=RTOL)
 
 class TestFindBin(unittest.TestCase):
     def setUp(self):
