@@ -3,14 +3,6 @@ import re
 
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ['WKTParser']
-#####################################################################
-## ToDo: Add Well-Known-Binary support...
-##       * WKB spec:
-##  http://webhelp.esri.com/arcgisserver/9.3/dotNet/index.htm#geodatabases/the_ogc_103951442.htm
-##
-##
-#####################################################################
-
 
 class WKTParser:
     """ Class to represent OGC WKT, supports reading and writing
