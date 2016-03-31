@@ -35,7 +35,7 @@ script:
   #- nosetests
   - echo "check_stable=False" >pysal/config.py
   - ./.travis_testing.sh
-  #- cd doc; make pickle; make doctest
+  - cd doc; make pickle; make doctest
 notifications:
     email:
         recipients:
