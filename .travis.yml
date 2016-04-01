@@ -49,6 +49,7 @@ notifications:
             - tayoshan@gmail.com
             - marynia.kolak@gmail.com
             - jgaboardi@gmail.com
+            - phil.stphns@gmail.com
         on_success: always
         on_failure: always
 
