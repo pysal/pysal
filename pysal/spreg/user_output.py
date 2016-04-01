@@ -627,7 +627,7 @@ def check_constant(x):
     (49, 3)
 
     """
-    if not diagnostics.constant_check():
+    if not diagnostics.constant_check:
         raise Exception, "x array cannot contain a constant vector; constant will be added automatically"
     else:
         x_constant = COPY.copy(x)
