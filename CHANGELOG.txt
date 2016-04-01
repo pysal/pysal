@@ -1,11 +1,13 @@
 v<1.11.1>, 2016-04-01
 
-We closed a total of 57 issues, 18 pull requests and 39 regular issues;
+We closed a total of 62 issues, 20 pull requests and 42 regular issues;
 this is the full list (generated with the script 
 :file:`tools/github_stats.py`):
 
-Pull Requests (18):
+Pull Requests (20):
 
+* :ghpull:`777`: fix minor issues with using stdlib warnings in mapclassify.py
+* :ghpull:`766`: Constant check
 * :ghpull:`781`: Dev
 * :ghpull:`778`: Wkb
 * :ghpull:`776`: Updating & find-bin-as-call for Map_Classifiers
@@ -25,8 +27,11 @@ Pull Requests (18):
 * :ghpull:`735`: Dev in sync with master for 1.11
 * :ghpull:`734`: Release 1.11
 
-Issues (39):
+Issues (42):
 
+* :ghissue:`773`: add isKDTree typecomparison to handle divergent cKDTree and KDTree types
+* :ghissue:`777`: fix minor issues with using stdlib warnings in mapclassify.py
+* :ghissue:`766`: Constant check
 * :ghissue:`782`: Contrib docs
 * :ghissue:`781`: Dev
 * :ghissue:`762`: viz: folium_mapping.ipynb AttributeError: 'Map' object has no attribute '_build_map'
@@ -66,7 +71,6 @@ Issues (39):
 * :ghissue:`736`: Merge pull request #734 from sjsrey/master
 * :ghissue:`735`: Dev in sync with master for 1.11
 * :ghissue:`734`: Release 1.11
-
 
 v<1.11.0>, 2016-01-27
 
