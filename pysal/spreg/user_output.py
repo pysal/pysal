@@ -309,7 +309,7 @@ def set_name_multi(multireg, multi_set, name_multiID, y, x, name_y, name_x, name
 def check_arrays(*arrays):
     """Check if the objects passed by a user to a regression class are
     correctly structured. If the user's data is correctly formed this function
-    returns nothing, if not then an exception is raised. Note, this does not 
+    returns nothing, if not then an exception is raised. Note, this does not
     check for model setup, simply the shape and types of the objects.
 
     Parameters
@@ -366,7 +366,7 @@ def check_arrays(*arrays):
 def check_y(y, n):
     """Check if the y object passed by a user to a regression class is
     correctly structured. If the user's data is correctly formed this function
-    returns nothing, if not then an exception is raised. Note, this does not 
+    returns nothing, if not then an exception is raised. Note, this does not
     check for model setup, simply the shape and types of the objects.
 
     Parameters
@@ -466,7 +466,7 @@ def check_weights(w, y, w_required=False):
 
 def check_robust(robust, wk):
     """Check if the combination of robust and wk parameters passed by the user
-    are valid. Note: this does not check if the W object is a valid adaptive 
+    are valid. Note: this does not check if the W object is a valid adaptive
     kernel weights matrix needed for the HAC.
 
     Parameters
@@ -627,7 +627,7 @@ def check_constant(x):
     (49, 3)
 
     """
-    if diagnostics.constant_check(x):
+    if not diagnostics.constant_check():
         raise Exception, "x array cannot contain a constant vector; constant will be added automatically"
     else:
         x_constant = COPY.copy(x)
