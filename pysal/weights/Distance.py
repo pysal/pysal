@@ -11,11 +11,11 @@ from pysal.common import KDTree
 from pysal.weights import W
 import scipy.stats
 import numpy as np
+from util import isKDTree
 
 __all__ = ["knnW", "Kernel", "DistanceBand"]
 
-
-def knnW(kdtree, k=2, p=2, ids=None):
+def knnW(data, k=2, p=2, ids=None):
     """
     Creates nearest neighbor weights matrix based on k nearest
     neighbors.
@@ -82,8 +82,12 @@ def knnW(kdtree, k=2, p=2, ids=None):
     pysal.weights.W
 
     """
-    data = kdtree.data
-    nnq = kdtree.query(data, k=k+1, p=p)
+    if isKDTree(data):
+        kdt = data
+        data = kdt.data
+    else:
+        kdt = KDTree(data)
+    nnq = kdt.query(data, k=k+1, p=p)
     info = nnq[1]
 
     neighbors = {}
@@ -264,7 +268,7 @@ class Kernel(W):
     def __init__(self, data, bandwidth=None, fixed=True, k=2,
                  function='triangular', eps=1.0000001, ids=None,
                  diagonal=False):
-        if issubclass(type(data), scipy.spatial.KDTree):
+        if isKDTree(data):
             self.kdt = data
             self.data = self.kdt.data
             data = self.data
@@ -357,7 +361,7 @@ class Kernel(W):
             c = c ** (-0.5)
             self.kernel = [c * np.exp(-(zi ** 2) / 2.) for zi in zs]
         else:
-            print 'Unsupported kernel function', self.function
+            print('Unsupported kernel function', self.function)
 
 
 class DistanceBand(W):
@@ -452,7 +456,7 @@ class DistanceBand(W):
         See detail in pysal issue #126.
 
         """
-        if issubclass(type(data), scipy.spatial.KDTree):
+        if isKDTree(data):
             self.kd = data
             self.data = self.kd.data
         else:
