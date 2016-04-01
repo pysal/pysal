@@ -66,6 +66,11 @@ Currently the following contribs are available:
     - Path: pysal.contrib.pdutilities
     - Requires: `pandas`_
 
+ 8. SpInt -- Spatial Interaction Modeling 
+
+    - .. versionadded:: 1.10
+    - Path: pysal.contrib.spint
+    - Requires: `pandas`_
 
 
 
