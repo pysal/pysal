@@ -48,6 +48,7 @@ notifications:
             - carsonfarmer@gmail.com
             - tayoshan@gmail.com
             - marynia.kolak@gmail.com
+            - jgaboardi@gmail.com
         on_success: always
         on_failure: always
 
