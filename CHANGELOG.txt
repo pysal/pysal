@@ -1,3 +1,77 @@
+v<1.11.1>, 2016-04-01
+
+We closed a total of 62 issues, 20 pull requests and 42 regular issues;
+this is the full list (generated with the script 
+:file:`tools/github_stats.py`):
+
+Pull Requests (20):
+
+* :ghpull:`777`: fix minor issues with using stdlib warnings in mapclassify.py
+* :ghpull:`766`: Constant check
+* :ghpull:`781`: Dev
+* :ghpull:`778`: Wkb
+* :ghpull:`776`: Updating & find-bin-as-call for Map_Classifiers
+* :ghpull:`770`: adding github chrome to make project contributions easier to handle
+* :ghpull:`764`: add folium changes needed for notebook to run
+* :ghpull:`760`: Update docs for #697
+* :ghpull:`763`: docs fix: incorrect array dimensions listed for spatial interaction SpaceTimeEvents
+* :ghpull:`756`: B726
+* :ghpull:`749`: remove cruft in git root and add gitter badge to the readme
+* :ghpull:`748`: Replace deprecated np.rank with np.ndim
+* :ghpull:`745`: Lag Categorical & Find Bins
+* :ghpull:`741`: fix for #740
+* :ghpull:`739`: Dev
+* :ghpull:`738`: fixing master version
+* :ghpull:`737`: Bumping dev
+* :ghpull:`736`: Merge pull request #734 from sjsrey/master
+* :ghpull:`735`: Dev in sync with master for 1.11
+* :ghpull:`734`: Release 1.11
+
+Issues (42):
+
+* :ghissue:`773`: add isKDTree typecomparison to handle divergent cKDTree and KDTree types
+* :ghissue:`777`: fix minor issues with using stdlib warnings in mapclassify.py
+* :ghissue:`766`: Constant check
+* :ghissue:`782`: Contrib docs
+* :ghissue:`781`: Dev
+* :ghissue:`762`: viz: folium_mapping.ipynb AttributeError: 'Map' object has no attribute '_build_map'
+* :ghissue:`778`: Wkb
+* :ghissue:`776`: Updating & find-bin-as-call for Map_Classifiers
+* :ghissue:`770`: adding github chrome to make project contributions easier to handle
+* :ghissue:`774`: Added a prototype for constructing weights from a list of shapely Polygons
+* :ghissue:`772`: knnW user guide doc error
+* :ghissue:`765`: potential constant_check bug
+* :ghissue:`759`: Fixed code in ipython notebooks
+* :ghissue:`752`: [WIP] Add J function to network submodule
+* :ghissue:`764`: add folium changes needed for notebook to run
+* :ghissue:`760`: Update docs for #697
+* :ghissue:`763`: docs fix: incorrect array dimensions listed for spatial interaction SpaceTimeEvents
+* :ghissue:`750`: Add gitter badge to README on master branch
+* :ghissue:`758`: Fixed code in ipython notebooks
+* :ghissue:`755`: add speedup of conditional randomization
+* :ghissue:`726`: Compatibility for Scipy 16.1
+* :ghissue:`756`: B726
+* :ghissue:`749`: remove cruft in git root and add gitter badge to the readme
+* :ghissue:`587`: ML Lag
+* :ghissue:`748`: Replace deprecated np.rank with np.ndim
+* :ghissue:`747`: Replace deprecated np.rank with np.ndim
+* :ghissue:`653`: network is returning NAN's on diagonal of distance matrix
+* :ghissue:`660`: insert zeros on symmetric matrix diagonal
+* :ghissue:`745`: Lag Categorical & Find Bins
+* :ghissue:`744`: [REBASED] Update moran.py with much faster iterations
+* :ghissue:`732`: Update moran.py with much faster iterations
+* :ghissue:`743`: [REBASED]: Update moran.py with much faster iterations
+* :ghissue:`742`: Links not working
+* :ghissue:`740`: Moran_Local's EI is returned as an array instead of a float
+* :ghissue:`741`: fix for #740
+* :ghissue:`739`: Dev
+* :ghissue:`738`: fixing master version
+* :ghissue:`737`: Bumping dev
+* :ghissue:`151`: Port pysal to python3
+* :ghissue:`736`: Merge pull request #734 from sjsrey/master
+* :ghissue:`735`: Dev in sync with master for 1.11
+* :ghissue:`734`: Release 1.11
+
 v<1.11.0>, 2016-01-27
 
 GitHub stats for 2015/07/29 - 2016/01/27
