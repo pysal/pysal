@@ -411,8 +411,13 @@ class DistanceBand(W):
     >>> w=DistanceBand(points,threshold=14.2)
     >>> w.weights
     {0: [1, 1], 1: [1, 1, 1], 2: [1], 3: [1, 1], 4: [1, 1, 1], 5: [1]}
-    >>> w.neighbors
-    {0: [1, 3], 1: [0, 3, 4], 2: [4], 3: [1, 0], 4: [5, 1, 2], 5: [4]}
+    >>> ps.weights.util.neighbor_equality(w,pysal.W( {0: [1, 3], 1: [0, 3, 4],
+                                                     2: [4], 3: [1, 0], 4:
+                                                     [5, 2, 1], 5: [4]}))
+    True
+
+
+
 
     inverse distance weights
 
@@ -485,22 +490,24 @@ class DistanceBand(W):
         if self.binary:
             for key,weight in self.dmat.items():
                 i,j = key
-                if j not in neighbors[i]:
-                    weights[i].append(1)
-                    neighbors[i].append(j)
-                if i not in neighbors[j]:
-                    weights[j].append(1)
-                    neighbors[j].append(i)
+                if i != j:
+                    if j not in neighbors[i]:
+                        weights[i].append(1)
+                        neighbors[i].append(j)
+                    if i not in neighbors[j]:
+                        weights[j].append(1)
+                        neighbors[j].append(i)
 
         else:
             for key,weight in self.dmat.items():
                 i,j = key
-                if j not in neighbors[i]:
-                    weights[i].append(weight**self.alpha)
-                    neighbors[i].append(j)
-                if i not in neighbors[j]:
-                    weights[j].append(weight**self.alpha)
-                    neighbors[j].append(i)
+                if i != j:
+                    if j not in neighbors[i]:
+                        weights[i].append(weight**self.alpha)
+                        neighbors[i].append(j)
+                    if i not in neighbors[j]:
+                        weights[j].append(weight**self.alpha)
+                        neighbors[j].append(i)
 
         return neighbors, weights
 

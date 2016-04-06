@@ -1016,12 +1016,20 @@ class Chain(object):
 
     @classmethod
     def __from_geo_interface__(cls, geo):
-        verts = [Point(pt) for pt in geo['coordinates']]
+        if geo['type'].lower() == 'linestring':
+            verts = [Point(pt) for pt in geo['coordinates']]
+        elif geo['type'].lower() == 'multilinestring':
+            verts = [map(Point, part) for part in geo['coordinates']]
+        else:
+            raise TypeError('%r is not a Chain'%geo)
         return cls(verts)
 
     @property
     def __geo_interface__(self):
-        return {'type': 'LineString', 'coordinates': self.vertices}
+        if len(self.parts) == 1:
+            return {'type': 'LineString', 'coordinates': self.vertices}
+        else:
+            return {'type': 'MultiLineString', 'coordinates': self.parts}
 
     def _reset_props(self):
         """
@@ -1945,7 +1953,7 @@ class Rectangle:
         return self.upper - self.lower
 
 
-_geoJSON_type_to_Pysal_type = {'point': Point, 'linestring': Chain,
+_geoJSON_type_to_Pysal_type = {'point': Point, 'linestring': Chain, 'multilinestring': Chain,
                                'polygon': Polygon, 'multipolygon': Polygon}
 import standalone  # moving this to top breaks unit tests !
 

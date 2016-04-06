@@ -124,18 +124,18 @@ class W(object):
 
     >>> neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
     >>> w = W(neighbors)
-    >>> "%.3f"%w.pct_nonzero
-    '29.630'
+    >>> round(w.pct_nonzero,3)
+    29.63
     >>> w = lat2W(100, 100)
     >>> w.trcW2
     39600.0
     >>> w.trcWtW
     39600.0
     >>> w.transform='r'
-    >>> w.trcW2
-    2530.7222222222586
-    >>> w.trcWtW
-    2533.6666666666774
+    >>> round(w.trcW2, 3)
+    2530.722
+    >>> round(w.trcWtW, 3)
+    2533.667
 
     Cardinality Histogram
 

@@ -13,8 +13,9 @@ Prepare the release
 - Check all tests pass. See :doc:`testing`.
 - Update CHANGELOG::
 
-     $ python tools/github_stats.py >> chglog
+     $ python tools/github_stats.py days >> chglog
 
+- where `days` is the number of days to start the logs at
 - Prepend `chglog` to `CHANGELOG` and edit
 - Edit THANKS and README and README.md if needed.
 - Edit the file `version.py` to update MAJOR, MINOR, MICRO

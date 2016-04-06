@@ -1,9 +1,9 @@
 import pysal
 from pysal.esda.mapclassify import *
 from pysal.esda.mapclassify import binC, bin, bin1d
+from pysal.common import RTOL
 import numpy as np
 import unittest
-
 
 class TestQuantile(unittest.TestCase):
     def test_quantile(self):
@@ -23,6 +23,49 @@ class TestQuantile(unittest.TestCase):
             np.testing.assert_almost_equal(k, len(quantile(y, k)))
             self.assertEqual(k, len(quantile(y, k)))
 
+class TestUpdate(unittest.TestCase):
+    def setUp(self):
+        np.random.seed(4414)
+        self.data = np.random.normal(0,10, size=10)
+        self.new_data = np.random.normal(0,10,size=4)
+    def test_update(self):
+        #Quantiles
+        quants = Quantiles(self.data, k=3)
+        known_yb = np.array([0,1,0,1,0,2,0,2,1,2])
+        np.testing.assert_allclose(quants.yb, known_yb, rtol=RTOL)
+        new_yb = quants.update(self.new_data, k=4).yb
+        known_new_yb = np.array([0,3,1,0,1,2,0,2,1,3,0,3,2,3])
+        np.testing.assert_allclose(new_yb, known_new_yb, rtol=RTOL)
+
+        #User-Defined
+        ud = User_Defined(self.data, [-20,0,5,20])
+        known_yb = np.array([1,2,1,1,1,2,0,2,1,3]) 
+        np.testing.assert_allclose(ud.yb, known_yb, rtol=RTOL)
+        new_yb = ud.update(self.new_data).yb
+        known_new_yb = np.array([1,3,1,1,1,2,1,1,1,2,0,2,1,3])
+        np.testing.assert_allclose(new_yb, known_new_yb, rtol=RTOL)
+
+        #Fisher-Jenks Sampled
+        fjs = Fisher_Jenks_Sampled(self.data, k=3, pct=70)
+        known_yb = np.array([1,2,0,1,1,2,0,2,1,2])
+        np.testing.assert_allclose(known_yb, fjs.yb, rtol=RTOL)
+        new_yb = fjs.update(self.new_data, k=2).yb
+        known_new_yb = np.array([0,1,0,0,0,1,0,0,0,1,0,1,0,1])
+        np.testing.assert_allclose(known_new_yb, new_yb, rtol=RTOL)
+
+class TestFindBin(unittest.TestCase):
+    def setUp(self):
+        dat = pysal.open(pysal.examples.get_path("calempdensity.csv"))
+        self.V = np.array([record[-1] for record in dat])
+    
+    def test_find_bin(self):
+        toclass = [0,1,3,5,50,70,101,202,390,505,800,5000,5001]
+        mc = Fisher_Jenks(self.V, k=5)
+        known = [0, 0, 0, 0, 0, 0, 1, 2, 3, 3, 4, 4, 4]
+        np.testing.assert_array_equal(known, mc.find_bin(toclass))
+        mc2 = Fisher_Jenks(self.V, k=9)
+        known = [0, 0, 0, 0, 2, 2, 3, 5, 7, 7, 8, 8, 8]
+        np.testing.assert_array_equal(known, mc2.find_bin(toclass))
 
 class TestBinC(unittest.TestCase):
     def test_bin_c(self):
@@ -172,7 +215,6 @@ class TestMapClassifier(unittest.TestCase):
         # self.assertEqual(expected, map__classifier.get_tss())
         assert True  # TODO: implement your test here
 
-
 class TestEqualInterval(unittest.TestCase):
     def setUp(self):
         dat = pysal.open(pysal.examples.get_path("calempdensity.csv"))
@@ -227,7 +269,6 @@ class TestQuantiles(unittest.TestCase):
                                                   1.32780000e+01, 5.46160000e+01, 4.11145000e+03]))
         np.testing.assert_array_almost_equal(q.counts,
                                              np.array([12, 11, 12, 11, 12]))
-
 
 class TestStdMean(unittest.TestCase):
     def setUp(self):
