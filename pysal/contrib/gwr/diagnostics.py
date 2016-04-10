@@ -1,8 +1,7 @@
 """
 Diagnostics for regression estimations. 
-        
 """
-__author__ = "Luc Anselin luc.anselin@asu.edu, Nicholas Malizia nicholas.malizia@asu.edu "
+__author__ = "Luc Anselin luc.anselin@asu.edu, Nicholas Malizia nicholas.malizia@asu.edu"
 
 import numpy as np
 
