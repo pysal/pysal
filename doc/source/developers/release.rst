@@ -25,7 +25,7 @@ Prepare the release
 
 - Commit all changes.
 - Push_ your branch up to your GitHub repos
-- On github issue a pull request, with a target of **upstream dev**. 
+- On github issue a pull request, with a target of **upstream master**. 
   Add a comment that this is for release.
 
 
@@ -60,10 +60,10 @@ is `v1.10` in what follows)::
 
 - Test that your package can install correctly::
 
-  $ pip install -i https://testpy.python.org/pypi
+  $ pip install -i https://testpypi.python.org/pypi pysal
 
 
-If all is good, proceed, otherwise fix.
+If all is good, proceed, otherwise fix, and repeat.
 
 
 - Make and upload_ to the Python Package Index in one shot!::
