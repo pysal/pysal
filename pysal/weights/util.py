@@ -649,10 +649,10 @@ def shimbel(w):
 
     info = {}
     ids = w.id_order
-    for id in ids:
+    for i in ids:
         s = [0] * w.n
-        s[ids.index(id)] = -1
-        for j in w.neighbors[id]:
+        s[ids.index(i)] = -1
+        for j in w.neighbors[i]:
             s[ids.index(j)] = 1
         k = 1
         flag = s.count(0)
@@ -669,7 +669,7 @@ def shimbel(w):
                         s[nid] = knext
             k = knext
             flag = s.count(0)
-        info[id] = s
+        info[i] = s
     return info
 
 

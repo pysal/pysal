@@ -405,21 +405,18 @@ class DistanceBand(W):
     --------
 
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+    >>> wcheck = pysal.W({0: [1, 3], 1: [0, 3], 2: [], 3: [0, 1], 4: [5], 5: [4]})
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  [2]
     >>> w=DistanceBand(points,threshold=11.2)
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
-    >>> w.weights
-    {0: [1, 1], 1: [1, 1], 2: [], 3: [1, 1], 4: [1], 5: [1]}
-    >>> w.neighbors
-    {0: [1, 3], 1: [0, 3], 2: [], 3: [1, 0], 4: [5], 5: [4]}
-    >>> w=DistanceBand(points,threshold=14.2)
-    >>> w.weights
-    {0: [1, 1], 1: [1, 1, 1], 2: [1], 3: [1, 1], 4: [1, 1, 1], 5: [1]}
-    >>> ps.weights.util.neighbor_equality(w,pysal.W( {0: [1, 3], 1: [0, 3, 4],
-                                                     2: [4], 3: [1, 0], 4:
-                                                     [5, 2, 1], 5: [4]}))
+    >>> pysal.weights.util.neighbor_equality(w, wcheck)
     True
-
+    >>> w=DistanceBand(points,threshold=14.2)
+    >>> wcheck = pysal.W({0: [1, 3], 1: [0, 3, 4], 2: [4], 3: [1, 0], 4: [5, 2, 1], 5: [4]})
+    >>> pysal.weights.util.neighbor_equality(w, wcheck)
+    True
 
 
 
