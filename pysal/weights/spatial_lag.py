@@ -128,43 +128,30 @@ def lag_categorical(w, y, ties='tryself'):
 
     >>> import pysal
     >>> import numpy as np
+    >>> np.random.seed(12345)
     >>> w = pysal.lat2W(3, 3)
     >>> y = ['a','b','a','b','c','b','c','b','c']
     >>> y_l = pysal.weights.spatial_lag.lag_categorical(w, y)
-    >>> y_l
-    array(['b', 'a', 'b', 'c', 'b', 'c', 'b', 'c', 'b'], dtype='|S1')
+    >>> np.array_equal(y_l, np.array(['b', 'a', 'b', 'c', 'b', 'c', 'b', 'c', 'b']))
+    True
 
     Explicitly reshape y into a (9x1) array and calculate lag again
 
     >>> yvect = np.array(y).reshape(9,1)
     >>> yvect_l = pysal.weights.spatial_lag.lag_categorical(w,yvect)
-    array([['b'],
-           ['a'],
-           ['b'],
-           ['c'],
-           ['b'],
-           ['c'],
-           ['b'],
-           ['c'],
-           ['b']],
-          dtype='|S1')
+    >>> check = np.array( [ [i] for i in  ['b', 'a', 'b', 'c', 'b', 'c', 'b', 'c', 'b']] )
+    >>> np.array_equal(yvect_l, check)
+    True
 
     compute the lag of a 9x2 matrix of categories
 
     >>> y2 = ['a', 'c', 'c', 'd', 'b', 'a', 'd', 'd', 'c']
     >>> ym = np.vstack((y,y2)).T
     >>> ym_lag = pysal.weights.spatial_lag.lag_categorical(w,ym)
-    >>> ym_lag
-    array([['b', 'b'],
-	   ['a', 'c'],
-	   ['b', 'c'],
-	   ['c', 'd'],
-	   ['b', 'd'],
-	   ['c', 'c'],
-	   ['c', 'd'],
-	   ['c', 'd'],
-	   ['b', 'b']],
-	  dtype='|S1')
+    >>> check = np.array([['b', 'b'], ['a', 'c'], ['b', 'c'], ['c', 'd'], ['b', 'd'], ['c', 'c'], ['b', 'd'], ['c', 'd'], ['b', 'b']])
+    >>> np.array_equal(check, ym_lag)
+    True
+
     """
     if isinstance(y, list):
         y = np.array(y)
