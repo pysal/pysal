@@ -207,3 +207,80 @@ def sphstack(a, b, array_out=False):
         raise Exception, "Invalid format for 'sphstack' argument: %s and %s" % (
             type(a).__name__, type(b).__name__)
     return ab
+
+def set_Bandwidth(data, method=1, band=0.0, criterion=0.0, maxVal=0.0, minVal=0.0, interval=0.0):
+    """
+    Set bandwidth using specified method and parameters
+        
+    Arguments:
+        data: dictionary, including (x,y) coordinates involved in the weight evaluation (including point i) 
+        band: float, bandwidth for single bandwidth
+        criterion: integer, criteria for bandwidth selection
+                   0: AICc
+                   1: AIC
+                   2: BIC/MDL
+                   3: CV
+        method: integer, method to use
+                0: Gloden section search
+                1: Single bandwith 
+                2: Interval Search
+        maxVal: max value for method 0 or 2
+        minVal: min value for method 0 or 2
+        interval: float, for Interval Search        
+            
+    Return:
+        band: float, bandwidth       
+    """
+    if method == 1:
+        return band
+    if method == 0:
+        return band_Golden(data, criterion, maxVal, minVal)
+    if method == 2:
+        return band_Interval(data, criterion, maxVal, minVal, interval)
+    
+    
+def band_Golden(data, criterion, maxVal, minVal):
+    """
+    Set bandwidth using golden section search
+    
+    Methods: p212-213, section 9.6.4, Fotheringham, Brunsdon and Charlton (2002)
+    
+    Arguments:
+        data: dictionary, including (x,y) coordinates involved in the weight evaluation (including point i) 
+        criterion: integer, criteria for bandwidth selection
+                   0: AICc
+                   1: AIC
+                   2: BIC/MDL
+                   3: CV
+        maxVal: max value for method 0 or 2
+        minVal: min value for method 0 or 2       
+            
+    Return:
+        band: float, bandwidth
+    """
+    a, b, c
+    b = (1-0.618) * abs(c-a)
+    
+    get_criteria[criterion]()
+
+def band_Interval(data, criterion, maxVal, minVal, interval):
+    """
+    Set bandwidth using interval search
+    
+    Methods: p61, (2.34), Fotheringham, Brunsdon and Charlton (2002)
+    
+    Arguments:
+        data: dictionary, including (x,y) coordinates involved in the weight evaluation (including point i) 
+        criterion: integer, criteria for bandwidth selection
+                   0: AICc
+                   1: AIC
+                   2: BIC/MDL
+                   3: CV
+        maxVal: max value for method 0 or 2
+        minVal: min value for method 0 or 2
+        interval: float, for Interval Search        
+            
+    Return:
+        band: float, bandwidth
+    """  
+    get_criteria[criterion]()
