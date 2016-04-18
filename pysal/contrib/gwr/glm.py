@@ -1,6 +1,6 @@
 import numpy as np
 import numpy.linalg as la
-from utils import RegressionPropsY
+from pysal.spreg.utils import RegressionPropsY
 from glm_fits import gauss_iwls, poiss_iwls, logit_iwls
 import pysal.spreg.user_output as USER
 
