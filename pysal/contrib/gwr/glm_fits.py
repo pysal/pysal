@@ -35,3 +35,4 @@ def logit_iwls(GLM):
     GLM.fit_params['n_iter'] = n_iter
     predy = get_y_hat(GLM.family, v, GLM.offset, GLM.y_fix)
     return [betas, predy, v, w]
+

@@ -1,6 +1,6 @@
 import numpy as np
 
-def golden_section(a, b, delta, function, int_score=False, tol, max_iter):
+def golden_section(a, c, delta, function, tol, max_iter, int_score=False):
     """
     Golden section search routine 
 
@@ -31,8 +31,8 @@ def golden_section(a, b, delta, function, int_score=False, tol, max_iter):
     output          : list of tuples
                       searching history
     """
-    b = a + lamda * abs(c-a)
-    d = c - lamda * abs(c-a)
+    b = a + delta * abs(c-a)
+    d = c - delta * abs(c-a)
     score = 0.0
     diff = 1.0e9  
     iters  = 0
@@ -42,7 +42,7 @@ def golden_section(a, b, delta, function, int_score=False, tol, max_iter):
         if int_score: 
             b = round(b,0)     
             d = round(d,0)
-
+        print a
         score_a = function(a)
         score_b = function(b)
         score_c = function(c)
