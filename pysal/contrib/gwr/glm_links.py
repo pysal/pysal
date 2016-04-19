@@ -1,14 +1,14 @@
 import numpy as np
 
-def get_y_hat(mType, v, y_offset, y_fix=0):
+def get_y_hat(family, v, y_offset, y_fix=0):
     """
     get y_hat
     """
-    if mType == 0:
+    if family == 'Gaussian':
         return v + y_fix
-    if mType == 1:
+    if family == 'Poisson':
         return np.exp(v + y_fix) * y_offset 
-    if mType == 2:
+    if family == 'logistic':
         return 1.0/(1 + np.exp(-1*v - y_fix))  
 
 def link_g(v, y, y_offset, y_fix=0):

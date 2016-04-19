@@ -17,31 +17,31 @@ def _compute_betas(y, x):
         
     return betas   
 
-def iwls(x, y, g_ey, link_func, mType=None, offset=None, y_fix=None, sMatrix=None,
-    ini_betas=None, tol=1.0e-6, maxIter=200):
+def iwls(x, y, g_ey, link_func, family=None, offset=None, y_fix=None, sMatrix=None,
+    ini_betas=None, tol=1.0e-6, max_iter=200):
     """
     Iteratively re-weighted least squares estimation routine
 
     """
 
     diff = 1.0e6
-    nIter = 0
+    n_iter = 0
     if ini_betas is None:
         betas = _compute_betas(g_ey-y_fix, x)
     else:
         betas = ini_betas
 		
     v = np.dot(x, betas)
-    while diff > tol and nIter < maxIter:
+    while diff > tol and n_iter < max_iter:
         nIter += 1 
                 
         z, w = link_func(v, y, offset, y_fix)
                 
         ww = np.sqrt(w)
         wx = x * ww
-        if sMatrix is None:
-            wz = z * ww
-            n_betas = _compute_betas(wz, wx)
+    if sMatrix is None:
+        wz = z * ww
+        n_betas = _compute_betas(wz, wx)
 	else:
 	    wz = (z - np.dot(sMatrix,z)) * ww
 	    wx2 = (x - np.dot(sMatrix,x)) * ww
@@ -51,7 +51,7 @@ def iwls(x, y, g_ey, link_func, mType=None, offset=None, y_fix=None, sMatrix=Non
 	    n_betas = np.dot(xtxinv, xtz)
                 
         v_new = np.dot(x, n_betas)
-	if (mType) & (mType == 0):
+	if family == 'Gaussian':
 	    diff = 0.0
 	else:
 	    diff = min(abs(n_betas-betas))
@@ -61,4 +61,4 @@ def iwls(x, y, g_ey, link_func, mType=None, offset=None, y_fix=None, sMatrix=Non
 
     nIter += 1
 
-    return betas, w, v, nIter
+    return betas, w, v, n_iter

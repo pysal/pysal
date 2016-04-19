@@ -10,7 +10,7 @@ class GLM(RegressionPropsY):
     """
     Generalised linear models. Can currently estimate Guassian, Poisson and
     Logisitc. GLM object prepares model input. Fit method performs estimation
-    and returns a GMResults object.
+    and returns a GMLResults object.
 
     Parameters
     ----------
@@ -18,8 +18,8 @@ class GLM(RegressionPropsY):
                         n*1, dependent variable.
         x             : array
                         n*k, independent variable, exlcuding the constant. 
-        mType         : integer
-                        Model type, 0: Gaussian, 1: Poisson, 2: Logistic.
+        family        : string
+                        Model type: 'Gaussian', 'Poisson', 'Logistic'
         offset        : array
                         n*1, the offset variable at the ith location. For Poisson model
                         this term is often the size of the population at risk or
@@ -39,8 +39,8 @@ class GLM(RegressionPropsY):
                         n*1, dependent variable.
         x             : array
                         n*k, independent variable, including constant.
-        mType         : integer
-                        Model type, 0: Gaussian, 1: Poisson, 2: Logistic.
+        family        : string
+                        Model type: 'Gaussian', 'Poisson', 'Logistic'
         n             : integer
                         Number of observations 
         k             : integer
@@ -53,7 +53,7 @@ class GLM(RegressionPropsY):
                         Parameters passed into fit method to define estimation
                         routine.
     """
-    def __init__(self, y, x, mType=0, offset=None, y_fix =None, sigma2_v1=False,
+    def __init__(self, y, x, family='Gaussian', offset=None, y_fix =None, sigma2_v1=False,
         sMatrix=None):
         """
         Initialize class
@@ -61,10 +61,9 @@ class GLM(RegressionPropsY):
         self.n = USER.check_arrays(y, x)
         USER.check_y(y, self.n)
         self.y = y
-        #USER.check_weights(w, y) #TODO
         self.x = USER.check_constant(x)
         self.sMatrix = sMatrix
-        self.mType = mType
+        self.family = family
         self.k = x.shape[1]  
         self.sigma2_v1=sigma2_v1
         if offset is None:
@@ -77,7 +76,7 @@ class GLM(RegressionPropsY):
 	        self.y_fix = y_fix
         self.fit_params = {}
 
-    def fit(self, ini_betas=None, tol=1.0e-6, maxIter=200, solve='iwls'):
+    def fit(self, ini_betas=None, tol=1.0e-6, max_iter=200, solve='iwls'):
         """
         Method that fits a model with a particular estimation routine.
 
@@ -90,7 +89,7 @@ class GLM(RegressionPropsY):
                         estimation.
         tol:            float
                         Tolerence for estimation convergence.
-        maxIter       : integer
+        max_iter       : integer
                         Maximum number of iterations if convergence not
                         achieved.
         solve         :string
@@ -99,15 +98,15 @@ class GLM(RegressionPropsY):
         """
         self.fit_params['ini_betas'] = ini_betas
         self.fit_params['tol'] = tol
-        self.fit_params['maxIter'] = maxIter
+        self.fit_params['max_iter'] = maxIter
         self.fit_params['solve']=solve
         if solve.lower() == 'iwls':
             ey = self.y/self.offset
-            if self.mType==0:
+            if self.family = 'Gaussian':
                 results = GLMResults(self, *gauss_iwls(self))
-            if self.mType==1:
+            if self.family = 'Poisson':
                 results =  GLMResults(self, *poiss_iwls(self))
-            if self.mType==2:
+            if self.family = 'logistic':
             	results = GLMResults(self, *logit_iwls(self)) 
         return results
     
@@ -137,8 +136,8 @@ class GLMResults(GLM):
                         n*1, dependent variable.
         x             : array
                         n*k, independent variable, including constant.
-        mType         : integer
-                        Model type, 0: Gaussian, 1: Poisson, 2: Logistic.
+        family        : string
+                        Model type: 'Gaussian', 'Poisson', 'Logistic'
         n             : integer
                         Number of observations 
         k             : integer
@@ -181,7 +180,7 @@ class GLMResults(GLM):
         self.y = model.y
         self.x = model.x
         self.k = model.k
-        self.mType = model.mType
+        self.family = model.family
         self.fit_params = model.fit_params
         self.betas = betas
         if v is not None:
@@ -340,9 +339,9 @@ class GLMResults(GLM):
 
     def calc_dev_u(self):            
 	dev = 0.0
-	if self.mType == 0:
+	if self.family == 'Gaussian':
 	    dev = self.n * (np.log(self.utu * 2.0 * np.pi / self.n) + 1.0) 
-	if self.mType == 1:
+	if self.family == 'Poisson':
 	    id0 = self.y==0
 	    id1 = self.y<>0
             if np.sum(id1) == self.n:
@@ -351,7 +350,7 @@ class GLMResults(GLM):
                 dev = 2.0 * (np.sum(self.y[id1] *
                     np.log(self.y[id1]/self.predy[id1])) -
                         np.sum(self.y[id0]-self.predy[id0]))   
-        if self.mType == 2:
+        if self.family == 'logistic':
             for i in range(self.n):
                 if self.y[i] == 0:
                     dev += -2.0 * np.log(1.0 - self.predy[i])

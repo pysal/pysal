@@ -4,21 +4,21 @@ from iwls import iwls
 
 def gauss_iwls(GLM):
     g_ey = GLM.y
-    betas, w, v, nIter = iwls(GLM.x, GLM.y, g_ey, link_g, GLM.mType, GLM.offset,
+    betas, w, v, n_iter = iwls(GLM.x, GLM.y, g_ey, link_g, GLM.family, GLM.offset,
             GLM.y_fix, GLM.sMatrix, GLM.fit_params['ini_betas'],
-            GLM.fit_params['tol'], GLM.fit_params['maxIter'])
-    GLM.fit_params['nIter'] = nIter
-    predy = get_y_hat(GLM.mType, v, GLM.offset, GLM.y_fix)
+            GLM.fit_params['tol'], GLM.fit_params['max_iter'])
+    GLM.fit_params['n_iter'] = n_iter
+    predy = get_y_hat(GLM.family, v, GLM.offset, GLM.y_fix)
     return [betas, predy, v, w]
 
 def poiss_iwls(GLM):     
     ey = GLM.y/GLM.offset
     g_ey = np.log(ey)
-    betas, w, v, nIter = iwls(GLM.x, GLM.y, g_ey, link_p, GLM.mType, GLM.offset,
+    betas, w, v, n_iter = iwls(GLM.x, GLM.y, g_ey, link_p, GLM.family, GLM.offset,
             GLM.y_fix, GLM.sMatrix, GLM.fit_params['ini_betas'],
             GLM.fit_params['tol'], GLM.fit_params['maxIter'])
-    GLM.fit_params['nIter'] = nIter
-    predy = get_y_hat(GLM.mType, v, GLM.offset, GLM.y_fix)
+    GLM.fit_params['n_iter'] = n_iter
+    predy = get_y_hat(GLM.family, v, GLM.offset, GLM.y_fix)
     return [betas, predy, v, w]
 
 def logit_iwls(GLM):
@@ -29,9 +29,9 @@ def logit_iwls(GLM):
     g_ey = np.ones(shape=(GLM.n,1))
     g_ey[id_one] = np.log(theta/(1.0 - theta))
     g_ey[id_zero] = np.log((1.0 - theta)/theta)
-    betas, w, v, nIter = iwls(GLM.x, GLM.y, g_ey, link_l, GLM.mType, GLM.offset,
+    betas, w, v, n_iter = iwls(GLM.x, GLM.y, g_ey, link_l, GLM.family, GLM.offset,
             GLM.y_fix, GLM.sMatrix, GLM.fit_params['ini_betas'],
-            GLM.fit_params['tol'], GLM.fit_params['maxIter'])
-    GLM.fit_params['nIter'] = nIter
-    predy = get_y_hat(GLM.mType, v, GLM.offset, GLM.y_fix)
+            GLM.fit_params['tol'], GLM.fit_params['max_iter'])
+    GLM.fit_params['n_iter'] = n_iter
+    predy = get_y_hat(GLM.family, v, GLM.offset, GLM.y_fix)
     return [betas, predy, v, w]
