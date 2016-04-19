@@ -53,7 +53,7 @@ class GLM(RegressionPropsY):
                         Parameters passed into fit method to define estimation
                         routine.
     """
-    def __init__(self, y, x, family='Gaussian', offset=None, y_fix =None, sigma2_v1=False,
+    def __init__(self, y, x, family='Gaussian', offset=None, y_fix = None, sigma2_v1=False,
         sMatrix=None):
         """
         Initialize class
@@ -98,15 +98,15 @@ class GLM(RegressionPropsY):
         """
         self.fit_params['ini_betas'] = ini_betas
         self.fit_params['tol'] = tol
-        self.fit_params['max_iter'] = maxIter
+        self.fit_params['max_iter'] = max_iter
         self.fit_params['solve']=solve
         if solve.lower() == 'iwls':
             ey = self.y/self.offset
-            if self.family = 'Gaussian':
+            if self.family == 'Gaussian':
                 results = GLMResults(self, *gauss_iwls(self))
-            if self.family = 'Poisson':
+            if self.family == 'Poisson':
                 results =  GLMResults(self, *poiss_iwls(self))
-            if self.family = 'logistic':
+            if self.family == 'logistic':
             	results = GLMResults(self, *logit_iwls(self)) 
         return results
     
@@ -273,7 +273,7 @@ class GLMResults(GLM):
         	    xtwx = np.dot(xtw, self.x)          
         	    self._cache['vm'] = la.inv(xtwx)
         except KeyError:
-            if self.mType == 0:                  
+            if self.family == 'Gaussian':                  
         		self._cache['vm'] = np.dot(self.sig2, self.xtxi)
             else:
         	    xtw = (self.x * self.w).T 
