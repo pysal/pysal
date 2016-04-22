@@ -2,7 +2,7 @@ import numpy as np
 
 def golden_section(a, c, delta, function, tol, max_iter, int_score=False):
     """
-    Golden section search routine 
+    Golden section search routine
 
     Arguments
     ----------
@@ -18,10 +18,10 @@ def golden_section(a, c, delta, function, tol, max_iter, int_score=False):
     int_score       : boolean
                       False for float score, True for integer score
     tol             : float
-                      tolerance used to determine convergence 
+                      tolerance used to determine convergence
     max_iter        : integer
                       maximum iterations if no convergence to tolerance
-    
+
     Returns
     -------
     opt_val         : float
@@ -34,13 +34,13 @@ def golden_section(a, c, delta, function, tol, max_iter, int_score=False):
     b = a + delta * abs(c-a)
     d = c - delta * abs(c-a)
     score = 0.0
-    diff = 1.0e9  
+    diff = 1.0e9
     iters  = 0
     output = []
-    while abs(diff) > tol and iters < max_iter:           
+    while abs(diff) > tol and iters < max_iter:
         iters += 1
-        if int_score: 
-            b = round(b,0)     
+        if int_score:
+            b = round(b,0)
             d = round(d,0)
         print a
         score_a = function(a)
@@ -53,20 +53,20 @@ def golden_section(a, c, delta, function, tol, max_iter, int_score=False):
             opt_score = score_b
             c = d
             d = b
-            b = a + lamda * abs(c-a)            
+            b = a + lamda * abs(c-a)
         else:
             opt_val = d
             opt_score = score_d
             a = b
-            b = d  
-            d = c - lamda * abs(c-a)            
-        
+            b = d
+            d = c - lamda * abs(c-a)
+
         output.append((opt_val, opt_score))
         diff = score_b - score_d
-        score = opt_score   
-        
+        score = opt_score
+
     return opt_val, opt_score, output
-   
+
 def interval(l_bound, u_bound, interval, function, int_score=False):
     """
     Interval search, using interval as stepsize
@@ -84,7 +84,7 @@ def interval(l_bound, u_bound, interval, function, int_score=False):
                       values
     int_score       : boolean
                       False for float score, True for integer score
-    
+
     Returns
     -------
     opt_val         : float
@@ -95,37 +95,37 @@ def interval(l_bound, u_bound, interval, function, int_score=False):
                       searching history
     """
     a = l_bound
-    c = u_bound  
+    c = u_bound
     b = a + interval
     if int_score:
         a = round(a,0)
         c = round(c,0)
         b = round(b,0)
-    
-    output = []    
-   
+
+    output = []
+
     score_a = function(a)
     score_c = function(b)
-    
+
     output.append((a,score_a))
     output.append((c,score_c))
-    
+
     if score_a < score_c:
         opt_val = a
         opt_score = score_a
     else:
-        opt_val = c   
+        opt_val = c
         opt_score = score_c
-    
-    while b < c:             
+
+    while b < c:
         score_b = function(b)
-        
+
         output.append((b,score_b))
-        
+
         if score_b < opt_score:
             opt_val = b
             opt_score = score_b
-                    
+
         b = b + interval
-        
+
     return opt_val, opt_score, output
