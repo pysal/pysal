@@ -6,7 +6,7 @@ import pysal.spreg.user_output as USER
 
 __all__ = ['GLM']
 
-class GLM(RegressionPropsY):
+class GLM(object):
     """
     Generalised linear models. Can currently estimate Guassian, Poisson and
     Logisitc. GLM object prepares model input. Fit method performs estimation
@@ -17,16 +17,16 @@ class GLM(RegressionPropsY):
         y             : array
                         n*1, dependent variable.
         x             : array
-                        n*k, independent variable, exlcuding the constant. 
+                        n*k, independent variable, exlcuding the constant.
         family        : string
                         Model type: 'Gaussian', 'Poisson', 'Logistic'
         offset        : array
                         n*1, the offset variable at the ith location. For Poisson model
                         this term is often the size of the population at risk or
-                        the expected size of the outcome in spatial epidemiology. 
+                        the expected size of the outcome in spatial epidemiology.
                         Default is None where Ni becomes 1.0 for all locations.
-        y_fix         : 
-      
+        y_fix         :
+
         sigma2_v1     : boolean
                         Sigma squared, True to use n as denominator.
                         Default is False which uses n-k.
@@ -42,9 +42,9 @@ class GLM(RegressionPropsY):
         family        : string
                         Model type: 'Gaussian', 'Poisson', 'Logistic'
         n             : integer
-                        Number of observations 
+                        Number of observations
         k             : integer
-                        Number of independent variables       
+                        Number of independent variables
         mean_y        : float
                         Mean of y
         std_y         : float
@@ -64,14 +64,14 @@ class GLM(RegressionPropsY):
         self.x = USER.check_constant(x)
         self.sMatrix = sMatrix
         self.family = family
-        self.k = x.shape[1]  
+        self.k = x.shape[1]
         self.sigma2_v1=sigma2_v1
         if offset is None:
-            self.offset = np.ones(shape=(self.n,1))   
+            self.offset = np.ones(shape=(self.n,1))
         else:
             self.offset = offset * 1.0
         if y_fix is None:
-	        self.y_fix = np.zeros(shape=(self.n,1)) 
+	        self.y_fix = np.zeros(shape=(self.n,1))
         else:
 	        self.y_fix = y_fix
         self.fit_params = {}
@@ -107,9 +107,9 @@ class GLM(RegressionPropsY):
             if self.family == 'Poisson':
                 results =  GLMResults(self, *poiss_iwls(self))
             if self.family == 'logistic':
-            	results = GLMResults(self, *logit_iwls(self)) 
+            	results = GLMResults(self, *logit_iwls(self))
         return results
-    
+
 
 class GLMResults(GLM):
     """
@@ -129,7 +129,7 @@ class GLMResults(GLM):
                         n*1, final weight used for iwrl
 
     Attributes
-    ----------  
+    ----------
         model         : GLM Object
                         Point to GLM object with estimation parameters
         y             : array
@@ -139,9 +139,9 @@ class GLMResults(GLM):
         family        : string
                         Model type: 'Gaussian', 'Poisson', 'Logistic'
         n             : integer
-                        Number of observations 
+                        Number of observations
         k             : integer
-                        Number of independent variables       
+                        Number of independent variables
         fit_params     : dict
                         Parameters passed into fit method to define estimation
                         routine.
@@ -157,7 +157,7 @@ class GLMResults(GLM):
         xtxi          : array
                         n*k, inverse of xx' for computing covariance
         u             : array
-                        n*1, residuals 
+                        n*1, residuals
         predy         : array
                         n*1, predicted value of y
         utu           : float
@@ -167,7 +167,7 @@ class GLMResults(GLM):
         sig2n_k       : float
                         sigma sqaured using n-k for denominator
         vm            : array
-                        Variance covariance matrix (kxk) of betas    
+                        Variance covariance matrix (kxk) of betas
         std_err       : array
                         k*1, standard errors of betas
         dev_u         : float
@@ -188,7 +188,7 @@ class GLMResults(GLM):
         if w is not None:
             self.w = w
         self.predy = predy
-        self.u = self.y - self.predy 
+        self.u = self.y - self.predy
         self.xtxi = la.inv(np.dot(self.x.T,self.x))
         self._cache = {}
 
@@ -196,7 +196,7 @@ class GLMResults(GLM):
 	        self.sig2 = self.sig2n
         else:
             self.sig2 = self.sig2n_k
-        
+
     @property
     def utu(self):
         try:
@@ -249,7 +249,7 @@ class GLMResults(GLM):
         except KeyError:
             self._cache['sig2n_k'] = np.sum(self.w*self.u**2) / (self.n - self.k)
         return self._cache['sig2n_k']
-    
+
     @sig2n_k.setter
     def sig2n_k(self, val):
         try:
@@ -265,19 +265,19 @@ class GLMResults(GLM):
         try:
             return self._cache['vm']
         except AttributeError:
-            self._cache = {} 
-            if self.mType == 0:                  
+            self._cache = {}
+            if self.mType == 0:
         		self._cache['vm'] = np.dot(self.sig2, self.xtxi)
             else:
-        	    xtw = (self.x * self.w).T 
-        	    xtwx = np.dot(xtw, self.x)          
+        	    xtw = (self.x * self.w).T
+        	    xtwx = np.dot(xtw, self.x)
         	    self._cache['vm'] = la.inv(xtwx)
         except KeyError:
-            if self.family == 'Gaussian':                  
+            if self.family == 'Gaussian':
         		self._cache['vm'] = np.dot(self.sig2, self.xtxi)
             else:
-        	    xtw = (self.x * self.w).T 
-        	    xtwx = np.dot(xtw, self.x)          
+        	    xtw = (self.x * self.w).T
+        	    xtwx = np.dot(xtw, self.x)
         	    self._cache['vm'] = la.inv(xtwx)
         return self._cache['vm']
 
@@ -290,7 +290,7 @@ class GLMResults(GLM):
             self._cache['vm'] = val
         except KeyError:
             self._cache['vm'] = val
-    
+
     @property
     def std_err(self):
         try:
@@ -311,7 +311,7 @@ class GLMResults(GLM):
             self._cache['std_err'] = val
         except KeyError:
             self._cache['std_err'] = val
-    
+
     @property
     def dev_u(self):
         """
@@ -331,16 +331,16 @@ class GLMResults(GLM):
         try:
             self._cache['dev_u'] = val
         except AttributeError:
-            self._cache = {}    
+            self._cache = {}
             self._cache['dev_u'] = val
         except KeyError:
             self.cache['dev_u'] = val
-        
 
-    def calc_dev_u(self):            
+
+    def calc_dev_u(self):
 	dev = 0.0
 	if self.family == 'Gaussian':
-	    dev = self.n * (np.log(self.utu * 2.0 * np.pi / self.n) + 1.0) 
+	    dev = self.n * (np.log(self.utu * 2.0 * np.pi / self.n) + 1.0)
 	if self.family == 'Poisson':
 	    id0 = self.y==0
 	    id1 = self.y<>0
@@ -349,11 +349,11 @@ class GLMResults(GLM):
             else:
                 dev = 2.0 * (np.sum(self.y[id1] *
                     np.log(self.y[id1]/self.predy[id1])) -
-                        np.sum(self.y[id0]-self.predy[id0]))   
+                        np.sum(self.y[id0]-self.predy[id0]))
         if self.family == 'logistic':
             for i in range(self.n):
                 if self.y[i] == 0:
                     dev += -2.0 * np.log(1.0 - self.predy[i])
-                else: 
-                    dev += -2.0 * np.log(self.predy[i])		
+                else:
+                    dev += -2.0 * np.log(self.predy[i])
         return dev
