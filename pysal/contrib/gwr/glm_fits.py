@@ -5,7 +5,7 @@ from iwls import iwls
 def gauss_iwls(GLM):
     g_ey = GLM.y
     betas, w, v, n_iter = iwls(GLM.x, GLM.y, g_ey, link_g, GLM.family, GLM.offset,
-            GLM.y_fix, GLM.sMatrix, GLM.fit_params['ini_betas'],
+            GLM.y_fix, GLM.fit_params['ini_betas'],
             GLM.fit_params['tol'], GLM.fit_params['max_iter'])
     GLM.fit_params['n_iter'] = n_iter
     predy = get_y_hat(GLM.family, v, GLM.offset, GLM.y_fix)
@@ -15,7 +15,7 @@ def poiss_iwls(GLM):
     ey = GLM.y/GLM.offset
     g_ey = np.log(ey)
     betas, w, v, n_iter = iwls(GLM.x, GLM.y, g_ey, link_p, GLM.family, GLM.offset,
-            GLM.y_fix, GLM.sMatrix, GLM.fit_params['ini_betas'],
+            GLM.y_fix GLM.fit_params['ini_betas'],
             GLM.fit_params['tol'], GLM.fit_params['max_iter'])
     GLM.fit_params['n_iter'] = n_iter
     predy = get_y_hat(GLM.family, v, GLM.offset, GLM.y_fix)
@@ -30,7 +30,7 @@ def logit_iwls(GLM):
     g_ey[id_one] = np.log(theta/(1.0 - theta))
     g_ey[id_zero] = np.log((1.0 - theta)/theta)
     betas, w, v, n_iter = iwls(GLM.x, GLM.y, g_ey, link_l, GLM.family, GLM.offset,
-            GLM.y_fix, GLM.sMatrix, GLM.fit_params['ini_betas'],
+            GLM.y_fix, GLM.fit_params['ini_betas'],
             GLM.fit_params['tol'], GLM.fit_params['max_iter'])
     GLM.fit_params['n_iter'] = n_iter
     predy = get_y_hat(GLM.family, v, GLM.offset, GLM.y_fix)

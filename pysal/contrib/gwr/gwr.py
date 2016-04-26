@@ -158,7 +158,7 @@ class GWRResults(GWR):
     localR2   : array
                 n*1, local R square
     tr_S      : float
-                trace of S matrix
+                trace of S (hat) matrix
     tr_STS    : float
                 trace of STS matrix
     CooksD    : array

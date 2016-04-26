@@ -15,7 +15,7 @@ def _compute_betas(y, x):
     betas = np.dot(xtx_inv_xt, y)
     return betas   
 
-def iwls(x, y, g_ey, link_func, family, offset, y_fix, sMatrix=None,
+def iwls(x, y, g_ey, link_func, family, offset, y_fix,
     ini_betas=None, tol=1.0e-6, max_iter=200, wi=None):
     """
     Iteratively re-weighted least squares estimation routine
@@ -32,23 +32,13 @@ def iwls(x, y, g_ey, link_func, family, offset, y_fix, sMatrix=None,
     v = np.dot(x, betas)
     while diff > tol and n_iter < max_iter:
         n_iter += 1 
-                
         z, w = link_func(v, y, offset, y_fix)
-                
         ww = np.sqrt(w)
         wx = x * ww
-        if sMatrix is None:
-            wz = z * ww
-            n_betas = _compute_betas(wz, wx)
-	    #else:
-	        #wz = (z - np.dot(sMatrix,z)) * ww
-	        #wx2 = (x - np.dot(sMatrix,x)) * ww
-	        #xtx = np.dot(wx.T, wx2)
-	        #xtxinv = la.inv(xtx)
-	        #xtz = np.dot(wx.T, wz)
-	        #n_betas = np.dot(xtxinv, xtz)
-                
+        wz = z * ww
+        n_betas = _compute_betas(wz, wx)
         v_new = np.dot(x, n_betas)
+
 	if family == 'Gaussian':
 	    diff = 0.0
 	else:

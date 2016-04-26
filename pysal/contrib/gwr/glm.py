@@ -1,3 +1,9 @@
+#TODO
+# Documentation for y_fix
+# Add model diagnostics as cached properties:
+# Add family class functionality so that diagnostics are methods of family class
+# intead of using different cases for family for each diagnostic.
+
 import numpy as np
 import numpy.linalg as la
 from pysal.spreg.utils import RegressionPropsY
@@ -6,11 +12,11 @@ import pysal.spreg.user_output as USER
 
 __all__ = ['GLM']
 
-class GLM(object):
+class GLM(RegressionPropsY):
     """
     Generalised linear models. Can currently estimate Guassian, Poisson and
-    Logisitc. GLM object prepares model input. Fit method performs estimation
-    and returns a GMLResults object.
+    Logisitc regression coefficients. GLM object prepares model input and fit
+    method performs estimation which then returns a GLMResults object.
 
     Parameters
     ----------
@@ -19,7 +25,7 @@ class GLM(object):
         x             : array
                         n*k, independent variable, exlcuding the constant.
         family        : string
-                        Model type: 'Gaussian', 'Poisson', 'Logistic'
+                        Model type: 'Gaussian', 'Poisson', 'logistic'
         offset        : array
                         n*1, the offset variable at the ith location. For Poisson model
                         this term is often the size of the population at risk or
@@ -30,8 +36,6 @@ class GLM(object):
         sigma2_v1     : boolean
                         Sigma squared, True to use n as denominator.
                         Default is False which uses n-k.
-        sMatrix       : array
-                        n*n, hat matrix. Default is None.
 
     Attributes
     ----------
@@ -40,7 +44,7 @@ class GLM(object):
         x             : array
                         n*k, independent variable, including constant.
         family        : string
-                        Model type: 'Gaussian', 'Poisson', 'Logistic'
+                        Model type: 'Gaussian', 'Poisson', 'logistic'
         n             : integer
                         Number of observations
         k             : integer
@@ -53,8 +57,7 @@ class GLM(object):
                         Parameters passed into fit method to define estimation
                         routine.
     """
-    def __init__(self, y, x, family='Gaussian', offset=None, y_fix = None, sigma2_v1=False,
-        sMatrix=None):
+    def __init__(self, y, x, family='Gaussian', offset=None, y_fix = None, sigma2_v1=False):
         """
         Initialize class
         """
@@ -62,7 +65,6 @@ class GLM(object):
         USER.check_y(y, self.n)
         self.y = y
         self.x = USER.check_constant(x)
-        self.sMatrix = sMatrix
         self.family = family
         self.k = x.shape[1]
         self.sigma2_v1=sigma2_v1
@@ -131,7 +133,8 @@ class GLMResults(GLM):
     Attributes
     ----------
         model         : GLM Object
-                        Point to GLM object with estimation parameters
+                        Points to GLM object for which parameters have been
+                        estimated.
         y             : array
                         n*1, dependent variable.
         x             : array
@@ -153,7 +156,7 @@ class GLMResults(GLM):
                         n*1, final weight used for x
         v             : array
                         n*1, untransformed predicted functions.
-                        Applying the link functions yields predy.i
+                        Applying the link functions yields predy.
         xtxi          : array
                         n*k, inverse of xx' for computing covariance
         u             : array
