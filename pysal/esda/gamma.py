@@ -82,8 +82,8 @@ class Gamma:
     >>> g = pysal.Gamma(y,w)
     >>> g.g
     20.0
-    >>> g.g_z
-    3.1879280354548638
+    >>> round(g.g_z, 3)
+    3.188
     >>> g.p_sim_g
     0.0030000000000000001
     >>> g.min_g
@@ -96,8 +96,8 @@ class Gamma:
     >>> g1 = pysal.Gamma(y,w,operation='s')
     >>> g1.g
     8.0
-    >>> g1.g_z
-    -3.7057554345954791
+    >>> round(g1.g_z, 3)
+    -3.706
     >>> g1.p_sim_g
     0.001
     >>> g1.min_g
@@ -110,8 +110,8 @@ class Gamma:
     >>> g2 = pysal.Gamma(y,w,operation='a')
     >>> g2.g
     8.0
-    >>> g2.g_z
-    -3.7057554345954791
+    >>> round(g2.g_z, 3)
+    -3.706
     >>> g2.p_sim_g
     0.001
     >>> g2.min_g
@@ -124,8 +124,8 @@ class Gamma:
     >>> g3 = pysal.Gamma(y,w,standardize='y')
     >>> g3.g
     32.0
-    >>> g3.g_z
-    3.7057554345954791
+    >>> round(g3.g_z, 3)
+    3.706
     >>> g3.p_sim_g
     0.001
     >>> g3.min_g
@@ -142,8 +142,8 @@ class Gamma:
     >>> g4 = pysal.Gamma(y,w,operation=func)
     >>> g4.g
     20.0
-    >>> g4.g_z
-    3.1879280354548638
+    >>> round(g4.g_z, 3)
+    3.188
     >>> g4.p_sim_g
     0.0030000000000000001
 

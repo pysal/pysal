@@ -15,6 +15,8 @@ __all__ = ['lat2W', 'block_weights', 'comb', 'order', 'higher_order',
            'higher_order_sp', 'hexLat2W', 'regime_weights']
 
 
+KDTREE_TYPES = [scipy.spatial.KDTree, scipy.spatial.cKDTree]
+
 def hexLat2W(nrows=5, ncols=5):
     """
     Create a W object for a hexagonal lattice.
@@ -64,7 +66,7 @@ def hexLat2W(nrows=5, ncols=5):
         return lat2W(nrows, ncols)
 
     n = nrows * ncols
-    rid = [i / ncols for i in xrange(n)]
+    rid = [i // ncols for i in xrange(n)]
     cid = [i % ncols for i in xrange(n)]
     r1 = nrows - 1
     c1 = ncols - 1
@@ -147,7 +149,7 @@ def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
     n = nrows * ncols
     r1 = nrows - 1
     c1 = ncols - 1
-    rid = [i / ncols for i in xrange(n)]
+    rid = [i // ncols for i in xrange(n)] #must be floor!
     cid = [i % ncols for i in xrange(n)]
     w = {}
     r = below = 0
@@ -251,7 +253,7 @@ def regime_weights(regimes):
 
 
 
-def block_weights(regimes):
+def block_weights(regimes, ids=None, sparse=False):
     """
     Construct spatial weights for regime neighbors.
 
@@ -262,8 +264,13 @@ def block_weights(regimes):
 
     Parameters
     ----------
-    regimes : list, array
-           ids of which regime an observation belongs to
+    regimes     : list, array
+                  ids of which regime an observation belongs to
+    ids         : list, array
+                  Ordered sequence of IDs for the observations
+    sparse      : boolean
+                  If True return WSP instance
+                  If False return W instance
 
     Returns
     -------
@@ -300,7 +307,12 @@ def block_weights(regimes):
         members = NPNZ(regimes == rid)[0]
         for member in members:
             neighbors[member] = members[NPNZ(members != member)[0]].tolist()
-    return pysal.weights.W(neighbors)
+    w = pysal.weights.W(neighbors)
+    if ids is not None:
+        w.remap_ids(ids)
+    if sparse:
+        w = pysal.weights.WSP(w.sparse, id_order=ids)
+    return w
 
 
 def comb(items, n=None):
@@ -637,10 +649,10 @@ def shimbel(w):
 
     info = {}
     ids = w.id_order
-    for id in ids:
+    for i in ids:
         s = [0] * w.n
-        s[ids.index(id)] = -1
-        for j in w.neighbors[id]:
+        s[ids.index(i)] = -1
+        for j in w.neighbors[i]:
             s[ids.index(j)] = 1
         k = 1
         flag = s.count(0)
@@ -657,7 +669,7 @@ def shimbel(w):
                         s[nid] = knext
             k = knext
             flag = s.count(0)
-        info[id] = s
+        info[i] = s
     return info
 
 
@@ -772,7 +784,7 @@ def full2W(m, ids=None):
 
 
 def WSP2W(wsp, silent_island_warning=False):
-    
+
     """
     Convert a pysal WSP object (thin weights matrix) to a pysal W object.
 
@@ -1187,6 +1199,72 @@ def write_gal(file, k=10):
         f.write(" ".join(map(str, neighs)))
     f.close()
 
+def neighbor_equality(w1, w2):
+    """
+    Test if the neighbor sets are equal between two weights objects
+
+    Parameters
+    ----------
+
+    w1 : W
+        instance of spatial weights class W
+
+    w2 : W
+        instance of spatial weights class W
+
+    Returns
+    -------
+    Boolean
+
+
+    Notes
+    -----
+    Only set membership is evaluated, no check of the weight values is carried out.
+
+
+    Examples
+    --------
+    >>> from pysal.weights.util import neighbor_equality
+    >>> w1 = pysal.lat2W(3,3)
+    >>> w2 = pysal.lat2W(3,3)
+    >>> neighbor_equality(w1, w2)
+    True
+    >>> w3 = pysal.lat2W(5,5)
+    >>> neighbor_equality(w1, w3)
+    False
+    >>> n4 = w1.neighbors.copy()
+    >>> n4[0] = [1]
+    >>> n4[1] = [4, 2]
+    >>> w4 = pysal.W(n4)
+    >>> neighbor_equality(w1, w4)
+    False
+    >>> n5 = w1.neighbors.copy()
+    >>> n5[0]
+    [3, 1]
+    >>> n5[0] = [1, 3]
+    >>> w5 = pysal.W(n5)
+    >>> neighbor_equality(w1, w5)
+    True
+
+    """
+    n1 = w1.neighbors
+    n2 = w2.neighbors
+    ids_1 = set(n1.keys())
+    ids_2 = set(n2.keys())
+    if ids_1 != ids_2:
+        return False
+    for i in ids_1:
+        if set(w1.neighbors[i]) != set(w2.neighbors[i]):
+            return False
+    return True
+
+def isKDTree(obj):
+    """
+    This is a utility function to determine whether or not an object is a
+    KDTree, since KDTree and cKDTree have no common parent type
+    """
+    return any([issubclass(type(obj), KDTYPE) for KDTYPE in KDTREE_TYPES])
+
 if __name__ == "__main__":
     from pysal import lat2W
 
@@ -1195,4 +1273,5 @@ if __name__ == "__main__":
     assert (lat2W(5, 3, rook=False).sparse.todense() == lat2SW(5, 3,
                                                                'queen').todense()).all()
     assert (lat2W(50, 50, rook=False).sparse.todense() == lat2SW(50,
+
                                                                  50, 'queen').todense()).all()

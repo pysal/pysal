@@ -1,6 +1,8 @@
 """
 A module of classification schemes for choropleth mapping.
 """
+
+
 __author__ = "Sergio J. Rey"
 
 __all__ = ['Map_Classifier', 'quantile', 'Box_Plot', 'Equal_Interval',
@@ -8,7 +10,7 @@ __all__ = ['Map_Classifier', 'quantile', 'Box_Plot', 'Equal_Interval',
            'Jenks_Caspall_Forced', 'Jenks_Caspall_Sampled',
            'Max_P_Classifier', 'Maximum_Breaks', 'Natural_Breaks',
            'Quantiles', 'Percentiles', 'Std_Mean', 'User_Defined',
-           'gadf', 'K_classifiers']
+           'gadf', 'K_classifiers', 'HeadTail_Breaks']
 
 
 K = 5  # default number of classes in any map scheme with this as an argument
@@ -17,6 +19,19 @@ import scipy.stats as stats
 import scipy as sp
 import copy
 import sys
+from scipy.cluster.vq import kmeans as KMEANS
+from warnings import warn as Warn
+
+def headTail_breaks(values, cuts):
+    """
+    head tail breaks helper function
+    """
+    values = np.array(values)
+    mean = np.mean(values)
+    cuts.append(mean)
+    if (len(values) > 1):
+        return headTail_breaks(values[values >= mean], cuts)
+    return cuts
 
 
 def quantile(y, k=4):
@@ -111,7 +126,7 @@ def binC(y, bins):
     >>>
     """
 
-    if np.rank(y) == 1:
+    if np.ndim(y) == 1:
         k = 1
         n = np.shape(y)[0]
     else:
@@ -120,12 +135,12 @@ def binC(y, bins):
     for i, bin in enumerate(bins):
         b[np.nonzero(y == bin)] = i
 
-    # check for non-binned items and print a warning if needed
+    # check for non-binned items and warn if needed
     vals = set(y.flatten())
     for val in vals:
         if val not in bins:
-            print 'warning: value not in bin: ', val
-            print 'bins: ', bins
+            Warn('value not in bin: {}'.format(val), UserWarning)
+            Warn('bins: {}'.format(bins), UserWarning)
 
     return b
 
@@ -176,7 +191,7 @@ def bin(y, bins):
            [0, 0, 2]])
     >>>
     """
-    if np.rank(y) == 1:
+    if np.ndim(y) == 1:
         k = 1
         n = np.shape(y)[0]
     else:
@@ -237,7 +252,7 @@ def bin1d(x, bins):
         k -= 1
         l, r = cuts.pop(-1)
         binIds += (x > l) * (x <= r) * k
-    counts = np.bincount(binIds)
+    counts = np.bincount(binIds, minlength=len(bins))
     return (binIds, counts)
 
 
@@ -252,49 +267,50 @@ def load_example():
     return cal
 
 
-def natural_breaks(values, k=5, itmax=100):
+def _kmeans(y, k=5):
+    """
+    Helper function to do kmeans in one dimension
+    """
+
+    y = y * 1.   # KMEANS needs float or double dtype
+    centroids = KMEANS(y, k)[0]
+    centroids.sort()
+    try:
+        class_ids = np.abs(y - centroids).argmin(axis=1)
+    except:
+        class_ids = np.abs(y[:, np.newaxis] - centroids).argmin(axis=1)
+
+    uc = np.unique(class_ids)
+    cuts = np.array([y[class_ids == c].max() for c in uc])
+    y_cent = np.zeros_like(y)
+    for c in uc:
+        y_cent[class_ids == c] = centroids[c]
+    diffs = y - y_cent
+    diffs *= diffs
+
+    return class_ids, cuts, diffs.sum(), centroids
+
+
+def natural_breaks(values, k=5):
     """
     natural breaks helper function
+
+    Jenks natural breaks is kmeans in one dimension
     """
     values = np.array(values)
     uv = np.unique(values)
     uvk = len(uv)
     if uvk < k:
-        print 'Warning: Not enough unique values in array to form k classes'
-        print "Warning: setting k to %d" % uvk
+        Warn('Warning: Not enough unique values in array to form k classes', 
+                UserWarning)
+        Warn('Warning: setting k to %d' % uvk, UserWarning)
         k = uvk
-    sids = np.random.permutation(range(len(uv)))[0:k]
-    seeds = uv[sids]
-    seeds.sort()
-    diffs = abs(np.matrix([values - seed for seed in seeds]))
-    c0 = diffs.argmin(axis=0)
-    c0 = np.array(c0)[0]
-    solving = True
-    solved = False
-    rk = range(k)
-    it = 0
-    while solving:
-        # get centroids of clusters
-        seeds = [np.median(values[c0 == c]) for c in rk]
-        seeds.sort()
-        # for each value find closest centroid
-        diffs = abs(np.matrix([values - seed for seed in seeds]))
-        # assign value to that centroid
-        c1 = diffs.argmin(axis=0)
-        c1 = np.array(c1)[0]
-        # compare new classids to previous
-        d = abs(c1 - c0)
-        if d.sum() == 0:
-            solving = False
-            solved = True
-        else:
-            c0 = c1
-        it += 1
-        if it == itmax:
-            solving = False
-    class_ids = c1
-    cuts = [max(values[c1 == c]) for c in rk]
-    return sids, seeds, diffs, class_ids, solved, it, cuts
+    kres = _kmeans(values, k)
+    sids = kres[-1]  # centroids
+    fit = kres[-2]
+    class_ids = kres[0]
+    cuts = kres[1]
+    return (sids, class_ids, fit, cuts)
 
 
 def _fisher_jenks_means(values, classes=5, sort=True):
@@ -367,14 +383,14 @@ def _fisher_jenks_means(values, classes=5, sort=True):
     return kclass
 
 
-class Map_Classifier:
+class Map_Classifier(object):
     """
     Abstract class for all map classifications [Slocum2008]_
 
-    For an array :math:`y` of :math:`n` values, a map classifier places each value
-    :math:`y_i` into one of :math:`k` mutually exclusive and exhaustive classes.
-    Each classifer defines the classes based on different criteria, but in all
-    cases the following hold for the classifiers in PySAL:
+    For an array :math:`y` of :math:`n` values, a map classifier places each
+    value :math:`y_i` into one of :math:`k` mutually exclusive and exhaustive
+    classes.  Each classifer defines the classes based on different criteria,
+    but in all cases the following hold for the classifiers in PySAL:
 
     .. math::
 
@@ -385,14 +401,13 @@ class Map_Classifier:
 
 
 
-
-
     Map Classifiers Supported
 
     * :class:`~pysal.esda.mapclassify.Box_Plot`
     * :class:`~pysal.esda.mapclassify.Equal_Interval`
     * :class:`~pysal.esda.mapclassify.Fisher_Jenks`
     * :class:`~pysal.esda.mapclassify.Fisher_Jenks_Sampled`
+    * :class:`~pysal.esda.mapclassify.HeadTail_Breaks`
     * :class:`~pysal.esda.mapclassify.Jenks_Caspall`
     * :class:`~pysal.esda.mapclassify.Jenks_Caspall_Forced`
     * :class:`~pysal.esda.mapclassify.Jenks_Caspall_Sampled`
@@ -434,6 +449,50 @@ class Map_Classifier:
     def _classify(self):
         self._set_bins()
         self.yb, self.counts = bin1d(self.y, self.bins)
+    
+    def _update(self, data, *args, **kwargs):
+        """
+        The only thing that *should* happen in this function is 
+        1. input sanitization for pandas
+        2. classification/reclassification. 
+        
+        Using their __init__ methods, all classifiers can re-classify given
+        different input parameters or additional data. 
+
+        If you've got a cleverer updating equation than the intial estimation
+        equation, remove the call to self.__init__ below and replace it with the
+        updating function. 
+        """
+        if data is not None:
+            if hasattr(data, 'values'):
+                data = data.values
+            data = np.append(data.flatten(), self.y)
+        else:
+            data = self.y
+        self.__init__(data, *args, **kwargs)
+    
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
+
+        Parameters
+        ----------
+        y   :   array
+                    (n,1) array of data to classify
+        inplace :   bool
+                    whether to conduct the update in place or to return a copy
+                    estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'k':kwargs.pop('k', self.k)})
+        if inplace:
+            self._update(y, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, **kwargs)
+            return new
 
     def __str__(self):
         st = self._table_string()
@@ -441,6 +500,19 @@ class Map_Classifier:
 
     def __repr__(self):
         return self._table_string()
+
+    def __call__(self, *args, **kwargs):
+        """
+        This will allow the classifier to be called like it's a function.
+
+        Whether or not we want to make this be "find_bin" or "update" is a
+        design decision. 
+
+        I like this as find_bin, since a classifier's job should be to classify
+        the data given to it using the rules estimated from the `_classify()`
+        function. 
+        """
+        return self.find_bin(*args)
 
     def get_tss(self):
         """
@@ -529,6 +601,91 @@ class Map_Classifier:
         table.insert(1, " ")
         table = "\n".join(table)
         return table
+    
+    def find_bin(self, x):
+        """
+        Sort input or inputs according to the current bin estimate
+
+        Parameters
+        ----------
+        x       :   array or numeric
+                    a value or array of values to fit within the estimated
+                    bins
+
+        Returns
+        -------
+        a bin index or array of bin indices that classify the input into one of
+        the classifiers' bins
+        """
+        if not isinstance(x, np.ndarray):
+            x = np.array([x]).flatten()
+        uptos = [np.where(value < self.bins)[0] for value in x]
+        bins = [x.min() if x.size > 0 else len(self.bins)-1 for x in uptos] #bail upwards
+        if len(bins) == 1:
+            return bins[0]
+        else:
+            return bins
+
+class HeadTail_Breaks(Map_Classifier):
+    """
+    Head/tail Breaks Map Classification for Heavy-tailed Distributions
+
+    Parameters
+    ----------
+    y       : array
+              (n,1), values to classify
+    Attributes
+    ----------
+    yb      : array
+              (n,1), bin ids for observations,
+    bins    : array
+              (k,1), the upper bounds of each class
+    k       : int
+              the number of classes
+    counts  : array
+              (k,1), the number of observations falling in each class
+    Examples
+    --------
+    >>> import numpy as np
+    >>> np.random.seed(10)
+    >>> cal = load_example()
+    >>> htb = HeadTail_Breaks(cal)
+    >>> htb.k
+    3
+    >>> htb.counts
+    array([50,  7,  1])
+    >>> htb.bins
+    array([  125.92810345,   811.26      ,  4111.45      ])
+    >>> np.random.seed(123456)
+    >>> x = np.random.lognormal(3, 1, 1000)
+    >>> htb = HeadTail_Breaks(x)
+    >>> htb.bins
+    array([  32.26204423,   72.50205622,  128.07150107,  190.2899093 ,
+            264.82847377,  457.88157946,  576.76046949])
+    >>> htb.counts
+    array([695, 209,  62,  22,  10,   1,   1])
+
+    Notes
+    -----
+
+    Head/tail Breaks is a relatively new classification method developed
+    and introduced by [Jiang2013]_ for data with a heavy-tailed distribution.
+
+
+    Based on contributions by Alessandra Sozzi <alessandra.sozzi@gmail.com>.
+
+    """
+    def __init__(self, y):
+        Map_Classifier.__init__(self, y)
+        self.name = 'HeadTail_Breaks'
+
+    def _set_bins(self):
+
+        x = self.y.copy()
+        bins = []
+        bins = headTail_breaks(x, bins)
+        self.bins = np.array(bins)
+        self.k = len(self.bins)
 
 
 class Equal_Interval(Map_Classifier):
@@ -662,6 +819,28 @@ class Percentiles(Map_Classifier):
         self.bins = np.array([stats.scoreatpercentile(y, p) for p in pct])
         self.k = len(self.bins)
 
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
+
+        Parameters
+        ----------
+        y   :   array
+                    (n,1) array of data to classify
+        inplace :   bool
+                    whether to conduct the update in place or to return a copy
+                    estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'pct':kwargs.pkp('pct', self.pct)})
+        if inplace:
+            self._update(y, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, **kwargs)
+            return new
 
 class Box_Plot(Map_Classifier):
     """
@@ -763,7 +942,29 @@ class Box_Plot(Map_Classifier):
         Map_Classifier._classify(self)
         self.low_outlier_ids = np.nonzero(self.yb == 0)[0]
         self.high_outlier_ids = np.nonzero(self.yb == 5)[0]
+    
+    def update(self, y=None,  inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
 
+        Parameters
+        ----------
+        y       :   array
+                        (n,1) array of data to classify
+        inplace     :   bool
+                        whether to conduct the update in place or to return a copy
+                        estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'hinge':kwargs.pop('hinge', self.hinge)})
+        if inplace:
+            self._update(y, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, **kwargs)
+            return new
 
 class Quantiles(Map_Classifier):
     """
@@ -875,6 +1076,30 @@ class Std_Mean(Map_Classifier):
             cuts.append(y_max)
         self.bins = np.array(cuts)
         self.k = len(cuts)
+    
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
+
+        Parameters
+        ----------
+        y   :   array
+                    (n,1) array of data to classify
+        inplace :   bool
+                    whether to conduct the update in place or to return a copy
+                    estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'multiples':kwargs.pop('multiples', self.multiples)})
+        if inplace:
+            self._update(y, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, **kwargs)
+            return new
+
 
 
 class Maximum_Breaks(Map_Classifier):
@@ -949,6 +1174,29 @@ class Maximum_Breaks(Map_Classifier):
         mp.sort()
         self.bins = np.array(mp)
 
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
+
+        Parameters
+        ----------
+        y   :   array
+                    (n,1) array of data to classify
+        inplace :   bool
+                    whether to conduct the update in place or to return a copy
+                    estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'k':kwargs.pop('k', self.k)})
+        kwargs.update({'mindiff':kwargs.pop('mindiff', self.mindiff)})
+        if inplace:
+            self._update(y, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, **kwargs)
+            return new
 
 class Natural_Breaks(Map_Classifier):
     """
@@ -977,20 +1225,20 @@ class Natural_Breaks(Map_Classifier):
 
     Examples
     --------
-    >>> import numpy as np
-    >>> np.random.seed(10)
-    >>> cal = load_example()
-    >>> nb = Natural_Breaks(cal, k = 5)
+    >>> import numpy
+    >>> import pysal
+    >>> numpy.random.seed(123456)
+    >>> cal = pysal.esda.mapclassify.load_example()
+    >>> nb = pysal.Natural_Breaks(cal, k=5)
     >>> nb.k
     5
     >>> nb.counts
-    array([14, 13, 14, 10,  7])
+    array([41,  9,  6,  1,  1])
     >>> nb.bins
-    array([  1.81000000e+00,   7.60000000e+00,   2.98200000e+01,
-             1.81270000e+02,   4.11145000e+03])
-    >>> x = np.array([1] * 50)
+    array([   29.82,   110.74,   370.5 ,   722.85,  4111.45])
+    >>> x = numpy.array([1] * 50)
     >>> x[-1] = 20
-    >>> nb = Natural_Breaks(x, k = 5, initial = 0)
+    >>> nb = pysal.Natural_Breaks(x, k = 5, initial = 0)
     Warning: Not enough unique values in array to form k classes
     Warning: setting k to 2
     >>> nb.bins
@@ -1002,11 +1250,10 @@ class Natural_Breaks(Map_Classifier):
     Notes
     -----
     There is a tradeoff here between speed and consistency of the
-    classification
-    If you want more speed, set initial to a smaller value (0
+    classification If you want more speed, set initial to a smaller value (0
     would result in the best speed, if you want more consistent classes in
-    multiple runs of Natural_Breaks on the same data, set initial to a
-    higher value.
+    multiple runs of Natural_Breaks on the same data, set initial to a higher
+    value.
 
 
     """
@@ -1020,17 +1267,54 @@ class Natural_Breaks(Map_Classifier):
 
         x = self.y.copy()
         k = self.k
-        res0 = natural_breaks(x, k)
-        fit = res0[2].sum()
-        for i in xrange(self.initial):
-            res = natural_breaks(x, k)
-            fit_i = res[2].sum()
-            if fit_i < fit:
-                res0 = res
-        self.bins = np.array(res0[-1])
-        self.k = len(self.bins)
-        self.iterations = res0[-2]
+        values = np.array(x)
+        uv = np.unique(values)
+        uvk = len(uv)
+        if uvk < k:
+            Warn('Warning: Not enough unique values in array to form k classes',
+                    UserWarning)
+            Warn("Warning: setting k to %d" % uvk, UserWarning)
+            k = uvk
+            uv.sort()
+            # we set the bins equal to the sorted unique values and ramp k
+            # downwards. no need to call kmeans.
+            self.bins = uv
+            self.k = k
+        else:
+            # find an initial solution and then try to find an improvement
+            res0 = natural_breaks(x, k)
+            fit = res0[2]
+            for i in xrange(self.initial):
+                res = natural_breaks(x, k)
+                fit_i = res[2]
+                if fit_i < fit:
+                    res0 = res
+            self.bins = np.array(res0[-1])
+            self.k = len(self.bins)
 
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
+
+        Parameters
+        ----------
+        y           :   array
+                        (n,1) array of data to classify
+        inplace     :   bool
+                        whether to conduct the update in place or to return a copy
+                        estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'k':kwargs.pop('k', self.k)})
+        kwargs.update({'initial':kwargs.pop('initial', self.initial)})
+        if inplace:
+            self._update(y, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, **kwargs)
+            return new
 
 class Fisher_Jenks(Map_Classifier):
     """
@@ -1132,6 +1416,7 @@ class Fisher_Jenks_Sampled(Map_Classifier):
         yr[0] = min(y)  # make sure we have the min
         self.original_y = y
         self.pct = pct
+        self._truncated = truncate
         self.yr = yr
         self.yr_n = yr.size
         Map_Classifier.__init__(self, yr)
@@ -1144,6 +1429,31 @@ class Fisher_Jenks_Sampled(Map_Classifier):
         fj = Fisher_Jenks(self.y, self.k)
         self.bins = fj.bins
 
+
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
+
+        Parameters
+        ----------
+        y           :   array
+                        (n,1) array of data to classify
+        inplace     :   bool
+                        whether to conduct the update in place or to return a copy
+                        estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'k':kwargs.pop('k', self.k)})
+        kwargs.update({'pct':kwargs.pop('pct', self.pct)})
+        kwargs.update({'truncate':kwargs.pop('truncate', self._truncated)})
+        if inplace:
+            self._update(y, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, **kwargs)
+            return new
 
 class Jenks_Caspall(Map_Classifier):
     """
@@ -1215,8 +1525,7 @@ class Jenks_Caspall(Map_Classifier):
         cuts.shape = (len(cuts),)
         self.bins = cuts
         self.iterations = it
-
-
+  
 class Jenks_Caspall_Sampled(Map_Classifier):
     """
     Jenks Caspall Map Classification using a random sample
@@ -1301,7 +1610,30 @@ class Jenks_Caspall_Sampled(Map_Classifier):
         jc = Jenks_Caspall(self.y, self.k)
         self.bins = jc.bins
         self.iterations = jc.iterations
+    
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
 
+        Parameters
+        ----------
+        y           :   array
+                        (n,1) array of data to classify
+        inplace     :   bool
+                        whether to conduct the update in place or to return a copy
+                        estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'k':kwargs.pop('k', self.k)})
+        kwargs.update({'pct':kwargs.pop('pct', self.pct)})
+        if inplace:
+            self._update(y, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, **kwargs)
+            return new
 
 class Jenks_Caspall_Forced(Map_Classifier):
     """
@@ -1511,6 +1843,39 @@ class User_Defined(Map_Classifier):
     def _set_bins(self):
         pass
 
+    def _update(self, y=None, bins=None):
+        if y is not None:
+            if hasattr(y, 'values'):
+                y = y.values
+            y = np.append(y.flatten(), self.y)
+        else:
+            y = self.y
+        if bins is None:
+            bins = self.bins
+        self.__init__(y, bins)
+
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
+
+        Parameters
+        ----------
+        y           :   array
+                        (n,1) array of data to classify
+        inplace     :   bool
+                        whether to conduct the update in place or to return a copy
+                        estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        bins = kwargs.pop('bins', self.bins)
+        if inplace:
+            self._update(y=y, bins=bins, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, bins, **kwargs)
+            return new
 
 class Max_P_Classifier(Map_Classifier):
     """
@@ -1678,6 +2043,28 @@ class Max_P_Classifier(Map_Classifier):
         else:
             return True
 
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters. 
+
+        Parameters
+        ----------
+        y           :   array
+                        (n,1) array of data to classify
+        inplace     :   bool
+                        whether to conduct the update in place or to return a copy
+                        estimated from the additional specifications. 
+
+        Additional parameters provided in **kwargs are passed to the init
+        function of the class. For documentation, check the class constructor.
+        """
+        kwargs.update({'initial':kwargs.pop('initial', self.initial)})
+        if inplace:
+            self._update(y, bins, **kwargs)
+        else:
+            new = copy.deepcopy(self)
+            new._update(y, bins, **kwargs)
+            return new
 
 def _fit(y, classes):
     """Calculate the total sum of squares for a vector y classified into
@@ -1779,7 +2166,7 @@ def gadf(y, method="Quantiles", maxk=15, pct=0.8):
     return (k, cl, gadf)
 
 
-class K_classifiers:
+class K_classifiers(object):
     """
     Evaluate all k-classifers and pick optimal based on k and GADF
 
@@ -1882,7 +2269,6 @@ def opt_part(x):
     tss = np.inf
     opt_i = -999
     for i in xrange(1, n):
-        print i
         left = x[:i].var() * i
         right = x[i:].var() * (n - i)
         tss_i = left + right

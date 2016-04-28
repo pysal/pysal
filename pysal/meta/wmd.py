@@ -1,3 +1,9 @@
+import pysal as ps
+import json
+from six.moves import urllib as urllib
+import copy
+import numpy as np
+
 """
 Weights Meta Data
 
@@ -19,13 +25,7 @@ TODO
 - have wmd_reader take either a wmd file or a wmd dictionary/object
 """
 __author__ = "Sergio J. Rey <srey@asu.edu>, Wenwen Li <wenwen@asu.edu>"
-import pysal as ps
-import io, json
-import httplib
-from urlparse import urlparse
-import urllib2 as urllib
-import copy
-import numpy as np
+
 
 def wmd_reader(fileName):
     """
@@ -48,11 +48,12 @@ def wmd_reader(fileName):
                 meta_data = json.load(fp)
                 global fullmeta
                 fullmeta = {}
-                fullmeta['root'] =  copy.deepcopy(meta_data)
+                fullmeta['root'] = copy.deepcopy(meta_data)
                 w = _wmd_parser(meta_data)
                 return w
         except:
             print 'wmd_reader failed: ', fileName
+
 
 class WMD(ps.W):
     """Weights Meta Data Class"""
@@ -89,7 +90,8 @@ class WMD(ps.W):
         _wmd_writer(self, fileName, data=data)
 
 ######################### Private functions #########################
-    
+
+
 def _wmd_writer(wmd_object, fileName, data=False):
     try:
         with open(fileName, 'w') as f:
@@ -98,11 +100,12 @@ def _wmd_writer(wmd_object, fileName, data=False):
                 wmd_object.meta_data['data']['weights'] = wmd_object.weights
                 wmd_object.meta_data['data']['neighbors'] = wmd_object.neighbors
             json.dump(wmd_object.meta_data,
-                    f,
-                    indent=4,
-                    separators=(',', ': '))
+                      f,
+                      indent=4,
+                      separators=(',', ': '))
     except:
         print 'wmd_writer failed.'
+
 
 def _block(arg_dict):
     """
@@ -115,7 +118,10 @@ def _block(arg_dict):
     >>> w.n
     4109
     >>> w.meta_data
-    {'root': {u'input1': {u'data1': {u'type': u'dbf', u'uri': u'http://toae.org/pub/taz.dbf'}}, u'weight_type': u'block', u'transform': u'O', u'parameters': {u'block_variable': u'CNTY'}}}
+    {'root': {u'input1': {u'data1': {u'type': u'dbf',
+                                     u'uri': u'http://toae.org/pub/taz.dbf'}},
+                          u'weight_type': u'block', u'transform': u'O',
+                          u'parameters': {u'block_variable': u'CNTY'}}}
 
     """
     input1 = arg_dict['input1']
@@ -124,7 +130,6 @@ def _block(arg_dict):
         break
     uri = input1['uri']
     weight_type = arg_dict['weight_type'].lower()
-    file_name = uri
 
     var_name = arg_dict['parameters']['block_variable']
     dbf = ps.open(uri)
@@ -136,9 +141,10 @@ def _block(arg_dict):
     w.meta_data['input1'] = {"type": 'dbf', 'uri': uri}
     w.meta_data['transform'] = w.transform
     w.meta_data['weight_type'] = weight_type
-    w.meta_data['parameters'] = {'block_variable':var_name}
+    w.meta_data['parameters'] = {'block_variable': var_name}
 
     return w
+
 
 def _contiguity(arg_dict):
     """
@@ -151,7 +157,9 @@ def _contiguity(arg_dict):
     >>> w.n
     49
     >>> w.meta_data
-    {'root': {u'input1': {u'data1': {u'type': u'shp', u'uri': u'http://toae.org/pub/columbus.shp'}}, u'weight_type': u'rook', u'transform': u'O'}}
+    {'root': {u'input1': {u'data1': {u'type': u'shp',
+                                     u'uri': u'http://toae.org/pub/columbus.shp'}},
+                          u'weight_type': u'rook', u'transform': u'O'}}
     """
     input1 = arg_dict['input1']
     for key in input1:
@@ -165,28 +173,29 @@ def _contiguity(arg_dict):
     elif weight_type == 'queen':
         w = ps.queen_from_shapefile(uri)
     else:
-        print "Unsupported contiguity criterion: ",weight_type
+        print "Unsupported contiguity criterion: ", weight_type
         return None
     if 'parameters' in arg_dict:
-        order = arg_dict['parameters'].get('order',1) # default to 1st order
-        lower = arg_dict['parameters'].get('lower',0) # default to exclude lower orders
+        order = arg_dict['parameters'].get('order', 1)  # default to 1st order
+        lower = arg_dict['parameters'].get('lower', 0)  # default to exclude lower orders
         if order > 1:
             w_orig = w
-            w = ps.higher_order(w,order)
+            w = ps.higher_order(w, order)
             if lower:
-                for o in xrange(order-1,1,-1):
-                    w = ps.weights.w_union(ps.higher_order(w_orig,o), w)
+                for o in xrange(order-1, 1, -1):
+                    w = ps.weights.w_union(ps.higher_order(w_orig, o), w)
                 w = ps.weights.w_union(w, w_orig)
         parameters = arg_dict['parameters']
     else:
-        parameters = {'lower': 0, 'order':1 }
+        parameters = {'lower': 0, 'order': 1}
     w = WMD(w.neighbors, w.weights)
     w.meta_data = {}
-    w.meta_data["input1"] = {"type": 'shp', 'uri':uri}
+    w.meta_data["input1"] = {"type": 'shp', 'uri': uri}
     w.meta_data["transform"] = w.transform
-    w.meta_data["weight_type"] =  weight_type
+    w.meta_data["weight_type"] = weight_type
     w.meta_data['parameters'] = parameters
     return w
+
 
 def _kernel(arg_dict):
     """
@@ -199,7 +208,11 @@ def _kernel(arg_dict):
     >>> w.n
     49
     >>> w.meta_data
-    {'root': {u'input1': {u'data1': {u'type': u'shp', u'uri': u'../examples/columbus.shp'}}, u'weight_type': u'kernel', u'transform': u'O', u'parameters': {u'function': u'triangular', u'bandwidths': None, u'k': 2}}}
+    {'root': {u'input1': {u'data1': {u'type': u'shp',
+                                     u'uri': u'../examples/columbus.shp'}},
+              u'weight_type': u'kernel', u'transform': u'O',
+              u'parameters': {u'function': u'triangular',
+              u'bandwidths': None, u'k': 2}}}
 
 
 
@@ -212,8 +225,8 @@ def _kernel(arg_dict):
     bandwidths = None
     function = 'triangular'
     if 'parameters' in arg_dict:
-        k = arg_dict['parameters'].get('k',k) # set default to 2
-        bandwidths = arg_dict['parameters'].get('bandwidths',bandwidths)
+        k = arg_dict['parameters'].get('k', k)  # set default to 2
+        bandwidths = arg_dict['parameters'].get('bandwidths', bandwidths)
         function = arg_dict['parameters'].get('function', function)
     else:
         parameters = {}
@@ -239,6 +252,7 @@ def _kernel(arg_dict):
     w.meta_data["weight_type"] =  weight_type
     w.meta_data['parameters'] = arg_dict['parameters']
     return w
+
 
 def _distance(arg_dict):
     """

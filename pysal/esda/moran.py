@@ -308,6 +308,8 @@ class Moran_BV:
         zx = (x - x.mean()) / x.std(ddof=1)
         self.zx = zx
         self.zy = zy
+        n = x.shape[0]
+        self.den = n - 1.  # zx'zx = zy'zy = n-1
         w.transform = transformation
         self.w = w
         self.I = self.__calc(zy)
@@ -332,7 +334,6 @@ class Moran_BV:
     def __calc(self, zy):
         wzy = slag(self.w, zy)
         self.num = (self.zx * wzy).sum()
-        self.den = (zy * zy).sum()
         return self.num / self.den
 
 
@@ -552,36 +553,36 @@ class Moran_Local:
     permutations : int
                    number of random permutations for calculation of pseudo
                    p_values
-    Is           : float
-                   value of Moran's I
+    Is           : array
+                   local Moran's I values
     q            : array
                    (if permutations>0)
-                   values indicate quadrat location 1 HH,  2 LH,  3 LL,  4 HL
-    sim          : array
+                   values indicate quandrant location 1 HH,  2 LH,  3 LL,  4 HL
+    sim          : array (permutations by n)
                    (if permutations>0)
-                   vector of I values for permuted samples
+                   I values for permuted samples
     p_sim        : array
                    (if permutations>0)
-                   p-value based on permutations (one-sided)
+                   p-values based on permutations (one-sided)
                    null: spatial randomness
                    alternative: the observed Ii is further away or extreme
                    from the median of simulated values. It is either extremelyi
                    high or extremely low in the distribution of simulated Is.
-    EI_sim       : float
+    EI_sim       : array
                    (if permutations>0)
-                   average value of I from permutations
-    VI_sim       : float
+                   average values of local Is from permutations
+    VI_sim       : array
                    (if permutations>0)
-                   variance of I from permutations
-    seI_sim      : float
+                   variance of Is from permutations
+    seI_sim      : array
                    (if permutations>0)
-                   standard deviation of I under permutations.
-    z_sim        : float
+                   standard deviations of Is under permutations.
+    z_sim        : arrray
                    (if permutations>0)
-                   standardized I based on permutations
-    p_z_sim      : float
+                   standardized Is based on permutations
+    p_z_sim      : array
                    (if permutations>0)
-                   p-value based on standard normal approximation from
+                   p-values based on standard normal approximation from
                    permutations (one-sided)
                    for two-sided tests, these values should be multiplied by 2
 
@@ -597,7 +598,7 @@ class Moran_Local:
     >>> lm.q
     array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
     >>> lm.p_z_sim[0]
-    0.46756830387716064
+    0.24669152541631179
     >>> lm = ps.Moran_Local(y, w, transformation = "r", permutations = 99, \
                             geoda_quads=True)
     >>> lm.q
@@ -641,8 +642,8 @@ class Moran_Local:
             larger[low_extreme] = self.permutations - larger[low_extreme]
             self.p_sim = (larger + 1.0) / (permutations + 1.0)
             self.sim = sim
-            self.EI_sim = sim.mean()
-            self.seI_sim = sim.std()
+            self.EI_sim = sim.mean(axis=0)
+            self.seI_sim = sim.std(axis=0)
             self.VI_sim = self.seI_sim * self.seI_sim
             self.z_sim = (self.Is - self.EI_sim) / self.seI_sim
             self.p_z_sim = 1 - stats.norm.cdf(np.abs(self.z_sim))
@@ -738,7 +739,7 @@ class Moran_Local_BV:
                    value of Moran's I
     q            : array
                    (if permutations>0)
-                   values indicate quadrat location 1 HH,  2 LH,  3 LL,  4 HL
+                   values indicate quandrant location 1 HH,  2 LH,  3 LL,  4 HL
     sim          : array
                    (if permutations>0)
                    vector of I values for permuted samples
@@ -749,23 +750,24 @@ class Moran_Local_BV:
                    alternative: the observed Ii is further away or extreme
                    from the median of simulated values. It is either extremelyi
                    high or extremely low in the distribution of simulated Is.
-    EI_sim       : float
+    EI_sim       : array
                    (if permutations>0)
-                   average value of I from permutations
-    VI_sim       : float
+                   average values of local Is from permutations
+    VI_sim       : array
                    (if permutations>0)
-                   variance of I from permutations
-    seI_sim      : float
+                   variance of Is from permutations
+    seI_sim      : array
                    (if permutations>0)
-                   standard deviation of I under permutations.
-    z_sim        : float
+                   standard deviations of Is under permutations.
+    z_sim        : arrray
                    (if permutations>0)
-                   standardized I based on permutations
-    p_z_sim      : float
+                   standardized Is based on permutations
+    p_z_sim      : array
                    (if permutations>0)
-                   p-value based on standard normal approximation from
+                   p-values based on standard normal approximation from
                    permutations (one-sided)
                    for two-sided tests, these values should be multiplied by 2
+
 
     Examples
     --------
@@ -829,8 +831,8 @@ class Moran_Local_BV:
             larger[low_extreme] = self.permutations - larger[low_extreme]
             self.p_sim = (larger + 1.0) / (permutations + 1.0)
             self.sim = sim
-            self.EI_sim = sim.mean()
-            self.seI_sim = sim.std()
+            self.EI_sim = sim.mean(axis=0)
+            self.seI_sim = sim.std(axis=0)
             self.VI_sim = self.seI_sim * self.seI_sim
             self.z_sim = (self.Is - self.EI_sim) / self.seI_sim
             self.p_z_sim = 1 - stats.norm.cdf(np.abs(self.z_sim))
@@ -928,7 +930,7 @@ class Moran_Local_Rate(Moran_Local):
                    value of Moran's I
     q            : array
                    (if permutations>0)
-                   values indicate quadrat location 1 HH,  2 LH,  3 LL,  4 HL
+                   values indicate quandrant location 1 HH,  2 LH,  3 LL,  4 HL
     sim          : array
                    (if permutations>0)
                    vector of I values for permuted samples

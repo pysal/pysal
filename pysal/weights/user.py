@@ -359,13 +359,15 @@ def threshold_binaryW_from_array(array, threshold, p=2, radius=None):
     Examples
     --------
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+    >>> wcheck = pysal.W({0: [1, 3], 1: [0, 3, ], 2: [], 3: [1, 0], 4: [5], 5: [4]})
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  [2]
     >>> w=threshold_binaryW_from_array(points,threshold=11.2)
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
-    >>> w.weights
-    {0: [1, 1], 1: [1, 1], 2: [], 3: [1, 1], 4: [1], 5: [1]}
-    >>> w.neighbors
-    {0: [1, 3], 1: [0, 3], 2: [], 3: [1, 0], 4: [5], 5: [4]}
+    >>> pysal.weights.util.neighbor_equality(w, wcheck)
+    True
+
     >>>
     """
     if radius is not None:
@@ -1089,8 +1091,11 @@ def min_threshold_dist_from_shapefile(shapefile, radius=None, p=2):
     """
     points = get_points_array_from_shapefile(shapefile)
     if radius is not None:
-        points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
-    return min_threshold_distance(points,p)
+        kdt = pysal.cg.kdtree.Arc_KDTree(points, radius=radius)
+        nn = kdt.query(kdt.data, k=2)
+        nnd = nn[0].max(axis=0)[1]
+        return nnd
+    return min_threshold_distance(points, p)
 
 
 def build_lattice_shapefile(nrows, ncols, outFileName):

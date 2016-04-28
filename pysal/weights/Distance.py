@@ -11,11 +11,11 @@ from pysal.common import KDTree
 from pysal.weights import W
 import scipy.stats
 import numpy as np
+from util import isKDTree
 
 __all__ = ["knnW", "Kernel", "DistanceBand"]
 
-
-def knnW(kdtree, k=2, p=2, ids=None):
+def knnW(data, k=2, p=2, ids=None):
     """
     Creates nearest neighbor weights matrix based on k nearest
     neighbors.
@@ -82,8 +82,12 @@ def knnW(kdtree, k=2, p=2, ids=None):
     pysal.weights.W
 
     """
-    data = kdtree.data
-    nnq = kdtree.query(data, k=k+1, p=p)
+    if isKDTree(data):
+        kdt = data
+        data = kdt.data
+    else:
+        kdt = KDTree(data)
+    nnq = kdt.query(data, k=k+1, p=p)
     info = nnq[1]
 
     neighbors = {}
@@ -170,13 +174,13 @@ class Kernel(W):
     Attributes
     ----------
     weights : dict
-	      Dictionary keyed by id with a list of weights for each neighbor
+              Dictionary keyed by id with a list of weights for each neighbor
 
     neighbors : dict
-		of lists of neighbors keyed by observation id
+                of lists of neighbors keyed by observation id
 
     bandwidth : array
- 		array of bandwidths
+                array of bandwidths
 
     Examples
     --------
@@ -264,7 +268,7 @@ class Kernel(W):
     def __init__(self, data, bandwidth=None, fixed=True, k=2,
                  function='triangular', eps=1.0000001, ids=None,
                  diagonal=False):
-        if issubclass(type(data), scipy.spatial.KDTree):
+        if isKDTree(data):
             self.kdt = data
             self.data = self.kdt.data
             data = self.data
@@ -338,7 +342,7 @@ class Kernel(W):
         for i, nids in enumerate(self.neigh):
             di, ni = kdtq(self.data[i], k=len(nids))
             if not isinstance(di, np.ndarray):
-            	di = np.asarray([di] * len(nids))
+                di = np.asarray([di] * len(nids))
                 ni = np.asarray([ni] * len(nids))
             zi = np.array([dict(zip(ni, di))[nid] for nid in nids]) / bw[i]
             z.append(zi)
@@ -357,7 +361,7 @@ class Kernel(W):
             c = c ** (-0.5)
             self.kernel = [c * np.exp(-(zi ** 2) / 2.) for zi in zs]
         else:
-            print 'Unsupported kernel function', self.function
+            print('Unsupported kernel function', self.function)
 
 
 class DistanceBand(W):
@@ -392,27 +396,29 @@ class DistanceBand(W):
     Attributes
     ----------
     weights : dict
-	      of neighbor weights keyed by observation id
+              of neighbor weights keyed by observation id
 
     neighbors : dict
-		of neighbors keyed by observation id
+                of neighbors keyed by observation id
 
     Examples
     --------
 
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
+    >>> wcheck = pysal.W({0: [1, 3], 1: [0, 3], 2: [], 3: [0, 1], 4: [5], 5: [4]})
+    WARNING: there is one disconnected observation (no neighbors)
+    Island id:  [2]
     >>> w=DistanceBand(points,threshold=11.2)
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
-    >>> w.weights
-    {0: [1, 1], 1: [1, 1], 2: [], 3: [1, 1], 4: [1], 5: [1]}
-    >>> w.neighbors
-    {0: [1, 3], 1: [0, 3], 2: [], 3: [1, 0], 4: [5], 5: [4]}
+    >>> pysal.weights.util.neighbor_equality(w, wcheck)
+    True
     >>> w=DistanceBand(points,threshold=14.2)
-    >>> w.weights
-    {0: [1, 1], 1: [1, 1, 1], 2: [1], 3: [1, 1], 4: [1, 1, 1], 5: [1]}
-    >>> w.neighbors
-    {0: [1, 3], 1: [0, 3, 4], 2: [4], 3: [1, 0], 4: [5, 1, 2], 5: [4]}
+    >>> wcheck = pysal.W({0: [1, 3], 1: [0, 3, 4], 2: [4], 3: [1, 0], 4: [5, 2, 1], 5: [4]})
+    >>> pysal.weights.util.neighbor_equality(w, wcheck)
+    True
+
+
 
     inverse distance weights
 
@@ -447,7 +453,7 @@ class DistanceBand(W):
         See detail in pysal issue #126.
 
         """
-        if issubclass(type(data), scipy.spatial.KDTree):
+        if isKDTree(data):
             self.kd = data
             self.data = self.kd.data
         else:
@@ -485,22 +491,24 @@ class DistanceBand(W):
         if self.binary:
             for key,weight in self.dmat.items():
                 i,j = key
-                if j not in neighbors[i]:
-                    weights[i].append(1)
-                    neighbors[i].append(j)
-                if i not in neighbors[j]:
-                    weights[j].append(1)
-                    neighbors[j].append(i)
+                if i != j:
+                    if j not in neighbors[i]:
+                        weights[i].append(1)
+                        neighbors[i].append(j)
+                    if i not in neighbors[j]:
+                        weights[j].append(1)
+                        neighbors[j].append(i)
 
         else:
             for key,weight in self.dmat.items():
                 i,j = key
-                if j not in neighbors[i]:
-                    weights[i].append(weight**self.alpha)
-                    neighbors[i].append(j)
-                if i not in neighbors[j]:
-                    weights[j].append(weight**self.alpha)
-                    neighbors[j].append(i)
+                if i != j:
+                    if j not in neighbors[i]:
+                        weights[i].append(weight**self.alpha)
+                        neighbors[i].append(j)
+                    if i not in neighbors[j]:
+                        weights[j].append(weight**self.alpha)
+                        neighbors[j].append(i)
 
         return neighbors, weights
 
