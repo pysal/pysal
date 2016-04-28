@@ -4,3 +4,5 @@ sphinx
 sphinxcontrib-napoleon
 networkx
 Shapely
+coverage
+coveralls
