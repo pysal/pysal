@@ -3,3 +3,4 @@ nose-progressive
 coverage
 sphinx
 sphinxcontrib-napoleon
+coveralls
