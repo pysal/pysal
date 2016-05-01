@@ -1,19 +1,19 @@
 # GWR Bandwidth selection
+#TODO
+#(1) Add functionality to allow GWR object to be passed into Sel_BW instead of GWR
+#parameters
 
-# For Model estimation
 from kernels import fix_gauss, fix_bisquare, fix_exp, adapt_gauss, adapt_bisquare, adapt_exp
-from search import golden_section, interval
+from search import golden_section, equal_interval
+from diagnostics import get_AICc_GWR, get_AIC_GWR, get_BIC_GWR, get_CV_GWR
 from gwr import GWR
 from scipy.spatial.distance import cdist
 from pysal.common import KDTree
 import numpy as np
 
-from diagnostics import get_AICc_GWR, get_AIC_GWR, get_BIC_GWR, get_CV_GWR#, get_AICc_GWGLM, get_AIC_GWGLM, get_BIC_GWGLM
-
 kernels = {1: fix_gauss, 2: adapt_gauss, 3: fix_bisquare, 4:
         adapt_bisquare, 5: fix_exp, 6:adapt_exp}
-
-getDiag = {'AICc': get_AICc_GWR,'AIC':get_AIC_GWR, 'BIC':get_BIC_GWR,'CV': get_CV_GWR} # bandwidth selection criteria
+getDiag = {'AICc': get_AICc_GWR,'AIC':get_AIC_GWR, 'BIC':get_BIC_GWR,'CV': get_CV_GWR}
 
 class Sel_BW(object):
     """
@@ -31,7 +31,7 @@ class Sel_BW(object):
                      n*k2, local independent variable, including constant.
     coords         : list of tuples
                      (x,y) of points used in bandwidth selection
-    link           : string
+    family         : string
                      GWR model type: 'Gaussian', 'logistic, 'Poisson''
     y_off          : array
                      n*1, offset variable for Poisson model
@@ -48,7 +48,7 @@ class Sel_BW(object):
     bw_max         : float
                      max value used in bandwidth search
     interval       : float
-                     interval used in interval search
+                     interval increment used in interval search
     tol            : float
                      tolerance used to determine convergence
     max_iter       : integer
@@ -56,8 +56,8 @@ class Sel_BW(object):
 
     Attributes
     ----------
-    link           : string
-                     GWR model type: 'Gaussian', 'logistic, 'Poisson''
+    family        : string
+                    GWR model type: 'Gaussian', 'logistic, 'Poisson''
     kernel        : string
                     type of kernel used and wether fixed or adaptive
     criterion     : string
@@ -69,16 +69,23 @@ class Sel_BW(object):
     bw_max        : float
                     max value used in bandwidth search
     interval      : float
-
+                    interval increment used in interval search
     tol           : float
                     tolerance used to determine convergence
     max_iter      : integer
                     max interations if no convergence to tol
     """
     def __init__(self, coords, y, x_loc, x_glob, family='Gaussian',
-            y_off=None, kernel='gaussian', fixed=False, criterion='AICc', search='golden_section', bw_min=0.0, bw_max=0.0, interval=0.0, tol=1.0e-6, max_iter=200):
+            y_off=None, kernel='gaussian', fixed=False):
+        self.coords = coords
+        self.y = y
+        self.x_loc = x_loc
+        self.x_glob = x_glob
         self.family=family
         self.fixed = fixed
+        self.kernel = kernel
+
+    def search(self, search='golden_section', criterion='AICc', bw_min=0.0, bw_max=0.0, interval=0.0, tol=1.0e-6, max_iter=200):
         self.search = search
         self.criterion = criterion
         self.bw_min = bw_min
@@ -86,36 +93,30 @@ class Sel_BW(object):
         self.interval = interval
         self.tol = tol
         self.max_iter = max_iter
-        #dists = cdist(coords, coords)
-        if fixed:
-            if kernel == 'gaussian':
-                self.kernel = 'fixed_gauss'
+
+        if self.fixed:
+            if self.kernel == 'gaussian':
                 ktype = 1
-            elif kernel == 'bisquare':
-                self.kernel = 'fixed_bisquare'
+            elif self.kernel == 'bisquare':
                 ktype = 3
-            elif kernel == 'exponential':
-                self.kernel = 'fixed_exp'
+            elif self.kernel == 'exponential':
                 ktype = 5
             else:
-                print 'Unsupported kernel function ', kernel
+                print 'Unsupported kernel function ', self.kernel
         else:
-            if kernel == 'gaussian':
-            	self.kernel = 'adapt_gauss'
+            if self.kernel == 'gaussian':
             	ktype = 2
-            elif kernel == 'bisquare':
-                self.kernel = 'adapt_bisquare'
+            elif self.kernel == 'bisquare':
                 ktype = 4
-            elif kernel == 'exponential':
-                self.kernel = 'adapt_bisquare'
+            elif self.kernel == 'exponential':
                 ktype = 6
             else:
-                print 'Unsupported kernel function ', kernel
+                print 'Unsupported kernel function ', self.kernel
 
         # Here creates the errors in the GWR testing notebook
         function = lambda bw: getDiag[criterion](
-                GWR(coords, y, x_loc, bw, family=family,
-                    fixed=fixed).fit())
+                GWR(self.coords, self.y, self.x_loc, bw, family=self.family,
+                    kernel=self.kernel, fixed=self.fixed).fit())
 
         if ktype % 2 == 0:
             int_score = True
@@ -124,13 +125,15 @@ class Sel_BW(object):
         self.int_score = int_score
 
         if search == 'golden_section':
-            a,c = self._init_section(x_glob, x_loc, coords)
+            a,c = self._init_section(self.x_glob, self.x_loc, self.coords)
             delta = 0.38197 #1 - (np.sqrt(5.0)-1.0)/2.0
-            return golden_section(a, c, delta, function, tol, max_iter,
+            self.bw = golden_section(a, c, delta, function, tol, max_iter,
                     int_score)
+            return self.bw[0]
         elif search == 'interval':
-            return interval(l_bound, u_bound, interval, function,
-                    int_score=False)
+            self.bw = equal_interval(bw_min, bw_max, interval, function, int_score)
+            print self.bw[0]
+            return self.bw[0]
         else:
             print 'Unsupported computational search method ', search
 

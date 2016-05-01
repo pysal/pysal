@@ -5,11 +5,6 @@ __author__ = ""
 
 import numpy as np
 
-__all__ = [
-    "f_stat", "t_stat", "r2", "ar2", "se_betas", "log_likelihood", "akaike", "schwarz",
-    "condition_index", "jarque_bera", "breusch_pagan", "white", "koenker_bassett", "vif", "likratiotest"]
-
-
 def get_AICc_GWR(GWR):
     """
     Get AICc value
@@ -26,8 +21,12 @@ def get_AICc_GWR(GWR):
     """
     n = GWR.n
     v1 = GWR.tr_S
-    aicc = -2.0*GWR.logll + 2.0*n*(v1 + 1.0)/(n-v1-2.0)
-
+    sig = GWR.sigma2_ML
+    #aicc = -2.0*GWR.logll + 2.0*n*(v1 + 1.0)/(n-v1-2.0)
+    #aicc = 2.0*n*np.log(GWR.std_err) + n*np.log(2.0*np.pi) + n*((n + v1)/(n - 2.0 - v1))
+    aicc = n*np.log(sig) + n*np.log(2.0*np.pi) + n*((n+v1)/(n-2.0-v1))
+    #aicc = GWR.dev_u + 2.0*v1
+    print aicc
     return aicc
 
 def get_AIC_GWR(GWR):
@@ -57,7 +56,7 @@ def get_BIC_GWR(GWR):
 
     return bic
 
-def get_CV_GWR(GWRMod):
+def get_CV_GWR(GWR):
     """
     Get CV value
 
@@ -70,9 +69,9 @@ def get_CV_GWR(GWRMod):
     Return:
         cv: float, CV value
     """
-    aa = GWR.res/(1.0-GWR.influ)
+    aa = GWR.u/(1.0-GWR.influ)
     cv = np.sum(aa**2)/GWR.n
-
+    print cv
     return cv
 
 def r2_GWR(GWR):

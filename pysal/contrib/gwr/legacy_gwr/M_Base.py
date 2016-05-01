@@ -370,6 +370,7 @@ class GWRGLM_Base(GWR_Base):
 	    w_i= np.reshape(np.array(self.kernel.w[i]), (-1, 1))      
 	    if self.mType == 1:
 		for j in range(self.nObs):		
+        self.sigma2_v1 = model.sigma2_v1
 		    if self.y[j] <> 0:
 			dev[i] += 2.0 * w_i[j] * self.y[j] *  np.log(self.y[j]/self.y_pred[j]) 
 		    dev[i] -= 2.0 * (self.y[j] - self.y_pred[j]) * w_i[j]   

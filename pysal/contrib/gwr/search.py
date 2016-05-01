@@ -31,35 +31,35 @@ def golden_section(a, c, delta, function, tol, max_iter, int_score=False):
     output          : list of tuples
                       searching history
     """
-    b = a + delta * abs(c-a)
-    d = c - delta * abs(c-a)
+    b = a + delta * np.abs(c-a)
+    d = c - delta * np.abs(c-a)
     score = 0.0
     diff = 1.0e9
     iters  = 0
     output = []
-    while abs(diff) > tol and iters < max_iter:
+    while np.abs(diff) > tol and iters < max_iter:
         iters += 1
         if int_score:
-            b = round(b,0)
-            d = round(d,0)
-        print a
+            b = np.round(b,0)
+            d = np.round(d,0)
+
         score_a = function(a)
         score_b = function(b)
         score_c = function(c)
         score_d = function(d)
-
+        
         if score_b <= score_d:
             opt_val = b
             opt_score = score_b
             c = d
             d = b
-            b = a + lamda * abs(c-a)
+            b = a + delta * np.abs(c-a)
         else:
             opt_val = d
             opt_score = score_d
             a = b
             b = d
-            d = c - lamda * abs(c-a)
+            d = c - delta * np.abs(c-a)
 
         output.append((opt_val, opt_score))
         diff = score_b - score_d
@@ -67,7 +67,7 @@ def golden_section(a, c, delta, function, tol, max_iter, int_score=False):
 
     return opt_val, opt_score, output
 
-def interval(l_bound, u_bound, interval, function, int_score=False):
+def equal_interval(l_bound, u_bound, interval, function, int_score=False):
     """
     Interval search, using interval as stepsize
 
@@ -98,9 +98,9 @@ def interval(l_bound, u_bound, interval, function, int_score=False):
     c = u_bound
     b = a + interval
     if int_score:
-        a = round(a,0)
-        c = round(c,0)
-        b = round(b,0)
+        a = np.round(a,0)
+        c = np.round(c,0)
+        b = np.round(b,0)
 
     output = []
 

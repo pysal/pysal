@@ -9,7 +9,7 @@ def get_y_hat(family, v, y_offset, y_fix):
     if family == 'Poisson':
         return np.exp(v + y_fix) * y_offset 
     if family == 'logistic':
-        return 1.0/(1 + np.exp(-1*v - y_fix))  
+        return 1.0/(1 + np.exp(-1.0*v - y_fix))  
 
 def link_g(v, y, y_offset, y_fix):
     """
@@ -59,7 +59,8 @@ def link_p(v, y, y_offset, y_fix):
            w           : array
                          n*1, weight to multiple with x
     """
-    y_hat = get_y_hat('Poisson', v, y_offset, y_fix)  
+    y_hat = get_y_hat('Poisson', v, y_offset, y_fix) 
+    y_hat = y_hat
     w = y_hat
     z = v + y_fix +(y-y_hat)/y_hat     
     
@@ -90,8 +91,8 @@ def link_l(v, y, y_offset, y_fix):
     deriv = y_hat * (1.0 - y_hat)
     n = len(y)
     for i in range(n):
-        if (deriv[i] < 1e-10):
-            deriv[i] = 1e-10
+        if (deriv[i] < .01):
+            deriv[i] = .01
     z = v + y_fix + (y - y_hat) / deriv
     w = deriv 
     

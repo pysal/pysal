@@ -2,7 +2,7 @@ import numpy as np
 import numpy.linalg as la
 from kernels import fix_gauss, fix_bisquare, fix_exp, adapt_gauss, adapt_bisquare, adapt_exp
 import pysal.spreg.user_output as USER
-from glm_fits import gauss_iwls, poiss_iwls, logit_iwls
+from gwr_fits import gauss_iwls, poiss_iwls, logit_iwls
 
 class GWR(object):
     """
@@ -28,8 +28,6 @@ class GWR(object):
         sigma2_v1     : boolean
                         Sigma squared, True to use n as denominator
                         Default is False which uses n-k
-        sMatrix       : array
-                        n*n, hat matrix. Default is None
 
     Attributes
     ----------
@@ -52,21 +50,16 @@ class GWR(object):
                         routine
     """
     def __init__(self, coords, y, x, bw, family='Gaussian', offset=None,
-            y_fix=None, sigma2_v1=False, kernel='bisquare', fixed=False,
-            sMatrix=None):
+            y_fix=None, sigma2_v1=False, kernel='bisquare', fixed=False):
         """
         Initialize class
         """
-        print(y.shape, x.shape)
-        print(y)
-        print(x)
         self.n = USER.check_arrays(y, x)
         USER.check_y(y, self.n)
         self.y = y
         self.x = USER.check_constant(x)
-        self.sMatrix = sMatrix
         self.family = family
-        self.k = x.shape[1]
+        self.k = self.x.shape[1]
         self.sigma2_v1=sigma2_v1
         if offset is None:
             self.offset = np.ones(shape=(self.n,1))
@@ -80,23 +73,22 @@ class GWR(object):
         self.kernel = kernel
         self.fixed = fixed
         self.fit_params = {}
-        print bw
         if fixed:
             if kernel == 'gaussian':
-            	self.wi = fix_gauss(coords, bw)
+            	self.W = fix_gauss(coords, bw)
             elif kernel == 'bisquare':
-                self.wi = fix_bisquare(coords, bw)
-            elif kernel == 'exp':
-                self.wi = fix_exp(coords, bw)
+                self.W = fix_bisquare(coords, bw)
+            elif kernel == 'exponential':
+                self.W = fix_exp(coords, bw)
             else:
                 print 'Unsupported kernel function  ', kernel
         else:
             if kernel == 'gaussian':
-            	self.wi = adapt_gauss(coords, bw)
+            	self.W = adapt_gauss(coords, bw)
             elif kernel == 'bisquare':
-                self.wi = adapt_bisquare(coords, bw)
-            elif kernel == 'exp':
-                self.wi = adapt_exp(coords, bw)
+                self.W = adapt_bisquare(coords, bw)
+            elif kernel == 'exponential':
+                self.W = adapt_exp(coords, bw)
             else:
                 print 'Unsupported kernel function  ', kernel
 
@@ -125,14 +117,34 @@ class GWR(object):
         self.fit_params['max_iter'] = max_iter
         self.fit_params['solve']= solve
         if solve.lower() == 'iwls':
-            ey = self.y/self.offset
-            if self.family=='Gaussian':
-                results = GWRResults(self, *gauss_iwls(self))
-            if self.family=='Poisson':
-                results =  GWRResults(self, *poiss_iwls(self))
-            if self.family=='logistic':
-            	results = GWRResults(self, *logit_iwls(self))
-        return results
+            betas = np.zeros((self.n, self.k))
+            predy = np.zeros((self.n, 1))
+            v = np.zeros((self.n, 1))
+            w = np.zeros((self.n, 1))
+            z = np.zeros((self.n, self.n))
+            s = np.zeros((self.n, self.n))
+            c = np.zeros((self.n, self.k))
+            f = np.zeros((self.n, self.n))
+            for i in range(self.n):
+                wi = np.diag(self.W[i])
+                if self.family=='Gaussian':
+                    rslt = gauss_iwls(self, wi)
+                if self.family=='Poisson':
+                    rslt = poiss_iwls(self, wi)
+                if self.family=='logistic':
+            	    rslt = logit_iwls(self, wi)
+                betas[i,:] = rslt[0]
+                predy[i] = rslt[1][i]
+                v[i] = rslt[2][i]
+                w[i] = rslt[3][i]
+                z[i] = rslt[4].flatten()
+                ri = np.dot(self.x[i], rslt[5])
+                s[i] = ri*np.reshape(rslt[4].flatten(), (1,-1))
+                cf = rslt[5] - np.dot(rslt[5], f)
+                c[i] =  np.diag(np.dot(cf, cf.T/w[i])).shape
+            self.S = s*(1.0/z)
+            self.CCT = c
+        return GWRResults(self, betas, predy, v, w)
 
 class GWRResults(GWR):
     """
@@ -167,20 +179,44 @@ class GWRResults(GWR):
                 n*1, leading diagonal of S matrixi
     logll     :
     """
+    def __init__(self, model, betas, predy, v=None, w=None):
+        self.model = model
+        self.n = model.n
+        self.y = model.y
+        self.x = model.x
+        self.k = model.k
+        self.family = model.family
+        self.fit_params = model.fit_params
+        self.betas = betas
+        self.W = model.W
+        if v is not None:
+        	self.v = v
+        if w is not None:
+        	self.w = w
+        self.S = model.S
+        self.CCT = model.CCT
+        self.predy = predy
+        self.u = (self.y - self.predy).flatten()
+        self.utu = np.dot(self.u, self.u.T)
+        self._cache = {}
 
+        if model.sigma2_v1:
+        	self.sig2 = self.sigma2_v1
+        else:
+            self.sig2 = self.sigma2_v1v2
 
     @property
     def tr_S(self):
         """
-        trace of S matrix
+        trace of S (hat) matrix
         """
         try:
             return self._cache['tr_S']
         except AttributeError:
             self._cache = {}
-            self._cache['tr_S'] = np.trace(self.SMatrix)
+            self._cache['tr_S'] = np.trace(self.S)
         except KeyError:
-            self._cache['tr_S'] = np.trace(self.SMatrix)
+            self._cache['tr_S'] = np.trace(self.S)
         return self._cache['tr_S']
 
     @tr_S.setter
@@ -202,9 +238,9 @@ class GWRResults(GWR):
             return self._cache['tr_STS']
         except AttributeError:
             self._cache = {}
-            self._cache['tr_STS'] = np.trace(np.dot(self.SMatrix.T,self.SMatrix))
+            self._cache['tr_STS'] = np.trace(np.dot(self.S.T,self.S))
         except KeyError:
-	        self._cache['tr_STS'] = np.trace(np.dot(self.SMatrix.T,self.SMatrix))
+	        self._cache['tr_STS'] = np.trace(np.dot(self.S.T,self.S))
         return self._cache['tr_STS']
 
     @tr_STS.setter
@@ -475,9 +511,9 @@ class GWRResults(GWR):
             return self._cache['std_err']
         except AttributeError:
             self._cache = {}
-            self._cache['std_err'] = np.sqrt(self.CCT * self.sigma2)
+            self._cache['std_err'] = np.sqrt(self.CCT * self.sig2)
         except KeyError:
-            self._cache['std_err'] = np.sqrt(self.CCT * self.sigma2)
+            self._cache['std_err'] = np.sqrt(self.CCT * self.sig2)
         return self._cache['std_err']
 
     @std_err.setter
@@ -500,9 +536,9 @@ class GWRResults(GWR):
             return self._cache['influ']
         except AttributeError:
             self._cache = {}
-            self._cache['influ'] = np.reshape(np.diag(self.SMatrix),(-1,1))
+            self._cache['influ'] = np.reshape(np.diag(self.S),(-1,1))
         except KeyError:
-            self._cache['influ'] = np.reshape(np.diag(self.SMatrix),(-1,1))
+            self._cache['influ'] = np.reshape(np.diag(self.S),(-1,1))
         return self._cache['influ']
 
     @influ.setter
@@ -580,9 +616,9 @@ class GWRResults(GWR):
             return self._cache['log_ll']
         except AttributeError:
             self._cache = {}
-            self._cache['logll'] = -0.5*n*(np.log(2*np.pi*sigma2)+1)
+            self._cache['logll'] = -0.5*self.n*(np.log(2*np.pi*self.sig2)+1)
         except KeyError:
-            self._cache['logll'] = -0.5*n*(np.log(2*np.pi*sigma2)+1)
+            self._cache['logll'] = -0.5*self.n*(np.log(2*np.pi*self.sig2)+1)
         return self._cache['logll']
 
 
@@ -597,4 +633,49 @@ class GWRResults(GWR):
             self._cache['logll'] = val
 
 
+    @property
+    def dev_u(self):
+        """
+        deviance of residuals
+        """
+        try:
+            return self._cache['dev_u']
+        except AttributeError:
+                self._cache = {}
+                self._cache['dev_u'] = self.calc_dev_u()
+        except KeyError:
+            self._cache['dev_u'] = self.calc_dev_u()
+        return self._cache['dev_u']
+
+        @dev_u.setter
+        def dev_u(self, val):
+            try:
+                self._cache['dev_u'] = val
+            except AttributeError:
+                self._cache = {}
+                self._cache['dev_u'] = val
+            except KeyError:
+                self.cache['dev_u'] = val
+
+
+    def calc_dev_u(self):
+        dev = 0.0
+        if self.family == 'Gaussian':
+            dev = self.n * (np.log(self.utu * 2.0 * np.pi / self.n) + 1.0)
+        if self.family == 'Poisson':
+            id0 = self.y==0
+            id1 = self.y<>0
+            if np.sum(id1) == self.n:
+                dev = 2.0 * np.sum(self.y * np.log(self.y/self.predy))
+            else:
+                dev = 2.0 * (np.sum(self.y[id1] *
+                        np.log(self.y[id1]/self.predy[id1])) -
+                            np.sum(self.y[id0]-self.predy[id0]))
+        if self.family == 'logistic':
+            for i in range(self.n):
+                if self.y[i] == 0:
+                    dev += -2.0 * np.log(1.0 - self.predy[i])
+                else:
+                    dev += -2.0 * np.log(self.predy[i])
+        return dev
 
