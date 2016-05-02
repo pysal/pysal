@@ -9,7 +9,9 @@ def get_AICc_GWR(GWR):
     """
     Get AICc value
 
-    Methods: p61, (2.33), Fotheringham, Brunsdon and Charlton (2002)
+    Methods: p61, (2.33)
+    Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+    Geographically weighted regression: the analysis of spatially varying relationships.
     using ML based sigma estimate
 
     Arguments:
@@ -33,7 +35,9 @@ def get_AIC_GWR(GWR):
     """
     Get AIC value
 
-    Methods: p96, (4.22), Fotheringham, Brunsdon and Charlton (2002)
+    Methods: p96, (4.22)
+    Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+    Geographically weighted regression: the analysis of spatially varying relationships.
     from Tomoki: AIC = -2L + 2.0 * (T_trace + 1.0);
     Note: for AIC, AICc and BIC of GWR, using (tr_S + 1) instead of k in the global model
 
@@ -47,7 +51,9 @@ def get_BIC_GWR(GWR):
     """
     Get BIC value, BIC=-2log(L)+klog(n)
 
-    Methods: p61, (2.34), Fotheringham, Brunsdon and Charlton (2002)
+    Methods: p61, (2.34)
+    Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+    Geographically weighted regression: the analysis of spatially varying relationships.
     from Tomoki:  BIC = -2L + (T_trace + 1.0) * log((double)N);
     """
     n = GWR.n
@@ -60,7 +66,9 @@ def get_CV_GWR(GWR):
     """
     Get CV value
 
-    Methods: p60, (2.31) or p212 (9.4), Fotheringham, Brunsdon and Charlton (2002)
+    Methods: p60, (2.31) or p212 (9.4)
+    Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+    Geographically weighted regression: the analysis of spatially varying relationships.
     Modification: sum of residual squared is divided by n according to GWR4 results
 
     Arguments:
@@ -96,7 +104,7 @@ def ar2_GWR(GWR):
     """
     Calculates the adjusted R^2 value for GWR model.
 
-    PArguments:
+    Arguments:
         GWR      : GWR model object
 
     Return:

@@ -3,8 +3,11 @@ import numpy as np
 def golden_section(a, c, delta, function, tol, max_iter, int_score=False):
     """
     Golden section search routine
+    Method: p212, 9.6.4
+    Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+    Geographically weighted regression: the analysis of spatially varying relationships.
 
-    Arguments
+    Parameters
     ----------
     a               : float
                       initial max search section value
@@ -47,7 +50,7 @@ def golden_section(a, c, delta, function, tol, max_iter, int_score=False):
         score_b = function(b)
         score_c = function(c)
         score_d = function(d)
-        
+
         if score_b <= score_d:
             opt_val = b
             opt_score = score_b

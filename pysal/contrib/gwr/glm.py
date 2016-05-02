@@ -1,5 +1,4 @@
 #TODO
-# Documentation for y_fix
 # Add model diagnostics as cached properties:
 # Add family class functionality so that diagnostics are methods of family class
 # intead of using different cases for family for each diagnostic.
@@ -31,8 +30,8 @@ class GLM(RegressionPropsY):
                         this term is often the size of the population at risk or
                         the expected size of the outcome in spatial epidemiology.
                         Default is None where Ni becomes 1.0 for all locations.
-        y_fix         :
-
+        y_fix         : array
+                        n*1, the fix intercept value of y
         sigma2_v1     : boolean
                         Sigma squared, True to use n as denominator.
                         Default is False which uses n-k.
@@ -128,7 +127,7 @@ class GLMResults(GLM):
         v             : array
                         n*1, predicted y values before transformation via link.
         w             : array
-                        n*1, final weight used for iwrl
+                        n*1, final weight used for irwl
 
     Attributes
     ----------
@@ -145,7 +144,7 @@ class GLMResults(GLM):
                         Number of observations
         k             : integer
                         Number of independent variables
-        fit_params     : dict
+        fit_params    : dict
                         Parameters passed into fit method to define estimation
                         routine.
         sig2          : float
@@ -175,6 +174,20 @@ class GLMResults(GLM):
                         k*1, standard errors of betas
         dev_u         : float
                         Deviance of residuals
+        logll         : float
+                        log-likelihood
+        aic           : float 
+                        AIC
+        aicc          : float 
+                        AICc
+        bic           : float 
+                        BIC
+        cv            : float
+                        CV
+        R2            : float
+                        R square
+        y_bar         : array
+                        n*1, mean value of y
     """
 
     def __init__(self, model, betas, predy, v=None, w=None):
@@ -296,6 +309,7 @@ class GLMResults(GLM):
 
     @property
     def std_err(self):
+
         try:
             return self._cache['std_err']
         except AttributeError:
@@ -317,9 +331,6 @@ class GLMResults(GLM):
 
     @property
     def dev_u(self):
-        """
-        deviance of residuals
-        """
         try:
             return self._cache['dev_u']
         except AttributeError:
@@ -360,3 +371,161 @@ class GLMResults(GLM):
                 else:
                     dev += -2.0 * np.log(self.predy[i])
         return dev
+
+    @property
+    def y_bar(self):
+        """
+        mean of y
+        """
+        try:
+            return self._cache['y_bar']
+        except AttributeError:
+            self._cache = {}
+            self._cache['y_bar'] = np.sum(self.y)/n
+        except KeyError:
+            self._cache['y_bar'] = np.sum(self.y)/n
+        return self._cache['y_bar']
+
+    @y_bar.setter
+    def y_bar(self, val):
+        try:
+            self._cache['y_bar'] = val
+        except AttributeError:
+            self._cache = {}
+            self._cache['y_bar'] = val
+        except KeyError:
+            self._cache['y_bar'] = val
+
+   @property
+    def r2(self):
+        try:
+            return self._cache['r2']
+        except AttributeError:
+            self._cache = {}
+            self._cache['r2'] = 1- self.utu/(np.sum((self.y-self.y_bar)**2))
+        except KeyError:
+            self._cache['r2'] = 1- self.utu/(np.sum((self.y-self.y_bar)**2))
+        return self._cache['r2']
+
+    @std_err.setter
+    def r2(self, val):
+        try:
+            self._cache['r2'] = val
+        except AttributeError:
+            self._cache = {}
+            self._cache['r2'] = val
+        except KeyError:
+            self._cache['r2'] = val
+'''
+    @property
+    def logll(self):
+        """
+        loglikelihood
+
+        log-likelihood = 
+        """
+
+        try:
+            return self._cache['log_ll']
+        except AttributeError:
+            self._cache = {}
+            self._cache['logll'] = -0.5*self.n*(np.log(2*np.pi*self.sig2)+1)
+        except KeyError:
+            self._cache['logll'] = -0.5*self.n*(np.log(2*np.pi*self.sig2)+1)
+        return self._cache['logll']
+
+
+    @logll.setter
+    def logll(self, val):
+        try:
+            self._cache['logll'] = val
+        except AttributeError:
+            self._cache = {}
+            self._cache['logll'] = val
+        except KeyError:
+            self._cache['logll'] = val
+'''
+
+   @property
+    def aic(self):
+        try:
+            return self._cache['aic']
+        except AttributeError:
+            self._cache = {}
+            self._cache['aic'] = 2.0 * self.k - 2.0 * self.logll
+        except KeyError:
+            self._cache['aic'] = 2.0 * self.k - 2.0 * self.logll
+        return self._cache['aic']
+
+    @std_err.setter
+    def aic(self, val):
+        try:
+            self._cache['aic'] = val
+        except AttributeError:
+            self._cache = {}
+            self._cache['aic'] = val
+        except KeyError:
+            self._cache['aic'] = val
+
+   @property
+    def aicc(self):
+        try:
+            return self._cache['aicc']
+        except AttributeError:
+            self._cache = {}
+            self._cache['aicc'] = self.aic + (2.0 * self.k * (self.k +1))/(self.n - self.k -1)
+        except KeyError:
+            self._cache['aicc'] = self.aic + (2.0 * self.k * (self.k +1))/(self.n - self.k -1)
+        return self._cache['aicc']
+
+    @std_err.setter
+    def aicc(self, val):
+        try:
+            self._cache['aicc'] = val
+        except AttributeError:
+            self._cache = {}
+            self._cache['aicc'] = val
+        except KeyError:
+            self._cache['aicc'] = val
+
+   @property
+    def bic(self):
+        try:
+            return self._cache['bic']
+        except AttributeError:
+            self._cache = {}
+            self._cache['bic'] = - 2.0 * self.logll + self.k * np.log(self.n)
+        except KeyError:
+            self._cache['bic'] = - 2.0 * self.logll + self.k * np.log(self.n)
+        return self._cache['bic']
+
+    @std_err.setter
+    def bic(self, val):
+        try:
+            self._cache['bic'] = val
+        except AttributeError:
+            self._cache = {}
+            self._cache['bic'] = val
+        except KeyError:
+            self._cache['bic'] = val
+
+   @property
+    def bic(self):
+        try:
+            return self._cache['bic']
+        except AttributeError:
+            self._cache = {}
+            self._cache['bic'] = - 2.0 * self.logll + self.k * np.log(self.n)
+        except KeyError:
+            self._cache['bic'] = - 2.0 * self.logll + self.k * np.log(self.n)
+        return self._cache['bic']
+
+    @std_err.setter
+    def bic(self, val):
+        try:
+            self._cache['bic'] = val
+        except AttributeError:
+            self._cache = {}
+            self._cache['bic'] = val
+        except KeyError:
+            self._cache['bic'] = val

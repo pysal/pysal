@@ -19,7 +19,9 @@ class Sel_BW(object):
     """
     Select bandwidth for kernel
 
-    Methods: Fotheringham, Brunsdon and Charlton (2002)
+    Methods: p211 - p213, bandwidth selection
+    Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+    Geographically weighted regression: the analysis of spatially varying relationships.
 
     Parameters
     ----------
