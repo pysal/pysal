@@ -11,52 +11,6 @@ from pysal.contrib.handler import Model
 GM_Error = partial(Model, mtype='GM_Error')
 GM_Endog_Error = partial(Model, mtype='GM_Endog_Error')
 GM_Combo = partial(Model, mtype='GM_Combo')
-BaseGM_Error = partial(Model, mtype='BaseGM_Error')
-BaseGM_Endog_Error = partial(Model, mtype='BaseGM_Endog_Error')
-BaseGM_Combo = partial(Model, mtype='BaseGM_Combo')
-
-class TestBaseGMError(unittest.TestCase):
-    def setUp(self):
-        db=pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
-        y = np.array(db.by_col("HOVAL"))
-        self.y = np.reshape(y, (49,1))
-        X = []
-        X.append(db.by_col("INC"))
-        X.append(db.by_col("CRIME"))
-        self.X = np.array(X).T
-        self.X = np.hstack((np.ones(self.y.shape),self.X))
-        self.X = sparse.csr_matrix(self.X)
-        self.w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
-        self.w.transform = 'r'
-
-    def test_model(self):
-        reg = BaseGM_Error(self.y, self.X, self.w.sparse)
-        betas = np.array([[ 47.94371455], [  0.70598088], [ -0.55571746], [  0.37230161]])
-        np.allclose(reg.betas,betas,4)
-        u = np.array([ 27.4739775])
-        np.allclose(reg.u[0],u,4)
-        predy = np.array([ 52.9930255])
-        np.allclose(reg.predy[0],predy,4)
-        n = 49
-        np.allclose(reg.n,n,4)
-        k = 3
-        np.allclose(reg.k,k,4)
-        y = np.array([ 80.467003])
-        np.allclose(reg.y[0],y,4)
-        x = np.array([  1.     ,  19.531  ,  15.72598])
-        np.allclose(reg.x.toarray()[0],x,4)
-        e = np.array([ 31.89620319])
-        np.allclose(reg.e_filtered[0],e,4)
-        predy = np.array([ 52.9930255])
-        np.allclose(reg.predy[0],predy,4)
-        my = 38.43622446938776
-        np.allclose(reg.mean_y,my)
-        sy = 18.466069465206047
-        np.allclose(reg.std_y,sy)
-        vm = np.array([[  1.51884943e+02,  -5.37622793e+00,  -1.86970286e+00], [ -5.37622793e+00,   2.48972661e-01,   5.26564244e-02], [ -1.86970286e+00,   5.26564244e-02, 3.18930650e-02]])
-        np.allclose(reg.vm,vm,4)
-        sig2 = 191.73716465732355
-        np.allclose(reg.sig2,sig2,4)
 
 class TestGMError(unittest.TestCase):
     def setUp(self):
@@ -105,62 +59,6 @@ class TestGMError(unittest.TestCase):
         np.allclose(reg.std_err,std_err,4)
         z_stat = np.array([[  3.89022140e+00,   1.00152805e-04], [  1.41487186e+00,   1.57106070e-01], [ -3.11175868e+00,   1.85976455e-03]])
         np.allclose(reg.z_stat,z_stat,4)
-
-@unittest.skipIf(int(scipy.__version__.split(".")[1]) < 11,
-"Maximum Likelihood requires SciPy version 11 or newer.")
-class TestBaseGMEndogError(unittest.TestCase):
-    def setUp(self):
-        db=pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
-        y = np.array(db.by_col("HOVAL"))
-        self.y = np.reshape(y, (49,1))
-        X = []
-        X.append(db.by_col("INC"))
-        self.X = np.array(X).T
-        self.X = np.hstack((np.ones(self.y.shape),self.X))
-        self.X = sparse.csr_matrix(self.X)
-        yd = []
-        yd.append(db.by_col("CRIME"))
-        self.yd = np.array(yd).T
-        q = []
-        q.append(db.by_col("DISCBD"))
-        self.q = np.array(q).T
-        self.w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
-        self.w.transform = 'r'
-
-    def test_model(self):
-        reg = BaseGM_Endog_Error(self.y, self.X, self.yd, self.q, self.w.sparse)
-        betas = np.array([[ 55.36095292], [  0.46411479], [ -0.66883535], [  0.38989939]])
-        np.allclose(reg.betas,betas,4)
-        u = np.array([ 26.55951566])
-        np.allclose(reg.u[0],u,4)
-        e = np.array([ 31.23925425])
-        np.allclose(reg.e_filtered[0],e,4)
-        predy = np.array([ 53.9074875])
-        np.allclose(reg.predy[0],predy,4)
-        n = 49
-        np.allclose(reg.n,n)
-        k = 3
-        np.allclose(reg.k,k)
-        y = np.array([ 80.467003])
-        np.allclose(reg.y[0],y,4)
-        x = np.array([  1.   ,  19.531])
-        np.allclose(reg.x.toarray()[0],x,4)
-        yend = np.array([  15.72598])
-        np.allclose(reg.yend[0],yend,4)
-        z = np.array([  1.     ,  19.531  ,  15.72598])
-        np.allclose(reg.z.toarray()[0],z,4)
-        my = 38.43622446938776
-        np.allclose(reg.mean_y,my)
-        #std_y
-        sy = 18.466069465206047
-        np.allclose(reg.std_y,sy)
-        #vm
-        vm = np.array([[ 529.15840986,  -15.78336736,   -8.38021053],
-       [ -15.78336736,    0.54023504,    0.23112032],
-       [  -8.38021053,    0.23112032,    0.14497738]])
-        np.allclose(reg.vm,vm,4)
-        sig2 = 192.5002
-        np.allclose(round(reg.sig2,4),round(sig2,4),4)
 
 @unittest.skipIf(int(scipy.__version__.split(".")[1]) < 11,
 "Maximum Likelihood requires SciPy version 11 or newer.")
@@ -220,58 +118,6 @@ class TestGMEndogError(unittest.TestCase):
         np.allclose(reg.std_err,std_err,4)
         z_stat = np.array([[ 2.40664208,  0.01609994], [ 0.63144305,  0.52775088], [-1.75659016,  0.07898769]])
         np.allclose(reg.z_stat,z_stat,4)
-
-@unittest.skipIf(int(scipy.__version__.split(".")[1]) < 11,
-"Maximum Likelihood requires SciPy version 11 or newer.")
-class TestBaseGMCombo(unittest.TestCase):
-    def setUp(self):
-        db=pysal.open(pysal.examples.get_path("columbus.dbf"),"r")
-        y = np.array(db.by_col("HOVAL"))
-        self.y = np.reshape(y, (49,1))
-        X = []
-        X.append(db.by_col("INC"))
-        X.append(db.by_col("CRIME"))
-        self.X = np.array(X).T
-        self.w = pysal.rook_from_shapefile(pysal.examples.get_path("columbus.shp"))
-        self.w.transform = 'r'
-
-    def test_model(self):
-        # Only spatial lag
-        yd2, q2 = pysal.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 1, True)
-        self.X = np.hstack((np.ones(self.y.shape),self.X))
-        self.X = sparse.csr_matrix(self.X)
-        reg = BaseGM_Combo(self.y, self.X, yend=yd2, q=q2, w=self.w.sparse)
-        betas = np.array([[ 57.61123461],[  0.73441314], [ -0.59459416], [ -0.21762921], [  0.54732051]])
-        np.allclose(reg.betas,betas,4)
-        u = np.array([ 25.57932637])
-        np.allclose(reg.u[0],u,4)
-        e_filtered = np.array([ 31.65374945])
-        np.allclose(reg.e_filtered[0],e_filtered,4)
-        predy = np.array([ 54.88767663])
-        np.allclose(reg.predy[0],predy,4)
-        n = 49
-        np.allclose(reg.n,n)
-        k = 4
-        np.allclose(reg.k,k)
-        y = np.array([ 80.467003])
-        np.allclose(reg.y[0],y,4)
-        x = np.array([  1.     ,  19.531  ,  15.72598])
-        np.allclose(reg.x.toarray()[0],x,4)
-        yend = np.array([  35.4585005])
-        np.allclose(reg.yend[0],yend,4)
-        z = np.array([  1.       ,  19.531    ,  15.72598  ,  35.4585005])
-        np.allclose(reg.z.toarray()[0],z,4)
-        my = 38.43622446938776
-        np.allclose(reg.mean_y,my)
-        sy = 18.466069465206047
-        np.allclose(reg.std_y,sy)
-        vm = np.array([[ 522.43841148,   -6.07256915,   -1.91429117,   -8.97133162],
-       [  -6.07256915,    0.23801287,    0.0470161 ,    0.02809628],
-       [  -1.91429117,    0.0470161 ,    0.03209242,    0.00314973],
-       [  -8.97133162,    0.02809628,    0.00314973,    0.21575363]])
-        np.allclose(reg.vm,vm,4)
-        sig2 = 181.78650186468832
-        np.allclose(reg.sig2,sig2,4)
 
 @unittest.skipIf(int(scipy.__version__.split(".")[1]) < 11,
 "Maximum Likelihood requires SciPy version 11 or newer.")

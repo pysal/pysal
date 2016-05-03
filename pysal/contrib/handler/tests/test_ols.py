@@ -8,11 +8,10 @@ from functools import partial
 from pysal.contrib.handler import Model
 
 OLS = partial(Model, mtype='OLS')
-BaseOLS = partial(Model, mtype='BaseOLS')
 
 PEGP = pysal.examples.get_path
 
-class TestBaseOLS(unittest.TestCase):
+class TestOLS(unittest.TestCase):
     def setUp(self):
         db = pysal.open(PEGP('columbus.dbf'),'r')
         y = np.array(db.by_col("HOVAL"))
@@ -23,41 +22,10 @@ class TestBaseOLS(unittest.TestCase):
         self.X = np.array(X).T
         self.w = pysal.weights.rook_from_shapefile(PEGP("columbus.shp"))
 
-    def test_ols(self):
-        self.X = np.hstack((np.ones(self.y.shape),self.X))
-        ols = BaseOLS(self.y,self.X)
-        np.testing.assert_array_almost_equal(ols.betas, np.array([[
-            46.42818268], [  0.62898397], [ -0.48488854]]))
-        vm = np.array([[  1.74022453e+02,  -6.52060364e+00,  -2.15109867e+00],
-           [ -6.52060364e+00,   2.87200008e-01,   6.80956787e-02],
-           [ -2.15109867e+00,   6.80956787e-02,   3.33693910e-02]])
-        np.testing.assert_array_almost_equal(ols.vm, vm,6)
-
-    def test_ols_white1(self):
-        self.X = np.hstack((np.ones(self.y.shape),self.X))
-        ols = BaseOLS(self.y,self.X,robust='white', sig2n_k=True)
-        np.testing.assert_array_almost_equal(ols.betas, np.array([[
-            46.42818268], [  0.62898397], [ -0.48488854]]))
-        vm = np.array([[  2.05819450e+02,  -6.83139266e+00,  -2.64825846e+00],
-       [ -6.83139266e+00,   2.58480813e-01,   8.07733167e-02],
-       [ -2.64825846e+00,   8.07733167e-02,   3.75817181e-02]])
-        np.testing.assert_array_almost_equal(ols.vm, vm,6)
-
-    def test_ols_white2(self):
-        self.X = np.hstack((np.ones(self.y.shape),self.X))
-        ols = BaseOLS(self.y,self.X,robust='white', sig2n_k=False)
-        np.testing.assert_array_almost_equal(ols.betas, np.array([[
-            46.42818268], [  0.62898397], [ -0.48488854]]))
-        vm = np.array([[  1.93218259e+02,  -6.41314413e+00,  -2.48612018e+00],
-       [ -6.41314413e+00,   2.42655457e-01,   7.58280116e-02],
-       [ -2.48612018e+00,   7.58280116e-02,   3.52807966e-02]])
-        np.testing.assert_array_almost_equal(ols.vm, vm,6)
-
     def test_OLS(self):
-        ols = OLS(self.y, self.X, self.w, spat_diag=True, moran=True, \
+        ols = OLS(self.y, self.X, w=self.w, spat_diag=True, moran=True, \
                 white_test=True, name_y='home value', name_x=['income','crime'], \
                 name_ds='columbus')
-        
         np.testing.assert_array_almost_equal(ols.aic, \
                 408.73548964604873 ,7)
         np.testing.assert_array_almost_equal(ols.ar2, \

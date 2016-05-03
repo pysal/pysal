@@ -8,11 +8,10 @@ from pysal.contrib.handler import Model
 from functools import partial
 
 OLS = partial(Model, mtype='OLS')
-BaseOLS = partial(Model, mtype='BaseOLS')
 
 PEGP = pysal.examples.get_path
 
-class TestBaseOLS(unittest.TestCase):
+class TestOLS(unittest.TestCase):
     def setUp(self):
         db = pysal.open(PEGP('columbus.dbf'),'r')
         y = np.array(db.by_col("HOVAL"))
@@ -23,20 +22,9 @@ class TestBaseOLS(unittest.TestCase):
         self.X = np.array(X).T
         self.w = pysal.weights.rook_from_shapefile(PEGP("columbus.shp"))
 
-    def test_ols(self):
-        self.X = np.hstack((np.ones(self.y.shape),self.X))
-        self.X = sparse.csr_matrix(self.X)
-        ols = BaseOLS(self.y,self.X)
-        np.testing.assert_array_almost_equal(ols.betas, np.array([[
-            46.42818268], [  0.62898397], [ -0.48488854]]))
-        vm = np.array([[  1.74022453e+02,  -6.52060364e+00,  -2.15109867e+00],
-           [ -6.52060364e+00,   2.87200008e-01,   6.80956787e-02],
-           [ -2.15109867e+00,   6.80956787e-02,   3.33693910e-02]])
-        np.testing.assert_array_almost_equal(ols.vm, vm,6)
-
     def test_OLS(self):
         self.X = sparse.csr_matrix(self.X)
-        ols = OLS(self.y, self.X, self.w, spat_diag=True, moran=True, \
+        ols = OLS(self.y, self.X, w=self.w, spat_diag=True, moran=True, \
                 name_y='home value', name_x=['income','crime'], \
                 name_ds='columbus', nonspat_diag=True, white_test=True)
         

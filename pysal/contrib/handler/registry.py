@@ -1,18 +1,22 @@
 import pysal
-from types import ModuleType, ClassType
-from six import iteritems as diter
+import types as ty
+from six import iteritems as diter, PY3
+
+if not PY3:
+    clstypes = (type, ty.ClassType)
+else:
+    clstypes = type
 
 def _find_bcs():
     classes = dict()
     bcs = dict()
     ucs = dict()
     submods = dict()
-    for obname in dir(pysal.spreg):
-        ob = pysal.spreg.__dict__[obname]
-        if isinstance(ob, ModuleType):
+    for obname, ob in diter(pysal.spreg.__dict__):
+        if isinstance(ob, ty.ModuleType):
             if ob.__package__.startswith("pysal"):
                 submods.update({obname:ob})
-        elif isinstance(ob, ClassType):
+        elif isinstance(ob, clstypes):
             classes.update({obname:ob})
             if ob.__name__.startswith('Base'):
                 bcs.update({obname:ob})
@@ -20,7 +24,7 @@ def _find_bcs():
         basecands = dict()
         for clname in dir(mod):
             cl = mod.__dict__[clname]
-            if isinstance(cl, ClassType):
+            if isinstance(cl, clstypes):
                 try:
                     if cl.__name__.startswith('Base'):
                         if cl not in bcs:
@@ -35,19 +39,15 @@ def _find_bcs():
                 or k.endswith('Regimes')})
     return bcs, ucs
 
+class Namespace:
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
 base, user = _find_bcs()
-_everything = base.copy()
-_everything.update(user)
-
-for k,v in diter(base):
-    exec('{k} = {v}'.format(k=k,v=v))
-for k,v in diter(user):
-    exec('{k} = {v}'.format(k=k,v=v))
-
-__all__ = list()
-__all__.extend(base.keys())
-__all__.extend(user.keys())
-#regimes = {cls for cls in user if 'regimes' in cls.__module__}
+base = Namespace(**base)
+user = Namespace(**user)
+everything = Namespace(**base.__dict__)
+everything.__dict__.update(user.__dict__)
 
 #if we go with something like a "base" and "user" submodule setup,
 #it'd be as simple as flattening the subclasses out into those submodules. 
