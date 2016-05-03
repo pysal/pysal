@@ -24,6 +24,7 @@ def pandashandler(formula_like, data):
         name_y, name_x = mu.strip(' ').split('~')
         name_x = name_x.split('+')
         name_yend, name_q = inst.strip(' ').split('~')
+        name_yend = [name_yend]
         name_q = name_q.split('+')
         names = {"name_y":name_y,
                  "name_x":name_x, 
