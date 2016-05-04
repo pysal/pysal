@@ -10,9 +10,6 @@ from functools import partial
 GM_Error_Hom_Regimes = partial(Model, mtype='GM_Error_Hom_Regimes')
 GM_Endog_Error_Hom_Regimes = partial(Model, mtype='GM_Endog_Error_Hom_Regimes')
 GM_Combo_Hom_Regimes = partial(Model, mtype='GM_Combo_Hom_Regimes')
-BaseGM_Error_Hom_Regimes = partial(Model, mtype='BaseGM_Error_Hom_Regimes')
-BaseGM_Endog_Error_Hom_Regimes = partial(Model, mtype='BaseGM_Endog_Error_Hom_Regimes')
-BaseGM_Combo_Hom_Regimes = partial(Model, mtype='BaseGM_Combo_Hom_Regimes')
 
 GM_Error_Hom = partial(Model, mtype='GM_Error_Hom')
 GM_Endog_Error_Hom = partial(Model, mtype='GM_Endog_Error_Hom')
@@ -222,7 +219,8 @@ class TestGM_Error_Hom_Regimes(unittest.TestCase):
         np.testing.assert_array_almost_equal(model.vm.diagonal(), vm, 6)
 
     def test_model_combo(self):
-        reg = GM_Combo_Hom_Regimes(self.y, self.X2, self.regimes, self.yd, self.q, w=self.w, A1='het')
+        reg = GM_Combo_Hom_Regimes(self.y, self.X2, self.regimes, 
+                                   yend=self.yd, q=self.q, w=self.w, A1='het')
         betas = np.array([[ 36.93726782],
        [ -0.829475  ],
        [ 30.86675168],
@@ -278,7 +276,10 @@ class TestGM_Error_Hom_Regimes(unittest.TestCase):
 
     def test_model_combo_regi_error(self):
         #Columbus:
-        reg = GM_Combo_Hom_Regimes(self.y, self.X2, self.regimes, self.yd, self.q, w=self.w, regime_lag_sep=True, regime_err_sep=True, A1='het')
+        reg = GM_Combo_Hom_Regimes(self.y, self.X2, self.regimes,
+                                   yend=self.yd, q=self.q, w=self.w, 
+                                   regime_lag_sep=True, regime_err_sep=True, 
+                                   A1='het')
         betas = np.array([[  4.20115146e+01],
        [ -1.39171512e-01],
        [ -6.53001838e-01],
