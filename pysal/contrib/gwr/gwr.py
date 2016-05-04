@@ -23,8 +23,8 @@ class GWR(object):
                         this term is often the size of the population at risk or
                         the expected size of the outcome in spatial epidemiology
                         Default is None where Ni becomes 1.0 for all locations
-        y_fix         :
-
+        y_fix         : array
+                        n*1, the fix intercept value of y
         sigma2_v1     : boolean
                         Sigma squared, True to use n as denominator
                         Default is False which uses n-k
@@ -45,7 +45,7 @@ class GWR(object):
                         Mean of y
         std_y         : float
                         Standard deviation of y
-        fit_params     : dict
+        fit_params    : dict
                         Parameters passed into fit method to define estimation
                         routine
     """
@@ -105,12 +105,12 @@ class GWR(object):
                         estimation
         tol:            float
                         Tolerence for estimation convergence
-        max_iter       : integer
+        max_iter      : integer
                         Maximum number of iterations if convergence not
                         achieved
-        solve         :string
-                       Technique to solve MLE equations.
-                       'iwls' = iteratively (re)weighted least squares (default)
+        solve         : string
+                        Technique to solve MLE equations.
+                        'iwls' = iteratively (re)weighted least squares (default)
         """
         self.fit_params['ini_betas'] = ini_betas
         self.fit_params['tol'] = tol
@@ -152,32 +152,88 @@ class GWRResults(GWR):
 
     Parameters
     ----------
+    model         : GWR object
+                    Pointer to GWR object with estimation parameters.
+    betas         : array
+                    k*1, estimared coefficients
+    predy         : array
+                    n*1, predicted y values.
+    v             : array
+                    n*1, predicted y values before transformation via link.
+    w             : array
+                    n*1, final weight used for irwl
 
     Attributes
     ----------
-    sigma2_v1 : float
-                sigma squared, use (n-v1) as denominator
-    sigma2_v1v2 : float
-                sigma squared, use (n-2v1+v2) as denominator
-    sigma2_ML : float
-                sigma squared, estimated using ML
-    std_res   : array
-                n*1, standardised residuals
-    std_err   : array
-                n*k, standard errors of Beta
-    t_stat    : array
-                n*k, local t-statistics
-    localR2   : array
-                n*1, local R square
-    tr_S      : float
-                trace of S (hat) matrix
-    tr_STS    : float
-                trace of STS matrix
-    CooksD    : array
-                n*1, Cook's D
-    influ     : array
-                n*1, leading diagonal of S matrixi
-    logll     :
+    model         : GWR Object
+                    Points to GWR object for which parameters have been
+                    estimated.
+    y             : array
+                    n*1, dependent variable.
+    x             : array
+                    n*k, independent variable, including constant.
+    family        : string
+                    Model type: 'Gaussian', 'Poisson', 'Logistic'
+    n             : integer
+                    Number of observations
+    k             : integer
+                    Number of independent variables
+    fit_params    : dict
+                    Parameters passed into fit method to define estimation
+                    routine.
+    sig2          : float
+                    sigma squared used for subsequent computations.
+    betas         : array
+                    n*k, Beta estimation
+    w             : array
+                    n*1, final weight used for x
+    v             : array
+                    n*1, untransformed predicted functions.
+                    Applying the link functions yields predy.
+    utu           : array
+                    
+    W             :
+    
+    S             :
+
+    CCT           : 
+    
+    u             : array
+                    n*1, residuals
+    predy         : array
+                    n*1, predicted value of y    
+    tr_S          : float
+                    trace of S (hat) matrix
+    tr_STS        : float
+                    trace of STS matrix
+    y_bar         : array
+                    n*1, weighted mean value of y
+    TSS           : array
+                    n*1, geographically weighted total sum of squares
+    RSS           : array
+                    n*1, geographically weighted residual sum of squares
+    localR2       : array
+                    n*1, local R square
+    sigma2_v1     : float
+                    sigma squared, use (n-v1) as denominator
+    sigma2_v1v2   : float
+                    sigma squared, use (n-2v1+v2) as denominator
+    sigma2_ML     : float
+                    sigma squared, estimated using ML
+    std_res       : array
+                    n*1, standardised residuals
+    std_err       : array
+                    n*k, standard errors of Beta
+    influ         : array
+                    n*1, leading diagonal of S matrixi
+    CooksD        : array
+                    n*1, Cook's D
+    t_stat        : array
+                    n*k, local t-statistics
+    logll         : float
+                    log-likelihood
+    dev_u         : float
+                    deviance of residuals
     """
     def __init__(self, model, betas, predy, v=None, w=None):
         self.model = model
@@ -294,7 +350,10 @@ class GWRResults(GWR):
         """
         geographically weighted total sum of squares
 
-        Methods: p215, (9.9), Fotheringham, Brunsdon and Charlton (2002)
+        Methods: p215, (9.9)
+        Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+        Geographically weighted regression: the analysis of spatially varying relationships.
+
         """
         try:
             return self._cache['TSS']
@@ -329,7 +388,9 @@ class GWRResults(GWR):
         """
         geographically weighted residual sum of squares
 
-        Methods: p215, (9.10), Fotheringham, Brunsdon and Charlton (2002)
+        Methods: p215, (9.10)
+        Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+        Geographically weighted regression: the analysis of spatially varying relationships.
         """
         try:
             return self._cache['RSS']
@@ -365,7 +426,9 @@ class GWRResults(GWR):
         """
         local R square
 
-        Methods: p215, (9.8), Fotheringham, Brunsdon and Charlton (2002)
+        Methods: p215, (9.8)
+        Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+        Geographically weighted regression: the analysis of spatially varying relationships.
         """
         try:
             return self._cache['localR2']
@@ -392,7 +455,10 @@ class GWRResults(GWR):
         """
         residual variance
 
-        Methods: p214, (9.6), Fotheringham, Brunsdon and Charlton (2002),
+        Methods: p214, (9.6),
+        Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+        Geographically weighted regression: the analysis of spatially varying relationships.
+
         only use v1
         """
         try:
@@ -420,7 +486,10 @@ class GWRResults(GWR):
         """
         residual variance
 
-        Methods: p55 (2.16)-(2.18), Fotheringham, Brunsdon and Charlton (2002),
+        Methods: p55 (2.16)-(2.18)
+        Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+        Geographically weighted regression: the analysis of spatially varying relationships.
+
         use v1 and v2 #used in GWR4
         """
         try:
@@ -477,7 +546,10 @@ class GWRResults(GWR):
         """
         standardized residuals
 
-        Methods:  p215, (9.7), Fotheringham Brundson and Charlton (2002)
+        Methods:  p215, (9.7)
+        Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+        Geographically weighted regression: the analysis of spatially varying relationships.
+
 
         """
         try:
@@ -504,7 +576,10 @@ class GWRResults(GWR):
         """
         standard errors of Betas
 
-        Methods:  p215, (2.15) and (2.21), Fotheringham Brundson and Charlton (2002)
+        Methods:  p215, (2.15) and (2.21)
+        Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+        Geographically weighted regression: the analysis of spatially varying relationships.
+
 
         """
         try:
@@ -556,7 +631,9 @@ class GWRResults(GWR):
         """
         Influence: leading diagonal of S Matrix
 
-        Methods: p216, (9.11), Fotheringham, Brunsdon and Charlton (2002)
+        Methods: p216, (9.11),
+        Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+        Geographically weighted regression: the analysis of spatially varying relationships.
         Note: in (9.11), p should be tr(S), that is, the effective number of parameters
         """
         try:
@@ -606,10 +683,11 @@ class GWRResults(GWR):
     @property
     def logll(self):
         """
-
         loglikelihood
 
-	    Methods: p87 (4.2), Fotheringham, Brunsdon and Charlton (2002)
+	    Methods: p87 (4.2),
+        Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+        Geographically weighted regression: the analysis of spatially varying relationships.
 	    from Tomoki: log-likelihood = -0.5 *(double)N * (log(ss / (double)N * 2.0 * PI) + 1.0);
         """
         try:

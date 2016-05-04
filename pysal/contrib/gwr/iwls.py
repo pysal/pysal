@@ -4,23 +4,25 @@ import numpy.linalg as la
 def _compute_betas(y, x):
     """
     compute MLE coefficients using iwls routine
-        
-    Methods: p189, Iteratively (Re)weighted Least Squares (IWLS), 
-    Fotheringham, Brunsdon and Charlton (2002)
+
+    Methods: p189, Iteratively (Re)weighted Least Squares (IWLS),
+    Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+    Geographically weighted regression: the analysis of spatially varying relationships.
     """
     xT = x.T
     xtx = np.dot(xT, x)
     xtx_inv = la.inv(xtx)
     xtx_inv_xt = np.dot(xtx_inv, xT)
     betas = np.dot(xtx_inv_xt, y)
-    return betas   
+    return betas
 
 def _compute_betas_gwr(y, x, wi):
     """
     compute MLE coefficients using iwls routine
-        
-    Methods: p189, Iteratively (Re)weighted Least Squares (IWLS), 
-    Fotheringham, Brunsdon and Charlton (2002)
+
+    Methods: p189, Iteratively (Re)weighted Least Squares (IWLS),
+    Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
+    Geographically weighted regression: the analysis of spatially varying relationships.
     """
     xT = np.dot(x.T, wi)
     xtx = np.dot(xT, x)
@@ -41,10 +43,10 @@ def iwls(x, y, g_ey, link_func, family, offset, y_fix,
         betas = _compute_betas(g_ey-y_fix, x)
     else:
         betas = ini_betas
-		
+
     v = np.dot(x, betas)
     while diff > tol and n_iter < max_iter:
-        n_iter += 1 
+        n_iter += 1
         z, w = link_func(v, y, offset, y_fix)
         w = np.sqrt(w)
         wx = x * w
@@ -59,12 +61,12 @@ def iwls(x, y, g_ey, link_func, family, offset, y_fix,
 	    diff = 0.0
 	else:
 	    diff = min(abs(n_betas-betas))
-                
+
         v = v_new
         betas = n_betas
 
     n_iter += 1
-    
+
     if wi is None:
         return betas, w, v, n_iter
     else:
