@@ -225,7 +225,8 @@ class TestGM_Error_Regimes(unittest.TestCase):
         np.testing.assert_array_almost_equal(model.vm.diagonal(), vm, 4)
 
     def test_model_combo(self):
-        reg = GM_Combo_Regimes(self.y, self.X1, self.regimes, self.yd, self.q, w=self.w)
+        reg = GM_Combo_Regimes(self.y, self.X1, self.regimes, 
+                               yend=self.yd, q=self.q, w=self.w)
         predy_e = np.array([ 18.82774339])
         np.testing.assert_array_almost_equal(reg.predy_e[0],predy_e,4)
         betas = np.array([[ 36.44798052],
@@ -281,7 +282,9 @@ class TestGM_Error_Regimes(unittest.TestCase):
 
     def test_model_combo_regi_error(self):
         #Columbus:
-        reg = GM_Combo_Regimes(self.y, self.X1, self.regimes, self.yd, self.q, w=self.w, regime_lag_sep=True, regime_err_sep=True)
+        reg = GM_Combo_Regimes(self.y, self.X1, self.regimes, 
+                               yend=self.yd, q=self.q, w=self.w, 
+                               regime_lag_sep=True, regime_err_sep=True)
         betas = np.array([[ 42.01035248],
        [ -0.13938772],
        [ -0.6528306 ],
