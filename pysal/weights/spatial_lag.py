@@ -5,7 +5,7 @@ __author__ = "Sergio J. Rey <srey@asu.edu>, David C. Folch <david.folch@asu.edu>
 __all__ = ['lag_spatial', 'lag_categorical']
 
 import numpy as np
-from six import iteritems as diter
+from pysal.common import iteritems as diter
 
 def lag_spatial(w, y):
     """

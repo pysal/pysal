@@ -1,6 +1,9 @@
 import pysal
 import types as ty
-from six import iteritems as diter, PY3
+import sys
+
+PY3 = sys.version_info.major > 2
+from pysal.common import iteritems as diter
 
 if not PY3:
     clstypes = (type, ty.ClassType)
