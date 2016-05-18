@@ -1,6 +1,12 @@
 import pysal as ps
 import json
-from six.moves import urllib as urllib
+
+# compatibility for Python 2 & Python 3:
+try:
+    from urllib.request import urlopen
+except ImportError:
+    from urllib2 import urlopen
+
 import copy
 import numpy as np
 
@@ -352,7 +358,7 @@ WEIGHT_TYPES['intersection'] = _intersection
 
 
 def _uri_reader(uri):
-    j = json.load(urllib.urlopen(uri))
+    j = json.load(urlopen(uri))
     return j
 
 def _wmd_read_only(fileName):
@@ -411,7 +417,7 @@ def _download_shapefiles(file_name):
         file_parts[-1] = file_name
         new_url = "/".join(file_parts)
         #print file_name, new_url
-        u = urllib.urlopen(new_url)
+        u = urlopen(new_url)
         f = open(file_name, 'wb')
         meta = u.info()
         file_size = int(meta.getheaders("Content-Length")[0])

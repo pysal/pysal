@@ -6,7 +6,7 @@ try:
 except:
     p = None
 from numpy import array, ndarray, asarray
-from six import iteritems as diter
+from pysal.common import iteritems as diter
 import inspect
 
 #would like to just wrap this in the opt decorator...
