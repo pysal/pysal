@@ -1,3 +1,36 @@
+v<1.11.2>, 2016-05-18
+
+We closed a total of 20 issues, 6 pull requests and 14 regular issues;
+this is the full list (generated with the script 
+:file:`tools/github_stats.py`):
+
+Pull Requests (6):
+
+* :ghpull:`805`: pre Rel1.11.2 and #840
+* :ghpull:`802`: fixed issues with model handler failing to correctly discover models
+* :ghpull:`798`: fix for css problem on rtd #790
+* :ghpull:`793`: Getting weights doctests to pass
+* :ghpull:`791`: Doc/rolling
+* :ghpull:`792`: Local Moran was using the incorrect moments in z_sim and p_z_sim
+
+Issues (14):
+
+* :ghissue:`805`: pre Rel1.11.2 and #840
+* :ghissue:`803`: check_contiguity error.. 
+* :ghissue:`802`: fixed issues with model handler failing to correctly discover models
+* :ghissue:`800`: `ps.threshold_continuousW_from_shapefile` returning inf along diagonal
+* :ghissue:`771`: KDtree type mismatch in knnW
+* :ghissue:`798`: fix for css problem on rtd #790
+* :ghissue:`796`: working moran plot func
+* :ghissue:`787`: Update docs to reflect Python-3 compatibility
+* :ghissue:`587`: ML Lag indexing error on optimization result
+* :ghissue:`793`: Getting weights doctests to pass
+* :ghissue:`791`: Doc/rolling
+* :ghissue:`792`: Local Moran was using the incorrect moments in z_sim and p_z_sim
+* :ghissue:`674`: Have PySAL included on OSGeo Live 9 
+* :ghissue:`779`: DistanceBand include the point itself as neighbor
+
+
 v<1.11.1>, 2016-04-01
 
 We closed a total of 62 issues, 20 pull requests and 42 regular issues;

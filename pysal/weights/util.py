@@ -15,6 +15,8 @@ __all__ = ['lat2W', 'block_weights', 'comb', 'order', 'higher_order',
            'higher_order_sp', 'hexLat2W', 'regime_weights']
 
 
+KDTREE_TYPES = [scipy.spatial.KDTree, scipy.spatial.cKDTree]
+
 def hexLat2W(nrows=5, ncols=5):
     """
     Create a W object for a hexagonal lattice.
@@ -647,10 +649,10 @@ def shimbel(w):
 
     info = {}
     ids = w.id_order
-    for id in ids:
+    for i in ids:
         s = [0] * w.n
-        s[ids.index(id)] = -1
-        for j in w.neighbors[id]:
+        s[ids.index(i)] = -1
+        for j in w.neighbors[i]:
             s[ids.index(j)] = 1
         k = 1
         flag = s.count(0)
@@ -667,7 +669,7 @@ def shimbel(w):
                         s[nid] = knext
             k = knext
             flag = s.count(0)
-        info[id] = s
+        info[i] = s
     return info
 
 
@@ -1255,6 +1257,13 @@ def neighbor_equality(w1, w2):
         if set(w1.neighbors[i]) != set(w2.neighbors[i]):
             return False
     return True
+
+def isKDTree(obj):
+    """
+    This is a utility function to determine whether or not an object is a
+    KDTree, since KDTree and cKDTree have no common parent type
+    """
+    return any([issubclass(type(obj), KDTYPE) for KDTYPE in KDTREE_TYPES])
 
 if __name__ == "__main__":
     from pysal import lat2W
