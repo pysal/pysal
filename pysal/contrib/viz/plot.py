@@ -9,38 +9,44 @@ import numpy as np
 import pysal as ps
 import matplotlib.pyplot as plt
 
-
-def moran(var, w, xlabel='', ylabel='', title='', custom=(5,5)):
-	'''
+def mplot(m, xlabel='', ylabel='', title='', custom=(7,7)):
+    '''
     Produce basic Moran Plot 
     ...
-    Arguments
+    Parameters
     ---------
-    var	            : array
-                      values of variable
-    w       	    : spatial weight
+    m            : array
+                   values of Moran's I 
+    xlabel       : str
+                   label for x axis
+    ylabel       : str
+                   label for y axis                
+    title        : str
+                   title of plot
+    custom       : tuple
+                   dimensions of figure size
+
+    Returns
+    ---------
+    plot         : png 
+                    image file showing plot
+            
     '''
+    
+    lag = ps.lag_spatial(m.w, m.z)
+    fit = ps.spreg.OLS(m.z[:, None], lag[:,None])
 
-	w.transform = 'r'
-	slag = ps.lag_spatial(w, var)
+    ## Customize plot
+    fig = plt.figure(figsize=custom)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.suptitle(title)
 
-	zx   = (var - var.mean())/var.std()
-	zy  = (slag - slag.mean())/slag.std()
+    plt.scatter(m.z, lag, s=60, color='k', alpha=.6)
+    plt.plot(lag, fit.predy, color='r')
 
-	fit = ps.spreg.OLS(zx[:, None], zy[:,None])
+    plt.axvline(0, alpha=0.5)
+    plt.axhline(0, alpha=0.5)
+    plt.show()
 
-	## Customize plot
-	fig1 = plt.figure(figsize=custom)
-	plt.xlabel(xlabel, fontsize=20)
-	plt.ylabel(ylabel, fontsize=20)
-	plt.suptitle(title, fontsize=30)
-
-	plt.scatter(zx, zy, s=60, color='k', alpha=.6)
-	plot(zy, fit.predy, color='r')
-
-	plt.axvline(0, alpha=0.5)
-	plt.axhline(0, alpha=0.5)
-
-	plt.show()
-
-	return None
+    return None
