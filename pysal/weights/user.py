@@ -83,6 +83,8 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
 
     shapefile : string
                 name of polygon shapefile including suffix.
+    idVariable: string
+                name of a column in the shapefile's DBF to use for ids.
     sparse    : boolean
                 If True return WSP instance
                 If False return W instance
