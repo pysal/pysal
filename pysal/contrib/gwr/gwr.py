@@ -3,6 +3,7 @@ import numpy.linalg as la
 from kernels import fix_gauss, fix_bisquare, fix_exp, adapt_gauss, adapt_bisquare, adapt_exp
 import pysal.spreg.user_output as USER
 from gwr_fits import gauss_iwls, poiss_iwls, logit_iwls
+from families.family import Gaussian
 
 class GWR(object):
     """
@@ -49,7 +50,7 @@ class GWR(object):
                         Parameters passed into fit method to define estimation
                         routine
     """
-    def __init__(self, coords, y, x, bw, family='Gaussian', offset=None,
+    def __init__(self, coords, y, x, bw, family=Gaussian(), offset=None,
             y_fix=None, sigma2_v1=False, kernel='bisquare', fixed=False):
         """
         Initialize class
@@ -127,12 +128,11 @@ class GWR(object):
             f = np.zeros((self.n, self.n))
             for i in range(self.n):
                 wi = np.diag(self.W[i])
-                if self.family=='Gaussian':
-                    rslt = gauss_iwls(self, wi)
-                if self.family=='Poisson':
-                    rslt = poiss_iwls(self, wi)
-                if self.family=='logistic':
-            	    rslt = logit_iwls(self, wi)
+            	g_ey = self.family.link(self.y)
+            	rslt = iwls(self.x, self.y, g_ey, self.family, self.offset,
+            	        self.y_fix, self.fit_params['max_iter', wi=wi])
+            	print rslt
+                
                 betas[i,:] = rslt[0]
                 predy[i] = rslt[1][i]
                 v[i] = rslt[2][i]

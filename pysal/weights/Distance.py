@@ -266,7 +266,7 @@ class Kernel(W):
     """
     def __init__(self, data, bandwidth=None, fixed=True, k=2,
                  function='triangular', eps=1.0000001, ids=None,
-                 diagonal=False, truncate=True):
+                 diagonal=False, truncate=True): #Added truncate flag
         if issubclass(type(data), scipy.spatial.KDTree):
             self.kdt = data
             self.data = self.kdt.data
@@ -299,6 +299,7 @@ class Kernel(W):
         allneighbors = {}
         weights = {}
         if ids:
+        
             ids = np.array(ids)
         else:
             ids = np.arange(len(self.data))
@@ -328,7 +329,7 @@ class Kernel(W):
 
     def _eval_kernel(self):
         # get points within bandwidth distance of each point
-        if self.trunc:
+        if self.trunc:#Check for truncate flag here
             if not hasattr(self, 'neigh'):
                 kdtq = self.kdt.query_ball_point
                 neighbors = [kdtq(self.data[i], r=bwi[0]) for i,

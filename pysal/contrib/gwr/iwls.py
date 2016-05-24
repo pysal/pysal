@@ -1,5 +1,7 @@
 import numpy as np
 import numpy.linalg as la
+import families
+
 
 def _compute_betas(y, x):
     """
@@ -31,7 +33,7 @@ def _compute_betas_gwr(y, x, wi):
     betas = np.dot(xtx_inv_xt, y)
     return betas, xtx_inv_xt
 
-def iwls(x, y, g_ey, link_func, family, offset, y_fix,
+def iwls(x, y, family, offset, y_fix,
     ini_betas=None, tol=1.0e-6, max_iter=200, wi=None):
     """
     Iteratively re-weighted least squares estimation routine
@@ -39,15 +41,25 @@ def iwls(x, y, g_ey, link_func, family, offset, y_fix,
     """
     diff = 1.0e6
     n_iter = 0
+    link_y = family.link(y)
+
+    if isinstance(family, families.Binomial):
+        link_y = family.link._clean(link_y)
     if ini_betas is None:
-        betas = _compute_betas(g_ey-y_fix, x)
+        betas = _compute_betas(link_y, x)
     else:
         betas = ini_betas
-
     v = np.dot(x, betas)
+   
     while diff > tol and n_iter < max_iter:
         n_iter += 1
-        z, w = link_func(v, y, offset, y_fix)
+       
+       #So we need to figure out how to get z and w from statsmodels
+       #family.Poisson.link.functions - then we should be able to use statmodels
+       #style probability families/links for estimation
+        mu = family.link.inverse(v)
+        w = family.weights(mu)
+        z = v + (family.link.deriv(mu)*(y-mu))
         w = np.sqrt(w)
         wx = x * w
         wz = z * w
@@ -56,18 +68,18 @@ def iwls(x, y, g_ey, link_func, family, offset, y_fix,
         else:
             n_betas, xtx_inv_xt = _compute_betas_gwr(wz, wx, wi)
         v_new = np.dot(x, n_betas)
-
-	if family == 'Gaussian':
-	    diff = 0.0
-	else:
-	    diff = min(abs(n_betas-betas))
-
+	    #if family == 'Gaussian':
+            #diff = 0.0
+	        #v = v_new
+	    #else
+        
+        diff = min(abs(n_betas-betas))
         v = v_new
         betas = n_betas
-
-    n_iter += 1
+    
+    y_hat = family.fitted(v)
 
     if wi is None:
-        return betas, w, v, n_iter
+        return betas, w, v, link_y, n_iter
     else:
         return betas, w, v, n_iter, z, xtx_inv_xt
