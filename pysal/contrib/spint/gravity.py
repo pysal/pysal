@@ -18,6 +18,7 @@ __author__ = "Taylor Oshan tayoshan@gmail.com"
 import numpy as np
 import statsmodels.api as sm
 from statsmodels.api import families 
+from statsmodels.tools.tools import categorical
 
 class GravityBase(object):
     """
@@ -69,7 +70,7 @@ class GravityBase(object):
         self.o = self.dt[origins].astype(str)
         self.d = self.dt[destinations].astype(str)
         self.f = self.dt[flows]
-        self.n = self.f.shape[0]
+        self.n = len(self.f)
         self.c = self.dt[cost]
 
         if cost_func.lower() == 'pow':
@@ -100,9 +101,21 @@ class GravityBase(object):
                               origin/destination/cost variables and constant
         '''
         if (framework.lower() == 'glm'):
-            y = self.f
-            X = np.hstack((np.ones((self.n, 1)), self.ov, self.dv,
-                self.cf(self.c)))
+            y = np.reshape(self.f, (-1,1))
+            X = np.ones((self.n, 1))
+            
+            if isinstance(self, Production) | isinstance(self, Doubly):
+            	o_dummies = categorical(self.o.values, drop=True)
+                X = np.hstack((X, o_dummies))
+            if isinstance(self, Attraction) | isinstance(self, Doubly):
+            	d_dummies = categorical(self.d.values, drop=True)
+            	X = np.hstack((X, d_dummies))
+
+            for att in self.ov.values():
+            	X = np.hstack((X, self.cf(np.reshape(att, (-1,1)))))
+            for att in self.dv.values():
+            	X = np.hstack((X, self.cf(np.reshape(att, (-1,1)))))
+            X = np.hstack((X, self.cf(np.reshape(self.c, (-1,1)))))
             model = sm.GLM(y, X, family = families.Poisson()).fit()
         return model
 
@@ -128,6 +141,8 @@ class Gravity(GravityBase):
                       name of column containing cost variable; typically
                       distance or time
                       go from M to N in all M*N flow onservations; typically distance or time
+        return model
+        return model
     cost_func       : string
                       functional form of the cost function; default is 'exp'
                       'exp' | 'pow'
