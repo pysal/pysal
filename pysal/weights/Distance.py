@@ -489,8 +489,9 @@ class DistanceBand(W):
         neighbors = dict([(i,[]) for i in ids])
         weights = dict([(i,[]) for i in ids])
         if self.binary:
-            for key,weight in self.dmat.items():
-                i,j = key
+            for idxs,weight in self.dmat.items():
+                idx,jdx = idxs
+                i, j = ids[idx], ids[jdx]
                 if i != j:
                     if j not in neighbors[i]:
                         weights[i].append(1)
@@ -498,10 +499,10 @@ class DistanceBand(W):
                     if i not in neighbors[j]:
                         weights[j].append(1)
                         neighbors[j].append(i)
-
         else:
-            for key,weight in self.dmat.items():
-                i,j = key
+            for idxs,weight in self.dmat.items():
+                idx, jdx = idxs
+                i, j = ids[idx], ids[jdx]
                 if i != j:
                     if j not in neighbors[i]:
                         weights[i].append(weight**self.alpha)
@@ -509,7 +510,6 @@ class DistanceBand(W):
                     if i not in neighbors[j]:
                         weights[j].append(weight**self.alpha)
                         neighbors[j].append(i)
-
         return neighbors, weights
 
 

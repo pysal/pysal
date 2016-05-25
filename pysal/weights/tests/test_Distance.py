@@ -2,6 +2,7 @@ import os
 import unittest
 import pysal
 import numpy as np
+from itertools import product
 
 
 class TestDistanceWeights(unittest.TestCase):
@@ -113,6 +114,22 @@ class TestDistanceWeights(unittest.TestCase):
         w1 = pysal.DistanceBand(points1, 1)
         for k in range(w.n):
             self.assertEqual(w[k], w1[k])
+
+    def test_DistanceBand_named(self):
+        w = pysal.rook_from_shapefile(
+                pysal.examples.get_path('lattice10x10.shp'))
+        polygons = pysal.open(
+                pysal.examples.get_path('lattice10x10.shp'),'r').read()
+        points1 = [poly.centroid for poly in polygons]
+        # two-letter names: 'AA', 'AB', .. 'JJ'
+        names = [''.join((chr(65+i), chr(65+j))) for i,j in product(range(10), range(10))]
+        w1 = pysal.DistanceBand(points1, 1, ids=names)
+        for k in range(w.n):
+            #need heaver comparison because looking between named & unnamed
+            name = names[k]
+            self.assertEqual(set(w.weights[k]), set(w1.weights[name]))
+            idxs_as_names = [names[i] for i in w.neighbors[k]]
+            self.assertEqual(set(idxs_as_names), set(w1.neighbors[name]))
 
     def test_DistanceBand_ints(self):
         """ see issue #126 """
