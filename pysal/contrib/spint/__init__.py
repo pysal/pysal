@@ -1,1 +1,1 @@
-from gravity import Unconstrained, ProductionConstrained, AttractionConstrained, DoublyConstrained
+from gravity import Gravity, Production, Attraction, Doubly
