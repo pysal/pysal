@@ -51,6 +51,7 @@ def intercept_filepath(f):
     """
     Intercept the first argument of a function if it looks like a string path
     """
+    @wraps(f)
     def wrapped(*args, **kwargs):
         iargs = iter(args)
         first = next(iargs)
