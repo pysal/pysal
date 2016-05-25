@@ -1,6 +1,6 @@
 # coding=utf-8
 """
-MLE calibration for Wilson (1967) family of gravity models
+ Wilsonian (1967) family of gravity-type spatial interaction models
 
 References
 ----------
@@ -79,6 +79,33 @@ class GravityBase(object):
         else:
             raise ValueError('cost_func must either be "exp" or "power"')
 
+    def fit(self, framework='GLM', method='iwls'):
+        '''
+        estimates parameters (coefficients) of spatial interaction model
+            
+        Parameters
+        ----------
+        framework           : string
+                            estimation framework; default is GLM
+                            "GLM" | "entropy"
+        method              : string
+                            estimation method for GLM framework; default is
+                            itertaively weighted least sqaures (iwls)
+                            "iwls" | "TODO - add other methods"
+
+       Returns
+       -------
+       betas                : array
+                              K+L+D+1 x 1; estimated parameters for
+                              origin/destination/cost variables and constant
+        '''
+        if (framework.lower() == 'glm'):
+            y = self.f
+            X = np.hstack((np.ones((self.n, 1)), self.ov, self.dv,
+                self.cf(self.c)))
+            model = sm.GLM(y, X, family = families.Poisson()).fit()
+        return model
+
 class Gravity(GravityBase):
     """
     Unconstrained (traditional gravity) gravity-type spatial interaction model
@@ -151,33 +178,6 @@ class Gravity(GravityBase):
 
         self.ov = dict(zip(o_vars, [self.dt[x] for x in o_vars]))
         self.dv = dict(zip(d_vars, [self.dt[x] for x in d_vars]))
-    
-    def fit(self, framework='GLM', method='iwls'):
-        '''
-        estimates parameters (coefficients) of spatial interaction model
-            
-        Parameters
-        ----------
-        framework           : string
-                            estimation framework; default is GLM
-                            "GLM" | "entropy"
-        method              : string
-                            estimation method for GLM framework; default is
-                            itertaively weighted least sqaures (iwls)
-                            "iwls" | "TODO - add other methods"
-
-       Returns
-       -------
-       betas                : array
-                              K+L+D+1 x 1; estimated parameters for
-                              origin/destination/cost variables and constant
-        '''
-        if (framework.lower() == 'glm'):
-            y = self.f
-            X = np.hstack((np.ones((self.n, 1)), self.ov, self.dv,
-                self.cf(self.c)))
-            model = sm.GLM(y, X, family = families.Poisson()).fit()
-        return model
 
 class Production(GravityBase):
     """
