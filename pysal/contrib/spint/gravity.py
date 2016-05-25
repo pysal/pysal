@@ -1,11 +1,15 @@
+# coding=utf-8
 """
-Poisson and Gaussian MLE calibration of gravity models via iteratively weighted
-least sqaures using a generalized linear model framework. 
+MLE calibration for Wilson (1967) family of gravity models
 
 References
 ----------
 
-Todo: add references
+Fotheringham, A. S. and O'Kelly, M. E. (1989). Spatial Interaction Models: Formulations
+ and Applications. London: Kluwer Academic Publishers.
+
+Wilson, A. G. (1967). A statistical theory of spatial distribution models.
+ Transportation Research, 1, 253–269.
 
 """
 
@@ -17,7 +21,8 @@ from statsmodels.api import families
 
 class GravityBase(object):
     """
-    Base class for gravity-type spatial interaction model
+    Base class to set up attributes common across the family of gravity-type
+    spatial interaction models
 
     Parameters
     ----------
@@ -76,7 +81,7 @@ class GravityBase(object):
 
 class Gravity(GravityBase):
     """
-    Unconstrained gravity-type spatial interaction model
+    Unconstrained (traditional gravity) gravity-type spatial interaction model
 
     Parameters
     ----------
@@ -132,10 +137,7 @@ class Gravity(GravityBase):
     fitted          : array
                       n x 1; flow values produced by calibrated model
     fit_stats       : dict{"statistic name": statistic value}
-                      keys are the names of the appropriate fit statistics
-                      associated with a fit framework and values are
-                      correspinding statistic values
-
+    
     Example
     -------
     TODO
@@ -179,7 +181,7 @@ class Gravity(GravityBase):
 
 class Production(GravityBase):
     """
-    Unconstrained gravity-type spatial interaction model
+    Production-constrained (origin-constrained) gravity-type spatial interaction model
 
     Parameters
     ----------
@@ -253,7 +255,7 @@ class Production(GravityBase):
 
 class Attraction(GravityBase):
     """
-    Unconstrained gravity-type spatial interaction model
+    Attraction-constrained (destination-constrained) gravity-type spatial interaction model
 
     Parameters
     ----------
@@ -327,7 +329,7 @@ class Attraction(GravityBase):
 
 class Doubly(GravityBase):
     """
-    Unconstrained gravity-type spatial interaction model
+    Doubly-constrained gravity-type spatial interaction model
 
     Parameters
     ----------
@@ -396,3 +398,4 @@ class Doubly(GravityBase):
 
         self.ov = {}
         self.dv = {}
+
