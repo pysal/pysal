@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #import math
 import pysal
-from pysal.cg.standalone import get_shared_segments
+from pysal.cg.standalone import get_shared_segments, get_bounding_box
 
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 __all__ = ["QUEEN", "ROOK", "ContiguityWeights_binning",
@@ -192,7 +192,7 @@ class ContiguityWeightsPolygons:
     Contiguity for a collection of polygons using a binning algorithm
     """
 
-    def __init__(self, collection, wttype=1):
+    def __init__(self, collection, wttype=1, bbox=None):
         """
 
         Parameters
@@ -207,16 +207,20 @@ class ContiguityWeightsPolygons:
 
         self.collection = collection
         self.wttype = wttype
+        if bbox is None:
+            try:
+                bbox = collection.bbox
+            except AttributeError:
+                bbox = get_bounding_box(collection)
+        self.shapebox = bbox
+        self.numPoly = len(collection)
         self.do_weights()
 
     def do_weights(self):
-        if self.collection.type != pysal.cg.Polygon:
-            return False
 
-        shapebox = self.collection.bbox      # bounding box
+        shapebox = self.shapebox      # bounding box
 
-        numPoly = self.collection.n
-        self.numPoly = numPoly
+        numPoly = len(self.collection)
 
         # bucket size
         if (numPoly < SHP_SMALL):

@@ -79,10 +79,7 @@ def buildContiguity(polygons, criterion="rook", ids=None):
     if issubclass(type(geo), pysal.open):
         geo.seek(0)  # Make sure we read from the beginging of the file.
         geoObj = geo
-    else:
-        raise TypeError(
-            "Argument must be a FileIO handler or connection string.")
-    neighbor_data = ContiguityWeights(geoObj, wt_type).w
+    neighbor_data = ContiguityWeightsPolygons(geoObj, wt_type).w
     neighbors = {}
     #weights={}
     if ids:
