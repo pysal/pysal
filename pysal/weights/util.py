@@ -1,4 +1,5 @@
 import pysal
+from pysal.cg import Polygon, Point
 from pysal.common import *
 import pysal.weights
 import numpy as np
@@ -1015,6 +1016,36 @@ def get_ids(shapefile, idVariable):
             idVariable, ','.join(db.header))
         raise KeyError(msg)
 
+def get_points_array(iterable):
+    """
+    Gets a data array of x and y coordinates from a given iterable
+    Parameters
+    ----------
+    iterable      : iterable
+                    arbitrary collection of shapes that supports iteration 
+
+    Returns
+    -------
+    points        : array
+                    (n, 2)
+                    a data array of x and y coordinates
+
+    Notes
+    -----
+    If the given shape file includes polygons,
+    this function returns x and y coordinates of the polygons' centroids
+
+    """
+    gen = (x for x in iterable)
+    first = next(gen)
+    if isinstance(first, Polygon):
+        data = np.array([first.centroid] + [shape.centroid for shape in gen])
+    elif isinstance(first, Point):
+        data = np.array([first] + [shape for shape in gen])
+    else:
+        data = np.asarray(iterable)
+    return data
+
 
 def get_points_array_from_shapefile(shapefile):
     """
@@ -1057,11 +1088,7 @@ def get_points_array_from_shapefile(shapefile):
     """
 
     f = pysal.open(shapefile)
-    if f.type.__name__ == 'Polygon':
-        data = np.array([shape.centroid for shape in f])
-    elif f.type.__name__ == 'Point':
-        data = np.array([shape for shape in f])
-    f.close()
+    data = get_points_array(f)
     return data
 
 

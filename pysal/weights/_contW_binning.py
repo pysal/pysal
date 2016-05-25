@@ -179,7 +179,7 @@ class ContiguityWeights_binning:
                                 w[j].add(polyId)
                                 # break
         else:
-            print "Unsupported weight type."
+            print("Unsupported weight type.")
 
         self.w = w
 
@@ -296,7 +296,7 @@ class ContiguityWeightsPolygons:
             for polyId in xrange(numPoly):
                 if polyId not in edgeCache:
                     iEdges = {}
-                    iVerts = shpFileObject.get(polyId).vertices
+                    iVerts = self.collection[polyId].vertices
                     nv = len(iVerts)
                     ne = nv - 1
                     for i in xrange(ne):
@@ -324,7 +324,7 @@ class ContiguityWeightsPolygons:
                     if polyId < j:
                         if bbcommon(bbcache[polyId], bbcache[j]):
                             if j not in edgeCache:
-                                jVerts = shpFileObject.get(j).vertices
+                                jVerts = self.collection[j].vertices
                                 jEdges = {}
                                 nv = len(jVerts)
                                 ne = nv - 1
@@ -342,26 +342,26 @@ class ContiguityWeightsPolygons:
                                 w[j].add(polyId)
                                 # break
         else:
-            print "Unsupported weight type."
+            print("Unsupported weight type.")
 
         self.w = w
 
 if __name__ == "__main__":
     import time
     fname = pysal.examples.get_path('NAT.shp')
-    print 'QUEEN binning'
+    print('QUEEN binning')
     t0 = time.time()
     qb = ContiguityWeights_binning(pysal.open(fname), QUEEN)
     t1 = time.time()
-    print "using " + str(fname)
-    print "time elapsed for queen... using bins: " + str(t1 - t0)
+    print("using " + str(fname))
+    print("time elapsed for queen... using bins: " + str(t1 - t0))
 
     t0 = time.time()
     rb = ContiguityWeights_binning(pysal.open(fname), ROOK)
     t1 = time.time()
-    print 'Rook binning'
-    print "using " + str(fname)
-    print "time elapsed for rook... using bins: " + str(t1 - t0)
+    print('Rook binning')
+    print("using " + str(fname))
+    print("time elapsed for rook... using bins: " + str(t1 - t0))
 
     from pysal.weights._contW_rtree import ContiguityWeights_rtree
 
@@ -369,25 +369,25 @@ if __name__ == "__main__":
     rt = ContiguityWeights_rtree(pysal.open(fname), ROOK)
     t1 = time.time()
 
-    print "time elapsed for rook... using rtree: " + str(t1 - t0)
-    print rt.w == rb.w
+    print("time elapsed for rook... using rtree: " + str(t1 - t0))
+    print(rt.w == rb.w)
 
-    print 'QUEEN'
+    print('QUEEN')
     t0 = time.time()
     qt = ContiguityWeights_rtree(pysal.open(fname), QUEEN)
     t1 = time.time()
-    print "using " + str(fname)
-    print "time elapsed for queen... using rtree: " + str(t1 - t0)
-    print qb.w == qt.w
+    print("using " + str(fname))
+    print("time elapsed for queen... using rtree: " + str(t1 - t0))
+    print(qb.w == qt.w)
 
-    print 'knn4'
+    print('knn4')
     t0 = time.time()
     knn = pysal.knnW_from_shapefile(fname, k=4)
     t1 = time.time()
-    print t1 - t0
+    print(t1 - t0)
 
-    print 'rook from shapefile'
+    print('rook from shapefile')
     t0 = time.time()
     knn = pysal.rook_from_shapefile(fname)
     t1 = time.time()
-    print t1 - t0
+    print(t1 - t0)
