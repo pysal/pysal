@@ -25,7 +25,7 @@ import pandas as pd
 #pd = safe_pandas(silent=True)
 import numpy as np
 from scipy.optimize import fsolve
-import _gravity_stats as stats
+import _entropy_stats as stats
 
 
 class Unconstrained:

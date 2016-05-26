@@ -25,7 +25,7 @@ import pandas as pd
 #pd = safe_pandas(silent=True)
 import numpy as np
 from scipy.stats.stats import pearsonr
-import gravity as gv
+import entropy as gv
 
 
 def sys_stats(gm):

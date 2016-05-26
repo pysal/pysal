@@ -19,156 +19,50 @@ import numpy as np
 import statsmodels.api as sm
 from statsmodels.api import families 
 from statsmodels.tools.tools import categorical
+from pysal.spreg import user_output as User
+from count_base import CountModel
 
-class GravityBase(object):
+class BaseGravity(CountModel):
     """
     Base class to set up attributes common across the family of gravity-type
     spatial interaction models
 
     Parameters
     ----------
-    data            : pandas DataFrame
-                      DataFrame containing data for model calibration
-    flows           : string
-                      name of column containing observed flows; depedent variable; y
-    origins         : string
-                      name of column containing origin unique identifiers
-    destinations    : string
-                      name of column containing destination unique identifiers 
-    cost            : list
-                      name of column containing cost variable; typically
-                      distance or time
-                      go from M to N in all M*N flow onservations; typically distance or time
+    flows           : array of integers
+                      n x 1; observed flows between O origins and D destinations
+    origins         : array of strings
+                      n x 1; unique identifiers of origins of n flows
+    destinations    : array of strings
+                      n x 1; unique identifiers of destinations of n flows 
+    cost            : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
     cost_func       : string
-                      functional form of the cost function; default is 'exp'
+                      functional form of the cost function; default is 'pow'
                       'exp' | 'pow'
-    filter_intra    : boolean
-                      True (default) to filter intra-zonal flows
+    o_vars          : array (optional)
+                      n x k; k attributes for each origin of  n flows; default
+                      is None
+    d_vars          : array (optional)
+                      n x k; k attributes for each destination of n flows;
+                      default is None
 
     Attributes
     ----------
-    dt              : pandas DataFrame
-                      filtered DataFrame if filter_intra=True
     f               : array
                       n x 1; observed flows; dependent variable; y
-    o               : array of strings
-                      n x 1; origin unique identifiers for n flows
-    d               : array of strings
-                      n x 1; destination unique identifiers for n flows
-    c               : array
-                      n x 1; cost associated with separation of each (o,d) pair
+    n               : integer
+                      number of observations
+    c               : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
     cf              : function
                       cost function; used to transform cost variable
-    """
-    def __init__(self, data, flows, origins, destinations, cost,
-            cost_func, filter_intra=True):
-        if filter_intra:
-        	self.dt = data[data[origins] !=
-        	        data[destinations]].reset_index(level=0, drop=True)
-        else:
-            self.dt = data
-        self.o = self.dt[origins].astype(str)
-        self.d = self.dt[destinations].astype(str)
-        self.f = self.dt[flows]
-        self.n = len(self.f)
-        self.c = self.dt[cost]
-
-        if cost_func.lower() == 'pow':
-            self.cf = np.log
-        elif cost_func.lower() == 'exp':
-            self.cf = lambda x: x*1.0
-        else:
-            raise ValueError('cost_func must either be "exp" or "power"')
-
-    def fit(self, framework='GLM', method='iwls'):
-        '''
-        estimates parameters (coefficients) of spatial interaction model
-            
-        Parameters
-        ----------
-        framework           : string
-                            estimation framework; default is GLM
-                            "GLM" | "entropy"
-        method              : string
-                            estimation method for GLM framework; default is
-                            itertaively weighted least sqaures (iwls)
-                            "iwls" | "TODO - add other methods"
-
-       Returns
-       -------
-       betas                : array
-                              K+L+D+1 x 1; estimated parameters for
-                              origin/destination/cost variables and constant
-        '''
-        if (framework.lower() == 'glm'):
-            y = np.reshape(self.f, (-1,1))
-            X = np.ones((self.n, 1))
-            
-            if isinstance(self, Production) | isinstance(self, Doubly):
-            	o_dummies = categorical(self.o.values, drop=True)
-                X = np.hstack((X, o_dummies))
-            if isinstance(self, Attraction) | isinstance(self, Doubly):
-            	d_dummies = categorical(self.d.values, drop=True)
-            	X = np.hstack((X, d_dummies))
-
-            for att in self.ov.values():
-            	X = np.hstack((X, self.cf(np.reshape(att, (-1,1)))))
-            for att in self.dv.values():
-            	X = np.hstack((X, self.cf(np.reshape(att, (-1,1)))))
-            X = np.hstack((X, self.cf(np.reshape(self.c, (-1,1)))))
-            model = sm.GLM(y, X, family = families.Poisson()).fit()
-        return model
-
-class Gravity(GravityBase):
-    """
-    Unconstrained (traditional gravity) gravity-type spatial interaction model
-
-    Parameters
-    ----------
-    data            : pandas DataFrame
-                      DataFrame containing data for model calibration
-    flows           : string
-                      name of column containing observed flows; depedent variable; y
-    origins         : string
-                      name of column containing origin unique identifiers
-    destinations    : string
-                      name of column containing destination unique identifiers 
-    o_vars          : list of strings
-                      names of columns containing origin attributtes
-    d_vars          : list of strings
-                      names of columns containing  destination attributes
-    cost            : list
-                      name of column containing cost variable; typically
-                      distance or time
-                      go from M to N in all M*N flow onservations; typically distance or time
-        return model
-        return model
-    cost_func       : string
-                      functional form of the cost function; default is 'exp'
-                      'exp' | 'pow'
-    filter_intra    : boolean
-                      True (default) to filter intra-zonal flows
-
-    Attributes
-    ----------
-    dt              : pandas DataFrame
-                      filtered DataFrame if filter_intra=True
-    f               : array
-                      n x 1; observed flows; dependent variable; y
-    o               : array of strings
-                      n x 1; origin unique identifiers for n flows
-    d               : array of strings
-                      n x 1; destination unique identifiers for n flows
-    ov              : dict{string : array}
-                      keys are string of origin variable's name and values are n x 1
-                      arrays of N origin variable values
-    dv              : dict{string  array}
-                      keys are string of destination variable's name and values
-                      are n x 1 arrays of M destination variable values
-    c               : array
-                      n x 1; cost associated with separation of each (o,d) pair
-    cf              : function
-                      cost function; used to transform cost variable
+    ov              : array 
+                      n x k; k attributes for each origin of n flows
+    dv              : array
+                      n x k; k attributes for each destination of n flows
     params          : array
                       estimated parameters
     se              : array
@@ -185,61 +79,139 @@ class Gravity(GravityBase):
     TODO
 
     """
-    def __init__(self, data, flows, origins, destinations, o_vars, d_vars, cost,
-            cost_func, filter_intra=True):
+    def __init__(self, flows, cost, cost_func='pow', o_vars=None, d_vars=None,
+            origins=None, destinations=None, constant=True):
+        flows = np.reshape(flows, (-1,1))
+        cost = np.reshape(cost, (-1,1))
+        n = User.check_arrays(flows, cost)
+        User.check_y(flows, n)
+        self.n = n
+        self.f = flows
+        self.c = cost
+        self.ov = o_vars
+        self.dv = d_vars
+
+        if cost_func.lower() == 'pow':
+            self.cf = np.log
+        elif cost_func.lower() == 'exp':
+            self.cf = lambda x: x*1.0
+        else:
+            raise ValueError('cost_func must either be "exp" or "power"')
+
+        y = np.reshape(self.f, (-1,1))
+        X = np.empty((self.n, 0))
+        if constant:
+            X = User.check_constant(X)
+
+        if isinstance(self, Production) | isinstance(self, Doubly):
+            o_dummies = categorical(origins.astype(str), drop=True)
+            X = np.hstack((X, o_dummies))
+        if isinstance(self, Attraction) | isinstance(self, Doubly):
+            d_dummies = categorical(destinations.astype(str), drop=True)
+            X = np.hstack((X, d_dummies))
+
+        if self.ov is not None:
+            X = np.hstack((X, np.log(np.reshape(self.ov, (-1,1)))))
+        if self.dv is not None:
+            X = np.hstack((X, np.log(np.reshape(self.dv, (-1,1)))))
+        X = np.hstack((X, self.cf(np.reshape(self.c, (-1,1)))))
+
+        CountModel.__init__(self, y, X)
+        self.fit()
         
-        GravityBase.__init__(self, data, flows, origins, destinations,
-                cost, cost_func, filter_intra=True)
 
-        self.ov = dict(zip(o_vars, [self.dt[x] for x in o_vars]))
-        self.dv = dict(zip(d_vars, [self.dt[x] for x in d_vars]))
+class Gravity(BaseGravity):
+    """
+    Unconstrained (traditional gravity) gravity-type spatial interaction model
 
-class Production(GravityBase):
+    Parameters
+    ----------
+    flows           : array of integers
+                      n x 1; observed flows between O origins and D destinations
+    cost            : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
+    cost_func       : string
+                      functional form of the cost function; default is 'pow'
+                      'exp' | 'pow'
+    o_vars          : array (optional)
+                      n x k; k attributes for each origin of  n flows; default
+                      is None
+    d_vars          : array (optional)
+                      n x k; k attributes for each destination of n flows;
+                      default is None
+
+    Attributes
+    ----------
+    f               : array
+                      n x 1; observed flows; dependent variable; y
+    n               : integer
+                      number of observations
+    c               : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
+    cf              : function
+                      cost function; used to transform cost variable
+    ov              : array 
+                      n x k; k attributes for each origin of n flows
+    dv              : array 
+                      n x k; k attributes for each destination of n flows
+    params          : array
+                      estimated parameters
+    se              : array
+                      standard errors associated with estimated parameters
+    t_stats         : array
+                      t-statistics associated with estimated parameters for
+                      hypothesis testing
+    fitted          : array
+                      n x 1; flow values produced by calibrated model
+    fit_stats       : dict{"statistic name": statistic value}
+    
+    Example
+    -------
+    TODO
+
+    """
+    def __init__(self, flows, o_vars, d_vars, cost,
+            cost_func):
+        User.check_arrays(flows, o_vars, d_vard, cost)
+        
+        BaseGravity.__init__(self, flows, cost,
+                cost_func, o_vars=o_vars, d_vars=d_vars)
+
+class Production(BaseGravity):
     """
     Production-constrained (origin-constrained) gravity-type spatial interaction model
-
+    
     Parameters
     ----------
-    data            : pandas DataFrame
-                      DataFrame containing data for model calibration
-    flows           : string
-                      name of column containing observed flows; depedent variable; y
-    origins         : string
-                      name of column containing origin unique identifiers
-    destinations    : string
-                      name of column containing destination unique identifiers 
-    d_vars          : list of strings
-                      names of columns containing  destination attributes
-    cost            : list
-                      name of column containing cost variable; typically
-                      distance or time
-                      go from M to N in all M*N flow onservations; typically distance or time
+    flows           : array of integers
+                      n x 1; observed flows between O origins and D destinations
+    origins         : array of strings
+                      n x 1; unique identifiers of origins of n flows
+    cost            : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
     cost_func       : string
-                      functional form of the cost function; default is 'exp'
+                      functional form of the cost function; default is 'pow'
                       'exp' | 'pow'
-    filter_intra    : boolean
-                      True (default) to filter intra-zonal flows
+    d_vars          : array (optional)
+                      n x k; k attributes for each destination of n flows;
+                      default is None
 
     Attributes
     ----------
-    dt              : pandas DataFrame
-                      filtered DataFrame if filter_intra=True
     f               : array
                       n x 1; observed flows; dependent variable; y
-    o               : array of strings
-                      n x 1; origin unique identifiers for n flows
-    d               : array of strings
-                      n x 1; destination unique identifiers for n flows
-    ov              : dict{string : array}
-                      keys are string of origin variable's name and values are n x 1
-                      arrays of N origin variable values
-    dv              : dict{string  array}
-                      keys are string of destination variable's name and values
-                      are n x 1 arrays of M destination variable values
-    c               : array
-                      n x 1; cost associated with separation of each (o,d) pair
+    n               : integer
+                      number of observations
+    c               : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
     cf              : function
                       cost function; used to transform cost variable
+    dv              : array 
+                      n x k; k attributes for each destination of n flows
     params          : array
                       estimated parameters
     se              : array
@@ -250,70 +222,51 @@ class Production(GravityBase):
     fitted          : array
                       n x 1; flow values produced by calibrated model
     fit_stats       : dict{"statistic name": statistic value}
-                      keys are the names of the appropriate fit statistics
-                      associated with a fit framework and values are
-                      correspinding statistic values
 
     Example
     -------
     TODO
 
     """
-    def __init__(self, data, flows, origins, destinations, d_vars, cost,
-            cost_func, filter_intra=True):
+    def __init__(self, flows, origins, d_vars, cost, cost_func):
+        User.check_arrays(flows, origins, d_vars, cost
+                )
+        BaseGravity.__init__(self, flows, cost, cost_func, d_vars=d_vars,
+                origins=origins)
         
-        GravityBase.__init__(self, data, flows, origins, destinations,
-                cost, cost_func, filter_intra=True)
-        
-        self.ov = {}
-        self.dv = dict(zip(d_vars, [self.dt[x] for x in d_vars]))
-
-class Attraction(GravityBase):
+class Attraction(BaseGravity):
     """
     Attraction-constrained (destination-constrained) gravity-type spatial interaction model
-
+    
     Parameters
     ----------
-    data            : pandas DataFrame
-                      DataFrame containing data for model calibration
-    flows           : string
-                      name of column containing observed flows; depedent variable; y
-    origins         : string
-                      name of column containing origin unique identifiers
-    destinations    : string
-                      name of column containing destination unique identifiers 
-    o_vars          : list of strings
-                      names of columns containing origin attributtes
-    cost            : list
-                      name of column containing cost variable; typically
-                      distance or time
-                      go from M to N in all M*N flow onservations; typically distance or time
+    flows           : array of integers
+                      n x 1; observed flows between O origins and D destinations
+    destinations    : array of strings
+                      n x 1; unique identifiers of destinations of n flows 
+    cost            : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
     cost_func       : string
-                      functional form of the cost function; default is 'exp'
+                      functional form of the cost function; default is 'pow'
                       'exp' | 'pow'
-    filter_intra    : boolean
-                      True (default) to filter intra-zonal flows
+    o_vars          : array (optional)
+                      n x k; k attributes for each origin of  n flows; default
+                      is None
 
     Attributes
     ----------
-    dt              : pandas DataFrame
-                      filtered DataFrame if filter_intra=True
     f               : array
                       n x 1; observed flows; dependent variable; y
-    o               : array of strings
-                      n x 1; origin unique identifiers for n flows
-    d               : array of strings
-                      n x 1; destination unique identifiers for n flows
-    ov              : dict{string : array}
-                      keys are string of origin variable's name and values are n x 1
-                      arrays of N origin variable values
-    dv              : dict{string  array}
-                      keys are string of destination variable's name and values
-                      are n x 1 arrays of M destination variable values
-    c               : array
-                      n x 1; cost associated with separation of each (o,d) pair
+    n               : integer
+                      number of observations
+    c               : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
     cf              : function
                       cost function; used to transform cost variable
+    ov              : array
+                      n x k; k attributes for each origin of n flows
     params          : array
                       estimated parameters
     se              : array
@@ -324,66 +277,46 @@ class Attraction(GravityBase):
     fitted          : array
                       n x 1; flow values produced by calibrated model
     fit_stats       : dict{"statistic name": statistic value}
-                      keys are the names of the appropriate fit statistics
-                      associated with a fit framework and values are
-                      correspinding statistic values
 
     Example
     -------
     TODO
 
     """
-    def __init__(self, data, flows, origins, destinations, o_vars, cost,
-            cost_func, filter_intra=True):
-        
-        GravityBase.__init__(self, data, flows, origins, destinations,
-                 cost, cost_func, filter_intra=True)
+    def __init__(self, flows, destinations, o_vars, cost, cost_func):
+        User.check_arrays(flows, destinations, o_vars, cost)
 
-        self.ov = dict(zip(o_vars, [self.dt[x] for x in o_vars]))
-        self.dv = {}
+        BaseGravity.__init__(self, flows, cost, cost_func, o_vars=o_vars,
+                 destinations=destinations)
 
-class Doubly(GravityBase):
+class Doubly(BaseGravity):
     """
     Doubly-constrained gravity-type spatial interaction model
-
+    
     Parameters
     ----------
-    data            : pandas DataFrame
-                      DataFrame containing data for model calibration
-    flows           : string
-                      name of column containing observed flows; depedent variable; y
-    origins         : string
-                      name of column containing origin unique identifiers
-    destinations    : string
-                      name of column containing destination unique identifiers 
-    cost            : list
-                      name of column containing cost variable; typically
-                      distance or time
-                      go from M to N in all M*N flow onservations; typically distance or time
+    flows           : array of integers
+                      n x 1; observed flows between O origins and D destinations
+    origins         : array of strings
+                      n x 1; unique identifiers of origins of n flows
+    destinations    : array of strings
+                      n x 1; unique identifiers of destinations of n flows 
+    cost            : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
     cost_func       : string
-                      functional form of the cost function; default is 'exp'
+                      functional form of the cost function; default is 'pow'
                       'exp' | 'pow'
-    filter_intra    : boolean
-                      True (default) to filter intra-zonal flows
 
     Attributes
     ----------
-    dt              : pandas DataFrame
-                      filtered DataFrame if filter_intra=True
     f               : array
                       n x 1; observed flows; dependent variable; y
-    o               : array of strings
-                      n x 1; origin unique identifiers for n flows
-    d               : array of strings
-                      n x 1; destination unique identifiers for n flows
-    ov              : dict{string : array}
-                      keys are string of origin variable's name and values are n x 1
-                      arrays of N origin variable values
-    dv              : dict{string  array}
-                      keys are string of destination variable's name and values
-                      are n x 1 arrays of M destination variable values
-    c               : array
-                      n x 1; cost associated with separation of each (o,d) pair
+    n               : integer
+                      number of observations
+    c               : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
     cf              : function
                       cost function; used to transform cost variable
     params          : array
@@ -396,21 +329,16 @@ class Doubly(GravityBase):
     fitted          : array
                       n x 1; flow values produced by calibrated model
     fit_stats       : dict{"statistic name": statistic value}
-                      keys are the names of the appropriate fit statistics
-                      associated with a fit framework and values are
-                      correspinding statistic values
 
     Example
     -------
     TODO
 
     """
-    def __init__(self, data, flows, origins, destinations, cost,
-            cost_func, filter_intra=True):
-        
-        GravityBase.__init__(self, data, flows, origins,
-                destinations, cost, cost_func, filter_intra=True)
+    def __init__(self, flows, origins, destinations, cost, cost_func):
+        User.check_arrays(flows, origins, destinations, cost)
+        #maybe a check for equal number of origins and destinations
 
-        self.ov = {}
-        self.dv = {}
+        BaseGravity.__init__(self, flows, cost, cost_func, origins=origins, 
+                destinations=destinations)
 
