@@ -30,13 +30,13 @@ def _W_Distance(collection, constructor, *args, **kwargs):
     data = util.get_points_array(collection)
     return constructor(data, *args, **kwargs)
 
-def Rook(collection):
+def Rook(collection, **kwargs):
     """
     Specific rook contiguity constructor from an iterable of polygons
     """
     return _W_Contiguity(collection, wtype='rook')
 
-def Queen(collection):
+def Queen(collection, **kwargs):
     """
     Specific queen contiguity constructor from an iterable of polygons
     """
