@@ -1,7 +1,6 @@
 import numpy as np
 from scipy.spatial import KDTree, cKDTree
 from pysal.cg.kdtree import Arc_KDTree
-from Distance import knnW as knnW_from_kdtree
 import util
 import pysal as ps
 from pysal.common import intercept_filepath
@@ -58,6 +57,9 @@ def Kernel_Adaptive(collection, *args, **kwargs):
     return _W_Distance(collection, ps.weights.Distance.Kernel, *args, **kwargs) 
 
 def Threshold_Binary(collection, *args, **kwargs):
+    return _W_Distance(collection, ps.weights.Distance.DistanceBand, *args, **kwargs)
+
+def Distance_Band(collection, *args, **kwargs):
     return _W_Distance(collection, ps.weights.Distance.DistanceBand, *args, **kwargs)
 
 def Threshold_Continuous(collection, *args, **kwargs):
