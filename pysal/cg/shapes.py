@@ -24,7 +24,7 @@ def asShape(obj):
         geo = obj.__geo_interface__
     else:
         geo = obj
-    if hasattr(geo, 'type'):
+    if not hasattr(geo, 'type') and 'type' not in geo:
         raise TypeError('%r does not appear to be a shape object' % (obj))
     geo_type = geo['type'].lower()
     #if geo_type.startswith('multi'):
@@ -1285,9 +1285,10 @@ class Ring(object):
 
             A = 0.0
             for i in xrange(N - 1):
-                A += (x[i] * y[i + 1] - x[i + 1] * y[i])
-            A = A / 2.0
-            self._area = A
+                A += (x[i] + x[i + 1]) * \
+                    (y[i] - y[i + 1])
+            A = A * 0.5
+            self._area = -A
         return self._area
 
     @property
