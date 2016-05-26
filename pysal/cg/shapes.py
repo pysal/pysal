@@ -319,7 +319,7 @@ class Point(object):
         >>> Point((0,1))
         (0.0, 1.0)
         """
-        return self.__loc.__repr__()
+        return str(self)
 
     def __str__(self):
         """
@@ -339,7 +339,7 @@ class Point(object):
         >>> str(p)
         '(1.0, 3.0)'
         """
-        return str(self.__loc)
+        return "POINT ({} {})".format(*self.__loc)
 
 
 class LineSegment(object):
@@ -393,7 +393,8 @@ class LineSegment(object):
         self._reset_props()
 
     def __str__(self):
-        return "LineSegment(" + str(self._p1) + ", " + str(self._p2) + ")"
+        return "LINESTRING ({} {}, {} {})".format(self._p1[0], self._p1[1], 
+                                                  self._p2[0], self._p2[1])
 
     def __eq__(self, other):
         """
