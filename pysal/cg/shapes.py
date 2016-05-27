@@ -20,6 +20,8 @@ def asShape(obj):
     Returns a pysal shape object from obj.
     obj must support the __geo_interface__.
     """
+    if isinstance(obj, (Point, LineSegment, Line, Ray, Chain, Polygon)):
+        return obj
     if hasattr(obj, '__geo_interface__'):
         geo = obj.__geo_interface__
     else:
