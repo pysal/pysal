@@ -7,7 +7,7 @@ __author__ = "Sergio J. Rey <srey@asu.edu> "
 __all__ = ['buildContiguity']
 
 import pysal
-from _contW_binning import ContiguityWeightsPolygons as ContiguityWeights
+from _contW_binning import ContiguityWeights_binning
 
 
 WT_TYPE = {'rook': 2, 'queen': 1}  # for _contW_Binning
@@ -77,7 +77,7 @@ def buildContiguity(polygons, criterion="rook", ids=None):
     geo = polygons
     if issubclass(type(geo), pysal.open):
         geo.seek(0)  # Make sure we read from the beginning of the file.
-    neighbor_data = ContiguityWeights(geo, wt_type).w
+    neighbor_data = ContiguityWeights_binning(geo, wt_type).w
     neighbors = {}
     #weights={}
     if ids:

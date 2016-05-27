@@ -179,8 +179,7 @@ class ContiguityWeights_binning:
                                 w[j].add(polyId)
                                 # break
         else:
-            print("Unsupported weight type.")
-
+            raise TypeError('Weight type not understood')
         self.w = w
 
 # Generalize to handle polygon collections - independent of origin file type
@@ -220,7 +219,7 @@ class ContiguityWeightsPolygons:
 
         shapebox = self.shapebox      # bounding box
 
-        numPoly = len(self.collection)
+        numPoly = self.numPoly
 
         # bucket size
         if (numPoly < SHP_SMALL):
@@ -342,7 +341,7 @@ class ContiguityWeightsPolygons:
                                 w[j].add(polyId)
                                 # break
         else:
-            print("Unsupported weight type.")
+            raise Exception("Unsupported weight type.")
 
         self.w = w
 
