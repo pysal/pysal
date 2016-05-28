@@ -9,9 +9,15 @@ import scipy.sparse
 from os.path import basename as BASENAME
 from util import full
 from pysal.core.FileIO import FileIO as popen
+from functools import partial
 
 __all__ = ['W', 'WSP']
 
+dispatch_table = {'rook':Rook, 'queen':Queen, 'kernel':Kernel, 
+                  'adaptive kernel': partial(Kernel, fixed=False)
+                  'threshold continuous': partial(DistanceBand, binary=False)
+                  'threshold binary': DistanceBand
+                  'distance band':DistanceBand, 'knn':KNN}
 
 class W(object):
     """
@@ -193,6 +199,16 @@ class W(object):
         w = f.read(**kwargs)
         f.close()
         return w
+
+    @classmethod
+    def from_shapefile(cls, *args, **kwargs):
+        # we could also just "do the right thing," but I think it'd make sense to
+        # try and get people to use `Rook.from_shapefile(shapefile)` rather than
+        # W.from_shapefile(shapefile, type=`rook`), otherwise we'd need to build
+        # a type dispatch table. Generic W should be for stuff we don't know
+        # anything about. 
+        raise NotImplementedError('Use type-specific constructors, like Rook,'
+                                  ' Queen, DistanceBand, or Kernel')
 
     @classmethod
     def from_WSP(cls, WSP, silent_island_warning=True):
@@ -995,6 +1011,8 @@ class W(object):
 
         '''
         return WSP(self.sparse, self._id_order)
+    
+    to_WSP = towsp
 
     def set_shapefile(self, shapefile, idVariable=None, full=False):
         """
@@ -1119,3 +1137,31 @@ class WSP(object):
             self._diagWtW_WW = (wt * w + w * w).diagonal()
             self._cache['diagWtW_WW'] = self._diagWtW_WW
         return self._diagWtW_WW
+    
+    def to_W(self, silence_island_warning=True):
+        """
+        Construct a W object from the WSP's sparse matrix
+
+        Arguments
+        ---------
+        silence_island_warning  :   bool
+                                    a flag governing whether to state when
+                                    islands are encountered. 
+        """
+        return util.WSP2W(self, silence_island_warning=silence_island_warning)
+
+    @classmethod
+    def from_W(cls, W)
+        """
+        Constructs a WSP object from the W's sparse matrix
+
+        Arguments
+        ---------
+        W       :   pysal.weights.W
+                    a pysal weights object with a sparse form and ids
+
+        Returns
+        -------
+        a WSP instance
+        """
+        return cls(W.sparse, id_order=W.id_order)

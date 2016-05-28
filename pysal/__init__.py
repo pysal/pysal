@@ -86,7 +86,7 @@ from pysal.network.network import Network, NetworkG, NetworkK, NetworkF
 
 try:
     import pandas
-    from pysal.contrib import pdutilities as pdio
+    from pysal.contrib import pdio
 except ImportError:
     print('Pandas adapters not loaded')
 
