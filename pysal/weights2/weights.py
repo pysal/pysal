@@ -10,14 +10,16 @@ from os.path import basename as BASENAME
 from util import full
 from pysal.core.FileIO import FileIO as popen
 from functools import partial
+#from .contiguity import Rook, Queen
+#from .distance import Kernel, DistanceBand, KNN
 
 __all__ = ['W', 'WSP']
 
-dispatch_table = {'rook':Rook, 'queen':Queen, 'kernel':Kernel, 
-                  'adaptive kernel': partial(Kernel, fixed=False)
-                  'threshold continuous': partial(DistanceBand, binary=False)
-                  'threshold binary': DistanceBand
-                  'distance band':DistanceBand, 'knn':KNN}
+#dispatch_table = {'rook':Rook, 'queen':Queen, 'kernel':Kernel, 
+#                  'adaptive kernel': partial(Kernel, fixed=False),
+#                  'threshold continuous': partial(DistanceBand, binary=False),
+#                  'threshold binary': DistanceBand,
+#                  'distance band':DistanceBand, 'knn':KNN}
 
 class W(object):
     """
@@ -181,11 +183,11 @@ class W(object):
         if self.islands and not self.silent_island_warning:
             ni = len(self.islands)
             if ni == 1:
-                print "WARNING: there is one disconnected observation (no neighbors)"
-                print "Island id: ", self.islands
+                print("WARNING: there is one disconnected observation (no neighbors)")
+                print("Island id: ", self.islands)
             else:
-                print "WARNING: there are %d disconnected observations" % ni
-                print "Island ids: ", self.islands
+                print("WARNING: there are %d disconnected observations" % ni)
+                print("Island ids: ", self.islands)
 
     def _reset(self):
         """Reset properties.
@@ -827,7 +829,7 @@ class W(object):
                     row_sum = sum(wijs) * 1.0
                     if row_sum == 0.0:
                         if not self.silent_island_warning:
-                            print 'WARNING: ', i, ' is an island (no neighbors)'
+                            print('WARNING: ', i, ' is an island (no neighbors)')
                     weights[i] = [wij / row_sum for wij in wijs]
                 weights = weights
                 self.transformations[value] = weights
@@ -886,7 +888,7 @@ class W(object):
                 self.weights = original
                 self._reset()
             else:
-                print 'unsupported weights transformation'
+                raise Exception('unsupported weights transformation')
 
     transform = property(get_transform, set_transform)
 
@@ -1151,7 +1153,7 @@ class WSP(object):
         return util.WSP2W(self, silence_island_warning=silence_island_warning)
 
     @classmethod
-    def from_W(cls, W)
+    def from_W(cls, W):
         """
         Constructs a WSP object from the W's sparse matrix
 
