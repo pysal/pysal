@@ -54,9 +54,6 @@ def iwls(x, y, family, offset, y_fix,
     while diff > tol and n_iter < max_iter:
         n_iter += 1
        
-       #So we need to figure out how to get z and w from statsmodels
-       #family.Poisson.link.functions - then we should be able to use statmodels
-       #style probability families/links for estimation
         mu = family.link.inverse(v)
         w = family.weights(mu)
         z = v + (family.link.deriv(mu)*(y-mu))
