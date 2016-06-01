@@ -2,8 +2,11 @@ import numpy as np
 import numpy.linalg as la
 from kernels import fix_gauss, fix_bisquare, fix_exp, adapt_gauss, adapt_bisquare, adapt_exp
 import pysal.spreg.user_output as USER
-from gwr_fits import gauss_iwls, poiss_iwls, logit_iwls
-from families.family import Gaussian
+import sys
+sys.path.append('/Users/toshan/projects/GIS596/pysal/pysal/contrib/glm/')
+from family import Gaussian, Binomial, Poisson
+#from pysal.contrib.glm.family import Gaussian, Binomial, Poisson
+from iwls import iwls
 
 class GWR(object):
     """
@@ -50,17 +53,17 @@ class GWR(object):
                         Parameters passed into fit method to define estimation
                         routine
     """
-    def __init__(self, coords, y, x, bw, family=Gaussian(), offset=None,
+    def __init__(self, coords, y, X, bw, family=Gaussian(), offset=None,
             y_fix=None, sigma2_v1=False, kernel='bisquare', fixed=False):
         """
         Initialize class
         """
-        self.n = USER.check_arrays(y, x)
+        self.n = USER.check_arrays(y, X)
         USER.check_y(y, self.n)
         self.y = y
-        self.x = USER.check_constant(x)
+        self.X = USER.check_constant(X)
         self.family = family
-        self.k = self.x.shape[1]
+        self.k = self.X.shape[1]
         self.sigma2_v1=sigma2_v1
         if offset is None:
             self.offset = np.ones(shape=(self.n,1))
@@ -93,7 +96,7 @@ class GWR(object):
             else:
                 print 'Unsupported kernel function  ', kernel
 
-    def fit(self, ini_betas=None, tol=1.0e-6, max_iter=200, solve='iwls'):
+    def fit(self, ini_betas=None, tol=1.0e-5, max_iter=20, solve='iwls'):
         """
         Method that fits a model with a particular estimation routine.
 
@@ -128,17 +131,16 @@ class GWR(object):
             f = np.zeros((self.n, self.n))
             for i in range(self.n):
                 wi = np.diag(self.W[i])
-            	g_ey = self.family.link(self.y)
-            	rslt = iwls(self.x, self.y, g_ey, self.family, self.offset,
-            	        self.y_fix, self.fit_params['max_iter', wi=wi])
-            	print rslt
+            	rslt = iwls(self.y, self.X, self.family, self.offset,
+            	        self.y_fix, ini_betas, tol, max_iter, wi=wi)
                 
-                betas[i,:] = rslt[0]
+                betas[i,:] = rslt[0].T
+                
                 predy[i] = rslt[1][i]
                 v[i] = rslt[2][i]
                 w[i] = rslt[3][i]
                 z[i] = rslt[4].flatten()
-                ri = np.dot(self.x[i], rslt[5])
+                ri = np.dot(self.X[i], rslt[5])
                 s[i] = ri*np.reshape(rslt[4].flatten(), (1,-1))
                 cf = rslt[5] - np.dot(rslt[5], f)
                 c[i] =  np.diag(np.dot(cf, cf.T/w[i])).shape
@@ -239,7 +241,7 @@ class GWRResults(GWR):
         self.model = model
         self.n = model.n
         self.y = model.y
-        self.x = model.x
+        self.X = model.X
         self.k = model.k
         self.family = model.family
         self.fit_params = model.fit_params

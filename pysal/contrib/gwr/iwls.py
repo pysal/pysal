@@ -1,6 +1,6 @@
 import numpy as np
 import numpy.linalg as la
-import families
+import family as families
 
 
 def _compute_betas(y, x):
@@ -33,8 +33,8 @@ def _compute_betas_gwr(y, x, wi):
     betas = np.dot(xtx_inv_xt, y)
     return betas, xtx_inv_xt
 
-def iwls(x, y, family, offset, y_fix,
-    ini_betas=None, tol=1.0e-6, max_iter=200, wi=None):
+def iwls(y, x, family, offset, y_fix,
+    ini_betas=None, tol=1.0e-5, max_iter=20, wi=None):
     """
     Iteratively re-weighted least squares estimation routine
 
@@ -77,6 +77,6 @@ def iwls(x, y, family, offset, y_fix,
     y_hat = family.fitted(v)
 
     if wi is None:
-        return betas, w, v, link_y, n_iter
+        return betas, y_hat, w, n_iter
     else:
-        return betas, w, v, n_iter, z, xtx_inv_xt
+        return betas, y_hat, v, w, z, xtx_inv_xt, n_iter
