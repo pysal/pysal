@@ -759,4 +759,3 @@ class GWRResults(GWR):
                     dev += -2.0 * np.log(self.predy[i])
         return dev
 
->>>>>>> gwr_glm_fams
