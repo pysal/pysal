@@ -1,6 +1,8 @@
 """
 A module of classification schemes for choropleth mapping.
 """
+
+
 __author__ = "Sergio J. Rey"
 
 __all__ = ['Map_Classifier', 'quantile', 'Box_Plot', 'Equal_Interval',
@@ -8,7 +10,7 @@ __all__ = ['Map_Classifier', 'quantile', 'Box_Plot', 'Equal_Interval',
            'Jenks_Caspall_Forced', 'Jenks_Caspall_Sampled',
            'Max_P_Classifier', 'Maximum_Breaks', 'Natural_Breaks',
            'Quantiles', 'Percentiles', 'Std_Mean', 'User_Defined',
-           'gadf', 'K_classifiers']
+           'gadf', 'K_classifiers', 'HeadTail_Breaks']
 
 
 K = 5  # default number of classes in any map scheme with this as an argument
@@ -17,6 +19,19 @@ import scipy.stats as stats
 import scipy as sp
 import copy
 import sys
+from scipy.cluster.vq import kmeans as KMEANS
+
+
+def headTail_breaks(values, cuts):
+    """
+    head tail breaks helper function
+    """
+    values = np.array(values)
+    mean = np.mean(values)
+    cuts.append(mean)
+    if (len(values) > 1):
+        return headTail_breaks(values[values >= mean], cuts)
+    return cuts
 
 
 def quantile(y, k=4):
@@ -237,7 +252,7 @@ def bin1d(x, bins):
         k -= 1
         l, r = cuts.pop(-1)
         binIds += (x > l) * (x <= r) * k
-    counts = np.bincount(binIds)
+    counts = np.bincount(binIds, minlength=len(bins))
     return (binIds, counts)
 
 
@@ -252,9 +267,35 @@ def load_example():
     return cal
 
 
-def natural_breaks(values, k=5, itmax=100):
+def _kmeans(y, k=5):
+    """
+    Helper function to do kmeans in one dimension
+    """
+
+    y = y * 1.   # KMEANS needs float or double dtype
+    centroids = KMEANS(y, k)[0]
+    centroids.sort()
+    try:
+        class_ids = np.abs(y - centroids).argmin(axis=1)
+    except:
+        class_ids = np.abs(y[:, np.newaxis] - centroids).argmin(axis=1)
+
+    uc = np.unique(class_ids)
+    cuts = np.array([y[class_ids == c].max() for c in uc])
+    y_cent = np.zeros_like(y)
+    for c in uc:
+        y_cent[class_ids == c] = centroids[c]
+    diffs = y - y_cent
+    diffs *= diffs
+
+    return class_ids, cuts, diffs.sum(), centroids
+
+
+def natural_breaks(values, k=5):
     """
     natural breaks helper function
+
+    Jenks natural breaks is kmeans in one dimension
     """
     values = np.array(values)
     uv = np.unique(values)
@@ -263,38 +304,12 @@ def natural_breaks(values, k=5, itmax=100):
         print 'Warning: Not enough unique values in array to form k classes'
         print "Warning: setting k to %d" % uvk
         k = uvk
-    sids = np.random.permutation(range(len(uv)))[0:k]
-    seeds = uv[sids]
-    seeds.sort()
-    diffs = abs(np.matrix([values - seed for seed in seeds]))
-    c0 = diffs.argmin(axis=0)
-    c0 = np.array(c0)[0]
-    solving = True
-    solved = False
-    rk = range(k)
-    it = 0
-    while solving:
-        # get centroids of clusters
-        seeds = [np.median(values[c0 == c]) for c in rk]
-        seeds.sort()
-        # for each value find closest centroid
-        diffs = abs(np.matrix([values - seed for seed in seeds]))
-        # assign value to that centroid
-        c1 = diffs.argmin(axis=0)
-        c1 = np.array(c1)[0]
-        # compare new classids to previous
-        d = abs(c1 - c0)
-        if d.sum() == 0:
-            solving = False
-            solved = True
-        else:
-            c0 = c1
-        it += 1
-        if it == itmax:
-            solving = False
-    class_ids = c1
-    cuts = [max(values[c1 == c]) for c in rk]
-    return sids, seeds, diffs, class_ids, solved, it, cuts
+    kres = _kmeans(values, k)
+    sids = kres[-1]  # centroids
+    fit = kres[-2]
+    class_ids = kres[0]
+    cuts = kres[1]
+    return (sids, class_ids, fit, cuts)
 
 
 def _fisher_jenks_means(values, classes=5, sort=True):
@@ -371,10 +386,10 @@ class Map_Classifier:
     """
     Abstract class for all map classifications [Slocum2008]_
 
-    For an array :math:`y` of :math:`n` values, a map classifier places each value
-    :math:`y_i` into one of :math:`k` mutually exclusive and exhaustive classes.
-    Each classifer defines the classes based on different criteria, but in all
-    cases the following hold for the classifiers in PySAL:
+    For an array :math:`y` of :math:`n` values, a map classifier places each
+    value :math:`y_i` into one of :math:`k` mutually exclusive and exhaustive
+    classes.  Each classifer defines the classes based on different criteria,
+    but in all cases the following hold for the classifiers in PySAL:
 
     .. math::
 
@@ -385,14 +400,13 @@ class Map_Classifier:
 
 
 
-
-
     Map Classifiers Supported
 
     * :class:`~pysal.esda.mapclassify.Box_Plot`
     * :class:`~pysal.esda.mapclassify.Equal_Interval`
     * :class:`~pysal.esda.mapclassify.Fisher_Jenks`
     * :class:`~pysal.esda.mapclassify.Fisher_Jenks_Sampled`
+    * :class:`~pysal.esda.mapclassify.HeadTail_Breaks`
     * :class:`~pysal.esda.mapclassify.Jenks_Caspall`
     * :class:`~pysal.esda.mapclassify.Jenks_Caspall_Forced`
     * :class:`~pysal.esda.mapclassify.Jenks_Caspall_Sampled`
@@ -529,6 +543,68 @@ class Map_Classifier:
         table.insert(1, " ")
         table = "\n".join(table)
         return table
+
+
+class HeadTail_Breaks(Map_Classifier):
+    """
+    Head/tail Breaks Map Classification for Heavy-tailed Distributions
+
+    Parameters
+    ----------
+    y       : array
+              (n,1), values to classify
+    Attributes
+    ----------
+    yb      : array
+              (n,1), bin ids for observations,
+    bins    : array
+              (k,1), the upper bounds of each class
+    k       : int
+              the number of classes
+    counts  : array
+              (k,1), the number of observations falling in each class
+    Examples
+    --------
+    >>> import numpy as np
+    >>> np.random.seed(10)
+    >>> cal = load_example()
+    >>> htb = HeadTail_Breaks(cal)
+    >>> htb.k
+    3
+    >>> htb.counts
+    array([50,  7,  1])
+    >>> htb.bins
+    array([  125.92810345,   811.26      ,  4111.45      ])
+    >>> np.random.seed(123456)
+    >>> x = np.random.lognormal(3, 1, 1000)
+    >>> htb = HeadTail_Breaks(x)
+    >>> htb.bins
+    array([  32.26204423,   72.50205622,  128.07150107,  190.2899093 ,
+            264.82847377,  457.88157946,  576.76046949])
+    >>> htb.counts
+    array([695, 209,  62,  22,  10,   1,   1])
+
+    Notes
+    -----
+
+    Head/tail Breaks is a relatively new classification method developed
+    and introduced by [Jiang2013]_ for data with a heavy-tailed distribution.
+
+
+    Based on contributions by Alessandra Sozzi <alessandra.sozzi@gmail.com>.
+
+    """
+    def __init__(self, y):
+        Map_Classifier.__init__(self, y)
+        self.name = 'HeadTail_Breaks'
+
+    def _set_bins(self):
+
+        x = self.y.copy()
+        bins = []
+        bins = headTail_breaks(x, bins)
+        self.bins = np.array(bins)
+        self.k = len(self.bins)
 
 
 class Equal_Interval(Map_Classifier):
@@ -977,20 +1053,20 @@ class Natural_Breaks(Map_Classifier):
 
     Examples
     --------
-    >>> import numpy as np
-    >>> np.random.seed(10)
-    >>> cal = load_example()
-    >>> nb = Natural_Breaks(cal, k = 5)
+    >>> import numpy
+    >>> import pysal
+    >>> numpy.random.seed(123456)
+    >>> cal = pysal.esda.mapclassify.load_example()
+    >>> nb = pysal.Natural_Breaks(cal, k=5)
     >>> nb.k
     5
     >>> nb.counts
-    array([14, 13, 14, 10,  7])
+    array([41,  9,  6,  1,  1])
     >>> nb.bins
-    array([  1.81000000e+00,   7.60000000e+00,   2.98200000e+01,
-             1.81270000e+02,   4.11145000e+03])
-    >>> x = np.array([1] * 50)
+    array([   29.82,   110.74,   370.5 ,   722.85,  4111.45])
+    >>> x = numpy.array([1] * 50)
     >>> x[-1] = 20
-    >>> nb = Natural_Breaks(x, k = 5, initial = 0)
+    >>> nb = pysal.Natural_Breaks(x, k = 5, initial = 0)
     Warning: Not enough unique values in array to form k classes
     Warning: setting k to 2
     >>> nb.bins
@@ -1002,11 +1078,10 @@ class Natural_Breaks(Map_Classifier):
     Notes
     -----
     There is a tradeoff here between speed and consistency of the
-    classification
-    If you want more speed, set initial to a smaller value (0
+    classification If you want more speed, set initial to a smaller value (0
     would result in the best speed, if you want more consistent classes in
-    multiple runs of Natural_Breaks on the same data, set initial to a
-    higher value.
+    multiple runs of Natural_Breaks on the same data, set initial to a higher
+    value.
 
 
     """
@@ -1020,16 +1095,29 @@ class Natural_Breaks(Map_Classifier):
 
         x = self.y.copy()
         k = self.k
-        res0 = natural_breaks(x, k)
-        fit = res0[2].sum()
-        for i in xrange(self.initial):
-            res = natural_breaks(x, k)
-            fit_i = res[2].sum()
-            if fit_i < fit:
-                res0 = res
-        self.bins = np.array(res0[-1])
-        self.k = len(self.bins)
-        self.iterations = res0[-2]
+        values = np.array(x)
+        uv = np.unique(values)
+        uvk = len(uv)
+        if uvk < k:
+            print 'Warning: Not enough unique values in array to form k classes'
+            print "Warning: setting k to %d" % uvk
+            k = uvk
+            uv.sort()
+            # we set the bins equal to the sorted unique values and ramp k
+            # downwards. no need to call kmeans.
+            self.bins = uv
+            self.k = k
+        else:
+            # find an initial solution and then try to find an improvement
+            res0 = natural_breaks(x, k)
+            fit = res0[2]
+            for i in xrange(self.initial):
+                res = natural_breaks(x, k)
+                fit_i = res[2]
+                if fit_i < fit:
+                    res0 = res
+            self.bins = np.array(res0[-1])
+            self.k = len(self.bins)
 
 
 class Fisher_Jenks(Map_Classifier):
@@ -1882,7 +1970,6 @@ def opt_part(x):
     tss = np.inf
     opt_i = -999
     for i in xrange(1, n):
-        print i
         left = x[:i].var() * i
         right = x[i:].var() * (n - i)
         tss_i = left + right

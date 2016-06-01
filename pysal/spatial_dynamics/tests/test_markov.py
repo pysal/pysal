@@ -64,11 +64,12 @@ class test_chi2(unittest.TestCase):
         w = pysal.open(pysal.examples.get_path("states48.gal")).read()
         w.transform = 'r'
         sm = pysal.Spatial_Markov(rpci, w, fixed=True, k=5)
-        chi = np.matrix([[4.06139105e+01, 6.32961385e-04, 1.60000000e+01],
-                         [5.55485793e+01, 2.88879565e-06, 1.60000000e+01],
-                         [1.77772638e+01, 3.37100315e-01, 1.60000000e+01],
-                         [4.00925436e+01, 7.54729084e-04, 1.60000000e+01],
-                         [4.68588786e+01, 7.16364084e-05, 1.60000000e+01]]).getA()
+        chi = np.matrix([[4.05598541e+01, 6.44644317e-04, 1.60000000e+01],
+		         [5.54751974e+01, 2.97033748e-06, 1.60000000e+01],
+			 [1.77528996e+01, 3.38563882e-01, 1.60000000e+01],
+			 [4.00390961e+01, 7.68422046e-04, 1.60000000e+01],
+			 [4.67966803e+01, 7.32512065e-05,
+				 1.60000000e+01]]).getA()
         obs = np.matrix(sm.chi2).getA()
         np.testing.assert_array_almost_equal(obs, chi)
         obs = np.matrix(

@@ -113,14 +113,13 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
         self.y = y
         self.n, self.k = self.x.shape
 
-        if robust:
-            self.vm = ROBUST.robust_vm(reg=self, gwk=gwk, sig2n_k=sig2n_k)
-
-        self._cache = {}
         if sig2n_k:
             self.sig2 = self.sig2n_k
         else:
             self.sig2 = self.sig2n
+
+        if robust is not None:
+            self.vm = ROBUST.robust_vm(reg=self, gwk=gwk, sig2n_k=sig2n_k)
 
 
 class OLS(BaseOLS):
