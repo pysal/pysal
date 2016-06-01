@@ -81,8 +81,6 @@ class BaseGravity(CountModel):
     """
     def __init__(self, flows, cost, cost_func='pow', o_vars=None, d_vars=None,
             origins=None, destinations=None, constant=True):
-        flows = np.reshape(flows, (-1,1))
-        cost = np.reshape(cost, (-1,1))
         n = User.check_arrays(flows, cost)
         User.check_y(flows, n)
         self.n = n
@@ -104,10 +102,10 @@ class BaseGravity(CountModel):
             X = User.check_constant(X)
 
         if isinstance(self, Production) | isinstance(self, Doubly):
-            o_dummies = categorical(origins.astype(str), drop=True)
+            o_dummies = categorical(origins.flatten().astype(str), drop=True)
             X = np.hstack((X, o_dummies))
         if isinstance(self, Attraction) | isinstance(self, Doubly):
-            d_dummies = categorical(destinations.astype(str), drop=True)
+            d_dummies = categorical(destinations.flatten().astype(str), drop=True)
             X = np.hstack((X, d_dummies))
 
         if self.ov is not None:
@@ -174,7 +172,11 @@ class Gravity(BaseGravity):
     """
     def __init__(self, flows, o_vars, d_vars, cost,
             cost_func):
-        User.check_arrays(flows, o_vars, d_vard, cost)
+        flows = np.reshape(flows, (-1,1))
+        o_vars = np.reshape(o_vars, (-1,1))
+        d_vars = np.reshape(d_vars, (-1,1))
+        cost = np.reshape(cost, (-1,1))
+        User.check_arrays(flows, o_vars, d_vars, cost)
         
         BaseGravity.__init__(self, flows, cost,
                 cost_func, o_vars=o_vars, d_vars=d_vars)
@@ -229,8 +231,12 @@ class Production(BaseGravity):
 
     """
     def __init__(self, flows, origins, d_vars, cost, cost_func):
-        User.check_arrays(flows, origins, d_vars, cost
-                )
+        flows = np.reshape(flows, (-1,1))
+        origins = np.reshape(origins, (-1,1))
+        d_vars = np.reshape(d_vars, (-1,1))
+        cost = np.reshape(cost, (-1,1))
+        User.check_arrays(flows, origins, d_vars, cost)
+       
         BaseGravity.__init__(self, flows, cost, cost_func, d_vars=d_vars,
                 origins=origins)
         
@@ -284,6 +290,10 @@ class Attraction(BaseGravity):
 
     """
     def __init__(self, flows, destinations, o_vars, cost, cost_func):
+        flows = np.reshape(flows, (-1,1))
+        o_vars = np.reshape(o_vars, (-1,1))
+        destinations = np.reshape(destinations, (-1,1))
+        cost = np.reshape(cost, (-1,1))
         User.check_arrays(flows, destinations, o_vars, cost)
 
         BaseGravity.__init__(self, flows, cost, cost_func, o_vars=o_vars,
@@ -336,8 +346,11 @@ class Doubly(BaseGravity):
 
     """
     def __init__(self, flows, origins, destinations, cost, cost_func):
+        flows = np.reshape(flows, (-1,1))
+        origins = np.reshape(origins, (-1,1))
+        destinations = np.reshape(destinations, (-1,1))
+        cost = np.reshape(cost, (-1,1))
         User.check_arrays(flows, origins, destinations, cost)
-        #maybe a check for equal number of origins and destinations
 
         BaseGravity.__init__(self, flows, cost, cost_func, origins=origins, 
                 destinations=destinations)
