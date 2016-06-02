@@ -80,7 +80,7 @@ class BaseGravity(CountModel):
 
     """
     def __init__(self, flows, cost, cost_func='pow', o_vars=None, d_vars=None,
-            origins=None, destinations=None, constant=True):
+            origins=None, destinations=None, constant=False, framework='SM_GLM'):
         n = User.check_arrays(flows, cost)
         User.check_y(flows, n)
         self.n = n
@@ -98,15 +98,15 @@ class BaseGravity(CountModel):
 
         y = np.reshape(self.f, (-1,1))
         X = np.empty((self.n, 0))
-        if constant:
-            X = User.check_constant(X)
 
-        if isinstance(self, Production) | isinstance(self, Doubly):
-            o_dummies = categorical(origins.flatten().astype(str), drop=True)
-            X = np.hstack((X, o_dummies))
         if isinstance(self, Attraction) | isinstance(self, Doubly):
             d_dummies = categorical(destinations.flatten().astype(str), drop=True)
             X = np.hstack((X, d_dummies))
+        if isinstance(self, Production) | isinstance(self, Doubly):
+            o_dummies = categorical(origins.flatten().astype(str), drop=True)
+            X = np.hstack((X, o_dummies))
+        if isinstance(self, Doubly):
+            X = X[:,1:]
 
         if self.ov is not None:
             X = np.hstack((X, np.log(np.reshape(self.ov, (-1,1)))))
@@ -114,8 +114,12 @@ class BaseGravity(CountModel):
             X = np.hstack((X, np.log(np.reshape(self.dv, (-1,1)))))
         X = np.hstack((X, self.cf(np.reshape(self.c, (-1,1)))))
 
-        CountModel.__init__(self, y, X)
-        self.fit()
+        CountModel.__init__(self, y, X, constant=constant)
+        
+        if (framework.lower() == 'sm_glm'):
+            self.fit()
+        elif (framework.lower() == 'glm'):
+            self.fit(framework='glm')
         
 
 class Gravity(BaseGravity):
@@ -171,7 +175,7 @@ class Gravity(BaseGravity):
 
     """
     def __init__(self, flows, o_vars, d_vars, cost,
-            cost_func):
+            cost_func, constant=False, framework='SM_GLM'):
         flows = np.reshape(flows, (-1,1))
         o_vars = np.reshape(o_vars, (-1,1))
         d_vars = np.reshape(d_vars, (-1,1))
@@ -179,7 +183,8 @@ class Gravity(BaseGravity):
         User.check_arrays(flows, o_vars, d_vars, cost)
         
         BaseGravity.__init__(self, flows, cost,
-                cost_func, o_vars=o_vars, d_vars=d_vars)
+                cost_func, o_vars=o_vars, d_vars=d_vars, constant=constant,
+                framework=framework)
 
 class Production(BaseGravity):
     """
@@ -230,7 +235,8 @@ class Production(BaseGravity):
     TODO
 
     """
-    def __init__(self, flows, origins, d_vars, cost, cost_func):
+    def __init__(self, flows, origins, d_vars, cost, cost_func, constant=False,
+            framework='SF_GLM'):
         flows = np.reshape(flows, (-1,1))
         origins = np.reshape(origins, (-1,1))
         d_vars = np.reshape(d_vars, (-1,1))
@@ -238,7 +244,7 @@ class Production(BaseGravity):
         User.check_arrays(flows, origins, d_vars, cost)
        
         BaseGravity.__init__(self, flows, cost, cost_func, d_vars=d_vars,
-                origins=origins)
+                origins=origins, constant=constant, framework=framework)
         
 class Attraction(BaseGravity):
     """
@@ -289,7 +295,8 @@ class Attraction(BaseGravity):
     TODO
 
     """
-    def __init__(self, flows, destinations, o_vars, cost, cost_func):
+    def __init__(self, flows, destinations, o_vars, cost, cost_func,
+            constant=False, framework='SM_GLM'):
         flows = np.reshape(flows, (-1,1))
         o_vars = np.reshape(o_vars, (-1,1))
         destinations = np.reshape(destinations, (-1,1))
@@ -297,7 +304,7 @@ class Attraction(BaseGravity):
         User.check_arrays(flows, destinations, o_vars, cost)
 
         BaseGravity.__init__(self, flows, cost, cost_func, o_vars=o_vars,
-                 destinations=destinations)
+                 destinations=destinations, constant=constant, framework=framework)
 
 class Doubly(BaseGravity):
     """
@@ -345,7 +352,8 @@ class Doubly(BaseGravity):
     TODO
 
     """
-    def __init__(self, flows, origins, destinations, cost, cost_func):
+    def __init__(self, flows, origins, destinations, cost, cost_func,
+            constant=False, framework='SM_GLM'):
         flows = np.reshape(flows, (-1,1))
         origins = np.reshape(origins, (-1,1))
         destinations = np.reshape(destinations, (-1,1))
@@ -353,5 +361,5 @@ class Doubly(BaseGravity):
         User.check_arrays(flows, origins, destinations, cost)
 
         BaseGravity.__init__(self, flows, cost, cost_func, origins=origins, 
-                destinations=destinations)
+                destinations=destinations, constant=constant, framework=framework)
 
