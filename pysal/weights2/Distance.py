@@ -72,7 +72,7 @@ class KNN(W):
     --------
     pysal.weights.W
     """
-    def __init__(self, data, k=2, p=2, ids=None, radius=None, distance_metric=None):
+    def __init__(self, data, k=2, p=2, ids=None, radius=None, distance_metric='euclidean'):
         if isKDTree(data):
             self.kdtree = data
             self.data = data.data
@@ -218,7 +218,7 @@ class KNN(W):
         return cls(array, **kwargs)
 
     @classmethod
-    def from_dataframe(cls, df, geomcol='geometry', ids=None, **kwargs):
+    def from_dataframe(cls, df, geom_col='geometry', ids=None, **kwargs):
         """
         Make KNN weights from a dataframe.
 
@@ -227,7 +227,7 @@ class KNN(W):
         df      :   pandas.dataframe
                     a dataframe with a geometry column that can be used to
                     construct a W object
-        geomcol :   string
+        geom_col :   string
                     column name of the geometry stored in df
         ids     :   string or iterable
                     if string, the column name of the indices from the dataframe
@@ -238,16 +238,36 @@ class KNN(W):
         --------
         KNN
         """
-        pts = get_points_array(df[geomcol])
+        pts = get_points_array(df[geom_col])
         if ids is None:
             ids = df.index.tolist()
         elif isinstance(ids, str):
             ids = df[ids].tolist()
         return cls(pts, ids=ids, **kwargs)
 
-    def reweight(self, new_data=None, new_ids=None, inplace=True, **kwargs):
+    def reweight(self, k=None, p=None, new_data=None, new_ids=None, inplace=True):
         """
         Redo K-Nearest Neighbor weights construction using given parameters
+
+        Parameters
+        ----------
+        new_data    : np.ndarray
+                      an array containing additional data to use in the KNN
+                      weight
+        new_ids     : list
+                      a list aligned with new_data that provides the ids for
+                      each new observation
+        inplace     : bool
+                      a flag denoting whether to modify the KNN object 
+                      in place or to return a new KNN object
+        k           : int
+                      number of nearest neighbors
+        p           : float
+                      Minkowski p-norm distance metric parameter:
+                      1<=p<=infinity
+                      2: Euclidean distance
+                      1: Manhattan distance
+                      Ignored if the KDTree is an ArcKDTree
         """
         if (new_data is not None) and (new_ids is not None):
             # If there's new data, we have to refit a tree
@@ -256,14 +276,18 @@ class KNN(W):
         elif (new_data is None) and (new_ids is None):
             # If not, we can use the same kdtree we have
             data = self.kdtree
-            ids = list(range(data.shape[0]))
+            ids = self.id_order
         elif (new_data is None) and (new_ids is not None):
             Warn('Remapping ids must be done using w.remap_ids')
+        if k is None:
+            k = self.k
+        if p is None:
+            p = self.p
         if inplace:
-            self.__init__(data, **kwargs)
             self._reset()
+            self.__init__(data, ids=ids, k=k, p=p)
         else:
-            return KNN(data, **kwargs)
+            return KNN(data, ids=ids, k=k, p=p)
 
 class Kernel(W):
     """
@@ -459,7 +483,7 @@ class Kernel(W):
         W.__init__(self, neighbors, weights, ids)
     
     @classmethod
-    def from_shapefile(cls, filepath,*args, **kwargs):
+    def from_shapefile(cls, filepath, idVariable=None,  **kwargs):
         """
         Kernel based weights from shapefile
 
@@ -479,19 +503,22 @@ class Kernel(W):
         Kernel
         """
         points = get_points_array_from_shapefile(filepath)
-        ids = get_ids(filepath)
-        return cls.from_array(points, *args, ids=ids **kwargs)
+        if idVariable is not None:
+            ids = get_ids(filepath, idVariable)
+        else:
+            ids = None
+        return cls.from_array(points, ids=ids, **kwargs)
     
     @classmethod
-    def from_array(cls, array, *args, **kwargs):
+    def from_array(cls, array, **kwargs):
         """
         Right now, just an alias for Kernel(array,...) because the current
         constructor can work on arrays and kdtrees
         """
-        return cls(array, *args, **kwargs)
+        return cls(array, **kwargs)
 
     @classmethod
-    def from_dataframe(cls, df, geomcol='geometry', ids=None, **kwargs):
+    def from_dataframe(cls, df, geom_col='geometry', ids=None, **kwargs):
         """
         Make Kernel weights from a dataframe.
 
@@ -500,7 +527,7 @@ class Kernel(W):
         df      :   pandas.dataframe
                     a dataframe with a geometry column that can be used to
                     construct a W object
-        geomcol :   string
+        geom_col :   string
                     column name of the geometry stored in df
         ids     :   string or iterable
                     if string, the column name of the indices from the dataframe
@@ -511,7 +538,7 @@ class Kernel(W):
         --------
         Kernel
         """
-        pts = get_points_array(df[geomcol])
+        pts = get_points_array(df[geom_col])
         if ids is None:
             ids = df.index.tolist()
         elif isinstance(ids, str):
@@ -697,7 +724,7 @@ class DistanceBand(W):
         W.__init__(self, neighbors, weights, ids)
 
     @classmethod
-    def from_shapefile(cls, filepath, idVariable=None, **kwargs):
+    def from_shapefile(cls, filepath, threshold, idVariable=None, **kwargs):
         """
         Distance-band based weights from shapefile
 
@@ -717,23 +744,23 @@ class DistanceBand(W):
         Kernel
         """
         points = get_points_array_from_shapefile(filepath)
-        if idVariable is None:
-            ids = get_ids(filepath)
+        if idVariable is not None:
+            ids = get_ids(filepath, idVariable)
         else:
-            ids = list(range(points.shape[0]))
-        return cls.from_array(points, *args, ids=ids **kwargs)
+            ids = None
+        return cls.from_array(points, threshold, ids=ids, **kwargs)
     
     @classmethod
-    def from_array(cls, array, *args, **kwargs):
+    def from_array(cls, array, threshold, **kwargs):
         """
         Right now, just an alias for DistanceBand(array,...)
         because the current
         constructor can work on arrays and kdtrees
         """
-        return cls(array, *args, **kwargs)
+        return cls(array, threshold, **kwargs)
     
     @classmethod
-    def from_dataframe(cls, df, geomcol='geometry', ids=None, **kwargs):
+    def from_dataframe(cls, df, threshold, geom_col='geometry', ids=None, **kwargs):
         """
         Make DistanceBand weights from a dataframe.
 
@@ -742,7 +769,7 @@ class DistanceBand(W):
         df      :   pandas.dataframe
                     a dataframe with a geometry column that can be used to
                     construct a W object
-        geomcol :   string
+        geom_col :   string
                     column name of the geometry stored in df
         ids     :   string or iterable
                     if string, the column name of the indices from the dataframe
@@ -753,12 +780,12 @@ class DistanceBand(W):
         --------
         DistanceBand
         """
-        pts = get_points_array(df[geomcol])
+        pts = get_points_array(df[geom_col])
         if ids is None:
             ids = df.index.tolist()
         elif isinstance(ids, str):
             ids = df[ids].tolist()
-        return cls(pts, ids=ids, **kwargs)
+        return cls(pts, threshold, ids=ids, **kwargs)
 
     def _band(self):
         """Find all pairs within threshold.

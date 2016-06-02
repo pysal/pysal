@@ -1,4 +1,4 @@
-from .weights import W
+from .weights import W, WSP
 from pysal.cg import asShape
 from pysal.core.FileIO import FileIO
 from pysal.weights._contW_binning import ContiguityWeightsPolygons
@@ -7,7 +7,7 @@ from pysal.weights.util import get_ids
 WT_TYPE = {'rook': 2, 'queen': 1}  # for _contW_Binning
 
 class Rook(W):
-    def __init__(self, polygons, **kwargs):
+    def __init__(self, polygons, driver='binning', **kw):
         """
         Construct a weights object from a collection of pysal polygons.
 
@@ -23,8 +23,11 @@ class Rook(W):
         ---------
         W
         """
-        neighbors, ids = _build(polygons, criterion='rook', **kwargs)
-        W.__init__(self, neighbors, ids=ids, **kwargs)
+        criterion = 'rook'
+        ids = kw.pop('ids', None) #not destructive, need for W.__init__
+        neighbors, ids = _build(polygons, criterion=criterion, 
+                                ids=ids, driver=driver)
+        W.__init__(self, neighbors, ids=ids, **kw)
     
     @classmethod
     def from_shapefile(cls, filepath, idVariable=None, full=False, **kwargs):
@@ -71,7 +74,8 @@ class Rook(W):
         else:
             ids = None
         w = cls(FileIO(filepath), ids=ids, **kwargs)
-        w.set_shapefile(filepath, idVariable=dVariable, full=full)
+        w.set_shapefile(filepath, idVariable=idVariable, full=full)
+        return w
     
     @classmethod
     def from_iterable(cls, iterable, **kwargs):
@@ -94,7 +98,7 @@ class Rook(W):
         return cls(new_iterable, **kwargs)
     
     @classmethod
-    def from_dataframe(cls, df, geomcol='geometry', **kwargs):
+    def from_dataframe(cls, df, geom_col='geometry', **kwargs):
         """
         Construct a weights object from a pandas dataframe with a geometry
         column. This will cast the polygons to PySAL polygons, then build the W
@@ -109,13 +113,26 @@ class Rook(W):
         ---------
         Queen
         """
-        ids = df.index.tolist()
-        ids = df.index.tolist()
-        return cls.from_iterable(df[geomcol].tolist(), ids=ids, **kwargs)
+        idVariable = kwargs.pop('idVariable', None)
+        ids = kwargs.pop('ids', None)
+        id_order = kwargs.pop('id_order', None)
+        if id_order is not None:
+            if id_order is True and ((idVariable is not None) 
+                                     or (ids is not None)):
+                # if idVariable is None, we want ids. Otherwise, we want the
+                # idVariable column
+                id_order = list(df.get(idVariable, ids))
+            else:
+                id_order = df.get(id_order, ids)
+        elif idVariable is not None:
+            ids = df.get(idVariable).tolist()
+        elif ids is not None:
+            ids = kwargs.pop('ids')
+        return cls.from_iterable(df[geom_col].tolist(), ids=ids,
+                                 id_order=id_order, **kwargs)
 
 class Queen(W):
-    def __init__(self, polygons, ids=None, criterion='queen', 
-                 driver='binning', **kw):
+    def __init__(self, polygons,driver='binning', **kw):
         """
         Construct a weights object from a collection of pysal polygons.
 
@@ -131,12 +148,14 @@ class Queen(W):
         ---------
         W
         """
+        criterion = 'queen'
+        ids = kw.pop('ids', None)
         neighbors, ids = _build(polygons, ids=ids, 
                                 criterion=criterion, driver=driver)
         W.__init__(self, neighbors, ids=ids, **kw)
     
     @classmethod
-    def from_shapefile(cls, filepath, idVariable=None, sparse=False, **kwargs):
+    def from_shapefile(cls, filepath, idVariable=None, full=False, **kwargs):
         """
         Queen contiguity weights from a polygon shapefile.
 
@@ -184,10 +203,12 @@ class Queen(W):
         else:
             ids = None
         iterable = FileIO(filepath)
-        return cls.from_iterable(iterable, sparse=sparse, **kwargs)
+        w = cls(FileIO(filepath), ids=ids, **kwargs)
+        w.set_shapefile(filepath, idVariable=idVariable, full=full)
+        return w
 
     @classmethod
-    def from_iterable(cls, iterable, sparse=True, **kwargs):
+    def from_iterable(cls, iterable, sparse=False, **kwargs):
         """
         Construct a weights object from a collection of arbitrary polygons. This
         will cast the polygons to PySAL polygons, then build the W.
@@ -212,7 +233,7 @@ class Queen(W):
         return w
 
     @classmethod
-    def from_dataframe(cls, df, geomcol='geometry', **kwargs):
+    def from_dataframe(cls, df, geom_col='geometry', **kwargs):
         """
         Construct a weights object from a pandas dataframe with a geometry
         column. This will cast the polygons to PySAL polygons, then build the W
@@ -227,8 +248,25 @@ class Queen(W):
         ---------
         Queen
         """
-        ids = df.index.tolist()
-        return cls.from_iterable(df[geomcol].tolist(), ids=ids, **kwargs)
+        idVariable = kwargs.pop('idVariable', None)
+        ids = kwargs.pop('ids', None)
+        id_order = kwargs.pop('id_order', None)
+        if id_order is not None:
+            if id_order is True and ((idVariable is not None) 
+                                     or (ids is not None)):
+                # if idVariable is None, we want ids. Otherwise, we want the
+                # idVariable column
+                ids = list(df.get(idVariable, ids))
+                id_order = ids
+            elif isinstance(id_order, str):
+                ids = df.get(id_order, ids)
+                id_order = ids
+        elif idVariable is not None:
+            ids = df.get(idVariable).tolist()
+        elif ids is not None:
+            ids = kwargs.pop('ids')
+        w = cls.from_iterable(df[geom_col].tolist(), ids=ids, id_order=id_order, **kwargs)
+        return w
 
 def _build(polygons, criterion="rook", ids=None, driver='binning'):
     """

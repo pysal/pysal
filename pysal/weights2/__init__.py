@@ -1,2 +1,2 @@
-from .contiguity import Rook, Queen
-from .distance import Kernel, DistanceBand, KNN
+from .Contiguity import Rook, Queen
+from .Distance import Kernel, DistanceBand, KNN
