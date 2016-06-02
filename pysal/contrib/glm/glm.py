@@ -5,7 +5,7 @@
 
 import numpy as np
 import numpy.linalg as la
-from families import Gaussian, Binomial, Poisson
+from family import Gaussian, Binomial, Poisson
 from pysal.spreg.utils import RegressionPropsY
 from iwls import iwls
 import pysal.spreg.user_output as USER
@@ -57,14 +57,18 @@ class GLM(RegressionPropsY):
                         Parameters passed into fit method to define estimation
                         routine.
     """
-    def __init__(self, y, X, family=Gaussian(), offset=None, y_fix = None, sigma2_v1=False):
+    def __init__(self, y, X, family=Gaussian(), offset=None, y_fix = None,
+            sigma2_v1=False, constant=True):
         """
         Initialize class
         """
         self.n = USER.check_arrays(y, X)
         USER.check_y(y, self.n)
         self.y = y
-        self.X = USER.check_constant(X)
+        if constant:
+            self.X = USER.check_constant(X)
+        else:
+            self.X = X
         self.family = family
         self.k = X.shape[1]
         self.sigma2_v1=sigma2_v1
