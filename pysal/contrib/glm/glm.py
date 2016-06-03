@@ -6,7 +6,7 @@
 import numpy as np
 import numpy.linalg as la
 from family import Gaussian, Binomial, Poisson
-from pysal.spreg.utils import RegressionPropsY
+from pysal.spreg.utils import RegressionPropsY, spdot
 from iwls import iwls
 import pysal.spreg.user_output as USER
 
@@ -203,13 +203,13 @@ class GLMResults(GLM):
         self.w = w
         self.predy = predy
         self.u = self.y - self.predy
-        self.xtxi = la.inv(np.dot(self.X.T,self.X))
+        self.xtxi = la.inv(spdot(self.X.T,self.X))
         self._cache = {}
 
-        if model.sigma2_v1:
-	        self.sig2 = self.sig2n
-        else:
-            self.sig2 = self.sig2n_k
+        #if model.sigma2_v1:
+	        #self.sig2 = self.sig2n
+        #else:
+            #self.sig2 = self.sig2n_k
 
     @property
     def utu(self):
