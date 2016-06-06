@@ -87,9 +87,11 @@ from pysal.network.network import Network, NetworkG, NetworkK, NetworkF
 try:
     import pandas
     from pysal.contrib import pdio
+    pysal.common.pandas = pandas
 except ImportError:
     print('Pandas adapters not loaded')
-
+    pysal.common.pandas = None
+    
 # Load the IOHandlers
 from pysal.core import IOHandlers
 # Assign pysal.open to dispatcher

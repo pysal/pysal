@@ -69,12 +69,15 @@ class Rook(W):
         --------
         :class:`pysal.weights.W`
         """
+        sparse = kwargs.pop('sparse', False)
         if idVariable is not None:
             ids = get_ids(filepath, idVariable) 
         else:
             ids = None
         w = cls(FileIO(filepath), ids=ids, **kwargs)
         w.set_shapefile(filepath, idVariable=idVariable, full=full)
+        if sparse:
+            w = w.to_WSP()
         return w
     
     @classmethod
@@ -126,8 +129,8 @@ class Rook(W):
                 id_order = df.get(id_order, ids)
         elif idVariable is not None:
             ids = df.get(idVariable).tolist()
-        elif ids is not None:
-            ids = kwargs.pop('ids')
+        elif isinstance(ids, str):
+            ids = df.get(ids).tolist()
         return cls.from_iterable(df[geom_col].tolist(), ids=ids,
                                  id_order=id_order, **kwargs)
 
@@ -198,6 +201,7 @@ class Queen(W):
         :class:`pysal.weights.W`
 
         """
+        sparse = kwargs.pop('sparse', False)
         if idVariable is not None:
             ids = get_ids(filepath, idVariable) 
         else:
@@ -205,6 +209,8 @@ class Queen(W):
         iterable = FileIO(filepath)
         w = cls(FileIO(filepath), ids=ids, **kwargs)
         w.set_shapefile(filepath, idVariable=idVariable, full=full)
+        if sparse:
+            w = w.to_WSP()
         return w
 
     @classmethod
@@ -263,8 +269,8 @@ class Queen(W):
                 id_order = ids
         elif idVariable is not None:
             ids = df.get(idVariable).tolist()
-        elif ids is not None:
-            ids = kwargs.pop('ids')
+        elif isinstance(ids, str):
+            ids = df.get(ids).tolist()
         w = cls.from_iterable(df[geom_col].tolist(), ids=ids, id_order=id_order, **kwargs)
         return w
 
