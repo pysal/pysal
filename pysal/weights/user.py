@@ -11,7 +11,10 @@ from Distance import knnW, Kernel, DistanceBand
 from util import get_ids, get_points_array_from_shapefile, min_threshold_distance
 import numpy as np
 
-__all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array', 'knnW_from_shapefile', 'threshold_binaryW_from_array', 'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array', 'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile', 'adaptive_kernelW', 'adaptive_kernelW_from_shapefile', 'min_threshold_dist_from_shapefile', 'build_lattice_shapefile']
+__all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array', 'knnW_from_shapefile',
+           'threshold_binaryW_from_array', 'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array',
+           'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile', 'adaptive_kernelW',
+           'adaptive_kernelW_from_shapefile', 'min_threshold_dist_from_shapefile', 'build_lattice_shapefile']
 
 
 def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
@@ -83,6 +86,8 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
 
     shapefile : string
                 name of polygon shapefile including suffix.
+    idVariable: string
+                name of a column in the shapefile's DBF to use for ids.
     sparse    : boolean
                 If True return WSP instance
                 If False return W instance
@@ -126,7 +131,6 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
 
     if sparse:
         w = pysal.weights.WSP(w.sparse, id_order=ids)
-
 
     return w
 
@@ -491,8 +495,7 @@ def threshold_continuousW_from_array(array, threshold, p=2,
     return w
 
 
-def threshold_continuousW_from_shapefile(shapefile, threshold, p=2,
-                                         alpha=-1, idVariable=None, radius=None):
+def threshold_continuousW_from_shapefile(shapefile, threshold, p=2, alpha=-1, idVariable=None, radius=None):
     """
     Threshold distance based continuous weights from a shapefile.
 
@@ -547,16 +550,15 @@ def threshold_continuousW_from_shapefile(shapefile, threshold, p=2,
         w = DistanceBand(data, threshold=threshold, p=p, alpha=alpha, binary=False)
         w.remap_ids(ids)
     else:
-        w =  threshold_continuousW_from_array(data, threshold, p=p, alpha=alpha)
-    w.set_shapefile(shapefile,idVariable)
+        w = threshold_continuousW_from_array(data, threshold, p=p, alpha=alpha)
+    w.set_shapefile(shapefile, idVariable)
     return w
 
 
 # Kernel Weights
 
 
-def kernelW(points, k=2, function='triangular', fixed=True,
-        radius=None, diagonal=False):
+def kernelW(points, k=2, function='triangular', fixed=True, radius=None, diagonal=False):
     """
     Kernel based weights.
 
@@ -679,12 +681,11 @@ def kernelW(points, k=2, function='triangular', fixed=True,
 
     if radius is not None:
         points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
-    return Kernel(points, function=function, k=k, fixed=fixed,
-            diagonal=diagonal)
+    return Kernel(points, function=function, k=k, fixed=fixed, diagonal=diagonal)
 
 
-def kernelW_from_shapefile(shapefile, k=2, function='triangular',
-        idVariable=None, fixed=True, radius=None, diagonal=False):
+def kernelW_from_shapefile(shapefile, k=2, function='triangular', idVariable=None, fixed=True, radius=None,
+                           diagonal=False):
     """
     Kernel based weights.
 
@@ -796,10 +797,8 @@ def kernelW_from_shapefile(shapefile, k=2, function='triangular',
         points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
-        return Kernel(points, function=function, k=k, ids=ids, fixed=fixed,
-                diagonal = diagonal)
-    return kernelW(points, k=k, function=function, fixed=fixed,
-            diagonal=diagonal)
+        return Kernel(points, function=function, k=k, ids=ids, fixed=fixed, diagonal=diagonal)
+    return kernelW(points, k=k, function=function, fixed=fixed, diagonal=diagonal)
 
 
 def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular',
@@ -1044,10 +1043,8 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='t
         points = pysal.cg.KDTree(points, distance_metric='Arc', radius=radius)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
-        return Kernel(points, bandwidth=bandwidths, fixed=False, k=k,
-                function=function, ids=ids, diagonal=diagonal)
-    return adaptive_kernelW(points, bandwidths=bandwidths, k=k,
-            function=function, diagonal=diagonal)
+        return Kernel(points, bandwidth=bandwidths, fixed=False, k=k, function=function, ids=ids, diagonal=diagonal)
+    return adaptive_kernelW(points, bandwidths=bandwidths, k=k, function=function, diagonal=diagonal)
 
 
 def min_threshold_dist_from_shapefile(shapefile, radius=None, p=2):
