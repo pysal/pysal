@@ -9,6 +9,7 @@ from family import Gaussian, Binomial, Poisson
 from pysal.spreg.utils import RegressionPropsY
 from iwls import iwls
 import pysal.spreg.user_output as USER
+from utils import np_matrix_rank, cache_readonly
 
 __all__ = ['GLM']
 
@@ -71,6 +72,8 @@ class GLM(RegressionPropsY):
             self.X = X
         self.family = family
         self.k = X.shape[1]
+        self.df_model = np_matrix_rank(self.X) - 1
+        self.df_resid = self.n - self.df_model - 1
         self.sigma2_v1=sigma2_v1
         if offset is None:
             self.offset = np.ones(shape=(self.n,1))
@@ -81,6 +84,7 @@ class GLM(RegressionPropsY):
         else:
 	        self.y_fix = y_fix
         self.fit_params = {}
+
 
     def fit(self, ini_betas=None, tol=1.0e-6, max_iter=200, solve='iwls'):
         """
@@ -107,10 +111,10 @@ class GLM(RegressionPropsY):
         self.fit_params['max_iter'] = max_iter
         self.fit_params['solve']=solve
         if solve.lower() == 'iwls':
-            betas, predy, w, n_iter = iwls(self.y, self.X, self.family, self.offset, 
+            params, predy, w, n_iter = iwls(self.y, self.X, self.family, self.offset, 
                     self.y_fix, ini_betas, tol, max_iter)
             self.fit_params['n_iter'] = n_iter
-        return GLMResults(self, betas, predy, w)
+        return GLMResults(self, params, predy, w)
 
 
 class GLMResults(GLM):
@@ -191,26 +195,115 @@ class GLMResults(GLM):
                         n*1, mean value of y
     """
 
-    def __init__(self, model, betas, predy, w):
+    def __init__(self, model, params, predy, w):
         self.model = model
         self.n = model.n
         self.y = model.y
         self.X = model.X
         self.k = model.k
+        self.offset = model.offset
+        self.df_model = model.df_model
+        self.df_resid = model.df_resid
         self.family = model.family
         self.fit_params = model.fit_params
-        self.betas = betas
+        self.params = params
         self.w = w
         self.predy = predy
         self.u = self.y - self.predy
         self.xtxi = la.inv(np.dot(self.X.T,self.X))
         self._cache = {}
 
-        if model.sigma2_v1:
-	        self.sig2 = self.sig2n
-        else:
-            self.sig2 = self.sig2n_k
+        #if model.sigma2_v1:
+	        #self.sig2 = self.sig2n
+        #else:
+            #self.sig2 = self.sig2n_k
 
+    @cache_readonly
+    def resid_response(self):
+        return self.y-self.mu
+
+    @cache_readonly
+    def resid_pearson(self):
+        return  ((self.y-self.mu) /
+                np.sqrt(self.family.variance(self.mu)))
+
+    @cache_readonly
+    def resid_working(self):
+        return (self.resid_response / self.family.link.deriv(self.mu))
+
+    @cache_readonly
+    def resid_anscombe(self):
+        return self.family.resid_anscombe(self.y, self.fittedvalues)
+
+    @cache_readonly
+    def resid_deviance(self):
+        return self.family.resid_dev(self.y, self.fittedvalues)
+
+    @cache_readonly
+    def pearson_chi2(self):
+        chisq = (self.y - self.mu)**2 / self.family.variance(self.mu)
+        chisqsum = np.sum(chisq)
+        return chisqsum
+
+
+    @cache_readonly
+    def fittedvalues(self):
+        return self.mu
+
+
+    @cache_readonly
+    def mu(self):
+        if np.allclose(self.offset, np.ones((self.n, 1))):
+            linpred = np.dot(self.X, self.params)
+        else:
+            linepred = np.dot(self.X, self.params) + self.offset
+        return self.family.fitted(linpred)
+
+    @cache_readonly
+    def null(self):
+        y = self.y
+        model = self.model
+        X = np.ones((len(y), 1))
+        null_mod =  GLM(y, X, family=self.family, offset=self.offset, constant=False)
+        return null_mod.fit().fittedvalues
+   
+    @cache_readonly
+    def scale(self):
+        if isinstance(self.family, (Binomial, Poisson)):
+            return 1.
+        else:
+            return (((np.power(self.resid_response, 2) /
+                         self.family.variance(self.mu))).sum() /
+                        (self.df_resid))
+
+    @cache_readonly
+    def deviance(self):
+        return self.family.deviance(self.y, self.mu)
+
+    @cache_readonly
+    def null_deviance(self):
+        return self.family.deviance(self.y, self.null)
+   
+    @cache_readonly
+    def llnull(self):
+        return self.family.loglike(self.y, self.null)
+
+    @cache_readonly
+    def llf(self):
+        _modelfamily = self.family
+        val = _modelfamily.loglike(self.y, self.mu)
+        return val
+    
+    @cache_readonly
+    def aic(self):
+        return -2 * self.llf + 2*(self.df_model+1)
+
+    @cache_readonly
+    def bic(self):
+        return (self.deviance -
+                (self.model.n - self.df_model - 1) *
+                np.log(self.model.n))
+'''
     @property
     def utu(self):
         try:
@@ -233,7 +326,7 @@ class GLMResults(GLM):
             self._cache['utu'] = val
 
     @property
-    def sig2n(self):
+   def sig2n(self):
         try:
             return self._cache['sig2n']
         except AttributeError:
@@ -326,7 +419,7 @@ class GLMResults(GLM):
             self._cache['std_err'] = val
         except KeyError:
             self._cache['std_err'] = val
-    '''
+    
     @property
     def dev_u(self):
         try:
@@ -348,7 +441,7 @@ class GLMResults(GLM):
         except KeyError:
             self.cache['dev_u'] = val
 
-    '''
+   
 
     @property
     def y_bar(self):
@@ -394,3 +487,4 @@ class GLMResults(GLM):
             self._cache['r2'] = val
         except KeyError:
             self._cache['r2'] = val
+'''
