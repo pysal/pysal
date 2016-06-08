@@ -1,9 +1,9 @@
 import unittest
 import pysal
 import numpy as np
+import pysal.weights2 as W2
 
 NPTA3E = np.testing.assert_array_almost_equal
-
 
 class TestW(unittest.TestCase):
     def setUp(self):
@@ -228,14 +228,12 @@ class TestW(unittest.TestCase):
     def test_trcWtW_WW(self):
         self.assertEqual(self.w3x3.trcWtW_WW, 48.)
 
-
 class Test_WSP_Back_To_W(unittest.TestCase):
     # Test to make sure we get back to the same W functionality
     def setUp(self):
-        from pysal import rook_from_shapefile
-        self.w = rook_from_shapefile(pysal.examples.get_path('10740.shp'))
-        wsp = pysal.weights.WSP(self.w.sparse, self.w.id_order)
-        self.w = pysal.weights.WSP2W(wsp)
+        self.w = W2.Rook.from_shapefile(pysal.examples.get_path('10740.shp'))
+        self.wsp = W2.weights.WSP(self.w.sparse, self.w.id_order)
+        self.w = self.wsp.to_W()
 
         self.neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4],
                           4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7],
@@ -245,12 +243,26 @@ class Test_WSP_Back_To_W(unittest.TestCase):
                         8: [1, 1]}
 
         self.w3x3 = pysal.lat2W(3, 3)
-        w3x3 = pysal.weights.WSP(self.w3x3.sparse, self.w3x3.id_order)
-        self.w3x3 = pysal.weights.WSP2W(w3x3)
+        w3x3 = W2.weights.WSP(self.w3x3.sparse, self.w3x3.id_order)
+        self.w3x3 = W2.weights.W.from_WSP(w3x3)
 
     def test_W(self):
         w = pysal.W(self.neighbors, self.weights)
         self.assertEqual(w.pct_nonzero, 29.62962962962963)
+
+    def test_exchange(self):
+        w_ = self.wsp.to_W()
+        self.assertEqual(w_.neighbors, self.w.neighbors)
+        
+        print(type(self.w))
+        wsp_ = self.w.to_WSP()
+        np.testing.assert_allclose(wsp_.sparse.todense(), self.w.sparse.todense())
+
+        w_ = W2.weights.W.from_WSP(self.wsp)
+        self.assertEqual(w_.neighbors, self.w.neighbors)
+
+        wsp_ = W2.weights.WSP.from_W(self.w)
+        np.testing.assert_allclose(wsp_.sparse.todense(), self.w.sparse.todense())
 
     def test___getitem__(self):
         self.assertEqual(

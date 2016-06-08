@@ -68,13 +68,12 @@ from pysal.spatial_dynamics import ergodic
 from pysal.spatial_dynamics import directional
 from pysal.weights import W, lat2W, block_weights, comb, full, shimbel, \
     order, higher_order, higher_order_sp, remap_ids, hexLat2W, WSP, regime_weights
-from pysal.weights.Distance import knnW, Kernel, DistanceBand
-from pysal.weights.Contiguity import buildContiguity
+from pysal.weights.Distance import KNN, Kernel, DistanceBand
 from pysal.weights.spatial_lag import lag_spatial
 from pysal.weights.Wsets import w_union, w_intersection, w_difference
 from pysal.weights.Wsets import w_symmetric_difference, w_subset
 from pysal.weights.user import queen_from_shapefile, rook_from_shapefile, \
-    knnW_from_array, knnW_from_shapefile, threshold_binaryW_from_array,\
+    KNN_from_array, KNN_from_shapefile, threshold_binaryW_from_array,\
     threshold_binaryW_from_shapefile, threshold_continuousW_from_array,\
     threshold_continuousW_from_shapefile, kernelW, kernelW_from_shapefile,\
     adaptive_kernelW, adaptive_kernelW_from_shapefile,\

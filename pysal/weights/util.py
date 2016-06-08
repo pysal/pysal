@@ -1,7 +1,6 @@
 import pysal
 from pysal.cg import Polygon, Point
 from pysal.common import *
-import pysal.weights
 import numpy as np
 from scipy import sparse, float32
 import scipy.spatial
@@ -1036,14 +1035,10 @@ def get_points_array(iterable):
     this function returns x and y coordinates of the polygons' centroids
 
     """
-    gen = (x for x in iterable)
-    first = next(gen)
-    if isinstance(first, Polygon):
-        data = np.array([first.centroid] + [shape.centroid for shape in gen])
-    elif isinstance(first, Point):
-        data = np.array([first] + [shape for shape in gen])
-    else:
-        data = np.asarray(iterable)
+    try:
+        data = np.vstack([np.array(shape.centroid) for shape in iterable])
+    except AttributeError:
+        data = np.vstack([shape for shape in iterable])
     return data
 
 

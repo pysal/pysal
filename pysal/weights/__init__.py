@@ -1,12 +1,5 @@
-"""
-:mod:`weights` --- Spatial Weights
-==================================
-
-"""
-from weights import *
-from util import *
-from Distance import *
-from Contiguity import *
-from user import *
-from spatial_lag import *
-from Wsets import *
+from .Contiguity import Rook, Queen
+from .Distance import Kernel, DistanceBand, KNN
+from .weights import W, WSP
+from .util import lat2W, block_weights, comb, full, shimbel, order, \
+                  higher_order, higher_order_sp, remap_ids, hexLat2W, regime_weights
