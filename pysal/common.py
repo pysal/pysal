@@ -17,7 +17,6 @@ except:
     raise
 
 RTOL = .00001
-ATOL = 1e-7
 
 import copy
 import math

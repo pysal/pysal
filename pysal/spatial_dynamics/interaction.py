@@ -9,12 +9,13 @@ __author__ = "Nicholas Malizia <nmalizia@asu.edu>", "Sergio J. Rey \
 __all__ = ['SpaceTimeEvents', 'knox', 'mantel', 'jacquez', 'modified_knox']
 
 import os
+import pysal
 import numpy as np
 import scipy.stats as stats
 #import pysal.weights.Distance as Distance
-from ..weights import KNN
-from .. import cg
-from . import util
+from pysal.weights.user import knnW_from_array
+from pysal import cg
+from pysal.spatial_dynamics import util
 from datetime import date
 
 class SpaceTimeEvents:
@@ -230,7 +231,7 @@ def knox(s_coords, t_coords, delta, tau, permutations=99, debug=False):
     # Do a kdtree on space first as the number of ties (identical points) is
     # likely to be lower for space than time.
 
-    kd_s = cg.KDTree(s_coords)
+    kd_s = pysal.cg.KDTree(s_coords)
     neigh_s = kd_s.query_pairs(delta)
     tau2 = tau * tau
     ids = np.array(list(neigh_s))
@@ -432,8 +433,8 @@ def jacquez(s_coords, t_coords, k, permutations=99):
     n = len(time)
 
     # calculate the nearest neighbors in space and time separately
-    knnt = KNN.from_array(time, k)
-    knns = KNN.from_array(space, k)
+    knnt = knnW_from_array(time, k)
+    knns = knnW_from_array(space, k)
 
     nnt = knnt.neighbors
     nns = knns.neighbors
@@ -459,7 +460,7 @@ def jacquez(s_coords, t_coords, k, permutations=99):
     for p in range(permutations):
         j = 0
         trand = np.random.permutation(time)
-        knnt = KNN.from_array(trand, k)
+        knnt = knnW_from_array(trand, k)
         nnt = knnt.neighbors
         for i in range(n):
             t_neighbors = nnt[i]
