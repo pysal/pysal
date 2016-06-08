@@ -5,11 +5,12 @@
 
 import numpy as np
 import numpy.linalg as la
-from family import Gaussian, Binomial, Poisson
+import family
 from pysal.spreg.utils import RegressionPropsY
 from iwls import iwls
 import pysal.spreg.user_output as USER
 from utils import np_matrix_rank, cache_readonly
+from statsmodels.base.model import LikelihoodModelResults
 
 __all__ = ['GLM']
 
@@ -23,7 +24,7 @@ class GLM(RegressionPropsY):
     ----------
         y             : array
                         n*1, dependent variable.
-        x             : array
+        X             : array
                         n*k, independent variable, exlcuding the constant.
         family        : string
                         Model type: 'Gaussian', 'Poisson', 'Binomial'
@@ -34,15 +35,12 @@ class GLM(RegressionPropsY):
                         Default is None where Ni becomes 1.0 for all locations.
         y_fix         : array
                         n*1, the fix intercept value of y
-        sigma2_v1     : boolean
-                        Sigma squared, True to use n as denominator.
-                        Default is False which uses n-k.
 
     Attributes
     ----------
         y             : array
                         n*1, dependent variable.
-        x             : array
+        X             : array
                         n*k, independent variable, including constant.
         family        : string
                         Model type: 'Gaussian', 'Poisson', 'logistic'
@@ -50,6 +48,11 @@ class GLM(RegressionPropsY):
                         Number of observations
         k             : integer
                         Number of independent variables
+        df_model      : float
+                        k-1, where k is the number of variables (including
+                        intercept)
+        df_residual   : float
+                        observations minus variables (n-k)
         mean_y        : float
                         Mean of y
         std_y         : float
@@ -57,9 +60,11 @@ class GLM(RegressionPropsY):
         fit_params     : dict
                         Parameters passed into fit method to define estimation
                         routine.
+        normalized_cov_params   : array
+                                k*k, approximates [X.T*X]-1
     """
-    def __init__(self, y, X, family=Gaussian(), offset=None, y_fix = None,
-            sigma2_v1=False, constant=True):
+    def __init__(self, y, X, family=family.Gaussian(), offset=None, y_fix = None,
+            constant=True):
         """
         Initialize class
         """
@@ -74,7 +79,6 @@ class GLM(RegressionPropsY):
         self.k = X.shape[1]
         self.df_model = np_matrix_rank(self.X) - 1
         self.df_resid = self.n - self.df_model - 1
-        self.sigma2_v1=sigma2_v1
         if offset is None:
             self.offset = np.ones(shape=(self.n,1))
         else:
@@ -83,6 +87,8 @@ class GLM(RegressionPropsY):
 	        self.y_fix = np.zeros(shape=(self.n,1))
         else:
 	        self.y_fix = y_fix
+        pinv = la.pinv(self.X)
+        self.normalized_cov_params = np.dot(pinv, pinv.T)
         self.fit_params = {}
 
 
@@ -114,10 +120,10 @@ class GLM(RegressionPropsY):
             params, predy, w, n_iter = iwls(self.y, self.X, self.family, self.offset, 
                     self.y_fix, ini_betas, tol, max_iter)
             self.fit_params['n_iter'] = n_iter
-        return GLMResults(self, params, predy, w)
+        return GLMResults(self, params.flatten(), predy, w)
 
 
-class GLMResults(GLM):
+class GLMResults(LikelihoodModelResults):
     """
     Results of estimated GLM and diagnostics.
 
@@ -125,14 +131,12 @@ class GLMResults(GLM):
     ----------
         model         : GLM object
                         Pointer to GLM object with estimation parameters.
-        betas         : array
+        params         : array
                         k*1, estimared coefficients
-        predy         : array
+        mu         : array
                         n*1, predicted y values.
-        v             : array
-                        n*1, predicted y values before transformation via link.
         w             : array
-                        n*1, final weight used for irwl
+                        n*1, final weight used for iwls
 
     Attributes
     ----------
@@ -149,56 +153,78 @@ class GLMResults(GLM):
                         Number of observations
         k             : integer
                         Number of independent variables
+        df_model      : float
+                        k-1, where k is the number of variables (including
+                        intercept)
+        df_residual   : float
+                        observations minus variables (n-k)
         fit_params    : dict
-                        Parameters passed into fit method to define estimation
+                        parameters passed into fit method to define estimation
                         routine.
-        sig2          : float
+        scale         : float
                         sigma squared used for subsequent computations.
-        betas         : array
-                        n*k, Beta estimation
+        params         : array
+                        n*k, estimared beta coefficients
         w             : array
                         n*1, final weight used for x
-        v             : array
-                        n*1, untransformed predicted functions.
-                        Applying the link functions yields predy.
-        xtxi          : array
-                        n*k, inverse of xx' for computing covariance
-        u             : array
-                        n*1, residuals
-        predy         : array
-                        n*1, predicted value of y
-        utu           : float
-                        Sum of squared residuals
-        sig2n         : float
-                        sigma sqaured using n for denominator
-        sig2n_k       : float
-                        sigma sqaured using n-k for denominator
-        vm            : array
+        mu            : array
+                        n*1, predicted value of y (i.e., fittedvalues)
+        cov_params    : array
                         Variance covariance matrix (kxk) of betas
-        std_err       : array
+        bse           : array
                         k*1, standard errors of betas
-        dev_u         : float
-                        Deviance of residuals
-        logll         : float
-                        log-likelihood
+        pvalues       : array
+                        k*1, two-tailed pvalues of parameters
+        tvalues       : array
+                        k*1, the tvalues of the standard errors
+        null          : array
+                        n*1, predicted values of y for null model
+        deviance      : float
+                        value of the deviance function evalued at params;
+                        see family.py for distribution-specific deviance
+        null_deviance : float
+                        value of the deviance function for the model fit with
+                        a constant as the only regressor
+        llf           : float
+                        value of the loglikelihood function evalued at params;
+                        see family.py for distribution-specific loglikelihoods
+        llnull       : float
+                        value of log-likelihood function evaluated at null
         aic           : float 
                         AIC
-        aicc          : float 
-                        AICc
         bic           : float 
                         BIC
-        cv            : float
-                        CV
-        R2            : float
-                        R square
-        y_bar         : array
-                        n*1, mean value of y
+        resid_response          : array
+                                  response residuals; defined as y-mu
+        resid_pearson           : array
+                                  Pearson residuals; defined as (y-mu)/sqrt(VAR(mu))
+                                  where VAR is the distribution specific variance
+                                  function; see family.py and varfuncs.py for more information.
+        resid_working           : array
+                                  Working residuals; the working residuals are defined as
+                                  resid_response/link'(mu); see links.py for the
+                                  derivatives of the link functions.
+
+        resid_anscombe          : array
+                                 Anscombe residuals; see family.py for 
+                                 distribution-specific Anscombe residuals.
+        
+        resid_deviance          : array
+                                 deviance residuals; see family.py for 
+                                 distribution-specific deviance residuals.
+
+        pearson_chi2            : float
+                                  chi-Squared statistic is defined as the sum 
+                                  of the squares of the Pearson residuals
+
+        normalized_cov_params   : array
+                                k*k, approximates [X.T*X]-1
     """
 
-    def __init__(self, model, params, predy, w):
+    def __init__(self, model, params, mu, w):
         self.model = model
         self.n = model.n
-        self.y = model.y
+        self.y = model.y.T.flatten()
         self.X = model.X
         self.k = model.k
         self.offset = model.offset
@@ -208,9 +234,9 @@ class GLMResults(GLM):
         self.fit_params = model.fit_params
         self.params = params
         self.w = w
-        self.predy = predy
-        self.u = self.y - self.predy
-        self.xtxi = la.inv(np.dot(self.X.T,self.X))
+        self.mu = mu.flatten()
+        pinv = la.pinv(self.w)
+        self.normalized_cov_params = np.dot(pinv, pinv.T)
         self._cache = {}
 
         #if model.sigma2_v1:
@@ -220,7 +246,7 @@ class GLMResults(GLM):
 
     @cache_readonly
     def resid_response(self):
-        return self.y-self.mu
+        return (self.y-self.mu)
 
     @cache_readonly
     def resid_pearson(self):
@@ -233,11 +259,11 @@ class GLMResults(GLM):
 
     @cache_readonly
     def resid_anscombe(self):
-        return self.family.resid_anscombe(self.y, self.fittedvalues)
+        return (self.family.resid_anscombe(self.y, self.mu))
 
     @cache_readonly
     def resid_deviance(self):
-        return self.family.resid_dev(self.y, self.fittedvalues)
+        return (self.family.resid_dev(self.y, self.mu))
 
     @cache_readonly
     def pearson_chi2(self):
@@ -245,37 +271,22 @@ class GLMResults(GLM):
         chisqsum = np.sum(chisq)
         return chisqsum
 
-
-    @cache_readonly
-    def fittedvalues(self):
-        return self.mu
-
-
-    @cache_readonly
-    def mu(self):
-        if np.allclose(self.offset, np.ones((self.n, 1))):
-            linpred = np.dot(self.X, self.params)
-        else:
-            linepred = np.dot(self.X, self.params) + self.offset
-        return self.family.fitted(linpred)
-
     @cache_readonly
     def null(self):
-        y = self.y
+        y = np.reshape(self.y, (-1,1))
         model = self.model
         X = np.ones((len(y), 1))
         null_mod =  GLM(y, X, family=self.family, offset=self.offset, constant=False)
-        return null_mod.fit().fittedvalues
+        return null_mod.fit().mu
    
     @cache_readonly
     def scale(self):
-        if isinstance(self.family, (Binomial, Poisson)):
+        if isinstance(self.family, (family.Binomial, family.Poisson)):
             return 1.
         else:
             return (((np.power(self.resid_response, 2) /
                          self.family.variance(self.mu))).sum() /
                         (self.df_resid))
-
     @cache_readonly
     def deviance(self):
         return self.family.deviance(self.y, self.mu)
@@ -286,13 +297,11 @@ class GLMResults(GLM):
    
     @cache_readonly
     def llnull(self):
-        return self.family.loglike(self.y, self.null)
+        return self.family.loglike(self.y, self.null, scale=self.scale)
 
     @cache_readonly
     def llf(self):
-        _modelfamily = self.family
-        val = _modelfamily.loglike(self.y, self.mu)
-        return val
+        return self.family.loglike(self.y, self.mu, scale=self.scale)
     
     @cache_readonly
     def aic(self):
@@ -304,169 +313,6 @@ class GLMResults(GLM):
                 (self.model.n - self.df_model - 1) *
                 np.log(self.model.n))
 '''
-    @property
-    def utu(self):
-        try:
-            return self._cache['utu']
-        except AttributeError:
-            self._cache = {}
-            self._cache['utu'] = np.sum(self.u ** 2)
-        except KeyError:
-            self._cache['utu'] = np.sum(self.u ** 2)
-        return self._cache['utu']
-
-    @utu.setter
-    def utu(self, val):
-        try:
-            self._cache['utu'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['utu'] = val
-        except KeyError:
-            self._cache['utu'] = val
-
-    @property
-   def sig2n(self):
-        try:
-            return self._cache['sig2n']
-        except AttributeError:
-            self._cache = {}
-            self._cache['sig2n'] = np.sum(self.w*self.u**2) / self.n
-        except KeyError:
-            self._cache['sig2n'] = np.sum(self.w*self.u**2) / self.n
-        return self._cache['sig2n']
-
-    @sig2n.setter
-    def sig2n(self, val):
-        try:
-            self._cache['sig2n'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['sig2n'] = val
-        except KeyError:
-            self._cache['sig2n'] = val
-
-    @property
-    def sig2n_k(self):
-        try:
-            return self._cache['sig2n_k']
-        except AttributeError:
-            self._cache = {}
-            self._cache['sig2n_k'] = np.sum(self.w*self.u**2) / (self.n - self.k)
-        except KeyError:
-            self._cache['sig2n_k'] = np.sum(self.w*self.u**2) / (self.n - self.k)
-        return self._cache['sig2n_k']
-
-    @sig2n_k.setter
-    def sig2n_k(self, val):
-        try:
-            self._cache['sig2n_k'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['sig2n_k'] = val
-        except KeyError:
-            self._cache['sig2n_k'] = val
-
-    @property
-    def vm(self):
-        try:
-            return self._cache['vm']
-        except AttributeError:
-            self._cache = {}
-            if self.mType == 0:
-        		self._cache['vm'] = np.dot(self.sig2, self.xtxi)
-            else:
-        	    xtw = (self.X * self.w).T
-        	    xtwx = np.dot(xtw, self.X)
-        	    self._cache['vm'] = la.inv(xtwx)
-        except KeyError:
-            if self.family == 'Gaussian':
-        		self._cache['vm'] = np.dot(self.sig2, self.xtxi)
-            else:
-        	    xtw = (self.X * self.w).T
-        	    xtwx = np.dot(xtw, self.X)
-        	    self._cache['vm'] = la.inv(xtwx)
-        return self._cache['vm']
-
-    @vm.setter
-    def vm(self, val):
-        try:
-            self._cache['vm'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['vm'] = val
-        except KeyError:
-            self._cache['vm'] = val
-
-    @property
-    def std_err(self):
-
-        try:
-            return self._cache['std_err']
-        except AttributeError:
-            self._cache = {}
-            self._cache['std_err'] = np.sqrt(self.vm).diagonal()
-        except KeyError:
-            self._cache['std_err'] = np.sqrt(self.vm).diagonal()
-        return self._cache['std_err']
-
-    @std_err.setter
-    def std_err(self, val):
-        try:
-            self._cache['std_err'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['std_err'] = val
-        except KeyError:
-            self._cache['std_err'] = val
-    
-    @property
-    def dev_u(self):
-        try:
-            return self._cache['dev_u']
-        except AttributeError:
-            self._cache = {}
-            self._cache['dev_u'] = self.calc_dev_u()
-        except KeyError:
-            self._cache['dev_u'] = self.calc_dev_u()
-        return self._cache['dev_u']
-
-    @dev_u.setter
-    def dev_u(self, val):
-        try:
-            self._cache['dev_u'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['dev_u'] = val
-        except KeyError:
-            self.cache['dev_u'] = val
-
-   
-
-    @property
-    def y_bar(self):
-        """
-        mean of y
-        """
-        try:
-            return self._cache['y_bar']
-        except AttributeError:
-            self._cache = {}
-            self._cache['y_bar'] = np.sum(self.y)/n
-        except KeyError:
-            self._cache['y_bar'] = np.sum(self.y)/n
-        return self._cache['y_bar']
-
-    @y_bar.setter
-    def y_bar(self, val):
-        try:
-            self._cache['y_bar'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['y_bar'] = val
-        except KeyError:
-            self._cache['y_bar'] = val
-
     @property
     def r2(self):
         try:

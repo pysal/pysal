@@ -75,6 +75,6 @@ def iwls(y, x, family, offset, y_fix,
         
     y_hat = mu
     if wi is None:
-        return betas, y_hat, w, n_iter
+        return betas, y_hat, wx, n_iter
     else:
         return betas, y_hat, n_iter, xtx_inv_xt

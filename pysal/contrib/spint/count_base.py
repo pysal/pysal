@@ -78,4 +78,4 @@ class CountModel(object):
         elif (framework.lower() == 'glm'):
             results = GLM(self.y, self.X, family = families.Poisson(),
                     constant=self.constant).fit()
-            self.params = results.betas.T.flatten()
+            self.params = results.params.T.flatten()
