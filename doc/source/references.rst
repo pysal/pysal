@@ -47,6 +47,7 @@ References
 .. [Rey2011] Rey, S. J., Murray, A. T., and Anselin, L. (2011). Visualizing regional income distribution dynamics. Letters in Spatial and Resource Sciences, 4(1):81–90.
 .. [Rey2013] Rey, S. J. and Smith, R. J. (2013). A spatial decomposition of the Gini coefficient. Letters in Spatial and Resource Sciences, 6:55–70.
 .. [Rey2014] Rey, S. J. (2014). Fast algorithms for a space-time concordance measure. Computational Statistics, 29(3-4):799–811.
+.. [Rey2016] Rey, S. J. (2016). Space-time patterns of rank concordance: Local Indicators of Mobility Association with applications to spatial income inequality dynamics. Annals of the Association of American Geographers. In Press.
 .. [Schwarz1978] Schwarz, G. et al. (1978). Estimating the dimension of a model. The annals of statistics, 6(2):461–464. 
 .. [Slocum2008] Slocum, T., McMaster, R., Kessler, F., and Howard, H. (2008). Thematic cartography and geovisualization. Prentice Hall.
 .. [Watts1998] Watts, D. J. and Strogatz, S. H. (1998). Collective dynamics of ‘small-world’ networks. Nature, 393(6684):440–442.
