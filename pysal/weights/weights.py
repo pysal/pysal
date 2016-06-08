@@ -3,15 +3,22 @@ Weights.
 """
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 
-import pysal
 import math
 import numpy as np
 import scipy.sparse
 from os.path import basename as BASENAME
-from pysal.weights import util
+from .util import full, WSP2W
+from ..core.FileIO import FileIO as popen
+#from .contiguity import Rook, Queen
+#from .distance import Kernel, DistanceBand, KNN
 
 __all__ = ['W', 'WSP']
 
+#dispatch_table = {'rook':Rook, 'queen':Queen, 'kernel':Kernel, 
+#                  'adaptive kernel': partial(Kernel, fixed=False),
+#                  'threshold continuous': partial(DistanceBand, binary=False),
+#                  'threshold binary': DistanceBand,
+#                  'distance band':DistanceBand, 'knn':KNN}
 
 class W(object):
     """
@@ -175,17 +182,38 @@ class W(object):
         if self.islands and not self.silent_island_warning:
             ni = len(self.islands)
             if ni == 1:
-                print "WARNING: there is one disconnected observation (no neighbors)"
-                print "Island id: ", self.islands
+                print("WARNING: there is one disconnected observation (no neighbors)")
+                print("Island id: ", self.islands)
             else:
-                print "WARNING: there are %d disconnected observations" % ni
-                print "Island ids: ", self.islands
+                print("WARNING: there are %d disconnected observations" % ni)
+                print("Island ids: ", self.islands)
 
     def _reset(self):
         """Reset properties.
 
         """
         self._cache = {}
+   
+    @classmethod
+    def from_file(cls, path='', format=None, **kwargs):
+        f = popen(dataPath=path, mode='r', dataFormat=format)
+        w = f.read(**kwargs)
+        f.close()
+        return w
+
+    @classmethod
+    def from_shapefile(cls, *args, **kwargs):
+        # we could also just "do the right thing," but I think it'd make sense to
+        # try and get people to use `Rook.from_shapefile(shapefile)` rather than
+        # W.from_shapefile(shapefile, type=`rook`), otherwise we'd need to build
+        # a type dispatch table. Generic W should be for stuff we don't know
+        # anything about. 
+        raise NotImplementedError('Use type-specific constructors, like Rook,'
+                                  ' Queen, DistanceBand, or Kernel')
+
+    @classmethod
+    def from_WSP(cls, WSP, silent_island_warning=True):
+        return WSP2W(WSP, silent_island_warning=silent_island_warning)
 
     @property
     def sparse(self):
@@ -800,7 +828,7 @@ class W(object):
                     row_sum = sum(wijs) * 1.0
                     if row_sum == 0.0:
                         if not self.silent_island_warning:
-                            print 'WARNING: ', i, ' is an island (no neighbors)'
+                            print('WARNING: ', i, ' is an island (no neighbors)')
                     weights[i] = [wij / row_sum for wij in wijs]
                 weights = weights
                 self.transformations[value] = weights
@@ -859,7 +887,7 @@ class W(object):
                 self.weights = original
                 self._reset()
             else:
-                print 'unsupported weights transformation'
+                raise Exception('unsupported weights transformation')
 
     transform = property(get_transform, set_transform)
 
@@ -951,7 +979,7 @@ class W(object):
         full
 
         """
-        return util.full(self)
+        return full(self)
 
     def towsp(self):
         '''
@@ -984,6 +1012,8 @@ class W(object):
 
         '''
         return WSP(self.sparse, self._id_order)
+    
+    to_WSP = towsp
 
     def set_shapefile(self, shapefile, idVariable=None, full=False):
         """
@@ -1108,3 +1138,31 @@ class WSP(object):
             self._diagWtW_WW = (wt * w + w * w).diagonal()
             self._cache['diagWtW_WW'] = self._diagWtW_WW
         return self._diagWtW_WW
+    
+    def to_W(self, silent_island_warning=True):
+        """
+        Construct a W object from the WSP's sparse matrix
+
+        Arguments
+        ---------
+        silence_island_warning  :   bool
+                                    a flag governing whether to state when
+                                    islands are encountered. 
+        """
+        return WSP2W(self, silent_island_warning=silent_island_warning)
+
+    @classmethod
+    def from_W(cls, W):
+        """
+        Constructs a WSP object from the W's sparse matrix
+
+        Arguments
+        ---------
+        W       :   pysal.weights.W
+                    a pysal weights object with a sparse form and ids
+
+        Returns
+        -------
+        a WSP instance
+        """
+        return cls(W.sparse, id_order=W.id_order)

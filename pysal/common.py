@@ -17,6 +17,7 @@ except:
     raise
 
 RTOL = .00001
+ATOL = 1e-7
 
 import copy
 import math
@@ -24,6 +25,7 @@ import random
 import sys
 import time
 import unittest
+from warnings import warn as Warn
 from functools import wraps
 from pysal.core.FileIO import FileIO as popen
 try:
@@ -220,4 +222,3 @@ def requires(f):
                     pass
             return passer 
     return inner
-
