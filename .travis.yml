@@ -1,8 +1,6 @@
 language: python
 sudo: false
 branches:
-    except:
-        - pdio
 only:
   - master
 python:
