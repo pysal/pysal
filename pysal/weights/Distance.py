@@ -77,7 +77,7 @@ class KNN(W):
 
     See Also
     --------
-    pysal.weights.W
+    :class:`pysal.weights.W`
     """
     def __init__(self, data, k=2, p=2, ids=None, radius=None, distance_metric='euclidean'):
         if isKDTree(data):
@@ -134,28 +134,38 @@ class KNN(W):
 
         Examples
         --------
-        >>> import numpy as np
-        >>> x,y=np.indices((5,5))
-        >>> x.shape=(25,1)
-        >>> y.shape=(25,1)
-        >>> data=np.hstack([x,y])
-        >>> wnn2=knnW_from_array(data,k=2)
-        >>> wnn4=knnW_from_array(data,k=4)
-        >>> set([1, 5, 6, 2]) == set(wnn4.neighbors[0])
+
+        Polygon shapefile
+
+        >>> wc=knnW_from_shapefile(pysal.examples.get_path("columbus.shp"))
+        >>> "%.4f"%wc.pct_nonzero
+        '4.0816'
+        >>> set([2,1]) == set(wc.neighbors[0])
         True
-        >>> set([0, 1, 10, 6]) == set(wnn4.neighbors[5])
+        >>> wc3=pysal.knnW_from_shapefile(pysal.examples.get_path("columbus.shp"),k=3)
+        >>> set(wc3.neighbors[0]) == set([2,1,3])
         True
-        >>> set([1, 5]) == set(wnn2.neighbors[0])
+        >>> set(wc3.neighbors[2]) == set([4,3,0])
         True
-        >>> set([0,6]) == set(wnn2.neighbors[5])
+
+        1 offset rather than 0 offset
+
+        >>> wc3_1=knnW_from_shapefile(pysal.examples.get_path("columbus.shp"),k=3,idVariable="POLYID")
+        >>> set([4,3,2]) == set(wc3_1.neighbors[1])
         True
-        >>> "%.2f"%wnn2.pct_nonzero
-        '8.00'
-        >>> wnn4.pct_nonzero
-        16.0
-        >>> wnn4=knnW_from_array(data,k=4)
-        >>> set([ 1,5,6,2]) == set(wnn4.neighbors[0])
+        >>> wc3_1.weights[2]
+        [1.0, 1.0, 1.0]
+        >>> set([4,1,8]) == set(wc3_1.neighbors[2])
         True
+
+
+        Point shapefile
+
+        >>> w=knnW_from_shapefile(pysal.examples.get_path("juvenile.shp"))
+        >>> w.pct_nonzero
+        1.1904761904761905
+        >>> w1=knnW_from_shapefile(pysal.examples.get_path("juvenile.shp"),k=1)
+        >>> "%.3f"%w1.pct_nonzero
 
         Notes
         -----
@@ -164,6 +174,7 @@ class KNN(W):
 
         See Also
         --------
+        :class:`pysal.weights.KNN`
         :class:`pysal.weights.W`
         """
         return cls(get_points_array_from_shapefile(filepath), **kwargs)
@@ -220,7 +231,8 @@ class KNN(W):
 
         See Also
         --------
-        KNN
+        :class: `pysal.weights.KNN`
+        :class:`pysal.weights.W`
         """
         return cls(array, **kwargs)
 
@@ -243,7 +255,8 @@ class KNN(W):
 
         See Also
         --------
-        KNN
+        :class: `pysal.weights.KNN`
+        :class:`pysal.weights.W`
         """
         pts = get_points_array(df[geom_col])
         if ids is None:
@@ -275,6 +288,11 @@ class KNN(W):
                       2: Euclidean distance
                       1: Manhattan distance
                       Ignored if the KDTree is an ArcKDTree
+
+        Returns
+        -------
+        A copy of the object using the new parameterization, or None if the
+        object is reweighted in place.
         """
         new_data = np.asarray(new_data).reshape(-1,2)
         if (new_data is not None):
@@ -511,7 +529,8 @@ class Kernel(W):
 
         See Also
         ---------
-        Kernel
+        :class:`pysal.weights.Kernel`
+        :class:`pysal.weights.W`
         """
         points = get_points_array_from_shapefile(filepath)
         if idVariable is not None:
@@ -523,8 +542,13 @@ class Kernel(W):
     @classmethod
     def from_array(cls, array, **kwargs):
         """
-        Right now, just an alias for Kernel(array,...) because the current
-        constructor can work on arrays and kdtrees
+        Construct a Kernel weights from an array. Supports all the same options
+        as :class:`pysal.weights.Kernel`
+
+        See Also
+        --------
+        :class:`pysal.weights.Kernel`
+        :class:`pysal.weights.W`
         """
         return cls(array, **kwargs)
 
@@ -547,7 +571,8 @@ class Kernel(W):
 
         See Also
         --------
-        Kernel
+        :class:`pysal.weights.Kernel`
+        :class:`pysal.weights.W`
         """
         pts = get_points_array(df[geom_col])
         if ids is None:
@@ -752,7 +777,8 @@ class DistanceBand(W):
 
         See Also
         ---------
-        Kernel
+        :class: `pysal.weights.DistanceBand`
+        :class: `pysal.weights.W`
         """
         points = get_points_array_from_shapefile(filepath)
         if idVariable is not None:
@@ -764,9 +790,13 @@ class DistanceBand(W):
     @classmethod
     def from_array(cls, array, threshold, **kwargs):
         """
-        Right now, just an alias for DistanceBand(array,...)
-        because the current
-        constructor can work on arrays and kdtrees
+        Construct a DistanceBand weights from an array. Supports all the same options
+        as :class:`pysal.weights.DistanceBand`
+
+        See Also
+        --------
+        :class:`pysal.weights.DistanceBand`
+        :class:`pysal.weights.W`
         """
         return cls(array, threshold, **kwargs)
     
@@ -789,7 +819,8 @@ class DistanceBand(W):
 
         See Also
         --------
-        DistanceBand
+        :class:`pysal.weights.DistanceBand`
+        :class:`pysal.weights.W`
         """
         pts = get_points_array(df[geom_col])
         if ids is None:
