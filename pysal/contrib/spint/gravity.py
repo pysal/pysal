@@ -16,9 +16,11 @@ Wilson, A. G. (1967). A statistical theory of spatial distribution models.
 __author__ = "Taylor Oshan tayoshan@gmail.com"
 
 import numpy as np
+from scipy import sparse as sp
 import statsmodels.api as sm
 from statsmodels.api import families 
 from statsmodels.tools.tools import categorical
+from sparse_categorical import spcategorical
 from pysal.spreg import user_output as User
 from count_base import CountModel
 
@@ -97,23 +99,43 @@ class BaseGravity(CountModel):
             raise ValueError('cost_func must either be "exp" or "power"')
 
         y = np.reshape(self.f, (-1,1))
-        X = np.empty((self.n, 0))
+        
+        if isinstance(self, (BaseGravity, Gravity)):
+            X = np.empty((self.n, 0))
+        else:
+            X = sp.csr_matrix((self.n, 1))
 
         if isinstance(self, Attraction) | isinstance(self, Doubly):
-            d_dummies = categorical(destinations.flatten().astype(str), drop=True)
-            X = np.hstack((X, d_dummies))
+            d_dummies = spcategorical(destinations.flatten().astype(str)) 
+            X = sp.hstack((X, d_dummies))
         if isinstance(self, Production) | isinstance(self, Doubly):
-            o_dummies = categorical(origins.flatten().astype(str), drop=True)
-            X = np.hstack((X, o_dummies))
+            o_dummies = spcategorical(origins.flatten().astype(str)) 
+            X = sp.hstack((X, o_dummies))
         if isinstance(self, Doubly):
+            X = sp.csr_matrix(X)
             X = X[:,1:]
-
-        if self.ov is not None:
-            X = np.hstack((X, np.log(np.reshape(self.ov, (-1,1)))))
-        if self.dv is not None:
-            X = np.hstack((X, np.log(np.reshape(self.dv, (-1,1)))))
-        X = np.hstack((X, self.cf(np.reshape(self.c, (-1,1)))))
-
+        
+        if self.ov is not None:	
+            if isinstance(self, (BaseGravity, Gravity)):
+                X = np.hstack((X, np.log(np.reshape(self.ov, (-1,1)))))
+            else:
+                ov = sp.csr_matrix(np.log(np.reshape(self.ov, ((-1,1)))))
+                X = sp.hstack((X, ov))
+        if self.dv is not None:    	
+            if isinstance(self, (BaseGravity, Gravity)):
+                X = np.hstack((X, np.log(np.reshape(self.dv, (-1,1)))))
+            else:
+                dv = sp.csr_matrix(np.log(np.reshape(self.dv, ((-1,1)))))
+                X = sp.hstack((X, dv))
+        
+        if isinstance(self, (BaseGravity, Gravity)):
+            X = np.hstack((X, self.cf(np.reshape(self.c, (-1,1)))))
+        else:
+            c = sp.csr_matrix(self.cf(np.reshape(self.c, (-1,1))))
+            X = sp.hstack((X, c))
+            X = sp.csr_matrix(X)
+            X = X[:,1:]
+        
         CountModel.__init__(self, y, X, constant=constant)
         
         if (framework.lower() == 'sm_glm'):
