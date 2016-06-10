@@ -562,7 +562,7 @@ class Gaussian(Family):
         """
         if isinstance(self.link, L.Power) and self.link.power == 1:
             # This is just the loglikelihood for classical OLS
-            nobs2 = np.sum(freq_weights, axis=0) / 2.
+            nobs2 = endog.shape[0] / 2.
             SSR = np.sum((endog-self.fitted(mu))**2, axis=0)
             llf = -np.log(SSR) * nobs2
             llf -= (1+np.log(np.pi/nobs2))*nobs2
