@@ -42,20 +42,20 @@ def iwls(y, x, family, offset, y_fix,
     """
     Iteratively re-weighted least squares estimation routine
     """
-    #spy = sp.csr_matrix(y)
     #spx = sp.csr_matrix(x)
-    #dy = np.float(spy.nnz)/np.float(np.multiply(*spy.shape))
     #dx = np.float(spx.nnz)/np.float(np.multiply(*spx.shape))
-    #print dy, dx
     n_iter = 0
     diff = 1.0e6
+    
     if isinstance(family, Binomial):
         y = family.link._clean(y)
+    
     if ini_betas is None:
         betas = np.zeros((x.shape[1], 1), np.float)
-        mu = family.starting_mu(y)
     else:
         betas = ini_betas
+    
+    mu = family.starting_mu(y)
     v = family.predict(mu)
    
     while diff > tol and n_iter < max_iter:
@@ -80,8 +80,7 @@ def iwls(y, x, family, offset, y_fix,
         diff = min(abs(n_betas-betas))
         betas = n_betas
         
-    y_hat = mu
     if wi is None:
-        return betas, y_hat, w, n_iter
+        return betas, mu, w, n_iter
     else:
-        return betas, y_hat, n_iter, xtx_inv_xt
+        return betas, mu, n_iter, xtx_inv_xt

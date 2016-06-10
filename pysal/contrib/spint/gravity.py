@@ -100,35 +100,41 @@ class BaseGravity(CountModel):
 
         y = np.reshape(self.f, (-1,1))
         
-        #X = np.empty((self.n, 0))
-        X = sp.csr_matrix((self.n, 1))
+        if isinstance(self, (BaseGravity, Gravity)):
+            X = np.empty((self.n, 0))
+        else:
+            X = sp.csr_matrix((self.n, 1))
 
         if isinstance(self, Attraction) | isinstance(self, Doubly):
-            #d_dummies = categorical(destinations.flatten().astype(str), drop=True)
             d_dummies = spcategorical(destinations.flatten().astype(str)) 
-            #X = np.hstack((X, d_dummies))
             X = sp.hstack((X, d_dummies))
         if isinstance(self, Production) | isinstance(self, Doubly):
-            #o_dummies = categorical(origins.flatten().astype(str), drop=True)
             o_dummies = spcategorical(origins.flatten().astype(str)) 
-            #X = np.hstack((X, o_dummies))
             X = sp.hstack((X, o_dummies))
         if isinstance(self, Doubly):
             X = sp.csr_matrix(X)
             X = X[:,1:]
-        if self.ov is not None:
-            #X = np.hstack((X, np.log(np.reshape(self.ov, (-1,1)))))
-            ov = sp.csr_matrix(np.log(np.reshape(self.ov, ((-1,1)))))
-            X = sp.hstack((X, ov))
-        if self.dv is not None:
-            #X = np.hstack((X, np.log(np.reshape(self.dv, (-1,1)))))
-            dv = sp.csr_matrix(np.log(np.reshape(self.dv, ((-1,1)))))
-            X = sp.hstack((X, dv))
-        #X = np.hstack((X, self.cf(np.reshape(self.c, (-1,1)))))
-        c = sp.csr_matrix(self.cf(np.reshape(self.c, (-1,1))))
-        X = sp.hstack((X, c))
-        X = sp.csr_matrix(X)
-        X = X[:,1:]
+        
+        if self.ov is not None:	
+            if isinstance(self, (BaseGravity, Gravity)):
+                X = np.hstack((X, np.log(np.reshape(self.ov, (-1,1)))))
+            else:
+                ov = sp.csr_matrix(np.log(np.reshape(self.ov, ((-1,1)))))
+                X = sp.hstack((X, ov))
+        if self.dv is not None:    	
+            if isinstance(self, (BaseGravity, Gravity)):
+                X = np.hstack((X, np.log(np.reshape(self.dv, (-1,1)))))
+            else:
+                dv = sp.csr_matrix(np.log(np.reshape(self.dv, ((-1,1)))))
+                X = sp.hstack((X, dv))
+        
+        if isinstance(self, (BaseGravity, Gravity)):
+            X = np.hstack((X, self.cf(np.reshape(self.c, (-1,1)))))
+        else:
+            c = sp.csr_matrix(self.cf(np.reshape(self.c, (-1,1))))
+            X = sp.hstack((X, c))
+            X = sp.csr_matrix(X)
+            X = X[:,1:]
         
         CountModel.__init__(self, y, X, constant=constant)
         
