@@ -6,7 +6,7 @@
 import numpy as np
 import numpy.linalg as la
 import family
-from pysal.spreg.utils import RegressionPropsY
+from pysal.spreg.utils import RegressionPropsY, spdot
 from iwls import iwls
 import pysal.spreg.user_output as USER
 from utils import np_matrix_rank, cache_readonly
@@ -77,7 +77,7 @@ class GLM(RegressionPropsY):
             self.X = X
         self.family = family
         self.k = X.shape[1]
-        self.df_model = np_matrix_rank(self.X) - 1
+        self.df_model = self.X.shape[1] - 1
         self.df_resid = self.n - self.df_model - 1
         if offset is None:
             self.offset = np.ones(shape=(self.n,1))
@@ -87,10 +87,9 @@ class GLM(RegressionPropsY):
 	        self.y_fix = np.zeros(shape=(self.n,1))
         else:
 	        self.y_fix = y_fix
-        pinv = la.pinv(self.X)
-        self.normalized_cov_params = np.dot(pinv, pinv.T)
+        #pinv = la.pinv(self.X)
+        #self.normalized_cov_params = la.inv(spdot(pinv, pinv.T))
         self.fit_params = {}
-
 
     def fit(self, ini_betas=None, tol=1.0e-6, max_iter=200, solve='iwls'):
         """
@@ -166,7 +165,7 @@ class GLMResults(LikelihoodModelResults):
         params         : array
                         n*k, estimared beta coefficients
         w             : array
-                        n*1, final weight used for x
+                        n*1, final weight values of x
         mu            : array
                         n*1, predicted value of y (i.e., fittedvalues)
         cov_params    : array
@@ -220,7 +219,6 @@ class GLMResults(LikelihoodModelResults):
         normalized_cov_params   : array
                                 k*k, approximates [X.T*X]-1
     """
-
     def __init__(self, model, params, mu, w):
         self.model = model
         self.n = model.n
@@ -235,9 +233,8 @@ class GLMResults(LikelihoodModelResults):
         self.params = params
         self.w = w
         self.mu = mu.flatten()
-        pinv = la.pinv(self.w)
-        self.normalized_cov_params = np.dot(pinv, pinv.T)
         self._cache = {}
+        self.normalized_cov_params = la.inv(spdot(self.w.T, self.w))
 
         #if model.sigma2_v1:
 	        #self.sig2 = self.sig2n

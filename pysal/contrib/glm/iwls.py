@@ -5,7 +5,6 @@ from scipy.sparse import linalg as spla
 from pysal.spreg.utils import spdot, spmultiply
 from family import Binomial
 
-
 def _compute_betas(y, x):
     """
     compute MLE coefficients using iwls routine
@@ -15,8 +14,8 @@ def _compute_betas(y, x):
     Geographically weighted regression: the analysis of spatially varying relationships.
     """
     xT = x.T
-    xtx = spdot(xT, x, array_out=False)
-    xtx_inv = la.inv(xtx.toarray())
+    xtx = spdot(xT, x)
+    xtx_inv = la.inv(xtx)
     xtx_inv = sp.csr_matrix(xtx_inv)
     xTy = spdot(xT, y, array_out=False)
     betas = spdot(xtx_inv, xTy)
@@ -46,7 +45,6 @@ def iwls(y, x, family, offset, y_fix,
     #dx = np.float(spx.nnz)/np.float(np.multiply(*spx.shape))
     n_iter = 0
     diff = 1.0e6
-    
     if isinstance(family, Binomial):
         y = family.link._clean(y)
     
@@ -54,10 +52,8 @@ def iwls(y, x, family, offset, y_fix,
         betas = np.zeros((x.shape[1], 1), np.float)
     else:
         betas = ini_betas
-    
     mu = family.starting_mu(y)
     v = family.predict(mu)
-   
     while diff > tol and n_iter < max_iter:
     	n_iter += 1
         w = family.weights(mu)
@@ -68,19 +64,16 @@ def iwls(y, x, family, offset, y_fix,
         	z = sp.csr_matrix(z)
         wx = spmultiply(x, w, array_out=False)
         wz = spmultiply(z, w, array_out=False)
-        
         if wi is None:
             n_betas = _compute_betas(wz, wx)
         else:
             n_betas, xtx_inv_xt = _compute_betas_gwr(wz, wx, wi)
-        
         v = spdot(x, n_betas)
         mu  = family.fitted(v)
-
         diff = min(abs(n_betas-betas))
         betas = n_betas
         
     if wi is None:
-        return betas, mu, w, n_iter
+        return betas, mu, wx, n_iter
     else:
         return betas, mu, n_iter, xtx_inv_xt

@@ -82,7 +82,7 @@ class BaseGravity(CountModel):
 
     """
     def __init__(self, flows, cost, cost_func='pow', o_vars=None, d_vars=None,
-            origins=None, destinations=None, constant=False, framework='SM_GLM'):
+            origins=None, destinations=None, constant=False, framework='GLM'):
         n = User.check_arrays(flows, cost)
         User.check_y(flows, n)
         self.n = n
@@ -99,14 +99,12 @@ class BaseGravity(CountModel):
             raise ValueError('cost_func must either be "exp" or "power"')
 
         y = np.reshape(self.f, (-1,1))
-        
-        if isinstance(self, (BaseGravity, Gravity)):
+        if isinstance(self,  Gravity):
             X = np.empty((self.n, 0))
         else:
             X = sp.csr_matrix((self.n, 1))
-
         if isinstance(self, Attraction) | isinstance(self, Doubly):
-            d_dummies = spcategorical(destinations.flatten().astype(str)) 
+            d_dummies = spcategorical(destinations.flatten().astype(str))
             X = sp.hstack((X, d_dummies))
         if isinstance(self, Production) | isinstance(self, Doubly):
             o_dummies = spcategorical(origins.flatten().astype(str)) 
@@ -114,30 +112,26 @@ class BaseGravity(CountModel):
         if isinstance(self, Doubly):
             X = sp.csr_matrix(X)
             X = X[:,1:]
-        
         if self.ov is not None:	
-            if isinstance(self, (BaseGravity, Gravity)):
+            if isinstance(self, Gravity):
                 X = np.hstack((X, np.log(np.reshape(self.ov, (-1,1)))))
             else:
                 ov = sp.csr_matrix(np.log(np.reshape(self.ov, ((-1,1)))))
                 X = sp.hstack((X, ov))
         if self.dv is not None:    	
-            if isinstance(self, (BaseGravity, Gravity)):
+            if isinstance(self, Gravity):
                 X = np.hstack((X, np.log(np.reshape(self.dv, (-1,1)))))
             else:
                 dv = sp.csr_matrix(np.log(np.reshape(self.dv, ((-1,1)))))
                 X = sp.hstack((X, dv))
-        
-        if isinstance(self, (BaseGravity, Gravity)):
+        if isinstance(self, Gravity):
             X = np.hstack((X, self.cf(np.reshape(self.c, (-1,1)))))
         else:
             c = sp.csr_matrix(self.cf(np.reshape(self.c, (-1,1))))
             X = sp.hstack((X, c))
             X = sp.csr_matrix(X)
             X = X[:,1:]
-        
         CountModel.__init__(self, y, X, constant=constant)
-        
         if (framework.lower() == 'sm_glm'):
             self.fit()
         elif (framework.lower() == 'glm'):
@@ -197,7 +191,7 @@ class Gravity(BaseGravity):
 
     """
     def __init__(self, flows, o_vars, d_vars, cost,
-            cost_func, constant=False, framework='SM_GLM'):
+            cost_func, constant=False, framework='GLM'):
         flows = np.reshape(flows, (-1,1))
         o_vars = np.reshape(o_vars, (-1,1))
         d_vars = np.reshape(d_vars, (-1,1))
@@ -258,7 +252,7 @@ class Production(BaseGravity):
 
     """
     def __init__(self, flows, origins, d_vars, cost, cost_func, constant=False,
-            framework='SF_GLM'):
+            framework='GLM'):
         flows = np.reshape(flows, (-1,1))
         origins = np.reshape(origins, (-1,1))
         d_vars = np.reshape(d_vars, (-1,1))
@@ -318,7 +312,7 @@ class Attraction(BaseGravity):
 
     """
     def __init__(self, flows, destinations, o_vars, cost, cost_func,
-            constant=False, framework='SM_GLM'):
+            constant=False, framework='GLM'):
         flows = np.reshape(flows, (-1,1))
         o_vars = np.reshape(o_vars, (-1,1))
         destinations = np.reshape(destinations, (-1,1))
@@ -375,7 +369,8 @@ class Doubly(BaseGravity):
 
     """
     def __init__(self, flows, origins, destinations, cost, cost_func,
-            constant=False, framework='SM_GLM'):
+            constant=False, framework='GLM'):
+
         flows = np.reshape(flows, (-1,1))
         origins = np.reshape(origins, (-1,1))
         destinations = np.reshape(destinations, (-1,1))

@@ -36,13 +36,11 @@ class CountModel(object):
         self.y = self._check_counts(y)
         self.X = X
         self.constant = constant
-        
     def _check_counts(self, y):
         if (y.dtype == 'int64') | (y.dtype == 'int32'):
         	return y
         else:
         	raise TypeError('Dependent variable (y) must be composed of integers')
-
     def fit(self, framework='SM_GLM', method='iwls'):
         '''
         estimates parameters (coefficients) of spatial interaction model
