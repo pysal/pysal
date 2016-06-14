@@ -131,12 +131,14 @@ class BaseGravity(CountModel):
             X = sp.hstack((X, c))
             X = sp.csr_matrix(X)
             X = X[:,1:]
+        if not isinstance(self, (Gravity, Production, Attraction, Doubly)):
+            X = self.cf(np.reshape(self.c, (-1,1)))
+
         CountModel.__init__(self, y, X, constant=constant)
         if (framework.lower() == 'sm_glm'):
             self.fit()
         elif (framework.lower() == 'glm'):
             self.fit(framework='glm')
-        
 
 class Gravity(BaseGravity):
     """
@@ -201,6 +203,7 @@ class Gravity(BaseGravity):
         BaseGravity.__init__(self, flows, cost,
                 cost_func, o_vars=o_vars, d_vars=d_vars, constant=constant,
                 framework=framework)
+        
 
 class Production(BaseGravity):
     """

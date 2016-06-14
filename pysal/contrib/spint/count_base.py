@@ -6,9 +6,8 @@ __author__ = "Taylor Oshan tayoshan@gmail.com"
 
 import numpy as np
 import statsmodels.api as sm
-#from statsmodels.api import families
 import sys
-sys.path.append('../glm/')
+sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
 import family as families
 from glm import GLM
 
@@ -74,6 +73,23 @@ class CountModel(object):
             self.fit_stats['aic'] = results.aic
 
         elif (framework.lower() == 'glm'):
-            results = GLM(self.y, self.X, family = families.Poisson(),
+            model = GLM(self.y, self.X, family = families.Poisson(),
                     constant=self.constant).fit()
-            self.params = results.params.T.flatten()
+           
+            self.params = model.params
+            self.aic = model.aic
+            self.bic = model.bic
+            self.deviance = model.deviance
+            self.df_model = model.df_model
+            self.df_resid = model.df_resid
+            self.llf = model.llf
+            self.yhat = model.mu
+            self.n = model.n
+            self.resid_deviance = model.resid_deviance
+            self.resid_pearson = model.resid_pearson
+            self.cov_params = model.cov_params()
+            self.std_err = model.bse
+            self.pvalues = model.pvalues
+            self.tvalues = model.tvalues
+            self.results = model
+            
