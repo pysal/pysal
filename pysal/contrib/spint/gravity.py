@@ -82,7 +82,8 @@ class BaseGravity(CountModel):
 
     """
     def __init__(self, flows, cost, cost_func='pow', o_vars=None, d_vars=None,
-            origins=None, destinations=None, constant=False, framework='GLM'):
+            origins=None, destinations=None, constant=False, framework='GLM',
+            SF=None, CD=None, Lag=None):
         n = User.check_arrays(flows, cost)
         User.check_y(flows, n)
         self.n = n
@@ -134,6 +135,13 @@ class BaseGravity(CountModel):
         if not isinstance(self, (Gravity, Production, Attraction, Doubly)):
             X = self.cf(np.reshape(self.c, (-1,1)))
 
+        if SF:
+        	raise NotImplementedError('Spatial filter model not yet implemented')
+        if CD:
+        	raise NotImplementedError('Competing destination model not yet implemented')
+        if Lag:
+        	raise NotImplementedError('Spatial Lag autoregressive model not yet implemented')
+        
         CountModel.__init__(self, y, X, constant=constant)
         if (framework.lower() == 'sm_glm'):
             self.fit()
@@ -193,7 +201,8 @@ class Gravity(BaseGravity):
 
     """
     def __init__(self, flows, o_vars, d_vars, cost,
-            cost_func, constant=False, framework='GLM'):
+            cost_func, constant=False, framework='GLM', SF=None, CD=None,
+            Lag=None):
         flows = np.reshape(flows, (-1,1))
         o_vars = np.reshape(o_vars, (-1,1))
         d_vars = np.reshape(d_vars, (-1,1))
@@ -202,7 +211,7 @@ class Gravity(BaseGravity):
         
         BaseGravity.__init__(self, flows, cost,
                 cost_func, o_vars=o_vars, d_vars=d_vars, constant=constant,
-                framework=framework)
+                framework=framework, SF=SF, CD=CD, Lag=Lag)
         
 
 class Production(BaseGravity):
@@ -255,7 +264,7 @@ class Production(BaseGravity):
 
     """
     def __init__(self, flows, origins, d_vars, cost, cost_func, constant=False,
-            framework='GLM'):
+            framework='GLM', SF=None, CD=None, Lag=None):
         flows = np.reshape(flows, (-1,1))
         origins = np.reshape(origins, (-1,1))
         d_vars = np.reshape(d_vars, (-1,1))
@@ -263,7 +272,8 @@ class Production(BaseGravity):
         User.check_arrays(flows, origins, d_vars, cost)
        
         BaseGravity.__init__(self, flows, cost, cost_func, d_vars=d_vars,
-                origins=origins, constant=constant, framework=framework)
+                origins=origins, constant=constant, framework=framework,
+                SF=SF, CD=CD, Lag=Lag)
         
 class Attraction(BaseGravity):
     """
@@ -315,7 +325,7 @@ class Attraction(BaseGravity):
 
     """
     def __init__(self, flows, destinations, o_vars, cost, cost_func,
-            constant=False, framework='GLM'):
+            constant=False, framework='GLM', SF=None, CD=None, Lag=None):
         flows = np.reshape(flows, (-1,1))
         o_vars = np.reshape(o_vars, (-1,1))
         destinations = np.reshape(destinations, (-1,1))
@@ -323,7 +333,8 @@ class Attraction(BaseGravity):
         User.check_arrays(flows, destinations, o_vars, cost)
 
         BaseGravity.__init__(self, flows, cost, cost_func, o_vars=o_vars,
-                 destinations=destinations, constant=constant, framework=framework)
+                 destinations=destinations, constant=constant,
+                 framework=framework, SF=SF, CD=CD, Lag=Lag)
 
 class Doubly(BaseGravity):
     """
@@ -372,7 +383,7 @@ class Doubly(BaseGravity):
 
     """
     def __init__(self, flows, origins, destinations, cost, cost_func,
-            constant=False, framework='GLM'):
+            constant=False, framework='GLM', SF=None, CD=None, Lag=None):
 
         flows = np.reshape(flows, (-1,1))
         origins = np.reshape(origins, (-1,1))
@@ -381,5 +392,6 @@ class Doubly(BaseGravity):
         User.check_arrays(flows, origins, destinations, cost)
 
         BaseGravity.__init__(self, flows, cost, cost_func, origins=origins, 
-                destinations=destinations, constant=constant, framework=framework)
+                destinations=destinations, constant=constant,
+                framework=framework, SF=SF, CD=CD, Lag=Lag)
 
