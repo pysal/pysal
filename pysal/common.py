@@ -189,7 +189,7 @@ def simport(modname):
     except:
         return False, None
 
-def requires(f):
+def requires(*args, **kwargs):
     """
     Decorator to wrap functions with extra dependencies:
 
@@ -207,8 +207,7 @@ def requires(f):
     """
     v = kwargs.pop('verbose', True)
     wanted = copy.deepcopy(args)
-    @wraps(f)
-    def inner(*args, **kwargs):
+    def inner(function):
         available = [simport(arg)[0] for arg in args]
         if all(available):
             return function
