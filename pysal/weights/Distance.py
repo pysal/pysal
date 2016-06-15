@@ -294,8 +294,8 @@ class KNN(W):
         A copy of the object using the new parameterization, or None if the
         object is reweighted in place.
         """
-        new_data = np.asarray(new_data).reshape(-1,2)
         if (new_data is not None):
+            new_data = np.asarray(new_data).reshape(-1,2)
             data = np.vstack((self.data, new_data)).reshape(-1,2)
             if new_ids is not None:
                 ids = copy.deepcopy(self.id_order)

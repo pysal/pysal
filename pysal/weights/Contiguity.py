@@ -357,7 +357,7 @@ def _build(polygons, criterion="rook", ids=None, method='list'):
     if method.lower().startswith('rtree'):
         neighbor_data = ContiguityWeights_rtree(polygons, joinType=wttype).w
     elif method.lower().startswith('list'):
-        neighbor_data = ContiguityWeights_list(polygons, wttype=wttype).w
+        neighbor_data = ContiguityWeightsLists(polygons, wttype=wttype).w
     else:
         neighbor_data = ContiguityWeightsPolygons(polygons, wttype=wttype).w
 
