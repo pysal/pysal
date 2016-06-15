@@ -1,7 +1,8 @@
 import numpy as np
 import numpy.linalg as la
 import scipy.sparse as SP
-import scipy.sparse.linalg as SPla
+import scipy
+from scipy.sparse import linalg as SPla
 
 def spdot(a, b, array_out=True):
     """
@@ -162,21 +163,7 @@ def spmin(a):
     min a       : int or float
                   minimum value in a
     """
-
-    if type(a).__name__ == 'ndarray':
-        return a.min()
-    elif type(a).__name__ == 'csr_matrix' or type(a).__name__ == 'csc_matrix':
-        try:
-            return min(a.data)
-        except:
-            if np.sum(a.data) == 0:
-                return 0
-            else:
-                raise Exception, "Error: could not evaluate the minimum value."
-    else:
-        raise Exception, "Invalid format for 'spmultiply' argument: %s and %s" % (
-            type(a).__name__, type(b).__name__)
-
+    return a.min()
 
 def spmax(a):
     """
@@ -194,20 +181,7 @@ def spmax(a):
     max a       : int or float
                   maximum value in a
     """
-    if type(a).__name__ == 'ndarray':
-        return a.max()
-    elif type(a).__name__ == 'csr_matrix' or type(a).__name__ == 'csc_matrix':
-        try:
-            return max(a.data)
-        except:
-            if np.sum(a.data) == 0:
-                return 0
-            else:
-                raise Exception, "Error: could not evaluate the maximum value."
-    else:
-        raise Exception, "Invalid format for 'spmultiply' argument: %s and %s" % (
-            type(a).__name__, type(b).__name__)
-
+    return a.max()
 
 def splogdet(a):
     """
@@ -229,8 +203,8 @@ def splogdet(a):
         LU = SPla.splu(a)
         det = np.sum(np.log(np.abs(LU.U.diagonal())))
     else:
-        sgn, det = la.slogdet(a)
-        det = det * sgn
+        sgn, ldet = la.slogdet(a)
+        det = sgn * ldet
     return det
 
 def spfill_diagonal(a, val):

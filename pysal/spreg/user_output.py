@@ -1,12 +1,12 @@
 """Internal helper files for user output."""
 
-__author__ = "Luc Anselin luc.anselin@asu.edu, David C. Folch david.folch@asu.edu, Jing Yao jingyao@asu.edu"
-import textwrap as TW
+__author__ = ("Luc Anselin luc.anselin@asu.edu, "
+              "David C. Folch david.folch@asu.edu, "
+              "Levi John Wolf levi.john.wolf@gmail.com, "
+              "Jing Yao jingyao@asu.edu")
 import numpy as np
 import copy as COPY
 from . import diagnostics
-from . import diagnostics_tsls
-from . import diagnostics_sp
 from . import sputils as spu
 from .. import weights 
 import scipy
