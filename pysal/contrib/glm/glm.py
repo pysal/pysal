@@ -1,7 +1,3 @@
-#TODO
-# Add model diagnostics as cached properties:
-# Add family class functionality so that diagnostics are methods of family class
-# intead of using different cases for family for each diagnostic.
 
 import numpy as np
 import numpy.linalg as la
@@ -9,7 +5,7 @@ import family
 from pysal.spreg.utils import RegressionPropsY, spdot
 from iwls import iwls
 import pysal.spreg.user_output as USER
-from utils import np_matrix_rank, cache_readonly
+from utils import cache_readonly
 from statsmodels.base.model import LikelihoodModelResults
 
 __all__ = ['GLM']
