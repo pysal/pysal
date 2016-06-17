@@ -8,6 +8,8 @@ from ._contW_lists import ContiguityWeightsLists
 from .util import get_ids
 WT_TYPE = {'rook': 2, 'queen': 1}  # for _contW_Binning
 
+__author__ = "Sergio J. Rey <srey@asu.edu> , Levi John Wolf <levi.john.wolf@gmail.com>"
+
 class Rook(W):
     def __init__(self, polygons, method='binning', **kw):
         """

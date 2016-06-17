@@ -7,6 +7,8 @@ import numpy as np
 
 __all__ = ["KNN", "Kernel", "DistanceBand"]
 
+__author__ = "Sergio J. Rey <srey@asu.edu>, Levi John Wolf <levi.john.wolf@gmail.com>"
+
 def knnW(data, k=2, p=2, ids=None, radius=None, distance_metric='euclidean'):
     """
     This is deprecated. Use the pysal.weights.KNN class instead. 

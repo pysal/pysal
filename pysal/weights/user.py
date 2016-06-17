@@ -11,7 +11,12 @@ from Distance import knnW, Kernel, DistanceBand
 from util import get_ids, get_points_array_from_shapefile, min_threshold_distance
 import numpy as np
 
-__all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array', 'knnW_from_shapefile', 'threshold_binaryW_from_array', 'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array', 'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile', 'adaptive_kernelW', 'adaptive_kernelW_from_shapefile', 'min_threshold_dist_from_shapefile', 'build_lattice_shapefile']
+__all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array', 
+           'knnW_from_shapefile', 'threshold_binaryW_from_array', 
+           'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array', 
+           'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile', 
+           'adaptive_kernelW', 'adaptive_kernelW_from_shapefile', 
+           'min_threshold_dist_from_shapefile', 'build_lattice_shapefile']
 
 
 def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
@@ -83,6 +88,8 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
 
     shapefile : string
                 name of polygon shapefile including suffix.
+    idVariable: string
+                name of a column in the shapefile's DBF to use for ids
     sparse    : boolean
                 If True return WSP instance
                 If False return W instance

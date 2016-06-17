@@ -505,8 +505,8 @@ def check_robust(robust, wk):
     """
     if robust:
         if robust.lower() == 'hac':
-            if not isinstance(wk, weights.W):
-                raise Exception, "HAC requires that wk be a pysal.W object"
+            if not isinstance(wk, weights.Kernel):
+                raise Exception, "HAC requires that wk be a Kernel Weights object"
             diag = wk.sparse.diagonal()
             # check to make sure all entries equal 1
             if diag.min() < 1.0:

@@ -3,6 +3,8 @@ import collections
 QUEEN = 1
 ROOK = 2
 
+__author__ = "Jay Laura jlaura@asu.edu"
+
 class ContiguityWeightsLists:
     """
     Contiguity for a collection of polygons using high performance
