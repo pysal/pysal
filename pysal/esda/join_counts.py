@@ -4,7 +4,7 @@ Spatial autocorrelation for binary attributes
 """
 __author__ = "Sergio J. Rey <srey@asu.edu> , Luc Anselin <luc.anselin@asu.edu>"
 
-import pysal
+from pysal.weights.spatial_lag import lag_spatial
 import numpy as np
 
 __all__ = ['Join_Counts']
@@ -114,6 +114,7 @@ class Join_Counts:
     >>>
     """
     def __init__(self, y, w, permutations=PERMUTATIONS):
+        y = np.asarray(y).flatten()
         w.transformation = 'b'  # ensure we have binary weights
         self.w = w
         self.y = y
@@ -139,10 +140,10 @@ class Join_Counts:
             self.p_sim_bw = p_sim_bw
 
     def __calc(self, z):
-        zl = pysal.lag_spatial(self.w, z)
+        zl = lag_spatial(self.w, z)
         bb = sum(z * zl) / 2.0
         zw = 1 - z
-        zl = pysal.lag_spatial(self.w, zw)
+        zl = lag_spatial(self.w, zw)
         ww = sum(zw * zl) / 2.0
         bw = self.J - (bb + ww)
         return (bb, ww, bw)

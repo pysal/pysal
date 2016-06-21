@@ -432,9 +432,8 @@ class Map_Classifier(object):
     """
 
     def __init__(self, y):
+        y = np.asarray(y).flatten()
         self.name = 'Map Classifier'
-        if hasattr(y, 'values'):
-            y = y.values  # fix for pandas
         self.y = y
         self._classify()
         self._summary()
@@ -617,8 +616,7 @@ class Map_Classifier(object):
         a bin index or array of bin indices that classify the input into one of
         the classifiers' bins
         """
-        if not isinstance(x, np.ndarray):
-            x = np.array([x]).flatten()
+        x = np.asarray(x).flatten()
         uptos = [np.where(value < self.bins)[0] for value in x]
         bins = [x.min() if x.size > 0 else len(self.bins)-1 for x in uptos] #bail upwards
         if len(bins) == 1:

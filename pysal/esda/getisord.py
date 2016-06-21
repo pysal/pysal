@@ -93,6 +93,7 @@ class G:
     """
 
     def __init__(self, y, w, permutations=PERMUTATIONS):
+        y = np.asarray(y).flatten()
         self.n = len(y)
         self.y = y
         w.transform = "B"
@@ -292,6 +293,7 @@ class G_Local:
 
     """
     def __init__(self, y, w, transform='R', permutations=PERMUTATIONS, star=False):
+        y = np.asarray(y).flatten()
         self.n = len(y)
         self.y = y
         self.w = w
