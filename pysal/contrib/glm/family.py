@@ -426,6 +426,149 @@ class Poisson(Family):
         """
         return (3 / 2.) * (endog**(2/3.) - mu**(2 / 3.)) / mu**(1 / 6.)
 
+class QuasiPoisson(Family):
+    """
+    QuasiPoisson exponential family.
+
+    Parameters
+    ----------
+    link : a link instance, optional
+        The default link for the Poisson family is the log link. Available
+        links are log, identity, and sqrt. See statsmodels.family.links for
+        more information.
+
+    Attributes
+    ----------
+    Poisson.link : a link instance
+        The link function of the Poisson instance.
+    Poisson.variance : varfuncs instance
+        `variance` is an instance of
+        statsmodels.genmod.families.family.varfuncs.mu
+
+    See also
+    --------
+    statsmodels.genmod.families.family.Family
+    :ref:`links`
+
+    """
+
+    links = [L.log, L.identity, L.sqrt]
+    variance = V.mu
+    valid = [0, np.inf]
+    safe_links = [L.Log, ]
+
+    def __init__(self, link=L.log):
+        self.variance = Poisson.variance
+        self.link = link()
+
+    def _clean(self, x):
+        """
+        Helper function to trim the data so that is in (0,inf)
+
+        Notes
+        -----
+        The need for this function was discovered through usage and its
+        possible that other families might need a check for validity of the
+        domain.
+        """
+        return np.clip(x, FLOAT_EPS, np.inf)
+
+    def resid_dev(self, endog, mu, scale=1.):
+        r"""Poisson deviance residual
+
+        Parameters
+        ----------
+        endog : array-like
+            Endogenous response variable
+        mu : array-like
+            Fitted mean response variable
+        scale : float, optional
+            An optional argument to divide the residuals by scale. The default
+            is 1.
+
+        Returns
+        -------
+        resid_dev : array
+            Deviance residuals as defined below
+
+        Notes
+        -----
+        .. math::
+
+           resid\_dev_i = sign(Y_i - \mu_i) * \sqrt{2 *
+                          (Y_i * \log(Y_i / \mu_i) - (Y_i - \mu_i))} / scale
+        """
+        endog_mu = self._clean(endog / mu)
+        return (np.sign(endog - mu) *
+                np.sqrt(2 * (endog * np.log(endog_mu) - (endog - mu))) / scale)
+
+    def deviance(self, endog, mu, freq_weights=1., scale=1.):
+        r'''
+        Poisson deviance function
+
+        Parameters
+        ----------
+        endog : array-like
+            Endogenous response variable
+        mu : array-like
+            Fitted mean response variable
+        freq_weights : array-like
+            1d array of frequency weights. The default is 1.
+        scale : float, optional
+            An optional scale argument. The default is 1.
+
+        Returns
+        -------
+        deviance : float
+            The deviance function at (endog,mu,freq_weights,scale) as defined
+            below.
+
+        Notes
+        -----
+        If a constant term is included it is defined as
+
+        .. math::
+
+           D = 2 * \sum_i (freq\_weights_i * Y_i * \log(Y_i / \mu_i))/ scale
+        '''
+        endog_mu = self._clean(endog / mu)
+        return 2 * np.sum(endog * freq_weights * np.log(endog_mu)) / scale
+
+    def loglike(self, endog, mu, freq_weights=1., scale=1.):
+        r"""
+        The log-likelihood function in terms of the fitted mean response.
+
+        Returns None for QuasiPoisson 
+
+        Returns
+        -------
+        None: not applicable for QuasiPoisson
+        """
+        return None
+
+    def resid_anscombe(self, endog, mu):
+        r"""
+        Anscombe residuals for the Poisson exponential family distribution
+
+        Parameters
+        ----------
+        endog : array-like
+            Endogenous response variable
+        mu : array-like
+            Fitted mean response variable
+
+        Returns
+        -------
+        resid_anscombe : array
+            The Anscome residuals for the Poisson family defined below
+
+        Notes
+        -----
+        .. math::
+
+           resid\_anscombe_i = (3/2) * (Y_i^{2/3} - \mu_i^{2/3}) / \mu_i^{1/6}
+        """
+        return (3 / 2.) * (endog**(2/3.) - mu**(2 / 3.)) / mu**(1 / 6.)
 
 class Gaussian(Family):
     """

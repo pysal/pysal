@@ -298,7 +298,10 @@ class GLMResults(LikelihoodModelResults):
     
     @cache_readonly
     def aic(self):
-        return -2 * self.llf + 2*(self.df_model+1)
+        if isinstance(self.family, family.QuasiPoisson):
+        	return None
+        else:
+            return -2 * self.llf + 2*(self.df_model+1)
 
     @cache_readonly
     def bic(self):
