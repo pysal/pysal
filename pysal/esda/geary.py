@@ -9,7 +9,7 @@ import scipy.stats as stats
 __all__ = ['Geary']
 
 
-class Geary:
+class Geary(object):
     """
     Global Geary C Autocorrelation statistic
 
@@ -90,6 +90,7 @@ class Geary:
     >>>
     """
     def __init__(self, y, w, transformation="r", permutations=999):
+        y = np.asarray(y).flatten()
         self.n = len(y)
         self.y = y
         w.transform = transformation
@@ -129,6 +130,11 @@ class Geary:
             self.VC_sim = self.seC_sim ** 2
             self.z_sim = (self.C - self.EC_sim) / self.seC_sim
             self.p_z_sim = 1 - stats.norm.cdf(np.abs(self.z_sim))
+
+    @property
+    def _statistic(self):
+        """ a standardized accessor for esda statistics"""
+        return self.C
 
     def __moments(self):
         y = self.y

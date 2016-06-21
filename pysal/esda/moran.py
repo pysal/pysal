@@ -15,7 +15,7 @@ __all__ = ["Moran", "Moran_Local", "Moran_BV", "Moran_BV_matrix",
 PERMUTATIONS = 999
 
 
-class Moran:
+class Moran(object):
     """Moran's I Global Autocorrelation Statistic
 
     Parameters
@@ -131,6 +131,7 @@ class Moran:
     """
     def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS,
                  two_tailed=True):
+        y = np.asarray(y).flatten()
         self.y = y
         w.transform = transformation
         self.w = w
@@ -199,8 +200,12 @@ class Moran:
         inum = (z * zl).sum()
         return self.n / self.w.s0 * inum / self.z2ss
 
+    @property
+    def _statistic(self):
+        """More consistent hidden attribute to access ESDA statistics"""
+        return self.I
 
-class Moran_BV:
+class Moran_BV(object):
     """
     Bivariate Moran's I
 
@@ -304,6 +309,8 @@ class Moran_BV:
 
     """
     def __init__(self, x, y, w, transformation="r", permutations=PERMUTATIONS):
+        x = np.asarray(x).flatten()
+        y = np.asarray(y).flatten()
         zy = (y - y.mean()) / y.std(ddof=1)
         zx = (x - x.mean()) / x.std(ddof=1)
         self.zx = zx
@@ -335,6 +342,11 @@ class Moran_BV:
         wzy = slag(self.w, zy)
         self.num = (self.zx * wzy).sum()
         return self.num / self.den
+
+    @property
+    def _statistic(self):
+        """More consistent hidden attribute to access ESDA statistics"""
+        return self.I
 
 
 def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
@@ -401,7 +413,6 @@ def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
             results[i, j] = Moran_BV(y1, y2, w, permutations=permutations)
             results[j, i] = Moran_BV(y2, y1, w, permutations=permutations)
     return results
-
 
 class Moran_Rate(Moran):
     """
@@ -510,6 +521,8 @@ class Moran_Rate(Moran):
 
     def __init__(self, e, b, w, adjusted=True, transformation="r",
                  permutations=PERMUTATIONS, two_tailed=True):
+        e = np.asarray(e).flatten()
+        b = np.asarray(b).flatten()
         if adjusted:
             y = assuncao_rate(e, b)
         else:
@@ -518,7 +531,7 @@ class Moran_Rate(Moran):
                        permutations=permutations, two_tailed=two_tailed)
 
 
-class Moran_Local:
+class Moran_Local(object):
     """Local Moran Statistics
 
 
@@ -610,6 +623,7 @@ class Moran_Local:
     """
     def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS,
                  geoda_quads=False):
+        y = np.asarray(y).flatten()
         self.y = y
         n = len(y)
         self.n = n
@@ -647,7 +661,7 @@ class Moran_Local:
             self.VI_sim = self.seI_sim * self.seI_sim
             self.z_sim = (self.Is - self.EI_sim) / self.seI_sim
             self.p_z_sim = 1 - stats.norm.cdf(np.abs(self.z_sim))
-
+        
     def calc(self, w, z):
         zl = slag(w, z)
         return self.n_1 * self.z * zl / self.den
@@ -695,8 +709,13 @@ class Moran_Local:
         self.q = self.quads[0] * pp + self.quads[1] * np + self.quads[2] * nn \
             + self.quads[3] * pn
 
+    @property
+    def _statistic(self):
+        """More consistent hidden attribute to access ESDA statistics"""
+        return self.Is
 
-class Moran_Local_BV:
+
+class Moran_Local_BV(object):
     """Bivariate Local Moran Statistics
 
 
@@ -795,6 +814,8 @@ class Moran_Local_BV:
     """
     def __init__(self, x, y, w, transformation="r", permutations=PERMUTATIONS,
                  geoda_quads=False):
+        x = np.asarray(x).flatten()
+        y = np.asarray(y).flatten()
         self.y = y
         n = len(y)
         self.n = n
@@ -884,6 +905,11 @@ class Moran_Local_BV:
         pn = zp * (1 - lp)
         self.q = self.quads[0] * pp + self.quads[1] * np + self.quads[2] * nn \
             + self.quads[3] * pn
+
+    @property
+    def _statistic(self):
+        """More consistent hidden attribute to access ESDA statistics"""
+        return self.Is
 
 
 class Moran_Local_Rate(Moran_Local):
@@ -989,6 +1015,8 @@ class Moran_Local_Rate(Moran_Local):
 
     def __init__(self, e, b, w, adjusted=True, transformation="r",
                  permutations=PERMUTATIONS, geoda_quads=False):
+        e = np.asarray(e).flatten()
+        b = np.asarray(e).flatten()
         if adjusted:
             y = assuncao_rate(e, b)
         else:
@@ -997,3 +1025,24 @@ class Moran_Local_Rate(Moran_Local):
                              transformation=transformation,
                              permutations=permutations,
                              geoda_quads=geoda_quads)
+
+def _local_series(series, w, statistic=Moran_Local, **kwargs):
+    out_obj = statistic(series, w, **kwargs)
+    if kwargs.pop('permutations', PERMUTATIONS) > 0:
+        pvals = out_obj.p_sim
+    else:
+        pvals = out_obj.p_z_sim
+    return out_obj
+
+def _local_df(df, column, w, selection=['Is', 'p_z_sim'], 
+                      inplace=True, **kwargs):
+    if not inplace:
+        new_df = df.copy()
+        return _local_df(new_df, column, w, selection=selection,
+                                 inplace=True, **kwargs)
+    series = df[column].values
+    local = _local_series(series, w, **kwargs)
+    colnames = ['_'.join((column, sel)) for sel in selection]
+    for colname, sel in zip(colnames, selection):
+        df[colname] = local.__getattribute__(sel)
+    return df
