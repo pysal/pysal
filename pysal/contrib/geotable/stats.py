@@ -1,5 +1,6 @@
 from ...esda import gamma as _gamma, moran as _moran, geary as _geary 
 from ...esda.smoothing import assuncao_rate as _assuncao_rate
+from ...common import requires as _requires
 
 import itertools as _it
 
@@ -9,6 +10,39 @@ import itertools as _it
 #def _statistic(df, *cols, stat=None, w=None, inplace=True, 
 def _univariate_handler(df, cols, stat=None, w=None, inplace=True,
                         pvalue = 'sim', outvals = None, swapname='', **kwargs):
+    """
+    Compute a univariate descriptive statistic `stat` over columns `cols` in
+    `df`.
+
+    Parameters
+    ----------
+    df          : pandas.DataFrame
+                  the dataframe containing columns to compute the descriptive
+                  statistics
+    cols        : string or list of strings
+                  one or more names of columns in `df` to use to compute
+                  exploratory descriptive statistics. 
+    stat        : callable
+                  a function that takes data as a first argument and any number
+                  of configuration keyword arguments and returns an object
+                  encapsulating the exploratory statistic results 
+    w           : pysal.weights.W
+                  the spatial weights object corresponding to the dataframe
+    inplace     : bool
+                  a flag denoting whether to add the statistic to the dataframe
+                  in memory, or to construct a copy of the dataframe and append
+                  the results to the copy
+    pvalue      : string
+                  the name of the pvalue on the results object wanted
+    outvals     : list of strings
+                  names of attributes of the dataframe to attempt to flatten
+                  into a column
+    swapname    : string
+                  suffix to replace generic identifier with. Each caller of this
+                  function should set this to a unique column suffix
+    **kwargs    : optional keyword arguments
+                  options that are passed directly to the statistic
+    """
     ### Preprocess
     if not inplace:
         new_df = df.copy()
@@ -62,11 +96,44 @@ def _univariate_handler(df, cols, stat=None, w=None, inplace=True,
                       for col in df.columns]
     return df
 
-def _bivariate_handler(df, x, y=None, w=None, inplace=True, pvalue = 'sim', 
-                       outvals = None, **kwargs):
+def _bivariate_handler(df, x, y=None, w=None, inplace=True, pvalue='sim', 
+                       outvals=None, **kwargs):
+    """
+    Compute a descriptive bivariate statistic over two sets of columns, `x` and
+    `y`, contained in `df`. 
+
+    Parameters
+    ----------
+    df          : pandas.DataFrame
+                  dataframe in which columns `x` and `y` are contained
+    x           : string or list of strings
+                  one or more column names to use as variates in the bivariate
+                  statistics
+    y           : string or list of strings
+                  one or more column names to use as variates in the bivariate
+                  statistics
+    w           : pysal.weights.W
+                  spatial weights object corresponding to the dataframe `df`
+    inplace     : bool
+                  a flag denoting whether to add the statistic to the dataframe
+                  in memory, or to construct a copy of the dataframe and append
+                  the results to the copy
+    pvalue      : string
+                  the name of the pvalue on the results object wanted
+    outvals     : list of strings
+                  names of attributes of the dataframe to attempt to flatten
+                  into a column
+    swapname    : string
+                  suffix to replace generic identifier with. Each caller of this
+                  function should set this to a unique column suffix
+    **kwargs    : optional keyword arguments
+                  options that are passed directly to the statistic
+    """
     real_swapname = kwargs.pop('swapname', '')
     if isinstance(y, str):
         y = [y]
+    if isinstance(x, str):
+        x = [x]
     if not inplace:
         new = df.copy()
         return _bivariate_handler(new, x, y=y, w=w, inplace=True,
@@ -85,81 +152,110 @@ def _bivariate_handler(df, x, y=None, w=None, inplace=True, pvalue = 'sim',
                       else col for col in df.columns]
     return df
 
-def Gamma(df, cols, w=None, inplace=True, pvalue = 'sim', outvals = None, **stat_kwds):
+# these are documented by the docstring templates at the end of the file
+
+def Gamma(df, cols, w=None, inplace=False, pvalue = 'sim', outvals = None, **stat_kws):
     return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
-            outvals=outvals, stat=_gamma.Gamma, swapname='gamma', **stat_kwds)
+            outvals=outvals, stat=_gamma.Gamma, swapname='gamma', **stat_kws)
 
 
-def Geary(df, cols, w=None, inplace=True, pvalue='sim', outvals=None, **stat_kwds):
+def Geary(df, cols, w=None, inplace=False, pvalue='sim', outvals=None, **stat_kws):
     return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
-                      outvals=outvals, stat=_geary.Geary, swapname='geary', **stat_kwds)
+                      outvals=outvals, stat=_geary.Geary, swapname='geary', **stat_kws)
 
 
-def Moran(df, cols, w=None, inplace=True, pvalue='sim', outvals=None, **stat_kwds):
+def Moran(df, cols, w=None, inplace=False, pvalue='sim', outvals=None, **stat_kws):
     return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
-            outvals=outvals, stat=_moran.Moran, swapname='moran', **stat_kwds)
+            outvals=outvals, stat=_moran.Moran, swapname='moran', **stat_kws)
 
 
-def Moran_Local(df, cols, w=None, inplace=True, 
-                pvalue = 'sim', outvals = None, **stat_kwds):
+def Moran_Local(df, cols, w=None, inplace=False, 
+                pvalue = 'sim', outvals = None, **stat_kws):
     return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
-            outvals=outvals, stat=_moran.Moran_Local, swapname='lmo', **stat_kwds)
+            outvals=outvals, stat=_moran.Moran_Local, swapname='lmo', **stat_kws)
 
 
-def Moran_BV(df, x, y=None, w=None, inplace=True, 
-             pvalue = 'sim', outvals = None, **stat_kwds):
+def Moran_BV(df, x, y=None, w=None, inplace=False, 
+             pvalue = 'sim', outvals = None, **stat_kws):
     # everything in x to everything in y, unless y is none. 
     # if y is none, everything in x to everything else in x
     return _bivariate_handler(df, x, y=y, w=w, inplace=inplace, 
                               pvalue = pvalue, outvals = outvals, 
-                              swapname='mobv', stat=_moran.Moran_BV,**stat_kwds)
+                              swapname='mobv', stat=_moran.Moran_BV,**stat_kws)
 
 
-def Moran_Local_BV(df, x, y=None, w=None, inplace=True, 
-                   pvalue = 'sim', outvals = None, **stat_kwds):
+def Moran_Local_BV(df, x, y=None, w=None, inplace=False, 
+                   pvalue = 'sim', outvals = None, **stat_kws):
     # everything in x to everything in y, unless y is none. 
     # if y is none, everything in x to everything else in x
     return _bivariate_handler(df, x, y=y, w=w, inplace=inplace, 
                               pvalue = pvalue, outvals = outvals, 
-                              swapname='lmobv', stat=_moran.Moran_Local_BV,**stat_kwds)
+                              swapname='lmobv', stat=_moran.Moran_Local_BV,**stat_kws)
 
 
-def Moran_Rate(df, events, populations, w=None, inplace=True, 
-               pvalue='sim', outvals=None, **stat_kwds):
-    if isinstance(populations, string):
+@_requires('pandas')
+def Moran_Rate(df, events, populations, w=None, inplace=False, 
+               pvalue='sim', outvals=None, **stat_kws):
+    import pandas as pd
+    if not inplace:
+        new = df.copy()
+        return Moran_Rate(new, events, populations, w=w, inplace=True,
+                          pvalue=pvalue, outvals=outvals, **stat_kws)
+    if isinstance(populations, str):
         populations = [populations] * len(events)
     if len(events) != len(populations):
         raise ValueError('There is not a one-to-one matching between events and '
                           'populations!\nEvents: {}\n\nPopulations:'
                           ' {}'.format(events, populations))
-    adjusted = kwargs.pop('adjusted', True)
+    adjusted = stat_kws.pop('adjusted', True)
+
     if isinstance(adjusted, bool):
         adjusted = [adjusted] * len(events)
-    rates = [assuncao_rate(df[e],df[pop]) if adj
+
+    rates = [_assuncao_rate(df[e], df[pop]) if adj
              else df[e].astype(float) / df[pop] 
              for e,pop,adj in zip(events, populations, adjusted)]
-    return _univariate_handler(df, rates, w=w, inplace=inplace, 
-                               pvalue = pvalue, outvals = outvals, 
-                               swapname='morate', stat=_moran.Moran_Rate,**stat_kwds)
+    names = ['-'.join((e,p)) for e,p in zip(events, populations)]
+    rate_df = pd.DataFrame(rates).T
+    rate_df.columns = names
+    outdf = _univariate_handler(rate_df, names, w=w, inplace=inplace, 
+                                pvalue = pvalue, outvals = outvals, 
+                                swapname='morate', stat=_moran.Moran,**stat_kws)
+    for col in outdf.columns:
+        df[col] = outdf[col]
+    return df
 
-
+@_requires('pandas')
 def Moran_Local_Rate(df, events, populations, w=None, 
-                     inplace=True, pvalue='sim', outvals=None, **stat_kwds):
-    if isinstance(populations, string):
+                     inplace=False, pvalue='sim', outvals=None, **stat_kws):
+    if not inplace:
+        new = df.copy()
+        return Moran_Local_Rate(new, events, populations, w=w, inplace=True,
+                                pvalue=pvalue, outvals=outvals, **stat_kws)
+    import pandas as pd
+    if isinstance(populations, str):
         populations = [populations] * len(events)
     if len(events) != len(populations):
         raise ValueError('There is not a one-to-one matching between events and '
                           'populations!\nEvents: {}\n\nPopulations:'
                           ' {}'.format(events, populations))
-    adjusted = kwargs.pop('adjusted', True)
+    adjusted = stat_kws.pop('adjusted', True)
+
     if isinstance(adjusted, bool):
         adjusted = [adjusted] * len(events)
-    rates = [_assuncao_rate(df[e],df[pop]) if adj
+
+    rates = [_assuncao_rate(df[e], df[pop]) if adj
              else df[e].astype(float) / df[pop] 
              for e,pop,adj in zip(events, populations, adjusted)]
-    return _univariate_handler(df, X, w=w, inplace=inplace, 
-                               pvalue = pvalue, outvals = outvals, 
-                               swapname='lmorate', stat=_moran.Moran_Local_Rate,**stat_kwds)
+    names = ['-'.join((e,p)) for e,p in zip(events, populations)]
+    rate_df = pd.DataFrame(rates).T
+    rate_df.columns = names
+    outdf = _univariate_handler(rate_df, names, w=w, inplace=inplace, 
+                                pvalue = pvalue, outvals = outvals, 
+                                swapname='morate', stat=_moran.Moran_Local,**stat_kws)
+    for col in outdf.columns:
+        df[col] = outdf[col]
+    return df
 
 def _swap_ending(s, ending, delim='_'):
     """
@@ -209,8 +305,9 @@ pvalue      :   string
                 a string denoting which pvalue should be returned. Refer to the
                 the {n} statistic's documentation for available p-values
 outvals     :   list of strings
-                list of arbitrary attributes to return as columns from the {n} statistic
-**stat_kwds :   keyword arguments
+                list of arbitrary attributes to return as columns from the 
+                {n} statistic
+**stat_kws  :   keyword arguments
                 options to pass to the underlying statistic. For this, see the
                 documentation for the {n} statistic.
 
@@ -251,8 +348,9 @@ pvalue      :   string
                 a string denoting which pvalue should be returned. Refer to the
                 the {n} statistic's documentation for available p-values
 outvals     :   list of strings
-                list of arbitrary attributes to return as columns from the {n} statistic
-**stat_kwds :   keyword arguments
+                list of arbitrary attributes to return as columns from the 
+                {n} statistic
+**stat_kws  :   keyword arguments
                 options to pass to the underlying statistic. For this, see the
                 documentation for the {n} statistic.
 
@@ -294,8 +392,9 @@ pvalue      :   string
                 a string denoting which pvalue should be returned. Refer to the
                 the {n} statistic's documentation for available p-values
 outvals     :   list of strings
-                list of arbitrary attributes to return as columns from the {n} statistic
-**stat_kwds :   keyword arguments
+                list of arbitrary attributes to return as columns from the 
+                {n} statistic
+**stat_kws  :   keyword arguments
                 options to pass to the underlying statistic. For this, see the
                 documentation for the {n} statistic.
 
