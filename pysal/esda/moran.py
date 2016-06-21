@@ -1016,7 +1016,7 @@ class Moran_Local_Rate(Moran_Local):
     def __init__(self, e, b, w, adjusted=True, transformation="r",
                  permutations=PERMUTATIONS, geoda_quads=False):
         e = np.asarray(e).flatten()
-        b = np.asarray(e).flatten()
+        b = np.asarray(b).flatten()
         if adjusted:
             y = assuncao_rate(e, b)
         else:
