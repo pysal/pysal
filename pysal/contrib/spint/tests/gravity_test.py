@@ -94,13 +94,9 @@ class TestGravity(unittest.TestCase):
         model = grav.BaseGravity(f, dij, 'exp')
         np.testing.assert_allclose(model.params, [0.01641585], atol = .0001)
         self.assertAlmostEqual(model.aic, 957622.28429746185, delta = .0001)
-        self.assertAlmostEqual(model.bic, 1087105.3274225981,  delta = .0001)
         np.testing.assert_allclose(model.cov_params, [[  1.92096665e-10]])
         self.assertAlmostEqual(model.deviance, 1087408.9707170483, delta = .0001)
-        self.assertEqual(model.df_model, 0)
-        self.assertEqual(model.df_resid, 71)
         self.assertAlmostEqual(model.llf, -478810.14214873099, delta = .0001)
-        self.assertEqual(model.n, 72)
         np.testing.assert_allclose(model.pvalues, [ 0.])
         np.testing.assert_allclose(model.std_err, [  1.38598941e-05])
         np.testing.assert_allclose(model.tvalues, [ 1184.41355888])
@@ -136,13 +132,9 @@ class TestGravity(unittest.TestCase):
         model = grav.BaseGravity(f, dij, 'pow')
         np.testing.assert_allclose(model.params, [ 1.27223738], atol = .0001)
         self.assertAlmostEqual(model.aic, 377298.04716333596, delta = .0001)
-        self.assertAlmostEqual(model.bic, 409507.69999620726,  delta = .0001)
         np.testing.assert_allclose(model.cov_params, [[  4.31955426e-07]])
         self.assertAlmostEqual(model.deviance, 409811.34329065739, delta = .0001)
-        self.assertEqual(model.df_model, 0)
-        self.assertEqual(model.df_resid, 71)
         self.assertAlmostEqual(model.llf, -188648.02358166798, delta = .0001)
-        self.assertEqual(model.n, 72)
         np.testing.assert_allclose(model.pvalues, [ 0.])
         np.testing.assert_allclose(model.std_err, [   0.00065723], atol = .000001)
         np.testing.assert_allclose(model.tvalues, [ 1935.74740017])
@@ -172,16 +164,12 @@ class TestGravity(unittest.TestCase):
         np.testing.assert_allclose(model.params, [ 0.44051324,  0.5144978,
             -0.00976746])
         self.assertAlmostEqual(model.aic, 33004.1458886, delta = .0001)
-        self.assertAlmostEqual(model.bic, 28756.701992,  delta = .0001)
         np.testing.assert_allclose(model.cov_params, [[  1.12101850e-05,
             -1.09133569e-05,  -1.44593711e-08],
             [ -1.09133569e-05,   1.10801323e-05,  -1.23580963e-08],
             [ -1.44593711e-08,  -1.23580963e-08,   2.11497156e-09]])
         self.assertAlmostEqual(model.deviance, 29051.791954, delta = .0001)
-        self.assertEqual(model.df_model, 2)
-        self.assertEqual(model.df_resid, 69)
         self.assertAlmostEqual(model.llf, -16499.0729443, delta = .0001)
-        self.assertEqual(model.n, 72)
         np.testing.assert_allclose(model.pvalues, [0., 0., 0.])
         np.testing.assert_allclose(model.std_err, [  3.34816144e-03,   3.32868327e-03,
             4.59888200e-05])
@@ -215,7 +203,6 @@ class TestGravity(unittest.TestCase):
             1.03487752, -0.51400641, -0.23320154, 0.09225167, -0.42761955,  
             0.03771866, -0.0922097 ,  0.89278717, -0.00727113], atol = .0001)
         self.assertAlmostEqual(model.aic, 15882.651018068489, delta = .0001)
-        self.assertAlmostEqual(model.bic, 15019.097608510332,  delta = .0001)
         np.testing.assert_allclose(model.cov_params, 
             [[ 2.58467540e-03,   2.25525153e-03,   2.25698879e-03,
                2.27598630e-03,   2.28753498e-03,   2.29518139e-03,
@@ -262,10 +249,7 @@ class TestGravity(unittest.TestCase):
               -1.05779552e-06,  -1.28324145e-06,  -1.40976210e-06,
                6.51339971e-08,   2.77308674e-09]])
         self.assertAlmostEqual(model.deviance, 15279.974241770311, delta = .0001)
-        self.assertEqual(model.df_model, 10)
-        self.assertEqual(model.df_resid, 61)
         self.assertAlmostEqual(model.llf, -7930.3255090342445, delta = .0001)
-        self.assertEqual(model.n, 72)
         np.testing.assert_allclose(model.pvalues, 
             [  5.43122294e-107,   1.60984652e-033,   4.30597019e-107,
             1.94310017e-025,   1.58325196e-006,   5.72169717e-002,
@@ -315,7 +299,6 @@ class TestGravity(unittest.TestCase):
                 -0.1879365 , -0.67530313, -0.19871953, -0.39900098,  0.89235874,
                 -0.00693755], atol = .0001)
         self.assertAlmostEqual(model.aic, 16275.899321893821, delta = .0001)
-        self.assertAlmostEqual(model.bic, 15412.345980367523,  delta = .0001)
         np.testing.assert_allclose(model.cov_params, 
             [[  3.01436996e-03,   2.75262767e-03,   2.69617868e-03,
             2.75263367e-03,   2.76096809e-03,   2.76082495e-03,
@@ -362,10 +345,7 @@ class TestGravity(unittest.TestCase):
             -1.22568680e-06,  -1.43182005e-06,  -1.55786850e-06,
             8.70031728e-08,   2.62593686e-09]])
         self.assertAlmostEqual(model.deviance, 15673.222613627502, delta = .0001)
-        self.assertEqual(model.df_model, 10)
-        self.assertEqual(model.df_resid, 61)
         self.assertAlmostEqual(model.llf, -8126.9496609469106, delta = .0001)
-        self.assertEqual(model.n, 72)
         np.testing.assert_allclose(model.pvalues, 
             [  2.23154436e-58,   2.84596439e-45,   1.60422925e-92,
             1.17853681e-44,   9.22717986e-07,   4.09150807e-04,
@@ -418,7 +398,6 @@ class TestGravity(unittest.TestCase):
             7.15340702e+00,   7.49439155e+00,   6.94741533e+00,
             7.39940090e+00,   7.19345711e+00,  -7.91533311e-03])
         self.assertAlmostEqual(model.aic, 9977.1591414502109, delta = .0001)
-        self.assertAlmostEqual(model.bic, 9129.5421221346169,  delta = .0001)
         np.testing.assert_allclose(model.cov_params, 
             [[  2.42563703e-04,   1.84733809e-04,   1.89259451e-04,
             1.91681710e-04,   1.89152965e-04,   1.92231256e-04,
@@ -529,10 +508,7 @@ class TestGravity(unittest.TestCase):
             -3.64321585e-07,  -4.03684411e-07,  -3.80706214e-07,
             -5.30363748e-07,  -5.59442560e-07,   2.56252122e-09]])
         self.assertAlmostEqual(model.deviance, 9360.482092561484, delta = .0001)
-        self.assertEqual(model.df_model, 17)
-        self.assertEqual(model.df_resid, 54)
         self.assertAlmostEqual(model.llf, -4970.5795707251054, delta = .0001)
-        self.assertEqual(model.n, 72)
         np.testing.assert_allclose(model.pvalues, 
             [  0.00000000e+000,   0.00000000e+000,   1.16346714e-018,
             1.88877600e-304,   0.00000000e+000,   1.10421926e-025,

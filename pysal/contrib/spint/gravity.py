@@ -22,7 +22,7 @@ from statsmodels.api import families
 from statsmodels.tools.tools import categorical
 from sparse_categorical import spcategorical
 from pysal.spreg import user_output as User
-from count_base import CountModel
+from count_model import CountModel
 
 class BaseGravity(CountModel):
     """
@@ -65,17 +65,29 @@ class BaseGravity(CountModel):
                       n x k; k attributes for each origin of n flows
     dv              : array
                       n x k; k attributes for each destination of n flows
-    params          : array
-                      estimated parameters
-    se              : array
-                      standard errors associated with estimated parameters
-    t_stats         : array
-                      t-statistics associated with estimated parameters for
-                      hypothesis testing
-    fitted          : array
-                      n x 1; flow values produced by calibrated model
-    fit_stats       : dict{"statistic name": statistic value}
-    
+    params        : array
+                    n*k, estimared beta coefficients
+    yhat          : array
+                    n*1, predicted value of y (i.e., fittedvalues)
+    cov_params    : array
+                    Variance covariance matrix (kxk) of betas
+    std_err       : array
+                    k*1, standard errors of betas
+    pvalues       : array
+                    k*1, two-tailed pvalues of parameters
+    tvalues       : array
+                    k*1, the tvalues of the standard errors
+    deviance      : float
+                    value of the deviance function evalued at params;
+                    see family.py for distribution-specific deviance
+    llf           : float
+                    value of the loglikelihood function evalued at params;
+                    see family.py for distribution-specific loglikelihoods
+    aic           : float 
+                    Akaike information criterion
+    results       : object
+                    Full results from estimated model. May contain addtional
+                    diagnostics
     Example
     -------
     TODO
@@ -143,11 +155,22 @@ class BaseGravity(CountModel):
         	raise NotImplementedError('Spatial Lag autoregressive model not yet implemented')
         
         CountModel.__init__(self, y, X, constant=constant)
-        if (framework.lower() == 'sm_glm'):
-            self.fit()
-        elif (framework.lower() == 'glm'):
-            self.fit(framework='glm')
+        if (framework.lower() == 'glm'):
+            results = self.fit(framework='glm')
+        else:
+            raise NotImplementedError('Only GLM is currently implemented')
 
+        self.params = results.params
+        self.yhat = results.yhat
+        self.cov_params = results.cov_params
+        self.std_err = results.std_err
+        self.pvalues = results.pvalues
+        self.tvalues = results.tvalues
+        self.deviance = results.deviance
+        self.llf = results.llf
+        self.aic = results.aic
+        self.full_results = results
+            
 class Gravity(BaseGravity):
     """
     Unconstrained (traditional gravity) gravity-type spatial interaction model
@@ -185,16 +208,30 @@ class Gravity(BaseGravity):
     dv              : array 
                       n x k; k attributes for each destination of n flows
     params          : array
-                      estimated parameters
-    se              : array
-                      standard errors associated with estimated parameters
-    t_stats         : array
-                      t-statistics associated with estimated parameters for
-                      hypothesis testing
-    fitted          : array
-                      n x 1; flow values produced by calibrated model
-    fit_stats       : dict{"statistic name": statistic value}
-    
+                      n*k, estimared beta coefficients
+    yhat            : array
+                      n*1, predicted value of y (i.e., fittedvalues)
+    cov_params      : array
+                      Variance covariance matrix (kxk) of betas
+    std_err         : array
+                      k*1, standard errors of betas
+    pvalues         : array
+                      k*1, two-tailed pvalues of parameters
+    tvalues         : array
+                      k*1, the tvalues of the standard errors
+    deviance        : float
+                      value of the deviance function evalued at params;
+                      see family.py for distribution-specific deviance
+    llf             : float
+                      value of the loglikelihood function evalued at params;
+                      see family.py for distribution-specific loglikelihoods
+    aic             : float 
+                      Akaike information criterion
+    resid           : array
+                      response residuals; defined as y-yhat
+    results         : object
+                      Full results from estimated model. May contain addtional
+                      diagnostics
     Example
     -------
     TODO
@@ -248,16 +285,28 @@ class Production(BaseGravity):
     dv              : array 
                       n x k; k attributes for each destination of n flows
     params          : array
-                      estimated parameters
-    se              : array
-                      standard errors associated with estimated parameters
-    t_stats         : array
-                      t-statistics associated with estimated parameters for
-                      hypothesis testing
-    fitted          : array
-                      n x 1; flow values produced by calibrated model
-    fit_stats       : dict{"statistic name": statistic value}
-
+                      n*k, estimared beta coefficients
+    yhat            : array
+                      n*1, predicted value of y (i.e., fittedvalues)
+    cov_params      : array
+                      Variance covariance matrix (kxk) of betas
+    std_err         : array
+                      k*1, standard errors of betas
+    pvalues         : array
+                      k*1, two-tailed pvalues of parameters
+    tvalues         : array
+                      k*1, the tvalues of the standard errors
+    deviance        : float
+                      value of the deviance function evalued at params;
+                      see family.py for distribution-specific deviance
+    llf             : float
+                      value of the loglikelihood function evalued at params;
+                      see family.py for distribution-specific loglikelihoods
+    aic             : float 
+                      Akaike information criterion
+    results         : object
+                      Full results from estimated model. May contain addtional
+                      diagnostics
     Example
     -------
     TODO
@@ -309,16 +358,28 @@ class Attraction(BaseGravity):
     ov              : array
                       n x k; k attributes for each origin of n flows
     params          : array
-                      estimated parameters
-    se              : array
-                      standard errors associated with estimated parameters
-    t_stats         : array
-                      t-statistics associated with estimated parameters for
-                      hypothesis testing
-    fitted          : array
-                      n x 1; flow values produced by calibrated model
-    fit_stats       : dict{"statistic name": statistic value}
-
+                      n*k, estimared beta coefficients
+    yhat            : array
+                      n*1, predicted value of y (i.e., fittedvalues)
+    cov_params      : array
+                      Variance covariance matrix (kxk) of betas
+    std_err         : array
+                      k*1, standard errors of betas
+    pvalues         : array
+                      k*1, two-tailed pvalues of parameters
+    tvalues         : array
+                      k*1, the tvalues of the standard errors
+    deviance        : float
+                      value of the deviance function evalued at params;
+                      see family.py for distribution-specific deviance
+    llf             : float
+                      value of the loglikelihood function evalued at params;
+                      see family.py for distribution-specific loglikelihoods
+    aic             : float 
+                      Akaike information criterion
+    results         : object
+                      Full results from estimated model. May contain addtional
+                      diagnostics
     Example
     -------
     TODO
@@ -367,16 +428,28 @@ class Doubly(BaseGravity):
     cf              : function
                       cost function; used to transform cost variable
     params          : array
-                      estimated parameters
-    se              : array
-                      standard errors associated with estimated parameters
-    t_stats         : array
-                      t-statistics associated with estimated parameters for
-                      hypothesis testing
-    fitted          : array
-                      n x 1; flow values produced by calibrated model
-    fit_stats       : dict{"statistic name": statistic value}
-
+                      n*k, estimared beta coefficients
+    yhat            : array
+                      n*1, predicted value of y (i.e., fittedvalues)
+    cov_params      : array
+                      Variance covariance matrix (kxk) of betas
+    std_err         : array
+                      k*1, standard errors of betas
+    pvalues         : array
+                      k*1, two-tailed pvalues of parameters
+    tvalues         : array
+                      k*1, the tvalues of the standard errors
+    deviance        : float
+                      value of the deviance function evalued at params;
+                      see family.py for distribution-specific deviance
+    llf             : float
+                      value of the loglikelihood function evalued at params;
+                      see family.py for distribution-specific loglikelihoods
+    aic             : float 
+                      Akaike information criterion
+    results         : object
+                      Full results from estimated model. May contain addtional
+                      diagnostics
     Example
     -------
     TODO
