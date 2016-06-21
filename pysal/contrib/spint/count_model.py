@@ -10,7 +10,7 @@ import sys
 #from pysal.contrib.glm.family import Poisson
 sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
 from glm import GLM
-from family import Poisson
+from family import Poisson, QuasiPoisson
 
 class CountModel(object):
     """
@@ -54,7 +54,7 @@ class CountModel(object):
         else:
         	raise TypeError('Dependent variable (y) must be composed of integers')
 
-    def fit(self, framework='GLM'):
+    def fit(self, framework='GLM', Quasi=False):
         """
         Method that fits a particular count model usign the appropriate
         estimation technique. Models include Poisson GLM, Negative Binomial GLM,
@@ -69,8 +69,11 @@ class CountModel(object):
                              "GLM" | "QUASI" | 
         """
         if (framework.lower() == 'glm'):
-            results = GLM(self.y, self.X, family = Poisson(), constant=self.constant).fit()
-            return CountModelResults(results, framework=framework)
+            if not Quasi:
+                results = GLM(self.y, self.X, family = Poisson(), constant=self.constant).fit()
+            else:
+                results = GLM(self.y, self.X, family = QuasiPoisson(), constant=self.constant).fit()
+            return CountModelResults(results)
    
         else:
             raise NotImplemented('Poisson GLM is the only count model currently implemented')
@@ -136,7 +139,7 @@ class CountModelResults(object):
         
 
     """
-    def __init__(self, results, framework='GLM'):
+    def __init__(self, results):
         self.y = results.y
         self.X = results.X
         self.family = results.family

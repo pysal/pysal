@@ -95,7 +95,7 @@ class BaseGravity(CountModel):
     """
     def __init__(self, flows, cost, cost_func='pow', o_vars=None, d_vars=None,
             origins=None, destinations=None, constant=False, framework='GLM',
-            SF=None, CD=None, Lag=None):
+            SF=None, CD=None, Lag=None, Quasi=False):
         n = User.check_arrays(flows, cost)
         User.check_y(flows, n)
         self.n = n
@@ -156,7 +156,10 @@ class BaseGravity(CountModel):
         
         CountModel.__init__(self, y, X, constant=constant)
         if (framework.lower() == 'glm'):
-            results = self.fit(framework='glm')
+            if not Quasi:
+                results = self.fit(framework='glm')
+            else:
+                results = self.fit(framework='glm', Quasi=True)
         else:
             raise NotImplementedError('Only GLM is currently implemented')
 
@@ -239,7 +242,7 @@ class Gravity(BaseGravity):
     """
     def __init__(self, flows, o_vars, d_vars, cost,
             cost_func, constant=False, framework='GLM', SF=None, CD=None,
-            Lag=None):
+            Lag=None, Quasi=False):
         flows = np.reshape(flows, (-1,1))
         o_vars = np.reshape(o_vars, (-1,1))
         d_vars = np.reshape(d_vars, (-1,1))
@@ -248,7 +251,7 @@ class Gravity(BaseGravity):
         
         BaseGravity.__init__(self, flows, cost,
                 cost_func, o_vars=o_vars, d_vars=d_vars, constant=constant,
-                framework=framework, SF=SF, CD=CD, Lag=Lag)
+                framework=framework, SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
         
 
 class Production(BaseGravity):
@@ -313,7 +316,7 @@ class Production(BaseGravity):
 
     """
     def __init__(self, flows, origins, d_vars, cost, cost_func, constant=False,
-            framework='GLM', SF=None, CD=None, Lag=None):
+            framework='GLM', SF=None, CD=None, Lag=None, Quasi=False):
         flows = np.reshape(flows, (-1,1))
         origins = np.reshape(origins, (-1,1))
         d_vars = np.reshape(d_vars, (-1,1))
@@ -322,7 +325,7 @@ class Production(BaseGravity):
        
         BaseGravity.__init__(self, flows, cost, cost_func, d_vars=d_vars,
                 origins=origins, constant=constant, framework=framework,
-                SF=SF, CD=CD, Lag=Lag)
+                SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
         
 class Attraction(BaseGravity):
     """
@@ -386,7 +389,8 @@ class Attraction(BaseGravity):
 
     """
     def __init__(self, flows, destinations, o_vars, cost, cost_func,
-            constant=False, framework='GLM', SF=None, CD=None, Lag=None):
+            constant=False, framework='GLM', SF=None, CD=None, Lag=None,
+            Quasi=False):
         flows = np.reshape(flows, (-1,1))
         o_vars = np.reshape(o_vars, (-1,1))
         destinations = np.reshape(destinations, (-1,1))
@@ -395,7 +399,7 @@ class Attraction(BaseGravity):
 
         BaseGravity.__init__(self, flows, cost, cost_func, o_vars=o_vars,
                  destinations=destinations, constant=constant,
-                 framework=framework, SF=SF, CD=CD, Lag=Lag)
+                 framework=framework, SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
 
 class Doubly(BaseGravity):
     """
@@ -456,7 +460,8 @@ class Doubly(BaseGravity):
 
     """
     def __init__(self, flows, origins, destinations, cost, cost_func,
-            constant=False, framework='GLM', SF=None, CD=None, Lag=None):
+            constant=False, framework='GLM', SF=None, CD=None, Lag=None,
+            Quasi=False):
 
         flows = np.reshape(flows, (-1,1))
         origins = np.reshape(origins, (-1,1))
@@ -466,5 +471,5 @@ class Doubly(BaseGravity):
 
         BaseGravity.__init__(self, flows, cost, cost_func, origins=origins, 
                 destinations=destinations, constant=constant,
-                framework=framework, SF=SF, CD=CD, Lag=Lag)
+                framework=framework, SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
 
