@@ -49,11 +49,10 @@ def spcategorical(n_cat_ids):
     if np.squeeze(n_cat_ids).ndim == 1:
         cat_set = np.unique(n_cat_ids)
         n = len(n_cat_ids)
-        row_map = dict((id, np.where(cat_set == id)[0]) for id in
-                n_cat_ids)#This line and one below are needed to allow for
-                          #string categories - making the code v. slow
-        index = np.array([row_map[row] for row in n_cat_ids]).flatten()
+        index = [np.where(cat_set == id)[0].tolist()[0] for id in n_cat_ids]
         indptr = np.arange(n+1, dtype=int) 
         return sp.csr_matrix((np.ones(n), index, indptr))
     else:
         raise IndexError("The index %s is not understood" % col)
+
+
