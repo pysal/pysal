@@ -1,8 +1,7 @@
-from ...esda import gamma as _gamma, moran as _moran, geary as _geary 
-from ...esda.smoothing import assuncao_rate as _assuncao_rate
-from ...common import requires as _requires
+#from ...common import requires as _requires
 
 import itertools as _it
+from pysal.weights import W
 
 # I would like to define it like this, so that you could make a call like:
 # Geary(df, 'HOVAL', 'INC', w=W), but this only works in Python3. So, I have to
@@ -46,17 +45,19 @@ def _univariate_handler(df, cols, stat=None, w=None, inplace=True,
     ### Preprocess
     if not inplace:
         new_df = df.copy()
-        return _univariate_handler(new_df, cols, stat=stat, w=w, pvalue='sim', 
+        return _univariate_handler(new_df, cols, stat=stat, w=w, pvalue=pvalue, 
                                    inplace=True, outvals=outvals,
                                    swapname=swapname, **kwargs)
     if w is None:
-        if ('W' in df._metadata):
-            w = df.W
-        else:
-            raise Exception('Weights not provided and no weights attached to frame! '
+        for name in df._metadata:
+            this_obj = df.__dict__.get(name)
+            if isinstance(this_obj, W):
+                w = this_obj
+    if w is None:
+        raise Exception('Weights not provided and no weights attached to frame! '
                             'Please provide a weight or attach a weight to the'
                             'dataframe ')
-    
+    print(w) 
     ### Prep indexes
     if outvals is None:
         outvals = []
@@ -72,8 +73,9 @@ def _univariate_handler(df, cols, stat=None, w=None, inplace=True,
     # arbitrarily assigned post-facto. One solution might be to post-process the
     # objects, determine which pvalue types are available, and then grab them
     # all if needed. 
-
-    outvals.append('p_'+pvalue.lower())
+    
+    if pvalue is not '':
+        outvals.append('p_'+pvalue.lower())
     if isinstance(cols, str):
         cols = [cols]
 
@@ -95,6 +97,7 @@ def _univariate_handler(df, cols, stat=None, w=None, inplace=True,
         df.columns = [_swap_ending(col, swapname) if col.endswith('_statistic') else col
                       for col in df.columns]
     return df
+
 
 def _bivariate_handler(df, x, y=None, w=None, inplace=True, pvalue='sim', 
                        outvals=None, **kwargs):
@@ -135,8 +138,8 @@ def _bivariate_handler(df, x, y=None, w=None, inplace=True, pvalue='sim',
     if isinstance(x, str):
         x = [x]
     if not inplace:
-        new = df.copy()
-        return _bivariate_handler(new, x, y=y, w=w, inplace=True,
+        new_df = df.copy()
+        return _bivariate_handler(new_df, x, y=y, w=w, inplace=True,
                                   swapname=real_swapname, 
                                   pvalue=pvalue, outvals=outvals, **kwargs)
     if y is None:
@@ -150,111 +153,6 @@ def _bivariate_handler(df, x, y=None, w=None, inplace=True, pvalue='sim',
         df.columns = [_swap_ending(col, real_swapname) 
                       if col.endswith('_statistic')
                       else col for col in df.columns]
-    return df
-
-# these are documented by the docstring templates at the end of the file
-
-def Gamma(df, cols, w=None, inplace=False, pvalue = 'sim', outvals = None, **stat_kws):
-    return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
-            outvals=outvals, stat=_gamma.Gamma, swapname='gamma', **stat_kws)
-
-
-def Geary(df, cols, w=None, inplace=False, pvalue='sim', outvals=None, **stat_kws):
-    return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
-                      outvals=outvals, stat=_geary.Geary, swapname='geary', **stat_kws)
-
-
-def Moran(df, cols, w=None, inplace=False, pvalue='sim', outvals=None, **stat_kws):
-    return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
-            outvals=outvals, stat=_moran.Moran, swapname='moran', **stat_kws)
-
-
-def Moran_Local(df, cols, w=None, inplace=False, 
-                pvalue = 'sim', outvals = None, **stat_kws):
-    return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
-            outvals=outvals, stat=_moran.Moran_Local, swapname='lmo', **stat_kws)
-
-
-def Moran_BV(df, x, y=None, w=None, inplace=False, 
-             pvalue = 'sim', outvals = None, **stat_kws):
-    # everything in x to everything in y, unless y is none. 
-    # if y is none, everything in x to everything else in x
-    return _bivariate_handler(df, x, y=y, w=w, inplace=inplace, 
-                              pvalue = pvalue, outvals = outvals, 
-                              swapname='mobv', stat=_moran.Moran_BV,**stat_kws)
-
-
-def Moran_Local_BV(df, x, y=None, w=None, inplace=False, 
-                   pvalue = 'sim', outvals = None, **stat_kws):
-    # everything in x to everything in y, unless y is none. 
-    # if y is none, everything in x to everything else in x
-    return _bivariate_handler(df, x, y=y, w=w, inplace=inplace, 
-                              pvalue = pvalue, outvals = outvals, 
-                              swapname='lmobv', stat=_moran.Moran_Local_BV,**stat_kws)
-
-
-@_requires('pandas')
-def Moran_Rate(df, events, populations, w=None, inplace=False, 
-               pvalue='sim', outvals=None, **stat_kws):
-    import pandas as pd
-    if not inplace:
-        new = df.copy()
-        return Moran_Rate(new, events, populations, w=w, inplace=True,
-                          pvalue=pvalue, outvals=outvals, **stat_kws)
-    if isinstance(populations, str):
-        populations = [populations] * len(events)
-    if len(events) != len(populations):
-        raise ValueError('There is not a one-to-one matching between events and '
-                          'populations!\nEvents: {}\n\nPopulations:'
-                          ' {}'.format(events, populations))
-    adjusted = stat_kws.pop('adjusted', True)
-
-    if isinstance(adjusted, bool):
-        adjusted = [adjusted] * len(events)
-
-    rates = [_assuncao_rate(df[e], df[pop]) if adj
-             else df[e].astype(float) / df[pop] 
-             for e,pop,adj in zip(events, populations, adjusted)]
-    names = ['-'.join((e,p)) for e,p in zip(events, populations)]
-    rate_df = pd.DataFrame(rates).T
-    rate_df.columns = names
-    outdf = _univariate_handler(rate_df, names, w=w, inplace=inplace, 
-                                pvalue = pvalue, outvals = outvals, 
-                                swapname='morate', stat=_moran.Moran,**stat_kws)
-    for col in outdf.columns:
-        df[col] = outdf[col]
-    return df
-
-@_requires('pandas')
-def Moran_Local_Rate(df, events, populations, w=None, 
-                     inplace=False, pvalue='sim', outvals=None, **stat_kws):
-    if not inplace:
-        new = df.copy()
-        return Moran_Local_Rate(new, events, populations, w=w, inplace=True,
-                                pvalue=pvalue, outvals=outvals, **stat_kws)
-    import pandas as pd
-    if isinstance(populations, str):
-        populations = [populations] * len(events)
-    if len(events) != len(populations):
-        raise ValueError('There is not a one-to-one matching between events and '
-                          'populations!\nEvents: {}\n\nPopulations:'
-                          ' {}'.format(events, populations))
-    adjusted = stat_kws.pop('adjusted', True)
-
-    if isinstance(adjusted, bool):
-        adjusted = [adjusted] * len(events)
-
-    rates = [_assuncao_rate(df[e], df[pop]) if adj
-             else df[e].astype(float) / df[pop] 
-             for e,pop,adj in zip(events, populations, adjusted)]
-    names = ['-'.join((e,p)) for e,p in zip(events, populations)]
-    rate_df = pd.DataFrame(rates).T
-    rate_df.columns = names
-    outdf = _univariate_handler(rate_df, names, w=w, inplace=inplace, 
-                                pvalue = pvalue, outvals = outvals, 
-                                swapname='morate', stat=_moran.Moran_Local,**stat_kws)
-    for col in outdf.columns:
-        df[col] = outdf[col]
     return df
 
 def _swap_ending(s, ending, delim='_'):
@@ -337,6 +235,7 @@ Y           :   list of strings
                 column name or list of column names to use as Y values to compute
                 the bivariate statistic. if no Y is provided, pariwise comparisons
                 among the X variates are used instead. 
+
 w           :   pysal weights object
                 a weights object aligned with the dataframe. If not provided, this
                 is searched for in the dataframe's metadata
@@ -407,11 +306,3 @@ See Also
 ---------
 For further documentation, refer to the {n} class in pysal.esda
 """
-Gamma.__doc__ = _univ_doc_template.format(n='Gamma', nl='gamma')
-Geary.__doc__ = _univ_doc_template.format(n='Geary', nl='geary')
-Moran.__doc__ = _univ_doc_template.format(n='Moran', nl='moran')
-Moran_Local.__doc__ = _bv_doc_template.format(n='Moran_Local', nl='lmo')
-Moran_BV.__doc__ = _bv_doc_template.format(n='Moran_BV', nl='bv')
-Moran_Local_BV.__doc__ = _bv_doc_template.format(n='Moran_Local_BV', nl='lmbv')
-Moran_Rate.__doc__ = _rate_doc_template.format(n='Moran_Rate', nl='morate')
-Moran_Local_Rate.__doc__ = _rate_doc_template.format(n='Moran_Local_Rate', nl='lmorate')

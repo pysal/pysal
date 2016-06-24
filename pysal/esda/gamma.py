@@ -7,6 +7,7 @@ __author__ = "Luc Anselin <luc.anselin@asu.edu>"
 
 import numpy as np
 from pysal.weights.spatial_lag import lag_spatial
+from ..contrib.geotable.stats import _univariate_handler
 
 __all__ = ['Gamma']
 
@@ -179,7 +180,7 @@ class Gamma(object):
 
     @property
     def  p_sim(self):
-        """new name in accordance to Moran module"""
+        """new name to fit with Moran module"""
         return self.p_sim_g
 
     def __calc(self, z, op):
@@ -221,4 +222,8 @@ class Gamma(object):
         if psim > 0.5:
             psim = (self.permutations - larger + 1.) / (self.permutations + 1.)
         return psim
-
+   
+    @classmethod
+    def by_col(cls, df, cols, w=None, inplace=False, pvalue = 'sim', outvals = None, **stat_kws):
+        return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
+                outvals=outvals, stat=cls, swapname=cls.__name__.lower(), **stat_kws)
