@@ -54,14 +54,13 @@ def _univariate_handler(df, cols, stat=None, w=None, inplace=True,
             if isinstance(this_obj, W):
                 w = this_obj
     if w is None:
-        raise Exception('Weights not provided and no weights attached to frame! '
-                            'Please provide a weight or attach a weight to the'
-                            'dataframe ')
-    print(w) 
+        raise Exception('Weights not provided and no weights attached to frame!'
+                            ' Please provide a weight or attach a weight to the'
+                            ' dataframe')
     ### Prep indexes
     if outvals is None:
         outvals = []
-    outvals.append('_statistic')
+    outvals.insert(0,'_statistic')
     if pvalue.lower() in ['all', 'both', '*']: 
         raise NotImplementedError("If you want more than one type of PValue,add"
                                   " the targeted pvalue type to outvals. For example:"

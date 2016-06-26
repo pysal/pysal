@@ -1,20 +1,22 @@
 import unittest
 import numpy as np
-import pysal
-from pysal.esda.gamma import Gamma
+from ...weights import lat2W
+from ..gamma import Gamma
+from ...common import pandas
 
-
+PANDAS_EXTINCT = pandas is None
 class Gamma_Tester(unittest.TestCase):
     """Unit test for Gamma Index"""
     def setUp(self):
-        self.w = pysal.lat2W(4, 4)
+        self.w = lat2W(4, 4)
         self.y = np.ones(16)
         self.y[0:8] = 0
+        np.random.seed(12345)
+        self.g = Gamma(self.y, self.w)
 
     def test_Gamma(self):
         """Test method"""
-        np.random.seed(12345)
-        g = Gamma(self.y, self.w)
+        g = self.g
         self.assertAlmostEquals(g.g, 20.0)
         self.assertAlmostEquals(g.g_z, 3.1879280354548638)
         self.assertAlmostEquals(g.p_sim_g, 0.0030000000000000001)
@@ -55,6 +57,23 @@ class Gamma_Tester(unittest.TestCase):
         self.assertAlmostEquals(g4.g, 20.0)
         self.assertAlmostEquals(g4.g_z, 3.1879280354548638)
         self.assertAlmostEquals(g4.p_sim_g, 0.0030000000000000001)
+
+    @unittest.skipIf(PANDAS_EXTINCT, 'missing pandas')
+    def test_by_col(self):
+        import pandas as pd
+        df = pd.DataFrame(self.y, columns=['y'])
+        r1 = Gamma.by_col(df, ['y'], w=self.w)
+        self.assertIn('y_gamma', r1.columns)
+        self.assertIn('y_p_sim', r1.columns)
+        this_gamma = np.unique(r1.y_gamma.values)
+        this_pval = np.unique(r1.y_p_sim.values)
+        np.testing.assert_allclose(this_gamma, self.g.g)
+        np.testing.assert_allclose(this_pval, self.g.p_sim)
+        Gamma.by_col(df, ['y'], inplace=True, operation='s', w=self.w)
+        this_gamma = np.unique(df.y_gamma.values)
+        this_pval = np.unique(df.y_p_sim.values)
+        np.testing.assert_allclose(this_gamma, 8.0)
+        np.testing.assert_allclose(this_pval, .001)
 
 
 suite = unittest.TestSuite()

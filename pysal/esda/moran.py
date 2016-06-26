@@ -1123,7 +1123,7 @@ class Moran_Local_BV(object):
         return self.Is
 
     @classmethod
-    def by_col(cls, x, y=None, w=None, inplace=False, pvalue='sim', outvals=None, **stat_kws):
+    def by_col(cls, df, x, y=None, w=None, inplace=False, pvalue='sim', outvals=None, **stat_kws):
         """ 
         Function to compute a Moran_Local_BV statistic on a dataframe
 

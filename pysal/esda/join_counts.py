@@ -203,4 +203,4 @@ class Join_Counts(object):
             pvalue = ''
         return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue, 
                                    outvals=outvals, stat=cls,
-                                   swapname=cls.__name__.lower(), **stat_kws)
+                                   swapname='bw', **stat_kws)
