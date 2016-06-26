@@ -18,7 +18,7 @@ before_install:
   - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION
   - source activate test-env
   - chmod +x ./.travis_testing.sh
-  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; 2to3 -nw pysal/ > /dev/null; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then 2to3 -nw pysal/ > /dev/null; fi
 
 install:
   - conda install --yes numpy scipy nose pip
