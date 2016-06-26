@@ -96,7 +96,7 @@ class TestSRate(unittest.TestCase):
         s_ebr10 = np.array([4.01485749e-05, 3.62437513e-05,
                             4.93034844e-05, 5.09387329e-05, 3.72735210e-05,
                             3.69333797e-05, 5.40245456e-05, 2.99806055e-05,
-                            3.73034109e-05, 3.47270722e-05])
+                            3.73034109e-05, 3.47270722e-05]).reshape(-1,1)
         np.testing.assert_array_almost_equal(s_ebr10, s_eb.r[:10])
 
     def test_Spatial_Rate(self):

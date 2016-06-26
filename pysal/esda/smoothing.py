@@ -774,8 +774,8 @@ class Spatial_Empirical_Bayes(Spatial_Smoother):
         b = np.asarray(b).reshape(-1,1)
         r_mean = Spatial_Rate(e, b, w).r
         rate = e * 1.0 / b
-        r_var_left = np.ones(len(e)) * 1.
-        ngh_num = np.ones(len(e))
+        r_var_left = np.ones_like(e) * 1.
+        ngh_num = np.ones_like(e)
         bi = slag(w, b) + b
         for i, idv in enumerate(w.id_order):
             ngh = w[idv].keys() + [idv]
@@ -1213,8 +1213,8 @@ class Spatial_Median_Rate(Spatial_Smoother):
     def __init__(self, e, b, w, aw=None, iteration=1):
         if not w.id_order_set:
             raise ValueError("w id_order must be set to align with the order of e and b")
-        e = np.asarray(e).reshape(-1,1)
-        b = np.asarray(b).reshape(-1,1)
+        e = np.asarray(e).flatten()
+        b = np.asarray(b).flatten() 
         self.r = e * 1.0 / b
         self.aw, self.w = aw, w
         while iteration:
@@ -1233,7 +1233,7 @@ class Spatial_Median_Rate(Spatial_Smoother):
                 id_d = [i] + list(w.neighbor_offsets[id])
                 aw_d, r_d = aw[id_d], r[id_d]
                 new_r.append(weighted_median(r_d, aw_d))
-        self.r = np.array(new_r)
+        self.r = np.asarray(new_r).reshape(r.shape)
 
 
 class Spatial_Filtering(Smoother):
@@ -1391,7 +1391,7 @@ class Spatial_Filtering(Smoother):
         return outdf
 
 class Headbanging_Triples(object):
-    """Generate a pseudo spatial weights instance that contains headbaning triples
+    """Generate a pseudo spatial weights instance that contains headbanging triples
 
     Parameters
     ----------
@@ -1664,8 +1664,6 @@ class Headbanging_Median_Rate(object):
     array([ 0.00091659,  0.        ,  0.00156838,  0.0018315 ,  0.00498891])
     """
     def __init__(self, e, b, t, aw=None, iteration=1):
-        e = np.asarray(e).flatten()
-        b = np.asarray(b).flatten()
         self.r = e * 1.0 / b
         self.tr, self.aw = t.triples, aw
         if hasattr(t, 'extra'):
@@ -1681,16 +1679,19 @@ class Headbanging_Median_Rate(object):
         if hasattr(self, 'extra') and id in self.extra:
             extra = self.extra
             trp_r = r[list(triples[0])]
+            # observed rate 
+            # plus difference in rate scaled by ratio of extrapolated distance
+            # & observed distance. 
             trp_r[-1] = trp_r[0] + (trp_r[0] - trp_r[-1]) * (
                 extra[id][-1] * 1.0 / extra[id][1])
             trp_r = sorted(trp_r)
             if not weighted:
-                return r, trp_r[0], trp_r[-1]
+                return r[id], trp_r[0], trp_r[-1]
             else:
-                trp_aw = self.aw[trp]
+                trp_aw = self.aw[triples[0]]
                 extra_w = trp_aw[0] + (trp_aw[0] - trp_aw[-
                                                           1]) * (extra[id][-1] * 1.0 / extra[id][1])
-                return r, trp_r[0], trp_r[-1], self.aw[id], trp_aw[0] + extra_w
+                return r[id], trp_r[0], trp_r[-1], self.aw[id], trp_aw[0] + extra_w
         if not weighted:
             lowest, highest = [], []
             for trp in triples:
@@ -1716,6 +1717,31 @@ class Headbanging_Median_Rate(object):
                 np.array(highest), np.array(highest_aw))
             triple_members = flatten(triples, unique=False)
             return r[id], wm_lowest, wm_highest, self.aw[id] * len(triples), self.aw[triple_members].sum()
+    
+    def __get_median_from_screens(self, screens):
+        if isinstance(screens, float):
+            return screens
+        elif len(screens) == 3:
+            return np.median(np.array(screens))
+        elif len(screens) == 5:
+            rk, wm_lowest, wm_highest, w1, w2 = screens
+            if rk >= wm_lowest and rk <= wm_highest:
+                return rk
+            elif rk < wm_lowest and w1 < w2:
+                return wm_lowest
+            elif rk > wm_highest and w1 < w2:
+                return wm_highest
+            else:
+                return rk
+
+    def __search_headbanging_median(self):
+        r, tr = self.r, self.tr
+        new_r = []
+        for k in tr.keys():
+            screens = self.__get_screens(
+                k, tr[k], weighted=(self.aw is not None))
+            new_r.append(self.__get_median_from_screens(screens))
+        self.r = np.array(new_r)
     
     @_requires('pandas')
     @classmethod
@@ -1763,28 +1789,3 @@ class Headbanging_Median_Rate(object):
             name = '_'.join(('-'.join((ename, bname)), cls.__name__.lower()))
             df[name] = r
         return df
-
-    def __get_median_from_screens(self, screens):
-        if isinstance(screens, float):
-            return screens
-        elif len(screens) == 3:
-            return np.median(np.array(screens))
-        elif len(screens) == 5:
-            rk, wm_lowest, wm_highest, w1, w2 = screens
-            if rk >= wm_lowest and rk <= wm_highest:
-                return rk
-            elif rk < wm_lowest and w1 < w2:
-                return wm_lowest
-            elif rk > wm_highest and w1 < w2:
-                return wm_highest
-            else:
-                return rk
-
-    def __search_headbanging_median(self):
-        r, tr = self.r, self.tr
-        new_r = []
-        for k in tr.keys():
-            screens = self.__get_screens(
-                k, tr[k], weighted=(self.aw is not None))
-            new_r.append(self.__get_median_from_screens(screens))
-        self.r = np.array(new_r)
