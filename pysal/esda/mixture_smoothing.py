@@ -116,8 +116,8 @@ class NP_Mixture_Smoother(object):
     """
 
     def __init__(self, e, b, k=50, acc=1.E-7, numiter=5000, limit=0.01):
-        self.e = np.asarray(e).reshape(-1,1)
-        self.b = np.asarray(b).reshape(-1,1)
+        self.e = np.asarray(e).flatten()
+        self.b = np.asarray(b).flatten()
         self.n = len(e)
         self.w = 1. / self.n
         self.k = k
