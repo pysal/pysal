@@ -24,10 +24,10 @@ class NP_Mixture_Smoother(object):
 
     Parameters
     ----------
-    e           : array
-                  (n, 1), event variable measured across n spatial units
-    b           : array
-                  (n, 1), population at risk variable measured across n spatial units
+    e           : array-like
+                  event variable measured across n spatial units
+    b           : array-like
+                  population at risk variable measured across n spatial units
     k           : integer
                   a seed number to specify the number of subpopulations
     acc         : float

@@ -45,9 +45,10 @@ def _univariate_handler(df, cols, stat=None, w=None, inplace=True,
     ### Preprocess
     if not inplace:
         new_df = df.copy()
-        return _univariate_handler(new_df, cols, stat=stat, w=w, pvalue=pvalue, 
+        _univariate_handler(new_df, cols, stat=stat, w=w, pvalue=pvalue, 
                                    inplace=True, outvals=outvals,
                                    swapname=swapname, **kwargs)
+        return new_df
     if w is None:
         for name in df._metadata:
             this_obj = df.__dict__.get(name)
@@ -95,8 +96,6 @@ def _univariate_handler(df, cols, stat=None, w=None, inplace=True,
     if swapname is not '':
         df.columns = [_swap_ending(col, swapname) if col.endswith('_statistic') else col
                       for col in df.columns]
-    return df
-
 
 def _bivariate_handler(df, x, y=None, w=None, inplace=True, pvalue='sim', 
                        outvals=None, **kwargs):
@@ -138,21 +137,21 @@ def _bivariate_handler(df, x, y=None, w=None, inplace=True, pvalue='sim',
         x = [x]
     if not inplace:
         new_df = df.copy()
-        return _bivariate_handler(new_df, x, y=y, w=w, inplace=True,
-                                  swapname=real_swapname, 
-                                  pvalue=pvalue, outvals=outvals, **kwargs)
+        _bivariate_handler(new_df, x, y=y, w=w, inplace=True,
+                           swapname=real_swapname, 
+                           pvalue=pvalue, outvals=outvals, **kwargs)
+        return new_df
     if y is None:
         y = x
     for xi,yi in _it.product(x,y):
         if xi == yi:
             continue
-        df = _univariate_handler(df, cols=xi, w=w, y=df[yi], inplace=inplace, 
-                                 pvalue=pvalue, outvals=outvals, swapname='', **kwargs)
+        _univariate_handler(df, cols=xi, w=w, y=df[yi], inplace=True, 
+                            pvalue=pvalue, outvals=outvals, swapname='', **kwargs)
     if real_swapname is not '':
         df.columns = [_swap_ending(col, real_swapname) 
                       if col.endswith('_statistic')
                       else col for col in df.columns]
-    return df
 
 def _swap_ending(s, ending, delim='_'):
     """

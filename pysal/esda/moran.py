@@ -6,7 +6,7 @@ __author__ = "Sergio J. Rey <srey@asu.edu>, \
         Dani Arribas-Bel <daniel.arribas.bel@gmail.com>"
 from ..weights.spatial_lag import lag_spatial as slag
 from .smoothing import assuncao_rate
-from ..contrib.geotable.stats import _univariate_handler, _bivariate_handler
+from .tabular import _univariate_handler, _bivariate_handler
 import scipy.stats as stats
 import numpy as np
 
@@ -392,7 +392,7 @@ class Moran_BV(object):
         return self.I
     
     @classmethod
-    def by_col(cls, x, y=None, w=None, inplace=False, pvalue='sim', outvals=None, **stat_kws):
+    def by_col(cls, df, x, y=None, w=None, inplace=False, pvalue='sim', outvals=None, **stat_kws):
         """ 
         Function to compute a Moran_BV statistic on a dataframe
 
@@ -669,9 +669,10 @@ class Moran_Rate(Moran):
         """
         if not inplace:
             new = df.copy()
-            return cls.by_col(new, events, populations, w=w, inplace=True,
+            cls.by_col(new, events, populations, w=w, inplace=True,
                               pvalue=pvalue, outvals=outvals, swapname=swapname,
                               **stat_kws)
+            return new
         if isinstance(populations, str):
             populations = [populations] * len(events)
         if len(events) != len(populations):
@@ -691,7 +692,7 @@ class Moran_Rate(Moran):
         names = ['-'.join((e,p)) for e,p in zip(events, populations)]
         out_df = df.copy()
         rate_df = df.from_items(zip(names, rates)) #trick to avoid importing pandas
-        stat_df = _univariate_handler(rate_df, names, w=w, inplace=True, 
+        stat_df = _univariate_handler(rate_df, names, w=w, inplace=False, 
                                       pvalue = pvalue, outvals = outvals, 
                                       swapname=swapname, 
                                       stat=Moran, #how would this get done w/super?
@@ -1331,9 +1332,10 @@ class Moran_Local_Rate(Moran_Local):
         """
         if not inplace:
             new = df.copy()
-            return cls.by_col(new, events, populations, w=w, inplace=True,
+            cls.by_col(new, events, populations, w=w, inplace=True,
                               pvalue=pvalue, outvals=outvals, swapname=swapname,
                               **stat_kws)
+            return new
         if isinstance(populations, str):
             populations = [populations] * len(events)
         if len(events) != len(populations):
@@ -1352,12 +1354,11 @@ class Moran_Local_Rate(Moran_Local):
                  for e,pop,adj in zip(events, populations, adjusted)]
         names = ['-'.join((e,p)) for e,p in zip(events, populations)]
         out_df = df.copy()
-        rate_df = df.from_items(zip(names, rates)) #trick to avoid importing pandas
-        stat_df = _univariate_handler(rate_df, names, w=w, inplace=True, 
+        rate_df = out_df.from_items(zip(names, rates)) #trick to avoid importing pandas
+        _univariate_handler(rate_df, names, w=w, inplace=True, 
                                       pvalue = pvalue, outvals = outvals, 
                                       swapname=swapname,
                                       stat=Moran_Local, #how would this get done w/super?
                                       **stat_kws)
-        for col in stat_df.columns:
-            out_df[col] = stat_df[col]
-        return out_df
+        for col in rate_df.columns:
+            df[col] = rate_df[col]

@@ -6,7 +6,7 @@ __author__ = "Sergio J. Rey <srey@asu.edu> "
 import numpy as np
 import scipy.stats as stats
 from .. import weights
-from ..contrib.geotable.stats import _univariate_handler, _univ_doc_template
+from .tabular import _univariate_handler
 
 __all__ = ['Geary']
 

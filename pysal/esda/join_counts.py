@@ -5,7 +5,7 @@ Spatial autocorrelation for binary attributes
 __author__ = "Sergio J. Rey <srey@asu.edu> , Luc Anselin <luc.anselin@asu.edu>"
 
 from ..weights.spatial_lag import lag_spatial
-from ..contrib.geotable.stats import _univariate_handler
+from .tabular import _univariate_handler
 import numpy as np
 
 __all__ = ['Join_Counts']

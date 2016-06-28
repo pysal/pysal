@@ -1,3 +1,4 @@
+from __future__ import division
 """
 Apply smoothing to rate computation
 
@@ -620,6 +621,8 @@ class Excess_Risk(Smoother):
 
     """
     def __init__(self, e, b):
+        e = np.asarray(e).reshape(-1,1)
+        b = np.asarray(b).reshape(-1,1)
         r_mean = e.sum() * 1.0 / b.sum()
         self.r = e * 1.0 / (b * r_mean)
 
@@ -666,6 +669,8 @@ class Empirical_Bayes(Smoother):
 
     """
     def __init__(self, e, b):
+        e = np.asarray(e).reshape(-1,1)
+        b = np.asarray(b).reshape(-1,1)
         e_sum, b_sum = e.sum() * 1.0, b.sum() * 1.0
         r_mean = e_sum / b_sum
         rate = e * 1.0 / b
@@ -985,7 +990,6 @@ class Age_Adjusted_Smoother(Spatial_Smoother):
         for i in range(h):
             e_n.append(slag(w, e[i::h]).tolist())
             b_n.append(slag(w, b[i::h]).tolist())
-        print(e_n, b_n)
         e_n = np.array(e_n).reshape((1, t), order='F')[0]
         b_n = np.array(b_n).reshape((1, t), order='F')[0]
         e_n = e_n.reshape(s.shape)
@@ -1035,7 +1039,6 @@ class Age_Adjusted_Smoother(Spatial_Smoother):
         rdf = []
         max_len = 0
         for ei, bi, wi, si in zip(e, b, w, s):
-            print(ei, bi, wi, si)
             ename = ei
             bname = bi
             h = len(ei) // wi.n
@@ -1110,7 +1113,6 @@ class Disk_Smoother(Spatial_Smoother):
             weight_sum = []
             for i in w.id_order:
                 weight_sum.append(sum(w.weights[i]))
-            print(r.shape)
             self.r = slag(w, r) / np.array(weight_sum).reshape(-1,1)
 
 

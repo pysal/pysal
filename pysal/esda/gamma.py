@@ -6,8 +6,8 @@ Gamma index for spatial autocorrelation
 __author__ = "Luc Anselin <luc.anselin@asu.edu>"
 
 import numpy as np
-from pysal.weights.spatial_lag import lag_spatial
-from ..contrib.geotable.stats import _univariate_handler
+from ..weights.spatial_lag import lag_spatial
+from .tabular import _univariate_handler 
 
 __all__ = ['Gamma']
 
