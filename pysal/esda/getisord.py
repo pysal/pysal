@@ -6,7 +6,7 @@ __all__ = ['G', 'G_Local']
 
 from ..common import np, stats, math
 from ..weights.spatial_lag import lag_spatial as slag
-from ..contrib.geotable.stats import _univariate_handler
+from .tabular import _univariate_handler
 
 PERMUTATIONS = 999
 
