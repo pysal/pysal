@@ -1335,8 +1335,8 @@ class Spatial_Filtering(Smoother):
         data_tree = KDTree(data)
         x_range = bbox[1][0] - bbox[0][0]
         y_range = bbox[1][1] - bbox[0][1]
-        x, y = np.mgrid[bbox[0][0]:bbox[1][0]:x_range / x_grid,
-                        bbox[0][1]:bbox[1][1]:y_range / y_grid]
+        x, y = np.mgrid[bbox[0][0]:bbox[1][0]:float(x_range) / x_grid,
+                        bbox[0][1]:bbox[1][1]:float(y_range) / y_grid]
         self.grid = zip(x.ravel(), y.ravel())
         self.r = []
         if r is None and pop is None:

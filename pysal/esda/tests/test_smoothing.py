@@ -3,6 +3,7 @@ import pysal
 from pysal.esda import smoothing as sm
 from pysal import knnW_from_array
 import numpy as np
+from pysal.common import RTOL, ATOL
 
 
 class TestFlatten(unittest.TestCase):
@@ -78,13 +79,13 @@ class TestSRate(unittest.TestCase):
 
     def test_Excess_Risk(self):
         out_er = sm.Excess_Risk(self.e, self.b).r
-        out_er = [round(i, 5) for i in out_er[:5]]
-        self.assertEquals(out_er, self.er)
+        np.testing.assert_allclose(out_er[:5].flatten(), self.er, 
+                                   rtol=RTOL, atol=ATOL)
 
     def test_Empirical_Bayes(self):
         out_eb = sm.Empirical_Bayes(self.e, self.b).r
-        out_eb = [round(i, 7) for i in out_eb[:5]]
-        self.assertEquals(out_eb, self.eb)
+        np.testing.assert_allclose(out_eb[:5].flatten(), self.eb, 
+                                   rtol=RTOL, atol=ATOL)
 
     def test_Spatial_Empirical_Bayes(self):
         stl = pysal.open(pysal.examples.get_path('stl_hom.csv'), 'r')
@@ -97,24 +98,23 @@ class TestSRate(unittest.TestCase):
                             4.93034844e-05, 5.09387329e-05, 3.72735210e-05,
                             3.69333797e-05, 5.40245456e-05, 2.99806055e-05,
                             3.73034109e-05, 3.47270722e-05]).reshape(-1,1)
-        np.testing.assert_array_almost_equal(s_ebr10, s_eb.r[:10])
+        np.testing.assert_allclose(s_ebr10, s_eb.r[:10])
 
     def test_Spatial_Rate(self):
         out_sr = sm.Spatial_Rate(self.e, self.b, self.w).r
-        out_sr = [round(i, 7) for i in out_sr[:5]]
-        self.assertEquals(out_sr, self.sr)
+        np.testing.assert_allclose(out_sr[:5].flatten(), self.sr, 
+                                   rtol=RTOL, atol=ATOL)
 
     def test_Spatial_Median_Rate(self):
         out_smr = sm.Spatial_Median_Rate(self.e, self.b, self.w).r
         out_smr_w = sm.Spatial_Median_Rate(self.e, self.b, self.w, aw=self.b).r
-        out_smr2 = sm.Spatial_Median_Rate(
-            self.e, self.b, self.w, iteration=2).r
-        out_smr = [round(i, 7) for i in out_smr[:5]]
-        out_smr_w = [round(i, 7) for i in out_smr_w[:5]]
-        out_smr2 = [round(i, 7) for i in out_smr2[:5]]
-        self.assertEquals(out_smr, self.smr)
-        self.assertEquals(out_smr_w, self.smr_w)
-        self.assertEquals(out_smr2, self.smr2)
+        out_smr2 = sm.Spatial_Median_Rate(self.e, self.b, self.w, iteration=2).r
+        np.testing.assert_allclose(out_smr[:5].flatten(), self.smr, 
+                                   atol=ATOL, rtol=RTOL)
+        np.testing.assert_allclose(out_smr_w[:5].flatten(), self.smr_w,
+                                   atol=ATOL, rtol=RTOL)
+        np.testing.assert_allclose(out_smr2[:5].flatten(), self.smr2,
+                                   atol=ATOL, rtol=RTOL)
 
 
 class TestHB(unittest.TestCase):
@@ -178,28 +178,27 @@ class TestKernel_AgeAdj_SM(unittest.TestCase):
         kr = sm.Kernel_Smoother(self.e, self.b, self.kw)
         exp = [0.10543301, 0.0858573, 0.08256196, 0.09884584,
                0.04756872, 0.04845298]
-        self.assertEquals(list(kr.r.round(8)), exp)
+        np.testing.assert_allclose(kr.r.flatten(), exp)
 
     def test_Age_Adjusted_Smoother(self):
         ar = sm.Age_Adjusted_Smoother(self.e1, self.b1, self.kw, self.s)
         exp = [0.10519625, 0.08494318, 0.06440072, 0.06898604,
                0.06952076, 0.05020968]
-        self.assertEquals(list(ar.r.round(8)), exp)
+        np.testing.assert_allclose(ar.r, exp)
 
     def test_Disk_Smoother(self):
         self.kw.transform = 'b'
         exp = [0.12222222000000001, 0.10833333, 0.08055556,
                0.08944444, 0.09944444, 0.09351852]
         disk = sm.Disk_Smoother(self.e, self.b, self.kw)
-        self.assertEqual(list(disk.r.round(8)), exp)
+        np.testing.assert_allclose(disk.r.flatten(), exp)
 
     def test_Spatial_Filtering(self):
         points = np.array(self.points)
         bbox = [[0, 0], [45, 45]]
         sf = sm.Spatial_Filtering(bbox, points, self.e, self.b, 2, 2, r=30)
-        exp = [0.11111111, 0.11111111, 0.20000000000000001, 0.085106379999999995,
-               0.076923080000000005, 0.05789474, 0.052173909999999997, 0.066666669999999997, 0.04117647]
-        self.assertEqual(list(sf.r.round(8)), exp)
+        exp = np.array([ 0.111111,  0.111111,  0.085106,  0.076923])
+        np.testing.assert_allclose(sf.r, exp, rtol=RTOL, atol=ATOL)
 
 
 class TestUtils(unittest.TestCase):
