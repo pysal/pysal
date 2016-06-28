@@ -1,6 +1,6 @@
 from ....pdio import read_files as rf
 from .._accessors import __all__ as to_test
-from unittest as ut
+import unittest as ut
 
 class Test_Accessors(ut.TestCase):
     def test_area(self):
