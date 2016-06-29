@@ -673,8 +673,12 @@ class Moran_Rate(Moran):
                               pvalue=pvalue, outvals=outvals, swapname=swapname,
                               **stat_kws)
             return new
-        if isinstance(populations, str):
-            populations = [populations] * len(events)
+        if isinstance(events, str):
+            events = [events]
+        if isinstance(populations, str): 
+            populations = [populations]
+        if len(populations) < len(events):
+            populations = populations * len(events)
         if len(events) != len(populations):
             raise ValueError('There is not a one-to-one matching between events and '
                               'populations!\nEvents: {}\n\nPopulations:'
@@ -691,15 +695,14 @@ class Moran_Rate(Moran):
                  for e,pop,adj in zip(events, populations, adjusted)]
         names = ['-'.join((e,p)) for e,p in zip(events, populations)]
         out_df = df.copy()
-        rate_df = df.from_items(zip(names, rates)) #trick to avoid importing pandas
+        rate_df = out_df.from_items(zip(names, rates)) #trick to avoid importing pandas
         stat_df = _univariate_handler(rate_df, names, w=w, inplace=False, 
                                       pvalue = pvalue, outvals = outvals, 
                                       swapname=swapname, 
                                       stat=Moran, #how would this get done w/super?
                                       **stat_kws)
         for col in stat_df.columns:
-            out_df[col] = stat_df[col]
-        return out_df
+            df[col] = stat_df[col]
 
 class Moran_Local(object):
     """Local Moran Statistics
@@ -1336,8 +1339,12 @@ class Moran_Local_Rate(Moran_Local):
                               pvalue=pvalue, outvals=outvals, swapname=swapname,
                               **stat_kws)
             return new
-        if isinstance(populations, str):
-            populations = [populations] * len(events)
+        if isinstance(events, str):
+            events = [events]
+        if isinstance(populations, str): 
+            populations = [populations]
+        if len(populations) < len(events):
+            populations = populations * len(events)
         if len(events) != len(populations):
             raise ValueError('There is not a one-to-one matching between events and '
                               'populations!\nEvents: {}\n\nPopulations:'
