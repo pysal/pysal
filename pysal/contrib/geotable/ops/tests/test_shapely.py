@@ -1,6 +1,6 @@
 import unittest as ut
 from .. import _shapely as sht
-from pysal.cg import Point, Chain, Polygon
+from pysal.cg import Point, Chain, Polygon, comparators as comp
 from pysal.contrib import shapely_ext as she
 from pysal.contrib.pdio import read_files as rf
 from pysal.examples import get_path
@@ -29,7 +29,11 @@ class Test_Shapely(ut.TestCase):
             sht_vals = shtfunc(df, inplace=False, **kwargs)
             sht_list = sht_vals['shape_{}'.format(func_name)].tolist()
             for tabular, shapely in zip(sht_list, she_vals):
-                self.assertEquals(tabular, shapely)
+                if (comp.is_shape(tabular) and
+                    comp.is_shape(shapely)):
+                    comp.equal(tabular, shapely)
+                else:
+                    self.assertEquals(tabular, shapely)
         except NotImplementedError as e:
             warn('The shapely/pysal bridge is not implemented: {}'.format(e))
             return True

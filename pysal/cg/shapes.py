@@ -38,8 +38,15 @@ def asShape(obj):
         raise NotImplementedError(
             "%s is not supported at this time." % geo_type)
 
+class Geometry(object):
+    """
+    A base class to help implement is_geometry and make geometric types
+    extendable.
+    """
+    def __init__(self):
+        pass
 
-class Point(object):
+class Point(Geometry):
     """
     Geometric class for point objects.
 
@@ -346,7 +353,7 @@ class Point(object):
         return "POINT ({} {})".format(*self.__loc)
 
 
-class LineSegment(object):
+class LineSegment(Geometry):
     """
     Geometric representation of line segment objects.
 
@@ -777,7 +784,7 @@ class LineSegment(object):
         return self._line
 
 
-class VerticalLine:
+class VerticalLine(Geometry):
     """
     Geometric representation of verticle line objects.
 
@@ -854,7 +861,7 @@ class VerticalLine:
         return float('nan')
 
 
-class Line:
+class Line(Geometry):
     """
     Geometric representation of line objects.
 
@@ -983,7 +990,7 @@ class Ray:
         self.p = second_p
 
 
-class Chain(object):
+class Chain(Geometry):
     """
     Geometric representation of a chain, also known as a polyline.
 
@@ -1020,7 +1027,7 @@ class Chain(object):
             self._vertices = [vertices]
         self._reset_props()
     
-    def __eq__(self, other):
+    def _eq__(self, other):
         is_chain = isinstance(other, type(self))
         try:
             is_nearly = np.array_equal(np.asarray(self.vertices),
@@ -1190,7 +1197,7 @@ class Chain(object):
         return [[LineSegment(a, b) for (a, b) in zip(part[:-1], part[1:])] for part in self._vertices]
 
 
-class Ring(object):
+class Ring(Geometry):
     """
     Geometric representation of a Linear Ring
 
@@ -1395,7 +1402,7 @@ class Ring(object):
 
 
 
-class Polygon(object):
+class Polygon(Geometry):
     """
     Geometric representation of polygon objects.
 
@@ -1508,7 +1515,7 @@ class Polygon(object):
     def __len__(self):
         return self.len
 
-    def __eq__(self, other):
+    def _eq__(self, other):
         is_polygon = isinstance(other, type(self))
         same_vertlist = np.array_equal(self.vertices, other.vertices)
         return is_polygon and same_vertlist
@@ -1771,7 +1778,7 @@ class Polygon(object):
 
 
 
-class Rectangle:
+class Rectangle(Geometry):
     """
     Geometric representation of rectangle objects.
 
