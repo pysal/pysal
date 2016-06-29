@@ -13,7 +13,7 @@ def knnW(data, k=2, p=2, ids=None, radius=None, distance_metric='euclidean'):
     """
     This is deprecated. Use the pysal.weights.KNN class instead. 
     """
-    Warn('This function is deprecated. Please use pysal.weights.KNN')
+    #Warn('This function is deprecated. Please use pysal.weights.KNN', UserWarning)
     return KNN(data, k=k, p=p, ids=ids, radius=radius,
             distance_metric=distance_metric)
 
