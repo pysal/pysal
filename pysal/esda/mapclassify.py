@@ -766,7 +766,7 @@ class Map_Classifier(object):
         x = np.asarray(x).flatten()
         uptos = [np.where(value < self.bins)[0] for value in x]
         bins = [x.min() if x.size > 0 else len(self.bins)-1 for x in uptos] #bail upwards
-        bins = np.asrrray(bins)
+        bins = np.asarray(bins)
         if len(bins) == 1:
             return bins[0]
         else:

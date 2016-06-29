@@ -1,5 +1,6 @@
 from ...cg import asShape as pShape
 from ...common import requires as _requires
+from warnings import warn
 
 @_requires('geopandas')
 def to_df(df, geom_col='geometry', **kw):
