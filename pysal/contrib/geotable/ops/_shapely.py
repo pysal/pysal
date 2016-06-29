@@ -7,11 +7,12 @@ __all__ = ["to_wkb", "to_wkt", "area", "distance", "length", "boundary", "bounds
 
 def _atomic_op(df, geom_col='geometry', inplace=False, _func=None, **kwargs):
     outval = df[geom_col].apply(lambda x: _func(x, **kwargs))
-    if inplace:
-        outcol = 'shape_{}'.format(_func.__name__)
-        df[outcol] = outval
-        return None
-    return outval
+    outcol = 'shape_{}'.format(_func.__name__)
+    if not inplace:
+        new = df.copy()
+        new[outcol] = outval
+        return new
+    df[outcol] = outval 
 
 _doc_template =\
 """ 
@@ -83,10 +84,13 @@ def cascaded_union(df, geom_col='geometry', **groupby_kws):
     pysal.shapely_ext.cascaded_union
     pandas.DataFrame.groupby
     """
-    by = groupby_kws.get('by', None)
-    if by is not None:
+    by = groupby_kws.pop('by', None)
+    level = groupby_kws.pop('level', None)
+    if by is not None or level is not None:
         df = df.groupby(by=by, level=level, **groupby_kws)
-    out = df.geometry.apply(_s.cascaded_union)
+        out = df[geom_col].apply(_s.cascaded_union)
+    else:
+        out = _s.cascaded_union(df[geom_col].tolist())
     return out
 
 @_requires('shapely')
@@ -114,10 +118,13 @@ def unary_union(df, geom_col='geometry', **groupby_kws):
     pysal.shapely_ext.cascaded_union
     pandas.DataFrame.groupby
     """
-    by = groupby_kws.get('by', None)
-    if by is not None:
+    by = groupby_kws.pop('by', None)
+    level = groupby_kws.pop('level', None)
+    if by is not None or level is not None:
         df = df.groupby(**groupby_kws)
-    out = df.geometry.apply(_s.cascaded_union)
+        out = df[geom_col].apply(_cascaded_union)
+    else:
+        out = _cascaded_union(df[geom_col].tolist())
     return out
 
 @_requires('shapely')
@@ -157,8 +164,11 @@ def cascaded_intersection(df, geom_col='geometry', **groupby_kws):
     pysal.shapely_ext.cascaded_union
     pandas.DataFrame.groupby
     """
-    by = groupby_kws.get('by', None)
-    if by is not None:
+    by = groupby_kws.pop('by', None)
+    level = groupby_kws.pop('level', None)
+    if by is not None or level is not None:
         df = df.groupby(**groupby_kws)
-    out = df.geometry.apply(_cascaded_intersection)
+        out = df[geom_col].apply(_cascaded_intersection)
+    else:
+        out = _cascaded_intersection(df[geom_col].tolist())
     return out

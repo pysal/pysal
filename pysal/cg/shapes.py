@@ -10,6 +10,7 @@ import doctest
 import math
 from warnings import warn
 from sphere import arcdist
+import numpy as np
 
 __all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon',
            'Rectangle', 'asShape']
@@ -1018,6 +1019,15 @@ class Chain(object):
         else:
             self._vertices = [vertices]
         self._reset_props()
+    
+    def __eq__(self, other):
+        is_chain = isinstance(other, type(self))
+        try:
+            is_nearly = np.array_equal(np.asarray(self.vertices),
+                                       np.asarray(other.vertices))
+        except AttributeError:
+            is_nearly = False
+        return is_chain and is_nearly
 
     @classmethod
     def __from_geo_interface__(cls, geo):
@@ -1497,6 +1507,11 @@ class Polygon(object):
 
     def __len__(self):
         return self.len
+
+    def __eq__(self, other):
+        is_polygon = isinstance(other, type(self))
+        same_vertlist = np.array_equal(self.vertices, other.vertices)
+        return is_polygon and same_vertlist
 
     @property
     def len(self):
