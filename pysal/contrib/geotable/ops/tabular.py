@@ -85,8 +85,8 @@ def spatial_overlay(df1, df2, how, left_geom_col='geometry',
 
 @_requires('shapely')
 def dissolve(df, by='', **groupby_kws):
-    from ._shapely import cascading_union as union
-    return union(df.groupby(by=by, **grouby_kws))
+    from ._shapely import cascaded_union as union
+    return union(df, by=by, **groupby_kws)
 
 def clip(return_exterior=False):
     # return modified entries of the df that are within an envelope
@@ -103,12 +103,12 @@ def union(df, **kws):
     if 'by' in kws:
         warn('when a "by" argument is provided, you should be using "dissolve"') 
         return dissolve(df, **kws)
-    from ._shapely import cascading_union as union
+    from ._shapely import cascaded_union as union
     return union(df)
 
 @_requires('shapely')
 def intersection(df, **kws):
-    from ._shapely import cascading_intersection as intersection
+    from ._shapely import cascaded_intersection as intersection
     return intersection(df, **kws) 
 
 def symmetric_difference():
