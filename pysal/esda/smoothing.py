@@ -284,7 +284,7 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
     res = []
     for i in range(len(adjusted_r)):
         if adjusted_r[i] == 0:
-            upper = 0.5 * chi2(1 - 0.5 * alpha)
+            upper = 0.5 * chi2.ppf(1 - 0.5 * alpha)
             lower = 0.0
         else:
             lower = gamma.ppf(0.5 * alpha, g_a[i], scale=g_b[i])
