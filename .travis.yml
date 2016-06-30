@@ -50,8 +50,8 @@ notifications:
             - marynia.kolak@gmail.com
             - jgaboardi@gmail.com
             - phil.stphns@gmail.com
-        on_success: never
-        on_failure: never
+        on_success: always
+        on_failure: always
 
 after_success:
   - coveralls
