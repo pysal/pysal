@@ -6,9 +6,10 @@ __author__ = 'toshan'
 
 import unittest
 import numpy as np
-import pandas as pd
-import gravity as grav
-import mle_stats as stats
+from pysal.check import safe_pandas
+pd = safe_pandas(silent=True)
+from pysal.spint import gravity as grav
+from pysal.spint import _gravity_stats as stats
 
 
 class SingleParameter(unittest.TestCase):
