@@ -15,6 +15,7 @@ Wilson, A. G. (1967). A statistical theory of spatial distribution models.
 
 __author__ = "Taylor Oshan tayoshan@gmail.com"
 
+from types import FunctionType
 import numpy as np
 from scipy import sparse as sp
 import statsmodels.api as sm
@@ -104,12 +105,16 @@ class BaseGravity(CountModel):
         self.ov = o_vars
         self.dv = d_vars
 
-        if cost_func.lower() == 'pow':
-            self.cf = np.log
-        elif cost_func.lower() == 'exp':
-            self.cf = lambda x: x*1.0
+        if type(cost_func) == str:
+            if cost_func.lower() == 'pow':
+                self.cf = np.log
+            elif cost_func.lower() == 'exp':
+                self.cf = lambda x: x*1.0
+        elif type(cost_func) == FunctionType:
+            self.cf = cost_func
         else:
-            raise ValueError('cost_func must either be "exp" or "power"')
+            raise ValueError('cost_func must be "exp", "power" or a valid\
+            function that has a scalar as a input and output')
 
         y = np.reshape(self.f, (-1,1))
         if isinstance(self,  Gravity):
@@ -173,7 +178,14 @@ class BaseGravity(CountModel):
         self.llf = results.llf
         self.aic = results.aic
         self.full_results = results
-            
+
+    def reshape(self, array):
+        if type(array) == np.ndarray:
+            return array.reshape((-1,1))
+        else:
+            raise TypeError('input must be an numpy array that can be coerced"
+                    " into the dimensions n x 1')
+    
 class Gravity(BaseGravity):
     """
     Unconstrained (traditional gravity) gravity-type spatial interaction model
@@ -243,16 +255,43 @@ class Gravity(BaseGravity):
     def __init__(self, flows, o_vars, d_vars, cost,
             cost_func, constant=False, framework='GLM', SF=None, CD=None,
             Lag=None, Quasi=False):
-        flows = np.reshape(flows, (-1,1))
-        o_vars = np.reshape(o_vars, (-1,1))
-        d_vars = np.reshape(d_vars, (-1,1))
-        cost = np.reshape(cost, (-1,1))
+        self.f = np.reshape(flows, (-1,1))
+        self.ov = np.reshape(o_vars, (-1,1))
+        self.dv = np.reshape(d_vars, (-1,1))
+        self.c = np.reshape(cost, (-1,1))
         User.check_arrays(flows, o_vars, d_vars, cost)
         
-        BaseGravity.__init__(self, flows, cost,
-                cost_func, o_vars=o_vars, d_vars=d_vars, constant=constant,
+        BaseGravity.__init__(self, self.f, self.c,
+                cost_func, o_vars=self.ov, d_vars=self.dv, constant=constant,
                 framework=framework, SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
         
+    def local(self, loc_index, locs):
+        """
+        Calibrate local models for subsets of data from a single location to all
+        other locations
+        """
+        results = {}
+        covs = self.ov.shape[1] + self.dv.shape[1] + 1
+        results['aic'] = []
+        results['deviance'] = []
+        for cov in range(covs):
+            results['param' + str(cov)] = []
+            results['pvalue' + str(cov)] = []
+            results['tvalue' + str(cov)] = []
+        for loc in np.unique(locs):
+            subset = loc_index == loc
+            f = self.reshape(self.f[subset])
+            o_vars = self.reshape(self.ov[subset])
+            d_vars = self.reshape(self.dv[subset])
+            dij = self.reshape(self.c[subset])
+            model = Gravity(f, o_vars, d_vars, dij, self.cf)
+            results['aic'].append(model.aic)
+            results['deviance'].append(model.deviance)
+            for cov in range(covs):
+                results['param' + str(cov)].append(model.params[cov])
+                results['pvalue' + str(cov)].append(model.pvalues[cov])
+                results['tvalue' + str(cov)].append(model.tvalues[cov])
+        return results
 
 class Production(BaseGravity):
     """
@@ -317,16 +356,47 @@ class Production(BaseGravity):
     """
     def __init__(self, flows, origins, d_vars, cost, cost_func, constant=False,
             framework='GLM', SF=None, CD=None, Lag=None, Quasi=False):
-        flows = np.reshape(flows, (-1,1))
-        origins = np.reshape(origins, (-1,1))
-        d_vars = np.reshape(d_vars, (-1,1))
-        cost = np.reshape(cost, (-1,1))
-        User.check_arrays(flows, origins, d_vars, cost)
+        self.f = self.reshape(flows)
+        self.o = self.reshape(origins)
+        self.dv = self.reshape(d_vars)
+        self.c = self.reshape(cost)
+        User.check_arr
+        ays(flows, origins, d_vars, cost)
        
-        BaseGravity.__init__(self, flows, cost, cost_func, d_vars=d_vars,
-                origins=origins, constant=constant, framework=framework,
+        BaseGravity.__init__(self, self.f, self.f, cost_func, d_vars=self.dv,
+                origins=self.o, constant=constant, framework=framework,
                 SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
-        
+    
+    def local(self, locs=None):
+        """
+        Calibrate local models for subsets of data from a single location to all
+        other locations
+        """
+        results = {}
+        covs = self.dv.shape[1] + 1
+        results['aic'] = []
+        results['deviance'] = []
+        for cov in range(covs):
+            results['param' + str(cov)] = []
+            results['pvalue' + str(cov)] = []
+            results['tvalue' + str(cov)] = []
+        if not locs:
+        	locs = np.unique(self.o)
+        for loc in np.unique(locs):
+            subset = self.o == loc
+            f = self.reshape(self.f[subset])
+            o = self.reshape(self.o[subset])
+            d_vars = self.reshape(self.dv[subset])
+            dij = self.reshape(self.c[subset])
+            model = Production(f, o, d_vars, dij, self.cf)
+            results['aic'].append(model.aic)
+            results['deviance'].append(model.deviance)
+            for cov in range(covs):
+                results['param' + str(cov)].append(model.params[cov])
+                results['pvalue' + str(cov)].append(model.pvalues[cov])
+                results['tvalue' + str(cov)].append(model.tvalues[cov])
+        return results
+
 class Attraction(BaseGravity):
     """
     Attraction-constrained (destination-constrained) gravity-type spatial interaction model
@@ -391,15 +461,45 @@ class Attraction(BaseGravity):
     def __init__(self, flows, destinations, o_vars, cost, cost_func,
             constant=False, framework='GLM', SF=None, CD=None, Lag=None,
             Quasi=False):
-        flows = np.reshape(flows, (-1,1))
-        o_vars = np.reshape(o_vars, (-1,1))
-        destinations = np.reshape(destinations, (-1,1))
-        cost = np.reshape(cost, (-1,1))
+        self.f = np.reshape(flows, (-1,1))
+        self.ov = np.reshape(o_vars, (-1,1))
+        self.d = np.reshape(destinations, (-1,1))
+        self.c = np.reshape(cost, (-1,1))
         User.check_arrays(flows, destinations, o_vars, cost)
 
-        BaseGravity.__init__(self, flows, cost, cost_func, o_vars=o_vars,
-                 destinations=destinations, constant=constant,
+        BaseGravity.__init__(self, self.f, self.c, cost_func, o_vars=self.ov,
+                 destinations=self.d, constant=constant,
                  framework=framework, SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
+
+    def local(self, locs=None):
+        """
+        Calibrate local models for subsets of data from a single location to all
+        other locations
+        """
+        results = {}
+        covs = self.ov.shape[1] + 1
+        results['aic'] = []
+        results['deviance'] = []
+        for cov in range(covs):
+            results['param' + str(cov)] = []
+            results['pvalue' + str(cov)] = []
+            results['tvalue' + str(cov)] = []
+        if not locs:
+        	locs = np.unique(self.d)
+        for loc in np.unique(locs):
+            subset = self.d == loc
+            f = self.reshape(self.f[subset])
+            d = self.reshape(self.d[subset])
+            o_vars = self.reshape(self.ov[subset])
+            dij = self.reshape(self.c[subset])
+            model = Attraction(f, d, o_vars, dij, self.cf)
+            results['aic'].append(model.aic)
+            results['deviance'].append(model.deviance)
+            for cov in range(covs):
+                results['param' + str(cov)].append(model.params[cov])
+                results['pvalue' + str(cov)].append(model.pvalues[cov])
+                results['tvalue' + str(cov)].append(model.tvalues[cov])
+        return results
 
 class Doubly(BaseGravity):
     """
@@ -463,13 +563,20 @@ class Doubly(BaseGravity):
             constant=False, framework='GLM', SF=None, CD=None, Lag=None,
             Quasi=False):
 
-        flows = np.reshape(flows, (-1,1))
-        origins = np.reshape(origins, (-1,1))
-        destinations = np.reshape(destinations, (-1,1))
-        cost = np.reshape(cost, (-1,1))
+        self.f = np.reshape(flows, (-1,1))
+        self.o = np.reshape(origins, (-1,1))
+        self.d = np.reshape(destinations, (-1,1))
+        self.c = np.reshape(cost, (-1,1))
         User.check_arrays(flows, origins, destinations, cost)
 
-        BaseGravity.__init__(self, flows, cost, cost_func, origins=origins, 
-                destinations=destinations, constant=constant,
+        BaseGravity.__init__(self, self.f, self.c, cost_func, origins=self.o, 
+                destinations=self.d, constant=constant,
                 framework=framework, SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
 
+    def local(self, locs=None, origins=True):
+        """
+        Calibrate local models for subsets of data from a single location to all
+        other locations
+        """
+        raise NotImplementedError("Local models not possible for"
+        " doubly-constrained model due to insufficient degrees of freedom.")
