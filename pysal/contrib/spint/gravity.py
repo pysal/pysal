@@ -42,14 +42,14 @@ class BaseGravity(CountModel):
     cost            : array 
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
-    cost_func       : string
-                      functional form of the cost function; default is 'pow'
-                      'exp' | 'pow'
+    cost_func       : string or function that has scalar input and output
+                      functional form of the cost function;
+                      'exp' | 'pow' | custom function
     o_vars          : array (optional)
-                      n x k; k attributes for each origin of  n flows; default
+                      n x p; p attributes for each origin of  n flows; default
                       is None
     d_vars          : array (optional)
-                      n x k; k attributes for each destination of n flows;
+                      n x p; p attributes for each destination of n flows;
                       default is None
 
     Attributes
@@ -64,32 +64,32 @@ class BaseGravity(CountModel):
     cf              : function
                       cost function; used to transform cost variable
     ov              : array 
-                      n x k; k attributes for each origin of n flows
+                      n x p(o); p attributes for each origin of n flows
     dv              : array
-                      n x k; k attributes for each destination of n flows
-    params        : array
-                    n*k, estimared beta coefficients
-    yhat          : array
-                    n*1, predicted value of y (i.e., fittedvalues)
-    cov_params    : array
-                    Variance covariance matrix (kxk) of betas
-    std_err       : array
-                    k*1, standard errors of betas
-    pvalues       : array
-                    k*1, two-tailed pvalues of parameters
-    tvalues       : array
-                    k*1, the tvalues of the standard errors
-    deviance      : float
-                    value of the deviance function evalued at params;
-                    see family.py for distribution-specific deviance
-    llf           : float
-                    value of the loglikelihood function evalued at params;
-                    see family.py for distribution-specific loglikelihoods
-    aic           : float 
-                    Akaike information criterion
-    results       : object
-                    Full results from estimated model. May contain addtional
-                    diagnostics
+                      n x p(d); p attributes for each destination of n flows
+    params          : array
+                      n x k, k estimated beta coefficients; k = p(o) + p(d) + 1
+    yhat            : array
+                      n x 1, predicted value of y (i.e., fittedvalues)
+    cov_params      : array
+                      Variance covariance matrix (k x k) of betas
+    std_err         : array
+                      k x 1, standard errors of betas
+    pvalues         : array
+                      k x 1, two-tailed pvalues of parameters
+    tvalues         : array
+                      k x 1, the tvalues of the standard errors
+    deviance        : float
+                      value of the deviance function evalued at params;
+                      see family.py for distribution-specific deviance
+    llf             : float
+                      value of the loglikelihood function evalued at params;
+                      see family.py for distribution-specific loglikelihoods
+    aic             : float 
+                      Akaike information criterion
+    results         : object
+                      Full results from estimated model. May contain addtional
+                      diagnostics
     Example
     -------
     TODO
@@ -176,7 +176,7 @@ class BaseGravity(CountModel):
         self.deviance = results.deviance
         self.llf = results.llf
         self.aic = results.aic
-        self.full_results = results
+        self.results = results
 
     def reshape(self, array):
         if type(array) == np.ndarray:
@@ -198,14 +198,14 @@ class Gravity(BaseGravity):
     cost            : array 
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
-    cost_func       : string
-                      functional form of the cost function; default is 'pow'
-                      'exp' | 'pow'
+    cost_func       : string or function that has scalar input and output
+                      functional form of the cost function;
+                      'exp' | 'pow' | custom function
     o_vars          : array (optional)
-                      n x k; k attributes for each origin of  n flows; default
+                      n x p; p attributes for each origin of  n flows; default
                       is None
     d_vars          : array (optional)
-                      n x k; k attributes for each destination of n flows;
+                      n x p; p attributes for each destination of n flows;
                       default is None
 
     Attributes
@@ -220,21 +220,21 @@ class Gravity(BaseGravity):
     cf              : function
                       cost function; used to transform cost variable
     ov              : array 
-                      n x k; k attributes for each origin of n flows
+                      n x p(o); p attributes for each origin of n flows
     dv              : array 
-                      n x k; k attributes for each destination of n flows
+                      n x p(d); p attributes for each destination of n flows
     params          : array
-                      n*k, estimared beta coefficients
+                      n x k, k estimated beta coefficients; k = p(o) + p(d) + 1
     yhat            : array
-                      n*1, predicted value of y (i.e., fittedvalues)
+                      n x 1, predicted value of y (i.e., fittedvalues)
     cov_params      : array
                       Variance covariance matrix (kxk) of betas
     std_err         : array
-                      k*1, standard errors of betas
+                      k x 1, standard errors of betas
     pvalues         : array
-                      k*1, two-tailed pvalues of parameters
+                      k x 1, two-tailed pvalues of parameters
     tvalues         : array
-                      k*1, the tvalues of the standard errors
+                      k x 1, the tvalues of the standard errors
     deviance        : float
                       value of the deviance function evalued at params;
                       see family.py for distribution-specific deviance
@@ -303,15 +303,17 @@ class Production(BaseGravity):
     flows           : array of integers
                       n x 1; observed flows between O origins and D destinations
     origins         : array of strings
-                      n x 1; unique identifiers of origins of n flows
+                      n x 1; unique identifiers of origins of n flows; when
+                      there are many origins it will be faster to use integers
+                      rather than strings for id labels.
     cost            : array 
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
-    cost_func       : string
-                      functional form of the cost function; default is 'pow'
-                      'exp' | 'pow'
+    cost_func       : string or function that has scalar input and output
+                      functional form of the cost function;
+                      'exp' | 'pow' | custom function
     d_vars          : array (optional)
-                      n x k; k attributes for each destination of n flows;
+                      n x p; p attributes for each destination of n flows;
                       default is None
 
     Attributes
@@ -325,20 +327,22 @@ class Production(BaseGravity):
                       destination associated with a flow; typically distance or time
     cf              : function
                       cost function; used to transform cost variable
+    o               : array
+                      n x 1; index of origin id's
     dv              : array 
-                      n x k; k attributes for each destination of n flows
+                      n x p; p attributes for each destination of n flows
     params          : array
-                      n*k, estimared beta coefficients
+                      n x k, k estimated beta coefficients; k = # of origins + p + 1
     yhat            : array
-                      n*1, predicted value of y (i.e., fittedvalues)
+                      n x 1, predicted value of y (i.e., fittedvalues)
     cov_params      : array
                       Variance covariance matrix (kxk) of betas
     std_err         : array
-                      k*1, standard errors of betas
+                      k x 1, standard errors of betas
     pvalues         : array
-                      k*1, two-tailed pvalues of parameters
+                      k x 1, two-tailed pvalues of parameters
     tvalues         : array
-                      k*1, the tvalues of the standard errors
+                      k x 1, the tvalues of the standard errors
     deviance        : float
                       value of the deviance function evalued at params;
                       see family.py for distribution-specific deviance
@@ -367,16 +371,6 @@ class Production(BaseGravity):
                 origins=self.o, constant=constant, framework=framework,
                 SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
     
-        #flows = np.reshape(flows, (-1,1))
-        #origins = np.reshape(origins, (-1,1))
-        #d_vars = np.reshape(d_vars, (-1,1))
-        #cost = np.reshape(cost, (-1,1))
-        #User.check_arrays(flows, origins, d_vars, cost)
-       
-        #BaseGravity.__init__(self, flows, cost, cost_func, d_vars=d_vars,
-                #origins=origins, constant=constant, framework=framework,
-                #SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
-
     def local(self, locs=None):
         """
         Calibrate local models for subsets of data from a single location to all
@@ -416,15 +410,17 @@ class Attraction(BaseGravity):
     flows           : array of integers
                       n x 1; observed flows between O origins and D destinations
     destinations    : array of strings
-                      n x 1; unique identifiers of destinations of n flows 
+                      n x 1; unique identifiers of destinations of n flows; when
+                      there are many destinations it will be faster to use
+                      integers over strings for id labels.
     cost            : array 
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
-    cost_func       : string
-                      functional form of the cost function; default is 'pow'
-                      'exp' | 'pow'
+    cost_func       : string or function that has scalar input and output
+                      functional form of the cost function;
+                      'exp' | 'pow' | custom function
     o_vars          : array (optional)
-                      n x k; k attributes for each origin of  n flows; default
+                      n x p; p attributes for each origin of  n flows; default
                       is None
 
     Attributes
@@ -438,20 +434,23 @@ class Attraction(BaseGravity):
                       destination associated with a flow; typically distance or time
     cf              : function
                       cost function; used to transform cost variable
+    d               : array
+                      n x 1; index of destination id's
     ov              : array
-                      n x k; k attributes for each origin of n flows
+                      n x p; p attributes for each origin of n flows
     params          : array
-                      n*k, estimared beta coefficients
+                      n x k, k estimated beta coefficients; k = # of
+                      destinations + p + 1
     yhat            : array
-                      n*1, predicted value of y (i.e., fittedvalues)
+                      n x 1, predicted value of y (i.e., fittedvalues)
     cov_params      : array
                       Variance covariance matrix (kxk) of betas
     std_err         : array
-                      k*1, standard errors of betas
+                      k x 1, standard errors of betas
     pvalues         : array
-                      k*1, two-tailed pvalues of parameters
+                      k x 1, two-tailed pvalues of parameters
     tvalues         : array
-                      k*1, the tvalues of the standard errors
+                      k x 1, the tvalues of the standard errors
     deviance        : float
                       value of the deviance function evalued at params;
                       see family.py for distribution-specific deviance
@@ -520,15 +519,19 @@ class Doubly(BaseGravity):
     flows           : array of integers
                       n x 1; observed flows between O origins and D destinations
     origins         : array of strings
-                      n x 1; unique identifiers of origins of n flows
+                      n x 1; unique identifiers of origins of n flows; when
+                      there are many origins it will be faster to use integers
+                      rather than strings for id labels.
     destinations    : array of strings
-                      n x 1; unique identifiers of destinations of n flows 
+                      n x 1; unique identifiers of destinations of n flows; when
+                      there are many destinations it will be faster to use
+                      integers rather than strings for id labels
     cost            : array 
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
-    cost_func       : string
-                      functional form of the cost function; default is 'pow'
-                      'exp' | 'pow'
+    cost_func       : string or function that has scalar input and output
+                      functional form of the cost function;
+                      'exp' | 'pow' | custom function
 
     Attributes
     ----------
@@ -542,17 +545,22 @@ class Doubly(BaseGravity):
     cf              : function
                       cost function; used to transform cost variable
     params          : array
-                      n*k, estimared beta coefficients
+                      n x k, estimated beta coefficients; k = # of origins + #
+                      of destinations; the first x-1 values
+                      pertain to the x destinations (leaving out the first
+                      destination to avoid perfect collinearity; no fixed
+                      effect), the next x values pertain to the x origins, and the
+                      final value is the distance decay coefficient
     yhat            : array
-                      n*1, predicted value of y (i.e., fittedvalues)
+                      n x 1, predicted value of y (i.e., fittedvalues)
     cov_params      : array
                       Variance covariance matrix (kxk) of betas
     std_err         : array
-                      k*1, standard errors of betas
+                      k x 1, standard errors of betas
     pvalues         : array
-                      k*1, two-tailed pvalues of parameters
+                      k x 1, two-tailed pvalues of parameters
     tvalues         : array
-                      k*1, the tvalues of the standard errors
+                      k x 1, the tvalues of the standard errors
     deviance        : float
                       value of the deviance function evalued at params;
                       see family.py for distribution-specific deviance
@@ -583,7 +591,7 @@ class Doubly(BaseGravity):
                 destinations=self.d, constant=constant,
                 framework=framework, SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
 
-    def local(self, locs=None, origins=True):
+    def local(self, locs=None):
         """
         Calibrate local models for subsets of data from a single location to all
         other locations
