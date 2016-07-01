@@ -23,6 +23,7 @@ from statsmodels.api import families
 from statsmodels.tools.tools import categorical
 from sparse_categorical import spcategorical
 from pysal.spreg import user_output as User
+from pysal.spreg.utils import sphstack
 from count_model import CountModel
 
 class BaseGravity(CountModel):
@@ -122,33 +123,31 @@ class BaseGravity(CountModel):
         else:
             X = sp.csr_matrix((self.n, 1))
         if isinstance(self, Attraction) | isinstance(self, Doubly):
-            d_dummies = spcategorical(destinations.flatten().astype(str))
-            X = sp.hstack((X, d_dummies))
+            d_dummies = spcategorical(destinations.flatten())
+            X = sphstack(X, d_dummies, array_out=False)
         if isinstance(self, Production) | isinstance(self, Doubly):
-            o_dummies = spcategorical(origins.flatten().astype(str)) 
-            X = sp.hstack((X, o_dummies))
+            o_dummies = spcategorical(origins.flatten()) 
+            X = sphstack(X, o_dummies, array_out=False)
         if isinstance(self, Doubly):
-            X = sp.csr_matrix(X)
             X = X[:,1:]
         if self.ov is not None:	
             if isinstance(self, Gravity):
                 X = np.hstack((X, np.log(np.reshape(self.ov, (-1,1)))))
             else:
                 ov = sp.csr_matrix(np.log(np.reshape(self.ov, ((-1,1)))))
-                X = sp.hstack((X, ov))
+                X = sphstack(X, ov, array_out=False)
         if self.dv is not None:    	
             if isinstance(self, Gravity):
                 X = np.hstack((X, np.log(np.reshape(self.dv, (-1,1)))))
             else:
                 dv = sp.csr_matrix(np.log(np.reshape(self.dv, ((-1,1)))))
-                X = sp.hstack((X, dv))
+                X = sphstack(X, dv, array_out=False)
         if isinstance(self, Gravity):
             X = np.hstack((X, self.cf(np.reshape(self.c, (-1,1)))))
         else:
             c = sp.csr_matrix(self.cf(np.reshape(self.c, (-1,1))))
-            X = sp.hstack((X, c))
-            X = sp.csr_matrix(X)
-            X = X[:,1:]
+            X = sphstack(X, c, array_out=False)
+            X = X[:,1:]#because empty array instantiated with extra column
         if not isinstance(self, (Gravity, Production, Attraction, Doubly)):
             X = self.cf(np.reshape(self.c, (-1,1)))
 
