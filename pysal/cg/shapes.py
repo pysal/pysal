@@ -1027,15 +1027,6 @@ class Chain(Geometry):
             self._vertices = [vertices]
         self._reset_props()
     
-    def _eq__(self, other):
-        is_chain = isinstance(other, type(self))
-        try:
-            is_nearly = np.array_equal(np.asarray(self.vertices),
-                                       np.asarray(other.vertices))
-        except AttributeError:
-            is_nearly = False
-        return is_chain and is_nearly
-
     @classmethod
     def __from_geo_interface__(cls, geo):
         if geo['type'].lower() == 'linestring':
@@ -1514,11 +1505,6 @@ class Polygon(Geometry):
 
     def __len__(self):
         return self.len
-
-    def _eq__(self, other):
-        is_polygon = isinstance(other, type(self))
-        same_vertlist = np.array_equal(self.vertices, other.vertices)
-        return is_polygon and same_vertlist
 
     @property
     def len(self):
