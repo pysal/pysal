@@ -113,8 +113,8 @@ class BaseGravity(CountModel):
         elif type(cost_func) == FunctionType:
             self.cf = cost_func
         else:
-            raise ValueError('cost_func must be "exp", "power" or a valid\
-            function that has a scalar as a input and output')
+            raise ValueError("cost_func must be 'exp', 'power' or a valid"
+            " function that has a scalar as a input and output")
 
         y = np.reshape(self.f, (-1,1))
         if isinstance(self,  Gravity):
@@ -153,11 +153,11 @@ class BaseGravity(CountModel):
             X = self.cf(np.reshape(self.c, (-1,1)))
 
         if SF:
-        	raise NotImplementedError('Spatial filter model not yet implemented')
+        	raise NotImplementedError("Spatial filter model not yet implemented")
         if CD:
-        	raise NotImplementedError('Competing destination model not yet implemented')
+        	raise NotImplementedError("Competing destination model not yet implemented")
         if Lag:
-        	raise NotImplementedError('Spatial Lag autoregressive model not yet implemented')
+        	raise NotImplementedError("Spatial Lag autoregressive model not yet implemented")
         
         CountModel.__init__(self, y, X, constant=constant)
         if (framework.lower() == 'glm'):
@@ -182,9 +182,11 @@ class BaseGravity(CountModel):
     def reshape(self, array):
         if type(array) == np.ndarray:
             return array.reshape((-1,1))
+        elif type(array) == list:
+            return np.array(array).reshape((-1,1))
         else:
-            raise TypeError('input must be an numpy array that can be coerced"
-                    " into the dimensions n x 1')
+            raise TypeError("input must be an numpy array or list that can be coerced"
+                    " into the dimensions n x 1")
     
 class Gravity(BaseGravity):
     """
@@ -259,7 +261,7 @@ class Gravity(BaseGravity):
         self.ov = np.reshape(o_vars, (-1,1))
         self.dv = np.reshape(d_vars, (-1,1))
         self.c = np.reshape(cost, (-1,1))
-        User.check_arrays(flows, o_vars, d_vars, cost)
+        User.check_arrays(self.f, self.ov, self.dv, self.c)
         
         BaseGravity.__init__(self, self.f, self.c,
                 cost_func, o_vars=self.ov, d_vars=self.dv, constant=constant,
@@ -360,13 +362,22 @@ class Production(BaseGravity):
         self.o = self.reshape(origins)
         self.dv = self.reshape(d_vars)
         self.c = self.reshape(cost)
-        User.check_arr
-        ays(flows, origins, d_vars, cost)
+        User.check_arrays(self.f, self.o, self.dv, self.c)
        
-        BaseGravity.__init__(self, self.f, self.f, cost_func, d_vars=self.dv,
+        BaseGravity.__init__(self, self.f, self.c, cost_func, d_vars=self.dv,
                 origins=self.o, constant=constant, framework=framework,
                 SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
     
+        #flows = np.reshape(flows, (-1,1))
+        #origins = np.reshape(origins, (-1,1))
+        #d_vars = np.reshape(d_vars, (-1,1))
+        #cost = np.reshape(cost, (-1,1))
+        #User.check_arrays(flows, origins, d_vars, cost)
+       
+        #BaseGravity.__init__(self, flows, cost, cost_func, d_vars=d_vars,
+                #origins=origins, constant=constant, framework=framework,
+                #SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
+
     def local(self, locs=None):
         """
         Calibrate local models for subsets of data from a single location to all
@@ -465,7 +476,7 @@ class Attraction(BaseGravity):
         self.ov = np.reshape(o_vars, (-1,1))
         self.d = np.reshape(destinations, (-1,1))
         self.c = np.reshape(cost, (-1,1))
-        User.check_arrays(flows, destinations, o_vars, cost)
+        User.check_arrays(self.f, self.d, self.ov, self.c)
 
         BaseGravity.__init__(self, self.f, self.c, cost_func, o_vars=self.ov,
                  destinations=self.d, constant=constant,
@@ -567,7 +578,7 @@ class Doubly(BaseGravity):
         self.o = np.reshape(origins, (-1,1))
         self.d = np.reshape(destinations, (-1,1))
         self.c = np.reshape(cost, (-1,1))
-        User.check_arrays(flows, origins, destinations, cost)
+        User.check_arrays(self.f, self.o, self.d, self.c)
 
         BaseGravity.__init__(self, self.f, self.c, cost_func, origins=self.o, 
                 destinations=self.d, constant=constant,
