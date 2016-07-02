@@ -5,7 +5,7 @@ from functools import partial
 from itertools import count
 
 
-def spcategorical(n_cat_ids):
+def spcategorical(index):
     '''
     Returns a dummy matrix given an array of categorical variables.
     Parameters
@@ -22,17 +22,17 @@ def spcategorical(n_cat_ids):
                    categorical data.  
 
     '''
-    if np.squeeze(n_cat_ids).ndim == 1:
-        cat_set = np.unique(n_cat_ids)
-        n = len(n_cat_ids)
-        if n_cat_ids.dtype.type is not np.int_:
+    if np.squeeze(index).ndim == 1:
+        id_set = np.unique(index)
+        n = len(index)
+        if index.dtype.type is not np.int_:
             mapper = defaultdict(partial(next, count()))
-            [mapper[each] for each in cat_set]
-            n_cat_ids = [mapper[each] for each in n_cat_ids]
+            [mapper[each] for each in id_set]
+            index = [mapper[each] for each in index]
         indptr = np.arange(n+1, dtype=int) 
-        return sp.csr_matrix((np.ones(n), n_cat_ids, indptr))
+        return sp.csr_matrix((np.ones(n), index, indptr))
     else:
-        raise IndexError("The index %s is not understood" % col)
+        raise IndexError("The index %s is not understood" % index)
 
 #older and very slow
 """

@@ -406,14 +406,14 @@ class Production(BaseGravity):
                       and values are lists of location specific values
         """
         results = {}
-        covs = self.dv.shape[1] + 1
+        covs = self.dv.shape[1] + 2
         results['aic'] = []
         results['deviance'] = []
         for cov in range(covs):
             results['param' + str(cov)] = []
             results['pvalue' + str(cov)] = []
             results['tvalue' + str(cov)] = []
-        if locs is not None:
+        if locs is None:
         	locs = np.unique(self.o)
         for loc in np.unique(locs):
             subset = self.o == loc
@@ -525,14 +525,14 @@ class Attraction(BaseGravity):
                       and values are lists of location specific values
         """
         results = {}
-        covs = self.ov.shape[1] + 1
+        covs = self.ov.shape[1] + 2
         results['aic'] = []
         results['deviance'] = []
         for cov in range(covs):
             results['param' + str(cov)] = []
             results['pvalue' + str(cov)] = []
             results['tvalue' + str(cov)] = []
-        if locs is not None:
+        if locs is  None:
         	locs = np.unique(self.d)
         for loc in np.unique(locs):
             subset = self.d == loc
