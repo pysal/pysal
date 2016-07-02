@@ -25,16 +25,16 @@ class TestGravity(unittest.TestCase):
     """Tests for gravity-type models"""
 
     def setUp(self):
-        self.f =  [ 1131,  1887,    69,   738,    98,    31,    43,    19,  1633,
+        self.f =  np.array([ 1131,  1887,    69,   738,    98,    31,    43,    19,  1633,
             14055,   416,  1276,  1850,   388,   303,   159,  2301, 20164,
             1080,  1831,  1943,   742,   674,   407,    85,   379,  1597,
             1608,   328,   317,   469,   114,   762,  1110,  2973,  1252,
             1081,   622,   425,   262,   196,  2027,  3498,   346,  1332,
             2144,   821,   274,    49,   378,  1349,   310,   851,  2117,
             630,   106,    87,   424,   978,   490,   670,   577,   546,
-            569,    33,   128,   643,   154,   328,   199,   112,   587]
+            569,    33,   128,   643,   154,   328,   199,   112,   587])
 
-        self.o = ['AT11', 'AT11', 'AT11', 'AT11', 'AT11', 'AT11', 'AT11', 'AT11',
+        self.o = np.array(['AT11', 'AT11', 'AT11', 'AT11', 'AT11', 'AT11', 'AT11', 'AT11',
             'AT12', 'AT12', 'AT12', 'AT12', 'AT12', 'AT12', 'AT12', 'AT12',
             'AT13', 'AT13', 'AT13', 'AT13', 'AT13', 'AT13', 'AT13', 'AT13',
             'AT21', 'AT21', 'AT21', 'AT21', 'AT21', 'AT21', 'AT21', 'AT21',
@@ -42,9 +42,9 @@ class TestGravity(unittest.TestCase):
             'AT31', 'AT31', 'AT31', 'AT31', 'AT31', 'AT31', 'AT31', 'AT31',
             'AT32', 'AT32', 'AT32', 'AT32', 'AT32', 'AT32', 'AT32', 'AT32',
             'AT33', 'AT33', 'AT33', 'AT33', 'AT33', 'AT33', 'AT33', 'AT33',
-            'AT34', 'AT34', 'AT34', 'AT34', 'AT34', 'AT34', 'AT34', 'AT34']
+            'AT34', 'AT34', 'AT34', 'AT34', 'AT34', 'AT34', 'AT34', 'AT34'])
         
-        self.d = ['AT12', 'AT13', 'AT21', 'AT22', 'AT31', 'AT32', 'AT33', 'AT34',
+        self.d = np.array(['AT12', 'AT13', 'AT21', 'AT22', 'AT31', 'AT32', 'AT33', 'AT34',
             'AT11', 'AT13', 'AT21', 'AT22', 'AT31', 'AT32', 'AT33', 'AT34',
             'AT11', 'AT12', 'AT21', 'AT22', 'AT31', 'AT32', 'AT33', 'AT34',
             'AT11', 'AT12', 'AT13', 'AT22', 'AT31', 'AT32', 'AT33', 'AT34',
@@ -52,9 +52,9 @@ class TestGravity(unittest.TestCase):
             'AT11', 'AT12', 'AT13', 'AT21', 'AT22', 'AT32', 'AT33', 'AT34',
             'AT11', 'AT12', 'AT13', 'AT21', 'AT22', 'AT31', 'AT33', 'AT34',
             'AT11', 'AT12', 'AT13', 'AT21', 'AT22', 'AT31', 'AT32', 'AT34',
-            'AT11', 'AT12', 'AT13', 'AT21', 'AT22', 'AT31', 'AT32', 'AT33']
+            'AT11', 'AT12', 'AT13', 'AT21', 'AT22', 'AT31', 'AT32', 'AT33'])
         
-        self.dij = [ 103.001845,   84.204666,  220.811933,  132.00748 ,  214.511814,
+        self.dij = np.array([ 103.001845,   84.204666,  220.811933,  132.00748 ,  214.511814,
             246.933305,  390.85611 ,  505.089539,  103.001845,   45.796272,
             216.994739,  129.878172,  140.706671,  201.232355,  343.50075 ,
             453.515594,   84.204666,   45.796272,  249.932874,  158.630661,
@@ -68,25 +68,25 @@ class TestGravity(unittest.TestCase):
             258.591197,  390.85611 ,  343.50075 ,  387.61776 ,  194.851669,
             261.893783,  208.456383,  145.076472,  114.46325 ,  505.089539,
             453.515594,  498.407152,  306.105825,  376.34667 ,  314.793199,
-            258.591197,  114.46325 ]
+            258.591197,  114.46325 ])
         
-        self.o_var = [ 4320,  4320,  4320,  4320,  4320,  4320,  4320,  4320, 21478,
+        self.o_var = np.array([ 4320,  4320,  4320,  4320,  4320,  4320,  4320,  4320, 21478,
             21478, 21478, 21478, 21478, 21478, 21478, 21478, 30500, 30500,
             30500, 30500, 30500, 30500, 30500, 30500,  5012,  5012,  5012,
             5012,  5012,  5012,  5012,  5012,  8811,  8811,  8811,  8811,
             8811,  8811,  8811,  8811, 11349, 11349, 11349, 11349, 11349,
             11349, 11349, 11349,  6021,  6021,  6021,  6021,  6021,  6021,
             6021,  6021,  4477,  4477,  4477,  4477,  4477,  4477,  4477,
-            4477,  2275,  2275,  2275,  2275,  2275,  2275,  2275,  2275]
+            4477,  2275,  2275,  2275,  2275,  2275,  2275,  2275,  2275])
         
-        self.d_var = [27169, 28710,  4354,  9069,  8577,  4963,  3923,  2026,  5452,
+        self.d_var = np.array([27169, 28710,  4354,  9069,  8577,  4963,  3923,  2026,  5452,
             28710,  4354,  9069,  8577,  4963,  3923,  2026,  5452, 27169,
             4354,  9069,  8577,  4963,  3923,  2026,  5452, 27169, 28710,
             9069,  8577,  4963,  3923,  2026,  5452, 27169, 28710,  4354,
             8577,  4963,  3923,  2026,  5452, 27169, 28710,  4354,  9069,
             4963,  3923,  2026,  5452, 27169, 28710,  4354,  9069,  8577,
             3923,  2026,  5452, 27169, 28710,  4354,  9069,  8577,  4963,
-            2026,  5452, 27169, 28710,  4354,  9069,  8577,  4963,  3923]
+            2026,  5452, 27169, 28710,  4354,  9069,  8577,  4963,  3923])
     
     def test_BaseGravity_exp(self):
         f = np.array(self.f).reshape((-1,1))
@@ -234,6 +234,20 @@ class TestGravity(unittest.TestCase):
             18.14169546,     68.59991159,     45.52214916,    112.85166716,
             82.89055652,    146.94298691,    192.00611495,    695.27339343])
 
+    def test_local_Gravity(self):
+        model = grav.Gravity(self.f, self.o_var, self.d_var, self.dij, 'exp')
+        local = model.local(loc_index=self.o, locs=np.unique(self.o))
+        self.assertEqual(local.keys(), ['pvalue2',
+                                                  'pvalue0',
+                                                  'deviance',
+                                                  'pvalue1',
+                                                  'tvalue2',
+                                                  'tvalue0',
+                                                  'tvalue1',
+                                                  'param2',
+                                                  'param1',
+                                                  'param0',
+                                                  'aic'])
 
     def test_Production(self):
         model = grav.Production(self.f, self.o, self.d_var,
@@ -329,7 +343,18 @@ class TestGravity(unittest.TestCase):
             2.32354948e+02,   1.74615053e+02,   2.01734215e+02,
             3.00280455e+02,   2.77258060e+02,   6.40968342e+02])
 
-
+    def test_local_Production(self):
+        model = grav.Production(self.f, self.o, self.d_var, self.dij, 'exp')
+        local = model.local(locs=np.unique(self.o))
+        self.assertEqual(local.keys(), ['pvalue0',
+                                       'deviance',
+                                       'pvalue1',
+                                       'tvalue0',
+                                       'tvalue1',
+                                       'param1',
+                                       'param0',
+                                       'aic'])
+                                                  
     def test_Attraction(self):
         model = grav.Production(self.f, self.d, self.o_var,
                 self.dij, 'exp')
@@ -425,6 +450,17 @@ class TestGravity(unittest.TestCase):
             8.85260032e+01,   5.53842615e+01,   5.60455225e+01,
             9.23759900e+01,   8.37976212e+01,   3.66824277e+02])
 
+    def test_local_Attraction(self):
+        model = grav.Attraction(self.f, self.d, self.o_var, self.dij, 'exp')
+        local = model.local(locs=np.unique(self.d))
+        self.assertEqual(local.keys(), ['pvalue0',
+                                       'deviance',
+                                       'pvalue1',
+                                       'tvalue0',
+                                       'tvalue1',
+                                       'param1',
+                                       'param0',
+                                       'aic'])
 
     def test_Doubly(self):
         model = grav.Doubly(self.f, self.o, self.d,

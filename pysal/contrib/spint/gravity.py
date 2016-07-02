@@ -270,6 +270,25 @@ class Gravity(BaseGravity):
         """
         Calibrate local models for subsets of data from a single location to all
         other locations
+        
+        Parameters
+        ----------
+        loc_index   : n x 1 array of either origin or destination id label for
+                      flows; must be explicitly provided for local version of
+                      basic gravity model since these are not passed to the
+                      global model. 
+                    
+        locs        : iterable of either origin or destination labels for which
+                      to calibrate local models; must also be explicitly
+                      provided since local gravity models can be calibrated from origins
+                      or destinations. If all origins are also destinations and
+                      a local model is desired for each location then use
+                      np.unique(loc_index)
+
+        Returns
+        -------
+        results     : dict where keys are names of model outputs and diagnostics
+                      and values are lists of location specific values. 
         """
         results = {}
         covs = self.ov.shape[1] + self.dv.shape[1] + 1
@@ -279,7 +298,7 @@ class Gravity(BaseGravity):
             results['param' + str(cov)] = []
             results['pvalue' + str(cov)] = []
             results['tvalue' + str(cov)] = []
-        for loc in np.unique(locs):
+        for loc in locs:
             subset = loc_index == loc
             f = self.reshape(self.f[subset])
             o_vars = self.reshape(self.ov[subset])
@@ -375,6 +394,16 @@ class Production(BaseGravity):
         """
         Calibrate local models for subsets of data from a single location to all
         other locations
+        
+        Parameters
+        ----------
+        locs        : iterable of location (origins) labels; default is
+                      None which calibrates a local model for each origin
+
+        Returns
+        -------
+        results     : dict where keys are names of model outputs and diagnostics
+                      and values are lists of location specific values
         """
         results = {}
         covs = self.dv.shape[1] + 1
@@ -384,7 +413,7 @@ class Production(BaseGravity):
             results['param' + str(cov)] = []
             results['pvalue' + str(cov)] = []
             results['tvalue' + str(cov)] = []
-        if not locs:
+        if locs is not None:
         	locs = np.unique(self.o)
         for loc in np.unique(locs):
             subset = self.o == loc
@@ -484,6 +513,16 @@ class Attraction(BaseGravity):
         """
         Calibrate local models for subsets of data from a single location to all
         other locations
+
+        Parameters
+        ----------
+        locs        : iterable of location (destinations) labels; default is
+                      None which calibrates a local model for each destination
+
+        Returns
+        -------
+        results     : dict where keys are names of model outputs and diagnostics
+                      and values are lists of location specific values
         """
         results = {}
         covs = self.ov.shape[1] + 1
@@ -493,7 +532,7 @@ class Attraction(BaseGravity):
             results['param' + str(cov)] = []
             results['pvalue' + str(cov)] = []
             results['tvalue' + str(cov)] = []
-        if not locs:
+        if locs is not None:
         	locs = np.unique(self.d)
         for loc in np.unique(locs):
             subset = self.d == loc
@@ -593,6 +632,9 @@ class Doubly(BaseGravity):
 
     def local(self, locs=None):
         """
+        **Not inmplemented for doubly-constrained models** Not possible due to
+        insufficient degrees of freedom.
+
         Calibrate local models for subsets of data from a single location to all
         other locations
         """
