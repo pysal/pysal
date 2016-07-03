@@ -237,7 +237,7 @@ class TestGravity(unittest.TestCase):
     def test_local_Gravity(self):
         model = grav.Gravity(self.f, self.o_var, self.d_var, self.dij, 'exp')
         local = model.local(loc_index=self.o, locs=np.unique(self.o))
-        self.assertEqual(local.keys(), ['pvalue2',
+        self.assertEqual(local.keys().sort(), ['pvalue2',
                                                   'pvalue0',
                                                   'deviance',
                                                   'pvalue1',
@@ -247,7 +247,7 @@ class TestGravity(unittest.TestCase):
                                                   'param2',
                                                   'param1',
                                                   'param0',
-                                                  'aic'])
+                                                  'aic'].sort())
 
     def test_Production(self):
         model = grav.Production(self.f, self.o, self.d_var,
@@ -346,14 +346,14 @@ class TestGravity(unittest.TestCase):
     def test_local_Production(self):
         model = grav.Production(self.f, self.o, self.d_var, self.dij, 'exp')
         local = model.local(locs=np.unique(self.o))
-        self.assertEqual(local.keys(), ['pvalue0',
+        self.assertEqual(local.keys().sort(), ['pvalue0',
                                        'deviance',
                                        'pvalue1',
                                        'tvalue0',
                                        'tvalue1',
                                        'param1',
                                        'param0',
-                                       'aic'])
+                                       'aic'].sort())
                                                   
     def test_Attraction(self):
         model = grav.Production(self.f, self.d, self.o_var,
@@ -453,14 +453,14 @@ class TestGravity(unittest.TestCase):
     def test_local_Attraction(self):
         model = grav.Attraction(self.f, self.d, self.o_var, self.dij, 'exp')
         local = model.local(locs=np.unique(self.d))
-        self.assertEqual(local.keys(), ['pvalue0',
+        self.assertEqual(local.keys().sort(), ['pvalue0',
                                        'deviance',
                                        'pvalue1',
                                        'tvalue0',
                                        'tvalue1',
                                        'param1',
                                        'param0',
-                                       'aic'])
+                                       'aic'].sort())
 
     def test_Doubly(self):
         model = grav.Doubly(self.f, self.o, self.d,

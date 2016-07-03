@@ -963,3 +963,6 @@ class LikelihoodModelResults(Results):
                 self._cache[key] = None
             except (AttributeError, KeyError):
                 pass
+
+def lzip(*args, **kwargs):
+    return list(zip(*args, **kwargs))

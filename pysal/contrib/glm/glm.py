@@ -6,7 +6,7 @@ from pysal.spreg.utils import RegressionPropsY, spdot
 from iwls import iwls
 import pysal.spreg.user_output as USER
 from utils import cache_readonly
-from statsmodels.base.model import LikelihoodModelResults
+from base import LikelihoodModelResults
 
 __all__ = ['GLM']
 
