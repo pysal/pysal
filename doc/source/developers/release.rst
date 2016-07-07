@@ -13,8 +13,9 @@ Prepare the release
 - Check all tests pass. See :doc:`testing`.
 - Update CHANGELOG::
 
-     $ python tools/github_stats.py >> chglog
+     $ python tools/github_stats.py days >> chglog
 
+- where `days` is the number of days to start the logs at
 - Prepend `chglog` to `CHANGELOG` and edit
 - Edit THANKS and README and README.md if needed.
 - Edit the file `version.py` to update MAJOR, MINOR, MICRO
@@ -24,7 +25,7 @@ Prepare the release
 
 - Commit all changes.
 - Push_ your branch up to your GitHub repos
-- On github issue a pull request, with a target of **upstream dev**. 
+- On github issue a pull request, with a target of **upstream master**. 
   Add a comment that this is for release.
 
 
@@ -59,10 +60,10 @@ is `v1.10` in what follows)::
 
 - Test that your package can install correctly::
 
-  $ pip install -i https://testpy.python.org/pypi
+  $ pip install -i https://testpypi.python.org/pypi pysal
 
 
-If all is good, proceed, otherwise fix.
+If all is good, proceed, otherwise fix, and repeat.
 
 
 - Make and upload_ to the Python Package Index in one shot!::

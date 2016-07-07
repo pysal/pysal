@@ -7,6 +7,7 @@ python:
   - 2.7
   #- "2.6"
   - 3.4
+  - 3.5
 
 before_install:
   - wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
@@ -41,6 +42,14 @@ notifications:
         recipients:
             - sjsrey@gmail.com
             - levi.john.wolf@gmail.com
+            - dfolch@gmail.com
+            - daniel.arribas.bel@gmail.com
+            - weikang9009@gmail.com
+            - carsonfarmer@gmail.com
+            - tayoshan@gmail.com
+            - marynia.kolak@gmail.com
+            - jgaboardi@gmail.com
+            - phil.stphns@gmail.com
         on_success: always
         on_failure: always
 

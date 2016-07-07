@@ -62,9 +62,8 @@ class Moran_Local_Tester(unittest.TestCase):
     def test_Moran_Local(self):
         lm = moran.Moran_Local(
             self.y, self.w, transformation="r", permutations=99)
-        self.assertAlmostEquals(lm.z_sim[0], -0.081383956359666748)
-        self.assertAlmostEquals(lm.p_z_sim[0], 0.46756830387716064)
-        self.assertAlmostEquals(lm.VI_sim, 0.2067126047680822)
+        self.assertAlmostEquals(lm.z_sim[0], -0.68493799168603808)
+        self.assertAlmostEquals(lm.p_z_sim[0],  0.24669152541631179)
 
 
 class Moran_Local_BV_Tester(unittest.TestCase):
@@ -79,9 +78,8 @@ class Moran_Local_BV_Tester(unittest.TestCase):
         lm = moran.Moran_Local_BV(self.x, self.y, self.w,
                                   transformation="r", permutations=99)
         self.assertAlmostEquals(lm.Is[0], 1.4649221250620736)
-        self.assertAlmostEquals(lm.z_sim[0], 2.9246889997781773)
-        self.assertAlmostEquals(lm.p_z_sim[0], 0.0017240031348827456)
-        self.assertAlmostEquals(lm.VI_sim, 0.24983591065175745)
+        self.assertAlmostEquals(lm.z_sim[0],  1.5816540860500772)
+        self.assertAlmostEquals(lm.p_z_sim[0], 0.056864279811026153)
 
 
 class Moran_Local_Rate_Tester(unittest.TestCase):
@@ -95,13 +93,12 @@ class Moran_Local_Rate_Tester(unittest.TestCase):
     def test_moran_rate(self):
         lm = moran.Moran_Local_Rate(self.e, self.b, self.w,
                                     transformation="r", permutations=99)
-        self.assertAlmostEquals(lm.z_sim[0], -0.27099998923550017)
-        self.assertAlmostEquals(lm.p_z_sim[0], 0.39319552026912641)
-        self.assertAlmostEquals(lm.VI_sim, 0.21879403675396222)
+        self.assertAlmostEquals(lm.z_sim[0], -0.13699844503985936)
+        self.assertAlmostEquals(lm.p_z_sim[0], 0.44551601210081715)
 
 
 suite = unittest.TestSuite()
-test_classes = [Moran_Tester, Moran_Rate_Tester, 
+test_classes = [Moran_Tester, Moran_Rate_Tester,
                 Moran_BV_matrix_Tester, Moran_Local_Tester,
                 Moran_Local_BV_Tester, Moran_Local_Rate_Tester]
 for i in test_classes:

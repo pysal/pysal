@@ -47,10 +47,10 @@ class SpaceTimeEvents:
     t               : array
                       (n, 1), array of the temporal coordinates for the events.
     space           : array
-                      (n, 1), array of the spatial coordinates (x,y) for the
+                      (n, 2), array of the spatial coordinates (x,y) for the
                       events.
     time            : array
-                      (n, 1), array of the temporal coordinates (t,1) for the
+                      (n, 2), array of the temporal coordinates (t,1) for the
                       events, the second column is a vector of ones.
 
     Examples
