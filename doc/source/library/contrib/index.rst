@@ -78,13 +78,13 @@ Currently the following contribs are available:
    - Path: pysal.contrib.spint
    - Requires: `pandas`_
 
-10. Githooks -- Optional hooks for `git` to make development on `PySAL` easier
+ 10. Githooks -- Optional hooks for `git` to make development on `PySAL` easier
 
     - .. versionadded:: 1.10
     - Path: pysal.contrib.githooks (Note: not importable)
     - Requires: `git`
 
-11. Handler -- A model ingester to standardize model extension
+ 11. Handler -- A model ingester to standardize model extension
 
     - .. versionadded:: 1.10
     - Path: pysal.contrib.handler
