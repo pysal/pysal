@@ -62,23 +62,29 @@ Currently the following contribs are available:
 
  7. Points -- Statistical analysis of planar point patterns
 
-    - .. versionadded:: 1.11
+    - .. versionadded:: 1.12
     - Path: pysal.contrib.points
-    - Requires: `pandas`_
+    - Requires: `pandas`_ `shapely`_ `descartes`_
 
- 9. Pandas utilities -- Tools to work with spatial file formats using `pandas`.
+ 8. Pandas utilities -- Tools to work with spatial file formats using `pandas`.
 
     - .. versionadded:: 1.8
     - Path: pysal.contrib.pdutilities
     - Requires: `pandas`_
 
- 9. Githooks -- Optional hooks for `git` to make development on `PySAL` easier
+ 9. Spatial Interaction -- Tools for spatial interaction (SpInt) modeling. 
+ 
+   - .. versionadded:: 1.10
+   - Path: pysal.contrib.spint
+   - Requires: `pandas`_
+
+10. Githooks -- Optional hooks for `git` to make development on `PySAL` easier
 
     - .. versionadded:: 1.10
     - Path: pysal.contrib.githooks (Note: not importable)
     - Requires: `git`
 
- 10. Handler -- A model ingester to standardize model extension
+11. Handler -- A model ingester to standardize model extension
 
     - .. versionadded:: 1.10
     - Path: pysal.contrib.handler
@@ -94,6 +100,7 @@ Currently the following contribs are available:
 
 
 .. _clusterpy: https://pypi.python.org/pypi/clusterPy/0.9.9
+.. _descartes: https://pypi.python.org/pypi/descartes
 .. _matplotlib: http://matplotlib.org/
 .. _pandas: http://pandas.pydata.org
 .. _project page: https://github.com/pysal/pysal/wiki/PySAL-Visualization-Project

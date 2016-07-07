@@ -4,7 +4,7 @@ SUR and 3SLS estimation
 
 __author__= "Luc Anselin lanselin@gmail.com,    \
              Pedro V. Amaral pedrovma@gmail.com"
-            
+
 
 import numpy as np
 import numpy.linalg as la
@@ -21,10 +21,10 @@ __all__ = ['SUR','ThreeSLS']
 
 class BaseSUR():
     """ Base class for SUR estimation, both two step as well as iterated
-    
+
         Parameters
         ----------
-        
+
         bigy       : dictionary with vector for dependent variable by equation
         bigX       : dictionary with matrix of explanatory variables by equation
                      (note, already includes constant term)
@@ -36,10 +36,10 @@ class BaseSUR():
         verbose    : flag to print out iteration number and value of log det(sig)
                      at the beginning and the end of the iteration
 
-                     
+
         Attributes
         ----------
-        
+
         bigy        : dictionary with y values
         bigX        : dictionary with X values
         bigXX       : dictionary with X_t'X_r cross-products
@@ -56,13 +56,13 @@ class BaseSUR():
         sig         : Sigma matrix of inter-equation error covariances
         ldetS1      : log det(Sigma) for SUR model
         resids      : n by n_eq array of residuals
-        sig_ols     : Sigma matrix for OLS residuals 
+        sig_ols     : Sigma matrix for OLS residuals
         ldetS0      : log det(Sigma) for null model (OLS by equation, diagonals only)
         niter       : number of iterations (=0 for iter=False)
         corr        : inter-equation SUR error correlation matrix
         llik        : log-likelihood (including the constant pi)
-        
-        
+
+
         Methods
         -------
 
@@ -113,37 +113,37 @@ class BaseSUR():
         self.corr = sur_corr(self.sig)
         lik = self.n_eq * (1.0 + np.log(2.0*np.pi)) + self.ldetS1
         self.llik = - (self.n / 2.0) * lik
-                
+
 
     def sur_ols(self):
         '''OLS estimation of SUR equations
-    
+
            Parameters
            ----------
-    
+
            self  : BaseSUR object
-    
+
            Creates
            -------
 
            self.bOLS    : dictionary with regression coefficients for each equation
            self.olsE    : N x n_eq array with OLS residuals for each equation
-                  
+
         '''
         self.bOLS = {}
         for r in range(self.n_eq):
             self.bOLS[r] = np.dot(la.inv(self.bigXX[(r,r)]),self.bigXy[(r,r)])
         self.olsE = sur_resids(self.bigy,self.bigX,self.bOLS)
-        
+
 
 
 
 class SUR(BaseSUR):
     """ User class for SUR estimation, both two step as well as iterated
-    
+
         Parameters
         ----------
-        
+
         bigy       : dictionary with vector for dependent variable by equation
         bigX       : dictionary with matrix of explanatory variables by equation
                      (note, already includes constant term)
@@ -155,7 +155,7 @@ class SUR(BaseSUR):
         maxiter    : integer; maximum iterations; default = 5
         epsilon    : float; precision criterion to end iterations
                      default = 0.00001
-        verbose    : boolean; flag to print out iteration number and value 
+        verbose    : boolean; flag to print out iteration number and value
                      of log det(sig) at the beginning and the end of the iteration
         name_bigy  : dictionary with name of dependent variable for each equation
                      default = None, but should be specified
@@ -167,10 +167,10 @@ class SUR(BaseSUR):
         name_ds    : string; name for the data set
         name_w     : string; name for the weights file
 
-                     
+
         Attributes
         ----------
-        
+
         bigy        : dictionary with y values
         bigX        : dictionary with X values
         bigXX       : dictionary with X_t'X_r cross-products
@@ -194,17 +194,18 @@ class SUR(BaseSUR):
         sur_inf     : dictionary with standard error, asymptotic t and p-value,
                       one for each equation
         lrtest      : Likelihood Ratio test on off-diagonal elements of sigma
-                      (tupel with test,df,p-value)
+                      (tuple with test,df,p-value)
         lmtest      : Lagrange Multipler test on off-diagonal elements of sigma
-                      (tupel with test,df,p-value)
+                      (tuple with test,df,p-value)
         lmEtest     : Lagrange Multiplier test on error spatial autocorrelation in SUR
+                      (tuple with test, df, p-value)
         surchow     : list with tuples for Chow test on regression coefficients
                       each tuple contains test value, degrees of freedom, p-value
         name_bigy   : dictionary with name of dependent variable for each equation
         name_bigX   : dictionary with names of explanatory variables for each
                       equation
         name_ds     : string; name for the data set
-        name_w      : string; name for the weights file        
+        name_w      : string; name for the weights file
 
 
         Examples
@@ -214,8 +215,8 @@ class SUR(BaseSUR):
 
         >>> import pysal
 
-        Open data on NCOVR US County Homicides (3085 areas) using pysal.open(). 
-        This is the DBF associated with the NAT shapefile. Note that pysal.open() 
+        Open data on NCOVR US County Homicides (3085 areas) using pysal.open().
+        This is the DBF associated with the NAT shapefile. Note that pysal.open()
         also reads data in CSV format.
 
         >>> db = pysal.open(pysal.examples.get_path("NAT.dbf"),'r')
@@ -246,7 +247,7 @@ class SUR(BaseSUR):
         >>> bigy,bigX,bigyvars,bigXvars = pysal.spreg.sur_utils.sur_dictxy(db,y_var,x_var)
 
         We can now run the regression and then have a summary of the output by typing:
-        'print(reg.summary)'  
+        'print(reg.summary)'
 
         >>> reg = SUR(bigy,bigX,w=w,name_bigy=bigyvars,name_bigX=bigXvars,spat_diag=True,name_ds="nat")
         >>> print(reg.summary)
@@ -314,7 +315,7 @@ class SUR(BaseSUR):
     def __init__(self,bigy,bigX,w=None,nonspat_diag=True,spat_diag=False,vm=False,\
         iter=False,maxiter=5,epsilon=0.00001,verbose=False,\
         name_bigy=None,name_bigX=None,name_ds=None,name_w=None):
-        
+
         #need checks on match between bigy, bigX dimensions
         # init moved here before name check
         BaseSUR.__init__(self,bigy=bigy,bigX=bigX,iter=iter,\
@@ -329,7 +330,7 @@ class SUR(BaseSUR):
             self.name_bigy = {}
             for r in range(self.n_eq):
                 yn = 'dep_var_' + str(r)
-                self.name_bigy[r] = yn               
+                self.name_bigy[r] = yn
         if name_bigX:
             self.name_bigX = name_bigX
         else: # need to construct x names
@@ -340,20 +341,20 @@ class SUR(BaseSUR):
                 ct = 'Constant_' + str(r)  # NOTE: constant always included in X
                 name_x.insert(0, ct)
                 self.name_bigX[r] = name_x
-        
+
         #inference
         self.sur_inf = sur_setp(self.bSUR,self.varb)
-        
+
         if nonspat_diag:
             #LR test on off-diagonal elements of Sigma
             self.lrtest = sur_lrtest(self.n,self.n_eq,self.ldetS0,self.ldetS1)
-        
+
             #LM test on off-diagonal elements of Sigma
             self.lmtest = sur_lmtest(self.n,self.n_eq,self.sig_ols)
         else:
             self.lrtest = None
             self.lmtest = None
-        
+
         #LM test on spatial error autocorrelation
         if spat_diag:
             if not w:
@@ -362,35 +363,35 @@ class SUR(BaseSUR):
             self.lmEtest = surLMe(self.n_eq,WS,self.bigE,self.sig)
         else:
             self.lmEtest = None
-        
+
         #LM test on spatial lag autocorrelation
-        
+
         # test on constancy of coefficients across equations
         if check_k(self.bigK):   # only for equal number of variables
             self.surchow = sur_chow(self.n_eq,self.bigK,self.bSUR,self.varb)
         else:
             self.surchow = None
-        
+
         #Listing of the results
-        self.title = "SEEMINGLY UNRELATED REGRESSIONS (SUR)"                
+        self.title = "SEEMINGLY UNRELATED REGRESSIONS (SUR)"
         SUMMARY.SUR(reg=self, nonspat_diag=nonspat_diag, spat_diag=spat_diag, surlm=True)
-        
+
 class BaseThreeSLS():
     """ Base class for 3SLS estimation, two step
-    
+
         Parameters
         ----------
-        
+
         bigy       : dictionary with vector for dependent variable by equation
         bigX       : dictionary with matrix of explanatory variables by equation
                      (note, already includes constant term)
         bigyend    : dictionary with matrix of endogenous variables by equation
         bigq       : dictionary with matrix of instruments by equation
 
-                     
+
         Attributes
         ----------
-        
+
         bigy        : dictionary with y values
         bigZ        : dictionary with matrix of exogenous and endogenous variables
                       for each equation
@@ -407,13 +408,13 @@ class BaseThreeSLS():
         sig         : Sigma matrix of inter-equation error covariances
         bigE        : n by n_eq array of residuals
         corr        : inter-equation 3SLS error correlation matrix
-        
-        
+
+
         Methods
         -------
 
         tsls_2sls       : 2SLS estimation by equation
-    
+
     """
     def __init__(self,bigy,bigX,bigyend,bigq):
         # setting up the cross-products
@@ -423,15 +424,15 @@ class BaseThreeSLS():
         # dictionary with exog and endog, Z
         self.bigZ = {}
         for r in range(self.n_eq):
-            self.bigZ[r] = np.hstack((bigX[r],bigyend[r]))   
-        # number of explanatory variables by equation     
+            self.bigZ[r] = np.hstack((bigX[r],bigyend[r]))
+        # number of explanatory variables by equation
         self.bigK = np.zeros((self.n_eq,1),dtype=np.int_)
         for r in range(self.n_eq):
             self.bigK[r] = self.bigZ[r].shape[1]
         # dictionary with instruments, H
         bigH = {}
         for r in range(self.n_eq):
-            bigH[r] = np.hstack((bigX[r],bigq[r]))    
+            bigH[r] = np.hstack((bigX[r],bigq[r]))
         # dictionary with instrumental variables, X and yend_predicted, Z-hat
         bigZhat = {}
         for r in range(self.n_eq):
@@ -443,44 +444,44 @@ class BaseThreeSLS():
             yp = np.dot(bigH[r],np.dot(HHi,Hye))
             bigZhat[r] = np.hstack((bigX[r],yp))
         self.bigZHZH,self.bigZHy = sur_crossprod(bigZhat,self.bigy)
-         
+
         # 2SLS regression by equation, sets up initial residuals
         self.sur_2sls() # creates self.b2SLS and self.tslsE
 
         self.b3SLS,self.varb,self.sig = sur_est(self.bigZHZH,self.bigZHy,self.tslsE,self.bigK)
         self.bigE = sur_resids(self.bigy,self.bigZ,self.b3SLS)  # matrix of residuals
-        
+
         # inter-equation correlation matrix
         self.corr = sur_corr(self.sig)
-                
+
 
     def sur_2sls(self):
         '''2SLS estimation of SUR equations
-    
+
            Parameters
            ----------
-    
+
            self  : BaseSUR object
-    
+
            Creates
            -------
 
            self.b2SLS    : dictionary with regression coefficients for each equation
            self.tslsE    : N x n_eq array with OLS residuals for each equation
-                  
+
         '''
         self.b2SLS = {}
         for r in range(self.n_eq):
             self.b2SLS[r] = np.dot(la.inv(self.bigZHZH[(r,r)]),self.bigZHy[(r,r)])
         self.tslsE = sur_resids(self.bigy,self.bigZ,self.b2SLS)
-        
+
 
 class ThreeSLS(BaseThreeSLS):
     """ User class for 3SLS estimation
-    
+
         Parameters
         ----------
-        
+
         bigy       : dictionary with vector for dependent variable by equation
         bigX       : dictionary with matrix of explanatory variables by equation
                      (note, already includes constant term)
@@ -504,10 +505,10 @@ class ThreeSLS(BaseThreeSLS):
                      is done when sur_stackZ is used
         name_ds    : string; name for the data set
 
-                     
+
         Attributes
         ----------
-        
+
         bigy        : dictionary with y values
         bigZ        : dictionary with matrix of exogenous and endogenous variables
                       for each equation
@@ -536,7 +537,7 @@ class ThreeSLS(BaseThreeSLS):
                        equation
         name_bigq  : dictionary with names of instrumental variables for each
                      equations
-        
+
 
         Examples
         --------
@@ -545,8 +546,8 @@ class ThreeSLS(BaseThreeSLS):
 
         >>> import pysal
 
-        Open data on NCOVR US County Homicides (3085 areas) using pysal.open(). 
-        This is the DBF associated with the NAT shapefile. Note that pysal.open() 
+        Open data on NCOVR US County Homicides (3085 areas) using pysal.open().
+        This is the DBF associated with the NAT shapefile. Note that pysal.open()
         also reads data in CSV format.
 
         >>> db = pysal.open(pysal.examples.get_path("NAT.dbf"),'r')
@@ -556,7 +557,7 @@ class ThreeSLS(BaseThreeSLS):
         has HR80 as dependent variable, PS80 and UE80 as exogenous regressors,
         RD80 as endogenous regressor and FP79 as additional instrument.
         For equation 2, HR90 is the dependent variable, PS90 and UE90 the
-        exogenous regressors, RD90 as endogenous regressor and FP99 as 
+        exogenous regressors, RD90 as endogenous regressor and FP99 as
         additional instrument
 
         >>> y_var = ['HR80','HR90']
@@ -565,7 +566,7 @@ class ThreeSLS(BaseThreeSLS):
         >>> q_var = [['FP79'],['FP89']]
 
         The SUR method requires data to be provided as dictionaries. PySAL
-        provides two tools to create these dictionaries from the list of variables: 
+        provides two tools to create these dictionaries from the list of variables:
         sur_dictxy and sur_dictZ. The tool sur_dictxy can be used to create the
         dictionaries for Y and X, and sur_dictZ for endogenous variables (yend) and
         additional instruments (q).
@@ -577,8 +578,8 @@ class ThreeSLS(BaseThreeSLS):
         We can now run the regression and then have a summary of the output by typing:
         print(reg.summary)
 
-        Alternatively, we can just check the betas and standard errors, asymptotic t 
-        and p-value of the parameters:        
+        Alternatively, we can just check the betas and standard errors, asymptotic t
+        and p-value of the parameters:
 
         >>> reg = ThreeSLS(bigy,bigX,bigyend,bigq,name_bigy=bigyvars,name_bigX=bigXvars,name_bigyend=bigyendvars,name_bigq=bigqvars,name_ds="NAT")
         >>> reg.b3SLS
@@ -604,7 +605,7 @@ class ThreeSLS(BaseThreeSLS):
     def __init__(self,bigy,bigX,bigyend,bigq,nonspat_diag=True,\
         name_bigy=None,name_bigX=None,name_bigyend=None,name_bigq=None,\
         name_ds=None):
-        
+
         #need checks on match between bigy, bigX dimensions
         BaseThreeSLS.__init__(self,bigy=bigy,bigX=bigX,bigyend=bigyend,\
             bigq=bigq)
@@ -617,7 +618,7 @@ class ThreeSLS(BaseThreeSLS):
             self.name_bigy = {}
             for r in range(self.n_eq):
                 yn = 'dep_var_' + str(r+1)
-                self.name_bigy[r] = yn               
+                self.name_bigy[r] = yn
         if name_bigX:
             self.name_bigX = name_bigX
         else: # need to construct x names
@@ -643,21 +644,21 @@ class ThreeSLS(BaseThreeSLS):
             for r in range(self.n_eq):
                 ki = bigq[r].shape[1]
                 name_i = ['inst_' + str(i + 1) + "_" + str(r+1) for i in range(ki)]
-                self.name_bigq[r] = name_i                
-               
+                self.name_bigq[r] = name_i
+
         #inference
         self.tsls_inf = sur_setp(self.b3SLS,self.varb)
-        
+
         # test on constancy of coefficients across equations
         if check_k(self.bigK):   # only for equal number of variables
             self.surchow = sur_chow(self.n_eq,self.bigK,self.b3SLS,self.varb)
         else:
-            self.surchow = None                
-        
+            self.surchow = None
+
         #Listing of the results
-        self.title = "THREE STAGE LEAST SQUARES (3SLS)"                
+        self.title = "THREE STAGE LEAST SQUARES (3SLS)"
         SUMMARY.SUR(reg=self, tsls=True, nonspat_diag=nonspat_diag)
-        
+
 def _test():
     import doctest
     start_suppress = np.get_printoptions()['suppress']
@@ -681,7 +682,7 @@ if __name__ == '__main__':
     bigy0,bigX0,bigyvars0,bigXvars0 = sur_dictxy(db,y_var,x_var)
     reg0 = SUR(bigy0,bigX0,w=w,name_bigy=bigyvars0,name_bigX=bigXvars0,\
           spat_diag=True,name_ds="nat")
-    print reg0.summary       
+    print reg0.summary
     """
     #Example 3SLS
     yend_var = [['RD80'],['RD90']]
@@ -692,6 +693,6 @@ if __name__ == '__main__':
     bigq1,bigqvars1 = sur_dictZ(db,q_var)
 
     reg1 = ThreeSLS(bigy1,bigX1,bigyend1,bigq1,name_ds="nat")
-    
-    print reg1.summary       
+
+    print reg1.summary
     #"""

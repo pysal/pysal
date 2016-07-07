@@ -1,5 +1,6 @@
 __all__ = ['DataTable']
 import FileIO
+from ..common import requires
 import numpy as np
 
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
@@ -192,7 +193,13 @@ class DataTable(FileIO.FileIO):
                 data = [r[cols] for r in data]
         self.seek(prevPos)
         return data
-
+    
+    @requires('pandas')
+    def to_df(self, n=-1, **df_kws):
+        import pandas as pd
+        header = self.header
+        records = self.read(n)
+        return pd.DataFrame(records, columns=header, **df_kws)
 
 def _test():
     import doctest

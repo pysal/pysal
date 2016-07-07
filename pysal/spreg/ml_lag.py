@@ -11,7 +11,8 @@ import numpy.linalg as la
 from scipy import sparse as sp
 from scipy.sparse.linalg import splu as SuperLU
 import pysal as ps
-from utils import RegressionPropsY, RegressionPropsVM, inverse_prod, spdot
+from utils import RegressionPropsY, RegressionPropsVM, inverse_prod
+from sputils import spdot, spfill_diagonal, spinv, spbroadcast
 import diagnostics as DIAG
 import user_output as USER
 import summary_output as SUMMARY
@@ -202,6 +203,7 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
             elif methodML == 'LU':
                 I = sp.identity(w.n)
                 Wsp = w.sparse  # moved here
+                W = Wsp
                 res = minimize_scalar(lag_c_loglik_sp, 0.0, bounds=(-1.0,1.0),
                                       args=(self.n, e0, e1, I, Wsp),
                                       method='bounded', tol=epsilon)
@@ -209,8 +211,9 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
                 # check on symmetry structure
                 if w.asymmetry(intrinsic=False) == []:
                     ww = symmetrize(w)
-                    WW = ww.todense()
+                    WW = np.array(ww.todense())
                     evals = la.eigvalsh(WW)
+                    W = WW
                 else:
                     W = w.full()[0]     # moved here
                     evals = la.eigvals(W)
@@ -245,20 +248,23 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
         self.e_pred = self.y - self.predy_e
 
         # residual variance
+        self._cache = {}
         self.sig2 = self.sig2n  # no allowance for division by n-k
 
         # information matrix
+        # if w should be kept sparse, how can we do the following:
         a = -self.rho * W
-        np.fill_diagonal(a, 1.0)
-        ai = la.inv(a)
-        wai = np.dot(W, ai)
-        tr1 = np.trace(wai)
+        spfill_diagonal(a, 1.0)
+        ai = spinv(a)
+        wai = spdot(W, ai)
+        tr1 = wai.diagonal().sum() #same for sparse and dense
 
         wai2 = np.dot(wai, wai)
-        tr2 = np.trace(wai2)
+        tr2 = wai2.diagonal().sum()
 
         waiTwai = np.dot(wai.T, wai)
-        tr3 = np.trace(waiTwai)
+        tr3 = waiTwai.diagonal().sum()
+        ### to here
 
         wpredy = ps.lag_spatial(w, self.predy_e)
         wpyTwpy = np.dot(wpredy.T, wpredy)
@@ -562,7 +568,7 @@ def lag_c_loglik(rho, n, e0, e1, W):
     sig2 = np.dot(er.T, er) / n
     nlsig2 = (n / 2.0) * np.log(sig2)
     a = -rho * W
-    np.fill_diagonal(a, 1.0)
+    spfill_diagonal(a, 1.0)
     jacob = np.log(np.linalg.det(a))
     # this is the negative of the concentrated log lik for minimization
     clik = nlsig2 - jacob
