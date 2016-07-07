@@ -23,6 +23,8 @@ It currently works on cartesian coordinates. Users with data in geographic coord
 
 - PySAL 1.11+
 - Pandas 0.17.0+
+- shapely
+- descartes
 
 ### Why in Contrib and Not Core?
 

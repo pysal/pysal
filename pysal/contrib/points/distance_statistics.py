@@ -7,9 +7,6 @@ TODO
 - documentation
 - testing
 
-- plot the benchmark function?
-- when calculating simulations envelopes, can we simulate CSR inside the Genv
-  class?
 
 """
 __author__ = "Serge Rey sjsrey@gmail.com"

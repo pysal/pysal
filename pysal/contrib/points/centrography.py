@@ -3,8 +3,6 @@ Centrographic measures for point patterns
 
 TODO
 
-- ellipses
-- euclidean median
 - testing
 - documentation
 
