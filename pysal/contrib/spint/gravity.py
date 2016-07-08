@@ -105,16 +105,15 @@ class BaseGravity(CountModel):
         self.c = cost
         self.ov = o_vars
         self.dv = d_vars
-
         if type(cost_func) == str:
             if cost_func.lower() == 'pow':
                 self.cf = np.log
             elif cost_func.lower() == 'exp':
                 self.cf = lambda x: x*1.0
-        elif type(cost_func) == FunctionType:
+        elif (type(cost_func) == FunctionType) | (type(cost_func) == np.ufunc):
             self.cf = cost_func
         else:
-            raise ValueError("cost_func must be 'exp', 'power' or a valid"
+            raise ValueError("cost_func must be 'exp', 'pow' or a valid"
             " function that has a scalar as a input and output")
 
         y = np.reshape(self.f, (-1,1))
@@ -126,22 +125,26 @@ class BaseGravity(CountModel):
             d_dummies = spcategorical(destinations.flatten())
             X = sphstack(X, d_dummies, array_out=False)
         if isinstance(self, Production) | isinstance(self, Doubly):
-            o_dummies = spcategorical(origins.flatten()) 
+            o_dummies = spcategorical(origins.flatten())
             X = sphstack(X, o_dummies, array_out=False)
         if isinstance(self, Doubly):
             X = X[:,1:]
         if self.ov is not None:	
             if isinstance(self, Gravity):
-                X = np.hstack((X, np.log(np.reshape(self.ov, (-1,1)))))
+                for each in range(self.ov.shape[1]):
+                    X = np.hstack((X, np.log(np.reshape(self.ov[:,each], (-1,1)))))
             else:
-                ov = sp.csr_matrix(np.log(np.reshape(self.ov, ((-1,1)))))
-                X = sphstack(X, ov, array_out=False)
+                for each in range(self.ov.shape[1]):
+                    ov = sp.csr_matrix(np.log(np.reshape(self.ov[:,each], ((-1,1)))))
+                    X = sphstack(X, ov, array_out=False)
         if self.dv is not None:    	
             if isinstance(self, Gravity):
-                X = np.hstack((X, np.log(np.reshape(self.dv, (-1,1)))))
+                for each in range(self.dv.shape[1]):
+                    X = np.hstack((X, np.log(np.reshape(self.dv[:,each], (-1,1)))))
             else:
-                dv = sp.csr_matrix(np.log(np.reshape(self.dv, ((-1,1)))))
-                X = sphstack(X, dv, array_out=False)
+                for each in range(self.dv.shape[1]):
+                    dv = sp.csr_matrix(np.log(np.reshape(self.dv[:,each], ((-1,1)))))
+                    X = sphstack(X, dv, array_out=False)
         if isinstance(self, Gravity):
             X = np.hstack((X, self.cf(np.reshape(self.c, (-1,1)))))
         else:
@@ -150,7 +153,7 @@ class BaseGravity(CountModel):
             X = X[:,1:]#because empty array instantiated with extra column
         if not isinstance(self, (Gravity, Production, Attraction, Doubly)):
             X = self.cf(np.reshape(self.c, (-1,1)))
-
+        
         if SF:
         	raise NotImplementedError("Spatial filter model not yet implemented")
         if CD:
@@ -257,13 +260,21 @@ class Gravity(BaseGravity):
             cost_func, constant=False, framework='GLM', SF=None, CD=None,
             Lag=None, Quasi=False):
         self.f = np.reshape(flows, (-1,1))
-        self.ov = np.reshape(o_vars, (-1,1))
-        self.dv = np.reshape(d_vars, (-1,1))
+        if len(o_vars.shape) > 1:
+            p = o_vars.shape[1]
+        else:
+            p = 1
+        self.ov = np.reshape(o_vars, (-1,p))
+        if len(d_vars.shape) > 1:
+            p = d_vars.shape[1]
+        else:
+            p = 1
+        self.dv = np.reshape(d_vars, (-1,p))
         self.c = np.reshape(cost, (-1,1))
         User.check_arrays(self.f, self.ov, self.dv, self.c)
         
         BaseGravity.__init__(self, self.f, self.c,
-                cost_func, o_vars=self.ov, d_vars=self.dv, constant=constant,
+                cost_func=cost_func, o_vars=self.ov, d_vars=self.dv, constant=constant,
                 framework=framework, SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
         
     def local(self, loc_index, locs):
@@ -301,8 +312,8 @@ class Gravity(BaseGravity):
         for loc in locs:
             subset = loc_index == loc
             f = self.reshape(self.f[subset])
-            o_vars = self.reshape(self.ov[subset])
-            d_vars = self.reshape(self.dv[subset])
+            o_vars = self.ov[subset.reshape(self.ov.shape[0),:]
+            d_vars = self.dv[subset.reshape(self.dv.shape[0]),:]
             dij = self.reshape(self.c[subset])
             model = Gravity(f, o_vars, d_vars, dij, self.cf)
             results['aic'].append(model.aic)
@@ -382,11 +393,17 @@ class Production(BaseGravity):
             framework='GLM', SF=None, CD=None, Lag=None, Quasi=False):
         self.f = self.reshape(flows)
         self.o = self.reshape(origins)
-        self.dv = self.reshape(d_vars)
+        
+        try:
+            if d_vars.shape[1]:
+                p = d_vars.shape[1]
+        except:
+            p = 1
+        self.dv = np.reshape(d_vars, (-1,p))
         self.c = self.reshape(cost)
         User.check_arrays(self.f, self.o, self.dv, self.c)
        
-        BaseGravity.__init__(self, self.f, self.c, cost_func, d_vars=self.dv,
+        BaseGravity.__init__(self, self.f, self.c, cost_func=cost_func, d_vars=self.dv,
                 origins=self.o, constant=constant, framework=framework,
                 SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
     
@@ -419,7 +436,7 @@ class Production(BaseGravity):
             subset = self.o == loc
             f = self.reshape(self.f[subset])
             o = self.reshape(self.o[subset])
-            d_vars = self.reshape(self.dv[subset])
+            d_vars = self.dv[subset.reshape(self.dv.shape[0]),:]
             dij = self.reshape(self.c[subset])
             model = Production(f, o, d_vars, dij, self.cf)
             results['aic'].append(model.aic)
@@ -500,12 +517,16 @@ class Attraction(BaseGravity):
             constant=False, framework='GLM', SF=None, CD=None, Lag=None,
             Quasi=False):
         self.f = np.reshape(flows, (-1,1))
-        self.ov = np.reshape(o_vars, (-1,1))
+        if len(o_vars.shape) > 1:
+            p = o_vars.shape[1]
+        else:
+            p = 1
+        self.ov = np.reshape(o_vars, (-1,p))
         self.d = np.reshape(destinations, (-1,1))
         self.c = np.reshape(cost, (-1,1))
         User.check_arrays(self.f, self.d, self.ov, self.c)
 
-        BaseGravity.__init__(self, self.f, self.c, cost_func, o_vars=self.ov,
+        BaseGravity.__init__(self, self.f, self.c, cost_func=cost_func, o_vars=self.ov,
                  destinations=self.d, constant=constant,
                  framework=framework, SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
 
@@ -538,7 +559,7 @@ class Attraction(BaseGravity):
             subset = self.d == loc
             f = self.reshape(self.f[subset])
             d = self.reshape(self.d[subset])
-            o_vars = self.reshape(self.ov[subset])
+            o_vars = self.ov[subset.reshape(self.ov.shape[0),:]
             dij = self.reshape(self.c[subset])
             model = Attraction(f, d, o_vars, dij, self.cf)
             results['aic'].append(model.aic)
@@ -626,7 +647,7 @@ class Doubly(BaseGravity):
         self.c = np.reshape(cost, (-1,1))
         User.check_arrays(self.f, self.o, self.d, self.c)
 
-        BaseGravity.__init__(self, self.f, self.c, cost_func, origins=self.o, 
+        BaseGravity.__init__(self, self.f, self.c, cost_func=cost_func, origins=self.o, 
                 destinations=self.d, constant=constant,
                 framework=framework, SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
 
