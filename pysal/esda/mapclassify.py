@@ -21,6 +21,11 @@ import copy
 import sys
 from scipy.cluster.vq import kmeans as KMEANS
 from warnings import warn as Warn
+try:
+    from numba import autojit
+except ImportError:
+    def autojit(func):
+        return func
 
 def headTail_breaks(values, cuts):
     """
@@ -313,6 +318,7 @@ def natural_breaks(values, k=5):
     return (sids, class_ids, fit, cuts)
 
 
+@autojit
 def _fisher_jenks_means(values, classes=5, sort=True):
     """
     Jenks Optimal (Natural Breaks) algorithm implemented in Python.
@@ -325,61 +331,45 @@ def _fisher_jenks_means(values, classes=5, sort=True):
     assuring heterogeneity among classes.
 
     """
-
     if sort:
         values.sort()
-    mat1 = []
-    for i in range(0, len(values) + 1):
-        temp = []
-        for j in range(0, classes + 1):
-            temp.append(0)
-        mat1.append(temp)
-    mat2 = []
-    for i in range(0, len(values) + 1):
-        temp = []
-        for j in range(0, classes + 1):
-            temp.append(0)
-        mat2.append(temp)
-    for i in range(1, classes + 1):
-        mat1[1][i] = 1
-        mat2[1][i] = 0
-        for j in range(2, len(values) + 1):
-            mat2[j][i] = float('inf')
-    v = 0.0
+    n_data = len(values)
+    mat1 = np.zeros((n_data + 1, classes + 1), dtype=np.int32)
+    mat2 = np.zeros((n_data + 1, classes + 1), dtype=np.float32)
+    mat1[1, 1:] = 1
+    mat2[2:, 1:] = np.inf
+
+    v = np.float32(0)
     for l in range(2, len(values) + 1):
-        s1 = 0.0
-        s2 = 0.0
-        w = 0.0
+        s1 = np.float32(0)
+        s2 = np.float32(0)
+        w = np.float32(0)
         for m in range(1, l + 1):
             i3 = l - m + 1
-            val = float(values[i3 - 1])
+            val = np.float32(values[i3 - 1])
             s2 += val * val
             s1 += val
-            w += 1
+            w += np.float32(1)
             v = s2 - (s1 * s1) / w
             i4 = i3 - 1
             if i4 != 0:
                 for j in range(2, classes + 1):
-                    if mat2[l][j] >= (v + mat2[i4][j - 1]):
-                        mat1[l][j] = i3
-                        mat2[l][j] = v + mat2[i4][j - 1]
-        mat1[l][1] = 1
-        mat2[l][1] = v
+                    if mat2[l, j] >= (v + mat2[i4, j - 1]):
+                        mat1[l, j] = i3
+                        mat2[l, j] = v + mat2[i4, j - 1]
+        mat1[l, 1] = 1
+        mat2[l, 1] = v
 
     k = len(values)
 
-    kclass = []
-    for i in range(0, classes + 1):
-        kclass.append(0)
-    kclass[classes] = float(values[len(values) - 1])
-    kclass[0] = float(values[0])
-    countNum = classes
-    while countNum >= 2:
-        pivot = mat1[k][countNum]
+    kclass = np.zeros(classes + 1, dtype=values.dtype)
+    kclass[classes] = values[len(values) - 1]
+    kclass[0] = values[0]
+    for countNum in range(classes, 1, -1):
+        pivot = mat1[k, countNum]
         id = int(pivot - 2)
         kclass[countNum - 1] = values[id]
         k = int(pivot - 1)
-        countNum -= 1
     return kclass
 
 
