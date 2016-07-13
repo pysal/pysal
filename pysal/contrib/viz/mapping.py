@@ -20,7 +20,7 @@ from matplotlib.pyplot import fill, text
 from matplotlib import cm
 from matplotlib.patches import Polygon
 from matplotlib.path import Path
-from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection
+from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection, CircleCollection
 
 # Low-level pieces
 
@@ -505,6 +505,84 @@ def _expand_values(values, shp2dbf_row):
 
 # High-level pieces
 
+def plot_geocol_mpl(gc, facecolor='0.9', edgecolor='k', 
+        alpha=1., linewidth=0.2, marker='o', marker_size=20, 
+        ax=None):
+    '''
+    Plot geographical data from the `geometry` column of a PySAL geotable
+
+    ToDo:
+
+    * Geometry plotting (poly, line, point)
+    * If not ax, sensible default
+    * Control of linewidth, edgecolor, facecolor
+    * Choropleth mapping
+    ...
+
+    Arguments
+    ---------
+    gc          : DataFrame
+                  GeoCol with data to be plotted.
+    facecolor   : str
+                  [Optional. Default='0.9'] Color for the polygon and point
+                  filling.
+    edgecolor   : str
+                  [Optional. Default='k'] Color for the polygon and point
+                  edges
+    alpha       : float
+                  [Optional. Default=1.] Transparency
+    linewidth   : float
+                  [Optional. Default=0.2] Width of the lines in polygon and line plotting (not
+                  applicable to points).
+    marker      : 'o'
+    marker_size : int
+    ax          : AxesSubplot
+                  [Optional. Default=None] Pre-existing axes to which append the collections
+                  and setup
+    '''
+    geom = type(gc.iloc[0])
+    draw = False
+    if not ax:
+        f, ax = plt.subplots(1, figsize=(9, 9))
+        draw = True
+    # Geometry plotting
+    ## Polygons
+    patches = []
+    if geom == ps.cg.shapes.Polygon:
+        for shape in gc:
+            for ring in shape.parts:
+                xy = np.array(ring)
+                patches.append(xy)
+        mpl_col = PolyCollection(patches)
+    ## Lines
+    elif geom == ps.cg.shapes.Chain:
+        for shape in gc:
+            for xy in shape.parts:
+                patches.append(xy)
+        mpl_col = LineCollection(patches)
+        facecolor = 'None'
+    ## Points
+    elif geom == ps.cg.shapes.Point:
+        edgecolor = facecolor
+        xys = np.array(zip(*gc)).T
+        ax.scatter(xys[:, 0], xys[:, 1], marker=marker, 
+                s=marker_size, c=facecolor, edgecolors=edgecolor,
+                linewidths=linewidth)
+        mpl_col = None
+    # Styling mpl collection
+    if mpl_col:
+        mpl_col.set_facecolor(facecolor)
+        mpl_col.set_edgecolor(edgecolor)
+        mpl_col.set_linewidth(linewidth)
+        mpl_col.set_alpha(alpha)
+
+        ax.add_collection(mpl_col, autolim=True)
+        ax.autoscale_view()
+    ax.set_axis_off()
+    if draw:
+        plt.axis('equal')
+        plt.show()
+    return None
 
 def plot_poly_lines(shp_link,  savein=None, poly_col='none'):
     '''
