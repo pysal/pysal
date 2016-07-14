@@ -609,6 +609,102 @@ def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
         plt.show()
     return None
 
+def plot_geocol_bk(gc, color=None, facecolor='0.3', edgecolor='0.7', 
+        alpha=1., linewidth=0.2, marker='o', marker_size=20, 
+        p=None):
+    '''
+    Plot geographical data from the `geometry` column of a PySAL geotable to a
+    bokeh backend.
+
+    ...
+
+    Arguments
+    ---------
+    gc          : DataFrame
+                  GeoCol with data to be plotted.
+    color       : str/tuple/Series
+                  [Optional. Default=None] Wrapper that sets both `facecolor`
+                  and `edgecolor` at the same time. If set, `facecolor` and
+                  `edgecolor` are ignored. It allows for either a single color
+                  or a Series of the same length as `gc` with colors, indexed
+                  on `gc.index`.
+    facecolor   : str/tuple/Series
+                  [Optional. Default='0.3'] Color for polygons and points. It
+                  allows for either a single color or a Series of the same
+                  length as `gc` with colors, indexed on `gc.index`.
+    edgecolor   : str/tuple/Series
+                  [Optional. Default='0.7'] Color for the polygon and point
+                  edges. It allows for either a single color or a Series of
+                  the same length as `gc` with colors, indexed on `gc.index`.
+    alpha       : float/Series
+                  [Optional. Default=1.] Transparency. It allows for either a
+                  single value or a Series of the same length as `gc` with
+                  colors, indexed on `gc.index`.
+    linewidth   : float/Series
+                  [Optional. Default=0.2] Width(s) of the lines in polygon and
+                  line plotting (not applicable to points). It allows for
+                  either a single value or a Series of the same length as `gc`
+                  with colors, indexed on `gc.index`.
+    marker      : 'o'
+    marker_size : int
+    p           : bokeh.plotting.figure
+                  [Optional. Default=None] Pre-existing bokeh figure to which
+                  append the collections and setup.
+    '''
+    geom = type(gc.iloc[0])
+    if color is not None:
+        facecolor = edgecolor = color
+    draw = False
+    if not p:
+        TOOLS="pan,wheel_zoom,box_zoom,reset,hover,save"
+        p = bk.figure(tools=TOOLS,
+           x_axis_location=None, y_axis_location=None)
+        p.grid.grid_line_color = None
+        draw = True
+    # Geometry plotting
+    patch_xs = []
+    patch_ys = []
+    ids = []
+    ## Polygons
+    if geom == ps.cg.shapes.Polygon:
+        for id, shape in gc.iteritems():
+            for ring in shape.parts:
+                xs, ys = zip(*ring)
+                patch_xs.append(xs)
+                patch_ys.append(ys)
+                ids.append(id)
+        cds = bk.ColumnDataSource(data=dict(
+                    x=patch_xs,
+                    y=patch_ys
+                    ))
+        p.patches('x', 'y', source=cds,
+          fill_alpha=alpha,
+          line_color=edgecolor, 
+          line_width=linewidth
+          )
+    '''
+    ## Lines
+    elif geom == ps.cg.shapes.Chain:
+        for id, shape in gc.iteritems():
+            for xy in shape.parts:
+                patches.append(xy)
+                ids.append(id)
+        mpl_col = LineCollection(patches)
+        facecolor = 'None'
+    ## Points
+    elif geom == ps.cg.shapes.Point:
+        edgecolor = facecolor
+        xys = np.array(zip(*gc)).T
+        ax.scatter(xys[:, 0], xys[:, 1], marker=marker, 
+                s=marker_size, c=facecolor, edgecolors=edgecolor,
+                linewidths=linewidth)
+        mpl_col = None
+    '''
+    # Styling mpl collection (polygons & lines)
+    if draw:
+        bk.show(p)
+    return None
+
 def plot_poly_lines(shp_link,  savein=None, poly_col='none'):
     '''
     Quick plotting of shapefiles
