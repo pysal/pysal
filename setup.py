@@ -78,7 +78,7 @@ def setup_package():
                                         "meta"]),
         package_data={'pysal': list(example_data_files)},
         install_requires=['scipy'],
-        extra_requires={'plus':psplus},
+        extras_require={'plus':psplus},
         cmdclass= {'build_py': build_py}
     )
 

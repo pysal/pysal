@@ -26,8 +26,8 @@ before_install:
 install:
   - conda install --yes numpy scipy nose pip
   - if [ "$PYSAL_PLUS" == true ]; then
-        echo 'plus testing'; conda install --file requirements_plus.txt;
-        else conda install --file requirements.txt; 
+        echo 'plus testing'; conda install --yes --file requirements_plus.txt;
+        else conda install --yes --file requirements.txt; 
     fi;
   - pip install -r travis.txt
 
