@@ -8,7 +8,8 @@ __all__ = ["Markov", "LISA_Markov", "Spatial_Markov", "kullback",
 
 import numpy as np
 import numpy.linalg as la
-from pysal.spatial_dynamics.ergodic import fmpt, steady_state
+from pysal.spatial_dynamics.ergodic import fmpt
+from pysal.spatial_dynamics.ergodic import steady_state as STEADY_STATE
 from scipy import stats
 import pysal
 from operator import gt
@@ -46,26 +47,26 @@ for i, sig_key in enumerate(sig_keys):
             c += 1
 
 
-class Markov:
+class Markov(object):
     """
     Classic Markov transition matrices.
 
     Parameters
     ----------
-    class_ids    : array 
-                   (n, t), one row per observation, one column recording the 
-                   state of each observation, with as many columns as time 
+    class_ids    : array
+                   (n, t), one row per observation, one column recording the
+                   state of each observation, with as many columns as time
                    periods.
-    classes      : array 
+    classes      : array
                    (k, 1), all different classes (bins) of the matrix.
 
     Attributes
     ----------
-    p            : matrix 
+    p            : matrix
                    (k, k), transition probability matrix.
-    steady_state : matrix 
+    steady_state : matrix
                    (k, 1), ergodic distribution.
-    transitions  : matrix 
+    transitions  : matrix
                    (k, k), count of transitions between each state i and j.
 
     Examples
@@ -73,7 +74,7 @@ class Markov:
     >>> c = np.array([['b','a','c'],['c','c','a'],['c','b','c'],['a','a','b'],['a','b','c']])
     >>> m = Markov(c)
     >>> m.classes
-    array(['a', 'b', 'c'], 
+    array(['a', 'b', 'c'],
           dtype='|S1')
     >>> m.p
     matrix([[ 0.25      ,  0.5       ,  0.25      ],
@@ -134,9 +135,8 @@ class Markov:
             [ 0.17776576]])
 
     """
-    def __init__(self, class_ids, classes=[]):
-        #pylint; Dangerous default value [] as argument
-        if len(classes):
+    def __init__(self, class_ids, classes=None):
+        if classes is not None:
             self.classes = classes
         else:
             self.classes = np.unique(class_ids)
@@ -164,31 +164,30 @@ class Markov:
         p = np.dot(np.diag(1 / (row_sum + (row_sum == 0))), transitions)
         self.p = np.matrix(p)
 
-        # steady_state vector
-        v, d = la.eig(np.transpose(self.p))
-        # for a regular P maximum eigenvalue will be 1
-        mv = max(v)
-        # find its position
-        i = v.tolist().index(mv)
-        # normalize eigenvector corresponding to the eigenvalue 1
-        self.steady_state = d[:, i] / sum(d[:, i])
+    @property
+    def steady_state(self):
+        if not hasattr(self,'_steady_state'):
+            self._steady_state = STEADY_STATE(self.p)
+        return self._steady_state
 
 
-class Spatial_Markov:
+
+
+class Spatial_Markov(object):
     """
     Markov transitions conditioned on the value of the spatial lag.
 
     Parameters
     ----------
-    y               : array 
-                      (n,t), one row per observation, one column per state of 
+    y               : array
+                      (n,t), one row per observation, one column per state of
                       each observation, with as many columns as time periods.
     w               : W
                       spatial weights object.
     k               : integer
                       number of classes (quantiles).
     permutations    : int, optional
-                      number of permutations for use in randomization based 
+                      number of permutations for use in randomization based
                       inference (the default is 0).
     fixed           : bool
                       If true, quantiles are taken over the entire n*t
@@ -199,14 +198,14 @@ class Spatial_Markov:
 
     Attributes
     ----------
-    p               : matrix 
+    p               : matrix
                       (k, k), transition probability matrix for a-spatial Markov.
-    s               : matrix 
+    s               : matrix
                       (k, 1), ergodic distribution for a-spatial Markov.
-    transitions     : matrix 
+    transitions     : matrix
                       (k, k), counts of transitions between each state i and j
                       for a-spatial Markov.
-    T               : matrix 
+    T               : matrix
                       (k, k, k), counts of transitions for each conditional Markov.
                       T[0] is the matrix of transitions for observations with
                       lags in the 0th quantile; T[k-1] is the transitions for
@@ -220,17 +219,17 @@ class Spatial_Markov:
     F               : matrix
                       (k, k, k),first mean passage times.
                       First dimension is conditioned on the lag.
-    shtest          : list 
-                      (k elements), each element of the list is a tuple for a 
-                      multinomial difference test between the steady state 
-                      distribution from a conditional distribution versus the 
-                      overall steady state distribution: first element of the 
-                      tuple is the chi2 value, second its p-value and the third 
+    shtest          : list
+                      (k elements), each element of the list is a tuple for a
+                      multinomial difference test between the steady state
+                      distribution from a conditional distribution versus the
+                      overall steady state distribution: first element of the
+                      tuple is the chi2 value, second its p-value and the third
                       the degrees of freedom.
-    chi2            : list 
-                      (k elements), each element of the list is a tuple for a 
-                      chi-squared test of the difference between the conditional 
-                      transition matrix against the overall transition matrix: 
+    chi2            : list
+                      (k elements), each element of the list is a tuple for a
+                      chi-squared test of the difference between the conditional
+                      transition matrix against the overall transition matrix:
                       first element of the tuple is the chi2 value, second its
                       p-value and the third the degrees of freedom.
     x2              : float
@@ -244,12 +243,12 @@ class Spatial_Markov:
     x2_pvalue       : float
                       pvalue for homogeneity test based on analytic.
                       distribution
-    x2_rpvalue      : float 
+    x2_rpvalue      : float
                       (if permutations>0)
                       pseudo p-value for x2 based on random spatial permutations
                       of the rows of the original transitions.
-    x2_realizations : array 
-                      (permutations,1), the values of x2 for the random 
+    x2_realizations : array
+                      (permutations,1), the values of x2 for the random
                       permutations.
     Q               : float
                       Chi-square test of homogeneity across lag classes based
@@ -273,7 +272,7 @@ class Spatial_Markov:
     preferable since it simulates the randomness under the null. It is an
     experimental test requiring further analysis.
 
-	This is new
+    This is new
 
     Examples
     --------
@@ -384,15 +383,15 @@ class Spatial_Markov:
      [ 127.1407767    48.74107143   33.29605263    3.91777427   83.52173913]
      [ 169.6407767    91.24107143   75.79605263   42.5           2.96521739]]
 
-   
+
     """
     def __init__(self, y, w, k=4, permutations=0, fixed=False,
                  variable_name=None):
 
         self.y = y
         rows, cols = y.shape
+        self.k = k
         self.cols = cols
-        npm = np.matrix
         npa = np.array
         self.fixed = fixed
         self.variable_name = variable_name
@@ -407,38 +406,19 @@ class Spatial_Markov:
         classic = Markov(classes)
         self.classes = classes
         self.p = classic.p
-        self.s = classic.steady_state
         self.transitions = classic.transitions
-        T, P, ss, F = self._calc(y, w, classes, k=k)
+        T, P = self._calc(y, w, classes, k=k)
         self.T = T
         self.P = P
-        self.S = ss
-        self.F = F
-        self.shtest = self._mn_test()
-        self.chi2 = self._chi2_test()
-        self.x2 = sum([c[0] for c in self.chi2])
-        dof = k * (k - 1) * (k - 1)
-        self.x2_pvalue = 1 - stats.chi2.cdf(self.x2, dof)
-        self.x2_dof = dof
-        self.k = k
 
-        # bickenbach and bode tests
-        ht = homogeneity(self.T)
-        self.Q = ht.Q
-        self.Q_p_value = ht.Q_p_value
-        self.LR = ht.LR
-        self.LR_p_value = ht.LR_p_value
-        self.dof_hom = ht.dof
 
 
         if permutations:
             nrp = np.random.permutation
-            rp = range(permutations)
             counter = 0
             x2_realizations = np.zeros((permutations, 1))
-            x2ss = []
             for perm in range(permutations):
-                T, P, ss, F = self._calc(nrp(y), w, classes, k=k)
+                T, P = self._calc(nrp(y), w, classes, k=k)
                 x2 = [chi2(T[i], self.transitions)[0] for i in range(k)]
                 x2s = sum(x2)
                 x2_realizations[perm] = x2s
@@ -447,10 +427,106 @@ class Spatial_Markov:
             self.x2_rpvalue = (counter + 1.0) / (permutations + 1.)
             self.x2_realizations = x2_realizations
 
+    @property
+    def s(self):
+        if not hasattr(self, '_s'):
+            self._s = STEADY_STATE(self.p)
+        return self._s
+
+
+    @property
+    def S(self):
+        if not hasattr(self, '_S'):
+            S = np.zeros_like(self.p)
+            for i,p in enumerate(self.P):
+                S[i] = STEADY_STATE(p)
+            self._S = np.asarray(S)
+        return self._S
+
+
+    @property
+    def F(self):
+        if not hasattr(self, '_F'):
+            F = np.zeros_like(self.P)
+            for i,p in enumerate(self.P):
+                F[i] = fmpt(np.asmatrix(p))
+            self._F = np.asarray(F)
+        return self._F
+
+    # bickenbach and bode tests
+    @property
+    def ht(self):
+        if not hasattr(self,'_ht'):
+            self._ht = homogeneity(self.T)
+        return self._ht
+
+    @property
+    def Q(self):
+        if not hasattr(self,'_Q'):
+            self._Q = self.ht.Q
+        return self._Q
+
+    @property
+    def Q_p_value(self):
+        self._Q_p_value = self.ht.Q_p_value
+        return self._Q_p_value
+
+    @property
+    def LR(self):
+        self._LR = self.ht.LR
+        return self._LR
+
+    @property
+    def LR_p_value(self):
+        self._LR_p_value = self.ht.LR_p_value
+        return self._LR_p_value
+
+    @property
+    def dof_hom(self):
+        self._dof_hom = self.ht.dof
+        return self._dof_hom
+
+
+    # shtests
+
+    @property
+    def shtest(self):
+        if not hasattr(self,'_shtest'):
+            self._shtest = self._mn_test()
+        return self._shtest
+
+    @property
+    def chi2(self):
+        if not hasattr(self, '_chi2'):
+            self._chi2 = self._chi2_test()
+        return self._chi2
+
+    @property
+    def x2(self):
+        if not hasattr(self,'_x2'):
+            self._x2 = sum([c[0] for c in self.chi2])
+        return self._x2
+
+    @property
+    def x2_pvalue(self):
+        if not hasattr(self,'_x2_pvalue'):
+            self._x2_pvalue = 1 - stats.chi2.cdf(self.x2,
+                                              self.x2_dof)
+        return self._x2_pvalue
+
+    @property
+    def x2_dof(self):
+        if not hasattr(self,'_x2_dof'):
+            k = self.k
+            self._x2_dof = k * (k - 1) * (k - 1)
+        return self._x2_dof
+
+
+
+
+
     def _calc(self, y, w, classes, k):
-        # lag markov
         ly = pysal.lag_spatial(w, y)
-        npm = np.matrix
         npa = np.array
         if self.fixed:
             l_classes = pysal.Quantiles(ly.flatten(), k=k).yb
@@ -459,7 +535,6 @@ class Spatial_Markov:
             l_classes = npa([pysal.Quantiles(
                 ly[:, i], k=k).yb for i in np.arange(self.cols)])
             l_classes = l_classes.transpose()
-        l_classic = Markov(l_classes)
         T = np.zeros((k, k, k))
         n, t = y.shape
         for t1 in range(t - 1):
@@ -468,23 +543,12 @@ class Spatial_Markov:
                 T[l_classes[i, t1], classes[i, t1], classes[i, t2]] += 1
 
         P = np.zeros_like(T)
-        F = np.zeros_like(T)  # fmpt
-        ss = np.zeros_like(T[0])
         for i, mat in enumerate(T):
             row_sum = mat.sum(axis=1)
             row_sum = row_sum + (row_sum == 0)
             p_i = np.matrix(np.diag(1. / row_sum) * np.matrix(mat))
-            #print i
-            #print mat
-            #print p_i
-            ss[i] = steady_state(p_i).transpose()
-            try:
-                F[i] = fmpt(p_i)
-            except:
-                #pylint; "No exception type(s) specified"
-                print "Singlular fmpt matrix for class ", i
             P[i] = p_i
-        return T, P, ss, F
+        return T, P
 
     def _mn_test(self):
         """
@@ -492,7 +556,6 @@ class Spatial_Markov:
         distributions from the conditional and overall distributions.
         """
         n, t = self.y.shape
-        nt = n * (t - 1)
         n0, n1, n2 = self.T.shape
         rn = range(n0)
         mat = [self._ssmnp_test(
@@ -505,19 +568,19 @@ class Spatial_Markov:
 
         Arguments
         ---------
-        p1       :  array 
+        p1       :  array
                     (k, 1), first steady state probability distribution.
-        p1       :  array 
+        p1       :  array
                     (k, 1), second steady state probability distribution.
         nt       :  int
                     number of transitions to base the test on.
 
         Returns
         -------
-        tuple 
+        tuple
                    (3 elements)
                    (chi2 value, pvalue, degrees of freedom)
- 
+
         """
         p1 = np.array(p1)
         k, c = p1.shape
@@ -560,15 +623,15 @@ def chi2(T1, T2):
 
     Parameters
     ----------
-    T1    : matrix 
+    T1    : matrix
             (k, k), matrix of transitions (counts).
-    T2    : matrix 
-            (k, k), matrix of transitions (counts) to use to form the 
+    T2    : matrix
+            (k, k), matrix of transitions (counts) to use to form the
             probabilities under the null.
- 
+
     Returns
     -------
-    	  : tuple 
+          : tuple
             (3 elements).
             (chi2 value, pvalue, degrees of freedom).
 
@@ -635,39 +698,39 @@ class LISA_Markov(Markov):
 
     Parameters
     ----------
-    y                  : array 
-                         (n, t), n cross-sectional units observed over t time 
+    y                  : array
+                         (n, t), n cross-sectional units observed over t time
                          periods.
     w                  : W
                          spatial weights object.
     permutations       : int, optional
-                         number of permutations used to determine LISA 
-                         significance (the default is 0). 
+                         number of permutations used to determine LISA
+                         significance (the default is 0).
     significance_level : float, optional
-                         significance level (two-sided) for filtering 
-                         significant LISA endpoints in a transition (the 
+                         significance level (two-sided) for filtering
+                         significant LISA endpoints in a transition (the
                          default is 0.05).
-    geoda_quads        : bool 
+    geoda_quads        : bool
                          If True use GeoDa scheme: HH=1, LL=2, LH=3, HL=4.
-                         If False use PySAL Scheme: HH=1, LH=2, LL=3, HL=4. 
-                         (the default is False). 
+                         If False use PySAL Scheme: HH=1, LH=2, LL=3, HL=4.
+                         (the default is False).
 
     Attributes
     ----------
-    chi_2        : tuple 
+    chi_2        : tuple
                    (3 elements)
-                   (chi square test statistic, p-value, degrees of freedom)                   
+                   (chi square test statistic, p-value, degrees of freedom)
                    for test that dynamics of y are independent of dynamics of wy.
-    classes      : array 
+    classes      : array
                    (4, 1)
-                   1=HH, 2=LH, 3=LL, 4=HL (own, lag) 
+                   1=HH, 2=LH, 3=LL, 4=HL (own, lag)
                    1=HH, 2=LL, 3=LH, 4=HL (own, lag) (if geoda_quads=True)
-    expected_t   : array 
-                   (4, 4), expected number of transitions under the null that 
+    expected_t   : array
+                   (4, 4), expected number of transitions under the null that
                    dynamics of y are independent of dynamics of wy.
-    move_types   : matrix 
-                   (n, t-1), integer values indicating which type of LISA 
-                   transition occurred (q1 is quadrant in period 1, q2 is 
+    move_types   : matrix
+                   (n, t-1), integer values indicating which type of LISA
+                   transition occurred (q1 is quadrant in period 1, q2 is
                    quadrant in period 2).
 
     .. Table:: Move Types
@@ -693,13 +756,13 @@ class LISA_Markov(Markov):
                    4   4      16
                    ==  ==     ========
 
-    p            : matrix 
+    p            : matrix
                    (k, k), transition probability matrix.
     p_values     : matrix
                    (n, t), LISA p-values for each end point (if permutations > 0).
     significant_moves : matrix
-                        (n, t-1), integer values indicating the type and 
-                        significance of a LISA transition. st = 1 if significant 
+                        (n, t-1), integer values indicating the type and
+                        significance of a LISA transition. st = 1 if significant
                         in period t, else st=0 (if permutations > 0).
 
     .. Table:: Significant Moves
@@ -753,13 +816,13 @@ class LISA_Markov(Markov):
                         4  4   0   0   64
                        == ==  ==  ==  =========
 
-    steady_state : matrix 
+    steady_state : matrix
                    (k, 1), ergodic distribution.
-    transitions  : matrix 
+    transitions  : matrix
                    (4, 4), count of transitions between each state i and j.
-    spillover    : array 
-                   (n, 1) binary array, locations that were not part of a 
-                   cluster in period 1 but joined a prexisting cluster in 
+    spillover    : array
+                   (n, 1) binary array, locations that were not part of a
+                   cluster in period 1 but joined a prexisting cluster in
                    period 2.
 
     Examples
@@ -795,7 +858,7 @@ class LISA_Markov(Markov):
     array([[11, 11, 11, ..., 11, 11, 11],
            [ 6,  6,  6, ...,  6,  7, 11],
            [11, 11, 11, ..., 11, 11, 11],
-           ..., 
+           ...,
            [ 6,  6,  6, ...,  6,  6,  6],
            [ 1,  1,  1, ...,  6,  6,  6],
            [16, 16, 16, ..., 16, 16, 16]])
@@ -809,7 +872,7 @@ class LISA_Markov(Markov):
     array([[11, 11, 11, ..., 59, 59, 59],
            [54, 54, 54, ..., 54, 55, 59],
            [11, 11, 11, ..., 27, 59, 59],
-           ..., 
+           ...,
            [54, 54, 54, ..., 54, 54, 54],
            [49, 49, 49, ..., 54, 54, 54],
            [64, 64, 64, ..., 64, 64, 64]])
@@ -867,11 +930,7 @@ class LISA_Markov(Markov):
         pml = pysal.Moran_Local
         gq = geoda_quads
 
-        #################################################################
-        # have to optimize conditional spatial permutations over a
-        # time series - this is a place holder for the foreclosure paper
         ml = [pml(yi, w, permutations=permutations, geoda_quads=gq) for yi in y]
-        #################################################################
 
         q = np.array([mli.q for mli in ml]).transpose()
         classes = np.arange(1, 5)  # no guarantee all 4 quadrants are visited
@@ -944,7 +1003,7 @@ class LISA_Markov(Markov):
 
         Returns
         -------
-        results      : dictionary   
+        results      : dictionary
                        two keys - values pairs:
                        'components' - array (n, t)
                        values are integer ids (starting at 1) indicating which
@@ -1073,13 +1132,13 @@ def kullback(F):
 
     Parameters
     ----------
-    F : array 
+    F : array
         (s, r, r), values are transitions (not probabilities) for
         s strata, r initial states, r terminal states.
 
     Returns
     -------
-    Results : dictionary 
+    Results : dictionary
               (key - value)
               Conditional homogeneity - (float) test statistic for homogeneity of
               transition probabilities across strata.
@@ -1263,10 +1322,10 @@ def homogeneity(transition_matrices, regime_names=[], class_names=[], \
 
     Parameters
     ----------
-    transition_matrices : list 
-                          of transition matrices for regimes, all matrices must 
-                          have same size (r, c). r is the number of rows in the 
-                          transition matrix and c is the number of columns in 
+    transition_matrices : list
+                          of transition matrices for regimes, all matrices must
+                          have same size (r, c). r is the number of rows in the
+                          transition matrix and c is the number of columns in
                           the transition matrix.
     regime_names        : sequence
                           Labels for the regimes.
@@ -1276,8 +1335,8 @@ def homogeneity(transition_matrices, regime_names=[], class_names=[], \
                           name of test.
 
     Returns
-    -------     
-    			: implicit            
+    -------
+                        : implicit
                           an instance of Homogeneity_Results.
     """
 
@@ -1288,14 +1347,14 @@ def homogeneity(transition_matrices, regime_names=[], class_names=[], \
 class Homogeneity_Results:
     """
     Wrapper class to present homogeneity results.
- 
+
     Parameters
     ----------
     transition_matrices : list
-                          of transition matrices for regimes, all matrices must 
+                          of transition matrices for regimes, all matrices must
                           have same size (r, c). r is the number of rows in
                           the transition matrix and c is the number of columns
-                          in the transition matrix.                       
+                          in the transition matrix.
     regime_names        : sequence
                           Labels for the regimes.
     class_names         : sequence
@@ -1312,7 +1371,7 @@ class Homogeneity_Results:
     (2003) [Bickenbach2003]_.
 
     Examples
-    -------- 
+    --------
     See Spatial_Markov above.
 
     """
@@ -1346,7 +1405,7 @@ class Homogeneity_Results:
         LR = 0.0
         lr_table = np.zeros_like(M)
         q_table = np.zeros_like(M)
-        
+
         for nijm in M:
             nim = nijm.sum(axis=1)
             B[:,m] = 1.*(nim>0)
@@ -1452,7 +1511,7 @@ class Homogeneity_Results:
                 line.extend(["%*.3f"%(col_width,v) for v in row])
                 print  "    ".join(line)
                 p0.append("&".join(line))
-            pmats.append(p0) 
+            pmats.append(p0)
             print lead
 
         if file_name:
