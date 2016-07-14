@@ -122,8 +122,8 @@ def requires(*args, **kwargs):
             def passer(*args,**kwargs):
                 if v:
                     missing = [arg for i, arg in enumerate(wanted) if not available[i]]
-                    print('missing dependencies: {d}'.format(d=missing))
-                    print('not running {}'.format(function.__name__))
+                    Warn('missing dependencies: {d}'.format(d=missing))
+                    Warn('not running {}'.format(function.__name__))
                 else:
                     pass
             return passer 
