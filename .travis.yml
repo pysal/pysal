@@ -25,7 +25,7 @@ before_install:
 install:
   - conda install --yes numpy scipy nose pip
   - if [ "$PYSAL_PLUS" == true ]; then
-        echo 'plus testing'; conda install --yes pandas numexpr numba patsy shapely; fi;
+    echo 'plus testing'; pip install -r requirements_plus.txt; fi;
   - pip install -r travis.txt
 
 script: 

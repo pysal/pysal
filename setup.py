@@ -19,6 +19,9 @@ ISRELEASED = False
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
 
+psplus = open('./requirements_plus.txt')
+psplus = psplus.readlines()
+
 # BEFORE importing distutils, remove MANIFEST. distutils doesn't properly
 # update it when the contents of directories change.
 if os.path.exists('MANIFEST'):
@@ -74,7 +77,8 @@ def setup_package():
         packages=find_packages(exclude=[".meta", "*.meta.*", "meta.*",
                                         "meta"]),
         package_data={'pysal': list(example_data_files)},
-        requires=['scipy'],
+        install_requires=['scipy'],
+        extra_requires={'plus':psplus},
         cmdclass= {'build_py': build_py}
     )
 
