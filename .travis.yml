@@ -18,6 +18,7 @@ before_install:
   - ./miniconda.sh -b -p ./miniconda
   - export PATH=`pwd`/miniconda/bin:$PATH
   - conda update --yes conda
+  - conda config --add channels conda-forge
   - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION
   - source activate test-env
   - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then 2to3 -nw pysal/ > /dev/null; fi
@@ -25,19 +26,13 @@ before_install:
 install:
   - conda install --yes numpy scipy nose pip
   - if [ "$PYSAL_PLUS" == true ]; then
-        echo 'plus testing'; conda install --yes pandas numexpr numba patsy shapely; fi;
+        echo 'plus testing'; conda install --file requirements_plus.txt;
+        else conda install --file requirements.txt; 
+    fi;
   - pip install -r travis.txt
 
 script: 
-  - python -c 'import numpy; print(numpy.__version__)'
-  - python -c 'import scipy; print(scipy.__version__)'
-  - python setup.py install  >/dev/null
-  - python -c 'import pysal'
-  #- python -c 'import multiprocessing as mp; print mp.cpu_count()'
-  #- pychecker --limit 1000 pysal
   - python setup.py sdist >/dev/null
-  #- nosetests --processes=-1 --process-timeout=60 --verbosity=1 --ignore-files=collection --exclude-dir=pysal/contrib
-  #- nosetests
   - echo "check_stable=False" >pysal/config.py
   - nosetests --with-coverage --cover-package=pysal; 
   #- cd doc; make pickle; make doctest
