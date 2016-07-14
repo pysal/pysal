@@ -21,6 +21,11 @@ from matplotlib import cm
 from matplotlib.patches import Polygon
 from matplotlib.path import Path
 from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection, CircleCollection
+try:
+    import bokeh.plotting as bk
+except:
+    print('Bokeh not installed. Functionality ' \
+            'related to it will not work')
 
 # Low-level pieces
 
@@ -505,60 +510,72 @@ def _expand_values(values, shp2dbf_row):
 
 # High-level pieces
 
-def plot_geocol_mpl(gc, facecolor='0.9', edgecolor='k', 
+def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7', 
         alpha=1., linewidth=0.2, marker='o', marker_size=20, 
         ax=None):
     '''
-    Plot geographical data from the `geometry` column of a PySAL geotable
+    Plot geographical data from the `geometry` column of a PySAL geotable to a
+    matplotlib backend.
 
-    ToDo:
-
-    * Geometry plotting (poly, line, point)
-    * If not ax, sensible default
-    * Control of linewidth, edgecolor, facecolor
-    * Choropleth mapping
     ...
 
     Arguments
     ---------
     gc          : DataFrame
                   GeoCol with data to be plotted.
-    facecolor   : str
-                  [Optional. Default='0.9'] Color for the polygon and point
-                  filling.
-    edgecolor   : str
-                  [Optional. Default='k'] Color for the polygon and point
-                  edges
-    alpha       : float
-                  [Optional. Default=1.] Transparency
-    linewidth   : float
-                  [Optional. Default=0.2] Width of the lines in polygon and line plotting (not
-                  applicable to points).
+    color       : str/tuple/Series
+                  [Optional. Default=None] Wrapper that sets both `facecolor`
+                  and `edgecolor` at the same time. If set, `facecolor` and
+                  `edgecolor` are ignored. It allows for either a single color
+                  or a Series of the same length as `gc` with colors, indexed
+                  on `gc.index`.
+    facecolor   : str/tuple/Series
+                  [Optional. Default='0.3'] Color for polygons and points. It
+                  allows for either a single color or a Series of the same
+                  length as `gc` with colors, indexed on `gc.index`.
+    edgecolor   : str/tuple/Series
+                  [Optional. Default='0.7'] Color for the polygon and point
+                  edges. It allows for either a single color or a Series of
+                  the same length as `gc` with colors, indexed on `gc.index`.
+    alpha       : float/Series
+                  [Optional. Default=1.] Transparency. It allows for either a
+                  single value or a Series of the same length as `gc` with
+                  colors, indexed on `gc.index`.
+    linewidth   : float/Series
+                  [Optional. Default=0.2] Width(s) of the lines in polygon and
+                  line plotting (not applicable to points). It allows for
+                  either a single value or a Series of the same length as `gc`
+                  with colors, indexed on `gc.index`.
     marker      : 'o'
     marker_size : int
     ax          : AxesSubplot
-                  [Optional. Default=None] Pre-existing axes to which append the collections
-                  and setup
+                  [Optional. Default=None] Pre-existing axes to which append the 
+                  collections and setup
     '''
     geom = type(gc.iloc[0])
+    if color is not None:
+        facecolor = edgecolor = color
     draw = False
     if not ax:
         f, ax = plt.subplots(1, figsize=(9, 9))
         draw = True
     # Geometry plotting
-    ## Polygons
     patches = []
+    ids = []
+    ## Polygons
     if geom == ps.cg.shapes.Polygon:
-        for shape in gc:
+        for id, shape in gc.iteritems():
             for ring in shape.parts:
                 xy = np.array(ring)
                 patches.append(xy)
+                ids.append(id)
         mpl_col = PolyCollection(patches)
     ## Lines
     elif geom == ps.cg.shapes.Chain:
-        for shape in gc:
+        for id, shape in gc.iteritems():
             for xy in shape.parts:
                 patches.append(xy)
+                ids.append(id)
         mpl_col = LineCollection(patches)
         facecolor = 'None'
     ## Points
@@ -569,11 +586,19 @@ def plot_geocol_mpl(gc, facecolor='0.9', edgecolor='k',
                 s=marker_size, c=facecolor, edgecolors=edgecolor,
                 linewidths=linewidth)
         mpl_col = None
-    # Styling mpl collection
+    # Styling mpl collection (polygons & lines)
     if mpl_col:
+        if type(facecolor) is pd.Series:
+            facecolor = facecolor.reindex(ids)
         mpl_col.set_facecolor(facecolor)
+        if type(edgecolor) is pd.Series:
+            edgecolor = edgecolor.reindex(ids)
         mpl_col.set_edgecolor(edgecolor)
+        if type(linewidth) is pd.Series:
+            linewidth = linewidth.reindex(ids)
         mpl_col.set_linewidth(linewidth)
+        if type(alpha) is pd.Series:
+            alpha = alpha.reindex(ids)
         mpl_col.set_alpha(alpha)
 
         ax.add_collection(mpl_col, autolim=True)
