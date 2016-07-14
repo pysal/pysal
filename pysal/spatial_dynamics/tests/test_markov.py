@@ -2,6 +2,7 @@ import unittest
 import pysal
 from pysal.spatial_dynamics import markov
 import numpy as np
+from pysal.common import RTOL
 
 
 class test_Markov(unittest.TestCase):
@@ -109,6 +110,20 @@ class test_LISA_Markov(unittest.TestCase):
                 [ 0.00333333,  0.02266667,  0.948     ,  0.026     ],
                 [ 0.04815409,  0.00160514,  0.06420546,  0.88603531]])
         np.testing.assert_array_almost_equal(lm.p, p)
+        np.random.seed(10)
+        lm_random = pysal.LISA_Markov(pci, w, permutations=99)
+        expected = np.array([[1.12328098e+03,   1.15377356e+01,
+                              3.47522158e-01, 3.38337644e+01], [
+                                  3.50272664e+00,   5.28473882e+02,
+                                  1.59178880e+01, 1.05503814e-01], [
+                                      1.53878082e-01,   2.32163556e+01,
+                                      1.46690710e+03, 9.72266513e+00], [
+                                          9.60775143e+00,   9.86856346e-02,
+                                          6.23537392e+00, 6.07058189e+02]])
+        np.testing.assert_allclose(lm_random.expected_t, expected, RTOL)
+        c = np.array([ 1058.207904, 0., 9. ])
+        np.testing.assert_allclose(lm_random.chi_2, c, RTOL)
+
 
 
 class test_kullback(unittest.TestCase):
