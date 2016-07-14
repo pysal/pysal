@@ -1,3 +1,4 @@
+from __future__ import division
 """
 Apply smoothing to rate computation
 
@@ -14,12 +15,13 @@ Author(s):
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>, David Folch <dfolch@asu.edu>, Luc Anselin <luc.anselin@asu.edu>, Serge Rey <srey@asu.edu"
 
 import pysal
-from pysal.weights import comb, Kernel
-from pysal.cg import Point, Ray, LineSegment
-from pysal.cg import get_angle_between, get_points_dist, get_segment_point_dist
-from pysal.cg import get_point_at_angle_and_dist, convex_hull
-from pysal.common import np, KDTree
-from pysal.weights.spatial_lag import lag_spatial as slag
+from ..weights import comb, Kernel, W
+from ..weights.util import get_points_array
+from ..cg import Point, Ray, LineSegment
+from ..cg import get_angle_between, get_points_dist, get_segment_point_dist,\
+                 get_point_at_angle_and_dist, convex_hull, get_bounding_box
+from ..common import np, KDTree, requires as _requires
+from ..weights.spatial_lag import lag_spatial as slag
 from scipy.stats import gamma, norm, chi2, poisson
 
 __all__ = ['Excess_Risk', 'Empirical_Bayes', 'Spatial_Empirical_Bayes', 'Spatial_Rate', 'Kernel_Smoother', 'Age_Adjusted_Smoother', 'Disk_Smoother', 'Spatial_Median_Rate', 'Spatial_Filtering', 'Headbanging_Triples', 'Headbanging_Median_Rate', 'flatten', 'weighted_median', 'sum_by_n', 'crude_age_standardization', 'direct_age_standardization', 'indirect_age_standardization', 'standardized_mortality_ratio', 'choynowski', 'assuncao_rate']
@@ -67,7 +69,7 @@ def weighted_median(d, w):
     d          : array
                  (n, 1), variable for which median will be found
     w          : array
-                 (n, 1), variable on which d's medain will be decided
+                 (n, 1), variable on which d's median will be decided
 
     Notes
     -----
@@ -254,7 +256,7 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
     For direct age standardization, we also need the data for standard population.
     Standard population is a reference population-at-risk (e.g., population distribution for the U.S.)
     whose age distribution can be used as a benchmarking point for comparing age distributions
-    across regions (e.g., popoulation distribution for Arizona and California).
+    across regions (e.g., population distribution for Arizona and California).
     Another array including standard population is created.
 
     >>> s = np.array([1000, 900, 1000, 900, 1000, 900, 1000, 900])
@@ -282,7 +284,7 @@ def direct_age_standardization(e, b, s, n, alpha=0.05):
     res = []
     for i in range(len(adjusted_r)):
         if adjusted_r[i] == 0:
-            upper = 0.5 * chi2(1 - 0.5 * alpha)
+            upper = 0.5 * chi2.ppf(1 - 0.5 * alpha)
             lower = 0.0
         else:
             lower = gamma.ppf(0.5 * alpha, g_a[i], scale=g_b[i])
@@ -550,8 +552,70 @@ def assuncao_rate(e, b):
     ebi_v = ebi_a + ebi_b / b
     return (y - ebi_b) / np.sqrt(ebi_v)
 
+class _Smoother(object):
+    """
+    This is a helper class that implements things that all smoothers should do.
+    Right now, the only thing that we need to propagate is the by_col function. 
 
-class Excess_Risk:
+    TBQH, most of these smoothers should be functions, not classes (aside from
+    maybe headbanging triples), since they're literally only inits + one
+    attribute. 
+    """
+    def __init__(self):
+        pass
+
+    @classmethod
+    def by_col(cls, df, e,b, inplace=False, **kwargs):
+        """
+        Compute smoothing by columns in a dataframe. 
+
+        Parameters
+        -----------
+        df      :  pandas.DataFrame
+                   a dataframe containing the data to be smoothed
+        e       :  string or list of strings
+                   the name or names of columns containing event variables to be
+                   smoothed
+        b       :  string or list of strings
+                   the name or names of columns containing the population
+                   variables to be smoothed
+        inplace :  bool
+                   a flag denoting whether to output a copy of `df` with the
+                   relevant smoothed columns appended, or to append the columns
+                   directly to `df` itself. 
+        **kwargs:  optional keyword arguments
+                   optional keyword options that are passed directly to the
+                   smoother. 
+
+        Returns
+        ---------
+        a copy of `df` containing the columns. Or, if `inplace`, this returns
+        None, but implicitly adds columns to `df`.  
+        """
+        if not inplace:
+            new = df.copy()
+            cls.by_col(new, e, b, inplace=True, **kwargs)
+            return new
+        if isinstance(e, str):
+            e = [e]
+        if isinstance(b, str):
+            b = [b]
+        if len(b) == 1 and len(e) > 1:
+            b = b * len(e)
+        try:
+            assert len(e) == len(b)
+        except AssertionError:
+            raise ValueError('There is no one-to-one mapping between event'
+                             ' variable and population at risk variable!')
+        for ei, bi in zip(e,b):
+            ename = ei
+            bname = bi
+            ei = df[ename]
+            bi = df[bname]
+            outcol = '_'.join(('-'.join((ename, bname)), cls.__name__.lower()))
+            df[outcol] = cls(ei, bi, **kwargs).r
+
+class Excess_Risk(_Smoother):
     """Excess Risk
 
     Parameters
@@ -591,11 +655,13 @@ class Excess_Risk:
 
     """
     def __init__(self, e, b):
+        e = np.asarray(e).reshape(-1,1)
+        b = np.asarray(b).reshape(-1,1)
         r_mean = e.sum() * 1.0 / b.sum()
         self.r = e * 1.0 / (b * r_mean)
 
 
-class Empirical_Bayes:
+class Empirical_Bayes(_Smoother):
     """Aspatial Empirical Bayes Smoothing
 
     Parameters
@@ -637,6 +703,8 @@ class Empirical_Bayes:
 
     """
     def __init__(self, e, b):
+        e = np.asarray(e).reshape(-1,1)
+        b = np.asarray(b).reshape(-1,1)
         e_sum, b_sum = e.sum() * 1.0, b.sum() * 1.0
         r_mean = e_sum / b_sum
         rate = e * 1.0 / b
@@ -647,8 +715,89 @@ class Empirical_Bayes:
         weight = r_var / (r_var + r_mean / b)
         self.r = weight * rate + (1.0 - weight) * r_mean
 
+class _Spatial_Smoother(_Smoother):
+    """
+    This is a helper class that implements things that all the things that
+    spatial smoothers should do. 
+    .
+    Right now, the only thing that we need to propagate is the by_col function. 
 
-class Spatial_Empirical_Bayes:
+    TBQH, most of these smoothers should be functions, not classes (aside from
+    maybe headbanging triples), since they're literally only inits + one
+    attribute. 
+    """
+    def __init__(self):
+        pass
+
+    @classmethod
+    def by_col(cls, df, e,b, w=None, inplace=False, **kwargs):
+        """
+        Compute smoothing by columns in a dataframe. 
+
+        Parameters
+        -----------
+        df      :  pandas.DataFrame
+                   a dataframe containing the data to be smoothed
+        e       :  string or list of strings
+                   the name or names of columns containing event variables to be
+                   smoothed
+        b       :  string or list of strings
+                   the name or names of columns containing the population
+                   variables to be smoothed
+        w       :  pysal.weights.W or list of pysal.weights.W
+                   the spatial weights object or objects to use with the
+                   event-population pairs. If not provided and a weights object
+                   is in the dataframe's metadata, that weights object will be
+                   used. 
+        inplace :  bool
+                   a flag denoting whether to output a copy of `df` with the
+                   relevant smoothed columns appended, or to append the columns
+                   directly to `df` itself. 
+        **kwargs:  optional keyword arguments
+                   optional keyword options that are passed directly to the
+                   smoother. 
+
+        Returns
+        ---------
+        a copy of `df` containing the columns. Or, if `inplace`, this returns
+        None, but implicitly adds columns to `df`.  
+        """
+        if not inplace:
+            new = df.copy()
+            cls.by_col(new, e, b, w=w, inplace=True, **kwargs)
+            return new
+        if isinstance(e, str):
+            e = [e]
+        if isinstance(b, str):
+            b = [b]
+        if w is None:
+            found = False
+            for k in df._metadata:
+                w = df.__dict__.get(w, None)
+                if isinstance(w, W):
+                    found = True
+            if not found:
+                raise Exception('Weights not provided and no weights attached to frame!'
+                                    ' Please provide a weight or attach a weight to the'
+                                    ' dataframe')
+        if isinstance(w, W):
+            w = [w] * len(e)
+        if len(b) == 1 and len(e) > 1:
+            b = b * len(e)
+        try:
+            assert len(e) == len(b)
+        except AssertionError:
+            raise ValueError('There is no one-to-one mapping between event'
+                             ' variable and population at risk variable!')
+        for ei, bi, wi in zip(e, b, w):
+            ename = ei
+            bname = bi
+            ei = df[ename]
+            bi = df[bname]
+            outcol = '_'.join(('-'.join((ename, bname)), cls.__name__.lower()))
+            df[outcol] = cls(ei, bi, w=wi, **kwargs).r
+
+class Spatial_Empirical_Bayes(_Spatial_Smoother):
     """Spatial Empirical Bayes Smoothing
 
     Parameters
@@ -701,10 +850,12 @@ class Spatial_Empirical_Bayes:
     def __init__(self, e, b, w):
         if not w.id_order_set:
             raise ValueError("w id_order must be set to align with the order of e an b")
+        e = np.asarray(e).reshape(-1,1)
+        b = np.asarray(b).reshape(-1,1)
         r_mean = Spatial_Rate(e, b, w).r
         rate = e * 1.0 / b
-        r_var_left = np.ones(len(e)) * 1.
-        ngh_num = np.ones(len(e))
+        r_var_left = np.ones_like(e) * 1.
+        ngh_num = np.ones_like(e)
         bi = slag(w, b) + b
         for i, idv in enumerate(w.id_order):
             ngh = w[idv].keys() + [idv]
@@ -718,8 +869,7 @@ class Spatial_Empirical_Bayes:
         r_var[r_var < 0] = 0.0
         self.r = r_mean + (rate - r_mean) * (r_var / (r_var + (r_mean / b)))
 
-
-class Spatial_Rate:
+class Spatial_Rate(_Spatial_Smoother):
     """Spatial Rate Smoothing
 
     Parameters
@@ -773,13 +923,15 @@ class Spatial_Rate:
         if not w.id_order_set:
             raise ValueError("w id_order must be set to align with the order of e and b")
         else:
+            e = np.asarray(e).reshape(-1,1)
+            b = np.asarray(b).reshape(-1,1)
             w.transform = 'b'
             w_e, w_b = slag(w, e), slag(w, b)
             self.r = (e + w_e) / (b + w_b)
             w.transform = 'o'
 
 
-class Kernel_Smoother:
+class Kernel_Smoother(_Spatial_Smoother):
     """Kernal smoothing
 
     Parameters
@@ -835,11 +987,13 @@ class Kernel_Smoother:
         if not w.id_order_set:
             raise ValueError("w id_order must be set to align with the order of e and b")
         else:
+            e = np.asarray(e).reshape(-1,1)
+            b = np.asarray(b).reshape(-1,1)
             w_e, w_b = slag(w, e), slag(w, b)
             self.r = w_e / w_b
 
 
-class Age_Adjusted_Smoother:
+class Age_Adjusted_Smoother(_Spatial_Smoother):
     """Age-adjusted rate smoothing
 
     Parameters
@@ -901,6 +1055,9 @@ class Age_Adjusted_Smoother:
             0.05020968])
     """
     def __init__(self, e, b, w, s, alpha=0.05):
+        e = np.asarray(e).reshape(-1, 1)
+        b = np.asarray(b).reshape(-1, 1)
+        s = np.asarray(s).flatten()
         t = len(e)
         h = t // w.n
         w.transform = 'b'
@@ -910,12 +1067,102 @@ class Age_Adjusted_Smoother:
             b_n.append(slag(w, b[i::h]).tolist())
         e_n = np.array(e_n).reshape((1, t), order='F')[0]
         b_n = np.array(b_n).reshape((1, t), order='F')[0]
+        e_n = e_n.reshape(s.shape)
+        b_n = b_n.reshape(s.shape)
         r = direct_age_standardization(e_n, b_n, s, w.n, alpha=alpha)
         self.r = np.array([i[0] for i in r])
         w.transform = 'o'
+    
+    @_requires('pandas')
+    @classmethod
+    def by_col(cls, df, e,b, w=None, s=None, **kwargs):
+        """
+        Compute smoothing by columns in a dataframe. 
+
+        Parameters
+        -----------
+        df      :  pandas.DataFrame
+                   a dataframe containing the data to be smoothed
+        e       :  string or list of strings
+                   the name or names of columns containing event variables to be
+                   smoothed
+        b       :  string or list of strings
+                   the name or names of columns containing the population
+                   variables to be smoothed
+        w       :  pysal.weights.W or list of pysal.weights.W
+                   the spatial weights object or objects to use with the
+                   event-population pairs. If not provided and a weights object
+                   is in the dataframe's metadata, that weights object will be
+                   used. 
+        s       :  string or list of strings
+                   the name or names of columns to use as a standard population
+                   variable for the events `e` and at-risk populations `b`. 
+        inplace :  bool
+                   a flag denoting whether to output a copy of `df` with the
+                   relevant smoothed columns appended, or to append the columns
+                   directly to `df` itself. 
+        **kwargs:  optional keyword arguments
+                   optional keyword options that are passed directly to the
+                   smoother. 
+
+        Returns
+        ---------
+        a copy of `df` containing the columns. Or, if `inplace`, this returns
+        None, but implicitly adds columns to `df`.  
+        """
+        if s is None:
+            raise Exception('Standard population variable "s" must be supplied.')
+        import pandas as pd
+        if isinstance(e, str):
+            e = [e]
+        if isinstance(b, str):
+            b = [b]
+        if isinstance(s, str):
+            s = [s]
+        if w is None:
+            found = False
+            for k in df._metadata:
+                w = df.__dict__.get(w, None)
+                if isinstance(w, W):
+                    found = True
+                    break
+            if not found:
+                raise Exception('Weights not provided and no weights attached to frame!'
+                                    ' Please provide a weight or attach a weight to the'
+                                    ' dataframe.')
+        if isinstance(w, W):
+            w = [w] * len(e)
+        if not all(isinstance(wi, W) for wi in w):
+            raise Exception('Weights object must be an instance of '
+                            ' pysal.weights.W!')
+        b = b * len(e) if len(b) == 1 and len(e) > 1 else b
+        s = s * len(e) if len(s) == 1 and len(e) > 1 else s
+        try:
+            assert len(e) == len(b)
+            assert len(e) == len(s)
+            assert len(e) == len(w)
+        except AssertionError:
+            raise ValueError('There is no one-to-one mapping between event'
+                             ' variable and population at risk variable, and '
+                             ' standard population variable, and spatial '
+                             ' weights!')
+        rdf = []
+        max_len = 0
+        for ei, bi, wi, si in zip(e, b, w, s):
+            ename = ei
+            bname = bi
+            h = len(ei) // wi.n
+            outcol = '_'.join(('-'.join((ename, bname)), cls.__name__.lower()))
+            this_r = cls(df[ei], df[bi], w=wi, s=df[si], **kwargs).r
+            max_len = 0 if len(this_r) > max_len else max_len
+            rdf.append((outcol, this_r.tolist()))
+        padded = (r[1] + [None] * max_len for r in rdf)
+        rdf = zip((r[0] for r in rdf), padded)
+        rdf = pd.DataFrame.from_items(rdf)
+        return rdf
 
 
-class Disk_Smoother:
+class Disk_Smoother(_Spatial_Smoother):
     """Locally weighted averages or disk smoothing
 
     Parameters
@@ -970,14 +1217,16 @@ class Disk_Smoother:
         if not w.id_order_set:
             raise ValueError("w id_order must be set to align with the order of e and b")
         else:
+            e = np.asarray(e).reshape(-1,1)
+            b = np.asarray(b).reshape(-1,1)
             r = e * 1.0 / b
             weight_sum = []
             for i in w.id_order:
                 weight_sum.append(sum(w.weights[i]))
-            self.r = slag(w, r) / np.array(weight_sum)
+            self.r = slag(w, r) / np.array(weight_sum).reshape(-1,1)
 
 
-class Spatial_Median_Rate:
+class Spatial_Median_Rate(_Spatial_Smoother):
     """Spatial Median Rate Smoothing
 
     Parameters
@@ -1076,6 +1325,8 @@ class Spatial_Median_Rate:
     def __init__(self, e, b, w, aw=None, iteration=1):
         if not w.id_order_set:
             raise ValueError("w id_order must be set to align with the order of e and b")
+        e = np.asarray(e).flatten()
+        b = np.asarray(b).flatten() 
         self.r = e * 1.0 / b
         self.aw, self.w = aw, w
         while iteration:
@@ -1094,10 +1345,10 @@ class Spatial_Median_Rate:
                 id_d = [i] + list(w.neighbor_offsets[id])
                 aw_d, r_d = aw[id_d], r[id_d]
                 new_r.append(weighted_median(r_d, aw_d))
-        self.r = np.array(new_r)
+        self.r = np.asarray(new_r).reshape(r.shape)
 
 
-class Spatial_Filtering:
+class Spatial_Filtering(_Smoother):
     """Spatial Filtering
 
     Parameters
@@ -1191,11 +1442,13 @@ class Spatial_Filtering:
     """
 
     def __init__(self, bbox, data, e, b, x_grid, y_grid, r=None, pop=None):
+        e= np.asarray(e).reshape(-1,1)
+        b= np.asarray(b).reshape(-1,1)
         data_tree = KDTree(data)
         x_range = bbox[1][0] - bbox[0][0]
         y_range = bbox[1][1] - bbox[0][1]
-        x, y = np.mgrid[bbox[0][0]:bbox[1][0]:x_range // x_grid,
-                        bbox[0][1]:bbox[1][1]:y_range // y_grid]
+        x, y = np.mgrid[bbox[0][0]:bbox[1][0]:float(x_range) / x_grid,
+                        bbox[0][1]:bbox[1][1]:float(y_range) / y_grid]
         self.grid = zip(x.ravel(), y.ravel())
         self.r = []
         if r is None and pop is None:
@@ -1216,10 +1469,71 @@ class Spatial_Filtering:
                     b_n_f = b_n[[0]]
                 self.r.append(e_n_f[-1] * 1.0 / b_n_f[-1])
         self.r = np.array(self.r)
+    
+    @_requires('pandas')
+    @classmethod
+    def by_col(cls, df, e, b, x_grid, y_grid, geom_col='geometry', **kwargs):
+        """
+        Compute smoothing by columns in a dataframe. The bounding box and point
+        information is computed from the geometry column. 
 
+        Parameters
+        -----------
+        df      :  pandas.DataFrame
+                   a dataframe containing the data to be smoothed
+        e       :  string or list of strings
+                   the name or names of columns containing event variables to be
+                   smoothed
+        b       :  string or list of strings
+                   the name or names of columns containing the population
+                   variables to be smoothed
+        x_grid  :  integer
+                   number of grid cells to use along the x-axis
+        y_grid  :  integer
+                   number of grid cells to use along the y-axis
+        geom_col:  string
+                   the name of the column in the dataframe containing the
+                   geometry information. 
+        **kwargs:  optional keyword arguments
+                   optional keyword options that are passed directly to the
+                   smoother. 
+        Returns
+        ---------
+        a new dataframe of dimension (x_grid*y_grid, 3), containing the 
+        coordinates of the grid cells and the rates associated with those grid
+        cells.
+        """
+        import pandas as pd
+        # prep for application over multiple event/population pairs
+        if isinstance(e, str):
+            e = [e]
+        if isinstance(b, str):
+            b = [b]
+        if len(e) > len(b):
+            b = b * len(e)
+        if isinstance(x_grid, (int, float)):
+            x_grid = [x_grid] * len(e)
+        if isinstance(y_grid, (int, float)):
+            y_grid = [y_grid] * len(e)
 
-class Headbanging_Triples:
-    """Generate a pseudo spatial weights instance that contains headbaning triples
+        bbox = get_bounding_box(df[geom_col])
+        bbox = [[bbox.left, bbox.lower], [bbox.right, bbox.upper]]
+        data = get_points_array(df[geom_col])
+        res = []
+        for ename, bname, xgi, ygi in zip(e, b, x_grid, y_grid):
+            r = cls(bbox, data, df[ename], df[bname], xgi, ygi, **kwargs)
+            grid = np.asarray(r.grid).reshape(-1,2)
+            name = '_'.join(('-'.join((ename, bname)), cls.__name__.lower()))
+            colnames = ('_'.join((name, suffix)) for suffix in ['X', 'Y', 'R'])
+            items = [(name, col) for name,col in zip(colnames, [grid[:,0], 
+                                                                grid[:,1], 
+                                                                r.r])]
+            res.append(pd.DataFrame.from_items(items))
+        outdf = pd.concat(res)
+        return outdf
+
+class Headbanging_Triples(object):
+    """Generate a pseudo spatial weights instance that contains headbanging triples
 
     Parameters
     ----------
@@ -1318,7 +1632,7 @@ class Headbanging_Triples:
     3 [(16, 6), (19, 6), (20, 6)]
     4 [(5, 15), (27, 15), (35, 15)]
 
-    Finding headbanging tirpes by using 5 nearest neighbors with edge correction
+    Finding headbanging triples by using 5 nearest neighbors with edge correction
 
     >>> s_ht2 = Headbanging_Triples(sids_d,sids_w,k=5,edgecor=True)
 
@@ -1341,7 +1655,7 @@ class Headbanging_Triples:
     >>> extrapolated[0]
     (89, 77)
 
-    Checking the distances between the exploated point and the observation 89 and 77
+    Checking the distances between the extraploated point and the observation 89 and 77
 
     >>> round(extrapolated[1],5), round(extrapolated[2],6)
     (0.33753, 0.302707)
@@ -1407,7 +1721,7 @@ class Headbanging_Triples:
                 self.extra[ps[point]] = extra
 
 
-class Headbanging_Median_Rate:
+class Headbanging_Median_Rate(object):
     """Headbaning Median Rate Smoothing
 
     Parameters
@@ -1425,7 +1739,7 @@ class Headbanging_Median_Rate:
     Attributes
     ----------
     r           : array (n, 1)
-                  rate values from headbaning median smoothing
+                  rate values from headbanging median smoothing
 
     Examples
     --------
@@ -1451,6 +1765,7 @@ class Headbanging_Median_Rate:
     >>> if not sids_w.id_order_set: sids_w.id_order = sids_w.id_order
 
     finding headbanging triples by using 5 neighbors
+        return outdf
 
     >>> s_ht = Headbanging_Triples(sids_d,sids_w,k=5)
 
@@ -1493,7 +1808,7 @@ class Headbanging_Median_Rate:
     def __init__(self, e, b, t, aw=None, iteration=1):
         self.r = e * 1.0 / b
         self.tr, self.aw = t.triples, aw
-        if hasattr(t, 'exta'):
+        if hasattr(t, 'extra'):
             self.extra = t.extra
         while iteration:
             self.__search_headbanging_median()
@@ -1506,16 +1821,19 @@ class Headbanging_Median_Rate:
         if hasattr(self, 'extra') and id in self.extra:
             extra = self.extra
             trp_r = r[list(triples[0])]
+            # observed rate 
+            # plus difference in rate scaled by ratio of extrapolated distance
+            # & observed distance. 
             trp_r[-1] = trp_r[0] + (trp_r[0] - trp_r[-1]) * (
                 extra[id][-1] * 1.0 / extra[id][1])
             trp_r = sorted(trp_r)
             if not weighted:
-                return r, trp_r[0], trp_r[-1]
+                return r[id], trp_r[0], trp_r[-1]
             else:
-                trp_aw = self.aw[trp]
+                trp_aw = self.aw[triples[0]]
                 extra_w = trp_aw[0] + (trp_aw[0] - trp_aw[-
                                                           1]) * (extra[id][-1] * 1.0 / extra[id][1])
-                return r, trp_r[0], trp_r[-1], self.aw[id], trp_aw[0] + extra_w
+                return r[id], trp_r[0], trp_r[-1], self.aw[id], trp_aw[0] + extra_w
         if not weighted:
             lowest, highest = [], []
             for trp in triples:
@@ -1541,7 +1859,7 @@ class Headbanging_Median_Rate:
                 np.array(highest), np.array(highest_aw))
             triple_members = flatten(triples, unique=False)
             return r[id], wm_lowest, wm_highest, self.aw[id] * len(triples), self.aw[triple_members].sum()
-
+    
     def __get_median_from_screens(self, screens):
         if isinstance(screens, float):
             return screens
@@ -1566,3 +1884,84 @@ class Headbanging_Median_Rate:
                 k, tr[k], weighted=(self.aw is not None))
             new_r.append(self.__get_median_from_screens(screens))
         self.r = np.array(new_r)
+    
+    @_requires('pandas')
+    @classmethod
+    def by_col(cls, df, e, b, t=None, geom_col='geometry', inplace=False, **kwargs):
+        """
+        Compute smoothing by columns in a dataframe. The bounding box and point
+        information is computed from the geometry column. 
+
+        Parameters
+        -----------
+        df      :  pandas.DataFrame
+                   a dataframe containing the data to be smoothed
+        e       :  string or list of strings
+                   the name or names of columns containing event variables to be
+                   smoothed
+        b       :  string or list of strings
+                   the name or names of columns containing the population
+                   variables to be smoothed
+        t       :  Headbanging_Triples instance or list of Headbanging_Triples
+                   list of headbanging triples instances. If not provided, this
+                   is computed from the geometry column of the dataframe. 
+        geom_col:  string
+                   the name of the column in the dataframe containing the
+                   geometry information. 
+        inplace :  bool
+                   a flag denoting whether to output a copy of `df` with the
+                   relevant smoothed columns appended, or to append the columns
+                   directly to `df` itself. 
+        **kwargs:  optional keyword arguments
+                   optional keyword options that are passed directly to the
+                   smoother. 
+        Returns
+        ---------
+        a new dataframe containing the smoothed Headbanging Median Rates for the
+        event/population pairs. If done inplace, there is no return value and
+        `df` is modified in place. 
+        """
+        import pandas as pd
+        if not inplace:
+            new = df.copy()
+            cls.by_col(new, e, b, t=t, geom_col=geom_col, inplace=True, **kwargs)
+            return new
+        import pandas as pd
+        # prep for application over multiple event/population pairs
+        if isinstance(e, str):
+            e = [e]
+        if isinstance(b, str):
+            b = [b]
+        if len(e) > len(b):
+            b = b * len(e)
+
+        data = get_points_array(df[geom_col])
+
+        #Headbanging_Triples doesn't take **kwargs, so filter its arguments
+        # (self, data, w, k=5, t=3, angle=135.0, edgecor=False):
+        
+        w = kwargs.pop('w', None)
+        if w is None:
+            found = False
+            for k in df._metadata:
+                w = df.__dict__.get(w, None)
+                if isinstance(w, W):
+                    found = True
+            if not found:
+                raise Exception('Weights not provided and no weights attached to frame!'
+                                    ' Please provide a weight or attach a weight to the'
+                                    ' dataframe')
+        
+        k = kwargs.pop('k', 5)
+        t = kwargs.pop('t', 3)
+        angle = kwargs.pop('angle', 135.0)
+        edgecor = kwargs.pop('edgecor', False)
+
+        hbt = Headbanging_Triples(data, w, k=k, t=t, angle=angle,
+                                  edgecor=edgecor)
+        
+        res = []
+        for ename, bname in zip(e, b):
+            r = cls(df[ename], df[bname], hbt, **kwargs).r
+            name = '_'.join(('-'.join((ename, bname)), cls.__name__.lower()))
+            df[name] = r

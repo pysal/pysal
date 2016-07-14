@@ -1,7 +1,7 @@
 import functools as _f
 
 __all__ = [ 'area', 'bbox', 'bounding_box', 'centroid', 'holes', 'len', 
-               'parts', 'perimeter', 'segments', 'vertices']
+            'parts', 'perimeter', 'segments', 'vertices']
 
 def get_attr(df, geom_col='geometry', inplace=False, attr=None):
     outval = df[geom_col].apply(lambda x: x.__getattribute__(attr))
