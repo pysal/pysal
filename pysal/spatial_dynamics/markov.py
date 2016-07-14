@@ -1,3 +1,6 @@
+
+from __future__ import print_function
+
 """
 Markov based methods for spatial dynamics.
 """
@@ -7,12 +10,11 @@ __all__ = ["Markov", "LISA_Markov", "Spatial_Markov", "kullback",
            "prais", "shorrock", "homogeneity"]
 
 import numpy as np
-import numpy.linalg as la
 from pysal.spatial_dynamics.ergodic import fmpt
 from pysal.spatial_dynamics.ergodic import steady_state as STEADY_STATE
 from scipy import stats
-import pysal
 from operator import gt
+import pysal
 
 # TT predefine LISA transitions
 # TT[i,j] is the transition type from i to j
@@ -71,7 +73,8 @@ class Markov(object):
 
     Examples
     --------
-    >>> c = np.array([['b','a','c'],['c','c','a'],['c','b','c'],['a','a','b'],['a','b','c']])
+    >>> c = np.array([['b','a','c'],['c','c','a'],['c','b','c'],['a','a','b'],
+                      ['a','b','c']])
     >>> m = Markov(c)
     >>> m.classes
     array(['a', 'b', 'c'],
@@ -166,11 +169,9 @@ class Markov(object):
 
     @property
     def steady_state(self):
-        if not hasattr(self,'_steady_state'):
+        if not hasattr(self, '_steady_state'):
             self._steady_state = STEADY_STATE(self.p)
         return self._steady_state
-
-
 
 
 class Spatial_Markov(object):
@@ -199,20 +200,21 @@ class Spatial_Markov(object):
     Attributes
     ----------
     p               : matrix
-                      (k, k), transition probability matrix for a-spatial Markov.
+                      (k, k), transition probability matrix for a-spatial
+                      Markov.
     s               : matrix
                       (k, 1), ergodic distribution for a-spatial Markov.
     transitions     : matrix
                       (k, k), counts of transitions between each state i and j
                       for a-spatial Markov.
     T               : matrix
-                      (k, k, k), counts of transitions for each conditional Markov.
-                      T[0] is the matrix of transitions for observations with
-                      lags in the 0th quantile; T[k-1] is the transitions for
-                      the observations with lags in the k-1th.
+                      (k, k, k), counts of transitions for each conditional
+                      Markov.  T[0] is the matrix of transitions for
+                      observations with lags in the 0th quantile; T[k-1] is the
+                      transitions for the observations with lags in the k-1th.
     P               : matrix
-                      (k, k, k), transition probability matrix for spatial Markov
-                      first dimension is the conditioned on the lag.
+                      (k, k, k), transition probability matrix for spatial
+                      Markov first dimension is the conditioned on the lag.
     S               : matrix
                       (k, k), steady state distributions for spatial Markov.
                       Each row is a conditional steady_state.
@@ -228,10 +230,11 @@ class Spatial_Markov(object):
                       the degrees of freedom.
     chi2            : list
                       (k elements), each element of the list is a tuple for a
-                      chi-squared test of the difference between the conditional
-                      transition matrix against the overall transition matrix:
-                      first element of the tuple is the chi2 value, second its
-                      p-value and the third the degrees of freedom.
+                      chi-squared test of the difference between the
+                      conditional transition matrix against the overall
+                      transition matrix: first element of the tuple is the chi2
+                      value, second its p-value and the third the degrees of
+                      freedom.
     x2              : float
                       sum of the chi2 values for each of the conditional tests.
                       Has an asymptotic chi2 distribution with k(k-1)(k-1)
@@ -245,8 +248,8 @@ class Spatial_Markov(object):
                       distribution
     x2_rpvalue      : float
                       (if permutations>0)
-                      pseudo p-value for x2 based on random spatial permutations
-                      of the rows of the original transitions.
+                      pseudo p-value for x2 based on random spatial
+                      permutations of the rows of the original transitions.
     x2_realizations : array
                       (permutations,1), the values of x2 for the random
                       permutations.
@@ -257,7 +260,8 @@ class Spatial_Markov(object):
                       p-value for Q.
     LR              : float
                       Likelihood ratio statistic for homogeneity across lag
-                      classes based on Bickenback and Bode (2003) [Bickenbach2003]_.
+                      classes based on Bickenback and Bode (2003)
+                      [Bickenbach2003]_.
     LR_p_value      : float
                       p-value for LR.
     dof_hom         : int
@@ -411,8 +415,6 @@ class Spatial_Markov(object):
         self.T = T
         self.P = P
 
-
-
         if permutations:
             nrp = np.random.permutation
             counter = 0
@@ -433,22 +435,20 @@ class Spatial_Markov(object):
             self._s = STEADY_STATE(self.p)
         return self._s
 
-
     @property
     def S(self):
         if not hasattr(self, '_S'):
             S = np.zeros_like(self.p)
-            for i,p in enumerate(self.P):
+            for i, p in enumerate(self.P):
                 S[i] = STEADY_STATE(p)
             self._S = np.asarray(S)
         return self._S
-
 
     @property
     def F(self):
         if not hasattr(self, '_F'):
             F = np.zeros_like(self.P)
-            for i,p in enumerate(self.P):
+            for i, p in enumerate(self.P):
                 F[i] = fmpt(np.asmatrix(p))
             self._F = np.asarray(F)
         return self._F
@@ -456,13 +456,13 @@ class Spatial_Markov(object):
     # bickenbach and bode tests
     @property
     def ht(self):
-        if not hasattr(self,'_ht'):
+        if not hasattr(self, '_ht'):
             self._ht = homogeneity(self.T)
         return self._ht
 
     @property
     def Q(self):
-        if not hasattr(self,'_Q'):
+        if not hasattr(self, '_Q'):
             self._Q = self.ht.Q
         return self._Q
 
@@ -486,12 +486,10 @@ class Spatial_Markov(object):
         self._dof_hom = self.ht.dof
         return self._dof_hom
 
-
     # shtests
-
     @property
     def shtest(self):
-        if not hasattr(self,'_shtest'):
+        if not hasattr(self, '_shtest'):
             self._shtest = self._mn_test()
         return self._shtest
 
@@ -503,27 +501,22 @@ class Spatial_Markov(object):
 
     @property
     def x2(self):
-        if not hasattr(self,'_x2'):
+        if not hasattr(self, '_x2'):
             self._x2 = sum([c[0] for c in self.chi2])
         return self._x2
 
     @property
     def x2_pvalue(self):
-        if not hasattr(self,'_x2_pvalue'):
-            self._x2_pvalue = 1 - stats.chi2.cdf(self.x2,
-                                              self.x2_dof)
+        if not hasattr(self, '_x2_pvalue'):
+            self._x2_pvalue = 1 - stats.chi2.cdf(self.x2, self.x2_dof)
         return self._x2_pvalue
 
     @property
     def x2_dof(self):
-        if not hasattr(self,'_x2_dof'):
+        if not hasattr(self, '_x2_dof'):
             k = self.k
             self._x2_dof = k * (k - 1) * (k - 1)
         return self._x2_dof
-
-
-
-
 
     def _calc(self, y, w, classes, k):
         ly = pysal.lag_spatial(w, y)
@@ -605,10 +598,10 @@ class Spatial_Markov(object):
         return mat
 
     def summary(self, file_name=None):
-        class_names = ["C%d"%i for i in range(self.k)]
-        regime_names = ["LAG%d"%i for i in range(self.k)]
+        class_names = ["C%d" % i for i in range(self.k)]
+        regime_names = ["LAG%d" % i for i in range(self.k)]
         ht = homogeneity(self.T, class_names=class_names,
-            regime_names=regime_names)
+                         regime_names=regime_names)
         title = "Spatial Markov Test"
         if self.variable_name:
             title = title + ": " + self.variable_name
@@ -616,6 +609,7 @@ class Spatial_Markov(object):
             ht.summary(file_name=file_name, title=title)
         else:
             ht.summary(title=title)
+
 
 def chi2(T1, T2):
     """
@@ -639,7 +633,8 @@ def chi2(T1, T2):
     --------
     >>> import pysal
     >>> f = pysal.open(pysal.examples.get_path("usjoin.csv"))
-    >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
+    >>> years = range(1929, 2010)
+    >>> pci = np.array([f.by_col[str(y)] for y in years]).transpose()
     >>> rpci = pci/(pci.mean(axis=0))
     >>> w = pysal.open(pysal.examples.get_path("states48.gal")).read()
     >>> w.transform='r'
@@ -719,8 +714,8 @@ class LISA_Markov(Markov):
     ----------
     chi_2        : tuple
                    (3 elements)
-                   (chi square test statistic, p-value, degrees of freedom)
-                   for test that dynamics of y are independent of dynamics of wy.
+                   (chi square test statistic, p-value, degrees of freedom) for
+                   test that dynamics of y are independent of dynamics of wy.
     classes      : array
                    (4, 1)
                    1=HH, 2=LH, 3=LL, 4=HL (own, lag)
@@ -759,11 +754,13 @@ class LISA_Markov(Markov):
     p            : matrix
                    (k, k), transition probability matrix.
     p_values     : matrix
-                   (n, t), LISA p-values for each end point (if permutations > 0).
+                   (n, t), LISA p-values for each end point (if permutations >
+                   0).
     significant_moves : matrix
                         (n, t-1), integer values indicating the type and
-                        significance of a LISA transition. st = 1 if significant
-                        in period t, else st=0 (if permutations > 0).
+                        significance of a LISA transition. st = 1 if
+                        significant in period t, else st=0 (if permutations >
+                        0).
 
     .. Table:: Significant Moves
 
@@ -830,7 +827,8 @@ class LISA_Markov(Markov):
     >>> import pysal as ps
     >>> import numpy as np
     >>> f = ps.open(ps.examples.get_path("usjoin.csv"))
-    >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
+    >>> years = range(1929, 2010)
+    >>> pci = np.array([f.by_col[str(y)] for y in years]).transpose()
     >>> w = ps.open(ps.examples.get_path("states48.gal")).read()
     >>> lm = ps.LISA_Markov(pci,w)
     >>> lm.classes
@@ -929,9 +927,8 @@ class LISA_Markov(Markov):
         y = y.transpose()
         pml = pysal.Moran_Local
         gq = geoda_quads
-
-        ml = [pml(yi, w, permutations=permutations, geoda_quads=gq) for yi in y]
-
+        ml = ([pml(yi, w, permutations=permutations, geoda_quads=gq)
+               for yi in y])
         q = np.array([mli.q for mli in ml]).transpose()
         classes = np.arange(1, 5)  # no guarantee all 4 quadrants are visited
         Markov.__init__(self, q, classes)
@@ -993,13 +990,13 @@ class LISA_Markov(Markov):
         Parameters
         ----------
         quadrant     : int
-                       which quadrant in the scatterplot should form the core of a
-                       cluster.
+                       which quadrant in the scatterplot should form the core
+                       of a cluster.
         neighbors_on : binary
                        If false, then only the 1st order neighbors of a core
                        location are included in the cluster.
-                       If true, neighbors of cluster core 1st order neighbors are
-                       included in the cluster.
+                       If true, neighbors of cluster core 1st order neighbors
+                       are included in the cluster.
 
         Returns
         -------
@@ -1009,14 +1006,15 @@ class LISA_Markov(Markov):
                        values are integer ids (starting at 1) indicating which
                        component/cluster observation i in period t belonged to.
                        'spillover' - array (n, t-1)
-                       binary values indicating if the location was a spill-over
-                       location that became a new member of a previously existing
-                       cluster.
+                       binary values indicating if the location was a
+                       spill-over location that became a new member of a
+                       previously existing cluster.
 
         Examples
         --------
         >>> f = pysal.open(pysal.examples.get_path("usjoin.csv"))
-        >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
+        >>> years = range(1929, 2010)
+        >>> pci = np.array([f.by_col[str(y)] for y in years]).transpose()
         >>> w = pysal.open(pysal.examples.get_path("states48.gal")).read()
         >>> np.random.seed(10)
         >>> lm_random = pysal.LISA_Markov(pci, w, permutations=99)
@@ -1063,8 +1061,8 @@ class LISA_Markov(Markov):
             components = np.zeros((n, k))
             i2id = {}  # handle string keys
             for key in self.w.neighbors.keys():
-                id = self.w.id2i[key]  # pylint "redefining built-in 'id'
-                i2id[id] = key
+                idx = self.w.id2i[key]
+                i2id[idx] = key
             sig_lisas = (self.q == quadrant) \
                 * (self.p_values <= self.significance_level)
             sig_ids = [np.nonzero(
@@ -1104,8 +1102,8 @@ class LISA_Markov(Markov):
                 for j in new_ids:
                     # find j's component in period 2
                     cj = [c for c in components2 if j in c][0]
-                    # for members of j's component in period 2, check if they belonged to
-                    # any components in period 1
+                    # for members of j's component in period 2, check if they
+                    # belonged to any components in period 1
                     for i in cj:
                         if i in c1:
                             spill_ids.append(j)
@@ -1140,10 +1138,15 @@ def kullback(F):
     -------
     Results : dictionary
               (key - value)
-              Conditional homogeneity - (float) test statistic for homogeneity of
-              transition probabilities across strata.
-              Conditional homogeneity pvalue - (float) p-value for test statistic.
-              Conditional homogeneity dof - (int) degrees of freedom =  r(s-1)(r-1).
+
+              Conditional homogeneity - (float) test statistic for homogeneity
+              of transition probabilities across strata.
+
+              Conditional homogeneity pvalue - (float) p-value for test
+              statistic.
+
+              Conditional homogeneity dof - (int) degrees of freedom =
+              r(s-1)(r-1).
 
     Notes
     -----
@@ -1197,9 +1200,6 @@ def kullback(F):
     FIJd = F[:, :].sum(axis=1)
     FIJd1 = FIJd + (FIJd == 0)
     T4 = 2 * (FIJd * np.log(FIJd1)).sum()
-
-    FIdd = F.sum(axis=1).sum(axis=1)
-    T5 = 2 * (FIdd * np.log(FIdd)).sum()
 
     T6 = F.sum()
     T6 = 2 * T6 * np.log(T6)
@@ -1315,8 +1315,9 @@ def shorrock(pmat):
     sh = (k - t) / (k - 1)
     return sh
 
-def homogeneity(transition_matrices, regime_names=[], class_names=[], \
-                     title="Markov Homogeneity Test"):
+
+def homogeneity(transition_matrices, regime_names=[], class_names=[],
+                title="Markov Homogeneity Test"):
     """
     Test for homogeneity of Markov transition probabilities across regimes.
 
@@ -1341,8 +1342,8 @@ def homogeneity(transition_matrices, regime_names=[], class_names=[], \
     """
 
     return Homogeneity_Results(transition_matrices, regime_names=regime_names,
-                                 class_names= class_names,
-                                 title=title)
+                               class_names=class_names, title=title)
+
 
 class Homogeneity_Results:
     """
@@ -1376,26 +1377,26 @@ class Homogeneity_Results:
 
     """
 
-    def __init__(self, transition_matrices, regime_names=[], class_names = [],
-            title="Markov Homogeneity Test"):
+    def __init__(self, transition_matrices, regime_names=[], class_names=[],
+                 title="Markov Homogeneity Test"):
         self._homogeneity(transition_matrices)
-        self.regime_names=regime_names
+        self.regime_names = regime_names
         self.class_names = class_names
         self.title = title
 
     def _homogeneity(self, transition_matrices):
         # form null transition probability matrix
         M = np.array(transition_matrices)
-        m,r,k = M.shape
+        m, r, k = M.shape
         self.k = k
-        B = np.zeros((r,m))
+        B = np.zeros((r, m))
         T = M.sum(axis=0)
         self.t_total = T.sum()
         n_i = T.sum(axis=1)
-        A_i = (T>0).sum(axis=1)
-        A_im = np.zeros((r,m))
-        p_ij = np.dot(np.diag(1./(n_i + (n_i==0)*1.)), T)
-        den = p_ij + 1. * (p_ij==0)
+        A_i = (T > 0).sum(axis=1)
+        A_im = np.zeros((r, m))
+        p_ij = np.dot(np.diag(1./(n_i + (n_i == 0)*1.)), T)
+        den = p_ij + 1. * (p_ij == 0)
         b_i = np.zeros_like(A_i)
         p_ijm = np.zeros_like(M)
         # get dimensions
@@ -1408,9 +1409,9 @@ class Homogeneity_Results:
 
         for nijm in M:
             nim = nijm.sum(axis=1)
-            B[:,m] = 1.*(nim>0)
-            b_i = b_i + 1. * (nim>0)
-            p_ijm[m] = np.dot(np.diag(1./(nim + (nim==0)*1.)),nijm)
+            B[:, m] = 1.*(nim > 0)
+            b_i = b_i + 1. * (nim > 0)
+            p_ijm[m] = np.dot(np.diag(1./(nim + (nim == 0)*1.)), nijm)
             num = (p_ijm[m]-p_ij)**2
             ratio = num / den
             qijm = np.dot(np.diag(nim), ratio)
@@ -1418,8 +1419,8 @@ class Homogeneity_Results:
             Q = Q + qijm.sum()
             # only use nonzero pijm in lr test
             mask = (nijm > 0) * (p_ij > 0)
-            A_im[:,m] = (nijm>0).sum(axis=1)
-            unmask = 1.0 * (mask==0)
+            A_im[:, m] = (nijm > 0).sum(axis=1)
+            unmask = 1.0 * (mask == 0)
             ratio = (mask * p_ijm[m] + unmask) / (mask * p_ij + unmask)
             lr = nijm * np.log(ratio)
             LR = LR + lr.sum()
@@ -1444,20 +1445,20 @@ class Homogeneity_Results:
         self.p_h1 = p_ijm
 
     def summary(self, file_name=None, title="Markov Homogeneity Test"):
-        regime_names = ["%d"%i for i in range(self.m)]
+        regime_names = ["%d" % i for i in range(self.m)]
         if self.regime_names:
             regime_names = self.regime_names
-        cols = ["P(%s)"%str(regime) for regime in regime_names]
+        cols = ["P(%s)" % str(regime) for regime in regime_names]
         if not self.class_names:
             self.class_names = range(self.k)
 
         max_col = max([len(col) for col in cols])
-        col_width = max([5, max_col]) #probabilities have 5 chars
+        col_width = max([5, max_col])  # probabilities have 5 chars
         n_tabs = self.k
         width = n_tabs * 4 + (self.k+1)*col_width
-        lead = "-"* width
+        lead = "-" * width
         head = title.center(width)
-        contents = [lead,head,lead]
+        contents = [lead, head, lead]
         l = "Number of regimes: %d" % int(self.m)
         k = "Number of classes: %d" % int(self.k)
         r = "Regime names: "
@@ -1468,51 +1469,54 @@ class Homogeneity_Results:
         contents.append(l)
         contents.append(r)
         contents.append(lead)
-        h = "%7s %20s %20s"%('Test', 'LR', 'Chi-2')
+        h = "%7s %20s %20s" % ('Test', 'LR', 'Chi-2')
         contents.append(h)
-        stat = "%7s %20.3f %20.3f"%('Stat.', self.LR, self.Q)
+        stat = "%7s %20.3f %20.3f" % ('Stat.', self.LR, self.Q)
         contents.append(stat)
-        stat = "%7s %20d %20d"%('DOF', self.dof, self.dof)
+        stat = "%7s %20d %20d" % ('DOF', self.dof, self.dof)
         contents.append(stat)
-        stat = "%7s %20.3f %20.3f"%('p-value', self.LR_p_value,
-            self.Q_p_value)
+        stat = "%7s %20.3f %20.3f" % ('p-value', self.LR_p_value,
+                                      self.Q_p_value)
         contents.append(stat)
-        print "\n".join(contents)
-        print lead
+        print("\n".join(contents))
+        print(lead)
 
-        cols = ["P(%s)"%str(regime) for regime in self.regime_names]
+        cols = ["P(%s)" % str(regime) for regime in self.regime_names]
         if not self.class_names:
             self.class_names = range(self.k)
-        cols.extend(["%s"%str(cname) for cname in self.class_names])
+        cols.extend(["%s" % str(cname) for cname in self.class_names])
 
         max_col = max([len(col) for col in cols])
-        col_width = max([5, max_col]) #probabilities have 5 chars
+        col_width = max([5, max_col])  # probabilities have 5 chars
         p0 = []
-        line0 = [  '{s: <{w}}'.format(s="P(H0)",w=col_width)   ]
-        line0.extend([ '{s: >{w}}'.format(s=cname,w=col_width) for cname in self.class_names])
-        print "    ".join(line0)
+        line0 = ['{s: <{w}}'.format(s="P(H0)", w=col_width)]
+        line0.extend((['{s: >{w}}'.format(s=cname, w=col_width) for cname in
+                       self.class_names]))
+        print("    ".join(line0))
         p0.append("&".join(line0))
-        for i,row in enumerate(self.p_h0):
-            line = ["%*s"%(col_width, str(self.class_names[i]))]
-            line.extend(["%*.3f"%(col_width,v) for v in row])
-            print  "    ".join(line)
+        for i, row in enumerate(self.p_h0):
+            line = ["%*s" % (col_width, str(self.class_names[i]))]
+            line.extend(["%*.3f" % (col_width, v) for v in row])
+            print("    ".join(line))
             p0.append("&".join(line))
         pmats = [p0]
 
-        print lead
+        print(lead)
         for r, p1 in enumerate(self.p_h1):
             p0 = []
-            line0 = [  '{s: <{w}}'.format(s="P(%s)"%regime_names[r],w=col_width)   ]
-            line0.extend([ '{s: >{w}}'.format(s=cname,w=col_width) for cname in self.class_names])
-            print "    ".join(line0)
+            line0 = ['{s: <{w}}'.format(s="P(%s)" %
+                                        regime_names[r], w=col_width)]
+            line0.extend((['{s: >{w}}'.format(s=cname, w=col_width) for cname
+                           in self.class_names]))
+            print("    ".join(line0))
             p0.append("&".join(line0))
-            for i,row in enumerate(p1):
-                line = ["%*s"%(col_width, str(self.class_names[i]))]
-                line.extend(["%*.3f"%(col_width,v) for v in row])
-                print  "    ".join(line)
+            for i, row in enumerate(p1):
+                line = ["%*s" % (col_width, str(self.class_names[i]))]
+                line.extend(["%*.3f" % (col_width, v) for v in row])
+                print("    ".join(line))
                 p0.append("&".join(line))
             pmats.append(p0)
-            print lead
+            print(lead)
 
         if file_name:
             k = self.k
@@ -1520,35 +1524,35 @@ class Homogeneity_Results:
             with open(file_name, 'w') as f:
                 c = []
                 fmt = "r"*(k+1)
-                s="\\begin{tabular}{|%s|}\\hline\n"%fmt
-                s+= "\\multicolumn{%s}{|c|}{%s}"%(ks,title)
+                s = "\\begin{tabular}{|%s|}\\hline\n" % fmt
+                s += "\\multicolumn{%s}{|c|}{%s}" % (ks, title)
                 c.append(s)
-                s = "Number of classes: %d"%int(self.k)
-                c.append("\\hline\\multicolumn{%s}{|l|}{%s}"%(ks,s))
-                s = "Number of transitions: %d"%int(self.t_total)
-                c.append("\\multicolumn{%s}{|l|}{%s}"%(ks,s))
-                s = "Number of regimes: %d"%int(self.m)
-                c.append("\\multicolumn{%s}{|l|}{%s}"%(ks,s))
+                s = "Number of classes: %d" % int(self.k)
+                c.append("\\hline\\multicolumn{%s}{|l|}{%s}" % (ks, s))
+                s = "Number of transitions: %d" % int(self.t_total)
+                c.append("\\multicolumn{%s}{|l|}{%s}" % (ks, s))
+                s = "Number of regimes: %d" % int(self.m)
+                c.append("\\multicolumn{%s}{|l|}{%s}" % (ks, s))
                 s = "Regime names: "
                 s += ", ".join(regime_names)
-                c.append("\\multicolumn{%s}{|l|}{%s}"%(ks,s))
-                s = "\\hline\\multicolumn{2}{|l}{%s}"%("Test")
+                c.append("\\multicolumn{%s}{|l|}{%s}" % (ks, s))
+                s = "\\hline\\multicolumn{2}{|l}{%s}" % ("Test")
                 s += "&\\multicolumn{2}{r}{LR}&\\multicolumn{2}{r|}{Q}"
                 c.append(s)
                 s = "Stat."
-                s = "\\multicolumn{2}{|l}{%s}"%(s)
-                s += "&\\multicolumn{2}{r}{%.3f}"%self.LR
-                s += "&\\multicolumn{2}{r|}{%.3f}"%self.Q
+                s = "\\multicolumn{2}{|l}{%s}" % (s)
+                s += "&\\multicolumn{2}{r}{%.3f}" % self.LR
+                s += "&\\multicolumn{2}{r|}{%.3f}" % self.Q
                 c.append(s)
-                s = "\\multicolumn{2}{|l}{%s}"%("DOF")
-                s += "&\\multicolumn{2}{r}{%d}"%int(self.dof)
-                s += "&\\multicolumn{2}{r|}{%d}"%int(self.dof)
+                s = "\\multicolumn{2}{|l}{%s}" % ("DOF")
+                s += "&\\multicolumn{2}{r}{%d}" % int(self.dof)
+                s += "&\\multicolumn{2}{r|}{%d}" % int(self.dof)
                 c.append(s)
-                s = "\\multicolumn{2}{|l}{%s}"%("p-value")
-                s += "&\\multicolumn{2}{r}{%.3f}"%self.LR_p_value
-                s += "&\\multicolumn{2}{r|}{%.3f}"%self.Q_p_value
+                s = "\\multicolumn{2}{|l}{%s}" % ("p-value")
+                s += "&\\multicolumn{2}{r}{%.3f}" % self.LR_p_value
+                s += "&\\multicolumn{2}{r|}{%.3f}" % self.Q_p_value
                 c.append(s)
-                s1 =  "\\\\\n".join(c)
+                s1 = "\\\\\n".join(c)
                 s1 += "\\\\\n"
                 c = []
                 for mat in pmats:
