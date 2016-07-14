@@ -26,6 +26,36 @@ try:
 except:
     print('Bokeh not installed. Functionality ' \
             'related to it will not work')
+import types
+
+# Classifier helper
+kinds = (types.ClassType, type)
+classifier  = {k.lower():v for k,v in ps.esda.mapclassify.__dict__.items() \
+        if isinstance(v, kinds)}
+
+def value_classifier(y, scheme='Quantiles', **kwargs):
+    """
+    Return classification for an indexed Series of values
+    ...
+
+    Arguments
+    ---------
+    y           : Series
+                  Indexed series containing values to be classified
+    scheme      : str
+                  [Optional. Default='Quantiles'] Name of the PySAL classifier
+                  to be used
+    **kwargs    : dict
+                  Additional arguments specific to the classifier of choice
+                  (see the classifier's documentation for details)
+
+    Returns
+    -------
+    labels      : Series
+                  Indexed series containing classes for each observation
+    """
+    lbls = classifier[scheme.lower()](y, **kwargs).yb
+    return pd.Series(lbls, index=y.index)
 
 # Low-level pieces
 
