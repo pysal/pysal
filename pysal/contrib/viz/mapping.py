@@ -609,9 +609,8 @@ def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
         plt.show()
     return None
 
-def plot_geocol_bk(gc, color=None, facecolor='0.3', edgecolor='0.7', 
-        alpha=1., linewidth=0.2, marker='o', marker_size=20, 
-        p=None):
+def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3', 
+        alpha=1., linewidth=0.2, marker_size=10, hover=True, p=None):
     '''
     Plot geographical data from the `geometry` column of a PySAL geotable to a
     bokeh backend.
@@ -645,8 +644,9 @@ def plot_geocol_bk(gc, color=None, facecolor='0.3', edgecolor='0.7',
                   line plotting (not applicable to points). It allows for
                   either a single value or a Series of the same length as `gc`
                   with colors, indexed on `gc.index`.
-    marker      : 'o'
     marker_size : int
+    hover       : Boolean
+                  Include hover tool
     p           : bokeh.plotting.figure
                   [Optional. Default=None] Pre-existing bokeh figure to which
                   append the collections and setup.
@@ -656,7 +656,9 @@ def plot_geocol_bk(gc, color=None, facecolor='0.3', edgecolor='0.7',
         facecolor = edgecolor = color
     draw = False
     if not p:
-        TOOLS="pan,wheel_zoom,box_zoom,reset,hover,save"
+        TOOLS="pan,wheel_zoom,box_zoom,reset,save"
+        if hover:
+            TOOLS += ',hover'
         p = bk.figure(tools=TOOLS,
            x_axis_location=None, y_axis_location=None)
         p.grid.grid_line_color = None
@@ -678,29 +680,45 @@ def plot_geocol_bk(gc, color=None, facecolor='0.3', edgecolor='0.7',
                     y=patch_ys
                     ))
         p.patches('x', 'y', source=cds,
-          fill_alpha=alpha,
+          fill_color=facecolor,
           line_color=edgecolor, 
+          fill_alpha=alpha,
           line_width=linewidth
           )
-    '''
     ## Lines
     elif geom == ps.cg.shapes.Chain:
         for id, shape in gc.iteritems():
-            for xy in shape.parts:
-                patches.append(xy)
+            for ring in shape.parts:
+                xs, ys = zip(*ring)
+                patch_xs.append(xs)
+                patch_ys.append(ys)
                 ids.append(id)
-        mpl_col = LineCollection(patches)
+        cds = bk.ColumnDataSource(data=dict(
+                    x=patch_xs,
+                    y=patch_ys
+                    ))
+        p.multi_line('x', 'y', source=cds,
+          line_color=edgecolor, 
+          line_alpha=alpha,
+          line_width=linewidth
+          )
         facecolor = 'None'
     ## Points
     elif geom == ps.cg.shapes.Point:
         edgecolor = facecolor
         xys = np.array(zip(*gc)).T
-        ax.scatter(xys[:, 0], xys[:, 1], marker=marker, 
-                s=marker_size, c=facecolor, edgecolors=edgecolor,
-                linewidths=linewidth)
-        mpl_col = None
-    '''
-    # Styling mpl collection (polygons & lines)
+        cds = bk.ColumnDataSource(data=dict(
+                    x=xys[:, 0],
+                    y=xys[:, 1]
+                    ))
+        p.circle('x', 'y',
+                 source=cds, 
+                 fill_color=facecolor,
+                 line_color=edgecolor,
+                 line_width=linewidth,
+                 fill_alpha=alpha,
+                 line_alpha=alpha,
+                 size=marker_size)
     if draw:
         bk.show(p)
     return None
