@@ -4,7 +4,7 @@ import scipy
 import numpy as np
 from pysal.spreg.ml_error import ML_Error
 from pysal.spreg import utils
-from pysal.common import RTOL
+from pysal.common import RTOL, ATOL
 from warnings import warn as Warn
 
 @unittest.skipIf(int(scipy.__version__.split(".")[1]) < 11,
@@ -62,7 +62,7 @@ class TestMLError(unittest.TestCase):
  (-4.8232686291115678, 1.4122456582517099e-06),
  (3.9913060809142995, 6.5710406838016854e-05),
  (7.9088780724028922, 2.5971882547279339e-15)]
-        np.testing.assert_allclose(reg.z_stat,z_stat,RTOL)
+        np.testing.assert_allclose(reg.z_stat,z_stat,RTOL, atol=ATOL)
         logll = -4471.407066887894
         np.testing.assert_allclose(reg.logll,logll,RTOL)
         aic = 8952.8141337757879
@@ -118,7 +118,7 @@ class TestMLError(unittest.TestCase):
                   (-4.8232686, 1.4122457e-06),
                   (3.99130608, 6.5710407e-05),
                   (7.71923784, 1.1702739e-14)]
-        np.testing.assert_allclose(reg.z_stat,z_stat,rtol=RTOL)
+        np.testing.assert_allclose(reg.z_stat,z_stat,rtol=RTOL, atol=ATOL)
         logll = -4471.407066887894
         np.testing.assert_allclose(reg.logll,logll,RTOL)
         aic = 8952.8141337757879
