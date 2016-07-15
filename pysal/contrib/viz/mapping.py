@@ -697,8 +697,14 @@ def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
     patch_xs = []
     patch_ys = []
     ids = []
-    ## Polygons
-    if geom == ps.cg.shapes.Polygon:
+    pars = {'fc': facecolor, \
+            'ec': edgecolor, \
+            'alpha': alpha, \
+            'lw': linewidth, \
+            'ms': marker_size}
+    ## Polygons + Lines
+    if (geom == ps.cg.shapes.Polygon) or \
+            (geom == ps.cg.shapes.Chain):
         for id, shape in gc.iteritems():
             for ring in shape.parts:
                 xs, ys = zip(*ring)
@@ -709,30 +715,32 @@ def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
                     x=patch_xs,
                     y=patch_ys
                     ))
-        p.patches('x', 'y', source=cds,
-          fill_color=facecolor,
-          line_color=edgecolor, 
-          fill_alpha=alpha,
-          line_width=linewidth
-          )
-    ## Lines
-    elif geom == ps.cg.shapes.Chain:
-        for id, shape in gc.iteritems():
-            for ring in shape.parts:
-                xs, ys = zip(*ring)
-                patch_xs.append(xs)
-                patch_ys.append(ys)
-                ids.append(id)
-        cds = bk.ColumnDataSource(data=dict(
-                    x=patch_xs,
-                    y=patch_ys
-                    ))
-        p.multi_line('x', 'y', source=cds,
-          line_color=edgecolor, 
-          line_alpha=alpha,
-          line_width=linewidth
-          )
-        facecolor = 'None'
+        if type(facecolor) is pd.Series:
+            cds.add(facecolor.reindex(ids), 'facecolor')
+            pars['fc'] = 'facecolor'
+        if type(edgecolor) is pd.Series:
+            cds.add(edgecolor.reindex(ids), 'edgecolor')
+            pars['ec'] = 'edgecolor'
+        if type(alpha) is pd.Series:
+            cds.add(alpha.reindex(ids), 'alpha')
+            pars['alpha'] = 'alpha'
+        if type(linewidth) is pd.Series:
+            cds.add(linewidth.reindex(ids), 'linewidth')
+            pars['lw'] = 'linewidth'
+        if geom == ps.cg.shapes.Polygon:
+            p.patches('x', 'y', source=cds,
+              fill_color=pars['fc'],
+              line_color=pars['ec'], 
+              fill_alpha=pars['alpha'],
+              line_width=pars['lw']
+              )
+        elif geom == ps.cg.shapes.Chain:
+            p.multi_line('x', 'y', source=cds,
+              line_color=pars['ec'], 
+              line_alpha=pars['alpha'],
+              line_width=pars['lw']
+              )
+            facecolor = 'None'
     ## Points
     elif geom == ps.cg.shapes.Point:
         edgecolor = facecolor
@@ -741,14 +749,29 @@ def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
                     x=xys[:, 0],
                     y=xys[:, 1]
                     ))
+        if type(facecolor) is pd.Series:
+            cds.add(facecolor.reindex(ids), 'facecolor')
+            pars['fc'] = 'facecolor'
+        if type(edgecolor) is pd.Series:
+            cds.add(edgecolor.reindex(ids), 'edgecolor')
+            pars['ec'] = 'edgecolor'
+        if type(alpha) is pd.Series:
+            cds.add(alpha.reindex(ids), 'alpha')
+            pars['alpha'] = 'alpha'
+        if type(linewidth) is pd.Series:
+            cds.add(linewidth.reindex(ids), 'linewidth')
+            pars['lw'] = 'linewidth'
+        if type(marker_size) is pd.Series:
+            cds.add(marker_size.reindex(ids), 'marker_size')
+            pars['ms'] = 'marker_size'
         p.circle('x', 'y',
                  source=cds, 
-                 fill_color=facecolor,
-                 line_color=edgecolor,
-                 line_width=linewidth,
-                 fill_alpha=alpha,
-                 line_alpha=alpha,
-                 size=marker_size)
+                 fill_color=pars['fc'],
+                 line_color=pars['ec'],
+                 line_width=pars['lw'],
+                 fill_alpha=pars['alpha'],
+                 line_alpha=pars['alpha'],
+                 size=pars['ms'])
     if draw:
         bk.show(p)
     return None
