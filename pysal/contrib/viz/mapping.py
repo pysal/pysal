@@ -617,7 +617,7 @@ def geoplot(db, col=None, palette='viridis', classi='Quantiles',
     elif backend is 'bk':
         plot_geocol_bk(db['geometry'], facecolor=facecolor, 
                 color=color, edgecolor=edgecolor, alpha=alpha,
-                linewidth=linewidth, marker=marker, marker_size=marker_size,
+                linewidth=linewidth, marker_size=marker_size,
                 hover=hover, p=p, **kwargs)
     else:
         print("Please choose an available backend")
