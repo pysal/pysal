@@ -540,6 +540,89 @@ def _expand_values(values, shp2dbf_row):
 
 # High-level pieces
 
+def geoplot(db, col=None, palette='viridis', classi='Quantiles',
+        backend='mpl', color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3', 
+        alpha=1., linewidth=0.2, marker='o', marker_size=20, 
+        ax=None, hover=True, p=None, **kwargs):
+    '''
+    Higher level plotter for geotables
+    ...
+
+    Arguments
+    ---------
+    db          : DataFrame
+                  GeoTable with 'geometry' column and values to be plotted.
+    col         : None/str
+                  [Optional. Default=None] Column holding the values to encode
+                  into the choropleth.
+    palette
+    classi      : str
+                  [Optional. Default='mpl'] Backend to plot the
+    backend     : str
+                  [Optional. Default='mpl'] Backend to plot the
+                  geometries. Available options include Matplotlib ('mpl') or
+                  Bokeh ('bk').
+    color       : str/tuple/Series
+                  [Optional. Default=None] Wrapper that sets both `facecolor`
+                  and `edgecolor` at the same time. If set, `facecolor` and
+                  `edgecolor` are ignored. It allows for either a single color
+                  or a Series of the same length as `gc` with colors, indexed
+                  on `gc.index`.
+    facecolor   : str/tuple/Series
+                  [Optional. Default='#4D4D4D'] Color for polygons and points. It
+                  allows for either a single color or a Series of the same
+                  length as `gc` with colors, indexed on `gc.index`.
+    edgecolor   : str/tuple/Series
+                  [Optional. Default='#B3B3B3'] Color for the polygon and point
+                  edges. It allows for either a single color or a Series of
+                  the same length as `gc` with colors, indexed on `gc.index`.
+    alpha       : float/Series
+                  [Optional. Default=1.] Transparency. It allows for either a
+                  single value or a Series of the same length as `gc` with
+                  colors, indexed on `gc.index`.
+    linewidth   : float/Series
+                  [Optional. Default=0.2] Width(s) of the lines in polygon and
+                  line plotting (not applicable to points). It allows for
+                  either a single value or a Series of the same length as `gc`
+                  with colors, indexed on `gc.index`.
+    marker      : str
+                  [Optional. `mpl` backend only. Default='o'] Marker for point
+                  plotting.
+    marker_size : int/Series
+                  [Optional. Default=0.15] Width(s) of the lines in polygon and
+    ax          : AxesSubplot
+                  [Optional. `mpl` backend only. Default=None] Pre-existing
+                  axes to which append the geometries.
+    hover       : Boolean
+                  [Optional. `bk` backend only. Default=True] Include hover tool.
+    p           : bokeh.plotting.figure
+                  [Optional. `bk` backend only. Default=None] Pre-existing
+                  bokeh figure to which append the collections and setup.
+    kwargs      : Dict
+                  Additional named vaues to be passed to the classifier of choice.
+    '''
+    if col:
+        lbl = value_classifier(db[col], scheme=classi, **kwargs)
+        #---
+        # Convert classes into (`hex`) colors --> Plug Serge's function here
+        import seaborn as sns
+        pltt = map(clrs.rgb2hex, sns.color_palette(palette, 6))
+        facecolor = lbl.map({i:j for i,j in enumerate(pltt)})
+        #---
+    if backend is 'mpl':
+        plot_geocol_mpl(db['geometry'], facecolor=facecolor, ax=ax, 
+                color=color, edgecolor=edgecolor, alpha=alpha,
+                linewidth=linewidth, marker=marker, marker_size=marker_size,
+                **kwargs)
+    elif backend is 'bk':
+        plot_geocol_bk(db['geometry'], facecolor=facecolor, 
+                color=color, edgecolor=edgecolor, alpha=alpha,
+                linewidth=linewidth, marker=marker, marker_size=marker_size,
+                hover=hover, p=p, **kwargs)
+    else:
+        print("Please choose an available backend")
+    return None
+
 def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7', 
         alpha=1., linewidth=0.2, marker='o', marker_size=20, 
         ax=None):
