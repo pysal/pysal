@@ -22,51 +22,51 @@ class Network:
 
     Parameters
     -----------
-    in_shp:         Str
+    in_shp:         str
                     The input shapefile. This must be in .shp format.
 
-    node_sig:       Int
+    node_sig:       int
                     Round the x and y coordinates of all nodes to node_sig significant 
                     digits (combined significant digits on the left and right
                     of the decimal place) 
                     -- Default is 11
                     -- Set to None for no rounding
 
-    unique_segs:    Boolean
+    unique_segs:    bool
                     If True (default), keep only unique segments (i.e., prune out any 
                     duplicated segments). 
                     If False keep all segments.
 
     Attributes
     ----------
-    in_shp:         Str
+    in_shp:         str
                     The input shapefile. This must be in .shp format.
 
-    adjacencylist:  List
+    adjacencylist:  list
                     List of lists storing node adjacency.
 
-    nodes:          Dict
+    nodes:          dict
                     Keys are tuples of node coords and values are the node ID.
 
-    edge_lengths:   Dict
+    edge_lengths:   dict
                     Keys are tuples of sorted node IDs representing an edge and values are
                     the length.
 
-    pointpatterns:  Dict
+    pointpatterns:  dict
                     Keys are a string name of the pattern and values are point pattern 
                     class instances.
 
-    node_coords:    Dict
+    node_coords:    dict
                     Keys are the node ID and values are the (x,y) coordinates inverse 
                     to nodes.
 
-    edges:          List
+    edges:          list
                     List of edges, where each edge is a sorted tuple of node IDs.
 
-    node_list:      List
+    node_list:      list
                     List of node IDs.
 
-    alldistances:   Dict
+    alldistances:   dict
                     Keys are the node IDs.
                     Values are tuples with two elements: 
                         1. A list of the shortest path distances
@@ -105,10 +105,10 @@ class Network:
             self._extractnetwork()
             self.node_coords = dict((value, key) for key, value in self.nodes.iteritems())
 
-            # This is a spatial representation of the network
+            # This is a spatial representation of the network.
             self.edges = sorted(self.edges)
 
-            # Extract the graph
+            # Extract the graph.
             self.extractgraph()
 
             self.node_list = sorted(self.nodes.values())
@@ -188,7 +188,7 @@ class Network:
         # deemed to be segments.
         self.graphedges = copy.deepcopy(self.edges)
         self.graph_lengths = copy.deepcopy(self.edge_lengths)
-        # Mapping all the edges contained within a single graph represented edge
+        # Mapping all the edges contained within a single graph represented edge.
         self.graph_to_edges = {}
 
         bridges = []
@@ -264,16 +264,16 @@ class Network:
 
         Parameters
         ----------
-        graph:      Boolean
+        graph:      bool
                     {True, False} controls whether the W is generated using the spatial
                     representation or the graph representation.
 
-        weightings: Dict
+        weightings: dict
                     Dict of lists of weightings for each edge.
 
         Returns
         -------
-         W:         Obj
+         W:         object
                     A PySAL W Object representing the binary adjacency of the network.
 
         Examples
@@ -337,7 +337,7 @@ class Network:
 
         Parameters
         ----------
-        threshold:  Float
+        threshold:  float
                     Distance threshold value.
         """
         try:
@@ -361,16 +361,16 @@ class Network:
 
         Parameters
         ----------
-        shapefile:  Str
+        shapefile:  str
                     The path to the shapefile.
 
-        name:       Str
+        name:       str
                     Name to be assigned to the point dataset.
 
-        idvariable: Str
+        idvariable: str
                     Column name to be used as ID variable.
 
-        attribute:  Bool
+        attribute:  bool
                     Defines whether attributes should be extracted.
                         True for attribute extraction.
                         False for no attribute extraaction.
@@ -389,22 +389,22 @@ class Network:
 
         Parameters
         ----------
-        x:      Float
+        x:      float
                 x-coordinate of the snapped point.
 
-        y:      Float
+        y:      float
                 y-coordiante of the snapped point.
 
-        edge:   Tuple
+        edge:   tuple
                 (node0, node1) representation of the network edge.
 
         Returns
         -------
-        d1:     Float
+        d1:     float
                 The distance to node0.
                     - always the node with the lesser id
 
-        d2:     Float
+        d2:     float
                 The distance to node1.
                     - always the node with the greater id
         """
@@ -419,18 +419,18 @@ class Network:
 
         Parameters
         -----------
-        pointpattern:   Obj
+        pointpattern:   object
                         PySAL Point Pattern Object
 
         Returns
         -------
-        obs_to_edge:    Dict
+        obs_to_edge:    dict
                         Dict with edges as keys and lists of points as values.
 
-        edge_to_obs:    Dict
+        edge_to_obs:    dict
                         Dict with point ids as keys and edge tuples as values.
 
-        dist_to_node:   Dict
+        dist_to_node:   dict
                         Dict with point ids as keys and values as dicts with keys for
                         node ids and values as distances from point to node.
         """
@@ -482,12 +482,12 @@ class Network:
 
         Parameters
         ----------
-        obs_on_network: Dict
+        obs_on_network: dict
                         Dict of observations on the network.
                         {(edge):{pt_id:(coords)}} or {edge:[(coord),(coord),(coord)]}
         Returns
         -------
-        counts:         Dict 
+        counts:         dict 
                         {(edge):count}
 
         Example
@@ -549,16 +549,16 @@ class Network:
 
         Parameters
         ----------
-        count:          Int
+        count:          int
                         The number of points to create or mean of the distribution if not 
                         'uniform'.
 
-        distribution:   Str
+        distribution:   str
                         {'uniform', 'poisson'} distribution of random points.
 
         Returns
         -------
-        random_pts:     Dict
+        random_pts:     dict
                         Keys are the edge tuple.
                         Value are a list of new point coordinates.
 
@@ -613,12 +613,12 @@ class Network:
 
         Parameters
         -----------
-        v0:     Int
+        v0:     int
                 Node id
 
         Returns
         -------
-        links:  List
+        links:  list
                 List of tuple edges adjacent to the node.
         """
         links = []
@@ -646,15 +646,15 @@ class Network:
 
         Parameters
         ----------
-        sourcepattern:  Str
+        sourcepattern:  str
                         The key of a point pattern snapped to the network.
 
-        destpattern:    Str
+        destpattern:    str
                         (Optional) The key of a point pattern snapped to the network.
 
         Returns
         -------
-        nearest:        Array (n,n)
+        nearest:        array (n,n)
                         An array of shape (n,n) storing distances between all points.
         """
 
@@ -756,10 +756,10 @@ class Network:
 
         Parameters
         ----------
-        sourcepattern:  Str 
+        sourcepattern:  str 
                         The key of a point pattern snapped to the network.
 
-        destpattern:    Str 
+        destpattern:    str 
                         (Optional) The key of a point pattern snapped to the network.
 
         Returns
@@ -842,34 +842,34 @@ class Network:
 
         Parameters
         ----------
-        pointpattern:   Obj
+        pointpattern:   object
                         A PySAL point pattern object.
 
-        nsteps:         Int
+        nsteps:         int
                         The number of steps at which the count of the nearest neighbors 
                         is computed.
 
-        permutations:   Int
+        permutations:   int
                         The number of permutations to perform (default 99).
 
-        threshold:      Float
+        threshold:      float
                         The level at which significance is computed.  
                             -- 0.5 would be 97.5% and 2.5%
 
-        distribution:   Str
+        distribution:   str
                         The distribution from which random points are sampled: 
                             -- uniform or poisson
 
-        lowerbound:     Float
+        lowerbound:     float
                         The lower bound at which the F-function is computed. (Default 0)
 
-        upperbound:     Float
+        upperbound:     float
                         The upper bound at which the F-function is computed.
                         Defaults to the maximum observed nearest neighbor distance.
 
         Returns
         -------
-        NetworkF:       Obj
+        NetworkF:       object
                         A network F class instance.
         """
         return NetworkF(self, pointpattern, nsteps=nsteps,
@@ -885,34 +885,34 @@ class Network:
 
         Parameters
         ----------
-        pointpattern:   Obj
+        pointpattern:   object
                         A PySAL point pattern object.
 
-        nsteps:         Int
+        nsteps:         int
                         The number of steps at which the count of the nearest neighbors 
                         is computed.
 
-        permutations:   Int
+        permutations:   int
                         The number of permutations to perform (default 99).
 
-        threshold:      Float
+        threshold:      float
                         The level at which significance is computed.  
                             -- 0.5 would be 97.5% and 2.5%
 
-        distribution:   Str
+        distribution:   str
                         The distribution from which random points are sampled: 
                             -- uniform or poisson
 
-        lowerbound:     Float
+        lowerbound:     float
                         The lower bound at which the G-function is computed. (Default 0)
 
-        upperbound:     Float
+        upperbound:     float
                         The upper bound at which the G-function is computed.
                         Defaults to the maximum observed nearest neighbor distance.
 
         Returns
         -------
-        NetworkG:       Obj
+        NetworkG:       object
                         A network G class instance.
         """
 
@@ -929,34 +929,34 @@ class Network:
 
         Parameters
         ----------
-        pointpattern:   Obj
+        pointpattern:   object
                         A PySAL point pattern object.
 
-        nsteps:         Int
+        nsteps:         int
                         The number of steps at which the count of the nearest neighbors 
                         is computed.
 
-        permutations:   Int
+        permutations:   int
                         The number of permutations to perform (default 99).
 
-        threshold:      Float
+        threshold:      float
                         The level at which significance is computed.  
                             -- 0.5 would be 97.5% and 2.5%
 
-        distribution:   Str
+        distribution:   str
                         The distribution from which random points are sampled: 
                             -- uniform or poisson
 
-        lowerbound:     Float
+        lowerbound:     float
                         The lower bound at which the K-function is computed. (Default 0)
 
-        upperbound:     Float
+        upperbound:     float
                         The upper bound at which the K-function is computed.
                         Defaults to the maximum observed nearest neighbor distance.
 
         Returns
         -------
-        NetworkK:       Obj
+        NetworkK:       object
                         A network K class instance.
         """
         return NetworkK(self, pointpattern, nsteps=nsteps,
@@ -971,12 +971,12 @@ class Network:
 
         Parameters
         -----------
-        distance:   Float
+        distance:   float
                     The distance at which edges are split.
 
         Returns
         -------
-        sn:         Object
+        sn:         object
                     PySAL Network Object.
 
         Example
@@ -1041,7 +1041,7 @@ class Network:
                     sn.node_coords[currentstop] = newx, newy
                     sn.nodes[(newx, newy)] = currentstop
 
-                # Update the adjacencylist.
+                # Update the adjacency list.
                 sn.adjacencylist[currentstart].append(currentstop)
                 sn.adjacencylist[currentstop].append(currentstart)
 
@@ -1071,7 +1071,7 @@ class Network:
 
         Parameters
         ----------
-        filename:   Str
+        filename:   str
                     The filename where the network should be saved. This should be a full 
                     path or the file is saved whereever this method is called from.
 
@@ -1101,23 +1101,23 @@ class PointPattern():
 
     Parameters
     ----------
-    shapefile:  Str
+    shapefile:  str
                 The input shapefile.
 
-    idvariable: Str
+    idvariable: str
                 Field in the shapefile to use as an id variable.
 
-    attribute:  Boolean
+    attribute:  bool
                 {False, True} 
                 A flag to indicate whether all attributes are tagged to this class.
 
     Attributes
     ----------
-    points:     Dict
+    points:     dict
                 Keys are the point ids.
                 Values are the coordinates.
 
-    npoints:    Int
+    npoints:    int
                 The number of points.
 
 
