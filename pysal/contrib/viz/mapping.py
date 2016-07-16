@@ -19,6 +19,7 @@ import matplotlib as mpl
 from matplotlib.pyplot import fill, text
 from matplotlib import cm
 from matplotlib.patches import Polygon
+import collections
 from matplotlib.path import Path
 from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection, CircleCollection
 try:
@@ -593,7 +594,7 @@ def _expand_values(values, shp2dbf_row):
 def geoplot(db, col=None, palette='BuGn', classi='Quantiles',
         backend='mpl', color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
         alpha=1., linewidth=0.2, marker='o', marker_size=20,
-        ax=None, hover=True, p=None,  **kwargs):
+        ax=None, hover=True, p=None, tips=None, **kwargs):
     '''
     Higher level plotter for geotables
     ...
@@ -648,6 +649,8 @@ def geoplot(db, col=None, palette='BuGn', classi='Quantiles',
     p           : bokeh.plotting.figure
                   [Optional. `bk` backend only. Default=None] Pre-existing
                   bokeh figure to which append the collections and setup.
+    tips        : list of strings
+                  series names to add to hover tool
     kwargs      : Dict
                   Additional named vaues to be passed to the classifier of choice.
     '''
@@ -659,7 +662,12 @@ def geoplot(db, col=None, palette='BuGn', classi='Quantiles',
             kwargs.pop('k')
         except KeyError:
             pass
-        col = {col: db[col]}
+        col = [(col, db[col])]
+        if tips:
+            for tip in tips:
+                col.append((tip, db[tip]))
+        col = collections.OrderedDict(col) # put mapped variable at the top
+
     if backend is 'mpl':
         plot_geocol_mpl(db['geometry'], facecolor=facecolor, ax=ax,
                 color=color, edgecolor=edgecolor, alpha=alpha,
