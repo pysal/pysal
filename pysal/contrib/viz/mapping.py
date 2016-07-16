@@ -666,6 +666,7 @@ def geoplot(db, col=None, palette='BuGn', classi='Quantiles',
         if tips:
             for tip in tips:
                 col.append((tip, db[tip]))
+        col.append(('index', db.index.values))
         col = collections.OrderedDict(col) # put mapped variable at the top
 
     if backend is 'mpl':
