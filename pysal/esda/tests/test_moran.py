@@ -1,7 +1,7 @@
 import unittest
 import pysal
 from .. import moran
-from ...common import pandas 
+from ...common import pandas, RTOL, ATOL 
 import numpy as np
 
 PANDAS_EXTINCT = pandas is None
@@ -14,7 +14,7 @@ class Moran_Tester(unittest.TestCase):
 
     def test_moran(self):
         mi = moran.Moran(self.y, self.w, two_tailed=False)
-        self.assertAlmostEquals(mi.I, 0.24365582621771659, 7)
+        np.testing.assert_allclose(mi.I,  0.24365582621771659, rtol=RTOL, atol=ATOL)
         self.assertAlmostEquals(mi.p_norm, 0.00013573931385468807)
 
     def test_sids(self):
@@ -22,7 +22,7 @@ class Moran_Tester(unittest.TestCase):
         f = pysal.open(pysal.examples.get_path("sids2.dbf"))
         SIDR = np.array(f.by_col("SIDR74"))
         mi = pysal.Moran(SIDR, w, two_tailed=False)
-        self.assertAlmostEquals(mi.I, 0.24772519320480135)
+        np.testing.assert_allclose(mi.I, 0.24772519320480135, atol=ATOL, rtol=RTOL)
         self.assertAlmostEquals(mi.p_norm,  5.7916539074498452e-05)
 
     @unittest.skipIf(PANDAS_EXTINCT, 'missing pandas')
@@ -33,7 +33,7 @@ class Moran_Tester(unittest.TestCase):
         mi = moran.Moran.by_col(df, ['SIDR74'], w=w, two_tailed=False)
         sidr = np.unique(mi.SIDR74_moran.values)
         pval = np.unique(mi.SIDR74_p_sim.values)
-        self.assertAlmostEquals(sidr, 0.24772519320480135, 7)
+        np.testing.assert_allclose(sidr, 0.24772519320480135, atol=ATOL, rtol=RTOL)
         self.assertAlmostEquals(pval, 0.001)
 
 
@@ -46,7 +46,7 @@ class Moran_Rate_Tester(unittest.TestCase):
 
     def test_moran_rate(self):
         mi = moran.Moran_Rate(self.e, self.b, self.w, two_tailed=False)
-        self.assertAlmostEquals(mi.I, 0.16622343552567395, 7)
+        np.testing.assert_allclose(mi.I, 0.16622343552567395, rtol=RTOL, atol=ATOL)
         self.assertAlmostEquals(mi.p_norm, 0.004191499504892171)
 
     @unittest.skipIf(PANDAS_EXTINCT, 'missing pandas')
@@ -56,7 +56,7 @@ class Moran_Rate_Tester(unittest.TestCase):
         mi = moran.Moran_Rate.by_col(df, ['SID79'], ['BIR79'], w=self.w, two_tailed=False)
         sidr = np.unique(mi["SID79-BIR79_moran_rate"].values)
         pval = np.unique(mi["SID79-BIR79_p_sim"].values)
-        self.assertAlmostEquals(sidr, 0.16622343552567395, 7)
+        np.testing.assert_allclose(sidr, 0.16622343552567395, rtol=RTOL, atol=ATOL)
         self.assertAlmostEquals(pval, 0.009)
 
 

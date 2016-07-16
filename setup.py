@@ -24,6 +24,8 @@ VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 if os.path.exists('MANIFEST'):
     os.remove('MANIFEST')
 
+with open('requirements_plus.txt') as file:
+    psplus = file.readlines()
 
 def setup_package():
 
@@ -74,7 +76,8 @@ def setup_package():
         packages=find_packages(exclude=[".meta", "*.meta.*", "meta.*",
                                         "meta"]),
         package_data={'pysal': list(example_data_files)},
-        requires=['scipy'],
+        install_requires=['scipy'],
+        extras_require={'plus':psplus},
         cmdclass= {'build_py': build_py}
     )
 
