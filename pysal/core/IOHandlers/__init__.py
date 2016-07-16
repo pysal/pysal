@@ -18,3 +18,8 @@ import mat
 import mtx
 import stata_txt
 import wk1
+
+try:
+    from . import db
+except:
+    warnings.warn('SQLAlchemy and Geomet not installed, database I/O disabled')

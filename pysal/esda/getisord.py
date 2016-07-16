@@ -234,7 +234,7 @@ class G_Local(object):
        original variable
     w : DistanceBand W
        original weights object
-    permutations: int
+    permutations : int
                   the number of permutations
     Gs : array
         of floats, the value of the orginal G statistic in Getis & Ord (1992)
