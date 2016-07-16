@@ -639,7 +639,7 @@ class Network:
             self.alldistances[node] = (distance, tree)
             self.distancematrix[node] = distance
 
-    def allneighbordistances(self, sourcepattern, destpattern=None, diagonalfill=None):
+    def allneighbordistances(self, sourcepattern, destpattern=None, fill_diagonal=None):
         """
         Compute either all distances between i and j in a single point pattern or all 
         distances between each i from a source pattern and all j from a destination pattern.
@@ -750,10 +750,10 @@ class Network:
                     nearest[p2,p1] = nearest[p1,p2]                    
         # Populate the main diagonal when symmetric.
         if symmetric:
-            if diagonalfill == None:
+            if fill_diagonal == None:
                 np.fill_diagonal(nearest, np.nan)
             else:
-                np.fill_diagonal(nearest, diagonalfill)
+                np.fill_diagonal(nearest, fill_diagonal)
             
         return nearest
 
