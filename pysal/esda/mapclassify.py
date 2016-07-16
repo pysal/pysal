@@ -10,7 +10,15 @@ __all__ = ['Map_Classifier', 'quantile', 'Box_Plot', 'Equal_Interval',
            'Jenks_Caspall_Forced', 'Jenks_Caspall_Sampled',
            'Max_P_Classifier', 'Maximum_Breaks', 'Natural_Breaks',
            'Quantiles', 'Percentiles', 'Std_Mean', 'User_Defined',
-           'gadf', 'K_classifiers', 'HeadTail_Breaks']
+           'gadf', 'K_classifiers', 'HeadTail_Breaks', 'CLASSIFIERS']
+
+
+CLASSIFIERS = ('Box_Plot', 'Equal_Interval', 'Fisher_Jenks',
+               'Fisher_Jenks_Sampled', 'HeadTail_Breaks', 'Jenks_Caspall',
+               'Jenks_Caspall_Forced', 'Jenks_Caspall_Sampled',
+               'Max_P_Classifier', 'Maximum_Breaks', 'Natural_Breaks',
+               'Quantiles', 'Percentiles', 'Std_Mean', 'User_Defined')
+
 
 
 K = 5  # default number of classes in any map scheme with this as an argument
@@ -301,7 +309,7 @@ def natural_breaks(values, k=5):
     uv = np.unique(values)
     uvk = len(uv)
     if uvk < k:
-        Warn('Warning: Not enough unique values in array to form k classes', 
+        Warn('Warning: Not enough unique values in array to form k classes',
                 UserWarning)
         Warn('Warning: setting k to %d' % uvk, UserWarning)
         k = uvk
@@ -449,19 +457,19 @@ class Map_Classifier(object):
     def _classify(self):
         self._set_bins()
         self.yb, self.counts = bin1d(self.y, self.bins)
-    
+
     def _update(self, data, *args, **kwargs):
         """
-        The only thing that *should* happen in this function is 
+        The only thing that *should* happen in this function is
         1. input sanitization for pandas
-        2. classification/reclassification. 
-        
+        2. classification/reclassification.
+
         Using their __init__ methods, all classifiers can re-classify given
-        different input parameters or additional data. 
+        different input parameters or additional data.
 
         If you've got a cleverer updating equation than the intial estimation
         equation, remove the call to self.__init__ below and replace it with the
-        updating function. 
+        updating function.
         """
         if data is not None:
             if hasattr(data, 'values'):
@@ -470,10 +478,10 @@ class Map_Classifier(object):
         else:
             data = self.y
         self.__init__(data, *args, **kwargs)
-    
+
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -481,7 +489,7 @@ class Map_Classifier(object):
                     (n,1) array of data to classify
         inplace :   bool
                     whether to conduct the update in place or to return a copy
-                    estimated from the additional specifications. 
+                    estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -506,11 +514,11 @@ class Map_Classifier(object):
         This will allow the classifier to be called like it's a function.
 
         Whether or not we want to make this be "find_bin" or "update" is a
-        design decision. 
+        design decision.
 
         I like this as find_bin, since a classifier's job should be to classify
         the data given to it using the rules estimated from the `_classify()`
-        function. 
+        function.
         """
         return self.find_bin(*args)
 
@@ -601,7 +609,7 @@ class Map_Classifier(object):
         table.insert(1, " ")
         table = "\n".join(table)
         return table
-    
+
     def find_bin(self, x):
         """
         Sort input or inputs according to the current bin estimate
@@ -821,7 +829,7 @@ class Percentiles(Map_Classifier):
 
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -829,7 +837,7 @@ class Percentiles(Map_Classifier):
                     (n,1) array of data to classify
         inplace :   bool
                     whether to conduct the update in place or to return a copy
-                    estimated from the additional specifications. 
+                    estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -942,10 +950,10 @@ class Box_Plot(Map_Classifier):
         Map_Classifier._classify(self)
         self.low_outlier_ids = np.nonzero(self.yb == 0)[0]
         self.high_outlier_ids = np.nonzero(self.yb == 5)[0]
-    
+
     def update(self, y=None,  inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -953,7 +961,7 @@ class Box_Plot(Map_Classifier):
                         (n,1) array of data to classify
         inplace     :   bool
                         whether to conduct the update in place or to return a copy
-                        estimated from the additional specifications. 
+                        estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -1076,10 +1084,10 @@ class Std_Mean(Map_Classifier):
             cuts.append(y_max)
         self.bins = np.array(cuts)
         self.k = len(cuts)
-    
+
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -1087,7 +1095,7 @@ class Std_Mean(Map_Classifier):
                     (n,1) array of data to classify
         inplace :   bool
                     whether to conduct the update in place or to return a copy
-                    estimated from the additional specifications. 
+                    estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -1176,7 +1184,7 @@ class Maximum_Breaks(Map_Classifier):
 
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -1184,7 +1192,7 @@ class Maximum_Breaks(Map_Classifier):
                     (n,1) array of data to classify
         inplace :   bool
                     whether to conduct the update in place or to return a copy
-                    estimated from the additional specifications. 
+                    estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -1294,7 +1302,7 @@ class Natural_Breaks(Map_Classifier):
 
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -1302,7 +1310,7 @@ class Natural_Breaks(Map_Classifier):
                         (n,1) array of data to classify
         inplace     :   bool
                         whether to conduct the update in place or to return a copy
-                        estimated from the additional specifications. 
+                        estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -1432,7 +1440,7 @@ class Fisher_Jenks_Sampled(Map_Classifier):
 
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -1440,7 +1448,7 @@ class Fisher_Jenks_Sampled(Map_Classifier):
                         (n,1) array of data to classify
         inplace     :   bool
                         whether to conduct the update in place or to return a copy
-                        estimated from the additional specifications. 
+                        estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -1525,7 +1533,7 @@ class Jenks_Caspall(Map_Classifier):
         cuts.shape = (len(cuts),)
         self.bins = cuts
         self.iterations = it
-  
+
 class Jenks_Caspall_Sampled(Map_Classifier):
     """
     Jenks Caspall Map Classification using a random sample
@@ -1610,10 +1618,10 @@ class Jenks_Caspall_Sampled(Map_Classifier):
         jc = Jenks_Caspall(self.y, self.k)
         self.bins = jc.bins
         self.iterations = jc.iterations
-    
+
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -1621,7 +1629,7 @@ class Jenks_Caspall_Sampled(Map_Classifier):
                         (n,1) array of data to classify
         inplace     :   bool
                         whether to conduct the update in place or to return a copy
-                        estimated from the additional specifications. 
+                        estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -1856,7 +1864,7 @@ class User_Defined(Map_Classifier):
 
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -1864,7 +1872,7 @@ class User_Defined(Map_Classifier):
                         (n,1) array of data to classify
         inplace     :   bool
                         whether to conduct the update in place or to return a copy
-                        estimated from the additional specifications. 
+                        estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -2045,7 +2053,7 @@ class Max_P_Classifier(Map_Classifier):
 
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -2053,7 +2061,7 @@ class Max_P_Classifier(Map_Classifier):
                         (n,1) array of data to classify
         inplace     :   bool
                         whether to conduct the update in place or to return a copy
-                        estimated from the additional specifications. 
+                        estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.

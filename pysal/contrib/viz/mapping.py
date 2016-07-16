@@ -1,5 +1,5 @@
 """
-Choropleth mapping using PySAL and Matplotlib
+Choropleth mapping using PySAL
 
 ToDo:
     * map_line_shp, map_point_shp should take a shp object not a shp_link
@@ -26,12 +26,16 @@ try:
 except:
     print('Bokeh not installed. Functionality ' \
             'related to it will not work')
-import types
+
+try:
+    import brewer2mpl
+except:
+    print('brewer2mpl  not installed. Functionality '\
+          'related to it will not work')
 
 # Classifier helper
-kinds = (types.ClassType, type)
-classifier  = {k.lower():v for k,v in ps.esda.mapclassify.__dict__.items() \
-        if isinstance(v, kinds)}
+classifiers = ps.esda.mapclassify.CLASSIFIERS
+classifier = {c.lower():getattr(ps.esda.mapclassify,c) for c in classifiers}
 
 def value_classifier(y, scheme='Quantiles', **kwargs):
     """
@@ -51,11 +55,56 @@ def value_classifier(y, scheme='Quantiles', **kwargs):
 
     Returns
     -------
-    labels      : Series
-                  Indexed series containing classes for each observation
+    labels           : Series
+                       Indexed series containing classes for each observation
+    classification   : Map_Classifier instance
     """
-    lbls = classifier[scheme.lower()](y, **kwargs).yb
-    return pd.Series(lbls, index=y.index)
+    c = classifier[scheme.lower()](y, **kwargs)
+    return (pd.Series(c.yb, index=y.index), c)
+
+
+# color helper
+def get_color_map(name='BuGn', cmtype='sequential', k=5,
+                  color_encoding='hexc'):
+
+    """
+    Get a brewer colormap
+
+    Arguments
+    ---------
+
+    name:   string
+            colormap name
+
+    cmtype: string
+            colormap scale type  [sequential, diverging, qualitative]
+
+    k:  int
+        number of classes
+
+    color_encoding: string
+                    encoding of colors [hexc, rgb, mpl, mpl_colormap]
+                    hex: list of hex strings
+                    rgb: list of RGB 0-255 triplets
+                    mpl: list of RGB 0-1 triplets as used by matplotlib
+                    mpl_colormap: matplotlib color map
+
+    Returns
+
+    colors:  color map in the specified color_encoding
+
+    """
+    encs = {'hexc': 'hex_colors',
+            'rgb': 'colors',
+            'mpl': 'mpl_colors',
+            'mpl_colormap': 'mpl_colormap'}
+    try:
+        bmap = brewer2mpl.get_map(name, cmtype, k)
+        colors =  getattr(bmap, encs[color_encoding.lower()])
+        return colors
+    except:
+        print('Color map not found: ',name, cmtype, k)
+
 
 # Low-level pieces
 
@@ -540,10 +589,10 @@ def _expand_values(values, shp2dbf_row):
 
 # High-level pieces
 
-def geoplot(db, col=None, palette='viridis', classi='Quantiles',
-        backend='mpl', color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3', 
-        alpha=1., linewidth=0.2, marker='o', marker_size=20, 
-        ax=None, hover=True, p=None, **kwargs):
+def geoplot(db, col=None, palette='BuGn', classi='Quantiles',
+        backend='mpl', color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
+        alpha=1., linewidth=0.2, marker='o', marker_size=20,
+        ax=None, hover=True, p=None,  **kwargs):
     '''
     Higher level plotter for geotables
     ...
@@ -602,20 +651,20 @@ def geoplot(db, col=None, palette='viridis', classi='Quantiles',
                   Additional named vaues to be passed to the classifier of choice.
     '''
     if col:
-        lbl = value_classifier(db[col], scheme=classi, **kwargs)
-        #---
-        # Convert classes into (`hex`) colors --> Plug Serge's function here
-        import seaborn as sns
-        pltt = map(clrs.rgb2hex, sns.color_palette(palette, 6))
-        facecolor = lbl.map({i:j for i,j in enumerate(pltt)})
-        #---
+        lbl,c = value_classifier(db[col], scheme=classi, **kwargs)
+        palette = get_color_map(name=palette, k=c.k)
+        facecolor = lbl.map({i:j for i,j in enumerate(palette)})
+        try:
+            kwargs.pop('k')
+        except KeyError:
+            pass
     if backend is 'mpl':
-        plot_geocol_mpl(db['geometry'], facecolor=facecolor, ax=ax, 
+        plot_geocol_mpl(db['geometry'], facecolor=facecolor, ax=ax,
                 color=color, edgecolor=edgecolor, alpha=alpha,
                 linewidth=linewidth, marker=marker, marker_size=marker_size,
                 **kwargs)
     elif backend is 'bk':
-        plot_geocol_bk(db['geometry'], facecolor=facecolor, 
+        plot_geocol_bk(db['geometry'], facecolor=facecolor,
                 color=color, edgecolor=edgecolor, alpha=alpha,
                 linewidth=linewidth, marker_size=marker_size,
                 hover=hover, p=p, **kwargs)
@@ -623,8 +672,8 @@ def geoplot(db, col=None, palette='viridis', classi='Quantiles',
         print("Please choose an available backend")
     return None
 
-def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7', 
-        alpha=1., linewidth=0.2, marker='o', marker_size=20, 
+def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
+        alpha=1., linewidth=0.2, marker='o', marker_size=20,
         ax=None):
     '''
     Plot geographical data from the `geometry` column of a PySAL geotable to a
@@ -662,7 +711,7 @@ def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
     marker      : 'o'
     marker_size : int
     ax          : AxesSubplot
-                  [Optional. Default=None] Pre-existing axes to which append the 
+                  [Optional. Default=None] Pre-existing axes to which append the
                   collections and setup
     '''
     geom = type(gc.iloc[0])
@@ -695,7 +744,7 @@ def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
     elif geom == ps.cg.shapes.Point:
         edgecolor = facecolor
         xys = np.array(zip(*gc)).T
-        ax.scatter(xys[:, 0], xys[:, 1], marker=marker, 
+        ax.scatter(xys[:, 0], xys[:, 1], marker=marker,
                 s=marker_size, c=facecolor, edgecolors=edgecolor,
                 linewidths=linewidth)
         mpl_col = None
@@ -722,7 +771,7 @@ def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
         plt.show()
     return None
 
-def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3', 
+def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
         alpha=1., linewidth=0.2, marker_size=10, hover=True, p=None):
     '''
     Plot geographical data from the `geometry` column of a PySAL geotable to a
@@ -813,13 +862,13 @@ def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
         if geom == ps.cg.shapes.Polygon:
             p.patches('x', 'y', source=cds,
               fill_color=pars['fc'],
-              line_color=pars['ec'], 
+              line_color=pars['ec'],
               fill_alpha=pars['alpha'],
               line_width=pars['lw']
               )
         elif geom == ps.cg.shapes.Chain:
             p.multi_line('x', 'y', source=cds,
-              line_color=pars['ec'], 
+              line_color=pars['ec'],
               line_alpha=pars['alpha'],
               line_width=pars['lw']
               )
@@ -848,7 +897,7 @@ def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
             cds.add(marker_size.reindex(ids), 'marker_size')
             pars['ms'] = 'marker_size'
         p.circle('x', 'y',
-                 source=cds, 
+                 source=cds,
                  fill_color=pars['fc'],
                  line_color=pars['ec'],
                  line_width=pars['lw'],
