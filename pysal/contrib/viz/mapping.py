@@ -23,6 +23,7 @@ from matplotlib.path import Path
 from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection, CircleCollection
 try:
     import bokeh.plotting as bk
+    from bokeh.models import HoverTool
 except:
     print('Bokeh not installed. Functionality ' \
             'related to it will not work')
@@ -658,6 +659,7 @@ def geoplot(db, col=None, palette='BuGn', classi='Quantiles',
             kwargs.pop('k')
         except KeyError:
             pass
+        col = {col: db[col]}
     if backend is 'mpl':
         plot_geocol_mpl(db['geometry'], facecolor=facecolor, ax=ax,
                 color=color, edgecolor=edgecolor, alpha=alpha,
@@ -667,7 +669,7 @@ def geoplot(db, col=None, palette='BuGn', classi='Quantiles',
         plot_geocol_bk(db['geometry'], facecolor=facecolor,
                 color=color, edgecolor=edgecolor, alpha=alpha,
                 linewidth=linewidth, marker_size=marker_size,
-                hover=hover, p=p, **kwargs)
+                hover=hover, p=p, col=col, **kwargs)
     else:
         print("Please choose an available backend")
     return None
@@ -772,7 +774,7 @@ def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
     return None
 
 def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
-        alpha=1., linewidth=0.2, marker_size=10, hover=True, p=None):
+        alpha=1., linewidth=0.2, marker_size=10, hover=True, p=None, col=None):
     '''
     Plot geographical data from the `geometry` column of a PySAL geotable to a
     bokeh backend.
@@ -783,6 +785,8 @@ def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
     ---------
     gc          : DataFrame
                   GeoCol with data to be plotted.
+    col         : None/dict
+                  [Optional. Default=None] Dictionary  with key, values for entries in hover tool
     color       : str/tuple/Series
                   [Optional. Default=None] Wrapper that sets both `facecolor`
                   and `edgecolor` at the same time. If set, `facecolor` and
@@ -837,16 +841,27 @@ def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
     ## Polygons + Lines
     if (geom == ps.cg.shapes.Polygon) or \
             (geom == ps.cg.shapes.Chain):
-        for id, shape in gc.iteritems():
+        for idx, shape in gc.iteritems():
             for ring in shape.parts:
                 xs, ys = zip(*ring)
                 patch_xs.append(xs)
                 patch_ys.append(ys)
-                ids.append(id)
-        cds = bk.ColumnDataSource(data=dict(
-                    x=patch_xs,
-                    y=patch_ys
-                    ))
+                ids.append(idx)
+        if hover and col:
+            tips = []
+            ds = dict(x=patch_xs, y=patch_ys)
+            for k,v in col.iteritems():
+                ds[k] = v
+                tips.append((k, "@"+k))
+            cds = bk.ColumnDataSource(data=ds)
+            h = p.select_one(HoverTool)
+            h.point_policy = 'follow_mouse'
+            h.tooltips = tips
+        else:
+            cds = bk.ColumnDataSource(data=dict(
+                        x=patch_xs,
+                        y=patch_ys
+                        ))
         if type(facecolor) is pd.Series:
             cds.add(facecolor.reindex(ids), 'facecolor')
             pars['fc'] = 'facecolor'
