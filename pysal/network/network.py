@@ -639,7 +639,7 @@ class Network:
             self.alldistances[node] = (distance, tree)
             self.distancematrix[node] = distance
 
-    def allneighbordistances(self, sourcepattern, destpattern=None):
+    def allneighbordistances(self, sourcepattern, destpattern=None, diagonalfill=None):
         """
         Compute either all distances between i and j in a single point pattern or all 
         distances between each i from a source pattern and all j from a destination pattern.
@@ -652,6 +652,11 @@ class Network:
         destpattern:    str
                         (Optional) The key of a point pattern snapped to the network.
 
+        diagonalfill:   float, int
+                        (Optional) Fill the diagonal of the cost matrix.
+                        Default in None and will populate the diagonal with numpy.nan
+                        Do not declare a destpattern for a custom diagonalfill.
+        
         Returns
         -------
         nearest:        array (n,n)
@@ -743,10 +748,13 @@ class Network:
                 if symmetric:
                     # Mirror the upper and lower triangle when symmetric.
                     nearest[p2,p1] = nearest[p1,p2]                    
+        # Populate the main diagonal when symmetric.
         if symmetric:
-            # Populate the main diagonal when symmetric.
-            #np.fill_diagonal(nearest, 0)
-            np.fill_diagonal(nearest, np.nan)
+            if diagonalfill == None:
+                np.fill_diagonal(nearest, np.nan)
+            else:
+                np.fill_diagonal(nearest, diagonalfill)
+            
         return nearest
 
     def nearestneighbordistances(self, sourcepattern, destpattern=None):
