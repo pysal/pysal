@@ -5,15 +5,16 @@ Gamma index for spatial autocorrelation
 """
 __author__ = "Luc Anselin <luc.anselin@asu.edu>"
 
-import pysal
 import numpy as np
+from ..weights.spatial_lag import lag_spatial
+from .tabular import _univariate_handler 
 
 __all__ = ['Gamma']
 
 PERMUTATIONS = 999
 
 
-class Gamma:
+class Gamma(object):
     """Gamma index for spatial autocorrelation
 
 
@@ -74,7 +75,7 @@ class Gamma:
 
     use same example as for join counts to show similarity
 
-    >>> import numpy as np
+    >>> import pysal, numpy as np
     >>> w=pysal.lat2W(4,4)
     >>> y=np.ones(16)
     >>> y[0:8]=0
@@ -149,6 +150,7 @@ class Gamma:
 
     """
     def __init__(self, y, w, operation='c', standardize='no', permutations=PERMUTATIONS):
+        y = np.asarray(y).flatten()
         self.w = w
         self.y = y
         self.op = operation
@@ -171,10 +173,19 @@ class Gamma:
             p_sim_g = self.__pseudop(self.sim_g, self.g)
             self.p_sim_g = p_sim_g
             self.g_z = (self.g - self.mean_g) / np.std(self.sim_g)
+    
+    @property
+    def _statistic(self):
+        return self.g
+
+    @property
+    def  p_sim(self):
+        """new name to fit with Moran module"""
+        return self.p_sim_g
 
     def __calc(self, z, op):
         if op == 'c':     # cross-product
-            zl = pysal.lag_spatial(self.w, z)
+            zl = lag_spatial(self.w, z)
             g = (z * zl).sum()
         elif op == 's':   # squared difference
             zs = np.zeros(z.shape)
@@ -211,4 +222,8 @@ class Gamma:
         if psim > 0.5:
             psim = (self.permutations - larger + 1.) / (self.permutations + 1.)
         return psim
-
+   
+    @classmethod
+    def by_col(cls, df, cols, w=None, inplace=False, pvalue = 'sim', outvals = None, **stat_kws):
+        return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
+                outvals=outvals, stat=cls, swapname=cls.__name__.lower(), **stat_kws)

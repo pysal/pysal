@@ -1,18 +1,18 @@
 import os
 import unittest
 import pysal
-from pysal.weights._contW_binning import ContiguityWeights_binning, QUEEN, ROOK
+from pysal.weights._contW_binning import ContiguityWeightsPolygons, QUEEN, ROOK
 
 
 class TestContiguityWeights(unittest.TestCase):
     def setUp(self):
         """ Setup the binning contiguity weights"""
         shpObj = pysal.open(pysal.examples.get_path('virginia.shp'), 'r')
-        self.binningW = ContiguityWeights_binning(shpObj, QUEEN)
+        self.binningW = ContiguityWeightsPolygons(shpObj, QUEEN)
         shpObj.close()
 
     def test_w_type(self):
-        self.assert_(isinstance(self.binningW, ContiguityWeights_binning))
+        self.assert_(isinstance(self.binningW, ContiguityWeightsPolygons))
 
     def test_QUEEN(self):
         self.assertEqual(QUEEN, 1)
@@ -20,7 +20,7 @@ class TestContiguityWeights(unittest.TestCase):
     def test_ROOK(self):
         self.assertEqual(ROOK, 2)
 
-    def test_ContiguityWeights_binning(self):
+    def test_ContiguityWeightsPolygons(self):
         self.assert_(hasattr(self.binningW, 'w'))
         self.assert_(issubclass(dict, type(self.binningW.w)))
         self.assertEqual(len(self.binningW.w), 136)
@@ -105,7 +105,7 @@ class TestContiguityWeights(unittest.TestCase):
         dbname = os.path.splitext(shapefile)[0] + '.dbf'
         db = pysal.open(dbname)
         shpObj = pysal.open(shapefile)
-        neighbor_data = ContiguityWeights_binning(shpObj, type).w
+        neighbor_data = ContiguityWeightsPolygons(shpObj, type).w
         neighbors = {}
         weights = {}
         if idVariable:
