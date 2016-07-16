@@ -22,4 +22,4 @@ import wk1
 try:
     from . import db
 except:
-    print 'SQLAlchemy and Geomet not installed, database I/O disabled'
+    warnings.warn('SQLAlchemy and Geomet not installed, database I/O disabled')
