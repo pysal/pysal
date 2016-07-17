@@ -4,7 +4,6 @@ import pysal
 import numpy as np
 import sys
 
-
 class TestDistanceWeights(unittest.TestCase):
     def setUp(self):
         np.random.seed(1234)
