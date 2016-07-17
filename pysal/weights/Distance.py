@@ -10,6 +10,8 @@ import scipy.spatial
 from pysal.common import KDTree
 from pysal.weights import W
 import scipy.stats
+from scipy.spatial import distance_matrix
+import scipy.sparse as sp
 import numpy as np
 from util import isKDTree
 
