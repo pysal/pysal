@@ -134,7 +134,7 @@ class TestDistanceWeights(unittest.TestCase):
         kd = pysal.cg.kdtree.KDTree(pts, distance_metric='Arc',
                                     radius=pysal.cg.sphere.RADIUS_EARTH_KM)
         w = pysal.DistanceBand(kd, full.max(), binary=False, alpha=1.0)
-        self.assertTrue((w.sparse.todense() == full).all())
+        np.testing.assert_allclose(w.sparse.todense(), full)
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestDistanceWeights)
