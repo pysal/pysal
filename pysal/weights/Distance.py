@@ -488,12 +488,12 @@ class DistanceBand(W):
         if self.build_sp:    
             self.dmat = self.kd.sparse_distance_matrix(
                     self.kd, max_distance=self.threshold)
-    def _band(self):
-        """Find all pairs within threshold.
-
-        """
-        self.dmat = self.kd.sparse_distance_matrix(
-                self.kd, max_distance=self.threshold)
+        else:
+            if str(self.kd).split('.')[-1][0:10] == 'Arc_KDTree':
+            	raise TypeError('Unable to calculate dense arc distance matrix;'
+            	        ' parameter "build_sp" must be set to True for arc'
+            	        ' distance type weight')
+            self.dmat = self._spdistance_matrix(self.data, self.data, self.threshold)
 
     def _distance_to_W(self, ids=None):
         if ids:
