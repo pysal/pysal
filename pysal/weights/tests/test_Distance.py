@@ -2,6 +2,7 @@ import os
 import unittest
 import pysal
 import numpy as np
+import sys
 
 
 class TestDistanceWeights(unittest.TestCase):
