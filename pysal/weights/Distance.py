@@ -526,6 +526,12 @@ class DistanceBand(W):
 
         return neighbors, weights
 
+    def _spdistance_matrix(self, x,y, threshold=None):
+        dist = distance_matrix(x,y)
+        if threshold is not None:
+            zeros = dist > threshold
+            dist[zeros] = 0
+        return sp.csr_matrix(dist)
 
 def _test():
     import doctest
