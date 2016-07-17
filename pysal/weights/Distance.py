@@ -392,6 +392,12 @@ class DistanceBand(W):
 
     ids         : list
                   values to use for keys of the neighbors and weights dicts
+    
+    build_sp    : boolean
+                  True to build sparse distance matrix and false to build dense
+                  distance matrix; significant speed gains may be obtained
+                  dending on the sparsity of the of distance_matrix and
+                  threshold that is applied
 
     Attributes
     ----------
