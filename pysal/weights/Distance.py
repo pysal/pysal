@@ -8,7 +8,8 @@ __author__ = "Sergio J. Rey <srey@asu.edu> "
 import pysal
 import scipy.spatial
 from pysal.common import KDTree
-from pysal.weights import W
+from pysal.weights import W, WSP
+from pysal.weights.util import WSP2W
 import scipy.stats
 from scipy.spatial import distance_matrix
 import scipy.sparse as sp
@@ -495,7 +496,7 @@ class DistanceBand(W):
         """
         if self.build_sp:    
             self.dmat = self.kd.sparse_distance_matrix(
-                    self.kd, max_distance=self.threshold)
+                    self.kd, max_distance=self.threshold).tocsr()
         else:
             if str(self.kd).split('.')[-1][0:10] == 'Arc_KDTree':
             	raise TypeError('Unable to calculate dense arc distance matrix;'
@@ -503,36 +504,27 @@ class DistanceBand(W):
             	        ' distance type weight')
             self.dmat = self._spdistance_matrix(self.data, self.data, self.threshold)
 
+
     def _distance_to_W(self, ids=None):
-        if ids:
-            ids = np.array(ids)
-        else:
-            ids = np.arange(self.dmat.shape[0])
-        neighbors = dict([(i,[]) for i in ids])
-        weights = dict([(i,[]) for i in ids])
         if self.binary:
-            for key,weight in self.dmat.items():
-                i,j = key
-                if i != j:
-                    if j not in neighbors[i]:
-                        weights[i].append(1)
-                        neighbors[i].append(j)
-                    if i not in neighbors[j]:
-                        weights[j].append(1)
-                        neighbors[j].append(i)
-
+            self.dmat[self.dmat>0] = 1
+            self.dmat.eliminate_zeros()
+            tempW = WSP2W(WSP(self.dmat))
+            neighbors = tempW.neighbors
+            weight_keys = tempW.weights.keys()
+            weight_vals = tempW.weights.values()
+            weights = dict(zip(weight_keys, map(list, weight_vals)))
+            return neighbors, weights
         else:
-            for key,weight in self.dmat.items():
-                i,j = key
-                if i != j:
-                    if j not in neighbors[i]:
-                        weights[i].append(weight**self.alpha)
-                        neighbors[i].append(j)
-                    if i not in neighbors[j]:
-                        weights[j].append(weight**self.alpha)
-                        neighbors[j].append(i)
-
-        return neighbors, weights
+            weighted = self.dmat.power(self.alpha)
+            weighted[weighted==np.inf] = 0
+            weighted.eliminate_zeros()
+            tempW = WSP2W(WSP(weighted))
+            neighbors = tempW.neighbors
+            weight_keys = tempW.weights.keys()
+            weight_vals = tempW.weights.values()
+            weights = dict(zip(weight_keys, map(list, weight_vals)))
+            return neighbors, weights
 
     def _spdistance_matrix(self, x,y, threshold=None):
         dist = distance_matrix(x,y)
