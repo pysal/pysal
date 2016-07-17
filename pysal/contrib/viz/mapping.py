@@ -22,19 +22,15 @@ from matplotlib.patches import Polygon
 import collections
 from matplotlib.path import Path
 from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection, CircleCollection
+
+from color import get_color_map
+
 try:
     import bokeh.plotting as bk
     from bokeh.models import HoverTool
 except:
     print('Bokeh not installed. Functionality ' \
             'related to it will not work')
-
-try:
-    import brewer2mpl
-except:
-    print('brewer2mpl  not installed. Functionality '\
-          'related to it will not work')
-
 # Classifier helper
 classifiers = ps.esda.mapclassify.CLASSIFIERS
 classifier = {c.lower():getattr(ps.esda.mapclassify,c) for c in classifiers}
@@ -63,49 +59,6 @@ def value_classifier(y, scheme='Quantiles', **kwargs):
     """
     c = classifier[scheme.lower()](y, **kwargs)
     return (pd.Series(c.yb, index=y.index), c)
-
-
-# color helper
-def get_color_map(name='BuGn', cmtype='sequential', k=5,
-                  color_encoding='hexc'):
-
-    """
-    Get a brewer colormap
-
-    Arguments
-    ---------
-
-    name:   string
-            colormap name
-
-    cmtype: string
-            colormap scale type  [sequential, diverging, qualitative]
-
-    k:  int
-        number of classes
-
-    color_encoding: string
-                    encoding of colors [hexc, rgb, mpl, mpl_colormap]
-                    hex: list of hex strings
-                    rgb: list of RGB 0-255 triplets
-                    mpl: list of RGB 0-1 triplets as used by matplotlib
-                    mpl_colormap: matplotlib color map
-
-    Returns
-
-    colors:  color map in the specified color_encoding
-
-    """
-    encs = {'hexc': 'hex_colors',
-            'rgb': 'colors',
-            'mpl': 'mpl_colors',
-            'mpl_colormap': 'mpl_colormap'}
-    try:
-        bmap = brewer2mpl.get_map(name, cmtype, k)
-        colors =  getattr(bmap, encs[color_encoding.lower()])
-        return colors
-    except:
-        print('Color map not found: ',name, cmtype, k)
 
 
 # Low-level pieces
