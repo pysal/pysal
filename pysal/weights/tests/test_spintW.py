@@ -1,7 +1,7 @@
 import unittest
 import pysal
 import numpy as np
-from pysal.weights.spintW import ODW, netW, mat2L
+from pysal.weights.spintW import ODW, netW, mat2L, vecW
 
 class TestODWeights(unittest.TestCase):
     def setUp(self):
@@ -156,7 +156,18 @@ class TestNetW(unittest.TestCase):
 
 class TestVecW(unittest.TestCase):
     def setUp(self):
-        pass
+        self.origin_x = np.array([2,6,9,2])
+        self.origin_y = np.array([4,8,2,5])
+        self.dest_x = np.array([9,1,6,3])
+        self.dest_y = np.array([3,6,2,7])
+        self.continuous = np.array([
+            [ 0.        ,  0.09759001,  0.12598816,  0.13736056],
+            [ 0.09759001,  0.        ,  0.10783277,  0.18257419],
+            [ 0.12598816,  0.10783277,  0.        ,  0.10425721],
+            [ 0.13736056,  0.18257419,  0.10425721,  0.        ]])
 
     def test_vecW(self):
-        pass
+        W = vecW(self.origin_x, self.origin_y, self.dest_x, self.dest_y, 
+                threshold=np.inf, binary=False)
+        np.testing.assert_allclose(self.continuous, W.full()[0])
+        

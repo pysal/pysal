@@ -111,7 +111,7 @@ def netW(link_list, share='A'):
     return W(neighbors)
 
 def vecW(origin_x, origin_y, dest_x, dest_y, threshold, p=2, alpha=-1.0,
-        binary=True, build_sp=True):
+        binary=True, ids=None):
     """
     Distance-based spatial weight for vectors that is computed using a
     4-dimensional distance between the origin x,y-coordinates and the
@@ -161,7 +161,7 @@ def vecW(origin_x, origin_y, dest_x, dest_y, threshold, p=2, alpha=-1.0,
     """
     data = zip(origin_x, origin_y, dest_x, dest_y)
     W = DistanceBand(data, threshold=threshold, p=p, binary=binary, alpha=alpha,
-            ids=ids, build_sp=build_sp)
+            ids=ids)
     return W
 
 def mat2L(edge_matrix):
