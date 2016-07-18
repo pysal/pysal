@@ -1,6 +1,6 @@
 nose-exclude
 nose-progressive
+coverage
 sphinx
 sphinxcontrib-napoleon
-networkx
-Shapely
+coveralls

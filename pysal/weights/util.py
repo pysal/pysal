@@ -8,6 +8,7 @@ import scipy.spatial
 import os
 import operator
 import scipy
+from warnings import warn
 
 __all__ = ['lat2W', 'block_weights', 'comb', 'order', 'higher_order',
            'shimbel', 'remap_ids', 'full2W', 'full', 'WSP2W',
@@ -850,8 +851,11 @@ def WSP2W(wsp, silent_island_warning=False):
     w._cache['sparse'] = w._sparse
     return w
 
+def insert_diagonal(w, val=1.0, wsp=False):
+    warn('This function is deprecated. Use fill_diagonal instead.')
+    return fill_diagonal(w, val=val, wsp=wsp)
 
-def insert_diagonal(w, diagonal=1.0, wsp=False):
+def fill_diagonal(w, val=1.0, wsp=False):
     """
     Returns a new weights object with values inserted along the main diagonal.
 
@@ -902,12 +906,12 @@ def insert_diagonal(w, diagonal=1.0, wsp=False):
 
     w_new = copy.deepcopy(w.sparse)
     w_new = w_new.tolil()
-    if issubclass(type(diagonal), np.ndarray):
-        if w.n != diagonal.shape[0]:
+    if issubclass(type(val), np.ndarray):
+        if w.n != val.shape[0]:
             raise Exception("shape of w and diagonal do not match")
-        w_new.setdiag(diagonal)
-    elif operator.isNumberType(diagonal):
-        w_new.setdiag([diagonal] * w.n)
+        w_new.setdiag(val)
+    elif operator.isNumberType(val):
+        w_new.setdiag([val] * w.n)
     else:
         raise Exception("Invalid value passed to diagonal")
     w_out = pysal.weights.WSP(w_new, copy.copy(w.id_order))
