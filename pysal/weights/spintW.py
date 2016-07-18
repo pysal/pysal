@@ -1,5 +1,6 @@
 from scipy.sparse import kron
-from pysal.weights import W
+from pysal.weights import W, WSP
+from pysal.weights.util import WSP2W
 from pysal.weights.Distance import DistanceBand
 from collections import OrderedDict
 
@@ -38,9 +39,12 @@ def ODW(Wo, Wd, transform='r'):
             raise AttributeError('Wd is not binary and cannot be transformed to '
                    'binary. Wd must be binary or suitably transformed to binary.')
     Wo = Wo.sparse
+    Wo.eliminate_zeros()
     Wd = Wd.sparse
-    Ww = kron(Wo, Wd)
-    Ww = w.WSP2W(w.WSP(Ww))
+    Wd.eliminate_zeros()
+    Ww = kron(Wo, Wd, format='csr')
+    Ww.eliminate_zeros()
+    Ww = WSP2W(WSP(Ww))
     Ww.transform = transform
     return Ww
 
