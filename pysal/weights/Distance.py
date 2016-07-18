@@ -485,7 +485,6 @@ class DistanceBand(W):
             else:
                 self.data = data
                 self.kd = None       
-        print self.kd       
         self._band()
         neighbors, weights = self._distance_to_W(ids)
         W.__init__(self, neighbors, weights, ids)
