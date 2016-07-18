@@ -544,10 +544,10 @@ def _expand_values(values, shp2dbf_row):
 
 # High-level pieces
 
-def geoplot(db, col=None, palette='BuGn', classi='Quantiles',
+def geoplot(db, col=None, palette='BuGn', dtype='sequential', classi='Quantiles',
         backend='mpl', color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
         alpha=1., linewidth=0.2, marker='o', marker_size=20,
-        ax=None, hover=True, p=None, tips=None, **kwargs):
+        ax=None, hover=True, p=None, tips=None, figsize=(9,9), **kwargs):
     '''
     Higher level plotter for geotables
     ...
@@ -609,7 +609,7 @@ def geoplot(db, col=None, palette='BuGn', classi='Quantiles',
     '''
     if col:
         lbl,c = value_classifier(db[col], scheme=classi, **kwargs)
-        palette = get_color_map(name=palette, k=c.k)
+        palette = get_color_map(name=palette, cmtype=dtype, k=c.k)
         facecolor = lbl.map({i:j for i,j in enumerate(palette)})
         try:
             kwargs.pop('k')
@@ -626,6 +626,7 @@ def geoplot(db, col=None, palette='BuGn', classi='Quantiles',
         plot_geocol_mpl(db['geometry'], facecolor=facecolor, ax=ax,
                 color=color, edgecolor=edgecolor, alpha=alpha,
                 linewidth=linewidth, marker=marker, marker_size=marker_size,
+                        figsize=figsize,
                 **kwargs)
     elif backend is 'bk':
         plot_geocol_bk(db['geometry'], facecolor=facecolor,
@@ -638,7 +639,7 @@ def geoplot(db, col=None, palette='BuGn', classi='Quantiles',
 
 def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
         alpha=1., linewidth=0.2, marker='o', marker_size=20,
-        ax=None):
+        ax=None, figsize=(9,9)):
     '''
     Plot geographical data from the `geometry` column of a PySAL geotable to a
     matplotlib backend.
@@ -677,13 +678,15 @@ def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
     ax          : AxesSubplot
                   [Optional. Default=None] Pre-existing axes to which append the
                   collections and setup
+    figsize     : tuple
+                  w,h of figure
     '''
     geom = type(gc.iloc[0])
     if color is not None:
         facecolor = edgecolor = color
     draw = False
     if not ax:
-        f, ax = plt.subplots(1, figsize=(9, 9))
+        f, ax = plt.subplots(1, figsize=figsize)
         draw = True
     # Geometry plotting
     patches = []

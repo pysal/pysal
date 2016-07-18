@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.colors as mpc
 
+
 try:
     import brewer2mpl
     from brewer2mpl import qualitative, sequential, diverging
@@ -79,7 +80,7 @@ def plot_cmaps(dtype, selected=0):
     selector
     """
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=(2,2))
     w = 1. / (9 + .5 * (9-1))
     h = 1./11
     ax = fig.add_subplot(111, aspect='equal')
