@@ -105,6 +105,9 @@ def netW(link_list, share='A'):
                        " 'OD', or 'C'")
     return W(neighbors)
 
+def vecW(origin_x, origin_y, dest_x, dest_y, threshold, p=2, alpha=-1.0,
+        binary=True, build_sp=True):
+
 def mat2L(edge_matrix):
     """
     Convert a matrix denoting network connectivity (edges or flows) to a list
