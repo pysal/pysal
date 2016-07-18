@@ -4,10 +4,13 @@ branches:
 only:
   - master
 python:
-  - 2.7
-  #- "2.6"
-  - 3.4
-  - 3.5
+  - "2.7"
+  - "3.4"
+  - "3.5"
+
+env:
+  - PYSAL_PLUS=false
+  - PYSAL_PLUS=true
 
 before_install:
   - wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
@@ -15,27 +18,23 @@ before_install:
   - ./miniconda.sh -b -p ./miniconda
   - export PATH=`pwd`/miniconda/bin:$PATH
   - conda update --yes conda
+  - conda config --add channels conda-forge
   - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION
   - source activate test-env
-  - chmod +x ./.travis_testing.sh
-  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then rm -rf pysal/contrib; 2to3 -nw pysal/ > /dev/null; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then 2to3 -nw pysal/ > /dev/null; fi
 
 install:
   - conda install --yes numpy scipy nose pip
+  - if [ "$PYSAL_PLUS" == true ]; then
+        echo 'plus testing'; conda install --yes --file requirements_plus.txt;
+        else conda install --yes --file requirements.txt; 
+    fi;
   - pip install -r travis.txt
 
 script: 
-  - python -c 'import numpy; print(numpy.__version__)'
-  - python -c 'import scipy; print(scipy.__version__)'
-  - python setup.py install  >/dev/null
-  - python -c 'import pysal'
-  #- python -c 'import multiprocessing as mp; print mp.cpu_count()'
-  #- pychecker --limit 1000 pysal
   - python setup.py sdist >/dev/null
-  #- nosetests --processes=-1 --process-timeout=60 --verbosity=1 --ignore-files=collection --exclude-dir=pysal/contrib
-  #- nosetests
   - echo "check_stable=False" >pysal/config.py
-  - ./.travis_testing.sh
+  - nosetests --with-coverage --cover-package=pysal; 
   #- cd doc; make pickle; make doctest
 notifications:
     email:

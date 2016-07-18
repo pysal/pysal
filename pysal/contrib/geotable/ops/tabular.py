@@ -82,3 +82,37 @@ def spatial_overlay(df1, df2, how, left_geom_col='geometry',
     gdf2 = to_gdf(df2, geom_col=right_geom_col)
     out = gpd.tools.overlay(gdf1, gdf2, how, **kwargs)
     return to_df(out)
+
+@_requires('shapely')
+def dissolve(df, by='', **groupby_kws):
+    from ._shapely import cascaded_union as union
+    return union(df, by=by, **groupby_kws)
+
+def clip(return_exterior=False):
+    # return modified entries of the df that are within an envelope
+    # provide an option to null out the geometries instead of not returning
+    raise NotImplementedError
+
+def erase(return_interior=True):
+    # return modified entries of the df that are outside of an envelope
+    # provide an option to null out the geometries instead of not returning 
+    raise NotImplementedError
+
+@_requires('shapely')
+def union(df, **kws):
+    if 'by' in kws:
+        warn('when a "by" argument is provided, you should be using "dissolve"') 
+        return dissolve(df, **kws)
+    from ._shapely import cascaded_union as union
+    return union(df)
+
+@_requires('shapely')
+def intersection(df, **kws):
+    from ._shapely import cascaded_intersection as intersection
+    return intersection(df, **kws) 
+
+def symmetric_difference():
+    raise NotImplementedError
+
+def difference():
+    raise NotImplementedError

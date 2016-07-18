@@ -385,7 +385,8 @@ def buildContiguity(polygons, criterion="rook", ids=None):
     It builds a contiguity W from the polygons provided. As such, it is now
     identical to calling the class constructors for Rook or Queen. 
     """
-    Warn('This function is deprecated. Please use the Rook or Queen classes')
+    #Warn('This function is deprecated. Please use the Rook or Queen classes',
+    #        UserWarning)
     if criterion.lower() == 'rook':
         return Rook(polygons, ids=ids)
     elif criterion.lower() == 'queen':
