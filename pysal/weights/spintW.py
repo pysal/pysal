@@ -1,5 +1,6 @@
 from scipy.sparse import kron
-from pysal.weights import W 
+from pysal.weights import W
+from pysal.weights.Distance import DistanceBand
 from collections import OrderedDict
 
 def ODW(Wo, Wd, transform='r'):
@@ -107,6 +108,57 @@ def netW(link_list, share='A'):
 
 def vecW(origin_x, origin_y, dest_x, dest_y, threshold, p=2, alpha=-1.0,
         binary=True, build_sp=True):
+    """
+    Distance-based spatial weight for vectors that is computed using a
+    4-dimensional distance between the origin x,y-coordinates and the
+    destination x,y-coordinates
+
+    Parameters
+    ----------
+    origin_x   : list or array
+                 of vector origin x-coordinates
+    origin_y   : list or array
+                 of vector origin y-coordinates
+    dest_x     : list or array
+                 of vector destination x-coordinates
+    dest_y     : list or array
+                 of vector destination y-coordinates
+    threshold  : float
+                 distance band
+    p          : float
+                 Minkowski p-norm distance metric parameter:
+                 1<=p<=infinity
+                 2: Euclidean distance
+                 1: Manhattan distance
+    binary     : boolean
+                 If true w_{ij}=1 if d_{i,j}<=threshold, otherwise w_{i,j}=0
+                 If false wij=dij^{alpha}
+    alpha      : float
+                 distance decay parameter for weight (default -1.0)
+                 if alpha is positive the weights will not decline with
+                 distance. If binary is True, alpha is ignored
+
+    ids         : list
+                  values to use for keys of the neighbors and weights dicts
+    build_sp    : boolean
+                  True to build sparse distance matrix and false to build dense
+                  distance matrix; significant speed gains may be obtained
+                  dending on the sparsity of the of distance_matrix and
+                  threshold that is applied
+    
+    Returns
+    ------
+    W           : DistanceBand W object that uses 4-dimenional distances between
+                  vectors origin and destination coordinates. 
+
+    Examples
+    --------
+
+    """
+    data = zip(origin_x, origin_y, dest_x, dest_y)
+    W = DistanceBand(data, threshold=threshold, p=p, binary=binary, alpha=alpha,
+            ids=ids, build_sp=build_sp)
+    return W
 
 def mat2L(edge_matrix):
     """
