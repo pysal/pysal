@@ -4,13 +4,14 @@ Getis and Ord G statistic for spatial autocorrelation
 __author__ = "Sergio J. Rey <srey@asu.edu>, Myunghwa Hwang <mhwang4@gmail.com> "
 __all__ = ['G', 'G_Local']
 
-from pysal.common import np, stats, math
-from pysal.weights.spatial_lag import lag_spatial as slag
+from ..common import np, stats, math
+from ..weights.spatial_lag import lag_spatial as slag
+from .tabular import _univariate_handler
 
 PERMUTATIONS = 999
 
 
-class G:
+class G(object):
     """
     Global G Autocorrelation Statistic
 
@@ -93,6 +94,7 @@ class G:
     """
 
     def __init__(self, y, w, permutations=PERMUTATIONS):
+        y = np.asarray(y).flatten()
         self.n = len(y)
         self.y = y
         w.transform = "B"
@@ -158,8 +160,55 @@ class G:
         self.num = y * yl
         return self.num.sum() / self.den_sum
 
+    @property
+    def _statistic(self):
+        """ Standardized accessor for esda statistics"""
+        return self.G
 
-class G_Local:
+    @classmethod
+    def by_col(cls, df, cols, w=None, inplace=False, pvalue='sim', outvals=None, **stat_kws):
+        """ 
+        Function to compute a G statistic on a dataframe
+
+        Arguments
+        ---------
+        df          :   pandas.DataFrame
+                        a pandas dataframe with a geometry column
+        cols        :   string or list of string
+                        name or list of names of columns to use to compute the statistic
+        w           :   pysal weights object
+                        a weights object aligned with the dataframe. If not provided, this
+                        is searched for in the dataframe's metadata
+        inplace     :   bool
+                        a boolean denoting whether to operate on the dataframe inplace or to
+                        return a series contaning the results of the computation. If
+                        operating inplace, the derived columns will be named 'column_g'
+        pvalue      :   string
+                        a string denoting which pvalue should be returned. Refer to the
+                        the G statistic's documentation for available p-values
+        outvals     :   list of strings
+                        list of arbitrary attributes to return as columns from the 
+                        G statistic
+        **stat_kws  :   keyword arguments
+                        options to pass to the underlying statistic. For this, see the
+                        documentation for the G statistic.
+
+        Returns
+        --------
+        If inplace, None, and operation is conducted on dataframe in memory. Otherwise,
+        returns a copy of the dataframe with the relevant columns attached.
+
+        See Also
+        ---------
+        For further documentation, refer to the G class in pysal.esda
+        """
+        return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
+                                   outvals=outvals, stat=cls,
+                                   swapname=cls.__name__.lower(), **stat_kws)
+
+
+
+class G_Local(object):
     """
     Generalized Local G Autocorrelation
     Statistic [Getis1992]_, [Ord1995]_, [Getis1996]_ .
@@ -185,7 +234,7 @@ class G_Local:
        original variable
     w : DistanceBand W
        original weights object
-    permutations: int
+    permutations : int
                   the number of permutations
     Gs : array
         of floats, the value of the orginal G statistic in Getis & Ord (1992)
@@ -292,6 +341,7 @@ class G_Local:
 
     """
     def __init__(self, y, w, transform='R', permutations=PERMUTATIONS, star=False):
+        y = np.asarray(y).flatten()
         self.n = len(y)
         self.y = y
         self.w = w
@@ -384,4 +434,51 @@ class G_Local:
         self.Zs = (self.Gs - self.EGs) / np.sqrt(self.VGs)
 
         self.w.transform = self.w_original
+    
+    @property
+    def _statistic(self):
+        """Standardized accessor for esda statistics"""
+        return self.Gs
 
+    @classmethod
+    def by_col(cls, df, cols, w=None, inplace=False, pvalue='sim', outvals=None, **stat_kws):
+        """ 
+        Function to compute a G_Local statistic on a dataframe
+
+        Arguments
+        ---------
+        df          :   pandas.DataFrame
+                        a pandas dataframe with a geometry column
+        cols        :   string or list of string
+                        name or list of names of columns to use to compute the statistic
+        w           :   pysal weights object
+                        a weights object aligned with the dataframe. If not provided, this
+                        is searched for in the dataframe's metadata
+        inplace     :   bool
+                        a boolean denoting whether to operate on the dataframe inplace or to
+                        return a series contaning the results of the computation. If
+                        operating inplace, the derived columns will be named 'column_g_local'
+        pvalue      :   string
+                        a string denoting which pvalue should be returned. Refer to the
+                        the G_Local statistic's documentation for available p-values
+        outvals     :   list of strings
+                        list of arbitrary attributes to return as columns from the 
+                        G_Local statistic
+        **stat_kws  :   keyword arguments
+                        options to pass to the underlying statistic. For this, see the
+                        documentation for the G_Local statistic.
+
+        Returns
+        --------
+        If inplace, None, and operation is conducted on dataframe in memory. Otherwise,
+        returns a copy of the dataframe with the relevant columns attached.
+
+        See Also
+        ---------
+        For further documentation, refer to the G_Local class in pysal.esda
+        """
+        return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue, 
+                                   outvals=outvals, stat=cls,
+                                   swapname=cls.__name__.lower(), **stat_kws)
+    
+    

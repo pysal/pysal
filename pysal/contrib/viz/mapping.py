@@ -1,5 +1,5 @@
 """
-Choropleth mapping using PySAL and Matplotlib
+Choropleth mapping using PySAL
 
 ToDo:
     * map_line_shp, map_point_shp should take a shp object not a shp_link
@@ -19,19 +19,21 @@ import matplotlib as mpl
 from matplotlib.pyplot import fill, text
 from matplotlib import cm
 from matplotlib.patches import Polygon
+import collections
 from matplotlib.path import Path
 from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection, CircleCollection
+
+from color import get_color_map
+
 try:
     import bokeh.plotting as bk
+    from bokeh.models import HoverTool
 except:
     print('Bokeh not installed. Functionality ' \
             'related to it will not work')
-import types
-
 # Classifier helper
-kinds = (types.ClassType, type)
-classifier  = {k.lower():v for k,v in ps.esda.mapclassify.__dict__.items() \
-        if isinstance(v, kinds)}
+classifiers = ps.esda.mapclassify.CLASSIFIERS
+classifier = {c.lower():getattr(ps.esda.mapclassify,c) for c in classifiers}
 
 def value_classifier(y, scheme='Quantiles', **kwargs):
     """
@@ -51,11 +53,13 @@ def value_classifier(y, scheme='Quantiles', **kwargs):
 
     Returns
     -------
-    labels      : Series
-                  Indexed series containing classes for each observation
+    labels           : Series
+                       Indexed series containing classes for each observation
+    classification   : Map_Classifier instance
     """
-    lbls = classifier[scheme.lower()](y, **kwargs).yb
-    return pd.Series(lbls, index=y.index)
+    c = classifier[scheme.lower()](y, **kwargs)
+    return (pd.Series(c.yb, index=y.index), c)
+
 
 # Low-level pieces
 
@@ -540,10 +544,10 @@ def _expand_values(values, shp2dbf_row):
 
 # High-level pieces
 
-def geoplot(db, col=None, palette='viridis', classi='Quantiles',
-        backend='mpl', color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3', 
-        alpha=1., linewidth=0.2, marker='o', marker_size=20, 
-        ax=None, hover=True, p=None, **kwargs):
+def geoplot(db, col=None, palette='BuGn', dtype='sequential', classi='Quantiles',
+        backend='mpl', color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
+        alpha=1., linewidth=0.2, marker='o', marker_size=20,
+        ax=None, hover=True, p=None, tips=None, figsize=(9,9), **kwargs):
     '''
     Higher level plotter for geotables
     ...
@@ -598,34 +602,44 @@ def geoplot(db, col=None, palette='viridis', classi='Quantiles',
     p           : bokeh.plotting.figure
                   [Optional. `bk` backend only. Default=None] Pre-existing
                   bokeh figure to which append the collections and setup.
+    tips        : list of strings
+                  series names to add to hover tool
     kwargs      : Dict
                   Additional named vaues to be passed to the classifier of choice.
     '''
     if col:
-        lbl = value_classifier(db[col], scheme=classi, **kwargs)
-        #---
-        # Convert classes into (`hex`) colors --> Plug Serge's function here
-        import seaborn as sns
-        pltt = map(clrs.rgb2hex, sns.color_palette(palette, 6))
-        facecolor = lbl.map({i:j for i,j in enumerate(pltt)})
-        #---
+        lbl,c = value_classifier(db[col], scheme=classi, **kwargs)
+        palette = get_color_map(name=palette, cmtype=dtype, k=c.k)
+        facecolor = lbl.map({i:j for i,j in enumerate(palette)})
+        try:
+            kwargs.pop('k')
+        except KeyError:
+            pass
+        col = [(col, db[col])]
+        if tips:
+            for tip in tips:
+                col.append((tip, db[tip]))
+        col.append(('index', db.index.values))
+        col = collections.OrderedDict(col) # put mapped variable at the top
+
     if backend is 'mpl':
-        plot_geocol_mpl(db['geometry'], facecolor=facecolor, ax=ax, 
+        plot_geocol_mpl(db['geometry'], facecolor=facecolor, ax=ax,
                 color=color, edgecolor=edgecolor, alpha=alpha,
                 linewidth=linewidth, marker=marker, marker_size=marker_size,
+                        figsize=figsize,
                 **kwargs)
     elif backend is 'bk':
-        plot_geocol_bk(db['geometry'], facecolor=facecolor, 
+        plot_geocol_bk(db['geometry'], facecolor=facecolor,
                 color=color, edgecolor=edgecolor, alpha=alpha,
                 linewidth=linewidth, marker_size=marker_size,
-                hover=hover, p=p, **kwargs)
+                hover=hover, p=p, col=col, **kwargs)
     else:
         print("Please choose an available backend")
     return None
 
-def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7', 
-        alpha=1., linewidth=0.2, marker='o', marker_size=20, 
-        ax=None):
+def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
+        alpha=1., linewidth=0.2, marker='o', marker_size=20,
+        ax=None, figsize=(9,9)):
     '''
     Plot geographical data from the `geometry` column of a PySAL geotable to a
     matplotlib backend.
@@ -662,15 +676,17 @@ def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
     marker      : 'o'
     marker_size : int
     ax          : AxesSubplot
-                  [Optional. Default=None] Pre-existing axes to which append the 
+                  [Optional. Default=None] Pre-existing axes to which append the
                   collections and setup
+    figsize     : tuple
+                  w,h of figure
     '''
     geom = type(gc.iloc[0])
     if color is not None:
         facecolor = edgecolor = color
     draw = False
     if not ax:
-        f, ax = plt.subplots(1, figsize=(9, 9))
+        f, ax = plt.subplots(1, figsize=figsize)
         draw = True
     # Geometry plotting
     patches = []
@@ -695,7 +711,7 @@ def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
     elif geom == ps.cg.shapes.Point:
         edgecolor = facecolor
         xys = np.array(zip(*gc)).T
-        ax.scatter(xys[:, 0], xys[:, 1], marker=marker, 
+        ax.scatter(xys[:, 0], xys[:, 1], marker=marker,
                 s=marker_size, c=facecolor, edgecolors=edgecolor,
                 linewidths=linewidth)
         mpl_col = None
@@ -722,8 +738,8 @@ def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
         plt.show()
     return None
 
-def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3', 
-        alpha=1., linewidth=0.2, marker_size=10, hover=True, p=None):
+def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
+        alpha=1., linewidth=0.2, marker_size=10, hover=True, p=None, col=None):
     '''
     Plot geographical data from the `geometry` column of a PySAL geotable to a
     bokeh backend.
@@ -734,6 +750,8 @@ def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
     ---------
     gc          : DataFrame
                   GeoCol with data to be plotted.
+    col         : None/dict
+                  [Optional. Default=None] Dictionary  with key, values for entries in hover tool
     color       : str/tuple/Series
                   [Optional. Default=None] Wrapper that sets both `facecolor`
                   and `edgecolor` at the same time. If set, `facecolor` and
@@ -788,16 +806,27 @@ def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
     ## Polygons + Lines
     if (geom == ps.cg.shapes.Polygon) or \
             (geom == ps.cg.shapes.Chain):
-        for id, shape in gc.iteritems():
+        for idx, shape in gc.iteritems():
             for ring in shape.parts:
                 xs, ys = zip(*ring)
                 patch_xs.append(xs)
                 patch_ys.append(ys)
-                ids.append(id)
-        cds = bk.ColumnDataSource(data=dict(
-                    x=patch_xs,
-                    y=patch_ys
-                    ))
+                ids.append(idx)
+        if hover and col:
+            tips = []
+            ds = dict(x=patch_xs, y=patch_ys)
+            for k,v in col.iteritems():
+                ds[k] = v
+                tips.append((k, "@"+k))
+            cds = bk.ColumnDataSource(data=ds)
+            h = p.select_one(HoverTool)
+            h.point_policy = 'follow_mouse'
+            h.tooltips = tips
+        else:
+            cds = bk.ColumnDataSource(data=dict(
+                        x=patch_xs,
+                        y=patch_ys
+                        ))
         if type(facecolor) is pd.Series:
             cds.add(facecolor.reindex(ids), 'facecolor')
             pars['fc'] = 'facecolor'
@@ -813,13 +842,13 @@ def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
         if geom == ps.cg.shapes.Polygon:
             p.patches('x', 'y', source=cds,
               fill_color=pars['fc'],
-              line_color=pars['ec'], 
+              line_color=pars['ec'],
               fill_alpha=pars['alpha'],
               line_width=pars['lw']
               )
         elif geom == ps.cg.shapes.Chain:
             p.multi_line('x', 'y', source=cds,
-              line_color=pars['ec'], 
+              line_color=pars['ec'],
               line_alpha=pars['alpha'],
               line_width=pars['lw']
               )
@@ -848,7 +877,7 @@ def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
             cds.add(marker_size.reindex(ids), 'marker_size')
             pars['ms'] = 'marker_size'
         p.circle('x', 'y',
-                 source=cds, 
+                 source=cds,
                  fill_color=pars['fc'],
                  line_color=pars['ec'],
                  line_width=pars['lw'],

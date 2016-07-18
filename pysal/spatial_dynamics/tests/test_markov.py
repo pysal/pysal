@@ -2,6 +2,7 @@ import unittest
 import pysal
 from pysal.spatial_dynamics import markov
 import numpy as np
+from pysal.common import RTOL
 
 
 class test_Markov(unittest.TestCase):
@@ -45,12 +46,16 @@ class test_Spatial_Markov(unittest.TestCase):
         w = pysal.open(pysal.examples.get_path("states48.gal")).read()
         w.transform = 'r'
         sm = pysal.Spatial_Markov(rpci, w, fixed=True, k=5)
-        S = np.array(
-            [[0.43509425, 0.2635327, 0.20363044, 0.06841983, 0.02932278],
-            [0.13391287, 0.33993305, 0.25153036, 0.23343016, 0.04119356],
-            [0.12124869, 0.21137444, 0.2635101, 0.29013417, 0.1137326],
-            [0.0776413, 0.19748806, 0.25352636, 0.22480415, 0.24654013],
-            [0.01776781, 0.19964349, 0.19009833, 0.25524697, 0.3372434]])
+        S = np.array([[0.43509425, 0.2635327, 0.20363044, 0.06841983,
+                       0.02932278], [0.13391287, 0.33993305, 0.25153036,
+                                     0.23343016, 0.04119356], [0.12124869,
+                                                               0.21137444,
+                                                               0.2635101,
+                                                               0.29013417,
+                                                               0.1137326],
+                      [0.0776413, 0.19748806, 0.25352636, 0.22480415,
+                       0.24654013], [0.01776781, 0.19964349, 0.19009833,
+                                     0.25524697, 0.3372434]])
         np.testing.assert_array_almost_equal(S, sm.S)
 
 
@@ -65,11 +70,11 @@ class test_chi2(unittest.TestCase):
         w.transform = 'r'
         sm = pysal.Spatial_Markov(rpci, w, fixed=True, k=5)
         chi = np.matrix([[4.05598541e+01, 6.44644317e-04, 1.60000000e+01],
-		         [5.54751974e+01, 2.97033748e-06, 1.60000000e+01],
-			 [1.77528996e+01, 3.38563882e-01, 1.60000000e+01],
-			 [4.00390961e+01, 7.68422046e-04, 1.60000000e+01],
-			 [4.67966803e+01, 7.32512065e-05,
-				 1.60000000e+01]]).getA()
+                         [5.54751974e+01, 2.97033748e-06, 1.60000000e+01],
+                         [1.77528996e+01, 3.38563882e-01, 1.60000000e+01],
+                         [4.00390961e+01, 7.68422046e-04, 1.60000000e+01],
+                         [4.67966803e+01, 7.32512065e-05,
+                          1.60000000e+01]]).getA()
         obs = np.matrix(sm.chi2).getA()
         np.testing.assert_array_almost_equal(obs, chi)
         obs = np.matrix(
@@ -92,46 +97,38 @@ class test_LISA_Markov(unittest.TestCase):
         lm = pysal.LISA_Markov(pci, w)
         obs = np.array([1, 2, 3, 4])
         np.testing.assert_array_almost_equal(obs, lm.classes)
-        """
-        >>> lm.steady_state
-        matrix([[ 0.28561505],
-                [ 0.14190226],
-                [ 0.40493672],
-                [ 0.16754598]])
-        >>> lm.transitions
-        array([[  1.08700000e+03,   4.40000000e+01,   4.00000000e+00,
-                  3.40000000e+01],
-               [  4.10000000e+01,   4.70000000e+02,   3.60000000e+01,
-                  1.00000000e+00],
-               [  5.00000000e+00,   3.40000000e+01,   1.42200000e+03,
-                  3.90000000e+01],
-               [  3.00000000e+01,   1.00000000e+00,   4.00000000e+01,
-                  5.52000000e+02]])
-        >>> lm.p
-        matrix([[ 0.92985458,  0.03763901,  0.00342173,  0.02908469],
-                [ 0.07481752,  0.85766423,  0.06569343,  0.00182482],
-                [ 0.00333333,  0.02266667,  0.948     ,  0.026     ],
-                [ 0.04815409,  0.00160514,  0.06420546,  0.88603531]])
-        >>> lm.move_types
-        array([[ 11.,  11.,  11., ...,  11.,  11.,  11.],
-               [  6.,   6.,   6., ...,   6.,   7.,  11.],
-               [ 11.,  11.,  11., ...,  11.,  11.,  11.],
-               ...,
-               [  6.,   6.,   6., ...,   6.,   6.,   6.],
-               [  1.,   1.,   1., ...,   6.,   6.,   6.],
-               [ 16.,  16.,  16., ...,  16.,  16.,  16.]])
-        >>> np.random.seed(10)
-        >>> lm_random = pysal.LISA_Markov(pci, w, permutations=99)
-        >>> lm_random.significant_moves
-        array([[11, 11, 11, ..., 59, 59, 59],
-               [54, 54, 54, ..., 54, 55, 59],
-               [11, 11, 11, ..., 11, 59, 59],
-               ...,
-               [54, 54, 54, ..., 54, 54, 54],
-               [49, 49, 49, ..., 54, 54, 54],
-               [64, 64, 64, ..., 64, 64, 64]])
-
-        """
+        ss = np.matrix([[0.28561505], [0.14190226], [0.40493672],
+                        [0.16754598]])
+        np.testing.assert_array_almost_equal(lm.steady_state, ss)
+        transitions = np.array([[1.08700000e+03, 4.40000000e+01,
+                                 4.00000000e+00, 3.40000000e+01], [
+                                     4.10000000e+01, 4.70000000e+02,
+                                     3.60000000e+01, 1.00000000e+00], [
+                                         5.00000000e+00, 3.40000000e+01,
+                                         1.42200000e+03, 3.90000000e+01], [
+                                             3.00000000e+01,   1.00000000e+00,
+                                             4.00000000e+01, 5.52000000e+02]])
+        np.testing.assert_array_almost_equal(lm.transitions, transitions)
+        p = np.matrix([[0.92985458,  0.03763901,  0.00342173,  0.02908469],
+                       [0.07481752, 0.85766423, 0.06569343, 0.00182482],
+                       [0.00333333, 0.02266667, 0.948, 0.026], [0.04815409,
+                                                                0.00160514,
+                                                                0.06420546,
+                                                                0.88603531]])
+        np.testing.assert_array_almost_equal(lm.p, p)
+        np.random.seed(10)
+        lm_random = pysal.LISA_Markov(pci, w, permutations=99)
+        expected = np.array([[1.12328098e+03,   1.15377356e+01,
+                              3.47522158e-01, 3.38337644e+01], [
+                                  3.50272664e+00,   5.28473882e+02,
+                                  1.59178880e+01, 1.05503814e-01], [
+                                      1.53878082e-01,   2.32163556e+01,
+                                      1.46690710e+03, 9.72266513e+00], [
+                                          9.60775143e+00,   9.86856346e-02,
+                                          6.23537392e+00, 6.07058189e+02]])
+        np.testing.assert_allclose(lm_random.expected_t, expected, RTOL)
+        c = np.array([1058.207904, 0., 9.])
+        np.testing.assert_allclose(lm_random.chi_2, c, RTOL)
 
 
 class test_kullback(unittest.TestCase):
@@ -158,10 +155,10 @@ class test_kullback(unittest.TestCase):
         res = markov.kullback(F)
         np.testing.assert_array_almost_equal(160.96060031170782,
                                              res['Conditional homogeneity'])
-        np.testing.assert_array_almost_equal(30,
-                                             res['Conditional homogeneity dof'])
-        np.testing.assert_array_almost_equal(0.0,
-                                             res['Conditional homogeneity pvalue'])
+        dof = res['Conditional homogeneity dof']
+        np.testing.assert_array_almost_equal(30, dof)
+        p_value = res['Conditional homogeneity pvalue']
+        np.testing.assert_array_almost_equal(0.0, p_value)
 
 
 class test_prais(unittest.TestCase):
