@@ -652,10 +652,10 @@ class Network:
         destpattern:    str
                         (Optional) The key of a point pattern snapped to the network.
 
-        diagonalfill:   float, int
+        fill_diagonal:  float, int
                         (Optional) Fill the diagonal of the cost matrix.
                         Default in None and will populate the diagonal with numpy.nan
-                        Do not declare a destpattern for a custom diagonalfill.
+                        Do not declare a destpattern for a custom fill_diagonal.
         
         Returns
         -------
