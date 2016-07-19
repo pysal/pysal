@@ -25,6 +25,21 @@ def ODW(Wo, Wd, transform='r'):
     W           : spatial contiguity W object for assocations between flows
                  o*d x o*d spatial weight object amongst o*d flows between o
                  origins and d destinations
+    
+    Examples
+    --------
+
+    >>> O = pysal.weights.lat2W(2,2)
+    >>> D = pysal.weights.lat2W(2,2)
+    >>> OD = pysal.weights.spintW.ODW(O,D)
+    >>> OD.weights[0]
+    [0.25, 0.25, 0.25, 0.25]
+    >>> OD.neighbors[0]
+    array([ 5,  6,  9, 10], dtype=int32)
+    >>> OD.full()[0][0]
+    array([ 0.  ,  0.  ,  0.  ,  0.  ,  0.  ,  0.25,  0.25,  0.  ,  0.  ,
+            0.25,  0.25,  0.  ,  0.  ,  0.  ,  0.  ,  0.  ])
+
     """
     if Wo.transform is not 'b':
         try:
@@ -48,7 +63,7 @@ def ODW(Wo, Wd, transform='r'):
     Ww.transform = transform
     return Ww
 
-def netW(link_list, share='A'):
+def netW(link_list, share='A', transform = 'r'):
     """
     Create a network-contiguity based weight object based on different nodal
     relationships encoded in a network.
@@ -63,7 +78,7 @@ def netW(link_list, share='A'):
                   denoting how to define the nodal relationship used to
                   determine neighboring edges; defualt is 'A' for any shared
                   nodes between two network edges; options include:
-                    'A': any shared nodes
+                    'A': any shared nodes 
                     'O': a shared origin node
                     'D': a shared destination node
                     'OD' a shared origin node or a shared destination node
@@ -71,6 +86,9 @@ def netW(link_list, share='A'):
                          edge and the origin of the second edge - i.e., a
                          directed chain is formed moving from edge one to edge
                          two.
+
+    transform   : Transformation for standardization of final OD spatial weight; default
+                  is 'r' for row standardized
        
     Returns
     -------
@@ -80,6 +98,17 @@ def netW(link_list, share='A'):
 
     Examples
     --------
+
+    >>> links = [('a','b'), ('a','c'), ('a','d'), ('c','d'), ('c', 'b'), ('c','a')]
+    >>> O = pysal.weights.spintW.netW(links, share='O')
+    >>> W.neighbors[('a', 'b')]
+    [('a', 'c'), ('a', 'd')]
+    >>> OD = pysal.weights.spintW.netW(links, share='OD')
+    >>> OD.neighbors[('a', 'b')]
+    [('a', 'c'), ('a', 'd'), ('c', 'b')]
+    >>> any_common = pysal.weights.spintW.netw(links, share='A')
+    [('a', 'c'), ('a', 'd'), ('c', 'b'), ('c', 'a')]
+
     """
     neighbors = {}
     neighbors = OrderedDict()
@@ -108,7 +137,9 @@ def netW(link_list, share='A'):
             else:
                 raise AttributeError("Parameter 'share' must be 'O', 'D',"
                        " 'OD', or 'C'")
-    return W(neighbors)
+    netW = W(neighbors)
+    netW.tranform = transform
+    return netW
 
 def vecW(origin_x, origin_y, dest_x, dest_y, threshold, p=2, alpha=-1.0,
         binary=True, ids=None):
@@ -157,6 +188,17 @@ def vecW(origin_x, origin_y, dest_x, dest_y, threshold, p=2, alpha=-1.0,
 
     Examples
     --------
+
+    >>> x1 = [5,6,3]
+    >>> y1 = [1,8,5]
+    >>> x2 = [2,4,9]
+    >>> y2 = [3,6,1]
+    >>> W1 = pysal.weights.spintW.vecW(x1, y1, x2, y2, threshold=999)
+    >>> W1.neighbors[0]
+    [1, 2]
+    >>> W2 = pysal.weights.spintW.vecW(x1, y2, x1, y2, threshold=8.5)
+    >>> W2.neighbors[0]
+    [1]
 
     """
     data = zip(origin_x, origin_y, dest_x, dest_y)
