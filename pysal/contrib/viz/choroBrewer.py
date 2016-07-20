@@ -28,8 +28,10 @@ def choro(gd, col, show_cmaps=True, fig_size=(6, 6)):
 
     data_type.observe(type_change, names=['value'])
     cmap_dd.observe(cmap_change, names=['value'])
-    kbindings = {'sequential': range(3, 9+1), 'qualitative': range(3, 12+1),
-                 'diverging': range(3, 11+1)}
+    kbindings = {'sequential': map(str, range(3, 9+1)),
+                 'qualitative': map(str, range(3, 12+1)),
+                 'diverging': map(str, range(3, 11+1))}
+
     k_dd = Dropdown(description='k', options=kbindings[data_type.value])
     display(HBox([data_type, k_dd]))
 
