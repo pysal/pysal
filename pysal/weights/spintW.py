@@ -1,3 +1,11 @@
+"""
+Spatial weights for spatial interaction including contiguity OD weights (ODW),
+network based weights (netW), and distance-decay based vector weights (vecW).
+
+"""
+
+__author__ = "Taylor Oshan  <tayoshan@gmail.com> "
+
 from scipy.sparse import kron
 from pysal.weights import W, WSP
 from pysal.weights.util import WSP2W
