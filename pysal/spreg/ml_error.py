@@ -22,6 +22,7 @@ try:
     minimize_scalar_available = True
 except ImportError:
     minimize_scalar_available = False
+from .sputils import spdot, spfill_diagonal, spinv
 
 __all__ = ["ML_Error"]
 
@@ -186,12 +187,14 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
                                       args=(self.n, self.y, ylag, 
                                             self.x, xlag, I, Wsp),
                                       method='bounded', tol=epsilon)
+                W = Wsp
             elif methodML == 'ORD':
                 # check on symmetry structure
                 if w.asymmetry(intrinsic=False) == []:
                     ww = symmetrize(w)
-                    WW = ww.todense()
+                    WW = np.array(ww.todense())
                     evals = la.eigvalsh(WW)
+                    W = WW
                 else:
                     W = w.full()[0]      # need dense here
                     evals = la.eigvals(W)
@@ -201,7 +204,7 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
                           xlag, evals), method='bounded',
                     tol=epsilon)
         else:
-            raise Exception, "{0} is an unsupported method".format(method)
+            raise Exception("{0} is an unsupported method".format(method))
 
         self.lam = res.x
 
@@ -237,16 +240,16 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
         # variance-covariance matrix lambda, sigma
 
         a = -self.lam * W
-        np.fill_diagonal(a, 1.0)
-        ai = la.inv(a)
-        wai = np.dot(W, ai)
-        tr1 = np.trace(wai)
+        spfill_diagonal(a, 1.0)
+        ai = spinv(a)
+        wai = spdot(W, ai)
+        tr1 = wai.diagonal().sum()
 
-        wai2 = np.dot(wai, wai)
-        tr2 = np.trace(wai2)
+        wai2 = spdot(wai, wai)
+        tr2 = wai2.diagonal().sum()
 
-        waiTwai = np.dot(wai.T, wai)
-        tr3 = np.trace(waiTwai)
+        waiTwai = spdot(wai.T, wai)
+        tr3 = waiTwai.diagonal().sum()
 
         v1 = np.vstack((tr2 + tr3,
                         tr1 / self.sig2))

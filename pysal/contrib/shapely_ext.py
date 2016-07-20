@@ -40,7 +40,7 @@ def length(shape):
 def boundary(shape):
     if not hasattr(shape,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     o = shapely.geometry.asShape(shape)
-    res = o.bondary
+    res = o.boundary
     return pysal.cg.shapes.asShape(res)
 
 def bounds(shape):
@@ -57,7 +57,7 @@ def centroid(shape):
 def representative_point(shape):
     if not hasattr(shape,'__geo_interface__'): raise TypeError, "%r does not appear to be a shape"%shape
     o = shapely.geometry.asShape(shape)
-    res = o.representative_point
+    res = o.representative_point()
     return pysal.cg.shapes.asShape(res)
 
 def convex_hull(shape):

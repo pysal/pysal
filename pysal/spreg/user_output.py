@@ -1,16 +1,16 @@
 """Internal helper files for user output."""
 
-__author__ = "Luc Anselin luc.anselin@asu.edu, David C. Folch david.folch@asu.edu, Jing Yao jingyao@asu.edu"
-import textwrap as TW
+__author__ = ("Luc Anselin luc.anselin@asu.edu, "
+              "David C. Folch david.folch@asu.edu, "
+              "Levi John Wolf levi.john.wolf@gmail.com, "
+              "Jing Yao jingyao@asu.edu")
 import numpy as np
 import copy as COPY
-import diagnostics as diagnostics
-import diagnostics_tsls as diagnostics_tsls
-import diagnostics_sp as diagnostics_sp
-import pysal
+from . import diagnostics
+from . import sputils as spu
+from .. import weights 
 import scipy
 from scipy.sparse.csr import csr_matrix
-from utils import spdot, sphstack
 
 __all__ = []
 
@@ -309,7 +309,7 @@ def set_name_multi(multireg, multi_set, name_multiID, y, x, name_y, name_x, name
 def check_arrays(*arrays):
     """Check if the objects passed by a user to a regression class are
     correctly structured. If the user's data is correctly formed this function
-    returns nothing, if not then an exception is raised. Note, this does not
+    returns nothing, if not then an exception is raised. Note, this does not 
     check for model setup, simply the shape and types of the objects.
 
     Parameters
@@ -343,12 +343,11 @@ def check_arrays(*arrays):
     49
 
     """
-    allowed = ['ndarray', 'csr_matrix']
     rows = []
     for i in arrays:
         if i is None:
             continue
-        if i.__class__.__name__ not in allowed:
+        if not isinstance(i, (np.ndarray, csr_matrix)):
             raise Exception, "all input data must be either numpy arrays or sparse csr matrices"
         shape = i.shape
         if len(shape) > 2:
@@ -357,6 +356,8 @@ def check_arrays(*arrays):
             raise Exception, "all input arrays must have exactly two dimensions"
         if shape[0] < shape[1]:
             raise Exception, "one or more input arrays have more columns than rows"
+        if not spu.spisfinite(i):
+            raise Exception, "one or more input arrays have missing/NaN values"
         rows.append(shape[0])
     if len(set(rows)) > 1:
         raise Exception, "arrays not all of same length"
@@ -366,7 +367,7 @@ def check_arrays(*arrays):
 def check_y(y, n):
     """Check if the y object passed by a user to a regression class is
     correctly structured. If the user's data is correctly formed this function
-    returns nothing, if not then an exception is raised. Note, this does not
+    returns nothing, if not then an exception is raised. Note, this does not 
     check for model setup, simply the shape and types of the objects.
 
     Parameters
@@ -398,7 +399,7 @@ def check_y(y, n):
     >>> # should not raise an exception
 
     """
-    if y.__class__.__name__ != 'ndarray':
+    if not isinstance(y, np.ndarray):
         print y.__class__.__name__
         raise Exception, "y must be a numpy array"
     shape = y.shape
@@ -452,7 +453,7 @@ def check_weights(w, y, w_required=False):
     if w_required == True or w != None:
         if w == None:
             raise Exception, "A weights matrix w must be provided to run this method."
-        if not isinstance(w, pysal.W):
+        if not isinstance(w, weights.W):
             raise Exception, "w must be a pysal.W object"
         if w.n != y.shape[0]:
             raise Exception, "y must be nx1, and w must be an nxn PySAL W object"
@@ -466,7 +467,7 @@ def check_weights(w, y, w_required=False):
 
 def check_robust(robust, wk):
     """Check if the combination of robust and wk parameters passed by the user
-    are valid. Note: this does not check if the W object is a valid adaptive
+    are valid. Note: this does not check if the W object is a valid adaptive 
     kernel weights matrix needed for the HAC.
 
     Parameters
@@ -504,8 +505,8 @@ def check_robust(robust, wk):
     """
     if robust:
         if robust.lower() == 'hac':
-            if type(wk).__name__ != 'W' and type(wk).__name__ != 'Kernel':
-                raise Exception, "HAC requires that wk be a pysal.W object"
+            if not isinstance(wk, weights.Kernel):
+                raise Exception, "HAC requires that wk be a Kernel Weights object"
             diag = wk.sparse.diagonal()
             # check to make sure all entries equal 1
             if diag.min() < 1.0:
@@ -570,7 +571,7 @@ def check_spat_diag(spat_diag, w):
 
     """
     if spat_diag:
-        if type(w).__name__ != 'W':
+        if not isinstance(w, weights.W):
             raise Exception, "w must be a pysal.W object to run spatial diagnostics"
 
 
@@ -627,11 +628,11 @@ def check_constant(x):
     (49, 3)
 
     """
-    if not diagnostics.constant_check:
+    if diagnostics.constant_check(x):
         raise Exception, "x array cannot contain a constant vector; constant will be added automatically"
     else:
         x_constant = COPY.copy(x)
-        return sphstack(np.ones((x_constant.shape[0], 1)), x_constant)
+        return spu.sphstack(np.ones((x_constant.shape[0], 1)), x_constant)
 
 
 def _test():

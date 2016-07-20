@@ -22,16 +22,17 @@ class NetworkBase(object):
         self.lowerbound = lowerbound
         self.upperbound = upperbound
 
-        #Compute Statistic
+        # Compute Statistic.
         self.computeobserved()
         self.computepermutations()
 
-        #Compute the envelope vectors
+        # Compute the envelope vectors.
         self.computeenvelope()
 
     def validatedistribution(self):
         valid_distributions = ['uniform', 'poisson']
-        assert(self.distribution in valid_distributions),"Disstribution not in {}".format(valid_distributions)
+        assert(self.distribution in valid_distributions),"Disstribution not in {}"\
+                                                              .format(valid_distributions)
 
     def computeenvelope(self):
         upper = 1.0 - self.threshold / 2.0
@@ -48,11 +49,7 @@ class NetworkBase(object):
 
 class NetworkG(NetworkBase):
     """
-    Compute a network constrained G statistic
-
-    Attributes
-    ==========
-
+    Compute a network constrained G statistic.
     """
 
     def computeobserved(self):
@@ -78,7 +75,7 @@ class NetworkG(NetworkBase):
 
 class NetworkK(NetworkBase):
     """
-    Network constrained K Function
+    Compute a network constrained K statistic.
     """
 
     def computeobserved(self):
@@ -107,7 +104,7 @@ class NetworkK(NetworkBase):
 
 class NetworkF(NetworkBase):
      """
-     Network constrained F Function
+     Compute a network constrained F statistic.
 
      This requires the capability to compute a distance matrix between two
      point patterns.  In this case one will be observed and one will be simulated
@@ -115,10 +112,11 @@ class NetworkF(NetworkBase):
 
      def computeobserved(self):
          self.fsim = self.ntw.simulate_observations(self.npts)
-         #Nearest neighbor distances from the simulated to the observed
-         nearest = np.nanmin(self.ntw.allneighbordistances(self.fsim, self.pointpattern), axis=1)
+         # Compute nearest neighbor distances from the simulated to the observed.
+         nearest = np.nanmin(self.ntw.allneighbordistances(self.fsim, 
+                                                           self.pointpattern), axis=1)
          self.setbounds(nearest)
-         #Generate a random distribution of points
+         # Generate a random distribution of points.
          observedx, observedy = ffunction(nearest, self.lowerbound, self.upperbound,
                                           nsteps=self.nsteps, npts=self.npts)
          self.observed = observedy
@@ -163,13 +161,23 @@ def gfunction(nearest, lowerbound, upperbound, nsteps = 10):
 
     Parameters
     ----------
-    nearest         ndarray A vector of nearest neighbor distances
-    nsteps          int The number of distance bands
-    permutations    int The number of permutations to perform
-    threshold       int Upper and lower significance threshold
-    envelope        bool Return results of all permutations
-    poisson         bool Use a poisson distribution to
-                         determine the number of points
+    nearest:         ndarray 
+                     A vector of nearest neighbor distances.
+                     
+    nsteps:          int
+                     The number of distance bands.
+                     
+    permutations:    int
+                     The number of permutations to perform.
+                     
+    threshold:       int 
+                     Upper and lower significance threshold.
+                     
+    envelope:        bool
+                     Return results of all permutations.
+                     
+    poisson:         bool
+                     Use a poisson distribution to determine the number of points.
     """
     nobs = len(nearest)
     x = np.linspace(lowerbound, upperbound, nsteps)

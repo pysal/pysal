@@ -21,6 +21,11 @@ import copy
 import sys
 from scipy.cluster.vq import kmeans as KMEANS
 from warnings import warn as Warn
+try:
+    from numba import autojit
+except ImportError:
+    def autojit(func):
+        return func
 
 def headTail_breaks(values, cuts):
     """
@@ -210,7 +215,7 @@ def bin(y, bins):
 
 def bin1d(x, bins):
     """
-    place values of a 1-d array into bins and determine counts of values in
+    Place values of a 1-d array into bins and determine counts of values in
     each bin
 
     Parameters
@@ -225,7 +230,7 @@ def bin1d(x, bins):
     binIds : array
              1-d array of integer bin Ids
 
-    counts: int
+    counts : int
             number of elements of x falling in each bin
 
     Examples
@@ -301,7 +306,7 @@ def natural_breaks(values, k=5):
     uv = np.unique(values)
     uvk = len(uv)
     if uvk < k:
-        Warn('Warning: Not enough unique values in array to form k classes', 
+        Warn('Warning: Not enough unique values in array to form k classes',
                 UserWarning)
         Warn('Warning: setting k to %d' % uvk, UserWarning)
         k = uvk
@@ -313,6 +318,7 @@ def natural_breaks(values, k=5):
     return (sids, class_ids, fit, cuts)
 
 
+@autojit
 def _fisher_jenks_means(values, classes=5, sort=True):
     """
     Jenks Optimal (Natural Breaks) algorithm implemented in Python.
@@ -325,61 +331,45 @@ def _fisher_jenks_means(values, classes=5, sort=True):
     assuring heterogeneity among classes.
 
     """
-
     if sort:
         values.sort()
-    mat1 = []
-    for i in range(0, len(values) + 1):
-        temp = []
-        for j in range(0, classes + 1):
-            temp.append(0)
-        mat1.append(temp)
-    mat2 = []
-    for i in range(0, len(values) + 1):
-        temp = []
-        for j in range(0, classes + 1):
-            temp.append(0)
-        mat2.append(temp)
-    for i in range(1, classes + 1):
-        mat1[1][i] = 1
-        mat2[1][i] = 0
-        for j in range(2, len(values) + 1):
-            mat2[j][i] = float('inf')
-    v = 0.0
+    n_data = len(values)
+    mat1 = np.zeros((n_data + 1, classes + 1), dtype=np.int32)
+    mat2 = np.zeros((n_data + 1, classes + 1), dtype=np.float32)
+    mat1[1, 1:] = 1
+    mat2[2:, 1:] = np.inf
+
+    v = np.float32(0)
     for l in range(2, len(values) + 1):
-        s1 = 0.0
-        s2 = 0.0
-        w = 0.0
+        s1 = np.float32(0)
+        s2 = np.float32(0)
+        w = np.float32(0)
         for m in range(1, l + 1):
             i3 = l - m + 1
-            val = float(values[i3 - 1])
+            val = np.float32(values[i3 - 1])
             s2 += val * val
             s1 += val
-            w += 1
+            w += np.float32(1)
             v = s2 - (s1 * s1) / w
             i4 = i3 - 1
             if i4 != 0:
                 for j in range(2, classes + 1):
-                    if mat2[l][j] >= (v + mat2[i4][j - 1]):
-                        mat1[l][j] = i3
-                        mat2[l][j] = v + mat2[i4][j - 1]
-        mat1[l][1] = 1
-        mat2[l][1] = v
+                    if mat2[l, j] >= (v + mat2[i4, j - 1]):
+                        mat1[l, j] = i3
+                        mat2[l, j] = v + mat2[i4, j - 1]
+        mat1[l, 1] = 1
+        mat2[l, 1] = v
 
     k = len(values)
 
-    kclass = []
-    for i in range(0, classes + 1):
-        kclass.append(0)
-    kclass[classes] = float(values[len(values) - 1])
-    kclass[0] = float(values[0])
-    countNum = classes
-    while countNum >= 2:
-        pivot = mat1[k][countNum]
+    kclass = np.zeros(classes + 1, dtype=values.dtype)
+    kclass[classes] = values[len(values) - 1]
+    kclass[0] = values[0]
+    for countNum in range(classes, 1, -1):
+        pivot = mat1[k, countNum]
         id = int(pivot - 2)
         kclass[countNum - 1] = values[id]
         k = int(pivot - 1)
-        countNum -= 1
     return kclass
 
 
@@ -394,7 +384,7 @@ class Map_Classifier(object):
 
     .. math::
 
-              C_j^l < y_i \le C_j^u \  forall  i \in C_j
+              C_j^l < y_i \le C_j^u \  \forall  i \in C_j
 
     where :math:`C_j` denotes class :math:`j` which has lower bound
           :math:`C_j^l` and upper bound :math:`C_j^u`.
@@ -432,9 +422,8 @@ class Map_Classifier(object):
     """
 
     def __init__(self, y):
+        y = np.asarray(y).flatten()
         self.name = 'Map Classifier'
-        if hasattr(y, 'values'):
-            y = y.values  # fix for pandas
         self.y = y
         self._classify()
         self._summary()
@@ -449,39 +438,186 @@ class Map_Classifier(object):
     def _classify(self):
         self._set_bins()
         self.yb, self.counts = bin1d(self.y, self.bins)
-    
+
     def _update(self, data, *args, **kwargs):
         """
-        The only thing that *should* happen in this function is 
+        The only thing that *should* happen in this function is
         1. input sanitization for pandas
-        2. classification/reclassification. 
-        
+        2. classification/reclassification.
+
         Using their __init__ methods, all classifiers can re-classify given
-        different input parameters or additional data. 
+        different input parameters or additional data.
 
         If you've got a cleverer updating equation than the intial estimation
         equation, remove the call to self.__init__ below and replace it with the
-        updating function. 
+        updating function.
         """
         if data is not None:
-            if hasattr(data, 'values'):
-                data = data.values
+            data = np.asarray(data).flatten()
             data = np.append(data.flatten(), self.y)
         else:
             data = self.y
         self.__init__(data, *args, **kwargs)
-    
-    def update(self, y=None, inplace=False, **kwargs):
+
+    @classmethod
+    def make(cls, *args, **kwargs):
         """
-        Add data or change classification parameters. 
+        Configure and create a classifier that will consume data and produce
+        classifications, given the configuration options specified by this
+        function.
+
+        Note that this like a *partial application* of the relevant class
+        constructor. `make` creates a function that returns classifications; it
+        does not actually do the classification.
+
+        If you want to classify data directly, use the appropriate class
+        constructor, like Quantiles, Max_Breaks, etc.
+
+        If you *have* a classifier object, but want to find which bins new data falls into,
+        use find_bin.
 
         Parameters
         ----------
-        y   :   array
+        *args           : required positional arguments
+                          all positional arguments required by the classifier,
+                          excluding the input data.
+        rolling         : bool
+                          a boolean configuring the outputted classifier to use
+                          a rolling classifier rather than a new classifier
+                          for each input. If rolling, this adds the current data
+                          to all of the previous data in the classifier, and
+                          rebalances the bins, like a running median
+                          computation.
+        return_object   : bool
+                          a boolean configuring the outputted classifier to
+                          return the classifier object or not
+        return_bins     : bool
+                          a boolean configuring the outputted classifier to
+                          return the bins/breaks or not
+        return_counts   : bool
+                          a boolean configuring the outputted classifier to
+                          return the histogram of objects falling into each bin
+                          or not
+
+        Returns
+        -------
+        A function that consumes data and returns their bins (and object,
+        bins/breaks, or counts, if requested).
+
+        Note
+        ----
+        This is most useful when you want to run a classifier many times
+        with a given configuration, such as when classifying many columns of an
+        array or dataframe using the same configuration.
+
+        Examples
+        --------
+        >>> import pysal as ps
+        >>> df = ps.pdio.read_files(ps.examples.get_path('columbus.dbf'))
+        >>> classifier = ps.Quantiles.make(k=9)
+        >>> classifier
+        >>> classifications = df[['HOVAL', 'CRIME', 'INC']].apply(ps.Quantiles.make(k=9))
+        >>> classifications.head()
+            HOVAL  CRIME   INC
+        0       8      0     7
+        1       7      1     8
+        2       2      3     5
+        3       4      4     0
+        4       1      6     3
+        >>> import pandas as pd; from numpy import linspace as lsp
+        >>> data = [lsp(3,8,num=10), lsp(10, 0, num=10), lsp(-5, 15, num=10)]
+        >>> data = pd.DataFrame(data).T
+        >>> data
+                 0          1          2
+        0 3.000000  10.000000  -5.000000
+        1 3.555556   8.888889  -2.777778
+        2 4.111111   7.777778  -0.555556
+        3 4.666667   6.666667   1.666667
+        4 5.222222   5.555556   3.888889
+        5 5.777778   4.444444   6.111111
+        6 6.333333   3.333333   8.333333
+        7 6.888888   2.222222  10.555556
+        8 7.444444   1.111111  12.777778
+        9 8.000000   0.000000  15.000000
+        >>> data.apply(ps.Quantiles.make(rolling=True))
+            0   1   3
+        0   0   4   0
+        1   0   4   0
+        2   1   4   0
+        3   1   3   0
+        4   2   2   1
+        5   2   1   2
+        6   3   0   4
+        7   3   0   4
+        8   4   0   4
+        9   4   0   4
+        >>> dbf = ps.open(ps.examples.get_path('baltim.dbf'))
+        >>> data = dbf.by_col_array('PRICE', 'LOTSZ', 'SQFT')
+        >>> my_bins = [1, 10, 20, 40, 80]
+        >>> classifications = [ps.User_Defined.make(bins=my_bins)(a) for a in data.T]
+        >>> len(classifications)
+        3
+        >>> print(classifications)
+        [array([4, 5, 5, 5, 4, 4, 5, 4, 4, 5, 4, 4, 4, 4, 4, 1, 2, 2, 3, 4, 4, 3, 3,
+            ...
+            2, 2, 2, 2])]
+        """
+
+        # only flag overrides return flag
+        to_annotate = copy.deepcopy(kwargs)
+        return_object = kwargs.pop('return_object', False)
+        return_bins = kwargs.pop('return_bins', False)
+        return_counts = kwargs.pop('return_counts', False)
+
+        rolling = kwargs.pop('rolling', False)
+        if rolling:
+            #just initialize a fake classifier
+            data = range(10)
+            cls_instance = cls(data, *args, **kwargs)
+            #and empty it, since we'll be using the update
+            cls_instance.y = np.array([])
+        else:
+            cls_instance = None
+
+        #wrap init in a closure to make a consumer.
+        # Qc Na: "Objects/Closures are poor man's Closures/Objects"
+        def classifier(data, cls_instance=cls_instance):
+            if rolling:
+                cls_instance.update(data, inplace=True, **kwargs)
+                yb = cls_instance.find_bin(data)
+            else:
+                cls_instance = cls(data, *args, **kwargs)
+                yb = cls_instance.yb
+            outs = [yb, None, None, None]
+            outs[1] = cls_instance if return_object else None
+            outs[2] = cls_instance.bins if return_bins else None
+            outs[3] = cls_instance.counts if return_counts else None
+            outs = [a for a in outs if a is not None]
+            if len(outs) == 1:
+                return outs[0]
+            else:
+                return outs
+
+        # for debugging/jic, keep around the kwargs.
+        # in future, we might want to make this a thin class, so that we can set
+        # a custom repr. Call the class `Binner` or something, that's a
+        # pre-configured Classifier that just consumes data, bins it, & possibly
+        # updates the bins.
+        classifier._options = to_annotate
+        return classifier
+
+
+    def update(self, y=None, inplace=False, **kwargs):
+        """
+        Add data or change classification parameters.
+
+        Parameters
+        ----------
+        y       :   array
                     (n,1) array of data to classify
         inplace :   bool
                     whether to conduct the update in place or to return a copy
-                    estimated from the additional specifications. 
+                    estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -506,11 +642,11 @@ class Map_Classifier(object):
         This will allow the classifier to be called like it's a function.
 
         Whether or not we want to make this be "find_bin" or "update" is a
-        design decision. 
+        design decision.
 
         I like this as find_bin, since a classifier's job should be to classify
         the data given to it using the rules estimated from the `_classify()`
-        function. 
+        function.
         """
         return self.find_bin(*args)
 
@@ -601,7 +737,7 @@ class Map_Classifier(object):
         table.insert(1, " ")
         table = "\n".join(table)
         return table
-    
+
     def find_bin(self, x):
         """
         Sort input or inputs according to the current bin estimate
@@ -617,10 +753,10 @@ class Map_Classifier(object):
         a bin index or array of bin indices that classify the input into one of
         the classifiers' bins
         """
-        if not isinstance(x, np.ndarray):
-            x = np.array([x]).flatten()
+        x = np.asarray(x).flatten()
         uptos = [np.where(value < self.bins)[0] for value in x]
         bins = [x.min() if x.size > 0 else len(self.bins)-1 for x in uptos] #bail upwards
+        bins = np.asarray(bins)
         if len(bins) == 1:
             return bins[0]
         else:
@@ -821,7 +957,7 @@ class Percentiles(Map_Classifier):
 
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -829,12 +965,12 @@ class Percentiles(Map_Classifier):
                     (n,1) array of data to classify
         inplace :   bool
                     whether to conduct the update in place or to return a copy
-                    estimated from the additional specifications. 
+                    estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
         """
-        kwargs.update({'pct':kwargs.pkp('pct', self.pct)})
+        kwargs.update({'pct':kwargs.pop('pct', self.pct)})
         if inplace:
             self._update(y, **kwargs)
         else:
@@ -942,10 +1078,10 @@ class Box_Plot(Map_Classifier):
         Map_Classifier._classify(self)
         self.low_outlier_ids = np.nonzero(self.yb == 0)[0]
         self.high_outlier_ids = np.nonzero(self.yb == 5)[0]
-    
+
     def update(self, y=None,  inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -953,7 +1089,7 @@ class Box_Plot(Map_Classifier):
                         (n,1) array of data to classify
         inplace     :   bool
                         whether to conduct the update in place or to return a copy
-                        estimated from the additional specifications. 
+                        estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -1076,10 +1212,10 @@ class Std_Mean(Map_Classifier):
             cuts.append(y_max)
         self.bins = np.array(cuts)
         self.k = len(cuts)
-    
+
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -1087,7 +1223,7 @@ class Std_Mean(Map_Classifier):
                     (n,1) array of data to classify
         inplace :   bool
                     whether to conduct the update in place or to return a copy
-                    estimated from the additional specifications. 
+                    estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -1176,7 +1312,7 @@ class Maximum_Breaks(Map_Classifier):
 
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -1184,7 +1320,7 @@ class Maximum_Breaks(Map_Classifier):
                     (n,1) array of data to classify
         inplace :   bool
                     whether to conduct the update in place or to return a copy
-                    estimated from the additional specifications. 
+                    estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -1294,7 +1430,7 @@ class Natural_Breaks(Map_Classifier):
 
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -1302,7 +1438,7 @@ class Natural_Breaks(Map_Classifier):
                         (n,1) array of data to classify
         inplace     :   bool
                         whether to conduct the update in place or to return a copy
-                        estimated from the additional specifications. 
+                        estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -1410,7 +1546,7 @@ class Fisher_Jenks_Sampled(Map_Classifier):
 
         if (pct * n > 1000) and truncate:
             pct = 1000. / n
-        ids = np.random.random_integers(0, n - 1, n * pct)
+        ids = np.random.random_integers(0, n - 1, int(n * pct))
         yr = y[ids]
         yr[-1] = max(y)  # make sure we have the upper bound
         yr[0] = min(y)  # make sure we have the min
@@ -1432,7 +1568,7 @@ class Fisher_Jenks_Sampled(Map_Classifier):
 
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -1440,7 +1576,7 @@ class Fisher_Jenks_Sampled(Map_Classifier):
                         (n,1) array of data to classify
         inplace     :   bool
                         whether to conduct the update in place or to return a copy
-                        estimated from the additional specifications. 
+                        estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -1525,7 +1661,7 @@ class Jenks_Caspall(Map_Classifier):
         cuts.shape = (len(cuts),)
         self.bins = cuts
         self.iterations = it
-  
+
 class Jenks_Caspall_Sampled(Map_Classifier):
     """
     Jenks Caspall Map Classification using a random sample
@@ -1593,7 +1729,7 @@ class Jenks_Caspall_Sampled(Map_Classifier):
         n = y.size
         if pct * n > 1000:
             pct = 1000. / n
-        ids = np.random.random_integers(0, n - 1, n * pct)
+        ids = np.random.random_integers(0, n - 1, int(n * pct))
         yr = y[ids]
         yr[0] = max(y)  # make sure we have the upper bound
         self.original_y = y
@@ -1610,10 +1746,10 @@ class Jenks_Caspall_Sampled(Map_Classifier):
         jc = Jenks_Caspall(self.y, self.k)
         self.bins = jc.bins
         self.iterations = jc.iterations
-    
+
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -1621,7 +1757,7 @@ class Jenks_Caspall_Sampled(Map_Classifier):
                         (n,1) array of data to classify
         inplace     :   bool
                         whether to conduct the update in place or to return a copy
-                        estimated from the additional specifications. 
+                        estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -1856,7 +1992,7 @@ class User_Defined(Map_Classifier):
 
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -1864,7 +2000,7 @@ class User_Defined(Map_Classifier):
                         (n,1) array of data to classify
         inplace     :   bool
                         whether to conduct the update in place or to return a copy
-                        estimated from the additional specifications. 
+                        estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
@@ -2045,7 +2181,7 @@ class Max_P_Classifier(Map_Classifier):
 
     def update(self, y=None, inplace=False, **kwargs):
         """
-        Add data or change classification parameters. 
+        Add data or change classification parameters.
 
         Parameters
         ----------
@@ -2053,7 +2189,7 @@ class Max_P_Classifier(Map_Classifier):
                         (n,1) array of data to classify
         inplace     :   bool
                         whether to conduct the update in place or to return a copy
-                        estimated from the additional specifications. 
+                        estimated from the additional specifications.
 
         Additional parameters provided in **kwargs are passed to the init
         function of the class. For documentation, check the class constructor.
