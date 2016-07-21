@@ -312,7 +312,7 @@ class Gravity(BaseGravity):
         for loc in locs:
             subset = loc_index == loc
             f = self.reshape(self.f[subset])
-            o_vars = self.ov[subset.reshape(self.ov.shape[0),:]
+            o_vars = self.ov[subset.reshape(self.ov.shape[0]),:]
             d_vars = self.dv[subset.reshape(self.dv.shape[0]),:]
             dij = self.reshape(self.c[subset])
             model = Gravity(f, o_vars, d_vars, dij, self.cf)
@@ -559,7 +559,7 @@ class Attraction(BaseGravity):
             subset = self.d == loc
             f = self.reshape(self.f[subset])
             d = self.reshape(self.d[subset])
-            o_vars = self.ov[subset.reshape(self.ov.shape[0),:]
+            o_vars = self.ov[subset.reshape(self.ov.shape[0]),:]
             dij = self.reshape(self.c[subset])
             model = Attraction(f, d, o_vars, dij, self.cf)
             results['aic'].append(model.aic)

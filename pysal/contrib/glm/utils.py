@@ -17,7 +17,7 @@ try:
     from scipy.lib._version import NumpyVersion
 except ImportError:
     import re
-    from .python import string_types
+    string_types = basestring 
 
     class NumpyVersion():
         """Parse and compare numpy version strings.
