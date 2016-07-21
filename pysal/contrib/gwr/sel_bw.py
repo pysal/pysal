@@ -5,7 +5,7 @@
 
 from kernels import fix_gauss, fix_bisquare, fix_exp, adapt_gauss, adapt_bisquare, adapt_exp
 from search import golden_section, equal_interval
-from diagnostics import get_AICc_GWR, get_AIC_GWR, get_BIC_GWR, get_CV_GWR
+from diagnostics import get_AICc_GWR, get_AIC_GWR, get_BIC_GWR, get_CV_GWR, get_AICc_GLM
 from gwr import GWR
 from scipy.spatial.distance import cdist
 from pysal.common import KDTree
@@ -13,7 +13,8 @@ import numpy as np
 
 kernels = {1: fix_gauss, 2: adapt_gauss, 3: fix_bisquare, 4:
         adapt_bisquare, 5: fix_exp, 6:adapt_exp}
-getDiag = {'AICc': get_AICc_GWR,'AIC':get_AIC_GWR, 'BIC':get_BIC_GWR,'CV': get_CV_GWR}
+getDiag = {'AICc': get_AICc_GWR,'AIC':get_AIC_GWR, 'BIC':get_BIC_GWR,'CV':
+        get_CV_GWR, 'AICc_GLM':get_AICc_GLM}
 
 class Sel_BW(object):
     """
@@ -115,16 +116,16 @@ class Sel_BW(object):
             else:
                 print 'Unsupported kernel function ', self.kernel
 
-        # Here creates the errors in the GWR testing notebook
         function = lambda bw: getDiag[criterion](
                 GWR(self.coords, self.y, self.x_loc, bw, family=self.family,
                     kernel=self.kernel, fixed=self.fixed).fit())
-
+        print self.kernel
         if ktype % 2 == 0:
             int_score = True
         else:
             int_score = False
         self.int_score = int_score
+        print self.int_score
 
         if search == 'golden_section':
             a,c = self._init_section(self.x_glob, self.x_loc, self.coords)
@@ -148,12 +149,13 @@ class Sel_BW(object):
             n_loc = x_loc.shape[1]
         else:
             n_loc = 0
-        n_vars = n_glob + n_loc
+        n_vars = n_glob + n_loc + 1 #intercept
         n = np.array(coords).shape[0]
 
         if self.int_score:
             a = 40 + 2 * n_vars
             c = n
+            print a,c
         else:
             tree = KDTree(coords)
             nn = 40 + 2 * n_vars
@@ -161,6 +163,7 @@ class Sel_BW(object):
             max_dists = [tree.query(point, nn)[0][-1] for point in coords]
             a = np.min(min_dists)/2.0
             c = np.max(max_dists)/2.0
+            print a,c
 
         if a < self.bw_min:
             a = self.bw_min

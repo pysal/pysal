@@ -25,8 +25,8 @@ def get_AICc_GWR(GWR):
     v1 = GWR.tr_S
     sig = GWR.sigma2_ML
     #aicc = -2.0*GWR.logll + 2.0*n*(v1 + 1.0)/(n-v1-2.0)
-    #aicc = 2.0*n*np.log(GWR.std_err) + n*np.log(2.0*np.pi) + n*((n + v1)/(n - 2.0 - v1))
-    aicc = n*np.log(sig) + n*np.log(2.0*np.pi) + n*((n+v1)/(n-2.0-v1))
+    aicc = 2.0*n*np.log(GWR.std_err) + n*np.log(2.0*np.pi) + n*((n + v1)/(n - 2.0 - v1))
+    #aicc = n*np.log(sig) + n*np.log(2.0*np.pi) + n*((n+v1)/(n-2.0-v1))
     #aicc = GWR.dev_u + 2.0*v1
     print aicc
     return aicc
@@ -124,4 +124,35 @@ def ar2_GWR(GWR):
 
     return ar2_result
 
+def get_AICc_GLM(GLMMod):
+    """
+    Get AICc value
+    
+    Methods: AICc=AIC+2k(k+1)/(n-k-1)
+    
+    Arguments:
+        GWRMod: GWR model object
+        
+    Return:
+        AICc value, float
+    
+    """   
+    n = GLMMod.n      # (scalar) number of observations
+    k = GLMMod.k+1    # (scalar) number of ind. variables (including constant)
+    aicc = get_AIC_GLM(GLMMod) + 2.0*k*(k+1)/(n-k-1)   
+    
+    return aicc
 
+
+
+def get_AIC_GLM(GLMMod):
+    """
+    The AIC = -2L+2K, where L is the log-likelihood and K is the number of parameters in the model
+    
+       
+    """   
+    k = GLMMod.k+1  
+    print GLMMod.dev_u
+    aic = -2.0 * GLMMod.dev_u + 2.0 * k   
+    
+    return aic
