@@ -9,17 +9,87 @@ import matplotlib.colors as mpc
 
 try:
     import brewer2mpl
-    from brewer2mpl import qualitative, sequential, diverging
+    from brewer2mpl import qualitative as b2m_qualitative
+    from brewer2mpl import sequential as b2m_sequential
+    from brewer2mpl import diverging as b2m_diverging
 except:
     print('brewer2mpl  not installed. Functionality '
           'related to it will not work')
+try:
+    import palettable as pltt
+    from palettable.colorbrewer import qualitative, sequential, diverging
+except:
+    print('palettable  not installed. Functionality '
+          'related to it will not work')
 
+def get_color_map(palette=None, name='BuGn', cmtype='sequential', k=5,
+                  color_encoding='hex'):
+    """
+    Get a brewer colormap from `palettable`
 
-def get_color_map(name='BuGn', cmtype='sequential', k=5,
+    Arguments
+    ---------
+
+    palette         : `palettable` palette
+                      Palettable object for a given palette
+    name            : string
+                      colormap name
+
+    cmtype          : string
+                      colormap scale type  [sequential, diverging, qualitative]
+
+    k               : int
+                      number of classes
+
+    color_encoding  : string
+                      encoding of colors [hexc, rgb, mpl, mpl_colormap]
+                      * hex: list of hex strings
+                      * rgb: list of RGB 0-255 triplets
+                      * mpl: list of RGB 0-1 triplets as used by matplotlib
+                      * mpl_colormap: matplotlib color map
+
+    Returns
+    -------
+
+    colors:  color map in the specified color_encoding
+
+    """
+    encs = {'hex': 'hex_colors',
+            'rgb': 'colors',
+            'mpl': 'mpl_colors',
+            'mpl_colormap': 'mpl_colormap'}
+    if not palette:
+        cmtype = pltt2type[name.lower()]
+        if name[-2:] == '_r':
+            palette = pltt.colorbrewer.get_map(name[:-2], cmtype,
+                    k, reverse=True)
+        else:
+            palette = pltt.colorbrewer.get_map(name, cmtype, k)
+    colors = getattr(palette, encs[color_encoding.lower()])
+    return colors
+
+def _build_pltt2type():
+    types = ['sequential', 'diverging', 'qualitative']
+    pltt2type = {}
+    for t in types:
+        pals = list(set([
+            p.split('_')[0] for p in dir(getattr(pltt.colorbrewer, t)) 
+                            if p[0]!='_'
+                            ]))
+        pals = pals + [p+'_r' for p in pals]
+        for p in pals:
+            pltt2type[p.lower()] = t
+    return pltt2type
+
+pltt2type = _build_pltt2type()
+
+def get_color_map_b2m(name='BuGn', cmtype='sequential', k=5,
                   color_encoding='hexc'):
 
     """
-    Get a brewer colormap
+    DEPRECATED!!!
+
+    Get a brewer colormap from `brewer2mpl`
 
     Arguments
     ---------
@@ -56,20 +126,19 @@ def get_color_map(name='BuGn', cmtype='sequential', k=5,
     except:
         print('Color map not found: ', name, cmtype, k)
 
-
 def get_maps_by_type(data_type):
     names = [name for name in dir(data_type) if not name.startswith('_')]
     return names
 
 # get maps for each ctype and default k=5 for populating display options
-ctypes = (sequential, diverging, qualitative)
+ctypes = (b2m_sequential, b2m_diverging, b2m_qualitative)
 color_display_types = {}
 for ctype in ctypes:
     cmaps = get_maps_by_type(ctype)
     ctype_name = ctype.__name__.split(".")[1]
     displays = {}
     for cmap in cmaps:
-        c = get_color_map(cmtype=ctype_name, name=cmap)
+        c = get_color_map_b2m(cmtype=ctype_name, name=cmap)
         displays[cmap] = c
     color_display_types[ctype_name] = displays
 

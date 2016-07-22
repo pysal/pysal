@@ -544,7 +544,7 @@ def _expand_values(values, shp2dbf_row):
 
 # High-level pieces
 
-def geoplot(db, col=None, palette='BuGn', dtype='sequential', classi='Quantiles',
+def geoplot(db, col=None, palette='BuGn', classi='Quantiles',
         backend='mpl', color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
         alpha=1., linewidth=0.2, marker='o', marker_size=20,
         ax=None, hover=True, p=None, tips=None, figsize=(9,9), **kwargs):
@@ -559,7 +559,9 @@ def geoplot(db, col=None, palette='BuGn', dtype='sequential', classi='Quantiles'
     col         : None/str
                   [Optional. Default=None] Column holding the values to encode
                   into the choropleth.
-    palette
+    palette     : str/palettable palette
+                  String of the `palettable.colorbrewer` portfolio, or a
+                  `palettable` palette to use
     classi      : str
                   [Optional. Default='mpl'] Backend to plot the
     backend     : str
@@ -609,7 +611,10 @@ def geoplot(db, col=None, palette='BuGn', dtype='sequential', classi='Quantiles'
     '''
     if col:
         lbl,c = value_classifier(db[col], scheme=classi, **kwargs)
-        palette = get_color_map(name=palette, cmtype=dtype, k=c.k)
+        if type(palette) is not str:
+            palette = get_color_map(palette=palette, k=c.k)
+        else:
+            palette = get_color_map(name=palette, k=c.k)
         facecolor = lbl.map({i:j for i,j in enumerate(palette)})
         try:
             kwargs.pop('k')
