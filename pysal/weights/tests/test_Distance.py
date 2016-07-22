@@ -173,6 +173,16 @@ class Test_DistanceBand(ut.TestCase, Distance_Mixin):
         w = d.DistanceBand(kdt, maxdist, binary=False, alpha=1.0)
         np.testing.assert_allclose(w.sparse.todense(), full)
 
+    def test_dense(self):
+        w_rook = ps.weights.Rook.from_shapefile(
+                ps.examples.get_path('lattice10x10.shp'))
+        polys = ps.open(ps.examples.get_path('lattice10x10.shp'))
+        centroids = [p.centroid for p in polys]
+        w_db = d.DistanceBand(centroids, 1, build_sp=False)
+
+        for k in w_db.id_order:
+            np.testing.assert_equal(w_db[k], w_rook[k])
+
 class Test_Kernel(ut.TestCase, Distance_Mixin):
     def setUp(self):
 
