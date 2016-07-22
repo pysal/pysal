@@ -40,5 +40,5 @@ def choro(gd, col, show_cmaps=True, fig_size=(6, 6)):
         i = cmap_dd.options.index(cmap)
         if show_cmaps:
             pcmaps(data_type.value, i)
-        maps.geoplot(gd, col, k=int(k_dd.value), palette=cmap_dd.value,
-                     dtype=data_type.value, figsize=fig_size)
+        maps.geoplot(gd, col, k=int(k_dd.value), palette=str(cmap_dd.value),
+                     figsize=fig_size)
