@@ -72,7 +72,7 @@ class GLM(RegressionPropsY):
         else:
             self.X = X
         self.family = family
-        self.k = X.shape[1]
+        self.k = self.X.shape[1]
         self.df_model = self.X.shape[1] - 1
         self.df_resid = self.n - self.df_model - 1
         if offset is None:
@@ -229,13 +229,8 @@ class GLMResults(LikelihoodModelResults):
         self.params = params
         self.w = w
         self.mu = mu.flatten()
-        self._cache = {}
         self.normalized_cov_params = la.inv(spdot(self.w.T, self.w))
-
-        #if model.sigma2_v1:
-	        #self.sig2 = self.sig2n
-        #else:
-            #self.sig2 = self.sig2n_k
+        self._cache = {}
 
     @cache_readonly
     def resid_response(self):

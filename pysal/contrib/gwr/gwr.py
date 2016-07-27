@@ -3,12 +3,13 @@ import numpy.linalg as la
 from kernels import fix_gauss, fix_bisquare, fix_exp, adapt_gauss, adapt_bisquare, adapt_exp
 import pysal.spreg.user_output as USER
 import sys
-sys.path.append('/Users/toshan/projects/GIS596/pysal/pysal/contrib/glm/')
+sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm/')
 from family import Gaussian, Binomial, Poisson
-#from pysal.contrib.glm.family import Gaussian, Binomial, Poisson
+from glm import GLM, GLMResults
 from iwls import iwls
+from utils import cache_readonly
 
-class GWR(object):
+class GWR(GLM):
     """
     Geographically weighted regression. Can currently estimate Gaussian,
     Poisson, and logistic models(built on a GLM framework). GWR object prepares
@@ -54,26 +55,14 @@ class GWR(object):
                         routine
     """
     def __init__(self, coords, y, X, bw, family=Gaussian(), offset=None,
-            y_fix=None, sigma2_v1=False, kernel='bisquare', fixed=False):
+            y_fix=None, sigma2_v1=False, kernel='bisquare', fixed=False,
+            constant=True):
         """
         Initialize class
         """
-        self.n = USER.check_arrays(y, X)
-        USER.check_y(y, self.n)
-        self.y = y
-        self.X = USER.check_constant(X)
-        self.family = family
-        self.k = self.X.shape[1]
+        GLM.__init__(self, y, X, family, offset, y_fix, constant)
         self.sigma2_v1=sigma2_v1
-        if offset is None:
-            self.offset = np.ones(shape=(self.n,1))
-        else:
-            self.offset = offset * 1.0
-        if y_fix is None:
-	        self.y_fix = np.zeros(shape=(self.n,1))
-        else:
-            self.y_fix = y_fix
-	    self.bw = bw
+        self.bw = bw
         self.kernel = kernel
         self.fixed = fixed
         self.fit_params = {}
@@ -96,7 +85,7 @@ class GWR(object):
             else:
                 print 'Unsupported kernel function  ', kernel
 
-    def fit(self, ini_betas=None, tol=1.0e-5, max_iter=20, solve='iwls'):
+    def fit(self, ini_params=None, tol=1.0e-5, max_iter=20, solve='iwls'):
         """
         Method that fits a model with a particular estimation routine.
 
@@ -116,15 +105,15 @@ class GWR(object):
                         Technique to solve MLE equations.
                         'iwls' = iteratively (re)weighted least squares (default)
         """
-        self.fit_params['ini_betas'] = ini_betas
+        self.fit_params['ini_params'] = ini_params
         self.fit_params['tol'] = tol
         self.fit_params['max_iter'] = max_iter
         self.fit_params['solve']= solve
         if solve.lower() == 'iwls':
-            betas = np.zeros((self.n, self.k))
+            params = np.zeros((self.n, self.k))
             predy = np.zeros((self.n, 1))
             v = np.zeros((self.n, 1))
-            w = np.zeros((self.n, 1))
+            w = np.zeros((self.n, self.n))
             z = np.zeros((self.n, self.n))
             s = np.zeros((self.n, self.n))
             c = np.zeros((self.n, self.k))
@@ -132,23 +121,25 @@ class GWR(object):
             for i in range(self.n):
                 wi = np.diag(self.W[i])
             	rslt = iwls(self.y, self.X, self.family, self.offset,
-            	        self.y_fix, ini_betas, tol, max_iter, wi=wi)
+            	        self.y_fix, ini_params, tol, max_iter, wi=wi)
                 
-                betas[i,:] = rslt[0].T
+                params[i,:] = rslt[0].T
                 
                 predy[i] = rslt[1][i]
                 v[i] = rslt[2][i]
-                w[i] = rslt[3][i]
+                w[:,i] = rslt[3].flatten()
                 z[i] = rslt[4].flatten()
                 ri = np.dot(self.X[i], rslt[5])
                 s[i] = ri*np.reshape(rslt[4].flatten(), (1,-1))
                 cf = rslt[5] - np.dot(rslt[5], f)
-                c[i] =  np.diag(np.dot(cf, cf.T/w[i])).shape
+                c[i] = np.diag(np.dot(cf, cf.T/w[i].reshape((-1,1))))
+            self.f = f
+            self.cf = cf
             self.S = s*(1.0/z)
             self.CCT = c
-        return GWRResults(self, betas, predy, v, w)
+        return GWRResults(self, params, predy, v, w)
 
-class GWRResults(GWR):
+class GWRResults(GLMResults):
     """
     Basic class including common properties for all GWR regression models
 
@@ -237,15 +228,8 @@ class GWRResults(GWR):
     dev_u         : float
                     deviance of residuals
     """
-    def __init__(self, model, betas, predy, v=None, w=None):
-        self.model = model
-        self.n = model.n
-        self.y = model.y
-        self.X = model.X
-        self.k = model.k
-        self.family = model.family
-        self.fit_params = model.fit_params
-        self.betas = betas
+    def __init__(self, model, params, predy, v=None, w=None):
+        GLMResults.__init__(self, model, params, predy, w)
         self.W = model.W
         if v is not None:
         	self.v = v
@@ -253,101 +237,43 @@ class GWRResults(GWR):
         	self.w = w
         self.S = model.S
         self.CCT = model.CCT
-        self.predy = predy
-        self.u = (self.y - self.predy).flatten()
+        self.u = (self.resid_response).flatten()
+        #self.u = self.u.reshape((-1,1))
         self.utu = np.dot(self.u, self.u.T)
+        self.u = self.u.reshape((-1,1))
         self._cache = {}
-
         if model.sigma2_v1:
         	self.sig2 = self.sigma2_v1
         else:
             self.sig2 = self.sigma2_v1v2
 
-    @property
+    @cache_readonly
     def tr_S(self):
         """
         trace of S (hat) matrix
         """
-        try:
-            return self._cache['tr_S']
-        except AttributeError:
-            self._cache = {}
-            self._cache['tr_S'] = np.trace(self.S)
-        except KeyError:
-            self._cache['tr_S'] = np.trace(self.S)
-        return self._cache['tr_S']
+        return np.trace(self.S)
 
-    @tr_S.setter
-    def tr_S(self, val):
-        try:
-            self._cache['tr_S'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['tr_S'] = val
-        except KeyError:
-            self._cache['tr_S'] = val
-
-    @property
+    @cache_readonly
     def tr_STS(self):
         """
         trace of STS matrix
         """
-        try:
-            return self._cache['tr_STS']
-        except AttributeError:
-            self._cache = {}
-            self._cache['tr_STS'] = np.trace(np.dot(self.S.T,self.S))
-        except KeyError:
-	        self._cache['tr_STS'] = np.trace(np.dot(self.S.T,self.S))
-        return self._cache['tr_STS']
+        return np.trace(np.dot(self.S.T,self.S))
 
-    @tr_STS.setter
-    def tr_STS(self, val):
-        try:
-            self._cache['tr_STS'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['tr_STS'] = val
-        except KeyError:
-            self._cache['tr_STS'] = val
-
-
-    @property
+    @cache_readonly
     def y_bar(self):
         """
         weighted mean of y
         """
-        try:
-            return self._cache['y_bar']
-        except AttributeError:
-            self._cache = {}
+        arr_ybar = np.zeros(shape=(self.n,1))
+        for i in range(self.n):
+            w_i= np.reshape(np.array(self.W[i]), (-1, 1))
+            sum_yw = np.sum(self.y.reshape((-1,1)) * w_i)
+            arr_ybar[i] = 1.0 * sum_yw / np.sum(w_i)
+        return arr_ybar
 
-            arr_ybar = np.zeros(shape=(self.n,1))
-            for i in range(self.n):
-                w_i= np.reshape(np.array(self.kernel.w[i]), (-1, 1))
-                sum_yw = np.sum(self.y * w_i)
-                arr_ybar[i] = 1.0 * sum_yw / np.sum(w_i)
-            self._cache['y_bar'] = arr_ybar
-        except KeyError:
-            arr_ybar = np.zeros(shape=(self.n,1))
-            for i in range(self.n):
-                w_i= np.reshape(np.array(self.kernel.w[i]), (-1, 1))
-                sum_yw = np.sum(self.y * w_i)
-                arr_ybar[i] = 1.0 * sum_yw / np.sum(w_i)
-            self._cache['y_bar'] = arr_ybar
-        return self._cache['y_bar']
-
-    @y_bar.setter
-    def y_bar(self, val):
-        try:
-            self._cache['y_bar'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['y_bar'] = val
-        except KeyError:
-            self._cache['y_bar'] = val
-
-    @property
+    @cache_readonly
     def TSS(self):
         """
         geographically weighted total sum of squares
@@ -357,35 +283,13 @@ class GWRResults(GWR):
         Geographically weighted regression: the analysis of spatially varying relationships.
 
         """
-        try:
-            return self._cache['TSS']
-        except AttributeError:
-            self._cache = {}
-            arr_R = np.zeros(shape=(self.n,1))
-            for i in range(self.n):
-	            arr_R[i] = np.sum(np.reshape(np.array(self.kernel.w[i]), (-1,1)) *
-	                    (self.y - self.y_bar[i])**2)
-            self._cache['TSS'] = arr_R
-        except KeyError:
-    	    arr_R = np.zeros(shape=(self.n,1))
-    	    for i in range(self.n):
-                arr_R[i] = np.sum(np.reshape(np.array(self.kernel.w[i]), (-1,1)) *
-	                    (self.y - self.y_bar[i])**2)
-            self._cache['TSS'] = arr_R
-        return self._cache['TSS']
+        TSS = np.zeros(shape=(self.n,1))
+        for i in range(self.n):
+	        TSS[i] = np.sum(np.reshape(np.array(self.W[i]), (-1,1)) *
+	                (self.y.reshape((-1,1)) - self.y_bar[i])**2)
+        return TSS
 
-    @TSS.setter
-    def TSS(self, val):
-        try:
-            self._cache['TSS'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['TSS'] = val
-        except KeyError:
-            self._cache['TSS'] = val
-
-
-    @property
+    @cache_readonly
     def RSS(self):
         """
         geographically weighted residual sum of squares
@@ -394,36 +298,13 @@ class GWRResults(GWR):
         Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
         Geographically weighted regression: the analysis of spatially varying relationships.
         """
-        try:
-            return self._cache['RSS']
-        except AttributeError:
-            self._cache = {}
-    	    arr_R = np.zeros(shape=(self.n,1))
-            for i in range(self.n):
-                arr_R[i] = np.sum(np.reshape(np.array(self.kernel.w[i]), (-1,1))
-	                    * self.u**2)
-            self._cache['RSS'] = arr_R
-        except KeyError:
-            arr_R = np.zeros(shape=(self.n,1))
-            for i in range(self.n):
-	            arr_R[i] = np.sum(np.reshape(np.array(self.kernel.w[i]), (-1,1))
-	                    * self.u**2)
-            self._cache['RSS'] = arr_R
-        return self._cache['RSS']
+    	RSS = np.zeros(shape=(self.n,1))
+        for i in range(self.n):
+            RSS[i] = np.sum(np.reshape(np.array(self.W[i]), (-1,1))
+	                * self.u**2)
+        return RSS
 
-    @RSS.setter
-    def RSS(self, val):
-        try:
-            self._cache['RSS'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['RSS'] = val
-        except KeyError:
-            self._cache['RSS'] = val
-
-
-
-    @property
+    @cache_readonly
     def localR2(self):
         """
         local R square
@@ -432,27 +313,9 @@ class GWRResults(GWR):
         Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
         Geographically weighted regression: the analysis of spatially varying relationships.
         """
-        try:
-            return self._cache['localR2']
-        except AttributeError:
-            self._cache = {}
-            self._cache['localR2'] = (self.TSS() - self.RSS())/self.TSS()
-        except KeyError:
-            self._cache['localR2'] = (self.TSS() - self.RSS())/self.TSS()
-        return self._cache['localR2']
+        return (self.TSS - self.RSS)/self.TSS
 
-    @localR2.setter
-    def localR2(self, val):
-        try:
-            self._cache['localR2'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['localR2'] = val
-        except KeyError:
-            self._cache['localR2'] = val
-
-
-    @property
+    @cache_readonly
     def sigma2_v1(self):
         """
         residual variance
@@ -463,27 +326,9 @@ class GWRResults(GWR):
 
         only use v1
         """
-        try:
-            return self._cache['sigma2_v1']
-        except AttributeError:
-            self._cache = {}
-            self._cache['sigma2_v1'] = (self.utu/(self.n-self.tr_S))
-        except KeyError:
-            self._cache['sigma2_v1'] = (self.utu/(self.n-self.tr_S))
-        return self._cache['sigma2_v1']
-
-    @sigma2_v1.setter
-    def sigma2_v1(self, val):
-        try:
-            self._cache['sigma2_v1'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['sigma2_v1'] = val
-        except KeyError:
-            self._cache['sogma2_v1'] = val
-
-
-    @property
+        return (self.utu/(self.n-self.tr_S))
+    
+    @cache_readonly
     def sigma2_v1v2(self):
         """
         residual variance
@@ -494,56 +339,19 @@ class GWRResults(GWR):
 
         use v1 and v2 #used in GWR4
         """
-        try:
-            return self._cache['sigma2_v1v2']
-        except AttributeError:
-            self._cache = {}
-            self._cache['sigma2_v1v2'] = self.utu/(self.n - 2.0*self.tr_S +
+        return self.utu/(self.n - 2.0*self.tr_S +
 	                self.tr_STS)
-        except KeyError:
-            self._cache['sigma2_v1v2'] = self.utu/(self.n - 2.0*self.tr_S +
-	                self.tr_STS)
-        return self._cache['sigma2_v1v2']
 
-    @sigma2_v1v2.setter
-    def sigma2_v1v2(self, val):
-        try:
-            self._cache['sigma2_v1v2'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['sigma2_v1v2'] = val
-        except KeyError:
-            self._cache['sogma2_v1v2'] = val
-
-
-    @property
+    @cache_readonly
     def sigma2_ML(self):
         """
         residual variance
 
         Methods: maximum likelihood
         """
-        try:
-            return self._cache['sigma2_ML']
-        except AttributeError:
-            self._cache = {}
-            self._cache['sigma2_ML'] = self.utu/self.n
-        except KeyError:
-            self._cache['sigma2_ML'] = self.utu/self.n
-        return self._cache['sigma2_ML']
+        return self.utu/self.n
 
-    @sigma2_ML.setter
-    def sigma2_ML(self, val):
-        try:
-            self._cache['sigma2_ML'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['sigma2_ML'] = val
-        except KeyError:
-            self._cache['sigma2_ML'] = val
-
-
-    @property
+    @cache_readonly
     def std_res(self):
         """
         standardized residuals
@@ -551,84 +359,29 @@ class GWRResults(GWR):
         Methods:  p215, (9.7)
         Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
         Geographically weighted regression: the analysis of spatially varying relationships.
-
-
         """
-        try:
-            return self._cache['std_res']
-        except AttributeError:
-            self._cache = {}
-            self._cache['std_res'] = self.u/(np.sqrt(self.sigma2 * (1.0 - self.influ)))
-        except KeyError:
-            self._cache['std_res'] = self.u/(np.sqrt(self.sigma2 * (1.0 - self.influ)))
-        return self._cache['std_res']
+        return self.u.reshape((-1,1))/(np.sqrt(self.sig2 * (1.0 - self.influ)))
 
-    @std_res.setter
-    def std_res(self, val):
-        try:
-            self._cache['std_res'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['std_res'] = val
-        except KeyError:
-            self._cache['std_res'] = val
-
-    @property
-    def std_err(self):
+    @cache_readonly
+    def bse(self):
         """
         standard errors of Betas
 
         Methods:  p215, (2.15) and (2.21)
         Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
         Geographically weighted regression: the analysis of spatially varying relationships.
-
-
         """
-        try:
-            return self._cache['std_err']
-        except AttributeError:
-            self._cache = {}
-            self._cache['std_err'] = np.sqrt(self.CCT * self.sig2)
-        except KeyError:
-            self._cache['std_err'] = np.sqrt(self.CCT * self.sig2)
-        return self._cache['std_err']
+        return np.sqrt(self.CCT)
 
-    @std_err.setter
-    def std_err(self, val):
-        try:
-            self._cache['std_err'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['std_err'] = val
-        except KeyError:
-            self._cache['std_err'] = val
-
-    @property
+    @cache_readonly
     def influ(self):
         """
         Influence: leading diagonal of S Matrix
 
         """
-        try:
-            return self._cache['influ']
-        except AttributeError:
-            self._cache = {}
-            self._cache['influ'] = np.reshape(np.diag(self.S),(-1,1))
-        except KeyError:
-            self._cache['influ'] = np.reshape(np.diag(self.S),(-1,1))
-        return self._cache['influ']
+        return np.reshape(np.diag(self.S),(-1,1))
 
-    @influ.setter
-    def influ(self, val):
-        try:
-            self._cache['influ'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['influ'] = val
-        except KeyError:
-            self._cache['influ'] = val
-
-    @property
+    @cache_readonly
     def cooksD(self):
         """
         Influence: leading diagonal of S Matrix
@@ -638,49 +391,15 @@ class GWRResults(GWR):
         Geographically weighted regression: the analysis of spatially varying relationships.
         Note: in (9.11), p should be tr(S), that is, the effective number of parameters
         """
-        try:
-            return self._cache['cooksD']
-        except AttributeError:
-            self._cache = {}
-            self._cache['cooksD'] = self.std_res**2 * self.influ / (self.tr_S * (1.0-self.influ))
-        except KeyError:
-            self._cache['cooksD'] =  self.std_res**2 * self.influ / (self.tr_S * (1.0-self.influ))
-        return self._cache['cooksD']
-
-    @cooksD.setter
-    def cooksD(self, val):
-        try:
-            self._cache['cooksD'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['cooksD'] = val
-        except KeyError:
-            self._cache['cooksD'] = val
-
+        return self.std_res**2 * self.influ / (self.tr_S * (1.0-self.influ))
+    
+    #should get this for free from GLM
     @property
-    def t_stat(self):
+    def tvalues(self):
         """
-        t statistics of Betas
-
+        t statistics of params
         """
-        try:
-            return self._cache['t_stat']
-        except AttributeError:
-            self._cache = {}
-            self._cache['t_stat'] = self.Betas *1.0/self.std_err
-        except KeyError:
-            self._cache['t_stat'] = self.Betas *1.0/self.std_err
-        return self._cache['t_stat']
-
-    @t_stat.setter
-    def t_stat(self, val):
-        try:
-            self._cache['t_stat'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['t_stat'] = val
-        except KeyError:
-            self._cache['t_stat'] = val
+        return self.params *1.0/self.bse
 
     @property
     def logll(self):
