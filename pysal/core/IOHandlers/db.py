@@ -1,10 +1,25 @@
 import pysal.core.FileIO as FileIO
-from geomet import wkb
-from sqlalchemy.ext.automap import automap_base
+errmsg = ''
+try:
+    try:
+        from geomet import wkb
+    except ImportError:
+        from shapely import wkb
+except ImportError:
+    wkb = None
+    errmsg += ('No WKB parser found. Please install one of the following packages '
+             'to enable this functionality: [geomet, shapely]\n')
 
-from sqlalchemy import create_engine
-from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import Session
+try:
+    from sqlalchemy.ext.automap import automap_base
+    from sqlalchemy import create_engine, inspect
+    from sqlalchemy.ext.automap import automap_base
+    from sqlalchemy.orm import Session
+    nosql_mode = False
+except ImportError:
+    nosql_mode = True
+    errmsg += ('No module named sqlalchemy. Please install'
+               ' sqlalchemy to enable this functionality.')
 
 class SQLConnection(FileIO.FileIO):
     """
@@ -15,6 +30,8 @@ class SQLConnection(FileIO.FileIO):
     MODES = ['r']
 
     def __init__(self, *args, **kwargs):
+        if errmsg != '':
+            raise ImportError(errmsg)
         self._typ = str
         FileIO.FileIO.__init__(self, *args, **kwargs)
         #self.file = open(self.dataPath, self.mode)
@@ -23,6 +40,7 @@ class SQLConnection(FileIO.FileIO):
         self.Base = automap_base()
         self._engine = create_engine(self.dbname)
         self.Base.prepare(self._engine, reflect=True)
+        self.metadata = self.Base.metadata
 
     def read(self, *args, **kwargs):
         return self._get_gjson(*args, **kwargs)
@@ -37,20 +55,18 @@ class SQLConnection(FileIO.FileIO):
         self.file.close()
         FileIO.FileIO.close(self)
 
-    def _get_gjson(self, tablename, attributes=False, geom_column="GEOMETRY"):
+    def _get_gjson(self, tablename, geom_column="GEOMETRY"):
 
         gjson = {
             "type": "FeatureCollection",
             "features": []}
 
-        for row in self.session.query(self.tables[tablename]):
+        for row in self.session.query(self.metadata.tables[tablename]):
             feat = {"type": "Feature",
                     "geometry": {},
                     "properties":{}}
-
-            feat["geometry"] = wkb.loads(row.GEOMETRY)
-            attributes = row.__dict__
-            attributes.pop('_sa_instance_state', None)
+            feat["GEOMETRY"] = wkb.loads(getattr(row,geom_column))
+            attributes = row._asdict()
             attributes.pop(geom_column, None)
             feat["properties"] = attributes
             gjson["features"].append(feat)
@@ -61,9 +77,7 @@ class SQLConnection(FileIO.FileIO):
     @property
     def tables(self):
         if not hasattr(self, '_tables'):
-            self._tables = {}
-            for k in self.Base.classes.keys():
-                self._tables[k] = self.Base.classes[k]
+            self._tables = self.metadata.tables.keys()
         return self._tables
 
     @property
