@@ -7,8 +7,11 @@ from pysal.spreg.ml_lag import ML_Lag
 from pysal.spreg import utils
 from pysal.common import RTOL
 
-@unittest.skipIf(int(scipy.__version__.split(".")[1]) < 11,
-         "Max Likelihood requires SciPy version 11 or newer.")
+
+SKIP = True
+
+@unittest.skipIf(SKIP,
+        "Skipping MLError Tests")
 class TestMLError(unittest.TestCase):
     def setUp(self):
         db =  pysal.open(pysal.examples.get_path("baltim.dbf"),'r')
