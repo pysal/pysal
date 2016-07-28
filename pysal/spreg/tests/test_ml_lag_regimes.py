@@ -6,12 +6,12 @@ from pysal.spreg.ml_lag_regimes import ML_Lag_Regimes
 from pysal.spreg.ml_lag import ML_Lag
 from pysal.spreg import utils
 from pysal.common import RTOL
+from skip import SKIP
 
 
-SKIP = True
 
 @unittest.skipIf(SKIP,
-        "Skipping MLError Tests")
+        "Skipping MLLag Tests")
 class TestMLError(unittest.TestCase):
     def setUp(self):
         db =  pysal.open(pysal.examples.get_path("baltim.dbf"),'r')

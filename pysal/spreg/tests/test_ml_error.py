@@ -6,8 +6,8 @@ from pysal.spreg.ml_error import ML_Error
 from pysal.spreg import utils
 from pysal.common import RTOL, ATOL
 from warnings import warn as Warn
+from skip import SKIP
 
-SKIP = True
 
 @unittest.skipIf(SKIP,
         "Skipping MLError Tests")
