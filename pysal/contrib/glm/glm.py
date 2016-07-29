@@ -5,6 +5,8 @@ import family
 from pysal.spreg.utils import RegressionPropsY, spdot
 from iwls import iwls
 import pysal.spreg.user_output as USER
+import sys
+sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
 from utils import cache_readonly
 from base import LikelihoodModelResults
 

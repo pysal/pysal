@@ -25,6 +25,10 @@ from sparse_categorical import spcategorical
 from pysal.spreg import user_output as User
 from pysal.spreg.utils import sphstack
 from count_model import CountModel
+import sys
+sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
+from utils import cache_readonly
+from spint_utils import sorensen
 
 class BaseGravity(CountModel):
     """
@@ -180,8 +184,11 @@ class BaseGravity(CountModel):
         self.llf = results.llf
         self.aic = results.aic
         self.results = results
+        self._cache = {}
 
-        
+    @cache_readonly
+    def SSI(self):
+        return sorensen(self)
 
     def reshape(self, array):
         if type(array) == np.ndarray:
