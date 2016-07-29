@@ -174,10 +174,10 @@ class TestPoisson(unittest.TestCase):
         self.assertEqual(results.n, 49)
         self.assertEqual(results.df_model, 2)
         self.assertEqual(results.df_resid, 46)
-        self.assertEqual(results.aic, 500.85184179938756)
-        self.assertEqual(results.bic, 51.436404535087661)
-        self.assertEqual(results.deviance, 230.46013824817649)
-        self.assertEqual(results.llf, -247.42592089969378)
+        self.assertAlmostEqual(results.aic, 500.85184179938756)
+        self.assertAlmostEqual(results.bic, 51.436404535087661)
+        self.assertAlmostEqual(results.deviance, 230.46013824817649)
+        self.assertAlmostEqual(results.llf, -247.42592089969378)
         self.assertAlmostEqual(results.null_deviance, 376.97293610347361)
         self.assertEqual(results.scale, 1.0)
         np.testing.assert_allclose(results.params, [ 3.92159085,  0.01183491,
@@ -213,7 +213,7 @@ class TestPoisson(unittest.TestCase):
                 34.49778584,  27.56236198,  48.34273194,  57.50829097,
                 50.66038226,  54.68701352,  35.77103116,  43.21886784,
                 40.07615759,  49.98658004,  43.13352883,  40.28520774,  46.28910294])
-        self.assertEqual(results.pearson_chi2, 264.62262932090221)
+        self.assertAlmostEqual(results.pearson_chi2, 264.62262932090221)
         np.testing.assert_allclose(results.resid_response, 
                 [ 28.73168426,  -5.15022766, -14.06142973,  -1.13799739,
                 -5.76119226, -13.6836241 ,  19.35406297,   2.91722003,
@@ -295,11 +295,11 @@ class TestPoisson(unittest.TestCase):
         self.assertEqual(results.df_model, 2)
         self.assertEqual(results.df_resid, 46)
         self.assertEqual(results.aic, None)
-        self.assertEqual(results.bic, 51.436404535087661)
-        self.assertEqual(results.deviance, 230.46013824817649)
+        self.assertAlmostEqual(results.bic, 51.436404535087661)
+        self.assertAlmostEqual(results.deviance, 230.46013824817649)
         self.assertEqual(results.llf, None)
         self.assertAlmostEqual(results.null_deviance, 376.97293610347361)
-        self.assertEqual(results.scale, 5.7526658548022223)
+        self.assertAlmostEqual(results.scale, 5.7526658548022223)
         np.testing.assert_allclose(results.params, [ 3.92159085,  0.01183491,
             -0.01371397], atol=1.0e-8)
         np.testing.assert_allclose(results.bse, [ 0.31298042,  0.01227057,
@@ -333,7 +333,7 @@ class TestPoisson(unittest.TestCase):
                 34.49778584,  27.56236198,  48.34273194,  57.50829097,
                 50.66038226,  54.68701352,  35.77103116,  43.21886784,
                 40.07615759,  49.98658004,  43.13352883,  40.28520774,  46.28910294])
-        self.assertEqual(results.pearson_chi2, 264.62262932090221)
+        self.assertAlmostEqual(results.pearson_chi2, 264.62262932090221)
         np.testing.assert_allclose(results.resid_response, 
                 [ 28.73168426,  -5.15022766, -14.06142973,  -1.13799739,
                 -5.76119226, -13.6836241 ,  19.35406297,   2.91722003,
@@ -548,7 +548,7 @@ class TestBinomial(unittest.TestCase):
             0.12242534,  0.12242534,  0.05407977,  0.01776301,  0.0311527 ,
             0.0689636 ,  0.02421701,  0.13200634,  0.19874565,  0.03293737,
             0.82774282], atol=1.0e-8)
-        self.assertEqual(results.pearson_chi2, 271.21110541713801)
+        self.assertAlmostEqual(results.pearson_chi2, 271.21110541713801)
         np.testing.assert_allclose(results.resid_response, 
             [-0.04226237, -0.03999333, -0.02946178, -0.0689636 , -0.09471181,
             -0.07879431, -0.04717464, -0.27065598, -0.07471691,  0.10477856,

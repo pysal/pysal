@@ -81,9 +81,9 @@ class TestCountModel(unittest.TestCase):
                 -8.66038226, -10.68701352,  -9.77103116,  -9.21886784,
                 -12.07615759,  26.01341996,  -1.13352883, -13.28520774,
                 -10.28910294])
-        self.assertEqual(results.deviance, 230.46013824817649)
-        self.assertEqual(results.llf, -247.42592089969378)
-        self.assertEqual(results.aic, 500.85184179938756)
+        self.assertAlmostEqual(results.deviance, 230.46013824817649)
+        self.assertAlmostEqual(results.llf, -247.42592089969378)
+        self.assertAlmostEqual(results.aic, 500.85184179938756)
 
         #self.assertEqual(model.df_model, 2)
 

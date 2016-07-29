@@ -181,6 +181,8 @@ class BaseGravity(CountModel):
         self.aic = results.aic
         self.results = results
 
+        
+
     def reshape(self, array):
         if type(array) == np.ndarray:
             return array.reshape((-1,1))
