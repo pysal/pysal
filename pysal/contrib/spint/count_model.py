@@ -148,15 +148,20 @@ class CountModelResults(object):
         self.df_model = results.df_model
         self.df_resid = results.df_resid
         self.llf = results.llf
+        self.llnull = results.llnull
         self.yhat = results.mu
         self.deviance = results.deviance
+        self.null_deviance = results.null_deviance
         self.n = results.n
         self.k = results.k
         self.resid = results.resid_response
+        self.resid_dev = results.resid_deviance
         self.cov_params = results.cov_params()
         self.std_err = results.bse
         self.pvalues = results.pvalues
         self.tvalues = results.tvalues
+        self.D2 = results.D2
+        self.adj_D2 = results.adj_D2
         self.model = results
 
     

@@ -310,25 +310,11 @@ class GLMResults(LikelihoodModelResults):
         return (self.deviance -
                 (self.model.n - self.df_model - 1) *
                 np.log(self.model.n))
-'''
-    @property
-    def r2(self):
-        try:
-            return self._cache['r2']
-        except AttributeError:
-            self._cache = {}
-            self._cache['r2'] = 1- self.utu/(np.sum((self.y-self.y_bar)**2))
-        except KeyError:
-            self._cache['r2'] = 1- self.utu/(np.sum((self.y-self.y_bar)**2))
-        return self._cache['r2']
+    
+    @cache_readonly
+    def D2(self):
+        return 1 - (self.deviance / self.null_deviance)
 
-    @std_err.setter
-    def r2(self, val):
-        try:
-            self._cache['r2'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['r2'] = val
-        except KeyError:
-            self._cache['r2'] = val
-'''
+    @cache_readonly
+    def adj_D2(self):
+        return 1.0 - (float(self.n) - 1.0)/(float(self.n) - float(self.k)) * (1.0-self.D2)

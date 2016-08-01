@@ -181,14 +181,35 @@ class BaseGravity(CountModel):
         self.pvalues = results.pvalues
         self.tvalues = results.tvalues
         self.deviance = results.deviance
+        self.resid_dev = results.resid_dev
         self.llf = results.llf
+        self.llnull = results.llnull
         self.aic = results.aic
+        self.k = results.k
+        self.D2 = results.D2
+        self.adj_D2 = results.adj_D2
         self.results = results
         self._cache = {}
 
     @cache_readonly
     def SSI(self):
         return sorensen(self)
+
+    @cache_readonly
+    def pseudoR2(self):
+        return 1 - (self.llf/self.llnull)
+    
+    @cache_readonly
+    def adj_pseudoR2(self):
+        return 1 - ((self.llf-self.k)/self.llnull)
+
+    @cache_readonly
+    def srmse(self):
+        n = self.n
+        y = self.y
+        yhat = self.yhat
+        srmse = ((np.sum((y-yhat)**2)/n)**.5)/(np.sum(y)/n)
+        return srmse
 
     def reshape(self, array):
         if type(array) == np.ndarray:
