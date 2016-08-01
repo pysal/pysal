@@ -84,19 +84,8 @@ class TestCountModel(unittest.TestCase):
         self.assertAlmostEqual(results.deviance, 230.46013824817649)
         self.assertAlmostEqual(results.llf, -247.42592089969378)
         self.assertAlmostEqual(results.aic, 500.85184179938756)
-
-        #self.assertEqual(model.df_model, 2)
-
-        def test_Dispersion(self):
-            model = CountModel(self.y, self.X, family=Poisson())
-            results = model.fit('GLM')
-            phi = results.phi_disp()
-            alpha1 = results.alpha_disp()
-            alpha2 = results.alpha_disp(lambda x:x**2)
-            np.testing.assert_allclose(phi, )
-            np.testing.assert_allclose(alpha1, )
-            np.testing.assert_allclose(alpha2, )
-
+        self.assertAlmostEqual(results.D2, 0.388656011675)
+        self.assertAlmostEqual(results.adj_D2, 0.375648692774)
 
 if __name__ == '__main__':
 	    unittest.main()

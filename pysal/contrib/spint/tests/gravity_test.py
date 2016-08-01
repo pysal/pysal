@@ -97,6 +97,7 @@ class TestGravity(unittest.TestCase):
         np.testing.assert_allclose(model.cov_params, [[  1.92096665e-10]])
         self.assertAlmostEqual(model.deviance, 1087408.9707170483, delta = .0001)
         self.assertAlmostEqual(model.llf, -478810.14214873099, delta = .0001)
+        self.assertAlmostEqual(model.llnull, -88037.0499629, delta = .0001)
         np.testing.assert_allclose(model.pvalues, [ 0.])
         np.testing.assert_allclose(model.std_err, [  1.38598941e-05])
         np.testing.assert_allclose(model.tvalues, [ 1184.41355888])
@@ -135,6 +136,7 @@ class TestGravity(unittest.TestCase):
         np.testing.assert_allclose(model.cov_params, [[  4.31955426e-07]])
         self.assertAlmostEqual(model.deviance, 409811.34329065739, delta = .0001)
         self.assertAlmostEqual(model.llf, -188648.02358166798, delta = .0001)
+        self.assertAlmostEqual(model.llnull, -88037.0499629, delta = .0001)
         np.testing.assert_allclose(model.pvalues, [ 0.])
         np.testing.assert_allclose(model.std_err, [   0.00065723], atol = .000001)
         np.testing.assert_allclose(model.tvalues, [ 1935.74740017])
@@ -167,7 +169,8 @@ class TestGravity(unittest.TestCase):
         np.testing.assert_allclose(model.cov_params, [[ 0.00079749]],
                 atol=1.0e-8)
         self.assertAlmostEqual(model.deviance, 1087408.9707170483, delta = .0001)
-        self.assertEqual(model.llf, None)
+        self.assertTrue(np.isnan(model.llf))
+        self.assertTrue(np.isnan(model.llnull))
         np.testing.assert_allclose(model.pvalues, [ 0.56103881])
         np.testing.assert_allclose(model.std_err, [ 0.02823993], atol=1.0e-8)
         np.testing.assert_allclose(model.tvalues, [ 0.58129922])
@@ -209,6 +212,7 @@ class TestGravity(unittest.TestCase):
             [ -1.44593711e-08,  -1.23580963e-08,   2.11497156e-09]])
         self.assertAlmostEqual(model.deviance, 29051.791954, delta = .0001)
         self.assertAlmostEqual(model.llf, -16499.0729443, delta = .0001)
+        self.assertAlmostEqual(model.llnull, -88037.0499629, delta = .0001)
         np.testing.assert_allclose(model.pvalues, [0., 0., 0.])
         np.testing.assert_allclose(model.std_err, [  3.34816144e-03,   3.32868327e-03,
             4.59888200e-05])
@@ -233,6 +237,12 @@ class TestGravity(unittest.TestCase):
             341.60352923,    559.42021561,    784.06616575,    666.83596532,
             18.14169546,     68.59991159,     45.52214916,    112.85166716,
             82.89055652,    146.94298691,    192.00611495,    695.27339343])
+        self.assertAlmostEquals(model.D2, 0.834456520292)
+        self.assertAlmostEquals(model.adj_D2, 0.829658158561)
+        self.assertAlmostEquals(model.SSI, 0.688220359428)
+        self.assertAlmostEquals(model.pseudoR2, 0.81258943875)
+        self.assertAlmostEquals(model.adj_pseudoR2, 0.812555362188)
+        self.assertAlmostEquals(model.srmse, 23.1039582985)
 
     def test_local_Gravity(self):
         model = grav.Gravity(self.f, self.o_var, self.d_var, self.dij, 'exp')
@@ -303,6 +313,7 @@ class TestGravity(unittest.TestCase):
                6.51339971e-08,   2.77308674e-09]])
         self.assertAlmostEqual(model.deviance, 15279.974241770311, delta = .0001)
         self.assertAlmostEqual(model.llf, -7930.3255090342445, delta = .0001)
+        self.assertAlmostEqual(model.llnull, -88037.0499629, delta = .0001)
         np.testing.assert_allclose(model.pvalues, 
             [  5.43122294e-107,   1.60984652e-033,   4.30597019e-107,
             1.94310017e-025,   1.58325196e-006,   5.72169717e-002,
@@ -342,6 +353,12 @@ class TestGravity(unittest.TestCase):
             4.04624989e+02,   5.02255240e+01,   3.06563409e+02,
             2.32354948e+02,   1.74615053e+02,   2.01734215e+02,
             3.00280455e+02,   2.77258060e+02,   6.40968342e+02])
+        self.assertAlmostEquals(model.D2, 0.912931356874)
+        self.assertAlmostEquals(model.adj_D2, 0.89865780882)
+        self.assertAlmostEquals(model.SSI, 0.740619203383)
+        self.assertAlmostEquals(model.pseudoR2, 0.909920590111)
+        self.assertAlmostEquals(model.adj_pseudoR2, 0.909795642717)
+        self.assertAlmostEquals(model.srmse, 26.0238816883)
 
     def test_local_Production(self):
         model = grav.Production(self.f, self.o, self.d_var, self.dij, 'exp')
@@ -410,6 +427,7 @@ class TestGravity(unittest.TestCase):
             8.70031728e-08,   2.62593686e-09]])
         self.assertAlmostEqual(model.deviance, 15673.222613627502, delta = .0001)
         self.assertAlmostEqual(model.llf, -8126.9496609469106, delta = .0001)
+        self.assertAlmostEqual(model.llnull, -88037.0499629, delta = .0001)
         np.testing.assert_allclose(model.pvalues, 
             [  2.23154436e-58,   2.84596439e-45,   1.60422925e-92,
             1.17853681e-44,   9.22717986e-07,   4.09150807e-04,
@@ -449,6 +467,12 @@ class TestGravity(unittest.TestCase):
             5.49332748e+02,   1.22952888e+01,   8.90162551e+01,
             8.85260032e+01,   5.53842615e+01,   5.60455225e+01,
             9.23759900e+01,   8.37976212e+01,   3.66824277e+02])
+        self.assertAlmostEquals(model.D2, .910690541438)
+        self.assertAlmostEquals(model.adj_D2, .896049646592)
+        self.assertAlmostEquals(model.SSI, .750634498293)
+        self.assertAlmostEquals(model.pseudoR2, .90768716507)
+        self.assertAlmostEquals(model.adj_pseudoR2, .907562217676)
+        self.assertAlmostEquals(model.srmse, 25.7902466715)
 
     def test_local_Attraction(self):
         model = grav.Attraction(self.f, self.d, self.o_var, self.dij, 'exp')
@@ -584,6 +608,7 @@ class TestGravity(unittest.TestCase):
             -5.30363748e-07,  -5.59442560e-07,   2.56252122e-09]])
         self.assertAlmostEqual(model.deviance, 9360.482092561484, delta = .0001)
         self.assertAlmostEqual(model.llf, -4970.5795707251054, delta = .0001)
+        self.assertAlmostEqual(model.llnull, -88037.0499629, delta = .0001)
         np.testing.assert_allclose(model.pvalues, 
             [  0.00000000e+000,   0.00000000e+000,   1.16346714e-018,
             1.88877600e-304,   0.00000000e+000,   1.10421926e-025,
@@ -629,6 +654,14 @@ class TestGravity(unittest.TestCase):
             9.85596546e+02,   2.44225078e+01,   1.64157859e+02,
             2.28909306e+02,   1.42362371e+02,   1.31485029e+02,
             2.31461478e+02,   2.12717926e+02,   1.04848355e+03])
+        self.assertAlmostEquals(model.D2, .946661920897)
+        self.assertAlmostEquals(model.adj_D2, .929870303401)
+        self.assertAlmostEquals(model.SSI, .811852110904)
+        self.assertAlmostEquals(model.pseudoR2, .943539912198)
+        self.assertAlmostEquals(model.adj_pseudoR2, .943335452826)
+        self.assertAlmostEquals(model.srmse, 26.4127512119)
+
+
 
 
 if __name__ == '__main__':

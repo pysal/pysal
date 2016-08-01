@@ -538,13 +538,13 @@ class QuasiPoisson(Family):
         r"""
         The log-likelihood function in terms of the fitted mean response.
 
-        Returns None for QuasiPoisson 
+        Returns NaN for QuasiPoisson 
 
         Returns
         -------
         None: not applicable for QuasiPoisson
         """
-        return None
+        return np.nan
 
     def resid_anscombe(self, endog, mu):
         r"""
