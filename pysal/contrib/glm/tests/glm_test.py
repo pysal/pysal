@@ -155,6 +155,8 @@ class TestGaussian(unittest.TestCase):
                 38.43622447,  38.43622447,  38.43622447,  38.43622447,
                 38.43622447,  38.43622447,  38.43622447,  38.43622447,
                 38.43622447,  38.43622447,  38.43622447,  38.43622447,  38.43622447])
+        self.assertAlmostEqual(results.D2, .349514377851)
+        self.assertAlmostEqual(results.adj_D2, .335674258231)
 
 class TestPoisson(unittest.TestCase):
 
@@ -287,6 +289,8 @@ class TestPoisson(unittest.TestCase):
                 38.42857143,  38.42857143,  38.42857143,  38.42857143,
                 38.42857143,  38.42857143,  38.42857143,  38.42857143,
                 38.42857143,  38.42857143,  38.42857143,  38.42857143,  38.42857143])
+        self.assertAlmostEqual(results.D2, .388656011675)
+        self.assertAlmostEqual(results.adj_D2, .375648692774)
 
     def testQuasi(self):
         model = GLM(self.y, self.X, family=QuasiPoisson())
@@ -407,6 +411,8 @@ class TestPoisson(unittest.TestCase):
                 38.42857143,  38.42857143,  38.42857143,  38.42857143,
                 38.42857143,  38.42857143,  38.42857143,  38.42857143,
                 38.42857143,  38.42857143,  38.42857143,  38.42857143,  38.42857143])
+        self.assertAlmostEqual(results.D2, .388656011675)
+        self.assertAlmostEqual(results.adj_D2, .375648692774)
 
 class TestBinomial(unittest.TestCase):
 
@@ -981,6 +987,8 @@ class TestBinomial(unittest.TestCase):
             0.08860759,  0.08860759,  0.08860759,  0.08860759,  0.08860759,
             0.08860759,  0.08860759,  0.08860759,  0.08860759,  0.08860759,
             0.08860759])
+        self.assertAlmostEqual(results.D2, .200712816165)
+        self.assertAlmostEqual(results.adj_D2, .200712816165)
 
 
 

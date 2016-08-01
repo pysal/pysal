@@ -191,6 +191,10 @@ class GLMResults(LikelihoodModelResults):
                         AIC
         bic           : float 
                         BIC
+        D2            : float
+                        percent deviance explained
+        adj_D2        : float
+                        adjusted percent deviance explained
         resid_response          : array
                                   response residuals; defined as y-mu
         resid_pearson           : array
