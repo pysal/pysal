@@ -132,11 +132,20 @@ class CountModelResults(object):
         llf           : float
                         value of the loglikelihood function evalued at params;
                         see family.py for distribution-specific loglikelihoods
+        llnull        : float
+                        value of the loglikelihood function evaluated with only an
+                        intercept; see family.py for distribution-specific
+                        loglikelihoods
         aic           : float 
                         Akaike information criterion
         resid         : array
                         response residuals; defined as y-mu
         
+        resid_dev     : array
+                        k x 1, residual deviance of model
+        D2            : float
+                        percentage of explained deviance
+        adj_D2        : float
 
     """
     def __init__(self, results):
@@ -151,7 +160,6 @@ class CountModelResults(object):
         self.llnull = results.llnull
         self.yhat = results.mu
         self.deviance = results.deviance
-        self.null_deviance = results.null_deviance
         self.n = results.n
         self.k = results.k
         self.resid = results.resid_response

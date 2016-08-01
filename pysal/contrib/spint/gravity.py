@@ -62,6 +62,8 @@ class BaseGravity(CountModel):
                       n x 1; observed flows; dependent variable; y
     n               : integer
                       number of observations
+    k               : integer
+                      number of parameter estimates
     c               : array 
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
@@ -86,13 +88,31 @@ class BaseGravity(CountModel):
     deviance        : float
                       value of the deviance function evalued at params;
                       see family.py for distribution-specific deviance
+    resid_dev       : array
+                      k x 1, residual deviance of model
     llf             : float
                       value of the loglikelihood function evalued at params;
                       see family.py for distribution-specific loglikelihoods
-    aic             : float 
+    llnull          : float
+                      value of the loglikelihood function evaluated with only an
+                      intercept; see family.py for distribution-specific
+                      loglikelihoods
+    aic             : float
                       Akaike information criterion
+    D2              : float
+                      percentage of explained deviance
+    adj_D2          : float
+                      adjusted percentage of explained deviance
+    pseudo_R2       : float
+                      McFadden's pseudo R2  (coefficient of determination) 
+    adj_pseudoR2    : float
+                      adjusted McFadden's pseudo R2
+    srmse           : float
+                      standardized root mean square error
+    SSI             : float
+                      Sorensen similarity index
     results         : object
-                      Full results from estimated model. May contain addtional
+                      full results from estimated model. May contain addtional
                       diagnostics
     Example
     -------
