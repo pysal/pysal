@@ -113,7 +113,7 @@ class GWR(GLM):
             params = np.zeros((self.n, self.k))
             predy = np.zeros((self.n, 1))
             v = np.zeros((self.n, 1))
-            w = np.zeros((self.n, self.n))
+            w = np.zeros((self.n, 1))
             z = np.zeros((self.n, self.n))
             s = np.zeros((self.n, self.n))
             c = np.zeros((self.n, self.k))
@@ -127,12 +127,12 @@ class GWR(GLM):
                 
                 predy[i] = rslt[1][i]
                 v[i] = rslt[2][i]
-                w[:,i] = rslt[3].flatten()
+                w[i] = rslt[3][i]
                 z[i] = rslt[4].flatten()
                 ri = np.dot(self.X[i], rslt[5])
                 s[i] = ri*np.reshape(rslt[4].flatten(), (1,-1))
                 cf = rslt[5] - np.dot(rslt[5], f)
-                c[i] = np.diag(np.dot(cf, cf.T/w[i].reshape((-1,1))))
+                c[i] = np.diag(np.dot(cf, cf.T/1))
             self.f = f
             self.cf = cf
             self.S = s*(1.0/z)
@@ -371,7 +371,10 @@ class GWRResults(GLMResults):
         Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
         Geographically weighted regression: the analysis of spatially varying relationships.
         """
-        return np.sqrt(self.CCT)
+        if isinstance(self.family, (Poisson, Binomial)):
+            return np.sqrt(self.CCT)
+        else:
+            return np.sqrt(self.CCT*self.sig2)
 
     @cache_readonly
     def influ(self):
