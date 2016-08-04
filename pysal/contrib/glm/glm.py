@@ -5,6 +5,8 @@ import family
 from pysal.spreg.utils import RegressionPropsY, spdot
 from iwls import iwls
 import pysal.spreg.user_output as USER
+import sys
+sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
 from utils import cache_readonly
 from base import LikelihoodModelResults
 
@@ -189,6 +191,10 @@ class GLMResults(LikelihoodModelResults):
                         AIC
         bic           : float 
                         BIC
+        D2            : float
+                        percent deviance explained
+        adj_D2        : float
+                        adjusted percent deviance explained
         resid_response          : array
                                   response residuals; defined as y-mu
         resid_pearson           : array
@@ -229,8 +235,13 @@ class GLMResults(LikelihoodModelResults):
         self.params = params
         self.w = w
         self.mu = mu.flatten()
-        self.normalized_cov_params = la.inv(spdot(self.w.T, self.w))
         self._cache = {}
+        self.normalized_cov_params = la.inv(spdot(self.w.T, self.w))
+
+        #if model.sigma2_v1:
+	        #self.sig2 = self.sig2n
+        #else:
+            #self.sig2 = self.sig2n_k
 
     @cache_readonly
     def resid_response(self):
@@ -303,25 +314,11 @@ class GLMResults(LikelihoodModelResults):
         return (self.deviance -
                 (self.model.n - self.df_model - 1) *
                 np.log(self.model.n))
-'''
-    @property
-    def r2(self):
-        try:
-            return self._cache['r2']
-        except AttributeError:
-            self._cache = {}
-            self._cache['r2'] = 1- self.utu/(np.sum((self.y-self.y_bar)**2))
-        except KeyError:
-            self._cache['r2'] = 1- self.utu/(np.sum((self.y-self.y_bar)**2))
-        return self._cache['r2']
+    
+    @cache_readonly
+    def D2(self):
+        return 1 - (self.deviance / self.null_deviance)
 
-    @std_err.setter
-    def r2(self, val):
-        try:
-            self._cache['r2'] = val
-        except AttributeError:
-            self._cache = {}
-            self._cache['r2'] = val
-        except KeyError:
-            self._cache['r2'] = val
-'''
+    @cache_readonly
+    def adj_D2(self):
+        return 1.0 - (float(self.n) - 1.0)/(float(self.n) - float(self.k)) * (1.0-self.D2)

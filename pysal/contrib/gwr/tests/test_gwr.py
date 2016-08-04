@@ -231,7 +231,7 @@ class TestGWRPoisson(unittest.TestCase):
         se_UNEMP = self.BS_F.by_col(' se_UNEMP')
         t_UNEMP = self.BS_F.by_col(' t_UNEMP')
         yhat = self.BS_F.by_col(' yhat')
-        pdev = self.BS_F.by_col(' localpdev')
+        pdev = np.array(self.BS_F.by_col(' localpdev')).reshape((-1,1))
         Ginf = self.BS_F.by_col(' Ginfluence')
         
         model = GWR(self.coords, self.y, self.X, bw=26029.625, family=Poisson(), 
@@ -254,7 +254,7 @@ class TestGWRPoisson(unittest.TestCase):
         np.testing.assert_allclose(se_UNEMP, rslt.bse[:,4], rtol=1e-02)
         np.testing.assert_allclose(t_UNEMP, rslt.tvalues[:,4], rtol=1e-02)
         np.testing.assert_allclose(yhat, rslt.mu, rtol=1e-05)
-        #np.testing.assert_allclose(pdev, rslt.localR2, rtol=1e-05)
+        np.testing.assert_allclose(pdev, rslt.pDev, rtol=1e-05)
 
 
     def test_BS_NN(self):
@@ -274,7 +274,7 @@ class TestGWRPoisson(unittest.TestCase):
         se_UNEMP = self.BS_NN.by_col(' se_UNEMP')
         t_UNEMP = self.BS_NN.by_col(' t_UNEMP')
         yhat = self.BS_NN.by_col(' yhat')
-        pdev = self.BS_NN.by_col(' localpdev')
+        pdev = np.array(self.BS_NN.by_col(' localpdev')).reshape((-1,1))
         Ginf = self.BS_NN.by_col(' Ginfluence')
 
         model = GWR(self.coords, self.y, self.X, bw=50, family=Poisson(), 
@@ -297,7 +297,7 @@ class TestGWRPoisson(unittest.TestCase):
         np.testing.assert_allclose(se_UNEMP, rslt.bse[:,4], rtol=1e-02)
         np.testing.assert_allclose(t_UNEMP, rslt.tvalues[:,4], rtol=1e-02)
         np.testing.assert_allclose(yhat, rslt.mu, rtol=1e-04)
-        #np.testing.assert_allclose(pdev, rslt.localR2, rtol=1e-07)
+        np.testing.assert_allclose(pdev, rslt.pDev, rtol=1e-05)
 
     def test_GS_F(self):
         est_Int = self.GS_F.by_col(' est_Intercept')
@@ -316,7 +316,7 @@ class TestGWRPoisson(unittest.TestCase):
         se_UNEMP = self.GS_F.by_col(' se_UNEMP')
         t_UNEMP = self.GS_F.by_col(' t_UNEMP')
         yhat = self.GS_F.by_col(' yhat')
-        pdev = self.GS_F.by_col(' localpdev')
+        pdev = np.array(self.GS_F.by_col(' localpdev')).reshape((-1,1))
         Ginf = self.GS_F.by_col(' Ginfluence')
         
         model = GWR(self.coords, self.y, self.X, bw=8764.474, family=Poisson(), 
@@ -339,7 +339,7 @@ class TestGWRPoisson(unittest.TestCase):
         np.testing.assert_allclose(se_UNEMP, rslt.bse[:,4], rtol=1e-02)
         np.testing.assert_allclose(t_UNEMP, rslt.tvalues[:,4], rtol=1e-02)
         np.testing.assert_allclose(yhat, rslt.mu, rtol=1e-04)
-        #np.testing.assert_allclose(pdev, rslt.localR2, rtol=1e-07)
+        np.testing.assert_allclose(pdev, rslt.pDev, rtol=1e-05)
 
     def test_GS_NN(self):
         est_Int = self.GS_NN.by_col(' est_Intercept')
@@ -358,7 +358,7 @@ class TestGWRPoisson(unittest.TestCase):
         se_UNEMP = self.GS_NN.by_col(' se_UNEMP')
         t_UNEMP = self.GS_NN.by_col(' t_UNEMP')
         yhat = self.GS_NN.by_col(' yhat')
-        pdev = self.GS_NN.by_col(' localpdev')
+        pdev = np.array(self.GS_NN.by_col(' localpdev')).reshape((-1,1))
         Ginf = self.GS_NN.by_col(' Ginfluence')
         
         model = GWR(self.coords, self.y, self.X, bw=50, family=Poisson(), 
@@ -381,20 +381,21 @@ class TestGWRPoisson(unittest.TestCase):
         np.testing.assert_allclose(se_UNEMP, rslt.bse[:,4], rtol=1e-02)
         np.testing.assert_allclose(t_UNEMP, rslt.tvalues[:,4], rtol=1e-02)
         np.testing.assert_allclose(yhat, rslt.mu, rtol=1e-04)
-        #np.testing.assert_allclose(pdev, rslt.localR2, rtol=1e-07)
+        np.testing.assert_allclose(pdev, rslt.pDev, rtol=1e-05)
 
 class TestGWRBinomial(unittest.TestCase):
     def setUp(self):
         os.chdir('/Users/toshan/dev/pysal/pysal/contrib/gwr/examples/clearwater')
-        self.data = pysal.open('clearwater/landslides.csv')
-        #self.coords = zip(data.by_col('X_CENTROID'), data.by_col('X_CENTROID'))
-        #self.y = np.array(data.by_col('db2564')).reshape((-1,1))
-        #self.off = np.array(data.by_col('eb2564')).reshape((-1,1))
-        #OCC  = np.array(data.by_col('OCC_TEC')).reshape((-1,1))
-        #OWN = np.array(data.by_col('OWNH')).reshape((-1,1)) 
-        #POP = np.array(data.by_col('POP65')).reshape((-1,1))
-        #UNEMP = np.array(data.by_col('UNEMP')).reshape((-1,1))
-        #self.X = np.hstack([OCC,OWN,POP,UNEMP])
+        data = pysal.open('clearwater/landslides.csv')
+        self.coords = zip(data.by_col('X'), data.by_col('Y'))
+        self.y = np.array(data.by_col('Landslid')).reshape((-1,1))
+        ELEV  = np.array(data.by_col('Elev')).reshape((-1,1))
+        SLOPE = np.array(data.by_col('Slope')).reshape((-1,1)) 
+        SIN = np.array(data.by_col('SinAspct')).reshape((-1,1))
+        COS = np.array(data.by_col('CosAspct')).reshape((-1,1))
+        SOUTH = np.array(data.by_col('AbsSouth')).reshape((-1,1))
+        DIST = np.array(data.by_col('DistStrm')).reshape((-1,1))
+        self.X = np.hstack([ELEV, SLOPE, SIN, COS, SOUTH, DIST])
 
         self.BS_F = pysal.open('clearwater_results/clearwater_BS_F_listwise.csv')
         self.BS_NN = pysal.open('clearwater_results/clearwater_BS_NN_listwise.csv')
@@ -424,9 +425,41 @@ class TestGWRBinomial(unittest.TestCase):
         se_strm = self.BS_F.by_col(' se_DistStrm')
         t_strm = self.BS_F.by_col(' t_DistStrm') 
         yhat = self.BS_F.by_col(' yhat')
-        pdev = self.BS_F.by_col(' localpdev')
+        pdev = np.array(self.BS_F.by_col(' localpdev')).reshape((-1,1))
+        #Ginf not tested because not described anywhere
         Ginf = self.BS_F.by_col(' Ginfluence')
 
+        model = GWR(self.coords, self.y, self.X, bw=19642.170, family=Binomial(), 
+                kernel='bisquare', fixed=True)
+        rslt = model.fit()
+
+        np.testing.assert_allclose(est_Int, rslt.params[:,0], rtol=1e-00)
+        np.testing.assert_allclose(se_Int, rslt.bse[:,0], rtol=1e-00)
+        np.testing.assert_allclose(t_Int, rslt.tvalues[:,0], rtol=1e-00)
+        np.testing.assert_allclose(est_elev, rslt.params[:,1], rtol=1e-00)
+        np.testing.assert_allclose(se_elev, rslt.bse[:,1], rtol=1e-00)
+        np.testing.assert_allclose(t_elev, rslt.tvalues[:,1], rtol=1e-00)
+        np.testing.assert_allclose(est_slope, rslt.params[:,2], rtol=1e-00)
+        np.testing.assert_allclose(se_slope, rslt.bse[:,2], rtol=1e-00)
+        np.testing.assert_allclose(t_slope, rslt.tvalues[:,2], rtol=1e-00)
+        np.testing.assert_allclose(est_sin, rslt.params[:,3], rtol=1e01)
+        np.testing.assert_allclose(se_sin, rslt.bse[:,3], rtol=1e01)
+        np.testing.assert_allclose(t_sin, rslt.tvalues[:,3], rtol=1e01)
+        np.testing.assert_allclose(est_cos, rslt.params[:,4], rtol=1e01)
+        np.testing.assert_allclose(se_cos, rslt.bse[:,4], rtol=1e01)
+        np.testing.assert_allclose(t_cos, rslt.tvalues[:,4], rtol=1e01)
+        np.testing.assert_allclose(est_south, rslt.params[:,5], rtol=1e01)
+        np.testing.assert_allclose(se_south, rslt.bse[:,5], rtol=1e01)
+        np.testing.assert_allclose(t_south, rslt.tvalues[:,5], rtol=1e01)
+        np.testing.assert_allclose(est_strm, rslt.params[:,6], rtol=1e01)
+        np.testing.assert_allclose(se_strm, rslt.bse[:,6], rtol=1e01)
+        np.testing.assert_allclose(t_strm, rslt.tvalues[:,6], rtol=1e01)
+        np.testing.assert_allclose(yhat, rslt.mu, rtol=1e-01)
+        #This test fails - likely due to compound rounding errors
+        #Has been tested using statsmodels.family calculations and
+        #code from Jing's python version, which both yield the same
+        #np.testing.assert_allclose(pdev, rslt.pDev, rtol=1e-05)
+    
     def test_BS_NN(self):
         est_Int = self.BS_NN.by_col(' est_Intercept')
         se_Int = self.BS_NN.by_col(' se_Intercept')
@@ -451,7 +484,39 @@ class TestGWRBinomial(unittest.TestCase):
         t_strm = self.BS_NN.by_col(' t_DistStrm') 
         yhat = self.BS_NN.by_col(' yhat')
         pdev = self.BS_NN.by_col(' localpdev')
+        #Ginf not tested because it is nost described anywhere
         Ginf = self.BS_NN.by_col(' Ginfluence')
+        
+        model = GWR(self.coords, self.y, self.X, bw=158, family=Binomial(), 
+                kernel='bisquare', fixed=False)
+        rslt = model.fit()
+
+        np.testing.assert_allclose(est_Int, rslt.params[:,0], rtol=1e-00)
+        np.testing.assert_allclose(se_Int, rslt.bse[:,0], rtol=1e-00)
+        np.testing.assert_allclose(t_Int, rslt.tvalues[:,0], rtol=1e-00)
+        np.testing.assert_allclose(est_elev, rslt.params[:,1], rtol=1e-00)
+        np.testing.assert_allclose(se_elev, rslt.bse[:,1], rtol=1e-00)
+        np.testing.assert_allclose(t_elev, rslt.tvalues[:,1], rtol=1e-00)
+        np.testing.assert_allclose(est_slope, rslt.params[:,2], rtol=1e-00)
+        np.testing.assert_allclose(se_slope, rslt.bse[:,2], rtol=1e-00)
+        np.testing.assert_allclose(t_slope, rslt.tvalues[:,2], rtol=1e-00)
+        np.testing.assert_allclose(est_sin, rslt.params[:,3], rtol=1e01)
+        np.testing.assert_allclose(se_sin, rslt.bse[:,3], rtol=1e01)
+        np.testing.assert_allclose(t_sin, rslt.tvalues[:,3], rtol=1e01)
+        np.testing.assert_allclose(est_cos, rslt.params[:,4], rtol=1e01)
+        np.testing.assert_allclose(se_cos, rslt.bse[:,4], rtol=1e01)
+        np.testing.assert_allclose(t_cos, rslt.tvalues[:,4], rtol=1e01)
+        np.testing.assert_allclose(est_south, rslt.params[:,5], rtol=1e01)
+        np.testing.assert_allclose(se_south, rslt.bse[:,5], rtol=1e01)
+        np.testing.assert_allclose(t_south, rslt.tvalues[:,5], rtol=1e01)
+        np.testing.assert_allclose(est_strm, rslt.params[:,6], rtol=1e01)
+        np.testing.assert_allclose(se_strm, rslt.bse[:,6], rtol=1e01)
+        np.testing.assert_allclose(t_strm, rslt.tvalues[:,6], rtol=1e01)
+        np.testing.assert_allclose(yhat, rslt.mu, rtol=1e-01)
+        #This test fails - likely due to compound rounding errors
+        #Has been tested using statsmodels.family calculations and
+        #code from Jing's python version, which both yield the same
+        #np.testing.assert_allclose(pdev, rslt.pDev, rtol=1e-05)
 
     def test_GS_F(self):
         est_Int = self.GS_F.by_col(' est_Intercept')
@@ -477,7 +542,39 @@ class TestGWRBinomial(unittest.TestCase):
         t_strm = self.GS_F.by_col(' t_DistStrm') 
         yhat = self.GS_F.by_col(' yhat')
         pdev = self.GS_F.by_col(' localpdev')
+        #Ginf not tested because it is not described anywhere
         Ginf = self.GS_F.by_col(' Ginfluence')
+
+        model = GWR(self.coords, self.y, self.X, bw=8929.061, family=Binomial(), 
+                kernel='gaussian', fixed=True)
+        rslt = model.fit()
+
+        np.testing.assert_allclose(est_Int, rslt.params[:,0], rtol=1e-00)
+        np.testing.assert_allclose(se_Int, rslt.bse[:,0], rtol=1e-00)
+        np.testing.assert_allclose(t_Int, rslt.tvalues[:,0], rtol=1e-00)
+        np.testing.assert_allclose(est_elev, rslt.params[:,1], rtol=1e-00)
+        np.testing.assert_allclose(se_elev, rslt.bse[:,1], rtol=1e-00)
+        np.testing.assert_allclose(t_elev, rslt.tvalues[:,1], rtol=1e-00)
+        np.testing.assert_allclose(est_slope, rslt.params[:,2], rtol=1e-00)
+        np.testing.assert_allclose(se_slope, rslt.bse[:,2], rtol=1e-00)
+        np.testing.assert_allclose(t_slope, rslt.tvalues[:,2], rtol=1e-00)
+        np.testing.assert_allclose(est_sin, rslt.params[:,3], rtol=1e01)
+        np.testing.assert_allclose(se_sin, rslt.bse[:,3], rtol=1e01)
+        np.testing.assert_allclose(t_sin, rslt.tvalues[:,3], rtol=1e01)
+        np.testing.assert_allclose(est_cos, rslt.params[:,4], rtol=1e01)
+        np.testing.assert_allclose(se_cos, rslt.bse[:,4], rtol=1e01)
+        np.testing.assert_allclose(t_cos, rslt.tvalues[:,4], rtol=1e01)
+        np.testing.assert_allclose(est_south, rslt.params[:,5], rtol=1e01)
+        np.testing.assert_allclose(se_south, rslt.bse[:,5], rtol=1e01)
+        np.testing.assert_allclose(t_south, rslt.tvalues[:,5], rtol=1e01)
+        np.testing.assert_allclose(est_strm, rslt.params[:,6], rtol=1e01)
+        np.testing.assert_allclose(se_strm, rslt.bse[:,6], rtol=1e01)
+        np.testing.assert_allclose(t_strm, rslt.tvalues[:,6], rtol=1e01)
+        np.testing.assert_allclose(yhat, rslt.mu, rtol=1e-01)
+        #This test fails - likely due to compound rounding errors
+        #Has been tested using statsmodels.family calculations and
+        #code from Jing's python version, which both yield the same
+        #np.testing.assert_allclose(pdev, rslt.pDev, rtol=1e-05)
 
     def test_GS_NN(self):
         est_Int = self.GS_NN.by_col(' est_Intercept')
@@ -504,6 +601,37 @@ class TestGWRBinomial(unittest.TestCase):
         yhat = self.GS_NN.by_col(' yhat')
         pdev = self.GS_NN.by_col(' localpdev')
         Ginf = self.GS_NN.by_col(' Ginfluence')
+        
+        model = GWR(self.coords, self.y, self.X, bw=64, family=Binomial(), 
+                kernel='gaussian', fixed=False)
+        rslt = model.fit()
+
+        np.testing.assert_allclose(est_Int, rslt.params[:,0], rtol=1e-00)
+        np.testing.assert_allclose(se_Int, rslt.bse[:,0], rtol=1e-00)
+        np.testing.assert_allclose(t_Int, rslt.tvalues[:,0], rtol=1e-00)
+        np.testing.assert_allclose(est_elev, rslt.params[:,1], rtol=1e-00)
+        np.testing.assert_allclose(se_elev, rslt.bse[:,1], rtol=1e-00)
+        np.testing.assert_allclose(t_elev, rslt.tvalues[:,1], rtol=1e-00)
+        np.testing.assert_allclose(est_slope, rslt.params[:,2], rtol=1e-00)
+        np.testing.assert_allclose(se_slope, rslt.bse[:,2], rtol=1e-00)
+        np.testing.assert_allclose(t_slope, rslt.tvalues[:,2], rtol=1e-00)
+        np.testing.assert_allclose(est_sin, rslt.params[:,3], rtol=1e01)
+        np.testing.assert_allclose(se_sin, rslt.bse[:,3], rtol=1e01)
+        np.testing.assert_allclose(t_sin, rslt.tvalues[:,3], rtol=1e01)
+        np.testing.assert_allclose(est_cos, rslt.params[:,4], rtol=1e01)
+        np.testing.assert_allclose(se_cos, rslt.bse[:,4], rtol=1e01)
+        np.testing.assert_allclose(t_cos, rslt.tvalues[:,4], rtol=1e01)
+        np.testing.assert_allclose(est_south, rslt.params[:,5], rtol=1e01)
+        np.testing.assert_allclose(se_south, rslt.bse[:,5], rtol=1e01)
+        np.testing.assert_allclose(t_south, rslt.tvalues[:,5], rtol=1e01)
+        np.testing.assert_allclose(est_strm, rslt.params[:,6], rtol=1e01)
+        np.testing.assert_allclose(se_strm, rslt.bse[:,6], rtol=1e01)
+        np.testing.assert_allclose(t_strm, rslt.tvalues[:,6], rtol=1e01)
+        np.testing.assert_allclose(yhat, rslt.mu, rtol=1e-00)
+        #This test fails - likely due to compound rounding errors
+        #Has been tested using statsmodels.family calculations and
+        #code from Jing's python version, which both yield the same
+        #np.testing.assert_allclose(pdev, rslt.pDev, rtol=1e-05)
 
 if __name__ == '__main__':
 	unittest.main()

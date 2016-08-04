@@ -118,6 +118,9 @@ class GWR(GLM):
             s = np.zeros((self.n, self.n))
             c = np.zeros((self.n, self.k))
             f = np.zeros((self.n, self.n))
+            p = np.zeros((self.n, 1))
+            dev_resa = np.zeros((self.n, 1))
+            dev = np.zeros((self.n, 1))
             for i in range(self.n):
                 wi = np.diag(self.W[i])
             	rslt = iwls(self.y, self.X, self.family, self.offset,
@@ -133,10 +136,34 @@ class GWR(GLM):
                 s[i] = ri*np.reshape(rslt[4].flatten(), (1,-1))
                 cf = rslt[5] - np.dot(rslt[5], f)
                 c[i] = np.diag(np.dot(cf, cf.T/1))
+                #sign = np.sign(self.y-rslt[1])
+                #dev_res = sign * 2.0 * wi * (self.y * np.log(self.y/rslt[1]) -
+                #        (self.y - rslt[1]))
+                #dev = 2.0 * np.sum(wi*np.log(self.y/rslt[1]))
+                #dev_res[i] = ((self.family.resid_dev(self.y,rslt[1]))**2).flatten()
+                #dev[i] = self.family.deviance(self.y, rslt[1])
+                #p[i] = 1.0 - (np.sum(np.abs(dev_res)) / dev)
+            for i in range(self.n):
+                wi = np.diag(self.W[i])
+                dev_resa[i] = np.sum(((self.family.resid_dev(self.y,predy))**2)*wi)
+
+            #dev_res = np.zeros((self.n, self.n))
+            #global_dev_res = ((self.family.resid_dev(self.y,predy))**2)
+            #global_dev = self.family.deviance(self.y, predy)
+            #dev_res = np.repeat(global_dev_res.flatten(),self.n)
+            #dev_res = dev_res.reshape((self.n, self.n))
+            #dev_res = np.sum(dev_res * self.W.T, axis=0)
+            #dev = (self.W * global_dev) - (self.W*(2.0 * (self.y - self.y_bar)))
+            #dev = np.sum(dev, axis=0)
+            #dev  = dev/self.n
             self.f = f
             self.cf = cf
             self.S = s*(1.0/z)
             self.CCT = c
+            #self.pDev = 1 - (np.sum(dev_res)/ dev)
+            #print self.pDev
+            #if isinstance(self.family, Poisson):
+                #print dev[0]
         return GWRResults(self, params, predy, v, w)
 
 class GWRResults(GLMResults):
@@ -237,6 +264,7 @@ class GWRResults(GLMResults):
         	self.w = w
         self.S = model.S
         self.CCT = model.CCT
+        #self.pDev  = model.pDev
         self.u = (self.resid_response).flatten()
         #self.u = self.u.reshape((-1,1))
         self.utu = np.dot(self.u, self.u.T)
@@ -395,14 +423,6 @@ class GWRResults(GLMResults):
         Note: in (9.11), p should be tr(S), that is, the effective number of parameters
         """
         return self.std_res**2 * self.influ / (self.tr_S * (1.0-self.influ))
-    
-    #should get this for free from GLM
-    @property
-    def tvalues(self):
-        """
-        t statistics of params
-        """
-        return self.params *1.0/self.bse
 
     @property
     def logll(self):
@@ -423,7 +443,6 @@ class GWRResults(GLMResults):
             self._cache['logll'] = -0.5*self.n*(np.log(2*np.pi*self.sig2)+1)
         return self._cache['logll']
 
-
     @logll.setter
     def logll(self, val):
         try:
@@ -434,50 +453,16 @@ class GWRResults(GLMResults):
         except KeyError:
             self._cache['logll'] = val
 
-
-    @property
-    def dev_u(self):
-        """
-        deviance of residuals
-        """
-        try:
-            return self._cache['dev_u']
-        except AttributeError:
-                self._cache = {}
-                self._cache['dev_u'] = self.calc_dev_u()
-        except KeyError:
-            self._cache['dev_u'] = self.calc_dev_u()
-        return self._cache['dev_u']
-
-        @dev_u.setter
-        def dev_u(self, val):
-            try:
-                self._cache['dev_u'] = val
-            except AttributeError:
-                self._cache = {}
-                self._cache['dev_u'] = val
-            except KeyError:
-                self.cache['dev_u'] = val
-
-
-    def calc_dev_u(self):
-        dev = 0.0
-        if self.family == 'Gaussian':
-            dev = self.n * (np.log(self.utu * 2.0 * np.pi / self.n) + 1.0)
-        if self.family == 'Poisson':
-            id0 = self.y==0
-            id1 = self.y<>0
-            if np.sum(id1) == self.n:
-                dev = 2.0 * np.sum(self.y * np.log(self.y/self.predy))
-            else:
-                dev = 2.0 * (np.sum(self.y[id1] *
-                        np.log(self.y[id1]/self.predy[id1])) -
-                            np.sum(self.y[id0]-self.predy[id0]))
-        if self.family == 'logistic':
-            for i in range(self.n):
-                if self.y[i] == 0:
-                    dev += -2.0 * np.log(1.0 - self.predy[i])
-                else:
-                    dev += -2.0 * np.log(self.predy[i])
-        return dev
-
+    @cache_readonly
+    def pDev(self):
+        global_dev_res = ((self.family.resid_dev(self.y,self.mu))**2)
+        dev_res = np.repeat(global_dev_res.flatten(),self.n)
+        dev_res = dev_res.reshape((self.n, self.n))
+        dev_res = np.sum(dev_res * self.W.T, axis=0)
+        if isinstance(self.family, Gaussian):
+        	return np.nan
+        elif isinstance(self.family, Poisson):
+            dev = np.sum(2.0*self.W*(self.y*np.log(self.y/(self.y_bar))-(self.y-self.y_bar)),axis=1)
+        elif isinstance(self.family, Binomial):
+            dev = self.family.deviance(self.y, self.y_bar, self.W, axis=1)
+        return  1.0 - (dev_res.reshape((-1,1))/ dev.reshape((-1,1)))
