@@ -170,6 +170,9 @@ class Kernel(W):
     eps         : float
                   adjustment to ensure knn distance range is closed on the
                   knnth observations
+    truncate    : boolean
+                  True for forced 0 values after bandwidth, False for weighting
+                  all points
 
     Attributes
     ----------
@@ -267,8 +270,8 @@ class Kernel(W):
     """
     def __init__(self, data, bandwidth=None, fixed=True, k=2,
                  function='triangular', eps=1.0000001, ids=None,
-                 diagonal=False):
-        if isKDTree(data):
+                 diagonal=False, truncate=True): #Added truncate flag
+        if issubclass(type(data), scipy.spatial.KDTree):
             self.kdt = data
             self.data = self.kdt.data
             data = self.data
@@ -279,6 +282,7 @@ class Kernel(W):
         self.function = function.lower()
         self.fixed = fixed
         self.eps = eps
+        self.trunc = truncate
         if bandwidth:
             try:
                 bandwidth = np.array(bandwidth)
@@ -288,7 +292,6 @@ class Kernel(W):
             self.bandwidth = bandwidth
         else:
             self._set_bw()
-
         self._eval_kernel()
         neighbors, weights = self._k_to_W(ids)
         if diagonal:
@@ -300,6 +303,7 @@ class Kernel(W):
         allneighbors = {}
         weights = {}
         if ids:
+        
             ids = np.array(ids)
         else:
             ids = np.arange(len(self.data))
@@ -329,11 +333,15 @@ class Kernel(W):
 
     def _eval_kernel(self):
         # get points within bandwidth distance of each point
-        if not hasattr(self, 'neigh'):
-            kdtq = self.kdt.query_ball_point
-            neighbors = [kdtq(self.data[i], r=bwi[0]) for i,
-                         bwi in enumerate(self.bandwidth)]
-            self.neigh = neighbors
+        if self.trunc:#Check for truncate flag here
+            if not hasattr(self, 'neigh'):
+                kdtq = self.kdt.query_ball_point
+                neighbors = [kdtq(self.data[i], r=bwi[0]) for i,
+                            bwi in enumerate(self.bandwidth)]
+                self.neigh = neighbors
+        else:
+            n = len(self.data)
+            self.neigh = [range(n) for each in range(n)]
         # get distances for neighbors
         bw = self.bandwidth
 
@@ -360,6 +368,12 @@ class Kernel(W):
             c = np.pi * 2
             c = c ** (-0.5)
             self.kernel = [c * np.exp(-(zi ** 2) / 2.) for zi in zs]
+        elif self.function == 'gwr_gaussian':
+            self.kernel = [ np.exp(-0.5*(zi)**2) for zi in zs]
+        elif self.function == 'bisquare':
+            self.kernel = [(1-(zi)**2)**2 for zi in zs]
+        elif self.function =='exponential':
+            self.kernel = [np.exp(-zi) for zi in zs]
         else:
             print('Unsupported kernel function', self.function)
 
