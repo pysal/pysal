@@ -9,6 +9,9 @@ from glm import GLM, GLMResults
 from iwls import iwls
 from utils import cache_readonly
 
+fk = {'gaussian': fix_gauss, 'bisquare': fix_bisquare, 'exponential': fix_exp}
+ak = {'gaussian': adapt_gauss, 'bisquare': adapt_bisquare, 'exponential': adapt_exp}
+
 class GWR(GLM):
     """
     Geographically weighted regression. Can currently estimate Gaussian,
@@ -18,14 +21,20 @@ class GWR(GLM):
     Parameters
     ----------
         coords        : array-like
-                        n*2, collection of n sets of (x,y) coordinates used for
-                        calibration locations
+                        n*2, collection of n sets of (x,y) coordinates of
+                        observatons; also used as calibration locations is
+                        'points' is set to None
 
         y             : array
                         n*1, dependent variable
 
         X             : array
                         n*k, independent variable, exlcuding the constant
+
+        points        : array-like
+                        n*2, collection of n sets of (x,y) coordinates used for
+                        calibration locations; default is set to None, which
+                        uses every observation as a calibration point 
 
         bw            : scalar
                         bandwidth value consisting of either a distance or N
@@ -141,24 +150,34 @@ class GWR(GLM):
         self.kernel = kernel
         self.fixed = fixed
         self.fit_params = {}
+        self.W = self._build_W(fixed, kernel, coords, bw)
+
+    def _build_W(self, fixed, kernel, coords, bw, points=None):
+        if points is not None:
+        	all_coords = np.vstack([coords, points])
+        else: all_coords = coords
+
         if fixed:
-            if kernel == 'gaussian':
-            	self.W = fix_gauss(coords, bw)
-            elif kernel == 'bisquare':
-                self.W = fix_bisquare(coords, bw)
-            elif kernel == 'exponential':
-                self.W = fix_exp(coords, bw)
-            else:
-                print 'Unsupported kernel function  ', kernel
+            try:
+            	W = fk[kernel](all_coords, bw)
+                if points is not None:
+                	W = self._shed(W, coords, points, bw, fk[kernel])
+            except:
+                raise TypeError('Unsupported kernel function  ', kernel)
         else:
-            if kernel == 'gaussian':
-            	self.W = adapt_gauss(coords, bw)
-            elif kernel == 'bisquare':
-                self.W = adapt_bisquare(coords, bw)
-            elif kernel == 'exponential':
-                self.W = adapt_exp(coords, bw)
-            else:
-                print 'Unsupported kernel function  ', kernel
+            try:
+                W = ak[kernel](all_coords, bw)
+                if points is not None:
+                	W = self._shed(W, coords, points, bw, fk[kernel])
+            except:
+                raise TypeError('Unsupported kernel function  ', kernel)
+        
+        return W
+
+    def _shed(self, W, coords, points, bw, function):
+        W_coords = function(coords, bw)
+        W_points = function(points, bw)
+
 
     def fit(self, ini_params=None, tol=1.0e-5, max_iter=20, solve='iwls'):
         """
@@ -359,7 +378,6 @@ class GWRResults(GLMResults):
         	self.sig2 = self.sigma2_v1
         else:
             self.sig2 = self.sigma2_v1v2
-        print self.filter_tvals(self.adj_alpha[1])
     
     @cache_readonly
     def tr_S(self):
