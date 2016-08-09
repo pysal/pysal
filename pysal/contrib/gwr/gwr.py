@@ -332,6 +332,13 @@ class GWRResults(GLMResults):
         
         tvalues       : array
                         n*k, local t-statistics
+
+        adj_alpha     : array
+                        3*1, corrected alpha values to account for multiple
+                        hypothesis testing for the 90%, 95%, and 99% confidence
+                        levels; tvalues with an absolute value larger than the
+                        corrected alpha are considered statistically
+                        significant.
         
         pDev          : float
                         local percent of deviation accounted for; analogous to
@@ -352,6 +359,7 @@ class GWRResults(GLMResults):
         	self.sig2 = self.sigma2_v1
         else:
             self.sig2 = self.sigma2_v1v2
+        print self.filter_tvals(self.adj_alpha[1])
     
     @cache_readonly
     def tr_S(self):
@@ -525,6 +533,10 @@ class GWRResults(GLMResults):
 
     @cache_readonly
     def pDev(self):
+        """
+        Local percentage of deviance accounted for. Described in the GWR4
+        manual. Equivalent to 1 - (deviance/null deviance)
+        """
         global_dev_res = ((self.family.resid_dev(self.y,self.mu))**2)
         dev_res = np.repeat(global_dev_res.flatten(),self.n)
         dev_res = dev_res.reshape((self.n, self.n))
@@ -536,3 +548,46 @@ class GWRResults(GLMResults):
         elif isinstance(self.family, Binomial):
             dev = self.family.deviance(self.y, self.y_bar, self.W, axis=1)
         return  1.0 - (dev_res.reshape((-1,1))/ dev.reshape((-1,1)))
+
+    @cache_readonly
+    def adj_alpha(self):
+        """
+        Corrected alpha (critical) values to account for multiple testing during hypothesis
+        testing. Includes corrected value for 90% (.1), 95% (.05), and 99%
+        (.01) confidence levels. Correction comes from:
+
+        da Silva, A. R., & Fotheringham, A. S. (2015). The Multiple Testing Issue in 
+        Geographically Weighted Regression. Geographical Analysis.
+
+        """
+        alpha = np.array([.1, .05, .001])
+        pe = (2.0 * self.tr_S) - self.tr_STS
+        p = self.k
+        return (alpha*p)/pe
+
+    def filter_tvals(self, alpha):
+        """
+        Utility function to set tvalues with an absolute value smaller than the
+        absolute value of the alpha (critical) value to 0
+
+        Parameters
+        ----------
+        alpha           : scalar
+                          critical value to determine which tvalues are
+                          associated with statistically significant parameter
+                          estimates
+
+        Returns
+        -------
+        filtered       : array
+                          n*k; new set of n tvalues for each of k variables
+                          where absolute tvalues less than the absolute value of
+                          alpha have been set to 0.
+        """
+        alpha = np.abs(alpha)
+        subset = (self.tvalues < alpha) & (self.tvalues > -1.0*alpha)
+        tvalues = self.tvalues.copy()
+        tvalues[subset] = 0
+        return tvalues
+
+
