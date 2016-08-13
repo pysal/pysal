@@ -5,16 +5,18 @@
 
 from kernels import fix_gauss, fix_bisquare, fix_exp, adapt_gauss, adapt_bisquare, adapt_exp
 from search import golden_section, equal_interval
-from diagnostics import get_AICc_GWR, get_AIC_GWR, get_BIC_GWR, get_CV_GWR, get_AICc_GLM
+import sys
+sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
+from family import Gaussian, Poisson, Binomial
+from diagnostics import get_AICc, get_AIC, get_BIC, get_CV
 from gwr import GWR
-from scipy.spatial.distance import cdist
+from scipy.spatial.distance import pdist, squareform
 from pysal.common import KDTree
 import numpy as np
 
 kernels = {1: fix_gauss, 2: adapt_gauss, 3: fix_bisquare, 4:
         adapt_bisquare, 5: fix_exp, 6:adapt_exp}
-getDiag = {'AICc': get_AICc_GWR,'AIC':get_AIC_GWR, 'BIC':get_BIC_GWR,'CV':
-        get_CV_GWR, 'AICc_GLM':get_AICc_GLM}
+getDiag = {'AICc': get_AICc,'AIC':get_AIC, 'BIC': get_BIC, 'CV': get_CV}
 
 class Sel_BW(object):
     """
@@ -78,12 +80,15 @@ class Sel_BW(object):
     max_iter      : integer
                     max interations if no convergence to tol
     """
-    def __init__(self, coords, y, x_loc, x_glob, family='Gaussian',
+    def __init__(self, coords, y, x_loc, x_glob=None, family=Gaussian(),
             y_off=None, kernel='gaussian', fixed=False):
         self.coords = coords
         self.y = y
         self.x_loc = x_loc
-        self.x_glob = x_glob
+        if x_glob is not None:
+            self.x_glob = x_glob
+        else:
+            self.x_glob = []
         self.family=family
         self.fixed = fixed
         self.kernel = kernel
@@ -105,7 +110,7 @@ class Sel_BW(object):
             elif self.kernel == 'exponential':
                 ktype = 5
             else:
-                print 'Unsupported kernel function ', self.kernel
+                raise TypeError('Unsupported kernel function ', self.kernel)
         else:
             if self.kernel == 'gaussian':
             	ktype = 2
@@ -114,18 +119,17 @@ class Sel_BW(object):
             elif self.kernel == 'exponential':
                 ktype = 6
             else:
-                print 'Unsupported kernel function ', self.kernel
+                raise TypeError('Unsupported kernel function ', self.kernel)
 
         function = lambda bw: getDiag[criterion](
                 GWR(self.coords, self.y, self.x_loc, bw, family=self.family,
                     kernel=self.kernel, fixed=self.fixed).fit())
-        print self.kernel
+        
         if ktype % 2 == 0:
             int_score = True
         else:
             int_score = False
         self.int_score = int_score
-        print self.int_score
 
         if search == 'golden_section':
             a,c = self._init_section(self.x_glob, self.x_loc, self.coords)
@@ -135,10 +139,9 @@ class Sel_BW(object):
             return self.bw[0]
         elif search == 'interval':
             self.bw = equal_interval(bw_min, bw_max, interval, function, int_score)
-            print self.bw[0]
             return self.bw[0]
         else:
-            print 'Unsupported computational search method ', search
+            raise TypeError('Unsupported computational search method ', search)
 
     def _init_section(self, x_glob, x_loc, coords):
         if len(x_glob) > 0:
@@ -155,21 +158,19 @@ class Sel_BW(object):
         if self.int_score:
             a = 40 + 2 * n_vars
             c = n
-            print a,c
         else:
-            tree = KDTree(coords)
             nn = 40 + 2 * n_vars
-            min_dists = [tree.query(point, nn)[0][nn-1] for point in coords]
-            max_dists = [tree.query(point, nn)[0][-1] for point in coords]
+            sq_dists = squareform(pdist(coords))
+            sort_dists = np.sort(sq_dists, axis=1)
+            min_dists = sort_dists[:,nn-1]
+            max_dists = sort_dists[:,-1]
             a = np.min(min_dists)/2.0
             c = np.max(max_dists)/2.0
-            print a,c
 
         if a < self.bw_min:
             a = self.bw_min
         if c > self.bw_max and self.bw_max > 0:
             c = self.bw_max
-
         return a, c
 
 

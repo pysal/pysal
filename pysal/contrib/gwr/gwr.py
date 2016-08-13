@@ -210,6 +210,7 @@ class GWR(GLM):
             w = np.zeros((self.n, 1))
             z = np.zeros((self.n, self.n))
             S = np.zeros((self.n, self.n))
+            R = np.zeros((self.n, self.n))
             CCT = np.zeros((self.n, self.k))
             f = np.zeros((self.n, self.n))
             p = np.zeros((self.n, 1))
@@ -222,11 +223,12 @@ class GWR(GLM):
                 v[i] = rslt[2][i]
                 w[i] = rslt[3][i]
                 z[i] = rslt[4].flatten()
+                R[i] = np.dot(self.X[i], rslt[5])
                 ri = np.dot(self.X[i], rslt[5])
                 S[i] = ri*np.reshape(rslt[4].flatten(), (1,-1))
                 cf = rslt[5] - np.dot(rslt[5], f)
                 CCT[i] = np.diag(np.dot(cf, cf.T))
-            S = S*(1.0/z)
+            S = S * (1.0/z)
         return GWRResults(self, params, predy, S, CCT, w)
 
 class GWRResults(GLMResults):
@@ -368,6 +370,7 @@ class GWRResults(GLMResults):
         self.W = model.W
         if w is not None:
             self.w = w
+        self.predy = predy
         self.S = S
         self.CCT = CCT
         self.u = (self.resid_response).flatten()
@@ -384,29 +387,15 @@ class GWRResults(GLMResults):
         """
         trace of S (hat) matrix
         """
-        return np.trace(self.S)
+        return np.trace(self.S*self.w)
 
     @cache_readonly
     def tr_STS(self):
         """
         trace of STS matrix
         """
-        return np.trace(np.dot(self.S.T,self.S))
+        return np.trace(np.dot(self.S.T*self.w,self.S*self.w))
 
-
-    @property
-    def tr_SWSTW(self):  
-	"""
-	trace of STS matrix: S'WSW^-1
-	"""
-	if 'tr_SWSTW' not in self._cache:
-	    w = np.reshape(self.w, (-1,1))
-	    stw = (self.S * w).T
-	    stws = np.dot(stw, self.S)
-	    stwsw = stws.T *1.0/w
-	    self._cache['tr_SWSTW'] = np.trace(stwsw)
-	return self._cache['tr_SWSTW']     
-        
     @cache_readonly
     def y_bar(self):
         """
@@ -490,9 +479,12 @@ class GWRResults(GLMResults):
 
         use v1 and v2 #used in GWR4
         """
-        return self.utu/(self.n - 2.0*self.tr_S +
+        if isinstance(self.family, (Poisson, Binomial)):
+            return self.utu/(self.n - 2.0*self.tr_S +
 	                self.tr_STS) #could be changed to SWSTW - nothing to test against
-
+        else:
+            return self.utu/(self.n - 2.0*self.tr_S +
+	                self.tr_STS) #could be changed to SWSTW - nothing to test against
     @cache_readonly
     def sigma2_ML(self):
         """
@@ -548,6 +540,31 @@ class GWRResults(GLMResults):
         Note: in (9.11), p should be tr(S), that is, the effective number of parameters
         """
         return self.std_res**2 * self.influ / (self.tr_S * (1.0-self.influ))
+
+    @cache_readonly
+    def dev_res(self):
+        #dev =  self.n * (np.log(self.utu * 2.0 * np.pi / self.n) + 1.0)
+        #dev = self.family.loglike(self.y, self.mu)
+        #dev_res = ((self.family.resid_dev(self.y,self.mu))**2)
+        #dev_res = np.sum(dev_res)
+        dev = 0.0
+        for i in range(self.n):
+            if self.y[i] == 0:
+			    dev += -2.0 * np.log(1.0 - self.mu[i])
+            else: 
+			    dev += -2.0 * np.log(self.mu[i])		
+        #print dev
+        #dev = -2 * self.llf + 2
+        #print self.deviance
+        #print self.llf
+			
+        #global_dev_res = ((self.family.resid_dev(self.y,self.mu))**2)
+        #dev_res = np.repeat(global_dev_res.flatten(),self.n)
+        #dev_res = dev_res.reshape((self.n, self.n))
+        #dev_res = np.sum(dev_res * self.W.T)
+        
+        #dev = np.sum(2.0*self.W*(self.y*np.log(self.y/(self.y_bar))-(self.y-self.y_bar)))
+        return dev
 
     @cache_readonly
     def pDev(self):
