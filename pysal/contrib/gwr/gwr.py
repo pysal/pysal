@@ -540,32 +540,7 @@ class GWRResults(GLMResults):
         Note: in (9.11), p should be tr(S), that is, the effective number of parameters
         """
         return self.std_res**2 * self.influ / (self.tr_S * (1.0-self.influ))
-
-    @cache_readonly
-    def dev_res(self):
-        #dev =  self.n * (np.log(self.utu * 2.0 * np.pi / self.n) + 1.0)
-        #dev = self.family.loglike(self.y, self.mu)
-        #dev_res = ((self.family.resid_dev(self.y,self.mu))**2)
-        #dev_res = np.sum(dev_res)
-        dev = 0.0
-        for i in range(self.n):
-            if self.y[i] == 0:
-			    dev += -2.0 * np.log(1.0 - self.mu[i])
-            else: 
-			    dev += -2.0 * np.log(self.mu[i])		
-        #print dev
-        #dev = -2 * self.llf + 2
-        #print self.deviance
-        #print self.llf
-			
-        #global_dev_res = ((self.family.resid_dev(self.y,self.mu))**2)
-        #dev_res = np.repeat(global_dev_res.flatten(),self.n)
-        #dev_res = dev_res.reshape((self.n, self.n))
-        #dev_res = np.sum(dev_res * self.W.T)
-        
-        #dev = np.sum(2.0*self.W*(self.y*np.log(self.y/(self.y_bar))-(self.y-self.y_bar)))
-        return dev
-
+    
     @cache_readonly
     def pDev(self):
         """
