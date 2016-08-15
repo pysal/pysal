@@ -109,11 +109,11 @@ def equal_interval(l_bound, u_bound, interval, function, int_score=False):
         a = np.round(a,0)
         c = np.round(c,0)
         b = np.round(b,0)
-
+    
     output = []
 
     score_a = function(a)
-    score_c = function(b)
+    score_c = function(c)
 
     output.append((a,score_a))
     output.append((c,score_c))
@@ -133,7 +133,6 @@ def equal_interval(l_bound, u_bound, interval, function, int_score=False):
         if score_b < opt_score:
             opt_val = b
             opt_score = score_b
-
         b = b + interval
 
     return opt_val, opt_score, output
