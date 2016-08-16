@@ -19,15 +19,14 @@ from types import FunctionType
 import numpy as np
 from scipy import sparse as sp
 import statsmodels.api as sm
-from statsmodels.api import families 
-from statsmodels.tools.tools import categorical
 from sparse_categorical import spcategorical
 from pysal.spreg import user_output as User
 from pysal.spreg.utils import sphstack
 from count_model import CountModel
-import sys
-sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
-from utils import cache_readonly
+#import sys
+#sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
+from pysal.contrib.glm.utils import cache_readonly
+#from utils import cache_readonly
 from spint_utils import sorensen
 
 class BaseGravity(CountModel):
