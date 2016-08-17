@@ -26,7 +26,7 @@ from count_model import CountModel
 import sys
 sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
 from utils import cache_readonly
-from spint_utils import sorensen
+from spint_utils import sorensen, srmse
 
 class BaseGravity(CountModel):
     """
@@ -105,7 +105,7 @@ class BaseGravity(CountModel):
                       McFadden's pseudo R2  (coefficient of determination) 
     adj_pseudoR2    : float
                       adjusted McFadden's pseudo R2
-    srmse           : float
+    SRMSE           : float
                       standardized root mean square error
     SSI             : float
                       Sorensen similarity index
@@ -206,6 +206,8 @@ class BaseGravity(CountModel):
         self.k = results.k
         self.D2 = results.D2
         self.adj_D2 = results.adj_D2
+        self.pseudoR2 = results.pseudoR2
+        self.adj_pseudoR2 = results.adj_pseudoR2
         self.results = results
         self._cache = {}
 
@@ -214,20 +216,8 @@ class BaseGravity(CountModel):
         return sorensen(self)
 
     @cache_readonly
-    def pseudoR2(self):
-        return 1 - (self.llf/self.llnull)
-    
-    @cache_readonly
-    def adj_pseudoR2(self):
-        return 1 - ((self.llf-self.k)/self.llnull)
-
-    @cache_readonly
-    def srmse(self):
-        n = self.n
-        y = self.y
-        yhat = self.yhat
-        srmse = ((np.sum((y-yhat)**2)/n)**.5)/(np.sum(y)/n)
-        return srmse
+    def SRMSE(self):
+        return srmse(self)
 
     def reshape(self, array):
         if type(array) == np.ndarray:

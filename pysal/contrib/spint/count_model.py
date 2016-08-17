@@ -147,6 +147,11 @@ class CountModelResults(object):
                         percentage of explained deviance
         adj_D2        : float
 
+        pseudo_R2       : float
+                        McFadden's pseudo R2  (coefficient of determination) 
+        adj_pseudoR2    : float
+                        adjusted McFadden's pseudo R2
+
     """
     def __init__(self, results):
         self.y = results.y
@@ -170,6 +175,8 @@ class CountModelResults(object):
         self.tvalues = results.tvalues
         self.D2 = results.D2
         self.adj_D2 = results.adj_D2
+        self.pseudoR2 = results.pseudoR2
+        self.adj_pseudoR2 = results.adj_pseudoR2
         self.model = results
 
     

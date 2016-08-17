@@ -195,6 +195,10 @@ class GLMResults(LikelihoodModelResults):
                         percent deviance explained
         adj_D2        : float
                         adjusted percent deviance explained
+        pseudo_R2       : float
+                        McFadden's pseudo R2  (coefficient of determination) 
+        adj_pseudoR2    : float
+                        adjusted McFadden's pseudo R2
         resid_response          : array
                                   response residuals; defined as y-mu
         resid_pearson           : array
@@ -322,3 +326,12 @@ class GLMResults(LikelihoodModelResults):
     @cache_readonly
     def adj_D2(self):
         return 1.0 - (float(self.n) - 1.0)/(float(self.n) - float(self.k)) * (1.0-self.D2)
+    
+    @cache_readonly
+    def pseudoR2(self):
+        return 1 - (self.llf/self.llnull)
+    
+    @cache_readonly
+    def adj_pseudoR2(self):
+        return 1 - ((self.llf-self.k)/self.llnull)
+    

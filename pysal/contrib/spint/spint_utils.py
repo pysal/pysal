@@ -21,7 +21,7 @@ def sorensen(model):
     """
     Sorensen similarity index
 
-    For use on regression type spatial interaction models; N = sample size
+    For use on spatial interaction models; N = sample size
     rather than N = number of locations and normalized by N instead of N**2
     """
     try:
@@ -37,3 +37,19 @@ def sorensen(model):
     num = 2.0 * np.min(YYhat, axis = 1)
     den = yhat + y
     return (1.0/N) * (np.sum(num.reshape((-1,1))/den.reshape((-1,1))))
+    
+def srmse(model):
+    """
+    Standardized root mean square error
+    """
+    n = model.n
+    try:
+        y = model.y.reshape((-1,1))
+    except:
+        y = model.f.reshape((-1,1))
+    try:
+        yhat = model.yhat.reshape((-1,1))
+    except:
+        yhat = model.mu.reshape((-1,1))
+    srmse = ((np.sum((y-yhat)**2)/n)**.5)/(np.sum(y)/n)
+    return srmse
