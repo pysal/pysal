@@ -2,11 +2,6 @@
 color handling for mapping and geovisualization
 """
 
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-import matplotlib.colors as mpc
-
-
 
 try:
     import palettable as pltt
