@@ -13,6 +13,7 @@ started in spatial interaction modelling (Working Paper No. 184). UCL: Citeseer.
 """
 
 import unittest
+import math
 import numpy as np
 from pysal.contrib.spint import gravity as grav
 
@@ -160,7 +161,7 @@ class TestGravity(unittest.TestCase):
         dij = np.array(self.dij).reshape((-1,1))
         model = grav.BaseGravity(f, dij, 'exp', Quasi=True)
         np.testing.assert_allclose(model.params, [0.01641585], atol = .0001)
-        self.assertEqual(model.aic, None)
+        self.assertTrue(math.isnan(model.aic))
         np.testing.assert_allclose(model.cov_params, [[ 0.00079749]],
                 atol=1.0e-8)
         self.assertAlmostEqual(model.deviance, 1087408.9707170483, delta = .0001)
