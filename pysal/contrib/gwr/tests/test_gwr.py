@@ -8,22 +8,20 @@ from pysal.contrib.gwr.diagnostics import get_AICc, get_AIC, get_BIC, get_CV
 from pysal.contrib.glm.family import Gaussian, Poisson, Binomial
 import numpy as np
 import pysal
-import os
 
 class TestGWRGaussian(unittest.TestCase):
     def setUp(self):
-        os.chdir('/Users/toshan/dev/pysal/pysal/contrib/gwr/examples/georgia')
-        data = pysal.open('georgia/GData_utm.csv')
+        data = pysal.open(pysal.examples.get_path('GData_utm.csv'))
         self.coords = zip(data.by_col('X'), data.by_col('Y'))
         self.y = np.array(data.by_col('PctBach')).reshape((-1,1))
         rural  = np.array(data.by_col('PctRural')).reshape((-1,1))
         pov = np.array(data.by_col('PctPov')).reshape((-1,1)) 
         black = np.array(data.by_col('PctBlack')).reshape((-1,1))
         self.X = np.hstack([rural, pov, black])
-        self.BS_F = pysal.open('georgia_results/georgia_BS_F_listwise.csv')
-        self.BS_NN = pysal.open('georgia_results/georgia_BS_NN_listwise.csv')
-        self.GS_F = pysal.open('georgia_results/georgia_GS_F_listwise.csv')
-        self.GS_NN = pysal.open('georgia_results/georgia_GS_NN_listwise.csv')
+        self.BS_F = pysal.open(pysal.examples.get_path('georgia_BS_F_listwise.csv'))
+        self.BS_NN = pysal.open(pysal.examples.get_path('georgia_BS_NN_listwise.csv'))
+        self.GS_F = pysal.open(pysal.examples.get_path('georgia_GS_F_listwise.csv'))
+        self.GS_NN = pysal.open(pysal.examples.get_path('georgia_GS_NN_listwise.csv'))
 
     def test_BS_F(self):
         est_Int = self.BS_F.by_col(' est_Intercept')
@@ -233,8 +231,7 @@ class TestGWRGaussian(unittest.TestCase):
         
 class TestGWRPoisson(unittest.TestCase):
     def setUp(self):
-        os.chdir('/Users/toshan/dev/pysal/pysal/contrib/gwr/examples/tokyo')
-        data = pysal.open('tokyo/tokyomortality.csv', mode='rU')
+        data = pysal.open(pysal.examples.get_path('Tokyomortality.csv'), mode='Ur')
         self.coords = zip(data.by_col('X_CENTROID'), data.by_col('Y_CENTROID'))
         self.y = np.array(data.by_col('db2564')).reshape((-1,1))
         self.off = np.array(data.by_col('eb2564')).reshape((-1,1))
@@ -243,10 +240,10 @@ class TestGWRPoisson(unittest.TestCase):
         POP = np.array(data.by_col('POP65')).reshape((-1,1))
         UNEMP = np.array(data.by_col('UNEMP')).reshape((-1,1))
         self.X = np.hstack([OCC,OWN,POP,UNEMP])
-        self.BS_F = pysal.open('tokyo_results_no_off/tokyo_BS_F_listwise.csv')
-        self.BS_NN = pysal.open('tokyo_results_no_off/tokyo_BS_NN_listwise.csv')
-        self.GS_F = pysal.open('tokyo_results_no_off/tokyo_GS_F_listwise.csv')
-        self.GS_NN = pysal.open('tokyo_results_no_off/tokyo_GS_NN_listwise.csv')
+        self.BS_F = pysal.open(pysal.examples.get_path('tokyo_BS_F_listwise.csv'))
+        self.BS_NN = pysal.open(pysal.examples.get_path('tokyo_BS_NN_listwise.csv'))
+        self.GS_F = pysal.open(pysal.examples.get_path('tokyo_GS_F_listwise.csv'))
+        self.GS_NN = pysal.open(pysal.examples.get_path('tokyo_GS_NN_listwise.csv'))
 
     def test_BS_F(self):
         est_Int = self.BS_F.by_col(' est_Intercept')
@@ -447,8 +444,7 @@ class TestGWRPoisson(unittest.TestCase):
 
 class TestGWRBinomial(unittest.TestCase):
     def setUp(self):
-        os.chdir('/Users/toshan/dev/pysal/pysal/contrib/gwr/examples/clearwater')
-        data = pysal.open('clearwater/landslides.csv')
+        data = pysal.open(pysal.examples.get_path('landslides.csv'))
         self.coords = zip(data.by_col('X'), data.by_col('Y'))
         self.y = np.array(data.by_col('Landslid')).reshape((-1,1))
         ELEV  = np.array(data.by_col('Elev')).reshape((-1,1))
@@ -458,11 +454,10 @@ class TestGWRBinomial(unittest.TestCase):
         SOUTH = np.array(data.by_col('AbsSouth')).reshape((-1,1))
         DIST = np.array(data.by_col('DistStrm')).reshape((-1,1))
         self.X = np.hstack([ELEV, SLOPE, SIN, COS, SOUTH, DIST])
-
-        self.BS_F = pysal.open('clearwater_results/clearwater_BS_F_listwise.csv')
-        self.BS_NN = pysal.open('clearwater_results/clearwater_BS_NN_listwise.csv')
-        self.GS_F = pysal.open('clearwater_results/clearwater_GS_F_listwise.csv')
-        self.GS_NN = pysal.open('clearwater_results/clearwater_GS_NN_listwise.csv')
+        self.BS_F = pysal.open(pysal.examples.get_path('clearwater_BS_F_listwise.csv'))
+        self.BS_NN = pysal.open(pysal.examples.get_path('clearwater_BS_NN_listwise.csv'))
+        self.GS_F = pysal.open(pysal.examples.get_path('clearwater_GS_F_listwise.csv'))
+        self.GS_NN = pysal.open(pysal.examples.get_path('clearwater_GS_NN_listwise.csv'))
 
     def test_BS_F(self):
         est_Int = self.BS_F.by_col(' est_Intercept')

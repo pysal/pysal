@@ -8,12 +8,10 @@ from pysal.contrib.glm.family import Gaussian, Poisson, Binomial
 from pysal.contrib.gwr.sel_bw import Sel_BW
 import numpy as np
 import pysal
-import os
 
 class TestSelBW(unittest.TestCase):
     def setUp(self):
-        os.chdir('/Users/toshan/dev/pysal/pysal/contrib/gwr/examples/georgia')
-        data = pysal.open('georgia/GData_utm.csv')
+        data = pysal.open(pysal.examples.get_path('GData_utm.csv'))
         self.coords = zip(data.by_col('X'), data.by_col('Y'))
         self.y = np.array(data.by_col('PctBach')).reshape((-1,1))
         rural  = np.array(data.by_col('PctRural')).reshape((-1,1))
