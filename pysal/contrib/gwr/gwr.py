@@ -1,13 +1,11 @@
 import numpy as np
 import numpy.linalg as la
-from kernels import fix_gauss, fix_bisquare, fix_exp, adapt_gauss, adapt_bisquare, adapt_exp
+from kernels import *
 import pysal.spreg.user_output as USER
-import sys
-sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm/')
-from family import Gaussian, Binomial, Poisson
-from glm import GLM, GLMResults
-from iwls import iwls
-from utils import cache_readonly
+from pysal.contrib.glm.family import Gaussian, Binomial, Poisson
+from pysal.contrib.glm.glm import GLM, GLMResults
+from pysal.contrib.glm.iwls import iwls
+from pysal.contrib.glm.utils import cache_readonly
 
 fk = {'gaussian': fix_gauss, 'bisquare': fix_bisquare, 'exponential': fix_exp}
 ak = {'gaussian': adapt_gauss, 'bisquare': adapt_bisquare, 'exponential': adapt_exp}

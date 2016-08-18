@@ -1,9 +1,7 @@
 import unittest
 import numpy as np
 import pysal
-import sys
-sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/gwr')
-from kernels import *
+from pysal.contrib.gwr.kernels import *
 
 PEGP = pysal.examples.get_path
 

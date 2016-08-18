@@ -4,11 +4,8 @@ GWR is tested against results from GWR4
 """
 
 import unittest
-import sys
-sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/gwr')
-sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
-from family import Gaussian, Poisson, Binomial
-from sel_bw import Sel_BW
+from pysal.contrib.glm.family import Gaussian, Poisson, Binomial
+from pysal.contrib.gwr.sel_bw import Sel_BW
 import numpy as np
 import pysal
 import os

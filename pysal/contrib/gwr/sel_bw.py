@@ -3,13 +3,11 @@
 #(1) Add functionality to allow GWR object to be passed into Sel_BW instead of GWR
 #parameters
 
-from kernels import fix_gauss, fix_bisquare, fix_exp, adapt_gauss, adapt_bisquare, adapt_exp
+from kernels import *
 from search import golden_section, equal_interval
-import sys
-sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
-from family import Gaussian, Poisson, Binomial
-from diagnostics import get_AICc, get_AIC, get_BIC, get_CV
 from gwr import GWR
+from pysal.contrib.glm.family import Gaussian, Poisson, Binomial
+from diagnostics import get_AICc, get_AIC, get_BIC, get_CV
 from scipy.spatial.distance import pdist, squareform
 from pysal.common import KDTree
 import numpy as np

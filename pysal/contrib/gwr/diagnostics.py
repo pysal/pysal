@@ -4,9 +4,7 @@ Diagnostics for estimated gwr modesl
 __author__ = ""
 
 import numpy as np
-import sys
-sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
-from family import Gaussian, Poisson, Binomial
+from pysal.contrib.glm.family import Gaussian, Poisson, Binomial
 
 def get_AICc(gwr):
     """
