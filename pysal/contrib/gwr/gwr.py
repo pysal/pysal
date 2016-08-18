@@ -1,3 +1,7 @@
+#Main GWR classes
+
+__author__ = "Taylor Oshan Tayoshan@gmail.com"
+
 import numpy as np
 import numpy.linalg as la
 from kernels import *

@@ -1,3 +1,7 @@
+#Bandwidth optimization methods
+
+__author__ = "Taylor Oshan"
+
 import numpy as np
 
 def golden_section(a, c, delta, function, tol, max_iter, int_score=False):

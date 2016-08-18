@@ -1,7 +1,6 @@
-# GWR Bandwidth selection
-#TODO
-#(1) Add functionality to allow GWR object to be passed into Sel_BW instead of GWR
-#parameters
+# GWR Bandwidth selection class
+
+__author__ = "Taylor Oshan Tayoshan@gmail.com"
 
 from kernels import *
 from search import golden_section, equal_interval

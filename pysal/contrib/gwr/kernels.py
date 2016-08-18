@@ -1,8 +1,8 @@
 # GWR kernel function specifications
-import sys
-sys.path.append('/Users/toshan/projects/GIS596/pysal/pysal/weights/')
-from Distance import Kernel
-#from pysal.weights.Distance import Kernel 
+
+__author__ = "Taylor Oshan tayoshan@gmail.com" 
+
+from pysal.weights.Distance import Kernel 
 
 
 #adaptive specifications should be parameterized with nn-1 to match original gwr
