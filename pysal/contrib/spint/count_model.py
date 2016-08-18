@@ -7,11 +7,8 @@ __author__ = "Taylor Oshan tayoshan@gmail.com"
 
 import numpy as np
 import sys
-#from pysal.contrib.glm.glm import GLM
-#from pysal.contrib.glm.family import Poisson
-sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
-from glm import GLM
-from family import Poisson, QuasiPoisson
+from pysal.contrib.glm.glm import GLM
+from pysal.contrib.glm.family import Poisson, QuasiPoisson
 
 class CountModel(object):
     """

@@ -12,13 +12,8 @@ __author__ = 'Taylor Oshan tayoshan@gmail.com'
 import unittest
 import numpy as np
 import pysal
-#from pysal.contrib.spint.count_model import CountModel
-#from pysal.contrib.glm.family import Poisson
-import sys
-sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/spint/')
-from count_model import CountModel
-sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
-from family import Poisson
+from pysal.contrib.spint.count_model import CountModel
+from pysal.contrib.glm.family import Poisson
 
 class TestCountModel(unittest.TestCase):
     """Tests CountModel class"""
