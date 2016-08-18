@@ -985,7 +985,7 @@ class Binomial(Family):
         else:
             return endog, np.ones(endog.shape[0])
 
-    def deviance(self, endog, mu, freq_weights=1, scale=1.):
+    def deviance(self, endog, mu, freq_weights=1, scale=1., axis=None):
         r'''
         Deviance function for either Bernoulli or Binomial data.
 
@@ -1031,13 +1031,13 @@ class Binomial(Family):
         if np.shape(self.n) == () and self.n == 1:
             one = np.equal(endog, 1)
             return -2 * np.sum((one * np.log(mu + 1e-200) + (1-one) *
-                               np.log(1 - mu + 1e-200)) * freq_weights)
+                               np.log(1 - mu + 1e-200)) * freq_weights, axis=axis)
 
         else:
             return 2 * np.sum(self.n * freq_weights *
                               (endog * np.log(endog/mu + 1e-200) +
                                (1 - endog) * np.log((1 - endog) /
-                               (1 - mu) + 1e-200)))
+                               (1 - mu) + 1e-200)), axis=axis)
 
     def resid_dev(self, endog, mu, scale=1.):
         r"""
@@ -1092,8 +1092,7 @@ class Binomial(Family):
             return (np.sign(endog - mu) *
                     np.sqrt(2 * self.n *
                             (endog * np.log(endog/mu + 1e-200) +
-                             (1 - endog) * np.log((1 - endog)/(1 - mu) +
-                                                  1e-200)))/scale)
+                             (1 - endog) * np.log((1 - endog)/(1 - mu) + 1e-200)))/scale)
 
     def loglike(self, endog, mu, freq_weights=1, scale=1.):
         r"""
