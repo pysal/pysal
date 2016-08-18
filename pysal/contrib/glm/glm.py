@@ -1,14 +1,12 @@
 
 import numpy as np
 import numpy.linalg as la
-import family
 from pysal.spreg.utils import RegressionPropsY, spdot
-from iwls import iwls
 import pysal.spreg.user_output as USER
-import sys
-sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
 from utils import cache_readonly
 from base import LikelihoodModelResults
+import family
+from iwls import iwls
 
 __all__ = ['GLM']
 
@@ -74,7 +72,7 @@ class GLM(RegressionPropsY):
         else:
             self.X = X
         self.family = family
-        self.k = self.X.shape[1]
+        self.k = X.shape[1]
         self.df_model = self.X.shape[1] - 1
         self.df_resid = self.n - self.df_model - 1
         if offset is None:
@@ -195,6 +193,10 @@ class GLMResults(LikelihoodModelResults):
                         percent deviance explained
         adj_D2        : float
                         adjusted percent deviance explained
+        pseudo_R2       : float
+                        McFadden's pseudo R2  (coefficient of determination) 
+        adj_pseudoR2    : float
+                        adjusted McFadden's pseudo R2
         resid_response          : array
                                   response residuals; defined as y-mu
         resid_pearson           : array
@@ -305,7 +307,7 @@ class GLMResults(LikelihoodModelResults):
     @cache_readonly
     def aic(self):
         if isinstance(self.family, family.QuasiPoisson):
-        	return None
+        	return np.nan
         else:
             return -2 * self.llf + 2*(self.df_model+1)
 
@@ -322,3 +324,12 @@ class GLMResults(LikelihoodModelResults):
     @cache_readonly
     def adj_D2(self):
         return 1.0 - (float(self.n) - 1.0)/(float(self.n) - float(self.k)) * (1.0-self.D2)
+    
+    @cache_readonly
+    def pseudoR2(self):
+        return 1 - (self.llf/self.llnull)
+    
+    @cache_readonly
+    def adj_pseudoR2(self):
+        return 1 - ((self.llf-self.k)/self.llnull)
+    
