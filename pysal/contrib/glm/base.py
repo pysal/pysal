@@ -1,17 +1,8 @@
 
 from __future__ import print_function
-#from statsmodels.compat.python import iterkeys, lzip, range, reduce
 import numpy as np
 from scipy import stats
-#from statsmodels.base.data import handle_data
-#from statsmodels.tools.tools import recipr, nan_dot
-#from statsmodels.stats.contrast import ContrastResults, WaldTestResults
 from utils import cache_readonly
-#import statsmodels.base.wrapper as wrap
-#from statsmodels.tools.numdiff import approx_fprime
-#from statsmodels.formula import handle_formula_data
-#from statsmodels.compat.numpy import np_matrix_rank
-#from statsmodels.base.optimizer import Optimizer
 
 class Results(object):
     """
