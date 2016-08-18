@@ -1,3 +1,11 @@
+"""
+Various functions to test hypotheses regarding the dispersion of the variance of
+a variable.
+
+"""
+
+__author__ = "Taylor Oshan tayoshan@gmail.com"
+
 #from pysal.contrib.glm.glm import GLM
 #from pysal.contrib.glm.family import Poisson
 import sys
@@ -47,7 +55,6 @@ def phi_disp(model):
     pval = stats.norm.sf(zval)
 
     return np.array([phi, zval, pval])
-
 
 def alpha_disp(model, alt_var=lambda x: x):
     """

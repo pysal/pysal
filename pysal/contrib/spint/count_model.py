@@ -1,5 +1,6 @@
 """
-Base clases for count models
+CountModel class for dispatching different types of count models and different
+types of estimation technqiues.
 """
 
 __author__ = "Taylor Oshan tayoshan@gmail.com"

@@ -1,5 +1,9 @@
+"""
+Classes for statistics for testing hypotheses of spatial autocorrelation amongst
+vectors. 
+"""
 
-_author_ = "Taylor Oshan tayoshan@gmail.com, Levi Wolf levo.john.wolf@gmail.com"
+_author_ = "Taylor Oshan tayoshan@gmail.com, Levi Wolf levi.john.wolf@gmail.com"
 
 import numpy as np
 import scipy.stats as stats
@@ -83,6 +87,29 @@ class VecMoran:
                    (if permutations>0)
                    p-value based on standard normal approximation from
                    permutations
+    Examples
+    --------
+
+    >>> vecs = np.array([[1, 55, 60, 100, 500], 
+    >>>                 [2, 60, 55, 105, 501], 
+    >>>                 [3, 500, 55, 155, 500], 
+    >>>                 [4, 505, 60, 160, 500], 
+    >>>                 [5, 105, 950, 105, 500], 
+    >>>                 [6, 155, 950, 155, 499]])
+    >>> origins = vecs[:, 1:3]
+    >>> dests = vecs[:, 3:5]
+    >>> wo = DistanceBand(origins, threshold=9999, alpha=-1.5, binary=False)
+    >>> wd = DistanceBand(dests, threshold=9999, alpha=-1.5, binary=False)
+    >>> vmo = VecMoran(vecs, wo)
+    >>> vmd = VecMoran(vecs, wd)
+    >>> vmo.I
+    0.645944594367
+    >>> vmo.p_z_sim
+    0.113299387475
+    >>>  vmd.I
+    -0.764603695022
+    >>>  vmd.p_z_sim
+    0.200046111057
     """
 
 
@@ -168,7 +195,6 @@ class VecMoran:
     def __calc(self, z):
         zl = self.slag(self.w, z)
         inum = np.sum(zl)
-        #print inum
         return self.n / self.w.s0 * inum / self.uv2ss
     
     def newD(self, oldO, oldD, newO):
@@ -225,7 +251,7 @@ class VecMoran:
        
     def slag(self, w, y):
         """
-        Spatial lag operator.
+        Dense spatial lag operator for.
         If w is row standardized, returns the average of each observation's neighbors;
         if not, returns the weighted sum of each observation's neighbors.
         Parameters
@@ -241,23 +267,3 @@ class VecMoran:
         """
         return np.array(w.sparse.todense()) * y
 
-if __name__ == '__main__':
-    vecs = np.array([[1, 55, 60, 100, 500], [2, 60, 55, 105, 501], [3, 500, 55, 155, 500], [4, 505, 60, 160, 500], [5, 105, 950, 105, 500], [6, 155, 950, 155, 499]])
-    origins = vecs[:, 1:3]
-    dests = vecs[:, 3:5]
-    wo = DistanceBand(origins, threshold=9999, alpha=-1.5, binary=False)
-    wd = DistanceBand(dests, threshold=9999, alpha=-1.5, binary=False)
-    vmo = VecMoran(vecs, wo)
-    vmd = VecMoran(vecs, wd)
-    print vmo.I
-    print vmo.p_z_sim
-    print vmd.I
-    print vmd.p_z_sim
-
-
-'''
-    def w(self, vectors, beta = -1.5):
-        w = dist.squareform(dist.pdist(vectors)) ** (beta)
-        np.fill_diagonal(w, 0)
-        return w
-'''

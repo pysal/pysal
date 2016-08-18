@@ -1,3 +1,9 @@
+"""
+Useful functions for analyzing spatial interaction data.
+"""
+
+__author__ = "Taylor Oshan tayoshan@gmail.com"
+
 import numpy as np
 
 def CPC(model):

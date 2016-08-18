@@ -1,9 +1,15 @@
+"""
+Function to efficiently compute sparse categorical vairables for regression
+deisgn matrices.
+"""
+
+__author__ = "Taylor Oshan tayoshan@gmail.com"
+
 from scipy import sparse as sp
 import numpy as np
 from collections import defaultdict
 from functools import partial
 from itertools import count
-
 
 def spcategorical(index):
     '''
@@ -33,36 +39,6 @@ def spcategorical(index):
         return sp.csr_matrix((np.ones(n), index, indptr))
     else:
         raise IndexError("The index %s is not understood" % index)
-
-#older and very slow
-"""
-def spcategorical(data):
-    '''
-    Returns a dummy matrix given an array of categorical variables.
-    Parameters
-    ----------
-    data : array
-        A 1d vector of the categorical variable.
-
-    Returns
-    --------
-    dummy_matrix
-        A sparse matrix of dummy (indicator/binary) float variables for the
-        categorical data.  
-
-    '''
-    if np.squeeze(data).ndim == 1:
-        tmp_arr = np.unique(data)
-        tmp_dummy = sp.csr_matrix((0, len(data)))
-        for each in tmp_arr[:, None]:
-            row = sp.csr_matrix((each == data).astype(float))
-            tmp_dummy = sp.vstack([tmp_dummy, row])
-        tmp_dummy = tmp_dummy.T
-        return tmp_dummy
-    else:
-        raise IndexError("The index %s is not understood" % col)
-
-"""
 
 #old and slow
 """

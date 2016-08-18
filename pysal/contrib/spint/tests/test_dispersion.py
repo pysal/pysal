@@ -1,10 +1,9 @@
 
 """
-Tests for CountModel class, which includes various linear models designed for
-count data
+Tests for regressiom based dispersion tests (Cameron & Trivedi, 2013)
 
-Test data is the Columbus dataset after it has been rounded to integers to act
-as count data. Results are verified using corresponding functions in R.
+Cameron, Colin A. & Trivedi, Pravin K. (2013) Regression Analysis of Count Data.
+    Camridge University Press: New York, New York. 
 
 """
 
@@ -22,14 +21,13 @@ from dispersion import phi_disp, alpha_disp
 sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
 from family import Poisson
 
-class TestCountModel(unittest.TestCase):
-    """Tests CountModel class"""
+class TestDispersion(unittest.TestCase):
 
     def setUp(self):
         db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
         y =  np.array(db.by_col("HOVAL"))
         y = np.reshape(y, (49,1))
-        self.y = np.round(y).astype(int)
+        self.y = np.round(y).astype(int) 
         X = []
         X.append(db.by_col("INC"))
         X.append(db.by_col("CRIME"))

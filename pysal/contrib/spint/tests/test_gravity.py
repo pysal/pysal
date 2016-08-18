@@ -12,14 +12,9 @@ started in spatial interaction modelling (Working Paper No. 184). UCL: Citeseer.
 
 """
 
-__author__ = 'Taylor Oshan tayoshan@gmail.com'
-
 import unittest
 import numpy as np
-#from pysal.contrib.spint import gravity as grav
-import sys
-sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/spint/')
-import gravity as grav
+from pysal.contrib.spint import gravity as grav
 
 class TestGravity(unittest.TestCase):
     """Tests for gravity-type models"""
@@ -660,9 +655,6 @@ class TestGravity(unittest.TestCase):
         self.assertAlmostEquals(model.pseudoR2, .943539912198)
         self.assertAlmostEquals(model.adj_pseudoR2, .943335452826)
         self.assertAlmostEquals(model.SRMSE, 0.37928618532947161)
-
-
-
 
 if __name__ == '__main__':
     unittest.main()
