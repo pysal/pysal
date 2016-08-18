@@ -6,12 +6,8 @@ a variable.
 
 __author__ = "Taylor Oshan tayoshan@gmail.com"
 
-#from pysal.contrib.glm.glm import GLM
-#from pysal.contrib.glm.family import Poisson
-import sys
-sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
-from glm import GLM
-from family import Poisson
+from pysal.contrib.glm.glm import GLM
+from pysal.contrib.glm.family import Poisson
 import numpy as np
 import scipy.stats as stats
 from types import FunctionType
