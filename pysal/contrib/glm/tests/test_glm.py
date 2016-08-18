@@ -15,6 +15,7 @@ from family import Gaussian, Poisson, Binomial, QuasiPoisson
 import numpy as np
 import pysal
 import unittest
+import math
 
 
 class TestGaussian(unittest.TestCase):
@@ -298,10 +299,10 @@ class TestPoisson(unittest.TestCase):
         self.assertEqual(results.n, 49)
         self.assertEqual(results.df_model, 2)
         self.assertEqual(results.df_resid, 46)
-        self.assertEqual(results.aic, None)
+        self.assertTrue(math.isnan(results.aic))
         self.assertAlmostEqual(results.bic, 51.436404535087661)
         self.assertAlmostEqual(results.deviance, 230.46013824817649)
-        self.assertEqual(results.llf, None)
+        self.assertTrue(math.isnan(results.llf))
         self.assertAlmostEqual(results.null_deviance, 376.97293610347361)
         self.assertAlmostEqual(results.scale, 5.7526658548022223)
         np.testing.assert_allclose(results.params, [ 3.92159085,  0.01183491,

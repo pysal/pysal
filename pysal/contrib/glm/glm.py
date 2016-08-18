@@ -1,14 +1,12 @@
 
 import numpy as np
 import numpy.linalg as la
-import family
 from pysal.spreg.utils import RegressionPropsY, spdot
-from iwls import iwls
 import pysal.spreg.user_output as USER
-import sys
-sys.path.append('/Users/toshan/dev/pysal/pysal/contrib/glm')
 from utils import cache_readonly
 from base import LikelihoodModelResults
+import family
+from iwls import iwls
 
 __all__ = ['GLM']
 
@@ -309,7 +307,7 @@ class GLMResults(LikelihoodModelResults):
     @cache_readonly
     def aic(self):
         if isinstance(self.family, family.QuasiPoisson):
-        	return None
+        	return np.nan
         else:
             return -2 * self.llf + 2*(self.df_model+1)
 
