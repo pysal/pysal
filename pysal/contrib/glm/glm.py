@@ -72,7 +72,7 @@ class GLM(RegressionPropsY):
         else:
             self.X = X
         self.family = family
-        self.k = X.shape[1]
+        self.k = self.X.shape[1]
         self.df_model = self.X.shape[1] - 1
         self.df_resid = self.n - self.df_model - 1
         if offset is None:

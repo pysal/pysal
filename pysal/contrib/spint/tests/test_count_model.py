@@ -35,7 +35,7 @@ class TestCountModel(unittest.TestCase):
             -0.01371397], atol=1.0e-8)
         self.assertIsInstance(results.family, Poisson)
         self.assertEqual(results.n, 49)
-        self.assertEqual(results.k, 2)
+        self.assertEqual(results.k, 3)
         self.assertEqual(results.df_model, 2)
         self.assertEqual(results.df_resid, 46)
         np.testing.assert_allclose(results.yhat, 
@@ -80,7 +80,7 @@ class TestCountModel(unittest.TestCase):
         self.assertAlmostEqual(results.llf, -247.42592089969378)
         self.assertAlmostEqual(results.aic, 500.85184179938756)
         self.assertAlmostEqual(results.D2, 0.388656011675)
-        self.assertAlmostEqual(results.adj_D2, 0.375648692774)
+        self.assertAlmostEqual(results.adj_D2, 0.36207583826952761)
 
 if __name__ == '__main__':
 	    unittest.main()
