@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 """Simple tools to query github.com and gather stats about issues.
+
+Adapted from: https://github.com/ipython/ipython/blob/master/tools/github_stats.py
 """
 #-----------------------------------------------------------------------------
 # Imports
@@ -14,6 +16,9 @@ import sys
 from datetime import datetime, timedelta
 from subprocess import check_output
 from urllib2 import urlopen
+import ssl
+
+context = ssl._create_unverified_context()
 
 #-----------------------------------------------------------------------------
 # Globals
@@ -43,7 +48,7 @@ def get_paged_request(url):
     results = []
     while url:
         print("fetching %s" % url, file=sys.stderr)
-        f = urlopen(url)
+        f = urlopen(url, context=context)
         results.extend(json.load(f))
         links = parse_link_header(f.headers)
         url = links.get('next')

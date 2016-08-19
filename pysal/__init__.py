@@ -45,7 +45,6 @@ try:
     from pysal.contrib import pdio
     pysal.common.pandas = pandas
 except ImportError:
-    print('Pandas adapters not loaded')
     pysal.common.pandas = None
     
 # Load the IOHandlers

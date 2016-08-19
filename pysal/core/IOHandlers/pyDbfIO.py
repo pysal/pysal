@@ -4,6 +4,8 @@ import struct
 import itertools
 from warnings import warn
 import pysal
+import os
+import time
 
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ['DBF']
@@ -272,7 +274,9 @@ class DBF(pysal.core.Tables.DataTable):
         POS = self.f.tell()
         self.f.seek(0)
         ver = 3
-        now = datetime.datetime.now()
+        now = datetime.datetime.utcfromtimestamp(
+            int(os.environ.get('SOURCE_DATE_EPOCH', time.time())),
+        )
         yr, mon, day = now.year - 1900, now.month, now.day
         numrec = self.numrec
         numfields = len(self.header)
