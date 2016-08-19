@@ -284,11 +284,11 @@ def lincs(network, event, base, weight, dist=None, lisa_func='moran', sim_method
     w, edges, e, b, edges_geom = None, None, None, None, []
     if weight == 'Node-based':
         w, edges = node_weights(network, attribute=True)
-	n = len(edges)
-	e, b = np.zeros(n), np.zeros(n)
-	for edge in edges:
+        n = len(edges)
+        e, b = np.zeros(n), np.zeros(n)
+        for edge in edges:
             edges_geom.append(edges[edge][0])
-	    e[edge] = edges[edge][event]
+            e[edge] = edges[edge][event]
             b[edge] = getBase(edges, edge, base)
         w.id_order = edges.keys()
     elif dist is not None:
@@ -298,50 +298,50 @@ def lincs(network, event, base, weight, dist=None, lisa_func='moran', sim_method
                 network[n1][n2] = network[n1][n2][0]
         w, edges = dist_weights(network, id2edgepoints, edge2id, dist)
         n = len(id2attr)
-	e, b = np.zeros(n), np.zeros(n)
+        e, b = np.zeros(n), np.zeros(n)
         if base:
             base -= 1
-	for edge in id2attr:
+        for edge in id2attr:
             edges_geom.append(edges[edge])
-	    e[edge] = id2attr[edge][event - 1]
+            e[edge] = id2attr[edge][event - 1]
             b[edge] = getBase(id2attr, edge, base)
         w.id_order = id2attr.keys()
 
     Is, p_sim, Zs = None,None, None
     if sim_method == 'permutation':
         if lisa_func == pysal.esda.moran.Moran_Local:
-	    lisa_i = lisa_func(e*1.0/b,w,transformation="r",permutations=sim_num)
+            lisa_i = lisa_func(e*1.0/b,w,transformation="r",permutations=sim_num)
             Is = lisa_i.Is
             Zs = lisa_i.q
         else:
-	    lisa_i = lisa_func(e*1.0/b,w,transform="R",permutations=sim_num,star=star)
+            lisa_i = lisa_func(e*1.0/b,w,transform="R",permutations=sim_num,star=star)
             Is = lisa_i.Gs
             Zs = lisa_i.Zs
         p_sim = lisa_i.p_sim
     else:
-	sims = None
+        sims = None
         if lisa_func == pysal.esda.moran.Moran_Local:
-	    lisa_i = lisa_func(e*1.0/b,w,transformation="r",permutations=0)
+            lisa_i = lisa_func(e*1.0/b,w,transformation="r",permutations=0)
             Is = lisa_i.Is
             Zs = lisa_i.q
         else:
-	    lisa_i = lisa_func(e*1.0/b,w,transform="R",permutations=0,star=star)
-	    Is = lisa_i.Gs
-	    Zs = lisa_i.Zs
-	if sim_method == 'binomial':
-	    sims = unconditional_sim(e, b, sim_num)
-	elif sim_method == 'poisson':
-	    sims = unconditional_sim_poisson(e, b, sim_num)
-	else:
-	    sims = conditional_multinomial(e, b, sim_num)
-        if lisa_func == pysal.esda.moran.Moran_Local:
-	    for i in range(sim_num):
-		sims[:,i] = lisa_func(sims[:,i]*1.0/b,w,transformation="r",permutations=0).Is
+            lisa_i = lisa_func(e*1.0/b,w,transform="R",permutations=0,star=star)
+            Is = lisa_i.Gs
+            Zs = lisa_i.Zs
+        if sim_method == 'binomial':
+            sims = unconditional_sim(e, b, sim_num)
+        elif sim_method == 'poisson':
+            sims = unconditional_sim_poisson(e, b, sim_num)
         else:
-	    for i in range(sim_num):
-		sims[:,i] = lisa_func(sims[:,i]*1.0/b,w,permutations=0,star=star).Gs
-	sim_res = pseudo_pvalues(Is, sims)
-	p_sim = sim_res[0]
+            sims = conditional_multinomial(e, b, sim_num)
+        if lisa_func == pysal.esda.moran.Moran_Local:
+            for i in range(sim_num):
+                sims[:,i] = lisa_func(sims[:,i]*1.0/b,w,transformation="r",permutations=0).Is
+        else:
+            for i in range(sim_num):
+                sims[:,i] = lisa_func(sims[:,i]*1.0/b,w,permutations=0,star=star).Gs
+        sim_res = pseudo_pvalues(Is, sims)
+        p_sim = sim_res[0]
 
     w.transform = 'O'
     return zip(edges_geom, e, b, Is, Zs, p_sim), w
