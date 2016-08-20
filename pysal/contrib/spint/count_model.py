@@ -6,7 +6,6 @@ types of estimation technqiues.
 __author__ = "Taylor Oshan tayoshan@gmail.com"
 
 import numpy as np
-import sys
 from pysal.contrib.glm.glm import GLM
 from pysal.contrib.glm.family import Poisson, QuasiPoisson
 
@@ -40,6 +39,23 @@ class CountModel(object):
     constant    : boolean
                   True if intercept should be estimated and false otherwise.
                   Default is True.
+
+    Example
+    -------
+    >>> import pysal.contrib.spint.count_model import CountModel
+    >>> from pysal.
+    >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
+    >>> y =  np.array(db.by_col("HOVAL"))
+    >>> y = np.reshape(y, (49,1))
+    >>> self.y = np.round(y).astype(int)
+    >>> X = []
+    >>> X.append(db.by_col("INC"))
+    >>> X.append(db.by_col("CRIME"))
+    >>> self.X = np.array(X).T
+    >>> model = CountModel(self.y, self.X, family=Poisson())
+    >>> results = model.fit('GLM')
+    >>> results.params
+    array([3.92159085, 0.01183491, -0.01371397])
 
     """
     def __init__(self, y, X, family = Poisson(), constant = True):
@@ -82,15 +98,10 @@ class CountModelResults(object):
 
     Parameters
     ----------
-        model         : GLM object
-                        Pointer to GLM object with estimation parameters.
-        params         : array
-                        k*1, estimared coefficients
-        mu         : array
-                        n*1, predicted y values.
-        w             : array
-                        n*1, final weight used for iwls
-
+        results       : GLM object
+                        Pointer to GLMResults object with estimated parameters
+                        and diagnostics.
+    
     Attributes
     ----------
         model         : GLM Object
