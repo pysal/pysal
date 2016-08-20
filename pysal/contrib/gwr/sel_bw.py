@@ -1,5 +1,11 @@
 # GWR Bandwidth selection class
 
+#Thinking about removing the search method and just having optimization begin in
+#class __init__
+
+#x_glob and offset parameters dont yet do anything; former is for semiparametric
+#GWR and later is for offset variable for Poisson model
+
 __author__ = "Taylor Oshan Tayoshan@gmail.com"
 
 from kernels import *
@@ -35,7 +41,7 @@ class Sel_BW(object):
                      (x,y) of points used in bandwidth selection
     family         : string
                      GWR model type: 'Gaussian', 'logistic, 'Poisson''
-    y_off          : array
+    offset         : array
                      n*1, offset variable for Poisson model
     kernel         : string
                      kernel function: 'gaussian', 'bisquare', 'exponetial'
@@ -58,6 +64,14 @@ class Sel_BW(object):
 
     Attributes
     ----------
+    y              : array
+                     n*1, dependent variable.
+    x_glob         : array
+                     n*k1, fixed independent variable.
+    x_loc          : array
+                     n*k2, local independent variable, including constant.
+    coords         : list of tuples
+                     (x,y) of points used in bandwidth selection
     family        : string
                     GWR model type: 'Gaussian', 'logistic, 'Poisson''
     kernel        : string
@@ -78,7 +92,7 @@ class Sel_BW(object):
                     max interations if no convergence to tol
     """
     def __init__(self, coords, y, x_loc, x_glob=None, family=Gaussian(),
-            y_off=None, kernel='gaussian', fixed=False):
+            offset=None, kernel='gaussian', fixed=False):
         self.coords = coords
         self.y = y
         self.x_loc = x_loc
@@ -91,6 +105,29 @@ class Sel_BW(object):
         self.kernel = kernel
 
     def search(self, search='golden_section', criterion='AICc', bw_min=0.0, bw_max=0.0, interval=0.0, tol=1.0e-6, max_iter=200):
+        """
+        Parameters
+        ----------
+        criterion      : string
+                         bw selection criterion: 'AICc', 'AIC', 'BIC', 'CV'
+        search         : string
+                         bw search method: 'golden', 'interval'
+        bw_min         : float
+                         min value used in bandwidth search
+        bw_max         : float
+                         max value used in bandwidth search
+        interval       : float
+                         interval increment used in interval search
+        tol            : float
+                         tolerance used to determine convergence
+        max_iter       : integer
+                         max iterations if no convergence to tol
+        
+        Returns
+        -------
+        bw             : scalar
+                         optimal bandwidth value
+        """     
         self.search = search
         self.criterion = criterion
         self.bw_min = bw_min

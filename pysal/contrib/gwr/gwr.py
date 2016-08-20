@@ -1,5 +1,7 @@
 #Main GWR classes
 
+#Offset does not yet do anyhting and needs to be implemented
+
 __author__ = "Taylor Oshan Tayoshan@gmail.com"
 
 import numpy as np
@@ -167,12 +169,12 @@ class GWR(GLM):
             except:
                 raise TypeError('Unsupported kernel function  ', kernel)
         else:
-            try:
-                W = ak[kernel](all_coords, bw)
-                if points is not None:
-                	W = self._shed(W, coords, points, bw, fk[kernel])
-            except:
-                raise TypeError('Unsupported kernel function  ', kernel)
+         
+            W = ak[kernel](all_coords, bw)
+                #if points is not None:
+                	#W = self._shed(W, coords, points, bw, fk[kernel])
+            #except:
+                #raise TypeError('Unsupported kernel function  ', kernel)
         
         return W
 
