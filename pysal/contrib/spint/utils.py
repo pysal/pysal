@@ -84,11 +84,11 @@ def spcategorical(index):
     if np.squeeze(index).ndim == 1:
         id_set = np.unique(index)
         n = len(index)
-        if index.dtype.type is not np.int_:
-            mapper = defaultdict(partial(next, count()))
-            [mapper[each] for each in id_set]
-            index = [mapper[each] for each in index]
-        indptr = np.arange(n+1, dtype=int) 
+        #if index.dtype.type is not np.int_:
+        mapper = defaultdict(partial(next, count()))
+        [mapper[each] for each in id_set]
+        index = [mapper[each] for each in index]
+        indptr = np.arange(n+1, dtype=int)
         return sp.csr_matrix((np.ones(n), index, indptr))
     else:
         raise IndexError("The index %s is not understood" % index)

@@ -113,7 +113,7 @@ class VecMoran:
     """
 
 
-    def __init__(self, y, w, focus='origin', rand='A', permutations=PERMUTATIONS,
+    def __init__(self, y, w, focus='origin', rand='A', threshold=999, permutations=PERMUTATIONS,
         two_tailed=True):
         self.y = y
         self.o = y[:, 1:3]
@@ -121,6 +121,7 @@ class VecMoran:
         self.w = w
         self.focus = focus
         self.rand = rand
+        self.threshold = threshold
         self.permutations = permutations
         self.__moments()
         self.I = self.__calc(self.z)
@@ -222,13 +223,13 @@ class VecMoran:
             newOs = [np.random.permutation(self.o) for i in xrange(self.permutations)]
             sims = [np.hstack([np.arange(self.n).reshape((-1,1)), newO,
             self.newD(self.o, self.d, newO)]) for newO in newOs]
-            Ws = [DistanceBand(newO, threshold=9999, alpha=-1.5, binary=False)
+            Ws = [DistanceBand(newO, threshold=self.threshold, alpha=-1.5, binary=False)
                     for newO in newOs]
         elif focus.lower() == 'destination':
             newDs = [np.random.permutation(self.d) for i in xrange(self.permutations)]
             sims = [np.hstack([np.arange(self.n).reshape((-1,1)),
                 self.newO(self.o, self.d, newD), newD]) for newD in newDs]
-            Ws = [DistanceBand(newD, threshold=9999, alpha=-1.5, binary=False)
+            Ws = [DistanceBand(newD, threshold=self.threshold, alpha=-1.5, binary=False)
                     for newD in newDs]
 
         VMs = [VecMoran(y, Ws[i], permutations=None) for i, y in

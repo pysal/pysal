@@ -18,7 +18,6 @@ __author__ = "Taylor Oshan tayoshan@gmail.com"
 from types import FunctionType
 import numpy as np
 from scipy import sparse as sp
-import statsmodels.api as sm
 from pysal.spreg import user_output as User
 from pysal.spreg.utils import sphstack
 from pysal.contrib.glm.utils import cache_readonly
@@ -111,7 +110,15 @@ class BaseGravity(CountModel):
                       diagnostics
     Example
     -------
-    TODO
+    >>> import numpy as np
+    >>> import pysal
+    >>> from pysal.contrib.spint.gravity import BaseGravity
+    >>> db = pysal.open(pysal.examples.get_path('nyc_bikes_ct.csv'))
+    >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
+    >>> flows = np.array(db.by_col('count')).reshape((-1,1))
+    >>> model = BaseGravity(flows, cost)
+    >>> model.params
+    array([ 0.92860101])
 
     """
     def __init__(self, flows, cost, cost_func='pow', o_vars=None, d_vars=None,
@@ -136,7 +143,7 @@ class BaseGravity(CountModel):
             " function that has a scalar as a input and output")
 
         y = np.reshape(self.f, (-1,1))
-        if isinstance(self,  Gravity):
+        if isinstance(self, Gravity):
             X = np.empty((self.n, 0))
         else:
             X = sp.csr_matrix((self.n, 1))
@@ -172,7 +179,6 @@ class BaseGravity(CountModel):
             X = X[:,1:]#because empty array instantiated with extra column
         if not isinstance(self, (Gravity, Production, Attraction, Doubly)):
             X = self.cf(np.reshape(self.c, (-1,1)))
-        
         if SF:
         	raise NotImplementedError("Spatial filter model not yet implemented")
         if CD:
@@ -288,8 +294,18 @@ class Gravity(BaseGravity):
                       diagnostics
     Example
     -------
-    TODO
-
+    >>> import numpy as np
+    >>> import pysal
+    >>> from pysal.contrib.spint.gravity import Gravity
+    >>> db = pysal.open(pysal.examples.get_path('nyc_bikes_ct.csv'))
+    >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
+    >>> flows = np.array(db.by_col('count')).reshape((-1,1))
+    >>> o_cap = np.array(db.by_col('o_cap')).reshape((-1,1))
+    >>> d_cap = np.array(db.by_col('d_cap')).reshape((-1,1))
+    >>> model = Gravity(flows, o_cap, d_cap, cost, 'exp')
+    >>> model.params
+    array([ 0.87911778,  0.71080687, -0.00194626])
+    
     """
     def __init__(self, flows, o_vars, d_vars, cost,
             cost_func, constant=False, framework='GLM', SF=None, CD=None,
@@ -421,7 +437,19 @@ class Production(BaseGravity):
                       diagnostics
     Example
     -------
-    TODO
+
+    >>> import numpy as np
+    >>> import pysal
+    >>> from pysal.contrib.spint.gravity import Production
+    >>> db = pysal.open(pysal.examples.get_path('nyc_bikes_ct.csv'))
+    >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
+    >>> flows = np.array(db.by_col('count')).reshape((-1,1))
+    >>> o = np.array(db.by_col('o_tract')).reshape((-1,1))
+    >>> d_cap = np.array(db.by_col('d_cap')).reshape((-1,1))
+    >>> model = Production(flows, o, d_cap, cost, 'exp')
+    >>> model.params[-4:]
+    array([  5.38580065e+00,   5.00216058e+00,   8.55357745e-01,
+            -2.27444394e-03])
 
     """
     def __init__(self, flows, origins, d_vars, cost, cost_func, constant=False,
@@ -545,7 +573,18 @@ class Attraction(BaseGravity):
                       diagnostics
     Example
     -------
-    TODO
+    >>> import numpy as np
+    >>> import pysal
+    >>> from pysal.contrib.spint.gravity import Attraction
+    >>> db = pysal.open(pysal.examples.get_path('nyc_bikes_ct.csv'))
+    >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
+    >>> flows = np.array(db.by_col('count')).reshape((-1,1))
+    >>> d = np.array(db.by_col('d_tract')).reshape((-1,1))
+    >>> o_cap = np.array(db.by_col('o_cap')).reshape((-1,1))
+    >>> model = Attraction(flows, d, o_cap, cost, 'exp')
+    >>> model.params[-4:]
+    array([  5.23366116e+00,   4.89037868e+00,   8.82909095e-01,
+            -2.29081323e-03])
 
     """
     def __init__(self, flows, destinations, o_vars, cost, cost_func,
@@ -669,7 +708,17 @@ class Doubly(BaseGravity):
                       diagnostics
     Example
     -------
-    TODO
+    >>> import numpy as np
+    >>> import pysal
+    >>> from pysal.contrib.spint.gravity import Doubly
+    >>> db = pysal.open(pysal.examples.get_path('nyc_bikes_ct.csv'))
+    >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
+    >>> flows = np.array(db.by_col('count')).reshape((-1,1))
+    >>> d = np.array(db.by_col('d_tract')).reshape((-1,1))
+    >>> o = np.array(db.by_col('o_tract')).reshape((-1,1))
+    >>> model = Doubly(flows, o, d, cost, 'exp')
+    >>> model.params[-1:]
+    array([-0.00232112])
 
     """
     def __init__(self, flows, origins, destinations, cost, cost_func,
