@@ -356,6 +356,12 @@ class Gravity(BaseGravity):
         covs = self.ov.shape[1] + self.dv.shape[1] + 1
         results['aic'] = []
         results['deviance'] = []
+        results['pseudoR2'] = []
+        results['adj_pseudoR2'] = []
+        results['D2'] = []
+        results['adj_D2'] = []
+        results['SSI'] = []
+        results['SRMSE'] = []
         for cov in range(covs):
             results['param' + str(cov)] = []
             results['pvalue' + str(cov)] = []
@@ -369,6 +375,12 @@ class Gravity(BaseGravity):
             model = Gravity(f, o_vars, d_vars, dij, self.cf)
             results['aic'].append(model.aic)
             results['deviance'].append(model.deviance)
+            results['pseudoR2'].append(model.pseudoR2)
+            results['adj_pseudoR2'].append(model.adj_pseudoR2)
+            results['D2'].append(model.D2)
+            results['adj_D2'].append(model.adj_D2)
+            results['SSI'].append(model.SSI)
+            results['SRMSE'].append(model.SRMSE)
             for cov in range(covs):
                 results['param' + str(cov)].append(model.params[cov])
                 results['pvalue' + str(cov)].append(model.pvalues[cov])
@@ -454,6 +466,7 @@ class Production(BaseGravity):
     """
     def __init__(self, flows, origins, d_vars, cost, cost_func, constant=False,
             framework='GLM', SF=None, CD=None, Lag=None, Quasi=False):
+        self.constant = constant
         self.f = self.reshape(flows)
         self.o = self.reshape(origins)
         
@@ -486,9 +499,15 @@ class Production(BaseGravity):
                       and values are lists of location specific values
         """
         results = {}
-        covs = self.dv.shape[1] + 2
+        covs = self.dv.shape[1] + 1
         results['aic'] = []
         results['deviance'] = []
+        results['pseudoR2'] = []
+        results['adj_pseudoR2'] = []
+        results['D2'] = []
+        results['adj_D2'] = []
+        results['SSI'] = []
+        results['SRMSE'] = []
         for cov in range(covs):
             results['param' + str(cov)] = []
             results['pvalue' + str(cov)] = []
@@ -504,6 +523,12 @@ class Production(BaseGravity):
             model = Production(f, o, d_vars, dij, self.cf)
             results['aic'].append(model.aic)
             results['deviance'].append(model.deviance)
+            results['pseudoR2'].append(model.pseudoR2)
+            results['adj_pseudoR2'].append(model.adj_pseudoR2)
+            results['D2'].append(model.D2)
+            results['adj_D2'].append(model.adj_D2)
+            results['SSI'].append(model.SSI)
+            results['SRMSE'].append(model.SRMSE)
             for cov in range(covs):
                 results['param' + str(cov)].append(model.params[cov])
                 results['pvalue' + str(cov)].append(model.pvalues[cov])
@@ -620,9 +645,15 @@ class Attraction(BaseGravity):
                       and values are lists of location specific values
         """
         results = {}
-        covs = self.ov.shape[1] + 2
+        covs = self.ov.shape[1] + 1
         results['aic'] = []
         results['deviance'] = []
+        results['pseudoR2'] = []
+        results['adj_pseudoR2'] = []
+        results['D2'] = []
+        results['adj_D2'] = []
+        results['SSI'] = []
+        results['SRMSE'] = []
         for cov in range(covs):
             results['param' + str(cov)] = []
             results['pvalue' + str(cov)] = []
@@ -638,6 +669,12 @@ class Attraction(BaseGravity):
             model = Attraction(f, d, o_vars, dij, self.cf)
             results['aic'].append(model.aic)
             results['deviance'].append(model.deviance)
+            results['pseudoR2'].append(model.pseudoR2)
+            results['adj_pseudoR2'].append(model.adj_pseudoR2)
+            results['D2'].append(model.D2)
+            results['adj_D2'].append(model.adj_D2)
+            results['SSI'].append(model.SSI)
+            results['SRMSE'].append(model.SRMSE)
             for cov in range(covs):
                 results['param' + str(cov)].append(model.params[cov])
                 results['pvalue' + str(cov)].append(model.pvalues[cov])
