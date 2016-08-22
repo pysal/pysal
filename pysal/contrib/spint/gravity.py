@@ -26,8 +26,8 @@ from utils import sorensen, srmse, spcategorical
 
 class BaseGravity(CountModel):
     """
-    Base class to set up attributes common across the family of gravity-type
-    spatial interaction models
+    Base class to set up gravity-type spatial interaction models and dispatch
+    estimaton technqiues.
 
     Parameters
     ----------
@@ -49,6 +49,30 @@ class BaseGravity(CountModel):
     d_vars          : array (optional)
                       n x p; p attributes for each destination of n flows;
                       default is None
+    constant        : boolean
+                      True to include intercept in model; false by default
+    framework       : string
+                      estimation technique; currently only 'GLM' is avaialble
+    Quasi           : boolean
+                      True to estimate QuasiPoisson model; should result in same
+                      parameters as Poisson but with altered covariance; default
+                      to true which estimates Poisson model
+    SF              : array
+                      n x 1; eigenvector spatial filter to include in the model;
+                      default to None which does not include a filter; not yet
+                      implemented
+    CD              : array
+                      n x 1; competing destination term that accounts for the
+                      likelihood that alternative destinations are considered
+                      along with each destination under consideration for every
+                      OD pair; defaults to None which does not include a CD
+                      term; not yet implemented
+    Lag             : W object
+                      spatial weight for n observations (OD pairs) used to
+                      construct a spatial autoregressive model and estimator;
+                      defaults to None which does not include an autoregressive
+                      term; not yet implemented
+
 
     Attributes
     ----------
@@ -57,7 +81,7 @@ class BaseGravity(CountModel):
     n               : integer
                       number of observations
     k               : integer
-                      number of parameter estimates
+                      number of parameters
     c               : array 
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
@@ -67,6 +91,13 @@ class BaseGravity(CountModel):
                       n x p(o); p attributes for each origin of n flows
     dv              : array
                       n x p(d); p attributes for each destination of n flows
+    constant        : boolean
+                      True to include intercept in model; false by default
+    y               : array
+                      n x 1; dependent variable used in estimation including any
+                      transformations
+    X               : array
+                      n x k, design matrix used in estimation
     params          : array
                       n x k, k estimated beta coefficients; k = p(o) + p(d) + 1
     yhat            : array
@@ -83,7 +114,7 @@ class BaseGravity(CountModel):
                       value of the deviance function evalued at params;
                       see family.py for distribution-specific deviance
     resid_dev       : array
-                      k x 1, residual deviance of model
+                      n x 1, residual deviance of model
     llf             : float
                       value of the loglikelihood function evalued at params;
                       see family.py for distribution-specific loglikelihoods
@@ -251,6 +282,29 @@ class Gravity(BaseGravity):
     d_vars          : array (optional)
                       n x p; p attributes for each destination of n flows;
                       default is None
+    constant        : boolean
+                      True to include intercept in model; false by default
+    framework       : string
+                      estimation technique; currently only 'GLM' is avaialble
+    Quasi           : boolean
+                      True to estimate QuasiPoisson model; should result in same
+                      parameters as Poisson but with altered covariance; default
+                      to true which estimates Poisson model
+    SF              : array
+                      n x 1; eigenvector spatial filter to include in the model;
+                      default to None which does not include a filter; not yet
+                      implemented
+    CD              : array
+                      n x 1; competing destination term that accounts for the
+                      likelihood that alternative destinations are considered
+                      along with each destination under consideration for every
+                      OD pair; defaults to None which does not include a CD
+                      term; not yet implemented
+    Lag             : W object
+                      spatial weight for n observations (OD pairs) used to
+                      construct a spatial autoregressive model and estimator;
+                      defaults to None which does not include an autoregressive
+                      term; not yet implemented
 
     Attributes
     ----------
@@ -258,6 +312,8 @@ class Gravity(BaseGravity):
                       n x 1; observed flows; dependent variable; y
     n               : integer
                       number of observations
+    k               : integer
+                      number of parameters
     c               : array 
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
@@ -267,6 +323,13 @@ class Gravity(BaseGravity):
                       n x p(o); p attributes for each origin of n flows
     dv              : array 
                       n x p(d); p attributes for each destination of n flows
+    constant        : boolean
+                      True to include intercept in model; false by default
+    y               : array
+                      n x 1; dependent variable used in estimation including any
+                      transformations
+    X               : array
+                      n x k, design matrix used in estimation
     params          : array
                       n x k, k estimated beta coefficients; k = p(o) + p(d) + 1
     yhat            : array
@@ -282,13 +345,29 @@ class Gravity(BaseGravity):
     deviance        : float
                       value of the deviance function evalued at params;
                       see family.py for distribution-specific deviance
+    resid_dev       : array
+                      n x 1, residual deviance of model
     llf             : float
                       value of the loglikelihood function evalued at params;
                       see family.py for distribution-specific loglikelihoods
+    llnull          : float
+                      value of the loglikelihood function evaluated with only an
+                      intercept; see family.py for distribution-specific
+                      loglikelihoods
     aic             : float 
                       Akaike information criterion
-    resid           : array
-                      response residuals; defined as y-yhat
+    D2              : float
+                      percentage of explained deviance
+    adj_D2          : float
+                      adjusted percentage of explained deviance
+    pseudo_R2       : float
+                      McFadden's pseudo R2  (coefficient of determination) 
+    adj_pseudoR2    : float
+                      adjusted McFadden's pseudo R2
+    SRMSE           : float
+                      standardized root mean square error
+    SSI             : float
+                      Sorensen similarity index
     results         : object
                       Full results from estimated model. May contain addtional
                       diagnostics
@@ -408,6 +487,29 @@ class Production(BaseGravity):
     d_vars          : array (optional)
                       n x p; p attributes for each destination of n flows;
                       default is None
+    constant        : boolean
+                      True to include intercept in model; false by default
+    framework       : string
+                      estimation technique; currently only 'GLM' is avaialble
+    Quasi           : boolean
+                      True to estimate QuasiPoisson model; should result in same
+                      parameters as Poisson but with altered covariance; default
+                      to true which estimates Poisson model
+    SF              : array
+                      n x 1; eigenvector spatial filter to include in the model;
+                      default to None which does not include a filter; not yet
+                      implemented
+    CD              : array
+                      n x 1; competing destination term that accounts for the
+                      likelihood that alternative destinations are considered
+                      along with each destination under consideration for every
+                      OD pair; defaults to None which does not include a CD
+                      term; not yet implemented
+    Lag             : W object
+                      spatial weight for n observations (OD pairs) used to
+                      construct a spatial autoregressive model and estimator;
+                      defaults to None which does not include an autoregressive
+                      term; not yet implemented
 
     Attributes
     ----------
@@ -415,6 +517,8 @@ class Production(BaseGravity):
                       n x 1; observed flows; dependent variable; y
     n               : integer
                       number of observations
+    k               : integer
+                      number of parameters
     c               : array 
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
@@ -424,6 +528,13 @@ class Production(BaseGravity):
                       n x 1; index of origin id's
     dv              : array 
                       n x p; p attributes for each destination of n flows
+    constant        : boolean
+                      True to include intercept in model; false by default
+    y               : array
+                      n x 1; dependent variable used in estimation including any
+                      transformations
+    X               : array
+                      n x k, design matrix used in estimation
     params          : array
                       n x k, k estimated beta coefficients; k = # of origins + p + 1
     yhat            : array
@@ -439,11 +550,29 @@ class Production(BaseGravity):
     deviance        : float
                       value of the deviance function evalued at params;
                       see family.py for distribution-specific deviance
+    resid_dev       : array
+                      n x 1, residual deviance of model
     llf             : float
                       value of the loglikelihood function evalued at params;
                       see family.py for distribution-specific loglikelihoods
+    llnull          : float
+                      value of the loglikelihood function evaluated with only an
+                      intercept; see family.py for distribution-specific
+                      loglikelihoods
     aic             : float 
                       Akaike information criterion
+    D2              : float
+                      percentage of explained deviance
+    adj_D2          : float
+                      adjusted percentage of explained deviance
+    pseudo_R2       : float
+                      McFadden's pseudo R2  (coefficient of determination) 
+    adj_pseudoR2    : float
+                      adjusted McFadden's pseudo R2
+    SRMSE           : float
+                      standardized root mean square error
+    SSI             : float
+                      Sorensen similarity index
     results         : object
                       Full results from estimated model. May contain addtional
                       diagnostics
@@ -556,6 +685,34 @@ class Attraction(BaseGravity):
     o_vars          : array (optional)
                       n x p; p attributes for each origin of  n flows; default
                       is None
+    constant        : boolean
+                      True to include intercept in model; false by default
+    y               : array
+                      n x 1; dependent variable used in estimation including any
+                      transformations
+    X               : array
+                      n x k, design matrix used in estimation
+    framework       : string
+                      estimation technique; currently only 'GLM' is avaialble
+    Quasi           : boolean
+                      True to estimate QuasiPoisson model; should result in same
+                      parameters as Poisson but with altered covariance; default
+                      to true which estimates Poisson model
+    SF              : array
+                      n x 1; eigenvector spatial filter to include in the model;
+                      default to None which does not include a filter; not yet
+                      implemented
+    CD              : array
+                      n x 1; competing destination term that accounts for the
+                      likelihood that alternative destinations are considered
+                      along with each destination under consideration for every
+                      OD pair; defaults to None which does not include a CD
+                      term; not yet implemented
+    Lag             : W object
+                      spatial weight for n observations (OD pairs) used to
+                      construct a spatial autoregressive model and estimator;
+                      defaults to None which does not include an autoregressive
+                      term; not yet implemented
 
     Attributes
     ----------
@@ -563,6 +720,8 @@ class Attraction(BaseGravity):
                       n x 1; observed flows; dependent variable; y
     n               : integer
                       number of observations
+    k               : integer
+                      number of parameters
     c               : array 
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
@@ -572,6 +731,8 @@ class Attraction(BaseGravity):
                       n x 1; index of destination id's
     ov              : array
                       n x p; p attributes for each origin of n flows
+    constant        : boolean
+                      True to include intercept in model; false by default
     params          : array
                       n x k, k estimated beta coefficients; k = # of
                       destinations + p + 1
@@ -588,11 +749,29 @@ class Attraction(BaseGravity):
     deviance        : float
                       value of the deviance function evalued at params;
                       see family.py for distribution-specific deviance
+    resid_dev       : array
+                      n x 1, residual deviance of model
     llf             : float
                       value of the loglikelihood function evalued at params;
                       see family.py for distribution-specific loglikelihoods
+    llnull          : float
+                      value of the loglikelihood function evaluated with only an
+                      intercept; see family.py for distribution-specific
+                      loglikelihoods
     aic             : float 
                       Akaike information criterion
+    D2              : float
+                      percentage of explained deviance
+    adj_D2          : float
+                      adjusted percentage of explained deviance
+    pseudo_R2       : float
+                      McFadden's pseudo R2  (coefficient of determination) 
+    adj_pseudoR2    : float
+                      adjusted McFadden's pseudo R2
+    SRMSE           : float
+                      standardized root mean square error
+    SSI             : float
+                      Sorensen similarity index
     results         : object
                       Full results from estimated model. May contain addtional
                       diagnostics
@@ -703,6 +882,34 @@ class Doubly(BaseGravity):
     cost_func       : string or function that has scalar input and output
                       functional form of the cost function;
                       'exp' | 'pow' | custom function
+    constant        : boolean
+                      True to include intercept in model; false by default
+    y               : array
+                      n x 1; dependent variable used in estimation including any
+                      transformations
+    X               : array
+                      n x k, design matrix used in estimation
+    framework       : string
+                      estimation technique; currently only 'GLM' is avaialble
+    Quasi           : boolean
+                      True to estimate QuasiPoisson model; should result in same
+                      parameters as Poisson but with altered covariance; default
+                      to true which estimates Poisson model
+    SF              : array
+                      n x 1; eigenvector spatial filter to include in the model;
+                      default to None which does not include a filter; not yet
+                      implemented
+    CD              : array
+                      n x 1; competing destination term that accounts for the
+                      likelihood that alternative destinations are considered
+                      along with each destination under consideration for every
+                      OD pair; defaults to None which does not include a CD
+                      term; not yet implemented
+    Lag             : W object
+                      spatial weight for n observations (OD pairs) used to
+                      construct a spatial autoregressive model and estimator;
+                      defaults to None which does not include an autoregressive
+                      term; not yet implemented
 
     Attributes
     ----------
@@ -710,11 +917,19 @@ class Doubly(BaseGravity):
                       n x 1; observed flows; dependent variable; y
     n               : integer
                       number of observations
+    k               : integer
+                      number of parameters
     c               : array 
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
     cf              : function
                       cost function; used to transform cost variable
+    o               : array
+                      n x 1; index of origin id's
+    d               : array
+                      n x 1; index of destination id's
+    constant        : boolean
+                      True to include intercept in model; false by default
     params          : array
                       n x k, estimated beta coefficients; k = # of origins + #
                       of destinations; the first x-1 values
@@ -735,11 +950,29 @@ class Doubly(BaseGravity):
     deviance        : float
                       value of the deviance function evalued at params;
                       see family.py for distribution-specific deviance
+    resid_dev       : array
+                      n x 1, residual deviance of model
     llf             : float
                       value of the loglikelihood function evalued at params;
                       see family.py for distribution-specific loglikelihoods
+    llnull          : float
+                      value of the loglikelihood function evaluated with only an
+                      intercept; see family.py for distribution-specific
+                      loglikelihoods
     aic             : float 
                       Akaike information criterion
+    D2              : float
+                      percentage of explained deviance
+    adj_D2          : float
+                      adjusted percentage of explained deviance
+    pseudo_R2       : float
+                      McFadden's pseudo R2  (coefficient of determination) 
+    adj_pseudoR2    : float
+                      adjusted McFadden's pseudo R2
+    SRMSE           : float
+                      standardized root mean square error
+    SSI             : float
+                      Sorensen similarity index
     results         : object
                       Full results from estimated model. May contain addtional
                       diagnostics

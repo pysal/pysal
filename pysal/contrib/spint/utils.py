@@ -70,9 +70,7 @@ def spcategorical(index):
     Parameters
     ----------
     n_cat_ids    : array
-                   A 1d vector of the categorical labels for n observations; it
-                   will be faster to use integers rather than strings for
-                   labels.
+                   A 1d vector of the categorical labels for n observations.
 
     Returns
     --------
