@@ -394,7 +394,7 @@ def w_subset(w1, ids, silent_island_warning=False):
     """ 
 
     neighbors = {}
-    ids_set = set(ids)
+    ids_set = set(list(ids))
     for i in ids:
         if i in w1.neighbors:
             neigh_add = ids_set.intersection(set(w1.neighbors[i]))
@@ -402,7 +402,7 @@ def w_subset(w1, ids, silent_island_warning=False):
         else:
             neighbors[i] = []
 
-    return pysal.W(neighbors, id_order=ids, silent_island_warning=silent_island_warning)
+    return pysal.W(neighbors, id_order=list(ids), silent_island_warning=silent_island_warning)
 
 
 def w_clip(w1, w2, outSP=True, silent_island_warning=False):

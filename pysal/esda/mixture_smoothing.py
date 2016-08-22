@@ -24,10 +24,10 @@ class NP_Mixture_Smoother(object):
 
     Parameters
     ----------
-    e           : array
-                  (n, 1), event variable measured across n spatial units
-    b           : array
-                  (n, 1), population at risk variable measured across n spatial units
+    e           : array-like
+                  event variable measured across n spatial units
+    b           : array-like
+                  population at risk variable measured across n spatial units
     k           : integer
                   a seed number to specify the number of subpopulations
     acc         : float
@@ -116,8 +116,8 @@ class NP_Mixture_Smoother(object):
     """
 
     def __init__(self, e, b, k=50, acc=1.E-7, numiter=5000, limit=0.01):
-        self.e = e
-        self.b = b
+        self.e = np.asarray(e).flatten()
+        self.b = np.asarray(b).flatten()
         self.n = len(e)
         self.w = 1. / self.n
         self.k = k

@@ -156,7 +156,7 @@ class BaseGravity(CountModel):
             origins=None, destinations=None, constant=False, framework='GLM',
             SF=None, CD=None, Lag=None, Quasi=False):
         n = User.check_arrays(flows, cost)
-        User.check_y(flows, n)
+        #User.check_y(flows, n)
         self.n = n
         self.f = flows
         self.c = cost
@@ -401,7 +401,7 @@ class Gravity(BaseGravity):
             p = 1
         self.dv = np.reshape(d_vars, (-1,p))
         self.c = np.reshape(cost, (-1,1))
-        User.check_arrays(self.f, self.ov, self.dv, self.c)
+        #User.check_arrays(self.f, self.ov, self.dv, self.c)
         
         BaseGravity.__init__(self, self.f, self.c,
                 cost_func=cost_func, o_vars=self.ov, d_vars=self.dv, constant=constant,
@@ -606,7 +606,7 @@ class Production(BaseGravity):
             p = 1
         self.dv = np.reshape(d_vars, (-1,p))
         self.c = self.reshape(cost)
-        User.check_arrays(self.f, self.o, self.dv, self.c)
+        #User.check_arrays(self.f, self.o, self.dv, self.c)
        
         BaseGravity.__init__(self, self.f, self.c, cost_func=cost_func, d_vars=self.dv,
                 origins=self.o, constant=constant, framework=framework,
@@ -802,7 +802,7 @@ class Attraction(BaseGravity):
         self.ov = np.reshape(o_vars, (-1,p))
         self.d = np.reshape(destinations, (-1,1))
         self.c = np.reshape(cost, (-1,1))
-        User.check_arrays(self.f, self.d, self.ov, self.c)
+        #User.check_arrays(self.f, self.d, self.ov, self.c)
 
         BaseGravity.__init__(self, self.f, self.c, cost_func=cost_func, o_vars=self.ov,
                  destinations=self.d, constant=constant,
@@ -999,7 +999,7 @@ class Doubly(BaseGravity):
         self.o = np.reshape(origins, (-1,1))
         self.d = np.reshape(destinations, (-1,1))
         self.c = np.reshape(cost, (-1,1))
-        User.check_arrays(self.f, self.o, self.d, self.c)
+        #User.check_arrays(self.f, self.o, self.d, self.c)
 
         BaseGravity.__init__(self, self.f, self.c, cost_func=cost_func, origins=self.o, 
                 destinations=self.d, constant=constant,

@@ -4,7 +4,7 @@ Diagnostics for SUR and 3SLS estimation
 
 __author__= "Luc Anselin lanselin@gmail.com,    \
              Pedro V. Amaral pedrovma@gmail.com"
-            
+
 
 import numpy as np
 import scipy.stats as stats
@@ -18,18 +18,18 @@ __all__ = ['sur_setp','sur_lrtest','sur_lmtest','lam_setp','surLMe']
 
 def sur_setp(bigB,varb):
     ''' Utility to compute standard error, t and p-value
-    
+
     Parameters
     ----------
     bigB    : dictionary of regression coefficient estimates,
               one vector by equation
     varb    : variance-covariance matrix of coefficients
-    
+
     Returns
     -------
     surinfdict : dictionary with standard error, t-value, and
                  p-value array, one for each equation
-    
+
     '''
     vvb = varb.diagonal()
     n_eq = len(bigB.keys())
@@ -44,10 +44,10 @@ def sur_setp(bigB,varb):
     surinf = np.hstack((se,t,tp))
     surinfdict = sur_mat2dict(surinf,bigK)
     return surinfdict
-    
+
 def lam_setp(lam,vm):
     """Standard errors, t-test and p-value for lambda in SUR Error ML
-    
+
     Parameters
     ----------
     lam        : n_eq x 1 array with ML estimates for spatial error
@@ -55,12 +55,12 @@ def lam_setp(lam,vm):
     vm         : n_eq x n_eq subset of variance-covariance matrix for
                  lambda and Sigma in SUR Error ML
                  (needs to be subset from full vm)
-                 
+
     Returns
     -------
                : tuple with arrays for standard error, t-value and p-value
                  (each element in the tuple is an n_eq x 1 array)
-        
+
     """
     vvb = vm.diagonal()
     se = np.sqrt(vvb)
@@ -71,42 +71,42 @@ def lam_setp(lam,vm):
 
 def sur_lrtest(n,n_eq,ldetS0,ldetS1):
     ''' Likelihood Ratio test on off-diagonal elements of Sigma
-    
+
         Parameters
         ----------
         n        : cross-sectional dimension (number of observations for an equation)
         n_eq     : number of equations
         ldetS0   : log determinant of Sigma for OLS case
         ldetS1   : log determinant of Sigma for SUR case (should be iterated)
-        
+
         Returns
         -------
         (lrtest,M,pvalue) : tupel with value of test statistic (lrtest),
                             degrees of freedom (M, as an integer)
                             p-value
-    
+
     '''
     M = n_eq * (n_eq - 1)/2.0
     lrtest = n * (ldetS0 - ldetS1)
     pvalue = stats.chi2.sf(lrtest,M)
     return (lrtest,int(M),pvalue)
 
-    
+
 def sur_lmtest(n,n_eq,sig):
     ''' Lagrange Multiplier test on off-diagonal elements of Sigma
-    
+
         Parameters
         ----------
         n        : cross-sectional dimension (number of observations for an equation)
         n_eq     : number of equations
         sig      : inter-equation covariance matrix for null model (OLS)
-        
+
         Returns
         -------
         (lmtest,M,pvalue) : tupel with value of test statistic (lmtest),
                             degrees of freedom (M, as an integer)
                             p-value
-    
+
     '''
     R = sur_corr(sig)
     tr = np.trace(np.dot(R.T,R))
@@ -115,22 +115,22 @@ def sur_lmtest(n,n_eq,sig):
     pvalue = stats.chi2.sf(lmtest,M)
     return (lmtest,int(M),pvalue)
 
-    
+
 def surLMe(n_eq,WS,bigE,sig):
     """Lagrange Multiplier test on error spatial autocorrelation in SUR
-    
+
     Parameters
     ----------
     n_eq       : number of equations
     WS         : spatial weights matrix in sparse form
     bigE       : n x n_eq matrix of residuals by equation
     sig        : cross-equation error covariance matrix
-    
+
     Returns
     -------
     (LMe,n_eq,pvalue) : tupel with value of statistic (LMe), degrees
                         of freedom (n_eq) and p-value
-    
+
     """
     # spatially lagged residuals
     WbigE = WS * bigE
@@ -155,16 +155,16 @@ def surLMe(n_eq,WS,bigE,sig):
     LMe = np.dot(np.dot(score.T,idenom),score)[0][0]
     pvalue = stats.chi2.sf(LMe,n_eq)
     return (LMe,n_eq,pvalue)
-    
+
 def sur_chow(n_eq,bigK,bSUR,varb):
     """test on constancy of regression coefficients across equations in
        a SUR specification
-       
+
        Note: requires a previous check on constancy of number of coefficients
              across equations; no other checks are carried out, so it is possible
              that the results are meaningless if the variables are not listed in
              the same order in each equation.
-             
+
        Parameters
        ----------
        n_eq       : integer, number of equations
@@ -172,13 +172,13 @@ def sur_chow(n_eq,bigK,bSUR,varb):
        bSUR       : dictionary with the SUR regression coefficients by equation
        varb       : array with the variance-covariance matrix for the SUR regression
                     coefficients
-                    
+
        Returns
        -------
        test       : a list with for each coefficient (in order) a tuple with the
                     value of the test statistic, the degrees of freedom, and the
                     p-value
-    
+
     """
     kr = bigK[0][0]
     test = []
@@ -191,24 +191,24 @@ def sur_chow(n_eq,bigK,bSUR,varb):
         tt,p = wald_test(bb,Ri,np.zeros((df,1)),varb)
         test.append((tt,df,p))
     return test
-    
+
 def sur_joinrho(n_eq,bigK,bSUR,varb):
     """Test on joint significance of spatial autoregressive coefficient in SUR
-    
+
        Parameters
        ----------
        n_eq       : integer, number of equations
        bigK       : n_eq x 1 array with number of variables by equation
-                    (includes constant term, exogenous and endogeneous and 
+                    (includes constant term, exogenous and endogeneous and
                     spatial lag)
        bSUR       : dictionary with regression coefficients by equation, with
                     the spatial autoregressive term as last
        varb       : variance-covariance matrix for regression coefficients
-       
+
        Returns
        -------
                   : tuple with test statistic, degrees of freedom, p-value
-        
+
     """
     bb = sur_dict2mat(bSUR)
     R = np.zeros((n_eq,varb.shape[0]))

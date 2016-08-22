@@ -1,4 +1,5 @@
 import pysal
+from pysal.cg import Polygon, Point
 from pysal.common import *
 import pysal.weights
 import numpy as np
@@ -7,6 +8,7 @@ import scipy.spatial
 import os
 import operator
 import scipy
+from warnings import warn
 
 __all__ = ['lat2W', 'block_weights', 'comb', 'order', 'higher_order',
            'shimbel', 'remap_ids', 'full2W', 'full', 'WSP2W',
@@ -849,8 +851,11 @@ def WSP2W(wsp, silent_island_warning=False):
     w._cache['sparse'] = w._sparse
     return w
 
+def insert_diagonal(w, val=1.0, wsp=False):
+    warn('This function is deprecated. Use fill_diagonal instead.')
+    return fill_diagonal(w, val=val, wsp=wsp)
 
-def insert_diagonal(w, diagonal=1.0, wsp=False):
+def fill_diagonal(w, val=1.0, wsp=False):
     """
     Returns a new weights object with values inserted along the main diagonal.
 
@@ -901,12 +906,12 @@ def insert_diagonal(w, diagonal=1.0, wsp=False):
 
     w_new = copy.deepcopy(w.sparse)
     w_new = w_new.tolil()
-    if issubclass(type(diagonal), np.ndarray):
-        if w.n != diagonal.shape[0]:
+    if issubclass(type(val), np.ndarray):
+        if w.n != val.shape[0]:
             raise Exception("shape of w and diagonal do not match")
-        w_new.setdiag(diagonal)
-    elif operator.isNumberType(diagonal):
-        w_new.setdiag([diagonal] * w.n)
+        w_new.setdiag(val)
+    elif operator.isNumberType(val):
+        w_new.setdiag([val] * w.n)
     else:
         raise Exception("Invalid value passed to diagonal")
     w_out = pysal.weights.WSP(w_new, copy.copy(w.id_order))
@@ -1015,6 +1020,32 @@ def get_ids(shapefile, idVariable):
             idVariable, ','.join(db.header))
         raise KeyError(msg)
 
+def get_points_array(iterable):
+    """
+    Gets a data array of x and y coordinates from a given iterable
+    Parameters
+    ----------
+    iterable      : iterable
+                    arbitrary collection of shapes that supports iteration 
+
+    Returns
+    -------
+    points        : array
+                    (n, 2)
+                    a data array of x and y coordinates
+
+    Notes
+    -----
+    If the given shape file includes polygons,
+    this function returns x and y coordinates of the polygons' centroids
+
+    """
+    try:
+        data = np.vstack([np.array(shape.centroid) for shape in iterable])
+    except AttributeError:
+        data = np.vstack([shape for shape in iterable])
+    return data
+
 
 def get_points_array_from_shapefile(shapefile):
     """
@@ -1057,11 +1088,7 @@ def get_points_array_from_shapefile(shapefile):
     """
 
     f = pysal.open(shapefile)
-    if f.type.__name__ == 'Polygon':
-        data = np.array([shape.centroid for shape in f])
-    elif f.type.__name__ == 'Point':
-        data = np.array([shape for shape in f])
-    f.close()
+    data = get_points_array(f)
     return data
 
 

@@ -1,7 +1,7 @@
 import pysal as ps
 import os
-from shp_utilities import shp2series, series2shp
-from dbf_utilities import dbf2df, df2dbf
+from shp import shp2series, series2shp
+from dbf import dbf2df, df2dbf
 
 
 def read_files(filepath, **kwargs):

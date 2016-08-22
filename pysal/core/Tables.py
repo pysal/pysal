@@ -1,5 +1,7 @@
 __all__ = ['DataTable']
 import FileIO
+from ..common import requires
+from warnings import warn
 import numpy as np
 
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
@@ -192,7 +194,26 @@ class DataTable(FileIO.FileIO):
                 data = [r[cols] for r in data]
         self.seek(prevPos)
         return data
-
+    
+    @requires('pandas')
+    def to_df(self, n=-1, read_shp=None, **df_kws):
+        import pandas as pd
+        self.seek(0)
+        header = self.header
+        records = self.read(n)
+        df = pd.DataFrame(records, columns=header, **df_kws)
+        if read_shp is not False:
+            if read_shp is True or self.dataPath.endswith('.dbf'):
+                read_shp = self.dataPath[:-3] + 'shp'
+            try:
+                import pysal.contrib.pdio.shp as shp
+                df['geometry'] = shp.shp2series(self.dataPath[:-3] + 'shp')
+            except IOError as e:
+                warn('Encountered the following error in attempting to read'
+                     ' the shapefile {}. Proceeding with read, but the error'
+                     ' will be reproduced below:\n'
+                     ' {}'.format(self.dataPath[:-3]+'shp', e))
+        return df
 
 def _test():
     import doctest

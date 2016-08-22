@@ -60,7 +60,7 @@ class GeoDaTxtReader(Tables.DataTable):
             self.pos += 1
             return row
         else:
-            raise None
+            return None
 
     def close(self):
         self.fileObj.close()
