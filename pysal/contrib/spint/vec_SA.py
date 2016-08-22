@@ -177,7 +177,7 @@ class VecMoran:
         self.focus = focus
         self.rand = rand
         self.permutations = permutations
-        self.two_tailed - two_tailed
+        self.two_tailed = two_tailed
         if isinstance(w, DistanceBand): 
             self.w = w
         else:
