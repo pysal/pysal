@@ -13,6 +13,7 @@ PERMUTATIONS = 99
 
 class VecMoran:
     """Moran's I Global Autocorrelation Statistic For Vectors
+    
     Parameters
     ----------
     y               : array
@@ -113,8 +114,8 @@ class VecMoran:
     """
 
 
-    def __init__(self, y, w, focus='origin', rand='A', threshold=999, permutations=PERMUTATIONS,
-        two_tailed=True):
+    def __init__(self, y, w, focus='origin', rand='A', threshold=999,
+            alpha=-1.5, permutations=PERMUTATIONS, two_tailed=True):
         self.y = y
         self.o = y[:, 1:3]
         self.d = y[:, 3:5]
@@ -122,6 +123,7 @@ class VecMoran:
         self.focus = focus
         self.rand = rand
         self.threshold = threshold
+        self.alpha = alpha
         self.permutations = permutations
         self.__moments()
         self.I = self.__calc(self.z)
@@ -223,17 +225,17 @@ class VecMoran:
             newOs = [np.random.permutation(self.o) for i in xrange(self.permutations)]
             sims = [np.hstack([np.arange(self.n).reshape((-1,1)), newO,
             self.newD(self.o, self.d, newO)]) for newO in newOs]
-            Ws = [DistanceBand(newO, threshold=self.threshold, alpha=-1.5, binary=False)
-                    for newO in newOs]
+            Ws = [DistanceBand(newO, threshold=self.threshold, alpha=-self.alpha, 
+                binary=False) for newO in newOs]
         elif focus.lower() == 'destination':
             newDs = [np.random.permutation(self.d) for i in xrange(self.permutations)]
             sims = [np.hstack([np.arange(self.n).reshape((-1,1)),
                 self.newO(self.o, self.d, newD), newD]) for newD in newDs]
-            Ws = [DistanceBand(newD, threshold=self.threshold, alpha=-1.5, binary=False)
-                    for newD in newDs]
+            Ws = [DistanceBand(newD, threshold=self.threshold, alpha=self.alpha, 
+                binary=False) for newD in newDs]
 
-        VMs = [VecMoran(y, Ws[i], permutations=None) for i, y in
-                enumerate(sims)]
+        VMs = [VecMoran(y, Ws[i], threshold=self.threshold, alpha=self.alpha,
+            permutations=None) for i, y in enumerate(sims)]
         sim = [VM.__calc(VM.z) for VM in VMs]
         return sim
 
@@ -246,7 +248,8 @@ class VecMoran:
                 np.random.permutation(self.o), self.d]) for i in xrange(self.permutations)]
         else:
             raise ValueError("Parameter 'focus' must take value of either 'origin' or 'destination.'")
-        sims = [VecMoran(y, self.w, permutations=None) for y in sims]
+        sims = [VecMoran(y, self.w, threshold=self.threshold, alpha=self.alpha,
+            permutations=None) for y in sims]
         sim = [VM.__calc(VM.z) for VM in sims]
         return sim
        
