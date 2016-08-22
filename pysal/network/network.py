@@ -11,7 +11,7 @@ from pysal.weights.util import get_ids
 from analysis import NetworkG, NetworkK, NetworkF
 import util
 
-__all__ = ["Network", "PointPattern", "NetworkG", "NetworkK", "NetworkF"  ]
+__all__ = ["Network", "PointPattern", "NetworkG", "NetworkK", "NetworkF"]
 
 
 class Network:
@@ -19,71 +19,74 @@ class Network:
     """
     Spatially constrained network representation and analytical functionality.
 
+
     Parameters
     -----------
-    in_shp : string
-             input shapefile
+    in_shp:         str
+                    The input shapefile. This must be in .shp format.
 
-    node_sig : int
-               round the x and y coordinates of all nodes to node_sig
-               significant digits (combined significant digits on left and right
-               of decimal place); default is 11; set to None for no rounding
+    node_sig:       int
+                    Round the x and y coordinates of all nodes to node_sig significant 
+                    digits (combined significant digits on the left and right
+                    of the decimal place) 
+                    -- Default is 11
+                    -- Set to None for no rounding
 
-    unique_segs : boolean
-                  if True (default), keep only unique segments (i.e., prune
-                  out any duplicated segments); if False keep all segments
+    unique_segs:    bool
+                    If True (default), keep only unique segments (i.e., prune out any 
+                    duplicated segments). 
+                    If False keep all segments.
 
     Attributes
     ----------
-    in_shp : string
-             input shapefile name
+    in_shp:         str
+                    The input shapefile. This must be in .shp format.
 
-    adjacencylist : list
-                    of lists storing node adjacency
+    adjacencylist:  list
+                    List of lists storing node adjacency.
 
-    nodes : dict
-            key are tuple of node coords and value is the node ID
+    nodes:          dict
+                    Keys are tuples of node coords and values are the node ID.
 
-    edge_lengths : dict
-                   key is a tuple of sorted node IDs representing an edge
-                   value is the length
+    edge_lengths:   dict
+                    Keys are tuples of sorted node IDs representing an edge and values are
+                    the length.
 
-    pointpatterns : dict
-                    key is a string name of the pattern
-                    value is a point pattern class instance
+    pointpatterns:  dict
+                    Keys are a string name of the pattern and values are point pattern 
+                    class instances.
 
-    node_coords : dict
-                  key is th node ID and value are the (x,y) coordinates
-                  inverse to nodes
+    node_coords:    dict
+                    Keys are the node ID and values are the (x,y) coordinates inverse 
+                    to nodes.
 
-    edges : list
-            of edges, where each edge is a sorted tuple of node IDs
+    edges:          list
+                    List of edges, where each edge is a sorted tuple of node IDs.
 
-    node_list : list
-                node IDs
+    node_list:      list
+                    List of node IDs.
 
-    alldistances : dict
-                   key is the node ID
-                   value is a tuple with two elements, first is a list of the
-                   shortest path distances, second is a dict with
-                   the key being the id of the destination node and the value
-                   is a list of the shortest path.
+    alldistances:   dict
+                    Keys are the node IDs.
+                    Values are tuples with two elements: 
+                        1. A list of the shortest path distances
+                        2. A dict with the key being the id of the destination node and 
+                           the value being a list of the shortest path.
 
     Examples
     --------
 
-    Instantiate an instance of a network
+    Instantiate an instance of a network.
 
     >>> ntw = ps.Network(ps.examples.get_path('streets.shp'))
 
-    Snap point observations to the network with attribute information
+    Snap point observations to the network with attribute information.
 
     >>> ntw.snapobservations(ps.examples.get_path('crimes.shp'), 'crimes', attribute=True)
 
-    And without attribute information
+    And without attribute information.
 
     >>> ntw.snapobservations(ps.examples.get_path('schools.shp'), 'schools', attribute=False)
-
     """
 
     def __init__(self, in_shp=None, node_sig=11, unique_segs=True):
@@ -102,32 +105,32 @@ class Network:
             self._extractnetwork()
             self.node_coords = dict((value, key) for key, value in self.nodes.iteritems())
 
-            #This is a spatial representation of the network.
+            # This is a spatial representation of the network.
             self.edges = sorted(self.edges)
 
-            #Extract the graph
+            # Extract the graph.
             self.extractgraph()
 
             self.node_list = sorted(self.nodes.values())
 
     def _round_sig(self, v):
         """
-        Used internally to round vertex to a set number of significant
-        digits. If sig is set to 4, then the following are some possible
-        results for a coordinate: 0.0xxxx, 0.xxxx, x.xxx, xx.xx, xxx.x,
-        xxxx.0, xxxx0.0
+        Used internally to round the vertex to a set number of significant digits. If sig 
+        is set to 4, then the following are some possible results for a coordinate: 
+        0.0xxxx, 0.xxxx, x.xxx, xx.xx, xxx.x, xxxx.0, xxxx0.0
         """
         sig = self.node_sig
         if sig is None:
             return v
         out_v = [val if 0 \
-                     else round(val, -int(math.floor(math.log10(math.fabs(val)))) + (sig-1)) \
+                     else round(val, -int(math.floor(math.log10(math.fabs(val)))) +\
+                          (sig-1)) \
                  for val in v]
         return tuple(out_v)
 
     def _extractnetwork(self):
         """
-        Used internally, to extract a network from a polyline shapefile
+        Used internally, to extract a network from a polyline shapefile.
         """
         nodecount = 0
         shps = ps.open(self.in_shp)
@@ -150,29 +153,29 @@ class Network:
                 self.adjacencylist[vid].append(nvid)
                 self.adjacencylist[nvid].append(vid)
 
-                #Sort the edges so that mono-directional keys can be stored.
+                # Sort the edges so that mono-directional keys can be stored.
                 edgenodes = sorted([vid, nvid])
                 edge = tuple(edgenodes)
                 self.edges.append(edge)
                 length = util.compute_length(v, vertices[i+1])
                 self.edge_lengths[edge] = length
         if self.unique_segs == True:
-            # remove duplicate edges and duplicate adjacent nodes
+            # Remove duplicate edges and duplicate adjacent nodes.
             self.edges = list(set(self.edges))
             for k, v in self.adjacencylist.iteritems():
                 self.adjacencylist[k] = list(set(v))
 
     def extractgraph(self):
         """
-        Using the existing network representation, create a graph based representation,
-        by removing all nodes with neighbor incidence of two.  That is, we assume these
+        Using the existing network representation, create a graph based representation by 
+        removing all nodes with a neighbor incidence of two.  That is, we assume these
         nodes are bridges between nodes with higher incidence.
         """
         self.graphedges = []
         self.edge_to_graph = {}
         self.graph_lengths = {}
 
-        #Find all nodes with cardinality 2
+        # Find all nodes with cardinality 2.
         segment_nodes = []
         for k, v in self.adjacencylist.iteritems():
             #len(v) == 1 #cul-de-sac
@@ -181,11 +184,12 @@ class Network:
             if len(v) == 2:
                 segment_nodes.append(k)
 
-        #Start with a copy of the spatial representation and iteratively
-        # remove edges deemed to be segments
+        # Start with a copy of the spatial representation and iteratively remove edges 
+        # deemed to be segments.
         self.graphedges = copy.deepcopy(self.edges)
         self.graph_lengths = copy.deepcopy(self.edge_lengths)
-        self.graph_to_edges = {}  #Mapping all the edges contained within a single graph represented edge
+        # Mapping all the edges contained within a single graph represented edge.
+        self.graph_to_edges = {}
 
         bridges = []
         for s in segment_nodes:
@@ -203,19 +207,19 @@ class Network:
             if len(bridge) == 1:
                 n = self.adjacencylist[bridge[0]]
                 newedge = tuple(sorted([n[0], n[1]]))
-                #Identify the edges to be removed
+                # Identify the edges to be removed.
                 e1 = tuple(sorted([bridge[0], n[0]]))
                 e2 = tuple(sorted([bridge[0], n[1]]))
-                #Remove from the graph
+                # Remove them from the graph.
                 self.graphedges.remove(e1)
                 self.graphedges.remove(e2)
-                #Remove from the edge lengths
+                # Remove from the edge lengths.
                 length_e1 = self.edge_lengths[e1]
                 length_e2 = self.edge_lengths[e2]
                 self.graph_lengths.pop(e1, None)
                 self.graph_lengths.pop(e2, None)
                 self.graph_lengths[newedge] = length_e1 + length_e2
-                #Update the pointers
+                # Update the pointers.
                 self.graph_to_edges[e1] = newedge
                 self.graph_to_edges[e2] = newedge
             else:
@@ -245,8 +249,8 @@ class Network:
 
     def _yieldneighbor(self, node, segment_nodes, bridge):
         """
-        Used internally, this method traverses a bridge segement
-        to find the source and destination nodes.
+        Used internally, this method traverses a bridge segement to find the source and 
+        destination nodes.
         """
         n = []
         for i in self.adjacencylist[node]:
@@ -260,17 +264,17 @@ class Network:
 
         Parameters
         ----------
-        graph : boolean
-                {True, False } controls whether the W is generated using the spatial
-                representation or the graph representation
+        graph:      bool
+                    {True, False} controls whether the W is generated using the spatial
+                    representation or the graph representation.
 
-        weightings : dict
-                     of lists of weightings for each edge
+        weightings: dict
+                    Dict of lists of weightings for each edge.
 
         Returns
         -------
-         : W
-           A PySAL W Object representing the binary adjacency of the network
+         W:         object
+                    A PySAL W Object representing the binary adjacency of the network.
 
         Examples
         --------
@@ -292,7 +296,6 @@ class Network:
         Next, a standard call ot Moran is made and the result placed into `res`
 
         >>> res = ps.esda.moran.Moran(y, w, permutations=99)
-
         """
 
         neighbors = {}
@@ -316,11 +319,13 @@ class Network:
             for neigh in edges:
                 if key == neigh:
                     continue
-                if key[0] == neigh[0] or key[0] == neigh[1] or key[1] == neigh[0] or key[1] == neigh[1]:
+                if key[0] == neigh[0] or key[0] == neigh[1] or key[1] == neigh[0]\
+                                                            or key[1] == neigh[1]:
                     neighbors[key].append(neigh)
                     if weightings:
                         weights[key].append(weightings[neigh])
-                #TODO: Add a break condition - everything is sorted, so we know when we have stepped beyond a possible neighbor.
+                # TODO: Add a break condition - everything is sorted, so we know when we 
+                #       have stepped beyond a possible neighbor.
                 #if key[1] > neigh[1]:  #NOT THIS
                     #break
 
@@ -332,8 +337,8 @@ class Network:
 
         Parameters
         ----------
-        threshold : float
-                    Distance threshold value
+        threshold:  float
+                    Distance threshold value.
         """
         try:
             hasattr(self.alldistances)
@@ -351,27 +356,27 @@ class Network:
 
     def snapobservations(self, shapefile, name, idvariable=None, attribute=None):
         """
-        Snap a point pattern shapefile to this network object.  The point pattern
-        is the stored in the network.pointpattern['key'] attribute of the network
-        object.
+        Snap a point pattern shapefile to this network object.  The point pattern is 
+        stored in the network.pointpattern['key'] attribute of the network object.
 
         Parameters
         ----------
-        shapefile : str
-                    The PATH to the shapefile
+        shapefile:  str
+                    The path to the shapefile.
 
-        name : str
-               Name to be assigned to the point dataset
+        name:       str
+                    Name to be assigned to the point dataset.
 
-        idvariable : str
-                     Column name to be used as ID variable
+        idvariable: str
+                    Column name to be used as ID variable.
 
-        attribute : bool
-                    Defines whether attributes should be extracted
+        attribute:  bool
+                    Defines whether attributes should be extracted.
+                        True for attribute extraction.
+                        False for no attribute extraaction.
 
         Returns
         -------
-
         """
 
         self.pointpatterns[name] = PointPattern(shapefile, idvariable=idvariable, attribute=attribute)
@@ -379,27 +384,29 @@ class Network:
 
     def compute_distance_to_nodes(self, x, y, edge):
         """
-        Given an observation on a network edge, return the distance to the two
-        nodes that bound that end.
+        Given an observation on a network edge, return the distance to the two nodes that 
+        bound that end.
 
         Parameters
         ----------
-        x : float
-            x-coordinate of the snapped point
+        x:      float
+                x-coordinate of the snapped point.
 
-        y : float
-            y-coordiante of the snapped point
+        y:      float
+                y-coordiante of the snapped point.
 
-        edge : tuple
-              (node0, node1) representation of the network edge
+        edge:   tuple
+                (node0, node1) representation of the network edge.
 
         Returns
         -------
-        d1 : float
-             the distance to node0, always the node with the lesser id
+        d1:     float
+                The distance to node0.
+                    - always the node with the lesser id
 
-        d2 : float
-             the distance to node1, always the node with the greater id
+        d2:     float
+                The distance to node1.
+                    - always the node with the greater id
         """
 
         d1 = util.compute_length((x,y), self.node_coords[edge[0]])
@@ -412,21 +419,20 @@ class Network:
 
         Parameters
         -----------
-        pointpattern : obj
-                       PySAL Point Pattern Object
+        pointpattern:   object
+                        PySAL Point Pattern Object
 
         Returns
         -------
-        obs_to_edge : dict
-                      with edge as key and list of points as value
+        obs_to_edge:    dict
+                        Dict with edges as keys and lists of points as values.
 
-        edge_to_obs : dict
-                      with point id as key and edge tuple as value
+        edge_to_obs:    dict
+                        Dict with point ids as keys and edge tuples as values.
 
-        dist_to_node : dict
-                       with point id as key and value as a dict with key for
-                       node id, and value distance from point to node
-
+        dist_to_node:   dict
+                        Dict with point ids as keys and values as dicts with keys for
+                        node ids and values as distances from point to node.
         """
 
         obs_to_edge = {}
@@ -476,18 +482,19 @@ class Network:
 
         Parameters
         ----------
-        obs_on_network : dict
-                         of observations on the network
-                         {(edge): {pt_id: (coords)}} or {edge: [(coord), (coord), (coord)]}
+        obs_on_network: dict
+                        Dict of observations on the network.
+                        {(edge):{pt_id:(coords)}} or {edge:[(coord),(coord),(coord)]}
         Returns
         -------
-        counts: dict {(edge):count}
+        counts:         dict 
+                        {(edge):count}
 
         Example
         -------
 
-        Note that this passes the obs_to_edge attribute of a point pattern
-        snapped to the network.
+        Note that this passes the obs_to_edge attribute of a point pattern snapped to the 
+        network.
 
         >>> ntw = ps.Network(ps.examples.get_path('streets.shp'))
         >>> ntw.snapobservations(ps.examples.get_path('crimes.shp'), 'crimes', attribute=True)
@@ -513,19 +520,19 @@ class Network:
 
     def _newpoint_coords(self, edge, distance):
         """
-        Used internally to compute new point coordinates during snapping
+        Used internally to compute new point coordinates during snapping.
         """
         x1 = self.node_coords[edge[0]][0]
         y1 = self.node_coords[edge[0]][1]
         x2 = self.node_coords[edge[1]][0]
         y2 = self.node_coords[edge[1]][1]
-        if x1 == x2:  # vertical line case
+        if x1 == x2:  # Vertical line case
             x0 = x1
             if y1 < y2:
                 y0 = y1 + distance
             elif y1 > y2:
                 y0 = y2 + distance
-            else:    # zero length edge
+            else:    # Zero length edge
                 y0 = y1
             return x0, y0        
         m = (y2 - y1) / (x2 - x1)
@@ -542,18 +549,18 @@ class Network:
 
         Parameters
         ----------
-        count : integer
-                number of points to create or mean of the distribution
-                if not 'uniform'
+        count:          int
+                        The number of points to create or mean of the distribution if not 
+                        'uniform'.
 
-        distribution : string
-                       {'uniform', 'poisson'} distribution of random points
+        distribution:   str
+                        {'uniform', 'poisson'} distribution of random points.
 
         Returns
         -------
-        random_pts : dict
-                     key is the edge tuple
-                     value is a list of new point coordinates
+        random_pts:     dict
+                        Keys are the edge tuple.
+                        Value are a list of new point coordinates.
 
         Example
         -------
@@ -567,7 +574,7 @@ class Network:
         """
         simpts = SimulatedPointPattern()
 
-        #Cumulative Network Length
+        #   Cumulative Network Length.
         edges = []
         lengths = np.zeros(len(self.edge_lengths))
         for i, key in enumerate(self.edge_lengths.iterkeys()):
@@ -585,13 +592,13 @@ class Network:
             idx = np.where(r < stops)[0][0]
             assignment_edge = edges[idx]
             distance_from_start = stops[idx] - r
-            #Populate the coordinates dict
+            # Populate the coordinates dict.
             x0, y0 = self._newpoint_coords(assignment_edge, distance_from_start)
             simpts.snapped_coordinates[i] = (x0, y0)
             simpts.obs_to_node[assignment_edge[0]].append(i)
             simpts.obs_to_node[assignment_edge[1]].append(i)
 
-            #Populate the distance to node
+            # Populate the distance to node.
             simpts.dist_to_node[i] = {assignment_edge[0] : distance_from_start,
                     assignment_edge[1] : self.edge_lengths[edges[idx]] - distance_from_start}
 
@@ -606,13 +613,13 @@ class Network:
 
         Parameters
         -----------
-        v0 : int
-             node id
+        v0:     int
+                Node id
 
         Returns
         -------
-        links : list
-                list of tuple edge adjacent to the node
+        links:  list
+                List of tuple edges adjacent to the node.
         """
         links = []
         neighbornodes =  self.adjacencylist[v0]
@@ -627,36 +634,39 @@ class Network:
         for node in self.node_list:
             distance, pred = util.dijkstra(self, self.edge_lengths, node, n=float('inf'))
             pred = np.array(pred)
-            #tree = util.generatetree(pred)
+            #tree = util.generatetree(pred)     <---- something to look at in the future
             tree = None
             self.alldistances[node] = (distance, tree)
             self.distancematrix[node] = distance
 
-    def allneighbordistances(self, sourcepattern, destpattern=None):
+    def allneighbordistances(self, sourcepattern, destpattern=None, fill_diagonal=None):
         """
-        Compute either all distances between i and j in a single point pattern
-        or all distances between each i from a source pattern and all j
-        from a destination pattern
+        Compute either all distances between i and j in a single point pattern or all 
+        distances between each i from a source pattern and all j from a destination pattern.
 
         Parameters
         ----------
-        sourcepattern : str
+        sourcepattern:  str
                         The key of a point pattern snapped to the network.
 
-        destpattern :str
-                    (Optional) The key of a point pattern snapped to the network.
+        destpattern:    str
+                        (Optional) The key of a point pattern snapped to the network.
 
+        fill_diagonal:  float, int
+                        (Optional) Fill the diagonal of the cost matrix.
+                        Default in None and will populate the diagonal with numpy.nan
+                        Do not declare a destpattern for a custom fill_diagonal.
+        
         Returns
         -------
-        nearest : array (n,n)
-                  An array or shape n,n storing distances between all points
-
+        nearest:        array (n,n)
+                        An array of shape (n,n) storing distances between all points.
         """
 
         if not hasattr(self,'alldistances'):
             self.node_distance_matrix()
             
-        # source setup
+        # Source setup
         src_indices = sourcepattern.points.keys()
         nsource_pts = len(src_indices)
         src_dist_to_node = sourcepattern.dist_to_node
@@ -665,7 +675,7 @@ class Network:
             e1, e2 = src_dist_to_node[s].keys()
             src_nodes[s] = (e1, e2)
 
-        # destination setup
+        # Destination setup
         symmetric = False
         if destpattern is None:
             symmetric = True
@@ -679,24 +689,24 @@ class Network:
             e1, e2 = dest_dist_to_node[s].keys()
             dest_nodes[s] = (e1, e2)
         
-        # output setup
+        # Output setup
         nearest = np.empty((nsource_pts, ndest_pts))
         nearest[:] = np.inf
 
         for p1 in src_indices:
-            #Get the source nodes and dist to source nodes
+            # Get the source nodes and dist to source nodes.
             source1, source2 = src_nodes[p1]
             set1 = set(src_nodes[p1])
-            # distance from node1 to p, distance from node2 to p
+            # Distance from node1 to p, distance from node2 to p.
             sdist1, sdist2 = src_dist_to_node[p1].values()
 
             if symmetric:
-                # only compute the upper triangle if symmetric
+                # Only compute the upper triangle if symmetric.
                 dest_searchpts.remove(p1)
             for p2 in dest_searchpts:
                 dest1, dest2 = dest_nodes[p2]
                 set2 = set(dest_nodes[p2])
-                if set1 == set2: #same edge
+                if set1 == set2: # same edge
                     x1,y1 = sourcepattern.snapped_coordinates[p1]
                     x2,y2 = destpattern.snapped_coordinates[p2]
                     xd = x1-x2
@@ -710,16 +720,17 @@ class Network:
                     d12 = self.alldistances[source1][0][dest2]
                     d22 = self.alldistances[source2][0][dest2]
 
-                    # find shortest distance from path passing through each of two origin nodes
-                    # to first destination node
+                    # Find the shortest distance from the path passing through each of the 
+                    # two origin nodes to the first destination node.
                     sd_1 = d11 + sdist1
                     sd_21 = d21 + sdist2
                     if sd_1 > sd_21:
                         sd_1 = sd_21
-                    # now add point to node one distance on destination edge
+                    # Now add the point to node one distance on the destination edge.
                     len_1 = sd_1 + ddist1
 
-                    # repeat but now for paths entering at second node of second edge
+                    # Repeat the prior but now for the paths entering at the second node 
+                    # of the second edge.
                     sd_2 = d12 + sdist1
                     sd_22 = d22 + sdist2
                     b = 0
@@ -728,36 +739,42 @@ class Network:
                         b = 1
                     len_2 = sd_2 + ddist2
 
-                    # now find shortest length path between the point 1 on edge 1 and
-                    # point 2 on edge 2, and assign
+                    # Now find the shortest distance path between point 1 on edge 1 and
+                    # point 2 on edge 2, and assign.
                     sp_12 = len_1
                     if len_1 > len_2:
                         sp_12 = len_2
                     nearest[p1, p2] = sp_12
                 if symmetric:
-                    # mirror the upper and lower triangle when symmetric
+                    # Mirror the upper and lower triangle when symmetric.
                     nearest[p2,p1] = nearest[p1,p2]                    
+        # Populate the main diagonal when symmetric.
         if symmetric:
-            # populate the main diagonal when symmetric
-            #np.fill_diagonal(nearest, 0)
-            np.fill_diagonal(nearest, np.nan)
+            if fill_diagonal == None:
+                np.fill_diagonal(nearest, np.nan)
+            else:
+                np.fill_diagonal(nearest, fill_diagonal)
+            
         return nearest
 
     def nearestneighbordistances(self, sourcepattern, destpattern=None):
         """
         Compute the interpattern nearest neighbor distances or the intrapattern
-        nearest neight distances between a source pattern and a destination pattern.
+        nearest neighbor distances between a source pattern and a destination pattern.
 
         Parameters
         ----------
-        sourcepattern   str The key of a point pattern snapped to the network.
+        sourcepattern:  str 
+                        The key of a point pattern snapped to the network.
 
-        destpattern      str (Optional) The key of a point pattern snapped to the network.
+        destpattern:    str 
+                        (Optional) The key of a point pattern snapped to the network.
 
         Returns
         -------
-        nearest         ndarray (n,2) With column[:,0] containing the id of the nearest
-                        neighbor and column [:,1] containing the distance.
+        nearest:        ndarray (n,2) 
+                        With column[:,0] containing the id of the nearest neighbor and 
+                        column [:,1] containing the distance.
         """
 
         if not sourcepattern in self.pointpatterns.keys():
@@ -776,14 +793,13 @@ class Network:
 
         searchpts = copy.deepcopy(pt_indices)
 
-
         searchnodes = {}
         for s in searchpts:
             e1, e2 = dist_to_node[s].keys()
             searchnodes[s] = (e1, e2)
 
         for p1 in pt_indices:
-            #Get the source nodes and dist to source nodes
+            # Get the source nodes and dist to source nodes.
             source1, source2 = searchnodes[p1]
             sdist1, sdist2 = dist_to_node[p1].values()
 
@@ -795,7 +811,6 @@ class Network:
                 source1_to_dest2 = sdist1 + self.alldistances[source1][0][dest2] + ddist2
                 source2_to_dest1 = sdist2 + self.alldistances[source2][0][dest1] + ddist1
                 source2_to_dest2 = sdist2 + self.alldistances[source2][0][dest2] + ddist2
-
 
                 if source1_to_dest1 < nearest[p1, 1]:
                     nearest[p1, 0] = p2
@@ -835,34 +850,35 @@ class Network:
 
         Parameters
         ----------
-        pointpattern : object
-                       A PySAL point pattern object
+        pointpattern:   object
+                        A PySAL point pattern object.
 
-        nsteps : int
-                 The number of steps at which the count of the nearest
-                 neighbors is computed
+        nsteps:         int
+                        The number of steps at which the count of the nearest neighbors 
+                        is computed.
 
-        permutations : int
-                       The number of permutations to perform (default 99)
+        permutations:   int
+                        The number of permutations to perform (default 99).
 
-        threshold : float
-                    The level at which significance is computed.  0.5 would be 97.5% and 2.5%
+        threshold:      float
+                        The level at which significance is computed.  
+                            -- 0.5 would be 97.5% and 2.5%
 
-        distribution : str
-                       The distirbution from which random points are sampled: uniform or poisson
+        distribution:   str
+                        The distribution from which random points are sampled: 
+                            -- uniform or poisson
 
-        lowerbound : float
-                     The lower bound at which the G-function is computed. (default 0)
+        lowerbound:     float
+                        The lower bound at which the F-function is computed. (Default 0)
 
-        upperbound : float
-                     The upper bound at which the G-function is computed.
-                     Defaults to the maximum pbserved nearest neighbor distance.
+        upperbound:     float
+                        The upper bound at which the F-function is computed.
+                        Defaults to the maximum observed nearest neighbor distance.
 
         Returns
         -------
-        NetworkF : object
-                   A network F class instance
-
+        NetworkF:       object
+                        A network F class instance.
         """
         return NetworkF(self, pointpattern, nsteps=nsteps,
                         permutations=permutations,threshold=threshold,
@@ -877,34 +893,35 @@ class Network:
 
         Parameters
         ----------
-        pointpattern : object
-                       A PySAL point pattern object
+        pointpattern:   object
+                        A PySAL point pattern object.
 
-        nsteps : int
-                 The number of steps at which the count of the nearest
-                 neighbors is computed
+        nsteps:         int
+                        The number of steps at which the count of the nearest neighbors 
+                        is computed.
 
-        permutations : int
-                       The number of permutations to perform (default 99)
+        permutations:   int
+                        The number of permutations to perform (default 99).
 
-        threshold : float
-                    The level at which significance is computed.  0.5 would be 97.5% and 2.5%
+        threshold:      float
+                        The level at which significance is computed.  
+                            -- 0.5 would be 97.5% and 2.5%
 
-        distribution : str
-                       The distirbution from which random points are sampled: uniform or poisson
+        distribution:   str
+                        The distribution from which random points are sampled: 
+                            -- uniform or poisson
 
-        lowerbound : float
-                     The lower bound at which the G-function is computed. (default 0)
+        lowerbound:     float
+                        The lower bound at which the G-function is computed. (Default 0)
 
-        upperbound : float
-                     The upper bound at which the G-function is computed.
-                     Defaults to the maximum pbserved nearest neighbor distance.
+        upperbound:     float
+                        The upper bound at which the G-function is computed.
+                        Defaults to the maximum observed nearest neighbor distance.
 
         Returns
         -------
-        NetworkG : object
-                   A network G class object
-
+        NetworkG:       object
+                        A network G class instance.
         """
 
         return NetworkG(self, pointpattern, nsteps=nsteps,
@@ -916,38 +933,39 @@ class Network:
                  threshold=0.5, distribution='uniform',
                  lowerbound=None, upperbound=None):
         """
-        Computes a network constrained G-Function
+        Computes a network constrained K-Function
 
         Parameters
         ----------
-        pointpattern : object
-                       A PySAL point pattern object
+        pointpattern:   object
+                        A PySAL point pattern object.
 
-        nsteps : int
-                 The number of steps at which the count of the nearest
-                 neighbors is computed
+        nsteps:         int
+                        The number of steps at which the count of the nearest neighbors 
+                        is computed.
 
-        permutations : int
-                       The number of permutations to perform (default 99)
+        permutations:   int
+                        The number of permutations to perform (default 99).
 
-        threshold : float
-                    The level at which significance is computed.  0.5 would be 97.5% and 2.5%
+        threshold:      float
+                        The level at which significance is computed.  
+                            -- 0.5 would be 97.5% and 2.5%
 
-        distribution : str
-                       The distirbution from which random points are sampled: uniform or poisson
+        distribution:   str
+                        The distribution from which random points are sampled: 
+                            -- uniform or poisson
 
-        lowerbound : float
-                     The lower bound at which the G-function is computed. (default 0)
+        lowerbound:     float
+                        The lower bound at which the K-function is computed. (Default 0)
 
-        upperbound : float
-                     The upper bound at which the G-function is computed.
-                     Defaults to the maximum pbserved nearest neighbor distance.
+        upperbound:     float
+                        The upper bound at which the K-function is computed.
+                        Defaults to the maximum observed nearest neighbor distance.
 
         Returns
         -------
-        NetworkK : object
-                   A network K class object
-
+        NetworkK:       object
+                        A network K class instance.
         """
         return NetworkK(self, pointpattern, nsteps=nsteps,
                         permutations=permutations,threshold=threshold,
@@ -956,18 +974,18 @@ class Network:
 
     def segment_edges(self, distance):
         """
-        Segment all of the edges in the network at either
-        a fixed distance or a fixed number of segments.
+        Segment all of the edges in the network at either a fixed distance or a fixed 
+        number of segments.
 
         Parameters
         -----------
-        distance : float
-                   The distance at which edges are split
+        distance:   float
+                    The distance at which edges are split.
 
         Returns
         -------
-        sn : object
-             PySAL Network Object
+        sn:         object
+                    PySAL Network Object.
 
         Example
         -------
@@ -1000,8 +1018,7 @@ class Network:
             currentstart = startnode = e[0]
             endnode = e[1]
 
-            #If the edge will be segmented, remove the
-            # current edge from the adjacency list
+            # If the edge will be segmented remove the current edge from the adjacency list.
             if interval < length:
                 sn.adjacencylist[e[0]].remove(e[1])
                 sn.adjacencylist[e[1]].remove(e[0])
@@ -1021,36 +1038,36 @@ class Network:
                     currentstop = current_node_id
                     totallength += interval
 
-                    #Compute the new node coordinate
+                    # Compute the new node coordinate.
                     newx, newy = self._newpoint_coords(e, totallength)
 
-                    #Update node_list
+                    # Update node_list.
                     if currentstop not in sn.node_list:
                         sn.node_list.append(currentstop)
 
-                    #Update nodes and node_coords
+                    # Update nodes and node_coords.
                     sn.node_coords[currentstop] = newx, newy
                     sn.nodes[(newx, newy)] = currentstop
 
-                #Update the adjacencylist
+                # Update the adjacency list.
                 sn.adjacencylist[currentstart].append(currentstop)
                 sn.adjacencylist[currentstop].append(currentstart)
 
 
-                #Add the new edge to the edge dict
-                #Iterating over this, so we need to add after iterating
+                # Add the new edge to the edge dict.
+                # Iterating over this so we need to add after iterating.
                 newedges.add(tuple(sorted([currentstart, currentstop])))
 
-                #Modify edge_lengths
+                # Modify edge_lengths.
                 sn.edge_lengths[tuple(sorted([currentstart, currentstop]))] = interval
 
-                #Increment the start to the stop
+                # Increment the start to the stop.
                 currentstart = currentstop
 
         sn.edges.update(newedges)
         sn.edges.difference_update(removeedges)
         sn.edges = list(sn.edges)
-        #Update the point pattern snapping
+        # Update the point pattern snapping.
         for instance in sn.pointpatterns.itervalues():
             sn._snap_to_edge(instance)
 
@@ -1062,16 +1079,14 @@ class Network:
 
         Parameters
         ----------
-        filename : str
-                   The filename where the network should be saved.
-                   This should be a full PATH or the file is saved
-                   whereever this method is called from.
+        filename:   str
+                    The filename where the network should be saved. This should be a full 
+                    path or the file is saved whereever this method is called from.
 
         Example
         --------
         >>> ntw = ps.Network(ps.examples.get_path('streets.shp'))
         >>> ntw.savenetwork('mynetwork.pkl')
-
         """
         with open(filename, 'wb') as networkout:
             cPickle.dump(self, networkout, protocol=2)
@@ -1086,33 +1101,32 @@ class Network:
 
 class PointPattern():
     """
-    A stub point pattern class used to store a point pattern.
-    This class is monkey patched with network specific attributes
-    when the points are snapped to a network.
+    A stub point pattern class used to store a point pattern. This class is monkey patched
+    with network specific attributes when the points are snapped to a network.
 
     In the future this class may be replaced with a generic point
     pattern class.
 
     Parameters
     ----------
-    shapefile : string
-                input shapefile
+    shapefile:  str
+                The input shapefile.
 
-    idvariable : string
-                 field in the shapefile to use as an idvariable
+    idvariable: str
+                Field in the shapefile to use as an id variable.
 
-    attribute : boolean
-                {False, True} A flag to indicate whether all attributes
-                are tagged to this class.
+    attribute:  bool
+                {False, True} 
+                A flag to indicate whether all attributes are tagged to this class.
 
     Attributes
     ----------
-    points : dict
-             key is the point id
-             value are the coordinates
+    points:     dict
+                Keys are the point ids.
+                Values are the coordinates.
 
-    npoints : integer
-              the number of points
+    npoints:    int
+                The number of points.
 
 
     """
@@ -1127,7 +1141,7 @@ class PointPattern():
 
         pts = ps.open(shapefile)
 
-        #Get attributes if requested
+        # Get attributes if requested
         if attribute == True:
             dbname = os.path.splitext(shapefile)[0] + '.dbf'
             db = ps.open(dbname)
@@ -1158,7 +1172,6 @@ class SimulatedPointPattern():
     make this a child of that class.
 
     This class is not intended to be used by the external user.
-
     """
     def __init__(self):
         self.npoints = 0

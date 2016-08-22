@@ -6,9 +6,11 @@ from pysal.spreg.ml_error_regimes import ML_Error_Regimes
 from pysal.spreg.ml_error import ML_Error
 from pysal.spreg import utils
 from pysal.common import RTOL
+from skip import SKIP
 
-@unittest.skipIf(int(scipy.__version__.split(".")[1]) < 11,
-         "Max Likelihood requires SciPy version 11 or newer.")
+
+@unittest.skipIf(SKIP,
+        "Skipping MLError Tests")
 class TestMLError(unittest.TestCase):
     def setUp(self):
         db =  pysal.open(pysal.examples.get_path("baltim.dbf"),'r')

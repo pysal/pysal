@@ -234,8 +234,8 @@ class Test_WSP_Back_To_W(unittest.TestCase):
     def setUp(self):
         from pysal import rook_from_shapefile
         self.w = rook_from_shapefile(pysal.examples.get_path('10740.shp'))
-        wsp = pysal.weights.WSP(self.w.sparse, self.w.id_order)
-        self.w = pysal.weights.WSP2W(wsp)
+        wsp = self.w.to_WSP()
+        self.w = wsp.to_W()
 
         self.neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4],
                           4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7],
