@@ -1,5 +1,6 @@
 from functools import partial
-
+from scipy import stats as stats
+from scipy import spatial as spatial
 def safe_import(modname, submods=[], silent=False):
     """
     checks whether a module is importable or not and returns the module or submodule if so
