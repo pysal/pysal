@@ -114,17 +114,28 @@ class VecMoran:
     """
 
 
-    def __init__(self, y, w, focus='origin', rand='A', threshold=999,
-            alpha=-1.5, permutations=PERMUTATIONS, two_tailed=True):
+    def __init__(self, y, w, focus='origin', rand='A', permutations=PERMUTATIONS,
+            two_tailed=True):
         self.y = y
         self.o = y[:, 1:3]
         self.d = y[:, 3:5]
-        self.w = w
         self.focus = focus
         self.rand = rand
-        self.threshold = threshold
-        self.alpha = alpha
         self.permutations = permutations
+        if isinstance(w, DistanceBand): 
+            self.w = w
+        else:
+            raise TypeError('Spatial weight, W, must be of type DistanceBand')
+        try:
+            self.threshold = w.threshold
+            self.alpha = w.alpha
+            self.build_sp = w.build_sp
+            self.binary = w.binary
+            self.silent = w.silent
+        except:
+            raise AttributeError('W object missing necessary attributes: '
+                'threshold, alpha, binary, build_sp, silent')
+
         self.__moments()
         self.I = self.__calc(self.z)
         self.z_rand = (self.I - self.EI) / self.seI_rand
@@ -200,7 +211,7 @@ class VecMoran:
         inum = np.sum(zl)
         return self.n / self.w.s0 * inum / self.uv2ss
     
-    def newD(self, oldO, oldD, newO):
+    def _newD(self, oldO, oldD, newO):
         oldOX, oldOY = oldO[:,0], oldO[:,1]
         oldDX, oldDY = oldD[:,0], oldD[:,1]
         newOX, newOY = newO[:,0], newO[:,1]
@@ -210,7 +221,7 @@ class VecMoran:
         newDY = oldDY + deltaY
         return np.hstack([newDX.reshape((-1,1)), newDY.reshape((-1,1))])
 
-    def newO(self, oldO, oldD, newD):
+    def _newO(self, oldO, oldD, newD):
         oldOX, oldOY = oldO[:,0], oldO[:,1]
         oldDX, oldDY = oldD[:,0], oldD[:,1]
         newDX, newDY = newD[:,0], newD[:,1]
@@ -224,18 +235,21 @@ class VecMoran:
         if focus.lower() == 'origin':
             newOs = [np.random.permutation(self.o) for i in xrange(self.permutations)]
             sims = [np.hstack([np.arange(self.n).reshape((-1,1)), newO,
-            self.newD(self.o, self.d, newO)]) for newO in newOs]
-            Ws = [DistanceBand(newO, threshold=self.threshold, alpha=-self.alpha, 
-                binary=False) for newO in newOs]
+            self._newD(self.o, self.d, newO)]) for newO in newOs]
+            Ws = [DistanceBand(newO, threshold=self.threshold, alpha=self.alpha, 
+                binary=self.binary, build_sp=self.build_sp, silent=self.silent)
+                for newO in newOs]
         elif focus.lower() == 'destination':
             newDs = [np.random.permutation(self.d) for i in xrange(self.permutations)]
             sims = [np.hstack([np.arange(self.n).reshape((-1,1)),
-                self.newO(self.o, self.d, newD), newD]) for newD in newDs]
+                self._newO(self.o, self.d, newD), newD]) for newD in newDs]
             Ws = [DistanceBand(newD, threshold=self.threshold, alpha=self.alpha, 
-                binary=False) for newD in newDs]
+                binary=self.binary, build_sp=self.build_sp, silent=self.silent)
+                for newD in newDs]
+        else:
+            raise ValueError("Parameter 'focus' must take value of either 'origin' or 'destination.'")
 
-        VMs = [VecMoran(y, Ws[i], threshold=self.threshold, alpha=self.alpha,
-            permutations=None) for i, y in enumerate(sims)]
+        VMs = [VecMoran(y, Ws[i], permutations=None) for i, y in enumerate(sims)]
         sim = [VM.__calc(VM.z) for VM in VMs]
         return sim
 
@@ -248,8 +262,7 @@ class VecMoran:
                 np.random.permutation(self.o), self.d]) for i in xrange(self.permutations)]
         else:
             raise ValueError("Parameter 'focus' must take value of either 'origin' or 'destination.'")
-        sims = [VecMoran(y, self.w, threshold=self.threshold, alpha=self.alpha,
-            permutations=None) for y in sims]
+        sims = [VecMoran(y, self.w, permutations=None) for y in sims]
         sim = [VM.__calc(VM.z) for VM in sims]
         return sim
        

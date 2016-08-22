@@ -150,7 +150,7 @@ def netW(link_list, share='A', transform = 'r'):
     return netW
 
 def vecW(origin_x, origin_y, dest_x, dest_y, threshold, p=2, alpha=-1.0,
-        binary=True, ids=None, build_sp=False):
+        binary=True, ids=None, build_sp=False, silent=False):
     """
     Distance-based spatial weight for vectors that is computed using a
     4-dimensional distance between the origin x,y-coordinates and the
@@ -188,6 +188,11 @@ def vecW(origin_x, origin_y, dest_x, dest_y, threshold, p=2, alpha=-1.0,
                   distance matrix; significant speed gains may be obtained
                   dending on the sparsity of the of distance_matrix and
                   threshold that is applied
+    silent      : boolean
+                  By default PySAL will print a warning if the
+                  dataset contains any disconnected observations or
+                  islands. To silence this warning set this
+                  parameter to True.
     
     Returns
     ------
@@ -211,7 +216,7 @@ def vecW(origin_x, origin_y, dest_x, dest_y, threshold, p=2, alpha=-1.0,
     """
     data = zip(origin_x, origin_y, dest_x, dest_y)
     W = DistanceBand(data, threshold=threshold, p=p, binary=binary, alpha=alpha,
-            ids=ids, build_sp=False)
+            ids=ids, build_sp=False, silent=silent)
     return W
 
 def mat2L(edge_matrix):

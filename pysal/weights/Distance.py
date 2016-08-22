@@ -695,6 +695,11 @@ class DistanceBand(W):
                   distance matrix; significant speed gains may be obtained
                   dending on the sparsity of the of distance_matrix and
                   threshold that is applied
+    silent      : boolean
+                  By default PySAL will print a warning if the
+                  dataset contains any disconnected observations or
+                  islands. To silence this warning set this
+                  parameter to True.
 
     Attributes
     ----------
@@ -752,7 +757,7 @@ class DistanceBand(W):
     """
 
     def __init__(self, data, threshold, p=2, alpha=-1.0, binary=True, ids=None,
-            build_sp=True):
+            build_sp=True, silent=False):
         """Casting to floats is a work around for a bug in scipy.spatial.
         See detail in pysal issue #126.
 
@@ -762,6 +767,7 @@ class DistanceBand(W):
         self.binary = binary
         self.alpha = alpha
         self.build_sp = build_sp
+        self.silent = silent
         
         if isKDTree(data):
             self.kd = data
@@ -781,7 +787,7 @@ class DistanceBand(W):
                 self.kd = None       
         self._band()
         neighbors, weights = self._distance_to_W(ids)
-        W.__init__(self, neighbors, weights, ids)
+        W.__init__(self, neighbors, weights, ids, silent_island_warning=self.silent)
 
     @classmethod
     def from_shapefile(cls, filepath, threshold, idVariable=None, **kwargs):
@@ -872,7 +878,7 @@ class DistanceBand(W):
         if self.binary:
             self.dmat[self.dmat>0] = 1
             self.dmat.eliminate_zeros()
-            tempW = WSP2W(WSP(self.dmat))
+            tempW = WSP2W(WSP(self.dmat), silent_island_warning=self.silent)
             neighbors = tempW.neighbors
             weight_keys = tempW.weights.keys()
             weight_vals = tempW.weights.values()
@@ -882,7 +888,7 @@ class DistanceBand(W):
             weighted = self.dmat.power(self.alpha)
             weighted[weighted==np.inf] = 0
             weighted.eliminate_zeros()
-            tempW = WSP2W(WSP(weighted))
+            tempW = WSP2W(WSP(weighted), silent_island_warning=self.silent)
             neighbors = tempW.neighbors
             weight_keys = tempW.weights.keys()
             weight_vals = tempW.weights.values()
