@@ -140,3 +140,70 @@ def equal_interval(l_bound, u_bound, interval, function, int_score=False):
         b = b + interval
 
     return opt_val, opt_score, output
+
+
+    def flexible_bw(init, y, X, n, k, family, tol, max_iter, rss_score,
+            gwr_func, sel_func):
+        if init is None:
+            err = y
+            est = np.zeros_like(X)
+        elif init:
+            model = Sel_BW(coords, y, X, [], )
+            bw = sel_func(y, X)
+            optim_model = gwr_func(bw)
+            err = optim_model.u
+            est = optim_model.params
+        else:
+            model = GLM(y, X, family=self.family).fit()
+            err = model.resid_working
+            est = np.repeat(model.params.T, n, axis=0)
+        
+        XB = np.multiply(est, X)
+        if rss_score:
+            rss = np.sum((err)**2)
+        iters = 0
+        scores = []
+        delta = 1e6
+        BWs = []
+        VALs = []
+
+        while delta > tol and iters < max_iter:
+        	iters += 1
+            new_XB = np.zeros_like(X)
+            bws = []
+            vals = []
+            ests = np.zeros_like(X)
+            for i in rage(k):
+                temp_y = XB[:,1].reshape((-1,1))
+                temp_y = temp_y + err
+                temp_X = X[:,i].reshape((-1,1))
+                
+                bw = sel_func(temp_y, temp_X)
+                optim_model = gwr_func(bw)
+                err = optim_model.u
+                est = optim_model.params.reshape((-1,))
+
+                new_XB[:,i] = np.multiply(est, temp_X.reshape((-1,)))
+                bws.append(bw)
+                ests[:,i] = est
+                vals.append(model.bw[1])
+            
+            predy = np.sum(np.multiply(ests, X), axis=1)
+            predy.shape = (n, 1)
+            num = np.sum((new_XB - old_XB)**2)/n
+            den = np.sum(np.sum(new_XB, aixs=1)**2)
+            score = (num/den)**0.5
+            XB = new_XB
+            
+            if rss_score:
+                new_rss = np.sum((y - predy)**2)
+                score = (new_rss - rss)/new_rss
+                rss = new_rss
+            
+            scores.append(score)
+            delta = score
+            BWs.append(bws) 
+            VALs.append(vals)
+
+        opt_bws = BWs[-1,:]
+        return opt_bws, np.array(BWs), np.array(VALs), np.array(scores)
