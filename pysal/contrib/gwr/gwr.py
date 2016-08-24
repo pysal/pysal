@@ -6,6 +6,7 @@ __author__ = "Taylor Oshan Tayoshan@gmail.com"
 
 import numpy as np
 import numpy.linalg as la
+from scipy.stats import t
 from kernels import *
 import pysal.spreg.user_output as USER
 from pysal.contrib.glm.family import Gaussian, Binomial, Poisson
@@ -598,7 +599,9 @@ class GWRResults(GLMResults):
                           where absolute tvalues less than the absolute value of
                           alpha have been set to 0.
         """
-        alpha = np.abs(alpha)
+        alpha = np.abs(alpha)/2.0
+        n = self.n
+        critical = stats.t.ppf(1-critical, n-1)
         subset = (self.tvalues < alpha) & (self.tvalues > -1.0*alpha)
         tvalues = self.tvalues.copy()
         tvalues[subset] = 0
