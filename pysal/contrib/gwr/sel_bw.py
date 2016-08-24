@@ -158,9 +158,51 @@ class Sel_BW(object):
         if self.fb:
             self._fbw()
         else:
-            self_bw()
+            self._bw()
 
         return self.bw[0]
+
+    def _bw(self):
+        gwr_func = lambda bw: getDiag[criterion](
+                GWR(self.coords, self.y, self.x_loc, bw, family=self.family,
+                    kernel=self.kernel, fixed=self.fixed).fit())
+        if self.search == 'golden_section':
+            a,c = self._init_section(self.x_glob, self.x_loc, self.coords)
+            delta = 0.38197 #1 - (np.sqrt(5.0)-1.0)/2.0
+            self.bw = golden_section(a, c, delta, gwr_func, self.tol, 
+                    self.max_iter, self.int_score)
+        elif self.search == 'interval':
+            self.bw = equal_interval(self.bw_min, self.bw_max, self.interval,
+                    gwr_func, self.int_score)
+        else:
+            raise TypeError('Unsupported computational search method ', search)
+   
+    def _fbw(self):
+        y = self.y
+        X = self.x_loc
+        n, k = X.shape
+        family = self.family
+        #offset = self.offset
+        kernel = self.kernel
+        fixed = self.fixed
+        coords = self.coords
+        search = self.search
+        criterion = self.criterion
+        bw_min = self.bw_min
+        bw_max = self.bw_max
+        interval = self.interval
+        tol = self.tol
+        max_iter = self.max_iter
+        gwr_func = lambda bw: GWR(coords, y, x_loc, bw, family=family, 
+                kernel=kernel, fixed=fixed).fit()
+        sel_func = lambda y, X: Sel_BW(coords, y, X, x_glob=[], family=family,
+                kernel=kernel, fixed=fixed).search(search=search, criterion=criterion,
+                        bw_min=bw_min, bw_max=bw_max, interval=interval, tol=tol,
+                        max_iter=max_iter)
+        self.bw = flexible_bw(self.init_fb, y, X, n, k, family, self.tol_fb,
+               self.max_iter_fb, self.rss_score, gwr_func, sel_func)
+
+
 
     def _init_section(self, x_glob, x_loc, coords):
         if len(x_glob) > 0:
@@ -185,42 +227,3 @@ class Sel_BW(object):
             max_dists = sort_dists[:,-1]
             a = np.min(min_dists)/2.0
             c = np.max(max_dists)/2.0
-    
-    def _bw(self):
-        gwr_func = lambda bw: getDiag[criterion](
-                GWR(self.coords, self.y, self.x_loc, bw, family=self.family,
-                    kernel=self.kernel, fixed=self.fixed).fit())
-        if self.search == 'golden_section':
-            a,c = self._init_section(self.x_glob, self.x_loc, self.coords)
-            delta = 0.38197 #1 - (np.sqrt(5.0)-1.0)/2.0
-            self.bw = golden_section(a, c, delta, gwr_func, self.tol, 
-                    self.max_iter, self.int_score)
-        elif self.search == 'interval':
-            self.bw = equal_interval(self.bw_min, self.bw_max, self.interval,
-                    gwr_func, self.int_score)
-        else:
-            raise TypeError('Unsupported computational search method ', search)
-   
-   def _fbw(self):
-        y = self.y
-        X = self.x_loc
-        family = self.family
-        offset = self.offset
-        kernel = self.kernel
-        fixed = self.fixed
-        coords = self.coords
-        search = self.search
-        criterion = self.criterion
-        bw_min = self.bw_min
-        bw_max = self.bw_max
-        interval = self.interval
-        tol = self.tol
-        max_iter - self.max_iter
-        gwr_func = lambda bw: GWR(coords, y, x_loc, bw, family=family, 
-                kernel=kernel, fixed=fixed).fit())
-        sel_func = lambda y, X: Sel_BW(coords, y, X, family=family,
-                offset=offset, kernel=kernel, fixed=fixed).search(search=search,
-                        criterion=criterion, bw_min=bw_min, bw_max=bw_max,
-                        interval=interval, tol=tol, max_iter=max_iter)
-       self.bw = flexible_bw(self.init_fb, y, X, self.n, self.k, family, self.tol_fb,
-               self.max_iter_fb, self.rss_score, gwr_func, sel_fun)

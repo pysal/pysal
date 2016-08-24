@@ -604,8 +604,8 @@ class GWRResults(GLMResults):
         tvalues[subset] = 0
         return tvalues
 
-class FBGWR(GWR):
 
+'''
 class FBGWR:
     """
     Flexible bandwidth GWR model: only including basic information, for bandwidth selection use. No diagnostics
@@ -842,4 +842,4 @@ class FBGWR:
 
 class FBGWRResults(GWRResults):
     pass
-
+'''
