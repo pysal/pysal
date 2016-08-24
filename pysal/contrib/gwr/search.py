@@ -188,8 +188,7 @@ def equal_interval(l_bound, u_bound, interval, function, int_score=False):
                 ests[:,i] = est
                 vals.append(model.bw[1])
             
-            predy = np.sum(np.multiply(ests, X), axis=1)
-            predy.shape = (n, 1)
+            predy = np.sum(np.multiply(ests, X), axis=1).reshape((-1,1))
             num = np.sum((new_XB - old_XB)**2)/n
             den = np.sum(np.sum(new_XB, aixs=1)**2)
             score = (num/den)**0.5

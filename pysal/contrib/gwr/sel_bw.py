@@ -78,7 +78,7 @@ class Sel_BW(object):
                     max interations if no convergence to tol
     """
     def __init__(self, coords, y, x_loc, x_glob=None, family=Gaussian(),
-            offset=None, kernel='gaussian', fixed=False):
+            offset=None, kernel='gaussian', fixed=False, fb=False):
         self.coords = coords
         self.y = y
         self.x_loc = x_loc
@@ -89,9 +89,10 @@ class Sel_BW(object):
         self.family=family
         self.fixed = fixed
         self.kernel = kernel
+        self.fb = fb
 
     def search(self, search='golden_section', criterion='AICc', bw_min=0.0, 
-            bw_max=0.0, interval=0.0, tol=1.0e-6, max_iter=200, init=True,
+            bw_max=0.0, interval=0.0, tol=1.0e-6, max_iter=200, init_fb=True,
             tol_fb=1.0e-5, rss_score=False, max_iter_fb=200):
         """
         Parameters
@@ -123,7 +124,7 @@ class Sel_BW(object):
         self.interval = interval
         self.tol = tol
         self.max_iter = max_iter
-        self.init = init
+        self.init_fb = init_fb
         self.tol_fb = tol_fb
         self.rss_score = rss_score
         self.max_iter_fb = max_iter_fb
@@ -221,5 +222,5 @@ class Sel_BW(object):
                 offset=offset, kernel=kernel, fixed=fixed).search(search=search,
                         criterion=criterion, bw_min=bw_min, bw_max=bw_max,
                         interval=interval, tol=tol, max_iter=max_iter)
-       self.bw = flexible_bw(self.init, y, X, self.n, self.k, family, self.tol_fb,
+       self.bw = flexible_bw(self.init_fb, y, X, self.n, self.k, family, self.tol_fb,
                self.max_iter_fb, self.rss_score, gwr_func, sel_fun)
