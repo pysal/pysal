@@ -163,7 +163,7 @@ class Sel_BW(object):
         return self.bw[0]
 
     def _bw(self):
-        gwr_func = lambda bw: getDiag[criterion](
+        gwr_func = lambda bw: getDiag[self.criterion](
                 GWR(self.coords, self.y, self.x_loc, bw, family=self.family,
                     kernel=self.kernel, fixed=self.fixed).fit())
         if self.search == 'golden_section':
@@ -193,7 +193,7 @@ class Sel_BW(object):
         interval = self.interval
         tol = self.tol
         max_iter = self.max_iter
-        gwr_func = lambda bw: GWR(coords, y, x_loc, bw, family=family, 
+        gwr_func = lambda bw: GWR(coords, y, X, bw, family=family, 
                 kernel=kernel, fixed=fixed).fit()
         sel_func = lambda y, X: Sel_BW(coords, y, X, x_glob=[], family=family,
                 kernel=kernel, fixed=fixed).search(search=search, criterion=criterion,
@@ -227,3 +227,9 @@ class Sel_BW(object):
             max_dists = sort_dists[:,-1]
             a = np.min(min_dists)/2.0
             c = np.max(max_dists)/2.0
+      
+        if a < self.bw_min:
+            a = self.bw_min
+        if c > self.bw_max and self.bw_max > 0:
+            c = self.bw_max
+        return a, c

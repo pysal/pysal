@@ -46,6 +46,7 @@ def golden_section(a, c, delta, function, tol, max_iter, int_score=False):
     output = []
     while np.abs(diff) > tol and iters < max_iter:
         iters += 1
+        print iters
         if int_score:
         	b = np.round(b)
         	d = np.round(d)
@@ -148,12 +149,11 @@ def flexible_bw(init, y, X, n, k, family, tol, max_iter, rss_score,
         err = y
         est = np.zeros_like(X)
     elif init:
-        print 'a'
         bw = sel_func(y, X)
-        print 'b'
         optim_model = gwr_func(bw)
         err = optim_model.u
         est = optim_model.params
+        X = optim_model.X
     else:
         model = GLM(y, X, family=self.family).fit()
         err = model.resid_working
@@ -170,15 +170,17 @@ def flexible_bw(init, y, X, n, k, family, tol, max_iter, rss_score,
 
     while delta > tol and iters < max_iter:
         iters += 1
+        print iters
         new_XB = np.zeros_like(X)
         bws = []
         vals = []
         ests = np.zeros_like(X)
-        for i in rage(k):
+        for i in range(k):
             temp_y = XB[:,1].reshape((-1,1))
             temp_y = temp_y + err
             temp_X = X[:,i].reshape((-1,1))
-                
+            print temp_y
+            print temp_X
             bw = sel_func(temp_y, temp_X)
             optim_model = gwr_func(bw)
             err = optim_model.u
