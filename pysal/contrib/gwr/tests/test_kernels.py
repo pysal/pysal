@@ -65,11 +65,12 @@ class TestKernels(unittest.TestCase):
 
     def test_fix_biqsquare(self):
         kern = fix_bisquare(self.coords, 3)
-        np.testing.assert_allclose(kern, self.fix_bisquare_kern)
+        np.testing.assert_allclose(kern, self.fix_bisquare_kern,
+                atol=1e-01)
 
     def test_adapt_bisqaure(self):
         kern = adapt_bisquare(self.coords, 3)
-        np.testing.assert_allclose(kern, self.adapt_bisquare_kern)
+        np.testing.assert_allclose(kern, self.adapt_bisquare_kern, atol=1e-012)
     
     def test_fix_exp(self):
         kern = fix_exp(self.coords, 3)
