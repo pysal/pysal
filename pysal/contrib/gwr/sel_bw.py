@@ -92,7 +92,7 @@ class Sel_BW(object):
                     max interations if no convergence to tol
     """
     def __init__(self, coords, y, x_loc, x_glob=None, family=Gaussian(),
-            offset=None, kernel='gaussian', fixed=False):
+            offset=None, kernel='bisquare', fixed=False):
         self.coords = coords
         self.y = y
         self.x_loc = x_loc
