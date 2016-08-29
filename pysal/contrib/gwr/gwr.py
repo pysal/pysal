@@ -220,7 +220,7 @@ class GWR(GLM):
             f = np.zeros((self.n, self.n))
             p = np.zeros((self.n, 1))
             for i in range(self.n):
-                wi = np.diag(self.W[i])
+                wi = self.W[i]
             	rslt = iwls(self.y, self.X, self.family, self.offset,
             	        self.y_fix, ini_params, tol, max_iter, wi=wi)
                 params[i,:] = rslt[0].T
