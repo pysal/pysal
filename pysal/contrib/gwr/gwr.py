@@ -6,6 +6,7 @@ __author__ = "Taylor Oshan Tayoshan@gmail.com"
 
 import numpy as np
 import numpy.linalg as la
+from scipy.stats import t
 from kernels import *
 import pysal.spreg.user_output as USER
 from pysal.contrib.glm.family import Gaussian, Binomial, Poisson
@@ -216,10 +217,10 @@ class GWR(GLM):
             S = np.zeros((self.n, self.n))
             R = np.zeros((self.n, self.n))
             CCT = np.zeros((self.n, self.k))
-            f = np.zeros((self.n, self.n))
+            #f = np.zeros((self.n, self.n))
             p = np.zeros((self.n, 1))
             for i in range(self.n):
-                wi = np.diag(self.W[i])
+                wi = self.W[i].reshape((-1,1))
             	rslt = iwls(self.y, self.X, self.family, self.offset,
             	        self.y_fix, ini_params, tol, max_iter, wi=wi)
                 params[i,:] = rslt[0].T
@@ -230,8 +231,10 @@ class GWR(GLM):
                 R[i] = np.dot(self.X[i], rslt[5])
                 ri = np.dot(self.X[i], rslt[5])
                 S[i] = ri*np.reshape(rslt[4].flatten(), (1,-1))
-                cf = rslt[5] - np.dot(rslt[5], f)
-                CCT[i] = np.diag(np.dot(cf, cf.T))
+                #dont need unless f is explicitly passed for
+                #prediction of non-sampled points
+                #cf = rslt[5] - np.dot(rslt[5], f)
+                CCT[i] = np.diag(np.dot(rslt[5], rslt[5].T))
             S = S * (1.0/z)
         return GWRResults(self, params, predy, S, CCT, w)
 
@@ -598,7 +601,9 @@ class GWRResults(GLMResults):
                           where absolute tvalues less than the absolute value of
                           alpha have been set to 0.
         """
-        alpha = np.abs(alpha)
+        alpha = np.abs(alpha)/2.0
+        n = self.n
+        critical = stats.t.ppf(1-critical, n-1)
         subset = (self.tvalues < alpha) & (self.tvalues > -1.0*alpha)
         tvalues = self.tvalues.copy()
         tvalues[subset] = 0

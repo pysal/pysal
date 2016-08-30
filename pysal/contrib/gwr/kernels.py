@@ -54,7 +54,7 @@ class _Kernel(object):
             self.data = data
             self.kdt = KDTree(self.data)
         if k is not None:
-            self.k = k + 1
+            self.k = int(k) + 1
         else:
             self.k = k
         self.dmat = cdist(self.data, self.data)

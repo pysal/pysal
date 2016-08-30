@@ -29,7 +29,7 @@ def _compute_betas_gwr(y, x, wi):
     Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
     Geographically weighted regression: the analysis of spatially varying relationships.
     """
-    xT = np.dot(x.T, wi)
+    xT = (x * wi).T
     xtx = np.dot(xT, x)
     xtx_inv = la.inv(xtx)
     xtx_inv_xt = np.dot(xtx_inv, xT)
