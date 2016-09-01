@@ -241,7 +241,7 @@ class TestGWRGaussian(unittest.TestCase):
         np.testing.assert_allclose(rslt.predy, self.FB['predy'], atol=1e-07)
         np.testing.assert_allclose(rslt.params, self.FB['params'], atol=1e-07)
         np.testing.assert_allclose(rslt.u, self.FB['u'], atol=1e-05)
-        np.testing.assert_allclose(rslt.utu, self.FB['utu'], atol=1e-04)
+        np.testing.assert_almost_equal(rslt.utu, 6339.3497144025841)
 
 class TestGWRPoisson(unittest.TestCase):
     def setUp(self):

@@ -247,8 +247,8 @@ class GWRResults(GLMResults):
         model         : GWR object
                         pointer to GWR object with estimation parameters
 
-        betas         : array
-                        k*1, estimared coefficients
+        params        : array
+                        n*k, estimated coefficients
 
         predy         : array
                         n*1, predicted y values
@@ -614,9 +614,132 @@ class FBGWR(GWR):
     """
     Parameters
     ----------
+        coords        : array-like
+                        n*2, collection of n sets of (x,y) coordinates of
+                        observatons; also used as calibration locations is
+                        'points' is set to None
+
+        y             : array
+                        n*1, dependent variable
+
+        X             : array
+                        n*k, independent variable, exlcuding the constant
+
+        points        : array-like
+                        n*2, collection of n sets of (x,y) coordinates used for
+                        calibration locations; default is set to None, which
+                        uses every observation as a calibration point 
+
+        bws           : array-like
+                        collection of bandwidth values consisting of either a distance or N
+                        nearest neighbors; user specified or obtained using
+                        Sel_BW with fb=True. Order of values should the same as
+                        the order of columns associated with X
+        XB            : array
+                        n*k, product of temporary X and params obtained as through-put
+                        from the backfitting algorithm used to select flexible
+                        bandwidths; product of the Sel_BW class
+        err           : array
+                        n*1, temporary residuals associated with the predicted values from
+                        the backfitting algorithm used to select flexible
+                        bandwidths; product of the Sel_BW class
+
+        family        : family object
+                        underlying probability model; provides
+                        distribution-specific calculations
+
+        offset        : array 
+                        n*1, the offset variable at the ith location. For Poisson model
+                        this term is often the size of the population at risk or
+                        the expected size of the outcome in spatial epidemiology
+                        Default is None where Ni becomes 1.0 for all locations
+
+        y_fix         : array 
+                        n*1, the fixed intercept value of y; default is None
+
+        sigma2_v1     : boolean
+                        specify sigma squared, True to use n as denominator;
+                        default is False which uses n-k
+
+        kernel        : string
+                        type of kernel function used to weight observations;
+                        available options:
+                        'gaussian'
+                        'bisquare'
+                        'exponential'
+
+        fixed         : boolean
+                        True for distance based kernel function and  False for
+                        adaptive (nearest neighbor) kernel function (default)
+
+        constant      : boolean
+                        True to include intercept (default) in model and False to exclude
+                        intercept.
 
     Attributes
     ----------
+        coords        : array-like
+                        n*2, collection of n sets of (x,y) coordinates of
+                        observatons; also used as calibration locations is
+                        'points' is set to None
+
+        y             : array
+                        n*1, dependent variable
+
+        X             : array
+                        n*k, independent variable, exlcuding the constant
+
+        points        : array-like
+                        n*2, collection of n sets of (x,y) coordinates used for
+                        calibration locations; default is set to None, which
+                        uses every observation as a calibration point 
+
+        bws           : array-like
+                        collection of bandwidth values consisting of either a distance or N
+                        nearest neighbors; user specified or obtained using
+                        Sel_BW with fb=True. Order of values should the same as
+                        the order of columns associated with X
+        XB            : array
+                        n*k, product of temporary X and params obtained as through-put
+                        from the backfitting algorithm used to select flexible
+                        bandwidths; product of the Sel_BW class
+        err           : array
+                        n*1, temporary residuals associated with the predicted values from
+                        the backfitting algorithm used to select flexible
+                        bandwidths; product of the Sel_BW class
+
+        family        : family object
+                        underlying probability model; provides
+                        distribution-specific calculations
+
+        offset        : array 
+                        n*1, the offset variable at the ith location. For Poisson model
+                        this term is often the size of the population at risk or
+                        the expected size of the outcome in spatial epidemiology
+                        Default is None where Ni becomes 1.0 for all locations
+
+        y_fix         : array 
+                        n*1, the fixed intercept value of y; default is None
+
+        sigma2_v1     : boolean
+                        specify sigma squared, True to use n as denominator;
+                        default is False which uses n-k
+
+        kernel        : string
+                        type of kernel function used to weight observations;
+                        available options:
+                        'gaussian'
+                        'bisquare'
+                        'exponential'
+
+        fixed         : boolean
+                        True for distance based kernel function and  False for
+                        adaptive (nearest neighbor) kernel function (default)
+
+        constant      : boolean
+                        True to include intercept (default) in model and False to exclude
+                        intercept.
+
 
     Examples
     -------
@@ -682,9 +805,35 @@ class FBGWRResults(object):
     """
     Parameters
     ----------
+        model         : GWR object
+                        pointer to FBGWR object with estimation parameters
+
+        params        : array
+                        n*k, estimated coefficients
 
     Attributes
     ----------
+        model         : GWR Object
+                        points to FBGWR object for which parameters have been
+                        estimated
+
+        params        : array
+                        n*k, parameter estimates
+
+        predy         : array
+                        n*1, predicted value of y
+
+        y             : array
+                        n*1, dependent variable
+
+        X             : array
+                        n*k, independent variable, including constant
+
+        u             : array
+                        n*1, residuals
+
+        utu           : scalar
+                        residual sum of sqaures
 
     Examples
     -------
@@ -711,4 +860,4 @@ class FBGWRResults(object):
 
     @cache_readonly
     def utu(self):
-        return np.dot(self.u, self.u.T)
+        return np.dot(self.u.flatten(), self.u.flatten().T)
