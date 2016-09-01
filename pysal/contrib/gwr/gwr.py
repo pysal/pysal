@@ -269,7 +269,7 @@ class GWRResults(GLMResults):
                         points to GWR object for which parameters have been
                         estimated
 
-        betas         : array
+        params        : array
                         n*k, parameter estimates
 
         predy         : array
@@ -610,241 +610,105 @@ class GWRResults(GLMResults):
         return tvalues
 
 
-'''
-class FBGWR:
+class FBGWR(GWR):
     """
-    Flexible bandwidth GWR model: only including basic information, for bandwidth selection use. No diagnostics
-
     Parameters
     ----------
-        coords        : array-like
-                        n*2, collection of n sets of (x,y) coordinates of
-                        observatons; also used as calibration locations is
-                        'points' is set to None
-
-        y             : array
-                        n*1, dependent variable
-
-        X             : array
-                        n*k, independent variable, exlcuding the constant
-
-        points        : array-like
-                        n*2, collection of n sets of (x,y) coordinates used for
-                        calibration locations; default is set to None, which
-                        uses every observation as a calibration point 
-
-        bw            : scalar
-                        bandwidth value consisting of either a distance or N
-                        nearest neighbors; user specified or obtained using
-                        Sel_BW 
-
-        family        : family object
-                        underlying probability model; provides
-                        distribution-specific calculations
-
-        offset        : array 
-                        n*1, the offset variable at the ith location. For Poisson model
-                        this term is often the size of the population at risk or
-                        the expected size of the outcome in spatial epidemiology
-                        Default is None where Ni becomes 1.0 for all locations
-
-        y_fix         : array 
-                        n*1, the fixed intercept value of y; default is None
-
-        sigma2_v1     : boolean
-                        specify sigma squared, True to use n as denominator;
-                        default is False which uses n-k
-
-        kernel        : string
-                        type of kernel function used to weight observations;
-                        available options:
-                        'gaussian'
-                        'bisquare'
-                        'exponential'
-
-        fixed         : boolean
-                        True for distance based kernel function and  False for
-                        adaptive (nearest neighbor) kernel function (default)
-
-        constant      : boolean
-                        True to include intercept (default) in model and False to exclude
-                        intercept.
-
-        tol:            float
-                        tolerence for estimation convergence
-        tolFB:          float
-                        tolerence for FBGWR estimation convergence (
-                        apply to SOC)
-        maxIter       : integer
-                        maximum number of iteration if convergence cannot arrived to the tolerance
-        ini_betas     : integer
-                        choice of initial guesses of betas, 0: zeros, 1: estimates from a basic GWR, 2: estimates from a global model
-        wType         : integer
-                        kernel type, 0: fix_Gaussian, 1: adap_Gaussian, 2: fix_Bisquare, 3: adap_Bisquare
-        criterion     : integer
-                        bandwidth selection criterion, 0: AICc, 1: AIC, 2: BIC, 3: CV
-        flag          : integer
-                        0 or 1, 0: Euclidean distance; 1: spherical distance
-        soc           : integer
-                        measure of score of change, 0: change of smooth function, 1: change of RSS
 
     Attributes
     ----------
-        coords        : array-like
-                        n*2, collection of n sets of (x,y) coordinates of
-                        observatons; also used as calibration locations is
-                        'points' is set to None
 
-        y             : array
-                        n*1, dependent variable
+    Examples
+    -------
+    TODO
 
-        X             : array
-                        n*k, independent variable, exlcuding the constant
-
-        points        : array-like
-                        n*2, collection of n sets of (x,y) coordinates used for
-                        calibration locations; default is set to None, which
-                        uses every observation as a calibration point 
-
-        bw            : scalar
-                        bandwidth value consisting of either a distance or N
-                        nearest neighbors; user specified or obtained using
-                        Sel_BW 
-
-        family        : family object
-                        underlying probability model; provides
-                        distribution-specific calculations
-
-        offset        : array 
-                        n*1, the offset variable at the ith location. For Poisson model
-                        this term is often the size of the population at risk or
-                        the expected size of the outcome in spatial epidemiology
-                        Default is None where Ni becomes 1.0 for all locations
-
-        y_fix         : array 
-                        n*1, the fixed intercept value of y; default is None
-
-        sigma2_v1     : boolean
-                        specify sigma squared, True to use n as denominator;
-                        default is False which uses n-k
-
-        kernel        : string
-                        type of kernel function used to weight observations;
-                        available options:
-                        'gaussian'
-                        'bisquare'
-                        'exponential'
-
-        fixed         : boolean
-                        True for distance based kernel function and  False for
-                        adaptive (nearest neighbor) kernel function (default)
-
-        constant      : boolean
-                        True to include intercept (default) in model and False to exclude
-                        intercept.
-        nObs          : integer
-                        number of observations
-        nVars         : integer
-                        number of independent variables
-        ey            : array
-                        n*1, E(y)
-        g_ey          : array
-                        n*1, g(E(y)), g() is link function, for Poisson model, g()=ln()
-        y_mean        : float
-                        Mean of y
-        y_std         : float
-                        Standard deviation of y
-        tol:          : float
-                        tolerance for estimation convergence
-        nIter         : integer
-                        number of iterations for Betas to converge
-        ini_betas     : integer
-                        choice of initial guesses of betas, 0: zeros, 1: estimates from a basic GWR, 2: estimates from a global model
-        Betas         : array
-                        (n,k), Beta estimation
-        opt_kernel    : array of GWR_W object
-                        one GWR_W object for each independent variable (different bandwidth)
-                        weit.w: n*n, weight, {0:[w_00, w_01,...w_0n-1], 1:[w_10, w_11,...w_1n-1],...}. key: id of point (i), value: weight wij,
-        opt_band      : array
-                        (1, k), optimal k bandwidths for each independent variable (different bandwidth)
-        band_all      : array
-                        (nIter,k), selected k bandwidths for each independent variable per iteration
-        SOC_all       : array
-                        (nIter-1,), score of change between consecutive iterations
-        y_pred        : array
-                        n*1, predicted value of y
-        res           : array
-                        n*1, residuals
-        RSS1          : float
-                        residual sum of squares
-
-
-        sigma2        : float
-                        sigma squared
-        sigma2_v1     : float
-                        sigma squared, use (n-v1) as denominator
-        sigma2_v1v2   : float
-                        sigma squared, use (n-2v1+v2) as denominator
-        sigma2_ML     : float
-                        sigma squared, estimated using ML
-        std_res       : array
-                        n*1, standardised residuals
-        std_err       : array
-                        n*k, standard errors of Beta
-        std_err_loc   : array
-                        n*k2, standard errors of local Beta
-        t_stat_glob   : array
-                        n*k1, global t-statistics
-        t_stat_loc    : array
-                        n*k2, local t-statistics
-        localR2       : array
-                        n*1, local R square
-        SMatrix       : array
-                        n*n, S matrix is used to compute diagnostics
-        tr_S          : float
-                        trace of S matrix
-        tr_STS        : float
-                        trace of STS matrix
-        CCT:          : array
-                        n*k, to calculate the variance of Betas
-        CooksD        : array
-                        n*1, Cook's D
-        influ         : array
-                        n*1, leading diagonal of S matrix
-        var_Betas     : array
-                        Variance covariance matrix (kxk) of betas
     """
-
-    def __init__(self, coords, y, X, bws, family=Gaussian(), offset=None,
+    def __init__(self, coords, y, X, bws, XB, err, family=Gaussian(), offset=None,
             y_fix=None, sigma2_v1=False, kernel='bisquare', fixed=False,
             constant=True):
         """
         Initialize class
         """
-        self.x = x
-        self.y = y * 1.0
         self.coords = coords
-        #self.kernel = kernel
-        self.mType = mType
-        self.wType = wType
-        self.criterion = criterion
-        self.nObs = len(y)
-        self.nVars = len(x[0])
-        self.socType = socType
-        #self.sigma2_v1 = sigma2_v1
-        self.sigma2v1 = sigma2_v1
-        self.tol = tol
-        self.tolFB = tolFB
-        self.maxIter = maxIter
-        self.ini_betas = ini_betas
-        self.flag = flag
+        self.y = y
+        self.X = X
+        self.XB = XB
+        self.err = err
+        self.bws = bws
+        self.family = family
+        self.offset = offset
+        self.y_fix = y_fix
+        self.sigma2_v1 = sigma2_v1
+        self.kernel = kernel
+        self.fixed = fixed
+        self.constant = constant
+
+    def fit(self, ini_params=None, tol=1.0e-5, max_iter=20, solve='iwls'):
+        """
+        Method that fits a model with a particular estimation routine.
+
+        Parameters
+        ----------
+
+        ini_betas     : array
+                        k*1, initial coefficient values, including constant.
+                        Default is None, which calculates initial values during
+                        estimation
+        tol:            float
+                        Tolerence for estimation convergence
+        max_iter      : integer
+                        Maximum number of iterations if convergence not
+                        achieved
+        solve         : string
+                        Technique to solve MLE equations.
+                        'iwls' = iteratively (re)weighted least squares (default)
+
+        """
+        params = np.zeros_like(self.X)
+        err = self.err
+        for i, bw in enumerate(self.bws):
+            W = self._build_W(self.fixed, self.kernel, self.coords, bw)
+            X = self.X[:,i].reshape((-1,1))
+            y = self.XB[:,i].reshape((-1,1)) + err
+            model = GWR(self.coords, y, X, bw, self.family, self.offset,
+                    self.y_fix, self.sigma2_v1, self.kernel, self.fixed, self.constant)
+            results = model.fit(ini_params, tol, max_iter, solve)
+            params[:,i] = results.params.flatten()
+            err = results.u
+        return FBGWRResults(self, params)
+
+
+class FBGWRResults(object):
+    """
+    Parameters
+    ----------
+
+    Attributes
+    ----------
+
+    Examples
+    -------
+    TODO
+
+    """
+    def __init__(self, model, params):
+        """
+        Initialize class
+        """
+        self.model = model
+        self.params = params
+        self.X = model.X
+        self.y = model.y
         self._cache = {}
+        
+    @cache_readonly
+    def predy(self):
+        return np.sum(np.multiply(self.params, self.X), axis=1).reshape((-1,1))
 
-        if offset is None: # default offset variable
-            self.offset = np.ones(shape=(self.nObs,1))
-        else:
-            self.offset = offset * 1.0
+    @cache_readonly
+    def u(self):
+        return (self.y - self.predy).reshape((-1,1))
 
-class FBGWRResults(GWRResults):
-    pass
-'''
+    @cache_readonly
+    def utu(self):
+        return np.dot(self.u, self.u.T)

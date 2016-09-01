@@ -172,6 +172,8 @@ def flexible_bw(init, y, X, n, k, family, tol, max_iter, rss_score,
         bws = []
         vals = []
         ests = np.zeros_like(X)
+        f_XB = XB.copy()
+        f_err = err.copy()
         for i in range(k):
             temp_y = XB[:,i].reshape((-1,1))
             temp_y = temp_y + err
@@ -191,17 +193,17 @@ def flexible_bw(init, y, X, n, k, family, tol, max_iter, rss_score,
         num = np.sum((new_XB - XB)**2)/n
         den = np.sum(np.sum(new_XB, axis=1)**2)
         score = (num/den)**0.5
-        print score
         XB = new_XB
             
         if rss_score:
             new_rss = np.sum((y - predy)**2)
-            score = (new_rss - rss)/new_rss
+            score = np.abs((new_rss - rss)/new_rss)
             rss = new_rss
+        print score
         scores.append(score)
         delta = score
         BWs.append(bws) 
         VALs.append(vals)
 
     opt_bws = BWs[-1]
-    return opt_bws, np.array(BWs), np.array(VALs), np.array(scores)
+    return opt_bws, np.array(BWs), np.array(VALs), np.array(scores), f_XB, f_err

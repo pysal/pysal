@@ -158,6 +158,8 @@ class Sel_BW(object):
         
         if self.fb:
             self._fbw()
+            self.XB = self.bw[4]
+            self.err = self.bw[5]
         else:
             self._bw()
 

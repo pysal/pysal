@@ -4,6 +4,7 @@ GWR is tested against results from GWR4
 """
 
 import unittest
+import pickle as pk
 from pysal.contrib.glm.family import Gaussian, Poisson, Binomial
 from pysal.contrib.gwr.sel_bw import Sel_BW
 import numpy as np
@@ -18,6 +19,8 @@ class TestSelBW(unittest.TestCase):
         pov = np.array(data.by_col('PctPov')).reshape((-1,1)) 
         black = np.array(data.by_col('PctBlack')).reshape((-1,1))
         self.X = np.hstack([rural, pov, black])
+        self.XB = pk.load(open(pysal.examples.get_path('XB.p'), 'r'))
+        self.err = pk.load(open(pysal.examples.get_path('err.p'), 'r'))
   
     def test_golden_fixed_AICc(self):
         bw1 = 211027.34
@@ -122,6 +125,15 @@ class TestSelBW(unittest.TestCase):
                 fixed=False).search(criterion='CV', search='interval', bw_min=60.0,
                         bw_max=76.0 , interval=2)
         self.assertAlmostEqual(bw1, bw2)
+
+    def test_FBGWR_AIC(self):
+        bw1 = [157.0, 65.0, 52.0]
+        sel = Sel_BW(self.coords, self.y, self.X, fb=True, kernel='bisquare',
+                constant=False)
+        bw2 = sel.search(tol_fb=1e-03)
+        np.testing.assert_allclose(bw1, bw2)
+        np.testing.assert_allclose(sel.XB, self.XB, atol=1e-05)
+        np.testing.assert_allclose(sel.err, self.err, atol=1e-05)
 
 if __name__ == '__main__':
 	unittest.main()
