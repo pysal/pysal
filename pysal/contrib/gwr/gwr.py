@@ -609,7 +609,6 @@ class GWRResults(GLMResults):
         tvalues[subset] = 0
         return tvalues
 
-
 class FBGWR(GWR):
     """
     Parameters
@@ -799,7 +798,6 @@ class FBGWR(GWR):
             params[:,i] = results.params.flatten()
             err = results.u
         return FBGWRResults(self, params)
-
 
 class FBGWRResults(object):
     """
