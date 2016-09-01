@@ -78,7 +78,7 @@ class Sel_BW(object):
                     max interations if no convergence to tol
     """
     def __init__(self, coords, y, x_loc, x_glob=None, family=Gaussian(),
-            offset=None, kernel='gaussian', fixed=False, fb=False):
+            offset=None, kernel='bisquare', fixed=False, fb=False, constant=True):
         self.coords = coords
         self.y = y
         self.x_loc = x_loc
@@ -90,6 +90,7 @@ class Sel_BW(object):
         self.fixed = fixed
         self.kernel = kernel
         self.fb = fb
+        self.constant = constant
 
     def search(self, search='golden_section', criterion='AICc', bw_min=0.0, 
             bw_max=0.0, interval=0.0, tol=1.0e-6, max_iter=200, init_fb=True,
@@ -165,9 +166,10 @@ class Sel_BW(object):
     def _bw(self):
         gwr_func = lambda bw: getDiag[self.criterion](
                 GWR(self.coords, self.y, self.x_loc, bw, family=self.family,
-                    kernel=self.kernel, fixed=self.fixed).fit())
+                    kernel=self.kernel, fixed=self.fixed, constant=self.constant).fit())
         if self.search == 'golden_section':
-            a,c = self._init_section(self.x_glob, self.x_loc, self.coords)
+            a,c = self._init_section(self.x_glob, self.x_loc, self.coords,
+                    self.constant)
             delta = 0.38197 #1 - (np.sqrt(5.0)-1.0)/2.0
             self.bw = golden_section(a, c, delta, gwr_func, self.tol, 
                     self.max_iter, self.int_score)
@@ -193,18 +195,20 @@ class Sel_BW(object):
         interval = self.interval
         tol = self.tol
         max_iter = self.max_iter
-        gwr_func = lambda bw: GWR(coords, y, X, bw, family=family, 
-                kernel=kernel, fixed=fixed).fit()
-        sel_func = lambda y, X: Sel_BW(coords, y, X, x_glob=[], family=family,
-                kernel=kernel, fixed=fixed).search(search=search, criterion=criterion,
-                        bw_min=bw_min, bw_max=bw_max, interval=interval, tol=tol,
-                        max_iter=max_iter)
+        constant = self.constant
+        gwr_func = lambda y, X, bw: GWR(coords, y, X, bw, family=family, 
+                kernel=kernel, fixed=fixed, constant=constant).fit()
+        bw_func = lambda y, X: Sel_BW(coords, y, X, x_glob=[], family=family,
+                kernel=kernel, fixed=fixed, constant=constant)
+        sel_func = lambda bw_func: bw_func.search(search=search, 
+                        criterion=criterion, bw_min=bw_min, bw_max=bw_max, 
+                        interval=interval, tol=tol, max_iter=max_iter)
         self.bw = flexible_bw(self.init_fb, y, X, n, k, family, self.tol_fb,
-               self.max_iter_fb, self.rss_score, gwr_func, sel_func)
+               self.max_iter_fb, self.rss_score, gwr_func, bw_func, sel_func)
 
 
 
-    def _init_section(self, x_glob, x_loc, coords):
+    def _init_section(self, x_glob, x_loc, coords, constant):
         if len(x_glob) > 0:
             n_glob = x_glob.shape[1]
         else:
@@ -213,7 +217,10 @@ class Sel_BW(object):
             n_loc = x_loc.shape[1]
         else:
             n_loc = 0
-        n_vars = n_glob + n_loc + 1 #intercept
+        if constant:
+            n_vars = n_glob + n_loc + 1
+        else:
+            n_vars = n_glob + n_loc
         n = np.array(coords).shape[0]
 
         if self.int_score:
