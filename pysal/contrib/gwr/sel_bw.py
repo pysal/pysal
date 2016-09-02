@@ -47,6 +47,13 @@ class Sel_BW(object):
                      kernel function: 'gaussian', 'bisquare', 'exponetial'
     fixed          : boolean
                      True for fixed bandwidth and False for adaptive (NN)
+    fb             : True for flexible (mutliple covaraite-specific) bandwidths
+                     False for a traditional (same for  all covariates)
+                     bandwdith; defualt is False.
+    constant       : boolean
+                     True to include intercept (default) in model and False to exclude
+                     intercept.
+
 
     Attributes
     ----------
@@ -58,24 +65,30 @@ class Sel_BW(object):
                      n*k2, local independent variable, including constant.
     coords         : list of tuples
                      (x,y) of points used in bandwidth selection
-    family        : string
-                    GWR model type: 'Gaussian', 'logistic, 'Poisson''
-    kernel        : string
-                    type of kernel used and wether fixed or adaptive
-    criterion     : string
-                    bw selection criterion: 'AICc', 'AIC', 'BIC', 'CV'
-    search        : string
-                    bw search method: 'golden', 'interval'
-    bw_min        : float
-                    min value used in bandwidth search
-    bw_max        : float
-                    max value used in bandwidth search
-    interval      : float
-                    interval increment used in interval search
-    tol           : float
-                    tolerance used to determine convergence
-    max_iter      : integer
-                    max interations if no convergence to tol
+    family         : string
+                     GWR model type: 'Gaussian', 'logistic, 'Poisson''
+    kernel         : string
+                     type of kernel used and wether fixed or adaptive
+    criterion      : string
+                     bw selection criterion: 'AICc', 'AIC', 'BIC', 'CV'
+    search         : string
+                     bw search method: 'golden', 'interval'
+    bw_min         : float
+                     min value used in bandwidth search
+    bw_max         : float
+                     max value used in bandwidth search
+    interval       : float
+                     interval increment used in interval search
+    tol            : float
+                     tolerance used to determine convergence
+    max_iter       : integer
+                     max interations if no convergence to tol
+    fb             : True for flexible (mutliple covaraite-specific) bandwidths
+                     False for a traditional (same for  all covariates)
+                     bandwdith; defualt is False.
+    constant       : boolean
+                     True to include intercept (default) in model and False to exclude
+                     intercept.
     """
     def __init__(self, coords, y, x_loc, x_glob=None, family=Gaussian(),
             offset=None, kernel='bisquare', fixed=False, fb=False, constant=True):
@@ -112,11 +125,28 @@ class Sel_BW(object):
                          tolerance used to determine convergence
         max_iter       : integer
                          max iterations if no convergence to tol
-        
+        init_fb        : True to initialize flexible bandwidth search with
+                         esitmates from a traditional GWR and False to
+                         initialize flexible bandwidth search with global
+                         regression estimates
+        tol_fb         : convergence tolerence for the flexible bandwidth
+                         backfitting algorithm; a larger tolerance may stop the
+                         algorith faster though it may result in a less optimal
+                         model
+        max_iter_fb    : max iterations if no convergence to tol for flexible
+                         bandwidth backfittign algorithm
+        rss_score      : True to use the residual sum of sqaures to evaluate
+                         each iteration of the flexible bandwidth backfitting
+                         routine and False to use a smooth function; default is
+                         False
+
         Returns
         -------
-        bw             : scalar
-                         optimal bandwidth value
+        bw             : scalar or array
+                         optimal bandwidth value or values; returns scalar for
+                         fb=False and array for fb=True; ordering of bandwidths
+                         matches the ordering of the covariates (columns) of the
+                         designs matrix, X
         """     
         self.search = search
         self.criterion = criterion

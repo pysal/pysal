@@ -144,10 +144,7 @@ def equal_interval(l_bound, u_bound, interval, function, int_score=False):
 
 def flexible_bw(init, y, X, n, k, family, tol, max_iter, rss_score,
         gwr_func, bw_func, sel_func):
-    if init is None:
-        err = y
-        est = np.zeros_like(X)
-    elif init:
+    if init:
         bw = sel_func(bw_func(y, X))
         optim_model = gwr_func(y, X, bw)
         err = optim_model.u
