@@ -56,8 +56,22 @@ class GLM(RegressionPropsY):
         fit_params     : dict
                         Parameters passed into fit method to define estimation
                         routine.
-        normalized_cov_params   : array
-                                k*k, approximates [X.T*X]-1
+
+    Examples
+    --------
+    >>> from pysal.contrib.glm.glm import GLM
+    >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
+    >>> y = np.array(db.by_col("HOVAL"))
+    >>> self.y = np.reshape(y, (49,1))
+    >>> X = []
+    >>> X.append(db.by_col("INC"))
+    >>> X.append(db.by_col("CRIME"))
+    >>> self.X = np.array(X).T
+    >>> model = GLM(self.y, self.X, family=Gaussian())
+    >>> results = model.fit()
+    >>> results.params
+    [ 46.42818268,   0.62898397, -0.48488854]
+
     """
     def __init__(self, y, X, family=family.Gaussian(), offset=None, y_fix = None,
             constant=True):
@@ -83,8 +97,6 @@ class GLM(RegressionPropsY):
 	        self.y_fix = np.zeros(shape=(self.n,1))
         else:
 	        self.y_fix = y_fix
-        #pinv = la.pinv(self.X)
-        #self.normalized_cov_params = la.inv(spdot(pinv, pinv.T))
         self.fit_params = {}
 
     def fit(self, ini_betas=None, tol=1.0e-6, max_iter=200, solve='iwls'):
@@ -222,6 +234,29 @@ class GLMResults(LikelihoodModelResults):
 
         normalized_cov_params   : array
                                 k*k, approximates [X.T*X]-1
+
+    Examples
+    --------
+    >>> from pysal.contrib.glm.glm import GLM, GLMResults
+    >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
+    >>> y = np.array(db.by_col("HOVAL"))
+    >>> self.y = np.reshape(y, (49,1))
+    >>> X = []
+    >>> X.append(db.by_col("INC"))
+    >>> X.append(db.by_col("CRIME"))
+    >>> self.X = np.array(X).T
+    >>> model = GLM(self.y, self.X, family=Gaussian())
+    >>> results1 = model.fit()
+    >>> results1.aic
+    408.73548964604873
+    >>> model = results1.model
+    >>> params = results1.params.flatten()
+    >>> predy = results1.predy
+    >>> w = results1.w
+    >>> results2 = GLMResults(model, params, predy, w)
+    >>> results2.aic
+    408.73548964604873
+   
     """
     def __init__(self, model, params, mu, w):
         self.model = model
@@ -239,11 +274,6 @@ class GLMResults(LikelihoodModelResults):
         self.mu = mu.flatten()
         self._cache = {}
         self.normalized_cov_params = la.inv(spdot(self.w.T, self.w))
-
-        #if model.sigma2_v1:
-	        #self.sig2 = self.sig2n
-        #else:
-            #self.sig2 = self.sig2n_k
 
     @cache_readonly
     def resid_response(self):
