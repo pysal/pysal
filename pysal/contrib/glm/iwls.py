@@ -41,8 +41,6 @@ def iwls(y, x, family, offset, y_fix,
     """
     Iteratively re-weighted least squares estimation routine
     """
-    #spx = sp.csr_matrix(x)
-    #dx = np.float(spx.nnz)/np.float(np.multiply(*spx.shape))
     n_iter = 0
     diff = 1.0e6
     if isinstance(family, Binomial):
