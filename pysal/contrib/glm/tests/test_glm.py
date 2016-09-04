@@ -31,20 +31,20 @@ class TestGaussian(unittest.TestCase):
     def testIWLS(self):
         model = GLM(self.y, self.X, family=Gaussian())
         results = model.fit()
-        self.assertEqual(results.n, 49)
-        self.assertEqual(results.df_model, 2)
-        self.assertEqual(results.df_resid, 46)
-        self.assertEqual(results.aic, 408.73548964604873)
-        self.assertEqual(results.bic, 10467.991340493107)
-        self.assertEqual(results.deviance, 10647.015074206196)
-        self.assertEqual(results.llf, -201.36774482302437)
-        self.assertEqual(results.null_deviance, 16367.794631703124)
-        self.assertEqual(results.scale, 231.45684943926514)
+        self.assertAlmostEqual(results.n, 49)
+        self.assertAlmostEqual(results.df_model, 2)
+        self.assertAlmostEqual(results.df_resid, 46)
+        self.assertAlmostEqual(results.aic, 408.73548964604873)
+        self.assertAlmostEqual(results.bic, 10467.991340493107)
+        self.assertAlmostEqual(results.deviance, 10647.015074206196)
+        self.assertAlmostEqual(results.llf, -201.36774482302437)
+        self.assertAlmostEqual(results.null_deviance, 16367.794631703124)
+        self.assertAlmostEqual(results.scale, 231.45684943926514)
         np.testing.assert_allclose(results.params, [ 46.42818268,   0.62898397,
             -0.48488854])
         np.testing.assert_allclose(results.bse, [ 13.19175703,   0.53591045,
             0.18267291])
-        np.testing.assert_allclose(results.cov_params(), 
+        np.testing.assert_allclose(results.cov_params(),
                 [[  1.74022453e+02,  -6.52060364e+00,  -2.15109867e+00],
                 [ -6.52060364e+00,   2.87200008e-01,   6.80956787e-02],
                 [ -2.15109867e+00,   6.80956787e-02,   3.33693910e-02]])
@@ -52,15 +52,15 @@ class TestGaussian(unittest.TestCase):
             -2.65440864])
         np.testing.assert_allclose(results.pvalues, [ 0.00043239,  0.24052577,
             0.00794475], atol=1.0e-8)
-        np.testing.assert_allclose(results.conf_int(), 
+        np.testing.assert_allclose(results.conf_int(),
                 [[ 20.57281401,  72.28355135],
                 [ -0.42138121,   1.67934915],
                 [ -0.84292086,  -0.12685622]])
-        np.testing.assert_allclose(results.normalized_cov_params, 
+        np.testing.assert_allclose(results.normalized_cov_params,
                 [[  7.51857004e-01,  -2.81720055e-02,  -9.29373521e-03],
                 [ -2.81720055e-02,   1.24083607e-03,   2.94204638e-04],
                 [ -9.29373521e-03,   2.94204638e-04,   1.44171110e-04]])
-        np.testing.assert_allclose(results.mu, 
+        np.testing.assert_allclose(results.mu,
                 [ 51.08752105,  50.66601521,  41.61367567,  33.53969014,
                 28.90638232,  43.87074227,  51.64910882,  34.92671563,
                 42.69267622,  38.49449134,  20.92815471,  25.25228436,
@@ -73,8 +73,8 @@ class TestGaussian(unittest.TestCase):
                 36.55047181,  27.37048914,  48.78812922,  57.31744163,
                 51.22914162,  54.70515578,  37.06622277,  44.5075759 ,
                 41.24328983,  49.93821824,  44.85644299,  40.93838609,  47.32045464])
-        self.assertEqual(results.pearson_chi2, 10647.015074206196)
-        np.testing.assert_allclose(results.resid_response, 
+        self.assertAlmostEqual(results.pearson_chi2, 10647.015074206196)
+        np.testing.assert_allclose(results.resid_response,
                 [ 29.37948195,  -6.09901421, -15.26367567,  -0.33968914,
                 -5.68138232, -15.12074227,  23.35089118,   2.19828437,
                 9.90732178,  57.90551066,  -1.22815371,  -5.35228436,
@@ -87,7 +87,7 @@ class TestGaussian(unittest.TestCase):
                 6.74952719,  -4.67048814,  -9.18813122,   4.63255937,
                 -9.12914362, -10.37215578, -11.36622177, -11.0075759 ,
                 -13.51028983,  26.16177976,  -2.35644299, -14.13838709, -11.52045564])
-        np.testing.assert_allclose(results.resid_working, 
+        np.testing.assert_allclose(results.resid_working,
                 [ 29.37948195,  -6.09901421, -15.26367567,  -0.33968914,
                 -5.68138232, -15.12074227,  23.35089118,   2.19828437,
                 9.90732178,  57.90551066,  -1.22815371,  -5.35228436,
@@ -100,7 +100,7 @@ class TestGaussian(unittest.TestCase):
                 6.74952719,  -4.67048814,  -9.18813122,   4.63255937,
                 -9.12914362, -10.37215578, -11.36622177, -11.0075759 ,
                 -13.51028983,  26.16177976,  -2.35644299, -14.13838709, -11.52045564])
-        np.testing.assert_allclose(results.resid_pearson, 
+        np.testing.assert_allclose(results.resid_pearson,
                 [ 29.37948195,  -6.09901421, -15.26367567,  -0.33968914,
                 -5.68138232, -15.12074227,  23.35089118,   2.19828437,
                 9.90732178,  57.90551066,  -1.22815371,  -5.35228436,
@@ -113,7 +113,7 @@ class TestGaussian(unittest.TestCase):
                 6.74952719,  -4.67048814,  -9.18813122,   4.63255937,
                 -9.12914362, -10.37215578, -11.36622177, -11.0075759 ,
                 -13.51028983,  26.16177976,  -2.35644299, -14.13838709, -11.52045564])
-        np.testing.assert_allclose(results.resid_anscombe, 
+        np.testing.assert_allclose(results.resid_anscombe,
                 [ 29.37948195,  -6.09901421, -15.26367567,  -0.33968914,
                 -5.68138232, -15.12074227,  23.35089118,   2.19828437,
                 9.90732178,  57.90551066,  -1.22815371,  -5.35228436,
@@ -126,7 +126,7 @@ class TestGaussian(unittest.TestCase):
                 6.74952719,  -4.67048814,  -9.18813122,   4.63255937,
                 -9.12914362, -10.37215578, -11.36622177, -11.0075759 ,
                 -13.51028983,  26.16177976,  -2.35644299, -14.13838709, -11.52045564])
-        np.testing.assert_allclose(results.resid_deviance, 
+        np.testing.assert_allclose(results.resid_deviance,
                 [ 29.37948195,  -6.09901421, -15.26367567,  -0.33968914,
                 -5.68138232, -15.12074227,  23.35089118,   2.19828437,
                 9.90732178,  57.90551066,  -1.22815371,  -5.35228436,
@@ -139,7 +139,7 @@ class TestGaussian(unittest.TestCase):
                 6.74952719,  -4.67048814,  -9.18813122,   4.63255937,
                 -9.12914362, -10.37215578, -11.36622177, -11.0075759 ,
                 -13.51028983,  26.16177976,  -2.35644299, -14.13838709, -11.52045564])
-        np.testing.assert_allclose(results.null, 
+        np.testing.assert_allclose(results.null,
                 [ 38.43622447,  38.43622447,  38.43622447,  38.43622447,
                 38.43622447,  38.43622447,  38.43622447,  38.43622447,
                 38.43622447,  38.43622447,  38.43622447,  38.43622447,
@@ -170,20 +170,20 @@ class TestPoisson(unittest.TestCase):
     def testIWLS(self):
         model = GLM(self.y, self.X, family=Poisson())
         results = model.fit()
-        self.assertEqual(results.n, 49)
-        self.assertEqual(results.df_model, 2)
-        self.assertEqual(results.df_resid, 46)
+        self.assertAlmostEqual(results.n, 49)
+        self.assertAlmostEqual(results.df_model, 2)
+        self.assertAlmostEqual(results.df_resid, 46)
         self.assertAlmostEqual(results.aic, 500.85184179938756)
         self.assertAlmostEqual(results.bic, 51.436404535087661)
         self.assertAlmostEqual(results.deviance, 230.46013824817649)
         self.assertAlmostEqual(results.llf, -247.42592089969378)
         self.assertAlmostEqual(results.null_deviance, 376.97293610347361)
-        self.assertEqual(results.scale, 1.0)
+        self.assertAlmostEqual(results.scale, 1.0)
         np.testing.assert_allclose(results.params, [ 3.92159085,  0.01183491,
             -0.01371397], atol=1.0e-8)
         np.testing.assert_allclose(results.bse, [ 0.13049161,  0.00511599,
             0.00193769], atol=1.0e-8)
-        np.testing.assert_allclose(results.cov_params(), 
+        np.testing.assert_allclose(results.cov_params(),
                 [[  1.70280610e-02,  -6.18628383e-04,  -2.21386966e-04],
                 [ -6.18628383e-04,   2.61733917e-05,   6.77496445e-06],
                 [ -2.21386966e-04,   6.77496445e-06,   3.75463502e-06]])
@@ -191,15 +191,15 @@ class TestPoisson(unittest.TestCase):
             -7.07748998])
         np.testing.assert_allclose(results.pvalues, [  2.02901657e-198,
             2.07052532e-002,   1.46788805e-012])
-        np.testing.assert_allclose(results.conf_int(), 
+        np.testing.assert_allclose(results.conf_int(),
                 [[  3.66583199e+00,   4.17734972e+00],
                 [  1.80774841e-03,   2.18620753e-02],
                 [ -1.75117666e-02,  -9.91616901e-03]])
-        np.testing.assert_allclose(results.normalized_cov_params, 
+        np.testing.assert_allclose(results.normalized_cov_params,
                 [[  1.70280610e-02,  -6.18628383e-04,  -2.21386966e-04],
                 [ -6.18628383e-04,   2.61733917e-05,   6.77496445e-06],
                 [ -2.21386966e-04,   6.77496445e-06,   3.75463502e-06]])
-        np.testing.assert_allclose(results.mu, 
+        np.testing.assert_allclose(results.mu,
                 [ 51.26831574,  50.15022766,  40.06142973,  34.13799739,
                 28.76119226,  42.6836241 ,  55.64593703,  34.08277997,
                 40.90389582,  37.19727958,  23.47459217,  26.12384057,
@@ -213,7 +213,7 @@ class TestPoisson(unittest.TestCase):
                 50.66038226,  54.68701352,  35.77103116,  43.21886784,
                 40.07615759,  49.98658004,  43.13352883,  40.28520774,  46.28910294])
         self.assertAlmostEqual(results.pearson_chi2, 264.62262932090221)
-        np.testing.assert_allclose(results.resid_response, 
+        np.testing.assert_allclose(results.resid_response,
                 [ 28.73168426,  -5.15022766, -14.06142973,  -1.13799739,
                 -5.76119226, -13.6836241 ,  19.35406297,   2.91722003,
                 12.09610418,  58.80272042,  -3.47459217,  -6.12384057,
@@ -226,7 +226,7 @@ class TestPoisson(unittest.TestCase):
                 8.50221416,  -4.56236198,  -8.34273194,   4.49170903,
                 -8.66038226, -10.68701352,  -9.77103116,  -9.21886784,
                 -12.07615759,  26.01341996,  -1.13352883, -13.28520774, -10.28910294])
-        np.testing.assert_allclose(results.resid_working, 
+        np.testing.assert_allclose(results.resid_working,
                 [ 1473.02506034,  -258.28508941,  -563.32097891,   -38.84895192,
                 -165.69875817,  -584.06666725,  1076.97496919,    99.42696848,
                 494.77778514,  2187.30123163,   -81.56463405,  -159.97823479,
@@ -240,7 +240,7 @@ class TestPoisson(unittest.TestCase):
                 -438.73827602,  -584.440853  ,  -349.51985996,  -398.42903071,
                 -483.96599444,  1300.32189904,   -48.89309853,  -535.19735391,
                 -476.27334527])
-        np.testing.assert_allclose(results.resid_pearson, 
+        np.testing.assert_allclose(results.resid_pearson,
                 [ 4.01269878, -0.72726045, -2.221602  , -0.19477008, -1.07425881,
                 -2.09445239,  2.59451042,  0.49969118,  1.89131202,  9.64143836,
                 -0.71714142, -1.19813392,  2.23861212,  3.34207756, -2.0637814 ,
@@ -251,7 +251,7 @@ class TestPoisson(unittest.TestCase):
                 -2.19400568,  1.44755952, -0.8690235 , -1.19989348,  0.59230634,
                 -1.21675413, -1.44515442, -1.63370888, -1.40229988, -1.90759306,
                 3.67934693, -0.17259375, -2.09312684, -1.51230062])
-        np.testing.assert_allclose(results.resid_anscombe, 
+        np.testing.assert_allclose(results.resid_anscombe,
                 [ 3.70889134, -0.74031295, -2.37729865, -0.19586855, -1.11374751,
                 -2.22611959,  2.46352013,  0.49282126,  1.80857757,  8.06444452,
                 -0.73610811, -1.25061371,  2.10820431,  3.05467547, -2.22437611,
@@ -262,7 +262,7 @@ class TestPoisson(unittest.TestCase):
                 -2.32398309,  1.39380683, -0.89495368, -1.23735395,  0.58485202,
                 -1.25435224, -1.4968484 , -1.71888038, -1.45756652, -2.01906267,
                 3.41729922, -0.17335867, -2.22921828, -1.57470549])
-        np.testing.assert_allclose(results.resid_deviance, 
+        np.testing.assert_allclose(results.resid_deviance,
                 [ 3.70529668, -0.74027329, -2.37536322, -0.19586751, -1.11349765,
                 -2.22466106,  2.46246446,  0.4928057 ,  1.80799655,  8.02696525,
                 -0.73602255, -1.25021555,  2.10699958,  3.05084608, -2.22214376,
@@ -273,7 +273,7 @@ class TestPoisson(unittest.TestCase):
                 -2.32263069,  1.39348459, -0.89482132, -1.23715363,  0.58483655,
                 -1.25415329, -1.49653039, -1.7181055 , -1.45719072, -2.01791949,
                 3.41437156, -0.1733581 , -2.22765605, -1.57426046])
-        np.testing.assert_allclose(results.null, 
+        np.testing.assert_allclose(results.null,
                 [ 38.42857143,  38.42857143,  38.42857143,  38.42857143,
                 38.42857143,  38.42857143,  38.42857143,  38.42857143,
                 38.42857143,  38.42857143,  38.42857143,  38.42857143,
@@ -292,9 +292,9 @@ class TestPoisson(unittest.TestCase):
     def testQuasi(self):
         model = GLM(self.y, self.X, family=QuasiPoisson())
         results = model.fit()
-        self.assertEqual(results.n, 49)
-        self.assertEqual(results.df_model, 2)
-        self.assertEqual(results.df_resid, 46)
+        self.assertAlmostEqual(results.n, 49)
+        self.assertAlmostEqual(results.df_model, 2)
+        self.assertAlmostEqual(results.df_resid, 46)
         self.assertTrue(math.isnan(results.aic))
         self.assertAlmostEqual(results.bic, 51.436404535087661)
         self.assertAlmostEqual(results.deviance, 230.46013824817649)
@@ -305,7 +305,7 @@ class TestPoisson(unittest.TestCase):
             -0.01371397], atol=1.0e-8)
         np.testing.assert_allclose(results.bse, [ 0.31298042,  0.01227057,
             0.00464749], atol=1.0e-8)
-        np.testing.assert_allclose(results.cov_params(), 
+        np.testing.assert_allclose(results.cov_params(),
                 [[  9.79567451e-02,  -3.55876238e-03,  -1.27356524e-03],
                 [ -3.55876238e-03,   1.50566777e-04,   3.89741067e-05],
                 [ -1.27356524e-03,   3.89741067e-05,   2.15991606e-05]])
@@ -313,15 +313,15 @@ class TestPoisson(unittest.TestCase):
             -2.95083339])
         np.testing.assert_allclose(results.pvalues, [  5.12737770e-36,
             3.34797291e-01,   3.16917819e-03])
-        np.testing.assert_allclose(results.conf_int(), 
+        np.testing.assert_allclose(results.conf_int(),
                 [[ 3.3081605 ,  4.53502121],
                 [-0.01221495,  0.03588478],
                 [-0.02282288, -0.00460506]], atol=1.0e-8)
-        np.testing.assert_allclose(results.normalized_cov_params, 
+        np.testing.assert_allclose(results.normalized_cov_params,
                 [[  1.70280610e-02,  -6.18628383e-04,  -2.21386966e-04],
                 [ -6.18628383e-04,   2.61733917e-05,   6.77496445e-06],
                 [ -2.21386966e-04,   6.77496445e-06,   3.75463502e-06]])
-        np.testing.assert_allclose(results.mu, 
+        np.testing.assert_allclose(results.mu,
                 [ 51.26831574,  50.15022766,  40.06142973,  34.13799739,
                 28.76119226,  42.6836241 ,  55.64593703,  34.08277997,
                 40.90389582,  37.19727958,  23.47459217,  26.12384057,
@@ -335,7 +335,7 @@ class TestPoisson(unittest.TestCase):
                 50.66038226,  54.68701352,  35.77103116,  43.21886784,
                 40.07615759,  49.98658004,  43.13352883,  40.28520774,  46.28910294])
         self.assertAlmostEqual(results.pearson_chi2, 264.62262932090221)
-        np.testing.assert_allclose(results.resid_response, 
+        np.testing.assert_allclose(results.resid_response,
                 [ 28.73168426,  -5.15022766, -14.06142973,  -1.13799739,
                 -5.76119226, -13.6836241 ,  19.35406297,   2.91722003,
                 12.09610418,  58.80272042,  -3.47459217,  -6.12384057,
@@ -348,7 +348,7 @@ class TestPoisson(unittest.TestCase):
                 8.50221416,  -4.56236198,  -8.34273194,   4.49170903,
                 -8.66038226, -10.68701352,  -9.77103116,  -9.21886784,
                 -12.07615759,  26.01341996,  -1.13352883, -13.28520774, -10.28910294])
-        np.testing.assert_allclose(results.resid_working, 
+        np.testing.assert_allclose(results.resid_working,
                 [ 1473.02506034,  -258.28508941,  -563.32097891,   -38.84895192,
                 -165.69875817,  -584.06666725,  1076.97496919,    99.42696848,
                 494.77778514,  2187.30123163,   -81.56463405,  -159.97823479,
@@ -362,7 +362,7 @@ class TestPoisson(unittest.TestCase):
                 -438.73827602,  -584.440853  ,  -349.51985996,  -398.42903071,
                 -483.96599444,  1300.32189904,   -48.89309853,  -535.19735391,
                 -476.27334527])
-        np.testing.assert_allclose(results.resid_pearson, 
+        np.testing.assert_allclose(results.resid_pearson,
                 [ 4.01269878, -0.72726045, -2.221602  , -0.19477008, -1.07425881,
                 -2.09445239,  2.59451042,  0.49969118,  1.89131202,  9.64143836,
                 -0.71714142, -1.19813392,  2.23861212,  3.34207756, -2.0637814 ,
@@ -373,7 +373,7 @@ class TestPoisson(unittest.TestCase):
                 -2.19400568,  1.44755952, -0.8690235 , -1.19989348,  0.59230634,
                 -1.21675413, -1.44515442, -1.63370888, -1.40229988, -1.90759306,
                 3.67934693, -0.17259375, -2.09312684, -1.51230062])
-        np.testing.assert_allclose(results.resid_anscombe, 
+        np.testing.assert_allclose(results.resid_anscombe,
                 [ 3.70889134, -0.74031295, -2.37729865, -0.19586855, -1.11374751,
                 -2.22611959,  2.46352013,  0.49282126,  1.80857757,  8.06444452,
                 -0.73610811, -1.25061371,  2.10820431,  3.05467547, -2.22437611,
@@ -384,7 +384,7 @@ class TestPoisson(unittest.TestCase):
                 -2.32398309,  1.39380683, -0.89495368, -1.23735395,  0.58485202,
                 -1.25435224, -1.4968484 , -1.71888038, -1.45756652, -2.01906267,
                 3.41729922, -0.17335867, -2.22921828, -1.57470549])
-        np.testing.assert_allclose(results.resid_deviance, 
+        np.testing.assert_allclose(results.resid_deviance,
                 [ 3.70529668, -0.74027329, -2.37536322, -0.19586751, -1.11349765,
                 -2.22466106,  2.46246446,  0.4928057 ,  1.80799655,  8.02696525,
                 -0.73602255, -1.25021555,  2.10699958,  3.05084608, -2.22214376,
@@ -395,7 +395,7 @@ class TestPoisson(unittest.TestCase):
                 -2.32263069,  1.39348459, -0.89482132, -1.23715363,  0.58483655,
                 -1.25415329, -1.49653039, -1.7181055 , -1.45719072, -2.01791949,
                 3.41437156, -0.1733581 , -2.22765605, -1.57426046])
-        np.testing.assert_allclose(results.null, 
+        np.testing.assert_allclose(results.null,
                 [ 38.42857143,  38.42857143,  38.42857143,  38.42857143,
                 38.42857143,  38.42857143,  38.42857143,  38.42857143,
                 38.42857143,  38.42857143,  38.42857143,  38.42857143,
@@ -462,31 +462,31 @@ class TestBinomial(unittest.TestCase):
     def testIWLS(self):
         model = GLM(self.y, self.X, family=Binomial())
         results = model.fit()
-        self.assertEqual(results.n, 316)
-        self.assertEqual(results.df_model, 1)
-        self.assertEqual(results.df_resid, 314)
-        self.assertEqual(results.aic, 155.19347530342466)
-        self.assertEqual(results.bic, -1656.1095797628657)
-        self.assertEqual(results.deviance, 151.19347530342466)
-        self.assertEqual(results.llf, -75.596737651712331)
-        self.assertEqual(results.null_deviance, 189.16038985881212)
-        self.assertEqual(results.scale, 1.0)
+        self.assertAlmostEqual(results.n, 316)
+        self.assertAlmostEqual(results.df_model, 1)
+        self.assertAlmostEqual(results.df_resid, 314)
+        self.assertAlmostEqual(results.aic, 155.19347530342466)
+        self.assertAlmostEqual(results.bic, -1656.1095797628657)
+        self.assertAlmostEqual(results.deviance, 151.19347530342466)
+        self.assertAlmostEqual(results.llf, -75.596737651712331)
+        self.assertAlmostEqual(results.null_deviance, 189.16038985881212)
+        self.assertAlmostEqual(results.scale, 1.0)
         np.testing.assert_allclose(results.params, [-5.33638276,  0.0287754 ])
         np.testing.assert_allclose(results.bse, [ 0.64499904,  0.00518312],
                 atol=1.0e-8)
-        np.testing.assert_allclose(results.cov_params(), 
+        np.testing.assert_allclose(results.cov_params(),
             [[  4.16023762e-01,  -3.14338457e-03],
             [ -3.14338457e-03,   2.68646833e-05]])
         np.testing.assert_allclose(results.tvalues, [-8.27347396,  5.55175826])
         np.testing.assert_allclose(results.pvalues, [  1.30111233e-16,
             2.82810512e-08])
-        np.testing.assert_allclose(results.conf_int(), 
+        np.testing.assert_allclose(results.conf_int(),
             [[-6.60055765, -4.07220787],
             [ 0.01861668,  0.03893412]], atol=1.0e-8)
-        np.testing.assert_allclose(results.normalized_cov_params, 
+        np.testing.assert_allclose(results.normalized_cov_params,
             [[  4.16023762e-01,  -3.14338457e-03],
             [ -3.14338457e-03,   2.68646833e-05]])
-        np.testing.assert_allclose(results.mu, 
+        np.testing.assert_allclose(results.mu,
             [ 0.04226237,  0.03999333,  0.02946178,  0.0689636 ,  0.09471181,
             0.07879431,  0.04717464,  0.27065598,  0.07471691,  0.89522144,
             0.39752487,  0.33102718,  0.06192993,  0.04589793,  0.01988679,
@@ -552,7 +552,7 @@ class TestBinomial(unittest.TestCase):
             0.0689636 ,  0.02421701,  0.13200634,  0.19874565,  0.03293737,
             0.82774282], atol=1.0e-8)
         self.assertAlmostEqual(results.pearson_chi2, 271.21110541713801)
-        np.testing.assert_allclose(results.resid_response, 
+        np.testing.assert_allclose(results.resid_response,
             [-0.04226237, -0.03999333, -0.02946178, -0.0689636 , -0.09471181,
             -0.07879431, -0.04717464, -0.27065598, -0.07471691,  0.10477856,
             -0.39752487,  0.66897282, -0.06192993, -0.04589793, -0.01988679,
@@ -617,7 +617,7 @@ class TestBinomial(unittest.TestCase):
             -0.12242534, -0.12242534, -0.05407977, -0.01776301, -0.0311527 ,
             -0.0689636 , -0.02421701, -0.13200634, -0.19874565, -0.03293737,
             -0.82774282], atol=1.0e-8)
-        np.testing.assert_allclose(results.resid_working, 
+        np.testing.assert_allclose(results.resid_working,
             [ -1.71062283e-03,  -1.53549840e-03,  -8.42423701e-04,
             -4.42798906e-03,  -8.12073047e-03,  -5.71934606e-03,
             -2.12046213e-03,  -5.34278480e-02,  -5.16550074e-03,
@@ -724,7 +724,7 @@ class TestBinomial(unittest.TestCase):
             -9.40257152e-04,  -4.42798906e-03,  -5.72261321e-04,
             -1.51253748e-02,  -3.16494123e-02,  -1.04913757e-03,
             -1.18023417e-01])
-        np.testing.assert_allclose(results.resid_pearson, 
+        np.testing.assert_allclose(results.resid_pearson,
             [-0.21006498, -0.20410641, -0.17423009, -0.27216147, -0.3234511 ,
             -0.29246179, -0.22250903, -0.60917574, -0.28416602,  0.3421141 ,
             -0.81229277,  1.42158361, -0.25694055, -0.21933056, -0.142444  ,
@@ -789,7 +789,7 @@ class TestBinomial(unittest.TestCase):
             -0.3735026 , -0.3735026 , -0.23910582, -0.13447767, -0.17931646,
             -0.27216147, -0.1575374 , -0.38997712, -0.4980393 , -0.18455132,
             -2.19209332])
-        np.testing.assert_allclose(results.resid_anscombe, 
+        np.testing.assert_allclose(results.resid_anscombe,
             [-0.31237627, -0.3036605 , -0.25978208, -0.40240831, -0.47552289,
             -0.43149255, -0.33053793, -0.85617194, -0.41962951,  0.50181328,
             -1.0954382 ,  1.66940149, -0.38048321, -0.3259044 , -0.21280762,
@@ -854,7 +854,7 @@ class TestBinomial(unittest.TestCase):
             -0.5456246 , -0.5456246 , -0.35467084, -0.20099345, -0.2672722 ,
             -0.40240831, -0.23514749, -0.56840788, -0.71397735, -0.27497271,
             -2.18250381])
-        np.testing.assert_allclose(results.resid_deviance, 
+        np.testing.assert_allclose(results.resid_deviance,
             [-0.29387552, -0.2857098 , -0.24455876, -0.37803944, -0.44609851,
             -0.40514674, -0.31088148, -0.79449324, -0.39409528,  0.47049798,
             -1.00668653,  1.48698001, -0.35757692, -0.30654405, -0.20043547,
@@ -919,7 +919,7 @@ class TestBinomial(unittest.TestCase):
             -0.51106408, -0.51106408, -0.33345774, -0.18932865, -0.251588  ,
             -0.37803944, -0.22142749, -0.53211065, -0.66569789, -0.25881274,
             -1.87550882])
-        np.testing.assert_allclose(results.null, 
+        np.testing.assert_allclose(results.null,
             [ 0.08860759,  0.08860759,  0.08860759,  0.08860759,  0.08860759,
             0.08860759,  0.08860759,  0.08860759,  0.08860759,  0.08860759,
             0.08860759,  0.08860759,  0.08860759,  0.08860759,  0.08860759,
