@@ -70,13 +70,13 @@ Currently the following contribs are available:
 
     - .. versionadded:: 1.10
     - Path: pysal.contrib.spint
-    - Requires: `pandas`_
+    - Requires: No extra dependencies
 
  9. glm -- GLM estimation using iteratively weighted least squares estimation
 
     - .. versionadded:: 1.12
     - Path: pysal.contrib.glm
-    - Requires: `statsmodels`_ `patsy`_
+    - Requires: No extra dependencies
 
 
        
@@ -87,5 +87,3 @@ Currently the following contribs are available:
 .. _project page: https://github.com/pysal/pysal/wiki/PySAL-Visualization-Project
 .. _shapely: https://pypi.python.org/pypi/Shapely
 .. _wxPython: http://www.wxpython.org/
-.. _statsmodels: http://statsmodels.sourceforge.net/ 
-.. _patsy: https://pypi.python.org/pypi/patsy
