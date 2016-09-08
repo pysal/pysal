@@ -65,8 +65,6 @@ class GLM(RegressionPropsY):
             self.X = X
         self.family = family
         self.k = self.X.shape[1]
-        self.df_model = self.X.shape[1] - 1
-        self.df_resid = self.n - self.df_model - 1
         self.fit_params = {}
 
     def fit(self, ini_betas=None, tol=1.0e-6, max_iter=200, solve='iwls'):
@@ -99,6 +97,13 @@ class GLM(RegressionPropsY):
             self.fit_params['n_iter'] = n_iter
         return GLMResults(self, params.flatten(), predy, w)
 
+    @cache_readonly
+    def df_model(self):
+        return self.X.shape[1] - 1
+
+    @cache_readonly
+    def df_resid(self):
+        return self.n - self.df_model - 1
 
 class GLMResults(LikelihoodModelResults):
     """
@@ -147,7 +152,8 @@ class GLMResults(LikelihoodModelResults):
         mu            : array
                         n*1, predicted value of y (i.e., fittedvalues)
         cov_params    : array
-                        Variance covariance matrix (kxk) of betas
+                        Variance covariance matrix (kxk) of betas which has been
+                        appropriately scaled by sigma-squared
         bse           : array
                         k*1, standard errors of betas
         pvalues       : array
@@ -211,15 +217,24 @@ class GLMResults(LikelihoodModelResults):
         self.y = model.y.T.flatten()
         self.X = model.X
         self.k = model.k
-        self.df_model = model.df_model
-        self.df_resid = model.df_resid
         self.family = model.family
         self.fit_params = model.fit_params
         self.params = params
         self.w = w
         self.mu = mu.flatten()
         self._cache = {}
-        self.normalized_cov_params = la.inv(spdot(self.w.T, self.w))
+    
+    @cache_readonly
+    def df_model(self):
+        return self.model.df_model
+
+    @cache_readonly
+    def df_resid(self):
+        return self.model.df_resid
+
+    @cache_readonly
+    def normalized_cov_params(self):
+        return la.inv(spdot(self.w.T, self.w))
 
     @cache_readonly
     def resid_response(self):

@@ -75,7 +75,7 @@ def get_CV(gwr):
     Modification: sum of residual squared is divided by n according to GWR4 results
 
     """
-    aa = gwr.u/(1.0-gwr.influ)
+    aa = gwr.resid_response.reshape((-1,1))/(1.0-gwr.influ)
     cv = np.sum(aa**2)/gwr.n
     return cv
 

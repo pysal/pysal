@@ -8,6 +8,7 @@ import numpy as np
 import numpy.linalg as la
 from scipy.stats import t
 from kernels import *
+from diagnostics import get_AIC, get_AICc, get_BIC
 import pysal.spreg.user_output as USER
 from pysal.contrib.glm.family import Gaussian, Binomial, Poisson
 from pysal.contrib.glm.glm import GLM, GLMResults
@@ -137,6 +138,10 @@ class GWR(GLM):
         fit_params    : dict
                         parameters passed into fit method to define estimation
                         routine
+
+        W             : array
+                        n*n, spatial weights matrix for weighting all
+                        observations from each calibration point
     """
     def __init__(self, coords, y, X, bw, family=Gaussian(), offset=None,
             sigma2_v1=False, kernel='bisquare', fixed=False, constant=True):
@@ -236,145 +241,180 @@ class GWR(GLM):
             S = S * (1.0/z)
         return GWRResults(self, params, predy, S, CCT, w)
 
+    @cache_readonly
+    def df_model(self):
+        raise NotImplementedError('Only computed for fitted model in GWRResults')
+
+    @cache_readonly
+    def df_resid(self):
+        raise NotImplementedError('Only computed for fitted model in GWRResults')
+
 class GWRResults(GLMResults):
     """
     Basic class including common properties for all GWR regression models
 
     Parameters
     ----------
-        model         : GWR object
-                        pointer to GWR object with estimation parameters
+        model               : GWR object
+                            pointer to GWR object with estimation parameters
 
-        betas         : array
-                        k*1, estimared coefficients
+        betas               : array
+                            k*1, estimared coefficients
 
-        predy         : array
-                        n*1, predicted y values
+        predy               : array
+                              n*1, predicted y values
 
-        w             : array
-                        n*1, final weight used for iteratively re-weighted least
-                        sqaures; default is None
+        w                   : array
+                              n*1, final weight used for iteratively re-weighted least
+                              sqaures; default is None
 
-        S             : array
-                        n*n, hat matrix
+        S                   : array
+                              n*n, hat matrix
 
-        CCT           : array
-                        n*k, variance-covariance matrix
+        CCT                 : array
+                              n*k, scaled variance-covariance matrix
 
     Attributes
     ----------
-        model         : GWR Object
-                        points to GWR object for which parameters have been
-                        estimated
+        model               : GWR Object
+                              points to GWR object for which parameters have been
+                              estimated
 
-        betas         : array
-                        n*k, parameter estimates
+        betas               : array
+                              n*k, parameter estimates
 
-        predy         : array
-                        n*1, predicted value of y
+        predy               : array
+                              n*1, predicted value of y
 
-        y             : array
-                        n*1, dependent variable
+        y                   : array
+                              n*1, dependent variable
 
-        X             : array
-                        n*k, independent variable, including constant
+        X                   : array
+                              n*k, independent variable, including constant
 
-        family        : family object
-                        underlying probability model; provides
-                        distribution-specific calculations
+        family              : family object
+                              underlying probability model; provides
+                              distribution-specific calculations
 
-        n             : integer
-                        number of observations
+        n                   : integer
+                              number of observations
 
-        k             : integer
-                        number of independent variables
+        k                   : integer
+                              number of independent variables
 
-        offset        : array 
-                        n*1, the offset variable at the ith location. For Poisson model
-                        this term is often the size of the population at risk or
-                        the expected size of the outcome in spatial epidemiology
-                        Default is None where Ni becomes 1.0 for all locations
+        df_model            : integer
+                              model degrees of freedom
+
+        df_resid            : integer
+                              residual degrees of freedom
+
+        offset              : array 
+                              n*1, the offset variable at the ith location. 
+                              For Poisson model this term is often the size of 
+                              the population at risk or the expected size of 
+                              the outcome in spatial epidemiology; Default is 
+                              None where Ni becomes 1.0 for all locations
         
-        sig2          : float
-                        sigma squared used for subsequent computations
+        scale               : float
+                              sigma squared used for subsequent computations
 
-        w             : array
-                        n*1, final weights from iteratively re-weighted least
-                        sqaures routine
+        w                   : array
+                              n*1, final weights from iteratively re-weighted least
+                              sqaures routine
 
-        u             : array
-                        n*1, residuals
+        resid_response      : array
+                              n*1, residuals of the repsonse
 
-        utu           : scalar
-                        residual sum of sqaures
+        resid_ss            : scalar
+                              residual sum of sqaures
 
-        W             : array
-                        n*n; spatial weights for each observation from each
-                        calibration point
+        W                   : array
+                              n*n; spatial weights for each observation from each
+                              calibration point
    
-        S             : array
-                        n*n, hat matrix
+        S                   : array
+                              n*n, hat matrix
 
-        CCT           : array
-                        n*k, variance-covariance matrix
+        CCT                 : array
+                              n*k, scaled variance-covariance matrix
     
-        tr_S          : float
-                        trace of S (hat) matrix
+        tr_S                : float
+                              trace of S (hat) matrix
     
-        tr_STS        : float
-                        trace of STS matrix
+        tr_STS              : float
+                              trace of STS matrix
 
-        tr_SWSTW      : float
-                        trace of weighted STS matrix; weights are those output
-                        from iteratively weighted least sqaures (not spatial
-                        weights)
+        tr_SWSTW            : float
+                              trace of weighted STS matrix; weights are those output
+                              from iteratively weighted least sqaures (not spatial
+                              weights)
 
-        y_bar         : array
-                        n*1, weighted mean value of y
+        y_bar               : array
+                              n*1, weighted mean value of y
         
-        TSS           : array
-                        n*1, geographically weighted total sum of squares
+        TSS                 : array
+                              n*1, geographically weighted total sum of squares
         
-        RSS           : array
-                        n*1, geographically weighted residual sum of squares
+        RSS                 : array
+                              n*1, geographically weighted residual sum of squares
         
-        localR2       : array
-                        n*1, local R square
+        localR2             : array
+                              n*1, local R square
         
-        sigma2_v1     : float
-                        sigma squared, use (n-v1) as denominator
+        sigma2_v1           : float
+                              sigma squared, use (n-v1) as denominator
         
-        sigma2_v1v2   : float
-                        sigma squared, use (n-2v1+v2) as denominator
+        sigma2_v1v2         : float
+                              sigma squared, use (n-2v1+v2) as denominator
         
-        sigma2_ML     : float
-                        sigma squared, estimated using ML
+        sigma2_ML           : float
+                              sigma squared, estimated using ML
         
-        std_res       : array
-                        n*1, standardised residuals
+        std_res             : array
+                              n*1, standardised residuals
         
-        std_err       : array
-                        n*k, standard errors of Beta
+        bse                 : array
+                              n*k, standard errors of parameters (betas)
         
-        influ         : array
-                        n*1, leading diagonal of S matrix
+        influ               : array
+                              n*1, leading diagonal of S matrix
         
-        CooksD        : array
-                        n*1, Cook's D
+        CooksD              : array
+                              n*1, Cook's D
         
-        tvalues       : array
-                        n*k, local t-statistics
+        tvalues             : array
+                              n*k, local t-statistics
 
-        adj_alpha     : array
-                        3*1, corrected alpha values to account for multiple
-                        hypothesis testing for the 90%, 95%, and 99% confidence
-                        levels; tvalues with an absolute value larger than the
-                        corrected alpha are considered statistically
-                        significant.
+        adj_alpha           : array
+                              3*1, corrected alpha values to account for multiple
+                              hypothesis testing for the 90%, 95%, and 99% confidence
+                              levels; tvalues with an absolute value larger than the
+                              corrected alpha are considered statistically
+                              significant.
         
-        pDev          : float
-                        local percent of deviation accounted for; analogous to
-                        r-squared for GLM's.
+        deviance            : array
+                              n*1, local model deviance for each calibration point
+
+        resid_deviance      : array
+                              n*1, local sum of residual deviance for each
+                              calibration point
+
+        llf                 : scalar
+                              log-likelihood of the full model; see
+                              pysal.contrib.glm.family for damily-sepcific
+                              log-likelihoods
+
+        pDev                : float
+                              local percent of deviation accounted for; analogous to
+                              r-squared for GLM's
+
+        mu                  : array
+                              n*, flat one dimensional array of predicted mean
+                              response value from estimator
+        
+        fit_params          : dict
+                              parameters passed into fit method to define estimation
+                              routine
     """
     def __init__(self, model, params, predy, S, CCT, w=None):
         GLMResults.__init__(self, model, params, predy, w)
@@ -384,15 +424,39 @@ class GWRResults(GLMResults):
             self.w = w
         self.predy = predy
         self.S = S
-        self.CCT = CCT
-        self.u = (self.resid_response).flatten()
-        self.utu = np.dot(self.u, self.u.T)
-        self.u = self.u.reshape((-1,1))
+        self.CCT = self.cov_params(CCT)
         self._cache = {}
-        if model.sigma2_v1:
-        	self.sig2 = self.sigma2_v1
+    
+    @cache_readonly
+    def resid_ss(self):
+        u = self.resid_response.flatten()
+        return np.dot(u, u.T)
+
+    @cache_readonly
+    def scale(self):
+        if isinstance(self.family, Gaussian):
+            if self.model.sigma2_v1:
+                scale = self.sigma2_v1
+            else:
+                scale = self.sigma2_v1v2
         else:
-            self.sig2 = self.sigma2_v1v2
+            scale = 1.0
+        return scale
+
+    def cov_params(self, cov):
+        """
+        Returns scaled covariance parameters
+        Parameters
+        ----------
+        cov         : array
+                      estimated covariance parameters
+
+        Returns
+        -------
+        Scaled covariance parameters
+
+        """
+        return cov*self.scale
     
     @cache_readonly
     def tr_S(self):
@@ -448,10 +512,11 @@ class GWRResults(GLMResults):
         Geographically weighted regression: the analysis of spatially varying 
         relationships.
         """
+        resid_response = self.resid_response.reshape((-1,1))
     	RSS = np.zeros(shape=(self.n,1))
         for i in range(self.n):
             RSS[i] = np.sum(np.reshape(np.array(self.W[i]), (-1,1))
-	                * self.u**2)
+	                * resid_response**2)
         return RSS
 
     @cache_readonly
@@ -464,7 +529,10 @@ class GWRResults(GLMResults):
         Geographically weighted regression: the analysis of spatially varying 
         relationships.
         """
-        return (self.TSS - self.RSS)/self.TSS
+        if isinstance(self.family, Gaussian):
+            return (self.TSS - self.RSS)/self.TSS
+        else:
+            raise NotImplementedError('Only applicable to Gaussian')
 
     @cache_readonly
     def sigma2_v1(self):
@@ -478,7 +546,7 @@ class GWRResults(GLMResults):
 
         only use v1
         """
-        return (self.utu/(self.n-self.tr_S))
+        return (self.resid_ss/(self.n-self.tr_S))
     
     @cache_readonly
     def sigma2_v1v2(self):
@@ -493,10 +561,10 @@ class GWRResults(GLMResults):
         use v1 and v2 #used in GWR4
         """
         if isinstance(self.family, (Poisson, Binomial)):
-            return self.utu/(self.n - 2.0*self.tr_S +
+            return self.resid_ss/(self.n - 2.0*self.tr_S +
 	                self.tr_STS) #could be changed to SWSTW - nothing to test against
         else:
-            return self.utu/(self.n - 2.0*self.tr_S +
+            return self.resid_ss/(self.n - 2.0*self.tr_S +
 	                self.tr_STS) #could be changed to SWSTW - nothing to test against
     @cache_readonly
     def sigma2_ML(self):
@@ -505,7 +573,7 @@ class GWRResults(GLMResults):
 
         Methods: maximum likelihood
         """
-        return self.utu/self.n
+        return self.resid_ss/self.n
 
     @cache_readonly
     def std_res(self):
@@ -517,7 +585,7 @@ class GWRResults(GLMResults):
         Geographically weighted regression: the analysis of spatially varying 
         relationships.
         """
-        return self.u.reshape((-1,1))/(np.sqrt(self.sig2 * (1.0 - self.influ)))
+        return self.resid_response.reshape((-1,1))/(np.sqrt(self.scale * (1.0 - self.influ)))
 
     @cache_readonly
     def bse(self):
@@ -529,10 +597,7 @@ class GWRResults(GLMResults):
         Geographically weighted regression: the analysis of spatially varying 
         relationships.
         """
-        if isinstance(self.family, (Poisson, Binomial)):
-            return np.sqrt(self.CCT)
-        else:
-            return np.sqrt(self.CCT*self.sig2)
+        return np.sqrt(self.CCT)
 
     @cache_readonly
     def influ(self):
@@ -565,7 +630,7 @@ class GWRResults(GLMResults):
             dev = np.sum(2.0*self.W*(y*np.log(y/(ybar*off))-(y-ybar*off)),axis=1)
         elif isinstance(self.family, Binomial):
             dev = self.family.deviance(self.y, self.y_bar, self.W, axis=1)
-        return dev
+        return dev.reshape((-1,1))
 
     @cache_readonly
     def resid_deviance(self):
@@ -579,7 +644,7 @@ class GWRResults(GLMResults):
             dev_res = np.repeat(global_dev_res.flatten(),self.n)
             dev_res = dev_res.reshape((self.n, self.n))
             dev_res = np.sum(dev_res * self.W.T, axis=0)
-            return dev_res
+            return dev_res.reshape((-1,1))
 
     @cache_readonly
     def pDev(self):
@@ -587,20 +652,10 @@ class GWRResults(GLMResults):
         Local percentage of deviance accounted for. Described in the GWR4
         manual. Equivalent to 1 - (deviance/null deviance)
         """
-        off = self.offset.reshape((-1,1)).T
-        y = self.y
-        ybar = self.y_bar
-        global_dev_res = ((self.family.resid_dev(self.y, self.mu))**2)
-        dev_res = np.repeat(global_dev_res.flatten(),self.n)
-        dev_res = dev_res.reshape((self.n, self.n))
-        dev_res = np.sum(dev_res * self.W.T, axis=0)
         if isinstance(self.family, Gaussian):
-        	return np.nan
-        elif isinstance(self.family, Poisson):
-            dev = np.sum(2.0*self.W*(y*np.log(y/(ybar*off))-(y-ybar*off)),axis=1)
-        elif isinstance(self.family, Binomial):
-            dev = self.family.deviance(self.y, self.y_bar, self.W, axis=1)
-        return  1.0 - (dev_res.reshape((-1,1))/ dev.reshape((-1,1)))
+        	raise NotImplementedError('Not implemented for Gaussian')
+        else:
+            return 1.0 - (self.resid_deviance/self.deviance)
 
     @cache_readonly
     def adj_alpha(self):
@@ -645,4 +700,75 @@ class GWRResults(GLMResults):
         tvalues[subset] = 0
         return tvalues
 
+    @cache_readonly
+    def df_model(self):
+        return self.n - self.tr_S
+
+    @cache_readonly
+    def df_resid(self):
+        return self.n - 2.0*self.tr_S + self.tr_STS
+
+    @cache_readonly
+    def normalized_cov_params(self):
+        raise NotImplementedError('Not implemented for GWR')
+
+    @cache_readonly
+    def resid_pearson(self):
+        raise NotImplementedError('Not implemented for GWR')
+
+    @cache_readonly
+    def resid_working(self):
+        raise NotImplementedError('Not implemented for GWR')
+
+    @cache_readonly
+    def resid_anscombe(self):
+        raise NotImplementedError('Not implemented for GWR')
+
+    @cache_readonly
+    def pearson_chi2(self):
+        raise NotImplementedError('Not implemented for GWR')
+
+    @cache_readonly
+    def null(self):
+        raise NotImplementedError('Not implemented for GWR')
+
+    @cache_readonly
+    def llnull(self):
+        raise NotImplementedError('Not implemented for GWR')
+
+    @cache_readonly
+    def null_deviance(self):
+        raise NotImplementedError('Not implemented for GWR')
+    
+    @cache_readonly
+    def aic(self):
+        return get_AIC(self)
+
+    @cache_readonly
+    def aicc(self):
+        return get_AICc(self)
+
+    @cache_readonly
+    def bic(self):
+        return get_BIC(self)
+
+    @cache_readonly
+    def D2(self):
+        raise NotImplementedError('Not implemented for GWR')
+
+    @cache_readonly
+    def adj_D2(self):
+        raise NotImplementedError('Not implemented for GWR')
+
+    @cache_readonly
+    def pseudoR2(self):
+        raise NotImplementedError('Not implemented for GWR')
+
+    @cache_readonly
+    def adj_pseudoR2(self):
+        raise NotImplementedError('Not implemented for GWR')
+
+    @cache_readonly
+    def pvalues(self):
+        raise NotImplementedError('Not implemented for GWR')
 
