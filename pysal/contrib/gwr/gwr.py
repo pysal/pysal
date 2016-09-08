@@ -54,7 +54,8 @@ class GWR(GLM):
                         n*1, the offset variable at the ith location. For Poisson model
                         this term is often the size of the population at risk or
                         the expected size of the outcome in spatial epidemiology
-                        Default is None where Ni becomes 1.0 for all locations
+                        Default is None where Ni becomes 1.0 for all locations;
+                        only for Poisson models
 
         y_fix         : array 
                         n*1, the fixed intercept value of y; default is None
@@ -149,11 +150,15 @@ class GWR(GLM):
         """
         Initialize class
         """
-        GLM.__init__(self, y, X, family, offset, y_fix, constant)
+        GLM.__init__(self, y, X, family, constant=constant)
         self.sigma2_v1 = sigma2_v1
         self.bw = bw
         self.kernel = kernel
         self.fixed = fixed
+        if offset is None:
+        	self.offset = np.ones((self.n, 1))
+        else:
+            self.offset = offset * 1.0
         self.fit_params = {}
         self.W = self._build_W(fixed, kernel, coords, bw)
 
@@ -291,6 +296,12 @@ class GWRResults(GLMResults):
         k             : integer
                         number of independent variables
 
+        offset        : array 
+                        n*1, the offset variable at the ith location. For Poisson model
+                        this term is often the size of the population at risk or
+                        the expected size of the outcome in spatial epidemiology
+                        Default is None where Ni becomes 1.0 for all locations
+        
         sig2          : float
                         sigma squared used for subsequent computations
 
@@ -375,6 +386,7 @@ class GWRResults(GLMResults):
     def __init__(self, model, params, predy, S, CCT, w=None):
         GLMResults.__init__(self, model, params, predy, w)
         self.W = model.W
+        self.offset = model.offset
         if w is not None:
             self.w = w
         self.predy = predy
@@ -408,11 +420,12 @@ class GWRResults(GLMResults):
         """
         weighted mean of y
         """
+        off = self.offset.reshape((-1,1))
         arr_ybar = np.zeros(shape=(self.n,1))
         for i in range(self.n):
             w_i= np.reshape(np.array(self.W[i]), (-1, 1))
             sum_yw = np.sum(self.y.reshape((-1,1)) * w_i)
-            arr_ybar[i] = 1.0 * sum_yw / np.sum(w_i*self.offset)
+            arr_ybar[i] = 1.0 * sum_yw / np.sum(w_i*off)
         return arr_ybar
 
     @cache_readonly
@@ -549,19 +562,51 @@ class GWRResults(GLMResults):
         return self.std_res**2 * self.influ / (self.tr_S * (1.0-self.influ))
     
     @cache_readonly
+    def deviance(self):
+        off = self.offset.reshape((-1,1)).T
+        y = self.y
+        ybar = self.y_bar
+        if isinstance(self.family, Gaussian):
+        	raise NotImplementedError('deviance not currently used for Gaussian
+        	        model')
+        elif isinstance(self.family, Poisson):
+            dev = np.sum(2.0*self.W*(y*np.log(y/(ybar*off))-(y-ybar*off)),axis=1)
+        elif isinstance(self.family, Binomial):
+            dev = self.family.deviance(self.y, self.y_bar, self.W, axis=1)
+        return dev
+
+    @cache_readonly
+    def resid_deviance(self):
+        if isinstance(self.family, Gaussian):
+        	raise NotImplementedError('deviance not currently used for Gaussian
+        	        model')
+        else isinstance(self.family, Gaussian):
+            off = self.offset.reshape((-1,1)).T
+            y = self.y
+            ybar = self.y_bar
+            global_dev_res = ((self.family.resid_dev(self.y, self.mu))**2)
+            dev_res = np.repeat(global_dev_res.flatten(),self.n)
+            dev_res = dev_res.reshape((self.n, self.n))
+            dev_res = np.sum(dev_res * self.W.T, axis=0)
+            return dev_res
+
+    @cache_readonly
     def pDev(self):
         """
         Local percentage of deviance accounted for. Described in the GWR4
         manual. Equivalent to 1 - (deviance/null deviance)
         """
-        global_dev_res = ((self.family.resid_dev(self.y,self.mu))**2)
+        off = self.offset.reshape((-1,1)).T
+        y = self.y
+        ybar = self.y_bar
+        global_dev_res = ((self.family.resid_dev(self.y, self.mu))**2)
         dev_res = np.repeat(global_dev_res.flatten(),self.n)
         dev_res = dev_res.reshape((self.n, self.n))
         dev_res = np.sum(dev_res * self.W.T, axis=0)
         if isinstance(self.family, Gaussian):
         	return np.nan
         elif isinstance(self.family, Poisson):
-            dev = np.sum(2.0*self.W*(self.y*np.log(self.y/(self.y_bar))-(self.y-self.y_bar)),axis=1)
+            dev = np.sum(2.0*self.W*(y*np.log(y/(ybar*off))-(y-ybar*off)),axis=1)
         elif isinstance(self.family, Binomial):
             dev = self.family.deviance(self.y, self.y_bar, self.W, axis=1)
         return  1.0 - (dev_res.reshape((-1,1))/ dev.reshape((-1,1)))

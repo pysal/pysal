@@ -103,6 +103,10 @@ class Sel_BW(object):
         self.family=family
         self.fixed = fixed
         self.kernel = kernel
+        if offset is None:
+        	self.offset = np.ones((len(y), 1))
+        else:
+            self.offset = offset * 1.0
 
     def search(self, search='golden_section', criterion='AICc', bw_min=0.0, bw_max=0.0, interval=0.0, tol=1.0e-6, max_iter=200):
         """
@@ -157,7 +161,7 @@ class Sel_BW(object):
 
         function = lambda bw: getDiag[criterion](
                 GWR(self.coords, self.y, self.x_loc, bw, family=self.family,
-                    kernel=self.kernel, fixed=self.fixed).fit())
+                    kernel=self.kernel, fixed=self.fixed, offset=self.offset).fit())
         
         if ktype % 2 == 0:
             int_score = True

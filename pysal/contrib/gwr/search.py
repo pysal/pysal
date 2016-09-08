@@ -54,7 +54,7 @@ def golden_section(a, c, delta, function, tol, max_iter, int_score=False):
         score_b = function(b)
         score_c = function(c)
         score_d = function(d)
-         
+        
         if score_b <= score_d:
             opt_val = b
             opt_score = score_b

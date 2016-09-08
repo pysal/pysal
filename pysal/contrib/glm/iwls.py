@@ -3,7 +3,7 @@ import numpy.linalg as la
 from scipy import sparse as sp
 from scipy.sparse import linalg as spla
 from pysal.spreg.utils import spdot, spmultiply
-from family import Binomial
+from family import Binomial, Poisson
 
 def _compute_betas(y, x):
     """
@@ -43,15 +43,21 @@ def iwls(y, x, family, offset, y_fix,
     """
     n_iter = 0
     diff = 1.0e6
-    if isinstance(family, Binomial):
-        y = family.link._clean(y)
-    
     if ini_betas is None:
         betas = np.zeros((x.shape[1], 1), np.float)
     else:
         betas = ini_betas
-    mu = family.starting_mu(y)
-    v = family.predict(mu)
+    if isinstance(family, Binomial):
+        y = family.link._clean(y)
+    if isinstance(family, Poisson):
+    	y_off = y/offset
+        y_off = family.starting_mu(y_off)
+        v = family.predict(y_off)
+        mu = family.starting_mu(y)
+    else:
+        mu = family.starting_mu(y)
+        v = family.predict(mu)
+    
     while diff > tol and n_iter < max_iter:
     	n_iter += 1
         w = family.weights(mu)
@@ -68,6 +74,8 @@ def iwls(y, x, family, offset, y_fix,
             n_betas, xtx_inv_xt = _compute_betas_gwr(wz, wx, wi)
         v = spdot(x, n_betas)
         mu  = family.fitted(v)
+        if isinstance(family, Poisson):
+            mu = mu * offset
         diff = min(abs(n_betas-betas))
         betas = n_betas
         
