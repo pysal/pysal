@@ -36,8 +36,7 @@ def _compute_betas_gwr(y, x, wi):
     betas = np.dot(xtx_inv_xt, y)
     return betas, xtx_inv_xt
 
-def iwls(y, x, family, offset, y_fix,
-    ini_betas=None, tol=1.0e-8, max_iter=200, wi=None):
+def iwls(y, x, family, offset=1.0, ini_betas=None, tol=1.0e-8, max_iter=200, wi=None):
     """
     Iteratively re-weighted least squares estimation routine
     """

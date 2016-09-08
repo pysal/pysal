@@ -24,13 +24,6 @@ class GLM(RegressionPropsY):
                         n*k, independent variable, exlcuding the constant.
         family        : string
                         Model type: 'Gaussian', 'Poisson', 'Binomial'
-        offset        : array
-                        n*1, the offset variable at the ith location. For Poisson model
-                        this term is often the size of the population at risk or
-                        the expected size of the outcome in spatial epidemiology.
-                        Default is None where Ni becomes 1.0 for all locations.
-        y_fix         : array
-                        n*1, the fix intercept value of y
 
     Attributes
     ----------
@@ -59,8 +52,7 @@ class GLM(RegressionPropsY):
         normalized_cov_params   : array
                                 k*k, approximates [X.T*X]-1
     """
-    def __init__(self, y, X, family=family.Gaussian(), offset=None, y_fix = None,
-            constant=True):
+    def __init__(self, y, X, family=family.Gaussian(), constant=True):
         """
         Initialize class
         """
@@ -75,16 +67,6 @@ class GLM(RegressionPropsY):
         self.k = self.X.shape[1]
         self.df_model = self.X.shape[1] - 1
         self.df_resid = self.n - self.df_model - 1
-        if offset is None:
-            self.offset = np.ones(shape=(self.n,1))
-        else:
-            self.offset = offset * 1.0
-        if y_fix is None:
-	        self.y_fix = np.zeros(shape=(self.n,1))
-        else:
-	        self.y_fix = y_fix
-        #pinv = la.pinv(self.X)
-        #self.normalized_cov_params = la.inv(spdot(pinv, pinv.T))
         self.fit_params = {}
 
     def fit(self, ini_betas=None, tol=1.0e-6, max_iter=200, solve='iwls'):
@@ -112,8 +94,8 @@ class GLM(RegressionPropsY):
         self.fit_params['max_iter'] = max_iter
         self.fit_params['solve']=solve
         if solve.lower() == 'iwls':
-            params, predy, w, n_iter = iwls(self.y, self.X, self.family, self.offset, 
-                    self.y_fix, ini_betas, tol, max_iter)
+            params, predy, w, n_iter = iwls(self.y, self.X, self.family,
+                    ini_betas=ini_betas, tol=tol, max_iter=max_iter)
             self.fit_params['n_iter'] = n_iter
         return GLMResults(self, params.flatten(), predy, w)
 
@@ -229,7 +211,6 @@ class GLMResults(LikelihoodModelResults):
         self.y = model.y.T.flatten()
         self.X = model.X
         self.k = model.k
-        self.offset = model.offset
         self.df_model = model.df_model
         self.df_resid = model.df_resid
         self.family = model.family
@@ -239,11 +220,6 @@ class GLMResults(LikelihoodModelResults):
         self.mu = mu.flatten()
         self._cache = {}
         self.normalized_cov_params = la.inv(spdot(self.w.T, self.w))
-
-        #if model.sigma2_v1:
-	        #self.sig2 = self.sig2n
-        #else:
-            #self.sig2 = self.sig2n_k
 
     @cache_readonly
     def resid_response(self):
@@ -277,7 +253,7 @@ class GLMResults(LikelihoodModelResults):
         y = np.reshape(self.y, (-1,1))
         model = self.model
         X = np.ones((len(y), 1))
-        null_mod =  GLM(y, X, family=self.family, offset=self.offset, constant=False)
+        null_mod =  GLM(y, X, family=self.family, constant=False)
         return null_mod.fit().mu
    
     @cache_readonly

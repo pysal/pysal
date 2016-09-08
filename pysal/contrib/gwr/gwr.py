@@ -57,9 +57,6 @@ class GWR(GLM):
                         Default is None where Ni becomes 1.0 for all locations;
                         only for Poisson models
 
-        y_fix         : array 
-                        n*1, the fixed intercept value of y; default is None
-
         sigma2_v1     : boolean
                         specify sigma squared, True to use n as denominator;
                         default is False which uses n-k
@@ -106,9 +103,6 @@ class GWR(GLM):
                         the expected size of the outcome in spatial epidemiology
                         Default is None where Ni becomes 1.0 for all locations
 
-        y_fix         : array 
-                        n*1, the fixed intercept value of y; default is None
-
         sigma2_v1     : boolean
                         specify sigma squared, True to use n as denominator;
                         default is False which uses n-k
@@ -145,8 +139,7 @@ class GWR(GLM):
                         routine
     """
     def __init__(self, coords, y, X, bw, family=Gaussian(), offset=None,
-            y_fix=None, sigma2_v1=False, kernel='bisquare', fixed=False,
-            constant=True):
+            sigma2_v1=False, kernel='bisquare', fixed=False, constant=True):
         """
         Initialize class
         """
@@ -227,7 +220,7 @@ class GWR(GLM):
             for i in range(self.n):
                 wi = self.W[i].reshape((-1,1))
             	rslt = iwls(self.y, self.X, self.family, self.offset,
-            	        self.y_fix, ini_params, tol, max_iter, wi=wi)
+            	        ini_params, tol, max_iter, wi=wi)
                 params[i,:] = rslt[0].T
                 predy[i] = rslt[1][i]
                 v[i] = rslt[2][i]
@@ -567,8 +560,7 @@ class GWRResults(GLMResults):
         y = self.y
         ybar = self.y_bar
         if isinstance(self.family, Gaussian):
-        	raise NotImplementedError('deviance not currently used for Gaussian
-        	        model')
+        	raise NotImplementedError('deviance not currently used for Gaussian')
         elif isinstance(self.family, Poisson):
             dev = np.sum(2.0*self.W*(y*np.log(y/(ybar*off))-(y-ybar*off)),axis=1)
         elif isinstance(self.family, Binomial):
@@ -578,9 +570,8 @@ class GWRResults(GLMResults):
     @cache_readonly
     def resid_deviance(self):
         if isinstance(self.family, Gaussian):
-        	raise NotImplementedError('deviance not currently used for Gaussian
-        	        model')
-        else isinstance(self.family, Gaussian):
+        	raise NotImplementedError('deviance not currently used for Gaussian')
+        else:
             off = self.offset.reshape((-1,1)).T
             y = self.y
             ybar = self.y_bar

@@ -244,6 +244,7 @@ class TestGWRPoisson(unittest.TestCase):
         self.BS_NN = pysal.open(pysal.examples.get_path('tokyo_BS_NN_listwise.csv'))
         self.GS_F = pysal.open(pysal.examples.get_path('tokyo_GS_F_listwise.csv'))
         self.GS_NN = pysal.open(pysal.examples.get_path('tokyo_GS_NN_listwise.csv'))
+        self.BS_NN_OFF = pysal.open(pysal.examples.get_path('tokyo_BS_NN_OFF_listwise.csv'))
 
     def test_BS_F(self):
         est_Int = self.BS_F.by_col(' est_Intercept')
@@ -263,7 +264,6 @@ class TestGWRPoisson(unittest.TestCase):
         t_UNEMP = self.BS_F.by_col(' t_UNEMP')
         yhat = self.BS_F.by_col(' yhat')
         pdev = np.array(self.BS_F.by_col(' localpdev')).reshape((-1,1))
-        Ginf = self.BS_F.by_col(' Ginfluence')
         
         model = GWR(self.coords, self.y, self.X, bw=26029.625, family=Poisson(), 
                 kernel='bisquare', fixed=True)
@@ -313,7 +313,6 @@ class TestGWRPoisson(unittest.TestCase):
         t_UNEMP = self.BS_NN.by_col(' t_UNEMP')
         yhat = self.BS_NN.by_col(' yhat')
         pdev = np.array(self.BS_NN.by_col(' localpdev')).reshape((-1,1))
-        Ginf = self.BS_NN.by_col(' Ginfluence')
 
         model = GWR(self.coords, self.y, self.X, bw=50, family=Poisson(), 
                 kernel='bisquare', fixed=False)
@@ -343,6 +342,65 @@ class TestGWRPoisson(unittest.TestCase):
         np.testing.assert_allclose(t_UNEMP, rslt.tvalues[:,4], rtol=1e-02)
         np.testing.assert_allclose(yhat, rslt.mu, rtol=1e-04)
         np.testing.assert_allclose(pdev, rslt.pDev, rtol=1e-05)
+    
+    def test_BS_NN_Offset(self):
+        est_Int = self.BS_NN_OFF.by_col(' est_Intercept')
+        se_Int = self.BS_NN_OFF.by_col(' se_Intercept')
+        t_Int = self.BS_NN_OFF.by_col(' t_Intercept')
+        est_OCC = self.BS_NN_OFF.by_col(' est_OCC_TEC')
+        se_OCC = self.BS_NN_OFF.by_col(' se_OCC_TEC')
+        t_OCC = self.BS_NN_OFF.by_col(' t_OCC_TEC')
+        est_OWN = self.BS_NN_OFF.by_col(' est_OWNH')
+        se_OWN = self.BS_NN_OFF.by_col(' se_OWNH')
+        t_OWN = self.BS_NN_OFF.by_col(' t_OWNH')
+        est_POP = self.BS_NN_OFF.by_col(' est_POP65')
+        se_POP = self.BS_NN_OFF.by_col(' se_POP65')
+        t_POP = self.BS_NN_OFF.by_col(' t_POP65')
+        est_UNEMP = self.BS_NN_OFF.by_col(' est_UNEMP')
+        se_UNEMP = self.BS_NN_OFF.by_col(' se_UNEMP')
+        t_UNEMP = self.BS_NN_OFF.by_col(' t_UNEMP')
+        yhat = self.BS_NN_OFF.by_col(' yhat')
+        pdev = np.array(self.BS_NN_OFF.by_col(' localpdev')).reshape((-1,1))
+
+        model = GWR(self.coords, self.y, self.X, bw=100, offset=self.off, family=Poisson(), 
+                kernel='bisquare', fixed=False)
+        rslt = model.fit()
+        
+        AICc = get_AICc(rslt)
+        AIC = get_AIC(rslt)
+        BIC = get_BIC(rslt)
+        
+        self.assertAlmostEquals(np.floor(AICc), 367.0)
+        self.assertAlmostEquals(np.floor(AIC), 361.0)
+        self.assertAlmostEquals(np.floor(BIC), 451.0)
+        np.testing.assert_allclose(est_Int, rslt.params[:,0], rtol=1e-02,
+                atol=1e-02)
+        np.testing.assert_allclose(se_Int, rslt.bse[:,0], rtol=1e-02, atol=1e-02)
+        np.testing.assert_allclose(t_Int, rslt.tvalues[:,0], rtol=1e-01,
+                atol=1e-02)
+        np.testing.assert_allclose(est_OCC, rslt.params[:,1], rtol=1e-03,
+                atol=1e-02)
+        np.testing.assert_allclose(se_OCC, rslt.bse[:,1], rtol=1e-02, atol=1e-02)
+        np.testing.assert_allclose(t_OCC, rslt.tvalues[:,1], rtol=1e-01,
+                atol=1e-02)
+        np.testing.assert_allclose(est_OWN, rslt.params[:,2], rtol=1e-04,
+                atol=1e-02)
+        np.testing.assert_allclose(se_OWN, rslt.bse[:,2], rtol=1e-02, atol=1e-02)
+        np.testing.assert_allclose(t_OWN, rslt.tvalues[:,2], rtol=1e-01,
+                atol=1e-02)
+        np.testing.assert_allclose(est_POP, rslt.params[:,3], rtol=1e-03,
+                atol=1e-02)
+        np.testing.assert_allclose(se_POP, rslt.bse[:,3], rtol=1e-02, atol=1e-02)
+        np.testing.assert_allclose(t_POP, rslt.tvalues[:,3], rtol=1e-01,
+                atol=1e-02)
+        np.testing.assert_allclose(est_UNEMP, rslt.params[:,4], rtol=1e-04,
+                atol=1e-02)
+        np.testing.assert_allclose(se_UNEMP, rslt.bse[:,4], rtol=1e-02,
+                atol=1e-02)
+        np.testing.assert_allclose(t_UNEMP, rslt.tvalues[:,4], rtol=1e-01,
+                atol=1e-02)
+        np.testing.assert_allclose(yhat, rslt.mu, rtol=1e-03, atol=1e-02)
+        np.testing.assert_allclose(pdev, rslt.pDev, rtol=1e-04, atol=1e-02)
 
     def test_GS_F(self):
         est_Int = self.GS_F.by_col(' est_Intercept')
@@ -362,7 +420,6 @@ class TestGWRPoisson(unittest.TestCase):
         t_UNEMP = self.GS_F.by_col(' t_UNEMP')
         yhat = self.GS_F.by_col(' yhat')
         pdev = np.array(self.GS_F.by_col(' localpdev')).reshape((-1,1))
-        Ginf = self.GS_F.by_col(' Ginfluence')
         
         model = GWR(self.coords, self.y, self.X, bw=8764.474, family=Poisson(), 
                 kernel='gaussian', fixed=True)
@@ -411,7 +468,6 @@ class TestGWRPoisson(unittest.TestCase):
         t_UNEMP = self.GS_NN.by_col(' t_UNEMP')
         yhat = self.GS_NN.by_col(' yhat')
         pdev = np.array(self.GS_NN.by_col(' localpdev')).reshape((-1,1))
-        Ginf = self.GS_NN.by_col(' Ginfluence')
         
         model = GWR(self.coords, self.y, self.X, bw=50, family=Poisson(), 
                 kernel='gaussian', fixed=False)
@@ -483,8 +539,6 @@ class TestGWRBinomial(unittest.TestCase):
         t_strm = self.BS_F.by_col(' t_DistStrm') 
         yhat = self.BS_F.by_col(' yhat')
         pdev = np.array(self.BS_F.by_col(' localpdev')).reshape((-1,1))
-        #Ginf not tested because not described anywhere
-        Ginf = self.BS_F.by_col(' Ginfluence')
 
         model = GWR(self.coords, self.y, self.X, bw=19642.170, family=Binomial(), 
                 kernel='bisquare', fixed=True)
@@ -548,8 +602,6 @@ class TestGWRBinomial(unittest.TestCase):
         t_strm = self.BS_NN.by_col(' t_DistStrm') 
         yhat = self.BS_NN.by_col(' yhat')
         pdev = self.BS_NN.by_col(' localpdev')
-        #Ginf not tested because it is nost described anywhere
-        Ginf = self.BS_NN.by_col(' Ginfluence')
         
         model = GWR(self.coords, self.y, self.X, bw=158, family=Binomial(), 
                 kernel='bisquare', fixed=False)
@@ -613,8 +665,6 @@ class TestGWRBinomial(unittest.TestCase):
         t_strm = self.GS_F.by_col(' t_DistStrm') 
         yhat = self.GS_F.by_col(' yhat')
         pdev = self.GS_F.by_col(' localpdev')
-        #Ginf not tested because it is not described anywhere
-        Ginf = self.GS_F.by_col(' Ginfluence')
 
         model = GWR(self.coords, self.y, self.X, bw=8929.061, family=Binomial(), 
                 kernel='gaussian', fixed=True)
@@ -678,7 +728,6 @@ class TestGWRBinomial(unittest.TestCase):
         t_strm = self.GS_NN.by_col(' t_DistStrm') 
         yhat = self.GS_NN.by_col(' yhat')
         pdev = self.GS_NN.by_col(' localpdev')
-        Ginf = self.GS_NN.by_col(' Ginfluence')
         
         model = GWR(self.coords, self.y, self.X, bw=64, family=Binomial(), 
                 kernel='gaussian', fixed=False)
