@@ -3,7 +3,8 @@ GWR is tested against results from GWR4
 """
 
 import unittest
-from pysal.contrib.gwr.gwr import GWR
+import pickle as pk
+from pysal.contrib.gwr.gwr import GWR, FBGWR
 from pysal.contrib.gwr.diagnostics import get_AICc, get_AIC, get_BIC, get_CV
 from pysal.contrib.glm.family import Gaussian, Poisson, Binomial
 import numpy as np
@@ -22,6 +23,9 @@ class TestGWRGaussian(unittest.TestCase):
         self.BS_NN = pysal.open(pysal.examples.get_path('georgia_BS_NN_listwise.csv'))
         self.GS_F = pysal.open(pysal.examples.get_path('georgia_GS_F_listwise.csv'))
         self.GS_NN = pysal.open(pysal.examples.get_path('georgia_GS_NN_listwise.csv'))
+        self.FB = pk.load(open(pysal.examples.get_path('FB.p'), 'r'))
+        self.XB = pk.load(open(pysal.examples.get_path('XB.p'), 'r'))
+        self.err = pk.load(open(pysal.examples.get_path('err.p'), 'r'))
 
     def test_BS_F(self):
         est_Int = self.BS_F.by_col(' est_Intercept')
@@ -228,7 +232,17 @@ class TestGWRGaussian(unittest.TestCase):
         np.testing.assert_allclose(localR2, rslt.localR2, rtol=1e-05)
         np.testing.assert_allclose(inf, rslt.influ, rtol=1e-04)
         np.testing.assert_allclose(cooksD, rslt.cooksD, rtol=1e-00)
-        
+    
+    def test_FBGWR(self):
+        model = FBGWR(self.coords, self.y, self.X, [157.0, 65.0, 52.0],
+                XB=self.XB, err=self.err, constant=False)
+        rslt = model.fit()
+
+        np.testing.assert_allclose(rslt.predy, self.FB['predy'], atol=1e-07)
+        np.testing.assert_allclose(rslt.params, self.FB['params'], atol=1e-07)
+        np.testing.assert_allclose(rslt.resid_response, self.FB['u'], atol=1e-05)
+        np.testing.assert_almost_equal(rslt.resid_ss, 6339.3497144025841)
+
 class TestGWRPoisson(unittest.TestCase):
     def setUp(self):
         data = pysal.open(pysal.examples.get_path('Tokyomortality.csv'), mode='Ur')
