@@ -6,16 +6,16 @@ contiguity and distance criteria.
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 
 import pysal
-from Contiguity import buildContiguity
+from Contiguity import buildContiguity, Queen, Rook
 from Distance import knnW, Kernel, DistanceBand
 from util import get_ids, get_points_array_from_shapefile, min_threshold_distance
 import numpy as np
 
-__all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array', 
-           'knnW_from_shapefile', 'threshold_binaryW_from_array', 
-           'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array', 
-           'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile', 
-           'adaptive_kernelW', 'adaptive_kernelW_from_shapefile', 
+__all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array',
+           'knnW_from_shapefile', 'threshold_binaryW_from_array',
+           'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array',
+           'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile',
+           'adaptive_kernelW', 'adaptive_kernelW_from_shapefile',
            'min_threshold_dist_from_shapefile', 'build_lattice_shapefile']
 
 
@@ -63,19 +63,10 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
     :class:`pysal.weights.W`
 
     """
-    shp = pysal.open(shapefile)
-    w = buildContiguity(shp, criterion='queen')
-    if idVariable:
-        ids = get_ids(shapefile, idVariable)
-        w.remap_ids(ids)
-    else:
-        ids = None
-    shp.close()
-    w.set_shapefile(shapefile, idVariable)
 
+    w = Queen.from_shapefile(shapefile, idVariable=idVariable)
     if sparse:
-        w = pysal.weights.WSP(w.sparse, id_order=ids)
-
+        w = pysal.weights.WSP(w.sparse, id_order=w.id_order)
     return w
 
 
@@ -121,22 +112,11 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
     :class:`pysal.weights.W`
 
     """
-    shp = pysal.open(shapefile)
-    w = buildContiguity(shp, criterion='rook')
-    if idVariable:
-        ids = get_ids(shapefile, idVariable)
-        w.remap_ids(ids)
-    else:
-        ids = None
-    shp.close()
-    w.set_shapefile(shapefile, idVariable)
 
+    w = Rook.from_shapefile(shapefile, idVariable=idVariable)
     if sparse:
-        w = pysal.weights.WSP(w.sparse, id_order=ids)
-
-
+        w = pysal.weights.WSP(w.sparse, id_order=w.id_order)
     return w
-
 
 def spw_from_gal(galfile):
     """

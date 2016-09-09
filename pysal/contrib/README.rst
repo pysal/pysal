@@ -70,8 +70,16 @@ Currently the following contribs are available:
 
     - .. versionadded:: 1.10
     - Path: pysal.contrib.spint
-    - Requires: `pandas`_
+    - Requires: No extra dependencies
 
+ 9. glm -- GLM estimation using iteratively weighted least squares estimation
+
+    - .. versionadded:: 1.12
+    - Path: pysal.contrib.glm
+    - Requires: No extra dependencies
+
+
+       
 
 
 .. _clusterpy: https://pypi.python.org/pypi/clusterPy/0.9.9
