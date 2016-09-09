@@ -279,7 +279,10 @@ class PoissonPointProcess(PointProcess):
 class PoissonClusterPointProcess(PointProcess):
     """
     Poisson cluster point process (Neyman Scott).
-    Two stages: 1. parent CSR process: N-conditioned or lambda-conditioned
+    Two stages: 1. parent CSR process: N-conditioned or
+                   lambda-conditioned. If parent events follow a
+                   lambda-conditioned CSR process, the number of
+                   parent events varies across realizations.
                 2. child process: fixed number of points in circle
                    centered on each parent.
 
@@ -304,13 +307,18 @@ class PoissonClusterPointProcess(PointProcess):
     conditioning  : bool
                     If True, use the lambda-conditioned CSR process
                     for parent events, leading to varied number of
-                    events across realizations;
+                    parent events across realizations;
                     if False, use the N-conditioned CSR process.
 
     Attributes
     ----------
     children      : int
-                    Number of childrens centered on each parent.
+                    Number of childrens centered on each parent. Can
+                    be considered as local intensity.
+    num_parents   : dictionary
+                    The key is the index of each realization. The
+                    value is the number of parent events for each
+                    realization.
     realizations  : dictionary
                     The key is the index of each realization, and the
                     value is simulated event points for each
@@ -352,6 +360,10 @@ class PoissonClusterPointProcess(PointProcess):
     >>> samples1 = PoissonClusterPointProcess(window, 200, 10, 0.5, 1, asPP=True, conditioning=False)
     >>> samples1.parameters # number of events for the realization
     {0: {'n': 200}}
+    >>> samples1.num_parents #number of parent events for each realization
+    {0: 10}
+    >>> samples1.children # number of children events centered on each parent event
+    20
 
     2. Simulate a Poisson cluster process of size 200 with 10 parents
     and 20 children within 0.5 units of each parent
@@ -360,6 +372,10 @@ class PoissonClusterPointProcess(PointProcess):
     >>> samples2 = PoissonClusterPointProcess(window, 200, 10, 0.5, 1, asPP=True, conditioning=True)
     >>> samples2.parameters # number of events for the realization might not be equal to 200
     {0: {'n': 260}}
+    >>> samples2.num_parents #number of parent events for each realization
+    {0: 13}
+    >>> samples2.children # number of children events centered on each parent event
+    20
 
     """
 
@@ -385,14 +401,17 @@ class PoissonClusterPointProcess(PointProcess):
         """
 
         self.parameters = {}
+        self.num_parents = {}
         if self.conditioning:
             lambdas = poisson(self.parents, self.samples)
             for i, l in enumerate(lambdas):
                 num = l * self.children
                 self.parameters[i] = {'n': num}
+                self.num_parents[i] = l
         else:
             for i in range(self.samples):
                 self.parameters[i] = {'n': self.n}
+                self.num_parents[i] = self.parents
 
     def realize(self, n):
         """
