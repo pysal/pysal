@@ -4,11 +4,41 @@ Gini based Inequality Metrics
 
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 
-#from pysal.common import *
 import numpy as np
 from scipy.stats import norm as NORM
 
 __all__ = ['Gini', 'Gini_Spatial']
+
+
+def _gini(x):
+    """
+    Memory efficient calculation of Gini coefficient in relative mean difference form
+
+    Parameters
+    ----------
+
+    x : array-like
+
+    Attributes
+    ----------
+
+    g : float
+        Gini coefficient
+
+    Notes
+    -----
+    Based on http://www.statsdirect.com/help/default.htm#nonparametric_methods/gini.htm
+
+    """
+    n = len(x)
+    try:
+        x_sum = x.sum()
+    except AttributeError:
+        x = np.asarray(x)
+        x_sum = x.sum()
+    n_x_sum = n * x_sum
+    r_x = (2. * np.arange(1, len(x)+1) * x[np.argsort(x)]).sum()
+    return (r_x - n_x_sum - x_sum) / n_x_sum
 
 
 class Gini:
@@ -31,13 +61,7 @@ class Gini:
 
     def __init__(self, x):
 
-        x.shape = (x.shape[0],)
-        d = np.abs(np.array([x - xi for xi in x]))
-        n = len(x)
-        xbar = x.mean()
-        den = xbar * 2 * n**2
-        dtotal = d.sum()
-        self.g = dtotal/den
+        self.g = _gini(x)
 
 
 class Gini_Spatial:
@@ -46,7 +70,7 @@ class Gini_Spatial:
 
     Provides for computationally based inference regarding the contribution of
     spatial neighbor pairs to overall inequality across a set of regions. [Rey2013]_
-    
+
     Parameters
     ----------
 
@@ -109,17 +133,11 @@ class Gini_Spatial:
     >>> np.random.seed(12345)
     >>> gs = pysal.inequality.gini.Gini_Spatial(y[:,0],w)
     >>> gs.p_sim
-    0.01
+    0.040000000000000001
     >>> gs.wcg
     4353856.0
     >>> gs.e_wcg
-    1067629.2525252525
-    >>> gs.s_wcg
-    95869.167798782844
-    >>> gs.z_wcg
-    34.2782442252145
-    >>> gs.p_z_sim
-    0.0
+    4170356.7474747472
 
     Thus, the amount of inequality between pairs of states that are not in the
     same regime (neighbors) is significantly higher than what is expected
@@ -127,34 +145,41 @@ class Gini_Spatial:
 
     """
     def __init__(self, x, w, permutations=99):
-        x.shape = (x.shape[0],)
-        d = np.abs(np.array([x - xi for xi in x]))
+
+        x = np.asarray(x)
+        g = _gini(x)
+        self.g = g
         n = len(x)
-        xbar = x.mean()
-        den = xbar * 2 * n**2
-        wg = w.sparse.multiply(d).sum()
-        self.wg = wg  # spatial inequality component
-        dtotal = d.sum()
-        wcg = dtotal - wg  # complement to spatial inequality component
+        den = x.mean() * 2 * n**2
+        d = g * den
+        wg = self._calc(x, w)
+        wcg = d - wg
+        self.g = g
         self.wcg = wcg
-        self.g = dtotal / den
-        self.wcg_share = wcg / dtotal
-        self.dtotal = dtotal
+        self.wg = wg
+        self.dtotal = d
         self.den = den
+        self.wcg_share = wcg / den
 
         if permutations:
             ids = np.arange(n)
-            wcgp = np.zeros((permutations, 1))
-            for perm in xrange(permutations):
-                # permute rows/cols of d
+            wcgp = np.zeros((permutations, ))
+            for perm in range(permutations):
                 np.random.shuffle(ids)
-                wcgp[perm] = w.sparse.multiply(d[ids, :][:, ids]).sum()
+                wcgp[perm] = d - self._calc(x[ids], w)
             above = wcgp >= self.wcg
             larger = above.sum()
             if (permutations - larger) < larger:
                 larger = permutations - larger
+            self.wcgp = wcgp
             self.p_sim = (larger + 1.) / (permutations + 1.)
             self.e_wcg = wcgp.mean()
             self.s_wcg = wcgp.std()
             self.z_wcg = (self.wcg - self.e_wcg) / self.s_wcg
             self.p_z_sim = 1.0 - NORM.cdf(self.z_wcg)
+
+    def _calc(self, x, w):
+        sad_sum = 0.0
+        for i, js in w.neighbors.iteritems():
+            sad_sum += np.abs(x[i]-x[js]).sum()
+        return sad_sum
