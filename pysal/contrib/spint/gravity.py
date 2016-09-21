@@ -1,6 +1,6 @@
 # coding=utf-8
 """
-MLE calibration for Wilson (1967) family of gravity models
+ Wilsonian (1967) family of gravity-type spatial interaction models
 
 References
 ----------
@@ -8,812 +8,1010 @@ References
 Fotheringham, A. S. and O'Kelly, M. E. (1989). Spatial Interaction Models: Formulations
  and Applications. London: Kluwer Academic Publishers.
 
-Williams, P. A. and A. S. Fotheringham (1984), The Calibration of Spatial Interaction
- Models by Maximum Likelihood Estimation with Program SIMODEL, Geographic Monograph
- Series, 7, Department of Geography, Indiana University.
-
 Wilson, A. G. (1967). A statistical theory of spatial distribution models.
  Transportation Research, 1, 253–269.
-
 
 """
 
 __author__ = "Taylor Oshan tayoshan@gmail.com"
 
-import pandas as pd
+from types import FunctionType
 import numpy as np
-from scipy.optimize import fsolve
-import gravity_stats as stats
+from scipy import sparse as sp
+from pysal.spreg import user_output as User
+from pysal.spreg.utils import sphstack
+from pysal.contrib.glm.utils import cache_readonly
+from count_model import CountModel
+from utils import sorensen, srmse, spcategorical
 
-
-class Unconstrained:
+class BaseGravity(CountModel):
     """
-    Unconstrained gravity model estimated using MLE
+    Base class to set up gravity-type spatial interaction models and dispatch
+    estimaton technqiues.
 
     Parameters
     ----------
-    data            : str
-                      pandas d frame
-    origins         : str
-                      column name for origin names
-    destinations    : str
-                      column name for destination names
-    flows           : str
-                      column name for observed flows
-    o_factors       : list of strings
-                      column name for each origin attribute
-    d_factors       : list of strings
-                      column name for each destination attribute
-    cost            : str
-                      column name for distance or cost values
-    cost_func       : str
-                      either 'exp' for exponential or 'pow' for power distance function
-    filter_intra    : boolean
-                      True (default) to filter intra-zonal flows
+    flows           : array of integers
+                      n x 1; observed flows between O origins and D destinations
+    origins         : array of strings
+                      n x 1; unique identifiers of origins of n flows
+    destinations    : array of strings
+                      n x 1; unique identifiers of destinations of n flows 
+    cost            : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
+    cost_func       : string or function that has scalar input and output
+                      functional form of the cost function;
+                      'exp' | 'pow' | custom function
+    o_vars          : array (optional)
+                      n x p; p attributes for each origin of  n flows; default
+                      is None
+    d_vars          : array (optional)
+                      n x p; p attributes for each destination of n flows;
+                      default is None
+    constant        : boolean
+                      True to include intercept in model; false by default
+    framework       : string
+                      estimation technique; currently only 'GLM' is avaialble
+    Quasi           : boolean
+                      True to estimate QuasiPoisson model; should result in same
+                      parameters as Poisson but with altered covariance; default
+                      to true which estimates Poisson model
+    SF              : array
+                      n x 1; eigenvector spatial filter to include in the model;
+                      default to None which does not include a filter; not yet
+                      implemented
+    CD              : array
+                      n x 1; competing destination term that accounts for the
+                      likelihood that alternative destinations are considered
+                      along with each destination under consideration for every
+                      OD pair; defaults to None which does not include a CD
+                      term; not yet implemented
+    Lag             : W object
+                      spatial weight for n observations (OD pairs) used to
+                      construct a spatial autoregressive model and estimator;
+                      defaults to None which does not include an autoregressive
+                      term; not yet implemented
+
 
     Attributes
     ----------
-    dt              : pandas DataFrame
-                      model input data
-    o               : pandas series
-                      origins
-    d               : pandas series
-                      destinations
-    f               : pandas series
-                      observed flows
-    of              : dict
-                      origin factors
-    df              : dict
-                      destination factors
-    c               : pandas series
-                      cost or distance variable
-    cf              : str
-                      either 'exp' for exponential or 'pow' for power cost function
-    opt_log         : dict
-                      record of minimization of o_function
-    ip              : dict
-                      initial parameter estimate values
-    p               : dict
-                      parameters estimates
-    ests            : list of floats
-                      estimated values for calibrated model
-
+    f               : array
+                      n x 1; observed flows; dependent variable; y
+    n               : integer
+                      number of observations
+    k               : integer
+                      number of parameters
+    c               : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
+    cf              : function
+                      cost function; used to transform cost variable
+    ov              : array 
+                      n x p(o); p attributes for each origin of n flows
+    dv              : array
+                      n x p(d); p attributes for each destination of n flows
+    constant        : boolean
+                      True to include intercept in model; false by default
+    y               : array
+                      n x 1; dependent variable used in estimation including any
+                      transformations
+    X               : array
+                      n x k, design matrix used in estimation
+    params          : array
+                      n x k, k estimated beta coefficients; k = p(o) + p(d) + 1
+    yhat            : array
+                      n x 1, predicted value of y (i.e., fittedvalues)
+    cov_params      : array
+                      Variance covariance matrix (k x k) of betas
+    std_err         : array
+                      k x 1, standard errors of betas
+    pvalues         : array
+                      k x 1, two-tailed pvalues of parameters
+    tvalues         : array
+                      k x 1, the tvalues of the standard errors
+    deviance        : float
+                      value of the deviance function evalued at params;
+                      see family.py for distribution-specific deviance
+    resid_dev       : array
+                      n x 1, residual deviance of model
+    llf             : float
+                      value of the loglikelihood function evalued at params;
+                      see family.py for distribution-specific loglikelihoods
+    llnull          : float
+                      value of the loglikelihood function evaluated with only an
+                      intercept; see family.py for distribution-specific
+                      loglikelihoods
+    aic             : float
+                      Akaike information criterion
+    D2              : float
+                      percentage of explained deviance
+    adj_D2          : float
+                      adjusted percentage of explained deviance
+    pseudo_R2       : float
+                      McFadden's pseudo R2  (coefficient of determination) 
+    adj_pseudoR2    : float
+                      adjusted McFadden's pseudo R2
+    SRMSE           : float
+                      standardized root mean square error
+    SSI             : float
+                      Sorensen similarity index
+    results         : object
+                      full results from estimated model. May contain addtional
+                      diagnostics
     Example
     -------
-
-    import numpy as np
-    import pandas as pd
-    import gravity as grav
-    >>> f = np.array([56, 100.8, 173.6, 235.2, 87.36,
-                    28., 100.8, 69.44, 235.2, 145.6,
-                    22., 26.4, 136.4, 123.2, 343.2,
-                    14., 75.6, 130.2, 70.56, 163.8,
-                    22, 59.4,  204.6,  110.88,  171.6])
-    >>> V = np.repeat(np.array([56, 56, 44, 42, 66]), 5)
-    >>> o = np.repeat(np.array(range(1, 6)), 5)
-    >>> W = np.tile(np.array([10, 18, 62, 84, 78]), 5)
-    >>> d = np.tile(np.array(range(1, 6)), 5)
-    >>> dij = np.array([10, 10, 20, 20, 50,
-                        20, 10, 50, 20, 30,
-                        20, 30, 20, 30, 10,
-                        30, 10, 20, 50, 20,
-                        30, 20, 20, 50, 30])
-    >>> dt = pd.DataFrame({'origins': self.o,
-                            'destinations': self.d,
-                            'V': V,
-                            'W': W,
-                            'Dij': dij,
-                            'flows': f})
-    >>> model = grav.Unconstrained(dt, 'origins', 'destinations', 'flows',
-                                    ['V'], ['W'], 'Dij', 'pow')
-    >>> print model.p
-    {'beta': -1.0, 'W': 1.0, 'V': 1.0}
+    >>> import numpy as np
+    >>> import pysal
+    >>> from pysal.contrib.spint.gravity import BaseGravity
+    >>> db = pysal.open(pysal.examples.get_path('nyc_bikes_ct.csv'))
+    >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
+    >>> flows = np.array(db.by_col('count')).reshape((-1,1))
+    >>> model = BaseGravity(flows, cost)
+    >>> model.params
+    array([ 0.92860101])
 
     """
-
-    def __init__(self, data, origins, destinations, flows, o_factors, d_factors, cost, cost_func, filter_intra=True):
-        if filter_intra:
-            self.dt = data[data[origins] != data[destinations]].reset_index(level=0, drop=True)
+    def __init__(self, flows, cost, cost_func='pow', o_vars=None, d_vars=None,
+            origins=None, destinations=None, constant=False, framework='GLM',
+            SF=None, CD=None, Lag=None, Quasi=False):
+        n = User.check_arrays(flows, cost)
+        #User.check_y(flows, n)
+        self.n = n
+        self.f = flows
+        self.c = cost
+        self.ov = o_vars
+        self.dv = d_vars
+        if type(cost_func) == str:
+            if cost_func.lower() == 'pow':
+                self.cf = np.log
+            elif cost_func.lower() == 'exp':
+                self.cf = lambda x: x*1.0
+        elif (type(cost_func) == FunctionType) | (type(cost_func) == np.ufunc):
+            self.cf = cost_func
         else:
-            self.dt = data
-        self.o = self.dt[origins].astype(str)
-        self.d = self.dt[destinations].astype(str)
-        self.f = self.dt[flows]
-        self.c = self.dt[cost]
-        self.of = dict(zip(o_factors, [self.dt[x] for x in o_factors]))
-        self.df = dict(zip(d_factors, [self.dt[x] for x in d_factors]))
-        self.cf = cost_func
-        self.opt_log = {}
-        self.ip = {'beta': 0}
-        self.p = {'beta': 0}
+            raise ValueError("cost_func must be 'exp', 'pow' or a valid"
+            " function that has a scalar as a input and output")
 
-        if self.cf == 'exp':
-            k = self.c
-        elif self.cf == 'pow':
-            k = np.log(self.c)
+        y = np.reshape(self.f, (-1,1))
+        if isinstance(self, Gravity):
+            X = np.empty((self.n, 0))
         else:
-            raise ValueError('variable cost_func must either be "exp" or "pow"')
-
-        for fx in self.of:
-            k += np.log(self.of[fx])
-            self.ip[fx] = 1
-            self.p[fx] = 1
-        for fx in self.df:
-            k += np.log(self.df[fx])
-            self.ip[fx] = 1
-            self.p[fx] = 1
-
-        o_info = np.sum(self.f*k)
-
-        self.p, self.ests = calibrate(self, o_info, k)
-        errors = output(self)
-        self.dt['aboslute_error'] = errors[0]
-        self.dt['percent_error'] = errors[1]
-        stats = statistics(self)
-        self.system_stats = stats[0]
-        self.entropy_stats = stats[1]
-        self.fit_stats = stats[2]
-        self.parameter_stats = stats[3]
-
-    def calc_dcy(self, c, cf, p):
-        if cf == 'exp':
-            dcy = np.exp(c*p['beta'])
-        elif cf == 'pow':
-            dcy = c**p['beta']
-        return dcy
-
-    def estimate_flows(self, c, cf, of, df, p):
-        """
-        estimate predicted flows multiplying individual model terms
-        """
-        dcy = self.calc_dcy(c, cf, p)
-        ests = dcy
-        for fx in of:
-            ests *= (of[fx]**p[fx])
-
-        for fx in df:
-            ests *= (df[fx]**p[fx])
-        return ests
-
-    def estimate_cum(self, ests, k):
-        """
-        calculate sum of all estimated flows and log of known 'information'
-        being estimated (log likelihood)
-        """
-        return np.sum(ests*k)
-
-    def build_LL_function(self, gm, LL_fx, of, df, f, cf, beta=False):
-        """
-        builds model-specifc components of the LL function being evaluated
-        """
-        dcy = self.calc_dcy(self.c, cf, gm.p)
-        fxs = dict(of.items() + df.items())
-        fs = 1
-        for fx in fxs:
-            fs *= fxs[fx]**gm.p[fx]
-        if beta:
-            if cf == 'exp':
-                return np.sum(fs*dcy*LL_fx) - np.sum(f*LL_fx)
+            X = sp.csr_matrix((self.n, 1))
+        if isinstance(self, Attraction) | isinstance(self, Doubly):
+            d_dummies = spcategorical(destinations.flatten())
+            X = sphstack(X, d_dummies, array_out=False)
+        if isinstance(self, Production) | isinstance(self, Doubly):
+            o_dummies = spcategorical(origins.flatten())
+            X = sphstack(X, o_dummies, array_out=False)
+        if isinstance(self, Doubly):
+            X = X[:,1:]
+        if self.ov is not None:	
+            if isinstance(self, Gravity):
+                for each in range(self.ov.shape[1]):
+                    X = np.hstack((X, np.log(np.reshape(self.ov[:,each], (-1,1)))))
             else:
-                return np.sum(fs*dcy*np.log(LL_fx)) - np.sum(f*np.log(LL_fx))
+                for each in range(self.ov.shape[1]):
+                    ov = sp.csr_matrix(np.log(np.reshape(self.ov[:,each], ((-1,1)))))
+                    X = sphstack(X, ov, array_out=False)
+        if self.dv is not None:    	
+            if isinstance(self, Gravity):
+                for each in range(self.dv.shape[1]):
+                    X = np.hstack((X, np.log(np.reshape(self.dv[:,each], (-1,1)))))
+            else:
+                for each in range(self.dv.shape[1]):
+                    dv = sp.csr_matrix(np.log(np.reshape(self.dv[:,each], ((-1,1)))))
+                    X = sphstack(X, dv, array_out=False)
+        if isinstance(self, Gravity):
+            X = np.hstack((X, self.cf(np.reshape(self.c, (-1,1)))))
         else:
-            return np.sum(fs*dcy*np.log(LL_fx)) - np.sum(f*np.log(LL_fx))
+            c = sp.csr_matrix(self.cf(np.reshape(self.c, (-1,1))))
+            X = sphstack(X, c, array_out=False)
+            X = X[:,1:]#because empty array instantiated with extra column
+        if not isinstance(self, (Gravity, Production, Attraction, Doubly)):
+            X = self.cf(np.reshape(self.c, (-1,1)))
+        if SF:
+        	raise NotImplementedError("Spatial filter model not yet implemented")
+        if CD:
+        	raise NotImplementedError("Competing destination model not yet implemented")
+        if Lag:
+        	raise NotImplementedError("Spatial Lag autoregressive model not yet implemented")
+        
+        CountModel.__init__(self, y, X, constant=constant)
+        if (framework.lower() == 'glm'):
+            if not Quasi:
+                results = self.fit(framework='glm')
+            else:
+                results = self.fit(framework='glm', Quasi=True)
+        else:
+            raise NotImplementedError('Only GLM is currently implemented')
 
+        self.params = results.params
+        self.yhat = results.yhat
+        self.cov_params = results.cov_params
+        self.std_err = results.std_err
+        self.pvalues = results.pvalues
+        self.tvalues = results.tvalues
+        self.deviance = results.deviance
+        self.resid_dev = results.resid_dev
+        self.llf = results.llf
+        self.llnull = results.llnull
+        self.aic = results.aic
+        self.k = results.k
+        self.D2 = results.D2
+        self.adj_D2 = results.adj_D2
+        self.pseudoR2 = results.pseudoR2
+        self.adj_pseudoR2 = results.adj_pseudoR2
+        self.results = results
+        self._cache = {}
 
-class ProductionConstrained(Unconstrained):
+    @cache_readonly
+    def SSI(self):
+        return sorensen(self)
+
+    @cache_readonly
+    def SRMSE(self):
+        return srmse(self)
+
+    def reshape(self, array):
+        if type(array) == np.ndarray:
+            return array.reshape((-1,1))
+        elif type(array) == list:
+            return np.array(array).reshape((-1,1))
+        else:
+            raise TypeError("input must be an numpy array or list that can be coerced"
+                    " into the dimensions n x 1")
+    
+class Gravity(BaseGravity):
     """
-    Production-constrained gravity model estimated using MLE
+    Unconstrained (traditional gravity) gravity-type spatial interaction model
 
     Parameters
     ----------
-    data            : str
-                      pandas d frame
-    origins         : str
-                      column name for origin names
-    destinations    : str
-                      column name for destination names
-    flows           : str
-                      column name for observed flows
-    d_factors       : list of strings
-                      column name for each destination attribute
-    cost            : str
-                      column name for distance or cost values
-    cost_func       : str
-                      either 'exp' for exponential or 'pow' for power distance function
-    filter_intra    : boolean
-                      True (default) to filter intra-zonal flows
+    flows           : array of integers
+                      n x 1; observed flows between O origins and D destinations
+    cost            : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
+    cost_func       : string or function that has scalar input and output
+                      functional form of the cost function;
+                      'exp' | 'pow' | custom function
+    o_vars          : array (optional)
+                      n x p; p attributes for each origin of  n flows; default
+                      is None
+    d_vars          : array (optional)
+                      n x p; p attributes for each destination of n flows;
+                      default is None
+    constant        : boolean
+                      True to include intercept in model; false by default
+    framework       : string
+                      estimation technique; currently only 'GLM' is avaialble
+    Quasi           : boolean
+                      True to estimate QuasiPoisson model; should result in same
+                      parameters as Poisson but with altered covariance; default
+                      to true which estimates Poisson model
+    SF              : array
+                      n x 1; eigenvector spatial filter to include in the model;
+                      default to None which does not include a filter; not yet
+                      implemented
+    CD              : array
+                      n x 1; competing destination term that accounts for the
+                      likelihood that alternative destinations are considered
+                      along with each destination under consideration for every
+                      OD pair; defaults to None which does not include a CD
+                      term; not yet implemented
+    Lag             : W object
+                      spatial weight for n observations (OD pairs) used to
+                      construct a spatial autoregressive model and estimator;
+                      defaults to None which does not include an autoregressive
+                      term; not yet implemented
 
     Attributes
     ----------
-    dt              : pandas DataFrame
-                      model input data
-    o               : pandas series
-                      origins
-    d               : pandas series
-                      destinations
-    f               : pandas series
-                      observed flows
-    of              : empty dict
-                      origin factors
-    df              : dict
-                      destination factors
-    c               : pandas series
-                      cost or distance variable
-    cf              : str
-                      either 'exp' for exponential or 'pow' for power cost function
-    opt_log         : dict
-                      record of minimization of o_function
-    ip              : dict
-                      initial parameter estimate values
-    p               : dict
-                      parameters estimates
-    ests            : list of floats
-                      estimated values for calibrated model
-
+    f               : array
+                      n x 1; observed flows; dependent variable; y
+    n               : integer
+                      number of observations
+    k               : integer
+                      number of parameters
+    c               : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
+    cf              : function
+                      cost function; used to transform cost variable
+    ov              : array 
+                      n x p(o); p attributes for each origin of n flows
+    dv              : array 
+                      n x p(d); p attributes for each destination of n flows
+    constant        : boolean
+                      True to include intercept in model; false by default
+    y               : array
+                      n x 1; dependent variable used in estimation including any
+                      transformations
+    X               : array
+                      n x k, design matrix used in estimation
+    params          : array
+                      n x k, k estimated beta coefficients; k = p(o) + p(d) + 1
+    yhat            : array
+                      n x 1, predicted value of y (i.e., fittedvalues)
+    cov_params      : array
+                      Variance covariance matrix (kxk) of betas
+    std_err         : array
+                      k x 1, standard errors of betas
+    pvalues         : array
+                      k x 1, two-tailed pvalues of parameters
+    tvalues         : array
+                      k x 1, the tvalues of the standard errors
+    deviance        : float
+                      value of the deviance function evalued at params;
+                      see family.py for distribution-specific deviance
+    resid_dev       : array
+                      n x 1, residual deviance of model
+    llf             : float
+                      value of the loglikelihood function evalued at params;
+                      see family.py for distribution-specific loglikelihoods
+    llnull          : float
+                      value of the loglikelihood function evaluated with only an
+                      intercept; see family.py for distribution-specific
+                      loglikelihoods
+    aic             : float 
+                      Akaike information criterion
+    D2              : float
+                      percentage of explained deviance
+    adj_D2          : float
+                      adjusted percentage of explained deviance
+    pseudo_R2       : float
+                      McFadden's pseudo R2  (coefficient of determination) 
+    adj_pseudoR2    : float
+                      adjusted McFadden's pseudo R2
+    SRMSE           : float
+                      standardized root mean square error
+    SSI             : float
+                      Sorensen similarity index
+    results         : object
+                      Full results from estimated model. May contain addtional
+                      diagnostics
     Example
     -------
-
-    import numpy as np
-    import pandas pd
-    import gravity as grav
-    >>> f = np.array([0, 6469, 7629, 20036, 4690,
-                        6194, 11688, 2243, 8857, 7248,
-                        3559, 9221, 10099, 22866, 3388,
-                        9986, 46618, 11639, 1380, 5261,
-                        5985, 6731, 2704, 12250, 16132])
-    >>> o = np.repeat(1, 25)
-    >>> d = np.array(range(1, 26))
-    >>> dij = np.array([0, 576, 946, 597, 373,
-                        559, 707, 1208, 602, 692,
-                        681, 1934, 332, 595, 906,
-                        425, 755, 672, 1587, 526,
-                        484, 2141, 2182, 410, 540])
-    >>> pop = np.array([1596000, 2071000, 3376000, 6978000, 1345000,
-                        2064000, 2378000, 1239000, 4435000, 1999000,
-                        1274000, 7042000, 834000, 1268000, 1965000,
-                        1046000, 12131000, 4824000, 969000, 2401000,
-                        2410000, 2847000, 1425000, 1089000, 2909000])
-    >>> dt = pd.DataFrame({'origins': self.o,
-                            'destinations': self.d,
-                            'pop': self.pop,
-                            'Dij': self.dij,
-                            'flows': self.f})
-    >>> model = grav.ProductionConstrained(self.dt, 'origins', 'destinations', 'flows',
-            ['pop'], 'Dij', 'pow')
-    {'beta': -0.7365098, 'pop': 0.7818262}
-
+    >>> import numpy as np
+    >>> import pysal
+    >>> from pysal.contrib.spint.gravity import Gravity
+    >>> db = pysal.open(pysal.examples.get_path('nyc_bikes_ct.csv'))
+    >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
+    >>> flows = np.array(db.by_col('count')).reshape((-1,1))
+    >>> o_cap = np.array(db.by_col('o_cap')).reshape((-1,1))
+    >>> d_cap = np.array(db.by_col('d_cap')).reshape((-1,1))
+    >>> model = Gravity(flows, o_cap, d_cap, cost, 'exp')
+    >>> model.params
+    array([ 0.87911778,  0.71080687, -0.00194626])
+    
     """
-    def __init__(self, data, origins, destinations, flows, d_factors, cost, cost_func, filter_intra=True):
-        if filter_intra:
-            self.dt = data[data[origins] != data[destinations]].reset_index(level=0, drop=True)
+    def __init__(self, flows, o_vars, d_vars, cost,
+            cost_func, constant=False, framework='GLM', SF=None, CD=None,
+            Lag=None, Quasi=False):
+        self.f = np.reshape(flows, (-1,1))
+        if len(o_vars.shape) > 1:
+            p = o_vars.shape[1]
         else:
-            self.dt = data
-        self.o = self.dt[origins].astype(str)
-        self.d = self.dt[destinations].astype(str)
-        self.f = self.dt[flows]
-        self.c = self.dt[cost]
-        self.of = {}
-        self.df = dict(zip(d_factors, [self.dt[x] for x in d_factors]))
-        self.cf = cost_func
-        self.opt_log = {}
-        self.ip = {'beta': 0}
-        self.p = {'beta': 0}
-        self.dt['Oi'] = total_flows(self.dt, flows, self.o)
-
-        if self.cf == 'exp':
-            k = self.c
-        elif self.cf == 'pow':
-            k = np.log(self.c)
+            p = 1
+        self.ov = np.reshape(o_vars, (-1,p))
+        if len(d_vars.shape) > 1:
+            p = d_vars.shape[1]
         else:
-            raise ValueError('variable cost_func must either be "exp" or "pow"')
-
-        for fx in self.df:
-            k += np.log(self.df[fx])
-            self.ip[fx] = 1
-            self.p[fx] = 1
-
-        o_info = np.sum(self.f*k)
-
-        self.p, self.ests = calibrate(self, o_info, k)
-        errors = output(self)
-        self.dt['aboslute_error'] = errors[0]
-        self.dt['percent_error'] = errors[1]
-        stats = statistics(self)
-        self.system_stats = stats[0]
-        self.entropy_stats = stats[1]
-        self.fit_stats = stats[2]
-        self.parameter_stats = stats[3]
-
-    def estimate_flows(self, c, cf, of, df, p):
+            p = 1
+        self.dv = np.reshape(d_vars, (-1,p))
+        self.c = np.reshape(cost, (-1,1))
+        #User.check_arrays(self.f, self.ov, self.dv, self.c)
+        
+        BaseGravity.__init__(self, self.f, self.c,
+                cost_func=cost_func, o_vars=self.ov, d_vars=self.dv, constant=constant,
+                framework=framework, SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
+        
+    def local(self, loc_index, locs):
         """
-        estimate predicted flows multiplying individual model terms
+        Calibrate local models for subsets of data from a single location to all
+        other locations
+        
+        Parameters
+        ----------
+        loc_index   : n x 1 array of either origin or destination id label for
+                      flows; must be explicitly provided for local version of
+                      basic gravity model since these are not passed to the
+                      global model. 
+                    
+        locs        : iterable of either origin or destination labels for which
+                      to calibrate local models; must also be explicitly
+                      provided since local gravity models can be calibrated from origins
+                      or destinations. If all origins are also destinations and
+                      a local model is desired for each location then use
+                      np.unique(loc_index)
+
+        Returns
+        -------
+        results     : dict where keys are names of model outputs and diagnostics
+                      and values are lists of location specific values. 
         """
-        dcy = self.calc_dcy(c, cf, p)
-        self.dt['Ai'] = self.calc_Ai(self.dt, self.o, df, p)
-        ests = self.dt['Oi']*self.dt['Ai']*dcy
-        for fx in df:
-            ests *= (df[fx]**p[fx])
-        return ests
+        results = {}
+        covs = self.ov.shape[1] + self.dv.shape[1] + 1
+        results['aic'] = []
+        results['deviance'] = []
+        results['pseudoR2'] = []
+        results['adj_pseudoR2'] = []
+        results['D2'] = []
+        results['adj_D2'] = []
+        results['SSI'] = []
+        results['SRMSE'] = []
+        for cov in range(covs):
+            results['param' + str(cov)] = []
+            results['pvalue' + str(cov)] = []
+            results['tvalue' + str(cov)] = []
+        for loc in locs:
+            subset = loc_index == loc
+            f = self.reshape(self.f[subset])
+            o_vars = self.ov[subset.reshape(self.ov.shape[0]),:]
+            d_vars = self.dv[subset.reshape(self.dv.shape[0]),:]
+            dij = self.reshape(self.c[subset])
+            model = Gravity(f, o_vars, d_vars, dij, self.cf)
+            results['aic'].append(model.aic)
+            results['deviance'].append(model.deviance)
+            results['pseudoR2'].append(model.pseudoR2)
+            results['adj_pseudoR2'].append(model.adj_pseudoR2)
+            results['D2'].append(model.D2)
+            results['adj_D2'].append(model.adj_D2)
+            results['SSI'].append(model.SSI)
+            results['SRMSE'].append(model.SRMSE)
+            for cov in range(covs):
+                results['param' + str(cov)].append(model.params[cov])
+                results['pvalue' + str(cov)].append(model.pvalues[cov])
+                results['tvalue' + str(cov)].append(model.tvalues[cov])
+        return results
 
-    def calc_Ai(self, dt, o, df, p, dc=False):
-        """
-        calculate Ai balancing factor
-        """
-        Ai = self.calc_dcy(self.c, self.cf, p)
-
-        if df:
-            for fx in df:
-                Ai *= df[fx]**p[fx]
-
-        if not dc:
-            dt['Ai'] = Ai
-        else:
-            dt['Ai'] = Ai*dt['Bj']*dt['Dj']
-        Ai = (dt.groupby(o).aggregate({'Ai': np.sum}))
-        Ai['Ai'] = 1/Ai['Ai']
-        Ai = Ai.ix[pd.match(o, Ai.index), 'Ai']
-        return Ai.reset_index(level=0, drop=True)
-
-    def build_LL_function(self, gm, LL_fx, of, df, f, cf, beta=False):
-        """
-        builds model-specifc components of the LL function being evaluated
-        """
-        self.dt['Ai'] = self.calc_Ai(self.dt, self.o, df, self.p)
-        dcy = self.calc_dcy(self.c, cf, gm.p)
-        fxs = dict(of.items() + df.items())
-        fs = 1
-        for fx in fxs:
-            fs *= fxs[fx]**gm.p[fx]
-        Ai = self.dt['Ai']
-        Oi = self.dt['Oi']
-        if beta:
-            if cf == 'exp':
-                return np.sum(Ai*Oi*fs*dcy*LL_fx) - np.sum(f*LL_fx)
-            else:
-                return np.sum(Ai*Oi*fs*dcy*np.log(LL_fx)) - np.sum(f*np.log(LL_fx))
-        else:
-            return np.sum(Ai*Oi*fs*dcy*np.log(LL_fx)) - np.sum(f*np.log(LL_fx))
-
-
-class AttractionConstrained(Unconstrained):
+class Production(BaseGravity):
     """
-    Attraction-constrained gravity model estimated using MLE
-
+    Production-constrained (origin-constrained) gravity-type spatial interaction model
+    
     Parameters
     ----------
-    data            : str
-                      pandas d frame
-    origins         : str
-                      column name for origin names
-    destinations    : str
-                      column name for destination names
-    flows           : str
-                      column name for observed flows
-    o_factors       : list of strings
-                      column name for each origin attribute
-    cost            : str
-                      column name for distance or cost values
-    cost_func       : str
-                      either 'exp' for exponential or 'pow' for power distance function
-    filter_intra    : boolean
-                      True (default) to filter intra-zonal flows
+    flows           : array of integers
+                      n x 1; observed flows between O origins and D destinations
+    origins         : array of strings
+                      n x 1; unique identifiers of origins of n flows; when
+                      there are many origins it will be faster to use integers
+                      rather than strings for id labels.
+    cost            : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
+    cost_func       : string or function that has scalar input and output
+                      functional form of the cost function;
+                      'exp' | 'pow' | custom function
+    d_vars          : array (optional)
+                      n x p; p attributes for each destination of n flows;
+                      default is None
+    constant        : boolean
+                      True to include intercept in model; false by default
+    framework       : string
+                      estimation technique; currently only 'GLM' is avaialble
+    Quasi           : boolean
+                      True to estimate QuasiPoisson model; should result in same
+                      parameters as Poisson but with altered covariance; default
+                      to true which estimates Poisson model
+    SF              : array
+                      n x 1; eigenvector spatial filter to include in the model;
+                      default to None which does not include a filter; not yet
+                      implemented
+    CD              : array
+                      n x 1; competing destination term that accounts for the
+                      likelihood that alternative destinations are considered
+                      along with each destination under consideration for every
+                      OD pair; defaults to None which does not include a CD
+                      term; not yet implemented
+    Lag             : W object
+                      spatial weight for n observations (OD pairs) used to
+                      construct a spatial autoregressive model and estimator;
+                      defaults to None which does not include an autoregressive
+                      term; not yet implemented
 
     Attributes
     ----------
-    dt              : pandas DataFrame
-                      model input data
-    o               : pandas series
-                      origins
-    d               : pandas series
-                      destinations
-    f               : pandas series
-                      observed flows
-    of              : dict
-                      origin factors
-    df              : None
-                      destination factors
-    c               : pandas series
-                      cost or distance variable
-    cf              : str
-                      either 'exp' for exponential or 'pow' for power cost function
-    opt_log         : dict
-                      record of minimization of o_function
-    ip              : dict
-                      initial parameter estimate values
-    p               : dict
-                      parameters estimates
-    ests            : list of floats
-                      estimated values for calibrated model
-
+    f               : array
+                      n x 1; observed flows; dependent variable; y
+    n               : integer
+                      number of observations
+    k               : integer
+                      number of parameters
+    c               : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
+    cf              : function
+                      cost function; used to transform cost variable
+    o               : array
+                      n x 1; index of origin id's
+    dv              : array 
+                      n x p; p attributes for each destination of n flows
+    constant        : boolean
+                      True to include intercept in model; false by default
+    y               : array
+                      n x 1; dependent variable used in estimation including any
+                      transformations
+    X               : array
+                      n x k, design matrix used in estimation
+    params          : array
+                      n x k, k estimated beta coefficients; k = # of origins + p + 1
+    yhat            : array
+                      n x 1, predicted value of y (i.e., fittedvalues)
+    cov_params      : array
+                      Variance covariance matrix (kxk) of betas
+    std_err         : array
+                      k x 1, standard errors of betas
+    pvalues         : array
+                      k x 1, two-tailed pvalues of parameters
+    tvalues         : array
+                      k x 1, the tvalues of the standard errors
+    deviance        : float
+                      value of the deviance function evalued at params;
+                      see family.py for distribution-specific deviance
+    resid_dev       : array
+                      n x 1, residual deviance of model
+    llf             : float
+                      value of the loglikelihood function evalued at params;
+                      see family.py for distribution-specific loglikelihoods
+    llnull          : float
+                      value of the loglikelihood function evaluated with only an
+                      intercept; see family.py for distribution-specific
+                      loglikelihoods
+    aic             : float 
+                      Akaike information criterion
+    D2              : float
+                      percentage of explained deviance
+    adj_D2          : float
+                      adjusted percentage of explained deviance
+    pseudo_R2       : float
+                      McFadden's pseudo R2  (coefficient of determination) 
+    adj_pseudoR2    : float
+                      adjusted McFadden's pseudo R2
+    SRMSE           : float
+                      standardized root mean square error
+    SSI             : float
+                      Sorensen similarity index
+    results         : object
+                      Full results from estimated model. May contain addtional
+                      diagnostics
     Example
     -------
 
-    import numpy as np
-    import pandas as pd
-    import gravity as grav
-    >>> f = np.array([56, 100.8, 173.6, 235.2, 87.36,
-                        28., 100.8, 69.44, 235.2, 145.6,
-                        22., 26.4, 136.4, 123.2, 343.2,
-                        14., 75.6, 130.2, 70.56, 163.8,
-                        22, 59.4,  204.6,  110.88,  171.6])
-    >>> V = np.repeat(np.array([56, 56, 44, 42, 66]), 5)
-    >>> o = np.repeat(np.array(range(1, 6)), 5)
-    >>> W = np.tile(np.array([10, 18, 62, 84, 78]), 5)
-    >>> d = np.tile(np.array(range(1, 6)), 5)
-    >>> dij = np.array([10, 10, 20, 20, 50,
-                        20, 10, 50, 20, 30,
-                        20, 30, 20, 30, 10,
-                        30, 10, 20, 50, 20,
-                        30, 20, 20, 50, 30])
-    >>> dt = pd.DataFrame({'origins': self.o,
-                            'destinations': self.d,
-                            'V': self.V,
-                            'Dij': self.dij,
-                            'flows': self.f})
-    >>> model = grav.AttractionConstrained(self.dt, 'origins', 'destinations', 'flows',
-                                            ['V'], 'Dij', 'pow')
-    >>> print model.p
-    {'beta': -1.0, 'V': 1.0}
+    >>> import numpy as np
+    >>> import pysal
+    >>> from pysal.contrib.spint.gravity import Production
+    >>> db = pysal.open(pysal.examples.get_path('nyc_bikes_ct.csv'))
+    >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
+    >>> flows = np.array(db.by_col('count')).reshape((-1,1))
+    >>> o = np.array(db.by_col('o_tract')).reshape((-1,1))
+    >>> d_cap = np.array(db.by_col('d_cap')).reshape((-1,1))
+    >>> model = Production(flows, o, d_cap, cost, 'exp')
+    >>> model.params[-4:]
+    array([  5.38580065e+00,   5.00216058e+00,   8.55357745e-01,
+            -2.27444394e-03])
 
     """
-
-    def __init__(self, data, origins, destinations, flows, o_factors, cost, cost_func, filter_intra=True):
-        if filter_intra:
-            self.dt = data[data[origins] != data[destinations]].reset_index(level=0, drop=True)
-        else:
-            self.dt = data
-        self.o = self.dt[origins].astype(str)
-        self.d = self.dt[destinations].astype(str)
-        self.f = self.dt[flows]
-        self.c = self.dt[cost]
-        self.of = dict(zip(o_factors, [self.dt[x] for x in o_factors]))
-        self.df = {}
-        self.cf = cost_func
-        self.opt_log = {}
-        self.ip = {'beta': 0}
-        self.p = {'beta': 0}
-        self.dt['Dj'] = total_flows(self.dt, flows, self.d)
-
-        if self.cf == 'exp':
-            k = self.c
-        elif self.cf == 'pow':
-            k = np.log(self.c)
-        else:
-            raise ValueError('variable cost_func must either be "exp" or "pow"')
-
-        for fx in self.of:
-            k += np.log(self.of[fx])
-            self.ip[fx] = 1
-            self.p[fx] = 1
-
-        o_info = np.sum(self.f*k)
-
-        self.p, self.ests = calibrate(self, o_info, k)
-        errors = output(self)
-        self.dt['aboslute_error'] = errors[0]
-        self.dt['percent_error'] = errors[1]
-        stats = statistics(self)
-        self.system_stats = stats[0]
-        self.entropy_stats = stats[1]
-        self.fit_stats = stats[2]
-        self.parameter_stats = stats[3]
-
-    def estimate_flows(self, c, cf, of, df, p):
+    def __init__(self, flows, origins, d_vars, cost, cost_func, constant=False,
+            framework='GLM', SF=None, CD=None, Lag=None, Quasi=False):
+        self.constant = constant
+        self.f = self.reshape(flows)
+        self.o = self.reshape(origins)
+        
+        try:
+            if d_vars.shape[1]:
+                p = d_vars.shape[1]
+        except:
+            p = 1
+        self.dv = np.reshape(d_vars, (-1,p))
+        self.c = self.reshape(cost)
+        #User.check_arrays(self.f, self.o, self.dv, self.c)
+       
+        BaseGravity.__init__(self, self.f, self.c, cost_func=cost_func, d_vars=self.dv,
+                origins=self.o, constant=constant, framework=framework,
+                SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
+    
+    def local(self, locs=None):
         """
-        estimate predicted flows multiplying individual model terms
-        """
-        dcy = self.calc_dcy(c, cf, p)
-        self.dt['Bj'] = self.calc_Bj(self.dt, self.d, of, p)
-        ests = self.dt['Dj']*self.dt['Bj']*dcy
-        for fx in of:
-            ests *= (of[fx]**p[fx])
-        return ests
+        Calibrate local models for subsets of data from a single location to all
+        other locations
+        
+        Parameters
+        ----------
+        locs        : iterable of location (origins) labels; default is
+                      None which calibrates a local model for each origin
 
-    def calc_Bj(self, dt, d, of, p, dc=False):
+        Returns
+        -------
+        results     : dict where keys are names of model outputs and diagnostics
+                      and values are lists of location specific values
         """
-        calculate Bj balancing factor
-        """
-        Bj = self.calc_dcy(self.c, self.cf, p)
+        results = {}
+        covs = self.dv.shape[1] + 1
+        results['aic'] = []
+        results['deviance'] = []
+        results['pseudoR2'] = []
+        results['adj_pseudoR2'] = []
+        results['D2'] = []
+        results['adj_D2'] = []
+        results['SSI'] = []
+        results['SRMSE'] = []
+        for cov in range(covs):
+            results['param' + str(cov)] = []
+            results['pvalue' + str(cov)] = []
+            results['tvalue' + str(cov)] = []
+        if locs is None:
+        	locs = np.unique(self.o)
+        for loc in np.unique(locs):
+            subset = self.o == loc
+            f = self.reshape(self.f[subset])
+            o = self.reshape(self.o[subset])
+            d_vars = self.dv[subset.reshape(self.dv.shape[0]),:]
+            dij = self.reshape(self.c[subset])
+            model = Production(f, o, d_vars, dij, self.cf)
+            results['aic'].append(model.aic)
+            results['deviance'].append(model.deviance)
+            results['pseudoR2'].append(model.pseudoR2)
+            results['adj_pseudoR2'].append(model.adj_pseudoR2)
+            results['D2'].append(model.D2)
+            results['adj_D2'].append(model.adj_D2)
+            results['SSI'].append(model.SSI)
+            results['SRMSE'].append(model.SRMSE)
+            for cov in range(covs):
+                results['param' + str(cov)].append(model.params[cov])
+                results['pvalue' + str(cov)].append(model.pvalues[cov])
+                results['tvalue' + str(cov)].append(model.tvalues[cov])
+        return results
 
-        if of:
-            for fx in of:
-                Bj *= of[fx]**p[fx]
-        if not dc:
-            dt['Bj'] = Bj
-        else:
-            dt['Bj'] = Bj*dt['Ai']*dt['Oi']
-        Bj = (dt.groupby(d).aggregate({'Bj': np.sum}))
-        Bj['Bj'] = 1/Bj['Bj']
-        Bj = Bj.ix[pd.match(d, Bj.index), 'Bj']
-        return Bj.reset_index(level=0, drop=True)
-
-    def build_LL_function(self, gm, LL_fx, of, df, f, cf, beta=False):
-        """
-        builds model-specifc components of the LL function being evaluated
-        """
-        self.dt['Bj'] = self.calc_Bj(self.dt, self.d, of, self.p)
-        dcy = self.calc_dcy(self.c, cf, gm.p)
-        fxs = dict(of.items() + df.items())
-        fs = 1
-        for fx in fxs:
-            fs *= fxs[fx]**gm.p[fx]
-        Bj = self.dt['Bj']
-        Dj = self.dt['Dj']
-        if beta:
-            if cf == 'exp':
-                return np.sum(Bj*Dj*fs*dcy*LL_fx) - np.sum(f*LL_fx)
-            else:
-                return np.sum(Bj*Dj*fs*dcy*np.log(LL_fx)) - np.sum(f*np.log(LL_fx))
-        else:
-            return np.sum(Bj*Dj*fs*dcy*np.log(LL_fx)) - np.sum(f*np.log(LL_fx))
-
-
-class DoublyConstrained(ProductionConstrained, AttractionConstrained):
+class Attraction(BaseGravity):
     """
-    Doubly-constrained gravity model estimated using MLE
-
+    Attraction-constrained (destination-constrained) gravity-type spatial interaction model
+    
     Parameters
     ----------
-    data            : str
-                      pandas d frame
-    origins         : str
-                      column name for origin names
-    destinations    : str
-                      column name for destination names
-    flows           : str
-                      column name for observed flows
-                      column name for each destination attribute
-    cost            : str
-                      column name for distance or cost values
-    cost_func       : str
-                      either 'exp' for exponential or 'pow' for power distance function
-    filter_intra    : boolean
-                      True (default) to filter intra-zonal flows
+    flows           : array of integers
+                      n x 1; observed flows between O origins and D destinations
+    destinations    : array of strings
+                      n x 1; unique identifiers of destinations of n flows; when
+                      there are many destinations it will be faster to use
+                      integers over strings for id labels.
+    cost            : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
+    cost_func       : string or function that has scalar input and output
+                      functional form of the cost function;
+                      'exp' | 'pow' | custom function
+    o_vars          : array (optional)
+                      n x p; p attributes for each origin of  n flows; default
+                      is None
+    constant        : boolean
+                      True to include intercept in model; false by default
+    y               : array
+                      n x 1; dependent variable used in estimation including any
+                      transformations
+    X               : array
+                      n x k, design matrix used in estimation
+    framework       : string
+                      estimation technique; currently only 'GLM' is avaialble
+    Quasi           : boolean
+                      True to estimate QuasiPoisson model; should result in same
+                      parameters as Poisson but with altered covariance; default
+                      to true which estimates Poisson model
+    SF              : array
+                      n x 1; eigenvector spatial filter to include in the model;
+                      default to None which does not include a filter; not yet
+                      implemented
+    CD              : array
+                      n x 1; competing destination term that accounts for the
+                      likelihood that alternative destinations are considered
+                      along with each destination under consideration for every
+                      OD pair; defaults to None which does not include a CD
+                      term; not yet implemented
+    Lag             : W object
+                      spatial weight for n observations (OD pairs) used to
+                      construct a spatial autoregressive model and estimator;
+                      defaults to None which does not include an autoregressive
+                      term; not yet implemented
 
     Attributes
     ----------
-    dt              : pandas DataFrame
-                      model input data
-    o               : pandas series
-                      origins
-    d               : pandas series
-                      destinations
-    f               : pandas series
-                      observed flows
-    of              : None
-                      origin factors
-    df              : None
-                      destination factors
-    c               : pandas series
-                      cost or distance variable
-    cf              : str
-                      either 'exp' for exponential or 'pow' for power cost function
-    opt_log         : dict
-                      record of minimization of o_function
-    ip              : dict
-                      initial parameter estimate values
-    p               : dict
-                      parameters estimates
-    ests            : list of floats
-                      estimated values for calibrated model
-
+    f               : array
+                      n x 1; observed flows; dependent variable; y
+    n               : integer
+                      number of observations
+    k               : integer
+                      number of parameters
+    c               : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
+    cf              : function
+                      cost function; used to transform cost variable
+    d               : array
+                      n x 1; index of destination id's
+    ov              : array
+                      n x p; p attributes for each origin of n flows
+    constant        : boolean
+                      True to include intercept in model; false by default
+    params          : array
+                      n x k, k estimated beta coefficients; k = # of
+                      destinations + p + 1
+    yhat            : array
+                      n x 1, predicted value of y (i.e., fittedvalues)
+    cov_params      : array
+                      Variance covariance matrix (kxk) of betas
+    std_err         : array
+                      k x 1, standard errors of betas
+    pvalues         : array
+                      k x 1, two-tailed pvalues of parameters
+    tvalues         : array
+                      k x 1, the tvalues of the standard errors
+    deviance        : float
+                      value of the deviance function evalued at params;
+                      see family.py for distribution-specific deviance
+    resid_dev       : array
+                      n x 1, residual deviance of model
+    llf             : float
+                      value of the loglikelihood function evalued at params;
+                      see family.py for distribution-specific loglikelihoods
+    llnull          : float
+                      value of the loglikelihood function evaluated with only an
+                      intercept; see family.py for distribution-specific
+                      loglikelihoods
+    aic             : float 
+                      Akaike information criterion
+    D2              : float
+                      percentage of explained deviance
+    adj_D2          : float
+                      adjusted percentage of explained deviance
+    pseudo_R2       : float
+                      McFadden's pseudo R2  (coefficient of determination) 
+    adj_pseudoR2    : float
+                      adjusted McFadden's pseudo R2
+    SRMSE           : float
+                      standardized root mean square error
+    SSI             : float
+                      Sorensen similarity index
+    results         : object
+                      Full results from estimated model. May contain addtional
+                      diagnostics
     Example
     -------
-    import numpy as np
-    import pandas as pd
-    import gravity as grav
-    >>> f = np.array([0, 180048, 79223, 26887, 198144, 17995, 35563, 30528, 110792,
-                        283049, 0, 300345, 67280, 718673, 55094, 93434, 87987, 268458,
-                        87267, 237229, 0, 281791, 551483, 230788, 178517, 172711, 394481,
-                        29877, 60681, 286580, 0, 143860, 49892, 185618, 181868, 274629,
-                        130830, 382565, 346407, 92308, 0, 252189, 192223, 89389, 279739,
-                        21434, 53772, 287340, 49828, 316650, 0, 141679, 27409, 87938,
-                        30287, 64645, 161645, 144980, 199466, 121366, 0, 134229, 289880,
-                        21450, 43749, 97808, 113683, 89806, 25574, 158006, 0, 437255,
-                        72114, 133122, 229764, 165405, 266305, 66324, 252039, 342948, 0])
-    >>> o = np.repeat(np.array(range(1, 10)), 9)
-    >>> d = np.tile(np.array(range(1, 10)), 9)
-    >>> dij = np.array([0, 219, 1009, 1514, 974, 1268, 1795, 2420, 3174,
-                        219, 0, 831, 1336, 755, 1049, 1576, 2242, 2996,
-                        1009, 831, 0, 505, 1019, 662, 933, 1451, 2205,
-                        1514, 1336, 505, 0, 1370, 888, 654, 946, 1700,
-                        974, 755, 1019, 1370, 0, 482, 1144, 2278, 2862,
-                        1268, 1049, 662, 888, 482, 0, 662, 1795, 2380,
-                        1795, 1576, 933, 654, 1144, 662, 0, 1287, 1779,
-                        2420, 2242, 1451, 946, 2278, 1795, 1287, 0, 754,
-                        3147, 2996, 2205, 1700, 2862, 2380, 1779, 754, 0])
-    >>> dt = pd.DataFrame({'Origin': self.o,
-                            'Destination': self.d,
-                            'flows': self.f,
-                            'Dij': self.dij})
-    >>> model = grav.DoublyConstrained(self.dt, 'Origin', 'Destination', 'flows', 'Dij', 'exp')
-    >>> print model.p
-    {'beta': -0.0007369}
+    >>> import numpy as np
+    >>> import pysal
+    >>> from pysal.contrib.spint.gravity import Attraction
+    >>> db = pysal.open(pysal.examples.get_path('nyc_bikes_ct.csv'))
+    >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
+    >>> flows = np.array(db.by_col('count')).reshape((-1,1))
+    >>> d = np.array(db.by_col('d_tract')).reshape((-1,1))
+    >>> o_cap = np.array(db.by_col('o_cap')).reshape((-1,1))
+    >>> model = Attraction(flows, d, o_cap, cost, 'exp')
+    >>> model.params[-4:]
+    array([  5.23366116e+00,   4.89037868e+00,   8.82909095e-01,
+            -2.29081323e-03])
 
     """
-
-    def __init__(self, data, origins, destinations, flows, cost, cost_func, filter_intra=True):
-        if filter_intra:
-            self.dt = data[data[origins] != data[destinations]].reset_index(level=0, drop=True)
+    def __init__(self, flows, destinations, o_vars, cost, cost_func,
+            constant=False, framework='GLM', SF=None, CD=None, Lag=None,
+            Quasi=False):
+        self.f = np.reshape(flows, (-1,1))
+        if len(o_vars.shape) > 1:
+            p = o_vars.shape[1]
         else:
-            self.dt = data
-        self.o = self.dt[origins].astype(str)
-        self.d = self.dt[destinations].astype(str)
-        self.f = self.dt[flows]
-        self.c = self.dt[cost]
-        self.of = {}
-        self.df = {}
-        self.cf = cost_func
-        self.opt_log = {}
-        self.ip = {'beta': 0}
-        self.p = {'beta': 0}
-        self.dt['Bj'] = 1.0
-        self.dt['Ai'] = 1.0
-        self.dt['OldAi'] = 10.000000000
-        self.dt['OldBj'] = 10.000000000
-        self.dt['diff'] = abs((self.dt['OldAi'] - self.dt['Ai'])/self.dt['OldAi'])
-        self.dt['Oi'] = total_flows(self.dt, flows, self.o)
-        self.dt['Dj'] = total_flows(self.dt, flows, self.d)
+            p = 1
+        self.ov = np.reshape(o_vars, (-1,p))
+        self.d = np.reshape(destinations, (-1,1))
+        self.c = np.reshape(cost, (-1,1))
+        #User.check_arrays(self.f, self.d, self.ov, self.c)
 
-        if self.cf == 'exp':
-            k = self.c
-        elif self.cf == 'pow':
-            k = np.log(self.c)
-        else:
-            raise ValueError('variable cost_func must either be "exp" or "pow"')
+        BaseGravity.__init__(self, self.f, self.c, cost_func=cost_func, o_vars=self.ov,
+                 destinations=self.d, constant=constant,
+                 framework=framework, SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
 
-        o_info = np.sum(self.f*k)
-
-        self.p, self.ests = calibrate(self, o_info, k)
-        errors = output(self)
-        self.dt['aboslute_error'] = errors[0]
-        self.dt['percent_error'] = errors[1]
-        stats = statistics(self)
-        self.system_stats = stats[0]
-        self.entropy_stats = stats[1]
-        self.fit_stats = stats[2]
-        self.parameter_stats = stats[3]
-
-    def estimate_flows(self, c, cf, of, df, p):
+    def local(self, locs=None):
         """
-        estimate predicted flows multiplying individual model terms
+        Calibrate local models for subsets of data from a single location to all
+        other locations
+
+        Parameters
+        ----------
+        locs        : iterable of location (destinations) labels; default is
+                      None which calibrates a local model for each destination
+
+        Returns
+        -------
+        results     : dict where keys are names of model outputs and diagnostics
+                      and values are lists of location specific values
         """
-        dcy = self.calc_dcy(c, cf, p)
-        self.dt['Ai'], self.dt['Bj'] = self.balance_factors(self.dt, self.o, self.d, of, df, p)
-        ests = self.dt['Dj']*self.dt['Bj']*self.dt['Oi']*self.dt['Ai']*dcy
-        return ests
+        results = {}
+        covs = self.ov.shape[1] + 1
+        results['aic'] = []
+        results['deviance'] = []
+        results['pseudoR2'] = []
+        results['adj_pseudoR2'] = []
+        results['D2'] = []
+        results['adj_D2'] = []
+        results['SSI'] = []
+        results['SRMSE'] = []
+        for cov in range(covs):
+            results['param' + str(cov)] = []
+            results['pvalue' + str(cov)] = []
+            results['tvalue' + str(cov)] = []
+        if locs is  None:
+        	locs = np.unique(self.d)
+        for loc in np.unique(locs):
+            subset = self.d == loc
+            f = self.reshape(self.f[subset])
+            d = self.reshape(self.d[subset])
+            o_vars = self.ov[subset.reshape(self.ov.shape[0]),:]
+            dij = self.reshape(self.c[subset])
+            model = Attraction(f, d, o_vars, dij, self.cf)
+            results['aic'].append(model.aic)
+            results['deviance'].append(model.deviance)
+            results['pseudoR2'].append(model.pseudoR2)
+            results['adj_pseudoR2'].append(model.adj_pseudoR2)
+            results['D2'].append(model.D2)
+            results['adj_D2'].append(model.adj_D2)
+            results['SSI'].append(model.SSI)
+            results['SRMSE'].append(model.SRMSE)
+            for cov in range(covs):
+                results['param' + str(cov)].append(model.params[cov])
+                results['pvalue' + str(cov)].append(model.pvalues[cov])
+                results['tvalue' + str(cov)].append(model.tvalues[cov])
+        return results
 
-    def build_LL_function(self, gm, LL_fx, of, df, f, cf, beta=False):
+class Doubly(BaseGravity):
+    """
+    Doubly-constrained gravity-type spatial interaction model
+    
+    Parameters
+    ----------
+    flows           : array of integers
+                      n x 1; observed flows between O origins and D destinations
+    origins         : array of strings
+                      n x 1; unique identifiers of origins of n flows; when
+                      there are many origins it will be faster to use integers
+                      rather than strings for id labels.
+    destinations    : array of strings
+                      n x 1; unique identifiers of destinations of n flows; when
+                      there are many destinations it will be faster to use
+                      integers rather than strings for id labels
+    cost            : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
+    cost_func       : string or function that has scalar input and output
+                      functional form of the cost function;
+                      'exp' | 'pow' | custom function
+    constant        : boolean
+                      True to include intercept in model; false by default
+    y               : array
+                      n x 1; dependent variable used in estimation including any
+                      transformations
+    X               : array
+                      n x k, design matrix used in estimation
+    framework       : string
+                      estimation technique; currently only 'GLM' is avaialble
+    Quasi           : boolean
+                      True to estimate QuasiPoisson model; should result in same
+                      parameters as Poisson but with altered covariance; default
+                      to true which estimates Poisson model
+    SF              : array
+                      n x 1; eigenvector spatial filter to include in the model;
+                      default to None which does not include a filter; not yet
+                      implemented
+    CD              : array
+                      n x 1; competing destination term that accounts for the
+                      likelihood that alternative destinations are considered
+                      along with each destination under consideration for every
+                      OD pair; defaults to None which does not include a CD
+                      term; not yet implemented
+    Lag             : W object
+                      spatial weight for n observations (OD pairs) used to
+                      construct a spatial autoregressive model and estimator;
+                      defaults to None which does not include an autoregressive
+                      term; not yet implemented
+
+    Attributes
+    ----------
+    f               : array
+                      n x 1; observed flows; dependent variable; y
+    n               : integer
+                      number of observations
+    k               : integer
+                      number of parameters
+    c               : array 
+                      n x 1; cost to overcome separation between each origin and
+                      destination associated with a flow; typically distance or time
+    cf              : function
+                      cost function; used to transform cost variable
+    o               : array
+                      n x 1; index of origin id's
+    d               : array
+                      n x 1; index of destination id's
+    constant        : boolean
+                      True to include intercept in model; false by default
+    params          : array
+                      n x k, estimated beta coefficients; k = # of origins + #
+                      of destinations; the first x-1 values
+                      pertain to the x destinations (leaving out the first
+                      destination to avoid perfect collinearity; no fixed
+                      effect), the next x values pertain to the x origins, and the
+                      final value is the distance decay coefficient
+    yhat            : array
+                      n x 1, predicted value of y (i.e., fittedvalues)
+    cov_params      : array
+                      Variance covariance matrix (kxk) of betas
+    std_err         : array
+                      k x 1, standard errors of betas
+    pvalues         : array
+                      k x 1, two-tailed pvalues of parameters
+    tvalues         : array
+                      k x 1, the tvalues of the standard errors
+    deviance        : float
+                      value of the deviance function evalued at params;
+                      see family.py for distribution-specific deviance
+    resid_dev       : array
+                      n x 1, residual deviance of model
+    llf             : float
+                      value of the loglikelihood function evalued at params;
+                      see family.py for distribution-specific loglikelihoods
+    llnull          : float
+                      value of the loglikelihood function evaluated with only an
+                      intercept; see family.py for distribution-specific
+                      loglikelihoods
+    aic             : float 
+                      Akaike information criterion
+    D2              : float
+                      percentage of explained deviance
+    adj_D2          : float
+                      adjusted percentage of explained deviance
+    pseudo_R2       : float
+                      McFadden's pseudo R2  (coefficient of determination) 
+    adj_pseudoR2    : float
+                      adjusted McFadden's pseudo R2
+    SRMSE           : float
+                      standardized root mean square error
+    SSI             : float
+                      Sorensen similarity index
+    results         : object
+                      Full results from estimated model. May contain addtional
+                      diagnostics
+    Example
+    -------
+    >>> import numpy as np
+    >>> import pysal
+    >>> from pysal.contrib.spint.gravity import Doubly
+    >>> db = pysal.open(pysal.examples.get_path('nyc_bikes_ct.csv'))
+    >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
+    >>> flows = np.array(db.by_col('count')).reshape((-1,1))
+    >>> d = np.array(db.by_col('d_tract')).reshape((-1,1))
+    >>> o = np.array(db.by_col('o_tract')).reshape((-1,1))
+    >>> model = Doubly(flows, o, d, cost, 'exp')
+    >>> model.params[-1:]
+    array([-0.00232112])
+
+    """
+    def __init__(self, flows, origins, destinations, cost, cost_func,
+            constant=False, framework='GLM', SF=None, CD=None, Lag=None,
+            Quasi=False):
+
+        self.f = np.reshape(flows, (-1,1))
+        self.o = np.reshape(origins, (-1,1))
+        self.d = np.reshape(destinations, (-1,1))
+        self.c = np.reshape(cost, (-1,1))
+        #User.check_arrays(self.f, self.o, self.d, self.c)
+
+        BaseGravity.__init__(self, self.f, self.c, cost_func=cost_func, origins=self.o, 
+                destinations=self.d, constant=constant,
+                framework=framework, SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
+
+    def local(self, locs=None):
         """
-        builds model-specifc components of the LL function being evaluated
+        **Not inmplemented for doubly-constrained models** Not possible due to
+        insufficient degrees of freedom.
+
+        Calibrate local models for subsets of data from a single location to all
+        other locations
         """
-        self.dt['Ai'], self.dt['Bj'] = self.balance_factors(self.dt, self.o, self.d, of, df, gm.p)
-        dcy = self.calc_dcy(self.c, cf, gm.p)
-        Ai = self.dt['Ai']
-        Oi = self.dt['Oi']
-        Bj = self.dt['Bj']
-        Dj = self.dt['Dj']
-        if beta:
-            if cf == 'exp':
-                return np.sum(Ai*Oi*Bj*Dj*dcy*LL_fx) - np.sum(f*LL_fx)
-            else:
-                return np.sum(dcy*np.log(LL_fx)) - np.sum(f*np.log(LL_fx))
-        else:
-            return np.sum(dcy*np.log(LL_fx)) - np.sum(f*np.log(LL_fx))
-
-    def balance_factors(self, dt, o, d, of, df, p):
-        """
-        calculate balancing factors and balance the balancing factors
-        if doubly-constrained model
-        """
-        its = 0
-        cnvg = 1
-        while cnvg > .0001:
-            its += 1
-            dt['Ai'] = self.calc_Ai(dt, o, df, p, dc=True)
-            if its == 1:
-                dt['OldAi'] = dt['Ai']
-            else:
-                dt['diff'] = abs((dt['OldAi'] - dt['Ai'])/dt['OldAi'])
-                dt['OldAi'] = dt['Ai']
-            dt['Bj'] = self.calc_Bj(dt, d, of, p, dc=True)
-            if its == 1:
-                dt['OldBj'] = dt['Bj']
-            else:
-                dt['diff'] = abs((dt['OldBj'] - dt['Bj'])/dt['OldBj'])
-                dt['OldBj'] = dt['Bj']
-            cnvg = np.sum(dt['diff'])
-        return dt['Ai'], dt['Bj']
-
-
-def total_flows(dt, f, locs):
-    """
-    sum rows or columns to derive total inflows or total outflows
-    """
-
-    totals = dt.groupby(locs).aggregate({f: np.sum})
-    return totals.ix[pd.match(locs, totals.index.astype(str))].reset_index()[f]
-
-
-def o_function(pv, gm, cf, of, df):
-    """
-    evaluates log-likelihood functions for each parameter being estimated.
-    Used in optimization/calibration and statistics.
-
-    prepares and builds the constant terms across a model and passes it
-    to build_LL_function to finish
-    """
-    for x, px in enumerate(gm.p):
-        gm.p[px] = pv[x]
-    funcs = []
-    fxs = dict(of.items() + df.items())
-    for fx in gm.p:
-        if fx == 'beta':
-            funcs.append(gm.build_LL_function(gm, gm.c, of, df, gm.f, gm.cf, beta=True))
-        else:
-            funcs.append(gm.build_LL_function(gm, fxs[fx], of, df, gm.f, gm.cf))
-    return funcs
-
-
-def calibrate(gm, o_info, k):
-    """
-    run the main routine which estimates parameters using mle
-    """
-    ests = gm.estimate_flows(gm.c, gm.cf, gm.of, gm.df, gm.p)
-    e_info = gm.estimate_cum(ests, k)
-    its = 0
-    diff = abs(e_info - o_info)
-    try:
-        while diff > .1:
-            gm.pv = gm.p.values()
-            gm.opt_log[its] = [gm.pv, diff]
-            gm.pv = fsolve(o_function, gm.pv, (gm, gm.cf, gm.of, gm.df))
-            ests = gm.estimate_flows(gm.c, gm.cf, gm.of, gm.df, gm.p)
-            e_info = gm.estimate_cum(ests, k)
-            its += 1
-            diff = abs(e_info - o_info)
-            if its > 25:
-                print 'Convergence criterion not met, solution may not be optimal'
-                break
-        gm.opt_log[its] = [gm.pv, diff]
-        gm.p = dict(zip(gm.p.keys(), [round(x, 7) for x in gm.pv]))
-        return gm.p, ests
-    except:
-        raise RuntimeError('Optimization could not be carried out, check input validity')
-        return gm.p, ests
-
-
-def output(gm):
-    """
-    prepare output
-    """
-    abs_err = gm.ests - gm.f
-    perc_err = (abs_err/gm.f) * 100
-    return abs_err, perc_err
-
-
-def statistics(gm):
-    """
-    calculate statistics
-    """
-    if 'Ai' in gm.dt.columns:
-        Ai = gm.dt.Ai.values.copy()
-    if 'Bj' in gm.dt.columns:
-        Bj = gm.dt.Bj.values.copy()
-    ests = gm.ests.values.copy()
-    p = gm.p.copy()
-
-    system_stats = stats.sys_stats(gm)
-    entropy_stats = stats.ent_stats(gm)
-    fit_stats = stats.fit_stats(gm)
-    parameter_statistics = stats.param_stats(gm)
-
-    if 'Ai' in gm.dt.columns:
-        gm.dt.Ai = Ai
-    if 'Bj' in gm.dt.columns:
-        gm.dt.Bj = Bj
-    gm.ests = ests
-    gm.dt.ests = ests
-    gm.p = p
-
-    return system_stats, entropy_stats, fit_stats, parameter_statistics
+        raise NotImplementedError("Local models not possible for"
+        " doubly-constrained model due to insufficient degrees of freedom.")
