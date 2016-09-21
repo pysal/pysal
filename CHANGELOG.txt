@@ -1,3 +1,115 @@
+v<1.12.0>, 2016-09-21
+
+We closed a total of 100 issues, 33 pull requests and 67 regular issues;
+this is the full list (generated with the script 
+:file:`tools/github_stats.py`):
+
+Pull Requests (33):
+
+* :ghpull:`864`: addressing issue #845 and adding tests
+* :ghpull:`862`: Memory efficient Gini and tests
+* :ghpull:`865`: fix space/tab inconsistency
+* :ghpull:`861`: GSOC -SpInt
+* :ghpull:`847`: spatial interaction weights 
+* :ghpull:`863`: B859
+* :ghpull:`860`: Incoprate updates to db driver and unittests
+* :ghpull:`858`: Dev mltest
+* :ghpull:`857`: Fix TabErrors, replace tabs with spaces
+* :ghpull:`856`: Make the output and build reproducible
+* :ghpull:`851`: fixed typo in test_network.py
+* :ghpull:`850`: [REBASE] Distance band speed ups
+* :ghpull:`843`: update and clean aesthetic of Network_Usage.ipynb
+* :ghpull:`842`: typo correction in network.py
+* :ghpull:`841`: [REBASE & REDIRECT] Conditional Database Imports & Docos, #692
+* :ghpull:`840`: minor bugfix to #816
+* :ghpull:`839`: documentation cleanup on network.analysis.py
+* :ghpull:`838`: network.util.py documentation cleanup 
+* :ghpull:`836`: re: network.py documentation cleanup
+* :ghpull:`768`: Modified the way area of a ring is calculated to allow for more precision
+* :ghpull:`829`: numba autojit _fisher_jenks_means if numba is available
+* :ghpull:`832`: Handling a deprecation warning, and latex errors corrected.
+* :ghpull:`834`: Travis testing matrix
+* :ghpull:`831`: Refactoring Markov classes for efficiency
+* :ghpull:`827`: ESDA Tabular Functions
+* :ghpull:`823`: typo and format of docstring of user.py in weights module
+* :ghpull:`821`: Pdio
+* :ghpull:`817`: D/sur
+* :ghpull:`818`: Documentation fix + some PEP8 standardization
+* :ghpull:`811`: DistanceBand should correctly handle named weights
+* :ghpull:`808`: Dev
+* :ghpull:`807`: Updating contrib docs and bumping version for dev
+* :ghpull:`797`: working moran plot func
+
+Issues (67):
+
+* :ghissue:`855`: Inefficient Gini Coefficient calculation?
+* :ghissue:`864`: addressing issue #845 and adding tests
+* :ghissue:`862`: Memory efficient Gini and tests
+* :ghissue:`865`: fix space/tab inconsistency
+* :ghissue:`861`: GSOC -SpInt
+* :ghissue:`847`: spatial interaction weights 
+* :ghissue:`859`: Wrong there is one disconnected observation (no neighbors)
+* :ghissue:`863`: B859
+* :ghissue:`860`: Incoprate updates to db driver and unittests
+* :ghissue:`858`: Dev mltest
+* :ghissue:`857`: Fix TabErrors, replace tabs with spaces
+* :ghissue:`854`: handle verication context for githubstats
+* :ghissue:`856`: Make the output and build reproducible
+* :ghissue:`851`: fixed typo in test_network.py
+* :ghissue:`850`: [REBASE] Distance band speed ups
+* :ghissue:`846`: DistanceBand speed ups
+* :ghissue:`843`: update and clean aesthetic of Network_Usage.ipynb
+* :ghissue:`842`: typo correction in network.py
+* :ghissue:`692`: Conditional Database Import / Docos
+* :ghissue:`841`: [REBASE & REDIRECT] Conditional Database Imports & Docos, #692
+* :ghissue:`769`: Windows 7, 64 bit installation issue with visual C++ for python
+* :ghissue:`816`: Exception TypeError in geoda_txt.py
+* :ghissue:`840`: minor bugfix to #816
+* :ghissue:`839`: documentation cleanup on network.analysis.py
+* :ghissue:`397`: integrate optimized contiguity builder
+* :ghissue:`531`: add user space function to generate numpy arrays
+* :ghissue:`654`: meta update for 2-3 conversion
+* :ghissue:`676`: Meta not importable from pysal
+* :ghissue:`838`: network.util.py documentation cleanup 
+* :ghissue:`753`: Fix the network ring bug
+* :ghissue:`836`: re: network.py documentation cleanup
+* :ghissue:`768`: Modified the way area of a ring is calculated to allow for more precision
+* :ghissue:`837`: re: network.allneighbordistances() diagonal fill
+* :ghissue:`822`: two issues about function choropleth_map in viz module
+* :ghissue:`835`: fix deprecation warnings noted in #822
+* :ghissue:`829`: numba autojit _fisher_jenks_means if numba is available
+* :ghissue:`832`: Handling a deprecation warning, and latex errors corrected.
+* :ghissue:`834`: Travis testing matrix
+* :ghissue:`825`: Headbanging Median Rate ignores edge correction
+* :ghissue:`826`: Spatial Filtering grid definition
+* :ghissue:`824`: Direct Age Standardization fails for empty regions
+* :ghissue:`833`: PySAL+ optional testing matrix
+* :ghissue:`830`: [REBASED] PySAL+ optional testing matrix
+* :ghissue:`831`: Refactoring Markov classes for efficiency
+* :ghissue:`827`: ESDA Tabular Functions
+* :ghissue:`815`: rook case not working in ContiguityWeightsPolygons
+* :ghissue:`828`: Fisher_Jenks pure python implementation is too slow
+* :ghissue:`814`: Explore Classmethods for alternative constructors
+* :ghissue:`795`: switch to scipy.linalg instead of numpy.linalg
+* :ghissue:`799`: w_subset(weights:W, ids:np.ndarray) constructs faulty weights object
+* :ghissue:`823`: typo and format of docstring of user.py in weights module
+* :ghissue:`821`: Pdio
+* :ghissue:`794`: spreg ML_lag doesn't always set W in __init__
+* :ghissue:`754`: Update README
+* :ghissue:`819`: add LIMAs
+* :ghissue:`817`: D/sur
+* :ghissue:`818`: Documentation fix + some PEP8 standardization
+* :ghissue:`809`: Fixed documentation
+* :ghissue:`813`: w.remap_ids(ids) never sets w.id_order_set
+* :ghissue:`775`: Added a prototype for constructing weights from a list of shapely Polygons
+* :ghissue:`810`: DistanceBand fails to accept custom ids
+* :ghissue:`811`: DistanceBand should correctly handle named weights
+* :ghissue:`780`: Doctests failing on travis
+* :ghissue:`801`: ImportError: No module named scipy.spatial
+* :ghissue:`808`: Dev
+* :ghissue:`807`: Updating contrib docs and bumping version for dev
+* :ghissue:`797`: working moran plot func
+
 v<1.11.2>, 2016-05-18
 
 We closed a total of 20 issues, 6 pull requests and 14 regular issues;
