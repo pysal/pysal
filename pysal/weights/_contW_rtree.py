@@ -91,16 +91,6 @@ class ContiguityWeights_rtree:
             if get_shared_segments(poly0, poly1, True):
                 return ROOK
             return False
-            #for vert in common:
-            #    idx = poly0.vertices.index(vert)
-            #    IDX = poly1.vertices.index(vert)
-            #    try:
-            #        if poly0.vertices[idx+1] == poly1.vertices[IDX+1] or poly0.vertices[idx+1] == poly1.vertices[IDX-1]\
-            #        or poly0.vertices[idx-1] == poly1.vertices[IDX+1] or poly0.vertices[idx-1] == poly1.vertices[IDX-1]:
-            #            return ROOK
-            #    except IndexError:
-            #        pass
-            #return False
         elif len(common) > 0:
             return QUEEN
         else:

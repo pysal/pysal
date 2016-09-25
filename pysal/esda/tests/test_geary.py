@@ -1,15 +1,19 @@
 """Geary Unittest."""
 import unittest
-import pysal
-from pysal.esda import geary
+
+from ... import open as popen
+from ... import examples
+from .. import geary
 import numpy as np
 
+from ...common import pandas
+PANDAS_EXTINCT = pandas is None
 
 class Geary_Tester(unittest.TestCase):
     """Geary class for unit tests."""
     def setUp(self):
-        self.w = pysal.open(pysal.examples.get_path("book.gal")).read()
-        f = pysal.open(pysal.examples.get_path("book.txt"))
+        self.w = popen(examples.get_path("book.gal")).read()
+        f = popen(examples.get_path("book.txt"))
         self.y = np.array(f.by_col['y'])
 
     def test_Geary(self):
@@ -48,6 +52,19 @@ class Geary_Tester(unittest.TestCase):
         self.assertAlmostEquals(c.p_z_sim, 0.00016908100514811952)
         self.assertAlmostEquals(c.z_sim, -3.5841621159171746)
         self.assertAlmostEquals(c.seC_sim, 0.18555432843202269)
+
+    @unittest.skipIf(PANDAS_EXTINCT, 'missing pandas')
+    def test_by_col(self):
+        import pandas as pd
+        df = pd.DataFrame(self.y, columns=['y'])
+        r1 = geary.Geary.by_col(df, ['y'], w=self.w, permutations=999)
+        this_geary = np.unique(r1.y_geary.values)
+        this_pval = np.unique(r1.y_p_sim.values)
+        np.random.seed(12345)
+        c = geary.Geary(self.y, self.w, permutations=999)
+        self.assertAlmostEquals(this_geary, c.C)
+        self.assertAlmostEquals(this_pval, c.p_sim)
+
 
 
 suite = unittest.TestSuite()

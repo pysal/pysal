@@ -94,18 +94,23 @@ class TestNetworkPointPattern(unittest.TestCase):
         pass
 
     def test_all_neighbor_distances(self):
-        distancematrix = self.ntw.allneighbordistances(self.schools)
-        self.assertAlmostEqual(np.nansum(distancematrix[0]), 17682.436988, places=4)
+        distancematrix_1 = self.ntw.allneighbordistances(self.schools)
+        self.assertAlmostEqual(np.nansum(distancematrix_1[0]), 17682.436988, places=4)
 
         for k, (distances, predlist) in self.ntw.alldistances.iteritems():
             self.assertEqual(distances[k], 0)
 
-            # turning off the tests associated with util.generatetree() for now,
-            # these can be restarted if that functionality is used in the future 
+            #  turning off the tests associated with util.generatetree() for now,
+            #  these can be restarted if that functionality is used in the future 
             #for p, plists in predlist.iteritems():
             #    self.assertEqual(plists[-1], k)
 
             #self.assertEqual(self.ntw.node_list, predlist.keys())
+            
+        distancematrix_2 = self.ntw.allneighbordistances(self.schools, fill_diagonal=0.)
+        observed = distancematrix_2.diagonal()
+        known = np.zeros(distancematrix_2.shape[0])
+        np.testing.assert_equal(observed, known)
 
     def test_nearest_neighbor_distances(self):
 
@@ -131,5 +136,5 @@ class TestNetworkUtils(unittest.TestCase):
         self.assertAlmostEqual(self.distance[196], 5505.668247, places=4)
         self.assertEqual(self.pred[196], 133)
 
-if __name__ == 'main':
+if __name__ == '__main__':
     unittest.main()

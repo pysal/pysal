@@ -40,6 +40,18 @@ Utilities
 import pysal.cg
 import pysal.core
 
+try:
+    import pandas
+    from pysal.contrib import pdio
+    pysal.common.pandas = pandas
+except ImportError:
+    pysal.common.pandas = None
+    
+# Load the IOHandlers
+from pysal.core import IOHandlers
+# Assign pysal.open to dispatcher
+open = pysal.core.FileIO.FileIO
+
 from pysal.version import version
 #from pysal.version import stable_release_date
 #import urllib2, json
@@ -83,17 +95,6 @@ from pysal.core.util.weight_converter import weight_convert
 import pysal.spreg
 import pysal.examples
 from pysal.network.network import Network, NetworkG, NetworkK, NetworkF
-
-try:
-    import pandas
-    from pysal.contrib import pdutilities as pdio
-except ImportError:
-    print('Pandas adapters not loaded')
-
-# Load the IOHandlers
-from pysal.core import IOHandlers
-# Assign pysal.open to dispatcher
-open = pysal.core.FileIO.FileIO
 
 #__all__=[]
 #import esda,weights

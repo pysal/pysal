@@ -66,13 +66,19 @@ Currently the following contribs are available:
     - Path: pysal.contrib.pdutilities
     - Requires: `pandas`_
 
- 8. Githooks -- Optional hooks for `git` to make development on `PySAL` easier
+ 8. Spatial Interaction -- Tools for spatial interaction (SpInt) modeling. 
+ 
+   - .. versionadded:: 1.10
+   - Path: pysal.contrib.spint
+   - Requires: `pandas`_
+
+ 9. Githooks -- Optional hooks for `git` to make development on `PySAL` easier
 
     - .. versionadded:: 1.10
     - Path: pysal.contrib.githooks (Note: not importable)
     - Requires: `git`
 
- 9. Handler -- A model ingester to standardize model extension
+ 10. Handler -- A model ingester to standardize model extension
 
     - .. versionadded:: 1.10
     - Path: pysal.contrib.handler

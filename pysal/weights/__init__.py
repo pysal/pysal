@@ -1,8 +1,3 @@
-"""
-:mod:`weights` --- Spatial Weights
-==================================
-
-"""
 from weights import *
 from util import *
 from Distance import *
