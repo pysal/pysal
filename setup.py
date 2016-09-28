@@ -74,8 +74,35 @@ def setup_package():
         packages=find_packages(exclude=[".meta", "*.meta.*", "meta.*",
                                         "meta"]),
         package_data={'pysal': list(example_data_files)},
-        requires=['scipy'],
-        cmdclass= {'build_py': build_py}
+        install_requires=[
+            'scipy>=0.11',
+            'numpy>=1.3',
+        ],
+        extras_require={
+            'plus': [
+                'matplotlib>=1.5.1',
+                'seaborn>=0.7.0',
+                'geopandas>=0.2',
+                'scikit-learn>=0.17.1',
+                'bokeh>=0.11.1',
+                'geojson>=1.3.2',
+                'folium>=0.2.1',
+                'mplleaflet>=0.0.5',
+                'statsmodels>=0.6.1',
+                'numba',
+                'numexpr',
+            ],
+            'dev': [
+                'nose',
+                'nose-progressive',
+                'nose-exclude',
+                'coverage',
+                'sphinx',
+                'sphinxcontrib-napoleon',
+                'coveralls',
+            ],
+        },
+        cmdclass={'build_py': build_py}
     )
 
 
