@@ -10,6 +10,7 @@ ToDo:
 __author__ = "Sergio Rey <sjsrey@gmail.com>", "Dani Arribas-Bel <daniel.arribas.bel@gmail.com"
 
 
+from warnings import warn
 import pandas as pd
 import pysal as ps
 import numpy as np
@@ -29,7 +30,7 @@ try:
     import bokeh.plotting as bk
     from bokeh.models import HoverTool
 except:
-    print('Bokeh not installed. Functionality ' \
+    warn('Bokeh not installed. Functionality ' \
             'related to it will not work')
 # Classifier helper
 classifiers = ps.esda.mapclassify.CLASSIFIERS
@@ -639,7 +640,7 @@ def geoplot(db, col=None, palette='BuGn', classi='Quantiles',
                 linewidth=linewidth, marker_size=marker_size,
                 hover=hover, p=p, col=col, **kwargs)
     else:
-        print("Please choose an available backend")
+        warn("Please choose an available backend")
     return None
 
 def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
@@ -919,7 +920,7 @@ def plot_poly_lines(shp_link,  savein=None, poly_col='none'):
     if savein:
         plt.savefig(savein)
     else:
-        print('callng plt.show()')
+        print('calling plt.show()')
         plt.show()
     return None
 

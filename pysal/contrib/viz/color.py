@@ -2,12 +2,12 @@
 color handling for mapping and geovisualization
 """
 
-
+from warnings import warn
 try:
     import palettable as pltt
     from palettable.colorbrewer import qualitative, sequential, diverging
 except:
-    print('palettable  not installed. Functionality '
+    warn('palettable  not installed. Functionality '
           'related to it will not work')
 
 def get_color_map(palette=None, name='BuGn', cmtype='sequential', k=5,
