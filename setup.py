@@ -24,9 +24,17 @@ VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 if os.path.exists('MANIFEST'):
     os.remove('MANIFEST')
 
+def _get_requirements_from_files(groups_files):
+    groups_reqlist = {}
+
+    for k,v in groups_files.items():
+        with open(v, 'r') as f:
+            pkg_list = f.read().splitlines()
+        groups_reqlist[k] = pkg_list
+
+    return groups_reqlist
 
 def setup_package():
-
     # get all file endings and copy whole file names without a file suffix
     # assumes nested directories are only down one level
     example_data_files = set()
@@ -42,6 +50,16 @@ def setup_package():
             glob_name = "examples/" + i + "/*"
 
         example_data_files.add(glob_name)
+
+    _groups_files = {
+        'base': 'requirements.txt',
+        'plus': 'requirements_plus.txt',
+        'dev': 'requirements_dev.txt'
+    }
+
+    reqs = _get_requirements_from_files(_groups_files)
+    install_reqs = reqs.pop('base')
+    extras_reqs = reqs
 
     setup(
         name='PySAL',
@@ -74,34 +92,8 @@ def setup_package():
         packages=find_packages(exclude=[".meta", "*.meta.*", "meta.*",
                                         "meta"]),
         package_data={'pysal': list(example_data_files)},
-        install_requires=[
-            'scipy>=0.11',
-            'numpy>=1.3',
-        ],
-        extras_require={
-            'plus': [
-                'matplotlib>=1.5.1',
-                'seaborn>=0.7.0',
-                'geopandas>=0.2',
-                'scikit-learn>=0.17.1',
-                'bokeh>=0.11.1',
-                'geojson>=1.3.2',
-                'folium>=0.2.1',
-                'mplleaflet>=0.0.5',
-                'statsmodels>=0.6.1',
-                'numba',
-                'numexpr',
-            ],
-            'dev': [
-                'nose',
-                'nose-progressive',
-                'nose-exclude',
-                'coverage',
-                'sphinx',
-                'sphinxcontrib-napoleon',
-                'coveralls',
-            ],
-        },
+        install_requires=install_reqs,
+        extras_require=extras_reqs,
         cmdclass={'build_py': build_py}
     )
 

@@ -26,10 +26,10 @@ before_install:
 install:
   - conda install --yes pip
   - if [ "$PYSAL_PLUS" == true ]; then
-        echo 'plus testing'; pip install .[plus];
-    else pip install .;
+        echo 'plus testing'; conda install --yes --file requirements_plus.txt;
+        else conda install --yes --file requirements.txt;
     fi;
-  - pip install .[dev]
+  - pip install -r requirements_dev.txt
 
 script:
   - python setup.py sdist >/dev/null
