@@ -146,14 +146,16 @@ def flexible_bw(init, y, X, n, k, family, tol, max_iter, rss_score,
         gwr_func, bw_func, sel_func):
     if init:
         bw = sel_func(bw_func(y, X))
+        print bw
         optim_model = gwr_func(y, X, bw)
         err = optim_model.resid_response.reshape((-1,1))
         est = optim_model.params
     else:
-        model = GLM(y, X, family=self.family).fit()
+        model = GLM(y, X, family=self.family, constant=False).fit()
         err = model.resid_response.reshape((-1,1))
         est = np.repeat(model.params.T, n, axis=0)
         
+    
     XB = np.multiply(est, X)
     if rss_score:
         rss = np.sum((err)**2)

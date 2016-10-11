@@ -12,6 +12,7 @@ from kernels import *
 from search import golden_section, equal_interval, flexible_bw
 from gwr import GWR
 from pysal.contrib.glm.family import Gaussian, Poisson, Binomial
+import pysal.spreg.user_output as USER
 from diagnostics import get_AICc, get_AIC, get_BIC, get_CV
 from scipy.spatial.distance import pdist, squareform
 from pysal.common import KDTree
@@ -196,6 +197,7 @@ class Sel_BW(object):
         
         if self.fb:
             self._fbw()
+            print self.bw[1]
             self.XB = self.bw[4]
             self.err = self.bw[5]
         else:
@@ -221,7 +223,10 @@ class Sel_BW(object):
    
     def _fbw(self):
         y = self.y
-        X = self.x_loc
+        if self.constant:
+        	X = USER.check_constant(self.x_loc)
+        else:
+            X = self.x_loc
         n, k = X.shape
         family = self.family
         offset = self.offset
@@ -235,11 +240,10 @@ class Sel_BW(object):
         interval = self.interval
         tol = self.tol
         max_iter = self.max_iter
-        constant = self.constant
         gwr_func = lambda y, X, bw: GWR(coords, y, X, bw, family=family, 
-                kernel=kernel, fixed=fixed, offset=offset, constant=constant).fit()
+                kernel=kernel, fixed=fixed, offset=offset, constant=False).fit()
         bw_func = lambda y, X: Sel_BW(coords, y, X, x_glob=[], family=family,
-                kernel=kernel, fixed=fixed, offset=offset, constant=constant)
+                kernel=kernel, fixed=fixed, offset=offset, constant=False)
         sel_func = lambda bw_func: bw_func.search(search=search, 
                         criterion=criterion, bw_min=bw_min, bw_max=bw_max, 
                         interval=interval, tol=tol, max_iter=max_iter)

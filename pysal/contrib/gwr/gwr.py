@@ -919,6 +919,8 @@ class FBGWR(GWR):
         self.kernel = kernel
         self.fixed = fixed
         self.constant = constant
+        if constant:
+        	self.X = USER.check_constant(self.X)
 
     def fit(self, ini_params=None, tol=1.0e-5, max_iter=20, solve='iwls'):
         """
@@ -948,7 +950,7 @@ class FBGWR(GWR):
             X = self.X[:,i].reshape((-1,1))
             y = self.XB[:,i].reshape((-1,1)) + err
             model = GWR(self.coords, y, X, bw, self.family, self.offset,
-                    self.sigma2_v1, self.kernel, self.fixed, self.constant)
+                    self.sigma2_v1, self.kernel, self.fixed, constant=False)
             results = model.fit(ini_params, tol, max_iter, solve)
             params[:,i] = results.params.flatten()
             err = results.resid_response.reshape((-1,1))
