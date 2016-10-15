@@ -59,40 +59,9 @@ and the `gitter room <https://gitter.im/pysal/pysal>`_.
 Release Schedule
 -----------------------
 
-PySAL development follows a six-month release schedule that is aligned with
-the academic calendar.
-
-
-1.12 Cycle
-==========
-
-========   ========   ================= ====================================================
-Start      End        Phase             Notes
-========   ========   ================= ====================================================
-2/1/16      2/14/16   Module Proposals  Developers draft PEPs and prototype
-2/15/16     2/15/16   Developer vote    All developers vote on PEPs 
-2/16/16     2/16/16   Module Approval   BDFL announces final approval
-2/17/16     6/30/16   Development       Implementation and testing of approved modules
-7/1/16      7/27/16   Code Freeze       APIs fixed, bug and testing changes only
-7/23/16     7/30/16   Release Prep      Test release builds, updating svn 
-7/31/16     7/31/16   Release           Official release of 1.12
-========   ========   ================= ====================================================
-
-
-1.13 Cycle
-==========
-
-========   ========   ================= ====================================================
-Start      End        Phase             Notes
-========   ========   ================= ====================================================
-8/1/16      8/14/16   Module Proposals  Developers draft PEPs and prototype
-8/16/16     8/16/16   Developer vote    All developers vote on PEPs 
-8/16/16     8/16/16   Module Approval   BDFL announces final approval
-8/17/16    12/30/16   Development       Implementation and testing of approved modules
-1/1/17       1/1/17   Code Freeze       APIs fixed, bug and testing changes only
-1/23/17     1/30/17   Release Prep      Test release builds, updating svn 
-1/31/17     1/31/17   Release           Official release of 1.13
-========   ========   ================= ====================================================
+As of version 1.11, PySAL has moved to a rolling release model. Discussions
+about releases are carried out during the monthly developer meetings and in 
+the `gitter room <https://gitter.im/pysal/pysal>`_.
 
 
 ----------

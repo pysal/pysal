@@ -51,7 +51,11 @@ from the command line using *pip* or *easy_install*.::
 
        $ easy_install sphinx
        $ easy_install sphinxcontrib-napoleon
+or
 
+       $ pip sphinx
+       $ pip sphinxcontrib-napoleon
+              
 If you get a permission error, trying using 'sudo'. 
 
 The source for the docs is in `doc`. Building the documentation is
