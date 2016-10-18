@@ -1,0 +1,773 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font than Computer Modern for most use cases
+    \usepackage{palatino}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{SpIntPrimer}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \section{\texorpdfstring{A primer for working with the
+\textbf{\emph{Sp}}atial \textbf{\emph{Int}}eraction modeling (SpInt)
+module in the python spatial analysis library
+(PySAL)}{A primer for working with the Spatial Interaction modeling (SpInt) module in the python spatial analysis library (PySAL)}}\label{a-primer-for-working-with-the-spatial-interaction-modeling-spint-module-in-the-python-spatial-analysis-library-pysal}
+
+    \subsection{Introduction}\label{introduction}
+
+    Spatial interaction modeling involves the analysis of flows from an
+origin to a destination either over physical space (i.e., migration) or
+through abstract space (i.e., telecommunication). Despite being a
+fundamental technique to many geogaphic disciplines, there is relatively
+little software available to carry out spatial interaction modeling and
+the analysis of flow data. Therefore, the purpose of this primer is to
+provide an overview of the recently develped spatial interaction
+modeling (SpInt) module of the python spatial analysis library (PySAL).
+First, the current framework of the module will be highlighted. Next,
+the main functionality of the module will be illustrated with a common
+regional science example, migration flows, with a dataset previously
+used for spatial interaction modeling tutorials in the R programming
+environment. Finally, some auxilliary functionality and future additions
+are discussed.
+
+    \subsection{The SpInt Framework}\label{the-spint-framework}
+
+    \subsubsection{Modeling framework}\label{modeling-framework}
+
+    The core purpose of the SpInt module is to provide the functionality to
+calibrate spatial interaction models. Since the ``family'' of spatial
+interaction models put forth by Wilson (Wilson, 1971) are perhaps the
+most popular, they were chosen as the starting point of the module.
+Consider the basic gravity model (Fotheringham \& O'Kelly, 1989),
+
+\[T_{ij} = k\frac{V_{i}^\mu W_{j}^\alpha}{d_{ij}^\beta} \quad(1)\]
+
+where
+
+\begin{itemize}
+\item
+  \(T_{ij}\) = an \(n \times m\) matrix of flows between \(n\) origins
+  (subscripted by \(i\)) to \(m\) destinations (subscripted by \(j\))
+\item
+  \(V\) = an \(n \times p\) and vector of \(p\) origin attributes
+  describing the emissiveness of \(i\)
+\item
+  \(W\) = an \(m \times p\) vector of \(p\) destination attributes
+  describing the attractiveness of \(j\)
+\item
+  \(d\) = an \(n \times m\) matrix of the costs to overcome the physical
+  separation between \(i\) and \(j\) (usually distance or time)
+\item
+  \(k\) = a scaling factor to be estimated to ensure the total flows is
+  consistent
+\item
+  \(\mu\) = a \(p \times 1\) vector of parameters representing the
+  effect of \(p\) origin attributes on flows
+\item
+  \(\alpha\) = a \(p \times 1\) vector of parameters representing the
+  effect of \(p\) destination attributes on flows
+\item
+  \(\beta\) = an exponential parameter representing the effect of
+  movement costs on flows.
+\end{itemize}
+
+When data for \(T\), \(V\), \(W\), and \(d\) are available we can
+estimate the model parameters (also called calibration), which summarize
+the effect that each model component contributes towards explaining the
+system of known flows (\(T\)). In contrast, known parameters can be used
+to predict unknown flows when there are deviations in model components
+(\(V\), \(W\), and \(d\)) or the set of locations in the system are
+altered.
+
+Using an entropy-maximizing framework, Wilson derives a more informative
+and flexible ``family'' of four spatial interaction models (Wilson,
+1971). This framework seeks to assign flows between a set of origins and
+destinations by finding the most probable configuration of flows out of
+all possible configurations, without making any additional assumptions.
+By using a common optimization problem and including information about
+the total inflows and outflows at each location (also called
+constraints), the following ``family'' of models can be obtained:
+
+\[
+\begin{align}
+&Unconstrained \ (Gravity) \\
+&Tij = V_{i}^\mu W_{j}^\alpha  f(d_{ij}) \quad & (2) \\
+\\
+&Production-constrained \\
+&T_{ij} = A_{i}O_{i}W_{j}^\alpha f(d_{ij}) \quad & (3) \\
+&A_{i} = \sum_{j} W_{j}^\alpha f(d_{ij}) \quad & (3a) \\
+\\
+&Attraction-constrained \\
+&T_{ij} = B_{j}D_{j}V_{i}^\mu f(d_{ij}) \quad & (4) \\
+&B_{j} = \sum_{i} V_{i}^\mu f(d_{ij}) \quad & (4a) \\
+\\
+&Doubly-constrained \\
+&T_{ij} = A_{i}B_{j}O_{i}D_{j}f(d_{ij}) \quad & (5) \\
+&A_{i} = \sum_{j} W_{j}^\alpha B_{j} D_{j} f(d_{ij}) \quad & (5a) \\
+&B_{j} = \sum_{i} V_{i}^\mu A_{i} O_{i} f(d_{ij}) \quad & (5b)
+\end{align}
+\]
+
+where
+
+\begin{itemize}
+\item
+  \(O_{i}\) = an \(n \times 1\) vector of the total number of flows
+  emanating from origin \(i\)
+\item
+  \(D_{j}\) = an \(m \times 1\) vector of the total number of flows
+  terminating at destination \(j\)
+\item
+  \(A_{i}\) = an \(n \times 1\) vector of thevorigin balancing factors
+  that ensures the total out-flows are preserved in the predicted flows
+\item
+  \(B_{j}\) = an \(m \times 1\) vector of the destination balancing
+  factors that ensures the total in-flows are preserved in the predicted
+  flows
+\item
+  \(f(d_{ij})\) = a function of cost or distance, referred to as the
+  distance-decay function. Most commonly this an exponential or power
+  function given by,
+\end{itemize}
+
+\[
+\begin{align}
+&Power\\
+&f(d_{ij}) = d_{ij}^\beta \quad & (6) \\
+\\
+&Exponential \\
+&f(d_{ij}) = exp(\beta*d_{ij}) \quad & (7) \\
+\end{align}
+\]
+
+where \(\beta\) is expected to take a negative value. Different
+distance-decay functions assume different responses to higher costs
+associated with moving to more distant locations. Of note is that the
+unconstrained model with of power function distance-decay is equivalent
+to the basic gravity model in equation (2), except that the scaling
+factor, \(k\), is not included. In fact, there is no scaling factor in
+any of the members of the family of maximum entropy models because there
+is a total trip constrained implied in their derivation and subsequently
+incorporated into their calibration (Fotheringham \& O'Kelly , 1989).
+Another aside is that in the doubly-constrained maximum entoropy model
+the values for \(A_{i}\) and \(B_{j}\) are dependent upon each other and
+may need to be computed iteratively depending on calibration technqiue.
+It is also usually assumed that \(n=m\) for doubly-constrained models.
+
+The family provides different model strucutre depedning on the available
+data or the research question at hand. The so-called unconstrained model
+does not conserve the total inflows or outflows during parameter
+estimation. The production-constrained and attraction-constrained models
+conserve either the number of total inflows or outflows, respectively,
+and are therefore useful for building models that allocate flows either
+to a set of origins or to a set of destinations. Finally, the
+doubly-constrained model conserves both the inflows and the outflows at
+each location during model calibration. The quantity of explanatory
+information provided by each model is given by the number of parameters
+it provides. As such, the unconstrained model provides the most
+information, followed by the two singly-constrained models, with the
+doubly-constrained model providing the least information. Conversely,
+the model's predictive power increases with higher quantities of
+built-in information (i.e.~total in or out-flows) so that the
+doubly-constrained model usually provides the most accurate predictions,
+followed by the two singly-constrained models, and the unconstrained
+model supplying the weakest predictions (Fotheringham \& O'Kelly, 1989).
+
+    \subsubsection{Calibration framework}\label{calibration-framework}
+
+    Spatial interaction models are often calibrated via linear programming,
+nonlinear optimization, or increasingly more often through linear
+regression. Given the flexibility and extendability of a regression
+framework it was chosen as the primary model calibration technqiue
+within the SpInt module. By taking the natural logarithm of both sides
+of a spatial interaction model, say the basic gravity model, is is
+possible to obtain the so-called log-linear or log-normal spatial
+interaction model:
+
+\[\ln{T_{ij}} = k + \mu \ln{V_{i}} + \alpha \ln{W_{j}} - \beta \ln{d_{ij}} + \epsilon \quad (8)\]
+
+where \(\epsilon\) is a a normally distributed error term with a mean of
+0. Constrained spatial interaction models can be achieved by including a
+fixed effects for the origins (production-constrained), a fixed effect
+for the destinations (attraction-constrained) or both
+(doubly-constrained). However, there are several limitations of the
+log-normal gravity model, which include:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  flows are often counts of people or objects and should be modeled as
+  discrete entities;
+\item
+  flows are often not normally distributed;
+\item
+  Bias
+\item
+  zero flows
+\end{enumerate}
+
+Therefore, Flowerdew (1984) proposes the Poisson log-linear regression
+specification for the family of spatial interaction models. This
+specification assumes that the number of flows between \(i\) and \(j\)
+is drawn from a Poisson distribution with mean,
+\(\lambda_{ij} = T_{ij}\), where \(\lambda_{ij}\) is assumed to be
+logarithmically linked to the linear combination of variables,
+
+\[\ln{\lambda_ij} = k + \mu V_{i} + \alpha W_{j} - \beta d_{ij}) \quad (9)\]
+
+and exponentiating both sides of the equation yields the following
+family of Poisson log-linear spatial interaction models:
+
+\[
+\begin{align}
+&Unconstrained \\
+&T_{ij} = \exp(k + \mu V_{i} + \alpha W_{j} - \beta d_{ij}) \quad & (10) \\
+\\
+&Production-constrained \\
+&T_{ij} = \exp(k + \mu_{i} + \alpha W_{j} - \beta d_{ij}) \quad & (11) \\
+\\
+&Attraction-constrained \\
+&T_{ij} = \exp(k + \mu V_{i} + \alpha_{j} - \beta d_{ij}) \quad & (12) \\
+\\
+&Doubly-constrained \\
+&T_{ij} = \exp(k + \mu_{i} + \alpha_{j} - \beta d_{ij}) \quad & (13) \\
+\end{align}
+\]
+
+where \(\mu_{i}\) are origin fixed effects and \(\alpha_{i}\) are
+destination fixed effects that achieve the same constraints as the
+balancing factors in equations (2-5). Using Poisson regression
+automatically alleviates limiations (1) and (2) and since we no longer
+need to take the logarithm of \(T_{ij}\), issue (4) is also absolved.
+Using fixed effects within Poisson regression to calibrate the
+doubly-constrained model also avoids the need for iterative computation
+of the balancing factors that exists in other calibration methods.
+
+Calibration of Poisson regression can be carried out within a
+generalized linear modeling framework (GLM) using iteratively weighted
+least sqaures (IWSL), which converges to the maximum likelihood
+estimates for the parameter estimates (Nelder \& Wedderburn, 1972). To
+maintain computational efficiency with increasingly larger spatial
+interaction datasets, SpInt is built upon a custom GLM/IWLS routine that
+leverages sparse data structures for the production-constrained,
+attraction-constrained, and doubly-constrained models. As the number of
+locations in these models increases, so the does the number of binary
+indicator variables needed to construct the fixed effects that enforce
+the constraints. Therefore, larger spatial interaction datasets become
+increasingly sparse and the utilization of sparse data structures take
+advantage of this feature. As a metric, constrained models with
+\(n = 3,000\) locations, which implies \(n^2 = 9,000,000\) observations
+can still be calibrated within minutes on a standard macbook pro
+notebook.
+
+    \subsection{An Illustrative example: migration in
+Austria}\label{an-illustrative-example-migration-in-austria}
+
+    \subsubsection{The data}\label{the-data}
+
+    The following example purposefully utilizes data that has was previously
+used to demonstrate spatial interaction modeling the R programming
+language for validation and consistency. The data is migration flows
+between Austrian NUTS level 2 municipalities in 2006. In order to use a
+regression-based calibration, the data has to be transformed from the
+matrices and vectors described in equations (1-5) to a table where each
+row represents a single origin-destination dyad, \((i,j)\) and any
+variables associated with either location. Details on how to do this are
+outlined further in (LeSage \& Pace, 2008), though this has already been
+done in the example data. Let's have a look!
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}74}]:} \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k+kn}{as} \PY{n+nn}{pd}
+         \PY{k+kn}{import} \PY{n+nn}{geopandas} \PY{k+kn}{as} \PY{n+nn}{gp}
+         \PY{o}{\PYZpc{}}\PY{k}{pylab} inline
+         \PY{n}{austria\PYZus{}shp} \PY{o}{=} \PY{n}{gp}\PY{o}{.}\PY{n}{read\PYZus{}file}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{austria.shp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{austria\PYZus{}shp}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{p}{)}
+         \PY{n}{austria} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{http://dl.dropbox.com/u/8649795/AT\PYZus{}Austria.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{austria}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Oi2007}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Dj2007}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{OrigAT11}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{OrigAT12}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{OrigAT13}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{OrigAT21}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{OrigAT22}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{OrigAT31}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{OrigAT32}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{OrigAT33}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{OrigAT34}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{DestAT11}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{DestAT12}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{DestAT13}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{DestAT21}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{DestAT22}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{DestAT31}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{DestAT32}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{DestAT33}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{DestAT34}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{beta}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Offset}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{n+nb+bp}{True}\PY{p}{)}
+         \PY{n}{austria}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Populating the interactive namespace from numpy and matplotlib
+
+    \end{Verbatim}
+
+            \begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}74}]:}   Origin Destination  Data    Oi     Dj            Dij
+         0   AT11        AT11     0  4016   5146  1.000000e-300
+         1   AT11        AT12  1131  4016  25741   1.030018e+02
+         2   AT11        AT13  1887  4016  26980   8.420467e+01
+         3   AT11        AT21    69  4016   4117   2.208119e+02
+         4   AT11        AT22   738  4016   8634   1.320075e+02
+\end{Verbatim}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{SpIntPrimer_files/SpIntPrimer_11_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The \textbf{Origin} and \textbf{Destination} columns refer to the
+origin, \(i\), and destination, \(j\), location labels, the
+\textbf{Data} column is the number of flows, the \textbf{Oi} and
+\textbf{Dj} columns are the number of total out-flows and total
+in-flows, respectively, and the \textbf{Dij} column is the distance
+between \(i\) and \(j\). In this case we use the total out-flow and
+total in-flow as variables to describe how emissive an origin is and how
+attractive a destination is. If we want a more informative model we can
+replace these with application specific variables that pertain to
+different hypotheses. Next, lets format the data into arrays.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}42}]:} \PY{n}{austria} \PY{o}{=} \PY{n}{austria}\PY{p}{[}\PY{n}{austria}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Origin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{!=} \PY{n}{austria}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Destination}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+         \PY{n}{flows} \PY{o}{=} \PY{n}{austria}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Data}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+         \PY{n}{Oi} \PY{o}{=} \PY{n}{austria}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Oi}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+         \PY{n}{Dj} \PY{o}{=} \PY{n}{austria}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Dj}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+         \PY{n}{Dij} \PY{o}{=} \PY{n}{austria}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Dij}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+         \PY{n}{Origin} \PY{o}{=} \PY{n}{austria}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Origin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+         \PY{n}{Destination} \PY{o}{=} \PY{n}{austria}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Destination}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{values}
+\end{Verbatim}
+
+    The Oi and Dj vectors need not be \(n^2 \times 1\) vectors. In fact,
+they can be \(n^2 \times k\) where \(k\) is the number of variables that
+are being used to describe origin or desitnation factors associated with
+flows.
+
+    \subsubsection{Calibrating the models}\label{calibrating-the-models}
+
+    Now, lets load the main SpInt functions and calibrate some models. The
+main SpInt functions are found within the gravity namespace of the SpInt
+module ans the estimated parameters can be accessed via the
+\textbf{params} attribute of a successfully instantiated spatial
+interaction model.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}64}]:} \PY{k+kn}{from} \PY{n+nn}{pysal.contrib.spint.gravity} \PY{k+kn}{import} \PY{n}{Gravity}\PY{p}{,} \PY{n}{Production}\PY{p}{,} \PY{n}{Attraction}\PY{p}{,} \PY{n}{Doubly}
+\end{Verbatim}
+
+    Unconstrained (basic gravity) model
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}65}]:} \PY{n}{gravity} \PY{o}{=} \PY{n}{Gravity}\PY{p}{(}\PY{n}{flows}\PY{p}{,} \PY{n}{Oi}\PY{p}{,} \PY{n}{Dj}\PY{p}{,} \PY{n}{Dij}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{exp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{k}{print} \PY{n}{gravity}\PY{o}{.}\PY{n}{params}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[ 0.44314667  0.51739961 -0.00979932]
+
+    \end{Verbatim}
+
+    Production-constrained model
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}66}]:} \PY{n}{production} \PY{o}{=} \PY{n}{Production}\PY{p}{(}\PY{n}{flows}\PY{p}{,} \PY{n}{Origin}\PY{p}{,} \PY{n}{Dj}\PY{p}{,} \PY{n}{Dij}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{exp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{k}{print} \PY{n}{production}\PY{o}{.}\PY{n}{params}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{:}\PY{p}{]}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[ 0.90285448 -0.0072617 ]
+
+    \end{Verbatim}
+
+    Attraction-constrained model
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}54}]:} \PY{n}{attraction} \PY{o}{=} \PY{n}{Attraction}\PY{p}{(}\PY{n}{flows}\PY{p}{,} \PY{n}{Destination}\PY{p}{,} \PY{n}{Oi}\PY{p}{,} \PY{n}{Dij}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{exp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{k}{print} \PY{n}{attraction}\PY{o}{.}\PY{n}{params}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{:}\PY{p}{]}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[ 0.90037216 -0.00695034]
+
+    \end{Verbatim}
+
+    Doubly-constrained model
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}55}]:} \PY{n}{doubly} \PY{o}{=} \PY{n}{Doubly}\PY{p}{(}\PY{n}{flows}\PY{p}{,} \PY{n}{Origin}\PY{p}{,} \PY{n}{Destination}\PY{p}{,} \PY{n}{Dij}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{exp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{k}{print} \PY{n}{doubly}\PY{o}{.}\PY{n}{params}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{:}\PY{p}{]}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[-0.00791533]
+
+    \end{Verbatim}
+
+    Note that for the constrained models we have limited the params
+attribute to print only those associated variables (i.e., not fixed
+effects), though it is still possible to access the fixed effect
+parameters too.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}67}]:} \PY{k}{print} \PY{n}{production}\PY{o}{.}\PY{n}{params}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[-1.16851884  0.52128801  0.98284063 -0.56934181 -0.28515686  0.0381801
+ -0.47906115 -0.0141766  -0.1583821   0.90285448 -0.0072617 ]
+
+    \end{Verbatim}
+
+    The first parameter is always the overall intercept with the subsequent
+8 parameters representing the fixed effects in this case. You might ask,
+``why not 9 fixed effects for the 9 different municipalities?''. Due to
+the coding scheme used in SpInt, and many popular statistical
+programming languages, you would use \(n - 1\) binary indicator
+variables in the design matrix to include the fixed effects for all 9
+municipalities in the model. While the non-zero entries in these columns
+of the design matrix indicate which rows are associated with which
+miunicipality, where a row has all zero entries then refers to the
+\(nth\) municipality that has been left out. In Spint this is always the
+first origin or destination for the production-constrained and
+attraction-constrained models. For the doubly-cosntrained model, both
+the first origin and the first destination are left out. In terms of
+interpetting the parameters, these dropped locations are assumed to be
+0. Since the fixed effects parameters are interpretted as deviations
+from the overall intercept, this essentially means the intercept acts as
+the fixed effect for the first location. Therefore, we could also say
+first 9 parameters are the origin fixed effect parameters and that the
+last two parameters are for destination attractiveness and distance,
+respectively.
+
+    \subsubsection{Interpretting the
+parameters}\label{interpretting-the-parameters}
+
+    \subsubsection{Assessing model fit}\label{assessing-model-fit}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}63}]:} \PY{k}{print} \PY{n}{gravity}\PY{o}{.}\PY{n}{pseudoR2}
+         \PY{k}{print} \PY{n}{production}\PY{o}{.}\PY{n}{pseudoR2}
+         \PY{k}{print} \PY{n}{attraction}\PY{o}{.}\PY{n}{pseudoR2}
+         \PY{k}{print} \PY{n}{doubly}\PY{o}{.}\PY{n}{pseudoR2}
+         \PY{k}{print} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZsq{}}
+         \PY{k}{print} \PY{n}{gravity}\PY{o}{.}\PY{n}{D2}
+         \PY{k}{print} \PY{n}{production}\PY{o}{.}\PY{n}{D2}
+         \PY{k}{print} \PY{n}{attraction}\PY{o}{.}\PY{n}{D2}
+         \PY{k}{print} \PY{n}{doubly}\PY{o}{.}\PY{n}{D2}
+         \PY{k}{print} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}
+         \PY{k}{print} \PY{n}{gravity}\PY{o}{.}\PY{n}{SSI}
+         \PY{k}{print} \PY{n}{production}\PY{o}{.}\PY{n}{SSI}
+         \PY{k}{print} \PY{n}{attraction}\PY{o}{.}\PY{n}{SSI}
+         \PY{k}{print} \PY{n}{doubly}\PY{o}{.}\PY{n}{SSI}
+         \PY{k}{print} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}
+         \PY{k}{print} \PY{n}{gravity}\PY{o}{.}\PY{n}{SRMSE}
+         \PY{k}{print} \PY{n}{production}\PY{o}{.}\PY{n}{SRMSE}
+         \PY{k}{print} \PY{n}{attraction}\PY{o}{.}\PY{n}{SRMSE}
+         \PY{k}{print} \PY{n}{doubly}\PY{o}{.}\PY{n}{SRMSE}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+0.812858632041
+0.910155702595
+0.909354566583
+0.943539912198
+
+0.834893355219
+0.913167247331
+0.912363460094
+0.946661920896
+
+0.68757357636
+0.740913740348
+0.752155260541
+0.811852110904
+
+1.01757072219
+0.464519773826
+0.58404798182
+0.37928618533
+
+    \end{Verbatim}
+
+    \subsubsection{Local models}\label{local-models}
+
+    \subsubsection{Testing for
+overdispersion}\label{testing-for-overdispersion}
+
+    \subsection{Additional functionality}\label{additional-functionality}
+
+    \subsubsection{Existing features}\label{existing-features}
+
+    \subsubsection{Future additions}\label{future-additions}
+
+    Finally, there are several paradigms for incorporating spatial effects
+into spatial interaction models (competing destinations, spatial
+autoregressive, eigenvector spatial filter)
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor} }]:} 
+\end{Verbatim}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}
