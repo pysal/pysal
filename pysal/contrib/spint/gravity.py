@@ -50,7 +50,7 @@ class BaseGravity(CountModel):
                       n x p; p attributes for each destination of n flows;
                       default is None
     constant        : boolean
-                      True to include intercept in model; false by default
+                      True to include intercept in model; True by default
     framework       : string
                       estimation technique; currently only 'GLM' is avaialble
     Quasi           : boolean
@@ -92,7 +92,7 @@ class BaseGravity(CountModel):
     dv              : array
                       n x p(d); p attributes for each destination of n flows
     constant        : boolean
-                      True to include intercept in model; false by default
+                      True to include intercept in model; True by default
     y               : array
                       n x 1; dependent variable used in estimation including any
                       transformations
@@ -122,7 +122,7 @@ class BaseGravity(CountModel):
                       value of the loglikelihood function evaluated with only an
                       intercept; see family.py for distribution-specific
                       loglikelihoods
-    aic             : float
+    AIC             : float
                       Akaike information criterion
     D2              : float
                       percentage of explained deviance
@@ -149,11 +149,11 @@ class BaseGravity(CountModel):
     >>> flows = np.array(db.by_col('count')).reshape((-1,1))
     >>> model = BaseGravity(flows, cost)
     >>> model.params
-    array([ 0.92860101])
+    array([ 17.84839637,  -1.68325787])
 
     """
     def __init__(self, flows, cost, cost_func='pow', o_vars=None, d_vars=None,
-            origins=None, destinations=None, constant=False, framework='GLM',
+            origins=None, destinations=None, constant=True, framework='GLM',
             SF=None, CD=None, Lag=None, Quasi=False):
         n = User.check_arrays(flows, cost)
         #User.check_y(flows, n)
@@ -178,14 +178,16 @@ class BaseGravity(CountModel):
             X = np.empty((self.n, 0))
         else:
             X = sp.csr_matrix((self.n, 1))
-        if isinstance(self, Attraction) | isinstance(self, Doubly):
-            d_dummies = spcategorical(destinations.flatten())
-            X = sphstack(X, d_dummies, array_out=False)
         if isinstance(self, Production) | isinstance(self, Doubly):
             o_dummies = spcategorical(origins.flatten())
+            if constant:
+                o_dummies = o_dummies[:,1:]
             X = sphstack(X, o_dummies, array_out=False)
-        if isinstance(self, Doubly):
-            X = X[:,1:]
+        if isinstance(self, Attraction) | isinstance(self, Doubly):
+            d_dummies = spcategorical(destinations.flatten())
+            if constant | isinstance(self, Doubly):
+                d_dummies = d_dummies[:,1:]
+            X = sphstack(X, d_dummies, array_out=False)
         if self.ov is not None:	
             if isinstance(self, Gravity):
                 for each in range(self.ov.shape[1]):
@@ -283,7 +285,7 @@ class Gravity(BaseGravity):
                       n x p; p attributes for each destination of n flows;
                       default is None
     constant        : boolean
-                      True to include intercept in model; false by default
+                      True to include intercept in model; True by default
     framework       : string
                       estimation technique; currently only 'GLM' is avaialble
     Quasi           : boolean
@@ -324,7 +326,7 @@ class Gravity(BaseGravity):
     dv              : array 
                       n x p(d); p attributes for each destination of n flows
     constant        : boolean
-                      True to include intercept in model; false by default
+                      True to include intercept in model; True by default
     y               : array
                       n x 1; dependent variable used in estimation including any
                       transformations
@@ -354,7 +356,7 @@ class Gravity(BaseGravity):
                       value of the loglikelihood function evaluated with only an
                       intercept; see family.py for distribution-specific
                       loglikelihoods
-    aic             : float 
+    AIC             : float 
                       Akaike information criterion
     D2              : float
                       percentage of explained deviance
@@ -383,11 +385,12 @@ class Gravity(BaseGravity):
     >>> d_cap = np.array(db.by_col('d_cap')).reshape((-1,1))
     >>> model = Gravity(flows, o_cap, d_cap, cost, 'exp')
     >>> model.params
-    array([ 0.87911778,  0.71080687, -0.00194626])
+    array([  3.80050153e+00,   5.54103854e-01,   3.94282921e-01,
+            -2.27091686e-03])
     
     """
     def __init__(self, flows, o_vars, d_vars, cost,
-            cost_func, constant=False, framework='GLM', SF=None, CD=None,
+            cost_func, constant=True, framework='GLM', SF=None, CD=None,
             Lag=None, Quasi=False):
         self.f = np.reshape(flows, (-1,1))
         if len(o_vars.shape) > 1:
@@ -488,7 +491,7 @@ class Production(BaseGravity):
                       n x p; p attributes for each destination of n flows;
                       default is None
     constant        : boolean
-                      True to include intercept in model; false by default
+                      True to include intercept in model; True by default
     framework       : string
                       estimation technique; currently only 'GLM' is avaialble
     Quasi           : boolean
@@ -529,7 +532,7 @@ class Production(BaseGravity):
     dv              : array 
                       n x p; p attributes for each destination of n flows
     constant        : boolean
-                      True to include intercept in model; false by default
+                      True to include intercept in model; True by default
     y               : array
                       n x 1; dependent variable used in estimation including any
                       transformations
@@ -559,7 +562,7 @@ class Production(BaseGravity):
                       value of the loglikelihood function evaluated with only an
                       intercept; see family.py for distribution-specific
                       loglikelihoods
-    aic             : float 
+    AIC             : float 
                       Akaike information criterion
     D2              : float
                       percentage of explained deviance
@@ -589,11 +592,10 @@ class Production(BaseGravity):
     >>> d_cap = np.array(db.by_col('d_cap')).reshape((-1,1))
     >>> model = Production(flows, o, d_cap, cost, 'exp')
     >>> model.params[-4:]
-    array([  5.38580065e+00,   5.00216058e+00,   8.55357745e-01,
-            -2.27444394e-03])
+    array([ 1.34721352,  0.96357345,  0.85535775, -0.00227444])
 
     """
-    def __init__(self, flows, origins, d_vars, cost, cost_func, constant=False,
+    def __init__(self, flows, origins, d_vars, cost, cost_func, constant=True,
             framework='GLM', SF=None, CD=None, Lag=None, Quasi=False):
         self.constant = constant
         self.f = self.reshape(flows)
@@ -686,7 +688,7 @@ class Attraction(BaseGravity):
                       n x p; p attributes for each origin of  n flows; default
                       is None
     constant        : boolean
-                      True to include intercept in model; false by default
+                      True to include intercept in model; True by default
     y               : array
                       n x 1; dependent variable used in estimation including any
                       transformations
@@ -732,7 +734,7 @@ class Attraction(BaseGravity):
     ov              : array
                       n x p; p attributes for each origin of n flows
     constant        : boolean
-                      True to include intercept in model; false by default
+                      True to include intercept in model; True by default
     params          : array
                       n x k, k estimated beta coefficients; k = # of
                       destinations + p + 1
@@ -758,7 +760,7 @@ class Attraction(BaseGravity):
                       value of the loglikelihood function evaluated with only an
                       intercept; see family.py for distribution-specific
                       loglikelihoods
-    aic             : float 
+    AIC             : float 
                       Akaike information criterion
     D2              : float
                       percentage of explained deviance
@@ -787,12 +789,11 @@ class Attraction(BaseGravity):
     >>> o_cap = np.array(db.by_col('o_cap')).reshape((-1,1))
     >>> model = Attraction(flows, d, o_cap, cost, 'exp')
     >>> model.params[-4:]
-    array([  5.23366116e+00,   4.89037868e+00,   8.82909095e-01,
-            -2.29081323e-03])
-
+    array([ 1.21962276,  0.87634028,  0.88290909, -0.00229081])
+    
     """
     def __init__(self, flows, destinations, o_vars, cost, cost_func,
-            constant=False, framework='GLM', SF=None, CD=None, Lag=None,
+            constant=True, framework='GLM', SF=None, CD=None, Lag=None,
             Quasi=False):
         self.f = np.reshape(flows, (-1,1))
         if len(o_vars.shape) > 1:
@@ -883,7 +884,7 @@ class Doubly(BaseGravity):
                       functional form of the cost function;
                       'exp' | 'pow' | custom function
     constant        : boolean
-                      True to include intercept in model; false by default
+                      True to include intercept in model; True by default
     y               : array
                       n x 1; dependent variable used in estimation including any
                       transformations
@@ -929,7 +930,7 @@ class Doubly(BaseGravity):
     d               : array
                       n x 1; index of destination id's
     constant        : boolean
-                      True to include intercept in model; false by default
+                      True to include intercept in model; True by default
     params          : array
                       n x k, estimated beta coefficients; k = # of origins + #
                       of destinations; the first x-1 values
@@ -959,7 +960,7 @@ class Doubly(BaseGravity):
                       value of the loglikelihood function evaluated with only an
                       intercept; see family.py for distribution-specific
                       loglikelihoods
-    aic             : float 
+    AIC             : float 
                       Akaike information criterion
     D2              : float
                       percentage of explained deviance
@@ -992,7 +993,7 @@ class Doubly(BaseGravity):
 
     """
     def __init__(self, flows, origins, destinations, cost, cost_func,
-            constant=False, framework='GLM', SF=None, CD=None, Lag=None,
+            constant=True, framework='GLM', SF=None, CD=None, Lag=None,
             Quasi=False):
 
         self.f = np.reshape(flows, (-1,1))
