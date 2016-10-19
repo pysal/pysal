@@ -238,7 +238,7 @@ class BaseGravity(CountModel):
         self.resid_dev = results.resid_dev
         self.llf = results.llf
         self.llnull = results.llnull
-        self.aic = results.aic
+        self.AIC = results.AIC
         self.k = results.k
         self.D2 = results.D2
         self.adj_D2 = results.adj_D2
@@ -436,7 +436,7 @@ class Gravity(BaseGravity):
         """
         results = {}
         covs = self.ov.shape[1] + self.dv.shape[1] + 1
-        results['aic'] = []
+        results['AIC'] = []
         results['deviance'] = []
         results['pseudoR2'] = []
         results['adj_pseudoR2'] = []
@@ -454,8 +454,9 @@ class Gravity(BaseGravity):
             o_vars = self.ov[subset.reshape(self.ov.shape[0]),:]
             d_vars = self.dv[subset.reshape(self.dv.shape[0]),:]
             dij = self.reshape(self.c[subset])
-            model = Gravity(f, o_vars, d_vars, dij, self.cf)
-            results['aic'].append(model.aic)
+            model = Gravity(f, o_vars, d_vars, dij, self.cf,
+                    constant=False)
+            results['AIC'].append(model.AIC)
             results['deviance'].append(model.deviance)
             results['pseudoR2'].append(model.pseudoR2)
             results['adj_pseudoR2'].append(model.adj_pseudoR2)
@@ -631,7 +632,7 @@ class Production(BaseGravity):
         """
         results = {}
         covs = self.dv.shape[1] + 1
-        results['aic'] = []
+        results['AIC'] = []
         results['deviance'] = []
         results['pseudoR2'] = []
         results['adj_pseudoR2'] = []
@@ -651,8 +652,8 @@ class Production(BaseGravity):
             o = self.reshape(self.o[subset])
             d_vars = self.dv[subset.reshape(self.dv.shape[0]),:]
             dij = self.reshape(self.c[subset])
-            model = Production(f, o, d_vars, dij, self.cf)
-            results['aic'].append(model.aic)
+            model = Production(f, o, d_vars, dij, self.cf, constant=False)
+            results['AIC'].append(model.AIC)
             results['deviance'].append(model.deviance)
             results['pseudoR2'].append(model.pseudoR2)
             results['adj_pseudoR2'].append(model.adj_pseudoR2)
@@ -826,7 +827,7 @@ class Attraction(BaseGravity):
         """
         results = {}
         covs = self.ov.shape[1] + 1
-        results['aic'] = []
+        results['AIC'] = []
         results['deviance'] = []
         results['pseudoR2'] = []
         results['adj_pseudoR2'] = []
@@ -846,8 +847,8 @@ class Attraction(BaseGravity):
             d = self.reshape(self.d[subset])
             o_vars = self.ov[subset.reshape(self.ov.shape[0]),:]
             dij = self.reshape(self.c[subset])
-            model = Attraction(f, d, o_vars, dij, self.cf)
-            results['aic'].append(model.aic)
+            model = Attraction(f, d, o_vars, dij, self.cf, constant=False)
+            results['AIC'].append(model.AIC)
             results['deviance'].append(model.deviance)
             results['pseudoR2'].append(model.pseudoR2)
             results['adj_pseudoR2'].append(model.adj_pseudoR2)

@@ -89,7 +89,7 @@ class TestGravity(unittest.TestCase):
         dij = np.array(self.dij).reshape((-1,1))
         model = grav.BaseGravity(f, dij, 'exp', constant=False)
         np.testing.assert_allclose(model.params, [0.01641585], atol = .0001)
-        self.assertAlmostEqual(model.aic, 957622.28429746185, delta = .0001)
+        self.assertAlmostEqual(model.AIC, 957622.28429746185, delta = .0001)
         np.testing.assert_allclose(model.cov_params, [[  1.92096665e-10]])
         self.assertAlmostEqual(model.deviance, 1087408.9707170483, delta = .0001)
         self.assertAlmostEqual(model.llf, -478810.14214873099, delta = .0001)
@@ -128,7 +128,7 @@ class TestGravity(unittest.TestCase):
         dij = np.array(self.dij).reshape((-1,1))
         model = grav.BaseGravity(f, dij, 'pow', constant=False)
         np.testing.assert_allclose(model.params, [ 1.27223738], atol = .0001)
-        self.assertAlmostEqual(model.aic, 377298.04716333596, delta = .0001)
+        self.assertAlmostEqual(model.AIC, 377298.04716333596, delta = .0001)
         np.testing.assert_allclose(model.cov_params, [[  4.31955426e-07]])
         self.assertAlmostEqual(model.deviance, 409811.34329065739, delta = .0001)
         self.assertAlmostEqual(model.llf, -188648.02358166798, delta = .0001)
@@ -161,7 +161,7 @@ class TestGravity(unittest.TestCase):
         dij = np.array(self.dij).reshape((-1,1))
         model = grav.BaseGravity(f, dij, 'exp', constant=False, Quasi=True)
         np.testing.assert_allclose(model.params, [0.01641585], atol = .0001)
-        self.assertTrue(math.isnan(model.aic))
+        self.assertTrue(math.isnan(model.AIC))
         np.testing.assert_allclose(model.cov_params, [[ 0.00079749]],
                 atol=1.0e-8)
         self.assertAlmostEqual(model.deviance, 1087408.9707170483, delta = .0001)
@@ -201,7 +201,7 @@ class TestGravity(unittest.TestCase):
                 self.dij, 'exp', constant=True)
         np.testing.assert_allclose(model.params, [ -7.95447436e+00,
             8.63867812e-01,   8.80474585e-01, -6.20544765e-03])
-        self.assertAlmostEqual(model.aic, 20395.085388908723, delta = .0001)
+        self.assertAlmostEqual(model.AIC, 20395.085388908723, delta = .0001)
         np.testing.assert_allclose(model.cov_params,
         [[  5.70906352e-03,  -3.00814799e-04,  -2.62650384e-04,
          -2.40317578e-06],
@@ -260,7 +260,7 @@ class TestGravity(unittest.TestCase):
                                                 'adj_D2', 
                                                 'tvalue1', 
                                                 'SSI', 
-                                                'aic', 
+                                                'AIC', 
                                                 'param1', 
                                                 'param0', 
                                                 'D2',
@@ -274,7 +274,7 @@ class TestGravity(unittest.TestCase):
                 [-1.11700938,  1.68662317, 2.15188689,  0.60300297,
                  0.88380784,  1.20926104, 0.68938983,  1.15472804,  
                  1.02479968,  0.89278717, -0.00727113], atol = .0001)
-        self.assertAlmostEqual(model.aic, 15882.651018068489, delta = .0001)
+        self.assertAlmostEqual(model.AIC, 15882.651018068489, delta = .0001)
         np.testing.assert_allclose(model.cov_params, 
         [[  2.58467540e-03,  -3.29423877e-04,  -3.27686611e-04,
          -3.08689103e-04,  -2.97140418e-04,  -2.89494010e-04,
@@ -383,7 +383,7 @@ class TestGravity(unittest.TestCase):
                                                 'adj_D2', 
                                                 'tvalue1', 
                                                 'SSI', 
-                                                'aic', 
+                                                'AIC', 
                                                 'param1', 
                                                 'param0', 
                                                 'D2',
@@ -397,7 +397,7 @@ class TestGravity(unittest.TestCase):
          [-0.88439723,  1.62180605,  1.92772078,  0.12462001,  0.62378812,
           0.69646073,  0.20909411,  0.6856777 ,  0.48539625,  0.89235874,
           -0.00693755], atol = .001)
-        self.assertAlmostEqual(model.aic, 16275.899321893821, delta = .0001)
+        self.assertAlmostEqual(model.AIC, 16275.899321893821, delta = .0001)
         np.testing.assert_allclose(model.cov_params, 
         [[  3.01436996e-03,  -2.61742292e-04,  -3.18191276e-04,
          -2.61736294e-04,  -2.53401872e-04,  -2.53545012e-04,
@@ -506,7 +506,7 @@ class TestGravity(unittest.TestCase):
                                                 'adj_D2', 
                                                 'tvalue1', 
                                                 'SSI', 
-                                                'aic', 
+                                                'AIC', 
                                                 'param1', 
                                                 'param0', 
                                                 'D2',
