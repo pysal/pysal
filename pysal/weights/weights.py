@@ -4,6 +4,7 @@ Weights.
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 
 import math
+import warnings
 import numpy as np
 import scipy.sparse
 from os.path import basename as BASENAME
@@ -182,11 +183,11 @@ class W(object):
         if self.islands and not self.silent_island_warning:
             ni = len(self.islands)
             if ni == 1:
-                print("WARNING: there is one disconnected observation (no neighbors)")
-                print("Island id: ", self.islands)
+                warnings.warn("There is one disconnected observation (no neighbors)")
+                warnings.warn("Island id: %s" % str(self.islands[0]))
             else:
-                print("WARNING: there are %d disconnected observations" % ni)
-                print("Island ids: ", self.islands)
+                warnings.warn("There are %d disconnected observations" % ni)
+                warnings.warn("Island ids: %s" % ', '.join(str(island) for island in self.islands))
 
     def _reset(self):
         """Reset properties.
