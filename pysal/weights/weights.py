@@ -184,10 +184,10 @@ class W(object):
             ni = len(self.islands)
             if ni == 1:
                 warnings.warn("There is one disconnected observation (no neighbors)")
-                warnings.warn("Island id: ", self.islands)
+                warnings.warn("Island id: %s" % str(self.islands[0]))
             else:
                 warnings.warn("There are %d disconnected observations" % ni)
-                warnings.warn("Island ids: ", self.islands)
+                warnings.warn("Island ids: %s" % ', '.join(str(island) for island in self.islands))
 
     def _reset(self):
         """Reset properties.
