@@ -145,7 +145,7 @@ class CountModelResults(object):
                         value of the loglikelihood function evaluated with only an
                         intercept; see family.py for distribution-specific
                         loglikelihoods
-        aic           : float 
+        AIC           : float 
                         Akaike information criterion
         resid         : array
                         response residuals; defined as y-mu
@@ -167,7 +167,7 @@ class CountModelResults(object):
         self.X = results.X
         self.family = results.family
         self.params = results.params
-        self.aic = results.aic
+        self.AIC = results.aic
         self.df_model = results.df_model
         self.df_resid = results.df_resid
         self.llf = results.llf

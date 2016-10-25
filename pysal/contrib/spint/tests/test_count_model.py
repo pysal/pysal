@@ -78,7 +78,7 @@ class TestCountModel(unittest.TestCase):
                 -10.28910294])
         self.assertAlmostEqual(results.deviance, 230.46013824817649)
         self.assertAlmostEqual(results.llf, -247.42592089969378)
-        self.assertAlmostEqual(results.aic, 500.85184179938756)
+        self.assertAlmostEqual(results.AIC, 500.85184179938756)
         self.assertAlmostEqual(results.D2, 0.388656011675)
         self.assertAlmostEqual(results.adj_D2, 0.36207583826952761)
 
