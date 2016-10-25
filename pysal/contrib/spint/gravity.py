@@ -165,12 +165,16 @@ class BaseGravity(CountModel):
         if type(cost_func) == str:
             if cost_func.lower() == 'pow':
                 self.cf = np.log
+                if (self.c==0).any():
+                    raise ValueError("Zero values detected: cost function 'pow'"
+                            "requires the logarithm of the cost variable which"
+                            "is undefined at 0")
             elif cost_func.lower() == 'exp':
                 self.cf = lambda x: x*1.0
         elif (type(cost_func) == FunctionType) | (type(cost_func) == np.ufunc):
             self.cf = cost_func
         else:
-            raise ValueError("cost_func must be 'exp', 'pow' or a valid"
+            raise ValueError("cost_func must be 'exp', 'pow' or a valid "
             " function that has a scalar as a input and output")
 
         y = np.reshape(self.f, (-1,1))
@@ -191,17 +195,33 @@ class BaseGravity(CountModel):
         if self.ov is not None:	
             if isinstance(self, Gravity):
                 for each in range(self.ov.shape[1]):
+                    if (self.ov[:,each] == 0).any(): 
+                    	raise ValueError("Zero values detected in column %s "
+                                "of origin variables, which are undefined for "
+                                "Poisson log-linear spatial interaction models" % each)
                     X = np.hstack((X, np.log(np.reshape(self.ov[:,each], (-1,1)))))
             else:
                 for each in range(self.ov.shape[1]):
+                    if (self.ov[:,each] == 0).any(): 
+                    	raise ValueError("Zero values detected in column %s "
+                                "of origin variables, which are undefined for "
+                                "Poisson log-linear spatial interaction models" % each)
                     ov = sp.csr_matrix(np.log(np.reshape(self.ov[:,each], ((-1,1)))))
                     X = sphstack(X, ov, array_out=False)
         if self.dv is not None:    	
             if isinstance(self, Gravity):
                 for each in range(self.dv.shape[1]):
+                    if (self.dv[:,each] == 0).any(): 
+                    	raise ValueError("Zero values detected in column %s "
+                                "of destination variables, which are undefined for "
+                                "Poisson log-linear spatial interaction models" % each)
                     X = np.hstack((X, np.log(np.reshape(self.dv[:,each], (-1,1)))))
             else:
                 for each in range(self.dv.shape[1]):
+                    if (self.dv[:,each] == 0).any(): 
+                    	raise ValueError("Zero values detected in column %s "
+                                "of destination variables, which are undefined for "
+                                "Poisson log-linear spatial interaction models" % each)
                     dv = sp.csr_matrix(np.log(np.reshape(self.dv[:,each], ((-1,1)))))
                     X = sphstack(X, dv, array_out=False)
         if isinstance(self, Gravity):
