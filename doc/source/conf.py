@@ -16,7 +16,7 @@ import os
 extensions = ['sphinx.ext.autodoc',
 'sphinx.ext.doctest','sphinx.ext.graphviz', 'sphinx.ext.intersphinx',
 'sphinx.ext.autosummary',
-'sphinx.ext.pngmath','sphinx.ext.viewcode', 'sphinx.ext.napoleon']
+'sphinx.ext.imgmath','sphinx.ext.viewcode', 'sphinx.ext.napoleon']
 
 #doctest extension config values
 #doctest_path = '/Users/stephens/code/pysal/doc/source/users/tutorials/'
