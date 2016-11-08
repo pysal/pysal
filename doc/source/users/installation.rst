@@ -33,8 +33,8 @@ stable version of PySAL with either of these distributions as follows:
 If you do not wish to use either Anaconda or Enthought, ensure the following software packages are available on your machine:
 
 * `Python <http://www.python.org/download>`_ 2.6, 2.7 or 3.4
-* `numpy <http://new.scipy.org/download.html>`_ 1.3 or later
-* `scipy <http://new.scipy.org/download.html>`_ 0.11 or later
+* `numpy <http://scipy.org/install.html>`_ 1.3 or later
+* `scipy <http://scipy.org/install.html>`_ 0.11 or later
 
 Getting your feet wet
 ----------------------
