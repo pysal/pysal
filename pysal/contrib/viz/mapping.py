@@ -611,6 +611,10 @@ def geoplot(db, col=None, palette='BuGn', classi='Quantiles',
                   Additional named vaues to be passed to the classifier of choice.
     '''
     if col:
+        if hasattr(palette, 'number') and 'k' in kwargs:
+            if kwargs['k'] > palette.number:
+                raise ValueError('The number of classes requested is greater than '
+                                 'the number of colors available in the palette.')
         lbl,c = value_classifier(db[col], scheme=classi, **kwargs)
         if type(palette) is not str:
             palette = get_color_map(palette=palette, k=c.k)
