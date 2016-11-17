@@ -1080,7 +1080,7 @@ class Box_Plot(Map_Classifier):
             bins[-1] = right_fence
         bins.insert(0, left_fence)
         self.bins = np.array(bins)
-        self.k = len(pct)
+        self.k = len(bins)
 
     def _classify(self):
         Map_Classifier._classify(self)
