@@ -1,5 +1,5 @@
 """
-Choropleth mapping using PySAL and Matplotlib
+Choropleth mapping using PySAL
 
 ToDo:
     * map_line_shp, map_point_shp should take a shp object not a shp_link
@@ -10,6 +10,7 @@ ToDo:
 __author__ = "Sergio Rey <sjsrey@gmail.com>", "Dani Arribas-Bel <daniel.arribas.bel@gmail.com"
 
 
+from warnings import warn
 import pandas as pd
 import pysal as ps
 import numpy as np
@@ -19,8 +20,47 @@ import matplotlib as mpl
 from matplotlib.pyplot import fill, text
 from matplotlib import cm
 from matplotlib.patches import Polygon
+import collections
 from matplotlib.path import Path
-from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection
+from matplotlib.collections import LineCollection, PathCollection, PolyCollection, PathCollection, PatchCollection, CircleCollection
+
+from color import get_color_map
+
+try:
+    import bokeh.plotting as bk
+    from bokeh.models import HoverTool
+except:
+    warn('Bokeh not installed. Functionality ' \
+            'related to it will not work')
+# Classifier helper
+classifiers = ps.esda.mapclassify.CLASSIFIERS
+classifier = {c.lower():getattr(ps.esda.mapclassify,c) for c in classifiers}
+
+def value_classifier(y, scheme='Quantiles', **kwargs):
+    """
+    Return classification for an indexed Series of values
+    ...
+
+    Arguments
+    ---------
+    y           : Series
+                  Indexed series containing values to be classified
+    scheme      : str
+                  [Optional. Default='Quantiles'] Name of the PySAL classifier
+                  to be used
+    **kwargs    : dict
+                  Additional arguments specific to the classifier of choice
+                  (see the classifier's documentation for details)
+
+    Returns
+    -------
+    labels           : Series
+                       Indexed series containing classes for each observation
+    classification   : Map_Classifier instance
+    """
+    c = classifier[scheme.lower()](y, **kwargs)
+    return (pd.Series(c.yb, index=y.index), c)
+
 
 # Low-level pieces
 
@@ -505,6 +545,358 @@ def _expand_values(values, shp2dbf_row):
 
 # High-level pieces
 
+def geoplot(db, col=None, palette='BuGn', classi='Quantiles',
+        backend='mpl', color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
+        alpha=1., linewidth=0.2, marker='o', marker_size=20,
+        ax=None, hover=True, p=None, tips=None, figsize=(9,9), **kwargs):
+    '''
+    Higher level plotter for geotables
+    ...
+
+    Arguments
+    ---------
+    db          : DataFrame
+                  GeoTable with 'geometry' column and values to be plotted.
+    col         : None/str
+                  [Optional. Default=None] Column holding the values to encode
+                  into the choropleth.
+    palette     : str/palettable palette
+                  String of the `palettable.colorbrewer` portfolio, or a
+                  `palettable` palette to use
+    classi      : str
+                  [Optional. Default='mpl'] Backend to plot the
+    backend     : str
+                  [Optional. Default='mpl'] Backend to plot the
+                  geometries. Available options include Matplotlib ('mpl') or
+                  Bokeh ('bk').
+    color       : str/tuple/Series
+                  [Optional. Default=None] Wrapper that sets both `facecolor`
+                  and `edgecolor` at the same time. If set, `facecolor` and
+                  `edgecolor` are ignored. It allows for either a single color
+                  or a Series of the same length as `gc` with colors, indexed
+                  on `gc.index`.
+    facecolor   : str/tuple/Series
+                  [Optional. Default='#4D4D4D'] Color for polygons and points. It
+                  allows for either a single color or a Series of the same
+                  length as `gc` with colors, indexed on `gc.index`.
+    edgecolor   : str/tuple/Series
+                  [Optional. Default='#B3B3B3'] Color for the polygon and point
+                  edges. It allows for either a single color or a Series of
+                  the same length as `gc` with colors, indexed on `gc.index`.
+    alpha       : float/Series
+                  [Optional. Default=1.] Transparency. It allows for either a
+                  single value or a Series of the same length as `gc` with
+                  colors, indexed on `gc.index`.
+    linewidth   : float/Series
+                  [Optional. Default=0.2] Width(s) of the lines in polygon and
+                  line plotting (not applicable to points). It allows for
+                  either a single value or a Series of the same length as `gc`
+                  with colors, indexed on `gc.index`.
+    marker      : str
+                  [Optional. `mpl` backend only. Default='o'] Marker for point
+                  plotting.
+    marker_size : int/Series
+                  [Optional. Default=0.15] Width(s) of the lines in polygon and
+    ax          : AxesSubplot
+                  [Optional. `mpl` backend only. Default=None] Pre-existing
+                  axes to which append the geometries.
+    hover       : Boolean
+                  [Optional. `bk` backend only. Default=True] Include hover tool.
+    p           : bokeh.plotting.figure
+                  [Optional. `bk` backend only. Default=None] Pre-existing
+                  bokeh figure to which append the collections and setup.
+    tips        : list of strings
+                  series names to add to hover tool
+    kwargs      : Dict
+                  Additional named vaues to be passed to the classifier of choice.
+    '''
+    if col:
+        if hasattr(palette, 'number') and 'k' in kwargs:
+            if kwargs['k'] > palette.number:
+                raise ValueError('The number of classes requested is greater than '
+                                 'the number of colors available in the palette.')
+        lbl,c = value_classifier(db[col], scheme=classi, **kwargs)
+        if type(palette) is not str:
+            palette = get_color_map(palette=palette, k=c.k)
+        else:
+            palette = get_color_map(name=palette, k=c.k)
+        facecolor = lbl.map({i:j for i,j in enumerate(palette)})
+        try:
+            kwargs.pop('k')
+        except KeyError:
+            pass
+        col = [(col, db[col])]
+        if tips:
+            for tip in tips:
+                col.append((tip, db[tip]))
+        col.append(('index', db.index.values))
+        col = collections.OrderedDict(col) # put mapped variable at the top
+
+    if backend is 'mpl':
+        plot_geocol_mpl(db['geometry'], facecolor=facecolor, ax=ax,
+                color=color, edgecolor=edgecolor, alpha=alpha,
+                linewidth=linewidth, marker=marker, marker_size=marker_size,
+                        figsize=figsize,
+                **kwargs)
+    elif backend is 'bk':
+        plot_geocol_bk(db['geometry'], facecolor=facecolor,
+                color=color, edgecolor=edgecolor, alpha=alpha,
+                linewidth=linewidth, marker_size=marker_size,
+                hover=hover, p=p, col=col, **kwargs)
+    else:
+        warn("Please choose an available backend")
+    return None
+
+def plot_geocol_mpl(gc, color=None, facecolor='0.3', edgecolor='0.7',
+        alpha=1., linewidth=0.2, marker='o', marker_size=20,
+        ax=None, figsize=(9,9)):
+    '''
+    Plot geographical data from the `geometry` column of a PySAL geotable to a
+    matplotlib backend.
+
+    ...
+
+    Arguments
+    ---------
+    gc          : DataFrame
+                  GeoCol with data to be plotted.
+    color       : str/tuple/Series
+                  [Optional. Default=None] Wrapper that sets both `facecolor`
+                  and `edgecolor` at the same time. If set, `facecolor` and
+                  `edgecolor` are ignored. It allows for either a single color
+                  or a Series of the same length as `gc` with colors, indexed
+                  on `gc.index`.
+    facecolor   : str/tuple/Series
+                  [Optional. Default='0.3'] Color for polygons and points. It
+                  allows for either a single color or a Series of the same
+                  length as `gc` with colors, indexed on `gc.index`.
+    edgecolor   : str/tuple/Series
+                  [Optional. Default='0.7'] Color for the polygon and point
+                  edges. It allows for either a single color or a Series of
+                  the same length as `gc` with colors, indexed on `gc.index`.
+    alpha       : float/Series
+                  [Optional. Default=1.] Transparency. It allows for either a
+                  single value or a Series of the same length as `gc` with
+                  colors, indexed on `gc.index`.
+    linewidth   : float/Series
+                  [Optional. Default=0.2] Width(s) of the lines in polygon and
+                  line plotting (not applicable to points). It allows for
+                  either a single value or a Series of the same length as `gc`
+                  with colors, indexed on `gc.index`.
+    marker      : 'o'
+    marker_size : int
+    ax          : AxesSubplot
+                  [Optional. Default=None] Pre-existing axes to which append the
+                  collections and setup
+    figsize     : tuple
+                  w,h of figure
+    '''
+    geom = type(gc.iloc[0])
+    if color is not None:
+        facecolor = edgecolor = color
+    draw = False
+    if not ax:
+        f, ax = plt.subplots(1, figsize=figsize)
+        draw = True
+    # Geometry plotting
+    patches = []
+    ids = []
+    ## Polygons
+    if geom == ps.cg.shapes.Polygon:
+        for id, shape in gc.iteritems():
+            for ring in shape.parts:
+                xy = np.array(ring)
+                patches.append(xy)
+                ids.append(id)
+        mpl_col = PolyCollection(patches)
+    ## Lines
+    elif geom == ps.cg.shapes.Chain:
+        for id, shape in gc.iteritems():
+            for xy in shape.parts:
+                patches.append(xy)
+                ids.append(id)
+        mpl_col = LineCollection(patches)
+        facecolor = 'None'
+    ## Points
+    elif geom == ps.cg.shapes.Point:
+        edgecolor = facecolor
+        xys = np.array(zip(*gc)).T
+        ax.scatter(xys[:, 0], xys[:, 1], marker=marker,
+                s=marker_size, c=facecolor, edgecolors=edgecolor,
+                linewidths=linewidth)
+        mpl_col = None
+    # Styling mpl collection (polygons & lines)
+    if mpl_col:
+        if type(facecolor) is pd.Series:
+            facecolor = facecolor.reindex(ids)
+        mpl_col.set_facecolor(facecolor)
+        if type(edgecolor) is pd.Series:
+            edgecolor = edgecolor.reindex(ids)
+        mpl_col.set_edgecolor(edgecolor)
+        if type(linewidth) is pd.Series:
+            linewidth = linewidth.reindex(ids)
+        mpl_col.set_linewidth(linewidth)
+        if type(alpha) is pd.Series:
+            alpha = alpha.reindex(ids)
+        mpl_col.set_alpha(alpha)
+
+        ax.add_collection(mpl_col, autolim=True)
+        ax.autoscale_view()
+    ax.set_axis_off()
+    if draw:
+        plt.axis('equal')
+        plt.show()
+    return None
+
+def plot_geocol_bk(gc, color=None, facecolor='#4D4D4D', edgecolor='#B3B3B3',
+        alpha=1., linewidth=0.2, marker_size=10, hover=True, p=None, col=None):
+    '''
+    Plot geographical data from the `geometry` column of a PySAL geotable to a
+    bokeh backend.
+
+    ...
+
+    Arguments
+    ---------
+    gc          : DataFrame
+                  GeoCol with data to be plotted.
+    col         : None/dict
+                  [Optional. Default=None] Dictionary  with key, values for entries in hover tool
+    color       : str/tuple/Series
+                  [Optional. Default=None] Wrapper that sets both `facecolor`
+                  and `edgecolor` at the same time. If set, `facecolor` and
+                  `edgecolor` are ignored. It allows for either a single color
+                  or a Series of the same length as `gc` with colors, indexed
+                  on `gc.index`.
+    facecolor   : str/tuple/Series
+                  [Optional. Default='0.3'] Color for polygons and points. It
+                  allows for either a single color or a Series of the same
+                  length as `gc` with colors, indexed on `gc.index`.
+    edgecolor   : str/tuple/Series
+                  [Optional. Default='0.7'] Color for the polygon and point
+                  edges. It allows for either a single color or a Series of
+                  the same length as `gc` with colors, indexed on `gc.index`.
+    alpha       : float/Series
+                  [Optional. Default=1.] Transparency. It allows for either a
+                  single value or a Series of the same length as `gc` with
+                  colors, indexed on `gc.index`.
+    linewidth   : float/Series
+                  [Optional. Default=0.2] Width(s) of the lines in polygon and
+                  line plotting (not applicable to points). It allows for
+                  either a single value or a Series of the same length as `gc`
+                  with colors, indexed on `gc.index`.
+    marker_size : int
+    hover       : Boolean
+                  Include hover tool
+    p           : bokeh.plotting.figure
+                  [Optional. Default=None] Pre-existing bokeh figure to which
+                  append the collections and setup.
+    '''
+    geom = type(gc.iloc[0])
+    if color is not None:
+        facecolor = edgecolor = color
+    draw = False
+    if not p:
+        TOOLS="pan,wheel_zoom,box_zoom,reset,save"
+        if hover:
+            TOOLS += ',hover'
+        p = bk.figure(tools=TOOLS,
+           x_axis_location=None, y_axis_location=None)
+        p.grid.grid_line_color = None
+        draw = True
+    # Geometry plotting
+    patch_xs = []
+    patch_ys = []
+    ids = []
+    pars = {'fc': facecolor, \
+            'ec': edgecolor, \
+            'alpha': alpha, \
+            'lw': linewidth, \
+            'ms': marker_size}
+    ## Polygons + Lines
+    if (geom == ps.cg.shapes.Polygon) or \
+            (geom == ps.cg.shapes.Chain):
+        for idx, shape in gc.iteritems():
+            for ring in shape.parts:
+                xs, ys = zip(*ring)
+                patch_xs.append(xs)
+                patch_ys.append(ys)
+                ids.append(idx)
+        if hover and col:
+            tips = []
+            ds = dict(x=patch_xs, y=patch_ys)
+            for k,v in col.iteritems():
+                ds[k] = v
+                tips.append((k, "@"+k))
+            cds = bk.ColumnDataSource(data=ds)
+            h = p.select_one(HoverTool)
+            h.point_policy = 'follow_mouse'
+            h.tooltips = tips
+        else:
+            cds = bk.ColumnDataSource(data=dict(
+                        x=patch_xs,
+                        y=patch_ys
+                        ))
+        if type(facecolor) is pd.Series:
+            cds.add(facecolor.reindex(ids), 'facecolor')
+            pars['fc'] = 'facecolor'
+        if type(edgecolor) is pd.Series:
+            cds.add(edgecolor.reindex(ids), 'edgecolor')
+            pars['ec'] = 'edgecolor'
+        if type(alpha) is pd.Series:
+            cds.add(alpha.reindex(ids), 'alpha')
+            pars['alpha'] = 'alpha'
+        if type(linewidth) is pd.Series:
+            cds.add(linewidth.reindex(ids), 'linewidth')
+            pars['lw'] = 'linewidth'
+        if geom == ps.cg.shapes.Polygon:
+            p.patches('x', 'y', source=cds,
+              fill_color=pars['fc'],
+              line_color=pars['ec'],
+              fill_alpha=pars['alpha'],
+              line_width=pars['lw']
+              )
+        elif geom == ps.cg.shapes.Chain:
+            p.multi_line('x', 'y', source=cds,
+              line_color=pars['ec'],
+              line_alpha=pars['alpha'],
+              line_width=pars['lw']
+              )
+            facecolor = 'None'
+    ## Points
+    elif geom == ps.cg.shapes.Point:
+        edgecolor = facecolor
+        xys = np.array(zip(*gc)).T
+        cds = bk.ColumnDataSource(data=dict(
+                    x=xys[:, 0],
+                    y=xys[:, 1]
+                    ))
+        if type(facecolor) is pd.Series:
+            cds.add(facecolor.reindex(ids), 'facecolor')
+            pars['fc'] = 'facecolor'
+        if type(edgecolor) is pd.Series:
+            cds.add(edgecolor.reindex(ids), 'edgecolor')
+            pars['ec'] = 'edgecolor'
+        if type(alpha) is pd.Series:
+            cds.add(alpha.reindex(ids), 'alpha')
+            pars['alpha'] = 'alpha'
+        if type(linewidth) is pd.Series:
+            cds.add(linewidth.reindex(ids), 'linewidth')
+            pars['lw'] = 'linewidth'
+        if type(marker_size) is pd.Series:
+            cds.add(marker_size.reindex(ids), 'marker_size')
+            pars['ms'] = 'marker_size'
+        p.circle('x', 'y',
+                 source=cds,
+                 fill_color=pars['fc'],
+                 line_color=pars['ec'],
+                 line_width=pars['lw'],
+                 fill_alpha=pars['alpha'],
+                 line_alpha=pars['alpha'],
+                 size=pars['ms'])
+    if draw:
+        bk.show(p)
+    return None
 
 def plot_poly_lines(shp_link,  savein=None, poly_col='none'):
     '''
@@ -532,7 +924,7 @@ def plot_poly_lines(shp_link,  savein=None, poly_col='none'):
     if savein:
         plt.savefig(savein)
     else:
-        print('callng plt.show()')
+        print('calling plt.show()')
         plt.show()
     return None
 
