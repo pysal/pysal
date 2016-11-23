@@ -57,7 +57,7 @@ widening in the near future.
 .. |docs| image:: https://readthedocs.org/projects/pysal/badge/?verison=latest
    :scale: 50%
    :align: top
-   :target: http://pysal.readthedocs.org/en/latest/ 
+   :target: http://pysal.readthedocs.org/en/latest/
 .. |talk| image:: https://badges.gitter.im/Join%20Chat.svg
    :scale: 50%
    :align: top
@@ -87,10 +87,10 @@ Installation
 PySAL can be installed using pip:
 
 .. code-block:: bash
-   
+
     $ pip install pysal
 
-PySAL is also available through 
+PySAL is also available through
 `Anaconda <https://www.continuum.io/downloads>`__ and `Enthought Canopy <https://www.enthought.com/products/canopy/>`__.
 
 Documentation
@@ -121,7 +121,7 @@ as well as gitter_.
 Getting Involved
 ================
 
-If you are interested in contributing to PySAL please see our 
+If you are interested in contributing to PySAL please see our
 `development guidelines <http://pysal.readthedocs.org/en/latest/developers/index.html>`_.
 
 

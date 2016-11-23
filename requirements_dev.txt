@@ -1,5 +1,6 @@
-nose-exclude
+nose
 nose-progressive
+nose-exclude
 coverage
 sphinx
 sphinxcontrib-napoleon

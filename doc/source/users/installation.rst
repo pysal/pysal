@@ -61,7 +61,7 @@ downloaded and installed manually or from the command line using
 
 Alternatively, grab the source distribution (.tar.gz) and decompress it to your selected destination. Open a command shell and navigate to the decompressed pysal folder. Type::
 
-  python setup.py install
+  pip install .
 
 
 Development version on GitHub 
@@ -74,10 +74,10 @@ Developers can checkout PySAL using **git**::
 Open a command shell and navigate to the cloned pysal
 directory. Type::
 
-  python setup.py develop
+  pip install -e .[dev]
 
-The 'develop' subcommand builds the modules in place 
-and modifies sys.path to include the code.
+The '-e' builds the modules in place 
+and symlinks from the python site packages directory to the pysal folder.
 The advantage of this method is that you get the latest code 
 but don't have to fuss with editing system environment variables.
 
@@ -107,7 +107,7 @@ After cloning pysal, install it in develop mode so Python knows where to find it
 Open a command shell and navigate to the cloned pysal
 directory. Type::
 
-  python setup.py develop
+  pip install -e .[dev]
 
 To test your setup, start a Python session and type::
 
