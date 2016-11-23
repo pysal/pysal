@@ -20,6 +20,10 @@ lib
 lib64
 __pycache__
 
+
+# virtual environment
+venv/
+
 # Installer logs
 pip-log.txt
 
@@ -101,3 +105,4 @@ pysal/examples/snow_maps/soho_graph.prj
 pysal/examples/snow_maps/soho_graph.qpj
 pysal/examples/snow_maps/soho_graph.shp
 pysal/examples/snow_maps/soho_graph.shx
+

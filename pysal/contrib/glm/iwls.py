@@ -55,7 +55,7 @@ def iwls(y, x, family, offset, y_fix,
     mu = family.starting_mu(y)
     v = family.predict(mu)
     while diff > tol and n_iter < max_iter:
-    	n_iter += 1
+        n_iter += 1
         w = family.weights(mu)
         z = v + (family.link.deriv(mu)*(y-mu))
         w = np.sqrt(w)

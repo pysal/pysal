@@ -60,7 +60,7 @@ is `v1.10` in what follows)::
 
 - Test that your package can install correctly::
 
-  $ pip install -i https://testpypi.python.org/pypi pysal
+  $ pip install --extra-index-url https://testpypi.python.org/pypi pysal
 
 
 If all is good, proceed, otherwise fix, and repeat.

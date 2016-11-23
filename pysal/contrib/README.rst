@@ -52,7 +52,11 @@ Currently the following contribs are available:
 
     - .. versionadded:: 1.5
     - Path: pysal.contrib.viz
-    - Requires: `matplotlib`_
+    - Requires: `matplotlib`_, `pandas`_
+    - Optional:
+        * `bokeh` backend on `geoplot`: `bokeh`_
+        * Color: `palettable`_
+        * Folium bridge on notebook: `folium`_, `geojson`_, `IPython`_
 
  6. Clusterpy -- Spatially constrained clustering.
 
