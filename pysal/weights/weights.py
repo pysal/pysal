@@ -788,15 +788,17 @@ class W(object):
 
         .. table::
 
-            ================   ======================================================
-            transform string   value
-            ================   ======================================================
-            B                  Binary
-            R                  Row-standardization (global sum=n)
-            D                  Double-standardization (global sum=1)
-            V                  Variance stabilizing
-            O                  Restore original transformation (from instantiation)
-            ================   ======================================================
+           :widths: auto
+
+           ================   ======================================================
+           transform string   value
+           ================   ======================================================
+           B                  Binary
+           R                  Row-standardization (global sum=n)
+           D                  Double-standardization (global sum=1)
+           V                  Variance stabilizing
+           O                  Restore original transformation (from instantiation)
+           ================   ======================================================
 
         Examples
         --------
