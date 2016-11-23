@@ -9,8 +9,10 @@ been left off, please email the "PySAL Developers List" <pysal-dev@googlegroups.
 
 Pedro Amaral
 Luc Anselin
+Jotham Apaloo
 Daniel Arribas-Bel
 David C. Folch
+Forest Gregg
 Myunghwa Hwang
 Wei Kang
 Marynia Kolak
@@ -22,6 +24,7 @@ Mark McCann
 Taylor Oshan
 Serge Rey
 Charles R. Schmidt
+Skipper Seabold
 Alessandra Sozzi
 Philip Stephens
 Bohumil Svoma
@@ -32,6 +35,8 @@ Jing Yao
 Xinyue Ye
 
 Funding from the following sources has supported PySAL development:
+
+Google Summer of Code 2016
 
 National Science Foundation New Approaches for Spatial Distribution Dynamics
 
