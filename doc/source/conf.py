@@ -16,7 +16,7 @@ import os
 extensions = ['sphinx.ext.autodoc',
 'sphinx.ext.doctest','sphinx.ext.graphviz', 'sphinx.ext.intersphinx',
 'sphinx.ext.autosummary',
-'sphinx.ext.pngmath','sphinx.ext.viewcode', 'sphinxcontrib.napoleon']
+'sphinx.ext.imgmath','sphinx.ext.viewcode', 'sphinx.ext.napoleon']
 
 #doctest extension config values
 #doctest_path = '/Users/stephens/code/pysal/doc/source/users/tutorials/'
@@ -225,3 +225,17 @@ intersphinx_mapping = {'http://docs.python.org/': None}
 #numpydoc option
 numpydoc_show_class_members = True
 numpydoc_class_members_toctree = False
+
+# Napoleon settings
+napoleon_google_docstring = True
+napoleon_numpy_docstring = True
+napoleon_include_init_with_doc = False
+napoleon_include_private_with_doc = False
+napoleon_include_special_with_doc = False
+napoleon_use_admonition_for_examples = False
+napoleon_use_admonition_for_notes = False
+napoleon_use_admonition_for_references = False
+napoleon_use_ivar = False
+napoleon_use_param = True
+napoleon_use_rtype = True
+napoleon_use_keyword = True
