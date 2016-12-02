@@ -169,22 +169,23 @@ class GWR(GLM):
             try:
             	W = fk[kernel](all_coords, bw)
                 if points is not None:
-                	W = self._shed(W, coords, points, bw, fk[kernel])
+                	W = self._shed(W, coords, points)
             except:
                 raise TypeError('Unsupported kernel function  ', kernel)
         else:
          
             W = ak[kernel](all_coords, bw)
-                #if points is not None:
-                	#W = self._shed(W, coords, points, bw, fk[kernel])
-            #except:
-                #raise TypeError('Unsupported kernel function  ', kernel)
+                if points is not None:
+                	W = self._shed(W, coords, points)
+            except:
+                raise TypeError('Unsupported kernel function  ', kernel)
         
         return W
 
-    def _shed(self, W, coords, points, bw, function):
-        W_coords = function(coords, bw)
-        W_points = function(points, bw)
+    def _shed(self, W, coords, points):
+        i = len(points)
+        j = len(coords)
+        W = W[i:,:-j].T
 
 
     def fit(self, ini_params=None, tol=1.0e-5, max_iter=20, solve='iwls'):
