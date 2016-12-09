@@ -466,6 +466,7 @@ class Gravity(BaseGravity):
         results['SRMSE'] = []
         for cov in range(covs):
             results['param' + str(cov)] = []
+            results['stde' + str(cov)] = []
             results['pvalue' + str(cov)] = []
             results['tvalue' + str(cov)] = []
         for loc in locs:
@@ -486,6 +487,7 @@ class Gravity(BaseGravity):
             results['SRMSE'].append(model.SRMSE)
             for cov in range(covs):
                 results['param' + str(cov)].append(model.params[cov])
+                results['stde' + str(cov)].append(model.std_err[cov])
                 results['pvalue' + str(cov)].append(model.pvalues[cov])
                 results['tvalue' + str(cov)].append(model.tvalues[cov])
         return results
@@ -662,6 +664,7 @@ class Production(BaseGravity):
         results['SRMSE'] = []
         for cov in range(covs):
             results['param' + str(cov)] = []
+            results['stde' + str(cov)] = []
             results['pvalue' + str(cov)] = []
             results['tvalue' + str(cov)] = []
         if locs is None:
@@ -683,6 +686,7 @@ class Production(BaseGravity):
             results['SRMSE'].append(model.SRMSE)
             for cov in range(covs):
                 results['param' + str(cov)].append(model.params[cov])
+                results['stde' + str(cov)].append(model.std_err[cov])
                 results['pvalue' + str(cov)].append(model.pvalues[cov])
                 results['tvalue' + str(cov)].append(model.tvalues[cov])
         return results
@@ -857,6 +861,7 @@ class Attraction(BaseGravity):
         results['SRMSE'] = []
         for cov in range(covs):
             results['param' + str(cov)] = []
+            results['stde' + str(cov)] = []
             results['pvalue' + str(cov)] = []
             results['tvalue' + str(cov)] = []
         if locs is  None:
@@ -878,6 +883,7 @@ class Attraction(BaseGravity):
             results['SRMSE'].append(model.SRMSE)
             for cov in range(covs):
                 results['param' + str(cov)].append(model.params[cov])
+                results['stde' + str(cov)].append(model.std_err[cov])
                 results['pvalue' + str(cov)].append(model.pvalues[cov])
                 results['tvalue' + str(cov)].append(model.tvalues[cov])
         return results
