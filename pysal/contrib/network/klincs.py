@@ -1,4 +1,4 @@
-#!/usr/env python
+#!/usr/bin/env python
 
 """
 A library for computing local K function for network-constrained data
