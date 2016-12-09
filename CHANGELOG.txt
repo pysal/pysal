@@ -1,3 +1,53 @@
+v<1.13.0>, 2016-11-24
+
+We closed a total of 38 issues, 7 pull requests and 31 regular issues;
+this is the full list (generated with the script 
+:file:`tools/github_stats.py`):
+
+Pull Requests (7):
+
+* :ghpull:`844`: Geotable plot
+* :ghpull:`875`: Spint constant
+* :ghpull:`874`: Use standard python facilites for warning
+* :ghpull:`873`: updating release schedule
+* :ghpull:`871`: Put requirements into setup.py so they are installed if missing
+* :ghpull:`870`: Doc/release
+* :ghpull:`869`: Dev
+
+Issues (31):
+
+* :ghissue:`844`: Geotable plot
+* :ghissue:`877`: documentation links to numpy and scipy are broken
+* :ghissue:`875`: Spint constant
+* :ghissue:`874`: Use standard python facilites for warning
+* :ghissue:`873`: updating release schedule
+* :ghissue:`871`: Put requirements into setup.py so they are installed if missing
+* :ghissue:`591`: check pysal version and report if a more recent stable version is available
+* :ghissue:`410`: prototype LISA cluster map
+* :ghissue:`333`: Add k functions
+* :ghissue:`274`: Implement LISA in network module
+* :ghissue:`746`: Network data structures
+* :ghissue:`751`: A method to get a list of example-files by type
+* :ghissue:`219`: inconsistent treatment of centroids in arc distance calculations in weights/user.py
+* :ghissue:`173`: implement cross sectional and space-time scan statistics
+* :ghissue:`170`: centralize all kernel based calculations
+* :ghissue:`134`: Complete cg.locators
+* :ghissue:`94`: Smoothing: add another module based on model-based smoothing
+* :ghissue:`91`: Smoothing: Develop simulations for comparing different smoothers 
+* :ghissue:`90`: Overhaul Polygon class
+* :ghissue:`89`: Optimize shapefile reader 
+* :ghissue:`88`: Optimize Clockwise test
+* :ghissue:`86`: Spatial_Dynamics: LISA Time paths
+* :ghissue:`85`: Spatial_Dynamics: modified knox statistic
+* :ghissue:`84`: Spatial_Dynamics: Optimize Theta
+* :ghissue:`652`: Use cKDtree for Arc_KDTree
+* :ghissue:`697`: Update Release Management to Support Rolling Releases
+* :ghissue:`761`: Object-oriented design for viz module
+* :ghissue:`767`: ZeroDivisonError when calculating certain centroids
+* :ghissue:`849`: dbf2df can not read dbf files within which there are Chinese characters
+* :ghissue:`870`: Doc/release
+* :ghissue:`869`: Dev
+
 v<1.12.0>, 2016-09-21
 
 We closed a total of 100 issues, 33 pull requests and 67 regular issues;
