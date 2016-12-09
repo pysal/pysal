@@ -10,7 +10,7 @@ import os
 #sys.path.append(os.path.abspath('~/anaconda/lib/python2.7/site-packages/'))
 
 # -- General configuration -----------------------------------------------------
-
+needs_sphinx = '1.4.3'
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc',
