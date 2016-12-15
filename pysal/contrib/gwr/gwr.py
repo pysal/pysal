@@ -150,6 +150,7 @@ class GWR(GLM):
         """
         GLM.__init__(self, y, X, family, constant=constant)
         self.sigma2_v1 = sigma2_v1
+        self.coords = coords
         self.bw = bw
         self.kernel = kernel
         self.fixed = fixed
@@ -159,34 +160,24 @@ class GWR(GLM):
             self.offset = offset * 1.0
         self.fit_params = {}
         self.W = self._build_W(fixed, kernel, coords, bw)
+        self.points = None
+        self.exog_scale = None
+        self.exog_resid = None
+        self.P = None
 
     def _build_W(self, fixed, kernel, coords, bw, points=None):
-        if points is not None:
-        	all_coords = np.vstack([coords, points])
-        else: all_coords = coords
-
         if fixed:
             try:
-            	W = fk[kernel](all_coords, bw)
-                if points is not None:
-                	W = self._shed(W, coords, points)
+            	W = fk[kernel](coords, bw, points)
             except:
                 raise TypeError('Unsupported kernel function  ', kernel)
         else:
-         
-            W = ak[kernel](all_coords, bw)
-                if points is not None:
-                	W = self._shed(W, coords, points)
+            try: 
+                W = ak[kernel](coords, bw, points)
             except:
                 raise TypeError('Unsupported kernel function  ', kernel)
         
         return W
-
-    def _shed(self, W, coords, points):
-        i = len(points)
-        j = len(coords)
-        W = W[i:,:-j].T
-
 
     def fit(self, ini_params=None, tol=1.0e-5, max_iter=20, solve='iwls'):
         """
@@ -213,17 +204,18 @@ class GWR(GLM):
         self.fit_params['max_iter'] = max_iter
         self.fit_params['solve']= solve
         if solve.lower() == 'iwls':
-            params = np.zeros((self.n, self.k))
-            predy = np.zeros((self.n, 1))
-            v = np.zeros((self.n, 1))
-            w = np.zeros((self.n, 1))
+            m = self.W.shape[0]
+            params = np.zeros((m, self.k))
+            predy = np.zeros((m, 1))
+            v = np.zeros((m, 1))
+            w = np.zeros((m, 1))
             z = np.zeros((self.n, self.n))
             S = np.zeros((self.n, self.n))
             R = np.zeros((self.n, self.n))
-            CCT = np.zeros((self.n, self.k))
-            #f = np.zeros((self.n, self.n))
-            p = np.zeros((self.n, 1))
-            for i in range(self.n):
+            CCT = np.zeros((m, self.k))
+            #f = np.zeros((n, n))
+            p = np.zeros((m, 1))
+            for i in range(m):
                 wi = self.W[i].reshape((-1,1))
             	rslt = iwls(self.y, self.X, self.family, self.offset,
             	        ini_params, tol, max_iter, wi=wi)
@@ -238,9 +230,30 @@ class GWR(GLM):
                 #dont need unless f is explicitly passed for
                 #prediction of non-sampled points
                 #cf = rslt[5] - np.dot(rslt[5], f)
+                #CCT[i] = np.diag(np.dot(cf, cf.T/rslt[3]))
                 CCT[i] = np.diag(np.dot(rslt[5], rslt[5].T))
             S = S * (1.0/z)
         return GWRResults(self, params, predy, S, CCT, w)
+
+    def predict(self, points, P, exog_scale=None, exog_resid=None, fit_params={}):
+        """
+        """
+        if (exog_scale is None) & (exog_resid is None):
+            train_gwr = self.fit(**fit_params)
+            self.exog_scale = train_gwr.scale
+            self.exog_resid = train_gwr.resid_response
+        elif (exog_scale is not None) & (exog_resid is not None):
+            self.exog_scale = exog_scale
+            self.exog_resid = exog_resid
+        else:
+            raise InputError('exog_scale and exog_resid must both either be'
+                    'None or specified')
+        self.points = points
+        self.P = P
+        self.W = self._build_W(self.fixed, self.kernel, self.coords, self.bw, points)
+        gwr = self.fit(**fit_params)        
+
+        return gwr
 
     @cache_readonly
     def df_model(self):
@@ -425,7 +438,7 @@ class GWRResults(GLMResults):
             self.w = w
         self.predy = predy
         self.S = S
-        self.CCT = self.cov_params(CCT)
+        self.CCT = self.cov_params(CCT, model.exog_scale)
         self._cache = {}
     
     @cache_readonly
@@ -434,7 +447,7 @@ class GWRResults(GLMResults):
         return np.dot(u, u.T)
 
     @cache_readonly
-    def scale(self):
+    def scale(self, scale=None):
         if isinstance(self.family, Gaussian):
             if self.model.sigma2_v1:
                 scale = self.sigma2_v1
@@ -444,7 +457,7 @@ class GWRResults(GLMResults):
             scale = 1.0
         return scale
 
-    def cov_params(self, cov):
+    def cov_params(self, cov, exog_scale=None):
         """
         Returns scaled covariance parameters
         Parameters
@@ -457,7 +470,10 @@ class GWRResults(GLMResults):
         Scaled covariance parameters
 
         """
-        return cov*self.scale
+        if exog_scale is not None:
+        	return cov*exog_scale
+        else:
+            return cov*self.scale
     
     @cache_readonly
     def tr_S(self):
@@ -478,9 +494,13 @@ class GWRResults(GLMResults):
         """
         weighted mean of y
         """
+        if self.model.points is not None:
+        	n = len(self.model.points)
+        else:
+            n = self.n
         off = self.offset.reshape((-1,1))
         arr_ybar = np.zeros(shape=(self.n,1))
-        for i in range(self.n):
+        for i in range(n):
             w_i= np.reshape(np.array(self.W[i]), (-1, 1))
             sum_yw = np.sum(self.y.reshape((-1,1)) * w_i)
             arr_ybar[i] = 1.0 * sum_yw / np.sum(w_i*off)
@@ -497,8 +517,12 @@ class GWRResults(GLMResults):
         relationships.
 
         """
-        TSS = np.zeros(shape=(self.n,1))
-        for i in range(self.n):
+        if self.model.points is not None:
+        	n = len(self.model.points)
+        else:
+            n = self.n
+        TSS = np.zeros(shape=(n,1))
+        for i in range(n):
 	        TSS[i] = np.sum(np.reshape(np.array(self.W[i]), (-1,1)) *
 	                (self.y.reshape((-1,1)) - self.y_bar[i])**2)
         return TSS
@@ -513,11 +537,16 @@ class GWRResults(GLMResults):
         Geographically weighted regression: the analysis of spatially varying 
         relationships.
         """
-        resid_response = self.resid_response.reshape((-1,1))
-    	RSS = np.zeros(shape=(self.n,1))
-        for i in range(self.n):
+        if self.model.points is not None:
+        	n = len(self.model.points)
+        	resid = self.model.exog_resid.reshape((-1,1))
+        else:
+            n = self.n
+            resid = self.resid_response.reshape((-1,1))
+    	RSS = np.zeros(shape=(n,1))
+        for i in range(n):
             RSS[i] = np.sum(np.reshape(np.array(self.W[i]), (-1,1))
-	                * resid_response**2)
+	                * resid**2)
         return RSS
 
     @cache_readonly
@@ -772,6 +801,15 @@ class GWRResults(GLMResults):
     @cache_readonly
     def pvalues(self):
         raise NotImplementedError('Not implemented for GWR')
+
+    @cahce_readonly
+    def predictions(self):
+        if self.P is None:
+        	raise NotImplementedError('predictions only avaialble if predict method
+        	        called on GWR model')
+        else:
+            predictions = 
+        return
 
 class FBGWR(GWR):
     """

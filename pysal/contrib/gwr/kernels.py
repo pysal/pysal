@@ -10,32 +10,32 @@ import numpy as np
 #adaptive specifications should be parameterized with nn-1 to match original gwr
 #implementation. That is, pysal counts self neighbors with knn automatically.
 
-def fix_gauss(points, bw):
-    w = _Kernel(points, function='gwr_gaussian', bandwidth=bw,
-            truncate=False)
+def fix_gauss(coords, bw, points=None):
+    w = _Kernel(coords, function='gwr_gaussian', bandwidth=bw,
+            truncate=False, points=points)
     return w.kernel
 
-def adapt_gauss(points, nn):
-    w = _Kernel(points, fixed=False, k=nn-1, function='gwr_gaussian',
-            truncate=False)
+def adapt_gauss(coords, nn, points=None):
+    w = _Kernel(coords, fixed=False, k=nn-1, function='gwr_gaussian',
+            truncate=False, points=points)
     return w.kernel
 
-def fix_bisquare(points, bw):
-    w = _Kernel(points, function='bisquare', bandwidth=bw)
+def fix_bisquare(coords, bw, points=None):
+    w = _Kernel(coords, function='bisquare', bandwidth=bw, points=points)
     return w.kernel
 
-def adapt_bisquare(points, nn):
-    w = _Kernel(points, fixed=False, k=nn-1, function='bisquare')
+def adapt_bisquare(coords, nn, points=None):
+    w = _Kernel(coords, fixed=False, k=nn-1, function='bisquare', points=points)
     return w.kernel
 
-def fix_exp(points, bw):
-    w = _Kernel(points, function='exponential', bandwidth=bw,
-            truncate=False)
+def fix_exp(coords, bw, points=None):
+    w = _Kernel(coords, function='exponential', bandwidth=bw,
+            truncate=False, points=points)
     return w.kernel
 
-def adapt_exp(points, nn):
-    w = _Kernel(points, fixed=False, k=nn-1, function='exponential',
-            truncate=False)
+def adapt_exp(coords, nn, points=None):
+    w = _Kernel(coords, fixed=False, k=nn-1, function='exponential',
+            truncate=False, points=points)
     return w.kernel
 
 from scipy.spatial.distance import cdist
@@ -45,19 +45,22 @@ class _Kernel(object):
 
     """
     def __init__(self, data, bandwidth=None, fixed=True, k=None,
-                 function='triangular', eps=1.0000001, ids=None, truncate=True): #Added truncate flag
+                 function='triangular', eps=1.0000001, ids=None, truncate=True, 
+                 points=None): #Added truncate flag
         if issubclass(type(data), scipy.spatial.KDTree):
-            self.kdt = data
-            self.data = self.kdt.data
+            self.data = data.data
             data = self.data
         else:
             self.data = data
-            self.kdt = KDTree(self.data)
         if k is not None:
             self.k = int(k) + 1
         else:
             self.k = k
-        self.dmat = cdist(self.data, self.data)
+        if points is None:
+            self.dmat = cdist(self.data, self.data)
+        else:
+            self.points = points
+            self.dmat = cdist(self.points, self.data)
         self.function = function.lower()
         self.fixed = fixed
         self.eps = eps
@@ -74,11 +77,8 @@ class _Kernel(object):
         self.kernel = self._kernel_funcs(self.dmat/self.bandwidth)
         
         if self.trunc:
-            mask = np.repeat(self.bandwidth, len(self.bandwidth), axis=1)
-            kernel_mask = self._kernel_funcs(1.0/mask)
+            mask = np.repeat(self.bandwidth, len(self.data), axis=1)
             self.kernel[(self.dmat >= mask)] = 0
-
-
 
     def _set_bw(self):
         if self.k is not None:
