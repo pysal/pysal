@@ -238,6 +238,28 @@ class GWR(GLM):
 
     def predict(self, points, P, exog_scale=None, exog_resid=None, fit_params={}):
         """
+        Method that predicts values of the dependent variable at un-sampled
+        locations
+
+        Parameters
+        ----------
+        points        : array-like
+                        n*2, collection of n sets of (x,y) coordinates used for
+                        calibration prediction locations
+        P             : array
+                        n*k, independent variables used to make prediction;
+                        exlcuding the constant
+        exog_scale    : scalar
+                        estimated scale using sampled locations; defualt is None
+                        which estimates a model using points from "coords"
+        exog_resid    : array-like
+                        estimated residuals using sampled locations; defualt is None
+                        which estimates a model using points from "coords"; if
+                        given it must be n*1 where n is the length of coords
+        fit_params    : dict
+                        key-value pairs of parameters that will be passed into fit method to define estimation
+                        routine; see fit method for more details
+                        
         """
         if (exog_scale is None) & (exog_resid is None):
             train_gwr = self.fit(**fit_params)
