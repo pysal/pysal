@@ -149,6 +149,7 @@ class GWR(GLM):
         Initialize class
         """
         GLM.__init__(self, y, X, family, constant=constant)
+        self.constant = constant
         self.sigma2_v1 = sigma2_v1
         self.coords = coords
         self.bw = bw
@@ -249,7 +250,11 @@ class GWR(GLM):
             raise InputError('exog_scale and exog_resid must both either be'
                     'None or specified')
         self.points = points
-        self.P = P
+        if self.constant:
+            P = np.hstack([np.ones((len(P),1)), P])
+            self.P = P
+        else:
+            self.P = P
         self.W = self._build_W(self.fixed, self.kernel, self.coords, self.bw, points)
         gwr = self.fit(**fit_params)        
 
@@ -802,14 +807,15 @@ class GWRResults(GLMResults):
     def pvalues(self):
         raise NotImplementedError('Not implemented for GWR')
 
-    @cahce_readonly
+    @cache_readonly
     def predictions(self):
-        if self.P is None:
-        	raise NotImplementedError('predictions only avaialble if predict method
-        	        called on GWR model')
+        P = self.model.P
+        if P is None:
+        	raise NotImplementedError('predictions only avaialble if predict'
+        	'method called on GWR model')
         else:
-            predictions = 
-        return
+            predictions = np.sum(P*self.params, axis=1).reshape((-1,1)) 
+        return predictions
 
 class FBGWR(GWR):
     """
