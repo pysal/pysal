@@ -617,7 +617,7 @@ which indicates that none of the C values from the permuted samples was as extre
 
 Getis and Ord's G
 -----------------
-The last statistic for global spatial autcorrelation implemented in PySAL is Getis and Ord's G:
+The last statistic for global spatial autocorrelation implemented in PySAL is Getis and Ord's G:
 
 .. math::
 
