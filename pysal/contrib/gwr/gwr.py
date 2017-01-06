@@ -751,8 +751,8 @@ class GWRResults(GLMResults):
         """
         alpha = np.abs(alpha)/2.0
         n = self.n
-        critical = stats.t.ppf(1-critical, n-1)
-        subset = (self.tvalues < alpha) & (self.tvalues > -1.0*alpha)
+        critical = t.ppf(1-alpha, n-1)
+        subset = (self.tvalues < critical) & (self.tvalues > -1.0*critical)
         tvalues = self.tvalues.copy()
         tvalues[subset] = 0
         return tvalues
