@@ -248,7 +248,7 @@ def get_A1_hom(s, scalarKP=False):
     wpw = s.T * s
     twpw = np.sum(wpw.diagonal())
     e = SP.eye(n, n, format='csr')
-    e.data = np.ones(n) * (twpw / n)
+    e.data = np.ones(int(n)) * (twpw / n)
     num = wpw - e
     if not scalarKP:
         return num

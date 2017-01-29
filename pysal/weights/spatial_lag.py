@@ -170,7 +170,7 @@ def lag_categorical(w, y, ties='tryself'):
         for neighb, weight in diter(neighbors):
             vals[inty[w.id2i[neighb]]] += weight
         outidx = _resolve_ties(idx,inty,vals,neighbors,ties, w)
-        output[w.id2i[idx]] = keys[outidx]
+        output[w.id2i[int(idx)]] = keys[int(outidx)]
     return output.reshape(orig_shape)
 
 def _resolve_ties(i,inty,vals,neighbors,method,w):

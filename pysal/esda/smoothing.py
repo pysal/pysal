@@ -555,11 +555,11 @@ def assuncao_rate(e, b):
 class _Smoother(object):
     """
     This is a helper class that implements things that all smoothers should do.
-    Right now, the only thing that we need to propagate is the by_col function. 
+    Right now, the only thing that we need to propagate is the by_col function.
 
     TBQH, most of these smoothers should be functions, not classes (aside from
     maybe headbanging triples), since they're literally only inits + one
-    attribute. 
+    attribute.
     """
     def __init__(self):
         pass
@@ -567,7 +567,7 @@ class _Smoother(object):
     @classmethod
     def by_col(cls, df, e,b, inplace=False, **kwargs):
         """
-        Compute smoothing by columns in a dataframe. 
+        Compute smoothing by columns in a dataframe.
 
         Parameters
         -----------
@@ -582,15 +582,15 @@ class _Smoother(object):
         inplace :  bool
                    a flag denoting whether to output a copy of `df` with the
                    relevant smoothed columns appended, or to append the columns
-                   directly to `df` itself. 
+                   directly to `df` itself.
         **kwargs:  optional keyword arguments
                    optional keyword options that are passed directly to the
-                   smoother. 
+                   smoother.
 
         Returns
         ---------
         a copy of `df` containing the columns. Or, if `inplace`, this returns
-        None, but implicitly adds columns to `df`.  
+        None, but implicitly adds columns to `df`.
         """
         if not inplace:
             new = df.copy()
@@ -718,13 +718,13 @@ class Empirical_Bayes(_Smoother):
 class _Spatial_Smoother(_Smoother):
     """
     This is a helper class that implements things that all the things that
-    spatial smoothers should do. 
+    spatial smoothers should do.
     .
-    Right now, the only thing that we need to propagate is the by_col function. 
+    Right now, the only thing that we need to propagate is the by_col function.
 
     TBQH, most of these smoothers should be functions, not classes (aside from
     maybe headbanging triples), since they're literally only inits + one
-    attribute. 
+    attribute.
     """
     def __init__(self):
         pass
@@ -732,7 +732,7 @@ class _Spatial_Smoother(_Smoother):
     @classmethod
     def by_col(cls, df, e,b, w=None, inplace=False, **kwargs):
         """
-        Compute smoothing by columns in a dataframe. 
+        Compute smoothing by columns in a dataframe.
 
         Parameters
         -----------
@@ -748,19 +748,19 @@ class _Spatial_Smoother(_Smoother):
                    the spatial weights object or objects to use with the
                    event-population pairs. If not provided and a weights object
                    is in the dataframe's metadata, that weights object will be
-                   used. 
+                   used.
         inplace :  bool
                    a flag denoting whether to output a copy of `df` with the
                    relevant smoothed columns appended, or to append the columns
-                   directly to `df` itself. 
+                   directly to `df` itself.
         **kwargs:  optional keyword arguments
                    optional keyword options that are passed directly to the
-                   smoother. 
+                   smoother.
 
         Returns
         ---------
         a copy of `df` containing the columns. Or, if `inplace`, this returns
-        None, but implicitly adds columns to `df`.  
+        None, but implicitly adds columns to `df`.
         """
         if not inplace:
             new = df.copy()
@@ -1072,12 +1072,12 @@ class Age_Adjusted_Smoother(_Spatial_Smoother):
         r = direct_age_standardization(e_n, b_n, s, w.n, alpha=alpha)
         self.r = np.array([i[0] for i in r])
         w.transform = 'o'
-    
+
     @_requires('pandas')
     @classmethod
     def by_col(cls, df, e,b, w=None, s=None, **kwargs):
         """
-        Compute smoothing by columns in a dataframe. 
+        Compute smoothing by columns in a dataframe.
 
         Parameters
         -----------
@@ -1093,22 +1093,22 @@ class Age_Adjusted_Smoother(_Spatial_Smoother):
                    the spatial weights object or objects to use with the
                    event-population pairs. If not provided and a weights object
                    is in the dataframe's metadata, that weights object will be
-                   used. 
+                   used.
         s       :  string or list of strings
                    the name or names of columns to use as a standard population
-                   variable for the events `e` and at-risk populations `b`. 
+                   variable for the events `e` and at-risk populations `b`.
         inplace :  bool
                    a flag denoting whether to output a copy of `df` with the
                    relevant smoothed columns appended, or to append the columns
-                   directly to `df` itself. 
+                   directly to `df` itself.
         **kwargs:  optional keyword arguments
                    optional keyword options that are passed directly to the
-                   smoother. 
+                   smoother.
 
         Returns
         ---------
         a copy of `df` containing the columns. Or, if `inplace`, this returns
-        None, but implicitly adds columns to `df`.  
+        None, but implicitly adds columns to `df`.
         """
         if s is None:
             raise Exception('Standard population variable "s" must be supplied.')
@@ -1326,7 +1326,7 @@ class Spatial_Median_Rate(_Spatial_Smoother):
         if not w.id_order_set:
             raise ValueError("w id_order must be set to align with the order of e and b")
         e = np.asarray(e).flatten()
-        b = np.asarray(b).flatten() 
+        b = np.asarray(b).flatten()
         self.r = e * 1.0 / b
         self.aw, self.w = aw, w
         while iteration:
@@ -1469,13 +1469,13 @@ class Spatial_Filtering(_Smoother):
                     b_n_f = b_n[[0]]
                 self.r.append(e_n_f[-1] * 1.0 / b_n_f[-1])
         self.r = np.array(self.r)
-    
+
     @_requires('pandas')
     @classmethod
     def by_col(cls, df, e, b, x_grid, y_grid, geom_col='geometry', **kwargs):
         """
         Compute smoothing by columns in a dataframe. The bounding box and point
-        information is computed from the geometry column. 
+        information is computed from the geometry column.
 
         Parameters
         -----------
@@ -1493,13 +1493,13 @@ class Spatial_Filtering(_Smoother):
                    number of grid cells to use along the y-axis
         geom_col:  string
                    the name of the column in the dataframe containing the
-                   geometry information. 
+                   geometry information.
         **kwargs:  optional keyword arguments
                    optional keyword options that are passed directly to the
-                   smoother. 
+                   smoother.
         Returns
         ---------
-        a new dataframe of dimension (x_grid*y_grid, 3), containing the 
+        a new dataframe of dimension (x_grid*y_grid, 3), containing the
         coordinates of the grid cells and the rates associated with those grid
         cells.
         """
@@ -1525,8 +1525,8 @@ class Spatial_Filtering(_Smoother):
             grid = np.asarray(r.grid).reshape(-1,2)
             name = '_'.join(('-'.join((ename, bname)), cls.__name__.lower()))
             colnames = ('_'.join((name, suffix)) for suffix in ['X', 'Y', 'R'])
-            items = [(name, col) for name,col in zip(colnames, [grid[:,0], 
-                                                                grid[:,1], 
+            items = [(name, col) for name,col in zip(colnames, [grid[:,0],
+                                                                grid[:,1],
                                                                 r.r])]
             res.append(pd.DataFrame.from_items(items))
         outdf = pd.concat(res)
@@ -1821,9 +1821,9 @@ class Headbanging_Median_Rate(object):
         if hasattr(self, 'extra') and id in self.extra:
             extra = self.extra
             trp_r = r[list(triples[0])]
-            # observed rate 
+            # observed rate
             # plus difference in rate scaled by ratio of extrapolated distance
-            # & observed distance. 
+            # & observed distance.
             trp_r[-1] = trp_r[0] + (trp_r[0] - trp_r[-1]) * (
                 extra[id][-1] * 1.0 / extra[id][1])
             trp_r = sorted(trp_r)
@@ -1852,14 +1852,14 @@ class Headbanging_Median_Rate(object):
                 trp_r.sort(order='r')
                 lowest.append(trp_r['r'][0])
                 highest.append(trp_r['r'][-1])
-                lowest_aw.append(self.aw[trp_r['w'][0]])
-                highest_aw.append(self.aw[trp_r['w'][-1]])
+                lowest_aw.append(self.aw[int(trp_r['w'][0])])
+                highest_aw.append(self.aw[int(trp_r['w'][-1])])
             wm_lowest = weighted_median(np.array(lowest), np.array(lowest_aw))
             wm_highest = weighted_median(
                 np.array(highest), np.array(highest_aw))
             triple_members = flatten(triples, unique=False)
             return r[id], wm_lowest, wm_highest, self.aw[id] * len(triples), self.aw[triple_members].sum()
-    
+
     def __get_median_from_screens(self, screens):
         if isinstance(screens, float):
             return screens
@@ -1884,13 +1884,13 @@ class Headbanging_Median_Rate(object):
                 k, tr[k], weighted=(self.aw is not None))
             new_r.append(self.__get_median_from_screens(screens))
         self.r = np.array(new_r)
-    
+
     @_requires('pandas')
     @classmethod
     def by_col(cls, df, e, b, t=None, geom_col='geometry', inplace=False, **kwargs):
         """
         Compute smoothing by columns in a dataframe. The bounding box and point
-        information is computed from the geometry column. 
+        information is computed from the geometry column.
 
         Parameters
         -----------
@@ -1904,22 +1904,22 @@ class Headbanging_Median_Rate(object):
                    variables to be smoothed
         t       :  Headbanging_Triples instance or list of Headbanging_Triples
                    list of headbanging triples instances. If not provided, this
-                   is computed from the geometry column of the dataframe. 
+                   is computed from the geometry column of the dataframe.
         geom_col:  string
                    the name of the column in the dataframe containing the
-                   geometry information. 
+                   geometry information.
         inplace :  bool
                    a flag denoting whether to output a copy of `df` with the
                    relevant smoothed columns appended, or to append the columns
-                   directly to `df` itself. 
+                   directly to `df` itself.
         **kwargs:  optional keyword arguments
                    optional keyword options that are passed directly to the
-                   smoother. 
+                   smoother.
         Returns
         ---------
         a new dataframe containing the smoothed Headbanging Median Rates for the
         event/population pairs. If done inplace, there is no return value and
-        `df` is modified in place. 
+        `df` is modified in place.
         """
         import pandas as pd
         if not inplace:
@@ -1939,7 +1939,7 @@ class Headbanging_Median_Rate(object):
 
         #Headbanging_Triples doesn't take **kwargs, so filter its arguments
         # (self, data, w, k=5, t=3, angle=135.0, edgecor=False):
-        
+
         w = kwargs.pop('w', None)
         if w is None:
             found = False
@@ -1951,7 +1951,7 @@ class Headbanging_Median_Rate(object):
                 raise Exception('Weights not provided and no weights attached to frame!'
                                     ' Please provide a weight or attach a weight to the'
                                     ' dataframe')
-        
+
         k = kwargs.pop('k', 5)
         t = kwargs.pop('t', 3)
         angle = kwargs.pop('angle', 135.0)
@@ -1959,7 +1959,7 @@ class Headbanging_Median_Rate(object):
 
         hbt = Headbanging_Triples(data, w, k=k, t=t, angle=angle,
                                   edgecor=edgecor)
-        
+
         res = []
         for ename, bname in zip(e, b):
             r = cls(df[ename], df[bname], hbt, **kwargs).r

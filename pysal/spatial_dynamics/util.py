@@ -12,14 +12,14 @@ def shuffle_matrix(X, ids):
 
     Parameters
     ----------
-    X   : array 
+    X   : array
           (k, k), array to be permutated.
     ids : array
           range (k, ).
 
     Returns
     -------
-    X   : array 
+    X   : array
           (k, k) with rows and columns randomly shuffled.
 
     Examples
@@ -50,7 +50,7 @@ def get_lower(matrix):
     Returns
     -------
     lowvec  : array
-              numpy array, the lower half of the distance matrix flattened into 
+              numpy array, the lower half of the distance matrix flattened into
               a vector of length n*(n-1)/2.
 
     Examples
@@ -75,6 +75,6 @@ def get_lower(matrix):
             if i > j:
                 lowerlist.append(matrix[i, j])
     veclen = n * (n - 1) / 2
-    lowvec = np.reshape(lowerlist, (veclen, 1))
+    lowvec = np.reshape(np.array(lowerlist), (int(veclen), 1))
     return lowvec
 

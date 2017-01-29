@@ -1363,7 +1363,7 @@ def get_omega_hom(w, wA1, wA2, reg, lamb, G):
     j = np.dot(G, np.array([[1.], [2 * lamb]]))
     psii = la.inv(psi)
     t2 = spdot(reg.h.T, np.hstack((a1, a2)))
-    psiDL = (mu3 * spdot(reg.h.T, np.hstack((vecdA1, np.zeros((n, 1))))) +
+    psiDL = (mu3 * spdot(reg.h.T, np.hstack((vecdA1, np.zeros((int(n), 1))))) +
              sig2 * spdot(reg.h.T, np.hstack((a1, a2)))) / n
 
     oDD = spdot(la.inv(spdot(reg.h.T, reg.h)), spdot(reg.h.T, z_s))
@@ -1413,7 +1413,7 @@ def get_omega_hom_ols(w, wA1, wA2, reg, lamb, G):
     oLL = la.inv(spdot(j.T, spdot(psii, j))) / n
     #oDL = np.zeros((oDD.shape[0], oLL.shape[1]))
     mu3 = np.sum(u_s ** 3) / n
-    psiDL = (mu3 * spdot(reg.x.T, np.hstack((vecdA1, np.zeros((n, 1)))))) / n
+    psiDL = (mu3 * spdot(reg.x.T, np.hstack((vecdA1, np.zeros((int(n), 1)))))) / n
     oDL = spdot(spdot(spdot(p.T, psiDL), spdot(psii, j)), oLL)
 
     o_upper = np.hstack((oDD, oDL))

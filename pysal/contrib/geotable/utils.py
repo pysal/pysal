@@ -6,7 +6,7 @@ from warnings import warn
 def to_df(df, geom_col='geometry', **kw):
     """
     Convert a Geopandas dataframe into a normal pandas dataframe with a column
-    containing PySAL shapes. 
+    containing PySAL shapes. Always returns a copy. 
 
     Arguments
     ---------
@@ -24,15 +24,14 @@ def to_df(df, geom_col='geometry', **kw):
     """
     import pandas as pd
     from geopandas import GeoDataFrame, GeoSeries
-    df[geom_col] = df[geom_col].apply(pShape)
-    if isinstance(df, (GeoDataFrame, GeoSeries)):
-        df = pd.DataFrame(df, **kw)
-    return df
+    out = df.copy(deep=True)
+    out[geom_col] = out[geom_col].apply(pShape)
+    return pd.DataFrame(out, **kw)
 
 @_requires('geopandas')
 def to_gdf(df, geom_col='geometry', **kw):
     """
-    Convert a pandas dataframe with geometry column to a GeoPandas dataframe
+    Convert a pandas dataframe with geometry column to a GeoPandas dataframe. Returns a copy always.
 
     Arguments
     ---------
@@ -50,13 +49,40 @@ def to_gdf(df, geom_col='geometry', **kw):
     """
     from geopandas import GeoDataFrame
     from shapely.geometry import asShape as sShape
-    df[geom_col] = df[geom_col].apply(sShape)
-    return GeoDataFrame(df, geometry=geom_col, **kw)
+    out = df.copy(deep=True)
+    out[geom_col] = out[geom_col].apply(sShape)
+    out = GeoDataFrame(out, geometry=geom_col, **kw)
+    return out
 
-def insert_metadata(df, obj, name=None, inplace=True, overwrite=False):
+def insert_metadata(df, obj, name=None, inplace=False, overwrite=False):
+    """
+    Insert an object into a dataframe's metadata with a given key. 
+
+    Arguments
+    ------------
+    df          : pd.DataFrame
+                  dataframe to insert into the metadata
+    obj         : object
+                  object desired to insert into the dataframe
+    name        : string
+                  key of the object to use. Will be available as 
+                  an attribute of the dataframe. 
+    inplace     : bool
+                  flag to denote whether to operate on a copy 
+                  of the dataframe or not. 
+    overwrite   : bool
+                  flag to denote whether to replace existing entry
+                  in metadata or not. 
+    
+    Returns
+    --------
+    If inplace, changes dataframe implicitly. 
+    Else, returns a new dataframe with added metadata. 
+    """
     if not inplace:
         new = df.copy(deep=True)
-        insert_metadata(new, obj, name=name, inplace=True)
+        insert_metadata(new, obj, name=name, 
+                        inplace=True, overwrite=overwrite)
         return new
     if name is None:
         name = type(obj).__name__
