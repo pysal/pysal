@@ -28,7 +28,6 @@ applications for spatial analysis.
 Counties 1990.*
 
 
-
 It is important to underscore what PySAL is, and is not, designed to do. First
 and foremost, PySAL is a library in the fullest sense of the word. Developers
 looking for a suite of spatial analytical methods that they can incorporate
@@ -37,17 +36,6 @@ who may be carrying out research projects requiring customized scripting,
 extensive simulation analysis, or those seeking to advance the state of the art
 in spatial analysis should also find PySAL to be a useful foundation for their
 work.
-
-End users looking for a user friendly graphical user interface for spatial
-analysis should not turn to PySAL directly. Instead, we would direct them to
-projects like  the GeoDaX_ suite of software products which wrap PySAL
-functionality in GUIs. At the same time, we expect that with developments such
-as the Python based plug-in architectures for QGIS, GRASS, and the toolbox
-extensions for ArcGIS, that end user access to PySAL functionality will be
-widening in the near future.
-
-.. _PySAL : https://github.com/pysal/pysal/
-.. _GeoDaX : https://geodacenter.asu.edu/software
 
 
 .. |build| image:: https://travis-ci.org/pysal/pysal.png
