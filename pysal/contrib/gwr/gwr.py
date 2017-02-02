@@ -40,18 +40,18 @@ class GWR(GLM):
         points        : array-like
                         n*2, collection of n sets of (x,y) coordinates used for
                         calibration locations; default is set to None, which
-                        uses every observation as a calibration point 
+                        uses every observation as a calibration point
 
         bw            : scalar
                         bandwidth value consisting of either a distance or N
                         nearest neighbors; user specified or obtained using
-                        Sel_BW 
+                        Sel_BW
 
         family        : family object
                         underlying probability model; provides
                         distribution-specific calculations
 
-        offset        : array 
+        offset        : array
                         n*1, the offset variable at the ith location. For Poisson model
                         this term is often the size of the population at risk or
                         the expected size of the outcome in spatial epidemiology
@@ -92,13 +92,13 @@ class GWR(GLM):
         bw            : scalar
                         bandwidth value consisting of either a distance or N
                         nearest neighbors; user specified or obtained using
-                        Sel_BW 
+                        Sel_BW
 
         family        : family object
                         underlying probability model; provides
                         distribution-specific calculations
 
-        offset        : array 
+        offset        : array
                         n*1, the offset variable at the ith location. For Poisson model
                         this term is often the size of the population at risk or
                         the expected size of the outcome in spatial epidemiology
@@ -156,7 +156,7 @@ class GWR(GLM):
         self.kernel = kernel
         self.fixed = fixed
         if offset is None:
-        	self.offset = np.ones((self.n, 1))
+          self.offset = np.ones((self.n, 1))
         else:
             self.offset = offset * 1.0
         self.fit_params = {}
@@ -169,15 +169,15 @@ class GWR(GLM):
     def _build_W(self, fixed, kernel, coords, bw, points=None):
         if fixed:
             try:
-            	W = fk[kernel](coords, bw, points)
+              W = fk[kernel](coords, bw, points)
             except:
                 raise TypeError('Unsupported kernel function  ', kernel)
         else:
-            try: 
+            try:
                 W = ak[kernel](coords, bw, points)
             except:
                 raise TypeError('Unsupported kernel function  ', kernel)
-        
+
         return W
 
     def fit(self, ini_params=None, tol=1.0e-5, max_iter=20, solve='iwls'):
@@ -223,7 +223,7 @@ class GWR(GLM):
                 params[i,:] = rslt[0].T
                 predy[i] = rslt[1][i]
                 v[i] = rslt[2][i]
-                w[i] = rslt[3][i]
+                w[i] = rslt[4][i]
                 z[i] = rslt[4].flatten()
                 R[i] = np.dot(self.X[i], rslt[5])
                 ri = np.dot(self.X[i], rslt[5])
@@ -259,7 +259,7 @@ class GWR(GLM):
         fit_params    : dict
                         key-value pairs of parameters that will be passed into fit method to define estimation
                         routine; see fit method for more details
-                        
+
         """
         if (exog_scale is None) & (exog_resid is None):
             train_gwr = self.fit(**fit_params)
@@ -278,7 +278,7 @@ class GWR(GLM):
         else:
             self.P = P
         self.W = self._build_W(self.fixed, self.kernel, self.coords, self.bw, points)
-        gwr = self.fit(**fit_params)        
+        gwr = self.fit(**fit_params)
 
         return gwr
 
@@ -349,13 +349,13 @@ class GWRResults(GLMResults):
         df_resid            : integer
                               residual degrees of freedom
 
-        offset              : array 
-                              n*1, the offset variable at the ith location. 
-                              For Poisson model this term is often the size of 
-                              the population at risk or the expected size of 
-                              the outcome in spatial epidemiology; Default is 
+        offset              : array
+                              n*1, the offset variable at the ith location.
+                              For Poisson model this term is often the size of
+                              the population at risk or the expected size of
+                              the outcome in spatial epidemiology; Default is
                               None where Ni becomes 1.0 for all locations
-        
+
         scale               : float
                               sigma squared used for subsequent computations
 
@@ -372,16 +372,16 @@ class GWRResults(GLMResults):
         W                   : array
                               n*n; spatial weights for each observation from each
                               calibration point
-   
+
         S                   : array
                               n*n, hat matrix
 
         CCT                 : array
                               n*k, scaled variance-covariance matrix
-    
+
         tr_S                : float
                               trace of S (hat) matrix
-    
+
         tr_STS              : float
                               trace of STS matrix
 
@@ -392,37 +392,37 @@ class GWRResults(GLMResults):
 
         y_bar               : array
                               n*1, weighted mean value of y
-        
+
         TSS                 : array
                               n*1, geographically weighted total sum of squares
-        
+
         RSS                 : array
                               n*1, geographically weighted residual sum of squares
-        
+
         localR2             : array
                               n*1, local R square
-        
+
         sigma2_v1           : float
                               sigma squared, use (n-v1) as denominator
-        
+
         sigma2_v1v2         : float
                               sigma squared, use (n-2v1+v2) as denominator
-        
+
         sigma2_ML           : float
                               sigma squared, estimated using ML
-        
+
         std_res             : array
                               n*1, standardised residuals
-        
+
         bse                 : array
                               n*k, standard errors of parameters (betas)
-        
+
         influ               : array
                               n*1, leading diagonal of S matrix
-        
+
         CooksD              : array
                               n*1, Cook's D
-        
+
         tvalues             : array
                               n*k, local t-statistics
 
@@ -432,7 +432,7 @@ class GWRResults(GLMResults):
                               levels; tvalues with an absolute value larger than the
                               corrected alpha are considered statistically
                               significant.
-        
+
         deviance            : array
                               n*1, local model deviance for each calibration point
 
@@ -452,7 +452,7 @@ class GWRResults(GLMResults):
         mu                  : array
                               n*, flat one dimensional array of predicted mean
                               response value from estimator
-        
+
         fit_params          : dict
                               parameters passed into fit method to define estimation
                               routine
@@ -467,7 +467,7 @@ class GWRResults(GLMResults):
         self.S = S
         self.CCT = self.cov_params(CCT, model.exog_scale)
         self._cache = {}
-    
+
     @cache_readonly
     def resid_ss(self):
         u = self.resid_response.flatten()
@@ -498,10 +498,10 @@ class GWRResults(GLMResults):
 
         """
         if exog_scale is not None:
-        	return cov*exog_scale
+          return cov*exog_scale
         else:
             return cov*self.scale
-    
+
     @cache_readonly
     def tr_S(self):
         """
@@ -522,7 +522,7 @@ class GWRResults(GLMResults):
         weighted mean of y
         """
         if self.model.points is not None:
-        	n = len(self.model.points)
+          n = len(self.model.points)
         else:
             n = self.n
         off = self.offset.reshape((-1,1))
@@ -540,18 +540,18 @@ class GWRResults(GLMResults):
 
         Methods: p215, (9.9)
         Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
-        Geographically weighted regression: the analysis of spatially varying 
+        Geographically weighted regression: the analysis of spatially varying
         relationships.
 
         """
         if self.model.points is not None:
-        	n = len(self.model.points)
+          n = len(self.model.points)
         else:
             n = self.n
         TSS = np.zeros(shape=(n,1))
         for i in range(n):
-	        TSS[i] = np.sum(np.reshape(np.array(self.W[i]), (-1,1)) *
-	                (self.y.reshape((-1,1)) - self.y_bar[i])**2)
+          TSS[i] = np.sum(np.reshape(np.array(self.W[i]), (-1,1)) *
+                  (self.y.reshape((-1,1)) - self.y_bar[i])**2)
         return TSS
 
     @cache_readonly
@@ -561,19 +561,19 @@ class GWRResults(GLMResults):
 
         Methods: p215, (9.10)
         Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
-        Geographically weighted regression: the analysis of spatially varying 
+        Geographically weighted regression: the analysis of spatially varying
         relationships.
         """
         if self.model.points is not None:
-        	n = len(self.model.points)
-        	resid = self.model.exog_resid.reshape((-1,1))
+          n = len(self.model.points)
+          resid = self.model.exog_resid.reshape((-1,1))
         else:
             n = self.n
             resid = self.resid_response.reshape((-1,1))
-    	RSS = np.zeros(shape=(n,1))
+        RSS = np.zeros(shape=(n,1))
         for i in range(n):
             RSS[i] = np.sum(np.reshape(np.array(self.W[i]), (-1,1))
-	                * resid**2)
+                  * resid**2)
         return RSS
 
     @cache_readonly
@@ -583,7 +583,7 @@ class GWRResults(GLMResults):
 
         Methods: p215, (9.8)
         Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
-        Geographically weighted regression: the analysis of spatially varying 
+        Geographically weighted regression: the analysis of spatially varying
         relationships.
         """
         if isinstance(self.family, Gaussian):
@@ -598,13 +598,13 @@ class GWRResults(GLMResults):
 
         Methods: p214, (9.6),
         Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
-        Geographically weighted regression: the analysis of spatially varying 
+        Geographically weighted regression: the analysis of spatially varying
         relationships.
 
         only use v1
         """
         return (self.resid_ss/(self.n-self.tr_S))
-    
+
     @cache_readonly
     def sigma2_v1v2(self):
         """
@@ -612,17 +612,17 @@ class GWRResults(GLMResults):
 
         Methods: p55 (2.16)-(2.18)
         Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
-        Geographically weighted regression: the analysis of spatially varying 
+        Geographically weighted regression: the analysis of spatially varying
         relationships.
 
         use v1 and v2 #used in GWR4
         """
         if isinstance(self.family, (Poisson, Binomial)):
             return self.resid_ss/(self.n - 2.0*self.tr_S +
-	                self.tr_STS) #could be changed to SWSTW - nothing to test against
+                  self.tr_STS) #could be changed to SWSTW - nothing to test against
         else:
             return self.resid_ss/(self.n - 2.0*self.tr_S +
-	                self.tr_STS) #could be changed to SWSTW - nothing to test against
+                  self.tr_STS) #could be changed to SWSTW - nothing to test against
     @cache_readonly
     def sigma2_ML(self):
         """
@@ -639,7 +639,7 @@ class GWRResults(GLMResults):
 
         Methods:  p215, (9.7)
         Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
-        Geographically weighted regression: the analysis of spatially varying 
+        Geographically weighted regression: the analysis of spatially varying
         relationships.
         """
         return self.resid_response.reshape((-1,1))/(np.sqrt(self.scale * (1.0 - self.influ)))
@@ -651,7 +651,7 @@ class GWRResults(GLMResults):
 
         Methods:  p215, (2.15) and (2.21)
         Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
-        Geographically weighted regression: the analysis of spatially varying 
+        Geographically weighted regression: the analysis of spatially varying
         relationships.
         """
         return np.sqrt(self.CCT)
@@ -670,19 +670,19 @@ class GWRResults(GLMResults):
 
         Methods: p216, (9.11),
         Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
-        Geographically weighted regression: the analysis of spatially varying 
+        Geographically weighted regression: the analysis of spatially varying
         relationships.
         Note: in (9.11), p should be tr(S), that is, the effective number of parameters
         """
         return self.std_res**2 * self.influ / (self.tr_S * (1.0-self.influ))
-    
+
     @cache_readonly
     def deviance(self):
         off = self.offset.reshape((-1,1)).T
         y = self.y
         ybar = self.y_bar
         if isinstance(self.family, Gaussian):
-        	raise NotImplementedError('deviance not currently used for Gaussian')
+          raise NotImplementedError('deviance not currently used for Gaussian')
         elif isinstance(self.family, Poisson):
             dev = np.sum(2.0*self.W*(y*np.log(y/(ybar*off))-(y-ybar*off)),axis=1)
         elif isinstance(self.family, Binomial):
@@ -692,7 +692,7 @@ class GWRResults(GLMResults):
     @cache_readonly
     def resid_deviance(self):
         if isinstance(self.family, Gaussian):
-        	raise NotImplementedError('deviance not currently used for Gaussian')
+          raise NotImplementedError('deviance not currently used for Gaussian')
         else:
             off = self.offset.reshape((-1,1)).T
             y = self.y
@@ -710,7 +710,7 @@ class GWRResults(GLMResults):
         manual. Equivalent to 1 - (deviance/null deviance)
         """
         if isinstance(self.family, Gaussian):
-        	raise NotImplementedError('Not implemented for Gaussian')
+          raise NotImplementedError('Not implemented for Gaussian')
         else:
             return 1.0 - (self.resid_deviance/self.deviance)
 
@@ -721,7 +721,7 @@ class GWRResults(GLMResults):
         testing. Includes corrected value for 90% (.1), 95% (.05), and 99%
         (.01) confidence levels. Correction comes from:
 
-        da Silva, A. R., & Fotheringham, A. S. (2015). The Multiple Testing Issue in 
+        da Silva, A. R., & Fotheringham, A. S. (2015). The Multiple Testing Issue in
         Geographically Weighted Regression. Geographical Analysis.
 
         """
@@ -796,7 +796,7 @@ class GWRResults(GLMResults):
     @cache_readonly
     def null_deviance(self):
         raise NotImplementedError('Not implemented for GWR')
-    
+
     @cache_readonly
     def aic(self):
         return get_AIC(self)
@@ -833,10 +833,10 @@ class GWRResults(GLMResults):
     def predictions(self):
         P = self.model.P
         if P is None:
-        	raise NotImplementedError('predictions only avaialble if predict'
-        	'method called on GWR model')
+          raise NotImplementedError('predictions only avaialble if predict'
+          'method called on GWR model')
         else:
-            predictions = np.sum(P*self.params, axis=1).reshape((-1,1)) 
+            predictions = np.sum(P*self.params, axis=1).reshape((-1,1))
         return predictions
 
 class FBGWR(GWR):
@@ -857,7 +857,7 @@ class FBGWR(GWR):
         points        : array-like
                         n*2, collection of n sets of (x,y) coordinates used for
                         calibration locations; default is set to None, which
-                        uses every observation as a calibration point 
+                        uses every observation as a calibration point
 
         bws           : array-like
                         collection of bandwidth values consisting of either a distance or N
@@ -877,7 +877,7 @@ class FBGWR(GWR):
                         underlying probability model; provides
                         distribution-specific calculations
 
-        offset        : array 
+        offset        : array
                         n*1, the offset variable at the ith location. For Poisson model
                         this term is often the size of the population at risk or
                         the expected size of the outcome in spatial epidemiology
@@ -918,7 +918,7 @@ class FBGWR(GWR):
         points        : array-like
                         n*2, collection of n sets of (x,y) coordinates used for
                         calibration locations; default is set to None, which
-                        uses every observation as a calibration point 
+                        uses every observation as a calibration point
 
         bws           : array-like
                         collection of bandwidth values consisting of either a distance or N
@@ -938,7 +938,7 @@ class FBGWR(GWR):
                         underlying probability model; provides
                         distribution-specific calculations
 
-        offset        : array 
+        offset        : array
                         n*1, the offset variable at the ith location. For Poisson model
                         this term is often the size of the population at risk or
                         the expected size of the outcome in spatial epidemiology
@@ -987,7 +987,7 @@ class FBGWR(GWR):
         self.fixed = fixed
         self.constant = constant
         if constant:
-        	self.X = USER.check_constant(self.X)
+          self.X = USER.check_constant(self.X)
 
     def fit(self, ini_params=None, tol=1.0e-5, max_iter=20, solve='iwls'):
         """
@@ -1071,7 +1071,7 @@ class FBGWRResults(object):
         self.X = model.X
         self.y = model.y
         self._cache = {}
-        
+
     @cache_readonly
     def predy(self):
         return np.sum(np.multiply(self.params, self.X), axis=1).reshape((-1,1))

@@ -1,8 +1,8 @@
 # GWR kernel function specifications
 
-__author__ = "Taylor Oshan tayoshan@gmail.com" 
+__author__ = "Taylor Oshan tayoshan@gmail.com"
 
-#from pysal.weights.Distance import Kernel 
+#from pysal.weights.Distance import Kernel
 import scipy
 from scipy.spatial.kdtree import KDTree
 import numpy as np
@@ -45,7 +45,7 @@ class _Kernel(object):
 
     """
     def __init__(self, data, bandwidth=None, fixed=True, k=None,
-                 function='triangular', eps=1.0000001, ids=None, truncate=True, 
+                 function='triangular', eps=1.0000001, ids=None, truncate=True,
                  points=None): #Added truncate flag
         if issubclass(type(data), scipy.spatial.KDTree):
             self.data = data.data
@@ -75,7 +75,7 @@ class _Kernel(object):
         else:
             self._set_bw()
         self.kernel = self._kernel_funcs(self.dmat/self.bandwidth)
-        
+
         if self.trunc:
             mask = np.repeat(self.bandwidth, len(self.data), axis=1)
             self.kernel[(self.dmat >= mask)] = 0
@@ -94,18 +94,18 @@ class _Kernel(object):
             # use local max knn distance
             self.bandwidth = dmat.max(axis=1) * self.eps
             self.bandwidth.shape = (self.bandwidth.size, 1)
-            
+
 
     def _kernel_funcs(self, zs):
         # functions follow Anselin and Rey (2010) table 5.4
         if self.function == 'triangular':
-            return 1 - zs 
+            return 1 - zs
         elif self.function == 'uniform':
-            return np.ones(zi.shape) * 0.5 
+            return np.ones(zi.shape) * 0.5
         elif self.function == 'quadratic':
-            return (3. / 4) * (1 - zs ** 2) 
+            return (3. / 4) * (1 - zs ** 2)
         elif self.function == 'quartic':
-            return (15. / 16) * (1 - zs ** 2) ** 2 
+            return (15. / 16) * (1 - zs ** 2) ** 2
         elif self.function == 'gaussian':
             c = np.pi * 2
             c = c ** (-0.5)

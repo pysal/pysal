@@ -173,16 +173,16 @@ class GLMResults(LikelihoodModelResults):
                         see family.py for distribution-specific loglikelihoods
         llnull       : float
                         value of log-likelihood function evaluated at null
-        aic           : float 
+        aic           : float
                         AIC
-        bic           : float 
+        bic           : float
                         BIC
         D2            : float
                         percent deviance explained
         adj_D2        : float
                         adjusted percent deviance explained
         pseudo_R2       : float
-                        McFadden's pseudo R2  (coefficient of determination) 
+                        McFadden's pseudo R2  (coefficient of determination)
         adj_pseudoR2    : float
                         adjusted McFadden's pseudo R2
         resid_response          : array
@@ -197,15 +197,15 @@ class GLMResults(LikelihoodModelResults):
                                   derivatives of the link functions.
 
         resid_anscombe          : array
-                                 Anscombe residuals; see family.py for 
+                                 Anscombe residuals; see family.py for
                                  distribution-specific Anscombe residuals.
-        
+
         resid_deviance          : array
-                                 deviance residuals; see family.py for 
+                                 deviance residuals; see family.py for
                                  distribution-specific deviance residuals.
 
         pearson_chi2            : float
-                                  chi-Squared statistic is defined as the sum 
+                                  chi-Squared statistic is defined as the sum
                                   of the squares of the Pearson residuals
 
         normalized_cov_params   : array
@@ -223,7 +223,7 @@ class GLMResults(LikelihoodModelResults):
         self.w = w
         self.mu = mu.flatten()
         self._cache = {}
-    
+
     @cache_readonly
     def df_model(self):
         return self.model.df_model
@@ -270,7 +270,7 @@ class GLMResults(LikelihoodModelResults):
         X = np.ones((len(y), 1))
         null_mod =  GLM(y, X, family=self.family, constant=False)
         return null_mod.fit().mu
-   
+
     @cache_readonly
     def scale(self):
         if isinstance(self.family, (family.Binomial, family.Poisson)):
@@ -286,7 +286,7 @@ class GLMResults(LikelihoodModelResults):
     @cache_readonly
     def null_deviance(self):
         return self.family.deviance(self.y, self.null)
-   
+
     @cache_readonly
     def llnull(self):
         return self.family.loglike(self.y, self.null, scale=self.scale)
@@ -294,11 +294,11 @@ class GLMResults(LikelihoodModelResults):
     @cache_readonly
     def llf(self):
         return self.family.loglike(self.y, self.mu, scale=self.scale)
-    
+
     @cache_readonly
     def aic(self):
         if isinstance(self.family, family.QuasiPoisson):
-        	return np.nan
+          return np.nan
         else:
             return -2 * self.llf + 2*(self.df_model+1)
 
@@ -307,7 +307,7 @@ class GLMResults(LikelihoodModelResults):
         return (self.deviance -
                 (self.model.n - self.df_model - 1) *
                 np.log(self.model.n))
-    
+
     @cache_readonly
     def D2(self):
         return 1 - (self.deviance / self.null_deviance)
@@ -315,12 +315,12 @@ class GLMResults(LikelihoodModelResults):
     @cache_readonly
     def adj_D2(self):
         return 1.0 - (float(self.n) - 1.0)/(float(self.n) - float(self.k)) * (1.0-self.D2)
-    
+
     @cache_readonly
     def pseudoR2(self):
         return 1 - (self.llf/self.llnull)
-    
+
     @cache_readonly
     def adj_pseudoR2(self):
         return 1 - ((self.llf-self.k)/self.llnull)
-    
+
