@@ -218,8 +218,8 @@ class GWR(GLM):
             p = np.zeros((m, 1))
             for i in range(m):
                 wi = self.W[i].reshape((-1,1))
-            	rslt = iwls(self.y, self.X, self.family, self.offset,
-            	        ini_params, tol, max_iter, wi=wi)
+                rslt = iwls(self.y, self.X, self.family, self.offset,
+                    ini_params, tol, max_iter, wi=wi)
                 params[i,:] = rslt[0].T
                 predy[i] = rslt[1][i]
                 v[i] = rslt[2][i]
