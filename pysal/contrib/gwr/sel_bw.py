@@ -104,13 +104,13 @@ class Sel_BW(object):
         self.fixed = fixed
         self.kernel = kernel
         if offset is None:
-        	self.offset = np.ones((len(y), 1))
+          self.offset = np.ones((len(y), 1))
         else:
             self.offset = offset * 1.0
         self.fb = fb
         self.constant = constant
 
-    def search(self, search='golden_section', criterion='AICc', bw_min=0.0, 
+    def search(self, search='golden_section', criterion='AICc', bw_min=0.0,
             bw_max=0.0, interval=0.0, tol=1.0e-6, max_iter=200, init_fb=True,
             tol_fb=1.0e-5, rss_score=False, max_iter_fb=200):
         """
@@ -152,7 +152,7 @@ class Sel_BW(object):
                          fb=False and array for fb=True; ordering of bandwidths
                          matches the ordering of the covariates (columns) of the
                          designs matrix, X
-        """     
+        """
         self.search = search
         self.criterion = criterion
         self.bw_min = bw_min
@@ -164,7 +164,7 @@ class Sel_BW(object):
         self.tol_fb = tol_fb
         self.rss_score = rss_score
         self.max_iter_fb = max_iter_fb
-        
+
 
         if self.fixed:
             if self.kernel == 'gaussian':
@@ -177,7 +177,7 @@ class Sel_BW(object):
                 raise TypeError('Unsupported kernel function ', self.kernel)
         else:
             if self.kernel == 'gaussian':
-            	ktype = 2
+              ktype = 2
             elif self.kernel == 'bisquare':
                 ktype = 4
             elif self.kernel == 'exponential':
@@ -188,13 +188,13 @@ class Sel_BW(object):
         function = lambda bw: getDiag[criterion](
                 GWR(self.coords, self.y, self.x_loc, bw, family=self.family,
                     kernel=self.kernel, fixed=self.fixed, offset=self.offset).fit())
-        
+
         if ktype % 2 == 0:
             int_score = True
         else:
             int_score = False
         self.int_score = int_score
-        
+
         if self.fb:
             self._fbw()
             print self.bw[1]
@@ -213,18 +213,18 @@ class Sel_BW(object):
             a,c = self._init_section(self.x_glob, self.x_loc, self.coords,
                     self.constant)
             delta = 0.38197 #1 - (np.sqrt(5.0)-1.0)/2.0
-            self.bw = golden_section(a, c, delta, gwr_func, self.tol, 
+            self.bw = golden_section(a, c, delta, gwr_func, self.tol,
                     self.max_iter, self.int_score)
         elif self.search == 'interval':
             self.bw = equal_interval(self.bw_min, self.bw_max, self.interval,
                     gwr_func, self.int_score)
         else:
             raise TypeError('Unsupported computational search method ', search)
-   
+
     def _fbw(self):
         y = self.y
         if self.constant:
-        	X = USER.check_constant(self.x_loc)
+          X = USER.check_constant(self.x_loc)
         else:
             X = self.x_loc
         n, k = X.shape
@@ -240,12 +240,12 @@ class Sel_BW(object):
         interval = self.interval
         tol = self.tol
         max_iter = self.max_iter
-        gwr_func = lambda y, X, bw: GWR(coords, y, X, bw, family=family, 
+        gwr_func = lambda y, X, bw: GWR(coords, y, X, bw, family=family,
                 kernel=kernel, fixed=fixed, offset=offset, constant=False).fit()
         bw_func = lambda y, X: Sel_BW(coords, y, X, x_glob=[], family=family,
                 kernel=kernel, fixed=fixed, offset=offset, constant=False)
-        sel_func = lambda bw_func: bw_func.search(search=search, 
-                        criterion=criterion, bw_min=bw_min, bw_max=bw_max, 
+        sel_func = lambda bw_func: bw_func.search(search=search,
+                        criterion=criterion, bw_min=bw_min, bw_max=bw_max,
                         interval=interval, tol=tol, max_iter=max_iter)
         self.bw = flexible_bw(self.init_fb, y, X, n, k, family, self.tol_fb,
                self.max_iter_fb, self.rss_score, gwr_func, bw_func, sel_func)
@@ -278,7 +278,7 @@ class Sel_BW(object):
             max_dists = sort_dists[:,-1]
             a = np.min(min_dists)/2.0
             c = np.max(max_dists)/2.0
-      
+
         if a < self.bw_min:
             a = self.bw_min
         if c > self.bw_max and self.bw_max > 0:

@@ -49,22 +49,22 @@ def iwls(y, x, family, offset=1.0, ini_betas=None, tol=1.0e-8, max_iter=200, wi=
     if isinstance(family, Binomial):
         y = family.link._clean(y)
     if isinstance(family, Poisson):
-    	y_off = y/offset
+        y_off = y/offset
         y_off = family.starting_mu(y_off)
         v = family.predict(y_off)
         mu = family.starting_mu(y)
     else:
         mu = family.starting_mu(y)
         v = family.predict(mu)
-    
+
     while diff > tol and n_iter < max_iter:
-    	n_iter += 1
+        n_iter += 1
         w = family.weights(mu)
         z = v + (family.link.deriv(mu)*(y-mu))
         w = np.sqrt(w)
         if type(x) != np.ndarray:
-        	w = sp.csr_matrix(w)
-        	z = sp.csr_matrix(z)
+          w = sp.csr_matrix(w)
+          z = sp.csr_matrix(z)
         wx = spmultiply(x, w, array_out=False)
         wz = spmultiply(z, w, array_out=False)
         if wi is None:
@@ -77,7 +77,7 @@ def iwls(y, x, family, offset=1.0, ini_betas=None, tol=1.0e-8, max_iter=200, wi=
             mu = mu * offset
         diff = min(abs(n_betas-betas))
         betas = n_betas
-        
+
     if wi is None:
         return betas, mu, wx, n_iter
     else:

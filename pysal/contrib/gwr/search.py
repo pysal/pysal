@@ -47,14 +47,14 @@ def golden_section(a, c, delta, function, tol, max_iter, int_score=False):
     while np.abs(diff) > tol and iters < max_iter:
         iters += 1
         if int_score:
-        	b = np.round(b)
-        	d = np.round(d)
+          b = np.round(b)
+          d = np.round(d)
 
         score_a = function(a)
         score_b = function(b)
         score_c = function(c)
         score_d = function(d)
-        
+
         if score_b <= score_d:
             opt_val = b
             opt_score = score_b
@@ -71,9 +71,9 @@ def golden_section(a, c, delta, function, tol, max_iter, int_score=False):
             d = c - delta * np.abs(c-a)
             #if int_score:
                 #d = np.round(b)
-        
+
         #if int_score:
-        #	opt_val = np.round(opt_val)
+        # opt_val = np.round(opt_val)
         output.append((opt_val, opt_score))
         diff = score_b - score_d
         score = opt_score
@@ -113,7 +113,7 @@ def equal_interval(l_bound, u_bound, interval, function, int_score=False):
         a = np.round(a,0)
         c = np.round(c,0)
         b = np.round(b,0)
-    
+
     output = []
 
     score_a = function(a)
@@ -154,8 +154,8 @@ def flexible_bw(init, y, X, n, k, family, tol, max_iter, rss_score,
         model = GLM(y, X, family=self.family, constant=False).fit()
         err = model.resid_response.reshape((-1,1))
         est = np.repeat(model.params.T, n, axis=0)
-        
-    
+
+
     XB = np.multiply(est, X)
     if rss_score:
         rss = np.sum((err)**2)
@@ -187,13 +187,13 @@ def flexible_bw(init, y, X, n, k, family, tol, max_iter, rss_score,
             bws.append(bw)
             ests[:,i] = est
             vals.append(bw_class.bw[1])
-            
+
         predy = np.sum(np.multiply(ests, X), axis=1).reshape((-1,1))
         num = np.sum((new_XB - XB)**2)/n
         den = np.sum(np.sum(new_XB, axis=1)**2)
         score = (num/den)**0.5
         XB = new_XB
-            
+
         if rss_score:
             new_rss = np.sum((y - predy)**2)
             score = np.abs((new_rss - rss)/new_rss)
@@ -201,7 +201,7 @@ def flexible_bw(init, y, X, n, k, family, tol, max_iter, rss_score,
         print score
         scores.append(score)
         delta = score
-        BWs.append(bws) 
+        BWs.append(bws)
         VALs.append(vals)
 
     opt_bws = BWs[-1]
