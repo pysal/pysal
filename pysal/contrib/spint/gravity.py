@@ -653,7 +653,7 @@ class Production(BaseGravity):
                       and values are lists of location specific values
         """
         results = {}
-        offset = len(np.unique(locs))
+        offset = 1
         covs = self.dv.shape[1] + 1
         results['AIC'] = []
         results['deviance'] = []
@@ -851,7 +851,7 @@ class Attraction(BaseGravity):
                       and values are lists of location specific values
         """
         results = {}
-        offset = len(np.unique(locs))
+        offset = 1
         covs = self.ov.shape[1] + 1
         results['AIC'] = []
         results['deviance'] = []
