@@ -29,7 +29,7 @@ class TestGM_Error_Hom_Regimes(unittest.TestCase):
         self.regimes = db.by_col(self.r_var)
         #Artficial:
         n = 256
-        self.n2 = n/2
+        self.n2 = n//2
         self.x_a1 = np.random.uniform(-10,10,(n,1))
         self.x_a2 = np.random.uniform(1,5,(n,1))
         self.q_a = self.x_a2 + np.random.normal(0,1,(n,1))
