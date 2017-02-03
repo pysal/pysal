@@ -37,16 +37,15 @@ class GWR(GLM):
         X             : array
                         n*k, independent variable, exlcuding the constant
 
-        points        : array-like
-                        n*2, collection of n sets of (x,y) coordinates used for
-                        calibration locations; default is set to None, which
-                        uses every observation as a calibration point
-
         bw            : scalar
                         bandwidth value consisting of either a distance or N
                         nearest neighbors; user specified or obtained using
                         Sel_BW
 
+        cal_coords    : array-like
+                        n*2, collection of n sets of (x,y) coordinates used for
+                        calibration locations instead of all observations; default 
+                        is set to None, which uses every observation as a calibration point
         family        : family object
                         underlying probability model; provides
                         distribution-specific calculations
@@ -142,9 +141,23 @@ class GWR(GLM):
         W             : array
                         n*n, spatial weights matrix for weighting all
                         observations from each calibration point
+        points        : array-like
+                        n*2, collection of n sets of (x,y) coordinates used for
+                        calibration locations instead of all observations; defaults to None
+        P             : array
+                        n*k, independent variables used to make prediction;
+                        exlcuding the constant; default to None unless specified
+                        in predict method
+        exog_scale    : scalar
+                        estimated scale using sampled locations; defualt is None
+                        unless specified in predict method
+        exog_resid    : array-like
+                        estimated residuals using sampled locations; defualt is None
+                        unless specified in predict method
     """
     def __init__(self, coords, y, X, bw, family=Gaussian(), offset=None,
-            sigma2_v1=False, kernel='bisquare', fixed=False, constant=True):
+            sigma2_v1=False, kernel='bisquare', fixed=False, constant=True,
+            cal_coords=None):
         """
         Initialize class
         """
@@ -152,6 +165,7 @@ class GWR(GLM):
         self.constant = constant
         self.sigma2_v1 = sigma2_v1
         self.coords = coords
+        self.cal_coords = cal_coords
         self.bw = bw
         self.kernel = kernel
         self.fixed = fixed
@@ -160,8 +174,11 @@ class GWR(GLM):
         else:
             self.offset = offset * 1.0
         self.fit_params = {}
-        self.W = self._build_W(fixed, kernel, coords, bw)
-        self.points = None
+        if cal_coords is not None:
+            self.points = cal_coords
+        else:
+            self.points = None
+        self.W = self._build_W(fixed, kernel, coords, bw, points=self.points)
         self.exog_scale = None
         self.exog_resid = None
         self.P = None
