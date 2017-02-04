@@ -249,7 +249,10 @@ class TestGravity(unittest.TestCase):
     def test_local_Gravity(self):
         model = grav.Gravity(self.f, self.o_var, self.d_var, self.dij, 'exp')
         local = model.local(loc_index=self.o, locs=np.unique(self.o))
-        self.assertEqual(local.keys().sort(), ['pvalue2', 
+        self.assertEqual(local.keys().sort(), ['stde0',
+                                                'stde1',
+                                                'stde2',
+                                                'pvalue2', 
                                                 'SRMSE', 
                                                 'pvalue0',
                                                 'deviance', 
@@ -372,7 +375,10 @@ class TestGravity(unittest.TestCase):
     def test_local_Production(self):
         model = grav.Production(self.f, self.o, self.d_var, self.dij, 'exp')
         local = model.local(locs=np.unique(self.o))
-        self.assertEqual(local.keys().sort(), ['pvalue2', 
+        self.assertEqual(local.keys().sort(), ['stde0',
+                                                'stde1',
+                                                'stde2',
+                                                'pvalue2', 
                                                 'SRMSE', 
                                                 'pvalue0',
                                                 'deviance', 
@@ -495,7 +501,10 @@ class TestGravity(unittest.TestCase):
     def test_local_Attraction(self):
         model = grav.Attraction(self.f, self.d, self.o_var, self.dij, 'exp')
         local = model.local(locs=np.unique(self.d))
-        self.assertEqual(local.keys().sort(), ['pvalue2', 
+        self.assertEqual(local.keys().sort(), ['stde0',
+                                                'stde1',
+                                                'stde2',
+                                                'pvalue2', 
                                                 'SRMSE', 
                                                 'pvalue0',
                                                 'deviance', 
