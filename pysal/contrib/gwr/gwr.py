@@ -240,7 +240,7 @@ class GWR(GLM):
                 params[i,:] = rslt[0].T
                 predy[i] = rslt[1][i]
                 v[i] = rslt[2][i]
-                w[i] = rslt[4][i]
+                w[i] = rslt[3][i]
                 z[i] = rslt[4].flatten()
                 R[i] = np.dot(self.X[i], rslt[5])
                 ri = np.dot(self.X[i], rslt[5])
