@@ -24,6 +24,13 @@ class GLM(RegressionPropsY):
                         n*k, independent variable, exlcuding the constant.
         family        : string
                         Model type: 'Gaussian', 'Poisson', 'Binomial'
+        offset        : array
+                        n*1, the offset variable at the ith location. For Poisson model
+                        this term is often the size of the population at risk or
+                        the expected size of the outcome in spatial epidemiology.
+                        Default is None where Ni becomes 1.0 for all locations.
+        y_fix         : array
+                        n*1, the fix intercept value of y
 
     Attributes
     ----------
@@ -49,10 +56,25 @@ class GLM(RegressionPropsY):
         fit_params     : dict
                         Parameters passed into fit method to define estimation
                         routine.
-        normalized_cov_params   : array
-                                k*k, approximates [X.T*X]-1
+
+    Examples
+    --------
+    >>> from pysal.contrib.glm.glm import GLM
+    >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
+    >>> y = np.array(db.by_col("HOVAL"))
+    >>> self.y = np.reshape(y, (49,1))
+    >>> X = []
+    >>> X.append(db.by_col("INC"))
+    >>> X.append(db.by_col("CRIME"))
+    >>> self.X = np.array(X).T
+    >>> model = GLM(self.y, self.X, family=Gaussian())
+    >>> results = model.fit()
+    >>> results.params
+    [ 46.42818268,   0.62898397, -0.48488854]
+
     """
-    def __init__(self, y, X, family=family.Gaussian(), constant=True):
+    def __init__(self, y, X, family=family.Gaussian(), offset=None, y_fix = None,
+            constant=True):
         """
         Initialize class
         """
@@ -65,6 +87,14 @@ class GLM(RegressionPropsY):
             self.X = X
         self.family = family
         self.k = self.X.shape[1]
+        if offset is None:
+            self.offset = np.ones(shape=(self.n,1))
+        else:
+            self.offset = offset * 1.0
+        if y_fix is None:
+	        self.y_fix = np.zeros(shape=(self.n,1))
+        else:
+	        self.y_fix = y_fix
         self.fit_params = {}
 
     def fit(self, ini_betas=None, tol=1.0e-6, max_iter=200, solve='iwls'):
@@ -92,8 +122,8 @@ class GLM(RegressionPropsY):
         self.fit_params['max_iter'] = max_iter
         self.fit_params['solve']=solve
         if solve.lower() == 'iwls':
-            params, predy, w, n_iter = iwls(self.y, self.X, self.family,
-                    ini_betas=ini_betas, tol=tol, max_iter=max_iter)
+            params, predy, w, n_iter = iwls(self.y, self.X, self.family, self.offset, 
+                    self.y_fix, ini_betas, tol, max_iter)
             self.fit_params['n_iter'] = n_iter
         return GLMResults(self, params.flatten(), predy, w)
 
@@ -152,8 +182,7 @@ class GLMResults(LikelihoodModelResults):
         mu            : array
                         n*1, predicted value of y (i.e., fittedvalues)
         cov_params    : array
-                        Variance covariance matrix (kxk) of betas which has been
-                        appropriately scaled by sigma-squared
+                        Variance covariance matrix (kxk) of betas
         bse           : array
                         k*1, standard errors of betas
         pvalues       : array
@@ -173,16 +202,16 @@ class GLMResults(LikelihoodModelResults):
                         see family.py for distribution-specific loglikelihoods
         llnull       : float
                         value of log-likelihood function evaluated at null
-        aic           : float
+        aic           : float 
                         AIC
-        bic           : float
+        bic           : float 
                         BIC
         D2            : float
                         percent deviance explained
         adj_D2        : float
                         adjusted percent deviance explained
         pseudo_R2       : float
-                        McFadden's pseudo R2  (coefficient of determination)
+                        McFadden's pseudo R2  (coefficient of determination) 
         adj_pseudoR2    : float
                         adjusted McFadden's pseudo R2
         resid_response          : array
@@ -197,19 +226,42 @@ class GLMResults(LikelihoodModelResults):
                                   derivatives of the link functions.
 
         resid_anscombe          : array
-                                 Anscombe residuals; see family.py for
+                                 Anscombe residuals; see family.py for 
                                  distribution-specific Anscombe residuals.
-
+        
         resid_deviance          : array
-                                 deviance residuals; see family.py for
+                                 deviance residuals; see family.py for 
                                  distribution-specific deviance residuals.
 
         pearson_chi2            : float
-                                  chi-Squared statistic is defined as the sum
+                                  chi-Squared statistic is defined as the sum 
                                   of the squares of the Pearson residuals
 
         normalized_cov_params   : array
                                 k*k, approximates [X.T*X]-1
+
+    Examples
+    --------
+    >>> from pysal.contrib.glm.glm import GLM, GLMResults
+    >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
+    >>> y = np.array(db.by_col("HOVAL"))
+    >>> self.y = np.reshape(y, (49,1))
+    >>> X = []
+    >>> X.append(db.by_col("INC"))
+    >>> X.append(db.by_col("CRIME"))
+    >>> self.X = np.array(X).T
+    >>> model = GLM(self.y, self.X, family=Gaussian())
+    >>> results1 = model.fit()
+    >>> results1.aic
+    408.73548964604873
+    >>> model = results1.model
+    >>> params = results1.params.flatten()
+    >>> predy = results1.predy
+    >>> w = results1.w
+    >>> results2 = GLMResults(model, params, predy, w)
+    >>> results2.aic
+    408.73548964604873
+   
     """
     def __init__(self, model, params, mu, w):
         self.model = model
@@ -217,6 +269,7 @@ class GLMResults(LikelihoodModelResults):
         self.y = model.y.T.flatten()
         self.X = model.X
         self.k = model.k
+        self.offset = model.offset
         self.family = model.family
         self.fit_params = model.fit_params
         self.params = params
@@ -268,9 +321,9 @@ class GLMResults(LikelihoodModelResults):
         y = np.reshape(self.y, (-1,1))
         model = self.model
         X = np.ones((len(y), 1))
-        null_mod =  GLM(y, X, family=self.family, constant=False)
+        null_mod =  GLM(y, X, family=self.family, offset=self.offset, constant=False)
         return null_mod.fit().mu
-
+   
     @cache_readonly
     def scale(self):
         if isinstance(self.family, (family.Binomial, family.Poisson)):
@@ -286,7 +339,7 @@ class GLMResults(LikelihoodModelResults):
     @cache_readonly
     def null_deviance(self):
         return self.family.deviance(self.y, self.null)
-
+   
     @cache_readonly
     def llnull(self):
         return self.family.loglike(self.y, self.null, scale=self.scale)
@@ -294,11 +347,11 @@ class GLMResults(LikelihoodModelResults):
     @cache_readonly
     def llf(self):
         return self.family.loglike(self.y, self.mu, scale=self.scale)
-
+    
     @cache_readonly
     def aic(self):
         if isinstance(self.family, family.QuasiPoisson):
-          return np.nan
+        	return np.nan
         else:
             return -2 * self.llf + 2*(self.df_model+1)
 
@@ -307,7 +360,7 @@ class GLMResults(LikelihoodModelResults):
         return (self.deviance -
                 (self.model.n - self.df_model - 1) *
                 np.log(self.model.n))
-
+    
     @cache_readonly
     def D2(self):
         return 1 - (self.deviance / self.null_deviance)
@@ -315,12 +368,12 @@ class GLMResults(LikelihoodModelResults):
     @cache_readonly
     def adj_D2(self):
         return 1.0 - (float(self.n) - 1.0)/(float(self.n) - float(self.k)) * (1.0-self.D2)
-
+    
     @cache_readonly
     def pseudoR2(self):
         return 1 - (self.llf/self.llnull)
-
+    
     @cache_readonly
     def adj_pseudoR2(self):
         return 1 - ((self.llf-self.k)/self.llnull)
-
+    

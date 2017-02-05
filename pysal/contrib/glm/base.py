@@ -25,7 +25,6 @@ class Results(object):
         if hasattr(model, 'k_constant'):
             self.k_constant = model.k_constant
 
-
 #TODO: public method?
 class LikelihoodModelResults(Results):
     """
@@ -364,21 +363,22 @@ class LikelihoodModelResults(Results):
             lower, the second column contains all upper limits.
         Examples
         --------
-        >>> import statsmodels.api as sm
-        >>> data = sm.datasets.longley.load()
-        >>> data.exog = sm.add_constant(data.exog)
-        >>> results = sm.OLS(data.endog, data.exog).fit()
+        >>> import pysal
+        >>> from pysal.contrib.glm.glm import GLM
+        >>> import numpy as np
+        >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
+        >>> y = np.array(db.by_col("HOVAL")).reshape((-1,1))
+        >>> X = []
+        >>> X.append(db.by_col("INC"))
+        >>> X.append(db.by_col("CRIME"))
+        >>> X = np.array(X).T
+        >>> model = GLM(y, X)
+        >>> results = model.fit()
         >>> results.conf_int()
-        array([[-5496529.48322745, -1467987.78596704],
-               [    -177.02903529,      207.15277984],
-               [      -0.1115811 ,        0.03994274],
-               [      -3.12506664,       -0.91539297],
-               [      -1.5179487 ,       -0.54850503],
-               [      -0.56251721,        0.460309  ],
-               [     798.7875153 ,     2859.51541392]])
-        >>> results.conf_int(cols=(2,3))
-        array([[-0.1115811 ,  0.03994274],
-               [-3.12506664, -0.91539297]])
+        array([[ 20.57281401,  72.28355135],
+               [ -0.42138121,   1.67934915],
+               [ -0.84292086,  -0.12685622]])
+
         Notes
         -----
         The confidence interval is based on the standard normal distribution.
