@@ -42,10 +42,6 @@ class GWR(GLM):
                         nearest neighbors; user specified or obtained using
                         Sel_BW
 
-        cal_coords    : array-like
-                        n*2, collection of n sets of (x,y) coordinates used for
-                        calibration locations instead of all observations; default 
-                        is set to None, which uses every observation as a calibration point
         family        : family object
                         underlying probability model; provides
                         distribution-specific calculations
@@ -143,7 +139,8 @@ class GWR(GLM):
                         observations from each calibration point
         points        : array-like
                         n*2, collection of n sets of (x,y) coordinates used for
-                        calibration locations instead of all observations; defaults to None
+                        calibration locations instead of all observations;
+                        defaults to None unles specified in predict method
         P             : array
                         n*k, independent variables used to make prediction;
                         exlcuding the constant; default to None unless specified
@@ -156,8 +153,7 @@ class GWR(GLM):
                         unless specified in predict method
     """
     def __init__(self, coords, y, X, bw, family=Gaussian(), offset=None,
-            sigma2_v1=False, kernel='bisquare', fixed=False, constant=True,
-            cal_coords=None):
+            sigma2_v1=False, kernel='bisquare', fixed=False, constant=True):
         """
         Initialize class
         """
@@ -165,7 +161,6 @@ class GWR(GLM):
         self.constant = constant
         self.sigma2_v1 = sigma2_v1
         self.coords = coords
-        self.cal_coords = cal_coords
         self.bw = bw
         self.kernel = kernel
         self.fixed = fixed
@@ -174,11 +169,8 @@ class GWR(GLM):
         else:
             self.offset = offset * 1.0
         self.fit_params = {}
-        if cal_coords is not None:
-            self.points = cal_coords
-        else:
-            self.points = None
-        self.W = self._build_W(fixed, kernel, coords, bw, points=self.points)
+        self.W = self._build_W(fixed, kernel, coords, bw)
+        self.points = None
         self.exog_scale = None
         self.exog_resid = None
         self.P = None
@@ -227,9 +219,9 @@ class GWR(GLM):
             predy = np.zeros((m, 1))
             v = np.zeros((m, 1))
             w = np.zeros((m, 1))
-            z = np.zeros((self.n, self.n))
-            S = np.zeros((self.n, self.n))
-            R = np.zeros((self.n, self.n))
+            z = np.zeros((m, self.n))
+            S = np.zeros((m, self.n))
+            R = np.zeros((m, self.n))
             CCT = np.zeros((m, self.k))
             #f = np.zeros((n, n))
             p = np.zeros((m, 1))
@@ -487,7 +479,10 @@ class GWRResults(GLMResults):
 
     @cache_readonly
     def resid_ss(self):
-        u = self.resid_response.flatten()
+        if self.model.points is not None:
+            raise NotImplementedError('Not available for GWR prediction')
+        else:
+            u = self.resid_response.flatten()
         return np.dot(u, u.T)
 
     @cache_readonly
