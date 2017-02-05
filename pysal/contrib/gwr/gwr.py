@@ -151,6 +151,36 @@ class GWR(GLM):
         exog_resid    : array-like
                         estimated residuals using sampled locations; defualt is None
                         unless specified in predict method
+
+    Example
+    -------
+    #basic model calibration
+
+    >>> import pysal
+    >>> from pysal.contrib.gwr.gwr import GWR
+    >>> data = pysal.open(pysal.examples.get_path('GData_utm.csv'))
+    >>> coords = zip(data.bycol('X'), data.by_col('Y')) 
+    >>> y = np.array(data.by_col('PctBach')).reshape((-1,1))
+    >>> rural = np.array(data.by_col('PctRural')).reshape((-1,1))
+    >>> pov = np.array(data.by_col('PctPov')).reshape((-1,1))
+    >>> african_amer = np.array(data.by_col('PctBlack')).reshape((-1,1))
+    >>> X = np.hstack([rural, pov, african_amer])
+    >>> model = GWR(coords, y, X, bw=90.000, fixed=False, kernel='bisquare')
+    >>> results = model.fit()
+    >>> print results.params.shape
+    (159, 4)
+
+    #predict at unsampled locations
+    
+    >>> index = np.arange(len(self.y))
+    >>> test = index[-10:]
+    >>> X_test = X[test]
+    >>> coords_test = list(coords[test])
+    >>> model = GWR(coords, y, X, bw=94, fixed=False, kernel='bisquare')
+    >>> results = model.predict(coords_test, X_test)
+    >>> print results.params.shape
+    (10, 4)
+
     """
     def __init__(self, coords, y, X, bw, family=Gaussian(), offset=None,
             sigma2_v1=False, kernel='bisquare', fixed=False, constant=True):
