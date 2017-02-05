@@ -296,8 +296,8 @@ class GWR(GLM):
                         which estimates a model using points from "coords"; if
                         given it must be n*1 where n is the length of coords
         fit_params    : dict
-                        key-value pairs of parameters that will be passed into fit method to define estimation
-                        routine; see fit method for more details
+                        key-value pairs of parameters that will be passed into fit 
+                        method to define estimation routine; see fit method for more details
 
         """
         if (exog_scale is None) & (exog_resid is None):
