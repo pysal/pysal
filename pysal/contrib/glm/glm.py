@@ -270,15 +270,12 @@ class GLMResults(LikelihoodModelResults):
         self.X = model.X
         self.k = model.k
         self.offset = model.offset
-        self.df_model = model.df_model
-        self.df_resid = model.df_resid
         self.family = model.family
         self.fit_params = model.fit_params
         self.params = params
         self.w = w
         self.mu = mu.flatten()
         self._cache = {}
-        self.normalized_cov_params = la.inv(spdot(self.w.T, self.w))
 
     @cache_readonly
     def df_model(self):

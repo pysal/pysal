@@ -153,6 +153,64 @@ except ImportError:
             return "NumpyVersion(%s)" % self.vstring
 
 
+class ResettableCache(dict):
+    """
+    Dictionary whose elements mey depend one from another.
+    If entry `B` depends on entry `A`, changing the values of entry `A` will
+    reset the value of entry `B` to a default (None); deleteing entry `A` will
+    delete entry `B`.  The connections between entries are stored in a
+    `_resetdict` private attribute.
+    Parameters
+    ----------
+    reset : dictionary, optional
+        An optional dictionary, associated a sequence of entries to any key
+        of the object.
+    items : var, optional
+        An optional dictionary used to initialize the dictionary
+    Examples
+    --------
+    >>> reset = dict(a=('b',), b=('c',))
+    >>> cache = resettable_cache(a=0, b=1, c=2, reset=reset)
+    >>> assert_equal(cache, dict(a=0, b=1, c=2))
+    >>> print("Try resetting a")
+    >>> cache['a'] = 1
+    >>> assert_equal(cache, dict(a=1, b=None, c=None))
+    >>> cache['c'] = 2
+    >>> assert_equal(cache, dict(a=1, b=None, c=2))
+    >>> cache['b'] = 0
+    >>> assert_equal(cache, dict(a=1, b=0, c=None))
+    >>> print("Try deleting b")
+    >>> del(cache['a'])
+    >>> assert_equal(cache, {})
+    """
+
+    def __init__(self, reset=None, **items):
+        self._resetdict = reset or {}
+        dict.__init__(self, **items)
+
+    def __setitem__(self, key, value):
+        dict.__setitem__(self, key, value)
+        # if hasattr needed for unpickling with protocol=2
+        if hasattr(self, '_resetdict'):
+            for mustreset in self._resetdict.get(key, []):
+                self[mustreset] = None
+
+    def __delitem__(self, key):
+        dict.__delitem__(self, key)
+        for mustreset in self._resetdict.get(key, []):
+            del(self[mustreset])
+
+#    def __getstate__(self):
+#        print('pickling wrapper', self.__dict__)
+#        return self.__dict__
+#
+#    def __setstate__(self, dict_):
+#        print('unpickling wrapper', dict_)
+#        self.__dict__.update(dict_)
+
+
+resettable_cache = ResettableCache
+
 def _next_regular(target):
     """
     Find the next regular number greater than or equal to target.
