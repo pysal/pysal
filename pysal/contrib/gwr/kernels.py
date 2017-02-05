@@ -40,6 +40,10 @@ def adapt_exp(coords, nn, points=None):
 
 from scipy.spatial.distance import cdist
 
+#Customized Kernel class user for GWR because the default PySAL kernel class
+#favors memory optimization over speed optimizations and GWR often needs the 
+#speed optimization since it is not always assume points far awar are truncated
+#to zero
 class _Kernel(object):
     """
 

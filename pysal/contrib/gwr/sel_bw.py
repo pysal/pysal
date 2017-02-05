@@ -1,10 +1,7 @@
 # GWR Bandwidth selection class
 
-#Thinking about removing the search method and just having optimization begin in
-#class __init__
+#x_glob parameter does not yet do anything; it is for semiparametric
 
-#x_glob and offset parameters dont yet do anything; former is for semiparametric
-#GWR and later is for offset variable for Poisson model
 
 __author__ = "Taylor Oshan Tayoshan@gmail.com"
 
@@ -34,9 +31,9 @@ class Sel_BW(object):
     ----------
     y              : array
                      n*1, dependent variable.
-    x_glob         : array
+    X_glob         : array
                      n*k1, fixed independent variable.
-    x_loc          : array
+    X_loc          : array
                      n*k2, local independent variable, including constant.
     coords         : list of tuples
                      (x,y) of points used in bandwidth selection
@@ -60,9 +57,9 @@ class Sel_BW(object):
     ----------
     y              : array
                      n*1, dependent variable.
-    x_glob         : array
+    X_glob         : array
                      n*k1, fixed independent variable.
-    x_loc          : array
+    X_loc          : array
                      n*k2, local independent variable, including constant.
     coords         : list of tuples
                      (x,y) of points used in bandwidth selection
@@ -90,16 +87,55 @@ class Sel_BW(object):
     constant       : boolean
                      True to include intercept (default) in model and False to exclude
                      intercept.
+    Examples
+    ________
+
+    >>> import pysal
+    >>> from pysal.contrib.gwr.sel_bw import Sel_BW
+    >>> data = pysal.open(pysal.examples.get_path('GData_utm.csv'))
+    >>> coords = zip(data.bycol('X'), data.by_col('Y')) 
+    >>> y = np.array(data.by_col('PctBach')).reshape((-1,1))
+    >>> rural = np.array(data.by_col('PctRural')).reshape((-1,1))
+    >>> pov = np.array(data.by_col('PctPov')).reshape((-1,1))
+    >>> african_amer = np.array(data.by_col('PctBlack')).reshape((-1,1))
+    >>> X = np.hstack([rural, pov, african_amer])
+    
+    #Golden section search AICc - adaptive bisquare
+    >>> bw = Sel_BW(coords, y, X).search(criterion='AICc')
+    >>> print bw
+    93.0
+
+    #Golden section search AIC - adaptive Gaussian
+    >>> bw = Sel_BW(coords, y, X, kernel='gaussian').search(criterion='AIC')
+    >>> print bw
+    50.0
+
+    #Golden section search BIC - adaptive Gaussian
+    >>> bw = Sel_BW(coords, y, X, kernel='gaussian').search(criterion='BIC')
+    >>> print bw
+    62.0
+
+    #Golden section search CV - adaptive Gaussian
+    >>> bw = Sel_BW(coords, y, X, kernel='gaussian').search(criterion='CV')
+    >>> print bw
+    68.0
+
+    #Interval AICc - fixed bisquare
+    >>>  sel = Sel_BW(coords, y, X, fixed=True).
+    >>>  bw = sel.search(search='interval', bw_min=211001.0, bw_max=211035.0, interval=2) 
+    >>> print bw
+    211025.0
+
     """
-    def __init__(self, coords, y, x_loc, x_glob=None, family=Gaussian(),
+    def __init__(self, coords, y, X_loc, X_glob=None, family=Gaussian(),
             offset=None, kernel='bisquare', fixed=False, fb=False, constant=True):
         self.coords = coords
         self.y = y
-        self.x_loc = x_loc
-        if x_glob is not None:
-            self.x_glob = x_glob
+        self.X_loc = X_loc
+        if X_glob is not None:
+            self.X_glob = X_glob
         else:
-            self.x_glob = []
+            self.X_glob = []
         self.family=family
         self.fixed = fixed
         self.kernel = kernel
@@ -207,10 +243,10 @@ class Sel_BW(object):
 
     def _bw(self):
         gwr_func = lambda bw: getDiag[self.criterion](
-                GWR(self.coords, self.y, self.x_loc, bw, family=self.family,
+                GWR(self.coords, self.y, self.X_loc, bw, family=self.family,
                     kernel=self.kernel, fixed=self.fixed, constant=self.constant).fit())
         if self.search == 'golden_section':
-            a,c = self._init_section(self.x_glob, self.x_loc, self.coords,
+            a,c = self._init_section(self.X_glob, self.X_loc, self.coords,
                     self.constant)
             delta = 0.38197 #1 - (np.sqrt(5.0)-1.0)/2.0
             self.bw = golden_section(a, c, delta, gwr_func, self.tol,
@@ -224,9 +260,9 @@ class Sel_BW(object):
     def _fbw(self):
         y = self.y
         if self.constant:
-          X = USER.check_constant(self.x_loc)
+          X = USER.check_constant(self.X_loc)
         else:
-            X = self.x_loc
+            X = self.X_loc
         n, k = X.shape
         family = self.family
         offset = self.offset
@@ -242,7 +278,7 @@ class Sel_BW(object):
         max_iter = self.max_iter
         gwr_func = lambda y, X, bw: GWR(coords, y, X, bw, family=family,
                 kernel=kernel, fixed=fixed, offset=offset, constant=False).fit()
-        bw_func = lambda y, X: Sel_BW(coords, y, X, x_glob=[], family=family,
+        bw_func = lambda y, X: Sel_BW(coords, y, X, X_glob=[], family=family,
                 kernel=kernel, fixed=fixed, offset=offset, constant=False)
         sel_func = lambda bw_func: bw_func.search(search=search,
                         criterion=criterion, bw_min=bw_min, bw_max=bw_max,
@@ -252,13 +288,13 @@ class Sel_BW(object):
 
 
 
-    def _init_section(self, x_glob, x_loc, coords, constant):
-        if len(x_glob) > 0:
-            n_glob = x_glob.shape[1]
+    def _init_section(self, X_glob, X_loc, coords, constant):
+        if len(X_glob) > 0:
+            n_glob = X_glob.shape[1]
         else:
             n_glob = 0
-        if len(x_loc) > 0:
-            n_loc = x_loc.shape[1]
+        if len(X_loc) > 0:
+            n_loc = X_loc.shape[1]
         else:
             n_loc = 0
         if constant:

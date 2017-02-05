@@ -152,8 +152,8 @@ class GWR(GLM):
                         estimated residuals using sampled locations; defualt is None
                         unless specified in predict method
 
-    Example
-    -------
+    Examples
+    --------
     #basic model calibration
 
     >>> import pysal

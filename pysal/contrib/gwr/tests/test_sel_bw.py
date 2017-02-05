@@ -73,8 +73,8 @@ class TestSelBW(unittest.TestCase):
     def test_interval_fixed_AICc(self):
         bw1 = 211025.0#211027.00
         bw2 = Sel_BW(self.coords, self.y, self.X, kernel='bisquare',
-                fixed=True).search(criterion='AICc', search='interval', bw_min=211001.,
-                        bw_max=211035.0, interval=2)
+                fixed=True).search(criterion='AICc', search='interval',
+                        bw_min=211001.0, bw_max=211035.0, interval=2)
         self.assertAlmostEqual(bw1, bw2)
 
     def test_interval_adapt_AICc(self):
