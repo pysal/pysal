@@ -305,6 +305,18 @@ class TestGWRGaussian(unittest.TestCase):
                             [ 0.55884954]])
         np.testing.assert_allclose(localR2, results.localR2, rtol=1e-05)
 
+        predictions = np.array([[ 10.51695514],
+                                [  9.93321992],
+                                [  8.92473026],
+                                [  5.47350219],
+                                [  8.61756585],
+                                [ 12.8141851 ],
+                                [  5.55619405],
+                                [ 12.63004172],
+                                [  8.70638418],
+                                [  8.17582599]])
+        np.testing.assert_allclose(predictions, results.predictions, rtol=1e-05)
+
 class TestGWRPoisson(unittest.TestCase):
     def setUp(self):
         data = pysal.open(pysal.examples.get_path('Tokyomortality.csv'), mode='Ur')
