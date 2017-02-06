@@ -126,11 +126,11 @@ class TestSelBW(unittest.TestCase):
                         bw_max=76.0 , interval=2)
         self.assertAlmostEqual(bw1, bw2)
 
-    def test_FBGWR_AIC(self):
+    def test_MGWR_AIC(self):
         bw1 = [157.0, 65.0, 52.0]
-        sel = Sel_BW(self.coords, self.y, self.X, fb=True, kernel='bisquare',
+        sel = Sel_BW(self.coords, self.y, self.X, multi=True, kernel='bisquare',
                 constant=False)
-        bw2 = sel.search(tol_fb=1e-03)
+        bw2 = sel.search(tol_multi=1e-03)
         np.testing.assert_allclose(bw1, bw2)
         np.testing.assert_allclose(sel.XB, self.XB, atol=1e-05)
         np.testing.assert_allclose(sel.err, self.err, atol=1e-05)

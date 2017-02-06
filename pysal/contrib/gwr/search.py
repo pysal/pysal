@@ -142,11 +142,10 @@ def equal_interval(l_bound, u_bound, interval, function, int_score=False):
     return opt_val, opt_score, output
 
 
-def flexible_bw(init, y, X, n, k, family, tol, max_iter, rss_score,
+def multi_bw(init, y, X, n, k, family, tol, max_iter, rss_score,
         gwr_func, bw_func, sel_func):
     if init:
         bw = sel_func(bw_func(y, X))
-        print bw
         optim_model = gwr_func(y, X, bw)
         err = optim_model.resid_response.reshape((-1,1))
         est = optim_model.params
@@ -198,7 +197,6 @@ def flexible_bw(init, y, X, n, k, family, tol, max_iter, rss_score,
             new_rss = np.sum((y - predy)**2)
             score = np.abs((new_rss - rss)/new_rss)
             rss = new_rss
-        print score
         scores.append(score)
         delta = score
         BWs.append(bws)

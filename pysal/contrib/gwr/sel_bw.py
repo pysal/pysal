@@ -6,7 +6,7 @@
 __author__ = "Taylor Oshan Tayoshan@gmail.com"
 
 from kernels import *
-from search import golden_section, equal_interval, flexible_bw
+from search import golden_section, equal_interval, multi_bw
 from gwr import GWR
 from pysal.contrib.glm.family import Gaussian, Poisson, Binomial
 import pysal.spreg.user_output as USER
@@ -45,7 +45,7 @@ class Sel_BW(object):
                      kernel function: 'gaussian', 'bisquare', 'exponetial'
     fixed          : boolean
                      True for fixed bandwidth and False for adaptive (NN)
-    fb             : True for flexible (mutliple covaraite-specific) bandwidths
+    multi          : True for multiple (covaraite-specific) bandwidths
                      False for a traditional (same for  all covariates)
                      bandwdith; defualt is False.
     constant       : boolean
@@ -81,7 +81,7 @@ class Sel_BW(object):
                      tolerance used to determine convergence
     max_iter       : integer
                      max interations if no convergence to tol
-    fb             : True for flexible (mutliple covaraite-specific) bandwidths
+    multi          : True for multiple (covaraite-specific) bandwidths
                      False for a traditional (same for  all covariates)
                      bandwdith; defualt is False.
     constant       : boolean
@@ -128,7 +128,7 @@ class Sel_BW(object):
 
     """
     def __init__(self, coords, y, X_loc, X_glob=None, family=Gaussian(),
-            offset=None, kernel='bisquare', fixed=False, fb=False, constant=True):
+            offset=None, kernel='bisquare', fixed=False, multi=False, constant=True):
         self.coords = coords
         self.y = y
         self.X_loc = X_loc
@@ -143,12 +143,12 @@ class Sel_BW(object):
           self.offset = np.ones((len(y), 1))
         else:
             self.offset = offset * 1.0
-        self.fb = fb
+        self.multi = multi
         self.constant = constant
 
     def search(self, search='golden_section', criterion='AICc', bw_min=0.0,
-            bw_max=0.0, interval=0.0, tol=1.0e-6, max_iter=200, init_fb=True,
-            tol_fb=1.0e-5, rss_score=False, max_iter_fb=200):
+            bw_max=0.0, interval=0.0, tol=1.0e-6, max_iter=200, init_multi=True,
+            tol_multi=1.0e-5, rss_score=False, max_iter_multi=200):
         """
         Parameters
         ----------
@@ -166,18 +166,18 @@ class Sel_BW(object):
                          tolerance used to determine convergence
         max_iter       : integer
                          max iterations if no convergence to tol
-        init_fb        : True to initialize flexible bandwidth search with
+        init_multi     : True to initialize multipke bandwidth search with
                          esitmates from a traditional GWR and False to
-                         initialize flexible bandwidth search with global
+                         initialize multiple bandwidth search with global
                          regression estimates
-        tol_fb         : convergence tolerence for the flexible bandwidth
+        tol_multi      : convergence tolerence for the multiple bandwidth
                          backfitting algorithm; a larger tolerance may stop the
                          algorith faster though it may result in a less optimal
                          model
-        max_iter_fb    : max iterations if no convergence to tol for flexible
+        max_iter_multi : max iterations if no convergence to tol for multiple
                          bandwidth backfittign algorithm
         rss_score      : True to use the residual sum of sqaures to evaluate
-                         each iteration of the flexible bandwidth backfitting
+                         each iteration of the multiple bandwidth backfitting
                          routine and False to use a smooth function; default is
                          False
 
@@ -185,7 +185,7 @@ class Sel_BW(object):
         -------
         bw             : scalar or array
                          optimal bandwidth value or values; returns scalar for
-                         fb=False and array for fb=True; ordering of bandwidths
+                         multi=False and array for multi=True; ordering of bandwidths
                          matches the ordering of the covariates (columns) of the
                          designs matrix, X
         """
@@ -196,10 +196,10 @@ class Sel_BW(object):
         self.interval = interval
         self.tol = tol
         self.max_iter = max_iter
-        self.init_fb = init_fb
-        self.tol_fb = tol_fb
+        self.init_multi = init_multi
+        self.tol_multi = tol_multi
         self.rss_score = rss_score
-        self.max_iter_fb = max_iter_fb
+        self.max_iter_multi = max_iter_multi
 
 
         if self.fixed:
@@ -231,9 +231,8 @@ class Sel_BW(object):
             int_score = False
         self.int_score = int_score
 
-        if self.fb:
-            self._fbw()
-            print self.bw[1]
+        if self.multi:
+            self._mbw()
             self.XB = self.bw[4]
             self.err = self.bw[5]
         else:
@@ -257,7 +256,7 @@ class Sel_BW(object):
         else:
             raise TypeError('Unsupported computational search method ', search)
 
-    def _fbw(self):
+    def _mbw(self):
         y = self.y
         if self.constant:
           X = USER.check_constant(self.X_loc)
@@ -283,8 +282,9 @@ class Sel_BW(object):
         sel_func = lambda bw_func: bw_func.search(search=search,
                         criterion=criterion, bw_min=bw_min, bw_max=bw_max,
                         interval=interval, tol=tol, max_iter=max_iter)
-        self.bw = flexible_bw(self.init_fb, y, X, n, k, family, self.tol_fb,
-               self.max_iter_fb, self.rss_score, gwr_func, bw_func, sel_func)
+        self.bw = multi_bw(self.init_multi, y, X, n, k, family,
+                self.tol_multi, self.max_iter_multi, self.rss_score, gwr_func,
+                bw_func, sel_func)
 
 
 

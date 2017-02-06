@@ -4,7 +4,7 @@ GWR is tested against results from GWR4
 
 import unittest
 import pickle as pk
-from pysal.contrib.gwr.gwr import GWR, FBGWR
+from pysal.contrib.gwr.gwr import GWR, MGWR
 from pysal.contrib.gwr.sel_bw import Sel_BW
 from pysal.contrib.gwr.diagnostics import get_AICc, get_AIC, get_BIC, get_CV
 from pysal.contrib.glm.family import Gaussian, Poisson, Binomial
@@ -24,7 +24,7 @@ class TestGWRGaussian(unittest.TestCase):
         self.BS_NN = pysal.open(pysal.examples.get_path('georgia_BS_NN_listwise.csv'))
         self.GS_F = pysal.open(pysal.examples.get_path('georgia_GS_F_listwise.csv'))
         self.GS_NN = pysal.open(pysal.examples.get_path('georgia_GS_NN_listwise.csv'))
-        self.FB = pk.load(open(pysal.examples.get_path('FB.p'), 'r'))
+        self.MGWR = pk.load(open(pysal.examples.get_path('FB.p'), 'r'))
         self.XB = pk.load(open(pysal.examples.get_path('XB.p'), 'r'))
         self.err = pk.load(open(pysal.examples.get_path('err.p'), 'r'))
 
@@ -234,14 +234,14 @@ class TestGWRGaussian(unittest.TestCase):
         np.testing.assert_allclose(inf, rslt.influ, rtol=1e-04)
         np.testing.assert_allclose(cooksD, rslt.cooksD, rtol=1e-00)
     
-    def test_FBGWR(self):
-        model = FBGWR(self.coords, self.y, self.X, [157.0, 65.0, 52.0],
+    def test_MGWR(self):
+        model = MGWR(self.coords, self.y, self.X, [157.0, 65.0, 52.0],
                 XB=self.XB, err=self.err, constant=False)
         rslt = model.fit()
 
-        np.testing.assert_allclose(rslt.predy, self.FB['predy'], atol=1e-07)
-        np.testing.assert_allclose(rslt.params, self.FB['params'], atol=1e-07)
-        np.testing.assert_allclose(rslt.resid_response, self.FB['u'], atol=1e-05)
+        np.testing.assert_allclose(rslt.predy, self.MGWR['predy'], atol=1e-07)
+        np.testing.assert_allclose(rslt.params, self.MGWR['params'], atol=1e-07)
+        np.testing.assert_allclose(rslt.resid_response, self.MGWR['u'], atol=1e-05)
         np.testing.assert_almost_equal(rslt.resid_ss, 6339.3497144025841)
 
     def test_Prediction(self):

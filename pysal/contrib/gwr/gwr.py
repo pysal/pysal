@@ -881,7 +881,7 @@ class GWRResults(GLMResults):
             predictions = np.sum(P*self.params, axis=1).reshape((-1,1))
         return predictions
 
-class FBGWR(GWR):
+class MGWR(GWR):
     """
     Parameters
     ----------
@@ -1063,14 +1063,14 @@ class FBGWR(GWR):
             results = model.fit(ini_params, tol, max_iter, solve)
             params[:,i] = results.params.flatten()
             err = results.resid_response.reshape((-1,1))
-        return FBGWRResults(self, params)
+        return MGWRResults(self, params)
 
-class FBGWRResults(object):
+class MGWRResults(object):
     """
     Parameters
     ----------
         model               : GWR object
-                              pointer to FBGWR object with estimation parameters
+                              pointer to MGWR object with estimation parameters
 
         params              : array
                               n*k, estimated coefficients
@@ -1078,7 +1078,7 @@ class FBGWRResults(object):
     Attributes
     ----------
         model               : GWR Object
-                              points to FBGWR object for which parameters have been
+                              points to MGWR object for which parameters have been
                               estimated
 
         params              : array
