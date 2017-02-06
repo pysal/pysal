@@ -6,7 +6,7 @@
 __author__ = "Taylor Oshan Tayoshan@gmail.com"
 
 from kernels import *
-from search import golden_section, equal_interval, multi_bw
+from search import golden_section, equal_interval
 from gwr import GWR
 from pysal.contrib.glm.family import Gaussian, Poisson, Binomial
 import pysal.spreg.user_output as USER
@@ -45,9 +45,6 @@ class Sel_BW(object):
                      kernel function: 'gaussian', 'bisquare', 'exponetial'
     fixed          : boolean
                      True for fixed bandwidth and False for adaptive (NN)
-    multi          : True for multiple (covaraite-specific) bandwidths
-                     False for a traditional (same for  all covariates)
-                     bandwdith; defualt is False.
     constant       : boolean
                      True to include intercept (default) in model and False to exclude
                      intercept.
@@ -81,9 +78,6 @@ class Sel_BW(object):
                      tolerance used to determine convergence
     max_iter       : integer
                      max interations if no convergence to tol
-    multi          : True for multiple (covaraite-specific) bandwidths
-                     False for a traditional (same for  all covariates)
-                     bandwdith; defualt is False.
     constant       : boolean
                      True to include intercept (default) in model and False to exclude
                      intercept.
@@ -128,7 +122,7 @@ class Sel_BW(object):
 
     """
     def __init__(self, coords, y, X_loc, X_glob=None, family=Gaussian(),
-            offset=None, kernel='bisquare', fixed=False, multi=False, constant=True):
+            offset=None, kernel='bisquare', fixed=False, constant=True):
         self.coords = coords
         self.y = y
         self.X_loc = X_loc
@@ -143,12 +137,10 @@ class Sel_BW(object):
           self.offset = np.ones((len(y), 1))
         else:
             self.offset = offset * 1.0
-        self.multi = multi
         self.constant = constant
 
     def search(self, search='golden_section', criterion='AICc', bw_min=0.0,
-            bw_max=0.0, interval=0.0, tol=1.0e-6, max_iter=200, init_multi=True,
-            tol_multi=1.0e-5, rss_score=False, max_iter_multi=200):
+            bw_max=0.0, interval=0.0, tol=1.0e-6, max_iter=200):
         """
         Parameters
         ----------
@@ -166,28 +158,11 @@ class Sel_BW(object):
                          tolerance used to determine convergence
         max_iter       : integer
                          max iterations if no convergence to tol
-        init_multi     : True to initialize multipke bandwidth search with
-                         esitmates from a traditional GWR and False to
-                         initialize multiple bandwidth search with global
-                         regression estimates
-        tol_multi      : convergence tolerence for the multiple bandwidth
-                         backfitting algorithm; a larger tolerance may stop the
-                         algorith faster though it may result in a less optimal
-                         model
-        max_iter_multi : max iterations if no convergence to tol for multiple
-                         bandwidth backfittign algorithm
-        rss_score      : True to use the residual sum of sqaures to evaluate
-                         each iteration of the multiple bandwidth backfitting
-                         routine and False to use a smooth function; default is
-                         False
 
         Returns
         -------
         bw             : scalar or array
-                         optimal bandwidth value or values; returns scalar for
-                         multi=False and array for multi=True; ordering of bandwidths
-                         matches the ordering of the covariates (columns) of the
-                         designs matrix, X
+                         optimal bandwidth value
         """
         self.search = search
         self.criterion = criterion
@@ -196,11 +171,6 @@ class Sel_BW(object):
         self.interval = interval
         self.tol = tol
         self.max_iter = max_iter
-        self.init_multi = init_multi
-        self.tol_multi = tol_multi
-        self.rss_score = rss_score
-        self.max_iter_multi = max_iter_multi
-
 
         if self.fixed:
             if self.kernel == 'gaussian':
@@ -231,12 +201,7 @@ class Sel_BW(object):
             int_score = False
         self.int_score = int_score
 
-        if self.multi:
-            self._mbw()
-            self.XB = self.bw[4]
-            self.err = self.bw[5]
-        else:
-            self._bw()
+        self._bw()
 
         return self.bw[0]
 
@@ -255,37 +220,6 @@ class Sel_BW(object):
                     gwr_func, self.int_score)
         else:
             raise TypeError('Unsupported computational search method ', search)
-
-    def _mbw(self):
-        y = self.y
-        if self.constant:
-          X = USER.check_constant(self.X_loc)
-        else:
-            X = self.X_loc
-        n, k = X.shape
-        family = self.family
-        offset = self.offset
-        kernel = self.kernel
-        fixed = self.fixed
-        coords = self.coords
-        search = self.search
-        criterion = self.criterion
-        bw_min = self.bw_min
-        bw_max = self.bw_max
-        interval = self.interval
-        tol = self.tol
-        max_iter = self.max_iter
-        gwr_func = lambda y, X, bw: GWR(coords, y, X, bw, family=family,
-                kernel=kernel, fixed=fixed, offset=offset, constant=False).fit()
-        bw_func = lambda y, X: Sel_BW(coords, y, X, X_glob=[], family=family,
-                kernel=kernel, fixed=fixed, offset=offset, constant=False)
-        sel_func = lambda bw_func: bw_func.search(search=search,
-                        criterion=criterion, bw_min=bw_min, bw_max=bw_max,
-                        interval=interval, tol=tol, max_iter=max_iter)
-        self.bw = multi_bw(self.init_multi, y, X, n, k, family,
-                self.tol_multi, self.max_iter_multi, self.rss_score, gwr_func,
-                bw_func, sel_func)
-
 
 
     def _init_section(self, X_glob, X_loc, coords, constant):
