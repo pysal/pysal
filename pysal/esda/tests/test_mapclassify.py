@@ -1,9 +1,10 @@
 import pysal
-from pysal.esda.mapclassify import *
-from pysal.esda.mapclassify import binC, bin, bin1d
-from pysal.common import RTOL
+from ..mapclassify import *
+from ..mapclassify import binC, bin, bin1d
+from ...common import RTOL
 import numpy as np
 import unittest
+import types
 
 class TestQuantile(unittest.TestCase):
     def test_quantile(self):
@@ -66,6 +67,34 @@ class TestFindBin(unittest.TestCase):
         mc2 = Fisher_Jenks(self.V, k=9)
         known = [0, 0, 0, 0, 2, 2, 3, 5, 7, 7, 8, 8, 8]
         np.testing.assert_array_equal(known, mc2.find_bin(toclass))
+
+class TestMake(unittest.TestCase):
+    def setUp(self):
+        self.data = [np.linspace(-5,5, num=5), np.linspace(-10, 10, num=5),
+                np.linspace(-20, 20, num=5)]
+        self.ei = Equal_Interval.make()
+        self.q5r = Quantiles.make(k=5, rolling=True)
+    
+    def test_make(self):
+        self.assertIsInstance(self.ei, types.FunctionType)
+        self.assertIsInstance(self.q5r, types.FunctionType)
+        
+        assert hasattr(self.ei, '_options')
+        self.assertEqual(self.ei._options, dict())
+        assert hasattr(self.q5r, '_options')
+        self.assertEqual(self.q5r._options, {'k':5, 'rolling':True})
+
+    def test_apply(self):
+        ei_classes = [self.ei(d) for d in self.data]
+        known = [np.arange(0,5,1)] * 3
+        np.testing.assert_allclose(known, ei_classes)
+
+        q5r_classes = [self.q5r(d) for d in self.data]
+        known = [[0,1,2,3,4], [0,1,2,4,4], [0,0,2,4,4]]
+        accreted_data = set(self.q5r.func_defaults[0].y)
+        all_data = set(np.asarray(self.data).flatten())
+        self.assertEqual(accreted_data, all_data)
+        np.testing.assert_allclose(known, q5r_classes)
 
 class TestBinC(unittest.TestCase):
     def test_bin_c(self):

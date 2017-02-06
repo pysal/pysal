@@ -1370,7 +1370,7 @@ def summary_diag_sur(reg, nonspat_diag, spat_diag, tsls, lambd, rho=False):
             if lambd and spat_diag:
                 strSummary += "%41s        %2d   %10.3f           %6.4f\n" % (
                     "LR test on lambda", reg.likrlambda[1], reg.likrlambda[0], reg.likrlambda[2])
-                if reg.vm != None:
+                if reg.vm is not None:
                     strSummary += "%41s        %2d   %10.3f           %6.4f\n" % (
                         "Joint significance (lambda)", reg.joinlam[1], reg.joinlam[0], reg.joinlam[2])        
             summary_add_other_end(reg, strSummary)

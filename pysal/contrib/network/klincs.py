@@ -31,11 +31,11 @@ class WeightedRandomSampleGenerator(object):
     """
 
     def __init__(self, weights, population, n):
-	"""
-	weights: an iterable with m numeric elements
-	population: a numpy array with m elements
-	n: an integer representing sample size
-	"""
+        """
+        weights: an iterable with m numeric elements
+        population: a numpy array with m elements
+        n: an integer representing sample size
+        """
         self.totals = np.cumsum(weights)
         self.population = population
         self.n = n
@@ -57,10 +57,10 @@ class RandomSampleGenerator(object):
     from a population group
     """
     def __init__(self, population, n):
-	"""
-	population: a numpy array with m elements
-	n: an integer representing sample size
-	"""
+        """
+        population: a numpy array with m elements
+        n: an integer representing sample size
+        """
         self.population = population
         self.n = n
 

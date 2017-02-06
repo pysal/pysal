@@ -10,6 +10,10 @@ Python Spatial Analysis Library
 .. image:: https://badges.gitter.im/pysal/pysal.svg
    :target: https://gitter.im/pysal/pysal
 
+.. image:: https://readthedocs.org/projects/pip/badge/?version=latest
+   :target: http://pysal.readthedocs.io/en/latest/index.html
+
+
 PySAL_ is an open source cross-platform library of spatial analysis functions
 written in Python. It is intended to support the development of high level
 applications for spatial analysis.
@@ -24,7 +28,6 @@ applications for spatial analysis.
 Counties 1990.*
 
 
-
 It is important to underscore what PySAL is, and is not, designed to do. First
 and foremost, PySAL is a library in the fullest sense of the word. Developers
 looking for a suite of spatial analytical methods that they can incorporate
@@ -33,17 +36,6 @@ who may be carrying out research projects requiring customized scripting,
 extensive simulation analysis, or those seeking to advance the state of the art
 in spatial analysis should also find PySAL to be a useful foundation for their
 work.
-
-End users looking for a user friendly graphical user interface for spatial
-analysis should not turn to PySAL directly. Instead, we would direct them to
-projects like  the GeoDaX_ suite of software products which wrap PySAL
-functionality in GUIs. At the same time, we expect that with developments such
-as the Python based plug-in architectures for QGIS, GRASS, and the toolbox
-extensions for ArcGIS, that end user access to PySAL functionality will be
-widening in the near future.
-
-.. _PySAL : https://github.com/pysal/pysal/
-.. _GeoDaX : https://geodacenter.asu.edu/software
 
 
 .. |build| image:: https://travis-ci.org/pysal/pysal.png
@@ -57,7 +49,7 @@ widening in the near future.
 .. |docs| image:: https://readthedocs.org/projects/pysal/badge/?verison=latest
    :scale: 50%
    :align: top
-   :target: http://pysal.readthedocs.org/en/latest/ 
+   :target: http://pysal.readthedocs.org/en/latest/
 .. |talk| image:: https://badges.gitter.im/Join%20Chat.svg
    :scale: 50%
    :align: top
@@ -87,10 +79,10 @@ Installation
 PySAL can be installed using pip:
 
 .. code-block:: bash
-   
+
     $ pip install pysal
 
-PySAL is also available through 
+PySAL is also available through
 `Anaconda <https://www.continuum.io/downloads>`__ and `Enthought Canopy <https://www.enthought.com/products/canopy/>`__.
 
 Documentation
@@ -121,7 +113,7 @@ as well as gitter_.
 Getting Involved
 ================
 
-If you are interested in contributing to PySAL please see our 
+If you are interested in contributing to PySAL please see our
 `development guidelines <http://pysal.readthedocs.org/en/latest/developers/index.html>`_.
 
 

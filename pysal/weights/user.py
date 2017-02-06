@@ -6,12 +6,17 @@ contiguity and distance criteria.
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 
 import pysal
-from Contiguity import buildContiguity
+from Contiguity import buildContiguity, Queen, Rook
 from Distance import knnW, Kernel, DistanceBand
 from util import get_ids, get_points_array_from_shapefile, min_threshold_distance
 import numpy as np
 
-__all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array', 'knnW_from_shapefile', 'threshold_binaryW_from_array', 'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array', 'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile', 'adaptive_kernelW', 'adaptive_kernelW_from_shapefile', 'min_threshold_dist_from_shapefile', 'build_lattice_shapefile']
+__all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array',
+           'knnW_from_shapefile', 'threshold_binaryW_from_array',
+           'threshold_binaryW_from_shapefile', 'threshold_continuousW_from_array',
+           'threshold_continuousW_from_shapefile', 'kernelW', 'kernelW_from_shapefile',
+           'adaptive_kernelW', 'adaptive_kernelW_from_shapefile',
+           'min_threshold_dist_from_shapefile', 'build_lattice_shapefile']
 
 
 def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
@@ -25,14 +30,14 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
                   name of polygon shapefile including suffix.
     idVariable  : string
                   name of a column in the shapefile's DBF to use for ids.
-    sparse    : boolean
-                If True return WSP instance
-                If False return W instance
+    sparse      : boolean
+                  If True return WSP instance
+                  If False return W instance
     Returns
     -------
 
-    w            : W
-                   instance of spatial weights
+    w           : W
+                  instance of spatial weights
 
     Examples
     --------
@@ -58,19 +63,10 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
     :class:`pysal.weights.W`
 
     """
-    shp = pysal.open(shapefile)
-    w = buildContiguity(shp, criterion='queen')
-    if idVariable:
-        ids = get_ids(shapefile, idVariable)
-        w.remap_ids(ids)
-    else:
-        ids = None
-    shp.close()
-    w.set_shapefile(shapefile, idVariable)
 
+    w = Queen.from_shapefile(shapefile, idVariable=idVariable)
     if sparse:
-        w = pysal.weights.WSP(w.sparse, id_order=ids)
-
+        w = pysal.weights.WSP(w.sparse, id_order=w.id_order)
     return w
 
 
@@ -83,6 +79,8 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
 
     shapefile : string
                 name of polygon shapefile including suffix.
+    idVariable: string
+                name of a column in the shapefile's DBF to use for ids
     sparse    : boolean
                 If True return WSP instance
                 If False return W instance
@@ -90,8 +88,8 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
     Returns
     -------
 
-    w          : W
-                 instance of spatial weights
+    w         : W
+                instance of spatial weights
 
     Examples
     --------
@@ -114,22 +112,11 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
     :class:`pysal.weights.W`
 
     """
-    shp = pysal.open(shapefile)
-    w = buildContiguity(shp, criterion='rook')
-    if idVariable:
-        ids = get_ids(shapefile, idVariable)
-        w.remap_ids(ids)
-    else:
-        ids = None
-    shp.close()
-    w.set_shapefile(shapefile, idVariable)
 
+    w = Rook.from_shapefile(shapefile, idVariable=idVariable)
     if sparse:
-        w = pysal.weights.WSP(w.sparse, id_order=ids)
-
-
+        w = pysal.weights.WSP(w.sparse, id_order=w.id_order)
     return w
-
 
 def spw_from_gal(galfile):
     """
@@ -138,8 +125,8 @@ def spw_from_gal(galfile):
     Parameters
     ----------
 
-    galfile: string
-             name of gal file including suffix
+    galfile  : string
+               name of gal file including suffix
 
     Returns
     -------
@@ -190,8 +177,8 @@ def knnW_from_array(array, k=2, p=2, ids=None, radius=None):
     Returns
     -------
 
-    w         : W
-                instance; Weights object with binary weights.
+    w          : W
+                 instance; Weights object with binary weights.
 
     Examples
     --------
@@ -260,8 +247,8 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
     Returns
     -------
 
-    w         : W
-                instance; Weights object with binary weights
+    w          : W
+                 instance; Weights object with binary weights
 
     Examples
     --------
@@ -335,9 +322,9 @@ def threshold_binaryW_from_array(array, threshold, p=2, radius=None):
     Parameters
     ----------
 
-    array       : array
-                  (n,m)
-                  attribute data, n observations on m attributes
+    array      : array
+                 (n,m)
+                 attribute data, n observations on m attributes
     threshold  : float
                  distance band
     p          : float
@@ -352,9 +339,9 @@ def threshold_binaryW_from_array(array, threshold, p=2, radius=None):
     Returns
     -------
 
-    w         : W
-                instance
-                Weights object with binary weights
+    w          : W
+                 instance
+                 Weights object with binary weights
 
     Examples
     --------
@@ -459,8 +446,8 @@ def threshold_continuousW_from_array(array, threshold, p=2,
     Returns
     -------
 
-    w         : W
-                instance; Weights object with continuous weights.
+    w          : W
+                 instance; Weights object with continuous weights.
 
     Examples
     --------
@@ -521,8 +508,8 @@ def threshold_continuousW_from_shapefile(shapefile, threshold, p=2,
     Returns
     -------
 
-    w         : W
-                instance; Weights object with continuous weights.
+    w          : W
+                 instance; Weights object with continuous weights.
 
     Examples
     --------
@@ -620,22 +607,22 @@ def kernelW(points, k=2, function='triangular', fixed=True,
 
                       K(z) = (2\pi)^{(-1/2)} exp(-z^2 / 2)
 
-    fixed        : boolean
-                   If true then :math:`h_i=h \\forall i`. If false then
-                   bandwidth is adaptive across observations.
-    radius     : float
-                 If supplied arc_distances will be calculated
-                 based on the given radius. p will be ignored.
-    diagonal   : boolean
-                 If true, set diagonal weights = 1.0, if false (default)
-                 diagonal weights are set to value according to kernel
-                 function
+    fixed       : boolean
+                  If true then :math:`h_i=h \\forall i`. If false then
+                  bandwidth is adaptive across observations.
+    radius      : float
+                  If supplied arc_distances will be calculated
+                  based on the given radius. p will be ignored.
+    diagonal    : boolean
+                  If true, set diagonal weights = 1.0, if false (
+                  default) diagonal weights are set to value
+                  according to kernel function.
 
     Returns
     -------
 
-    w            : W
-                   instance of spatial weights
+    w           : W
+                  instance of spatial weights
 
     Examples
     --------
@@ -752,13 +739,13 @@ def kernelW_from_shapefile(shapefile, k=2, function='triangular',
     fixed        : binary
                    If true then :math:`h_i=h \\forall i`. If false then
                    bandwidth is adaptive across observations.
-    radius     : float
-                 If supplied arc_distances will be calculated
-                 based on the given radius. p will be ignored.
-    diagonal   : boolean
-                 If true, set diagonal weights = 1.0, if false (default)
-                 diagonal weights are set to value according to kernel
-                 function
+    radius       : float
+                   If supplied arc_distances will be calculated
+                   based on the given radius. p will be ignored.
+    diagonal     : boolean
+                   If true, set diagonal weights = 1.0, if false (
+                   default) diagonal weights are set to value
+                   according to kernel function.
 
     Returns
     -------
@@ -862,18 +849,18 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular',
 
                       K(z) = (2\pi)^{(-1/2)} exp(-z^2 / 2)
 
-    radius     : float
-                 If supplied arc_distances will be calculated
-                 based on the given radius. p will be ignored.
-    diagonal   : boolean
-                 If true, set diagonal weights = 1.0, if false (default)
-                 diagonal weights are set to value according to kernel
-                 function
+    radius      : float
+                  If supplied arc_distances will be calculated
+                  based on the given radius. p will be ignored.
+    diagonal    : boolean
+                  If true, set diagonal weights = 1.0, if false (
+                  default) diagonal weights are set to value
+                  according to kernel function.
     Returns
     -------
 
-    w            : W
-                   instance of spatial weights
+    w           : W
+                  instance of spatial weights
 
     Examples
     --------
@@ -1001,21 +988,21 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='t
                   .. math::
 
                       K(z) = (2\pi)^{(-1/2)} exp(-z^2 / 2)
-    idVariable   : string
-                   name of a column in the shapefile's DBF to use for ids
-    radius     : float
-                 If supplied arc_distances will be calculated
-                 based on the given radius. p will be ignored.
-    diagonal   : boolean
-                 If true, set diagonal weights = 1.0, if false (default)
-                 diagonal weights are set to value according to kernel
-                 function
+    idVariable  : string
+                  name of a column in the shapefile's DBF to use for ids
+    radius      : float
+                  If supplied arc_distances will be calculated
+                  based on the given radius. p will be ignored.
+    diagonal    : boolean
+                  If true, set diagonal weights = 1.0, if false (
+                  default) diagonal weights are set to value
+                  according to kernel function.
 
     Returns
     -------
 
-    w            : W
-                   instance of spatial weights
+    w           : W
+                  instance of spatial weights
 
     Examples
     --------
@@ -1029,7 +1016,6 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='t
     [0.3989422804014327, 0.24966013701844503, 0.2419707487162134]
     >>> kwad.weights[0]
     [1.0, 0.24966013701844503, 0.2419707487162134]
-    >>>
 
     Notes
     -----
@@ -1058,7 +1044,7 @@ def min_threshold_dist_from_shapefile(shapefile, radius=None, p=2):
     ----------
 
     shapefile  : string
-                 shapefile name with shp suffix
+                 shapefile name with shp suffix.
     radius     : float
                  If supplied arc_distances will be calculated
                  based on the given radius. p will be ignored.
@@ -1070,8 +1056,9 @@ def min_threshold_dist_from_shapefile(shapefile, radius=None, p=2):
 
     Returns
     -------
-    d            : float
-                   minimum nearest neighbor distance between the n observations
+    d          : float
+                 Maximum nearest neighbor distance between the n
+                 observations.
 
     Examples
     --------
