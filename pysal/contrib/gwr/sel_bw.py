@@ -134,7 +134,7 @@ class Sel_BW(object):
         self.fixed = fixed
         self.kernel = kernel
         if offset is None:
-          self.offset = np.ones((len(y), 1))
+            self.offset = np.ones((len(y), 1))
         else:
             self.offset = offset * 1.0
         self.constant = constant
@@ -183,7 +183,7 @@ class Sel_BW(object):
                 raise TypeError('Unsupported kernel function ', self.kernel)
         else:
             if self.kernel == 'gaussian':
-              ktype = 2
+                ktype = 2
             elif self.kernel == 'bisquare':
                 ktype = 4
             elif self.kernel == 'exponential':
