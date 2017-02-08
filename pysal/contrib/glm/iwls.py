@@ -29,7 +29,7 @@ def _compute_betas_gwr(y, x, wi):
     Fotheringham, A. S., Brunsdon, C., & Charlton, M. (2002).
     Geographically weighted regression: the analysis of spatially varying relationships.
     """
-    xT = np.dot(x.T, wi)
+    xT = (x * wi).T
     xtx = np.dot(xT, x)
     xtx_inv = la.inv(xtx)
     xtx_inv_xt = np.dot(xtx_inv, xT)
@@ -52,22 +52,22 @@ def iwls(y, x, family, offset, y_fix,
     if isinstance(family, Binomial):
         y = family.link._clean(y)
     if isinstance(family, Poisson):
-    	y_off = y/offset
+        y_off = y/offset
     	y_off = family.starting_mu(y_off)
     	v = family.predict(y_off)
     	mu = family.starting_mu(y)
     else:
         mu = family.starting_mu(y)
         v = family.predict(mu)
-    
+
     while diff > tol and n_iter < max_iter:
         n_iter += 1
         w = family.weights(mu)
         z = v + (family.link.deriv(mu)*(y-mu))
         w = np.sqrt(w)
         if type(x) != np.ndarray:
-        	w = sp.csr_matrix(w)
-        	z = sp.csr_matrix(z)
+            w = sp.csr_matrix(w)
+            z = sp.csr_matrix(z)
         wx = spmultiply(x, w, array_out=False)
         wz = spmultiply(z, w, array_out=False)
         if wi is None:
@@ -82,7 +82,7 @@ def iwls(y, x, family, offset, y_fix,
 
         diff = min(abs(n_betas-betas))
         betas = n_betas
-        
+
     if wi is None:
         return betas, mu, wx, n_iter
     else:

@@ -153,6 +153,7 @@ except ImportError:
             return "NumpyVersion(%s)" % self.vstring
 
 
+
 class ResettableCache(dict):
     """
     Dictionary whose elements mey depend one from another.
