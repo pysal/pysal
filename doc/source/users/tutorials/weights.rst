@@ -26,7 +26,8 @@ matrices across three different general types:
  * Distance Based Weights
  * Kernel Weights
 
-These different types of weights are implemented as instances of the PySAL weights class 
+These different types of weights are implemented as instances or subclasses of 
+the PySAL weights class 
 :class:`~pysal.weights.W`. 
 
 In what follows, we provide a high level overview of spatial weights in PySAL, starting with the three different types of weights, followed by
@@ -105,7 +106,6 @@ of the lattice to define contiguities:
 	>>> wq = pysal.lat2W(rook = False)
 	>>> wq.neighbors[0]
 	[5, 1, 6]
-	>>> 
 
 The bishop criterion, which designates pairs of cells as neighbors if they share
 only a vertex, is yet a third alternative for contiguity weights. A bishop matrix
@@ -116,12 +116,13 @@ requiring a regular grid. For empirical research, a common use case is to have
 a shapefile, which is a nontopological vector data structure, and a need
 to carry out some form of spatial analysis that requires spatial weights. Since
 topology is not stored in the underlying file there is a need to construct
-the spatial weights prior to carrying out the analysis. In PySAL spatial
-weights can be obtained directly from shapefiles:
+the spatial weights prior to carrying out the analysis. 
+
+In PySAL, weights are constructed by default from any contiguity graph representation.  Most users will find the ``.from_shapefile`` methods most useful:
 
 .. doctest::
 
-    >>> w = pysal.rook_from_shapefile("../pysal/examples/columbus.shp")
+    >>> w = pysal.weights.Rook.from_shapefile("../pysal/examples/columbus.shp")
     >>> w.n
     49
     >>> print "%.4f"%w.pct_nonzero
@@ -133,13 +134,32 @@ If queen, rather than rook, contiguity is required then the following would work
 
 .. doctest::
 
-    >>> w = pysal.queen_from_shapefile("../pysal/examples/columbus.shp")
+    >>> w = pysal.weights.Queen.from_shapefile("../pysal/examples/columbus.shp")
     >>> print "%.4f"%w.pct_nonzero
     0.0983
     >>> w.histogram
     [(2, 5), (3, 9), (4, 12), (5, 5), (6, 9), (7, 3), (8, 4), (9, 1), (10, 1)]
-    
 
+In addition to these methods, contiguity weights can be built from dataframes with a geometry column. This includes dataframes built from geopandas or from the PySAL pandas IO extension, pdio. For instance:
+
+    >>> import geopandas as gpd
+    >>> test = gpd.read_file(pysal.examples.get_path('south.shp'))
+    >>> W = pysal.weights.Queen.from_dataframe(test)
+    >>> Wrook = pysal.weights.Rook.from_dataframe(test, idVariable='CNTY_FIPS')
+    >>> pdiodf = pysal.pdio.read_files(pysal.examples.get_path('south.shp'))
+    >>> W = pysal.weights.Rook.from_dataframe(pdiodf)
+
+Or, weights can be constructed directly from an interable of shapely objects:
+
+    >>> import geopandas as gpd
+    >>> shapelist = gpd.read_file(pysal.examples.get_path('columbus.shp')).geometry.tolist()
+    >>> W = pysal.weights.Queen.from_iterable(shapelist)
+
+The ``.from_file`` method on contigutiy weights simply passes down to the parent class's  ``.from_file`` method, so the returned object is of instance ``W``, not ``Queen`` or ``Rook``. This occurs because the weights cannot be verified *as* contiguity weights without the original shapes.  
+
+    >>> W = pysal.weights.Rook.from_file(pysal.examples.get_path('columbus.gal')
+    >>> type(W)
+    pysal.weights.weights.W
 
 Distance Based Weights
 ----------------------
@@ -158,8 +178,7 @@ k-nearest neighbor weights
 The neighbors for a given observations can be defined using a k-nearest neighbor criterion.
 For example we could use the the centroids of our
 5x5 lattice as point locations to measure the distances. First, we import numpy to 
-create the coordinates as a 25x2 numpy array named data (numpy arrays are the only
-form of input supported at this point):
+create the coordinates as a 25x2 numpy array named ``data``:
 
 .. doctest::
 
@@ -170,16 +189,24 @@ form of input supported at this point):
     >>> data=np.hstack([x,y])
     
     
-then define the knn set as:
+then define the KNN weight as:
 
 .. doctest::
 
-    >>> wknn3 = pysal.knnW(data, k = 3)
+    >>> wknn3 = pysal.weights.KNN(data, k = 3)
     >>> wknn3.neighbors[0]
     [1, 5, 6]
     >>> wknn3.s0
     75.0
-    >>> w4 = pysal.knnW(data, k = 4)
+
+For efficiency, a KDTree is constructed to compute efficient nearest neighbor queries.  To construct many K-Nearest neighbor weights from the same data, a convenience method is provided that prevents re-constructing the KDTree while letting the user change aspects of the weight object. By default, the reweight method operates in place:
+
+    >>> w4 = wknn3.reweight(k=4, inplace=False)
+    >>> w4.neighbors[0]
+    [1,5,6,2]
+    >>> l1norm = wknn3.reweight(p=1, inplace=False)
+    >>> l1norm.neighbors
+    [1,5,2]
     >>> set(w4.neighbors[0]) == set([1, 5, 6, 2])
     True
     >>> w4.s0
@@ -192,9 +219,15 @@ shapefile:
 
 .. doctest::
     
-    >>> wknn5 = pysal.knnW_from_shapefile(pysal.examples.get_path('columbus.shp'), k=5)
+    >>> wknn5 = pysal.weights.KNN.from_shapefile(pysal.examples.get_path('columbus.shp'), k=5)
     >>> wknn5.neighbors[0]
     [2, 1, 3, 7, 4]
+
+Or from a dataframe:
+
+    >>> import geopandas as gpd
+    >>> df = gpd.read_file(ps.examples.get_path('baltim.shp')) 
+    >>> k5 = pysal.weights.KNN.from_dataframe(df, k=5)
 
 Distance band weights
 ---------------------
@@ -206,7 +239,7 @@ falling within a threshold distance of the focal unit:
 
 .. doctest::
 
-    >>> wthresh = pysal.threshold_binaryW_from_array(data, 2)
+    >>> wthresh = pysal.weights.DistanceBand.from_array(data, 2)
     >>> set(wthresh.neighbors[0]) == set([1, 2, 5, 6, 10])
     True
     >>> set(wthresh.neighbors[1]) == set( [0, 2, 5, 6, 7, 11, 3])
@@ -220,6 +253,12 @@ falling within a threshold distance of the focal unit:
 As can be seen in the above example, the number of neighbors is likely to vary
 across observations with distance band weights in contrast to what holds for
 knn weights.
+
+In addition to constructing these from the helper function,  Distance Band weights. For example, a threshold binary W can be constructed from a dataframe:
+
+    >>> import geopandas as gpd
+    >>> df = gpd.read_file(ps.examples.get_path('baltim.shp')) 
+    >>> ps.weights.DistanceBand.from_dataframe(df, threshold=6, binary=True)
 
 Distance band weights can be generated for shapefiles as well as arrays of points. [#]_ First, the 
 minimum nearest neighbor distance should be determined so that each unit is assured of at least one 
@@ -235,7 +274,7 @@ with this threshold in hand, the distance band weights are obtained as:
 
 .. doctest::
 
-    >>> wt = pysal.threshold_binaryW_from_shapefile("../pysal/examples/columbus.shp", thresh)
+    >>> wt = pysal.weights.DistanceBand.from_shapefile("../pysal/examples/columbus.shp", threshold=thresh, binary=True)
     >>> wt.min_neighbors
     1
     >>> wt.histogram
@@ -253,7 +292,7 @@ points:
 .. doctest::
 
     >>> points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
-    >>> wid = pysal.threshold_continuousW_from_array(points,14.2)
+    >>> wid = pysal.weights.DistanceBand.from_array(points,14.2,binary=False)
     >>> wid.weights[0]
     [0.10000000000000001, 0.089442719099991588]
 
@@ -261,7 +300,7 @@ If we change the distance decay exponent to -2.0 the result is so called gravity
 
 .. doctest::
 
-    >>> wid2 = pysal.threshold_continuousW_from_array(points,14.2,alpha = -2.0)
+    >>> wid2 = pysal.weights.DistanceBand.from_array(points,14.2,alpha = -2.0, binary=False)
     >>> wid2.weights[0]
     [0.01, 0.0079999999999999984]
 
@@ -365,8 +404,31 @@ Finally, the kernel function could be changed (with endogenous adaptive bandwidt
 
 
 More details on kernel weights can be found in 
-:class:`~pysal.weights.Distance.Kernel`. 
+:class:`~pysal.weights.Distance.Kernel`. All kernel methods also support construction from shapefiles with ``Kernel.from_shapefile`` and from dataframes with ``Kernel.from_dataframe``.
 
+Weights from other python objects
+==================================
+
+PySAL weights can also be constructed easily from many other objects.  Most importantly, all weight types can be constructed directly from ``geopandas`` geodataframes using the ``.from_dataframe`` method. For distance and kernel weights, underlying features should typically be points. But, if polygons are supplied, the centroids of the polygons will be used by default: 
+
+    >>> import geopandas as gpd
+    >>> df = gpd.read_file(pysal.examples.get_path('columbus.shp'))
+    >>> kw = pysal.weights.Kernel.from_dataframe(df)
+    >>> dbb = pysal.weights.DistanceBand.from_dataframe(df, threshold=.9, binary=False)
+    >>> dbc = pysal.weights.DistanceBand.from_dataframe(df, threshold=.9, binary=True)
+    >>> q = pysal.weights.Queen.from_dataframe(df)
+    >>> r = pysal.weights.Rook.from_dataframe(df)
+
+This also applies to dynamic views of the dataframe:
+
+    >>> q2 = pysal.weights.Queen.from_dataframe(df.query('DISCBD < 2'))
+
+Weights can also be constructed from NetworkX objects. This is easiest to construct using a sparse weight, but that can be converted to a full dense PySAL weight easily:
+
+    >>> import networkx as nx
+    >>> G = nx.random_lobster(50,.2,.5)
+    >>> sparse_lobster = ps.weights.WSP(nx.adj_matrix(G))
+    >>> dense_lobster = sparse_lobster.to_W()
 
 A Closer look at W
 ==================
