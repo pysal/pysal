@@ -392,7 +392,7 @@ class Map_Classifier(object):
 
     .. math::
 
-              C_j^l < y_i \le C_j^u \  \forall  i \in C_j
+              C_j^l < y_i \le C_j^u  \ \ \\forall  i \in C_j
 
     where :math:`C_j` denotes class :math:`j` which has lower bound
           :math:`C_j^l` and upper bound :math:`C_j^u`.
