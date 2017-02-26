@@ -11,6 +11,7 @@ import math
 from warnings import warn
 from sphere import arcdist
 import numpy as np
+import copy
 
 __all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon',
            'Rectangle', 'asShape']
@@ -1187,6 +1188,26 @@ class Chain(Geometry):
         """
         return [[LineSegment(a, b) for (a, b) in zip(part[:-1], part[1:])] for part in self._vertices]
 
+    def __repr__(self):
+        """
+        Returns the string representation of the Chain
+
+        __repr__() -> string
+
+        Parameters
+        ----------
+        None
+
+        Attributes
+        ----------
+
+        Examples
+        --------
+        >>> Chain([[Point((0, 0)), Point((1, 0)), Point((1, 1))],[Point((10,10)),Point((11,10)),Point((11,11))]])
+        [[(0.0, 0.0), (1.0, 0.0), (1.0, 1.0)], [(10.0, 10.0), (11.0, 10.0), (11.0, 11.0)]]
+        """
+        return str(self.parts)
+
 
 class Ring(Geometry):
     """
@@ -1390,8 +1411,6 @@ class Ring(Geometry):
             return False
         else:
             return True
-
-
 
 
 class Polygon(Geometry):
@@ -1763,6 +1782,39 @@ class Polygon(Geometry):
 
         return False
 
+    def __repr__(self):
+        """
+        Returns the string representation of the Polygon
+
+        __repr__() -> string
+
+        Parameters
+        ----------
+        None
+
+        Attributes
+        ----------
+
+        Examples
+        --------
+        >>> Polygon([[Point((0,0)), Point((1,3)), Point((3,3)), Point((3,1))],[Point((4,8)), Point((8,5)), Point((8,1)), Point((4,1))]], [Point((5, 2)), Point((5,3)), Point((6,3)), Point((6,2))])
+        [[((5.0, 2.0), (5.0, 3.0), (6.0, 3.0), (6.0, 2.0)), ((4.0, 8.0), (8.0, 5.0), (8.0, 1.0), (4.0, 1.0), (4.0, 8.0))], [((0.0, 0.0), (1.0, 3.0), (3.0, 3.0), (3.0, 1.0), (0.0, 0.0))]]
+        """
+        if len(self._hole_rings) == 0:
+            return str(self.parts)
+        else:
+            rings = copy.deepcopy(self._part_rings)
+            out = []
+            # pair holes with exterior rings
+            for hole in self.holes:
+                for ring in rings:
+                    if ring.contains_point(hole[0]):
+                        out.append([tuple(hole), ring.vertices])
+                        rings.remove(ring)
+            # append the remaining subpolygons(which didn't had holes)
+            for ring in rings:
+                out.append([ring.vertices])
+            return str(out)
 
 
 class Rectangle(Geometry):
