@@ -709,9 +709,8 @@ class Network:
                 if set1 == set2: # same edge
                     x1,y1 = sourcepattern.snapped_coordinates[p1]
                     x2,y2 = destpattern.snapped_coordinates[p2]
-                    xd = x1-x2
-                    yd = y1-y2
-                    nearest[p1,p2] = np.sqrt(xd*xd + yd*yd)
+                    computed_length = util.compute_length((x1,y1),(x2,y2))
+                    nearest[p1,p2] = computed_length
 
                 else:
                     ddist1, ddist2 = dest_dist_to_node[p2].values()
