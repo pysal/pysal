@@ -1,6 +1,6 @@
-from collections import OrderedDict
-import math
-import operator
+#from collections import OrderedDict
+#import math
+#import operator
 import pysal as ps
 import numpy as np
 
@@ -19,9 +19,13 @@ def compute_length(v0, v1):
     --------
     Euclidean distance
     """
-
-    return math.sqrt((v0[0] - v1[0])**2 + (v0[1] - v1[1])**2)
-
+    #  Is there a reason we are using `math` as opposed to `numpy` is this function?
+    #  Moreover, we are not using `OrderedDict` or `operator` for anything currently in
+    #  any of the defined functions in `utils.py`. 
+    
+    #return math.sqrt((v0[0] - v1[0])**2 + (v0[1] - v1[1])**2)
+    return np.sqrt((v0[0] - v1[0])**2 + (v0[1] - v1[1])**2)
+    
 
 def get_neighbor_distances(ntw, v0, l):
     edges = ntw.enum_links_node(v0)
