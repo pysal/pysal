@@ -109,6 +109,39 @@ def dijkstra(ntw, cost, node, n=float('inf')):
     return distance, np.array(pred, dtype=np.int)
 
 
+def dijkstra_mp((ntw, cost, node)):
+    """
+    Compute the shortest path between a start node and all other nodes in the web 
+    utilizing multiple cores upon request.
+    
+    Parameters
+    ----------
+    ntw:        object
+                PySAL network object
+                
+    cost:       dict
+                key:    tuple
+                        (start node, end node)
+                value:  float
+                        Cost per edge to travel, e.g. distance
+    
+    node:       int
+                Start node ID
+    
+    n:          float('inf')
+                integer break point to stop iteration and return n neighbors
+    
+    Returns
+    -------
+    distance:   list
+                List of distances from node to all other nodes.
+    
+    pred:       list
+                List of preceeding nodes for traversal route.
+    """
+    return dijkstra(ntw, cost, node)
+       
+    
 def squaredDistancePointSegment(point, segment):
     """Find the squared distance between a point and a segment
     
