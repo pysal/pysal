@@ -331,7 +331,7 @@ class Network:
 
         return ps.weights.W(neighbors, weights=weights)
 
-    def distancebandweights(self, threshold, processing=None):
+    def distancebandweights(self, threshold, n_proccess=None):
         """
         Create distance based weights
 
@@ -340,15 +340,15 @@ class Network:
         threshold:      float
                         Distance threshold value.
         
-        processing:     int
+        n_processes:    int, str
                         (Optional) Specify the number of cores to utilize.
-                        Default is 1 core.
-                        9999 = use all available cores
+                        Default is 1 core. Use (int) to specify an exact number or cores.
+                        Use ("all") to request all available cores.
         """
         try:
             hasattr(self.alldistances)
         except:
-            self.node_distance_matrix(processing)
+            self.node_distance_matrix(n_proccess)
 
         neighbor_query = np.where(self.distancematrix < threshold)
         neighbors = defaultdict(list)
@@ -632,18 +632,17 @@ class Network:
             links.append(tuple(sorted([n, v0])))
         return links
 
-    def node_distance_matrix(self, processing):
+    def node_distance_matrix(self, n_processes):
         """
         Called from: allneighbordistances()
                      nearestneighbordistances()
                      distancebandweights()
-        
         """
         self.alldistances = {}
         nnodes = len(self.node_list)
         self.distancematrix = np.empty((nnodes, nnodes))
         # Single-core processing
-        if not processing:
+        if not n_processes:
             for node in self.node_list:
                 distance, pred = util.dijkstra(self, self.edge_lengths, node, n=float('inf'))
                 pred = np.array(pred)
@@ -652,16 +651,13 @@ class Network:
                 self.alldistances[node] = (distance, tree)
                 self.distancematrix[node] = distance
         # Multiprocessing
-        if processing:
-            try:
-                import multiprocessing as mp
-                from itertools import repeat
-            except:
-                raise Execption("Must have multiprocessing and itertools")
-            if processing == 9999:
+        if n_processes:
+            import multiprocessing as mp
+            from itertools import repeat
+            if n_processes == "all":
                 cores = mp.cpu_count()
             else:
-                cores = processing
+                cores = n_processes
             p = mp.Pool(processes=cores)
             distance_pred = p.map(util.dijkstra_multi, zip(repeat(self), 
                                                        repeat(self.edge_time), 
@@ -675,7 +671,7 @@ class Network:
     
     
     def allneighbordistances(self, sourcepattern, destpattern=None, fill_diagonal=None,
-                             processing=None):
+                             n_processes=None):
         """
         Compute either all distances between i and j in a single point pattern or all 
         distances between each i from a source pattern and all j from a destination pattern.
@@ -693,10 +689,10 @@ class Network:
                         Default in None and will populate the diagonal with numpy.nan
                         Do not declare a destpattern for a custom fill_diagonal.
         
-        processing:     int
+        n_processes:    int, str
                         (Optional) Specify the number of cores to utilize.
-                        Default is 1 core.
-                        9999 = use all available cores
+                        Default is 1 core. Use (int) to specify an exact number or cores.
+                        Use ("all") to request all available cores.
         Returns
         -------
         nearest:        array (n,n)
@@ -704,7 +700,7 @@ class Network:
         """
 
         if not hasattr(self,'alldistances'):
-            self.node_distance_matrix(processing)
+            self.node_distance_matrix(n_processes)
             
         # Source setup
         src_indices = sourcepattern.points.keys()
@@ -797,7 +793,7 @@ class Network:
             
         return nearest
 
-    def nearestneighbordistances(self, sourcepattern, destpattern=None, processing=None):
+    def nearestneighbordistances(self, sourcepattern, destpattern=None, n_processes=None):
         """
         Compute the interpattern nearest neighbor distances or the intrapattern
         nearest neighbor distances between a source pattern and a destination pattern.
@@ -810,10 +806,10 @@ class Network:
         destpattern:    str 
                         (Optional) The key of a point pattern snapped to the network.
 
-        processing:     int
+        n_processes:    int, str
                         (Optional) Specify the number of cores to utilize.
-                        Default is 1 core.
-                        9999 = use all available cores
+                        Default is 1 core. Use (int) to specify an exact number or cores.
+                        Use ("all") to request all available cores.
                         
         Returns
         -------
@@ -826,7 +822,7 @@ class Network:
             raise KeyError("Available point patterns are {}".format(self.pointpatterns.keys()))
 
         if not hasattr(self,'alldistances'):
-            self.node_distance_matrix(processing)
+            self.node_distance_matrix(n_processes)
 
         pt_indices = self.pointpatterns[sourcepattern].points.keys()
         dist_to_node = self.pointpatterns[sourcepattern].dist_to_node

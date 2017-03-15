@@ -111,9 +111,8 @@ def dijkstra(ntw, cost, node, n=float('inf')):
 
 def dijkstra_mp((ntw, cost, node)):
     """
-    Multiprocessing dijkstra()
-    Compute the shortest path between a start node and all other nodes in the web. 
-    This performs identically to `dijkstra()`, but utilizes multiple cores upon request.
+    Compute the shortest path between a start node and all other nodes in the web 
+    utilizing multiple cores upon request.
     
     Parameters
     ----------
@@ -140,33 +139,8 @@ def dijkstra_mp((ntw, cost, node)):
     pred:       list
                 List of preceeding nodes for traversal route.
     """
-    
-    v0 = node
-    distance = [float('inf') for x in ntw.node_list]
-    idx = ntw.node_list.index(v0)
-    distance[ntw.node_list.index(v0)] = 0
-    pred = [-1 for x in ntw.node_list]
-    a = set()
-    a.add(v0)
-    while len(a) > 0:
-        # Get node with the lowest value from distance.
-        dist = float('inf')
-        for node in a:
-            if distance[node] < dist:
-                dist = distance[node]
-                v = node
-        # Remove that node from the set.
-        a.remove(v)
-        last = v
-        #4. Get the neighbors to the current node.
-        neighbors = get_neighbor_distances(ntw, v, cost)
-        for v1, indiv_cost in neighbors.iteritems():
-            if distance[v1] > distance[v] + indiv_cost:
-                distance[v1] = distance[v] + indiv_cost
-                pred[v1] = v
-                a.add(v1)
-    return distance, np.array(pred, dtype=np.int)
-    
+    return dijkstra(ntw, cost, node)
+       
     
 def squaredDistancePointSegment(point, segment):
     """Find the squared distance between a point and a segment
