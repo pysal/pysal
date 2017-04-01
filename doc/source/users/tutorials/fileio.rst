@@ -37,7 +37,7 @@ Shapefiles
 .. doctest::
 
     >>> import pysal
-    >>> shp = pysal.open('../pysal/examples/10740/10740.shp')
+    >>> shp = pysal.open(pysal.examples.get_path('10740.shp'))
     >>> poly = shp.next()
     >>> type(poly)
     <class 'pysal.cg.shapes.Polygon'>
@@ -55,7 +55,7 @@ DBF Files
 .. doctest::
 
     >>> import pysal
-    >>> db = pysal.open('../pysal/examples/10740/10740.dbf','r')
+    >>> db = pysal.open(pysal.examples.get_path('10740.dbf'),'r')
     >>> db.header
     ['GIST_ID', 'FIPSSTCO', 'TRT2000', 'STFID', 'TRACTID']
     >>> db.field_spec
