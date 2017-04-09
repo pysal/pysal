@@ -25,9 +25,9 @@ before_install:
 
 install:
   - conda install --yes pip
+  - pip install -r requirements.txt;
   - if [ "$PYSAL_PLUS" == true ]; then
         echo 'plus testing'; conda install --yes --file requirements_plus.txt;
-        else conda install --yes --file requirements.txt;
     fi;
   - pip install -r requirements_dev.txt
 
