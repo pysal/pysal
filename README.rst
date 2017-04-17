@@ -1,11 +1,11 @@
 Python Spatial Analysis Library
 =================================
 
-.. image:: https://travis-ci.org/pysal/pysal.svg
-   :target: https://travis-ci.org/pysal
+.. image:: https://travis-ci.org/pysal/pysal.svg?branch=dev
+   :target: https://travis-ci.org/pysal/pysal
 
-.. image:: https://coveralls.io/repos/pysal/pysal/badge.svg?branch=master
-   :target: https://coveralls.io/r/pysal/pysal?branch=master
+.. image:: https://coveralls.io/repos/pysal/pysal/badge.svg?branch=dev
+   :target: https://coveralls.io/r/pysal/pysal?branch=dev
 
 .. image:: https://badges.gitter.im/pysal/pysal.svg
    :target: https://gitter.im/pysal/pysal
