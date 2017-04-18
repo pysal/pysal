@@ -41,7 +41,7 @@ Shapefiles
 
     >>> import pysal
     >>> shp = pysal.open('../pysal/examples/10740.shp')
-    >>> poly = shp.next()
+    >>> poly = next(shp)
     >>> type(poly)
     <class 'pysal.cg.shapes.Polygon'>
     >>> len(shp)
