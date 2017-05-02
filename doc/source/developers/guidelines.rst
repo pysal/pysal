@@ -9,7 +9,7 @@ PySAL is adopting many of the conventions in the larger scientific computing
 in Python community and we ask that anyone interested in joining the project
 please review the following documents:
 
- * :doc:`Documentation standards <docs/index>`
+ * `Documentation standards <https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt>`_
  * `Coding guidelines <http://www.python.org/dev/peps/pep-0008/>`_
  * :doc:`Testing guidelines <testing>`
 
