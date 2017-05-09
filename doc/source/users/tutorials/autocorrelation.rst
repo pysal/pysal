@@ -676,7 +676,7 @@ PySAL implements local Moran's I as follows:
 
 .. math::
 
-        I_i =  \sum_j z_i w_{i,j} z_j / \sum_i z_i z_i
+        I_i =  \frac{(n-1) z_i \sum_j w_{i,j} z_j}{\sum_j z_j^2}
 
 which results in :math:`n` values of local spatial autocorrelation, 1 for each spatial unit. Continuing on with the St. Louis example, the LISA statistics are obtained with:
 
