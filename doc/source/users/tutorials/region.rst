@@ -145,7 +145,7 @@ constraints.
     >>> import pysal
     >>> from pysal.region import Random_Region
     >>> nregs = 13
-    >>> cards = range(2,14) + [10]
+    >>> cards = list(range(2,14)) + [10]
     >>> w = pysal.lat2W(10,10,rook = False)
     >>> ids = w.id_order
     >>>
