@@ -2,22 +2,13 @@ import unittest
 import pysal
 import tempfile, os
 
-
-
-
-
 class TestWIO(unittest.TestCase):
     def setUp(self):
         self.swmFile1 = pysal.examples.get_path('ohio.swm')
         self.swmFile2 = pysal.examples.get_path('us48_CONTIGUITY_EDGES_ONLY.swm')
         self.swmFile3 = pysal.examples.get_path('us48_INVERSE_DISTANCE.swm')
-        self.swmFile4 = r"C:\git\test\swm.swm"
-        self.SWMIO(self.swmFile1)
-        self.SWMIO(self.swmFile2)
-        self.SWMIO(self.swmFile3)
-        self.SWMIO(self.swmFile4)
 
-    def SWMIO(file_path):
+    def SWMIO(self, file_path):
         f1 = pysal.open(file_path)
         w1 = f1.read()
         # print f1.varName
@@ -39,6 +30,13 @@ class TestWIO(unittest.TestCase):
         # print w2.neighbors
         # print w2.weights
 
+    def test_RWFunctions(self):
+        self.SWMIO(self.swmFile1)
+        self.SWMIO(self.swmFile2)
+        self.SWMIO(self.swmFile3)
+
+suite = unittest.TestLoader().loadTestsFromTestCase(TestWIO)
 
 if __name__ == '__main__':
-    unittest.main()
+    runner = unittest.TextTestRunner()
+    runner.run(suite)
