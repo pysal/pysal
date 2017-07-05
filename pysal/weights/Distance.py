@@ -762,6 +762,8 @@ class DistanceBand(W):
         See detail in pysal issue #126.
 
         """
+        if ids is not None:
+            ids=list(ids)
         self.p = p
         self.threshold = threshold
         self.binary = binary
@@ -878,7 +880,7 @@ class DistanceBand(W):
         if self.binary:
             self.dmat[self.dmat>0] = 1
             self.dmat.eliminate_zeros()
-            tempW = WSP2W(WSP(self.dmat), silent_island_warning=self.silent)
+            tempW = WSP2W(WSP(self.dmat, id_order=ids), silent_island_warning=self.silent)
             neighbors = tempW.neighbors
             weight_keys = tempW.weights.keys()
             weight_vals = tempW.weights.values()
@@ -888,7 +890,7 @@ class DistanceBand(W):
             weighted = self.dmat.power(self.alpha)
             weighted[weighted==np.inf] = 0
             weighted.eliminate_zeros()
-            tempW = WSP2W(WSP(weighted), silent_island_warning=self.silent)
+            tempW = WSP2W(WSP(weighted, id_order=ids), silent_island_warning=self.silent)
             neighbors = tempW.neighbors
             weight_keys = tempW.weights.keys()
             weight_vals = tempW.weights.values()
