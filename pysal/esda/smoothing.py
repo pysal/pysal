@@ -1532,6 +1532,9 @@ class Spatial_Filtering(_Smoother):
         outdf = pd.concat(res)
         return outdf
 
+
+
+import warnings
 class Headbanging_Triples(object):
     """Generate a pseudo spatial weights instance that contains headbanging triples
 
@@ -1661,6 +1664,7 @@ class Headbanging_Triples(object):
     (0.33753, 0.302707)
     """
     def __init__(self, data, w, k=5, t=3, angle=135.0, edgecor=False):
+        raise DepricationWarning('Depricated')
         if k < 3:
             raise ValueError("w should be NeareastNeighbors instance & the number of neighbors should be more than 3.")
         if not w.id_order_set:
@@ -1806,6 +1810,7 @@ class Headbanging_Median_Rate(object):
     array([ 0.00091659,  0.        ,  0.00156838,  0.0018315 ,  0.00498891])
     """
     def __init__(self, e, b, t, aw=None, iteration=1):
+        warnings.warn("Deprecated", DepricationWarning)
         self.r = e * 1.0 / b
         self.tr, self.aw = t.triples, aw
         if hasattr(t, 'extra'):
