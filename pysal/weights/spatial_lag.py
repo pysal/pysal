@@ -109,6 +109,8 @@ def lag_categorical(w, y, ties='tryself'):
                           and break a tie. If this does not resolve the tie,
                           a winner is chosen randomly. To just use random choice to
                           break ties, pass "random" instead.
+                          Also supported are selecting the ``lowest'' class in the 
+                          sorted list of ties or the ``highest'' class. 
     Returns
     -------
     an (n x k) column vector containing the most common neighboring observation
@@ -190,8 +192,15 @@ def _resolve_ties(i,inty,vals,neighbors,method,w):
         return np.argmax(vals)
     elif method.lower() == 'random':
         ties = np.where(vals == vals.max())
-        return np.random.choice(vals[ties])
+        return np.random.choice(np.squeeze(ties))
     elif method.lower() == 'tryself':
         vals[inty[w.id2i[i]]] += np.mean(neighbors.values())
         return _resolve_ties(i,inty,vals,neighbors,'random', w)
-
+    elif method.lower() == 'lowest':
+        ties = np.where(vals == vals.max())
+        return ties[0]
+    elif method.lower() == 'highest':
+        ties = np.where(vals.max())
+        return ties[-1]
+    else:
+        raise KeyError('Tie-Breaking method for categorical lag not recognized')
