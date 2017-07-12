@@ -415,6 +415,28 @@ class OLS(BaseOLS):
     >>> print round(ols.moran_res[2],4)
     0.0095
 
+    If the optional parameter robust is passed to pysal.spreg.OLS, the
+    appropriate heteroskedasticity- and/or autocorrelation-robust
+    variance-covariance matrix will be calculated. The option robust='white'
+    requests White's heteroskedasticity-consistent standard errors. The option
+    robust='hac' requests heteroskedasticity- and autocorrelation-consistent
+    standard errors, using the formulation by Kelejian and Prucha. (These are
+    also called Conley standard errors.)
+    Below, we calculate kernel weights with a triangular kernel and a
+    bandwidth that  is the maximum of the distances to the second nearest
+    neighbor (the defaults).
+
+    >>> ols = OLS(y, X, robust=None)
+    >>> print round(ols.vm[1,1], 4)
+    0.2872
+    >>> ols = OLS(y, X, robust='white')
+    >>> print round(ols.vm[1,1], 4)
+    0.2585
+    >>> wk = pysal.weights.kernelW_from_shapefile(pysal.examples.get_path("columbus.shp"))
+    >>> ols = OLS(y, X, robust='hac', gwk=wk)
+    >>> print round(ols.vm[1,1], 4)
+    0.2603
+
     """
 
     def __init__(self, y, x,
