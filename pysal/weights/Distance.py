@@ -859,6 +859,8 @@ class DistanceBand(W):
             ids = df.index.tolist()
         elif isinstance(ids, str):
             ids = df[ids].tolist()
+        else:
+            ids = df.index.tolist()
         return cls(pts, threshold, ids=ids, **kwargs)
 
     def _band(self):

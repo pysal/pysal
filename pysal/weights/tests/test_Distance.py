@@ -86,6 +86,12 @@ class Test_KNN(ut.TestCase, Distance_Mixin):
         w = d.KNN.from_dataframe(df, k=4)
         self.assertEqual(w.neighbors[self.known_wi0], self.known_w0)
         self.assertEqual(w.neighbors[self.known_wi1], self.known_w1)
+        perm = df.sample(frac=1)
+        w = d.KNN.from_dataframe(perm, k=4)
+        with self.assertRaises(AssertionError):
+            assert w.id_order == df.index.tolist()
+        self.assertEqual(perm.index.tolist(), w.id_order)
+
 
     def test_from_array(self):
         w = d.KNN.from_array(self.poly_centroids, k=4)
@@ -146,6 +152,11 @@ class Test_DistanceBand(ut.TestCase, Distance_Mixin):
         w = d.DistanceBand.from_dataframe(df, 1)
         for k,v in w:
             self.assertEquals(v, self.grid_rook_w[k])
+        perm = df.sample(frac=1)
+        w =  d.DistanceBand.from_dataframe(perm, 1)
+        with self.assertRaises(AssertionError):
+            assert w.id_order == df.index.tolist()
+        self.assertEqual(w.id_order, perm.index.tolist())
 
     ##########################
     # Function/User tests    #
@@ -252,7 +263,12 @@ class Test_Kernel(ut.TestCase, Distance_Mixin):
         w = d.Kernel.from_dataframe(df)
         for k,v in w[self.known_wi5-1].items():
             np.testing.assert_allclose(v, self.known_w5[k+1], rtol=RTOL)
-    
+        perm = df.sample(frac=1)
+        w = d.Kernel.from_dataframe(perm)
+        with self.assertRaises(AssertionError):
+            assert w.id_order == df.index.tolist()
+        self.assertEqual(w.id_order, perm.index.tolist())
+
     ##########################
     # Function/User tests    # 
     ##########################
