@@ -29,7 +29,7 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
                    If 'white', then a White consistent estimator of the
                    variance-covariance matrix is given.  If 'hac', then a
                    HAC consistent estimator of the variance-covariance
-                   matrix is given. Default set to None. 
+                   matrix is given. Default set to None.
     gwk          : pysal W object
                    Kernel spatial weights needed for HAC estimation. Note:
                    matrix must have ones along the main diagonal.
@@ -141,7 +141,7 @@ class OLS(BaseOLS):
                    If 'white', then a White consistent estimator of the
                    variance-covariance matrix is given.  If 'hac', then a
                    HAC consistent estimator of the variance-covariance
-                   matrix is given. Default set to None. 
+                   matrix is given. Default set to None.
     gwk          : pysal W object
                    Kernel spatial weights needed for HAC estimation. Note:
                    matrix must have ones along the main diagonal.
@@ -218,11 +218,11 @@ class OLS(BaseOLS):
     logll        : float
                    Log likelihood
     aic          : float
-                   Akaike information criterion 
+                   Akaike information criterion
     schwarz      : float
-                   Schwarz information criterion     
+                   Schwarz information criterion
     std_err      : array
-                   1xk array of standard errors of the betas    
+                   1xk array of standard errors of the betas
     t_stat       : list of tuples
                    t statistic; each tuple contains the pair (statistic,
                    p-value), where each is a float
@@ -230,24 +230,24 @@ class OLS(BaseOLS):
                    Multicollinearity condition number
     jarque_bera  : dictionary
                    'jb': Jarque-Bera statistic (float); 'pvalue': p-value
-                   (float); 'df': degrees of freedom (int)  
+                   (float); 'df': degrees of freedom (int)
     breusch_pagan : dictionary
                     'bp': Breusch-Pagan statistic (float); 'pvalue': p-value
-                    (float); 'df': degrees of freedom (int)  
+                    (float); 'df': degrees of freedom (int)
     koenker_bassett : dictionary
                       'kb': Koenker-Bassett statistic (float); 'pvalue':
-                      p-value (float); 'df': degrees of freedom (int)  
+                      p-value (float); 'df': degrees of freedom (int)
     white         : dictionary
                     'wh': White statistic (float); 'pvalue': p-value (float);
-                    'df': degrees of freedom (int)  
+                    'df': degrees of freedom (int)
     lm_error      : tuple
                     Lagrange multiplier test for spatial error model; tuple
                     contains the pair (statistic, p-value), where each is a
-                    float 
+                    float
     lm_lag        : tuple
                     Lagrange multiplier test for spatial lag model; tuple
                     contains the pair (statistic, p-value), where each is a
-                    float 
+                    float
     rlm_error     : tuple
                     Robust lagrange multiplier test for spatial error model;
                     tuple contains the pair (statistic, p-value), where each
@@ -294,7 +294,7 @@ class OLS(BaseOLS):
     This is the DBF associated with the Columbus shapefile.  Note that
     pysal.open() also reads data in CSV format; also, the actual OLS class
     requires data to be passed in as numpy arrays so the user can read their
-    data in using any method.  
+    data in using any method.
 
     >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
 
