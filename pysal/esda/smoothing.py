@@ -549,7 +549,8 @@ def assuncao_rate(e, b):
     ebi_b = e_sum * 1.0 / b_sum
     s2 = sum(b * ((y - ebi_b) ** 2)) / b_sum
     ebi_a = s2 - ebi_b / (float(b_sum) / len(e))
-    ebi_v = ebi_a + ebi_b / b
+    ebi_v_raw = ebi_a + ebi_b / b
+    ebi_v = np.where(ebi_v_raw < 0, ebi_b / b, ebi_v_raw)
     return (y - ebi_b) / np.sqrt(ebi_v)
 
 class _Smoother(object):
