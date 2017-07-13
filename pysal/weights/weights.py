@@ -426,6 +426,7 @@ class W(object):
         """Number of neighbors for each observation.
 
         """
+        print(self.neighbors)
         if 'cardinalities' not in self._cache:
             c = {}
             for i in self._id_order:

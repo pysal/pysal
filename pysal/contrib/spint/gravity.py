@@ -466,6 +466,7 @@ class Gravity(BaseGravity):
         results['SRMSE'] = []
         for cov in range(covs):
             results['param' + str(cov)] = []
+            results['stde' + str(cov)] = []
             results['pvalue' + str(cov)] = []
             results['tvalue' + str(cov)] = []
         for loc in locs:
@@ -486,6 +487,7 @@ class Gravity(BaseGravity):
             results['SRMSE'].append(model.SRMSE)
             for cov in range(covs):
                 results['param' + str(cov)].append(model.params[cov])
+                results['stde' + str(cov)].append(model.std_err[cov])
                 results['pvalue' + str(cov)].append(model.pvalues[cov])
                 results['tvalue' + str(cov)].append(model.tvalues[cov])
         return results
@@ -651,6 +653,7 @@ class Production(BaseGravity):
                       and values are lists of location specific values
         """
         results = {}
+        offset = 1
         covs = self.dv.shape[1] + 1
         results['AIC'] = []
         results['deviance'] = []
@@ -662,6 +665,7 @@ class Production(BaseGravity):
         results['SRMSE'] = []
         for cov in range(covs):
             results['param' + str(cov)] = []
+            results['stde' + str(cov)] = []
             results['pvalue' + str(cov)] = []
             results['tvalue' + str(cov)] = []
         if locs is None:
@@ -682,9 +686,10 @@ class Production(BaseGravity):
             results['SSI'].append(model.SSI)
             results['SRMSE'].append(model.SRMSE)
             for cov in range(covs):
-                results['param' + str(cov)].append(model.params[cov])
-                results['pvalue' + str(cov)].append(model.pvalues[cov])
-                results['tvalue' + str(cov)].append(model.tvalues[cov])
+                results['param' + str(cov)].append(model.params[offset+cov])
+                results['stde' + str(cov)].append(model.std_err[offset+cov])
+                results['pvalue' + str(cov)].append(model.pvalues[offset+cov])
+                results['tvalue' + str(cov)].append(model.tvalues[offset+cov])
         return results
 
 class Attraction(BaseGravity):
@@ -846,6 +851,7 @@ class Attraction(BaseGravity):
                       and values are lists of location specific values
         """
         results = {}
+        offset = 1
         covs = self.ov.shape[1] + 1
         results['AIC'] = []
         results['deviance'] = []
@@ -857,6 +863,7 @@ class Attraction(BaseGravity):
         results['SRMSE'] = []
         for cov in range(covs):
             results['param' + str(cov)] = []
+            results['stde' + str(cov)] = []
             results['pvalue' + str(cov)] = []
             results['tvalue' + str(cov)] = []
         if locs is  None:
@@ -877,9 +884,10 @@ class Attraction(BaseGravity):
             results['SSI'].append(model.SSI)
             results['SRMSE'].append(model.SRMSE)
             for cov in range(covs):
-                results['param' + str(cov)].append(model.params[cov])
-                results['pvalue' + str(cov)].append(model.pvalues[cov])
-                results['tvalue' + str(cov)].append(model.tvalues[cov])
+                results['param' + str(cov)].append(model.params[offset+cov])
+                results['stde' + str(cov)].append(model.std_err[offset+cov])
+                results['pvalue' + str(cov)].append(model.pvalues[offset+cov])
+                results['tvalue' + str(cov)].append(model.tvalues[offset+cov])
         return results
 
 class Doubly(BaseGravity):

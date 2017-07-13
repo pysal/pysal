@@ -1,3 +1,134 @@
+v<1.14.0>, 2017-07-13
+
+This is the last version of PySAL that will officially support Python 2.x. 
+This version will also receive only bug fixes going forward. All new PySAL
+functionality will be added using the new structure documented at pysal.org.
+
+
+We closed a total of 114 issues, 36 pull requests and 78 regular issues;
+this is the full list (generated with the script 
+:file:`tools/github_stats.py`):
+
+Pull Requests (36):
+
+* :ghpull:`915`: Network  dev
+* :ghpull:`911`: coverage change
+* :ghpull:`931`: Fix for negative values of ebi_v in assancao_rate smoother function
+* :ghpull:`955`: Minor corrections to issue template
+* :ghpull:`888`: Fix unusual interpreter path.
+* :ghpull:`926`: DOC: fix a broken link (HTTP 404) in documentation
+* :ghpull:`951`: Order enforce
+* :ghpull:`953`: deprecating headbanging
+* :ghpull:`952`: fix for #932 coordinates need to be (lon, lat) not (lat, lon)
+* :ghpull:`946`: [WIP] add Distance bugfix
+* :ghpull:`942`: fixed the bug in reading the new ArcGIS .swm file
+* :ghpull:`947`: [WIP] fix bug #944
+* :ghpull:`950`: Lag cat fix
+* :ghpull:`928`: Fixed incorrect file path in fileio.rst
+* :ghpull:`927`: DOC: fix formatting of a code block in the documentation
+* :ghpull:`934`: Added String_Type values to unsupported file types
+* :ghpull:`929`: DOC: make code snippet in documentation compatible to Python 3
+* :ghpull:`924`: add pseudocode makefile
+* :ghpull:`916`: Util.compute length
+* :ghpull:`919`: Dijkstra mp
+* :ghpull:`921`: Mapping: allow tips parameter even if col not passed
+* :ghpull:`912`: adjust the formula for calculating local Moran's I in the docs
+* :ghpull:`913`: 0. Fixed docstring that was causing latex error
+* :ghpull:`910`: add new weights classes & methods to docs & tutorials
+* :ghpull:`908`: Geographically weighted regresson
+* :ghpull:`907`: Spint
+* :ghpull:`905`: Spint - fix local param indexing
+* :ghpull:`904`: Rc1.13.1
+* :ghpull:`903`: Fix for numpy bump induced breakage
+* :ghpull:`902`: Spreg fix
+* :ghpull:`901`: Badge for docs
+* :ghpull:`899`: fix inplace overwrite issue
+* :ghpull:`897`: fix minor typo
+* :ghpull:`887`: Dev version bump
+* :ghpull:`885`: Fixing doc builds
+* :ghpull:`883`: release 1.13.0
+
+Issues (78):
+
+* :ghissue:`892`: allow non-binary weights to propagate in w_subset
+* :ghissue:`915`: Network  dev
+* :ghissue:`925`: Reorg
+* :ghissue:`911`: coverage change
+* :ghissue:`848`: Points contrib module
+* :ghissue:`931`: Fix for negative values of ebi_v in assancao_rate smoother function
+* :ghissue:`956`: Nose tests fail for python 3 in Windows
+* :ghissue:`917`: Code not updated in docs
+* :ghissue:`943`: mapclassify docs contain a long WARNING
+* :ghissue:`948`: test_Headbanging_Median_Rate fails with Python 3.6
+* :ghissue:`955`: Minor corrections to issue template
+* :ghissue:`958`: Estimate panel models in spreg
+* :ghissue:`949`: spreg request: Conley standard errors
+* :ghissue:`888`: Fix unusual interpreter path.
+* :ghissue:`926`: DOC: fix a broken link (HTTP 404) in documentation
+* :ghissue:`951`: Order enforce
+* :ghissue:`953`: deprecating headbanging
+* :ghissue:`313`: Add handler for topojson
+* :ghissue:`316`: Add support for geojson 
+* :ghissue:`721`: Ability to specify categories / ranges in spatial markov method
+* :ghissue:`474`: Add contrib module to explore interface with geopandas
+* :ghissue:`651`: Design Point Pattern API
+* :ghissue:`648`: FileIO deprecation warning
+* :ghissue:`891`: Strange weights when I apply w_subset
+* :ghissue:`201`: Distance matrix builder
+* :ghissue:`872`: `weights.util.higher_order` warns when using a subclassed `W`
+* :ghissue:`923`: Arc_KDTree returned distances incorrect
+* :ghissue:`952`: fix for #932 coordinates need to be (lon, lat) not (lat, lon)
+* :ghissue:`945`: `DistanceBand` failing when `ids` passed
+* :ghissue:`946`: [WIP] add Distance bugfix
+* :ghissue:`939`: Compute spatial weight matrix from geopandas dataframe
+* :ghissue:`937`: Can't read ESRI spatial weights matrix
+* :ghissue:`942`: fixed the bug in reading the new ArcGIS .swm file
+* :ghissue:`729`: Update contrib docs
+* :ghissue:`947`: [WIP] fix bug #944
+* :ghissue:`950`: Lag cat fix
+* :ghissue:`944`: Higher Order Weights from Queen Contiguity Weights - Unsupported sparse argument
+* :ghissue:`922`: Weights, ordering, and from_dataframe
+* :ghissue:`940`: Add a Gitter chat badge to README.md
+* :ghissue:`928`: Fixed incorrect file path in fileio.rst
+* :ghissue:`906`: GSOC 2017
+* :ghissue:`938`: I use  “Markov(class_ids, classes=None)” ,classes (array) – (k, 1), define k=4, but the result display error.
+* :ghissue:`927`: DOC: fix formatting of a code block in the documentation
+* :ghissue:`935`: Creating Network instance from road shapefile fails; ValueError: list.remove(x): x not in list
+* :ghissue:`932`: Opening PolyLineM Shapefile fails to return file type unsupported error
+* :ghissue:`934`: Added String_Type values to unsupported file types
+* :ghissue:`929`: DOC: make code snippet in documentation compatible to Python 3
+* :ghissue:`924`: add pseudocode makefile
+* :ghissue:`916`: Util.compute length
+* :ghissue:`919`: Dijkstra mp
+* :ghissue:`866`: Use install_requires to automatically install required packages if they are not present
+* :ghissue:`921`: Mapping: allow tips parameter even if col not passed
+* :ghissue:`914`: added wkt representation for chain/polygon
+* :ghissue:`918`: Python 3.5, pysal FileIO import error
+* :ghissue:`912`: adjust the formula for calculating local Moran's I in the docs
+* :ghissue:`913`: 0. Fixed docstring that was causing latex error
+* :ghissue:`910`: add new weights classes & methods to docs & tutorials
+* :ghissue:`908`: Geographically weighted regresson
+* :ghissue:`907`: Spint
+* :ghissue:`905`: Spint - fix local param indexing
+* :ghissue:`904`: Rc1.13.1
+* :ghissue:`896`: test_Headbanging_Median_Rate fails
+* :ghissue:`903`: Fix for numpy bump induced breakage
+* :ghissue:`902`: Spreg fix
+* :ghissue:`901`: Badge for docs
+* :ghissue:`899`: fix inplace overwrite issue
+* :ghissue:`610`: SpReg Deprecation Warning
+* :ghissue:`895`: Weights for rasters or arrays with missing data
+* :ghissue:`897`: fix minor typo
+* :ghissue:`881`: Readthedocs failing to build due to missing ingmath module
+* :ghissue:`893`: DistanceBand error (AttributeError: power not found)
+* :ghissue:`890`: no neighbors on threshold_continuousW, after w_subset
+* :ghissue:`887`: Dev version bump
+* :ghissue:`886`: Dev
+* :ghissue:`885`: Fixing doc builds
+* :ghissue:`884`: Rel/1.13.1
+* :ghissue:`883`: release 1.13.0
+* :ghissue:`876`: changing shp.next() to next(shp)
+
 v<1.13.0>, 2016-11-24
 
 We closed a total of 38 issues, 7 pull requests and 31 regular issues;

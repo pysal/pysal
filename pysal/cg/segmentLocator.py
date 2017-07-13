@@ -114,19 +114,19 @@ class SegmentGrid(object):
             raise Exception('Invalid arguments for SegmentGrid(): (' + str(self.x_range) + ', ' + str(self.y_range) + ', ' + str(self.res) + ')')
     @property
     def hashKeys(self):
-        if self._hashKeys == None:
+        if self._hashKeys is None:
             self._hashKeys = numpy.array(self.hash.keys(),dtype=float)
         return self._hashKeys
 
     @property
     def kd(self):
-        if self._kd == None:
+        if self._kd is None:
             self._kd = scipy.spatial.cKDTree(self.hashKeys)
         return self._kd
 
     @property
     def kd2(self):
-        if self._kd2 == None:
+        if self._kd2 is None:
             self._kd2 = scipy.spatial.KDTree(self.hashKeys)
         return self._kd2
 

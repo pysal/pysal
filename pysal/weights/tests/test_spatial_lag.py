@@ -43,7 +43,7 @@ class Test_spatial_lag(unittest.TestCase):
         known = np.array(['b', 'a', 'b', 'c', 'b', 'c', 'b', 'c', 'b'])
         np.testing.assert_array_equal(yl, known)
         ym_lag = pysal.weights.spatial_lag.lag_categorical(self.wlat,self.ym)
-        known = np.array([['b', 'b'],
+        known = np.array([['b', 'c'],
                           ['a', 'c'],
                           ['b', 'c'],
                           ['c', 'd'],
@@ -51,7 +51,7 @@ class Test_spatial_lag(unittest.TestCase):
                           ['c', 'c'],
                           ['b', 'd'],
                           ['c', 'd'],
-                          ['b', 'b']])
+                          ['b', 'd']])
         np.testing.assert_array_equal(ym_lag, np.asarray(known))
 
 suite = unittest.TestLoader().loadTestsFromTestCase(Test_spatial_lag)

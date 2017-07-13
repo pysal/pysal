@@ -733,6 +733,7 @@ class Polygon(PolyLine):
 
 
 class MultiPoint:
+    String_Type = 'MULTIPOINT'
     def __init__(self):
         raise NotImplementedError("No MultiPoint Support at this time.")
 
@@ -742,31 +743,37 @@ class PolygonZ(PolyLineZ):
 
 
 class MultiPointZ:
+    String_Type = 'MULTIPOINTZ'
     def __init__(self):
         raise NotImplementedError("No MultiPointZ Support at this time.")
 
 
 class PointM:
+    String_Type = 'POINTM'
     def __init__(self):
         raise NotImplementedError("No PointM Support at this time.")
 
 
 class PolyLineM:
+    String_Type = 'ARCM'
     def __init__(self):
         raise NotImplementedError("No PolyLineM Support at this time.")
 
 
 class PolygonM:
+    String_Type = 'POLYGONM'
     def __init__(self):
         raise NotImplementedError("No PolygonM Support at this time.")
 
 
 class MultiPointM:
+    String_Type = 'MULTIPOINTM'
     def __init__(self):
         raise NotImplementedError("No MultiPointM Support at this time.")
 
 
 class MultiPatch:
+    String_Type = 'MULTIPATCH'
     def __init__(self):
         raise NotImplementedError("No MultiPatch Support at this time.")
 
