@@ -49,5 +49,6 @@ References
 .. [Rey2014] Rey, S. J. (2014). Fast algorithms for a space-time concordance measure. Computational Statistics, 29(3-4):799–811.
 .. [Schwarz1978] Schwarz, G. et al. (1978). Estimating the dimension of a model. The annals of statistics, 6(2):461–464. 
 .. [Slocum2008] Slocum, T., McMaster, R., Kessler, F., and Howard, H. (2008). Thematic cartography and geovisualization. Prentice Hall.
+.. [VanLieshout1996] Van Lieshout, M.N.M. and Baddeley, A.J. A nonparametric measure of spatial interaction in point patterns. Statistica Neerlandica 50 (1996) 344–361.
 .. [Watts1998] Watts, D. J. and Strogatz, S. H. (1998). Collective dynamics of ‘small-world’ networks. Nature, 393(6684):440–442.
 .. [White1980] White, H. (1980). A heteroskedasticity-consistent covariance matrix estimator and a direct test for heteroskedasticity. Econometrica: Journal of the Econometric Society, pages 817–838.
