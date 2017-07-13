@@ -394,15 +394,20 @@ def w_subset(w1, ids, silent_island_warning=False):
     """ 
 
     neighbors = {}
+    weights = {}
     ids_set = set(list(ids))
     for i in ids:
         if i in w1.neighbors:
             neigh_add = ids_set.intersection(set(w1.neighbors[i]))
+            weights_add = [w1.weights[i][list(w1.neighbors[i]).index(neigh)] 
+                           for neigh in neigh_add]
             neighbors[i] = list(neigh_add)
+            weights[i] = list(weights_add)
         else:
             neighbors[i] = []
+            weights[i] = [] 
 
-    return pysal.W(neighbors, id_order=list(ids), silent_island_warning=silent_island_warning)
+    return pysal.W(neighbors, weights=weights, id_order=list(ids), silent_island_warning=silent_island_warning)
 
 
 def w_clip(w1, w2, outSP=True, silent_island_warning=False):
