@@ -33,10 +33,22 @@ Andrew Winslow
 Levi Wolf
 Jing Yao
 Xinyue Ye
+jo-tham
+sebastic
+andy-esch
+calebrob6
+fnorf
+mylons-tcc
+dnadai2
+MridulS
 
 Funding from the following sources has supported PySAL development:
 
-Google Summer of Code 2016
+Google Summer of Code 2017 
+
+Google Summer of Code 2016 
+
+National Institutes of Health Award 7R01CA1266858-06, Geospatial Factors and Impacts II.
 
 National Science Foundation New Approaches for Spatial Distribution Dynamics
 
