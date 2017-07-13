@@ -8,7 +8,7 @@ Feel free to delete the commands after you've filled out each bullet.
 
 - Platform information:
 ```python
->>> import os; print(os.name, os.sys.platform);print(os.uname())
+>>> import os; print(os.name, os.sys.platform)
 ```
 - Python version: 
 ```python
@@ -16,7 +16,7 @@ Feel free to delete the commands after you've filled out each bullet.
 ```
 - SciPy version:
 ```python
->>> import scpiy; print(scipy.__version__)
+>>> import scipy; print(scipy.__version__)
 ```
 - NumPy version:
 ```python
