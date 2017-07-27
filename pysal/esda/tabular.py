@@ -172,7 +172,7 @@ def _swap_ending(s, ending, delim='_'):
     new string where the final chunk of `s`, delimited by `delim`, is replaced
     with `ending`. 
     """
-    parts = [x for x in s.split(delim)[:-1] if x != '']
+    parts = [x for x in s.split(delim)[:-1]]
     parts.append(ending)
     return delim.join(parts)
  
