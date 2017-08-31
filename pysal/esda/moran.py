@@ -129,6 +129,16 @@ class Moran(object):
     >>> mi_1.p_norm
     5.7916539074498452e-05
 
+    Example from http://www.lpc.uottawa.ca/publications/moransi/moran.htm
+
+    >>> w = ps.lat2W(3, 3)
+    >>> import numpy as np
+    >>> y = np.arange(1, 10)
+    >>> mi = pysal.Moran(y, w, transformation='B')
+    >>> mi.VI_rand
+    0.059687500000000004
+    >>> mi.VI_norm
+    0.053125000000000006
     """
     def __init__(self, y, w, transformation="r", permutations=PERMUTATIONS,
                  two_tailed=True):
@@ -188,13 +198,18 @@ class Moran(object):
         self.VI_norm = v_num / v_den - (1.0 / (n - 1)) ** 2
         self.seI_norm = self.VI_norm ** (1 / 2.)
 
-        k = (1 / ((z ** 4).sum()) * (((z ** 2).sum()) ** 2))
-        vi = (1 / (((n - 1) ** 3) * s02)) * ((n * ((n * n - 3 * n + 3)
-                                                   * s1 - n * s2 + 3 * s02))
-                                             - (k * ((n * n - n) * s1 - 2 * n *
-                                                     s2 + 6 * s02)))
-        self.VI_rand = vi
-        self.seI_rand = vi ** (1 / 2.)
+        # variance under randomization
+        xd4 = z**4
+        xd2 = z**2
+        k_num = xd4.sum() / n
+        k_den = (xd2.sum() / n)**2
+        k = k_num / k_den
+        EI = self.EI
+        A = n * ((n * n - 3 * n + 3) * s1 - n * s2 + 3 * s02)
+        B = k * ((n * n - n) * s1 - 2 * n * s2 + 6 * s02  )
+        VIR = (A - B) / ((n - 1) * (n - 2) * (n - 3 ) * s02) - EI*EI
+        self.VI_rand = VIR 
+        self.seI_rand = VIR ** (1 / 2.)
 
     def __calc(self, z):
         zl = slag(self.w, z)
