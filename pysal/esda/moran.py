@@ -189,12 +189,13 @@ class Moran(object):
         self.z2ss = (z * z).sum()
         self.EI = -1. / (self.n - 1)
         n = self.n
+        n2 = n * n
         s1 = self.w.s1
         s0 = self.w.s0
         s2 = self.w.s2
         s02 = s0 * s0
-        v_num = n * n * s1 - n * s2 + 3 * s0 * s0
-        v_den = (n - 1) * (n + 1) * s0 * s0
+        v_num = n2  * s1 - n * s2 + 3 * s02
+        v_den = (n - 1) * (n + 1) * s02
         self.VI_norm = v_num / v_den - (1.0 / (n - 1)) ** 2
         self.seI_norm = self.VI_norm ** (1 / 2.)
 
@@ -205,8 +206,8 @@ class Moran(object):
         k_den = (xd2.sum() / n)**2
         k = k_num / k_den
         EI = self.EI
-        A = n * ((n * n - 3 * n + 3) * s1 - n * s2 + 3 * s02)
-        B = k * ((n * n - n) * s1 - 2 * n * s2 + 6 * s02  )
+        A = n * ((n2 - 3 * n + 3) * s1 - n * s2 + 3 * s02)
+        B = k * ((n2 - n) * s1 - 2 * n * s2 + 6 * s02  )
         VIR = (A - B) / ((n - 1) * (n - 2) * (n - 3 ) * s02) - EI*EI
         self.VI_rand = VIR 
         self.seI_rand = VIR ** (1 / 2.)

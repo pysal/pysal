@@ -29,8 +29,8 @@ class Moran_Tester(unittest.TestCase):
         y = np.arange(1, 10)
         w = pysal.lat2W(3, 3)
         mi = pysal.Moran(y, w, transformation='B')
-        self.assertAlmostEquals(mi.VI_rand, 0.059687500000000004)
-        self.assertAlmostEquals(mi.VI_norm, 0.053125000000000006) 
+        np.testing.assert_allclose(mi.VI_rand, 0.059687500000000004, atol=ATOL, rtol=RTOL)
+        np.testing.assert_allclose(mi.VI_norm, 0.053125000000000006, atol=ATOL, rtol=RTOL)
  
     @unittest.skipIf(PANDAS_EXTINCT, 'missing pandas')
     def test_by_col(self):
