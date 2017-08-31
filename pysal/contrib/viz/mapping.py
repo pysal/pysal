@@ -626,9 +626,13 @@ def geoplot(db, col=None, palette='BuGn', classi='Quantiles',
         except KeyError:
             pass
         col = [(col, db[col])]
-        if tips:
-            for tip in tips:
-                col.append((tip, db[tip]))
+
+    if tips:
+        col = col or []
+        for tip in tips:
+            col.append((tip, db[tip]))
+
+    if col or tips:
         col.append(('index', db.index.values))
         col = collections.OrderedDict(col) # put mapped variable at the top
 

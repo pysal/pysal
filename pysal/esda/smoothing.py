@@ -549,7 +549,8 @@ def assuncao_rate(e, b):
     ebi_b = e_sum * 1.0 / b_sum
     s2 = sum(b * ((y - ebi_b) ** 2)) / b_sum
     ebi_a = s2 - ebi_b / (float(b_sum) / len(e))
-    ebi_v = ebi_a + ebi_b / b
+    ebi_v_raw = ebi_a + ebi_b / b
+    ebi_v = np.where(ebi_v_raw < 0, ebi_b / b, ebi_v_raw)
     return (y - ebi_b) / np.sqrt(ebi_v)
 
 class _Smoother(object):
@@ -1532,6 +1533,9 @@ class Spatial_Filtering(_Smoother):
         outdf = pd.concat(res)
         return outdf
 
+
+
+import warnings
 class Headbanging_Triples(object):
     """Generate a pseudo spatial weights instance that contains headbanging triples
 
@@ -1661,6 +1665,7 @@ class Headbanging_Triples(object):
     (0.33753, 0.302707)
     """
     def __init__(self, data, w, k=5, t=3, angle=135.0, edgecor=False):
+        raise DepricationWarning('Depricated')
         if k < 3:
             raise ValueError("w should be NeareastNeighbors instance & the number of neighbors should be more than 3.")
         if not w.id_order_set:
@@ -1806,6 +1811,7 @@ class Headbanging_Median_Rate(object):
     array([ 0.00091659,  0.        ,  0.00156838,  0.0018315 ,  0.00498891])
     """
     def __init__(self, e, b, t, aw=None, iteration=1):
+        warnings.warn("Deprecated", DepricationWarning)
         self.r = e * 1.0 / b
         self.tr, self.aw = t.triples, aw
         if hasattr(t, 'extra'):

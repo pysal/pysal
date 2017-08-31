@@ -13,7 +13,7 @@ with open('README.rst') as file:
     long_description = file.read()
 
 MAJOR = 1
-MINOR = 13
+MINOR = 14
 MICRO = 0
 ISRELEASED = False
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)

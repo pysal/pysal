@@ -92,6 +92,13 @@ class Contiguity_Mixin(object):
         w = self.cls.from_dataframe(df, geom_col='the_geom', idVariable=self.idVariable)
         self.assertEqual(w[self.known_name], self.known_namedw)
 
+        # order preserving
+        permute = df.sample(frac=1)
+        w = self.cls.from_dataframe(permute, geom_col='the_geom')
+        with self.assertRaises(AssertionError):
+            assert w.id_order == df.index.tolist()
+        self.assertEqual(w.id_order, permute.index.tolist())
+
 class Test_Queen(ut.TestCase, Contiguity_Mixin):
     def setUp(self):
         Contiguity_Mixin.setUp(self)

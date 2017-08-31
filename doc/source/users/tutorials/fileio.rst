@@ -14,10 +14,11 @@ An Overview of the FileIO system in PySAL.
 Introduction
 ============
 
-PySAL contains a new file input-output API that should be used for all file IO
-operations. The goal is to abstract file handling and return native PySAL data
-types when reading from known file types. A list of known extensions can be
-found by issuing the following command::
+PySAL contains a file input-output API that stands as a reference pure python
+implementation for spatial IO. The design goal for this API is to abstract 
+file handling and return native PySAL data types when reading from known 
+file types. A list of known extensions can be found by issuing the 
+following command::
 
     pysal.open.check()
 
@@ -28,6 +29,8 @@ if has the necessary header information and dispatch accordingly. In the event
 that pysal does not understand your file IO operations will be dispatched to
 python's internal open.
 
+PySAL can also fully leverage `Geopandas <http://geopandas.org>`_ in analyses. It also provides an alternative, tabular data IO system, ``pdio``. 
+
 Examples: Reading files
 =======================
 
@@ -37,7 +40,7 @@ Shapefiles
 .. doctest::
 
     >>> import pysal
-    >>> shp = pysal.open('../pysal/examples/10740.shp')
+    >>> shp = pysal.open(pysal.examples.get_path('10740.shp'))
     >>> poly = shp.next()
     >>> type(poly)
     <class 'pysal.cg.shapes.Polygon'>
@@ -55,7 +58,7 @@ DBF Files
 .. doctest::
 
     >>> import pysal
-    >>> db = pysal.open('../pysal/examples/10740.dbf','r')
+    >>> db = pysal.open(pysal.examples.get_path('10740.dbf'),'r')
     >>> db.header
     ['GIST_ID', 'FIPSSTCO', 'TRT2000', 'STFID', 'TRACTID']
     >>> db.field_spec
@@ -427,3 +430,20 @@ From GAL to ArcGIS SWM format
 
 
 For further details see the :doc:`FileIO API <../../library/core/FileIO>`.
+
+Alternative Tabular API
+========================
+
+For shapefile input and output, the dataframe API constructs a dataframe similar to that constructed by Geopandas, but populated by PySAL's own shape classes. This is provided as a convenience method for users who have shapefile-heavy workflows and would like to get Geopandas-style interaction. This API is only a frontend to the existing PySAL api documented above, and users who have heavier spatial data needs may find Geopandas useful.  
+
+.. doctest::
+    >>> df = pysal.pdio.read_files(ps.examples.get_path('columbus.shp'))
+    >>> df.head().NEIG
+        0    5
+        1    1
+        2    6
+        3    2
+        4    7
+        Name: NEIG, dtype: int64
+	>>> df['new_data'] = np.random.normal(0,1,shape=df.shape[0])
+	>>> ps.pdio.write_files(df, './test_out.shp')

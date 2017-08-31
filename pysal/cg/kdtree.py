@@ -19,23 +19,23 @@ DISTANCE_METRICS = ['Euclidean', 'Arc']
 FLOAT_EPS = numpy.finfo(float).eps
 
 
-def KDTree(data, leafsize=10, distance_metric='Euclidean', 
+def KDTree(data, leafsize=10, distance_metric='Euclidean',
            radius=RADIUS_EARTH_KM):
     """
     kd-tree built on top of kd-tree functionality in scipy. If using scipy 0.12
     or greater uses the scipy.spatial.cKDTree, otherwise uses
     scipy.spatial.KDTree. Offers both Arc distance and Euclidean distance.
     Note that Arc distance is only appropriate when points in latitude and
-    longitude, and the radius set to meaningful value (see docs below). 
+    longitude, and the radius set to meaningful value (see docs below).
 
     Parameters
     ----------
     data            : array
-                      The data points to be indexed. This array is not copied, 
+                      The data points to be indexed. This array is not copied,
                       and so modifying this data will result in bogus results.
                       Typically nx2.
     leafsize        : int
-                      The number of points at which the algorithm switches over 
+                      The number of points at which the algorithm switches over
                       to brute-force. Has to be positive. Optional, default is 10.
     distance_metric : string
                       Options: "Euclidean" (default) and "Arc".
@@ -56,7 +56,7 @@ def KDTree(data, leafsize=10, distance_metric='Euclidean',
         return Arc_KDTree(data, leafsize, radius)
 
 
-# internal hack for the Arc_KDTree class inheritance 
+# internal hack for the Arc_KDTree class inheritance
 if int(scipy.version.version.split(".")[1]) < 12:
     temp_KDTree = scipy.spatial.KDTree
 else:
@@ -164,10 +164,16 @@ class Arc_KDTree(temp_KDTree):
             return sphere.linear2arcdist(d, r), i
         if dims == 1:
             #TODO: implement linear2arcdist on numpy arrays
-            d = [sphere.linear2arcdist(x, r) for x in d]
+            d1 = [sphere.linear2arcdist(dx, r) for dx in d]
         elif dims == 2:
-            d = [[sphere.linear2arcdist(x, r) for x in row] for row in d]
-        return numpy.array(d), i
+            d1 = [[sphere.linear2arcdist(dx, r) for dx in row] for row in d]
+        d = numpy.array(d1)
+        dinf = d == numpy.inf
+        if dinf.sum() > 0:
+            i = i.astype(float)
+            i[dinf] = numpy.nan
+
+        return d, i
 
     def query_ball_point(self, x, r, p=2, eps=0):
         """

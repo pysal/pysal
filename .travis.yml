@@ -34,7 +34,7 @@ install:
 script:
   - python setup.py sdist >/dev/null
   - echo "check_stable=False" >pysal/config.py
-  - nosetests --with-coverage --cover-package=pysal;
+  - nosetests --verbose --with-coverage --cover-package=pysal;
   #- cd doc; make pickle; make doctest
 notifications:
     email:

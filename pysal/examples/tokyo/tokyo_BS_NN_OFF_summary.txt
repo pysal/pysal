@@ -1,0 +1,148 @@
+*****************************************************************************
+*             Semiparametric Geographically Weighted Regression             *
+*                         Release 1.0.90 (GWR 4.0.90)                       *
+*                               12 May 2015                                 *
+*                 (Originally coded by T. Nakaya: 1 Nov 2009)               *
+*                                                                           *
+*              Tomoki Nakaya(1), Martin Charlton(2), Chris Brunsdon (2)     *
+*              Paul Lewis (2), Jing Yao (3), A Stewart Fotheringham (4)     *
+*                       (c) GWR4 development team                           *
+* (1) Ritsumeikan University, (2) National University of Ireland, Maynooth, *
+*         (3) University of Glasgow, (4) Arizona State University           *
+*****************************************************************************
+
+Program began at 9/7/2016 12:36:11 PM
+
+*****************************************************************************
+Session: 
+Session control file: C:\Users\IEUser\Desktop\tokyo\tokyo_results\tokyo_BS_NN_OFF_100.ctl
+*****************************************************************************
+Data filename: C:\Users\IEUser\Desktop\tokyo\tokyo\Tokyomortality.txt
+Number of areas/points: 262
+
+Model settings---------------------------------
+Model type: Poisson
+Geographic kernel: adaptive bi-square
+Method for optimal bandwidth search: fixed value
+Criterion for optimal bandwidth: AICc
+Number of varying coefficients: 5
+Number of fixed coefficients:   0
+
+Modelling options---------------------------------
+Standardisation of independent variables: OFF
+Testing geographical variability of local coefficients: OFF
+Local to Global Variable selection: OFF
+Global to Local Variable selection: OFF
+Prediction at non-regression points: OFF
+
+Variable settings---------------------------------
+Area key: field1: IDnum0
+Easting (x-coord): field2 : X_CENTROID
+Northing (y-coord): field3: Y_CENTROID
+Cartesian coordinates: Euclidean distance
+Dependent variable: field4: db2564
+Offset variable: field5: eb2564
+Intercept: varying (Local) intercept
+Independent variable with varying (Local) coefficient: field6: OCC_TEC
+Independent variable with varying (Local) coefficient: field7: OWNH
+Independent variable with varying (Local) coefficient: field8: POP65
+Independent variable with varying (Local) coefficient: field9: UNEMP
+*****************************************************************************
+
+*****************************************************************************
+  Global regression result
+*****************************************************************************
+  < Diagnostic information >
+Number of parameters:                   5
+Deviance:                            389.281580
+Classic AIC:                         399.281580
+AICc:                                399.515955
+BIC/MDL:                             417.123303
+Percent deviance explained             0.594601
+
+Variable                  Estimate    Standard Error      z(Est/SE)        Exp(Est)  
+-------------------- --------------- --------------- --------------- --------------- 
+Intercept                   0.007470        0.065139        0.114679        1.007498
+OCC_TEC                    -2.287906        0.162000      -14.122903        0.101479
+OWNH                       -0.259692        0.047050       -5.519470        0.771289
+POP65                       2.199387        0.198270       11.092878        9.019480
+UNEMP                       0.064025        0.010997        5.822059        1.066119
+
+*****************************************************************************
+  GWR (Geographically weighted regression) bandwidth selection
+*****************************************************************************
+
+Bandwidth search <fixed value>:  100
+
+*****************************************************************************
+  GWR (Geographically weighted regression) result
+*****************************************************************************
+  Bandwidth and geographic ranges
+Bandwidth size:                  100.000000
+Coordinate                Min              Max           Range
+--------------- --------------- --------------- ---------------
+X-coord           276385.400000   408226.180000   131840.780000
+Y-coord           -86587.480000    33538.420000   120125.900000
+
+  Diagnostic information
+Effective number of parameters (model: trace(S)):                         25.145091
+Effective number of parameters (variance: trace(S'WSW^-1)):               17.142370
+Degree of freedom (model: n - trace(S)):                                 236.854909
+Degree of freedom (residual: n - 2trace(S) + trace(S'WSW^-1)):           228.852188
+Deviance:                            311.245301
+Classic AIC:                         361.535483
+AICc:                                367.110273
+BIC/MDL:                             451.261832
+Percent deviance explained             0.675868
+
+***********************************************************
+ << Geographically varying (Local) coefficients >>
+***********************************************************
+Estimates of varying coefficients have been saved in the following file.
+    Listwise output file: C:\Users\IEUser\Desktop\tokyo\tokyo_results\tokyo_BS_NN_OFF_100_listwise.csv
+
+Summary statistics for varying (Local) coefficients 
+Variable                      Mean             STD 
+-------------------- --------------- ---------------
+Intercept                   0.038565        0.295395
+OCC_TEC                    -2.132644        1.004125
+OWNH                       -0.275802        0.157200
+POP65                       2.169549        0.626589
+UNEMP                       0.047531        0.038121
+
+Variable                       Min              Max           Range
+-------------------- --------------- --------------- ---------------
+Intercept                  -0.879764        0.408928        1.288692
+OCC_TEC                    -3.607038        1.218879        4.825918
+OWNH                       -0.547011        0.111386        0.658397
+POP65                       1.319626        4.095840        2.776214
+UNEMP                      -0.051157        0.159427        0.210584
+
+Variable               Lwr Quartile          Median    Upr Quartile
+-------------------- --------------- --------------- ---------------
+Intercept                   0.001123        0.090003        0.254783
+OCC_TEC                    -2.661121       -2.503268       -1.837056
+OWNH                       -0.375947       -0.321084       -0.208341
+POP65                       1.676893        2.083871        2.420870
+UNEMP                       0.022264        0.044555        0.075398
+
+Variable             Interquartile R     Robust STD
+-------------------- --------------- ---------------
+Intercept                   0.253660        0.188036
+OCC_TEC                     0.824066        0.610872
+OWNH                        0.167607        0.124245
+POP65                       0.743976        0.551502
+UNEMP                       0.053134        0.039388
+ (Note: Robust STD is given by (interquartile range / 1.349) )
+
+*****************************************************************************
+ GWR Analysis of Deviance Table
+*****************************************************************************
+Source                 Deviance        DOF     Deviance/DOF
+------------ ------------------- ---------- ----------------
+Global model              389.282    257.000             1.515
+GWR model                 311.245    228.852             1.360
+Difference                 78.036     28.148             2.772
+
+*****************************************************************************
+Program terminated at 9/7/2016 12:36:11 PM

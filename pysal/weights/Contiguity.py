@@ -31,9 +31,9 @@ class Rook(W):
         :class:`pysal.weights.W`
         """
         criterion = 'rook'
-        ids = kw.pop('ids', None) 
-        neighbors, ids = _build(polygons, criterion=criterion, 
-                                ids=ids, method=method)
+        ids = kw.pop('ids', None)
+        neighbors, ids = _build(polygons, ids=ids, 
+                                criterion=criterion, method=method)
         W.__init__(self, neighbors, ids=ids, **kw)
     
     @classmethod
@@ -82,6 +82,7 @@ class Rook(W):
             ids = get_ids(filepath, idVariable) 
         else:
             ids = None
+        iterable = FileIO(filepath)
         w = cls(FileIO(filepath), ids=ids, **kwargs)
         w.set_shapefile(filepath, idVariable=idVariable, full=full)
         if sparse:
@@ -89,7 +90,7 @@ class Rook(W):
         return w
     
     @classmethod
-    def from_iterable(cls, iterable, **kwargs):
+    def from_iterable(cls, iterable, sparse=False, **kwargs):
         """
         Construct a weights object from a collection of arbitrary polygons. This
         will cast the polygons to PySAL polygons, then build the W.
@@ -109,11 +110,15 @@ class Rook(W):
         :class:`pysal.weights.Rook`
         """
         new_iterable = [asShape(shape) for shape in iterable]
-        return cls(new_iterable, **kwargs)
+        
+        w = cls(new_iterable, **kwargs) 
+        if sparse:
+            w = WSP.from_W(w)
+        
+        return w
     
     @classmethod
-    def from_dataframe(cls, df, geom_col='geometry', 
-                       idVariable=None, ids=None, id_order=None, **kwargs):
+    def from_dataframe(cls, df, geom_col='geometry', **kwargs):
         """
         Construct a weights object from a pandas dataframe with a geometry
         column. This will cast the polygons to PySAL polygons, then build the W
@@ -144,20 +149,27 @@ class Rook(W):
         :class:`pysal.weights.W`
         :class:`pysal.weights.Rook`
         """
-        if id_order is not None:
-            if id_order is True and ((idVariable is not None) 
-                                     or (ids is not None)):
+        idVariable = kwargs.pop('idVariable', None)
+        ids = kwargs.pop('ids', None)
+        id_order = kwargs.pop('id_order', True)
+        if id_order is True and ((idVariable is not None) 
+                                  or (ids is not None)):
                 # if idVariable is None, we want ids. Otherwise, we want the
                 # idVariable column
-                id_order = list(df.get(idVariable, ids))
-            else:
-                id_order = df.get(id_order, ids)
+            ids = list(df.get(idVariable, ids))
+            id_order = ids
+        elif isinstance(id_order, str):
+            ids = df.get(id_order, ids)
+            id_order = ids
         elif idVariable is not None:
             ids = df.get(idVariable).tolist()
         elif isinstance(ids, str):
             ids = df.get(ids).tolist()
-        return cls.from_iterable(df[geom_col].tolist(), ids=ids,
-                                 id_order=id_order, **kwargs)
+        else:
+            id_order = list(df.index)
+            ids = list(df.index)
+        w = cls.from_iterable(df[geom_col].tolist(), ids=ids, id_order=id_order, **kwargs)
+        return w
 
 class Queen(W):
     def __init__(self, polygons,method='binning', **kw):
@@ -303,21 +315,23 @@ class Queen(W):
         """
         idVariable = kwargs.pop('idVariable', None)
         ids = kwargs.pop('ids', None)
-        id_order = kwargs.pop('id_order', None)
-        if id_order is not None:
-            if id_order is True and ((idVariable is not None) 
-                                     or (ids is not None)):
+        id_order = kwargs.pop('id_order', True)
+        if id_order is True and ((idVariable is not None) 
+                                  or (ids is not None)):
                 # if idVariable is None, we want ids. Otherwise, we want the
                 # idVariable column
-                ids = list(df.get(idVariable, ids))
-                id_order = ids
-            elif isinstance(id_order, str):
-                ids = df.get(id_order, ids)
-                id_order = ids
+            ids = list(df.get(idVariable, ids))
+            id_order = ids
+        elif isinstance(id_order, str):
+            ids = df.get(id_order, ids)
+            id_order = ids
         elif idVariable is not None:
             ids = df.get(idVariable).tolist()
         elif isinstance(ids, str):
             ids = df.get(ids).tolist()
+        else:
+            id_order = list(df.index)
+            ids = list(df.index)
         w = cls.from_iterable(df[geom_col].tolist(), ids=ids, id_order=id_order, **kwargs)
         return w
 
