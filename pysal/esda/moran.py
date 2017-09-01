@@ -102,7 +102,7 @@ class Moran(object):
     >>> w = pysal.open(pysal.examples.get_path("stl.gal")).read()
     >>> f = pysal.open(pysal.examples.get_path("stl_hom.txt"))
     >>> y = np.array(f.by_col['HR8893'])
-    >>> mi = Moran(y,  w)
+    >>> mi = pysal.Moran(y,  w)
     >>> "%7.5f" % mi.I
     '0.24366'
     >>> mi.EI
@@ -114,6 +114,7 @@ class Moran(object):
 
     >>> w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
     >>> f = pysal.open(pysal.examples.get_path("sids2.dbf"))
+    >>> import numpy as np
     >>> SIDR = np.array(f.by_col("SIDR74"))
     >>> mi = pysal.Moran(SIDR,  w)
     >>> "%6.4f" % mi.I
@@ -131,8 +132,7 @@ class Moran(object):
 
     Example from http://www.lpc.uottawa.ca/publications/moransi/moran.htm
 
-    >>> w = ps.lat2W(3, 3)
-    >>> import numpy as np
+    >>> w = pysal.lat2W(3, 3)
     >>> y = np.arange(1, 10)
     >>> mi = pysal.Moran(y, w, transformation='B')
     >>> mi.VI_rand
