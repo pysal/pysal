@@ -89,7 +89,8 @@ class Geary(object):
     0.3330108
     >>> print round(c.p_norm,7)
     9.2e-05
-    >>>
+    >>> c.z_rand
+    -3.6489513837253944
     """
     def __init__(self, y, w, transformation="r", permutations=999):
         if not isinstance(w, weights.W):

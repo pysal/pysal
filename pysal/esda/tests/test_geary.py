@@ -26,7 +26,7 @@ class Geary_Tester(unittest.TestCase):
         self.assertAlmostEquals(c.z_norm, -3.7399778367629564)
         self.assertAlmostEquals(c.seC_norm, 0.17834040553138225)
 
-        self.assertAlmostEquals(c.VC_rand, 0.018437747611029367)
+        self.assertAlmostEquals(c.VC_rand,0.033411917666958356)
         self.assertAlmostEquals(c.p_rand, 4.5059156794646782e-07)
         self.assertAlmostEquals(c.z_rand, -4.9120733751216008)
         self.assertAlmostEquals(c.seC_rand, 0.13578566791465646)
