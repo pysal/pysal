@@ -27,9 +27,9 @@ class Geary_Tester(unittest.TestCase):
         self.assertAlmostEquals(c.seC_norm, 0.17834040553138225)
 
         self.assertAlmostEquals(c.VC_rand,0.033411917666958356)
-        self.assertAlmostEquals(c.p_rand, 4.5059156794646782e-07)
-        self.assertAlmostEquals(c.z_rand, -4.9120733751216008)
-        self.assertAlmostEquals(c.seC_rand, 0.13578566791465646)
+        self.assertAlmostEquals(c.p_rand,0.00013165646189214729)
+        self.assertAlmostEquals(c.z_rand, -3.6489513837253944)
+        self.assertAlmostEquals(c.seC_rand, 0.18278927120309429)
 
         np.random.seed(12345)
         c = geary.Geary(self.y, self.w, permutations=999)
@@ -41,10 +41,10 @@ class Geary_Tester(unittest.TestCase):
         self.assertAlmostEquals(c.z_norm, -3.7399778367629564)
         self.assertAlmostEquals(c.seC_norm, 0.17834040553138225)
 
-        self.assertAlmostEquals(c.VC_rand, 0.018437747611029367)
-        self.assertAlmostEquals(c.p_rand, 4.5059156794646782e-07)
-        self.assertAlmostEquals(c.z_rand, -4.9120733751216008)
-        self.assertAlmostEquals(c.seC_rand, 0.13578566791465646)
+        self.assertAlmostEquals(c.VC_rand, 0.033411917666958356)
+        self.assertAlmostEquals(c.p_rand, 0.00013165646189214729)
+        self.assertAlmostEquals(c.z_rand, -3.6489513837253944)
+        self.assertAlmostEquals(c.seC_rand, 0.18278927120309429)
 
         self.assertAlmostEquals(c.EC_sim, 0.9980676303238214)
         self.assertAlmostEquals(c.VC_sim, 0.034430408799858946)
