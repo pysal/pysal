@@ -28,34 +28,6 @@ applications for spatial analysis.
 Counties 1990.*
 
 
-It is important to underscore what PySAL is, and is not, designed to do. First
-and foremost, PySAL is a library in the fullest sense of the word. Developers
-looking for a suite of spatial analytical methods that they can incorporate
-into application development should feel at home using PySAL. Spatial analysts
-who may be carrying out research projects requiring customized scripting,
-extensive simulation analysis, or those seeking to advance the state of the art
-in spatial analysis should also find PySAL to be a useful foundation for their
-work.
-
-
-.. |build| image:: https://travis-ci.org/pysal/pysal.png
-   :scale: 100%
-   :align: middle
-   :target: https://travis-ci.org/pysal/pysal
-.. |cover| image:: https://coveralls.io/repos/pysal/pysal/badge.svg?branch=master
-   :scale: 50%
-   :align: top
-   :target: https://coveralls.io/r/pysal/pysal?branch=master
-.. |docs| image:: https://readthedocs.org/projects/pysal/badge/?verison=latest
-   :scale: 50%
-   :align: top
-   :target: http://pysal.readthedocs.org/en/latest/
-.. |talk| image:: https://badges.gitter.im/Join%20Chat.svg
-   :scale: 50%
-   :align: top
-   :target: https://gitter.im/pysal/pysal?
-
-
 
 PySAL modules
 =============
