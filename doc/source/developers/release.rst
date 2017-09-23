@@ -56,11 +56,11 @@ is `v1.10` in what follows)::
 
 - Make and upload_ to the **Testing** Python Package Index::
 
-  $ python setup.py sdist upload -r https://testpypi.python.org/pypi
+  $ python setup.py sdist upload -r https://test.pypi.org/legacy/
 
 - Test that your package can install correctly::
 
-  $ pip install --extra-index-url https://testpypi.python.org/pypi pysal
+  $ pip install --extra-index-url https://test.pypi.org/legacy pysal
 
 
 If all is good, proceed, otherwise fix, and repeat.
