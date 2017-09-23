@@ -11,6 +11,7 @@ Pedro Amaral
 Luc Anselin
 Jotham Apaloo
 Daniel Arribas-Bel
+Roger Bivand
 David C. Folch
 Forest Gregg
 Myunghwa Hwang
