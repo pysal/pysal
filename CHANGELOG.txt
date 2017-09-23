@@ -1,3 +1,25 @@
+v<1.14.2>, 2017-09-23
+This is a bug fix release for the 1.14 Python 2.x. series of PySAL.
+
+We closed a total of 8 issues, 3 pull requests and 5 regular issues;
+this is the full list (generated with the script 
+:file:`tools/github_stats.py`):
+
+Pull Requests (3):
+
+* :ghpull:`975`: Correction of Geary's C under randomization
+* :ghpull:`972`: Bug Fix for #970
+* :ghpull:`973`: Passing p_thres in plot_lisa_cluster. This fixes #971
+
+Issues (5):
+
+* :ghissue:`974`: Re: #979
+* :ghissue:`975`: Correction of Geary's C under randomization
+* :ghissue:`972`: Bug Fix for #970
+* :ghissue:`973`: Passing p_thres in plot_lisa_cluster. This fixes #971
+* :ghissue:`968`: find_bin does not include top value
+
+
 v<1.14.0>, 2017-07-13
 
 This is the last version of PySAL that will officially support Python 2.x. 
