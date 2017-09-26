@@ -25,6 +25,13 @@ class Moran_Tester(unittest.TestCase):
         np.testing.assert_allclose(mi.I, 0.24772519320480135, atol=ATOL, rtol=RTOL)
         self.assertAlmostEquals(mi.p_norm,  5.7916539074498452e-05)
 
+    def test_variance(self):
+        y = np.arange(1, 10)
+        w = pysal.lat2W(3, 3)
+        mi = pysal.Moran(y, w, transformation='B')
+        np.testing.assert_allclose(mi.VI_rand, 0.059687500000000004, atol=ATOL, rtol=RTOL)
+        np.testing.assert_allclose(mi.VI_norm, 0.053125000000000006, atol=ATOL, rtol=RTOL)
+ 
     @unittest.skipIf(PANDAS_EXTINCT, 'missing pandas')
     def test_by_col(self):
         import pysal.contrib.pdio as pdio
@@ -35,6 +42,7 @@ class Moran_Tester(unittest.TestCase):
         pval = np.unique(mi.SIDR74_p_sim.values)
         np.testing.assert_allclose(sidr, 0.24772519320480135, atol=ATOL, rtol=RTOL)
         self.assertAlmostEquals(pval, 0.001)
+
 
 
 class Moran_Rate_Tester(unittest.TestCase):

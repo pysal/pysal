@@ -45,7 +45,7 @@ def iwls(y, x, family, offset, y_fix,
     diff = 1.0e6
     
     if ini_betas is None:
-    	betas = np.zeros((x.shape[1], 1), np.float)
+        betas = np.zeros((x.shape[1], 1), np.float)
     else:
         betas = ini_betas
 
@@ -53,9 +53,9 @@ def iwls(y, x, family, offset, y_fix,
         y = family.link._clean(y)
     if isinstance(family, Poisson):
         y_off = y/offset
-    	y_off = family.starting_mu(y_off)
-    	v = family.predict(y_off)
-    	mu = family.starting_mu(y)
+        y_off = family.starting_mu(y_off)
+        v = family.predict(y_off)
+        mu = family.starting_mu(y)
     else:
         mu = family.starting_mu(y)
         v = family.predict(mu)
@@ -78,7 +78,7 @@ def iwls(y, x, family, offset, y_fix,
         mu  = family.fitted(v)
 
         if isinstance(family, Poisson):
-        	mu = mu * offset
+            mu = mu * offset
 
         diff = min(abs(n_betas-betas))
         betas = n_betas
