@@ -28,7 +28,6 @@ applications for spatial analysis.
 Counties 1990.*
 
 
-
 PySAL modules
 =============
 
