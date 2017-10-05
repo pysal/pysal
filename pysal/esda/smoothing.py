@@ -510,10 +510,10 @@ def assuncao_rate(e, b):
 
     Parameters
     ----------
-    e          : array(n, 1)
-                 event variable measured at n spatial units
-    b          : array(n, 1)
-                 population at risk variable measured at n spatial units
+    e          : array
+                 (n, 1), event variable measured at n spatial units
+    b          : array
+                 (n, 1), population at risk variable measured at n spatial units
 
     Notes
     -----
@@ -521,7 +521,8 @@ def assuncao_rate(e, b):
 
     Returns
     -------
-               : array (nx1)
+               : array
+                 (n,1)
 
     Examples
     --------
@@ -540,7 +541,7 @@ def assuncao_rate(e, b):
     Computing the rates
 
     >>> print assuncao_rate(e, b)[:4]
-    [ 1.04319254 -0.04117865 -0.56539054 -1.73762547]
+    [ 1.03843594 -0.04099089 -0.56250375 -1.73061861]
 
     """
 
@@ -667,15 +668,15 @@ class Empirical_Bayes(_Smoother):
 
     Parameters
     ----------
-    e           : array (n, 1)
-                  event variable measured across n spatial units
-    b           : array (n, 1)
-                  population at risk variable measured across n spatial units
+    e           : array
+                  (n, 1), event variable measured across n spatial units
+    b           : array
+                  (n, 1), population at risk variable measured across n spatial units
 
     Attributes
     ----------
-    r           : array (n, 1)
-                  rate values from Empirical Bayes Smoothing
+    r           : array
+                  (n, 1), rate values from Empirical Bayes Smoothing
 
     Examples
     --------

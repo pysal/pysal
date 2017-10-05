@@ -141,7 +141,7 @@ and total population (the 13th column):
 .. doctest:: 
 
     >>> import pysal
-    >>> stl = pysal.open('../pysal/examples/stl_hom.csv', 'r')
+    >>> stl = pysal.open(pysal.examples.get_path('stl_hom.csv'), 'r')
     >>> e, b = np.array(stl[:,10]), np.array(stl[:,13])
 
 We then read the spatial weights file defining neighborhood relationships among the counties 
@@ -149,7 +149,7 @@ and ensure that the :ref:`order <id_order>` of observations in the weights objec
 
 .. doctest:: 
 
-    >>> w = pysal.open('../pysal/examples/stl.gal', 'r').read()
+    >>> w = pysal.open(pysal.examples.get_path("stl.gal"),"r").read()
     >>> if not w.id_order_set: w.id_order = range(1,len(stl) + 1)
 
 Now we calculate locally weighted averages of the homicide rates.
