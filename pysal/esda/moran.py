@@ -554,10 +554,10 @@ class Moran_Rate(Moran):
                       number of random permutations for calculation of pseudo
                       p_values
     geoda_rate      : boolean
-                      If adjusted=True and geoda=True, rates are adjusted and
+                      If adjusted=True and geoda_rate=True, rates are adjusted and
                       conform with Geoda implementation: if a<0, variance
                       estimator is v_i = b/x_i for any i; otherwise v_i = a+b/x_i.
-                      If adjusted=True and geoda=False, conform with
+                      If adjusted=True and geoda_rate=False, conform with
                       Assuncao and Reis (1999) [Assuncao1999]_ :
                       assign v_i = a+b/x_i and check individual v_i: if v_i<0,
                       assign v_i = b/x_i.
@@ -1230,10 +1230,10 @@ class Moran_Local_Rate(Moran_Local):
                      If True use GeoDa scheme: HH=1, LL=2, LH=3, HL=4
                      If False use PySAL Scheme: HH=1, LH=2, LL=3, HL=4
     geoda_rate     : boolean
-                     If adjusted=True and geoda=True, rates are adjusted and
+                     If adjusted=True and geoda_rate=True, rates are adjusted and
                      conform with Geoda implementation: if a<0, variance
                      estimator is v_i = b/x_i for any i; otherwise v_i = a+b/x_i.
-                     If adjusted=True and geoda=False, conform with
+                     If adjusted=True and geoda_rate=False, conform with
                      Assuncao and Reis (1999) [Assuncao1999]_ :
                      assign v_i = a+b/x_i and check individual v_i: if v_i<0,
                      assign v_i = b/x_i.
