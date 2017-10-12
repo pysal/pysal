@@ -502,11 +502,9 @@ def choynowski(e, b, n, threshold=None):
     return np.array(p)
 
 
-def assuncao_rate(e, b):
-    """The standardized rates where the mean and stadard deviation used for
-    the standardization are those of Empirical Bayes rate estimates
-    The standardized rates resulting from this function are used to compute
-    Moran's I corrected for rate variables [Choynowski1959]_ .
+def assuncao_rate(e, b, geoda=True):
+    """Standardized rates used for computing Moran's I corrected for rate
+    variables.
 
     Parameters
     ----------
@@ -514,25 +512,33 @@ def assuncao_rate(e, b):
                  (n, 1), event variable measured at n spatial units
     b          : array
                  (n, 1), population at risk variable measured at n spatial units
+    geoda      : bool
+                 If True, conform with Geoda implementation: if a<0, variance
+                 estimator is v_i = b/x_i for any i; otherwise v_i = a+b/x_i.
+                 If False, conform with Assuncao and Reis (1999) [Assuncao1999]_ :
+                 assign v_i = a+b/x_i and check individual v_i: if v_i<0,
+                 assign v_i = b/x_i.
+                 Default is True.
 
     Notes
     -----
-    e and b are arranged in the same order
+    The mean and standard deviation used for standardizing rates are those
+    of Empirical Bayes rate estimates.
+    Based on Assuncao and Reis (1999) [Assuncao1999]_ .
 
     Returns
     -------
                : array
-                 (n,1)
+                 (n, 1)
 
     Examples
     --------
-
-    Creating an array of an event variable (e.g., the number of cancer patients)
+    Create an array of an event variable (e.g., the number of cancer patients)
     for 8 regions.
 
     >>> e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
 
-    Creating another array of a population-at-risk variable (e.g., total population)
+    Create another array of a population-at-risk variable (e.g., total population)
     for the same 8 regions.
     The order for entering values is the same as the case of e.
 
@@ -540,19 +546,34 @@ def assuncao_rate(e, b):
 
     Computing the rates
 
-    >>> print assuncao_rate(e, b)[:4]
-    [ 1.03843594 -0.04099089 -0.56250375 -1.73061861]
+    >>> print(assuncao_rate(e, b)[:4])
+    [ 0.95839273 -0.03783129 -0.51460896 -1.61105841]
+
+    >>> import pysal
+    >>> w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
+    >>> f = pysal.open(pysal.examples.get_path("sids2.dbf"))
+    >>> e = np.array(f.by_col('SID79'))
+    >>> b = np.array(f.by_col('BIR79'))
+    >>> print(assuncao_rate(e, b)[:4])
+    [-1.48875691  1.78507268 -0.34422806  0.26190802]
 
     """
 
-    y = e * 1.0 / b
+    e = np.array(e).astype(float)
+    b = np.array(b).astype(float)
+    y = e / b
     e_sum, b_sum = sum(e), sum(b)
-    ebi_b = e_sum * 1.0 / b_sum
-    s2 = sum(b * ((y - ebi_b) ** 2)) / b_sum
-    ebi_a = s2 - ebi_b / (float(b_sum) / len(e))
-    ebi_v_raw = ebi_a + ebi_b / b
-    ebi_v = np.where(ebi_v_raw < 0, ebi_b / b, ebi_v_raw)
+    ebi_b = e_sum / b_sum
+    s2 = sum(b * (((y - ebi_b) ** 2)/ b_sum))
+    ebi_a = s2 - (ebi_b / (b_sum / len(e)))
+    ebi_v = ebi_a + ebi_b / b
+    if geoda:
+        if ebi_a < 0:
+            ebi_v = ebi_b / b
+    else:
+        ebi_v = np.where(ebi_v < 0, ebi_b / b, ebi_v)
     return (y - ebi_b) / np.sqrt(ebi_v)
+
 
 class _Smoother(object):
     """
