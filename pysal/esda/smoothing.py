@@ -512,7 +512,7 @@ def assuncao_rate(e, b, geoda=True):
                  (n, 1), event variable measured at n spatial units
     b          : array
                  (n, 1), population at risk variable measured at n spatial units
-    geoda      : bool
+    geoda      : boolean
                  If True, conform with Geoda implementation: if a<0, variance
                  estimator is v_i = b/x_i for any i; otherwise v_i = a+b/x_i.
                  If False, conform with Assuncao and Reis (1999) [Assuncao1999]_ :
