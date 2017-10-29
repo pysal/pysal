@@ -4,7 +4,7 @@ Spatial diagnostics module
 __author__ = "Luc Anselin luc.anselin@asu.edu, Daniel Arribas-Bel darribas@asu.edu"
 
 from utils import spdot
-from scipy.stats.stats import chi2
+from scipy.stats import chi2
 chisqprob = chi2.sf
 from scipy.stats import norm
 import numpy as np
