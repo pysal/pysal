@@ -5,7 +5,8 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.
 import numpy as np
 import numpy.linalg as la
 import scipy.optimize as op
-from scipy.stats import norm, chisqprob
+from scipy.stats import norm, chi2
+chisqprob = chi2.sf
 import scipy.sparse as SP
 import user_output as USER
 import summary_output as SUMMARY
