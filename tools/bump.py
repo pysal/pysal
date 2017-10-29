@@ -60,10 +60,10 @@ with open("../doc/source/conf.py") as c_file:
         tok = line[:9]
         if tok == 'version =':
             lines[i] = "version = '{}'\n".format(version)
-            print lines[i]
+            print(lines[i])
         elif tok == 'release =':
             lines[i] = "release = '{}'\n".format(version)
-            print lines[i]
+            print(lines[i])
 
 with open("../doc/source/conf.py", 'w') as c_file:
     c_file.write("".join(lines))
