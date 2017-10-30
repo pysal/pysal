@@ -142,14 +142,7 @@ def choropleth_map(jsonpath, key, attribute, df = None,
             sjson = gj.load(open(jsonpath))
         else:
             raise IOError('File not found')
-
-    if isinstance(jsonpath, dict):
-        raise NotImplementedError('Direct mapping from dictionary not yet supported')
-        #with open('tmp.json', 'w') as out:
-        #    gj.dump(jsonpath, out)
-        #    sjson = gj.load(open('tmp.json'))
-
-    if isinstance(jsonpath, tuple):
+    elif isinstance(jsonpath, tuple):
         if 'ShpWrapper' in str(type(jsonpath[0])) and 'DBF' in str(type(jsonpath[1])):
             flip('tmp.json', jsonpath[0], jsonpath[1])
             sjson = gj.load(open('tmp.json'))
@@ -162,6 +155,14 @@ def choropleth_map(jsonpath, key, attribute, df = None,
 
         else:
             raise IOError('Inputs must be GeoJSON filepath, GeoJSON dictionary in memory, or shp-dbf tuple')
+    else:
+        import geopandas
+        if isinstance(jsonpath, geopandas.GeoDataFrame):
+            jsonpath = jsonpath
+            df = jsonpath
+            geom_col = df._geometry_column_name
+            centroid = tuple(reversed(np.hstack(df[geom_col].centroid.cascaded_union.centroid.xy)))
+            bbox = df.total_bounds
 
     #key construction
     if df is None:
@@ -169,7 +170,7 @@ def choropleth_map(jsonpath, key, attribute, df = None,
     dfkey = [key, attribute]
     
     #centroid search
-    if centroid == None:
+    if centroid is None:
         if 'bbox' in sjson.keys():
             bbox = sjson.bbox
         bbox = bboxsearch(sjson)
@@ -194,15 +195,13 @@ def choropleth_map(jsonpath, key, attribute, df = None,
         y = np.array(df[attribute].tolist())
     
     #For people who don't read documentation...
-    if isinstance(classes, list):
-        bins = classes
-        classes = len(bins)
-    elif isinstance(classes, float):
+    if isinstance(classes, float):
         try:
             classes = int(classes)
         except:
             raise ValueError('Classes must be coercable to integers')
 
+    classes += 1
     #classification passing
     if classification != None:
         if classification == "Maximum Breaks": #there is probably a better way to do this, but it's a start. 
@@ -248,14 +247,19 @@ def choropleth_map(jsonpath, key, attribute, df = None,
         mapclass = ps.Quantiles(y, k=classes).bins.tolist()
 
     #folium call, try abstracting to a "mapper" function, passing list of args
-    choromap.geo_json(geo_path=jsonpath, key_on = jsonkey, 
+    if len(mapclass) > 6:
+        raise ValueError('Folium only supports a maximum of' 
+                         ' six classes on threshold scales')
+    #return dict(geo_data = jsonpath, key_on = jsonkey, data = df, columns=dfkey, fill_color=fill_color, 
+    #            fill_opacity=fill_opacity, line_opacity=line_opacity, threshold_scale=mapclass, legend_name=legend_name)
+    choromap.choropleth(geo_data=jsonpath, key_on = jsonkey, 
                       data = df, columns = dfkey, 
                       fill_color = fill_color, fill_opacity = fill_opacity,
-                      line_opacity = line_opacity, threshold_scale = mapclass[:-1] , legend_name = legend_name
+                      line_opacity = line_opacity, threshold_scale = mapclass, legend_name = legend_name
                       )
 
     if save:
-        fname = jsonpath.rstrip('.json') + '_' + attribute + '.html'
+        fname = '_'.join((key,attribute))+'.html'
         choromap.save(fname)
     
     return choromap
