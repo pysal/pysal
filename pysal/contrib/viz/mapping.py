@@ -1097,7 +1097,7 @@ def plot_lisa_cluster(shp_link, lisa, p_thres=0.01, shp_type='poly',
     shp = ps.open(shp_link)
     # Lisa layer
     lisa_obj = map_poly_shp(shp)
-    lisa_obj = base_lisa_cluster(lisa_obj, lisa)
+    lisa_obj = base_lisa_cluster(lisa_obj, lisa, p_thres=p_thres)
     lisa_obj.set_alpha(alpha)
     # Figure
     fig = plt.figure(figsize=figsize)

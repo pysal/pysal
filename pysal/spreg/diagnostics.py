@@ -6,6 +6,7 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, Nicholas Malizia nicholas.malizia
 
 import pysal
 from pysal.common import *
+chisqprob = stats.chi2.sf
 import scipy.sparse as SP
 from math import sqrt
 from utils import spmultiply, sphstack, spmin, spmax
@@ -657,7 +658,7 @@ def jarque_bera(reg):
     S = mu3 / (mu2 ** (1.5))    # skewness measure
     K = (mu4 / (mu2 ** 2))      # kurtosis measure
     jb = n * (((S ** 2) / 6) + ((K - 3) ** 2) / 24)
-    pvalue = stats.chisqprob(jb, 2)
+    pvalue = chisqprob(jb, 2)
     jb_result = {"df": 2, "jb": jb, 'pvalue': pvalue}
     return jb_result
 
@@ -807,7 +808,7 @@ def breusch_pagan(reg, z=None):
     bp_array = 0.5 * part2
     bp = bp_array[0, 0]
 
-    pvalue = stats.chisqprob(bp, df)
+    pvalue = chisqprob(bp, df)
     bp_result = {'df': df, 'bp': bp, 'pvalue': pvalue}
     return bp_result
 
@@ -961,7 +962,7 @@ def white(reg):
     aux_r2 = r2(aux_reg)
     wh = aux_r2 * n
     df = k - 1
-    pvalue = stats.chisqprob(wh, df)
+    pvalue = chisqprob(wh, df)
     white_result = {'df': df, 'wh': wh, 'pvalue': pvalue}
     return white_result
 
@@ -1116,7 +1117,7 @@ def koenker_bassett(reg, z=None):
     kb_array = (1.0 / v) * part2
     kb = kb_array[0, 0]
 
-    pvalue = stats.chisqprob(kb, df)
+    pvalue = chisqprob(kb, df)
     kb_result = {'kb': kb, 'df': df, 'pvalue': pvalue}
     return kb_result
 
@@ -1330,7 +1331,7 @@ def likratiotest(reg0, reg1):
         raise Exception, "Missing or improper log-likelihoods in regression objects"
     if likr < 0.0:  # always enforces positive likelihood ratio
         likr = -likr
-    pvalue = stats.chisqprob(likr, 1)
+    pvalue = chisqprob(likr, 1)
     likratio = {"likr": likr, "df": 1, "p-value": pvalue}
     return likratio
 

@@ -3,7 +3,7 @@ Hello! Please make sure to check all these boxes before submitting a Pull Reques
 justification in point 5. 
 
 1. [ ] You have run tests on this submission, either by using [Travis Continuous Integration testing](https://github.com/pysal/pysal/wiki/GitHub-Standard-Operating-Procedures#automated-testing-w-travis-ci) testing or running `nosetests` on your changes?
-2. [ ] This pull request is directed to the `pysal/dev` branch.
+2. [ ] This pull request is directed to the `pysal/master` branch. **This is important, as any PRs submitted against any other branches will be delayed.**
 3. [ ] This pull introduces new functionality covered by
    [docstrings](https://en.wikipedia.org/wiki/Docstring#Python) and
    [unittests](https://docs.python.org/2/library/unittest.html)? 
