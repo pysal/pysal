@@ -487,10 +487,14 @@ class TestUtils(unittest.TestCase):
     def test_assuncao_rate(self):
         e = np.array([30, 25, 25, 15, 33, 21, 30, 20])
         b = np.array([100, 100, 110, 90, 100, 90, 110, 90])
-        exp_assuncao = np.array([1.03843594, -0.04099089, -0.56250375,
-            -1.73061861])
+
+        exp_assuncao_geoda = np.array([ 0.95839273, -0.03783129, -0.51460896, -1.61105841])
         np.testing.assert_array_almost_equal(
-            exp_assuncao, sm.assuncao_rate(e, b)[:4])
+            exp_assuncao_geoda, sm.assuncao_rate(e, b)[:4])
+
+        exp_assuncao = np.array([1.03843594, -0.04099089, -0.56250375, -1.73061861])
+        np.testing.assert_array_almost_equal(
+            exp_assuncao, sm.assuncao_rate(e, b, geoda=False)[:4])
 
 
 suite = unittest.TestSuite()

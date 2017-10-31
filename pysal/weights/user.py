@@ -10,6 +10,7 @@ from Contiguity import buildContiguity, Queen, Rook
 from Distance import knnW, Kernel, DistanceBand
 from util import get_ids, get_points_array_from_shapefile, min_threshold_distance
 import numpy as np
+import weights
 
 __all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array',
            'knnW_from_shapefile', 'threshold_binaryW_from_array',
@@ -19,7 +20,7 @@ __all__ = ['queen_from_shapefile', 'rook_from_shapefile', 'knnW_from_array',
            'min_threshold_dist_from_shapefile', 'build_lattice_shapefile']
 
 
-def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
+def queen_from_shapefile(shapefile, idVariable=None, sparse=False, noIsland=False):
     """
     Queen contiguity weights from a polygon shapefile.
 
@@ -33,6 +34,12 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
     sparse      : boolean
                   If True return WSP instance
                   If False return W instance
+    noIsland    : boolean
+                  If True, set each island to have one neighbor
+                  which is the spatial unit nearest to it;
+                  if False, keep the islands which do not share any
+                  vetex or edge with others.
+                  Default is False.
     Returns
     -------
 
@@ -65,12 +72,19 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
     """
 
     w = Queen.from_shapefile(shapefile, idVariable=idVariable)
+    if noIsland:
+        w_knn1 = knnW_from_shapefile(shapefile, k=1, idVariable=idVariable)
+        for island in w.islands:
+            nb = w_knn1.neighbors[island]
+            w.neighbors[island] = nb
+            w.neighbors[nb[0]] = w.neighbors[nb[0]] + [island]
+        w = weights.W(w.neighbors)
     if sparse:
         w = pysal.weights.WSP(w.sparse, id_order=w.id_order)
     return w
 
 
-def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
+def rook_from_shapefile(shapefile, idVariable=None, sparse=False, noIsland=False):
     """
     Rook contiguity weights from a polygon shapefile.
 
@@ -84,6 +98,12 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
     sparse    : boolean
                 If True return WSP instance
                 If False return W instance
+    noIsland  : boolean
+                If True, set each island to have one neighbor
+                which is the spatial unit nearest to it;
+                if False, keep the islands which do not share any
+                edge with others.
+                Default is False.
 
     Returns
     -------
@@ -114,6 +134,13 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
     """
 
     w = Rook.from_shapefile(shapefile, idVariable=idVariable)
+    if noIsland:
+        w_knn1 = knnW_from_shapefile(shapefile, k=1, idVariable=idVariable)
+        for island in w.islands:
+            nb = w_knn1.neighbors[island]
+            w.neighbors[island] = nb
+            w.neighbors[nb[0]] = w.neighbors[nb[0]] + [island]
+        w = weights.W(w.neighbors)
     if sparse:
         w = pysal.weights.WSP(w.sparse, id_order=w.id_order)
     return w

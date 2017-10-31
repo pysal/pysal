@@ -10,7 +10,7 @@ References
 .. [Anselin1997] Anselin, L. and Kelejian, H. H. (1997). Testing for spatial error autocorrelation in the presence of endogenous regressors. International Regional Science Review, 20(1-2):153–182.
 .. [Anselin2011] Anselin, L. (2011). GMM Estimation of Spatial Error Autocorrelation with and without Heteroskedasticity.
 .. [Arraiz2010] Arraiz, I., Drukker, D. M., Kelejian, H. H., and Prucha, I. R. (2010). A spatial Cliff-Ord-type model with heteroskedastic innovations: Small and large sample results. Journal of Regional Science, 50(2):592–614.
-.. [Assuncao1999] Assuncao, R. M. and Reis, E. A. (1999). A new proposal to adjust moran’s i for population density. Statistics in medicine, 18(16):2147–2162.
+.. [Assuncao1999] Assuncao, R. M. and Reis, E. A. (1999). A new proposal to adjust Moran’s I for population density. Statistics in medicine, 18(16):2147–2162.
 .. [Baker2004] Baker, R. D. (2004). Identifying space–time disease clusters. Acta tropica, 91(3):291–299.
 .. [Belsley1980] Belsley, D. A., Kuh, E., and Welsch, R. E. (1980). Regression diagnostics: Identifying influential data and sources of collinearity, volume 1.
 .. [Bickenbach2003] Bickenbach, F. and Bode, E. (2003). Evaluating the Markov property in studies of economic convergence. International Regional Science Review, 26(3):363–392.
