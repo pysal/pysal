@@ -510,10 +510,10 @@ def assuncao_rate(e, b):
 
     Parameters
     ----------
-    e          : array(n, 1)
-                 event variable measured at n spatial units
-    b          : array(n, 1)
-                 population at risk variable measured at n spatial units
+    e          : array
+                 (n, 1), event variable measured at n spatial units
+    b          : array
+                 (n, 1), population at risk variable measured at n spatial units
 
     Notes
     -----
@@ -521,7 +521,8 @@ def assuncao_rate(e, b):
 
     Returns
     -------
-               : array (nx1)
+               : array
+                 (n,1)
 
     Examples
     --------
@@ -540,7 +541,7 @@ def assuncao_rate(e, b):
     Computing the rates
 
     >>> print assuncao_rate(e, b)[:4]
-    [ 1.04319254 -0.04117865 -0.56539054 -1.73762547]
+    [ 1.03843594 -0.04099089 -0.56250375 -1.73061861]
 
     """
 
@@ -667,15 +668,15 @@ class Empirical_Bayes(_Smoother):
 
     Parameters
     ----------
-    e           : array (n, 1)
-                  event variable measured across n spatial units
-    b           : array (n, 1)
-                  population at risk variable measured across n spatial units
+    e           : array
+                  (n, 1), event variable measured across n spatial units
+    b           : array
+                  (n, 1), population at risk variable measured across n spatial units
 
     Attributes
     ----------
-    r           : array (n, 1)
-                  rate values from Empirical Bayes Smoothing
+    r           : array
+                  (n, 1), rate values from Empirical Bayes Smoothing
 
     Examples
     --------
@@ -1665,7 +1666,7 @@ class Headbanging_Triples(object):
     (0.33753, 0.302707)
     """
     def __init__(self, data, w, k=5, t=3, angle=135.0, edgecor=False):
-        raise DepricationWarning('Depricated')
+        raise DeprecationWarning('Deprecated. This function is no longer supported.')
         if k < 3:
             raise ValueError("w should be NeareastNeighbors instance & the number of neighbors should be more than 3.")
         if not w.id_order_set:
@@ -1811,7 +1812,7 @@ class Headbanging_Median_Rate(object):
     array([ 0.00091659,  0.        ,  0.00156838,  0.0018315 ,  0.00498891])
     """
     def __init__(self, e, b, t, aw=None, iteration=1):
-        warnings.warn("Deprecated", DepricationWarning)
+        raise DeprecationWarning('Deprecated. This function is no longer supported.')
         self.r = e * 1.0 / b
         self.tr, self.aw = t.triples, aw
         if hasattr(t, 'extra'):

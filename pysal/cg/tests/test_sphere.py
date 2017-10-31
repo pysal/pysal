@@ -2,7 +2,8 @@ from pysal.cg import sphere
 import pysal
 import math
 import unittest
-
+import numpy as np
+from pysal.common import (RTOL, ATOL)
 
 class Sphere(unittest.TestCase):
 
@@ -70,7 +71,7 @@ class Sphere(unittest.TestCase):
         pup = (42.023768, -87.946389)    # Arlington Heights IL
         pdown = (41.644415, -87.524102)  # Hammond, IN
         grid1 = sphere.geogrid(pup, pdown, 3, lonx=False)
-        self.assertAlmostEqual(grid, grid1)
+        np.testing.assert_allclose(grid, grid1, rtol=RTOL, atol=ATOL)
 
     def test_toXYZ(self):
         w2 = {0: [2, 5, 6, 10], 1: [4, 7, 9, 14], 2: [6, 0, 3, 8],

@@ -9,7 +9,8 @@ __author__= "Luc Anselin lanselin@gmail.com,    \
 import numpy as np
 import pysal
 import numpy.linalg as la
-import scipy.stats as stats
+from scipy.stats import chi2
+chisqprob = chi2.sf
 import summary_output as SUMMARY
 import user_output as USER
 from scipy.sparse.linalg import splu as SuperLU
@@ -320,7 +321,7 @@ class SURerrorML(BaseSURerrorML):
         if nonspat_diag:
             M = self.n_eq * (self.n_eq - 1)/2.0
             likrodiag = 2.0 * (self.surerrllik - self.errllik)
-            plik1 = stats.chisqprob(likrodiag, M)
+            plik1 = chisqprob(likrodiag, M)
             self.lrtest = (likrodiag,int(M),plik1)
         else:
             self.lrtest = None
@@ -328,7 +329,7 @@ class SURerrorML(BaseSURerrorML):
         # LR test on spatial autoregressive coefficients
         if spat_diag:
             liklambda = 2.0 * (self.surerrllik - self.llik)
-            plik2 = stats.chisqprob(liklambda, self.n_eq)
+            plik2 = chisqprob(liklambda, self.n_eq)
             self.likrlambda = (liklambda,self.n_eq,plik2)
         else:
             self.likrlambda = None

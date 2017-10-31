@@ -79,11 +79,13 @@ class Rook(W):
         """
         sparse = kwargs.pop('sparse', False)
         if idVariable is not None:
-            ids = get_ids(filepath, idVariable) 
+            ids = get_ids(filepath, idVariable)
+            id_order = ids
         else:
             ids = None
+            id_order = None
         iterable = FileIO(filepath)
-        w = cls(FileIO(filepath), ids=ids, **kwargs)
+        w = cls(iterable, ids=ids, id_order=id_order, **kwargs)
         w.set_shapefile(filepath, idVariable=idVariable, full=full)
         if sparse:
             w = w.to_WSP()
@@ -243,11 +245,14 @@ class Queen(W):
         """
         sparse = kwargs.pop('sparse', False)
         if idVariable is not None:
-            ids = get_ids(filepath, idVariable) 
+            ids = get_ids(filepath, idVariable)
+            id_order = ids
         else:
             ids = None
+            id_order = None
+
         iterable = FileIO(filepath)
-        w = cls(FileIO(filepath), ids=ids, **kwargs)
+        w = cls(iterable, ids=ids, id_order=id_order, **kwargs)
         w.set_shapefile(filepath, idVariable=idVariable, full=full)
         if sparse:
             w = w.to_WSP()

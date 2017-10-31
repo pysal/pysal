@@ -726,10 +726,10 @@ class Moran_Local(object):
 
     Parameters
     ----------
-    y : array
-        (n,1), attribute array
-    w : W
-        weight instance assumed to be aligned with y
+    y              : array
+                     (n,1), attribute array
+    w              : W
+                     weight instance assumed to be aligned with y
     transformation : {'R', 'B', 'D', 'U', 'V'}
                      weights transformation,  default is row-standardized "r".
                      Other options include
@@ -952,12 +952,12 @@ class Moran_Local_BV(object):
 
     Parameters
     ----------
-    x : array
-        x-axis variable
-    y : array
-        (n,1), wy will be on y axis
-    w : W
-        weight instance assumed to be aligned with y
+    x              : array
+                     x-axis variable
+    y              : array
+                     (n,1), wy will be on y axis
+    w              : W
+                     weight instance assumed to be aligned with y
     transformation : {'R', 'B', 'D', 'U', 'V'}
                      weights transformation,  default is row-standardized "r".
                      Other options include
@@ -1197,15 +1197,15 @@ class Moran_Local_Rate(Moran_Local):
 
     Parameters
     ----------
-    e : array
-        (n,1), an event variable across n spatial units
-    b : array
-        (n,1), a population-at-risk variable across n spatial units
-    w : W
-        weight instance assumed to be aligned with y
-    adjusted : boolean
-              whether or not local Moran statistics need to be adjusted for
-              rate variable
+    e              : array
+                     (n,1), an event variable across n spatial units
+    b              : array
+                     (n,1), a population-at-risk variable across n spatial units
+    w              : W
+                     weight instance assumed to be aligned with y
+    adjusted       : boolean
+                     whether or not local Moran statistics need to be adjusted for
+                     rate variable
     transformation : {'R', 'B', 'D', 'U', 'V'}
                      weights transformation,  default is row-standardized "r".
                      Other options include
@@ -1222,47 +1222,47 @@ class Moran_Local_Rate(Moran_Local):
                      If False use PySAL Scheme: HH=1, LH=2, LL=3, HL=4
     Attributes
     ----------
-    y            : array
-                   rate variables computed from parameters e and b
-                   if adjusted is True, y is standardized rates
-                   otherwise, y is raw rates
-    w            : W
-                   original w object
-    permutations : int
-                   number of random permutations for calculation of pseudo
-                   p_values
-    I            : float
-                   value of Moran's I
-    q            : array
-                   (if permutations>0)
-                   values indicate quandrant location 1 HH,  2 LH,  3 LL,  4 HL
-    sim          : array
-                   (if permutations>0)
-                   vector of I values for permuted samples
-    p_sim        : array
-                   (if permutations>0)
-                   p-value based on permutations (one-sided)
-                   null: spatial randomness
-                   alternative: the observed Ii is further away or extreme
-                   from the median of simulated Iis. It is either extremely
-                   high or extremely low in the distribution of simulated Is
-    EI_sim       : float
-                   (if permutations>0)
-                   average value of I from permutations
-    VI_sim       : float
-                   (if permutations>0)
-                   variance of I from permutations
-    seI_sim      : float
-                   (if permutations>0)
-                   standard deviation of I under permutations.
-    z_sim        : float
-                   (if permutations>0)
-                   standardized I based on permutations
-    p_z_sim      : float
-                   (if permutations>0)
-                   p-value based on standard normal approximation from
-                   permutations (one-sided)
-                   for two-sided tests, these values should be multiplied by 2
+    y              : array
+                     rate variables computed from parameters e and b
+                     if adjusted is True, y is standardized rates
+                     otherwise, y is raw rates
+    w              : W
+                     original w object
+    permutations   : int
+                     number of random permutations for calculation of pseudo
+                     p_values
+    Is             : float
+                     local Moran's I values for rates or Empirical Bayes Index
+    q              : array
+                     (if permutations>0)
+                     values indicate quandrant location 1 HH,  2 LH,  3 LL,  4 HL
+    sim            : array
+                     (if permutations>0)
+                     vector of I values for permuted samples
+    p_sim          : array
+                     (if permutations>0)
+                     p-values based on permutations (one-sided)
+                     null: spatial randomness
+                     alternative: the observed Ii is further away or extreme
+                     from the median of simulated values. It is either extremelyi
+                     high or extremely low in the distribution of simulated Is.
+    EI_sim         : array
+                     (if permutations>0)
+                     average values of local Is from permutations
+    VI_sim         : array
+                     (if permutations>0)
+                     variance of Is from permutations
+    seI_sim        : array
+                     (if permutations>0)
+                     standard deviations of Is under permutations.
+    z_sim          : arrray
+                     (if permutations>0)
+                     standardized Is based on permutations
+    p_z_sim        : array
+                     (if permutations>0)
+                     p-values based on standard normal approximation from
+                     permutations (one-sided)
+                     for two-sided tests, these values should be multiplied by 2
 
     Examples
     --------
