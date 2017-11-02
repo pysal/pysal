@@ -149,7 +149,10 @@ def _unpackDict2(d, structure, fileObj):
     for name, dtype, order in structure:
         dtype, n = dtype
         result = array.array(dtype)
-        result.fromstring(fileObj.read(result.itemsize * n))
+        try:
+            result.frombytes(fileObj.read(result.itemsize * n))
+        except AttributeError:
+            result.fromstring(fileObj.read(result.itemsize * n))
         if order != SYS_BYTE_ORDER:
             result.byteswap()
         d[name] = result.tolist()
