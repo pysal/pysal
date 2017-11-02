@@ -9,3 +9,4 @@ mplleaflet>=0.0.5
 statsmodels>=0.6.1
 numba
 numexpr
+palettable
