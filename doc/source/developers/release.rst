@@ -9,7 +9,6 @@ PySAL Release Management
 Prepare the release
 -------------------
 
-- Create a branch_ out of the `dev` branch
 - Check all tests pass. See :doc:`testing`.
 - Update CHANGELOG::
 
@@ -29,46 +28,36 @@ Prepare the release
   Add a comment that this is for release.
 
 
-Tag 
----
-
-With version 1.10 we changed the way the tags are created to reflect our
-policy_ of not pushing directly to upstream.
-
-After you have issued a pull request, the project maintainer can `create the release`_ on GitHub. 
-
 
 Make docs
 ---------
 
 As of version 1.6, docs are automatically compiled and hosted_.
 
-Make and Upload and Test Distributions
---------------------------------------
+Make a source dist and test locally (Python 3)
+----------------------------------------------
 
-On each build machine, clone and checkout the newly created tag (assuming that
-is `v1.10` in what follows)::
+On each build machine
 
-  $ git clone http://github.com/pysal/pysal.git
-  $ cd pysal
-  $ git fetch --tags
-  $ git checkout v1.10
+  $  git clone http://github.com/pysal/pysal.git
+  $  cd pysal
+  $  python setup.py sdist
+  $  cp dist/PySAL-1.14.2.tar.gz ../junk/.
+  $  cd ../junk
+  $  conda create -n pysaltest3 python=3 pip
+  $  source activate pysaltest3
+  $  pip install PySAL-1.14.2.tar.gz
+  $  rm -r /home/serge/anaconda3/envs/pysaltest3/lib/python3.6/site-packages/pysal/contrib
+  $  nosetests /home/serge/anaconda3/envs/pysaltest3/lib/python3.6/site-packages/pysal/
 
-- Make and upload_ to the **Testing** Python Package Index::
-
-  $ python setup.py sdist upload -r https://test.pypi.org/legacy/
-
-- Test that your package can install correctly::
-
-  $ pip install --extra-index-url https://test.pypi.org/legacy pysal
+You can modify the above to test for Python 2 environments.
 
 
-If all is good, proceed, otherwise fix, and repeat.
-
+Upload release to pypi
+----------------------
 
 - Make and upload_ to the Python Package Index in one shot!::
 
-   $ python setup.py sdist  (to test it)
    $ python setup.py sdist upload
 
   - if not registered_, do so. Follow the prompts. You can save the
@@ -79,25 +68,20 @@ If all is good, proceed, otherwise fix, and repeat.
 
     $ python setup.py bdist_wininst
 
+Create a release on github
+--------------------------
+
+https://help.github.com/articles/creating-releases/
+
+
 Announce
 --------
 
-- Draft and distribute press release on geodacenter.asu.edu, openspace-list, and pysal.org
+- Draft and distribute press release on openspace-list, pysal.org, spatial.ucr.edu
 
-  - On GeoDa center website, do this:
 
-   - Login and expand the wrench icon to reveal the Admin menu
-   - Click "Administer", "Content Management", "Content"
-   - Next, click "List", filter by type, and select "Featured Project".
-   - Click "Filter"
-
-   Now you will see the list of Featured Projects. Find "PySAL".
-
-   - Choose to 'edit' PySAL and modify the short text there. This changes the text users see on the homepage slider.
-   - Clicking on the name "PySAL" allows you to edit the content of the PySAL project page, which is also the "About PySAL" page linked to from the homepage slider.
-
-Put master back to dev
-----------------------
+Bump master version
+-------------------
 
 - Change MAJOR, MINOR version in setup script.
 - Change pysal/version.py to dev number
