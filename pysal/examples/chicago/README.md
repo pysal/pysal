@@ -4,8 +4,6 @@ chicago
 Chicago neighborhoods
 --------------------
 
- * Chicago77.dbf attribute file
- * Chicago77.shp shapefile
- * Chicago77.shx spatial index
-
-Polygons, n=77, k=11
+* Chicago77.dbf: attribute data. (k=11)
+* Chicago77.shp: Polygon shapefile. (n=77)
+* Chicago77.shx: spatial index.
