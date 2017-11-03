@@ -1,3 +1,52 @@
+v<1.14.3>, 2017-11-2
+
+
+GitHub stats for 2017/09/23 - 2017/11/02 
+
+These lists are automatically generated, and may be incomplete or contain duplicates.
+
+
+We closed a total of 31 issues, 8 pull requests and 23 regular issues;
+this is the full list (generated with the script 
+:file:`tools/github_stats.py`):
+
+Pull Requests (8):
+
+* :ghpull:`997`: b'edit README.md for example datasets'
+* :ghpull:`999`: b'Raise ImportError on missing palettable and PEP8'
+* :ghpull:`983`: b'Fix inconsistent use of tabs and spaces in indentation.'
+* :ghpull:`995`: b'Foliumfix'
+* :ghpull:`993`: b'B991'
+* :ghpull:`988`: b'Resolve issue of "False" "id_order_set" when building contiguity weights from shapefile even if `idVariable` is given in initialization'
+* :ghpull:`982`: b'update release instructions for new test.pypi'
+* :ghpull:`979`: b'Rel 1.14.2'
+
+Issues (23):
+
+* :ghissue:`997`: b'edit README.md for example datasets'
+* :ghissue:`970`: b'Odd pysal.Moran() randomisation VI'
+* :ghissue:`999`: b'Raise ImportError on missing palettable and PEP8'
+* :ghissue:`998`: b'Should missing palettable be a warning or error? '
+* :ghissue:`981`: b'mixed indentation in `iwls`'
+* :ghissue:`987`: b"discrepancy in EB Local Moran's I with PySAL vs. GeoDa results"
+* :ghissue:`992`: b'Scipy 1.0.0 Compat issues'
+* :ghissue:`991`: b'Chisqprob is deprecated'
+* :ghissue:`983`: b'Fix inconsistent use of tabs and spaces in indentation.'
+* :ghissue:`996`: b'edit README for example datasets'
+* :ghissue:`989`: b"resolve discrepancy of estimating Moran's I corrected for rates between GeoDa and pysal"
+* :ghissue:`995`: b'Foliumfix'
+* :ghissue:`994`: b'folium breakage'
+* :ghissue:`971`: b'base_lisa_cluster function call does not pass p_thresh'
+* :ghissue:`993`: b'B991'
+* :ghissue:`984`: b'Level dev & master, incorporate 983'
+* :ghissue:`990`: b'problem with open shp file'
+* :ghissue:`988`: b'Resolve issue of "False" "id_order_set" when building contiguity weights from shapefile even if `idVariable` is given in initialization'
+* :ghissue:`980`: b'release documentation test pypi is out of date'
+* :ghissue:`982`: b'update release instructions for new test.pypi'
+* :ghissue:`978`: b'Coordinate releases on pypi and github'
+* :ghissue:`976`: b'bump  pysal/pysal/version.py please'
+* :ghissue:`979`: b'Rel 1.14.2'
+
 v<1.14.2>, 2017-09-23
 This is a bug fix release for the 1.14 Python 2.x. series of PySAL.
 

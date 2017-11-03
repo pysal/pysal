@@ -42,6 +42,7 @@ fnorf
 mylons-tcc
 dnadai2
 MridulS
+thequackdaddy
 
 Funding from the following sources has supported PySAL development:
 
