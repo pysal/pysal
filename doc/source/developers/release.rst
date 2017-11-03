@@ -37,13 +37,13 @@ As of version 1.6, docs are automatically compiled and hosted_.
 Make a source dist and test locally (Python 3)
 ----------------------------------------------
 
-On each build machine
+On each build machine::
 
   $  git clone http://github.com/pysal/pysal.git
   $  cd pysal
   $  python setup.py sdist
-  $  cp dist/PySAL-1.14.2.tar.gz ../junk/.
-  $  cd ../junk
+  $  cp dist/PySAL-1.14.2.tar.gz ../test/.
+  $  cd ../test
   $  conda create -n pysaltest3 python=3 pip
   $  source activate pysaltest3
   $  pip install PySAL-1.14.2.tar.gz
@@ -60,11 +60,11 @@ Upload release to pypi
 
    $ python setup.py sdist upload
 
-  - if not registered_, do so. Follow the prompts. You can save the
-      login credentials in a dot-file, .pypirc
+- If not registered_, do so. Follow the prompts. You can save the
+  login credentials in a dot-file, .pypirc
 
 - Make and upload the Windows installer to SourceForge.
-  - On a Windows box, build the installer as so:: 
+- On a Windows box, build the installer as so::
 
     $ python setup.py bdist_wininst
 
@@ -84,8 +84,8 @@ Bump master version
 -------------------
 
 - Change MAJOR, MINOR version in setup script.
-- Change pysal/version.py to dev number
-- Change the docs version from X.x to X.xdev by editing doc/source/conf.py in two places.
+- Change pysal/version.py
+- Change the docs version X.x by editing doc/source/conf.py in two places.
 - Update the release schedule in doc/source/developers/guidelines.rst
 
 
