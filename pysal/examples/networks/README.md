@@ -9,7 +9,7 @@ Datasets used for network testing
 * eberly_net.shx: spatial index.
 * eberly_net_pts_offnetwork.dbf: attribute data for points off network. (k=2)
 * eberly_net_pts_offnetwork.shp: Point shapefile. (n=100)
-* eberly_net_pts_offnetwork.shx: spatial index。
+* eberly_net_pts_offnetwork.shx: spatial index.
 * eberly_net_pts_onnetwork.dbf: attribute data for points on network. (k=1)
 * eberly_net_pts_onnetwork.shp: Point shapefile. (n=110)
 * eberly_net_pts_onnetwork.shx: spatial index.
