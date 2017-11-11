@@ -72,18 +72,18 @@ class TestHB(unittest.TestCase):
 
         result = smh.Headbanging_Triples.is_valid_triple(p0, p1, p2_45_yes,
                                                          135)
-        np.testing.assert_(result)
+        self.assertTrue(result)
 
         result = smh.Headbanging_Triples.is_valid_triple(p0, p1, p2_n45_yes,
                                                          135)
-        np.testing.assert_(result)
+        self.assertTrue(result)
 
         result = smh.Headbanging_Triples.is_valid_triple(p0, p1, p2_45_no, 135)
-        np.testing.assert_(~result)
+        self.assertTrue(~result)
 
         result = smh.Headbanging_Triples.is_valid_triple(p0, p1, p2_n45_no,
                                                          135)
-        np.testing.assert_(~result)
+        self.assertTrue(~result)
 
     def test_headbang_make_triple(self):
         p0 = (0, 0)
@@ -92,9 +92,8 @@ class TestHB(unittest.TestCase):
                      42: [1, 0],
                      99: [0, 1]}
         result = smh.Headbanging_Triples.construct_triples(p0, neighbors, 135)
-        # expected = [(0, 2), (1, 3)]
         expected = [(((-1, 0), (1, 0)), (2, 42)), (((0, -1), (0, 1)), (5, 99))]
-        np.testing.assert_(result == expected)
+        self.assertTrue(sorted(result) == sorted(expected))
         p0 = (0, 0)
         neighbors = {2: [-1, 0.5],
                      5: [0, -1],
@@ -103,7 +102,7 @@ class TestHB(unittest.TestCase):
         result = smh.Headbanging_Triples.construct_triples(p0, neighbors, 135)
         expected = [(((-1, .5), (1, 0)), (2, 42)),
                     (((0, -1), (.5, 1)), (5, 99))]
-        np.testing.assert_(result == expected)
+        self.assertTrue(sorted(result) == sorted(expected))
 
     def test_construct_one_extra(self):
         p0 = (0., 0.)

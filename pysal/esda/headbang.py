@@ -29,6 +29,8 @@ class Headbanging_Triples(object):
     def construct_triples(p0, neighbors, angle):
         triple = []
         for i1, i2 in combinations(iterkeys(neighbors), 2):
+            if i1 > i2:  # Need to swap for consistency sake
+                i2, i1 = i1, i2
             p1 = tuple(neighbors[i1])
             p2 = tuple(neighbors[i2])
             if Headbanging_Triples.is_valid_triple(p0, p1, p2, angle):
