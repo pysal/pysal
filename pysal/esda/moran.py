@@ -328,7 +328,7 @@ class Moran_BV(object):
     Notes
     -----
 
-    Inference is only based on permutations as analytical results are none too
+    Inference is only based on permutations as analytical results are not too
     reliable.
 
     Examples
