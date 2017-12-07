@@ -328,7 +328,7 @@ class Moran_BV(object):
     Notes
     -----
 
-    Inference is only based on permutations as analytical results are none too
+    Inference is only based on permutations as analytical results are not too
     reliable.
 
     Examples
@@ -553,6 +553,16 @@ class Moran_Rate(Moran):
     permutations    : int
                       number of random permutations for calculation of pseudo
                       p_values
+    geoda_rate      : boolean
+                      If adjusted=False, geoda_rate is ignored.
+                      If adjusted=True and geoda_rate=True, rates are adjusted and
+                      conform with Geoda implementation: if a<0, variance
+                      estimator is v_i = b/x_i for any i; otherwise v_i = a+b/x_i.
+                      If adjusted=True and geoda_rate=False, conform with
+                      Assuncao and Reis (1999) [Assuncao1999]_ :
+                      assign v_i = a+b/x_i and check individual v_i: if v_i<0,
+                      assign v_i = b/x_i.
+                      Default is True.
 
     Attributes
     ----------
@@ -628,11 +638,11 @@ class Moran_Rate(Moran):
     """
 
     def __init__(self, e, b, w, adjusted=True, transformation="r",
-                 permutations=PERMUTATIONS, two_tailed=True):
+                 permutations=PERMUTATIONS, two_tailed=True, geoda_rate=True):
         e = np.asarray(e).flatten()
         b = np.asarray(b).flatten()
         if adjusted:
-            y = assuncao_rate(e, b)
+            y = assuncao_rate(e, b, geoda=geoda_rate)
         else:
             y = e * 1.0 / b
         Moran.__init__(self, y, w, transformation=transformation,
@@ -1220,6 +1230,16 @@ class Moran_Local_Rate(Moran_Local):
                      (default=False)
                      If True use GeoDa scheme: HH=1, LL=2, LH=3, HL=4
                      If False use PySAL Scheme: HH=1, LH=2, LL=3, HL=4
+    geoda_rate     : boolean
+                     If adjusted=False, geoda_rate is ignored.
+                     If adjusted=True and geoda_rate=True, rates are adjusted and
+                     conform with Geoda implementation: if a<0, variance
+                     estimator is v_i = b/x_i for any i; otherwise v_i = a+b/x_i.
+                     If adjusted=True and geoda_rate=False, conform with
+                     Assuncao and Reis (1999) [Assuncao1999]_ :
+                     assign v_i = a+b/x_i and check individual v_i: if v_i<0,
+                     assign v_i = b/x_i.
+                     Default is True.
     Attributes
     ----------
     y              : array
@@ -1293,11 +1313,11 @@ class Moran_Local_Rate(Moran_Local):
     """
 
     def __init__(self, e, b, w, adjusted=True, transformation="r",
-                 permutations=PERMUTATIONS, geoda_quads=False):
+                 permutations=PERMUTATIONS, geoda_quads=False, geoda_rate=True):
         e = np.asarray(e).flatten()
         b = np.asarray(b).flatten()
         if adjusted:
-            y = assuncao_rate(e, b)
+            y = assuncao_rate(e, b, geoda=geoda_rate)
         else:
             y = e * 1.0 / b
         Moran_Local.__init__(self, y, w,

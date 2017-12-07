@@ -158,7 +158,11 @@ class Arc_KDTree(temp_KDTree):
                 distance_upper_bound, self.radius)
         d, i = temp_KDTree.query(self, self._toXYZ(x), k,
                                           eps=eps, distance_upper_bound=distance_upper_bound)
-        dims = len(d.shape)
+        if isinstance(d, float):
+           dims = 0
+        else:
+           dims = len(d.shape)
+        
         r = self.radius
         if dims == 0:
             return sphere.linear2arcdist(d, r), i

@@ -35,7 +35,7 @@ As of version 1.6, docs are automatically compiled and hosted_.
 Make a source dist and test locally (Python 3)
 ----------------------------------------------
 
-On each build machine
+On each build machine::
 
      $  git clone http://github.com/pysal/pysal.git
      $  cd pysal
