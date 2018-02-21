@@ -1,7 +1,7 @@
 .. _weights:
 
 .. testsetup:: *
-
+s
     import pysal
     import numpy as np
 
@@ -145,7 +145,7 @@ In addition to these methods, contiguity weights can be built from dataframes wi
     >>> import geopandas as gpd
     >>> test = gpd.read_file(pysal.examples.get_path('south.shp'))
     >>> W = pysal.weights.Queen.from_dataframe(test)
-    >>> Wrook = pysal.weights.Rook.from_dataframe(test, idVariable='CNTY_FIPS')
+    >>> Wrook = pysal.weights.Rook.from_dataframe(test, idVariable='FIPS')
     >>> pdiodf = pysal.pdio.read_files(pysal.examples.get_path('south.shp'))
     >>> W = pysal.weights.Rook.from_dataframe(pdiodf)
 
@@ -155,7 +155,7 @@ Or, weights can be constructed directly from an interable of shapely objects:
     >>> shapelist = gpd.read_file(pysal.examples.get_path('columbus.shp')).geometry.tolist()
     >>> W = pysal.weights.Queen.from_iterable(shapelist)
 
-The ``.from_file`` method on contigutiy weights simply passes down to the parent class's  ``.from_file`` method, so the returned object is of instance ``W``, not ``Queen`` or ``Rook``. This occurs because the weights cannot be verified *as* contiguity weights without the original shapes.  
+The ``.from_file`` method on contiguity weights simply passes down to the parent class's  ``.from_file`` method, so the returned object is of instance ``W``, not ``Queen`` or ``Rook``. This occurs because the weights cannot be verified *as* contiguity weights without the original shapes.
 
     >>> W = pysal.weights.Rook.from_file(pysal.examples.get_path('columbus.gal')
     >>> type(W)
@@ -175,7 +175,7 @@ correct.
 k-nearest neighbor weights
 --------------------------
 
-The neighbors for a given observations can be defined using a k-nearest neighbor criterion.
+The neighbors for a given obsemrvations can be defined using a k-nearest neighbor criterion.
 For example we could use the the centroids of our
 5x5 lattice as point locations to measure the distances. First, we import numpy to 
 create the coordinates as a 25x2 numpy array named ``data``:
