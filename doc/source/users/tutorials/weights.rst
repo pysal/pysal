@@ -175,7 +175,7 @@ correct.
 k-nearest neighbor weights
 --------------------------
 
-The neighbors for a given obsemrvations can be defined using a k-nearest neighbor criterion.
+The neighbors for a given observations can be defined using a k-nearest neighbor criterion.
 For example we could use the the centroids of our
 5x5 lattice as point locations to measure the distances. First, we import numpy to 
 create the coordinates as a 25x2 numpy array named ``data``:
