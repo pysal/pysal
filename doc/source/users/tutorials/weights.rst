@@ -1,7 +1,7 @@
 .. _weights:
 
 .. testsetup:: *
-s
+
     import pysal
     import numpy as np
 
