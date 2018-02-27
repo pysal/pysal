@@ -9,6 +9,10 @@ import numpy as np
 import pysal as ps
 import matplotlib.pyplot as plt
 
+
+__all__ = ['mplot']
+
+
 def mplot(m, xlabel='', ylabel='', title='', custom=(7,7)):
     '''
     Produce basic Moran Plot 
@@ -38,15 +42,16 @@ def mplot(m, xlabel='', ylabel='', title='', custom=(7,7)):
 
     ## Customize plot
     fig = plt.figure(figsize=custom)
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.suptitle(title)
+    ax = fig.add_subplot(111)
 
-    plt.scatter(m.z, lag, s=60, color='k', alpha=.6)
-    plt.plot(lag, fit.predy, color='r')
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    fig.suptitle(title)
 
-    plt.axvline(0, alpha=0.5)
-    plt.axhline(0, alpha=0.5)
-    plt.show()
+    ax.scatter(m.z, lag, s=60, color='k', alpha=.6)
+    ax.plot(lag, fit.predy, color='r')
+
+    ax.axvline(0, alpha=0.5)
+    ax.axhline(0, alpha=0.5)
 
     return None
