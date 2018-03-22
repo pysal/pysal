@@ -148,7 +148,13 @@ def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
     {0: 1.0, 4: 1.0, 6: 1.0}
     >>>
     """
+    if nrows < 1 or ncols < 1:
+        print "nrows and ncols have to be postivie integers"
+        return
     n = nrows * ncols
+    if n == 1:
+        print "The lattice requires at least 2 columns or 2 rows"
+        return
     r1 = nrows - 1
     c1 = ncols - 1
     rid = [i // ncols for i in xrange(n)] #must be floor!
