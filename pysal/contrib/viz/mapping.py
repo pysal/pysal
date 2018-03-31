@@ -939,57 +939,53 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None,
     Wrapper to quickly create and plot from a lat/lon shapefile
     ...
 
-    Arguments
-    ---------
-
-    shp_link        : str
-                      Path to shapefile
-    values          : array
-                      Numpy array with values to map
-    type            : str
-                      Type of choropleth. Supported methods:
-                        * 'classless'
-                        * 'unique_values'
-                        * 'quantiles'
-                        * 'fisher_jenks'
-                        * 'equal_interval'
-    k               : int
-                      Number of bins to classify values in and assign a color
-                      to (defaults to 5)
-    cmap            : str
-                      Matplotlib coloring scheme. If None (default), uses:
-                        * 'classless': 'Greys'
-                        * 'unique_values': 'Paired'
-                        * 'quantiles': 'hot_r'
-                        * 'fisher_jenks': 'hot_r'
-                        * 'equal_interval': 'hot_r'
-    shp_type        : str
-                      'poly' (default) or 'line', for the kind of shapefile
-                      passed
-    sample_fisher   : Boolean
-                      Defaults to False, controls whether Fisher-Jenks
-                      classification uses a sample (faster) or the entire
-                      array of values. Ignored if 'classification'!='fisher_jenks'
-                      The percentage of the sample that takes at a time is 10%
-    title           : str
-                      Optional string for the title
-    savein          : str
-                      Path to png file where to dump the plot. Optional,
-                      defaults to None
-    figsize         : tuple
-                      Figure dimensions
-    dpi             : int
-                      resolution of graphic file
-    alpha           : float
-                      [Optional. Default=0.4] Transparency of the map.
+    Parameters
+    ----------
+    shp_link : str
+        Path to shapefile
+    values : array
+        Numpy array with values to map
+    type : str
+        Type of choropleth. Supported methods:
+        * 'classless'
+        * 'unique_values'
+        * 'quantiles'
+        * 'fisher_jenks'
+        * 'equal_interval'
+    k : int
+        Number of bins to classify values in and assign a color
+        to (defaults to 5)
+    cmap : str
+        Matplotlib coloring scheme. If None (default), uses:
+        * 'classless': 'Greys'
+        * 'unique_values': 'Paired'
+        * 'quantiles': 'hot_r'
+        * 'fisher_jenks': 'hot_r'
+        * 'equal_interval': 'hot_r'
+    shp_type : str
+        'poly' (default) or 'line', for the kind of shapefile
+        passed
+    sample_fisher : Boolean
+        Defaults to False, controls whether Fisher-Jenks
+        classification uses a sample (faster) or the entire
+        array of values. Ignored if 'classification'!='fisher_jenks'
+        The percentage of the sample that takes at a time is 10%
+    title : str
+        Optional string for the title
+    savein : str
+        Path to png file where to dump the plot. Optional,
+        defaults to None
+    figsize : tuple
+        Figure dimensions
+    dpi : int
+        resolution of graphic file
+    alpha : float
+        [Optional. Default=0.4] Transparency of the map.
 
     Returns
     -------
-
-    map             : PatchCollection
-                      Map object with the polygons from the shapefile and
-                      unique value coloring
-
+    fig : Matplotlib figure instance
+        Choropleth map
     '''
     shp = ps.open(shp_link)
     if shp_type == 'poly':
@@ -1036,9 +1032,8 @@ def plot_choropleth(shp_link, values, type, k=5, cmap=None,
                 ticks=boundaries, orientation='horizontal', shrink=0.5)
     if savein:
         plt.savefig(savein, dpi=dpi)
-    else:
-        plt.show()
-    return None
+
+    return fig
 
 # Coding to be used with PySAL scheme
 # HH=1, LH=2, LL=3, HL=4
@@ -1087,7 +1082,7 @@ def plot_lisa_cluster(shp_link, lisa, p_thres=0.01, shp_type='poly',
 
     Returns
     -------
-    fig : Matplotlip figure instance
+    fig : Matplotlib figure instance
         LISA cluster map
     '''
     shp = ps.open(shp_link)
@@ -1176,6 +1171,6 @@ if __name__ == '__main__':
     w = ps.queen_from_shapefile(shp_link)
     lisa = ps.Moran_Local(values, w, permutations=999)
     fig1 = plot_lisa_cluster(shp_link, lisa)
-    #_ = plot_choropleth(shp_link, values, 'fisher_jenks')
+    fig2 = plot_choropleth(shp_link, values, 'fisher_jenks')
 
     plt.show()
