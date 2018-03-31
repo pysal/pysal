@@ -1054,45 +1054,41 @@ def plot_lisa_cluster(shp_link, lisa, p_thres=0.01, shp_type='poly',
     Plot LISA cluster maps easily
     ...
 
-    Arguments
-    ---------
-
-    shp_link        : str
-                      Path to shapefile
-    lisa            : Moran_Local
-                      LISA object  from PySAL. NOTE: assumes
-                      `geoda_quads=False`
-    p_thres         : float
-                      Significant threshold for clusters
-    shp_type        : str
-                      'poly' (default) or 'line', for the kind of shapefile
-                      passed
-    title           : str
-                      Optional string for the title
-    legend          : Boolean
-                      [Optional. Default=True] Flag to add a legend to the map
-    savein          : str
-                      Path to png file where to dump the plot. Optional,
-                      defaults to None
-    figsize         : tuple
-                      Figure dimensions
-    dpi             : int
-                      resolution of graphic file
-    alpha           : float
-                      [Optional. Default=0.4] Transparency of the map.
-    leg_loc         : int
-                      [Optional. Default=0] Location of legend. 0: best, 1:
-                      upper right, 2: upper left, 3: lower left, 4: lower
-                      right, 5: right, 6: center left, 7: center right, 8: lower
-                      center, 9: upper center, 10: center.
+    Parameters 
+    ----------
+    shp_link : str
+        Path to shapefile
+    lisa : Moran_Local
+        LISA object  from PySAL. NOTE: assumes
+        `geoda_quads=False`
+    p_thres : float
+        Significant threshold for clusters
+    shp_type : str
+        'poly' (default) or 'line', for the kind of shapefile
+        passed
+    title : str
+        Optional string for the title
+    legend : Boolean
+        [Optional. Default=True] Flag to add a legend to the map
+    savein : str
+        Path to png file where to dump the plot. Optional,
+        defaults to None
+    figsize : tuple
+        Figure dimensions
+    dpi : int
+        resolution of graphic file
+    alpha : float
+        [Optional. Default=0.4] Transparency of the map.
+    leg_loc : int
+        [Optional. Default=0] Location of legend. 0: best, 1:
+        upper right, 2: upper left, 3: lower left, 4: lower
+        right, 5: right, 6: center left, 7: center right, 8: lower
+        center, 9: upper center, 10: center.
 
     Returns
     -------
-
-    map             : PatchCollection
-                      Map object with the polygons from the shapefile and
-                      unique value coloring
-
+    fig : Matplotlip figure instance
+        LISA cluster map
     '''
     shp = ps.open(shp_link)
     # Lisa layer
@@ -1111,9 +1107,8 @@ def plot_lisa_cluster(shp_link, lisa, p_thres=0.01, shp_type='poly',
         ax.set_title(title)
     if savein:
         plt.savefig(savein, dpi=dpi)
-    else:
-        plt.show()
-    return None
+
+    return fig 
 
 
 if __name__ == '__main__':
@@ -1180,5 +1175,7 @@ if __name__ == '__main__':
     values = np.array(ps.open(ps.examples.get_path('columbus.dbf')).by_col('HOVAL'))
     w = ps.queen_from_shapefile(shp_link)
     lisa = ps.Moran_Local(values, w, permutations=999)
-    _ = plot_lisa_cluster(shp_link, lisa)
+    fig1 = plot_lisa_cluster(shp_link, lisa)
     #_ = plot_choropleth(shp_link, values, 'fisher_jenks')
+
+    plt.show()
