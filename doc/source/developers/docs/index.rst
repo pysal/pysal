@@ -51,10 +51,13 @@ from the command line using *pip* or *easy_install*::
 
        $ easy_install sphinx
        $ easy_install sphinxcontrib-napoleon
+       $ easy_install sphinx_rtd_theme
+
 or::
 
-       $ pip sphinx
-       $ pip sphinxcontrib-napoleon
+       $ pip install sphinx
+       $ pip install sphinxcontrib-napoleon
+       $ pip install sphinx_rtd_theme
               
 If you get a permission error, trying using 'sudo'. 
 
@@ -247,10 +250,10 @@ than listing them at the bottom of each class, as has been done in some modules.
 .. _API docs: /library/index
 .. _spreg: /library/spreg/index
 .. _Sphinx: http://pypi.python.org/pypi/Sphinx/
-.. _here: https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt
+.. _here: https://numpydoc.readthedocs.io/en/latest/
 .. _Github: http://github.com/pysal
 .. _spreg: /library/spreg/index
 .. _reStructuredText: http://sphinx.pocoo.org/rest.html
-.. _Sphinx markup guide: http://sphinx.pocoo.org/contents.html
+.. _Sphinx markup guide: http://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
 .. _napoleon: http://sphinxcontrib-napoleon.readthedocs.org/en/latest/sphinxcontrib.napoleon.html
 .. _readthedocs: http://pysal.readthedocs.org/en/latest
