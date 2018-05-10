@@ -69,10 +69,9 @@ PySAL development is hosted on github_.
 .. _github : https://github.com/pysal/pysal
 
 
-As of version 2.0, pysal is a container package. If you would like to contribute
+As of version 2.0.0, pysal is a container package. If you would like to contribute
 features or bug fixes to any of the subpackages, please do so at the upstream
-repository listed in the subpackage README.md file.
-
+repository listed in the subpackage README.md that are contained in the directories under this respository.
 
 
 Discussions of development occurs on the
@@ -80,7 +79,6 @@ Discussions of development occurs on the
 as well as gitter_.
 
 .. _gitter : https://gitter.im/pysal/pysal?
-
 
 
 License information

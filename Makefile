@@ -9,6 +9,7 @@ doctest:
 	cd doc; make pickle; make doctest
 
 install:
+
 	python setup.py install >/dev/null
 
 src:

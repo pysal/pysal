@@ -1,0 +1,17 @@
+lib:
+  libpysal
+explore:
+  esda
+  pointpats
+dynamics:
+  giddy
+viz:
+  splot
+  mapclassify
+  legendgram
+region:
+  region
+model:
+  gwr
+  spreg
+  spvcm
