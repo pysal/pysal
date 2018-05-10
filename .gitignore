@@ -16,8 +16,6 @@ var
 sdist
 develop-eggs
 .installed.cfg
-lib64/
-lib/
 __pycache__
 
 
