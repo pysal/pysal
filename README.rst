@@ -14,6 +14,14 @@ Python Spatial Analysis Library
    :target: http://pysal.readthedocs.io/en/latest/index.html
 
 
+Note
+----
+
+As of July 1, 2018 this PySAL package is a *container* package that is relying on external dependencies. This means if you are interested in contributing enhancements and/or bug fixes to any of the subpackages listed here, you should direct those contributions to the individual packages at the links listed in the README files found in the subdirectories listed here.
+
+
+
+
 PySAL_ is an open source cross-platform library of spatial analysis functions
 written in Python. It is intended to support the development of high level
 applications for spatial analysis.
@@ -27,21 +35,6 @@ applications for spatial analysis.
 *Above: Local Indicators of Spatial Association for Homicide Rates in US
 Counties 1990.*
 
-
-PySAL modules
-=============
-
-* pysal.cg  Computational geometry
-* pysal.contrib  Contributed modules
-* pysal.core  Core data structures and IO
-* pysal.esda  Exploratory spatial data analysis
-* pysal.examples  Data sets
-* pysal.inequality  Spatial inequality analysis
-* pysal.network  Spatial analysis on networks
-* pysal.region  Spatially constrained clustering
-* pysal.spatial_dynamics  Spatial dynamics
-* pysal.spreg  Spatial econometrics and diagnostics
-* pysal.weights  Spatial weights
 
 
 Installation
@@ -75,24 +68,20 @@ PySAL development is hosted on github_.
 
 .. _github : https://github.com/pysal/pysal
 
+
+As of version 2.0, pysal is a container package. If you would like to contribute
+features or bug fixes to any of the subpackages, please do so at the upstream
+repository listed in the subpackage README.md file.
+
+
+
 Discussions of development occurs on the
 `developer list <http://groups.google.com/group/pysal-dev>`_
 as well as gitter_.
 
 .. _gitter : https://gitter.im/pysal/pysal?
 
-Getting Involved
-================
 
-If you are interested in contributing to PySAL please see our
-`development guidelines <http://pysal.readthedocs.org/en/latest/developers/index.html>`_.
-
-
-Bug reports
-===========
-To search for or report bugs, please see PySAL's issues_.
-
-.. _issues :  http://github.com/pysal/pysal/issues
 
 License information
 ===================
