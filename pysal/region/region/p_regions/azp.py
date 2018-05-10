@@ -115,7 +115,7 @@ class AZP:
 
         Parameters
         ----------
-        w : :class:`libpysal.weights.weights.W`
+        w : :class:`pysal.lib.weights.weights.W`
             W object representing the contiguity relation.
         attr : :class:`numpy.ndarray`
             Refer to the corresponding argument in
@@ -642,7 +642,7 @@ class AZPSimulatedAnnealing:
         """
         Parameters
         ----------
-        w : :class:`libpysal.weights.weights.W`
+        w : :class:`pysal.lib.weights.weights.W`
             Refer to the corresponding argument in :meth:`AZP.fit_from_w`.
         attr : :class:`numpy.ndarray`
             Refer to the corresponding argument in

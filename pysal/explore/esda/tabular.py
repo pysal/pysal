@@ -1,7 +1,7 @@
 #from ...common import requires as _requires
 
 import itertools as _it
-from libpysal.weights import W
+from pysal.lib.weights import W
 
 # I would like to define it like this, so that you could make a call like:
 # Geary(df, 'HOVAL', 'INC', w=W), but this only works in Python3. So, I have to
@@ -214,7 +214,7 @@ returns a copy of the dataframe with the relevant columns attached.
 
 See Also
 ---------
-For further documentation, refer to the {n} class in pysal.esda
+For further documentation, refer to the {n} class in pysal.pysal.explore.esda
 """
 
 _bv_doc_template =\
@@ -259,7 +259,7 @@ returns a copy of the dataframe with the relevant columns attached.
 
 See Also
 ---------
-For further documentation, refer to the {n} class in pysal.esda
+For further documentation, refer to the {n} class in pysal.pysal.explore.esda
 """
 
 _rate_doc_template =\
@@ -302,5 +302,5 @@ returns a copy of the dataframe with the relevant columns attached.
 
 See Also
 ---------
-For further documentation, refer to the {n} class in pysal.esda
+For further documentation, refer to the {n} class in pysal.pysal.explore.esda
 """

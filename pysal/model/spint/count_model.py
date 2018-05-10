@@ -43,8 +43,8 @@ class CountModel(object):
     Example
     -------
     >>> from spint.count_model import CountModel
-    >>> import libpysal
-    >>> db = libpysal.open(libpysal.examples.get_path('columbus.dbf'),'r')
+    >>> import pysal.lib
+    >>> db = pysal.lib.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
     >>> y =  np.array(db.by_col("HOVAL"))
     >>> y = np.reshape(y, (49,1))
     >>> self.y = np.round(y).astype(int)

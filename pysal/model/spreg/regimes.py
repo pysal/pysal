@@ -1,5 +1,5 @@
 import numpy as np
-import libpysal.api as lps
+import pysal.lib.api as lps
 import scipy.sparse as SP
 import itertools as iter
 #from scipy.stats import f, chisqprob
@@ -55,7 +55,7 @@ class Chow:
     Examples
     ========
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> from ols_regimes import OLS_Regimes
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> y_var = 'CRIME'
@@ -683,7 +683,7 @@ def _test():
 if __name__ == '__main__':
     _test()
     import numpy as np
-    import libpysal.api as lps
+    import pysal.lib.api as lps
     from ols_regimes import OLS_Regimes
     db = lps.open(lps.get_path('columbus.dbf'), 'r')
     y_var = 'CRIME'

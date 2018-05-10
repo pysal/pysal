@@ -9,7 +9,7 @@ import multiprocessing as mp
 import regimes as REGI
 import user_output as USER
 import summary_output as SUMMARY
-from libpysal.api import lag_spatial
+from pysal.lib.api import lag_spatial
 from ols import BaseOLS
 from twosls import BaseTSLS
 from error_sp import BaseGM_Error, BaseGM_Endog_Error, _momentsGM_Error
@@ -182,7 +182,7 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     data we read into arrays that ``spreg`` understands and ``pysal`` to
     perform all the analysis.
 
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import numpy as np
 
     Open data on NCOVR US County Homicides (3085 areas) using lps.open().
@@ -597,7 +597,7 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     data we read into arrays that ``spreg`` understands and ``pysal`` to
     perform all the analysis.
 
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import numpy as np
 
     Open data on NCOVR US County Homicides (3085 areas) using lps.open().
@@ -1083,7 +1083,7 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
 
     Open data on NCOVR US County Homicides (3085 areas) using lps.open().
     This is the DBF associated with the NAT shapefile.  Note that
@@ -1321,7 +1321,7 @@ def _test():
 if __name__ == '__main__':
 
     _test()
-    import libpysal.api as lps
+    import pysal.lib.api as lps
     import numpy as np
     dbf = lps.open(lps.get_path('columbus.dbf'), 'r')
     y = np.array([dbf.by_col('CRIME')]).T

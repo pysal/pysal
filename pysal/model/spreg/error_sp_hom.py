@@ -10,7 +10,7 @@ from scipy import sparse as SP
 import numpy as np
 from numpy import linalg as la
 import ols as OLS
-from libpysal.api import lag_spatial
+from pysal.lib.api import lag_spatial
 from utils import power_expansion, set_endog, iter_msg, sp_att
 from utils import get_A1_hom, get_A2_hom, get_A1_het, optim_moments
 from utils import get_spFilter, get_lags, _moments2eqs
@@ -90,7 +90,7 @@ class BaseGM_Error_Hom(RegressionPropsY):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> y = np.array(db.by_col("HOVAL"))
     >>> y = np.reshape(y, (49,1))
@@ -269,7 +269,7 @@ class GM_Error_Hom(BaseGM_Error_Hom):
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
     This is the DBF associated with the Columbus shapefile.  Note that
@@ -444,7 +444,7 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> y = np.array(db.by_col("HOVAL"))
     >>> y = np.reshape(y, (49,1))
@@ -655,7 +655,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
     This is the DBF associated with the Columbus shapefile.  Note that
@@ -863,7 +863,7 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> y = np.array(db.by_col("HOVAL"))
     >>> y = np.reshape(y, (49,1))
@@ -1069,7 +1069,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
     This is the DBF associated with the Columbus shapefile.  Note that

@@ -1,7 +1,7 @@
 import random
 
 import networkx as nx
-import libpysal.api as ps_api
+import pysal.lib.api as ps_api
 
 from region.objective_function import ObjectiveFunctionPairwise
 from region.p_regions.azp import AZP
@@ -281,7 +281,7 @@ class MaxPRegionsHeu:
 
         Parameters
         ----------
-        w : :class:`libpysal.weights.weights.W`
+        w : :class:`pysal.lib.weights.weights.W`
             W object representing the contiguity relation.
         attr : :class:`numpy.ndarray`
             Each element specifies an area's attribute which is used for

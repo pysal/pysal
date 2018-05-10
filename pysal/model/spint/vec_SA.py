@@ -7,7 +7,7 @@ _author_ = "Taylor Oshan tayoshan@gmail.com, Levi Wolf levi.john.wolf@gmail.com"
 
 import numpy as np
 import scipy.stats as stats
-from libpysal.weights.Distance import DistanceBand
+from pysal.lib.weights.Distance import DistanceBand
 
 PERMUTATIONS = 99
 

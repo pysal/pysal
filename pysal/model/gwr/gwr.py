@@ -169,9 +169,9 @@ class GWR(GLM):
     --------
     #basic model calibration
 
-    >>> import libpysal
+    >>> import pysal.lib
     >>> from gwr.gwr import GWR
-    >>> data = libpysal.open(libpysal.examples.get_path('GData_utm.csv'))
+    >>> data = pysal.lib.open(pysal.lib.examples.get_path('GData_utm.csv'))
     >>> coords = zip(data.bycol('X'), data.by_col('Y')) 
     >>> y = np.array(data.by_col('PctBach')).reshape((-1,1))
     >>> rural = np.array(data.by_col('PctRural')).reshape((-1,1))

@@ -1,1 +1,1 @@
-from .legendgram import legendgram
+from pysal.viz.legendgram import legendgram

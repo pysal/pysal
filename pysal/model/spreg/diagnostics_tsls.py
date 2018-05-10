@@ -5,7 +5,7 @@ Diagnostics for two stage least squares regression estimations.
 
 __author__ = "Luc Anselin luc.anselin@asu.edu, Nicholas Malizia nicholas.malizia@asu.edu "
 
-from libpysal.common import *
+from pysal.lib.common import *
 from scipy.stats import pearsonr
 
 __all__ = ["t_stat", "pr2_aspatial", "pr2_spatial"]
@@ -39,7 +39,7 @@ def t_stat(reg, z_stat=False):
     which we will perform the tests.
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import spreg.diagnostics as diagnostics
     >>> from spreg.ols import OLS
     >>> from twosls import TSLS
@@ -151,7 +151,7 @@ def pr2_aspatial(tslsreg):
     which we will perform the tests.
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> from twosls import TSLS
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
@@ -244,7 +244,7 @@ def pr2_spatial(tslsreg):
     contains the function with the test.
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import spreg.diagnostics as D
     >>> from twosls_sp import GM_Lag
 

@@ -8,7 +8,7 @@ __author__ = "Sergio J. Rey <sjsrey@gmail.com>"
 __all__ = ['Rose']
 
 import numpy as np
-from libpysal.api import lag_spatial
+from pysal.lib.api import lag_spatial
 
 _POS8 = np.array([1, 1, 0, 0, 1, 1, 0, 0])
 _POS4 = np.array([1, 0, 1, 0])
@@ -102,8 +102,8 @@ class Rose(object):
 
         Load comma delimited data file in and convert to a numpy array
 
-        >>> import libpysal
-        >>> f=open(libpysal.examples.get_path("spi_download.csv"),'r')
+        >>> import pysal.lib
+        >>> f=open(pysal.lib.examples.get_path("spi_download.csv"),'r')
         >>> lines=f.readlines()
         >>> f.close()
         >>> lines=[line.strip().split(",") for line in lines]
@@ -140,7 +140,7 @@ class Rose(object):
         Create our contiguity matrix from an external GAL file and row
         standardize the resulting weights
 
-        >>> gal=libpysal.open(libpysal.examples.get_path('states48.gal'))
+        >>> gal=pysal.lib.open(pysal.lib.examples.get_path('states48.gal'))
         >>> w=gal.read()
         >>> w.transform='r'
 

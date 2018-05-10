@@ -8,7 +8,7 @@ import copy as COPY
 import diagnostics as diagnostics
 import diagnostics_tsls as diagnostics_tsls
 import diagnostics_sp as diagnostics_sp
-import libpysal.api as lps
+import pysal.lib.api as lps
 import scipy
 from scipy.sparse.csr import csr_matrix
 

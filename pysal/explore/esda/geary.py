@@ -5,7 +5,7 @@ __author__ = "Sergio J. Rey <srey@asu.edu> "
 
 import numpy as np
 import scipy.stats as stats
-from libpysal import weights
+from pysal.lib import weights
 from .tabular import _univariate_handler
 
 __all__ = ['Geary']
@@ -138,7 +138,7 @@ class Geary(object):
 
     @property
     def _statistic(self):
-        """ a standardized accessor for esda statistics"""
+        """ a standardized accessor for pysal.explore.esda statistics"""
         return self.C
 
     def __moments(self):
@@ -213,7 +213,7 @@ class Geary(object):
 
         See Also
         ---------
-        For further documentation, refer to the Geary class in pysal.esda
+        For further documentation, refer to the Geary class in pysal.pysal.explore.esda
         """
         return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
                                    outvals=outvals, stat=cls,

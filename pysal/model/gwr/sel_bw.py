@@ -84,9 +84,9 @@ class Sel_BW(object):
     Examples
     ________
 
-    >>> import libpysal
+    >>> import pysal.lib
     >>> from gwr.sel_bw import Sel_BW
-    >>> data = libpysal.open(libpysal.examples.get_path('GData_utm.csv'))
+    >>> data = pysal.lib.open(pysal.lib.examples.get_path('GData_utm.csv'))
     >>> coords = zip(data.bycol('X'), data.by_col('Y')) 
     >>> y = np.array(data.by_col('PctBach')).reshape((-1,1))
     >>> rural = np.array(data.by_col('PctRural')).reshape((-1,1))

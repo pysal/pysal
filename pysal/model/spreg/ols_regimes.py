@@ -296,7 +296,7 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
 
     Open data on NCOVR US County Homicides (3085 areas) using lps.open().
     This is the DBF associated with the NAT shapefile.  Note that
@@ -526,7 +526,7 @@ def _test():
 if __name__ == '__main__':
     _test()
     import numpy as np
-    import libpysal.api as lps
+    import pysal.lib.api as lps
     db = lps.open(lps.get_path('columbus.dbf'), 'r')
     y_var = 'CRIME'
     y = np.array([db.by_col(y_var)]).reshape(49, 1)

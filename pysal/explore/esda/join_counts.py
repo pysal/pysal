@@ -4,7 +4,7 @@ Spatial autocorrelation for binary attributes
 """
 __author__ = "Sergio J. Rey <srey@asu.edu> , Luc Anselin <luc.anselin@asu.edu>"
 
-from libpysal.weights.spatial_lag import lag_spatial
+from pysal.lib.weights.spatial_lag import lag_spatial
 from .tabular import _univariate_handler
 import numpy as np
 
@@ -195,7 +195,7 @@ class Join_Counts(object):
 
         See Also
         ---------
-        For further documentation, refer to the Join_Count class in pysal.esda
+        For further documentation, refer to the Join_Count class in pysal.pysal.explore.esda
         """
         if outvals is None:
             outvals = []

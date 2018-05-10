@@ -108,7 +108,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
     --------
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> db = lps.open(lps.get_path("columbus.dbf"),'r')
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
@@ -371,7 +371,7 @@ class TSLS(BaseTSLS):
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
     This is the DBF associated with the Columbus shapefile.  Note that
@@ -471,7 +471,7 @@ if __name__ == '__main__':
     _test()
 
     import numpy as np
-    import libpysal.api as lps
+    import pysal.lib.api as lps
     db = lps.open(lps.get_path("columbus.dbf"), 'r')
     y_var = 'CRIME'
     y = np.array([db.by_col(y_var)]).reshape(49, 1)

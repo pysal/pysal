@@ -4,8 +4,8 @@ Diagnostics for regression estimations.
 """
 __author__ = "Luc Anselin luc.anselin@asu.edu, Nicholas Malizia nicholas.malizia@asu.edu "
 
-import libpysal.api as lps
-from libpysal.common import *
+import pysal.lib.api as lps
+from pysal.lib.common import *
 import scipy.sparse as SP
 from math import sqrt
 from utils import spmultiply, sphstack, spmin, spmax
@@ -35,7 +35,7 @@ def f_stat(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import diagnostics
     >>> from ols import OLS
 
@@ -103,7 +103,7 @@ def t_stat(reg, z_stat=False):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import diagnostics
     >>> from ols import OLS
 
@@ -170,7 +170,7 @@ def r2(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import diagnostics
     >>> from ols import OLS
 
@@ -231,7 +231,7 @@ def ar2(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import diagnostics
     >>> from ols import OLS
 
@@ -287,7 +287,7 @@ def se_betas(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import diagnostics
     >>> from ols import OLS
 
@@ -344,7 +344,7 @@ def log_likelihood(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import diagnostics
     >>> from ols import OLS
 
@@ -403,7 +403,7 @@ def akaike(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import diagnostics
     >>> from ols import OLS
 
@@ -466,7 +466,7 @@ def schwarz(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import diagnostics
     >>> from ols import OLS
 
@@ -530,7 +530,7 @@ def condition_index(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import diagnostics
     >>> from ols import OLS
 
@@ -602,7 +602,7 @@ def jarque_bera(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import diagnostics
     >>> from ols import OLS
 
@@ -701,7 +701,7 @@ def breusch_pagan(reg, z=None):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import diagnostics
     >>> from ols import OLS
 
@@ -843,7 +843,7 @@ def white(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import diagnostics
     >>> from ols import OLS
 
@@ -1005,7 +1005,7 @@ def koenker_bassett(reg, z=None):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import diagnostics
     >>> from ols import OLS
 
@@ -1143,7 +1143,7 @@ def vif(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import diagnostics
     >>> from ols import OLS
 
@@ -1235,7 +1235,7 @@ def constant_check(array):
     -------
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import diagnostics
     >>> from ols import OLS
     >>> db = lps.open(lps.get_path("columbus.dbf"),"r")
@@ -1290,7 +1290,7 @@ def likratiotest(reg0, reg1):
     --------
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import scipy.stats as stats
     >>> import spreg.ml_lag as lag
 

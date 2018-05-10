@@ -10,7 +10,7 @@ import numpy as np
 import numpy.linalg as la
 from scipy import sparse as sp
 from scipy.sparse.linalg import splu as SuperLU
-import libpysal.api as lps
+import pysal.lib.api as lps
 from utils import RegressionPropsY, RegressionPropsVM
 import diagnostics as DIAG
 import user_output as USER
@@ -97,7 +97,7 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> np.set_printoptions(suppress=True) #prevent scientific format
     >>> db = ps.open(ps.examples.get_path("south.dbf"),'r')
     >>> y_name = "HR90"
@@ -377,7 +377,7 @@ class ML_Error(BaseML_Error):
     --------
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> np.set_printoptions(suppress=True)  #prevent scientific format
     >>> db = ps.open(ps.examples.get_path("south.dbf"),'r')
     >>> ds_name = "south.dbf"

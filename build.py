@@ -1,8 +1,8 @@
 import yaml
 import os
 import subprocess
+import sys
 
-GITROOT = "git@github.com:pysal/"
 TARGETROOT ="pysal/"
 
 
@@ -15,7 +15,6 @@ for package in packages:
     subpackages = packages[package].split()
     for subpackage in subpackages:
         #print(package, subpackage)
-        upstream = GITROOT+subpackage
         #print(upstream)
 
         # get the zip of the current master branch (or release?) for the subpackage
@@ -40,3 +39,45 @@ for package in packages:
         # mv  tmp/subpackage*/subpackage subparent/
 
 #os.system('git clean -fd')
+
+# libpysal
+
+os.system('pip download libpysal --no-binary :all: --no-deps -d tmp')
+os.system('tar xzf tmp/libpysal*.tar.gz -C tmp; rm tmp/*.gz')
+os.system('cp -fr tmp/libpysal*/libpysal/libpysal/* pysal/lib/.')
+
+# handle libpysal if python=3.+
+if sys.version_info[0] == 3:
+    twothreecom = '2to3 -nw pysal/lib/'
+    print(twothreecom)
+    os.system(twothreecom)
+
+# replace all references to libpysal with pysal.lib
+c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/libpysal/pysal\.lib/g'"
+os.system(c)
+# replace all references to esda with pysal.explore.esda
+c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/esda/pysal\.explore\.esda/g'"
+os.system(c)
+# replace all references to mapclassify with pysal.viz.mapclassify
+c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/mapclassify/pysal\.viz\.mapclassify/g'"
+os.system(c)
+# replace all references to .legendgram with pysal.viz.legendgram
+c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/\.legendgram/pysal\.viz\.legendgram/g'"
+os.system(c)
+
+# rewrite pysal/__init__.py at the end
+
+init_lines = [
+    ". import lib",
+    ". explore import esda",
+    ". explore import pointpats",
+    ". viz import mapclassify",
+    ". viz import legendgram",
+    ". dynamics import giddy"]
+
+init_lines = [ "from "+line for line in init_lines]
+lines = "\n".join(init_lines)
+with open("pysal/__init__.py", 'w') as outfile:
+    outfile.write(lines)
+
+

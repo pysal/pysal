@@ -4,8 +4,8 @@ Getis and Ord G statistic for spatial autocorrelation
 __author__ = "Sergio J. Rey <srey@asu.edu>, Myunghwa Hwang <mhwang4@gmail.com> "
 __all__ = ['G', 'G_Local']
 
-from libpysal.common import np, stats, math
-from libpysal.weights.spatial_lag import lag_spatial as slag
+from pysal.lib.common import np, stats, math
+from pysal.lib.weights.spatial_lag import lag_spatial as slag
 from .tabular import _univariate_handler
 
 PERMUTATIONS = 999
@@ -162,7 +162,7 @@ class G(object):
 
     @property
     def _statistic(self):
-        """ Standardized accessor for esda statistics"""
+        """ Standardized accessor for pysal.explore.esda statistics"""
         return self.G
 
     @classmethod
@@ -200,7 +200,7 @@ class G(object):
 
         See Also
         ---------
-        For further documentation, refer to the G class in pysal.esda
+        For further documentation, refer to the G class in pysal.pysal.explore.esda
         """
         return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
                                    outvals=outvals, stat=cls,
@@ -437,7 +437,7 @@ class G_Local(object):
 
     @property
     def _statistic(self):
-        """Standardized accessor for esda statistics"""
+        """Standardized accessor for pysal.explore.esda statistics"""
         return self.Gs
 
     @classmethod
@@ -475,7 +475,7 @@ class G_Local(object):
 
         See Also
         ---------
-        For further documentation, refer to the G_Local class in pysal.esda
+        For further documentation, refer to the G_Local class in pysal.pysal.explore.esda
         """
         return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
                                    outvals=outvals, stat=cls,

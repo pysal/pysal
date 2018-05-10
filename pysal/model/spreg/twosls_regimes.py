@@ -180,7 +180,7 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
 
     Open data on NCOVR US County Homicides (3085 areas) using lps.open().
     This is the DBF associated with the NAT shapefile.  Note that
@@ -496,7 +496,7 @@ def _test():
 if __name__ == '__main__':
     _test()
     import numpy as np
-    import libpysal.api as lps
+    import pysal.lib.api as lps
     db = lps.open(lps.get_path('NAT.dbf'), 'r')
     y_var = 'HR60'
     y = np.array([db.by_col(y_var)]).T

@@ -102,7 +102,7 @@ class BaseProbit(object):
     Examples
     --------
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> dbf = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> y = np.array([dbf.by_col('CRIME')]).T
     >>> x = np.array([dbf.by_col('INC'), dbf.by_col('HOVAL')]).T
@@ -716,7 +716,7 @@ class Probit(BaseProbit):
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
     This is the DBF associated with the Columbus shapefile.  Note that
@@ -940,7 +940,7 @@ def _test():
 if __name__ == '__main__':
     _test()
     import numpy as np
-    import libpysal.api as lps
+    import pysal.lib.api as lps
     dbf = lps.open(lps.get_path('columbus.dbf'), 'r')
     y = np.array([dbf.by_col('CRIME')]).T
     var_x = ['INC', 'HOVAL']

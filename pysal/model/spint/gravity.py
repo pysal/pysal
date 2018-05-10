@@ -142,9 +142,9 @@ class BaseGravity(CountModel):
     Example
     -------
     >>> import numpy as np
-    >>> import libpysal
+    >>> import pysal.lib
     >>> from spint.gravity import BaseGravity
-    >>> db = libpysal.open(libpysal.examples.get_path('nyc_bikes_ct.csv'))
+    >>> db = pysal.lib.open(pysal.lib.examples.get_path('nyc_bikes_ct.csv'))
     >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
     >>> flows = np.array(db.by_col('count')).reshape((-1,1))
     >>> model = BaseGravity(flows, cost)
@@ -396,9 +396,9 @@ class Gravity(BaseGravity):
     Example
     -------
     >>> import numpy as np
-    >>> import libpysal
+    >>> import pysal.lib
     >>> from spint.gravity import Gravity
-    >>> db = libpysal.open(libpysal.examples.get_path('nyc_bikes_ct.csv'))
+    >>> db = pysal.lib.open(pysal.lib.examples.get_path('nyc_bikes_ct.csv'))
     >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
     >>> flows = np.array(db.by_col('count')).reshape((-1,1))
     >>> o_cap = np.array(db.by_col('o_cap')).reshape((-1,1))
@@ -606,9 +606,9 @@ class Production(BaseGravity):
     -------
 
     >>> import numpy as np
-    >>> import libpysal
+    >>> import pysal.lib
     >>> from spint.gravity import Production
-    >>> db = libpysal.open(libpysal.examples.get_path('nyc_bikes_ct.csv'))
+    >>> db = pysal.lib.open(pysal.lib.examples.get_path('nyc_bikes_ct.csv'))
     >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
     >>> flows = np.array(db.by_col('count')).reshape((-1,1))
     >>> o = np.array(db.by_col('o_tract')).reshape((-1,1))
@@ -806,9 +806,9 @@ class Attraction(BaseGravity):
     Example
     -------
     >>> import numpy as np
-    >>> import libpysal
+    >>> import pysal.lib
     >>> from spint.gravity import Attraction
-    >>> db = libpysal.open(libpysal.examples.get_path('nyc_bikes_ct.csv'))
+    >>> db = pysal.lib.open(pysal.lib.examples.get_path('nyc_bikes_ct.csv'))
     >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
     >>> flows = np.array(db.by_col('count')).reshape((-1,1))
     >>> d = np.array(db.by_col('d_tract')).reshape((-1,1))
@@ -1011,7 +1011,7 @@ class Doubly(BaseGravity):
     >>> import numpy as np
     >>> import libpsal
     >>> from spint.gravity import Doubly
-    >>> db = libpysal.open(libpysal.examples.get_path('nyc_bikes_ct.csv'))
+    >>> db = pysal.lib.open(pysal.lib.examples.get_path('nyc_bikes_ct.csv'))
     >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
     >>> flows = np.array(db.by_col('count')).reshape((-1,1))
     >>> d = np.array(db.by_col('d_tract')).reshape((-1,1))

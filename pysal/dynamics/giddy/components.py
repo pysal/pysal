@@ -79,7 +79,7 @@ def check_contiguity(w, neighbors, leaver):
 
     Setup imports and a 25x25 spatial weights matrix on a 5x5 square region.
 
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> w = lps.lat2W(5, 5)
 
     Test removing various areas from a subset of the region's areas.  In the

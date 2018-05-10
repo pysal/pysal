@@ -10,7 +10,7 @@ from scipy.stats.mstats import rankdata
 from scipy.special import erfc
 import numpy as np
 import scipy as sp
-import libpysal.api as ps
+import pysal.lib.api as ps
 
 class Theta:
     """
@@ -60,7 +60,7 @@ class Theta:
 
     Examples
     --------
-    >>> import libpysal as ps
+    >>> import pysal.lib as ps
     >>> f=ps.open(ps.examples.get_path("mexico.csv"))
     >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
     >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
@@ -322,10 +322,10 @@ class SpatialTau(object):
 
     Examples
     --------
-    >>> import libpysal
-    >>> import libpysal.api as ps
+    >>> import pysal.lib
+    >>> import pysal.lib.api as ps
     >>> import numpy as np
-    >>> f=libpysal.open(libpysal.examples.get_path("mexico.csv"))
+    >>> f=pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
     >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
     >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> regime=np.array(f.by_col['esquivel99'])
@@ -445,10 +445,10 @@ class Tau_Local:
 
     Examples
     --------
-    >>> import libpysal
+    >>> import pysal.lib
     >>> import numpy as np
     >>> np.random.seed(10)
-    >>> f = libpysal.open(libpysal.examples.get_path("mexico.csv"))
+    >>> f = pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
     >>> vnames = ["pcgdp%d"%dec for dec in range(1940, 2010, 10)]
     >>> y = np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> r = y / y.mean(axis=0)
@@ -543,11 +543,11 @@ class Tau_Local_Neighbor:
 
     Examples
     --------
-    >>> import libpysal
-    >>> import libpysal.api as ps
+    >>> import pysal.lib
+    >>> import pysal.lib.api as ps
     >>> import numpy as np
     >>> np.random.seed(10)
-    >>> f = libpysal.open(libpysal.examples.get_path("mexico.csv"))
+    >>> f = pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
     >>> vnames = ["pcgdp%d"%dec for dec in range(1940, 2010, 10)]
     >>> y = np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> r = y / y.mean(axis=0)
@@ -710,11 +710,11 @@ class Tau_Local_Neighborhood:
 
     Examples
     --------
-    >>> import libpysal
-    >>> import libpysal.api as ps
+    >>> import pysal.lib
+    >>> import pysal.lib.api as ps
     >>> import numpy as np
     >>> np.random.seed(10)
-    >>> f = libpysal.open(libpysal.examples.get_path("mexico.csv"))
+    >>> f = pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
     >>> vnames = ["pcgdp%d"%dec for dec in range(1940, 2010, 10)]
     >>> y = np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> r = y / y.mean(axis=0)
@@ -837,10 +837,10 @@ class Tau_Regional:
 
     Examples
     --------
-    >>> import libpysal
+    >>> import pysal.lib
     >>> import numpy as np
     >>> np.random.seed(10)
-    >>> f = libpysal.open(libpysal.examples.get_path("mexico.csv"))
+    >>> f = pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
     >>> vnames = ["pcgdp%d"%dec for dec in range(1940, 2010, 10)]
     >>> y = np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> r = y / y.mean(axis=0)

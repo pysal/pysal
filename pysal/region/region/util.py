@@ -9,7 +9,7 @@ from sklearn.metrics.pairwise import distance_metrics
 from scipy.sparse.dok import dok_matrix
 import numpy as np
 import networkx as nx
-import libpysal.api as ps_api
+import pysal.lib.api as ps_api
 import pulp
 
 Move = collections.namedtuple("move", "area old_region new_region")
@@ -127,7 +127,7 @@ def scipy_sparse_matrix_from_w(w):
 
     Parameters
     ----------
-    w : :class:`libpysal.weights.weights.W`
+    w : :class:`pysal.lib.weights.weights.W`
         A W object representing the areas' contiguity relation.
 
     Returns
@@ -137,7 +137,7 @@ def scipy_sparse_matrix_from_w(w):
 
     Examples
     --------
-    >>> import libpysal as ps
+    >>> import pysal.lib as ps
     >>> neighbor_dict = {0: {1}, 1: {0, 2}, 2: {1}}
     >>> w = ps.weights.W(neighbor_dict)
     >>> obtained = scipy_sparse_matrix_from_w(w)

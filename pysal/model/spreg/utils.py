@@ -13,7 +13,7 @@ from scipy import sparse as SP
 from scipy.sparse import linalg as SPla
 import scipy.optimize as op
 import numpy.linalg as la
-from libpysal.api import lag_spatial
+from pysal.lib.api import lag_spatial
 from sputils import *
 import copy
 
@@ -419,7 +419,7 @@ def get_spFilter(w, lamb, sf):
     --------
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))

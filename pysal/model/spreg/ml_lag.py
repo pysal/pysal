@@ -10,7 +10,7 @@ import numpy as np
 import numpy.linalg as la
 from scipy import sparse as sp
 from scipy.sparse.linalg import splu as SuperLU
-import libpysal.api as lps
+import pysal.lib.api as lps
 from utils import RegressionPropsY, RegressionPropsVM, inverse_prod
 from sputils import spdot, spfill_diagonal, spinv, spbroadcast
 import diagnostics as DIAG
@@ -96,7 +96,7 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
     --------
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> db =  ps.open(ps.examples.get_path("baltim.dbf"),'r')
     >>> ds_name = "baltim.dbf"
     >>> y_name = "PRICE"
@@ -391,7 +391,7 @@ class ML_Lag(BaseML_Lag):
     ________
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> db =  ps.open(ps.examples.get_path("baltim.dbf"),'r')
     >>> ds_name = "baltim.dbf"
     >>> y_name = "PRICE"

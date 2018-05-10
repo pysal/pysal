@@ -18,14 +18,22 @@ def legendgram(f, ax, y, breaks, pal, bins=50, clip=None,
                   Sequence with breaks for each class (i.e. boundary values
                   for colors)
     pal         : palettable colormap
-    rescale     : None/tuple
+    clip        : tuple
                   [Optional. Default=None] If a tuple, clips the X
                   axis of the histogram to the bounds provided.
     loc         :   string or int
                     valid legend location like that used in matplotlib.pyplot.legend
-    legend_size :
-    frameon     :
-    tick_params :
+    legend_size : tuple
+                  tuple of floats between 0 and 1 describing the (width,height)
+                  of the legend relative to the original frame.
+    frameon     : bool (default: False)
+                  whether to add a frame to the legendgram
+    tick_params : keyword dictionary
+                  options to control how the histogram axis gets ticked/labelled.
+
+    Returns
+    -------
+    axis containing the legendgram. 
     '''
     k = len(breaks)
     assert k == pal.number, "provided number of classes does not match number of colors in palette."

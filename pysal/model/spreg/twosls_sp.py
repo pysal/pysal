@@ -6,7 +6,7 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, David C. Folch david.folch@asu.ed
 
 import copy
 import numpy as np
-import libpysal.api as lps
+import pysal.lib.api as lps
 import numpy.linalg as la
 import twosls as TSLS
 import robust as ROBUST
@@ -118,7 +118,7 @@ class BaseGM_Lag(TSLS.BaseTSLS):
     --------
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import spreg.diagnostics as D
     >>> w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
     >>> w.transform = 'r'
@@ -345,7 +345,7 @@ class GM_Lag(BaseGM_Lag):
     model, we also import the diagnostics module.
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import spreg.diagnostics as D
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
@@ -509,7 +509,7 @@ if __name__ == '__main__':
     _test()
 
     import numpy as np
-    import libpysal.api as lps
+    import pysal.lib.api as lps
     db = lps.open(lps.get_path("columbus.dbf"), 'r')
     y_var = 'CRIME'
     y = np.array([db.by_col(y_var)]).reshape(49, 1)

@@ -63,7 +63,7 @@ class LMtests:
     --------
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> from ols import OLS
 
     Open the csv file to access the data for analysis
@@ -173,7 +173,7 @@ class MoranRes:
     --------
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> from ols import OLS
 
     Open the csv file to access the data for analysis
@@ -289,7 +289,7 @@ class AKtest:
     which we will perform the tests.
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> from twosls import TSLS
     >>> from twosls_sp import GM_Lag
 

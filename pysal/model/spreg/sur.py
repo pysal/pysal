@@ -211,9 +211,9 @@ class SUR(BaseSUR):
         Examples
         --------
 
-        First import libpysal.api as lps to load the spatial analysis tools.
+        First import pysal.lib.api as lps to load the spatial analysis tools.
 
-        >>> import libpysal.api as lps
+        >>> import pysal.lib.api as lps
 
         Open data on NCOVR US County Homicides (3085 areas) using lps.open().
         This is the DBF associated with the NAT shapefile. Note that lps.open()
@@ -542,9 +542,9 @@ class ThreeSLS(BaseThreeSLS):
         Examples
         --------
 
-        First import libpysal.api as lps to load the spatial analysis tools.
+        First import pysal.lib.api as lps to load the spatial analysis tools.
 
-        >>> import libpysal.api as lps
+        >>> import pysal.lib.api as lps
 
         Open data on NCOVR US County Homicides (3085 areas) using lps.open().
         This is the DBF associated with the NAT shapefile. Note that lps.open()
@@ -669,7 +669,7 @@ def _test():
 if __name__ == '__main__':
     _test()
     import numpy as np
-    import libpysal.api as lps
+    import pysal.lib.api as lps
     from sur_utils import sur_dictxy,sur_dictZ
 
     db = lps.open(lps.get_path('NAT.dbf'), 'r')

@@ -408,21 +408,21 @@ class Map_Classifier(object):
 
     Map Classifiers Supported
 
-    * :class:`mapclassify.classifiers.Box_Plot`
-    * :class:`mapclassify.classifiers.Equal_Interval`
-    * :class:`mapclassify.classifiers.Fisher_Jenks`
-    * :class:`mapclassify.classifiers.Fisher_Jenks_Sampled`
-    * :class:`mapclassify.classifiers.HeadTail_Breaks`
-    * :class:`mapclassify.classifiers.Jenks_Caspall`
-    * :class:`mapclassify.classifiers.Jenks_Caspall_Forced`
-    * :class:`mapclassify.classifiers.Jenks_Caspall_Sampled`
-    * :class:`mapclassify.classifiers.Max_P_Classifier`
-    * :class:`mapclassify.classifiers.Maximum_Breaks`
-    * :class:`mapclassify.classifiers.Natural_Breaks`
-    * :class:`mapclassify.classifiers.Quantiles`
-    * :class:`mapclassify.classifiers.Percentiles`
-    * :class:`mapclassify.classifiers.Std_Mean`
-    * :class:`mapclassify.classifiers.User_Defined`
+    * :class:`pysal.viz.mapclassify.classifiers.Box_Plot`
+    * :class:`pysal.viz.mapclassify.classifiers.Equal_Interval`
+    * :class:`pysal.viz.mapclassify.classifiers.Fisher_Jenks`
+    * :class:`pysal.viz.mapclassify.classifiers.Fisher_Jenks_Sampled`
+    * :class:`pysal.viz.mapclassify.classifiers.HeadTail_Breaks`
+    * :class:`pysal.viz.mapclassify.classifiers.Jenks_Caspall`
+    * :class:`pysal.viz.mapclassify.classifiers.Jenks_Caspall_Forced`
+    * :class:`pysal.viz.mapclassify.classifiers.Jenks_Caspall_Sampled`
+    * :class:`pysal.viz.mapclassify.classifiers.Max_P_Classifier`
+    * :class:`pysal.viz.mapclassify.classifiers.Maximum_Breaks`
+    * :class:`pysal.viz.mapclassify.classifiers.Natural_Breaks`
+    * :class:`pysal.viz.mapclassify.classifiers.Quantiles`
+    * :class:`pysal.viz.mapclassify.classifiers.Percentiles`
+    * :class:`pysal.viz.mapclassify.classifiers.Std_Mean`
+    * :class:`pysal.viz.mapclassify.classifiers.User_Defined`
 
     Utilities:
 
@@ -431,8 +431,8 @@ class Map_Classifier(object):
     different lues, or for automatic selection of a classifier and
     number of classes.
 
-    * :func:`mapclassify.classifiers.gadf`
-    * :class:`mapclassify.classifiers.K_classifiers`
+    * :func:`pysal.viz.mapclassify.classifiers.gadf`
+    * :class:`pysal.viz.mapclassify.classifiers.K_classifiers`
 
     """
 
@@ -1388,7 +1388,7 @@ class Natural_Breaks(Map_Classifier):
     >>> import numpy
     >>> import pysal
     >>> numpy.random.seed(123456)
-    >>> cal = pysal.esda.mapclassify.load_example()
+    >>> cal = pysal.pysal.explore.esda.pysal.viz.mapclassify.load_example()
     >>> nb = pysal.Natural_Breaks(cal, k=5)
     >>> nb.k
     5
@@ -2071,7 +2071,7 @@ class Max_P_Classifier(Map_Classifier):
     Examples
     --------
     >>> import pysal
-    >>> cal = pysal.esda.mapclassify.load_example()
+    >>> cal = pysal.pysal.explore.esda.pysal.viz.mapclassify.load_example()
     >>> mp = pysal.Max_P_Classifier(cal)
     >>> mp.bins
     array([    8.7 ,    16.7 ,    20.47,    66.26,  4111.45])

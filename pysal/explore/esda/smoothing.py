@@ -14,14 +14,14 @@ Author(s):
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>, David Folch <dfolch@asu.edu>, Luc Anselin <luc.anselin@asu.edu>, Serge Rey <srey@asu.edu"
 
-from libpysal.weights.weights import W
-from libpysal.weights.Distance import Kernel
-from libpysal.weights.util import get_points_array, comb
-from libpysal.cg import Point, Ray, LineSegment
-from libpysal.cg import get_angle_between, get_points_dist, get_segment_point_dist,\
+from pysal.lib.weights.weights import W
+from pysal.lib.weights.Distance import Kernel
+from pysal.lib.weights.util import get_points_array, comb
+from pysal.lib.cg import Point, Ray, LineSegment
+from pysal.lib.cg import get_angle_between, get_points_dist, get_segment_point_dist,\
                  get_point_at_angle_and_dist, convex_hull, get_bounding_box
-from libpysal.common import np, KDTree, requires as _requires
-from libpysal.weights.spatial_lag import lag_spatial as slag
+from pysal.lib.common import np, KDTree, requires as _requires
+from pysal.lib.weights.spatial_lag import lag_spatial as slag
 from scipy.stats import gamma, norm, chi2, poisson
 from functools import reduce
 
@@ -1135,7 +1135,7 @@ class Age_Adjusted_Smoother(_Spatial_Smoother):
             w = [w] * len(e)
         if not all(isinstance(wi, W) for wi in w):
             raise Exception('Weights object must be an instance of '
-                            ' libpysal.weights.W!')
+                            ' pysal.lib.weights.W!')
         b = b * len(e) if len(b) == 1 and len(e) > 1 else b
         s = s * len(e) if len(s) == 1 and len(e) > 1 else s
         try:

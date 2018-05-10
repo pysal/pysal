@@ -4,7 +4,7 @@ Moran's I Spatial Autocorrelation Statistics
 """
 __author__ = "Sergio J. Rey <srey@asu.edu>, \
         Dani Arribas-Bel <daniel.arribas.bel@gmail.com>"
-from libpysal.weights.spatial_lag import lag_spatial as slag
+from pysal.lib.weights.spatial_lag import lag_spatial as slag
 from .smoothing import assuncao_rate
 from .tabular import _univariate_handler, _bivariate_handler
 import scipy.stats as stats
@@ -242,7 +242,7 @@ class Moran(object):
 
         See Also
         ---------
-        For further documentation, refer to the Moran class in pysal.esda
+        For further documentation, refer to the Moran class in pysal.pysal.explore.esda
         """
         return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
                                    outvals=outvals, stat=cls,
@@ -434,7 +434,7 @@ class Moran_BV(object):
 
         See Also
         ---------
-        For further documentation, refer to the Moran_BV class in pysal.esda
+        For further documentation, refer to the Moran_BV class in pysal.pysal.explore.esda
         """
         return _bivariate_handler(df, x, y=y, w=w, inplace=inplace,
                                   pvalue = pvalue, outvals = outvals,
@@ -604,7 +604,7 @@ class Moran_Rate(Moran):
     >>> f = pysal.open(pysal.examples.get_path("sids2.dbf"))
     >>> e = np.array(f.by_col('SID79'))
     >>> b = np.array(f.by_col('BIR79'))
-    >>> mi = pysal.esda.moran.Moran_Rate(e, b,  w, two_tailed=False)
+    >>> mi = pysal.pysal.explore.esda.moran.Moran_Rate(e, b,  w, two_tailed=False)
     >>> "%6.4f" % mi.I
     '0.1662'
     >>> "%6.4f" % mi.p_norm
@@ -665,7 +665,7 @@ class Moran_Rate(Moran):
 
         See Also
         ---------
-        For further documentation, refer to the Moran_Rate class in pysal.esda
+        For further documentation, refer to the Moran_Rate class in pysal.pysal.explore.esda
         """
         if not inplace:
             new = df.copy()
@@ -923,7 +923,7 @@ class Moran_Local(object):
 
         See Also
         ---------
-        For further documentation, refer to the Moran_Local class in pysal.esda
+        For further documentation, refer to the Moran_Local class in pysal.pysal.explore.esda
         """
         return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
                                    outvals=outvals, stat=cls,
@@ -1169,7 +1169,7 @@ class Moran_Local_BV(object):
 
         See Also
         ---------
-        For further documentation, refer to the Moran_Local_BV class in pysal.esda
+        For further documentation, refer to the Moran_Local_BV class in pysal.pysal.explore.esda
         """
         return _bivariate_handler(df, x, y=y, w=w, inplace=inplace,
                                   pvalue = pvalue, outvals = outvals,
@@ -1257,14 +1257,14 @@ class Moran_Local_Rate(Moran_Local):
     >>> f = ps.open(ps.examples.get_path("sids2.dbf"))
     >>> e = np.array(f.by_col('SID79'))
     >>> b = np.array(f.by_col('BIR79'))
-    >>> lm = ps.esda.moran.Moran_Local_Rate(e, b, w, \
+    >>> lm = ps.pysal.explore.esda.moran.Moran_Local_Rate(e, b, w, \
                                                transformation = "r", \
                                                permutations = 99)
     >>> lm.q[:10]
     array([2, 4, 3, 1, 2, 1, 1, 4, 2, 4])
     >>> lm.p_z_sim[0]
     0.39319552026912641
-    >>> lm = ps.esda.moran.Moran_Local_Rate(e, b, w, \
+    >>> lm = ps.pysal.explore.esda.moran.Moran_Local_Rate(e, b, w, \
                                                transformation = "r", \
                                                permutations = 99, \
                                                geoda_quads=True)
@@ -1331,7 +1331,7 @@ class Moran_Local_Rate(Moran_Local):
 
         See Also
         ---------
-        For further documentation, refer to the Moran_Local_Rate class in pysal.esda
+        For further documentation, refer to the Moran_Local_Rate class in pysal.pysal.explore.esda
         """
         if not inplace:
             new = df.copy()

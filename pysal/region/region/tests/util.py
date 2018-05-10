@@ -1,5 +1,5 @@
 import networkx as nx
-import libpysal.api as ps_api
+import pysal.lib.api as ps_api
 
 
 def compare_region_lists(actual, desired):

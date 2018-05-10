@@ -317,7 +317,7 @@ class MaxPRegionsExact:
 
         Parameters
         ----------
-        w : libpysal.weights.W
+        w : pysal.lib.weights.W
             W object representing the areas' contiguity relation.
         attr : :class:`numpy.ndarray`
             See the corresponding argument in

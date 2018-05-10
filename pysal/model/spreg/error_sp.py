@@ -9,7 +9,7 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, \
 import numpy as np
 from numpy import linalg as la
 import ols as OLS
-from libpysal.api import lag_spatial
+from pysal.lib.api import lag_spatial
 from utils import power_expansion, set_endog, iter_msg, sp_att
 from utils import get_A1_hom, get_A2_hom, get_A1_het, optim_moments, get_spFilter, get_lags, _moments2eqs
 from utils import spdot, RegressionPropsY, set_warn
@@ -69,7 +69,7 @@ class BaseGM_Error(RegressionPropsY):
     Examples
     --------
 
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import numpy as np
     >>> dbf = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> y = np.array([dbf.by_col('HOVAL')]).T
@@ -197,7 +197,7 @@ class GM_Error(BaseGM_Error):
     data we read into arrays that ``spreg`` understands and ``pysal`` to
     perform all the analysis.
 
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import numpy as np
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
@@ -355,7 +355,7 @@ class BaseGM_Endog_Error(RegressionPropsY):
     Examples
     --------
 
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import numpy as np
     >>> dbf = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> y = np.array([dbf.by_col('CRIME')]).T
@@ -512,7 +512,7 @@ class GM_Endog_Error(BaseGM_Endog_Error):
     data we read into arrays that ``spreg`` understands and ``pysal`` to
     perform all the analysis.
 
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> import numpy as np
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
@@ -692,7 +692,7 @@ class BaseGM_Combo(BaseGM_Endog_Error):
     --------
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
@@ -875,7 +875,7 @@ class GM_Combo(BaseGM_Combo):
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import libpysal.api as lps
+    >>> import pysal.lib.api as lps
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
     This is the DBF associated with the Columbus shapefile.  Note that
@@ -1049,7 +1049,7 @@ def _test():
 if __name__ == '__main__':
 
     _test()
-    import libpysal.api as lps
+    import pysal.lib.api as lps
     import numpy as np
     dbf = lps.open(lps.get_path('columbus.dbf'), 'r')
     y = np.array([dbf.by_col('HOVAL')]).T
