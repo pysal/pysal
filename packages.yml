@@ -6,12 +6,14 @@ explore:
 dynamics:
   giddy
 viz:
-  splot
-  mapclassify
   legendgram
+  mapclassify
+  splot
 region:
   region
 model:
   gwr
+  spglm
+  spint
   spreg
   spvcm
