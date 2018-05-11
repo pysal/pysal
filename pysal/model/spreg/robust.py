@@ -5,8 +5,8 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, \
 import numpy as np
 import numpy.linalg as la
 from pysal.lib.api import lag_spatial
-from utils import spdot, spbroadcast
-from user_output import check_constant
+from .utils import spdot, spbroadcast
+from .user_output import check_constant
 
 
 def robust_vm(reg, gwk=None, sig2n_k=False):

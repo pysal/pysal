@@ -7,12 +7,12 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.
 import pysal.lib.api as lps
 import numpy as np
 import multiprocessing as mp
-import regimes as REGI
-import user_output as USER
-import summary_output as SUMMARY
-import diagnostics as DIAG
-from utils import set_warn
-from ml_error import BaseML_Error
+from . import regimes as REGI
+from . import user_output as USER
+from . import summary_output as SUMMARY
+from . import diagnostics as DIAG
+from .utils import set_warn
+from .ml_error import BaseML_Error
 from platform import system
 
 __all__ = ["ML_Error_Regimes"]
@@ -300,7 +300,7 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
                 self._error_regimes_multi(y, x, regimes, w, cores,
                                           method, epsilon, cols2regi, vm, name_x, spat_diag)
             else:
-                raise Exception, "All coefficients must vary accross regimes if regime_err_sep = True."
+                raise Exception("All coefficients must vary accross regimes if regime_err_sep = True.")
         else:
             regimes_att = {}
             regimes_att['x'] = x_constant
@@ -456,4 +456,4 @@ if __name__ == "__main__":
     mlerror = ML_Error_Regimes(y, x, regimes, w=w, method='full', name_y=y_name,
                                name_x=x_names, name_w=w_name, name_ds=ds_name, regime_err_sep=False,
                                name_regimes="North")
-    print mlerror.summary
+    print(mlerror.summary)

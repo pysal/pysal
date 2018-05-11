@@ -4,13 +4,13 @@ Ordinary Least Squares regression with regimes.
 
 __author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.edu, Daniel Arribas-Bel darribas@asu.edu"
 
-import regimes as REGI
-import user_output as USER
+from . import regimes as REGI
+from . import user_output as USER
 import multiprocessing as mp
-from ols import BaseOLS
-from utils import set_warn, spbroadcast, RegressionProps_basic, RegressionPropsY, spdot
-from robust import hac_multi
-import summary_output as SUMMARY
+from .ols import BaseOLS
+from .utils import set_warn, spbroadcast, RegressionProps_basic, RegressionPropsY, spdot
+from .robust import hac_multi
+from . import summary_output as SUMMARY
 import numpy as np
 from platform import system
 import scipy.sparse as SP
@@ -538,4 +538,4 @@ if __name__ == '__main__':
     w.transform = 'r'
     olsr = OLS_Regimes(y, x, regimes, w=w, constant_regi='many', nonspat_diag=False, spat_diag=False, name_y=y_var, name_x=['INC', 'HOVAL'],
                        name_ds='columbus', name_regimes=r_var, name_w='columbus.gal', regime_err_sep=True, cols2regi=[True, True], sig2n_k=True, robust='white')
-    print olsr.summary
+    print(olsr.summary)

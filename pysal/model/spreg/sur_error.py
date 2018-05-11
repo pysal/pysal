@@ -12,19 +12,19 @@ import numpy.linalg as la
 #import scipy.stats as stats
 from scipy import stats
 stats.chisqprob = lambda chisq, df: stats.chi2.sf(chisq, df)
-import summary_output as SUMMARY
-import user_output as USER
+from . import summary_output as SUMMARY
+from . import user_output as USER
 from scipy.sparse.linalg import splu as SuperLU
 from scipy.optimize import minimize_scalar, minimize
 from scipy import sparse as sp
 
-from ml_error import err_c_loglik_sp
-from sur_utils import sur_dictxy,sur_corr,sur_dict2mat,\
+from .ml_error import err_c_loglik_sp
+from .sur_utils import sur_dictxy,sur_corr,sur_dict2mat,\
                sur_crossprod,sur_est,sur_resids,filter_dict,\
                check_k
-from sur import BaseSUR
-from diagnostics_sur import sur_setp, lam_setp, sur_chow
-from regimes import buildR,wald_test
+from .sur import BaseSUR
+from .diagnostics_sur import sur_setp, lam_setp, sur_chow
+from .regimes import buildR,wald_test
 
 __all__ = ["BaseSURerrorML","SURerrorML"]
 
@@ -77,7 +77,7 @@ class BaseSURerrorML():
         # setting up constants
         self.n = w.n
         self.n2 = self.n / 2.0
-        self.n_eq = len(bigy.keys())
+        self.n_eq = len(list(bigy.keys()))
         WS = w.sparse
         I = sp.identity(self.n)
         # variables
@@ -538,7 +538,7 @@ if __name__ == '__main__':
     _test()
     import numpy as np
     import pysal.lib.api as lps
-    from sur_utils import sur_dictxy,sur_dictZ
+    from .sur_utils import sur_dictxy,sur_dictZ
 
     db = lps.open(lps.get_path('NAT.dbf'), 'r')
     y_var = ['HR80','HR90']

@@ -11,12 +11,12 @@ import numpy.linalg as la
 from scipy import sparse as sp
 from scipy.sparse.linalg import splu as SuperLU
 import pysal.lib.api as lps
-from utils import RegressionPropsY, RegressionPropsVM, inverse_prod
-from sputils import spdot, spfill_diagonal, spinv, spbroadcast
-import diagnostics as DIAG
-import user_output as USER
-import summary_output as SUMMARY
-from w_utils import symmetrize
+from .utils import RegressionPropsY, RegressionPropsVM, inverse_prod
+from .sputils import spdot, spfill_diagonal, spinv, spbroadcast
+from . import diagnostics as DIAG
+from . import user_output as USER
+from . import summary_output as SUMMARY
+from .w_utils import symmetrize
 try:
     from scipy.optimize import minimize_scalar
     minimize_scalar_available = True
@@ -223,7 +223,7 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
                                       tol=epsilon)
         else:
             # program will crash, need to catch
-            print("{0} is an unsupported method".format(methodML))
+            print(("{0} is an unsupported method".format(methodML)))
             self = None
             return
 

@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.linalg as scla
 from ...utils import splogdet
-from pysal.spreg.utils import spdot
+from pysal.model.spreg.utils import spdot
 
 def logp_rho_prec(state, val):
     """

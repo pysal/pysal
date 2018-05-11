@@ -1,10 +1,10 @@
 import numpy as np
 import copy
 import numpy.linalg as la
-import summary_output as SUMMARY
-import robust as ROBUST
-import user_output as USER
-from utils import spdot, sphstack, RegressionPropsY, RegressionPropsVM
+from . import summary_output as SUMMARY
+from . import robust as ROBUST
+from . import user_output as USER
+from .utils import spdot, sphstack, RegressionPropsY, RegressionPropsVM
 
 __author__ = "Luc Anselin luc.anselin@asu.edu, David C. Folch david.folch@asu.edu, Jing Yao jingyao@asu.edu"
 __all__ = ["TSLS"]
@@ -135,9 +135,9 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
                  robust=None, gwk=None, sig2n_k=False):
 
         if issubclass(type(q), np.ndarray) and issubclass(type(h), np.ndarray):
-            raise Exception, "Please do not provide 'q' and 'h' together"
+            raise Exception("Please do not provide 'q' and 'h' together")
         if q is None and h is None:
-            raise Exception, "Please provide either 'q' or 'h'"
+            raise Exception("Please provide either 'q' or 'h'")
 
         self.y = y
         self.n = y.shape[0]
@@ -485,4 +485,4 @@ if __name__ == '__main__':
     w.transform = 'r'
     tsls = TSLS(y, x, yd, q, w=w, spat_diag=True, name_y=y_var, name_x=x_var,
                 name_yend=yd_var, name_q=q_var, name_ds='columbus', name_w='columbus.gal')
-    print tsls.summary
+    print(tsls.summary)

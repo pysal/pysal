@@ -8,11 +8,11 @@ __author__= "Luc Anselin lanselin@gmail.com,    \
 
 import numpy as np
 import pysal.lib.api as lps
-import summary_output as SUMMARY
-import user_output as USER
-from sur import BaseThreeSLS
-from diagnostics_sur import sur_setp, sur_chow, sur_joinrho
-from sur_utils import check_k
+from . import summary_output as SUMMARY
+from . import user_output as USER
+from .sur import BaseThreeSLS
+from .diagnostics_sur import sur_setp, sur_chow, sur_joinrho
+from .sur_utils import check_k
 
 __all__ = ["SURlagIV"]
 
@@ -179,16 +179,16 @@ class SURlagIV(BaseThreeSLS):
                  name_bigy=None,name_bigX=None,name_bigyend=None,\
                  name_bigq=None,name_ds=None,name_w=None):
         if w == None:
-            raise Exception, "Spatial weights required for SUR-Lag"
+            raise Exception("Spatial weights required for SUR-Lag")
         self.w = w
         WS = w.sparse
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_w = USER.set_name_w(name_w, w)
         if bigyend and not(bigq):
-            raise Exception, "Instruments needed when endogenous variables"
+            raise Exception("Instruments needed when endogenous variables")
         #initialize
         self.bigy = bigy
-        self.n_eq = len(self.bigy.keys())
+        self.n_eq = len(list(self.bigy.keys()))
         if name_bigy:
             self.name_bigy = name_bigy
         else: # need to construct y names
@@ -316,7 +316,7 @@ class SURlagIV(BaseThreeSLS):
                     self.name_bigq[r] = wxnames[r]
 
         else:
-            raise Exception, "Lag order must be 1 or higher"
+            raise Exception("Lag order must be 1 or higher")
             
         BaseThreeSLS.__init__(self,bigy=self.bigy,bigX=self.bigX,bigyend=self.bigyend,\
             bigq=self.bigq)
@@ -351,7 +351,7 @@ if __name__ == '__main__':
     _test()
     import numpy as np
     import pysal.lib.api as lps
-    from sur_utils import sur_dictxy
+    from .sur_utils import sur_dictxy
 
     db = lps.open(lps.get_path('NAT.dbf'), 'r')
     w = lps.queen_from_shapefile(lps.get_path("NAT.shp"))
@@ -363,4 +363,4 @@ if __name__ == '__main__':
 
     reg = SURlagIV(bigy0,bigX0,w=w,name_bigy=bigyvars0,name_bigX=bigXvars0,\
                name_ds="NAT",name_w="nat_queen",nonspat_diag=True,spat_diag=True)
-    print reg.summary
+    print(reg.summary)

@@ -9,15 +9,15 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, Daniel Arribas-Bel darribas@asu.e
 from scipy import sparse as SP
 import numpy as np
 from numpy import linalg as la
-import ols as OLS
+from . import ols as OLS
 from pysal.lib.api import lag_spatial
-from utils import power_expansion, set_endog, iter_msg, sp_att
-from utils import get_A1_hom, get_A2_hom, get_A1_het, optim_moments
-from utils import get_spFilter, get_lags, _moments2eqs
-from utils import spdot, RegressionPropsY, set_warn
-import twosls as TSLS
-import user_output as USER
-import summary_output as SUMMARY
+from .utils import power_expansion, set_endog, iter_msg, sp_att
+from .utils import get_A1_hom, get_A2_hom, get_A1_het, optim_moments
+from .utils import get_spFilter, get_lags, _moments2eqs
+from .utils import spdot, RegressionPropsY, set_warn
+from . import twosls as TSLS
+from . import user_output as USER
+from . import summary_output as SUMMARY
 
 __all__ = ["GM_Error_Hom", "GM_Endog_Error_Hom", "GM_Combo_Hom"]
 

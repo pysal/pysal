@@ -9,11 +9,11 @@ __author__= "Luc Anselin lanselin@gmail.com,    \
 import numpy as np
 import numpy.linalg as la
 import scipy.stats as stats
-import summary_output as SUMMARY
-import user_output as USER
-from sur_utils import sur_dict2mat,sur_mat2dict,sur_corr,\
+from . import summary_output as SUMMARY
+from . import user_output as USER
+from .sur_utils import sur_dict2mat,sur_mat2dict,sur_corr,\
                       sur_crossprod,sur_est,sur_resids,check_k
-from diagnostics_sur import sur_setp,sur_lrtest,sur_lmtest,surLMe,sur_chow
+from .diagnostics_sur import sur_setp,sur_lrtest,sur_lmtest,surLMe,sur_chow
 
 
 __all__ = ['SUR','ThreeSLS']
@@ -73,7 +73,7 @@ class BaseSUR():
         # setting up the cross-products
         self.bigy = bigy
         self.bigX = bigX
-        self.n_eq = len(bigy.keys())
+        self.n_eq = len(list(bigy.keys()))
         self.n = bigy[0].shape[0]
         self.bigK = np.zeros((self.n_eq,1),dtype=np.int_)
         for r in range(self.n_eq):
@@ -103,7 +103,7 @@ class BaseSUR():
                 resids = sur_resids(self.bigy,self.bigX,self.bSUR)
                 det1 = la.slogdet(self.sig)[1]
                 if verbose:
-                    print (n_iter,det0,det1)
+                    print((n_iter,det0,det1))
             self.bigE = sur_resids(self.bigy,self.bigX,self.bSUR)
             self.ldetS1 = det1
             self.niter = n_iter
@@ -358,7 +358,7 @@ class SUR(BaseSUR):
         #LM test on spatial error autocorrelation
         if spat_diag:
             if not w:
-                 raise Exception, "Error: spatial weights needed"
+                 raise Exception("Error: spatial weights needed")
             WS = w.sparse
             self.lmEtest = surLMe(self.n_eq,WS,self.bigE,self.sig)
         else:
@@ -419,7 +419,7 @@ class BaseThreeSLS():
     def __init__(self,bigy,bigX,bigyend,bigq):
         # setting up the cross-products
         self.bigy = bigy
-        self.n_eq = len(bigy.keys())
+        self.n_eq = len(list(bigy.keys()))
         self.n = bigy[0].shape[0]
         # dictionary with exog and endog, Z
         self.bigZ = {}
@@ -439,7 +439,7 @@ class BaseThreeSLS():
             try:
                 HHi = la.inv(np.dot(bigH[r].T,bigH[r]))
             except:
-                raise Exception, "ERROR: singular cross product matrix, check instruments"
+                raise Exception("ERROR: singular cross product matrix, check instruments")
             Hye = np.dot(bigH[r].T,bigyend[r])
             yp = np.dot(bigH[r],np.dot(HHi,Hye))
             bigZhat[r] = np.hstack((bigX[r],yp))
@@ -670,7 +670,7 @@ if __name__ == '__main__':
     _test()
     import numpy as np
     import pysal.lib.api as lps
-    from sur_utils import sur_dictxy,sur_dictZ
+    from .sur_utils import sur_dictxy,sur_dictZ
 
     db = lps.open(lps.get_path('NAT.dbf'), 'r')
     y_var = ['HR80','HR90']
@@ -682,7 +682,7 @@ if __name__ == '__main__':
     bigy0,bigX0,bigyvars0,bigXvars0 = sur_dictxy(db,y_var,x_var)
     reg0 = SUR(bigy0,bigX0,w=w,name_bigy=bigyvars0,name_bigX=bigXvars0,\
           spat_diag=True,name_ds="nat")
-    print reg0.summary
+    print(reg0.summary)
     """
     #Example 3SLS
     yend_var = [['RD80'],['RD90']]

@@ -1,6 +1,6 @@
 import numpy as np
-from pysal.spreg.utils import sphstack
-from pysal.spreg.diagnostics import constant_check
+from pysal.model.spreg.utils import sphstack
+from pysal.model.spreg.diagnostics import constant_check
 from warnings import warn as Warn
 
 def weights(W,M, transform):

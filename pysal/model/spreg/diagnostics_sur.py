@@ -9,8 +9,8 @@ __author__= "Luc Anselin lanselin@gmail.com,    \
 import numpy as np
 import scipy.stats as stats
 import numpy.linalg as la
-from sur_utils import sur_dict2mat,sur_mat2dict,sur_corr
-from regimes import buildR1var,wald_test
+from .sur_utils import sur_dict2mat,sur_mat2dict,sur_corr
+from .regimes import buildR1var,wald_test
 
 
 __all__ = ['sur_setp','sur_lrtest','sur_lmtest','lam_setp','surLMe']
@@ -32,7 +32,7 @@ def sur_setp(bigB,varb):
 
     '''
     vvb = varb.diagonal()
-    n_eq = len(bigB.keys())
+    n_eq = len(list(bigB.keys()))
     bigK = np.zeros((n_eq,1),dtype=np.int_)
     for r in range(n_eq):
         bigK[r] = bigB[r].shape[0]

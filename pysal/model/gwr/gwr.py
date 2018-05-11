@@ -11,11 +11,11 @@ import numpy.linalg as la
 from scipy.stats import t
 from scipy.special import factorial
 from itertools import combinations as combo
-import pysal.spreg.user_output as USER
-from spglm.family import Gaussian, Binomial, Poisson
-from spglm.glm import GLM, GLMResults
-from spglm.iwls import iwls,_compute_betas_gwr
-from spglm.utils import cache_readonly
+import pysal.model.spreg.user_output as USER
+from pysal.model.spglm.family import Gaussian, Binomial, Poisson
+from pysal.model.spglm.glm import GLM, GLMResults
+from pysal.model.spglm.iwls import iwls,_compute_betas_gwr
+from pysal.model.spglm.utils import cache_readonly
 from .diagnostics import get_AIC, get_AICc, get_BIC, corr
 from .kernels import *
 
@@ -347,7 +347,7 @@ class GWR(GLM):
         else:
             self.P = P
         self.W = self._build_W(self.fixed, self.kernel, self.coords, self.bw, points)
-        gwr = self.fit(**fit_params)
+        pysal.model.gwr= self.fit(**fit_params)
 
         return gwr
 
@@ -1041,7 +1041,7 @@ class GWRResults(GLMResults):
         ----------
         selector        : sel_bw object
                           should be the sel_bw object used to select a bandwidth
-                          for the gwr model that produced the surfaces that are
+                          for the pysal.model.gwrmodel that produced the surfaces that are
                           being tested for spatial variation
         
         n_iters         : int

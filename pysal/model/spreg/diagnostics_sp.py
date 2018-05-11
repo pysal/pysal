@@ -3,7 +3,7 @@ Spatial diagnostics module
 """
 __author__ = "Luc Anselin luc.anselin@asu.edu, Daniel Arribas-Bel darribas@asu.edu"
 
-from utils import spdot
+from .utils import spdot
 #from scipy.stats.stats import chisqprob
 from scipy import stats
 #stats.chisqprob = lambda chisq, df: stats.chi2.sf(chisq, df)
@@ -394,11 +394,11 @@ class AKtest:
             self.mi = get_mI(iv, w, cache)
             self.ak, self.p = lmErr(iv, w, cache)
         else:
-            print """\n
+            print("""\n
             Fix the optional argument 'case' to match the requirements:
                 * 'gen': General case (spatial lag + end. reg.)
                 * 'nosp': No spatial end. reg.
-            \n"""
+            \n""")
 
 
 class spDcache:

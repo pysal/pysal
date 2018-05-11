@@ -11,12 +11,12 @@ import numpy.linalg as la
 from scipy import sparse as sp
 from scipy.sparse.linalg import splu as SuperLU
 import pysal.lib.api as lps
-from utils import RegressionPropsY, RegressionPropsVM
-import diagnostics as DIAG
-import user_output as USER
-import summary_output as SUMMARY
-import regimes as REGI
-from w_utils import symmetrize
+from .utils import RegressionPropsY, RegressionPropsVM
+from . import diagnostics as DIAG
+from . import user_output as USER
+from . import summary_output as SUMMARY
+from . import regimes as REGI
+from .w_utils import symmetrize
 try:
     from scipy.optimize import minimize_scalar
     minimize_scalar_available = True

@@ -131,7 +131,7 @@ class VecMoran:
     >>> import numpy as np
     >>> np.random.seed(1)
     >>> from pysal_core.weights import DistanceBand
-    >>> from spint.vec_SA import VecMoran
+    >>> from pysal.model.spint.vec_SA import VecMoran
     >>> vecs = np.array([[1, 55, 60, 100, 500], 
     >>>                 [2, 60, 55, 105, 501], 
     >>>                 [3, 500, 55, 155, 500], 
@@ -289,14 +289,14 @@ class VecMoran:
     
     def __rand_vecs_A(self, focus):
         if focus.lower() == 'origin':
-            newOs = [np.random.permutation(self.o) for i in xrange(self.permutations)]
+            newOs = [np.random.permutation(self.o) for i in range(self.permutations)]
             sims = [np.hstack([np.arange(self.n).reshape((-1,1)), newO,
             self._newD(self.o, self.d, newO)]) for newO in newOs]
             Ws = [DistanceBand(newO, threshold=self.threshold, alpha=self.alpha, 
                 binary=self.binary, build_sp=self.build_sp, silent=self.silent)
                 for newO in newOs]
         elif focus.lower() == 'destination':
-            newDs = [np.random.permutation(self.d) for i in xrange(self.permutations)]
+            newDs = [np.random.permutation(self.d) for i in range(self.permutations)]
             sims = [np.hstack([np.arange(self.n).reshape((-1,1)),
                 self._newO(self.o, self.d, newD), newD]) for newD in newDs]
             Ws = [DistanceBand(newD, threshold=self.threshold, alpha=self.alpha, 
@@ -312,10 +312,10 @@ class VecMoran:
     def __rand_vecs_B(self, focus):
         if focus.lower() == 'origin':
             sims = [np.hstack([np.arange(self.n).reshape((-1,1)), self.o,
-                np.random.permutation(self.d)]) for i in xrange(self.permutations)]
+                np.random.permutation(self.d)]) for i in range(self.permutations)]
         elif focus.lower() == 'destination':
             sims = [np.hstack([np.arange(self.n).reshape((-1,1)),
-                np.random.permutation(self.o), self.d]) for i in xrange(self.permutations)]
+                np.random.permutation(self.o), self.d]) for i in range(self.permutations)]
         else:
             raise ValueError("Parameter 'focus' must take value of either 'origin' or 'destination.'")
         sims = [VecMoran(y, self.w, permutations=None) for y in sims]

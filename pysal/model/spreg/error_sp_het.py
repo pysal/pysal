@@ -10,12 +10,12 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, \
 
 import numpy as np
 import numpy.linalg as la
-import ols as OLS
-import user_output as USER
-import summary_output as SUMMARY
-import twosls as TSLS
-import utils as UTILS
-from utils import RegressionPropsY, spdot, set_endog, sphstack
+from . import ols as OLS
+from . import user_output as USER
+from . import summary_output as SUMMARY
+from . import twosls as TSLS
+from . import utils as UTILS
+from .utils import RegressionPropsY, spdot, set_endog, sphstack
 from scipy import sparse as SP
 from pysal.lib.api import lag_spatial
 
@@ -1251,7 +1251,7 @@ def get_vc_het(w, wA1, E):
     psi11 = aPatE * aPatE
     psi12 = aPatE * wPwtE
     psi22 = wPwtE * wPwtE
-    psi = map(np.sum, [psi11.diagonal(), psi12.diagonal(), psi22.diagonal()])
+    psi = list(map(np.sum, [psi11.diagonal(), psi12.diagonal(), psi22.diagonal()]))
     return np.array([[psi[0], psi[1]], [psi[1], psi[2]]]) / (2. * w.shape[0])
 
 

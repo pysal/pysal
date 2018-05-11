@@ -33,8 +33,8 @@ def spdot(a, b, array_out=True):
             if type(ab).__name__ == 'csc_matrix' or type(ab).__name__ == 'csr_matrix':
                 ab = ab.toarray()
     else:
-        raise Exception, "Invalid format for 'spdot' argument: %s and %s" % (
-            type(a).__name__, type(b).__name__)
+        raise Exception("Invalid format for 'spdot' argument: %s and %s" % (
+            type(a).__name__, type(b).__name__))
     return ab
 
 
@@ -69,8 +69,8 @@ def spmultiply(a, b, array_out=True):
             if type(ab).__name__ == 'csc_matrix' or type(ab).__name__ == 'csr_matrix':
                 ab = ab.toarray()
     else:
-        raise Exception, "Invalid format for 'spmultiply' argument: %s and %s" % (
-            type(a).__name__, type(b).__name__)
+        raise Exception("Invalid format for 'spmultiply' argument: %s and %s" % (
+            type(a).__name__, type(b).__name__))
     return ab
 
 
@@ -104,8 +104,8 @@ def sphstack(a, b, array_out=False):
             if type(ab).__name__ == 'csr_matrix':
                 ab = ab.toarray()
     else:
-        raise Exception, "Invalid format for 'sphstack' argument: %s and %s" % (
-            type(a).__name__, type(b).__name__)
+        raise Exception("Invalid format for 'sphstack' argument: %s and %s" % (
+            type(a).__name__, type(b).__name__))
     return ab
 
 
@@ -142,8 +142,8 @@ def spbroadcast(a, b, array_out=False):
             if type(ab).__name__ == 'csr_matrix':
                 ab = ab.toarray()
     else:
-        raise Exception, "Invalid format for 'spbroadcast' argument: %s and %s" % (
-            type(a).__name__, type(b).__name__)
+        raise Exception("Invalid format for 'spbroadcast' argument: %s and %s" % (
+            type(a).__name__, type(b).__name__))
     return ab
 
 

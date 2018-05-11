@@ -5,9 +5,9 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, David C. Folch david.folch@asu.ed
 import textwrap as TW
 import numpy as np
 import copy as COPY
-import diagnostics as diagnostics
-import diagnostics_tsls as diagnostics_tsls
-import diagnostics_sp as diagnostics_sp
+from . import diagnostics as diagnostics
+from . import diagnostics_tsls as diagnostics_tsls
+from . import diagnostics_sp as diagnostics_sp
 import pysal.lib.api as lps
 import scipy
 from scipy.sparse.csr import csr_matrix
@@ -822,7 +822,7 @@ def summary_multi(reg, multireg, vm, instruments, short_intro=False, nonspat_dia
             summary += mreg.__summary['summary_other_mid']
         except:
             pass
-        if m == multireg.keys()[-1]:
+        if m == list(multireg.keys())[-1]:
             try:
                 summary += reg.__summary['summary_other_mid']
             except:
@@ -836,7 +836,7 @@ def summary_multi(reg, multireg, vm, instruments, short_intro=False, nonspat_dia
             summary += summary_vm(mreg, instruments)
         if other_end:
             summary += mreg.__summary['summary_other_end']
-        if m == multireg.keys()[-1]:
+        if m == list(multireg.keys())[-1]:
             try:
                 summary += reg.__summary['summary_chow']
             except:
@@ -865,7 +865,7 @@ def summary_SUR(reg, short_intro=True):
     except:
         pass
     summary += "----------\n\n"
-    for m in reg.name_bigy.keys():
+    for m in list(reg.name_bigy.keys()):
         summary += summary_sur_mid(reg, m)
         #summary += mreg.__summary['summary_r2']
         #if nonspat_diag:
@@ -930,7 +930,7 @@ def _get_var_indices(reg, lambd=False):
             indices += [var_names.index(ind) for ind in name_reg]
     except:
         #indices = [0] + (np.argsort(var_names[1:last_v]) + 1).tolist()
-        indices = range(len(var_names[1:last_v])+1)
+        indices = list(range(len(var_names[1:last_v])+1))
     return var_names, indices
 
 
@@ -978,7 +978,7 @@ def summary_intro(reg, short, sur=False):  # extra space d
 def summary_sur_mid(reg, eq):
     strSummary = "SUMMARY OF EQUATION " + str(eq+1) + "\n"
     strSummary += "-" * (len(strSummary) - 1) + "\n"
-    n_var = int(reg.bigK[reg.name_bigy.keys().index(eq)])
+    n_var = int(reg.bigK[list(reg.name_bigy.keys()).index(eq)])
     strSummary += "%-20s:%12s                %-22s:%12d\n" % (
         'Dependent Variable', reg.name_bigy[eq], 'Number of Variables', n_var)
     strSummary += "%-20s:%12.4f                %-22s:%12d\n" % (
@@ -1022,7 +1022,7 @@ def summary_coefs_sur(reg, lambd=False):
     except:
         betas = reg.b3SLS
         inf = reg.tsls_inf
-    for eq in reg.name_bigy.keys():
+    for eq in list(reg.name_bigy.keys()):
         reg.__summary[eq] = {}
         strSummary = ""
         for i in range(len(reg.name_bigX[eq])):
@@ -1038,7 +1038,7 @@ def summary_coefs_sur(reg, lambd=False):
         except:
             pass 
         if lambd:
-            pos = reg.name_bigy.keys().index(eq)
+            pos = list(reg.name_bigy.keys()).index(eq)
             try:
                 strSummary += "%20s    %12.7f    %12.7f    %12.7f    %12.7f\n"   \
                     % ("lambda_"+str(eq+1), reg.lamsur[pos], reg.lamsetp[0][pos][0],\
@@ -1093,7 +1093,7 @@ def summary_coefs_instruments(reg, sur=None):
         name_q = reg.name_q
         name_yend = reg.name_yend
     else:
-        eq = reg.name_bigy.keys()[sur-1]
+        eq = list(reg.name_bigy.keys())[sur-1]
         name_q = reg.name_bigq[eq]
         name_yend = reg.name_bigyend[eq]
     insts = "Instruments: "
@@ -1387,7 +1387,7 @@ def summary_diag_sur(reg, nonspat_diag, spat_diag, tsls, lambd, rho=False):
             if nonspat_diag:
                 kx = len(reg.surchow)
                 if tsls:
-                    kx += -len(reg.name_bigyend[reg.name_bigyend.keys()[0]])
+                    kx += -len(reg.name_bigyend[list(reg.name_bigyend.keys())[0]])
                 names_chow = {}
                 for k in range(len(reg.surchow)):
                     names_chow[k] = ""

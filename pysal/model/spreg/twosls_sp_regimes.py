@@ -6,14 +6,14 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.
 
 import numpy as np
 import pysal.lib.api as lps
-import regimes as REGI
-import user_output as USER
-import summary_output as SUMMARY
+from . import regimes as REGI
+from . import user_output as USER
+from . import summary_output as SUMMARY
 import multiprocessing as mp
-from twosls_regimes import TSLS_Regimes, _optimal_weight
-from twosls import BaseTSLS
-from utils import set_endog, set_endog_sparse, sp_att, set_warn, sphstack, spdot
-from robust import hac_multi
+from .twosls_regimes import TSLS_Regimes, _optimal_weight
+from .twosls import BaseTSLS
+from .utils import set_endog, set_endog_sparse, sp_att, set_warn, sphstack, spdot
+from .robust import hac_multi
 from platform import system
 
 
@@ -460,7 +460,7 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
         self.regime_lag_sep = regime_lag_sep
         if regime_lag_sep == True:
             if not regime_err_sep:
-                raise Exception, "regime_err_sep must be True when regime_lag_sep=True."
+                raise Exception("regime_err_sep must be True when regime_lag_sep=True.")
             cols2regi += [True]
             w_i, regi_ids, warn = REGI.w_regimes(
                 w, regimes, self.regimes_set, transform=True, get_ids=True, min_n=len(cols2regi) + 1)
@@ -696,4 +696,4 @@ if __name__ == '__main__':
     w.transform = 'r'
     model = GM_Lag_Regimes(y, x, regimes, yend=yd, q=q, w=w, constant_regi='many', spat_diag=True, sig2n_k=False, lag_q=True, name_y=y_var,
                            name_x=x_var, name_yend=yd_var, name_q=q_var, name_regimes=r_var, name_ds='columbus', name_w='columbus.gal', regime_err_sep=True, robust='white')
-    print model.summary
+    print(model.summary)

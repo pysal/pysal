@@ -4,8 +4,8 @@ __author__ = "Taylor Oshan tayoshan@gmail.com"
 
 import numpy as np
 import numpy.linalg as la
-from pysal.spreg.utils import RegressionPropsY, spdot
-import pysal.spreg.user_output as USER
+from pysal.model.spreg.utils import RegressionPropsY, spdot
+import pysal.model.spreg.user_output as USER
 from .utils import cache_readonly
 from .base import LikelihoodModelResults
 from .iwls import iwls
@@ -63,7 +63,7 @@ class GLM(RegressionPropsY):
     Examples
     --------
     >>> import pysal.lib
-    >>> from spglm.glm import GLM
+    >>> from pysal.model.spglm.glm import GLM
     >>> db = pysal.lib.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
     >>> y = np.array(db.by_col("HOVAL"))
     >>> self.y = np.reshape(y, (49,1))
@@ -247,7 +247,7 @@ class GLMResults(LikelihoodModelResults):
     Examples
     --------
     >>> import pysal.lib
-    >>> from spglm.glm import GLM, GLMResults
+    >>> from pysal.model.spglm.glm import GLM, GLMResults
     >>> db = pysal.lib.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
     >>> y = np.array(db.by_col("HOVAL"))
     >>> self.y = np.reshape(y, (49,1))

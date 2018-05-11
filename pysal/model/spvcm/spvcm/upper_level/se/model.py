@@ -9,7 +9,7 @@ from ...both_levels.generic import Base_Generic
 from ...both_levels.generic.model import SAMPLERS as generic_parameters
 from ... import verify
 from ...utils import se_covariance, se_precision, ind_covariance, splogdet, chol_mvn
-from pysal.spreg.utils import spdot
+from pysal.model.spreg.utils import spdot
 
 
 

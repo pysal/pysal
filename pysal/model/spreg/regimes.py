@@ -7,7 +7,7 @@ from scipy import stats
 chisqprob = lambda chisq, df: stats.chi2.sf(chisq, df)
 
 import numpy.linalg as la
-from utils import spbroadcast
+from .utils import spbroadcast
 
 """
 Tools for different regimes procedure estimations
@@ -86,7 +86,7 @@ class Chow:
             else:
                 brange = []
                 for i in range(nr):
-                    brange.extend(range(i * (kr + 1), i * (kr + 1) + kr))
+                    brange.extend(list(range(i * (kr + 1), i * (kr + 1) + kr)))
                 betas = betas[brange, :]
         r_global = []
         regi = np.zeros((reg.kr, 2))
@@ -213,8 +213,8 @@ class Regimes_Frame:
             elif constant_regi == 'many':
                 cols2regi.insert(0, True)
             else:
-                raise Exception, "Invalid argument (%s) passed for 'constant_regi'. Please secify a valid term." % str(
-                    constant)
+                raise Exception("Invalid argument (%s) passed for 'constant_regi'. Please secify a valid term." % str(
+                    constant))
         try:
             x = regimeX_setup(x, regimes, cols2regi,
                               self.regimes_set, constant=constant_regi)
@@ -489,12 +489,12 @@ def w_regime(w, regi_ids, regi_i, transform=True, min_n=None):
     w_regi_i    : pysal W object
                   Subset of W for regime regi_i
     '''
-    w_ids = map(w.id_order.__getitem__, regi_ids)
+    w_ids = list(map(w.id_order.__getitem__, regi_ids))
     warn = None
     w_regi_i = lps.w_subset(w, w_ids, silent_island_warning=True)
     if min_n:
         if w_regi_i.n < min_n:
-            raise Exception, "There are less observations than variables in regime %s." % regi_i
+            raise Exception("There are less observations than variables in regime %s." % regi_i)
     if transform:
         w_regi_i.transform = w.get_transform()
     if w_regi_i.islands:
@@ -526,7 +526,7 @@ def w_regimes(w, regimes, regimes_set, transform=True, get_ids=None, min_n=None)
     '''
     regi_ids = dict((r, list(np.where(np.array(regimes) == r)[0]))
                     for r in regimes_set)
-    w_ids = dict((r, map(w.id_order.__getitem__, regi_ids[r]))
+    w_ids = dict((r, list(map(w.id_order.__getitem__, regi_ids[r])))
                  for r in regimes_set)
     w_regi_i = {}
     warn = None
@@ -535,7 +535,7 @@ def w_regimes(w, regimes, regimes_set, transform=True, get_ids=None, min_n=None)
                                              silent_island_warning=True)
         if min_n:
             if w_regi_i[r].n < min_n:
-                raise Exception, "There are less observations than variables in regime %s." % r
+                raise Exception("There are less observations than variables in regime %s." % r)
         if transform:
             w_regi_i[r].transform = w.get_transform()
         if w_regi_i[r].islands:
@@ -635,7 +635,7 @@ def check_cols2regi(constant_regi, cols2regi, x, yend=None, add_cons=True):
     else:
         cols2regi = regi_cons + cols2regi
     if len(cols2regi) - is_cons != tot_k:
-        raise Exception, "The lenght of list 'cols2regi' must be equal to the amount of variables (exogenous + endogenous) when not using cols2regi=='all'."
+        raise Exception("The lenght of list 'cols2regi' must be equal to the amount of variables (exogenous + endogenous) when not using cols2regi=='all'.")
     return cols2regi
 
 
@@ -684,7 +684,7 @@ if __name__ == '__main__':
     _test()
     import numpy as np
     import pysal.lib.api as lps
-    from ols_regimes import OLS_Regimes
+    from .ols_regimes import OLS_Regimes
     db = lps.open(lps.get_path('columbus.dbf'), 'r')
     y_var = 'CRIME'
     y = np.array([db.by_col(y_var)]).reshape(49, 1)
@@ -697,4 +697,4 @@ if __name__ == '__main__':
     olsr = OLS_Regimes(
         y, x, regimes, w=w, constant_regi='many', nonspat_diag=False, spat_diag=False,
         name_y=y_var, name_x=x_var, name_ds='columbus', name_regimes=r_var, name_w='columbus.gal')
-    print olsr.summary
+    print(olsr.summary)

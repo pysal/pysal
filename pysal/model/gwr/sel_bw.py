@@ -9,8 +9,8 @@ __author__ = "Taylor Oshan Tayoshan@gmail.com"
 import numpy as np
 from scipy.spatial.distance import pdist,squareform
 from scipy.optimize import minimize_scalar
-from spglm.family import Gaussian, Poisson, Binomial
-from spglm.iwls import iwls,_compute_betas_gwr
+from pysal.model.spglm.family import Gaussian, Poisson, Binomial
+from pysal.model.spglm.iwls import iwls,_compute_betas_gwr
 from .kernels import *
 from .gwr import GWR
 from .search import golden_section, equal_interval

@@ -10,9 +10,9 @@ from scipy.stats import norm
 from scipy import stats
 chisqprob = lambda chisq, df: stats.chi2.sf(chisq, df)
 import scipy.sparse as SP
-import user_output as USER
-import summary_output as SUMMARY
-from utils import spdot, spbroadcast
+from . import user_output as USER
+from . import summary_output as SUMMARY
+from .utils import spdot, spbroadcast
 
 __all__ = ["Probit"]
 
@@ -173,14 +173,14 @@ class BaseProbit(object):
             rs = {}
             for i in range(len(self.betas)):
                 rs[i] = (zStat[i], norm.sf(abs(zStat[i])) * 2)
-            self._cache['z_stat'] = rs.values()
+            self._cache['z_stat'] = list(rs.values())
         except KeyError:
             variance = self.vm.diagonal()
             zStat = self.betas.reshape(len(self.betas),) / np.sqrt(variance)
             rs = {}
             for i in range(len(self.betas)):
                 rs[i] = (zStat[i], norm.sf(abs(zStat[i])) * 2)
-            self._cache['z_stat'] = rs.values()
+            self._cache['z_stat'] = list(rs.values())
         return self._cache['z_stat']
 
     @z_stat.setter
@@ -221,14 +221,14 @@ class BaseProbit(object):
             rs = {}
             for i in range(len(self.slopes)):
                 rs[i] = (zStat[i], norm.sf(abs(zStat[i])) * 2)
-            self._cache['slopes_z_stat'] = rs.values()
+            self._cache['slopes_z_stat'] = list(rs.values())
         except KeyError:
             zStat = self.slopes.reshape(
                 len(self.slopes),) / self.slopes_std_err
             rs = {}
             for i in range(len(self.slopes)):
                 rs[i] = (zStat[i], norm.sf(abs(zStat[i])) * 2)
-            self._cache['slopes_z_stat'] = rs.values()
+            self._cache['slopes_z_stat'] = list(rs.values())
         return self._cache['slopes_z_stat']
 
     @slopes_z_stat.setter
@@ -897,7 +897,7 @@ def sp_tests(reg):
         # chi-square instead of bootstrap.
         ps = np.array([ps, chisqprob(ps, 1)])
     else:
-        raise Exception, "W matrix must be provided to calculate spatial tests."
+        raise Exception("W matrix must be provided to calculate spatial tests.")
     return LM_err, moran, ps
 
 
@@ -950,4 +950,4 @@ if __name__ == '__main__':
     probit1 = Probit(
         (y > 40).astype(float), x, w=w, name_x=var_x, name_y="CRIME",
         name_ds="Columbus", name_w="columbus.dbf")
-    print probit1.summary
+    print(probit1.summary)

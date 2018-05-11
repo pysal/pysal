@@ -8,11 +8,11 @@ import copy
 import numpy as np
 import pysal.lib.api as lps
 import numpy.linalg as la
-import twosls as TSLS
-import robust as ROBUST
-import user_output as USER
-import summary_output as SUMMARY
-from utils import get_lags, set_endog, sp_att, set_warn
+from . import twosls as TSLS
+from . import robust as ROBUST
+from . import user_output as USER
+from . import summary_output as SUMMARY
+from .utils import get_lags, set_endog, sp_att, set_warn
 
 __all__ = ["GM_Lag"]
 
@@ -524,4 +524,4 @@ if __name__ == '__main__':
     model = GM_Lag(
         y, x, yd, q, w=w, spat_diag=True, name_y=y_var, name_x=x_var,
         name_yend=yd_var, name_q=q_var, name_ds='columbus', name_w='columbus.gal')
-    print model.summary
+    print(model.summary)

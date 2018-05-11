@@ -12,7 +12,7 @@ from ... import verify
 from ... steps import Metropolis, Slice
 from ... import priors
 from ...utils import speigen_range, ind_covariance, chol_mvn
-from pysal.spreg.utils import spdot
+from pysal.model.spreg.utils import spdot
 
 SAMPLERS = ['Alphas', 'Betas', 'Sigma2', 'Tau2', 'Lambda', 'Rho']
 

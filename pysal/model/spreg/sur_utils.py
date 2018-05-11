@@ -44,7 +44,7 @@ def sur_dictxy(db,y_vars,x_vars,space_id=None,time_id=None):
         bigy_vars = dict((r,y_vars[r]) for r in range(n_eq))
         bigy = dict((r,np.resize(y[:,r],(n,1))) for r in range(n_eq))
         if not(len(x_vars) == n_eq):  #CHANGE into exception
-            print "Error: mismatch variable lists"
+            print("Error: mismatch variable lists")
         bigX = {}
         bigX_vars = {}
         for r in range(n_eq):
@@ -58,7 +58,7 @@ def sur_dictxy(db,y_vars,x_vars,space_id=None,time_id=None):
         return (bigy,bigX,bigy_vars,bigX_vars)
     elif (len(y_vars) == 1):  #splm format
         if not(time_id):   #CHANGE into exception
-            print "Error: time id must be specified"
+            print("Error: time id must be specified")
         y = np.array([db.by_col(name) for name in y_vars]).T
         bign = y.shape[0]
         tt = np.array([db.by_col(name) for name in time_id]).T
@@ -86,7 +86,7 @@ def sur_dictxy(db,y_vars,x_vars,space_id=None,time_id=None):
             bigX_vars[r] = bxvars
         return (bigy,bigX,bigy_vars,bigX_vars)
     else:
-        print "error message, but should never be here"
+        print("error message, but should never be here")
         
 
 def sur_dictZ(db,z_vars,form="spreg",const=False,space_id=None,time_id=None):
@@ -129,7 +129,7 @@ def sur_dictZ(db,z_vars,form="spreg",const=False,space_id=None,time_id=None):
     
     elif (form == "plm"):  #plm format
         if not(time_id):   #CHANGE into exception
-            raise Exception, "Error: time id must be specified for plm format"
+            raise Exception("Error: time id must be specified for plm format")
         tt = np.array([db.by_col(name) for name in time_id]).T
         bign = tt.shape[0]
         tt1 = set([val for sublist in tt.tolist() for val in sublist])
@@ -153,7 +153,7 @@ def sur_dictZ(db,z_vars,form="spreg",const=False,space_id=None,time_id=None):
             bigZ_names[r] = bzvars
         return (bigZ,bigZ_names)
     else:
-        raise Exception, "you should never be here"
+        raise Exception("you should never be here")
     
 
         
@@ -196,7 +196,7 @@ def sur_dict2mat(dicts):
     
     
     """
-    n_dicts = len(dicts.keys())
+    n_dicts = len(list(dicts.keys()))
     mat = np.vstack((dicts[t] for t in range(n_dicts)))
     return(mat)
     
@@ -243,7 +243,7 @@ def sur_crossprod(bigZ,bigy):
                      of Z_r'Z_s    
     '''
     bigZZ = {}
-    n_eq = len(bigy.keys())
+    n_eq = len(list(bigy.keys()))
     for r in range(n_eq):
         for t in range(n_eq):
             bigZZ[(r,t)] = np.dot(bigZ[r].T,bigZ[t])
@@ -314,7 +314,7 @@ def sur_resids(bigy,bigX,beta):
         bigE     : a n x n_eq matrix of vectors of residuals
     
     '''
-    n_eq = len(bigy.keys())
+    n_eq = len(list(bigy.keys()))
     bigE = np.hstack((bigy[r] - np.dot(bigX[r],beta[r])) for r in range(n_eq))
     return(bigE) 
     
@@ -337,8 +337,8 @@ def filter_dict(lam,bigZ,bigZlag):
     
     """
     n_eq = lam.shape[0]
-    if not(len(bigZ.keys()) == n_eq and len(bigZlag.keys()) == n_eq):
-        raise Exception, "Error: incompatible dimensions"
+    if not(len(list(bigZ.keys())) == n_eq and len(list(bigZlag.keys())) == n_eq):
+        raise Exception("Error: incompatible dimensions")
     Zfilt = {}
     for r in range(n_eq):
         lami = lam[r][0]

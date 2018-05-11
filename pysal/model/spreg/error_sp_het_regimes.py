@@ -5,14 +5,14 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.
 
 import numpy as np
 import multiprocessing as mp
-import user_output as USER
-import summary_output as SUMMARY
-import utils as UTILS
-import regimes as REGI
-from ols import BaseOLS
-from twosls import BaseTSLS
-from error_sp_het import BaseGM_Error_Het, BaseGM_Endog_Error_Het, get_psi_sigma, get_vc_het, get_vm_het, get_P_hat, get_a1a2, get_vc_het_tsls, get_Omega_GS2SLS
-from utils import RegressionPropsY, spdot, set_endog, sphstack, set_warn, sp_att
+from . import user_output as USER
+from . import summary_output as SUMMARY
+from . import utils as UTILS
+from . import regimes as REGI
+from .ols import BaseOLS
+from .twosls import BaseTSLS
+from .error_sp_het import BaseGM_Error_Het, BaseGM_Endog_Error_Het, get_psi_sigma, get_vc_het, get_vm_het, get_P_hat, get_a1a2, get_vc_het_tsls, get_Omega_GS2SLS
+from .utils import RegressionPropsY, spdot, set_endog, sphstack, set_warn, sp_att
 from scipy import sparse as SP
 from pysal.lib.api import lag_spatial
 from platform import system
@@ -314,7 +314,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                                           max_iter, epsilon, step1c,
                                           cols2regi, vm, name_x)
             else:
-                raise Exception, "All coefficients must vary accross regimes if regime_err_sep = True."
+                raise Exception("All coefficients must vary accross regimes if regime_err_sep = True.")
         else:
             self.x, self.name_x = REGI.Regimes_Frame.__init__(self, x_constant,
                                                               regimes, constant_regi=None, cols2regi=cols2regi, names=name_x)
@@ -799,7 +799,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
                                                 max_iter, epsilon, step1c, inv_method, cols2regi, vm,
                                                 name_x, name_yend, name_q, add_lag)
             else:
-                raise Exception, "All coefficients must vary accross regimes if regime_err_sep = True."
+                raise Exception("All coefficients must vary accross regimes if regime_err_sep = True.")
         else:
             x_constant = USER.check_constant(x)
             q, name_q = REGI.Regimes_Frame.__init__(self, q,
@@ -1359,13 +1359,13 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
 
         if regime_lag_sep == True:
             if regime_err_sep == False:
-                raise Exception, "For spatial combo models, if spatial lag is set by regimes (regime_lag_sep=True), spatial error must also be set by regimes (regime_err_sep=True)."
+                raise Exception("For spatial combo models, if spatial lag is set by regimes (regime_lag_sep=True), spatial error must also be set by regimes (regime_err_sep=True).")
             add_lag = [w_lags, lag_q]
         else:
             cols2regi += [False]
             add_lag = False
             if regime_err_sep == True:
-                raise Exception, "For spatial combo models, if spatial error is set by regimes (regime_err_sep=True), all coefficients including lambda (regime_lag_sep=True) must be set by regimes."
+                raise Exception("For spatial combo models, if spatial error is set by regimes (regime_err_sep=True), all coefficients including lambda (regime_lag_sep=True) must be set by regimes.")
             yend, q = set_endog(y, x, w, yend, q, w_lags, lag_q)
         name_yend.append(USER.set_name_yend_sp(self.name_y))
 

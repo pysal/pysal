@@ -1,12 +1,12 @@
 import numpy as np
-import regimes as REGI
-import user_output as USER
+from . import regimes as REGI
+from . import user_output as USER
 import multiprocessing as mp
 import scipy.sparse as SP
-from utils import sphstack, set_warn, RegressionProps_basic, spdot, sphstack
-from twosls import BaseTSLS
-from robust import hac_multi
-import summary_output as SUMMARY
+from .utils import sphstack, set_warn, RegressionProps_basic, spdot, sphstack
+from .twosls import BaseTSLS
+from .robust import hac_multi
+from . import summary_output as SUMMARY
 from platform import system
 
 """
@@ -512,4 +512,4 @@ if __name__ == '__main__':
                          name_yend=yd_var, name_q=q_var, name_regimes=r_var, cols2regi=[
                              False, True, True, True],
                          sig2n_k=False)
-    print tslsr.summary
+    print(tslsr.summary)

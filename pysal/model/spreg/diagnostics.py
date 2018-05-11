@@ -8,7 +8,7 @@ import pysal.lib.api as lps
 from pysal.lib.common import *
 import scipy.sparse as SP
 from math import sqrt
-from utils import spmultiply, sphstack, spmin, spmax
+from .utils import spmultiply, sphstack, spmin, spmax
 
 
 __all__ = [
@@ -142,7 +142,7 @@ def t_stat(reg, z_stat=False):
     vm = reg.vm         # (array) coefficients of variance matrix (k x k)
     betas = reg.betas   # (array) coefficients of the regressors (1 x k)
     variance = vm.diagonal()
-    tStat = betas[range(0, len(vm))].reshape(len(vm),) / np.sqrt(variance)
+    tStat = betas[list(range(0, len(vm)))].reshape(len(vm),) / np.sqrt(variance)
     ts_result = []
     for t in tStat:
         if z_stat:
@@ -911,7 +911,7 @@ def white(reg):
         # this is probably inefficient
         A = SP.lil_matrix((n, (k * (k + 1)) // 2))
     else:
-        raise Exception, "unknown X type, %s" % type(X).__name__
+        raise Exception("unknown X type, %s" % type(X).__name__)
     counter = 0
     for i in range(k):
         for j in range(i, k):
@@ -946,17 +946,17 @@ def white(reg):
         A = np.delete(A, omitcolumn, 1)
     elif type(A).__name__ == 'csc_matrix' or type(A).__name__ == 'csr_matrix':
         # this is probably inefficient
-        keepcolumn = range(k)
+        keepcolumn = list(range(k))
         for i in omitcolumn:
             keepcolumn.remove(i)
         A = A[:, keepcolumn]
     else:
-        raise Exception, "unknown A type, %s" % type(X).__name__
+        raise Exception("unknown A type, %s" % type(X).__name__)
     A = sphstack(np.ones((A.shape[0], 1)), A)   # add a constant back in
     n, k = A.shape
 
     # Conduct the auxiliary regression and calculate the statistic
-    import ols as OLS
+    from . import ols as OLS
     aux_reg = OLS.BaseOLS(e, A)
     aux_r2 = r2(aux_reg)
     wh = aux_r2 * n
@@ -1201,7 +1201,7 @@ def vif(reg):
         Z = X.copy()
         Z = np.delete(Z, j, 1)
         y = X[:, j]
-        import ols as OLS
+        from . import ols as OLS
         aux = OLS.BaseOLS(y, Z)
         mean_y = aux.mean_y
         utu = aux.utu
@@ -1327,7 +1327,7 @@ def likratiotest(reg0, reg1):
     try:
         likr = 2.0 * (reg1.logll - reg0.logll)
     except AttributeError:
-        raise Exception, "Missing or improper log-likelihoods in regression objects"
+        raise Exception("Missing or improper log-likelihoods in regression objects")
     if likr < 0.0:  # always enforces positive likelihood ratio
         likr = -likr
     pvalue = stats.chisqprob(likr, 1)

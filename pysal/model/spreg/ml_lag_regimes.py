@@ -6,13 +6,13 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.
 
 import pysal.lib.api as lps
 import numpy as np
-import regimes as REGI
-import user_output as USER
-import summary_output as SUMMARY
-import diagnostics as DIAG
+from . import regimes as REGI
+from . import user_output as USER
+from . import summary_output as SUMMARY
+from . import diagnostics as DIAG
 import multiprocessing as mp
-from ml_lag import BaseML_Lag
-from utils import set_warn
+from .ml_lag import BaseML_Lag
+from .utils import set_warn
 from platform import system
 
 __all__ = ["ML_Lag_Regimes"]
@@ -318,7 +318,7 @@ class ML_Lag_Regimes(BaseML_Lag, REGI.Regimes_Frame):
 
         if regime_lag_sep == True:
             if not (set(cols2regi) == set([True]) and constant_regi == 'many'):
-                raise Exception, "All variables must vary by regimes if regime_lag_sep = True."
+                raise Exception("All variables must vary by regimes if regime_lag_sep = True.")
             cols2regi += [True]
             w_i, regi_ids, warn = REGI.w_regimes(
                 w, regimes, self.regimes_set, transform=True, get_ids=True, min_n=len(cols2regi) + 1)
@@ -478,4 +478,4 @@ if __name__ == "__main__":
     mllag = ML_Lag_Regimes(y, x, regimes, w=w, method='full', name_y=y_name, name_x=x_names,
                            name_w=w_name, name_ds=ds_name, regime_lag_sep=True, constant_regi='many',
                            name_regimes="CITCOU")
-    print mllag.summary
+    print(mllag.summary)

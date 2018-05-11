@@ -4,10 +4,10 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, David C. Folch david.folch@asu.ed
 import numpy as np
 import copy as COPY
 import numpy.linalg as la
-import user_output as USER
-import summary_output as SUMMARY
-import robust as ROBUST
-from utils import spdot, sphstack, RegressionPropsY, RegressionPropsVM
+from . import user_output as USER
+from . import summary_output as SUMMARY
+from . import robust as ROBUST
+from .utils import spdot, sphstack, RegressionPropsY, RegressionPropsVM
 
 __all__ = ["OLS"]
 
@@ -467,4 +467,4 @@ if __name__ == '__main__':
     ols = OLS(
         y, x, w=w, nonspat_diag=True, spat_diag=True, name_y=y_var, name_x=x_var,
         name_ds='columbus', name_w='columbus.gal', robust='white', sig2n_k=True, moran=True)
-    print ols.summary
+    print(ols.summary)

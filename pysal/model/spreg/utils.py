@@ -14,7 +14,7 @@ from scipy.sparse import linalg as SPla
 import scipy.optimize as op
 import numpy.linalg as la
 from pysal.lib.api import lag_spatial
-from sputils import *
+from .sputils import *
 import copy
 
 
@@ -536,7 +536,7 @@ def inverse_prod(w, data, scalar, post_multiply=False, inv_method="power_exp", t
         else:
             inv_prod = spdot(matrix, data)
     else:
-        raise Exception, "Invalid method selected for inversion."
+        raise Exception("Invalid method selected for inversion.")
     return inv_prod
 
 
@@ -575,7 +575,7 @@ def power_expansion(w, data, scalar, post_multiply=False, threshold=0.0000000001
         test_old = test
         test = la.norm(increment)
         if test > test_old:
-            raise Exception, "power expansion will not converge, check model specification and that weight are less than 1"
+            raise Exception("power expansion will not converge, check model specification and that weight are less than 1")
         count += 1
     return running_total
 
@@ -596,7 +596,7 @@ def set_endog(y, x, w, yend, q, w_lags, lag_q):
         q = get_lags(w, x, w_lags)
         yend = yl
     else:
-        raise Exception, "invalid value passed to yend"
+        raise Exception("invalid value passed to yend")
     return yend, q
 
     lag = lag_spatial(w, x)
@@ -629,7 +629,7 @@ def set_endog_sparse(y, x, w, yend, q, w_lags, lag_q):
             q = sphstack(q, w * q)
         yend = yl
     else:
-        raise Exception, "invalid value passed to yend"
+        raise Exception("invalid value passed to yend")
     return yend, q
 
 
