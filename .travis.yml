@@ -8,9 +8,8 @@ python:
   - "3.6"
 
 env:
-  - PYSAL_PLUS=false
-  - PYSAL_PLUS=true
-  - MPLBACKEND="pdf"
+  - PYSAL_PLUS=false MPLBACKEND="pdf"
+  - PYSAL_PLUS=true MPLBACKEND="pdf"
 
 before_install:
   - wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
