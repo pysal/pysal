@@ -35,7 +35,7 @@ def setup_package():
     # get all file endings and copy whole file names without a file suffix
     # assumes nested directories are only down one level
     example_data_files = set()
-    for i in os.listdir("pysal/examples"):
+    for i in os.listdir("pysal/lib/examples"):
         if i.endswith(('py', 'pyc')):
             continue
         if not os.path.isdir("pysal/lib/examples/" + i):
