@@ -89,7 +89,7 @@ c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/ gwr / pysal\.model\.
 os.system(c)
 
 # replace all references to spvcm with pysal.model.spvcm
-c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/ spvcm / pysal\.model\.spvcm/g'"
+c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/ spvcm / pysal\.model\.spvcm /g'"
 os.system(c)
 
 
