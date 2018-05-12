@@ -1,0 +1,17 @@
+explore:
+  esda
+  pointpats
+dynamics:
+  giddy
+viz:
+  legendgram
+  mapclassify
+  splot
+region:
+  region
+model:
+  gwr
+  spglm
+  spint
+  spreg
+  spvcm
