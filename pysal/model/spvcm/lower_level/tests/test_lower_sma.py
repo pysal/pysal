@@ -1,4 +1,4 @@
-from spvcm import lower_level as lower
+from pysal.model.spvcmimport lower_level as lower
 from spvcm.tests.utils import Model_Mixin
 from spvcm.abstracts import Trace
 import unittest as ut

@@ -88,6 +88,11 @@ os.system(c)
 c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/ gwr / pysal\.model\.gwr/g'"
 os.system(c)
 
+# replace all references to spvcm with pysal.model.spvcm
+c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/ spvcm / pysal\.model\.spvcm/g'"
+os.system(c)
+
+
 
 # rewrite pysal/__init__.py at the end
 
@@ -101,6 +106,7 @@ init_lines = [
     ". model import spreg",
     ". model import spglm",
     ". model import spint",
+    ". model import spvcm",
     ". model import gwr"]
 
 init_lines = [ "from "+line for line in init_lines]

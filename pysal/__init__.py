@@ -7,4 +7,5 @@ from . dynamics import giddy
 from . model import spreg
 from . model import spglm
 from . model import spint
+from . model import spvcm
 from . model import gwr
