@@ -2,10 +2,7 @@
 
 from setuptools import setup, find_packages
 
-try:
-    from distutils.command.build_py import build_py_2to3 as build_py
-except ImportError:
-    from distutils.command.build_py import build_py
+from distutils.command.build_py import build_py
 
 import os
 
@@ -41,7 +38,7 @@ def setup_package():
     for i in os.listdir("pysal/examples"):
         if i.endswith(('py', 'pyc')):
             continue
-        if not os.path.isdir("pysal/examples/" + i):
+        if not os.path.isdir("pysal/lib/examples/" + i):
             if "." in i:
                 glob_name = "examples/*." + i.split(".")[-1]
             else:
@@ -85,10 +82,9 @@ def setup_package():
             'Topic :: Scientific/Engineering :: GIS',
             'License :: OSI Approved :: BSD License',
             'Programming Language :: Python',
-            'Programming Language :: Python :: 3.4'
+            'Programming Language :: Python :: 3.5',
+            'Programming Language :: Python :: 3.6'
         ],
-        packages=find_packages(exclude=[".meta", "*.meta.*", "meta.*",
-                                        "meta"]),
         package_data={'pysal': list(example_data_files)},
         install_requires=install_reqs,
         extras_require=extras_reqs,
