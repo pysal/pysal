@@ -748,7 +748,7 @@ class Trace(object):
     @classmethod
     def from_pymc3(cls, pymc3trace):
         """
-        Convert a PyMC3 trace to a pysal.model.spvcmtrace
+        Convert a PyMC3 trace to a pysal.model.spvcm trace
         """
         try:
             from pymc3 import trace_to_dataframe

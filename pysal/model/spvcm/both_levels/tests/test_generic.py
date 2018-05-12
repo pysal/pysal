@@ -1,5 +1,5 @@
-from pysal.model.spvcmimport both_levels as M
-from pysal.model.spvcmimport utils
+from pysal.model.spvcm import both_levels as M
+from pysal.model.spvcm import utils
 from spvcm._constants import RTOL, ATOL, TEST_SEED, CLASSTYPES
 from spvcm.tests.utils import Model_Mixin, run_with_seed
 from spvcm.abstracts import Sampler_Mixin, Trace
