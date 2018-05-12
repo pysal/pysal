@@ -141,4 +141,4 @@ if __name__ == '__main__':
     f = open('test.foo', 'r')
     s2 = f.read()
     f.close()
-    print(s == s2)
+    print((s == s2))

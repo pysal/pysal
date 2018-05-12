@@ -965,7 +965,7 @@ def remap_ids(w, old2new, id_order=[]):
         raise Exception("w must be a spatial weights object")
     new_neigh = {}
     new_weights = {}
-    for key, value in w.neighbors.items():
+    for key, value in list(w.neighbors.items()):
         new_values = [old2new[i] for i in value]
         new_key = old2new[key]
         new_neigh[new_key] = new_values

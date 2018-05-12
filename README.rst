@@ -28,20 +28,15 @@ applications for spatial analysis.
 Counties 1990.*
 
 
-PySAL modules
-=============
+PySAL Components
+================
 
-* pysal.cg  Computational geometry
-* pysal.contrib  Contributed modules
-* pysal.core  Core data structures and IO
-* pysal.esda  Exploratory spatial data analysis
-* pysal.examples  Data sets
-* pysal.inequality  Spatial inequality analysis
-* pysal.network  Spatial analysis on networks
-* pysal.region  Spatially constrained clustering
-* pysal.spatial_dynamics  Spatial dynamics
-* pysal.spreg  Spatial econometrics and diagnostics
-* pysal.weights  Spatial weights
+* Explore
+* Viz
+* Model
+* Dynamics
+* lib
+
 
 
 Installation
@@ -55,6 +50,12 @@ PySAL can be installed using pip:
 
 PySAL is also available through
 `Anaconda <https://www.continuum.io/downloads>`__ and `Enthought Canopy <https://www.enthought.com/products/canopy/>`__.
+
+As of version 2.0.0 PySAL has shifted to Python 3.
+
+Users who need an older stable version of PySAL that is Python 2 compatible can install version 1.14.3 with:
+
+```pip install pysal==1.14.3```
 
 Documentation
 =============
@@ -70,6 +71,9 @@ For help on using PySAL, check out the following resources:
 
 Development
 ===========
+
+
+As of version 2.0.0 PySAL has been refactored to be a meta-package. Changes to the code for any of the subpackages should be directed at the respective upstream repository, and not made here. Infrastructural changes for the meta-package will be considered.
 
 PySAL development is hosted on github_.
 

@@ -223,7 +223,7 @@ if __name__ == '__main__':
         print(shape1)
         if shape2:
             assert shape0.equals(shape2)
-            print(shape0.equals(shape2))
+            print((shape0.equals(shape2)))
         else:
             print("Skip")
 

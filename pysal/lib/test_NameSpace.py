@@ -39,7 +39,7 @@ class TestNameSpace(unittest.TestCase):
             self.assertTrue(item in current_namespace)
         for item in current_namespace:
             if item not in namespace_v1_0 and not item.startswith('__'):
-                print(item, "added to name space")
+                print((item, "added to name space"))
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestNameSpace)

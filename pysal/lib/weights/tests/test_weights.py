@@ -109,10 +109,10 @@ class TestW(unittest.TestCase):
                      4: [8, 0, 2, 6], 5: [1, 3, 7], 6: [4, 0, 8], 7: [3, 1, 5],
                      8: [6, 2, 4]}
         wneighbs = {k: {neighb: weights[k][i] for i, neighb in enumerate(v)}
-                    for k, v in neighbors.items()}
+                    for k, v in list(neighbors.items())}
         w2 = util.higher_order(self.w3x3, 2)
         test_wneighbs = {k: {ne: weights[k][i] for i, ne in enumerate(v)}
-                         for k, v in w2.neighbors.items()}
+                         for k, v in list(w2.neighbors.items())}
         self.assertEqual(test_wneighbs, wneighbs)
 
     def test_histogram(self):
@@ -346,10 +346,10 @@ class Test_WSP_Back_To_W(unittest.TestCase):
                      4: [8, 0, 2, 6], 5: [1, 3, 7], 6: [4, 0, 8], 7: [3, 1, 5],
                      8: [6, 2, 4]}
         wneighbs = {k: {neighb: weights[k][i] for i, neighb in enumerate(v)}
-                    for k, v in neighbors.items()}
+                    for k, v in list(neighbors.items())}
         w2 = util.higher_order(self.w3x3, 2)
         test_wneighbs = {k: {ne: w2.weights[k][i] for i, ne in enumerate(v)}
-                         for k, v in w2.neighbors.items()}
+                         for k, v in list(w2.neighbors.items())}
         self.assertEqual(test_wneighbs, wneighbs)
 
     def test_histogram(self):

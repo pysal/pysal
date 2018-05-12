@@ -24,8 +24,11 @@ PY3 = int(sys.version[0]) > 2
 
 if PY3:
     import io
+    izip = zip
 else:
     from io import StringIO
+    
+    
 
 if sys.byteorder == 'little':
     SYS_BYTE_ORDER = '<'

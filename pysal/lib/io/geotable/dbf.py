@@ -101,7 +101,7 @@ def df2dbf(df, dbf_path, my_specs=None):
     db = ps_open(dbf_path, 'w')
     db.header = list(df.columns)
     db.field_spec = specs
-    for i, row in df.T.items():
+    for i, row in list(df.T.items()):
         db.write(row)
     db.close()
     return dbf_path

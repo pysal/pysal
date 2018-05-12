@@ -108,6 +108,3 @@ lines = "\n".join(init_lines)
 with open("pysal/__init__.py", 'w') as outfile:
     outfile.write(lines)
 
-
-
-

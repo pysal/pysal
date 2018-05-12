@@ -360,7 +360,7 @@ class W(object):
         col = []
         data = []
         id2i = self.id2i
-        for i, neigh_list in self.neighbor_offsets.items():
+        for i, neigh_list in list(self.neighbor_offsets.items()):
             card = self.cardinalities[i]
             row.extend([id2i[i]] * card)
             col.extend(neigh_list)
@@ -861,7 +861,7 @@ class W(object):
         if "neighbors_0" not in self._cache:
             self.__neighbors_0 = {}
             id2i = self.id2i
-            for j, neigh_list in self.neighbors.items():
+            for j, neigh_list in list(self.neighbors.items()):
                 self.__neighbors_0[j] = [id2i[neigh] for neigh in neigh_list]
             self._cache['neighbors_0'] = self.__neighbors_0
         return self.__neighbors_0

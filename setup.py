@@ -12,9 +12,9 @@ import os
 with open('README.rst') as file:
     long_description = file.read()
 
-MAJOR = 1
-MINOR = 14
-MICRO = 3
+MAJOR = 2
+MINOR = 0 
+MICRO = 0
 ISRELEASED = False
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
@@ -72,6 +72,7 @@ def setup_package():
         download_url='https://pypi.python.org/pypi/PySAL',
         license='BSD',
         py_modules=['pysal'],
+        python_requires='>3.4',
         test_suite='nose.collector',
         tests_require=['nose'],
         keywords='spatial statistics',
@@ -84,9 +85,6 @@ def setup_package():
             'Topic :: Scientific/Engineering :: GIS',
             'License :: OSI Approved :: BSD License',
             'Programming Language :: Python',
-            'Programming Language :: Python :: 2.5',
-            'Programming Language :: Python :: 2.6',
-            'Programming Language :: Python :: 2.7',
             'Programming Language :: Python :: 3.4'
         ],
         packages=find_packages(exclude=[".meta", "*.meta.*", "meta.*",

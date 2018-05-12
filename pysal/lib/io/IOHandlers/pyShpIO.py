@@ -169,7 +169,7 @@ class PurePyShpWrapper(FileIO.FileIO):
                 if self.dataObj.type() == 'POLYGON' and not cg.is_clockwise(vertices):
                     ### SHAPEFILE WARNING: Polygon %d topology has been fixed. (ccw -> cw)
                     warn("SHAPEFILE WARNING: Polygon %d topology has been fixed. (ccw -> cw)" % (self.pos), RuntimeWarning)
-                    print("SHAPEFILE WARNING: Polygon %d topology has been fixed. (ccw -> cw)" % (self.pos))
+                    print(("SHAPEFILE WARNING: Polygon %d topology has been fixed. (ccw -> cw)" % (self.pos)))
 
                 shp = self.type(vertices)
             else:
