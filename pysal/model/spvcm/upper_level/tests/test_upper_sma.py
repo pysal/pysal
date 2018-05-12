@@ -1,7 +1,7 @@
 from pysal.model.spvcm import upper_level as upper
 from pysal.model.spvcm import utils
-from spvcm.tests.utils import Model_Mixin
-from spvcm.abstracts import Trace
+from pysal.model.spvcm.tests.utils import Model_Mixin
+from pysal.model.spvcm.abstracts import Trace
 import unittest as ut
 import pandas as pd
 import os

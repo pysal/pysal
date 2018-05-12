@@ -204,7 +204,7 @@ class Upper_SE(Base_Upper_SE):
                 Lambda_configs  : configuration options for the sampler for the region-level effects that will be used in the step method.
 
                 For options that can be in Lambda/Rho_configs, see:
-                spvcm.steps.Slice, spvcm.steps.Metropolis
+                pysal.model.spvcm.steps.Slice, pysal.model.spvcm.steps.Metropolis
     truncation  :   dictionary
                     A dictionary containing the configuration values for the maximum and minimum allowable Lambda and Rho parameters. If these are not provided, the support is row-standardized by default, and the minimal eigenvalue computed for the lower bound on the parameters. *only* the single minimum eigenvalue is computed, so this is still rather efficient for large matrices. Keys may include:
                     Rho_min     : minimum value allowed for response-level autoregressive coefficient

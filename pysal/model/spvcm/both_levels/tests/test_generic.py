@@ -1,8 +1,8 @@
 from pysal.model.spvcm import both_levels as M
 from pysal.model.spvcm import utils
-from spvcm._constants import RTOL, ATOL, TEST_SEED, CLASSTYPES
-from spvcm.tests.utils import Model_Mixin, run_with_seed
-from spvcm.abstracts import Sampler_Mixin, Trace
+from pysal.model.spvcm._constants import RTOL, ATOL, TEST_SEED, CLASSTYPES
+from pysal.model.spvcm.tests.utils import Model_Mixin, run_with_seed
+from pysal.model.spvcm.abstracts import Sampler_Mixin, Trace
 import unittest as ut
 import numpy as np
 import pandas as pd

@@ -1,6 +1,6 @@
 import unittest as ut
 from pysal.model.spvcm import utils
-from spvcm._constants import RTOL, ATOL, TEST_SEED, CLASSTYPES
+from pysal.model.spvcm._constants import RTOL, ATOL, TEST_SEED, CLASSTYPES
 from warnings import warn
 import numpy as np
 import copy
