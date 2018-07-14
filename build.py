@@ -96,6 +96,18 @@ os.system(c)
 c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/ spvcm\./ pysal\.model\.spvcm\./g'"
 os.system(c)
 
+# replace all references in spglm to spreg with pysal.model.spreg
+c = "find pysal/model/spglm/. -name '*.py' -print | xargs sed -i -- 's/ spreg\./ pysal\.model\.spreg\./g'"
+os.system(c)
+
+# replace all references in spint to spreg with pysal.model.spreg
+c = "find pysal/model/spint/. -name '*.py' -print | xargs sed -i -- 's/ spreg\./ pysal\.model\.spreg\./g'"
+os.system(c)
+
+# replace all references in spint to spreg with pysal.model.spreg
+c = "find pysal/model/spint/. -name '*.py' -print | xargs sed -i -- 's/from spreg import/from pysal\.model\.spreg import/g'"
+os.system(c)
+
 
 # rewrite pysal/__init__.py at the end
 
