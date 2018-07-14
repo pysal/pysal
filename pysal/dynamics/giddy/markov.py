@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 
 """
 Markov based methods for spatial dynamics.
@@ -82,13 +82,13 @@ class Markov(object):
     >>> m.classes.tolist()
     ['a', 'b', 'c']
     >>> m.p
-    matrix([[ 0.25      ,  0.5       ,  0.25      ],
-            [ 0.33333333,  0.        ,  0.66666667],
-            [ 0.33333333,  0.33333333,  0.33333333]])
+    matrix([[0.25      , 0.5       , 0.25      ],
+            [0.33333333, 0.        , 0.66666667],
+            [0.33333333, 0.33333333, 0.33333333]])
     >>> m.steady_state
-    matrix([[ 0.30769231],
-            [ 0.28846154],
-            [ 0.40384615]])
+    matrix([[0.30769231],
+            [0.28846154],
+            [0.40384615]])
 
     US nominal per capita income 48 states 81 years 1929-2009
 
@@ -101,23 +101,23 @@ class Markov(object):
     >>> q5 = np.array([mc.Quantiles(y).yb for y in pci]).transpose()
     >>> m = Markov(q5)
     >>> m.transitions
-    array([[ 729.,   71.,    1.,    0.,    0.],
-           [  72.,  567.,   80.,    3.,    0.],
-           [   0.,   81.,  631.,   86.,    2.],
-           [   0.,    3.,   86.,  573.,   56.],
-           [   0.,    0.,    1.,   57.,  741.]])
+    array([[729.,  71.,   1.,   0.,   0.],
+           [ 72., 567.,  80.,   3.,   0.],
+           [  0.,  81., 631.,  86.,   2.],
+           [  0.,   3.,  86., 573.,  56.],
+           [  0.,   0.,   1.,  57., 741.]])
     >>> m.p
-    matrix([[ 0.91011236,  0.0886392 ,  0.00124844,  0.        ,  0.        ],
-            [ 0.09972299,  0.78531856,  0.11080332,  0.00415512,  0.        ],
-            [ 0.        ,  0.10125   ,  0.78875   ,  0.1075    ,  0.0025    ],
-            [ 0.        ,  0.00417827,  0.11977716,  0.79805014,  0.07799443],
-            [ 0.        ,  0.        ,  0.00125156,  0.07133917,  0.92740926]])
+    matrix([[0.91011236, 0.0886392 , 0.00124844, 0.        , 0.        ],
+            [0.09972299, 0.78531856, 0.11080332, 0.00415512, 0.        ],
+            [0.        , 0.10125   , 0.78875   , 0.1075    , 0.0025    ],
+            [0.        , 0.00417827, 0.11977716, 0.79805014, 0.07799443],
+            [0.        , 0.        , 0.00125156, 0.07133917, 0.92740926]])
     >>> m.steady_state
-    matrix([[ 0.20774716],
-            [ 0.18725774],
-            [ 0.20740537],
-            [ 0.18821787],
-            [ 0.20937187]])
+    matrix([[0.20774716],
+            [0.18725774],
+            [0.20740537],
+            [0.18821787],
+            [0.20937187]])
 
     Relative incomes
 
@@ -127,17 +127,17 @@ class Markov(object):
     >>> rq.shape = (48,81)
     >>> mq = Markov(rq)
     >>> mq.transitions
-    array([[ 707.,   58.,    7.,    1.,    0.],
-           [  50.,  629.,   80.,    1.,    1.],
-           [   4.,   79.,  610.,   73.,    2.],
-           [   0.,    7.,   72.,  650.,   37.],
-           [   0.,    0.,    0.,   48.,  724.]])
+    array([[707.,  58.,   7.,   1.,   0.],
+           [ 50., 629.,  80.,   1.,   1.],
+           [  4.,  79., 610.,  73.,   2.],
+           [  0.,   7.,  72., 650.,  37.],
+           [  0.,   0.,   0.,  48., 724.]])
     >>> mq.steady_state
-    matrix([[ 0.17957376],
-            [ 0.21631443],
-            [ 0.21499942],
-            [ 0.21134662],
-            [ 0.17776576]])
+    matrix([[0.17957376],
+            [0.21631443],
+            [0.21499942],
+            [0.21134662],
+            [0.17776576]])
 
     """
     def __init__(self, class_ids, classes=None):
@@ -148,7 +148,7 @@ class Markov(object):
 
         n, t = class_ids.shape
         k = len(self.classes)
-        js = range(t - 1)
+        js = list(range(t - 1))
 
         classIds = self.classes.tolist()
         transitions = np.zeros((k, k))
@@ -183,7 +183,7 @@ class Spatial_Markov(object):
     Parameters
     ----------
     y               : array
-                      (n,t), one row per observation, one column per state of
+                      (n, t), one row per observation, one column per state of
                       each observation, with as many columns as time periods.
     w               : W
                       spatial weights object.
@@ -196,11 +196,20 @@ class Spatial_Markov(object):
                       If true, quantiles are taken over the entire n*t
                       pooled series. If false, quantiles are taken each
                       time period over n.
+    discrete        : bool
+                      If true, categorical spatial lags which are most common
+                      categories of neighboring observations serve as the
+                      conditioning and fixed is ignored; if false, weighted
+                      averages of neighboring observations are used. Default is
+                      false.
     variable_name   : string
                       name of variable.
 
     Attributes
     ----------
+    classes         : matrix
+                      (n, t), discretized series if y is continuous. Otherwise
+                      it is identical to y.
     p               : matrix
                       (k, k), transition probability matrix for a-spatial
                       Markov.
@@ -293,31 +302,31 @@ class Spatial_Markov(object):
     >>> for p in sm.P:
     ...     print(p)
     ...
-    [[ 0.96341463  0.0304878   0.00609756  0.          0.        ]
-     [ 0.06040268  0.83221477  0.10738255  0.          0.        ]
-     [ 0.          0.14        0.74        0.12        0.        ]
-     [ 0.          0.03571429  0.32142857  0.57142857  0.07142857]
-     [ 0.          0.          0.          0.16666667  0.83333333]]
-    [[ 0.79831933  0.16806723  0.03361345  0.          0.        ]
-     [ 0.0754717   0.88207547  0.04245283  0.          0.        ]
-     [ 0.00537634  0.06989247  0.8655914   0.05913978  0.        ]
-     [ 0.          0.          0.06372549  0.90196078  0.03431373]
-     [ 0.          0.          0.          0.19444444  0.80555556]]
-    [[ 0.84693878  0.15306122  0.          0.          0.        ]
-     [ 0.08133971  0.78947368  0.1291866   0.          0.        ]
-     [ 0.00518135  0.0984456   0.79274611  0.0984456   0.00518135]
-     [ 0.          0.          0.09411765  0.87058824  0.03529412]
-     [ 0.          0.          0.          0.10204082  0.89795918]]
-    [[ 0.8852459   0.09836066  0.          0.01639344  0.        ]
-     [ 0.03875969  0.81395349  0.13953488  0.          0.00775194]
-     [ 0.0049505   0.09405941  0.77722772  0.11881188  0.0049505 ]
-     [ 0.          0.02339181  0.12865497  0.75438596  0.09356725]
-     [ 0.          0.          0.          0.09661836  0.90338164]]
-    [[ 0.33333333  0.66666667  0.          0.          0.        ]
-     [ 0.0483871   0.77419355  0.16129032  0.01612903  0.        ]
-     [ 0.01149425  0.16091954  0.74712644  0.08045977  0.        ]
-     [ 0.          0.01036269  0.06217617  0.89637306  0.03108808]
-     [ 0.          0.          0.          0.02352941  0.97647059]]
+    [[0.96341463 0.0304878  0.00609756 0.         0.        ]
+     [0.06040268 0.83221477 0.10738255 0.         0.        ]
+     [0.         0.14       0.74       0.12       0.        ]
+     [0.         0.03571429 0.32142857 0.57142857 0.07142857]
+     [0.         0.         0.         0.16666667 0.83333333]]
+    [[0.79831933 0.16806723 0.03361345 0.         0.        ]
+     [0.0754717  0.88207547 0.04245283 0.         0.        ]
+     [0.00537634 0.06989247 0.8655914  0.05913978 0.        ]
+     [0.         0.         0.06372549 0.90196078 0.03431373]
+     [0.         0.         0.         0.19444444 0.80555556]]
+    [[0.84693878 0.15306122 0.         0.         0.        ]
+     [0.08133971 0.78947368 0.1291866  0.         0.        ]
+     [0.00518135 0.0984456  0.79274611 0.0984456  0.00518135]
+     [0.         0.         0.09411765 0.87058824 0.03529412]
+     [0.         0.         0.         0.10204082 0.89795918]]
+    [[0.8852459  0.09836066 0.         0.01639344 0.        ]
+     [0.03875969 0.81395349 0.13953488 0.         0.00775194]
+     [0.0049505  0.09405941 0.77722772 0.11881188 0.0049505 ]
+     [0.         0.02339181 0.12865497 0.75438596 0.09356725]
+     [0.         0.         0.         0.09661836 0.90338164]]
+    [[0.33333333 0.66666667 0.         0.         0.        ]
+     [0.0483871  0.77419355 0.16129032 0.01612903 0.        ]
+     [0.01149425 0.16091954 0.74712644 0.08045977 0.        ]
+     [0.         0.01036269 0.06217617 0.89637306 0.03108808]
+     [0.         0.         0.         0.02352941 0.97647059]]
 
 
     The probability of a poor state remaining poor is 0.963 if their
@@ -346,11 +355,11 @@ class Spatial_Markov(object):
     fourth and 0.029 (0.337) in the fifth quintile.
 
     >>> sm.S
-    array([[ 0.43509425,  0.2635327 ,  0.20363044,  0.06841983,  0.02932278],
-           [ 0.13391287,  0.33993305,  0.25153036,  0.23343016,  0.04119356],
-           [ 0.12124869,  0.21137444,  0.2635101 ,  0.29013417,  0.1137326 ],
-           [ 0.0776413 ,  0.19748806,  0.25352636,  0.22480415,  0.24654013],
-           [ 0.01776781,  0.19964349,  0.19009833,  0.25524697,  0.3372434 ]])
+    array([[0.43509425, 0.2635327 , 0.20363044, 0.06841983, 0.02932278],
+           [0.13391287, 0.33993305, 0.25153036, 0.23343016, 0.04119356],
+           [0.12124869, 0.21137444, 0.2635101 , 0.29013417, 0.1137326 ],
+           [0.0776413 , 0.19748806, 0.25352636, 0.22480415, 0.24654013],
+           [0.01776781, 0.19964349, 0.19009833, 0.25524697, 0.3372434 ]])
 
     States with incomes in the first quintile with neighbors in the
     first quintile return to the first quartile after 2.298 years, after
@@ -363,67 +372,57 @@ class Spatial_Markov(object):
     >>> for f in sm.F:
     ...     print(f)
     ...
-    [[   2.29835259   28.95614035   46.14285714   80.80952381  279.42857143]
-     [  33.86549708    3.79459555   22.57142857   57.23809524  255.85714286]
-     [  43.60233918    9.73684211    4.91085714   34.66666667  233.28571429]
-     [  46.62865497   12.76315789    6.25714286   14.61564626  198.61904762]
-     [  52.62865497   18.76315789   12.25714286    6.           34.1031746 ]]
-    [[   7.46754205    9.70574606   25.76785714   74.53116883  194.23446197]
-     [  27.76691978    2.94175577   24.97142857   73.73474026  193.4380334 ]
-     [  53.57477715   28.48447637    3.97566318   48.76331169  168.46660482]
-     [  72.03631562   46.94601483   18.46153846    4.28393653  119.70329314]
-     [  77.17917276   52.08887197   23.6043956     5.14285714   24.27564033]]
-    [[   8.24751154    6.53333333   18.38765432   40.70864198  112.76732026]
-     [  47.35040872    4.73094099   11.85432099   34.17530864  106.23398693]
-     [  69.42288828   24.76666667    3.794921     22.32098765   94.37966594]
-     [  83.72288828   39.06666667   14.3           3.44668119   76.36702977]
-     [  93.52288828   48.86666667   24.1           9.8           8.79255406]]
-    [[  12.87974382   13.34847151   19.83446328   28.47257282   55.82395142]
-     [  99.46114206    5.06359731   10.54545198   23.05133495   49.68944423]
-     [ 117.76777159   23.03735526    3.94436301   15.0843986    43.57927247]
-     [ 127.89752089   32.4393006    14.56853107    4.44831643   31.63099455]
-     [ 138.24752089   42.7893006    24.91853107   10.35          4.05613474]]
-    [[  56.2815534     1.5          10.57236842   27.02173913  110.54347826]
-     [  82.9223301     5.00892857    9.07236842   25.52173913  109.04347826]
-     [  97.17718447   19.53125       5.26043557   21.42391304  104.94565217]
-     [ 127.1407767    48.74107143   33.29605263    3.91777427   83.52173913]
-     [ 169.6407767    91.24107143   75.79605263   42.5           2.96521739]]
+    [[  2.29835259  28.95614035  46.14285714  80.80952381 279.42857143]
+     [ 33.86549708   3.79459555  22.57142857  57.23809524 255.85714286]
+     [ 43.60233918   9.73684211   4.91085714  34.66666667 233.28571429]
+     [ 46.62865497  12.76315789   6.25714286  14.61564626 198.61904762]
+     [ 52.62865497  18.76315789  12.25714286   6.          34.1031746 ]]
+    [[  7.46754205   9.70574606  25.76785714  74.53116883 194.23446197]
+     [ 27.76691978   2.94175577  24.97142857  73.73474026 193.4380334 ]
+     [ 53.57477715  28.48447637   3.97566318  48.76331169 168.46660482]
+     [ 72.03631562  46.94601483  18.46153846   4.28393653 119.70329314]
+     [ 77.17917276  52.08887197  23.6043956    5.14285714  24.27564033]]
+    [[  8.24751154   6.53333333  18.38765432  40.70864198 112.76732026]
+     [ 47.35040872   4.73094099  11.85432099  34.17530864 106.23398693]
+     [ 69.42288828  24.76666667   3.794921    22.32098765  94.37966594]
+     [ 83.72288828  39.06666667  14.3          3.44668119  76.36702977]
+     [ 93.52288828  48.86666667  24.1          9.8          8.79255406]]
+    [[ 12.87974382  13.34847151  19.83446328  28.47257282  55.82395142]
+     [ 99.46114206   5.06359731  10.54545198  23.05133495  49.68944423]
+     [117.76777159  23.03735526   3.94436301  15.0843986   43.57927247]
+     [127.89752089  32.4393006   14.56853107   4.44831643  31.63099455]
+     [138.24752089  42.7893006   24.91853107  10.35         4.05613474]]
+    [[ 56.2815534    1.5         10.57236842  27.02173913 110.54347826]
+     [ 82.9223301    5.00892857   9.07236842  25.52173913 109.04347826]
+     [ 97.17718447  19.53125      5.26043557  21.42391304 104.94565217]
+     [127.1407767   48.74107143  33.29605263   3.91777427  83.52173913]
+     [169.6407767   91.24107143  75.79605263  42.5          2.96521739]]
 
 
     """
-    def __init__(self, y, w, k=4, permutations=0, fixed=False,
+    def __init__(self, y, w, k=4, permutations=0, fixed=False, discrete=False,
                  variable_name=None):
 
         self.y = y
         rows, cols = y.shape
-        self.k = k
         self.cols = cols
-        npa = np.array
         self.fixed = fixed
+        self.discrete = discrete
         self.variable_name = variable_name
-        if fixed:
-            yf = y.flatten()
-            yb = mc.Quantiles(yf, k=k).yb
-            yb.shape = (rows, cols)
-            classes = yb
-        else:
-            classes = npa([mc.Quantiles(y[:, i], k=k)
-                           .yb for i in np.arange(cols)]).transpose()
-        classic = Markov(classes)
-        self.classes = classes
+        self.k = k
+        self.classes, self.k = self._maybe_classify(y)
+        classic = Markov(self.classes)
         self.p = classic.p
         self.transitions = classic.transitions
-        T, P = self._calc(y, w, classes, k=k)
-        self.T = T
-        self.P = P
+        self.T, self.P = self._calc(y, w)
 
         if permutations:
             nrp = np.random.permutation
             counter = 0
             x2_realizations = np.zeros((permutations, 1))
             for perm in range(permutations):
-                T, P = self._calc(nrp(y), w, classes, k=k)
-                x2 = [chi2(T[i], self.transitions)[0] for i in range(k)]
+                T, P = self._calc(nrp(y), w)
+                x2 = [chi2(T[i], self.transitions)[0] for i in range(self.k)]
                 x2s = sum(x2)
                 x2_realizations[perm] = x2s
                 if x2s >= self.x2:
@@ -520,22 +519,18 @@ class Spatial_Markov(object):
             self._x2_dof = k * (k - 1) * (k - 1)
         return self._x2_dof
 
-    def _calc(self, y, w, classes, k):
-        ly = ps.lag_spatial(w, y)
-        npa = np.array
-        if self.fixed:
-            l_classes = mc.Quantiles(ly.flatten(), k=k).yb
-            l_classes.shape = ly.shape
+    def _calc(self, y, w):
+        if self.discrete:
+            ly = ps.lag_categorical(w, y)
         else:
-            l_classes = npa([mc.Quantiles(
-                ly[:, i], k=k).yb for i in np.arange(self.cols)])
-            l_classes = l_classes.transpose()
-        T = np.zeros((k, k, k))
+            ly = ps.lag_spatial(w, y)
+        l_classes, _ = self._maybe_classify(ly)
+        T = np.zeros((self.k, self.k, self.k))
         n, t = y.shape
         for t1 in range(t - 1):
             t2 = t1 + 1
             for i in range(n):
-                T[l_classes[i, t1], classes[i, t1], classes[i, t2]] += 1
+                T[l_classes[i, t1], self.classes[i, t1], self.classes[i, t2]] += 1
 
         P = np.zeros_like(T)
         for i, mat in enumerate(T):
@@ -550,9 +545,8 @@ class Spatial_Markov(object):
         helper to calculate tests of differences between steady state
         distributions from the conditional and overall distributions.
         """
-        n, t = self.y.shape
         n0, n1, n2 = self.T.shape
-        rn = range(n0)
+        rn = list(range(n0))
         mat = [self._ssmnp_test(
             self.s, self.S[i], self.T[i].sum()) for i in rn]
         return mat
@@ -593,9 +587,8 @@ class Spatial_Markov(object):
         helper to calculate tests of differences between the conditional
         transition matrices and the overall transitions matrix.
         """
-        n, t = self.y.shape
         n0, n1, n2 = self.T.shape
-        rn = range(n0)
+        rn = list(range(n0))
         mat = [chi2(self.T[i], self.transitions) for i in rn]
         return mat
 
@@ -612,6 +605,28 @@ class Spatial_Markov(object):
         else:
             ht.summary(title=title)
 
+    def _maybe_classify(self, y):
+        rows,cols = y.shape
+        if self.discrete:
+            classes = y #would like to use sckikt.cluster.labelencoder here...
+            encoded = []
+            uniques = np.unique(classes).tolist()
+            for yt in classes.T:
+                encoded.append([uniques.index(yi) for yi in yt])
+            encoded = np.asarray(encoded).T
+            classes = encoded
+            k = len(np.unique(uniques))
+        elif self.fixed:
+            k = self.k
+            yf = y.flatten()
+            yb = mc.Quantiles(yf, k=k).yb
+            yb.shape = (rows,cols)
+            classes = yb
+        else:
+            k = self.k
+            classes = np.array([mc.Quantiles(y[:,i], k=k).yb
+                                for i in np.arange(cols)]).transpose()
+        return classes, k
 
 def chi2(T1, T2):
     """
@@ -635,7 +650,7 @@ def chi2(T1, T2):
     --------
     >>> import pysal.lib
     >>> f = pysal.lib.open(pysal.lib.examples.get_path("usjoin.csv"))
-    >>> years = range(1929, 2010)
+    >>> years = list(range(1929, 2010))
     >>> pci = np.array([f.by_col[str(y)] for y in years]).transpose()
     >>> rpci = pci/(pci.mean(axis=0))
     >>> w = pysal.lib.open(pysal.lib.examples.get_path("states48.gal")).read()
@@ -643,18 +658,18 @@ def chi2(T1, T2):
     >>> sm = Spatial_Markov(rpci, w, fixed=True)
     >>> T1 = sm.T[0]
     >>> T1
-    array([[ 562.,   22.,    1.,    0.],
-           [  12.,  201.,   22.,    0.],
-           [   0.,   17.,   97.,    4.],
-           [   0.,    0.,    3.,   19.]])
+    array([[562.,  22.,   1.,   0.],
+           [ 12., 201.,  22.,   0.],
+           [  0.,  17.,  97.,   4.],
+           [  0.,   0.,   3.,  19.]])
     >>> T2 = sm.transitions
     >>> T2
-    array([[ 884.,   77.,    4.,    0.],
-           [  68.,  794.,   87.,    3.],
-           [   1.,   92.,  815.,   51.],
-           [   1.,    0.,   60.,  903.]])
+    array([[884.,  77.,   4.,   0.],
+           [ 68., 794.,  87.,   3.],
+           [  1.,  92., 815.,  51.],
+           [  1.,   0.,  60., 903.]])
     >>> chi2(T1,T2)
-    (23.397284414732951, 0.0053631167048613371, 9)
+    (23.39728441473295, 0.005363116704861337, 9)
 
     Notes
     -----
@@ -829,31 +844,27 @@ class LISA_Markov(Markov):
     >>> import pysal.lib
     >>> import numpy as np
     >>> f = pysal.lib.open(pysal.lib.examples.get_path("usjoin.csv"))
-    >>> years = range(1929, 2010)
+    >>> years = list(range(1929, 2010))
     >>> pci = np.array([f.by_col[str(y)] for y in years]).transpose()
     >>> w = pysal.lib.open(pysal.lib.examples.get_path("states48.gal")).read()
     >>> lm = LISA_Markov(pci,w)
     >>> lm.classes
     array([1, 2, 3, 4])
     >>> lm.steady_state
-    matrix([[ 0.28561505],
-            [ 0.14190226],
-            [ 0.40493672],
-            [ 0.16754598]])
+    matrix([[0.28561505],
+            [0.14190226],
+            [0.40493672],
+            [0.16754598]])
     >>> lm.transitions
-    array([[  1.08700000e+03,   4.40000000e+01,   4.00000000e+00,
-              3.40000000e+01],
-           [  4.10000000e+01,   4.70000000e+02,   3.60000000e+01,
-              1.00000000e+00],
-           [  5.00000000e+00,   3.40000000e+01,   1.42200000e+03,
-              3.90000000e+01],
-           [  3.00000000e+01,   1.00000000e+00,   4.00000000e+01,
-              5.52000000e+02]])
+    array([[1.087e+03, 4.400e+01, 4.000e+00, 3.400e+01],
+           [4.100e+01, 4.700e+02, 3.600e+01, 1.000e+00],
+           [5.000e+00, 3.400e+01, 1.422e+03, 3.900e+01],
+           [3.000e+01, 1.000e+00, 4.000e+01, 5.520e+02]])
     >>> lm.p
-    matrix([[ 0.92985458,  0.03763901,  0.00342173,  0.02908469],
-            [ 0.07481752,  0.85766423,  0.06569343,  0.00182482],
-            [ 0.00333333,  0.02266667,  0.948     ,  0.026     ],
-            [ 0.04815409,  0.00160514,  0.06420546,  0.88603531]])
+    matrix([[0.92985458, 0.03763901, 0.00342173, 0.02908469],
+            [0.07481752, 0.85766423, 0.06569343, 0.00182482],
+            [0.00333333, 0.02266667, 0.948     , 0.026     ],
+            [0.04815409, 0.00160514, 0.06420546, 0.88603531]])
     >>> lm.move_types[0,:3]
     array([11, 11, 11])
     >>> lm.move_types[0,-3:]
@@ -885,27 +896,19 @@ class LISA_Markov(Markov):
     Actual transitions of LISAs
 
     >>> lm.transitions
-    array([[  1.08700000e+03,   4.40000000e+01,   4.00000000e+00,
-              3.40000000e+01],
-           [  4.10000000e+01,   4.70000000e+02,   3.60000000e+01,
-              1.00000000e+00],
-           [  5.00000000e+00,   3.40000000e+01,   1.42200000e+03,
-              3.90000000e+01],
-           [  3.00000000e+01,   1.00000000e+00,   4.00000000e+01,
-              5.52000000e+02]])
+    array([[1.087e+03, 4.400e+01, 4.000e+00, 3.400e+01],
+           [4.100e+01, 4.700e+02, 3.600e+01, 1.000e+00],
+           [5.000e+00, 3.400e+01, 1.422e+03, 3.900e+01],
+           [3.000e+01, 1.000e+00, 4.000e+01, 5.520e+02]])
 
     Expected transitions of LISAs under the null y and wy are moving
     independently of one another
 
     >>> lm.expected_t
-    array([[  1.12328098e+03,   1.15377356e+01,   3.47522158e-01,
-              3.38337644e+01],
-           [  3.50272664e+00,   5.28473882e+02,   1.59178880e+01,
-              1.05503814e-01],
-           [  1.53878082e-01,   2.32163556e+01,   1.46690710e+03,
-              9.72266513e+00],
-           [  9.60775143e+00,   9.86856346e-02,   6.23537392e+00,
-              6.07058189e+02]])
+    array([[1.12328098e+03, 1.15377356e+01, 3.47522158e-01, 3.38337644e+01],
+           [3.50272664e+00, 5.28473882e+02, 1.59178880e+01, 1.05503814e-01],
+           [1.53878082e-01, 2.32163556e+01, 1.46690710e+03, 9.72266513e+00],
+           [9.60775143e+00, 9.86856346e-02, 6.23537392e+00, 6.07058189e+02]])
 
     If the LISA classes are to be defined according to GeoDa, the `geoda_quad`
     option has to be set to true
@@ -1009,46 +1012,40 @@ class LISA_Markov(Markov):
         --------
         >>> import pysal.lib
         >>> f = pysal.lib.open(pysal.lib.examples.get_path("usjoin.csv"))
-        >>> years = range(1929, 2010)
+        >>> years = list(range(1929, 2010))
         >>> pci = np.array([f.by_col[str(y)] for y in years]).transpose()
         >>> w = pysal.lib.open(pysal.lib.examples.get_path("states48.gal")).read()
         >>> np.random.seed(10)
         >>> lm_random = LISA_Markov(pci, w, permutations=99)
         >>> r = lm_random.spillover()
         >>> r['components'][:,12]
-        array([ 0.,  0.,  0.,  2.,  0.,  1.,  1.,  0.,  0.,  2.,  0.,  0.,  0.,
-                0.,  0.,  0.,  0.,  1.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  2.,
-                1.,  1.,  0.,  1.,  0.,  0.,  1.,  0.,  2.,  1.,  1.,  0.,  0.,
-                0.,  0.,  0.,  1.,  0.,  2.,  1.,  0.,  0.])
+        array([0., 0., 0., 2., 0., 1., 1., 0., 0., 2., 0., 0., 0., 0., 0., 0., 0.,
+               1., 1., 0., 0., 0., 0., 0., 0., 2., 1., 1., 0., 1., 0., 0., 1., 0.,
+               2., 1., 1., 0., 0., 0., 0., 0., 1., 0., 2., 1., 0., 0.])
         >>> r['components'][:,14]
-        array([ 0.,  2.,  0.,  2.,  0.,  1.,  1.,  0.,  0.,  2.,  0.,  0.,  0.,
-                0.,  0.,  0.,  0.,  1.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  2.,
-                0.,  1.,  0.,  1.,  0.,  0.,  1.,  0.,  2.,  1.,  1.,  0.,  0.,
-                0.,  0.,  0.,  1.,  0.,  2.,  1.,  0.,  0.])
+        array([0., 2., 0., 2., 0., 1., 1., 0., 0., 2., 0., 0., 0., 0., 0., 0., 0.,
+               1., 1., 0., 0., 0., 0., 0., 0., 2., 0., 1., 0., 1., 0., 0., 1., 0.,
+               2., 1., 1., 0., 0., 0., 0., 0., 1., 0., 2., 1., 0., 0.])
         >>> r['spill_over'][:,12]
-        array([ 0.,  1.,  0.,  0.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,
-                0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  1.,  0.,  0.,
-                0.,  0.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,
-                0.,  0.,  1.,  0.,  0.,  0.,  0.,  0.,  1.])
+        array([0., 1., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+               0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.,
+               0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 1.])
 
         Including neighbors of core neighbors
 
         >>> rn = lm_random.spillover(neighbors_on=True)
         >>> rn['components'][:,12]
-        array([ 0.,  2.,  0.,  2.,  0.,  1.,  1.,  0.,  0.,  2.,  0.,  1.,  0.,
-                0.,  1.,  0.,  1.,  1.,  1.,  1.,  0.,  0.,  0.,  2.,  0.,  2.,
-                1.,  1.,  0.,  1.,  0.,  0.,  1.,  0.,  2.,  1.,  1.,  0.,  0.,
-                0.,  0.,  2.,  1.,  1.,  2.,  1.,  0.,  2.])
+        array([0., 2., 0., 2., 0., 1., 1., 0., 0., 2., 0., 1., 0., 0., 1., 0., 1.,
+               1., 1., 1., 0., 0., 0., 2., 0., 2., 1., 1., 0., 1., 0., 0., 1., 0.,
+               2., 1., 1., 0., 0., 0., 0., 2., 1., 1., 2., 1., 0., 2.])
         >>> rn["components"][:,13]
-        array([ 0.,  2.,  0.,  2.,  2.,  1.,  1.,  0.,  0.,  2.,  0.,  1.,  0.,
-                2.,  1.,  0.,  1.,  1.,  1.,  1.,  0.,  0.,  0.,  2.,  2.,  2.,
-                1.,  1.,  2.,  1.,  0.,  2.,  1.,  2.,  2.,  1.,  1.,  0.,  2.,
-                0.,  2.,  2.,  1.,  1.,  2.,  1.,  0.,  2.])
+        array([0., 2., 0., 2., 2., 1., 1., 0., 0., 2., 0., 1., 0., 2., 1., 0., 1.,
+               1., 1., 1., 0., 0., 0., 2., 2., 2., 1., 1., 2., 1., 0., 2., 1., 2.,
+               2., 1., 1., 0., 2., 0., 2., 2., 1., 1., 2., 1., 0., 2.])
         >>> rn["spill_over"][:,12]
-        array([ 0.,  0.,  0.,  0.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,
-                1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  1.,  0.,
-                0.,  0.,  1.,  0.,  0.,  1.,  0.,  1.,  0.,  0.,  0.,  0.,  1.,
-                0.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.])
+        array([0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0.,
+               0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 1., 0., 0., 1., 0., 1.,
+               0., 0., 0., 0., 1., 0., 1., 0., 0., 0., 0., 0., 0., 0.])
 
         """
         n, k = self.q.shape
@@ -1056,7 +1053,7 @@ class LISA_Markov(Markov):
             spill_over = np.zeros((n, k - 1))
             components = np.zeros((n, k))
             i2id = {}  # handle string keys
-            for key in self.w.neighbors.keys():
+            for key in list(self.w.neighbors.keys()):
                 idx = self.w.id2i[key]
                 i2id[idx] = key
             sig_lisas = (self.q == quadrant) \
@@ -1241,19 +1238,19 @@ def prais(pmat):
     >>> q5 = np.array([mc.Quantiles(y).yb for y in pci]).transpose()
     >>> m = Markov(q5)
     >>> m.transitions
-    array([[ 729.,   71.,    1.,    0.,    0.],
-           [  72.,  567.,   80.,    3.,    0.],
-           [   0.,   81.,  631.,   86.,    2.],
-           [   0.,    3.,   86.,  573.,   56.],
-           [   0.,    0.,    1.,   57.,  741.]])
+    array([[729.,  71.,   1.,   0.,   0.],
+           [ 72., 567.,  80.,   3.,   0.],
+           [  0.,  81., 631.,  86.,   2.],
+           [  0.,   3.,  86., 573.,  56.],
+           [  0.,   0.,   1.,  57., 741.]])
     >>> m.p
-    matrix([[ 0.91011236,  0.0886392 ,  0.00124844,  0.        ,  0.        ],
-            [ 0.09972299,  0.78531856,  0.11080332,  0.00415512,  0.        ],
-            [ 0.        ,  0.10125   ,  0.78875   ,  0.1075    ,  0.0025    ],
-            [ 0.        ,  0.00417827,  0.11977716,  0.79805014,  0.07799443],
-            [ 0.        ,  0.        ,  0.00125156,  0.07133917,  0.92740926]])
+    matrix([[0.91011236, 0.0886392 , 0.00124844, 0.        , 0.        ],
+            [0.09972299, 0.78531856, 0.11080332, 0.00415512, 0.        ],
+            [0.        , 0.10125   , 0.78875   , 0.1075    , 0.0025    ],
+            [0.        , 0.00417827, 0.11977716, 0.79805014, 0.07799443],
+            [0.        , 0.        , 0.00125156, 0.07133917, 0.92740926]])
     >>> prais(m.p)
-    matrix([[ 0.08988764,  0.21468144,  0.21125   ,  0.20194986,  0.07259074]])
+    matrix([[0.08988764, 0.21468144, 0.21125   , 0.20194986, 0.07259074]])
 
     """
     pr = (pmat.sum(axis=1) - np.diag(pmat))[0]
@@ -1393,7 +1390,7 @@ class Homogeneity_Results:
             regime_names = self.regime_names
         cols = ["P(%s)" % str(regime) for regime in regime_names]
         if not self.class_names:
-            self.class_names = range(self.k)
+            self.class_names = list(range(self.k))
 
         max_col = max([len(col) for col in cols])
         col_width = max([5, max_col])  # probabilities have 5 chars
@@ -1421,12 +1418,12 @@ class Homogeneity_Results:
         stat = "%7s %20.3f %20.3f" % ('p-value', self.LR_p_value,
                                       self.Q_p_value)
         contents.append(stat)
-        print("\n".join(contents))
+        print(("\n".join(contents)))
         print(lead)
 
         cols = ["P(%s)" % str(regime) for regime in self.regime_names]
         if not self.class_names:
-            self.class_names = range(self.k)
+            self.class_names = list(range(self.k))
         cols.extend(["%s" % str(cname) for cname in self.class_names])
 
         max_col = max([len(col) for col in cols])
@@ -1435,12 +1432,12 @@ class Homogeneity_Results:
         line0 = ['{s: <{w}}'.format(s="P(H0)", w=col_width)]
         line0.extend((['{s: >{w}}'.format(s=cname, w=col_width) for cname in
                        self.class_names]))
-        print("    ".join(line0))
+        print(("    ".join(line0)))
         p0.append("&".join(line0))
         for i, row in enumerate(self.p_h0):
             line = ["%*s" % (col_width, str(self.class_names[i]))]
             line.extend(["%*.3f" % (col_width, v) for v in row])
-            print("    ".join(line))
+            print(("    ".join(line)))
             p0.append("&".join(line))
         pmats = [p0]
 
@@ -1451,12 +1448,12 @@ class Homogeneity_Results:
                                         regime_names[r], w=col_width)]
             line0.extend((['{s: >{w}}'.format(s=cname, w=col_width) for cname
                            in self.class_names]))
-            print("    ".join(line0))
+            print(("    ".join(line0)))
             p0.append("&".join(line0))
             for i, row in enumerate(p1):
                 line = ["%*s" % (col_width, str(self.class_names[i]))]
                 line.extend(["%*.3f" % (col_width, v) for v in row])
-                print("    ".join(line))
+                print(("    ".join(line)))
                 p0.append("&".join(line))
             pmats.append(p0)
             print(lead)
@@ -1507,6 +1504,4 @@ class Homogeneity_Results:
                 s2 = "".join(c)
                 f.write(s1+s2)
 
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
+

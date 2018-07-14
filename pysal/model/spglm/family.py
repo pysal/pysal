@@ -278,13 +278,6 @@ class Poisson(Family):
     Poisson.link : a link instance
         The link function of the Poisson instance.
     Poisson.variance : varfuncs instance
-        `variance` is an instance of
-        statsmodels.genmod.families.family.varfuncs.mu
-
-    See also
-    --------
-    statsmodels.genmod.families.family.Family
-    :ref:`links`
 
     """
 
@@ -442,13 +435,6 @@ class QuasiPoisson(Family):
     Poisson.link : a link instance
         The link function of the Poisson instance.
     Poisson.variance : varfuncs instance
-        `variance` is an instance of
-        statsmodels.genmod.families.family.varfuncs.mu
-
-    See also
-    --------
-    statsmodels.genmod.families.family.Family
-    :ref:`links`
 
     """
 
@@ -586,13 +572,6 @@ class Gaussian(Family):
     Gaussian.link : a link instance
         The link function of the Gaussian instance
     Gaussian.variance : varfunc instance
-        `variance` is an instance of statsmodels.family.varfuncs.constant
-
-    See also
-    --------
-    statsmodels.genmod.families.family.Family
-    :ref:`links`
-
     """
 
     links = [L.log, L.identity, L.inverse_power]
@@ -755,13 +734,6 @@ class Gamma(Family):
     Gamma.link : a link instance
         The link function of the Gamma instance
     Gamma.variance : varfunc instance
-        `variance` is an instance of statsmodels.family.varfuncs.mu_squared
-
-    See also
-    --------
-    statsmodels.genmod.families.family.Family
-    :ref:`links`
-
     """
 
     links = [L.log, L.identity, L.inverse_power]
@@ -922,12 +894,6 @@ class Binomial(Family):
     Binomial.link : a link instance
         The link function of the Binomial instance
     Binomial.variance : varfunc instance
-        `variance` is an instance of statsmodels.family.varfuncs.binary
-
-    See also
-    --------
-    statsmodels.genmod.families.family.Family
-    :ref:`links`
 
     Notes
     -----
@@ -1212,12 +1178,6 @@ class InverseGaussian(Family):
     InverseGaussian.link : a link instance
         The link function of the inverse Gaussian instance
     InverseGaussian.variance : varfunc instance
-        `variance` is an instance of statsmodels.family.varfuncs.mu_cubed
-
-    See also
-    --------
-    statsmodels.genmod.families.family.Family
-    :ref:`links`
 
     Notes
     -----
@@ -1372,12 +1332,6 @@ class NegativeBinomial(Family):
     NegativeBinomial.link : a link instance
         The link function of the negative binomial instance
     NegativeBinomial.variance : varfunc instance
-        `variance` is an instance of statsmodels.family.varfuncs.nbinom
-
-    See also
-    --------
-    statsmodels.genmod.families.family.Family
-    :ref:`links`
 
     Notes
     -----
@@ -1595,16 +1549,10 @@ class Tweedie(Family):
     Tweedie.link : a link instance
         The link function of the Tweedie instance
     Tweedie.variance : varfunc instance
-        `variance` is an instance of statsmodels.family.varfuncs.Power
     Tweedie.link_power : float
         The power of the link function, or 0 if its a log link.
     Tweedie.var_power : float
         The power of the variance function.
-
-    See also
-    --------
-    statsmodels.genmod.families.family.Family
-    :ref:`links`
 
     Notes
     -----

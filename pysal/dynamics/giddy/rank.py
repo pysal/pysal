@@ -68,12 +68,12 @@ class Theta:
     >>> np.random.seed(10)
     >>> t=Theta(y,regime,999)
     >>> t.theta
-    array([[ 0.41538462,  0.28070175,  0.61363636,  0.62222222,  0.33333333,
-             0.47222222]])
+    array([[0.41538462, 0.28070175, 0.61363636, 0.62222222, 0.33333333,
+            0.47222222]])
     >>> t.pvalue_left
-    array([ 0.307,  0.077,  0.823,  0.552,  0.045,  0.735])
+    array([0.307, 0.077, 0.823, 0.552, 0.045, 0.735])
     >>> t.total
-    array([ 130.,  114.,   88.,   90.,   90.,   72.])
+    array([130., 114.,  88.,  90.,  90.,  72.])
     >>> t.max_total
     512
 
@@ -83,7 +83,7 @@ class Theta:
         ranks = rankdata(y, axis=0)
         self.ranks = ranks
         n, k = y.shape
-        ranks_d = ranks[:, range(1, k)] - ranks[:, range(k - 1)]
+        ranks_d = ranks[:, list(range(1, k))] - ranks[:, list(range(k - 1))]
         self.ranks_d = ranks_d
         regimes = sp.unique(regime)
         self.regimes = regimes
@@ -95,7 +95,7 @@ class Theta:
         if permutations:
             np.perm = np.random.permutation
             sim = np.array([self._calc(
-                np.perm(regime)) for i in xrange(permutations)])
+                np.perm(regime)) for i in range(permutations)])
             self.theta.shape = (1, len(self.theta))
             sim = np.concatenate((self.theta, sim))
             self.sim = sim
@@ -151,9 +151,9 @@ class Tau:
     0.24821309157521476
     >>> tau, p = kendalltau(x1,x2)
     >>> tau
-    -0.47140452079103162
+    -0.4714045207910316
     >>> p
-    0.28274545993277478
+    0.2827454599327748
 
     """
 
@@ -175,7 +175,7 @@ class Tau:
         x = np.array(x)
         y = np.array(y)
         n = len(y)
-        perm = range(n)
+        perm = list(range(n))
         perm.sort(key=lambda a: (x[a], y[a]))
         vals = y[perm]
         ExtraY = 0
@@ -335,7 +335,7 @@ class SpatialTau(object):
     >>> for r in res:
     ...     ev = r.taus.mean()
     ...     "%8.3f %8.3f %8.3f"%(r.tau_spatial, ev, r.tau_spatial_psim)
-    ...
+    ... 
     '   0.397    0.659    0.010'
     '   0.492    0.706    0.010'
     '   0.651    0.772    0.020'
@@ -364,7 +364,7 @@ class SpatialTau(object):
         if permutations > 0:
             taus = np.zeros(permutations)
             ids = np.arange(self.n)
-            for r in xrange(permutations):
+            for r in range(permutations):
                 rids = np.random.permutation(ids)
                 taus[r] = self._calc(x[rids], y[rids], w)[0]
             self.taus = taus
@@ -462,10 +462,10 @@ class Tau_Local:
             0.48387097,  0.93548387,  0.61290323,  0.74193548,  0.41935484,
             0.61290323,  0.61290323])
     >>> tau_local.tau
-    0.66129032258064513
+    0.6612903225806451
     >>> tau_classic = Tau(r[:,0],r[:,1])
     >>> tau_classic.tau
-    0.66129032258064513
+    0.6612903225806451
 
     """
 
@@ -563,18 +563,18 @@ class Tau_Local_Neighbor:
             0.2       ,  1.        ,  0.6       ,  0.33333333,  0.5       ,
             0.5       , -0.2       ])
     >>> res.tau_ln_weights
-    array([ 0.03968254,  0.03968254,  0.03174603,  0.03174603,  0.02380952,
-            0.03968254,  0.03968254,  0.03174603,  0.00793651,  0.03968254,
-            0.03968254,  0.02380952,  0.02380952,  0.03174603,  0.00793651,
-            0.02380952,  0.02380952,  0.03174603,  0.03968254,  0.02380952,
-            0.02380952,  0.03968254,  0.03174603,  0.03968254,  0.03174603,
-            0.03968254,  0.03174603,  0.03968254,  0.02380952,  0.03174603,
-            0.03174603,  0.03968254])
+    array([0.03968254, 0.03968254, 0.03174603, 0.03174603, 0.02380952,
+           0.03968254, 0.03968254, 0.03174603, 0.00793651, 0.03968254,
+           0.03968254, 0.02380952, 0.02380952, 0.03174603, 0.00793651,
+           0.02380952, 0.02380952, 0.03174603, 0.03968254, 0.02380952,
+           0.02380952, 0.03968254, 0.03174603, 0.03968254, 0.03174603,
+           0.03968254, 0.03174603, 0.03968254, 0.02380952, 0.03174603,
+           0.03174603, 0.03968254])
     >>> res.tau_ln_pvalues
-    array([ 0.541,  0.852,  0.668,  0.568,  0.11 ,  0.539,  0.609,  0.058,
-            1.   ,  0.255,  0.125,  0.087,  0.393,  0.433,  0.908,  0.657,
-            0.447,  0.128,  0.531,  0.033,  0.12 ,  0.271,  0.868,  0.234,
-            0.124,  0.387,  0.859,  0.697,  0.349,  0.664,  0.596,  0.041])
+    array([0.541, 0.852, 0.668, 0.568, 0.11 , 0.539, 0.609, 0.058, 1.   ,
+           0.255, 0.125, 0.087, 0.393, 0.433, 0.908, 0.657, 0.447, 0.128,
+           0.531, 0.033, 0.12 , 0.271, 0.868, 0.234, 0.124, 0.387, 0.859,
+           0.697, 0.349, 0.664, 0.596, 0.041])
     >>> res.sign
     array([-1,  1,  1,  1,  1,  1,  1, -1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
             1,  1, -1, -1, -1,  1,  1,  1,  1,  1,  1,  1,  1,  1, -1])
@@ -602,13 +602,13 @@ class Tau_Local_Neighbor:
         if permutations > 0:
             tau_ln_sim = np.zeros((self.n, permutations))
             tau_ln_pvalues = np.zeros(self.n)
-            for i in xrange(self.n):
+            for i in range(self.n):
                 obs_i = self.tau_ln[i]  # observed value i LIMA statistic
                 yr = np.zeros_like(y)
                 xr = np.zeros_like(y)
                 rids = np.arange(self.n)
                 rids = np.delete(rids, i)
-                for j in xrange(permutations):
+                for j in range(permutations):
                     pids = np.random.permutation(rids)
                     xr[i] = x[i]
                     xr[rids] = x[pids]
@@ -722,21 +722,21 @@ class Tau_Local_Neighborhood:
     >>> w = ps.block_weights(regime)
     >>> res = Tau_Local_Neighborhood(r[:,0],r[:,1],w,permutations=999)
     >>> res.tau_lnhood
-    array([ 0.06666667,  0.6       ,  0.2       ,  0.8       ,  0.33333333,
-            0.6       ,  0.6       ,  0.2       ,  1.        ,  0.06666667,
-            0.06666667,  0.33333333,  0.33333333,  0.2       ,  1.        ,
-            0.33333333,  0.33333333,  0.2       ,  0.6       ,  0.33333333,
-            0.33333333,  0.06666667,  0.8       ,  0.06666667,  0.2       ,
-            0.6       ,  0.8       ,  0.6       ,  0.33333333,  0.8       ,
-            0.8       ,  0.06666667])
+    array([0.06666667, 0.6       , 0.2       , 0.8       , 0.33333333,
+           0.6       , 0.6       , 0.2       , 1.        , 0.06666667,
+           0.06666667, 0.33333333, 0.33333333, 0.2       , 1.        ,
+           0.33333333, 0.33333333, 0.2       , 0.6       , 0.33333333,
+           0.33333333, 0.06666667, 0.8       , 0.06666667, 0.2       ,
+           0.6       , 0.8       , 0.6       , 0.33333333, 0.8       ,
+           0.8       , 0.06666667])
     >>> res.tau_lnhood_pvalues
-    array([ 0.106,  0.33 ,  0.107,  0.535,  0.137,  0.414,  0.432,  0.169,
-            1.   ,  0.03 ,  0.019,  0.146,  0.249,  0.1  ,  0.908,  0.225,
-            0.311,  0.125,  0.399,  0.215,  0.334,  0.115,  0.669,  0.045,
-            0.11 ,  0.525,  0.655,  0.466,  0.236,  0.413,  0.504,  0.038])
+    array([0.106, 0.33 , 0.107, 0.535, 0.137, 0.414, 0.432, 0.169, 1.   ,
+           0.03 , 0.019, 0.146, 0.249, 0.1  , 0.908, 0.225, 0.311, 0.125,
+           0.399, 0.215, 0.334, 0.115, 0.669, 0.045, 0.11 , 0.525, 0.655,
+           0.466, 0.236, 0.413, 0.504, 0.038])
     >>> res.sign
-    array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-           1, 1, 1, 1, 1, 1, 1, 1, 1])
+    array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+           1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
 
     """
 
@@ -751,7 +751,7 @@ class Tau_Local_Neighborhood:
 
         w.transform = 'b'
         tau_lnhood = np.zeros(self.n)
-        for i in xrange(self.n):
+        for i in range(self.n):
             neighbors_i = [i]
             neighbors_i.extend(w.neighbors[i])
             n_i = len(neighbors_i)
@@ -767,12 +767,12 @@ class Tau_Local_Neighborhood:
         if permutations > 0:
             tau_lnhood_sim = np.zeros((self.n, permutations))
             tau_lnhood_pvalues = np.zeros(self.n)
-            for i in xrange(self.n):
+            for i in range(self.n):
                 obs_i = self.tau_lnhood[i]
-                rids = range(self.n)
+                rids = list(range(self.n))
                 rids.remove(i)
                 larger = 0
-                for j in xrange(permutations):
+                for j in range(permutations):
                     np.random.shuffle(rids)
                     neighbors_i = [i]
                     neighbors_i.extend(rids[:len(w.neighbors[i])])
@@ -847,28 +847,28 @@ class Tau_Regional:
     >>> regime = np.array(f.by_col['esquivel99'])
     >>> res = Tau_Regional(y[:,0],y[:,-1],regime,permutations=999)
     >>> res.tau_reg
-    array([[ 1.        ,  0.25      ,  0.5       ,  0.6       ,  0.83333333,
-             0.6       ,  1.        ],
-           [ 0.25      ,  0.33333333,  0.5       ,  0.3       ,  0.91666667,
-             0.4       ,  0.75      ],
-           [ 0.5       ,  0.5       ,  0.6       ,  0.4       ,  0.38888889,
-             0.53333333,  0.83333333],
-           [ 0.6       ,  0.3       ,  0.4       ,  0.2       ,  0.4       ,
-             0.28      ,  0.8       ],
-           [ 0.83333333,  0.91666667,  0.38888889,  0.4       ,  0.6       ,
-             0.73333333,  1.        ],
-           [ 0.6       ,  0.4       ,  0.53333333,  0.28      ,  0.73333333,
-             0.8       ,  0.8       ],
-           [ 1.        ,  0.75      ,  0.83333333,  0.8       ,  1.        ,
-             0.8       ,  0.33333333]])
+    array([[1.        , 0.25      , 0.5       , 0.6       , 0.83333333,
+            0.6       , 1.        ],
+           [0.25      , 0.33333333, 0.5       , 0.3       , 0.91666667,
+            0.4       , 0.75      ],
+           [0.5       , 0.5       , 0.6       , 0.4       , 0.38888889,
+            0.53333333, 0.83333333],
+           [0.6       , 0.3       , 0.4       , 0.2       , 0.4       ,
+            0.28      , 0.8       ],
+           [0.83333333, 0.91666667, 0.38888889, 0.4       , 0.6       ,
+            0.73333333, 1.        ],
+           [0.6       , 0.4       , 0.53333333, 0.28      , 0.73333333,
+            0.8       , 0.8       ],
+           [1.        , 0.75      , 0.83333333, 0.8       , 1.        ,
+            0.8       , 0.33333333]])
     >>> res.tau_reg_pvalues
-    array([[ 0.782,  0.227,  0.464,  0.638,  0.294,  0.627,  0.201],
-           [ 0.227,  0.352,  0.391,  0.14 ,  0.048,  0.252,  0.327],
-           [ 0.464,  0.391,  0.587,  0.198,  0.107,  0.423,  0.124],
-           [ 0.638,  0.14 ,  0.198,  0.141,  0.184,  0.089,  0.217],
-           [ 0.294,  0.048,  0.107,  0.184,  0.583,  0.25 ,  0.005],
-           [ 0.627,  0.252,  0.423,  0.089,  0.25 ,  0.38 ,  0.227],
-           [ 0.201,  0.327,  0.124,  0.217,  0.005,  0.227,  0.322]])
+    array([[0.782, 0.227, 0.464, 0.638, 0.294, 0.627, 0.201],
+           [0.227, 0.352, 0.391, 0.14 , 0.048, 0.252, 0.327],
+           [0.464, 0.391, 0.587, 0.198, 0.107, 0.423, 0.124],
+           [0.638, 0.14 , 0.198, 0.141, 0.184, 0.089, 0.217],
+           [0.294, 0.048, 0.107, 0.184, 0.583, 0.25 , 0.005],
+           [0.627, 0.252, 0.423, 0.089, 0.25 , 0.38 , 0.227],
+           [0.201, 0.327, 0.124, 0.217, 0.005, 0.227, 0.322]])
 
     """
 
@@ -901,7 +901,7 @@ class Tau_Regional:
             larger = np.zeros((k, k))
             smaller = np.zeros((k, k))
             rids = np.arange(len(x))
-            for i in xrange(permutations):
+            for i in range(permutations):
                 np.random.shuffle(rids)
                 res = Tau_Local(x[rids], y[rids])
                 tau_reg_sim[i] = self._calc(W, WH, P, res.S)
@@ -921,6 +921,3 @@ class Tau_Regional:
 
         return T
 
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()

@@ -148,7 +148,7 @@ def seplot(model=None, trace=None, chain=None, varnames=None,
 
 
 def rollplot(model=None, trace=None, chain=None, varnames=None,
-             order=100, roller=pd.rolling_mean,
+             order=100, roller=None,
              burn=0, thin=None, plot_kw=None, fig_kw=None, ax=None):
     """
     This plots a rolling window function, `roller`, against all parameters contained
@@ -170,7 +170,8 @@ def rollplot(model=None, trace=None, chain=None, varnames=None,
     order   :   int
                 the order of the moving process
     roller  :   callable
-                pandas rolling function that takes argument `window` to specify window size
+                function that takes arguments `data, window`, where `data` is all data and `window` is the size
+                of the window to pass over `data`, applying function `roller`. 
     burn    :   int
                 number of iterations to discard from the front of the chain. If negative, number of iterations to keep from the tail of the chain.
     thin    :   int
@@ -187,6 +188,8 @@ def rollplot(model=None, trace=None, chain=None, varnames=None,
     figure,axis tuple or, if ax is passed, ax
     """
     from . import diagnostics as diag
+    if roller is None:
+        roller = lambda data, order: pd.Series(data).rolling(order).mean()
 
     trace = diag._resolve_to_trace(model, trace, chain, varnames)
 
@@ -215,7 +218,7 @@ def rollplot(model=None, trace=None, chain=None, varnames=None,
 
 
 def conv_plot(model=None, trace=None, chain=None, varnames=None,
-              N_bins=200, roller=pd.rolling_mean,
+              N_bins=200, roller=None,
               burn=0, thin=None, plot_kw=None, fig_kw=None, ax=None):
     """
     This plots a moving average of the chain alongside of a standard error indicator. This takes a long time to compute and provides poor plots unless N_bins is very high relative to the chain length.
@@ -236,7 +239,8 @@ def conv_plot(model=None, trace=None, chain=None, varnames=None,
     N_bins  :   int
                 the number of sample points to use to compute the rolling mean and standard errors.
     roller  :   callable
-                pandas rolling function that takes argument `window` to specify window size
+                function that takes arguments `data, window`, where `data` is all data and `window` is the size
+                of the window to pass over `data`, applying function `roller`. 
     burn    :   int
                 number of iterations to discard from the front of the chain. If negative, number of iterations to keep from the tail of the chain.
     thin    :   int
@@ -254,6 +258,8 @@ def conv_plot(model=None, trace=None, chain=None, varnames=None,
 
     """
     from . import diagnostics as diag
+    if roller is None:
+        roller = lambda data, order: pd.Series(data).rolling(order).mean()
 
     trace = diag._resolve_to_trace(model, trace, chain, varnames)
 
@@ -358,7 +364,8 @@ def corrplot(m, burn=0, thin=None,
     ax[0].set_ybound(0,1)
     ax[0].set_xlabel('Distance')
     ax[0].set_ylabel('Inter-Observation $\\rho$')
-    return f,ax
+    return f, ax
+
 
 def hpd_trajplot(model=None, trace=None, chain=None, varnames=None,
                  alpha=.95, n_splits=100,
@@ -383,7 +390,8 @@ def hpd_trajplot(model=None, trace=None, chain=None, varnames=None,
     n_splits:   int
                 the number of chunks of the chain to estimate the HPD over. 
     burn    :   int
-                number of iterations to discard from the front of the chain. If negative, number of iterations to keep from the tail of the chain.
+                number of iterations to discard from the front of the chain. If negative,
+                number of iterations to keep from the tail of the chain.
     thin    :   int
                 step to thin the chain. Picks every `thin`th observation.
     fig_kw  :   dict/keyword arguments
@@ -402,17 +410,18 @@ def hpd_trajplot(model=None, trace=None, chain=None, varnames=None,
     figure,axis tuple or, if ax is passed, ax
 
     """
+    from . import diagnostics as diag
     trace = diag._resolve_to_trace(model, trace, chain, varnames)
     if varnames is None:
         varnames = trace.varnames
     p = len(varnames)
-    f,ax = plt.subplots(p,2, **fig_kw)
+    f, ax = plt.subplots(p, 2, **fig_kw)
     pieces = trace.map(np.array_split, indices_or_sections=n_splits)
     hpds = dict()
     for i, varname in enumerate(varnames):
         bits = pieces[varname]
         hpds[varname] = []
-        for i,bit in enumerate(bits):
+        for i, bit in enumerate(bits):
             try:
                 cumulant = np.hstack((cumulant, bit))
                 hpd = diag.hpd_interval(chain=cumulant, alpha=alpha)
@@ -421,12 +430,12 @@ def hpd_trajplot(model=None, trace=None, chain=None, varnames=None,
                 hpd = diag.hpd_interval(chain=cumulant, alpha=alpha)
             finally:
                 hpds[varname].append(hpd)
-        this_hpdset = np.hstack(hpds[varname]).reshape(-1,2)
+        this_hpdset = np.hstack(hpds[varname]).reshape(-1, 2)
         keff = len(this_hpdset)
-        support = np.arange(0,keff)
-        i,ax[0].plot(support, this_hpdset.T[0], **hpdi_kw)
-        i,ax[0].plot(support, this_hpdset.T[1], **hpdi_kw)
-        i,ax[0].plot(trace[varname], **trace_kw)
+        support = np.arange(0, keff)
+        i, ax[0].plot(support, this_hpdset.T[0], **hpdi_kw)
+        i, ax[0].plot(support, this_hpdset.T[1], **hpdi_kw)
+        i, ax[0].plot(trace[varname], **trace_kw)
         widths = np.subtract.reduce(this_hpdset, axis=1)
-        i,ax[1].plot(support, widths, **width_kw)
-    return f,ax
+        i, ax[1].plot(support, widths, **width_kw)
+    return f, ax

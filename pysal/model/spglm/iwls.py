@@ -40,6 +40,66 @@ def iwls(y, x, family, offset, y_fix,
     ini_betas=None, tol=1.0e-8, max_iter=200, wi=None):
     """
     Iteratively re-weighted least squares estimation routine
+
+    Parameters
+    ----------
+    y           : array
+                  n*1, dependent variable
+
+    x           : array
+                  n*k, designs matrix of k independent variables
+
+    family      : family object
+                  probability models: Gaussian, Poisson, or Binomial
+
+    offset      : array
+                  n*1, the offset variable for each observation.
+
+    y_fix       : array
+                  n*1, the fixed intercept value of y for each observation
+
+    ini_betas   : array
+                  1*k, starting values for the k betas within the iteratively
+                  weighted least squares routine 
+
+    tol         : float
+                  tolerance for estimation convergence
+
+    max_iter    : integer maximum number of iterations if convergence not met
+
+    wi          : array
+                  n*1, weights to transform observations from location i in GWR
+
+
+
+    Returns
+    -------
+
+    betas       : array
+                  k*1, estimated coefficients
+
+    mu          : array
+                  n*1, predicted y values
+
+    wx          : array
+                  n*1, final weights used for iwls for GLM
+
+    n_iter      : integer
+                  number of iterations that when iwls algorithm terminates
+
+    w           : array
+                  n*1, final weights used for iwls for GWR
+
+    z           : array
+                  iwls throughput
+
+    v           : array
+                  iwls throughput
+
+    xtx_inv_xt  : array
+                  iwls throughout to compute GWR hat matrix
+                  [X'X]^-1 X'
+
     """
     n_iter = 0
     diff = 1.0e6

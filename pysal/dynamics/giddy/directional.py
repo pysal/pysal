@@ -108,12 +108,12 @@ class Rose(object):
         >>> f.close()
         >>> lines=[line.strip().split(",") for line in lines]
         >>> names=[line[2] for line in lines[1:-5]]
-        >>> data=np.array([map(int,line[3:]) for line in lines[1:-5]])
+        >>> data=np.array([list(map(int,line[3:])) for line in lines[1:-5]])
 
         Bottom of the file has regional data which we don't need for this
         example so we will subset only those records that match a state name
 
-        >>> sids=range(60)
+        >>> sids=list(range(60))
         >>> out=['"United States 3/"',
         ...      '"Alaska 3/"',
         ...      '"District of Columbia"',
@@ -164,7 +164,7 @@ class Rose(object):
         What are the cut-offs for our histogram - in radians
 
         >>> r4.cuts
-        array([ 0.        ,  1.57079633,  3.14159265,  4.71238898,  6.28318531])
+        array([0.        , 1.57079633, 3.14159265, 4.71238898, 6.28318531])
 
         How many vectors fell in each sector
 
@@ -182,7 +182,7 @@ class Rose(object):
         and then inspect the `p` attibute:
 
         >>> r4.p
-        array([ 0.04,  0.  ,  0.02,  0.  ])
+        array([0.04, 0.  , 0.02, 0.  ])
 
         Repeat the exercise but now for 8 rather than 4 sectors
 
@@ -191,7 +191,7 @@ class Rose(object):
         array([19, 13,  3,  2,  7,  2,  1,  1])
         >>> r8.permute()
         >>> r8.p
-        array([ 0.86,  0.08,  0.16,  0.  ,  0.02,  0.2 ,  0.56,  0.  ])
+        array([0.86, 0.08, 0.16, 0.  , 0.02, 0.2 , 0.56, 0.  ])
 
         The default is a two-sided alternative. There is an option for a
         directional alternative reflecting positive co-movement of the focal
@@ -202,14 +202,14 @@ class Rose(object):
 
         >>> r8.permute(alternative='positive')
         >>> r8.p
-        array([ 0.51,  0.04,  0.28,  0.02,  0.01,  0.14,  0.57,  0.03])
+        array([0.51, 0.04, 0.28, 0.02, 0.01, 0.14, 0.57, 0.03])
 
         Finally, there is a second directional alternative for examining the
         hypothesis that the focal unit and its lag move in opposite directions.
 
         >>> r8.permute(alternative='negative')
         >>> r8.p
-        array([ 0.69,  0.99,  0.92,  1.  ,  1.  ,  0.97,  0.74,  1.  ])
+        array([0.69, 0.99, 0.92, 1.  , 1.  , 0.97, 0.74, 1.  ])
 
         """
 
@@ -298,7 +298,7 @@ class Rose(object):
             P = NEG * L + (1-NEG) * S
             self.p = P
         else:
-            print('Bad option for alternative: %s.' % alternative)
+            print(('Bad option for alternative: %s.' % alternative))
 
     def _calc(self, Y, w, k):
         wY = lag_spatial(w, Y)
@@ -366,3 +366,4 @@ class Rose(object):
         plt.axis('equal')
         plt.xlim(xlim)
         plt.ylim(ylim)
+

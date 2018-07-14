@@ -138,7 +138,7 @@ class Graph(object):
                 subgraph.nodes = connected
                 subgraph.no_link = self.no_link
                 for s in subgraph.nodes:
-                    for k, v in self.edges.get(s, {}).iteritems():
+                    for k, v in list(self.edges.get(s, {}).items()):
                         if k in subgraph.nodes:
                             subgraph.edges.setdefault(s, {}).update({k: v})
                     if s in self.cluster_lookup:
@@ -151,7 +151,7 @@ class Graph(object):
         visited.add(v)
         if first is None:
             first = v
-        for i in (n for n, w in self.edges.get(v, {}).iteritems()
+        for i in (n for n, w in list(self.edges.get(v, {}).items())
                   if op(w, threshold) and n not in visited):
             x, y = self.dfs(i, visited, threshold, op, first)
             aux.extend(x)

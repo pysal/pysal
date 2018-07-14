@@ -5,3 +5,4 @@ coverage
 sphinx>=1.4.3
 sphinxcontrib-napoleon
 coveralls
+geopandas

@@ -36,9 +36,9 @@ def steady_state(P):
     >>> import numpy as np
     >>> p=np.matrix([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])
     >>> steady_state(p)
-    matrix([[ 0.4],
-            [ 0.2],
-            [ 0.4]])
+    matrix([[0.4],
+            [0.2],
+            [0.4]])
 
     Thus, the long run distribution for Oz is to have 40 percent of the
     days classified as Rain, 20 percent as Nice, and 40 percent as Snow
@@ -80,9 +80,9 @@ def fmpt(P):
     >>> p=np.matrix([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])
     >>> fm=fmpt(p)
     >>> fm
-    matrix([[ 2.5       ,  4.        ,  3.33333333],
-            [ 2.66666667,  5.        ,  2.66666667],
-            [ 3.33333333,  4.        ,  2.5       ]])
+    matrix([[2.5       , 4.        , 3.33333333],
+            [2.66666667, 5.        , 2.66666667],
+            [3.33333333, 4.        , 2.5       ]])
 
     Thus, if it is raining today in Oz we can expect a nice day to come
     along in another 4 days, on average, and snow to hit in 3.33 days. We can
@@ -135,9 +135,9 @@ def var_fmpt(P):
     >>> p=np.matrix([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])
     >>> vfm=var_fmpt(p)
     >>> vfm
-    matrix([[  5.58333333,  12.        ,   6.88888889],
-            [  6.22222222,  12.        ,   6.22222222],
-            [  6.88888889,  12.        ,   5.58333333]])
+    matrix([[ 5.58333333, 12.        ,  6.88888889],
+            [ 6.22222222, 12.        ,  6.22222222],
+            [ 6.88888889, 12.        ,  5.58333333]])
 
     Notes
     -----

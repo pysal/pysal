@@ -6,11 +6,12 @@ def Constant():
     A constructor for a rescaled flat log probability density function.
     This will simply return 0 always. 
     """
-    def constant(val):
+    def constant(*arg, **args):
         return 0
     return constant
 
-constant = Constant()
+def constant(*args, **kwargs):
+    return 0
 
 def Beta(shapea, shapeb, bounds=(-1,1)):
     """

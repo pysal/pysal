@@ -98,8 +98,8 @@ class RectangleM:
         """
 
         dict_id_count = {}
-        for i in xrange(self.count_row):
-            for j in xrange(self.count_column):
+        for i in range(self.count_row):
+            for j in range(self.count_column):
                 dict_id_count[j+i*self.count_column] = 0
 
         for point in self.points:
@@ -128,20 +128,20 @@ class RectangleM:
         # draw cells and counts
         x_start_end = [x_min,
                        x_min + self.count_column*self.rectangle_width]
-        for row in xrange(self.count_row + 1):
+        for row in range(self.count_row + 1):
             y = y_min + row*self.rectangle_height
             ax.plot(x_start_end, [y, y], lw = line_width_cell,
                     color=line_color_cell)
         y_start_end = [y_min,
                        y_min + self.count_row*self.rectangle_height]
-        for column in xrange(self.count_column + 1):
+        for column in range(self.count_column + 1):
             x = x_min + column*self.rectangle_width
             ax.plot([x, x], y_start_end, lw = line_width_cell,
                     color=line_color_cell)
 
         dict_id_count = self.point_location_sta()
-        for x in xrange(self.count_column):
-            for y in xrange(self.count_row):
+        for x in range(self.count_column):
+            for y in range(self.count_row):
                 cell_id = x + y*self.count_column
                 count = dict_id_count[cell_id]
                 position_x = x_min + self.rectangle_width*(x+0.5)
@@ -229,8 +229,8 @@ class HexagonM:
         dict_id_count = {}
 
         # even row may be equal with odd row or 1 more than odd row
-        for i in xrange(self.count_row_even):
-            for j in xrange(self.count_column):
+        for i in range(self.count_row_even):
+            for j in range(self.count_column):
                 if self.count_row_even != self.count_row_odd and i ==\
                                 self.count_row_even-1:
                     if j % 2 == 1:
@@ -402,7 +402,7 @@ class QStatistic:
         # calculate chi2 test statisitc for the observed point pattern
         dict_id_count = self.mr.point_location_sta()
         self.chi2,self.chi2_pvalue = scipy.stats.chisquare(
-                dict_id_count.values())
+                list(dict_id_count.values()))
 
         self.df = self.mr.num - 1
 

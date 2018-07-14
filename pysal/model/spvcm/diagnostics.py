@@ -9,7 +9,6 @@ import copy as _copy
 __all__ = ['summarize', 'mcse', 'psrf', 'geweke', 'hpd_interval', 'effective_size']
 
 try:
-    import readline  # hack to work around a conda bug
     from rpy2.rinterface import RRuntimeError
     from rpy2.robjects.packages import importr
     from rpy2.robjects.numpy2ri import numpy2ri
@@ -18,7 +17,7 @@ try:
     _coda = importr('coda')
     _HAS_CODA = True
     _HAS_RPY2 = True
-except ImportError:
+except (ImportError, LookupError):
     _HAS_CODA = False
     _HAS_RPY2 = False
 except RRuntimeError:
@@ -631,7 +630,7 @@ def _mcse_obm(x, N_chunks, transform = _thru_op):
     N = len(x)
     a = N - N_chunks + 1
     chunk_size = _np.floor(N / N_chunks).astype(int)
-    y = _pd.rolling_apply(x, chunk_size, lambda vec: transform(vec).mean())
+    y = _pd.Series(x).rolling(chunk_size).apply(lambda vec: _np.mean(transform(vec)))
     y = y[~_np.isnan(y)]
     mean = transform(x).mean()
     variance = N * chunk_size * ((y - mean)**2).sum() / (a -1) / a

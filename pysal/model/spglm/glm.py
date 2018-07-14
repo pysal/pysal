@@ -218,6 +218,7 @@ class GLMResults(LikelihoodModelResults):
                         McFadden's pseudo R2  (coefficient of determination)
         adj_pseudoR2  : float
                         adjusted McFadden's pseudo R2
+        tr_S          : trace of the hat matrix S
         resid_response          : array
                                   response residuals; defined as y-mu
         resid_pearson           : array
@@ -382,3 +383,9 @@ class GLMResults(LikelihoodModelResults):
     def adj_pseudoR2(self):
         return 1 - ((self.llf-self.k)/self.llnull)
 
+    @cache_readonly
+    def tr_S(self):
+        xtx_inv = np.linalg.inv(np.dot(self.X.T, self.X))
+        xtx_inv_xt = np.dot(xtx_inv, self.X.T)
+        S = np.dot(self.X, xtx_inv_xt)
+        return np.trace(S)

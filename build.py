@@ -37,6 +37,14 @@ for package in packages:
         # pip download subpackage -d tmp --no-deps
         # tar xzf tmp/subpackage*.gz -C tmp
         # mv  tmp/subpackage*/subpackage subparent/
+        if subpackage == 'splot':
+            downloadcommand = "wget https://github.com/pysal/splot/archive/master.zip; mv master.zip tmp/."
+            os.system(downloadcommand)
+            os.system('unzip tmp/master.zip -d tmp')
+            os.system('rm tmp/master.zip')
+            cpcom = 'cp -fr tmp/'+subpackage+"*/"+subpackage+" "+"pysal/"+package+"/"
+            print('splot via wget from github')
+
 
 #os.system('git clean -fd')
 

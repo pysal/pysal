@@ -190,10 +190,10 @@ class PoissonPointProcess(PointProcess):
 
     Examples
     --------
-    >>> import pysal as ps
+    >>> import pysal.lib as ps
     >>> import numpy as np
-    >>> from points.window import Window, poly_from_bbox
-    >>> from pysal.contrib import shapely_ext
+    >>> from pointpats.window import Window, poly_from_bbox
+    >>> from pysal.lib.cg import shapely_ext
 
     Open the virginia polygon shapefile
     >>> va = ps.open(ps.examples.get_path("virginia.shp"))
@@ -339,10 +339,10 @@ class PoissonClusterPointProcess(PointProcess):
 
     Examples
     --------
-    >>> import pysal as ps
+    >>> import pysal.lib as ps
     >>> import numpy as np
-    >>> from points.window import Window, poly_from_bbox
-    >>> from pysal.contrib import shapely_ext
+    >>> from pointpats.window import Window, poly_from_bbox
+    >>> from pysal.lib.cg import shapely_ext
 
     Open the virginia polygon shapefile
     >>> va = ps.open(ps.examples.get_path("virginia.shp"))
@@ -433,8 +433,8 @@ class PoissonClusterPointProcess(PointProcess):
         l, b, r, t = self.window.bbox
         d = self.radius
         # get parent points
-        pxs = np.random.uniform(l, r, (n/self.children, 1))
-        pys = np.random.uniform(b, t, (n/self.children, 1))
+        pxs = np.random.uniform(l, r, (int(n/self.children), 1))
+        pys = np.random.uniform(b, t, (int(n/self.children), 1))
         cents = np.hstack((pxs, pys))
         # generate children points
         pnts = [runif_in_circle(self.children, d, center) for center in cents]

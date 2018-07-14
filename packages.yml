@@ -7,8 +7,6 @@ viz:
   legendgram
   mapclassify
   splot
-region:
-  region
 model:
   gwr
   spglm

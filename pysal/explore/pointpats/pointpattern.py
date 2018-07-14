@@ -45,7 +45,7 @@ class PointPattern(object):
     Examples
     --------
 
-    >>> from points.pointpattern import PointPattern
+    >>> from pointpats.pointpattern import PointPattern
     >>> points = [[66.22, 32.54], [22.52, 22.39], [31.01, 81.21],
     ...           [9.47, 31.02], [30.78, 60.10], [75.21, 58.93],
     ...           [79.26,  7.68], [8.23, 39.93], [98.73, 77.17],
@@ -60,9 +60,9 @@ class PointPattern(object):
     >>> pp.lambda_hull
     0.0022667153468973137
     >>> pp.hull_area
-    5294.0039500000003
+    5294.00395
     >>> pp.mbb_area
-    7638.2000000000007
+    7638.200000000001
 
     """
     def __init__(self, points, window=None, names=None, coord_names=None):
@@ -81,7 +81,7 @@ class PointPattern(object):
         if names is None:
             col_names = coord_names
             if p > 2:
-                for m in xrange(2, p):
+                for m in range(2, p):
                     col_names.append("mark_{}".format(m-2))
             coord_names = coord_names[:2]
         else:
@@ -160,7 +160,7 @@ class PointPattern(object):
 
     def add_marks(self, marks, mark_names=None):
         if mark_names is None:
-            nm = xrange(len(marks))
+            nm = range(len(marks))
             mark_names = ["mark_{}".format(self._n_marks+1+j) for j in nm]
         for name, mark in zip(mark_names, marks):
             self.df[name] = mark

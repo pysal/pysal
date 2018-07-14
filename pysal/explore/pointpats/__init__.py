@@ -4,3 +4,4 @@ from .centrography import mbr, std_distance, hull, euclidean_median
 from .centrography import ellipse, mean_center
 from .process import PointProcess, PoissonPointProcess
 from .process import PoissonClusterPointProcess
+from .version import version as __version__

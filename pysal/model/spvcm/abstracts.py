@@ -6,9 +6,18 @@ import multiprocessing as mp
 import pandas as pd
 import os
 
+
 from .sqlite import head_to_sql, start_sql
 from .plotting import plot_trace
 from collections import OrderedDict
+try:
+    from tqdm import tqdm
+    import six
+    if not six.PY3:
+        range = xrange
+except ImportError:
+    from .utils import thru_op
+    tqdm = thru_op
 
 __all__ = ['Sampler_Mixin', 'Hashmap', 'Trace']
 
@@ -48,11 +57,10 @@ class Sampler_Mixin(object):
             return
         _start = dt.now()
         try:
-            while n_samples > 0:
+            for _ in tqdm(range(n_samples)):
                 if (self._verbose > 1) and (n_samples % 100 == 0):
                     print('{} Draws to go'.format(n_samples))
                 self.draw()
-                n_samples -= 1
         except KeyboardInterrupt:
             warnings.warn('Sampling interrupted, drew {} samples'.format(self.cycles))
         finally:
@@ -133,9 +141,9 @@ class Sampler_Mixin(object):
         if hasattr(st, 'Tau2'):
             st.Tau2 += np.random.uniform(0,5)
         if hasattr(st, 'Lambda'):
-            st.Lambda += np.random.uniform(-.5,.5)
+            st.Lambda += np.random.uniform(-.25,.25)
         if hasattr(st, 'Rho'):
-            st.Rho += np.random.uniform(-.5,.5)
+            st.Rho += np.random.uniform(-.25,.25)
 
     def _finalize(self, **args):
         """
