@@ -98,7 +98,7 @@ class TestMake(unittest.TestCase):
 
 class TestBinC(unittest.TestCase):
     def test_bin_c(self):
-        bins = range(2, 8)
+        bins = list(range(2, 8))
         y = np.array([[7, 5, 6],
                       [2, 3, 5],
                       [7, 2, 2],
@@ -177,29 +177,29 @@ class TestNaturalBreaks(unittest.TestCase):
 
     def test_Natural_Breaks(self):
         nb = Natural_Breaks(self.V, 5)
-        self.assertEquals(nb.k, 5)
-        self.assertEquals(len(nb.counts), 5)
+        self.assertEqual(nb.k, 5)
+        self.assertEqual(len(nb.counts), 5)
         np.testing.assert_array_almost_equal(
             nb.counts, np.array([41, 9, 6, 1, 1]))
 
     def test_Natural_Breaks_stability(self):
         for i in range(10):
             nb = Natural_Breaks(self.V, 5)
-            self.assertEquals(nb.k, 5)
-            self.assertEquals(len(nb.counts), 5)
+            self.assertEqual(nb.k, 5)
+            self.assertEqual(len(nb.counts), 5)
 
     def test_Natural_Breaks_randomData(self):
         for i in range(10):
             V = np.random.random(50) * (i + 1)
             nb = Natural_Breaks(V, 5)
-            self.assertEquals(nb.k, 5)
-            self.assertEquals(len(nb.counts), 5)
+            self.assertEqual(nb.k, 5)
+            self.assertEqual(len(nb.counts), 5)
 
 
 
 class TestHeadTailBreaks(unittest.TestCase):
     def setUp(self):
-        x = range(1,1000)
+        x = list(range(1,1000))
         y = []
         for i in x:
             y.append(i**(-2))
@@ -207,8 +207,8 @@ class TestHeadTailBreaks(unittest.TestCase):
 
     def test_HeadTail_Breaks(self):
         htb = HeadTail_Breaks(self.V)
-        self.assertEquals(htb.k, 4)
-        self.assertEquals(len(htb.counts), 4)
+        self.assertEqual(htb.k, 4)
+        self.assertEqual(len(htb.counts), 4)
         np.testing.assert_array_almost_equal(
             htb.counts, np.array([975,  21,   2,   1]))
 
@@ -314,7 +314,7 @@ class TestMaximumBreaks(unittest.TestCase):
 
     def test_Maximum_Breaks(self):
         mb = Maximum_Breaks(self.V, k=5)
-        self.assertEquals(mb.k, 5)
+        self.assertEqual(mb.k, 5)
         np.testing.assert_array_almost_equal(mb.bins,
                                              np.array(
                                                  [146.005, 228.49, 546.675, 2417.15,
@@ -329,7 +329,7 @@ class TestFisherJenks(unittest.TestCase):
 
     def test_Fisher_Jenks(self):
         fj = Fisher_Jenks(self.V)
-        self.assertEquals(fj.adcm, 799.24000000000001)
+        self.assertEqual(fj.adcm, 799.24000000000001)
         np.testing.assert_array_almost_equal(fj.bins, np.array([   75.29,   192.05,   370.5 ,
                                                                 722.85,  4111.45]))
         np.testing.assert_array_almost_equal(fj.counts, np.array([49, 3, 4,
@@ -426,8 +426,8 @@ class TestGadf(unittest.TestCase):
 
     def test_gadf(self):
         qgadf = gadf(self.V)
-        self.assertEquals(qgadf[0], 15)
-        self.assertEquals(qgadf[-1], 0.37402575909092828)
+        self.assertEqual(qgadf[0], 15)
+        self.assertEqual(qgadf[-1], 0.37402575909092828)
 
 
 class TestKClassifiers(unittest.TestCase):
@@ -437,9 +437,9 @@ class TestKClassifiers(unittest.TestCase):
     def test_K_classifiers(self):
         np.random.seed(100)
         ks = K_classifiers(self.V)
-        self.assertEquals(ks.best.name, 'Fisher_Jenks')
-        self.assertEquals(ks.best.gadf, 0.84810327199081048)
-        self.assertEquals(ks.best.k, 4)
+        self.assertEqual(ks.best.name, 'Fisher_Jenks')
+        self.assertEqual(ks.best.gadf, 0.84810327199081048)
+        self.assertEqual(ks.best.k, 4)
 
 if __name__ == '__main__':
     unittest.main()

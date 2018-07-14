@@ -131,7 +131,7 @@ class VecMoran:
     >>> import numpy as np
     >>> np.random.seed(1)
     >>> from pysal_core.weights import DistanceBand
-    >>> from pysal.model.spint.vec_SA import VecMoran
+    >>> from spint.vec_SA import VecMoran
     >>> vecs = np.array([[1, 55, 60, 100, 500], 
     >>>                 [2, 60, 55, 105, 501], 
     >>>                 [3, 500, 55, 155, 500], 

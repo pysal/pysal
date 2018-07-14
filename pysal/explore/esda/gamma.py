@@ -3,7 +3,7 @@ Gamma index for spatial autocorrelation
 
 
 """
-__author__ = "Luc Anselin <luc.anselin@asu.edu>"
+__author__ = "Luc Anselin <luc.anselin@asu.edu> Serge Rey <sjsrey@gmail.com>"
 
 import numpy as np
 from pysal.lib.weights.spatial_lag import lag_spatial
@@ -75,18 +75,19 @@ class Gamma(object):
 
     use same example as for join counts to show similarity
 
-    >>> import pysal, numpy as np
-    >>> w=pysal.lat2W(4,4)
+    >>> import pysal.lib.api as lps, numpy as np
+    >>> from pysal.explore.esda.gamma import Gamma
+    >>> w = lps.lat2W(4,4)
     >>> y=np.ones(16)
     >>> y[0:8]=0
     >>> np.random.seed(12345)
-    >>> g = pysal.Gamma(y,w)
+    >>> g = Gamma(y,w)
     >>> g.g
     20.0
     >>> round(g.g_z, 3)
     3.188
-    >>> g.p_sim_g
-    0.0030000000000000001
+    >>> round(g.p_sim_g, 3)
+    0.003
     >>> g.min_g
     0.0
     >>> g.max_g
@@ -94,7 +95,7 @@ class Gamma(object):
     >>> g.mean_g
     11.093093093093094
     >>> np.random.seed(12345)
-    >>> g1 = pysal.Gamma(y,w,operation='s')
+    >>> g1 = Gamma(y,w,operation='s')
     >>> g1.g
     8.0
     >>> round(g1.g_z, 3)
@@ -108,7 +109,7 @@ class Gamma(object):
     >>> g1.mean_g
     25.623623623623622
     >>> np.random.seed(12345)
-    >>> g2 = pysal.Gamma(y,w,operation='a')
+    >>> g2 = Gamma(y,w,operation='a')
     >>> g2.g
     8.0
     >>> round(g2.g_z, 3)
@@ -122,7 +123,7 @@ class Gamma(object):
     >>> g2.mean_g
     25.623623623623622
     >>> np.random.seed(12345)
-    >>> g3 = pysal.Gamma(y,w,standardize='y')
+    >>> g3 = Gamma(y,w,standardize='y')
     >>> g3.g
     32.0
     >>> round(g3.g_z, 3)
@@ -140,13 +141,13 @@ class Gamma(object):
     ...     q = z[i]*z[j]
     ...     return q
     ...
-    >>> g4 = pysal.Gamma(y,w,operation=func)
+    >>> g4 = Gamma(y,w,operation=func)
     >>> g4.g
     20.0
     >>> round(g4.g_z, 3)
     3.188
-    >>> g4.p_sim_g
-    0.0030000000000000001
+    >>> round(g4.p_sim_g, 3)
+    0.003
 
     """
     def __init__(self, y, w, operation='c', standardize='no', permutations=PERMUTATIONS):

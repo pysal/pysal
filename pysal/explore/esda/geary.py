@@ -1,7 +1,7 @@
 """
 Geary's C statistic for spatial autocorrelation
 """
-__author__ = "Sergio J. Rey <srey@asu.edu> "
+__author__ = "Serge Rey <sjsrey@gmail.com> "
 
 import numpy as np
 import scipy.stats as stats
@@ -80,14 +80,15 @@ class Geary(object):
 
     Examples
     --------
-    >>> import pysal
-    >>> w = pysal.open(pysal.examples.get_path("book.gal")).read()
-    >>> f = pysal.open(pysal.examples.get_path("book.txt"))
+    >>> import pysal.lib.api as lps
+    >>> from pysal.explore.esda.geary import Geary
+    >>> w = lps.open(lps.get_path("book.gal")).read()
+    >>> f = lps.open(lps.get_path("book.txt"))
     >>> y = np.array(f.by_col['y'])
     >>> c = Geary(y,w,permutations=0)
-    >>> print round(c.C,7)
+    >>> round(c.C,7)
     0.3330108
-    >>> print round(c.p_norm,7)
+    >>> round(c.p_norm,7)
     9.2e-05
     >>>
     """
@@ -149,14 +150,15 @@ class Geary(object):
         s1 = w.s1
         s2 = w.s2
         s02 = s0 * s0
-
         yd = y - y.mean()
-        k = (1 / (sum(yd ** 4)) * ((sum(yd ** 2)) ** 2))
-        vc_rand = (1 / (n * ((n - 2) ** 2) * s02)) * \
-            ((((n - 1) * s1) * (n * n - 3 * n + 3 - (n - 1) * k))
-             - ((.25 * (n - 1) * s2) * (n * n + 3 * n - 6 -
-                (n * n - n + 2) * k))
-                + (s02 * (n * n - 3 - ((n - 1) ** 2) * k)))
+        yd4 = yd**4
+        yd2 = yd**2
+        n2 = n * n
+        k = (yd4.sum() / n) / ((yd2.sum()/n)**2)
+        A = (n-1) * s1 * (n2 - 3*n + 3 - (n-1) * k)
+        B = (1./4) * ((n-1) * s2 * (n2 + 3*n - 6 - (n2 - n +2) * k ))
+        C = s02 * (n2 - 3 - (n-1)**2 * k)
+        vc_rand = (A-B+C) / (n * (n-2) * (n-3)*s02)
         vc_norm = ((1 / (2 * (n + 1) * s02)) *
                    ((2 * s1 + s2) * (n - 1) - 4 * s02))
 

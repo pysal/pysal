@@ -42,7 +42,7 @@ class CountModel(object):
 
     Example
     -------
-    >>> from pysal.model.spint.count_model import CountModel
+    >>> from spint.count_model import CountModel
     >>> import pysal.lib
     >>> db = pysal.lib.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
     >>> y =  np.array(db.by_col("HOVAL"))

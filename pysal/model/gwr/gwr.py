@@ -347,7 +347,7 @@ class GWR(GLM):
         else:
             self.P = P
         self.W = self._build_W(self.fixed, self.kernel, self.coords, self.bw, points)
-        pysal.model.gwr= self.fit(**fit_params)
+        gwr = self.fit(**fit_params)
 
         return gwr
 
@@ -1041,7 +1041,7 @@ class GWRResults(GLMResults):
         ----------
         selector        : sel_bw object
                           should be the sel_bw object used to select a bandwidth
-                          for the pysal.model.gwrmodel that produced the surfaces that are
+                          for the gwr model that produced the surfaces that are
                           being tested for spatial variation
         
         n_iters         : int

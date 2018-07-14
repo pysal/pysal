@@ -2,22 +2,20 @@
 A module of classification schemes for choropleth mapping.
 """
 
-
 try:
     xrange
 except:
     xrange = range
 
-
 __author__ = "Sergio J. Rey"
 
-__all__ = ['Map_Classifier', 'quantile', 'Box_Plot', 'Equal_Interval',
-           'Fisher_Jenks', 'Fisher_Jenks_Sampled', 'Jenks_Caspall',
-           'Jenks_Caspall_Forced', 'Jenks_Caspall_Sampled',
-           'Max_P_Classifier', 'Maximum_Breaks', 'Natural_Breaks',
-           'Quantiles', 'Percentiles', 'Std_Mean', 'User_Defined',
-           'gadf', 'K_classifiers', 'HeadTail_Breaks', 'CLASSIFIERS']
-
+__all__ = [
+    'Map_Classifier', 'quantile', 'Box_Plot', 'Equal_Interval', 'Fisher_Jenks',
+    'Fisher_Jenks_Sampled', 'Jenks_Caspall', 'Jenks_Caspall_Forced',
+    'Jenks_Caspall_Sampled', 'Max_P_Classifier', 'Maximum_Breaks',
+    'Natural_Breaks', 'Quantiles', 'Percentiles', 'Std_Mean', 'User_Defined',
+    'gadf', 'K_classifiers', 'HeadTail_Breaks', 'CLASSIFIERS'
+]
 
 CLASSIFIERS = ('Box_Plot', 'Equal_Interval', 'Fisher_Jenks',
                'Fisher_Jenks_Sampled', 'HeadTail_Breaks', 'Jenks_Caspall',
@@ -35,6 +33,7 @@ from warnings import warn as Warn
 try:
     from numba import autojit
 except ImportError:
+
     def autojit(func):
         return func
 
@@ -46,7 +45,7 @@ def headTail_breaks(values, cuts):
     values = np.array(values)
     mean = np.mean(values)
     cuts.append(mean)
-    if (len(values) > 1):
+    if len(values) > 1:
         return headTail_breaks(values[values >= mean], cuts)
     return cuts
 
@@ -292,7 +291,7 @@ def _kmeans(y, k=5):
     Helper function to do kmeans in one dimension
     """
 
-    y = y * 1.   # KMEANS needs float or double dtype
+    y = y * 1.  # KMEANS needs float or double dtype
     centroids = KMEANS(y, k)[0]
     centroids.sort()
     try:
@@ -588,7 +587,7 @@ class Map_Classifier(object):
         rolling = kwargs.pop('rolling', False)
         if rolling:
             #  just initialize a fake classifier
-            data = range(10)
+            data = list(range(10))
             cls_instance = cls(data, *args, **kwargs)
             #  and empty it, since we'll be using the update
             cls_instance.y = np.array([])
@@ -780,7 +779,7 @@ class Map_Classifier(object):
         x = np.asarray(x).flatten()
         right = np.digitize(x, self.bins, right=True)
         if right.max() == len(self.bins):
-            right[right == len(self.bins)] = len(self.bins)-1
+            right[right == len(self.bins)] = len(self.bins) - 1
         return right
 
 
@@ -833,6 +832,7 @@ class HeadTail_Breaks(Map_Classifier):
     Based on contributions by Alessandra Sozzi <alessandra.sozzi@gmail.com>.
 
     """
+
     def __init__(self, y):
         Map_Classifier.__init__(self, y)
         self.name = 'HeadTail_Breaks'
@@ -1102,7 +1102,7 @@ class Box_Plot(Map_Classifier):
         self.low_outlier_ids = np.nonzero(self.yb == 0)[0]
         self.high_outlier_ids = np.nonzero(self.yb == 5)[0]
 
-    def update(self, y=None,  inplace=False, **kwargs):
+    def update(self, y=None, inplace=False, **kwargs):
         """
         Add data or change classification parameters.
 
@@ -1221,6 +1221,7 @@ class Std_Mean(Map_Classifier):
     >>>
 
     """
+
     def __init__(self, y, multiples=[-2, -1, 1, 2]):
         self.multiples = multiples
         Map_Classifier.__init__(self, y)
@@ -1304,6 +1305,7 @@ class Maximum_Breaks(Map_Classifier):
     >>>
 
     """
+
     def __init__(self, y, k=5, mindiff=0):
         self.k = k
         self.mindiff = mindiff
@@ -1417,6 +1419,7 @@ class Natural_Breaks(Map_Classifier):
 
 
     """
+
     def __init__(self, y, k=K, initial=100):
         self.k = k
         self.initial = initial
@@ -1444,7 +1447,7 @@ class Natural_Breaks(Map_Classifier):
             # find an initial solution and then try to find an improvement
             res0 = natural_breaks(x, k)
             fit = res0[2]
-            for i in list(xrange(self.initial)):
+            for i in list(range(self.initial)):
                 res = natural_breaks(x, k)
                 fit_i = res[2]
                 if fit_i < fit:
@@ -1651,6 +1654,7 @@ class Jenks_Caspall(Map_Classifier):
     array([14, 13, 14, 10,  7])
 
     """
+
     def __init__(self, y, k=K):
         self.k = k
         Map_Classifier.__init__(self, y)
@@ -1671,7 +1675,7 @@ class Jenks_Caspall(Map_Classifier):
         xb0 = xb.copy()
         q = xm
         it = 0
-        rk = range(self.k)
+        rk = list(range(self.k))
         while solving:
             xb = np.zeros(xb0.shape, int)
             d = abs(x - q)
@@ -1683,7 +1687,7 @@ class Jenks_Caspall(Map_Classifier):
             it += 1
             q = np.array([np.median(x[xb == i]) for i in rk])
         cuts = np.array([max(x[xb == i]) for i in sp.unique(xb)])
-        cuts.shape = (len(cuts),)
+        cuts.shape = (len(cuts), )
         self.bins = cuts
         self.iterations = it
 
@@ -1849,6 +1853,7 @@ class Jenks_Caspall_Forced(Map_Classifier):
     array([15, 14, 14, 15])
     >>>
     """
+
     def __init__(self, y, k=K):
         self.k = k
         Map_Classifier.__init__(self, y)
@@ -2079,6 +2084,7 @@ class Max_P_Classifier(Map_Classifier):
     array([29,  8,  1, 10, 10])
 
     """
+
     def __init__(self, y, k=K, initial=1000):
         self.k = k
         self.initial = initial
@@ -2099,9 +2105,11 @@ class Max_P_Classifier(Map_Classifier):
         tss_all = np.zeros((self.initial, 1))
         while solution < self.initial:
             remaining = list(range(n))
-            seeds = [np.nonzero(di == min(
-                di))[0][0] for di in [np.abs(x - qi) for qi in q]]
-            rseeds = np.random.permutation(range(k)).tolist()
+            seeds = [
+                np.nonzero(di == min(di))[0][0]
+                for di in [np.abs(x - qi) for qi in q]
+            ]
+            rseeds = np.random.permutation(list(range(k))).tolist()
             [remaining.remove(seed) for seed in seeds]
             self.classes = classes = []
             [classes.append([seed]) for seed in seeds]
@@ -2145,7 +2153,7 @@ class Max_P_Classifier(Map_Classifier):
                 a2c[a] = r
         swapping = True
         while swapping:
-            rseeds = np.random.permutation(range(k)).tolist()
+            rseeds = np.random.permutation(list(range(k))).tolist()
             total_moves = 0
             while rseeds:
                 id = rseeds.pop()
@@ -2251,6 +2259,7 @@ def _fit(y, classes):
         css *= css
         tss += sum(css)
     return tss
+
 
 kmethods = {}
 kmethods["Quantiles"] = Quantiles
@@ -2372,6 +2381,7 @@ class K_classifiers(object):
     gadf
 
     """
+
     def __init__(self, y, pct=0.8):
         results = {}
         best = gadf(y, "Fisher_Jenks", maxk=len(y) - 1, pct=pct)

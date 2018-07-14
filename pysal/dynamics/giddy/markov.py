@@ -75,6 +75,8 @@ class Markov(object):
 
     Examples
     --------
+    >>> import numpy as np
+    >>> from pysal.dynamics.giddy.api import Markov
     >>> c = [['b','a','c'],['c','c','a'],['c','b','c']]
     >>> c.extend([['a','a','b'], ['a','b','c']])
     >>> c = np.array(c)
@@ -93,6 +95,7 @@ class Markov(object):
     US nominal per capita income 48 states 81 years 1929-2009
 
     >>> import pysal.lib
+    >>> import pysal.viz.mapclassify.api as mc
     >>> f = pysal.lib.open(pysal.lib.examples.get_path("usjoin.csv"))
     >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)])
 
@@ -266,13 +269,12 @@ class Spatial_Markov(object):
                       permutations.
     Q               : float
                       Chi-square test of homogeneity across lag classes based
-                      on Bickenbach and Bode (2003) [Bickenbach2003]_.
+                      on :cite:`Bickenbach2003`.
     Q_p_value       : float
                       p-value for Q.
     LR              : float
                       Likelihood ratio statistic for homogeneity across lag
-                      classes based on Bickenback and Bode (2003)
-                      [Bickenbach2003]_.
+                      classes based on :cite:`Bickenbach2003`.
     LR_p_value      : float
                       p-value for LR.
     dof_hom         : int
@@ -280,18 +282,18 @@ class Spatial_Markov(object):
 
     Notes
     -----
-    Based on  Rey (2001) [Rey2001]_.
+    Based on :cite:`Rey2001`.
 
     The shtest and chi2 tests should be used with caution as they are based on
     classic theory assuming random transitions. The x2 based test is
     preferable since it simulates the randomness under the null. It is an
     experimental test requiring further analysis.
 
-    This is new
-
     Examples
     --------
     >>> import pysal.lib
+    >>> from pysal.dynamics.giddy.api import Spatial_Markov
+    >>> import numpy as np
     >>> f = pysal.lib.open(pysal.lib.examples.get_path("usjoin.csv"))
     >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)])
     >>> pci = pci.transpose()
@@ -593,6 +595,14 @@ class Spatial_Markov(object):
         return mat
 
     def summary(self, file_name=None):
+        '''
+        A summary method to call the Markov homogeneity test to test for
+        temporally lagged spatial dependence.
+
+        To learn more about the properties of the tests, refer to
+        :cite:`Rey2016a` and :cite:`Kang2018`.
+        '''
+
         class_names = ["C%d" % i for i in range(self.k)]
         regime_names = ["LAG%d" % i for i in range(self.k)]
         ht = homogeneity(self.T, class_names=class_names,
@@ -634,9 +644,9 @@ def chi2(T1, T2):
 
     Parameters
     ----------
-    T1    : matrix
+    T1    : array
             (k, k), matrix of transitions (counts).
-    T2    : matrix
+    T2    : array
             (k, k), matrix of transitions (counts) to use to form the
             probabilities under the null.
 
@@ -649,6 +659,8 @@ def chi2(T1, T2):
     Examples
     --------
     >>> import pysal.lib
+    >>> from pysal.dynamics.giddy.api import Spatial_Markov
+    >>> from pysal.dynamics.giddy.markov import chi2
     >>> f = pysal.lib.open(pysal.lib.examples.get_path("usjoin.csv"))
     >>> years = list(range(1929, 2010))
     >>> pci = np.array([f.by_col[str(y)] for y in years]).transpose()
@@ -745,11 +757,11 @@ class LISA_Markov(Markov):
                    transition occurred (q1 is quadrant in period 1, q2 is
                    quadrant in period 2).
 
-    .. Table:: Move Types
+                   .. table:: Move Types
 
-                   ==  ==     ========
+                   ==  ==     =========
                    q1  q2     move_type
-                   ==  ==     ========
+                   ==  ==     =========
                    1   1      1
                    1   2      2
                    1   3      3
@@ -766,7 +778,7 @@ class LISA_Markov(Markov):
                    4   2      14
                    4   3      15
                    4   4      16
-                   ==  ==     ========
+                   ==  ==     =========
 
     p            : matrix
                    (k, k), transition probability matrix.
@@ -779,21 +791,22 @@ class LISA_Markov(Markov):
                         significant in period t, else st=0 (if permutations >
                         0).
 
-    .. Table:: Significant Moves
+                        .. Table:: Significant Moves1
 
-                       ===============  ===================
-                       (s1,s2)          move_type
-                       ===============  ===================
-                       (1,1)            [1, 16]
-                       (1,0)            [17, 32]
-                       (0,1)            [33, 48]
-                       (0,0)            [49, 64]
-                       ===============  ===================
+                        ===============  ===================
+                        (s1,s2)          move_type
+                        ===============  ===================
+                        (1,1)            [1, 16]
+                        (1,0)            [17, 32]
+                        (0,1)            [33, 48]
+                        (0,0)            [49, 64]
+                        ===============  ===================
 
+                        .. Table:: Significant Moves2
 
-                       == ==  ==  ==  =========
-                       q1 q2  s1  s2  move_type
-                       == ==  ==  ==  =========
+                        == ==  ==  ==  =========
+                        q1 q2  s1  s2  move_type
+                        == ==  ==  ==  =========
                         1  1   1   1   1
                         1  2   1   1   2
                         1  3   1   1   3
@@ -828,7 +841,7 @@ class LISA_Markov(Markov):
                         .  .   .   .    .
                         4  3   0   0   63
                         4  4   0   0   64
-                       == ==  ==  ==  =========
+                        == ==  ==  ==  =========
 
     steady_state : matrix
                    (k, 1), ergodic distribution.
@@ -843,6 +856,7 @@ class LISA_Markov(Markov):
     --------
     >>> import pysal.lib
     >>> import numpy as np
+    >>> from pysal.dynamics.giddy.api import LISA_Markov
     >>> f = pysal.lib.open(pysal.lib.examples.get_path("usjoin.csv"))
     >>> years = list(range(1929, 2010))
     >>> pci = np.array([f.by_col[str(y)] for y in years]).transpose()
@@ -1011,6 +1025,7 @@ class LISA_Markov(Markov):
         Examples
         --------
         >>> import pysal.lib
+        >>> from pysal.dynamics.giddy.api import LISA_Markov
         >>> f = pysal.lib.open(pysal.lib.examples.get_path("usjoin.csv"))
         >>> years = list(range(1929, 2010))
         >>> pci = np.array([f.by_col[str(y)] for y in years]).transpose()
@@ -1143,11 +1158,13 @@ def kullback(F):
 
     Notes
     -----
-    Based on  Kullback, Kupperman and Ku (1962) [Kullback1962]_.
+    Based on :cite:`Kullback1962`.
     Example below is taken from Table 9.2 .
 
     Examples
     --------
+    >>> import numpy as np
+    >>> from pysal.dynamics.giddy.api import kullback
     >>> s1 = np.array([
     ...         [ 22, 11, 24,  2,  2,  7],
     ...         [ 5, 23, 15,  3, 42,  6],
@@ -1233,6 +1250,7 @@ def prais(pmat):
     --------
     >>> import numpy as np
     >>> import pysal.lib
+    >>> from pysal.dynamics.giddy.api import prais
     >>> f = pysal.lib.open(pysal.lib.examples.get_path("usjoin.csv"))
     >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)])
     >>> q5 = np.array([mc.Quantiles(y).yb for y in pci]).transpose()
@@ -1308,8 +1326,7 @@ class Homogeneity_Results:
 
     Notes
     -----
-    Degrees of freedom adjustment follow the approach in Bickenbach and Bode
-    (2003) [Bickenbach2003]_.
+    Degrees of freedom adjustment follow the approach in :cite:`Bickenbach2003`.
 
     Examples
     --------
@@ -1503,5 +1520,3 @@ class Homogeneity_Results:
                 c.append("\\end{tabular}")
                 s2 = "".join(c)
                 f.write(s1+s2)
-
-

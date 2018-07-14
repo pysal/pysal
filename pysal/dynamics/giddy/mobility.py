@@ -18,8 +18,8 @@ def markov_mobility(p, measure="P",ini=None):
     p       : array
               (k, k), Markov transition probability matrix.
     measure : string
-              If measure = "P",
-              :math:`M_{P} = \frac{m-\sum_{i=1}^m P_{ii}}{m-1}`;
+              If measure= "P",
+              :math:`M_{P} = \\frac{m-\sum_{i=1}^m P_{ii}}{m-1}`;
               if measure = "D",
               :math:`M_{D} = 1 - |\det(P)|`,
               where :math:`\det(P)` is the determinant of :math:`P`;
@@ -28,10 +28,10 @@ def markov_mobility(p, measure="P",ini=None):
               where :math:`\lambda_2` is the second largest eigenvalue of
               :math:`P`;
               if measure = "B1",
-              :math:`M_{B1} = \frac{m-m \sum_{i=1}^m \pi_i P_{ii}}{m-1}`,
+              :math:`M_{B1} = \\frac{m-m \sum_{i=1}^m \pi_i P_{ii}}{m-1}`,
               where :math:`\pi` is the initial income distribution;
               if measure == "B2",
-              :math:`M_{Bartholomew2} = \frac{1}{m-1} \sum_{i=1}^m \sum_{
+              :math:`M_{B2} = \\frac{1}{m-1} \sum_{i=1}^m \sum_{
               j=1}^m \pi_i P_{ij} |i-j|`,
               where :math:`\pi` is the initial income distribution.
     ini     : array
@@ -45,24 +45,56 @@ def markov_mobility(p, measure="P",ini=None):
     mobi    : float
               Mobility value.
 
+    Notes
+    -----
+    The mobility indices are based on :cite:`Formby:2004fk`.
+
     Examples
     --------
     >>> import numpy as np
     >>> import pysal.lib
-    >>> import giddy.markov
     >>> import pysal.viz.mapclassify.api as mc
+    >>> from pysal.dynamics.giddy.api import Markov, markov_mobility
     >>> f = pysal.lib.open(pysal.lib.examples.get_path("usjoin.csv"))
     >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)])
     >>> q5 = np.array([mc.Quantiles(y).yb for y in pci]).transpose()
-    >>> m = giddy.markov.Markov(q5)
+    >>> m = Markov(q5)
     >>> m.p
     matrix([[0.91011236, 0.0886392 , 0.00124844, 0.        , 0.        ],
             [0.09972299, 0.78531856, 0.11080332, 0.00415512, 0.        ],
             [0.        , 0.10125   , 0.78875   , 0.1075    , 0.0025    ],
             [0.        , 0.00417827, 0.11977716, 0.79805014, 0.07799443],
             [0.        , 0.        , 0.00125156, 0.07133917, 0.92740926]])
+
+    (1) Estimate Shorrock1 mobility index:
+
     >>> markov_mobility(m.p, measure="P")
     0.19758992000997844
+
+    (2) Estimate Shorrock2 mobility index:
+
+    >>> markov_mobility(m.p, measure="D")
+    0.6068485462369559
+
+    (3) Estimate Sommers and Conlisk mobility index:
+
+    >>> markov_mobility(m.p, measure="L2")
+    0.03978200230815965
+
+    (4) Estimate Bartholomew1 mobility index (note that the initial
+    distribution should be given):
+
+    >>> ini = np.array([0.1,0.2,0.2,0.4,0.1])
+    >>> markov_mobility(m.p, measure = "B1", ini=ini)
+    0.2277675878319787
+
+    (5) Estimate Bartholomew2 mobility index (note that the initial
+    distribution should be given):
+
+    >>> ini = np.array([0.1,0.2,0.2,0.4,0.1])
+    >>> markov_mobility(m.p, measure = "B2", ini=ini)
+    0.04636660119478926
+
     """
 
     p = np.array(p)

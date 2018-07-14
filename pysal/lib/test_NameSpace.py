@@ -21,7 +21,7 @@ class TestNameSpace(unittest.TestCase):
                           'TheilD', 'TheilDSim', 'Theta', 'User_Defined', 'W', 'adaptive_kernelW',
                           'adaptive_kernelW_from_shapefile', 'bin', 'bin1d',
                           'binC', 'buildContiguity', 'cg', 'comb', 'common',
-                          'core', 'directional', 'ergodic', 'pysal.explore.esda', 'full',
+                          'core', 'directional', 'ergodic', 'pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.esda', 'full',
                           'gadf', 'higher_order', 'inequality', 'kernelW',
                           'kernelW_from_shapefile', 'knnW', 'knnW_from_array',
                           'knnW_from_shapefile', 'lag_spatial', 'lat2W',

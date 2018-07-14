@@ -67,7 +67,7 @@ class G(object):
 
     Examples
     --------
-    >>> from pysal.weights.Distance import DistanceBand
+    >>> import pysal.lib.api as lps
     >>> import numpy
     >>> numpy.random.seed(10)
 
@@ -75,21 +75,22 @@ class G(object):
     >>> points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
 
     Creating a weights object from points
-    >>> w = DistanceBand(points,threshold=15)
+    >>> w = lps.DistanceBand(points,threshold=15)
     >>> w.transform = "B"
 
     Preparing a variable
     >>> y = numpy.array([2, 3, 3.2, 5, 8, 7])
 
     Applying Getis and Ord G test
+    >>> from pysal.explore.esda.getisord import G
     >>> g = G(y,w)
 
     Examining the results
-    >>> print "%.8f" % g.G
-    0.55709779
+    >>> round(g.G, 3)
+    0.557
 
-    >>> print "%.4f" % g.p_norm
-    0.1729
+    >>> round(g.p_norm, 3)
+    0.173
 
     """
 
@@ -277,7 +278,7 @@ class G_Local(object):
 
     Examples
     --------
-    >>> from pysal.weights.Distance import DistanceBand
+    >>> import pysal.lib.api as lps
     >>> import numpy
     >>> numpy.random.seed(10)
 
@@ -287,21 +288,22 @@ class G_Local(object):
 
     Creating a weights object from points
 
-    >>> w = DistanceBand(points,threshold=15)
+    >>> w = lps.DistanceBand(points,threshold=15)
 
     Prepareing a variable
 
     >>> y = numpy.array([2, 3, 3.2, 5, 8, 7])
 
     Applying Getis and Ord local G test using a binary weights object
+    >>> from pysal.explore.esda.getisord import G_Local
     >>> lg = G_Local(y,w,transform='B')
 
     Examining the results
     >>> lg.Zs
     array([-1.0136729 , -0.04361589,  1.31558703, -0.31412676,  1.15373986,
             1.77833941])
-    >>> lg.p_sim[0]
-    0.10100000000000001
+    >>> round(lg.p_sim[0], 3)
+    0.101
 
     >>> numpy.random.seed(10)
 
@@ -312,10 +314,10 @@ class G_Local(object):
     >>> lg_star.Zs
     array([-1.39727626, -0.28917762,  0.65064964, -0.28917762,  1.23452088,
             2.02424331])
-    >>> lg_star.p_sim[0]
-    0.10100000000000001
+    >>> round(lg_star.p_sim[0], 3)
+    0.101
 
-    >>> numpy.random.seed(10)
+    >>> numpy.random.seed(12345)
 
     Applying Getis and Ord local G test using a row-standardized weights object
     >>> lg = G_Local(y,w,transform='R')
@@ -324,8 +326,8 @@ class G_Local(object):
     >>> lg.Zs
     array([-0.62074534, -0.01780611,  1.31558703, -0.12824171,  0.28843496,
             1.77833941])
-    >>> lg.p_sim[0]
-    0.10100000000000001
+    >>> round(lg.p_sim[0], 3)
+    0.103
 
     >>> numpy.random.seed(10)
 
@@ -336,8 +338,8 @@ class G_Local(object):
     >>> lg_star.Zs
     array([-0.62488094, -0.09144599,  0.41150696, -0.09144599,  0.24690418,
             1.28024388])
-    >>> lg_star.p_sim[0]
-    0.10100000000000001
+    >>> round(lg_star.p_sim[0], 3)
+    0.101
 
     """
     def __init__(self, y, w, transform='R', permutations=PERMUTATIONS, star=False):

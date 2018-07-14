@@ -455,7 +455,8 @@ def check_weights(w, y, w_required=False):
         if w == None:
             raise Exception("A weights matrix w must be provided to run this method.")
         if not isinstance(w, weights.W):
-            raise Exception("w must be a pysal.lib.W object")
+            from warnings import warn
+            warn("w must be API-compatible pysal weights object")
         if w.n != y.shape[0]:
             raise Exception("y must be nx1, and w must be an nxn PySAL W object")
         diag = w.sparse.diagonal()

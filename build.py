@@ -14,6 +14,7 @@ for package in packages:
     #print(package)
     subpackages = packages[package].split()
     for subpackage in subpackages:
+        """
         #print(package, subpackage)
         #print(upstream)
 
@@ -37,13 +38,16 @@ for package in packages:
         # pip download subpackage -d tmp --no-deps
         # tar xzf tmp/subpackage*.gz -C tmp
         # mv  tmp/subpackage*/subpackage subparent/
-        if subpackage == 'splot':
-            downloadcommand = "wget https://github.com/pysal/splot/archive/master.zip; mv master.zip tmp/."
-            os.system(downloadcommand)
-            os.system('unzip tmp/master.zip -d tmp')
-            os.system('rm tmp/master.zip')
-            cpcom = 'cp -fr tmp/'+subpackage+"*/"+subpackage+" "+"pysal/"+package+"/"
-            print('splot via wget from github')
+        """
+        pkgstr = "https://github.com/pysal/%s/archive/master.zip" % subpackage 
+        downloadcommand = "wget %s; mv master.zip tmp/." % pkgstr
+        #downloadcommand = "wget https://github.com/pysal/splot/archive/master.zip; mv master.zip tmp/."
+        os.system(downloadcommand)
+        os.system('unzip tmp/master.zip -d tmp')
+        os.system('rm tmp/master.zip')
+        cpcom = 'cp -fr tmp/'+subpackage+"*/"+subpackage+" "+"pysal/"+package+"/"
+        os.system(cpcom)
+        print("%s via wget from github" % subpackage)
 
 
 #os.system('git clean -fd')
@@ -60,6 +64,7 @@ if sys.version_info[0] == 3:
     print(twothreecom)
     os.system(twothreecom)
 
+"""
 # replace all references to libpysal with pysal.lib
 c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/libpysal/pysal\.lib/g'"
 os.system(c)
@@ -73,7 +78,10 @@ c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/mapclassify/pysal\.vi
 os.system(c)
 
 # replace all references to .legendgram with pysal.viz.legendgram
-c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/\.legendgram/pysal\.viz\.legendgram/g'"
+#c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/\.legendgram/pysal\.viz\.legendgram/g'"
+#os.system(c)
+
+c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/\.vizpysal\./\./g'"
 os.system(c)
 
 # replace all references to pysal.spreg with pysal.model.spreg
@@ -115,6 +123,7 @@ os.system(c)
 # replace all references in spint to spreg with pysal.model.spreg
 c = "find pysal/model/spint/. -name '*.py' -print | xargs sed -i -- 's/from spreg import/from pysal\.model\.spreg import/g'"
 os.system(c)
+"""
 
 
 # rewrite pysal/__init__.py at the end

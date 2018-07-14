@@ -143,7 +143,7 @@ class BaseGravity(CountModel):
     -------
     >>> import numpy as np
     >>> import pysal.lib
-    >>> from pysal.model.spint.gravity import BaseGravity
+    >>> from spint.gravity import BaseGravity
     >>> db = pysal.lib.open(pysal.lib.examples.get_path('nyc_bikes_ct.csv'))
     >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
     >>> flows = np.array(db.by_col('count')).reshape((-1,1))
@@ -397,7 +397,7 @@ class Gravity(BaseGravity):
     -------
     >>> import numpy as np
     >>> import pysal.lib
-    >>> from pysal.model.spint.gravity import Gravity
+    >>> from spint.gravity import Gravity
     >>> db = pysal.lib.open(pysal.lib.examples.get_path('nyc_bikes_ct.csv'))
     >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
     >>> flows = np.array(db.by_col('count')).reshape((-1,1))
@@ -607,7 +607,7 @@ class Production(BaseGravity):
 
     >>> import numpy as np
     >>> import pysal.lib
-    >>> from pysal.model.spint.gravity import Production
+    >>> from spint.gravity import Production
     >>> db = pysal.lib.open(pysal.lib.examples.get_path('nyc_bikes_ct.csv'))
     >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
     >>> flows = np.array(db.by_col('count')).reshape((-1,1))
@@ -807,7 +807,7 @@ class Attraction(BaseGravity):
     -------
     >>> import numpy as np
     >>> import pysal.lib
-    >>> from pysal.model.spint.gravity import Attraction
+    >>> from spint.gravity import Attraction
     >>> db = pysal.lib.open(pysal.lib.examples.get_path('nyc_bikes_ct.csv'))
     >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
     >>> flows = np.array(db.by_col('count')).reshape((-1,1))
@@ -1010,7 +1010,7 @@ class Doubly(BaseGravity):
     -------
     >>> import numpy as np
     >>> import libpsal
-    >>> from pysal.model.spint.gravity import Doubly
+    >>> from spint.gravity import Doubly
     >>> db = pysal.lib.open(pysal.lib.examples.get_path('nyc_bikes_ct.csv'))
     >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
     >>> flows = np.array(db.by_col('count')).reshape((-1,1))

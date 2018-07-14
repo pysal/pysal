@@ -79,11 +79,13 @@ class Join_Counts(object):
     Replicate example from anselin and rey
 
     >>> import numpy as np
-    >>> w = pysal.lat2W(4, 4)
+    >>> import pysal.lib.api as lps
+    >>> w = lps.lat2W(4, 4)
     >>> y = np.ones(16)
     >>> y[0:8] = 0
     >>> np.random.seed(12345)
-    >>> jc = pysal.Join_Counts(y, w)
+    >>> from pysal.explore.esda.join_counts import Join_Counts
+    >>> jc = Join_Counts(y, w)
     >>> jc.bb
     10.0
     >>> jc.bw
@@ -94,10 +96,10 @@ class Join_Counts(object):
     24.0
     >>> len(jc.sim_bb)
     999
-    >>> jc.p_sim_bb
-    0.0030000000000000001
-    >>> np.mean(jc.sim_bb)
-    5.5465465465465469
+    >>> round(jc.p_sim_bb, 3)
+    0.003
+    >>> round(np.mean(jc.sim_bb), 3)
+    5.547
     >>> np.max(jc.sim_bb)
     10.0
     >>> np.min(jc.sim_bb)

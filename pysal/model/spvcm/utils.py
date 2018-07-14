@@ -55,9 +55,8 @@ def south(df=False):
 
     and the dataframe contains the raw dataset
     """
-    import pysal as ps
-
-    data = ps.pdio.read_files(ps.examples.get_path('south.shp'))
+    import geopandas
+    data = geopandas.read_file(ps.examples.get_path('south.shp'))
     data = data[data.STATE_NAME != 'District of Columbia']
     X = data[['GI89', 'BLK90', 'HR90']].values
     N = X.shape[0]
@@ -99,7 +98,8 @@ def baltim(df=False):
 
     dataframe contains the raw data of the baltimore example
     """
-    baltim = ps.pdio.read_files(ps.examples.get_path('baltim.shp'))
+    import geopandas
+    baltim = geopandas.read_files(ps.examples.get_path('baltim.shp'))
     coords = baltim[['X', 'Y']].values
     Y = np.log(baltim.PRICE.values).reshape(-1,1)
     Yz = Y - Y.mean()

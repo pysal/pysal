@@ -7,6 +7,8 @@ __author__ = "Sergio J. Rey <sjsrey@gmail.com>"
 
 __all__ = ['Rose']
 
+import warnings
+
 import numpy as np
 from pysal.lib.api import lag_spatial
 
@@ -92,7 +94,7 @@ class Rose(object):
 
         Notes
         -----
-        Based on [Rey2011]_ .
+        Based on :cite:`Rey2011`.
 
         Examples
         --------
@@ -103,6 +105,7 @@ class Rose(object):
         Load comma delimited data file in and convert to a numpy array
 
         >>> import pysal.lib
+        >>> from pysal.dynamics.giddy.api import Rose
         >>> f=open(pysal.lib.examples.get_path("spi_download.csv"),'r')
         >>> lines=f.readlines()
         >>> f.close()
@@ -321,23 +324,88 @@ class Rose(object):
         results['dy'] = dy
         return results
 
-    def plot(self, attribute=None):
+    def plot(self, attribute=None, ax=None, **kwargs):
         """Plot the rose diagram.
 
         Parameters
         ----------
         attribute : (n,) ndarray, optional
             Variable to specify colors of the colorbars.
+        ax : Matplotlib Axes instance, optional
+            If given, the figure will be created inside this axis.
+            Default =None. Note, this axis should have a polar projection.
+        **kwargs : keyword arguments, optional
+            Keywords used for creating and designing the plot.
+            Note: 'c' and 'color' cannot be passed when attribute is not None
+
+        Returns
+        -------
+        fig : Matplotlib Figure instance
+            Moran scatterplot figure
+        ax : matplotlib Axes instance
+            Axes in which the figure is plotted
+        
+        Examples
+        --------
+        Imports
+        >>> import geopandas as gpd
+        >>> import pandas as pd
+        >>> import pysal.lib.api as lp
+        >>> from pysal.lib import examples
+        >>> import numpy as np
+        >>> import matplotlib.pyplot as plt
+        >>> from pysal.dynamics.giddy.directional import Rose
+        get csv and shp files
+        >>> shp_link = examples.get_path('us48.shp')
+        >>> df = gpd.read_file(shp_link)
+        >>> income_table = pd.read_csv(examples.get_path("usjoin.csv"))
+        calculate relative values
+        >>> for year in range(1969, 2010):
+        ...     income_table[str(year) + '_rel'] = (
+        ...         income_table[str(year)] / income_table[str(year)].mean())  
+        merge to one gdf
+        >>> gdf = df.merge(income_table,left_on='STATE_NAME',right_on='Name')
+        retrieve spatial weights and data for two points in time
+        >>> w = lp.Queen.from_dataframe(gdf)
+        >>> w.transform = 'r'
+        >>> y1 = gdf['1969_rel'].values
+        >>> y2 = gdf['2000_rel'].values
+        calculate rose Object
+        >>> Y = np.array([y1, y2]).T
+        >>> rose = Rose(Y, w, k=5)
+        plot
+        >>> fig1, _ = rose.plot()
+        >>> plt.show()
+        customize plot
+        >>> fig, _ = rose.plot()(attribute=y1)
+        >>> plt.show()
         """
-        import matplotlib.cm as cm
-        import matplotlib.pyplot as plt
-        ax = plt.subplot(111, projection='polar')
-        ax.set_rlabel_position(315)
-        if attribute is None:
-            c = ax.scatter(self.theta, self.r)
+        use_splot = False
+        try:
+            import splot.giddy
+            use_splot = True
+        except ImportError:
+            warnings.warn('This method relies on importing `splot` in future',
+                          DeprecationWarning)
+            use_splot = False
+
+        if use_splot:
+            fig, ax = splot.giddy.dynamic_lisa_rose(self, attribute=attribute,
+                                                    ax=ax, **kwargs)
         else:
-            c = ax.scatter(self.theta, self.r, c=attribute)
-            plt.colorbar(c)
+            # This can be removed if splot has been released with support for
+            # giddy.directional TODO add **kwargs
+            import matplotlib.cm as cm
+            import matplotlib.pyplot as plt
+            ax = plt.subplot(111, projection='polar')
+            ax.set_rlabel_position(315)
+            if attribute is None:
+                c = ax.scatter(self.theta, self.r)
+            else:
+                c = ax.scatter(self.theta, self.r, c=attribute)
+                plt.colorbar(c)
+            fig = ax.get_figure()
+        return fig, ax
 
     def plot_origin(self):  # TODO add attribute option to color vectors
         import matplotlib.cm as cm
@@ -353,17 +421,89 @@ class Rose(object):
         plt.xlim(xlim)
         plt.ylim(ylim)
 
-    def plot_vectors(self):  # TODO add attribute option to color vectors
-        import matplotlib.cm as cm
-        import matplotlib.pyplot as plt
-        ax = plt.subplot(111 )
-        xlim = [self.Y.min(), self.Y.max()]
-        ylim = [self.wY.min(), self.wY.max()]
-        for i in range(len(self.Y)):
-            xs = self.Y[i,:]
-            ys = self.wY[i,:]
-            plt.plot(xs,ys, '-b')  # TODO change this to scale with attribute
-        plt.axis('equal')
-        plt.xlim(xlim)
-        plt.ylim(ylim)
+    def plot_vectors(self, arrows=True):
+        """
+        Plot vectors of positional transition of LISA values
+        witin quadrant in scatterplot in a polar plot.
 
+        Parameters
+        ----------
+        ax : Matplotlib Axes instance, optional
+            If given, the figure will be created inside this axis.
+            Default =None.
+        arrows : boolean, optional
+            If True show arrowheads of vectors. Default =True
+        **kwargs : keyword arguments, optional
+            Keywords used for creating and designing the plot.
+            Note: 'c' and 'color' cannot be passed when attribute is not None
+
+        Returns
+        -------
+        fig : Matplotlib Figure instance
+            Moran scatterplot figure
+        ax : matplotlib Axes instance
+            Axes in which the figure is plotted
+    
+        Examples
+        --------
+        Imports
+        >>> import geopandas as gpd
+        >>> import pandas as pd
+        >>> import pysal.lib.api as lp
+        >>> from pysal.lib import examples
+        >>> import numpy as np
+        >>> import matplotlib.pyplot as plt
+        >>> from pysal.dynamics.giddy.directional import Rose
+        get csv and shp files
+        >>> shp_link = examples.get_path('us48.shp')
+        >>> df = gpd.read_file(shp_link)
+        >>> income_table = pd.read_csv(examples.get_path("usjoin.csv"))
+        calculate relative values
+        >>> for year in range(1969, 2010):
+        ...     income_table[str(year) + '_rel'] = (
+        ...         income_table[str(year)] / income_table[str(year)].mean())   
+        merge to one gdf
+        >>> gdf = df.merge(income_table,left_on='STATE_NAME',right_on='Name')
+        retrieve spatial weights and data for two points in time
+        >>> w = lp.Queen.from_dataframe(gdf)
+        >>> w.transform = 'r'
+        >>> y1 = gdf['1969_rel'].values
+        >>> y2 = gdf['2000_rel'].values
+        calculate rose Object
+        >>> Y = np.array([y1, y2]).T
+        >>> rose = Rose(Y, w, k=5)
+        plot
+        >>> fig, _ = rose.plot_vectors()
+        >>> plt.show()
+        customize plot
+        >>> fig, _ = rose.plot_vectors(arrows=False)
+        >>> plt.show()
+        """
+        use_splot = False
+        try:
+            import splot.giddy
+            use_splot = True
+        except ImportError:
+            warnings.warn('This method relies on importing `splot` in future',
+                          DeprecationWarning)
+            use_splot = False
+        
+        if use_splot:
+            fig, ax = splot.giddy.dynamic_lisa_vectors(self, arrows=arrows)
+        else:
+            # This can be removed if splot has been released with support for
+            # giddy.directional TODO add **kwargs, arrow=True
+            import matplotlib.cm as cm
+            import matplotlib.pyplot as plt
+            ax = plt.subplot(111 )
+            xlim = [self.Y.min(), self.Y.max()]
+            ylim = [self.wY.min(), self.wY.max()]
+            for i in range(len(self.Y)):
+                xs = self.Y[i,:]
+                ys = self.wY[i,:]
+                ax.plot(xs,ys, '-b')  # TODO change this to scale with attribute
+            plt.axis('equal')
+            plt.xlim(xlim)
+            plt.ylim(ylim)
+            fig = ax.get_figure()
+        return fig, ax

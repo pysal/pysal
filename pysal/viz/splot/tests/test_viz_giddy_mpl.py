@@ -5,7 +5,7 @@ from pysal.lib import examples
 import numpy as np
 import matplotlib.pyplot as plt
 
-from giddy.directional import Rose
+from pysal.dynamics.giddy.directional import Rose
 from splot.giddy import (dynamic_lisa_heatmap,
                          dynamic_lisa_rose,
                          dynamic_lisa_vectors,

@@ -1,5 +1,5 @@
 """
-Diagnostics for estimated pysal.model.gwrmodels
+Diagnostics for estimated gwr models
 """
 __author__ = "Taylor Oshan tayoshan@gmail.com"
 
