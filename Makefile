@@ -23,9 +23,14 @@ src:
 win:
 	python setup.py bdist_wininst >/dev/null
 
+prep:
+	rm -rf pysal/lib
+	mkdir pysal/lib
+
 clean: 
 	find . -name "*.pyc" -exec rm '{}' ';'
 	find pysal -name "__pycache__" -exec rm -rf '{}' ';'
 	rm -rf dist
 	rm -rf build
 	rm -rf PySAL.egg-info
+
