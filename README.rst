@@ -14,9 +14,15 @@ Python Spatial Analysis Library
    :target: http://pysal.readthedocs.io/en/latest/index.html
 
 
-PySAL_ is an open source cross-platform library of spatial analysis functions
-written in Python. It is intended to support the development of high level
-applications for spatial analysis.
+PySAL_ is an open source cross-platform library for spatial data science with an
+emphasis on vector data written in Python. It is intended to support the
+development of high level applications for spatial analysis, such as
+
+  - detection of spatial clusters, hot-spots, and outliers
+  - construction of graphs from spatial data
+  - spatial regression and statistical modeling on geographically embedded networks
+  - spatial econometrics
+  - exploratory spatio-temporal data analysis
 
 .. image:: https://farm2.staticflickr.com/1699/23937788493_1b9d147b9f_z.jpg
         :width: 25%
@@ -31,12 +37,11 @@ Counties 1990.*
 PySAL Components
 ================
 
-* Explore
-* Viz
-* Model
-* Dynamics
+* explore
+* viz
+* model
+* dynamics
 * lib
-
 
 
 Installation
