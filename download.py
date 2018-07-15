@@ -8,7 +8,7 @@ TARGETROOT ="pysal/"
 
 with open('packages.yml') as package_file:
     packages = yaml.load(package_file)
-
+os.system('rm -rf tmp')
 os.system('mkdir tmp')
 for package in packages:
     #print(package)
