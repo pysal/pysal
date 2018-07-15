@@ -47,3 +47,10 @@ for package in packages:
         os.system('rm tmp/master.zip')
         print("%s via wget from github" % subpackage)
 
+# get libpysal from master
+
+pkgstr = "https://github.com/pysal/libpysal/archive/master.zip"
+downloadcommand = "wget %s; mv master.zip tmp/." % pkgstr
+os.system(downloadcommand)
+os.system('unzip tmp/master.zip -d tmp')
+os.system('rm tmp/master.zip')

@@ -2,6 +2,12 @@
 # 
 .PHONY: clean
 
+download:
+	python download.py
+
+convert:
+	python convert.py
+
 test:
 	nosetests 
 

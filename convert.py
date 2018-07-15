@@ -9,6 +9,19 @@ TARGETROOT ="pysal/"
 with open('packages.yml') as package_file:
     packages = yaml.load(package_file)
 
+
+# clean out lib directory
+os.system('rm -rf pysal/lib/*')
+# move libpysal over from master download
+
+subpackage='libpysal'
+package='lib'
+cpcom = 'cp -fr tmp/'+subpackage+"*/"+subpackage+" "+"pysal/"+package+"/"
+os.system('cp -rf tmp/libpysal-master/libpysal/* pysal/lib/')
+#os.system(cpcom)
+
+
+
 for package in packages:
     #print(package)
     subpackages = packages[package].split()
