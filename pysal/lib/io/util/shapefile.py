@@ -26,8 +26,8 @@ if PY3:
     import io
     izip = zip
 else:
-    from io import StringIO
-    
+    from cStringIO import StringIO
+    from itertools import izip
     
 
 if sys.byteorder == 'little':

@@ -306,8 +306,8 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True, silent_islan
     [10, 11, 14]
     >>> w2.neighbors[15]
     [11, 14, 19]
-    >>> w.neighbors[15]
-    [10, 19]
+    >>> set(w.neighbors[15]) == set([10, 19])
+    True
     >>>
 
     """
@@ -471,18 +471,19 @@ def w_clip(w1, w2, outSP=True, silent_island_warning=False):
     This will create a sparse object (recommended when n is large).
 
     >>> wcs.sparse.toarray()
-    array([[ 0.        ,  0.        ,  0.33333333,  0.33333333,  0.        ,
-             0.        ],
-           [ 0.        ,  0.        ,  0.        ,  0.        ,  0.        ,
-             0.        ],
-           [ 0.2       ,  0.        ,  0.        ,  0.2       ,  0.2       ,
-             0.        ],
-           [ 0.2       ,  0.        ,  0.2       ,  0.        ,  0.2       ,
-             0.        ],
-           [ 0.        ,  0.        ,  0.33333333,  0.33333333,  0.        ,
-             0.        ],
-           [ 0.        ,  0.        ,  0.        ,  0.        ,  0.        ,
-             0.        ]])
+    array([[0.        , 0.        , 0.33333333, 0.33333333, 0.        ,
+            0.        ],
+           [0.        , 0.        , 0.        , 0.        , 0.        ,
+            0.        ],
+           [0.2       , 0.        , 0.        , 0.2       , 0.2       ,
+            0.        ],
+           [0.2       , 0.        , 0.2       , 0.        , 0.2       ,
+            0.        ],
+           [0.        , 0.        , 0.33333333, 0.33333333, 0.        ,
+            0.        ],
+           [0.        , 0.        , 0.        , 0.        , 0.        ,
+            0.        ]])
+
 
     If we wanted an original W object, we can control that with the argument
     ``outSP``:
@@ -492,18 +493,18 @@ def w_clip(w1, w2, outSP=True, silent_island_warning=False):
     WARNING: there are 2 disconnected observations
     Island ids:  [1, 5]
     >>> wc.full()[0]
-    array([[ 0.        ,  0.        ,  0.33333333,  0.33333333,  0.        ,
-             0.        ],
-           [ 0.        ,  0.        ,  0.        ,  0.        ,  0.        ,
-             0.        ],
-           [ 0.2       ,  0.        ,  0.        ,  0.2       ,  0.2       ,
-             0.        ],
-           [ 0.2       ,  0.        ,  0.2       ,  0.        ,  0.2       ,
-             0.        ],
-           [ 0.        ,  0.        ,  0.33333333,  0.33333333,  0.        ,
-             0.        ],
-           [ 0.        ,  0.        ,  0.        ,  0.        ,  0.        ,
-             0.        ]])
+    array([[0.        , 0.        , 0.33333333, 0.33333333, 0.        ,
+            0.        ],
+           [0.        , 0.        , 0.        , 0.        , 0.        ,
+            0.        ],
+           [0.2       , 0.        , 0.        , 0.2       , 0.2       ,
+            0.        ],
+           [0.2       , 0.        , 0.2       , 0.        , 0.2       ,
+            0.        ],
+           [0.        , 0.        , 0.33333333, 0.33333333, 0.        ,
+            0.        ],
+           [0.        , 0.        , 0.        , 0.        , 0.        ,
+            0.        ]])
 
     You can check they are actually the same:
 
@@ -513,7 +514,7 @@ def w_clip(w1, w2, outSP=True, silent_island_warning=False):
            [ True,  True,  True,  True,  True,  True],
            [ True,  True,  True,  True,  True,  True],
            [ True,  True,  True,  True,  True,  True],
-           [ True,  True,  True,  True,  True,  True]], dtype=bool)
+           [ True,  True,  True,  True,  True,  True]])
 
     '''
 

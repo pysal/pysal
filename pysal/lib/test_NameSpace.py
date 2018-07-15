@@ -21,7 +21,7 @@ class TestNameSpace(unittest.TestCase):
                           'TheilD', 'TheilDSim', 'Theta', 'User_Defined', 'W', 'adaptive_kernelW',
                           'adaptive_kernelW_from_shapefile', 'bin', 'bin1d',
                           'binC', 'buildContiguity', 'cg', 'comb', 'common',
-                          'core', 'directional', 'ergodic', 'pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.pysal.explore.esda', 'full',
+                          'core', 'directional', 'ergodic', 'esda', 'full',
                           'gadf', 'higher_order', 'inequality', 'kernelW',
                           'kernelW_from_shapefile', 'knnW', 'knnW_from_array',
                           'knnW_from_shapefile', 'lag_spatial', 'lat2W',
@@ -39,7 +39,7 @@ class TestNameSpace(unittest.TestCase):
             self.assertTrue(item in current_namespace)
         for item in current_namespace:
             if item not in namespace_v1_0 and not item.startswith('__'):
-                print((item, "added to name space"))
+                print(item, "added to name space")
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestNameSpace)

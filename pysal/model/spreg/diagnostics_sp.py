@@ -97,7 +97,7 @@ class LMtests:
     presence of a spatial error model (simple and robust version) and joint presence
     of both a spatial lag as well as a spatial error model.
 
-    >>> lms = spreg.diagnostics_sp.LMtests(ols, w)
+    >>> lms = pysal.model.spreg.diagnostics_sp.LMtests(ols, w)
 
     LM error test:
 
@@ -205,7 +205,7 @@ class MoranRes:
     expectation and variance to account for the fact it comes from residuals
     instead of an independent variable
 
-    >>> m = spreg.diagnostics_sp.MoranRes(ols, w, z=True)
+    >>> m = pysal.model.spreg.diagnostics_sp.MoranRes(ols, w, z=True)
 
     Value of the Moran's I statistic:
 

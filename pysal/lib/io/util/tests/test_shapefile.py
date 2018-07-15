@@ -7,7 +7,7 @@ PY3 = int(sys.version[0]) > 2
 if PY3:
     import io
 else:
-    from io import StringIO
+    from cStringIO import StringIO
 
 from ..shapefile import noneMax, noneMin, shp_file, shx_file, NullShape, Point, PolyLine, MultiPoint, PointZ, PolyLineZ, PolygonZ, MultiPointZ, PointM, PolyLineM, PolygonM, MultiPointM, MultiPatch
 import os

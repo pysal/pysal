@@ -309,7 +309,7 @@ class OLS(BaseOLS):
     Extract CRIME (crime) and INC (income) vectors from the DBF to be used as
     independent variables in the regression.  Note that PySAL requires this to
     be an nxj numpy array, where j is the number of independent variables (not
-    including a constant). spreg.OLS adds a vector of ones to the
+    including a constant). pysal.model.spreg.OLS adds a vector of ones to the
     independent variables passed in.
 
     >>> X = []
@@ -324,12 +324,12 @@ class OLS(BaseOLS):
 
     >>> ols = OLS(y, X, name_y='home value', name_x=['income','crime'], name_ds='columbus', white_test=True)
 
-    spreg.OLS computes the regression coefficients and their standard
+    pysal.model.spreg.OLS computes the regression coefficients and their standard
     errors, t-stats and p-values. It also computes a large battery of
     diagnostics on the regression. In this example we compute the white test
     which by default isn't ('white_test=True'). All of these results can be independently
     accessed as attributes of the regression object created by running
-    spreg.OLS.  They can also be accessed at one time by printing the
+    pysal.model.spreg.OLS.  They can also be accessed at one time by printing the
     summary attribute of the regression object. In the example below, the
     parameter on crime is -0.4849, with a t-statistic of -2.6544 and p-value
     of 0.01087.
@@ -391,7 +391,7 @@ class OLS(BaseOLS):
     White                             5           2.906           0.7145
     ================================ END OF REPORT =====================================
 
-    If the optional parameters w and spat_diag are passed to spreg.OLS,
+    If the optional parameters w and spat_diag are passed to pysal.model.spreg.OLS,
     spatial diagnostics will also be computed for the regression.  These
     include Lagrange multiplier tests and Moran's I of the residuals.  The w
     parameter is a PySAL spatial weights matrix. In this example, w is built

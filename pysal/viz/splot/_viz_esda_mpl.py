@@ -5,7 +5,7 @@ import pysal.lib.api as lp
 import seaborn as sbn
 from pysal.explore.esda.moran import Moran_Local, Moran_Local_BV
 import warnings
-from spreg import OLS
+from pysal.model.spreg import OLS
 
 from matplotlib import patches, colors
 
@@ -54,7 +54,7 @@ def moran_scatterplot(moran, zstandard=True, ax=None,
 
     Parameters
     ----------
-    moran : pysal.explore.esda.moran.Moran instance
+    moran : esda.moran.Moran instance
         Values of Moran's I Global Autocorrelation Statistics
     zstandard : bool, optional
         If True, Moran Scatterplot will show z-standardized attribute and
@@ -85,7 +85,7 @@ def moran_scatterplot(moran, zstandard=True, ax=None,
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran
-    >>> from splot.pysal.explore.esda import moran_scatterplot
+    >>> from pysal.viz.splot.esda import moran_scatterplot
     
     Load data and calculate weights
     
@@ -166,7 +166,7 @@ def plot_moran_simulation(moran, ax=None, fitline_kwds=None, **kwargs):
 
     Parameters
     ----------
-    moran : pysal.explore.esda.moran.Moran instance
+    moran : esda.moran.Moran instance
         Values of Moran's I Global Autocorrelation Statistics
     ax : Matplotlib Axes instance, optional
         If given, the Moran plot will be created inside this axis.
@@ -194,7 +194,7 @@ def plot_moran_simulation(moran, ax=None, fitline_kwds=None, **kwargs):
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran
-    >>> from splot.pysal.explore.esda import plot_moran_simulation
+    >>> from pysal.viz.splot.esda import plot_moran_simulation
     
     Load data and calculate weights
     
@@ -249,7 +249,7 @@ def plot_moran(moran, zstandard=True, scatter_kwds=None,
 
     Parameters
     ----------
-    moran : pysal.explore.esda.moran.Moran instance
+    moran : esda.moran.Moran instance
         Values of Moran's I Global Autocorrelation Statistics
     zstandard : bool, optional
         If True, Moran Scatterplot will show z-standardized attribute and
@@ -280,7 +280,7 @@ def plot_moran(moran, zstandard=True, scatter_kwds=None,
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran
-    >>> from splot.pysal.explore.esda import plot_moran
+    >>> from pysal.viz.splot.esda import plot_moran
     
     Load data and calculate weights
     
@@ -323,7 +323,7 @@ def moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None
 
     Parameters
     ----------
-    moran_bv : pysal.explore.esda.moran.Moran_BV instance
+    moran_bv : esda.moran.Moran_BV instance
         Values of Bivariate Moran's I Autocorrelation Statistics
     ax : Matplotlib Axes instance, optional
         If given, the Moran plot will be created inside this axis.
@@ -351,7 +351,7 @@ def moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran_BV
-    >>> from splot.pysal.explore.esda import moran_bv_scatterplot
+    >>> from pysal.viz.splot.esda import moran_bv_scatterplot
     
     Load data and calculate weights
     
@@ -419,7 +419,7 @@ def plot_moran_bv_simulation(moran_bv, ax=None, fitline_kwds=None, **kwargs):
 
     Parameters
     ----------
-    moran_bv : pysal.explore.esda.moran.Moran_BV instance
+    moran_bv : esda.moran.Moran_BV instance
         Values of Bivariate Moran's I Autocorrelation Statistics
     ax : Matplotlib Axes instance, optional
         If given, the Moran plot will be created inside this axis.
@@ -447,7 +447,7 @@ def plot_moran_bv_simulation(moran_bv, ax=None, fitline_kwds=None, **kwargs):
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran_BV
-    >>> from splot.pysal.explore.esda import plot_moran_bv_simulation
+    >>> from pysal.viz.splot.esda import plot_moran_bv_simulation
     
     Load data and calculate weights
     
@@ -503,7 +503,7 @@ def plot_moran_bv(moran_bv, scatter_kwds=None, fitline_kwds=None, **kwargs):
 
     Parameters
     ----------
-    moran_bv : pysal.explore.esda.moran.Moran_BV instance
+    moran_bv : esda.moran.Moran_BV instance
         Values of Bivariate Moran's I Autocorrelation Statistics
     scatter_kwds : keyword arguments, optional
         Keywords used for creating and designing the scatter points.
@@ -531,7 +531,7 @@ def plot_moran_bv(moran_bv, scatter_kwds=None, fitline_kwds=None, **kwargs):
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran_BV
-    >>> from splot.pysal.explore.esda import plot_moran_bv
+    >>> from pysal.viz.splot.esda import plot_moran_bv
     
     Load data and calculate weights
     
@@ -576,7 +576,7 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
 
     Parameters
     ----------
-    moran_loc : pysal.explore.esda.moran.Moran_Local instance
+    moran_loc : esda.moran.Moran_Local instance
         Values of Moran's I Local Autocorrelation Statistics
     p : float, optional
         If given, the p-value threshold for significance. Points will
@@ -608,7 +608,7 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     >>> import pysal.lib.api as lp
     >>> from pysal.lib import examples
     >>> from pysal.explore.esda.moran import Moran_Local
-    >>> from splot.pysal.explore.esda import moran_loc_scatterplot
+    >>> from pysal.viz.splot.esda import moran_loc_scatterplot
     
     Load data and calculate Moran Local statistics
     
@@ -639,7 +639,7 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     if p is not None:
         if not isinstance(moran_loc, Moran_Local):
             raise ValueError("`moran_loc` is not a\n " +
-                             "pysal.explore.esda.moran.Moran_Local instance")
+                             "esda.moran.Moran_Local instance")
         if 'color' in scatter_kwds or 'c' in scatter_kwds or 'cmap' in scatter_kwds:
             warnings.warn('To change the color use cmap with a colormap of 5,\n' +
                           ' color defines the LISA category')
@@ -711,7 +711,7 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
 
     Parameters
     ----------
-    moran_loc : pysal.explore.esda.moran.Moran_Local or Moran_Local_BV instance
+    moran_loc : esda.moran.Moran_Local or Moran_Local_BV instance
         Values of Moran's Local Autocorrelation Statistic
     gdf : geopandas dataframe instance
         The Dataframe containing information to plot. Note that `gdf` will be
@@ -748,7 +748,7 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran_Local
-    >>> from splot.pysal.explore.esda import lisa_cluster
+    >>> from pysal.viz.splot.esda import lisa_cluster
 
     Data preparation and statistical analysis
     
@@ -798,7 +798,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
 
     Parameters
     ----------
-    moran_loc : pysal.explore.esda.moran.Moran_Local instance
+    moran_loc : esda.moran.Moran_Local instance
         Values of Moran's Local Autocorrelation Statistic
     gdf : geopandas dataframe
         The Dataframe containing information to plot the two maps.
@@ -848,7 +848,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran_Local
-    >>> from splot.pysal.explore.esda import plot_local_autocorrelation
+    >>> from pysal.viz.splot.esda import plot_local_autocorrelation
 
     Data preparation and analysis
     
@@ -956,7 +956,7 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
 
     Parameters
     ----------
-    moran_loc : pysal.explore.esda.moran.Moran_Local_BV instance
+    moran_loc : esda.moran.Moran_Local_BV instance
         Values of Moran's I Local Autocorrelation Statistics
     p : float, optional
         If given, the p-value threshold for significance. Points will
@@ -988,7 +988,7 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     >>> import pysal.lib.api as lp
     >>> from pysal.lib import examples
     >>> from pysal.explore.esda.moran import Moran_Local_BV
-    >>> from splot.pysal.explore.esda import moran_loc_bv_scatterplot
+    >>> from pysal.viz.splot.esda import moran_loc_bv_scatterplot
     
     Load data and calculate Moran Local statistics
     
@@ -1020,7 +1020,7 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     if p is not None:
         if not isinstance(moran_loc_bv, Moran_Local_BV):
             raise ValueError("`moran_loc_bv` is not a\n" +
-                             "pysal.explore.esda.moran.Moran_Local_BV instance")
+                             "esda.moran.Moran_Local_BV instance")
         if 'color' in scatter_kwds or 'cmap' in scatter_kwds:
             warnings.warn("To change the color use cmap with a colormap of 5,\n" +
                           "c defines the LISA category, color will interfere with c")

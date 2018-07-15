@@ -514,7 +514,7 @@ def threshold_continuousW_from_array(array, threshold, p=2,
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
     >>> wid.weights[0]
-    [0.10000000000000001, 0.089442719099991588]
+    [0.1, 0.08944271909999159]
 
     gravity weights
 
@@ -523,7 +523,8 @@ def threshold_continuousW_from_array(array, threshold, p=2,
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
     >>> wid2.weights[0]
-    [0.01, 0.0079999999999999984]
+    [0.01, 0.007999999999999998]
+
 
     """
 
@@ -692,12 +693,13 @@ def kernelW(points, k=2, function='triangular', fixed=True,
     >>> kw.neighbors[0]
     [0, 1, 3]
     >>> kw.bandwidth
-    array([[ 20.000002],
-           [ 20.000002],
-           [ 20.000002],
-           [ 20.000002],
-           [ 20.000002],
-           [ 20.000002]])
+    array([[20.000002],
+           [20.000002],
+           [20.000002],
+           [20.000002],
+           [20.000002],
+           [20.000002]])
+
 
     use different k
 
@@ -705,12 +707,12 @@ def kernelW(points, k=2, function='triangular', fixed=True,
     >>> kw.neighbors[0]
     [0, 1, 3, 4]
     >>> kw.bandwidth
-    array([[ 22.36068201],
-           [ 22.36068201],
-           [ 22.36068201],
-           [ 22.36068201],
-           [ 22.36068201],
-           [ 22.36068201]])
+    array([[22.36068201],
+           [22.36068201],
+           [22.36068201],
+           [22.36068201],
+           [22.36068201],
+           [22.36068201]])
 
     Diagonals to 1.0
 
@@ -937,12 +939,12 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular',
     >>> kwa.neighbors[0]
     [0, 1, 3, 4]
     >>> kwa.bandwidth
-    array([[ 25. ],
-           [ 15. ],
-           [ 25. ],
-           [ 16. ],
-           [ 14.5],
-           [ 25. ]])
+    array([[25. ],
+           [15. ],
+           [25. ],
+           [16. ],
+           [14.5],
+           [25. ]])
 
     Endogenous adaptive bandwidths
 
@@ -952,12 +954,12 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular',
     >>> kwea.neighbors[0]
     [0, 1, 3]
     >>> kwea.bandwidth
-    array([[ 11.18034101],
-           [ 11.18034101],
-           [ 20.000002  ],
-           [ 11.18034101],
-           [ 14.14213704],
-           [ 18.02775818]])
+    array([[11.18034101],
+           [11.18034101],
+           [20.000002  ],
+           [11.18034101],
+           [14.14213704],
+           [18.02775818]])
 
     Endogenous adaptive bandwidths with Gaussian kernel
 
@@ -965,12 +967,12 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular',
     >>> kweag.weights[0]
     [0.3989422804014327, 0.2674190291577696, 0.2419707487162134]
     >>> kweag.bandwidth
-    array([[ 11.18034101],
-           [ 11.18034101],
-           [ 20.000002  ],
-           [ 11.18034101],
-           [ 14.14213704],
-           [ 18.02775818]])
+    array([[11.18034101],
+           [11.18034101],
+           [20.000002  ],
+           [11.18034101],
+           [14.14213704],
+           [18.02775818]])
 
     with diagonal
 
@@ -1130,7 +1132,7 @@ def min_threshold_dist_from_shapefile(shapefile, radius=None, p=2):
     >>> import pysal.lib
     >>> md = ps.min_threshold_dist_from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
     >>> md
-    0.61886415807685413
+    0.6188641580768541
     >>> ps.min_threshold_dist_from_shapefile(pysal.lib.examples.get_path("stl_hom.shp"), pysal.lib.cg.sphere.RADIUS_EARTH_MILES)
     31.846942936393717
 

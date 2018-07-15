@@ -112,7 +112,7 @@ class FileIO(object, metaclass=FileIO_MetaCls):  # should be a type?
         """ Prints the contents of the registry """
         print("PySAL File I/O understands the following file extensions:")
         for key, val in list(cls.__registry.items()):
-            print(("Ext: '.%s', Modes: %r" % (key, list(val.keys()))))
+            print("Ext: '.%s', Modes: %r" % (key, list(val.keys())))
 
     @classmethod
     def open(cls, *args, **kwargs):

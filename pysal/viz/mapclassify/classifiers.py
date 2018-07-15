@@ -1390,7 +1390,7 @@ class Natural_Breaks(Map_Classifier):
     >>> import numpy
     >>> import pysal
     >>> numpy.random.seed(123456)
-    >>> cal = pysal.pysal.explore.esda.pysal.viz.mapclassify.load_example()
+    >>> cal = pysal.esda.pysal.viz.mapclassify.load_example()
     >>> nb = pysal.Natural_Breaks(cal, k=5)
     >>> nb.k
     5
@@ -2076,7 +2076,7 @@ class Max_P_Classifier(Map_Classifier):
     Examples
     --------
     >>> import pysal
-    >>> cal = pysal.pysal.explore.esda.pysal.viz.mapclassify.load_example()
+    >>> cal = pysal.esda.pysal.viz.mapclassify.load_example()
     >>> mp = pysal.Max_P_Classifier(cal)
     >>> mp.bins
     array([    8.7 ,    16.7 ,    20.47,    66.26,  4111.45])

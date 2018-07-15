@@ -1,5 +1,5 @@
 import pandas as pd
-import pysal as ps
+import pysal
 from pysal.explore.esda.moran import Moran_Local
 from bokeh.plotting import figure
 from bokeh.models import (GeoJSONDataSource, ColumnDataSource,
@@ -69,8 +69,8 @@ def plot_choropleth(df, attribute, title=None, plot_width=500,
     >>> import pysal.lib.api as lp
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
-    >>> import pysal.explore.esda
-    >>> from splot.bk import plot_choropleth
+    >>> import pysal.explore.esda as esda
+    >>> from pysal.viz.splot.bk import plot_choropleth
     >>> from bokeh.io import show
 
     >>> link = examples.get_path('columbus.shp')
@@ -160,7 +160,7 @@ def lisa_cluster(moran_loc, df, p=0.05, region_column='', title=None,
 
     Parameters
     ----------
-    moran_loc : pysal.explore.esda.moran.Moran_Local instance
+    moran_loc : esda.moran.Moran_Local instance
         values of Moran's Local Autocorrelation Statistic
     df : geopandas dataframe instance
         In mask_local_auto(), assign df['labels'] per row. Note that
@@ -189,7 +189,7 @@ def lisa_cluster(moran_loc, df, p=0.05, region_column='', title=None,
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran_Local
-    >>> from splot.bk import lisa_cluster
+    >>> from pysal.viz.splot.bk import lisa_cluster
     >>> from bokeh.io import show
 
     >>> link = examples.get_path('columbus.shp')
@@ -271,7 +271,7 @@ def moran_scatterplot(moran_loc, p=None, region_column='', plot_width=500,
 
     Parameters
     ----------
-    moran_loc : pysal.explore.esda.moran.Moran_Local instance
+    moran_loc : esda.moran.Moran_Local instance
         values of Moran's Local Autocorrelation Statistic
     p : float, optional
         The p-value threshold for significance. Points will
@@ -295,7 +295,7 @@ def moran_scatterplot(moran_loc, p=None, region_column='', plot_width=500,
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran_Local
-    >>> from splot.bk import moran_scatterplot
+    >>> from pysal.viz.splot.bk import moran_scatterplot
     >>> from bokeh.io import show
 
     >>> link = examples.get_path('columbus.shp')
@@ -317,11 +317,11 @@ def moran_scatterplot(moran_loc, p=None, region_column='', plot_width=500,
 
 
 def _moran_scatterplot_calc(moran_loc, p):
-    lag = ps.lag_spatial(moran_loc.w, moran_loc.z)
-    fit = ps.spreg.OLS(moran_loc.z[:, None], lag[:, None])
+    lag = pysal.lib.weights.spatial_lag.lag_spatial(moran_loc.w, moran_loc.z)
+    fit = pysal.model.spreg.OLS(moran_loc.z[:, None], lag[:, None])
     if p is not None:
         if not isinstance(moran_loc, Moran_Local):
-            raise ValueError("`moran_loc` is not a pysal.explore.esda.moran.Moran_Local instance")
+            raise ValueError("`moran_loc` is not a esda.moran.Moran_Local instance")
 
         _, _, colors, _ = mask_local_auto(moran_loc, p=p)
     else:
@@ -381,7 +381,7 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
 
     Parameters
     ----------
-    moran_loc : pysal.explore.esda.moran.Moran_Local instance
+    moran_loc : esda.moran.Moran_Local instance
         values of Moran's Local Autocorrelation Statistic
     df : Geopandas dataframe
         Dataframe containing relevant polygon and attribute values.
@@ -415,7 +415,7 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran_Local
-    >>> from splot.bk import plot_local_autocorrelation
+    >>> from pysal.viz.splot.bk import plot_local_autocorrelation
     >>> from bokeh.io import show
 
     >>> link = examples.get_path('columbus.shp')

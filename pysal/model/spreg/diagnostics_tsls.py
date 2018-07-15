@@ -40,8 +40,8 @@ def t_stat(reg, z_stat=False):
 
     >>> import numpy as np
     >>> import pysal.lib.api as lps
-    >>> import spreg.diagnostics as diagnostics
-    >>> from spreg.ols import OLS
+    >>> import pysal.model.spreg.diagnostics as diagnostics
+    >>> from pysal.model.spreg.ols import OLS
     >>> from twosls import TSLS
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
@@ -245,7 +245,7 @@ def pr2_spatial(tslsreg):
 
     >>> import numpy as np
     >>> import pysal.lib.api as lps
-    >>> import spreg.diagnostics as D
+    >>> import pysal.model.spreg.diagnostics as D
     >>> from twosls_sp import GM_Lag
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().

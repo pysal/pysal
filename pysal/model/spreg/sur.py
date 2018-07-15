@@ -244,7 +244,7 @@ class SUR(BaseSUR):
         (bigXvars). All these will be created from th database (db) and lists
         of variables (y_var and x_var) created above.
 
-        >>> bigy,bigX,bigyvars,bigXvars = spreg.sur_utils.sur_dictxy(db,y_var,x_var)
+        >>> bigy,bigX,bigyvars,bigXvars = pysal.model.spreg.sur_utils.sur_dictxy(db,y_var,x_var)
 
         We can now run the regression and then have a summary of the output by typing:
         'print(reg.summary)'
@@ -571,9 +571,9 @@ class ThreeSLS(BaseThreeSLS):
         dictionaries for Y and X, and sur_dictZ for endogenous variables (yend) and
         additional instruments (q).
 
-        >>> bigy,bigX,bigyvars,bigXvars = spreg.sur_utils.sur_dictxy(db,y_var,x_var)
-        >>> bigyend,bigyendvars = spreg.sur_utils.sur_dictZ(db,yend_var)
-        >>> bigq,bigqvars = spreg.sur_utils.sur_dictZ(db,q_var)
+        >>> bigy,bigX,bigyvars,bigXvars = pysal.model.spreg.sur_utils.sur_dictxy(db,y_var,x_var)
+        >>> bigyend,bigyendvars = pysal.model.spreg.sur_utils.sur_dictZ(db,yend_var)
+        >>> bigq,bigqvars = pysal.model.spreg.sur_utils.sur_dictZ(db,q_var)
 
         We can now run the regression and then have a summary of the output by typing:
         print(reg.summary)

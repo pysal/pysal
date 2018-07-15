@@ -418,24 +418,24 @@ class Kernel(W):
     >>> kw.neighbors[0]
     [0, 1, 3]
     >>> kw.bandwidth
-    array([[ 20.000002],
-           [ 20.000002],
-           [ 20.000002],
-           [ 20.000002],
-           [ 20.000002],
-           [ 20.000002]])
+    array([[20.000002],
+           [20.000002],
+           [20.000002],
+           [20.000002],
+           [20.000002],
+           [20.000002]])
     >>> kw15=Kernel(points,bandwidth=15.0)
     >>> kw15[0]
     {0: 1.0, 1: 0.33333333333333337, 3: 0.2546440075000701}
     >>> kw15.neighbors[0]
     [0, 1, 3]
     >>> kw15.bandwidth
-    array([[ 15.],
-           [ 15.],
-           [ 15.],
-           [ 15.],
-           [ 15.],
-           [ 15.]])
+    array([[15.],
+           [15.],
+           [15.],
+           [15.],
+           [15.],
+           [15.]])
 
     Adaptive bandwidths user specified
 
@@ -446,12 +446,12 @@ class Kernel(W):
     >>> kwa.neighbors[0]
     [0, 1, 3, 4]
     >>> kwa.bandwidth
-    array([[ 25. ],
-           [ 15. ],
-           [ 25. ],
-           [ 16. ],
-           [ 14.5],
-           [ 25. ]])
+    array([[25. ],
+           [15. ],
+           [25. ],
+           [16. ],
+           [14.5],
+           [25. ]])
 
     Endogenous adaptive bandwidths
 
@@ -461,12 +461,12 @@ class Kernel(W):
     >>> kwea.neighbors[0]
     [0, 1, 3]
     >>> kwea.bandwidth
-    array([[ 11.18034101],
-           [ 11.18034101],
-           [ 20.000002  ],
-           [ 11.18034101],
-           [ 14.14213704],
-           [ 18.02775818]])
+    array([[11.18034101],
+           [11.18034101],
+           [20.000002  ],
+           [11.18034101],
+           [14.14213704],
+           [18.02775818]])
 
     Endogenous adaptive bandwidths with Gaussian kernel
 
@@ -474,12 +474,12 @@ class Kernel(W):
     >>> kweag.weights[0]
     [0.3989422804014327, 0.2674190291577696, 0.2419707487162134]
     >>> kweag.bandwidth
-    array([[ 11.18034101],
-           [ 11.18034101],
-           [ 20.000002  ],
-           [ 11.18034101],
-           [ 14.14213704],
-           [ 18.02775818]])
+    array([[11.18034101],
+           [11.18034101],
+           [20.000002  ],
+           [11.18034101],
+           [14.14213704],
+           [18.02775818]])
 
     Diagonals to 1.0
 
@@ -737,7 +737,7 @@ class DistanceBand(W):
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
     >>> w.weights[0]
-    [0.10000000000000001, 0.089442719099991588]
+    [0.1, 0.08944271909999159]
     >>> w.neighbors[0].tolist()
     [1, 3]
     >>>
@@ -749,7 +749,7 @@ class DistanceBand(W):
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
     >>> w.weights[0]
-    [0.01, 0.0079999999999999984]
+    [0.01, 0.007999999999999998]
 
     Notes
     -----

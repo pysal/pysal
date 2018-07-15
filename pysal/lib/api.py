@@ -14,7 +14,8 @@ from .weights.user import threshold_binaryW_from_shapefile, threshold_continuous
 from .weights.user import threshold_continuousW_from_shapefile, kernelW, kernelW_from_shapefile
 from .weights.user import adaptive_kernelW, adaptive_kernelW_from_shapefile
 from .weights.user import min_threshold_dist_from_shapefile, build_lattice_shapefile
-from .weights.util import lat2W, block_weights, comb, order, higher_order, shimbel, remap_ids, full2W, full, WSP2W, insert_diagonal, get_ids, get_points_array_from_shapefile, min_threshold_distance, lat2SW, w_local_cluster, higher_order_sp, hexLat2W, regime_weights, attach_islands
+from .weights.user import voronoi_frames, voronoiW as VoronoiW
+from .weights.util import lat2W, block_weights, comb, order, higher_order, shimbel, remap_ids, full2W, full, WSP2W, insert_diagonal, get_ids, get_points_array_from_shapefile, min_threshold_distance, lat2SW, w_local_cluster, higher_order_sp, hexLat2W, regime_weights, attach_islands, nonplanar_neighbors, fuzzy_contiguity
 from .weights.spatial_lag import lag_spatial, lag_categorical
 from .weights.Contiguity import Rook, Queen
 from .weights.Distance import KNN, Kernel, DistanceBand

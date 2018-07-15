@@ -1,9 +1,9 @@
 import pysal.lib.api as lp
 from pysal.lib import examples
 import geopandas as gpd
-import pysal.explore.esda
+import pysal.explore.esda as esda
 
-from splot.bk import (plot_choropleth, lisa_cluster,
+from pysal.viz.splot.bk import (plot_choropleth, lisa_cluster,
                       moran_scatterplot, plot_local_autocorrelation)
 
 
@@ -27,7 +27,7 @@ def test_lisa_cluster():
     w = lp.Queen.from_dataframe(df)
     w.transform = 'r'
 
-    moran_loc = pysal.explore.esda.moran.Moran_Local(y, w)
+    moran_loc = esda.moran.Moran_Local(y, w)
 
     TOOLS = "tap,reset,help"
     fig = lisa_cluster(moran_loc, df, p=0.05, tools=TOOLS)
@@ -41,7 +41,7 @@ def test_moran_scatterplot():
     w = lp.Queen.from_dataframe(df)
     w.transform = 'r'
 
-    moran_loc = pysal.explore.esda.moran.Moran_Local(y, w)
+    moran_loc = esda.moran.Moran_Local(y, w)
 
     fig = moran_scatterplot(moran_loc, p=0.05)
 
@@ -54,6 +54,6 @@ def test_plot_local_autocorrelation():
     w = lp.Queen.from_dataframe(df)
     w.transform = 'r'
 
-    moran_loc = pysal.explore.esda.moran.Moran_Local(y, w)
+    moran_loc = esda.moran.Moran_Local(y, w)
 
     fig = plot_local_autocorrelation(moran_loc, df, 'HOVAL')

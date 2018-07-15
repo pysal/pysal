@@ -4,7 +4,7 @@ from pysal.lib import examples
 import geopandas as gpd
 
 from pysal.explore.esda.moran import Moran_Local, Moran, Moran_BV, Moran_Local_BV
-from splot.pysal.explore.esda import (moran_scatterplot,
+from pysal.viz.splot.esda import (moran_scatterplot,
                         plot_moran_simulation,
                         plot_moran,
                         moran_bv_scatterplot,

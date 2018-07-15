@@ -1,4 +1,5 @@
 from .. import Contiguity as c
+from ..weights import W
 from .. import util
 from ...common import pandas
 from ...io.FileIO import FileIO as ps_open
@@ -6,9 +7,14 @@ from ...io import geotable as pdio
 
 from ... import examples as pysal_examples
 import unittest as ut
-from warnings import warn as Warn
+import numpy as np
 
 PANDAS_EXTINCT = pandas is None
+try:
+    import geopandas
+    GEOPANDAS_EXTINCT = False
+except ImportError:
+    GEOPANDAS_EXTINCT = True
 
 class Contiguity_Mixin(object):
     polygon_path = pysal_examples.get_path('columbus.shp')
@@ -87,6 +93,7 @@ class Contiguity_Mixin(object):
         w = self.cls.from_dataframe(df, geom_col='the_geom', idVariable=self.idVariable)
         self.assertEqual(w[self.known_name], self.known_namedw)
 
+
 class Test_Queen(ut.TestCase, Contiguity_Mixin):
     def setUp(self):
         Contiguity_Mixin.setUp(self)
@@ -98,6 +105,22 @@ class Test_Queen(ut.TestCase, Contiguity_Mixin):
         self.idVariable = 'POLYID'
         self.known_name = 5
         self.known_namedw = {k+1:v for k,v in list(self.known_w.items())}
+
+    @ut.skipIf(GEOPANDAS_EXTINCT, 'Missing Geopandas')
+    def test_linestrings(self):
+        import geopandas 
+        eberly = geopandas.read_file(pysal_examples.get_path("eberly_net.shp")).iloc[0:8]
+        eberly_w = {0: [1,2,3],
+                    1: [0,4],
+                    2: [0,3,4,5],
+                    3: [0,2,7],
+                    4: [1,2,5],
+                    5: [2,4,6],
+                    6: [5],
+                    7: [3]}
+        eberly_w = W(neighbors=eberly_w).sparse.toarray()
+        computed = self.cls.from_dataframe(eberly).sparse.toarray()
+        np.testing.assert_array_equal(eberly_w, computed)
 
 class Test_Rook(ut.TestCase, Contiguity_Mixin):
     def setUp(self):

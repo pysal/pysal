@@ -12,12 +12,21 @@ import operator
 import scipy
 from warnings import warn
 import numbers
+import copy
+from collections import defaultdict
+from ..common import requires
+
+try:
+    import geopandas as gpd
+except ImportError:
+    warn('geopandas not available. Some functionality will be disabled.')
 
 __all__ = ['lat2W', 'block_weights', 'comb', 'order', 'higher_order',
            'shimbel', 'remap_ids', 'full2W', 'full', 'WSP2W',
            'insert_diagonal', 'get_ids', 'get_points_array_from_shapefile',
            'min_threshold_distance', 'lat2SW', 'w_local_cluster',
-           'higher_order_sp', 'hexLat2W', 'regime_weights', 'attach_islands']
+           'higher_order_sp', 'hexLat2W', 'regime_weights', 'attach_islands',
+           'nonplanar_neighbors', 'fuzzy_contiguity']
 
 
 KDTREE_TYPES = [scipy.spatial.KDTree, scipy.spatial.cKDTree]
@@ -145,11 +154,10 @@ def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
     >>> w9 = ps.lat2W(3,3)
     >>> "%.3f"%w9.pct_nonzero
     '29.630'
-    >>> w9[0]
-    {1: 1.0, 3: 1.0}
-    >>> w9[3]
-    {0: 1.0, 4: 1.0, 6: 1.0}
-    >>>
+    >>> w9[0] == {1: 1.0, 3: 1.0}
+    True
+    >>> w9[3] == {0: 1.0, 4: 1.0, 6: 1.0}
+    True
     """
     n = nrows * ncols
     r1 = nrows - 1
@@ -231,8 +239,8 @@ def regime_weights(regimes):
     >>> regimes[range(10,20)] = 2
     >>> regimes[range(21,25)] = 3
     >>> regimes
-    array([ 1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  2.,  2.,  2.,
-            2.,  2.,  2.,  2.,  2.,  2.,  2.,  1.,  3.,  3.,  3.,  3.])
+    array([1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 2., 2., 2., 2., 2., 2., 2.,
+           2., 2., 2., 1., 3., 3., 3., 3.])
     >>> w = ps.regime_weights(regimes)
     PendingDepricationWarning: regime_weights will be renamed to block_weights in PySAL 2.0
     >>> w.weights[0]
@@ -243,8 +251,8 @@ def regime_weights(regimes):
     >>> n = len(regimes)
     >>> w = ps.regime_weights(regimes)
     PendingDepricationWarning: regime_weights will be renamed to block_weights in PySAL 2.0
-    >>> w.neighbors
-    {0: [1], 1: [0], 2: [3], 3: [2], 4: [5, 8], 5: [4, 8], 6: [7], 7: [6], 8: [4, 5]}
+    >>> w.neighbors == {0: [1], 1: [0], 2: [3], 3: [2], 4: [5, 8], 5: [4, 8], 6: [7], 7: [6], 8: [4, 5]}
+    True
 
     Notes
     -----
@@ -291,8 +299,8 @@ def block_weights(regimes, ids=None, sparse=False):
     >>> regimes[range(10,20)] = 2
     >>> regimes[range(21,25)] = 3
     >>> regimes
-    array([ 1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  1.,  2.,  2.,  2.,
-            2.,  2.,  2.,  2.,  2.,  2.,  2.,  1.,  3.,  3.,  3.,  3.])
+    array([1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 2., 2., 2., 2., 2., 2., 2.,
+           2., 2., 2., 1., 3., 3., 3., 3.])
     >>> w = ps.block_weights(regimes)
     >>> w.weights[0]
     [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
@@ -301,8 +309,8 @@ def block_weights(regimes, ids=None, sparse=False):
     >>> regimes = ['n','n','s','s','e','e','w','w','e']
     >>> n = len(regimes)
     >>> w = ps.block_weights(regimes)
-    >>> w.neighbors
-    {0: [1], 1: [0], 2: [3], 3: [2], 4: [5, 8], 5: [4, 8], 6: [7], 7: [6], 8: [4, 5]}
+    >>> w.neighbors == {0: [1], 1: [0], 2: [3], 3: [2], 4: [5, 8], 5: [4, 8], 6: [7], 7: [6], 8: [4, 5]}
+    True
     """
     rids = np.unique(regimes)
     neighbors = {}
@@ -342,7 +350,7 @@ def comb(items, n=None):
     --------
     >>> x = range(4)
     >>> for c in comb(x, 2):
-    ...     print c
+    ...     print(c)
     ...
     [0, 1]
     [0, 2]
@@ -352,9 +360,10 @@ def comb(items, n=None):
     [2, 3]
 
     """
+    items = list(items)
     if n is None:
         n = len(items)
-    for i in range(len(items)):
+    for i in list(range(len(items))):
         v = items[i:i + 1]
         if n == 1:
             yield v
@@ -456,16 +465,16 @@ def higher_order(w, k=2):
     >>> import pysal.lib.api as ps
     >>> w10 = ps.lat2W(10, 10)
     >>> w10_2 = ps.higher_order(w10, 2)
-    >>> w10_2[0]
-    {2: 1.0, 11: 1.0, 20: 1.0}
+    >>> w10_2[0] ==  {2: 1.0, 11: 1.0, 20: 1.0}
+    True
     >>> w5 = ps.lat2W()
-    >>> w5[0]
-    {1: 1.0, 5: 1.0}
-    >>> w5[1]
-    {0: 1.0, 2: 1.0, 6: 1.0}
+    >>> w5[0] ==  {1: 1.0, 5: 1.0}
+    True
+    >>> w5[1] == {0: 1.0, 2: 1.0, 6: 1.0}
+    True
     >>> w5_2 = ps.higher_order(w5,2)
-    >>> w5_2[0]
-    {10: 1.0, 2: 1.0, 6: 1.0}
+    >>> w5_2[0] == {10: 1.0, 2: 1.0, 6: 1.0}
+    True
     """
     return higher_order_sp(w, k)
 
@@ -510,20 +519,20 @@ def higher_order_sp(w, k=2, shortest_path=True, diagonal=False):
     >>> w25 = ps.lat2W(5,5)
     >>> w25.n
     25
-    >>> w25[0]
-    {1: 1.0, 5: 1.0}
+    >>> w25[0] == {1: 1.0, 5: 1.0}
+    True
     >>> w25_2 = pysal.lib.weights.util.higher_order_sp(w25, 2)
-    >>> w25_2[0]
-    {10: 1.0, 2: 1.0, 6: 1.0}
+    >>> w25_2[0] == {10: 1.0, 2: 1.0, 6: 1.0}
+    True
     >>> w25_2 = pysal.lib.weights.util.higher_order_sp(w25, 2, diagonal=True)
-    >>> w25_2[0]
-    {0: 1.0, 10: 1.0, 2: 1.0, 6: 1.0}
+    >>> w25_2[0] ==  {0: 1.0, 10: 1.0, 2: 1.0, 6: 1.0}
+    True
     >>> w25_3 = pysal.lib.weights.util.higher_order_sp(w25, 3)
-    >>> w25_3[0]
-    {15: 1.0, 3: 1.0, 11: 1.0, 7: 1.0}
+    >>> w25_3[0] == {15: 1.0, 3: 1.0, 11: 1.0, 7: 1.0}
+    True
     >>> w25_3 = pysal.lib.weights.util.higher_order_sp(w25, 3, shortest_path=False)
-    >>> w25_3[0]
-    {1: 1.0, 3: 1.0, 5: 1.0, 7: 1.0, 11: 1.0, 15: 1.0}
+    >>> w25_3[0] == {1: 1.0, 3: 1.0, 5: 1.0, 7: 1.0, 11: 1.0, 15: 1.0}
+    True
 
     """
     id_order = None
@@ -608,16 +617,18 @@ def w_local_cluster(w):
     --------
     >>> import pysal.lib.api as ps
     >>> w = ps.lat2W(3,3, rook=False)
-    >>> w_local_cluster(w)
-    array([[ 1.        ],
-           [ 0.6       ],
-           [ 1.        ],
-           [ 0.6       ],
-           [ 0.42857143],
-           [ 0.6       ],
-           [ 1.        ],
-           [ 0.6       ],
-           [ 1.        ]])
+    >>> w_local_cluster(w) 
+    array([[1.        ],
+           [0.6       ],
+           [1.        ],
+           [0.6       ],
+           [0.42857143],
+           [0.6       ],
+           [1.        ],
+           [0.6       ],
+           [1.        ]])
+
+    True
 
     """
 
@@ -708,9 +719,10 @@ def full(w):
     >>> w = ps.W(neighbors, weights)
     >>> wf, ids = ps.full(w)
     >>> wf
-    array([[ 0.,  1.,  0.],
-           [ 1.,  0.,  1.],
-           [ 0.,  1.,  0.]])
+    array([[0., 1., 0.],
+           [1., 0., 1.],
+           [0., 1., 0.]])
+
     >>> ids
     ['first', 'second', 'third']
     """
@@ -755,7 +767,7 @@ def full2W(m, ids=None):
     array([[ True,  True,  True,  True],
            [ True,  True,  True,  True],
            [ True,  True,  True,  True],
-           [ True,  True,  True,  True]], dtype=bool)
+           [ True,  True,  True,  True]])
 
     Create list of user ids
 
@@ -765,7 +777,7 @@ def full2W(m, ids=None):
     array([[ True,  True,  True,  True],
            [ True,  True,  True,  True],
            [ True,  True,  True,  True],
-           [ True,  True,  True,  True]], dtype=bool)
+           [ True,  True,  True,  True]])
     '''
     if m.shape[0] != m.shape[1]:
         raise ValueError('Your array is not square')
@@ -813,16 +825,17 @@ def WSP2W(wsp, silent_island_warning=False):
     >>> wsp = ps.WSP(sp)
     >>> wsp.n
     10
-    >>> print wsp.sparse[0].todense()
-    [[0 1 0 0 0 1 0 0 0 0]]
+    >>> wsp.sparse[0].todense()
+    matrix([[0, 1, 0, 0, 0, 1, 0, 0, 0, 0]], dtype=int8)
 
     Convert this sparse weights object to a standard PySAL weights object.
 
     >>> w = ps.WSP2W(wsp)
     >>> w.n
     10
-    >>> print w.full()[0][0]
-    [ 0.  1.  0.  0.  0.  1.  0.  0.  0.  0.]
+    >>> print(w.full()[0][0])
+    [0. 1. 0. 0. 0. 1. 0. 0. 0. 0.]
+
 
     """
     wsp.sparse
@@ -889,17 +902,17 @@ def fill_diagonal(w, val=1.0, wsp=False):
 
     >>> w = ps.lat2W(5, 5, id_type='string')
     >>> w_const = ps.insert_diagonal(w)
-    >>> w['id0']
-    {'id5': 1.0, 'id1': 1.0}
-    >>> w_const['id0']
-    {'id5': 1.0, 'id0': 1.0, 'id1': 1.0}
+    >>> w['id0'] ==  {'id5': 1.0, 'id1': 1.0}
+    True
+    >>> w_const['id0'] == {'id5': 1.0, 'id0': 1.0, 'id1': 1.0}
+    True
 
     Insert different values along the main diagonal.
 
     >>> diag = np.arange(100, 125)
     >>> w_var = ps.insert_diagonal(w, diag)
-    >>> w_var['id0']
-    {'id5': 1.0, 'id0': 100.0, 'id1': 1.0}
+    >>> w_var['id0'] == {'id5': 1.0, 'id0': 100.0, 'id1': 1.0}
+    True
 
     """
 
@@ -1026,7 +1039,7 @@ def get_points_array(iterable):
     Parameters
     ----------
     iterable      : iterable
-                    arbitrary collection of shapes that supports iteration 
+                    arbitrary collection of shapes that supports iteration
 
     Returns
     -------
@@ -1074,18 +1087,19 @@ def get_points_array_from_shapefile(shapefile):
     >>> import pysal.lib
     >>> from pysal.lib.weights.util import get_points_array_from_shapefile
     >>> xy = get_points_array_from_shapefile(pysal.lib.examples.get_path('juvenile.shp'))
-    >>> xy[:3]
-    array([[ 94.,  93.],
-           [ 80.,  95.],
-           [ 79.,  90.]])
+    >>> xy[:3] 
+    array([[94., 93.],
+           [80., 95.],
+           [79., 90.]])
+
 
     Polygon shapefile
 
     >>> xy = get_points_array_from_shapefile(pysal.lib.examples.get_path('columbus.shp'))
     >>> xy[:3]
-    array([[  8.82721847,  14.36907602],
-           [  8.33265837,  14.03162401],
-           [  9.01226541,  13.81971908]])
+    array([[ 8.82721847, 14.36907602],
+           [ 8.33265837, 14.03162401],
+           [ 9.01226541, 13.81971908]])
     """
 
     f = psopen(shapefile)
@@ -1175,8 +1189,8 @@ def lat2SW(nrows=3, ncols=5, criterion="rook", row_st=False):
     >>> w9[3,6]
     1
     >>> w9r = ps.lat2SW(3,3, row_st=True)
-    >>> w9r[3,6]
-    0.33333333333333331
+    >>> w9r[3,6] == 1./3
+    True
     """
 
     n = nrows * ncols
@@ -1342,10 +1356,247 @@ def attach_islands(w, w_knn1):
             weights[nb] = weights[nb] + [1.0]
         return W(neighbors, weights, id_order=w.id_order)
 
+def nonplanar_neighbors(w, geodataframe, tolerance=0.001):
+    """
+    Detect neighbors for non-planar polygon collections
+
+
+    Parameters
+    ----------
+
+    w:   pysal W
+         A spatial weights object with reported islands
+
+
+    geodataframe: GeoDataframe
+                  The polygon dataframe from which w was constructed.
+
+    tolerance: float
+               The percentage of the minimum horizontal or vertical extent (minextent) of
+               the dataframe to use in defining  a buffering distance to allow for fuzzy
+               contiguity detection. The buffering distance is equal to tolerance*minextent.
+
+    Attributes
+    ----------
+
+    non_planar_joins : dictionary
+               Stores the new joins detected. Key is the id of the focal unit, value is a list of neighbor ids.
+
+    Returns
+    -------
+
+    w: pysal W
+       Spatial weights object that encodes fuzzy neighbors.
+       This will have an attribute `non_planar_joins` to indicate what new joins were detected.
+
+    Notes
+    -----
+
+    This relaxes the notion of contiguity neighbors for the case of shapefiles
+    that violate the condition of planar enforcement. It handles three types
+    of conditions present in such files that would result in islands when using
+    the regular PySAL contiguity methods. The first are edges for nearby
+    polygons that should be shared, but are digitized separately for the
+    individual polygons and the resulting edges do not coincide, but instead
+    the edges intersect. The second case is similar to the first, only the
+    resultant edges do not intersect but are "close". The final case arises
+    when one polygon is "inside" a second polygon but is not encoded to
+    represent a hole in the containing polygon.
+
+    The buffering check assumes the geometry coordinates are projected.
+
+    Examples
+    --------
+
+    >>> import geopandas as gpd
+    >>> import pysal.lib.api as lp
+    >>> df = gpd.read_file(lp.get_path('map_RS_BR.shp'))
+    >>> w = lp.Queen.from_dataframe(df)
+    >>> import pysal.lib
+    >>> w.islands
+    [0, 4, 23, 27, 80, 94, 101, 107, 109, 119, 122, 139, 169, 175, 223, 239, 247, 253, 254, 255, 256, 261, 276, 291, 294, 303, 321, 357, 374]
+    >>> wnp = pysal.lib.weights.util.nonplanar_neighbors(w, df)
+    >>> wnp.islands
+    []
+    >>> w.neighbors[0]
+    []
+    >>> wnp.neighbors[0]
+    [23, 59, 152, 239]
+    >>> wnp.neighbors[23]
+    [0, 45, 59, 107, 152, 185, 246]
+    >>>
+
+    Also see `nonplanarweights.ipynb`
+
+    References
+    ----------
+
+    Planar Enforcement: http://ibis.geog.ubc.ca/courses/klink/gis.notes/ncgia/u12.html#SEC12.6
+
+
+    """
+
+    gdf = geodataframe
+    islands = w.islands
+    joins = copy.deepcopy(w.neighbors)
+    candidates = gdf['geometry']
+    fixes = defaultdict(list)
+
+    # first check for intersecting polygons
+    for island in islands:
+        focal = gdf.iloc[island].geometry
+        neighbors = [j for j, candidate in enumerate(candidates) if focal.intersects(candidate) and j!= island]
+        if len(neighbors) > 0:
+            for neighbor in neighbors:
+                if neighbor not in joins[island]:
+                    fixes[island].append(neighbor)
+                    joins[island].append(neighbor)
+                if island not in joins[neighbor]:
+                    fixes[neighbor].append(island)
+                    joins[neighbor].append(island)
+
+    # if any islands remain, dilate them and check for intersection
+    if islands:
+        x0,y0,x1,y1 = gdf.total_bounds
+        distance = tolerance * min(x1-x0, y1-y0)
+        for island in islands:
+            dilated = gdf.iloc[island].geometry.buffer(distance)
+            neighbors = [j for j, candidate in enumerate(candidates) if dilated.intersects(candidate) and j!= island]
+            if len(neighbors) > 0:
+                for neighbor in neighbors:
+                    if neighbor not in joins[island]:
+                        fixes[island].append(neighbor)
+                        joins[island].append(neighbor)
+                    if island not in joins[neighbor]:
+                        fixes[neighbor].append(island)
+                        joins[neighbor].append(island)
+
+    w = W(joins)
+    w.non_planar_joins = fixes
+    return w
+
+@requires('geopandas')
+def fuzzy_contiguity(gdf, tolerance=0.005, buffering=False, drop=True):
+    """
+    Fuzzy contiguity spatial weights
+
+    Parameters
+    ----------
+
+    gdf:   GeoDataFrame
+
+    tolerance: float
+               The percentage of the length of the minimum side of the bounding rectangle for the GeoDataFrame to use in determining the buffering distance.
+
+    buffering: boolean
+               If False (default) joins will only be detected for features that intersect (touch, contain, within).
+               If True then features will be buffered and intersections will be based on buffered features.
+
+    drop: boolean
+          If True (default), the buffered features are removed from the GeoDataFrame. If False, buffered features are added to the GeoDataFrame.
+
+    Returns
+    -------
+
+    w:  PySAL W
+        Spatial weights based on fuzzy contiguity. Weights are binary.
+
+    Examples
+    --------
+
+    >>> import pysal.lib.api as lps
+    >>> import geopandas as gpd
+    >>> rs = lps.get_path('map_RS_BR.shp')
+    >>> rs_df = gpd.read_file(rs)
+    >>> wq = lps.Queen.from_dataframe(rs_df)
+    >>> len(wq.islands)
+    29
+    >>> wq[0]
+    {}
+    >>> wf = lps.fuzzy_contiguity(rs_df)
+    >>> wf.islands
+    []
+    >>> wf[0]
+    {239: 1.0, 59: 1.0, 152: 1.0, 23: 1.0, 107: 1.0}
+
+    Example needing to use buffering
+
+    >>> import pysal.lib.api as lps
+    >>> import geopandas as gpd
+    >>> from shapely.geometry import Polygon
+    >>> p0 = Polygon([(0,0), (10,0), (10,10)])
+    >>> p1 = Polygon([(10,1), (10,2), (15,2)])
+    >>> p2 = Polygon([(12,2.001), (14, 2.001), (13,10)])
+    >>> gs = gpd.GeoSeries([p0,p1,p2])
+    >>> gdf = gpd.GeoDataFrame(geometry=gs)
+    >>> wf = lps.fuzzy_contiguity(gdf)
+    >>> wf.islands
+    [2]
+    >>> wfb = lps.fuzzy_contiguity(gdf, buffering=True)
+    >>> wfb.islands
+    []
+    >>> wfb[2]
+    {1: 1.0}
+
+    Notes
+    -----
+
+    This relaxes the notion of contiguity neighbors for the case of feature
+    collections that violate the condition of planar enforcement. It handles
+    three types of conditions present in such collections that would result in
+    islands when using the regular PySAL contiguity methods. The first are
+    edges for nearby polygons that should be shared, but are digitized
+    separately for the individual polygons and the resulting edges do not
+    coincide, but instead the edges intersect. The second case is similar to
+    the first, only the resultant edges do not intersect but are "close". The
+    final case arises when one polygon is "inside" a second polygon but is not
+    encoded to represent a hole in the containing polygon.
+
+    Detection of the second case will require setting buffering=True and exploring different values for tolerance.
+
+    The buffering check assumes the geometry coordinates are projected.
+
+
+    References
+    ----------
+
+    Planar Enforcement: http://ibis.geog.ubc.ca/courses/klink/gis.notes/ncgia/u12.html#SEC12.6
+
+
+    """
+    if buffering:
+        # buffer each shape
+        minx, miny, maxx, maxy = gdf.total_bounds
+        buffer = tolerance * 0.5 * abs(min(maxx-minx, maxy-miny))
+        # create new geometry column
+        new_geometry = gpd.GeoSeries([feature.buffer(buffer) for feature in gdf.geometry])
+        gdf['_buffer'] = new_geometry
+        old_geometry_name = gdf.geometry.name
+        gdf.set_geometry('_buffer', inplace=True)
+
+    tree = gdf.sindex
+    neighbors = {}
+    n,k = gdf.shape
+    for i in range(n):
+        geom = gdf.geometry.iloc[i]
+        hits = list(tree.intersection(geom.bounds))
+        possible = gdf.iloc[hits]
+        ids = possible.intersects(geom).index.tolist()
+        ids.remove(i)
+        neighbors[i] = ids
+
+    if buffering:
+        gdf.set_geometry(old_geometry_name, inplace=True)
+        if drop:
+            gdf.drop(columns=['_buffer'], inplace=True)
+
+    return W(neighbors)
+
+
 
 if __name__ == "__main__":
-    from pysal import lat2W
 
+    from pysal import lat2W
     assert (lat2W(5, 5).sparse.todense() == lat2SW(5, 5).todense()).all()
     assert (lat2W(5, 3).sparse.todense() == lat2SW(5, 3).todense()).all()
     assert (lat2W(5, 3, rook=False).sparse.todense() == lat2SW(5, 3,

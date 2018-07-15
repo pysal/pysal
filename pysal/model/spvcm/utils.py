@@ -3,7 +3,7 @@ from scipy import sparse as spar
 import numpy as np
 from numpy import linalg as nla
 from scipy.sparse import linalg as spla
-import pysal as ps
+import pysal
 import scipy.linalg as scla
 from warnings import warn as Warn
 
@@ -56,7 +56,7 @@ def south(df=False):
     and the dataframe contains the raw dataset
     """
     import geopandas
-    data = geopandas.read_file(ps.examples.get_path('south.shp'))
+    data = geopandas.read_file(pysal.lib.examples.get_path('south.shp'))
     data = data[data.STATE_NAME != 'District of Columbia']
     X = data[['GI89', 'BLK90', 'HR90']].values
     N = X.shape[0]
@@ -66,12 +66,12 @@ def south(df=False):
 
     Y = data.DNL90.values.reshape(-1,1)
 
-    W2 = ps.queen_from_shapefile(ps.examples.get_path('us48.shp'),
+    W2 = pysal.lib.weights.user.queen_from_shapefile(pysal.lib.examples.get_path('us48.shp'),
                                  idVariable='STATE_NAME')
-    W2 = ps.w_subset(W2, ids=data.STATE_NAME.unique().tolist()) #only keep what's in the data
-    W1 = ps.queen_from_shapefile(ps.examples.get_path('south.shp'),
+    W2 = pysal.lib.weights.Wsets.w_subset(W2, ids=data.STATE_NAME.unique().tolist()) #only keep what's in the data
+    W1 = pysal.lib.weights.user.queen_from_shapefile(pysal.lib.examples.get_path('south.shp'),
                                  idVariable='FIPS')
-    W1 = ps.w_subset(W1, ids=data.FIPS.tolist()) #again, only keep what's in the data
+    W1 = pysal.lib.weights.Wsets.w_subset(W1, ids=data.FIPS.tolist()) #again, only keep what's in the data
 
     W1.transform = 'r'
     W2.transform = 'r'
@@ -99,7 +99,7 @@ def baltim(df=False):
     dataframe contains the raw data of the baltimore example
     """
     import geopandas
-    baltim = geopandas.read_files(ps.examples.get_path('baltim.shp'))
+    baltim = geopandas.read_files(pysal.lib.examples.get_path('baltim.shp'))
     coords = baltim[['X', 'Y']].values
     Y = np.log(baltim.PRICE.values).reshape(-1,1)
     Yz = Y - Y.mean()

@@ -24,7 +24,7 @@ def mask_local_auto(moran_loc, p=0.5):
 
     Parameters
     ----------
-    moran_loc : pysal.explore.esda.moran.Moran_Local instance
+    moran_loc : esda.moran.Moran_Local instance
         values of Moran's I Global Autocorrelation Statistic
     p : float
         The p-value threshold for significance. Points will

@@ -132,9 +132,9 @@ class SURlagIV(BaseThreeSLS):
         dictionaries for Y and X, and sur_dictZ for endogenous variables (yend) and
         additional instruments (q).
 
-        >>> bigy,bigX,bigyvars,bigXvars = spreg.sur_utils.sur_dictxy(db,y_var,x_var)
-        >>> bigyend,bigyendvars = spreg.sur_utils.sur_dictZ(db,yend_var)
-        >>> bigq,bigqvars = spreg.sur_utils.sur_dictZ(db,q_var)
+        >>> bigy,bigX,bigyvars,bigXvars = pysal.model.spreg.sur_utils.sur_dictxy(db,y_var,x_var)
+        >>> bigyend,bigyendvars = pysal.model.spreg.sur_utils.sur_dictZ(db,yend_var)
+        >>> bigq,bigqvars = pysal.model.spreg.sur_utils.sur_dictZ(db,q_var)
 
         To run a spatial lag model, we need to specify the spatial weights matrix. 
         To do that, we can open an already existing gal file or create a new one.

@@ -1,3 +1,4 @@
+
 """
 Weights.
 """
@@ -653,8 +654,8 @@ class W(object):
         Island id:  [163]
         >>> w[163]
         {}
-        >>> w[0]
-        {1: 1.0, 5: 1.0, 4: 1.0, 101: 1.0, 85: 1.0}
+        >>> w[0] == {1: 1.0, 5: 1.0, 4: 1.0, 101: 1.0, 85: 1.0}
+        True
         """
         return dict(list(zip(self.neighbors[key], self.weights[key])))
 
@@ -667,17 +668,17 @@ class W(object):
         >>> import pysal.lib.api as ps
         >>> w=ps.lat2W(3,3)
         >>> for i,wi in enumerate(w):
-        ...     print i,wi
+        ...     print(i,wi[0])
         ...
-        0 (0, {1: 1.0, 3: 1.0})
-        1 (1, {0: 1.0, 2: 1.0, 4: 1.0})
-        2 (2, {1: 1.0, 5: 1.0})
-        3 (3, {0: 1.0, 4: 1.0, 6: 1.0})
-        4 (4, {1: 1.0, 3: 1.0, 5: 1.0, 7: 1.0})
-        5 (5, {8: 1.0, 2: 1.0, 4: 1.0})
-        6 (6, {3: 1.0, 7: 1.0})
-        7 (7, {8: 1.0, 4: 1.0, 6: 1.0})
-        8 (8, {5: 1.0, 7: 1.0})
+        0 0
+        1 1
+        2 2
+        3 3
+        4 4
+        5 5
+        6 6
+        7 7
+        8 8
         >>>
         """
         for i in self._id_order:
@@ -771,34 +772,34 @@ class W(object):
         >>> import pysal.lib.api as ps
         >>> w=ps.lat2W(3,3)
         >>> for i,wi in enumerate(w):
-        ...     print i,wi
+        ...     print(i, wi[0])
         ...
-        0 (0, {1: 1.0, 3: 1.0})
-        1 (1, {0: 1.0, 2: 1.0, 4: 1.0})
-        2 (2, {1: 1.0, 5: 1.0})
-        3 (3, {0: 1.0, 4: 1.0, 6: 1.0})
-        4 (4, {1: 1.0, 3: 1.0, 5: 1.0, 7: 1.0})
-        5 (5, {8: 1.0, 2: 1.0, 4: 1.0})
-        6 (6, {3: 1.0, 7: 1.0})
-        7 (7, {8: 1.0, 4: 1.0, 6: 1.0})
-        8 (8, {5: 1.0, 7: 1.0})
+        0 0
+        1 1
+        2 2
+        3 3
+        4 4
+        5 5
+        6 6
+        7 7
+        8 8
         >>> w.id_order
         [0, 1, 2, 3, 4, 5, 6, 7, 8]
         >>> w.id_order=range(8,-1,-1)
-        >>> w.id_order
+        >>> list(w.id_order)
         [8, 7, 6, 5, 4, 3, 2, 1, 0]
         >>> for i,w_i in enumerate(w):
-        ...     print i,w_i
+        ...     print(i,w_i[0])
         ...
-        0 (8, {5: 1.0, 7: 1.0})
-        1 (7, {8: 1.0, 4: 1.0, 6: 1.0})
-        2 (6, {3: 1.0, 7: 1.0})
-        3 (5, {8: 1.0, 2: 1.0, 4: 1.0})
-        4 (4, {1: 1.0, 3: 1.0, 5: 1.0, 7: 1.0})
-        5 (3, {0: 1.0, 4: 1.0, 6: 1.0})
-        6 (2, {1: 1.0, 5: 1.0})
-        7 (1, {0: 1.0, 2: 1.0, 4: 1.0})
-        8 (0, {1: 1.0, 3: 1.0})
+        0 8
+        1 7
+        2 6
+        3 5
+        4 4
+        5 3
+        6 2
+        7 1
+        8 0
         >>>
 
         """
@@ -1125,9 +1126,10 @@ class W(object):
         >>> w = W(neighbors, weights)
         >>> wf, ids = full(w)
         >>> wf
-        array([[ 0.,  1.,  0.],
-               [ 1.,  0.,  1.],
-               [ 0.,  1.,  0.]])
+        array([[0., 1., 0.],
+               [1., 0., 1.],
+               [0., 1., 0.]])
+
         >>> ids
         ['first', 'second', 'third']
         """
@@ -1243,10 +1245,11 @@ class W(object):
         Usage
         -----
 
-        >>> shapes = geopandas.read_file(pysal.lib.examples.get_path("columbus.shp"))
-        >>> weights = pysal.lib.weights.Contigutiy.from_dataframe(geodataframe)
-        >>> weights.plot(shapes, color='firebrickred', 
-                         node_kws=dict(marker='*', color='k'))
+        >>> import pysal.lib.api as lp
+        >>> import geopandas
+        >>> gdf = geopandas.read_file(lp.get_path("columbus.shp"))
+        >>> weights = lp.Queen.from_dataframe(gdf)
+        >>> tmp = weights.plot(gdf, color='firebrickred', node_kws=dict(marker='*', color='k'))
         """
         try:
             import matplotlib.pyplot as plt
@@ -1333,7 +1336,7 @@ class WSP(object):
     >>> w.s0
     4.0
     >>> w.trcWtW_WW
-    6.3949999999999996
+    6.395
     >>> w.n
     4
 
@@ -1435,7 +1438,7 @@ class WSP(object):
         >>> self = WSP(sp)
         >>> self.n
         10
-        >>> print self.sparse[0].todense()
+        >>> print(self.sparse[0].todense())
         [[0 1 0 0 0 1 0 0 0 0]]
 
         Convert this sparse weights object to a standard PySAL weights object.
@@ -1443,8 +1446,8 @@ class WSP(object):
         >>> w = ps.WSP2W(self)
         >>> w.n
         10
-        >>> print w.full()[0][0]
-        [ 0.  1.  0.  0.  0.  1.  0.  0.  0.  0.]
+        >>> print(w.full()[0][0])
+        [0. 1. 0. 0. 0. 1. 0. 0. 0. 0.]
 
         """
         self.sparse

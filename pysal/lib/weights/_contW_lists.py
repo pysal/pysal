@@ -1,42 +1,37 @@
-from ..cg.shapes import Polygon
+from ..cg.shapes import Polygon, Chain
 import itertools as it
-from sys import version_info
 import collections
 QUEEN = 1
 ROOK = 2
-if version_info[0] == 2:
-    zip = it.izip
-    range = xrange
 
 __author__ = "Jay Laura jlaura@asu.edu"
 
-def _get_verts(pgon):
-    if isinstance(pgon, Polygon):
-        return pgon.vertices
+def _get_verts(shape):
+    if isinstance(shape, (Polygon, Chain)):
+        return shape.vertices
     else:
-        return _get_boundary_points(pgon)
+        return _get_boundary_points(shape)
 
-def _get_boundary_points(pgon):
+def _get_boundary_points(shape):
     """
     Recursively handle polygons vs. multipolygons to
     extract the boundary point set from each. 
     """
-    if pgon.type.lower() == 'polygon':
-        bounds = pgon.boundary
-        if bounds.type.lower() == 'linestring':
-            return list(map(tuple, list(zip(*bounds.coords.xy))))
-        elif bounds.type.lower() == 'multilinestring':
-            return list(it.chain(*(list(zip(*bound.coords.xy))
-                                     for bound in bounds)))
-        else:
-            raise TypeError('Input Polygon has unrecognized boundary type: {}'
-                            ''.format(bounds.type))
-    elif pgon.type.lower() == 'multipolygon':
-        return list(it.chain(*(_get_boundary_points(part) 
-                               for part in pgon)))
+    if shape.type.lower() == 'polygon':
+        shape = shape.boundary
+        return _get_boundary_points(shape)
+    elif shape.type.lower() == 'linestring':
+        return list(map(tuple, list(zip(*shape.coords.xy))))
+    elif shape.type.lower() == 'multilinestring':
+        return list(it.chain(*(list(zip(*shape.coords.xy))
+                                 for shape in shape)))
+    elif shape.type.lower() == 'multipolygon':
+        return list(it.chain(*(_get_boundary_points(part.boundary) 
+                               for part in shape)))
     else:
-        raise TypeError('Input shape must be Polygon or Multipolygon and was '
-                        'instead: {}'.format(pgon.type))
+        raise TypeError('Input shape must be a Polygon, Multipolygon, LineString, '
+                        ' or MultiLinestring and was '
+                        ' instead: {}'.format(shape.type))
 
 
 class ContiguityWeightsLists:

@@ -57,7 +57,7 @@ def south(df=False):
     """
     import pysal as ps
 
-    data = ps.pdio.read_files(ps.examples.get_path('south.shp'))
+    data = ps.pdio.read_files(pysal.lib.examples.get_path('south.shp'))
     data = data[data.STATE_NAME != 'District of Columbia']
     X = data[['GI89', 'BLK90', 'HR90']].values
     N = X.shape[0]
@@ -67,10 +67,10 @@ def south(df=False):
 
     Y = data.DNL90.values.reshape(-1,1)
 
-    W2 = ps.queen_from_shapefile(ps.examples.get_path('us48.shp'),
+    W2 = ps.queen_from_shapefile(pysal.lib.examples.get_path('us48.shp'),
                                  idVariable='STATE_NAME')
     W2 = ps.w_subset(W2, ids=data.STATE_NAME.unique().tolist()) #only keep what's in the data
-    W1 = ps.queen_from_shapefile(ps.examples.get_path('south.shp'),
+    W1 = ps.queen_from_shapefile(pysal.lib.examples.get_path('south.shp'),
                                  idVariable='FIPS')
     W1 = ps.w_subset(W1, ids=data.FIPS.tolist()) #again, only keep what's in the data
 
@@ -99,7 +99,7 @@ def baltim(df=False):
 
     dataframe contains the raw data of the baltimore example
     """
-    baltim = ps.pdio.read_files(ps.examples.get_path('baltim.shp'))
+    baltim = ps.pdio.read_files(pysal.lib.examples.get_path('baltim.shp'))
     coords = baltim[['X', 'Y']].values
     Y = np.log(baltim.PRICE.values).reshape(-1,1)
     Yz = Y - Y.mean()

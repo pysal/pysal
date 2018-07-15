@@ -15,7 +15,7 @@ for root, subdirs, files in os.walk(example_dir, topdown=False):
         dirs.append(tail)
 
 
-def get_path(example_name):
+def get_path(example_name, raw=False):
     """
     Get path of  example folders
     """
@@ -25,15 +25,18 @@ def get_path(example_name):
         except:
             raise KeyError('Cannot coerce requested example name to string')
     if example_name in dirs:
-        return os.path.join(example_dir, example_name, example_name)
+        outpath =  os.path.join(example_dir, example_name, example_name)
     elif example_name in file_2_dir:
         d = file_2_dir[example_name]
-        return os.path.join(d, example_name)
+        outpath = os.path.join(d, example_name)
     elif example_name == "":
-        return os.path.join(base, 'examples', example_name)
+        outpath = os.path.join(base, 'examples', example_name)
     else:
         raise KeyError(example_name + ' not found in PySAL built-in examples.')
-
+    name,ext = os.path.splitext(outpath)
+    if (ext == '.zip') and (not raw):
+        outpath = 'zip://'+outpath
+    return outpath
 
 def available(verbose=False):
     """

@@ -39,30 +39,32 @@ def lag_spatial(w, y):
     >>> y = np.arange(9)
     >>> yl = ps.lag_spatial(w, y)
     >>> yl
-    array([  4.,   6.,   6.,  10.,  16.,  14.,  10.,  18.,  12.])
+    array([ 4.,  6.,  6., 10., 16., 14., 10., 18., 12.])
 
     Row standardize the weights matrix and recompute the spatial lag
 
     >>> w.transform = 'r'
     >>> yl = ps.lag_spatial(w, y)
     >>> yl
-    array([ 2.        ,  2.        ,  3.        ,  3.33333333,  4.        ,
-            4.66666667,  5.        ,  6.        ,  6.        ])
+    array([2.        , 2.        , 3.        , 3.33333333, 4.        ,
+           4.66666667, 5.        , 6.        , 6.        ])
+
 
     Explicitly define data vector as 9x1 and recompute the spatial lag
 
     >>> y.shape = (9, 1)
     >>> yl = ps.lag_spatial(w, y)
     >>> yl
-    array([[ 2.        ],
-           [ 2.        ],
-           [ 3.        ],
-           [ 3.33333333],
-           [ 4.        ],
-           [ 4.66666667],
-           [ 5.        ],
-           [ 6.        ],
-           [ 6.        ]])
+    array([[2.        ],
+           [2.        ],
+           [3.        ],
+           [3.33333333],
+           [4.        ],
+           [4.66666667],
+           [5.        ],
+           [6.        ],
+           [6.        ]])
+
 
     Take the spatial lag of a 9x2 data matrix
 
@@ -71,15 +73,15 @@ def lag_spatial(w, y):
     >>> x = np.hstack((y, yr))
     >>> yl = ps.lag_spatial(w, x)
     >>> yl
-    array([[ 2.        ,  6.        ],
-           [ 2.        ,  6.        ],
-           [ 3.        ,  5.        ],
-           [ 3.33333333,  4.66666667],
-           [ 4.        ,  4.        ],
-           [ 4.66666667,  3.33333333],
-           [ 5.        ,  3.        ],
-           [ 6.        ,  2.        ],
-           [ 6.        ,  2.        ]])
+    array([[2.        , 6.        ],
+           [2.        , 6.        ],
+           [3.        , 5.        ],
+           [3.33333333, 4.66666667],
+           [4.        , 4.        ],
+           [4.66666667, 3.33333333],
+           [5.        , 3.        ],
+           [6.        , 2.        ],
+           [6.        , 2.        ]])
 
     """
     return w.sparse * y

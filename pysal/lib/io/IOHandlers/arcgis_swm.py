@@ -28,7 +28,6 @@ class ArcGISSwmIO(FileIO.FileIO):
     The specifics of each part of the above structure is as follows.
 
   .. table:: ArcGIS SWM Components
-
     ============ ============ ==================================== ================================
         Part      Data type           Description                   Length                        
     ============ ============ ==================================== ================================
@@ -52,6 +51,7 @@ class ArcGISSwmIO(FileIO.FileIO):
 
     def __init__(self, *args, **kwargs):
         self._varName = 'Unknown'
+        self._srs = "Unknow"
         FileIO.FileIO.__init__(self, *args, **kwargs)
         self.file = open(self.dataPath, self.mode + 'b')
 
@@ -61,7 +61,17 @@ class ArcGISSwmIO(FileIO.FileIO):
 
     def _get_varName(self):
         return self._varName
+
     varName = property(fget=_get_varName, fset=_set_varName)
+
+    def _set_srs(self, val):
+        if issubclass(type(val), str):
+            self._srs = val
+
+    def _get_srs(self):
+        return self._srs
+
+    srs = property(fget=_get_srs, fset=_set_srs)
 
     def read(self, n=-1):
         self._complain_ifclosed(self.closed)
@@ -101,17 +111,30 @@ class ArcGISSwmIO(FileIO.FileIO):
         {2: 1.0, 11: 1.0, 6: 1.0, 7: 1.0}
 
         """
-
         if self.pos > 0:
             raise StopIteration
 
-        header01 = self.file.readline()
-        header01 = header01.decode()
-        id_var, srs = header01[:-1].split(';')
-        self.varName = id_var
-        self.header_len = len(header01) + 8
-        no_obs, row_std = tuple(unpack('<2l', self.file.read(8)))
+        header = self.file.readline()
+        header = header.decode()
 
+        if header.upper().strip().startswith("VERSION@"):
+            #  deal with the new SWM version
+            return self.read_new_version(header)
+        else:
+            #  deal with the old SWM version
+            return self.read_old_version(header)
+
+    def read_old_version(self, header):
+        """
+        Read the old version of ArcGIS(<10.1) swm file
+        :param header:
+        :return:
+        """
+        id_var, srs = header[:-1].split(';')
+        self.varName = id_var
+        self.srs = srs
+        self.header_len = len(header) + 8
+        no_obs, row_std = tuple(unpack('<2l', self.file.read(8)))
         neighbors = {}
         weights = {}
         for i in range(no_obs):
@@ -122,6 +145,48 @@ class ArcGISSwmIO(FileIO.FileIO):
                 neighbors[origin] = list(unpack('<%il' %
                                                 no_nghs, self.file.read(4 * no_nghs)))
                 weights[origin] = list(unpack('<%id' %
+                                              no_nghs, self.file.read(8 * no_nghs)))
+                w_sum = list(unpack('<d', self.file.read(8)))[0]
+
+        self.pos += 1
+        return W(neighbors, weights)
+
+    def read_new_version(self, header_line):
+        """
+        Read the new version of ArcGIS(<10.1) swm file, which contains more parameters
+        and records weights in two ways: fixed or variable
+        :param header_line: str, the firs line of the swm file, which contains a lot of parameters.
+                            The parameters are divided by ";" and the key-value of each parameter is divided by "@"
+        :return:
+        """
+        headerDict = {}
+        for item in header_line.split(";"):
+            key, value = item.split("@")
+            headerDict[key] = value
+        # for the reader, in order to generate the PySAL Weight class, only a few of the parameters are needed.
+        self.varName = headerDict["UNIQUEID"]
+        self.srs = headerDict["SPATIALREFNAME"]
+
+        fixedWeights = False
+        if "FIXEDWEIGHTS" in headerDict:
+            fixedWeights = headerDict["FIXEDWEIGHTS"].upper().strip() == 'TRUE'
+
+        no_obs, row_std = tuple(unpack('<2l', self.file.read(8)))
+        is_row_standard = row_std == 1
+
+        neighbors = {}
+        weights = {}
+        for i in range(no_obs):
+            origin, no_nghs = tuple(unpack('<2l', self.file.read(8)))
+            neighbors[origin] = []
+            weights[origin] = []
+            if no_nghs > 0:
+                neighbors[origin] = list(unpack('<%il' %
+                                                no_nghs, self.file.read(4 * no_nghs)))
+                if fixedWeights:
+                    weights[origin] = list(unpack('<d', self.file.read(8))) * no_nghs
+                else:
+                    weights[origin] = list(unpack('<%id' %
                                               no_nghs, self.file.read(8 * no_nghs)))
                 w_sum = list(unpack('<d', self.file.read(8)))[0]
 
@@ -166,6 +231,11 @@ class ArcGISSwmIO(FileIO.FileIO):
 
         >>> o = pysal.open(fname,'w')
 
+        Add properities to the file to write
+
+        >>> o.varName = testfile.varName
+        >>> o.srs = testfile.srs
+
         Write the Weights object into the open file
 
         >>> o.write(w)
@@ -185,28 +255,27 @@ class ArcGISSwmIO(FileIO.FileIO):
         >>> os.remove(fname) """
 
         self._complain_ifclosed(self.closed)
-        if issubclass(type(obj), W):
-            if not (type(obj.id_order[0]) in (np.int32, np.int64, int)) and not useIdIndex:
-                raise TypeError("ArcGIS SWM files support only integer IDs")
-            if useIdIndex:
-                id2i = obj.id2i
-                obj = remap_ids(obj, id2i)
-            unk = str('%s;Unknown\n' % self.varName).encode()
-            self.file.write(unk)
-            self.file.write(pack('<l', obj.n))
-            self.file.write(pack('<l', obj.transform.upper() == 'R'))
-            for obs in obj.weights:
-                self.file.write(pack('<l', obs))
-                no_nghs = len(obj.weights[obs])
-                self.file.write(pack('<l', no_nghs))
-                self.file.write(pack('<%il' % no_nghs, *obj.neighbors[obs]))
-                self.file.write(pack('<%id' % no_nghs, *obj.weights[obs]))
-                self.file.write(pack('<d', sum(obj.weights[obs])))
-            self.pos += 1
-
-        else:
+        if not issubclass(type(obj), W):
             raise TypeError("Expected a pysal weights object, got: %s" % (
                 type(obj)))
+        if not (type(obj.id_order[0]) in (np.int32, np.int64, int)) and not useIdIndex:
+            raise TypeError("ArcGIS SWM files support only integer IDs")
+        if useIdIndex:
+            id2i = obj.id2i
+            obj = remap_ids(obj, id2i)
+
+        unk = str('%s;%s\n' % (self.varName, self.srs)).encode()
+        self.file.write(unk)
+        self.file.write(pack('<l', obj.n))
+        self.file.write(pack('<l', obj.transform.upper() == 'R'))
+        for obs in obj.weights:
+            self.file.write(pack('<l', obs))
+            no_nghs = len(obj.weights[obs])
+            self.file.write(pack('<l', no_nghs))
+            self.file.write(pack('<%il' % no_nghs, *obj.neighbors[obs]))
+            self.file.write(pack('<%id' % no_nghs, *obj.weights[obs]))
+            self.file.write(pack('<d', sum(obj.weights[obs])))
+        self.pos += 1
 
     def close(self):
         self.file.close()

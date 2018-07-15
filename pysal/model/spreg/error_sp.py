@@ -702,7 +702,7 @@ class BaseGM_Combo(BaseGM_Endog_Error):
     >>> w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
     >>> w.transform = 'r'
     >>> w_lags = 1
-    >>> yd2, q2 = spreg.utils.set_endog(y, X, w, None, None, w_lags, True)
+    >>> yd2, q2 = pysal.model.spreg.utils.set_endog(y, X, w, None, None, w_lags, True)
     >>> X = np.hstack((np.ones(y.shape),X))
 
     Example only with spatial lag
@@ -732,7 +732,7 @@ class BaseGM_Combo(BaseGM_Endog_Error):
     >>> q = []
     >>> q.append(db.by_col("DISCBD"))
     >>> q = np.array(q).T
-    >>> yd2, q2 = spreg.utils.set_endog(y, X, w, yd, q, w_lags, True)
+    >>> yd2, q2 = pysal.model.spreg.utils.set_endog(y, X, w, yd, q, w_lags, True)
     >>> X = np.hstack((np.ones(y.shape),X))
     >>> reg = BaseGM_Combo(y, X, yd2, q2, w=w.sparse)
     >>> betas = np.array([['CONSTANT'],['INC'],['HOVAL'],['W_CRIME']])

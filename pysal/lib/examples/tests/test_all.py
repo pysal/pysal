@@ -1,12 +1,12 @@
 from unittest import TestCase, skip
+import os
 TestCase.maxDiff = None
-from ...examples import available, explain
+from ...examples import available, explain, get_path
 
-@skip
 class TestHelpers(TestCase):
     def test_available(self):
         examples = available()
-        self.assertEqual(len(examples), 31)
+        self.assertEqual(len(examples), 38)
         self.assertIn('arcgis', examples)
         self.assertIn('nat', examples)
 
@@ -16,6 +16,12 @@ class TestHelpers(TestCase):
         self.assertEqual(e['description'], des)
         self.assertEqual(len(e['explanation']), 10)
 
+    def test_zip_path(self):
+        path = get_path('prenzlauer.zip')
+        rawpath = get_path('prenzlauer.zip', raw=True)
+        path, fext = os.path.splitext(path)
+        self.assertEqual(path[:6], 'zip://')
+        self.assertNotEqual(path[:6], rawpath[:6])
 
 if __name__ == '__main__':
     import unittest

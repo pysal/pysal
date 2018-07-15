@@ -15,4 +15,4 @@ pysal.lib weights
 
 """
 
-from ._viz_pysal.lib_mpl import (plot_spatial_weights)
+from ._viz_libpysal_mpl import (plot_spatial_weights)

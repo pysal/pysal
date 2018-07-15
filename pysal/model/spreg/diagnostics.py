@@ -696,7 +696,7 @@ def breusch_pagan(reg, z=None):
     Notes
     -----
     x attribute in the reg object must have a constant term included. This is
-    standard for spreg.OLS so no testing done to confirm constant.
+    standard for pysal.model.spreg.OLS so no testing done to confirm constant.
 
     Examples
     --------
@@ -838,7 +838,7 @@ def white(reg):
     Notes
     -----
     x attribute in the reg object must have a constant term included. This is
-    standard for spreg.OLS so no testing done to confirm constant.
+    standard for pysal.model.spreg.OLS so no testing done to confirm constant.
 
     Examples
     --------
@@ -1000,7 +1000,7 @@ def koenker_bassett(reg, z=None):
     Notes
     -----
     x attribute in the reg object must have a constant term included. This is
-    standard for spreg.OLS so no testing done to confirm constant.
+    standard for pysal.model.spreg.OLS so no testing done to confirm constant.
 
     Examples
     --------
@@ -1292,7 +1292,7 @@ def likratiotest(reg0, reg1):
     >>> import numpy as np
     >>> import pysal.lib.api as lps
     >>> import scipy.stats as stats
-    >>> import spreg.ml_lag as lag
+    >>> import pysal.model.spreg.ml_lag as lag
 
     Use the baltim sample data set
 

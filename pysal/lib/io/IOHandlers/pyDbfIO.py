@@ -243,7 +243,7 @@ class DBF(Tables.DataTable):
             try:
                 assert len(value) == size
             except:
-                print((value, len(value), size))
+                print(value, len(value), size)
                 raise
             self.f.write(value.encode())
             self.pos += 1
@@ -305,13 +305,13 @@ if __name__ == '__main__':
     newDB = pysal.open('copy.dbf', 'w')
     newDB.header = f.header
     newDB.field_spec = f.field_spec
-    print((f.header))
+    print(f.header)
     for row in f:
         print(row)
         newDB.write(row)
     newDB.close()
     copy = pysal.open('copy.dbf', 'r')
     f.seek(0)
-    print(("HEADER: ", copy.header == f.header))
-    print(("SPEC: ", copy.field_spec == f.field_spec))
-    print(("DATA: ", list(copy) == list(f)))
+    print("HEADER: ", copy.header == f.header)
+    print("SPEC: ", copy.field_spec == f.field_spec)
+    print("DATA: ", list(copy) == list(f))

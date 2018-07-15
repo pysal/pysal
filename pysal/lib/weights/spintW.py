@@ -45,8 +45,8 @@ def ODW(Wo, Wd, transform='r', silent_island_warning=True):
     >>> OD.neighbors[0]
     array([ 5,  6,  9, 10], dtype=int32)
     >>> OD.full()[0][0]
-    array([ 0.  ,  0.  ,  0.  ,  0.  ,  0.  ,  0.25,  0.25,  0.  ,  0.  ,
-            0.25,  0.25,  0.  ,  0.  ,  0.  ,  0.  ,  0.  ])
+    array([0.  , 0.  , 0.  , 0.  , 0.  , 0.25, 0.25, 0.  , 0.  , 0.25, 0.25,
+           0.  , 0.  , 0.  , 0.  , 0.  ])
 
     """
     if Wo.transform is not 'b':

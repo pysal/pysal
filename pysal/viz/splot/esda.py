@@ -1,9 +1,9 @@
 """
-``splot.pysal.explore.esda``
+``splot.esda``
 ===============
 
-Provides visualisations for the `pysal.explore.esda` subpackage.
-`pysal.explore.esda` provides tools for exploratory spatial data analysis that consider the role of space in a distribution of attribute values.
+Provides visualisations for the `esda` subpackage.
+`esda` provides tools for exploratory spatial data analysis that consider the role of space in a distribution of attribute values.
 
 Moran Local analytics
 ---------------------
@@ -23,7 +23,7 @@ Moran Local analytics
 
 """
 
-from ._viz_pysal.explore.esda_mpl import (moran_scatterplot,
+from ._viz_esda_mpl import (moran_scatterplot,
                             plot_moran_simulation,
                             plot_moran,
                             moran_bv_scatterplot,

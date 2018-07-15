@@ -119,7 +119,7 @@ class BaseGM_Lag(TSLS.BaseTSLS):
 
     >>> import numpy as np
     >>> import pysal.lib.api as lps
-    >>> import spreg.diagnostics as D
+    >>> import pysal.model.spreg.diagnostics as D
     >>> w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
     >>> w.transform = 'r'
     >>> db = lps.open(lps.get_path("columbus.dbf"),'r')
@@ -131,7 +131,7 @@ class BaseGM_Lag(TSLS.BaseTSLS):
     >>> X.append(db.by_col("CRIME"))
     >>> X = np.array(X).T
     >>> w_lags = 2
-    >>> yd2, q2 = spreg.utils.set_endog(y, X, w, None, None, w_lags, True)
+    >>> yd2, q2 = pysal.model.spreg.utils.set_endog(y, X, w, None, None, w_lags, True)
     >>> X = np.hstack((np.ones(y.shape),X))
     >>> reg=BaseGM_Lag(y, X, yend=yd2, q=q2, w=w.sparse, w_lags=w_lags)
     >>> reg.betas
@@ -156,7 +156,7 @@ class BaseGM_Lag(TSLS.BaseTSLS):
     >>> yd = np.reshape(yd, (49,1))
     >>> q = np.array(db.by_col("DISCBD"))
     >>> q = np.reshape(q, (49,1))
-    >>> yd2, q2 = spreg.utils.set_endog(y, X, w, yd, q, w_lags, True)
+    >>> yd2, q2 = pysal.model.spreg.utils.set_endog(y, X, w, yd, q, w_lags, True)
     >>> X = np.hstack((np.ones(y.shape),X))
     >>> reg=BaseGM_Lag(y, X, w=w.sparse, yend=yd2, q=q2, w_lags=w_lags)
     >>> reg.betas
@@ -346,7 +346,7 @@ class GM_Lag(BaseGM_Lag):
 
     >>> import numpy as np
     >>> import pysal.lib.api as lps
-    >>> import spreg.diagnostics as D
+    >>> import pysal.model.spreg.diagnostics as D
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
     This is the DBF associated with the Columbus shapefile.  Note that

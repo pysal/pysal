@@ -8,7 +8,7 @@ from ipywidgets import interact, fixed
 from pysal.dynamics.giddy.directional import Rose
 
 from ._viz_utils import moran_hot_cold_spots
-from ._viz_pysal.explore.esda_mpl import lisa_cluster
+from ._viz_esda_mpl import lisa_cluster
 
 """
 Lightweight visualizations for pysal dynamics using Matplotlib and Geopandas
@@ -46,7 +46,7 @@ def _dynamic_lisa_heatmap_data(moran_locy, moran_locx, p=0.05):
 
 def _moran_loc_from_rose_calc(rose):
     """
-    Calculate pysal.explore.esda.moran.Moran_Local values from pysal.dynamics.giddy.rose object
+    Calculate esda.moran.Moran_Local values from pysal.dynamics.giddy.rose object
     """
     old_state = np.random.get_state()
     moran_locy = Moran_Local(rose.Y[:, 0], rose.w)
@@ -95,7 +95,7 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
     >>> from pysal.dynamics.giddy.directional import Rose
-    >>> from splot.giddy import dynamic_lisa_heatmap
+    >>> from pysal.viz.splot.giddy import dynamic_lisa_heatmap
 
     get csv and shp files
 
@@ -203,7 +203,7 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
     >>> from pysal.dynamics.giddy.directional import Rose
-    >>> from splot.giddy import dynamic_lisa_rose
+    >>> from pysal.viz.splot.giddy import dynamic_lisa_rose
 
     get csv and shp files
 
@@ -342,7 +342,7 @@ def dynamic_lisa_vectors(rose, ax=None,
     >>> import matplotlib.pyplot as plt
 
     >>> from pysal.dynamics.giddy.directional import Rose
-    >>> from splot.giddy import dynamic_lisa_vectors
+    >>> from pysal.viz.splot.giddy import dynamic_lisa_vectors
 
     get csv and shp files
 
@@ -455,7 +455,7 @@ def dynamic_lisa_composite(rose, gdf,
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
     >>> from pysal.dynamics.giddy.directional import Rose
-    >>> from splot.giddy import dynamic_lisa_composite
+    >>> from pysal.viz.splot.giddy import dynamic_lisa_composite
 
     get csv and shp files
 
@@ -572,7 +572,7 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern='',
     ----------
     rose : giddy.directional.Rose instance
         A ``Rose`` object, which contains (among other attributes)
-        weights to calculate `pysal.explore.esda.moran.Moran_local` values
+        weights to calculate `esda.moran.Moran_local` values
     gdf : geopandas dataframe instance
         The Dataframe containing information and polygons to plot.
     pattern : str, optional
@@ -603,7 +603,7 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern='',
     add a line ``%matplotlib inline`` at the top of your notebook.
 
     >>> from pysal.dynamics.giddy.directional import Rose
-    >>> from splot.giddy import dynamic_lisa_composite_explore
+    >>> from pysal.viz.splot.giddy import dynamic_lisa_composite_explore
 
     get csv and shp files
 
