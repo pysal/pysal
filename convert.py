@@ -220,20 +220,35 @@ os.system(c)
 
 # rewrite pysal/__init__.py at the end
 
-init_lines = [
-    ". import lib",
-    ". explore import esda",
-    ". explore import pointpats",
-    ". viz import mapclassify",
-    ". dynamics import giddy",
-    ". model import spreg",
-    ". model import spglm",
-    ". model import spint",
-    ". model import spvcm",
-    ". model import gwr"]
+#init_lines = [
+#    ". import lib",
+#    ". explore import esda",
+#    ". explore import pointpats",
+#    ". viz import mapclassify",
+#    ". dynamics import giddy",
+#    ". model import spreg",
+#    ". model import spglm",
+#    ". model import spint",
+#    ". model import spvcm",
+#    ". model import gwr"]
+#
+#init_lines = [ "from "+line for line in init_lines]
+#lines = "\n".join(init_lines)
+#with open("pysal/__init__.py", 'w') as outfile:
+#    outfile.write(lines)
 
-init_lines = [ "from "+line for line in init_lines]
+init_lines = []
+for package in packages:
+    subpackages = packages[package].split()
+    for subpackage in subpackages:
+        if subpackage == 'libpysal':
+            init_line = "from . import lib"
+        else:
+            init_line = "from . {package} import {subpackage}".format(package=package, subpackage=subpackage)
+
+        init_lines.append(init_line)
+
 lines = "\n".join(init_lines)
+
 with open("pysal/__init__.py", 'w') as outfile:
     outfile.write(lines)
-
