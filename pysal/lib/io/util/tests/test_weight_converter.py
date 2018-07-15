@@ -8,7 +8,7 @@ import warnings
 #import pysal_examples
 from .... import examples as pysal_examples
 
-
+@unittest.skip('This function is deprecated')
 class test_WeightConverter(unittest.TestCase):
     def setUp(self):
         self.base_dir = pysal_examples.get_path('')

@@ -1,5 +1,6 @@
 import os
 from ..FileIO import FileIO as psopen
+from warnings import warn
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
 __all__ = ["weight_convert"]
 
@@ -24,6 +25,7 @@ class WeightConverter(object):
     """
 
     def __init__(self, inputPath, dataFormat=None):
+        warn('WeightConverter will be deprecated in PySAL 3.1', DeprecationWarning)
         self.inputPath = inputPath
         self.inputDataFormat = dataFormat
         self._setW()
