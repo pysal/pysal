@@ -22,9 +22,9 @@ for package in packages:
     subpackages = packages[package].split()
     for subpackage in subpackages:
         if subpackage == 'libpysal':
-            com = "cp -rf tmp/{subpackage}-master/{subpackage}/*  pysal/{package}/".format(package=package, subpackage=subpackage)
+            com = "cp -rf tmp/{subpackage}/{subpackage}/*  pysal/{package}/".format(package=package, subpackage=subpackage)
         else:
-            com = "cp -rf tmp/{subpackage}-master/{subpackage} pysal/{package}/{subpackage}".format(package=package, subpackage=subpackage)
+            com = "cp -rf tmp/{subpackage}/{subpackage} pysal/{package}/{subpackage}".format(package=package, subpackage=subpackage)
         print(com)
         os.system(com)
 
