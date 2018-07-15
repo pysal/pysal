@@ -5,30 +5,28 @@ import sys
 
 TARGETROOT ="pysal/"
 
+os.system('rm pysal/*.py')
 
 with open('packages.yml') as package_file:
     packages = yaml.load(package_file)
 
 
-# clean out lib directory
-os.system('rm -rf pysal/lib/*')
-# move libpysal over from master download
-
-subpackage='libpysal'
-package='lib'
-cpcom = 'cp -fr tmp/'+subpackage+"*/"+subpackage+" "+"pysal/"+package+"/"
-os.system('cp -rf tmp/libpysal-master/libpysal/* pysal/lib/')
-#os.system(cpcom)
-
-
 
 for package in packages:
-    #print(package)
+    com = "rm -fr pysal/{package}".format(package=package)
+    os.system(com)
+    com = "mkdir pysal/{package}".format(package=package)
+    os.system(com)
+
+    #"cp -fr tmp/{subpackage}-master/{subpackage}/* pysal/{package}/".format(package=package, subpackage=subpackage)
     subpackages = packages[package].split()
     for subpackage in subpackages:
-        cpcom = 'cp -fr tmp/'+subpackage+"*/"+subpackage+" "+"pysal/"+package+"/"
-        os.system(cpcom)
-
+        if subpackage == 'libpysal':
+            com = "cp -rf tmp/{subpackage}-master/{subpackage}/*  pysal/{package}/".format(package=package, subpackage=subpackage)
+        else:
+            com = "cp -rf tmp/{subpackage}-master/{subpackage} pysal/{package}/{subpackage}".format(package=package, subpackage=subpackage)
+        print(com)
+        os.system(com)
 
 # replace all references to libpysal with pysal.lib
 c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/libpysal/pysal\.lib/g'"
@@ -227,7 +225,6 @@ init_lines = [
     ". explore import esda",
     ". explore import pointpats",
     ". viz import mapclassify",
-    ". viz import legendgram",
     ". dynamics import giddy",
     ". model import spreg",
     ". model import spglm",
