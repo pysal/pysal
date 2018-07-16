@@ -25,9 +25,6 @@ except ImportError:
     HAS_JIT = False
 import numpy as np
 import scipy.spatial as spat
-from shapely.geometry import LineString
-from shapely.ops import polygonize
-from geopandas import GeoSeries
 
 EPS = np.finfo(float).eps
 
@@ -412,6 +409,17 @@ def alpha_geoms(alpha, triangles, radii, xys):
     >>> geoms = alpha_geoms(alpha, triangulation.simplices, radii, xys)
     >>> geoms
     '''
+    try:
+        from shapely.geometry import LineString
+        from shapely.ops import polygonize
+    except ImportError:
+        raise ImportError("Shapely is a required package to use alpha_shapes")
+
+    try:
+        from geopandas import GeoSeries
+    except ImportError:
+        raise ImportError("Geopandas is a required package to use alpha_shapes")
+
     triangles_reduced = triangles[radii < 1/alpha]
     outer_triangulation = get_single_faces(triangles_reduced)
     face_pts = xys[outer_triangulation]

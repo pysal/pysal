@@ -796,7 +796,7 @@ def full2W(m, ids=None):
     return W(neighbors, weights, id_order=ids)
 
 
-def WSP2W(wsp, silent_island_warning=False):
+def WSP2W(wsp, silence_warnings=False):
 
     """
     Convert a pysal WSP object (thin weights matrix) to a pysal W object.
@@ -805,7 +805,7 @@ def WSP2W(wsp, silent_island_warning=False):
     ----------
     wsp                     : WSP
                               PySAL sparse weights object
-    silent_island_warning   : boolean
+    silence_warnings   : boolean
                               Switch to turn off (default on) print statements
                               for every observation with islands
 
@@ -858,7 +858,7 @@ def WSP2W(wsp, silent_island_warning=False):
         start = end
     ids = copy.copy(wsp.id_order)
     w = W(neighbors, weights, ids,
-                silent_island_warning=silent_island_warning)
+                silence_warnings=silence_warnings)
     w._sparse = copy.deepcopy(wsp.sparse)
     w._cache['sparse'] = w._sparse
     return w
@@ -1439,7 +1439,7 @@ def nonplanar_neighbors(w, geodataframe, tolerance=0.001):
     gdf = geodataframe
     islands = w.islands
     joins = copy.deepcopy(w.neighbors)
-    candidates = gdf['geometry']
+    candidates = gdf.geometry
     fixes = defaultdict(list)
 
     # first check for intersecting polygons

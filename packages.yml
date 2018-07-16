@@ -3,6 +3,7 @@ lib:
 explore:
   esda
   pointpats
+  spaghetti
 dynamics:
   giddy
 viz:

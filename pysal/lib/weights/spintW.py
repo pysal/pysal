@@ -11,7 +11,7 @@ from .weights import W, WSP
 from .Distance import DistanceBand
 from collections import OrderedDict
 
-def ODW(Wo, Wd, transform='r', silent_island_warning=True):
+def ODW(Wo, Wd, transform='r', silence_warnings=True):
     """
     Constructs an o*d by o*d origin-destination style spatial weight for o*d
     flows using standard spatial weights on o origins and d destinations. Input
@@ -67,7 +67,7 @@ def ODW(Wo, Wd, transform='r', silent_island_warning=True):
     Wd.eliminate_zeros()
     Ww = kron(Wo, Wd, format='csr')
     Ww.eliminate_zeros()
-    Ww = WSP(Ww).to_W(silent_island_warning=silent_island_warning)
+    Ww = WSP(Ww).to_W(silence_warnings=silence_warnings)
     Ww.transform = transform
     return Ww
 

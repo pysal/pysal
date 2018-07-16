@@ -8,6 +8,7 @@ import math
 import warnings
 import numpy as np
 import scipy.sparse
+from scipy.sparse.csgraph import connected_components
 import copy
 from os.path import basename as BASENAME
 #from .util import full, WSP2W resolve import cycle by
@@ -41,6 +42,12 @@ class W(object):
                            dataset contains any disconnected observations or
                            islands. To silence this warning set this
                            parameter to True.
+    silent_connected_components   : boolean
+                            By default PySAL will print a warning if the
+                            dataset contains any disconnected components in the
+                            adjacency matrix. These are disconnected *groups*
+                            of islands. To silence this warning set this
+                            parameter to True.                       
     ids                  : list
                            Values to use for keys of the neighbors and weights dicts.
 
@@ -51,6 +58,9 @@ class W(object):
                           of
     cardinalities       : dictionary
                           of
+    component_labels    : numpy ndarray
+                          array of integer labels for each observation, showing
+                          which component of the graph an observation is in. 
     diagW2              : array
                           of
     diagWtW             : array
@@ -78,7 +88,8 @@ class W(object):
                           minimum neighbor count
     n                   : int
                           of
-
+    n_components        : int
+                          number of connected components in the W.
     neighbor_offsets    : list
                           ids of neighbors to a region in id_order
     nonzero             : int
@@ -158,8 +169,9 @@ class W(object):
     """
 
     def __init__(self, neighbors, weights=None, id_order=None,
-        silent_island_warning=False, ids=None):
-        self.silent_island_warning = silent_island_warning
+                 silence_warnings=False, ids=None):
+        self.silent_island_warning = silence_warnings
+        self.silent_connected_components = silence_warnings
         self.transformations = {}
         self.neighbors = neighbors
         if not weights:
@@ -186,8 +198,10 @@ class W(object):
                               .format(str(self.islands[0])), 
                               stacklevel=2)
             else:
-                warnings.warn("There are %d disconnected observations" % ni)
-                warnings.warn("Island ids: %s" % ', '.join(str(island) for island in self.islands))
+                warnings.warn("There are %d disconnected observations" % ni + ' \n '
+                              " Island ids: %s" % ', '.join(str(island) for island in self.islands))
+        if self.n_components > 1 and not self.silent_connected_components:
+            warnings.warn("The weights matrix is not fully connected. There are  %d components" % self.n_components )
 
     def _reset(self):
         """Reset properties.
@@ -213,8 +227,8 @@ class W(object):
                                   ' Queen, DistanceBand, or Kernel')
 
     @classmethod
-    def from_WSP(cls, WSP, silent_island_warning=True):
-        return WSP2W(WSP, silent_island_warning=silent_island_warning)
+    def from_WSP(cls, WSP, silence_warnings=True):
+        return WSP2W(WSP, silence_warnings=silence_warnings)
 
     @classmethod
     def from_adjlist(cls, adjlist, focal_col='focal', 
@@ -351,6 +365,26 @@ class W(object):
             self._sparse = self._build_sparse()
             self._cache['sparse'] = self._sparse
         return self._sparse
+    
+    @property
+    def n_components(self):
+        """Store whether the adjacency matrix is fully connected.
+        """
+        if 'n_components' not in self._cache:
+            self._n_components, self._component_labels = connected_components(self.sparse)
+            self._cache['n_components'] = self._n_components
+            self._cache['component_labels'] = self._component_labels
+        return self._n_components
+
+    @property
+    def component_labels(self):
+        """Store the graph component in which each observation falls.
+        """
+        if 'component_labels' not in self._cache:
+            self._n_components, self._component_labels = connected_components(self.sparse)
+            self._cache['n_components'] = self._n_components
+            self._cache['component_labels'] = self._component_labels
+        return self._component_labels
 
     def _build_sparse(self):
         """Construct the sparse attribute.
@@ -1409,7 +1443,7 @@ class WSP(object):
         """
         return cls(W.sparse, id_order=W.id_order)
     
-    def to_W(self, silent_island_warning=False):
+    def to_W(self, silence_warnings=False):
 
         """
         Convert a pysal WSP object (thin weights matrix) to a pysal W object.
@@ -1418,7 +1452,7 @@ class WSP(object):
         ----------
         self                     : WSP
                                   PySAL sparse weights object
-        silent_island_warning   : boolean
+        silence_warnings         : boolean
                                   Switch to turn off (default on) print statements
                                   for every observation with islands
 
@@ -1470,7 +1504,7 @@ class WSP(object):
             start = end
         ids = copy.copy(self.id_order)
         w = W(neighbors, weights, ids,
-                    silent_island_warning=silent_island_warning)
+                    silence_warnings=silence_warnings)
         w._sparse = copy.deepcopy(self.sparse)
         w._cache['sparse'] = w._sparse
         return w

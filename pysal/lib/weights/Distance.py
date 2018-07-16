@@ -793,7 +793,7 @@ class DistanceBand(W):
                 self.kd = None       
         self._band()
         neighbors, weights = self._distance_to_W(ids)
-        W.__init__(self, neighbors, weights, ids, silent_island_warning=self.silent)
+        W.__init__(self, neighbors, weights, ids, silence_warnings=self.silent)
 
     @classmethod
     def from_shapefile(cls, filepath, threshold, idVariable=None, **kwargs):
@@ -884,7 +884,7 @@ class DistanceBand(W):
         if self.binary:
             self.dmat[self.dmat>0] = 1
             self.dmat.eliminate_zeros()
-            tempW = WSP2W(WSP(self.dmat, id_order=ids), silent_island_warning=self.silent)
+            tempW = WSP2W(WSP(self.dmat, id_order=ids), silence_warnings=self.silent)
             neighbors = tempW.neighbors
             weight_keys = list(tempW.weights.keys())
             weight_vals = list(tempW.weights.values())
@@ -894,7 +894,7 @@ class DistanceBand(W):
             weighted = self.dmat.power(self.alpha)
             weighted[weighted==np.inf] = 0
             weighted.eliminate_zeros()
-            tempW = WSP2W(WSP(weighted, id_order=ids), silent_island_warning=self.silent)
+            tempW = WSP2W(WSP(weighted, id_order=ids), silence_warnings=self.silent)
             neighbors = tempW.neighbors
             weight_keys = list(tempW.weights.keys())
             weight_vals = list(tempW.weights.values())

@@ -244,6 +244,14 @@ class TestW(unittest.TestCase):
         np.testing.assert_allclose(sknn.sparse.toarray(), knn.sparse.toarray())
         np.testing.assert_allclose(knn.sparse.toarray().T, knn.sparse.toarray())
 
+    def test_connected_components(self):
+        disco = {0: [1],
+                 1: [0],
+                 2: [3],
+                 3: [2]}
+        disco = W(disco)
+        assert disco.n_components == 2
+
 class Test_WSP_Back_To_W(unittest.TestCase):
     # Test to make sure we get back to the same W functionality
     def setUp(self):

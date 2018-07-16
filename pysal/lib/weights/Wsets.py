@@ -13,7 +13,7 @@ __all__ = ['w_union', 'w_intersection', 'w_difference',
            'w_symmetric_difference', 'w_subset', 'w_clip']
 
 
-def w_union(w1, w2, silent_island_warning=False):
+def w_union(w1, w2, silence_warnings=False):
     """
     Returns a binary weights object, w, that includes all neighbor pairs that
     exist in either w1 or w2.
@@ -25,7 +25,7 @@ def w_union(w1, w2, silent_island_warning=False):
                               object
     w2                      : W 
                               object
-    silent_island_warning   : boolean
+    silence_warnings   : boolean
                               Switch to turn off (default on) print statements
                               for every observation with islands
 
@@ -70,10 +70,10 @@ def w_union(w1, w2, silent_island_warning=False):
             neighbors[i] = list(add_neigh)
         else:
             neighbors[i] = copy.copy(w2.neighbors[i])
-    return W(neighbors, silent_island_warning=silent_island_warning)
+    return W(neighbors, silence_warnings=silence_warnings)
 
 
-def w_intersection(w1, w2, w_shape='w1', silent_island_warning=False):
+def w_intersection(w1, w2, w_shape='w1', silence_warnings=False):
     """
     Returns a binary weights object, w, that includes only 
     those neighbor pairs that exist in both w1 and w2.
@@ -90,7 +90,7 @@ def w_intersection(w1, w2, w_shape='w1', silent_island_warning=False):
                               matrix with the same IDs as w1; 'all' returns a matrix with all
                               the unique IDs from w1 and w2; and 'min' returns a matrix with
                               only the IDs occurring in both w1 and w2.
-    silent_island_warning   : boolean
+    silence_warnings   : boolean
                               Switch to turn off (default on) print statements
                               for every observation with islands
 
@@ -146,10 +146,10 @@ def w_intersection(w1, w2, w_shape='w1', silent_island_warning=False):
         else:
             neighbors[i] = []
 
-    return W(neighbors, silent_island_warning=silent_island_warning)
+    return W(neighbors, silence_warnings=silence_warnings)
 
 
-def w_difference(w1, w2, w_shape='w1', constrained=True, silent_island_warning=False):
+def w_difference(w1, w2, w_shape='w1', constrained=True, silence_warnings=False):
     """
     Returns a binary weights object, w, that includes only neighbor pairs
     in w1 that are not in w2. The w_shape and constrained parameters
@@ -172,7 +172,7 @@ def w_difference(w1, w2, w_shape='w1', constrained=True, silent_island_warning=F
                               not in w2 are returned. If True then those pairs that would
                               not be possible if w_shape='min' are dropped. Ignored if
                               w_shape is set to 'min'.
-    silent_island_warning   : boolean
+    silence_warnings   : boolean
                               Switch to turn off (default on) print statements
                               for every observation with islands
 
@@ -247,10 +247,10 @@ def w_difference(w1, w2, w_shape='w1', constrained=True, silent_island_warning=F
             neighbors[i] = list(
                 set(neighbors[i]).intersection(constrained_keys))
 
-    return W(neighbors, silent_island_warning=silent_island_warning)
+    return W(neighbors, silence_warnings=silence_warnings)
 
 
-def w_symmetric_difference(w1, w2, w_shape='all', constrained=True, silent_island_warning=False):
+def w_symmetric_difference(w1, w2, w_shape='all', constrained=True, silence_warnings=False):
     """
     Returns a binary weights object, w, that includes only neighbor pairs
     that are not shared by w1 and w2. The w_shape and constrained parameters
@@ -272,7 +272,7 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True, silent_islan
                               shared by w1 and w2 are returned. If True then those pairs
                               that would not be possible if w_shape='min' are dropped.
                               Ignored if w_shape is set to 'min'.
-    silent_island_warning   : boolean
+    silence_warnings   : boolean
                               Switch to turn off (default on) print statements
                               for every observation with islands
 
@@ -344,10 +344,10 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True, silent_islan
             neighbors[i] = list(
                 set(neighbors[i]).intersection(constrained_keys))
 
-    return W(neighbors, silent_island_warning=silent_island_warning)
+    return W(neighbors, silence_warnings=silence_warnings)
 
 
-def w_subset(w1, ids, silent_island_warning=False):
+def w_subset(w1, ids, silence_warnings=False):
     """
     Returns a binary weights object, w, that includes only those
     observations in ids.
@@ -360,7 +360,7 @@ def w_subset(w1, ids, silent_island_warning=False):
     ids                     : list
                               A list containing the IDs to be include in the returned weights
                               object.
-    silent_island_warning   : boolean
+    silence_warnings   : boolean
                               Switch to turn off (default on) print statements
                               for every observation with islands
 
@@ -402,10 +402,10 @@ def w_subset(w1, ids, silent_island_warning=False):
         else:
             neighbors[i] = []
 
-    return W(neighbors, id_order=list(ids), silent_island_warning=silent_island_warning)
+    return W(neighbors, id_order=list(ids), silence_warnings=silence_warnings)
 
 
-def w_clip(w1, w2, outSP=True, silent_island_warning=False):
+def w_clip(w1, w2, outSP=True, silence_warnings=False):
     '''
     Clip a continuous W object (w1) with a different W object (w2) so only cells where
     w2 has a non-zero value remain with non-zero values in w1.
@@ -427,7 +427,7 @@ def w_clip(w1, w2, outSP=True, silent_island_warning=False):
     outSP                   : boolean
                               If True (default) return sparse version of the clipped W, if
                               False, return W object of the clipped matrix
-    silent_island_warning   : boolean
+    silence_warnings   : boolean
                               Switch to turn off (default on) print statements
                               for every observation with islands
 
@@ -530,7 +530,7 @@ def w_clip(w1, w2, outSP=True, silent_island_warning=False):
     wc = w1.multiply(w2)
     wc = WSP(wc, id_order=id_order)
     if not outSP:
-        wc = WSP2W(wc, silent_island_warning=silent_island_warning)
+        wc = WSP2W(wc, silence_warnings=silence_warnings)
     return wc
 
 
