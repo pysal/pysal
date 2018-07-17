@@ -48,7 +48,7 @@ def w_union(w1, w2, silence_warnings=False):
     and the other is 6x4 (24 areas). A union of these two weights matrices
     results in the new weights matrix matching the larger one.
 
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> w1 = ps.lat2W(4,4)
     >>> w2 = ps.lat2W(6,4)
     >>> w = ps.w_union(w1, w2)
@@ -112,7 +112,7 @@ def w_intersection(w1, w2, w_shape='w1', silence_warnings=False):
     and the other is 6x4 (24 areas). An intersection of these two weights
     matrices results in the new weights matrix matching the smaller one.
 
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> w1 = ps.lat2W(4,4)
     >>> w2 = ps.lat2W(6,4)
     >>> w = ps.w_intersection(w1, w2)
@@ -197,7 +197,7 @@ def w_difference(w1, w2, w_shape='w1', constrained=True, silence_warnings=False)
     bishop matrix). Note that the difference of queen from rook would result
     in a weights matrix with no joins.
 
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> w1 = ps.lat2W(4,4,rook=False)
     >>> w2 = ps.lat2W(4,4,rook=True)
     >>> w = ps.w_difference(w1, w2, constrained=False)
@@ -296,7 +296,7 @@ def w_symmetric_difference(w1, w2, w_shape='all', constrained=True, silence_warn
     contains the corner joins in the overlap area, all the joins in the
     non-overlap area.
 
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> w1 = ps.lat2W(4,4,rook=False)
     >>> w2 = ps.lat2W(6,4,rook=True)
     >>> w = ps.w_symmetric_difference(w1, w2, constrained=False)
@@ -379,7 +379,7 @@ def w_subset(w1, ids, silence_warnings=False):
     previous weights matrix, and only those joins relevant to the new region
     are retained.
 
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> w1 = ps.lat2W(6,4)
     >>> ids = range(16)
     >>> w = ps.w_subset(w1, ids)
@@ -440,7 +440,7 @@ def w_clip(w1, w2, outSP=True, silence_warnings=False):
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
 
     First create a W object from a lattice using queen contiguity and
     row-standardize it (note that these weights will stay when we clip the

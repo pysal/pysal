@@ -9,8 +9,8 @@ __author__ = "Taylor Oshan Tayoshan@gmail.com"
 import numpy as np
 from scipy.spatial.distance import pdist,squareform
 from scipy.optimize import minimize_scalar
-from pysal.model.spglm.family import Gaussian, Poisson, Binomial
-from pysal.model.spglm.iwls import iwls,_compute_betas_gwr
+from pysalnext.model.spglm.family import Gaussian, Poisson, Binomial
+from pysalnext.model.spglm.iwls import iwls,_compute_betas_gwr
 from .kernels import *
 from .gwr import GWR
 from .search import golden_section, equal_interval
@@ -84,9 +84,9 @@ class Sel_BW(object):
     Examples
     ________
 
-    >>> import pysal.lib
+    >>> import pysalnext.lib
     >>> from gwr.sel_bw import Sel_BW
-    >>> data = pysal.lib.open(pysal.lib.examples.get_path('GData_utm.csv'))
+    >>> data = pysalnext.lib.open(pysalnext.lib.examples.get_path('GData_utm.csv'))
     >>> coords = zip(data.bycol('X'), data.by_col('Y')) 
     >>> y = np.array(data.by_col('PctBach')).reshape((-1,1))
     >>> rural = np.array(data.by_col('PctRural')).reshape((-1,1))

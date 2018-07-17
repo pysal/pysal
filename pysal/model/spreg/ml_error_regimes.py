@@ -4,7 +4,7 @@ ML Estimation of Spatial Error Model
 
 __author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.edu"
 
-import pysal.lib.api as lps
+import pysalnext.lib.api as lps
 import numpy as np
 import multiprocessing as mp
 from . import regimes as REGI
@@ -205,10 +205,10 @@ class ML_Error_Regimes(BaseML_Error, REGI.Regimes_Frame):
     Examples
     ________
 
-    Open data baltim.dbf using pysal and create the variables matrices and weights matrix.
+    Open data baltim.dbf using pysalnext and create the variables matrices and weights matrix.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> db =  ps.open(ps.examples.get_path("baltim.dbf"),'r')
     >>> ds_name = "baltim.dbf"
     >>> y_name = "PRICE"
@@ -429,7 +429,7 @@ def _test():
 if __name__ == "__main__":
     _test()
     import numpy as np
-    import pysal.lib.api as lps
+    import pysalnext.lib.api as lps
 
     db = ps.open(ps.examples.get_path("baltim.dbf"), 'r')
     ds_name = "baltim.dbf"

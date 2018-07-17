@@ -1,10 +1,10 @@
-from pysal.model.spvcm.hierarchical.svc import SVC
-from pysal.model.spvcm.abstracts import Trace
-from pysal.model.spvcm._constants import TEST_SEED, RTOL, ATOL
-from pysal.model.spvcm.utils import no_op
+from pysalnext.model.spvcm.hierarchical.svc import SVC
+from pysalnext.model.spvcm.abstracts import Trace
+from pysalnext.model.spvcm._constants import TEST_SEED, RTOL, ATOL
+from pysalnext.model.spvcm.utils import no_op
 import unittest as ut
 import pandas as pd
-import pysal as ps
+import pysalnext as ps
 import numpy as np
 import os
 

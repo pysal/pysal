@@ -11,14 +11,14 @@ except ImportError:
     gpd = None
 
 
-from ... import examples as pysal_examples
+from ... import examples as pysalnext_examples
 
 
 
 class TestContiguityWeights(unittest.TestCase):
     def setUp(self):
         """ Setup the binning contiguity weights"""
-        shpObj = ps_open(pysal_examples.get_path('virginia.shp'), 'r')
+        shpObj = ps_open(pysalnext_examples.get_path('virginia.shp'), 'r')
         self.binningW = ContiguityWeightsLists(shpObj, QUEEN)
         shpObj.close()
 
@@ -39,89 +39,89 @@ class TestContiguityWeights(unittest.TestCase):
     def test_nested_polygons(self):
         # load queen gal file created using Open Geoda.
         geodaW = ps_open(
-            pysal_examples.get_path('virginia.gal'), 'r').read()
-        # build matching W with pysal
-        pysalWb = self.build_W(
-            pysal_examples.get_path('virginia.shp'), QUEEN, 'POLY_ID')
+            pysalnext_examples.get_path('virginia.gal'), 'r').read()
+        # build matching W with pysalnext
+        pysalnextWb = self.build_W(
+            pysalnext_examples.get_path('virginia.shp'), QUEEN, 'POLY_ID')
         # compare output.
         for key in geodaW.neighbors:
             geoda_neighbors = list(map(int, geodaW.neighbors[key]))
-            pysalb_neighbors = pysalWb.neighbors[int(key)]
+            pysalnextb_neighbors = pysalnextWb.neighbors[int(key)]
             geoda_neighbors.sort()
-            pysalb_neighbors.sort()
-            self.assertEqual(geoda_neighbors, pysalb_neighbors)
+            pysalnextb_neighbors.sort()
+            self.assertEqual(geoda_neighbors, pysalnextb_neighbors)
 
     def test_true_rook(self):
         # load queen gal file created using Open Geoda.
-        geodaW = ps_open(pysal_examples.get_path('rook31.gal'), 'r').read()
-        # build matching W with pysal
-        #pysalW = pysal.rook_from_shapefile(pysal_examples.get_path('rook31.shp'),','POLY_ID')
-        pysalWb = self.build_W(
-            pysal_examples.get_path('rook31.shp'), ROOK, 'POLY_ID')
+        geodaW = ps_open(pysalnext_examples.get_path('rook31.gal'), 'r').read()
+        # build matching W with pysalnext
+        #pysalnextW = pysalnext.rook_from_shapefile(pysalnext_examples.get_path('rook31.shp'),','POLY_ID')
+        pysalnextWb = self.build_W(
+            pysalnext_examples.get_path('rook31.shp'), ROOK, 'POLY_ID')
         # compare output.
         for key in geodaW.neighbors:
             geoda_neighbors = list(map(int, geodaW.neighbors[key]))
-            pysalb_neighbors = pysalWb.neighbors[int(key)]
+            pysalnextb_neighbors = pysalnextWb.neighbors[int(key)]
             geoda_neighbors.sort()
-            pysalb_neighbors.sort()
-            self.assertEqual(geoda_neighbors, pysalb_neighbors)
+            pysalnextb_neighbors.sort()
+            self.assertEqual(geoda_neighbors, pysalnextb_neighbors)
 
     def test_true_rook2(self):
         # load queen gal file created using Open Geoda.
         geodaW = ps_open(
-            pysal_examples.get_path('stl_hom_rook.gal'), 'r').read()
-        # build matching W with pysal
-        pysalWb = self.build_W(pysal_examples.get_path(
+            pysalnext_examples.get_path('stl_hom_rook.gal'), 'r').read()
+        # build matching W with pysalnext
+        pysalnextWb = self.build_W(pysalnext_examples.get_path(
             'stl_hom.shp'), ROOK, 'POLY_ID_OG')
         # compare output.
         for key in geodaW.neighbors:
             geoda_neighbors = list(map(int, geodaW.neighbors[key]))
-            pysalb_neighbors = pysalWb.neighbors[int(key)]
+            pysalnextb_neighbors = pysalnextWb.neighbors[int(key)]
             geoda_neighbors.sort()
-            pysalb_neighbors.sort()
-            self.assertEqual(geoda_neighbors, pysalb_neighbors)
+            pysalnextb_neighbors.sort()
+            self.assertEqual(geoda_neighbors, pysalnextb_neighbors)
 
     def test_true_rook3(self):
         # load queen gal file created using Open Geoda.
         geodaW = ps_open(
-            pysal_examples.get_path('sacramentot2.gal'), 'r').read()
-        # build matching W with pysal
-        pysalWb = self.build_W(pysal_examples.get_path(
+            pysalnext_examples.get_path('sacramentot2.gal'), 'r').read()
+        # build matching W with pysalnext
+        pysalnextWb = self.build_W(pysalnext_examples.get_path(
             'sacramentot2.shp'), ROOK, 'POLYID')
         # compare output.
         for key in geodaW.neighbors:
             geoda_neighbors = list(map(int, geodaW.neighbors[key]))
-            pysalb_neighbors = pysalWb.neighbors[int(key)]
+            pysalnextb_neighbors = pysalnextWb.neighbors[int(key)]
             geoda_neighbors.sort()
-            pysalb_neighbors.sort()
-            self.assertEqual(geoda_neighbors, pysalb_neighbors)
+            pysalnextb_neighbors.sort()
+            self.assertEqual(geoda_neighbors, pysalnextb_neighbors)
 
     def test_true_rook4(self):
         # load queen gal file created using Open Geoda.
         geodaW = ps_open(
-            pysal_examples.get_path('virginia_rook.gal'), 'r').read()
-        # build matching W with pysal
-        pysalWb = self.build_W(
-            pysal_examples.get_path('virginia.shp'), ROOK, 'POLY_ID')
+            pysalnext_examples.get_path('virginia_rook.gal'), 'r').read()
+        # build matching W with pysalnext
+        pysalnextWb = self.build_W(
+            pysalnext_examples.get_path('virginia.shp'), ROOK, 'POLY_ID')
         # compare output.
         for key in geodaW.neighbors:
             geoda_neighbors = list(map(int, geodaW.neighbors[key]))
-            pysalb_neighbors = pysalWb.neighbors[int(key)]
+            pysalnextb_neighbors = pysalnextWb.neighbors[int(key)]
             geoda_neighbors.sort()
-            pysalb_neighbors.sort()
-            self.assertEqual(geoda_neighbors, pysalb_neighbors)
+            pysalnextb_neighbors.sort()
+            self.assertEqual(geoda_neighbors, pysalnextb_neighbors)
 
     @unittest.skipIf(gpd is None, 'geopandas is missing in the testing environment')
     def test_shapely(self):
-        pysalneighbs = ContiguityWeightsLists(ps_open(
-            pysal_examples.get_path('virginia.shp')), ROOK)
-        gdf = gpd.read_file(pysal_examples.get_path('virginia.shp')) 
+        pysalnextneighbs = ContiguityWeightsLists(ps_open(
+            pysalnext_examples.get_path('virginia.shp')), ROOK)
+        gdf = gpd.read_file(pysalnext_examples.get_path('virginia.shp')) 
         shplyneighbs = ContiguityWeightsLists(gdf.geometry.tolist(), ROOK)
-        self.assertEqual(pysalneighbs.w, shplyneighbs.w)
-        pysalneighbs = ContiguityWeightsLists(ps_open(
-            pysal_examples.get_path('virginia.shp')), QUEEN)
+        self.assertEqual(pysalnextneighbs.w, shplyneighbs.w)
+        pysalnextneighbs = ContiguityWeightsLists(ps_open(
+            pysalnext_examples.get_path('virginia.shp')), QUEEN)
         shplyneighbs = ContiguityWeightsLists(gdf.geometry.tolist(), QUEEN)
-        self.assertEqual(pysalneighbs.w, shplyneighbs.w)
+        self.assertEqual(pysalnextneighbs.w, shplyneighbs.w)
 
     def build_W(self, shapefile, type, idVariable=None):
         """ Building 2 W's the hard way.  We need to do this so we can test both rtree and binning """

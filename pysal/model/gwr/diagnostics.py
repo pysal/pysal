@@ -4,7 +4,7 @@ Diagnostics for estimated gwr models
 __author__ = "Taylor Oshan tayoshan@gmail.com"
 
 import numpy as np
-from pysal.model.spglm.family import Gaussian, Poisson, Binomial
+from pysalnext.model.spglm.family import Gaussian, Poisson, Binomial
 
 def get_AICc(gwr):
     """

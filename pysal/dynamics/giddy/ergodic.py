@@ -34,7 +34,7 @@ def steady_state(P):
     is melting).
 
     >>> import numpy as np
-    >>> from pysal.dynamics.giddy.api import steady_state
+    >>> from pysalnext.dynamics.giddy.api import steady_state
     >>> p=np.matrix([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])
     >>> steady_state(p)
     matrix([[0.4],
@@ -78,7 +78,7 @@ def fmpt(P):
     Examples
     --------
     >>> import numpy as np
-    >>> from pysal.dynamics.giddy.api import fmpt
+    >>> from pysalnext.dynamics.giddy.api import fmpt
     >>> p=np.matrix([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])
     >>> fm=fmpt(p)
     >>> fm
@@ -134,7 +134,7 @@ def var_fmpt(P):
     Examples
     --------
     >>> import numpy as np
-    >>> from pysal.dynamics.giddy.api import var_fmpt
+    >>> from pysalnext.dynamics.giddy.api import var_fmpt
     >>> p=np.matrix([[.5, .25, .25],[.5,0,.5],[.25,.25,.5]])
     >>> vfm=var_fmpt(p)
     >>> vfm

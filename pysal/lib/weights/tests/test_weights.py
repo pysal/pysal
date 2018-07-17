@@ -4,7 +4,7 @@ from .. import util
 from ..util import WSP2W, lat2W
 from ..user import rook_from_shapefile
 from ...io.FileIO import FileIO as psopen
-from ... import examples as pysal_examples
+from ... import examples as pysalnext_examples
 from ..Distance import KNN
 import numpy as np
 
@@ -13,7 +13,7 @@ NPTA3E = np.testing.assert_array_almost_equal
 
 class TestW(unittest.TestCase):
     def setUp(self):
-        self.w = rook_from_shapefile(pysal_examples.get_path('10740.shp'))
+        self.w = rook_from_shapefile(pysalnext_examples.get_path('10740.shp'))
 
         self.neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4],
                           4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7],
@@ -236,7 +236,7 @@ class TestW(unittest.TestCase):
     def test_symmetrize(self):
         symm = self.w.symmetrize() 
         np.testing.assert_allclose(symm.sparse.toarray(), self.w.sparse.toarray())
-        knn = KNN.from_shapefile(pysal_examples.get_path('baltim.shp'), k=10)
+        knn = KNN.from_shapefile(pysalnext_examples.get_path('baltim.shp'), k=10)
         sknn = knn.symmetrize()
         assert (not np.allclose(knn.sparse.toarray(), sknn.sparse.toarray()))
         np.testing.assert_allclose(sknn.sparse.toarray(), sknn.sparse.toarray().T)
@@ -255,7 +255,7 @@ class TestW(unittest.TestCase):
 class Test_WSP_Back_To_W(unittest.TestCase):
     # Test to make sure we get back to the same W functionality
     def setUp(self):
-        self.w = rook_from_shapefile(pysal_examples.get_path('10740.shp'))
+        self.w = rook_from_shapefile(pysalnext_examples.get_path('10740.shp'))
         wsp = self.w.to_WSP()
         self.w = wsp.to_W()
 
@@ -468,7 +468,7 @@ class Test_WSP_Back_To_W(unittest.TestCase):
 
 class TestWSP(unittest.TestCase):
     def setUp(self):
-        self.w = psopen(pysal_examples.get_path("sids2.gal")).read()
+        self.w = psopen(pysalnext_examples.get_path("sids2.gal")).read()
         self.wsp = WSP(self.w.sparse, self.w.id_order)
         w3x3 = util.lat2W(3, 3)
         self.w3x3 = WSP(w3x3.sparse)

@@ -407,21 +407,21 @@ class Map_Classifier(object):
 
     Map Classifiers Supported
 
-    * :class:`pysal.viz.mapclassify.classifiers.Box_Plot`
-    * :class:`pysal.viz.mapclassify.classifiers.Equal_Interval`
-    * :class:`pysal.viz.mapclassify.classifiers.Fisher_Jenks`
-    * :class:`pysal.viz.mapclassify.classifiers.Fisher_Jenks_Sampled`
-    * :class:`pysal.viz.mapclassify.classifiers.HeadTail_Breaks`
-    * :class:`pysal.viz.mapclassify.classifiers.Jenks_Caspall`
-    * :class:`pysal.viz.mapclassify.classifiers.Jenks_Caspall_Forced`
-    * :class:`pysal.viz.mapclassify.classifiers.Jenks_Caspall_Sampled`
-    * :class:`pysal.viz.mapclassify.classifiers.Max_P_Classifier`
-    * :class:`pysal.viz.mapclassify.classifiers.Maximum_Breaks`
-    * :class:`pysal.viz.mapclassify.classifiers.Natural_Breaks`
-    * :class:`pysal.viz.mapclassify.classifiers.Quantiles`
-    * :class:`pysal.viz.mapclassify.classifiers.Percentiles`
-    * :class:`pysal.viz.mapclassify.classifiers.Std_Mean`
-    * :class:`pysal.viz.mapclassify.classifiers.User_Defined`
+    * :class:`pysalnext.viz.mapclassify.classifiers.Box_Plot`
+    * :class:`pysalnext.viz.mapclassify.classifiers.Equal_Interval`
+    * :class:`pysalnext.viz.mapclassify.classifiers.Fisher_Jenks`
+    * :class:`pysalnext.viz.mapclassify.classifiers.Fisher_Jenks_Sampled`
+    * :class:`pysalnext.viz.mapclassify.classifiers.HeadTail_Breaks`
+    * :class:`pysalnext.viz.mapclassify.classifiers.Jenks_Caspall`
+    * :class:`pysalnext.viz.mapclassify.classifiers.Jenks_Caspall_Forced`
+    * :class:`pysalnext.viz.mapclassify.classifiers.Jenks_Caspall_Sampled`
+    * :class:`pysalnext.viz.mapclassify.classifiers.Max_P_Classifier`
+    * :class:`pysalnext.viz.mapclassify.classifiers.Maximum_Breaks`
+    * :class:`pysalnext.viz.mapclassify.classifiers.Natural_Breaks`
+    * :class:`pysalnext.viz.mapclassify.classifiers.Quantiles`
+    * :class:`pysalnext.viz.mapclassify.classifiers.Percentiles`
+    * :class:`pysalnext.viz.mapclassify.classifiers.Std_Mean`
+    * :class:`pysalnext.viz.mapclassify.classifiers.User_Defined`
 
     Utilities:
 
@@ -430,8 +430,8 @@ class Map_Classifier(object):
     different lues, or for automatic selection of a classifier and
     number of classes.
 
-    * :func:`pysal.viz.mapclassify.classifiers.gadf`
-    * :class:`pysal.viz.mapclassify.classifiers.K_classifiers`
+    * :func:`pysalnext.viz.mapclassify.classifiers.gadf`
+    * :class:`pysalnext.viz.mapclassify.classifiers.K_classifiers`
 
     """
 
@@ -526,7 +526,7 @@ class Map_Classifier(object):
 
         Examples
         --------
-        >>> import pysal as ps
+        >>> import pysalnext as ps
         >>> df = ps.pdio.read_files(ps.examples.get_path('columbus.dbf'))
         >>> classifier = ps.Quantiles.make(k=9)
         >>> classifier
@@ -1388,10 +1388,10 @@ class Natural_Breaks(Map_Classifier):
     Examples
     --------
     >>> import numpy
-    >>> import pysal
+    >>> import pysalnext
     >>> numpy.random.seed(123456)
-    >>> cal = pysal.esda.pysal.viz.mapclassify.load_example()
-    >>> nb = pysal.Natural_Breaks(cal, k=5)
+    >>> cal = pysalnext.esda.pysalnext.viz.mapclassify.load_example()
+    >>> nb = pysalnext.Natural_Breaks(cal, k=5)
     >>> nb.k
     5
     >>> nb.counts
@@ -1400,7 +1400,7 @@ class Natural_Breaks(Map_Classifier):
     array([   29.82,   110.74,   370.5 ,   722.85,  4111.45])
     >>> x = numpy.array([1] * 50)
     >>> x[-1] = 20
-    >>> nb = pysal.Natural_Breaks(x, k = 5, initial = 0)
+    >>> nb = pysalnext.Natural_Breaks(x, k = 5, initial = 0)
     Warning: Not enough unique values in array to form k classes
     Warning: setting k to 2
     >>> nb.bins
@@ -2075,9 +2075,9 @@ class Max_P_Classifier(Map_Classifier):
 
     Examples
     --------
-    >>> import pysal
-    >>> cal = pysal.esda.pysal.viz.mapclassify.load_example()
-    >>> mp = pysal.Max_P_Classifier(cal)
+    >>> import pysalnext
+    >>> cal = pysalnext.esda.pysalnext.viz.mapclassify.load_example()
+    >>> mp = pysalnext.Max_P_Classifier(cal)
     >>> mp.bins
     array([    8.7 ,    16.7 ,    20.47,    66.26,  4111.45])
     >>> mp.counts

@@ -10,7 +10,7 @@ from scipy.stats.mstats import rankdata
 from scipy.special import erfc
 import numpy as np
 import scipy as sp
-import pysal.lib.api as ps
+import pysalnext.lib.api as ps
 
 class Theta:
     """
@@ -60,8 +60,8 @@ class Theta:
 
     Examples
     --------
-    >>> import pysal.lib as ps
-    >>> from pysal.dynamics.giddy.api import Theta
+    >>> import pysalnext.lib as ps
+    >>> from pysalnext.dynamics.giddy.api import Theta
     >>> import numpy as np
     >>> f=ps.open(ps.examples.get_path("mexico.csv"))
     >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
@@ -144,7 +144,7 @@ class Tau:
     # from scipy example
 
     >>> from scipy.stats import kendalltau
-    >>> from pysal.dynamics.giddy.api import Tau
+    >>> from pysalnext.dynamics.giddy.api import Tau
     >>> x1 = [12, 2, 1, 12, 2]
     >>> x2 = [1, 4, 7, 1, 0]
     >>> kt = Tau(x1,x2)
@@ -324,11 +324,11 @@ class SpatialTau(object):
 
     Examples
     --------
-    >>> import pysal.lib
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib
+    >>> import pysalnext.lib.api as ps
     >>> import numpy as np
-    >>> from pysal.dynamics.giddy.api import SpatialTau
-    >>> f=pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
+    >>> from pysalnext.dynamics.giddy.api import SpatialTau
+    >>> f=pysalnext.lib.open(pysalnext.lib.examples.get_path("mexico.csv"))
     >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
     >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> regime=np.array(f.by_col['esquivel99'])
@@ -448,11 +448,11 @@ class Tau_Local:
 
     Examples
     --------
-    >>> import pysal.lib
+    >>> import pysalnext.lib
     >>> import numpy as np
-    >>> from pysal.dynamics.giddy.api import Tau_Local,Tau
+    >>> from pysalnext.dynamics.giddy.api import Tau_Local,Tau
     >>> np.random.seed(10)
-    >>> f = pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
+    >>> f = pysalnext.lib.open(pysalnext.lib.examples.get_path("mexico.csv"))
     >>> vnames = ["pcgdp%d"%dec for dec in range(1940, 2010, 10)]
     >>> y = np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> r = y / y.mean(axis=0)
@@ -547,12 +547,12 @@ class Tau_Local_Neighbor:
 
     Examples
     --------
-    >>> import pysal.lib
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib
+    >>> import pysalnext.lib.api as ps
     >>> import numpy as np
-    >>> from pysal.dynamics.giddy.api import Tau_Local_Neighbor, SpatialTau
+    >>> from pysalnext.dynamics.giddy.api import Tau_Local_Neighbor, SpatialTau
     >>> np.random.seed(10)
-    >>> f = pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
+    >>> f = pysalnext.lib.open(pysalnext.lib.examples.get_path("mexico.csv"))
     >>> vnames = ["pcgdp%d"%dec for dec in range(1940, 2010, 10)]
     >>> y = np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> r = y / y.mean(axis=0)
@@ -715,12 +715,12 @@ class Tau_Local_Neighborhood:
 
     Examples
     --------
-    >>> import pysal.lib
-    >>> import pysal.lib.api as ps
-    >>> from pysal.dynamics.giddy.api import Tau_Local_Neighborhood
+    >>> import pysalnext.lib
+    >>> import pysalnext.lib.api as ps
+    >>> from pysalnext.dynamics.giddy.api import Tau_Local_Neighborhood
     >>> import numpy as np
     >>> np.random.seed(10)
-    >>> f = pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
+    >>> f = pysalnext.lib.open(pysalnext.lib.examples.get_path("mexico.csv"))
     >>> vnames = ["pcgdp%d"%dec for dec in range(1940, 2010, 10)]
     >>> y = np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> r = y / y.mean(axis=0)
@@ -843,11 +843,11 @@ class Tau_Regional:
 
     Examples
     --------
-    >>> import pysal.lib
+    >>> import pysalnext.lib
     >>> import numpy as np
-    >>> from pysal.dynamics.giddy.api import Tau_Regional
+    >>> from pysalnext.dynamics.giddy.api import Tau_Regional
     >>> np.random.seed(10)
-    >>> f = pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
+    >>> f = pysalnext.lib.open(pysalnext.lib.examples.get_path("mexico.csv"))
     >>> vnames = ["pcgdp%d"%dec for dec in range(1940, 2010, 10)]
     >>> y = np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> r = y / y.mean(axis=0)

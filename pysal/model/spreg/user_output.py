@@ -8,8 +8,8 @@ import numpy as np
 import copy as COPY
 from . import diagnostics
 from . import sputils as spu
-from pysal.lib import weights 
-from pysal.lib.weights.Distance import Kernel
+from pysalnext.lib import weights 
+from pysalnext.lib.weights.Distance import Kernel
 import scipy
 from scipy.sparse.csr import csr_matrix
 weights.Kernel = Kernel
@@ -249,7 +249,7 @@ def set_name_w(name_w, w):
     name_w      : string
                   Name passed in by user. Default is None.
     w           : W object
-                  pysal W object passed in by user
+                  pysalnext W object passed in by user
 
     Returns
     -------
@@ -330,7 +330,7 @@ def check_arrays(*arrays):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> # Extract CRIME column from the dbf file
     >>> y = np.array(db.by_col("CRIME"))
@@ -391,7 +391,7 @@ def check_y(y, n):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> # Extract CRIME column from the dbf file
     >>> y = np.array(db.by_col("CRIME"))
@@ -413,7 +413,7 @@ def check_y(y, n):
 
 
 def check_weights(w, y, w_required=False):
-    """Check if the w parameter passed by the user is a pysal.lib.W object and
+    """Check if the w parameter passed by the user is a pysalnext.lib.W object and
     check that its dimensionality matches the y parameter.  Note that this
     check is not performed if w set to None.
 
@@ -437,7 +437,7 @@ def check_weights(w, y, w_required=False):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> # Extract CRIME column from the dbf file
     >>> y = np.array(db.by_col("CRIME"))
@@ -456,7 +456,7 @@ def check_weights(w, y, w_required=False):
             raise Exception("A weights matrix w must be provided to run this method.")
         if not isinstance(w, weights.W):
             from warnings import warn
-            warn("w must be API-compatible pysal weights object")
+            warn("w must be API-compatible pysalnext weights object")
         if w.n != y.shape[0]:
             raise Exception("y must be nx1, and w must be an nxn PySAL W object")
         diag = w.sparse.diagonal()
@@ -491,7 +491,7 @@ def check_robust(robust, wk):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> # Extract CRIME column from the dbf file
     >>> y = np.array(db.by_col("CRIME"))
@@ -558,7 +558,7 @@ def check_spat_diag(spat_diag, w):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> # Extract CRIME column from the dbf file
     >>> y = np.array(db.by_col("CRIME"))
@@ -574,7 +574,7 @@ def check_spat_diag(spat_diag, w):
     """
     if spat_diag:
         if not isinstance(w, weights.W):
-            raise Exception("w must be a pysal.lib.W object to run spatial diagnostics")
+            raise Exception("w must be a pysalnext.lib.W object to run spatial diagnostics")
 
 
 def check_regimes(reg_set, N=None, K=None):
@@ -619,7 +619,7 @@ def check_constant(x):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> X = []
     >>> X.append(db.by_col("INC"))

@@ -742,7 +742,7 @@ class test_Rectangle(unittest.TestCase):
 
 
 #suite = unittest.TestSuite()
-#suite.addTest(doctest.DocTestSuite('pysal.cg.shapes'))
+#suite.addTest(doctest.DocTestSuite('pysalnext.cg.shapes'))
 #A = unittest.TestLoader().loadTestsFromTestCase(_TestPoint)
 #B = unittest.TestLoader().loadTestsFromTestCase(_TestLineSegment)
 #C = unittest.TestLoader().loadTestsFromTestCase(_TestLine)

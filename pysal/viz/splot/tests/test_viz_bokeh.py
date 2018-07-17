@@ -1,9 +1,9 @@
-import pysal.lib.api as lp
-from pysal.lib import examples
+import pysalnext.lib.api as lp
+from pysalnext.lib import examples
 import geopandas as gpd
-import pysal.explore.esda as esda
+import pysalnext.explore.esda as esda
 
-from pysal.viz.splot.bk import (plot_choropleth, lisa_cluster,
+from pysalnext.viz.splot.bk import (plot_choropleth, lisa_cluster,
                       moran_scatterplot, plot_local_autocorrelation)
 
 

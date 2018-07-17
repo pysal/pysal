@@ -5,7 +5,7 @@ from ...common import pandas
 from ...io.FileIO import FileIO as ps_open
 from ...io import geotable as pdio
 
-from ... import examples as pysal_examples
+from ... import examples as pysalnext_examples
 import unittest as ut
 import numpy as np
 
@@ -17,8 +17,8 @@ except ImportError:
     GEOPANDAS_EXTINCT = True
 
 class Contiguity_Mixin(object):
-    polygon_path = pysal_examples.get_path('columbus.shp')
-    point_path = pysal_examples.get_path('baltim.shp')
+    polygon_path = pysalnext_examples.get_path('columbus.shp')
+    point_path = pysalnext_examples.get_path('baltim.shp')
     f = ps_open(polygon_path) # our file handler
     polygons = f.read() # our iterable
     f.seek(0) #go back to head of file
@@ -109,7 +109,7 @@ class Test_Queen(ut.TestCase, Contiguity_Mixin):
     @ut.skipIf(GEOPANDAS_EXTINCT, 'Missing Geopandas')
     def test_linestrings(self):
         import geopandas 
-        eberly = geopandas.read_file(pysal_examples.get_path("eberly_net.shp")).iloc[0:8]
+        eberly = geopandas.read_file(pysalnext_examples.get_path("eberly_net.shp")).iloc[0:8]
         eberly_w = {0: [1,2,3],
                     1: [0,4],
                     2: [0,3,4,5],

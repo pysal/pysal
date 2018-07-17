@@ -84,7 +84,7 @@ class DataTable(FileIO.FileIO):
         Examples
         --------
 
-        >>> import pysal as ps
+        >>> import pysalnext as ps
         >>> dbf = ps.open(ps.examples.get_path('NAT.dbf'))
         >>> hr = dbf.by_col_array('HR70', 'HR80')
         >>> hr[0:5]

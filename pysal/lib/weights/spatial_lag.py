@@ -17,7 +17,7 @@ def lag_spatial(w, y):
     ----------
 
     w                   : W
-                          pysal.lib spatial weightsobject
+                          pysalnext.lib spatial weightsobject
     y                   : array
                           numpy array with dimensionality conforming to w (see examples)
 
@@ -33,7 +33,7 @@ def lag_spatial(w, y):
     Setup a 9x9 binary spatial weights matrix and vector of data; compute the
     spatial lag of the vector.
 
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> import numpy as np
     >>> w = ps.lat2W(3, 3)
     >>> y = np.arange(9)
@@ -127,20 +127,20 @@ def lag_categorical(w, y, ties='tryself'):
     Set up a 9x9 weights matrix describing a 3x3 regular lattice. Lag one list of
     categorical variables with no ties.
 
-    >>> import pysal.lib.api as ps
-    >>> import pysal.lib
+    >>> import pysalnext.lib.api as ps
+    >>> import pysalnext.lib
     >>> import numpy as np
     >>> np.random.seed(12345)
     >>> w = ps.lat2W(3, 3)
     >>> y = ['a','b','a','b','c','b','c','b','c']
-    >>> y_l = pysal.lib.weights.spatial_lag.lag_categorical(w, y)
+    >>> y_l = pysalnext.lib.weights.spatial_lag.lag_categorical(w, y)
     >>> np.array_equal(y_l, np.array(['b', 'a', 'b', 'c', 'b', 'c', 'b', 'c', 'b']))
     True
 
     Explicitly reshape y into a (9x1) array and calculate lag again
 
     >>> yvect = np.array(y).reshape(9,1)
-    >>> yvect_l = pysal.lib.weights.spatial_lag.lag_categorical(w,yvect)
+    >>> yvect_l = pysalnext.lib.weights.spatial_lag.lag_categorical(w,yvect)
     >>> check = np.array( [ [i] for i in  ['b', 'a', 'b', 'c', 'b', 'c', 'b', 'c', 'b']] )
     >>> np.array_equal(yvect_l, check)
     True
@@ -149,7 +149,7 @@ def lag_categorical(w, y, ties='tryself'):
 
     >>> y2 = ['a', 'c', 'c', 'd', 'b', 'a', 'd', 'd', 'c']
     >>> ym = np.vstack((y,y2)).T
-    >>> ym_lag = pysal.lib.weights.spatial_lag.lag_categorical(w,ym)
+    >>> ym_lag = pysalnext.lib.weights.spatial_lag.lag_categorical(w,ym)
     >>> check = np.array([['b', 'd'], ['a', 'c'], ['b', 'c'], ['c', 'd'], ['b', 'd'], ['c', 'c'], ['b', 'd'], ['c', 'd'], ['b', 'c']])
     >>> np.array_equal(check, ym_lag)
     True
@@ -214,7 +214,7 @@ def _resolve_ties(idx,normalized_labels,tally,neighbors,method,w):
                           2. random: Resolve the tie randomly amongst winners.
                           3. lowest: Pick the lowest-value label amongst winners.
                           4. highest: Pick the highest-value label amongst winners.
-    w                   : pysal.W object
+    w                   : pysalnext.W object
                           a PySAL weights object aligned with normalized_labels. 
 
     Returns

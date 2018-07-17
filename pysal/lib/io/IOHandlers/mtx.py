@@ -61,8 +61,8 @@ class MtxIO(FileIO.FileIO):
     def read(self, n=-1, sparse=False):
         """
         sparse: boolean
-                if true, return pysal WSP object
-                if false, return pysal W object
+                if true, return pysalnext WSP object
+                if false, return pysalnext W object
         """
         self._sparse = sparse
         self._complain_ifclosed(self.closed)
@@ -75,15 +75,15 @@ class MtxIO(FileIO.FileIO):
 
     def _read(self):
         """Reads MatrixMarket mtx file
-        Returns a pysal.weights.weights.W or pysal.weights.weights.WSP object
+        Returns a pysalnext.weights.weights.W or pysalnext.weights.weights.WSP object
 
         Examples
         --------
 
         Type 'dir(w)' at the interpreter to see what methods are supported.
-        Open a MatrixMarket mtx file and read it into a pysal weights object
+        Open a MatrixMarket mtx file and read it into a pysalnext weights object
 
-        >>> f = pysal.open(pysal.examples.get_path('wmat.mtx'),'r')
+        >>> f = pysalnext.open(pysalnext.examples.get_path('wmat.mtx'),'r')
 
         >>> w = f.read()
 
@@ -104,7 +104,7 @@ class MtxIO(FileIO.FileIO):
 
         >>> f.close()
 
-        >>> f = pysal.open(pysal.examples.get_path('wmat.mtx'),'r')
+        >>> f = pysalnext.open(pysalnext.examples.get_path('wmat.mtx'),'r')
 
         >>> wsp = f.read(sparse=True)
 
@@ -154,8 +154,8 @@ class MtxIO(FileIO.FileIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
-        >>> testfile = pysal.open(pysal.examples.get_path('wmat.mtx'),'r')
+        >>> import tempfile, pysalnext, os
+        >>> testfile = pysalnext.open(pysalnext.examples.get_path('wmat.mtx'),'r')
         >>> w = testfile.read()
 
         Create a temporary file for this example
@@ -172,7 +172,7 @@ class MtxIO(FileIO.FileIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w')
+        >>> o = pysalnext.open(fname,'w')
 
         Write the Weights object into the open file
 
@@ -181,7 +181,7 @@ class MtxIO(FileIO.FileIO):
 
         Read in the newly created mtx file
 
-        >>> wnew =  pysal.open(fname,'r').read()
+        >>> wnew =  pysalnext.open(fname,'r').read()
 
         Compare values from old to new
 
@@ -202,7 +202,7 @@ class MtxIO(FileIO.FileIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w')
+        >>> o = pysalnext.open(fname,'w')
 
         Write the sparse weights object into the open file
 
@@ -211,7 +211,7 @@ class MtxIO(FileIO.FileIO):
 
         Read in the newly created mtx file
 
-        >>> wsp_new =  pysal.open(fname,'r').read(sparse=True)
+        >>> wsp_new =  pysalnext.open(fname,'r').read(sparse=True)
 
         Compare values from old to new
 
@@ -230,7 +230,7 @@ class MtxIO(FileIO.FileIO):
                         field='real', precision=7)
             self.pos += 1
         else:
-            raise TypeError("Expected a pysal weights object, got: %s" % (
+            raise TypeError("Expected a pysalnext weights object, got: %s" % (
                 type(obj)))
 
     def close(self):

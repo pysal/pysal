@@ -1,10 +1,10 @@
 import unittest
-import pysal.lib.api as lps
+import pysalnext.lib.api as lps
 import numpy as np
 from scipy import sparse
-from pysal.model.spreg import error_sp_het as HET
-from pysal.lib.common import RTOL
-import pysal.model.spreg
+from pysalnext.model.spreg import error_sp_het as HET
+from pysalnext.lib.common import RTOL
+import pysalnext.model.spreg
 
 class TestBaseGMErrorHet(unittest.TestCase):
     def setUp(self):
@@ -274,7 +274,7 @@ class TestBaseGMComboHet(unittest.TestCase):
 
     def test_model(self):
         # Only spatial lag
-        yd2, q2 = pysal.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 1, True)
+        yd2, q2 = pysalnext.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 1, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         self.X = sparse.csr_matrix(self.X)
         reg = HET.BaseGM_Combo_Het(self.y, self.X, yend=yd2, q=q2, w=self.w.sparse, step1c=True)

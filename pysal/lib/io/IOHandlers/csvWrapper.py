@@ -17,9 +17,9 @@ class csvWrapper(Tables.DataTable):
 
         Examples
         --------
-        >>> import pysal
-        >>> file_name = pysal.examples.get_path('stl_hom.csv')
-        >>> f = pysal.open(file_name,'r')
+        >>> import pysalnext
+        >>> file_name = pysalnext.examples.get_path('stl_hom.csv')
+        >>> f = pysalnext.open(file_name,'r')
         >>> y = f.read()
         >>> f.header
         ['WKT', 'NAME', 'STATE_NAME', 'STATE_FIPS', 'CNTY_FIPS', 'FIPS', 'FIPSNO', 'HR7984', 'HR8488', 'HR8893', 'HC7984', 'HC8488', 'HC8893', 'PO7984', 'PO8488', 'PO8893', 'PE77', 'PE82', 'PE87', 'RDAC80', 'RDAC85', 'RDAC90']

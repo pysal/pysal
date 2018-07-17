@@ -79,15 +79,15 @@ class ArcGISDbfIO(FileIO.FileIO):
 
     def _read(self):
         """Reads ArcGIS dbf file
-        Returns a pysal.weights.weights.W object
+        Returns a pysalnext.weights.weights.W object
 
         Examples
         --------
 
         Type 'dir(w)' at the interpreter to see what methods are supported.
-        Open an ArcGIS dbf file and read it into a pysal weights object
+        Open an ArcGIS dbf file and read it into a pysalnext weights object
 
-        >>> w = pysal.open(pysal.examples.get_path('arcgis_ohio.dbf'),'r','arcgis_dbf').read()
+        >>> w = pysalnext.open(pysalnext.examples.get_path('arcgis_ohio.dbf'),'r','arcgis_dbf').read()
 
         Get the number of observations from the header
 
@@ -158,8 +158,8 @@ class ArcGISDbfIO(FileIO.FileIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
-        >>> testfile = pysal.open(pysal.examples.get_path('arcgis_ohio.dbf'),'r','arcgis_dbf')
+        >>> import tempfile, pysalnext, os
+        >>> testfile = pysalnext.open(pysalnext.examples.get_path('arcgis_ohio.dbf'),'r','arcgis_dbf')
         >>> w = testfile.read()
 
         Create a temporary file for this example
@@ -176,7 +176,7 @@ class ArcGISDbfIO(FileIO.FileIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w','arcgis_dbf')
+        >>> o = pysalnext.open(fname,'w','arcgis_dbf')
 
         Write the Weights object into the open file
 
@@ -185,7 +185,7 @@ class ArcGISDbfIO(FileIO.FileIO):
 
         Read in the newly created text file
 
-        >>> wnew =  pysal.open(fname,'r','arcgis_dbf').read()
+        >>> wnew =  pysalnext.open(fname,'r','arcgis_dbf').read()
 
         Compare values from old to new
 
@@ -218,7 +218,7 @@ class ArcGISDbfIO(FileIO.FileIO):
                     self.pos = self.file.pos
 
         else:
-            raise TypeError("Expected a pysal weights object, got: %s" % (
+            raise TypeError("Expected a pysalnext weights object, got: %s" % (
                 type(obj)))
 
     def flush(self):

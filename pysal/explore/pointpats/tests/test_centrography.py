@@ -4,7 +4,7 @@ import numpy as np
 
 from ..centrography import *
 
-from pysal.lib.common import RTOL
+from pysalnext.lib.common import RTOL
 
 
 class TestCentrography(unittest.TestCase):

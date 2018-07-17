@@ -69,15 +69,15 @@ class ArcGISTextIO(gwt.GwtIO):
 
     def _read(self):
         """Reads ArcGIS Text file
-        Returns a pysal.weights.weights.W object
+        Returns a pysalnext.weights.weights.W object
 
         Examples
         --------
 
         Type 'dir(w)' at the interpreter to see what methods are supported.
-        Open a text file and read it into a pysal weights object
+        Open a text file and read it into a pysalnext weights object
 
-        >>> w = pysal.open(pysal.examples.get_path('arcgis_txt.txt'),'r','arcgis_text').read()
+        >>> w = pysalnext.open(pysalnext.examples.get_path('arcgis_txt.txt'),'r','arcgis_text').read()
 
         Get the number of observations from the header
 
@@ -152,8 +152,8 @@ class ArcGISTextIO(gwt.GwtIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
-        >>> testfile = pysal.open(pysal.examples.get_path('arcgis_txt.txt'),'r','arcgis_text')
+        >>> import tempfile, pysalnext, os
+        >>> testfile = pysalnext.open(pysalnext.examples.get_path('arcgis_txt.txt'),'r','arcgis_text')
         >>> w = testfile.read()
 
         Create a temporary file for this example
@@ -170,7 +170,7 @@ class ArcGISTextIO(gwt.GwtIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w','arcgis_text')
+        >>> o = pysalnext.open(fname,'w','arcgis_text')
 
         Write the Weights object into the open file
 
@@ -179,7 +179,7 @@ class ArcGISTextIO(gwt.GwtIO):
 
         Read in the newly created text file
 
-        >>> wnew =  pysal.open(fname,'r','arcgis_text').read()
+        >>> wnew =  pysalnext.open(fname,'r','arcgis_text').read()
 
         Compare values from old to new
 
@@ -203,6 +203,6 @@ class ArcGISTextIO(gwt.GwtIO):
             self.file.write(header)
             self._writelines(obj)
         else:
-            raise TypeError("Expected a pysal weights object, got: %s" % (
+            raise TypeError("Expected a pysalnext weights object, got: %s" % (
                 type(obj)))
 

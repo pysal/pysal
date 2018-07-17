@@ -2,7 +2,7 @@ from __future__ import division
 import unittest
 
 import numpy as np
-import pysal.lib as ps
+import pysalnext.lib as ps
 
 from .. import util
 

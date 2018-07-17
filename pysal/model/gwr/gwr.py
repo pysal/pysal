@@ -11,11 +11,11 @@ import numpy.linalg as la
 from scipy.stats import t
 from scipy.special import factorial
 from itertools import combinations as combo
-import pysal.model.spreg.user_output as USER
-from pysal.model.spglm.family import Gaussian, Binomial, Poisson
-from pysal.model.spglm.glm import GLM, GLMResults
-from pysal.model.spglm.iwls import iwls,_compute_betas_gwr
-from pysal.model.spglm.utils import cache_readonly
+import pysalnext.model.spreg.user_output as USER
+from pysalnext.model.spglm.family import Gaussian, Binomial, Poisson
+from pysalnext.model.spglm.glm import GLM, GLMResults
+from pysalnext.model.spglm.iwls import iwls,_compute_betas_gwr
+from pysalnext.model.spglm.utils import cache_readonly
 from .diagnostics import get_AIC, get_AICc, get_BIC, corr
 from .kernels import *
 
@@ -169,9 +169,9 @@ class GWR(GLM):
     --------
     #basic model calibration
 
-    >>> import pysal.lib
+    >>> import pysalnext.lib
     >>> from gwr.gwr import GWR
-    >>> data = pysal.lib.open(pysal.lib.examples.get_path('GData_utm.csv'))
+    >>> data = pysalnext.lib.open(pysalnext.lib.examples.get_path('GData_utm.csv'))
     >>> coords = zip(data.bycol('X'), data.by_col('Y')) 
     >>> y = np.array(data.by_col('PctBach')).reshape((-1,1))
     >>> rural = np.array(data.by_col('PctRural')).reshape((-1,1))
@@ -383,7 +383,7 @@ class GWRResultsLite(object):
                         
     llf                 : scalar
                         log-likelihood of the full model; see
-                        pysal.contrib.glm.family for damily-sepcific
+                        pysalnext.contrib.glm.family for damily-sepcific
                         log-likelihoods
                         
     mu                  : array
@@ -562,7 +562,7 @@ class GWRResults(GLMResults):
 
         llf                 : scalar
                               log-likelihood of the full model; see
-                              pysal.contrib.glm.family for damily-sepcific
+                              pysalnext.contrib.glm.family for damily-sepcific
                               log-likelihoods
 
         pDev                : float

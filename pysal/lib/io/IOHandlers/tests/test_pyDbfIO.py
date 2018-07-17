@@ -1,14 +1,14 @@
 
 
 import unittest
-from .... import examples as pysal_examples
+from .... import examples as pysalnext_examples
 from ..pyDbfIO import DBF
 import tempfile
 import os
 
 class test_DBF(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = pysal_examples.get_path('10740.dbf')
+        self.test_file = test_file = pysalnext_examples.get_path('10740.dbf')
         self.dbObj = DBF(test_file, 'r')
 
     def test_len(self):

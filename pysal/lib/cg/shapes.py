@@ -17,7 +17,7 @@ __all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon',
 
 def asShape(obj):
     """
-    Returns a pysal shape object from obj.
+    Returns a pysalnext shape object from obj.
     obj must support the __geo_interface__.
     """
     if isinstance(obj, (Point, LineSegment, Line, Ray, Chain, Polygon)):
@@ -1478,7 +1478,7 @@ class Polygon(Geometry):
     @classmethod
     def __from_geo_interface__(cls, geo):
         """
-        While pysal does not differentiate polygons and multipolygons GEOS,Shapely and geoJSON do.
+        While pysalnext does not differentiate polygons and multipolygons GEOS,Shapely and geoJSON do.
         In GEOS, etc, polygons may only have a single exterior ring, all other parts are holes.
         MultiPolygons are simply a list of polygons.
         """

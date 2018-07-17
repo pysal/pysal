@@ -1,5 +1,5 @@
 import unittest
-from .... import examples as pysal_examples
+from .... import examples as pysalnext_examples
 from .. import csvWrapper
 from ...util import WKTParser
 import tempfile
@@ -10,7 +10,7 @@ PY3 = int(V[0]) > 2
 
 class test_csvWrapper(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = pysal_examples.get_path('stl_hom.csv')
+        self.test_file = test_file = pysalnext_examples.get_path('stl_hom.csv')
         self.obj = csvWrapper.csvWrapper(test_file, 'r')
 
     def test_len(self):

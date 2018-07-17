@@ -1,12 +1,12 @@
 import geopandas as gpd
 import pandas as pd
-import pysal.lib.api as lp
-from pysal.lib import examples
+import pysalnext.lib.api as lp
+from pysalnext.lib import examples
 import numpy as np
 import matplotlib.pyplot as plt
 
-from pysal.dynamics.giddy.directional import Rose
-from pysal.viz.splot.giddy import (dynamic_lisa_heatmap,
+from pysalnext.dynamics.giddy.directional import Rose
+from pysalnext.viz.splot.giddy import (dynamic_lisa_heatmap,
                          dynamic_lisa_rose,
                          dynamic_lisa_vectors,
                          dynamic_lisa_composite)

@@ -7,7 +7,7 @@ _author_ = "Taylor Oshan tayoshan@gmail.com, Levi Wolf levi.john.wolf@gmail.com"
 
 import numpy as np
 import scipy.stats as stats
-from pysal.lib.weights.Distance import DistanceBand
+from pysalnext.lib.weights.Distance import DistanceBand
 
 PERMUTATIONS = 99
 
@@ -130,7 +130,7 @@ class VecMoran:
     --------
     >>> import numpy as np
     >>> np.random.seed(1)
-    >>> from pysal_core.weights import DistanceBand
+    >>> from pysalnext_core.weights import DistanceBand
     >>> from spint.vec_SA import VecMoran
     >>> vecs = np.array([[1, 55, 60, 100, 500], 
     >>>                 [2, 60, 55, 105, 501], 

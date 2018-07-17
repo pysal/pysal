@@ -1,7 +1,7 @@
-from pysal.model.spvcm.utils import south
-import pysal.model.spvcm.api as spvcm
-from pysal.model.spvcm._constants import TEST_SEED
-from pysal.model.spvcm.diagnostics import psrf, mcse, hpd_interval, effective_size, geweke
+from pysalnext.model.spvcm.utils import south
+import pysalnext.model.spvcm.api as spvcm
+from pysalnext.model.spvcm._constants import TEST_SEED
+from pysalnext.model.spvcm.diagnostics import psrf, mcse, hpd_interval, effective_size, geweke
 import numpy as np
 import os
 
@@ -12,7 +12,7 @@ def build():
     data = south()
     del data['W']
     del data['M']
-    model = pysal.model.spvcm.both.MVCM(**data, n_samples=0)
+    model = pysalnext.model.spvcm.both.MVCM(**data, n_samples=0)
     np.random.seed(TEST_SEED)
     print('starting South 5000, njobs=4')
     model.sample(5000,n_jobs=4)

@@ -26,7 +26,7 @@ class GalIO(FileIO.FileIO):
 
         sparse: boolean
                If true return scipy sparse object
-               If false return pysal w object
+               If false return pysalnext w object
         """
         self._sparse = sparse
         self._complain_ifclosed(self.closed)
@@ -60,11 +60,11 @@ class GalIO(FileIO.FileIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
+        >>> import tempfile, pysalnext, os
 
         Read in a file GAL file
 
-        >>> testfile = pysal.open(pysal.examples.get_path('sids2.gal'),'r')
+        >>> testfile = pysalnext.open(pysalnext.examples.get_path('sids2.gal'),'r')
 
         Return a W object
 
@@ -73,7 +73,7 @@ class GalIO(FileIO.FileIO):
         True
         >>> w.sd == 1.5151237573214935
         True
-        >>> testfile = pysal.open(pysal.examples.get_path('sids2.gal'),'r')
+        >>> testfile = pysalnext.open(pysalnext.examples.get_path('sids2.gal'),'r')
 
         Return a sparse matrix for the w information
 
@@ -160,8 +160,8 @@ class GalIO(FileIO.FileIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
-        >>> testfile = pysal.open(pysal.examples.get_path('sids2.gal'),'r')
+        >>> import tempfile, pysalnext, os
+        >>> testfile = pysalnext.open(pysalnext.examples.get_path('sids2.gal'),'r')
         >>> w = testfile.read()
 
         Create a temporary file for this example
@@ -178,7 +178,7 @@ class GalIO(FileIO.FileIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w')
+        >>> o = pysalnext.open(fname,'w')
 
         Write the Weights object into the open file
 
@@ -187,7 +187,7 @@ class GalIO(FileIO.FileIO):
 
         Read in the newly created gal file
 
-        >>> wnew =  pysal.open(fname,'r').read()
+        >>> wnew =  pysalnext.open(fname,'r').read()
 
         Compare values from old to new
 
@@ -208,7 +208,7 @@ class GalIO(FileIO.FileIO):
                 self.file.write(' '.join(map(str, neighbors)) + '\n')
             self.pos += 1
         else:
-            raise TypeError("Expected a pysal weights object, got: %s" %
+            raise TypeError("Expected a pysalnext weights object, got: %s" %
                             (type(obj)))
 
     def close(self):

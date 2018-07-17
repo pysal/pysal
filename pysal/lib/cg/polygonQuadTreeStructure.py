@@ -950,7 +950,7 @@ class QuadTreeStructureSingleRing(object):
 #         Parameters
 #         ----------
 #         polygon             : Polygon
-#                               The polygon class from pysal.cg.shapes.Polygon, could include part rings and holes
+#                               The polygon class from pysalnext.cg.shapes.Polygon, could include part rings and holes
 #         quad_tree_level     : int
 #                               the level for quad dividing the study area. Result tree node size equals quad_tree_level**4
 #                               e.g. for the default value 7,  result tree node size = 16384

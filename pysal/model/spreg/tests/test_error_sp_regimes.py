@@ -1,10 +1,10 @@
 import unittest
 import scipy
-import pysal.lib.api as lps
+import pysalnext.lib.api as lps
 import numpy as np
-from pysal.model.spreg import error_sp_regimes as SP
-from pysal.model.spreg.error_sp import GM_Error, GM_Endog_Error, GM_Combo
-from pysal.lib.common import RTOL
+from pysalnext.model.spreg import error_sp_regimes as SP
+from pysalnext.model.spreg.error_sp import GM_Error, GM_Endog_Error, GM_Combo
+from pysalnext.lib.common import RTOL
 
 @unittest.skipIf(int(scipy.__version__.split(".")[1]) < 11,
 "Maximum Likelihood requires SciPy version 11 or newer.")

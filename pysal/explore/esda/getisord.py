@@ -4,8 +4,8 @@ Getis and Ord G statistic for spatial autocorrelation
 __author__ = "Sergio J. Rey <srey@asu.edu>, Myunghwa Hwang <mhwang4@gmail.com> "
 __all__ = ['G', 'G_Local']
 
-from pysal.lib.common import np, stats, math
-from pysal.lib.weights.spatial_lag import lag_spatial as slag
+from pysalnext.lib.common import np, stats, math
+from pysalnext.lib.weights.spatial_lag import lag_spatial as slag
 from .tabular import _univariate_handler
 
 PERMUTATIONS = 999
@@ -67,7 +67,7 @@ class G(object):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> import numpy
     >>> numpy.random.seed(10)
 
@@ -82,7 +82,7 @@ class G(object):
     >>> y = numpy.array([2, 3, 3.2, 5, 8, 7])
 
     Applying Getis and Ord G test
-    >>> from pysal.explore.esda.getisord import G
+    >>> from pysalnext.explore.esda.getisord import G
     >>> g = G(y,w)
 
     Examining the results
@@ -163,7 +163,7 @@ class G(object):
 
     @property
     def _statistic(self):
-        """ Standardized accessor for pysal.explore.esda statistics"""
+        """ Standardized accessor for pysalnext.explore.esda statistics"""
         return self.G
 
     @classmethod
@@ -177,7 +177,7 @@ class G(object):
                         a pandas dataframe with a geometry column
         cols        :   string or list of string
                         name or list of names of columns to use to compute the statistic
-        w           :   pysal weights object
+        w           :   pysalnext weights object
                         a weights object aligned with the dataframe. If not provided, this
                         is searched for in the dataframe's metadata
         inplace     :   bool
@@ -201,7 +201,7 @@ class G(object):
 
         See Also
         ---------
-        For further documentation, refer to the G class in pysal.pysal.explore.esda
+        For further documentation, refer to the G class in pysalnext.pysalnext.explore.esda
         """
         return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
                                    outvals=outvals, stat=cls,
@@ -278,7 +278,7 @@ class G_Local(object):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> import numpy
     >>> numpy.random.seed(10)
 
@@ -295,7 +295,7 @@ class G_Local(object):
     >>> y = numpy.array([2, 3, 3.2, 5, 8, 7])
 
     Applying Getis and Ord local G test using a binary weights object
-    >>> from pysal.explore.esda.getisord import G_Local
+    >>> from pysalnext.explore.esda.getisord import G_Local
     >>> lg = G_Local(y,w,transform='B')
 
     Examining the results
@@ -439,7 +439,7 @@ class G_Local(object):
 
     @property
     def _statistic(self):
-        """Standardized accessor for pysal.explore.esda statistics"""
+        """Standardized accessor for pysalnext.explore.esda statistics"""
         return self.Gs
 
     @classmethod
@@ -453,7 +453,7 @@ class G_Local(object):
                         a pandas dataframe with a geometry column
         cols        :   string or list of string
                         name or list of names of columns to use to compute the statistic
-        w           :   pysal weights object
+        w           :   pysalnext weights object
                         a weights object aligned with the dataframe. If not provided, this
                         is searched for in the dataframe's metadata
         inplace     :   bool
@@ -477,7 +477,7 @@ class G_Local(object):
 
         See Also
         ---------
-        For further documentation, refer to the G_Local class in pysal.pysal.explore.esda
+        For further documentation, refer to the G_Local class in pysalnext.pysalnext.explore.esda
         """
         return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
                                    outvals=outvals, stat=cls,

@@ -7,12 +7,12 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
     """
     Plot spatial weights network.
     NOTE: Additionally plots `w.non_planar_joins` if
-    `pysal.lib.weights.util.nonplanar_neighbors()` was applied.
+    `pysalnext.lib.weights.util.nonplanar_neighbors()` was applied.
 
     Arguments
     ---------
-    w : pysal.lib.W object
-        Values of pysal.lib weights object.
+    w : pysalnext.lib.W object
+        Values of pysalnext.lib weights object.
     gdf : geopandas dataframe 
         The original shapes whose topological relations are 
         modelled in W.
@@ -48,12 +48,12 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
     Examples
     --------
     Imports
-    >>> import pysal.lib.api as lp
+    >>> import pysalnext.lib.api as lp
     >>> import geopandas as gpd
     Data preparation and statistical analysis
     >>> gdf = gpd.read_file(examples.get_path('43MUE250GC_SIR.shp'))
     >>> weights = lp.Queen.from_dataframe(gdf)
-    >>> wnp = pysal.lib.weights.util.nonplanar_neighbors(weights, gdf)
+    >>> wnp = pysalnext.lib.weights.util.nonplanar_neighbors(weights, gdf)
     Plot weights
     >>> plot_spatial_weights(weights, gdf)
     >>> plot_spatial_weights(wnp, gdf)

@@ -1,9 +1,9 @@
 import unittest
 import numpy as np
-import pysal.lib.api as lps
-import pysal.model.spreg as EC
-from pysal.model.spreg import utils
-from pysal.lib.common import RTOL
+import pysalnext.lib.api as lps
+import pysalnext.model.spreg as EC
+from pysalnext.model.spreg import utils
+from pysalnext.lib.common import RTOL
 
 PEGP = lps.get_path
 

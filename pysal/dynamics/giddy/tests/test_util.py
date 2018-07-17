@@ -1,5 +1,5 @@
 import unittest
-import pysal.dynamics.giddy.util as util
+import pysalnext.dynamics.giddy.util as util
 import numpy as np
 
 

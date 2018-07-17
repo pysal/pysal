@@ -1,6 +1,6 @@
 import pandas as pd
-import pysal
-from pysal.explore.esda.moran import Moran_Local
+import pysalnext
+from pysalnext.explore.esda.moran import Moran_Local
 from bokeh.plotting import figure
 from bokeh.models import (GeoJSONDataSource, ColumnDataSource,
                           CategoricalColorMapper, Span,
@@ -66,11 +66,11 @@ def plot_choropleth(df, attribute, title=None, plot_width=500,
 
     Examples
     --------
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import geopandas as gpd
-    >>> import pysal.explore.esda as esda
-    >>> from pysal.viz.splot.bk import plot_choropleth
+    >>> import pysalnext.explore.esda as esda
+    >>> from pysalnext.viz.splot.bk import plot_choropleth
     >>> from bokeh.io import show
 
     >>> link = examples.get_path('columbus.shp')
@@ -185,11 +185,11 @@ def lisa_cluster(moran_loc, df, p=0.05, region_column='', title=None,
 
     Examples
     --------
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import geopandas as gpd
-    >>> from pysal.explore.esda.moran import Moran_Local
-    >>> from pysal.viz.splot.bk import lisa_cluster
+    >>> from pysalnext.explore.esda.moran import Moran_Local
+    >>> from pysalnext.viz.splot.bk import lisa_cluster
     >>> from bokeh.io import show
 
     >>> link = examples.get_path('columbus.shp')
@@ -291,11 +291,11 @@ def moran_scatterplot(moran_loc, p=None, region_column='', plot_width=500,
 
     Examples
     --------
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import geopandas as gpd
-    >>> from pysal.explore.esda.moran import Moran_Local
-    >>> from pysal.viz.splot.bk import moran_scatterplot
+    >>> from pysalnext.explore.esda.moran import Moran_Local
+    >>> from pysalnext.viz.splot.bk import moran_scatterplot
     >>> from bokeh.io import show
 
     >>> link = examples.get_path('columbus.shp')
@@ -317,8 +317,8 @@ def moran_scatterplot(moran_loc, p=None, region_column='', plot_width=500,
 
 
 def _moran_scatterplot_calc(moran_loc, p):
-    lag = pysal.lib.weights.spatial_lag.lag_spatial(moran_loc.w, moran_loc.z)
-    fit = pysal.model.spreg.OLS(moran_loc.z[:, None], lag[:, None])
+    lag = pysalnext.lib.weights.spatial_lag.lag_spatial(moran_loc.w, moran_loc.z)
+    fit = pysalnext.model.spreg.OLS(moran_loc.z[:, None], lag[:, None])
     if p is not None:
         if not isinstance(moran_loc, Moran_Local):
             raise ValueError("`moran_loc` is not a esda.moran.Moran_Local instance")
@@ -411,11 +411,11 @@ def plot_local_autocorrelation(moran_loc, df, attribute, p=0.05,
 
     Examples
     --------
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import geopandas as gpd
-    >>> from pysal.explore.esda.moran import Moran_Local
-    >>> from pysal.viz.splot.bk import plot_local_autocorrelation
+    >>> from pysalnext.explore.esda.moran import Moran_Local
+    >>> from pysalnext.viz.splot.bk import plot_local_autocorrelation
     >>> from bokeh.io import show
 
     >>> link = examples.get_path('columbus.shp')

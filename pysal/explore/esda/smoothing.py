@@ -14,14 +14,14 @@ Author(s):
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>, David Folch <dfolch@asu.edu>, Luc Anselin <luc.anselin@asu.edu>, Serge Rey <srey@asu.edu"
 
-from pysal.lib.weights.weights import W
-from pysal.lib.weights.Distance import Kernel
-from pysal.lib.weights.util import get_points_array, comb
-from pysal.lib.cg import Point, Ray, LineSegment
-from pysal.lib.cg import get_angle_between, get_points_dist, get_segment_point_dist,\
+from pysalnext.lib.weights.weights import W
+from pysalnext.lib.weights.Distance import Kernel
+from pysalnext.lib.weights.util import get_points_array, comb
+from pysalnext.lib.cg import Point, Ray, LineSegment
+from pysalnext.lib.cg import get_angle_between, get_points_dist, get_segment_point_dist,\
                  get_point_at_angle_and_dist, convex_hull, get_bounding_box
-from pysal.lib.common import np, KDTree, requires as _requires
-from pysal.lib.weights.spatial_lag import lag_spatial as slag
+from pysalnext.lib.common import np, KDTree, requires as _requires
+from pysalnext.lib.weights.spatial_lag import lag_spatial as slag
 from scipy.stats import gamma, norm, chi2, poisson
 from functools import reduce
 
@@ -645,7 +645,7 @@ class Excess_Risk(_Smoother):
 
     Reading data in stl_hom.csv into stl to extract values
     for event and population-at-risk variables
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> stl = lps.open(lps.get_path('stl_hom.csv'), 'r')
 
     The 11th and 14th columns in stl_hom.csv includes the number of homocides and population.
@@ -700,7 +700,7 @@ class Empirical_Bayes(_Smoother):
     Reading data in stl_hom.csv into stl to extract values
     for event and population-at-risk variables
 
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> stl = lps.open(lps.get_path('stl_hom.csv'), 'r')
 
     The 11th and 14th columns in stl_hom.csv includes the number of homocides and population.
@@ -769,7 +769,7 @@ class _Spatial_Smoother(_Smoother):
         b       :  string or list of strings
                    the name or names of columns containing the population
                    variables to be smoothed
-        w       :  pysal.weights.W or list of pysal.weights.W
+        w       :  pysalnext.weights.W or list of pysalnext.weights.W
                    the spatial weights object or objects to use with the
                    event-population pairs. If not provided and a weights object
                    is in the dataframe's metadata, that weights object will be
@@ -844,7 +844,7 @@ class Spatial_Empirical_Bayes(_Spatial_Smoother):
     Reading data in stl_hom.csv into stl to extract values
     for event and population-at-risk variables
 
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> stl = lps.open(lps.get_path('stl_hom.csv'), 'r')
 
     The 11th and 14th columns in stl_hom.csv includes the number of homocides and population.
@@ -863,7 +863,7 @@ class Spatial_Empirical_Bayes(_Spatial_Smoother):
 
     Creating an instance of Spatial_Empirical_Bayes class using stl_e, stl_b, and stl_w
 
-    >>> from pysal.explore.esda.smoothing import Spatial_Empirical_Bayes
+    >>> from pysalnext.explore.esda.smoothing import Spatial_Empirical_Bayes
     >>> s_eb = Spatial_Empirical_Bayes(stl_e, stl_b, stl_w)
 
     Extracting the risk values through the property r of s_eb
@@ -924,7 +924,7 @@ class Spatial_Rate(_Spatial_Smoother):
     Reading data in stl_hom.csv into stl to extract values
     for event and population-at-risk variables
 
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> stl = lps.open(lps.get_path('stl_hom.csv'), 'r')
 
     The 11th and 14th columns in stl_hom.csv includes the number of homocides and population.
@@ -943,7 +943,7 @@ class Spatial_Rate(_Spatial_Smoother):
 
     Creating an instance of Spatial_Rate class using stl_e, stl_b, and stl_w
 
-    >>> from pysal.explore.esda.smoothing import Spatial_Rate
+    >>> from pysalnext.explore.esda.smoothing import Spatial_Rate
     >>> sr = Spatial_Rate(stl_e,stl_b,stl_w)
 
     Extracting the risk values through the property r of sr
@@ -1134,7 +1134,7 @@ class Age_Adjusted_Smoother(_Spatial_Smoother):
         b       :  string or list of strings
                    the name or names of columns containing the population
                    variables to be smoothed
-        w       :  pysal.weights.W or list of pysal.weights.W
+        w       :  pysalnext.weights.W or list of pysalnext.weights.W
                    the spatial weights object or objects to use with the
                    event-population pairs. If not provided and a weights object
                    is in the dataframe's metadata, that weights object will be
@@ -1179,7 +1179,7 @@ class Age_Adjusted_Smoother(_Spatial_Smoother):
             w = [w] * len(e)
         if not all(isinstance(wi, W) for wi in w):
             raise Exception('Weights object must be an instance of '
-                            ' pysal.lib.weights.W!')
+                            ' pysalnext.lib.weights.W!')
         b = b * len(e) if len(b) == 1 and len(e) > 1 else b
         s = s * len(e) if len(s) == 1 and len(e) > 1 else s
         try:
@@ -1229,7 +1229,7 @@ class Disk_Smoother(_Spatial_Smoother):
     Reading data in stl_hom.csv into stl to extract values
     for event and population-at-risk variables
 
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> stl = lps.open(lps.get_path('stl_hom.csv'), 'r')
 
     The 11th and 14th columns in stl_hom.csv includes the number of homocides and population.
@@ -1308,7 +1308,7 @@ class Spatial_Median_Rate(_Spatial_Smoother):
     Reading data in stl_hom.csv into stl to extract values
     for event and population-at-risk variables
 
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> stl = lps.open(lps.get_path('stl_hom.csv'), 'r')
 
     The 11th and 14th columns in stl_hom.csv includes the number of homocides and population.
@@ -1437,13 +1437,13 @@ class Spatial_Filtering(_Smoother):
     Reading data in stl_hom.csv into stl to extract values
     for event and population-at-risk variables
 
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> stl = lps.open(lps.get_path('stl_hom.csv'), 'r')
 
     Reading the stl data in the WKT format so that
     we can easily extract polygon centroids
 
-    >>> from pysal.lib.io.util.wkt import WKTParser
+    >>> from pysalnext.lib.io.util.wkt import WKTParser
     >>> fromWKT = WKTParser()
     >>> stl.cast('WKT',fromWKT)
 
@@ -1613,7 +1613,7 @@ class Headbanging_Triples(object):
 
     importing k-nearest neighbor weights creator
 
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
 
     Reading data in stl_hom.csv into stl_db to extract values
     for event and population-at-risk variables
@@ -1623,7 +1623,7 @@ class Headbanging_Triples(object):
     Reading the stl data in the WKT format so that
     we can easily extract polygon centroids
 
-    >>> from pysal.lib.io.util.wkt import WKTParser
+    >>> from pysalnext.lib.io.util.wkt import WKTParser
     >>> fromWKT = WKTParser()
     >>> stl_db.cast('WKT',fromWKT)
 
@@ -1655,7 +1655,7 @@ class Headbanging_Triples(object):
 
     Opening sids2.shp file
 
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> sids = lps.open(lps.get_path('sids2.shp'),'r')
 
     Extracting the centroids of polygons in the sids data
@@ -1796,7 +1796,7 @@ class Headbanging_Median_Rate(object):
     Examples
     --------
 
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
 
     opening the sids2 shapefile
 

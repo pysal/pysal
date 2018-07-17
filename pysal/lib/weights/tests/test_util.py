@@ -6,7 +6,7 @@ from ..weights import W, WSP
 from ..Distance import DistanceBand, KNN
 from ..Contiguity import Queen, Rook
 from ...io.FileIO import FileIO as psopen
-from ... import examples as pysal_examples
+from ... import examples as pysalnext_examples
 import numpy as np
 import unittest
 
@@ -20,7 +20,7 @@ except:
 class Testutil(unittest.TestCase):
     def setUp(self):
         self.w = user.rook_from_shapefile(
-            pysal_examples.get_path('10740.shp'))
+            pysalnext_examples.get_path('10740.shp'))
 
     def test_lat2W(self):
         w9 = lat2W(3, 3)
@@ -99,10 +99,10 @@ class Testutil(unittest.TestCase):
         self.assertEqual(w5_20, w5_2[0])
     
     def test_higher_order_classes(self):
-        wdb = DistanceBand.from_shapefile(pysal_examples.get_path('baltim.shp'), 34)
-        wknn = KNN.from_shapefile(pysal_examples.get_path('baltim.shp'), 10)
-        wrook = Rook.from_shapefile(pysal_examples.get_path('columbus.shp'))
-        wqueen = Queen.from_shapefile(pysal_examples.get_path('columbus.shp'))
+        wdb = DistanceBand.from_shapefile(pysalnext_examples.get_path('baltim.shp'), 34)
+        wknn = KNN.from_shapefile(pysalnext_examples.get_path('baltim.shp'), 10)
+        wrook = Rook.from_shapefile(pysalnext_examples.get_path('columbus.shp'))
+        wqueen = Queen.from_shapefile(pysalnext_examples.get_path('columbus.shp'))
         wsparse = wqueen.sparse
         ww = W(wknn.neighbors, wknn.weights)
         util.higher_order(wdb, 2)
@@ -157,7 +157,7 @@ class Testutil(unittest.TestCase):
         w = util.WSP2W(wsp)
         self.assertEqual(w.n, 10)
         self.assertEqual(w[0], {1: 1, 5: 1})
-        w = psopen(pysal_examples.get_path('sids2.gal'), 'r').read()
+        w = psopen(pysalnext_examples.get_path('sids2.gal'), 'r').read()
         wsp = WSP(w.sparse, w.id_order)
         w = util.WSP2W(wsp)
         self.assertEqual(w.n, 100)
@@ -191,17 +191,17 @@ class Testutil(unittest.TestCase):
 
     def test_get_ids(self):
         polyids = util.get_ids(
-            pysal_examples.get_path('columbus.shp'), "POLYID")
+            pysalnext_examples.get_path('columbus.shp'), "POLYID")
         polyids5 = [1, 2, 3, 4, 5]
         self.assertEqual(polyids5, polyids[:5])
 
     def test_get_points_array_from_shapefile(self):
         xy = util.get_points_array_from_shapefile(
-            pysal_examples.get_path('juvenile.shp'))
+            pysalnext_examples.get_path('juvenile.shp'))
         xy3 = np.array([[94., 93.], [80., 95.], [79., 90.]])
         np.testing.assert_array_almost_equal(xy3, xy[:3], decimal=8)
         xy = util.get_points_array_from_shapefile(
-            pysal_examples.get_path('columbus.shp'))
+            pysalnext_examples.get_path('columbus.shp'))
         xy3 = np.array([[8.82721847, 14.36907602], [8.33265837,
                                                     14.03162401], [9.01226541, 13.81971908]])
         np.testing.assert_array_almost_equal(xy3, xy[:3], decimal=8)
@@ -216,21 +216,21 @@ class Testutil(unittest.TestCase):
             mint, util.min_threshold_distance(data))
 
     def test_attach_islands(self):
-        w = user.rook_from_shapefile(pysal_examples.get_path('10740.shp'))
-        w_knn1 = user.knnW_from_shapefile(pysal_examples.get_path('10740.shp'), k=1)
+        w = user.rook_from_shapefile(pysalnext_examples.get_path('10740.shp'))
+        w_knn1 = user.knnW_from_shapefile(pysalnext_examples.get_path('10740.shp'), k=1)
         w_attach = util.attach_islands(w, w_knn1)
         self.assertEqual(w_attach.islands, [])
         self.assertEqual(w_attach[w.islands[0]], {166: 1.0})
 
     @unittest.skipIf(not HAS_GEOPANDAS, "Missing geopandas, cannot test nonplanar neighbors")
     def test_nonplanar_neighbors(self):
-        import pysal.lib.api as lp
+        import pysalnext.lib.api as lp
         import geopandas as gpd
         df = gpd.read_file(lp.get_path('map_RS_BR.shp'))
         w = lp.Queen.from_dataframe(df)
         self.assertEqual(w.islands, [0, 4, 23, 27, 80, 94, 101, 107, 109, 119, 122, 139, 169, 175, 223, 239, 247, 253, 254, 255, 256, 261, 276, 291, 294, 303, 321, 357, 374])
-        import pysal.lib
-        wnp = pysal.lib.weights.util.nonplanar_neighbors(w, df)
+        import pysalnext.lib
+        wnp = pysalnext.lib.weights.util.nonplanar_neighbors(w, df)
         self.assertEqual(wnp.islands, [])
         self.assertEqual(w.neighbors[0], [])
         self.assertEqual(wnp.neighbors[0], [23, 59, 152, 239])
@@ -238,7 +238,7 @@ class Testutil(unittest.TestCase):
 
     @unittest.skipIf(not HAS_GEOPANDAS, "Missing geopandas, cannot test fuzzy_contiguity")
     def test_fuzzy_contiguity(self):
-        import pysal.lib.api as lps
+        import pysalnext.lib.api as lps
         import geopandas as gpd
         rs = lps.get_path('map_RS_BR.shp')
         rs_df = gpd.read_file(rs)

@@ -1,6 +1,6 @@
 import unittest
 from ..mat import MatIO
-from .... import examples as pysal_examples
+from .... import examples as pysalnext_examples
 from ...FileIO import FileIO as psopen
 import tempfile
 import os
@@ -9,7 +9,7 @@ import warnings
 
 class test_MatIO(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = pysal_examples.get_path('spat-sym-us.mat')
+        self.test_file = test_file = pysalnext_examples.get_path('spat-sym-us.mat')
         self.obj = MatIO(test_file, 'r')
 
     def test_close(self):
@@ -32,7 +32,7 @@ class test_MatIO(unittest.TestCase):
     def test_write(self):
         w = self.obj.read()
         f = tempfile.NamedTemporaryFile(
-            suffix='.mat', dir=pysal_examples.get_path(''))
+            suffix='.mat', dir=pysalnext_examples.get_path(''))
         fname = f.name
         f.close()
         o = psopen(fname, 'w')

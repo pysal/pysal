@@ -1,9 +1,9 @@
 import unittest
 import numpy as np
-import pysal.lib.api as lps
-from pysal.model.spreg.sur_utils import sur_dictxy,sur_dictZ
-from pysal.model.spreg.sur_error import SURerrorML
-from pysal.lib.common import RTOL
+import pysalnext.lib.api as lps
+from pysalnext.model.spreg.sur_utils import sur_dictxy,sur_dictZ
+from pysalnext.model.spreg.sur_error import SURerrorML
+from pysalnext.lib.common import RTOL
 ATOL = 1e-12
 
 PEGP = lps.get_path

@@ -1,10 +1,10 @@
-import pysal.lib.api as lp
-import pysal.lib
-from pysal.lib import examples
+import pysalnext.lib.api as lp
+import pysalnext.lib
+from pysalnext.lib import examples
 import matplotlib.pyplot as plt
 import geopandas as gpd
 
-from pysal.viz.splot.libpysal import plot_spatial_weights
+from pysalnext.viz.splot.libpysalnext import plot_spatial_weights
 
 def test_plot_spatial_weights():
     # get data
@@ -16,7 +16,7 @@ def test_plot_spatial_weights():
     fig, _ = plot_spatial_weights(weights, gdf)
     plt.close(fig)
     # calculate nonplanar_joins
-    wnp = pysal.lib.weights.util.nonplanar_neighbors(weights, gdf)
+    wnp = pysalnext.lib.weights.util.nonplanar_neighbors(weights, gdf)
     # plot new joins
     fig2, _ = plot_spatial_weights(wnp, gdf)
     plt.close(fig2)

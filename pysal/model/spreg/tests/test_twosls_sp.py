@@ -1,10 +1,10 @@
 import unittest
 import numpy as np
-import pysal.lib.api as lps
-import pysal.model.spreg.diagnostics as D
-from pysal.model.spreg.twosls_sp import BaseGM_Lag, GM_Lag
-from pysal.lib.common import RTOL
-import pysal.model.spreg
+import pysalnext.lib.api as lps
+import pysalnext.model.spreg.diagnostics as D
+from pysalnext.model.spreg.twosls_sp import BaseGM_Lag, GM_Lag
+from pysalnext.lib.common import RTOL
+import pysalnext.model.spreg
 
 class TestBaseGMLag(unittest.TestCase):
     def setUp(self):
@@ -20,7 +20,7 @@ class TestBaseGMLag(unittest.TestCase):
         X.append(self.db.by_col("INC"))
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
-        yd2, q2 = pysal.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, w_lags, True)
+        yd2, q2 = pysalnext.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, w_lags, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         reg = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w.sparse, w_lags=w_lags)
         betas = np.array([[  4.53017056e+01], [  6.20888617e-01], [ -4.80723451e-01], [  2.83622122e-02]])
@@ -87,7 +87,7 @@ class TestBaseGMLag(unittest.TestCase):
         X.append(self.db.by_col("INC"))
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
-        yd2, q2 = pysal.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, w_lags, True)
+        yd2, q2 = pysalnext.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, w_lags, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         base_gm_lag = BaseGM_Lag(self.y, self.X,  yend=yd2, q=q2, w=self.w.sparse, w_lags=w_lags, robust='white')
         tbetas = np.array([[  4.53017056e+01], [  6.20888617e-01], [ -4.80723451e-01], [  2.83622122e-02]])
@@ -102,7 +102,7 @@ class TestBaseGMLag(unittest.TestCase):
         X.append(self.db.by_col("INC"))
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
-        yd2, q2 = pysal.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, w_lags, True)
+        yd2, q2 = pysalnext.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, w_lags, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         gwk = lps.kernelW_from_shapefile(lps.get_path('columbus.shp'),k=15,function='triangular', fixed=False)        
         base_gm_lag = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w.sparse, w_lags=w_lags, robust='hac', gwk=gwk)
@@ -120,7 +120,7 @@ class TestBaseGMLag(unittest.TestCase):
         yd = np.reshape(yd, (49,1))
         q = np.array(self.db.by_col("DISCBD"))
         q = np.reshape(q, (49,1))
-        yd2, q2 = pysal.model.spreg.utils.set_endog(self.y, self.X, self.w, yd, q, w_lags, True)
+        yd2, q2 = pysalnext.model.spreg.utils.set_endog(self.y, self.X, self.w, yd, q, w_lags, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         reg = BaseGM_Lag(self.y, self.X, w=self.w.sparse, yend=yd2, q=q2, w_lags=w_lags)
         tbetas = np.array([[ 100.79359082], [  -0.50215501], [  -1.14881711], [  -0.38235022]])
@@ -135,7 +135,7 @@ class TestBaseGMLag(unittest.TestCase):
         X.append(self.db.by_col("INC"))
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
-        yd2, q2 = pysal.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, w_lags, True)
+        yd2, q2 = pysalnext.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, w_lags, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         reg = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w.sparse, w_lags=w_lags, sig2n_k=True)
         betas = np.  array([[  4.53017056e+01], [  6.20888617e-01], [ -4.80723451e-01], [  2.83622122e-02]])
@@ -154,7 +154,7 @@ class TestBaseGMLag(unittest.TestCase):
         yd = np.reshape(yd, (49,1))
         q = np.array(self.db.by_col("DISCBD"))
         q = np.reshape(q, (49,1))
-        yd2, q2 = pysal.model.spreg.utils.set_endog(self.y, self.X, self.w, yd, q, w_lags, False)
+        yd2, q2 = pysalnext.model.spreg.utils.set_endog(self.y, self.X, self.w, yd, q, w_lags, False)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         reg = BaseGM_Lag(self.y, self.X, w=self.w.sparse, yend=yd2, q=q2, w_lags=w_lags, lag_q=False)
         tbetas = np.array( [[ 108.83261383], [  -0.48041099], [  -1.18950006], [  -0.56140186]])

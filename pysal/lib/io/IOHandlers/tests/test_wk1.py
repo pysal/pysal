@@ -1,6 +1,6 @@
 import unittest
 from ..wk1 import Wk1IO
-from .... import examples as pysal_examples
+from .... import examples as pysalnext_examples
 from ...FileIO import FileIO as psopen
 import tempfile
 import os
@@ -8,7 +8,7 @@ import os
 
 class test_Wk1IO(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = pysal_examples.get_path('spat-sym-us.wk1')
+        self.test_file = test_file = pysalnext_examples.get_path('spat-sym-us.wk1')
         self.obj = Wk1IO(test_file, 'r')
 
     def test_close(self):
@@ -31,7 +31,7 @@ class test_Wk1IO(unittest.TestCase):
     def test_write(self):
         w = self.obj.read()
         f = tempfile.NamedTemporaryFile(
-            suffix='.wk1', dir=pysal_examples.get_path(''))
+            suffix='.wk1', dir=pysalnext_examples.get_path(''))
         fname = f.name
         f.close()
         o = psopen(fname, 'w')

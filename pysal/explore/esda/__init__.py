@@ -1,5 +1,5 @@
 """
-:mod:`pysal.explore.esda` --- Exploratory Spatial Data Analysis
+:mod:`pysalnext.explore.esda` --- Exploratory Spatial Data Analysis
 =================================================
 
 """

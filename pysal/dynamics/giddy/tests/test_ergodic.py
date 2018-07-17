@@ -1,5 +1,5 @@
 import unittest
-import pysal.dynamics.giddy.ergodic as ergodic
+import pysalnext.dynamics.giddy.ergodic as ergodic
 import numpy as np
 
 

@@ -2,8 +2,8 @@ import unittest
 import numpy as np
 
 from ..join_counts import Join_Counts
-from pysal.lib.weights.util import lat2W
-from pysal.lib.common import pandas
+from pysalnext.lib.weights.util import lat2W
+from pysalnext.lib.common import pandas
 
 PANDAS_EXTINCT = pandas is None
 

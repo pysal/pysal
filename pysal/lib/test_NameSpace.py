@@ -4,7 +4,7 @@ import unittest
 @unittest.skip('Skipping unittest for namespace')
 class TestNameSpace(unittest.TestCase):
     """
-        This test makes sure we don't remove anything from the pysal NameSpace that
+        This test makes sure we don't remove anything from the pysalnext NameSpace that
         1.0 users might expect to be there.  1.0 Namespace was taken from the 1.1
         Code sprint wave, with special names removes (__all__, etc)
     """
@@ -34,7 +34,7 @@ class TestNameSpace(unittest.TestCase):
                           'version', 'w_difference', 'w_intersection', 'w_subset',
                           'w_symmetric_difference', 'w_union', 'weights']
 
-        current_namespace = dir(pysal)
+        current_namespace = dir(pysalnext)
         for item in namespace_v1_0:
             self.assertTrue(item in current_namespace)
         for item in current_namespace:

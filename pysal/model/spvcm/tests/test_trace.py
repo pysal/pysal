@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
-from pysal.model.spvcm.abstracts import Hashmap, Trace
+from pysalnext.model.spvcm.abstracts import Hashmap, Trace
 import unittest as ut
-from pysal.model.spvcm._constants import RTOL, ATOL
+from pysalnext.model.spvcm._constants import RTOL, ATOL
 import os
 
 FULL_PATH = os.path.dirname(os.path.abspath(__file__))

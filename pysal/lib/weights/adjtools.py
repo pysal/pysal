@@ -11,7 +11,7 @@ def adjlist_apply(X, W=None, alist=None, func=np.subtract, skip_verify=False):
                 must take 2 arguments and return a single reduction. If P>1, then
                 func must take two P-length arrays and return a single 
                 reduction of them. 
-    W       :   pysal.weights.W object
+    W       :   pysalnext.weights.W object
                 a weights object that provides adjacency information
     alist   :   pandas DataFrame
                 a table containing an adajacency list representation of a W matrix
@@ -119,8 +119,8 @@ def adjlist_map(data, funcs=(np.subtract,), W=None, alist=None,
                     a function to apply to each of the P columns in ``data'', or a list of functions
                     to apply to each column of P. This function must take two arguments, compare them,
                     and return a value. Examples may be ``lambda x,y: x < y'' or ``np.subtract''.
-    W           :   pysal.weights.W object
-                    a pysal weights object. If not provided, one is constructed from 
+    W           :   pysalnext.weights.W object
+                    a pysalnext weights object. If not provided, one is constructed from 
                     the given adjacency list.
     alist       :   pandas dataframe
                     an adjacency list representation of a weights matrix. If not provided, 

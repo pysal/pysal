@@ -1,10 +1,10 @@
 import unittest
-import pysal.lib.api as lps
+import pysalnext.lib.api as lps
 import scipy
 import numpy as np
-from pysal.model.spreg.ml_error import ML_Error
-from pysal.model.spreg import utils
-from pysal.lib.common import RTOL, ATOL
+from pysalnext.model.spreg.ml_error import ML_Error
+from pysalnext.model.spreg import utils
+from pysalnext.lib.common import RTOL, ATOL
 from warnings import warn as Warn
 from .skip import SKIP
 

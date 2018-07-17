@@ -42,8 +42,8 @@ def KDTree(data, leafsize=10, distance_metric='Euclidean',
                       Radius of the sphere on which to compute distances.
                       Assumes data in latitude and longitude. Ignored if
                       distance_metric="Euclidean". Typical values:
-                      pysal.cg.RADIUS_EARTH_KM  (default)
-                      pysal.cg.RADIUS_EARTH_MILES
+                      pysalnext.cg.RADIUS_EARTH_KM  (default)
+                      pysalnext.cg.RADIUS_EARTH_MILES
     """
 
     if distance_metric.lower() == 'euclidean':

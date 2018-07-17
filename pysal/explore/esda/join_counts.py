@@ -4,7 +4,7 @@ Spatial autocorrelation for binary attributes
 """
 __author__ = "Sergio J. Rey <srey@asu.edu> , Luc Anselin <luc.anselin@asu.edu>"
 
-from pysal.lib.weights.spatial_lag import lag_spatial
+from pysalnext.lib.weights.spatial_lag import lag_spatial
 from .tabular import _univariate_handler
 import numpy as np
 
@@ -79,12 +79,12 @@ class Join_Counts(object):
     Replicate example from anselin and rey
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> w = lps.lat2W(4, 4)
     >>> y = np.ones(16)
     >>> y[0:8] = 0
     >>> np.random.seed(12345)
-    >>> from pysal.explore.esda.join_counts import Join_Counts
+    >>> from pysalnext.explore.esda.join_counts import Join_Counts
     >>> jc = Join_Counts(y, w)
     >>> jc.bb
     10.0
@@ -172,7 +172,7 @@ class Join_Counts(object):
                         a pandas dataframe with a geometry column
         cols        :   string or list of string
                         name or list of names of columns to use to compute the statistic
-        w           :   pysal weights object
+        w           :   pysalnext weights object
                         a weights object aligned with the dataframe. If not provided, this
                         is searched for in the dataframe's metadata
         inplace     :   bool
@@ -197,7 +197,7 @@ class Join_Counts(object):
 
         See Also
         ---------
-        For further documentation, refer to the Join_Count class in pysal.pysal.explore.esda
+        For further documentation, refer to the Join_Count class in pysalnext.pysalnext.explore.esda
         """
         if outvals is None:
             outvals = []

@@ -9,7 +9,7 @@ import multiprocessing as mp
 from . import regimes as REGI
 from . import user_output as USER
 from . import summary_output as SUMMARY
-from pysal.lib.api import lag_spatial
+from pysalnext.lib.api import lag_spatial
 from .ols import BaseOLS
 from .twosls import BaseTSLS
 from .error_sp import BaseGM_Error, BaseGM_Endog_Error, _momentsGM_Error
@@ -35,7 +35,7 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     regimes      : list
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
-    w            : pysal W object
+    w            : pysalnext W object
                    Spatial weights object   
     constant_regi: ['one', 'many']
                    Switcher controlling the constant term setup. It may take
@@ -179,10 +179,10 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     --------
 
     We first need to import the needed modules, namely numpy to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis.
 
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> import numpy as np
 
     Open data on NCOVR US County Homicides (3085 areas) using lps.open().
@@ -429,7 +429,7 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     regimes      : list
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
-    w            : pysal W object
+    w            : pysalnext W object
                    Spatial weights object   
     constant_regi: ['one', 'many']
                    Switcher controlling the constant term setup. It may take
@@ -594,10 +594,10 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     --------
 
     We first need to import the needed modules, namely numpy to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis.
 
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> import numpy as np
 
     Open data on NCOVR US County Homicides (3085 areas) using lps.open().
@@ -891,7 +891,7 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
                    Two dimensional array with n rows and one column for each
                    external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
-    w            : pysal W object
+    w            : pysalnext W object
                    Spatial weights object (always needed)   
     constant_regi: ['one', 'many']
                    Switcher controlling the constant term setup. It may take
@@ -1079,11 +1079,11 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
     --------
 
     We first need to import the needed modules, namely numpy to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
 
     Open data on NCOVR US County Homicides (3085 areas) using lps.open().
     This is the DBF associated with the NAT shapefile.  Note that
@@ -1321,7 +1321,7 @@ def _test():
 if __name__ == '__main__':
 
     _test()
-    import pysal.lib.api as lps
+    import pysalnext.lib.api as lps
     import numpy as np
     dbf = lps.open(lps.get_path('columbus.dbf'), 'r')
     y = np.array([dbf.by_col('CRIME')]).T

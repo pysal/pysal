@@ -241,7 +241,7 @@ class MVCM(Base_MVCM):
                                 (default: 4)
 
                 For options that can be in Lambda/Rho_configs, see:
-                pysal.model.spvcm.steps.Slice, pysal.model.spvcm.steps.Metropolis
+                pysalnext.model.spvcm.steps.Slice, pysalnext.model.spvcm.steps.Metropolis
     """
     def __init__(self, Y, X, Z=None, Delta=None, membership=None,
                  #data options

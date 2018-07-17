@@ -2,18 +2,18 @@
 GWR is tested against results from GWR4
 """
 
-import pysal
+import pysalnext
 import numpy as np
-import pysal.lib
+import pysalnext.lib
 import unittest
 import pickle as pk
-from pysal.model.spglm.family import Gaussian, Poisson, Binomial
+from pysalnext.model.spglm.family import Gaussian, Poisson, Binomial
 from ..sel_bw import Sel_BW
 from numpy.testing import assert_allclose
 
 class TestSelBW(unittest.TestCase):
     def setUp(self):
-        data = pysal.lib.open(pysal.lib.examples.get_path('GData_utm.csv'))
+        data = pysalnext.lib.open(pysalnext.lib.examples.get_path('GData_utm.csv'))
         self.coords = list(zip(data.by_col('X'), data.by_col('Y')))
         self.y = np.array(data.by_col('PctBach')).reshape((-1,1))
         rural  = np.array(data.by_col('PctRural')).reshape((-1,1))

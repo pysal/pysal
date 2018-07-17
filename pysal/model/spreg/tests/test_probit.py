@@ -1,8 +1,8 @@
 import unittest
-import pysal.lib.api as lps
+import pysalnext.lib.api as lps
 import numpy as np
-from pysal.model.spreg import probit as PB
-from pysal.lib.common import RTOL
+from pysalnext.model.spreg import probit as PB
+from pysalnext.lib.common import RTOL
 
 class TestBaseProbit(unittest.TestCase):
     def setUp(self):

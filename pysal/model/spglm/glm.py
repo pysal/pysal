@@ -4,8 +4,8 @@ __author__ = "Taylor Oshan tayoshan@gmail.com"
 
 import numpy as np
 import numpy.linalg as la
-from pysal.model.spreg.utils import RegressionPropsY, spdot
-import pysal.model.spreg.user_output as USER
+from pysalnext.model.spreg.utils import RegressionPropsY, spdot
+import pysalnext.model.spreg.user_output as USER
 from .utils import cache_readonly
 from .base import LikelihoodModelResults
 from .iwls import iwls
@@ -62,9 +62,9 @@ class GLM(RegressionPropsY):
 
     Examples
     --------
-    >>> import pysal.lib
-    >>> from pysal.model.spglm.glm import GLM
-    >>> db = pysal.lib.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
+    >>> import pysalnext.lib
+    >>> from pysalnext.model.spglm.glm import GLM
+    >>> db = pysalnext.lib.open(pysalnext.lib.examples.get_path('columbus.dbf'),'r')
     >>> y = np.array(db.by_col("HOVAL"))
     >>> self.y = np.reshape(y, (49,1))
     >>> X = []
@@ -247,9 +247,9 @@ class GLMResults(LikelihoodModelResults):
 
     Examples
     --------
-    >>> import pysal.lib
-    >>> from pysal.model.spglm.glm import GLM, GLMResults
-    >>> db = pysal.lib.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
+    >>> import pysalnext.lib
+    >>> from pysalnext.model.spglm.glm import GLM, GLMResults
+    >>> db = pysalnext.lib.open(pysalnext.lib.examples.get_path('columbus.dbf'),'r')
     >>> y = np.array(db.by_col("HOVAL"))
     >>> self.y = np.reshape(y, (49,1))
     >>> X = []

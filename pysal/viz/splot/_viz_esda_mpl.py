@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
 import geopandas as gpd
 import numpy as np
-import pysal.lib.api as lp
+import pysalnext.lib.api as lp
 import seaborn as sbn
-from pysal.explore.esda.moran import Moran_Local, Moran_Local_BV
+from pysalnext.explore.esda.moran import Moran_Local, Moran_Local_BV
 import warnings
-from pysal.model.spreg import OLS
+from pysalnext.model.spreg import OLS
 
 from matplotlib import patches, colors
 
@@ -13,7 +13,7 @@ from ._viz_utils import (mask_local_auto, moran_hot_cold_spots,
                          splot_colors)
 
 """
-Lightweight visualizations for pysal using Matplotlib and Geopandas
+Lightweight visualizations for pysalnext using Matplotlib and Geopandas
 
 TODO
 geopandas plotting, change round shapes in legends to boxes
@@ -81,11 +81,11 @@ def moran_scatterplot(moran, zstandard=True, ax=None,
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import geopandas as gpd
-    >>> from pysal.explore.esda.moran import Moran
-    >>> from pysal.viz.splot.esda import moran_scatterplot
+    >>> from pysalnext.explore.esda.moran import Moran
+    >>> from pysalnext.viz.splot.esda import moran_scatterplot
     
     Load data and calculate weights
     
@@ -190,11 +190,11 @@ def plot_moran_simulation(moran, ax=None, fitline_kwds=None, **kwargs):
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import geopandas as gpd
-    >>> from pysal.explore.esda.moran import Moran
-    >>> from pysal.viz.splot.esda import plot_moran_simulation
+    >>> from pysalnext.explore.esda.moran import Moran
+    >>> from pysalnext.viz.splot.esda import plot_moran_simulation
     
     Load data and calculate weights
     
@@ -276,11 +276,11 @@ def plot_moran(moran, zstandard=True, scatter_kwds=None,
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import geopandas as gpd
-    >>> from pysal.explore.esda.moran import Moran
-    >>> from pysal.viz.splot.esda import plot_moran
+    >>> from pysalnext.explore.esda.moran import Moran
+    >>> from pysalnext.viz.splot.esda import plot_moran
     
     Load data and calculate weights
     
@@ -347,11 +347,11 @@ def moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import geopandas as gpd
-    >>> from pysal.explore.esda.moran import Moran_BV
-    >>> from pysal.viz.splot.esda import moran_bv_scatterplot
+    >>> from pysalnext.explore.esda.moran import Moran_BV
+    >>> from pysalnext.viz.splot.esda import moran_bv_scatterplot
     
     Load data and calculate weights
     
@@ -443,11 +443,11 @@ def plot_moran_bv_simulation(moran_bv, ax=None, fitline_kwds=None, **kwargs):
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import geopandas as gpd
-    >>> from pysal.explore.esda.moran import Moran_BV
-    >>> from pysal.viz.splot.esda import plot_moran_bv_simulation
+    >>> from pysalnext.explore.esda.moran import Moran_BV
+    >>> from pysalnext.viz.splot.esda import plot_moran_bv_simulation
     
     Load data and calculate weights
     
@@ -527,11 +527,11 @@ def plot_moran_bv(moran_bv, scatter_kwds=None, fitline_kwds=None, **kwargs):
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import geopandas as gpd
-    >>> from pysal.explore.esda.moran import Moran_BV
-    >>> from pysal.viz.splot.esda import plot_moran_bv
+    >>> from pysalnext.explore.esda.moran import Moran_BV
+    >>> from pysalnext.viz.splot.esda import plot_moran_bv
     
     Load data and calculate weights
     
@@ -605,10 +605,10 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     
     >>> import matplotlib.pyplot as plt
     >>> import geopandas as gpd
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
-    >>> from pysal.explore.esda.moran import Moran_Local
-    >>> from pysal.viz.splot.esda import moran_loc_scatterplot
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
+    >>> from pysalnext.explore.esda.moran import Moran_Local
+    >>> from pysalnext.viz.splot.esda import moran_loc_scatterplot
     
     Load data and calculate Moran Local statistics
     
@@ -744,11 +744,11 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import geopandas as gpd
-    >>> from pysal.explore.esda.moran import Moran_Local
-    >>> from pysal.viz.splot.esda import lisa_cluster
+    >>> from pysalnext.explore.esda.moran import Moran_Local
+    >>> from pysalnext.viz.splot.esda import lisa_cluster
 
     Data preparation and statistical analysis
     
@@ -844,11 +844,11 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import geopandas as gpd
-    >>> from pysal.explore.esda.moran import Moran_Local
-    >>> from pysal.viz.splot.esda import plot_local_autocorrelation
+    >>> from pysalnext.explore.esda.moran import Moran_Local
+    >>> from pysalnext.viz.splot.esda import plot_local_autocorrelation
 
     Data preparation and analysis
     
@@ -985,10 +985,10 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     
     >>> import matplotlib.pyplot as plt
     >>> import geopandas as gpd
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
-    >>> from pysal.explore.esda.moran import Moran_Local_BV
-    >>> from pysal.viz.splot.esda import moran_loc_bv_scatterplot
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
+    >>> from pysalnext.explore.esda.moran import Moran_Local_BV
+    >>> from pysalnext.viz.splot.esda import moran_loc_bv_scatterplot
     
     Load data and calculate Moran Local statistics
     

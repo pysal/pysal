@@ -1,7 +1,7 @@
-from pysal.model.spvcm._constants import TEST_SEED, CLASSTYPES
+from pysalnext.model.spvcm._constants import TEST_SEED, CLASSTYPES
 from ... import both_levels as M
-from pysal.model.spvcm.tests.utils import run_with_seed
-from pysal.model.spvcm.abstracts import Sampler_Mixin
+from pysalnext.model.spvcm.tests.utils import run_with_seed
+from pysalnext.model.spvcm.abstracts import Sampler_Mixin
 import pandas as pd
 import os
 

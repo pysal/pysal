@@ -4,15 +4,15 @@ import numpy as np
 from ..util import neighbor_equality
 from ..weights import W
 from .. import user
-from ... import examples as pysal_examples
+from ... import examples as pysalnext_examples
 
 
 class Testuser(unittest.TestCase):
     def setUp(self):
         self.wq = user.queen_from_shapefile(
-            pysal_examples.get_path("columbus.shp"))
+            pysalnext_examples.get_path("columbus.shp"))
         self.wr = user.rook_from_shapefile(
-            pysal_examples.get_path("columbus.shp"))
+            pysalnext_examples.get_path("columbus.shp"))
 
     def test_queen_from_shapefile(self):
         self.assertAlmostEqual(self.wq.pct_nonzero, 9.82923781757601)
@@ -37,24 +37,24 @@ class Testuser(unittest.TestCase):
         wnn4 = user.knnW_from_array(data, k=4)
         self.assertEqual(set(wnn4.neighbors[0]), set([1, 5, 6, 2]))
         '''
-        wnn3e = pysal.knnW(data, p=2, k=3)
+        wnn3e = pysalnext.knnW(data, p=2, k=3)
         self.assertEquals(set(wnn3e.neighbors[0]),set([1, 5, 6]))
-        wnn3m = pysal.knnW(data, p=1, k=3)
+        wnn3m = pysalnext.knnW(data, p=1, k=3)
         self.assertEquals(set(wnn3m.neighbors[0]), set([1, 5, 2]))
         '''
 
     def test_knnW_from_shapefile(self):
-        wc = user.knnW_from_shapefile(pysal_examples.get_path("columbus.shp"))
+        wc = user.knnW_from_shapefile(pysalnext_examples.get_path("columbus.shp"))
         self.assertAlmostEqual(wc.pct_nonzero, 4.081632653061225)
-        wc3 = user.knnW_from_shapefile(pysal_examples.get_path(
+        wc3 = user.knnW_from_shapefile(pysalnext_examples.get_path(
             "columbus.shp"), k=3)
         self.assertEqual(wc3.weights[1], [1, 1, 1])
         self.assertEqual(set(wc3.neighbors[1]), set([3, 0, 7]))
         self.assertEqual(set(wc.neighbors[0]), set([2, 1]))
-        w = user.knnW_from_shapefile(pysal_examples.get_path('juvenile.shp'))
+        w = user.knnW_from_shapefile(pysalnext_examples.get_path('juvenile.shp'))
         self.assertAlmostEqual(w.pct_nonzero, 1.1904761904761904)
         w1 = user.knnW_from_shapefile(
-            pysal_examples.get_path('juvenile.shp'), k=1)
+            pysalnext_examples.get_path('juvenile.shp'), k=1)
         self.assertAlmostEqual(w1.pct_nonzero, 0.5952380952380952)
 
     def test_threshold_binaryW_from_array(self):
@@ -67,7 +67,7 @@ class Testuser(unittest.TestCase):
                                                         4: [5], 5: [4]})))
 
     def test_threshold_binaryW_from_shapefile(self):
-        w = user.threshold_binaryW_from_shapefile(pysal_examples.get_path(
+        w = user.threshold_binaryW_from_shapefile(pysalnext_examples.get_path(
             "columbus.shp"), 0.62, idVariable="POLYID")
         self.assertEqual(w.weights[1], [1, 1])
 
@@ -82,7 +82,7 @@ class Testuser(unittest.TestCase):
         self.assertEqual(wid2.weights[0], [0.01, 0.0079999999999999984])
 
     def test_threshold_continuousW_from_shapefile(self):
-        w = user.threshold_continuousW_from_shapefile(pysal_examples.get_path(
+        w = user.threshold_continuousW_from_shapefile(pysalnext_examples.get_path(
             "columbus.shp"), 0.62, idVariable="POLYID")
         wds = {w.neighbors[1][i]:v for i,v in enumerate(w.weights[1])}
         self.assertEqual(wds, {2:1.6702346893743334, 3:1.7250729841938093})
@@ -102,12 +102,12 @@ class Testuser(unittest.TestCase):
                                     [20.000002]]))
 
     def test_min_threshold_dist_from_shapefile(self):
-        f = pysal_examples.get_path('columbus.shp')
+        f = pysalnext_examples.get_path('columbus.shp')
         min_d = user.min_threshold_dist_from_shapefile(f)
         self.assertAlmostEqual(min_d, 0.61886415807685413)
 
     def test_kernelW_from_shapefile(self):
-        kw = user.kernelW_from_shapefile(pysal_examples.get_path(
+        kw = user.kernelW_from_shapefile(pysalnext_examples.get_path(
             'columbus.shp'), idVariable='POLYID')
         self.assertEqual(set(kw.weights[1]), set([0.0070787731484506233,
                                          0.2052478782400463,
@@ -144,7 +144,7 @@ class Testuser(unittest.TestCase):
 
     def test_adaptive_kernelW_from_shapefile(self):
         kwa = user.adaptive_kernelW_from_shapefile(
-            pysal_examples.get_path('columbus.shp'))
+            pysalnext_examples.get_path('columbus.shp'))
         wds = {kwa.neighbors[0][i]: v for i, v in enumerate(kwa.weights[0])}
         self.assertEqual(wds, {0: 1.0, 2: 0.03178906767736345,
                                 1: 9.9999990066379496e-08})

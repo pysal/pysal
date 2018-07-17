@@ -37,7 +37,7 @@ class Test_Shapely(ut.TestCase):
                 else:
                     self.assertEqual(tabular, shapely)
         except NotImplementedError as e:
-            warn('The shapely/pysal bridge is not implemented: {}'.format(e))
+            warn('The shapely/pysalnext bridge is not implemented: {}'.format(e))
             return True
 
     def test_to_wkb(self):

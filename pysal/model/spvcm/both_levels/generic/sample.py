@@ -3,7 +3,7 @@ import numpy as np
 import numpy.linalg as la
 from ...utils import splogdet, spsolve
 from ...steps import metropolis
-from pysal.model.spreg.utils import spdot
+from pysalnext.model.spreg.utils import spdot
 
 #############################
 # SPATIAL SAMPLE METHODS    #

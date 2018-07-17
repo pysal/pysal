@@ -1,10 +1,10 @@
 import unittest
-import pysal.lib.api as lps
+import pysalnext.lib.api as lps
 import scipy
 import numpy as np
-from pysal.model.spreg.ml_lag import ML_Lag
-from pysal.model.spreg import utils
-from pysal.lib.common import RTOL
+from pysalnext.model.spreg.ml_lag import ML_Lag
+from pysalnext.model.spreg import utils
+from pysalnext.lib.common import RTOL
 from .skip import SKIP
 
 

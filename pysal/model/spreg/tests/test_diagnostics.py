@@ -1,9 +1,9 @@
 import unittest
 import numpy as np
-import pysal.lib.api as lps
-from pysal.model.spreg import diagnostics
-from pysal.model.spreg.ols import OLS
-from pysal.lib.common import RTOL
+import pysalnext.lib.api as lps
+from pysalnext.model.spreg import diagnostics
+from pysalnext.model.spreg.ols import OLS
+from pysalnext.lib.common import RTOL
 
 
 # create regression object used by all the tests below

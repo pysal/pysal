@@ -12,7 +12,7 @@ __author__ = "Serge Rey sjsrey@gmail.com"
 __all__ = ['PointProcess', 'PoissonPointProcess', 'PoissonClusterPointProcess']
 
 import numpy as np
-import pysal.lib as ps
+import pysalnext.lib as ps
 from numpy.random import poisson
 from .pointpattern import PointPattern as PP
 
@@ -190,10 +190,10 @@ class PoissonPointProcess(PointProcess):
 
     Examples
     --------
-    >>> import pysal.lib as ps
+    >>> import pysalnext.lib as ps
     >>> import numpy as np
     >>> from pointpats.window import Window, poly_from_bbox
-    >>> from pysal.lib.cg import shapely_ext
+    >>> from pysalnext.lib.cg import shapely_ext
 
     Open the virginia polygon shapefile
     >>> va = ps.open(ps.examples.get_path("virginia.shp"))
@@ -339,10 +339,10 @@ class PoissonClusterPointProcess(PointProcess):
 
     Examples
     --------
-    >>> import pysal.lib as ps
+    >>> import pysalnext.lib as ps
     >>> import numpy as np
     >>> from pointpats.window import Window, poly_from_bbox
-    >>> from pysal.lib.cg import shapely_ext
+    >>> from pysalnext.lib.cg import shapely_ext
 
     Open the virginia polygon shapefile
     >>> va = ps.open(ps.examples.get_path("virginia.shp"))

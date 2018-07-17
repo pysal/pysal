@@ -1,9 +1,9 @@
 """Geary Unittest."""
 import unittest
 
-from pysal.lib import open as popen
-from pysal.lib import examples
-from pysal.lib.common import pandas
+from pysalnext.lib import open as popen
+from pysalnext.lib import examples
+from pysalnext.lib.common import pandas
 
 from .. import geary
 import numpy as np

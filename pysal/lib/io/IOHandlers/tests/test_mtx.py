@@ -1,7 +1,7 @@
 import unittest
 from ..mtx import MtxIO
 from ...FileIO import FileIO as psopen
-from .... import examples as pysal_examples
+from .... import examples as pysalnext_examples
 import tempfile
 import os
 import warnings
@@ -10,7 +10,7 @@ import scipy.sparse as SP
 
 class test_MtxIO(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = pysal_examples.get_path('wmat.mtx')
+        self.test_file = test_file = pysalnext_examples.get_path('wmat.mtx')
         self.obj = MtxIO(test_file, 'r')
 
     def test_close(self):
@@ -41,7 +41,7 @@ class test_MtxIO(unittest.TestCase):
             self.obj.seek(0)
             w = self.obj.read(sparse=i)
             f = tempfile.NamedTemporaryFile(
-                suffix='.mtx', dir=pysal_examples.get_path(''))
+                suffix='.mtx', dir=pysalnext_examples.get_path(''))
             fname = f.name
             f.close()
             o = psopen(fname, 'w')

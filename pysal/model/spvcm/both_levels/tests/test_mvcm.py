@@ -1,6 +1,6 @@
-from pysal.model.spvcm import both_levels as M
-from pysal.model.spvcm.tests.utils import Model_Mixin
-from pysal.model.spvcm.abstracts import Trace
+from pysalnext.model.spvcm import both_levels as M
+from pysalnext.model.spvcm.tests.utils import Model_Mixin
+from pysalnext.model.spvcm.abstracts import Trace
 import unittest as ut
 import pandas as pd
 from .make_data import FULL_PATH

@@ -13,7 +13,7 @@ from scipy import sparse as SP
 from scipy.sparse import linalg as SPla
 import scipy.optimize as op
 import numpy.linalg as la
-from pysal.lib.api import lag_spatial
+from pysalnext.lib.api import lag_spatial
 from .sputils import *
 import copy
 
@@ -419,7 +419,7 @@ def get_spFilter(w, lamb, sf):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
@@ -502,7 +502,7 @@ def inverse_prod(w, data, scalar, post_multiply=False, inv_method="power_exp", t
     Examples
     --------
 
-    >>> import numpy, pysal
+    >>> import numpy, pysalnext
     >>> import numpy.linalg as la
     >>> np.random.seed(10)
     >>> w = lps.lat2W(5, 5)

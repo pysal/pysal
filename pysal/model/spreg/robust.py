@@ -4,7 +4,7 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, \
 
 import numpy as np
 import numpy.linalg as la
-from pysal.lib.api import lag_spatial
+from pysalnext.lib.api import lag_spatial
 from .utils import spdot, spbroadcast
 from .user_output import check_constant
 
@@ -36,7 +36,7 @@ def robust_vm(reg, gwk=None, sig2n_k=False):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> from ols import OLS
     >>> from twosls import TSLS
     >>> db=lps.open(lps.get_path("NAT.dbf"),"r")

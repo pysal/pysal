@@ -1,12 +1,12 @@
 import unittest
 import numpy as np
-import pysal.lib.api as lps
-from pysal.model.spreg import diagnostics
-from pysal.model.spreg.ols import OLS as OLS
-from pysal.model.spreg.twosls import TSLS as TSLS
-from pysal.model.spreg.twosls_sp import GM_Lag
-from pysal.model.spreg.diagnostics_sp import LMtests, MoranRes, spDcache, AKtest
-from pysal.lib.common import RTOL
+import pysalnext.lib.api as lps
+from pysalnext.model.spreg import diagnostics
+from pysalnext.model.spreg.ols import OLS as OLS
+from pysalnext.model.spreg.twosls import TSLS as TSLS
+from pysalnext.model.spreg.twosls_sp import GM_Lag
+from pysalnext.model.spreg.diagnostics_sp import LMtests, MoranRes, spDcache, AKtest
+from pysalnext.lib.common import RTOL
 
 class TestLMtests(unittest.TestCase):
     def setUp(self):

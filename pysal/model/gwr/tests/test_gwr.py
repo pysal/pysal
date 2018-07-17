@@ -3,29 +3,29 @@ GWR is tested against results from GWR4
 """
 
 import os
-import pysal
+import pysalnext
 import numpy as np
-import pysal.lib
+import pysalnext.lib
 import unittest
 import pickle as pk
 from ..gwr import GWR
 from ..sel_bw import Sel_BW
 from ..diagnostics import get_AICc, get_AIC, get_BIC, get_CV
-from pysal.model.spglm.family import Gaussian, Poisson, Binomial
+from pysalnext.model.spglm.family import Gaussian, Poisson, Binomial
 
 class TestGWRGaussian(unittest.TestCase):
     def setUp(self):
-        data = pysal.lib.open(pysal.lib.examples.get_path('GData_utm.csv'))
+        data = pysalnext.lib.open(pysalnext.lib.examples.get_path('GData_utm.csv'))
         self.coords = list(zip(data.by_col('X'), data.by_col('Y')))
         self.y = np.array(data.by_col('PctBach')).reshape((-1,1))
         rural  = np.array(data.by_col('PctRural')).reshape((-1,1))
         pov = np.array(data.by_col('PctPov')).reshape((-1,1)) 
         black = np.array(data.by_col('PctBlack')).reshape((-1,1))
         self.X = np.hstack([rural, pov, black])
-        self.BS_F = pysal.lib.open(pysal.lib.examples.get_path('georgia_BS_F_listwise.csv'))
-        self.BS_NN = pysal.lib.open(pysal.lib.examples.get_path('georgia_BS_NN_listwise.csv'))
-        self.GS_F = pysal.lib.open(pysal.lib.examples.get_path('georgia_GS_F_listwise.csv'))
-        self.GS_NN = pysal.lib.open(pysal.lib.examples.get_path('georgia_GS_NN_listwise.csv'))
+        self.BS_F = pysalnext.lib.open(pysalnext.lib.examples.get_path('georgia_BS_F_listwise.csv'))
+        self.BS_NN = pysalnext.lib.open(pysalnext.lib.examples.get_path('georgia_BS_NN_listwise.csv'))
+        self.GS_F = pysalnext.lib.open(pysalnext.lib.examples.get_path('georgia_GS_F_listwise.csv'))
+        self.GS_NN = pysalnext.lib.open(pysalnext.lib.examples.get_path('georgia_GS_NN_listwise.csv'))
 
     def test_BS_F(self):
         est_Int = self.BS_F.by_col(' est_Intercept')
@@ -98,13 +98,13 @@ class TestGWRGaussian(unittest.TestCase):
         inf = np.array(self.BS_NN.by_col(' influence')).reshape((-1,1))
         cooksD = np.array(self.BS_NN.by_col(' CooksD')).reshape((-1,1))
         local_corr = os.path.join(os.path.dirname(__file__),'local_corr.csv')
-        corr1 = np.array(pysal.lib.open(local_corr))
+        corr1 = np.array(pysalnext.lib.open(local_corr))
         local_vif = os.path.join(os.path.dirname(__file__),'local_vif.csv')
-        vif1 = np.array(pysal.lib.open(local_vif))
+        vif1 = np.array(pysalnext.lib.open(local_vif))
         local_cn = os.path.join(os.path.dirname(__file__),'local_cn.csv')
-        cn1 = np.array(pysal.lib.open(local_cn))
+        cn1 = np.array(pysalnext.lib.open(local_cn))
         local_vdp = os.path.join(os.path.dirname(__file__),'local_vdp.csv')
-        vdp1 = np.array(pysal.lib.open(local_vdp), dtype=np.float64)
+        vdp1 = np.array(pysalnext.lib.open(local_vdp), dtype=np.float64)
         spat_var_p_vals = [0. , 0. , 0.5, 0.2 ]
 
         model = GWR(self.coords, self.y, self.X, bw=90.000, fixed=False)
@@ -339,7 +339,7 @@ class TestGWRGaussian(unittest.TestCase):
 
     def test_BS_NN_longlat(self):
         GA_longlat = os.path.join(os.path.dirname(__file__),'ga_bs_nn_longlat_listwise.csv')
-        self.BS_NN_longlat = pysal.lib.open(GA_longlat)
+        self.BS_NN_longlat = pysalnext.lib.open(GA_longlat)
         
         coords_longlat = list(zip(self.BS_NN_longlat.by_col(' x_coord'), self.BS_NN_longlat.by_col(' y_coord')))
         est_Int = self.BS_NN_longlat.by_col(' est_Intercept')
@@ -398,7 +398,7 @@ class TestGWRGaussian(unittest.TestCase):
 
 class TestGWRPoisson(unittest.TestCase):
     def setUp(self):
-        data = pysal.lib.open(pysal.lib.examples.get_path('Tokyomortality.csv'), mode='Ur')
+        data = pysalnext.lib.open(pysalnext.lib.examples.get_path('Tokyomortality.csv'), mode='Ur')
         self.coords = list(zip(data.by_col('X_CENTROID'), data.by_col('Y_CENTROID')))
         self.y = np.array(data.by_col('db2564')).reshape((-1,1))
         self.off = np.array(data.by_col('eb2564')).reshape((-1,1))
@@ -407,11 +407,11 @@ class TestGWRPoisson(unittest.TestCase):
         POP = np.array(data.by_col('POP65')).reshape((-1,1))
         UNEMP = np.array(data.by_col('UNEMP')).reshape((-1,1))
         self.X = np.hstack([OCC,OWN,POP,UNEMP])
-        self.BS_F = pysal.lib.open(pysal.lib.examples.get_path('tokyo_BS_F_listwise.csv'))
-        self.BS_NN = pysal.lib.open(pysal.lib.examples.get_path('tokyo_BS_NN_listwise.csv'))
-        self.GS_F = pysal.lib.open(pysal.lib.examples.get_path('tokyo_GS_F_listwise.csv'))
-        self.GS_NN = pysal.lib.open(pysal.lib.examples.get_path('tokyo_GS_NN_listwise.csv'))
-        self.BS_NN_OFF = pysal.lib.open(pysal.lib.examples.get_path('tokyo_BS_NN_OFF_listwise.csv'))
+        self.BS_F = pysalnext.lib.open(pysalnext.lib.examples.get_path('tokyo_BS_F_listwise.csv'))
+        self.BS_NN = pysalnext.lib.open(pysalnext.lib.examples.get_path('tokyo_BS_NN_listwise.csv'))
+        self.GS_F = pysalnext.lib.open(pysalnext.lib.examples.get_path('tokyo_GS_F_listwise.csv'))
+        self.GS_NN = pysalnext.lib.open(pysalnext.lib.examples.get_path('tokyo_GS_NN_listwise.csv'))
+        self.BS_NN_OFF = pysalnext.lib.open(pysalnext.lib.examples.get_path('tokyo_BS_NN_OFF_listwise.csv'))
 
     def test_BS_F(self):
         est_Int = self.BS_F.by_col(' est_Intercept')
@@ -667,7 +667,7 @@ class TestGWRPoisson(unittest.TestCase):
 
 class TestGWRBinomial(unittest.TestCase):
     def setUp(self):
-        data = pysal.lib.open(pysal.lib.examples.get_path('landslides.csv'))
+        data = pysalnext.lib.open(pysalnext.lib.examples.get_path('landslides.csv'))
         self.coords = list(zip(data.by_col('X'), data.by_col('Y')))
         self.y = np.array(data.by_col('Landslid')).reshape((-1,1))
         ELEV  = np.array(data.by_col('Elev')).reshape((-1,1))
@@ -677,10 +677,10 @@ class TestGWRBinomial(unittest.TestCase):
         SOUTH = np.array(data.by_col('AbsSouth')).reshape((-1,1))
         DIST = np.array(data.by_col('DistStrm')).reshape((-1,1))
         self.X = np.hstack([ELEV, SLOPE, SIN, COS, SOUTH, DIST])
-        self.BS_F = pysal.lib.open(pysal.lib.examples.get_path('clearwater_BS_F_listwise.csv'))
-        self.BS_NN = pysal.lib.open(pysal.lib.examples.get_path('clearwater_BS_NN_listwise.csv'))
-        self.GS_F = pysal.lib.open(pysal.lib.examples.get_path('clearwater_GS_F_listwise.csv'))
-        self.GS_NN = pysal.lib.open(pysal.lib.examples.get_path('clearwater_GS_NN_listwise.csv'))
+        self.BS_F = pysalnext.lib.open(pysalnext.lib.examples.get_path('clearwater_BS_F_listwise.csv'))
+        self.BS_NN = pysalnext.lib.open(pysalnext.lib.examples.get_path('clearwater_BS_NN_listwise.csv'))
+        self.GS_F = pysalnext.lib.open(pysalnext.lib.examples.get_path('clearwater_GS_F_listwise.csv'))
+        self.GS_NN = pysalnext.lib.open(pysalnext.lib.examples.get_path('clearwater_GS_NN_listwise.csv'))
 
     def test_BS_F(self):
         est_Int = self.BS_F.by_col(' est_Intercept')

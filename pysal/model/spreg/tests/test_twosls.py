@@ -1,8 +1,8 @@
 import unittest
 import numpy as np
-import pysal.lib.api as lps
-from pysal.model.spreg.twosls import BaseTSLS, TSLS
-from pysal.lib.common import RTOL
+import pysalnext.lib.api as lps
+from pysalnext.model.spreg.twosls import BaseTSLS, TSLS
+from pysalnext.lib.common import RTOL
 
 class TestBaseTSLS(unittest.TestCase):
     def setUp(self):

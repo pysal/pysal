@@ -6,7 +6,7 @@ Python Spatial Analysis Library
 Documentation
 -------------
 PySAL documentation is available in two forms: python docstrings and an html \
-        webpage at http://pysal.org/
+        webpage at http://pysalnext.org/
 
 Available sub-packages
 ----------------------
@@ -31,7 +31,7 @@ from .io import IOHandlers
 if common.pandas is not None:
     from .io import geotable
 
-# Assign pysal.open to dispatcher
+# Assign pysalnext.open to dispatcher
 open = io.FileIO.FileIO
 
 from .version import version

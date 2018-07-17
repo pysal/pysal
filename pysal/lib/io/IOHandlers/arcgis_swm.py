@@ -85,15 +85,15 @@ class ArcGISSwmIO(FileIO.FileIO):
     def _read(self):
         """
         Reads ArcGIS swm file.
-        Returns a pysal.weights.weights.W object
+        Returns a pysalnext.weights.weights.W object
 
         Examples
         --------
 
         Type 'dir(w)' at the interpreter to see what methods are supported.
-        Open an ArcGIS swm file and read it into a pysal weights object
+        Open an ArcGIS swm file and read it into a pysalnext weights object
 
-        >>> w = pysal.open(pysal.examples.get_path('ohio.swm'),'r').read()
+        >>> w = pysalnext.open(pysalnext.examples.get_path('ohio.swm'),'r').read()
 
         Get the number of observations from the header
 
@@ -211,8 +211,8 @@ class ArcGISSwmIO(FileIO.FileIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
-        >>> testfile = pysal.open(pysal.examples.get_path('ohio.swm'),'r')
+        >>> import tempfile, pysalnext, os
+        >>> testfile = pysalnext.open(pysalnext.examples.get_path('ohio.swm'),'r')
         >>> w = testfile.read()
 
         Create a temporary file for this example
@@ -229,7 +229,7 @@ class ArcGISSwmIO(FileIO.FileIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w')
+        >>> o = pysalnext.open(fname,'w')
 
         Add properities to the file to write
 
@@ -243,7 +243,7 @@ class ArcGISSwmIO(FileIO.FileIO):
 
         Read in the newly created text file
 
-        >>> wnew = pysal.open(fname,'r').read()
+        >>> wnew = pysalnext.open(fname,'r').read()
 
         Compare values from old to new
 
@@ -256,7 +256,7 @@ class ArcGISSwmIO(FileIO.FileIO):
 
         self._complain_ifclosed(self.closed)
         if not issubclass(type(obj), W):
-            raise TypeError("Expected a pysal weights object, got: %s" % (
+            raise TypeError("Expected a pysalnext weights object, got: %s" % (
                 type(obj)))
         if not (type(obj.id_order[0]) in (np.int32, np.int64, int)) and not useIdIndex:
             raise TypeError("ArcGIS SWM files support only integer IDs")

@@ -1,7 +1,7 @@
 import unittest
 from ..arcgis_txt import ArcGISTextIO
 from ...FileIO import FileIO as psopen
-from .... import examples as pysal_examples
+from .... import examples as pysalnext_examples
 import tempfile
 import os
 import warnings
@@ -9,7 +9,7 @@ import warnings
 
 class test_ArcGISTextIO(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = pysal_examples.get_path('arcgis_txt.txt')
+        self.test_file = test_file = pysalnext_examples.get_path('arcgis_txt.txt')
         self.obj = ArcGISTextIO(test_file, 'r')
 
     def test_close(self):
@@ -42,7 +42,7 @@ class test_ArcGISTextIO(unittest.TestCase):
                 assert issubclass(warn[0].category, RuntimeWarning)
                 assert "DBF relating to ArcGIS TEXT was not found, proceeding with unordered string ids." in str(warn[0].message)
         f = tempfile.NamedTemporaryFile(
-            suffix='.txt', dir=pysal_examples.get_path(''))
+            suffix='.txt', dir=pysalnext_examples.get_path(''))
         fname = f.name
         f.close()
         o = psopen(fname, 'w', 'arcgis_text')

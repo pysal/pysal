@@ -14,9 +14,9 @@ from .ergodic import steady_state as STEADY_STATE
 from .components import Graph
 from scipy import stats
 from operator import gt
-import pysal.lib.api as ps
-from pysal.explore.esda.moran import Moran_Local
-import pysal.viz.mapclassify.api as mc
+import pysalnext.lib.api as ps
+from pysalnext.explore.esda.moran import Moran_Local
+import pysalnext.viz.mapclassify.api as mc
 
 # TT predefine LISA transitions
 # TT[i,j] is the transition type from i to j
@@ -76,7 +76,7 @@ class Markov(object):
     Examples
     --------
     >>> import numpy as np
-    >>> from pysal.dynamics.giddy.api import Markov
+    >>> from pysalnext.dynamics.giddy.api import Markov
     >>> c = [['b','a','c'],['c','c','a'],['c','b','c']]
     >>> c.extend([['a','a','b'], ['a','b','c']])
     >>> c = np.array(c)
@@ -94,9 +94,9 @@ class Markov(object):
 
     US nominal per capita income 48 states 81 years 1929-2009
 
-    >>> import pysal.lib
-    >>> import pysal.viz.mapclassify.api as mc
-    >>> f = pysal.lib.open(pysal.lib.examples.get_path("usjoin.csv"))
+    >>> import pysalnext.lib
+    >>> import pysalnext.viz.mapclassify.api as mc
+    >>> f = pysalnext.lib.open(pysalnext.lib.examples.get_path("usjoin.csv"))
     >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)])
 
     set classes to quintiles for each year
@@ -291,14 +291,14 @@ class Spatial_Markov(object):
 
     Examples
     --------
-    >>> import pysal.lib
-    >>> from pysal.dynamics.giddy.api import Spatial_Markov
+    >>> import pysalnext.lib
+    >>> from pysalnext.dynamics.giddy.api import Spatial_Markov
     >>> import numpy as np
-    >>> f = pysal.lib.open(pysal.lib.examples.get_path("usjoin.csv"))
+    >>> f = pysalnext.lib.open(pysalnext.lib.examples.get_path("usjoin.csv"))
     >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)])
     >>> pci = pci.transpose()
     >>> rpci = pci/(pci.mean(axis=0))
-    >>> w = pysal.lib.open(pysal.lib.examples.get_path("states48.gal")).read()
+    >>> w = pysalnext.lib.open(pysalnext.lib.examples.get_path("states48.gal")).read()
     >>> w.transform = 'r'
     >>> sm = Spatial_Markov(rpci, w, fixed=True, k=5, variable_name='rpci')
     >>> for p in sm.P:
@@ -658,14 +658,14 @@ def chi2(T1, T2):
 
     Examples
     --------
-    >>> import pysal.lib
-    >>> from pysal.dynamics.giddy.api import Spatial_Markov
-    >>> from pysal.dynamics.giddy.markov import chi2
-    >>> f = pysal.lib.open(pysal.lib.examples.get_path("usjoin.csv"))
+    >>> import pysalnext.lib
+    >>> from pysalnext.dynamics.giddy.api import Spatial_Markov
+    >>> from pysalnext.dynamics.giddy.markov import chi2
+    >>> f = pysalnext.lib.open(pysalnext.lib.examples.get_path("usjoin.csv"))
     >>> years = list(range(1929, 2010))
     >>> pci = np.array([f.by_col[str(y)] for y in years]).transpose()
     >>> rpci = pci/(pci.mean(axis=0))
-    >>> w = pysal.lib.open(pysal.lib.examples.get_path("states48.gal")).read()
+    >>> w = pysalnext.lib.open(pysalnext.lib.examples.get_path("states48.gal")).read()
     >>> w.transform='r'
     >>> sm = Spatial_Markov(rpci, w, fixed=True)
     >>> T1 = sm.T[0]
@@ -854,13 +854,13 @@ class LISA_Markov(Markov):
 
     Examples
     --------
-    >>> import pysal.lib
+    >>> import pysalnext.lib
     >>> import numpy as np
-    >>> from pysal.dynamics.giddy.api import LISA_Markov
-    >>> f = pysal.lib.open(pysal.lib.examples.get_path("usjoin.csv"))
+    >>> from pysalnext.dynamics.giddy.api import LISA_Markov
+    >>> f = pysalnext.lib.open(pysalnext.lib.examples.get_path("usjoin.csv"))
     >>> years = list(range(1929, 2010))
     >>> pci = np.array([f.by_col[str(y)] for y in years]).transpose()
-    >>> w = pysal.lib.open(pysal.lib.examples.get_path("states48.gal")).read()
+    >>> w = pysalnext.lib.open(pysalnext.lib.examples.get_path("states48.gal")).read()
     >>> lm = LISA_Markov(pci,w)
     >>> lm.classes
     array([1, 2, 3, 4])
@@ -1024,12 +1024,12 @@ class LISA_Markov(Markov):
 
         Examples
         --------
-        >>> import pysal.lib
-        >>> from pysal.dynamics.giddy.api import LISA_Markov
-        >>> f = pysal.lib.open(pysal.lib.examples.get_path("usjoin.csv"))
+        >>> import pysalnext.lib
+        >>> from pysalnext.dynamics.giddy.api import LISA_Markov
+        >>> f = pysalnext.lib.open(pysalnext.lib.examples.get_path("usjoin.csv"))
         >>> years = list(range(1929, 2010))
         >>> pci = np.array([f.by_col[str(y)] for y in years]).transpose()
-        >>> w = pysal.lib.open(pysal.lib.examples.get_path("states48.gal")).read()
+        >>> w = pysalnext.lib.open(pysalnext.lib.examples.get_path("states48.gal")).read()
         >>> np.random.seed(10)
         >>> lm_random = LISA_Markov(pci, w, permutations=99)
         >>> r = lm_random.spillover()
@@ -1164,7 +1164,7 @@ def kullback(F):
     Examples
     --------
     >>> import numpy as np
-    >>> from pysal.dynamics.giddy.api import kullback
+    >>> from pysalnext.dynamics.giddy.api import kullback
     >>> s1 = np.array([
     ...         [ 22, 11, 24,  2,  2,  7],
     ...         [ 5, 23, 15,  3, 42,  6],
@@ -1249,9 +1249,9 @@ def prais(pmat):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib
-    >>> from pysal.dynamics.giddy.api import prais
-    >>> f = pysal.lib.open(pysal.lib.examples.get_path("usjoin.csv"))
+    >>> import pysalnext.lib
+    >>> from pysalnext.dynamics.giddy.api import prais
+    >>> f = pysalnext.lib.open(pysalnext.lib.examples.get_path("usjoin.csv"))
     >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)])
     >>> q5 = np.array([mc.Quantiles(y).yb for y in pci]).transpose()
     >>> m = Markov(q5)

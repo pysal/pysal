@@ -1,8 +1,8 @@
 import unittest
 
 import sys
-#import pysal_examples
-from .... import examples as  pysal_examples
+#import pysalnext_examples
+from .... import examples as  pysalnext_examples
 PY3 = int(sys.version[0]) > 2
 if PY3:
     import io
@@ -37,11 +37,11 @@ class TestNoneMin(unittest.TestCase):
 
 class test_shp_file(unittest.TestCase):
     def test___init__(self):
-        shp = shp_file(pysal_examples.get_path('10740.shp'))
+        shp = shp_file(pysalnext_examples.get_path('10740.shp'))
         assert shp.header == {'BBOX Xmax': -105.29012, 'BBOX Ymax': 36.219799000000002, 'BBOX Mmax': 0.0, 'BBOX Zmin': 0.0, 'BBOX Mmin': 0.0, 'File Code': 9994, 'BBOX Ymin': 34.259672000000002, 'BBOX Xmin': -107.62651, 'Unused0': 0, 'Unused1': 0, 'Unused2': 0, 'Unused3': 0, 'Unused4': 0, 'Version': 1000, 'BBOX Zmax': 0.0, 'Shape Type': 5, 'File Length': 260534}
 
     def test___iter__(self):
-        shp = shp_file(pysal_examples.get_path('Point.shp'))
+        shp = shp_file(pysalnext_examples.get_path('Point.shp'))
         points = [pt for pt in shp]
         expected = [{'Y': -0.25904661905760773, 'X': -0.00068176617532103578, 'Shape Type': 1},
                     {'Y': -0.25630328607387354, 'X': 0.11697145363360706,
@@ -62,7 +62,7 @@ class test_shp_file(unittest.TestCase):
         assert points == expected
 
     def test___len__(self):
-        shp = shp_file(pysal_examples.get_path('10740.shp'))
+        shp = shp_file(pysalnext_examples.get_path('10740.shp'))
         assert len(shp) == 195
 
     def test_add_shape(self):
@@ -82,12 +82,12 @@ class test_shp_file(unittest.TestCase):
         os.remove('test_point.shx')
 
     def test_close(self):
-        shp = shp_file(pysal_examples.get_path('10740.shp'))
+        shp = shp_file(pysalnext_examples.get_path('10740.shp'))
         shp.close()
         self.assertEqual(shp.fileObj.closed, True)
 
     def test_get_shape(self):
-        shp = shp_file(pysal_examples.get_path('Line.shp'))
+        shp = shp_file(pysalnext_examples.get_path('Line.shp'))
         rec = shp.get_shape(0)
         expected = {'BBOX Ymax': -0.25832280562918325,
                     'NumPoints': 3,
@@ -104,7 +104,7 @@ class test_shp_file(unittest.TestCase):
         self.assertEqual(expected, shp.get_shape(0))
 
     def test_next(self):
-        shp = shp_file(pysal_examples.get_path('Point.shp'))
+        shp = shp_file(pysalnext_examples.get_path('Point.shp'))
         points = [pt for pt in shp]
         expected = {'Y': -0.25904661905760773, 'X': -
                     0.00068176617532103578, 'Shape Type': 1}
@@ -114,21 +114,21 @@ class test_shp_file(unittest.TestCase):
         self.assertEqual(expected, next(shp))
 
     def test_type(self):
-        shp = shp_file(pysal_examples.get_path('Point.shp'))
+        shp = shp_file(pysalnext_examples.get_path('Point.shp'))
         self.assertEqual("POINT", shp.type())
-        shp = shp_file(pysal_examples.get_path('Polygon.shp'))
+        shp = shp_file(pysalnext_examples.get_path('Polygon.shp'))
         self.assertEqual("POLYGON", shp.type())
-        shp = shp_file(pysal_examples.get_path('Line.shp'))
+        shp = shp_file(pysalnext_examples.get_path('Line.shp'))
         self.assertEqual("ARC", shp.type())
 
 
 class test_shx_file(unittest.TestCase):
     def test___init__(self):
-        shx = shx_file(pysal_examples.get_path('Point.shx'))
+        shx = shx_file(pysalnext_examples.get_path('Point.shx'))
         assert isinstance(shx, shx_file)
 
     def test_add_record(self):
-        shx = shx_file(pysal_examples.get_path('Point.shx'))
+        shx = shx_file(pysalnext_examples.get_path('Point.shx'))
         expectedIndex = [(100, 20), (128, 20), (156, 20),
                          (184, 20), (212, 20), (240, 20),
                          (268, 20), (296, 20), (324, 20)]
@@ -141,12 +141,12 @@ class test_shx_file(unittest.TestCase):
         assert shx2.index == shx.index
         shx2.close(shx._header)
         new_shx = open('test.shx', 'rb').read()
-        expected_shx = open(pysal_examples.get_path('Point.shx'), 'rb').read()
+        expected_shx = open(pysalnext_examples.get_path('Point.shx'), 'rb').read()
         assert new_shx == expected_shx
         os.remove('test.shx')
 
     def test_close(self):
-        shx = shx_file(pysal_examples.get_path('Point.shx'))
+        shx = shx_file(pysalnext_examples.get_path('Point.shx'))
         shx.close(None)
         self.assertEqual(shx.fileObj.closed, True)
 

@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-import pysal.lib as pysal
+import pysalnext.lib as pysalnext
 from .. import mixture_smoothing as m_s
 
 

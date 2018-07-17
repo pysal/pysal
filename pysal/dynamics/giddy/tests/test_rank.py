@@ -1,13 +1,13 @@
 import unittest
-import pysal.lib
-import pysal.lib.api as ps
-import pysal.dynamics.giddy.rank as rank
+import pysalnext.lib
+import pysalnext.lib.api as ps
+import pysalnext.dynamics.giddy.rank as rank
 import numpy as np
 
 
 class Theta_Tester(unittest.TestCase):
     def setUp(self):
-        f = ps.open(pysal.lib.examples.get_path('mexico.csv'))
+        f = ps.open(pysalnext.lib.examples.get_path('mexico.csv'))
         vnames = ["pcgdp%d" % dec for dec in range(1940, 2010, 10)]
         self.y = np.transpose(np.array([f.by_col[v] for v in vnames]))
         self.regime = np.array(f.by_col['esquivel99'])
@@ -34,7 +34,7 @@ class Theta_Tester(unittest.TestCase):
 
 class SpatialTau_Tester(unittest.TestCase):
     def setUp(self):
-        f = ps.open(pysal.lib.examples.get_path('mexico.csv'))
+        f = ps.open(pysalnext.lib.examples.get_path('mexico.csv'))
         vnames = ["pcgdp%d" % dec for dec in range(1940, 2010, 10)]
         self.y = np.transpose(np.array([f.by_col[v] for v in vnames]))
         regime = np.array(f.by_col['esquivel99'])

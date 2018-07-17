@@ -1,7 +1,7 @@
-from pysal.model.spvcm.hierarchical.svc import SVC
-from pysal.model.spvcm._constants import TEST_SEED
-from pysal.model.spvcm.utils import baltim
-import pysal as ps
+from pysalnext.model.spvcm.hierarchical.svc import SVC
+from pysalnext.model.spvcm._constants import TEST_SEED
+from pysalnext.model.spvcm.utils import baltim
+import pysalnext as ps
 import numpy as np
 import os
 

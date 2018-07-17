@@ -1,14 +1,14 @@
 import unittest
 from ...FileIO import FileIO as psopen
 from ..dat import DatIO
-from .... import examples as pysal_examples
+from .... import examples as pysalnext_examples
 import tempfile
 import os
 
 
 class test_DatIO(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = pysal_examples.get_path('wmat.dat')
+        self.test_file = test_file = pysalnext_examples.get_path('wmat.dat')
         self.obj = DatIO(test_file, 'r')
 
     def test_close(self):
@@ -31,7 +31,7 @@ class test_DatIO(unittest.TestCase):
     def test_write(self):
         w = self.obj.read()
         f = tempfile.NamedTemporaryFile(
-            suffix='.dat', dir=pysal_examples.get_path(''))
+            suffix='.dat', dir=pysalnext_examples.get_path(''))
         fname = f.name
         f.close()
         o = psopen(fname, 'w')

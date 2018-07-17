@@ -15,9 +15,9 @@ import numpy as np
 
 def knnW(data, k=2, p=2, ids=None, radius=None, distance_metric='euclidean'):
     """
-    This is deprecated. Use the pysal.weights.KNN class instead. 
+    This is deprecated. Use the pysalnext.weights.KNN class instead. 
     """
-    #Warn('This function is deprecated. Please use pysal.weights.KNN', UserWarning)
+    #Warn('This function is deprecated. Please use pysalnext.weights.KNN', UserWarning)
     return KNN(data, k=k, p=p, ids=ids, radius=radius,
             distance_metric=distance_metric)
 
@@ -52,10 +52,10 @@ class KNN(W):
 
     Examples
     --------
-    >>> import pysal.lib
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib
+    >>> import pysalnext.lib.api as ps
     >>> points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
-    >>> kd = pysal.lib.cg.kdtree.KDTree(np.array(points))
+    >>> kd = pysalnext.lib.cg.kdtree.KDTree(np.array(points))
     >>> wnn2 = ps.KNN(kd, 2)
     >>> [1,3] == wnn2.neighbors[0]
     True
@@ -85,7 +85,7 @@ class KNN(W):
 
     See Also
     --------
-    :class:`pysal.weights.W`
+    :class:`pysalnext.weights.W`
     """
     def __init__(self, data, k=2, p=2, ids=None, radius=None, distance_metric='euclidean'):
         if isKDTree(data):
@@ -144,14 +144,14 @@ class KNN(W):
         --------
 
         Polygon shapefile
-        >>> import pysal.lib
-        >>> import pysal.lib.api as ps
-        >>> wc=ps.knnW_from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
+        >>> import pysalnext.lib
+        >>> import pysalnext.lib.api as ps
+        >>> wc=ps.knnW_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"))
         >>> "%.4f"%wc.pct_nonzero
         '4.0816'
         >>> set([2,1]) == set(wc.neighbors[0])
         True
-        >>> wc3=ps.knnW_from_shapefile(pysal.lib.examples.get_path("columbus.shp"),k=3)
+        >>> wc3=ps.knnW_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"),k=3)
         >>> set(wc3.neighbors[0]) == set([2,1,3])
         True
         >>> set(wc3.neighbors[2]) == set([4,3,0])
@@ -159,7 +159,7 @@ class KNN(W):
 
         1 offset rather than 0 offset
 
-        >>> wc3_1=ps.knnW_from_shapefile(pysal.lib.examples.get_path("columbus.shp"),k=3,idVariable="POLYID")
+        >>> wc3_1=ps.knnW_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"),k=3,idVariable="POLYID")
         >>> set([4,3,2]) == set(wc3_1.neighbors[1])
         True
         >>> wc3_1.weights[2]
@@ -170,10 +170,10 @@ class KNN(W):
 
         Point shapefile
 
-        >>> w=ps.knnW_from_shapefile(pysal.lib.examples.get_path("juvenile.shp"))
+        >>> w=ps.knnW_from_shapefile(pysalnext.lib.examples.get_path("juvenile.shp"))
         >>> w.pct_nonzero
         1.1904761904761905
-        >>> w1=ps.knnW_from_shapefile(pysal.lib.examples.get_path("juvenile.shp"),k=1)
+        >>> w1=ps.knnW_from_shapefile(pysalnext.lib.examples.get_path("juvenile.shp"),k=1)
         >>> "%.3f"%w1.pct_nonzero
         '0.595'
 
@@ -184,8 +184,8 @@ class KNN(W):
 
         See Also
         --------
-        :class:`pysal.lib.weights.KNN`
-        :class:`pysal.lib.weights.W`
+        :class:`pysalnext.lib.weights.KNN`
+        :class:`pysalnext.lib.weights.W`
         """
         return cls(get_points_array_from_shapefile(filepath), *args, **kwargs)
     
@@ -211,7 +211,7 @@ class KNN(W):
 
         Examples
         --------
-        >>> import pysal.lib.api as ps
+        >>> import pysalnext.lib.api as ps
         >>> points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
         >>> wnn2 = ps.KNN.from_array(points, 2)
         >>> [1,3] == wnn2.neighbors[0]
@@ -242,8 +242,8 @@ class KNN(W):
 
         See Also
         --------
-        :class: `pysal.lib.weights.KNN`
-        :class:`pysal.lib.weights.W`
+        :class: `pysalnext.lib.weights.KNN`
+        :class:`pysalnext.lib.weights.W`
         """
         return cls(array, *args, **kwargs)
 
@@ -266,8 +266,8 @@ class KNN(W):
 
         See Also
         --------
-        :class: `pysal.lib.weights.KNN`
-        :class:`pysal.lib.weights.W`
+        :class: `pysalnext.lib.weights.KNN`
+        :class:`pysalnext.lib.weights.W`
         """
         pts = get_points_array(df[geom_col])
         if ids is None:
@@ -540,8 +540,8 @@ class Kernel(W):
 
         See Also
         ---------
-        :class:`pysal.lib.weights.Kernel`
-        :class:`pysal.lib.weights.W`
+        :class:`pysalnext.lib.weights.Kernel`
+        :class:`pysalnext.lib.weights.W`
         """
         points = get_points_array_from_shapefile(filepath)
         if idVariable is not None:
@@ -554,12 +554,12 @@ class Kernel(W):
     def from_array(cls, array, **kwargs):
         """
         Construct a Kernel weights from an array. Supports all the same options
-        as :class:`pysal.lib.weights.Kernel`
+        as :class:`pysalnext.lib.weights.Kernel`
 
         See Also
         --------
-        :class:`pysal.lib.weights.Kernel`
-        :class:`pysal.lib.weights.W`
+        :class:`pysalnext.lib.weights.Kernel`
+        :class:`pysalnext.lib.weights.W`
         """
         return cls(array, **kwargs)
 
@@ -582,8 +582,8 @@ class Kernel(W):
 
         See Also
         --------
-        :class:`pysal.lib.weights.Kernel`
-        :class:`pysal.lib.weights.W`
+        :class:`pysalnext.lib.weights.Kernel`
+        :class:`pysalnext.lib.weights.W`
         """
         pts = get_points_array(df[geom_col])
         if ids is None:
@@ -695,7 +695,7 @@ class DistanceBand(W):
                   dending on the sparsity of the of distance_matrix and
                   threshold that is applied
     silent      : boolean
-                  By default pysal.lib will print a warning if the
+                  By default pysalnext.lib will print a warning if the
                   dataset contains any disconnected observations or
                   islands. To silence this warning set this
                   parameter to True.
@@ -710,8 +710,8 @@ class DistanceBand(W):
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
-    >>> import pysal.lib
+    >>> import pysalnext.lib.api as ps
+    >>> import pysalnext.lib
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
     >>> wcheck = ps.W({0: [1, 3], 1: [0, 3], 2: [], 3: [0, 1], 4: [5], 5: [4]})
 
@@ -721,11 +721,11 @@ class DistanceBand(W):
 
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
-    >>> pysal.lib.weights.util.neighbor_equality(w, wcheck)
+    >>> pysalnext.lib.weights.util.neighbor_equality(w, wcheck)
     True
     >>> w=ps.DistanceBand(points,threshold=14.2)
     >>> wcheck = ps.W({0: [1, 3], 1: [0, 3, 4], 2: [4], 3: [1, 0], 4: [5, 2, 1], 5: [4]})
-    >>> pysal.lib.weights.util.neighbor_equality(w, wcheck)
+    >>> pysalnext.lib.weights.util.neighbor_equality(w, wcheck)
     True
 
 
@@ -763,7 +763,7 @@ class DistanceBand(W):
     def __init__(self, data, threshold, p=2, alpha=-1.0, binary=True, ids=None,
             build_sp=True, silent=False):
         """Casting to floats is a work around for a bug in scipy.spatial.
-        See detail in pysal issue #126.
+        See detail in pysalnext issue #126.
 
         """
         if ids is not None:
@@ -813,8 +813,8 @@ class DistanceBand(W):
 
         See Also
         ---------
-        :class: `pysal.lib.weights.DistanceBand`
-        :class: `pysal.lib.weights.W`
+        :class: `pysalnext.lib.weights.DistanceBand`
+        :class: `pysalnext.lib.weights.W`
         """
         points = get_points_array_from_shapefile(filepath)
         if idVariable is not None:
@@ -827,12 +827,12 @@ class DistanceBand(W):
     def from_array(cls, array, threshold, **kwargs):
         """
         Construct a DistanceBand weights from an array. Supports all the same options
-        as :class:`pysal.lib.weights.DistanceBand`
+        as :class:`pysalnext.lib.weights.DistanceBand`
 
         See Also
         --------
-        :class:`pysal.lib.weights.DistanceBand`
-        :class:`pysal.lib.weights.W`
+        :class:`pysalnext.lib.weights.DistanceBand`
+        :class:`pysalnext.lib.weights.W`
         """
         return cls(array, threshold, **kwargs)
     
@@ -855,8 +855,8 @@ class DistanceBand(W):
 
         See Also
         --------
-        :class:`pysal.lib.weights.DistanceBand`
-        :class:`pysal.lib.weights.W`
+        :class:`pysalnext.lib.weights.DistanceBand`
+        :class:`pysalnext.lib.weights.W`
         """
         pts = get_points_array(df[geom_col])
         if ids is None:

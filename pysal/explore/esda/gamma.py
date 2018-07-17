@@ -6,7 +6,7 @@ Gamma index for spatial autocorrelation
 __author__ = "Luc Anselin <luc.anselin@asu.edu> Serge Rey <sjsrey@gmail.com>"
 
 import numpy as np
-from pysal.lib.weights.spatial_lag import lag_spatial
+from pysalnext.lib.weights.spatial_lag import lag_spatial
 from .tabular import _univariate_handler
 
 __all__ = ['Gamma']
@@ -75,8 +75,8 @@ class Gamma(object):
 
     use same example as for join counts to show similarity
 
-    >>> import pysal.lib.api as lps, numpy as np
-    >>> from pysal.explore.esda.gamma import Gamma
+    >>> import pysalnext.lib.api as lps, numpy as np
+    >>> from pysalnext.explore.esda.gamma import Gamma
     >>> w = lps.lat2W(4,4)
     >>> y=np.ones(16)
     >>> y[0:8]=0

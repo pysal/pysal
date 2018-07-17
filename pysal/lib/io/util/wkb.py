@@ -1,7 +1,7 @@
 """
-Load WKB into pysal shapes.
+Load WKB into pysalnext shapes.
 
-Where pysal shapes support multiple parts, 
+Where pysalnext shapes support multiple parts, 
 "MULTI"type shapes will be converted to a single multi-part shape:
     MULTIPOLYGON -> Polygon
     MULTILINESTRING -> Chain
@@ -9,11 +9,11 @@ Where pysal shapes support multiple parts,
 Otherwise a list of shapes will be returned:
     MULTIPOINT -> [pt0, ..., ptN]
 
-Some concepts aren't well supported by pysal shapes.
+Some concepts aren't well supported by pysalnext shapes.
 For example:
     wkt = 'MULTIPOLYGON EMPTY' -> '\x01   \x06\x00\x00\x00   \x00\x00\x00\x00'
                                   |  <  | WKBMultiPolygon |    0 parts      |
-    pysal.cg.Polygon does not support 0 part polygons.
+    pysalnext.cg.Polygon does not support 0 part polygons.
     None is returned in this case.
 
 REFERENCE MATERIAL:
@@ -29,7 +29,7 @@ SOURCE: http://webhelp.esri.com/arcgisserver/9.3/dotNet/index.htm#geodatabases/t
 
 """
 from cStringIO import StringIO
-from pysal import cg
+from pysalnext import cg
 import sys
 import array
 import struct
@@ -163,7 +163,7 @@ def loads(s):
         polys = [loads(dat) for _ in range(npolys)]
         parts = sum([p.parts for p in polys], [])
         holes = sum([p.holes for p in polys if p.holes[0]], [])
-        # MULTIPOLYGON EMPTY, isn't well supported by pysal shape types.
+        # MULTIPOLYGON EMPTY, isn't well supported by pysalnext shape types.
         if not parts:
             return None
         return cg.Polygon(parts, holes)
@@ -201,7 +201,7 @@ if __name__ == '__main__':
     # shapely only used for testing.
     try:
         import shapely.wkt, shapely.geometry
-        from pysal.contrib.shapely_ext import to_wkb
+        from pysalnext.contrib.shapely_ext import to_wkb
     except ImportError:
         print("shapely is used to test this module.")
         raise

@@ -1,11 +1,11 @@
 import numpy as np
-from pysal.model.spreg.utils import sphstack
-from pysal.model.spreg.diagnostics import constant_check
+from pysalnext.model.spreg.utils import sphstack
+from pysalnext.model.spreg.diagnostics import constant_check
 from warnings import warn as Warn
 
 def weights(W,M, transform):
     """
-    This tries to transform a pysal spatial weights object into being
+    This tries to transform a pysalnext spatial weights object into being
     row-standardized. It warns if the objects do not support transformation.
 
     """

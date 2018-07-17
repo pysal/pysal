@@ -34,7 +34,7 @@ returns a series.
 See Also
 ---------
 For further documentation about the attributes of the object in question, refer
-to shape classes in pysal.cg.shapes
+to shape classes in pysalnext.cg.shapes
 """
 
 _accessors = dict()

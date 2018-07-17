@@ -211,9 +211,9 @@ class SUR(BaseSUR):
         Examples
         --------
 
-        First import pysal.lib.api as lps to load the spatial analysis tools.
+        First import pysalnext.lib.api as lps to load the spatial analysis tools.
 
-        >>> import pysal.lib.api as lps
+        >>> import pysalnext.lib.api as lps
 
         Open data on NCOVR US County Homicides (3085 areas) using lps.open().
         This is the DBF associated with the NAT shapefile. Note that lps.open()
@@ -244,7 +244,7 @@ class SUR(BaseSUR):
         (bigXvars). All these will be created from th database (db) and lists
         of variables (y_var and x_var) created above.
 
-        >>> bigy,bigX,bigyvars,bigXvars = pysal.model.spreg.sur_utils.sur_dictxy(db,y_var,x_var)
+        >>> bigy,bigX,bigyvars,bigXvars = pysalnext.model.spreg.sur_utils.sur_dictxy(db,y_var,x_var)
 
         We can now run the regression and then have a summary of the output by typing:
         'print(reg.summary)'
@@ -542,9 +542,9 @@ class ThreeSLS(BaseThreeSLS):
         Examples
         --------
 
-        First import pysal.lib.api as lps to load the spatial analysis tools.
+        First import pysalnext.lib.api as lps to load the spatial analysis tools.
 
-        >>> import pysal.lib.api as lps
+        >>> import pysalnext.lib.api as lps
 
         Open data on NCOVR US County Homicides (3085 areas) using lps.open().
         This is the DBF associated with the NAT shapefile. Note that lps.open()
@@ -571,9 +571,9 @@ class ThreeSLS(BaseThreeSLS):
         dictionaries for Y and X, and sur_dictZ for endogenous variables (yend) and
         additional instruments (q).
 
-        >>> bigy,bigX,bigyvars,bigXvars = pysal.model.spreg.sur_utils.sur_dictxy(db,y_var,x_var)
-        >>> bigyend,bigyendvars = pysal.model.spreg.sur_utils.sur_dictZ(db,yend_var)
-        >>> bigq,bigqvars = pysal.model.spreg.sur_utils.sur_dictZ(db,q_var)
+        >>> bigy,bigX,bigyvars,bigXvars = pysalnext.model.spreg.sur_utils.sur_dictxy(db,y_var,x_var)
+        >>> bigyend,bigyendvars = pysalnext.model.spreg.sur_utils.sur_dictZ(db,yend_var)
+        >>> bigq,bigqvars = pysalnext.model.spreg.sur_utils.sur_dictZ(db,q_var)
 
         We can now run the regression and then have a summary of the output by typing:
         print(reg.summary)
@@ -669,7 +669,7 @@ def _test():
 if __name__ == '__main__':
     _test()
     import numpy as np
-    import pysal.lib.api as lps
+    import pysalnext.lib.api as lps
     from .sur_utils import sur_dictxy,sur_dictZ
 
     db = lps.open(lps.get_path('NAT.dbf'), 'r')

@@ -1,13 +1,13 @@
 '''
-Unittests for pysal.model.spreg.error_sp_hom module
+Unittests for pysalnext.model.spreg.error_sp_hom module
 
 '''
 import unittest
-import pysal.lib.api as lps
-from pysal.model.spreg import error_sp_hom as HOM
+import pysalnext.lib.api as lps
+from pysalnext.model.spreg import error_sp_hom as HOM
 import numpy as np
-from pysal.lib.common import RTOL
-import pysal.model.spreg
+from pysalnext.lib.common import RTOL
+import pysalnext.model.spreg
 
 class BaseGM_Error_Hom_Tester(unittest.TestCase):
     def setUp(self):
@@ -212,7 +212,7 @@ class BaseGM_Combo_Hom_Tester(unittest.TestCase):
         self.w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
         self.w.transform = 'r'
     def test_model(self):
-        yd2, q2 = pysal.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 1, True)
+        yd2, q2 = pysalnext.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 1, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         reg = HOM.BaseGM_Combo_Hom(self.y, self.X, yend=yd2, q=q2, w=self.w.sparse, A1='hom_sc')
         np.testing.assert_allclose(reg.y[0],np.array([80.467003]),RTOL)

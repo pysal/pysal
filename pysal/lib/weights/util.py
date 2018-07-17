@@ -60,7 +60,7 @@ def hexLat2W(nrows=5, ncols=5):
     Examples
     --------
 
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> w = ps.lat2W()
     >>> w.neighbors[1]
     [0, 6, 2]
@@ -150,7 +150,7 @@ def lat2W(nrows=5, ncols=5, rook=True, id_type='int'):
     Examples
     --------
 
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> w9 = ps.lat2W(3,3)
     >>> "%.3f"%w9.pct_nonzero
     '29.630'
@@ -233,7 +233,7 @@ def regime_weights(regimes):
     Examples
     --------
 
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> import numpy as np
     >>> regimes = np.ones(25)
     >>> regimes[range(10,20)] = 2
@@ -293,7 +293,7 @@ def block_weights(regimes, ids=None, sparse=False):
     Examples
     --------
 
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> import numpy as np
     >>> regimes = np.ones(25)
     >>> regimes[range(10,20)] = 2
@@ -400,9 +400,9 @@ def order(w, kmax=3):
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
-    >>> import pysal.lib
-    >>> w = ps.rook_from_shapefile(pysal.lib.examples.get_path('10740.shp'))
+    >>> import pysalnext.lib.api as ps
+    >>> import pysalnext.lib
+    >>> w = ps.rook_from_shapefile(pysalnext.lib.examples.get_path('10740.shp'))
 
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [163]
@@ -462,7 +462,7 @@ def higher_order(w, k=2):
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> w10 = ps.lat2W(10, 10)
     >>> w10_2 = ps.higher_order(w10, 2)
     >>> w10_2[0] ==  {2: 1.0, 11: 1.0, 20: 1.0}
@@ -514,23 +514,23 @@ def higher_order_sp(w, k=2, shortest_path=True, diagonal=False):
     Examples
     --------
 
-    >>> import pysal.lib.api as ps
-    >>> import pysal.lib
+    >>> import pysalnext.lib.api as ps
+    >>> import pysalnext.lib
     >>> w25 = ps.lat2W(5,5)
     >>> w25.n
     25
     >>> w25[0] == {1: 1.0, 5: 1.0}
     True
-    >>> w25_2 = pysal.lib.weights.util.higher_order_sp(w25, 2)
+    >>> w25_2 = pysalnext.lib.weights.util.higher_order_sp(w25, 2)
     >>> w25_2[0] == {10: 1.0, 2: 1.0, 6: 1.0}
     True
-    >>> w25_2 = pysal.lib.weights.util.higher_order_sp(w25, 2, diagonal=True)
+    >>> w25_2 = pysalnext.lib.weights.util.higher_order_sp(w25, 2, diagonal=True)
     >>> w25_2[0] ==  {0: 1.0, 10: 1.0, 2: 1.0, 6: 1.0}
     True
-    >>> w25_3 = pysal.lib.weights.util.higher_order_sp(w25, 3)
+    >>> w25_3 = pysalnext.lib.weights.util.higher_order_sp(w25, 3)
     >>> w25_3[0] == {15: 1.0, 3: 1.0, 11: 1.0, 7: 1.0}
     True
-    >>> w25_3 = pysal.lib.weights.util.higher_order_sp(w25, 3, shortest_path=False)
+    >>> w25_3 = pysalnext.lib.weights.util.higher_order_sp(w25, 3, shortest_path=False)
     >>> w25_3[0] == {1: 1.0, 3: 1.0, 5: 1.0, 7: 1.0, 11: 1.0, 15: 1.0}
     True
 
@@ -615,7 +615,7 @@ def w_local_cluster(w):
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> w = ps.lat2W(3,3, rook=False)
     >>> w_local_cluster(w) 
     array([[1.        ],
@@ -660,7 +660,7 @@ def shimbel(w):
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> w5 = ps.lat2W()
     >>> w5_shimbel = ps.shimbel(w5)
     >>> w5_shimbel[0][24]
@@ -713,7 +713,7 @@ def full(w):
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> neighbors = {'first':['second'],'second':['first','third'],'third':['second']}
     >>> weights = {'first':[1],'second':[1,1],'third':[1]}
     >>> w = ps.W(neighbors, weights)
@@ -746,7 +746,7 @@ def full2W(m, ids=None):
 
     Examples
     --------
-    >>> import pysal.lib
+    >>> import pysalnext.lib
     >>> import numpy as np
 
     Create an array of zeros
@@ -762,7 +762,7 @@ def full2W(m, ids=None):
 
     Create W object
 
-    >>> w = pysal.lib.weights.util.full2W(a)
+    >>> w = pysalnext.lib.weights.util.full2W(a)
     >>> w.full()[0] == a
     array([[ True,  True,  True,  True],
            [ True,  True,  True,  True],
@@ -772,7 +772,7 @@ def full2W(m, ids=None):
     Create list of user ids
 
     >>> ids = ['myID0', 'myID1', 'myID2', 'myID3']
-    >>> w = pysal.lib.weights.util.full2W(a, ids=ids)
+    >>> w = pysalnext.lib.weights.util.full2W(a, ids=ids)
     >>> w.full()[0] == a
     array([[ True,  True,  True,  True],
            [ True,  True,  True,  True],
@@ -799,7 +799,7 @@ def full2W(m, ids=None):
 def WSP2W(wsp, silence_warnings=False):
 
     """
-    Convert a pysal WSP object (thin weights matrix) to a pysal W object.
+    Convert a pysalnext WSP object (thin weights matrix) to a pysalnext W object.
 
     Parameters
     ----------
@@ -816,7 +816,7 @@ def WSP2W(wsp, silence_warnings=False):
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
 
     Build a 10x10 scipy.sparse matrix for a rectangular 2x5 region of cells
     (rook contiguity), then construct a PySAL sparse weights object (wsp).
@@ -894,7 +894,7 @@ def fill_diagonal(w, val=1.0, wsp=False):
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> import numpy as np
 
     Build a basic rook weights matrix, which has zeros on the diagonal, then
@@ -959,7 +959,7 @@ def remap_ids(w, old2new, id_order=[]):
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> w = ps.lat2W(3,2)
     >>> w.id_order
     [0, 1, 2, 3, 4, 5]
@@ -1011,9 +1011,9 @@ def get_ids(shapefile, idVariable):
 
     Examples
     --------
-    >>> from pysal.lib.weights.util import get_ids
-    >>> import pysal.lib
-    >>> polyids = get_ids(pysal.lib.examples.get_path("columbus.shp"), "POLYID")
+    >>> from pysalnext.lib.weights.util import get_ids
+    >>> import pysalnext.lib
+    >>> polyids = get_ids(pysalnext.lib.examples.get_path("columbus.shp"), "POLYID")
     >>> polyids[:5]
     [1, 2, 3, 4, 5]
     """
@@ -1084,9 +1084,9 @@ def get_points_array_from_shapefile(shapefile):
     --------
     Point shapefile
 
-    >>> import pysal.lib
-    >>> from pysal.lib.weights.util import get_points_array_from_shapefile
-    >>> xy = get_points_array_from_shapefile(pysal.lib.examples.get_path('juvenile.shp'))
+    >>> import pysalnext.lib
+    >>> from pysalnext.lib.weights.util import get_points_array_from_shapefile
+    >>> xy = get_points_array_from_shapefile(pysalnext.lib.examples.get_path('juvenile.shp'))
     >>> xy[:3] 
     array([[94., 93.],
            [80., 95.],
@@ -1095,7 +1095,7 @@ def get_points_array_from_shapefile(shapefile):
 
     Polygon shapefile
 
-    >>> xy = get_points_array_from_shapefile(pysal.lib.examples.get_path('columbus.shp'))
+    >>> xy = get_points_array_from_shapefile(pysalnext.lib.examples.get_path('columbus.shp'))
     >>> xy[:3]
     array([[ 8.82721847, 14.36907602],
            [ 8.33265837, 14.03162401],
@@ -1130,7 +1130,7 @@ def min_threshold_distance(data, p=2):
 
     Examples
     --------
-    >>> from pysal.lib.weights.util import min_threshold_distance
+    >>> from pysalnext.lib.weights.util import min_threshold_distance
     >>> import numpy as np
     >>> x, y = np.indices((5, 5))
     >>> x.shape = (25, 1)
@@ -1182,7 +1182,7 @@ def lat2SW(nrows=3, ncols=5, criterion="rook", row_st=False):
     Examples
     --------
 
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> w9 = ps.lat2SW(3,3)
     >>> w9[0,1]
     1
@@ -1266,8 +1266,8 @@ def neighbor_equality(w1, w2):
 
     Examples
     --------
-    >>> from pysal.lib.weights.util import neighbor_equality
-    >>> import pysal.lib.api as ps
+    >>> from pysalnext.lib.weights.util import neighbor_equality
+    >>> import pysalnext.lib.api as ps
     >>> w1 = ps.lat2W(3,3)
     >>> w2 = ps.lat2W(3,3)
     >>> neighbor_equality(w1, w2)
@@ -1315,24 +1315,24 @@ def attach_islands(w, w_knn1):
     Parameters
     ----------
 
-    w            : pysal.lib.weights.W
-                   pysal spatial weight object (unstandardized).
-    w_knn1       : pysal.lib.weights.W
-                   Nearest neighbor pysal spatial weight object (k=1).
+    w            : pysalnext.lib.weights.W
+                   pysalnext spatial weight object (unstandardized).
+    w_knn1       : pysalnext.lib.weights.W
+                   Nearest neighbor pysalnext spatial weight object (k=1).
 
     Returns
     -------
-                 : pysal.lib.weights.W
-                   pysal spatial weight object w without islands.
+                 : pysalnext.lib.weights.W
+                   pysalnext spatial weight object w without islands.
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
-    >>> import pysal.lib
-    >>> w = ps.rook_from_shapefile(pysal.lib.examples.get_path('10740.shp'))
+    >>> import pysalnext.lib.api as ps
+    >>> import pysalnext.lib
+    >>> w = ps.rook_from_shapefile(pysalnext.lib.examples.get_path('10740.shp'))
     >>> w.islands
     [163]
-    >>> w_knn1 = ps.knnW_from_shapefile(pysal.lib.examples.get_path('10740.shp'),k=1)
+    >>> w_knn1 = ps.knnW_from_shapefile(pysalnext.lib.examples.get_path('10740.shp'),k=1)
     >>> w_attach = attach_islands(w, w_knn1)
     >>> w_attach.islands
     []
@@ -1364,7 +1364,7 @@ def nonplanar_neighbors(w, geodataframe, tolerance=0.001):
     Parameters
     ----------
 
-    w:   pysal W
+    w:   pysalnext W
          A spatial weights object with reported islands
 
 
@@ -1385,7 +1385,7 @@ def nonplanar_neighbors(w, geodataframe, tolerance=0.001):
     Returns
     -------
 
-    w: pysal W
+    w: pysalnext W
        Spatial weights object that encodes fuzzy neighbors.
        This will have an attribute `non_planar_joins` to indicate what new joins were detected.
 
@@ -1409,13 +1409,13 @@ def nonplanar_neighbors(w, geodataframe, tolerance=0.001):
     --------
 
     >>> import geopandas as gpd
-    >>> import pysal.lib.api as lp
+    >>> import pysalnext.lib.api as lp
     >>> df = gpd.read_file(lp.get_path('map_RS_BR.shp'))
     >>> w = lp.Queen.from_dataframe(df)
-    >>> import pysal.lib
+    >>> import pysalnext.lib
     >>> w.islands
     [0, 4, 23, 27, 80, 94, 101, 107, 109, 119, 122, 139, 169, 175, 223, 239, 247, 253, 254, 255, 256, 261, 276, 291, 294, 303, 321, 357, 374]
-    >>> wnp = pysal.lib.weights.util.nonplanar_neighbors(w, df)
+    >>> wnp = pysalnext.lib.weights.util.nonplanar_neighbors(w, df)
     >>> wnp.islands
     []
     >>> w.neighbors[0]
@@ -1504,7 +1504,7 @@ def fuzzy_contiguity(gdf, tolerance=0.005, buffering=False, drop=True):
     Examples
     --------
 
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> import geopandas as gpd
     >>> rs = lps.get_path('map_RS_BR.shp')
     >>> rs_df = gpd.read_file(rs)
@@ -1521,7 +1521,7 @@ def fuzzy_contiguity(gdf, tolerance=0.005, buffering=False, drop=True):
 
     Example needing to use buffering
 
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> import geopandas as gpd
     >>> from shapely.geometry import Polygon
     >>> p0 = Polygon([(0,0), (10,0), (10,10)])
@@ -1596,7 +1596,7 @@ def fuzzy_contiguity(gdf, tolerance=0.005, buffering=False, drop=True):
 
 if __name__ == "__main__":
 
-    from pysal import lat2W
+    from pysalnext import lat2W
     assert (lat2W(5, 5).sparse.todense() == lat2SW(5, 5).todense()).all()
     assert (lat2W(5, 3).sparse.todense() == lat2SW(5, 3).todense()).all()
     assert (lat2W(5, 3, rook=False).sparse.todense() == lat2SW(5, 3,

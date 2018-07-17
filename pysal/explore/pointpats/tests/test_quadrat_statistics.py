@@ -4,7 +4,7 @@ import numpy as np
 from ..quadrat_statistics import *
 from ..pointpattern import PointPattern
 
-from pysal.lib.common import RTOL, ATOL
+from pysalnext.lib.common import RTOL, ATOL
 
 
 class TestQuadratStatistics(unittest.TestCase):

@@ -72,7 +72,7 @@ class NP_Mixture_Smoother(object):
     importing numpy, and NP_Mixture_Smoother
 
     >>> import numpy as np
-    >>> from pysal.explore.esda.mixture_smoothing import NP_Mixture_Smoother
+    >>> from pysalnext.explore.esda.mixture_smoothing import NP_Mixture_Smoother
 
     creating an arrary including event values
 

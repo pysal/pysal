@@ -1,6 +1,6 @@
 import unittest
-import pysal.lib as pysal
-from pysal.lib.common import pandas, RTOL, ATOL
+import pysalnext.lib as pysalnext
+from pysalnext.lib.common import pandas, RTOL, ATOL
 from .. import moran
 import numpy as np
 
@@ -9,8 +9,8 @@ PANDAS_EXTINCT = pandas is None
 
 class Moran_Tester(unittest.TestCase):
     def setUp(self):
-        self.w = pysal.open(pysal.examples.get_path("stl.gal")).read()
-        f = pysal.open(pysal.examples.get_path("stl_hom.txt"))
+        self.w = pysalnext.open(pysalnext.examples.get_path("stl.gal")).read()
+        f = pysalnext.open(pysalnext.examples.get_path("stl_hom.txt"))
         self.y = np.array(f.by_col['HR8893'])
 
     def test_moran(self):
@@ -19,8 +19,8 @@ class Moran_Tester(unittest.TestCase):
         self.assertAlmostEqual(mi.p_norm, 0.00013573931385468807)
 
     def test_sids(self):
-        w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
-        f = pysal.open(pysal.examples.get_path("sids2.dbf"))
+        w = pysalnext.open(pysalnext.examples.get_path("sids2.gal")).read()
+        f = pysalnext.open(pysalnext.examples.get_path("sids2.dbf"))
         SIDR = np.array(f.by_col("SIDR74"))
         mi = moran.Moran(SIDR, w, two_tailed=False)
         np.testing.assert_allclose(mi.I, 0.24772519320480135, atol=ATOL, rtol=RTOL)
@@ -28,7 +28,7 @@ class Moran_Tester(unittest.TestCase):
 
     def test_variance(self):
         y = np.arange(1, 10)
-        w = pysal.weights.util.lat2W(3, 3)
+        w = pysalnext.weights.util.lat2W(3, 3)
         mi = moran.Moran(y, w, transformation='B')
         np.testing.assert_allclose(mi.VI_rand, 0.059687500000000004, atol=ATOL, rtol=RTOL)
         np.testing.assert_allclose(mi.VI_norm, 0.053125000000000006, atol=ATOL, rtol=RTOL)
@@ -36,9 +36,9 @@ class Moran_Tester(unittest.TestCase):
 
     @unittest.skipIf(PANDAS_EXTINCT, 'missing pandas')
     def test_by_col(self):
-        from pysal.lib.io import geotable as pdio
-        df = pdio.read_files(pysal.examples.get_path('sids2.dbf'))
-        w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
+        from pysalnext.lib.io import geotable as pdio
+        df = pdio.read_files(pysalnext.examples.get_path('sids2.dbf'))
+        w = pysalnext.open(pysalnext.examples.get_path("sids2.gal")).read()
         mi = moran.Moran.by_col(df, ['SIDR74'], w=w, two_tailed=False)
         sidr = np.unique(mi.SIDR74_moran.values)
         pval = np.unique(mi.SIDR74_p_sim.values)
@@ -48,8 +48,8 @@ class Moran_Tester(unittest.TestCase):
 
 class Moran_Rate_Tester(unittest.TestCase):
     def setUp(self):
-        self.w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
-        f = pysal.open(pysal.examples.get_path("sids2.dbf"))
+        self.w = pysalnext.open(pysalnext.examples.get_path("sids2.gal")).read()
+        f = pysalnext.open(pysalnext.examples.get_path("sids2.dbf"))
         self.e = np.array(f.by_col['SID79'])
         self.b = np.array(f.by_col['BIR79'])
 
@@ -60,8 +60,8 @@ class Moran_Rate_Tester(unittest.TestCase):
 
     @unittest.skipIf(PANDAS_EXTINCT, 'missing pandas')
     def test_by_col(self):
-        from pysal.lib.io import geotable as pdio
-        df = pdio.read_files(pysal.examples.get_path('sids2.dbf'))
+        from pysalnext.lib.io import geotable as pdio
+        df = pdio.read_files(pysalnext.examples.get_path('sids2.dbf'))
         mi = moran.Moran_Rate.by_col(df, ['SID79'], ['BIR79'], w=self.w, two_tailed=False)
         sidr = np.unique(mi["SID79-BIR79_moran_rate"].values)
         pval = np.unique(mi["SID79-BIR79_p_sim"].values)
@@ -72,12 +72,12 @@ class Moran_Rate_Tester(unittest.TestCase):
 
 class Moran_BV_matrix_Tester(unittest.TestCase):
     def setUp(self):
-        f = pysal.open(pysal.examples.get_path("sids2.dbf"))
+        f = pysalnext.open(pysalnext.examples.get_path("sids2.dbf"))
         varnames = ['SIDR74', 'SIDR79', 'NWR74', 'NWR79']
         self.names = varnames
         vars = [np.array(f.by_col[var]) for var in varnames]
         self.vars = vars
-        self.w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
+        self.w = pysalnext.open(pysalnext.examples.get_path("sids2.gal")).read()
 
     def test_Moran_BV_matrix(self):
         res = moran.Moran_BV_matrix(self.vars, self.w, varnames=self.names)
@@ -87,8 +87,8 @@ class Moran_BV_matrix_Tester(unittest.TestCase):
 class Moran_Local_Tester(unittest.TestCase):
     def setUp(self):
         np.random.seed(10)
-        self.w = pysal.open(pysal.examples.get_path("desmith.gal")).read()
-        f = pysal.open(pysal.examples.get_path("desmith.txt"))
+        self.w = pysalnext.open(pysalnext.examples.get_path("desmith.gal")).read()
+        f = pysalnext.open(pysalnext.examples.get_path("desmith.txt"))
         self.y = np.array(f.by_col['z'])
 
     def test_Moran_Local(self):
@@ -110,8 +110,8 @@ class Moran_Local_Tester(unittest.TestCase):
 class Moran_Local_BV_Tester(unittest.TestCase):
     def setUp(self):
         np.random.seed(10)
-        self.w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
-        f = pysal.open(pysal.examples.get_path("sids2.dbf"))
+        self.w = pysalnext.open(pysalnext.examples.get_path("sids2.gal")).read()
+        f = pysalnext.open(pysalnext.examples.get_path("sids2.dbf"))
         self.x = np.array(f.by_col['SIDR79'])
         self.y = np.array(f.by_col['SIDR74'])
 
@@ -124,8 +124,8 @@ class Moran_Local_BV_Tester(unittest.TestCase):
 
     @unittest.skipIf(PANDAS_EXTINCT, 'missing pandas')
     def test_by_col(self):
-        from pysal.lib.io import geotable as pdio
-        df = pdio.read_files(pysal.examples.get_path('sids2.dbf'))
+        from pysalnext.lib.io import geotable as pdio
+        df = pdio.read_files(pysalnext.examples.get_path('sids2.dbf'))
         np.random.seed(12345)
         moran.Moran_Local_BV.by_col(df, ['SIDR74', 'SIDR79'], w=self.w,
                                     inplace=True, outvals=['z_sim', 'p_z_sim'],
@@ -141,8 +141,8 @@ class Moran_Local_BV_Tester(unittest.TestCase):
 class Moran_Local_Rate_Tester(unittest.TestCase):
     def setUp(self):
         np.random.seed(10)
-        self.w = pysal.open(pysal.examples.get_path("sids2.gal")).read()
-        f = pysal.open(pysal.examples.get_path("sids2.dbf"))
+        self.w = pysalnext.open(pysalnext.examples.get_path("sids2.gal")).read()
+        f = pysalnext.open(pysalnext.examples.get_path("sids2.dbf"))
         self.e = np.array(f.by_col['SID79'])
         self.b = np.array(f.by_col['BIR79'])
 
@@ -154,8 +154,8 @@ class Moran_Local_Rate_Tester(unittest.TestCase):
 
     @unittest.skipIf(PANDAS_EXTINCT, 'missing pandas')
     def test_by_col(self):
-        from pysal.lib.io import geotable as pdio
-        df = pdio.read_files(pysal.examples.get_path('sids2.dbf'))
+        from pysalnext.lib.io import geotable as pdio
+        df = pdio.read_files(pysalnext.examples.get_path('sids2.dbf'))
         lm = moran.Moran_Local_Rate.by_col(df, ['SID79'], ['BIR79'], w=self.w,
                                            outvals=['p_z_sim', 'z_sim'],
                                            transformation='r', permutations=99)

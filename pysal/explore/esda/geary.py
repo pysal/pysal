@@ -5,7 +5,7 @@ __author__ = "Serge Rey <sjsrey@gmail.com> "
 
 import numpy as np
 import scipy.stats as stats
-from pysal.lib import weights
+from pysalnext.lib import weights
 from .tabular import _univariate_handler
 
 __all__ = ['Geary']
@@ -80,8 +80,8 @@ class Geary(object):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
-    >>> from pysal.explore.esda.geary import Geary
+    >>> import pysalnext.lib.api as lps
+    >>> from pysalnext.explore.esda.geary import Geary
     >>> w = lps.open(lps.get_path("book.gal")).read()
     >>> f = lps.open(lps.get_path("book.txt"))
     >>> y = np.array(f.by_col['y'])
@@ -94,7 +94,7 @@ class Geary(object):
     """
     def __init__(self, y, w, transformation="r", permutations=999):
         if not isinstance(w, weights.W):
-            raise TypeError('w must be a pysal weights object, got {}'
+            raise TypeError('w must be a pysalnext weights object, got {}'
                             ' instead'.format(type(w)))
         y = np.asarray(y).flatten()
         self.n = len(y)
@@ -139,7 +139,7 @@ class Geary(object):
 
     @property
     def _statistic(self):
-        """ a standardized accessor for pysal.explore.esda statistics"""
+        """ a standardized accessor for pysalnext.explore.esda statistics"""
         return self.C
 
     def __moments(self):
@@ -190,7 +190,7 @@ class Geary(object):
                         a pandas dataframe with a geometry column
         cols        :   string or list of string
                         name or list of names of columns to use to compute the statistic
-        w           :   pysal weights object
+        w           :   pysalnext weights object
                         a weights object aligned with the dataframe. If not provided, this
                         is searched for in the dataframe's metadata
         inplace     :   bool
@@ -215,7 +215,7 @@ class Geary(object):
 
         See Also
         ---------
-        For further documentation, refer to the Geary class in pysal.pysal.explore.esda
+        For further documentation, refer to the Geary class in pysalnext.pysalnext.explore.esda
         """
         return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
                                    outvals=outvals, stat=cls,

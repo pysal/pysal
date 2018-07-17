@@ -1,5 +1,5 @@
 import unittest
-from .... import examples as pysal_examples 
+from .... import examples as pysalnext_examples 
 from ..pyShpIO import PurePyShpWrapper
 import tempfile
 import os
@@ -7,7 +7,7 @@ import os
 
 class test_PurePyShpWrapper(unittest.TestCase):
     def setUp(self):
-        test_file = pysal_examples.get_path('10740.shp')
+        test_file = pysalnext_examples.get_path('10740.shp')
         self.test_file = test_file
         self.shpObj = PurePyShpWrapper(
             test_file, 'r')

@@ -1,9 +1,9 @@
 import unittest
-import pysal.lib as ps
+import pysalnext.lib as ps
 import numpy as np
-import pysal.viz.mapclassify.api as mc
-from pysal.dynamics.giddy.markov import Markov, kullback, prais
-from pysal.dynamics.giddy.markov import Spatial_Markov, LISA_Markov
+import pysalnext.viz.mapclassify.api as mc
+from pysalnext.dynamics.giddy.markov import Markov, kullback, prais
+from pysalnext.dynamics.giddy.markov import Spatial_Markov, LISA_Markov
 
 
 RTOL = 0.00001
@@ -92,7 +92,7 @@ class test_Spatial_Markov(unittest.TestCase):
 
 class test_chi2(unittest.TestCase):
     def test_chi2(self):
-        import pysal.lib as ps
+        import pysalnext.lib as ps
         f = ps.open(ps.examples.get_path('usjoin.csv'))
         pci = np.array([f.by_col[str(y)] for y in range(1929, 2010)])
         pci = pci.transpose()

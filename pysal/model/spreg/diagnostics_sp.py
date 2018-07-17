@@ -63,7 +63,7 @@ class LMtests:
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> from ols import OLS
 
     Open the csv file to access the data for analysis
@@ -97,7 +97,7 @@ class LMtests:
     presence of a spatial error model (simple and robust version) and joint presence
     of both a spatial lag as well as a spatial error model.
 
-    >>> lms = pysal.model.spreg.diagnostics_sp.LMtests(ols, w)
+    >>> lms = pysalnext.model.spreg.diagnostics_sp.LMtests(ols, w)
 
     LM error test:
 
@@ -173,7 +173,7 @@ class MoranRes:
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> from ols import OLS
 
     Open the csv file to access the data for analysis
@@ -205,7 +205,7 @@ class MoranRes:
     expectation and variance to account for the fact it comes from residuals
     instead of an independent variable
 
-    >>> m = pysal.model.spreg.diagnostics_sp.MoranRes(ols, w, z=True)
+    >>> m = pysalnext.model.spreg.diagnostics_sp.MoranRes(ols, w, z=True)
 
     Value of the Moran's I statistic:
 
@@ -284,12 +284,12 @@ class AKtest:
     --------
 
     We first need to import the needed modules. Numpy is needed to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis. The TSLS is required to run the model on
     which we will perform the tests.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> from twosls import TSLS
     >>> from twosls_sp import GM_Lag
 

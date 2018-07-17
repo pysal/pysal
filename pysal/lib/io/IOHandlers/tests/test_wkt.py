@@ -1,12 +1,12 @@
 import unittest
 from ..wkt import WKTReader
-from .... import examples as pysal_examples
+from .... import examples as pysalnext_examples
 
 
 
 class test_WKTReader(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = pysal_examples.get_path('stl_hom.wkt')
+        self.test_file = test_file = pysalnext_examples.get_path('stl_hom.wkt')
         self.obj = WKTReader(test_file, 'r')
 
     def test_close(self):

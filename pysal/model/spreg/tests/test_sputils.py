@@ -1,5 +1,5 @@
-import pysal.model.spreg as EC
-from pysal.model.spreg import sputils as spu
+import pysalnext.model.spreg as EC
+from pysalnext.model.spreg import sputils as spu
 from warnings import warn as Warn
 import unittest as ut
 import numpy as np

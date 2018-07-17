@@ -32,15 +32,15 @@ class DatIO(gwt.GwtIO):
 
     def _read(self):
         """Reads .dat file
-        Returns a pysal.weights.weights.W object
+        Returns a pysalnext.weights.weights.W object
 
         Examples
         --------
 
         Type 'dir(w)' at the interpreter to see what methods are supported.
-        Open .dat file and read it into a pysal weights object
+        Open .dat file and read it into a pysalnext weights object
 
-        >>> w = pysal.open(pysal.examples.get_path('wmat.dat'),'r').read()
+        >>> w = pysalnext.open(pysalnext.examples.get_path('wmat.dat'),'r').read()
 
         Get the number of observations from the header
 
@@ -84,8 +84,8 @@ class DatIO(gwt.GwtIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
-        >>> testfile = pysal.open(pysal.examples.get_path('wmat.dat'),'r')
+        >>> import tempfile, pysalnext, os
+        >>> testfile = pysalnext.open(pysalnext.examples.get_path('wmat.dat'),'r')
         >>> w = testfile.read()
 
         Create a temporary file for this example
@@ -102,7 +102,7 @@ class DatIO(gwt.GwtIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w')
+        >>> o = pysalnext.open(fname,'w')
 
         Write the Weights object into the open file
 
@@ -111,7 +111,7 @@ class DatIO(gwt.GwtIO):
 
         Read in the newly created dat file
 
-        >>> wnew =  pysal.open(fname,'r').read()
+        >>> wnew =  pysalnext.open(fname,'r').read()
 
         Compare values from old to new
 
@@ -126,6 +126,6 @@ class DatIO(gwt.GwtIO):
         if issubclass(type(obj), W):
             self._writelines(obj)
         else:
-            raise TypeError("Expected a pysal weights object, got: %s" % (
+            raise TypeError("Expected a pysalnext weights object, got: %s" % (
                 type(obj)))
 

@@ -9,9 +9,9 @@ except:
     import pickle
 import copy
 import numpy as np
-import pysal.lib as ps
-from pysal.lib.weights.util import get_ids
-from pysal.lib.weights._contW_lists import _get_verts
+import pysalnext.lib as ps
+from pysalnext.lib.weights.util import get_ids
+from pysalnext.lib.weights._contW_lists import _get_verts
 from .analysis import NetworkG, NetworkK, NetworkF
 from . import util
 
@@ -303,7 +303,7 @@ class Network:
 
         Next, a standard call ot Moran is made and the result placed into `res`
 
-        >>> res = ps.pysal.explore.esda.moran.Moran(y, w, permutations=99)
+        >>> res = ps.pysalnext.explore.esda.moran.Moran(y, w, permutations=99)
         """
 
         neighbors = {}

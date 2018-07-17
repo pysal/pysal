@@ -1,6 +1,6 @@
 import unittest
 from ...FileIO import FileIO as psopen
-from .... import examples as pysal_examples
+from .... import examples as pysalnext_examples
 from ..arcgis_dbf import ArcGISDbfIO
 import tempfile
 import os
@@ -9,7 +9,7 @@ import warnings
 
 class test_ArcGISDbfIO(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = pysal_examples.get_path('arcgis_ohio.dbf')
+        self.test_file = test_file = pysalnext_examples.get_path('arcgis_ohio.dbf')
         self.obj = ArcGISDbfIO(test_file, 'r')
 
     def test_close(self):
@@ -23,7 +23,7 @@ class test_ArcGISDbfIO(unittest.TestCase):
             w = self.obj.read()
             if len(warn) > 0:
                 assert issubclass(warn[0].category, RuntimeWarning)
-                assert "Missing Value Found, setting value to pysal.MISSINGVALUE" in str(warn[0].message)
+                assert "Missing Value Found, setting value to pysalnext.MISSINGVALUE" in str(warn[0].message)
         self.assertEqual(88, w.n)
         self.assertEqual(5.25, w.mean_neighbors)
         self.assertEqual([1.0, 1.0, 1.0, 1.0], list(w[1].values()))
@@ -40,9 +40,9 @@ class test_ArcGISDbfIO(unittest.TestCase):
             w = self.obj.read()
             if len(warn) > 0:
                 assert issubclass(warn[0].category, RuntimeWarning)
-                assert "Missing Value Found, setting value to pysal.MISSINGVALUE" in str(warn[0].message)
+                assert "Missing Value Found, setting value to pysalnext.MISSINGVALUE" in str(warn[0].message)
         f = tempfile.NamedTemporaryFile(
-            suffix='.dbf', dir=pysal_examples.get_path(''))
+            suffix='.dbf', dir=pysalnext_examples.get_path(''))
         fname = f.name
         f.close()
         o = psopen(fname, 'w', 'arcgis_dbf')

@@ -12,7 +12,7 @@ def shp2series(filepath):
 
 def series2shp(series, filepath):
     """
-    writes a series of pysal polygons to a file
+    writes a series of pysalnext polygons to a file
     """
     f = ps_open(filepath, 'w')
     for poly in series:

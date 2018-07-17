@@ -1,9 +1,9 @@
 import unittest
-import pysal.lib.api as lps
+import pysalnext.lib.api as lps
 import numpy as np
-from pysal.model.spreg import error_sp_hom_regimes as SP
-from pysal.model.spreg.error_sp_hom import GM_Error_Hom, GM_Endog_Error_Hom, GM_Combo_Hom
-from pysal.lib.common import RTOL
+from pysalnext.model.spreg import error_sp_hom_regimes as SP
+from pysalnext.model.spreg.error_sp_hom import GM_Error_Hom, GM_Endog_Error_Hom, GM_Combo_Hom
+from pysalnext.lib.common import RTOL
 
 class TestGM_Error_Hom_Regimes(unittest.TestCase):
     def setUp(self):

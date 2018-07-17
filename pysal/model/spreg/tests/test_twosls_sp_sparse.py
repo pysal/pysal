@@ -1,12 +1,12 @@
 import unittest
 import numpy as np
-import pysal.lib.api as lps
-import pysal.model.spreg.diagnostics as D
+import pysalnext.lib.api as lps
+import pysalnext.model.spreg.diagnostics as D
 from scipy import sparse as SP
-from pysal.model.spreg.twosls_sp import BaseGM_Lag, GM_Lag
-from pysal.lib.common import RTOL
-import pysal.model.spreg.utils
-import pysal.model.spreg
+from pysalnext.model.spreg.twosls_sp import BaseGM_Lag, GM_Lag
+from pysalnext.lib.common import RTOL
+import pysalnext.model.spreg.utils
+import pysalnext.model.spreg
 
 class TestBaseGMLag(unittest.TestCase):
     def setUp(self):
@@ -21,7 +21,7 @@ class TestBaseGMLag(unittest.TestCase):
         X.append(self.db.by_col("INC"))
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
-        yd2, q2 = pysal.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 2, True)
+        yd2, q2 = pysalnext.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 2, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         self.X = SP.csr_matrix(self.X)
         reg = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w, w_lags=2)
@@ -88,7 +88,7 @@ class TestBaseGMLag(unittest.TestCase):
         X.append(self.db.by_col("INC"))
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
-        yd2, q2 = pysal.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 2, True)
+        yd2, q2 = pysalnext.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 2, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         self.X = SP.csr_matrix(self.X)
         base_gm_lag = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w, w_lags=2, robust='white')
@@ -103,7 +103,7 @@ class TestBaseGMLag(unittest.TestCase):
         X.append(self.db.by_col("INC"))
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
-        yd2, q2 = pysal.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 2, True)
+        yd2, q2 = pysalnext.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 2, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         self.X = SP.csr_matrix(self.X)
         gwk = lps.kernelW_from_shapefile(lps.get_path('columbus.shp'),k=15,function='triangular', fixed=False)        
@@ -121,7 +121,7 @@ class TestBaseGMLag(unittest.TestCase):
         yd = np.reshape(yd, (49,1))
         q = np.array(self.db.by_col("DISCBD"))
         q = np.reshape(q, (49,1))
-        yd2, q2 = pysal.model.spreg.utils.set_endog(self.y, self.X, self.w, yd, q, 2, True)
+        yd2, q2 = pysalnext.model.spreg.utils.set_endog(self.y, self.X, self.w, yd, q, 2, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         self.X = SP.csr_matrix(self.X)
         reg = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w, w_lags=2)
@@ -136,7 +136,7 @@ class TestBaseGMLag(unittest.TestCase):
         X.append(self.db.by_col("INC"))
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
-        yd2, q2 = pysal.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 2, True)
+        yd2, q2 = pysalnext.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 2, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         self.X = SP.csr_matrix(self.X)
         reg = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w, w_lags=2, sig2n_k=True)
@@ -155,7 +155,7 @@ class TestBaseGMLag(unittest.TestCase):
         yd = np.reshape(yd, (49,1))
         q = np.array(self.db.by_col("DISCBD"))
         q = np.reshape(q, (49,1))
-        yd2, q2 = pysal.model.spreg.utils.set_endog(self.y, self.X, self.w, yd, q, 2, False)
+        yd2, q2 = pysalnext.model.spreg.utils.set_endog(self.y, self.X, self.w, yd, q, 2, False)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         self.X = SP.csr_matrix(self.X)
         reg = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w, w_lags=2, lag_q=False)

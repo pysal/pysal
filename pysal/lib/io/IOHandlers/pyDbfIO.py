@@ -34,8 +34,8 @@ class DBF(Tables.DataTable):
     Examples
     --------
 
-    >>> import pysal
-    >>> dbf = pysal.open(pysal.examples.get_path('juvenile.dbf'), 'r')
+    >>> import pysalnext
+    >>> dbf = pysalnext.open(pysalnext.examples.get_path('juvenile.dbf'), 'r')
     >>> dbf.header
     ['ID', 'X', 'Y']
     >>> dbf.field_spec
@@ -47,7 +47,7 @@ class DBF(Tables.DataTable):
 
     def __init__(self, *args, **kwargs):
         """
-        Initializes an instance of the pysal's DBF handler.
+        Initializes an instance of the pysalnext's DBF handler.
 
         Arguments:
         dataPath -- str -- Path to file, including file.
@@ -299,10 +299,10 @@ class DBF(Tables.DataTable):
             self.f.seek(POS)
 
 if __name__ == '__main__':
-    import pysal
-    file_name = pysal.examples.get_path("10740.dbf")
-    f = pysal.open(file_name, 'r')
-    newDB = pysal.open('copy.dbf', 'w')
+    import pysalnext
+    file_name = pysalnext.examples.get_path("10740.dbf")
+    f = pysalnext.open(file_name, 'r')
+    newDB = pysalnext.open('copy.dbf', 'w')
     newDB.header = f.header
     newDB.field_spec = f.field_spec
     print(f.header)
@@ -310,7 +310,7 @@ if __name__ == '__main__':
         print(row)
         newDB.write(row)
     newDB.close()
-    copy = pysal.open('copy.dbf', 'r')
+    copy = pysalnext.open('copy.dbf', 'r')
     f.seek(0)
     print("HEADER: ", copy.header == f.header)
     print("SPEC: ", copy.field_spec == f.field_spec)

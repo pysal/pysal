@@ -1,9 +1,9 @@
 import unittest as ut
 import numpy as np
-from pysal.model.spvcm.utils import south
-from pysal.model.spvcm.diagnostics import psrf, geweke, effective_size, hpd_interval, summarize, mcse
-from pysal.model.spvcm._constants import RTOL, ATOL, TEST_SEED
-from pysal.model.spvcm.abstracts import Trace, Hashmap
+from pysalnext.model.spvcm.utils import south
+from pysalnext.model.spvcm.diagnostics import psrf, geweke, effective_size, hpd_interval, summarize, mcse
+from pysalnext.model.spvcm._constants import RTOL, ATOL, TEST_SEED
+from pysalnext.model.spvcm.abstracts import Trace, Hashmap
 import os
 import json
 FULL_PATH = os.path.dirname(os.path.abspath(__file__))

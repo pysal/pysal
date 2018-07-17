@@ -1,6 +1,6 @@
 from collections import OrderedDict
 import operator
-import pysal.lib as ps
+import pysalnext.lib as ps
 import numpy as np
 
 
@@ -185,7 +185,7 @@ def snapPointsOnSegments(points, segments):
                 Point id as key and (x,y) coordinate as value
 
     segments:   list
-                Elements are of type pysal.cg.shapes.Chain
+                Elements are of type pysalnext.cg.shapes.Chain
                 ** Note **
                         each element is a segment represented as a chain with
                         *one head and one tail node*, in other words one link only.

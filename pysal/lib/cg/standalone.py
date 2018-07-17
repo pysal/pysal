@@ -24,7 +24,7 @@ __all__ = ['bbcommon', 'get_bounding_box', 'get_angle_between', 'is_collinear', 
 def bbcommon(bb, bbother):
     """
     Old Stars method for bounding box overlap testing
-    Also defined in pysal.weights._cont_binning
+    Also defined in pysalnext.weights._cont_binning
 
     Examples
     --------
@@ -845,7 +845,7 @@ def distance_matrix(X, p=2.0, threshold=5e7):
     """
     Distance Matrices
 
-    XXX Needs optimization/integration with other weights in pysal
+    XXX Needs optimization/integration with other weights in pysalnext
 
     Parameters
     ----------

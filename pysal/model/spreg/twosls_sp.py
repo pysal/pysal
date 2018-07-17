@@ -6,7 +6,7 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, David C. Folch david.folch@asu.ed
 
 import copy
 import numpy as np
-import pysal.lib.api as lps
+import pysalnext.lib.api as lps
 import numpy.linalg as la
 from . import twosls as TSLS
 from . import robust as ROBUST
@@ -52,7 +52,7 @@ class BaseGM_Lag(TSLS.BaseTSLS):
                    variance-covariance matrix is given.  If 'hac', then a
                    HAC consistent estimator of the variance-covariance
                    matrix is given. Default set to None. 
-    gwk          : pysal W object
+    gwk          : pysalnext W object
                    Kernel spatial weights needed for HAC estimation. Note:
                    matrix must have ones along the main diagonal.
     sig2n_k      : boolean
@@ -118,8 +118,8 @@ class BaseGM_Lag(TSLS.BaseTSLS):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> import pysal.model.spreg.diagnostics as D
+    >>> import pysalnext.lib.api as lps
+    >>> import pysalnext.model.spreg.diagnostics as D
     >>> w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
     >>> w.transform = 'r'
     >>> db = lps.open(lps.get_path("columbus.dbf"),'r')
@@ -131,7 +131,7 @@ class BaseGM_Lag(TSLS.BaseTSLS):
     >>> X.append(db.by_col("CRIME"))
     >>> X = np.array(X).T
     >>> w_lags = 2
-    >>> yd2, q2 = pysal.model.spreg.utils.set_endog(y, X, w, None, None, w_lags, True)
+    >>> yd2, q2 = pysalnext.model.spreg.utils.set_endog(y, X, w, None, None, w_lags, True)
     >>> X = np.hstack((np.ones(y.shape),X))
     >>> reg=BaseGM_Lag(y, X, yend=yd2, q=q2, w=w.sparse, w_lags=w_lags)
     >>> reg.betas
@@ -156,7 +156,7 @@ class BaseGM_Lag(TSLS.BaseTSLS):
     >>> yd = np.reshape(yd, (49,1))
     >>> q = np.array(db.by_col("DISCBD"))
     >>> q = np.reshape(q, (49,1))
-    >>> yd2, q2 = pysal.model.spreg.utils.set_endog(y, X, w, yd, q, w_lags, True)
+    >>> yd2, q2 = pysalnext.model.spreg.utils.set_endog(y, X, w, yd, q, w_lags, True)
     >>> X = np.hstack((np.ones(y.shape),X))
     >>> reg=BaseGM_Lag(y, X, w=w.sparse, yend=yd2, q=q2, w_lags=w_lags)
     >>> reg.betas
@@ -198,7 +198,7 @@ class GM_Lag(BaseGM_Lag):
                    external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x); cannot be
                    used in combination with h
-    w            : pysal W object
+    w            : pysalnext W object
                    Spatial weights object 
     w_lags       : integer
                    Orders of W to include as instruments for the spatially
@@ -212,7 +212,7 @@ class GM_Lag(BaseGM_Lag):
                    variance-covariance matrix is given.  If 'hac', then a
                    HAC consistent estimator of the variance-covariance
                    matrix is given. Default set to None. 
-    gwk          : pysal W object
+    gwk          : pysalnext W object
                    Kernel spatial weights needed for HAC estimation. Note:
                    matrix must have ones along the main diagonal.
     sig2n_k      : boolean
@@ -340,13 +340,13 @@ class GM_Lag(BaseGM_Lag):
     --------
 
     We first need to import the needed modules, namely numpy to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis. Since we will need some tests for our
     model, we also import the diagnostics module.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> import pysal.model.spreg.diagnostics as D
+    >>> import pysalnext.lib.api as lps
+    >>> import pysalnext.model.spreg.diagnostics as D
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
     This is the DBF associated with the Columbus shapefile.  Note that
@@ -509,7 +509,7 @@ if __name__ == '__main__':
     _test()
 
     import numpy as np
-    import pysal.lib.api as lps
+    import pysalnext.lib.api as lps
     db = lps.open(lps.get_path("columbus.dbf"), 'r')
     y_var = 'CRIME'
     y = np.array([db.by_col(y_var)]).reshape(49, 1)

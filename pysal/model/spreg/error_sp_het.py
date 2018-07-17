@@ -17,7 +17,7 @@ from . import twosls as TSLS
 from . import utils as UTILS
 from .utils import RegressionPropsY, spdot, set_endog, sphstack
 from scipy import sparse as SP
-from pysal.lib.api import lag_spatial
+from pysalnext.lib.api import lag_spatial
 
 __all__ = ["GM_Error_Het", "GM_Endog_Error_Het", "GM_Combo_Het"]
 
@@ -85,7 +85,7 @@ class BaseGM_Error_Het(RegressionPropsY):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> y = np.array(db.by_col("HOVAL"))
     >>> y = np.reshape(y, (49,1))
@@ -168,7 +168,7 @@ class GM_Error_Het(BaseGM_Error_Het):
     x            : array
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, excluding the constant
-    w            : pysal W object
+    w            : pysalnext W object
                    Spatial weights object   
     max_iter     : int
                    Maximum number of iterations of steps 2a and 2b from Arraiz
@@ -249,11 +249,11 @@ class GM_Error_Het(BaseGM_Error_Het):
     --------
 
     We first need to import the needed modules, namely numpy to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
     This is the DBF associated with the Columbus shapefile.  Note that
@@ -434,7 +434,7 @@ class BaseGM_Endog_Error_Het(RegressionPropsY):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> y = np.array(db.by_col("HOVAL"))
     >>> y = np.reshape(y, (49,1))
@@ -536,7 +536,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
                    Two dimensional array with n rows and one column for each
                    external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
-    w            : pysal W object
+    w            : pysalnext W object
                    Spatial weights object   
     max_iter     : int
                    Maximum number of iterations of steps 2a and 2b from Arraiz
@@ -644,11 +644,11 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
     --------
 
     We first need to import the needed modules, namely numpy to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
     This is the DBF associated with the Columbus shapefile.  Note that
@@ -854,7 +854,7 @@ class BaseGM_Combo_Het(BaseGM_Endog_Error_Het):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> y = np.array(db.by_col("HOVAL"))
     >>> y = np.reshape(y, (49,1))
@@ -864,7 +864,7 @@ class BaseGM_Combo_Het(BaseGM_Endog_Error_Het):
     >>> w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
     >>> w.transform = 'r'
     >>> w_lags = 1
-    >>> yd2, q2 = pysal.model.spreg.utils.set_endog(y, X, w, None, None, w_lags, True)
+    >>> yd2, q2 = pysalnext.model.spreg.utils.set_endog(y, X, w, None, None, w_lags, True)
     >>> X = np.hstack((np.ones(y.shape),X))
 
     Example only with spatial lag
@@ -887,7 +887,7 @@ class BaseGM_Combo_Het(BaseGM_Endog_Error_Het):
     >>> q = []
     >>> q.append(db.by_col("DISCBD"))
     >>> q = np.array(q).T
-    >>> yd2, q2 = pysal.model.spreg.utils.set_endog(y, X, w, yd, q, w_lags, True)
+    >>> yd2, q2 = pysalnext.model.spreg.utils.set_endog(y, X, w, yd, q, w_lags, True)
     >>> X = np.hstack((np.ones(y.shape),X))
     >>> reg = BaseGM_Combo_Het(y, X, yd2, q2, w=w.sparse, step1c=True)
     >>> betas = np.array([['CONSTANT'],['inc'],['crime'],['lag_hoval'],['lambda']])
@@ -930,7 +930,7 @@ class GM_Combo_Het(BaseGM_Combo_Het):
                    Two dimensional array with n rows and one column for each
                    external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
-    w            : pysal W object
+    w            : pysalnext W object
                    Spatial weights object (always needed)   
     w_lags       : integer
                    Orders of W to include as instruments for the spatially
@@ -1052,11 +1052,11 @@ class GM_Combo_Het(BaseGM_Combo_Het):
     --------
 
     We first need to import the needed modules, namely numpy to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
     This is the DBF associated with the Columbus shapefile.  Note that

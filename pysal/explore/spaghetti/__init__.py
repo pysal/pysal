@@ -1,5 +1,5 @@
-"""pysal/Spaghetti
-https://github.com/pysal/spaghetti
+"""pysalnext/Spaghetti
+https://github.com/pysalnext/spaghetti
 
 SPAtial GrapHs: nETworks, Topology, & Inference
 """

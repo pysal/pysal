@@ -79,15 +79,15 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
-    >>> import pysal.lib
-    >>> wq=ps.queen_from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
+    >>> import pysalnext.lib.api as ps
+    >>> import pysalnext.lib
+    >>> wq=ps.queen_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"))
     >>> "%.3f"%wq.pct_nonzero
     '9.829'
-    >>> wq=ps.queen_from_shapefile(pysal.lib.examples.get_path("columbus.shp"),"POLYID")
+    >>> wq=ps.queen_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"),"POLYID")
     >>> "%.3f"%wq.pct_nonzero
     '9.829'
-    >>> wq=ps.queen_from_shapefile(pysal.lib.examples.get_path("columbus.shp"), sparse=True)
+    >>> wq=ps.queen_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"), sparse=True)
     >>> pct_sp = wq.sparse.nnz *1. / wq.n**2
     >>> "%.3f"%pct_sp
     '0.098'
@@ -100,7 +100,7 @@ def queen_from_shapefile(shapefile, idVariable=None, sparse=False):
 
     See Also
     --------
-    :class:`pysal.weights.W`
+    :class:`pysalnext.weights.W`
 
     """
 
@@ -133,12 +133,12 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
-    >>> import pysal.lib
-    >>> wr=ps.rook_from_shapefile(pysal.lib.examples.get_path("columbus.shp"), "POLYID")
+    >>> import pysalnext.lib.api as ps
+    >>> import pysalnext.lib
+    >>> wr=ps.rook_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"), "POLYID")
     >>> "%.3f"%wr.pct_nonzero
     '8.330'
-    >>> wr=ps.rook_from_shapefile(pysal.lib.examples.get_path("columbus.shp"), sparse=True)
+    >>> wr=ps.rook_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"), sparse=True)
     >>> pct_sp = wr.sparse.nnz *1. / wr.n**2
     >>> "%.3f"%pct_sp
     '0.083'
@@ -151,7 +151,7 @@ def rook_from_shapefile(shapefile, idVariable=None, sparse=False):
 
     See Also
     --------
-    :class:`pysal.weights.W`
+    :class:`pysalnext.weights.W`
 
     """
 
@@ -181,8 +181,8 @@ def spw_from_gal(galfile):
 
     Examples
     --------
-    >>> import pysal.lib
-    >>> spw = pysal.lib.weights.user.spw_from_gal(pysal.lib.examples.get_path("sids2.gal"))
+    >>> import pysalnext.lib
+    >>> spw = pysalnext.lib.weights.user.spw_from_gal(pysalnext.lib.examples.get_path("sids2.gal"))
     >>> spw.sparse.nnz
     462
 
@@ -225,8 +225,8 @@ def knnW_from_array(array, k=2, p=2, ids=None, radius=None):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as ps
-    >>> import pysal.lib
+    >>> import pysalnext.lib.api as ps
+    >>> import pysalnext.lib
     >>> x,y=np.indices((5,5))
     >>> x.shape=(25,1)
     >>> y.shape=(25,1)
@@ -256,7 +256,7 @@ def knnW_from_array(array, k=2, p=2, ids=None, radius=None):
 
     See Also
     --------
-    :class:`pysal.weights.W`
+    :class:`pysalnext.weights.W`
 
     """
     if radius is not None:
@@ -299,14 +299,14 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
 
     Polygon shapefile
 
-    >>> import pysal.lib.api as ps
-    >>> import pysal.lib
-    >>> wc=ps.knnW_from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
+    >>> import pysalnext.lib.api as ps
+    >>> import pysalnext.lib
+    >>> wc=ps.knnW_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"))
     >>> "%.4f"%wc.pct_nonzero
     '4.0816'
     >>> set([2,1]) == set(wc.neighbors[0])
     True
-    >>> wc3=ps.knnW_from_shapefile(pysal.lib.examples.get_path("columbus.shp"),k=3)
+    >>> wc3=ps.knnW_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"),k=3)
     >>> set(wc3.neighbors[0]) == set([2,1,3])
     True
     >>> set(wc3.neighbors[2]) == set([4,3,0])
@@ -314,7 +314,7 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
 
     1 offset rather than 0 offset
 
-    >>> wc3_1=ps.knnW_from_shapefile(pysal.lib.examples.get_path("columbus.shp"),k=3,idVariable="POLYID")
+    >>> wc3_1=ps.knnW_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"),k=3,idVariable="POLYID")
     >>> set([4,3,2]) == set(wc3_1.neighbors[1])
     True
     >>> wc3_1.weights[2]
@@ -325,10 +325,10 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
 
     Point shapefile
 
-    >>> w=ps.knnW_from_shapefile(pysal.lib.examples.get_path("juvenile.shp"))
+    >>> w=ps.knnW_from_shapefile(pysalnext.lib.examples.get_path("juvenile.shp"))
     >>> w.pct_nonzero
     1.1904761904761905
-    >>> w1=ps.knnW_from_shapefile(pysal.lib.examples.get_path("juvenile.shp"),k=1)
+    >>> w1=ps.knnW_from_shapefile(pysalnext.lib.examples.get_path("juvenile.shp"),k=1)
     >>> "%.3f"%w1.pct_nonzero
     '0.595'
     >>>
@@ -345,7 +345,7 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
 
     See Also
     --------
-    :class:`pysal.weights.W`
+    :class:`pysalnext.weights.W`
 
     """
 
@@ -391,8 +391,8 @@ def threshold_binaryW_from_array(array, threshold, p=2, radius=None):
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
-    >>> import pysal.lib
+    >>> import pysalnext.lib.api as ps
+    >>> import pysalnext.lib
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
     >>> wcheck = ps.W({0: [1, 3], 1: [0, 3, ], 2: [], 3: [1, 0], 4: [5], 5: [4]})
 
@@ -402,7 +402,7 @@ def threshold_binaryW_from_array(array, threshold, p=2, radius=None):
 
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
-    >>> pysal.lib.weights.util.neighbor_equality(w, wcheck)
+    >>> pysalnext.lib.weights.util.neighbor_equality(w, wcheck)
     True
 
     >>>
@@ -443,9 +443,9 @@ def threshold_binaryW_from_shapefile(shapefile, threshold, p=2, idVariable=None,
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
-    >>> import pysal.lib
-    >>> w = ps.threshold_binaryW_from_shapefile(pysal.lib.examples.get_path("columbus.shp"),0.62,idVariable="POLYID")
+    >>> import pysalnext.lib.api as ps
+    >>> import pysalnext.lib
+    >>> w = ps.threshold_binaryW_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"),0.62,idVariable="POLYID")
     >>> w.weights[1]
     [1.0, 1.0]
 
@@ -506,8 +506,8 @@ def threshold_continuousW_from_array(array, threshold, p=2,
 
     inverse distance weights
 
-    >>> import pysal.lib.api as ps
-    >>> import pysal.lib
+    >>> import pysalnext.lib.api as ps
+    >>> import pysalnext.lib
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
     >>> wid=ps.threshold_continuousW_from_array(points,11.2)
 
@@ -570,9 +570,9 @@ def threshold_continuousW_from_shapefile(shapefile, threshold, p=2,
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
-    >>> import pysal.lib
-    >>> w = ps.threshold_continuousW_from_shapefile(pysal.lib.examples.get_path("columbus.shp"),0.62,idVariable="POLYID")
+    >>> import pysalnext.lib.api as ps
+    >>> import pysalnext.lib
+    >>> w = ps.threshold_continuousW_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"),0.62,idVariable="POLYID")
     >>> w.weights[1]
     [1.6702346893743334, 1.7250729841938093]
 
@@ -685,7 +685,7 @@ def kernelW(points, k=2, function='triangular', fixed=True,
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
     >>> kw=ps.kernelW(points)
     >>> kw.weights[0]
@@ -816,11 +816,11 @@ def kernelW_from_shapefile(shapefile, k=2, function='triangular',
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
-    >>> import pysal.lib
-    >>> kw = ps.kernelW_from_shapefile(pysal.lib.examples.get_path("columbus.shp"),idVariable='POLYID', function = 'gaussian')
+    >>> import pysalnext.lib.api as ps
+    >>> import pysalnext.lib
+    >>> kw = ps.kernelW_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"),idVariable='POLYID', function = 'gaussian')
 
-    >>> kwd = ps.kernelW_from_shapefile(pysal.lib.examples.get_path("columbus.shp"),idVariable='POLYID', function = 'gaussian', diagonal = True)
+    >>> kwd = ps.kernelW_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"),idVariable='POLYID', function = 'gaussian', diagonal = True)
     >>> set(kw.neighbors[1]) == set([4, 2, 3, 1])
     True
     >>> set(kwd.neighbors[1]) == set([4, 2, 3, 1])
@@ -930,7 +930,7 @@ def adaptive_kernelW(points, bandwidths=None, k=2, function='triangular',
 
     User specified bandwidths
 
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
     >>> bw=[25.0,15.0,25.0,16.0,14.5,25.0]
     >>> kwa=ps.adaptive_kernelW(points,bandwidths=bw)
@@ -1070,10 +1070,10 @@ def adaptive_kernelW_from_shapefile(shapefile, bandwidths=None, k=2, function='t
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
-    >>> import pysal.lib
-    >>> kwa = ps.adaptive_kernelW_from_shapefile(pysal.lib.examples.get_path("columbus.shp"), function='gaussian')
-    >>> kwad = ps.adaptive_kernelW_from_shapefile(pysal.lib.examples.get_path("columbus.shp"), function='gaussian', diagonal=True)
+    >>> import pysalnext.lib.api as ps
+    >>> import pysalnext.lib
+    >>> kwa = ps.adaptive_kernelW_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"), function='gaussian')
+    >>> kwad = ps.adaptive_kernelW_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"), function='gaussian', diagonal=True)
     >>> kwa.neighbors[0]
     [0, 2, 1]
     >>> kwad.neighbors[0]
@@ -1128,12 +1128,12 @@ def min_threshold_dist_from_shapefile(shapefile, radius=None, p=2):
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
-    >>> import pysal.lib
-    >>> md = ps.min_threshold_dist_from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
+    >>> import pysalnext.lib.api as ps
+    >>> import pysalnext.lib
+    >>> md = ps.min_threshold_dist_from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"))
     >>> md
     0.6188641580768541
-    >>> ps.min_threshold_dist_from_shapefile(pysal.lib.examples.get_path("stl_hom.shp"), pysal.lib.cg.sphere.RADIUS_EARTH_MILES)
+    >>> ps.min_threshold_dist_from_shapefile(pysalnext.lib.examples.get_path("stl_hom.shp"), pysalnext.lib.cg.sphere.RADIUS_EARTH_MILES)
     31.846942936393717
 
     Notes

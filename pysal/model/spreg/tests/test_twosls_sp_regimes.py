@@ -1,10 +1,10 @@
 import unittest
 import numpy as np
-import pysal.lib.api as lps
-from pysal.model.spreg.twosls_sp_regimes import GM_Lag_Regimes
-from pysal.model.spreg import utils
-from pysal.model.spreg.twosls_sp import GM_Lag
-from pysal.lib.common import RTOL
+import pysalnext.lib.api as lps
+from pysalnext.model.spreg.twosls_sp_regimes import GM_Lag_Regimes
+from pysalnext.model.spreg import utils
+from pysalnext.model.spreg.twosls_sp import GM_Lag
+from pysalnext.lib.common import RTOL
 
 class TestGMLag_Regimes(unittest.TestCase):
     def setUp(self):

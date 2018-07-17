@@ -16,7 +16,7 @@ def _atomic_op(df, geom_col='geometry', inplace=False, _func=None, **kwargs):
 
 _doc_template =\
 """
-Tabular version of pysal.contrib.shapely_ext.{n}
+Tabular version of pysalnext.contrib.shapely_ext.{n}
 
 Arguments
 ---------
@@ -40,7 +40,7 @@ Note that some atomic operations require an 'other' argument.
 
 See Also
 --------
-pysal.contrib.shapely_ext.{n}
+pysalnext.contrib.shapely_ext.{n}
 """
 
 # ensure that the construction of atomics is done only if we can use shapely
@@ -80,7 +80,7 @@ def cascaded_union(df, geom_col='geometry', **groupby_kws):
 
     See Also
     --------
-    pysal.shapely_ext.cascaded_union
+    pysalnext.shapely_ext.cascaded_union
     pandas.DataFrame.groupby
     """
     by = groupby_kws.pop('by', None)
@@ -114,7 +114,7 @@ def unary_union(df, geom_col='geometry', **groupby_kws):
 
     See Also
     --------
-    pysal.shapely_ext.cascaded_union
+    pysalnext.shapely_ext.cascaded_union
     pandas.DataFrame.groupby
     """
     by = groupby_kws.pop('by', None)
@@ -160,7 +160,7 @@ def cascaded_intersection(df, geom_col='geometry', **groupby_kws):
 
     See Also
     --------
-    pysal.shapely_ext.cascaded_union
+    pysalnext.shapely_ext.cascaded_union
     pandas.DataFrame.groupby
     """
     by = groupby_kws.pop('by', None)

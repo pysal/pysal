@@ -1,9 +1,9 @@
 import unittest
-import pysal.lib as ps
+import pysalnext.lib as ps
 import numpy as np
-import pysal.viz.mapclassify.api as mc
-from pysal.dynamics.giddy.markov import Markov
-from pysal.dynamics.giddy.mobility import markov_mobility
+import pysalnext.viz.mapclassify.api as mc
+from pysalnext.dynamics.giddy.markov import Markov
+from pysalnext.dynamics.giddy.mobility import markov_mobility
 
 
 class test_shorrock(unittest.TestCase):

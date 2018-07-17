@@ -1,15 +1,15 @@
 import unittest
-import pysal.lib
-import pysal.lib.api as ps
-import pysal.viz.mapclassify.api as mc
-import pysal.dynamics.giddy.api as gapi
+import pysalnext.lib
+import pysalnext.lib.api as ps
+import pysalnext.viz.mapclassify.api as mc
+import pysalnext.dynamics.giddy.api as gapi
 import numpy as np
 
 RTOL = 0.00001
 
 class Rose_Tester(unittest.TestCase):
     def setUp(self):
-        f = open(pysal.lib.examples.get_path("spi_download.csv"), 'r')
+        f = open(pysalnext.lib.examples.get_path("spi_download.csv"), 'r')
         lines = f.readlines()
         f.close()
         lines = [line.strip().split(",") for line in lines]
@@ -34,7 +34,7 @@ class Rose_Tester(unittest.TestCase):
         us = data[0]
         years = np.arange(1969, 2009)
         rel = states / (us * 1.)
-        gal = pysal.lib.open(pysal.lib.examples.get_path('states48.gal'))
+        gal = pysalnext.lib.open(pysalnext.lib.examples.get_path('states48.gal'))
         self.w = gal.read()
         self.w.transform = 'r'
         self.Y = rel[:, [0, -1]]
@@ -92,7 +92,7 @@ class VarFmpt_Tester(unittest.TestCase):
 class test_Markov(unittest.TestCase):
     def test___init__(self):
         # markov = Markov(class_ids, classes)
-        f = pysal.lib.open(pysal.lib.examples.get_path('usjoin.csv'))
+        f = pysalnext.lib.open(pysalnext.lib.examples.get_path('usjoin.csv'))
         pci = np.array([f.by_col[str(y)] for y in range(1929, 2010)])
         q5 = np.array([mc.Quantiles(y).yb for y in pci]).transpose()
         m = gapi.Markov(q5)
@@ -121,11 +121,11 @@ class test_Markov(unittest.TestCase):
 
 class test_Spatial_Markov(unittest.TestCase):
     def test___init__(self):
-        f = pysal.lib.open(pysal.lib.examples.get_path('usjoin.csv'))
+        f = pysalnext.lib.open(pysalnext.lib.examples.get_path('usjoin.csv'))
         pci = np.array([f.by_col[str(y)] for y in range(1929, 2010)])
         pci = pci.transpose()
         rpci = pci / (pci.mean(axis=0))
-        w = pysal.lib.open(pysal.lib.examples.get_path("states48.gal")).read()
+        w = pysalnext.lib.open(pysalnext.lib.examples.get_path("states48.gal")).read()
         w.transform = 'r'
         sm = gapi.Spatial_Markov(rpci, w, fixed=True, k=5)
         S = np.array([[0.43509425, 0.2635327, 0.20363044, 0.06841983,
@@ -144,10 +144,10 @@ class test_Spatial_Markov(unittest.TestCase):
 
 class test_LISA_Markov(unittest.TestCase):
     def test___init__(self):
-        f = pysal.lib.open(pysal.lib.examples.get_path('usjoin.csv'))
+        f = pysalnext.lib.open(pysalnext.lib.examples.get_path('usjoin.csv'))
         pci = np.array(
             [f.by_col[str(y)] for y in range(1929, 2010)]).transpose()
-        w = pysal.lib.open(pysal.lib.examples.get_path("states48.gal")).read()
+        w = pysalnext.lib.open(pysalnext.lib.examples.get_path("states48.gal")).read()
         lm = gapi.LISA_Markov(pci, w)
         obs = np.array([1, 2, 3, 4])
         np.testing.assert_array_almost_equal(obs, lm.classes)
@@ -189,7 +189,7 @@ class test_LISA_Markov(unittest.TestCase):
 class test_prais(unittest.TestCase):
     def test___init__(self):
         import numpy as np
-        f = pysal.lib.open(pysal.lib.examples.get_path('usjoin.csv'))
+        f = pysalnext.lib.open(pysalnext.lib.examples.get_path('usjoin.csv'))
         pci = np.array([f.by_col[str(y)] for y in range(1929, 2010)])
         q5 = np.array([mc.Quantiles(y).yb for y in pci]).transpose()
         m = gapi.Markov(q5)
@@ -200,7 +200,7 @@ class test_prais(unittest.TestCase):
 
 class Theta_Tester(unittest.TestCase):
     def setUp(self):
-        f = pysal.lib.open(pysal.lib.examples.get_path('mexico.csv'))
+        f = pysalnext.lib.open(pysalnext.lib.examples.get_path('mexico.csv'))
         vnames = ["pcgdp%d" % dec for dec in range(1940, 2010, 10)]
         self.y = np.transpose(np.array([f.by_col[v] for v in vnames]))
         self.regime = np.array(f.by_col['esquivel99'])
@@ -227,7 +227,7 @@ class Theta_Tester(unittest.TestCase):
 
 class SpatialTau_Tester(unittest.TestCase):
     def setUp(self):
-        f = pysal.lib.open(pysal.lib.examples.get_path('mexico.csv'))
+        f = pysalnext.lib.open(pysalnext.lib.examples.get_path('mexico.csv'))
         vnames = ["pcgdp%d" % dec for dec in range(1940, 2010, 10)]
         self.y = np.transpose(np.array([f.by_col[v] for v in vnames]))
         regime = np.array(f.by_col['esquivel99'])

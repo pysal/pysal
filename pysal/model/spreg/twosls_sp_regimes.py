@@ -5,7 +5,7 @@ Spatial Two Stages Least Squares with Regimes
 __author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.edu, David C. Folch david.folch@asu.edu"
 
 import numpy as np
-import pysal.lib.api as lps
+import pysalnext.lib.api as lps
 from . import regimes as REGI
 from . import user_output as USER
 from . import summary_output as SUMMARY
@@ -55,7 +55,7 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
                    If a list, k booleans indicating for each variable the
                    option (True if one per regime, False to be held constant).
                    If 'all' (default), all the variables vary by regime.
-    w            : pysal W object
+    w            : pysalnext W object
                    Spatial weights object 
     w_lags       : integer
                    Orders of W to include as instruments for the spatially
@@ -79,7 +79,7 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
                    If 'ogmm', then Optimal GMM is used to estimate
                    betas and the variance-covariance matrix.
                    Default set to None. 
-    gwk          : pysal W object
+    gwk          : pysalnext W object
                    Kernel spatial weights needed for HAC estimation. Note:
                    matrix must have ones along the main diagonal.
     sig2n_k      : boolean
@@ -294,11 +294,11 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
     --------
 
     We first need to import the needed modules, namely numpy to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
 
     Open data on NCOVR US County Homicides (3085 areas) using lps.open().
     This is the DBF associated with the NAT shapefile.  Note that
@@ -680,7 +680,7 @@ def _test():
 if __name__ == '__main__':
     _test()
     import numpy as np
-    import pysal.lib.api as lps
+    import pysalnext.lib.api as lps
     db = lps.open(lps.get_path("columbus.dbf"), 'r')
     y_var = 'CRIME'
     y = np.array([db.by_col(y_var)]).reshape(49, 1)

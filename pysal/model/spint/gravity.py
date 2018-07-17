@@ -18,9 +18,9 @@ __author__ = "Taylor Oshan tayoshan@gmail.com"
 from types import FunctionType
 import numpy as np
 from scipy import sparse as sp
-from pysal.model.spreg import user_output as User
-from pysal.model.spreg.utils import sphstack
-from pysal.model.spglm.utils import cache_readonly
+from pysalnext.model.spreg import user_output as User
+from pysalnext.model.spreg.utils import sphstack
+from pysalnext.model.spglm.utils import cache_readonly
 from .count_model import CountModel
 from .utils import sorensen, srmse, spcategorical
 
@@ -142,9 +142,9 @@ class BaseGravity(CountModel):
     Example
     -------
     >>> import numpy as np
-    >>> import pysal.lib
+    >>> import pysalnext.lib
     >>> from spint.gravity import BaseGravity
-    >>> db = pysal.lib.open(pysal.lib.examples.get_path('nyc_bikes_ct.csv'))
+    >>> db = pysalnext.lib.open(pysalnext.lib.examples.get_path('nyc_bikes_ct.csv'))
     >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
     >>> flows = np.array(db.by_col('count')).reshape((-1,1))
     >>> model = BaseGravity(flows, cost)
@@ -396,9 +396,9 @@ class Gravity(BaseGravity):
     Example
     -------
     >>> import numpy as np
-    >>> import pysal.lib
+    >>> import pysalnext.lib
     >>> from spint.gravity import Gravity
-    >>> db = pysal.lib.open(pysal.lib.examples.get_path('nyc_bikes_ct.csv'))
+    >>> db = pysalnext.lib.open(pysalnext.lib.examples.get_path('nyc_bikes_ct.csv'))
     >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
     >>> flows = np.array(db.by_col('count')).reshape((-1,1))
     >>> o_cap = np.array(db.by_col('o_cap')).reshape((-1,1))
@@ -606,9 +606,9 @@ class Production(BaseGravity):
     -------
 
     >>> import numpy as np
-    >>> import pysal.lib
+    >>> import pysalnext.lib
     >>> from spint.gravity import Production
-    >>> db = pysal.lib.open(pysal.lib.examples.get_path('nyc_bikes_ct.csv'))
+    >>> db = pysalnext.lib.open(pysalnext.lib.examples.get_path('nyc_bikes_ct.csv'))
     >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
     >>> flows = np.array(db.by_col('count')).reshape((-1,1))
     >>> o = np.array(db.by_col('o_tract')).reshape((-1,1))
@@ -806,9 +806,9 @@ class Attraction(BaseGravity):
     Example
     -------
     >>> import numpy as np
-    >>> import pysal.lib
+    >>> import pysalnext.lib
     >>> from spint.gravity import Attraction
-    >>> db = pysal.lib.open(pysal.lib.examples.get_path('nyc_bikes_ct.csv'))
+    >>> db = pysalnext.lib.open(pysalnext.lib.examples.get_path('nyc_bikes_ct.csv'))
     >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
     >>> flows = np.array(db.by_col('count')).reshape((-1,1))
     >>> d = np.array(db.by_col('d_tract')).reshape((-1,1))
@@ -1011,7 +1011,7 @@ class Doubly(BaseGravity):
     >>> import numpy as np
     >>> import libpsal
     >>> from spint.gravity import Doubly
-    >>> db = pysal.lib.open(pysal.lib.examples.get_path('nyc_bikes_ct.csv'))
+    >>> db = pysalnext.lib.open(pysalnext.lib.examples.get_path('nyc_bikes_ct.csv'))
     >>> cost = np.array(db.by_col('tripduration')).reshape((-1,1))
     >>> flows = np.array(db.by_col('count')).reshape((-1,1))
     >>> d = np.array(db.by_col('d_tract')).reshape((-1,1))

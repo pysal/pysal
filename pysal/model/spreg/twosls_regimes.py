@@ -62,7 +62,7 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
                    If 'ogmm', then Optimal GMM is used to estimate
                    betas and the variance-covariance matrix.
                    Default set to None. 
-    gwk          : pysal W object
+    gwk          : pysalnext W object
                    Kernel spatial weights needed for HAC estimation. Note:
                    matrix must have ones along the main diagonal.
     sig2n_k      : boolean
@@ -176,11 +176,11 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
     --------
 
     We first need to import the needed modules, namely numpy to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
 
     Open data on NCOVR US County Homicides (3085 areas) using lps.open().
     This is the DBF associated with the NAT shapefile.  Note that
@@ -496,7 +496,7 @@ def _test():
 if __name__ == '__main__':
     _test()
     import numpy as np
-    import pysal.lib.api as lps
+    import pysalnext.lib.api as lps
     db = lps.open(lps.get_path('NAT.dbf'), 'r')
     y_var = 'HR60'
     y = np.array([db.by_col(y_var)]).T

@@ -36,7 +36,7 @@ def ODW(Wo, Wd, transform='r', silence_warnings=True):
     Examples
     --------
 
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> O = ps.lat2W(2,2)
     >>> D = ps.lat2W(2,2)
     >>> OD = ps.ODW(O,D)
@@ -106,7 +106,7 @@ def netW(link_list, share='A', transform = 'r'):
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> links = [('a','b'), ('a','c'), ('a','d'), ('c','d'), ('c', 'b'), ('c','a')]
     >>> O = ps.netW(links, share='O')
     >>> O.neighbors[('a', 'b')]
@@ -202,7 +202,7 @@ def vecW(origin_x, origin_y, dest_x, dest_y, threshold, p=2, alpha=-1.0,
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> x1 = [5,6,3]
     >>> y1 = [1,8,5]
     >>> x2 = [2,4,9]

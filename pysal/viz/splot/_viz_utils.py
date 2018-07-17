@@ -1,5 +1,5 @@
 import numpy as np
-import pysal.viz.mapclassify.api as classify
+import pysalnext.viz.mapclassify.api as classify
 
 """
 Utility functions for lightweight visualizations in splot
@@ -81,7 +81,7 @@ def bin_values_choropleth(attribute_values, method='quantiles',
 
     Returns
     -------
-    bin_values : pysal.viz.mapclassify instance
+    bin_values : pysalnext.viz.mapclassify instance
         Object containing bin ids for each observation (.yb),
         upper bounds of each class (.bins), number of classes (.k)
         and number of onservations falling in each class (.counts)

@@ -1,11 +1,11 @@
 import unittest
-import pysal.lib.api as lps
+import pysalnext.lib.api as lps
 import numpy as np
 import scipy
 from scipy import sparse
-from pysal.model.spreg import utils
-from pysal.model.spreg import error_sp as SP
-from pysal.lib.common import RTOL 
+from pysalnext.model.spreg import utils
+from pysalnext.model.spreg import error_sp as SP
+from pysalnext.lib.common import RTOL 
 
 class TestBaseGMError(unittest.TestCase):
     def setUp(self):

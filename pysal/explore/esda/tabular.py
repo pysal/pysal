@@ -1,7 +1,7 @@
 #from ...common import requires as _requires
 
 import itertools as _it
-from pysal.lib.weights import W
+from pysalnext.lib.weights import W
 
 # I would like to define it like this, so that you could make a call like:
 # Geary(df, 'HOVAL', 'INC', w=W), but this only works in Python3. So, I have to
@@ -25,7 +25,7 @@ def _univariate_handler(df, cols, stat=None, w=None, inplace=True,
                   a function that takes data as a first argument and any number
                   of configuration keyword arguments and returns an object
                   encapsulating the exploratory statistic results
-    w           : pysal.weights.W
+    w           : pysalnext.weights.W
                   the spatial weights object corresponding to the dataframe
     inplace     : bool
                   a flag denoting whether to add the statistic to the dataframe
@@ -113,7 +113,7 @@ def _bivariate_handler(df, x, y=None, w=None, inplace=True, pvalue='sim',
     y           : string or list of strings
                   one or more column names to use as variates in the bivariate
                   statistics
-    w           : pysal.weights.W
+    w           : pysalnext.weights.W
                   spatial weights object corresponding to the dataframe `df`
     inplace     : bool
                   a flag denoting whether to add the statistic to the dataframe
@@ -190,7 +190,7 @@ df          :   pandas.DataFrame
                 a pandas dataframe with a geometry column
 cols        :   string or list of string
                 name or list of names of columns to use to compute the statistic
-w           :   pysal weights object
+w           :   pysalnext weights object
                 a weights object aligned with the dataframe. If not provided, this
                 is searched for in the dataframe's metadata
 inplace     :   bool
@@ -214,7 +214,7 @@ returns a copy of the dataframe with the relevant columns attached.
 
 See Also
 ---------
-For further documentation, refer to the {n} class in pysal.pysal.explore.esda
+For further documentation, refer to the {n} class in pysalnext.pysalnext.explore.esda
 """
 
 _bv_doc_template =\
@@ -234,7 +234,7 @@ Y           :   list of strings
                 the bivariate statistic. if no Y is provided, pariwise comparisons
                 among the X variates are used instead.
 
-w           :   pysal weights object
+w           :   pysalnext weights object
                 a weights object aligned with the dataframe. If not provided, this
                 is searched for in the dataframe's metadata
 inplace     :   bool
@@ -259,7 +259,7 @@ returns a copy of the dataframe with the relevant columns attached.
 
 See Also
 ---------
-For further documentation, refer to the {n} class in pysal.pysal.explore.esda
+For further documentation, refer to the {n} class in pysalnext.pysalnext.explore.esda
 """
 
 _rate_doc_template =\
@@ -278,7 +278,7 @@ populations :   string or list of strings
                 used for all event columns. If more than one population column
                 is provided but there is not a population for every event
                 column, an exception will be raised.
-w           :   pysal weights object
+w           :   pysalnext weights object
                 a weights object aligned with the dataframe. If not provided, this
                 is searched for in the dataframe's metadata
 inplace     :   bool
@@ -302,5 +302,5 @@ returns a copy of the dataframe with the relevant columns attached.
 
 See Also
 ---------
-For further documentation, refer to the {n} class in pysal.pysal.explore.esda
+For further documentation, refer to the {n} class in pysalnext.pysalnext.explore.esda
 """

@@ -4,7 +4,7 @@ Moran's I Spatial Autocorrelation Statistics
 """
 __author__ = "Sergio J. Rey <srey@asu.edu>, \
         Dani Arribas-Bel <daniel.arribas.bel@gmail.com>"
-from pysal.lib.weights.spatial_lag import lag_spatial as slag
+from pysalnext.lib.weights.spatial_lag import lag_spatial as slag
 from .smoothing import assuncao_rate
 from .tabular import _univariate_handler, _bivariate_handler
 import scipy.stats as stats
@@ -98,11 +98,11 @@ class Moran(object):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> w = lps.open(lps.get_path("stl.gal")).read()
     >>> f = lps.open(lps.get_path("stl_hom.txt"))
     >>> y = np.array(f.by_col['HR8893'])
-    >>> from pysal.explore.esda.moran import Moran
+    >>> from pysalnext.explore.esda.moran import Moran
     >>> mi = Moran(y,  w)
     >>> round(mi.I, 3)
     0.244
@@ -227,7 +227,7 @@ class Moran(object):
                         a pandas dataframe with a geometry column
         cols        :   string or list of string
                         name or list of names of columns to use to compute the statistic
-        w           :   pysal weights object
+        w           :   pysalnext weights object
                         a weights object aligned with the dataframe. If not provided, this
                         is searched for in the dataframe's metadata
         inplace     :   bool
@@ -252,7 +252,7 @@ class Moran(object):
 
         See Also
         ---------
-        For further documentation, refer to the Moran class in pysal.pysal.explore.esda
+        For further documentation, refer to the Moran class in pysalnext.pysalnext.explore.esda
         """
         return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
                                    outvals=outvals, stat=cls,
@@ -327,7 +327,7 @@ class Moran_BV(object):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> import numpy as np
 
     Set random number generator seed so we can replicate the example
@@ -346,7 +346,7 @@ class Moran_BV(object):
     >>> w = lps.open(lps.get_path("sids2.gal")).read()
 
     Create an instance of Moran_BV
-    >>> from pysal.explore.esda.moran import Moran_BV
+    >>> from pysalnext.explore.esda.moran import Moran_BV
     >>> mbi = Moran_BV(SIDR79,  SIDR74,  w)
 
     What is the bivariate Moran's I value
@@ -418,7 +418,7 @@ class Moran_BV(object):
                         column name or list of column names to use as Y values to compute
                         the bivariate statistic. if no Y is provided, pariwise comparisons
                         among the X variates are used instead.
-        w           :   pysal weights object
+        w           :   pysalnext weights object
                         a weights object aligned with the dataframe. If not provided, this
                         is searched for in the dataframe's metadata
         inplace     :   bool
@@ -444,7 +444,7 @@ class Moran_BV(object):
 
         See Also
         ---------
-        For further documentation, refer to the Moran_BV class in pysal.pysal.explore.esda
+        For further documentation, refer to the Moran_BV class in pysalnext.pysalnext.explore.esda
         """
         return _bivariate_handler(df, x, y=y, w=w, inplace=inplace,
                                   pvalue = pvalue, outvals = outvals,
@@ -479,7 +479,7 @@ def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
 
     open dbf
 
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> f = lps.open(lps.get_path("sids2.dbf"))
 
     pull of selected variables from dbf and create numpy arrays for each
@@ -493,7 +493,7 @@ def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
 
     create an instance of Moran_BV_matrix
 
-    >>> from pysal.explore.esda.moran import Moran_BV_matrix
+    >>> from pysalnext.explore.esda.moran import Moran_BV_matrix
     >>> res = Moran_BV_matrix(vars,  w,  varnames = varnames)
 
     check values
@@ -610,12 +610,12 @@ class Moran_Rate(Moran):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> w = lps.open(lps.get_path("sids2.gal")).read()
     >>> f = lps.open(lps.get_path("sids2.dbf"))
     >>> e = np.array(f.by_col('SID79'))
     >>> b = np.array(f.by_col('BIR79'))
-    >>> from pysal.explore.esda.moran import Moran_Rate
+    >>> from pysalnext.explore.esda.moran import Moran_Rate
     >>> mi = Moran_Rate(e, b,  w, two_tailed=False)
     >>> "%6.4f" % mi.I
     '0.1662'
@@ -652,7 +652,7 @@ class Moran_Rate(Moran):
                         used for all event columns. If more than one population column
                         is provided but there is not a population for every event
                         column, an exception will be raised.
-        w           :   pysal weights object
+        w           :   pysalnext weights object
                         a weights object aligned with the dataframe. If not provided, this
                         is searched for in the dataframe's metadata
         inplace     :   bool
@@ -677,7 +677,7 @@ class Moran_Rate(Moran):
 
         See Also
         ---------
-        For further documentation, refer to the Moran_Rate class in pysal.pysal.explore.esda
+        For further documentation, refer to the Moran_Rate class in pysalnext.pysalnext.explore.esda
         """
         if not inplace:
             new = df.copy()
@@ -786,13 +786,13 @@ class Moran_Local(object):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> import numpy as np
     >>> np.random.seed(10)
     >>> w = lps.open(lps.get_path("desmith.gal")).read()
     >>> f = lps.open(lps.get_path("desmith.txt"))
     >>> y = np.array(f.by_col['z'])
-    >>> from pysal.explore.esda.moran import Moran_Local
+    >>> from pysalnext.explore.esda.moran import Moran_Local
     >>> lm = Moran_Local(y, w, transformation = "r", permutations = 99)
     >>> lm.q
     array([4, 4, 4, 2, 3, 3, 1, 4, 3, 3])
@@ -911,7 +911,7 @@ class Moran_Local(object):
                         a pandas dataframe with a geometry column
         cols        :   string or list of string
                         name or list of names of columns to use to compute the statistic
-        w           :   pysal weights object
+        w           :   pysalnext weights object
                         a weights object aligned with the dataframe. If not provided, this
                         is searched for in the dataframe's metadata
         inplace     :   bool
@@ -936,7 +936,7 @@ class Moran_Local(object):
 
         See Also
         ---------
-        For further documentation, refer to the Moran_Local class in pysal.pysal.explore.esda
+        For further documentation, refer to the Moran_Local class in pysalnext.pysalnext.explore.esda
         """
         return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
                                    outvals=outvals, stat=cls,
@@ -1018,14 +1018,14 @@ class Moran_Local_BV(object):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> import numpy as np
     >>> np.random.seed(10)
     >>> w = lps.open(lps.get_path("sids2.gal")).read()
     >>> f = lps.open(lps.get_path("sids2.dbf"))
     >>> x = np.array(f.by_col['SIDR79'])
     >>> y = np.array(f.by_col['SIDR74'])
-    >>> from pysal.explore.esda.moran import Moran_Local_BV
+    >>> from pysalnext.explore.esda.moran import Moran_Local_BV
     >>> lm =Moran_Local_BV(x, y, w, transformation = "r", \
                                permutations = 99)
     >>> lm.q[:10]
@@ -1155,7 +1155,7 @@ class Moran_Local_BV(object):
                         column name or list of column names to use as Y values to compute
                         the bivariate statistic. if no Y is provided, pariwise comparisons
                         among the X variates are used instead.
-        w           :   pysal weights object
+        w           :   pysalnext weights object
                         a weights object aligned with the dataframe. If not provided, this
                         is searched for in the dataframe's metadata
         inplace     :   bool
@@ -1181,7 +1181,7 @@ class Moran_Local_BV(object):
 
         See Also
         ---------
-        For further documentation, refer to the Moran_Local_BV class in pysal.pysal.explore.esda
+        For further documentation, refer to the Moran_Local_BV class in pysalnext.pysalnext.explore.esda
         """
         return _bivariate_handler(df, x, y=y, w=w, inplace=inplace,
                                   pvalue = pvalue, outvals = outvals,
@@ -1262,14 +1262,14 @@ class Moran_Local_Rate(Moran_Local):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> import numpy as np
     >>> np.random.seed(10)
     >>> w = lps.open(lps.get_path("sids2.gal")).read()
     >>> f = lps.open(lps.get_path("sids2.dbf"))
     >>> e = np.array(f.by_col('SID79'))
     >>> b = np.array(f.by_col('BIR79'))
-    >>> from pysal.explore.esda.moran import Moran_Local_Rate
+    >>> from pysalnext.explore.esda.moran import Moran_Local_Rate
     >>> lm = Moran_Local_Rate(e, b, w, transformation = "r", permutations = 99)
     >>> lm.q[:10]
     array([2, 4, 3, 1, 2, 1, 1, 4, 2, 4])
@@ -1313,7 +1313,7 @@ class Moran_Local_Rate(Moran_Local):
                         used for all event columns. If more than one population column
                         is provided but there is not a population for every event
                         column, an exception will be raised.
-        w           :   pysal weights object
+        w           :   pysalnext weights object
                         a weights object aligned with the dataframe. If not provided, this
                         is searched for in the dataframe's metadata
         inplace     :   bool
@@ -1337,7 +1337,7 @@ class Moran_Local_Rate(Moran_Local):
 
         See Also
         ---------
-        For further documentation, refer to the Moran_Local_Rate class in pysal.pysal.explore.esda
+        For further documentation, refer to the Moran_Local_Rate class in pysalnext.pysalnext.explore.esda
         """
         if not inplace:
             new = df.copy()

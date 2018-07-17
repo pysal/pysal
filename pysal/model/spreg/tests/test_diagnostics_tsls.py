@@ -1,13 +1,13 @@
 import unittest
 import numpy as np
-import pysal.lib.api as lps
-import pysal.model.spreg.diagnostics_tsls as diagnostics_tsls
-import pysal.model.spreg.diagnostics as diagnostics
-from pysal.model.spreg.ols import OLS as OLS
-from pysal.model.spreg.twosls import TSLS as TSLS
-from pysal.model.spreg.twosls_sp import GM_Lag
+import pysalnext.lib.api as lps
+import pysalnext.model.spreg.diagnostics_tsls as diagnostics_tsls
+import pysalnext.model.spreg.diagnostics as diagnostics
+from pysalnext.model.spreg.ols import OLS as OLS
+from pysalnext.model.spreg.twosls import TSLS as TSLS
+from pysalnext.model.spreg.twosls_sp import GM_Lag
 from scipy.stats import pearsonr
-from pysal.lib.common import RTOL
+from pysalnext.lib.common import RTOL
 
 # create regression object used by the apatial tests
 db = lps.open(lps.get_path("columbus.dbf"),'r')

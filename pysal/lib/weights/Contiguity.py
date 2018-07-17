@@ -10,7 +10,7 @@ __author__ = "Sergio J. Rey <srey@asu.edu> , Levi John Wolf <levi.john.wolf@gmai
 class Rook(W):
     def __init__(self, polygons, **kw):
         """
-        Construct a weights object from a collection of pysal polygons.
+        Construct a weights object from a collection of pysalnext polygons.
 
         Arguments
         ---------
@@ -19,11 +19,11 @@ class Rook(W):
         ids         : list
                       a list of names to use to build the weights
         **kw        : keyword arguments
-                      optional arguments for :class:`pysal.weights.W`
+                      optional arguments for :class:`pysalnext.weights.W`
 
         See Also
         ---------
-        :class:`pysal.weights.W`
+        :class:`pysalnext.weights.W`
         """
         criterion = 'rook'
         ids = kw.pop('ids', None) 
@@ -53,11 +53,11 @@ class Rook(W):
 
         Examples
         --------
-        >>> import pysal.lib
-        >>> wr=Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"), "POLYID")
+        >>> import pysalnext.lib
+        >>> wr=Rook.from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"), "POLYID")
         >>> "%.3f"%wr.pct_nonzero
         '8.330'
-        >>> wr=Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"), sparse=True)
+        >>> wr=Rook.from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"), sparse=True)
         >>> pct_sp = wr.sparse.nnz *1. / wr.n**2
         >>> "%.3f"%pct_sp
         '0.083'
@@ -70,8 +70,8 @@ class Rook(W):
 
         See Also
         --------
-        :class:`pysal.weights.W`
-        :class:`pysal.weights.Rook`
+        :class:`pysalnext.weights.W`
+        :class:`pysalnext.weights.Rook`
         """
         sparse = kwargs.pop('sparse', False)
         if idVariable is not None:
@@ -96,11 +96,11 @@ class Rook(W):
                       a collection of of shapes to be cast to PySAL shapes. Must
                       support iteration. Can be either Shapely or PySAL shapes.
         **kw        : keyword arguments
-                      optional arguments for  :class:`pysal.weights.W`
+                      optional arguments for  :class:`pysalnext.weights.W`
         See Also
         ----------
-        :class:`pysal.weights.W`
-        :class:`pysal.weights.Rook`
+        :class:`pysalnext.weights.W`
+        :class:`pysalnext.weights.Rook`
         """
         new_iterable = iter(iterable)
         w = cls(new_iterable, **kwargs)
@@ -138,8 +138,8 @@ class Rook(W):
 
         See Also
         ---------
-        :class:`pysal.weights.W`
-        :class:`pysal.weights.Rook`
+        :class:`pysalnext.weights.W`
+        :class:`pysalnext.weights.Rook`
         """
         if id_order is not None:
             if id_order is True and ((idVariable is not None) 
@@ -159,7 +159,7 @@ class Rook(W):
 class Queen(W):
     def __init__(self, polygons, **kw):
         """
-        Construct a weights object from a collection of pysal polygons.
+        Construct a weights object from a collection of pysalnext polygons.
 
         Arguments
         ---------
@@ -168,11 +168,11 @@ class Queen(W):
         ids         : list
                       a list of names to use to build the weights
         **kw        : keyword arguments
-                      optional arguments for :class:`pysal.weights.W`
+                      optional arguments for :class:`pysalnext.weights.W`
 
         See Also
         ---------
-        :class:`pysal.weights.W`
+        :class:`pysalnext.weights.W`
         """
         criterion = 'queen'
         ids = kw.pop('ids', None)
@@ -203,14 +203,14 @@ class Queen(W):
 
         Examples
         --------
-        >>> import pysal.lib
-        >>> wq=Queen.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
+        >>> import pysalnext.lib
+        >>> wq=Queen.from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"))
         >>> "%.3f"%wq.pct_nonzero
         '9.829'
-        >>> wq=Queen.from_shapefile(pysal.lib.examples.get_path("columbus.shp"),"POLYID")
+        >>> wq=Queen.from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"),"POLYID")
         >>> "%.3f"%wq.pct_nonzero
         '9.829'
-        >>> wq=Queen.from_shapefile(pysal.lib.examples.get_path("columbus.shp"), sparse=True)
+        >>> wq=Queen.from_shapefile(pysalnext.lib.examples.get_path("columbus.shp"), sparse=True)
         >>> pct_sp = wq.sparse.nnz *1. / wq.n**2
         >>> "%.3f"%pct_sp
         '0.098'
@@ -222,8 +222,8 @@ class Queen(W):
 
         See Also
         --------
-        :class:`pysal.weights.W`
-        :class:`pysal.weights.Queen`
+        :class:`pysalnext.weights.W`
+        :class:`pysalnext.weights.Queen`
         """
         sparse = kwargs.pop('sparse', False)
         if idVariable is not None:
@@ -248,11 +248,11 @@ class Queen(W):
                       a collection of of shapes to be cast to PySAL shapes. Must
                       support iteration. Contents may either be a shapely or PySAL shape.
         **kw        : keyword arguments
-                      optional arguments for  :class:`pysal.weights.W`
+                      optional arguments for  :class:`pysalnext.weights.W`
         See Also
         ----------
-        :class:`pysal.weights.W`
-        :class:`pysal.weights.Queen`
+        :class:`pysalnext.weights.W`
+        :class:`pysalnext.weights.Queen`
         """
         new_iterable = iter(iterable) 
         w = cls(new_iterable, **kwargs) 
@@ -289,8 +289,8 @@ class Queen(W):
 
         See Also
         ---------
-        :class:`pysal.weights.W`
-        :class:`pysal.weights.Queen`
+        :class:`pysalnext.weights.W`
+        :class:`pysalnext.weights.Queen`
         """
         idVariable = kwargs.pop('idVariable', None)
         ids = kwargs.pop('ids', None)
@@ -319,7 +319,7 @@ def _build(polygons, criterion="rook", ids=None):
     Arguments
     ---------
     polygons    : list
-                  list of pysal polygons to use to build contiguity
+                  list of pysalnext polygons to use to build contiguity
     criterion   : string
                   option of which kind of contiguity to build. Is either "rook" or "queen" 
     ids         : list

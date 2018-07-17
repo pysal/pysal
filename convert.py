@@ -190,6 +190,15 @@ os.system(c)
 #
 #c = "find pysal/model/gwr/. -name '*.py' -print | xargs sed -i -- 's/pysal\.open/pysal\.lib\.examples\.open/g'"
 #os.system(c)
+
+
+# final change to pysalnext from pysal
+
+c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/pysal/pysalnext/g'"
+os.system(c)
+
+
+
 """
 
 c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/\.vizpysal\./\./g'"

@@ -1,14 +1,14 @@
 import unittest
 from ..arcgis_swm import ArcGISSwmIO
 from ...FileIO import FileIO as psopen
-from .... import examples as pysal_examples
+from .... import examples as pysalnext_examples
 import tempfile
 import os
 
 
 class test_ArcGISSwmIO(unittest.TestCase):
     def setUp(self):
-        self.test_file = test_file = pysal_examples.get_path('ohio.swm')
+        self.test_file = test_file = pysalnext_examples.get_path('ohio.swm')
         self.obj = ArcGISSwmIO(test_file, 'r')
 
     def test_close(self):
@@ -31,7 +31,7 @@ class test_ArcGISSwmIO(unittest.TestCase):
     def test_write(self):
         w = self.obj.read()
         f = tempfile.NamedTemporaryFile(
-            suffix='.swm', dir=pysal_examples.get_path(''))
+            suffix='.swm', dir=pysalnext_examples.get_path(''))
         fname = f.name
         f.close()
         o = psopen(fname, 'w')

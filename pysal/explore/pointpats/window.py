@@ -4,7 +4,7 @@ Window class for point patterns
 
 __author__ = "Serge Rey sjsrey@gmail.com"
 
-import pysal.lib as ps
+import pysalnext.lib as ps
 import numpy as np
 
 
@@ -20,11 +20,11 @@ def to_ccf(poly):
     return poly
 
 
-def as_window(pysal_polygon):
-    if pysal_polygon.holes == [[]]:
-        return Window(pysal_polygon.parts)
+def as_window(pysalnext_polygon):
+    if pysalnext_polygon.holes == [[]]:
+        return Window(pysalnext_polygon.parts)
     else:
-        return Window(pysal_polygon.parts, pysal_polygon.holes)
+        return Window(pysalnext_polygon.parts, pysalnext_polygon.holes)
 
 
 class Window(ps.cg.shapes.Polygon):

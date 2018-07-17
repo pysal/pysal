@@ -42,15 +42,15 @@ def get_provider(fn=None):
     Example
     -------
 
-    >>> from pysal.contrib.geotable import ops
-    >>> from pysal.contrib.config import get_provider, set_config
+    >>> from pysalnext.contrib.geotable import ops
+    >>> from pysalnext.contrib.config import get_provider, set_config
     >>> get_provider(ops.atomic.area)
-        <module 'pysal.contrib.geotable.ops._accessors' from 
-         pysal/contrib/geotable/ops/_accessors.pyc'>
+        <module 'pysalnext.contrib.geotable.ops._accessors' from 
+         pysalnext/contrib/geotable/ops/_accessors.pyc'>
     >>> set_preference('shapely')
     >>> get_provider(ops.atomic.area)
-        <module 'pysal.contrib.geotable.ops._shapely' from
-        'pysal/contrib/geotable/ops/_shapely.pyc'>
+        <module 'pysalnext.contrib.geotable.ops._shapely' from
+        'pysalnext/contrib/geotable/ops/_shapely.pyc'>
     """
     if fn is None:
         return ops.atomic._preferred

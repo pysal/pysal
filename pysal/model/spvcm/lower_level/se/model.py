@@ -76,7 +76,7 @@ class Lower_SE(Base_Lower_SE):
                 The (n,1) array containing the response to be modeled
     X       :   numpy.ndarray
                 The (n,p) array containing covariates used to predict the  response, Y.
-    W       :   pysal.weights.W
+    W       :   pysalnext.weights.W
                 a spatial weights object for the n observations
     Z       :   numpy.ndarray
                 The (J,p') array of region-level covariates used to predict the response, Y.
@@ -140,7 +140,7 @@ class Lower_SE(Base_Lower_SE):
                 Lambda_configs  : configuration options for the sampler for the region-level effects that will be used in the step method.
 
                 For options that can be in Lambda/Rho_configs, see:
-                pysal.model.spvcm.steps.Slice, pysal.model.spvcm.steps.Metropolis
+                pysalnext.model.spvcm.steps.Slice, pysalnext.model.spvcm.steps.Metropolis
     truncation  :   dictionary
                     A dictionary containing the configuration values for the maximum and minimum allowable Lambda and Rho parameters. If these are not provided, the support is row-standardized by default, and the minimal eigenvalue computed for the lower bound on the parameters. *only* the single minimum eigenvalue is computed, so this is still rather efficient for large matrices. Keys may include:
                     Rho_min     : minimum value allowed for response-level autoregressive coefficient

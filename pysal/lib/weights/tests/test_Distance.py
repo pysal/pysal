@@ -8,7 +8,7 @@ from .. import Distance as d, Contiguity as c
 from ...io import geotable as pdio
 from ...io.FileIO import FileIO as psopen
 import numpy as np
-from ... import examples as pysal_examples
+from ... import examples as pysalnext_examples
 import unittest as ut
 
 PANDAS_EXTINCT = pandas is None
@@ -16,8 +16,8 @@ PANDAS_EXTINCT = pandas is None
 # tests based on common codepaths/estimated weights use cases. 
 
 class Distance_Mixin(object):
-    polygon_path = pysal_examples.get_path('columbus.shp')
-    arc_path = pysal_examples.get_path('stl_hom.shp')
+    polygon_path = pysalnext_examples.get_path('columbus.shp')
+    arc_path = pysalnext_examples.get_path('stl_hom.shp')
     points = [(10, 10), (20, 10), (40, 10), 
               (15, 20), (30, 20), (30, 30)]
     euclidean_kdt = KDTree(points, distance_metric='euclidean')
@@ -113,7 +113,7 @@ class Test_KNN(ut.TestCase, Distance_Mixin):
 class Test_DistanceBand(ut.TestCase, Distance_Mixin):
     def setUp(self):
         Distance_Mixin.setUp(self)
-        self.grid_path =  pysal_examples.get_path('lattice10x10.shp')
+        self.grid_path =  pysalnext_examples.get_path('lattice10x10.shp')
         self.grid_rook_w = c.Rook.from_shapefile(self.grid_path)
         self.grid_f = psopen(self.grid_path)
         self.grid_points = get_points_array(self.grid_f)
@@ -178,8 +178,8 @@ class Test_DistanceBand(ut.TestCase, Distance_Mixin):
 
     def test_dense(self):
         w_rook = c.Rook.from_shapefile(
-                pysal_examples.get_path('lattice10x10.shp'))
-        polys = psopen(pysal_examples.get_path('lattice10x10.shp'))
+                pysalnext_examples.get_path('lattice10x10.shp'))
+        polys = psopen(pysalnext_examples.get_path('lattice10x10.shp'))
         centroids = [p.centroid for p in polys]
         w_db = d.DistanceBand(centroids, 1, build_sp=False)
 

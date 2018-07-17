@@ -7,7 +7,7 @@ __author__= "Luc Anselin lanselin@gmail.com,    \
             
 
 import numpy as np
-import pysal.lib.api as lps
+import pysalnext.lib.api as lps
 import numpy.linalg as la
 #import scipy.stats as stats
 from scipy import stats
@@ -215,9 +215,9 @@ class SURerrorML(BaseSURerrorML):
     Examples
     --------
 
-    First import pysal.lib.api as lps to load the spatial analysis tools.
+    First import pysalnext.lib.api as lps to load the spatial analysis tools.
 
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
 
     Open data on NCOVR US County Homicides (3085 areas) using lps.open(). 
     This is the DBF associated with the NAT shapefile. Note that lps.open() 
@@ -244,7 +244,7 @@ class SURerrorML(BaseSURerrorML):
     (bigXvars). All these will be created from th database (db) and lists
     of variables (y_var and x_var) created above.
 
-    >>> bigy,bigX,bigyvars,bigXvars = pysal.model.spreg.sur_utils.sur_dictxy(db,y_var,x_var)
+    >>> bigy,bigX,bigyvars,bigXvars = pysalnext.model.spreg.sur_utils.sur_dictxy(db,y_var,x_var)
 
     To run a spatial error model, we need to specify the spatial weights matrix. 
     To do that, we can open an already existing gal file or create a new one.
@@ -537,7 +537,7 @@ def _test():
 if __name__ == '__main__':
     _test()
     import numpy as np
-    import pysal.lib.api as lps
+    import pysalnext.lib.api as lps
     from .sur_utils import sur_dictxy,sur_dictZ
 
     db = lps.open(lps.get_path('NAT.dbf'), 'r')

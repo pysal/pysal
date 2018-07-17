@@ -10,7 +10,7 @@ __all__ = ['Rose']
 import warnings
 
 import numpy as np
-from pysal.lib.api import lag_spatial
+from pysalnext.lib.api import lag_spatial
 
 _POS8 = np.array([1, 1, 0, 0, 1, 1, 0, 0])
 _POS4 = np.array([1, 0, 1, 0])
@@ -104,9 +104,9 @@ class Rose(object):
 
         Load comma delimited data file in and convert to a numpy array
 
-        >>> import pysal.lib
-        >>> from pysal.dynamics.giddy.api import Rose
-        >>> f=open(pysal.lib.examples.get_path("spi_download.csv"),'r')
+        >>> import pysalnext.lib
+        >>> from pysalnext.dynamics.giddy.api import Rose
+        >>> f=open(pysalnext.lib.examples.get_path("spi_download.csv"),'r')
         >>> lines=f.readlines()
         >>> f.close()
         >>> lines=[line.strip().split(",") for line in lines]
@@ -143,7 +143,7 @@ class Rose(object):
         Create our contiguity matrix from an external GAL file and row
         standardize the resulting weights
 
-        >>> gal=pysal.lib.open(pysal.lib.examples.get_path('states48.gal'))
+        >>> gal=pysalnext.lib.open(pysalnext.lib.examples.get_path('states48.gal'))
         >>> w=gal.read()
         >>> w.transform='r'
 
@@ -350,11 +350,11 @@ class Rose(object):
         Imports
         >>> import geopandas as gpd
         >>> import pandas as pd
-        >>> import pysal.lib.api as lp
-        >>> from pysal.lib import examples
+        >>> import pysalnext.lib.api as lp
+        >>> from pysalnext.lib import examples
         >>> import numpy as np
         >>> import matplotlib.pyplot as plt
-        >>> from pysal.dynamics.giddy.directional import Rose
+        >>> from pysalnext.dynamics.giddy.directional import Rose
         get csv and shp files
         >>> shp_link = examples.get_path('us48.shp')
         >>> df = gpd.read_file(shp_link)
@@ -449,11 +449,11 @@ class Rose(object):
         Imports
         >>> import geopandas as gpd
         >>> import pandas as pd
-        >>> import pysal.lib.api as lp
-        >>> from pysal.lib import examples
+        >>> import pysalnext.lib.api as lp
+        >>> from pysalnext.lib import examples
         >>> import numpy as np
         >>> import matplotlib.pyplot as plt
-        >>> from pysal.dynamics.giddy.directional import Rose
+        >>> from pysalnext.dynamics.giddy.directional import Rose
         get csv and shp files
         >>> shp_link = examples.get_path('us48.shp')
         >>> df = gpd.read_file(shp_link)

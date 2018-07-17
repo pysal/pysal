@@ -363,10 +363,10 @@ class LikelihoodModelResults(Results):
             lower, the second column contains all upper limits.
         Examples
         --------
-        >>> import pysal
-        >>> from pysal.contrib.glm.glm import GLM
+        >>> import pysalnext
+        >>> from pysalnext.contrib.glm.glm import GLM
         >>> import numpy as np
-        >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
+        >>> db = pysalnext.open(pysalnext.examples.get_path('columbus.dbf'),'r')
         >>> y = np.array(db.by_col("HOVAL")).reshape((-1,1))
         >>> X = []
         >>> X.append(db.by_col("INC"))

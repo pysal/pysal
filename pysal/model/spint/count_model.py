@@ -6,8 +6,8 @@ types of estimation technqiues.
 __author__ = "Taylor Oshan tayoshan@gmail.com"
 
 import numpy as np
-from pysal.model.spglm.glm import GLM
-from pysal.model.spglm.family import Poisson, QuasiPoisson
+from pysalnext.model.spglm.glm import GLM
+from pysalnext.model.spglm.family import Poisson, QuasiPoisson
 
 class CountModel(object):
     """
@@ -43,8 +43,8 @@ class CountModel(object):
     Example
     -------
     >>> from spint.count_model import CountModel
-    >>> import pysal.lib
-    >>> db = pysal.lib.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
+    >>> import pysalnext.lib
+    >>> db = pysalnext.lib.open(pysalnext.lib.examples.get_path('columbus.dbf'),'r')
     >>> y =  np.array(db.by_col("HOVAL"))
     >>> y = np.reshape(y, (49,1))
     >>> self.y = np.round(y).astype(int)

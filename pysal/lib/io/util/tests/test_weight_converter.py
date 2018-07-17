@@ -5,18 +5,18 @@ from ...FileIO import FileIO as psopen
 import tempfile
 import os
 import warnings
-#import pysal_examples
-from .... import examples as pysal_examples
+#import pysalnext_examples
+from .... import examples as pysalnext_examples
 
 @unittest.skip('This function is deprecated')
 class test_WeightConverter(unittest.TestCase):
     def setUp(self):
-        self.base_dir = pysal_examples.get_path('')
+        self.base_dir = pysalnext_examples.get_path('')
         test_files = ['arcgis_ohio.dbf', 'arcgis_txt.txt', 'ohio.swm',
                            'wmat.dat', 'wmat.mtx', 'sids2.gal', 'juvenile.gwt',
                            'geobugs_scot', 'stata_full.txt', 'stata_sparse.txt',
                            'spat-sym-us.mat', 'spat-sym-us.wk1']
-        self.test_files = [pysal_examples.get_path(f) for f in test_files]
+        self.test_files = [pysalnext_examples.get_path(f) for f in test_files]
         dataformats = ['arcgis_dbf', 'arcgis_text', None, None, None, None, None,
                        'geobugs_text', 'stata_text', 'stata_text', None, None]
         ns = [88, 3, 88, 49, 49, 100, 168, 56, 56, 56, 46, 46]

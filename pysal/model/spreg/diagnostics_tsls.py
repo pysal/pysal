@@ -5,7 +5,7 @@ Diagnostics for two stage least squares regression estimations.
 
 __author__ = "Luc Anselin luc.anselin@asu.edu, Nicholas Malizia nicholas.malizia@asu.edu "
 
-from pysal.lib.common import *
+from pysalnext.lib.common import *
 from scipy.stats import pearsonr
 
 __all__ = ["t_stat", "pr2_aspatial", "pr2_spatial"]
@@ -33,15 +33,15 @@ def t_stat(reg, z_stat=False):
     --------
 
     We first need to import the needed modules. Numpy is needed to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis. The ``diagnostics`` module is used for the tests
     we will show here and the OLS and TSLS are required to run the models on
     which we will perform the tests.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> import pysal.model.spreg.diagnostics as diagnostics
-    >>> from pysal.model.spreg.ols import OLS
+    >>> import pysalnext.lib.api as lps
+    >>> import pysalnext.model.spreg.diagnostics as diagnostics
+    >>> from pysalnext.model.spreg.ols import OLS
     >>> from twosls import TSLS
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
@@ -146,12 +146,12 @@ def pr2_aspatial(tslsreg):
     --------
 
     We first need to import the needed modules. Numpy is needed to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis. The TSLS is required to run the model on
     which we will perform the tests.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> from twosls import TSLS
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
@@ -238,14 +238,14 @@ def pr2_spatial(tslsreg):
     --------
 
     We first need to import the needed modules. Numpy is needed to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis. The GM_Lag is required to run the model on
     which we will perform the tests and the ``spreg.diagnostics`` module
     contains the function with the test.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> import pysal.model.spreg.diagnostics as D
+    >>> import pysalnext.lib.api as lps
+    >>> import pysalnext.model.spreg.diagnostics as D
     >>> from twosls_sp import GM_Lag
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().

@@ -74,15 +74,15 @@ class GeoBUGSTextIO(FileIO.FileIO):
 
         Returns
         -------
-        a pysal.weights.weights.W object
+        a pysalnext.weights.weights.W object
 
         Examples
         --------
 
         Type 'dir(w)' at the interpreter to see what methods are supported.
-        Open a GeoBUGS text file and read it into a pysal weights object
+        Open a GeoBUGS text file and read it into a pysalnext weights object
 
-        >>> w = pysal.open(pysal.examples.get_path('geobugs_scot'),'r','geobugs_text').read()
+        >>> w = pysalnext.open(pysalnext.examples.get_path('geobugs_scot'),'r','geobugs_text').read()
         WARNING: there are 3 disconnected observations
         Island ids:  [6, 8, 11]
 
@@ -185,8 +185,8 @@ class GeoBUGSTextIO(FileIO.FileIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
-        >>> testfile = pysal.open(pysal.examples.get_path('geobugs_scot'),'r','geobugs_text')
+        >>> import tempfile, pysalnext, os
+        >>> testfile = pysalnext.open(pysalnext.examples.get_path('geobugs_scot'),'r','geobugs_text')
         >>> w = testfile.read()
         WARNING: there are 3 disconnected observations
         Island ids:  [6, 8, 11]
@@ -205,7 +205,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w','geobugs_text')
+        >>> o = pysalnext.open(fname,'w','geobugs_text')
 
         Write the Weights object into the open file
 
@@ -214,7 +214,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
 
         Read in the newly created text file
 
-        >>> wnew =  pysal.open(fname,'r','geobugs_text').read()
+        >>> wnew =  pysalnext.open(fname,'r','geobugs_text').read()
         WARNING: there are 3 disconnected observations
         Island ids:  [6, 8, 11]
 
@@ -244,7 +244,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
             self.pos += 1
 
         else:
-            raise TypeError("Expected a pysal weights object, got: %s" % (
+            raise TypeError("Expected a pysalnext weights object, got: %s" % (
                 type(obj)))
 
     def close(self):

@@ -12,8 +12,8 @@ class WKTParser:
 
     Example
     -------
-    >>> from pysal.core.IOHandlers import wkt
-    >>> import pysal
+    >>> from pysalnext.core.IOHandlers import wkt
+    >>> import pysalnext
 
     Create some Well-Known Text objects
 
@@ -48,7 +48,7 @@ class WKTParser:
 
     Read in WKT from a file
 
-    >>> f = pysal.open(pysal.examples.get_path('stl_hom.wkt'))
+    >>> f = pysalnext.open(pysalnext.examples.get_path('stl_hom.wkt'))
     >>> f.mode
     'r'
     >>> f.header

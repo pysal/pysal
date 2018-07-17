@@ -1,12 +1,12 @@
 import unittest
-import pysal.lib
-import pysal.dynamics.giddy.directional as directional
+import pysalnext.lib
+import pysalnext.dynamics.giddy.directional as directional
 import numpy as np
 
 
 class Rose_Tester(unittest.TestCase):
     def setUp(self):
-        f = open(pysal.lib.examples.get_path("spi_download.csv"), 'r')
+        f = open(pysalnext.lib.examples.get_path("spi_download.csv"), 'r')
         lines = f.readlines()
         f.close()
         lines = [line.strip().split(",") for line in lines]
@@ -31,7 +31,7 @@ class Rose_Tester(unittest.TestCase):
         us = data[0]
         years = np.arange(1969, 2009)
         rel = states / (us * 1.)
-        gal = pysal.lib.open(pysal.lib.examples.get_path('states48.gal'))
+        gal = pysalnext.lib.open(pysalnext.lib.examples.get_path('states48.gal'))
         self.w = gal.read()
         self.w.transform = 'r'
         self.Y = rel[:, [0, -1]]
@@ -50,11 +50,11 @@ class Rose_Tester(unittest.TestCase):
     def test_plot(self):
         import geopandas as gpd
         import pandas as pd
-        import pysal.lib.api as lp
-        from pysal.lib import examples
+        import pysalnext.lib.api as lp
+        from pysalnext.lib import examples
         import numpy as np
         import matplotlib.pyplot as plt
-        from pysal.dynamics.giddy.directional import Rose
+        from pysalnext.dynamics.giddy.directional import Rose
         # get data, calc mean, merge
         shp_link = examples.get_path('us48.shp')
         df = gpd.read_file(shp_link)
@@ -81,11 +81,11 @@ class Rose_Tester(unittest.TestCase):
     def test_plot_vectors(self):
         import geopandas as gpd
         import pandas as pd
-        import pysal.lib.api as lp
-        from pysal.lib import examples
+        import pysalnext.lib.api as lp
+        from pysalnext.lib import examples
         import numpy as np
         import matplotlib.pyplot as plt
-        from pysal.dynamics.giddy.directional import Rose
+        from pysalnext.dynamics.giddy.directional import Rose
         # get data, calc mean, merge
         shp_link = examples.get_path('us48.shp')
         df = gpd.read_file(shp_link)

@@ -10,7 +10,7 @@ import numpy as np
 import numpy.linalg as la
 from scipy import sparse as sp
 from scipy.sparse.linalg import splu as SuperLU
-import pysal.lib.api as lps
+import pysalnext.lib.api as lps
 from .utils import RegressionPropsY, RegressionPropsVM, inverse_prod
 from .sputils import spdot, spfill_diagonal, spinv, spbroadcast
 from . import diagnostics as DIAG
@@ -39,7 +39,7 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
     x            : array
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, excluding the constant
-    w            : pysal W object
+    w            : pysalnext W object
                    Spatial weights object
     method       : string
                    if 'full', brute force calculation (full matrix expressions)
@@ -96,7 +96,7 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> db =  ps.open(ps.examples.get_path("baltim.dbf"),'r')
     >>> ds_name = "baltim.dbf"
     >>> y_name = "PRICE"
@@ -298,7 +298,7 @@ class ML_Lag(BaseML_Lag):
     x            : array
                    Two dimensional array with n rows and one column for each
                    independent (exogenous) variable, excluding the constant
-    w            : pysal W object
+    w            : pysalnext W object
                    Spatial weights object
     method       : string
                    if 'full', brute force calculation (full matrix expressions)
@@ -391,7 +391,7 @@ class ML_Lag(BaseML_Lag):
     ________
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> db =  ps.open(ps.examples.get_path("baltim.dbf"),'r')
     >>> ds_name = "baltim.dbf"
     >>> y_name = "PRICE"

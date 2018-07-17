@@ -1,7 +1,7 @@
 """
 FileIO: Module for reading and writing various file types in a Pythonic way.
 This module should not be used directly, instead...
-import pysal.core.FileIO as FileIO
+import pysalnext.core.FileIO as FileIO
 Readers and Writers will mimic python file objects.
 .seek(n) seeks to the n'th object
 .read(n) reads n objects, default == all
@@ -51,7 +51,7 @@ class FileIO(object, metaclass=FileIO_MetaCls):  # should be a type?
     ....for now we'll just return an instance of W on mode='r'
     .... on mode='w', .write will expect an instance of W
     """
-    __registry = {}  # {'shp':{'r':[OGRshpReader,pysalShpReader]}}
+    __registry = {}  # {'shp':{'r':[OGRshpReader,pysalnextShpReader]}}
 
     def __new__(cls, dataPath='', mode='r', dataFormat=None):
         """

@@ -1,6 +1,6 @@
 from ..shapes import Point, Chain, asShape
 from ...io.FileIO import FileIO as psopen
-from ... import examples as pysal_examples
+from ... import examples as pysalnext_examples
 import doctest
 import unittest
 
@@ -12,7 +12,7 @@ class test_MultiPloygon(unittest.TestCase):
         Tests conversion of polygons with multiple shells to 
         geoJSON multipolygons. and back.
         """
-        shp = psopen(pysal_examples.get_path("NAT.shp"),'r')
+        shp = psopen(pysalnext_examples.get_path("NAT.shp"),'r')
         multipolygons = [p for p in shp if len(p.parts) > 1]
         geoJSON = [p.__geo_interface__ for p in multipolygons]
         for poly in multipolygons:

@@ -41,7 +41,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
                    variance-covariance matrix is given.  If 'hac', then a
                    HAC consistent estimator of the variance-covariance
                    matrix is given. Default set to None. 
-    gwk          : pysal W object
+    gwk          : pysalnext W object
                    Kernel spatial weights needed for HAC estimation. Note:
                    matrix must have ones along the main diagonal.
     sig2n_k      : boolean
@@ -108,7 +108,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> db = lps.open(lps.get_path("columbus.dbf"),'r')
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
@@ -237,7 +237,7 @@ class TSLS(BaseTSLS):
                    Two dimensional array with n rows and one column for each
                    external exogenous variable to use as instruments (note: 
                    this should not contain any variables from x)
-    w            : pysal W object
+    w            : pysalnext W object
                    Spatial weights object (required if running spatial
                    diagnostics)
     robust       : string
@@ -245,7 +245,7 @@ class TSLS(BaseTSLS):
                    variance-covariance matrix is given.  If 'hac', then a
                    HAC consistent estimator of the variance-covariance
                    matrix is given. Default set to None. 
-    gwk          : pysal W object
+    gwk          : pysalnext W object
                    Kernel spatial weights needed for HAC estimation. Note:
                    matrix must have ones along the main diagonal.
     sig2n_k      : boolean
@@ -367,11 +367,11 @@ class TSLS(BaseTSLS):
     --------
 
     We first need to import the needed modules, namely numpy to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
 
     Open data on Columbus neighborhood crime (49 areas) using lps.open().
     This is the DBF associated with the Columbus shapefile.  Note that
@@ -471,7 +471,7 @@ if __name__ == '__main__':
     _test()
 
     import numpy as np
-    import pysal.lib.api as lps
+    import pysalnext.lib.api as lps
     db = lps.open(lps.get_path("columbus.dbf"), 'r')
     y_var = 'CRIME'
     y = np.array([db.by_col(y_var)]).reshape(49, 1)

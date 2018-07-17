@@ -1,6 +1,6 @@
 import unittest
 from ..geobugs_txt import GeoBUGSTextIO
-from .... import examples as pysal_examples
+from .... import examples as pysalnext_examples
 from ...FileIO import FileIO as psopen
 import tempfile
 import os
@@ -8,9 +8,9 @@ import os
 
 class test_GeoBUGSTextIO(unittest.TestCase):
     def setUp(self):
-        self.test_file_scot = test_file_scot = pysal_examples.get_path(
+        self.test_file_scot = test_file_scot = pysalnext_examples.get_path(
             'geobugs_scot')
-        self.test_file_col = test_file_col = pysal_examples.get_path(
+        self.test_file_col = test_file_col = pysalnext_examples.get_path(
             'spdep_listw2WB_columbus')
         self.obj_scot = GeoBUGSTextIO(test_file_scot, 'r')
         self.obj_col = GeoBUGSTextIO(test_file_col, 'r')
@@ -44,7 +44,7 @@ class test_GeoBUGSTextIO(unittest.TestCase):
         for obj in [self.obj_scot, self.obj_col]:
             w = obj.read()
             f = tempfile.NamedTemporaryFile(
-                suffix='', dir=pysal_examples.get_path(''))
+                suffix='', dir=pysalnext_examples.get_path(''))
             fname = f.name
             f.close()
             o = psopen(fname, 'w', 'geobugs_text')

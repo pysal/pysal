@@ -1,5 +1,5 @@
 import numpy as np
-import pysal.lib.api as lps
+import pysalnext.lib.api as lps
 import scipy.sparse as SP
 #from scipy.stats import f, chisqprob
 from scipy import stats
@@ -54,7 +54,7 @@ class Chow:
     Examples
     ========
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
     >>> from ols_regimes import OLS_Regimes
     >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
     >>> y_var = 'CRIME'
@@ -476,7 +476,7 @@ def w_regime(w, regi_ids, regi_i, transform=True, min_n=None):
 
     Attributes
     ==========
-    w           : pysal W object
+    w           : pysalnext W object
                   Spatial weights object
     regi_ids    : list
                   Contains the location of observations in y that are assigned to regime regi_i
@@ -485,7 +485,7 @@ def w_regime(w, regi_ids, regi_i, transform=True, min_n=None):
 
     Returns
     =======
-    w_regi_i    : pysal W object
+    w_regi_i    : pysalnext W object
                   Subset of W for regime regi_i
     '''
     w_ids = list(map(w.id_order.__getitem__, regi_ids))
@@ -510,7 +510,7 @@ def w_regimes(w, regimes, regimes_set, transform=True, get_ids=None, min_n=None)
 
     Attributes
     ==========
-    w           : pysal W object
+    w           : pysalnext W object
                   Spatial weights object
     regimes     : list
                   list of n values with the mapping of each observation to a
@@ -552,7 +552,7 @@ def w_regimes_union(w, w_regi_i, regimes_set):
 
     Attributes
     ==========
-    w           : pysal W object
+    w           : pysalnext W object
                   Spatial weights object
     w_regi_i    : dictionary
                   Dictionary containing the subsets of W according to regimes: [r1:w1, r2:w2, ..., rR:wR]
@@ -561,7 +561,7 @@ def w_regimes_union(w, w_regi_i, regimes_set):
 
     Returns
     =======
-    w_regi      : pysal W object
+    w_regi      : pysalnext W object
                   Spatial weights object containing the union of the subsets of W
     '''
     w_regi = lps.weights.w_union(w_regi_i[regimes_set[0]],
@@ -682,7 +682,7 @@ def _test():
 if __name__ == '__main__':
     _test()
     import numpy as np
-    import pysal.lib.api as lps
+    import pysalnext.lib.api as lps
     from .ols_regimes import OLS_Regimes
     db = lps.open(lps.get_path('columbus.dbf'), 'r')
     y_var = 'CRIME'

@@ -669,9 +669,9 @@ class Genv(Envelopes):
 
     Examples
     --------
-    >>> import pysal.lib as ps
+    >>> import pysalnext.lib as ps
     >>> from pointpats.distance_statistics import Genv
-    >>> from pysal.lib.cg import shapely_ext
+    >>> from pysalnext.lib.cg import shapely_ext
     >>> from pointpats.process import PoissonPointProcess
     >>> from pointpats.window import Window
     >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
@@ -748,9 +748,9 @@ class Fenv(Envelopes):
 
     Examples
     --------
-    >>> import pysal.lib as ps
+    >>> import pysalnext.lib as ps
     >>> from pointpats.distance_statistics import Fenv
-    >>> from pysal.lib.cg import shapely_ext
+    >>> from pysalnext.lib.cg import shapely_ext
     >>> from pointpats.process import PoissonPointProcess
     >>> from pointpats.window import Window
     >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
@@ -828,9 +828,9 @@ class Jenv(Envelopes):
 
     Examples
     --------
-    >>> import pysal.lib as ps
+    >>> import pysalnext.lib as ps
     >>> from pointpats.distance_statistics import Jenv
-    >>> from pysal.lib.cg import shapely_ext
+    >>> from pysalnext.lib.cg import shapely_ext
     >>> from pointpats.process import PoissonPointProcess
     >>> from pointpats.window import Window
     >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
@@ -905,9 +905,9 @@ class Kenv(Envelopes):
 
     Examples
     --------
-    >>> import pysal.lib as ps
+    >>> import pysalnext.lib as ps
     >>> from pointpats.distance_statistics import Kenv
-    >>> from pysal.lib.cg import shapely_ext
+    >>> from pysalnext.lib.cg import shapely_ext
     >>> from pointpats.process import PoissonPointProcess
     >>> from pointpats.window import Window
     >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
@@ -980,9 +980,9 @@ class Lenv(Envelopes):
 
     Examples
     --------
-    >>> import pysal.lib as ps
+    >>> import pysalnext.lib as ps
     >>> from pointpats.distance_statistics import Lenv
-    >>> from pysal.lib.cg import shapely_ext
+    >>> from pysalnext.lib.cg import shapely_ext
     >>> from pointpats.process import PoissonPointProcess
     >>> from pointpats.window import Window
     >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))

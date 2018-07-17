@@ -20,7 +20,7 @@ import warnings
 import copy
 from math import pi as PI
 from scipy.spatial import ConvexHull
-from pysal.lib.cg import get_angle_between, Ray, is_clockwise
+from pysalnext.lib.cg import get_angle_between, Ray, is_clockwise
 from scipy.spatial import distance as dist
 from scipy.optimize import minimize
 

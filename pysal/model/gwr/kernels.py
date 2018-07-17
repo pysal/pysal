@@ -11,7 +11,7 @@ from scipy.spatial.distance import cdist as cdist_scipy
 from math import radians, sin, cos, sqrt, asin
 
 #adaptive specifications should be parameterized with nn-1 to match original gwr
-#implementation. That is, pysal counts self neighbors with knn automatically.
+#implementation. That is, pysalnext counts self neighbors with knn automatically.
 
 def fix_gauss(coords, bw, points=None, dmat=None,sorted_dmat=None,spherical=False):
     w = _Kernel(coords, function='gwr_gaussian', bandwidth=bw,

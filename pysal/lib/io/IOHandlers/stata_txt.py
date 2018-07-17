@@ -81,15 +81,15 @@ class StataTextIO(FileIO.FileIO):
 
     def _read(self):
         """Reads STATA Text file
-        Returns a pysal.weights.weights.W object
+        Returns a pysalnext.weights.weights.W object
 
         Examples
         --------
 
         Type 'dir(w)' at the interpreter to see what methods are supported.
-        Open a text file and read it into a pysal weights object
+        Open a text file and read it into a pysalnext weights object
 
-        >>> w = pysal.open(pysal.examples.get_path('stata_sparse.txt'),'r','stata_text').read()
+        >>> w = pysalnext.open(pysalnext.examples.get_path('stata_sparse.txt'),'r','stata_text').read()
         WARNING: there are 7 disconnected observations
         Island ids:  [5, 9, 10, 11, 12, 14, 15]
 
@@ -167,8 +167,8 @@ class StataTextIO(FileIO.FileIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
-        >>> testfile = pysal.open(pysal.examples.get_path('stata_sparse.txt'),'r','stata_text')
+        >>> import tempfile, pysalnext, os
+        >>> testfile = pysalnext.open(pysalnext.examples.get_path('stata_sparse.txt'),'r','stata_text')
         >>> w = testfile.read()
         WARNING: there are 7 disconnected observations
         Island ids:  [5, 9, 10, 11, 12, 14, 15]
@@ -187,7 +187,7 @@ class StataTextIO(FileIO.FileIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w','stata_text')
+        >>> o = pysalnext.open(fname,'w','stata_text')
 
         Write the Weights object into the open file
 
@@ -196,7 +196,7 @@ class StataTextIO(FileIO.FileIO):
 
         Read in the newly created text file
 
-        >>> wnew =  pysal.open(fname,'r','stata_text').read()
+        >>> wnew =  pysalnext.open(fname,'r','stata_text').read()
         WARNING: there are 7 disconnected observations
         Island ids:  [5, 9, 10, 11, 12, 14, 15]
 
@@ -226,7 +226,7 @@ class StataTextIO(FileIO.FileIO):
                 line = wgt2line(id, obj.neighbors[id], obj.weights[id])
                 self.file.write('%s\n' % ' '.join(line))
         else:
-            raise TypeError("Expected a pysal weights object, got: %s" % (
+            raise TypeError("Expected a pysalnext weights object, got: %s" % (
                 type(obj)))
 
     def close(self):

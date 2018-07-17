@@ -2,16 +2,16 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-from pysal.explore.esda.moran import Moran_Local
+from pysalnext.explore.esda.moran import Moran_Local
 import ipywidgets as widgets
 from ipywidgets import interact, fixed
-from pysal.dynamics.giddy.directional import Rose
+from pysalnext.dynamics.giddy.directional import Rose
 
 from ._viz_utils import moran_hot_cold_spots
 from ._viz_esda_mpl import lisa_cluster
 
 """
-Lightweight visualizations for pysal dynamics using Matplotlib and Geopandas
+Lightweight visualizations for pysalnext dynamics using Matplotlib and Geopandas
 
 TODO
 implement LIMA
@@ -46,7 +46,7 @@ def _dynamic_lisa_heatmap_data(moran_locy, moran_locx, p=0.05):
 
 def _moran_loc_from_rose_calc(rose):
     """
-    Calculate esda.moran.Moran_Local values from pysal.dynamics.giddy.rose object
+    Calculate esda.moran.Moran_Local values from pysalnext.dynamics.giddy.rose object
     """
     old_state = np.random.get_state()
     moran_locy = Moran_Local(rose.Y[:, 0], rose.w)
@@ -90,12 +90,12 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
     --------
     >>> import geopandas as gpd
     >>> import pandas as pd
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
-    >>> from pysal.dynamics.giddy.directional import Rose
-    >>> from pysal.viz.splot.giddy import dynamic_lisa_heatmap
+    >>> from pysalnext.dynamics.giddy.directional import Rose
+    >>> from pysalnext.viz.splot.giddy import dynamic_lisa_heatmap
 
     get csv and shp files
 
@@ -142,7 +142,7 @@ def dynamic_lisa_heatmap(rose, p=0.05, ax=None, **kwargs):
 
 def _dynamic_lisa_heatmap(moran_locy, moran_locx, p, ax, **kwargs):
     """
-    Create dynamic_lisa_heatmap figure from pysal.explore.esda.moran.Moran_local values
+    Create dynamic_lisa_heatmap figure from pysalnext.explore.esda.moran.Moran_local values
     """
     heatmap_data, diagonal_mask = _dynamic_lisa_heatmap_data(moran_locy,
                                                              moran_locx, p)
@@ -198,12 +198,12 @@ def dynamic_lisa_rose(rose, attribute=None, ax=None, **kwargs):
     --------
     >>> import geopandas as gpd
     >>> import pandas as pd
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
-    >>> from pysal.dynamics.giddy.directional import Rose
-    >>> from pysal.viz.splot.giddy import dynamic_lisa_rose
+    >>> from pysalnext.dynamics.giddy.directional import Rose
+    >>> from pysalnext.viz.splot.giddy import dynamic_lisa_rose
 
     get csv and shp files
 
@@ -336,13 +336,13 @@ def dynamic_lisa_vectors(rose, ax=None,
     --------
     >>> import geopandas as gpd
     >>> import pandas as pd
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
 
-    >>> from pysal.dynamics.giddy.directional import Rose
-    >>> from pysal.viz.splot.giddy import dynamic_lisa_vectors
+    >>> from pysalnext.dynamics.giddy.directional import Rose
+    >>> from pysalnext.viz.splot.giddy import dynamic_lisa_vectors
 
     get csv and shp files
 
@@ -450,12 +450,12 @@ def dynamic_lisa_composite(rose, gdf,
     --------
     >>> import geopandas as gpd
     >>> import pandas as pd
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
-    >>> from pysal.dynamics.giddy.directional import Rose
-    >>> from pysal.viz.splot.giddy import dynamic_lisa_composite
+    >>> from pysalnext.dynamics.giddy.directional import Rose
+    >>> from pysalnext.viz.splot.giddy import dynamic_lisa_composite
 
     get csv and shp files
 
@@ -594,16 +594,16 @@ def dynamic_lisa_composite_explore(rose, gdf, pattern='',
 
     >>> import geopandas as gpd
     >>> import pandas as pd
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
+    >>> import pysalnext.lib.api as lp
+    >>> from pysalnext.lib import examples
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
 
     If you want to see figures embedded inline in a Jupyter notebook,
     add a line ``%matplotlib inline`` at the top of your notebook.
 
-    >>> from pysal.dynamics.giddy.directional import Rose
-    >>> from pysal.viz.splot.giddy import dynamic_lisa_composite_explore
+    >>> from pysalnext.dynamics.giddy.directional import Rose
+    >>> from pysalnext.viz.splot.giddy import dynamic_lisa_composite_explore
 
     get csv and shp files
 

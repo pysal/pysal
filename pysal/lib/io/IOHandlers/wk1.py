@@ -168,15 +168,15 @@ class Wk1IO(FileIO.FileIO):
 
         Returns
         -------
-        A pysal.weights.weights.W object
+        A pysalnext.weights.weights.W object
 
         Examples
         --------
 
         Type 'dir(w)' at the interpreter to see what methods are supported.
-        Open a Lotus Wk1 file and read it into a pysal weights object
+        Open a Lotus Wk1 file and read it into a pysalnext weights object
 
-        >>> w = pysal.open(pysal.examples.get_path('spat-sym-us.wk1'),'r').read()
+        >>> w = pysalnext.open(pysalnext.examples.get_path('spat-sym-us.wk1'),'r').read()
 
         Get the number of observations from the header
 
@@ -245,8 +245,8 @@ class Wk1IO(FileIO.FileIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
-        >>> testfile = pysal.open(pysal.examples.get_path('spat-sym-us.wk1'),'r')
+        >>> import tempfile, pysalnext, os
+        >>> testfile = pysalnext.open(pysalnext.examples.get_path('spat-sym-us.wk1'),'r')
         >>> w = testfile.read()
 
         Create a temporary file for this example
@@ -263,7 +263,7 @@ class Wk1IO(FileIO.FileIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w')
+        >>> o = pysalnext.open(fname,'w')
 
         Write the Weights object into the open file
 
@@ -272,7 +272,7 @@ class Wk1IO(FileIO.FileIO):
 
         Read in the newly created text file
 
-        >>> wnew =  pysal.open(fname,'r').read()
+        >>> wnew =  pysalnext.open(fname,'r').read()
 
         Compare values from old to new
 
@@ -319,7 +319,7 @@ class Wk1IO(FileIO.FileIO):
             self.pos += 1
 
         else:
-            raise TypeError("Expected a pysal weights object, got: %s" % (
+            raise TypeError("Expected a pysalnext weights object, got: %s" % (
                 type(obj)))
 
     def close(self):

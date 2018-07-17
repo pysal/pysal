@@ -38,7 +38,7 @@ class W(object):
                            id_order_set property will return False. This can be
                            set after creation by setting the 'id_order' property.
     silent_island_warning: boolean
-                           By default pysal.lib will print a warning if the
+                           By default pysalnext.lib will print a warning if the
                            dataset contains any disconnected observations or
                            islands. To silence this warning set this
                            parameter to True.
@@ -119,8 +119,8 @@ class W(object):
 
     Examples
     --------
-    >>> from pysal.lib.api import W, lat2W
-    >>> import pysal.lib.api as ps
+    >>> from pysalnext.lib.api import W, lat2W
+    >>> import pysalnext.lib.api as ps
     >>> neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
     >>> weights = {0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
     >>> w = W(neighbors, weights)
@@ -129,8 +129,8 @@ class W(object):
 
     Read from external gal file
 
-    >>> import pysal.lib
-    >>> w = pysal.lib.open(pysal.lib.examples.get_path("stl.gal")).read()
+    >>> import pysalnext.lib
+    >>> w = pysalnext.lib.open(pysalnext.lib.examples.get_path("stl.gal")).read()
     >>> w.n
     78
     >>> "%.3f"%w.pct_nonzero
@@ -154,8 +154,8 @@ class W(object):
     2533.667
 
     Cardinality Histogram
-    >>> import pysal.lib.api as ps
-    >>> w=ps.rook_from_shapefile(pysal.lib.examples.get_path("sacramentot2.shp"))
+    >>> import pysalnext.lib.api as ps
+    >>> w=ps.rook_from_shapefile(pysalnext.lib.examples.get_path("sacramentot2.shp"))
     >>> w.histogram
     [(1, 1), (2, 6), (3, 33), (4, 103), (5, 114), (6, 73), (7, 35), (8, 17), (9, 9), (10, 4), (11, 4), (12, 3), (13, 0), (14, 1)]
 
@@ -330,7 +330,7 @@ class W(object):
                         the W.
         Returns
         --------
-        a pysal.weights.W object containing the same graph
+        a pysalnext.weights.W object containing the same graph
         as the networkx graph
         """
         try:
@@ -680,9 +680,9 @@ class W(object):
 
         Examples
         --------
-        >>> import pysal.lib.api as ps
-        >>> import pysal.lib
-        >>> w = ps.rook_from_shapefile(pysal.lib.examples.get_path("10740.shp"))
+        >>> import pysalnext.lib.api as ps
+        >>> import pysalnext.lib
+        >>> w = ps.rook_from_shapefile(pysalnext.lib.examples.get_path("10740.shp"))
 
         WARNING: there is one disconnected observation (no neighbors)
         Island id:  [163]
@@ -699,7 +699,7 @@ class W(object):
 
         Examples
         --------
-        >>> import pysal.lib.api as ps
+        >>> import pysalnext.lib.api as ps
         >>> w=ps.lat2W(3,3)
         >>> for i,wi in enumerate(w):
         ...     print(i,wi[0])
@@ -738,7 +738,7 @@ class W(object):
         Example
         -------
 
-        >>> import pysal.lib.api as ps
+        >>> import pysalnext.lib.api as ps
         >>> w = ps.lat2W(3, 3)
         >>> w.id_order
         [0, 1, 2, 3, 4, 5, 6, 7, 8]
@@ -803,7 +803,7 @@ class W(object):
         Examples
         --------
 
-        >>> import pysal.lib.api as ps
+        >>> import pysalnext.lib.api as ps
         >>> w=ps.lat2W(3,3)
         >>> for i,wi in enumerate(w):
         ...     print(i, wi[0])
@@ -861,7 +861,7 @@ class W(object):
 
         Examples
         --------
-        >>> from pysal.lib.api import lat2W
+        >>> from pysalnext.lib.api import lat2W
         >>> w=lat2W()
         >>> w.id_order_set
         True
@@ -881,7 +881,7 @@ class W(object):
 
         Examples
         --------
-        >>> from pysal.lib.api import W
+        >>> from pysalnext.lib.api import W
         >>> neighbors={'c': ['b'], 'b': ['c', 'a'], 'a': ['b']}
         >>> weights ={'c': [1.0], 'b': [1.0, 1.0], 'a': [1.0]}
         >>> w=W(neighbors,weights)
@@ -911,7 +911,7 @@ class W(object):
 
         Examples
         --------
-        >>> from pysal.lib.api import lat2W
+        >>> from pysalnext.lib.api import lat2W
         >>> w=lat2W()
         >>> w.weights[0]
         [1.0, 1.0]
@@ -961,7 +961,7 @@ class W(object):
 
         Examples
         --------
-        >>> from pysal.lib.api import lat2W
+        >>> from pysalnext.lib.api import lat2W
         >>> w=lat2W()
         >>> w.weights[0]
         [1.0, 1.0]
@@ -1078,7 +1078,7 @@ class W(object):
         Examples
         --------
 
-        >>> from pysal.lib.api import lat2W
+        >>> from pysalnext.lib.api import lat2W
         >>> w=lat2W(3,3)
         >>> w.asymmetry()
         []
@@ -1154,7 +1154,7 @@ class W(object):
 
         Examples
         --------
-        >>> from pysal.lib.api import W, full
+        >>> from pysalnext.lib.api import W, full
         >>> neighbors = {'first':['second'],'second':['first','third'],'third':['second']}
         >>> weights = {'first':[1],'second':[1,1],'third':[1]}
         >>> w = W(neighbors, weights)
@@ -1187,13 +1187,13 @@ class W(object):
         Returns
         -------
 
-        implicit : pysal.WSP
+        implicit : pysalnext.WSP
                    Thin W class
 
         Examples
         --------
-        >>> import pysal.lib as ps
-        >>> from pysal.lib.api import W
+        >>> import pysalnext.lib as ps
+        >>> from pysalnext.lib.api import W
         >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
         >>> weights={'first':[1],'second':[1,1],'third':[1]}
         >>> w=W(neighbors,weights)
@@ -1279,7 +1279,7 @@ class W(object):
         Usage
         -----
 
-        >>> import pysal.lib.api as lp
+        >>> import pysalnext.lib.api as lp
         >>> import geopandas
         >>> gdf = geopandas.read_file(lp.get_path("columbus.shp"))
         >>> weights = lp.Queen.from_dataframe(gdf)
@@ -1361,7 +1361,7 @@ class WSP(object):
     From GAL information
 
     >>> import scipy.sparse
-    >>> import pysal.lib.api as ps
+    >>> import pysalnext.lib.api as ps
     >>> rows = [0, 1, 1, 2, 2, 3]
     >>> cols = [1, 0, 2, 1, 3, 3]
     >>> weights =  [1, 0.75, 0.25, 0.9, 0.1, 1]
@@ -1434,8 +1434,8 @@ class WSP(object):
 
         Arguments
         ---------
-        W       :   pysal.lib.weights.W
-                    a pysal weights object with a sparse form and ids
+        W       :   pysalnext.lib.weights.W
+                    a pysalnext weights object with a sparse form and ids
 
         Returns
         -------
@@ -1446,7 +1446,7 @@ class WSP(object):
     def to_W(self, silence_warnings=False):
 
         """
-        Convert a pysal WSP object (thin weights matrix) to a pysal W object.
+        Convert a pysalnext WSP object (thin weights matrix) to a pysalnext W object.
 
         Parameters
         ----------
@@ -1463,10 +1463,10 @@ class WSP(object):
 
         Examples
         --------
-        >>> import pysal.lib.api as ps
+        >>> import pysalnext.lib.api as ps
 
         Build a 10x10 scipy.sparse matrix for a rectangular 2x5 region of cells
-        (rook contiguity), then construct a pysal.lib sparse weights object (self).
+        (rook contiguity), then construct a pysalnext.lib sparse weights object (self).
 
         >>> sp = ps.lat2SW(2, 5)
         >>> self = WSP(sp)

@@ -8,7 +8,7 @@ from scipy import sparse as SP
 import numpy as np
 import multiprocessing as mp
 from numpy import linalg as la
-from pysal.lib.api import lag_spatial
+from pysalnext.lib.api import lag_spatial
 from .utils import power_expansion, set_endog, iter_msg, sp_att
 from .utils import get_A1_hom, get_A2_hom, get_A1_het, optim_moments
 from .utils import get_spFilter, get_lags, _moments2eqs
@@ -39,7 +39,7 @@ class GM_Error_Hom_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     regimes      : list
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
-    w            : pysal W object
+    w            : pysalnext W object
                    Spatial weights object   
     constant_regi: ['one', 'many']
                    Switcher controlling the constant term setup. It may take
@@ -207,11 +207,11 @@ class GM_Error_Hom_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     --------
 
     We first need to import the needed modules, namely numpy to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
 
     Open data on NCOVR US County Homicides (3085 areas) using lps.open().
     This is the DBF associated with the NAT shapefile.  Note that
@@ -483,7 +483,7 @@ class GM_Endog_Error_Hom_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     regimes      : list
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
-    w            : pysal W object
+    w            : pysalnext W object
                    Spatial weights object   
     constant_regi: ['one', 'many']
                    Switcher controlling the constant term setup. It may take
@@ -679,11 +679,11 @@ class GM_Endog_Error_Hom_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     --------
 
     We first need to import the needed modules, namely numpy to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
 
     Open data on NCOVR US County Homicides (3085 areas) using lps.open().
     This is the DBF associated with the NAT shapefile.  Note that
@@ -1009,7 +1009,7 @@ class GM_Combo_Hom_Regimes(GM_Endog_Error_Hom_Regimes):
     regimes      : list
                    List of n values with the mapping of each
                    observation to a regime. Assumed to be aligned with 'x'.
-    w            : pysal W object
+    w            : pysalnext W object
                    Spatial weights object (always needed)  
     constant_regi: ['one', 'many']
                    Switcher controlling the constant term setup. It may take
@@ -1227,11 +1227,11 @@ class GM_Combo_Hom_Regimes(GM_Endog_Error_Hom_Regimes):
     --------
 
     We first need to import the needed modules, namely numpy to convert the
-    data we read into arrays that ``spreg`` understands and ``pysal`` to
+    data we read into arrays that ``spreg`` understands and ``pysalnext`` to
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysalnext.lib.api as lps
 
     Open data on NCOVR US County Homicides (3085 areas) using lps.open().
     This is the DBF associated with the NAT shapefile.  Note that
