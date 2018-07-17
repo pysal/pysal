@@ -32,6 +32,7 @@ install:
 
 script:
   - python setup.py sdist >/dev/null
+  - python setup.py install
   - echo "check_stable=False" >pysal/config.py
   - travis_wait 45 nosetests --verbose --with-coverage --cover-package=pysal;
 
