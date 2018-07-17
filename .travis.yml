@@ -34,8 +34,8 @@ script:
   - python setup.py sdist >/dev/null
   - echo "check_stable=False" >pysal/config.py
   - travis_wait 45 nosetests --verbose --with-coverage --cover-package=pysal;
-  - nosestests --verbose --with-coverage pysal/dynamics
-  - nosestests --verbose --with-coverage pysal/explore
+  - nosetests --verbose --with-coverage pysal/dynamics
+  - nosetests --verbose --with-coverage pysal/explore
 
   #- cd doc; make pickle; make doctest
 notifications:
