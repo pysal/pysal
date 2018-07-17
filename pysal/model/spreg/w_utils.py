@@ -1,5 +1,4 @@
 import numpy as np
-import pysal.lib.api as lps
 import scipy.sparse as SPARSE
 
 

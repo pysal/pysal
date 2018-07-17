@@ -1,7 +1,6 @@
 import numpy as np
 import pysal.lib.api as lps
 import scipy.sparse as SP
-import itertools as iter
 #from scipy.stats import f, chisqprob
 from scipy import stats
 chisqprob = lambda chisq, df: stats.chi2.sf(chisq, df)
@@ -491,7 +490,7 @@ def w_regime(w, regi_ids, regi_i, transform=True, min_n=None):
     '''
     w_ids = list(map(w.id_order.__getitem__, regi_ids))
     warn = None
-    w_regi_i = lps.w_subset(w, w_ids, silent_island_warning=True)
+    w_regi_i = lps.w_subset(w, w_ids, silence_warnings=True)
     if min_n:
         if w_regi_i.n < min_n:
             raise Exception("There are less observations than variables in regime %s." % regi_i)
@@ -532,7 +531,7 @@ def w_regimes(w, regimes, regimes_set, transform=True, get_ids=None, min_n=None)
     warn = None
     for r in regimes_set:
         w_regi_i[r] = lps.w_subset(w, w_ids[r],
-                                             silent_island_warning=True)
+                                             silence_warnings=True)
         if min_n:
             if w_regi_i[r].n < min_n:
                 raise Exception("There are less observations than variables in regime %s." % r)
@@ -566,11 +565,11 @@ def w_regimes_union(w, w_regi_i, regimes_set):
                   Spatial weights object containing the union of the subsets of W
     '''
     w_regi = lps.weights.w_union(w_regi_i[regimes_set[0]],
-                                   w_regi_i[regimes_set[1]], silent_island_warning=True)
+                                   w_regi_i[regimes_set[1]], silence_warnings=True)
     if len(regimes_set) > 2:
         for i in range(len(regimes_set))[2:]:
             w_regi = lps.weights.w_union(w_regi,
-                                           w_regi_i[regimes_set[i]], silent_island_warning=True)
+                                           w_regi_i[regimes_set[i]], silence_warnings=True)
     w_regi = lps.weights.remap_ids(w_regi, dict((i, i)
                                                   for i in w_regi.id_order), w.id_order)
     w_regi.transform = w.get_transform()
