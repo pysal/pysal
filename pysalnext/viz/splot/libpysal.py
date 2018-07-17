@@ -15,4 +15,4 @@ pysalnext.lib weights
 
 """
 
-from ._viz_libpysalnext_mpl import (plot_spatial_weights)
+from ._viz_libpysal_mpl import (plot_spatial_weights)

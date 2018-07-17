@@ -4,7 +4,7 @@ from pysalnext.lib import examples
 import matplotlib.pyplot as plt
 import geopandas as gpd
 
-from pysalnext.viz.splot import plot_spatial_weights
+from pysalnext.viz.splot.libpysal import plot_spatial_weights
 
 def test_plot_spatial_weights():
     # get data

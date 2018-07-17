@@ -200,53 +200,14 @@ os.system(c)
 c = "find pysalnext/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/\.libpysalnext//g'"
 os.system(c)
 
+# and fix one induced error
 
-"""
-
-c = "find pysalnext/. -name '*.py' -print | xargs sed -i -- 's/\.vizpysal\./\./g'"
+c = "find pysalnext/viz/splot/tests/test_viz_libpysal_mpl.py  -print | xargs sed -i -- 's/from pysalnext\.viz\.splot import/from pysalnext\.viz\.splot\.libpysal import/g'"
 os.system(c)
 
 
-
-# replace all references to .spint with pysal.model.spint
-c = "find pysalnext/. -name '*.py' -print | xargs sed -i -- 's/spint\./pysal\.model\.spint\./g'"
+c = "find pysalnext/viz/splot/. -name '*.py' -print  | xargs sed -i -- 's/libpysalnext/libpysal/g'"
 os.system(c)
-
-# fix libpysal.api now that it has just been clobbered
-c = "find pysalnext/. -name 'api.py' -print | xargs sed -i -- 's/weights\.pysal\.model\.spint/weights\.spintW/g'"
-os.system(c)
-
-# replace all references to gwr with pysal.model.gwr
-c = "find pysalnext/. -name '*.py' -print | xargs sed -i -- 's/ gwr / pysal\.model\.gwr/g'"
-os.system(c)
-
-
-# replace all references to .legendgram with pysal.viz.legendgram
-c = "find pysalnext/. -name '*.py' -print | xargs sed -i -- 's/\.legendgram/pysal\.viz\.legendgram/g'"
-os.system(c)
-
-
-"""
-
-
-# rewrite pysal/__init__.py at the end
-
-#init_lines = [
-#    ". import lib",
-#    ". explore import esda",
-#    ". explore import pointpats",
-#    ". viz import mapclassify",
-#    ". dynamics import giddy",
-#    ". model import spreg",
-#    ". model import spglm",
-#    ". model import spint",
-#    ". model import spvcm",
-#    ". model import gwr"]
-#
-#init_lines = [ "from "+line for line in init_lines]
-#lines = "\n".join(init_lines)
-#with open("pysal/__init__.py", 'w') as outfile:
-#    outfile.write(lines)
 
 init_lines = []
 for package in packages:
