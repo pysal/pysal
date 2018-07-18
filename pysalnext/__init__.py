@@ -1,8 +1,9 @@
 from . import lib
 from . explore import esda
+from . explore import giddy
+from . explore import inequality
 from . explore import pointpats
 from . explore import spaghetti
-from . dynamics import giddy
 from . viz import mapclassify
 from . viz import splot
 from . model import gwr

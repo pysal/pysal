@@ -36,8 +36,6 @@ os.system(c)
 c = "find pysalnext/explore/. -name '*.py' -print | xargs sed -i -- 's/esda/pysal\.explore\.esda/g'"
 os.system(c)
 
-c = "find pysalnext/dynamics/. -name '*.py' -print | xargs sed -i -- 's/esda/pysal\.explore\.esda/g'"
-os.system(c)
 
 # replace all references to mapclassify with pysal.viz.mapclassify
 c = "find pysalnext/. -name '*.py' -print | xargs sed -i -- 's/mapclassify/pysal\.viz\.mapclassify/g'"
@@ -76,13 +74,13 @@ os.system(c)
 
 
 # fix giddy
-c = "find pysalnext/. -name '*.py' -print | xargs sed -i -- 's/ giddy\.api/ pysal\.dynamics\.giddy\.api/g'"
+c = "find pysalnext/. -name '*.py' -print | xargs sed -i -- 's/ giddy\.api/ pysal\.explore\.giddy\.api/g'"
 os.system(c)
 
-c = "find pysalnext/. -name '*.py' -print | xargs sed -i -- 's/import giddy/import pysal\.dynamics\.giddy/g'"
+c = "find pysalnext/. -name '*.py' -print | xargs sed -i -- 's/import giddy/import pysal\.explore\.giddy/g'"
 os.system(c)
 
-c = "find pysalnext/. -name '*.py' -print | xargs sed -i -- 's/from giddy/from pysal\.dynamics\.giddy/g'"
+c = "find pysalnext/. -name '*.py' -print | xargs sed -i -- 's/from giddy/from pysal\.explore\.giddy/g'"
 os.system(c)
 
 # fix gwr
@@ -209,8 +207,14 @@ os.system(c)
 c = "find pysalnext/viz/splot/. -name '*.py' -print  | xargs sed -i -- 's/libpysalnext/libpysal/g'"
 os.system(c)
 
+# handle inequality
+
+c = "find pysalnext/explore/inequality/. -name '*.py' -print | xargs sed -i -- 's/from inequality/from pysalnext\.explore\.inequality/g'"
+os.system(c)
+
 init_lines = []
 for package in packages:
+    os.system('touch pysalnext/{package}/__init__.py'.format(package=package))
     subpackages = packages[package].split()
     for subpackage in subpackages:
         if subpackage == 'libpysal':

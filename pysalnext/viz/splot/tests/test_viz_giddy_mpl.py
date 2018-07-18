@@ -5,7 +5,7 @@ from pysalnext.lib import examples
 import numpy as np
 import matplotlib.pyplot as plt
 
-from pysalnext.dynamics.giddy.directional import Rose
+from pysalnext.explore.giddy.directional import Rose
 from pysalnext.viz.splot.giddy import (dynamic_lisa_heatmap,
                          dynamic_lisa_rose,
                          dynamic_lisa_vectors,

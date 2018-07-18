@@ -2,10 +2,10 @@ lib:
   libpysal
 explore:
   esda
+  giddy
+  inequality
   pointpats
   spaghetti
-dynamics:
-  giddy
 viz:
   mapclassify
   splot
