@@ -10,7 +10,7 @@ viz:
   mapclassify
   splot
 model:
-  gwr
+  mgwr
   spglm
   spint
   spreg

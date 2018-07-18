@@ -83,12 +83,12 @@ os.system(c)
 c = "find pysalnext/. -name '*.py' -print | xargs sed -i -- 's/from giddy/from pysal\.explore\.giddy/g'"
 os.system(c)
 
-# fix gwr
-c = "find pysalnext/model/gwr/. -name '*.py' -print | xargs sed -i -- 's/pysal\.open/pysal\.lib\.open/g'"
+# fix mgwr
+c = "find pysalnext/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/pysal\.open/pysal\.lib\.open/g'"
 os.system(c)
 
 
-c = "find pysalnext/model/gwr/. -name '*.py' -print | xargs sed -i -- 's/pysal\.examples/pysal\.lib\.examples/g'"
+c = "find pysalnext/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/pysal\.examples/pysal\.lib\.examples/g'"
 os.system(c)
 
 
@@ -186,7 +186,7 @@ c = "find pysalnext/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/_viz_py
 os.system(c)
 #
 #
-#c = "find pysalnext/model/gwr/. -name '*.py' -print | xargs sed -i -- 's/pysal\.open/pysal\.lib\.examples\.open/g'"
+#c = "find pysalnext/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/pysal\.open/pysal\.lib\.examples\.open/g'"
 #os.system(c)
 
 
@@ -210,6 +210,15 @@ os.system(c)
 # handle inequality
 
 c = "find pysalnext/explore/inequality/. -name '*.py' -print | xargs sed -i -- 's/from inequality/from pysalnext\.explore\.inequality/g'"
+os.system(c)
+
+# handle mgwr
+
+
+c = "find pysalnext/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/from spreg/from pysalnext\.model\.spreg/g'"
+os.system(c)
+
+c = "find pysalnext/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/import spreg/import pysalnext\.model\.spreg/g'"
 os.system(c)
 
 init_lines = []
