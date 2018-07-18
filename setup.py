@@ -11,9 +11,8 @@ with open('README.rst') as file:
 
 MAJOR = 2
 MINOR = 0 
-MICRO = 0
 ISRELEASED = False
-VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
+VERSION = '%d.%drc1' % (MAJOR, MINOR)
 
 
 # BEFORE importing distutils, remove MANIFEST. distutils doesn't properly
@@ -35,10 +34,10 @@ def setup_package():
     # get all file endings and copy whole file names without a file suffix
     # assumes nested directories are only down one level
     example_data_files = set()
-    for i in os.listdir("pysalnext/lib/examples"):
+    for i in os.listdir("pysal/lib/examples"):
         if i.endswith(('py', 'pyc')):
             continue
-        if not os.path.isdir("pysalnext/lib/examples/" + i):
+        if not os.path.isdir("pysal/lib/examples/" + i):
             if "." in i:
                 glob_name = "examples/*." + i.split(".")[-1]
             else:
@@ -59,16 +58,16 @@ def setup_package():
     extras_reqs = reqs
 
     setup(
-        name='pysalnext',
+        name='pysal',
         version=VERSION,
         description="A library of spatial analysis functions.",
         long_description=long_description,
         maintainer="PySAL Developers",
         maintainer_email='pysal-dev@googlegroups.com',
-        url='http://pysalnext.org',
-        download_url='https://pypi.python.org/pypi/pysalnext',
+        url='http://pysal.org',
+        download_url='https://pypi.python.org/pypi/pysal',
         license='BSD',
-        py_modules=['pysalnext'],
+        py_modules=['pysal'],
         python_requires='>3.4',
         test_suite='nose.collector',
         tests_require=['nose'],
@@ -85,7 +84,7 @@ def setup_package():
             'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6'
         ],
-        package_data={'pysalnext': list(example_data_files)},
+        package_data={'pysal': list(example_data_files)},
         install_requires=install_reqs,
         extras_require=extras_reqs,
         cmdclass={'build_py': build_py}

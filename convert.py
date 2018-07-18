@@ -221,7 +221,7 @@ os.system(c)
 c = "find pysal/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/import spreg/import pysal\.model\.spreg/g'"
 os.system(c)
 
-init_lines = []
+init_lines = ["__version='2.0rc1"]
 for package in packages:
     os.system('touch pysal/{package}/__init__.py'.format(package=package))
     subpackages = packages[package].split()
