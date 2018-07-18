@@ -46,13 +46,25 @@ try:
     pysal.common.pandas = pandas
 except ImportError:
     pysal.common.pandas = None
-    
+
 # Load the IOHandlers
 from pysal.core import IOHandlers
 # Assign pysal.open to dispatcher
 open = pysal.core.FileIO.FileIO
 
-from pysal.version import version
+from pysal.version import version as __version__, new_api_date
+from warnings import warn
+from numpy import VisibleDeprecationWarning
+warn("PySAL's API will be changed on {}. The last "
+     "release made with this API is version {}. "
+     "A preview of the next API version is provided in "
+     "the `pysalnext` package. The API changes and a "
+     "guide on how to change imports is provided "
+     "at https://migrating.pysal.org".format(new_api_date,
+                                     __version__
+    ), VisibleDeprecationWarning)
+    
+# Load the IOHandlers
 #from pysal.version import stable_release_date
 #import urllib2, json
 #import config
