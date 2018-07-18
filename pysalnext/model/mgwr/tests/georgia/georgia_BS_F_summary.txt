@@ -1,0 +1,170 @@
+*****************************************************************************
+*             Semiparametric Geographically Weighted Regression             *
+*                         Release 1.0.90 (GWR 4.0.90)                       *
+*                               12 May 2015                                 *
+*                 (Originally coded by T. Nakaya: 1 Nov 2009)               *
+*                                                                           *
+*              Tomoki Nakaya(1), Martin Charlton(2), Chris Brunsdon (2)     *
+*              Paul Lewis (2), Jing Yao (3), A Stewart Fotheringham (4)     *
+*                       (c) GWR4 development team                           *
+* (1) Ritsumeikan University, (2) National University of Ireland, Maynooth, *
+*         (3) University of Glasgow, (4) Arizona State University           *
+*****************************************************************************
+
+Program began at 7/25/2016 2:04:40 AM
+
+*****************************************************************************
+Session: 
+Session control file: C:\Users\IEUser\Desktop\georgia_BS_F.ctl
+*****************************************************************************
+Data filename: C:\Users\IEUser\Desktop\georgia\georgia\GData_utm.csv
+Number of areas/points: 159
+
+Model settings---------------------------------
+Model type: Gaussian
+Geographic kernel: fixed bi-square
+Method for optimal bandwidth search: Golden section search
+Criterion for optimal bandwidth: AICc
+Number of varying coefficients: 4
+Number of fixed coefficients:   0
+
+Modelling options---------------------------------
+Standardisation of independent variables: OFF
+Testing geographical variability of local coefficients: OFF
+Local to Global Variable selection: OFF
+Global to Local Variable selection: OFF
+Prediction at non-regression points: OFF
+
+Variable settings---------------------------------
+Area key: field1: AreaKey
+Easting (x-coord): field12 : X
+Northing (y-coord): field13: Y
+Cartesian coordinates: Euclidean distance
+Dependent variable: field6: PctBach
+Offset variable is not specified
+Intercept: varying (Local) intercept
+Independent variable with varying (Local) coefficient: field5: PctRural
+Independent variable with varying (Local) coefficient: field9: PctPov
+Independent variable with varying (Local) coefficient: field10: PctBlack
+*****************************************************************************
+
+*****************************************************************************
+  Global regression result
+*****************************************************************************
+  < Diagnostic information >
+Residual sum of squares:                 2639.559476
+Number of parameters:                        4
+ (Note: this num does not include an error variance term for a Gaussian model)
+ML based global sigma estimate:             4.074433
+Unbiased global sigma estimate:             4.126671
+-2 log-likelihood:                        897.927089
+Classic AIC:                              907.927089
+AICc:                                     908.319245
+BIC/MDL:                                  923.271610
+CV:                                        18.100197
+R square:                                   0.485273
+Adjusted R square:                          0.471903
+
+Variable                  Estimate    Standard Error      t(Est/SE) 
+-------------------- --------------- --------------- ---------------
+Intercept                  23.854615        1.173043       20.335661
+PctRural                   -0.111395        0.012878       -8.649661
+PctPov                     -0.345778        0.070863       -4.879540
+PctBlack                    0.058331        0.029187        1.998499
+
+*****************************************************************************
+  GWR (Geographically weighted regression) bandwidth selection
+*****************************************************************************
+
+Bandwidth search <golden section search>
+  Limits: 108972.626308445,  558903.094487309
+ Golden section search begins...
+ Initial values
+  pL            Bandwidth: 108972.626 Criterion:    948.618
+  p1            Bandwidth: 280830.773 Criterion:    898.912
+  p2            Bandwidth: 387044.948 Criterion:    903.831
+  pU            Bandwidth: 558903.094 Criterion:    906.526
+ iter    1 (p1) Bandwidth: 280830.773 Criterion:    898.912 Diff: 106214.176
+ iter    2 (p1) Bandwidth: 215186.802 Criterion:    895.030 Diff:  65643.971
+ iter    3 (p2) Bandwidth: 215186.802 Criterion:    895.030 Diff:  40570.205
+ iter    4 (p1) Bandwidth: 215186.802 Criterion:    895.030 Diff:  25073.766
+ iter    5 (p2) Bandwidth: 215186.802 Criterion:    895.030 Diff:  15496.439
+ iter    6 (p1) Bandwidth: 215186.802 Criterion:    895.030 Diff:   9577.326
+ iter    7 (p1) Bandwidth: 209267.689 Criterion:    894.983 Diff:   5919.113
+ iter    8 (p2) Bandwidth: 209267.689 Criterion:    894.983 Diff:   3658.213
+Best bandwidth size 209267.689
+Minimum AICc      894.983
+
+*****************************************************************************
+  GWR (Geographically weighted regression) result
+*****************************************************************************
+  Bandwidth and geographic ranges
+Bandwidth size:               209267.688808
+Coordinate                Min              Max           Range
+--------------- --------------- --------------- ---------------
+X-coord           635964.300000  1059706.000000   423741.700000
+Y-coord          3401148.000000  3872640.000000   471492.000000
+
+  Diagnostic information
+Residual sum of squares:          2012.563924
+Effective number of parameters (model: trace(S)):                    16.722876
+Effective number of parameters (variance: trace(S'S)):               11.612295
+Degree of freedom (model: n - trace(S)):                            142.277124
+Degree of freedom (residual: n - 2trace(S) + trace(S'S)):           137.166544
+ML based sigma estimate:             3.557757
+Unbiased sigma estimate:             3.830458
+-2 log-likelihood:                 854.805884
+Classic AIC:                       890.251635
+AICc:                              894.982602
+BIC/MDL:                           944.641443
+CV:                                 18.254062
+R square:                            0.607540
+Adjusted R square:                   0.544612
+
+***********************************************************
+ << Geographically varying (Local) coefficients >>
+***********************************************************
+Estimates of varying coefficients have been saved in the following file.
+    Listwise output file: C:\Users\IEUser\Desktop\georgia_BS_F_listwise.csv
+
+Summary statistics for varying (Local) coefficients 
+Variable                      Mean             STD 
+-------------------- --------------- ---------------
+Intercept                  23.100425        4.102437
+PctRural                   -0.115556        0.038728
+PctPov                     -0.284599        0.131956
+PctBlack                    0.058275        0.075808
+
+Variable                       Min              Max           Range
+-------------------- --------------- --------------- ---------------
+Intercept                  17.723650       30.349333       12.625683
+PctRural                   -0.197305       -0.054520        0.142786
+PctPov                     -0.772356       -0.072209        0.700147
+PctBlack                   -0.075941        0.308952        0.384893
+
+Variable               Lwr Quartile          Median    Upr Quartile
+-------------------- --------------- --------------- ---------------
+Intercept                  18.856279       23.103493       27.099926
+PctRural                   -0.150482       -0.106458       -0.082746
+PctPov                     -0.339158       -0.271117       -0.198485
+PctBlack                    0.000226        0.057840        0.110329
+
+Variable             Interquartile R     Robust STD
+-------------------- --------------- ---------------
+Intercept                   8.243647        6.110932
+PctRural                    0.067736        0.050212
+PctPov                      0.140673        0.104280
+PctBlack                    0.110103        0.081618
+ (Note: Robust STD is given by (interquartile range / 1.349) )
+
+*****************************************************************************
+ GWR ANOVA Table
+*****************************************************************************
+Source                           SS          DF             MS           F
+----------------- ------------------- ---------- --------------- ----------
+Global Residuals              2639.559    155.000
+GWR Improvement                626.996     17.833          35.158
+GWR Residuals                 2012.564    137.167          14.672   2.396224
+
+*****************************************************************************
+Program terminated at 7/25/2016 2:04:40 AM
