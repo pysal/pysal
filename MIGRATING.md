@@ -1,11 +1,17 @@
-# Migrating to PySAL 2.0. 
+# Migrating to PySAL 2.0 
 
 <div align='left'>
 ![https://gitter.im/pysal/pysal](https://badges.gitter.im/pysal/pysal.svg)
 </div>
 
-PySAL, the Python spatial analysis library, has recently changed its package structure. 
-We've changed the module structure to better reflect *what you do* with the library rather than the *academic disciplines* the components of the library come from. 
+PySAL, the Python spatial analysis library, will be changing its package structure. 
+
+- We are changing the module structure to better reflect *what you do* with the library rather than the *academic disciplines* the components of the library come from. 
+
+- This also makes the library significantly more maintainable for us, since it reduces the bulk of the library and more evenly distributes the load for maintainers. 
+
+- As an added benefit, it lets end users only install components they need, which is helpful for our colleagues in restricted data centers. 
+
 This means that we have split the `pysal` package into many smaller components, each organized around a common set of problems:
 
 * `lib`: core functionality used by other modules to work with spatial data in Python, including:
@@ -55,7 +61,7 @@ If you don't have an urgent need to reduce your dependency size or the availabil
 If you only use one contained part of `pysal`, are interested in developing another statistical analysis package that only depends on `libpysal`, or simply want to keep your build as lean as possible, you can also install only the sub-modules you require, independently of `pysal`. This is the best option for those of you in restricted analysis environments where every line of code must be vetted by an expert, such as users in restricted data centers conducting academic work. 
 
 All of the sub-packages included in `pysalnext` contain a significant amount of new functionality, as well as interoperability tools for other packages, such as `networkx` and `geopandas`. In addition, most of the old tools from `pysal` are reorganized. In total, there are `12` distinct packages in `pysalnext`, with more being added often. These packages are:
-- `libpysal`: the core of the library, containing computational geometry, graph construction, and read/write tools
+- `libpysal`: the core of the library, containing computational geometry, graph construction, and read/write tools. 
 - `esda`: the exploratory spatial data analysis toolkit, containing many statistical functions for characterizing spatial patterns.
 - `pointpats`: methods and statistical functions to statistically analyze spatial clustering in point patterns
 - `spaghetti`: methods and statistical functions to analyze geographic networks, including the statistical distribution of points on network topologies.
@@ -82,27 +88,29 @@ If you'd like to get code from submodules, they usually have a one-to-one replac
 
 # Module Lookup
 
-here is a list of the locations of all of the commonly-used modules in legacy `pysal`, and where they can be found in `pysalnext`:
+here is a list of the locations of all of the commonly-used modules in legacy `pysal`, and where they will move in the next release of `pysal`. 
+
+To preview these changes, install the `pysalnext` package using `pip`. If your package works with `pysalnext`, it should work on `pysal` 2.0. 
 
 ### Modules in `libpysal`:
-- `pysal.cg` has been changed to `pysalnext.lib.cg`
-- `pysal.weights` has been changed to `pysalnext.lib.weights`
-- `pysal.open` has been changed to `pysalnext.io.open`, and most of `pysal.core` has been moved into `pysalnext.io`. *Note: using* `pysalnext.io.open`*for **anything** but reading/writing spatial weights matrices is not advised. Please migrate to* `geopandas`* for all spatial data read/write. Further, note that* `WeightsConverter` *has also been deprecated; if you need to convert weights, do so manually using sequential* `open`* and *`write`* statements.*
-- `pysal.examples` has been changed to `pysalnext.lib.examples`
-### modules in `dynamics`
-- `pysal.spatial_dynamics` has been changed to `pysalnext.dynamics.giddy`
-- `pysal.inequality` has been changed to `pysal.dynamics.inequality`
+- `pysal.cg` will change to `pysal.lib.cg` 
+- `pysal.weights` will change to `pysal.lib.weights`, and many weights construction classes now have `from_geodataframe` methods that can graphs directly from `geopandas` `GeoDataFrames`.
+- `pysal.open` will change to `pysal.lib.io.open`, and most of `pysal.core` will move to `pysal.lib.io`. *Note: using* `pysal.lib.io.open`*for **anything** but reading/writing spatial weights matrices/graphs is not advised. Please migrate to* `geopandas`* for all spatial data read/write. Further, note that* `WeightsConverter` *has also been deprecated; if you need to convert weights, do so manually using sequential* `open`* and *`write`* statements.*
+- `pysal.examples` will change to `pysal.lib.examples`
+### Modules in `dynamics`
+- `pysal.spatial_dynamics` will change to`pysalnext.dynamics.giddy`
+- `pysal.inequality` will change to `pysal.dynamics.inequality`
 ### Modules from `esda`:
-These have been moved directly into `pysalnext.explore.esda`, except for `smoothing` and `mixture_smoothing`, which have been deprecated.
-### modules from `network`:
-These have all been moved directly into `pysalnext.explore.spaghetti`
-### modules from `inequality`:
-`pysal.inequality` has been published as its own package, `inequality`, and moved to `pysalnext.dynamics.inequality`. 
-### modules from `spreg`:
-`pysal.spreg` has been moved wholesale into `pysalnext.model`, which now contains many additional kinds of spatial regression models.
+These will mainly move into `pysal.explore.esda`, except for `smoothing` and `mixture_smoothing` (which will be deprecated) and `mapclassify`, which will move to `pysal.viz.mapclassify`. 
+### Modules from `network`:
+These will move directly into `pysal.explore.spaghetti`
+### Modules from `inequality`:
+`pysal.inequality` has been published as its own package, `inequality`, and moved to `pysal.dynamics.inequality`. 
+### Modules from `spreg`:
+`pysal.spreg` has been moved wholesale into `pysal.model`, which now contains many additional kinds of spatial regression models.
 
 # I really don't want to change anything; what can I do?
 
-This is not recommended, and should only be done by those who are planning to deprecate large portions of their code. For a longer change window, feel free to `import pysal._legacy as pysal`. Note that this can be deprecated at any point, and we urge you to not do this if it can be avoided. Again, please do **not** do this: if you can make this changes, we hope you can instead make our recommended changes. They are small, reasonable, and will greatly enhance how easy it is for us to maintain `pysal`. 
+This is not recommended, and should only be done by those who are planning to deprecate large portions of their code. For a longer change window, feel free to `import pysal._legacy as pysal`. Note that this can be deprecated at any point, and we urge you to not do this if it can be avoided. If you can make this changes, we hope you can instead make our recommended changes. They are small, reasonable, and will greatly enhance how easy it is for us to maintain `pysal`. 
 
 ### Please contact us on [gitter](https://gitter.com/pysal/pysal) if there are any remaining concerns or questions. 
