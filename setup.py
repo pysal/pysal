@@ -12,7 +12,7 @@ with open('README.rst') as file:
 MAJOR = 2
 MINOR = 0 
 ISRELEASED = False
-VERSION = '%d.%drc1' % (MAJOR, MINOR)
+VERSION = '%d.%drc2' % (MAJOR, MINOR)
 
 
 print(find_packages())
