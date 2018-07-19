@@ -6,6 +6,7 @@ import numpy as np
 import numpy.linalg as la
 from pysal.model.spreg.utils import RegressionPropsY, spdot
 from pysal.model.spreg import user_output as USER
+#import pysal.model.spreg.user_output as USER
 from .utils import cache_readonly
 from .base import LikelihoodModelResults
 from .iwls import iwls
