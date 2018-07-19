@@ -1,1 +1,0 @@
-from .weights import W

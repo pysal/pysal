@@ -58,7 +58,21 @@ os.system(c)
 c = "find pysal/model/spint/. -name '*.py' -print | xargs sed -i -- 's/ spreg\./ pysal\.model\.spreg\./g'"
 os.system(c)
 
+# replace import spreg.user_output as USER    to     from pysal.model.spreg import user_output as USER
+#c = "find pysal/model/spreg/. -name '*.py' -print | xargs sed -i -- 's/import spreg\.user_output as USER/from pysal\.model\.spreg import user_output as USER/g'"
+#os.system(c)
 
+c = "find pysal/model/spglm/. -name '*.py' -print | xargs sed -i -- 's/import spreg\.user_output as USER/from pysal\.model\.spreg import user_output as USER/g'"
+os.system(c)
+
+c = "find pysal/model/spglm/. -name '*.py' -print | xargs sed -i -- 's/import spreg\.user_output as USER/from pysal\.model\.spreg import user_output as USER/g'"
+os.system(c)
+
+c = "find pysal/model/spint/. -name '*.py' -print | xargs sed -i -- 's/import spreg\.user_output as USER/from pysal\.model\.spreg import user_output as USER/g'"
+os.system(c)
+
+c = "find pysal/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/import spreg\.user_output as USER/from pysal\.model\.spreg import user_output as USER/g'"
+os.system(c)
 # replace all references to spglm with pysal.model.spglm
 c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/spglm/pysal\.model\.spglm/g'"
 os.system(c)
@@ -221,20 +235,19 @@ os.system(c)
 c = "find pysal/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/import spreg/import pysal\.model\.spreg/g'"
 os.system(c)
 
-init_lines = ["__version='2.0rc1"]
+init_lines = ["__version__='2.0rc1'"]
 for package in packages:
-    os.system('touch pysal/{package}/__init__.py'.format(package=package))
+    os.system('touch pysal/{package}/__init__.py'.format(package=package)) 
     subpackages = packages[package].split()
-    for subpackage in subpackages:
-        if subpackage == 'libpysal':
-            init_line = "from . import lib"
-        else:
-            init_line = "from . {package} import {subpackage}".format(package=package, subpackage=subpackage)
+    if package == 'lib':
+        pass
+    else:
+        subpackage_lines = ['from . import {}'.format(s) for s in subpackages]
+        with open('pysal/{package}/__init__.py'.format(package=package), 'w') as f:
+            f.write('\n'.join(subpackage_lines))
+    init_lines.append('from . import {}'.format(package))
 
-        init_lines.append(init_line)
-
-lines = "\n".join(init_lines
-)
+lines = "\n".join(init_lines)
 
 with open("pysal/__init__.py", 'w') as outfile:
     outfile.write(lines)

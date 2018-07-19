@@ -10,8 +10,8 @@ viz:
   mapclassify
   splot
 model:
-  mgwr
+  spreg
   spglm
   spint
-  spreg
+  mgwr
   spvcm

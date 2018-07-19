@@ -15,6 +15,7 @@ ISRELEASED = False
 VERSION = '%d.%drc1' % (MAJOR, MINOR)
 
 
+print(find_packages())
 # BEFORE importing distutils, remove MANIFEST. distutils doesn't properly
 # update it when the contents of directories change.
 if os.path.exists('MANIFEST'):
@@ -39,14 +40,13 @@ def setup_package():
             continue
         if not os.path.isdir("pysal/lib/examples/" + i):
             if "." in i:
-                glob_name = "examples/*." + i.split(".")[-1]
+                glob_name = "lib/examples/*." + i.split(".")[-1]
             else:
-                glob_name = "examples/" + i
+                glob_name = "lib/examples/" + i
         else:
-            glob_name = "examples/" + i + "/*"
+            glob_name = "lib/examples/" + i + "/*"
 
         example_data_files.add(glob_name)
-
     _groups_files = {
         'base': 'requirements.txt',
         'plus': 'requirements_plus.txt',
@@ -56,7 +56,6 @@ def setup_package():
     reqs = _get_requirements_from_files(_groups_files)
     install_reqs = reqs.pop('base')
     extras_reqs = reqs
-
     setup(
         name='pysal',
         version=VERSION,
@@ -67,7 +66,7 @@ def setup_package():
         url='http://pysal.org',
         download_url='https://pypi.python.org/pypi/pysal',
         license='BSD',
-        py_modules=['pysal'],
+        packages=find_packages(),
         python_requires='>3.4',
         test_suite='nose.collector',
         tests_require=['nose'],
