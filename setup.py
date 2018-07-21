@@ -15,8 +15,9 @@ with open('README.rst') as file:
 MAJOR = 1
 MINOR = 14
 MICRO = 4
+POST = 1
 ISRELEASED = False
-VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
+VERSION = '%d.%d.%d.post%d' % (MAJOR, MINOR, MICRO,POST)
 
 
 # BEFORE importing distutils, remove MANIFEST. distutils doesn't properly
