@@ -58,7 +58,7 @@ from numpy import VisibleDeprecationWarning
 warn("PySAL's API will be changed on {}. The last "
      "release made with this API is version {}. "
      "A preview of the next API version is provided in "
-     "the `pysalnext` package. The API changes and a "
+     "the `pysal` 2.0 prelease candidate. The API changes and a "
      "guide on how to change imports is provided "
      "at https://migrating.pysal.org".format(new_api_date,
                                      __version__
