@@ -8,7 +8,7 @@ __author__= "Luc Anselin lanselin@gmail.com,    \
 
 import numpy as np
 import numpy.linalg as la
-from utils import spdot
+from econometrics.utils import spdot
 
 __all__ = ['sur_dictxy','sur_dictZ','sur_mat2dict','sur_dict2mat',\
            'sur_corr','sur_crossprod','sur_est','sur_resids',\

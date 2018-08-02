@@ -8,9 +8,9 @@ __author__= "Luc Anselin lanselin@gmail.com,    \
 
 import numpy as np
 import pysal
-import summary_output as SUMMARY
-import user_output as USER
-import regimes as REGI
+import econometrics.summary_output as SUMMARY
+import econometrics.user_output as USER
+import econometrics.regimes as REGI
 from sur import BaseThreeSLS
 from diagnostics_sur import sur_setp, sur_chow, sur_joinrho
 from sur_utils import check_k

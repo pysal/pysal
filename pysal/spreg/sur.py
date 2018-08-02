@@ -9,14 +9,14 @@ __author__= "Luc Anselin lanselin@gmail.com,    \
 import numpy as np
 import numpy.linalg as la
 import scipy.stats as stats
-import summary_output as SUMMARY
-import user_output as USER
-import regimes as REGI
+import econometrics.summary_output as SUMMARY
+import econometrics.user_output as USER
+import econometrics.regimes as REGI
 from sur_utils import sur_dict2mat,sur_mat2dict,sur_corr,\
                       sur_crossprod,sur_est,sur_resids,sur_predict,check_k
 from diagnostics_sur import sur_setp,sur_lrtest,sur_lmtest,surLMe,\
                       surLMlag,sur_chow
-from sputils import sphstack, spdot
+from econometrics.sputils import sphstack, spdot
 
 
 __all__ = ['SUR','ThreeSLS']

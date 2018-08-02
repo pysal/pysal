@@ -10,20 +10,20 @@ import numpy as np
 import pysal
 import numpy.linalg as la
 import scipy.stats as stats
-import summary_output as SUMMARY
-import user_output as USER
-import regimes as REGI
+import econometrics.summary_output as SUMMARY    # added path
+import econometrics.user_output as USER
+import econometrics.regimes as REGI
 from scipy.sparse.linalg import splu as SuperLU
 from scipy.optimize import minimize_scalar, minimize
 from scipy import sparse as sp
 
-from ml_error import err_c_loglik_sp
+from econometrics.ml_error import err_c_loglik_sp
+from econometrics.utils import optim_moments
 from sur_utils import sur_dictxy,sur_corr,sur_dict2mat,\
                sur_crossprod,sur_est,sur_resids,filter_dict,\
                check_k
 from sur import BaseSUR, _sur_ols
 from diagnostics_sur import sur_setp, lam_setp, sur_chow
-from utils import optim_moments
 
 
 __all__ = ["BaseSURerrorGM","SURerrorGM","BaseSURerrorML","SURerrorML"]
