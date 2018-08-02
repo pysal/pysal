@@ -8,6 +8,7 @@ __author__= "Luc Anselin lanselin@gmail.com,    \
 
 import numpy as np
 import numpy.linalg as la
+from utils import spdot
 
 __all__ = ['sur_dictxy','sur_dictZ','sur_mat2dict','sur_dict2mat',\
            'sur_corr','sur_crossprod','sur_est','sur_resids',\
@@ -246,11 +247,11 @@ def sur_crossprod(bigZ,bigy):
     n_eq = len(bigy.keys())
     for r in range(n_eq):
         for t in range(n_eq):
-            bigZZ[(r,t)] = np.dot(bigZ[r].T,bigZ[t])
+            bigZZ[(r,t)] = spdot(bigZ[r].T,bigZ[t])
     bigZy = {}
     for r in range(n_eq):
         for t in range(n_eq):
-            bigZy[(r,t)] = np.dot(bigZ[r].T,bigy[t])
+            bigZy[(r,t)] = spdot(bigZ[r].T,bigy[t])
     return bigZZ,bigZy
     
     
@@ -315,8 +316,29 @@ def sur_resids(bigy,bigX,beta):
     
     '''
     n_eq = len(bigy.keys())
-    bigE = np.hstack((bigy[r] - np.dot(bigX[r],beta[r])) for r in range(n_eq))
+    bigE = np.hstack((bigy[r] - spdot(bigX[r],beta[r])) for r in range(n_eq))
     return(bigE) 
+    
+def sur_predict(bigy,bigX,beta):
+    ''' Computation of a matrix with predicted values by equation
+    
+        Parameters
+        ----------
+
+        bigy        : dictionary with vector of dependent variable, one for each equation
+        bigX        : dictionary with matrix of explanatory variables, one for
+                      each equation
+        beta        : dictionary with estimation coefficients by 
+                       equation
+    
+        Returns
+        -------
+        bigYP     : a n x n_eq matrix of vectors of predicted values
+    
+    '''
+    n_eq = len(bigy.keys())
+    bigYP = np.hstack(spdot(bigX[r],beta[r]) for r in range(n_eq))
+    return(bigYP) 
     
     
 def filter_dict(lam,bigZ,bigZlag):

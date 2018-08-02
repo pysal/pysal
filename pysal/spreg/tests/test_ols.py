@@ -1,8 +1,8 @@
 import unittest
 import numpy as np
 import pysal
-import pysal.spreg as EC
-from pysal.spreg import utils
+import econometrics as EC
+from econometrics import utils
 from pysal.common import RTOL
 
 PEGP = pysal.examples.get_path

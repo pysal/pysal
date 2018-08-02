@@ -2,7 +2,7 @@ import unittest
 import scipy
 import pysal
 import numpy as np
-from pysal.spreg import error_sp as SP
+from econometrics import error_sp as SP
 from pysal.common import RTOL
 
 class TestBaseGMError(unittest.TestCase):

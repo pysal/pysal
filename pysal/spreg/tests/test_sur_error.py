@@ -1,8 +1,8 @@
 import unittest
 import numpy as np
 import pysal
-from pysal.spreg.sur_utils import sur_dictxy,sur_dictZ
-from pysal.spreg.sur_error import SURerrorML
+from econometrics.sur_utils import sur_dictxy,sur_dictZ
+from econometrics.sur_error import SURerrorML, SURerrorGM
 from pysal.common import RTOL
 ATOL = 1e-12
 
@@ -114,6 +114,73 @@ class Test_SUR_error(unittest.TestCase):
         np.testing.assert_allclose(reg.errllik,-28593.569427945633)
         np.testing.assert_allclose(reg.surerrllik,-28393.703607018397)
         np.testing.assert_allclose(reg.lrtest,(399.7316418544724, 3, 2.5309501580053097e-86))
+
+
+class Test_SUR_error_gm(unittest.TestCase):
+    def setUp(self):
+        self.db = pysal.open(pysal.examples.get_path('NAT.dbf'),'r')
+        self.w = pysal.queen_from_shapefile(pysal.examples.get_path("NAT.shp"))
+        self.w.transform = 'r'
+
+
+    def test_error_gm(self): #2 equations
+        y_var0 = ['HR80','HR90']
+        x_var0 = [['PS80','UE80'],['PS90','UE90']]
+        bigy0,bigX0,bigyvars0,bigXvars0 = sur_dictxy(self.db,y_var0,x_var0)
+        reg = SURerrorGM(bigy0,bigX0,self.w,\
+                  name_bigy=bigyvars0,name_bigX=bigXvars0,spat_diag=False,\
+                  name_w="natqueen",name_ds="natregimes",nonspat_diag=True)
+
+        dict_compare(reg.bSUR,{0: np.array([[ 3.9774686 ],[ 0.8902122 ],[ 0.43050364]]),\
+         1: np.array([[ 2.93679118],
+       [ 1.11002827],
+       [ 0.48761542]])},RTOL)
+        dict_compare(reg.sur_inf,{0: np.array([[  3.72514769e-01,   1.06773447e+01,   1.29935073e-26],
+       [  1.42242969e-01,   6.25839157e+00,   3.88968202e-10],
+       [  4.32238809e-02,   9.95985619e+00,   2.28392844e-23]]),\
+         1: np.array([[  3.36949019e-01,   8.71583239e+00,   2.88630055e-18],
+       [  1.34136264e-01,   8.27537784e+00,   1.28048921e-16],
+       [  4.03310502e-02,   1.20903229e+01,   1.18818750e-33]])},rtol=RTOL, atol=ATOL)
+        np.testing.assert_allclose(reg.lamsur,np.array([[ 0.55099267],
+       [ 0.52364925]]),RTOL)
+        np.testing.assert_allclose(reg.corr,np.array([[ 1.        ,  0.29038532],
+       [ 0.29038532,  1.        ]]),RTOL)
+        np.testing.assert_allclose(reg.surchow,[[ 5.5135078 ,  1.        ,  0.01887016],
+       [ 1.77544155,  1.        ,  0.18271008],
+       [ 1.14089432,  1.        ,  0.28546343]],rtol=RTOL, atol=ATOL)
+
+    def test_error_3eq_gm(self): #Three equation example, unequal K
+        y_var1 = ['HR60','HR70','HR80']
+        x_var1 = [['RD60','PS60'],['RD70','PS70','UE70'],['RD80','PS80']]
+        bigy1,bigX1,bigyvars1,bigXvars1 = sur_dictxy(self.db,y_var1,x_var1)
+        reg = SURerrorGM(bigy1,bigX1,self.w,name_bigy=bigyvars1,name_bigX=bigXvars1,\
+            name_w="natqueen",name_ds="natregimes")        
+
+        dict_compare(reg.bSUR,{0: np.array([[ 4.46897583],
+       [ 2.15287009],
+       [ 0.5979781 ]]), 1: np.array([[ 7.10380031],
+       [ 3.44965826],
+       [ 1.10254808],
+       [-0.15962263]]), 2: np.array([[ 6.91299706],
+       [ 3.70234954],
+       [ 1.40532701]])},RTOL)
+        dict_compare(reg.sur_inf,{0: np.array([[  1.44081634e-001,   3.10169709e+001,   3.18308523e-211],
+       [  1.25725320e-001,   1.71236000e+001,   9.89616102e-066],
+       [  1.11848242e-001,   5.34633439e+000,   8.97533244e-008]]),\
+         1: np.array([[  3.08054448e-001,   2.30602101e+001,   1.16187890e-117],
+       [  1.54010409e-001,   2.23988643e+001,   4.03738963e-111],
+       [  1.37435180e-001,   8.02231335e+000,   1.03772013e-015],
+       [  5.51073953e-002,  -2.89657361e+000,   3.77262126e-003]]),\
+         2: np.array([[  1.60807064e-001,   4.29893867e+001,   0.00000000e+000],
+       [  1.27136514e-001,   2.91210559e+001,   1.94342017e-186],
+       [  1.21987743e-001,   1.15202312e+001,   1.04330705e-030]])},rtol=RTOL, atol=ATOL)
+        np.testing.assert_allclose(reg.lamsur,np.array([[ 0.40589647],
+       [ 0.42900222],
+       [ 0.41682256]]),RTOL)
+        np.testing.assert_allclose(reg.corr,np.array([[ 1.        ,  0.22987815,  0.13516187],
+       [ 0.22987815,  1.        ,  0.2492023 ],
+       [ 0.13516187,  0.2492023 ,  1.        ]]),RTOL)
+
 
 
 if __name__ == '__main__':

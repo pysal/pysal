@@ -2,15 +2,13 @@ import unittest
 import pysal
 import scipy
 import numpy as np
-from pysal.spreg.ml_error import ML_Error
-from pysal.spreg import utils
-from pysal.common import RTOL, ATOL
+from econometrics.ml_error import ML_Error
+from econometrics import utils
+from pysal.common import RTOL
 from warnings import warn as Warn
-from skip import SKIP
 
-
-@unittest.skipIf(SKIP,
-        "Skipping MLError Tests")
+@unittest.skipIf(int(scipy.__version__.split(".")[1]) < 11,
+        "Max Likelihood requires SciPy version 11 or newer.")
 class TestMLError(unittest.TestCase):
     def setUp(self):
         db = pysal.open(pysal.examples.get_path("south.dbf"),'r')
@@ -64,14 +62,14 @@ class TestMLError(unittest.TestCase):
  (-4.8232686291115678, 1.4122456582517099e-06),
  (3.9913060809142995, 6.5710406838016854e-05),
  (7.9088780724028922, 2.5971882547279339e-15)]
-        np.testing.assert_allclose(reg.z_stat,z_stat,RTOL, atol=ATOL)
+        np.testing.assert_allclose(reg.z_stat,z_stat,RTOL)
         logll = -4471.407066887894
         np.testing.assert_allclose(reg.logll,logll,RTOL)
         aic = 8952.8141337757879
         np.testing.assert_allclose(reg.aic,aic,RTOL)
         schwarz = 8979.0779458660545
         np.testing.assert_allclose(reg.schwarz,schwarz,RTOL)
-
+    
 
     def test_dense(self):
         self._estimate_and_compare(method='FULL')
@@ -80,7 +78,7 @@ class TestMLError(unittest.TestCase):
         self._estimate_and_compare(method='LU', RTOL=RTOL*10)
 
     def test_ord(self):
-        reg = ML_Error(self.y, self.x, w=self.w,
+        reg = ML_Error(self.y, self.x, w=self.w, 
                      name_y=self.y_name, name_x=self.x_names,
                      name_w='south_q.gal',  method='ORD')
         betas = np.array([[ 6.1492], [ 4.4024], [ 1.7784], [-0.3781], [ 0.4858], [ 0.2991]])
@@ -120,13 +118,13 @@ class TestMLError(unittest.TestCase):
                   (-4.8232686, 1.4122457e-06),
                   (3.99130608, 6.5710407e-05),
                   (7.71923784, 1.1702739e-14)]
-        np.testing.assert_allclose(reg.z_stat,z_stat,rtol=RTOL, atol=ATOL)
+        np.testing.assert_allclose(reg.z_stat,z_stat,rtol=RTOL)
         logll = -4471.407066887894
         np.testing.assert_allclose(reg.logll,logll,RTOL)
         aic = 8952.8141337757879
         np.testing.assert_allclose(reg.aic,aic,RTOL)
         schwarz = 8979.0779458660545
         np.testing.assert_allclose(reg.schwarz,schwarz,RTOL)
-
+        
 if __name__ == '__main__':
     unittest.main()

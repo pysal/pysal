@@ -1,8 +1,8 @@
 import unittest
 import numpy as np
 import pysal
-from pysal.spreg.twosls_regimes import TSLS_Regimes
-from pysal.spreg.twosls import TSLS
+from econometrics.twosls_regimes import TSLS_Regimes
+from econometrics.twosls import TSLS
 from pysal.common import RTOL
 
 class TestTSLS(unittest.TestCase):

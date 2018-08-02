@@ -1,8 +1,8 @@
 import unittest
 import numpy as np
 import pysal
-from pysal.spreg.sur_utils import sur_dictxy,sur_dictZ
-from pysal.spreg.sur_lag import SURlagIV
+from econometrics.sur_utils import sur_dictxy,sur_dictZ
+from econometrics.sur_lag import SURlagIV
 from pysal.common import RTOL
 
 PEGP = pysal.examples.get_path

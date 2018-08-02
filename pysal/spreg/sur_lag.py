@@ -10,13 +10,14 @@ import numpy as np
 import pysal
 import summary_output as SUMMARY
 import user_output as USER
+import regimes as REGI
 from sur import BaseThreeSLS
 from diagnostics_sur import sur_setp, sur_chow, sur_joinrho
 from sur_utils import check_k
 
 __all__ = ["SURlagIV"]
 
-class SURlagIV(BaseThreeSLS):
+class SURlagIV(BaseThreeSLS, REGI.Regimes_Frame):
     """ User class for spatial lag estimation using IV
     
         Parameters
@@ -174,10 +175,10 @@ class SURlagIV(BaseThreeSLS):
                [  0.04394024,   5.87893596,   0.        ]])}
     """
 
-    def __init__(self,bigy,bigX,bigyend=None,bigq=None,w=None,vm=False,\
-                 w_lags=1, lag_q=True, nonspat_diag=True, spat_diag=False,\
-                 name_bigy=None,name_bigX=None,name_bigyend=None,\
-                 name_bigq=None,name_ds=None,name_w=None):
+    def __init__(self,bigy,bigX,bigyend=None,bigq=None,w=None,regimes=None,vm=False,\
+                 regime_lag_sep=False, w_lags=1, lag_q=True, nonspat_diag=True,\
+                 spat_diag=False,name_bigy=None,name_bigX=None,name_bigyend=None,\
+                 name_bigq=None,name_ds=None,name_w=None,name_regimes=None):
         if w == None:
             raise Exception, "Spatial weights required for SUR-Lag"
         self.w = w
@@ -196,89 +197,97 @@ class SURlagIV(BaseThreeSLS):
             for r in range(self.n_eq):
                 yn = 'dep_var_' + str(r+1)
                 self.name_bigy[r] = yn               
-        self.bigX = bigX
-        if name_bigX:
-            self.name_bigX = name_bigX
-        else: # need to construct x names
-            self.name_bigX = {}
+#        self.bigX = bigX
+        if name_bigX is None:
+            name_bigX = {}
             for r in range(self.n_eq):
-                k = self.bigX[r].shape[1] - 1
+                k = bigX[r].shape[1] - 1
                 name_x = ['var_' + str(i + 1) + "_" + str(r+1) for i in range(k)]
                 ct = 'Constant_' + str(r+1)  # NOTE: constant always included in X
                 name_x.insert(0, ct)
-                self.name_bigX[r] = name_x
-        if bigyend: # check on other endogenous
+                name_bigX[r] = name_x
+        if name_bigyend is None:
+            name_bigyend = {}
+        if bigyend is not None: # check on other endogenous
             self.bigyend = bigyend
-            if name_bigyend:
-                self.name_bigyend = name_bigyend
-            else: # need to construct names
-                self.name_bigyend = {}
-                for r in range(self.n_eq):
-                    ky = self.bigyend[r].shape[1]
-                    name_ye = ['end_' + str(i + 1) + "_" + str(r+1) for i in range(ky)]
-                    self.name_bigyend[r] = name_ye
-        if bigq:  # check on instruments
+            for r in range(self.n_eq):
+                ky = bigyend[r].shape[1]
+                name_ye = ['end_' + str(i + 1) + "_" + str(r+1) for i in range(ky)]
+                name_bigyend[r] = name_ye
+        if name_bigq is None:
+            name_bigq = {}
+        if bigq is not None:  # check on instruments
             self.bigq = bigq
-            if name_bigq:
-                self.name_bigq = name_bigq
-            else: # need to construct names
-                self.name_bigq = {}
-                for r in range(self.n_eq):
-                    ki = self.bigq[r].shape[1]
-                    name_i = ['inst_' + str(i + 1) + "_" + str(r+1) for i in range(ki)]
-                    self.name_bigq[r] = name_i                
+            for r in range(self.n_eq):
+                ki = bigq[r].shape[1]
+                name_i = ['inst_' + str(i + 1) + "_" + str(r+1) for i in range(ki)]
+                name_bigq[r] = name_i                
                 
-        #spatial lag dependent variable
-        bigylag = {}
-        for r in range(self.n_eq):
-            bigylag[r] = WS*self.bigy[r]
-        if bigyend:
-            self.bigyend=bigyend
+        if regimes is not None:
+            self.constant_regi = 'many'
+            self.cols2regi = 'all'
+            self.regime_err_sep = False
+            self.name_regimes = USER.set_name_ds(name_regimes)
+            self.regimes_set = REGI._get_regimes_set(regimes)
+            self.regimes = regimes
+            cols2regi_dic = {}
+            self.name_bigX,self.name_bigq,self.name_bigyend = {},{},{}
+            self.name_x_r = name_bigX
+
+            #spatial lag dependent variable varying across regimes
+            if regime_lag_sep == True:
+                bigyend, name_bigyend = _get_spatial_lag(self, bigyend, WS, name_bigyend)    
+
             for r in range(self.n_eq):
-                self.bigyend[r] = np.hstack((self.bigyend[r],bigylag[r]))
-            # adjust variable names
-            for r in range(self.n_eq):
-                wyname = "W_" + self.name_bigy[r]
-                self.name_bigyend[r].append(wyname)            
-        else: # no other endogenous variables
-            self.bigyend={}
-            for r in range(self.n_eq):
-                self.bigyend[r] = bigylag[r]
-            # variable names
-            self.name_bigyend = {}
-            for r in range(self.n_eq):
-                wyname = ["W_" + self.name_bigy[r]]
-                self.name_bigyend[r] = wyname
-                    
+                if bigyend is not None:
+                    self.name_x_r[r] += name_bigyend[r]
+                    cols2regi_dic[r] = REGI.check_cols2regi(self.constant_regi, self.cols2regi, bigX[r], yend=bigyend[r], add_cons=False)
+                else:
+                    cols2regi_dic[r] = REGI.check_cols2regi(self.constant_regi, self.cols2regi, bigX[r], add_cons=False)
+                USER.check_regimes(self.regimes_set, bigy[0].shape[0], bigX[r].shape[1])
+                bigX[r], self.name_bigX[r] = REGI.Regimes_Frame.__init__(self, bigX[r],\
+                 regimes, constant_regi=None, cols2regi=cols2regi_dic[r], names=name_bigX[r])
+                if bigq is not None:
+                    bigq[r], self.name_bigq[r] = REGI.Regimes_Frame.__init__(self, bigq[r],\
+                     regimes, constant_regi=None, cols2regi='all', names=name_bigq[r])
+                if bigyend is not None:
+                    bigyend[r], self.name_bigyend[r] = REGI.Regimes_Frame.__init__(self, bigyend[r],\
+                     regimes, constant_regi=None, cols2regi=cols2regi_dic[r], yend=True, names=name_bigyend[r])
+        else:
+            self.name_bigX,self.name_bigq,self.name_bigyend = name_bigX,name_bigq,name_bigyend
+
+
+        #spatial lag dependent variable fixed across regimes or no regimes
+        if regimes is None or regime_lag_sep == False:
+            bigyend, self.name_bigyend = _get_spatial_lag(self, bigyend, WS, name_bigyend)
         #spatially lagged exogenous variables
         bigwx = {}
         wxnames = {}
         if w_lags == 1:
             for r in range(self.n_eq):
-                bigwx[r] = WS* self.bigX[r][:,1:]
+                bigwx[r] = WS* bigX[r][:,1:]
                 wxnames[r] = [ "W_" + i for i in self.name_bigX[r][1:]]
             if bigq: # other instruments
                 if lag_q:  # also lags for instruments
                     bigwq = {}
                     for r in range(self.n_eq):
-                        bigwq = WS* self.bigq[r]
-                        self.bigq[r] = np.hstack((self.bigq[r],bigwx[r],bigwq))
+                        bigwq = WS* bigq[r]
+                        bigq[r] = np.hstack((bigq[r],bigwx[r],bigwq))
                         wqnames = [ "W_" + i for i in self.name_bigq[r]]
                         wxnames[r] = wxnames[r] + wqnames
                         self.name_bigq[r] = self.name_bigq[r] + wxnames[r]
                 else:  # no lags for other instruments
                     for r in range(self.n_eq):
-                        self.bigq[r] = np.hstack((self.bigq[r],bigwx[r]))
+                        bigq[r] = np.hstack((bigq[r],bigwx[r]))
                         self.name_bigq[r] = self.name_bigq[r] + wxnames[r]
             else: #no other instruments only wx
-                self.bigq = {}
-                self.name_bigq = {}
+                bigq = {}
                 for r in range(self.n_eq):
-                    self.bigq[r]=bigwx[r]
+                    bigq[r]=bigwx[r]
                     self.name_bigq[r] = wxnames[r]
         elif w_lags > 1:  # higher order lags for WX
             for r in range(self.n_eq):
-                bigwxwork = WS* self.bigX[r][:,1:]
+                bigwxwork = WS* bigX[r][:,1:]
                 bigwx[r] = bigwxwork
                 nameswork = [ "W_" + i for i in self.name_bigX[r][1:]]
                 wxnames[r] = nameswork
@@ -292,7 +301,7 @@ class SURlagIV(BaseThreeSLS):
                     wq = {}
                     wqnames = {}
                     for r in range(self.n_eq):
-                        bigwq = WS* self.bigq[r]
+                        bigwq = WS* bigq[r]
                         wqnameswork = [ "W_" + i for i in self.name_bigq[r]]
                         wqnames[r] = wqnameswork
                         wq[r] = bigwq                        
@@ -301,25 +310,24 @@ class SURlagIV(BaseThreeSLS):
                             wq[r] = np.hstack((wq[r],bigwq))
                             wqnameswork = [ "W" + i for i in wqnameswork ]
                             wqnames[r] = wqnames[r] + wqnameswork
-                        self.bigq[r] = np.hstack((self.bigq[r],bigwx[r],wq[r]))
+                        bigq[r] = np.hstack((bigq[r],bigwx[r],wq[r]))
                         self.name_bigq[r] = self.name_bigq[r] + wxnames[r] + wqnames[r]
                             
                 else:  # no lags for other instruments
                     for r in range(self.n_eq):
-                        self.bigq[r] = np.hstack((self.bigq[r],bigwx[r]))
+                        bigq[r] = np.hstack((bigq[r],bigwx[r]))
                         self.name_bigq[r] = self.name_bigq[r] + wxnames[r]
             else: # no other instruments only wx
-                self.bigq = {}
-                self.name_bigq = {}
+                bigq = {}
                 for r in range(self.n_eq):
-                    self.bigq[r] = bigwx[r]
+                    bigq[r] = bigwx[r]
                     self.name_bigq[r] = wxnames[r]
 
         else:
             raise Exception, "Lag order must be 1 or higher"
             
-        BaseThreeSLS.__init__(self,bigy=self.bigy,bigX=self.bigX,bigyend=self.bigyend,\
-            bigq=self.bigq)
+        BaseThreeSLS.__init__(self,bigy=self.bigy,bigX=bigX,bigyend=bigyend,\
+            bigq=bigq)
         
         #inference
         self.tsls_inf = sur_setp(self.b3SLS,self.varb)
@@ -338,7 +346,41 @@ class SURlagIV(BaseThreeSLS):
         
         #list results
         self.title = "SEEMINGLY UNRELATED REGRESSIONS (SUR) - SPATIAL LAG MODEL"                
-        SUMMARY.SUR(reg=self, tsls=True, spat_diag=spat_diag, nonspat_diag=nonspat_diag)
+        if regimes is not None:
+            self.title = "SUR - SPATIAL LAG MODEL - REGIMES"
+            self.chow_regimes = {}
+            varb_counter = 0
+            fixed_lag = 1
+            if regime_lag_sep == True:
+                fixed_lag += -1        
+            for r in range(self.n_eq):
+                counter_end = varb_counter+self.b3SLS[r].shape[0]
+                self.chow_regimes[r] = REGI._chow_run(len(cols2regi_dic[r]),fixed_lag,0,len(self.regimes_set),self.b3SLS[r],self.varb[varb_counter:counter_end,varb_counter:counter_end])
+                varb_counter = counter_end     
+            regimes=True   
+        SUMMARY.SUR(reg=self, tsls=True, spat_diag=spat_diag, nonspat_diag=nonspat_diag, ml=False, regimes=regimes)
+
+def _get_spatial_lag(reg, bigyend, WS, name_bigyend):
+    bigylag = {}
+    for r in range(reg.n_eq):
+        bigylag[r] = WS*reg.bigy[r]
+    if bigyend is not None:
+        for r in range(reg.n_eq):
+            bigyend[r] = np.hstack((bigyend[r],bigylag[r]))
+        # adjust variable names
+        for r in range(reg.n_eq):
+            wyname = "W_" + reg.name_bigy[r]
+            name_bigyend[r].append(wyname)            
+    else: # no other endogenous variables
+        bigyend={}
+        for r in range(reg.n_eq):
+            bigyend[r] = bigylag[r]
+        # variable names
+        for r in range(reg.n_eq):
+            wyname = ["W_" + reg.name_bigy[r]]
+            name_bigyend[r] = wyname
+    return bigyend, name_bigyend
+
 
 def _test():
     import doctest
@@ -348,7 +390,7 @@ def _test():
     np.set_printoptions(suppress=start_suppress)
 
 if __name__ == '__main__':
-    _test()
+    #_test()
     import numpy as np
     import pysal
     from sur_utils import sur_dictxy
@@ -358,9 +400,10 @@ if __name__ == '__main__':
     w.transform='r'
     y_var0 = ['HR80','HR90']
     x_var0 = [['PS80','UE80'],['PS90','UE90']]
+    regimes = db.by_col('SOUTH')
 
     bigy0,bigX0,bigyvars0,bigXvars0 = sur_dictxy(db,y_var0,x_var0)
 
-    reg = SURlagIV(bigy0,bigX0,w=w,name_bigy=bigyvars0,name_bigX=bigXvars0,\
-               name_ds="NAT",name_w="nat_queen",nonspat_diag=True,spat_diag=True)
+    reg = SURlagIV(bigy0,bigX0,w=w,regimes=regimes,name_bigy=bigyvars0,name_bigX=bigXvars0,\
+               name_ds="NAT",name_w="nat_queen",nonspat_diag=True,spat_diag=True,regime_lag_sep=True)
     print reg.summary

@@ -6,10 +6,9 @@ __author__ = ("Luc Anselin luc.anselin@asu.edu, "
               "Jing Yao jingyao@asu.edu")
 import numpy as np
 import copy as COPY
-from . import diagnostics
-from . import sputils as spu
-from .. import weights 
-import scipy
+import diagnostics
+import sputils as spu
+from pysal import weights 
 from scipy.sparse.csr import csr_matrix
 
 __all__ = []
@@ -506,7 +505,7 @@ def check_robust(robust, wk):
     if robust:
         if robust.lower() == 'hac':
             if not isinstance(wk, weights.Kernel):
-                raise Exception, "HAC requires that wk be a Kernel Weights object"
+                raise Exception, "HAC requires that wk be a pysal.W object"
             diag = wk.sparse.diagonal()
             # check to make sure all entries equal 1
             if diag.min() < 1.0:

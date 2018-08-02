@@ -1,9 +1,9 @@
 import unittest
 import numpy as np
 import pysal
-from pysal.spreg.twosls_sp_regimes import GM_Lag_Regimes
-from pysal.spreg import utils
-from pysal.spreg.twosls_sp import GM_Lag
+from econometrics.twosls_sp_regimes import GM_Lag_Regimes
+from econometrics import utils
+from econometrics.twosls_sp import GM_Lag
 from pysal.common import RTOL
 
 class TestGMLag_Regimes(unittest.TestCase):

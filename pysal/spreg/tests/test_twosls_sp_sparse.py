@@ -1,9 +1,9 @@
 import unittest
 import numpy as np
 import pysal
-import pysal.spreg.diagnostics as D
+import econometrics.diagnostics as D
 from scipy import sparse as SP
-from pysal.spreg.twosls_sp import BaseGM_Lag, GM_Lag
+from econometrics.twosls_sp import BaseGM_Lag, GM_Lag
 from pysal.common import RTOL
 
 class TestBaseGMLag(unittest.TestCase):

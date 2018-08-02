@@ -467,4 +467,4 @@ if __name__ == '__main__':
     ols = OLS(
         y, x, w=w, nonspat_diag=True, spat_diag=True, name_y=y_var, name_x=x_var,
         name_ds='columbus', name_w='columbus.gal', robust='white', sig2n_k=True, moran=True)
-    print ols.summary
+    print(ols.summary)

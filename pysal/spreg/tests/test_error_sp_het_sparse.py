@@ -2,7 +2,7 @@ import unittest
 import pysal
 import numpy as np
 from scipy import sparse
-from pysal.spreg import error_sp_het as HET
+from econometrics import error_sp_het as HET
 from pysal.common import RTOL
 
 class TestBaseGMErrorHet(unittest.TestCase):

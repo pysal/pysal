@@ -306,7 +306,6 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
         self.regimes_set = REGI._get_regimes_set(regimes)
         self.regimes = regimes
         USER.check_regimes(self.regimes_set, self.n, x.shape[1])
-        self.regime_err_sep = regime_err_sep
 
         if regime_err_sep == True:
             if set(cols2regi) == set([True]):

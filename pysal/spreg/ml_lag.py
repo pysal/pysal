@@ -306,7 +306,7 @@ class ML_Lag(BaseML_Lag):
     epsilon      : float
                    tolerance criterion in mimimize_scalar function and inverse_product
     spat_diag    : boolean
-                   if True, include spatial diagnostics
+                   if True, include spatial diagnostics (not implemented yet)
     vm           : boolean
                    if True, include variance-covariance matrix in summary
                    results

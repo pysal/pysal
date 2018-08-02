@@ -4,7 +4,7 @@ Unittests for spreg.error_sp_hom module
 '''
 import unittest
 import pysal
-from pysal.spreg import error_sp_hom as HOM
+from econometrics import error_sp_hom as HOM
 import numpy as np
 from pysal.common import RTOL
 

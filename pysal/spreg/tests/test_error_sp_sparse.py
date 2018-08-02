@@ -4,7 +4,7 @@ import numpy as np
 import scipy
 from scipy import sparse
 
-from pysal.spreg import error_sp as SP
+from econometrics import error_sp as SP
 from pysal.common import RTOL 
 
 class TestBaseGMError(unittest.TestCase):

@@ -65,7 +65,7 @@ class ML_Lag_Regimes(BaseML_Lag, REGI.Regimes_Frame):
                    Default: no multiprocessing, cores = False
                    Note: Multiprocessing may not work on all platforms.
     spat_diag    : boolean
-                   if True, include spatial diagnostics
+                   if True, include spatial diagnostics (not implemented yet)
     vm           : boolean
                    if True, include variance-covariance matrix in summary
                    results

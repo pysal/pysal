@@ -11,7 +11,7 @@ import numpy.linalg as la
 from scipy import sparse as sp
 from scipy.sparse.linalg import splu as SuperLU
 import pysal as ps
-from utils import RegressionPropsY, RegressionPropsVM
+from utils import RegressionPropsY, RegressionPropsVM, spdot
 import diagnostics as DIAG
 import user_output as USER
 import summary_output as SUMMARY
@@ -22,7 +22,7 @@ try:
     minimize_scalar_available = True
 except ImportError:
     minimize_scalar_available = False
-from .sputils import spdot, spfill_diagonal, spinv
+from sputils import spdot, spfill_diagonal, spinv
 
 __all__ = ["ML_Error"]
 
@@ -301,7 +301,7 @@ class ML_Error(BaseML_Error):
     epsilon      : float
                    tolerance criterion in mimimize_scalar function and inverse_product
     spat_diag    : boolean
-                   if True, include spatial diagnostics
+                   if True, include spatial diagnostics (not implemented yet)
     vm           : boolean
                    if True, include variance-covariance matrix in summary
                    results
@@ -492,12 +492,12 @@ def err_c_loglik_sp(lam, n, y, ylag, x, xlag, I, Wsp):
             lam = lam[0][0] #why does the interior value change?
     ys = y - lam * ylag
     xs = x - lam * xlag
-    ysys = np.dot(ys.T, ys)
-    xsxs = np.dot(xs.T, xs)
+    ysys = spdot(ys.T, ys)
+    xsxs = spdot(xs.T, xs)
     xsxsi = np.linalg.inv(xsxs)
-    xsys = np.dot(xs.T, ys)
-    x1 = np.dot(xsxsi, xsys)
-    x2 = np.dot(xsys.T, x1)
+    xsys = spdot(xs.T, ys)
+    x1 = spdot(xsxsi, xsys)
+    x2 = spdot(xsys.T, x1)
     ee = ysys - x2
     sig2 = ee[0][0] / n
     nlsig2 = (n / 2.0) * np.log(sig2)

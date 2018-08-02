@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 import pysal
-from pysal.spreg.twosls import BaseTSLS, TSLS
+from econometrics.twosls import BaseTSLS, TSLS
 from pysal.common import RTOL
 
 class TestBaseTSLS(unittest.TestCase):
