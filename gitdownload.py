@@ -3,8 +3,6 @@ import os
 import subprocess
 import sys
 
-TARGETROOT ="pysal/"
-
 
 with open('packages.yml') as package_file:
     packages = yaml.load(package_file)

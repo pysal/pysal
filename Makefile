@@ -33,4 +33,5 @@ clean:
 	rm -rf dist
 	rm -rf build
 	rm -rf PySAL.egg-info
+	rm -rf tmp
 

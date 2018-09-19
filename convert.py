@@ -3,7 +3,7 @@ import os
 import subprocess
 import sys
 
-TARGETROOT ="pysal/"
+#TARGETROOT ="pysal/"
 
 os.system('rm pysal/*.py')
 
