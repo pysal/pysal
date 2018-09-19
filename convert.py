@@ -68,6 +68,10 @@ os.system(c)
 c = "find pysal/model/spglm/. -name '*.py' -print | xargs sed -i -- 's/import spreg\.user_output as USER/from pysal\.model\.spreg import user_output as USER/g'"
 os.system(c)
 
+# undo a side effect in spglm
+c = "find pysal/model/spglm/. -name '*.py' -print | xargs sed -i -- 's/import pysal\.model\.spreg\.user_output as USER/from pysal\.model\.spreg import user_output as USER/g'"
+os.system(c)
+
 c = "find pysal/model/spint/. -name '*.py' -print | xargs sed -i -- 's/import spreg\.user_output as USER/from pysal\.model\.spreg import user_output as USER/g'"
 os.system(c)
 
