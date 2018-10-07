@@ -1,14 +1,12 @@
-import os.path
-from .. import FileIO
+from .. import fileio
 from ...weights.weights import W
 from ...weights.util import remap_ids
-from warnings import warn
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
 __all__ = ["ArcGISDbfIO"]
 
 
-class ArcGISDbfIO(FileIO.FileIO):
+class ArcGISDbfIO(fileio.FileIO):
     """
     Opens, reads, and writes weights file objects in ArcGIS dbf format.
 
@@ -58,8 +56,8 @@ class ArcGISDbfIO(FileIO.FileIO):
     def __init__(self, *args, **kwargs):
         self._varName = 'Unknown'
         args = args[:2]
-        FileIO.FileIO.__init__(self, *args, **kwargs)
-        self.file = FileIO.FileIO(self.dataPath, self.mode)
+        fileio.FileIO.__init__(self, *args, **kwargs)
+        self.file = fileio.FileIO(self.dataPath, self.mode)
 
     def _set_varName(self, val):
         if issubclass(type(val), str):
@@ -79,7 +77,7 @@ class ArcGISDbfIO(FileIO.FileIO):
 
     def _read(self):
         """Reads ArcGIS dbf file
-        Returns a pysal.weights.weights.W object
+        Returns a pysal.lib.weights.weights.W object
 
         Examples
         --------
@@ -87,7 +85,8 @@ class ArcGISDbfIO(FileIO.FileIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open an ArcGIS dbf file and read it into a pysal weights object
 
-        >>> w = pysal.open(pysal.examples.get_path('arcgis_ohio.dbf'),'r','arcgis_dbf').read()
+        >>> import pysal.lib
+        >>> w = pysal.lib.io.open(pysal.lib.examples.get_path('arcgis_ohio.dbf'),'r','arcgis_dbf').read()
 
         Get the number of observations from the header
 
@@ -101,8 +100,8 @@ class ArcGISDbfIO(FileIO.FileIO):
 
         Get neighbor distances for a single observation
 
-        >>> w[1]
-        {2: 1.0, 11: 1.0, 6: 1.0, 7: 1.0}
+        >>> w[1] == dict({2: 1.0, 11: 1.0, 6: 1.0, 7: 1.0})
+        True
 
         """
         if self.pos > 0:
@@ -227,4 +226,3 @@ class ArcGISDbfIO(FileIO.FileIO):
 
     def close(self):
         self.file.close()
-

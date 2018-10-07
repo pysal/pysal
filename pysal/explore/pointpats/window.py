@@ -6,6 +6,7 @@ __author__ = "Serge Rey sjsrey@gmail.com"
 
 import pysal.lib as ps
 import numpy as np
+__all__ = ["as_window", "poly_from_bbox", "to_ccf", "Window"]
 
 
 def poly_from_bbox(bbox):
@@ -27,7 +28,7 @@ def as_window(pysal_polygon):
         return Window(pysal_polygon.parts, pysal_polygon.holes)
 
 
-class Window(ps.cg.shapes.Polygon):
+class Window(ps.cg.Polygon):
     """
     Geometric container for point patterns.
 

@@ -1,13 +1,13 @@
-from .. import Tables 
+from .. import tables
 import csv
 
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ['csvWrapper']
 
 
-class csvWrapper(Tables.DataTable):
+class csvWrapper(tables.DataTable):
     
-    __doc__ = Tables.DataTable.__doc__
+    __doc__ = tables.DataTable.__doc__
     FORMATS = ['csv']
     READ_MODES = ['r','Ur','rU','U']
     MODES = READ_MODES[:]
@@ -17,18 +17,18 @@ class csvWrapper(Tables.DataTable):
 
         Examples
         --------
-        >>> import pysal
-        >>> file_name = pysal.examples.get_path('stl_hom.csv')
-        >>> f = pysal.open(file_name,'r')
+        >>> import pysal.lib
+        >>> file_name = pysal.lib.examples.get_path('stl_hom.csv')
+        >>> f = pysal.lib.io.open(file_name,'r')
         >>> y = f.read()
         >>> f.header
         ['WKT', 'NAME', 'STATE_NAME', 'STATE_FIPS', 'CNTY_FIPS', 'FIPS', 'FIPSNO', 'HR7984', 'HR8488', 'HR8893', 'HC7984', 'HC8488', 'HC8893', 'PO7984', 'PO8488', 'PO8893', 'PE77', 'PE82', 'PE87', 'RDAC80', 'RDAC85', 'RDAC90']
         >>> f._spec
-        [<type 'str'>, <type 'str'>, <type 'str'>, <type 'int'>, <type 'int'>, <type 'int'>, <type 'int'>, <type 'float'>, <type 'float'>, <type 'float'>, <type 'int'>, <type 'int'>, <type 'int'>, <type 'int'>, <type 'int'>, <type 'int'>, <type 'float'>, <type 'float'>, <type 'float'>, <type 'float'>, <type 'float'>, <type 'float'>]
+        [<class 'str'>, <class 'str'>, <class 'str'>, <class 'int'>, <class 'int'>, <class 'int'>, <class 'int'>, <class 'float'>, <class 'float'>, <class 'float'>, <class 'int'>, <class 'int'>, <class 'int'>, <class 'int'>, <class 'int'>, <class 'int'>, <class 'float'>, <class 'float'>, <class 'float'>, <class 'float'>, <class 'float'>, <class 'float'>]
 
 
         """
-        Tables.DataTable.__init__(self, *args, **kwargs)
+        tables.DataTable.__init__(self, *args, **kwargs)
         self.__idx = {}
         self.__len = None
         self._open()
@@ -93,4 +93,3 @@ class csvWrapper(Tables.DataTable):
             return row
         else:
             return None
-

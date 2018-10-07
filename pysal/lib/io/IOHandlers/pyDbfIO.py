@@ -1,9 +1,7 @@
-from .. import Tables
+from .. import tables
 from ...common import MISSINGVALUE
 import datetime
 import struct
-import itertools
-from warnings import warn
 import os
 import time
 
@@ -11,7 +9,7 @@ __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ['DBF']
 
 
-class DBF(Tables.DataTable):
+class DBF(tables.DataTable):
     """
     PySAL DBF Reader/Writer
 
@@ -53,7 +51,7 @@ class DBF(Tables.DataTable):
         dataPath -- str -- Path to file, including file.
         mode -- str -- 'r' or 'w'
         """
-        Tables.DataTable.__init__(self, *args, **kwargs)
+        tables.DataTable.__init__(self, *args, **kwargs)
         if self.mode == 'r':
             self.f = f = open(self.dataPath, 'rb')
             numrec, lenheader = struct.unpack('<xxxxLH22x', f.read(32)) #from dbf file standards
@@ -259,7 +257,7 @@ class DBF(Tables.DataTable):
             # End of file
             self.f.write('\x1A'.encode())
         self.f.close()
-        Tables.DataTable.close(self)
+        tables.DataTable.close(self)
 
     def _firstWrite(self, obj):
         if not self.header:

@@ -1,5 +1,5 @@
 import unittest
-import pysal.explore.giddy.util as util
+from .. import util
 import numpy as np
 
 

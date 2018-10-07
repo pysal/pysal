@@ -63,12 +63,12 @@ class LMtests:
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
     >>> from ols import OLS
 
     Open the csv file to access the data for analysis
 
-    >>> csv = lps.open(lps.get_path('columbus.dbf'),'r')
+    >>> csv = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
 
     Pull out from the csv the files we need ('HOVAL' as dependent as well as
     'INC' and 'CRIME' as independent) and directly transform them into nx1 and
@@ -79,7 +79,7 @@ class LMtests:
 
     Create the weights object from existing .gal file
 
-    >>> w = lps.open(lps.get_path('columbus.gal'), 'r').read()
+    >>> w = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.gal'), 'r').read()
 
     Row-standardize the weight object (not required although desirable in some
     cases)
@@ -173,12 +173,12 @@ class MoranRes:
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
     >>> from ols import OLS
 
     Open the csv file to access the data for analysis
 
-    >>> csv = lps.open(lps.get_path('columbus.dbf'),'r')
+    >>> csv = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
 
     Pull out from the csv the files we need ('HOVAL' as dependent as well as
     'INC' and 'CRIME' as independent) and directly transform them into nx1 and
@@ -189,7 +189,7 @@ class MoranRes:
 
     Create the weights object from existing .gal file
 
-    >>> w = lps.open(lps.get_path('columbus.gal'), 'r').read()
+    >>> w = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.gal'), 'r').read()
 
     Row-standardize the weight object (not required although desirable in some
     cases)
@@ -289,17 +289,17 @@ class AKtest:
     which we will perform the tests.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
     >>> from twosls import TSLS
     >>> from twosls_sp import GM_Lag
 
-    Open data on Columbus neighborhood crime (49 areas) using lps.open().
+    Open data on Columbus neighborhood crime (49 areas) using pysal.lib.io.open().
     This is the DBF associated with the Columbus shapefile.  Note that
-    lps.open() also reads data in CSV format; since the actual class
+    pysal.lib.io.open() also reads data in CSV format; since the actual class
     requires data to be passed in as numpy arrays, the user can read their
     data in using any method.
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"),'r')
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),'r')
 
     Before being able to apply the diagnostics, we have to run a model and,
     for that, we need the input variables. Extract the CRIME column (crime
@@ -350,7 +350,7 @@ class AKtest:
     existing gal file or create a new one. In this case, we will create one
     from ``columbus.shp``.
 
-    >>> w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+    >>> w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
 
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other

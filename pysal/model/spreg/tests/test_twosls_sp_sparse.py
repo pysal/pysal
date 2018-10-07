@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-import pysal.lib.api as lps
+import pysal.lib
 import pysal.model.spreg.diagnostics as D
 from scipy import sparse as SP
 from pysal.model.spreg.twosls_sp import BaseGM_Lag, GM_Lag
@@ -10,9 +10,9 @@ import pysal.model.spreg
 
 class TestBaseGMLag(unittest.TestCase):
     def setUp(self):
-        self.w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+        self.w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
-        self.db = lps.open(lps.get_path("columbus.dbf"), 'r')
+        self.db = pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"), 'r')
         y = np.array(self.db.by_col("HOVAL"))
         self.y = np.reshape(y, (49,1))
         
@@ -106,7 +106,7 @@ class TestBaseGMLag(unittest.TestCase):
         yd2, q2 = pysal.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 2, True)
         self.X = np.hstack((np.ones(self.y.shape),self.X))
         self.X = SP.csr_matrix(self.X)
-        gwk = lps.kernelW_from_shapefile(lps.get_path('columbus.shp'),k=15,function='triangular', fixed=False)        
+        gwk = pysal.lib.weights.Kernel.from_shapefile(pysal.lib.examples.get_path('columbus.shp'),k=15,function='triangular', fixed=False)        
         base_gm_lag = BaseGM_Lag(self.y, self.X, yend=yd2, q=q2, w=self.w, w_lags=2, robust='hac', gwk=gwk)
         tbetas = np.array([[  4.53017056e+01], [  6.20888617e-01], [ -4.80723451e-01], [  2.83622122e-02]])
         np.testing.assert_allclose(base_gm_lag.betas, tbetas) 
@@ -169,9 +169,9 @@ class TestBaseGMLag(unittest.TestCase):
 
 class TestGMLag(unittest.TestCase):
     def setUp(self):
-        self.w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+        self.w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
-        self.db = lps.open(lps.get_path("columbus.dbf"), 'r')
+        self.db = pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"), 'r')
         y = np.array(self.db.by_col("HOVAL"))
         self.y = np.reshape(y, (49,1))
         
@@ -266,7 +266,7 @@ class TestGMLag(unittest.TestCase):
         X.append(self.db.by_col("CRIME"))
         self.X = np.array(X).T
         self.X = SP.csr_matrix(self.X)
-        gwk = lps.kernelW_from_shapefile(lps.get_path('columbus.shp'),k=15,function='triangular', fixed=False)        
+        gwk = pysal.lib.weights.Kernel.from_shapefile(pysal.lib.examples.get_path('columbus.shp'),k=15,function='triangular', fixed=False)        
         base_gm_lag = GM_Lag(self.y, self.X, w=self.w, w_lags=2, robust='hac', gwk=gwk)
         tbetas = np.array([[  4.53017056e+01], [  6.20888617e-01], [ -4.80723451e-01], [  2.83622122e-02]])
         np.testing.assert_allclose(base_gm_lag.betas, tbetas) 
@@ -327,7 +327,7 @@ class TestGMLag(unittest.TestCase):
         yd = np.reshape(yd, (49,1))
         q = np.array(self.db.by_col("DISCBD"))
         q = np.reshape(q, (49,1))
-        w = lps.queen_from_shapefile(lps.get_path('columbus.shp'))
+        w = pysal.lib.weights.Queen.from_shapefile(pysal.lib.examples.get_path('columbus.shp'))
         reg = GM_Lag(self.y, X, yd, q, spat_diag=True, w=w)
         betas = np.array([[  5.46344924e+01], [  4.13301682e-01], [ -5.92637442e-01], [ -7.40490883e-03]])
         np.testing.assert_allclose(reg.betas, betas,RTOL)
@@ -347,8 +347,8 @@ class TestGMLag(unittest.TestCase):
         yd = np.reshape(yd, (49,1))
         q = np.array(self.db.by_col("DISCBD"))
         q = np.reshape(q, (49,1))
-        w = lps.queen_from_shapefile(lps.get_path('columbus.shp'))
-        gwk = lps.kernelW_from_shapefile(lps.get_path('columbus.shp'),k=5,function='triangular', fixed=False)
+        w = pysal.lib.weights.Queen.from_shapefile(pysal.lib.examples.get_path('columbus.shp'))
+        gwk = pysal.lib.weights.Kernel.from_shapefile(pysal.lib.examples.get_path('columbus.shp'),k=5,function='triangular', fixed=False)
         name_x = ['inc']
         name_y = 'crime'
         name_yend = ['crime']

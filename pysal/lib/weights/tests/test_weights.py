@@ -2,10 +2,10 @@ import unittest
 from ..weights import W, WSP
 from .. import util
 from ..util import WSP2W, lat2W
-from ..user import rook_from_shapefile
-from ...io.FileIO import FileIO as psopen
-from ... import examples as pysal_examples
-from ..Distance import KNN
+from ..contiguity import Rook
+from ...io.fileio import FileIO as psopen
+from ... import examples
+from ..distance import KNN
 import numpy as np
 
 NPTA3E = np.testing.assert_array_almost_equal
@@ -13,7 +13,8 @@ NPTA3E = np.testing.assert_array_almost_equal
 
 class TestW(unittest.TestCase):
     def setUp(self):
-        self.w = rook_from_shapefile(pysal_examples.get_path('10740.shp'))
+        self.w = Rook.from_shapefile(examples.get_path('10740.shp'),
+                                     silence_warnings=True)
 
         self.neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4],
                           4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7],
@@ -25,7 +26,7 @@ class TestW(unittest.TestCase):
         self.w3x3 = util.lat2W(3, 3)
 
     def test_W(self):
-        w = W(self.neighbors, self.weights)
+        w = W(self.neighbors, self.weights, silence_warnings=True)
         self.assertEqual(w.pct_nonzero, 29.62962962962963)
 
     def test___getitem__(self):
@@ -33,7 +34,7 @@ class TestW(unittest.TestCase):
             self.w[0], {1: 1.0, 4: 1.0, 101: 1.0, 85: 1.0, 5: 1.0})
 
     def test___init__(self):
-        w = W(self.neighbors, self.weights)
+        w = W(self.neighbors, self.weights, silence_warnings=True)
         self.assertEqual(w.pct_nonzero, 29.62962962962963)
 
     def test___iter__(self):
@@ -131,13 +132,13 @@ class TestW(unittest.TestCase):
 
     def test_islands(self):
         w = W(neighbors={'a': ['b'], 'b': ['a', 'c'], 'c':
-                               ['b'], 'd': []})
+                               ['b'], 'd': []}, silence_warnings=True)
         self.assertEqual(w.islands, ['d'])
         self.assertEqual(self.w3x3.islands, [])
 
     def test_max_neighbors(self):
         w = W(neighbors={'a': ['b'], 'b': ['a', 'c'], 'c':
-                               ['b'], 'd': []})
+                               ['b'], 'd': []}, silence_warnings=True)
         self.assertEqual(w.max_neighbors, 2)
         self.assertEqual(self.w3x3.max_neighbors, 4)
 
@@ -236,7 +237,8 @@ class TestW(unittest.TestCase):
     def test_symmetrize(self):
         symm = self.w.symmetrize() 
         np.testing.assert_allclose(symm.sparse.toarray(), self.w.sparse.toarray())
-        knn = KNN.from_shapefile(pysal_examples.get_path('baltim.shp'), k=10)
+        knn = KNN.from_shapefile(examples.get_path('baltim.shp'), k=10,
+                                 silence_warnings=True)
         sknn = knn.symmetrize()
         assert (not np.allclose(knn.sparse.toarray(), sknn.sparse.toarray()))
         np.testing.assert_allclose(sknn.sparse.toarray(), sknn.sparse.toarray().T)
@@ -255,9 +257,10 @@ class TestW(unittest.TestCase):
 class Test_WSP_Back_To_W(unittest.TestCase):
     # Test to make sure we get back to the same W functionality
     def setUp(self):
-        self.w = rook_from_shapefile(pysal_examples.get_path('10740.shp'))
+        self.w = Rook.from_shapefile(examples.get_path('10740.shp'), 
+                                     silence_warnings=True)
         wsp = self.w.to_WSP()
-        self.w = wsp.to_W()
+        self.w = wsp.to_W(silence_warnings=True)
 
         self.neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4],
                           4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7],
@@ -271,7 +274,7 @@ class Test_WSP_Back_To_W(unittest.TestCase):
         self.w3x3 = WSP2W(w3x3)
 
     def test_W(self):
-        w = W(self.neighbors, self.weights)
+        w = W(self.neighbors, self.weights, silence_warnings=True)
         self.assertEqual(w.pct_nonzero, 29.62962962962963)
 
     def test___getitem__(self):
@@ -279,7 +282,7 @@ class Test_WSP_Back_To_W(unittest.TestCase):
             self.w[0], {1: 1.0, 4: 1.0, 101: 1.0, 85: 1.0, 5: 1.0})
 
     def test___init__(self):
-        w = W(self.neighbors, self.weights)
+        w = W(self.neighbors, self.weights, silence_warnings=True)
         self.assertEqual(w.pct_nonzero, 29.62962962962963)
 
     def test___iter__(self):
@@ -376,13 +379,13 @@ class Test_WSP_Back_To_W(unittest.TestCase):
 
     def test_islands(self):
         w = W(neighbors={'a': ['b'], 'b': ['a', 'c'], 'c':
-                               ['b'], 'd': []})
+                               ['b'], 'd': []}, silence_warnings=True)
         self.assertEqual(w.islands, ['d'])
         self.assertEqual(self.w3x3.islands, [])
 
     def test_max_neighbors(self):
         w = W(neighbors={'a': ['b'], 'b': ['a', 'c'], 'c':
-                               ['b'], 'd': []})
+                               ['b'], 'd': []}, silence_warnings=True)
         self.assertEqual(w.max_neighbors, 2)
         self.assertEqual(self.w3x3.max_neighbors, 4)
 
@@ -468,7 +471,7 @@ class Test_WSP_Back_To_W(unittest.TestCase):
 
 class TestWSP(unittest.TestCase):
     def setUp(self):
-        self.w = psopen(pysal_examples.get_path("sids2.gal")).read()
+        self.w = psopen(examples.get_path("sids2.gal")).read()
         self.wsp = WSP(self.w.sparse, self.w.id_order)
         w3x3 = util.lat2W(3, 3)
         self.w3x3 = WSP(w3x3.sparse)

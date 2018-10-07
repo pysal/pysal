@@ -7,7 +7,7 @@ _author_ = "Taylor Oshan tayoshan@gmail.com, Levi Wolf levi.john.wolf@gmail.com"
 
 import numpy as np
 import scipy.stats as stats
-from pysal.lib.weights.Distance import DistanceBand
+from pysal.lib.weights.distance import DistanceBand
 
 PERMUTATIONS = 99
 
@@ -187,7 +187,7 @@ class VecMoran:
             self.alpha = w.alpha
             self.build_sp = w.build_sp
             self.binary = w.binary
-            self.silent = w.silent
+            self.silence_warnings = w.silence_warnings
         except:
             raise AttributeError('W object missing necessary attributes: '
                 'threshold, alpha, binary, build_sp, silent')
@@ -293,14 +293,14 @@ class VecMoran:
             sims = [np.hstack([np.arange(self.n).reshape((-1,1)), newO,
             self._newD(self.o, self.d, newO)]) for newO in newOs]
             Ws = [DistanceBand(newO, threshold=self.threshold, alpha=self.alpha, 
-                binary=self.binary, build_sp=self.build_sp, silent=self.silent)
+                binary=self.binary, build_sp=self.build_sp, silence_warnings=self.silence_warnings)
                 for newO in newOs]
         elif focus.lower() == 'destination':
             newDs = [np.random.permutation(self.d) for i in range(self.permutations)]
             sims = [np.hstack([np.arange(self.n).reshape((-1,1)),
                 self._newO(self.o, self.d, newD), newD]) for newD in newDs]
             Ws = [DistanceBand(newD, threshold=self.threshold, alpha=self.alpha, 
-                binary=self.binary, build_sp=self.build_sp, silent=self.silent)
+                binary=self.binary, build_sp=self.build_sp, silence_warnings=self.silence_warnings)
                 for newD in newDs]
         else:
             raise ValueError("Parameter 'focus' must take value of either 'origin' or 'destination.'")

@@ -3,7 +3,7 @@ import unittest
 import tempfile
 import os
 from ..gal import GalIO
-from ...FileIO import FileIO as psopen
+from ...fileio import FileIO as psopen
 from .... import examples as pysal_examples
 
 

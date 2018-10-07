@@ -1,15 +1,13 @@
-import os.path
 import scipy.io as sio
-from .. import FileIO
+from .. import fileio
 from ...weights import W
 from ...weights.util import full, full2W
-from warnings import warn
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
 __all__ = ["MatIO"]
 
 
-class MatIO(FileIO.FileIO):
+class MatIO(fileio.FileIO):
     """
     Opens, reads, and writes weights file objects in MATLAB Level 4-5 MAT format.
 
@@ -42,7 +40,7 @@ class MatIO(FileIO.FileIO):
 
     def __init__(self, *args, **kwargs):
         self._varName = 'Unknown'
-        FileIO.FileIO.__init__(self, *args, **kwargs)
+        fileio.FileIO.__init__(self, *args, **kwargs)
         self.file = open(self.dataPath, self.mode + 'b')
 
     def _set_varName(self, val):
@@ -72,7 +70,8 @@ class MatIO(FileIO.FileIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open a MATLAB mat file and read it into a pysal weights object
 
-        >>> w = pysal.open(pysal.examples.get_path('spat-sym-us.mat'),'r').read()
+        >>> import pysal.lib
+        >>> w = pysal.lib.io.open(pysal.lib.examples.get_path('spat-sym-us.mat'),'r').read()
 
         Get the number of observations from the header
 
@@ -82,12 +81,12 @@ class MatIO(FileIO.FileIO):
         Get the mean number of neighbors
 
         >>> w.mean_neighbors
-        4.0869565217391308
+        4.086956521739131
 
         Get neighbor distances for a single observation
 
-        >>> w[1]
-        {25: 1, 3: 1, 28: 1, 39: 1}
+        >>> w[1] == dict({25: 1, 3: 1, 28: 1, 39: 1})
+        True
 
         """
         if self.pos > 0:
@@ -170,5 +169,4 @@ class MatIO(FileIO.FileIO):
 
     def close(self):
         self.file.close()
-        FileIO.FileIO.close(self)
-
+        fileio.FileIO.close(self)

@@ -33,18 +33,18 @@ def lag_spatial(w, y):
     Setup a 9x9 binary spatial weights matrix and vector of data; compute the
     spatial lag of the vector.
 
-    >>> import pysal.lib.api as ps
+    >>> import pysal.lib
     >>> import numpy as np
-    >>> w = ps.lat2W(3, 3)
+    >>> w = pysal.lib.weights.lat2W(3, 3)
     >>> y = np.arange(9)
-    >>> yl = ps.lag_spatial(w, y)
+    >>> yl = pysal.lib.weights.spatial_lag.lag_spatial(w, y)
     >>> yl
     array([ 4.,  6.,  6., 10., 16., 14., 10., 18., 12.])
 
     Row standardize the weights matrix and recompute the spatial lag
 
     >>> w.transform = 'r'
-    >>> yl = ps.lag_spatial(w, y)
+    >>> yl = pysal.lib.weights.spatial_lag.lag_spatial(w, y)
     >>> yl
     array([2.        , 2.        , 3.        , 3.33333333, 4.        ,
            4.66666667, 5.        , 6.        , 6.        ])
@@ -53,7 +53,7 @@ def lag_spatial(w, y):
     Explicitly define data vector as 9x1 and recompute the spatial lag
 
     >>> y.shape = (9, 1)
-    >>> yl = ps.lag_spatial(w, y)
+    >>> yl = pysal.lib.weights.spatial_lag.lag_spatial(w, y)
     >>> yl
     array([[2.        ],
            [2.        ],
@@ -71,7 +71,7 @@ def lag_spatial(w, y):
     >>> yr = np.arange(8, -1, -1)
     >>> yr.shape = (9, 1)
     >>> x = np.hstack((y, yr))
-    >>> yl = ps.lag_spatial(w, x)
+    >>> yl = pysal.lib.weights.spatial_lag.lag_spatial(w, x)
     >>> yl
     array([[2.        , 6.        ],
            [2.        , 6.        ],
@@ -127,11 +127,10 @@ def lag_categorical(w, y, ties='tryself'):
     Set up a 9x9 weights matrix describing a 3x3 regular lattice. Lag one list of
     categorical variables with no ties.
 
-    >>> import pysal.lib.api as ps
     >>> import pysal.lib
     >>> import numpy as np
     >>> np.random.seed(12345)
-    >>> w = ps.lat2W(3, 3)
+    >>> w = pysal.lib.weights.lat2W(3, 3)
     >>> y = ['a','b','a','b','c','b','c','b','c']
     >>> y_l = pysal.lib.weights.spatial_lag.lag_categorical(w, y)
     >>> np.array_equal(y_l, np.array(['b', 'a', 'b', 'c', 'b', 'c', 'b', 'c', 'b']))

@@ -1,26 +1,24 @@
 import unittest
-import scipy
-import pysal.lib.api as lps
+import pysal.lib
 import numpy as np
-from pysal.model.spreg.ml_error_regimes import ML_Error_Regimes
-from pysal.model.spreg.ml_error import ML_Error
-from pysal.model.spreg import utils
+from scipy import sparse
+from ..ml_error_regimes import ML_Error_Regimes
+from ..ml_error import ML_Error
 from pysal.lib.common import RTOL
-from .skip import SKIP
+from warnings import filterwarnings
 
+filterwarnings('ignore', category=sparse.SparseEfficiencyWarning)
 
-@unittest.skipIf(SKIP,
-        "Skipping MLError Tests")
 class TestMLError(unittest.TestCase):
     def setUp(self):
-        db =  lps.open(lps.get_path("baltim.dbf"),'r')
+        db =  pysal.lib.io.open(pysal.lib.examples.get_path("baltim.dbf"),'r')
         self.ds_name = "baltim.dbf"
         self.y_name = "PRICE"
         self.y = np.array(db.by_col(self.y_name)).T
         self.y.shape = (len(self.y),1)
         self.x_names = ["NROOM","AGE","SQFT"]
         self.x = np.array([db.by_col(var) for var in self.x_names]).T
-        ww = lps.open(lps.get_path("baltim_q.gal"))
+        ww = pysal.lib.io.open(pysal.lib.examples.get_path("baltim_q.gal"))
         self.w = ww.read()
         ww.close()
         self.w_name = "baltim_q.gal"
@@ -28,17 +26,17 @@ class TestMLError(unittest.TestCase):
         self.regimes = db.by_col("CITCOU")
         #Artficial:
         n = 256
-        self.n2 = n/2
+        self.n2 = int(n/2)
         self.x_a1 = np.random.uniform(-10,10,(n,1))
         self.x_a2 = np.random.uniform(1,5,(n,1))
         self.q_a = self.x_a2 + np.random.normal(0,1,(n,1))
         self.x_a = np.hstack((self.x_a1,self.x_a2))
         self.y_a = np.dot(np.hstack((np.ones((n,1)),self.x_a)),np.array([[1],[0.5],[2]])) + np.random.normal(0,1,(n,1))
         latt = int(np.sqrt(n))
-        self.w_a = lps.lat2W(latt,latt)
+        self.w_a = pysal.lib.weights.util.lat2W(latt,latt)
         self.w_a.transform='r'
         self.regi_a = [0]*(n//2) + [1]*(n//2) #must be floor!
-        self.w_a1 = lps.lat2W(latt//2,latt)
+        self.w_a1 = pysal.lib.weights.util.lat2W(latt//2,latt)
         self.w_a1.transform='r'
 
     def test_model1(self):

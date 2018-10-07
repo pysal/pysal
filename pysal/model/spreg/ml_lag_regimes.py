@@ -4,7 +4,6 @@ ML Estimation of Spatial Lag Model with Regimes
 
 __author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.edu"
 
-import pysal.lib.api as lps
 import numpy as np
 from . import regimes as REGI
 from . import user_output as USER
@@ -65,7 +64,7 @@ class ML_Lag_Regimes(BaseML_Lag, REGI.Regimes_Frame):
                    Default: no multiprocessing, cores = False
                    Note: Multiprocessing may not work on all platforms.
     spat_diag    : boolean
-                   if True, include spatial diagnostics
+                   if True, include spatial diagnostics (not implemented yet)
     vm           : boolean
                    if True, include variance-covariance matrix in summary
                    results
@@ -226,8 +225,9 @@ class ML_Lag_Regimes(BaseML_Lag, REGI.Regimes_Frame):
     Open data baltim.dbf using pysal and create the variables matrices and weights matrix.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> db =  ps.open(ps.examples.get_path("baltim.dbf"),'r')
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
+    >>> db =  pysal.lib.io.open(examples.get_path("baltim.dbf"),'r')
     >>> ds_name = "baltim.dbf"
     >>> y_name = "PRICE"
     >>> y = np.array(db.by_col(y_name)).T
@@ -459,8 +459,8 @@ def _test():
 if __name__ == "__main__":
     _test()
     import numpy as np
-    import pysal.lib.api as lps
-    db = ps.open(ps.examples.get_path("baltim.dbf"), 'r')
+    import pysal.lib
+    db = pysal.lib.io.open(pysal.lib.examples.get_path("baltim.dbf"), 'r')
     ds_name = "baltim.dbf"
     y_name = "PRICE"
     y = np.array(db.by_col(y_name)).T

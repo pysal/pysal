@@ -192,11 +192,11 @@ class PoissonPointProcess(PointProcess):
     --------
     >>> import pysal.lib as ps
     >>> import numpy as np
-    >>> from pointpats.window import Window, poly_from_bbox
+    >>> from pointpats import Window
     >>> from pysal.lib.cg import shapely_ext
 
     Open the virginia polygon shapefile
-    >>> va = ps.open(ps.examples.get_path("virginia.shp"))
+    >>> va = ps.io.open(ps.examples.get_path("virginia.shp"))
 
     Create the exterior polygons for VA from the union of the county shapes
     >>> polys = [shp for shp in va]
@@ -341,11 +341,11 @@ class PoissonClusterPointProcess(PointProcess):
     --------
     >>> import pysal.lib as ps
     >>> import numpy as np
-    >>> from pointpats.window import Window, poly_from_bbox
+    >>> from pointpats import Window
     >>> from pysal.lib.cg import shapely_ext
 
     Open the virginia polygon shapefile
-    >>> va = ps.open(ps.examples.get_path("virginia.shp"))
+    >>> va = ps.io.open(ps.examples.get_path("virginia.shp"))
 
     Create the exterior polygons for VA from the union of the county shapes
     >>> polys = [shp for shp in va]

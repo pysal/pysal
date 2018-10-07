@@ -78,8 +78,8 @@ class BaseOLS(RegressionPropsY, RegressionPropsVM):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
+    >>> import pysal.lib
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
     >>> y = np.array(db.by_col("HOVAL"))
     >>> y = np.reshape(y, (49,1))
     >>> X = []
@@ -288,15 +288,15 @@ class OLS(BaseOLS):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
 
-    Open data on Columbus neighborhood crime (49 areas) using lps.open().
+    Open data on Columbus neighborhood crime (49 areas) using pysal.lib.io.open().
     This is the DBF associated with the Columbus shapefile.  Note that
-    lps.open() also reads data in CSV format; also, the actual OLS class
+    pysal.lib.io.open() also reads data in CSV format; also, the actual OLS class
     requires data to be passed in as numpy arrays so the user can read their
     data in using any method.  
 
-    >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
 
     Extract the HOVAL column (home values) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
@@ -402,7 +402,7 @@ class OLS(BaseOLS):
     residuals is 0.204 with a standardized value of 2.592 and a p-value of
     0.0095.
 
-    >>> w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+    >>> w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
     >>> ols = OLS(y, X, w, spat_diag=True, moran=True, name_y='home value', name_x=['income','crime'], name_ds='columbus')
     >>> ols.betas
     array([[ 46.42818268],
@@ -456,13 +456,13 @@ if __name__ == '__main__':
     _test()
 
     import numpy as np
-    import pysal.lib.api as lps
-    db = lps.open(lps.get_path("columbus.dbf"), 'r')
+    import pysal.lib
+    db = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
     y_var = 'CRIME'
     y = np.array([db.by_col(y_var)]).reshape(49, 1)
     x_var = ['INC', 'HOVAL']
     x = np.array([db.by_col(name) for name in x_var]).T
-    w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+    w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
     w.transform = 'r'
     ols = OLS(
         y, x, w=w, nonspat_diag=True, spat_diag=True, name_y=y_var, name_x=x_var,

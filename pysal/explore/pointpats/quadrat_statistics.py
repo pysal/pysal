@@ -16,7 +16,6 @@ __all__ = ['RectangleM', 'HexagonM', 'QStatistic']
 import numpy as np
 from matplotlib import pyplot as plt
 import math
-from .process import PoissonPointProcess as csr
 import scipy
 
 class RectangleM:
@@ -420,11 +419,10 @@ class QStatistic:
                                                 count_row=ny)
                 elif shape == "hexagon":
                     mr_temp = HexagonM(reals[i],lh)
-                dict_id_count_temp = mr_temp.point_location_sta()
+                id_count_temp = mr_temp.point_location_sta().values()
 
                 #calculate test statistics for simulated point patterns
-                chi2_sim,p = scipy.stats.chisquare(
-                        dict_id_count_temp.values())
+                chi2_sim,p = scipy.stats.chisquare(list(id_count_temp))
                 chi2_realizations.append(chi2_sim)
             self.chi2_realizations = np.array(chi2_realizations)
 

@@ -1,5 +1,5 @@
 import unittest
-from ...FileIO import FileIO as psopen
+from ...fileio import FileIO as psopen
 from .... import examples as pysal_examples
 from ..arcgis_dbf import ArcGISDbfIO
 import tempfile

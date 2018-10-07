@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-import pysal.lib.api as lps
+import pysal.lib
 import pysal.model.spreg.diagnostics_tsls as diagnostics_tsls
 import pysal.model.spreg.diagnostics as diagnostics
 from pysal.model.spreg.ols import OLS as OLS
@@ -10,7 +10,7 @@ from scipy.stats import pearsonr
 from pysal.lib.common import RTOL
 
 # create regression object used by the apatial tests
-db = lps.open(lps.get_path("columbus.dbf"),'r')
+db = pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),'r')
 y = np.array(db.by_col("CRIME"))
 y = np.reshape(y, (49,1))
 X = []
@@ -25,7 +25,7 @@ q = np.array(q).T
 reg = TSLS(y, X, yd, q)
 
 # create regression object for spatial test
-db = lps.open(lps.get_path("columbus.dbf"),'r')
+db = pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),'r')
 y = np.array(db.by_col("HOVAL"))
 y = np.reshape(y, (49,1))
 X = np.array(db.by_col("INC"))
@@ -34,7 +34,7 @@ yd = np.array(db.by_col("CRIME"))
 yd = np.reshape(yd, (49,1))
 q = np.array(db.by_col("DISCBD"))
 q = np.reshape(q, (49,1))
-w = lps.rook_from_shapefile(lps.get_path("columbus.shp")) 
+w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp")) 
 w.transform = 'r'
 regsp = GM_Lag(y, X, w=w, yend=yd, q=q, w_lags=2)
 

@@ -17,7 +17,7 @@ try:
     from numpy.lib._version import NumpyVersion
 except ImportError:
     import re
-    string_types = basestring 
+    string_types = basestring
 
     class NumpyVersion():
         """Parse and compare numpy version strings.
@@ -111,7 +111,8 @@ except ImportError:
 
         def _compare(self, other):
             if not isinstance(other, (string_types, NumpyVersion)):
-                raise ValueError("Invalid object to compare with NumpyVersion.")
+                raise ValueError(
+                    "Invalid object to compare with NumpyVersion.")
 
             if isinstance(other, string_types):
                 other = NumpyVersion(other)
@@ -167,21 +168,6 @@ class ResettableCache(dict):
         of the object.
     items : var, optional
         An optional dictionary used to initialize the dictionary
-    Examples
-    --------
-    >>> reset = dict(a=('b',), b=('c',))
-    >>> cache = resettable_cache(a=0, b=1, c=2, reset=reset)
-    >>> assert_equal(cache, dict(a=0, b=1, c=2))
-    >>> print("Try resetting a")
-    >>> cache['a'] = 1
-    >>> assert_equal(cache, dict(a=1, b=None, c=None))
-    >>> cache['c'] = 2
-    >>> assert_equal(cache, dict(a=1, b=None, c=2))
-    >>> cache['b'] = 0
-    >>> assert_equal(cache, dict(a=1, b=0, c=None))
-    >>> print("Try deleting b")
-    >>> del(cache['a'])
-    >>> assert_equal(cache, {})
     """
 
     def __init__(self, reset=None, **items):
@@ -210,6 +196,7 @@ class ResettableCache(dict):
 
 
 resettable_cache = ResettableCache
+
 
 def _next_regular(target):
     """
@@ -257,6 +244,8 @@ def _next_regular(target):
     if p5 < match:
         match = p5
     return match
+
+
 if NumpyVersion(np.__version__) >= '1.7.1':
     np_matrix_rank = np.linalg.matrix_rank
 else:
@@ -339,9 +328,9 @@ else:
         return np.sum(S > tol)
 
 
-
 class CacheWriteWarning(UserWarning):
     pass
+
 
 class CachedAttribute(object):
 
@@ -403,6 +392,6 @@ class _cache_readonly(object):
         return CachedAttribute(func,
                                cachename=self.cachename,
                                resetlist=self.resetlist)
+
+
 cache_readonly = _cache_readonly()
-
-

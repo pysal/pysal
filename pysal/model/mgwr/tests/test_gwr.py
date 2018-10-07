@@ -3,10 +3,11 @@ GWR is tested against results from GWR4
 """
 
 import os
-import pysal.lib
+from pysal.lib import io
 import numpy as np
 import unittest
 import pickle as pk
+from types import SimpleNamespace
 from ..gwr import GWR, MGWR, MGWRResults
 from ..sel_bw import Sel_BW
 from ..diagnostics import get_AICc, get_AIC, get_BIC, get_CV
@@ -15,7 +16,7 @@ from pysal.model.spglm.family import Gaussian, Poisson, Binomial
 class TestGWRGaussian(unittest.TestCase):
     def setUp(self):
         data_path = os.path.join(os.path.dirname(__file__),'georgia/GData_utm.csv')
-        data = pysal.lib.open(data_path)
+        data = io.open(data_path)
         self.coords = list(zip(data.by_col('X'), data.by_col('Y')))
         self.y = np.array(data.by_col('PctBach')).reshape((-1,1))
         rural  = np.array(data.by_col('PctRural')).reshape((-1,1))
@@ -24,10 +25,10 @@ class TestGWRGaussian(unittest.TestCase):
         fb = np.array(data.by_col('PctFB')).reshape((-1,1))
         self.X = np.hstack([rural, pov, black])
         self.mgwr_X = np.hstack([fb, black, rural])
-        self.BS_F = pysal.lib.open(os.path.join(os.path.dirname(__file__),'georgia/georgia_BS_F_listwise.csv'))
-        self.BS_NN = pysal.lib.open(os.path.join(os.path.dirname(__file__),'georgia/georgia_BS_NN_listwise.csv'))
-        self.GS_F = pysal.lib.open(os.path.join(os.path.dirname(__file__),'georgia/georgia_GS_F_listwise.csv'))
-        self.GS_NN =pysal.lib.open(os.path.join(os.path.dirname(__file__),'georgia/georgia_GS_NN_listwise.csv'))
+        self.BS_F = io.open(os.path.join(os.path.dirname(__file__),'georgia/georgia_BS_F_listwise.csv'))
+        self.BS_NN = io.open(os.path.join(os.path.dirname(__file__),'georgia/georgia_BS_NN_listwise.csv'))
+        self.GS_F = io.open(os.path.join(os.path.dirname(__file__),'georgia/georgia_GS_F_listwise.csv'))
+        self.GS_NN = io.open(os.path.join(os.path.dirname(__file__),'georgia/georgia_GS_NN_listwise.csv'))
         MGWR_path = os.path.join(os.path.dirname(__file__),'mgwr_example.p')
         self.MGWR = pk.load(open(MGWR_path, 'rb'))
 
@@ -103,13 +104,13 @@ class TestGWRGaussian(unittest.TestCase):
         inf = np.array(self.BS_NN.by_col(' influence')).reshape((-1,1))
         cooksD = np.array(self.BS_NN.by_col(' CooksD')).reshape((-1,1))
         local_corr = os.path.join(os.path.dirname(__file__),'local_corr.csv')
-        corr1 = np.array(pysal.lib.open(local_corr))
+        corr1 = np.array(io.open(local_corr))
         local_vif = os.path.join(os.path.dirname(__file__),'local_vif.csv')
-        vif1 = np.array(pysal.lib.open(local_vif))
+        vif1 = np.array(io.open(local_vif))
         local_cn = os.path.join(os.path.dirname(__file__),'local_cn.csv')
-        cn1 = np.array(pysal.lib.open(local_cn))
+        cn1 = np.array(io.open(local_cn))
         local_vdp = os.path.join(os.path.dirname(__file__),'local_vdp.csv')
-        vdp1 = np.array(pysal.lib.open(local_vdp), dtype=np.float64)
+        vdp1 = np.array(io.open(local_vdp), dtype=np.float64)
         spat_var_p_vals = [0. , 0.0 , 0.5, 0.2]
 
         model = GWR(self.coords, self.y, self.X, bw=90.000, fixed=False,
@@ -297,10 +298,11 @@ class TestGWRGaussian(unittest.TestCase):
         np.testing.assert_allclose(rslt.ENP_j, self.MGWR.ENP_j)
         np.testing.assert_allclose(rslt.adj_alpha_j, self.MGWR.adj_alpha_j)
         np.testing.assert_allclose(rslt.critical_tval(),
-                self.MGWR.critical_tval())
-        np.testing.assert_allclose(rslt.filter_tvals(), self.MGWR.filter_tvals())
+                                   self.MGWR.critical_tval)
+        np.testing.assert_allclose(rslt.filter_tvals(), 
+                                   self.MGWR.filter_tvals)
         np.testing.assert_allclose(rslt.local_collinearity()[0],
-                self.MGWR.local_collinearity()[0])
+                                   self.MGWR.local_collinearity)
     
     def test_Prediction(self):
         coords =np.array(self.coords)
@@ -379,7 +381,7 @@ class TestGWRGaussian(unittest.TestCase):
 
     def test_BS_NN_longlat(self):
         GA_longlat = os.path.join(os.path.dirname(__file__),'ga_bs_nn_longlat_listwise.csv')
-        self.BS_NN_longlat = pysal.lib.open(GA_longlat)
+        self.BS_NN_longlat = io.open(GA_longlat)
         
         coords_longlat = list(zip(self.BS_NN_longlat.by_col(' x_coord'), self.BS_NN_longlat.by_col(' y_coord')))
         est_Int = self.BS_NN_longlat.by_col(' est_Intercept')
@@ -440,7 +442,7 @@ class TestGWRGaussian(unittest.TestCase):
 class TestGWRPoisson(unittest.TestCase):
     def setUp(self):
         data_path = os.path.join(os.path.dirname(__file__),'tokyo/Tokyomortality.csv')
-        data = pysal.lib.open(data_path, mode='Ur')
+        data = io.open(data_path, mode='Ur')
         self.coords = list(zip(data.by_col('X_CENTROID'), data.by_col('Y_CENTROID')))
         self.y = np.array(data.by_col('db2564')).reshape((-1,1))
         self.off = np.array(data.by_col('eb2564')).reshape((-1,1))
@@ -449,11 +451,11 @@ class TestGWRPoisson(unittest.TestCase):
         POP = np.array(data.by_col('POP65')).reshape((-1,1))
         UNEMP = np.array(data.by_col('UNEMP')).reshape((-1,1))
         self.X = np.hstack([OCC,OWN,POP,UNEMP])
-        self.BS_F = pysal.lib.open(os.path.join(os.path.dirname(__file__),'tokyo/tokyo_BS_F_listwise.csv'))
-        self.BS_NN = pysal.lib.open(os.path.join(os.path.dirname(__file__),'tokyo/tokyo_BS_NN_listwise.csv'))
-        self.GS_F = pysal.lib.open(os.path.join(os.path.dirname(__file__),'tokyo/tokyo_GS_F_listwise.csv'))
-        self.GS_NN = pysal.lib.open(os.path.join(os.path.dirname(__file__),'tokyo/tokyo_GS_NN_listwise.csv'))
-        self.BS_NN_OFF = pysal.lib.open(os.path.join(os.path.dirname(__file__),'tokyo/tokyo_BS_NN_OFF_listwise.csv'))
+        self.BS_F = io.open(os.path.join(os.path.dirname(__file__),'tokyo/tokyo_BS_F_listwise.csv'))
+        self.BS_NN = io.open(os.path.join(os.path.dirname(__file__),'tokyo/tokyo_BS_NN_listwise.csv'))
+        self.GS_F = io.open(os.path.join(os.path.dirname(__file__),'tokyo/tokyo_GS_F_listwise.csv'))
+        self.GS_NN = io.open(os.path.join(os.path.dirname(__file__),'tokyo/tokyo_GS_NN_listwise.csv'))
+        self.BS_NN_OFF = io.open(os.path.join(os.path.dirname(__file__),'tokyo/tokyo_BS_NN_OFF_listwise.csv'))
 
     def test_BS_F(self):
         est_Int = self.BS_F.by_col(' est_Intercept')
@@ -710,7 +712,7 @@ class TestGWRPoisson(unittest.TestCase):
 class TestGWRBinomial(unittest.TestCase):
     def setUp(self):
         data_path = os.path.join(os.path.dirname(__file__),'clearwater/landslides.csv')
-        data = pysal.lib.open(data_path)
+        data = io.open(data_path)
         self.coords = list(zip(data.by_col('X'), data.by_col('Y')))
         self.y = np.array(data.by_col('Landslid')).reshape((-1,1))
         ELEV  = np.array(data.by_col('Elev')).reshape((-1,1))
@@ -720,10 +722,10 @@ class TestGWRBinomial(unittest.TestCase):
         SOUTH = np.array(data.by_col('AbsSouth')).reshape((-1,1))
         DIST = np.array(data.by_col('DistStrm')).reshape((-1,1))
         self.X = np.hstack([ELEV, SLOPE, SIN, COS, SOUTH, DIST])
-        self.BS_F = pysal.lib.open(os.path.join(os.path.dirname(__file__),'clearwater/clearwater_BS_F_listwise.csv'))
-        self.BS_NN = pysal.lib.open(os.path.join(os.path.dirname(__file__),'clearwater/clearwater_BS_NN_listwise.csv'))
-        self.GS_F = pysal.lib.open(os.path.join(os.path.dirname(__file__),'clearwater/clearwater_GS_F_listwise.csv'))
-        self.GS_NN = pysal.lib.open(os.path.join(os.path.dirname(__file__),'clearwater/clearwater_GS_NN_listwise.csv'))
+        self.BS_F = io.open(os.path.join(os.path.dirname(__file__),'clearwater/clearwater_BS_F_listwise.csv'))
+        self.BS_NN = io.open(os.path.join(os.path.dirname(__file__),'clearwater/clearwater_BS_NN_listwise.csv'))
+        self.GS_F = io.open(os.path.join(os.path.dirname(__file__),'clearwater/clearwater_GS_F_listwise.csv'))
+        self.GS_NN = io.open(os.path.join(os.path.dirname(__file__),'clearwater/clearwater_GS_NN_listwise.csv'))
 
     def test_BS_F(self):
         est_Int = self.BS_F.by_col(' est_Intercept')

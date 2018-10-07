@@ -4,6 +4,7 @@ import numpy as np
 from scipy import stats
 from .utils import cache_readonly
 
+
 class Results(object):
     """
     Class to contain model results
@@ -14,6 +15,7 @@ class Results(object):
     params : array
         parameter estimates from the fit model
     """
+
     def __init__(self, model, params, **kwd):
         self.__dict__.update(kwd)
         self.initialize(model, params, **kwd)
@@ -25,7 +27,9 @@ class Results(object):
         if hasattr(model, 'k_constant'):
             self.k_constant = model.k_constant
 
-#TODO: public method?
+# TODO: public method?
+
+
 class LikelihoodModelResults(Results):
     """
     Class to contain results from likelihood models
@@ -197,7 +201,7 @@ class LikelihoodModelResults(Results):
 
             if cov_type == 'nonrobust':
                 self.cov_type = 'nonrobust'
-                self.cov_kwds = {'description' : 'Standard Errors assume that the ' +
+                self.cov_kwds = {'description': 'Standard Errors assume that the ' +
                                  'covariance matrix of the errors is correctly ' +
                                  'specified.'}
             else:
@@ -207,28 +211,26 @@ class LikelihoodModelResults(Results):
                 use_t = self.use_t
                 # TODO: we shouldn't need use_t in get_robustcov_results
                 get_robustcov_results(self, cov_type=cov_type, use_self=True,
-                                           use_t=use_t, **cov_kwds)
-
+                                      use_t=use_t, **cov_kwds)
 
     def normalized_cov_params(self):
         raise NotImplementedError
 
-
     def _get_robustcov_results(self, cov_type='nonrobust', use_self=True,
-                                   use_t=None, **cov_kwds):
+                               use_t=None, **cov_kwds):
         from statsmodels.base.covtype import get_robustcov_results
         if cov_kwds is None:
             cov_kwds = {}
 
         if cov_type == 'nonrobust':
             self.cov_type = 'nonrobust'
-            self.cov_kwds = {'description' : 'Standard Errors assume that the ' +
+            self.cov_kwds = {'description': 'Standard Errors assume that the ' +
                              'covariance matrix of the errors is correctly ' +
                              'specified.'}
         else:
             # TODO: we shouldn't need use_t in get_robustcov_results
             get_robustcov_results(self, cov_type=cov_type, use_self=True,
-                                       use_t=use_t, **cov_kwds)
+                                  use_t=use_t, **cov_kwds)
 
     @cache_readonly
     def llf(self):
@@ -249,13 +251,12 @@ class LikelihoodModelResults(Results):
     def pvalues(self):
         if self.use_t:
             df_resid = getattr(self, 'df_resid_inference', self.df_resid)
-            return stats.t.sf(np.abs(self.tvalues), df_resid)*2
+            return stats.t.sf(np.abs(self.tvalues), df_resid) * 2
         else:
-            return stats.norm.sf(np.abs(self.tvalues))*2
-
+            return stats.norm.sf(np.abs(self.tvalues)) * 2
 
     def cov_params(self, r_matrix=None, column=None, scale=None, cov_p=None,
-            other=None):
+                   other=None):
         """
         Returns the variance/covariance matrix.
         The variance/covariance matrix can be of a linear contrast
@@ -299,7 +300,7 @@ class LikelihoodModelResults(Results):
             dot_fun = np.dot
 
         if (cov_p is None and self.normalized_cov_params is None and
-            not hasattr(self, 'cov_params_default')):
+                not hasattr(self, 'cov_params_default')):
             raise ValueError('need covariance of parameters for computing '
                              '(unnormalized) covariances')
         if column is not None and (r_matrix is not None or other is not None):
@@ -321,7 +322,7 @@ class LikelihoodModelResults(Results):
             if column.shape == ():
                 return cov_p[column, column]
             else:
-                #return cov_p[column][:, column]
+                # return cov_p[column][:, column]
                 return cov_p[column[:, None], column]
         elif r_matrix is not None:
             r_matrix = np.asarray(r_matrix)
@@ -339,34 +340,40 @@ class LikelihoodModelResults(Results):
     def conf_int(self, alpha=.05, cols=None, method='default'):
         """
         Returns the confidence interval of the fitted parameters.
+
         Parameters
         ----------
         alpha : float, optional
-            The significance level for the confidence interval.
-            ie., The default `alpha` = .05 returns a 95% confidence interval.
-        cols : array-like, optional
-            `cols` specifies which confidence intervals to return
-        method : string
-            Not Implemented Yet
-            Method to estimate the confidence_interval.
-            "Default" : uses self.bse which is based on inverse Hessian for MLE
-            "hjjh" :
-            "jac" :
-            "boot-bse"
-            "boot_quant"
-            "profile"
+                The significance level for the confidence interval.
+                ie., The default `alpha` = .05 returns a 95% confidence
+                interval.
+        cols  : array-like, optional
+               `cols` specifies which confidence intervals to return
+        method: string
+                 Not Implemented Yet
+                 Method to estimate the confidence_interval.
+                 "Default" : uses self.bse which is based on inverse Hessian
+                 for MLE.
+                 "hjjh" :
+                 "jac" :
+                 "boot-bse"
+                 "boot_quant"
+                 "profile"
+
         Returns
         --------
         conf_int : array
-            Each row contains [lower, upper] limits of the confidence interval
-            for the corresponding parameter. The first column contains all
-            lower, the second column contains all upper limits.
+                   Each row contains [lower, upper] limits of the confidence
+                   interval for the corresponding parameter. The first column
+                   contains all lower, the second column contains all upper
+                   limits.
+
         Examples
         --------
-        >>> import pysal
-        >>> from pysal.contrib.glm.glm import GLM
+        >>> import pysal.lib as ps
+        >>> from pysal.model.spglm.glm import GLM
         >>> import numpy as np
-        >>> db = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
+        >>> db = ps.io.open(ps.examples.get_path('columbus.dbf'),'r')
         >>> y = np.array(db.by_col("HOVAL")).reshape((-1,1))
         >>> X = []
         >>> X.append(db.by_col("INC"))
@@ -403,6 +410,7 @@ class LikelihoodModelResults(Results):
             lower = self.params[cols] - q * bse[cols]
             upper = self.params[cols] + q * bse[cols]
         return np.asarray(lzip(lower, upper))
+
 
 def lzip(*args, **kwargs):
     return list(zip(*args, **kwargs))

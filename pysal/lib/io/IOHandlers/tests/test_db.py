@@ -1,6 +1,6 @@
 import os
 from ... import geotable as pdio
-from ...FileIO import FileIO as psopen
+from ...fileio import FileIO as psopen
 import unittest as ut
 from .... import examples as pysal_examples
 
@@ -48,7 +48,7 @@ class Test_sqlite_reader(ut.TestCase):
         self.assertEqual(db.tables, ['newhaven'])
 
         gj = db._get_gjson('newhaven')
-        self.assertFalse(True)
+        self.assertEqual(gj["type"], 'FeatureCollection')
 
     def tearDown(self):
         os.remove('test.db')

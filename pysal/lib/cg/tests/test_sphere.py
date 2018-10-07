@@ -1,5 +1,5 @@
 from .. import sphere
-from ...io.FileIO import FileIO as psopen
+from ...io.fileio import FileIO as psopen
 from ... import examples as pysal_examples
 import math
 import unittest

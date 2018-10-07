@@ -1,13 +1,11 @@
-import os.path
-from .. import FileIO as FileIO
+from .. import fileio
 from ...weights import W
-from warnings import warn
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
 __all__ = ["StataTextIO"]
 
 
-class StataTextIO(FileIO.FileIO):
+class StataTextIO(fileio.FileIO):
     """
     Opens, reads, and writes weights file objects in STATA text format.
 
@@ -67,7 +65,7 @@ class StataTextIO(FileIO.FileIO):
 
     def __init__(self, *args, **kwargs):
         args = args[:2]
-        FileIO.FileIO.__init__(self, *args, **kwargs)
+        fileio.FileIO.__init__(self, *args, **kwargs)
         self.file = open(self.dataPath, self.mode)
 
     def read(self, n=-1):
@@ -89,9 +87,8 @@ class StataTextIO(FileIO.FileIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open a text file and read it into a pysal weights object
 
-        >>> w = pysal.open(pysal.examples.get_path('stata_sparse.txt'),'r','stata_text').read()
-        WARNING: there are 7 disconnected observations
-        Island ids:  [5, 9, 10, 11, 12, 14, 15]
+        >>> import pysal.lib
+        >>> w = pysal.lib.io.open(pysal.lib.examples.get_path('stata_sparse.txt'),'r','stata_text').read()
 
         Get the number of observations from the header
 
@@ -105,8 +102,8 @@ class StataTextIO(FileIO.FileIO):
 
         Get neighbor distances for a single observation
 
-        >>> w[1]
-        {53: 1.0, 51: 1.0, 45: 1.0, 54: 1.0, 7: 1.0}
+        >>> w[1] == dict({53: 1.0, 51: 1.0, 45: 1.0, 54: 1.0, 7: 1.0})
+        True
 
         """
         if self.pos > 0:
@@ -167,11 +164,9 @@ class StataTextIO(FileIO.FileIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
-        >>> testfile = pysal.open(pysal.examples.get_path('stata_sparse.txt'),'r','stata_text')
+        >>> import tempfile, pysal.lib, os
+        >>> testfile = pysal.lib.io.open(pysal.lib.examples.get_path('stata_sparse.txt'),'r','stata_text')
         >>> w = testfile.read()
-        WARNING: there are 7 disconnected observations
-        Island ids:  [5, 9, 10, 11, 12, 14, 15]
 
         Create a temporary file for this example
 
@@ -187,7 +182,7 @@ class StataTextIO(FileIO.FileIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w','stata_text')
+        >>> o = pysal.lib.io.open(fname,'w','stata_text')
 
         Write the Weights object into the open file
 
@@ -196,9 +191,7 @@ class StataTextIO(FileIO.FileIO):
 
         Read in the newly created text file
 
-        >>> wnew =  pysal.open(fname,'r','stata_text').read()
-        WARNING: there are 7 disconnected observations
-        Island ids:  [5, 9, 10, 11, 12, 14, 15]
+        >>> wnew =  pysal.lib.io.open(fname,'r','stata_text').read()
 
         Compare values from old to new
 
@@ -231,5 +224,4 @@ class StataTextIO(FileIO.FileIO):
 
     def close(self):
         self.file.close()
-        FileIO.FileIO.close(self)
-
+        fileio.FileIO.close(self)

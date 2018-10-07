@@ -3,7 +3,6 @@ __author__ = "Sergio J. Rey <srey@asu.edu>, Levi John Wolf <levi.john.wolf@gmail
 
 
 from ..cg.kdtree import KDTree
-from ..common import KDTree
 from .weights import W, WSP
 from .util import isKDTree, get_ids, get_points_array_from_shapefile,\
                   get_points_array, WSP2W
@@ -12,6 +11,7 @@ from warnings import warn as Warn
 from scipy.spatial import distance_matrix
 import scipy.sparse as sp
 import numpy as np
+
 
 def knnW(data, k=2, p=2, ids=None, radius=None, distance_metric='euclidean'):
     """
@@ -53,10 +53,9 @@ class KNN(W):
     Examples
     --------
     >>> import pysal.lib
-    >>> import pysal.lib.api as ps
     >>> points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
     >>> kd = pysal.lib.cg.kdtree.KDTree(np.array(points))
-    >>> wnn2 = ps.KNN(kd, 2)
+    >>> wnn2 = pysal.lib.weights.KNN(kd, 2)
     >>> [1,3] == wnn2.neighbors[0]
     True
 
@@ -70,7 +69,7 @@ class KNN(W):
 
     now with 1 rather than 0 offset
 
-    >>> wnn2 = KNN(kd, 2, ids=range(1,7))
+    >>> wnn2 = pysal.lib.weights.KNN(kd, 2, ids=range(1,7))
     >>> wnn2[1]
     {2: 1.0, 4: 1.0}
     >>> wnn2[2]
@@ -85,23 +84,25 @@ class KNN(W):
 
     See Also
     --------
-    :class:`pysal.weights.W`
+    :class:`pysal.lib.weights.weights.W`
     """
-    def __init__(self, data, k=2, p=2, ids=None, radius=None, distance_metric='euclidean'):
+    def __init__(self, data, k=2, p=2, ids=None, radius=None,
+                 distance_metric='euclidean', **kwargs):
+
         if isKDTree(data):
             self.kdtree = data
-            self.data = data.data
+            self.data = self.kdtree.data
         else:
-            self.data = data
             self.kdtree = KDTree(data, radius=radius, distance_metric=distance_metric)
+            self.data = self.kdtree.data
         self.k = k 
         self.p = p
         this_nnq = self.kdtree.query(self.data, k=k+1, p=p)
-        
+
         to_weight = this_nnq[1]
         if ids is None:
             ids = list(range(to_weight.shape[0]))
-        
+
         neighbors = {}
         for i,row in enumerate(to_weight):
             row = row.tolist()
@@ -109,8 +110,8 @@ class KNN(W):
             row = [ids[j] for j in row]
             focal = ids[i]
             neighbors[focal] = row
-        W.__init__(self, neighbors, id_order=ids)
-    
+        W.__init__(self, neighbors, id_order=ids, **kwargs)
+
     @classmethod
     def from_shapefile(cls, filepath, *args, **kwargs):
         """
@@ -145,35 +146,25 @@ class KNN(W):
 
         Polygon shapefile
         >>> import pysal.lib
-        >>> import pysal.lib.api as ps
-        >>> wc=ps.knnW_from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
+        >>> from pysal.lib.weights import KNN
+        >>> wc=KNN.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
         >>> "%.4f"%wc.pct_nonzero
         '4.0816'
         >>> set([2,1]) == set(wc.neighbors[0])
         True
-        >>> wc3=ps.knnW_from_shapefile(pysal.lib.examples.get_path("columbus.shp"),k=3)
+        >>> wc3=KNN.from_shapefile(pysal.lib.examples.get_path("columbus.shp"),k=3)
         >>> set(wc3.neighbors[0]) == set([2,1,3])
         True
         >>> set(wc3.neighbors[2]) == set([4,3,0])
         True
 
-        1 offset rather than 0 offset
-
-        >>> wc3_1=ps.knnW_from_shapefile(pysal.lib.examples.get_path("columbus.shp"),k=3,idVariable="POLYID")
-        >>> set([4,3,2]) == set(wc3_1.neighbors[1])
-        True
-        >>> wc3_1.weights[2]
-        [1.0, 1.0, 1.0]
-        >>> set([4,1,8]) == set(wc3_1.neighbors[2])
-        True
-
 
         Point shapefile
 
-        >>> w=ps.knnW_from_shapefile(pysal.lib.examples.get_path("juvenile.shp"))
+        >>> w=KNN.from_shapefile(pysal.lib.examples.get_path("juvenile.shp"))
         >>> w.pct_nonzero
         1.1904761904761905
-        >>> w1=ps.knnW_from_shapefile(pysal.lib.examples.get_path("juvenile.shp"),k=1)
+        >>> w1=KNN.from_shapefile(pysal.lib.examples.get_path("juvenile.shp"),k=1)
         >>> "%.3f"%w1.pct_nonzero
         '0.595'
 
@@ -184,11 +175,10 @@ class KNN(W):
 
         See Also
         --------
-        :class:`pysal.lib.weights.KNN`
-        :class:`pysal.lib.weights.W`
+        :class:`pysal.lib.weights.weights.W`
         """
         return cls(get_points_array_from_shapefile(filepath), *args, **kwargs)
-    
+
     @classmethod
     def from_array(cls, array, *args, **kwargs):
         """
@@ -211,15 +201,15 @@ class KNN(W):
 
         Examples
         --------
-        >>> import pysal.lib.api as ps
+        >>> from pysal.lib.weights import KNN
         >>> points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
-        >>> wnn2 = ps.KNN.from_array(points, 2)
+        >>> wnn2 = KNN.from_array(points, 2)
         >>> [1,3] == wnn2.neighbors[0]
         True
 
         ids
 
-        >>> wnn2 = ps.KNN.from_array(points,2)
+        >>> wnn2 = KNN.from_array(points,2)
         >>> wnn2[0]
         {1: 1.0, 3: 1.0}
         >>> wnn2[1]
@@ -227,7 +217,7 @@ class KNN(W):
 
         now with 1 rather than 0 offset
 
-        >>> wnn2 = ps.KNN.from_array(points, 2, ids=range(1,7))
+        >>> wnn2 = KNN.from_array(points, 2, ids=range(1,7))
         >>> wnn2[1]
         {2: 1.0, 4: 1.0}
         >>> wnn2[2]
@@ -242,8 +232,7 @@ class KNN(W):
 
         See Also
         --------
-        :class: `pysal.lib.weights.KNN`
-        :class:`pysal.lib.weights.W`
+        :class:`pysal.lib.weights.weights.W`
         """
         return cls(array, *args, **kwargs)
 
@@ -266,8 +255,7 @@ class KNN(W):
 
         See Also
         --------
-        :class: `pysal.lib.weights.KNN`
-        :class:`pysal.lib.weights.W`
+        :class:`pysal.lib.weights.weights.W`
         """
         pts = get_points_array(df[geom_col])
         if ids is None:
@@ -493,14 +481,17 @@ class Kernel(W):
     """
     def __init__(self, data, bandwidth=None, fixed=True, k=2,
                  function='triangular', eps=1.0000001, ids=None,
-                 diagonal=False):
+                 diagonal=False, 
+                 distance_metric='euclidean', radius=None, 
+                 **kwargs):
         if isKDTree(data):
-            self.kdt = data
-            self.data = self.kdt.data
+            self.kdtree = data
+            self.data = self.kdtree.data
             data = self.data
         else:
-            self.data = data
-            self.kdt = KDTree(self.data)
+            self.kdtree = KDTree(data, distance_metric=distance_metric,
+                                 radius=radius)
+            self.data = self.kdtree.data
         self.k = k + 1
         self.function = function.lower()
         self.fixed = fixed
@@ -520,14 +511,14 @@ class Kernel(W):
         if diagonal:
             for i in neighbors:
                 weights[i][neighbors[i].index(i)] = 1.0
-        W.__init__(self, neighbors, weights, ids)
-    
+        W.__init__(self, neighbors, weights, ids, **kwargs)
+
     @classmethod
     def from_shapefile(cls, filepath, idVariable=None,  **kwargs):
         """
         Kernel based weights from shapefile
 
-        Arguments
+        Parameters
         ---------
         shapefile   : string
                       shapefile name with shp suffix
@@ -540,8 +531,7 @@ class Kernel(W):
 
         See Also
         ---------
-        :class:`pysal.lib.weights.Kernel`
-        :class:`pysal.lib.weights.W`
+        :class:`pysal.lib.weights.weights.W`
         """
         points = get_points_array_from_shapefile(filepath)
         if idVariable is not None:
@@ -549,7 +539,7 @@ class Kernel(W):
         else:
             ids = None
         return cls.from_array(points, ids=ids, **kwargs)
-    
+
     @classmethod
     def from_array(cls, array, **kwargs):
         """
@@ -558,8 +548,7 @@ class Kernel(W):
 
         See Also
         --------
-        :class:`pysal.lib.weights.Kernel`
-        :class:`pysal.lib.weights.W`
+        :class:`pysal.lib.weights.weights.W`
         """
         return cls(array, **kwargs)
 
@@ -582,8 +571,7 @@ class Kernel(W):
 
         See Also
         --------
-        :class:`pysal.lib.weights.Kernel`
-        :class:`pysal.lib.weights.W`
+        :class:`pysal.lib.weights.weights.W`
         """
         pts = get_points_array(df[geom_col])
         if ids is None:
@@ -609,7 +597,7 @@ class Kernel(W):
         return allneighbors, weights
 
     def _set_bw(self):
-        dmat, neigh = self.kdt.query(self.data, k=self.k)
+        dmat, neigh = self.kdtree.query(self.data, k=self.k)
         if self.fixed:
             # use max knn distance as bandwidth
             bandwidth = dmat.max() * self.eps
@@ -620,20 +608,20 @@ class Kernel(W):
             self.bandwidth = dmat.max(axis=1) * self.eps
             self.bandwidth.shape = (self.bandwidth.size, 1)
             # identify knn neighbors for each point
-            nnq = self.kdt.query(self.data, k=self.k)
+            nnq = self.kdtree.query(self.data, k=self.k)
             self.neigh = nnq[1]
 
     def _eval_kernel(self):
         # get points within bandwidth distance of each point
         if not hasattr(self, 'neigh'):
-            kdtq = self.kdt.query_ball_point
+            kdtq = self.kdtree.query_ball_point
             neighbors = [kdtq(self.data[i], r=bwi[0]) for i,
                          bwi in enumerate(self.bandwidth)]
             self.neigh = neighbors
         # get distances for neighbors
         bw = self.bandwidth
 
-        kdtq = self.kdt.query
+        kdtq = self.kdtree.query
         z = []
         for i, nids in enumerate(self.neigh):
             di, ni = kdtq(self.data[i], k=len(nids))
@@ -688,7 +676,7 @@ class DistanceBand(W):
 
     ids         : list
                   values to use for keys of the neighbors and weights dicts
-    
+
     build_sp    : boolean
                   True to build sparse distance matrix and false to build dense
                   distance matrix; significant speed gains may be obtained
@@ -710,21 +698,20 @@ class DistanceBand(W):
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
     >>> import pysal.lib
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
-    >>> wcheck = ps.W({0: [1, 3], 1: [0, 3], 2: [], 3: [0, 1], 4: [5], 5: [4]})
+    >>> wcheck = pysal.lib.weights.W({0: [1, 3], 1: [0, 3], 2: [], 3: [0, 1], 4: [5], 5: [4]})
 
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
-    >>> w=ps.DistanceBand(points,threshold=11.2)
+    >>> w=pysal.lib.weights.distance.DistanceBand(points,threshold=11.2)
 
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
     >>> pysal.lib.weights.util.neighbor_equality(w, wcheck)
     True
-    >>> w=ps.DistanceBand(points,threshold=14.2)
-    >>> wcheck = ps.W({0: [1, 3], 1: [0, 3, 4], 2: [4], 3: [1, 0], 4: [5, 2, 1], 5: [4]})
+    >>> w=pysal.lib.weights.distance.DistanceBand(points,threshold=14.2)
+    >>> wcheck = pysal.lib.weights.W({0: [1, 3], 1: [0, 3, 4], 2: [4], 3: [1, 0], 4: [5, 2, 1], 5: [4]})
     >>> pysal.lib.weights.util.neighbor_equality(w, wcheck)
     True
 
@@ -732,7 +719,7 @@ class DistanceBand(W):
 
     inverse distance weights
 
-    >>> w=ps.DistanceBand(points,threshold=11.2,binary=False)
+    >>> w=pysal.lib.weights.distance.DistanceBand(points,threshold=11.2,binary=False)
 
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
@@ -744,7 +731,7 @@ class DistanceBand(W):
 
     gravity weights
 
-    >>> w=ps.DistanceBand(points,threshold=11.2,binary=False,alpha=-2.)
+    >>> w=pysal.lib.weights.distance.DistanceBand(points,threshold=11.2,binary=False,alpha=-2.)
 
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
@@ -761,7 +748,8 @@ class DistanceBand(W):
     """
 
     def __init__(self, data, threshold, p=2, alpha=-1.0, binary=True, ids=None,
-            build_sp=True, silent=False):
+            build_sp=True, silence_warnings=False, 
+            distance_metric='euclidean', radius=None):
         """Casting to floats is a work around for a bug in scipy.spatial.
         See detail in pysal issue #126.
 
@@ -773,35 +761,37 @@ class DistanceBand(W):
         self.binary = binary
         self.alpha = alpha
         self.build_sp = build_sp
-        self.silent = silent
-        
+        self.silence_warnings = silence_warnings
+
         if isKDTree(data):
-            self.kd = data
-            self.data = self.kd.data
+            self.kdtree = data
+            self.data = self.kdtree.data
         else:
             if self.build_sp:
                 try:
                     data = np.asarray(data)
                     if data.dtype.kind != 'f':
                         data = data.astype(float)
-                    self.data = data
-                    self.kd = KDTree(self.data)
+                    self.kdtree = KDTree(data, 
+                                         distance_metric=distance_metric, 
+                                         radius=radius)
+                    self.data = self.kdtree.data
                 except:
                     raise ValueError("Could not make array from data")        
             else:
                 self.data = data
-                self.kd = None       
+                self.kdtree = None       
         self._band()
         neighbors, weights = self._distance_to_W(ids)
-        W.__init__(self, neighbors, weights, ids, silence_warnings=self.silent)
+        W.__init__(self, neighbors, weights, ids, silence_warnings=self.silence_warnings)
 
     @classmethod
     def from_shapefile(cls, filepath, threshold, idVariable=None, **kwargs):
         """
         Distance-band based weights from shapefile
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         shapefile   : string
                       shapefile name with shp suffix
         idVariable  : string
@@ -811,10 +801,6 @@ class DistanceBand(W):
         --------
         Kernel Weights Object
 
-        See Also
-        ---------
-        :class: `pysal.lib.weights.DistanceBand`
-        :class: `pysal.lib.weights.W`
         """
         points = get_points_array_from_shapefile(filepath)
         if idVariable is not None:
@@ -822,20 +808,16 @@ class DistanceBand(W):
         else:
             ids = None
         return cls.from_array(points, threshold, ids=ids, **kwargs)
-    
+
     @classmethod
     def from_array(cls, array, threshold, **kwargs):
         """
         Construct a DistanceBand weights from an array. Supports all the same options
         as :class:`pysal.lib.weights.DistanceBand`
 
-        See Also
-        --------
-        :class:`pysal.lib.weights.DistanceBand`
-        :class:`pysal.lib.weights.W`
         """
         return cls(array, threshold, **kwargs)
-    
+
     @classmethod
     def from_dataframe(cls, df, threshold, geom_col='geometry', ids=None, **kwargs):
         """
@@ -853,10 +835,6 @@ class DistanceBand(W):
                     if iterable, a list of ids to use for the W
                     if None, df.index is used.
 
-        See Also
-        --------
-        :class:`pysal.lib.weights.DistanceBand`
-        :class:`pysal.lib.weights.W`
         """
         pts = get_points_array(df[geom_col])
         if ids is None:
@@ -870,10 +848,10 @@ class DistanceBand(W):
 
         """
         if self.build_sp:
-            self.dmat = self.kd.sparse_distance_matrix(
-                    self.kd, max_distance=self.threshold, p=self.p).tocsr()
+            self.dmat = self.kdtree.sparse_distance_matrix(
+                    self.kdtree, max_distance=self.threshold, p=self.p).tocsr()
         else:
-            if str(self.kd).split('.')[-1][0:10] == 'Arc_KDTree':
+            if str(self.kdtree).split('.')[-1][0:10] == 'Arc_KDTree':
             	raise TypeError('Unable to calculate dense arc distance matrix;'
             	        ' parameter "build_sp" must be set to True for arc'
             	        ' distance type weight')
@@ -884,7 +862,7 @@ class DistanceBand(W):
         if self.binary:
             self.dmat[self.dmat>0] = 1
             self.dmat.eliminate_zeros()
-            tempW = WSP2W(WSP(self.dmat, id_order=ids), silence_warnings=self.silent)
+            tempW = WSP2W(WSP(self.dmat, id_order=ids), silence_warnings=self.silence_warnings)
             neighbors = tempW.neighbors
             weight_keys = list(tempW.weights.keys())
             weight_vals = list(tempW.weights.values())
@@ -894,7 +872,7 @@ class DistanceBand(W):
             weighted = self.dmat.power(self.alpha)
             weighted[weighted==np.inf] = 0
             weighted.eliminate_zeros()
-            tempW = WSP2W(WSP(weighted, id_order=ids), silence_warnings=self.silent)
+            tempW = WSP2W(WSP(weighted, id_order=ids), silence_warnings=self.silence_warnings)
             neighbors = tempW.neighbors
             weight_keys = list(tempW.weights.keys())
             weight_vals = list(tempW.weights.values())

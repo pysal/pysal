@@ -1,12 +1,11 @@
 """Unit test for util.py"""
-from .. import user
-from ..util import lat2W, nonplanar_neighbors
+from ..util import lat2W, nonplanar_neighbors, fuzzy_contiguity
 from .. import util
 from ..weights import W, WSP
-from ..Distance import DistanceBand, KNN
-from ..Contiguity import Queen, Rook
-from ...io.FileIO import FileIO as psopen
-from ... import examples as pysal_examples
+from ..distance import DistanceBand, KNN
+from ..contiguity import Queen, Rook
+from ...io.fileio import FileIO as psopen
+from ... import examples
 import numpy as np
 import unittest
 
@@ -19,8 +18,8 @@ except:
 
 class Testutil(unittest.TestCase):
     def setUp(self):
-        self.w = user.rook_from_shapefile(
-            pysal_examples.get_path('10740.shp'))
+        self.w = Rook.from_shapefile(
+            examples.get_path('10740.shp'))
 
     def test_lat2W(self):
         w9 = lat2W(3, 3)
@@ -58,7 +57,6 @@ class Testutil(unittest.TestCase):
         wn0 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 20]
         self.assertEqual(w.neighbors[0], wn0)
         regimes = ['n', 'n', 's', 's', 'e', 'e', 'w', 'w', 'e']
-        n = len(regimes)
         w = util.block_weights(regimes)
         wn = {0: [1], 1: [0], 2: [3], 3: [2], 4: [5, 8], 5: [4, 8],
               6: [7], 7: [6], 8: [4, 5]}
@@ -99,10 +97,10 @@ class Testutil(unittest.TestCase):
         self.assertEqual(w5_20, w5_2[0])
     
     def test_higher_order_classes(self):
-        wdb = DistanceBand.from_shapefile(pysal_examples.get_path('baltim.shp'), 34)
-        wknn = KNN.from_shapefile(pysal_examples.get_path('baltim.shp'), 10)
-        wrook = Rook.from_shapefile(pysal_examples.get_path('columbus.shp'))
-        wqueen = Queen.from_shapefile(pysal_examples.get_path('columbus.shp'))
+        wdb = DistanceBand.from_shapefile(examples.get_path('baltim.shp'), 34)
+        wknn = KNN.from_shapefile(examples.get_path('baltim.shp'), 10)
+        wrook = Rook.from_shapefile(examples.get_path('columbus.shp'))
+        wqueen = Queen.from_shapefile(examples.get_path('columbus.shp'))
         wsparse = wqueen.sparse
         ww = W(wknn.neighbors, wknn.weights)
         util.higher_order(wdb, 2)
@@ -157,7 +155,7 @@ class Testutil(unittest.TestCase):
         w = util.WSP2W(wsp)
         self.assertEqual(w.n, 10)
         self.assertEqual(w[0], {1: 1, 5: 1})
-        w = psopen(pysal_examples.get_path('sids2.gal'), 'r').read()
+        w = psopen(examples.get_path('sids2.gal'), 'r').read()
         wsp = WSP(w.sparse, w.id_order)
         w = util.WSP2W(wsp)
         self.assertEqual(w.n, 100)
@@ -189,19 +187,26 @@ class Testutil(unittest.TestCase):
         w_newdneighborsa = ['c', 'b']
         self.assertEqual(w_newdneighborsa, w_new.neighbors['a'])
 
-    def test_get_ids(self):
+    def test_get_ids_shp(self):
         polyids = util.get_ids(
-            pysal_examples.get_path('columbus.shp'), "POLYID")
+            examples.get_path('columbus.shp'), "POLYID")
         polyids5 = [1, 2, 3, 4, 5]
         self.assertEqual(polyids5, polyids[:5])
 
+    @unittest.skipIf(not HAS_GEOPANDAS, "Missing geopandas, cannot test get_ids with gdf")
+    def test_get_ids_gdf(self):
+        gdf = gpd.read_file(examples.get_path('columbus.shp'))
+        polyids = util.get_ids(gdf, "POLYID")
+        polyids5 = [1, 2, 3, 4, 5]
+        self.assertEqual(polyids5, polyids[:5])
+    
     def test_get_points_array_from_shapefile(self):
         xy = util.get_points_array_from_shapefile(
-            pysal_examples.get_path('juvenile.shp'))
+            examples.get_path('juvenile.shp'))
         xy3 = np.array([[94., 93.], [80., 95.], [79., 90.]])
         np.testing.assert_array_almost_equal(xy3, xy[:3], decimal=8)
         xy = util.get_points_array_from_shapefile(
-            pysal_examples.get_path('columbus.shp'))
+            examples.get_path('columbus.shp'))
         xy3 = np.array([[8.82721847, 14.36907602], [8.33265837,
                                                     14.03162401], [9.01226541, 13.81971908]])
         np.testing.assert_array_almost_equal(xy3, xy[:3], decimal=8)
@@ -216,21 +221,18 @@ class Testutil(unittest.TestCase):
             mint, util.min_threshold_distance(data))
 
     def test_attach_islands(self):
-        w = user.rook_from_shapefile(pysal_examples.get_path('10740.shp'))
-        w_knn1 = user.knnW_from_shapefile(pysal_examples.get_path('10740.shp'), k=1)
+        w = Rook.from_shapefile(examples.get_path('10740.shp'))
+        w_knn1 = KNN.from_shapefile(examples.get_path('10740.shp'), k=1)
         w_attach = util.attach_islands(w, w_knn1)
         self.assertEqual(w_attach.islands, [])
         self.assertEqual(w_attach[w.islands[0]], {166: 1.0})
 
     @unittest.skipIf(not HAS_GEOPANDAS, "Missing geopandas, cannot test nonplanar neighbors")
     def test_nonplanar_neighbors(self):
-        import pysal.lib.api as lp
-        import geopandas as gpd
-        df = gpd.read_file(lp.get_path('map_RS_BR.shp'))
-        w = lp.Queen.from_dataframe(df)
+        df = gpd.read_file(examples.get_path('map_RS_BR.shp'))
+        w = Queen.from_dataframe(df)
         self.assertEqual(w.islands, [0, 4, 23, 27, 80, 94, 101, 107, 109, 119, 122, 139, 169, 175, 223, 239, 247, 253, 254, 255, 256, 261, 276, 291, 294, 303, 321, 357, 374])
-        import pysal.lib
-        wnp = pysal.lib.weights.util.nonplanar_neighbors(w, df)
+        wnp = nonplanar_neighbors(w, df)
         self.assertEqual(wnp.islands, [])
         self.assertEqual(w.neighbors[0], [])
         self.assertEqual(wnp.neighbors[0], [23, 59, 152, 239])
@@ -238,11 +240,9 @@ class Testutil(unittest.TestCase):
 
     @unittest.skipIf(not HAS_GEOPANDAS, "Missing geopandas, cannot test fuzzy_contiguity")
     def test_fuzzy_contiguity(self):
-        import pysal.lib.api as lps
-        import geopandas as gpd
-        rs = lps.get_path('map_RS_BR.shp')
+        rs = examples.get_path('map_RS_BR.shp')
         rs_df = gpd.read_file(rs)
-        wf = lps.fuzzy_contiguity(rs_df)
+        wf = fuzzy_contiguity(rs_df)
         self.assertEqual(wf.islands, [])
         self.assertEqual(set(wf.neighbors[0]), set([239, 59, 152, 23, 107]))
 

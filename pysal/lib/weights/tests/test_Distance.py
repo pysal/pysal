@@ -1,12 +1,12 @@
 
 from ...common import RTOL, ATOL, pandas
-from ...cg.kdtree import KDTree
+from ...cg.kdtree import KDTree, RADIUS_EARTH_KM
 from ..util import get_points_array
 from ... import cg
 from ... import weights
-from .. import Distance as d, Contiguity as c
+from .. import distance as d, contiguity as c
 from ...io import geotable as pdio
-from ...io.FileIO import FileIO as psopen
+from ...io.fileio import FileIO as psopen
 import numpy as np
 from ... import examples as pysal_examples
 import unittest as ut
@@ -110,6 +110,13 @@ class Test_KNN(ut.TestCase, Distance_Mixin):
         wnew = w.reweight(k=4, p=1, new_data=new_point, inplace=False)
         self.assertEqual(wnew[0], {1: 1.0, 3: 1.0, 4: 1.0, 6: 1.0})
 
+    def test_arcdata(self):
+        w = d.KNN.from_shapefile(self.polygon_path, k=4, 
+                                 distance_metric='Arc', 
+                                 radius=cg.sphere.RADIUS_EARTH_KM)
+        self.assertEqual(w.data.shape[1], 3)
+
+
 class Test_DistanceBand(ut.TestCase, Distance_Mixin):
     def setUp(self):
         Distance_Mixin.setUp(self)
@@ -175,6 +182,7 @@ class Test_DistanceBand(ut.TestCase, Distance_Mixin):
         maxdist = full.max()
         w = d.DistanceBand(kdt, maxdist, binary=False, alpha=1.0)
         np.testing.assert_allclose(w.sparse.todense(), full)
+        self.assertEqual(w.data.shape[1], 3)
 
     def test_dense(self):
         w_rook = c.Rook.from_shapefile(
@@ -293,6 +301,11 @@ class Test_Kernel(ut.TestCase, Distance_Mixin):
             np.testing.assert_allclose((k,v), (k, self.known_w4[k]), rtol=RTOL)
         bws = w.bandwidth.tolist()
         np.testing.assert_allclose(bws, self.known_w4_abws, rtol=RTOL)
+
+    def test_arcdistance(self):
+        w = d.Kernel(self.points, fixed=True, distance_metric='Arc', 
+                     radius=cg.sphere.RADIUS_EARTH_KM)
+        self.assertEqual(w.data.shape[1], 3)
 
 knn = ut.TestLoader().loadTestsFromTestCase(Test_KNN)
 kern = ut.TestLoader().loadTestsFromTestCase(Test_Kernel)

@@ -10,7 +10,8 @@ from scipy.stats.mstats import rankdata
 from scipy.special import erfc
 import numpy as np
 import scipy as sp
-import pysal.lib.api as ps
+from pysal.lib import weights
+
 
 class Theta:
     """
@@ -61,9 +62,9 @@ class Theta:
     Examples
     --------
     >>> import pysal.lib as ps
-    >>> from pysal.explore.giddy.api import Theta
+    >>> from pysal.explore.giddy.rank import Theta
     >>> import numpy as np
-    >>> f=ps.open(ps.examples.get_path("mexico.csv"))
+    >>> f=ps.io.open(ps.examples.get_path("mexico.csv"))
     >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
     >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> regime=np.array(f.by_col['esquivel99'])
@@ -144,7 +145,7 @@ class Tau:
     # from scipy example
 
     >>> from scipy.stats import kendalltau
-    >>> from pysal.explore.giddy.api import Tau
+    >>> from pysal.explore.giddy.rank import Tau
     >>> x1 = [12, 2, 1, 12, 2]
     >>> x2 = [1, 4, 7, 1, 0]
     >>> kt = Tau(x1,x2)
@@ -324,21 +325,20 @@ class SpatialTau(object):
 
     Examples
     --------
-    >>> import pysal.lib
-    >>> import pysal.lib.api as ps
+    >>> import pysal.lib as ps
     >>> import numpy as np
-    >>> from pysal.explore.giddy.api import SpatialTau
-    >>> f=pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
+    >>> from pysal.explore.giddy.rank import SpatialTau
+    >>> f=ps.io.open(ps.examples.get_path("mexico.csv"))
     >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
     >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> regime=np.array(f.by_col['esquivel99'])
-    >>> w=ps.block_weights(regime)
+    >>> w=ps.weights.block_weights(regime)
     >>> np.random.seed(12345)
     >>> res=[SpatialTau(y[:,i],y[:,i+1],w,99) for i in range(6)]
     >>> for r in res:
     ...     ev = r.taus.mean()
     ...     "%8.3f %8.3f %8.3f"%(r.tau_spatial, ev, r.tau_spatial_psim)
-    ... 
+    ...
     '   0.397    0.659    0.010'
     '   0.492    0.706    0.010'
     '   0.651    0.772    0.020'
@@ -405,6 +405,7 @@ class SpatialTau(object):
         gd = gc - iS
         return [tau_g, gc, gd]
 
+
 def pseudop(sim, observed, nperm):
     above = sim >= observed
     larger = above.sum()
@@ -412,6 +413,7 @@ def pseudop(sim, observed, nperm):
     if psim > 0.5:
         psim = (nperm - larger + 1.) / (nperm + 1.)
     return psim
+
 
 class Tau_Local:
     """
@@ -448,11 +450,11 @@ class Tau_Local:
 
     Examples
     --------
-    >>> import pysal.lib
+    >>> import pysal.lib as ps
     >>> import numpy as np
-    >>> from pysal.explore.giddy.api import Tau_Local,Tau
+    >>> from pysal.explore.giddy.rank import Tau_Local,Tau
     >>> np.random.seed(10)
-    >>> f = pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
+    >>> f = ps.io.open(ps.examples.get_path("mexico.csv"))
     >>> vnames = ["pcgdp%d"%dec for dec in range(1940, 2010, 10)]
     >>> y = np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> r = y / y.mean(axis=0)
@@ -484,10 +486,11 @@ class Tau_Local:
         C = (xx - xx.T) * (yy - yy.T)
         self.S = -1 * (C < 0) + 1 * (C > 0)
 
-        self.tau = self.S.sum()*1. / (self.n*(self.n-1))
+        self.tau = self.S.sum() * 1. / (self.n * (self.n - 1))
         si = self.S.sum(axis=1)
 
         self.tau_local = si * 1. / (self.n - 1)
+
 
 class Tau_Local_Neighbor:
     """
@@ -508,7 +511,7 @@ class Tau_Local_Neighbor:
     permutations   : int
                      number of random spatial permutations for
                      computationally based inference.
-                     
+
     Attributes
     ----------
     n              : int
@@ -547,17 +550,16 @@ class Tau_Local_Neighbor:
 
     Examples
     --------
-    >>> import pysal.lib
-    >>> import pysal.lib.api as ps
+    >>> import pysal.lib as ps
     >>> import numpy as np
-    >>> from pysal.explore.giddy.api import Tau_Local_Neighbor, SpatialTau
+    >>> from pysal.explore.giddy.rank import Tau_Local_Neighbor, SpatialTau
     >>> np.random.seed(10)
-    >>> f = pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
+    >>> f = ps.io.open(ps.examples.get_path("mexico.csv"))
     >>> vnames = ["pcgdp%d"%dec for dec in range(1940, 2010, 10)]
     >>> y = np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> r = y / y.mean(axis=0)
     >>> regime = np.array(f.by_col['esquivel99'])
-    >>> w = ps.block_weights(regime)
+    >>> w = ps.weights.block_weights(regime)
     >>> res = Tau_Local_Neighbor(r[:,0], r[:,1], w, permutations=999)
     >>> res.tau_ln
     array([-0.2       ,  1.        ,  1.        ,  1.        ,  0.33333333,
@@ -622,8 +624,8 @@ class Tau_Local_Neighbor:
                     tau_ln_sim[i, j] = self._calc(xr, yr, w, i)
                 larger = (tau_ln_sim[i] >= obs_i).sum()
                 smaller = (tau_ln_sim[i] <= obs_i).sum()
-                tau_ln_pvalues[i] = (np.min([larger, smaller])+1.)/(
-                    1+permutations)
+                tau_ln_pvalues[i] = (np.min([larger, smaller]) + 1.) / (
+                    1 + permutations)
             self.tau_ln_sim = tau_ln_sim
             self.tau_ln_pvalues = tau_ln_pvalues
 
@@ -654,7 +656,7 @@ class Tau_Local_Neighbor:
                 for j in w.neighbors[i]:
                     iS_local += self._calc_r(x[i], y[i], x[j], y[j], w)
                 tau_ln[i] = iS_local * 1.0 / w.cardinalities[i]
-                tau_ln_weights[i] = w.cardinalities[i]*1.0/w.s0
+                tau_ln_weights[i] = w.cardinalities[i] * 1.0 / w.s0
             return tau_ln, tau_ln_weights
 
 
@@ -715,17 +717,16 @@ class Tau_Local_Neighborhood:
 
     Examples
     --------
-    >>> import pysal.lib
-    >>> import pysal.lib.api as ps
-    >>> from pysal.explore.giddy.api import Tau_Local_Neighborhood
+    >>> import pysal.lib as ps
+    >>> from pysal.explore.giddy.rank import Tau_Local_Neighborhood
     >>> import numpy as np
     >>> np.random.seed(10)
-    >>> f = pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
+    >>> f = ps.io.open(ps.examples.get_path("mexico.csv"))
     >>> vnames = ["pcgdp%d"%dec for dec in range(1940, 2010, 10)]
     >>> y = np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> r = y / y.mean(axis=0)
     >>> regime = np.array(f.by_col['esquivel99'])
-    >>> w = ps.block_weights(regime)
+    >>> w = ps.weights.block_weights(regime)
     >>> res = Tau_Local_Neighborhood(r[:,0],r[:,1],w,permutations=999)
     >>> res.tau_lnhood
     array([0.06666667, 0.6       , 0.2       , 0.8       , 0.33333333,
@@ -763,7 +764,7 @@ class Tau_Local_Neighborhood:
             n_i = len(neighbors_i)
             sh_i = self.S[neighbors_i, :][:, neighbors_i]
             # Neighborhood set LIMA
-            tau_lnhood[i] = sh_i.sum()*1./(n_i*(n_i-1))
+            tau_lnhood[i] = sh_i.sum() * 1. / (n_i * (n_i - 1))
         self.tau_lnhood = tau_lnhood
 
         concor_sign = np.ones(self.n)
@@ -785,7 +786,7 @@ class Tau_Local_Neighborhood:
                     n_i = len(neighbors_i)
                     neighbors_i_second = neighbors_i
                     sh_i = self.S[neighbors_i, :][:, neighbors_i_second]
-                    tau_lnhood_sim[i, j] = sh_i.sum()*1./(n_i*(n_i-1))
+                    tau_lnhood_sim[i, j] = sh_i.sum() * 1. / (n_i * (n_i - 1))
 
                 larger = (tau_lnhood_sim[i] >= obs_i).sum()
                 smaller = (tau_lnhood_sim[i] <= obs_i).sum()
@@ -811,7 +812,7 @@ class Tau_Regional:
     permutations    : int
                       number of random spatial permutations for
                       computationally based inference.
-                      
+
     Attributes
     ----------
     n               : int
@@ -843,11 +844,11 @@ class Tau_Regional:
 
     Examples
     --------
-    >>> import pysal.lib
+    >>> import pysal.lib as ps
     >>> import numpy as np
-    >>> from pysal.explore.giddy.api import Tau_Regional
+    >>> from pysal.explore.giddy.rank import Tau_Regional
     >>> np.random.seed(10)
-    >>> f = pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
+    >>> f = ps.io.open(ps.examples.get_path("mexico.csv"))
     >>> vnames = ["pcgdp%d"%dec for dec in range(1940, 2010, 10)]
     >>> y = np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> r = y / y.mean(axis=0)
@@ -894,7 +895,7 @@ class Tau_Regional:
         for i, r in enumerate(reg):
             P[ur.index(r), i] = 1  # construct P matrix
 
-        w = ps.block_weights(regime)
+        w = weights.block_weights(regime)
         w.transform = 'b'
         W = w.full()[0]
         WH = np.ones((self.n, self.n)) - np.eye(self.n) - W
@@ -916,7 +917,8 @@ class Tau_Regional:
                 smaller += np.less_equal(tau_reg_sim[i], self.tau_reg)
 
             m = np.less(smaller, larger)
-            pvalues = (1 + m * smaller + (1-m) * larger) / (1. + permutations)
+            pvalues = (1 + m * smaller + (1 - m) *
+                       larger) / (1. + permutations)
             self.tau_reg_sim = tau_reg_sim
             self.tau_reg_pvalues = pvalues
 
@@ -924,7 +926,6 @@ class Tau_Regional:
 
         nomi = np.dot(P, np.dot(S, P.T))
         denomi = np.dot(P, np.dot(W, P.T)) + np.dot(P, np.dot(WH, P.T))
-        T = nomi/denomi
+        T = nomi / denomi
 
         return T
-

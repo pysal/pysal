@@ -4,13 +4,9 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, David C. Folch david.folch@asu.ed
 
 import textwrap as TW
 import numpy as np
-import copy as COPY
 from . import diagnostics as diagnostics
 from . import diagnostics_tsls as diagnostics_tsls
 from . import diagnostics_sp as diagnostics_sp
-import pysal.lib.api as lps
-import scipy
-from scipy.sparse.csr import csr_matrix
 
 __all__ = []
 
@@ -211,7 +207,7 @@ def ML_Lag(reg, w, vm, spat_diag, regimes=False):  # extra space d
         summary_regimes(reg)
     summary_warning(reg)
     summary(reg=reg, vm=vm, instruments=False,
-            nonspat_diag=False, spat_diag=spat_diag)
+            nonspat_diag=False, spat_diag=False)
 
 
 # extra space d
@@ -238,7 +234,7 @@ def ML_Lag_multi(reg, multireg, vm, spat_diag, regimes=False, sur=False, w=False
         summary_chow(reg)
     summary_warning(reg)
     summary_multi(reg=reg, multireg=multireg, vm=vm,
-                  instruments=False, nonspat_diag=False, spat_diag=spat_diag)
+                  instruments=False, nonspat_diag=False, spat_diag=False)
 
 
 def ML_Error(reg, w, vm, spat_diag, regimes=False):   # extra space d
@@ -257,7 +253,7 @@ def ML_Error(reg, w, vm, spat_diag, regimes=False):   # extra space d
         summary_regimes(reg)
     summary_warning(reg)
     summary(reg=reg, vm=vm, instruments=False,
-            nonspat_diag=False, spat_diag=spat_diag)
+            nonspat_diag=False, spat_diag=False)
 
 
 # extra space d
@@ -284,7 +280,7 @@ def ML_Error_multi(reg, multireg, vm, spat_diag, regimes=False, sur=False, w=Fal
         summary_chow(reg, lambd=True)
     summary_warning(reg)
     summary_multi(reg=reg, multireg=multireg, vm=vm,
-                  instruments=False, nonspat_diag=False, spat_diag=spat_diag)
+                  instruments=False, nonspat_diag=False, spat_diag=False)
 
 
 def GM_Error(reg, vm, w, regimes=False):
@@ -645,12 +641,12 @@ def Probit(reg, vm, w, spat_diag):
             short_intro=True, spat_diag=spat_diag)
 
 def SUR(reg, nonspat_diag=True, spat_diag=False, regimes=False,\
-        tsls=False, lambd=False, surlm=False):
+        tsls=False, lambd=False, surlm=False, ml=True):
     reg.__summary = {}
     # compute diagnostics and organize summary output
     reg.__summary['summary_zt'] = 'z'
     reg.__summary['summary_std_err'] = None
-    if not tsls:
+    if ml:
         try:
             sum_str = "%-20s:%12.3f                %-22s:%12d\n" % (
                 'Log likelihood (SUR)', reg.llik, 'Number of Iterations', reg.niter)
@@ -659,22 +655,30 @@ def SUR(reg, nonspat_diag=True, spat_diag=False, regimes=False,\
                 'Log likelihood (SUR)', reg.llik)
         summary_add_other_top(reg, sum_str)
     if lambd:
-        sum_str = "%-20s:%12.3f                %-22s:%12.3f\n" % (
-            'Log likel. (error)', reg.errllik, 'Log likel. (SUR error)', reg.surerrllik)
-        summary_add_other_top(reg, sum_str)
+        try:
+            sum_str = "%-20s:%12.3f                %-22s:%12.3f\n" % (
+                'Log likel. (error)', reg.errllik, 'Log likel. (SUR error)', reg.surerrllik)
+            summary_add_other_top(reg, sum_str)
+        except:
+            pass
     # build coefficients table body
-    summary_coefs_sur(reg, lambd=lambd)
+    summary_coefs_sur(reg, lambd=lambd, regimes=regimes)
     if tsls:
         for i in range(1,reg.n_eq+1):
             summary_coefs_instruments(reg, sur=i)
-    #if regimes:
-    #    summary_regimes(reg)
+    if regimes:
+        summary_regimes(reg, chow=False)
+        for i in range(1,reg.n_eq+1):
+            summary_chow(reg, sur=i)
+
     summary_warning(reg)
-    summary_diag_sur(reg, nonspat_diag=nonspat_diag, spat_diag=spat_diag, tsls=tsls, lambd=lambd)
+    summary_diag_sur(reg, nonspat_diag=nonspat_diag, spat_diag=spat_diag, tsls=tsls, lambd=lambd, ml=ml, regimes=regimes)
     if surlm and spat_diag:  # only in classic SUR
         sum_str =  summary_spat_diag_intro(no_mi=True)
         sum_str += "%-27s      %2d    %12.3f        %6.4f\n" % (
         "Lagrange Multiplier (error)", reg.lmEtest[1], reg.lmEtest[0], reg.lmEtest[2])
+        sum_str += "%-27s      %2d    %12.3f        %6.4f\n" % (
+        "Lagrange Multiplier (lag)  ", reg.lmlagtest[1],reg.lmlagtest[0],reg.lmlagtest[2])
         summary_add_other_end(reg, sum_str)
 
     summary_errorcorr(reg)
@@ -881,6 +885,11 @@ def summary_SUR(reg, short_intro=True):
             summary += reg.__summary['summary_other_mid']
         except:
             pass
+        try:
+            summary += reg.__summary[m]['summary_chow']
+        except:
+            pass
+
         summary += "\n"
     try:
         summary += reg.__summary['summary_other_end']
@@ -1015,28 +1024,38 @@ def summary_coefs_allx(reg, zt_stat, lambd=False):
 
     return i
 
-def summary_coefs_sur(reg, lambd=False):
+def summary_coefs_sur(reg, lambd=False, regimes=False):
     try:
         betas = reg.bSUR
         inf = reg.sur_inf
     except:
         betas = reg.b3SLS
         inf = reg.tsls_inf
-    for eq in list(reg.name_bigy.keys()):
+    if regimes:
+        regK = len(reg.regimes_set) # number of regimes
+    else:
+        regK = 1   
+    for eq in reg.name_bigy.keys():
         reg.__summary[eq] = {}
         strSummary = ""
-        for i in range(len(reg.name_bigX[eq])):
-            strSummary += "%20s    %12.7f    %12.7f    %12.7f    %12.7f\n"   \
-                % (reg.name_bigX[eq][i], betas[eq][i][0], inf[eq][i][0],\
-                     inf[eq][i][1], inf[eq][i][2])
-        try:
-            i += 1
-            for j in range(len(reg.name_bigyend[eq])):
+        regk = len(reg.name_bigX[eq]) / regK #number of exogenous variables in each regime
+        for k in range(regK):
+            for i in range(len(reg.name_bigX[eq]))[int(k*regk):int((k+1)*regk)]:
                 strSummary += "%20s    %12.7f    %12.7f    %12.7f    %12.7f\n"   \
-                    % (reg.name_bigyend[eq][j], betas[eq][i+j][0], inf[eq][i+j][0],\
-                         inf[eq][i+j][1], inf[eq][i+j][2])
-        except:
-            pass 
+                    % (reg.name_bigX[eq][i], betas[eq][i][0], inf[eq][i][0],\
+                         inf[eq][i][1], inf[eq][i][2])
+            try:
+                regkend = len(reg.name_bigyend[eq]) / regK
+                h = len(reg.name_bigX[eq])
+                fixed_rho = 0
+                if k == range(regK)[-1] and (len(reg.name_bigyend[eq])/regK)*regK<len(reg.name_bigyend[eq]):
+                    fixed_rho += 1
+                for j in range(len(reg.name_bigyend[eq]))[k*regkend:(k+1)*regkend+fixed_rho]:
+                    strSummary += "%20s    %12.7f    %12.7f    %12.7f    %12.7f\n"   \
+                        % (reg.name_bigyend[eq][j], betas[eq][h+j][0], inf[eq][h+j][0],\
+                             inf[eq][h+j][1], inf[eq][h+j][2])
+            except:
+                pass 
         if lambd:
             pos = list(reg.name_bigy.keys()).index(eq)
             try:
@@ -1181,16 +1200,23 @@ def summary_sur(reg, u_cov=False):
                 'summary_r2'] += "%-20s: %3.4f\n" % ('Log-Likelihood', reg.logl)
         except:
             pass
-'''
+#'''
 
-def summary_chow(reg, lambd=False):
-    reg.__summary['summary_chow'] = "\nREGIMES DIAGNOSTICS - CHOW TEST\n"
-    reg.__summary[
-        'summary_chow'] += "                 VARIABLE        DF        VALUE           PROB\n"
-    if reg.cols2regi == 'all':
-        names_chow = reg.name_x_r[1:]
+def summary_chow(reg, lambd=False, sur=False):
+    sum_text = "\nREGIMES DIAGNOSTICS - CHOW TEST"
+    if sur is not False:
+        eq = list(reg.name_bigy.keys())[sur-1]        
+        name_x_r = reg.name_x_r[eq]
+        joint,regi = reg.chow_regimes[eq]
+        sum_text += " WITHIN EQUATION"
     else:
-        names_chow = [reg.name_x_r[1:][i] for i in np.where(reg.cols2regi)[0]]
+        name_x_r = reg.name_x_r
+        joint,regi = reg.chow.joint,reg.chow.regi
+    sum_text += "\n                 VARIABLE        DF        VALUE           PROB\n"
+    if reg.cols2regi == 'all':
+        names_chow = name_x_r[1:]
+    else:
+        names_chow = [name_x_r[1:][i] for i in np.where(reg.cols2regi)[0]]
     if reg.constant_regi == 'many':
         indices = [0] + (np.argsort(names_chow) + 1).tolist()
         names_chow = ['CONSTANT'] + names_chow
@@ -1200,10 +1226,15 @@ def summary_chow(reg, lambd=False):
         indices += [-1]
         names_chow += ['lambda']
     for i in indices:
-        reg.__summary['summary_chow'] += "%25s        %2d    %12.3f        %9.4f\n" % (
-            names_chow[i], reg.nr - 1, reg.chow.regi[i, 0], reg.chow.regi[i, 1])
-    reg.__summary['summary_chow'] += "%25s        %2d    %12.3f        %9.4f\n" % (
-        'Global test', reg.kr * (reg.nr - 1), reg.chow.joint[0], reg.chow.joint[1])
+        sum_text += "%25s        %2d    %12.3f        %9.4f\n" % (
+            names_chow[i], reg.nr - 1, regi[i, 0], regi[i, 1])
+    sum_text += "%25s        %2d    %12.3f        %9.4f\n" % (
+        'Global test', reg.kr * (reg.nr - 1), joint[0], joint[1])
+    reg.__summary['summary_chow'] = sum_text
+    if not sur:
+        reg.__summary['summary_chow'] = sum_text
+    else:
+        reg.__summary[eq]['summary_chow'] = sum_text
 
 
 def summary_warning(reg):
@@ -1338,8 +1369,8 @@ def summary_spat_diag_probit(reg):
         "Pinkse-Slade (error)", 1, reg.PS_error[0], reg.PS_error[1])
     return strSummary
 
-def summary_diag_sur(reg, nonspat_diag, spat_diag, tsls, lambd, rho=False):
-    if tsls:
+def summary_diag_sur(reg, nonspat_diag, spat_diag, tsls, lambd, rho=False, ml=True, regimes=False):
+    if not ml:
         try:
             if reg.joinrho != None:
                 rho = True
@@ -1382,28 +1413,46 @@ def summary_diag_sur(reg, nonspat_diag, spat_diag, tsls, lambd, rho=False):
         pass
     if nonspat_diag or (spat_diag and chow_lamb):
         if reg.surchow != None:
-            strChow = "\nOTHER DIAGNOSTICS - CHOW TEST\n"
+            strChow = "\nOTHER DIAGNOSTICS - CHOW TEST BETWEEN EQUATIONS\n"
             strChow += "                                VARIABLES         DF       VALUE           PROB\n"
             if nonspat_diag:
+                if regimes:
+                    regK = len(reg.regimes_set)
+                else:
+                    regK = 1
                 kx = len(reg.surchow)
+                kend = 0
                 if tsls:
-                    kx += -len(reg.name_bigyend[list(reg.name_bigyend.keys())[0]])
+                    kend = len(reg.name_bigyend[list(reg.name_bigyend.keys())[0]])
+                    kx += -kend
                 names_chow = {}
+                reg_counter = 1
                 for k in range(len(reg.surchow)):
                     names_chow[k] = ""
-                    if k < kx:
+                    if k < ((kx+kend)*reg_counter-kend)/regK:
+                        kxadj = int(k-(reg_counter-1)*kend/regK)
                         for i in reg.name_bigX:
-                            names_chow[k] += reg.name_bigX[i][k] + ", "
+                            names_chow[k] += reg.name_bigX[i][kxadj] + ", "
                     else:
                         for j in reg.name_bigyend:
-                            names_chow[k] += reg.name_bigyend[j][k-kx] + ", "
+                            kxadj = int(k-kx*reg_counter/regK)
+                            names_chow[k] += reg.name_bigyend[j][kxadj] + ", "
+                    if k+1 == (kx+kend)*reg_counter/regK:
+                        reg_counter += 1
                     if len(names_chow[k])>42:
                         names_chow[k] = names_chow[k][0:38] + "..."
                     else:
                         names_chow[k] = names_chow[k][:-2]
+                reg_counter = 1
                 for k in range(len(reg.surchow)):
+                    if k < ((kx+kend)*reg_counter-kend)/regK:
+                        kadj = int(k-(reg_counter-1)*kend/regK)
+                    else:
+                        kadj = int(kx+k-kx*reg_counter/regK)
+                    if k + 1 == (kx-kend)/regK:
+                        reg_counter += 1
                     strChow += "%41s        %2d   %10.3f           %6.4f\n" % (
-                        names_chow[k], reg.surchow[k][1], reg.surchow[k][0], reg.surchow[k][2])
+                        names_chow[k], reg.surchow[kadj][1], reg.surchow[kadj][0], reg.surchow[kadj][2])
             if spat_diag and chow_lamb:
                 strChow += "%41s        %2d   %10.3f           %6.4f\n" % (
                         "lambda", reg.lamtest[1], reg.lamtest[0], reg.lamtest[2])

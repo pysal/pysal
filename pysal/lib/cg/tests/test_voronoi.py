@@ -1,7 +1,6 @@
 from ..voronoi import voronoi, voronoi_frames
-from ... import cg
+from ..shapes import Polygon, asShape
 import unittest
-import numpy as np
 
 
 class Voronoi(unittest.TestCase):
@@ -25,9 +24,9 @@ class Voronoi(unittest.TestCase):
         region = r_df.iloc[0]['geometry']
         try:
             import geopandas as df
-            self.assertFalse(isinstance(region, cg.shapes.Polygon))
+            self.assertTrue(isinstance(asShape(region), Polygon))
         except ImportError:
-            self.assertTrue(isinstance(region, cg.shapes.Polygon))
+            self.assertTrue(isinstance(region, Polygon))
 
 
 

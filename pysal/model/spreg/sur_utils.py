@@ -8,6 +8,7 @@ __author__= "Luc Anselin lanselin@gmail.com,    \
 
 import numpy as np
 import numpy.linalg as la
+from .utils import spdot
 
 __all__ = ['sur_dictxy','sur_dictZ','sur_mat2dict','sur_dict2mat',\
            'sur_corr','sur_crossprod','sur_est','sur_resids',\
@@ -19,7 +20,7 @@ def sur_dictxy(db,y_vars,x_vars,space_id=None,time_id=None):
     
     Parameters
     ----------
-    db          : data object created by lps.open
+    db          : data object created by pysal.lib.io.open
     y_vars      : list of lists with variable name(s) for dependent var
                   (Note must be a list of lists, even in splm case)
     x_vars      : list of lists with variable names for explanatory vars
@@ -94,7 +95,7 @@ def sur_dictZ(db,z_vars,form="spreg",const=False,space_id=None,time_id=None):
     
     Parameters
     ----------
-    db          : data object created by lps.open
+    db          : data object created by pysal.lib.io.open
     varnames    : list of lists with variable name(s)
                   (Note must be a list of lists, even in splm case)
     form        : format used for data set
@@ -153,7 +154,8 @@ def sur_dictZ(db,z_vars,form="spreg",const=False,space_id=None,time_id=None):
             bigZ_names[r] = bzvars
         return (bigZ,bigZ_names)
     else:
-        raise Exception("you should never be here")
+        raise KeyError("Invalid format used for data set. form must be either "
+		       " 'spreg' or 'plm', and {} was provided.".format(form))
     
 
         
@@ -196,7 +198,7 @@ def sur_dict2mat(dicts):
     
     
     """
-    n_dicts = len(list(dicts.keys()))
+    n_dicts = len(dicts.keys())
     mat = np.vstack((dicts[t] for t in range(n_dicts)))
     return(mat)
     
@@ -243,14 +245,14 @@ def sur_crossprod(bigZ,bigy):
                      of Z_r'Z_s    
     '''
     bigZZ = {}
-    n_eq = len(list(bigy.keys()))
+    n_eq = len(bigy.keys())
     for r in range(n_eq):
         for t in range(n_eq):
-            bigZZ[(r,t)] = np.dot(bigZ[r].T,bigZ[t])
+            bigZZ[(r,t)] = spdot(bigZ[r].T,bigZ[t])
     bigZy = {}
     for r in range(n_eq):
         for t in range(n_eq):
-            bigZy[(r,t)] = np.dot(bigZ[r].T,bigy[t])
+            bigZy[(r,t)] = spdot(bigZ[r].T,bigy[t])
     return bigZZ,bigZy
     
     
@@ -314,9 +316,30 @@ def sur_resids(bigy,bigX,beta):
         bigE     : a n x n_eq matrix of vectors of residuals
     
     '''
-    n_eq = len(list(bigy.keys()))
-    bigE = np.hstack((bigy[r] - np.dot(bigX[r],beta[r])) for r in range(n_eq))
+    n_eq = len(bigy.keys())
+    bigE = np.hstack((bigy[r] - spdot(bigX[r],beta[r])) for r in range(n_eq))
     return(bigE) 
+    
+def sur_predict(bigy,bigX,beta):
+    ''' Computation of a matrix with predicted values by equation
+    
+        Parameters
+        ----------
+
+        bigy        : dictionary with vector of dependent variable, one for each equation
+        bigX        : dictionary with matrix of explanatory variables, one for
+                      each equation
+        beta        : dictionary with estimation coefficients by 
+                       equation
+    
+        Returns
+        -------
+        bigYP     : a n x n_eq matrix of vectors of predicted values
+    
+    '''
+    n_eq = len(bigy.keys())
+    bigYP = np.hstack(spdot(bigX[r],beta[r]) for r in range(n_eq))
+    return(bigYP) 
     
     
 def filter_dict(lam,bigZ,bigZlag):
@@ -337,7 +360,7 @@ def filter_dict(lam,bigZ,bigZlag):
     
     """
     n_eq = lam.shape[0]
-    if not(len(list(bigZ.keys())) == n_eq and len(list(bigZlag.keys())) == n_eq):
+    if not(len(bigZ.keys()) == n_eq and len(bigZlag.keys()) == n_eq):
         raise Exception("Error: incompatible dimensions")
     Zfilt = {}
     for r in range(n_eq):

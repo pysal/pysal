@@ -1,7 +1,5 @@
-from .. import FileIO
+from .. import fileio
 from ..util import WKTParser
-from ... import cg
-import re
 
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ['WKTReader']
@@ -14,7 +12,7 @@ __all__ = ['WKTReader']
 #####################################################################
 
 
-class WKTReader(FileIO.FileIO):
+class WKTReader(fileio.FileIO):
     """
     Parameters
     ----------
@@ -49,7 +47,7 @@ class WKTReader(FileIO.FileIO):
     FORMATS = ['wkt']
 
     def __init__(self, *args, **kwargs):
-        FileIO.FileIO.__init__(self, *args, **kwargs)
+        fileio.FileIO.__init__(self, *args, **kwargs)
         self.__idx = {}
         self.__pos = 0
         self.__open()
@@ -62,7 +60,7 @@ class WKTReader(FileIO.FileIO):
         self.wkt = WKTParser()
 
     def _read(self):
-        FileIO.FileIO._complain_ifclosed(self.closed)
+        fileio.FileIO._complain_ifclosed(self.closed)
         if self.__pos not in self.__idx:
             self.__idx[self.__pos] = self.dataObj.tell()
         line = self.dataObj.readline()
@@ -77,7 +75,7 @@ class WKTReader(FileIO.FileIO):
             return None
 
     def seek(self, n):
-        FileIO.FileIO.seek(self, n)
+        fileio.FileIO.seek(self, n)
         pos = self.pos
         if pos in self.__idx:
             self.dataObj.seek(self.__idx[pos])
@@ -94,5 +92,4 @@ class WKTReader(FileIO.FileIO):
 
     def close(self):
         self.dataObj.close()
-        FileIO.FileIO.close(self)
-
+        fileio.FileIO.close(self)

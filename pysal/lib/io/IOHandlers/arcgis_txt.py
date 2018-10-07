@@ -2,7 +2,7 @@ import os.path
 from . import gwt
 from ...weights import W
 from ...weights.util import remap_ids
-from .. import FileIO
+from .. import fileio
 from warnings import warn
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
@@ -69,7 +69,7 @@ class ArcGISTextIO(gwt.GwtIO):
 
     def _read(self):
         """Reads ArcGIS Text file
-        Returns a pysal.weights.weights.W object
+        Returns a pysal.lib.weights.weights.W object
 
         Examples
         --------
@@ -77,7 +77,8 @@ class ArcGISTextIO(gwt.GwtIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open a text file and read it into a pysal weights object
 
-        >>> w = pysal.open(pysal.examples.get_path('arcgis_txt.txt'),'r','arcgis_text').read()
+        >>> import pysal.lib
+        >>> w = pysal.lib.io.open(pysal.lib.examples.get_path('arcgis_txt.txt'),'r','arcgis_text').read()
 
         Get the number of observations from the header
 
@@ -105,7 +106,7 @@ class ArcGISTextIO(gwt.GwtIO):
         try:
             dbf = os.path.join(self.dataPath + '.dbf')
             if os.path.exists(dbf):
-                db = FileIO.FileIO(dbf, 'r')
+                db = fileio.FileIO(dbf, 'r')
                 if id_var in db.header:
                     id_order = db.by_col(id_var)
                     id_type = type(id_order[0])

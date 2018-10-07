@@ -79,7 +79,7 @@ class Arc_KDTree(temp_KDTree):
         >>> kd = Arc_KDTree(pts, radius = sphere.RADIUS_EARTH_KM)
         >>> d,i = kd.query((90,0), k=4)
         >>> d
-        array([ 10007.54339801,  10007.54339801,  10007.54339801,  10007.54339801])
+        array([10007.54339801, 10007.54339801, 10007.54339801, 10007.54339801])
         >>> circumference = 2*math.pi*sphere.RADIUS_EARTH_KM
         >>> round(d[0],5) == round(circumference/4.0,5)
         True
@@ -136,11 +136,12 @@ class Arc_KDTree(temp_KDTree):
 
         Examples
         --------
+        >>> import numpy as np
         >>> pts = [(0,90), (0,0), (180,0), (0,-90)]
         >>> kd = Arc_KDTree(pts, radius = sphere.RADIUS_EARTH_KM)
         >>> d,i = kd.query((90,0), k=4)
         >>> d
-        array([ 10007.54339801,  10007.54339801,  10007.54339801,  10007.54339801])
+        array([10007.54339801, 10007.54339801, 10007.54339801, 10007.54339801])
         >>> circumference = 2*math.pi*sphere.RADIUS_EARTH_KM
         >>> round(d[0],5) == round(circumference/4.0,5)
         True
@@ -178,13 +179,16 @@ class Arc_KDTree(temp_KDTree):
 
         Examples
         --------
+        >>> import numpy as np
         >>> pts = [(0,90), (0,0), (180,0), (0,-90)]
         >>> kd = Arc_KDTree(pts, radius = sphere.RADIUS_EARTH_KM)
         >>> circumference = 2*math.pi*sphere.RADIUS_EARTH_KM
         >>> kd.query_ball_point(pts, circumference/4.)
-        array([[0, 1, 2], [0, 1, 3], [0, 2, 3], [1, 2, 3]], dtype=object)
+        array([list([0, 1, 2]), list([0, 1, 3]), list([0, 2, 3]), list([1, 2, 3])],
+              dtype=object)
         >>> kd.query_ball_point(pts, circumference/2.)
-        array([[0, 1, 2, 3], [0, 1, 2, 3], [0, 1, 2, 3], [0, 1, 2, 3]], dtype=object)
+        array([list([0, 1, 2, 3]), list([0, 1, 2, 3]), list([0, 1, 2, 3]),
+               list([0, 1, 2, 3])], dtype=object)
         """
         eps = sphere.arcdist2linear(eps, self.radius)
         #scipy.sphere.KDTree.query_ball_point appears to ignore the eps argument.
@@ -207,10 +211,10 @@ class Arc_KDTree(temp_KDTree):
         --------
         >>> pts = [(0,90), (0,0), (180,0), (0,-90)]
         >>> kd = Arc_KDTree(pts, radius = sphere.RADIUS_EARTH_KM)
-        >>> kd.query_ball_tree(kd, kd.circumference/4.)
-        [[0, 1, 2], [0, 1, 3], [0, 2, 3], [1, 2, 3]]
-        >>> kd.query_ball_tree(kd, kd.circumference/2.)
-        [[0, 1, 2, 3], [0, 1, 2, 3], [0, 1, 2, 3], [0, 1, 2, 3]]
+        >>> kd.query_ball_tree(kd, kd.circumference/4.) == [[0, 1, 2], [0, 1, 3], [0, 2, 3], [1, 2, 3]]
+        True
+        >>> kd.query_ball_tree(kd, kd.circumference/2.) == [[0, 1, 2, 3], [0, 1, 2, 3], [0, 1, 2, 3], [0, 1, 2, 3]]
+        True
         """
         eps = sphere.arcdist2linear(eps, self.radius)
         #scipy.sphere.KDTree.query_ball_point appears to ignore the eps argument.
@@ -235,10 +239,10 @@ class Arc_KDTree(temp_KDTree):
         --------
         >>> pts = [(0,90), (0,0), (180,0), (0,-90)]
         >>> kd = Arc_KDTree(pts, radius = sphere.RADIUS_EARTH_KM)
-        >>> kd.query_pairs(kd.circumference/4.)
-        set([(0, 1), (1, 3), (2, 3), (0, 2)])
-        >>> kd.query_pairs(kd.circumference/2.)
-        set([(0, 1), (1, 2), (1, 3), (2, 3), (0, 3), (0, 2)])
+        >>> kd.query_pairs(kd.circumference/4.) == set([(0, 1), (1, 3), (2, 3), (0, 2)])
+        True
+        >>> kd.query_pairs(kd.circumference/2.) == set([(0, 1), (1, 2), (1, 3), (2, 3), (0, 3), (0, 2)])
+        True
         """
         if r > 0.5 * self.circumference:
             raise ValueError("r, must not exceed 1/2 circumference of the sphere (%f)." % self.circumference * 0.5)
@@ -258,15 +262,15 @@ class Arc_KDTree(temp_KDTree):
         >>> pts = [(0,90), (0,0), (180,0), (0,-90)]
         >>> kd = Arc_KDTree(pts, radius = sphere.RADIUS_EARTH_KM)
         >>> kd.sparse_distance_matrix(kd, kd.circumference/4.).todense()
-        matrix([[     0.        ,  10007.54339801,  10007.54339801,      0.        ],
-                [ 10007.54339801,      0.        ,      0.        ,  10007.54339801],
-                [ 10007.54339801,      0.        ,      0.        ,  10007.54339801],
-                [     0.        ,  10007.54339801,  10007.54339801,      0.        ]])
+        matrix([[    0.        , 10007.54339801, 10007.54339801,     0.        ],
+                [10007.54339801,     0.        ,     0.        , 10007.54339801],
+                [10007.54339801,     0.        ,     0.        , 10007.54339801],
+                [    0.        , 10007.54339801, 10007.54339801,     0.        ]])
         >>> kd.sparse_distance_matrix(kd, kd.circumference/2.).todense()
-        matrix([[     0.        ,  10007.54339801,  10007.54339801,  20015.08679602],
-                [ 10007.54339801,      0.        ,  20015.08679602,  10007.54339801],
-                [ 10007.54339801,  20015.08679602,      0.        ,  10007.54339801],
-                [ 20015.08679602,  10007.54339801,  10007.54339801,      0.        ]])
+        matrix([[    0.        , 10007.54339801, 10007.54339801, 20015.08679602],
+                [10007.54339801,     0.        , 20015.08679602, 10007.54339801],
+                [10007.54339801, 20015.08679602,     0.        , 10007.54339801],
+                [20015.08679602, 10007.54339801, 10007.54339801,     0.        ]])
         """
         if self.radius != other.radius:
             raise ValueError("Both trees must have the same radius.")

@@ -28,6 +28,8 @@ import scipy.spatial as spat
 
 EPS = np.finfo(float).eps
 
+__all__ = ['alpha_shape', 'alpha_shape_auto']
+
 @jit
 def nb_dist(x, y):
     '''
@@ -315,18 +317,14 @@ def get_single_faces(triangles_is):
     Example
     -------
     >>> import scipy.spatial as spat
-    >>> pts = np.array([[0, 1],
-                        [3, 5],
-                        [4, 1],
-                        [6, 7],
-                        [9, 3]])
+    >>> pts = np.array([[0, 1], [3, 5], [4, 1], [6, 7], [9, 3]])
     >>> alpha = 0.33
     >>> triangulation = spat.Delaunay(pts)
     >>> triangulation.simplices
     array([[3, 1, 4],
            [1, 2, 4],
            [2, 1, 0]], dtype=int32)
-    >>> faces = get_single_faces(triangulation.simplices)
+    >>> get_single_faces(triangulation.simplices)
     array([[0, 1],
            [0, 2],
            [1, 3],
@@ -382,11 +380,7 @@ def alpha_geoms(alpha, triangles, radii, xys):
     Example
     -------
     >>> import scipy.spatial as spat
-    >>> pts = np.array([[0, 1],
-                        [3, 5],
-                        [4, 1],
-                        [6, 7],
-                        [9, 3]])
+    >>> pts = np.array([[0, 1], [3, 5], [4, 1], [6, 7], [9, 3]])
     >>> alpha = 0.33
     >>> triangulation = spat.Delaunay(pts)
     >>> triangles = pts[triangulation.simplices]
@@ -394,11 +388,11 @@ def alpha_geoms(alpha, triangles, radii, xys):
     array([[[6, 7],
             [3, 5],
             [9, 3]],
-
+    <BLANKLINE>
            [[3, 5],
             [4, 1],
             [9, 3]],
-
+    <BLANKLINE>
            [[4, 1],
             [3, 5],
             [0, 1]]])
@@ -406,8 +400,10 @@ def alpha_geoms(alpha, triangles, radii, xys):
     >>> b_pts = triangles[:, 1, :]
     >>> c_pts = triangles[:, 2, :]
     >>> radii = r_circumcircle_triangle(a_pts, b_pts, c_pts)
-    >>> geoms = alpha_geoms(alpha, triangulation.simplices, radii, xys)
+    >>> geoms = alpha_geoms(alpha, triangulation.simplices, radii, pts)
     >>> geoms
+    0    POLYGON ((0 1, 3 5, 4 1, 0 1))
+    dtype: object
     '''
     try:
         from shapely.geometry import LineString
@@ -451,11 +447,7 @@ def alpha_shape(xys, alpha):
     Example
     -------
 
-    >>> pts = np.array([[0, 1],
-                        [3, 5],
-                        [4, 1],
-                        [6, 7],
-                        [9, 3]])
+    >>> pts = np.array([[0, 1], [3, 5], [4, 1], [6, 7], [9, 3]])
     >>> alpha = 0.1
     >>> poly = alpha_shape(pts, alpha)
     >>> poly
@@ -521,14 +513,8 @@ def alpha_shape_auto(xys, step=1, verbose=False):
     Example
     -------
 
-    >>> pts = np.array([[0, 1],
-                        [3, 5],
-                        [4, 1],
-                        [6, 7],
-                        [9, 3]])
+    >>> pts = np.array([[0, 1], [3, 5], [4, 1], [6, 7], [9, 3]])
     >>> poly = alpha_shape_auto(pts)
-    >>> poly
-    <shapely.geometry.polygon.Polygon at 0x11a7bbf60>
     >>> poly.bounds
     (0.0, 1.0, 9.0, 7.0)
     >>> poly.centroid.x, poly.centroid.y

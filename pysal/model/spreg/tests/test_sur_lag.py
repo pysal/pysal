@@ -1,21 +1,17 @@
 import unittest
 import numpy as np
-import pysal.lib.api as lps
-from pysal.model.spreg.sur_utils import sur_dictxy,sur_dictZ
-from pysal.model.spreg.sur_lag import SURlagIV
+from ..sur_utils import sur_dictxy, sur_dictZ
+from ..sur_lag import SURlagIV
+from .test_sur import dict_compare
+import pysal.lib
 from pysal.lib.common import RTOL
 
-PEGP = lps.get_path
-
-def dict_compare(actual, desired, rtol):
-    for i in list(actual.keys()):
-        np.testing.assert_allclose(actual[i],desired[i],rtol)
-
+PEGP = pysal.lib.examples.get_path
 
 class Test_SURlagIV(unittest.TestCase):
     def setUp(self):
-        self.db = lps.open(lps.get_path('NAT.dbf'),'r')
-        self.w = lps.queen_from_shapefile(lps.get_path("NAT.shp"))
+        self.db = pysal.lib.io.open(pysal.lib.examples.get_path('NAT.dbf'),'r')
+        self.w = pysal.lib.weights.Queen.from_shapefile(pysal.lib.examples.get_path("NAT.shp"))
         self.w.transform = 'r'
 
 

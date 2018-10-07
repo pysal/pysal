@@ -114,4 +114,3 @@ if __name__ == '__main__':
                    'POINT EMPTY',
                    'MULTIPOLYGON EMPTY']
     wkt = WKTParser()
-

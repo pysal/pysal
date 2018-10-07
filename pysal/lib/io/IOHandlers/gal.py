@@ -1,4 +1,4 @@
-from .. import FileIO
+from .. import fileio
 from ...weights.weights import W, WSP
 from scipy import sparse
 import numpy as np
@@ -7,7 +7,7 @@ __author__ = 'Charles R Schmidt <schmidtc@gmail.com>'
 __all__ = ['GalIO']
 
 
-class GalIO(FileIO.FileIO):
+class GalIO(fileio.FileIO):
     """
     Opens, reads, and writes file objects in GAL format.
 
@@ -18,7 +18,7 @@ class GalIO(FileIO.FileIO):
 
     def __init__(self, *args, **kwargs):
         self._typ = str
-        FileIO.FileIO.__init__(self, *args, **kwargs)
+        fileio.FileIO.__init__(self, *args, **kwargs)
         self.file = open(self.dataPath, self.mode)
 
     def read(self, n=-1, sparse=False):
@@ -213,6 +213,6 @@ class GalIO(FileIO.FileIO):
 
     def close(self):
         self.file.close()
-        FileIO.FileIO.close(self)
+        fileio.FileIO.close(self)
 
 

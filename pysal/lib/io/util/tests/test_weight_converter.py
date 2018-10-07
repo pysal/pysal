@@ -1,7 +1,7 @@
 import unittest
 from ..weight_converter import WeightConverter
 from ..weight_converter import weight_convert
-from ...FileIO import FileIO as psopen
+from ...fileio import FileIO as psopen
 import tempfile
 import os
 import warnings

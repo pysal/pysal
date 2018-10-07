@@ -1,5 +1,8 @@
 import numpy as np
-import pysal.viz.mapclassify.api as classify
+import pysal.viz.mapclassify as classify
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 
 """
 Utility functions for lightweight visualizations in splot
@@ -61,6 +64,23 @@ def mask_local_auto(moran_loc, p=0.5):
     return cluster_labels, colors5, colors, labels
 
 
+_classifiers = {
+    'box_plot': classify.Box_Plot,
+    'equal_interval': classify.Equal_Interval,
+    'fisher_jenks': classify.Fisher_Jenks,
+    'headtail_breaks': classify.HeadTail_Breaks,
+    'jenks_caspall': classify.Jenks_Caspall,
+    'jenks_caspall_forced': classify.Jenks_Caspall_Forced,
+    'max_p_classifier': classify.Max_P_Classifier,
+    'maximum_breaks': classify.Maximum_Breaks,
+    'natural_breaks': classify.Natural_Breaks,
+    'quantiles': classify.Quantiles,
+    'percentiles': classify.Percentiles,
+    'std_mean': classify.Std_Mean,
+    'user_defined': classify.User_Defined,
+    }
+
+
 def bin_values_choropleth(attribute_values, method='quantiles',
                           k=5):
     '''
@@ -86,13 +106,10 @@ def bin_values_choropleth(attribute_values, method='quantiles',
         upper bounds of each class (.bins), number of classes (.k)
         and number of onservations falling in each class (.counts)
     '''
-    classifiers = {
-        'quantiles': classify.Quantiles,
-        'fisher-jenks': classify.Fisher_Jenks,
-        'equal-interval': classify.Equal_Interval
-    }
+    if method not in ['quantiles', 'fisher_jenks', 'equal_interval']:
+        raise ValueError("Method {} not supported".format(method))
 
-    bin_values = classifiers[method](attribute_values, k)
+    bin_values = _classifiers[method](attribute_values, k)
     return bin_values
 
 
@@ -168,6 +185,22 @@ def add_legend(fig, labels, colors):
     return legend
 
 
+def format_legend(values):
+    """
+    Helper to return sensible legend values
+    
+    Parameters
+    ----------
+    values: array
+        Values plotted in legend.
+    """
+    in_thousand = False
+    if np.any(values > 1000):
+        in_thousand = True
+        values = values / 1000
+    return values, in_thousand
+
+
 def calc_data_aspect(plot_height, plot_width, bounds):
     # Deal with data ranges in Bokeh:
     # make a meter in x and a meter in y the same in pixel lengths
@@ -236,7 +269,9 @@ def shift_colormap(cmap, start=0, midpoint=0.5, stop=1.0, name='shiftedcmap'):
     -------
     new_cmap : A new colormap that has been shifted. 
     '''
-    
+    if isinstance(cmap, str):
+        cmap = cm.get_cmap(cmap) 
+
     cdict = {
         'red': [],
         'green': [],

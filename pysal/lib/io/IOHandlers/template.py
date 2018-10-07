@@ -4,13 +4,13 @@
 
 """
 
-from .. import FileIO
+from .. import fileio as FileIO
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ['TemplateWriter', 'TemplateReaderWriter']
 
 
 # Always subclass FileIO
-class TemplateWriter(FileIO):
+class TemplateWriter(FileIO.FileIO):
     #REQUIRED, List the formats this class supports.
     FORMATS = ['foo']
     #REQUIRED, List the modes supported by this class.
@@ -68,7 +68,7 @@ class TemplateWriter(FileIO):
         FileIO.close(self)
 
 
-class TemplateReaderWriter(FileIO):
+class TemplateReaderWriter(FileIO.FileIO):
     FORMATS = ['bar']
     MODES = ['r', 'w']
 

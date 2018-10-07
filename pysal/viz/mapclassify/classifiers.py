@@ -2,11 +2,6 @@
 A module of classification schemes for choropleth mapping.
 """
 
-try:
-    xrange
-except:
-    xrange = range
-
 __author__ = "Sergio J. Rey"
 
 __all__ = [
@@ -31,10 +26,9 @@ import copy
 from scipy.cluster.vq import kmeans as KMEANS
 from warnings import warn as Warn
 try:
-    from numba import autojit
+    from numba import jit
 except ImportError:
-
-    def autojit(func):
+    def jit(func):
         return func
 
 
@@ -73,7 +67,6 @@ def quantile(y, k=4):
     array([ 249.75,  499.5 ,  749.25,  999.  ])
     >>> quantile(x, k = 3)
     array([ 333.,  666.,  999.])
-    >>>
 
     Note that if there are enough ties that the quantile values repeat, we
     collapse to pseudo quantiles in which case the number of classes will be
@@ -121,7 +114,7 @@ def binC(y, bins):
     --------
     >>> np.random.seed(1)
     >>> x = np.random.randint(2, 8, (10, 3))
-    >>> bins = range(2, 8)
+    >>> bins = list(range(2, 8))
     >>> x
     array([[7, 5, 6],
            [2, 3, 5],
@@ -211,7 +204,6 @@ def bin(y, bins):
            [2, 0, 1],
            [1, 1, 0],
            [0, 0, 2]])
-    >>>
     """
     if np.ndim(y) == 1:
         k = 1
@@ -332,7 +324,7 @@ def natural_breaks(values, k=5):
     return (sids, class_ids, fit, cuts)
 
 
-@autojit
+@jit
 def _fisher_jenks_means(values, classes=5, sort=True):
     """
     Jenks Optimal (Natural Breaks) algorithm implemented in Python.
@@ -426,8 +418,8 @@ class Map_Classifier(object):
     Utilities:
 
     In addition to the classifiers, there are several utility functions that
-    can be usee the properties of a specific classifier for
-    different lues, or for automatic selection of a classifier and
+    can be used to evaluate the properties of a specific classifier,
+    or for automatic selection of a classifier and
     number of classes.
 
     * :func:`pysal.viz.mapclassify.classifiers.gadf`

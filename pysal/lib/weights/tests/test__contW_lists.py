@@ -2,7 +2,7 @@ import os
 import unittest
 from .._contW_lists import ContiguityWeightsLists, ROOK, QUEEN
 from ..weights import W
-from ...io.FileIO import FileIO as ps_open
+from ...io.fileio import FileIO as ps_open
 
 
 try:

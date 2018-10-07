@@ -781,4 +781,3 @@ class MultiPatch:
         raise NotImplementedError("No MultiPatch Support at this time.")
 
 TYPE_DISPATCH = {0: NullShape, 1: Point, 3: PolyLine, 5: Polygon, 8: MultiPoint, 11: PointZ, 13: PolyLineZ, 15: PolygonZ, 18: MultiPointZ, 21: PointM, 23: PolyLineM, 25: PolygonM, 28: MultiPointM, 31: MultiPatch, 'POINT': Point, 'POINTZ': PointZ, 'POINTM': PointM, 'ARC': PolyLine, 'ARCZ': PolyLineZ, 'ARCM': PolyLineM, 'POLYGON': Polygon, 'POLYGONZ': PolygonZ, 'POLYGONM': PolygonM, 'MULTIPOINT': MultiPoint, 'MULTIPOINTZ': MultiPointZ, 'MULTIPOINTM': MultiPointM, 'MULTIPATCH': MultiPatch}
-

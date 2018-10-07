@@ -4,7 +4,7 @@ Getis and Ord G statistic for spatial autocorrelation
 __author__ = "Sergio J. Rey <srey@asu.edu>, Myunghwa Hwang <mhwang4@gmail.com> "
 __all__ = ['G', 'G_Local']
 
-from pysal.lib.common import np, stats, math
+from pysal.lib.common import np, stats 
 from pysal.lib.weights.spatial_lag import lag_spatial as slag
 from .tabular import _univariate_handler
 
@@ -67,7 +67,7 @@ class G(object):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
     >>> import numpy
     >>> numpy.random.seed(10)
 
@@ -75,7 +75,7 @@ class G(object):
     >>> points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
 
     Creating a weights object from points
-    >>> w = lps.DistanceBand(points,threshold=15)
+    >>> w = pysal.lib.weights.DistanceBand(points,threshold=15)
     >>> w.transform = "B"
 
     Preparing a variable
@@ -106,7 +106,7 @@ class G(object):
         y = y.reshape(len(y), 1)  # Ensure that y is an n by 1 vector, otherwise y*y.T == y*y
         self.den_sum = (y * y.T).sum() - (y * y).sum()
         self.G = self.__calc(self.y)
-        self.z_norm = (self.G - self.EG) / math.sqrt(self.VG)
+        self.z_norm = (self.G - self.EG) / np.sqrt(self.VG)
         self.p_norm = 1.0 - stats.norm.cdf(np.abs(self.z_norm))
 
         if permutations:
@@ -278,7 +278,7 @@ class G_Local(object):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
     >>> import numpy
     >>> numpy.random.seed(10)
 
@@ -288,7 +288,7 @@ class G_Local(object):
 
     Creating a weights object from points
 
-    >>> w = lps.DistanceBand(points,threshold=15)
+    >>> w = pysal.lib.weights.DistanceBand(points,threshold=15)
 
     Prepareing a variable
 

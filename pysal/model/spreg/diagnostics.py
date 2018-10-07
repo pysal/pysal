@@ -4,10 +4,9 @@ Diagnostics for regression estimations.
 """
 __author__ = "Luc Anselin luc.anselin@asu.edu, Nicholas Malizia nicholas.malizia@asu.edu "
 
-import pysal.lib.api as lps
 from pysal.lib.common import *
 import scipy.sparse as SP
-from math import sqrt
+from math import sqrt, pi
 from .utils import spmultiply, sphstack, spmin, spmax
 
 
@@ -35,13 +34,14 @@ def f_stat(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> import diagnostics
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data. 
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"),"r")
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),"r")
 
     Create the dependent variable vector. 
 
@@ -103,13 +103,14 @@ def t_stat(reg, z_stat=False):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> import diagnostics
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data. 
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"),"r")
+    >>> db = pysal.lib.open(pysal.lib.examples.get_path("columbus.dbf"),"r")
 
     Create the dependent variable vector. 
 
@@ -170,13 +171,14 @@ def r2(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> import diagnostics
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"),"r")
+    >>> db = pysal.lib.io.open(examples.get_path("columbus.dbf"),"r")
 
     Create the dependent variable vector.
 
@@ -231,13 +233,14 @@ def ar2(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> import diagnostics
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"),"r")
+    >>> db = pysal.lib.io.open(examples.get_path("columbus.dbf"),"r")
 
     Create the dependent variable vector. 
 
@@ -287,13 +290,14 @@ def se_betas(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> import diagnostics
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data. 
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"),"r")
+    >>> db = pysal.lib.io.open(examples.get_path("columbus.dbf"),"r")
 
     Create the dependent variable vector.
 
@@ -344,13 +348,14 @@ def log_likelihood(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> import diagnostics
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data. 
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"),"r")
+    >>> db = pysal.lib.io.open(examples.get_path("columbus.dbf"),"r")
 
     Create the dependent variable vector. 
 
@@ -381,7 +386,7 @@ def log_likelihood(reg):
     n = reg.n       # (scalar) number of observations
     utu = reg.utu   # (scalar) residual sum of squares
     ll_result = -0.5 * \
-        (n * (np.log(2 * math.pi)) + n * np.log(utu / n) + (utu / (utu / n)))
+        (n * (np.log(2 * pi)) + n * np.log(utu / n) + (utu / (utu / n)))
     return ll_result
 
 
@@ -403,13 +408,14 @@ def akaike(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> import diagnostics
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"),"r")
+    >>> db = pysal.lib.io.open(examples.get_path("columbus.dbf"),"r")
 
     Create the dependent variable vector. 
 
@@ -466,13 +472,14 @@ def schwarz(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> import diagnostics
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"),"r")
+    >>> db = pysal.lib.io.open(examples.get_path("columbus.dbf"),"r")
 
     Create the dependent variable vector. 
 
@@ -530,13 +537,14 @@ def condition_index(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> import diagnostics
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"),"r")
+    >>> db = pysal.lib.io.open(examples.get_path("columbus.dbf"),"r")
 
     Create the dependent variable vector. 
 
@@ -602,13 +610,14 @@ def jarque_bera(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> import diagnostics
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"), "r")
+    >>> db = pysal.lib.io.open(examples.get_path("columbus.dbf"), "r")
 
     Create the dependent variable vector. 
 
@@ -701,13 +710,14 @@ def breusch_pagan(reg, z=None):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> import diagnostics
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"), "r")
+    >>> db = pysal.lib.io.open(examples.get_path("columbus.dbf"), "r")
 
     Create the dependent variable vector. 
 
@@ -843,13 +853,14 @@ def white(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> import diagnostics
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"),"r")
+    >>> db = pysal.lib.io.open(examples.get_path("columbus.dbf"),"r")
 
     Create the dependent variable vector. 
 
@@ -1005,13 +1016,14 @@ def koenker_bassett(reg, z=None):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> import diagnostics
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"),"r")
+    >>> db = pysal.lib.io.open(examples.get_path("columbus.dbf"),"r")
 
     Create the dependent variable vector. 
 
@@ -1143,13 +1155,14 @@ def vif(reg):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> import diagnostics
     >>> from ols import OLS
 
     Read the DBF associated with the Columbus data.
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"),"r")
+    >>> db = pysal.lib.io.open(examples.get_path("columbus.dbf"),"r")
 
     Create the dependent variable vector. 
 
@@ -1235,10 +1248,11 @@ def constant_check(array):
     -------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> import diagnostics
     >>> from ols import OLS
-    >>> db = lps.open(lps.get_path("columbus.dbf"),"r")
+    >>> db = pysal.lib.io.open(examples.get_path("columbus.dbf"),"r")
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
     >>> X = []
@@ -1290,13 +1304,14 @@ def likratiotest(reg0, reg1):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> import scipy.stats as stats
     >>> import pysal.model.spreg.ml_lag as lag
 
     Use the baltim sample data set
 
-    >>> db =  ps.open(ps.examples.get_path("baltim.dbf"),'r')
+    >>> db = pysal.lib.io.open(examples.get_path("baltim.dbf"),'r')
     >>> y_name = "PRICE"
     >>> y = np.array(db.by_col(y_name)).T
     >>> y.shape = (len(y),1)

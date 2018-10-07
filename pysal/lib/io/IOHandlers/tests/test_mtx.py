@@ -1,6 +1,6 @@
 import unittest
 from ..mtx import MtxIO
-from ...FileIO import FileIO as psopen
+from ...fileio import FileIO as psopen
 from .... import examples as pysal_examples
 import tempfile
 import os

@@ -10,7 +10,6 @@ import numpy as np
 import numpy.linalg as la
 from scipy import sparse as sp
 from scipy.sparse.linalg import splu as SuperLU
-import pysal.lib.api as lps
 from .utils import RegressionPropsY, RegressionPropsVM
 from . import diagnostics as DIAG
 from . import user_output as USER
@@ -23,6 +22,7 @@ try:
 except ImportError:
     minimize_scalar_available = False
 from .sputils import spdot, spfill_diagonal, spinv
+from pysal.lib import weights
 
 __all__ = ["ML_Error"]
 
@@ -97,16 +97,17 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
     >>> np.set_printoptions(suppress=True) #prevent scientific format
-    >>> db = ps.open(ps.examples.get_path("south.dbf"),'r')
+    >>> db = pysal.lib.io.open(examples.get_path("south.dbf"),'r')
     >>> y_name = "HR90"
     >>> y = np.array(db.by_col(y_name))
     >>> y.shape = (len(y),1)
     >>> x_names = ["RD90","PS90","UE90","DV90"]
     >>> x = np.array([db.by_col(var) for var in x_names]).T
     >>> x = np.hstack((np.ones((len(y),1)),x))
-    >>> ww = ps.open(ps.examples.get_path("south_q.gal"))
+    >>> ww = pysal.lib.io.open(pysal.lib.examples.get_path("south_q.gal"))
     >>> w = ww.read()
     >>> ww.close()
     >>> w.transform = 'r'
@@ -168,7 +169,7 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
         #W = w.full()[0] #wait to build pending what is needed
         #Wsp = w.sparse
 
-        ylag = ps.lag_spatial(w, self.y)
+        ylag = weights.lag_spatial(w, self.y)
         xlag = self.get_x_lag(w, regimes_att)
 
         # call minimizer using concentrated log-likelihood to get lambda
@@ -230,7 +231,7 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
 
         # residual variance
 
-        self.e_filtered = self.u - self.lam * ps.lag_spatial(w, self.u)
+        self.e_filtered = self.u - self.lam * weights.lag_spatial(w, self.u)
         self.sig2 = np.dot(self.e_filtered.T, self.e_filtered) / self.n
 
         # variance-covariance matrix betas
@@ -270,12 +271,12 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
 
     def get_x_lag(self, w, regimes_att):
         if regimes_att:
-            xlag = ps.lag_spatial(w, regimes_att['x'])
+            xlag = weights.lag_spatial(w, regimes_att['x'])
             xlag = REGI.Regimes_Frame.__init__(self, xlag,
                                                regimes_att['regimes'], constant_regi=None, cols2regi=regimes_att['cols2regi'])[0]
             xlag = xlag.toarray()
         else:
-            xlag = ps.lag_spatial(w, self.x)
+            xlag = weights.lag_spatial(w, self.x)
         return xlag
 
 
@@ -301,7 +302,7 @@ class ML_Error(BaseML_Error):
     epsilon      : float
                    tolerance criterion in mimimize_scalar function and inverse_product
     spat_diag    : boolean
-                   if True, include spatial diagnostics
+                   if True, include spatial diagnostics (not implemented yet)
     vm           : boolean
                    if True, include variance-covariance matrix in summary
                    results
@@ -377,16 +378,16 @@ class ML_Error(BaseML_Error):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> np.set_printoptions(suppress=True)  #prevent scientific format
-    >>> db = ps.open(ps.examples.get_path("south.dbf"),'r')
-    >>> ds_name = "south.dbf"
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
+    >>> np.set_printoptions(suppress=True) #prevent scientific format
+    >>> db = pysal.lib.io.open(examples.get_path("south.dbf"),'r')
     >>> y_name = "HR90"
     >>> y = np.array(db.by_col(y_name))
     >>> y.shape = (len(y),1)
     >>> x_names = ["RD90","PS90","UE90","DV90"]
     >>> x = np.array([db.by_col(var) for var in x_names]).T
-    >>> ww = ps.open(ps.examples.get_path("south_q.gal"))
+    >>> ww = pysal.lib.io.open(pysal.lib.examples.get_path("south_q.gal"))
     >>> w = ww.read()
     >>> ww.close()
     >>> w_name = "south_q.gal"

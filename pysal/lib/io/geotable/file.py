@@ -1,5 +1,5 @@
-from ...weights.Contiguity import Rook, Queen
-from ..FileIO import FileIO as ps_open
+from ...weights.contiguity import Rook, Queen
+from ..fileio import FileIO as ps_open
 from .utils import insert_metadata
 import os
 from .shp import shp2series, series2shp

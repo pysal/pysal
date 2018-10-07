@@ -1,13 +1,6 @@
 """
 Distance statistics for planar point patterns
 
-
-TODO
-
-- documentation
-- testing
-
-
 """
 __author__ = "Serge Rey sjsrey@gmail.com"
 __all__ = ['DStatistic', 'G', 'F', 'J', 'K', 'L', 'Envelopes', 'Genv', 'Fenv', 'Jenv', 'Kenv', 'Lenv']
@@ -670,11 +663,9 @@ class Genv(Envelopes):
     Examples
     --------
     >>> import pysal.lib as ps
-    >>> from pointpats.distance_statistics import Genv
+    >>> from pointpats import Genv, PoissonPointProcess, Window
     >>> from pysal.lib.cg import shapely_ext
-    >>> from pointpats.process import PoissonPointProcess
-    >>> from pointpats.window import Window
-    >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
+    >>> va = ps.io.open(ps.examples.get_path("vautm17n.shp"))
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
     >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, \
@@ -749,11 +740,9 @@ class Fenv(Envelopes):
     Examples
     --------
     >>> import pysal.lib as ps
-    >>> from pointpats.distance_statistics import Fenv
     >>> from pysal.lib.cg import shapely_ext
-    >>> from pointpats.process import PoissonPointProcess
-    >>> from pointpats.window import Window
-    >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
+    >>> from pointpats import PoissonPointProcess,Window,Fenv
+    >>> va = ps.io.open(ps.examples.get_path("vautm17n.shp"))
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
     >>> pp = PoissonPointProcess(Window(state.parts), 100, 1,  \
@@ -829,11 +818,9 @@ class Jenv(Envelopes):
     Examples
     --------
     >>> import pysal.lib as ps
-    >>> from pointpats.distance_statistics import Jenv
+    >>> from pointpats import Jenv, PoissonPointProcess, Window
     >>> from pysal.lib.cg import shapely_ext
-    >>> from pointpats.process import PoissonPointProcess
-    >>> from pointpats.window import Window
-    >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
+    >>> va = ps.io.open(ps.examples.get_path("vautm17n.shp"))
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
     >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, \
@@ -906,11 +893,9 @@ class Kenv(Envelopes):
     Examples
     --------
     >>> import pysal.lib as ps
-    >>> from pointpats.distance_statistics import Kenv
+    >>> from pointpats import Kenv, PoissonPointProcess, Window
     >>> from pysal.lib.cg import shapely_ext
-    >>> from pointpats.process import PoissonPointProcess
-    >>> from pointpats.window import Window
-    >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
+    >>> va = ps.io.open(ps.examples.get_path("vautm17n.shp"))
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
     >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, \
@@ -981,11 +966,9 @@ class Lenv(Envelopes):
     Examples
     --------
     >>> import pysal.lib as ps
-    >>> from pointpats.distance_statistics import Lenv
+    >>> from pointpats import Lenv, PoissonPointProcess, Window
     >>> from pysal.lib.cg import shapely_ext
-    >>> from pointpats.process import PoissonPointProcess
-    >>> from pointpats.window import Window
-    >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
+    >>> va = ps.io.open(ps.examples.get_path("vautm17n.shp"))
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
     >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, \

@@ -1,13 +1,12 @@
 import unittest
-import pysal.lib
-import pysal.lib.api as ps
-import pysal.explore.giddy.rank as rank
+import pysal.lib as ps
+from .. import rank
 import numpy as np
 
 
 class Theta_Tester(unittest.TestCase):
     def setUp(self):
-        f = ps.open(pysal.lib.examples.get_path('mexico.csv'))
+        f = ps.io.open(ps.examples.get_path('mexico.csv'))
         vnames = ["pcgdp%d" % dec for dec in range(1940, 2010, 10)]
         self.y = np.transpose(np.array([f.by_col[v] for v in vnames]))
         self.regime = np.array(f.by_col['esquivel99'])
@@ -34,11 +33,11 @@ class Theta_Tester(unittest.TestCase):
 
 class SpatialTau_Tester(unittest.TestCase):
     def setUp(self):
-        f = ps.open(pysal.lib.examples.get_path('mexico.csv'))
+        f = ps.io.open(ps.examples.get_path('mexico.csv'))
         vnames = ["pcgdp%d" % dec for dec in range(1940, 2010, 10)]
         self.y = np.transpose(np.array([f.by_col[v] for v in vnames]))
         regime = np.array(f.by_col['esquivel99'])
-        self.w = ps.block_weights(regime)
+        self.w = ps.weights.block_weights(regime)
 
     def test_SpatialTau(self):
         np.random.seed(12345)

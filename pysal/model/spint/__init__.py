@@ -1,6 +1,6 @@
-from . import gravity 
+__version__ = '1.0.3'
+
 from .gravity import Gravity, Production, Attraction, Doubly
-from . import dispersion
-from . import utils
-from . import vec_SA
-from . import count_model
+from .utils import CPC, sorensen, srmse 
+from .vec_SA import VecMoran as Moran_Vector
+from .dispersion import phi_disp, alpha_disp

@@ -4,23 +4,23 @@ Weights.
 """
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 
+import copy
+from os.path import basename as BASENAME
 import math
 import warnings
 import numpy as np
 import scipy.sparse
 from scipy.sparse.csgraph import connected_components
-import copy
-from os.path import basename as BASENAME
 #from .util import full, WSP2W resolve import cycle by
 #forcing these into methods
 from . import adjtools
-from ..io.FileIO import FileIO as popen
+from ..io.fileio import FileIO as popen
 
 __all__ = ['W', 'WSP']
 
 class W(object):
     """
-    Spatial weights.
+    Spatial weights class.
 
     Parameters
     ----------
@@ -47,80 +47,46 @@ class W(object):
                             dataset contains any disconnected components in the
                             adjacency matrix. These are disconnected *groups*
                             of islands. To silence this warning set this
-                            parameter to True.                       
+                            parameter to True.
     ids                  : list
                            Values to use for keys of the neighbors and weights dicts.
 
-    Attributes
+    Attributes (NOTE: these are described by their docstrings. to view, use the `help` function)
     ----------
 
-    asymmetries         : list
-                          of
-    cardinalities       : dictionary
-                          of
-    component_labels    : numpy ndarray
-                          array of integer labels for each observation, showing
-                          which component of the graph an observation is in. 
-    diagW2              : array
-                          of
-    diagWtW             : array
-                          of
-    diagWtW_WW          : array
-                          of
-    histogram           : dictionary
-                          of
-    id2i                : dictionary
-                          of
-    id_order            : list
-                          of
-    id_order_set        : boolean
-                          True if
-    islands             : list
-                          of
-
-    max_neighbors       : int
-                          maximum number of neighbors
-
-    mean_neighbors      : int
-                          mean number of neighbors
-
-    min_neighbors       : int
-                          minimum neighbor count
-    n                   : int
-                          of
-    n_components        : int
-                          number of connected components in the W.
-    neighbor_offsets    : list
-                          ids of neighbors to a region in id_order
-    nonzero             : int
-                          Number of non-zero entries
-    pct_nonzero         : float
-                          Percentage of nonzero neighbor counts
-    s0                  : float
-                          of
-    s1                  : float
-                          of
-    s2                  : float
-                          of
-    s2array             : array
-                          of
-    sd                  : float
-                          of
-    sparse              : sparse_matrix
-                          SciPy sparse matrix instance
-    trcW2               : float
-                          of
-    trcWtW              : float
-                          of
-    trcWtW_WW           : float
-                          of
-    transform           : string
-                          of
+    asymmetries
+    cardinalities
+    component_labels
+    diagW2
+    diagWtW
+    diagWtW_WW
+    histogram
+    id2i
+    id_order
+    id_order_set
+    islands
+    max_neighbors
+    mean_neighbors
+    min_neighbors
+    n
+    n_components
+    neighbor_offsets
+    nonzero
+    pct_nonzero
+    s0
+    s1
+    s2
+    s2array
+    sd
+    sparse
+    trcW2
+    trcWtW
+    trcWtW_WW
+    transform
 
     Examples
     --------
-    >>> from pysal.lib.api import W, lat2W
-    >>> import pysal.lib.api as ps
+    >>> from pysal.lib.weights.weights import W
     >>> neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
     >>> weights = {0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
     >>> w = W(neighbors, weights)
@@ -130,7 +96,7 @@ class W(object):
     Read from external gal file
 
     >>> import pysal.lib
-    >>> w = pysal.lib.open(pysal.lib.examples.get_path("stl.gal")).read()
+    >>> w = pysal.lib.io.open(pysal.lib.examples.get_path("stl.gal")).read()
     >>> w.n
     78
     >>> "%.3f"%w.pct_nonzero
@@ -142,6 +108,7 @@ class W(object):
     >>> w = W(neighbors)
     >>> round(w.pct_nonzero,3)
     29.63
+    >>> from pysal.lib.weights import lat2W
     >>> w = lat2W(100, 100)
     >>> w.trcW2
     39600.0
@@ -154,14 +121,13 @@ class W(object):
     2533.667
 
     Cardinality Histogram
-    >>> import pysal.lib.api as ps
-    >>> w=ps.rook_from_shapefile(pysal.lib.examples.get_path("sacramentot2.shp"))
     >>> w.histogram
-    [(1, 1), (2, 6), (3, 33), (4, 103), (5, 114), (6, 73), (7, 35), (8, 17), (9, 9), (10, 4), (11, 4), (12, 3), (13, 0), (14, 1)]
+    [(2, 4), (3, 392), (4, 9604)]
 
     Disconnected observations (islands)
 
-    >>> w = ps.W({1:[0],0:[1],2:[], 3:[]})
+    >>> from pysal.lib.weights import W
+    >>> w = W({1:[0],0:[1],2:[], 3:[]})
 
     WARNING: there are 2 disconnected observations
     Island ids:  [2, 3]
@@ -200,15 +166,15 @@ class W(object):
             else:
                 warnings.warn("There are %d disconnected observations" % ni + ' \n '
                               " Island ids: %s" % ', '.join(str(island) for island in self.islands))
-        if self.n_components > 1 and not self.silent_connected_components:
-            warnings.warn("The weights matrix is not fully connected. There are  %d components" % self.n_components )
+        if self.n_components > 1 and not self.islands and not self.silent_connected_components:
+            warnings.warn("The weights matrix is not fully connected. There are %d components" % self.n_components)
 
     def _reset(self):
         """Reset properties.
 
         """
         self._cache = {}
-   
+
     @classmethod
     def from_file(cls, path='', format=None, **kwargs):
         f = popen(dataPath=path, mode='r', dataFormat=format)
@@ -272,7 +238,7 @@ class W(object):
         Compute an adjacency list representation of a weights object.
 
         Parameters
-        -----------
+        ----------
         remove_symmetric    :   bool
                             whether or not to remove ``symmetric'' entries. If the W is symmetric,
                             a standard ``directed'' adjacency list will contain both the forward and
@@ -299,13 +265,13 @@ class W(object):
     def to_networkx(self):
         """
         Convert a weights object to a networkx graph
-        
-        Arguments
-        ---------
+
+        Parameters
+        ----------
         None
 
         Returns
-        --------
+        -------
         a networkx graph representation of the W object
         """
         try:
@@ -314,13 +280,13 @@ class W(object):
             raise ImportError("NetworkX is required to use this function.")
         G = nx.DiGraph() if len(self.asymmetries)>0 else nx.Graph()
         return nx.from_scipy_sparse_matrix(self.sparse, create_using=G)
-    
+
     @classmethod
     def from_networkx(cls, graph, weight_col='weight'):
         """
         Convert a networkx graph to a PySAL W object.
 
-        Arguments
+        Parameters
         ----------
         graph       :   networkx graph
                         the graph to convert to a W
@@ -365,7 +331,7 @@ class W(object):
             self._sparse = self._build_sparse()
             self._cache['sparse'] = self._sparse
         return self._sparse
-    
+
     @property
     def n_components(self):
         """Store whether the adjacency matrix is fully connected.
@@ -680,15 +646,10 @@ class W(object):
 
         Examples
         --------
-        >>> import pysal.lib.api as ps
-        >>> import pysal.lib
-        >>> w = ps.rook_from_shapefile(pysal.lib.examples.get_path("10740.shp"))
+        >>> from pysal.lib.weights import lat2W
+        >>> w = lat2W()
 
-        WARNING: there is one disconnected observation (no neighbors)
-        Island id:  [163]
-        >>> w[163]
-        {}
-        >>> w[0] == {1: 1.0, 5: 1.0, 4: 1.0, 101: 1.0, 85: 1.0}
+        >>> w[0] == dict({1: 1.0, 5: 1.0})
         True
         """
         return dict(list(zip(self.neighbors[key], self.weights[key])))
@@ -699,8 +660,8 @@ class W(object):
 
         Examples
         --------
-        >>> import pysal.lib.api as ps
-        >>> w=ps.lat2W(3,3)
+        >>> from pysal.lib.weights import lat2W
+        >>> w=lat2W(3,3)
         >>> for i,wi in enumerate(w):
         ...     print(i,wi[0])
         ...
@@ -725,8 +686,8 @@ class W(object):
 
         ...
 
-        Arguments
-        ---------
+        Parameters
+        ----------
 
         new_ids     :   list
                         /ndarray
@@ -735,11 +696,11 @@ class W(object):
                         w.id_order, second element of new_ids replaces second
                         element of w.id_order and so on.
 
-        Example
-        -------
+        Examples
+        --------
 
-        >>> import pysal.lib.api as ps
-        >>> w = ps.lat2W(3, 3)
+        >>> from pysal.lib.weights import lat2W
+        >>> w = lat2W(3, 3)
         >>> w.id_order
         [0, 1, 2, 3, 4, 5, 6, 7, 8]
         >>> w.neighbors[0]
@@ -803,8 +764,8 @@ class W(object):
         Examples
         --------
 
-        >>> import pysal.lib.api as ps
-        >>> w=ps.lat2W(3,3)
+        >>> from pysal.lib.weights import lat2W
+        >>> w=lat2W(3,3)
         >>> for i,wi in enumerate(w):
         ...     print(i, wi[0])
         ...
@@ -861,7 +822,7 @@ class W(object):
 
         Examples
         --------
-        >>> from pysal.lib.api import lat2W
+        >>> from pysal.lib.weights import lat2W
         >>> w=lat2W()
         >>> w.id_order_set
         True
@@ -881,7 +842,7 @@ class W(object):
 
         Examples
         --------
-        >>> from pysal.lib.api import W
+        >>> from pysal.lib.weights import W
         >>> neighbors={'c': ['b'], 'b': ['c', 'a'], 'a': ['b']}
         >>> weights ={'c': [1.0], 'b': [1.0, 1.0], 'a': [1.0]}
         >>> w=W(neighbors,weights)
@@ -911,7 +872,7 @@ class W(object):
 
         Examples
         --------
-        >>> from pysal.lib.api import lat2W
+        >>> from pysal.lib.weights import lat2W
         >>> w=lat2W()
         >>> w.weights[0]
         [1.0, 1.0]
@@ -961,7 +922,7 @@ class W(object):
 
         Examples
         --------
-        >>> from pysal.lib.api import lat2W
+        >>> from pysal.lib.weights import lat2W
         >>> w=lat2W()
         >>> w.weights[0]
         [1.0, 1.0]
@@ -1078,7 +1039,7 @@ class W(object):
         Examples
         --------
 
-        >>> from pysal.lib.api import lat2W
+        >>> from pysal.lib.weights import lat2W
         >>> w=lat2W(3,3)
         >>> w.asymmetry()
         []
@@ -1154,7 +1115,7 @@ class W(object):
 
         Examples
         --------
-        >>> from pysal.lib.api import W, full
+        >>> from pysal.lib.weights import W, full
         >>> neighbors = {'first':['second'],'second':['first','third'],'third':['second']}
         >>> weights = {'first':[1],'second':[1,1],'third':[1]}
         >>> w = W(neighbors, weights)
@@ -1187,18 +1148,17 @@ class W(object):
         Returns
         -------
 
-        implicit : pysal.WSP
+        implicit : pysal.lib.weights.WSP
                    Thin W class
 
         Examples
         --------
-        >>> import pysal.lib as ps
-        >>> from pysal.lib.api import W
+        >>> from pysal.lib.weights import W, WSP
         >>> neighbors={'first':['second'],'second':['first','third'],'third':['second']}
         >>> weights={'first':[1],'second':[1,1],'third':[1]}
         >>> w=W(neighbors,weights)
         >>> wsp=w.to_WSP()
-        >>> isinstance(wsp, ps.weights.weights.WSP)
+        >>> isinstance(wsp, WSP)
         True
         >>> wsp.n
         3
@@ -1245,7 +1205,7 @@ class W(object):
         NOTE: Requires matplotlib, and implicitly requires geopandas 
         dataframe as input.
 
-        Arguments
+        Parameters
         ---------
         gdf         : geopandas geodataframe 
                       the original shapes whose topological relations are 
@@ -1276,13 +1236,14 @@ class W(object):
               geodataframe, call gdf.plot(ax=ax) after this. To plot underneath,
               adjust the z-order of the geopandas plot: gdf.plot(ax=ax,zorder=0)
 
-        Usage
-        -----
+        Examples
+        --------
 
-        >>> import pysal.lib.api as lp
+        >>> from pysal.lib.weights.contiguity import Queen
+        >>> import pysal.lib as lp
         >>> import geopandas
-        >>> gdf = geopandas.read_file(lp.get_path("columbus.shp"))
-        >>> weights = lp.Queen.from_dataframe(gdf)
+        >>> gdf = geopandas.read_file(lp.examples.get_path("columbus.shp"))
+        >>> weights = Queen.from_dataframe(gdf)
         >>> tmp = weights.plot(gdf, color='firebrickred', node_kws=dict(marker='*', color='k'))
         """
         try:
@@ -1361,12 +1322,12 @@ class WSP(object):
     From GAL information
 
     >>> import scipy.sparse
-    >>> import pysal.lib.api as ps
+    >>> from pysal.lib.weights import WSP
     >>> rows = [0, 1, 1, 2, 2, 3]
     >>> cols = [1, 0, 2, 1, 3, 3]
     >>> weights =  [1, 0.75, 0.25, 0.9, 0.1, 1]
     >>> sparse = scipy.sparse.csr_matrix((weights, (rows, cols)), shape=(4,4))
-    >>> w = ps.WSP(sparse)
+    >>> w = WSP(sparse)
     >>> w.s0
     4.0
     >>> w.trcWtW_WW
@@ -1426,14 +1387,14 @@ class WSP(object):
             self._diagWtW_WW = (wt * w + w * w).diagonal()
             self._cache['diagWtW_WW'] = self._diagWtW_WW
         return self._diagWtW_WW
-    
+
     @classmethod
     def from_W(cls, W):
         """
         Constructs a WSP object from the W's sparse matrix
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         W       :   pysal.lib.weights.W
                     a pysal weights object with a sparse form and ids
 
@@ -1442,7 +1403,7 @@ class WSP(object):
         a WSP instance
         """
         return cls(W.sparse, id_order=W.id_order)
-    
+
     def to_W(self, silence_warnings=False):
 
         """
@@ -1463,12 +1424,12 @@ class WSP(object):
 
         Examples
         --------
-        >>> import pysal.lib.api as ps
+        >>> from pysal.lib.weights import lat2SW, WSP, WSP2W
 
         Build a 10x10 scipy.sparse matrix for a rectangular 2x5 region of cells
         (rook contiguity), then construct a pysal.lib sparse weights object (self).
 
-        >>> sp = ps.lat2SW(2, 5)
+        >>> sp = lat2SW(2, 5)
         >>> self = WSP(sp)
         >>> self.n
         10
@@ -1477,7 +1438,7 @@ class WSP(object):
 
         Convert this sparse weights object to a standard PySAL weights object.
 
-        >>> w = ps.WSP2W(self)
+        >>> w = WSP2W(self)
         >>> w.n
         10
         >>> print(w.full()[0][0])

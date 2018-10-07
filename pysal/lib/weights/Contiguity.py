@@ -1,5 +1,4 @@
-from warnings import warn as Warn
-from ..io.FileIO import FileIO
+from ..io.fileio import FileIO
 from .weights import W, WSP
 from ._contW_lists import ContiguityWeightsLists
 from .util import get_ids
@@ -7,24 +6,27 @@ WT_TYPE = {'rook': 2, 'queen': 1}  # for _contW_Binning
 
 __author__ = "Sergio J. Rey <srey@asu.edu> , Levi John Wolf <levi.john.wolf@gmail.com>"
 
+__all__ = ['Rook', 'Queen', 'Voronoi']
+
 class Rook(W):
+    """
+    Construct a weights object from a collection of pysal polygons that share at least one edge.
+
+    Parameters
+    ----------
+    polygons    : list
+                a collection of PySAL shapes to build weights from
+    ids         : list
+                a list of names to use to build the weights
+    **kw        : keyword arguments
+                optional arguments for :class:`pysal.weights.W`
+
+    See Also
+    ---------
+    :class:`pysal.lib.weights.weights.W`
+    """
+
     def __init__(self, polygons, **kw):
-        """
-        Construct a weights object from a collection of pysal polygons.
-
-        Arguments
-        ---------
-        polygons    : list
-                      a collection of PySAL shapes to build weights from
-        ids         : list
-                      a list of names to use to build the weights
-        **kw        : keyword arguments
-                      optional arguments for :class:`pysal.weights.W`
-
-        See Also
-        ---------
-        :class:`pysal.weights.W`
-        """
         criterion = 'rook'
         ids = kw.pop('ids', None) 
         neighbors, ids = _build(polygons, criterion=criterion, 
@@ -70,8 +72,8 @@ class Rook(W):
 
         See Also
         --------
-        :class:`pysal.weights.W`
-        :class:`pysal.weights.Rook`
+        :class:`pysal.lib.weights.weights.W`
+        :class:`pysal.lib.weights.contiguity.Rook`
         """
         sparse = kwargs.pop('sparse', False)
         if idVariable is not None:
@@ -90,7 +92,7 @@ class Rook(W):
         Construct a weights object from a collection of arbitrary polygons. This
         will cast the polygons to PySAL polygons, then build the W.
 
-        Arguments
+        Parameters
         ---------
         iterable    : iterable
                       a collection of of shapes to be cast to PySAL shapes. Must
@@ -99,15 +101,15 @@ class Rook(W):
                       optional arguments for  :class:`pysal.weights.W`
         See Also
         ----------
-        :class:`pysal.weights.W`
-        :class:`pysal.weights.Rook`
+        :class:`pysal.lib.weights.weights.W`
+        :class:`pysal.lib.weights.contiguity.Rook`
         """
         new_iterable = iter(iterable)
         w = cls(new_iterable, **kwargs)
         if sparse:
             w = WSP.from_W(w)
         return w
-    
+
     @classmethod
     def from_dataframe(cls, df, geom_col='geometry', 
                        idVariable=None, ids=None, id_order=None, **kwargs):
@@ -116,7 +118,7 @@ class Rook(W):
         column. This will cast the polygons to PySAL polygons, then build the W
         using ids from the dataframe.
 
-        Arguments
+        Parameters
         ---------
         df          : DataFrame
                       a :class: `pandas.DataFrame` containing geometries to use
@@ -138,8 +140,8 @@ class Rook(W):
 
         See Also
         ---------
-        :class:`pysal.weights.W`
-        :class:`pysal.weights.Rook`
+        :class:`pysal.lib.weights.weights.W`
+        :class:`pysal.lib.weights.contiguity.Rook`
         """
         if id_order is not None:
             if id_order is True and ((idVariable is not None) 
@@ -157,29 +159,30 @@ class Rook(W):
                                  id_order=id_order, **kwargs)
 
 class Queen(W):
+    """
+    Construct a weights object from a collection of pysal polygons that share at least one vertex.
+
+    Parameters
+    ----------
+    polygons    : list
+                  a collection of PySAL shapes to build weights from
+    ids         : list
+                  a list of names to use to build the weights
+    **kw        : keyword arguments
+                  optional arguments for :class:`pysal.weights.W`
+
+    See Also
+    ---------
+    :class:`pysal.lib.weights.weights.W`
+    """
+
     def __init__(self, polygons, **kw):
-        """
-        Construct a weights object from a collection of pysal polygons.
-
-        Arguments
-        ---------
-        polygons    : list
-                      a collection of PySAL shapes to build weights from
-        ids         : list
-                      a list of names to use to build the weights
-        **kw        : keyword arguments
-                      optional arguments for :class:`pysal.weights.W`
-
-        See Also
-        ---------
-        :class:`pysal.weights.W`
-        """
         criterion = 'queen'
         ids = kw.pop('ids', None)
         neighbors, ids = _build(polygons, ids=ids, 
                                 criterion=criterion)
         W.__init__(self, neighbors, ids=ids, **kw)
-    
+
     @classmethod
     def from_shapefile(cls, filepath, idVariable=None, full=False, **kwargs):
         """
@@ -222,8 +225,8 @@ class Queen(W):
 
         See Also
         --------
-        :class:`pysal.weights.W`
-        :class:`pysal.weights.Queen`
+        :class:`pysal.lib.weights.weights.W`
+        :class:`pysal.lib.weights.contiguity.Queen`
         """
         sparse = kwargs.pop('sparse', False)
         if idVariable is not None:
@@ -242,7 +245,7 @@ class Queen(W):
         Construct a weights object from a collection of arbitrary polygons. This
         will cast the polygons to PySAL polygons, then build the W.
 
-        Arguments
+        Parameters
         ---------
         iterable    : iterable
                       a collection of of shapes to be cast to PySAL shapes. Must
@@ -251,8 +254,8 @@ class Queen(W):
                       optional arguments for  :class:`pysal.weights.W`
         See Also
         ----------
-        :class:`pysal.weights.W`
-        :class:`pysal.weights.Queen`
+        :class:`pysal.lib.weights.weights.W`
+        :class:`pysal.lib.weights.contiguiyt.Queen`
         """
         new_iterable = iter(iterable) 
         w = cls(new_iterable, **kwargs) 
@@ -267,7 +270,7 @@ class Queen(W):
         column. This will cast the polygons to PySAL polygons, then build the W
         using ids from the dataframe.
 
-        Arguments
+        Parameters
         ---------
         df          : DataFrame
                       a :class: `pandas.DataFrame` containing geometries to use
@@ -289,8 +292,8 @@ class Queen(W):
 
         See Also
         ---------
-        :class:`pysal.weights.W`
-        :class:`pysal.weights.Queen`
+        :class:`pysal.lib.weights.weights.W`
+        :class:`pysal.lib.weights.contiguity.Queen`
         """
         idVariable = kwargs.pop('idVariable', None)
         ids = kwargs.pop('ids', None)
@@ -312,11 +315,46 @@ class Queen(W):
         w = cls.from_iterable(df[geom_col].tolist(), ids=ids, id_order=id_order, **kwargs)
         return w
 
+def Voronoi(points):
+    """
+    Voronoi weights for a 2-d point set
+
+
+    Points are Voronoi neighbors if their polygons share an edge or vertex.
+
+
+    Parameters
+    ----------
+
+    points      : array
+                  (n,2)
+                  coordinates for point locations
+
+    Returns
+    -------
+
+    w           : W
+                  instance of spatial weights
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> np.random.seed(12345)
+    >>> points= np.random.random((5,2))*10 + 10
+    >>> w = Voronoi(points)
+    >>> w.neighbors
+    {0: [1, 2, 3, 4], 1: [0, 2], 2: [0, 1, 4], 3: [0, 4], 4: [0, 2, 3]}
+    """
+    from ..cg.voronoi import voronoi_frames
+    region_df, _ = voronoi_frames(points)
+    return Queen.from_dataframe(region_df)
+
+
 def _build(polygons, criterion="rook", ids=None):
     """
     This is a developer-facing function to construct a spatial weights object. 
 
-    Arguments
+    Parameters
     ---------
     polygons    : list
                   list of pysal polygons to use to build contiguity

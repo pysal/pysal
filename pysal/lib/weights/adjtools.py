@@ -5,7 +5,7 @@ def adjlist_apply(X, W=None, alist=None, func=np.subtract, skip_verify=False):
     apply a function to an adajcency list, getting an adjacency list and result.
 
     Parameters
-    -----------
+    ----------
     X       :   iterable
                 an (N,P)-length iterable to apply ``func'' to. If (N,1), then `func`
                 must take 2 arguments and return a single reduction. If P>1, then
@@ -167,7 +167,7 @@ def filter_adjlist(adjlist, focal_col = 'focal', neighbor_col = 'neighbor'):
     The removal is done in order of the iteration order of the input adjacency list. So, if a 
     special order of removal is desired, you need to sort the list before this function. 
 
-    Arguments
+    Parameters
     ----------
     adjlist     :   pandas DataFrame
                     a dataframe that contains focal and neighbor columns

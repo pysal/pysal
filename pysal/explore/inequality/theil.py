@@ -3,7 +3,7 @@
 """
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 
-from pysal.lib.common import *
+# from pysal.lib.common import *
 import numpy as np
 __all__ = ['Theil', 'TheilD', 'TheilDSim']
 

@@ -7,6 +7,7 @@ __docformat__ = 'restructuredtext'
 import numpy as np
 FLOAT_EPS = np.finfo(float).eps
 
+
 class VarianceFunction(object):
     """
     Relates the variance of a random variable to its mean. Defaults to 1.
@@ -45,7 +46,6 @@ class VarianceFunction(object):
         mu = np.asarray(mu)
         return np.ones(mu.shape, np.float64)
 
-
     def deriv(self, mu):
         """
         Derivative of the variance function v'(mu)
@@ -61,6 +61,7 @@ The call method of constant returns a constant variance, i.e., a vector of ones.
 
 constant is an alias of VarianceFunction()
 """
+
 
 class Power(object):
     """
@@ -107,13 +108,12 @@ class Power(object):
         """
         return np.power(np.fabs(mu), self.power)
 
-
     def deriv(self, mu):
         """
         Derivative of the variance function v'(mu)
         """
         from statsmodels.tools.numdiff import approx_fprime_cs, approx_fprime
-        #return approx_fprime_cs(mu, self)  # TODO fix breaks in `fabs
+        # return approx_fprime_cs(mu, self)  # TODO fix breaks in `fabs
         # TODO: diag is workaround problem with numdiff for 1d
         return np.diag(approx_fprime(mu, self))
 
@@ -142,6 +142,7 @@ Notes
 -----
 This is an alias of statsmodels.family.links.Power(power=3)
 """
+
 
 class Binomial(object):
     """
@@ -196,7 +197,7 @@ class Binomial(object):
         p = self._clean(mu / self.n)
         return p * (1 - p) * self.n
 
-    #TODO: inherit from super
+    # TODO: inherit from super
     def deriv(self, mu):
         """
         Derivative of the variance function v'(mu)
@@ -214,6 +215,7 @@ Notes
 -----
 This is an alias of Binomial(n=1)
 """
+
 
 class NegativeBinomial(object):
     '''
@@ -264,7 +266,7 @@ class NegativeBinomial(object):
             variance = mu + alpha*mu**2
         """
         p = self._clean(mu)
-        return p + self.alpha*p**2
+        return p + self.alpha * p**2
 
     def deriv(self, mu):
         """
@@ -273,6 +275,7 @@ class NegativeBinomial(object):
 
         p = self._clean(mu)
         return 1 + 2 * self.alpha * p
+
 
 nbinom = NegativeBinomial()
 nbinom.__doc__ = """

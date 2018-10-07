@@ -4,15 +4,11 @@ Spatial Two Stages Least Squares
 
 __author__ = "Luc Anselin luc.anselin@asu.edu, David C. Folch david.folch@asu.edu"
 
-import copy
 import numpy as np
-import pysal.lib.api as lps
-import numpy.linalg as la
 from . import twosls as TSLS
-from . import robust as ROBUST
 from . import user_output as USER
 from . import summary_output as SUMMARY
-from .utils import get_lags, set_endog, sp_att, set_warn
+from .utils import set_endog, sp_att, set_warn
 
 __all__ = ["GM_Lag"]
 
@@ -118,11 +114,11 @@ class BaseGM_Lag(TSLS.BaseTSLS):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
     >>> import pysal.model.spreg.diagnostics as D
-    >>> w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+    >>> w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
     >>> w.transform = 'r'
-    >>> db = lps.open(lps.get_path("columbus.dbf"),'r')
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),'r')
     >>> y = np.array(db.by_col("HOVAL"))
     >>> y = np.reshape(y, (49,1))
     >>> # no non-spatial endogenous variables
@@ -345,16 +341,16 @@ class GM_Lag(BaseGM_Lag):
     model, we also import the diagnostics module.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
     >>> import pysal.model.spreg.diagnostics as D
 
-    Open data on Columbus neighborhood crime (49 areas) using lps.open().
+    Open data on Columbus neighborhood crime (49 areas) using pysal.lib.io.open().
     This is the DBF associated with the Columbus shapefile.  Note that
-    lps.open() also reads data in CSV format; since the actual class
+    pysal.lib.io.open() also reads data in CSV format; since the actual class
     requires data to be passed in as numpy arrays, the user can read their
     data in using any method.  
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"),'r')
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),'r')
 
     Extract the HOVAL column (home value) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
@@ -382,7 +378,7 @@ class GM_Lag(BaseGM_Lag):
     existing gal file or create a new one. In this case, we will create one
     from ``columbus.shp``.
 
-    >>> w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+    >>> w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
 
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other
@@ -509,8 +505,8 @@ if __name__ == '__main__':
     _test()
 
     import numpy as np
-    import pysal.lib.api as lps
-    db = lps.open(lps.get_path("columbus.dbf"), 'r')
+    import pysal.lib
+    db = pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"), 'r')
     y_var = 'CRIME'
     y = np.array([db.by_col(y_var)]).reshape(49, 1)
     x_var = ['INC']
@@ -519,7 +515,7 @@ if __name__ == '__main__':
     yd = np.array([db.by_col(name) for name in yd_var]).T
     q_var = ['DISCBD']
     q = np.array([db.by_col(name) for name in q_var]).T
-    w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+    w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
     w.transform = 'r'
     model = GM_Lag(
         y, x, yd, q, w=w, spat_diag=True, name_y=y_var, name_x=x_var,

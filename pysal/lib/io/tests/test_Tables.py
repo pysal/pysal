@@ -1,5 +1,5 @@
 import numpy as np
-from ..FileIO import FileIO as psopen
+from ..fileio import FileIO as psopen
 from ...common import pandas
 #import pysal_examples
 from ... import examples as pysal_examples

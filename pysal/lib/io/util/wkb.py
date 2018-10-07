@@ -28,10 +28,9 @@ SOURCE: http://webhelp.esri.com/arcgisserver/9.3/dotNet/index.htm#geodatabases/t
 
 
 """
-from cStringIO import StringIO
-from pysal import cg
+from io import StringIO
+from ... import cg
 import sys
-import array
 import struct
 
 __author__ = 'Charles R Schmidt <schmidtc@gmail.com>'

@@ -4,7 +4,7 @@
 
 import numpy as np
 import pandas as pd
-from ..FileIO import FileIO as ps_open
+from ..fileio import FileIO as ps_open
 
 def check_dups(li):
     """checks duplicates in list of ID values

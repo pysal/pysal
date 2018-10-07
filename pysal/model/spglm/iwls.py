@@ -5,6 +5,7 @@ from scipy.sparse import linalg as spla
 from pysal.model.spreg.utils import spdot, spmultiply
 from .family import Binomial, Poisson
 
+
 def _compute_betas(y, x):
     """
     compute MLE coefficients using iwls routine
@@ -21,6 +22,7 @@ def _compute_betas(y, x):
     betas = spdot(xtx_inv, xTy)
     return betas
 
+
 def _compute_betas_gwr(y, x, wi):
     """
     compute MLE coefficients using iwls routine
@@ -36,8 +38,9 @@ def _compute_betas_gwr(y, x, wi):
     betas = np.dot(xtx_inv_xt, y)
     return betas, xtx_inv_xt
 
+
 def iwls(y, x, family, offset, y_fix,
-    ini_betas=None, tol=1.0e-8, max_iter=200, wi=None):
+         ini_betas=None, tol=1.0e-8, max_iter=200, wi=None):
     """
     Iteratively re-weighted least squares estimation routine
 
@@ -60,7 +63,7 @@ def iwls(y, x, family, offset, y_fix,
 
     ini_betas   : array
                   1*k, starting values for the k betas within the iteratively
-                  weighted least squares routine 
+                  weighted least squares routine
 
     tol         : float
                   tolerance for estimation convergence
@@ -103,16 +106,16 @@ def iwls(y, x, family, offset, y_fix,
     """
     n_iter = 0
     diff = 1.0e6
-    
+
     if ini_betas is None:
-    	betas = np.zeros((x.shape[1], 1), np.float)
+        betas = np.zeros((x.shape[1], 1), np.float)
     else:
         betas = ini_betas
 
     if isinstance(family, Binomial):
         y = family.link._clean(y)
     if isinstance(family, Poisson):
-        y_off = y/offset
+        y_off = y / offset
         y_off = family.starting_mu(y_off)
         v = family.predict(y_off)
         mu = family.starting_mu(y)
@@ -123,9 +126,9 @@ def iwls(y, x, family, offset, y_fix,
     while diff > tol and n_iter < max_iter:
         n_iter += 1
         w = family.weights(mu)
-        z = v + (family.link.deriv(mu)*(y-mu))
+        z = v + (family.link.deriv(mu) * (y - mu))
         w = np.sqrt(w)
-        if type(x) != np.ndarray:
+        if not isinstance(x, np.ndarray):
             w = sp.csr_matrix(w)
             z = sp.csr_matrix(z)
         wx = spmultiply(x, w, array_out=False)
@@ -135,12 +138,12 @@ def iwls(y, x, family, offset, y_fix,
         else:
             n_betas, xtx_inv_xt = _compute_betas_gwr(wz, wx, wi)
         v = spdot(x, n_betas)
-        mu  = family.fitted(v)
+        mu = family.fitted(v)
 
         if isinstance(family, Poisson):
             mu = mu * offset
 
-        diff = min(abs(n_betas-betas))
+        diff = min(abs(n_betas - betas))
         betas = n_betas
 
     if wi is None:

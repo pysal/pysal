@@ -8,9 +8,8 @@ __author__ = "Sergio J. Rey <sjsrey@gmail.com>"
 __all__ = ['Rose']
 
 import warnings
-
 import numpy as np
-from pysal.lib.api import lag_spatial
+from pysal.lib import weights
 
 _POS8 = np.array([1, 1, 0, 0, 1, 1, 0, 0])
 _POS4 = np.array([1, 0, 1, 0])
@@ -93,9 +92,10 @@ class Rose(object):
            Load comma delimited data file in and convert to a numpy array
 
            >>> import pysal.lib
-           >>> from pysal.explore.giddy.api import Rose
+           >>> from pysal.explore.giddy.directional import Rose
            >>> import matplotlib.pyplot as plt
-           >>> f=open(pysal.lib.examples.get_path("spi_download.csv"),'r')
+           >>> file_path = pysal.lib.examples.get_path("spi_download.csv")
+           >>> f=open(file_path,'r')
            >>> lines=f.readlines()
            >>> f.close()
            >>> lines=[line.strip().split(",") for line in lines]
@@ -132,7 +132,7 @@ class Rose(object):
            Create our contiguity matrix from an external GAL file and row
            standardize the resulting weights
 
-           >>> gal=pysal.lib.open(pysal.lib.examples.get_path('states48.gal'))
+           >>> gal=pysal.lib.io.open(pysal.lib.examples.get_path('states48.gal'))
            >>> w=gal.read()
            >>> w.transform='r'
 
@@ -250,8 +250,10 @@ class Rose(object):
             res = self._calc(rY[idxs, :], self.w, self.k)
             counts[m] = res['counts']
         self.counts_perm = counts
-        self.larger_perm = np.array([(counts[:, i] >= self.counts[i]).sum() for i in range(self.k)])
-        self.smaller_perm = np.array([(counts[:, i] <= self.counts[i]).sum() for i in range(self.k)])
+        self.larger_perm = np.array(
+            [(counts[:, i] >= self.counts[i]).sum() for i in range(self.k)])
+        self.smaller_perm = np.array(
+            [(counts[:, i] <= self.counts[i]).sum() for i in range(self.k)])
         self.expected_perm = counts.mean(axis=0)
         self.alternative = alternative
 
@@ -276,7 +278,7 @@ class Rose(object):
         if alt == 'TWO.SIDED':
             P = (self.larger_perm + 1) / (permutations + 1.)
             mask = P < 0.5
-            self.p = mask * 2 * P + (1 - mask) * 2 * (1-P)
+            self.p = mask * 2 * P + (1 - mask) * 2 * (1 - P)
         elif alt == 'POSITIVE':
             # NE, SW sectors are higher, NW, SE are lower
             POS = _POS8
@@ -284,7 +286,7 @@ class Rose(object):
                 POS = _POS4
             L = (self.larger_perm + 1) / (permutations + 1.)
             S = (self.smaller_perm + 1) / (permutations + 1.)
-            P = POS * L + (1-POS) * S
+            P = POS * L + (1 - POS) * S
             self.p = P
         elif alt == 'NEGATIVE':
             # NE, SW sectors are lower, NW, SE are higher
@@ -293,26 +295,26 @@ class Rose(object):
                 NEG = _NEG4
             L = (self.larger_perm + 1) / (permutations + 1.)
             S = (self.smaller_perm + 1) / (permutations + 1.)
-            P = NEG * L + (1-NEG) * S
+            P = NEG * L + (1 - NEG) * S
             self.p = P
         else:
             print(('Bad option for alternative: %s.' % alternative))
 
     def _calc(self, Y, w, k):
-        wY = lag_spatial(w, Y)
-        dx = Y[:, -1] - Y[:,0]
+        wY = weights.lag_spatial(w, Y)
+        dx = Y[:, -1] - Y[:, 0]
         dy = wY[:, -1] - wY[:, 0]
         self.wY = wY
         self.Y = Y
-        r = np.sqrt(dx*dx + dy*dy)
+        r = np.sqrt(dx * dx + dy * dy)
         theta = np.arctan2(dy, dx)
         neg = theta < 0.0
-        utheta = theta * (1 - neg) + neg * (2 *np.pi + theta)
+        utheta = theta * (1 - neg) + neg * (2 * np.pi + theta)
         counts, bins = np.histogram(utheta, self.cuts)
         results = {}
         results['counts'] = counts
         results['theta'] = theta
-        results['bins' ] = bins
+        results['bins'] = bins
         results['r'] = r
         results['lag'] = wY
         results['dx'] = dx
@@ -343,7 +345,6 @@ class Rose(object):
 
         """
 
-        use_splot = False
         try:
             import splot.giddy
             use_splot = True
@@ -377,7 +378,7 @@ class Rose(object):
         """
         import matplotlib.cm as cm
         import matplotlib.pyplot as plt
-        ax = plt.subplot(111 )
+        ax = plt.subplot(111)
         xlim = [self._dx.min(), self._dx.max()]
         ylim = [self._dy.min(), self._dy.max()]
         for x, y in zip(self._dx, self._dy):
@@ -412,7 +413,7 @@ class Rose(object):
             Axes in which the figure is plotted
 
         """
-        use_splot = False
+
         try:
             import splot.giddy
             use_splot = True
@@ -420,7 +421,7 @@ class Rose(object):
             warnings.warn('This method relies on importing `splot` in future',
                           DeprecationWarning)
             use_splot = False
-        
+
         if use_splot:
             fig, ax = splot.giddy.dynamic_lisa_vectors(self, arrows=arrows)
         else:
@@ -428,13 +429,14 @@ class Rose(object):
             # giddy.directional TODO add **kwargs, arrow=True
             import matplotlib.cm as cm
             import matplotlib.pyplot as plt
-            ax = plt.subplot(111 )
+            ax = plt.subplot(111)
             xlim = [self.Y.min(), self.Y.max()]
             ylim = [self.wY.min(), self.wY.max()]
             for i in range(len(self.Y)):
-                xs = self.Y[i,:]
-                ys = self.wY[i,:]
-                ax.plot(xs,ys, '-b')  # TODO change this to scale with attribute
+                xs = self.Y[i, :]
+                ys = self.wY[i, :]
+                # TODO change this to scale with attribute
+                ax.plot(xs, ys, '-b')
             plt.axis('equal')
             plt.xlim(xlim)
             plt.ylim(ylim)

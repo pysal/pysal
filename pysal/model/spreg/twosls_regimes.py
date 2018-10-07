@@ -180,15 +180,15 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
 
-    Open data on NCOVR US County Homicides (3085 areas) using lps.open().
+    Open data on NCOVR US County Homicides (3085 areas) using pysal.lib.io.open().
     This is the DBF associated with the NAT shapefile.  Note that
-    lps.open() also reads data in CSV format; since the actual class
+    pysal.lib.io.open() also reads data in CSV format; since the actual class
     requires data to be passed in as numpy arrays, the user can read their
     data in using any method.  
 
-    >>> db = lps.open(lps.get_path("NAT.dbf"),'r')
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path("NAT.dbf"),'r')
 
     Extract the HR90 column (homicide rates in 1990) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
@@ -234,7 +234,7 @@ class TSLS_Regimes(BaseTSLS, REGI.Regimes_Frame):
     an already existing gal file or create a new one. In this case, we will
     create one from ``NAT.shp``.
 
-    >>> w = lps.rook_from_shapefile(lps.get_path("NAT.shp"))
+    >>> w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("NAT.shp"))
 
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other
@@ -496,8 +496,8 @@ def _test():
 if __name__ == '__main__':
     _test()
     import numpy as np
-    import pysal.lib.api as lps
-    db = lps.open(lps.get_path('NAT.dbf'), 'r')
+    import pysal.lib
+    db = pysal.lib.io.open(pysal.lib.examples.get_path('NAT.dbf'), 'r')
     y_var = 'HR60'
     y = np.array([db.by_col(y_var)]).T
     x_var = ['PS60', 'DV60', 'RD60']

@@ -1,9 +1,12 @@
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import geopandas as gpd
 import numpy as np
-import pysal.lib.api as lp
+from pysal.lib.weights.contiguity import Queen
+from pysal.lib.weights.spatial_lag import lag_spatial
 import seaborn as sbn
-from pysal.explore.esda.moran import Moran_Local, Moran_Local_BV
+from pysal.explore.esda.moran import (Moran_Local, Moran_Local_BV,
+                        Moran, Moran_BV)
 import warnings
 from pysal.model.spreg import OLS
 
@@ -13,13 +16,11 @@ from ._viz_utils import (mask_local_auto, moran_hot_cold_spots,
                          splot_colors)
 
 """
-Lightweight visualizations for pysal using Matplotlib and Geopandas
+Lightweight visualizations for esda using Matplotlib and Geopandas
 
 TODO
-geopandas plotting, change round shapes in legends to boxes
-change function input naming to be in line with bokeh functionality
-check if geopandas can read **kwargs
-check if attribute in gdf.plot works without attribute str
+* geopandas plotting, change round shapes in legends to boxes
+* prototype moran_facet using `seaborn.FacetGrid`
 """
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
@@ -42,13 +43,112 @@ def _create_moran_fig_ax(ax, figsize):
     ax.spines['top'].set_color('none')
     ax.spines['left'].set_smart_bounds(True)
     ax.spines['bottom'].set_smart_bounds(True)
+    return fig, ax
+
+
+def moran_scatterplot(moran, zstandard=True, p=None, ax=None,
+                      scatter_kwds=None, fitline_kwds=None):
+    """
+    Moran Scatterplot
+    
+    Parameters
+    ----------
+    moran : esda.moran instance
+        Values of Moran's I Global, Bivariate and Local
+        Autocorrelation Statistics
+    zstandard : bool, optional
+        If True, Moran Scatterplot will show z-standardized attribute and
+        spatial lag values. Default =True.
+    p : float, optional
+        If given, the p-value threshold for significance
+        for Local Autocorrelation analysis. Points will be colored by
+        significance. By default it will not be colored.
+        Default =None.
+    ax : Matplotlib Axes instance, optional
+        If given, the Moran plot will be created inside this axis.
+        Default =None.
+    scatter_kwds : keyword arguments, optional
+        Keywords used for creating and designing the scatter points.
+        Default =None.
+    fitline_kwds : keyword arguments, optional
+        Keywords used for creating and designing the moran fitline.
+        Default =None.
+
+    Returns
+    -------
+    fig : Matplotlib Figure instance
+        Moran scatterplot figure
+    ax : matplotlib Axes instance
+        Axes in which the figure is plotted
+    
+    Examples
+    --------
+    Imports
+    
+    >>> import matplotlib.pyplot as plt
+    >>> from pysal.lib.weights.contiguity import Queen
+    >>> from pysal.lib import examples
+    >>> import geopandas as gpd
+    >>> from pysal.explore.esda.moran import (Moran, Moran_BV,
+    ...                         Moran_Local, Moran_Local_BV)
+    >>> from pysal.viz.splot.esda import moran_scatterplot
+    
+    Load data and calculate weights
+    
+    >>> link_to_data = examples.get_path('Guerry.shp')
+    >>> gdf = gpd.read_file(link_to_data)
+    >>> x = gdf['Suicids'].values
+    >>> y = gdf['Donatns'].values
+    >>> w = Queen.from_dataframe(gdf)
+    >>> w.transform = 'r'
+    
+    Calculate esda.moran Objects
+    
+    >>> moran = Moran(y, w)
+    >>> moran_bv = Moran_BV(y, x, w)
+    >>> moran_loc = Moran_Local(y, w)
+    >>> moran_loc_bv = Moran_Local_BV(y, x, w)
+    
+    Plot
+    
+    >>> fig, axs = plt.subplots(2, 2, figsize=(10,10),
+    ...                         subplot_kw={'aspect': 'equal'})
+    >>> moran_scatterplot(moran, p=0.05, ax=axs[0,0])
+    >>> moran_scatterplot(moran_loc, p=0.05, ax=axs[1,0])
+    >>> moran_scatterplot(moran_bv, p=0.05, ax=axs[0,1])
+    >>> moran_scatterplot(moran_loc_bv, p=0.05, ax=axs[1,1])
+    >>> plt.show()
+    
+    """
+    if isinstance(moran, Moran):
+        if p is not None:
+            warnings.warn('`p` is only used for plotting `esda.moran.Moran_Local`\n'
+                          'or `Moran_Local_BV` objects')
+        fig, ax = _moran_global_scatterplot(moran=moran, zstandard=zstandard,
+                                           ax=ax, scatter_kwds=scatter_kwds,
+                                           fitline_kwds=fitline_kwds)
+    elif isinstance(moran, Moran_BV):
+        if p is not None:
+            warnings.warn('`p` is only used for plotting `esda.moran.Moran_Local`\n'
+                          'or `Moran_Local_BV` objects')
+        fig, ax = _moran_bv_scatterplot(moran_bv=moran, ax=ax,
+                                       scatter_kwds=scatter_kwds,
+                                       fitline_kwds=fitline_kwds)
+    elif isinstance(moran, Moran_Local):
+        fig, ax = _moran_loc_scatterplot(moran_loc=moran, zstandard=zstandard,
+                                        ax=ax, p=p, scatter_kwds=scatter_kwds,
+                                        fitline_kwds=fitline_kwds)
+    elif isinstance(moran, Moran_Local_BV):
+        fig, ax = _moran_loc_bv_scatterplot(moran_loc_bv=moran, ax=ax,
+                                           p=p, scatter_kwds=scatter_kwds,
+                                           fitline_kwds=fitline_kwds)
     ax.xaxis.set_ticks_position('bottom')
     ax.yaxis.set_ticks_position('left')
     return fig, ax
 
 
-def moran_scatterplot(moran, zstandard=True, ax=None,
-                      scatter_kwds=None, fitline_kwds=None):
+def _moran_global_scatterplot(moran, zstandard=True, ax=None,
+                              scatter_kwds=None, fitline_kwds=None):
     """
     Global Moran's I Scatterplot.
 
@@ -81,7 +181,7 @@ def moran_scatterplot(moran, zstandard=True, ax=None,
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> import pysal.lib.api as lp
+    >>> from pysal.lib.weights.contiguity import Queen
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran
@@ -92,7 +192,7 @@ def moran_scatterplot(moran, zstandard=True, ax=None,
     >>> link_to_data = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
     >>> y = gdf['Donatns'].values
-    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     
     Calculate Global Moran
@@ -107,7 +207,7 @@ def moran_scatterplot(moran, zstandard=True, ax=None,
     customize plot
     
     >>> fig, ax = moran_scatterplot(moran, zstandard=False,
-    ...                             fitline_kws=dict(color='#4393c3'))
+    ...                             fitline_kwds=dict(color='#4393c3'))
     >>> ax.set_xlabel('Donations')
     >>> plt.show()
     
@@ -137,7 +237,7 @@ def moran_scatterplot(moran, zstandard=True, ax=None,
 
     # plot and set standards
     if zstandard is True:
-        lag = lp.lag_spatial(moran.w, moran.z)
+        lag = lag_spatial(moran.w, moran.z)
         fit = OLS(moran.z[:, None], lag[:, None])
         # plot
         ax.scatter(moran.z, lag, **scatter_kwds)
@@ -146,7 +246,7 @@ def moran_scatterplot(moran, zstandard=True, ax=None,
         ax.axvline(0, alpha=0.5, color='k', linestyle='--')
         ax.axhline(0, alpha=0.5, color='k', linestyle='--')
     else:
-        lag = lp.lag_spatial(moran.w, moran.y)
+        lag = lag_spatial(moran.w, moran.y)
         b, a = np.polyfit(moran.y, lag, 1)
         # plot
         ax.scatter(moran.y, lag, **scatter_kwds)
@@ -190,7 +290,7 @@ def plot_moran_simulation(moran, ax=None, fitline_kwds=None, **kwargs):
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> import pysal.lib.api as lp
+    >>> from pysal.lib.weights.contiguity import Queen
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran
@@ -201,7 +301,7 @@ def plot_moran_simulation(moran, ax=None, fitline_kwds=None, **kwargs):
     >>> link_to_data = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
     >>> y = gdf['Donatns'].values
-    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     
     Calculate Global Moran
@@ -276,7 +376,7 @@ def plot_moran(moran, zstandard=True, scatter_kwds=None,
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> import pysal.lib.api as lp
+    >>> from pysal.lib.weights.contiguity import Queen
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran
@@ -287,7 +387,7 @@ def plot_moran(moran, zstandard=True, scatter_kwds=None,
     >>> link_to_data = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link_to_data)
     >>> y = gdf['Donatns'].values
-    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     
     Calculate Global Moran
@@ -317,7 +417,7 @@ def plot_moran(moran, zstandard=True, scatter_kwds=None,
     return fig, axs
 
 
-def moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None):
+def _moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None):
     """
     Bivariate Moran Scatterplot.
 
@@ -347,11 +447,11 @@ def moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> import pysal.lib.api as lp
+    >>> from pysal.lib.weights.contiguity import Queen
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran_BV
-    >>> from pysal.viz.splot.esda import moran_bv_scatterplot
+    >>> from pysal.viz.splot.esda import moran_scatterplot
     
     Load data and calculate weights
     
@@ -359,7 +459,7 @@ def moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None
     >>> gdf = gpd.read_file(link_to_data)
     >>> x = gdf['Suicids'].values
     >>> y = gdf['Donatns'].values
-    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     
     Calculate Bivariate Moran
@@ -368,12 +468,12 @@ def moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None
     
     plot
     
-    >>> moran_bv_scatterplot(moran_bv)
+    >>> moran_scatterplot(moran_bv)
     >>> plt.show()
     
     customize plot
     
-    >>> moran_bv_scatterplot(moran_bv, zstandard=False,
+    >>> moran_scatterplot(moran_bv,
     ...                      fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
     
@@ -402,7 +502,7 @@ def moran_bv_scatterplot(moran_bv, ax=None, scatter_kwds=None, fitline_kwds=None
                  ' (' + str(round(moran_bv.I, 2)) + ')')
 
     # plot and set standards
-    lag = lp.lag_spatial(moran_bv.w, moran_bv.zy)
+    lag = lag_spatial(moran_bv.w, moran_bv.zy)
     fit = OLS(moran_bv.zy[:, None], lag[:, None])
     # plot
     ax.scatter(moran_bv.zx, lag, **scatter_kwds)
@@ -443,7 +543,7 @@ def plot_moran_bv_simulation(moran_bv, ax=None, fitline_kwds=None, **kwargs):
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> import pysal.lib.api as lp
+    >>> from pysal.lib.weights.contiguity import Queen
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran_BV
@@ -455,7 +555,7 @@ def plot_moran_bv_simulation(moran_bv, ax=None, fitline_kwds=None, **kwargs):
     >>> gdf = gpd.read_file(link_to_data)
     >>> x = gdf['Suicids'].values
     >>> y = gdf['Donatns'].values
-    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     
     Calculate Bivariate Moran
@@ -527,7 +627,7 @@ def plot_moran_bv(moran_bv, scatter_kwds=None, fitline_kwds=None, **kwargs):
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> import pysal.lib.api as lp
+    >>> from pysal.lib.weights.contiguity import Queen
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran_BV
@@ -539,7 +639,7 @@ def plot_moran_bv(moran_bv, scatter_kwds=None, fitline_kwds=None, **kwargs):
     >>> gdf = gpd.read_file(link_to_data)
     >>> x = gdf['Suicids'].values
     >>> y = gdf['Donatns'].values
-    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     
     Calculate Bivariate Moran
@@ -553,7 +653,7 @@ def plot_moran_bv(moran_bv, scatter_kwds=None, fitline_kwds=None, **kwargs):
     
     customize plot
     
-    >>> plot_moran_bv(moran_bv, fitline_kwds=dict(color='#4393c3')))
+    >>> plot_moran_bv(moran_bv, fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
     
     """
@@ -562,14 +662,14 @@ def plot_moran_bv(moran_bv, scatter_kwds=None, fitline_kwds=None, **kwargs):
                             subplot_kw={'aspect': 'equal'})
     plot_moran_bv_simulation(moran_bv, ax=axs[0], fitline_kwds=fitline_kwds,
                              **kwargs)
-    moran_bv_scatterplot(moran_bv, ax=axs[1],scatter_kwds=scatter_kwds,
+    moran_scatterplot(moran_bv, ax=axs[1],scatter_kwds=scatter_kwds,
                          fitline_kwds=fitline_kwds)
     axs[0].set(aspect="auto")
     axs[1].set(aspect="auto")
     return fig, axs
 
 
-def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
+def _moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
                           ax=None, scatter_kwds=None, fitline_kwds=None):
     """
     Moran Scatterplot with option of coloring of Local Moran Statistics
@@ -605,28 +705,29 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
     
     >>> import matplotlib.pyplot as plt
     >>> import geopandas as gpd
-    >>> import pysal.lib.api as lp
+    >>> from pysal.lib.weights.contiguity import Queen
     >>> from pysal.lib import examples
     >>> from pysal.explore.esda.moran import Moran_Local
-    >>> from pysal.viz.splot.esda import moran_loc_scatterplot
+    >>> from pysal.viz.splot.esda import moran_scatterplot
     
     Load data and calculate Moran Local statistics
     
     >>> link = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link)
     >>> y = gdf['Donatns'].values
-    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> m = Moran_Local(y, w)
     
     plot
     
-    >>> moran_loc_scatterplot(m)
+    >>> moran_scatterplot(m)
+    >>> plt.show()
     
     customize plot
     
-    >>> moran_loc_scatterplot(m, p=0.05,
-    ...                       fitline_kwds=dict(color='#4393c3')))
+    >>> moran_scatterplot(m, p=0.05,
+    ...                   fitline_kwds=dict(color='#4393c3'))
     >>> plt.show()
     
     """
@@ -664,7 +765,7 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
 
     # plot and set standards
     if zstandard is True:
-        lag = lp.lag_spatial(moran_loc.w, moran_loc.z)
+        lag = lag_spatial(moran_loc.w, moran_loc.z)
         fit = OLS(moran_loc.z[:, None], lag[:, None])
         # v- and hlines
         ax.axvline(0, alpha=0.5, color='k', linestyle='--')
@@ -682,7 +783,7 @@ def moran_loc_scatterplot(moran_loc, zstandard=True, p=None,
             ax.plot(lag, fit.predy, **fitline_kwds)
             ax.scatter(moran_loc.z, fit.predy, **scatter_kwds)
     else:
-        lag = lp.lag_spatial(moran_loc.w, moran_loc.y)
+        lag = lag_spatial(moran_loc.w, moran_loc.y)
         b, a = np.polyfit(moran_loc.y, lag, 1)
         # dashed vert at mean of the attribute
         ax.vlines(moran_loc.y.mean(), lag.min(), lag.max(), alpha=0.5,
@@ -744,7 +845,7 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> import pysal.lib.api as lp
+    >>> from pysal.lib.weights.contiguity import Queen
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran_Local
@@ -754,8 +855,8 @@ def lisa_cluster(moran_loc, gdf, p=0.05, ax=None,
     
     >>> link = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link)
-    >>> y = gdf['HOVAL'].values
-    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> y = gdf['Donatns'].values
+    >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> moran_loc = Moran_Local(y, w)
 
@@ -798,7 +899,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
 
     Parameters
     ----------
-    moran_loc : esda.moran.Moran_Local instance
+    moran_loc : esda.moran.Moran_Local or Moran_Local_BV instance
         Values of Moran's Local Autocorrelation Statistic
     gdf : geopandas dataframe
         The Dataframe containing information to plot the two maps.
@@ -824,7 +925,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
         Name of PySAL classifier to be used. Default = 'Quantiles'
     cmap: str, optional
         Name of matplotlib colormap used for plotting the Choropleth.
-        Default = 'YlGnBU'
+        Default = 'YlGnBu'
     scatter_kwds : keyword arguments, optional
         Keywords used for creating and designing the scatter points.
         Default =None.
@@ -844,7 +945,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     Imports
     
     >>> import matplotlib.pyplot as plt
-    >>> import pysal.lib.api as lp
+    >>> from pysal.lib.weights.contiguity import Queen
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
     >>> from pysal.explore.esda.moran import Moran_Local
@@ -855,27 +956,23 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     >>> link = examples.get_path('Guerry.shp')
     >>> gdf = gpd.read_file(link)
     >>> y = gdf['Donatns'].values
-    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> moran_loc = Moran_Local(y, w)
 
     Plotting with quadrant mask and region mask
     
-    >>> fig = plot_local_autocorrelation(moran_loc, gdf, 'HOVAL', p=0.05,
-    ...                                  region_column='POLYID',
-    ...                                  mask=['1', '2', '3'], quadrant=1)
+    >>> fig = plot_local_autocorrelation(moran_loc, gdf, 'Donatns', p=0.05,
+    ...                                  region_column='Dprtmnt',
+    ...                                  mask=['Ain'], quadrant=1)
     >>> plt.show()
     
     '''
     fig, axs = plt.subplots(1, 3, figsize=figsize,
                             subplot_kw={'aspect': 'equal'})
     # Moran Scatterplot
-    if isinstance (moran_loc, Moran_Local):
-        moran_loc_scatterplot(moran_loc, p=p, ax=axs[0],
-                              scatter_kwds=scatter_kwds, fitline_kwds=fitline_kwds)
-    else:
-        moran_loc_bv_scatterplot(moran_loc, p=p, ax=axs[0],
-                                 scatter_kwds=scatter_kwds, fitline_kwds=fitline_kwds)
+    moran_scatterplot(moran_loc, p=p, ax=axs[0],
+                      scatter_kwds=scatter_kwds, fitline_kwds=fitline_kwds)
     axs[0].set_aspect('auto')
 
     # Lisa cluster map
@@ -913,7 +1010,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
         axs[0].add_patch(patches.Rectangle((0, 0), width=mask_width[quadrant],
                                            height=mask_height[quadrant],
                                            angle=mask_angles[quadrant],
-                                           color='grey', zorder=-1, alpha=0.8))
+                                           color='#E5E5E5', zorder=-1, alpha=0.8))
         # quadrant selection in maps
         non_quadrant = ~(moran_loc.q == quadrant)
         mask_quadrant = gdf[non_quadrant]
@@ -921,14 +1018,18 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
         union2 = df_quadrant.unary_union.boundary
 
         # LISA Cluster mask and cluster boundary
-        mask_quadrant.plot(column=attribute, scheme=scheme, color='white',
-                           ax=axs[1], alpha=0.7, zorder=1)
-        gpd.GeoSeries([union2]).plot(linewidth=2, ax=axs[1], color='darkgrey')
+        with warnings.catch_warnings():  # temorarily surpress geopandas warning
+            warnings.filterwarnings('ignore', category=UserWarning)
+            mask_quadrant.plot(column=attribute, scheme=scheme, color='white',
+                               ax=axs[1], alpha=0.7, zorder=1)
+        gpd.GeoSeries([union2]).plot(linewidth=1, ax=axs[1], color='#E5E5E5')
 
         # CHOROPLETH MASK
-        mask_quadrant.plot(column=attribute, scheme=scheme, color='white',
+        with warnings.catch_warnings():  # temorarily surpress geopandas warning
+            warnings.filterwarnings('ignore', category=UserWarning)
+            mask_quadrant.plot(column=attribute, scheme=scheme, color='white',
                            ax=axs[2], alpha=0.7, zorder=1)
-        gpd.GeoSeries([union2]).plot(linewidth=2, ax=axs[2], color='darkgrey')
+        gpd.GeoSeries([union2]).plot(linewidth=1, ax=axs[2], color='#E5E5E5')
 
     # REGION MASKING
     if region_column is not None:
@@ -936,7 +1037,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
         ix = gdf[region_column].isin(mask)
         df_mask = gdf[ix]
         x_mask = moran_loc.z[ix]
-        y_mask = lp.lag_spatial(moran_loc.w, moran_loc.z)[ix]
+        y_mask = lag_spatial(moran_loc.w, moran_loc.z)[ix]
         axs[0].plot(x_mask, y_mask, color=mask_color, marker='o',
                     markersize=14, alpha=.8, linestyle="None", zorder=-1)
 
@@ -949,7 +1050,7 @@ def plot_local_autocorrelation(moran_loc, gdf, attribute, p=0.05,
     return fig, axs
 
 
-def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
+def _moran_loc_bv_scatterplot(moran_loc_bv, p=None,
                              ax=None, scatter_kwds=None, fitline_kwds=None):
     """
     Moran Bivariate Scatterplot with option of coloring of Local Moran Statistics
@@ -985,10 +1086,10 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     
     >>> import matplotlib.pyplot as plt
     >>> import geopandas as gpd
-    >>> import pysal.lib.api as lp
+    >>> from pysal.lib.weights.contiguity import Queen
     >>> from pysal.lib import examples
     >>> from pysal.explore.esda.moran import Moran_Local_BV
-    >>> from pysal.viz.splot.esda import moran_loc_bv_scatterplot
+    >>> from pysal.viz.splot.esda import moran_scatterplot
     
     Load data and calculate Moran Local statistics
     
@@ -996,17 +1097,18 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     >>> gdf = gpd.read_file(link)
     >>> x = gdf['Suicids'].values
     >>> y = gdf['Donatns'].values
-    >>> w = lp.Queen.from_dataframe(gdf)
+    >>> w = Queen.from_dataframe(gdf)
     >>> w.transform = 'r'
     >>> m = Moran_Local_BV(x, y, w)
     
     Plot
     
-    >>> moran_loc_bv_scatterplot(m)
+    >>> moran_scatterplot(m)
+    >>> plt.show()
     
     Customize plot
     
-    >>> moran_loc_bv_scatterplot(m, p=0.05,
+    >>> moran_scatterplot(m, p=0.05,
     ...                          fitline_kwds=dict(color='#4393c3')))
     >>> plt.show()
     
@@ -1016,7 +1118,7 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
         scatter_kwds = dict()
     if fitline_kwds is None:
         fitline_kwds = dict()
-        
+
     if p is not None:
         if not isinstance(moran_loc_bv, Moran_Local_BV):
             raise ValueError("`moran_loc_bv` is not a\n" +
@@ -1044,7 +1146,7 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
     ax.set_title('Moran BV Local Scatterplot')
 
     # plot and set standards
-    lag = lp.lag_spatial(moran_loc_bv.w, moran_loc_bv.zy)
+    lag = lag_spatial(moran_loc_bv.w, moran_loc_bv.zy)
     fit = OLS(moran_loc_bv.zy[:, None], lag[:, None])
     # v- and hlines
     ax.axvline(0, alpha=0.5, color='k', linestyle='--')
@@ -1062,3 +1164,114 @@ def moran_loc_bv_scatterplot(moran_loc_bv, p=None,
         ax.plot(lag, fit.predy, **fitline_kwds)
         ax.scatter(moran_loc_bv.zy, fit.predy, **scatter_kwds)
     return fig, ax
+
+
+def moran_facet(moran_matrix, figsize=(16,12),
+                scatter_bv_kwds=None, fitline_bv_kwds=None,
+                scatter_glob_kwds=dict(color='#737373'), fitline_glob_kwds=None):
+    """
+    Moran Facet visualization.
+    Includes BV Morans and Global Morans on the diagonal.
+    
+    Parameters
+    ----------
+    moran_matrix : esda.moran.Moran_BV_matrix instance
+        Dictionary of Moran_BV objects
+    figsize : tuple, optional
+        W, h of figure. Default =(16,12)
+    scatter_bv_kwds : keyword arguments, optional
+        Keywords used for creating and designing the scatter points of
+        off-diagonal Moran_BV plots.
+        Default =None.
+    fitline_bv_kwds : keyword arguments, optional
+        Keywords used for creating and designing the moran fitline of
+        off-diagonal Moran_BV plots.
+        Default =None.
+    scatter_glob_kwds : keyword arguments, optional
+        Keywords used for creating and designing the scatter points of
+        diagonal Moran plots.
+        Default =None.
+    fitline_glob_kwds : keyword arguments, optional
+        Keywords used for creating and designing the moran fitline of
+        diagonal Moran plots.
+        Default =None.
+
+    Returns
+    -------
+    fig : Matplotlib Figure instance
+        Bivariate Moran Local scatterplot figure
+    axarr : matplotlib Axes instance
+        Axes in which the figure is plotted
+
+    Examples
+    --------
+    Imports
+    
+    >>> import matplotlib.pyplot as plt
+    >>> import pysal.lib as lp
+    >>> import numpy as np
+    >>> import geopandas as gpd
+    >>> from pysal.explore.esda.moran import Moran_BV_matrix
+    >>> from pysal.viz.splot.esda import moran_facet
+    
+    Load data and calculate Moran Local statistics
+    
+    >>> f = gpd.read_file(lp.examples.get_path("sids2.dbf"))
+    >>> varnames = ['SIDR74',  'SIDR79',  'NWR74',  'NWR79']
+    >>> vars = [np.array(f.by_col[var]) for var in varnames]
+    >>> w = lp.io.open(lp.examples.get_path("sids2.gal")).read()
+    >>> moran_matrix = Moran_BV_matrix(vars,  w,  varnames = varnames)
+    
+    Plot
+    
+    >>> fig, axarr = moran_facet(moran_matrix)
+    >>> plt.show()
+    
+    Customize plot
+    
+    >>> fig, axarr = moran_facet(moran_matrix,
+    ...                          fitline_bv_kwds=dict(color='#4393c3'))
+    >>> plt.show()
+    
+    """
+    nrows = int(np.sqrt(len(moran_matrix))) + 1
+    ncols = nrows
+    
+    fig, axarr = plt.subplots(nrows, ncols, figsize=figsize,
+                              sharey=True, sharex=True)
+    fig.suptitle('Moran Facet')
+    
+    for row in range(nrows):
+        for col in range(ncols):
+            if row == col:
+                global_m = Moran(moran_matrix[row, (row+1) % 4].zy,
+                                 moran_matrix[row, (row+1) % 4].w)
+                _moran_global_scatterplot(global_m, ax= axarr[row,col],
+                                  scatter_kwds=scatter_glob_kwds,
+                                  fitline_kwds=fitline_glob_kwds)
+                axarr[row, col].set_facecolor('#d9d9d9')
+            else:
+                _moran_bv_scatterplot(moran_matrix[row,col],
+                                  ax=axarr[row,col], 
+                                  scatter_kwds=scatter_bv_kwds,
+                                  fitline_kwds=fitline_bv_kwds)
+    
+            axarr[row, col].spines['bottom'].set_visible(False)
+            axarr[row, col].spines['left'].set_visible(False)
+            if row == nrows - 1:
+                axarr[row, col].set_xlabel(str(
+                    moran_matrix[(col+1)%4, col].varnames['x']).format(col))
+                axarr[row, col].spines['bottom'].set_visible(True)
+            else:
+                axarr[row, col].set_xlabel('')
+                
+            if col == 0:
+                axarr[row, col].set_ylabel(('Spatial Lag of '+str(
+                    moran_matrix[row, (row+1)%4].varnames['y'])).format(row))
+                axarr[row, col].spines['left'].set_visible(True)
+            else:
+                axarr[row, col].set_ylabel('')
+                
+            axarr[row, col].set_title('') 
+    plt.tight_layout()
+    return fig, axarr

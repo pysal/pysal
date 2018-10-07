@@ -1,21 +1,21 @@
 import unittest
 import numpy as np
-import pysal.lib.api as lps
-from pysal.model.spreg.sur_utils import sur_dictxy,sur_dictZ
-from pysal.model.spreg.sur import SUR,ThreeSLS
+from ..sur_utils import sur_dictxy, sur_dictZ
+from ..sur import SUR, ThreeSLS
+import pysal.lib
 from pysal.lib.common import RTOL
 
-PEGP = lps.get_path
+PEGP = pysal.lib.examples.get_path
 
-def dict_compare(actual, desired, rtol):
-    for i in list(actual.keys()):
-        np.testing.assert_allclose(actual[i],desired[i],rtol)
+def dict_compare(actual, desired, rtol, atol=1e-7):
+    for i in actual.keys():
+        np.testing.assert_allclose(actual[i],desired[i],rtol,atol=atol)
 
 
 class Test_SUR(unittest.TestCase):
     def setUp(self):
-        self.db = lps.open(lps.get_path('NAT.dbf'),'r')
-        self.w = lps.queen_from_shapefile(lps.get_path("NAT.shp"))
+        self.db = pysal.lib.io.open(pysal.lib.examples.get_path('NAT.dbf'),'r')
+        self.w = pysal.lib.weights.Queen.from_shapefile(pysal.lib.examples.get_path("NAT.shp"))
         self.w.transform = 'r'
 
 
@@ -66,7 +66,7 @@ class Test_SUR(unittest.TestCase):
         np.testing.assert_allclose(reg.llik,-19860.067987395596)
         np.testing.assert_allclose(reg.lmtest,(680.16759754291365, 1, 6.144389240997126e-150))
         np.testing.assert_allclose(reg.lrtest, (854.18095147295708, 1, 8.966465468792485e-188))
-        np.testing.assert_allclose(reg.lmEtest,(1270.9424750801545, 2, 1.0431532803839709e-276))
+        np.testing.assert_allclose(reg.lmEtest,(1270.87724, 2, 1.07773778e-276))
 
     def test_SUR_3eq(self): #3 equations, different K, iterated estimation, spatial test
         y_var1 = ['HR60','HR70','HR80']
@@ -97,7 +97,7 @@ class Test_SUR(unittest.TestCase):
         np.testing.assert_allclose(reg.llik,-28695.767676078722)
         np.testing.assert_allclose(reg.lmtest,(882.43543942655947, 3, 5.7128374010751484e-191))
         np.testing.assert_allclose(reg.lrtest, (818.30409875688747, 3, 4.6392724270549021e-177))
-        np.testing.assert_allclose(reg.lmEtest,(696.64318511682916, 3, 1.1218163246066135e-150))
+        np.testing.assert_allclose(reg.lmEtest,(696.541197, 3, 1.18041989e-150))
 
     def test_3SLS(self): # two equations, one endog, one instrument, same k
         y_var1 = ['HR80','HR90']
@@ -165,8 +165,94 @@ class Test_SUR(unittest.TestCase):
         np.testing.assert_allclose(reg.corr,np.array([[ 1.        ,  0.31819323,  0.20428789],\
        [ 0.31819323,  1.        ,  0.12492191],[ 0.20428789,  0.12492191,  1.        ]]),RTOL)
 
+    #"""
+    def test_sur_regi(self):
+        y_var0 = ['HR80','HR90']
+        x_var0 = [['PS80','UE80'],['PS90','UE90']]
+        bigy0,bigX0,bigyvars0,bigXvars0 = sur_dictxy(self.db,y_var0,x_var0)
+        regi1 = int(bigy0[0].shape[0]/2)
+        regi = [0]*(regi1) + [1]*(bigy0[0].shape[0]-regi1)
 
+        bigysub,bigXsub = {},{}
+        for r in bigy0.keys():
+            bigysub[r] = bigy0[r][0:regi1]
+            bigXsub[r] = bigX0[r][0:regi1]
+
+        reg = SUR(bigy0,bigX0,regimes=regi,name_bigy=bigyvars0,name_bigX=bigXvars0)
+        reg_sub = SUR(bigysub,bigXsub,name_bigy=bigyvars0,name_bigX=bigXvars0)
+
+        dict_compare(reg.bOLS,{0: np.array([[ 1.87615878],
+       [ 0.18966296],
+       [ 0.34814587],
+       [ 9.16595183],
+       [ 0.82165993],
+       [ 0.06343039]]), 1: np.array([[ 0.74758463],
+       [ 0.72948358],
+       [ 0.45993437],
+       [ 4.81814289],
+       [ 0.96819747],
+       [ 0.55080463]])},RTOL)
+        dict_compare(reg_sub.bOLS,{0: np.array([[ 1.87615878],
+       [ 0.18966296],
+       [ 0.34814587]]), 1: np.array([[ 0.74758463],
+       [ 0.72948358],
+       [ 0.45993437]])},RTOL)
+        dict_compare(reg.bSUR,{0: np.array([[ 2.01116476],
+       [ 0.20092017],
+       [ 0.32804397],
+       [ 8.73384797],
+       [ 0.78145176],
+       [ 0.12659106]]), 1: np.array([[ 1.74977074],
+       [ 0.74734938],
+       [ 0.29345176],
+       [ 6.31032557],
+       [ 0.91171898],
+       [ 0.34665252]])},RTOL)
+        dict_compare(reg_sub.bSUR,{0: np.array([[ 1.92667554],
+       [ 0.19603381],
+       [ 0.34065072]]), 1: np.array([[ 1.48997568],
+       [ 0.74311959],
+       [ 0.33661536]])},RTOL)
+
+        dict_compare(reg.sur_inf,{0: np.array([[  3.41101914e-001,   5.89608171e+000,   3.72234709e-009],
+       [  1.46263739e-001,   1.37368406e+000,   1.69539787e-001],
+       [  4.50557935e-002,   7.28083871e+000,   3.31751122e-013],
+       [  3.54394907e-001,   2.46443947e+001,   4.22629982e-134],
+       [  1.75344503e-001,   4.45666528e+000,   8.32444268e-006],
+       [  4.61236608e-002,   2.74460137e+000,   6.05844400e-003]]), 1: np.array([[  3.17850453e-01,   5.50501258e+00,   3.69141910e-08],
+       [  1.36607810e-01,   5.47076618e+00,   4.48094161e-08],
+       [  4.66138382e-02,   6.29537851e+00,   3.06650646e-10],
+       [  3.81183966e-01,   1.65545409e+01,   1.48469542e-61],
+       [  1.65046297e-01,   5.52401961e+00,   3.31330455e-08],
+       [  4.80006322e-02,   7.22183237e+00,   5.12916752e-13]])},RTOL)
+        dict_compare(reg_sub.sur_inf,{0: np.array([[  3.09065537e-01,   6.23387375e+00,   4.55039845e-10],
+       [  1.31344830e-01,   1.49251259e+00,   1.35564820e-01],
+       [  4.09281853e-02,   8.32313281e+00,   8.56683667e-17]]), 1: np.array([[  2.55486625e-01,   5.83191264e+00,   5.47956072e-09],
+       [  1.08792884e-01,   6.83059002e+00,   8.45660945e-12],
+       [  3.75656548e-02,   8.96072109e+00,   3.22561992e-19]])},RTOL)
+        np.testing.assert_allclose(reg.corr,np.array([[ 1.,         0.39876159],
+ [ 0.39876159,  1.        ]]),RTOL)
+        np.testing.assert_allclose(reg_sub.corr,np.array([[ 1.,         0.34082746],
+ [ 0.34082746,  1.        ]]),RTOL)
+        np.testing.assert_allclose(reg.surchow,[(0.45990603232321264, 1, 0.49766789236262199), (12.272945563489683, 1, 0.00045957230926145726), (0.40387355647401846, 1, 0.52509554089354726), (29.703322949663928, 1, 5.0348441543660547e-08), (0.48278663488874679, 1, 0.48716278953324077), (14.458361295874431, 1, 0.00014329232472224597)],RTOL)
+        np.testing.assert_allclose(reg_sub.surchow,[(1.6159328442921959, 1, 0.2036598282347839), (15.367000078470731, 1, 8.8520850179747918e-05), (0.0070481637293965593, 1, 0.93309352797583178)],RTOL)
+
+    #"""
 
 if __name__ == '__main__':
     unittest.main()
-
+    '''
+    db = pysal.open(pysal.examples.get_path('NAT.dbf'),'r')
+    w = pysal.queen_from_shapefile(pysal.examples.get_path("NAT.shp"))
+    w.transform = 'r'
+    y_var0 = ['HR80','HR90']
+    x_var0 = [['PS80','UE80'],['PS90','UE90']]
+    bigy0,bigX0,bigyvars0,bigXvars0 = sur_dictxy(db,y_var0,x_var0)
+    regi1 = bigy0[0].shape[0]/2
+    regi = [0]*(regi1) + [1]*(bigy0[0].shape[0]-regi1)
+    bigysub,bigXsub = {},{}
+    for r in bigy0.keys():
+        bigysub[r] = bigy0[r][0:regi1]
+        bigXsub[r] = bigX0[r][0:regi1]
+    reg = SUR(bigysub,bigXsub,name_bigy=bigyvars0,name_bigX=bigXvars0)
+    #'''

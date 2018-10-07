@@ -1,5 +1,5 @@
 import os
-from ..FileIO import FileIO as psopen
+from ..fileio import FileIO as psopen
 from warnings import warn
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
 __all__ = ["weight_convert"]
@@ -39,7 +39,8 @@ class WeightConverter(object):
 
         Create a WeightConvert object
 
-        >>> wc = WeightConverter(pysal.examples.get_path('arcgis_ohio.dbf'),dataFormat='arcgis_dbf')
+        >>> import pysal.lib
+        >>> wc = WeightConverter(pysal.lib.examples.get_path('arcgis_ohio.dbf'),dataFormat='arcgis_dbf')
 
         Check whether or not the W object is set as an attribute
 
@@ -97,11 +98,11 @@ class WeightConverter(object):
 
         Examples
         --------
-        >>> import tempfile, os, pysal
+        >>> import tempfile, os, pysal.lib
 
         Create a WeightConverter object
 
-        >>> wc = WeightConverter(pysal.examples.get_path('sids2.gal'))
+        >>> wc = WeightConverter(pysal.lib.examples.get_path('sids2.gal'))
 
         Check whether or not the W object is set as an attribute
 
@@ -241,4 +242,3 @@ def weight_convert(inPath, outPath, inDataFormat=None, outDataFormat=None, useId
     converter = WeightConverter(inPath, dataFormat=inDataFormat)
     converter.write(outPath, dataFormat=outDataFormat,
                     useIdIndex=useIdIndex, matrix_form=matrix_form)
-

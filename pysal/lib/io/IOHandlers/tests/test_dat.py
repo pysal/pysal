@@ -1,5 +1,5 @@
 import unittest
-from ...FileIO import FileIO as psopen
+from ...fileio import FileIO as psopen
 from ..dat import DatIO
 from .... import examples as pysal_examples
 import tempfile

@@ -3,17 +3,18 @@ Diagnostics for SUR and 3SLS estimation
 """
 
 __author__= "Luc Anselin lanselin@gmail.com,    \
-             Pedro V. Amaral pedrovma@gmail.com"
+             Pedro V. Amaral pedrovma@gmail.com  \
+             Tony Aburaad taburaad@uchicago.edu"
 
 
 import numpy as np
 import scipy.stats as stats
 import numpy.linalg as la
-from .sur_utils import sur_dict2mat,sur_mat2dict,sur_corr
+from .sur_utils import sur_dict2mat,sur_mat2dict,sur_corr,spdot
 from .regimes import buildR1var,wald_test
 
 
-__all__ = ['sur_setp','sur_lrtest','sur_lmtest','lam_setp','surLMe']
+__all__ = ['sur_setp','sur_lrtest','sur_lmtest','lam_setp','surLMe','surLMlag']
 
 
 def sur_setp(bigB,varb):
@@ -32,7 +33,7 @@ def sur_setp(bigB,varb):
 
     '''
     vvb = varb.diagonal()
-    n_eq = len(list(bigB.keys()))
+    n_eq = len(bigB.keys())
     bigK = np.zeros((n_eq,1),dtype=np.int_)
     for r in range(n_eq):
         bigK[r] = bigB[r].shape[0]
@@ -138,8 +139,14 @@ def surLMe(n_eq,WS,bigE,sig):
     EWE = np.dot(bigE.T,WbigE)
     sigi = la.inv(sig)
     SEWE = sigi * EWE
-    score = SEWE.sum(axis=1)
-    score.resize(n_eq,1)
+    #score = SEWE.sum(axis=1)
+    #score.resize(n_eq,1)
+    # note score is column sum of Sig_i * E'WE, a 1 by n_eq row vector
+    # previously stored as column
+    score = SEWE.sum(axis=0)
+    score.resize(1,n_eq)
+    
+    
     # trace terms
     WW = WS * WS
     trWW = np.sum(WW.diagonal())
@@ -152,9 +159,75 @@ def surLMe(n_eq,WS,bigE,sig):
     denom = Tii + tSiS
     idenom = la.inv(denom)
     # test statistic
-    LMe = np.dot(np.dot(score.T,idenom),score)[0][0]
+    #LMe = np.dot(np.dot(score.T,idenom),score)[0][0]
+    # score is now row vector
+    LMe = np.dot(np.dot(score,idenom),score.T)[0][0]
     pvalue = stats.chi2.sf(LMe,n_eq)
     return (LMe,n_eq,pvalue)
+
+def surLMlag(n_eq,WS,bigy,bigX,bigE,bigYP,sig,varb):
+    """Lagrange Multiplier test on lag spatial autocorrelation in SUR
+
+    Parameters
+    ----------
+    n_eq       : number of equations
+    WS         : spatial weights matrix in sparse form
+    bigy       : dictionary with y values
+    bigX       : dictionary with X values
+    bigE       : n x n_eq matrix of residuals by equation
+    bigYP      : n x n_eq matrix of predicted values by equation
+    sig        : cross-equation error covariance matrix
+    varb       : variance-covariance matrix for b coefficients (inverse of Ibb)
+
+    Returns
+    -------
+    (LMlag,n_eq,pvalue) : tupel with value of statistic (LMlag), degrees
+                          of freedom (n_eq) and p-value
+
+    """
+    # Score
+    Y = np.hstack((bigy[r]) for r in range(n_eq))
+    WY = WS * Y
+    EWY = np.dot(bigE.T,WY)
+    sigi = la.inv(sig)
+    SEWE = sigi * EWY
+    score = SEWE.sum(axis=0)  # column sums
+    score.resize(1,n_eq)  # score as a row vector
+    
+    # I(rho,rho) as partitioned inverse, eq 72
+    # trace terms
+    WW = WS * WS
+    trWW = np.sum(WW.diagonal()) #T1
+    WTW = WS.T * WS
+    trWtW = np.sum(WTW.diagonal()) #T2
+
+    # I(rho,rho)
+    SiS = sigi * sig
+    Tii = trWW * np.identity(n_eq) #T1It
+    tSiS = trWtW * SiS
+    firstHalf = Tii + tSiS
+    WbigYP = WS * bigYP
+    inner = np.dot(WbigYP.T, WbigYP)
+    secondHalf= sigi * inner
+    Ipp= firstHalf + secondHalf #eq. 75
+    
+    # I(b,b) inverse is varb
+    
+    # I(b,rho)
+    bp = sigi[0,] * spdot(bigX[0].T,WbigYP)  #initialize
+    for r in range(1,n_eq):
+        bpwork = sigi[r,] * spdot(bigX[r].T,WbigYP)
+        bp = np.vstack((bp,bpwork))
+    # partitioned part    
+    i_inner = Ipp - np.dot(np.dot(bp.T, varb), bp)
+    # partitioned inverse of information matrix
+    Ippi = la.inv(i_inner)
+    
+    # test statistic
+    LMlag = np.dot(np.dot(score,Ippi),score.T)[0][0]
+    # p-value
+    pvalue = stats.chi2.sf(LMlag,n_eq)
+    return (LMlag,n_eq,pvalue)
 
 def sur_chow(n_eq,bigK,bSUR,varb):
     """test on constancy of regression coefficients across equations in

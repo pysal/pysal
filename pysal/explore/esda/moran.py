@@ -98,9 +98,9 @@ class Moran(object):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
-    >>> w = lps.open(lps.get_path("stl.gal")).read()
-    >>> f = lps.open(lps.get_path("stl_hom.txt"))
+    >>> import pysal.lib
+    >>> w = pysal.lib.io.open(pysal.lib.examples.get_path("stl.gal")).read()
+    >>> f = pysal.lib.io.open(pysal.lib.examples.get_path("stl_hom.txt"))
     >>> y = np.array(f.by_col['HR8893'])
     >>> from pysal.explore.esda.moran import Moran
     >>> mi = Moran(y,  w)
@@ -112,8 +112,8 @@ class Moran(object):
     0.00027147862770937614
 
     SIDS example replicating OpenGeoda
-    >>> w = lps.open(lps.get_path("sids2.gal")).read()
-    >>> f = lps.open(lps.get_path("sids2.dbf"))
+    >>> w = pysal.lib.io.open(pysal.lib.examples.get_path("sids2.gal")).read()
+    >>> f = pysal.lib.io.open(pysal.lib.examples.get_path("sids2.dbf"))
     >>> SIDR = np.array(f.by_col("SIDR74"))
     >>> mi = Moran(SIDR,  w)
     >>> round(mi.I, 3)
@@ -171,6 +171,10 @@ class Moran(object):
             else:
                 self.p_z_sim = stats.norm.cdf(self.z_sim)
 
+        # provide .z attribute that is znormalized
+        sy = y.std()
+        self.z /= sy
+        
     def __moments(self):
         self.n = len(self.y)
         y = self.y
@@ -201,10 +205,6 @@ class Moran(object):
         VIR = (A - B) / ((n - 1) * (n - 2) * (n - 3 ) * s02) - EI*EI
         self.VI_rand = VIR 
         self.seI_rand = VIR ** (1 / 2.)
-
-
-
-
 
     def __calc(self, z):
         zl = slag(self.w, z)
@@ -327,7 +327,7 @@ class Moran_BV(object):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
     >>> import numpy as np
 
     Set random number generator seed so we can replicate the example
@@ -337,13 +337,13 @@ class Moran_BV(object):
     Open the sudden infant death dbf file and read in rates for 74 and 79
     converting each to a numpy array
 
-    >>> f = lps.open(lps.get_path("sids2.dbf"))
+    >>> f = pysal.lib.io.open(pysal.lib.examples.get_path("sids2.dbf"))
     >>> SIDR74 = np.array(f.by_col['SIDR74'])
     >>> SIDR79 = np.array(f.by_col['SIDR79'])
 
     Read a GAL file and construct our spatial weights object
 
-    >>> w = lps.open(lps.get_path("sids2.gal")).read()
+    >>> w = pysal.lib.io.open(pysal.lib.examples.get_path("sids2.gal")).read()
 
     Create an instance of Moran_BV
     >>> from pysal.explore.esda.moran import Moran_BV
@@ -366,6 +366,8 @@ class Moran_BV(object):
         y = np.asarray(y).flatten()
         zy = (y - y.mean()) / y.std(ddof=1)
         zx = (x - x.mean()) / x.std(ddof=1)
+        self.y = y
+        self.x = x
         self.zx = zx
         self.zy = zy
         n = x.shape[0]
@@ -452,22 +454,25 @@ class Moran_BV(object):
 
 
 def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
-    """Bivariate Moran Matrix
+    """
+    Bivariate Moran Matrix
 
     Calculates bivariate Moran between all pairs of a set of variables.
 
     Parameters
     ----------
-    variables    : list
-                   sequence of variables
+    variables    : array or pandas.DataFrame
+                   sequence of variables to be assessed
     w            : W
                    a spatial weights object
     permutations : int
                    number of permutations
-    varnames     : list
-                   strings for variable names. If specified runtime summary is
-                   printed
-
+    varnames     : list, optional if variables is an array
+                   Strings for variable names. Will add an
+                   attribute to `Moran_BV` objects in results needed for plotting
+                   in `splot` or `.plot()`. Default =None.
+                   Note: If variables is a `pandas.DataFrame` varnames
+                   will automatically be generated
     Returns
     -------
     results      : dictionary
@@ -476,11 +481,12 @@ def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
 
     Examples
     --------
-
+    Example 1: Variables passed in as an array
+    
     open dbf
 
-    >>> import pysal.lib.api as lps
-    >>> f = lps.open(lps.get_path("sids2.dbf"))
+    >>> import pysal.lib
+    >>> f = pysal.lib.io.open(pysal.lib.examples.get_path("sids2.dbf"))
 
     pull of selected variables from dbf and create numpy arrays for each
 
@@ -489,7 +495,7 @@ def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
 
     create a contiguity matrix from an external gal file
 
-    >>> w = lps.open(lps.get_path("sids2.gal")).read()
+    >>> w = pysal.lib.io.open(pysal.lib.examples.get_path("sids2.gal")).read()
 
     create an instance of Moran_BV_matrix
 
@@ -504,7 +510,63 @@ def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
     0.3770138
 
 
+    Example 2: variables passed in as pandas.Dataframe
+    
+    Imports
+    
+    >>> import pysal.lib.api as lp
+    >>> from pysal.lib import examples
+    >>> import geopandas as gpd
+    >>> import pandas as pd
+    >>> import matplotlib.pyplot as plt
+    >>> import matplotlib
+    >>> import numpy as np
+    >>> from splot.pysal.explore.esda import moran_facet
+    
+    Prepare DataFrame
+    
+    >>> path = examples.get_path('columbus.shp')
+    >>> gdf = gpd.read_file(path)
+    >>> variables2 = gdf[['HOVAL', 'CRIME', 'INC', 'EW']]
+    >>> w2 = lp.queen_from_shapefile(path)
+    
+    Create Moran_BV_Matrix
+    
+    >>> matrix = Moran_BV_matrix(variables2, w2)
+    >>> matrix
+    
+    Plot Moran_facet using `splot`
+    
+    >>> moran_facet(matrix)
+    >>> plt.show()
+    
     """
+    try:
+        # check if pandas is installed
+        import pandas
+        if isinstance(variables, pandas.DataFrame):
+            # if yes use variables as df and convert to numpy_array
+            varnames = pandas.Index.tolist(variables.columns)
+            variables_n = []
+            for var in varnames:
+                variables_n.append(variables[str(var)].values)
+        else:
+            variables_n = variables
+    except ImportError:
+        variables_n = variables
+    
+    results = _Moran_BV_Matrix_array(variables=variables_n, w=w,
+                                     permutations=permutations,
+                                     varnames=varnames)
+    return results
+
+
+def _Moran_BV_Matrix_array(variables, w, permutations=0, varnames=None):
+    """
+    Base calculation for MORAN_BV_Matrix
+    """
+    if varnames is None:
+        varnames = ['x{}'.format(i) for i in range(k)]
 
     k = len(variables)
     rk = list(range(0, k - 1))
@@ -515,7 +577,10 @@ def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
             y2 = variables[j]
             results[i, j] = Moran_BV(y1, y2, w, permutations=permutations)
             results[j, i] = Moran_BV(y2, y1, w, permutations=permutations)
+            results[i, j].varnames = {'x': varnames[i], 'y': varnames[j]}
+            results[j, i].varnames = {'x': varnames[j], 'y': varnames[i]}
     return results
+
 
 class Moran_Rate(Moran):
     """
@@ -610,9 +675,9 @@ class Moran_Rate(Moran):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
-    >>> w = lps.open(lps.get_path("sids2.gal")).read()
-    >>> f = lps.open(lps.get_path("sids2.dbf"))
+    >>> import pysal.lib
+    >>> w = pysal.lib.io.open(pysal.lib.examples.get_path("sids2.gal")).read()
+    >>> f = pysal.lib.io.open(pysal.lib.examples.get_path("sids2.dbf"))
     >>> e = np.array(f.by_col('SID79'))
     >>> b = np.array(f.by_col('BIR79'))
     >>> from pysal.explore.esda.moran import Moran_Rate
@@ -786,11 +851,11 @@ class Moran_Local(object):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
     >>> import numpy as np
     >>> np.random.seed(10)
-    >>> w = lps.open(lps.get_path("desmith.gal")).read()
-    >>> f = lps.open(lps.get_path("desmith.txt"))
+    >>> w = pysal.lib.io.open(pysal.lib.examples.get_path("desmith.gal")).read()
+    >>> f = pysal.lib.io.open(pysal.lib.examples.get_path("desmith.txt"))
     >>> y = np.array(f.by_col['z'])
     >>> from pysal.explore.esda.moran import Moran_Local
     >>> lm = Moran_Local(y, w, transformation = "r", permutations = 99)
@@ -1018,11 +1083,11 @@ class Moran_Local_BV(object):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
     >>> import numpy as np
     >>> np.random.seed(10)
-    >>> w = lps.open(lps.get_path("sids2.gal")).read()
-    >>> f = lps.open(lps.get_path("sids2.dbf"))
+    >>> w = pysal.lib.io.open(pysal.lib.examples.get_path("sids2.gal")).read()
+    >>> f = pysal.lib.io.open(pysal.lib.examples.get_path("sids2.dbf"))
     >>> x = np.array(f.by_col['SIDR79'])
     >>> y = np.array(f.by_col['SIDR74'])
     >>> from pysal.explore.esda.moran import Moran_Local_BV
@@ -1044,6 +1109,7 @@ class Moran_Local_BV(object):
         x = np.asarray(x).flatten()
         y = np.asarray(y).flatten()
         self.y = y
+        self.x =x
         n = len(y)
         self.n = n
         self.n_1 = n - 1
@@ -1262,11 +1328,11 @@ class Moran_Local_Rate(Moran_Local):
 
     Examples
     --------
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
     >>> import numpy as np
     >>> np.random.seed(10)
-    >>> w = lps.open(lps.get_path("sids2.gal")).read()
-    >>> f = lps.open(lps.get_path("sids2.dbf"))
+    >>> w = pysal.lib.io.open(pysal.lib.examples.get_path("sids2.gal")).read()
+    >>> f = pysal.lib.io.open(pysal.lib.examples.get_path("sids2.dbf"))
     >>> e = np.array(f.by_col('SID79'))
     >>> b = np.array(f.by_col('BIR79'))
     >>> from pysal.explore.esda.moran import Moran_Local_Rate

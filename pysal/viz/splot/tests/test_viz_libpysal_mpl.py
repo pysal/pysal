@@ -1,4 +1,4 @@
-import pysal.lib.api as lp
+from pysal.lib.weights.contiguity import Queen
 import pysal.lib
 from pysal.lib import examples
 import matplotlib.pyplot as plt
@@ -11,7 +11,7 @@ def test_plot_spatial_weights():
     gdf = gpd.read_file(examples.get_path('43MUE250GC_SIR.shp'))
     gdf.head()
     # calculate weights
-    weights = lp.Queen.from_dataframe(gdf)
+    weights = Queen.from_dataframe(gdf)
     # plot weights
     fig, _ = plot_spatial_weights(weights, gdf)
     plt.close(fig)

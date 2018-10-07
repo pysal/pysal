@@ -6,12 +6,12 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.
 
 from . import regimes as REGI
 from . import user_output as USER
-import multiprocessing as mp
 from .ols import BaseOLS
 from .utils import set_warn, spbroadcast, RegressionProps_basic, RegressionPropsY, spdot
 from .robust import hac_multi
 from . import summary_output as SUMMARY
 import numpy as np
+import multiprocessing as mp
 from platform import system
 import scipy.sparse as SP
 
@@ -296,15 +296,15 @@ class OLS_Regimes(BaseOLS, REGI.Regimes_Frame, RegressionPropsY):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
 
-    Open data on NCOVR US County Homicides (3085 areas) using lps.open().
+    Open data on NCOVR US County Homicides (3085 areas) using pysal.lib.io.open().
     This is the DBF associated with the NAT shapefile.  Note that
-    lps.open() also reads data in CSV format; since the actual class
+    pysal.lib.io.open() also reads data in CSV format; since the actual class
     requires data to be passed in as numpy arrays, the user can read their
     data in using any method.  
 
-    >>> db = lps.open(lps.get_path("NAT.dbf"),'r')
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path("NAT.dbf"),'r')
 
     Extract the HR90 column (homicide rates in 1990) from the DBF file and make it
     the dependent variable for the regression. Note that PySAL requires this to be
@@ -526,15 +526,15 @@ def _test():
 if __name__ == '__main__':
     _test()
     import numpy as np
-    import pysal.lib.api as lps
-    db = lps.open(lps.get_path('columbus.dbf'), 'r')
+    import pysal.lib
+    db = pysal.lib.io.open(pysal.lib.examples.get_path("NAT.dbf"),'r')
     y_var = 'CRIME'
     y = np.array([db.by_col(y_var)]).reshape(49, 1)
     x_var = ['INC', 'HOVAL']
     x = np.array([db.by_col(name) for name in x_var]).T
     r_var = 'NSA'
     regimes = db.by_col(r_var)
-    w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+    w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
     w.transform = 'r'
     olsr = OLS_Regimes(y, x, regimes, w=w, constant_regi='many', nonspat_diag=False, spat_diag=False, name_y=y_var, name_x=['INC', 'HOVAL'],
                        name_ds='columbus', name_regimes=r_var, name_w='columbus.gal', regime_err_sep=True, cols2regi=[True, True], sig2n_k=True, robust='white')

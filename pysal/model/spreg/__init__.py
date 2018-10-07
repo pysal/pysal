@@ -1,3 +1,4 @@
+__version__ = "1.0.4"
 from .ols import *
 from .diagnostics import *
 from .diagnostics_sp import *
@@ -21,3 +22,4 @@ from .ml_error_regimes import *
 from .sur import *
 from .sur_error import *
 from .sur_lag import *
+from .sur_utils import *

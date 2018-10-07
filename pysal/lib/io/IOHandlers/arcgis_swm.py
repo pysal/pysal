@@ -1,16 +1,14 @@
-import os.path
 import numpy as np
 from struct import pack, unpack
-from .. import FileIO as FileIO
+from .. import fileio
 from ...weights import W
 from ...weights.util import remap_ids
-from warnings import warn
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
 __all__ = ["ArcGISSwmIO"]
 
 
-class ArcGISSwmIO(FileIO.FileIO):
+class ArcGISSwmIO(fileio.FileIO):
     """
     Opens, reads, and writes weights file objects in ArcGIS swm format.
 
@@ -52,7 +50,7 @@ class ArcGISSwmIO(FileIO.FileIO):
     def __init__(self, *args, **kwargs):
         self._varName = 'Unknown'
         self._srs = "Unknow"
-        FileIO.FileIO.__init__(self, *args, **kwargs)
+        fileio.FileIO.__init__(self, *args, **kwargs)
         self.file = open(self.dataPath, self.mode + 'b')
 
     def _set_varName(self, val):
@@ -85,7 +83,7 @@ class ArcGISSwmIO(FileIO.FileIO):
     def _read(self):
         """
         Reads ArcGIS swm file.
-        Returns a pysal.weights.weights.W object
+        Returns a pysal.lib.weights.weights.W object
 
         Examples
         --------
@@ -93,7 +91,8 @@ class ArcGISSwmIO(FileIO.FileIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open an ArcGIS swm file and read it into a pysal weights object
 
-        >>> w = pysal.open(pysal.examples.get_path('ohio.swm'),'r').read()
+        >>> import pysal.lib
+        >>> w = pysal.lib.io.open(pysal.lib.examples.get_path('ohio.swm'),'r').read()
 
         Get the number of observations from the header
 
@@ -107,8 +106,8 @@ class ArcGISSwmIO(FileIO.FileIO):
 
         Get neighbor distances for a single observation
 
-        >>> w[1]
-        {2: 1.0, 11: 1.0, 6: 1.0, 7: 1.0}
+        >>> w[1] == dict({2: 1.0, 11: 1.0, 6: 1.0, 7: 1.0})
+        True
 
         """
         if self.pos > 0:
@@ -279,4 +278,4 @@ class ArcGISSwmIO(FileIO.FileIO):
 
     def close(self):
         self.file.close()
-        FileIO.FileIO.close(self)
+        fileio.FileIO.close(self)

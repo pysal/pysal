@@ -5,7 +5,6 @@ Spatial Two Stages Least Squares with Regimes
 __author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.edu, David C. Folch david.folch@asu.edu"
 
 import numpy as np
-import pysal.lib.api as lps
 from . import regimes as REGI
 from . import user_output as USER
 from . import summary_output as SUMMARY
@@ -14,7 +13,6 @@ from .twosls_regimes import TSLS_Regimes, _optimal_weight
 from .twosls import BaseTSLS
 from .utils import set_endog, set_endog_sparse, sp_att, set_warn, sphstack, spdot
 from .robust import hac_multi
-from platform import system
 
 
 class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
@@ -298,15 +296,16 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
 
-    Open data on NCOVR US County Homicides (3085 areas) using lps.open().
+    Open data on NCOVR US County Homicides (3085 areas) using pysal.lib.io.open().
     This is the DBF associated with the NAT shapefile.  Note that
-    lps.open() also reads data in CSV format; since the actual class
+    pysal.lib.io.open() also reads data in CSV format; since the actual class
     requires data to be passed in as numpy arrays, the user can read their
     data in using any method.  
 
-    >>> db = lps.open(lps.get_path("NAT.dbf"),'r')
+    >>> db = pysal.lib.io.open(examples.get_path("NAT.dbf"),'r')
 
     Extract the HR90 column (homicide rates in 1990) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
@@ -337,7 +336,8 @@ class GM_Lag_Regimes(TSLS_Regimes, REGI.Regimes_Frame):
     observations. To do that, we can open an already existing gal file or 
     create a new one. In this case, we will create one from ``NAT.shp``.
 
-    >>> w = lps.rook_from_shapefile(lps.get_path("NAT.shp"))
+    >>> from pysal.lib import weights
+    >>> w = weights.Rook.from_shapefile(examples.get_path("NAT.shp"))
 
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. Among other
@@ -680,8 +680,9 @@ def _test():
 if __name__ == '__main__':
     _test()
     import numpy as np
-    import pysal.lib.api as lps
-    db = lps.open(lps.get_path("columbus.dbf"), 'r')
+    import pysal.lib
+    from pysal.lib import examples
+    db = pysal.lib.io.open(examples.get_path("columbus.dbf"), 'r')
     y_var = 'CRIME'
     y = np.array([db.by_col(y_var)]).reshape(49, 1)
     x_var = ['INC']
@@ -692,7 +693,7 @@ if __name__ == '__main__':
     q = np.array([db.by_col(name) for name in q_var]).T
     r_var = 'NSA'
     regimes = db.by_col(r_var)
-    w = lps.queen_from_shapefile(lps.get_path("columbus.shp"))
+    w = pysal.lib.weights.Queen.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
     w.transform = 'r'
     model = GM_Lag_Regimes(y, x, regimes, yend=yd, q=q, w=w, constant_regi='many', spat_diag=True, sig2n_k=False, lag_q=True, name_y=y_var,
                            name_x=x_var, name_yend=yd_var, name_q=q_var, name_regimes=r_var, name_ds='columbus', name_w='columbus.gal', regime_err_sep=True, robust='white')

@@ -10,13 +10,13 @@ import numpy as np
 import numpy.linalg as la
 from scipy import sparse as sp
 from scipy.sparse.linalg import splu as SuperLU
-import pysal.lib.api as lps
 from .utils import RegressionPropsY, RegressionPropsVM, inverse_prod
 from .sputils import spdot, spfill_diagonal, spinv, spbroadcast
 from . import diagnostics as DIAG
 from . import user_output as USER
 from . import summary_output as SUMMARY
 from .w_utils import symmetrize
+from pysal.lib import weights
 try:
     from scipy.optimize import minimize_scalar
     minimize_scalar_available = True
@@ -96,8 +96,8 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> db =  ps.open(ps.examples.get_path("baltim.dbf"),'r')
+    >>> import pysal.lib
+    >>> db =  pysal.lib.io.open(pysal.lib.examples.get_path("baltim.dbf"),'r')
     >>> ds_name = "baltim.dbf"
     >>> y_name = "PRICE"
     >>> y = np.array(db.by_col(y_name)).T
@@ -181,14 +181,14 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
         self.epsilon = epsilon
         #W = w.full()[0]
         #Wsp = w.sparse
-        ylag = ps.lag_spatial(w, y)
+        ylag = weights.lag_spatial(w, y)
         # b0, b1, e0 and e1
         xtx = spdot(self.x.T, self.x)
         xtxi = la.inv(xtx)
         xty = spdot(self.x.T, self.y)
         xtyl = spdot(self.x.T, ylag)
-        b0 = np.dot(xtxi, xty)
-        b1 = np.dot(xtxi, xtyl)
+        b0 = spdot(xtxi, xty)
+        b1 = spdot(xtxi, xtyl)
         e0 = self.y - spdot(x, b0)
         e1 = ylag - spdot(x, b1)
         methodML = method.upper()
@@ -259,15 +259,15 @@ class BaseML_Lag(RegressionPropsY, RegressionPropsVM):
         wai = spdot(W, ai)
         tr1 = wai.diagonal().sum() #same for sparse and dense
 
-        wai2 = np.dot(wai, wai)
+        wai2 = spdot(wai, wai)
         tr2 = wai2.diagonal().sum()
 
-        waiTwai = np.dot(wai.T, wai)
+        waiTwai = spdot(wai.T, wai)
         tr3 = waiTwai.diagonal().sum()
         ### to here
 
-        wpredy = ps.lag_spatial(w, self.predy_e)
-        wpyTwpy = np.dot(wpredy.T, wpredy)
+        wpredy = weights.lag_spatial(w, self.predy_e)
+        wpyTwpy = spdot(wpredy.T, wpredy)
         xTwpy = spdot(x.T, wpredy)
 
         # order of variables is beta, rho, sigma2
@@ -391,8 +391,8 @@ class ML_Lag(BaseML_Lag):
     ________
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> db =  ps.open(ps.examples.get_path("baltim.dbf"),'r')
+    >>> import pysal.lib
+    >>> db =  pysal.lib.io.open(pysal.lib.examples.get_path("baltim.dbf"),'r')
     >>> ds_name = "baltim.dbf"
     >>> y_name = "PRICE"
     >>> y = np.array(db.by_col(y_name)).T
@@ -565,7 +565,7 @@ class ML_Lag(BaseML_Lag):
 def lag_c_loglik(rho, n, e0, e1, W):
     # concentrated log-lik for lag model, no constants, brute force
     er = e0 - rho * e1
-    sig2 = np.dot(er.T, er) / n
+    sig2 = spdot(er.T, er) / n
     nlsig2 = (n / 2.0) * np.log(sig2)
     a = -rho * W
     spfill_diagonal(a, 1.0)
@@ -580,7 +580,7 @@ def lag_c_loglik_sp(rho, n, e0, e1, I, Wsp):
         if rho.shape == (1,1):
             rho = rho[0][0] #why does the interior value change?
     er = e0 - rho * e1
-    sig2 = np.dot(er.T, er) / n
+    sig2 = spdot(er.T, er) / n
     nlsig2 = (n / 2.0) * np.log(sig2)
     a = I - rho * Wsp
     LU = SuperLU(a.tocsc())
@@ -591,7 +591,7 @@ def lag_c_loglik_sp(rho, n, e0, e1, I, Wsp):
 def lag_c_loglik_ord(rho, n, e0, e1, evals):
     # concentrated log-lik for lag model, no constants, Ord eigenvalue method
     er = e0 - rho * e1
-    sig2 = np.dot(er.T, er) / n
+    sig2 = spdot(er.T, er) / n
     nlsig2 = (n / 2.0) * np.log(sig2)
     revals = rho * evals
     jacob = np.log(1 - revals).sum()

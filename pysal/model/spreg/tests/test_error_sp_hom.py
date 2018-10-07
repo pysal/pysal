@@ -3,7 +3,7 @@ Unittests for pysal.model.spreg.error_sp_hom module
 
 '''
 import unittest
-import pysal.lib.api as lps
+import pysal.lib
 from pysal.model.spreg import error_sp_hom as HOM
 import numpy as np
 from pysal.lib.common import RTOL
@@ -11,7 +11,7 @@ import pysal.model.spreg
 
 class BaseGM_Error_Hom_Tester(unittest.TestCase):
     def setUp(self):
-        db=lps.open(lps.get_path("columbus.dbf"),"r")
+        db=pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),"r")
         y = np.array(db.by_col("HOVAL"))
         self.y = np.reshape(y, (49,1))
         X = []
@@ -19,7 +19,7 @@ class BaseGM_Error_Hom_Tester(unittest.TestCase):
         X.append(db.by_col("CRIME"))
         self.X = np.array(X).T
         self.X = np.hstack((np.ones(self.y.shape),self.X))
-        self.w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+        self.w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
     def test_model(self):
         reg = HOM.BaseGM_Error_Hom(self.y, self.X, self.w.sparse, A1='hom_sc')
@@ -44,14 +44,14 @@ class BaseGM_Error_Hom_Tester(unittest.TestCase):
 
 class GM_Error_Hom_Tester(unittest.TestCase):
     def setUp(self):
-        db=lps.open(lps.get_path("columbus.dbf"),"r")
+        db=pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),"r")
         y = np.array(db.by_col("HOVAL"))
         self.y = np.reshape(y, (49,1))
         X = []
         X.append(db.by_col("INC"))
         X.append(db.by_col("CRIME"))
         self.X = np.array(X).T
-        self.w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+        self.w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
     def test_model(self):
         reg = HOM.GM_Error_Hom(self.y, self.X, self.w, A1='hom_sc')
@@ -88,7 +88,7 @@ class GM_Error_Hom_Tester(unittest.TestCase):
 
 class BaseGM_Endog_Error_Hom_Tester(unittest.TestCase):
     def setUp(self):
-        db=lps.open(lps.get_path("columbus.dbf"),"r")
+        db=pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),"r")
         y = np.array(db.by_col("HOVAL"))
         self.y = np.reshape(y, (49,1))
         X = []
@@ -101,7 +101,7 @@ class BaseGM_Endog_Error_Hom_Tester(unittest.TestCase):
         q = []
         q.append(db.by_col("DISCBD"))
         self.q = np.array(q).T
-        self.w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+        self.w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
     def test_model(self):
         reg = HOM.BaseGM_Endog_Error_Hom(self.y, self.X, self.yd, self.q, self.w.sparse, A1='hom_sc')
@@ -144,7 +144,7 @@ class BaseGM_Endog_Error_Hom_Tester(unittest.TestCase):
 
 class GM_Endog_Error_Hom_Tester(unittest.TestCase):
     def setUp(self):
-        db=lps.open(lps.get_path("columbus.dbf"),"r")
+        db=pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),"r")
         y = np.array(db.by_col("HOVAL"))
         self.y = np.reshape(y, (49,1))
         X = []
@@ -156,7 +156,7 @@ class GM_Endog_Error_Hom_Tester(unittest.TestCase):
         q = []
         q.append(db.by_col("DISCBD"))
         self.q = np.array(q).T
-        self.w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+        self.w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
     def test_model(self):
         reg = HOM.GM_Endog_Error_Hom(self.y, self.X, self.yd, self.q, self.w, A1='hom_sc')
@@ -203,13 +203,13 @@ class GM_Endog_Error_Hom_Tester(unittest.TestCase):
 
 class BaseGM_Combo_Hom_Tester(unittest.TestCase):
     def setUp(self):
-        db=lps.open(lps.get_path("columbus.dbf"),"r")
+        db=pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),"r")
         y = np.array(db.by_col("HOVAL"))
         self.y = np.reshape(y, (49,1))
         X = []
         X.append(db.by_col("INC"))
         self.X = np.array(X).T
-        self.w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+        self.w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
     def test_model(self):
         yd2, q2 = pysal.model.spreg.utils.set_endog(self.y, self.X, self.w, None, None, 1, True)
@@ -252,13 +252,13 @@ class BaseGM_Combo_Hom_Tester(unittest.TestCase):
 
 class GM_Combo_Hom_Tester(unittest.TestCase):
     def setUp(self):
-        db=lps.open(lps.get_path("columbus.dbf"),"r")
+        db=pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),"r")
         y = np.array(db.by_col("HOVAL"))
         self.y = np.reshape(y, (49,1))
         X = []
         X.append(db.by_col("INC"))
         self.X = np.array(X).T
-        self.w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+        self.w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
     def test_model(self):
         reg = HOM.GM_Combo_Hom(self.y, self.X, w=self.w, A1='hom_sc')

@@ -44,8 +44,7 @@ class PointPattern(object):
 
     Examples
     --------
-
-    >>> from pointpats.pointpattern import PointPattern
+    >>> from pointpats import PointPattern
     >>> points = [[66.22, 32.54], [22.52, 22.39], [31.01, 81.21],
     ...           [9.47, 31.02], [30.78, 60.10], [75.21, 58.93],
     ...           [79.26,  7.68], [8.23, 39.93], [98.73, 77.17],
@@ -109,6 +108,7 @@ class PointPattern(object):
 
         Examples
         --------
+        >>> from pointpats import PointPattern
         >>> points = [[1, 3], [4, 5], [0,0]]
         >>> pp = PointPattern(points)
         >>> len(pp)
@@ -123,6 +123,7 @@ class PointPattern(object):
 
         Examples
         --------
+        >>> from pointpats import PointPattern
         >>> points = [[1, 3], [4, 5], [0,0]]
         >>> pp = PointPattern(points)
         >>> [1, 3] in pp
@@ -441,6 +442,7 @@ class PointPattern(object):
 
         Examples
         --------
+        >>> from pointpats import PointPattern
         >>> points = [[1.2, 2.1], [1.2, 2.1], [0, 1], [1, 2]]
         >>> pp = PointPattern(points)
         >>> pp.unique().df
@@ -471,6 +473,7 @@ class PointPattern(object):
 
         Examples
         --------
+        >>> from pointpats import PointPattern
         >>> points1 = [[1, 3], [4, 5], [0, 0]]
         >>> points2 = [[5, 6], [1, 4], [0, 0]]
         >>> pp1 = PointPattern(points1)

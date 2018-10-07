@@ -1,5 +1,5 @@
 import pandas as pd
-from ..FileIO import FileIO as ps_open
+from ..fileio import FileIO as ps_open
 
 def shp2series(filepath):
     """

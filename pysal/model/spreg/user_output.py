@@ -9,10 +9,7 @@ import copy as COPY
 from . import diagnostics
 from . import sputils as spu
 from pysal.lib import weights 
-from pysal.lib.weights.Distance import Kernel
-import scipy
 from scipy.sparse.csr import csr_matrix
-weights.Kernel = Kernel
 __all__ = []
 
 
@@ -330,8 +327,8 @@ def check_arrays(*arrays):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
+    >>> import pysal.lib
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
     >>> # Extract CRIME column from the dbf file
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
@@ -391,8 +388,8 @@ def check_y(y, n):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
+    >>> import pysal.lib
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
     >>> # Extract CRIME column from the dbf file
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
@@ -437,8 +434,8 @@ def check_weights(w, y, w_required=False):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
+    >>> import pysal.lib
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
     >>> # Extract CRIME column from the dbf file
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
@@ -446,7 +443,7 @@ def check_weights(w, y, w_required=False):
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
-    >>> w = lps.open(lps.get_path("columbus.gal"), 'r').read()
+    >>> w = pysal.lib.io.open(pysal.lib.examples.get_path("columbus.gal"), 'r').read()
     >>> check_weights(w, y)
     >>> # should not raise an exception
 
@@ -491,8 +488,8 @@ def check_robust(robust, wk):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
+    >>> import pysal.lib
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
     >>> # Extract CRIME column from the dbf file
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
@@ -558,8 +555,8 @@ def check_spat_diag(spat_diag, w):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
+    >>> import pysal.lib
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
     >>> # Extract CRIME column from the dbf file
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
@@ -567,7 +564,7 @@ def check_spat_diag(spat_diag, w):
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))
     >>> X = np.array(X).T
-    >>> w = lps.open(lps.get_path("columbus.gal"), 'r').read()
+    >>> w = pysal.lib.io.open(pysal.lib.examples.get_path("columbus.gal"), 'r').read()
     >>> check_spat_diag(True, w)
     >>> # should not raise an exception
 
@@ -619,8 +616,8 @@ def check_constant(x):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
+    >>> import pysal.lib
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("HOVAL"))

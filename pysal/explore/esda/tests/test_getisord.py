@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 
 from .. import getisord
-from pysal.lib.weights.Distance import DistanceBand
+from pysal.lib.weights.distance import DistanceBand
 from pysal.lib.common import pandas
 
 POINTS = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]

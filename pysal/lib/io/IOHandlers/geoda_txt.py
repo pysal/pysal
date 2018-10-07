@@ -1,13 +1,13 @@
-from .. import Tables
+from .. import tables
 
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ['GeoDaTxtReader']
 
 
-class GeoDaTxtReader(Tables.DataTable):
+class GeoDaTxtReader(tables.DataTable):
     """GeoDa Text File Export Format
     """
-    __doc__ = Tables.DataTable.__doc__
+    __doc__ = tables.DataTable.__doc__
     FORMATS = ['geoda_txt']
     MODES = ['r']
 
@@ -15,8 +15,8 @@ class GeoDaTxtReader(Tables.DataTable):
         """
         Examples
         --------
-        >>> import pysal
-        >>> f = pysal.open(pysal.examples.get_path('stl_hom.txt'),'r')
+        >>> import pysal.lib
+        >>> f = pysal.lib.io.open(pysal.lib.examples.get_path('stl_hom.txt'),'r')
         >>> f.header
         ['FIPSNO', 'HR8488', 'HR8893', 'HC8488']
         >>> len(f)
@@ -26,10 +26,10 @@ class GeoDaTxtReader(Tables.DataTable):
         >>> f.dat[-1]
         ['29223', '0', '8.451537', '0']
         >>> f._spec
-        [<type 'int'>, <type 'float'>, <type 'float'>, <type 'int'>]
+        [<class 'int'>, <class 'float'>, <class 'float'>, <class 'int'>]
 
         """
-        Tables.DataTable.__init__(self, *args, **kwargs)
+        tables.DataTable.__init__(self, *args, **kwargs)
         self.__idx = {}
         self.__len = None
         self.pos = 0
@@ -64,7 +64,7 @@ class GeoDaTxtReader(Tables.DataTable):
 
     def close(self):
         self.fileObj.close()
-        Tables.DataTable.close(self)
+        tables.DataTable.close(self)
 
     @staticmethod
     def _determineSpec(data):

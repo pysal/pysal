@@ -8,12 +8,15 @@ __author__= "Luc Anselin lanselin@gmail.com,    \
 
 import numpy as np
 import numpy.linalg as la
-import scipy.stats as stats
+from scipy import stats
 from . import summary_output as SUMMARY
 from . import user_output as USER
+from . import regimes as REGI
 from .sur_utils import sur_dict2mat,sur_mat2dict,sur_corr,\
-                      sur_crossprod,sur_est,sur_resids,check_k
-from .diagnostics_sur import sur_setp,sur_lrtest,sur_lmtest,surLMe,sur_chow
+                      sur_crossprod,sur_est,sur_resids,sur_predict,check_k
+from .diagnostics_sur import sur_setp,sur_lrtest,sur_lmtest,surLMe,\
+                      surLMlag,sur_chow
+from .sputils import sphstack, spdot
 
 
 __all__ = ['SUR','ThreeSLS']
@@ -53,6 +56,7 @@ class BaseSUR():
         bSUR        : dictionary with SUR regression coefficients for each equation
         varb        : variance-covariance matrix
         bigE        : N x n_eq array with SUR residuals for each equation
+        bigYP       : N x n_eq array with SUR predicted values for each equation
         sig         : Sigma matrix of inter-equation error covariances
         ldetS1      : log det(Sigma) for SUR model
         resids      : n by n_eq array of residuals
@@ -63,24 +67,19 @@ class BaseSUR():
         llik        : log-likelihood (including the constant pi)
 
 
-        Methods
-        -------
-
-        sur_ols         : OLS estimation by equation
-
     """
     def __init__(self,bigy,bigX,iter=False,maxiter=5,epsilon=0.00001,verbose=False):
         # setting up the cross-products
         self.bigy = bigy
         self.bigX = bigX
-        self.n_eq = len(list(bigy.keys()))
+        self.n_eq = len(bigy.keys())
         self.n = bigy[0].shape[0]
         self.bigK = np.zeros((self.n_eq,1),dtype=np.int_)
         for r in range(self.n_eq):
             self.bigK[r] = self.bigX[r].shape[1]
         self.bigXX,self.bigXy = sur_crossprod(self.bigX,self.bigy)
         # OLS regression by equation, sets up initial residuals
-        self.sur_ols() # creates self.bOLS and self.olsE
+        _sur_ols(self) # creates self.bOLS and self.olsE
         # SUR estimation using OLS residuals - two step estimation
         self.bSUR,self.varb,self.sig = sur_est(self.bigXX,self.bigXy,self.olsE,self.bigK)
         resids = sur_resids(self.bigy,self.bigX,self.bSUR)  # matrix of residuals
@@ -103,42 +102,41 @@ class BaseSUR():
                 resids = sur_resids(self.bigy,self.bigX,self.bSUR)
                 det1 = la.slogdet(self.sig)[1]
                 if verbose:
-                    print((n_iter,det0,det1))
+                    print(n_iter,det0,det1)
             self.bigE = sur_resids(self.bigy,self.bigX,self.bSUR)
             self.ldetS1 = det1
             self.niter = n_iter
         else:
             self.niter = 1
             self.bigE = resids
+        self.bigYP = sur_predict(self.bigy,self.bigX,self.bSUR)  # LA added 10/30/16    
         self.corr = sur_corr(self.sig)
         lik = self.n_eq * (1.0 + np.log(2.0*np.pi)) + self.ldetS1
         self.llik = - (self.n / 2.0) * lik
 
 
-    def sur_ols(self):
-        '''OLS estimation of SUR equations
+def _sur_ols(reg):
+    '''OLS estimation of SUR equations
 
-           Parameters
-           ----------
+       Parameters
+       ----------
 
-           self  : BaseSUR object
+       reg  : BaseSUR object
 
-           Creates
-           -------
+       Creates
+       -------
 
-           self.bOLS    : dictionary with regression coefficients for each equation
-           self.olsE    : N x n_eq array with OLS residuals for each equation
+       reg.bOLS    : dictionary with regression coefficients for each equation
+       reg.olsE    : N x n_eq array with OLS residuals for each equation
 
-        '''
-        self.bOLS = {}
-        for r in range(self.n_eq):
-            self.bOLS[r] = np.dot(la.inv(self.bigXX[(r,r)]),self.bigXy[(r,r)])
-        self.olsE = sur_resids(self.bigy,self.bigX,self.bOLS)
+    '''
+    reg.bOLS = {}
+    for r in range(reg.n_eq):
+        reg.bOLS[r] = np.dot(la.inv(reg.bigXX[(r,r)]),reg.bigXy[(r,r)])
+    reg.olsE = sur_resids(reg.bigy,reg.bigX,reg.bOLS)
+    return reg
 
-
-
-
-class SUR(BaseSUR):
+class SUR(BaseSUR, REGI.Regimes_Frame):
     """ User class for SUR estimation, both two step as well as iterated
 
         Parameters
@@ -148,6 +146,9 @@ class SUR(BaseSUR):
         bigX       : dictionary with matrix of explanatory variables by equation
                      (note, already includes constant term)
         w          : spatial weights object, default = None
+        regimes    : list; default = None
+                     List of n values with the mapping of each
+                     observation to a regime. Assumed to be aligned with 'x'.
         nonspat_diag : boolean; flag for non-spatial diagnostics, default = True
         spat_diag  : boolean; flag for spatial diagnostics, default = False
         iter       : boolean; whether or not to use iterated estimation
@@ -166,7 +167,7 @@ class SUR(BaseSUR):
                      is done when sur_stackxy is used
         name_ds    : string; name for the data set
         name_w     : string; name for the weights file
-
+        name_regimes : string; name of regime variable for use in the output
 
         Attributes
         ----------
@@ -199,6 +200,8 @@ class SUR(BaseSUR):
                       (tuple with test,df,p-value)
         lmEtest     : Lagrange Multiplier test on error spatial autocorrelation in SUR
                       (tuple with test, df, p-value)
+        lmlagtest   : Lagrange Multiplier test on spatial lag autocorrelation in SUR
+                      (tuple with test, df, p-value)
         surchow     : list with tuples for Chow test on regression coefficients
                       each tuple contains test value, degrees of freedom, p-value
         name_bigy   : dictionary with name of dependent variable for each equation
@@ -206,20 +209,21 @@ class SUR(BaseSUR):
                       equation
         name_ds     : string; name for the data set
         name_w      : string; name for the weights file
+        name_regimes : string; name of regime variable for use in the output
 
 
         Examples
         --------
 
-        First import pysal.lib.api as lps to load the spatial analysis tools.
+        First import pysal.lib to load the spatial analysis tools.
 
-        >>> import pysal.lib.api as lps
+        >>> import pysal.lib
 
-        Open data on NCOVR US County Homicides (3085 areas) using lps.open().
-        This is the DBF associated with the NAT shapefile. Note that lps.open()
+        Open data on NCOVR US County Homicides (3085 areas) using pysal.lib.io.open().
+        This is the DBF associated with the NAT shapefile. Note that pysal.lib.io.open()
         also reads data in CSV format.
 
-        >>> db = lps.open(lps.get_path("NAT.dbf"),'r')
+        >>> db = pysal.lib.io.open(pysal.lib.examples.get_path("NAT.dbf"),'r')
 
         The specification of the model to be estimated can be provided as lists.
         Each equation should be listed separately. In this example, equation 1
@@ -233,7 +237,7 @@ class SUR(BaseSUR):
         Although not required for this method, we can load a weights matrix file
         to allow for spatial diagnostics.
 
-        >>> w = lps.queen_from_shapefile(lps.get_path("NAT.shp"))
+        >>> w = pysal.lib.weights.Queen.from_shapefile(pysal.lib.examples.get_path("NAT.shp"))
         >>> w.transform='r'
 
         The SUR method requires data to be provided as dictionaries. PySAL
@@ -295,7 +299,7 @@ class SUR(BaseSUR):
                                  LM test on Sigma         1      680.168           0.0000
                                  LR test on Sigma         1      768.385           0.0000
         <BLANKLINE>
-        OTHER DIAGNOSTICS - CHOW TEST
+        OTHER DIAGNOSTICS - CHOW TEST BETWEEN EQUATIONS
                                         VARIABLES         DF       VALUE           PROB
                            Constant_1, Constant_2         1       26.729           0.0000
                                        PS80, PS90         1        8.241           0.0041
@@ -303,7 +307,8 @@ class SUR(BaseSUR):
         <BLANKLINE>
         DIAGNOSTICS FOR SPATIAL DEPENDENCE
         TEST                              DF       VALUE           PROB
-        Lagrange Multiplier (error)       2        1333.625        0.0000
+        Lagrange Multiplier (error)       2        1333.586        0.0000
+        Lagrange Multiplier (lag)         2        1275.821        0.0000
         <BLANKLINE>
         ERROR CORRELATION MATRIX
           EQUATION 1  EQUATION 2
@@ -312,17 +317,14 @@ class SUR(BaseSUR):
         ================================ END OF REPORT =====================================
     """
 
-    def __init__(self,bigy,bigX,w=None,nonspat_diag=True,spat_diag=False,vm=False,\
-        iter=False,maxiter=5,epsilon=0.00001,verbose=False,\
-        name_bigy=None,name_bigX=None,name_ds=None,name_w=None):
-
-        #need checks on match between bigy, bigX dimensions
-        # init moved here before name check
-        BaseSUR.__init__(self,bigy=bigy,bigX=bigX,iter=iter,\
-            maxiter=maxiter,epsilon=epsilon,verbose=verbose)
+    def __init__(self,bigy,bigX,w=None,regimes=None,nonspat_diag=True,spat_diag=False,\
+        vm=False,iter=False,maxiter=5,epsilon=0.00001,verbose=False,\
+        name_bigy=None,name_bigX=None,name_ds=None,name_w=None, name_regimes=None):
 
         self.name_ds = USER.set_name_ds(name_ds)
         self.name_w = USER.set_name_w(name_w, w)
+        self.n_eq = len(bigy.keys())        
+
         #initialize names - should be generated by sur_stack
         if name_bigy:
             self.name_bigy = name_bigy
@@ -331,16 +333,37 @@ class SUR(BaseSUR):
             for r in range(self.n_eq):
                 yn = 'dep_var_' + str(r)
                 self.name_bigy[r] = yn
-        if name_bigX:
-            self.name_bigX = name_bigX
-        else: # need to construct x names
-            self.name_bigX = {}
+        if name_bigX is None:
+            name_bigX = {}
             for r in range(self.n_eq):
                 k = self.bigX[r].shape[1] - 1
                 name_x = ['var_' + str(i + 1) + "_" + str(r) for i in range(k)]
                 ct = 'Constant_' + str(r)  # NOTE: constant always included in X
                 name_x.insert(0, ct)
-                self.name_bigX[r] = name_x
+                name_bigX[r] = name_x
+
+        if regimes is not None:
+            self.constant_regi = 'many'
+            self.cols2regi = 'all'
+            self.regime_err_sep = False
+            self.name_regimes = USER.set_name_ds(name_regimes)
+            self.regimes_set = REGI._get_regimes_set(regimes)
+            self.regimes = regimes
+            self.name_x_r = name_bigX     
+            cols2regi_dic = {}
+            self.name_bigX = {}
+            for r in range(self.n_eq):
+                cols2regi_dic[r] = REGI.check_cols2regi(self.constant_regi, self.cols2regi, bigX[r], add_cons=False)
+                USER.check_regimes(self.regimes_set, bigy[0].shape[0], bigX[r].shape[1])
+                bigX[r], self.name_bigX[r] = REGI.Regimes_Frame.__init__(self, bigX[r],\
+                 regimes, constant_regi=None, cols2regi=cols2regi_dic[r], names=name_bigX[r])
+        else:
+            self.name_bigX = name_bigX
+            
+        #need checks on match between bigy, bigX dimensions
+        # init moved here before name check
+        BaseSUR.__init__(self,bigy=bigy,bigX=bigX,iter=iter,\
+            maxiter=maxiter,epsilon=epsilon,verbose=verbose)
 
         #inference
         self.sur_inf = sur_setp(self.bSUR,self.varb)
@@ -355,16 +378,19 @@ class SUR(BaseSUR):
             self.lrtest = None
             self.lmtest = None
 
-        #LM test on spatial error autocorrelation
         if spat_diag:
             if not w:
                  raise Exception("Error: spatial weights needed")
             WS = w.sparse
+            #LM test on spatial error autocorrelation
             self.lmEtest = surLMe(self.n_eq,WS,self.bigE,self.sig)
+            #LM test on spatial lag autocorrelation
+            self.lmlagtest = surLMlag(self.n_eq,WS,self.bigy,
+                       self.bigX,self.bigE,self.bigYP,
+                       self.sig,self.varb)
         else:
             self.lmEtest = None
-
-        #LM test on spatial lag autocorrelation
+            self.lmlagtest = None
 
         # test on constancy of coefficients across equations
         if check_k(self.bigK):   # only for equal number of variables
@@ -374,7 +400,17 @@ class SUR(BaseSUR):
 
         #Listing of the results
         self.title = "SEEMINGLY UNRELATED REGRESSIONS (SUR)"
-        SUMMARY.SUR(reg=self, nonspat_diag=nonspat_diag, spat_diag=spat_diag, surlm=True)
+        if regimes is not None:
+            self.title += " - REGIMES"
+            self.chow_regimes = {}
+            varb_counter = 0
+            for r in range(self.n_eq):
+                counter_end = varb_counter+self.bSUR[r].shape[0]
+                self.chow_regimes[r] = REGI._chow_run(len(cols2regi_dic[r]),0,0,len(self.regimes_set),self.bSUR[r],self.varb[varb_counter:counter_end,varb_counter:counter_end])
+                varb_counter = counter_end     
+            regimes=True   
+            
+        SUMMARY.SUR(reg=self, nonspat_diag=nonspat_diag, spat_diag=spat_diag, surlm=True, regimes=regimes)
 
 class BaseThreeSLS():
     """ Base class for 3SLS estimation, two step
@@ -419,12 +455,12 @@ class BaseThreeSLS():
     def __init__(self,bigy,bigX,bigyend,bigq):
         # setting up the cross-products
         self.bigy = bigy
-        self.n_eq = len(list(bigy.keys()))
+        self.n_eq = len(bigy.keys())
         self.n = bigy[0].shape[0]
         # dictionary with exog and endog, Z
         self.bigZ = {}
         for r in range(self.n_eq):
-            self.bigZ[r] = np.hstack((bigX[r],bigyend[r]))
+            self.bigZ[r] = sphstack(bigX[r],bigyend[r])
         # number of explanatory variables by equation
         self.bigK = np.zeros((self.n_eq,1),dtype=np.int_)
         for r in range(self.n_eq):
@@ -432,21 +468,13 @@ class BaseThreeSLS():
         # dictionary with instruments, H
         bigH = {}
         for r in range(self.n_eq):
-            bigH[r] = np.hstack((bigX[r],bigq[r]))
+            bigH[r] = sphstack(bigX[r],bigq[r])
         # dictionary with instrumental variables, X and yend_predicted, Z-hat
-        bigZhat = {}
-        for r in range(self.n_eq):
-            try:
-                HHi = la.inv(np.dot(bigH[r].T,bigH[r]))
-            except:
-                raise Exception("ERROR: singular cross product matrix, check instruments")
-            Hye = np.dot(bigH[r].T,bigyend[r])
-            yp = np.dot(bigH[r],np.dot(HHi,Hye))
-            bigZhat[r] = np.hstack((bigX[r],yp))
+        bigZhat = _get_bigZhat(self, bigX, bigyend, bigH)
         self.bigZHZH,self.bigZHy = sur_crossprod(bigZhat,self.bigy)
 
         # 2SLS regression by equation, sets up initial residuals
-        self.sur_2sls() # creates self.b2SLS and self.tslsE
+        _sur_2sls(self) # creates self.b2SLS and self.tslsE
 
         self.b3SLS,self.varb,self.sig = sur_est(self.bigZHZH,self.bigZHy,self.tslsE,self.bigK)
         self.bigE = sur_resids(self.bigy,self.bigZ,self.b3SLS)  # matrix of residuals
@@ -455,28 +483,7 @@ class BaseThreeSLS():
         self.corr = sur_corr(self.sig)
 
 
-    def sur_2sls(self):
-        '''2SLS estimation of SUR equations
-
-           Parameters
-           ----------
-
-           self  : BaseSUR object
-
-           Creates
-           -------
-
-           self.b2SLS    : dictionary with regression coefficients for each equation
-           self.tslsE    : N x n_eq array with OLS residuals for each equation
-
-        '''
-        self.b2SLS = {}
-        for r in range(self.n_eq):
-            self.b2SLS[r] = np.dot(la.inv(self.bigZHZH[(r,r)]),self.bigZHy[(r,r)])
-        self.tslsE = sur_resids(self.bigy,self.bigZ,self.b2SLS)
-
-
-class ThreeSLS(BaseThreeSLS):
+class ThreeSLS(BaseThreeSLS, REGI.Regimes_Frame):
     """ User class for 3SLS estimation
 
         Parameters
@@ -487,6 +494,9 @@ class ThreeSLS(BaseThreeSLS):
                      (note, already includes constant term)
         bigyend    : dictionary with matrix of endogenous variables by equation
         bigq       : dictionary with matrix of instruments by equation
+        regimes    : list
+                     List of n values with the mapping of each
+                     observation to a regime. Assumed to be aligned with 'x'.
         nonspat_diag : boolean; flag for non-spatial diagnostics, default = True
         name_bigy  : dictionary with name of dependent variable for each equation
                      default = None, but should be specified
@@ -500,10 +510,11 @@ class ThreeSLS(BaseThreeSLS):
                        default = None, but should be specified
                        is done when sur_stackZ is used
         name_bigq  : dictionary with names of instrumental variables for each
-                     equations
+                     equation
                      default = None, but should be specified
                      is done when sur_stackZ is used
         name_ds    : string; name for the data set
+        name_regimes : string; name of regime variable for use in the output
 
 
         Attributes
@@ -537,20 +548,21 @@ class ThreeSLS(BaseThreeSLS):
                        equation
         name_bigq  : dictionary with names of instrumental variables for each
                      equations
+        name_regimes : string; name of regime variable for use in the output
 
 
         Examples
         --------
 
-        First import pysal.lib.api as lps to load the spatial analysis tools.
+        First import pysal.lib to load the spatial analysis tools.
 
-        >>> import pysal.lib.api as lps
+        >>> import pysal.lib
 
-        Open data on NCOVR US County Homicides (3085 areas) using lps.open().
-        This is the DBF associated with the NAT shapefile. Note that lps.open()
+        Open data on NCOVR US County Homicides (3085 areas) using pysal.lib.io.open().
+        This is the DBF associated with the NAT shapefile. Note that pysal.lib.io.open()
         also reads data in CSV format.
 
-        >>> db = lps.open(lps.get_path("NAT.dbf"),'r')
+        >>> db = pysal.lib.io.open(pysal.lib.examples.get_path("NAT.dbf"),'r')
 
         The specification of the model to be estimated can be provided as lists.
         Each equation should be listed separately. In this example, equation 1
@@ -602,15 +614,13 @@ class ThreeSLS(BaseThreeSLS):
 
     """
 
-    def __init__(self,bigy,bigX,bigyend,bigq,nonspat_diag=True,\
+    def __init__(self,bigy,bigX,bigyend,bigq,regimes=None,nonspat_diag=True,\
         name_bigy=None,name_bigX=None,name_bigyend=None,name_bigq=None,\
-        name_ds=None):
-
-        #need checks on match between bigy, bigX dimensions
-        BaseThreeSLS.__init__(self,bigy=bigy,bigX=bigX,bigyend=bigyend,\
-            bigq=bigq)
+        name_ds=None,name_regimes=None):
 
         self.name_ds = USER.set_name_ds(name_ds)
+        self.n_eq = len(bigy.keys())        
+
         #initialize names - should be generated by sur_stack
         if name_bigy:
             self.name_bigy = name_bigy
@@ -619,32 +629,55 @@ class ThreeSLS(BaseThreeSLS):
             for r in range(self.n_eq):
                 yn = 'dep_var_' + str(r+1)
                 self.name_bigy[r] = yn
-        if name_bigX:
-            self.name_bigX = name_bigX
-        else: # need to construct x names
-            self.name_bigX = {}
+
+        if name_bigX is None:
+            name_bigX = {}
             for r in range(self.n_eq):
                 k = bigX[r].shape[1] - 1
                 name_x = ['var_' + str(i + 1) + "_" + str(r+1) for i in range(k)]
                 ct = 'Constant_' + str(r+1)  # NOTE: constant always included in X
                 name_x.insert(0, ct)
-                self.name_bigX[r] = name_x
-        if name_bigyend:
-            self.name_bigyend = name_bigyend
-        else: # need to construct names
-            self.name_bigyend = {}
+                name_bigX[r] = name_x
+
+        if name_bigyend is None:
+            name_bigyend = {}
             for r in range(self.n_eq):
                 ky = bigyend[r].shape[1]
                 name_ye = ['end_' + str(i + 1) + "_" + str(r+1) for i in range(ky)]
-                self.name_bigyend[r] = name_ye
-        if name_bigq:
-            self.name_bigq = name_bigq
-        else: # need to construct names
-            self.name_bigq = {}
+                name_bigyend[r] = name_ye
+
+        if name_bigq is None:
+            name_bigq = {}
             for r in range(self.n_eq):
                 ki = bigq[r].shape[1]
                 name_i = ['inst_' + str(i + 1) + "_" + str(r+1) for i in range(ki)]
-                self.name_bigq[r] = name_i
+                name_bigq[r] = name_i
+
+        if regimes is not None:
+            self.constant_regi = 'many'
+            self.cols2regi = 'all'
+            self.regime_err_sep = False
+            self.name_regimes = USER.set_name_ds(name_regimes)
+            self.regimes_set = REGI._get_regimes_set(regimes)
+            self.regimes = regimes
+            cols2regi_dic = {}
+            self.name_bigX,self.name_x_r,self.name_bigq,self.name_bigyend = {},{},{},{}
+
+            for r in range(self.n_eq):
+                self.name_x_r[r] = name_bigX[r] + name_bigyend[r]
+                cols2regi_dic[r] = REGI.check_cols2regi(self.constant_regi, self.cols2regi, bigX[r], yend=bigyend[r], add_cons=False)
+                USER.check_regimes(self.regimes_set, bigy[0].shape[0], bigX[r].shape[1])
+                bigX[r], self.name_bigX[r] = REGI.Regimes_Frame.__init__(self, bigX[r],\
+                 regimes, constant_regi=None, cols2regi=cols2regi_dic[r], names=name_bigX[r])
+                bigq[r], self.name_bigq[r] = REGI.Regimes_Frame.__init__(self, bigq[r],\
+                 regimes, constant_regi=None, cols2regi='all', names=name_bigq[r])
+                bigyend[r], self.name_bigyend[r] = REGI.Regimes_Frame.__init__(self, bigyend[r],\
+                 regimes, constant_regi=None, cols2regi=cols2regi_dic[r], yend=True, names=name_bigyend[r])
+        else:
+            self.name_bigX,self.name_bigq,self.name_bigyend = name_bigX,name_bigq,name_bigyend
+        #need checks on match between bigy, bigX dimensions
+        BaseThreeSLS.__init__(self,bigy=bigy,bigX=bigX,bigyend=bigyend,\
+            bigq=bigq)
 
         #inference
         self.tsls_inf = sur_setp(self.b3SLS,self.varb)
@@ -657,7 +690,52 @@ class ThreeSLS(BaseThreeSLS):
 
         #Listing of the results
         self.title = "THREE STAGE LEAST SQUARES (3SLS)"
-        SUMMARY.SUR(reg=self, tsls=True, nonspat_diag=nonspat_diag)
+        if regimes is not None:
+            self.title += " - REGIMES"
+            self.chow_regimes = {}
+            varb_counter = 0
+            for r in range(self.n_eq):
+                counter_end = varb_counter+self.b3SLS[r].shape[0]
+                self.chow_regimes[r] = REGI._chow_run(len(cols2regi_dic[r]),0,0,len(self.regimes_set),self.b3SLS[r],self.varb[varb_counter:counter_end,varb_counter:counter_end])
+                varb_counter = counter_end     
+            regimes=True   
+
+        SUMMARY.SUR(reg=self, tsls=True, ml=False, nonspat_diag=nonspat_diag, regimes=regimes)
+
+def _sur_2sls(reg):
+    '''2SLS estimation of SUR equations
+
+       Parameters
+       ----------
+
+       reg  : BaseSUR object
+
+       Creates
+       -------
+
+       reg.b2SLS    : dictionary with regression coefficients for each equation
+       reg.tslsE    : N x n_eq array with OLS residuals for each equation
+
+    '''
+    reg.b2SLS = {}
+    for r in range(reg.n_eq):
+        reg.b2SLS[r] = np.dot(la.inv(reg.bigZHZH[(r,r)]),reg.bigZHy[(r,r)])
+    reg.tslsE = sur_resids(reg.bigy,reg.bigZ,reg.b2SLS)
+    return reg
+
+def _get_bigZhat(reg, bigX, bigyend, bigH):
+    bigZhat = {}
+    for r in range(reg.n_eq):
+        try:
+            HHi = la.inv(spdot(bigH[r].T,bigH[r]))
+        except:
+            raise Exception("ERROR: singular cross product matrix, check instruments")
+        Hye = spdot(bigH[r].T,bigyend[r])
+        yp = spdot(bigH[r],spdot(HHi,Hye))
+        bigZhat[r] = sphstack(bigX[r],yp)
+    return bigZhat
+
+
 
 def _test():
     import doctest
@@ -669,19 +747,21 @@ def _test():
 if __name__ == '__main__':
     _test()
     import numpy as np
-    import pysal.lib.api as lps
+    import pysal.lib
     from .sur_utils import sur_dictxy,sur_dictZ
 
-    db = lps.open(lps.get_path('NAT.dbf'), 'r')
+    db = pysal.lib.io.open(pysal.lib.examples.get_path('NAT.dbf'), 'r')
     y_var = ['HR80','HR90']
     x_var = [['PS80','UE80'],['PS90','UE90']]
+    regimes = db.by_col('SOUTH')
+
     #Example SUR
     #"""
-    w = lps.queen_from_shapefile(lps.get_path("NAT.shp"))
+    w = pysal.lib.weights.Queen.from_shapefile(pysal.lib.examples.get_path("NAT.shp"))
     w.transform='r'
     bigy0,bigX0,bigyvars0,bigXvars0 = sur_dictxy(db,y_var,x_var)
-    reg0 = SUR(bigy0,bigX0,w=w,name_bigy=bigyvars0,name_bigX=bigXvars0,\
-          spat_diag=True,name_ds="nat")
+    reg0 = SUR(bigy0,bigX0,w=w,regimes=None,name_bigy=bigyvars0,name_bigX=bigXvars0,\
+          spat_diag=True,name_ds="NAT")
     print(reg0.summary)
     """
     #Example 3SLS
@@ -692,7 +772,7 @@ if __name__ == '__main__':
     bigyend1,bigyendvars1 = sur_dictZ(db,yend_var)
     bigq1,bigqvars1 = sur_dictZ(db,q_var)
 
-    reg1 = ThreeSLS(bigy1,bigX1,bigyend1,bigq1,name_ds="nat")
+    reg1 = ThreeSLS(bigy1,bigX1,bigyend1,bigq1,regimes=regimes,name_bigy=bigyvars1,name_bigX=bigXvars1,name_bigyend=bigyendvars1,name_bigq=bigqvars1,name_ds="NAT",name_regimes="South")
 
     print reg1.summary
     #"""

@@ -19,7 +19,7 @@ from ..dispersion import phi_disp, alpha_disp
 class TestDispersion(unittest.TestCase):
 
     def setUp(self):
-        db = pysal.lib.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
+        db = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
         y =  np.array(db.by_col("HOVAL"))
         y = np.reshape(y, (49,1))
         self.y = np.round(y).astype(int) 

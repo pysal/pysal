@@ -1,6 +1,6 @@
 import unittest
-import pysal.lib as pysal
-from pysal.lib.weights.Distance import KNN, Kernel
+import pysal.lib
+from pysal.lib.weights.distance import KNN, Kernel
 from .. import smoothing as sm
 import numpy as np
 from pysal.lib.common import RTOL, ATOL, pandas
@@ -62,8 +62,8 @@ class TestAgeStd(unittest.TestCase):
 
 class TestSRate(unittest.TestCase):
     def setUp(self):
-        sids = pysal.open(pysal.examples.get_path('sids2.dbf'), 'r')
-        self.w = pysal.open(pysal.examples.get_path('sids2.gal'), 'r').read()
+        sids = pysal.lib.io.open(pysal.lib.examples.get_path('sids2.dbf'), 'r')
+        self.w = pysal.lib.io.open(pysal.lib.examples.get_path('sids2.gal'), 'r').read()
         self.b, self.e = np.array(sids[:, 8]), np.array(sids[:, 9])
         self.er = [0.453433, 0.000000, 0.775871, 0.973810, 3.133190]
         self.eb = [0.0016973, 0.0017054, 0.0017731, 0.0020129, 0.0035349]
@@ -76,17 +76,17 @@ class TestSRate(unittest.TestCase):
                             3.69333797e-05, 5.40245456e-05, 2.99806055e-05,
                             3.73034109e-05, 3.47270722e-05]).reshape(-1,1)
 
-        self.stl = pysal.open(pysal.examples.get_path('stl_hom.csv'), 'r')
+        self.stl = pysal.lib.io.open(pysal.lib.examples.get_path('stl_hom.csv'), 'r')
         self.stl_e, self.stl_b = np.array(self.stl[:, 10]), np.array(self.stl[:, 13])
-        self.stl_w = pysal.open(pysal.examples.get_path('stl.gal'), 'r').read()
+        self.stl_w = pysal.lib.io.open(pysal.lib.examples.get_path('stl.gal'), 'r').read()
         if not self.stl_w.id_order_set:
             self.stl_w.id_order = list(range(1, len(self.stl) + 1))
 
         if not PANDAS_EXTINCT:
-            self.df = pysal.open(pysal.examples.get_path('sids2.dbf')).to_df()
+            self.df = pysal.lib.io.open(pysal.lib.examples.get_path('sids2.dbf')).to_df()
             self.ename = 'SID74'
             self.bname = 'BIR74'
-            self.stl_df = pysal.open(pysal.examples.get_path('stl_hom.csv')).to_df()
+            self.stl_df = pysal.lib.io.open(pysal.lib.examples.get_path('stl_hom.csv')).to_df()
             self.stl_ename = 'HC7984'
             self.stl_bname = 'PO7984'
 
@@ -259,13 +259,13 @@ class TestSRate(unittest.TestCase):
 
 class TestHB(unittest.TestCase):
     def setUp(self):
-        sids = pysal.open(pysal.examples.get_path('sids2.shp'), 'r')
+        sids = pysal.lib.io.open(pysal.lib.examples.get_path('sids2.shp'), 'r')
         self.sids = sids
         self.d = np.array([i.centroid for i in sids])
         self.w = KNN.from_array(self.d, k=5)
         if not self.w.id_order_set:
             self.w.id_order = self.w.id_order
-        sids_db = pysal.open(pysal.examples.get_path('sids2.dbf'), 'r')
+        sids_db = pysal.lib.io.open(pysal.lib.examples.get_path('sids2.dbf'), 'r')
         self.b, self.e = np.array(sids_db[:, 8]), np.array(sids_db[:, 9])
         self.sids_hb_rr5 = np.array([0.00075586, 0.,
                                      0.0008285, 0.0018315, 0.00498891])

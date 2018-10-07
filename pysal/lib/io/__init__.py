@@ -1,2 +1,5 @@
-from . import FileIO
-from . import geotable as gt
+from . import fileio
+from .tables import *
+from .iohandlers import *
+from .util import *
+open = fileio.FileIO

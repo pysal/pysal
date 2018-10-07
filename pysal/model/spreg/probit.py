@@ -5,10 +5,8 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, Pedro V. Amaral pedro.amaral@asu.
 import numpy as np
 import numpy.linalg as la
 import scipy.optimize as op
-#from scipy.stats import norm, chisqprob
-from scipy.stats import norm
-from scipy import stats
-chisqprob = lambda chisq, df: stats.chi2.sf(chisq, df)
+from scipy.stats import norm, chi2
+chisqprob = chi2.sf
 import scipy.sparse as SP
 from . import user_output as USER
 from . import summary_output as SUMMARY
@@ -102,12 +100,12 @@ class BaseProbit(object):
     Examples
     --------
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> dbf = lps.open(lps.get_path('columbus.dbf'),'r')
+    >>> import pysal
+    >>> dbf = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
     >>> y = np.array([dbf.by_col('CRIME')]).T
     >>> x = np.array([dbf.by_col('INC'), dbf.by_col('HOVAL')]).T
     >>> x = np.hstack((np.ones(y.shape),x))
-    >>> w = lps.open(lps.get_path("columbus.gal"), 'r').read()
+    >>> w = pysal.open(pysal.examples.get_path("columbus.gal"), 'r').read()
     >>> w.transform='r'
     >>> model = BaseProbit((y>40).astype(float), x, w=w)    
     >>> np.around(model.betas, decimals=6)
@@ -173,14 +171,14 @@ class BaseProbit(object):
             rs = {}
             for i in range(len(self.betas)):
                 rs[i] = (zStat[i], norm.sf(abs(zStat[i])) * 2)
-            self._cache['z_stat'] = list(rs.values())
+            self._cache['z_stat'] = rs.values()
         except KeyError:
             variance = self.vm.diagonal()
             zStat = self.betas.reshape(len(self.betas),) / np.sqrt(variance)
             rs = {}
             for i in range(len(self.betas)):
                 rs[i] = (zStat[i], norm.sf(abs(zStat[i])) * 2)
-            self._cache['z_stat'] = list(rs.values())
+            self._cache['z_stat'] = rs.values()
         return self._cache['z_stat']
 
     @z_stat.setter
@@ -216,12 +214,7 @@ class BaseProbit(object):
             return self._cache['slopes_z_stat']
         except AttributeError:
             self._cache = {}
-            zStat = self.slopes.reshape(
-                len(self.slopes),) / self.slopes_std_err
-            rs = {}
-            for i in range(len(self.slopes)):
-                rs[i] = (zStat[i], norm.sf(abs(zStat[i])) * 2)
-            self._cache['slopes_z_stat'] = list(rs.values())
+            return self.slopes_z_stat
         except KeyError:
             zStat = self.slopes.reshape(
                 len(self.slopes),) / self.slopes_std_err
@@ -716,15 +709,15 @@ class Probit(BaseProbit):
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal
 
-    Open data on Columbus neighborhood crime (49 areas) using lps.open().
+    Open data on Columbus neighborhood crime (49 areas) using pysal.open().
     This is the DBF associated with the Columbus shapefile.  Note that
-    lps.open() also reads data in CSV format; since the actual class
+    pysal.open() also reads data in CSV format; since the actual class
     requires data to be passed in as numpy arrays, the user can read their
     data in using any method.  
 
-    >>> dbf = lps.open(lps.get_path('columbus.dbf'),'r')
+    >>> dbf = pysal.open(pysal.examples.get_path('columbus.dbf'),'r')
 
     Extract the CRIME column (crime) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
@@ -755,7 +748,7 @@ class Probit(BaseProbit):
     Note that, in order to read the file, not only to open it, we need to
     append '.read()' at the end of the command.
 
-    >>> w = lps.open(lps.get_path("columbus.gal"), 'r').read() 
+    >>> w = pysal.open(pysal.examples.get_path("columbus.gal"), 'r').read() 
 
     Unless there is a good reason not to do it, the weights have to be
     row-standardized so every row of the matrix sums to one. In PySAL, this
@@ -940,12 +933,12 @@ def _test():
 if __name__ == '__main__':
     _test()
     import numpy as np
-    import pysal.lib.api as lps
-    dbf = lps.open(lps.get_path('columbus.dbf'), 'r')
+    import pysal
+    dbf = pysal.open(pysal.examples.get_path('columbus.dbf'), 'r')
     y = np.array([dbf.by_col('CRIME')]).T
     var_x = ['INC', 'HOVAL']
     x = np.array([dbf.by_col(name) for name in var_x]).T
-    w = lps.open(lps.get_path("columbus.gal"), 'r').read()
+    w = pysal.open(pysal.examples.get_path("columbus.gal"), 'r').read()
     w.transform = 'r'
     probit1 = Probit(
         (y > 40).astype(float), x, w=w, name_x=var_x, name_y="CRIME",

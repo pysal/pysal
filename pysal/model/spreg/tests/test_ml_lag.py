@@ -1,25 +1,22 @@
 import unittest
-import pysal.lib.api as lps
-import scipy
+import pysal.lib
+from scipy import sparse
 import numpy as np
-from pysal.model.spreg.ml_lag import ML_Lag
-from pysal.model.spreg import utils
+from ..ml_lag import ML_Lag
 from pysal.lib.common import RTOL
-from .skip import SKIP
+from warnings import filterwarnings
+filterwarnings('ignore', category=sparse.SparseEfficiencyWarning)
 
-
-@unittest.skipIf(SKIP,
-        "Skipping MLLag Tests")
 class TestMLError(unittest.TestCase):
     def setUp(self):
-        db =  lps.open(lps.get_path("baltim.dbf"),'r')
+        db =  pysal.lib.io.open(pysal.lib.examples.get_path("baltim.dbf"),'r')
         self.ds_name = "baltim.dbf"
         self.y_name = "PRICE"
         self.y = np.array(db.by_col(self.y_name)).T
         self.y.shape = (len(self.y),1)
         self.x_names = ["NROOM","AGE","SQFT"]
         self.x = np.array([db.by_col(var) for var in self.x_names]).T
-        ww = lps.open(lps.get_path("baltim_q.gal"))
+        ww = pysal.lib.io.open(pysal.lib.examples.get_path("baltim_q.gal"))
         self.w = ww.read()
         ww.close()
         self.w_name = "baltim_q.gal"

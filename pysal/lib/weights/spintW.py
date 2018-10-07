@@ -8,7 +8,7 @@ __author__ = "Taylor Oshan  <tayoshan@gmail.com> "
 
 from scipy.sparse import kron
 from .weights import W, WSP
-from .Distance import DistanceBand
+from .distance import DistanceBand
 from collections import OrderedDict
 
 def ODW(Wo, Wd, transform='r', silence_warnings=True):
@@ -27,19 +27,20 @@ def ODW(Wo, Wd, transform='r', silence_warnings=True):
 
     transform   : Transformation for standardization of final OD spatial weight; default
                   is 'r' for row standardized
+
     Returns
     -------
     W           : spatial contiguity W object for assocations between flows
                  o*d x o*d spatial weight object amongst o*d flows between o
                  origins and d destinations
-    
+
     Examples
     --------
 
-    >>> import pysal.lib.api as ps
-    >>> O = ps.lat2W(2,2)
-    >>> D = ps.lat2W(2,2)
-    >>> OD = ps.ODW(O,D)
+    >>> import pysal.lib
+    >>> O = pysal.lib.weights.lat2W(2,2)
+    >>> D = pysal.lib.weights.lat2W(2,2)
+    >>> OD = pysal.lib.weights.spintW.ODW(O,D)
     >>> OD.weights[0]
     [0.25, 0.25, 0.25, 0.25]
     >>> OD.neighbors[0]
@@ -102,19 +103,19 @@ def netW(link_list, share='A', transform = 'r'):
     -------
      W          : nodal contiguity W object for networkd edges or flows
                   W Object representing the binary adjacency of the network edges
-                  given a definition of nodal relationships.
+                  given a definition of nodal relationshipysal.lib.weights.spintW.
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
+    >>> import pysal.lib
     >>> links = [('a','b'), ('a','c'), ('a','d'), ('c','d'), ('c', 'b'), ('c','a')]
-    >>> O = ps.netW(links, share='O')
+    >>> O = pysal.lib.weights.spintW.netW(links, share='O')
     >>> O.neighbors[('a', 'b')]
     [('a', 'c'), ('a', 'd')]
-    >>> OD = ps.netW(links, share='OD')
+    >>> OD = pysal.lib.weights.spintW.netW(links, share='OD')
     >>> OD.neighbors[('a', 'b')]
     [('a', 'c'), ('a', 'd'), ('c', 'b')]
-    >>> any_common = ps.netW(links, share='A')
+    >>> any_common = pysal.lib.weights.spintW.netW(links, share='A')
     >>> any_common.neighbors[('a', 'b')]
     [('a', 'c'), ('a', 'd'), ('c', 'b'), ('c', 'a')]
 
@@ -151,7 +152,7 @@ def netW(link_list, share='A', transform = 'r'):
     return netW
 
 def vecW(origin_x, origin_y, dest_x, dest_y, threshold, p=2, alpha=-1.0,
-        binary=True, ids=None, build_sp=False, silent=False):
+        binary=True, ids=None, build_sp=False, silence_warnings=False):
     """
     Distance-based spatial weight for vectors that is computed using a
     4-dimensional distance between the origin x,y-coordinates and the
@@ -189,7 +190,7 @@ def vecW(origin_x, origin_y, dest_x, dest_y, threshold, p=2, alpha=-1.0,
                   distance matrix; significant speed gains may be obtained
                   dending on the sparsity of the of distance_matrix and
                   threshold that is applied
-    silent      : boolean
+    silence_warnings : boolean
                   By default PySAL will print a warning if the
                   dataset contains any disconnected observations or
                   islands. To silence this warning set this
@@ -202,22 +203,22 @@ def vecW(origin_x, origin_y, dest_x, dest_y, threshold, p=2, alpha=-1.0,
 
     Examples
     --------
-    >>> import pysal.lib.api as ps
+    >>> import pysal.lib
     >>> x1 = [5,6,3]
     >>> y1 = [1,8,5]
     >>> x2 = [2,4,9]
     >>> y2 = [3,6,1]
-    >>> W1 = ps.vecW(x1, y1, x2, y2, threshold=999)
+    >>> W1 = pysal.lib.weights.spintW.vecW(x1, y1, x2, y2, threshold=999)
     >>> list(W1.neighbors[0])
     [1, 2]
-    >>> W2 = ps.vecW(x1, y2, x1, y2, threshold=8.5)
+    >>> W2 = pysal.lib.weights.spintW.vecW(x1, y2, x1, y2, threshold=8.5)
     >>> list(W2.neighbors[0])
     [1, 2]
 
     """
     data = list(zip(origin_x, origin_y, dest_x, dest_y))
     W = DistanceBand(data, threshold=threshold, p=p, binary=binary, alpha=alpha,
-            ids=ids, build_sp=False, silent=silent)
+            ids=ids, build_sp=False, silence_warnings=silence_warnings)
     return W
 
 def mat2L(edge_matrix):
@@ -238,8 +239,6 @@ def mat2L(edge_matrix):
                     of tuples where each tuple is of the form (o,d) where o is an
                     origin id and d is a destination id
 
-    Examples
-    --------
     """
     if len(edge_matrix.shape) !=2:
     	raise AttributeError("Matrix of network edges should be two dimensions"

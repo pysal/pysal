@@ -9,11 +9,11 @@ __credits__ = "Copyright (c) 2005-2009 Sergio J. Rey"
 import doctest
 import math
 import copy
+import random
 from .shapes import *
 from itertools import islice
 import scipy.spatial
 import numpy as np
-#from ..common import *
 
 EPSILON_SCALER = 3
 
@@ -43,6 +43,17 @@ def bbcommon(bb, bbother):
 
 def get_bounding_box(items):
     """
+    Find bounding box for a list of geometries
+
+    Parameters
+    ----------
+    items: list
+           PySAL shapes
+
+    Returns
+    -------
+    Rectangle
+          
 
     Examples
     --------
@@ -777,11 +788,12 @@ def get_shared_segments(poly1, poly2, bool_ret=False):
 
     Examples
     --------
+    >>> from pysal.lib.cg.shapes import Polygon
     >>> x = [0, 0, 1, 1]
     >>> y = [0, 1, 1, 0]
-    >>> poly1 = Polygon( map(Point,zip(x,y)) )
+    >>> poly1 = Polygon( list(map(Point,zip(x,y))) )
     >>> x = [a+1 for a in x]
-    >>> poly2 = Polygon( map(Point,zip(x,y)) )
+    >>> poly2 = Polygon( list(map(Point,zip(x,y))) )
     >>> get_shared_segments(poly1, poly2, bool_ret=True)
     True
 
@@ -867,25 +879,24 @@ def distance_matrix(X, p=2.0, threshold=5e7):
     >>> data = np.array([x,y]).T
     >>> d=distance_matrix(data)
     >>> np.array(d)
-    array([[ 0.        ,  1.        ,  2.        ,  1.        ,  1.41421356,
-             2.23606798,  2.        ,  2.23606798,  2.82842712],
-           [ 1.        ,  0.        ,  1.        ,  1.41421356,  1.        ,
-             1.41421356,  2.23606798,  2.        ,  2.23606798],
-           [ 2.        ,  1.        ,  0.        ,  2.23606798,  1.41421356,
-             1.        ,  2.82842712,  2.23606798,  2.        ],
-           [ 1.        ,  1.41421356,  2.23606798,  0.        ,  1.        ,
-             2.        ,  1.        ,  1.41421356,  2.23606798],
-           [ 1.41421356,  1.        ,  1.41421356,  1.        ,  0.        ,
-             1.        ,  1.41421356,  1.        ,  1.41421356],
-           [ 2.23606798,  1.41421356,  1.        ,  2.        ,  1.        ,
-             0.        ,  2.23606798,  1.41421356,  1.        ],
-           [ 2.        ,  2.23606798,  2.82842712,  1.        ,  1.41421356,
-             2.23606798,  0.        ,  1.        ,  2.        ],
-           [ 2.23606798,  2.        ,  2.23606798,  1.41421356,  1.        ,
-             1.41421356,  1.        ,  0.        ,  1.        ],
-           [ 2.82842712,  2.23606798,  2.        ,  2.23606798,  1.41421356,
-             1.        ,  2.        ,  1.        ,  0.        ]])
-    >>>
+    array([[0.        , 1.        , 2.        , 1.        , 1.41421356,
+            2.23606798, 2.        , 2.23606798, 2.82842712],
+           [1.        , 0.        , 1.        , 1.41421356, 1.        ,
+            1.41421356, 2.23606798, 2.        , 2.23606798],
+           [2.        , 1.        , 0.        , 2.23606798, 1.41421356,
+            1.        , 2.82842712, 2.23606798, 2.        ],
+           [1.        , 1.41421356, 2.23606798, 0.        , 1.        ,
+            2.        , 1.        , 1.41421356, 2.23606798],
+           [1.41421356, 1.        , 1.41421356, 1.        , 0.        ,
+            1.        , 1.41421356, 1.        , 1.41421356],
+           [2.23606798, 1.41421356, 1.        , 2.        , 1.        ,
+            0.        , 2.23606798, 1.41421356, 1.        ],
+           [2.        , 2.23606798, 2.82842712, 1.        , 1.41421356,
+            2.23606798, 0.        , 1.        , 2.        ],
+           [2.23606798, 2.        , 2.23606798, 1.41421356, 1.        ,
+            1.41421356, 1.        , 0.        , 1.        ],
+           [2.82842712, 2.23606798, 2.        , 2.23606798, 1.41421356,
+            1.        , 2.        , 1.        , 0.        ]])
     """
     if X.ndim == 1:
         X.shape = (X.shape[0], 1)
@@ -908,5 +919,3 @@ def distance_matrix(X, p=2.0, threshold=5e7):
             D += dx2
         D = D ** (1.0 / p)
         return D
-
-

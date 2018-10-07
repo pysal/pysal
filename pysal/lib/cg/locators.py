@@ -7,217 +7,12 @@ __credits__ = "Copyright (c) 2005-2011 Sergio J. Rey"
 
 import math
 import copy
-import doctest
 from .rtree import *
 from .standalone import *
 from .shapes import *
 
-__all__ = ["IntervalTree", "Grid", "BruteForcePointLocator",
+__all__ = ["Grid", "BruteForcePointLocator",
            "PointLocator", "PolygonLocator"]
-
-
-class IntervalTree:
-    """
-    Representation of an interval tree. An interval tree is a data structure which is used to
-    quickly determine which intervals in a set contain a value or overlap with
-    a query interval. [DeBerg2008]_
-
-    """
-
-    class _Node:
-        """
-        Private class representing a node in an interval tree.
-        """
-
-        def __init__(self, val, left_list, right_list, left_node, right_node):
-            self.val = val
-            self.left_list = left_list
-            self.right_list = right_list
-            self.left_node = left_node
-            self.right_node = right_node
-
-        def query(self, q):
-            i = 0
-            if q < self.val:
-                while i < len(self.left_list) and self.left_list[i][0] <= q:
-                    i += 1
-                return [rec[2] for rec in self.left_list[0:i]]
-            else:
-                while i < len(self.right_list) and self.right_list[i][1] >= q:
-                    i += 1
-                return [rec[2] for rec in self.right_list[0:i]]
-
-        def add(self, i):
-            """
-            Adds an interval to the IntervalTree node.
-            """
-            if not i[0] <= self.val <= i[1]:
-                raise Exception('Attempt to add an interval to an inappropriate IntervalTree node')
-            index = 0
-            while index < len(self.left_list) and self.left_list[index] < i[0]:
-                index = index + 1
-            self.left_list.insert(index, i)
-            index = 0
-            while index < len(self.right_list) and self.right_list[index] > i[1]:
-                index = index + 1
-            self.right_list.insert(index, i)
-
-        def remove(self, i):
-            """
-            Removes an interval from the IntervalTree node.
-            """
-            l = 0
-            r = len(self.left_list)
-            while l < r:
-                m = (l + r) / 2
-                if self.left_list[m] < i[0]:
-                    l = m + 1
-                elif self.left_list[m] > i[0]:
-                    r = m
-                else:
-                    if self.left_list[m] == i:
-                        self.left_list.pop(m)
-                    else:
-                        raise Exception('Attempt to remove an unknown interval')
-            l = 0
-            r = len(self.right_list)
-            while l < r:
-                m = (l + r) / 2
-                if self.right_list[m] > i[1]:
-                    l = m + 1
-                elif self.right_left[m] < i[1]:
-                    r = m
-                else:
-                    if self.right_list[m] == i:
-                        self.right_list.pop(m)
-                    else:
-                        raise Exception('Attempt to remove an unknown interval')
-
-    def __init__(self, intervals):
-        """
-        __init__((number, number, x) list) -> IntervalTree
-        Returns an interval tree containing specified intervals.
-
-        Parameters
-        ----------
-        intervals : a list of (lower, upper, item) elements to build the interval tree
-
-        Examples
-        --------
-
-        >>> intervals = [(-1, 2, 'A'), (5, 9, 'B'), (3, 6, 'C')]
-        >>> it = IntervalTree(intervals)
-        >>> isinstance(it, IntervalTree)
-        True
-        """
-        self._build(intervals)
-
-    def _build(self, intervals):
-        """
-        Build an interval tree containing _intervals_.
-        Each interval should be of the form (start, end, object).
-
-        build((number, number, x) list) -> None
-
-        Test tag: <tc>#is#IntervalTree.build</tc>
-        """
-        bad_is = [i for i in intervals if i[0] > i[1]]
-        if bad_is != []:
-            raise Exception('Attempt to build IntervalTree with invalid intervals: ' + str(bad_is))
-        eps = list(set([i[0] for i in intervals] + [i[1] for i in intervals]))
-        eps.sort()
-        self.root = self._recursive_build(copy.copy(intervals), eps)
-
-    def query(self, q):
-        """
-        Returns the intervals intersected by a value or interval.
-
-        query((number, number) or number) -> x list
-
-        Parameters
-        ----------
-
-        q : a value or interval to find intervals intersecting
-
-        Examples
-        --------
-
-        >>> intervals = [(-1, 2, 'A'), (5, 9, 'B'), (3, 6, 'C')]
-        >>> it = IntervalTree(intervals)
-        >>> it.query((7, 14))
-        ['B']
-        >>> it.query(1)
-        ['A']
-        """
-        if isinstance(q, tuple):
-            return self._query_range(q, self.root)
-        else:
-            return self._query_points(q)
-
-    def _query_range(self, q, root):
-        if root is None:
-            return []
-        if root.val < q[0]:
-            return self._query_range(q, root.right_node) + root.query(q[0])
-        elif root.val > q[1]:
-            return self._query_range(q, root.left_node) + root.query(q[1])
-        else:
-            return root.query(root.val) + self._query_range(q, root.left_node) + self._query_range(q, root.right_node)
-
-    def _query_points(self, q):
-        found = []
-        cur = self.root
-        while cur is not None:
-            found.extend(cur.query(q))
-            if q < cur.val:
-                cur = cur.left_node
-            else:
-                cur = cur.right_node
-        return found
-
-    def _recursive_build(self, intervals, eps):
-        def sign(x):
-            if x < 0:
-                return -1
-            elif x > 0:
-                return 1
-            else:
-                return 0
-
-        def binary_search(list, q):
-            l = 0
-            r = len(list)
-            while l < r:
-                m = (l + r) / 2
-                if list[m] < q:
-                    l = m + 1
-                else:
-                    r = m
-            return l
-
-        if eps == []:
-            return None
-        median = eps[len(eps) / 2]
-        hit_is = []
-        rem_is = []
-        for i in intervals:
-            if i[0] <= median <= i[1]:
-                hit_is.append(i)
-            else:
-                rem_is.append(i)
-        left_list = copy.copy(hit_is)
-        left_list.sort(lambda a, b: sign(a[0] - b[0]))
-        right_list = copy.copy(hit_is)
-        right_list.sort(lambda a, b: sign(b[1] - a[1]))
-        eps = list(set([i[0] for i in intervals] + [i[1] for i in intervals]))
-        eps.sort()
-        bp = binary_search(eps, median)
-        left_eps = eps[:bp]
-        right_eps = eps[bp:]
-        node = (IntervalTree._Node(median, left_list, right_list,
-                                   self._recursive_build(rem_is, left_eps),
-                                   self._recursive_build(rem_is, right_eps)))
-        return node
 
 
 class Grid:
@@ -878,7 +673,7 @@ class PolygonLocator:
         >>> p2 = Polygon([Point((3, 9)), Point((6, 7)), Point((1, 1))])
         >>> pl = PolygonLocator([p1, p2])
         >>> try: n = pl.nearest(Point((-1, 1)))
-        ... except NotImplementedError: print "future test: str(min(n.vertices())) == (0.0, 1.0)"
+        ... except NotImplementedError: print("future test: str(min(n.vertices())) == (0.0, 1.0)")
         future test: str(min(n.vertices())) == (0.0, 1.0)
         """
         raise NotImplementedError
@@ -979,8 +774,7 @@ class PolygonLocator:
         >>> try:
         ...     len(pl.proximity(Point((0, 0)), 2))
         ... except NotImplementedError:
-        ...     print "future test: len(pl.proximity(Point((0, 0)), 2)) == 2"
+        ...     print("future test: len(pl.proximity(Point((0, 0)), 2)) == 2")
         future test: len(pl.proximity(Point((0, 0)), 2)) == 2
         """
         raise NotImplementedError
-

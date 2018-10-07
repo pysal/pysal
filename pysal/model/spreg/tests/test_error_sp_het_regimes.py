@@ -1,5 +1,5 @@
 import unittest
-import pysal.lib.api as lps
+import pysal.lib
 import numpy as np
 from pysal.model.spreg import error_sp_het_regimes as SP
 from pysal.model.spreg.error_sp_het import GM_Error_Het, GM_Endog_Error_Het, GM_Combo_Het
@@ -8,7 +8,7 @@ from pysal.lib.common import RTOL
 class TestGM_Error_Het_Regimes(unittest.TestCase):
     def setUp(self):
         #Columbus:
-        db=lps.open(lps.get_path("columbus.dbf"),"r")
+        db=pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),"r")
         y = np.array(db.by_col("CRIME"))
         self.y = np.reshape(y, (49,1))
         X = []
@@ -24,7 +24,7 @@ class TestGM_Error_Het_Regimes(unittest.TestCase):
         q = []
         q.append(db.by_col("DISCBD"))
         self.q = np.array(q).T
-        self.w = lps.queen_from_shapefile(lps.get_path("columbus.shp"))
+        self.w = pysal.lib.weights.Queen.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
         self.r_var = 'NSA'
         self.regimes = db.by_col(self.r_var)
@@ -37,10 +37,10 @@ class TestGM_Error_Het_Regimes(unittest.TestCase):
         self.x_a = np.hstack((self.x_a1,self.x_a2))
         self.y_a = np.dot(np.hstack((np.ones((n,1)),self.x_a)),np.array([[1],[0.5],[2]])) + np.random.normal(0,1,(n,1))
         latt = int(np.sqrt(n))
-        self.w_a = lps.lat2W(latt,latt)
+        self.w_a = pysal.lib.weights.util.lat2W(latt,latt)
         self.w_a.transform='r'
         self.regi_a = [0]*(n//2) + [1]*(n//2)
-        self.w_a1 = lps.lat2W(latt//2,latt)
+        self.w_a1 = pysal.lib.weights.util.lat2W(latt//2,latt)
         self.w_a1.transform='r'
         
     def test_model(self):

@@ -1,7 +1,7 @@
 import unittest
 from ..mat import MatIO
 from .... import examples as pysal_examples
-from ...FileIO import FileIO as psopen
+from ...fileio import FileIO as psopen
 import tempfile
 import os
 import warnings

@@ -4,9 +4,8 @@ GWR is tested against results from GWR4
 
 import os
 import numpy as np
-import pysal.lib
+from pysal.lib import io
 import unittest
-import pickle as pk
 from pysal.model.spglm.family import Gaussian, Poisson, Binomial
 from ..sel_bw import Sel_BW
 from numpy.testing import assert_allclose
@@ -14,7 +13,8 @@ from numpy.testing import assert_allclose
 class TestSelBW(unittest.TestCase):
     def setUp(self):
         data_path = os.path.join(os.path.dirname(__file__),'georgia/GData_utm.csv')
-        data = pysal.lib.open(data_path)
+        #data = pysal.lib.open(data_path)
+        data = io.open(data_path)
         self.coords = list(zip(data.by_col('X'), data.by_col('Y')))
         self.y = np.array(data.by_col('PctBach')).reshape((-1,1))
         rural  = np.array(data.by_col('PctRural')).reshape((-1,1))

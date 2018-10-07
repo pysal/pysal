@@ -1,3 +1,4 @@
+
 '''
 The one parameter exponential family distributions used by GLM.
 '''
@@ -89,15 +90,6 @@ class Family(object):
         mu_0 : array
             The first guess on the transformed response variable.
 
-        Notes
-        -----
-        .. math::
-
-           \mu_0 = (Y + \overline{Y})/2
-
-        Notes
-        -----
-        Only the Binomial family takes a different initial value.
         """
         return (y + y.mean())/2.
 
@@ -115,11 +107,6 @@ class Family(object):
         w : array
             The weights for the IRLS steps
 
-        Notes
-        -----
-        .. math::
-
-           w = 1 / (g'(\mu)^2  * Var(\mu))
         """
         return 1. / (self.link.deriv(mu)**2 * self.variance(mu))
 
@@ -145,17 +132,6 @@ class Family(object):
         Deviance : array
             The value of deviance function defined below.
 
-        Notes
-        -----
-        Deviance is defined
-
-        .. math::
-
-           D = \sum_i (2 * freq\_weights_i * llf(Y_i, Y_i) - 2 *
-               llf(Y_i, \mu_i)) / scale
-
-        where y is the endogenous variable. The deviance functions are
-        analytically defined for each family.
         """
         raise NotImplementedError
 
@@ -179,9 +155,6 @@ class Family(object):
         -------
         Deviance residuals.
 
-        Notes
-        -----
-        The deviance residuals are defined for each family.
         """
         raise NotImplementedError
 
@@ -241,12 +214,6 @@ class Family(object):
         llf : float
             The value of the loglikelihood evaluated at
             (endog,mu,freq_weights,scale) as defined below.
-        Notes
-        -----
-        This is defined for each family.  endog and mu are not restricted to
-        `endog` and `mu` respectively.  For instance, the deviance function
-        calls both loglike(endog,endog) and loglike(endog,mu) to get the
-        likelihood ratio.
         """
         raise NotImplementedError
 
@@ -294,11 +261,6 @@ class Poisson(Family):
         """
         Helper function to trim the data so that is in (0,inf)
 
-        Notes
-        -----
-        The need for this function was discovered through usage and its
-        possible that other families might need a check for validity of the
-        domain.
         """
         return np.clip(x, FLOAT_EPS, np.inf)
 
@@ -320,12 +282,6 @@ class Poisson(Family):
         resid_dev : array
             Deviance residuals as defined below
 
-        Notes
-        -----
-        .. math::
-
-           resid\_dev_i = sign(Y_i - \mu_i) * \sqrt{2 *
-                          (Y_i * \log(Y_i / \mu_i) - (Y_i - \mu_i))} / scale
         """
         endog_mu = self._clean(endog / mu)
         return (np.sign(endog - mu) *
@@ -352,13 +308,6 @@ class Poisson(Family):
             The deviance function at (endog,mu,freq_weights,scale) as defined
             below.
 
-        Notes
-        -----
-        If a constant term is included it is defined as
-
-        .. math::
-
-           D = 2 * \sum_i (freq\_weights_i * Y_i * \log(Y_i / \mu_i))/ scale
         '''
         endog_mu = self._clean(endog / mu)
         return 2 * np.sum(endog * freq_weights * np.log(endog_mu)) / scale
@@ -384,12 +333,6 @@ class Poisson(Family):
             The value of the loglikelihood function evaluated at
             (endog,mu,freq_weights,scale) as defined below.
 
-        Notes
-        -----
-        .. math::
-
-           llf = scale * \sum_i freq\_weights_i * (Y_i * \log(\mu_i) - \mu_i -
-                 \ln \Gamma(Y_i + 1))
         """
         loglike = np.sum(freq_weights * (endog * np.log(mu) - mu -
                          special.gammaln(endog + 1)))
@@ -411,11 +354,6 @@ class Poisson(Family):
         resid_anscombe : array
             The Anscome residuals for the Poisson family defined below
 
-        Notes
-        -----
-        .. math::
-
-           resid\_anscombe_i = (3/2) * (Y_i^{2/3} - \mu_i^{2/3}) / \mu_i^{1/6}
         """
         return (3 / 2.) * (endog**(2/3.) - mu**(2 / 3.)) / mu**(1 / 6.)
 
@@ -451,11 +389,6 @@ class QuasiPoisson(Family):
         """
         Helper function to trim the data so that is in (0,inf)
 
-        Notes
-        -----
-        The need for this function was discovered through usage and its
-        possible that other families might need a check for validity of the
-        domain.
         """
         return np.clip(x, FLOAT_EPS, np.inf)
 
@@ -477,12 +410,6 @@ class QuasiPoisson(Family):
         resid_dev : array
             Deviance residuals as defined below
 
-        Notes
-        -----
-        .. math::
-
-           resid\_dev_i = sign(Y_i - \mu_i) * \sqrt{2 *
-                          (Y_i * \log(Y_i / \mu_i) - (Y_i - \mu_i))} / scale
         """
         endog_mu = self._clean(endog / mu)
         return (np.sign(endog - mu) *
@@ -509,13 +436,6 @@ class QuasiPoisson(Family):
             The deviance function at (endog,mu,freq_weights,scale) as defined
             below.
 
-        Notes
-        -----
-        If a constant term is included it is defined as
-
-        .. math::
-
-           D = 2 * \sum_i (freq\_weights_i * Y_i * \log(Y_i / \mu_i))/ scale
         '''
         endog_mu = self._clean(endog / mu)
         return 2 * np.sum(endog * freq_weights * np.log(endog_mu)) / scale
@@ -548,11 +468,6 @@ class QuasiPoisson(Family):
         resid_anscombe : array
             The Anscome residuals for the Poisson family defined below
 
-        Notes
-        -----
-        .. math::
-
-           resid\_anscombe_i = (3/2) * (Y_i^{2/3} - \mu_i^{2/3}) / \mu_i^{1/6}
         """
         return (3 / 2.) * (endog**(2/3.) - mu**(2 / 3.)) / mu**(1 / 6.)
 
@@ -583,7 +498,7 @@ class Gaussian(Family):
         self.link = link()
 
     def resid_dev(self, endog, mu, scale=1.):
-        r"""
+        """
         Gaussian deviance residuals
 
         Parameters
@@ -601,17 +516,12 @@ class Gaussian(Family):
         resid_dev : array
             Deviance residuals as defined below
 
-        Notes
-        --------
-        .. math::
-
-           resid\_dev_i = (Y_i - \mu_i) / \sqrt{Var(\mu_i)} / scale
         """
 
         return (endog - mu) / np.sqrt(self.variance(mu)) / scale
 
     def deviance(self, endog, mu, freq_weights=1., scale=1.):
-        r"""
+        """
         Gaussian deviance function
 
         Parameters
@@ -631,16 +541,11 @@ class Gaussian(Family):
             The deviance function at (endog,mu,freq_weights,scale)
             as defined below.
 
-        Notes
-        --------
-        .. math::
-
-           D = \sum_i freq\_weights_i * (Y_i - \mu_i)^2 / scale
         """
         return np.sum((freq_weights * (endog - mu)**2)) / scale
 
     def loglike(self, endog, mu, freq_weights=1., scale=1.):
-        r"""
+        """
         The log-likelihood in terms of the fitted mean response.
 
         Parameters
@@ -660,27 +565,6 @@ class Gaussian(Family):
             The value of the loglikelihood function evaluated at
             (endog,mu,freq_weights,scale) as defined below.
 
-        Notes
-        -----
-        If the link is the identity link function then the
-        loglikelihood function is the same as the classical OLS model.
-
-        .. math::
-
-           llf = -nobs / 2 * (\log(SSR) + (1 + \log(2 \pi / nobs)))
-
-        where
-
-        .. math::
-           SSR = \sum_i (Y_i - g^{-1}(\mu_i))^2
-
-        If the links is not the identity link then the loglikelihood
-        function is defined as
-
-        .. math::
-
-           llf = \sum_i freq\_weights_i * ((Y_i * \mu_i - \mu_i^2 / 2) / scale-
-                 Y^2 / (2 * scale) - (1/2) * \log(2 * \pi * scale))
         """
         if isinstance(self.link, L.Power) and self.link.power == 1:
             # This is just the loglikelihood for classical OLS
@@ -694,7 +578,7 @@ class Gaussian(Family):
                           endog**2/(2 * scale) - .5*np.log(2 * np.pi * scale)))
 
     def resid_anscombe(self, endog, mu):
-        r"""
+        """
         The Anscombe residuals for the Gaussian exponential family distribution
 
         Parameters
@@ -709,11 +593,6 @@ class Gaussian(Family):
         resid_anscombe : array
             The Anscombe residuals for the Gaussian family defined below
 
-        Notes
-        --------
-        .. math::
-
-           resid\_anscombe_i = Y_i - \mu_i
         """
         return endog - mu
 
@@ -748,11 +627,6 @@ class Gamma(Family):
         """
         Helper function to trim the data so that is in (0,inf)
 
-        Notes
-        -----
-        The need for this function was discovered through usage and its
-        possible that other families might need a check for validity of the
-        domain.
         """
         return np.clip(x, FLOAT_EPS, np.inf)
 
@@ -776,12 +650,6 @@ class Gamma(Family):
         deviance : float
             Deviance function as defined below
 
-        Notes
-        -----
-        .. math::
-
-           D = 2 * \sum_i freq\_weights_i * ((Y_i - \mu_i)/\mu_i - \log(Y_i /
-               \mu_i))
         """
         endog_mu = self._clean(endog/mu)
         return 2*np.sum(freq_weights*((endog-mu)/mu-np.log(endog_mu)))
@@ -805,12 +673,6 @@ class Gamma(Family):
         resid_dev : array
             Deviance residuals as defined below
 
-        Notes
-        -----
-        .. math::
-
-           resid\_dev_i = sign(Y_i - \mu_i) \sqrt{-2 *
-                          (-(Y_i - \mu_i) / \mu_i + \log(Y_i / \mu_i))}
         """
         endog_mu = self._clean(endog / mu)
         return np.sign(endog - mu) * np.sqrt(-2 * (-(endog - mu)/mu +
@@ -837,13 +699,6 @@ class Gamma(Family):
             The value of the loglikelihood function evaluated at
             (endog,mu,freq_weights,scale) as defined below.
 
-        Notes
-        --------
-        .. math::
-
-           llf = -1 / scale * \sum_i *(Y_i / \mu_i+ \log(\mu_i)+
-                 (scale -1) * \log(Y) + \log(scale) + scale *
-                 \ln \Gamma(1 / scale))
         """
         return - 1./scale * np.sum((endog/mu + np.log(mu) + (scale - 1) *
                                     np.log(endog) + np.log(scale) + scale *
@@ -869,11 +724,6 @@ class Gamma(Family):
         resid_anscombe : array
             The Anscombe residuals for the Gamma family defined below
 
-        Notes
-        -----
-        .. math::
-
-           resid\_anscombe_i = 3 * (Y_i^{1/3} - \mu_i^{1/3}) / \mu_i^{1/3}
         """
         return 3 * (endog**(1/3.) - mu**(1/3.)) / mu**(1/3.)
 
@@ -894,10 +744,6 @@ class Binomial(Family):
     Binomial.link : a link instance
         The link function of the Binomial instance
     Binomial.variance : varfunc instance
-
-    Notes
-    -----
-    endog for Binomial can be specified in one of three ways.
 
     """
 
@@ -972,27 +818,6 @@ class Binomial(Family):
         deviance : float
             The deviance function as defined below
 
-        Notes
-        -----
-        If the endogenous variable is binary:
-
-        .. math::
-
-           D = -2 * \sum_i freq\_weights * (I_{1,i} * \log(\mu_i) + I_{0,i} *
-               \log(1 - \mu_i))
-
-        where :math:`I_{1,i}` is an indicator function that evalueates to 1 if
-        :math:`Y_i = 1`. and :math:`I_{0,i}` is an indicator function that
-        evaluates to 1 if :math:`Y_i = 0`.
-
-        If the model is ninomial:
-
-        .. math::
-
-           D = 2 * \sum_i freq\_weights * (\log(Y_i / \mu_i) + (n_i - Y_i) *
-               \log((n_i - Y_i) / n_i - \mu_i))
-
-        where :math:`Y_i` and :math:`n` are as defined in Binomial.initialize.
         '''
         if np.shape(self.n) == () and self.n == 1:
             one = np.equal(endog, 1)
@@ -1024,28 +849,6 @@ class Binomial(Family):
         resid_dev : array
             Deviance residuals as defined below
 
-        Notes
-        -----
-        If the endogenous variable is binary:
-
-        .. math::
-
-           resid\_dev_i = sign(Y_i - \mu_i) * \sqrt{-2 *
-                          \log(I_{1,i} * \mu_i + I_{0,i} * (1 - \mu_i))}
-
-        where :math:`I_{1,i}` is an indicator function that evalueates to 1 if
-        :math:`Y_i = 1`. and :math:`I_{0,i}` is an indicator function that
-        evaluates to 1 if :math:`Y_i = 0`.
-
-        If the endogenous variable is binomial:
-
-        .. math::
-
-           resid\_dev_i = sign(Y_i - \mu_i) \sqrt{2 * n_i *
-                          (Y_i * \log(Y_i / \mu_i) + (1 - Y_i) *
-                          \log(1 - Y_i)/(1 - \mu_i))}
-
-        where :math:`Y_i` and :math:`n` are as defined in Binomial.initialize.
         """
 
         mu = self.link._clean(mu)
@@ -1081,26 +884,6 @@ class Binomial(Family):
             The value of the loglikelihood function evaluated at
             (endog,mu,freq_weights,scale) as defined below.
 
-        Notes
-        --------
-        If the endogenous variable is binary:
-
-        .. math::
-
-         llf = scale * \sum_i (y_i * \log(\mu_i/(1-\mu_i)) + \log(1-\mu_i)) *
-               freq\_weights_i
-
-        If the endogenous variable is binomial:
-
-        .. math::
-
-           llf = scale * \sum_i freq\_weights_i * (\ln \Gamma(n+1) -
-                 \ln \Gamma(y_i + 1) - \ln \Gamma(n_i - y_i +1) + y_i *
-                 \log(\mu_i / (1 - \mu_i)) + n * \log(1 - \mu_i))
-
-        where :math:`y_i = Y_i * n_i` with :math:`Y_i` and :math:`n_i` as
-        defined in Binomial initialize.  This simply makes :math:`y_i` the
-        original number of successes.
         """
 
         if np.shape(self.n) == () and self.n == 1:
@@ -1130,22 +913,6 @@ class Binomial(Family):
         resid_anscombe : array
             The Anscombe residuals as defined below.
 
-        Notes
-        -----
-        sqrt(n)*(cox_snell(endog)-cox_snell(mu))/(mu**(1/6.)*(1-mu)**(1/6.))
-
-        where cox_snell is defined as
-        cox_snell(x) = betainc(2/3., 2/3., x)*betainc(2/3.,2/3.)
-        where betainc is the incomplete beta function
-
-        The name 'cox_snell' is idiosyncratic and is simply used for
-        convenience following the approach suggested in Cox and Snell (1968).
-        Further note that
-        cox_snell(x) = x**(2/3.)/(2/3.)*hyp2f1(2/3.,1/3.,5/3.,x)
-        where hyp2f1 is the hypergeometric 2f1 function.  The Anscombe
-        residuals are sometimes defined in the literature using the
-        hyp2f1 formulation.  Both betainc and hyp2f1 can be found in scipy.
-
         References
         ----------
         Anscombe, FJ. (1953) "Contribution to the discussion of H. Hotelling's
@@ -1161,633 +928,3 @@ class Binomial(Family):
                                   (mu**(1/6.) * (1 - mu)**(1/6.)))
 
 
-class InverseGaussian(Family):
-    """
-    InverseGaussian exponential family.
-
-    Parameters
-    ----------
-    link : a link instance, optional
-        The default link for the inverse Gaussian family is the
-        inverse squared link.
-        Available links are inverse_squared, inverse, log, and identity.
-        See statsmodels.family.links for more information.
-
-    Attributes
-    ----------
-    InverseGaussian.link : a link instance
-        The link function of the inverse Gaussian instance
-    InverseGaussian.variance : varfunc instance
-
-    Notes
-    -----
-    The inverse Guassian distribution is sometimes referred to in the
-    literature as the Wald distribution.
-
-    """
-
-    links = [L.inverse_squared, L.inverse_power, L.identity, L.log]
-    variance = V.mu_cubed
-    safe_links = [L.inverse_squared, L.Log, ]
-
-    def __init__(self, link=L.inverse_squared):
-        self.variance = InverseGaussian.variance
-        self.link = link()
-
-    def resid_dev(self, endog, mu, scale=1.):
-        r"""
-        Returns the deviance residuals for the inverse Gaussian family.
-
-        Parameters
-        -----------
-        endog : array-like
-            Endogenous response variable
-        mu : array-like
-            Fitted mean response variable
-        freq_weights : array-like
-            1d array of frequency weights. The default is 1.
-        scale : float, optional
-            An optional argument to divide the residuals by scale. The default
-            is 1.
-
-        Returns
-        -------
-        resid_dev : array
-            Deviance residuals as defined below
-
-        Notes
-        -----
-        .. math::
-
-           resid\_dev_i = sign(Y_i - \mu_i) * 
-                          \sqrt {(Y_i - \mu_i)^2 / (Y_i * \mu_i^2)} / scale
-        """
-        return np.sign(endog-mu) * np.sqrt((endog-mu)**2/(endog*mu**2))/scale
-
-    def deviance(self, endog, mu, freq_weights=1., scale=1.):
-        r"""
-        Inverse Gaussian deviance function
-
-        Parameters
-        -----------
-        endog : array-like
-            Endogenous response variable
-        mu : array-like
-            Fitted mean response variable
-        freq_weights : array-like
-            1d array of frequency weights. The default is 1.
-        scale : float, optional
-            An optional scale argument. The default is 1.
-
-        Returns
-        -------
-        deviance : float
-            Deviance function as defined below
-
-        Notes
-        -----
-        .. math::
-
-           D = \sum_i freq\_weights_i * ((Y_i - \mu_i)^2 / (Y_i *\mu_i^2)) /
-               scale
-        """
-        return np.sum(freq_weights*(endog-mu)**2/(endog*mu**2))/scale
-
-    def loglike(self, endog, mu, freq_weights=1., scale=1.):
-        r"""
-        The log-likelihood function in terms of the fitted mean response.
-
-        Parameters
-        ----------
-        endog : array-like
-            Endogenous response variable
-        mu : array-like
-            Fitted mean response variable
-        freq_weights : array-like
-            1d array of frequency weights. The default is 1.
-        scale : float, optional
-            The default is 1.
-
-        Returns
-        -------
-        llf : float
-            The value of the loglikelihood function evaluated at
-            (endog,mu,freq_weights,scale) as defined below.
-
-        Notes
-        -----
-        .. math::
-
-           llf = -1/2 * \sum_i freq\_weights_i * ((Y_i - \mu_i)^2 / (Y_i *
-                 \mu_i * scale) + \log(scale * Y_i^3) + \log(2 * \pi))
-        """
-        return -.5 * np.sum(((endog - mu)**2/(endog * mu**2 * scale) +
-                             np.log(scale * endog**3) + np.log(2 * np.pi)) *
-                            freq_weights)
-
-    def resid_anscombe(self, endog, mu):
-        r"""
-        The Anscombe residuals for the inverse Gaussian distribution
-
-        Parameters
-        ----------
-        endog : array
-            Endogenous response variable
-        mu : array
-            Fitted mean response variable
-
-        Returns
-        -------
-        resid_anscombe : array
-            The Anscombe residuals for the inverse Gaussian distribution  as
-            defined below
-
-        Notes
-        -----
-        .. math::
-
-           resid\_anscombe_i = \log(Y_i / \mu_i) / \sqrt{\mu_i}
-        """
-        return np.log(endog / mu) / np.sqrt(mu)
-
-
-class NegativeBinomial(Family):
-    """
-    Negative Binomial exponential family.
-
-    Parameters
-    ----------
-    link : a link instance, optional
-        The default link for the negative binomial family is the log link.
-        Available links are log, cloglog, identity, nbinom and power.
-        See statsmodels.family.links for more information.
-    alpha : float, optional
-        The ancillary parameter for the negative binomial distribution.
-        For now `alpha` is assumed to be nonstochastic.  The default value
-        is 1.  Permissible values are usually assumed to be between .01 and 2.
-
-
-    Attributes
-    ----------
-    NegativeBinomial.link : a link instance
-        The link function of the negative binomial instance
-    NegativeBinomial.variance : varfunc instance
-
-    Notes
-    -----
-    Power link functions are not yet supported.
-
-    """
-    links = [L.log, L.cloglog, L.identity, L.nbinom, L.Power]
-    # TODO: add the ability to use the power links with an if test
-    # similar to below
-    variance = V.nbinom
-    safe_links = [L.Log, ]
-
-    def __init__(self, link=L.log, alpha=1.):
-        self.alpha = 1. * alpha  # make it at least float
-        self.variance = V.NegativeBinomial(alpha=self.alpha)
-        if isinstance(link, L.NegativeBinomial):
-            self.link = link(alpha=self.alpha)
-        else:
-            self.link = link()
-
-    def _clean(self, x):
-        """
-        Helper function to trim the data so that is in (0,inf)
-
-        Notes
-        -----
-        The need for this function was discovered through usage and its
-        possible that other families might need a check for validity of the
-        domain.
-        """
-        return np.clip(x, FLOAT_EPS, np.inf)
-
-    def deviance(self, endog, mu, freq_weights=1., scale=1.):
-        r"""
-        Returns the value of the deviance function.
-
-        Parameters
-        -----------
-        endog : array-like
-            Endogenous response variable
-        mu : array-like
-            Fitted mean response variable
-        freq_weights : array-like
-            1d array of frequency weights. The default is 1.
-        scale : float, optional
-            An optional scale argument. The default is 1.
-
-        Returns
-        -------
-        deviance : float
-            Deviance function as defined below
-
-        Notes
-        -----
-        :math:`D = \sum_i piecewise_i` where :math:`piecewise_i` is defined as:
-
-        If :math:`Y_{i} = 0`:
-
-        :math:`piecewise_i = 2* \log(1 + \alpha * \mu_i) / \alpha`
-
-        If :math:`Y_{i} > 0`:
-
-        :math:`piecewise_i = 2 * Y_i * \log(Y_i / \mu_i) - (2 / \alpha) *
-            (1 + \alpha * Y_i) * \ln(1 + \alpha * Y_i) / (1 + \alpha * \mu_i)`
-        """
-        iszero = np.equal(endog, 0)
-        notzero = 1 - iszero
-        endog_mu = self._clean(endog/mu)
-        tmp = iszero * 2 * np.log(1 + self.alpha * mu) / self.alpha
-        tmp += notzero * (2 * endog * np.log(endog_mu) - 2 / self.alpha *
-                          (1 + self.alpha * endog) *
-                          np.log((1 + self.alpha * endog) /
-                                 (1 + self.alpha * mu)))
-        return np.sum(freq_weights * tmp) / scale
-
-    def resid_dev(self, endog, mu, scale=1.):
-        r"""
-        Negative Binomial Deviance Residual
-
-        Parameters
-        ----------
-        endog : array-like
-            `endog` is the response variable
-        mu : array-like
-            `mu` is the fitted value of the model
-        scale : float, optional
-            An optional argument to divide the residuals by scale. The default
-            is 1.
-
-        Returns
-        --------
-        resid_dev : array
-            The array of deviance residuals
-
-        Notes
-        -----
-        :math:`resid\_dev_i = sign(Y_i-\mu_i) * \sqrt{piecewise_i}`
-
-        where :math:`piecewise_i` is defined as
-
-        If :math:`Y_i = 0`:
-
-        :math:`piecewise_i = 2 * \log(1 + \alpha * \mu_i)/ \alpha`
-
-        If :math:`Y_i > 0`:
-
-        :math:`piecewise_i = 2 * Y_i * \log(Y_i / \mu_i) - (2 / \alpha) *
-        (1 + \alpha * Y_i) * \log((1 + \alpha * Y_i) / (1 + \alpha * \mu_i))`
-        """
-        iszero = np.equal(endog, 0)
-        notzero = 1 - iszero
-        endog_mu = self._clean(endog / mu)
-        tmp = iszero * 2 * np.log(1 + self.alpha * mu) / self.alpha
-        tmp += notzero * (2 * endog * np.log(endog_mu) - 2 / self.alpha *
-                          (1 + self.alpha * endog) *
-                          np.log((1 + self.alpha * endog) /
-                                 (1 + self.alpha * mu)))
-        return np.sign(endog - mu) * np.sqrt(tmp) / scale
-
-    def loglike(self, endog, mu, freq_weights=1., scale=1.):
-        r"""
-        The log-likelihood function in terms of the fitted mean response.
-
-        Parameters
-        ----------
-        endog : array-like
-            Endogenous response variable
-        mu : array-like
-            The fitted mean response values
-        freq_weights : array-like
-            1d array of frequency weights. The default is 1.
-        scale : float
-            The scale parameter. The default is 1.
-
-        Returns
-        -------
-        llf : float
-            The value of the loglikelihood function evaluated at
-            (endog,mu,freq_weights,scale) as defined below.
-
-        Notes
-        -----
-        Defined as:
-
-        .. math::
-
-           llf = \sum_i freq\_weights_i * (Y_i * \log{(\alpha * e^{\eta_i} /
-                 (1 + \alpha * e^{\eta_i}))} - \log{(1 + \alpha * e^{\eta_i})}/
-                 \alpha + Constant)
-
-        where :math:`Constant` is defined as:
-
-        .. math::
-
-           Constant = \ln \Gamma{(Y_i + 1/ \alpha )} - \ln \Gamma(Y_i + 1) -
-                      \ln \Gamma{(1/ \alpha )}
-        """
-        lin_pred = self._link(mu)
-        constant = (special.gammaln(endog + 1 / self.alpha) -
-                    special.gammaln(endog+1)-special.gammaln(1/self.alpha))
-        exp_lin_pred = np.exp(lin_pred)
-        return np.sum((endog * np.log(self.alpha * exp_lin_pred /
-                                      (1 + self.alpha * exp_lin_pred)) -
-                      np.log(1 + self.alpha * exp_lin_pred) /
-                      self.alpha + constant) * freq_weights)
-
-    def resid_anscombe(self, endog, mu):
-        """
-        The Anscombe residuals for the negative binomial family
-
-        Parameters
-        ----------
-        endog : array-like
-            Endogenous response variable
-        mu : array-like
-            Fitted mean response variable
-
-        Returns
-        -------
-        resid_anscombe : array
-            The Anscombe residuals as defined below.
-
-        Notes
-        -----
-        `resid_anscombe` = (hyp2f1(-alpha*endog)-hyp2f1(-alpha*mu)+\
-                1.5*(endog**(2/3.)-mu**(2/3.)))/(mu+alpha*mu**2)**(1/6.)
-
-        where hyp2f1 is the hypergeometric 2f1 function parameterized as
-        hyp2f1(x) = hyp2f1(2/3.,1/3.,5/3.,x)
-        """
-
-        hyp2f1 = lambda x : special.hyp2f1(2 / 3., 1 / 3., 5 / 3., x)
-        return ((hyp2f1(-self.alpha * endog) - hyp2f1(-self.alpha * mu) +
-                 1.5 * ( endog**(2 / 3.) - mu**(2 / 3.))) /
-                (mu + self.alpha * mu**2)**(1 / 6.))
-
-
-class Tweedie(Family):
-    """
-    Tweedie family.
-
-    Parameters
-    ----------
-    link : a link instance, optional
-        The default link for the Tweedie family is the log link when the
-        link_power is 0. Otherwise, the power link is default.
-        Available links are log and Power.
-    var_power : float, optional
-        The variance power.
-    link_power : float, optional
-        The link power.
-
-    Attributes
-    ----------
-    Tweedie.link : a link instance
-        The link function of the Tweedie instance
-    Tweedie.variance : varfunc instance
-    Tweedie.link_power : float
-        The power of the link function, or 0 if its a log link.
-    Tweedie.var_power : float
-        The power of the variance function.
-
-    Notes
-    -----
-    Logliklihood function not implemented because of the complexity of
-    calculating an infinite series of summations. The variance power can be
-    estimated using the `estimate_tweedie_power` function that is part of the
-    `GLM` class.
-    """
-    links = [L.log, L.Power]
-    variance = V.Power
-    safe_links = [L.log, L.Power]
-
-    def __init__(self, link=None, var_power=1., link_power=0):
-        self.var_power = var_power
-        self.link_power = link_power
-        self.variance = V.Power(power=var_power * 1.)
-        if link_power != 0 and not ((link is L.Power) or (link is None)):
-            msg = 'link_power of {} not supported specified link'
-            msg = msg.format(link_power)
-            raise ValueError(msg)
-        if (link_power == 0) and ((link is None) or (link is L.Log)):
-            self.link = L.log()
-        elif link_power != 0:
-            self.link = L.Power(power=link_power * 1.)
-        else:
-            self.link = link()
-
-    def _clean(self, x):
-        """
-        Helper function to trim the data so that is in (0,inf)
-
-        Notes
-        -----
-        The need for this function was discovered through usage and its
-        possible that other families might need a check for validity of the
-        domain.
-        """
-        return np.clip(x, 0, np.inf)
-
-    def deviance(self, endog, mu, freq_weights=1., scale=1.):
-        r"""
-        Returns the value of the deviance function.
-
-        Parameters
-        -----------
-        endog : array-like
-            Endogenous response variable
-        mu : array-like
-            Fitted mean response variable
-        freq_weights : array-like
-            1d array of frequency weights. The default is 1.
-        scale : float, optional
-            An optional scale argument. The default is 1.
-
-        Returns
-        -------
-        deviance : float
-            Deviance function as defined below
-
-        Notes
-        -----
-        When :math:`p = 1`,
-
-        .. math::
-
-            resid\_dev_i = \mu
-
-        when :math:`endog = 0` and
-
-        .. math::
-
-            resid\_dev_i = endog * \log(endog / \mu) + (\mu - endog)
-
-        otherwise.
-
-        When :math:`p = 2`,
-
-        .. math::
-
-            resid\_dev_i =  (endog - \mu) / \mu - \log(endog / \mu)
-
-        For all other p,
-
-        .. math::
-
-            resid\_dev_i = endog ^{2 - p} / ((1 - p) * (2 - p)) -
-                           endog * \mu ^{1 - p} / (1 - p) + \mu ^{2 - p} /
-                           (2 - p)
-
-        Once :math:`resid\_dev_i` is calculated, then calculate deviance as
-
-        .. math::
-
-            D = \sum{2 * freq\_weights * resid\_dev_i}
-        """
-        p = self.var_power
-        if p == 1:
-            dev = np.where(endog == 0,
-                           mu,
-                           endog * np.log(endog / mu) + (mu - endog))
-        elif p == 2:
-            endog1 = np.clip(endog, FLOAT_EPS, np.inf)
-            dev = ((endog - mu) / mu) - np.log(endog1 / mu)
-        else:
-            dev = (endog ** (2 - p) / ((1 - p) * (2 - p)) -
-                   endog * mu ** (1-p) / (1 - p) + mu ** (2 - p) / (2 - p))
-        return np.sum(2 * freq_weights * dev)
-
-    def resid_dev(self, endog, mu, scale=1.):
-        r"""
-        Tweedie Deviance Residual
-
-        Parameters
-        ----------
-        endog : array-like
-            `endog` is the response variable
-        mu : array-like
-            `mu` is the fitted value of the model
-        scale : float, optional
-            An optional argument to divide the residuals by scale. The default
-            is 1.
-
-        Returns
-        --------
-        resid_dev : array
-            The array of deviance residuals
-
-        Notes
-        -----
-        When :math:`p = 1`,
-
-        .. math::
-
-            resid\_dev_i = \mu
-
-        when :math:`endog = 0` and
-
-        .. math::
-
-            resid\_dev_i = endog * \log(endog / \mu) + (\mu - endog)
-
-        otherwise.
-
-        When :math:`p = 2`,
-
-        .. math::
-
-            resid\_dev_i =  (endog - \mu) / \mu - \log(endog / \mu)
-
-        For all other p,
-
-        .. math::
-
-            resid\_dev_i = endog ^{2 - p} / ((1 - p) * (2 - p)) -
-                           endog * \mu ^{1 - p} / (1 - p) + \mu ^{2 - p} /
-                           (2 - p)
-        """
-        p = self.var_power
-        if p == 1:
-            dev = np.where(endog == 0,
-                           mu,
-                           endog * np.log(endog / mu) + (mu - endog))
-        elif p == 2:
-            endog1 = np.clip(endog, FLOAT_EPS, np.inf)
-            dev = ((endog - mu) / mu) - np.log(endog1 / mu)
-        else:
-            dev = (endog ** (2 - p) / ((1 - p) * (2 - p)) -
-                   endog * mu ** (1-p) / (1 - p) + mu ** (2 - p) / (2 - p))
-        return np.sign(endog - mu) * np.sqrt(2 * dev)
-
-    def loglike(self, endog, mu, freq_weights=1., scale=1.):
-        r"""
-        The log-likelihood function in terms of the fitted mean response.
-
-        Parameters
-        ----------
-        endog : array-like
-            Endogenous response variable
-        mu : array-like
-            The fitted mean response values
-        freq_weights : array-like
-            1d array of frequency weights. The default is 1.
-        scale : float
-            The scale parameter. The default is 1.
-
-        Returns
-        -------
-        llf : float
-            The value of the loglikelihood function evaluated at
-            (endog,mu,freq_weights,scale) as defined below.
-
-        Notes
-        -----
-        This is not implemented because of the complexity of calculating an
-        infinite series of sums.
-        """
-        return np.nan
-
-    def resid_anscombe(self, endog, mu):
-        """
-        The Anscombe residuals for the Tweedie family
-
-        Parameters
-        ----------
-        endog : array-like
-            Endogenous response variable
-        mu : array-like
-            Fitted mean response variable
-
-        Returns
-        -------
-        resid_anscombe : array
-            The Anscombe residuals as defined below.
-
-        Notes
-        -----
-        When :math:`p = 3`, then
-
-        .. math::
-
-            resid\_anscombe_i = (\log(endog) - \log(\mu)) / \sqrt{mu}
-
-        Otherwise,
-
-        .. math::
-
-            c = (3 - p) / 3
-
-        .. math::
-
-            resid\_anscombe_i = (1 / c) * (endog ^ c - \mu ^ c) / \mu ^{p / 6}
-        """
-        if self.var_power == 3:
-            return (np.log(endog) - np.log(mu)) / np.sqrt(mu)
-        else:
-            c = (3. - self.var_power) / 3.
-            return ((1. / c) * (endog ** c - mu ** c) /
-                    mu ** (self.var_power / 6.))

@@ -1,14 +1,12 @@
-import os.path
 import struct
-from .. import FileIO
+from .. import fileio
 from ...weights import W
-from warnings import warn
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
 __all__ = ["Wk1IO"]
 
 
-class Wk1IO(FileIO.FileIO):
+class Wk1IO(fileio.FileIO):
     """
     MATLAB wk1read.m and wk1write.m that were written by Brian M. Bourgault in 10/22/93
 
@@ -142,7 +140,7 @@ class Wk1IO(FileIO.FileIO):
 
     def __init__(self, *args, **kwargs):
         self._varName = 'Unknown'
-        FileIO.FileIO.__init__(self, *args, **kwargs)
+        fileio.FileIO.__init__(self, *args, **kwargs)
         self.file = open(self.dataPath, self.mode + 'b')
 
     def _set_varName(self, val):
@@ -176,22 +174,18 @@ class Wk1IO(FileIO.FileIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open a Lotus Wk1 file and read it into a pysal weights object
 
-        >>> w = pysal.open(pysal.examples.get_path('spat-sym-us.wk1'),'r').read()
+        >>> import pysal.lib
+        >>> w = pysal.lib.io.open(pysal.lib.examples.get_path('spat-sym-us.wk1'),'r').read()
 
         Get the number of observations from the header
 
         >>> w.n
         46
 
-        Get the mean number of neighbors
-
-        >>> w.mean_neighbors
-        4.0869565217391308
-
         Get neighbor distances for a single observation
 
-        >>> w[1]
-        {25: 1.0, 3: 1.0, 28: 1.0, 39: 1.0}
+        >>> w[1] == dict({25: 1.0, 3: 1.0, 28: 1.0, 39: 1.0})
+        True
 
         """
         if self.pos > 0:
@@ -324,6 +318,4 @@ class Wk1IO(FileIO.FileIO):
 
     def close(self):
         self.file.close()
-        FileIO.FileIO.close(self)
-
-
+        fileio.FileIO.close(self)

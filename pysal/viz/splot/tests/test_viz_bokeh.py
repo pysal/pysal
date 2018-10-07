@@ -1,4 +1,4 @@
-import pysal.lib.api as lp
+from pysal.lib.weights.contiguity import Queen
 from pysal.lib import examples
 import geopandas as gpd
 import pysal.explore.esda as esda
@@ -11,7 +11,7 @@ def test_plot_choropleth():
     link = examples.get_path('columbus.shp')
     df = gpd.read_file(link)
 
-    w = lp.Queen.from_dataframe(df)
+    w = Queen.from_dataframe(df)
     w.transform = 'r'
 
     TOOLS = "tap,help"
@@ -24,7 +24,7 @@ def test_lisa_cluster():
     df = gpd.read_file(link)
 
     y = df['HOVAL'].values
-    w = lp.Queen.from_dataframe(df)
+    w = Queen.from_dataframe(df)
     w.transform = 'r'
 
     moran_loc = esda.moran.Moran_Local(y, w)
@@ -38,7 +38,7 @@ def test_moran_scatterplot():
     df = gpd.read_file(link)
 
     y = df['HOVAL'].values
-    w = lp.Queen.from_dataframe(df)
+    w = Queen.from_dataframe(df)
     w.transform = 'r'
 
     moran_loc = esda.moran.Moran_Local(y, w)
@@ -51,7 +51,7 @@ def test_plot_local_autocorrelation():
     df = gpd.read_file(link)
 
     y = df['HOVAL'].values
-    w = lp.Queen.from_dataframe(df)
+    w = Queen.from_dataframe(df)
     w.transform = 'r'
 
     moran_loc = esda.moran.Moran_Local(y, w)

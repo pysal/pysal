@@ -20,19 +20,14 @@ RTOL = .00001
 ATOL = 1e-7
 
 import copy
-import math
-import random
 import sys
 import time
-import unittest
-from warnings import warn as Warn
-from functools import wraps
 try:
     from patsy import PatsyError
 except ImportError:
     PatsyError = Exception
 try:
-    import pandas 
+    import pandas
 except ImportError:
     pandas = None
 
@@ -77,8 +72,9 @@ def simport(modname):
     Wrapping this function around an iterative context or a with context would
     allow the module to be used without necessarily attaching it permanently in
     the global namespace:
+
     
-    >>> for t,mod in simport('pandas'):
+        for t,mod in simport('pandas'):
             if t:
                 mod.DataFrame()
             else:
@@ -87,8 +83,8 @@ def simport(modname):
 
     instead of:
 
-    >>> t, mod = simport('pandas')
-    >>> if t:
+        t, mod = simport('pandas')
+        if t:
             mod.DataFrame()
         else:
             #do alternative behavior here

@@ -1,7 +1,6 @@
-from ...common import simport, requires
+from ...common import requires
 from ...cg import asShape
-from .. import FileIO
-from .file import read_files, write_files 
+from .file import read_files, write_files
 import shapely.geometry as sgeom
 import pandas as pd
 

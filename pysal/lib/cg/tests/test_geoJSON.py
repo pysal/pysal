@@ -1,5 +1,5 @@
 from ..shapes import Point, Chain, asShape
-from ...io.FileIO import FileIO as psopen
+from ...io.fileio import FileIO as psopen
 from ... import examples as pysal_examples
 import doctest
 import unittest

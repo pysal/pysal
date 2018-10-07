@@ -1,9 +1,11 @@
 import pysal.model.spreg as EC
 from pysal.model.spreg import sputils as spu
-from warnings import warn as Warn
+from warnings import warn as Warn, filterwarnings
 import unittest as ut
 import numpy as np
 import scipy.sparse as spar
+
+filterwarnings('ignore', category=spar.SparseEfficiencyWarning)
 
 ALL_FUNCS = [f for f,v in list(spu.__dict__.items()) \
 	     if (callable(v) \

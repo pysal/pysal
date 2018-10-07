@@ -1,5 +1,4 @@
 import numpy as np
-import copy
 import numpy.linalg as la
 from . import summary_output as SUMMARY
 from . import robust as ROBUST
@@ -28,19 +27,19 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable to use as instruments (note: 
+                   external exogenous variable to use as instruments (note:
                    this should not contain any variables from x); cannot be
                    used in combination with h
     h            : array
                    Two dimensional array with n rows and one column for each
-                   exogenous variable to use as instruments (note: this 
-                   can contain variables from x); cannot be used in 
+                   exogenous variable to use as instruments (note: this
+                   can contain variables from x); cannot be used in
                    combination with q
     robust       : string
                    If 'white', then a White consistent estimator of the
                    variance-covariance matrix is given.  If 'hac', then a
                    HAC consistent estimator of the variance-covariance
-                   matrix is given. Default set to None. 
+                   matrix is given. Default set to None.
     gwk          : pysal W object
                    Kernel spatial weights needed for HAC estimation. Note:
                    matrix must have ones along the main diagonal.
@@ -62,7 +61,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
                    Number of variables for which coefficients are estimated
                    (including the constant)
     kstar        : integer
-                   Number of endogenous variables. 
+                   Number of endogenous variables.
     y            : array
                    nx1 array for dependent variable
     x            : array
@@ -73,7 +72,7 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable used as instruments 
+                   external exogenous variable used as instruments
     z            : array
                    nxk array of variables (combination of x and yend)
     h            : array
@@ -108,8 +107,8 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> db = lps.open(lps.get_path("columbus.dbf"),'r')
+    >>> import pysal.lib
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),'r')
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
     >>> X = []
@@ -235,7 +234,7 @@ class TSLS(BaseTSLS):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable to use as instruments (note: 
+                   external exogenous variable to use as instruments (note:
                    this should not contain any variables from x)
     w            : pysal W object
                    Spatial weights object (required if running spatial
@@ -244,7 +243,7 @@ class TSLS(BaseTSLS):
                    If 'white', then a White consistent estimator of the
                    variance-covariance matrix is given.  If 'hac', then a
                    HAC consistent estimator of the variance-covariance
-                   matrix is given. Default set to None. 
+                   matrix is given. Default set to None.
     gwk          : pysal W object
                    Kernel spatial weights needed for HAC estimation. Note:
                    matrix must have ones along the main diagonal.
@@ -288,7 +287,7 @@ class TSLS(BaseTSLS):
                    Number of variables for which coefficients are estimated
                    (including the constant)
     kstar        : integer
-                   Number of endogenous variables. 
+                   Number of endogenous variables.
     y            : array
                    nx1 array for dependent variable
     x            : array
@@ -299,7 +298,7 @@ class TSLS(BaseTSLS):
                    endogenous variable
     q            : array
                    Two dimensional array with n rows and one column for each
-                   external exogenous variable used as instruments 
+                   external exogenous variable used as instruments
     z            : array
                    nxk array of variables (combination of x and yend)
     h            : array
@@ -319,7 +318,7 @@ class TSLS(BaseTSLS):
     sig2         : float
                    Sigma squared used in computations
     std_err      : array
-                   1xk array of standard errors of the betas    
+                   1xk array of standard errors of the betas
     z_stat       : list of tuples
                    z statistic; each tuple contains the pair (statistic,
                    p-value), where each is a float
@@ -333,7 +332,7 @@ class TSLS(BaseTSLS):
     name_yend    : list of strings
                    Names of endogenous variables for use in output
     name_z       : list of strings
-                   Names of exogenous and endogenous variables for use in 
+                   Names of exogenous and endogenous variables for use in
                    output
     name_q       : list of strings
                    Names of external instruments
@@ -371,15 +370,15 @@ class TSLS(BaseTSLS):
     perform all the analysis.
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
 
-    Open data on Columbus neighborhood crime (49 areas) using lps.open().
+    Open data on Columbus neighborhood crime (49 areas) using pysal.lib.io.open().
     This is the DBF associated with the Columbus shapefile.  Note that
-    lps.open() also reads data in CSV format; since the actual class
+    pysal.lib.io.open() also reads data in CSV format; since the actual class
     requires data to be passed in as numpy arrays, the user can read their
-    data in using any method.  
+    data in using any method.
 
-    >>> db = lps.open(lps.get_path("columbus.dbf"),'r')
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),'r')
 
     Extract the CRIME column (crime rates) from the DBF file and make it the
     dependent variable for the regression. Note that PySAL requires this to be
@@ -470,9 +469,8 @@ def _test():
 if __name__ == '__main__':
     _test()
 
-    import numpy as np
-    import pysal.lib.api as lps
-    db = lps.open(lps.get_path("columbus.dbf"), 'r')
+    import pysal.lib
+    db = pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"), 'r')
     y_var = 'CRIME'
     y = np.array([db.by_col(y_var)]).reshape(49, 1)
     x_var = ['INC']
@@ -481,7 +479,7 @@ if __name__ == '__main__':
     yd = np.array([db.by_col(name) for name in yd_var]).T
     q_var = ['DISCBD']
     q = np.array([db.by_col(name) for name in q_var]).T
-    w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+    w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
     w.transform = 'r'
     tsls = TSLS(y, x, yd, q, w=w, spat_diag=True, name_y=y_var, name_x=x_var,
                 name_yend=yd_var, name_q=q_var, name_ds='columbus', name_w='columbus.gal')

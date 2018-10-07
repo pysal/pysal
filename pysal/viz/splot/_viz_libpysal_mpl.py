@@ -1,6 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+"""
+Lightweight visualizations for pysal.lib using Matplotlib and Geopandas
+
+TODO
+* make gdf argument in plot_spatial_weights optional
+"""
+
+__author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")
+
+
+
 def plot_spatial_weights(w, gdf, indexed_on=None, ax=None, 
                          figsize=(10,10), node_kws=None, edge_kws=None,
                          nonplanar_edge_kws=None):
@@ -48,16 +59,30 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
     Examples
     --------
     Imports
-    >>> import pysal.lib.api as lp
+    
+    >>> from pysal.lib.weights.contiguity import Queen
     >>> import geopandas as gpd
+    >>> import pysal.lib
+    >>> from pysal.lib import examples
+    >>> import matplotlib.pyplot as plt
+    >>> from pysal.viz.splot.libpysal import plot_spatial_weights
+    
     Data preparation and statistical analysis
-    >>> gdf = gpd.read_file(examples.get_path('43MUE250GC_SIR.shp'))
-    >>> weights = lp.Queen.from_dataframe(gdf)
+    
+    >>> gdf = gpd.read_file(examples.get_path('map_RS_BR.shp'))
+    >>> weights = Queen.from_dataframe(gdf)
     >>> wnp = pysal.lib.weights.util.nonplanar_neighbors(weights, gdf)
+    
     Plot weights
+    
     >>> plot_spatial_weights(weights, gdf)
+    >>> plt.show()
+    
+    Plot corrected weights
+    
     >>> plot_spatial_weights(wnp, gdf)
     >>> plt.show()
+    
     """
     if ax is None:
         fig = plt.figure(figsize=figsize)

@@ -10,10 +10,9 @@ __author__ = "Luc Anselin luc.anselin@asu.edu, \
 
 import numpy as np
 from scipy import sparse as SP
-from scipy.sparse import linalg as SPla
 import scipy.optimize as op
 import numpy.linalg as la
-from pysal.lib.api import lag_spatial
+from pysal.lib.weights.spatial_lag import lag_spatial
 from .sputils import *
 import copy
 
@@ -419,11 +418,11 @@ def get_spFilter(w, lamb, sf):
     --------
 
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
-    >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
+    >>> import pysal.lib
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
     >>> y = np.array(db.by_col("CRIME"))
     >>> y = np.reshape(y, (49,1))
-    >>> w=lps.open(lps.get_path("columbus.gal")).read()        
+    >>> w=pysal.lib.io.open(pysal.lib.examples.get_path("columbus.gal")).read()        
     >>> solu = get_spFilter(w,0.5,y)
     >>> print solu[0:5]
     [[  -8.9882875]
@@ -505,7 +504,7 @@ def inverse_prod(w, data, scalar, post_multiply=False, inv_method="power_exp", t
     >>> import numpy, pysal
     >>> import numpy.linalg as la
     >>> np.random.seed(10)
-    >>> w = lps.lat2W(5, 5)
+    >>> w = pysal.lib.weights.util.lat2W(5, 5)
     >>> w.transform = 'r'
     >>> data = np.random.randn(w.n)
     >>> data.shape = (w.n, 1)

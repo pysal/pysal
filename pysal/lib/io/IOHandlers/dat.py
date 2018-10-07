@@ -1,7 +1,5 @@
-import os.path
 from . import gwt
 from ...weights import W
-from warnings import warn
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
 __all__ = ["DatIO"]
@@ -40,7 +38,8 @@ class DatIO(gwt.GwtIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open .dat file and read it into a pysal weights object
 
-        >>> w = pysal.open(pysal.examples.get_path('wmat.dat'),'r').read()
+        >>> import pysal.lib
+        >>> w = pysal.lib.io.open(pysal.lib.examples.get_path('wmat.dat'),'r').read()
 
         Get the number of observations from the header
 
@@ -50,12 +49,12 @@ class DatIO(gwt.GwtIO):
         Get the mean number of neighbors
 
         >>> w.mean_neighbors
-        4.7346938775510203
+        4.73469387755102
 
         Get neighbor distances for a single observation
 
-        >>> w[1]
-        {2.0: 0.3333, 5.0: 0.3333, 6.0: 0.3333}
+        >>> w[1] == dict({2.0: 0.3333, 5.0: 0.3333, 6.0: 0.3333})
+        True
 
         """
         if self.pos > 0:
@@ -128,4 +127,3 @@ class DatIO(gwt.GwtIO):
         else:
             raise TypeError("Expected a pysal weights object, got: %s" % (
                 type(obj)))
-

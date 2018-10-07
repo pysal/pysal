@@ -1,15 +1,12 @@
-import os.path
 import scipy.io as sio
-from .. import FileIO
+from .. import fileio
 from ...weights.weights import W, WSP
-from ...weights.util import full, full2W
-from warnings import warn
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
 __all__ = ["MtxIO"]
 
 
-class MtxIO(FileIO.FileIO):
+class MtxIO(fileio.FileIO):
     """
     Opens, reads, and writes weights file objects in Matrix Market MTX format.
 
@@ -55,7 +52,7 @@ class MtxIO(FileIO.FileIO):
     MODES = ['r', 'w']
 
     def __init__(self, *args, **kwargs):
-        FileIO.FileIO.__init__(self, *args, **kwargs)
+        fileio.FileIO.__init__(self, *args, **kwargs)
         self.file = open(self.dataPath, self.mode + 'b')
 
     def read(self, n=-1, sparse=False):
@@ -83,7 +80,8 @@ class MtxIO(FileIO.FileIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open a MatrixMarket mtx file and read it into a pysal weights object
 
-        >>> f = pysal.open(pysal.examples.get_path('wmat.mtx'),'r')
+        >>> import pysal.lib
+        >>> f = pysal.lib.io.open(pysal.lib.examples.get_path('wmat.mtx'),'r')
 
         >>> w = f.read()
 
@@ -95,16 +93,16 @@ class MtxIO(FileIO.FileIO):
         Get the mean number of neighbors
 
         >>> w.mean_neighbors
-        4.7346938775510203
+        4.73469387755102
 
         Get neighbor weights for a single observation
 
         >>> w[1]
-        {2: 0.33329999999999999, 5: 0.33329999999999999, 6: 0.33329999999999999}
+        {2: 0.3333, 5: 0.3333, 6: 0.3333}
 
         >>> f.close()
 
-        >>> f = pysal.open(pysal.examples.get_path('wmat.mtx'),'r')
+        >>> f = pysal.lib.io.open(pysal.lib.examples.get_path('wmat.mtx'),'r')
 
         >>> wsp = f.read(sparse=True)
 
@@ -117,13 +115,12 @@ class MtxIO(FileIO.FileIO):
         matrix (the 0th row) corresponds to ID 1 from the original mtx file
         read in.
 
-        >>> print wsp.sparse[0].todense()
-        [[ 0.      0.3333  0.      0.      0.3333  0.3333  0.      0.      0.      0.
-           0.      0.      0.      0.      0.      0.      0.      0.      0.      0.
-           0.      0.      0.      0.      0.      0.      0.      0.      0.      0.
-           0.      0.      0.      0.      0.      0.      0.      0.      0.      0.
-           0.      0.      0.      0.      0.      0.      0.      0.      0.    ]]
-
+        >>> print(wsp.sparse[0].todense())
+        [[0.     0.3333 0.     0.     0.3333 0.3333 0.     0.     0.     0.
+          0.     0.     0.     0.     0.     0.     0.     0.     0.     0.
+          0.     0.     0.     0.     0.     0.     0.     0.     0.     0.
+          0.     0.     0.     0.     0.     0.     0.     0.     0.     0.
+          0.     0.     0.     0.     0.     0.     0.     0.     0.    ]]
         """
         if self.pos > 0:
             raise StopIteration
@@ -235,6 +232,4 @@ class MtxIO(FileIO.FileIO):
 
     def close(self):
         self.file.close()
-        FileIO.FileIO.close(self)
-
-
+        fileio.FileIO.close(self)

@@ -15,9 +15,9 @@ from ._viz_utils import (bin_labels_choropleth, add_legend,
 Leightweight interactive visualizations in Bokeh.
 
 TODO:
-We are not re-projection data into web-mercator atm,
-to allow plotting from raw coordinates.
-The user should however be aware of the projection of the used data.
+* We are not re-projection data into web-mercator atm,
+    to allow plotting from raw coordinates.
+    The user should however be aware of the projection of the used data.
 """
 
 __author__ = ("Stefanie Lumnitz <stefanie.lumitz@gmail.com>")

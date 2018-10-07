@@ -1,25 +1,22 @@
 import unittest
-import pysal.lib.api as lps
-import scipy
+import pysal.lib
 import numpy as np
-from pysal.model.spreg.ml_error import ML_Error
-from pysal.model.spreg import utils
+from scipy import sparse
+from ..ml_error import ML_Error
 from pysal.lib.common import RTOL, ATOL
-from warnings import warn as Warn
-from .skip import SKIP
+from warnings import filterwarnings
+filterwarnings('ignore', category=sparse.SparseEfficiencyWarning)
+filterwarnings('ignore', message="^Method 'bounded' does not support")
 
-
-@unittest.skipIf(SKIP,
-        "Skipping MLError Tests")
 class TestMLError(unittest.TestCase):
     def setUp(self):
-        db = lps.open(lps.get_path("south.dbf"),'r')
+        db = pysal.lib.io.open(pysal.lib.examples.get_path("south.dbf"),'r')
         self.y_name = "HR90"
         self.y = np.array(db.by_col(self.y_name))
         self.y.shape = (len(self.y),1)
         self.x_names = ["RD90","PS90","UE90","DV90"]
         self.x = np.array([db.by_col(var) for var in self.x_names]).T
-        ww = lps.open(lps.get_path("south_q.gal"))
+        ww = pysal.lib.io.open(pysal.lib.examples.get_path("south_q.gal"))
         self.w = ww.read()
         ww.close()
         self.w.transform = 'r'
@@ -28,7 +25,6 @@ class TestMLError(unittest.TestCase):
         reg = ML_Error(self.y,self.x,w=self.w,name_y=self.y_name,name_x=self.x_names,\
                name_w="south_q.gal", method=method)
         betas = np.array([[ 6.1492], [ 4.4024], [ 1.7784], [-0.3781], [ 0.4858], [ 0.2991]])
-        Warn('Running higher-tolerance tests in test_ml_error.py')
         np.testing.assert_allclose(reg.betas,betas,RTOL + .0001)
         u = np.array([-5.97649777])
         np.testing.assert_allclose(reg.u[0],u,RTOL)
@@ -84,7 +80,6 @@ class TestMLError(unittest.TestCase):
                      name_y=self.y_name, name_x=self.x_names,
                      name_w='south_q.gal',  method='ORD')
         betas = np.array([[ 6.1492], [ 4.4024], [ 1.7784], [-0.3781], [ 0.4858], [ 0.2991]])
-        Warn('Running higher-tolerance tests in test_ml_error.py')
         np.testing.assert_allclose(reg.betas,betas,RTOL + .0001)
         u = np.array([-5.97649777])
         np.testing.assert_allclose(reg.u[0],u,RTOL)

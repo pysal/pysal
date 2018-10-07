@@ -1,18 +1,17 @@
 import unittest
-import pysal.lib
-import pysal.explore.giddy.directional as directional
+import pysal.lib as ps
+from .. import directional
 import numpy as np
 
 
 class Rose_Tester(unittest.TestCase):
     def setUp(self):
-        f = open(pysal.lib.examples.get_path("spi_download.csv"), 'r')
+        f = open(ps.examples.get_path("spi_download.csv"), 'r')
         lines = f.readlines()
         f.close()
         lines = [line.strip().split(",") for line in lines]
         names = [line[2] for line in lines[1:-5]]
         data = np.array([list(map(int, line[3:])) for line in lines[1:-5]])
-        sids = list(range(60))
         out = ['"United States 3/"',
                '"Alaska 3/"',
                '"District of Columbia"',
@@ -29,9 +28,8 @@ class Rose_Tester(unittest.TestCase):
         sids = [names.index(name) for name in snames]
         states = data[sids, :]
         us = data[0]
-        years = np.arange(1969, 2009)
         rel = states / (us * 1.)
-        gal = pysal.lib.open(pysal.lib.examples.get_path('states48.gal'))
+        gal = ps.io.open(ps.examples.get_path('states48.gal'))
         self.w = gal.read()
         self.w.transform = 'r'
         self.Y = rel[:, [0, -1]]

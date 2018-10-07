@@ -1,13 +1,11 @@
-import os.path
-from .. import FileIO 
+from .. import fileio 
 from ...weights import W
-from warnings import warn
 
 __author__ = "Myunghwa Hwang <mhwang4@gmail.com>"
 __all__ = ["GeoBUGSTextIO"]
 
 
-class GeoBUGSTextIO(FileIO.FileIO):
+class GeoBUGSTextIO(fileio.FileIO):
     """
     Opens, reads, and writes weights file objects in the text format
     used in GeoBUGS. GeoBUGS generates a spatial weights matrix
@@ -65,7 +63,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
 
     def __init__(self, *args, **kwargs):
         args = args[:2]
-        FileIO.FileIO.__init__(self, *args, **kwargs)
+        fileio.FileIO.__init__(self, *args, **kwargs)
         self.file = open(self.dataPath, self.mode)
 
     def read(self, n=-1):
@@ -82,9 +80,8 @@ class GeoBUGSTextIO(FileIO.FileIO):
         Type 'dir(w)' at the interpreter to see what methods are supported.
         Open a GeoBUGS text file and read it into a pysal weights object
 
-        >>> w = pysal.open(pysal.examples.get_path('geobugs_scot'),'r','geobugs_text').read()
-        WARNING: there are 3 disconnected observations
-        Island ids:  [6, 8, 11]
+        >>> import pysal.lib
+        >>> w = pysal.lib.io.open(pysal.lib.examples.get_path('geobugs_scot'),'r','geobugs_text').read()
 
         Get the number of observations from the header
 
@@ -94,12 +91,12 @@ class GeoBUGSTextIO(FileIO.FileIO):
         Get the mean number of neighbors
 
         >>> w.mean_neighbors
-        4.1785714285714288
+        4.178571428571429
 
         Get neighbor distances for a single observation
 
-        >>> w[1]
-        {9: 1.0, 19: 1.0, 5: 1.0}
+        >>> w[1] == dict({9: 1.0, 19: 1.0, 5: 1.0})
+        True
 
         """
         self._complain_ifclosed(self.closed)
@@ -185,11 +182,9 @@ class GeoBUGSTextIO(FileIO.FileIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
-        >>> testfile = pysal.open(pysal.examples.get_path('geobugs_scot'),'r','geobugs_text')
+        >>> import tempfile, pysal.lib, os
+        >>> testfile = pysal.lib.io.open(pysal.lib.examples.get_path('geobugs_scot'),'r','geobugs_text')
         >>> w = testfile.read()
-        WARNING: there are 3 disconnected observations
-        Island ids:  [6, 8, 11]
 
         Create a temporary file for this example
 
@@ -205,7 +200,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w','geobugs_text')
+        >>> o = pysal.lib.io.open(fname,'w','geobugs_text')
 
         Write the Weights object into the open file
 
@@ -214,9 +209,7 @@ class GeoBUGSTextIO(FileIO.FileIO):
 
         Read in the newly created text file
 
-        >>> wnew =  pysal.open(fname,'r','geobugs_text').read()
-        WARNING: there are 3 disconnected observations
-        Island ids:  [6, 8, 11]
+        >>> wnew =  pysal.lib.io.open(fname,'r','geobugs_text').read()
 
         Compare values from old to new
 
@@ -249,5 +242,4 @@ class GeoBUGSTextIO(FileIO.FileIO):
 
     def close(self):
         self.file.close()
-        FileIO.FileIO.close(self)
-
+        fileio.FileIO.close(self)

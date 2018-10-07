@@ -1,10 +1,10 @@
 import numpy as np
-import pysal.lib.api as lps
+from pysal.lib import weights
 import scipy.sparse as SP
-#from scipy.stats import f, chisqprob
-from scipy import stats
-chisqprob = lambda chisq, df: stats.chi2.sf(chisq, df)
-
+import itertools as iter
+from scipy.stats import f, chi2
+chisqprob = chi2.sf
+import itertools as iter
 import numpy.linalg as la
 from .utils import spbroadcast
 
@@ -28,16 +28,16 @@ class Chow:
 
     Parameters
     ==========
-    reg     : regression object
+    reg     : regression object or attributes list
               Regression object from PySAL.spreg which is assumed to have the
-              following attributes:
+              following attributes (or attributes list in this order):
 
+                    * kr    : Number of variables varying across regimes
+                    * kf    : Number of variables fixed (global) across regimes
+                    * kryd  : Number of endogenous variables varying across regimes
+                    * nr    : Number of regimes
                     * betas : coefficient estimates
                     * vm    : variance covariance matrix of betas
-                    * kr    : Number of variables varying across regimes
-                    * kryd  : Number of endogenous variables varying across regimes
-                    * kf    : Number of variables fixed (global) across regimes
-                    * nr    : Number of regimes
 
     Attributes
     ==========
@@ -54,9 +54,9 @@ class Chow:
     Examples
     ========
     >>> import numpy as np
-    >>> import pysal.lib.api as lps
+    >>> import pysal.lib
     >>> from ols_regimes import OLS_Regimes
-    >>> db = lps.open(lps.get_path('columbus.dbf'),'r')
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
     >>> y_var = 'CRIME'
     >>> y = np.array([db.by_col(y_var)]).reshape(49,1)
     >>> x_var = ['INC','HOVAL']
@@ -78,27 +78,29 @@ class Chow:
 
     def __init__(self, reg):
         kr, kf, kryd, nr, betas, vm = reg.kr, reg.kf, reg.kryd, reg.nr, reg.betas, reg.vm
-        if betas.shape[0] != vm.shape[0]:
-            if kf > 0:
-                betas = betas[0:vm.shape[0], :]
-                kf = kf - 1
-            else:
-                brange = []
-                for i in range(nr):
+        self.joint, self.regi = _chow_run(reg.kr, reg.kf, reg.kryd, reg.nr, reg.betas, reg.vm)
+
+def _chow_run(kr, kf, kryd, nr, betas, vm):
+    if betas.shape[0] != vm.shape[0]:
+        if kf > 0:
+            betas = betas[0:vm.shape[0], :]
+            kf = kf - 1
+        else:
+            brange = []
+            for i in range(nr):
                     brange.extend(list(range(i * (kr + 1), i * (kr + 1) + kr)))
-                betas = betas[brange, :]
-        r_global = []
-        regi = np.zeros((reg.kr, 2))
-        for vari in np.arange(kr):
-            r_vari = buildR1var(vari, kr, kf, kryd, nr)
-            r_global.append(r_vari)
-            q = np.zeros((r_vari.shape[0], 1))
-            regi[vari, :] = wald_test(betas, r_vari, q, vm)
-        r_global = np.vstack(tuple(r_global))
-        q = np.zeros((r_global.shape[0], 1))
-        joint = wald_test(betas, r_global, q, vm)
-        self.joint = joint
-        self.regi = regi
+            betas = betas[brange, :]
+    r_global = []
+    regi = np.zeros((kr, 2))
+    for vari in np.arange(kr):
+        r_vari = buildR1var(vari, kr, kf, kryd, nr)
+        r_global.append(r_vari)
+        q = np.zeros((r_vari.shape[0], 1))
+        regi[vari, :] = wald_test(betas, r_vari, q, vm)
+    r_global = np.vstack(tuple(r_global))
+    q = np.zeros((r_global.shape[0], 1))
+    joint = wald_test(betas, r_global, q, vm)
+    return joint,regi
 
 
 class Wald:
@@ -490,7 +492,7 @@ def w_regime(w, regi_ids, regi_i, transform=True, min_n=None):
     '''
     w_ids = list(map(w.id_order.__getitem__, regi_ids))
     warn = None
-    w_regi_i = lps.w_subset(w, w_ids, silence_warnings=True)
+    w_regi_i = weights.set_operations.w_subset(w, w_ids, silence_warnings=True)
     if min_n:
         if w_regi_i.n < min_n:
             raise Exception("There are less observations than variables in regime %s." % regi_i)
@@ -530,7 +532,7 @@ def w_regimes(w, regimes, regimes_set, transform=True, get_ids=None, min_n=None)
     w_regi_i = {}
     warn = None
     for r in regimes_set:
-        w_regi_i[r] = lps.w_subset(w, w_ids[r],
+        w_regi_i[r] = weights.set_operations.w_subset(w, w_ids[r],
                                              silence_warnings=True)
         if min_n:
             if w_regi_i[r].n < min_n:
@@ -564,13 +566,13 @@ def w_regimes_union(w, w_regi_i, regimes_set):
     w_regi      : pysal W object
                   Spatial weights object containing the union of the subsets of W
     '''
-    w_regi = lps.weights.w_union(w_regi_i[regimes_set[0]],
+    w_regi = weights.set_operations.w_union(w_regi_i[regimes_set[0]],
                                    w_regi_i[regimes_set[1]], silence_warnings=True)
     if len(regimes_set) > 2:
         for i in range(len(regimes_set))[2:]:
-            w_regi = lps.weights.w_union(w_regi,
+            w_regi = weights.set_operations.w_union(w_regi,
                                            w_regi_i[regimes_set[i]], silence_warnings=True)
-    w_regi = lps.weights.remap_ids(w_regi, dict((i, i)
+    w_regi = weights.util.remap_ids(w_regi, dict((i, i)
                                                   for i in w_regi.id_order), w.id_order)
     w_regi.transform = w.get_transform()
     return w_regi
@@ -682,16 +684,16 @@ def _test():
 if __name__ == '__main__':
     _test()
     import numpy as np
-    import pysal.lib.api as lps
+    import pysal.lib
     from .ols_regimes import OLS_Regimes
-    db = lps.open(lps.get_path('columbus.dbf'), 'r')
+    db = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.dbf'), 'r')
     y_var = 'CRIME'
     y = np.array([db.by_col(y_var)]).reshape(49, 1)
     x_var = ['INC', 'HOVAL']
     x = np.array([db.by_col(name) for name in x_var]).T
     r_var = 'NSA'
     regimes = db.by_col(r_var)
-    w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+    w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
     w.transform = 'r'
     olsr = OLS_Regimes(
         y, x, regimes, w=w, constant_regi='many', nonspat_diag=False, spat_diag=False,

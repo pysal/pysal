@@ -1,4 +1,5 @@
-from .. import FileIO
+from .. import fileio
+
 errmsg = ''
 try:
     try:
@@ -12,8 +13,7 @@ except ImportError:
 
 try:
     from sqlalchemy.ext.automap import automap_base
-    from sqlalchemy import create_engine, inspect
-    from sqlalchemy.ext.automap import automap_base
+    from sqlalchemy import create_engine
     from sqlalchemy.orm import Session
     nosql_mode = False
 except ImportError:
@@ -21,7 +21,7 @@ except ImportError:
     errmsg += ('No module named sqlalchemy. Please install'
                ' sqlalchemy to enable this functionality.')
 
-class SQLConnection(FileIO.FileIO):
+class SQLConnection(fileio.FileIO):
     """
     Reads SQL mappable
     """
@@ -33,7 +33,7 @@ class SQLConnection(FileIO.FileIO):
         if errmsg != '':
             raise ImportError(errmsg)
         self._typ = str
-        FileIO.FileIO.__init__(self, *args, **kwargs)
+        fileio.FileIO.__init__(self, *args, **kwargs)
         #self.file = open(self.dataPath, self.mode)
 
         self.dbname = args[0]
@@ -53,7 +53,7 @@ class SQLConnection(FileIO.FileIO):
 
     def close(self):
         self.file.close()
-        FileIO.FileIO.close(self)
+        fileio.FileIO.close(self)
 
     def _get_gjson(self, tablename, geom_column="GEOMETRY"):
 

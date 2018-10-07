@@ -1,5 +1,5 @@
 import unittest
-import pysal.lib.api as lps
+import pysal.lib
 import numpy as np
 from pysal.model.spreg import error_sp_het as HET
 from pysal.lib.common import RTOL
@@ -7,7 +7,7 @@ import pysal.model.spreg
 
 class TestBaseGMErrorHet(unittest.TestCase):
     def setUp(self):
-        db=lps.open(lps.get_path("columbus.dbf"),"r")
+        db=pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),"r")
         y = np.array(db.by_col("HOVAL"))
         self.y = np.reshape(y, (49,1))
         X = []
@@ -15,7 +15,7 @@ class TestBaseGMErrorHet(unittest.TestCase):
         X.append(db.by_col("CRIME"))
         self.X = np.array(X).T
         self.X = np.hstack((np.ones(self.y.shape),self.X))
-        self.w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+        self.w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
 
     def test_model(self):
@@ -60,14 +60,14 @@ class TestBaseGMErrorHet(unittest.TestCase):
              
 class TestGMErrorHet(unittest.TestCase):
     def setUp(self):
-        db=lps.open(lps.get_path("columbus.dbf"),"r")
+        db=pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),"r")
         y = np.array(db.by_col("HOVAL"))
         self.y = np.reshape(y, (49,1))
         X = []
         X.append(db.by_col("INC"))
         X.append(db.by_col("CRIME"))
         self.X = np.array(X).T
-        self.w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+        self.w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
 
     def test_model(self):
@@ -121,7 +121,7 @@ class TestGMErrorHet(unittest.TestCase):
 
 class TestBaseGMEndogErrorHet(unittest.TestCase):
     def setUp(self):
-        db=lps.open(lps.get_path("columbus.dbf"),"r")
+        db=pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),"r")
         y = np.array(db.by_col("HOVAL"))
         self.y = np.reshape(y, (49,1))
         X = []
@@ -134,7 +134,7 @@ class TestBaseGMEndogErrorHet(unittest.TestCase):
         q = []
         q.append(db.by_col("DISCBD"))
         self.q = np.array(q).T
-        self.w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+        self.w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
 
     def test_model(self):
@@ -187,7 +187,7 @@ class TestBaseGMEndogErrorHet(unittest.TestCase):
         
 class TestGMEndogErrorHet(unittest.TestCase):
     def setUp(self):
-        db=lps.open(lps.get_path("columbus.dbf"),"r")
+        db=pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),"r")
         y = np.array(db.by_col("HOVAL"))
         self.y = np.reshape(y, (49,1))
         X = []
@@ -199,7 +199,7 @@ class TestGMEndogErrorHet(unittest.TestCase):
         q = []
         q.append(db.by_col("DISCBD"))
         self.q = np.array(q).T
-        self.w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+        self.w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
 
     def test_model(self):
@@ -257,14 +257,14 @@ class TestGMEndogErrorHet(unittest.TestCase):
  
 class TestBaseGMComboHet(unittest.TestCase):
     def setUp(self):
-        db=lps.open(lps.get_path("columbus.dbf"),"r")
+        db=pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),"r")
         y = np.array(db.by_col("HOVAL"))
         self.y = np.reshape(y, (49,1))
         X = []
         X.append(db.by_col("INC"))
         X.append(db.by_col("CRIME"))
         self.X = np.array(X).T
-        self.w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+        self.w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
 
     def test_model(self):
@@ -327,14 +327,14 @@ class TestBaseGMComboHet(unittest.TestCase):
 
 class TestGMComboHet(unittest.TestCase):
     def setUp(self):
-        db=lps.open(lps.get_path("columbus.dbf"),"r")
+        db=pysal.lib.io.open(pysal.lib.examples.get_path("columbus.dbf"),"r")
         y = np.array(db.by_col("HOVAL"))
         self.y = np.reshape(y, (49,1))
         X = []
         X.append(db.by_col("INC"))
         X.append(db.by_col("CRIME"))
         self.X = np.array(X).T
-        self.w = lps.rook_from_shapefile(lps.get_path("columbus.shp"))
+        self.w = pysal.lib.weights.Rook.from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
         self.w.transform = 'r'
 
     def test_model(self):

@@ -1,3 +1,7 @@
+__version__ = "4.0.0"
+
+# __version__ has to be define in the first line
+
 """
 Python Spatial Analysis Library
 ===============================
@@ -23,16 +27,4 @@ weights
 from . import cg
 from . import io
 from . import weights
-from . import common
 from . import examples
-
-from .io import IOHandlers
-
-if common.pandas is not None:
-    from .io import geotable
-
-# Assign pysal.open to dispatcher
-open = io.FileIO.FileIO
-
-from .version import version
-MISSINGVALUE = common.MISSINGVALUE

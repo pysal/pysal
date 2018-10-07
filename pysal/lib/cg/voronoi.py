@@ -11,7 +11,7 @@ from scipy.spatial import Voronoi
 
 __author__ = "Serge Rey <sjsrey@gmail.com>"
 
-__all__ = ['voronoi']
+__all__ = ['voronoi_frames']
 
 def voronoi(points, radius=None):
     """
@@ -41,17 +41,18 @@ def voronoi(points, radius=None):
     >>> points = [(10.2, 5.1), (4.7, 2.2), (5.3, 5.7), (2.7, 5.3)]
     >>> regions, coordinates = voronoi(points)
     >>> regions
-    [[0, 3, 4, 2], [1, 2, 5, 6], [2, 0, 1], [7, 0, 1, 8]]
+    [[1, 3, 2], [4, 5, 1, 0], [0, 1, 7, 6], [9, 0, 8]]
     >>> coordinates
-    array([[  6.09488636,  -8.11676136],
-           [  3.82047478,   6.66691395],
-           [  8.02880572,   7.67691337],
-           [  5.69502851, -23.11143087],
-           [ 15.39400167,  20.74419651],
-           [ 15.39400167,  20.74419651],
-           [ -8.52771701,  15.18290828],
-           [  5.69502851, -23.11143087],
-           [ -8.52771701,  15.18290828]])
+    array([[  4.21783296,   4.08408578],
+           [  7.51956025,   3.51807539],
+           [  9.4642193 ,  19.3994576 ],
+           [ 14.98210684, -10.63503022],
+           [ -9.22691341,  -4.58994414],
+           [ 14.98210684, -10.63503022],
+           [  1.78491801,  19.89803294],
+           [  9.4642193 ,  19.3994576 ],
+           [  1.78491801,  19.89803294],
+           [ -9.22691341,  -4.58994414]])
     """
     vor = Voronoi(points)
     return voronoi_regions(vor, radius=radius)
@@ -205,11 +206,11 @@ def voronoi_frames(points, radius=None):
 
     Examples
     --------
-    >>> eoints = [(10.2, 5.1), (4.7, 2.2), (5.3, 5.7), (2.7, 5.3)]
+    >>> points = [(10.2, 5.1), (4.7, 2.2), (5.3, 5.7), (2.7, 5.3)]
     >>> regions_df, points_df = voronoi_frames(points)
     >>> regions_df.shape
     (4, 1)
-    >>> regions_df.shape === points_df.shape
+    >>> regions_df.shape == points_df.shape
     True
 
     """
