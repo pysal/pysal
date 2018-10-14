@@ -800,10 +800,10 @@ class DistanceBand(W):
         for i, _ in enumerate(neighbors):
             for j, _ in enumerate(weights):
                 if j not in neighbors[i]:
-                    weights[i].append((weight+self.beta)**self.alpha)
+                    weights[i].append((weights[i]+self.beta)**self.alpha)
                     neighbors[i].append(j)
                 if i not in neighbors[j]:
-                    weights[j].append((weight+self.beta)**self.alpha)
+                    weights[j].append((weights[i]+self.beta)**self.alpha)
                     neighbors[j].append(i)
 
         W.__init__(self, neighbors, weights, ids, silent_island_warning=self.silent)
