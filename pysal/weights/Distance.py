@@ -21,7 +21,7 @@ from util import isKDTree
 
 def knnW(data, k=2, p=2, ids=None, radius=None, distance_metric='euclidean'):
     """
-    This is deprecated. Use the pysal.weights.KNN class instead. 
+    This is deprecated. Use the pysal.weights.KNN class instead.
     """
     #Warn('This function is deprecated. Please use pysal.weights.KNN', UserWarning)
     return KNN(data, k=k, p=p, ids=ids, radius=radius,
@@ -98,14 +98,14 @@ class KNN(W):
         else:
             self.data = data
             self.kdtree = KDTree(data, radius=radius, distance_metric=distance_metric)
-        self.k = k 
+        self.k = k
         self.p = p
         this_nnq = self.kdtree.query(self.data, k=k+1, p=p)
-        
+
         to_weight = this_nnq[1]
         if ids is None:
             ids = list(range(to_weight.shape[0]))
-        
+
         neighbors = {}
         for i,row in enumerate(to_weight):
             row = row.tolist()
@@ -114,7 +114,7 @@ class KNN(W):
             focal = ids[i]
             neighbors[focal] = row
         W.__init__(self, neighbors, id_order=ids)
-    
+
     @classmethod
     def from_shapefile(cls, filepath, **kwargs):
         """
@@ -190,7 +190,7 @@ class KNN(W):
         :class:`pysal.weights.W`
         """
         return cls(get_points_array_from_shapefile(filepath), **kwargs)
-    
+
     @classmethod
     def from_array(cls, array, **kwargs):
         """
@@ -200,8 +200,8 @@ class KNN(W):
         Parameters
         ----------
         array       : np.ndarray
-                      (n, k) array representing n observations on 
-                      k characteristics used to measure distances 
+                      (n, k) array representing n observations on
+                      k characteristics used to measure distances
                       between the n objects
         **kwargs    : keyword arguments, see Rook
 
@@ -290,7 +290,7 @@ class KNN(W):
                       a list aligned with new_data that provides the ids for
                       each new observation
         inplace     : bool
-                      a flag denoting whether to modify the KNN object 
+                      a flag denoting whether to modify the KNN object
                       in place or to return a new KNN object
         k           : int
                       number of nearest neighbors
@@ -522,7 +522,7 @@ class Kernel(W):
             for i in neighbors:
                 weights[i][neighbors[i].index(i)] = 1.0
         W.__init__(self, neighbors, weights, ids)
-    
+
     @classmethod
     def from_shapefile(cls, filepath, idVariable=None,  **kwargs):
         """
@@ -550,7 +550,7 @@ class Kernel(W):
         else:
             ids = None
         return cls.from_array(points, ids=ids, **kwargs)
-    
+
     @classmethod
     def from_array(cls, array, **kwargs):
         """
@@ -689,7 +689,7 @@ class DistanceBand(W):
 
     ids         : list
                   values to use for keys of the neighbors and weights dicts
-    
+
     build_sp    : boolean
                   True to build sparse distance matrix and false to build dense
                   distance matrix; significant speed gains may be obtained
@@ -757,7 +757,7 @@ class DistanceBand(W):
     """
 
     def __init__(self, data, threshold, p=2, alpha=-1.0, binary=True, ids=None,
-            build_sp=True, silent=False):
+            build_sp=True, silent=False, beta=0):
         """Casting to floats is a work around for a bug in scipy.spatial.
         See detail in pysal issue #126.
 
@@ -770,7 +770,8 @@ class DistanceBand(W):
         self.alpha = alpha
         self.build_sp = build_sp
         self.silent = silent
-        
+        self.beta = beta
+
         if isKDTree(data):
             self.kd = data
             self.data = self.kd.data
@@ -783,12 +784,28 @@ class DistanceBand(W):
                     self.data = data
                     self.kd = KDTree(self.data)
                 except:
-                    raise ValueError("Could not make array from data")        
+                    raise ValueError("Could not make array from data")
             else:
                 self.data = data
-                self.kd = None       
+                self.kd = None
         self._band()
         neighbors, weights = self._distance_to_W(ids)
+        # neighbors = {}
+        # for i,row in enumerate(to_weight):
+        #     row = row.tolist()
+        #     row.remove(i)
+        #     row = [ids[j] for j in row]
+        #     focal = ids[i]
+        #     neighbors[focal] = row
+        for i, _ in enumerate(neighbors):
+            for j, _ in enumerate(weights):
+                if j not in neighbors[i]:
+                    weights[i].append((weight+self.beta)**self.alpha)
+                    neighbors[i].append(j)
+                if i not in neighbors[j]:
+                    weights[j].append((weight+self.beta)**self.alpha)
+                    neighbors[j].append(i)
+
         W.__init__(self, neighbors, weights, ids, silent_island_warning=self.silent)
 
     @classmethod
@@ -818,7 +835,7 @@ class DistanceBand(W):
         else:
             ids = None
         return cls.from_array(points, threshold, ids=ids, **kwargs)
-    
+
     @classmethod
     def from_array(cls, array, threshold, **kwargs):
         """
@@ -831,7 +848,7 @@ class DistanceBand(W):
         :class:`pysal.weights.W`
         """
         return cls(array, threshold, **kwargs)
-    
+
     @classmethod
     def from_dataframe(cls, df, threshold, geom_col='geometry', ids=None, **kwargs):
         """
@@ -867,7 +884,7 @@ class DistanceBand(W):
         """Find all pairs within threshold.
 
         """
-        if self.build_sp:    
+        if self.build_sp:
             self.dmat = self.kd.sparse_distance_matrix(
                     self.kd, max_distance=self.threshold, p=self.p).tocsr()
         else:
