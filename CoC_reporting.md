@@ -185,7 +185,7 @@ violator to apologize in order to retain one’s membership on a mailing list.
 temporarily refrain from community participation. If the individual chooses
 not to take a temporary break voluntarily, the committee may issue a
 "mandatory cooling off period".
-* A permanent or temporary ban from some or all NumPy spaces (mailing lists,
+* A permanent or temporary ban from some or all PySAL spaces (mailing lists,
 gitter.im, etc.). The group will maintain records of all such bans so that
 they may be reviewed in the future or otherwise maintained.
 
@@ -194,8 +194,8 @@ contact the original reporter and any other affected parties and explain the
 proposed resolution. The committee will ask if this resolution is acceptable,
 and must note feedback for the record.
 
-Finally, the committee will make a report to the NumPy Steering Council (as
-well as the NumPy core team in the event of an ongoing resolution, such as a
+Finally, the committee will make a report to the PySAL Steering Council (as
+well as the PySAL core team in the event of an ongoing resolution, such as a
 ban).
 
 The committee will never publicly discuss the issue; all public statements will
