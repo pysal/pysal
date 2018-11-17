@@ -3,7 +3,7 @@
 .PHONY: clean
 
 download:
-	python gitdownload.py
+	python gitreleases.py
 
 convert:
 	python convert.py

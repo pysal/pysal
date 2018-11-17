@@ -25,7 +25,7 @@ def get_release_info():
     for package in packages:
         subpackages = packages[package].split()
         for subpackage in subpackages:
-            pkstr = "curl --silent \"https://api.github.com/repos/pysal/{subpackage}/releases/latest\"".Format(subpackage=subpackage)
+            pkstr = "curl --silent \"https://api.github.com/repos/pysal/{subpackage}/releases/latest\"".format(subpackage=subpackage)
             result = os.popen(pkstr).read()
             d = json.loads(result)
             if 'message' in d:
@@ -57,7 +57,7 @@ def get_tarballs():
     """
     with open('tarballs.json', 'r') as fp:
         sources = json.load(fp)
-    os.system('rm -rf tarballs')
+    Os.system('rm -rf tarballs')
     os.system('mkdir tarballs')
     for subpackage in sources.keys():
         print(subpackage)
@@ -70,3 +70,24 @@ def get_tarballs():
             target_file.write(resp.content)
 
     return sources
+
+def clone_releases():
+    """
+    Clone the releases in tmp
+    """
+
+    with open('tarballs.json', 'r') as fp:
+        sources = json.load(fp)
+    os.system('rm -rf tmp')
+    os.system('mkdir tmp')
+    for subpackage in sources.keys():
+        tag = sources[subpackage][0]
+        pkgstr = "git clone git@github.com:pysal/{subpackage}.git --branch {tag} tmp/{subpackage}".format(subpackage=subpackage,
+                                                                                                          tag=tag)
+        print(pkgstr)
+    os.system(pkgstr)
+
+if __name__ == "__main__":
+    get_release_info()
+    clone_releases()
+
