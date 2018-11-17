@@ -18,6 +18,7 @@ develop-eggs
 .installed.cfg
 __pycache__
 
+tmp/
 
 # virtual environment
 venv/
