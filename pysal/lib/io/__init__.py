@@ -1,4 +1,4 @@
-from . import fileio
+import fileio
 from .tables import *
 from .iohandlers import *
 from .util import *
