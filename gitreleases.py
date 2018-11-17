@@ -3,7 +3,7 @@ Grab most recent releases tagged on Github for PySAL subpacakges
 
 TODO
 - [x] grab tarballs
-- [ ] move tarballs to properly named src directories (target of convert.py)
+- [x] move tarballs to properly named src directories (target of convert.py)
 
 
 """
@@ -18,7 +18,7 @@ with open('packages.yml') as package_file:
 
 def get_release_info():
     """
-    Get information about subpackage releases that have been tagged on gith
+    Get information about subpackage releases that have been tagged on github
     """
     no_release = []
     release = {} 
@@ -54,7 +54,7 @@ def get_release_info():
 
 def get_tarballs():
     """
-    Grab tarballs for releases and put in a temporary directory for furhter processing
+    Grab tarballs for releases and put in a temporary directory for further processing
     """
     with open('tarballs.json', 'r') as infile:
         sources = json.load(infile)
@@ -101,7 +101,7 @@ def clone_releases():
 
 
         print(pkgstr)
-    os.system(pkgstr)
+        os.system(pkgstr)
 
 if __name__ == "__main__":
     get_release_info()

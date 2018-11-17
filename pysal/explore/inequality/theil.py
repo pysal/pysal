@@ -14,9 +14,9 @@ class Theil:
     """
     Classic Theil measure of inequality
 
-        .. math::
+    .. math::
 
-            T = \sum_{i=1}^n \left( \\frac{y_i}{\sum_{i=1}^n y_i} \ln \left[ N \\frac{y_i}{\sum_{i=1}^n y_i}\\right] \\right)
+        T = \sum_{i=1}^n \left( \\frac{y_i}{\sum_{i=1}^n y_i} \ln \left[ N \\frac{y_i}{\sum_{i=1}^n y_i}\\right] \\right)
 
     Parameters
     ----------
@@ -40,13 +40,15 @@ class Theil:
     Examples
     --------
     >>> import pysal.lib
-    >>> f=pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
+    >>> import numpy as np
+    >>> from pysal.explore.inequality.theil import Theil
+    >>> f=pysal.lib.io.open(pysal.lib.examples.get_path("mexico.csv"))
     >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
-    >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
+    >>> y=np.array([f.by_col[v] for v in vnames]).T
     >>> theil_y=Theil(y)
     >>> theil_y.T
-    array([ 0.20894344,  0.15222451,  0.10472941,  0.10194725,  0.09560113,
-            0.10511256,  0.10660832])
+    array([0.20894344, 0.15222451, 0.10472941, 0.10194725, 0.09560113,
+           0.10511256, 0.10660832])
     """
 
     def __init__(self, y):
@@ -88,17 +90,19 @@ class TheilD:
     Examples
     --------
     >>> import pysal.lib
-    >>> f=pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
+    >>> from pysal.explore.inequality.theil import TheilD
+    >>> import numpy as np
+    >>> f=pysal.lib.io.open(pysal.lib.examples.get_path("mexico.csv"))
     >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
-    >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
+    >>> y = np.array([f.by_col[v] for v in vnames]).T
     >>> regimes=np.array(f.by_col('hanson98'))
     >>> theil_d=TheilD(y,regimes)
     >>> theil_d.bg
-    array([ 0.0345889 ,  0.02816853,  0.05260921,  0.05931219,  0.03205257,
-            0.02963731,  0.03635872])
+    array([0.0345889 , 0.02816853, 0.05260921, 0.05931219, 0.03205257,
+           0.02963731, 0.03635872])
     >>> theil_d.wg
-    array([ 0.17435454,  0.12405598,  0.0521202 ,  0.04263506,  0.06354856,
-            0.07547525,  0.0702496 ])
+    array([0.17435454, 0.12405598, 0.0521202 , 0.04263506, 0.06354856,
+           0.07547525, 0.0702496 ])
    """
     def __init__(self, y, partition):
         groups = np.unique(partition)
@@ -129,7 +133,7 @@ class TheilDSim:
     """Random permutation based inference on Theil's inequality decomposition.
 
     Provides for computationally based inference regarding the inequality
-    decomposition using random spatial permutations. [Rey2004b]_
+    decomposition using random spatial permutations. See :cite:`rey_interregional_2010`. 
 
     Parameters
     ----------
@@ -166,14 +170,16 @@ class TheilDSim:
     Examples
     --------
     >>> import pysal.lib
-    >>> f=pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
+    >>> from pysal.explore.inequality.theil import TheilDSim
+    >>> import numpy as np
+    >>> f=pysal.lib.io.open(pysal.lib.examples.get_path("mexico.csv"))
     >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
-    >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
+    >>> y=np.array([f.by_col[v] for v in vnames]).T
     >>> regimes=np.array(f.by_col('hanson98'))
     >>> np.random.seed(10)
     >>> theil_ds=TheilDSim(y,regimes,999)
     >>> theil_ds.bg_pvalue
-    array([ 0.4  ,  0.344,  0.001,  0.001,  0.034,  0.072,  0.032])
+    array([0.4  , 0.344, 0.001, 0.001, 0.034, 0.072, 0.032])
 
     """
     def __init__(self, y, partition, permutations=99):

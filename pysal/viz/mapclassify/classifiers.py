@@ -57,16 +57,18 @@ def quantile(y, k=4):
 
     Returns
     -------
-    implicit  : array
+    q         : array
                 (n,1), quantile values
 
     Examples
     --------
+    >>> import numpy as np
+    >>> import pysal.viz.mapclassify as mc
     >>> x = np.arange(1000)
-    >>> quantile(x)
-    array([ 249.75,  499.5 ,  749.25,  999.  ])
-    >>> quantile(x, k = 3)
-    array([ 333.,  666.,  999.])
+    >>> mc.classifiers.quantile(x)
+    array([249.75, 499.5 , 749.25, 999.  ])
+    >>> mc.classifiers.quantile(x, k = 3)
+    array([333., 666., 999.])
 
     Note that if there are enough ties that the quantile values repeat, we
     collapse to pseudo quantiles in which case the number of classes will be
@@ -77,9 +79,10 @@ def quantile(y, k=4):
     >>> len(x)
     140
     >>> y = np.array(x)
-    >>> quantile(y)
-    array([ 1.,  3.])
+    >>> mc.classifiers.quantile(y)
+    array([1., 3.])
     """
+
     w = 100. / k
     p = np.arange(w, 100 + w, w)
     if p[-1] > 100.0:
@@ -100,8 +103,8 @@ def binC(y, bins):
 
     Parameters
     ----------
-    y : array
-        (n,q), categorical values
+    y    : array
+           (n,q), categorical values
     bins : array
            (k,1),  unique values associated with each bin
 
@@ -112,6 +115,8 @@ def binC(y, bins):
 
     Examples
     --------
+    >>> import numpy as np
+    >>> import pysal.viz.mapclassify as mc
     >>> np.random.seed(1)
     >>> x = np.random.randint(2, 8, (10, 3))
     >>> bins = list(range(2, 8))
@@ -126,7 +131,7 @@ def binC(y, bins):
            [4, 6, 7],
            [4, 6, 3],
            [3, 2, 7]])
-    >>> y = binC(x, bins)
+    >>> y = mc.classifiers.binC(x, bins)
     >>> y
     array([[5, 3, 4],
            [0, 1, 3],
@@ -138,7 +143,6 @@ def binC(y, bins):
            [2, 4, 5],
            [2, 4, 1],
            [1, 0, 5]])
-    >>>
     """
 
     if np.ndim(y) == 1:
@@ -178,10 +182,12 @@ def bin(y, bins):
 
     Examples
     --------
+    >>> import numpy as np
+    >>> import pysal.viz.mapclassify as mc
     >>> np.random.seed(1)
     >>> x = np.random.randint(2, 20, (10, 3))
     >>> bins = [10, 15, 20]
-    >>> b = bin(x, bins)
+    >>> b = mc.classifiers.bin(x, bins)
     >>> x
     array([[ 7, 13, 14],
            [10, 11, 13],
@@ -244,15 +250,17 @@ def bin1d(x, bins):
 
     Examples
     --------
+    >>> import numpy as np
+    >>> import pysal.viz.mapclassify as mc
     >>> x = np.arange(100, dtype = 'float')
     >>> bins = [25, 74, 100]
-    >>> binIds, counts = bin1d(x, bins)
+    >>> binIds, counts = mc.classifiers.bin1d(x, bins)
     >>> binIds
-    array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-           0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-           1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-           1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-           2, 2, 2, 2, 2, 2, 2, 2])
+    array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+           0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+           1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+           1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+           2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2])
     >>> counts
     array([26, 49, 25])
     """
@@ -328,6 +336,9 @@ def natural_breaks(values, k=5):
 def _fisher_jenks_means(values, classes=5, sort=True):
     """
     Jenks Optimal (Natural Breaks) algorithm implemented in Python.
+
+    Notes
+    -----
     The original Python code comes from here:
     http://danieljlewis.org/2010/06/07/jenks-natural-breaks-algorithm-in-python/
     and is based on a JAVA and Fortran code available here:
@@ -381,21 +392,17 @@ def _fisher_jenks_means(values, classes=5, sort=True):
 
 class Map_Classifier(object):
     """
-    Abstract class for all map classifications [Slocum2008]_
+    Abstract class for all map classifications :cite:`Slocum_2009`
 
     For an array :math:`y` of :math:`n` values, a map classifier places each
     value :math:`y_i` into one of :math:`k` mutually exclusive and exhaustive
     classes.  Each classifer defines the classes based on different criteria,
     but in all cases the following hold for the classifiers in PySAL:
 
-    .. math::
-
-              C_j^l < y_i \le C_j^u \  \forall  i \in C_j
+    .. math:: C_j^l < y_i \le C_j^u \  \forall  i \in C_j
 
     where :math:`C_j` denotes class :math:`j` which has lower bound
           :math:`C_j^l` and upper bound :math:`C_j^u`.
-
-
 
     Map Classifiers Supported
 
@@ -518,56 +525,53 @@ class Map_Classifier(object):
 
         Examples
         --------
-        >>> import pysal as ps
-        >>> df = ps.pdio.read_files(ps.examples.get_path('columbus.dbf'))
-        >>> classifier = ps.Quantiles.make(k=9)
-        >>> classifier
-        >>> cl = df[['HOVAL', 'CRIME', 'INC']].apply(ps.Quantiles.make(k=9))
-        >>> cl.head()
-            HOVAL  CRIME   INC
-        0       8      0     7
-        1       7      1     8
-        2       2      3     5
-        3       4      4     0
-        4       1      6     3
+        >>> import pysal.lib as ps
+        >>> import pysal.viz.mapclassify as mc
+        >>> import geopandas as gpd
+        >>> df = gpd.read_file(ps.examples.get_path('columbus.dbf'))
+        >>> classifier = mc.Quantiles.make(k=9)
+        >>> cl = df[['HOVAL', 'CRIME', 'INC']].apply(classifier)
+        >>> cl["HOVAL"].values[:10]
+        array([8, 7, 2, 4, 1, 3, 8, 5, 7, 8])
+        >>> cl["CRIME"].values[:10]
+        array([0, 1, 3, 4, 6, 2, 0, 5, 3, 4])
+        >>> cl["INC"].values[:10]
+        array([7, 8, 5, 0, 3, 5, 0, 3, 6, 4])
         >>> import pandas as pd; from numpy import linspace as lsp
         >>> data = [lsp(3,8,num=10), lsp(10, 0, num=10), lsp(-5, 15, num=10)]
         >>> data = pd.DataFrame(data).T
         >>> data
-                 0          1          2
-        0 3.000000  10.000000  -5.000000
-        1 3.555556   8.888889  -2.777778
-        2 4.111111   7.777778  -0.555556
-        3 4.666667   6.666667   1.666667
-        4 5.222222   5.555556   3.888889
-        5 5.777778   4.444444   6.111111
-        6 6.333333   3.333333   8.333333
-        7 6.888888   2.222222  10.555556
-        8 7.444444   1.111111  12.777778
-        9 8.000000   0.000000  15.000000
-        >>> data.apply(ps.Quantiles.make(rolling=True))
-            0   1   3
-        0   0   4   0
-        1   0   4   0
-        2   1   4   0
-        3   1   3   0
-        4   2   2   1
-        5   2   1   2
-        6   3   0   4
-        7   3   0   4
-        8   4   0   4
-        9   4   0   4
-        >>> dbf = ps.open(ps.examples.get_path('baltim.dbf'))
+                  0          1          2
+        0  3.000000  10.000000  -5.000000
+        1  3.555556   8.888889  -2.777778
+        2  4.111111   7.777778  -0.555556
+        3  4.666667   6.666667   1.666667
+        4  5.222222   5.555556   3.888889
+        5  5.777778   4.444444   6.111111
+        6  6.333333   3.333333   8.333333
+        7  6.888889   2.222222  10.555556
+        8  7.444444   1.111111  12.777778
+        9  8.000000   0.000000  15.000000
+        >>> data.apply(mc.Quantiles.make(rolling=True))
+           0  1  2
+        0  0  4  0
+        1  0  4  0
+        2  1  4  0
+        3  1  3  0
+        4  2  2  1
+        5  2  1  2
+        6  3  0  4
+        7  3  0  4
+        8  4  0  4
+        9  4  0  4
+        >>> dbf = ps.io.open(ps.examples.get_path('baltim.dbf'))
         >>> data = dbf.by_col_array('PRICE', 'LOTSZ', 'SQFT')
         >>> my_bins = [1, 10, 20, 40, 80]
-        >>> cl = [ps.User_Defined.make(bins=my_bins)(a) for a in data.T]
+        >>> cl = [mc.User_Defined.make(bins=my_bins)(a) for a in data.T]
         >>> len(cl)
         3
-        >>> print(cl)
-        [array([4, 5, 5, 5, 4, 4, 5, 4, 4, 5, 4, 4, 4, 4, 4, 1, 2, 2, 3, 4, 4,
-                3, 3,
-            ...
-            2, 2, 2, 2])]
+        >>> cl[0][:10]
+        array([4, 5, 5, 5, 4, 4, 5, 4, 4, 5])
         """
 
         # only flag overrides return flag
@@ -783,6 +787,7 @@ class HeadTail_Breaks(Map_Classifier):
     ----------
     y       : array
               (n,1), values to classify
+
     Attributes
     ----------
     yb      : array
@@ -793,35 +798,37 @@ class HeadTail_Breaks(Map_Classifier):
               the number of classes
     counts  : array
               (k,1), the number of observations falling in each class
+
     Examples
     --------
     >>> import numpy as np
+    >>> import pysal.viz.mapclassify as mc
     >>> np.random.seed(10)
-    >>> cal = load_example()
-    >>> htb = HeadTail_Breaks(cal)
+    >>> cal = mc.load_example()
+    >>> htb = mc.HeadTail_Breaks(cal)
     >>> htb.k
     3
     >>> htb.counts
     array([50,  7,  1])
     >>> htb.bins
-    array([  125.92810345,   811.26      ,  4111.45      ])
+    array([ 125.92810345,  811.26      , 4111.45      ])
     >>> np.random.seed(123456)
     >>> x = np.random.lognormal(3, 1, 1000)
-    >>> htb = HeadTail_Breaks(x)
+    >>> htb = mc.HeadTail_Breaks(x)
     >>> htb.bins
-    array([  32.26204423,   72.50205622,  128.07150107,  190.2899093 ,
-            264.82847377,  457.88157946,  576.76046949])
+    array([ 32.26204423,  72.50205622, 128.07150107, 190.2899093 ,
+           264.82847377, 457.88157946, 576.76046949])
     >>> htb.counts
     array([695, 209,  62,  22,  10,   1,   1])
 
     Notes
     -----
-
     Head/tail Breaks is a relatively new classification method developed
-    and introduced by [Jiang2013]_ for data with a heavy-tailed distribution.
+    for data with a heavy-tailed distribution.
 
+    Implementation based on contributions by Alessandra Sozzi <alessandra.sozzi@gmail.com>.
 
-    Based on contributions by Alessandra Sozzi <alessandra.sozzi@gmail.com>.
+    For theoretical details see :cite:`Jiang_2013`.
 
     """
 
@@ -851,7 +858,6 @@ class Equal_Interval(Map_Classifier):
 
     Attributes
     ----------
-
     yb      : array
               (n,1), bin ids for observations,
               each value is the id of the class the observation belongs to
@@ -866,16 +872,15 @@ class Equal_Interval(Map_Classifier):
 
     Examples
     --------
-    >>> cal = load_example()
-    >>> ei = Equal_Interval(cal, k = 5)
+    >>> import pysal.viz.mapclassify as mc
+    >>> cal = mc.load_example()
+    >>> ei = mc.Equal_Interval(cal, k = 5)
     >>> ei.k
     5
     >>> ei.counts
     array([57,  0,  0,  0,  1])
     >>> ei.bins
-    array([  822.394,  1644.658,  2466.922,  3289.186,  4111.45 ])
-    >>>
-
+    array([ 822.394, 1644.658, 2466.922, 3289.186, 4111.45 ])
 
     Notes
     -----
@@ -919,7 +924,6 @@ class Percentiles(Map_Classifier):
 
     Parameters
     ----------
-
     y    : array
            attribute to classify
     pct  : array
@@ -929,29 +933,27 @@ class Percentiles(Map_Classifier):
     ----------
     yb     : array
              bin ids for observations (numpy array n x 1)
-
     bins   : array
              the upper bounds of each class (numpy array k x 1)
-
     k      : int
              the number of classes
-
     counts : int
              the number of observations falling in each class
              (numpy array k x 1)
 
     Examples
     --------
-    >>> cal = load_example()
-    >>> p = Percentiles(cal)
+    >>> import pysal.viz.mapclassify as mc
+    >>> cal = mc.load_example()
+    >>> p = mc.Percentiles(cal)
     >>> p.bins
-    array([  1.35700000e-01,   5.53000000e-01,   9.36500000e+00,
-             2.13914000e+02,   2.17994800e+03,   4.11145000e+03])
+    array([1.357000e-01, 5.530000e-01, 9.365000e+00, 2.139140e+02,
+           2.179948e+03, 4.111450e+03])
     >>> p.counts
     array([ 1,  5, 23, 23,  5,  1])
-    >>> p2 = Percentiles(cal, pct = [50, 100])
+    >>> p2 = mc.Percentiles(cal, pct = [50, 100])
     >>> p2.bins
-    array([    9.365,  4111.45 ])
+    array([   9.365, 4111.45 ])
     >>> p2.counts
     array([29, 29])
     >>> p2.k
@@ -997,7 +999,6 @@ class Box_Plot(Map_Classifier):
     """
     Box_Plot Map Classification
 
-
     Parameters
     ----------
     y     : array
@@ -1041,21 +1042,22 @@ class Box_Plot(Map_Classifier):
 
     Examples
     --------
-    >>> cal = load_example()
-    >>> bp = Box_Plot(cal)
+    >>> import pysal.viz.mapclassify as mc
+    >>> cal = mc.load_example()
+    >>> bp = mc.Box_Plot(cal)
     >>> bp.bins
-    array([ -5.28762500e+01,   2.56750000e+00,   9.36500000e+00,
-             3.95300000e+01,   9.49737500e+01,   4.11145000e+03])
+    array([-5.287625e+01,  2.567500e+00,  9.365000e+00,  3.953000e+01,
+            9.497375e+01,  4.111450e+03])
     >>> bp.counts
     array([ 0, 15, 14, 14,  6,  9])
     >>> bp.high_outlier_ids
     array([ 0,  6, 18, 29, 33, 36, 37, 40, 42])
-    >>> cal[bp.high_outlier_ids]
-    array([  329.92,   181.27,   370.5 ,   722.85,   192.05,   110.74,
-            4111.45,   317.11,   264.93])
-    >>> bx = Box_Plot(np.arange(100))
+    >>> cal[bp.high_outlier_ids].values
+    array([ 329.92,  181.27,  370.5 ,  722.85,  192.05,  110.74, 4111.45,
+            317.11,  264.93])
+    >>> bx = mc.Box_Plot(np.arange(100))
     >>> bx.bins
-    array([ -49.5 ,   24.75,   49.5 ,   74.25,  148.5 ])
+    array([-49.5 ,  24.75,  49.5 ,  74.25, 148.5 ])
 
     """
 
@@ -1131,7 +1133,6 @@ class Quantiles(Map_Classifier):
 
     Attributes
     ----------
-
     yb      : array
               (n,1), bin ids for observations,
               each value is the id of the class the observation belongs to
@@ -1147,14 +1148,13 @@ class Quantiles(Map_Classifier):
 
     Examples
     --------
-    >>> cal = load_example()
-    >>> q = Quantiles(cal, k = 5)
+    >>> import pysal.viz.mapclassify as mc
+    >>> cal = mc.load_example()
+    >>> q = mc.Quantiles(cal, k = 5)
     >>> q.bins
-    array([  1.46400000e+00,   5.79800000e+00,   1.32780000e+01,
-             5.46160000e+01,   4.11145000e+03])
+    array([1.46400e+00, 5.79800e+00, 1.32780e+01, 5.46160e+01, 4.11145e+03])
     >>> q.counts
     array([12, 11, 12, 11, 12])
-    >>>
     """
 
     def __init__(self, y, k=K):
@@ -1194,23 +1194,23 @@ class Std_Mean(Map_Classifier):
 
     Examples
     --------
-    >>> cal = load_example()
-    >>> st = Std_Mean(cal)
+    >>> import pysal.viz.mapclassify as mc
+    >>> cal = mc.load_example()
+    >>> st = mc.Std_Mean(cal)
     >>> st.k
     5
     >>> st.bins
-    array([ -967.36235382,  -420.71712519,   672.57333208,  1219.21856072,
-            4111.45      ])
+    array([-967.36235382, -420.71712519,  672.57333208, 1219.21856072,
+           4111.45      ])
     >>> st.counts
     array([ 0,  0, 56,  1,  1])
     >>>
-    >>> st3 = Std_Mean(cal, multiples = [-3, -1.5, 1.5, 3])
+    >>> st3 = mc.Std_Mean(cal, multiples = [-3, -1.5, 1.5, 3])
     >>> st3.bins
     array([-1514.00758246,  -694.03973951,   945.8959464 ,  1765.86378936,
             4111.45      ])
     >>> st3.counts
     array([ 0,  0, 57,  0,  1])
-    >>>
 
     """
 
@@ -1273,28 +1273,25 @@ class Maximum_Breaks(Map_Classifier):
     ----------
     yb : array
          (n, 1), bin ids for observations
-
     bins : array
            (k, 1), the upper bounds of each class
-
     k    : int
            the number of classes
-
     counts : array
              (k, 1), the number of observations falling in each class (numpy
              array k x 1)
 
     Examples
     --------
-    >>> cal = load_example()
-    >>> mb = Maximum_Breaks(cal, k = 5)
+    >>> import pysal.viz.mapclassify as mc
+    >>> cal = mc.load_example()
+    >>> mb = mc.Maximum_Breaks(cal, k = 5)
     >>> mb.k
     5
     >>> mb.bins
-    array([  146.005,   228.49 ,   546.675,  2417.15 ,  4111.45 ])
+    array([ 146.005,  228.49 ,  546.675, 2417.15 , 4111.45 ])
     >>> mb.counts
     array([50,  2,  4,  1,  1])
-    >>>
 
     """
 
@@ -1379,27 +1376,28 @@ class Natural_Breaks(Map_Classifier):
 
     Examples
     --------
-    >>> import numpy
-    >>> import pysal
-    >>> numpy.random.seed(123456)
-    >>> cal = pysal.esda.pysal.viz.mapclassify.load_example()
-    >>> nb = pysal.Natural_Breaks(cal, k=5)
+    >>> import numpy as np
+    >>> import pysal.viz.mapclassify as mc
+    >>> np.random.seed(123456)
+    >>> cal = mc.load_example()
+    >>> nb = mc.Natural_Breaks(cal, k=5)
     >>> nb.k
     5
     >>> nb.counts
     array([41,  9,  6,  1,  1])
     >>> nb.bins
-    array([   29.82,   110.74,   370.5 ,   722.85,  4111.45])
-    >>> x = numpy.array([1] * 50)
+    array([  29.82,  110.74,  370.5 ,  722.85, 4111.45])
+    >>> x = np.array([1] * 50)
     >>> x[-1] = 20
-    >>> nb = pysal.Natural_Breaks(x, k = 5, initial = 0)
+    >>> nb = mc.Natural_Breaks(x, k = 5, initial = 0)
+
     Warning: Not enough unique values in array to form k classes
     Warning: setting k to 2
+
     >>> nb.bins
     array([ 1, 20])
     >>> nb.counts
     array([49,  1])
-
 
     Notes
     -----
@@ -1485,7 +1483,6 @@ class Fisher_Jenks(Map_Classifier):
 
     Attributes
     ----------
-
     yb      : array
               (n,1), bin ids for observations
     bins    : array
@@ -1495,16 +1492,15 @@ class Fisher_Jenks(Map_Classifier):
     counts  : array
               (k,1), the number of observations falling in each class
 
-
     Examples
     --------
-
-    >>> cal = load_example()
-    >>> fj = Fisher_Jenks(cal)
+    >>> import pysal.viz.mapclassify as mc
+    >>> cal = mc.load_example()
+    >>> fj = mc.Fisher_Jenks(cal)
     >>> fj.adcm
-    799.24000000000001
+    799.24
     >>> fj.bins
-    array([   75.29,   192.05,   370.5 ,   722.85,  4111.45])
+    array([  75.29,  192.05,  370.5 ,  722.85, 4111.45])
     >>> fj.counts
     array([49,  3,  4,  1,  1])
     >>>
@@ -1543,7 +1539,6 @@ class Fisher_Jenks_Sampled(Map_Classifier):
 
     Attributes
     ----------
-
     yb      : array
               (n,1), bin ids for observations
     bins    : array
@@ -1557,6 +1552,9 @@ class Fisher_Jenks_Sampled(Map_Classifier):
     --------
 
     (Turned off due to timing being different across hardware)
+
+
+    For theoretical details see :cite:`Rey_2016`.
 
     """
 
@@ -1637,11 +1635,11 @@ class Jenks_Caspall(Map_Classifier):
 
     Examples
     --------
-    >>> cal = load_example()
-    >>> jc = Jenks_Caspall(cal, k = 5)
+    >>> import pysal.viz.mapclassify as mc
+    >>> cal = mc.load_example()
+    >>> jc = mc.Jenks_Caspall(cal, k = 5)
     >>> jc.bins
-    array([  1.81000000e+00,   7.60000000e+00,   2.98200000e+01,
-             1.81270000e+02,   4.11145000e+03])
+    array([1.81000e+00, 7.60000e+00, 2.98200e+01, 1.81270e+02, 4.11145e+03])
     >>> jc.counts
     array([14, 13, 14, 10,  7])
 
@@ -1714,20 +1712,19 @@ class Jenks_Caspall_Sampled(Map_Classifier):
 
     Examples
     --------
-
-    >>> cal = load_example()
+    >>> import pysal.viz.mapclassify as mc
+    >>> cal = mc.load_example()
     >>> x = np.random.random(100000)
-    >>> jc = Jenks_Caspall(x)
-    >>> jcs = Jenks_Caspall_Sampled(x)
+    >>> jc = mc.Jenks_Caspall(x)
+    >>> jcs = mc.Jenks_Caspall_Sampled(x)
     >>> jc.bins
-    array([ 0.19770952,  0.39695769,  0.59588617,  0.79716865,  0.99999425])
+    array([0.1988721 , 0.39624334, 0.59441487, 0.79624357, 0.99999251])
     >>> jcs.bins
-    array([ 0.18877882,  0.39341638,  0.6028286 ,  0.80070925,  0.99999425])
+    array([0.20998558, 0.42112792, 0.62752937, 0.80543819, 0.99999251])
     >>> jc.counts
-    array([19804, 20005, 19925, 20178, 20088])
+    array([19943, 19510, 19547, 20297, 20703])
     >>> jcs.counts
-    array([18922, 20521, 20980, 19826, 19751])
-    >>>
+    array([21039, 20908, 20425, 17813, 19815])
 
     # not for testing since we get different times on different hardware
     # just included for documentation of likely speed gains
@@ -1796,7 +1793,6 @@ class Jenks_Caspall_Sampled(Map_Classifier):
 
 class Jenks_Caspall_Forced(Map_Classifier):
     """
-
     Jenks Caspall  Map Classification with forced movements
 
     Parameters
@@ -1808,7 +1804,6 @@ class Jenks_Caspall_Forced(Map_Classifier):
 
     Attributes
     ----------
-
     yb      : array
               (n,1), bin ids for observations
     bins    : array
@@ -1821,29 +1816,29 @@ class Jenks_Caspall_Forced(Map_Classifier):
 
     Examples
     --------
-    >>> cal = load_example()
-    >>> jcf = Jenks_Caspall_Forced(cal, k = 5)
+    >>> import pysal.viz.mapclassify as mc
+    >>> cal = mc.load_example()
+    >>> jcf = mc.Jenks_Caspall_Forced(cal, k = 5)
     >>> jcf.k
     5
     >>> jcf.bins
-    array([[  1.34000000e+00],
-           [  5.90000000e+00],
-           [  1.67000000e+01],
-           [  5.06500000e+01],
-           [  4.11145000e+03]])
+    array([[1.34000e+00],
+           [5.90000e+00],
+           [1.67000e+01],
+           [5.06500e+01],
+           [4.11145e+03]])
     >>> jcf.counts
     array([12, 12, 13,  9, 12])
-    >>> jcf4 = Jenks_Caspall_Forced(cal, k = 4)
+    >>> jcf4 = mc.Jenks_Caspall_Forced(cal, k = 4)
     >>> jcf4.k
     4
     >>> jcf4.bins
-    array([[  2.51000000e+00],
-           [  8.70000000e+00],
-           [  3.66800000e+01],
-           [  4.11145000e+03]])
+    array([[2.51000e+00],
+           [8.70000e+00],
+           [3.66800e+01],
+           [4.11145e+03]])
     >>> jcf4.counts
     array([15, 14, 14, 15])
-    >>>
     """
 
     def __init__(self, y, k=K):
@@ -1943,7 +1938,6 @@ class User_Defined(Map_Classifier):
     """
     User Specified Binning
 
-
     Parameters
     ----------
     y    : array
@@ -1953,7 +1947,6 @@ class User_Defined(Map_Classifier):
 
     Attributes
     ----------
-
     yb      : array
               (n,1), bin ids for observations,
     bins    : array
@@ -1966,23 +1959,22 @@ class User_Defined(Map_Classifier):
 
     Examples
     --------
-    >>> cal = load_example()
+    >>> import pysal.viz.mapclassify as mc
+    >>> cal = mc.load_example()
     >>> bins = [20, max(cal)]
     >>> bins
-    [20, 4111.4499999999998]
-    >>> ud = User_Defined(cal, bins)
+    [20, 4111.45]
+    >>> ud = mc.User_Defined(cal, bins)
     >>> ud.bins
-    array([   20.  ,  4111.45])
+    array([  20.  , 4111.45])
     >>> ud.counts
     array([37, 21])
     >>> bins = [20, 30]
-    >>> ud = User_Defined(cal, bins)
+    >>> ud = mc.User_Defined(cal, bins)
     >>> ud.bins
-    array([   20.  ,    30.  ,  4111.45])
+    array([  20.  ,   30.  , 4111.45])
     >>> ud.counts
     array([37,  4, 17])
-    >>>
-
 
     Notes
     -----
@@ -2067,13 +2059,13 @@ class Max_P_Classifier(Map_Classifier):
 
     Examples
     --------
-    >>> import pysal
-    >>> cal = pysal.esda.pysal.viz.mapclassify.load_example()
-    >>> mp = pysal.Max_P_Classifier(cal)
+    >>> import pysal.viz.mapclassify as mc
+    >>> cal = mc.load_example()
+    >>> mp = mc.Max_P_Classifier(cal)
     >>> mp.bins
-    array([    8.7 ,    16.7 ,    20.47,    66.26,  4111.45])
+    array([   8.7 ,   20.47,   36.68,  110.74, 4111.45])
     >>> mp.counts
-    array([29,  8,  1, 10, 10])
+    array([29,  9,  5,  7,  8])
 
     """
 
@@ -2287,17 +2279,18 @@ def gadf(y, method="Quantiles", maxk=15, pct=0.8):
 
     Examples
     --------
-    >>> cal = load_example()
-    >>> qgadf = gadf(cal)
+    >>> import pysal.viz.mapclassify as mc
+    >>> cal = mc.load_example()
+    >>> qgadf = mc.classifiers.gadf(cal)
     >>> qgadf[0]
     15
     >>> qgadf[-1]
-    0.37402575909092828
+    0.3740257590909283
 
     Quantiles fail to exceed 0.80 before 15 classes. If we lower the bar to
     0.2 we see quintiles as a result
 
-    >>> qgadf2 = gadf(cal, pct = 0.2)
+    >>> qgadf2 = mc.classifiers.gadf(cal, pct = 0.2)
     >>> qgadf2[0]
     5
     >>> qgadf2[-1]
@@ -2353,16 +2346,15 @@ class K_classifiers(object):
 
     Examples
     --------
-
-    >>> cal = load_example()
-    >>> ks = K_classifiers(cal)
+    >>> import pysal.viz.mapclassify as mc
+    >>> cal = mc.load_example()
+    >>> ks = mc.classifiers.K_classifiers(cal)
     >>> ks.best.name
     'Fisher_Jenks'
     >>> ks.best.k
     4
     >>> ks.best.gadf
-    0.84810327199081048
-    >>>
+    0.8481032719908105
 
     Notes
     -----

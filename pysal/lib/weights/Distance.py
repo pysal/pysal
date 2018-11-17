@@ -88,7 +88,8 @@ class KNN(W):
     """
     def __init__(self, data, k=2, p=2, ids=None, radius=None,
                  distance_metric='euclidean', **kwargs):
-
+        if radius is not None: 
+            distance_metric='arc'
         if isKDTree(data):
             self.kdtree = data
             self.data = self.kdtree.data
@@ -484,6 +485,8 @@ class Kernel(W):
                  diagonal=False, 
                  distance_metric='euclidean', radius=None, 
                  **kwargs):
+        if radius is not None:
+            distance_metric='arc'
         if isKDTree(data):
             self.kdtree = data
             self.data = self.kdtree.data
@@ -756,6 +759,8 @@ class DistanceBand(W):
         """
         if ids is not None:
             ids = list(ids)
+        if radius is not None:
+            distance_metric='arc'
         self.p = p
         self.threshold = threshold
         self.binary = binary

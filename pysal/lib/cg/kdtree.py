@@ -51,7 +51,7 @@ def KDTree(data, leafsize=10, distance_metric='Euclidean',
             return scipy.spatial.KDTree(data, leafsize)
         else:
             return scipy.spatial.cKDTree(data, leafsize)
-    elif distance_metric == 'Arc':
+    elif distance_metric.lower() == 'arc':
         return Arc_KDTree(data, leafsize, radius)
 
 

@@ -131,7 +131,6 @@ class Markov(object):
     array([0.17957376, 0.21631443, 0.21499942, 0.21134662, 0.17776576])
 
     """
-
     def __init__(self, class_ids, classes=None):
         if classes is not None:
             self.classes = classes
@@ -588,7 +587,6 @@ class Spatial_Markov(object):
      [0.         0.         0.         0.03891051 0.96108949]]
 
     """
-
     def __init__(self, y, w, k=4, m=4, permutations=0, fixed=True,
                  discrete=False, cutoffs=None, lag_cutoffs=None,
                  variable_name=None):
@@ -613,9 +611,16 @@ class Spatial_Markov(object):
                 y_int.append(list(map(label_dict.get, yi)))
             self.class_ids = np.array(y_int)
             self.lclass_ids = self.class_ids
+
+            # le = preprocessing.LabelEncoder()
+            # le.fit(y_pool)
+            # self.k = len(le.classes_)
+            # self.m = self.k
+            # y_pool_int = le.transform(y_pool)
+            # self.classes = y_int.reshape(y.shape)
         else:
-            self.class_ids, self.cutoffs, self.k = self._maybe_classify(
-                y, k=k, cutoffs=self.cutoffs)
+            self.class_ids, self.cutoffs, self.k = self._maybe_classify(y, k=k,
+                                                                     cutoffs=self.cutoffs)
             self.classes = np.arange(self.k)
 
         classic = Markov(self.class_ids)
@@ -732,11 +737,12 @@ class Spatial_Markov(object):
 
         '''
         if self.discrete:
+            #np.random.seed(24788)
             self.lclass_ids = weights.lag_categorical(w, self.class_ids,
-                                                      ties="tryself")
+                                                 ties="tryself")
         else:
             ly = weights.lag_spatial(w, y)
-            self.lclass_ids, self.lag_cutoffs, self.m = self._maybe_classify(
+            self.lclass_ids, self.lag_cutoffs,self.m = self._maybe_classify(
                 ly, self.m, self.lag_cutoffs)
             self.lclasses = np.arange(self.m)
 
@@ -745,8 +751,8 @@ class Spatial_Markov(object):
         for t1 in range(t - 1):
             t2 = t1 + 1
             for i in range(n):
-                T[self.lclass_ids[i, t1], self.class_ids[i, t1],
-                    self.class_ids[i, t2]] += 1
+                T[self.lclass_ids[i, t1], self.class_ids[i, t1], self.class_ids[i,
+                                                                       t2]] += 1
 
         P = np.zeros_like(T)
         for i, mat in enumerate(T):
@@ -832,9 +838,10 @@ class Spatial_Markov(object):
 
         '''
 
-        rows, cols = y.shape
+        rows,cols = y.shape
         if cutoffs is None:
             if self.fixed:
+            #if cutoffs is None:
                 mcyb = mc.Quantiles(y.flatten(), k=k)
                 yb = mcyb.yb.reshape(y.shape)
                 cutoffs = mcyb.bins
@@ -1145,7 +1152,6 @@ class LISA_Markov(Markov):
     array([2, 3, 2, 1, 4])
 
     """
-
     def __init__(self, y, w, permutations=0,
                  significance_level=0.05, geoda_quads=False):
         y = y.transpose()
@@ -1487,7 +1493,6 @@ def prais(pmat):
     pr = 1 - np.diag(pmat)
     return pr
 
-
 def homogeneity(transition_matrices, regime_names=[], class_names=[],
                 title="Markov Homogeneity Test"):
     """
@@ -1566,7 +1571,7 @@ class Homogeneity_Results:
         n_i = T.sum(axis=1)
         A_i = (T > 0).sum(axis=1)
         A_im = np.zeros((r, m))
-        p_ij = np.dot(np.diag(1. / (n_i + (n_i == 0) * 1.)), T)
+        p_ij = np.dot(np.diag(1./(n_i + (n_i == 0)*1.)), T)
         den = p_ij + 1. * (p_ij == 0)
         b_i = np.zeros_like(A_i)
         p_ijm = np.zeros_like(M)
@@ -1580,10 +1585,10 @@ class Homogeneity_Results:
 
         for nijm in M:
             nim = nijm.sum(axis=1)
-            B[:, m] = 1. * (nim > 0)
+            B[:, m] = 1.*(nim > 0)
             b_i = b_i + 1. * (nim > 0)
-            p_ijm[m] = np.dot(np.diag(1. / (nim + (nim == 0) * 1.)), nijm)
-            num = (p_ijm[m] - p_ij)**2
+            p_ijm[m] = np.dot(np.diag(1./(nim + (nim == 0)*1.)), nijm)
+            num = (p_ijm[m]-p_ij)**2
             ratio = num / den
             qijm = np.dot(np.diag(nim), ratio)
             q_table[m] = qijm
@@ -1600,7 +1605,7 @@ class Homogeneity_Results:
         # b_i is the number of regimes that have non-zero observations in row i
         # A_i is the number of non-zero elements in row i of the aggregated
         # transition matrix
-        self.dof = int(((b_i - 1) * (A_i - 1)).sum())
+        self.dof = int(((b_i-1) * (A_i-1)).sum())
         self.Q = Q
         self.Q_p_value = 1 - stats.chi2.cdf(self.Q, self.dof)
         self.LR = LR * 2.
@@ -1626,7 +1631,7 @@ class Homogeneity_Results:
         max_col = max([len(col) for col in cols])
         col_width = max([5, max_col])  # probabilities have 5 chars
         n_tabs = self.k
-        width = n_tabs * 4 + (self.k + 1) * col_width
+        width = n_tabs * 4 + (self.k+1)*col_width
         lead = "-" * width
         head = title.center(width)
         contents = [lead, head, lead]
@@ -1691,10 +1696,10 @@ class Homogeneity_Results:
 
         if file_name:
             k = self.k
-            ks = str(k + 1)
+            ks = str(k+1)
             with open(file_name, 'w') as f:
                 c = []
-                fmt = "r" * (k + 1)
+                fmt = "r"*(k+1)
                 s = "\\begin{tabular}{|%s|}\\hline\n" % fmt
                 s += "\\multicolumn{%s}{|c|}{%s}" % (ks, title)
                 c.append(s)
@@ -1729,8 +1734,8 @@ class Homogeneity_Results:
                 for mat in pmats:
                     c.append("\\hline\n")
                     for row in mat:
-                        c.append(row + "\\\\\n")
+                        c.append(row+"\\\\\n")
                 c.append("\\hline\n")
                 c.append("\\end{tabular}")
                 s2 = "".join(c)
-                f.write(s1 + s2)
+                f.write(s1+s2)

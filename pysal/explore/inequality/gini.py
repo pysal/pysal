@@ -69,7 +69,7 @@ class Gini_Spatial:
     Spatial Gini coefficient
 
     Provides for computationally based inference regarding the contribution of
-    spatial neighbor pairs to overall inequality across a set of regions. [Rey2013]_
+    spatial neighbor pairs to overall inequality across a set of regions. See :cite:`Rey_2013_sea`.
 
     Parameters
     ----------
@@ -119,10 +119,11 @@ class Gini_Spatial:
     --------
     >>> import pysal.lib
     >>> import numpy as np
+    >>> from pysal.explore.inequality.gini import Gini_Spatial
 
     Use data from the 32 Mexican States, Decade frequency 1940-2010
 
-    >>> f=pysal.lib.open(pysal.lib.examples.get_path("mexico.csv"))
+    >>> f=pysal.lib.io.open(pysal.lib.examples.get_path("mexico.csv"))
     >>> vnames=["pcgdp%d"%dec for dec in range(1940,2010,10)]
     >>> y=np.transpose(np.array([f.by_col[v] for v in vnames]))
 
@@ -131,9 +132,9 @@ class Gini_Spatial:
     >>> regimes=np.array(f.by_col('hanson98'))
     >>> w = pysal.lib.weights.block_weights(regimes)
     >>> np.random.seed(12345)
-    >>> gs = inequality.gini.Gini_Spatial(y[:,0],w)
+    >>> gs = Gini_Spatial(y[:,0],w)
     >>> gs.p_sim
-    0.040000000000000001
+    0.04
     >>> gs.wcg
     4353856.0
     >>> gs.e_wcg

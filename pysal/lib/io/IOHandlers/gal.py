@@ -71,8 +71,8 @@ class GalIO(fileio.FileIO):
         >>> w = testfile.read()
         >>> w.n == 100
         True
-        >>> w.sd == 1.5151237573214935
-        True
+        >>> print(round(w.sd,6))
+        1.515124
         >>> testfile = pysal.open(pysal.examples.get_path('sids2.gal'),'r')
 
         Return a sparse matrix for the w information

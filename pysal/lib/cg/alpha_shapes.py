@@ -171,7 +171,7 @@ def get_faces(triangle):
     Example
     -------
     
-    >>> triangle = np.array([3, 1, 4], dtype=int32)
+    >>> triangle = np.array([3, 1, 4], dtype=np.int32)
     >>> faces = get_faces(triangle)
     >>> faces
     array([[3., 1.],
@@ -215,11 +215,7 @@ def build_faces(faces, triangles_is,
     Example
     -------
     >>> import scipy.spatial as spat
-    >>> pts = np.array([[0, 1],
-                        [3, 5],
-                        [4, 1],
-                        [6, 7],
-                        [9, 3]])
+    >>> pts = np.array([[0, 1], [3, 5], [4, 1], [6, 7], [9, 3]])
     >>> triangulation = spat.Delaunay(pts)
     >>> triangulation.simplices
     array([[3, 1, 4],
@@ -229,9 +225,8 @@ def build_faces(faces, triangles_is,
     >>> num_triangles = triangulation.simplices.shape[0]
     >>> num_faces = num_triangles * num_faces_single
     >>> faces = np.zeros((num_faces, 2), dtype=np.int_)
-    >>> mask = np.ones((num_faces,), dtype=np.bool_)       
-    >>> faces = build_faces(faces, triangulation.simplices, 
-                            num_triangles, num_faces_single)
+    >>> mask = np.ones((num_faces,), dtype=np.bool_)
+    >>> faces = build_faces(faces, triangulation.simplices, num_triangles, num_faces_single)
     >>> faces
     array([[3, 1],
            [1, 4],
@@ -273,17 +268,9 @@ def nb_mask_faces(mask, faces):
 
     Example
     -------
-
-    >>> faces = array([[0, 1],
-                       [0, 2],
-                       [1, 2],
-                       [1, 2],
-                       [1, 3],
-                       [1, 4],
-                       [1, 4],
-                       [2, 4],
-                       [3, 4]])
-    >>> mask = np.ones((faces.shape[0], ), dtype=bool_)
+    >>> import numpy as np
+    >>> faces = np.array([[0, 1], [0, 2], [1, 2], [1, 2], [1, 3], [1, 4], [1, 4], [2, 4], [3, 4]])
+    >>> mask = np.ones((faces.shape[0], ), dtype=np.bool_)
     >>> masked = nb_mask_faces(mask, faces)
     >>> masked
     array([[0, 1],

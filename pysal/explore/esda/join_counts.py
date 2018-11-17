@@ -115,6 +115,12 @@ class Join_Counts(object):
     >>> np.min(jc.sim_bw)
     7.0
     >>>
+
+
+    Notes
+    -----
+    Technical details and derivations can be found in :cite:`cliff81`.
+
     """
     def __init__(self, y, w, permutations=PERMUTATIONS):
         y = np.asarray(y).flatten()

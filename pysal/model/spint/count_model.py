@@ -9,10 +9,11 @@ import numpy as np
 from pysal.model.spglm.glm import GLM
 from pysal.model.spglm.family import Poisson, QuasiPoisson
 
+
 class CountModel(object):
     """
     Base class for variety of count-based models such as Poisson, negative binomial,
-    etc. of the exponetial family. 
+    etc. of the exponetial family.
 
     Parameters
     ----------
@@ -26,7 +27,7 @@ class CountModel(object):
                   True if intercept should be estimated and false otherwise.
                   Default is True.
 
-                  
+
     Attributes
     ----------
     y           : array
@@ -35,7 +36,7 @@ class CountModel(object):
                   n x k; design matrix of k explanatory variables
     fitted      : boolean
                   False is model has not been fitted and True if it has been
-                  successfully fitted. Deault is False. 
+                  successfully fitted. Deault is False.
     constant    : boolean
                   True if intercept should be estimated and false otherwise.
                   Default is True.
@@ -58,15 +59,18 @@ class CountModel(object):
     array([3.92159085, 0.01183491, -0.01371397])
 
     """
-    def __init__(self, y, X, family = Poisson(), constant = True):
+
+    def __init__(self, y, X, family=Poisson(), constant=True):
         self.y = self._check_counts(y)
         self.X = X
         self.constant = constant
+
     def _check_counts(self, y):
         if (y.dtype == 'int64') | (y.dtype == 'int32'):
-        	return y
+            return y
         else:
-        	raise TypeError('Dependent variable (y) must be composed of integers')
+            raise TypeError(
+                'Dependent variable (y) must be composed of integers')
 
     def fit(self, framework='GLM', Quasi=False):
         """
@@ -80,17 +84,27 @@ class CountModel(object):
         ----------
         framework           : string
                             estimation framework; default is GLM
-                             "GLM" | "QUASI" | 
+                             "GLM" | "QUASI" |
         """
         if (framework.lower() == 'glm'):
             if not Quasi:
-                results = GLM(self.y, self.X, family = Poisson(), constant=self.constant).fit()
+                results = GLM(
+                    self.y,
+                    self.X,
+                    family=Poisson(),
+                    constant=self.constant).fit()
             else:
-                results = GLM(self.y, self.X, family = QuasiPoisson(), constant=self.constant).fit()
+                results = GLM(
+                    self.y,
+                    self.X,
+                    family=QuasiPoisson(),
+                    constant=self.constant).fit()
             return CountModelResults(results)
-   
+
         else:
-            raise NotImplemented('Poisson GLM is the only count model currently implemented')
+            raise NotImplemented(
+                'Poisson GLM is the only count model currently implemented')
+
 
 class CountModelResults(object):
     """
@@ -101,7 +115,7 @@ class CountModelResults(object):
         results       : GLM object
                         Pointer to GLMResults object with estimated parameters
                         and diagnostics.
-    
+
     Attributes
     ----------
         model         : GLM Object
@@ -145,11 +159,11 @@ class CountModelResults(object):
                         value of the loglikelihood function evaluated with only an
                         intercept; see family.py for distribution-specific
                         loglikelihoods
-        AIC           : float 
+        AIC           : float
                         Akaike information criterion
         resid         : array
                         response residuals; defined as y-mu
-        
+
         resid_dev     : array
                         k x 1, residual deviance of model
         D2            : float
@@ -157,11 +171,12 @@ class CountModelResults(object):
         adj_D2        : float
 
         pseudo_R2       : float
-                        McFadden's pseudo R2  (coefficient of determination) 
+                        McFadden's pseudo R2  (coefficient of determination)
         adj_pseudoR2    : float
                         adjusted McFadden's pseudo R2
 
     """
+
     def __init__(self, results):
         self.y = results.y
         self.X = results.X
@@ -187,5 +202,3 @@ class CountModelResults(object):
         self.pseudoR2 = results.pseudoR2
         self.adj_pseudoR2 = results.adj_pseudoR2
         self.model = results
-
-    

@@ -1486,8 +1486,8 @@ def fuzzy_contiguity(gdf, tolerance=0.005, buffering=False, drop=True):
     >>> wf = fuzzy_contiguity(rs_df)
     >>> wf.islands
     []
-    >>> wf[0]
-    {239: 1.0, 59: 1.0, 152: 1.0, 23: 1.0, 107: 1.0}
+    >>> wf[0] == dict({239: 1.0, 59: 1.0, 152: 1.0, 23: 1.0, 107: 1.0})
+    True
 
     Example needing to use buffering
 

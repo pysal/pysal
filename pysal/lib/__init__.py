@@ -1,10 +1,10 @@
-__version__ = "4.0.0"
+__version__ = "4.0.1"
 
 # __version__ has to be define in the first line
 
 """
-Python Spatial Analysis Library
-===============================
+pysal.lib: Python Spatial Analysis Library (core)
+================================================
 
 
 Documentation

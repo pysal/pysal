@@ -96,6 +96,11 @@ class Moran(object):
                    p-value based on standard normal approximation from
                    permutations
 
+    Notes
+    -----
+    Technical details and derivations can be found in :cite:`cliff81`.
+
+
     Examples
     --------
     >>> import pysal.lib
@@ -325,6 +330,9 @@ class Moran_BV(object):
     Inference is only based on permutations as analytical results are not too
     reliable.
 
+
+
+
     Examples
     --------
     >>> import pysal.lib
@@ -481,7 +489,6 @@ def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
 
     Examples
     --------
-    Example 1: Variables passed in as an array
     
     open dbf
 
@@ -509,37 +516,6 @@ def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
     >>> round(res[(3,  0)].I,7)
     0.3770138
 
-
-    Example 2: variables passed in as pandas.Dataframe
-    
-    Imports
-    
-    >>> import pysal.lib.api as lp
-    >>> from pysal.lib import examples
-    >>> import geopandas as gpd
-    >>> import pandas as pd
-    >>> import matplotlib.pyplot as plt
-    >>> import matplotlib
-    >>> import numpy as np
-    >>> from splot.pysal.explore.esda import moran_facet
-    
-    Prepare DataFrame
-    
-    >>> path = examples.get_path('columbus.shp')
-    >>> gdf = gpd.read_file(path)
-    >>> variables2 = gdf[['HOVAL', 'CRIME', 'INC', 'EW']]
-    >>> w2 = lp.queen_from_shapefile(path)
-    
-    Create Moran_BV_Matrix
-    
-    >>> matrix = Moran_BV_matrix(variables2, w2)
-    >>> matrix
-    
-    Plot Moran_facet using `splot`
-    
-    >>> moran_facet(matrix)
-    >>> plt.show()
-    
     """
     try:
         # check if pandas is installed
@@ -585,7 +561,7 @@ def _Moran_BV_Matrix_array(variables, w, permutations=0, varnames=None):
 class Moran_Rate(Moran):
     """
     Adjusted Moran's I Global Autocorrelation Statistic for Rate
-    Variables [Assuncao1999]_
+    Variables :cite:`Assun_o_1999`
 
     Parameters
     ----------
@@ -848,6 +824,12 @@ class Moran_Local(object):
                    p-values based on standard normal approximation from
                    permutations (one-sided)
                    for two-sided tests, these values should be multiplied by 2
+
+    Notes
+    -----
+
+    For technical details see :cite:`Anselin95`.
+
 
     Examples
     --------

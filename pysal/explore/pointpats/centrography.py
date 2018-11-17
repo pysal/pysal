@@ -11,7 +11,7 @@ TODO
 __author__ = "Serge Rey sjsrey@gmail.com"
 __all__ = ['mbr', 'hull', 'mean_center', 'weighted_mean_center',
            'manhattan_median', 'std_distance', 'euclidean_median', 'ellipse',
-           'skyum', 'dtot',"_circle"]
+           'skyum', 'dtot']
 
 
 import sys

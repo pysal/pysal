@@ -149,6 +149,13 @@ class Gamma(object):
     >>> round(g4.p_sim_g, 3)
     0.003
 
+    Notes
+    -----
+
+    For further technical details see :cite:`Hubert_1981`.
+
+
+
     """
     def __init__(self, y, w, operation='c', standardize='no', permutations=PERMUTATIONS):
         y = np.asarray(y).flatten()

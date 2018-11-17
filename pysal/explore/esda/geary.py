@@ -91,6 +91,12 @@ class Geary(object):
     >>> round(c.p_norm,7)
     9.2e-05
     >>>
+
+
+    Notes
+    -----
+    Technical details and derivations can be found in :cite:`cliff81`.
+
     """
     def __init__(self, y, w, transformation="r", permutations=999):
         if not isinstance(w, weights.W):
@@ -213,9 +219,10 @@ class Geary(object):
         If inplace, None, and operation is conducted on dataframe in memory. Otherwise,
         returns a copy of the dataframe with the relevant columns attached.
 
-        See Also
-        ---------
-        For further documentation, refer to the Geary class in pysal.pysal.explore.esda
+        Notes
+        -----
+        Technical details and derivations can be found in :cite:`cliff81`.
+
         """
         return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
                                    outvals=outvals, stat=cls,

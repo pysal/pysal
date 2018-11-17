@@ -1,4 +1,4 @@
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 """
 :mod:`pysal.explore.esda` --- Exploratory Spatial Data Analysis
 =================================================

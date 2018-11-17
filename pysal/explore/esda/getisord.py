@@ -65,6 +65,9 @@ class G(object):
     -----
     Moments are based on normality assumption.
 
+    For technical details see :cite:`Getis_2010` and :cite:`Ord_2010`.
+
+
     Examples
     --------
     >>> import pysal.lib
@@ -212,7 +215,6 @@ class G(object):
 class G_Local(object):
     """
     Generalized Local G Autocorrelation
-    Statistic [Getis1992]_, [Ord1995]_, [Getis1996]_ .
 
     Parameters
     ----------
@@ -268,6 +270,7 @@ class G_Local(object):
     p_z_sim : array
              of floats, p-value based on standard normal approximation from
              permutations (one-sided)
+
     Notes
     -----
     To compute moments of Gs under normality assumption,
@@ -275,6 +278,10 @@ class G_Local(object):
     For binary weights object, the weight value for self is 1
     For row-standardized weights object, the weight value for self is
     1/(the number of its neighbors + 1).
+
+
+    For technical details see :cite:`Getis_2010` and :cite:`Ord_2010`.
+
 
     Examples
     --------
@@ -295,10 +302,12 @@ class G_Local(object):
     >>> y = numpy.array([2, 3, 3.2, 5, 8, 7])
 
     Applying Getis and Ord local G test using a binary weights object
+
     >>> from pysal.explore.esda.getisord import G_Local
     >>> lg = G_Local(y,w,transform='B')
 
     Examining the results
+
     >>> lg.Zs
     array([-1.0136729 , -0.04361589,  1.31558703, -0.31412676,  1.15373986,
             1.77833941])
@@ -332,6 +341,7 @@ class G_Local(object):
     >>> numpy.random.seed(10)
 
     Applying Getis and Ord local G* test using a row-standardized weights object
+
     >>> lg_star = G_Local(y,w,transform='R',star=True)
 
     Examining the results

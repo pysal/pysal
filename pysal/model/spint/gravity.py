@@ -24,6 +24,7 @@ from pysal.model.spglm.utils import cache_readonly
 from .count_model import CountModel
 from .utils import sorensen, srmse, spcategorical
 
+
 class BaseGravity(CountModel):
     """
     Base class to set up gravity-type spatial interaction models and dispatch
@@ -36,8 +37,8 @@ class BaseGravity(CountModel):
     origins         : array of strings
                       n x 1; unique identifiers of origins of n flows
     destinations    : array of strings
-                      n x 1; unique identifiers of destinations of n flows 
-    cost            : array 
+                      n x 1; unique identifiers of destinations of n flows
+    cost            : array
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
     cost_func       : string or function that has scalar input and output
@@ -82,12 +83,12 @@ class BaseGravity(CountModel):
                       number of observations
     k               : integer
                       number of parameters
-    c               : array 
+    c               : array
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
     cf              : function
                       cost function; used to transform cost variable
-    ov              : array 
+    ov              : array
                       n x p(o); p attributes for each origin of n flows
     dv              : array
                       n x p(d); p attributes for each destination of n flows
@@ -129,7 +130,7 @@ class BaseGravity(CountModel):
     adj_D2          : float
                       adjusted percentage of explained deviance
     pseudo_R2       : float
-                      McFadden's pseudo R2  (coefficient of determination) 
+                      McFadden's pseudo R2  (coefficient of determination)
     adj_pseudoR2    : float
                       adjusted McFadden's pseudo R2
     SRMSE           : float
@@ -152,9 +153,22 @@ class BaseGravity(CountModel):
     array([ 17.84839637,  -1.68325787])
 
     """
-    def __init__(self, flows, cost, cost_func='pow', o_vars=None, d_vars=None,
-            origins=None, destinations=None, constant=True, framework='GLM',
-            SF=None, CD=None, Lag=None, Quasi=False):
+
+    def __init__(
+            self,
+            flows,
+            cost,
+            cost_func='pow',
+            o_vars=None,
+            d_vars=None,
+            origins=None,
+            destinations=None,
+            constant=True,
+            framework='GLM',
+            SF=None,
+            CD=None,
+            Lag=None,
+            Quasi=False):
         n = User.check_arrays(flows, cost)
         #User.check_y(flows, n)
         self.n = n
@@ -162,22 +176,24 @@ class BaseGravity(CountModel):
         self.c = cost
         self.ov = o_vars
         self.dv = d_vars
-        if type(cost_func) == str:
+        if isinstance(cost_func, str):
             if cost_func.lower() == 'pow':
                 self.cf = np.log
-                if (self.c==0).any():
-                    raise ValueError("Zero values detected: cost function 'pow'"
-                            "requires the logarithm of the cost variable which"
-                            "is undefined at 0")
+                if (self.c == 0).any():
+                    raise ValueError(
+                        "Zero values detected: cost function 'pow'"
+                        "requires the logarithm of the cost variable which"
+                        "is undefined at 0")
             elif cost_func.lower() == 'exp':
-                self.cf = lambda x: x*1.0
-        elif (type(cost_func) == FunctionType) | (type(cost_func) == np.ufunc):
+                self.cf = lambda x: x * 1.0
+        elif (isinstance(cost_func, FunctionType)) | (isinstance(cost_func, np.ufunc)):
             self.cf = cost_func
         else:
-            raise ValueError("cost_func must be 'exp', 'pow' or a valid "
-            " function that has a scalar as a input and output")
+            raise ValueError(
+                "cost_func must be 'exp', 'pow' or a valid "
+                " function that has a scalar as a input and output")
 
-        y = np.reshape(self.f, (-1,1))
+        y = np.reshape(self.f, (-1, 1))
         if isinstance(self, Gravity):
             X = np.empty((self.n, 0))
         else:
@@ -185,60 +201,75 @@ class BaseGravity(CountModel):
         if isinstance(self, Production) | isinstance(self, Doubly):
             o_dummies = spcategorical(origins.flatten())
             if constant:
-                o_dummies = o_dummies[:,1:]
+                o_dummies = o_dummies[:, 1:]
             X = sphstack(X, o_dummies, array_out=False)
         if isinstance(self, Attraction) | isinstance(self, Doubly):
             d_dummies = spcategorical(destinations.flatten())
             if constant | isinstance(self, Doubly):
-                d_dummies = d_dummies[:,1:]
+                d_dummies = d_dummies[:, 1:]
             X = sphstack(X, d_dummies, array_out=False)
-        if self.ov is not None:	
+        if self.ov is not None:
             if isinstance(self, Gravity):
                 for each in range(self.ov.shape[1]):
-                    if (self.ov[:,each] == 0).any(): 
-                    	raise ValueError("Zero values detected in column %s "
-                                "of origin variables, which are undefined for "
-                                "Poisson log-linear spatial interaction models" % each)
-                    X = np.hstack((X, np.log(np.reshape(self.ov[:,each], (-1,1)))))
+                    if (self.ov[:, each] == 0).any():
+                        raise ValueError(
+                            "Zero values detected in column %s "
+                            "of origin variables, which are undefined for "
+                            "Poisson log-linear spatial interaction models" %
+                            each)
+                    X = np.hstack(
+                        (X, np.log(np.reshape(self.ov[:, each], (-1, 1)))))
             else:
                 for each in range(self.ov.shape[1]):
-                    if (self.ov[:,each] == 0).any(): 
-                    	raise ValueError("Zero values detected in column %s "
-                                "of origin variables, which are undefined for "
-                                "Poisson log-linear spatial interaction models" % each)
-                    ov = sp.csr_matrix(np.log(np.reshape(self.ov[:,each], ((-1,1)))))
+                    if (self.ov[:, each] == 0).any():
+                        raise ValueError(
+                            "Zero values detected in column %s "
+                            "of origin variables, which are undefined for "
+                            "Poisson log-linear spatial interaction models" %
+                            each)
+                    ov = sp.csr_matrix(
+                        np.log(np.reshape(self.ov[:, each], ((-1, 1)))))
                     X = sphstack(X, ov, array_out=False)
-        if self.dv is not None:    	
+        if self.dv is not None:
             if isinstance(self, Gravity):
                 for each in range(self.dv.shape[1]):
-                    if (self.dv[:,each] == 0).any(): 
-                    	raise ValueError("Zero values detected in column %s "
-                                "of destination variables, which are undefined for "
-                                "Poisson log-linear spatial interaction models" % each)
-                    X = np.hstack((X, np.log(np.reshape(self.dv[:,each], (-1,1)))))
+                    if (self.dv[:, each] == 0).any():
+                        raise ValueError(
+                            "Zero values detected in column %s "
+                            "of destination variables, which are undefined for "
+                            "Poisson log-linear spatial interaction models" %
+                            each)
+                    X = np.hstack(
+                        (X, np.log(np.reshape(self.dv[:, each], (-1, 1)))))
             else:
                 for each in range(self.dv.shape[1]):
-                    if (self.dv[:,each] == 0).any(): 
-                    	raise ValueError("Zero values detected in column %s "
-                                "of destination variables, which are undefined for "
-                                "Poisson log-linear spatial interaction models" % each)
-                    dv = sp.csr_matrix(np.log(np.reshape(self.dv[:,each], ((-1,1)))))
+                    if (self.dv[:, each] == 0).any():
+                        raise ValueError(
+                            "Zero values detected in column %s "
+                            "of destination variables, which are undefined for "
+                            "Poisson log-linear spatial interaction models" %
+                            each)
+                    dv = sp.csr_matrix(
+                        np.log(np.reshape(self.dv[:, each], ((-1, 1)))))
                     X = sphstack(X, dv, array_out=False)
         if isinstance(self, Gravity):
-            X = np.hstack((X, self.cf(np.reshape(self.c, (-1,1)))))
+            X = np.hstack((X, self.cf(np.reshape(self.c, (-1, 1)))))
         else:
-            c = sp.csr_matrix(self.cf(np.reshape(self.c, (-1,1))))
+            c = sp.csr_matrix(self.cf(np.reshape(self.c, (-1, 1))))
             X = sphstack(X, c, array_out=False)
-            X = X[:,1:]#because empty array instantiated with extra column
+            X = X[:, 1:]  # because empty array instantiated with extra column
         if not isinstance(self, (Gravity, Production, Attraction, Doubly)):
-            X = self.cf(np.reshape(self.c, (-1,1)))
+            X = self.cf(np.reshape(self.c, (-1, 1)))
         if SF:
-        	raise NotImplementedError("Spatial filter model not yet implemented")
+            raise NotImplementedError(
+                "Spatial filter model not yet implemented")
         if CD:
-        	raise NotImplementedError("Competing destination model not yet implemented")
+            raise NotImplementedError(
+                "Competing destination model not yet implemented")
         if Lag:
-        	raise NotImplementedError("Spatial Lag autoregressive model not yet implemented")
-        
+            raise NotImplementedError(
+                "Spatial Lag autoregressive model not yet implemented")
+
         CountModel.__init__(self, y, X, constant=constant)
         if (framework.lower() == 'glm'):
             if not Quasi:
@@ -276,14 +307,16 @@ class BaseGravity(CountModel):
         return srmse(self)
 
     def reshape(self, array):
-        if type(array) == np.ndarray:
-            return array.reshape((-1,1))
-        elif type(array) == list:
-            return np.array(array).reshape((-1,1))
+        if isinstance(array, np.ndarray):
+            return array.reshape((-1, 1))
+        elif isinstance(array, list):
+            return np.array(array).reshape((-1, 1))
         else:
-            raise TypeError("input must be an numpy array or list that can be coerced"
-                    " into the dimensions n x 1")
-    
+            raise TypeError(
+                "input must be an numpy array or list that can be coerced"
+                " into the dimensions n x 1")
+
+
 class Gravity(BaseGravity):
     """
     Unconstrained (traditional gravity) gravity-type spatial interaction model
@@ -292,7 +325,7 @@ class Gravity(BaseGravity):
     ----------
     flows           : array of integers
                       n x 1; observed flows between O origins and D destinations
-    cost            : array 
+    cost            : array
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
     cost_func       : string or function that has scalar input and output
@@ -336,14 +369,14 @@ class Gravity(BaseGravity):
                       number of observations
     k               : integer
                       number of parameters
-    c               : array 
+    c               : array
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
     cf              : function
                       cost function; used to transform cost variable
-    ov              : array 
+    ov              : array
                       n x p(o); p attributes for each origin of n flows
-    dv              : array 
+    dv              : array
                       n x p(d); p attributes for each destination of n flows
     constant        : boolean
                       True to include intercept in model; True by default
@@ -376,14 +409,14 @@ class Gravity(BaseGravity):
                       value of the loglikelihood function evaluated with only an
                       intercept; see family.py for distribution-specific
                       loglikelihoods
-    AIC             : float 
+    AIC             : float
                       Akaike information criterion
     D2              : float
                       percentage of explained deviance
     adj_D2          : float
                       adjusted percentage of explained deviance
     pseudo_R2       : float
-                      McFadden's pseudo R2  (coefficient of determination) 
+                      McFadden's pseudo R2  (coefficient of determination)
     adj_pseudoR2    : float
                       adjusted McFadden's pseudo R2
     SRMSE           : float
@@ -407,41 +440,52 @@ class Gravity(BaseGravity):
     >>> model.params
     array([  3.80050153e+00,   5.54103854e-01,   3.94282921e-01,
             -2.27091686e-03])
-    
+
     """
+
     def __init__(self, flows, o_vars, d_vars, cost,
-            cost_func, constant=True, framework='GLM', SF=None, CD=None,
-            Lag=None, Quasi=False):
-        self.f = np.reshape(flows, (-1,1))
+                 cost_func, constant=True, framework='GLM', SF=None, CD=None,
+                 Lag=None, Quasi=False):
+        self.f = np.reshape(flows, (-1, 1))
         if len(o_vars.shape) > 1:
             p = o_vars.shape[1]
         else:
             p = 1
-        self.ov = np.reshape(o_vars, (-1,p))
+        self.ov = np.reshape(o_vars, (-1, p))
         if len(d_vars.shape) > 1:
             p = d_vars.shape[1]
         else:
             p = 1
-        self.dv = np.reshape(d_vars, (-1,p))
-        self.c = np.reshape(cost, (-1,1))
+        self.dv = np.reshape(d_vars, (-1, p))
+        self.c = np.reshape(cost, (-1, 1))
         #User.check_arrays(self.f, self.ov, self.dv, self.c)
-        
-        BaseGravity.__init__(self, self.f, self.c,
-                cost_func=cost_func, o_vars=self.ov, d_vars=self.dv, constant=constant,
-                framework=framework, SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
-        
+
+        BaseGravity.__init__(
+            self,
+            self.f,
+            self.c,
+            cost_func=cost_func,
+            o_vars=self.ov,
+            d_vars=self.dv,
+            constant=constant,
+            framework=framework,
+            SF=SF,
+            CD=CD,
+            Lag=Lag,
+            Quasi=Quasi)
+
     def local(self, loc_index, locs):
         """
         Calibrate local models for subsets of data from a single location to all
         other locations
-        
+
         Parameters
         ----------
         loc_index   : n x 1 array of either origin or destination id label for
                       flows; must be explicitly provided for local version of
                       basic gravity model since these are not passed to the
-                      global model. 
-                    
+                      global model.
+
         locs        : iterable of either origin or destination labels for which
                       to calibrate local models; must also be explicitly
                       provided since local gravity models can be calibrated from origins
@@ -452,7 +496,7 @@ class Gravity(BaseGravity):
         Returns
         -------
         results     : dict where keys are names of model outputs and diagnostics
-                      and values are lists of location specific values. 
+                      and values are lists of location specific values.
         """
         results = {}
         covs = self.ov.shape[1] + self.dv.shape[1] + 1
@@ -472,11 +516,11 @@ class Gravity(BaseGravity):
         for loc in locs:
             subset = loc_index == loc
             f = self.reshape(self.f[subset])
-            o_vars = self.ov[subset.reshape(self.ov.shape[0]),:]
-            d_vars = self.dv[subset.reshape(self.dv.shape[0]),:]
+            o_vars = self.ov[subset.reshape(self.ov.shape[0]), :]
+            d_vars = self.dv[subset.reshape(self.dv.shape[0]), :]
             dij = self.reshape(self.c[subset])
             model = Gravity(f, o_vars, d_vars, dij, self.cf,
-                    constant=False)
+                            constant=False)
             results['AIC'].append(model.AIC)
             results['deviance'].append(model.deviance)
             results['pseudoR2'].append(model.pseudoR2)
@@ -492,10 +536,11 @@ class Gravity(BaseGravity):
                 results['tvalue' + str(cov)].append(model.tvalues[cov])
         return results
 
+
 class Production(BaseGravity):
     """
     Production-constrained (origin-constrained) gravity-type spatial interaction model
-    
+
     Parameters
     ----------
     flows           : array of integers
@@ -504,7 +549,7 @@ class Production(BaseGravity):
                       n x 1; unique identifiers of origins of n flows; when
                       there are many origins it will be faster to use integers
                       rather than strings for id labels.
-    cost            : array 
+    cost            : array
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
     cost_func       : string or function that has scalar input and output
@@ -545,14 +590,14 @@ class Production(BaseGravity):
                       number of observations
     k               : integer
                       number of parameters
-    c               : array 
+    c               : array
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
     cf              : function
                       cost function; used to transform cost variable
     o               : array
                       n x 1; index of origin id's
-    dv              : array 
+    dv              : array
                       n x p; p attributes for each destination of n flows
     constant        : boolean
                       True to include intercept in model; True by default
@@ -585,14 +630,14 @@ class Production(BaseGravity):
                       value of the loglikelihood function evaluated with only an
                       intercept; see family.py for distribution-specific
                       loglikelihoods
-    AIC             : float 
+    AIC             : float
                       Akaike information criterion
     D2              : float
                       percentage of explained deviance
     adj_D2          : float
                       adjusted percentage of explained deviance
     pseudo_R2       : float
-                      McFadden's pseudo R2  (coefficient of determination) 
+                      McFadden's pseudo R2  (coefficient of determination)
     adj_pseudoR2    : float
                       adjusted McFadden's pseudo R2
     SRMSE           : float
@@ -618,30 +663,41 @@ class Production(BaseGravity):
     array([ 1.34721352,  0.96357345,  0.85535775, -0.00227444])
 
     """
+
     def __init__(self, flows, origins, d_vars, cost, cost_func, constant=True,
-            framework='GLM', SF=None, CD=None, Lag=None, Quasi=False):
+                 framework='GLM', SF=None, CD=None, Lag=None, Quasi=False):
         self.constant = constant
         self.f = self.reshape(flows)
         self.o = self.reshape(origins)
-        
+
         try:
             if d_vars.shape[1]:
                 p = d_vars.shape[1]
-        except:
+        except BaseException:
             p = 1
-        self.dv = np.reshape(d_vars, (-1,p))
+        self.dv = np.reshape(d_vars, (-1, p))
         self.c = self.reshape(cost)
         #User.check_arrays(self.f, self.o, self.dv, self.c)
-       
-        BaseGravity.__init__(self, self.f, self.c, cost_func=cost_func, d_vars=self.dv,
-                origins=self.o, constant=constant, framework=framework,
-                SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
-    
+
+        BaseGravity.__init__(
+            self,
+            self.f,
+            self.c,
+            cost_func=cost_func,
+            d_vars=self.dv,
+            origins=self.o,
+            constant=constant,
+            framework=framework,
+            SF=SF,
+            CD=CD,
+            Lag=Lag,
+            Quasi=Quasi)
+
     def local(self, locs=None):
         """
         Calibrate local models for subsets of data from a single location to all
         other locations
-        
+
         Parameters
         ----------
         locs        : iterable of location (origins) labels; default is
@@ -669,12 +725,12 @@ class Production(BaseGravity):
             results['pvalue' + str(cov)] = []
             results['tvalue' + str(cov)] = []
         if locs is None:
-        	locs = np.unique(self.o)
+            locs = np.unique(self.o)
         for loc in np.unique(locs):
             subset = self.o == loc
             f = self.reshape(self.f[subset])
             o = self.reshape(self.o[subset])
-            d_vars = self.dv[subset.reshape(self.dv.shape[0]),:]
+            d_vars = self.dv[subset.reshape(self.dv.shape[0]), :]
             dij = self.reshape(self.c[subset])
             model = Production(f, o, d_vars, dij, self.cf, constant=False)
             results['AIC'].append(model.AIC)
@@ -686,16 +742,19 @@ class Production(BaseGravity):
             results['SSI'].append(model.SSI)
             results['SRMSE'].append(model.SRMSE)
             for cov in range(covs):
-                results['param' + str(cov)].append(model.params[offset+cov])
-                results['stde' + str(cov)].append(model.std_err[offset+cov])
-                results['pvalue' + str(cov)].append(model.pvalues[offset+cov])
-                results['tvalue' + str(cov)].append(model.tvalues[offset+cov])
+                results['param' + str(cov)].append(model.params[offset + cov])
+                results['stde' + str(cov)].append(model.std_err[offset + cov])
+                results['pvalue' +
+                        str(cov)].append(model.pvalues[offset + cov])
+                results['tvalue' +
+                        str(cov)].append(model.tvalues[offset + cov])
         return results
+
 
 class Attraction(BaseGravity):
     """
     Attraction-constrained (destination-constrained) gravity-type spatial interaction model
-    
+
     Parameters
     ----------
     flows           : array of integers
@@ -704,7 +763,7 @@ class Attraction(BaseGravity):
                       n x 1; unique identifiers of destinations of n flows; when
                       there are many destinations it will be faster to use
                       integers over strings for id labels.
-    cost            : array 
+    cost            : array
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
     cost_func       : string or function that has scalar input and output
@@ -750,7 +809,7 @@ class Attraction(BaseGravity):
                       number of observations
     k               : integer
                       number of parameters
-    c               : array 
+    c               : array
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
     cf              : function
@@ -786,14 +845,14 @@ class Attraction(BaseGravity):
                       value of the loglikelihood function evaluated with only an
                       intercept; see family.py for distribution-specific
                       loglikelihoods
-    AIC             : float 
+    AIC             : float
                       Akaike information criterion
     D2              : float
                       percentage of explained deviance
     adj_D2          : float
                       adjusted percentage of explained deviance
     pseudo_R2       : float
-                      McFadden's pseudo R2  (coefficient of determination) 
+                      McFadden's pseudo R2  (coefficient of determination)
     adj_pseudoR2    : float
                       adjusted McFadden's pseudo R2
     SRMSE           : float
@@ -816,24 +875,35 @@ class Attraction(BaseGravity):
     >>> model = Attraction(flows, d, o_cap, cost, 'exp')
     >>> model.params[-4:]
     array([ 1.21962276,  0.87634028,  0.88290909, -0.00229081])
-    
+
     """
+
     def __init__(self, flows, destinations, o_vars, cost, cost_func,
-            constant=True, framework='GLM', SF=None, CD=None, Lag=None,
-            Quasi=False):
-        self.f = np.reshape(flows, (-1,1))
+                 constant=True, framework='GLM', SF=None, CD=None, Lag=None,
+                 Quasi=False):
+        self.f = np.reshape(flows, (-1, 1))
         if len(o_vars.shape) > 1:
             p = o_vars.shape[1]
         else:
             p = 1
-        self.ov = np.reshape(o_vars, (-1,p))
-        self.d = np.reshape(destinations, (-1,1))
-        self.c = np.reshape(cost, (-1,1))
+        self.ov = np.reshape(o_vars, (-1, p))
+        self.d = np.reshape(destinations, (-1, 1))
+        self.c = np.reshape(cost, (-1, 1))
         #User.check_arrays(self.f, self.d, self.ov, self.c)
 
-        BaseGravity.__init__(self, self.f, self.c, cost_func=cost_func, o_vars=self.ov,
-                 destinations=self.d, constant=constant,
-                 framework=framework, SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
+        BaseGravity.__init__(
+            self,
+            self.f,
+            self.c,
+            cost_func=cost_func,
+            o_vars=self.ov,
+            destinations=self.d,
+            constant=constant,
+            framework=framework,
+            SF=SF,
+            CD=CD,
+            Lag=Lag,
+            Quasi=Quasi)
 
     def local(self, locs=None):
         """
@@ -866,13 +936,13 @@ class Attraction(BaseGravity):
             results['stde' + str(cov)] = []
             results['pvalue' + str(cov)] = []
             results['tvalue' + str(cov)] = []
-        if locs is  None:
-        	locs = np.unique(self.d)
+        if locs is None:
+            locs = np.unique(self.d)
         for loc in np.unique(locs):
             subset = self.d == loc
             f = self.reshape(self.f[subset])
             d = self.reshape(self.d[subset])
-            o_vars = self.ov[subset.reshape(self.ov.shape[0]),:]
+            o_vars = self.ov[subset.reshape(self.ov.shape[0]), :]
             dij = self.reshape(self.c[subset])
             model = Attraction(f, d, o_vars, dij, self.cf, constant=False)
             results['AIC'].append(model.AIC)
@@ -884,16 +954,19 @@ class Attraction(BaseGravity):
             results['SSI'].append(model.SSI)
             results['SRMSE'].append(model.SRMSE)
             for cov in range(covs):
-                results['param' + str(cov)].append(model.params[offset+cov])
-                results['stde' + str(cov)].append(model.std_err[offset+cov])
-                results['pvalue' + str(cov)].append(model.pvalues[offset+cov])
-                results['tvalue' + str(cov)].append(model.tvalues[offset+cov])
+                results['param' + str(cov)].append(model.params[offset + cov])
+                results['stde' + str(cov)].append(model.std_err[offset + cov])
+                results['pvalue' +
+                        str(cov)].append(model.pvalues[offset + cov])
+                results['tvalue' +
+                        str(cov)].append(model.tvalues[offset + cov])
         return results
+
 
 class Doubly(BaseGravity):
     """
     Doubly-constrained gravity-type spatial interaction model
-    
+
     Parameters
     ----------
     flows           : array of integers
@@ -906,7 +979,7 @@ class Doubly(BaseGravity):
                       n x 1; unique identifiers of destinations of n flows; when
                       there are many destinations it will be faster to use
                       integers rather than strings for id labels
-    cost            : array 
+    cost            : array
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
     cost_func       : string or function that has scalar input and output
@@ -949,7 +1022,7 @@ class Doubly(BaseGravity):
                       number of observations
     k               : integer
                       number of parameters
-    c               : array 
+    c               : array
                       n x 1; cost to overcome separation between each origin and
                       destination associated with a flow; typically distance or time
     cf              : function
@@ -989,14 +1062,14 @@ class Doubly(BaseGravity):
                       value of the loglikelihood function evaluated with only an
                       intercept; see family.py for distribution-specific
                       loglikelihoods
-    AIC             : float 
+    AIC             : float
                       Akaike information criterion
     D2              : float
                       percentage of explained deviance
     adj_D2          : float
                       adjusted percentage of explained deviance
     pseudo_R2       : float
-                      McFadden's pseudo R2  (coefficient of determination) 
+                      McFadden's pseudo R2  (coefficient of determination)
     adj_pseudoR2    : float
                       adjusted McFadden's pseudo R2
     SRMSE           : float
@@ -1021,19 +1094,30 @@ class Doubly(BaseGravity):
     array([-0.00232112])
 
     """
-    def __init__(self, flows, origins, destinations, cost, cost_func,
-            constant=True, framework='GLM', SF=None, CD=None, Lag=None,
-            Quasi=False):
 
-        self.f = np.reshape(flows, (-1,1))
-        self.o = np.reshape(origins, (-1,1))
-        self.d = np.reshape(destinations, (-1,1))
-        self.c = np.reshape(cost, (-1,1))
+    def __init__(self, flows, origins, destinations, cost, cost_func,
+                 constant=True, framework='GLM', SF=None, CD=None, Lag=None,
+                 Quasi=False):
+
+        self.f = np.reshape(flows, (-1, 1))
+        self.o = np.reshape(origins, (-1, 1))
+        self.d = np.reshape(destinations, (-1, 1))
+        self.c = np.reshape(cost, (-1, 1))
         #User.check_arrays(self.f, self.o, self.d, self.c)
 
-        BaseGravity.__init__(self, self.f, self.c, cost_func=cost_func, origins=self.o, 
-                destinations=self.d, constant=constant,
-                framework=framework, SF=SF, CD=CD, Lag=Lag, Quasi=Quasi)
+        BaseGravity.__init__(
+            self,
+            self.f,
+            self.c,
+            cost_func=cost_func,
+            origins=self.o,
+            destinations=self.d,
+            constant=constant,
+            framework=framework,
+            SF=SF,
+            CD=CD,
+            Lag=Lag,
+            Quasi=Quasi)
 
     def local(self, locs=None):
         """
@@ -1043,5 +1127,6 @@ class Doubly(BaseGravity):
         Calibrate local models for subsets of data from a single location to all
         other locations
         """
-        raise NotImplementedError("Local models not possible for"
-        " doubly-constrained model due to insufficient degrees of freedom.")
+        raise NotImplementedError(
+            "Local models not possible for"
+            " doubly-constrained model due to insufficient degrees of freedom.")
