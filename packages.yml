@@ -8,7 +8,6 @@ explore:
   spaghetti
 viz:
   mapclassify
-  splot
 model:
   spreg
   spglm

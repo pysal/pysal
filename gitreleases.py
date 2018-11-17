@@ -11,6 +11,7 @@ import os
 import json
 import yaml
 import requests
+import tarfile
 
 with open('packages.yml') as package_file:
     packages = yaml.load(package_file)
@@ -55,9 +56,9 @@ def get_tarballs():
     """
     Grab tarballs for releases and put in a temporary directory for furhter processing
     """
-    with open('tarballs.json', 'r') as fp:
-        sources = json.load(fp)
-    Os.system('rm -rf tarballs')
+    with open('tarballs.json', 'r') as infile:
+        sources = json.load(infile)
+    os.system('rm -rf tarballs')
     os.system('mkdir tarballs')
     for subpackage in sources.keys():
         print(subpackage)
@@ -68,6 +69,17 @@ def get_tarballs():
         resp = requests.get(url)
         with open(target, 'wb') as target_file:
             target_file.write(resp.content)
+        tar = tarfile.open(target, "r:gz")
+        members = tar.getmembers()
+        path = members[0].path
+        cmd = "tar xzvf tarballs/{pkg}.tar.gz".format(pkg=subpackage)
+        print(cmd)
+        os.system(cmd)
+        cmd = "cp -R {path} tmp/{pkg}".format(path=path, pkg=subpackage)
+        print(cmd)
+        os.system(cmd)
+        cmd = "rm -rf {path}".format(path=path)
+        os.system(cmd)
 
     return sources
 
@@ -75,19 +87,22 @@ def clone_releases():
     """
     Clone the releases in tmp
     """
-
-    with open('tarballs.json', 'r') as fp:
-        sources = json.load(fp)
+    with open('tarballs.json', 'r') as file_name:
+        sources = json.load(file_name)
     os.system('rm -rf tmp')
     os.system('mkdir tmp')
     for subpackage in sources.keys():
         tag = sources[subpackage][0]
-        pkgstr = "git clone git@github.com:pysal/{subpackage}.git --branch {tag} tmp/{subpackage}".format(subpackage=subpackage,
-                                                                                                          tag=tag)
+        pkgstr = "git clone git@github.com:pysal/{subpackage}.git".format(subpackage=subpackage)
+        pkgstr = "{pkgstr} --branch {tag} tmp/{subpackage}".format(pkgstr=pkgstr,
+                                                                   tag=tag,
+                                                                   subpackage=subpackage)
+
+
+
         print(pkgstr)
     os.system(pkgstr)
 
 if __name__ == "__main__":
     get_release_info()
-    clone_releases()
-
+    get_tarballs()
