@@ -1,2 +1,0 @@
-include authors.txt INSTALL.txt LICENSE.txt THANKS.txt CHANGELOG.md MANIFEST.in pysal/COPYING requirements_dev.txt requirements_plus.txt requirements.txt
-

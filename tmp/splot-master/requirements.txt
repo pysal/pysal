@@ -1,7 +1,0 @@
-numpy
-pandas 
-geopandas
-matplotlib
-seaborn
-bokeh
-ipywidgets
