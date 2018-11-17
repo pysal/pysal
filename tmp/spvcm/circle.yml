@@ -1,0 +1,29 @@
+machine:
+    environment: 
+        PATH: "/home/ubuntu/miniconda/envs/circleenv/bin:/home/ubuntu/miniconda/bin:$PATH"
+    python:
+        version: 2.7
+
+dependencies: 
+    pre:
+        - cd ~
+        - ls -al; 
+        - rm -rf ~/.pyenv;
+        - rm -rf ~/virtualenvs
+        - >
+           
+            if [ ! -d "/home/ubuntu/miniconda" ]; then
+                    echo "Setting up conda";
+                    wget -q http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O ~/miniconda.sh;
+                    chmod +x ~/miniconda.sh;
+                    ~/miniconda.sh -b -p /home/ubuntu/miniconda;
+                    conda update --yes --quiet conda;
+                    conda create -n circleenv --yes pip python=2.7 pip pandas pysal scipy numpy nose seaborn dill statsmodels;
+                  else
+                    echo "Conda already set up."; 
+            fi
+
+test:
+    override:
+        - ls -al
+        - nosetests spvcm

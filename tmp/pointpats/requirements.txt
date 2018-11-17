@@ -1,0 +1,6 @@
+scipy>=0.11
+numpy>=1.3
+pandas
+matplotlib
+libpysal
+descartes

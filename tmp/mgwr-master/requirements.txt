@@ -1,0 +1,4 @@
+scipy>=0.11
+numpy>=1.3
+libpysal>=4.0.0
+spglm>=1.0.6

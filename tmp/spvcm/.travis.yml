@@ -1,0 +1,35 @@
+language: python
+sudo: false
+
+branches:
+    - master
+    - dev
+
+python:
+    - 2.7
+    - 3.5
+    - 3.6
+
+before_install:
+    - wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+    - chmod +x miniconda.sh
+    - ./miniconda.sh -b -p ./miniconda
+    - export PATH=`pwd`/miniconda/bin:$PATH
+    - conda update --yes conda
+    - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION 
+    - source activate test-env
+    - conda install -y numpy scipy pandas six pip
+    - conda install -y nose seaborn dill statsmodels geopandas
+    - pip install pysal
+
+install:
+    - python setup.py install
+script:
+    - travis_wait 45 nosetests spvcm
+
+notifications:
+    email:
+        recipients:
+            - levi.john.wolf+travis@gmail.com
+        on_success: change
+        on_failure: always

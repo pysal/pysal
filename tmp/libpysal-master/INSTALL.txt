@@ -1,0 +1,242 @@
+.. _installation:
+
+================
+Installing PySAL
+================
+
+.. contents::
+
+Prerequisites
+=============
+
+
+Before installing PySAL, make sure the following libraries are properly
+installed on your machine:
+
+
+* `Python <http://www.python.org/>`_ 2.5 or later
+* `Numpy <http://new.scipy.org/download.html>`_ 1.3 or later
+* `Scipy <http://new.scipy.org/download.html>`_ 0.7 or later
+
+
+*Optional, bundled installation:* 
+
+The Anaconda Python distribution ships with PySAL. Opting for this distro means you don't have to read any further!
+Check it out at http://continuum.io/downloads.html
+
+With the `Enthought Python Distribution (EPD Free) <http://www.enthought.com/products/epd_free.php>`_, 
+you will install all of PySAL's required dependencies, as well as iPython and a lot more, rather than installing dependencies one by one.
+The full-blown EPD package is free for academics, and downloadable `here <http://www.enthought.com/products/edudownload.php>`_. 
+
+* Optional, tools to compile our documentation:*
+
+* `Sphinx <http://sphinx.pocoo.org/>`_
+* `numpydoc <http://pypi.python.org/pypi/numpydoc/0.4>`_  extension to Sphinx (*not included in EPD*)
+
+*Optional, recommended additions:*
+
+* `iPython <http://ipython.scipy.org/moin/Download>`_
+
+Getting PySAL
+=============
+
+PySAL is available on the `Python Package Index
+<http://pypi.python.org/pypi/PySAL>`_, which means it can be
+downloaded and installed manually or from the command line using pip or easy_install, as
+follows::
+
+ $ pip install pysal
+ #or
+ $ easy_install pysal
+
+Alternatively, grab the source distribution (.tar.gz) and decompress it to your selected destination. Open a command shell and navigate to the decompressed PySAL folder. Type::
+
+ $ python setup.py install
+
+Development version on GitHub 
+-----------------------------
+
+Developers can checkout PySAL using **git**::
+
+ $ git clone https://github.com/pysal/pysal.git pysal
+
+
+This will create a folder called 'pysal' containing the source
+code in trunk. This will allow you to easily update any change
+to the developer code base by running::
+
+ $ git pull
+
+Since PySAL is in active development, changes are made frequently. For that
+reason, we recommend you 'tell' Python to look for PySAL in that folder
+rather than properly install it as a package. You can do this by adding the
+PySAL folder to the PYTHONPATH, a UNIX environment variable. 
+To do that, create or edit your command shell profile (.bash_profile if using
+BASH) and add the following line, substituting where appropriate::
+
+
+ $ export PYTHONPATH=${PYTHONPATH}:"/path_to_desired/folder/pysal/"
+
+Save and quit the file, then source it as follows::
+
+ $ source ~/.bash_profile
+
+You are all set. To test your setup, start a Python session and type::
+
+ >>> import pysal; pysal.open.check()
+
+Your terminal should reply with the following::
+
+ PySAL File I/O understands the following file extensions:
+ Ext: '.shp', Modes: ['r', 'wb', 'w', 'rb']
+ Ext: '.mtx', Modes: ['r', 'w']
+ Ext: '.swm', Modes: ['r', 'w']
+ Ext: '.mat', Modes: ['r', 'w']
+ Ext: '.shx', Modes: ['r', 'wb', 'w', 'rb']
+ Ext: '.stata_text', Modes: ['r', 'w']
+ Ext: '.geoda_txt', Modes: ['r']
+ Ext: '.dbf', Modes: ['r', 'w']
+ Ext: '.dat', Modes: ['r', 'w']
+ Ext: '.gwt', Modes: ['r']
+ Ext: '.gal', Modes: ['r', 'w']
+ Ext: '.arcgis_text', Modes: ['r', 'w']
+ Ext: '.wk1', Modes: ['r', 'w']
+ Ext: '.arcgis_dbf', Modes: ['r', 'w']
+ Ext: '.geobugs_text', Modes: ['r', 'w']
+ Ext: '.csv', Modes: ['r']
+ Ext: '.wkt', Modes: ['r']
+ >>>
+
+
+Windows
+~~~~~~~~
+
+To keep up to date with PySAL development, you will need a Git client that allows you to access and 
+update the code from our repository. We recommend 
+`GitHub Windows <http://windows.github.com/>`_.
+
+After using GitHub Windows to install a local copy of Pysal, you need to tell
+your Python distribution where to find PySAL.  There are several ways to do this. Here we
+will use a simple one that requires you to create a text file
+called ``sitecustomize.py`` in the
+``site-packages`` folder of your Python distribution. That path looks more or
+less like this::
+ 
+ C:\PythonXX\Lib\site-packages\sitecustomize.py
+
+,where XX corresponds to the version of the Python distribution you are using
+(25 for 2.5, for example).
+Edit ``sitecustomize.py`` with the following two lines of text::
+
+ import sys
+ sys.path.append("C:/PySALsvn/pysal-read-only")
+ 
+Save and close the file.
+You are all set.  To test your setup, start a Python session and type::
+
+ >>> import pysal; pysal.open.check()
+
+Your terminal should reply with the following::
+
+
+ PySAL File I/O understands the following file extensions:
+ Ext: '.shp', Modes: ['r', 'wb', 'w', 'rb']
+ Ext: '.mtx', Modes: ['r', 'w']
+ Ext: '.swm', Modes: ['r', 'w']
+ Ext: '.mat', Modes: ['r', 'w']
+ Ext: '.shx', Modes: ['r', 'wb', 'w', 'rb']
+ Ext: '.stata_text', Modes: ['r', 'w']
+ Ext: '.geoda_txt', Modes: ['r']
+ Ext: '.dbf', Modes: ['r', 'w']
+ Ext: '.dat', Modes: ['r', 'w']
+ Ext: '.gwt', Modes: ['r']
+ Ext: '.gal', Modes: ['r', 'w']
+ Ext: '.arcgis_text', Modes: ['r', 'w']
+ Ext: '.wk1', Modes: ['r', 'w']
+ Ext: '.arcgis_dbf', Modes: ['r', 'w']
+ Ext: '.geobugs_text', Modes: ['r', 'w']
+ Ext: '.csv', Modes: ['r']
+ Ext: '.wkt', Modes: ['r']
+ >>>
+
+
+Known Issues
+============
+
+1.5 install fails with scipy 11.0 on Mac OS X
+---------------------------------------------
+
+Running `python setup.py install` results in::
+
+	from _cephes import *
+	ImportError:
+	dlopen(/Users/serge/Documents/p/pysal/virtualenvs/python1.5/lib/python2.7/site-packages/scipy/special/_cephes.so,
+	2): Symbol not found: _aswfa_
+	  Referenced from:
+	  /Users/serge/Documents/p/pysal/virtualenvs/python1.5/lib/python2.7/site-packages/scipy/special/_cephes.so
+	    Expected in: dynamic lookup
+
+This occurs when your scipy on Mac OS X was complied with gnu95 and not
+gfortran.  See `this thread <http://mail.scipy.org/pipermail/scipy-user/2010-November/027548.html>`_ for possible solutions.
+
+weights.DistanceBand failing
+----------------------------
+
+This occurs due to a bug in scipy.sparse prior to version 0.8. If you are running such a version see `Issue 73 <http://code.google.com/p/pysal/issues/detail?id=73&sort=milestone>`_ for a fix.
+
+doc tests and unit tests under Linux
+------------------------------------
+
+Some Linux machines return different results for the unit and doc tests. We suspect this has to do with the way random seeds are set. See `Issue 52 <http://code.google.com/p/pysal/issues/detail?id=52&sort=milestone>`_
+
+LISA Markov missing a transpose
+-------------------------------
+In versions of PySAL < 1.1 there is a bug in the LISA Markov, resulting in
+incorrect values. For a fix and more details see `Issue 115 <http://code.google.com/p/pysal/issues/detail?id=115>`_.
+
+
+PIP Install Fails
+-----------------
+
+
+Having numpy and scipy specified in pip requiretments.txt causes PIP install of pysal to fail. For discussion and suggested fixes see `Issue 207 <http://code.google.com/p/pysal/issues/detail?id=207&sort=milestone>`_.
+
+Troubleshooting
+===============
+
+If you experience problems when building, installing, or testing PySAL, ask for
+help on the
+`OpenSpace <http://geodacenter.asu.edu/support/community>`_ 
+list or
+browse the archives of the
+`pysal-dev <http://groups.google.com/group/pysal-dev?pli=1>`_ 
+google group. 
+
+Please include the output of the following commands in your message:
+
+1) Platform information::
+
+    python -c 'import os,sys;print os.name, sys.platform'
+    uname -a
+
+2) Python version::
+    
+    python -c 'import sys; print sys.version'
+
+3) SciPy version::
+
+    python -c 'import scipy; print scipy.__version__'
+
+3) NumPy version::
+
+    python -c 'import numpy; print numpy.__version__'
+
+4) Feel free to add any other relevant information.
+   For example, the full output (both stdout and stderr) of the PySAL
+   installation command can be very helpful. Since this output can be
+   rather large, ask before sending it into the mailing list (or
+   better yet, to one of the developers, if asked).
+
+
+
+

@@ -1,0 +1,60 @@
+language: python
+sudo: false
+branches:
+only:
+  - master
+python:
+  - "3.5"
+  - "3.6"
+
+env:
+  - PYSAL_PYPI=true
+  - PYSAL_PYPI=false
+
+matrix:
+    allow_failures:
+        - python: 3.5
+          env: PYSAL_PYPI=false
+        - python: 3.6
+          env: PYSAL_PYPI=false
+
+before_install:
+  - wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+  - chmod +x miniconda.sh
+  - ./miniconda.sh -b -p ./miniconda
+  - export PATH=`pwd`/miniconda/bin:$PATH
+  - conda update --yes conda
+  - conda config --add channels conda-forge
+  - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION
+  - source activate test-env
+
+install:
+  - conda install --yes pip
+  - pip install -r requirements.txt
+  - conda install --yes --file requirements.txt;
+  - pip install https://github.com/pysal/splot/archive/master.zip
+  - pip install -r requirements_tests.txt
+  - if "$PYSAL_PYPI"; then
+        echo 'testing pypi libpysal spreg' && pip install libpysal spreg;
+    else
+        echo 'testing git libpysal spreg';
+        git clone https://github.com/pysal/libpysal.git; cd libpysal; pip install .; cd ../;
+        git clone https://github.com/pysal/spreg.git; cd spreg; pip install .; cd ../;
+    fi;
+
+
+
+script:
+  - python setup.py sdist >/dev/null
+  - python setup.py install
+  - nosetests --with-coverage --cover-package=spglm;
+
+notifications:
+    email:
+        recipients:
+            - tayoshan@gmail.com
+        on_change: change
+        on_failure: always
+
+after_success:
+  - coveralls

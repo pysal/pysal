@@ -1,0 +1,12 @@
+name: esda
+dependencies:
+        - jupyterlab
+        - geopandas
+        - seaborn
+        - nose
+        - pip:
+           - libpysal
+           - mapclassify
+        
+
+

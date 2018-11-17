@@ -1,0 +1,66 @@
+language: python
+sudo: false
+branches:
+  only:
+    - master
+python:
+  - 3.5
+  - 3.6
+
+env: 
+    - PYSAL_PYPI=true PYSAL_PLUS=true
+    - PYSAL_PYPI=true PYSAL_PLUS=false
+    - PYSAL_PYPI=false PYSAL_PLUS=true
+    - PYSAL_PYPI=false PYSAL_PLUS=false
+
+matrix:
+  allow_failures:
+      - python: 3.5
+        env: PYSAL_PYPI=false PYSAL_PLUS=false
+      - python: 3.5
+        env: PYSAL_PYPI=false PYSAL_PLUS=true
+      - python: 3.6
+        env: PYSAL_PYPI=false PYSAL_PLUS=false
+      - python: 3.6
+        env: PYSAL_PYPI=false PYSAL_PLUS=true
+
+before_install:
+  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+  - chmod +x miniconda.sh
+  - ./miniconda.sh -b -p ./miniconda
+  - export PATH=`pwd`/miniconda/bin:$PATH
+  - conda update --yes conda
+  - conda config --append channels conda-forge
+  - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION
+  - source activate test-env
+
+install:
+  - conda install --yes pip
+  - conda install --yes geopandas
+  - if "$PYSAL_PYPI"; then
+        echo 'testing pypi libpysal' && pip install libpysal;
+        else echo 'testing git libpysal';
+        git clone https://github.com/pysal/libpysal.git;
+        cd libpysal; pip install .; cd ../;
+    fi;
+  - if [ "$PYSAL_PLUS" == true ]; then
+        echo 'plus testing'; conda install --yes --file requirements_plus.txt;
+        else conda install --yes --file requirements.txt;
+    fi;
+  - pip install -r requirements_dev.txt -r requirements_docs.txt
+
+script:
+  - python setup.py sdist >/dev/null
+  - nosetests --with-doctest --with-coverage --cover-package=spaghetti;
+
+notifications:
+    email:
+        recipients:
+          - sjsrey@gmail.com
+          - levi.john.wolf@gmail.com
+          - jgaboardi@gmail.com
+        on_success: change
+        on_failure: change
+
+after_success:
+  - coveralls

@@ -1,0 +1,55 @@
+PySAL is an open source library of routines for exploratory spatial data
+analysis using Python.  It is a community project sponsored by the GeoDa
+Center for Geospatial Analysis and Computation at Arizona State University.
+PySAL originated with code contributions by Luc Anselin and Serge Rey.
+
+Since then many people have contributed to PySAL, in code development,
+suggestions, and financial support.  Below is a partial list.  If you've
+been left off, please email the "PySAL Developers List" <pysal-dev@googlegroups.com>
+
+Pedro Amaral
+Luc Anselin
+Jotham Apaloo
+Daniel Arribas-Bel
+David C. Folch
+Forest Gregg
+Myunghwa Hwang
+Wei Kang
+Marynia Kolak
+Julia Koschinsky
+Jason Laura
+Xun Li
+Nicholas Malizia
+Mark McCann
+Taylor Oshan
+Serge Rey
+Charles R. Schmidt
+Skipper Seabold
+Alessandra Sozzi
+Philip Stephens
+Bohumil Svoma
+Ran Wei
+Andrew Winslow
+Levi Wolf
+Jing Yao
+Xinyue Ye
+
+Funding from the following sources has supported PySAL development:
+
+Google Summer of Code 2016
+
+National Science Foundation New Approaches for Spatial Distribution Dynamics
+
+National Science Foundation CyberGIS Software Integration for Sustained Geospatial Innovation
+
+National Institute of Justice Flexible Geospatial Visual Analytics and
+Simulation Technologies to Enhance Criminal Justice Decision Support Systems
+
+National Institutes of Health Geospatial Factors and Impacts: Measurement and
+Use (R01CA126858-02)
+
+National Science Foundation An Exploratory Space-Time Data Analysis Toolkit for
+Spatial Social Science Research (0433132)
+
+National Science Foundation Hedonic Models of Location Decisions with
+Applications to Geospatial Microdata (0852261)

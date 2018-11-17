@@ -1,0 +1,28 @@
+v<1.1.0>, 2018-05-17
+
+This release is the first tagged release of pointpats on Github.
+Starting from this release, pointpats supports python 3.5 and 3.6 only.
+
+GitHub stats for 2017/04/22 - 2018/05/17
+
+These lists are automatically generated, and may be incomplete or contain duplicates.
+
+
+We closed a total of 9 issues, 4 pull requests and 5 regular issues;
+this is the full list (generated with the script 
+:file:`tools/github_stats.py`):
+
+Pull Requests (4):
+
+* :ghpull:`12`: b'chore: libpysal is 3 only now so removing travis tests on python 2'
+* :ghpull:`11`: b'try removing conversion and see if this passes'
+* :ghpull:`10`: b'updating license'
+* :ghpull:`9`: b'Update the Readme file, change the relative URL links to absolute URLs'
+
+Issues (5):
+
+* :ghissue:`12`: b'chore: libpysal is 3 only now so removing travis tests on python 2'
+* :ghissue:`11`: b'try removing conversion and see if this passes'
+* :ghissue:`10`: b'updating license'
+* :ghissue:`9`: b'Update the Readme file, change the relative URL links to absolute URLs'
+* :ghissue:`8`: b'Relative links to notebooks on pypi landing page are broken'

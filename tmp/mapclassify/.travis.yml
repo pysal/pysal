@@ -1,0 +1,55 @@
+language: python
+sudo: false
+branches:
+  only:
+    - master
+python:
+  - 3.5
+  - 3.6
+
+env:
+  - NUMBA_TEST=true
+  - NUMBA_TEST=false
+
+
+#matrix:
+#  allow_failures:
+#      - python: 3.5
+#        env: NUMBA_TEST=true
+#      - python: 3.6
+#        env: NUMBA_TEST=true
+
+before_install:
+  - wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+  - chmod +x miniconda.sh
+  - ./miniconda.sh -b -p ./miniconda
+  - export PATH=`pwd`/miniconda/bin:$PATH
+  - conda update --yes conda
+  - conda config --append channels conda-forge
+  - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION
+  - source activate test-env
+
+install:
+  - conda install --yes pip
+  - conda install --yes --file requirements.txt
+  - pip install -r requirements_tests.txt
+  - if "$NUMBA_TEST"; then
+      conda install --yes numba;
+    fi
+
+script:
+  - python setup.py sdist >/dev/null
+  - python setup.py install
+  - nosetests --verbose --with-coverage --cover-package=mapclassify;
+
+notifications:
+    email:
+        recipients:
+            - sjsrey@gmail.com
+            - levi.john.wolf@gmail.com
+            - weikang9009@gmail.com
+        on_success: change
+        on_failure: always
+
+after_success:
+  - coveralls

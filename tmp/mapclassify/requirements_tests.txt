@@ -1,0 +1,7 @@
+nose
+nose-progressive
+nose-exclude
+coverage
+coveralls
+geopandas
+libpysal

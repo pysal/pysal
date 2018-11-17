@@ -1,0 +1,55 @@
+language: python
+sudo: false
+branches:
+only:
+  - master
+python:
+  - "3.5"
+  - "3.6"
+
+before_install:
+  - wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+  - chmod +x miniconda.sh
+  - ./miniconda.sh -b -p ./miniconda
+  - export PATH=`pwd`/miniconda/bin:$PATH
+  - conda update --yes conda
+  - conda config --add channels conda-forge
+  - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION pip
+  - source activate test-env
+  - conda install --yes --file requirements.txt
+  - conda list
+  - conda info -a
+
+install:
+  # We need geopandas master, the legend_kwds is not in 0.3.0
+  - pip install https://github.com/geopandas/geopandas/archive/master.zip
+  - pip install https://github.com/pysal/libpysal/archive/master.zip
+  # Pysal dependencies removed, therefore need spreg master import
+  - pip install https://github.com/pysal/spreg/archive/master.zip
+  # `libpysal` api change requires esda and giddy import from masterbranch
+  - pip install https://github.com/pysal/esda/archive/master.zip
+  - pip install https://github.com/pysal/giddy/archive/master.zip
+  - pip install palettable mapclassify
+  - pip install nose coverage coveralls
+  # Now install splot (don't use 'pip install .', we'll run out of space)
+  - python setup.py sdist
+  - cd dist && pip install splot-*.tar.gz && cd ..
+  # We need the Agg backend to use Matplotlib on TravisCI, otherwise
+  # we get an error "DISPLAY variable not set"
+  - cp utils/matplotlibrc .
+
+
+script:
+  - nosetests splot
+#  - cd notebooks
+#  - make test
+
+notifications:
+    email:
+        recipients:
+            - sjsrey@gmail.com
+        on_change: always
+        on_failure: always
+
+after_success:
+  - coveralls

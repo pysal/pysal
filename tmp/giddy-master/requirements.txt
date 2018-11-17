@@ -1,0 +1,4 @@
+scipy>=0.11
+libpysal>=4.0.0
+mapclassify>=2.0.0
+esda>=2.0.0
