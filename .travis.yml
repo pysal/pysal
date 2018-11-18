@@ -27,6 +27,8 @@ install:
         echo 'plus testing'; conda install --yes --file requirements_plus.txt;
         else conda install --yes --file requirements.txt;
     fi;
+
+  - conda install --yes conda-forge::gdal conda-forge::numpy conda-forge::scipy conda-forge::fiona
   - conda install --yes geopandas
   - pip install -r requirements_dev.txt
 
