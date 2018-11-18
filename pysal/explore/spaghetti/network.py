@@ -90,7 +90,7 @@ class Network:
     
     Instantiate an instance of a network.
     
-    >>> import spaghetti as spgh
+    >>> import pysal.explore.spaghetti as spgh
     >>> streets_file = examples.get_path('streets.shp')
     >>> ntw = spgh.Network(in_data=streets_file)
     
@@ -335,7 +335,7 @@ class Network:
         
         Instantiate an instance of a network.
         
-        >>> import spaghetti as spgh
+        >>> import pysal.explore.spaghetti as spgh
         >>> from pysal.lib import examples
         >>> import pysal.explore.esda
         >>> import numpy as np
@@ -441,7 +441,7 @@ class Network:
         Examples
         --------
         
-        >>> import spaghetti as spgh
+        >>> import pysal.explore.spaghetti as spgh
         >>> streets_file = examples.get_path('streets.shp')
         >>> ntw = spgh.Network(in_data=streets_file)
         >>> w = ntw.distancebandweights(threshold=500)
@@ -493,7 +493,7 @@ class Network:
         Examples
         --------
         
-        >>> import spaghetti as spgh
+        >>> import pysal.explore.spaghetti as spgh
         >>> streets_file = examples.get_path('streets.shp')
         >>> ntw = spgh.Network(in_data=streets_file)
         >>> pt_str = 'crimes'
@@ -656,7 +656,7 @@ class Network:
         Note that this passes the obs_to_edge attribute of a
         point pattern snapped to the network.
         
-        >>> import spaghetti as spgh
+        >>> import pysal.explore.spaghetti as spgh
         >>> ntw = spgh.Network(examples.get_path('streets.shp'))
         >>> ntw.snapobservations(examples.get_path('crimes.shp'),
         ...                                           'crimes',
@@ -738,7 +738,7 @@ class Network:
         Examples
         --------
        
-        >>> import spaghetti as spgh
+        >>> import pysal.explore.spaghetti as spgh
         >>> ntw = spgh.Network(examples.get_path('streets.shp'))
         >>> ntw.snapobservations(examples.get_path('crimes.shp'),
         ...                                        'crimes',
@@ -808,7 +808,7 @@ class Network:
         Examples
         --------
         
-        >>> import spaghetti as spgh
+        >>> import pysal.explore.spaghetti as spgh
         >>> ntw = spgh.Network(examples.get_path('streets.shp'))
         >>> ntw.enum_links_node(24)
         [(24, 48), (24, 25), (24, 26)]
@@ -922,7 +922,7 @@ class Network:
         Examples
         --------
         
-        >>> import spaghetti as spgh
+        >>> import pysal.explore.spaghetti as spgh
         >>> ntw = spgh.Network(examples.get_path('streets.shp'))
         >>> ntw.snapobservations(examples.get_path('crimes.shp'),
         ...                                        'crimes',
@@ -1123,7 +1123,7 @@ class Network:
         Examples
         --------
         
-        >>> import spaghetti as spgh
+        >>> import pysal.explore.spaghetti as spgh
         >>> ntw = spgh.Network(examples.get_path('streets.shp'))
         >>> ntw.snapobservations(examples.get_path('crimes.shp'), 'crimes')
         >>> nn = ntw.nearestneighbordistances('crimes', keep_zero_dist=True)
@@ -1221,7 +1221,7 @@ class Network:
         Examples
         --------
         
-        >>> import spaghetti as spgh
+        >>> import pysal.explore.spaghetti as spgh
         >>> ntw = spgh.Network(in_data=examples.get_path('streets.shp'))
         >>> pt_str = 'crimes'
         >>> in_data = examples.get_path('{}.shp'.format(pt_str))
@@ -1280,7 +1280,7 @@ class Network:
         Examples
         --------
         
-        >>> import spaghetti as spgh
+        >>> import pysal.explore.spaghetti as spgh
         >>> ntw = spgh.Network(in_data=examples.get_path('streets.shp'))
         >>> pt_str = 'crimes'
         >>> in_data = examples.get_path('{}.shp'.format(pt_str))
@@ -1341,7 +1341,7 @@ class Network:
         Examples
         --------
         
-        >>> import spaghetti as spgh
+        >>> import pysal.explore.spaghetti as spgh
         >>> ntw = spgh.Network(in_data=examples.get_path('streets.shp'))
         >>> pt_str = 'crimes'
         >>> in_data = examples.get_path('{}.shp'.format(pt_str))
@@ -1377,7 +1377,7 @@ class Network:
        Examples
         --------
        
-        >>> import spaghetti as spgh
+        >>> import pysal.explore.spaghetti as spgh
         >>> ntw = spgh.Network(examples.get_path('streets.shp'))
         >>> n200 = ntw.segment_edges(200.0)
         >>> len(n200.edges)
@@ -1477,7 +1477,7 @@ class Network:
         Examples
         --------
         
-        >>> import spaghetti as spgh
+        >>> import pysal.explore.spaghetti as spgh
         >>> ntw = spgh.Network(examples.get_path('streets.shp'))
         >>> ntw.savenetwork('mynetwork.pkl')
         """

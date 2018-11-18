@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 from pysal.lib import cg, examples
-import spaghetti as spgh
+import pysal.explore.spaghetti as spgh
 
 
 class TestNetwork(unittest.TestCase):

@@ -23,7 +23,7 @@ def compute_length(v0, v1):
     Examples
     --------
     
-    >>> import spaghetti as spgh
+    >>> import pysal.explore.spaghetti as spgh
     >>> point1, point2 = (0,0), (1,1)
     >>> spgh.util.compute_length(point1, point2)
     1.4142135623730951
@@ -52,7 +52,7 @@ def get_neighbor_distances(ntw, v0, l):
     
     Examples
     --------
-    >>> import spaghetti as spgh
+    >>> import pysal.explore.spaghetti as spgh
     >>> from pysal.lib import examples
     >>> ntw = spgh.Network(examples.get_path('streets.shp'))
     >>> neighs = spgh.util.get_neighbor_distances(ntw, 0, ntw.edge_lengths)
@@ -87,7 +87,7 @@ def generatetree(pred):
     Examples
     --------
     
-    >>> import spaghetti as spgh
+    >>> import pysal.explore.spaghetti as spgh
     >>> from pysal.lib import examples
     >>> ntw = spgh.Network(examples.get_path('streets.shp'))
     >>> distance, pred = spgh.util.dijkstra(ntw, ntw.edge_lengths, 0)
@@ -150,7 +150,7 @@ def dijkstra(ntw, cost, v0, n=float('inf')):
     Examples
     --------
     
-    >>> import spaghetti as spgh
+    >>> import pysal.explore.spaghetti as spgh
     >>> from pysal.lib import examples
     >>> ntw = spgh.Network(examples.get_path('streets.shp'))
     >>> distance, pred = spgh.util.dijkstra(ntw, ntw.edge_lengths, 0)
@@ -217,7 +217,7 @@ def dijkstra_mp(ntw_cost_node):
     Examples
     --------
     
-    >>> import spaghetti as spgh
+    >>> import pysal.explore.spaghetti as spgh
     >>> from pysal.lib import examples
     >>> ntw = spgh.Network(examples.get_path('streets.shp'))
     >>> distance, pred = spgh.util.dijkstra(ntw, ntw.edge_lengths, 0)
@@ -254,7 +254,7 @@ def squared_distance_point_segment(point, segment):
     Examples
     --------
     
-    >>> import spaghetti as spgh
+    >>> import pysal.explore.spaghetti as spgh
     >>> point, segment = (1,1), ((0,0), (2,0))
     >>> spgh.util.squared_distance_point_segment(point, segment)
     (1.0, array([1., 0.]))
@@ -311,7 +311,7 @@ def snap_points_on_segments(points, segments):
     Examples
     --------
     
-    >>> import spaghetti as spgh
+    >>> import pysal.explore.spaghetti as spgh
     >>> from pysal.lib.cg.shapes import Point, Chain
     >>> points = {0: Point((1,1))}
     >>> segments = [Chain([Point((0,0)), Point((2,0))])]

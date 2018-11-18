@@ -242,6 +242,16 @@ os.system(c)
 c = "find pysal/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/import spreg/import pysal\.model\.spreg/g'"
 os.system(c)
 
+
+# handle spaghetti
+
+c = "find pysal/explore/spaghetti/. -name '*.py' -print | xargs sed -i -- 's/from spaghetti/from pysal\.explore\.spaghetti/g'"
+os.system(c)
+
+
+c = "find pysal/explore/spaghetti/. -name '*.py' -print | xargs sed -i -- 's/import spaghetti/import pysal\.explore\.spaghetti/g'"
+os.system(c)
+
 init_lines = ["__version__='2.0rc1'"]
 for package in packages:
     os.system('touch pysal/{package}/__init__.py'.format(package=package)) 
