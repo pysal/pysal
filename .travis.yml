@@ -28,8 +28,7 @@ install:
         else conda install --yes --file requirements.txt;
     fi;
 
-  - conda install --yes conda-forge::gdal conda-forge::numpy conda-forge::scipy conda-forge::fiona
-  - conda install --yes geopandas
+  - conda install --yes --channel "conda-forge" geopandas
   - pip install -r requirements_dev.txt
 
 script:
