@@ -9,10 +9,8 @@ import os
 with open('README.rst') as file:
     long_description = file.read()
 
-MAJOR = 2
-MINOR = 0 
-ISRELEASED = False
-VERSION = '%d.%drc2' % (MAJOR, MINOR)
+with open('pysal/__init__.py', 'r') as f:
+    exec(f.readline())
 
 
 print(find_packages())
@@ -58,7 +56,7 @@ def setup_package():
     extras_reqs = reqs
     setup(
         name='pysal',
-        version=VERSION,
+        version=__version__,
         description="A library of spatial analysis functions.",
         long_description=long_description,
         maintainer="PySAL Developers",

@@ -2,6 +2,7 @@ import yaml
 import os
 import subprocess
 import sys
+import json
 
 #TARGETROOT ="pysal/"
 
@@ -11,6 +12,13 @@ with open('packages.yml') as package_file:
     packages = yaml.load(package_file)
 
 
+# only tagged packages go in release
+with open('tags.json') as tag_file:
+    tags = json.load(tag_file)
+
+tagged = list(tags.keys())
+
+print(tagged)
 
 for package in packages:
     com = "rm -fr pysal/{package}".format(package=package)
@@ -25,8 +33,11 @@ for package in packages:
             com = "cp -rf tmp/{subpackage}/{subpackage}/*  pysal/{package}/".format(package=package, subpackage=subpackage)
         else:
             com = "cp -rf tmp/{subpackage}/{subpackage} pysal/{package}/{subpackage}".format(package=package, subpackage=subpackage)
-        print(com)
-        os.system(com)
+        if subpackage in tagged:
+            print(com)
+            os.system(com)
+        else:
+            print('skipping: ', subpackage)
 
 # replace all references to libpysal with pysal.lib
 c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/libpysal/pysal\.lib/g'"
@@ -135,98 +146,82 @@ c = "find pysal/model/spvcm/. -name '*.py' -print | xargs sed -i -- 's/pysal\.qu
 os.system(c)
 
 
-
 c = "find pysal/model/spvcm/. -name '*.py' -print | xargs sed -i -- 's/pysal\.w_subset/pysal\.lib\.weights\.Wsets\.w_subset/g'"
 os.system(c)
 
-# fix splot
-#from splot.libpysal import plot_spatial_weights
-c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.libpysal/from pysal\.viz\.splot\.libpysal/g'"
-os.system(c)
+if 'splot' in tagged:
 
-c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.bk/from pysal\.viz\.splot\.bk/g'"
-os.system(c)
+    # fix splot
+    #from splot.libpysal import plot_spatial_weights
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.libpysal/from pysal\.viz\.splot\.libpysal/g'"
+    os.system(c)
 
-#from esda.moran import Moran_Local, Moran, Moran_BV, Moran_Local_BV
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.bk/from pysal\.viz\.splot\.bk/g'"
+    os.system(c)
 
-#c = "find pysalnext/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from esda/from pysal\.explore\.esda/g'"
-#os.system(c)
+    #from esda.moran import Moran_Local, Moran, Moran_BV, Moran_Local_BV
 
-# from pysal.viz.splot.pysal.explore.esda import 
-# from splot.esda
-c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from pysal\.viz\.splot\.pysal\.explore\.esda/from pysal\.viz\.splot\.esda/g'"
-os.system(c)
+    #c = "find pysalnext/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from esda/from pysal\.explore\.esda/g'"
+    #os.system(c)
 
-
-c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.pysal\.explore\.esda/from pysal\.viz\.splot\.pysal\.explore\.esda/g'"
-os.system(c)
+    # from pysal.viz.splot.pysal.explore.esda import 
+    # from splot.esda
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from pysal\.viz\.splot\.pysal\.explore\.esda/from pysal\.viz\.splot\.esda/g'"
+    os.system(c)
 
 
-c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/import pysal as ps/import pysal/g'"
-os.system(c)
-
-c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/ps\.spreg/pysal\.model\.spreg/g'"
-os.system(c)
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.pysal\.explore\.esda/from pysal\.viz\.splot\.pysal\.explore\.esda/g'"
+    os.system(c)
 
 
-c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/ps\.lag_spatial/pysal\.lib\.weights\.spatial_lag\.lag_spatial/g'"
-os.system(c)
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/import pysal as ps/import pysal/g'"
+    os.system(c)
 
-c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from esda/from pysal\.explore\.esda/g'"
-os.system(c)
-
-
-c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/import esda/import pysal\.explore\.esda/g'"
-os.system(c)
-
-c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/import pysal\.explore\.esda/import pysal\.explore\.esda as esda/g'"
-os.system(c)
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/ps\.spreg/pysal\.model\.spreg/g'"
+    os.system(c)
 
 
-c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.esda/from pysal\.viz\.splot\.esda/g'"
-os.system(c)
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/ps\.lag_spatial/pysal\.lib\.weights\.spatial_lag\.lag_spatial/g'"
+    os.system(c)
 
-c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from spreg/from pysal\.model\.spreg/g'"
-os.system(c)
-
-#from splot.libpysal import plot_spatial_weights
-#from splot.pysal.lib import plot_spatial_weights
-
-c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.pysal\.lib/from pysal\.viz\.splot\.libpysal/g'"
-os.system(c)
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from esda/from pysal\.explore\.esda/g'"
+    os.system(c)
 
 
-c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.giddy/from pysal\.viz\.splot\.giddy/g'"
-os.system(c)
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/import esda/import pysal\.explore\.esda/g'"
+    os.system(c)
+
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/import pysal\.explore\.esda/import pysal\.explore\.esda as esda/g'"
+    os.system(c)
 
 
-#from ._viz_pysal.lib_mpl import (plot_spatial_weights)
-#from ._viz_libpysal_mpl import (plot_spatial_weights)
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.esda/from pysal\.viz\.splot\.esda/g'"
+    os.system(c)
 
-c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/_viz_pysal\.lib_mpl/_viz_libpysal_mpl/g'"
-os.system(c)
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from spreg/from pysal\.model\.spreg/g'"
+    os.system(c)
+
+    #from splot.libpysal import plot_spatial_weights
+    #from splot.pysal.lib import plot_spatial_weights
+
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.pysal\.lib/from pysal\.viz\.splot\.libpysal/g'"
+    os.system(c)
+
+
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.giddy/from pysal\.viz\.splot\.giddy/g'"
+    os.system(c)
+
+
+    #from ._viz_pysal.lib_mpl import (plot_spatial_weights)
+    #from ._viz_libpysal_mpl import (plot_spatial_weights)
+
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/_viz_pysal\.lib_mpl/_viz_libpysal_mpl/g'"
+    os.system(c)
 #
 #
 #c = "find pysalnext/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/pysal\.open/pysal\.lib\.examples\.open/g'"
 #os.system(c)
 
-
-# final change to pysalnext from pysal
-
-#c = "find pysalnext/. -name '*.py' -print | xargs sed -i -- 's/pysal/pysalnext/g'"
-#os.system(c)
-#
-#c = "find pysalnext/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/\.libpysalnext//g'"
-#os.system(c)
-
-# and fix one induced error
-
-#c = "find pysalnext/viz/splot/tests/test_viz_libpysal_mpl.py  -print | xargs sed -i -- 's/from pysalnext\.viz\.splot import/from pysalnext\.viz\.splot\.libpysal import/g'"
-#os.system(c)
-#
-#
-#c = "find pysalnext/viz/splot/. -name '*.py' -print  | xargs sed -i -- 's/libpysalnext/libpysal/g'"
-#os.system(c)
 
 # handle inequality
 
@@ -252,7 +247,7 @@ os.system(c)
 c = "find pysal/explore/spaghetti/. -name '*.py' -print | xargs sed -i -- 's/import spaghetti/import pysal\.explore\.spaghetti/g'"
 os.system(c)
 
-init_lines = ["__version__='2.0rc1'"]
+init_lines = ["__version__='2.0rc2'"]
 for package in packages:
     os.system('touch pysal/{package}/__init__.py'.format(package=package)) 
     subpackages = packages[package].split()

@@ -58,8 +58,12 @@ def get_tarballs():
     """
     with open('tarballs.json', 'r') as infile:
         sources = json.load(infile)
-    os.system('rm -rf tarballs')
+    if os.path.exists('tarballs'):
+        os.system('rm -rf tarballs')
     os.system('mkdir tarballs')
+    if not os.path.exists('tmp'):
+        os.makedirs('tmp')
+
     for subpackage in sources.keys():
         print(subpackage)
         url = sources[subpackage][-1]
@@ -87,12 +91,12 @@ def clone_releases():
     """
     Clone the releases in tmp
     """
-    with open('tarballs.json', 'r') as file_name:
+    with open('tags.json', 'r') as file_name:
         sources = json.load(file_name)
     os.system('rm -rf tmp')
     os.system('mkdir tmp')
     for subpackage in sources.keys():
-        tag = sources[subpackage][0]
+        tag = sources[subpackage]
         pkgstr = "git clone git@github.com:pysal/{subpackage}.git".format(subpackage=subpackage)
         pkgstr = "{pkgstr} --branch {tag} tmp/{subpackage}".format(pkgstr=pkgstr,
                                                                    tag=tag,
@@ -103,6 +107,28 @@ def clone_releases():
         print(pkgstr)
         os.system(pkgstr)
 
+def get_tags():
+    """
+    Get the tags of the packages that are going into this releases
+    """
+    with open('subtags', 'r') as tag_name:
+        tags = tag_name.readlines()
+
+    pkgs = [tag.split() for tag in tags]
+
+    tags = {}
+    for pkg in pkgs:
+        name, url = pkg
+        tag = url.split("/")[-1]
+        tags[name] = tag
+
+    with open('tags.json', 'w') as fp:
+        json.dump(tags, fp)
+    return tags
+
+
 if __name__ == "__main__":
-    get_release_info()
-    get_tarballs()
+    # get_release_info()
+    # get_tarballs()
+    get_tags()
+    clone_releases()
