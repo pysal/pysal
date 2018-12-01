@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pysal.explore.esda.Moran_Rate &#8212; pysal v2.0rc2 Manual</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.0rc2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../installation.html">Installation</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-pysal.explore"><code class="docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-pysal.viz"><code class="docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">pysal.explore.esda.Moran_Rate</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="pysal-explore-esda-moran-rate">
+<h1>pysal.explore.esda.Moran_Rate<a class="headerlink" href="#pysal-explore-esda-moran-rate" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pysal.explore.esda.Moran_Rate">
+<em class="property">class </em><code class="descclassname">pysal.explore.esda.</code><code class="descname">Moran_Rate</code><span class="sig-paren">(</span><em>e</em>, <em>b</em>, <em>w</em>, <em>adjusted=True</em>, <em>transformation='r'</em>, <em>permutations=999</em>, <em>two_tailed=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/esda/moran.html#Moran_Rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.esda.Moran_Rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjusted Moran’s I Global Autocorrelation Statistic for Rate
+Variables [Assun_o_1999]</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>e</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array</span></dt>
+<dd><p class="first last">an event variable measured across n spatial units</p>
+</dd>
+<dt><strong>b</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array</span></dt>
+<dd><p class="first last">a population-at-risk variable measured across n spatial
+units</p>
+</dd>
+<dt><strong>w</strong> <span class="classifier-delimiter">:</span> <span class="classifier">W</span></dt>
+<dd><p class="first last">spatial weights instance</p>
+</dd>
+<dt><strong>adjusted</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
+<dd><p class="first last">whether or not Moran’s I needs to be adjusted for rate
+variable</p>
+</dd>
+<dt><strong>transformation</strong> <span class="classifier-delimiter">:</span> <span class="classifier">{‘R’, ‘B’, ‘D’, ‘U’, ‘V’}</span></dt>
+<dd><p class="first last">weights transformation, default is row-standardized “r”.
+Other options include
+“B”: binary,
+“D”: doubly-standardized,
+“U”: untransformed (general weights),
+“V”: variance-stabilizing.</p>
+</dd>
+<dt><strong>two_tailed</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
+<dd><p class="first last">If True (default), analytical p-values for Moran’s I are
+two-tailed, otherwise they are one tailed.</p>
+</dd>
+<dt><strong>permutations</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">number of random permutations for calculation of pseudo
+p_values</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pysal.lib</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;sids2.gal&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">pysal</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;sids2.dbf&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;SID79&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s1">&#39;BIR79&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pysal.explore.esda.moran</span> <span class="k">import</span> <span class="n">Moran_Rate</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mi</span> <span class="o">=</span> <span class="n">Moran_Rate</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span>  <span class="n">w</span><span class="p">,</span> <span class="n">two_tailed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;</span><span class="si">%6.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">mi</span><span class="o">.</span><span class="n">I</span>
+<span class="go">&#39;0.1662&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;</span><span class="si">%6.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">mi</span><span class="o">.</span><span class="n">p_norm</span>
+<span class="go">&#39;0.0042&#39;</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>y</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array</span></dt>
+<dd><p class="first last">rate variable computed from parameters e and b
+if adjusted is True, y is standardized rates
+otherwise, y is raw rates</p>
+</dd>
+<dt><strong>w</strong> <span class="classifier-delimiter">:</span> <span class="classifier">W</span></dt>
+<dd><p class="first last">original w object</p>
+</dd>
+<dt><strong>permutations</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">number of permutations</p>
+</dd>
+<dt><strong>I</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">value of Moran’s I</p>
+</dd>
+<dt><strong>EI</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">expected value under normality assumption</p>
+</dd>
+<dt><strong>VI_norm</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">variance of I under normality assumption</p>
+</dd>
+<dt><strong>seI_norm</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">standard deviation of I under normality assumption</p>
+</dd>
+<dt><strong>z_norm</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">z-value of I under normality assumption</p>
+</dd>
+<dt><strong>p_norm</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">p-value of I under normality assumption</p>
+</dd>
+<dt><strong>VI_rand</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">variance of I under randomization assumption</p>
+</dd>
+<dt><strong>seI_rand</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">standard deviation of I under randomization assumption</p>
+</dd>
+<dt><strong>z_rand</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">z-value of I under randomization assumption</p>
+</dd>
+<dt><strong>p_rand</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">p-value of I under randomization assumption</p>
+</dd>
+<dt><strong>two_tailed</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
+<dd><p class="first last">If True, p_norm and p_rand are two-tailed p-values,
+otherwise they are one-tailed.</p>
+</dd>
+<dt><strong>sim</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array</span></dt>
+<dd><p class="first last">(if permutations&gt;0)
+vector of I values for permuted samples</p>
+</dd>
+<dt><strong>p_sim</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array</span></dt>
+<dd><p class="first last">(if permutations&gt;0)
+p-value based on permutations (one-sided)
+null: spatial randomness
+alternative: the observed I is extreme if it is
+either extremely greater or extremely lower than the values
+obtained from permutaitons</p>
+</dd>
+<dt><strong>EI_sim</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">(if permutations&gt;0)
+average value of I from permutations</p>
+</dd>
+<dt><strong>VI_sim</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">(if permutations&gt;0)
+variance of I from permutations</p>
+</dd>
+<dt><strong>seI_sim</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">(if permutations&gt;0)
+standard deviation of I under permutations.</p>
+</dd>
+<dt><strong>z_sim</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">(if permutations&gt;0)
+standardized I based on permutations</p>
+</dd>
+<dt><strong>p_z_sim</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">(if permutations&gt;0)
+p-value based on standard normal approximation from</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">by_col</span></code>(df,&nbsp;events,&nbsp;populations[,&nbsp;w,&nbsp;…])</td>
+<td>Function to compute a Moran_Rate statistic on a dataframe</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysal.explore.esda.Moran_Rate.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>e</em>, <em>b</em>, <em>w</em>, <em>adjusted=True</em>, <em>transformation='r'</em>, <em>permutations=999</em>, <em>two_tailed=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysal/explore/esda/moran.html#Moran_Rate.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysal.explore.esda.Moran_Rate.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#pysal.explore.esda.Moran_Rate.__init__" title="pysal.explore.esda.Moran_Rate.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(e,&nbsp;b,&nbsp;w[,&nbsp;adjusted,&nbsp;…])</td>
+<td>Initialize self.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">by_col</span></code>(df,&nbsp;events,&nbsp;populations[,&nbsp;w,&nbsp;…])</td>
+<td>Function to compute a Moran_Rate statistic on a dataframe</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/generated/pysal.explore.esda.Moran_Rate.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

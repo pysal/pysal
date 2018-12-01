@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>API Reference &#8212; pysal v2.0rc2 Manual</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pysal-styles.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="_static/pysal_favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pysal.explore.esda.Gamma" href="generated/pysal.explore.esda.Gamma.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          pysal</a>
+        <span class="navbar-text navbar-version pull-left"><b>2.0rc2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="#">API</a></li>
+                <li><a href="references.html">References</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-pysal.explore"><code class="docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pysal.viz"><code class="docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">API Reference</a><ul>
+<li><a class="reference internal" href="#module-pysal.explore"><code class="docutils literal notranslate"><span class="pre">pysal.explore</span></code>: Exploratory spatial data analysis</a><ul>
+<li><a class="reference internal" href="#pysal-explore-esda-spatial-autocorrelation-analysis">pysal.explore.esda: Spatial Autocorrelation Analysis</a><ul>
+<li><a class="reference internal" href="#gamma-statistic">Gamma Statistic</a></li>
+<li><a class="reference internal" href="#geary-statistic">Geary Statistic</a></li>
+<li><a class="reference internal" href="#getis-ord-statistics">Getis-Ord Statistics</a></li>
+<li><a class="reference internal" href="#join-count-statistics">Join Count Statistics</a></li>
+<li><a class="reference internal" href="#moran-statistics">Moran Statistics</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pysal-explore-giddy-geospatial-distribution-dynamics">pysal.explore.giddy: Geospatial Distribution Dynamics</a><ul>
+<li><a class="reference internal" href="#markov-methods">Markov Methods</a></li>
+<li><a class="reference internal" href="#directional-lisa">Directional LISA</a></li>
+<li><a class="reference internal" href="#economic-mobility-indices">Economic Mobility Indices</a></li>
+<li><a class="reference internal" href="#exchange-mobility-methods">Exchange Mobility Methods</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pysal-explore-spaghetti">pysal.explore.spaghetti:</a><ul>
+<li><a class="reference internal" href="#spaghetti-network">spaghetti.Network</a></li>
+<li><a class="reference internal" href="#spaghetti-networkbase">spaghetti.NetworkBase</a></li>
+<li><a class="reference internal" href="#spaghetti-networkf">spaghetti.NetworkF</a></li>
+<li><a class="reference internal" href="#spaghetti-networkg">spaghetti.NetworkG</a></li>
+<li><a class="reference internal" href="#spaghetti-networkk">spaghetti.NetworkK</a></li>
+<li><a class="reference internal" href="#spaghetti-pointpattern">spaghetti.PointPattern</a></li>
+<li><a class="reference internal" href="#spaghetti-simulatedpointpattern">spaghetti.SimulatedPointPattern</a></li>
+<li><a class="reference internal" href="#spaghetti">spaghetti</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-pysal.viz"><code class="docutils literal notranslate"><span class="pre">pysal.viz</span></code>: Geovisualization</a><ul>
+<li><a class="reference internal" href="#pysal-explore-pysal-viz-mapclassify-choropleth-map-classification">pysal.explore.pysal.viz.mapclassify: Choropleth map classification</a><ul>
+<li><a class="reference internal" href="#classifiers">Classifiers</a></li>
+<li><a class="reference internal" href="#utilities">Utilities</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
+<p>This is the class and function reference of pysal.</p>
+<div class="section" id="module-pysal.explore">
+<span id="pysal-explore-exploratory-spatial-data-analysis"></span><h2><a class="reference internal" href="#module-pysal.explore" title="pysal.explore"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.explore</span></code></a>: Exploratory spatial data analysis<a class="headerlink" href="#module-pysal.explore" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pysal-explore-esda-spatial-autocorrelation-analysis">
+<h3>pysal.explore.esda: Spatial Autocorrelation Analysis<a class="headerlink" href="#pysal-explore-esda-spatial-autocorrelation-analysis" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="gamma-statistic">
+<h4>Gamma Statistic<a class="headerlink" href="#gamma-statistic" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.esda.Gamma.html#pysal.explore.esda.Gamma" title="pysal.explore.esda.Gamma"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.esda.Gamma</span></code></a>(y,&nbsp;w[,&nbsp;operation,&nbsp;…])</td>
+<td>Gamma index for spatial autocorrelation</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="geary-statistic">
+<span id="geary-api"></span><h4>Geary Statistic<a class="headerlink" href="#geary-statistic" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.esda.Geary.html#pysal.explore.esda.Geary" title="pysal.explore.esda.Geary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.esda.Geary</span></code></a>(y,&nbsp;w[,&nbsp;…])</td>
+<td>Global Geary C Autocorrelation statistic</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="getis-ord-statistics">
+<span id="getis-api"></span><h4>Getis-Ord Statistics<a class="headerlink" href="#getis-ord-statistics" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.esda.G.html#pysal.explore.esda.G" title="pysal.explore.esda.G"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.esda.G</span></code></a>(y,&nbsp;w[,&nbsp;permutations])</td>
+<td>Global G Autocorrelation Statistic</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.esda.G_Local.html#pysal.explore.esda.G_Local" title="pysal.explore.esda.G_Local"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.esda.G_Local</span></code></a>(y,&nbsp;w[,&nbsp;…])</td>
+<td>Generalized Local G Autocorrelation</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="join-count-statistics">
+<span id="join-api"></span><h4>Join Count Statistics<a class="headerlink" href="#join-count-statistics" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.esda.Join_Counts.html#pysal.explore.esda.Join_Counts" title="pysal.explore.esda.Join_Counts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.esda.Join_Counts</span></code></a>(y,&nbsp;w[,&nbsp;…])</td>
+<td>Binary Join Counts</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="moran-statistics">
+<h4>Moran Statistics<a class="headerlink" href="#moran-statistics" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.esda.Moran.html#pysal.explore.esda.Moran" title="pysal.explore.esda.Moran"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.esda.Moran</span></code></a>(y,&nbsp;w[,&nbsp;…])</td>
+<td>Moran’s I Global Autocorrelation Statistic</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.esda.Moran_BV.html#pysal.explore.esda.Moran_BV" title="pysal.explore.esda.Moran_BV"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.esda.Moran_BV</span></code></a>(x,&nbsp;y,&nbsp;w[,&nbsp;…])</td>
+<td>Bivariate Moran’s I</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.esda.Moran_BV_matrix.html#pysal.explore.esda.Moran_BV_matrix" title="pysal.explore.esda.Moran_BV_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.esda.Moran_BV_matrix</span></code></a>(variables,&nbsp;w)</td>
+<td>Bivariate Moran Matrix</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.esda.Moran_Local.html#pysal.explore.esda.Moran_Local" title="pysal.explore.esda.Moran_Local"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.esda.Moran_Local</span></code></a>(y,&nbsp;w[,&nbsp;…])</td>
+<td>Local Moran Statistics</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.esda.Moran_Local_BV.html#pysal.explore.esda.Moran_Local_BV" title="pysal.explore.esda.Moran_Local_BV"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.esda.Moran_Local_BV</span></code></a>(x,&nbsp;y,&nbsp;w[,&nbsp;…])</td>
+<td>Bivariate Local Moran Statistics</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.esda.Moran_Rate.html#pysal.explore.esda.Moran_Rate" title="pysal.explore.esda.Moran_Rate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.esda.Moran_Rate</span></code></a>(e,&nbsp;b,&nbsp;w[,&nbsp;…])</td>
+<td>Adjusted Moran’s I Global Autocorrelation Statistic for Rate Variables [Assun_o_1999]</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.esda.Moran_Local_Rate.html#pysal.explore.esda.Moran_Local_Rate" title="pysal.explore.esda.Moran_Local_Rate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.esda.Moran_Local_Rate</span></code></a>(e,&nbsp;b,&nbsp;w)</td>
+<td>Adjusted Local Moran Statistics for Rate Variables [Assuncao1999]</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="pysal-explore-giddy-geospatial-distribution-dynamics">
+<h3>pysal.explore.giddy: Geospatial Distribution Dynamics<a class="headerlink" href="#pysal-explore-giddy-geospatial-distribution-dynamics" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="markov-methods">
+<span id="markov-api"></span><h4>Markov Methods<a class="headerlink" href="#markov-methods" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.giddy.markov.Markov.html#pysal.explore.giddy.markov.Markov" title="pysal.explore.giddy.markov.Markov"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.markov.Markov</span></code></a>(class_ids)</td>
+<td>Classic Markov transition matrices.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.giddy.markov.Spatial_Markov.html#pysal.explore.giddy.markov.Spatial_Markov" title="pysal.explore.giddy.markov.Spatial_Markov"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.markov.Spatial_Markov</span></code></a>(y,&nbsp;w)</td>
+<td>Markov transitions conditioned on the value of the spatial lag.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.giddy.markov.LISA_Markov.html#pysal.explore.giddy.markov.LISA_Markov" title="pysal.explore.giddy.markov.LISA_Markov"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.markov.LISA_Markov</span></code></a>(y,&nbsp;w)</td>
+<td>Markov for Local Indicators of Spatial Association</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.giddy.markov.kullback.html#pysal.explore.giddy.markov.kullback" title="pysal.explore.giddy.markov.kullback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.markov.kullback</span></code></a>(F)</td>
+<td>Kullback information based test of Markov Homogeneity.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.giddy.markov.prais.html#pysal.explore.giddy.markov.prais" title="pysal.explore.giddy.markov.prais"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.markov.prais</span></code></a>(pmat)</td>
+<td>Prais conditional mobility measure.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.giddy.markov.homogeneity.html#pysal.explore.giddy.markov.homogeneity" title="pysal.explore.giddy.markov.homogeneity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.markov.homogeneity</span></code></a>(…)</td>
+<td>Test for homogeneity of Markov transition probabilities across regimes.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.giddy.ergodic.steady_state.html#pysal.explore.giddy.ergodic.steady_state" title="pysal.explore.giddy.ergodic.steady_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.ergodic.steady_state</span></code></a>(P)</td>
+<td>Calculates the steady state probability vector for a regular Markov transition matrix P.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.giddy.ergodic.fmpt.html#pysal.explore.giddy.ergodic.fmpt" title="pysal.explore.giddy.ergodic.fmpt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.ergodic.fmpt</span></code></a>(P)</td>
+<td>Calculates the matrix of first mean passage times for an ergodic transition  probability matrix.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.giddy.ergodic.var_fmpt.html#pysal.explore.giddy.ergodic.var_fmpt" title="pysal.explore.giddy.ergodic.var_fmpt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.ergodic.var_fmpt</span></code></a>(P)</td>
+<td>Variances of first mean passage times for an ergodic transition probability matrix.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="directional-lisa">
+<span id="directional-api"></span><h4>Directional LISA<a class="headerlink" href="#directional-lisa" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.giddy.directional.Rose.html#pysal.explore.giddy.directional.Rose" title="pysal.explore.giddy.directional.Rose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.directional.Rose</span></code></a>(Y,&nbsp;w[,&nbsp;k])</td>
+<td>Rose diagram based inference for directional LISAs.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="economic-mobility-indices">
+<span id="mobility-api"></span><h4>Economic Mobility Indices<a class="headerlink" href="#economic-mobility-indices" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.giddy.mobility.markov_mobility.html#pysal.explore.giddy.mobility.markov_mobility" title="pysal.explore.giddy.mobility.markov_mobility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.mobility.markov_mobility</span></code></a>(p)</td>
+<td>Markov-based mobility index.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="exchange-mobility-methods">
+<span id="rank-api"></span><h4>Exchange Mobility Methods<a class="headerlink" href="#exchange-mobility-methods" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.giddy.rank.Theta.html#pysal.explore.giddy.rank.Theta" title="pysal.explore.giddy.rank.Theta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.rank.Theta</span></code></a>(y,&nbsp;regime[,&nbsp;…])</td>
+<td>Regime mobility measure.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.giddy.rank.Tau.html#pysal.explore.giddy.rank.Tau" title="pysal.explore.giddy.rank.Tau"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.rank.Tau</span></code></a>(x,&nbsp;y)</td>
+<td>Kendall’s Tau is based on a comparison of the number of pairs of n observations that have concordant ranks between two variables.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.giddy.rank.SpatialTau.html#pysal.explore.giddy.rank.SpatialTau" title="pysal.explore.giddy.rank.SpatialTau"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.rank.SpatialTau</span></code></a>(x,&nbsp;y,&nbsp;w)</td>
+<td>Spatial version of Kendall’s rank correlation statistic.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.giddy.rank.Tau_Local.html#pysal.explore.giddy.rank.Tau_Local" title="pysal.explore.giddy.rank.Tau_Local"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.rank.Tau_Local</span></code></a>(x,&nbsp;y)</td>
+<td>Local version of the classic Tau.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.giddy.rank.Tau_Local_Neighbor.html#pysal.explore.giddy.rank.Tau_Local_Neighbor" title="pysal.explore.giddy.rank.Tau_Local_Neighbor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.rank.Tau_Local_Neighbor</span></code></a>(x,&nbsp;y,&nbsp;w)</td>
+<td>Neighbor set LIMA.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.giddy.rank.Tau_Local_Neighborhood.html#pysal.explore.giddy.rank.Tau_Local_Neighborhood" title="pysal.explore.giddy.rank.Tau_Local_Neighborhood"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.rank.Tau_Local_Neighborhood</span></code></a>(x,&nbsp;y,&nbsp;w)</td>
+<td>Neighborhood set LIMA.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.giddy.rank.Tau_Regional.html#pysal.explore.giddy.rank.Tau_Regional" title="pysal.explore.giddy.rank.Tau_Regional"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.explore.giddy.rank.Tau_Regional</span></code></a>(x,&nbsp;y,&nbsp;…)</td>
+<td>Inter and intraregional decomposition of the classic Tau.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="pysal-explore-spaghetti">
+<h3>pysal.explore.spaghetti:<a class="headerlink" href="#pysal-explore-spaghetti" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="spaghetti-network">
+<span id="network-api"></span><h4>spaghetti.Network<a class="headerlink" href="#spaghetti-network" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.html#pysal.explore.spaghetti.Network" title="pysal.explore.spaghetti.Network"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network</span></code></a>([in_data,&nbsp;node_sig,&nbsp;unique_segs,&nbsp;…])</td>
+<td>Spatially-constrained network representation and analytical functionality.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.extractgraph.html#pysal.explore.spaghetti.Network.extractgraph" title="pysal.explore.spaghetti.Network.extractgraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.extractgraph</span></code></a>()</td>
+<td>Using the existing network representation, create a graph-theoretic representation by removing all nodes with a neighbor incidence of two  (non-articulation points).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.contiguityweights.html#pysal.explore.spaghetti.Network.contiguityweights" title="pysal.explore.spaghetti.Network.contiguityweights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.contiguityweights</span></code></a>([graph,&nbsp;weightings])</td>
+<td>Create a contiguity based W object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.distancebandweights.html#pysal.explore.spaghetti.Network.distancebandweights" title="pysal.explore.spaghetti.Network.distancebandweights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.distancebandweights</span></code></a>(threshold[,&nbsp;…])</td>
+<td>Create distance based weights.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.snapobservations.html#pysal.explore.spaghetti.Network.snapobservations" title="pysal.explore.spaghetti.Network.snapobservations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.snapobservations</span></code></a>(in_data,&nbsp;name[,&nbsp;…])</td>
+<td>Snap a point pattern shapefile to this network object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.compute_distance_to_nodes.html#pysal.explore.spaghetti.Network.compute_distance_to_nodes" title="pysal.explore.spaghetti.Network.compute_distance_to_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.compute_distance_to_nodes</span></code></a>(x,&nbsp;y,&nbsp;edge)</td>
+<td>Given an observation on a network edge, return the distance to the two nodes that bound that end.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.compute_snap_dist.html#pysal.explore.spaghetti.Network.compute_snap_dist" title="pysal.explore.spaghetti.Network.compute_snap_dist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.compute_snap_dist</span></code></a>(pattern,&nbsp;idx)</td>
+<td>Given an observation snapped to a network edge, calculate the distance from the original location to the snapped location.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.count_per_edge.html#pysal.explore.spaghetti.Network.count_per_edge" title="pysal.explore.spaghetti.Network.count_per_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.count_per_edge</span></code></a>(obs_on_network[,&nbsp;graph])</td>
+<td>Compute the counts per edge.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.simulate_observations.html#pysal.explore.spaghetti.Network.simulate_observations" title="pysal.explore.spaghetti.Network.simulate_observations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.simulate_observations</span></code></a>(count[,&nbsp;…])</td>
+<td>Generate a simulated point pattern on the network.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.enum_links_node.html#pysal.explore.spaghetti.Network.enum_links_node" title="pysal.explore.spaghetti.Network.enum_links_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.enum_links_node</span></code></a>(v0)</td>
+<td>Returns the edges (links) around node.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.node_distance_matrix.html#pysal.explore.spaghetti.Network.node_distance_matrix" title="pysal.explore.spaghetti.Network.node_distance_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.node_distance_matrix</span></code></a>(n_processes[,&nbsp;…])</td>
+<td>Called from within allneighbordistances(), nearestneighbordistances(), and distancebandweights().</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.allneighbordistances.html#pysal.explore.spaghetti.Network.allneighbordistances" title="pysal.explore.spaghetti.Network.allneighbordistances"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.allneighbordistances</span></code></a>(sourcepattern)</td>
+<td>Compute either all distances between i and j in a single point pattern or all distances between each i from a source pattern and all j from a destination pattern.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.nearestneighbordistances.html#pysal.explore.spaghetti.Network.nearestneighbordistances" title="pysal.explore.spaghetti.Network.nearestneighbordistances"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.nearestneighbordistances</span></code></a>(sourcepattern)</td>
+<td>Compute the interpattern nearest neighbor distances or the intrapattern nearest neighbor distances between a source pattern and a destination pattern.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.NetworkF.html#pysal.explore.spaghetti.Network.NetworkF" title="pysal.explore.spaghetti.Network.NetworkF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.NetworkF</span></code></a>(pointpattern[,&nbsp;nsteps,&nbsp;…])</td>
+<td>Computes a network constrained F-Function</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.NetworkG.html#pysal.explore.spaghetti.Network.NetworkG" title="pysal.explore.spaghetti.Network.NetworkG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.NetworkG</span></code></a>(pointpattern[,&nbsp;nsteps,&nbsp;…])</td>
+<td>Computes a network constrained G-Function</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.NetworkK.html#pysal.explore.spaghetti.Network.NetworkK" title="pysal.explore.spaghetti.Network.NetworkK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.NetworkK</span></code></a>(pointpattern[,&nbsp;nsteps,&nbsp;…])</td>
+<td>Computes a network constrained K-Function</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.segment_edges.html#pysal.explore.spaghetti.Network.segment_edges" title="pysal.explore.spaghetti.Network.segment_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.segment_edges</span></code></a>(distance)</td>
+<td>Segment all of the edges in the network at either a</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.savenetwork.html#pysal.explore.spaghetti.Network.savenetwork" title="pysal.explore.spaghetti.Network.savenetwork"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.savenetwork</span></code></a>(filename)</td>
+<td>Save a network to disk as a binary file.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.Network.loadnetwork.html#pysal.explore.spaghetti.Network.loadnetwork" title="pysal.explore.spaghetti.Network.loadnetwork"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network.loadnetwork</span></code></a>(filename)</td>
+<td>Load a network from a binary file saved on disk.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="spaghetti-networkbase">
+<h4>spaghetti.NetworkBase<a class="headerlink" href="#spaghetti-networkbase" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkBase.html#pysal.explore.spaghetti.NetworkBase" title="pysal.explore.spaghetti.NetworkBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkBase</span></code></a>(ntw,&nbsp;pointpattern[,&nbsp;nsteps,&nbsp;…])</td>
+<td>Base object for performing network analysis on a spaghetti.Network object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkBase.computeenvelope.html#pysal.explore.spaghetti.NetworkBase.computeenvelope" title="pysal.explore.spaghetti.NetworkBase.computeenvelope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkBase.computeenvelope</span></code></a>()</td>
+<td>compute upper and lower bounds of envelope</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkBase.setbounds.html#pysal.explore.spaghetti.NetworkBase.setbounds" title="pysal.explore.spaghetti.NetworkBase.setbounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkBase.setbounds</span></code></a>(nearest)</td>
+<td>set upper and lower bounds</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkBase.validatedistribution.html#pysal.explore.spaghetti.NetworkBase.validatedistribution" title="pysal.explore.spaghetti.NetworkBase.validatedistribution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkBase.validatedistribution</span></code></a>()</td>
+<td>enusure statistical distribution is supported</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="spaghetti-networkf">
+<h4>spaghetti.NetworkF<a class="headerlink" href="#spaghetti-networkf" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkF.html#pysal.explore.spaghetti.NetworkF" title="pysal.explore.spaghetti.NetworkF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkF</span></code></a>(ntw,&nbsp;pointpattern[,&nbsp;nsteps,&nbsp;…])</td>
+<td>Compute a network constrained F statistic.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkF.computeenvelope.html#pysal.explore.spaghetti.NetworkF.computeenvelope" title="pysal.explore.spaghetti.NetworkF.computeenvelope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkF.computeenvelope</span></code></a>()</td>
+<td>compute upper and lower bounds of envelope</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkF.setbounds.html#pysal.explore.spaghetti.NetworkF.setbounds" title="pysal.explore.spaghetti.NetworkF.setbounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkF.setbounds</span></code></a>(nearest)</td>
+<td>set upper and lower bounds</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkF.validatedistribution.html#pysal.explore.spaghetti.NetworkF.validatedistribution" title="pysal.explore.spaghetti.NetworkF.validatedistribution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkF.validatedistribution</span></code></a>()</td>
+<td>enusure statistical distribution is supported</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkF.computeobserved.html#pysal.explore.spaghetti.NetworkF.computeobserved" title="pysal.explore.spaghetti.NetworkF.computeobserved"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkF.computeobserved</span></code></a>()</td>
+<td>compute the observed nearest and simulated nearest</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkF.computepermutations.html#pysal.explore.spaghetti.NetworkF.computepermutations" title="pysal.explore.spaghetti.NetworkF.computepermutations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkF.computepermutations</span></code></a>()</td>
+<td>compute permutations of the nearest</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="spaghetti-networkg">
+<h4>spaghetti.NetworkG<a class="headerlink" href="#spaghetti-networkg" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkG.html#pysal.explore.spaghetti.NetworkG" title="pysal.explore.spaghetti.NetworkG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkG</span></code></a>(ntw,&nbsp;pointpattern[,&nbsp;nsteps,&nbsp;…])</td>
+<td>Compute a network constrained G statistic.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkG.computeenvelope.html#pysal.explore.spaghetti.NetworkG.computeenvelope" title="pysal.explore.spaghetti.NetworkG.computeenvelope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkG.computeenvelope</span></code></a>()</td>
+<td>compute upper and lower bounds of envelope</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkG.setbounds.html#pysal.explore.spaghetti.NetworkG.setbounds" title="pysal.explore.spaghetti.NetworkG.setbounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkG.setbounds</span></code></a>(nearest)</td>
+<td>set upper and lower bounds</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkG.validatedistribution.html#pysal.explore.spaghetti.NetworkG.validatedistribution" title="pysal.explore.spaghetti.NetworkG.validatedistribution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkG.validatedistribution</span></code></a>()</td>
+<td>enusure statistical distribution is supported</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkG.computeobserved.html#pysal.explore.spaghetti.NetworkG.computeobserved" title="pysal.explore.spaghetti.NetworkG.computeobserved"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkG.computeobserved</span></code></a>()</td>
+<td>compute the observed nearest</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkG.computepermutations.html#pysal.explore.spaghetti.NetworkG.computepermutations" title="pysal.explore.spaghetti.NetworkG.computepermutations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkG.computepermutations</span></code></a>()</td>
+<td>compute permutations of the nearest</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="spaghetti-networkk">
+<h4>spaghetti.NetworkK<a class="headerlink" href="#spaghetti-networkk" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkK.html#pysal.explore.spaghetti.NetworkK" title="pysal.explore.spaghetti.NetworkK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkK</span></code></a>(ntw,&nbsp;pointpattern[,&nbsp;nsteps,&nbsp;…])</td>
+<td>Compute a network constrained K statistic.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkK.computeenvelope.html#pysal.explore.spaghetti.NetworkK.computeenvelope" title="pysal.explore.spaghetti.NetworkK.computeenvelope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkK.computeenvelope</span></code></a>()</td>
+<td>compute upper and lower bounds of envelope</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkK.setbounds.html#pysal.explore.spaghetti.NetworkK.setbounds" title="pysal.explore.spaghetti.NetworkK.setbounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkK.setbounds</span></code></a>(nearest)</td>
+<td>set upper and lower bounds</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkK.validatedistribution.html#pysal.explore.spaghetti.NetworkK.validatedistribution" title="pysal.explore.spaghetti.NetworkK.validatedistribution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkK.validatedistribution</span></code></a>()</td>
+<td>enusure statistical distribution is supported</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkK.computeobserved.html#pysal.explore.spaghetti.NetworkK.computeobserved" title="pysal.explore.spaghetti.NetworkK.computeobserved"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkK.computeobserved</span></code></a>()</td>
+<td>compute the observed nearest</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.NetworkK.computepermutations.html#pysal.explore.spaghetti.NetworkK.computepermutations" title="pysal.explore.spaghetti.NetworkK.computepermutations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkK.computepermutations</span></code></a>()</td>
+<td>compute permutations of the nearest</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="spaghetti-pointpattern">
+<h4>spaghetti.PointPattern<a class="headerlink" href="#spaghetti-pointpattern" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.PointPattern.html#pysal.explore.spaghetti.PointPattern" title="pysal.explore.spaghetti.PointPattern"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PointPattern</span></code></a>([in_data,&nbsp;idvariable,&nbsp;attribute])</td>
+<td>A stub point pattern class used to store a point pattern.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="spaghetti-simulatedpointpattern">
+<h4>spaghetti.SimulatedPointPattern<a class="headerlink" href="#spaghetti-simulatedpointpattern" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.explore.spaghetti.SimulatedPointPattern.html#pysal.explore.spaghetti.SimulatedPointPattern" title="pysal.explore.spaghetti.SimulatedPointPattern"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimulatedPointPattern</span></code></a>()</td>
+<td>Struct style class to mirror the Point Pattern Class.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="spaghetti">
+<h4>spaghetti<a class="headerlink" href="#spaghetti" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">spaghetti.compute_length</span></code></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">spaghetti.dijkstra</span></code></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">spaghetti.dijkstra_mp</span></code></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">spaghetti.generatetree</span></code></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">spaghetti.get_neighbor_distances</span></code></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">spaghetti.snap_points_on_segments</span></code></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">spaghetti.squared_distance_point_segment</span></code></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">spaghetti.ffunction</span></code></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">spaghetti.gfunction</span></code></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">spaghetti.kfunction</span></code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="section" id="module-pysal.viz">
+<span id="pysal-viz-geovisualization"></span><h2><a class="reference internal" href="#module-pysal.viz" title="pysal.viz"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pysal.viz</span></code></a>: Geovisualization<a class="headerlink" href="#module-pysal.viz" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pysal-explore-pysal-viz-mapclassify-choropleth-map-classification">
+<h3>pysal.explore.pysal.viz.mapclassify: Choropleth map classification<a class="headerlink" href="#pysal-explore-pysal-viz-mapclassify-choropleth-map-classification" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="classifiers">
+<span id="classifiers-api"></span><h4>Classifiers<a class="headerlink" href="#classifiers" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.Box_Plot.html#pysal.viz.mapclassify.Box_Plot" title="pysal.viz.mapclassify.Box_Plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.Box_Plot</span></code></a>(y[,&nbsp;hinge])</td>
+<td>Box_Plot Map Classification</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.Equal_Interval.html#pysal.viz.mapclassify.Equal_Interval" title="pysal.viz.mapclassify.Equal_Interval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.Equal_Interval</span></code></a>(y[,&nbsp;k])</td>
+<td>Equal Interval Classification</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.Fisher_Jenks.html#pysal.viz.mapclassify.Fisher_Jenks" title="pysal.viz.mapclassify.Fisher_Jenks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.Fisher_Jenks</span></code></a>(y[,&nbsp;k])</td>
+<td>Fisher Jenks optimal classifier - mean based</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.Fisher_Jenks_Sampled.html#pysal.viz.mapclassify.Fisher_Jenks_Sampled" title="pysal.viz.mapclassify.Fisher_Jenks_Sampled"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.Fisher_Jenks_Sampled</span></code></a>(y)</td>
+<td>Fisher Jenks optimal classifier - mean based using random sample</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.HeadTail_Breaks.html#pysal.viz.mapclassify.HeadTail_Breaks" title="pysal.viz.mapclassify.HeadTail_Breaks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.HeadTail_Breaks</span></code></a>(y)</td>
+<td>Head/tail Breaks Map Classification for Heavy-tailed Distributions</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.Jenks_Caspall.html#pysal.viz.mapclassify.Jenks_Caspall" title="pysal.viz.mapclassify.Jenks_Caspall"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.Jenks_Caspall</span></code></a>(y[,&nbsp;k])</td>
+<td>Jenks Caspall  Map Classification</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.Jenks_Caspall_Forced.html#pysal.viz.mapclassify.Jenks_Caspall_Forced" title="pysal.viz.mapclassify.Jenks_Caspall_Forced"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.Jenks_Caspall_Forced</span></code></a>(y)</td>
+<td>Jenks Caspall  Map Classification with forced movements</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.Jenks_Caspall_Sampled.html#pysal.viz.mapclassify.Jenks_Caspall_Sampled" title="pysal.viz.mapclassify.Jenks_Caspall_Sampled"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.Jenks_Caspall_Sampled</span></code></a>(y)</td>
+<td>Jenks Caspall Map Classification using a random sample</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.Max_P_Classifier.html#pysal.viz.mapclassify.Max_P_Classifier" title="pysal.viz.mapclassify.Max_P_Classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.Max_P_Classifier</span></code></a>(y[,&nbsp;…])</td>
+<td>Max_P Map Classification</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.Maximum_Breaks.html#pysal.viz.mapclassify.Maximum_Breaks" title="pysal.viz.mapclassify.Maximum_Breaks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.Maximum_Breaks</span></code></a>(y[,&nbsp;k,&nbsp;…])</td>
+<td>Maximum Breaks Map Classification</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.Natural_Breaks.html#pysal.viz.mapclassify.Natural_Breaks" title="pysal.viz.mapclassify.Natural_Breaks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.Natural_Breaks</span></code></a>(y[,&nbsp;k,&nbsp;…])</td>
+<td>Natural Breaks Map Classification</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.Quantiles.html#pysal.viz.mapclassify.Quantiles" title="pysal.viz.mapclassify.Quantiles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.Quantiles</span></code></a>(y[,&nbsp;k])</td>
+<td>Quantile Map Classification</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.Percentiles.html#pysal.viz.mapclassify.Percentiles" title="pysal.viz.mapclassify.Percentiles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.Percentiles</span></code></a>(y[,&nbsp;pct])</td>
+<td>Percentiles Map Classification</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.Std_Mean.html#pysal.viz.mapclassify.Std_Mean" title="pysal.viz.mapclassify.Std_Mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.Std_Mean</span></code></a>(y[,&nbsp;multiples])</td>
+<td>Standard Deviation and Mean Map Classification</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.User_Defined.html#pysal.viz.mapclassify.User_Defined" title="pysal.viz.mapclassify.User_Defined"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.User_Defined</span></code></a>(y,&nbsp;bins)</td>
+<td>User Specified Binning</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="utilities">
+<h4>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.K_classifiers.html#pysal.viz.mapclassify.K_classifiers" title="pysal.viz.mapclassify.K_classifiers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.K_classifiers</span></code></a>(y[,&nbsp;pct])</td>
+<td>Evaluate all k-classifers and pick optimal based on k and GADF</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/pysal.viz.mapclassify.gadf.html#pysal.viz.mapclassify.gadf" title="pysal.viz.mapclassify.gadf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pysal.viz.mapclassify.gadf</span></code></a>(y[,&nbsp;method,&nbsp;…])</td>
+<td>Evaluate the Goodness of Absolute Deviation Fit of a Classifier Finds the minimum value of k for which gadf&gt;pct</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="_sources/api.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, pysal developers.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
