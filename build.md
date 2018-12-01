@@ -8,6 +8,7 @@ This document provides instructions on the preparation of the meta-package
 ## Building
 
 1. `make  download`
+2. edit convert.py and change `init_lines` at the bottom to have new version number
 2. `make convert`
 3. `make test`
 4. create changelong
