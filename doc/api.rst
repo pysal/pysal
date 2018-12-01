@@ -126,13 +126,13 @@ Exchange Mobility Methods
 .. autosummary::
    :toctree: generated/
 
-    pysal.explore.giddy.rank.Theta
-    pysal.explore.giddy.rank.Tau
-    pysal.explore.giddy.rank.SpatialTau
-    pysal.explore.giddy.rank.Tau_Local
-    pysal.explore.giddy.rank.Tau_Local_Neighbor
-    pysal.explore.giddy.rank.Tau_Local_Neighborhood
-    pysal.explore.giddy.rank.Tau_Regional
+    rank.Theta
+    rank.Tau
+    rank.SpatialTau
+    rank.Tau_Local
+    rank.Tau_Local_Neighbor
+    rank.Tau_Local_Neighborhood
+    rank.Tau_Regional
 
 
 
