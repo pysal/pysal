@@ -160,4 +160,6 @@ Endnotes
 We are thankful to the groups behind the following documents, from which we
 drew content and inspiration:
 
-- [The NumPy Code of Conduct](https://github.com/numpy/numpy/blob/master/doc/source/dev/conduct/code_of_conduct.rst#id1)
+- [NumPy Code of Conduct](https://github.com/numpy/numpy/blob/master/doc/source/dev/conduct/code_of_conduct.rst#id1)
+- [SciPy Code of Conduct](https://docs.scipy.org/doc/scipy/reference/dev/conduct/code_of_conduct.html)
+- [Open Source Guides - Your Code of Conduct](https://opensource.guide/code-of-conduct/)
