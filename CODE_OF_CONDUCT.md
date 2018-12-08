@@ -113,7 +113,9 @@ You can report issues to the PySAL Code of Conduct committee at
 ***pysal-conduct@googlegroups.com***[create group and add link] or ***pysal/CoC***[create group and add link]. Currently, the committee consists of:
 
 - ***pysaler 1***
+    - <e.mail@dot.com>
 - ***Stefanie Lumnitz***
+    - <stefanie.lumnitz@gmail.com>
 - ***James Gaboardi***
     - <jgaboardi@gmail.com>
 
