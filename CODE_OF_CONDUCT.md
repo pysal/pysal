@@ -115,6 +115,7 @@ You can report issues to the PySAL Code of Conduct committee at
 - ***pysaler 1***
 - ***Stefanie Lumnitz***
 - ***James Gaboardi***
+    - <jgaboardi@gmail.com>
 
 If your report involves any members of the committee, or if they feel they have
 a conflict of interest in handling it, then they will recuse themselves from
