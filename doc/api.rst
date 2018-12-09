@@ -5,6 +5,239 @@ API Reference
 
 This is the class and function reference of pysal.
 
+.. currentmodule:: pysal.lib
+
+
+lib: PySAL Core 
+===============
+
+Spatial Weights
+---------------
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.weights.W
+
+Distance Weights
+++++++++++++++++
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.weights.DistanceBand
+   pysal.lib.weights.Kernel
+   pysal.lib.weights.KNN
+
+Contiguity Weights
+++++++++++++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.weights.Queen
+   pysal.lib.weights.Rook
+   pysal.lib.weights.Voronoi
+   pysal.lib.weights.W
+
+spint Weights
++++++++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.weights.WSP
+   pysal.lib.weights.netW
+   pysal.lib.weights.mat2L
+   pysal.lib.weights.ODW
+   pysal.lib.weights.vecW
+
+
+Weights Util Classes and Functions
+++++++++++++++++++++++++++++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.weights.block_weights
+   pysal.lib.weights.lat2W
+   pysal.lib.weights.comb
+   pysal.lib.weights.order
+   pysal.lib.weights.higher_order
+   pysal.lib.weights.shimbel
+   pysal.lib.weights.remap_ids
+   pysal.lib.weights.full2W
+   pysal.lib.weights.full
+   pysal.lib.weights.WSP2W
+   pysal.lib.weights.get_ids
+   pysal.lib.weights.get_points_array_from_shapefile
+
+Weights user Classes and Functions
+++++++++++++++++++++++++++++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.weights.min_threshold_distance
+   pysal.lib.weights.lat2SW
+   pysal.lib.weights.w_local_cluster
+   pysal.lib.weights.higher_order_sp
+   pysal.lib.weights.hexLat2W
+   pysal.lib.weights.attach_islands
+   pysal.lib.weights.nonplanar_neighbors
+   pysal.lib.weights.fuzzy_contiguity
+   pysal.lib.weights.min_threshold_dist_from_shapefile
+   pysal.lib.weights.build_lattice_shapefile
+   pysal.lib.weights.spw_from_gal
+
+
+Set Theoretic Weights
++++++++++++++++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.weights.w_union
+   pysal.lib.weights.w_intersection
+   pysal.lib.weights.w_difference
+   pysal.lib.weights.w_symmetric_difference
+   pysal.lib.weights.w_subset
+   pysal.lib.weights.w_clip
+
+
+Spatial Lag
++++++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.weights.lag_spatial
+   pysal.lib.weights.lag_categorical
+          
+
+cg: Computational Geometry
+--------------------------
+
+alpha_shapes
+++++++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.cg.alpha_shape
+   pysal.lib.cg.alpha_shape_auto
+
+voronoi
++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.cg.voronoi_frames
+
+
+sphere
+++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.cg.RADIUS_EARTH_KM
+   pysal.lib.cg.RADIUS_EARTH_MILES
+   pysal.lib.cg.arcdist
+   pysal.lib.cg.arcdist2linear
+   pysal.lib.cg.brute_knn
+   pysal.lib.cg.fast_knn
+   pysal.lib.cg.fast_threshold
+   pysal.lib.cg.linear2arcdist
+   pysal.lib.cg.toLngLat
+   pysal.lib.cg.toXYZ
+   pysal.lib.cg.lonlat
+   pysal.lib.cg.harcdist
+   pysal.lib.cg.geointerpolate
+   pysal.lib.cg.geogrid
+
+shapes
+++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.cg.Point
+   pysal.lib.cg.LineSegment
+   pysal.lib.cg.Line
+   pysal.lib.cg.Ray
+   pysal.lib.cg.Chain
+   pysal.lib.cg.Polygon
+   pysal.lib.cg.Rectangle
+   pysal.lib.cg.asShape
+
+standalone
+++++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.cg.bbcommon
+   pysal.lib.cg.get_bounding_box
+   pysal.lib.cg.get_angle_between
+   pysal.lib.cg.is_collinear
+   pysal.lib.cg.get_segments_intersect
+   pysal.lib.cg.get_segment_point_intersect
+   pysal.lib.cg.get_polygon_point_intersect
+   pysal.lib.cg.get_rectangle_point_intersect
+   pysal.lib.cg.get_ray_segment_intersect
+   pysal.lib.cg.get_rectangle_rectangle_intersection
+   pysal.lib.cg.get_polygon_point_dist
+   pysal.lib.cg.get_points_dist
+   pysal.lib.cg.get_segment_point_dist
+   pysal.lib.cg.get_point_at_angle_and_dist
+   pysal.lib.cg.convex_hull
+   pysal.lib.cg.is_clockwise
+   pysal.lib.cg.point_touches_rectangle
+   pysal.lib.cg.get_shared_segments
+   pysal.lib.cg.distance_matrix
+
+
+locators
+++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.cg.Grid
+   pysal.lib.cg.PointLocator
+   pysal.lib.cg.PolygonLocator
+
+
+kdtree
+++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.cg.KDTree
+
+
+io
+-- 
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.io.open
+   pysal.lib.io.fileio.FileIO
+
+
+examples
+--------
+
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.lib.examples.available
+   pysal.lib.examples.explain
+   pysal.lib.examples.get_path
 
 
 :mod:`pysal.explore`: Exploratory spatial data analysis
