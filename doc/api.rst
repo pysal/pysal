@@ -135,6 +135,34 @@ Exchange Mobility Methods
     rank.Tau_Regional
 
 
+pysal.explore.inequality: Spatial Inequality Analysis
++++++++++++++++++++++++++
+.. currentmodule:: pysal.explore.inequality
+
+ .. _inequality_api:
+
+Theil Inequality Measures
+-------------------------
+
+.. autosummary::
+   :toctree: generated/
+
+    pysal.explore.inequality.theil.Theil 
+    pysal.explore.inequality.theil.TheilD
+    pysal.explore.inequality.theil.TheilDSim
+
+
+Gini Inequality Measures
+------------------------
+
+.. autosummary::
+   :toctree: generated/
+
+    pysal.explore.inequality.gini.Gini
+    pysal.explore.inequality.gini.Gini_Spatial
+
+
+
 
 pysal.explore.spaghetti: 
 +++++++++++++++++++++++++
