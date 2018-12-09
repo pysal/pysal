@@ -42,7 +42,7 @@ extensions = [#'sphinx_gallery.gen_gallery',
               'sphinx.ext.mathjax',
               'sphinx.ext.doctest',
               'sphinx.ext.intersphinx',
-              'numpydoc',
+              'sphinx.ext.napoleon',
               'matplotlib.sphinxext.plot_directive']
 
 
