@@ -404,3 +404,64 @@ Seeimingly-unrelated regression models are a generalization of linear regression
     pysal.model.spreg.SURerrorML
     pysal.model.spreg.SURlagIV
     pysal.model.spreg.ThreeSLS
+
+
+
+.. currentmodule:: pysal.model.mgwr
+
+
+.. _gwr_api:
+
+GWR Model Estimation and Inference
+----------------------------------
+
+.. autosummary::
+   :toctree: generated/
+
+    pysal.model.mgwr.gwr.GWR
+    pysal.model.mgwr.gwr.GWRResults
+    pysal.model.mgwr.gwr.GWRResultsLite
+
+
+MGWR Estimation and Inference
+-----------------------------
+
+.. autosummary::
+   :toctree: generated/
+
+    pysal.model.mgwr.gwr.MGWR
+    pysal.model.mgwr.gwr.MGWRResults
+
+Utility Functions
+-----------------
+
+Kernel Specification
+~~~~~~~~~~~~~~~~~~~~
+
+.. autosummary::
+   :toctree: generated/
+
+    pysal.model.mgwr.kernels.fix_gauss
+    pysal.model.mgwr.kernels.adapt_gauss
+    pysal.model.mgwr.kernels.fix_bisquare
+    pysal.model.mgwr.kernels.adapt_bisquare
+    pysal.model.mgwr.kernels.fix_exp
+    pysal.model.mgwr.kernels.adapt_exp
+
+Bandwidth Selection
+~~~~~~~~~~~~~~~~~~~~
+
+.. autosummary::
+   :toctree: generated/
+
+    pysal.model.mgwr.sel_bw.Sel_BW
+
+
+Visualization
+~~~~~~~~~~~~~
+.. autosummary::
+   :toctree: generated/
+
+   pysal.model.mgwr.utils.shift_colormap
+   pysal.model.mgwr.utils.truncate_colormap
+   pysal.model.mgwr.utils.compare_surfaces
