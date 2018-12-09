@@ -331,4 +331,76 @@ Utilities
 
     pysal.viz.mapclassify.K_classifiers
     pysal.viz.mapclassify.gadf
+
+
 	
+:mod:`pysal.model`: Linear models for spatial data analysis
+===========================================================
+
+.. automodule:: pysal.model
+    :no-members:
+    :no-inherited-members:
+
+pysal.model.spreg: Spatial Econometrics
+++++++++++++++++++++++++++++++++++++++
+.. currentmodule:: pysal.model.spreg
+
+Spatial Regression Models
+-------------------------
+
+These are the standard spatial regression models supported by the `spreg` package. Each of them contains a significant amount of detail in their docstring discussing how they're used, how they're fit, and how to interpret the results. 
+
+.. autosummary::
+   :toctree: generated/
+    
+    pysal.model.spreg.OLS
+    pysal.model.spreg.ML_Lag
+    pysal.model.spreg.ML_Error
+    pysal.model.spreg.GM_Lag
+    pysal.model.spreg.GM_Error
+    pysal.model.spreg.GM_Error_Het
+    pysal.model.spreg.GM_Error_Hom
+    pysal.model.spreg.GM_Combo
+    pysal.model.spreg.GM_Combo_Het
+    pysal.model.spreg.GM_Combo_Hom
+    pysal.model.spreg.GM_Endog_Error
+    pysal.model.spreg.GM_Endog_Error_Het
+    pysal.model.spreg.GM_Endog_Error_Hom
+    pysal.model.spreg.TSLS
+    pysal.model.spreg.ThreeSLS
+
+Regimes Models
+---------------
+
+Regimes models are variants of spatial regression models which allow for structural instability in parameters. That means that these models allow different coefficient values in distinct subsets of the data. 
+
+.. autosummary::
+    :toctree: generated/
+
+    pysal.model.spreg.OLS_Regimes
+    pysal.model.spreg.ML_Lag_Regimes
+    pysal.model.spreg.ML_Error_Regimes
+    pysal.model.spreg.GM_Lag_Regimes
+    pysal.model.spreg.GM_Error_Regimes
+    pysal.model.spreg.GM_Error_Het_Regimes
+    pysal.model.spreg.GM_Error_Hom_Regimes
+    pysal.model.spreg.GM_Combo_Regimes
+    pysal.model.spreg.GM_Combo_Hom_Regimes
+    pysal.model.spreg.GM_Combo_Het_Regimes
+    pysal.model.spreg.GM_Endog_Error_Regimes
+    pysal.model.spreg.GM_Endog_Error_Hom_Regimes
+    pysal.model.spreg.GM_Endog_Error_Het_Regimes
+
+Seemingly-Unrelated Regressions
+--------------------------------
+
+Seeimingly-unrelated regression models are a generalization of linear regression. These models (and their spatial generalizations) allow for correlation in the residual terms between groups that use the same model. In spatial Seeimingly-Unrelated Regressions, the error terms across groups are allowed to exhibit a structured type of correlation: spatail correlation. 
+
+.. autosummary::
+   :toctree: generated/
+    
+    pysal.model.spreg.SUR
+    pysal.model.spreg.SURerrorGM
+    pysal.model.spreg.SURerrorML
+    pysal.model.spreg.SURlagIV
+    pysal.model.spreg.ThreeSLS
