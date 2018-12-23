@@ -12,31 +12,30 @@ PySAL is an open source Python library for geocomputation and spatial data analy
         <div class="col-sm-1 col-xs-hidden">
         </div>
         <div class="col-md-3 col-xs-12">
-            <a href="http://nbviewer.jupyter.org/github/pysal/esda/blob/master/notebooks/Spatial%20Autocorrelation%20for%20Areal%20Unit%20data.ipynb" class="thumbnail">
+            <a href="http://nbviewer.jupyter.org/github/pysal/esda/blob/master/notebooks/Spatial%20Autocorrelation%20for%20Areal%20Unit%20Data.ipynb" class="thumbnail">
                 <img src="_static/images/prices.png" class="img-responsive center-block">
                 <div class="caption text-center">
                 <h6>Housing Prices Berlin</h6>
                 </div>
             </a>
         </div>
-
-        <div class="col-md-3 col-xs-12">
-            <a href="http://nbviewer.jupyter.org/github/pysal/giddy/blob/master/notebooks/directional.ipynb" class="thumbnail">
-                <img src="_static/images/rose_conditional.png" class="img-responsive center-block">
+        <div class="col-sm-3 col-xs-12">
+         <a href="http://nbviewer.jupyter.org/github/pysal/giddy/blob/master/notebooks/directional.ipynb" class="thumbnail">
+        <img src="_static/images/rose_conditional.png" class="img-responsive center-block">
                 <div class="caption text-center">
                 <h6>Rose diagram (directional LISAs)</h6>
                 </div>
             </a>
         </div>
         <div class="col-sm-3 col-xs-12">
-            <a href="http://nbviewer.jupyter.org/github/pysal/splot/blob/master/notebooks/libpysal_non_planar_joins_viz.ipynb" class="thumbnail">
+ <a href="http://nbviewer.jupyter.org/github/pysal/splot/blob/master/notebooks/libpysal_non_planar_joins_viz.ipynb" class="thumbnail">
                 <img src="_static/images/nonplanar.png"
                 class="img-responsive center-block">
                 <div class="caption text-center">
                 <h6>Visualizing Non Planar Neighbours
                 </h6>
                 </div>
-            </a>
+      </a>
         </div>
         <div class="col-sm-2 col-xs-hidden">
         </div>
@@ -44,6 +43,7 @@ PySAL is an open source Python library for geocomputation and spatial data analy
     </div>
 
 
+        
 .. toctree::
    :hidden:
    :maxdepth: 3
