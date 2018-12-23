@@ -48,8 +48,11 @@ c = "find pysal/explore/. -name '*.py' -print | xargs sed -i -- 's/esda/pysal\.e
 os.system(c)
 
 
-# replace all references to mapclassify with pysal.viz.mapclassify
-c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/mapclassify/pysal\.viz\.mapclassify/g'"
+# replace all references to mapclassify in esda and viz.mappclassify with pysal.viz.mapclassify
+c = "find pysal/viz/mapclassify/. -name '*.py' -print | xargs sed -i -- 's/mapclassify/pysal\.viz\.mapclassify/g'"
+os.system(c)
+
+c = "find pysal/explore/. -name '*.py' -print | xargs sed -i -- 's/mapclassify/pysal\.viz\.mapclassify/g'"
 os.system(c)
 
 # replace all references to pysal.spreg with pysal.model.spreg
@@ -217,6 +220,20 @@ if 'splot' in tagged:
 
     c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/_viz_pysal\.lib_mpl/_viz_libpysal_mpl/g'"
     os.system(c)
+
+    # import mapclassify as classify -> import pysal.viz.mapclassify as classify
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/import mapclassify/import pysal\.viz\.mapclassify/g'"
+    os.system(c)
+
+    # from splot.mapping -> from pysal.viz.splot.mapping 
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.mapping /from pysal\.viz\.splot\.mapping /g'"
+    os.system(c)
+
+    # from splot._ -> from pysal.viz.splot._  
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\._/from pysal\.viz\.splot\._/g'"
+    os.system(c)
+
+
 #
 #
 #c = "find pysalnext/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/pysal\.open/pysal\.lib\.examples\.open/g'"

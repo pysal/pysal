@@ -64,7 +64,7 @@ def value_by_alpha_cmap(x, y, cmap='GnBu', revert_alpha=False, divergent=False):
     >>> import matplotlib.pyplot as plt
     >>> import matplotlib
     >>> import numpy as np
-    >>> from splot.mapping import value_by_alpha_cmap
+    >>> from pysal.viz.splot.mapping import value_by_alpha_cmap
     
     Load Example Data
     
@@ -106,8 +106,8 @@ def value_by_alpha_cmap(x, y, cmap='GnBu', revert_alpha=False, divergent=False):
 
 def vba_choropleth(x, y, gdf, cmap='GnBu', 
                    divergent=False, revert_alpha=False,
-                   alpha_pysal.viz.mapclassify=None,
-                   rgb_pysal.viz.mapclassify=None,
+                   alpha_mapclassify=None,
+                   rgb_mapclassify=None,
                    ax=None, legend=False):
     """
     Value by Alpha Choropleth 
@@ -131,23 +131,23 @@ def vba_choropleth(x, y, gdf, cmap='GnBu',
         If True, high y values will have a
         low alpha and low values will be transparent.
         Default =False.
-    alpha_pysal.viz.mapclassify : dict
+    alpha_mapclassify : dict
         Keywords used for binning input values and
-        classifying alpha values with `pysal.viz.mapclassify`.
+        classifying alpha values with `mapclassify`.
         Note: valid keywords are eg. dict(classifier='quantiles', k=5,
-        hinge=1.5). For other options check `splot.mapping.pysal.viz.mapclassify_bin`.
-    rgb_pysal.viz.mapclassify : dict
+        hinge=1.5). For other options check `splot.mapping.mapclassify_bin`.
+    rgb_mapclassify : dict
         Keywords used for binning input values and
-        classifying rgb values with `pysal.viz.mapclassify`.
+        classifying rgb values with `mapclassify`.
         Note: valid keywords are eg.g dict(classifier='quantiles', k=5,
-        hinge=1.5).For other options check `splot.mapping.pysal.viz.mapclassify_bin`.
+        hinge=1.5).For other options check `splot.mapping.mapclassify_bin`.
     ax : matplotlib Axes instance, optional
         Axes in which to plot the figure in multiple Axes layout.
         Default = None
     legend : bool, optional
         Adds a legend.
         Note: currently only available if data is classified,
-        hence if `alpha_pysal.viz.mapclassify` and `rgb_pysal.viz.mapclassify` are used.
+        hence if `alpha_mapclassify` and `rgb_mapclassify` are used.
     
     Returns
     -------
@@ -166,7 +166,7 @@ def vba_choropleth(x, y, gdf, cmap='GnBu',
     >>> import matplotlib.pyplot as plt
     >>> import matplotlib
     >>> import numpy as np
-    >>> from splot.mapping import vba_choropleth
+    >>> from pysal.viz.splot.mapping import vba_choropleth
     
     Load Example Data
     
@@ -190,25 +190,25 @@ def vba_choropleth(x, y, gdf, cmap='GnBu',
     
     >>> fig, axs = plt.subplots(2,2, figsize=(20,10))
     >>> vba_choropleth(y, x, gdf, cmap='viridis', ax = axs[0,0],
-    ...                rgb_pysal.viz.mapclassify=dict(classifier='quantiles', k=3), 
-    ...                alpha_pysal.viz.mapclassify=dict(classifier='quantiles', k=3))
+    ...                rgb_mapclassify=dict(classifier='quantiles', k=3), 
+    ...                alpha_mapclassify=dict(classifier='quantiles', k=3))
     >>> vba_choropleth(y, x, gdf, cmap='viridis', ax = axs[0,1],
-    ...                rgb_pysal.viz.mapclassify=dict(classifier='natural_breaks'), 
-    ...                alpha_pysal.viz.mapclassify=dict(classifier='natural_breaks'))
+    ...                rgb_mapclassify=dict(classifier='natural_breaks'), 
+    ...                alpha_mapclassify=dict(classifier='natural_breaks'))
     >>> vba_choropleth(y, x, gdf, cmap='viridis', ax = axs[1,0],
-    ...                rgb_pysal.viz.mapclassify=dict(classifier='std_mean'), 
-    ...                alpha_pysal.viz.mapclassify=dict(classifier='std_mean'))
+    ...                rgb_mapclassify=dict(classifier='std_mean'), 
+    ...                alpha_mapclassify=dict(classifier='std_mean'))
     >>> vba_choropleth(y, x, gdf, cmap='viridis', ax = axs[1,1],
-    ...                rgb_pysal.viz.mapclassify=dict(classifier='fisher_jenks', k=3), 
-    ...                alpha_pysal.viz.mapclassify=dict(classifier='fisher_jenks', k=3))
+    ...                rgb_mapclassify=dict(classifier='fisher_jenks', k=3), 
+    ...                alpha_mapclassify=dict(classifier='fisher_jenks', k=3))
     >>> plt.show()
     
     Pass in a list of colors instead of a cmap
     
     >>> color_list = ['#a1dab4','#41b6c4','#225ea8']
     >>> vba_choropleth(y, x, gdf, cmap=color_list,
-    ...                rgb_pysal.viz.mapclassify=dict(classifier='quantiles', k=3), 
-    ...                alpha_pysal.viz.mapclassify=dict(classifier='quantiles'))
+    ...                rgb_mapclassify=dict(classifier='quantiles', k=3), 
+    ...                alpha_mapclassify=dict(classifier='quantiles'))
     >>> plt.show()
     
     Add a legend and use divergent alpha values
@@ -216,8 +216,8 @@ def vba_choropleth(x, y, gdf, cmap='GnBu',
     >>> fig = plt.figure(figsize=(15,10))
     >>> ax = fig.add_subplot(111)
     >>> vba_choropleth(x, y, gdf, divergent=True,
-    ...                alpha_pysal.viz.mapclassify=dict(classifier='quantiles', k=5),
-    ...                rgb_pysal.viz.mapclassify=dict(classifier='quantiles', k=5),
+    ...                alpha_mapclassify=dict(classifier='quantiles', k=5),
+    ...                rgb_mapclassify=dict(classifier='quantiles', k=5),
     ...                legend=True, ax=ax)
     >>> plt.show()
 
@@ -229,42 +229,42 @@ def vba_choropleth(x, y, gdf, cmap='GnBu',
     else:
         fig = ax.get_figure()
     
-    if rgb_pysal.viz.mapclassify is not None:
-        rgb_pysal.viz.mapclassify.setdefault('k', 5)
-        rgb_pysal.viz.mapclassify.setdefault('hinge', 1.5)
-        rgb_pysal.viz.mapclassify.setdefault('multiples', [-2,-1,1,2])
-        rgb_pysal.viz.mapclassify.setdefault('mindiff', 0)
-        rgb_pysal.viz.mapclassify.setdefault('initial', 100)
-        rgb_pysal.viz.mapclassify.setdefault('bins', [20, max(x)])
-        classifier = rgb_pysal.viz.mapclassify['classifier']
-        k = rgb_pysal.viz.mapclassify['k']
-        hinge = rgb_pysal.viz.mapclassify['hinge']
-        multiples = rgb_pysal.viz.mapclassify['multiples']
-        mindiff = rgb_pysal.viz.mapclassify['mindiff']
-        initial = rgb_pysal.viz.mapclassify['initial']
-        bins = rgb_pysal.viz.mapclassify['bins']
-        rgb_bins = pysal.viz.mapclassify_bin(x, classifier, k=k, hinge=hinge,
+    if rgb_mapclassify is not None:
+        rgb_mapclassify.setdefault('k', 5)
+        rgb_mapclassify.setdefault('hinge', 1.5)
+        rgb_mapclassify.setdefault('multiples', [-2,-1,1,2])
+        rgb_mapclassify.setdefault('mindiff', 0)
+        rgb_mapclassify.setdefault('initial', 100)
+        rgb_mapclassify.setdefault('bins', [20, max(x)])
+        classifier = rgb_mapclassify['classifier']
+        k = rgb_mapclassify['k']
+        hinge = rgb_mapclassify['hinge']
+        multiples = rgb_mapclassify['multiples']
+        mindiff = rgb_mapclassify['mindiff']
+        initial = rgb_mapclassify['initial']
+        bins = rgb_mapclassify['bins']
+        rgb_bins = mapclassify_bin(x, classifier, k=k, hinge=hinge,
                                    multiples=multiples,
                                    mindiff=mindiff,
                                    initial=initial, bins=bins)
         x = rgb_bins.yb
 
-    if alpha_pysal.viz.mapclassify is not None:
-        alpha_pysal.viz.mapclassify.setdefault('k', 5)
-        alpha_pysal.viz.mapclassify.setdefault('hinge', 1.5)
-        alpha_pysal.viz.mapclassify.setdefault('multiples', [-2,-1,1,2])
-        alpha_pysal.viz.mapclassify.setdefault('mindiff', 0)
-        alpha_pysal.viz.mapclassify.setdefault('initial', 100)
-        alpha_pysal.viz.mapclassify.setdefault('bins', [20, max(y)])
-        classifier = alpha_pysal.viz.mapclassify['classifier']
-        k = alpha_pysal.viz.mapclassify['k']
-        hinge = alpha_pysal.viz.mapclassify['hinge']
-        multiples = alpha_pysal.viz.mapclassify['multiples']
-        mindiff = alpha_pysal.viz.mapclassify['mindiff']
-        initial = alpha_pysal.viz.mapclassify['initial']
-        bins = alpha_pysal.viz.mapclassify['bins']
+    if alpha_mapclassify is not None:
+        alpha_mapclassify.setdefault('k', 5)
+        alpha_mapclassify.setdefault('hinge', 1.5)
+        alpha_mapclassify.setdefault('multiples', [-2,-1,1,2])
+        alpha_mapclassify.setdefault('mindiff', 0)
+        alpha_mapclassify.setdefault('initial', 100)
+        alpha_mapclassify.setdefault('bins', [20, max(y)])
+        classifier = alpha_mapclassify['classifier']
+        k = alpha_mapclassify['k']
+        hinge = alpha_mapclassify['hinge']
+        multiples = alpha_mapclassify['multiples']
+        mindiff = alpha_mapclassify['mindiff']
+        initial = alpha_mapclassify['initial']
+        bins = alpha_mapclassify['bins']
         #TODO: use the pct keyword here
-        alpha_bins = pysal.viz.mapclassify_bin(y, classifier,
+        alpha_bins = mapclassify_bin(y, classifier,
                                      k=k, hinge=hinge,
                                      multiples=multiples,
                                      mindiff=mindiff,
@@ -291,14 +291,14 @@ def vba_legend(rgb_bins, alpha_bins, cmap, ax=None):
     
     Parameters
     ----------
-    rgb_bins : pysal.pysal.viz.mapclassify instance
+    rgb_bins : pysal.mapclassify instance
         Object of classified values used for rgb.
-        Can be created with `pysal.viz.mapclassify_bin()`
-        or `pysal.pysal.viz.mapclassify`.
-    alpha_bins : pysal.pysal.viz.mapclassify instance
+        Can be created with `mapclassify_bin()`
+        or `pysal.mapclassify`.
+    alpha_bins : pysal.mapclassify instance
         Object of classified values used for alpha.
-        Can be created with `pysal.viz.mapclassify_bin()`
-        or `pysal.pysal.viz.mapclassify`.
+        Can be created with `mapclassify_bin()`
+        or `pysal.mapclassify`.
     ax : matplotlib Axes instance, optional
         Axes in which to plot the figure in multiple Axes layout.
         Default = None
@@ -319,7 +319,7 @@ def vba_legend(rgb_bins, alpha_bins, cmap, ax=None):
     >>> import matplotlib.pyplot as plt
     >>> import matplotlib
     >>> import numpy as np
-    >>> from splot.mapping import vba_legend, pysal.viz.mapclassify_bin
+    >>> from pysal.viz.splot.mapping import vba_legend, mapclassify_bin
     
     Load Example Data
     
@@ -330,8 +330,8 @@ def vba_legend(rgb_bins, alpha_bins, cmap, ax=None):
     
     Classify your data
     
-    >>> rgb_bins = pysal.viz.mapclassify_bin(x, 'quantiles')
-    >>> alpha_bins = pysal.viz.mapclassify_bin(y, 'quantiles')
+    >>> rgb_bins = mapclassify_bin(x, 'quantiles')
+    >>> alpha_bins = mapclassify_bin(y, 'quantiles')
     
     Plot your legend
     
@@ -387,11 +387,11 @@ def vba_legend(rgb_bins, alpha_bins, cmap, ax=None):
     return fig, ax
 
 
-def pysal.viz.mapclassify_bin(y, classifier, k=5, pct=[1,10,50,90,99,100],
+def mapclassify_bin(y, classifier, k=5, pct=[1,10,50,90,99,100],
                     hinge=1.5, multiples=[-2,-1,1,2], mindiff=0,
                     initial=100, bins=None):
     """
-    Classify your data with `pysal.pysal.viz.mapclassify`
+    Classify your data with `pysal.mapclassify`
     Note: Input parameters are dependent on classifier used.
     
     Parameters
@@ -399,7 +399,7 @@ def pysal.viz.mapclassify_bin(y, classifier, k=5, pct=[1,10,50,90,99,100],
     y : array
         (n,1), values to classify
     classifier : str
-        pysal.pysal.viz.mapclassify classification scheme
+        pysal.mapclassify classification scheme
     k : int, optional
         The number of classes. Default=5.
     pct  : array, optional
@@ -428,7 +428,7 @@ def pysal.viz.mapclassify_bin(y, classifier, k=5, pct=[1,10,50,90,99,100],
 
     Returns
     -------
-    bins : pysal.pysal.viz.mapclassify instance
+    bins : pysal.mapclassify instance
         Object containing bin ids for each observation (.yb),
         upper bounds of each class (.bins), number of classes (.k)
         and number of onservations falling in each class (.counts)
@@ -445,7 +445,7 @@ def pysal.viz.mapclassify_bin(y, classifier, k=5, pct=[1,10,50,90,99,100],
     
     >>> from pysal.lib import examples
     >>> import geopandas as gpd
-    >>> from splot.mapping import pysal.viz.mapclassify_bin
+    >>> from pysal.viz.splot.mapping import pysal.viz.mapclassify_bin
     
     Load Example Data
     
@@ -455,11 +455,11 @@ def pysal.viz.mapclassify_bin(y, classifier, k=5, pct=[1,10,50,90,99,100],
     
     Classify values by quantiles
     
-    >>> quantiles = pysal.viz.mapclassify_bin(x, 'quantiles')
+    >>> quantiles = mapclassify_bin(x, 'quantiles')
     
     Classify values by box_plot and set hinge to 2
     
-    >>> box_plot = pysal.viz.mapclassify_bin(x, 'box_plot', hinge=2)
+    >>> box_plot = mapclassify_bin(x, 'box_plot', hinge=2)
     
     """
     classifier = classifier.lower()

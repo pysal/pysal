@@ -13,7 +13,7 @@ Value-by-Alpha maps
    value_by_alpha_cmap
    vba_choropleth
    vba_legend
-   pysal.viz.mapclassify_bin
+   mapclassify_bin
 
 
 Colormap utilities
@@ -30,7 +30,7 @@ Colormap utilities
 from ._viz_value_by_alpha_mpl import (value_by_alpha_cmap,
                                       vba_choropleth,
                                       vba_legend,
-                                      pysal.viz.mapclassify_bin)
+                                      mapclassify_bin)
 
 from ._viz_utils import (shift_colormap,
                          truncate_colormap)

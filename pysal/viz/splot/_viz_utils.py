@@ -101,7 +101,7 @@ def bin_values_choropleth(attribute_values, method='quantiles',
 
     Returns
     -------
-    bin_values : pysal.viz.mapclassify instance
+    bin_values : mapclassify instance
         Object containing bin ids for each observation (.yb),
         upper bounds of each class (.bins), number of classes (.k)
         and number of onservations falling in each class (.counts)

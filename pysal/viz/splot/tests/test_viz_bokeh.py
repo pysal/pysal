@@ -8,7 +8,7 @@ from pysal.lib import examples
 import geopandas as gpd
 import pysal.explore.esda as esda
 
-from splot._bk import (plot_choropleth, lisa_cluster,
+from pysal.viz.splot._bk import (plot_choropleth, lisa_cluster,
                        moran_scatterplot, plot_local_autocorrelation)
 
 

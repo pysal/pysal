@@ -16,7 +16,7 @@ from pysal.viz.splot.esda import (moran_scatterplot,
                         lisa_cluster,
                         moran_facet)
 
-from splot._viz_esda_mpl import (_moran_global_scatterplot,
+from pysal.viz.splot._viz_esda_mpl import (_moran_global_scatterplot,
                                  _moran_loc_scatterplot,
                                  _moran_bv_scatterplot,
                                  _moran_loc_bv_scatterplot)
