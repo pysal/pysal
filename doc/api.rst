@@ -528,14 +528,14 @@ spaghetti
     :no-inherited-members:
 
 
-pysal.explore.pysal.viz.mapclassify: Choropleth map classification
-+++++++++++++++++++++++++++++++++++++++
+pysal.viz.mapclassify: Choropleth map classification
+------------------------------------------------------------------
 .. currentmodule:: pysal.viz.mapclassify
 
 .. _classifiers_api:
 
 Classifiers
------------
++++++++++++
 
 .. autosummary::
    :toctree: generated/
@@ -557,7 +557,7 @@ Classifiers
    pysal.viz.mapclassify.User_Defined
 
 Utilities
----------
++++++++++
 
 .. autosummary::
    :toctree: generated/
@@ -565,7 +565,62 @@ Utilities
    pysal.viz.mapclassify.K_classifiers
    pysal.viz.mapclassify.gadf
 
+pysal.viz.splot: Lightweight visualization interface
+------------------------------------------------------------------
+.. currentmodule:: pysal.viz.splot
 
+
+Giddy
++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.viz.splot.giddy.dynamic_lisa_heatmap
+   pysal.viz.splot.giddy.dynamic_lisa_rose
+   pysal.viz.splot.giddy.dynamic_lisa_vectors
+   pysal.viz.splot.giddy.lisa_composite
+   pysal.viz.splot.giddy.lisa_composite_explore
+
+
+ESDA
+++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.viz.splot.esda.moran_scatterplot
+   pysal.viz.splot.esda.plot_moran
+   pysal.viz.splot.esda.plot_moran_simulation
+   pysal.viz.splot.esda.plot_moran_bv
+   pysal.viz.splot.esda.plot_moran_bv_simulation
+   pysal.viz.splot.esda.lisa_cluster
+   pysal.viz.splot.esda.plot_local_autocorrelation
+   pysal.viz.splot.esda.moran_facet
+
+Weights
++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.viz.splot.libpysal.plot_spatial_weights
+
+
+mapping
++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pysal.viz.splot.mapping.value_by_alpha_cmap
+   pysal.viz.splot.mapping.vba_choropleth
+   pysal.viz.splot.mapping.vba_legend
+   pysal.viz.splot.mapping.mapclassify_bin
+
+
+
+ 
 	
 :mod:`pysal.model`: Linear models for spatial data analysis
 ===========================================================
