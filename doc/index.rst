@@ -1,6 +1,9 @@
 .. documentation master file
 
-Introduction of your package
+PySAL: Python Spatial Analysis Library
+======================================
+
+PySAL is an open source Python library for geocomputation and spatial data analysis.
 
 .. raw:: html
 
