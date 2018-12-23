@@ -11,7 +11,7 @@ TODO
 __author__ = "Serge Rey sjsrey@gmail.com"
 __all__ = ['mbr', 'hull', 'mean_center', 'weighted_mean_center',
            'manhattan_median', 'std_distance', 'euclidean_median', 'ellipse',
-           'skyum', 'dtot']
+           'skyum', 'dtot',"_circle"]
 
 
 import sys
@@ -34,8 +34,8 @@ def mbr(points):
     """
     Find minimum bounding rectangle of a point array.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     points : arraylike
              (n,2), (x,y) coordinates of a series of event points.
 
@@ -71,8 +71,8 @@ def hull(points):
     """
     Find convex hull of a point array.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     points: arraylike
             (n,2), (x,y) coordinates of a series of event points.
 
@@ -91,8 +91,8 @@ def mean_center(points):
     """
     Find mean center of a point array.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     points: arraylike
             (n,2), (x,y) coordinates of a series of event points.
 
@@ -110,12 +110,13 @@ def weighted_mean_center(points, weights):
     """
     Find weighted mean center of a marked point pattern.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     points  : arraylike
               (n,2), (x,y) coordinates of a series of event points.
     weights : arraylike
               a series of attribute values of length n.
+
     Returns
     -------
     _      : array
@@ -133,8 +134,8 @@ def manhattan_median(points):
     """
     Find manhattan median of a point array.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     points  : arraylike
               (n,2), (x,y) coordinates of a series of event points.
 
@@ -155,8 +156,8 @@ def std_distance(points):
     """
     Calculate standard distance of a point array.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     points  : arraylike
               (n,2), (x,y) coordinates of a series of event points.
 
@@ -176,8 +177,8 @@ def ellipse(points):
     """
     Calculate parameters of standard deviational ellipse for a point pattern.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     points : arraylike
              (n,2), (x,y) coordinates of a series of event points.
 
@@ -190,6 +191,8 @@ def ellipse(points):
     theta  : float
              clockwise rotation angle of the ellipse.
 
+    Notes
+    -----
     Implements approach from:
 
     https://www.icpsr.umich.edu/CrimeStat/files/CrimeStatChapter.4.pdf
@@ -219,8 +222,8 @@ def dtot(coord, points):
     """
     Sum of Euclidean distances between event points and a selected point.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     coord   : arraylike
               (x,y) coordinates of a point.
     points  : arraylike
@@ -242,8 +245,8 @@ def euclidean_median(points):
     """
     Calculate the Euclidean median for a point pattern.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     points: arraylike
             (n,2), (x,y) coordinates of a series of event points.
 

@@ -22,17 +22,16 @@ if sys.version_info[0] > 2:
 
 class PointPattern(object):
     """
-    Planar Point Pattern Class 2-D
+    Planar Point Pattern Class 2-D.
 
     Parameters
     ----------
-
     points:       array
                   (n,p), n points with p >= 2 attributes on each
                   point. Two attributes must comprise the spatial
                   coordinate pair. Default is that the first two
                   attributes are the x and y spatial coordinates.
-    window:       :py:class:`~.window.Window`
+    window:       :class:`.Window`
                   Bounding geometric object for the point pattern.
                   If not specified, window will be set to the minimum
                   bounding rectangle of the point pattern.
@@ -44,8 +43,7 @@ class PointPattern(object):
 
     Examples
     --------
-
-    >>> from pointpats.pointpattern import PointPattern
+    >>> from pointpats import PointPattern
     >>> points = [[66.22, 32.54], [22.52, 22.39], [31.01, 81.21],
     ...           [9.47, 31.02], [30.78, 60.10], [75.21, 58.93],
     ...           [79.26,  7.68], [8.23, 39.93], [98.73, 77.17],
@@ -109,6 +107,7 @@ class PointPattern(object):
 
         Examples
         --------
+        >>> from pointpats import PointPattern
         >>> points = [[1, 3], [4, 5], [0,0]]
         >>> pp = PointPattern(points)
         >>> len(pp)
@@ -123,6 +122,7 @@ class PointPattern(object):
 
         Examples
         --------
+        >>> from pointpats import PointPattern
         >>> points = [[1, 3], [4, 5], [0,0]]
         >>> pp = PointPattern(points)
         >>> [1, 3] in pp
@@ -151,6 +151,10 @@ class PointPattern(object):
     window = property(get_window, set_window)
 
     def summary(self):
+        '''
+        Description of the point pattern.
+        '''
+
         print('Point Pattern')
         print("{} points".format(self.n))
         print("Bounding rectangle [({},{}), ({},{})]".format(*self.mbb))
@@ -169,6 +173,8 @@ class PointPattern(object):
     def plot(self, window=False, title="Point Pattern", hull=False,
              get_ax=False):
         """
+        Plot function for a point pattern.
+
         Parameters
         ----------
         window  : boolean
@@ -181,6 +187,7 @@ class PointPattern(object):
                   pattern. If not, don't plot convex hull.
         get_ax  : boolean
                   If get_ax is True, return the current plot ax.
+                  
         Returns
         -------
         ax      : matplotlib.axes._subplots.AxesSubplot
@@ -441,6 +448,7 @@ class PointPattern(object):
 
         Examples
         --------
+        >>> from pointpats import PointPattern
         >>> points = [[1.2, 2.1], [1.2, 2.1], [0, 1], [1, 2]]
         >>> pp = PointPattern(points)
         >>> pp.unique().df
@@ -471,6 +479,7 @@ class PointPattern(object):
 
         Examples
         --------
+        >>> from pointpats import PointPattern
         >>> points1 = [[1, 3], [4, 5], [0, 0]]
         >>> points2 = [[5, 6], [1, 4], [0, 0]]
         >>> pp1 = PointPattern(points1)

@@ -147,8 +147,8 @@ class PointProcess(object):
 
 class PoissonPointProcess(PointProcess):
     """
-    Poisson point process including N-conditioned CSR process and
-    lambda-conditioned CSR process.
+    Poisson point process including :math:`N`-conditioned CSR process and
+    :math:`\lambda`-conditioned CSR process.
 
     Parameters
     ----------
@@ -160,9 +160,9 @@ class PoissonPointProcess(PointProcess):
     samples       : list
                     Number of realizations.
     conditioning  : bool
-                    If True, use the lambda-conditioned CSR process,
+                    If True, use the :math:`\lambda`-conditioned CSR process,
                     number of events would vary across realizations;
-                    if False, use the N-conditioned CSR process.
+                    if False, use the :math:`N`-conditioned CSR process.
     asPP          : bool
                     Control the data type of value in the "realizations"
                     dictionary. If True, the data type is point
@@ -192,21 +192,25 @@ class PoissonPointProcess(PointProcess):
     --------
     >>> import pysal.lib as ps
     >>> import numpy as np
-    >>> from pointpats.window import Window, poly_from_bbox
+    >>> from pointpats import Window
     >>> from pysal.lib.cg import shapely_ext
 
     Open the virginia polygon shapefile
-    >>> va = ps.open(ps.examples.get_path("virginia.shp"))
+
+    >>> va = ps.io.open(ps.examples.get_path("virginia.shp"))
 
     Create the exterior polygons for VA from the union of the county shapes
+
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
 
     Create window from virginia state boundary
+
     >>> window = Window(state.parts)
 
-    1. Simulate a N-conditioned csr process in the same window (10
+    1. Simulate a :math:`N`-conditioned csr process in the same window (10
     points, 2 realizations)
+
     >>> np.random.seed(5)
     >>> samples1 = PoissonPointProcess(window, 10, 2, conditioning=False, asPP=False)
     >>> samples1.realizations[0] # the first realized event points
@@ -221,8 +225,9 @@ class PoissonPointProcess(PointProcess):
            [-76.33475868,  36.62635347],
            [-79.71621808,  37.27396618]])
 
-    2. Simulate a lambda-conditioned csr process in the same window (10
+    2. Simulate a :math:`\lambda`-conditioned csr process in the same window (10
     points, 2 realizations)
+
     >>> np.random.seed(5)
     >>> samples2 = PoissonPointProcess(window, 10, 2, conditioning=True, asPP=True)
     >>> samples2.realizations[0].n # the size of first realized point pattern
@@ -280,12 +285,13 @@ class PoissonPointProcess(PointProcess):
 class PoissonClusterPointProcess(PointProcess):
     """
     Poisson cluster point process (Neyman Scott).
-    Two stages: 1. parent CSR process: N-conditioned or
-                   lambda-conditioned. If parent events follow a
-                   lambda-conditioned CSR process, the number of
-                   parent events varies across realizations.
-                2. child process: fixed number of points in circle
-                   centered on each parent.
+    Two stages: 
+    1. parent CSR process: :math:`N`-conditioned or 
+    :math:`\lambda`-conditioned. If parent events follow a 
+    :math:`\lambda`-conditioned CSR process, 
+    the number of parent events varies across realizations.
+    2. child process: fixed number of points in circle centered 
+    on each parent.
 
     Parameters
     ----------
@@ -306,10 +312,10 @@ class PoissonClusterPointProcess(PointProcess):
                     pattern as defined in pointpattern.py; if False,
                     the data type is an two-dimensional array.
     conditioning  : bool
-                    If True, use the lambda-conditioned CSR process
+                    If True, use the :math:`lambda`-conditioned CSR process
                     for parent events, leading to varied number of
                     parent events across realizations;
-                    if False, use the N-conditioned CSR process.
+                    if False, use the :math:`N`-conditioned CSR process.
 
     Attributes
     ----------
@@ -341,22 +347,26 @@ class PoissonClusterPointProcess(PointProcess):
     --------
     >>> import pysal.lib as ps
     >>> import numpy as np
-    >>> from pointpats.window import Window, poly_from_bbox
+    >>> from pointpats import Window
     >>> from pysal.lib.cg import shapely_ext
 
     Open the virginia polygon shapefile
-    >>> va = ps.open(ps.examples.get_path("virginia.shp"))
+
+    >>> va = ps.io.open(ps.examples.get_path("virginia.shp"))
 
     Create the exterior polygons for VA from the union of the county shapes
+
     >>> polys = [shp for shp in va]
     >>> state = shapely_ext.cascaded_union(polys)
 
     Create window from virginia state boundary
+
     >>> window = Window(state.parts)
 
     1. Simulate a Poisson cluster process of size 200 with 10 parents
     and 20 children within 0.5 units of each parent
-    (parent events:  $N$-conditioned CSR)
+    (parent events:  :math:`N`-conditioned CSR)
+    
     >>> np.random.seed(10)
     >>> samples1 = PoissonClusterPointProcess(window, 200, 10, 0.5, 1, asPP=True, conditioning=False)
     >>> samples1.parameters # number of events for the realization
@@ -368,7 +378,8 @@ class PoissonClusterPointProcess(PointProcess):
 
     2. Simulate a Poisson cluster process of size 200 with 10 parents
     and 20 children within 0.5 units of each parent
-    (parent events:  $\lambda$-conditioned CSR)
+    (parent events:  :math:`\lambda`-conditioned CSR)
+
     >>> np.random.seed(10)
     >>> samples2 = PoissonClusterPointProcess(window, 200, 10, 0.5, 1, asPP=True, conditioning=True)
     >>> samples2.parameters # number of events for the realization might not be equal to 200

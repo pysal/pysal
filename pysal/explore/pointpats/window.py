@@ -6,6 +6,7 @@ __author__ = "Serge Rey sjsrey@gmail.com"
 
 import pysal.lib as ps
 import numpy as np
+__all__ = ["as_window", "poly_from_bbox", "to_ccf", "Window"]
 
 
 def poly_from_bbox(bbox):
@@ -21,23 +22,36 @@ def to_ccf(poly):
 
 
 def as_window(pysal_polygon):
+    """
+    Convert a pysal.lib polygon to a Window.
+
+    Parameters
+    ----------
+    pysal_polygon: pysal.lib.cg.shapes.Polygon
+                   pysal.lib Polygon instance.
+
+    Returns
+    -------
+    Window
+                   A Window instance.
+    """
+
     if pysal_polygon.holes == [[]]:
         return Window(pysal_polygon.parts)
     else:
         return Window(pysal_polygon.parts, pysal_polygon.holes)
 
 
-class Window(ps.cg.shapes.Polygon):
+class Window(ps.cg.Polygon):
     """
     Geometric container for point patterns.
 
     A window is used to define the area over which the pattern is observed.
     This area is used in estimating the intensity of the point pattern.
-    See :py:attr:`~.pointpattern.PointPattern.lambda_window`.
+    See :attr:`PointPattern.lambda_window`.
 
     Parameters
     ----------
-
     parts: sequence
            A sequence of rings which bound the positive space  point
            pattern.

@@ -1,13 +1,6 @@
 """
 Distance statistics for planar point patterns
 
-
-TODO
-
-- documentation
-- testing
-
-
 """
 __author__ = "Serge Rey sjsrey@gmail.com"
 __all__ = ['DStatistic', 'G', 'F', 'J', 'K', 'L', 'Envelopes', 'Genv', 'Fenv', 'Jenv', 'Kenv', 'Lenv']
@@ -66,7 +59,7 @@ class G(DStatistic):
 
     Parameters
     ----------
-    pp         : :py:class:`~.pointpattern.PointPattern`
+    pp         : :class:`.PointPattern`
                  Point Pattern instance.
     intervals  : int
                  The length of distance domain sequence.
@@ -121,7 +114,7 @@ class F(DStatistic):
 
     Parameters
     ----------
-    pp         : :py:class:`~.pointpattern.PointPattern`
+    pp         : :class:`.PointPattern`
                  Point Pattern instance.
     n          : int
                  Number of empty space points (random points).
@@ -173,11 +166,11 @@ class F(DStatistic):
 
 class J(DStatistic):
     """
-    Estimates the J function for a point pattern [VanLieshout1996]_
+    Estimates the J function for a point pattern :cite:`VanLieshout1996`
 
     Parameters
     ----------
-    pp         : :py:class:`~.pointpattern.PointPattern`
+    pp         : :class:`.PointPattern`
                  Point Pattern instance.
     n          : int
                  Number of empty space points (random points).
@@ -231,7 +224,7 @@ class K(DStatistic):
 
     Parameters
     ----------
-    pp         : :py:class:`~.pointpattern.PointPattern`
+    pp         : :class:`.PointPattern`
                  Point Pattern instance.
     intervals  : int
                  The length of distance domain sequence.
@@ -265,7 +258,7 @@ class L(DStatistic):
 
     Parameters
     ----------
-    pp         : :py:class:`~.pointpattern.PointPattern`
+    pp         : :class:`.PointPattern`
                  Point Pattern instance.
     intervals  : int
                  The length of distance domain sequence.
@@ -305,7 +298,7 @@ def _g(pp, intervals=10, dmin=0.0, dmax=None, d=None):
 
     Parameters
     ----------
-    pp       : :py:class:`~.pointpattern.PointPattern`
+    pp       : :class:`.PointPattern`
                Point Pattern instance.
     intevals : int
                Number of intervals to evaluate F over.
@@ -348,7 +341,7 @@ def _f(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
 
     Parameters
     ----------
-    pp       : :py:class:`~.pointpattern.PointPattern`
+    pp       : :class:`.PointPattern`
                Point Pattern instance.
     n        : int
                Number of empty space points (random points).
@@ -372,7 +365,7 @@ def _f(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
 
     Notes
     -----
-    See :class:`F`
+    See :class:`.F`
 
     """
 
@@ -401,7 +394,7 @@ def _j(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
 
     Parameters
     ----------
-    pp       : :py:class:`~.pointpattern.PointPattern`
+    pp       : :class:`.PointPattern`
                Point Pattern instance.
     n        : int
                Number of empty space points (random points).
@@ -425,7 +418,7 @@ def _j(pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None):
 
     Notes
     -----
-    See :class:`J`
+    See :class:`.J`
 
     """
 
@@ -446,7 +439,7 @@ def _k(pp, intervals=10, dmin=0.0, dmax=None, d=None):
 
     Parameters
     ----------
-    pp       : :py:class:`~.pointpattern.PointPattern`
+    pp       : :class:`.PointPattern`
                Point Pattern instance.
     n        : int
                Number of empty space points (random points).
@@ -470,7 +463,7 @@ def _k(pp, intervals=10, dmin=0.0, dmax=None, d=None):
 
     Notes
     -----
-    See :class:`K`
+    See :class:`.K`
 
     """
 
@@ -493,7 +486,7 @@ def _l(pp, intervals=10, dmin=0.0, dmax=None, d=None):
 
     Parameters
     ----------
-    pp       : :py:class:`~.pointpattern.PointPattern`
+    pp       : :class:`.PointPattern`
                Point Pattern instance.
     n        : int
                Number of empty space points (random points).
@@ -517,7 +510,7 @@ def _l(pp, intervals=10, dmin=0.0, dmax=None, d=None):
 
     Notes
     -----
-    See :class:`L`
+    See :class:`.L`
 
     """
 
@@ -528,11 +521,11 @@ def _l(pp, intervals=10, dmin=0.0, dmax=None, d=None):
 
 class Envelopes(object):
     """
-    Abstrace base class for simulation envelopes.
+    Abstract base class for simulation envelopes.
 
     Parameters
     ----------
-    pp          : :py:class:`~.pointpattern.PointPattern`
+    pp          : :class:`.PointPattern`
                   Point Pattern instance.
     intervals   : int
                   The length of distance domain sequence. Default is 10.
@@ -546,8 +539,7 @@ class Envelopes(object):
     pct         : float
                   1-alpha, alpha is the significance level. Default is 0.05,
                   1-alpha is the confidence level for the envelope.
-
-    realizations: :py:class:`~.process.PointProcess`
+    realizations: :class:`.PointProcess`
                   Point process instance with more than 1 realizations.
 
     Attributes
@@ -609,7 +601,7 @@ class Envelopes(object):
         self.mean = res.mean(axis=0)
 
     def calc(self, *args, **kwargs):
-        print('implment in subclass')
+        print('implement in subclass')
 
     def plot(self):
         # assuming mpl
@@ -630,7 +622,7 @@ class Genv(Envelopes):
 
     Parameters
     ----------
-    pp          : :py:class:`~.pointpattern.PointPattern`
+    pp          : :class:`.PointPattern`
                   Point Pattern instance.
     intervals   : int
                   The length of distance domain sequence. Default is 10.
@@ -645,7 +637,7 @@ class Genv(Envelopes):
     pct         : float
                   1-alpha, alpha is the significance level. Default is 0.05,
                   which means 95% confidence level for the envelopes.
-    realizations: :py:class:`~.process.PointProcess`
+    realizations: :class:`.PointProcess`
                   Point process instance with more than 1 realizations.
 
     Attributes
@@ -669,18 +661,18 @@ class Genv(Envelopes):
 
     Examples
     --------
-    >>> import pysal.lib as ps
-    >>> from pointpats.distance_statistics import Genv
-    >>> from pysal.lib.cg import shapely_ext
-    >>> from pointpats.process import PoissonPointProcess
-    >>> from pointpats.window import Window
-    >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
-    >>> polys = [shp for shp in va]
-    >>> state = shapely_ext.cascaded_union(polys)
-    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, \
-                                 asPP=True).realizations[0]
-    >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
-    >>> genv_bb = Genv(pp, realizations=csrs)
+    .. plot::
+
+       >>> import pysal.lib as ps
+       >>> from pointpats import Genv, PoissonPointProcess, Window
+       >>> from pysal.lib.cg import shapely_ext
+       >>> va = ps.io.open(ps.examples.get_path("vautm17n.shp"))
+       >>> polys = [shp for shp in va]
+       >>> state = shapely_ext.cascaded_union(polys)
+       >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, asPP=True).realizations[0]
+       >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
+       >>> genv_bb = Genv(pp, realizations=csrs)
+       >>> genv_bb.plot()
 
     """
 
@@ -706,7 +698,7 @@ class Fenv(Envelopes):
 
     Parameters
     ----------
-    pp          : :py:class:`~.pointpattern.PointPattern`
+    pp          : :class:`.PointPattern`
                   Point Pattern instance.
     n           : int
                   Number of empty space points (random points).
@@ -723,8 +715,7 @@ class Fenv(Envelopes):
     pct         : float
                   1-alpha, alpha is the significance level. Default is 0.05,
                   which means 95% confidence level for the envelopes.
-
-    realizations: :py:class:`~.process.PointProcess`
+    realizations: :class:`.PointProcess`
                   Point process instance with more than 1 realizations.
 
     Attributes
@@ -748,19 +739,18 @@ class Fenv(Envelopes):
 
     Examples
     --------
-    >>> import pysal.lib as ps
-    >>> from pointpats.distance_statistics import Fenv
-    >>> from pysal.lib.cg import shapely_ext
-    >>> from pointpats.process import PoissonPointProcess
-    >>> from pointpats.window import Window
-    >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
-    >>> polys = [shp for shp in va]
-    >>> state = shapely_ext.cascaded_union(polys)
-    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1,  \
-                                 asPP=True).realizations[0]
-    >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
-    >>> fenv = Fenv(pp, realizations=csrs)
-    >>> fenv.plot()
+    .. plot::
+
+       >>> import pysal.lib as ps
+       >>> from pysal.lib.cg import shapely_ext
+       >>> from pointpats import PoissonPointProcess,Window,Fenv
+       >>> va = ps.io.open(ps.examples.get_path("vautm17n.shp"))
+       >>> polys = [shp for shp in va]
+       >>> state = shapely_ext.cascaded_union(polys)
+       >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, asPP=True).realizations[0]
+       >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
+       >>> fenv = Fenv(pp, realizations=csrs)
+       >>> fenv.plot()
 
     """
     def __init__(self, pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None,
@@ -786,7 +776,7 @@ class Jenv(Envelopes):
 
     Parameters
     ----------
-    pp          : :py:class:`~.pointpattern.PointPattern`
+    pp          : :class:`.PointPattern`
                   Point Pattern instance.
     n           : int
                   Number of empty space points (random points).
@@ -803,8 +793,7 @@ class Jenv(Envelopes):
     pct         : float
                   1-alpha, alpha is the significance level. Default is 0.05,
                   which means 95% confidence level for the envelopes.
-
-    realizations: :py:class:`~.process.PointProcess`
+    realizations: :class:`.PointProcess`
                   Point process instance with more than 1 realizations.
 
     Attributes
@@ -828,19 +817,18 @@ class Jenv(Envelopes):
 
     Examples
     --------
-    >>> import pysal.lib as ps
-    >>> from pointpats.distance_statistics import Jenv
-    >>> from pysal.lib.cg import shapely_ext
-    >>> from pointpats.process import PoissonPointProcess
-    >>> from pointpats.window import Window
-    >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
-    >>> polys = [shp for shp in va]
-    >>> state = shapely_ext.cascaded_union(polys)
-    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, \
-                                 asPP=True).realizations[0]
-    >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
-    >>> jenv = Jenv(pp, realizations=csrs)
-    >>> jenv.plot()
+    .. plot::
+
+       >>> import pysal.lib as ps
+       >>> from pointpats import Jenv, PoissonPointProcess, Window
+       >>> from pysal.lib.cg import shapely_ext
+       >>> va = ps.io.open(ps.examples.get_path("vautm17n.shp"))
+       >>> polys = [shp for shp in va]
+       >>> state = shapely_ext.cascaded_union(polys)
+       >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, asPP=True).realizations[0]
+       >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
+       >>> jenv = Jenv(pp, realizations=csrs)
+       >>> jenv.plot()
 
     """
     def __init__(self, pp, n=100, intervals=10, dmin=0.0, dmax=None, d=None,
@@ -866,7 +854,7 @@ class Kenv(Envelopes):
 
     Parameters
     ----------
-    pp          : :py:class:`~.pointpattern.PointPattern`
+    pp          : :class:`.PointPattern`
                   Point Pattern instance.
     intervals   : int
                   The length of distance domain sequence. Default is 10.
@@ -881,7 +869,7 @@ class Kenv(Envelopes):
     pct         : float
                   1-alpha, alpha is the significance level. Default is 0.05,
                   which means 95% confidence level for the envelope.
-    realizations: :py:class:`~.process.PointProcess`
+    realizations: :class:`.PointProcess`
                   Point process instance with more than 1 realizations.
 
     Attributes
@@ -905,18 +893,18 @@ class Kenv(Envelopes):
 
     Examples
     --------
-    >>> import pysal.lib as ps
-    >>> from pointpats.distance_statistics import Kenv
-    >>> from pysal.lib.cg import shapely_ext
-    >>> from pointpats.process import PoissonPointProcess
-    >>> from pointpats.window import Window
-    >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
-    >>> polys = [shp for shp in va]
-    >>> state = shapely_ext.cascaded_union(polys)
-    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, \
-                                 asPP=True).realizations[0]
-    >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
-    >>> kenv = Kenv(pp, realizations=csrs)
+    .. plot::
+
+       >>> import pysal.lib as ps
+       >>> from pointpats import Kenv, PoissonPointProcess, Window
+       >>> from pysal.lib.cg import shapely_ext
+       >>> va = ps.io.open(ps.examples.get_path("vautm17n.shp"))
+       >>> polys = [shp for shp in va]
+       >>> state = shapely_ext.cascaded_union(polys)
+       >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, asPP=True).realizations[0]
+       >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
+       >>> kenv = Kenv(pp, realizations=csrs)
+       >>> kenv.plot()
 
     """
     def __init__(self, pp, intervals=10, dmin=0.0, dmax=None, d=None,
@@ -941,7 +929,7 @@ class Lenv(Envelopes):
 
     Parameters
     ----------
-    pp          : :py:class:`~.pointpattern.PointPattern`
+    pp          : :class:`.PointPattern`
                   Point Pattern instance.
     intervals   : int
                   The length of distance domain sequence. Default is 10.
@@ -956,7 +944,7 @@ class Lenv(Envelopes):
     pct         : float
                   1-alpha, alpha is the significance level. Default is 0.05,
                   which means 95% confidence level for the envelopes.
-    realizations: :py:class:`~.process.PointProcess`
+    realizations: :class:`.PointProcess`
                   Point process instance with more than 1 realizations.
 
     Attributes
@@ -980,18 +968,18 @@ class Lenv(Envelopes):
 
     Examples
     --------
-    >>> import pysal.lib as ps
-    >>> from pointpats.distance_statistics import Lenv
-    >>> from pysal.lib.cg import shapely_ext
-    >>> from pointpats.process import PoissonPointProcess
-    >>> from pointpats.window import Window
-    >>> va = ps.open(ps.examples.get_path("vautm17n.shp"))
-    >>> polys = [shp for shp in va]
-    >>> state = shapely_ext.cascaded_union(polys)
-    >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, \
-                                 asPP=True).realizations[0]
-    >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
-    >>> lenv = Lenv(pp, realizations=csrs)
+    .. plot::
+
+       >>> import pysal.lib as ps
+       >>> from pointpats import Lenv, PoissonPointProcess, Window
+       >>> from pysal.lib.cg import shapely_ext
+       >>> va = ps.io.open(ps.examples.get_path("vautm17n.shp"))
+       >>> polys = [shp for shp in va]
+       >>> state = shapely_ext.cascaded_union(polys)
+       >>> pp = PoissonPointProcess(Window(state.parts), 100, 1, asPP=True).realizations[0]
+       >>> csrs = PoissonPointProcess(pp.window, 100, 100, asPP=True)
+       >>> lenv = Lenv(pp, realizations=csrs)
+       >>> lenv.plot()
 
     """
 
