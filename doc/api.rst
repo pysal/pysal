@@ -502,16 +502,16 @@ spaghetti
 .. autosummary::
    :toctree: generated/
    
-   spaghetti.spaghetti.compute_length
-   spaghetti.spaghetti.dijkstra
-   spaghetti.spaghetti.dijkstra_mp
-   spaghetti.spaghetti.generatetree
-   spaghetti.spaghetti.get_neighbor_distances
-   spaghetti.spaghetti.snap_points_on_segments
-   spaghetti.spaghetti.squared_distance_point_segment
-   spaghetti.spaghetti.ffunction
-   spaghetti.spaghetti.gfunction
-   spaghetti.spaghetti.kfunction
+   spaghetti.compute_length
+   spaghetti.dijkstra
+   spaghetti.dijkstra_mp
+   spaghetti.generatetree
+   spaghetti.get_neighbor_distances
+   spaghetti.snap_points_on_segments
+   spaghetti.squared_distance_point_segment
+   spaghetti.ffunction
+   spaghetti.gfunction
+   spaghetti.kfunction
 
 
 .. currentmodule:: pysal.viz
