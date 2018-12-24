@@ -8,8 +8,9 @@ This is the class and function reference of pysal.
 .. currentmodule:: pysal.lib
 
 
-lib: PySAL Core 
-===============
+:mod:`pysal.lib`: PySAL Core 
+=============================
+
 
 Spatial Weights
 ---------------
@@ -17,16 +18,16 @@ Spatial Weights
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.weights.W
+   weights.W
 
 Distance Weights
 ++++++++++++++++
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.weights.DistanceBand
-   pysal.lib.weights.Kernel
-   pysal.lib.weights.KNN
+   weights.DistanceBand
+   weights.Kernel
+   weights.KNN
 
 Contiguity Weights
 ++++++++++++++++++
@@ -34,10 +35,10 @@ Contiguity Weights
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.weights.Queen
-   pysal.lib.weights.Rook
-   pysal.lib.weights.Voronoi
-   pysal.lib.weights.W
+   weights.Queen
+   weights.Rook
+   weights.Voronoi
+   weights.W
 
 spint Weights
 +++++++++++++
@@ -45,11 +46,11 @@ spint Weights
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.weights.WSP
-   pysal.lib.weights.netW
-   pysal.lib.weights.mat2L
-   pysal.lib.weights.ODW
-   pysal.lib.weights.vecW
+   weights.WSP
+   weights.netW
+   weights.mat2L
+   weights.ODW
+   weights.vecW
 
 
 Weights Util Classes and Functions
@@ -58,18 +59,18 @@ Weights Util Classes and Functions
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.weights.block_weights
-   pysal.lib.weights.lat2W
-   pysal.lib.weights.comb
-   pysal.lib.weights.order
-   pysal.lib.weights.higher_order
-   pysal.lib.weights.shimbel
-   pysal.lib.weights.remap_ids
-   pysal.lib.weights.full2W
-   pysal.lib.weights.full
-   pysal.lib.weights.WSP2W
-   pysal.lib.weights.get_ids
-   pysal.lib.weights.get_points_array_from_shapefile
+   weights.block_weights
+   weights.lat2W
+   weights.comb
+   weights.order
+   weights.higher_order
+   weights.shimbel
+   weights.remap_ids
+   weights.full2W
+   weights.full
+   weights.WSP2W
+   weights.get_ids
+   weights.get_points_array_from_shapefile
 
 Weights user Classes and Functions
 ++++++++++++++++++++++++++++++++++
@@ -77,17 +78,17 @@ Weights user Classes and Functions
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.weights.min_threshold_distance
-   pysal.lib.weights.lat2SW
-   pysal.lib.weights.w_local_cluster
-   pysal.lib.weights.higher_order_sp
-   pysal.lib.weights.hexLat2W
-   pysal.lib.weights.attach_islands
-   pysal.lib.weights.nonplanar_neighbors
-   pysal.lib.weights.fuzzy_contiguity
-   pysal.lib.weights.min_threshold_dist_from_shapefile
-   pysal.lib.weights.build_lattice_shapefile
-   pysal.lib.weights.spw_from_gal
+   weights.min_threshold_distance
+   weights.lat2SW
+   weights.w_local_cluster
+   weights.higher_order_sp
+   weights.hexLat2W
+   weights.attach_islands
+   weights.nonplanar_neighbors
+   weights.fuzzy_contiguity
+   weights.min_threshold_dist_from_shapefile
+   weights.build_lattice_shapefile
+   weights.spw_from_gal
 
 
 Set Theoretic Weights
@@ -96,12 +97,12 @@ Set Theoretic Weights
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.weights.w_union
-   pysal.lib.weights.w_intersection
-   pysal.lib.weights.w_difference
-   pysal.lib.weights.w_symmetric_difference
-   pysal.lib.weights.w_subset
-   pysal.lib.weights.w_clip
+   weights.w_union
+   weights.w_intersection
+   weights.w_difference
+   weights.w_symmetric_difference
+   weights.w_subset
+   weights.w_clip
 
 
 Spatial Lag
@@ -110,8 +111,8 @@ Spatial Lag
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.weights.lag_spatial
-   pysal.lib.weights.lag_categorical
+   weights.lag_spatial
+   weights.lag_categorical
           
 
 cg: Computational Geometry
@@ -123,8 +124,8 @@ alpha_shapes
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.cg.alpha_shape
-   pysal.lib.cg.alpha_shape_auto
+   cg.alpha_shape
+   cg.alpha_shape_auto
 
 voronoi
 +++++++
@@ -132,7 +133,7 @@ voronoi
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.cg.voronoi_frames
+   cg.voronoi_frames
 
 
 sphere
@@ -141,20 +142,20 @@ sphere
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.cg.RADIUS_EARTH_KM
-   pysal.lib.cg.RADIUS_EARTH_MILES
-   pysal.lib.cg.arcdist
-   pysal.lib.cg.arcdist2linear
-   pysal.lib.cg.brute_knn
-   pysal.lib.cg.fast_knn
-   pysal.lib.cg.fast_threshold
-   pysal.lib.cg.linear2arcdist
-   pysal.lib.cg.toLngLat
-   pysal.lib.cg.toXYZ
-   pysal.lib.cg.lonlat
-   pysal.lib.cg.harcdist
-   pysal.lib.cg.geointerpolate
-   pysal.lib.cg.geogrid
+   cg.RADIUS_EARTH_KM
+   cg.RADIUS_EARTH_MILES
+   cg.arcdist
+   cg.arcdist2linear
+   cg.brute_knn
+   cg.fast_knn
+   cg.fast_threshold
+   cg.linear2arcdist
+   cg.toLngLat
+   cg.toXYZ
+   cg.lonlat
+   cg.harcdist
+   cg.geointerpolate
+   cg.geogrid
 
 shapes
 ++++++
@@ -162,14 +163,14 @@ shapes
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.cg.Point
-   pysal.lib.cg.LineSegment
-   pysal.lib.cg.Line
-   pysal.lib.cg.Ray
-   pysal.lib.cg.Chain
-   pysal.lib.cg.Polygon
-   pysal.lib.cg.Rectangle
-   pysal.lib.cg.asShape
+   cg.Point
+   cg.LineSegment
+   cg.Line
+   cg.Ray
+   cg.Chain
+   cg.Polygon
+   cg.Rectangle
+   cg.asShape
 
 standalone
 ++++++++++
@@ -177,25 +178,25 @@ standalone
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.cg.bbcommon
-   pysal.lib.cg.get_bounding_box
-   pysal.lib.cg.get_angle_between
-   pysal.lib.cg.is_collinear
-   pysal.lib.cg.get_segments_intersect
-   pysal.lib.cg.get_segment_point_intersect
-   pysal.lib.cg.get_polygon_point_intersect
-   pysal.lib.cg.get_rectangle_point_intersect
-   pysal.lib.cg.get_ray_segment_intersect
-   pysal.lib.cg.get_rectangle_rectangle_intersection
-   pysal.lib.cg.get_polygon_point_dist
-   pysal.lib.cg.get_points_dist
-   pysal.lib.cg.get_segment_point_dist
-   pysal.lib.cg.get_point_at_angle_and_dist
-   pysal.lib.cg.convex_hull
-   pysal.lib.cg.is_clockwise
-   pysal.lib.cg.point_touches_rectangle
-   pysal.lib.cg.get_shared_segments
-   pysal.lib.cg.distance_matrix
+   cg.bbcommon
+   cg.get_bounding_box
+   cg.get_angle_between
+   cg.is_collinear
+   cg.get_segments_intersect
+   cg.get_segment_point_intersect
+   cg.get_polygon_point_intersect
+   cg.get_rectangle_point_intersect
+   cg.get_ray_segment_intersect
+   cg.get_rectangle_rectangle_intersection
+   cg.get_polygon_point_dist
+   cg.get_points_dist
+   cg.get_segment_point_dist
+   cg.get_point_at_angle_and_dist
+   cg.convex_hull
+   cg.is_clockwise
+   cg.point_touches_rectangle
+   cg.get_shared_segments
+   cg.distance_matrix
 
 
 locators
@@ -204,9 +205,9 @@ locators
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.cg.Grid
-   pysal.lib.cg.PointLocator
-   pysal.lib.cg.PolygonLocator
+   cg.Grid
+   cg.PointLocator
+   cg.PolygonLocator
 
 
 kdtree
@@ -215,7 +216,7 @@ kdtree
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.cg.KDTree
+   cg.KDTree
 
 
 io
@@ -224,8 +225,8 @@ io
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.io.open
-   pysal.lib.io.fileio.FileIO
+   io.open
+   io.fileio.FileIO
 
 
 examples
@@ -235,171 +236,165 @@ examples
 .. autosummary::
    :toctree: generated/
 
-   pysal.lib.examples.available
-   pysal.lib.examples.explain
-   pysal.lib.examples.get_path
+   examples.available
+   examples.explain
+   examples.get_path
 
+.. currentmodule:: pysal.explore
 
 :mod:`pysal.explore`: Exploratory spatial data analysis
 =======================================================
 
-.. automodule:: pysal.explore
-    :no-members:
-    :no-inherited-members:
-
 pysal.explore.esda: Spatial Autocorrelation Analysis
-++++++++++++++++++++++++++++++++++++++
-.. currentmodule:: pysal.explore.esda
+----------------------------------------------------
 
+.. autosummary::
+   :toctree: /generated
 
 Gamma Statistic
----------------
++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-   pysal.explore.esda.Gamma
+   esda.Gamma
 
 .. _geary_api:
 
 Geary Statistic
----------------
++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-   pysal.explore.esda.Geary
+   esda.Geary
 
 
 .. _getis_api:
 
 Getis-Ord Statistics
---------------------
+++++++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-   pysal.explore.esda.G
-   pysal.explore.esda.G_Local
+   esda.G
+   esda.G_Local
 
 .. _join_api:
 
 Join Count Statistics
----------------------
++++++++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-   pysal.explore.esda.Join_Counts
+   esda.Join_Counts
 
 Moran Statistics
-----------------
+++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-   pysal.explore.esda.Moran
-   pysal.explore.esda.Moran_BV
-   pysal.explore.esda.Moran_BV_matrix
-   pysal.explore.esda.Moran_Local
-   pysal.explore.esda.Moran_Local_BV
-   pysal.explore.esda.Moran_Rate
-   pysal.explore.esda.Moran_Local_Rate
+   esda.Moran
+   esda.Moran_BV
+   esda.Moran_BV_matrix
+   esda.Moran_Local
+   esda.Moran_Local_BV
+   esda.Moran_Rate
+   esda.Moran_Local_Rate
 
 
 
 pysal.explore.giddy: Geospatial Distribution Dynamics
-+++++++++++++++++++++++++++++++++++++++
-.. currentmodule:: pysal.explore.giddy
+-----------------------------------------------------
 
 
 .. _markov_api:
 
 Markov Methods
---------------
+++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-   pysal.explore.giddy.markov.Markov
-   pysal.explore.giddy.markov.Spatial_Markov
-   pysal.explore.giddy.markov.LISA_Markov
-   pysal.explore.giddy.markov.kullback
-   pysal.explore.giddy.markov.prais
-   pysal.explore.giddy.markov.homogeneity
-   pysal.explore.giddy.ergodic.steady_state
-   pysal.explore.giddy.ergodic.fmpt
-   pysal.explore.giddy.ergodic.var_fmpt
+   giddy.markov.Markov
+   giddy.markov.Spatial_Markov
+   giddy.markov.LISA_Markov
+   giddy.markov.kullback
+   giddy.markov.prais
+   giddy.markov.homogeneity
+   giddy.ergodic.steady_state
+   giddy.ergodic.fmpt
+   giddy.ergodic.var_fmpt
 
 
 .. _directional_api:
 
 Directional LISA
-----------------
+++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-   pysal.explore.giddy.directional.Rose
+   giddy.directional.Rose
 
 
 .. _mobility_api:
 
 Economic Mobility Indices
--------------------------
++++++++++++++++++++++++++
 .. autosummary::
    :toctree: generated/
 
-    pysal.explore.giddy.mobility.markov_mobility
+    giddy.mobility.markov_mobility
 
 .. _rank_api:
 
 Exchange Mobility Methods
--------------------------
++++++++++++++++++++++++++
 .. autosummary::
    :toctree: generated/
 
-    rank.Theta
-    rank.Tau
-    rank.SpatialTau
-    rank.Tau_Local
-    rank.Tau_Local_Neighbor
-    rank.Tau_Local_Neighborhood
-    rank.Tau_Regional
+    giddy.rank.Theta
+    giddy.rank.Tau
+    giddy.rank.SpatialTau
+    giddy.rank.Tau_Local
+    giddy.rank.Tau_Local_Neighbor
+    giddy.rank.Tau_Local_Neighborhood
+    giddy.rank.Tau_Regional
 
 
 pysal.explore.inequality: Spatial Inequality Analysis
-+++++++++++++++++++++++++
-.. currentmodule:: pysal.explore.inequality
+-----------------------------------------------------
 
  .. _inequality_api:
 
 Theil Inequality Measures
--------------------------
++++++++++++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-    pysal.explore.inequality.theil.Theil 
-    pysal.explore.inequality.theil.TheilD
-    pysal.explore.inequality.theil.TheilDSim
+    inequality.theil.Theil 
+    inequality.theil.TheilD
+    inequality.theil.TheilDSim
 
 
 Gini Inequality Measures
-------------------------
+++++++++++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-    pysal.explore.inequality.gini.Gini
-    pysal.explore.inequality.gini.Gini_Spatial
+    inequality.gini.Gini_Spatial
 
 
 
 
 pysal.explore.spaghetti: 
-+++++++++++++++++++++++++
-.. currentmodule:: pysal.explore.spaghetti
+-------------------------
 
 
 
@@ -407,130 +402,126 @@ pysal.explore.spaghetti:
 
 
 spaghetti.Network
------------------
++++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-   Network
-   Network.extractgraph
-   Network.contiguityweights
-   Network.distancebandweights
-   Network.snapobservations
-   Network.compute_distance_to_nodes
-   Network.compute_snap_dist
-   Network.count_per_edge
-   Network.simulate_observations
-   Network.enum_links_node
-   Network.node_distance_matrix
-   Network.allneighbordistances
-   Network.nearestneighbordistances
-   Network.NetworkF
-   Network.NetworkG
-   Network.NetworkK
-   Network.segment_edges
-   Network.savenetwork
-   Network.loadnetwork
+   spaghetti.Network
+   spaghetti.Network.extractgraph
+   spaghetti.Network.contiguityweights
+   spaghetti.Network.distancebandweights
+   spaghetti.Network.snapobservations
+   spaghetti.Network.compute_distance_to_nodes
+   spaghetti.Network.compute_snap_dist
+   spaghetti.Network.count_per_edge
+   spaghetti.Network.simulate_observations
+   spaghetti.Network.enum_links_node
+   spaghetti.Network.node_distance_matrix
+   spaghetti.Network.allneighbordistances
+   spaghetti.Network.nearestneighbordistances
+   spaghetti.Network.NetworkF
+   spaghetti.Network.NetworkG
+   spaghetti.Network.NetworkK
+   spaghetti.Network.segment_edges
+   spaghetti.Network.savenetwork
+   spaghetti.Network.loadnetwork
 
 
 spaghetti.NetworkBase
----------------------
++++++++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-   NetworkBase
-   NetworkBase.computeenvelope
-   NetworkBase.setbounds
-   NetworkBase.validatedistribution
+   spaghetti.NetworkBase
+   spaghetti.NetworkBase.computeenvelope
+   spaghetti.NetworkBase.setbounds
+   spaghetti.NetworkBase.validatedistribution
 
 
 spaghetti.NetworkF
----------------------
+++++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-   NetworkF
-   NetworkF.computeenvelope
-   NetworkF.setbounds
-   NetworkF.validatedistribution
-   NetworkF.computeobserved
-   NetworkF.computepermutations
+   spaghetti.NetworkF
+   spaghetti.NetworkF.computeenvelope
+   spaghetti.NetworkF.setbounds
+   spaghetti.NetworkF.validatedistribution
+   spaghetti.NetworkF.computeobserved
+   spaghetti.NetworkF.computepermutations
 
 spaghetti.NetworkG
----------------------
+++++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-   NetworkG
-   NetworkG.computeenvelope
-   NetworkG.setbounds
-   NetworkG.validatedistribution
-   NetworkG.computeobserved
-   NetworkG.computepermutations
+   spaghetti.NetworkG
+   spaghetti.NetworkG.computeenvelope
+   spaghetti.NetworkG.setbounds
+   spaghetti.NetworkG.validatedistribution
+   spaghetti.NetworkG.computeobserved
+   spaghetti.NetworkG.computepermutations
 
 spaghetti.NetworkK
----------------------
+++++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-   NetworkK
-   NetworkK.computeenvelope
-   NetworkK.setbounds
-   NetworkK.validatedistribution
-   NetworkK.computeobserved
-   NetworkK.computepermutations
+   spaghetti.NetworkK
+   spaghetti.NetworkK.computeenvelope
+   spaghetti.NetworkK.setbounds
+   spaghetti.NetworkK.validatedistribution
+   spaghetti.NetworkK.computeobserved
+   spaghetti.NetworkK.computepermutations
 
 spaghetti.PointPattern
-----------------------
+++++++++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
    
-   PointPattern
+   spaghetti.PointPattern
    
 
 spaghetti.SimulatedPointPattern
--------------------------------
++++++++++++++++++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
    
-   SimulatedPointPattern
+   spaghetti.SimulatedPointPattern
 
 spaghetti
--------------------------------
++++++++++
 
 .. autosummary::
    :toctree: generated/
    
-   spaghetti.compute_length
-   spaghetti.dijkstra
-   spaghetti.dijkstra_mp
-   spaghetti.generatetree
-   spaghetti.get_neighbor_distances
-   spaghetti.snap_points_on_segments
-   spaghetti.squared_distance_point_segment
-   spaghetti.ffunction
-   spaghetti.gfunction
-   spaghetti.kfunction
+   spaghetti.spaghetti.compute_length
+   spaghetti.spaghetti.dijkstra
+   spaghetti.spaghetti.dijkstra_mp
+   spaghetti.spaghetti.generatetree
+   spaghetti.spaghetti.get_neighbor_distances
+   spaghetti.spaghetti.snap_points_on_segments
+   spaghetti.spaghetti.squared_distance_point_segment
+   spaghetti.spaghetti.ffunction
+   spaghetti.spaghetti.gfunction
+   spaghetti.spaghetti.kfunction
 
 
+.. currentmodule:: pysal.viz
 
 :mod:`pysal.viz`: Geovisualization
-=======================================================
-
-.. automodule:: pysal.viz
-    :no-members:
-    :no-inherited-members:
+==================================
 
 
 pysal.viz.mapclassify: Choropleth map classification
-------------------------------------------------------------------
-.. currentmodule:: pysal.viz.mapclassify
+----------------------------------------------------
 
 .. _classifiers_api:
 
@@ -540,21 +531,21 @@ Classifiers
 .. autosummary::
    :toctree: generated/
 
-   pysal.viz.mapclassify.Box_Plot
-   pysal.viz.mapclassify.Equal_Interval
-   pysal.viz.mapclassify.Fisher_Jenks
-   pysal.viz.mapclassify.Fisher_Jenks_Sampled
-   pysal.viz.mapclassify.HeadTail_Breaks
-   pysal.viz.mapclassify.Jenks_Caspall
-   pysal.viz.mapclassify.Jenks_Caspall_Forced
-   pysal.viz.mapclassify.Jenks_Caspall_Sampled
-   pysal.viz.mapclassify.Max_P_Classifier
-   pysal.viz.mapclassify.Maximum_Breaks
-   pysal.viz.mapclassify.Natural_Breaks
-   pysal.viz.mapclassify.Quantiles
-   pysal.viz.mapclassify.Percentiles
-   pysal.viz.mapclassify.Std_Mean
-   pysal.viz.mapclassify.User_Defined
+   mapclassify.Box_Plot
+   mapclassify.Equal_Interval
+   mapclassify.Fisher_Jenks
+   mapclassify.Fisher_Jenks_Sampled
+   mapclassify.HeadTail_Breaks
+   mapclassify.Jenks_Caspall
+   mapclassify.Jenks_Caspall_Forced
+   mapclassify.Jenks_Caspall_Sampled
+   mapclassify.Max_P_Classifier
+   mapclassify.Maximum_Breaks
+   mapclassify.Natural_Breaks
+   mapclassify.Quantiles
+   mapclassify.Percentiles
+   mapclassify.Std_Mean
+   mapclassify.User_Defined
 
 Utilities
 +++++++++
@@ -562,12 +553,11 @@ Utilities
 .. autosummary::
    :toctree: generated/
 
-   pysal.viz.mapclassify.K_classifiers
-   pysal.viz.mapclassify.gadf
+   mapclassify.K_classifiers
+   mapclassify.gadf
 
 pysal.viz.splot: Lightweight visualization interface
-------------------------------------------------------------------
-.. currentmodule:: pysal.viz.splot
+----------------------------------------------------
 
 
 Giddy
@@ -576,11 +566,11 @@ Giddy
 .. autosummary::
    :toctree: generated/
 
-   pysal.viz.splot.giddy.dynamic_lisa_heatmap
-   pysal.viz.splot.giddy.dynamic_lisa_rose
-   pysal.viz.splot.giddy.dynamic_lisa_vectors
-   pysal.viz.splot.giddy.lisa_composite
-   pysal.viz.splot.giddy.lisa_composite_explore
+   splot.giddy.dynamic_lisa_heatmap
+   splot.giddy.dynamic_lisa_rose
+   splot.giddy.dynamic_lisa_vectors
+   splot.giddy.lisa_composite
+   splot.giddy.lisa_composite_explore
 
 
 ESDA
@@ -589,14 +579,14 @@ ESDA
 .. autosummary::
    :toctree: generated/
 
-   pysal.viz.splot.esda.moran_scatterplot
-   pysal.viz.splot.esda.plot_moran
-   pysal.viz.splot.esda.plot_moran_simulation
-   pysal.viz.splot.esda.plot_moran_bv
-   pysal.viz.splot.esda.plot_moran_bv_simulation
-   pysal.viz.splot.esda.lisa_cluster
-   pysal.viz.splot.esda.plot_local_autocorrelation
-   pysal.viz.splot.esda.moran_facet
+   splot.esda.moran_scatterplot
+   splot.esda.plot_moran
+   splot.esda.plot_moran_simulation
+   splot.esda.plot_moran_bv
+   splot.esda.plot_moran_bv_simulation
+   splot.esda.lisa_cluster
+   splot.esda.plot_local_autocorrelation
+   splot.esda.moran_facet
 
 Weights
 +++++++
@@ -604,7 +594,7 @@ Weights
 .. autosummary::
    :toctree: generated/
 
-   pysal.viz.splot.libpysal.plot_spatial_weights
+   splot.libpysal.plot_spatial_weights
 
 
 mapping
@@ -613,143 +603,134 @@ mapping
 .. autosummary::
    :toctree: generated/
 
-   pysal.viz.splot.mapping.value_by_alpha_cmap
-   pysal.viz.splot.mapping.vba_choropleth
-   pysal.viz.splot.mapping.vba_legend
-   pysal.viz.splot.mapping.mapclassify_bin
-
+   splot.mapping.value_by_alpha_cmap
+   splot.mapping.vba_choropleth
+   splot.mapping.vba_legend
+   splot.mapping.mapclassify_bin
 
 
  
+.. currentmodule:: pysal.model
 	
 :mod:`pysal.model`: Linear models for spatial data analysis
 ===========================================================
 
-.. automodule:: pysal.model
-    :no-members:
-    :no-inherited-members:
 
 pysal.model.spreg: Spatial Econometrics
-++++++++++++++++++++++++++++++++++++++
-.. currentmodule:: pysal.model.spreg
-
-Spatial Regression Models
--------------------------
+---------------------------------------
 
 These are the standard spatial regression models supported by the `spreg` package. Each of them contains a significant amount of detail in their docstring discussing how they're used, how they're fit, and how to interpret the results. 
 
 .. autosummary::
    :toctree: generated/
     
-   pysal.model.spreg.OLS
-   pysal.model.spreg.ML_Lag
-   pysal.model.spreg.ML_Error
-   pysal.model.spreg.GM_Lag
-   pysal.model.spreg.GM_Error
-   pysal.model.spreg.GM_Error_Het
-   pysal.model.spreg.GM_Error_Hom
-   pysal.model.spreg.GM_Combo
-   pysal.model.spreg.GM_Combo_Het
-   pysal.model.spreg.GM_Combo_Hom
-   pysal.model.spreg.GM_Endog_Error
-   pysal.model.spreg.GM_Endog_Error_Het
-   pysal.model.spreg.GM_Endog_Error_Hom
-   pysal.model.spreg.TSLS
-   pysal.model.spreg.ThreeSLS
+   spreg.OLS
+   spreg.ML_Lag
+   spreg.ML_Error
+   spreg.GM_Lag
+   spreg.GM_Error
+   spreg.GM_Error_Het
+   spreg.GM_Error_Hom
+   spreg.GM_Combo
+   spreg.GM_Combo_Het
+   spreg.GM_Combo_Hom
+   spreg.GM_Endog_Error
+   spreg.GM_Endog_Error_Het
+   spreg.GM_Endog_Error_Hom
+   spreg.TSLS
+   spreg.ThreeSLS
 
 Regimes Models
----------------
+++++++++++++++
 
 Regimes models are variants of spatial regression models which allow for structural instability in parameters. That means that these models allow different coefficient values in distinct subsets of the data. 
 
 .. autosummary::
     :toctree: generated/
 
-   pysal.model.spreg.OLS_Regimes
-   pysal.model.spreg.ML_Lag_Regimes
-   pysal.model.spreg.ML_Error_Regimes
-   pysal.model.spreg.GM_Lag_Regimes
-   pysal.model.spreg.GM_Error_Regimes
-   pysal.model.spreg.GM_Error_Het_Regimes
-   pysal.model.spreg.GM_Error_Hom_Regimes
-   pysal.model.spreg.GM_Combo_Regimes
-   pysal.model.spreg.GM_Combo_Hom_Regimes
-   pysal.model.spreg.GM_Combo_Het_Regimes
-   pysal.model.spreg.GM_Endog_Error_Regimes
-   pysal.model.spreg.GM_Endog_Error_Hom_Regimes
-   pysal.model.spreg.GM_Endog_Error_Het_Regimes
+   spreg.OLS_Regimes
+   spreg.ML_Lag_Regimes
+   spreg.ML_Error_Regimes
+   spreg.GM_Lag_Regimes
+   spreg.GM_Error_Regimes
+   spreg.GM_Error_Het_Regimes
+   spreg.GM_Error_Hom_Regimes
+   spreg.GM_Combo_Regimes
+   spreg.GM_Combo_Hom_Regimes
+   spreg.GM_Combo_Het_Regimes
+   spreg.GM_Endog_Error_Regimes
+   spreg.GM_Endog_Error_Hom_Regimes
+   spreg.GM_Endog_Error_Het_Regimes
 
 Seemingly-Unrelated Regressions
---------------------------------
++++++++++++++++++++++++++++++++
 
 Seeimingly-unrelated regression models are a generalization of linear regression. These models (and their spatial generalizations) allow for correlation in the residual terms between groups that use the same model. In spatial Seeimingly-Unrelated Regressions, the error terms across groups are allowed to exhibit a structured type of correlation: spatail correlation. 
 
 .. autosummary::
    :toctree: generated/
     
-   pysal.model.spreg.SUR
-   pysal.model.spreg.SURerrorGM
-   pysal.model.spreg.SURerrorML
-   pysal.model.spreg.SURlagIV
-   pysal.model.spreg.ThreeSLS
+   spreg.SUR
+   spreg.SURerrorGM
+   spreg.SURerrorML
+   spreg.SURlagIV
+   spreg.ThreeSLS
 
 
+pysal.model.mgwr: Multiscale Geographically Weighted Regression
+---------------------------------------------------------------
 
-.. currentmodule:: pysal.model.mgwr
-
-
-.. _gwr_api:
+.. _mgwr_api:
 
 GWR Model Estimation and Inference
-----------------------------------
+++++++++++++++++++++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-   pysal.model.mgwr.gwr.GWR
-   pysal.model.mgwr.gwr.GWRResults
-   pysal.model.mgwr.gwr.GWRResultsLite
+   mgwr.gwr.GWR
+   mgwr.gwr.GWRResults
+   mgwr.gwr.GWRResultsLite
 
 
 MGWR Estimation and Inference
------------------------------
++++++++++++++++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-    pysal.model.mgwr.gwr.MGWR
-    pysal.model.mgwr.gwr.MGWRResults
+    mgwr.gwr.MGWR
+    mgwr.gwr.MGWRResults
 
-Utility Functions
------------------
 
 Kernel Specification
-~~~~~~~~~~~~~~~~~~~~
+++++++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-    pysal.model.mgwr.kernels.fix_gauss
-    pysal.model.mgwr.kernels.adapt_gauss
-    pysal.model.mgwr.kernels.fix_bisquare
-    pysal.model.mgwr.kernels.adapt_bisquare
-    pysal.model.mgwr.kernels.fix_exp
-    pysal.model.mgwr.kernels.adapt_exp
+    mgwr.kernels.fix_gauss
+    mgwr.kernels.adapt_gauss
+    mgwr.kernels.fix_bisquare
+    mgwr.kernels.adapt_bisquare
+    mgwr.kernels.fix_exp
+    mgwr.kernels.adapt_exp
 
 Bandwidth Selection
-~~~~~~~~~~~~~~~~~~~~
++++++++++++++++++++
 
 .. autosummary::
    :toctree: generated/
 
-   pysal.model.mgwr.sel_bw.Sel_BW
+   mgwr.sel_bw.Sel_BW
 
 
 Visualization
-~~~~~~~~~~~~~
++++++++++++++
+
 .. autosummary::
    :toctree: generated/
 
-   pysal.model.mgwr.utils.shift_colormap
-   pysal.model.mgwr.utils.truncate_colormap
-   pysal.model.mgwr.utils.compare_surfaces
+   mgwr.utils.shift_colormap
+   mgwr.utils.truncate_colormap
+   mgwr.utils.compare_surfaces
