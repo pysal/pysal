@@ -7,6 +7,7 @@ This document provides instructions on the preparation of the meta-package
 
 ## Building
 
+0. Edit subtags to pin release versions for federated packages
 1. `make  download`
 2. edit convert.py and change `init_lines` at the bottom to have new version number
 2. `make convert`

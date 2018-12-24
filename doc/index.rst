@@ -3,7 +3,6 @@
 PySAL: Python Spatial Analysis Library
 ======================================
 
-PySAL is an open source Python library for geocomputation and spatial data analysis.
 
 .. raw:: html
 
@@ -42,6 +41,37 @@ PySAL is an open source Python library for geocomputation and spatial data analy
       </div>
     </div>
 
+PySAL is an open source
+cross-platform library for geospatial data science with an emphasis on
+geospatial vector data written in Python. It supports the development of
+high level applications for spatial analysis, such as
+
+-   detection of spatial clusters, hot-spots, and outliers
+-   construction of graphs from spatial data
+-   spatial regression and statistical modeling on geographically
+    embedded networks
+-   spatial econometrics
+-   exploratory spatio-temporal data analysis
+
+PySAL Components
+================
+
+-   **explore** - modules to conduct exploratory analysis of spatial and spatio-temporal data, including statistical testing on points, networks, and
+    polygonal lattices.  Also includes methods for spatial inequality and distributional dynamics.
+-   **viz** - visualize patterns in spatial data to detect clusters,
+    outliers, and hot-spots.
+-   **model** - model spatial relationships in data with a variety of
+    linear, generalized-linear, generalized-additive, and nonlinear
+    models.
+-   **lib** - solve a wide variety of computational geometry problems:
+
+    -   graph construction from polygonal lattices, lines, and points.
+    -   construction and interactive editing of spatial weights matrices
+        & graphs
+    -   computation of alpha shapes, spatial indices, and
+        spatial-topological relationships
+    -   reading and writing of sparse graph data, as well as pure python
+        readers of spatial vector data.
 
         
 .. toctree::
@@ -61,9 +91,18 @@ For background information see :cite:`pysal2007`.
 Development
 ***********
 
+As of version 2.0.0, PySAL is now a collection of affiliated geographic
+data science packages. Changes to the code for any of the subpackages
+should be directed at the respective upstream repositories and not made
+here. Infrastructural changes for the meta-package, like those for
+tooling, building the package, and code standards, will be considered.
+
+
 PySAL development is hosted on github_.
 
 .. _github : https://github.com/pysal/PySAL
+
+
 
 Discussions of development occurs on the
 `developer list <http://groups.google.com/group/pysal-dev>`_
