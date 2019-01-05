@@ -59,9 +59,8 @@ class Test_PSRF(ut.TestCase):
         for k,v in self.noburn.items():
             if k == 'Alphas':
                 continue
-            with self.assertRaises(AssertionError):
                 np.testing.assert_allclose(v, np.squeeze(test_completion[k]),
-                                       rtol=RTOL, atol=ATOL,
+                                       rtol=1e-5, atol=1e-5,
                                        err_msg='Failed in {}'.format(k))
         limit_vars = psrf(trace=self.trace, varnames=['Tau2', 'Sigma2'])
         for k,v in limit_vars.items():

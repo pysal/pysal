@@ -1,6 +1,7 @@
 from . import both_levels as both
 from . import upper_level as upper
 from . import lower_level as lower
+from . import svc as local
 from .plotting import plot_trace
 from .abstracts import Trace
 from . import diagnostics

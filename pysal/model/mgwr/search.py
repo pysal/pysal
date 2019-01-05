@@ -3,6 +3,7 @@
 __author__ = "Taylor Oshan"
 
 import numpy as np
+from scipy import linalg
 from copy import deepcopy
 import copy
 from collections import namedtuple
@@ -173,7 +174,7 @@ def multi_bw(init, y, X, n, k, family, tol, max_iter, rss_score,
         for i in range(n):
             wi = optim_model.W[i].reshape(-1,1)
             xT = (X * wi).T
-            P = np.dot(np.linalg.inv(np.dot(xT, X)), xT)
+            P = linalg.solve(xT.dot(X), xT)
             R[i,:,j] = X[i,j]*P[j]
 
     XB = np.multiply(param, X)

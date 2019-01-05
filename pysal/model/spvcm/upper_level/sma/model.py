@@ -222,6 +222,10 @@ class Upper_SMA(Base_Upper_SMA):
                  truncation=None,
                  center=False,
                  scale=False):
+        if X is None:
+            X = np.ones_like(Y)
+            center=False
+            scale=False
         _, M = verify.weights(None, M, transform=transform)
         self.M = M
         Mmat = M.sparse

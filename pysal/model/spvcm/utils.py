@@ -3,7 +3,7 @@ from scipy import sparse as spar
 import numpy as np
 from numpy import linalg as nla
 from scipy.sparse import linalg as spla
-import pysal
+import pysal.lib
 import scipy.linalg as scla
 from warnings import warn as Warn
 
@@ -33,6 +33,13 @@ def thru_op(*args, **kws):
         return kws
     else:
         return args, kws
+
+def zero_op(*args, **kws):
+    """
+    this is a zero op. It takes any arguments, keyword
+    or positional, and returns zero.
+    """
+    return 0
 
 ##########################
 # BUILD EXAMPLE DATASETS #
@@ -66,12 +73,12 @@ def south(df=False):
 
     Y = data.DNL90.values.reshape(-1,1)
 
-    W2 = pysal.lib.weights.user.queen_from_shapefile(pysal.lib.examples.get_path('us48.shp'),
-                                 idVariable='STATE_NAME')
-    W2 = pysal.lib.weights.Wsets.w_subset(W2, ids=data.STATE_NAME.unique().tolist()) #only keep what's in the data
-    W1 = pysal.lib.weights.user.queen_from_shapefile(pysal.lib.examples.get_path('south.shp'),
-                                 idVariable='FIPS')
-    W1 = pysal.lib.weights.Wsets.w_subset(W1, ids=data.FIPS.tolist()) #again, only keep what's in the data
+    W2 = pysal.lib.weights.Queen.from_shapefile(pysal.lib.examples.get_path('us48.shp'),
+                                               idVariable='STATE_NAME')
+    W2 = pysal.lib.weights.set_operations.w_subset(W2, ids=data.STATE_NAME.unique().tolist()) #only keep what's in the data
+    W1 = pysal.lib.weights.Queen.from_shapefile(pysal.lib.examples.get_path('south.shp'),
+                                            idVariable='FIPS')
+    W1 = pysal.lib.weights.set_operations.w_subset(W1, ids=data.FIPS.tolist()) #again, only keep what's in the data
 
     W1.transform = 'r'
     W2.transform = 'r'
@@ -99,7 +106,7 @@ def baltim(df=False):
     dataframe contains the raw data of the baltimore example
     """
     import geopandas
-    baltim = geopandas.read_files(pysal.lib.examples.get_path('baltim.shp'))
+    baltim = geopandas.read_file(pysal.lib.examples.get_path('baltim.shp'))
     coords = baltim[['X', 'Y']].values
     Y = np.log(baltim.PRICE.values).reshape(-1,1)
     Yz = Y - Y.mean()

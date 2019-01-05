@@ -11,7 +11,7 @@ FULL_PATH = os.path.dirname(os.path.abspath(__file__))
 class Test_Upper_SE(ut.TestCase, Model_Mixin):
     def setUp(self):
         super(Test_Upper_SE, self).build_self()
-        self.cls = upper.SE
+        self.cls = upper.Upper_SE
         del self.inputs["W"]
         self.inputs['n_samples'] = 0
         instance = self.cls(**self.inputs)

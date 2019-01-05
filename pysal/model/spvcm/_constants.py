@@ -1,8 +1,8 @@
 import sys
 import types
 import os
-RTOL = 1e-5
-ATOL = 1e-5
+RTOL = 1e-3
+ATOL = 1e-3
 TEST_SEED = 310516
 
 PY2 = sys.version_info[0] == 2

@@ -5,6 +5,7 @@ GWR is tested against results from GWR4
 import os
 import numpy as np
 from pysal.lib import io
+import pysal.lib as ps
 import unittest
 from pysal.model.spglm.family import Gaussian, Poisson, Binomial
 from ..sel_bw import Sel_BW
@@ -12,8 +13,7 @@ from numpy.testing import assert_allclose
 
 class TestSelBW(unittest.TestCase):
     def setUp(self):
-        data_path = os.path.join(os.path.dirname(__file__),'georgia/GData_utm.csv')
-        #data = pysal.lib.open(data_path)
+        data_path = ps.examples.get_path("GData_utm.csv")
         data = io.open(data_path)
         self.coords = list(zip(data.by_col('X'), data.by_col('Y')))
         self.y = np.array(data.by_col('PctBach')).reshape((-1,1))

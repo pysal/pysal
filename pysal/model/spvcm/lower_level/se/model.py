@@ -49,6 +49,7 @@ class Base_Lower_SE(Base_Generic):
         self.state.Psi_2i = ind_covariance #same as precision
         self.configs.Rho.logp = logp_rho_prec
         self.configs.Lambda = no_op
+        self.state.Lambda = 0
 
         if n_samples > 0:
             try:
@@ -159,6 +160,10 @@ class Lower_SE(Base_Lower_SE):
                  truncation=None,
                  center=False,
                  scale=False):
+        if X is None:
+            X = np.ones_like(Y)
+            center=False
+            scale=False
         W,_ = verify.weights(W, None, transform=transform)
         self.W = W
         Wmat = W.sparse

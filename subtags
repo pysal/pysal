@@ -9,5 +9,5 @@ spreg   https://github.com/pysal/spreg/tree/v1.0.4
 spglm https://github.com/pysal/spglm/tree/v1.0.6
 spint https://github.com/pysal/spint/tree/v1.0.4
 splot https://github.com/pysal/spint/tree/v1.0.0
-mgwr https://github.com/pysal/mgwr/releases/tag/v2.0.1
-spvcm https://github.com/pysal/spvcm/tree/0.2.0
+mgwr https://github.com/pysal/mgwr/releases/tag/v2.0.2
+spvcm https://github.com/pysal/spvcm/tree/v0.2.1

@@ -58,7 +58,7 @@ class Base_MVCM(Sampler_Mixin):
 
     def _setup_priors(self, Sigma2_a0=.001, Sigma2_b0 = .001,
                       Betas_cov0 = None, Betas_mean0 = None,
-                      Tau2_a0 = .001, Tau2_b0 = .0001):
+                      Tau2_a0 = .001, Tau2_b0 = .001):
         ## Prior specifications
         st = self.state
         st.Sigma2_a0 =  Sigma2_a0
@@ -191,7 +191,8 @@ class MVCM(Base_MVCM):
     Y       :   numpy.ndarray
                 The (n,1) array containing the response to be modeled
     X       :   numpy.ndarray
-                The (n,p) array containing covariates used to predict the  response, Y.
+                The (n,p) array containing covariates used to predict the  response, Y. Can be None, and if so,
+                 will be used to fit a naive model with only a response-level constant.
     Z       :   numpy.ndarray
                 The (J,p') array of region-level covariates used to predict the response, Y.
     Delta   :   numpy.ndarray
@@ -253,7 +254,10 @@ class MVCM(Base_MVCM):
                  center=False,
                  scale=False
                  ):
-
+        if X is None:
+            X = np.ones_like(Y)
+            center=False
+            scale=False
         N, _ = X.shape
         if Delta is not None:
             _,J = Delta.shape
@@ -270,7 +274,6 @@ class MVCM(Base_MVCM):
             X = verify.center(X)
         if scale:
             X = verify.scale(X)
-
 
         X = verify.covariates(X)
 

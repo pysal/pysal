@@ -133,6 +133,10 @@ class SMASMA(Base_SMASMA):
                  starting_values=None,
                  center=False,
                  scale=False):
+        if X is None:
+            X = np.ones_like(Y)
+            center=False
+            scale=False
         W,M = verify.weights(W,M, transform=transform)
         self.M = M
 
