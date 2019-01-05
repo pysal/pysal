@@ -131,14 +131,14 @@ class VecMoran:
     --------
     >>> import numpy as np
     >>> np.random.seed(1)
-    >>> from pysal_core.weights import DistanceBand
+    >>> from pysal.lib.weights import DistanceBand
     >>> from spint.vec_SA import VecMoran
     >>> vecs = np.array([[1, 55, 60, 100, 500],
-    >>>                 [2, 60, 55, 105, 501],
-    >>>                 [3, 500, 55, 155, 500],
-    >>>                 [4, 505, 60, 160, 500],
-    >>>                 [5, 105, 950, 105, 500],
-    >>>                 [6, 155, 950, 155, 499]])
+    ...                  [2, 60, 55, 105, 501],
+    ...                  [3, 500, 55, 155, 500],
+    ...                  [4, 505, 60, 160, 500],
+    ...                  [5, 105, 950, 105, 500],
+    ...                  [6, 155, 950, 155, 499]])
     >>> origins = vecs[:, 1:3]
     >>> dests = vecs[:, 3:5]
     >>> wo = DistanceBand(origins, threshold=9999, alpha=-1.5, binary=False)
@@ -148,25 +148,25 @@ class VecMoran:
     >>> vmo = VecMoran(vecs, wo, focus='origin', rand='A')
     >>> vmd = VecMoran(vecs, wd, focus='destination', rand='A')
     >>> vmo.I
-    -0.764603695022
+    0.6459445943670211
     >>> vmo.p_z_sim
-    0.99549579548
-    >>>  vmd.I
-    0.645944594367
-    >>>  vmd.p_z_sim
-    0.1494726733677
+    0.03898650733809228
+    >>> vmd.I
+    -0.7646036950223406
+    >>> vmd.p_z_sim
+    0.11275129553163704
 
     #randomization technique B
     >>> vmo = VecMoran(vecs, wo, focus='origin', rand='B')
-    >>> vmd = VecMoran(vecs, wd, foucs='destination', rand='B')
+    >>> vmd = VecMoran(vecs, wd, focus='destination', rand='B')
     >>> vmo.I
-    -0.764603695022
+    0.6459445943670211
     >>> vmo.p_z_sim
-    0.071427063787951814
-    >>>  vmd.I
-    0.645944594367
-    >>>  vmd.p_z_sim
-    0.086894261015806051
+    0.05087923006558356
+    >>> vmd.I
+    -0.7646036950223406
+    >>> vmd.p_z_sim
+    0.1468368983650693
 
     """
 
