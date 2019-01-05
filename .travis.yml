@@ -28,7 +28,7 @@ install:
         else conda install --yes --file requirements.txt;
     fi;
 
-  - pip install geopandas
+  - conda install --yes geopandas
   - pip install -r requirements_dev.txt
 
 script:
