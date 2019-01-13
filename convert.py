@@ -107,6 +107,11 @@ os.system(c)
 c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/ spvcm\./ pysal\.model\.spvcm\./g'"
 os.system(c)
 
+# fix in spvcm from spreg -> from pysal.model.spreg
+
+c = "find pysal/model/spvcm/. -name '*.py' -print | xargs sed -i -- 's/from spreg/from pysal\.model\.spreg/g'"
+os.system(c)
+
 
 # fix giddy
 c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/ giddy\.api/ pysal\.explore\.giddy\.api/g'"

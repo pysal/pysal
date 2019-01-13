@@ -7,7 +7,6 @@ __author__ = 'Taylor Oshan tayoshan@gmail.com'
 
 import unittest
 import numpy as np
-np.random.seed(1)
 from pysal.lib.weights.distance import DistanceBand
 from ..vec_SA import VecMoran
 
@@ -31,12 +30,14 @@ class TestVecMoran(unittest.TestCase):
             threshold=9999,
             alpha=-1.5,
             binary=False)
+        np.random.seed(1)
         vmo = VecMoran(self.vecs, wo, focus='origin', rand='A')
         self.assertAlmostEquals(vmo.I, 0.645944594367)
-        self.assertAlmostEquals(vmo.p_z_sim, 0.099549579548)
+        self.assertAlmostEquals(vmo.p_z_sim, 0.03898650733809228)
 
     def test_dest_focused_A(self):
         wd = DistanceBand(self.dests, threshold=9999, alpha=-1.5, binary=False)
+        np.random.seed(1)
         vmd = VecMoran(self.vecs, wd, focus='destination', rand='A')
         self.assertAlmostEquals(vmd.I, -0.764603695022)
         self.assertAlmostEquals(vmd.p_z_sim, 0.149472673677)
@@ -47,15 +48,17 @@ class TestVecMoran(unittest.TestCase):
             threshold=9999,
             alpha=-1.5,
             binary=False)
+        np.random.seed(1)
         vmo = VecMoran(self.vecs, wo, focus='origin', rand='B')
         self.assertAlmostEquals(vmo.I, 0.645944594367)
-        self.assertAlmostEquals(vmo.p_z_sim, 0.071427063787951814)
+        self.assertAlmostEquals(vmo.p_z_sim, 0.02944612633233532)
 
     def test_dest_focused_B(self):
         wd = DistanceBand(self.dests, threshold=9999, alpha=-1.5, binary=False)
+        np.random.seed(1)
         vmd = VecMoran(self.vecs, wd, focus='destination', rand='B')
         self.assertAlmostEquals(vmd.I, -0.764603695022)
-        self.assertAlmostEquals(vmd.p_z_sim, 0.086894261015806051)
+        self.assertAlmostEquals(vmd.p_z_sim, 0.12411761124197379)
 
 
 if __name__ == '__main__':

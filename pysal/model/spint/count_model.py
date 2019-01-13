@@ -45,18 +45,18 @@ class CountModel(object):
     -------
     >>> from spint.count_model import CountModel
     >>> import pysal.lib
-    >>> db = pysal.lib.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
+    >>> db = pysal.lib.io.open(pysal.lib.examples.get_path('columbus.dbf'),'r')
     >>> y =  np.array(db.by_col("HOVAL"))
     >>> y = np.reshape(y, (49,1))
-    >>> self.y = np.round(y).astype(int)
+    >>> y = np.round(y).astype(int)
     >>> X = []
     >>> X.append(db.by_col("INC"))
     >>> X.append(db.by_col("CRIME"))
-    >>> self.X = np.array(X).T
-    >>> model = CountModel(self.y, self.X, family=Poisson())
+    >>> X = np.array(X).T
+    >>> model = CountModel(y, X, family=Poisson())
     >>> results = model.fit('GLM')
     >>> results.params
-    array([3.92159085, 0.01183491, -0.01371397])
+    array([ 3.92159085,  0.01183491, -0.01371397])
 
     """
 

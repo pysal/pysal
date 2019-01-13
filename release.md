@@ -1,4 +1,4 @@
-Overall, there were 1306 commits that closed 319 issues, together with 196 pull requests since our last release on 2017-11-03.
+Overall, there were 1580 commits that closed 355 issues, together with 226 pull requests since our last release on 2017-11-03.
 
 ## Changes by package
 
@@ -163,6 +163,15 @@ Overall, there were 1306 commits that closed 319 issues, together with 196 pull 
 * Initial setup [(#1)](https://github.com/pysal/inequality/pull/1)
 
 ### pointpats:
+* add changelog for release 2.0.0 [(#21)](https://github.com/pysal/pointpats/pull/21)
+* remove api.py & adjust notebooks and doctests for changes in libpysal [(#19)](https://github.com/pysal/pointpats/pull/19)
+* version pointpats only in pointpats/__ini__.py [(#18)](https://github.com/pysal/pointpats/pull/18)
+* include /tests  in the release [(#17)](https://github.com/pysal/pointpats/pull/17)
+* configure dual testing [(#16)](https://github.com/pysal/pointpats/pull/16)
+* install stable released libpysal for travis testing [(#15)](https://github.com/pysal/pointpats/pull/15)
+* force UTF8 encoding for the long description read [(#14)](https://github.com/pysal/pointpats/pull/14)
+* Prepare for the release  [(#13)](https://github.com/pysal/pointpats/pull/13)
+* chore: libpysal is 3 only now so removing travis tests on python 2 [(#12)](https://github.com/pysal/pointpats/pull/12)
 * try removing conversion and see if this passes [(#11)](https://github.com/pysal/pointpats/pull/11)
 
 ### spaghetti:
@@ -272,6 +281,35 @@ Overall, there were 1306 commits that closed 319 issues, together with 196 pull 
 * ENH: move classifiers up into init [(#9)](https://github.com/pysal/mapclassify/pull/9)
 * Moving to python 3+ [(#8)](https://github.com/pysal/mapclassify/pull/8)
 
+### splot:
+* merge Sprint with master branch [(#39)](https://github.com/pysal/splot/pull/39)
+* Change documentation style [(#38)](https://github.com/pysal/splot/pull/38)
+* add travis build badge to README.md [(#37)](https://github.com/pysal/splot/pull/37)
+* fix current documentation for sprint [(#36)](https://github.com/pysal/splot/pull/36)
+* `value_by_alpha` prototype [(#28)](https://github.com/pysal/splot/pull/28)
+* Clean up of current code base [(#30)](https://github.com/pysal/splot/pull/30)
+* Value By Alpha specification [(#24)](https://github.com/pysal/splot/issues/24)
+* nonplanar example update [(#33)](https://github.com/pysal/splot/issues/33)
+* add README.md [(#29)](https://github.com/pysal/splot/pull/29)
+* issues in some docstrings for giddy [(#26)](https://github.com/pysal/splot/issues/26)
+* debug `splot` documentation [(#25)](https://github.com/pysal/splot/pull/25)
+* collection of cleanups for`splot.giddy`  [(#23)](https://github.com/pysal/splot/pull/23)
+* created `esda.moran.Moran_Local_BV` visualisations [(#20)](https://github.com/pysal/splot/pull/20)
+* add `esda.moran.Moran_BV` visualizations to `splot.esda` [(#18)](https://github.com/pysal/splot/pull/18)
+* add `seaborn` and `matplotlib` to `install_requirements` in `setup.py` [(#19)](https://github.com/pysal/splot/pull/19)
+* prototype `moran_scatterplot()`, `plot_moran_simulation()` and `plot_moran()` for `esda` [(#17)](https://github.com/pysal/splot/pull/17)
+* include utility functions `shift_colormap` and `truncate_colormap` [(#15)](https://github.com/pysal/splot/pull/15)
+* fix setup.py so files are installed with "pip install ." [(#16)](https://github.com/pysal/splot/pull/16)
+* `plot_spatial_weights` including network joins for `non_planar_joins` [(#14)](https://github.com/pysal/splot/pull/14)
+* adapting existing `esda` functionality to `splot.esda` namespace and allow `.plot()` method [(#13)](https://github.com/pysal/splot/pull/13)
+* adding license [(#4)](https://github.com/pysal/splot/pull/4)
+* add `giddy` dynamic LISA functionality under `splot.giddy` [(#11)](https://github.com/pysal/splot/pull/11)
+* start sphinx html documentation [(#12)](https://github.com/pysal/splot/pull/12)
+* add visualization option with significance to mplot [(#7)](https://github.com/pysal/splot/pull/7)
+* Visualising Local Autocorrelation [(#8)](https://github.com/pysal/splot/pull/8)
+* Copy new changes made to viz module into split [(#5)](https://github.com/pysal/splot/pull/5)
+* run 2to3 for splot [(#6)](https://github.com/pysal/splot/pull/6)
+
 ### spreg:
 * update docstrings for libpysal API changes [(#9)](https://github.com/pysal/spreg/pull/9)
 * Merging in spanel & spreg2 code necessary for new spatial panel & GeoDaSpace [(#10)](https://github.com/pysal/spreg/pull/10)
@@ -345,185 +383,9 @@ Overall, there were 1306 commits that closed 319 issues, together with 196 pull 
 * Test failures in effective size & geweke diagnostics [(#2)](https://github.com/pysal/spvcm/issues/2)
 * update plotting and diagnostics for pandas deprecation [(#3)](https://github.com/pysal/spvcm/pull/3)
 
-## Contributor Statistics
 
 
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Dani Arribas-Bel</th>
-      <th>Eli Knaap</th>
-      <th>James Gaboardi</th>
-      <th>Levi John Wolf</th>
-      <th>Philip Kahn</th>
-      <th>Serge Rey</th>
-      <th>Stefanie Lumnitz</th>
-      <th>Taylor Oshan</th>
-      <th>Wei Kang</th>
-      <th>Ziqi Li</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>lib.libpysal</th>
-      <td>19</td>
-      <td>12</td>
-      <td>8</td>
-      <td>112</td>
-      <td>0</td>
-      <td>101</td>
-      <td>2</td>
-      <td>4</td>
-      <td>18</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>explore.esda</th>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>11</td>
-      <td>0</td>
-      <td>50</td>
-      <td>10</td>
-      <td>0</td>
-      <td>8</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>explore.giddy</th>
-      <td>0</td>
-      <td>2</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>18</td>
-      <td>10</td>
-      <td>0</td>
-      <td>103</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>explore.inequality</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>20</td>
-      <td>0</td>
-      <td>0</td>
-      <td>11</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>explore.pointpats</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>6</td>
-      <td>0</td>
-      <td>2</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>explore.spaghetti</th>
-      <td>0</td>
-      <td>0</td>
-      <td>278</td>
-      <td>3</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>viz.mapclassify</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>3</td>
-      <td>0</td>
-      <td>22</td>
-      <td>0</td>
-      <td>0</td>
-      <td>23</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>model.spreg</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>40</td>
-      <td>0</td>
-      <td>17</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>model.spglm</th>
-      <td>0</td>
-      <td>0</td>
-      <td>7</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>60</td>
-      <td>1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>model.spint</th>
-      <td>0</td>
-      <td>0</td>
-      <td>7</td>
-      <td>8</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>42</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>model.mgwr</th>
-      <td>0</td>
-      <td>0</td>
-      <td>9</td>
-      <td>10</td>
-      <td>2</td>
-      <td>0</td>
-      <td>0</td>
-      <td>130</td>
-      <td>21</td>
-      <td>51</td>
-    </tr>
-    <tr>
-      <th>model.spvcm</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>20</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
-
+## Summary Statistics
 
 <table border="1" class="dataframe">
   <thead>
@@ -546,6 +408,12 @@ Overall, there were 1306 commits that closed 319 issues, together with 196 pull 
       <td>276</td>
       <td>79</td>
       <td>57</td>
+    </tr>
+    <tr>
+      <td>splot</td>
+      <td>247</td>
+      <td>27</td>
+      <td>21</td>
     </tr>
     <tr>
       <td>mgwr</td>
@@ -590,6 +458,12 @@ Overall, there were 1306 commits that closed 319 issues, together with 196 pull 
       <td>8</td>
     </tr>
     <tr>
+      <td>pointpats</td>
+      <td>40</td>
+      <td>10</td>
+      <td>10</td>
+    </tr>
+    <tr>
       <td>inequality</td>
       <td>36</td>
       <td>6</td>
@@ -601,12 +475,303 @@ Overall, there were 1306 commits that closed 319 issues, together with 196 pull 
       <td>2</td>
       <td>1</td>
     </tr>
+  </tbody>
+</table>
+
+
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>commits</th>
+    </tr>
+  </thead>
+  <tbody>
     <tr>
-      <td>pointpats</td>
-      <td>13</td>
+      <th>Dani Arribas-Bel</th>
+      <td>25</td>
+    </tr>
+    <tr>
+      <th>Eli Knaap</th>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>Hu Shao</th>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>James Gaboardi</th>
+      <td>310</td>
+    </tr>
+    <tr>
+      <th>Jsignell</th>
       <td>1</td>
+    </tr>
+    <tr>
+      <th>Levi John Wolf</th>
+      <td>227</td>
+    </tr>
+    <tr>
+      <th>Philip Kahn</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Serge Rey</th>
+      <td>239</td>
+    </tr>
+    <tr>
+      <th>Stefanie Lumnitz</th>
+      <td>240</td>
+    </tr>
+    <tr>
+      <th>Taylor Oshan</th>
+      <td>239</td>
+    </tr>
+    <tr>
+      <th>Thequackdaddy</th>
       <td>1</td>
+    </tr>
+    <tr>
+      <th>Wei Kang</th>
+      <td>217</td>
+    </tr>
+    <tr>
+      <th>Ziqi Li</th>
+      <td>51</td>
     </tr>
   </tbody>
 </table>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Dani Arribas-Bel</th>
+      <th>Eli Knaap</th>
+      <th>Hu Shao</th>
+      <th>James Gaboardi</th>
+      <th>Jsignell</th>
+      <th>Levi John Wolf</th>
+      <th>Philip Kahn</th>
+      <th>Serge Rey</th>
+      <th>Stefanie Lumnitz</th>
+      <th>Taylor Oshan</th>
+      <th>Thequackdaddy</th>
+      <th>Wei Kang</th>
+      <th>Ziqi Li</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>lib.libpysal</th>
+      <td>19</td>
+      <td>12</td>
+      <td>0</td>
+      <td>8</td>
+      <td>0</td>
+      <td>112</td>
+      <td>0</td>
+      <td>101</td>
+      <td>2</td>
+      <td>4</td>
+      <td>0</td>
+      <td>18</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>explore.esda</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>11</td>
+      <td>0</td>
+      <td>50</td>
+      <td>10</td>
+      <td>0</td>
+      <td>0</td>
+      <td>8</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>explore.giddy</th>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>18</td>
+      <td>10</td>
+      <td>0</td>
+      <td>0</td>
+      <td>106</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>explore.inequality</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>22</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>13</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>explore.pointpats</th>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>26</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>explore.spaghetti</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>278</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>viz.mapclassify</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>22</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>23</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>viz.splot</th>
+      <td>6</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>9</td>
+      <td>0</td>
+      <td>7</td>
+      <td>218</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>model.spreg</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+      <td>0</td>
+      <td>17</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>model.spglm</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>60</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>model.spint</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7</td>
+      <td>0</td>
+      <td>8</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>42</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>model.mgwr</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>9</td>
+      <td>0</td>
+      <td>10</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>133</td>
+      <td>0</td>
+      <td>21</td>
+      <td>51</td>
+    </tr>
+    <tr>
+      <th>model.spvcm</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>21</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+
 

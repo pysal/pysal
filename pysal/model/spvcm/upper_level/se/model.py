@@ -224,6 +224,10 @@ class Upper_SE(Base_Upper_SE):
                  center=False,
                  scale=False,
                  tuning=0):
+        if X is None:
+            X = np.ones_like(Y)
+            center=False
+            scale=False
         _, M = verify.weights(None, M, transform=transform)
         self.M = M
         Mmat = M.sparse
