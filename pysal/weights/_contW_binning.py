@@ -24,11 +24,11 @@ SHP_SMALL = 1000
 
 def bbcommon(bb, bbother):
     """
-    Checks for overlaps of bounding boxes. First, east-west, then north-south.
+    Checks for non-overlap of bounding boxes. First, east-west, then north-south.
     Element 0 is west, element 2 is east, element 3 is north, element 1 is
     south.
-    All four checks must be false for chflag to be true, meaning the two
-    bounding boxes do not overlap.
+    All four checks must be false for chflag to be true, indicating that the two
+    bounding boxes overlap.
     """
     chflag = 0
     if not ((bbother[2] < bb[0]) or (bbother[0] > bb[2])):
