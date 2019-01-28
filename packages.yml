@@ -1,0 +1,17 @@
+lib:
+  libpysal
+explore:
+  esda
+  giddy
+  inequality
+  pointpats
+  spaghetti
+viz:
+  mapclassify
+  splot
+model:
+  spreg
+  spglm
+  spint
+  mgwr
+  spvcm

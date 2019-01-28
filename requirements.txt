@@ -1,2 +1,6 @@
 scipy>=0.11
-numpy>=1.3
+pandas
+seaborn
+matplotlib
+descartes
+palettable
