@@ -39,7 +39,7 @@ contribute to the PySAL development.
 Installing versions supporting Python 2
 ---------------------------------------
 
-Users requiring Python 2 support can install the legacy version of Python: 1.1.14 via pip::
+Users requiring Python 2 support can install the legacy version of PySAL: 1.1.14 via pip::
 
  pip install pysal==1.14.4.post2
 

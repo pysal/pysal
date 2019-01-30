@@ -67,7 +67,7 @@ pip install pysal
 As of version 2.0.0 PySAL has shifted to Python 3 only.
 
 Users who need an older stable version of PySAL that is Python 2
-compatible can install version 1.14.3 through pip or \`conda\`:
+compatible can install version 1.14.3 through pip or conda:
 
 ``` {.sourceCode .bash}
 conda install pysal==1.14.3
