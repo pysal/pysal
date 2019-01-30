@@ -3,5 +3,6 @@ python:
     setup_py_install: true
     pip_install: true
     extra_requirements:
-        - tests
+        - dev
         - docs
+        - plus
