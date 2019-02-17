@@ -19,12 +19,12 @@ cross-platform library for geospatial data science with an emphasis on
 geospatial vector data written in Python. It supports the development of
 high level applications for spatial analysis, such as
 
-> -   detection of spatial clusters, hot-spots, and outliers
-> -   construction of graphs from spatial data
-> -   spatial regression and statistical modeling on geographically
->     embedded networks
-> -   spatial econometrics
-> -   exploratory spatio-temporal data analysis
+-   detection of spatial clusters, hot-spots, and outliers
+-   construction of graphs from spatial data
+-   spatial regression and statistical modeling on geographically
+    embedded networks
+-   spatial econometrics
+-   exploratory spatio-temporal data analysis
 
 PySAL Components
 ================
