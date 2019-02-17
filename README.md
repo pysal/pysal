@@ -9,7 +9,7 @@ Python Spatial Analysis Library
 
 [![image](https://readthedocs.org/projects/pip/badge/?version=latest)](http://pysal.readthedocs.io/en/latest/index.html)
 
-[![LISA Maps of US County Homicide Rates](https://farm2.staticflickr.com/1699/23937788493_1b9d147b9f_z.jpg){width="100.0%"}](http://nbviewer.ipython.org/urls/gist.githubusercontent.com/darribas/657e0568df7a63362762/raw/pysal_lisa_maps.ipynb)
+[![LISA Maps of US County Homicide Rates](https://farm2.staticflickr.com/1699/23937788493_1b9d147b9f_z.jpg)](http://nbviewer.ipython.org/urls/gist.githubusercontent.com/darribas/657e0568df7a63362762/raw/pysal_lisa_maps.ipynb)
 
 *Above: Local Indicators of Spatial Association for Homicide Rates in US
 Counties 1990.*
@@ -102,7 +102,7 @@ Getting Involved
 ================
 
 If you are interested in contributing to PySAL please see our
-development guidelines \<https://github.com/pysal/pysal/wiki/GitHub-Standard-Operating-Procedures\>
+[development guidelines](https://github.com/pysal/pysal/wiki).
 
 Bug reports
 ===========
