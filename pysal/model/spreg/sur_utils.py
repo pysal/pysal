@@ -62,29 +62,44 @@ def sur_dictxy(db,y_vars,x_vars,space_id=None,time_id=None):
             print("Error: time id must be specified")
         y = np.array([db.by_col(name) for name in y_vars]).T
         bign = y.shape[0]
+        ss = np.array([db.by_col(name) for name in space_id]).T
         tt = np.array([db.by_col(name) for name in time_id]).T
         tt1 = set([val for sublist in tt.tolist() for val in sublist])
         n_eq = len(tt1)
         tt2 = list(tt1)
         tt2.sort()
-        tt3 = [str(int(a)+1) for a in tt2]
-        n = bign/n_eq
+        tt3 = [str(a) for a in tt2] # in case of string type time_id
+        n = int(bign/n_eq)
         longx = np.array([db.by_col(name) for name in x_vars[0]]).T
         longxc = np.hstack((np.ones((bign, 1)), longx))
         xvars = x_vars[0][:]
         xvars.insert(0,c)
+        # get unique values of space_id and time_id, since they could be
+        # randomly organized in a table
+        skeys = []
+        sdict = {}
+        tmpy = { t : {} for t in tt1 }
+        tmpX = { t : {} for t in tt1 }
+        for i in range(bign):
+            sval = ss[i][0]  # e.g. FIPSNO 27077
+            tval = tt[i][0]   # e.g. TIME 1960
+            if tval in tmpy:
+                tmpy[tval][sval] = y[i]
+            if tval in tmpX:
+                tmpX[tval][sval] = longxc[i]
+            if sval not in sdict:
+                skeys.append(sval)
+                sdict[sval] = True
         bigy = {}
         bigX = {}
         bigy_vars = {}
         bigX_vars = {}
         for r in range(n_eq):
-            k0 = r * n
-            ke = r * n + n
-            bigy[r] = y[k0:ke,:]
+            tval = tt2[r]
+            bigy[r] = np.array([tmpy[tval][v] for v in skeys])
+            bigX[r] = np.array([tmpX[tval][v] for v in skeys])
             bigy_vars[r] = y_vars[0] + "_" + tt3[r]
-            bigX[r] = longxc[k0:ke,:]
-            bxvars = [i + "_" + tt3[r] for i in xvars]
-            bigX_vars[r] = bxvars
+            bigX_vars[r] = [i + "_" + tt3[r] for i in xvars]
         return (bigy,bigX,bigy_vars,bigX_vars)
     else:
         print("error message, but should never be here")
@@ -131,25 +146,36 @@ def sur_dictZ(db,z_vars,form="spreg",const=False,space_id=None,time_id=None):
     elif (form == "plm"):  #plm format
         if not(time_id):   #CHANGE into exception
             raise Exception("Error: time id must be specified for plm format")
+        ss = np.array([db.by_col(name) for name in space_id]).T
         tt = np.array([db.by_col(name) for name in time_id]).T
         bign = tt.shape[0]
         tt1 = set([val for sublist in tt.tolist() for val in sublist])
         n_eq = len(tt1)
         tt2 = list(tt1)
         tt2.sort()
-        tt3 = [str(int(a)+1) for a in tt2]
-        n = bign/n_eq
+        tt3 = [str(a) for a in tt2] # in case of string type time_id
+        n = int(bign/n_eq)
         longz = np.array([db.by_col(name) for name in z_vars[0]]).T
         zvars = z_vars[0][:]
         if const:
             longz = np.hstack((np.ones((bign, 1)), longz))
             zvars.insert(0,c)
+        skeys = []
+        sdict = {}
+        tmpz = {t: {} for t in tt1}
+        for i in range(bign):
+            sval = ss[i][0]
+            tval = tt[i][0]
+            if tval in tmpz:
+                tmpz[tval][sval] = longz[i]
+            if sval not in sdict:
+                skeys.append(sval)
+                sdict[sval] = True
         bigZ = {}
         bigZ_names = {}
         for r in range(n_eq):
-            k0 = r * n
-            ke = r * n + n
-            bigZ[r] = longz[k0:ke,:]
+            tval = tt2[r]
+            bigZ[r] = np.array([tmpz[tval][v] for v in skeys])
             bzvars = [i + "_" + tt3[r] for i in zvars]
             bigZ_names[r] = bzvars
         return (bigZ,bigZ_names)
