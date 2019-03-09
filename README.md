@@ -79,9 +79,9 @@ Documentation
 For help on using PySAL, check out the following resources:
 
 -   [User
-    Guide](http://pysal.readthedocs.org/en/latest/users/index.html)
+    Guide](https://pysal.readthedocs.io/en/latest/)
 -   [Tutorials and Short
-    Courses](https://github.com/pysal/notebooks/blob/master/courses.md)
+    Courses](https://github.com/pysal/notebooks)
 
 Development
 ===========
