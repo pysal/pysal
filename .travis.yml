@@ -4,8 +4,8 @@ branches:
 only:
   - master
 python:
-  - "3.5"
-  - "3.6"
+  - 3.5
+  - 3.6
 
 env:
   - PYSAL_PLUS=false MPLBACKEND="pdf"
