@@ -4,12 +4,12 @@ branches:
 only:
   - master
 python:
-  - 3.5
-  - 3.6
+  - "3.5"
+  - "3.6"
 
 env:
-  - PYSAL_PLUS=false
-  - PYSAL_PLUS=true
+  - PYSAL_PLUS=false MPLBACKEND="pdf"
+  - PYSAL_PLUS=true MPLBACKEND="pdf"
 
 before_install:
   - wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
@@ -33,8 +33,8 @@ install:
 
 script:
   - python setup.py sdist >/dev/null
-  - echo "check_stable=False" >pysal/config.py
-  - nosetests --with-doctest --verbose --with-coverage --cover-package=pysal -I shapely_ext.py;
+  - python setup.py install
+  - travis_wait 45 nosetests --verbose --with-coverage --cover-package=pysal;
 
   #- cd doc; make pickle; make doctest
 notifications:
@@ -45,6 +45,7 @@ notifications:
             - dfolch@gmail.com
             - daniel.arribas.bel@gmail.com
             - weikang9009@gmail.com
+            - carsonfarmer@gmail.com
             - tayoshan@gmail.com
             - marynia.kolak@gmail.com
             - jgaboardi@gmail.com
