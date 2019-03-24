@@ -102,7 +102,7 @@ def clone_releases():
         pkgstr = "git clone --branch {tag} ".format(tag=tag)
         pkgstr = "{pkgstr} https://github.com/pysal/{subpackage}.git".format(pkgstr=pkgstr,
                                                                              subpackage=subpackage)
-        pkgstr = "{pkgstr} tmp{subpackage}".format(pkgstr=pkgstr, subpackage=subpackage)
+        pkgstr = "{pkgstr} tmp/{subpackage}".format(pkgstr=pkgstr, subpackage=subpackage)
 
         print(pkgstr)
         os.system(pkgstr)
