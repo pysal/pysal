@@ -1,10 +1,5 @@
 """
-Grab most recent releases tagged on Github for PySAL subpacakges
-
-TODO
-- [x] grab tarballs
-- [x] move tarballs to properly named src directories (target of convert.py)
-
+Grab most recent releases tagged on Github for PySAL subpackages
 
 """
 import os
@@ -36,18 +31,20 @@ def get_release_info():
                 else:
                     print('Something else happened')
             else:
-                print("{subpackage} has a latest release".format(subpackage=subpackage))
+                #print("{subpackage} has a latest release".format(subpackage=subpackage))
                 tag_name = d['tag_name']
                 tarball_url = d['tarball_url']
                 release[subpackage] = (tag_name, tarball_url)
                 #print(tag_name)
                 #print(tarball_url)
 
+    """
     print("The following {count} packages have a git release:\n\t".format(count=len(release.keys())))
     print(release.keys())
 
     print("\n\nThe following {count} packages do not have a git release:\n\t".format(count=len(no_release)))
     print(no_release)
+    """
 
     with open('tarballs.json', 'w') as fp:
         json.dump(release, fp)
@@ -124,11 +121,26 @@ def get_tags():
 
     with open('tags.json', 'w') as fp:
         json.dump(tags, fp)
+
+    # check if there have been updated releases and alert if so
+    releases = get_release_info()
+    new_tags = dict([(key,releases[key][0]) for key in releases])
+    new_releases = []
+    for package in new_tags:
+        new_tag = new_tags[package]
+        old_tag = tags[package]
+        if new_tag != old_tag:
+            new_releases.append([package, new_tag, old_tag])
+    if new_releases:
+        print("There are more recent releases to consider:\n\n")
+        for release in new_releases:
+            package, new_tag, old_tag = release
+            print(package, new_tag, old_tag)
+        print("\n\n Consider updating the file subtags.")
+
     return tags
 
 
 if __name__ == "__main__":
-    # get_release_info()
-    # get_tarballs()
     get_tags()
     clone_releases()
