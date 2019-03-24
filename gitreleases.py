@@ -99,12 +99,10 @@ def clone_releases():
     os.system('mkdir tmp')
     for subpackage in sources.keys():
         tag = sources[subpackage]
-        pkgstr = "git clone git@github.com:pysal/{subpackage}.git".format(subpackage=subpackage)
-        pkgstr = "{pkgstr} --branch {tag} tmp/{subpackage}".format(pkgstr=pkgstr,
-                                                                   tag=tag,
-                                                                   subpackage=subpackage)
-
-
+        pkgstr = "git clone --branch {tag} ".format(tag=tag)
+        pkgstr = "{pkgstr} https://github.com/pysal/{subpackage}.git".format(pkgstr=pkgstr,
+                                                                             subpackage=subpackage)
+        pkgstr = "{pkgstr} tmp{subpackage}".format(pkgstr=pkgstr, subpackage=subpackage)
 
         print(pkgstr)
         os.system(pkgstr)
