@@ -31,6 +31,8 @@ install:
 
   - conda install --yes geopandas
   - pip install -r requirements_dev.txt
+  - make download
+  - make convert
 
 script:
   - python setup.py sdist >/dev/null

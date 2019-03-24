@@ -52,6 +52,8 @@ def get_release_info():
     with open('tarballs.json', 'w') as fp:
         json.dump(release, fp)
 
+    return release
+
 def get_tarballs():
     """
     Grab tarballs for releases and put in a temporary directory for further processing
