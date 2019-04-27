@@ -24,4 +24,4 @@ clean:
 	rm -rf auto_examples/
 
 dash:
-	doc2dash --name=pysal  --icon=_static/images/pysal_favicon.png _build/html 
+	doc2dash --name=PySAL  --icon=_static/images/pysal_favicon.png _build/html 
