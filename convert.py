@@ -269,7 +269,7 @@ os.system(c)
 c = "find pysal/explore/spaghetti/. -name '*.py' -print | xargs sed -i -- 's/import spaghetti/import pysal\.explore\.spaghetti/g'"
 os.system(c)
 
-init_lines = ["__version__='2.0rc2'"]
+init_lines = ["__version__='2.1.0dev'"]
 for package in packages:
     os.system('touch pysal/{package}/__init__.py'.format(package=package)) 
     subpackages = packages[package].split()
