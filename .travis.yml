@@ -4,8 +4,8 @@ branches:
 only:
   - master
 python:
-  - 3.5
   - 3.6
+  - 3.7
 
 env:
   - PYSAL_PLUS=false MPLBACKEND="pdf"
@@ -47,7 +47,6 @@ notifications:
             - levi.john.wolf@gmail.com
             - weikang9009@gmail.com
             - tayoshan@gmail.com
-            - marynia.kolak@gmail.com
             - jgaboardi@gmail.com
             - phil.stphns@gmail.com
         on_success: always
