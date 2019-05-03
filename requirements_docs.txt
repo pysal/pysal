@@ -4,3 +4,4 @@ sphinx_gallery
 sphinxcontrib-bibtex
 sphinx_bootstrap_theme
 numpydoc
+doc2dash
