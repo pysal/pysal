@@ -27,7 +27,6 @@ before_install:
   - conda config --add channels conda-forge
   - conda config --set channel_priority strict
   - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION
-  - conda install -y statsmodels
   - source activate test-env
 
 install:
@@ -38,6 +37,7 @@ install:
     fi;
 
   - conda install --yes geopandas
+  - conda install -y statsmodels
   - pip install -r requirements_dev.txt
   - make download
   - make convert
