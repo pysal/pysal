@@ -27,6 +27,7 @@ before_install:
   - conda config --add channels conda-forge
   - conda config --set channel_priority strict
   - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION
+  - conda install -y statsmodels
   - source activate test-env
 
 install:
