@@ -111,6 +111,13 @@ Bug reports
 To search for or report bugs, please see PySAL\'s
 [issues](http://github.com/pysal/pysal/issues).
 
+Build Instructions
+=======================
+
+To build the meta-package pysal see [build.md](build.md).
+
+
+
 License information
 ===================
 
