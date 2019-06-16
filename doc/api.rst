@@ -391,6 +391,97 @@ Gini Inequality Measures
     inequality.gini.Gini_Spatial
 
 
+pysal.explore.pointpats: Point Pattern Analysis
+-----------------------------------------------
+
+.. _pointpattern_api:
+
+Point Pattern
+++++++++++++++++++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+    pointpats.PointPattern
+
+.. _pointprocess_api:
+
+Point Processes
+++++++++++++++++++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+    pointpats.PointProcess
+    pointpats.PoissonPointProcess
+    pointpats.PoissonClusterPointProcess
+
+.. _centrgraphy_api:
+
+Centrography
+++++++++++++++++++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+    pointpats.mbr
+    pointpats.hull
+    pointpats.mean_center
+    pointpats.weighted_mean_center
+    pointpats.manhattan_median
+    pointpats.std_distance
+    pointpats.euclidean_median
+    pointpats.ellipse
+    pointpats.skyum
+    pointpats.dtot
+    pointpats._circle
+
+.. _quadrat_api:
+
+Quadrat Based Statistics
+++++++++++++++++++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+    pointpats.RectangleM
+    pointpats.HexagonM
+    pointpats.QStatistic
+
+
+.. _distance_api:
+
+Distance Based Statistics
++++++++++++++++++++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+    pointpats.DStatistic
+    pointpats.G
+    pointpats.F
+    pointpats.J
+    pointpats.K
+    pointpats.L
+    pointpats.Envelopes
+    pointpats.Genv
+    pointpats.Fenv
+    pointpats.Jenv
+    pointpats.Kenv
+    pointpats.Lenv
+
+.. _window_api:
+
+Window functions
+++++++++++++++++++++++++
+
+.. autosummary::
+   :toctree: generated/
+
+   pointpats.Window
+   pointpats.as_window
+   pointpats.poly_from_bbox
+   pointpats.to_ccf
 
 
 pysal.explore.spaghetti: 
