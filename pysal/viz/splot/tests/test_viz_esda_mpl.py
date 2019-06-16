@@ -4,9 +4,6 @@ import pysal.lib as lp
 from pysal.lib import examples
 import geopandas as gpd
 import numpy as np
-import unittest
-
-
 
 from pysal.explore.esda.moran import (Moran_Local, Moran, Moran_BV,
                         Moran_Local_BV, Moran_BV_matrix)
@@ -191,7 +188,7 @@ def test_lisa_cluster():
     fig, _ = lisa_cluster(moran_loc, df)
     plt.close(fig)
 
-@unittest.skip("skipping")
+
 def test_plot_local_autocorrelation():
     link = examples.get_path('columbus.shp')
     df = gpd.read_file(link)

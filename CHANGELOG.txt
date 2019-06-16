@@ -1,7 +1,5 @@
 v<2.0.0>, 2019-01-30
 
-# Release Notes for PySAL 2.0
-
 
 This release represents over 15 months of hard work on PySAL. It brings major transitions in the project together with many new enhancements, improved documentation, and many bug fixes and optimizations.
 
