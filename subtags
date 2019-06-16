@@ -6,6 +6,7 @@ pointpats  https://github.com/pysal/pointpats/tree/v2.0.0
 spaghetti https://github.com/pysal/spaghetti/tree/v1.1.0 
 mapclassify  https://github.com/pysal/mapclassify/tree/v2.0.1
 spreg   https://github.com/pysal/spreg/tree/v1.0.4
+segregation https://github.com/pysal/segregation/tree/1.0.6
 spglm https://github.com/pysal/spglm/tree/v1.0.6
 spint https://github.com/pysal/spint/tree/v1.0.5
 splot https://github.com/pysal/spint/tree/v1.0.0
