@@ -73,6 +73,10 @@
 .table-scrollable { margin: 0; padding: 0; }
 
 .label {
-    color: #222222;
-    font-size: 100%;
+    color: #ff0000;
+    /*font-size: 100%;*/
+}
+
+div.body {
+    max-width: 1080px;
 }
