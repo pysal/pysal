@@ -800,12 +800,8 @@ Kernel Specification
 .. autosummary::
    :toctree: generated/
 
-    mgwr.kernels.fix_gauss
-    mgwr.kernels.adapt_gauss
-    mgwr.kernels.fix_bisquare
-    mgwr.kernels.adapt_bisquare
-    mgwr.kernels.fix_exp
-    mgwr.kernels.adapt_exp
+    mgwr.kernels.Kernel
+    mgwr.kernels.local_cdist
 
 Bandwidth Selection
 +++++++++++++++++++
