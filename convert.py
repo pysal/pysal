@@ -239,6 +239,11 @@ if "splot" in tagged:
     c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\._/from pysal\.viz\.splot\._/g'"
     os.system(c)
 
+    # import spreg -> from pysal.model import spreg
+    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/import spreg/from pysal\.model import spreg/g'"
+    os.system(c)
+
+
 #
 #
 # c = "find pysalnext/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/pysal\.open/pysal\.lib\.examples\.open/g'"
@@ -277,7 +282,7 @@ c = "find pysal/explore/segregation/. -name '*.py' -print | xargs sed -i -- 's/w
 
 os.system(c)
 
-init_lines = ["__version__='2.1.0dev'"]
+init_lines = ["__version__='2.1.0rc'"]
 for package in packages:
     os.system("touch pysal/{package}/__init__.py".format(package=package))
     subpackages = packages[package].split()
