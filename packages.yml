@@ -6,6 +6,7 @@ explore:
   inequality
   pointpats
   spaghetti
+  segregation
 viz:
   mapclassify
   splot

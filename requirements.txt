@@ -1,6 +1,7 @@
-scipy>=0.11
+scipy
 pandas
 seaborn
 matplotlib
 descartes
 palettable
+scikit-learn

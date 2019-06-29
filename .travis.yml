@@ -37,6 +37,7 @@ install:
     fi;
 
   - conda install --yes geopandas
+  - conda install -y statsmodels
   - pip install -r requirements_dev.txt
   - make download
   - make convert

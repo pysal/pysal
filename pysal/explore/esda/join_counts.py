@@ -203,7 +203,8 @@ class Join_Counts(object):
 
         See Also
         ---------
-        For further documentation, refer to the Join_Count class in pysal.pysal.explore.esda
+
+        Join_Count
         """
         if outvals is None:
             outvals = []
