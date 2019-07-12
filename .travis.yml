@@ -21,12 +21,13 @@ install:
   - source activate test
   - make download
   - make convert
-  - pip install -e .
   - conda list
 
 script:
   - python setup.py sdist >/dev/null
-  - nosetests --with-doctest --verbose --with-coverage --cover-package=libpysal -I shapely_ext.py;
+  - python setup.py install
+  - travis_wait 45 nosetests --verbose --with-coverage --cover-package=pysal;
+
 notifications:
     email:
         recipients:
