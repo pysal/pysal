@@ -1,0 +1,14 @@
+name: test
+channels:
+  - conda-forge
+dependencies:
+  - python=3.6
+  - six
+  # required
+  # testing
+  - nose
+  - codecov
+  - matplotlib
+  # optional
+  - geopandas
+  - statsmodels

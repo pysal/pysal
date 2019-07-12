@@ -1,63 +1,40 @@
 language: python
+
 sudo: false
-branches:
-only:
-  - master
+
 matrix:
   include:
-    - python: 3.6
-      env: PYSAL_PLUS=false MPLBACKEND="pdf"
-    - python: 3.6
-      env: PYSAL_PLUS=true MPLBACKEND="pdf"
-    - python: 3.7
-      dist: xenial
-      sudo: true
-      env: PYSAL_PLUS=false MPLBACKEND="pdf"
-    - python: 3.7
-      dist: xenial
-      sudo: true
-      env: PYSAL_PLUS=true MPLBACKEND="pdf"
-
-before_install:
-  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-  - chmod +x miniconda.sh
-  - ./miniconda.sh -b -p ./miniconda
-  - export PATH=`pwd`/miniconda/bin:$PATH
-  - conda update --yes conda
-  - conda config --add channels conda-forge
-  - conda config --set channel_priority strict
-  - conda create -y -q -n test-env python=$TRAVIS_PYTHON_VERSION
-  - source activate test-env
+    - env: ENV_FILE="ci/travis/36-latest-conda-forge.yaml"
+    - env: ENV_FILE="ci/travis/37-latest-conda-forge.yaml"
 
 install:
-  - conda install --yes pip
-  - if [ "$PYSAL_PLUS" == true ]; then
-        echo 'plus testing'; conda install --yes --file requirements_plus.txt;
-        else conda install --yes --file requirements.txt;
-    fi;
+  # Install conda
+  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - conda config --set always_yes yes --set changeps1 no
+  - conda install conda=4.6
+  - conda info
 
-  - conda install --yes geopandas
-  - conda install -y statsmodels
-  - pip install -r requirements_dev.txt
+  # Install dependencies
+  - conda env create --file="${ENV_FILE}"
+  - source activate test
   - make download
   - make convert
+  - pip install -e .
+  - conda list
 
 script:
   - python setup.py sdist >/dev/null
-  - python setup.py install
-  - travis_wait 45 nosetests --verbose --with-coverage --cover-package=pysal;
-
+  - echo "check_stable=False" >libpysal/config.py
+  - nosetests --with-doctest --verbose --with-coverage --cover-package=libpysal -I shapely_ext.py;
   #- cd doc; make pickle; make doctest
 notifications:
     email:
         recipients:
             - sjsrey@gmail.com
             - levi.john.wolf@gmail.com
-            - weikang9009@gmail.com
-            - tayoshan@gmail.com
-            - jgaboardi@gmail.com
-            - phil.stphns@gmail.com
-        on_success: always
+        on_success: change 
         on_failure: always
 
 after_success:
