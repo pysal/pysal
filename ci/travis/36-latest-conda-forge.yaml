@@ -5,6 +5,7 @@ dependencies:
   - python=3.6
   - six
   - pyyaml
+  - deprecated
   # required
   # testing
   - nose
