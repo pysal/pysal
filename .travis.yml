@@ -26,9 +26,7 @@ install:
 
 script:
   - python setup.py sdist >/dev/null
-  - echo "check_stable=False" >libpysal/config.py
   - nosetests --with-doctest --verbose --with-coverage --cover-package=libpysal -I shapely_ext.py;
-  #- cd doc; make pickle; make doctest
 notifications:
     email:
         recipients:
