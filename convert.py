@@ -7,6 +7,7 @@ import json
 # TARGETROOT ="pysal/"
 
 os.system("rm pysal/*.py")
+os.system("rm -rf notebooks")
 
 with open("packages.yml") as package_file:
     packages = yaml.load(package_file)
@@ -19,13 +20,17 @@ tagged = list(tags.keys())
 
 print(tagged)
 
+com = "mkdir notebooks"
+os.system(com)
+
 for package in packages:
     com = "rm -fr pysal/{package}".format(package=package)
     os.system(com)
     com = "mkdir pysal/{package}".format(package=package)
     os.system(com)
+    com = "mkdir notebooks/{package}".format(package=package)
+    os.system(com)
 
-    # "cp -fr tmp/{subpackage}-master/{subpackage}/* pysal/{package}/".format(package=package, subpackage=subpackage)
     subpackages = packages[package].split()
     for subpackage in subpackages:
         if subpackage == "libpysal":
@@ -42,16 +47,29 @@ for package in packages:
         else:
             print("skipping: ", subpackage)
 
+        #############
+        # notebooks #
+        #############
+        com = "mkdir notebooks/{package}/{subpackage}".format(package=package, subpackage=subpackage)
+        os.system(com)
+        com = "cp -rf tmp/{subpackage}/notebooks/* notebooks/{package}/{subpackage}/".format(package=package,
+                                                                                             subpackage=subpackage)
+        os.system(com)
 
 ###################
 # Rewrite Imports #
 ###################
+cache = {}
 
-def replace(targets, string, replacement):
+def replace(targets, string, replacement, update_cache=True):
     c = "find {} -name '*.py' -print | xargs sed -i -- 's/{}/{}/g'".format(targets,
                                                                            string,
                                                                            replacement)
-    print(c)
+    if update_cache:
+        if targets in cache:
+            cache[targets].append([string, replacement])
+        else:
+            cache[targets]=[[string, replacement]]
     os.system(c)
 
 
@@ -118,6 +136,52 @@ replace("pysal/explore/spaghetti/.", "import spaghetti", "import pysal\.explore\
 replace("pysal/explore/segregation/.", "from segregation", "from pysal\.explore\.segregation")
 replace("pysal/explore/segregation/.", "import segregation", "import pysal\.explore\.segregation")
 replace("pysal/explore/segregation/.", "w_pysal\.lib", "w_libpysal")
+
+#####################
+# Rewrite notebooks #
+#####################
+
+
+
+
+
+
+with open("packages.yml") as package_file:
+    packages = yaml.load(package_file)
+
+
+
+
+mappings = []
+for package in ["explore", "viz", "model"]:
+    for subpackage in packages[package].split():
+        left = "from {}".format(subpackage)
+        right = "from pysal\.{package}\.{subpackage}".format(package=package, subpackage=subpackage)
+        mappings.append([left, right])
+        left = "import {}".format(subpackage)
+        right = "from pysal\.{package} import {subpackage}".format(package=package, subpackage=subpackage)
+        mappings.append([left, right])
+        left = "libpysal"
+        right = "pysal\.lib"
+        mappings.append([left, right])
+
+def replace_nb(targets, string, replacement, update_cache=True):
+    c = "find {} -type f -print0 | xargs -0 sed -i -- 's/{}/{}/g'".format(targets, string, replacement)
+
+    os.system(c)
+
+
+
+for package in ["explore", "viz", "model"]:
+    for subpackage in packages[package].split():
+        targets = "notebooks/{package}/{subpackage}/".format(package=package, subpackage=subpackage)
+        for mapping in mappings:
+            left, right = mapping
+            replace_nb(targets, left, right)
+
+
+
+
 
 
 init_lines = ["__version__='2.1.0rc'"]
