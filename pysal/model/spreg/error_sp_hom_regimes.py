@@ -26,8 +26,8 @@ class GM_Error_Hom_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
     '''
     GMM method for a spatial error model with homoskedasticity, with regimes, 
-    results and diagnostics; based on Drukker et al. (2013) [Drukker2013]_, following
-    Anselin (2011) [Anselin2011]_.
+    results and diagnostics; based on Drukker et al. (2013) :cite:`Drukker2013`, following
+    Anselin (2011) :cite:`Anselin2011`.
 
     Parameters
     ----------
@@ -463,8 +463,8 @@ class GM_Endog_Error_Hom_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     '''
     GMM method for a spatial error model with homoskedasticity, regimes and
     endogenous variables.
-    Based on Drukker et al. (2013) [Drukker2013]_, following Anselin (2011)
-    [Anselin2011]_.
+    Based on Drukker et al. (2013) :cite:`Drukker2013`, following Anselin (2011)
+    :cite:`Anselin2011`.
 
     Parameters
     ----------
@@ -989,8 +989,8 @@ class GM_Combo_Hom_Regimes(GM_Endog_Error_Hom_Regimes):
     '''
     GMM method for a spatial lag and error model with homoskedasticity,
     regimes and endogenous variables, with results and diagnostics;
-    based on Drukker et al. (2013) [Drukker2013]_, following Anselin (2011)
-    [Anselin2011]_.
+    based on Drukker et al. (2013) :cite:`Drukker2013`, following Anselin (2011)
+    :cite:`Anselin2011`.
 
     Parameters
     ----------

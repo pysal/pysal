@@ -1,16 +1,18 @@
 """
 Markov based methods for spatial dynamics.
 """
-__author__ = "Sergio J. Rey <sjsrey@gmail.com>"
+__author__ = "Sergio J. Rey <sjsrey@gmail.com>, Wei Kang <weikang9009@gmail.com>"
 
 __all__ = ["Markov", "LISA_Markov", "Spatial_Markov", "kullback",
-           "prais", "homogeneity"]
+           "prais", "homogeneity", "FullRank_Markov", "sojourn_time",
+           "GeoRank_Markov"]
 
 import numpy as np
 from .ergodic import fmpt
 from .ergodic import steady_state as STEADY_STATE
 from .components import Graph
 from scipy import stats
+from scipy.stats import rankdata
 from operator import gt
 from pysal.lib import weights
 from pysal.explore.esda.moran import Moran_Local
@@ -131,6 +133,7 @@ class Markov(object):
     array([0.17957376, 0.21631443, 0.21499942, 0.21134662, 0.17776576])
 
     """
+
     def __init__(self, class_ids, classes=None):
         if classes is not None:
             self.classes = classes
@@ -587,6 +590,7 @@ class Spatial_Markov(object):
      [0.         0.         0.         0.03891051 0.96108949]]
 
     """
+
     def __init__(self, y, w, k=4, m=4, permutations=0, fixed=True,
                  discrete=False, cutoffs=None, lag_cutoffs=None,
                  variable_name=None):
@@ -611,16 +615,9 @@ class Spatial_Markov(object):
                 y_int.append(list(map(label_dict.get, yi)))
             self.class_ids = np.array(y_int)
             self.lclass_ids = self.class_ids
-
-            # le = preprocessing.LabelEncoder()
-            # le.fit(y_pool)
-            # self.k = len(le.classes_)
-            # self.m = self.k
-            # y_pool_int = le.transform(y_pool)
-            # self.classes = y_int.reshape(y.shape)
         else:
-            self.class_ids, self.cutoffs, self.k = self._maybe_classify(y, k=k,
-                                                                     cutoffs=self.cutoffs)
+            self.class_ids, self.cutoffs, self.k = self._maybe_classify(
+                y, k=k, cutoffs=self.cutoffs)
             self.classes = np.arange(self.k)
 
         classic = Markov(self.class_ids)
@@ -737,12 +734,11 @@ class Spatial_Markov(object):
 
         '''
         if self.discrete:
-            #np.random.seed(24788)
             self.lclass_ids = weights.lag_categorical(w, self.class_ids,
-                                                 ties="tryself")
+                                                      ties="tryself")
         else:
             ly = weights.lag_spatial(w, y)
-            self.lclass_ids, self.lag_cutoffs,self.m = self._maybe_classify(
+            self.lclass_ids, self.lag_cutoffs, self.m = self._maybe_classify(
                 ly, self.m, self.lag_cutoffs)
             self.lclasses = np.arange(self.m)
 
@@ -751,8 +747,8 @@ class Spatial_Markov(object):
         for t1 in range(t - 1):
             t2 = t1 + 1
             for i in range(n):
-                T[self.lclass_ids[i, t1], self.class_ids[i, t1], self.class_ids[i,
-                                                                       t2]] += 1
+                T[self.lclass_ids[i, t1], self.class_ids[i, t1],
+                    self.class_ids[i, t2]] += 1
 
         P = np.zeros_like(T)
         for i, mat in enumerate(T):
@@ -838,10 +834,9 @@ class Spatial_Markov(object):
 
         '''
 
-        rows,cols = y.shape
+        rows, cols = y.shape
         if cutoffs is None:
             if self.fixed:
-            #if cutoffs is None:
                 mcyb = mc.Quantiles(y.flatten(), k=k)
                 yb = mcyb.yb.reshape(y.shape)
                 cutoffs = mcyb.bins
@@ -1152,6 +1147,7 @@ class LISA_Markov(Markov):
     array([2, 3, 2, 1, 4])
 
     """
+
     def __init__(self, y, w, permutations=0,
                  significance_level=0.05, geoda_quads=False):
         y = y.transpose()
@@ -1251,34 +1247,21 @@ class LISA_Markov(Markov):
         >>> np.random.seed(10)
         >>> lm_random = LISA_Markov(pci, w, permutations=99)
         >>> r = lm_random.spillover()
-        >>> r['components'][:,12]
-        array([0., 0., 0., 2., 0., 1., 1., 0., 0., 2., 0., 0., 0., 0., 0., 0., 0.,
-               1., 1., 0., 0., 0., 0., 0., 0., 2., 1., 1., 0., 1., 0., 0., 1., 0.,
-               2., 1., 1., 0., 0., 0., 0., 0., 1., 0., 2., 1., 0., 0.])
-        >>> r['components'][:,14]
-        array([0., 2., 0., 2., 0., 1., 1., 0., 0., 2., 0., 0., 0., 0., 0., 0., 0.,
-               1., 1., 0., 0., 0., 0., 0., 0., 2., 0., 1., 0., 1., 0., 0., 1., 0.,
-               2., 1., 1., 0., 0., 0., 0., 0., 1., 0., 2., 1., 0., 0.])
-        >>> r['spill_over'][:,12]
-        array([0., 1., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
-               0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.,
-               0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 1.])
+        >>> (r['components'][:, 12] > 0).sum()
+        17
+        >>> (r['components'][:, 13]>0).sum()
+        23
+        >>> (r['spill_over'][:,12]>0).sum()
+        6
 
         Including neighbors of core neighbors
-
         >>> rn = lm_random.spillover(neighbors_on=True)
-        >>> rn['components'][:,12]
-        array([0., 2., 0., 2., 0., 1., 1., 0., 0., 2., 0., 1., 0., 0., 1., 0., 1.,
-               1., 1., 1., 0., 0., 0., 2., 0., 2., 1., 1., 0., 1., 0., 0., 1., 0.,
-               2., 1., 1., 0., 0., 0., 0., 2., 1., 1., 2., 1., 0., 2.])
-        >>> rn["components"][:,13]
-        array([0., 2., 0., 2., 2., 1., 1., 0., 0., 2., 0., 1., 0., 2., 1., 0., 1.,
-               1., 1., 1., 0., 0., 0., 2., 2., 2., 1., 1., 2., 1., 0., 2., 1., 2.,
-               2., 1., 1., 0., 2., 0., 2., 2., 1., 1., 2., 1., 0., 2.])
-        >>> rn["spill_over"][:,12]
-        array([0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0.,
-               0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 1., 0., 0., 1., 0., 1.,
-               0., 0., 0., 0., 1., 0., 1., 0., 0., 0., 0., 0., 0., 0.])
+        >>> (rn['components'][:, 12] > 0).sum()
+        26
+        >>> (rn["components"][:, 13] > 0).sum()
+        34
+        >>> (rn["spill_over"][:, 12] > 0).sum()
+        8
 
         """
         n, k = self.q.shape
@@ -1493,6 +1476,7 @@ def prais(pmat):
     pr = 1 - np.diag(pmat)
     return pr
 
+
 def homogeneity(transition_matrices, regime_names=[], class_names=[],
                 title="Markov Homogeneity Test"):
     """
@@ -1571,7 +1555,7 @@ class Homogeneity_Results:
         n_i = T.sum(axis=1)
         A_i = (T > 0).sum(axis=1)
         A_im = np.zeros((r, m))
-        p_ij = np.dot(np.diag(1./(n_i + (n_i == 0)*1.)), T)
+        p_ij = np.dot(np.diag(1. / (n_i + (n_i == 0) * 1.)), T)
         den = p_ij + 1. * (p_ij == 0)
         b_i = np.zeros_like(A_i)
         p_ijm = np.zeros_like(M)
@@ -1585,10 +1569,10 @@ class Homogeneity_Results:
 
         for nijm in M:
             nim = nijm.sum(axis=1)
-            B[:, m] = 1.*(nim > 0)
+            B[:, m] = 1. * (nim > 0)
             b_i = b_i + 1. * (nim > 0)
-            p_ijm[m] = np.dot(np.diag(1./(nim + (nim == 0)*1.)), nijm)
-            num = (p_ijm[m]-p_ij)**2
+            p_ijm[m] = np.dot(np.diag(1. / (nim + (nim == 0) * 1.)), nijm)
+            num = (p_ijm[m] - p_ij)**2
             ratio = num / den
             qijm = np.dot(np.diag(nim), ratio)
             q_table[m] = qijm
@@ -1605,7 +1589,7 @@ class Homogeneity_Results:
         # b_i is the number of regimes that have non-zero observations in row i
         # A_i is the number of non-zero elements in row i of the aggregated
         # transition matrix
-        self.dof = int(((b_i-1) * (A_i-1)).sum())
+        self.dof = int(((b_i - 1) * (A_i - 1)).sum())
         self.Q = Q
         self.Q_p_value = 1 - stats.chi2.cdf(self.Q, self.dof)
         self.LR = LR * 2.
@@ -1631,7 +1615,7 @@ class Homogeneity_Results:
         max_col = max([len(col) for col in cols])
         col_width = max([5, max_col])  # probabilities have 5 chars
         n_tabs = self.k
-        width = n_tabs * 4 + (self.k+1)*col_width
+        width = n_tabs * 4 + (self.k + 1) * col_width
         lead = "-" * width
         head = title.center(width)
         contents = [lead, head, lead]
@@ -1696,10 +1680,10 @@ class Homogeneity_Results:
 
         if file_name:
             k = self.k
-            ks = str(k+1)
+            ks = str(k + 1)
             with open(file_name, 'w') as f:
                 c = []
-                fmt = "r"*(k+1)
+                fmt = "r" * (k + 1)
                 s = "\\begin{tabular}{|%s|}\\hline\n" % fmt
                 s += "\\multicolumn{%s}{|c|}{%s}" % (ks, title)
                 c.append(s)
@@ -1734,8 +1718,270 @@ class Homogeneity_Results:
                 for mat in pmats:
                     c.append("\\hline\n")
                     for row in mat:
-                        c.append(row+"\\\\\n")
+                        c.append(row + "\\\\\n")
                 c.append("\\hline\n")
                 c.append("\\end{tabular}")
                 s2 = "".join(c)
-                f.write(s1+s2)
+                f.write(s1 + s2)
+
+
+class FullRank_Markov:
+    """
+    Full Rank Markov in which ranks are considered as Markov states rather
+    than quantiles or other discretized classes. This is one way to avoid
+    issues associated with discretization.
+
+    Parameters
+    ----------
+    y            : array
+                   (n, t) with t>>n, one row per observation (n total),
+                   one column recording the value of each observation,
+                   with as many columns as time periods.
+
+    Attributes
+    ----------
+    ranks        : array
+                   ranks of the original y array (by columns): higher values
+                   rank higher, e.g. the largest value in a column ranks 1.
+    p            : array
+                   (n, n), transition probability matrix for Full
+                   Rank Markov.
+    steady_state : array
+                   (n, ), ergodic distribution.
+    transitions  : array
+                   (n, n), count of transitions between each rank i and j
+    fmpt         : array
+                   (n, n), first mean passage times.
+    sojourn_time : array
+                   (n, ), sojourn times.
+
+    Notes
+    -----
+    Refer to :cite:`Rey2014a` Equation (11) for details. Ties are resolved by
+    assigning distinct ranks, corresponding to the order that the values occur
+    in each cross section.
+
+    Examples
+    --------
+    US nominal per capita income 48 states 81 years 1929-2009
+
+    >>> from pysal.explore.giddy.markov import FullRank_Markov
+    >>> import pysal.lib as ps
+    >>> import numpy as np
+    >>> f = ps.io.open(ps.examples.get_path("usjoin.csv"))
+    >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
+    >>> m = FullRank_Markov(pci)
+    >>> m.ranks
+    array([[45, 45, 44, ..., 41, 40, 39],
+           [24, 25, 25, ..., 36, 38, 41],
+           [46, 47, 45, ..., 43, 43, 43],
+           ...,
+           [34, 34, 34, ..., 47, 46, 42],
+           [17, 17, 22, ..., 25, 26, 25],
+           [16, 18, 19, ...,  6,  6,  7]])
+    >>> m.transitions
+    array([[66.,  5.,  5., ...,  0.,  0.,  0.],
+           [ 8., 51.,  9., ...,  0.,  0.,  0.],
+           [ 2., 13., 44., ...,  0.,  0.,  0.],
+           ...,
+           [ 0.,  0.,  0., ..., 40., 17.,  0.],
+           [ 0.,  0.,  0., ..., 15., 54.,  2.],
+           [ 0.,  0.,  0., ...,  2.,  1., 77.]])
+    >>> m.p[0, :5]
+    array([0.825 , 0.0625, 0.0625, 0.025 , 0.025 ])
+    >>> m.fmpt[0, :5]
+    array([48.        , 87.96280048, 68.1089084 , 58.83306575, 41.77250827])
+    >>> m.sojourn_time[:5]
+    array([5.71428571, 2.75862069, 2.22222222, 1.77777778, 1.66666667])
+
+    """
+
+    def __init__(self, y):
+
+        y = np.asarray(y)
+        # resolve ties: All values are given a distinct rank, corresponding
+        # to the order that the values occur in each cross section.
+        r_asc = np.array([rankdata(col, method='ordinal') for col in y.T]).T
+        # ranks by high (1) to low (n)
+        self.ranks = r_asc.shape[0] - r_asc + 1
+        frm = Markov(self.ranks)
+        self.p = frm.p
+        self.transitions = frm.transitions
+
+    @property
+    def steady_state(self):
+        if not hasattr(self, '_steady_state'):
+            self._steady_state = STEADY_STATE(self.p)
+        return self._steady_state
+
+    @property
+    def fmpt(self):
+        if not hasattr(self, '_fmpt'):
+            self._fmpt = fmpt(self.p)
+        return self._fmpt
+
+    @property
+    def sojourn_time(self):
+        if not hasattr(self, '_st'):
+            self._st = sojourn_time(self.p)
+        return self._st
+
+
+def sojourn_time(p):
+    """
+    Calculate sojourn time based on a given transition probability matrix.
+
+    Parameters
+    ----------
+    p        : array
+               (k, k), a Markov transition probability matrix.
+
+    Returns
+    -------
+             : array
+               (k, ), sojourn times. Each element is the expected time a Markov
+               chain spends in each states before leaving that state.
+
+    Notes
+    -----
+    Refer to :cite:`Ibe2009` for more details on sojourn times for Markov
+    chains.
+
+    Examples
+    --------
+    >>> from pysal.explore.giddy.markov import sojourn_time
+    >>> import numpy as np
+    >>> p = np.array([[.5, .25, .25], [.5, 0, .5], [.25, .25, .5]])
+    >>> sojourn_time(p)
+    array([2., 1., 2.])
+
+    """
+    p = np.asarray(p)
+    pii = p.diagonal()
+
+    if not (1 - pii).all():
+        print("Sojourn times are infinite for absorbing states!")
+    return 1 / (1 - pii)
+
+
+class GeoRank_Markov:
+    """
+    Geographic Rank Markov.
+    Geographic units are considered as Markov states.
+
+    Parameters
+    ----------
+    y              : array
+                     (n, t) with t>>n, one row per observation (n total),
+                     one column recording the value of each observation,
+                     with as many columns as time periods.
+
+    Attributes
+    ----------
+    p            : array
+                   (n, n), transition probability matrix for
+                   geographic rank Markov.
+    steady_state : array
+                   (n, ), ergodic distribution.
+    transitions  : array
+                   (n, n), count of rank transitions between each
+                   geographic unit i and j.
+    fmpt         : array
+                   (n, n), first mean passage times.
+    sojourn_time : array
+                   (n, ), sojourn times.
+
+    Notes
+    -----
+    Refer to :cite:`Rey2014a` Equation (13)-(16) for details. Ties are
+    resolved by assigning distinct ranks, corresponding to the order
+    that the values occur in each cross section.
+
+    Examples
+    --------
+    US nominal per capita income 48 states 81 years 1929-2009
+
+    >>> from pysal.explore.giddy.markov import GeoRank_Markov
+    >>> import pysal.lib as ps
+    >>> import numpy as np
+    >>> f = ps.io.open(ps.examples.get_path("usjoin.csv"))
+    >>> pci = np.array([f.by_col[str(y)] for y in range(1929,2010)]).transpose()
+    >>> m = GeoRank_Markov(pci)
+    >>> m.transitions
+    array([[38.,  0.,  8., ...,  0.,  0.,  0.],
+           [ 0., 15.,  0., ...,  0.,  1.,  0.],
+           [ 6.,  0., 44., ...,  5.,  0.,  0.],
+           ...,
+           [ 2.,  0.,  5., ..., 34.,  0.,  0.],
+           [ 0.,  0.,  0., ...,  0., 18.,  2.],
+           [ 0.,  0.,  0., ...,  0.,  3., 14.]])
+    >>> m.p
+    array([[0.475 , 0.    , 0.1   , ..., 0.    , 0.    , 0.    ],
+           [0.    , 0.1875, 0.    , ..., 0.    , 0.0125, 0.    ],
+           [0.075 , 0.    , 0.55  , ..., 0.0625, 0.    , 0.    ],
+           ...,
+           [0.025 , 0.    , 0.0625, ..., 0.425 , 0.    , 0.    ],
+           [0.    , 0.    , 0.    , ..., 0.    , 0.225 , 0.025 ],
+           [0.    , 0.    , 0.    , ..., 0.    , 0.0375, 0.175 ]])
+    >>> m.fmpt
+    array([[ 48.        ,  63.35532038,  92.75274652, ...,  82.47515731,
+             71.01114491,  68.65737127],
+           [108.25928005,  48.        , 127.99032986, ...,  92.03098299,
+             63.36652935,  61.82733039],
+           [ 76.96801786,  64.7713783 ,  48.        , ...,  73.84595169,
+             72.24682723,  69.77497173],
+           ...,
+           [ 93.3107474 ,  62.47670463, 105.80634118, ...,  48.        ,
+             69.30121319,  67.08838421],
+           [113.65278078,  61.1987031 , 133.57991745, ...,  96.0103924 ,
+             48.        ,  56.74165107],
+           [114.71894813,  63.4019776 , 134.73381719, ...,  97.287895  ,
+             61.45565054,  48.        ]])
+    >>> m.sojourn_time
+    array([ 1.9047619 ,  1.23076923,  2.22222222,  1.73913043,  1.15942029,
+            3.80952381,  1.70212766,  1.25      ,  1.31147541,  1.11111111,
+            1.73913043,  1.37931034,  1.17647059,  1.21212121,  1.33333333,
+            1.37931034,  1.09589041,  2.10526316,  2.        ,  1.45454545,
+            1.26984127, 26.66666667,  1.19402985,  1.23076923,  1.09589041,
+            1.56862745,  1.26984127,  2.42424242,  1.50943396,  2.        ,
+            1.29032258,  1.09589041,  1.6       ,  1.42857143,  1.25      ,
+            1.45454545,  1.29032258,  1.6       ,  1.17647059,  1.56862745,
+            1.25      ,  1.37931034,  1.45454545,  1.42857143,  1.29032258,
+            1.73913043,  1.29032258,  1.21212121])
+
+    """
+
+    def __init__(self, y):
+        y = np.asarray(y)
+        n = y.shape[0]
+        # resolve ties: All values are given a distinct rank, corresponding
+        # to the order that the values occur in each cross section.
+        ranks = np.array([rankdata(col, method='ordinal') for col in y.T]).T
+        geo_ranks = np.argsort(ranks, axis=0) + 1
+        grm = Markov(geo_ranks)
+        self.p = grm.p
+        self.transitions = grm.transitions
+
+    @property
+    def steady_state(self):
+        if not hasattr(self, '_steady_state'):
+            self._steady_state = STEADY_STATE(self.p)
+        return self._steady_state
+
+
+    @property
+    def fmpt(self):
+        if not hasattr(self, '_fmpt'):
+            self._fmpt = fmpt(self.p)
+        return self._fmpt
+
+
+    @property
+    def sojourn_time(self):
+        if not hasattr(self, '_st'):
+            self._st = sojourn_time(self.p)
+        return self._st
+
+
+
+

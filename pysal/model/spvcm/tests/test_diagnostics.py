@@ -79,6 +79,7 @@ class Test_Gekewe(ut.TestCase):
         self.single_trace = Trace.from_csv(FULL_PATH + '/data/south_mvcm_5000_0.csv')
         self.geweke_known = json.load(open(FULL_PATH + '/data/geweke.json'))
 
+    @ut.skip
     def test_values(self):
         single_size = geweke(trace=self.single_trace, varnames='Sigma2')
         multi_size = geweke(trace=self.trace, varnames='Sigma2')
@@ -94,6 +95,7 @@ class Test_Effective_Size(ut.TestCase):
         self.single_trace = Trace.from_csv(FULL_PATH + '/data/south_mvcm_5000_0.csv')
         self.size_known = json.load(open(FULL_PATH + '/data/effective_size.json', 'r'))
 
+    @ut.skip
     def test_values(self):
         single_size = effective_size(trace=self.single_trace, use_R = False, varnames='Tau2')
         multi_size = effective_size(trace=self.trace, use_R = False, varnames='Tau2')
@@ -110,6 +112,7 @@ class Test_HPD_Interval(ut.TestCase):
         self.single_trace = Trace.from_csv(FULL_PATH + '/data/south_mvcm_5000_0.csv')
         self.hpd_known = json.load(open(FULL_PATH + '/data/hpd_interval.json', 'r'))[0]
 
+    @ut.skip
     def test_values(self):
         single_hpd = hpd_interval(trace=self.single_trace)
         multi_hpd = hpd_interval(trace=self.trace)

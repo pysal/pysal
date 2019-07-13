@@ -18,7 +18,7 @@ __all__ = [
 def f_stat(reg):
     """
     Calculates the f-statistic and associated p-value of the
-    regression. [Greene2003]_
+    regression. :cite:`Greene2003`
     (For two stage least squares see f_stat_tsls)
 
     Parameters
@@ -85,7 +85,7 @@ def f_stat(reg):
 def t_stat(reg, z_stat=False):
     """
     Calculates the t-statistics (or z-statistics) and associated
-    p-values. [Greene2003]_
+    p-values. :cite:`Greene2003`
 
     Parameters
     ----------
@@ -155,7 +155,7 @@ def t_stat(reg, z_stat=False):
 
 def r2(reg):
     """
-    Calculates the R^2 value for the regression. [Greene2003]_ 
+    Calculates the R^2 value for the regression. :cite:`Greene2003` 
 
     Parameters
     ----------
@@ -217,7 +217,7 @@ def r2(reg):
 
 def ar2(reg):
     """
-    Calculates the adjusted R^2 value for the regression. [Greene2003]_
+    Calculates the adjusted R^2 value for the regression. :cite:`Greene2003`
 
     Parameters
     ----------
@@ -275,7 +275,7 @@ def ar2(reg):
 
 def se_betas(reg):
     """
-    Calculates the standard error of the regression coefficients. [Greene2003]_
+    Calculates the standard error of the regression coefficients. :cite:`Greene2003`
 
     Parameters
     ----------
@@ -333,7 +333,7 @@ def se_betas(reg):
 
 def log_likelihood(reg):
     """
-    Calculates the log-likelihood value for the regression. [Greene2003]_ 
+    Calculates the log-likelihood value for the regression. :cite:`Greene2003` 
 
     Parameters
     ----------
@@ -392,7 +392,7 @@ def log_likelihood(reg):
 
 def akaike(reg):
     """
-    Calculates the Akaike Information Criterion. [Akaike1974]_
+    Calculates the Akaike Information Criterion. :cite:`Akaike1974`
 
     Parameters
     ----------
@@ -456,7 +456,7 @@ def akaike(reg):
 
 def schwarz(reg):
     """
-    Calculates the Schwarz Information Criterion. [Schwarz1978]_
+    Calculates the Schwarz Information Criterion. :cite:`Schwarz1978`
 
     Parameters
     ----------
@@ -521,7 +521,7 @@ def schwarz(reg):
 def condition_index(reg):
     """
     Calculates the multicollinearity condition index according to Belsey,
-    Kuh and Welsh (1980) [Belsley1980]_.
+    Kuh and Welsh (1980) :cite:`Belsley1980`.
 
     Parameters
     ----------
@@ -587,7 +587,7 @@ def condition_index(reg):
 
 def jarque_bera(reg):
     """
-    Jarque-Bera test for normality in the residuals. [Jarque1980]_ 
+    Jarque-Bera test for normality in the residuals. :cite:`Jarque1980`
 
     Parameters
     ----------
@@ -674,7 +674,7 @@ def jarque_bera(reg):
 def breusch_pagan(reg, z=None):
     """
     Calculates the Breusch-Pagan test statistic to check for
-    heteroscedasticity. [Breusch1979]_ 
+    heteroscedasticity. :cite:`Breusch1979`
 
     Parameters
     ----------
@@ -824,7 +824,7 @@ def breusch_pagan(reg, z=None):
 
 def white(reg):
     """
-    Calculates the White test to check for heteroscedasticity. [White1980]_
+    Calculates the White test to check for heteroscedasticity. :cite:`White1980`
 
     Parameters
     ----------
@@ -980,7 +980,7 @@ def white(reg):
 def koenker_bassett(reg, z=None):
     """
     Calculates the Koenker-Bassett test statistic to check for
-    heteroscedasticity. [Koenker1982]_ [Greene2003]_
+    heteroscedasticity. :cite:`Koenker1982,Greene2003`
 
     Parameters
     ----------
@@ -1138,7 +1138,7 @@ def vif(reg):
     Calculates the variance inflation factor for each independent variable.
     For the ease of indexing the results, the constant is currently
     included. This should be omitted when reporting the results to the
-    output text. [Greene2003]_
+    output text. :cite:`Greene2003`
 
     Parameters
     ----------
@@ -1279,7 +1279,7 @@ def constant_check(array):
 
 def likratiotest(reg0, reg1):
     """
-    Likelihood ratio test statistic [Greene2003]_
+    Likelihood ratio test statistic :cite:`Greene2003`
 
     Parameters
     ----------

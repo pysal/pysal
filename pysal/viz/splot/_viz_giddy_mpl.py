@@ -523,7 +523,7 @@ def dynamic_lisa_composite(rose, gdf,
     # define plotting style
     mpl.rcParams['grid.color'] = 'w'
     mpl.rcParams['axes.edgecolor'] = 'w'
-    mpl.rcParams['axes.facecolor'] = '#bababa'
+    mpl.rcParams['axes.facecolor'] = '#E5E5E5'
     # define axs[2]
     axs.append(plt.subplot(223, projection='polar'))
     # reset style to old default values

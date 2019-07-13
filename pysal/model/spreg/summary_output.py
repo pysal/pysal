@@ -1050,7 +1050,7 @@ def summary_coefs_sur(reg, lambd=False, regimes=False):
                 fixed_rho = 0
                 if k == range(regK)[-1] and (len(reg.name_bigyend[eq])/regK)*regK<len(reg.name_bigyend[eq]):
                     fixed_rho += 1
-                for j in range(len(reg.name_bigyend[eq]))[k*regkend:(k+1)*regkend+fixed_rho]:
+                for j in range(len(reg.name_bigyend[eq]))[int(k*regkend):int((k+1)*regkend+fixed_rho)]:
                     strSummary += "%20s    %12.7f    %12.7f    %12.7f    %12.7f\n"   \
                         % (reg.name_bigyend[eq][j], betas[eq][h+j][0], inf[eq][h+j][0],\
                              inf[eq][h+j][1], inf[eq][h+j][2])
@@ -1449,7 +1449,7 @@ def summary_diag_sur(reg, nonspat_diag, spat_diag, tsls, lambd, rho=False, ml=Tr
                         kadj = int(k-(reg_counter-1)*kend/regK)
                     else:
                         kadj = int(kx+k-kx*reg_counter/regK)
-                    if k + 1 == (kx-kend)/regK:
+                    if k + 1 == (kx+kend)*reg_counter/regK:
                         reg_counter += 1
                     strChow += "%41s        %2d   %10.3f           %6.4f\n" % (
                         names_chow[k], reg.surchow[kadj][1], reg.surchow[kadj][0], reg.surchow[kadj][2])

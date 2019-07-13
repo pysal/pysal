@@ -22,7 +22,7 @@ class GM_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
     """
     GMM method for a spatial error model with heteroskedasticity and regimes;
-    based on Arraiz et al [Arraiz2010]_, following Anselin [Anselin2011]_.
+    based on Arraiz et al :cite:`Arraiz2010`, following Anselin :cite:`Anselin2011`.
 
     Parameters
     ----------
@@ -449,7 +449,7 @@ class GM_Endog_Error_Het_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     """
     GMM method for a spatial error model with heteroskedasticity, regimes and
     endogenous variables, with results and diagnostics; based on Arraiz et al
-    [Arraiz2010]_, following Anselin [Anselin2011]_.
+    :cite:`Arraiz2010`, following Anselin :cite:`Anselin2011`.
 
     Parameters
     ----------
@@ -976,7 +976,7 @@ class GM_Combo_Het_Regimes(GM_Endog_Error_Het_Regimes):
     """
     GMM method for a spatial lag and error model with heteroskedasticity,
     regimes and endogenous variables, with results and diagnostics;
-    based on Arraiz et al [Arraiz2010]_, following Anselin [Anselin2011]_.
+    based on Arraiz et al :cite:`Arraiz2010`, following Anselin :cite:`Anselin2011`.
 
     Parameters
     ----------

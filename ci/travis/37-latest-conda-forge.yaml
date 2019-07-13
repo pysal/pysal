@@ -1,0 +1,20 @@
+name: test
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7
+  - six
+  - pyyaml
+  - deprecated
+  # testing
+  - nose
+  - codecov
+  - matplotlib
+  # optional
+  - geopandas
+  - bokeh
+  - scikit-learn
+  - numba
+  - statsmodels
+  - ipywidgets
+  - mapclassify

@@ -22,7 +22,7 @@ class GM_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
 
     """
     GMM method for a spatial error model with regimes, with results and diagnostics;
-    based on Kelejian and Prucha (1998, 1999) [Kelejian1998]_ [Kelejian1999]_.
+    based on Kelejian and Prucha (1998, 1999) :cite:`Kelejian1998` :cite:`Kelejian1999`.
 
     Parameters
     ----------
@@ -409,7 +409,7 @@ class GM_Endog_Error_Regimes(RegressionPropsY, REGI.Regimes_Frame):
     '''
     GMM method for a spatial error model with regimes and endogenous variables, with
     results and diagnostics; based on Kelejian and Prucha (1998,
-    1999) [Kelejian1998]_ [Kelejian1999]_.
+    1999) :cite:`Kelejian1998` :cite:`Kelejian1999`.
 
     Parameters
     ----------
@@ -871,7 +871,7 @@ class GM_Combo_Regimes(GM_Endog_Error_Regimes, REGI.Regimes_Frame):
     """
     GMM method for a spatial lag and error model with regimes and endogenous
     variables, with results and diagnostics; based on Kelejian and Prucha (1998,
-    1999) [Kelejian1998]_ [Kelejian1999]_.
+    1999) :cite:`Kelejian1998` :cite:`Kelejian1999`.
 
     Parameters
     ----------

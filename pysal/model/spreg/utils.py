@@ -190,7 +190,7 @@ class RegressionPropsVM(object):
 
 def get_A1_het(S):
     """
-    Builds A1 as in Arraiz et al [Arraiz2010]_
+    Builds A1 as in Arraiz et al :cite:`Arraiz2010`
 
     .. math::
 
@@ -259,7 +259,7 @@ def get_A1_hom(s, scalarKP=False):
 def get_A2_hom(s):
     """
     Builds A2 for the spatial error GM estimation with homoscedasticity as in
-    Anselin (2011) [Anselin2011]_ 
+    Anselin (2011) :cite:`Anselin2011` 
 
     .. math::
 

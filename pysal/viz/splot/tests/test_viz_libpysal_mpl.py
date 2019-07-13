@@ -23,3 +23,12 @@ def test_plot_spatial_weights():
     #customize
     fig3, _ = plot_spatial_weights(wnp, gdf, nonplanar_edge_kws=dict(color='#4393c3'))
     plt.close(fig3)
+    # plot in existing figure
+    fig4, axs = plt.subplots(1,3)
+    plot_spatial_weights(wnp, gdf, ax=axs[0])
+    plt.close(fig4)
+
+    # uses a column as the index for spatial weights object
+    weights_index = Queen.from_dataframe(gdf, idVariable="CD_GEOCMU")
+    fig, _ = plot_spatial_weights(weights_index, gdf, indexed_on="CD_GEOCMU")
+    plt.close(fig)

@@ -25,7 +25,7 @@ class BaseGM_Error(RegressionPropsY):
     """
     GMM method for a spatial error model (note: no consistency checks
     diagnostics or constant added); based on Kelejian and Prucha 
-    (1998, 1999) [Kelejian1998]_ [Kelejian1999]_.
+    (1998, 1999) :cite:`Kelejian1998` :cite:`Kelejian1999`.
 
     Parameters
     ----------
@@ -118,7 +118,7 @@ class GM_Error(BaseGM_Error):
 
     """
     GMM method for a spatial error model, with results and diagnostics; based
-    on Kelejian and Prucha (1998, 1999) [Kelejian1998]_ [Kelejian1999]_.
+    on Kelejian and Prucha (1998, 1999) :cite:`Kelejian1998` :cite:`Kelejian1999`.
 
     Parameters
     ----------
@@ -299,7 +299,7 @@ class BaseGM_Endog_Error(RegressionPropsY):
     '''
     GMM method for a spatial error model with endogenous variables (note: no
     consistency checks, diagnostics or constant added); based on Kelejian and
-    Prucha (1998, 1999) [Kelejian1998]_ [Kelejian1999]_.
+    Prucha (1998, 1999) :cite:`Kelejian1998` :cite:`Kelejian1999`.
 
     Parameters
     ----------
@@ -408,7 +408,7 @@ class GM_Endog_Error(BaseGM_Endog_Error):
     '''
     GMM method for a spatial error model with endogenous variables, with
     results and diagnostics; based on Kelejian and Prucha (1998,
-    1999) [Kelejian1998]_ [Kelejian1999]_.
+    1999) :cite:`Kelejian1998` :cite:`Kelejian1999`.
 
     Parameters
     ----------
@@ -628,7 +628,7 @@ class BaseGM_Combo(BaseGM_Endog_Error):
     """
     GMM method for a spatial lag and error model, with endogenous variables
     (note: no consistency checks, diagnostics or constant added); based on 
-    Kelejian and Prucha (1998, 1999) [Kelejian1998]_ [Kelejian1999]_.
+    Kelejian and Prucha (1998, 1999) :cite:`Kelejian1998` :cite:`Kelejian1999`.
 
     Parameters
     ----------
@@ -755,7 +755,7 @@ class GM_Combo(BaseGM_Combo):
     """
     GMM method for a spatial lag and error model with endogenous variables,
     with results and diagnostics; based on Kelejian and Prucha (1998,
-    1999) [Kelejian1998]_ [Kelejian1999]_.
+    1999) :cite:`Kelejian1998` :cite:`Kelejian1999`.
 
     Parameters
     ----------

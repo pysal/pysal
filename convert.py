@@ -7,6 +7,7 @@ import json
 # TARGETROOT ="pysal/"
 
 os.system("rm pysal/*.py")
+os.system("rm -rf notebooks")
 
 with open("packages.yml") as package_file:
     packages = yaml.load(package_file)
@@ -19,13 +20,17 @@ tagged = list(tags.keys())
 
 print(tagged)
 
+com = "mkdir notebooks"
+os.system(com)
+
 for package in packages:
     com = "rm -fr pysal/{package}".format(package=package)
     os.system(com)
     com = "mkdir pysal/{package}".format(package=package)
     os.system(com)
+    com = "mkdir notebooks/{package}".format(package=package)
+    os.system(com)
 
-    # "cp -fr tmp/{subpackage}-master/{subpackage}/* pysal/{package}/".format(package=package, subpackage=subpackage)
     subpackages = packages[package].split()
     for subpackage in subpackages:
         if subpackage == "libpysal":
@@ -42,245 +47,141 @@ for package in packages:
         else:
             print("skipping: ", subpackage)
 
-# replace all references to libpysal with pysal.lib
-c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/libpysal/pysal\.lib/g'"
-os.system(c)
+        #############
+        # notebooks #
+        #############
+        com = "mkdir notebooks/{package}/{subpackage}".format(package=package, subpackage=subpackage)
+        os.system(com)
+        com = "cp -rf tmp/{subpackage}/notebooks/* notebooks/{package}/{subpackage}/".format(package=package,
+                                                                                             subpackage=subpackage)
+        os.system(com)
 
-# replace all references to esda with pysal.explore.esda
-c = "find pysal/explore/. -name '*.py' -print | xargs sed -i -- 's/esda/pysal\.explore\.esda/g'"
-os.system(c)
+###################
+# Rewrite Imports #
+###################
+cache = {}
 
-# replace all references to mapclassify in esda and viz.mappclassify with pysal.viz.mapclassify
-c = "find pysal/viz/mapclassify/. -name '*.py' -print | xargs sed -i -- 's/mapclassify/pysal\.viz\.mapclassify/g'"
-os.system(c)
-
-c = "find pysal/explore/. -name '*.py' -print | xargs sed -i -- 's/mapclassify/pysal\.viz\.mapclassify/g'"
-os.system(c)
-
-# replace all references to pysal.spreg with pysal.model.spreg
-c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/pysal\.spreg/pysal\.model\.spreg/g'"
-os.system(c)
-
-# replace all references in spglm to spreg with pysal.model.spreg
-c = "find pysal/model/spglm/. -name '*.py' -print | xargs sed -i -- 's/ spreg\./ pysal\.model\.spreg\./g'"
-os.system(c)
-# from spreg import user_output as USER
-c = "find pysal/model/spglm/. -name '*.py' -print | xargs sed -i -- 's/from spreg import/from pysal\.model\.spreg import/g'"
-os.system(c)
-
-# replace all references in spint to spreg with pysal.model.spreg
-c = "find pysal/model/spint/. -name '*.py' -print | xargs sed -i -- 's/from spreg import/from pysal\.model\.spreg import/g'"
-os.system(c)
-
-# replace all references in spint to spreg with pysal.model.spreg
-c = "find pysal/model/spint/. -name '*.py' -print | xargs sed -i -- 's/ spreg\./ pysal\.model\.spreg\./g'"
-os.system(c)
-
-# replace import spreg.user_output as USER    to     from pysal.model.spreg import user_output as USER
-# c = "find pysal/model/spreg/. -name '*.py' -print | xargs sed -i -- 's/import spreg\.user_output as USER/from pysal\.model\.spreg import user_output as USER/g'"
-# os.system(c)
-
-c = "find pysal/model/spglm/. -name '*.py' -print | xargs sed -i -- 's/import spreg\.user_output as USER/from pysal\.model\.spreg import user_output as USER/g'"
-os.system(c)
-
-c = "find pysal/model/spglm/. -name '*.py' -print | xargs sed -i -- 's/import spreg\.user_output as USER/from pysal\.model\.spreg import user_output as USER/g'"
-os.system(c)
-
-# undo a side effect in spglm
-c = "find pysal/model/spglm/. -name '*.py' -print | xargs sed -i -- 's/import pysal\.model\.spreg\.user_output as USER/from pysal\.model\.spreg import user_output as USER/g'"
-os.system(c)
-
-c = "find pysal/model/spint/. -name '*.py' -print | xargs sed -i -- 's/import spreg\.user_output as USER/from pysal\.model\.spreg import user_output as USER/g'"
-os.system(c)
-
-c = "find pysal/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/import spreg\.user_output as USER/from pysal\.model\.spreg import user_output as USER/g'"
-os.system(c)
-# replace all references to spglm with pysal.model.spglm
-c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/spglm/pysal\.model\.spglm/g'"
-os.system(c)
-
-# replace all references to spvcm with pysal.model.spvcm
-c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/ spvcm / pysal\.model\.spvcm /g'"
-os.system(c)
-
-# replace all references to spvcm with pysal.model.spvcm
-c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/ spvcm\./ pysal\.model\.spvcm\./g'"
-os.system(c)
-
-# add skips for scipy 1.3.0 breakage
-
-c = "find pysal/model/spvcm/. -name 'test_diag*.py' -print | xargs sed -i -- 's/def test_val/\@ut\.skip\\n    def test_val/g'"
-os.system(c)
-
-
-
-# fix in spvcm from spreg -> from pysal.model.spreg
-
-c = "find pysal/model/spvcm/. -name '*.py' -print | xargs sed -i -- 's/from spreg/from pysal\.model\.spreg/g'"
-os.system(c)
-
-# fix giddy
-c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/ giddy\.api/ pysal\.explore\.giddy\.api/g'"
-os.system(c)
-
-c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/import giddy/import pysal\.explore\.giddy/g'"
-os.system(c)
-
-c = "find pysal/. -name '*.py' -print | xargs sed -i -- 's/from giddy/from pysal\.explore\.giddy/g'"
-os.system(c)
-
-c = "find pysal/explore/giddy/tests/. -name '*.py' -print | xargs sed -i -- 's/class Rose_Tester/@unittest\.skip(\"skipping\")\\nclass Rose_Tester/g'"
-os.system(c)
-
-
-
-# fix mgwr
-c = "find pysal/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/pysal\.open/pysal\.lib\.open/g'"
-os.system(c)
-
-c = "find pysal/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/pysal\.examples/pysal\.lib\.examples/g'"
-os.system(c)
-
-# fix spreg
-
-c = "find pysal/model/spreg/. -name '*.py' -print | xargs sed -i -- 's/from spreg/from pysal\.model\.spreg/g'"
-os.system(c)
-
-c = "find pysal/model/spreg/. -name '*.py' -print | xargs sed -i -- 's/import spreg/import pysal\.model\.spreg/g'"
-os.system(c)
-
-c = "find pysal/model/spreg/. -name '*.py' -print | xargs sed -i -- 's/ spreg/ pysal\.model\.spreg/g'"
-os.system(c)
-
-# fix spvcm
-
-c = "find pysal/model/spvcm/. -name '*.py' -print | xargs sed -i -- 's/pysal\.examples/pysal\.lib\.examples/g'"
-os.system(c)
-
-# pysal.queen_from_shapefile
-
-c = "find pysal/model/spvcm/. -name '*.py' -print | xargs sed -i -- 's/pysal\.queen/pysal\.lib\.weights\.user\.queen/g'"
-os.system(c)
-
-c = "find pysal/model/spvcm/. -name '*.py' -print | xargs sed -i -- 's/pysal\.w_subset/pysal\.lib\.weights\.Wsets\.w_subset/g'"
-os.system(c)
-
-if "splot" in tagged:
-
-    # fix splot
-    # from splot.libpysal import plot_spatial_weights
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.libpysal/from pysal\.viz\.splot\.libpysal/g'"
-    os.system(c)
-
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.bk/from pysal\.viz\.splot\.bk/g'"
-    os.system(c)
-
-    # from esda.moran import Moran_Local, Moran, Moran_BV, Moran_Local_BV
-
-    # c = "find pysalnext/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from esda/from pysal\.explore\.esda/g'"
-    # os.system(c)
-
-    # from pysal.viz.splot.pysal.explore.esda import
-    # from splot.esda
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from pysal\.viz\.splot\.pysal\.explore\.esda/from pysal\.viz\.splot\.esda/g'"
-    os.system(c)
-
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.pysal\.explore\.esda/from pysal\.viz\.splot\.pysal\.explore\.esda/g'"
-    os.system(c)
-
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/import pysal as ps/import pysal/g'"
-    os.system(c)
-
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/ps\.spreg/pysal\.model\.spreg/g'"
-    os.system(c)
-
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/ps\.lag_spatial/pysal\.lib\.weights\.spatial_lag\.lag_spatial/g'"
-    os.system(c)
-
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from esda/from pysal\.explore\.esda/g'"
-    os.system(c)
-
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/import esda/import pysal\.explore\.esda/g'"
-    os.system(c)
-
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/import pysal\.explore\.esda/import pysal\.explore\.esda as esda/g'"
-    os.system(c)
-
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.esda/from pysal\.viz\.splot\.esda/g'"
-    os.system(c)
-
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from spreg/from pysal\.model\.spreg/g'"
-    os.system(c)
-
-    # from splot.libpysal import plot_spatial_weights
-    # from splot.pysal.lib import plot_spatial_weights
-
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.pysal\.lib/from pysal\.viz\.splot\.libpysal/g'"
-    os.system(c)
-
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.giddy/from pysal\.viz\.splot\.giddy/g'"
-    os.system(c)
-
-    # from ._viz_pysal.lib_mpl import (plot_spatial_weights)
-    # from ._viz_libpysal_mpl import (plot_spatial_weights)
-
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/_viz_pysal\.lib_mpl/_viz_libpysal_mpl/g'"
-    os.system(c)
-
-    # import mapclassify as classify -> import pysal.viz.mapclassify as classify
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/import mapclassify/import pysal\.viz\.mapclassify/g'"
-    os.system(c)
-
-    # from splot.mapping -> from pysal.viz.splot.mapping
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\.mapping /from pysal\.viz\.splot\.mapping /g'"
-    os.system(c)
-
-    # from splot._ -> from pysal.viz.splot._
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/from splot\._/from pysal\.viz\.splot\._/g'"
-    os.system(c)
-
-    # import spreg -> from pysal.model import spreg
-    c = "find pysal/viz/splot/. -name '*.py' -print | xargs sed -i -- 's/import spreg/from pysal\.model import spreg/g'"
+def replace(targets, string, replacement, update_cache=True):
+    c = "find {} -name '*.py' -print | xargs sed -i -- 's/{}/{}/g'".format(targets,
+                                                                           string,
+                                                                           replacement)
+    if update_cache:
+        if targets in cache:
+            cache[targets].append([string, replacement])
+        else:
+            cache[targets]=[[string, replacement]]
     os.system(c)
 
 
-#
-#
-# c = "find pysalnext/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/pysal\.open/pysal\.lib\.examples\.open/g'"
-# os.system(c)
+replace("pysal/.", "libpysal", "pysal\.lib")
+replace("pysal/explore/.", "esda", "pysal\.explore\.esda")
+replace("pysal/viz/mapclassify/.", "mapclassify",
+        "pysal\.viz\.mapclassify")
+replace("pysal/explore/.", "mapclassify", "pysal\.viz\.mapclassify")
+replace("pysal/.", "pysal\.spreg", "pysal\.model\.spreg")
+replace("pysal/model/spglm/.", "spreg\.", "pysal\.model\.spreg\.")
+replace("pysal/model/spglm/.", "from spreg import",
+        "from pysal\.model\.spreg import")
+replace("pysal/model/spint/.", "from spreg import",
+        "from pysal\.model\.spreg import")
+replace("pysal/model/spint/.", " spreg\.", " pysal\.model\.spreg\.")
+replace("pysal/model/spglm/.", "import spreg\.user_output as USER",
+        "from pysal\.model\.spreg import user_output as USER")
+replace("pysal/model/spglm/.", "import pysal\.model\.spreg\.user_output as USER",
+        "from pysal\.model\.spreg import user_output as USER")
+replace("pysal/model/spint/.", "import pysal\.model\.spreg\.user_output as USER",
+        "from pysal\.model\.spreg import user_output as USER")
+replace("pysal/model/mgwr/.", "import pysal\.model\.spreg\.user_output as USER",
+        "from pysal\.model\.spreg import user_output as USER")
+replace("pysal/.", "spglm", "pysal\.model\.spglm")
+replace("pysal/.", "spvcm", "pysal\.model\.spvcm")
+replace("pysal/model/spvcm/.", "def test_val", "\@ut\.skip\\n    def test_val")
+replace("pysal/model/spvcm/.", "from spreg", "from pysal\.model\.spreg")
+replace("pysal/.", " giddy\.api", "pysal\.explore\.giddy\.api")
+replace("pysal/.", "import giddy", "import pysal\.explore\.giddy")
+replace("pysal/.", "from giddy",  "from pysal\.explore\.giddy")
+replace("pysal/explore/giddy/tests/.", "class Rose_Tester", "@unittest\.skip(\"skipping\")\\nclass Rose_Tester")
+replace("pysal/model/mgwr/.", "pysal\.open", "pysal\.lib\.open")
+replace("pysal/model/mgwr/.", "pysal\.examples", "pysal\.lib\.examples")
+replace("pysal/model/spreg/.", "from spreg", "from pysal\.model\.spreg")
+replace("pysal/model/spreg/.", "import spreg", "import pysal\.model\.spreg")
+replace("pysal/model/spreg/.", " spreg", " pysal\.model\.spreg")
+replace("pysal/model/spvcm/.", "pysal\.examples", "pysal\.lib\.examples")
+replace("pysal/model/spvcm/.", "pysal\.queen", "pysal\.lib\.weights\.user\.queen")
+replace("pysal/model/spvcm/.", "pysal\.w_subset", "pysal\.lib\.weights\.Wsets\.w_subset")
+replace("pysal/viz/splot/.", "from splot\.libpysal", "from pysal\.viz\.splot\.libpysal")
+replace("pysal/viz/splot/.", "from splot\.bk", "from pysal\.viz\.splot\.bk")
+replace("pysal/viz/splot/.", "from pysal\.viz\.splot\.pysal\.explore\.esda", "from pysal\.viz\.splot\.esda")
+replace("pysal/viz/splot/.", "from splot\.pysal\.explore\.esda", "from pysal\.viz\.splot\.pysal\.explore\.esda")
+replace("pysal/viz/splot/.", "import pysal as ps", "import pysal")
+replace("pysal/viz/splot/.", "ps\.spreg", "pysal\.model\.spreg")
+replace("pysal/viz/splot/.", "ps\.lag_spatial", "pysal\.lib\.weights\.spatial_lag\.lag_spatial")
+replace("pysal/viz/splot/.", "from esda", "from pysal\.explore\.esda")
+replace("pysal/viz/splot/.", "import esda", "import pysal\.explore\.esda as esda")
+replace("pysal/viz/splot/.", "import pysal\.esda", "import pysal\.explore\.esda as esda")
+replace("pysal/viz/splot/.", "from splot\.esda", "from pysal\.viz\.splot\.esda")
+replace("pysal/viz/splot/.", "from spreg", "from pysal\.model\.spreg")
+replace("pysal/viz/splot/.", "from splot\.pysal\.lib", "from pysal\.viz\.splot\.libpysal")
+replace("pysal/viz/splot/.", "from splot\.giddy", "from pysal\.viz\.splot\.giddy")
+replace("pysal/viz/splot/.", "_viz_pysal\.lib_mpl", "_viz_libpysal_mpl")
+replace("pysal/viz/splot/.", "import mapclassify", "import pysal\.viz\.mapclassify")
+replace("pysal/viz/splot/.", "from splot\.mapping", "from pysal\.viz\.splot\.mapping")
+replace("pysal/viz/splot/.", "from splot\._", "from pysal\.viz\.splot\._")
+replace("pysal/viz/splot/.", "import spreg", "from pysal\.model import spreg")
+replace("pysal/explore/inequality/.", "from inequality", "from pysal\.explore\.inequality")
+replace("pysal/model/mgwr/.", "from spreg", "from pysal\.model\.spreg")
+replace("pysal/model/mgwr/.", "import spreg", "import pysal\.model\.spreg")
+replace("pysal/explore/spaghetti/.", "from spaghetti", "from pysal\.explore\.spaghetti")
+replace("pysal/explore/spaghetti/.", "import spaghetti", "import pysal\.explore\.spaghetti")
+replace("pysal/explore/segregation/.", "from segregation", "from pysal\.explore\.segregation")
+replace("pysal/explore/segregation/.", "import segregation", "import pysal\.explore\.segregation")
+replace("pysal/explore/segregation/.", "w_pysal\.lib", "w_libpysal")
 
-# handle inequality
+#####################
+# Rewrite notebooks #
+#####################
 
-c = "find pysal/explore/inequality/. -name '*.py' -print | xargs sed -i -- 's/from inequality/from pysal\.explore\.inequality/g'"
-os.system(c)
 
-# handle mgwr
 
-c = "find pysal/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/from spreg/from pysal\.model\.spreg/g'"
-os.system(c)
 
-c = "find pysal/model/mgwr/. -name '*.py' -print | xargs sed -i -- 's/import spreg/import pysal\.model\.spreg/g'"
-os.system(c)
 
-# handle spaghetti
 
-c = "find pysal/explore/spaghetti/. -name '*.py' -print | xargs sed -i -- 's/from spaghetti/from pysal\.explore\.spaghetti/g'"
-os.system(c)
+with open("packages.yml") as package_file:
+    packages = yaml.load(package_file)
 
-c = "find pysal/explore/spaghetti/. -name '*.py' -print | xargs sed -i -- 's/import spaghetti/import pysal\.explore\.spaghetti/g'"
-os.system(c)
 
-# handle segregation
 
-c = "find pysal/explore/segregation/. -name '*.py' -print | xargs sed -i -- 's/from segregation/from pysal\.explore\.segregation/g'"
-os.system(c)
+mappings = []
+for package in ["explore", "viz", "model"]:
+    for subpackage in packages[package].split():
+        left = "from {}".format(subpackage)
+        right = "from pysal\.{package}\.{subpackage}".format(package=package, subpackage=subpackage)
+        mappings.append([left, right])
+        left = "import {}".format(subpackage)
+        right = "from pysal\.{package} import {subpackage}".format(package=package, subpackage=subpackage)
+        mappings.append([left, right])
+        left = "libpysal"
+        right = "pysal\.lib"
+        mappings.append([left, right])
 
-c = "find pysal/explore/segregation/. -name '*.py' -print | xargs sed -i -- 's/import segregation/import pysal\.explore\.segregation/g'"
-os.system(c)
+def replace_nb(targets, string, replacement, update_cache=True):
+    c = "find {} -type f -print0 | xargs -0 sed -i -- 's/{}/{}/g'".format(targets, string, replacement)
 
-c = "find pysal/explore/segregation/. -name '*.py' -print | xargs sed -i -- 's/w_pysal\.lib/w_libpysal/g'"
+    os.system(c)
 
-os.system(c)
+
+
+for package in ["explore", "viz", "model"]:
+    for subpackage in packages[package].split():
+        targets = "notebooks/{package}/{subpackage}/".format(package=package, subpackage=subpackage)
+        for mapping in mappings:
+            left, right = mapping
+            replace_nb(targets, left, right)
+
+
+
+
+
 
 init_lines = ["__version__='2.1.0rc'"]
 for package in packages:

@@ -21,7 +21,7 @@ def steady_state(P):
 
     Returns
     -------
-    	     : array
+             : array
                (k, ), steady state distribution.
 
     Examples
@@ -61,7 +61,7 @@ def steady_state(P):
 
 def fmpt(P):
     """
-    Calculates the matrix of first mean passage times for an ergodic transition 
+    Calculates the matrix of first mean passage times for an ergodic transition
     probability matrix.
 
     Parameters
@@ -103,7 +103,7 @@ def fmpt(P):
     P = np.matrix(P)
     k = P.shape[0]
     A = np.zeros_like(P)
-    ss = steady_state(P).reshape(k,1)
+    ss = steady_state(P).reshape(k, 1)
     for i in range(k):
         A[:, i] = ss
     A = A.transpose()
@@ -111,7 +111,7 @@ def fmpt(P):
     Z = la.inv(I - P + A)
     E = np.ones_like(Z)
     A_diag = np.diag(A)
-    A_diag = A_diag + (A_diag==0)
+    A_diag = A_diag + (A_diag == 0)
     D = np.diag(1. / A_diag)
     Zdg = np.diag(np.diag(Z))
     M = (I - Z + E * Zdg) * D
@@ -130,7 +130,7 @@ def var_fmpt(P):
 
     Returns
     -------
-    	   : array
+           : array
              (k, k), elements are the variances for the number of intervals
              required for a chain starting in state i to first enter state j.
 
@@ -165,4 +165,3 @@ def var_fmpt(P):
     ZMdg = np.diag(np.diag(ZM))
     W = M * (2 * Zdg * D - I) + 2 * (ZM - E * ZMdg)
     return np.array(W - np.multiply(M, M))
-

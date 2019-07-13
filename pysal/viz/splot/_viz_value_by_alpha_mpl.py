@@ -104,7 +104,7 @@ def value_by_alpha_cmap(x, y, cmap='GnBu', revert_alpha=False, divergent=False):
     return rgba, cmap
 
 
-def vba_choropleth(x, y, gdf, cmap='GnBu', 
+def vba_choropleth(x_var, y_var, gdf, cmap='GnBu', 
                    divergent=False, revert_alpha=False,
                    alpha_mapclassify=None,
                    rgb_mapclassify=None,
@@ -114,10 +114,12 @@ def vba_choropleth(x, y, gdf, cmap='GnBu',
     
     Parameters
     ----------
-    x : array
-        Variable determined by color
-    y : array
-        Variable determining alpha value
+    x_var : string or array
+        The name of variable in gdf determined by color or an array 
+        of values determined by color.
+    y_var : string or array
+        The name of variable in gdf determining alpha value or an array 
+        of values determined by color.
     gdf : geopandas dataframe instance
         The Dataframe containing information to plot.
     cmap : str or list of str
@@ -130,7 +132,7 @@ def vba_choropleth(x, y, gdf, cmap='GnBu',
     revert_alpha : bool, optional
         If True, high y values will have a
         low alpha and low values will be transparent.
-        Default =False.
+        Default = False.
     alpha_mapclassify : dict
         Keywords used for binning input values and
         classifying alpha values with `mapclassify`.
@@ -172,33 +174,31 @@ def vba_choropleth(x, y, gdf, cmap='GnBu',
     
     >>> link_to_data = examples.get_path('columbus.shp')
     >>> gdf = gpd.read_file(link_to_data)
-    >>> x = gdf['HOVAL'].values
-    >>> y = gdf['CRIME'].values
     
     Plot a Value-by-Alpha map
     
-    >>> fig, _ = vba_choropleth(x, y, gdf)
+    >>> fig, _ = vba_choropleth('HOVAL', 'CRIME', gdf)
     >>> plt.show()
     
     Plot a Value-by-Alpha map with reverted alpha values
     
-    >>> fig, _ = vba_choropleth(x, y, gdf, cmap='RdBu',
+    >>> fig, _ = vba_choropleth('HOVAL', 'CRIME', gdf, cmap='RdBu',
     ...                         revert_alpha=True)
     >>> plt.show()
     
     Plot a Value-by-Alpha map with classified alpha and rgb values
     
     >>> fig, axs = plt.subplots(2,2, figsize=(20,10))
-    >>> vba_choropleth(y, x, gdf, cmap='viridis', ax = axs[0,0],
+    >>> vba_choropleth('HOVAL', 'CRIME', gdf, cmap='viridis', ax = axs[0,0],
     ...                rgb_mapclassify=dict(classifier='quantiles', k=3), 
     ...                alpha_mapclassify=dict(classifier='quantiles', k=3))
-    >>> vba_choropleth(y, x, gdf, cmap='viridis', ax = axs[0,1],
+    >>> vba_choropleth('HOVAL', 'CRIME', gdf, cmap='viridis', ax = axs[0,1],
     ...                rgb_mapclassify=dict(classifier='natural_breaks'), 
     ...                alpha_mapclassify=dict(classifier='natural_breaks'))
-    >>> vba_choropleth(y, x, gdf, cmap='viridis', ax = axs[1,0],
+    >>> vba_choropleth('HOVAL', 'CRIME', gdf, cmap='viridis', ax = axs[1,0],
     ...                rgb_mapclassify=dict(classifier='std_mean'), 
     ...                alpha_mapclassify=dict(classifier='std_mean'))
-    >>> vba_choropleth(y, x, gdf, cmap='viridis', ax = axs[1,1],
+    >>> vba_choropleth('HOVAL', 'CRIME', gdf, cmap='viridis', ax = axs[1,1],
     ...                rgb_mapclassify=dict(classifier='fisher_jenks', k=3), 
     ...                alpha_mapclassify=dict(classifier='fisher_jenks', k=3))
     >>> plt.show()
@@ -206,7 +206,7 @@ def vba_choropleth(x, y, gdf, cmap='GnBu',
     Pass in a list of colors instead of a cmap
     
     >>> color_list = ['#a1dab4','#41b6c4','#225ea8']
-    >>> vba_choropleth(y, x, gdf, cmap=color_list,
+    >>> vba_choropleth('HOVAL', 'CRIME', gdf, cmap=color_list,
     ...                rgb_mapclassify=dict(classifier='quantiles', k=3), 
     ...                alpha_mapclassify=dict(classifier='quantiles'))
     >>> plt.show()
@@ -215,13 +215,23 @@ def vba_choropleth(x, y, gdf, cmap='GnBu',
     
     >>> fig = plt.figure(figsize=(15,10))
     >>> ax = fig.add_subplot(111)
-    >>> vba_choropleth(x, y, gdf, divergent=True,
+    >>> vba_choropleth('HOVAL', 'CRIME', gdf, divergent=True,
     ...                alpha_mapclassify=dict(classifier='quantiles', k=5),
     ...                rgb_mapclassify=dict(classifier='quantiles', k=5),
     ...                legend=True, ax=ax)
     >>> plt.show()
 
     """
+    
+    if isinstance(x_var, str): 
+        x = np.array(gdf[x_var]) 
+    else: 
+        x = x_var
+    
+    if isinstance(y_var, str): 
+        y = np.array(gdf[y_var]) 
+    else: 
+        y = y_var
 
     if ax is None:
         fig = plt.figure()
