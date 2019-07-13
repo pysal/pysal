@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.collections import LineCollection
 
 """
 Lightweight visualizations for pysal.lib using Matplotlib and Geopandas
@@ -89,20 +90,20 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
         ax = fig.add_subplot(111)
     else:
         fig = ax.get_figure()
-    
-    # default for node_kws
+
+        # default for node_kws
     if node_kws is None:
-        node_kws = dict(marker='.', s=10, color='#4d4d4d')
-    
-    # default for edge_kws
+        node_kws = dict(markersize=10, facecolor='#4d4d4d', edgecolor='#4d4d4d')
+
+        # default for edge_kws
     if edge_kws is None:
-        edge_kws = dict(color='#4393c3')
-    
-    # default for nonplanar_edge_kws
+        edge_kws = dict(colors='#4393c3')
+
+        # default for nonplanar_edge_kws
     if nonplanar_edge_kws is None:
         edge_kws.setdefault('lw', 0.7)
         nonplanar_edge_kws = edge_kws.copy()
-        nonplanar_edge_kws['color'] = '#d6604d'
+        nonplanar_edge_kws['colors'] = '#d6604d'
 
     node_has_nonplanar_join = []
     if hasattr(w, 'non_planar_joins'):
@@ -111,40 +112,53 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
         # edges differently by default.
         node_has_nonplanar_join = w.non_planar_joins.keys()
 
+    centroids_shp = gdf.centroid.values
+
+    segments = []
+    non_planar_segments = []
+
+    if indexed_on is not None:
+        dict_index = dict(zip(gdf[indexed_on].values, range(len(gdf))))
+        for idx in w.id_order:
+            if idx in w.islands:
+                continue
+            # Find the centroid of the polygon we're looking at now
+            origin = np.array(centroids_shp[dict_index[idx]].coords)[0]
+            for jdx in w.neighbors[idx]:
+                dest = np.array(centroids_shp[dict_index[jdx]].coords)[0]
+                if (idx in node_has_nonplanar_join) and (jdx in w.non_planar_joins[idx]):
+                    # This is a non-planar edge
+                    non_planar_segments.append([origin, dest])
+                else:
+                    segments.append([origin, dest])
+    else:
+        for idx in w.id_order:
+            if idx in w.islands:
+                continue
+
+            # Find the centroid of the polygon we're looking at now
+            origin = np.array(centroids_shp[idx].coords)[0]
+            for j in w.neighbors[idx]:
+                jdx = w.id2i[j]
+                dest = np.array(centroids_shp[jdx].coords)[0]
+                if (idx in node_has_nonplanar_join) and (jdx in w.non_planar_joins[idx]):
+                    # This is a non-planar edge
+                    non_planar_segments.append([origin, dest])
+                else:
+                    segments.append([origin, dest])
+
     # Plot the polygons from the geodataframe as a base layer
     gdf.plot(ax=ax, color='#bababa', edgecolor='w')
 
-    for idx, neighbors in w:
-        if idx in w.islands:
-            continue
+    # plot polygon centroids
+    gdf.centroid.plot(ax=ax, **node_kws)
 
-        if indexed_on is not None:
-            neighbors = gdf[gdf[indexed_on].isin(neighbors)].index.tolist()
-            idx = gdf[gdf[indexed_on] == idx].index.tolist()[0]
+    # plot weight edges
+    non_planar_segs_plot = LineCollection(np.array(non_planar_segments), **nonplanar_edge_kws)
+    segs_plot = LineCollection(np.array(segments), **edge_kws)
+    ax.add_collection(segs_plot)
+    ax.add_collection(non_planar_segs_plot)
 
-        # Find centroid of each polygon that's a neighbor, as a numpy array (x, y)
-        centroids = gdf.loc[neighbors].centroid.apply(lambda p: (p.x, p.y))
-        centroids = np.vstack(centroids.values)
-        # Find the centroid of the polygon we're looking at now
-        focal = np.hstack(gdf.loc[idx].geometry.centroid.xy)
-        seen = set()
-        for nidx, neighbor in zip(neighbors, centroids):
-            if (idx, nidx) in seen:
-                continue
-            seen.update((idx, nidx))
-            seen.update((nidx, idx))
-
-            # Plot current edge as line: plot([x0, x1], [y0, y1])
-            if (idx in node_has_nonplanar_join) and (nidx in w.non_planar_joins[idx]):
-                # This is a non-planar edge
-                ax.plot(*list(zip(focal, neighbor)), marker=None, **nonplanar_edge_kws)
-            else:
-                ax.plot(*list(zip(focal, neighbor)), marker=None, **edge_kws)
-
-    # Plot the nodes
-    ax.scatter(gdf.centroid.apply(lambda p: p.x),
-               gdf.centroid.apply(lambda p: p.y),
-               **node_kws)
     ax.set_axis_off()
     ax.set_aspect('equal')
     return fig, ax

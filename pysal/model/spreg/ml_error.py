@@ -31,7 +31,7 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
 
     """
     ML estimation of the spatial error model (note no consistency
-    checks, diagnostics or constants added); Anselin (1988) [Anselin1988]_
+    checks, diagnostics or constants added): :cite:`Anselin1988`
 
     Parameters
     ----------
@@ -283,8 +283,8 @@ class BaseML_Error(RegressionPropsY, RegressionPropsVM, REGI.Regimes_Frame):
 class ML_Error(BaseML_Error):
 
     """
-    ML estimation of the spatial lag model with all results and diagnostics;
-    Anselin (1988) [Anselin1988]_
+    ML estimation of the spatial error model with all results and diagnostics;
+    :cite:`Anselin1988`
 
     Parameters
     ----------

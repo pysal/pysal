@@ -179,7 +179,7 @@ class Moran(object):
         # provide .z attribute that is znormalized
         sy = y.std()
         self.z /= sy
-
+        
     def __moments(self):
         self.n = len(self.y)
         y = self.y
@@ -193,7 +193,7 @@ class Moran(object):
         s0 = self.w.s0
         s2 = self.w.s2
         s02 = s0 * s0
-        v_num = n2 * s1 - n * s2 + 3 * s02
+        v_num = n2 * s1 - n * s2 + 3 * s02 
         v_den = (n - 1) * (n + 1) * s02
         self.VI_norm = v_num / v_den - (1.0 / (n - 1)) ** 2
         self.seI_norm = self.VI_norm ** (1 / 2.)
@@ -208,7 +208,7 @@ class Moran(object):
         A = n * ((n2 - 3 * n + 3) * s1 - n * s2 + 3 * s02)
         B = k * ((n2 - n) * s1 - 2 * n * s2 + 6 * s02  )
         VIR = (A - B) / ((n - 1) * (n - 2) * (n - 3 ) * s02) - EI*EI
-        self.VI_rand = VIR
+        self.VI_rand = VIR 
         self.seI_rand = VIR ** (1 / 2.)
 
     def __calc(self, z):
@@ -257,7 +257,7 @@ class Moran(object):
 
         See Also
         ---------
-        Moran
+        For further documentation, refer to the Moran class in pysal.pysal.explore.esda
         """
         return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
                                    outvals=outvals, stat=cls,
@@ -454,7 +454,7 @@ class Moran_BV(object):
 
         See Also
         ---------
-        Moran_BV
+        For further documentation, refer to the Moran_BV class in pysal.pysal.explore.esda
         """
         return _bivariate_handler(df, x, y=y, w=w, inplace=inplace,
                                   pvalue = pvalue, outvals = outvals,
@@ -489,7 +489,7 @@ def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
 
     Examples
     --------
-
+    
     open dbf
 
     >>> import pysal.lib
@@ -530,7 +530,7 @@ def Moran_BV_matrix(variables, w, permutations=0, varnames=None):
             variables_n = variables
     except ImportError:
         variables_n = variables
-
+    
     results = _Moran_BV_Matrix_array(variables=variables_n, w=w,
                                      permutations=permutations,
                                      varnames=varnames)
@@ -718,7 +718,7 @@ class Moran_Rate(Moran):
 
         See Also
         ---------
-        Moran_Rate
+        For further documentation, refer to the Moran_Rate class in pysal.pysal.explore.esda
         """
         if not inplace:
             new = df.copy()
@@ -983,7 +983,7 @@ class Moran_Local(object):
 
         See Also
         ---------
-        Moran_Local
+        For further documentation, refer to the Moran_Local class in pysal.pysal.explore.esda
         """
         return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
                                    outvals=outvals, stat=cls,
@@ -1229,7 +1229,7 @@ class Moran_Local_BV(object):
 
         See Also
         ---------
-        Moran_Local_BV
+        For further documentation, refer to the Moran_Local_BV class in pysal.pysal.explore.esda
         """
         return _bivariate_handler(df, x, y=y, w=w, inplace=inplace,
                                   pvalue = pvalue, outvals = outvals,
@@ -1385,7 +1385,7 @@ class Moran_Local_Rate(Moran_Local):
 
         See Also
         ---------
-        Moran_Local_Rate
+        For further documentation, refer to the Moran_Local_Rate class in pysal.pysal.explore.esda
         """
         if not inplace:
             new = df.copy()

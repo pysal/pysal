@@ -12,5 +12,9 @@ dependencies:
   - codecov
   - matplotlib
   # optional
+  - bokeh
+  - scikit-learn
   - geopandas
   - statsmodels
+  - ipywidgets
+  - mapclassify

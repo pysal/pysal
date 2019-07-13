@@ -107,7 +107,7 @@ class Wald:
 
     '''
     Chi sq. Wald statistic to test for restriction of coefficients.
-    Implementation following Greene [Greene2003]_ eq. (17-24), p. 488
+    Implementation following Greene :cite:`Greene2003` eq. (17-24), p. 488
 
     ...
 
@@ -245,7 +245,7 @@ class Regimes_Frame:
 def wald_test(betas, r, q, vm):
     '''
     Chi sq. Wald statistic to test for restriction of coefficients.
-    Implementation following Greene [Greene2003]_ eq. (17-24), p. 488
+    Implementation following Greene :cite:`Greene2003` eq. (17-24), p. 488
 
     ...
 

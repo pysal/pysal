@@ -1,5 +1,5 @@
 from pysal.model.spvcm.utils import south
-import pysal.model.spvcm.api as spvcm
+import pysal.model.spvcm.api as pysal.model.spvcm
 from pysal.model.spvcm._constants import TEST_SEED
 from pysal.model.spvcm.diagnostics import psrf, mcse, hpd_interval, effective_size, geweke
 import numpy as np

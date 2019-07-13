@@ -19,8 +19,6 @@ install:
   # Install dependencies
   - conda env create --file="${ENV_FILE}"
   - source activate test
-  - make download
-  - make convert
   - conda list
 
 script:

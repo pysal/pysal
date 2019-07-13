@@ -27,7 +27,7 @@ class BaseGM_Error_Het(RegressionPropsY):
     """
     GMM method for a spatial error model with heteroskedasticity (note: no
     consistency checks, diagnostics or constant added); based on Arraiz
-    et al [Arraiz2010]_, following Anselin [Anselin2011]_.
+    et al :cite:`Arraiz2010`, following Anselin :cite:`Anselin2011`.
 
     Parameters
     ----------
@@ -158,8 +158,8 @@ class GM_Error_Het(BaseGM_Error_Het):
 
     """
     GMM method for a spatial error model with heteroskedasticity, with results
-    and diagnostics; based on Arraiz et al [Arraiz2010]_, following Anselin
-    [Anselin2011]_.
+    and diagnostics; based on Arraiz et al :cite:`Arraiz2010`, following Anselin
+    :cite:`Anselin2011`.
 
     Parameters
     ----------
@@ -353,8 +353,8 @@ class BaseGM_Endog_Error_Het(RegressionPropsY):
     """
     GMM method for a spatial error model with heteroskedasticity and
     endogenous variables (note: no consistency checks, diagnostics or constant
-    added); based on Arraiz et al [Arraiz2010]_, following Anselin
-    [Anselin2011]_.
+    added); based on Arraiz et al :cite:`Arraiz2010`, following Anselin
+    :cite:`Anselin2011`.
 
     Parameters
     ----------
@@ -520,7 +520,7 @@ class GM_Endog_Error_Het(BaseGM_Endog_Error_Het):
     """
     GMM method for a spatial error model with heteroskedasticity and
     endogenous variables, with results and diagnostics; based on Arraiz et al
-    [Arraiz2010]_, following Anselin [Anselin2011]_.
+    :cite:`Arraiz2010`, following Anselin :cite:`Anselin2011`.
 
     Parameters
     ----------
@@ -767,7 +767,7 @@ class BaseGM_Combo_Het(BaseGM_Endog_Error_Het):
     """
     GMM method for a spatial lag and error model with heteroskedasticity and
     endogenous variables (note: no consistency checks, diagnostics or constant
-    added); based on Arraiz et al [Arraiz2010]_, following Anselin [Anselin2011]_.
+    added); based on Arraiz et al :cite:`Arraiz2010`, following Anselin :cite:`Anselin2011`.
 
     Parameters
     ----------
@@ -914,7 +914,7 @@ class GM_Combo_Het(BaseGM_Combo_Het):
     """
     GMM method for a spatial lag and error model with heteroskedasticity and
     endogenous variables, with results and diagnostics; based on Arraiz et al
-    [Arraiz2010]_, following Anselin [Anselin2011]_.
+    :cite:`Arraiz2010`, following Anselin :cite:`Anselin2011`.
 
     Parameters
     ----------
@@ -1216,7 +1216,7 @@ def get_psi_sigma(w, u, lamb):
 
 def get_vc_het(w, wA1, E):
     """
-    Computes the VC matrix Psi based on lambda as in Arraiz et al [Arraiz2010]_:
+    Computes the VC matrix Psi based on lambda as in Arraiz et al :cite:`Arraiz2010`:
 
     ..math::
 
@@ -1258,7 +1258,7 @@ def get_vc_het(w, wA1, E):
 def get_vm_het(G, lamb, reg, w, psi):
     """
     Computes the variance-covariance matrix Omega as in Arraiz et al
-    [Arraiz2010]_:
+    :cite:`Arraiz2010`:
     ...
 
     Parameters
@@ -1316,7 +1316,7 @@ def get_P_hat(reg, hthi, zf):
 def get_a1a2(w, wA1, reg, lambdapar, P, zs, inv_method, filt):
     """
     Computes the a1 in psi assuming residuals come from original regression.
-    [Anselin2011]_
+    :cite:`Anselin2011`
     ...
 
     Parameters

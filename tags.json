@@ -1,1 +1,1 @@
-{"libpysal": "v4.0.1", "esda": "v2.0.1", "giddy": "v2.0.0", "inequality": "v1.0.0", "pointpats": "v2.0.0", "spaghetti": "v1.1.0", "mapclassify": "v2.0.1", "spreg": "v1.0.4", "spglm": "v1.0.6", "spint": "v1.0.5", "splot": "v1.0.0", "mgwr": "v2.0.2", "spvcm": "v0.2.1"}
+{"libpysal": "v4.0.1", "esda": "v2.0.1", "giddy": "v2.2.0", "inequality": "v1.0.0", "pointpats": "v2.0.0", "spaghetti": "v1.3", "mapclassify": "v2.1.1", "spreg": "v1.1.0", "segregation": "1.0.6", "spglm": "v1.0.6", "spint": "v1.0.5", "splot": "v1.1.0", "mgwr": "v2.0.2", "spvcm": "v0.2.1post1"}

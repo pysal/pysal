@@ -9,7 +9,8 @@ __all__ = ["markov_mobility"]
 import numpy as np
 import numpy.linalg as la
 
-def markov_mobility(p, measure="P",ini=None):
+
+def markov_mobility(p, measure="P", ini=None):
     """
     Markov-based mobility index.
 
@@ -116,7 +117,7 @@ def markov_mobility(p, measure="P",ini=None):
         mobi = 1 - np.sort(eigen_value_abs)[-2]
     elif measure == "B1":
         if ini is None:
-            ini = 1.0/k * np.ones(k)
+            ini = 1.0 / k * np.ones(k)
         mobi = (k - k * np.sum(ini * np.diag(p))) / (k - 1)
     elif measure == "B2":
         mobi = 0

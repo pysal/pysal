@@ -1,5 +1,6 @@
 import pandas as pd
-import pysal
+#import pysal
+from pysal.model import spreg
 from pysal.explore.esda.moran import Moran_Local
 from bokeh.plotting import figure
 from bokeh.models import (GeoJSONDataSource, ColumnDataSource,
@@ -317,8 +318,8 @@ def moran_scatterplot(moran_loc, p=None, region_column='', plot_width=500,
 
 
 def _moran_scatterplot_calc(moran_loc, p):
-    lag = pysal.lib.weights.spatial_lag.lag_spatial(moran_loc.w, moran_loc.z)
-    fit = pysal.model.spreg.OLS(moran_loc.z[:, None], lag[:, None])
+    lag = spreg.lag_spatial(moran_loc.w, moran_loc.z)
+    fit = spreg.OLS(moran_loc.z[:, None], lag[:, None])
     if p is not None:
         if not isinstance(moran_loc, Moran_Local):
             raise ValueError("`moran_loc` is not a esda.moran.Moran_Local instance")

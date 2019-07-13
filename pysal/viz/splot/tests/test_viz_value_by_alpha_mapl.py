@@ -27,12 +27,35 @@ def test_value_by_alpha_cmap():
 
 
 def test_vba_choropleth():
+    
     # data
     link_to_data = examples.get_path('columbus.shp')
     gdf = gpd.read_file(link_to_data)
+    
+    # plot (string as input)
+    fig, _ = vba_choropleth('HOVAL', 'CRIME', gdf)
+    plt.close(fig)
+    # plot with divergent and reverted alpha
+    fig, _ = vba_choropleth('HOVAL', 'CRIME', gdf, cmap='RdBu',
+                            divergent=True,
+                            revert_alpha=True)
+    plt.close(fig)
+    # plot with classified alpha and rgb
+    fig, _ = vba_choropleth('HOVAL', 'CRIME', gdf, cmap='RdBu',
+                            alpha_mapclassify=dict(classifier='quantiles'),
+                            rgb_mapclassify=dict(classifier='quantiles'))
+    plt.close(fig)
+    # plot classified with legend
+    fig, _ = vba_choropleth('HOVAL', 'CRIME', gdf,
+                            alpha_mapclassify=dict(classifier='std_mean'),
+                            rgb_mapclassify=dict(classifier='std_mean'),
+                            legend=True)
+    plt.close(fig)
+
+    
+    # plot (values as input)
     x = gdf['HOVAL'].values
     y = gdf['CRIME'].values
-    # plot
     fig, _ = vba_choropleth(x, y, gdf)
     plt.close(fig)
     # plot with divergent and reverted alpha
@@ -51,6 +74,8 @@ def test_vba_choropleth():
                             rgb_mapclassify=dict(classifier='std_mean'),
                             legend=True)
     plt.close(fig)
+    
+    
 
 
 def test_vba_legend():

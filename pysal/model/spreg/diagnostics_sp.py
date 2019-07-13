@@ -18,8 +18,7 @@ __all__ = ['LMtests', 'MoranRes', 'AKtest']
 class LMtests:
 
     """
-    Lagrange Multiplier tests. Implemented as presented in Anselin et al.
-    (1996) [Anselin1996a]_
+    Lagrange Multiplier tests. Implemented as presented in :cite:`Anselin1996a`
 
     ...
 
@@ -247,8 +246,7 @@ class AKtest:
 
     """
     Moran's I test of spatial autocorrelation for IV estimation.
-    Implemented following the original reference Anselin and Kelejian
-    (1997) [Anselin1997]_
+    Implemented following the original reference :cite:`Anselin1997`
     ...
 
     Parameters

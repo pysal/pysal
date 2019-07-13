@@ -4,7 +4,7 @@ Getis and Ord G statistic for spatial autocorrelation
 __author__ = "Sergio J. Rey <srey@asu.edu>, Myunghwa Hwang <mhwang4@gmail.com> "
 __all__ = ['G', 'G_Local']
 
-from pysal.lib.common import np, stats
+from pysal.lib.common import np, stats 
 from pysal.lib.weights.spatial_lag import lag_spatial as slag
 from .tabular import _univariate_handler
 
@@ -198,11 +198,13 @@ class G(object):
                         documentation for the G statistic.
 
         Returns
-        -------
+        --------
         If inplace, None, and operation is conducted on dataframe in memory. Otherwise,
         returns a copy of the dataframe with the relevant columns attached.
 
-
+        See Also
+        ---------
+        For further documentation, refer to the G class in pysal.pysal.explore.esda
         """
         return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
                                    outvals=outvals, stat=cls,
@@ -483,11 +485,9 @@ class G_Local(object):
         If inplace, None, and operation is conducted on dataframe in memory. Otherwise,
         returns a copy of the dataframe with the relevant columns attached.
 
-        See also
-        --------
-
-        G_Local
-
+        See Also
+        ---------
+        For further documentation, refer to the G_Local class in pysal.pysal.explore.esda
         """
         return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
                                    outvals=outvals, stat=cls,

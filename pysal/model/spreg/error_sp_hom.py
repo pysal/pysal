@@ -1,6 +1,6 @@
 '''
-Hom family of models based on: [Drukker2013]_ 
-Following: [Anselin2011]_
+Hom family of models based on: :cite:`Drukker2013` 
+Following: :cite:`Anselin2011`
 
 '''
 
@@ -27,7 +27,7 @@ class BaseGM_Error_Hom(RegressionPropsY):
     '''
     GMM method for a spatial error model with homoskedasticity (note: no
     consistency checks, diagnostics or constant added); based on 
-    Drukker et al. (2013) [Drukker2013]_, following Anselin (2011) [Anselin2011]_.
+    Drukker et al. (2013) :cite:`Drukker2013`, following Anselin (2011) :cite:`Anselin2011`.
 
     Parameters
     ----------
@@ -168,8 +168,8 @@ class GM_Error_Hom(BaseGM_Error_Hom):
 
     '''
     GMM method for a spatial error model with homoskedasticity, with results
-    and diagnostics; based on Drukker et al. (2013) [Drukker2013]_, following Anselin
-    (2011) [Anselin2011]_.
+    and diagnostics; based on Drukker et al. (2013) :cite:`Drukker2013`, following Anselin
+    (2011) :cite:`Anselin2011`.
 
     Parameters
     ----------
@@ -363,8 +363,8 @@ class BaseGM_Endog_Error_Hom(RegressionPropsY):
     '''
     GMM method for a spatial error model with homoskedasticity and
     endogenous variables (note: no consistency checks, diagnostics or constant
-    added); based on Drukker et al. (2013) [Drukker2013]_, following Anselin (2011)
-    [Anselin2011]_.
+    added); based on Drukker et al. (2013) :cite:`Drukker2013`, following Anselin (2011)
+    :cite:`Anselin2011`.
 
     Parameters
     ----------
@@ -525,7 +525,7 @@ class GM_Endog_Error_Hom(BaseGM_Endog_Error_Hom):
     '''
     GMM method for a spatial error model with homoskedasticity and endogenous
     variables, with results and diagnostics; based on Drukker et al. (2013)
-    [Drukker2013]_, following Anselin (2011) [Anselin2011]_.
+    :cite:`Drukker2013`, following Anselin (2011) :cite:`Anselin2011`.
 
     Parameters
     ----------
@@ -773,8 +773,8 @@ class BaseGM_Combo_Hom(BaseGM_Endog_Error_Hom):
     '''
     GMM method for a spatial lag and error model with homoskedasticity and
     endogenous variables (note: no consistency checks, diagnostics or constant
-    added); based on Drukker et al. (2013) [Drukker2013]_, following Anselin (2011)
-    [Anselin2011]_.
+    added); based on Drukker et al. (2013) :cite:`Drukker2013`, following Anselin (2011)
+    :cite:`Anselin2011`.
 
     Parameters
     ----------
@@ -924,7 +924,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
     '''
     GMM method for a spatial lag and error model with homoskedasticity and
     endogenous variables, with results and diagnostics; based on Drukker et
-    al. (2013) [Drukker2013]_, following Anselin (2011) [Anselin2011]_.
+    al. (2013) :cite:`Drukker2013`, following Anselin (2011) :cite:`Anselin2011`.
 
     Parameters
     ----------
@@ -1202,7 +1202,7 @@ class GM_Combo_Hom(BaseGM_Combo_Hom):
 def moments_hom(w, wA1, wA2, u):
     '''
     Compute G and g matrices for the spatial error model with homoscedasticity
-    as in Anselin [Anselin2011]_ (2011).
+    as in Anselin :cite:`Anselin2011` (2011).
     ...
 
     Parameters
@@ -1243,7 +1243,7 @@ def moments_hom(w, wA1, wA2, u):
 def get_vc_hom(w, wA1, wA2, reg, lambdapar, z_s=None, for_omegaOLS=False):
     '''
     VC matrix \psi of Spatial error with homoscedasticity. As in 
-    Anselin (2011) [Anselin2011]_ (p. 20)
+    Anselin (2011) :cite:`Anselin2011` (p. 20)
     ...
 
     Parameters
@@ -1332,7 +1332,7 @@ def get_vc_hom(w, wA1, wA2, reg, lambdapar, z_s=None, for_omegaOLS=False):
 def get_omega_hom(w, wA1, wA2, reg, lamb, G):
     '''
     Omega VC matrix for Hom models with endogenous variables computed as in
-    Anselin (2011) [Anselin2011]_ (p. 21).
+    Anselin (2011) :cite:`Anselin2011` (p. 21).
     ...
 
     Parameters
@@ -1379,7 +1379,7 @@ def get_omega_hom(w, wA1, wA2, reg, lamb, G):
 def get_omega_hom_ols(w, wA1, wA2, reg, lamb, G):
     '''
     Omega VC matrix for Hom models without endogenous variables (OLS) computed
-    as in Anselin (2011) [Anselin2011]_.
+    as in Anselin (2011) :cite:`Anselin2011`.
     ...
 
     Parameters

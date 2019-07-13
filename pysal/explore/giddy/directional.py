@@ -8,9 +8,9 @@ __author__ = "Sergio J. Rey <sjsrey@gmail.com>"
 __all__ = ['Rose']
 
 import warnings
-
 import numpy as np
 from pysal.lib import weights
+from pysal.lib.common import requires as _requires
 
 _POS8 = np.array([1, 1, 0, 0, 1, 1, 0, 0])
 _POS4 = np.array([1, 0, 1, 0])
@@ -84,131 +84,129 @@ class Rose(object):
 
         Examples
         --------
-        .. plot::
+        Constructing data for illustration of directional LISA analytics.
+        Data is for the 48 lower US states over the period 1969-2009 and
+        includes per capita income normalized to the national average.
 
-           Constructing data for illustration of directional LISA analytics.
-           Data is for the 48 lower US states over the period 1969-2009 and
-           includes per capita income normalized to the national average.
+        Load comma delimited data file in and convert to a numpy array
 
-           Load comma delimited data file in and convert to a numpy array
+        >>> import pysal.lib
+        >>> from pysal.explore.giddy.directional import Rose
+        >>> import matplotlib.pyplot as plt
+        >>> file_path = pysal.lib.examples.get_path("spi_download.csv")
+        >>> f=open(file_path,'r')
+        >>> lines=f.readlines()
+        >>> f.close()
+        >>> lines=[line.strip().split(",") for line in lines]
+        >>> names=[line[2] for line in lines[1:-5]]
+        >>> data=np.array([list(map(int,line[3:])) for line in lines[1:-5]])
 
-           >>> import pysal.lib
-           >>> from pysal.explore.giddy.directional import Rose
-           >>> import matplotlib.pyplot as plt
-           >>> file_path = pysal.lib.examples.get_path("spi_download.csv")
-           >>> f=open(file_path,'r')
-           >>> lines=f.readlines()
-           >>> f.close()
-           >>> lines=[line.strip().split(",") for line in lines]
-           >>> names=[line[2] for line in lines[1:-5]]
-           >>> data=np.array([list(map(int,line[3:])) for line in lines[1:-5]])
+        Bottom of the file has regional data which we don't need for this
+        example so we will subset only those records that match a state name
 
-           Bottom of the file has regional data which we don't need for this
-           example so we will subset only those records that match a state name
+        >>> sids=list(range(60))
+        >>> out=['"United States 3/"',
+        ...      '"Alaska 3/"',
+        ...      '"District of Columbia"',
+        ...      '"Hawaii 3/"',
+        ...      '"New England"',
+        ...      '"Mideast"',
+        ...      '"Great Lakes"',
+        ...      '"Plains"',
+        ...      '"Southeast"',
+        ...      '"Southwest"',
+        ...      '"Rocky Mountain"',
+        ...      '"Far West 3/"']
+        >>> snames=[name for name in names if name not in out]
+        >>> sids=[names.index(name) for name in snames]
+        >>> states=data[sids,:]
+        >>> us=data[0]
+        >>> years=np.arange(1969,2009)
 
-           >>> sids=list(range(60))
-           >>> out=['"United States 3/"',
-           ...      '"Alaska 3/"',
-           ...      '"District of Columbia"',
-           ...      '"Hawaii 3/"',
-           ...      '"New England"',
-           ...      '"Mideast"',
-           ...      '"Great Lakes"',
-           ...      '"Plains"',
-           ...      '"Southeast"',
-           ...      '"Southwest"',
-           ...      '"Rocky Mountain"',
-           ...      '"Far West 3/"']
-           >>> snames=[name for name in names if name not in out]
-           >>> sids=[names.index(name) for name in snames]
-           >>> states=data[sids,:]
-           >>> us=data[0]
-           >>> years=np.arange(1969,2009)
+        Now we convert state incomes to express them relative to the national
+        average
 
-           Now we convert state incomes to express them relative to the national
-           average
+        >>> rel=states/(us*1.)
 
-           >>> rel=states/(us*1.)
+        Create our contiguity matrix from an external GAL file and row
+        standardize the resulting weights
 
-           Create our contiguity matrix from an external GAL file and row
-           standardize the resulting weights
+        >>> gal=pysal.lib.io.open(pysal.lib.examples.get_path('states48.gal'))
+        >>> w=gal.read()
+        >>> w.transform='r'
 
-           >>> gal=pysal.lib.io.open(pysal.lib.examples.get_path('states48.gal'))
-           >>> w=gal.read()
-           >>> w.transform='r'
+        Take the first and last year of our income data as the interval to do
+        the directional directional analysis
+        
+        >>> Y=rel[:,[0,-1]]
 
-           Take the first and last year of our income data as the interval to do
-           the directional directional analysis
+        Set the random seed generator which is used in the permutation based
+        inference for the rose diagram so that we can replicate our example
+        results
 
-           >>> Y=rel[:,[0,-1]]
+        >>> np.random.seed(100)
 
-           Set the random seed generator which is used in the permutation based
-           inference for the rose diagram so that we can replicate our example
-           results
+        Call the rose function to construct the directional histogram for the
+        dynamic LISA statistics. We will use four circular sectors for our
+        histogram
 
-           >>> np.random.seed(100)
+        >>> r4=Rose(Y,w,k=4)
 
-           Call the rose function to construct the directional histogram for the
-           dynamic LISA statistics. We will use four circular sectors for our
-           histogram
+        What are the cut-offs for our histogram - in radians
 
-           >>> r4=Rose(Y,w,k=4)
+        >>> r4.cuts
+        array([0.        , 1.57079633, 3.14159265, 4.71238898, 6.28318531])
 
-           What are the cut-offs for our histogram - in radians
+        How many vectors fell in each sector
 
-           >>> r4.cuts
-           array([0.        , 1.57079633, 3.14159265, 4.71238898, 6.28318531])
+        >>> r4.counts
+        array([32,  5,  9,  2])
 
-           How many vectors fell in each sector
+        We can test whether these counts are different than what would be
+        expected if there was no association between the movement of the
+        focal unit and its spatial lag.
 
-           >>> r4.counts
-           array([32,  5,  9,  2])
+        To do so we call the `permute` method of the object
 
-           We can test whether these counts are different than what would be
-           expected if there was no association between the movement of the
-           focal unit and its spatial lag.
+        >>> r4.permute()
 
-           To do so we call the `permute` method of the object
+        and then inspect the `p` attibute:
 
-           >>> r4.permute()
+        >>> r4.p
+        array([0.04, 0.  , 0.02, 0.  ])
 
-           and then inspect the `p` attibute:
+        Repeat the exercise but now for 8 rather than 4 sectors
 
-           >>> r4.p
-           array([0.04, 0.  , 0.02, 0.  ])
+        >>> r8 = Rose(Y, w, k=8)
+        >>> r8.counts
+        array([19, 13,  3,  2,  7,  2,  1,  1])
+        >>> r8.permute()
+        >>> r8.p
+        array([0.86, 0.08, 0.16, 0.  , 0.02, 0.2 , 0.56, 0.  ])
 
-           Repeat the exercise but now for 8 rather than 4 sectors
+        The default is a two-sided alternative. There is an option for a
+        directional alternative reflecting positive co-movement of the focal
+        series with its spatial lag. In this case the number of vectors in
+        quadrants I and III should be much larger than expected, while the
+        counts of vectors falling in quadrants II and IV should be much lower
+        than expected.
 
-           >>> r8 = Rose(Y, w, k=8)
-           >>> r8.counts
-           array([19, 13,  3,  2,  7,  2,  1,  1])
-           >>> r8.permute()
-           >>> r8.p
-           array([0.86, 0.08, 0.16, 0.  , 0.02, 0.2 , 0.56, 0.  ])
+        >>> r8.permute(alternative='positive')
+        >>> r8.p
+        array([0.51, 0.04, 0.28, 0.02, 0.01, 0.14, 0.57, 0.03])
 
-           The default is a two-sided alternative. There is an option for a
-           directional alternative reflecting positive co-movement of the focal
-           series with its spatial lag. In this case the number of vectors in
-           quadrants I and III should be much larger than expected, while the
-           counts of vectors falling in quadrants II and IV should be much lower
-           than expected.
+        Finally, there is a second directional alternative for examining the
+        hypothesis that the focal unit and its lag move in opposite directions.
 
-           >>> r8.permute(alternative='positive')
-           >>> r8.p
-           array([0.51, 0.04, 0.28, 0.02, 0.01, 0.14, 0.57, 0.03])
+        >>> r8.permute(alternative='negative')
+        >>> r8.p
+        array([0.69, 0.99, 0.92, 1.  , 1.  , 0.97, 0.74, 1.  ])
 
-           Finally, there is a second directional alternative for examining the
-           hypothesis that the focal unit and its lag move in opposite directions.
+        We can call the plot method to visualize directional LISAs as a
+        rose diagram conditional on the starting relative income:
 
-           >>> r8.permute(alternative='negative')
-           >>> r8.p
-           array([0.69, 0.99, 0.92, 1.  , 1.  , 0.97, 0.74, 1.  ])
-
-           We can call the plot method to visualize directional LISAs as a
-           rose diagram conditional on the starting relative income:
-
-           >>> fig1, _ = r8.plot(attribute=Y[:,0])
-           >>> plt.show(fig1)
+        >>> fig1, _ = r8.plot(attribute=Y[:,0])
+        >>> plt.show(fig1)
         """
 
         self.Y = Y
@@ -251,8 +249,10 @@ class Rose(object):
             res = self._calc(rY[idxs, :], self.w, self.k)
             counts[m] = res['counts']
         self.counts_perm = counts
-        self.larger_perm = np.array([(counts[:, i] >= self.counts[i]).sum() for i in range(self.k)])
-        self.smaller_perm = np.array([(counts[:, i] <= self.counts[i]).sum() for i in range(self.k)])
+        self.larger_perm = np.array(
+            [(counts[:, i] >= self.counts[i]).sum() for i in range(self.k)])
+        self.smaller_perm = np.array(
+            [(counts[:, i] <= self.counts[i]).sum() for i in range(self.k)])
         self.expected_perm = counts.mean(axis=0)
         self.alternative = alternative
 
@@ -277,7 +277,7 @@ class Rose(object):
         if alt == 'TWO.SIDED':
             P = (self.larger_perm + 1) / (permutations + 1.)
             mask = P < 0.5
-            self.p = mask * 2 * P + (1 - mask) * 2 * (1-P)
+            self.p = mask * 2 * P + (1 - mask) * 2 * (1 - P)
         elif alt == 'POSITIVE':
             # NE, SW sectors are higher, NW, SE are lower
             POS = _POS8
@@ -285,7 +285,7 @@ class Rose(object):
                 POS = _POS4
             L = (self.larger_perm + 1) / (permutations + 1.)
             S = (self.smaller_perm + 1) / (permutations + 1.)
-            P = POS * L + (1-POS) * S
+            P = POS * L + (1 - POS) * S
             self.p = P
         elif alt == 'NEGATIVE':
             # NE, SW sectors are lower, NW, SE are higher
@@ -294,32 +294,33 @@ class Rose(object):
                 NEG = _NEG4
             L = (self.larger_perm + 1) / (permutations + 1.)
             S = (self.smaller_perm + 1) / (permutations + 1.)
-            P = NEG * L + (1-NEG) * S
+            P = NEG * L + (1 - NEG) * S
             self.p = P
         else:
             print(('Bad option for alternative: %s.' % alternative))
 
     def _calc(self, Y, w, k):
         wY = weights.lag_spatial(w, Y)
-        dx = Y[:, -1] - Y[:,0]
+        dx = Y[:, -1] - Y[:, 0]
         dy = wY[:, -1] - wY[:, 0]
         self.wY = wY
         self.Y = Y
-        r = np.sqrt(dx*dx + dy*dy)
+        r = np.sqrt(dx * dx + dy * dy)
         theta = np.arctan2(dy, dx)
         neg = theta < 0.0
-        utheta = theta * (1 - neg) + neg * (2 *np.pi + theta)
+        utheta = theta * (1 - neg) + neg * (2 * np.pi + theta)
         counts, bins = np.histogram(utheta, self.cuts)
         results = {}
         results['counts'] = counts
         results['theta'] = theta
-        results['bins' ] = bins
+        results['bins'] = bins
         results['r'] = r
         results['lag'] = wY
         results['dx'] = dx
         results['dy'] = dy
         return results
 
+    @_requires('splot')
     def plot(self, attribute=None, ax=None, **kwargs):
         """
         Plot the rose diagram.
@@ -344,30 +345,9 @@ class Rose(object):
 
         """
 
-        try:
-            import splot.giddy
-            use_splot = True
-        except ImportError:
-            warnings.warn('This method relies on importing `splot` in future',
-                          DeprecationWarning)
-            use_splot = False
-
-        if use_splot:
-            fig, ax = splot.giddy.dynamic_lisa_rose(self, attribute=attribute,
-                                                    ax=ax, **kwargs)
-        else:
-            # This can be removed if splot has been released with support for
-            # giddy.directional TODO add **kwargs
-            import matplotlib.cm as cm
-            import matplotlib.pyplot as plt
-            ax = plt.subplot(111, projection='polar')
-            ax.set_rlabel_position(315)
-            if attribute is None:
-                c = ax.scatter(self.theta, self.r)
-            else:
-                c = ax.scatter(self.theta, self.r, c=attribute)
-                plt.colorbar(c)
-            fig = ax.get_figure()
+        from splot.giddy import dynamic_lisa_rose
+        fig, ax = dynamic_lisa_rose(self, attribute=attribute,
+                                    ax=ax, **kwargs)
         return fig, ax
 
     def plot_origin(self):  # TODO add attribute option to color vectors
@@ -377,7 +357,7 @@ class Rose(object):
         """
         import matplotlib.cm as cm
         import matplotlib.pyplot as plt
-        ax = plt.subplot(111 )
+        ax = plt.subplot(111)
         xlim = [self._dx.min(), self._dx.max()]
         ylim = [self._dy.min(), self._dy.max()]
         for x, y in zip(self._dx, self._dy):
@@ -388,6 +368,7 @@ class Rose(object):
         plt.xlim(xlim)
         plt.ylim(ylim)
 
+    @_requires('splot')
     def plot_vectors(self, arrows=True):
         """
         Plot vectors of positional transition of LISA values
@@ -413,30 +394,7 @@ class Rose(object):
 
         """
 
-        try:
-            import splot.giddy
-            use_splot = True
-        except ImportError:
-            warnings.warn('This method relies on importing `splot` in future',
-                          DeprecationWarning)
-            use_splot = False
-        
-        if use_splot:
-            fig, ax = splot.giddy.dynamic_lisa_vectors(self, arrows=arrows)
-        else:
-            # This can be removed if splot has been released with support for
-            # giddy.directional TODO add **kwargs, arrow=True
-            import matplotlib.cm as cm
-            import matplotlib.pyplot as plt
-            ax = plt.subplot(111 )
-            xlim = [self.Y.min(), self.Y.max()]
-            ylim = [self.wY.min(), self.wY.max()]
-            for i in range(len(self.Y)):
-                xs = self.Y[i,:]
-                ys = self.wY[i,:]
-                ax.plot(xs,ys, '-b')  # TODO change this to scale with attribute
-            plt.axis('equal')
-            plt.xlim(xlim)
-            plt.ylim(ylim)
-            fig = ax.get_figure()
+        from splot.giddy import dynamic_lisa_vectors
+
+        fig, ax = dynamic_lisa_vectors(self, arrows=arrows)
         return fig, ax

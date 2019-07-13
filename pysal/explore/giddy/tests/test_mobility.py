@@ -6,7 +6,7 @@ from ..markov import Markov
 from ..mobility import markov_mobility
 
 
-class test_shorrock(unittest.TestCase):
+class Shorrock_Tester(unittest.TestCase):
     def test___init__(self):
         import numpy as np
         f = ps.io.open(ps.examples.get_path('usjoin.csv'))
@@ -16,7 +16,7 @@ class test_shorrock(unittest.TestCase):
         np.testing.assert_array_almost_equal(markov_mobility(m.p, measure="P"),
                                              0.19758992000997844)
 
-class test_markovMobility(unittest.TestCase):
+class MarkovMobility_Tester(unittest.TestCase):
     def test___init__(self):
         pi = np.array([0.1, 0.2, 0.2, 0.4, 0.1])
         f = ps.io.open(ps.examples.get_path('usjoin.csv'))

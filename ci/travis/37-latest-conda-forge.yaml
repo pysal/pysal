@@ -12,5 +12,9 @@ dependencies:
   - matplotlib
   # optional
   - geopandas
+  - bokeh
+  - scikit-learn
   - numba
   - statsmodels
+  - ipywidgets
+  - mapclassify

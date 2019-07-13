@@ -38,7 +38,8 @@ def mask_local_auto(moran_loc, p=0.5):
     cluster_labels : list of str
         List of labels - ['ns', 'HH', 'LH', 'LL', 'HL']
     colors5 : list of str
-        List of colours - ['lightgrey', 'red', 'lightblue','blue', 'pink']
+        List of colours - ['#d7191c', '#fdae61', '#abd9e9',
+        '#2c7bb6', 'lightgrey']
     colors : array of str
         Array containing coloration for each input value/ shape.
     labels : list of str
@@ -56,8 +57,15 @@ def mask_local_auto(moran_loc, p=0.5):
                3: '#2c7bb6',
                4: '#fdae61'}
     colors = [colors5[i] for i in cluster]  # for Bokeh
-    # for MPL:
-    colors5 = (['#d7191c', '#fdae61', '#abd9e9', '#2c7bb6', 'lightgrey'])
+    # for MPL, keeps colors even if clusters are missing:
+    x = np.array(labels)
+    y = np.unique(x)
+    colors5_mpl = {'HH': '#d7191c',
+                   'LH': '#abd9e9',
+                   'LL': '#2c7bb6',
+                   'HL': '#fdae61',
+                   'ns': 'lightgrey'}
+    colors5 = [colors5_mpl[i] for i in y]  # for mpl
 
     # HACK need this, because MPL sorts these labels while Bokeh does not
     cluster_labels.sort()
@@ -245,7 +253,7 @@ def shift_colormap(cmap, start=0, midpoint=0.5, stop=1.0, name='shiftedcmap'):
 
     Parameters
     ----------
-    cmap : matplotlib colormap
+    cmap : str or matplotlib.cm instance
         colormap to be altered
     start : float, optional
         Offset from lowest point in the colormap's range.
@@ -309,7 +317,7 @@ def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
 
     Parameters
     ----------
-    cmap : Mmatplotlib colormap
+    cmap : str or matplotlib.cm instance
         Colormap to be altered
     minval : float, optional
         Minimum value of the original colormap to include
@@ -324,6 +332,9 @@ def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
     -------
     new_cmap : A new colormap that has been shifted. 
     '''
+    if isinstance(cmap, str):
+        cmap = cm.get_cmap(cmap) 
+
     new_cmap = mpl.colors.LinearSegmentedColormap.from_list(
         'trunc({n},{a:.2f},{b:.2f})'.format(n=cmap.name, a=minval, b=maxval),
         cmap(np.linspace(minval, maxval, n)))

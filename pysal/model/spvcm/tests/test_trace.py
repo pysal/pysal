@@ -18,6 +18,7 @@ class Test_Trace(ut.TestCase):
         self.real_singles = [Trace.from_csv(FULL_PATH + r'/data/south_mvcm_5000_{}.csv'
                              .format(i)) for i in range(4)]
 
+    @ut.skip
     def test_validate_names(self):
         b = self.a.copy()
         try:
