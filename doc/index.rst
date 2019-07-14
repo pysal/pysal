@@ -115,7 +115,7 @@ Getting Involved
 ****************
 
 If you are interested in contributing to PySAL please see our
-`development guidelines <http://pysal.readthedocs.org/en/latest/developers/index.html>`_.
+`development guidelines <https://github.com/pysal/pysal/wiki>`_.
 
 
 ***********
