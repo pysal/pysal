@@ -47,6 +47,7 @@ class G_Local_Tester(unittest.TestCase):
         lg = getisord.G_Local(self.y, self.w, transform='B')
         self.assertAlmostEqual(lg.Zs[0], -1.0136729, places=7)
         self.assertAlmostEqual(lg.p_sim[0], 0.10100000000000001, places=7)
+        self.assertAlmostEqual(lg.p_z_sim[0], 0.154373052, places=7)
 
     def test_G_Local_Row_Standardized(self):
         lg = getisord.G_Local(self.y, self.w, transform='R')

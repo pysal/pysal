@@ -2,9 +2,9 @@
 Getis and Ord G statistic for spatial autocorrelation
 """
 __author__ = "Sergio J. Rey <srey@asu.edu>, Myunghwa Hwang <mhwang4@gmail.com> "
-__all__ = ['G', 'G_Local']
+__all__ = ["G", "G_Local"]
 
-from pysal.lib.common import np, stats 
+from pysal.lib.common import np, stats
 from pysal.lib.weights.spatial_lag import lag_spatial as slag
 from .tabular import _univariate_handler
 
@@ -75,20 +75,25 @@ class G(object):
     >>> numpy.random.seed(10)
 
     Preparing a point data set
+
     >>> points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
 
     Creating a weights object from points
+
     >>> w = pysal.lib.weights.DistanceBand(points,threshold=15)
     >>> w.transform = "B"
 
     Preparing a variable
+
     >>> y = numpy.array([2, 3, 3.2, 5, 8, 7])
 
     Applying Getis and Ord G test
+
     >>> from pysal.explore.esda.getisord import G
     >>> g = G(y,w)
 
     Examining the results
+
     >>> round(g.G, 3)
     0.557
 
@@ -106,26 +111,29 @@ class G(object):
         self.permutations = permutations
         self.__moments()
         self.y2 = y * y
-        y = y.reshape(len(y), 1)  # Ensure that y is an n by 1 vector, otherwise y*y.T == y*y
+        y = y.reshape(
+            len(y), 1
+        )  # Ensure that y is an n by 1 vector, otherwise y*y.T == y*y
         self.den_sum = (y * y.T).sum() - (y * y).sum()
         self.G = self.__calc(self.y)
         self.z_norm = (self.G - self.EG) / np.sqrt(self.VG)
         self.p_norm = 1.0 - stats.norm.cdf(np.abs(self.z_norm))
 
         if permutations:
-            sim = [self.__calc(np.random.permutation(self.y))
-                   for i in range(permutations)]
+            sim = [
+                self.__calc(np.random.permutation(self.y)) for i in range(permutations)
+            ]
             self.sim = sim = np.array(sim)
             above = sim >= self.G
             larger = sum(above)
             if (self.permutations - larger) < larger:
                 larger = self.permutations - larger
-            self.p_sim = (larger + 1.0) / (permutations + 1.)
+            self.p_sim = (larger + 1.0) / (permutations + 1.0)
             self.EG_sim = sum(sim) / permutations
             self.seG_sim = sim.std()
             self.VG_sim = self.seG_sim ** 2
             self.z_sim = (self.G - self.EG_sim) / self.seG_sim
-            self.p_z_sim = 1. - stats.norm.cdf(np.abs(self.z_sim))
+            self.p_z_sim = 1.0 - stats.norm.cdf(np.abs(self.z_sim))
 
     def __moments(self):
         y = self.y
@@ -138,8 +146,8 @@ class G(object):
         s1 = w.s1
         s2 = w.s2
         b0 = (n2 - 3 * n + 3) * s1 - n * s2 + 3 * s02
-        b1 = (-1.) * ((n2 - n) * s1 - 2 * n * s2 + 6 * s02)
-        b2 = (-1.) * (2 * n * s1 - (n + 3) * s2 + 6 * s02)
+        b1 = (-1.0) * ((n2 - n) * s1 - 2 * n * s2 + 6 * s02)
+        b2 = (-1.0) * (2 * n * s1 - (n + 3) * s2 + 6 * s02)
         b3 = 4 * (n - 1) * s1 - 2 * (n + 1) * s2 + 8 * s02
         b4 = s1 - s2 + s02
         self.b0 = b0
@@ -150,12 +158,10 @@ class G(object):
         y2 = y * y
         y3 = y * y2
         y4 = y2 * y2
-        EG2 = (b0 * (sum(
-            y2) ** 2) + b1 * sum(y4) + b2 * (sum(y) ** 2) * sum(y2))
+        EG2 = b0 * (sum(y2) ** 2) + b1 * sum(y4) + b2 * (sum(y) ** 2) * sum(y2)
         EG2 += b3 * sum(y) * sum(y3) + b4 * (sum(y) ** 4)
         EG2NUM = EG2
-        EG2DEN = (((sum(y) ** 2 - sum(y2)) ** 2) * n * (n - 1) * (
-            n - 2) * (n - 3))
+        EG2DEN = ((sum(y) ** 2 - sum(y2)) ** 2) * n * (n - 1) * (n - 2) * (n - 3)
         self.EG2 = EG2NUM / EG2DEN
         self.VG = self.EG2 - self.EG ** 2
 
@@ -170,12 +176,14 @@ class G(object):
         return self.G
 
     @classmethod
-    def by_col(cls, df, cols, w=None, inplace=False, pvalue='sim', outvals=None, **stat_kws):
+    def by_col(
+        cls, df, cols, w=None, inplace=False, pvalue="sim", outvals=None, **stat_kws
+    ):
         """
         Function to compute a G statistic on a dataframe
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         df          :   pandas.DataFrame
                         a pandas dataframe with a geometry column
         cols        :   string or list of string
@@ -202,14 +210,18 @@ class G(object):
         If inplace, None, and operation is conducted on dataframe in memory. Otherwise,
         returns a copy of the dataframe with the relevant columns attached.
 
-        See Also
-        ---------
-        For further documentation, refer to the G class in pysal.pysal.explore.esda
         """
-        return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
-                                   outvals=outvals, stat=cls,
-                                   swapname=cls.__name__.lower(), **stat_kws)
-
+        return _univariate_handler(
+            df,
+            cols,
+            w=w,
+            inplace=inplace,
+            pvalue=pvalue,
+            outvals=outvals,
+            stat=cls,
+            swapname=cls.__name__.lower(),
+            **stat_kws
+        )
 
 
 class G_Local(object):
@@ -297,7 +309,7 @@ class G_Local(object):
 
     >>> w = pysal.lib.weights.DistanceBand(points,threshold=15)
 
-    Prepareing a variable
+    Preparing a variable
 
     >>> y = numpy.array([2, 3, 3.2, 5, 8, 7])
 
@@ -314,12 +326,18 @@ class G_Local(object):
     >>> round(lg.p_sim[0], 3)
     0.101
 
+    p-value based on standard normal approximation from permutations
+    >>> round(lg.p_z_sim[0], 3)
+    0.154
+
     >>> numpy.random.seed(10)
 
     Applying Getis and Ord local G* test using a binary weights object
+
     >>> lg_star = G_Local(y,w,transform='B',star=True)
 
     Examining the results
+
     >>> lg_star.Zs
     array([-1.39727626, -0.28917762,  0.65064964, -0.28917762,  1.23452088,
             2.02424331])
@@ -329,9 +347,11 @@ class G_Local(object):
     >>> numpy.random.seed(12345)
 
     Applying Getis and Ord local G test using a row-standardized weights object
+
     >>> lg = G_Local(y,w,transform='R')
 
     Examining the results
+
     >>> lg.Zs
     array([-0.62074534, -0.01780611,  1.31558703, -0.12824171,  0.28843496,
             1.77833941])
@@ -345,6 +365,7 @@ class G_Local(object):
     >>> lg_star = G_Local(y,w,transform='R',star=True)
 
     Examining the results
+
     >>> lg_star.Zs
     array([-0.62488094, -0.09144599,  0.41150696, -0.09144599,  0.24690418,
             1.28024388])
@@ -352,7 +373,8 @@ class G_Local(object):
     0.101
 
     """
-    def __init__(self, y, w, transform='R', permutations=PERMUTATIONS, star=False):
+
+    def __init__(self, y, w, transform="R", permutations=PERMUTATIONS, star=False):
         y = np.asarray(y).flatten()
         self.n = len(y)
         self.y = y
@@ -362,8 +384,7 @@ class G_Local(object):
         self.permutations = permutations
         self.star = star
         self.calc()
-        self.p_norm = np.array(
-            [1 - stats.norm.cdf(np.abs(i)) for i in self.Zs])
+        self.p_norm = np.array([1 - stats.norm.cdf(np.abs(i)) for i in self.Zs])
         if permutations:
             self.__crand()
             sim = np.transpose(self.rGs)
@@ -373,8 +394,8 @@ class G_Local(object):
             larger[low_extreme] = self.permutations - larger[low_extreme]
             self.p_sim = (larger + 1.0) / (permutations + 1)
             self.sim = sim
-            self.EG_sim = sim.mean()
-            self.seG_sim = sim.std()
+            self.EG_sim = sim.mean(axis=0)
+            self.seG_sim = sim.std(axis=0)
             self.VG_sim = self.seG_sim * self.seG_sim
             self.z_sim = (self.Gs - self.EG_sim) / self.seG_sim
             self.p_z_sim = 1 - stats.norm.cdf(np.abs(self.z_sim))
@@ -390,7 +411,7 @@ class G_Local(object):
         ids = np.arange(self.w.n)
         ido = self.w.id_order
         wc = self.__getCardinalities()
-        if self.w_transform == 'r':
+        if self.w_transform == "r":
             den = np.array(wc) + self.star
         else:
             den = np.ones(self.w.n)
@@ -400,14 +421,12 @@ class G_Local(object):
             yi_star = y[i] * self.star
             wci = wc[i]
             rGs[i] = (y[idsi[rids[:, 0:wci]]]).sum(1) + yi_star
-            rGs[i] = (np.array(rGs[i]) / den[i]) / (
-                self.y_sum - (1 - self.star) * y[i])
+            rGs[i] = (np.array(rGs[i]) / den[i]) / (self.y_sum - (1 - self.star) * y[i])
         self.rGs = rGs
 
     def __getCardinalities(self):
         ido = self.w.id_order
-        self.wc = np.array(
-            [self.w.cardinalities[ido[i]] for i in range(self.n)])
+        self.wc = np.array([self.w.cardinalities[ido[i]] for i in range(self.n)])
         return self.wc
 
     def calc(self):
@@ -424,10 +443,10 @@ class G_Local(object):
             yl_mean = ydi / N
             s2 = (y2_sum - y2) / N - (yl_mean) ** 2
         else:
-            self.w.transform = 'B'
+            self.w.transform = "B"
             yl = 1.0 * slag(self.w, y)
             yl += y
-            if self.w_transform == 'r':
+            if self.w_transform == "r":
                 yl = yl / (self.__getCardinalities() + 1.0)
             self.Gs = yl / y_sum
             N = self.n
@@ -435,7 +454,7 @@ class G_Local(object):
             s2 = y.var()
 
         EGs_num, VGs_num = 1.0, 1.0
-        if self.w_transform == 'b':
+        if self.w_transform == "b":
             W = self.__getCardinalities()
             W += self.star
             EGs_num = W * 1.0
@@ -453,12 +472,14 @@ class G_Local(object):
         return self.Gs
 
     @classmethod
-    def by_col(cls, df, cols, w=None, inplace=False, pvalue='sim', outvals=None, **stat_kws):
+    def by_col(
+        cls, df, cols, w=None, inplace=False, pvalue="sim", outvals=None, **stat_kws
+    ):
         """
         Function to compute a G_Local statistic on a dataframe
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         df          :   pandas.DataFrame
                         a pandas dataframe with a geometry column
         cols        :   string or list of string
@@ -481,14 +502,21 @@ class G_Local(object):
                         documentation for the G_Local statistic.
 
         Returns
-        --------
-        If inplace, None, and operation is conducted on dataframe in memory. Otherwise,
-        returns a copy of the dataframe with the relevant columns attached.
+        -------
+        pandas.DataFrame
+                        If inplace, None, and operation is conducted on dataframe
+                        in memory. Otherwise, returns a copy of the dataframe with
+                        the relevant columns attached.
 
-        See Also
-        ---------
-        For further documentation, refer to the G_Local class in pysal.pysal.explore.esda
         """
-        return _univariate_handler(df, cols, w=w, inplace=inplace, pvalue=pvalue,
-                                   outvals=outvals, stat=cls,
-                                   swapname=cls.__name__.lower(), **stat_kws)
+        return _univariate_handler(
+            df,
+            cols,
+            w=w,
+            inplace=inplace,
+            pvalue=pvalue,
+            outvals=outvals,
+            stat=cls,
+            swapname=cls.__name__.lower(),
+            **stat_kws
+        )

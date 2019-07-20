@@ -34,7 +34,7 @@ def spw_from_gal(galfile):
     Examples
     --------
     >>> import pysal.lib
-    >>> spw = pysal.lib.weights.user.spw_from_gal(pysal.lib.examples.get_path("sids2.gal"))
+    >>> spw = pysal.lib.weights.spw_from_gal(pysal.lib.examples.get_path("sids2.gal"))
     >>> spw.sparse.nnz
     462
 
@@ -44,11 +44,11 @@ def spw_from_gal(galfile):
 
 def min_threshold_dist_from_shapefile(shapefile, radius=None, p=2):
     """
-    Kernel weights with adaptive bandwidths.
+    Get the maximum nearest neighbor distance between observations in the
+    shapefile.
 
     Parameters
     ----------
-
     shapefile  : string
                  shapefile name with shp suffix.
     radius     : float
@@ -69,10 +69,10 @@ def min_threshold_dist_from_shapefile(shapefile, radius=None, p=2):
     Examples
     --------
     >>> import pysal.lib
-    >>> md = pysal.lib.weights.user.min_threshold_dist_from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
+    >>> md = pysal.lib.weights.min_threshold_dist_from_shapefile(pysal.lib.examples.get_path("columbus.shp"))
     >>> md
     0.6188641580768541
-    >>> pysal.lib.weights.user.min_threshold_dist_from_shapefile(pysal.lib.examples.get_path("stl_hom.shp"), pysal.lib.cg.sphere.RADIUS_EARTH_MILES)
+    >>> pysal.lib.weights.min_threshold_dist_from_shapefile(pysal.lib.examples.get_path("stl_hom.shp"), pysal.lib.cg.sphere.RADIUS_EARTH_MILES)
     31.846942936393717
 
     Notes
@@ -119,8 +119,8 @@ def build_lattice_shapefile(nrows, ncols, outFileName):
     d.header = [ 'ID' ]
     d.field_spec = [ ('N', 8, 0) ]
     c = 0
-    for i in range(nrows):
-        for j in range(ncols):
+    for i in range(ncols):
+        for j in range(nrows):
             ll = i, j
             ul = i, j + 1
             ur = i + 1, j + 1

@@ -6,6 +6,7 @@ import os
 
 try:
     import geopandas
+    from shapely import geometry
     GEOPANDAS_EXTINCT = False
 except ImportError:
     GEOPANDAS_EXTINCT = True
@@ -44,3 +45,11 @@ class Test_Alpha_Shapes(TestCase):
         auto_alpha = alpha_shape_auto(self.vertices, 5)
 
         assert self.autoalpha.equals(auto_alpha)
+
+    def test_small_n(self):
+        new_singleton = alpha_shape(self.vertices[0].reshape(1,-1), .5)
+        assert isinstance(new_singleton, geometry.Polygon)
+        new_duo = alpha_shape(self.vertices[:1], .5)
+        assert isinstance(new_duo, geometry.Polygon)
+        new_triple = alpha_shape(self.vertices[:2], .5)
+        assert isinstance(new_triple, geometry.Polygon)

@@ -53,14 +53,12 @@ class KNN(W):
     Examples
     --------
     >>> import pysal.lib
+    >>> import numpy as np
     >>> points = [(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
-    >>> kd = pysal.lib.cg.kdtree.KDTree(np.array(points))
+    >>> kd = pysal.lib.cg.KDTree(np.array(points))
     >>> wnn2 = pysal.lib.weights.KNN(kd, 2)
     >>> [1,3] == wnn2.neighbors[0]
     True
-
-    ids
-
     >>> wnn2 = KNN(kd,2)
     >>> wnn2[0]
     {1: 1.0, 3: 1.0}
@@ -207,9 +205,6 @@ class KNN(W):
         >>> wnn2 = KNN.from_array(points, 2)
         >>> [1,3] == wnn2.neighbors[0]
         True
-
-        ids
-
         >>> wnn2 = KNN.from_array(points,2)
         >>> wnn2[0]
         {1: 1.0, 3: 1.0}
@@ -399,7 +394,7 @@ class Kernel(W):
 
     Examples
     --------
-
+    >>> from pysal.lib.weights import Kernel
     >>> points=[(10, 10), (20, 10), (40, 10), (15, 20), (30, 20), (30, 30)]
     >>> kw=Kernel(points)
     >>> kw.weights[0]
@@ -707,22 +702,20 @@ class DistanceBand(W):
 
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
-    >>> w=pysal.lib.weights.distance.DistanceBand(points,threshold=11.2)
+    >>> w=pysal.lib.weights.DistanceBand(points,threshold=11.2)
 
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
     >>> pysal.lib.weights.util.neighbor_equality(w, wcheck)
     True
-    >>> w=pysal.lib.weights.distance.DistanceBand(points,threshold=14.2)
+    >>> w=pysal.lib.weights.DistanceBand(points,threshold=14.2)
     >>> wcheck = pysal.lib.weights.W({0: [1, 3], 1: [0, 3, 4], 2: [4], 3: [1, 0], 4: [5, 2, 1], 5: [4]})
     >>> pysal.lib.weights.util.neighbor_equality(w, wcheck)
     True
 
-
-
     inverse distance weights
 
-    >>> w=pysal.lib.weights.distance.DistanceBand(points,threshold=11.2,binary=False)
+    >>> w=pysal.lib.weights.DistanceBand(points,threshold=11.2,binary=False)
 
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
@@ -730,11 +723,10 @@ class DistanceBand(W):
     [0.1, 0.08944271909999159]
     >>> w.neighbors[0].tolist()
     [1, 3]
-    >>>
 
     gravity weights
 
-    >>> w=pysal.lib.weights.distance.DistanceBand(points,threshold=11.2,binary=False,alpha=-2.)
+    >>> w=pysal.lib.weights.DistanceBand(points,threshold=11.2,binary=False,alpha=-2.)
 
     WARNING: there is one disconnected observation (no neighbors)
     Island id:  [2]
@@ -857,7 +849,7 @@ class DistanceBand(W):
                     self.kdtree, max_distance=self.threshold, p=self.p).tocsr()
         else:
             if str(self.kdtree).split('.')[-1][0:10] == 'Arc_KDTree':
-            	raise TypeError('Unable to calculate dense arc distance matrix;'
+                raise TypeError('Unable to calculate dense arc distance matrix;'
             	        ' parameter "build_sp" must be set to True for arc'
             	        ' distance type weight')
             self.dmat = self._spdistance_matrix(self.data, self.data, self.threshold)

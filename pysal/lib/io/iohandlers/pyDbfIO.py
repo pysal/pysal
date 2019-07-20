@@ -32,8 +32,8 @@ class DBF(tables.DataTable):
     Examples
     --------
 
-    >>> import pysal
-    >>> dbf = pysal.open(pysal.examples.get_path('juvenile.dbf'), 'r')
+    >>> import pysal.lib
+    >>> dbf = pysal.lib.io.open(pysal.lib.examples.get_path('juvenile.dbf'), 'r')
     >>> dbf.header
     ['ID', 'X', 'Y']
     >>> dbf.field_spec

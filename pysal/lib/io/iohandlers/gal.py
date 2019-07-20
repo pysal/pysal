@@ -60,11 +60,11 @@ class GalIO(fileio.FileIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
+        >>> import tempfile, pysal.lib, os
 
         Read in a file GAL file
 
-        >>> testfile = pysal.open(pysal.examples.get_path('sids2.gal'),'r')
+        >>> testfile = pysal.lib.io.open(pysal.lib.examples.get_path('sids2.gal'),'r')
 
         Return a W object
 
@@ -73,7 +73,7 @@ class GalIO(fileio.FileIO):
         True
         >>> print(round(w.sd,6))
         1.515124
-        >>> testfile = pysal.open(pysal.examples.get_path('sids2.gal'),'r')
+        >>> testfile = pysal.lib.io.open(pysal.lib.examples.get_path('sids2.gal'),'r')
 
         Return a sparse matrix for the w information
 
@@ -160,8 +160,8 @@ class GalIO(fileio.FileIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
-        >>> testfile = pysal.open(pysal.examples.get_path('sids2.gal'),'r')
+        >>> import tempfile, pysal.lib, os
+        >>> testfile = pysal.lib.io.open(pysal.lib.examples.get_path('sids2.gal'),'r')
         >>> w = testfile.read()
 
         Create a temporary file for this example
@@ -178,7 +178,7 @@ class GalIO(fileio.FileIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w')
+        >>> o = pysal.lib.io.open(fname,'w')
 
         Write the Weights object into the open file
 
@@ -187,7 +187,7 @@ class GalIO(fileio.FileIO):
 
         Read in the newly created gal file
 
-        >>> wnew =  pysal.open(fname,'r').read()
+        >>> wnew =  pysal.lib.io.open(fname,'r').read()
 
         Compare values from old to new
 

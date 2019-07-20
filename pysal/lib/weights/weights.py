@@ -86,7 +86,7 @@ class W(object):
 
     Examples
     --------
-    >>> from pysal.lib.weights.weights import W
+    >>> from pysal.lib.weights import W
     >>> neighbors = {0: [3, 1], 1: [0, 4, 2], 2: [1, 5], 3: [0, 6, 4], 4: [1, 3, 7, 5], 5: [2, 4, 8], 6: [3, 7], 7: [4, 6, 8], 8: [5, 7]}
     >>> weights = {0: [1, 1], 1: [1, 1, 1], 2: [1, 1], 3: [1, 1, 1], 4: [1, 1, 1, 1], 5: [1, 1, 1], 6: [1, 1], 7: [1, 1, 1], 8: [1, 1]}
     >>> w = W(neighbors, weights)
@@ -795,7 +795,6 @@ class W(object):
         6 2
         7 1
         8 0
-        >>>
 
         """
 
@@ -884,7 +883,6 @@ class W(object):
         >>> w.transform='b'
         >>> w.weights[0]
         [1.0, 1.0]
-        >>>
 
         """
 
@@ -934,7 +932,6 @@ class W(object):
         >>> w.transform='b'
         >>> w.weights[0]
         [1.0, 1.0]
-        >>>
         """
         value = value.upper()
         self._transform = value
@@ -1124,7 +1121,6 @@ class W(object):
         array([[0., 1., 0.],
                [1., 0., 1.],
                [0., 1., 0.]])
-
         >>> ids
         ['first', 'second', 'third']
         """
@@ -1239,7 +1235,7 @@ class W(object):
         Examples
         --------
 
-        >>> from pysal.lib.weights.contiguity import Queen
+        >>> from pysal.lib.weights import Queen
         >>> import pysal.lib as lp
         >>> import geopandas
         >>> gdf = geopandas.read_file(lp.examples.get_path("columbus.shp"))
@@ -1445,7 +1441,7 @@ class WSP(object):
         [0. 1. 0. 0. 0. 1. 0. 0. 0. 0.]
 
         """
-        self.sparse
+
         indices = self.sparse.indices
         data = self.sparse.data
         indptr = self.sparse.indptr
