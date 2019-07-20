@@ -110,11 +110,6 @@ replace("pysal/.", "spglm", "pysal\.model\.spglm")
 replace("pysal/.", "spvcm", "pysal\.model\.spvcm")
 replace("pysal/model/spvcm/.", "def test_val", "\@ut\.skip\\n    def test_val")
 replace("pysal/model/spvcm/.", "from spreg", "from pysal\.model\.spreg")
-replace(
-    "pysal/model/spvcm/.",
-    "import pysal\.model\.spvcm\.api",
-    "from pysal\.model\.spvcm import api as spvcm",
-)
 replace("pysal/.", " giddy\.api", "pysal\.explore\.giddy\.api")
 replace("pysal/.", "import giddy", "import pysal\.explore\.giddy")
 replace("pysal/.", "from giddy", "from pysal\.explore\.giddy")
