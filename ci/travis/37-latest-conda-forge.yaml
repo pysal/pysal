@@ -18,3 +18,4 @@ dependencies:
   - statsmodels
   - ipywidgets
   - mapclassify
+  - tqdm
