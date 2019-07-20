@@ -201,9 +201,6 @@ class Join_Counts(object):
         If inplace, None, and operation is conducted on dataframe in memory. Otherwise,
         returns a copy of the dataframe with the relevant columns attached.
 
-        See Also
-        ---------
-        For further documentation, refer to the Join_Count class in pysal.pysal.explore.esda
         """
         if outvals is None:
             outvals = []

@@ -37,14 +37,14 @@ def lag_spatial(w, y):
     >>> import numpy as np
     >>> w = pysal.lib.weights.lat2W(3, 3)
     >>> y = np.arange(9)
-    >>> yl = pysal.lib.weights.spatial_lag.lag_spatial(w, y)
+    >>> yl = pysal.lib.weights.lag_spatial(w, y)
     >>> yl
     array([ 4.,  6.,  6., 10., 16., 14., 10., 18., 12.])
 
     Row standardize the weights matrix and recompute the spatial lag
 
     >>> w.transform = 'r'
-    >>> yl = pysal.lib.weights.spatial_lag.lag_spatial(w, y)
+    >>> yl = pysal.lib.weights.lag_spatial(w, y)
     >>> yl
     array([2.        , 2.        , 3.        , 3.33333333, 4.        ,
            4.66666667, 5.        , 6.        , 6.        ])
@@ -53,7 +53,7 @@ def lag_spatial(w, y):
     Explicitly define data vector as 9x1 and recompute the spatial lag
 
     >>> y.shape = (9, 1)
-    >>> yl = pysal.lib.weights.spatial_lag.lag_spatial(w, y)
+    >>> yl = pysal.lib.weights.lag_spatial(w, y)
     >>> yl
     array([[2.        ],
            [2.        ],
@@ -71,7 +71,7 @@ def lag_spatial(w, y):
     >>> yr = np.arange(8, -1, -1)
     >>> yr.shape = (9, 1)
     >>> x = np.hstack((y, yr))
-    >>> yl = pysal.lib.weights.spatial_lag.lag_spatial(w, x)
+    >>> yl = pysal.lib.weights.lag_spatial(w, x)
     >>> yl
     array([[2.        , 6.        ],
            [2.        , 6.        ],
@@ -132,14 +132,14 @@ def lag_categorical(w, y, ties='tryself'):
     >>> np.random.seed(12345)
     >>> w = pysal.lib.weights.lat2W(3, 3)
     >>> y = ['a','b','a','b','c','b','c','b','c']
-    >>> y_l = pysal.lib.weights.spatial_lag.lag_categorical(w, y)
+    >>> y_l = pysal.lib.weights.lag_categorical(w, y)
     >>> np.array_equal(y_l, np.array(['b', 'a', 'b', 'c', 'b', 'c', 'b', 'c', 'b']))
     True
 
     Explicitly reshape y into a (9x1) array and calculate lag again
 
     >>> yvect = np.array(y).reshape(9,1)
-    >>> yvect_l = pysal.lib.weights.spatial_lag.lag_categorical(w,yvect)
+    >>> yvect_l = pysal.lib.weights.lag_categorical(w,yvect)
     >>> check = np.array( [ [i] for i in  ['b', 'a', 'b', 'c', 'b', 'c', 'b', 'c', 'b']] )
     >>> np.array_equal(yvect_l, check)
     True
@@ -148,7 +148,7 @@ def lag_categorical(w, y, ties='tryself'):
 
     >>> y2 = ['a', 'c', 'c', 'd', 'b', 'a', 'd', 'd', 'c']
     >>> ym = np.vstack((y,y2)).T
-    >>> ym_lag = pysal.lib.weights.spatial_lag.lag_categorical(w,ym)
+    >>> ym_lag = pysal.lib.weights.lag_categorical(w,ym)
     >>> check = np.array([['b', 'd'], ['a', 'c'], ['b', 'c'], ['c', 'd'], ['b', 'd'], ['c', 'c'], ['b', 'd'], ['c', 'd'], ['b', 'c']])
     >>> np.array_equal(check, ym_lag)
     True

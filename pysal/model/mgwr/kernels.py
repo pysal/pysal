@@ -2,166 +2,65 @@
 
 __author__ = "Taylor Oshan tayoshan@gmail.com"
 
-import scipy
-from scipy.spatial.kdtree import KDTree
 import numpy as np
-from scipy.spatial.distance import cdist as cdist_scipy
-from math import radians, sin, cos, sqrt, asin
-
 #adaptive specifications should be parameterized with nn-1 to match original gwr
 #implementation. That is, pysal counts self neighbors with knn automatically.
 
-def fix_gauss(coords, bw, points=None, dmat=None,sorted_dmat=None,spherical=False):
-    """
-    Fixed Gaussian kernel.
-    """
-    w = _Kernel(coords, function='gwr_gaussian', bandwidth=bw,
-            truncate=False, points=points, dmat=dmat,sorted_dmat=sorted_dmat,spherical=spherical)
-    return w.kernel
+#Soft dependency of numba's njit
+try:
+    from numba import njit
+except ImportError:
 
-def adapt_gauss(coords, nn, points=None, dmat=None,sorted_dmat=None,spherical=False):
-    """
-    Spatially adaptive Gaussian kernel.
-    """
-    w = _Kernel(coords, fixed=False, k=nn-1, function='gwr_gaussian',
-            truncate=False, points=points, dmat=dmat,sorted_dmat=sorted_dmat,spherical=spherical)
-    return w.kernel
+    def njit(func):
+        return func
 
-def fix_bisquare(coords, bw, points=None, dmat=None,sorted_dmat=None,spherical=False):
-    """
-    Fixed bisquare kernel.
-    """
-    w = _Kernel(coords, function='bisquare', bandwidth=bw, points=points, dmat=dmat,sorted_dmat=sorted_dmat,spherical=spherical)
-    return w.kernel
 
-def adapt_bisquare(coords, nn, points=None, dmat=None,sorted_dmat=None,spherical=False):
+@njit
+def local_cdist(coords_i, coords, spherical):
     """
-    Spatially adaptive bisquare kernel.
+    Compute Haversine (spherical=True) or Euclidean (spherical=False) distance for a local kernel.
     """
-    w = _Kernel(coords, fixed=False, k=nn-1, function='bisquare', points=points, dmat=dmat,sorted_dmat=sorted_dmat,spherical=spherical)
-    return w.kernel
-
-def fix_exp(coords, bw, points=None, dmat=None,sorted_dmat=None,spherical=False):
-    """
-    Fixed exponential kernel.
-    """
-    w = _Kernel(coords, function='exponential', bandwidth=bw,
-            truncate=False, points=points, dmat=dmat,sorted_dmat=sorted_dmat,spherical=spherical)
-    return w.kernel
-
-def adapt_exp(coords, nn, points=None, dmat=None,sorted_dmat=None,spherical=False):
-    """
-    Spatially adaptive exponential kernel.
-    """
-    w = _Kernel(coords, fixed=False, k=nn-1, function='exponential',
-            truncate=False, points=points, dmat=dmat,sorted_dmat=sorted_dmat,spherical=spherical)
-    return w.kernel
-
-from scipy.spatial.distance import cdist
-
-#Customized Kernel class user for GWR because the default PySAL kernel class
-#favors memory optimization over speed optimizations and GWR often needs the 
-#speed optimization since it is not always assume points far awary
-# are truncated #to zero
-
-def cdist(coords1,coords2,spherical):
-    def _haversine(lon1, lat1, lon2, lat2):
-        R = 6371.0 # Earth radius in kilometers
-        dLat = radians(lat2 - lat1)
-        dLon = radians(lon2 - lon1)
-        lat1 = radians(lat1)
-        lat2 = radians(lat2)
-        a = sin(dLat/2)**2 + cos(lat1)*cos(lat2)*sin(dLon/2)**2
-        c = 2*asin(sqrt(a))
-        return R * c
-    n = len(coords1)
-    m = len(coords2)
-    dmat = np.zeros((n,n))
-
     if spherical:
-        for i in range(n) :
-            for j in range(m):
-                dmat[i,j] = _haversine(coords1[i][0], coords1[i][1], coords2[j][0], coords2[j][1])
+        dLat = np.radians(coords[:, 1] - coords_i[1])
+        dLon = np.radians(coords[:, 0] - coords_i[0])
+        lat1 = np.radians(coords[:, 1])
+        lat2 = np.radians(coords_i[1])
+        a = np.sin(
+            dLat / 2)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dLon / 2)**2
+        c = 2 * np.arcsin(np.sqrt(a))
+        R = 6371.0
+        return R * c
     else:
-        dmat = cdist_scipy(coords1,coords2)
+        return np.sqrt(np.sum((coords_i - coords)**2, axis=1))
 
-    return dmat
 
-class _Kernel(object):
+class Kernel(object):
     """
     GWR kernel function specifications.
-
+    
     """
-    def __init__(self, data, bandwidth=None, fixed=True, k=None,
-                 function='triangular', eps=1.0000001, ids=None, truncate=True,
-                 points=None, dmat=None,sorted_dmat=None, spherical=False): #Added truncate flag
-        
 
-        if issubclass(type(data), scipy.spatial.KDTree):
-            self.data = data.data
-            data = self.data
+    def __init__(self, i, data, bw=None, fixed=True, function='triangular',
+                 eps=1.0000001, ids=None, points=None, spherical=False):
+
+        if points is None:
+            self.dvec = local_cdist(data[i], data, spherical).reshape(-1)
         else:
-            self.data = data
-        if k is not None:
-            self.k = int(k) + 1
-        else:
-            self.k = k
-        
-        self.spherical = spherical
-        self.searching = True
-        
-        if dmat is None:
-            self.searching = False
-        
-        if self.searching:
-            self.dmat = dmat
-            self.sorted_dmat = sorted_dmat
-        else:
-            if points is None:
-                self.dmat = cdist(self.data, self.data, self.spherical)
-            else:
-                self.points = points
-                self.dmat = cdist(self.points, self.data, self.spherical)
+            self.dvec = local_cdist(points[i], data, spherical).reshape(-1)
 
         self.function = function.lower()
-        self.fixed = fixed
-        self.eps = eps
-        self.trunc = truncate
-        if bandwidth:
-            try:
-                bandwidth = np.array(bandwidth)
-                bandwidth.shape = (len(bandwidth), 1)
-            except:
-                bandwidth = np.ones((len(data), 1), 'float') * bandwidth
-            self.bandwidth = bandwidth
+
+        if fixed:
+            self.bandwidth = float(bw)
         else:
-            self._set_bw()
-        self.kernel = self._kernel_funcs(self.dmat/self.bandwidth)
-        if self.trunc:
-            mask = np.repeat(self.bandwidth, len(self.data), axis=1)
-            self.kernel[(self.dmat >= mask)] = 0
-                
-    def _set_bw(self):
-        if self.searching:
-            if self.k is not None:
-                dmat = self.sorted_dmat[:,:self.k]
-            else:
-                dmat = self.dmat
-        else:
-            if self.k is not None:
-                dmat = np.sort(self.dmat)[:,:self.k]
-            else:
-                dmat = self.dmat
-        
-        if self.fixed:
-            # use max knn distance as bandwidth
-            bandwidth = dmat.max() * self.eps
-            n = len(self.data)
-            self.bandwidth = np.ones((n, 1), 'float') * bandwidth
-        else:
-            # use local max knn distance
-            self.bandwidth = dmat.max(axis=1) * self.eps
-            self.bandwidth.shape = (self.bandwidth.size, 1)
+            self.bandwidth = np.partition(
+                self.dvec,
+                int(bw) - 1)[int(bw) - 1] * eps  #partial sort in O(n) Time
+
+        self.kernel = self._kernel_funcs(self.dvec / self.bandwidth)
+
+        if self.function == "bisquare":  #Truncate for bisquare
+            self.kernel[(self.dvec >= self.bandwidth)] = 0
 
     def _kernel_funcs(self, zs):
         # functions follow Anselin and Rey (2010) table 5.4
@@ -170,18 +69,14 @@ class _Kernel(object):
         elif self.function == 'uniform':
             return np.ones(zi.shape) * 0.5
         elif self.function == 'quadratic':
-            return (3. / 4) * (1 - zs ** 2)
+            return (3. / 4) * (1 - zs**2)
         elif self.function == 'quartic':
-            return (15. / 16) * (1 - zs ** 2) ** 2
+            return (15. / 16) * (1 - zs**2)**2
         elif self.function == 'gaussian':
-            c = np.pi * 2
-            c = c ** (-0.5)
-            return c * np.exp(-(zs ** 2) / 2.)
-        elif self.function == 'gwr_gaussian':
-            return np.exp(-0.5*(zs)**2)
+            return np.exp(-0.5 * (zs)**2)
         elif self.function == 'bisquare':
-            return (1-(zs)**2)**2
-        elif self.function =='exponential':
+            return (1 - (zs)**2)**2
+        elif self.function == 'exponential':
             return np.exp(-zs)
         else:
             print('Unsupported kernel function', self.function)

@@ -239,8 +239,8 @@ class Wk1IO(fileio.FileIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
-        >>> testfile = pysal.open(pysal.examples.get_path('spat-sym-us.wk1'),'r')
+        >>> import tempfile, pysal.lib, os
+        >>> testfile = pysal.lib.io.open(pysal.lib.examples.get_path('spat-sym-us.wk1'),'r')
         >>> w = testfile.read()
 
         Create a temporary file for this example
@@ -257,7 +257,7 @@ class Wk1IO(fileio.FileIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w')
+        >>> o = pysal.lib.io.open(fname,'w')
 
         Write the Weights object into the open file
 
@@ -266,7 +266,7 @@ class Wk1IO(fileio.FileIO):
 
         Read in the newly created text file
 
-        >>> wnew =  pysal.open(fname,'r').read()
+        >>> wnew =  pysal.lib.io.open(fname,'r').read()
 
         Compare values from old to new
 

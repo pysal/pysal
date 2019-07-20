@@ -21,9 +21,9 @@ class Geary(object):
                      (n, 1) attribute vector
     w              : W
                      spatial weights
-    transformation : {'B', 'R', 'D', 'U', 'V'}
-                     weights transformation, default is binary.
-                     Other options include "R": row-standardized, "D":
+    transformation : {'R', 'B', 'D', 'U', 'V'}
+                     weights transformation, default is row-standardized.
+                     Other options include "B": binary, "D":
                      doubly-standardized, "U": untransformed (general
                      weights), "V": variance-stabilizing.
     permutations   : int

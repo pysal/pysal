@@ -7,6 +7,7 @@ import numpy as np
 from scipy import linalg
 from pysal.model.spglm.family import Gaussian, Poisson, Binomial
 
+
 def get_AICc(gwr):
     """
     Get AICc value
@@ -20,12 +21,14 @@ def get_AICc(gwr):
     k = gwr.tr_S
     #sigma2 = gwr.sigma2
     if isinstance(gwr.family, Gaussian):
-        aicc = -2.0*gwr.llf + 2.0*n*(k + 1.0)/(n-k-2.0) #equivalent to below but
+        aicc = -2.0 * gwr.llf + 2.0 * n * (k + 1.0) / (
+            n - k - 2.0)  #equivalent to below but
         #can't control denominator of sigma without altering GLM familt code
         #aicc = n*np.log(sigma2) + n*np.log(2.0*np.pi) + n*(n+k)/(n-k-2.0)
     elif isinstance(gwr.family, (Poisson, Binomial)):
-        aicc = get_AIC(gwr) + 2.0 * k * (k+1.0) / (n - k - 1.0) 
+        aicc = get_AIC(gwr) + 2.0 * k * (k + 1.0) / (n - k - 1.0)
     return aicc
+
 
 def get_AIC(gwr):
     """
@@ -36,16 +39,17 @@ def get_AIC(gwr):
     GWGLM:  AIC(G)=D(G) + 2K(G), where D and K denote the deviance and the effective
     number of parameters in the model with bandwidth G, respectively.
     
-    """   
+    """
     k = gwr.tr_S
     #deviance = -2*log-likelihood
     y = gwr.y
     mu = gwr.mu
     if isinstance(gwr.family, Gaussian):
-        aic = -2.0 * gwr.llf + 2.0 * (k+1)
+        aic = -2.0 * gwr.llf + 2.0 * (k + 1)
     elif isinstance(gwr.family, (Poisson, Binomial)):
         aic = np.sum(gwr.family.resid_dev(y, mu)**2) + 2.0 * k
-    return aic 
+    return aic
+
 
 def get_BIC(gwr):
     """
@@ -57,15 +61,16 @@ def get_BIC(gwr):
     GWGLM: BIC = dev + tr_S * log(n)
 
     """
-    n = gwr.n      # (scalar) number of observations
-    k = gwr.tr_S  
+    n = gwr.n  # (scalar) number of observations
+    k = gwr.tr_S
     y = gwr.y
     mu = gwr.mu
     if isinstance(gwr.family, Gaussian):
-        bic = -2.0 * gwr.llf + (k+1) * np.log(n) 
+        bic = -2.0 * gwr.llf + (k + 1) * np.log(n)
     elif isinstance(gwr.family, (Poisson, Binomial)):
         bic = np.sum(gwr.family.resid_dev(y, mu)**2) + k * np.log(n)
     return bic
+
 
 def get_CV(gwr):
     """
@@ -79,11 +84,12 @@ def get_CV(gwr):
     Modification: sum of residual squared is divided by n according to GWR4 results
 
     """
-    aa = gwr.resid_response.reshape((-1,1))/(1.0-gwr.influ)
-    cv = np.sum(aa**2)/gwr.n
+    aa = gwr.resid_response.reshape((-1, 1)) / (1.0 - gwr.influ)
+    cv = np.sum(aa**2) / gwr.n
     return cv
 
+
 def corr(cov):
-    invsd = np.diag(1/np.sqrt(np.diag(cov)))
+    invsd = np.diag(1 / np.sqrt(np.diag(cov)))
     cors = np.dot(np.dot(invsd, cov), invsd)
     return cors

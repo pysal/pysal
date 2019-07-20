@@ -12,8 +12,7 @@ class WKTParser:
 
     Example
     -------
-    >>> from pysal.core.IOHandlers import wkt
-    >>> import pysal
+    >>> import pysal.lib
 
     Create some Well-Known Text objects
 
@@ -23,32 +22,32 @@ class WKTParser:
 
     Instantiate the parser
 
-    >>> wkt = WKTParser()
+    >>> parser = pysal.lib.io.wkt.WKTParser()
 
     Inspect our WKT polygon
 
-    >>> wkt(p).parts
+    >>> parser(p).parts
     [[(1.0, 1.0), (1.0, 5.0), (5.0, 5.0), (5.0, 1.0), (1.0, 1.0)], [(2.0, 2.0), (2.0, 3.0), (3.0, 3.0), (3.0, 2.0), (2.0, 2.0)]]
-    >>> wkt(p).centroid
+    >>> parser(p).centroid
     (2.9705882352941178, 2.9705882352941178)
-    >>> wkt(p).area
+    >>> parser(p).area
     17.0
 
     Inspect pt, our WKT point object
 
-    >>> wkt(pt)
+    >>> parser(pt)
     (6.0, 10.0)
 
     Inspect our WKT linestring
 
-    >>> wkt(l).len
+    >>> parser(l).len
     73.45538453219989
-    >>> wkt(l).parts
+    >>> parser(l).parts
     [[(3.0, 4.0), (10.0, 50.0), (20.0, 25.0)]]
 
     Read in WKT from a file
 
-    >>> f = pysal.open(pysal.examples.get_path('stl_hom.wkt'))
+    >>> f = pysal.lib.io.open(pysal.lib.examples.get_path('stl_hom.wkt'))
     >>> f.mode
     'r'
     >>> f.header

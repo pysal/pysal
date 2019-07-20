@@ -201,8 +201,8 @@ class GwtIO(FileIO.FileIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
-        >>> testfile = pysal.open(pysal.examples.get_path('juvenile.gwt'),'r')
+        >>> import tempfile, pysal.lib, os
+        >>> testfile = pysal.lib.io.open(pysal.lib.examples.get_path('juvenile.gwt'),'r')
         >>> w = testfile.read()
 
         Create a temporary file for this example
@@ -219,7 +219,7 @@ class GwtIO(FileIO.FileIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w')
+        >>> o = pysal.lib.io.open(fname,'w')
 
         Write the Weights object into the open file
 
@@ -228,7 +228,7 @@ class GwtIO(FileIO.FileIO):
 
         Read in the newly created gwt file
 
-        >>> wnew =  pysal.open(fname,'r').read()
+        >>> wnew =  pysal.lib.io.open(fname,'r').read()
 
         Compare values from old to new
 
