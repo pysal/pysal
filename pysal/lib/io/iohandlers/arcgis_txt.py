@@ -153,8 +153,8 @@ class ArcGISTextIO(gwt.GwtIO):
         Examples
         --------
 
-        >>> import tempfile, pysal, os
-        >>> testfile = pysal.open(pysal.examples.get_path('arcgis_txt.txt'),'r','arcgis_text')
+        >>> import tempfile, pysal.lib, os
+        >>> testfile = pysal.lib.io.open(pysal.lib.examples.get_path('arcgis_txt.txt'),'r','arcgis_text')
         >>> w = testfile.read()
 
         Create a temporary file for this example
@@ -171,7 +171,7 @@ class ArcGISTextIO(gwt.GwtIO):
 
         Open the new file in write mode
 
-        >>> o = pysal.open(fname,'w','arcgis_text')
+        >>> o = pysal.lib.io.open(fname,'w','arcgis_text')
 
         Write the Weights object into the open file
 
@@ -180,7 +180,7 @@ class ArcGISTextIO(gwt.GwtIO):
 
         Read in the newly created text file
 
-        >>> wnew =  pysal.open(fname,'r','arcgis_text').read()
+        >>> wnew =  pysal.lib.io.open(fname,'r','arcgis_text').read()
 
         Compare values from old to new
 

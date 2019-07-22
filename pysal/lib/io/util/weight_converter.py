@@ -69,15 +69,16 @@ class WeightConverter(object):
                 f.close()
 
     def w_set(self):
-        """
-        Checks if a source w object is set
+        """Checks if a source w object is set
         """
         return hasattr(self, 'w')
 
     def write(self, outputPath, dataFormat=None, useIdIndex=True, matrix_form=True):
         """
+        
         Parameters
         ----------
+        
         outputPath: string
                     path to the output weights file
         dataFormat: string
@@ -94,10 +95,12 @@ class WeightConverter(object):
 
         Returns
         -------
+       
         A weights file is created
 
         Examples
         --------
+        
         >>> import tempfile, os, pysal.lib
 
         Create a WeightConverter object
@@ -175,6 +178,7 @@ def weight_convert(inPath, outPath, inDataFormat=None, outDataFormat=None, useId
 
     Parameters
     ----------
+    
     inPath: string
             path to the input weights file
     outPath: string
@@ -198,11 +202,13 @@ def weight_convert(inPath, outPath, inDataFormat=None, outDataFormat=None, useId
 
     Returns
     -------
+   
     A weights file is created
 
     Examples
     --------
-    >>> import tempfile, os, pysal
+    
+    >>> import tempfile, os, pysal.lib
 
     Create a temporary file for this example
 
@@ -218,15 +224,15 @@ def weight_convert(inPath, outPath, inDataFormat=None, outDataFormat=None, useId
 
     Create a WeightConverter object
 
-    >>> weight_convert(pysal.examples.get_path('sids2.gal'), fname, outDataFormat='arcgis_dbf', useIdIndex=True)
+    >>> weight_convert(pysal.lib.examples.get_path('sids2.gal'), fname, outDataFormat='arcgis_dbf', useIdIndex=True)
 
     Create a new weights object from the gal file
 
-    >>> wold = pysal.open(pysal.examples.get_path('sids2.gal'), 'r').read()
+    >>> wold = pysal.lib.io.open(pysal.lib.examples.get_path('sids2.gal'), 'r').read()
 
     Create a new weights object from the converted dbf file
 
-    >>> wnew = pysal.open(fname, 'r', 'arcgis_dbf').read()
+    >>> wnew = pysal.lib.io.open(fname, 'r', 'arcgis_dbf').read()
 
     Compare the number of observations in two W objects
 

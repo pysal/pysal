@@ -453,6 +453,11 @@ def alpha_shape(xys, alpha):
     '''
     if not HAS_JIT:
         warn("Numba not imported, so alpha shape construction may be slower than expected.")
+    if xys.shape[0] < 4:
+        from shapely import ops, geometry as geom
+        return ops.cascaded_union([geom.Point(xy) 
+                                   for xy in xys])\
+                  .convex_hull.buffer(0)
     triangulation = spat.Delaunay(xys)
     triangles = xys[triangulation.simplices]
     a_pts = triangles[:, 0, :]
@@ -516,6 +521,12 @@ def alpha_shape_auto(xys, step=1, verbose=False):
     '''
     if not HAS_JIT:
         warn("Numba not imported, so alpha shape construction may be slower than expected.")
+    if xys.shape[0] < 4:
+        from shapely import ops, geometry as geom
+        return ops.cascaded_union([geom.Point(xy) 
+                                   for xy in xys])\
+                  .convex_hull.buffer(0)
+    triangulation = spat.Delaunay(xys)
     triangulation = spat.Delaunay(xys)
     triangles = xys[triangulation.simplices]
     a_pts = triangles[:, 0, :]

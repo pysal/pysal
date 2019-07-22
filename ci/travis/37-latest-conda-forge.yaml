@@ -18,3 +18,8 @@ dependencies:
   - statsmodels
   - ipywidgets
   - mapclassify
+  - tqdm
+  - pip
+  - pip:
+    - urbanaccess
+    - pandana
