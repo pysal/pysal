@@ -594,12 +594,11 @@ Network
 
 
 
-pysal.explore.spaghetti: 
--------------------------
+pysal.explore.spaghetti: Spatial Analysis on Networks
+-----------------------------------------------------
 
 
-
-.. _network_api:
+.. _spaghetti_api:
 
 
 spaghetti.Network
@@ -607,78 +606,34 @@ spaghetti.Network
 
 .. autosummary::
    :toctree: generated/
+    
+    spaghetti.Network.extract_components
+    spaghetti.Network.extractgraph
+    spaghetti.Network.contiguityweights
+    spaghetti.Network.distancebandweights
+    spaghetti.Network.snapobservations
+    spaghetti.Network.compute_distance_to_vertices
+    spaghetti.Network.compute_snap_dist
+    spaghetti.Network.count_per_link
+    spaghetti.Network.simulate_observations
+    spaghetti.Network.enum_links_vertex
+    spaghetti.Network.full_distance_matrix
+    spaghetti.Network.allneighbordistances
+    spaghetti.Network.nearestneighbordistances
+    spaghetti.Network.split_arcs
+    spaghetti.Network.savenetwork
+    spaghetti.Network.loadnetwork
+    spaghetti.Network.NetworkF
+    spaghetti.Network.NetworkG
+    spaghetti.Network.NetworkK
+    spaghetti.Network._evaluate_napts
+    spaghetti.Network._extractnetwork
+    spaghetti.Network._newpoint_coords
+    spaghetti.Network._round_sig
+    spaghetti.Network._snap_to_link
+    spaghetti.Network._yield_napts
+    spaghetti.Network._yieldneighbor
 
-   spaghetti.Network
-   spaghetti.Network.extractgraph
-   spaghetti.Network.contiguityweights
-   spaghetti.Network.distancebandweights
-   spaghetti.Network.snapobservations
-   spaghetti.Network.compute_distance_to_nodes
-   spaghetti.Network.compute_snap_dist
-   spaghetti.Network.count_per_edge
-   spaghetti.Network.simulate_observations
-   spaghetti.Network.enum_links_node
-   spaghetti.Network.node_distance_matrix
-   spaghetti.Network.allneighbordistances
-   spaghetti.Network.nearestneighbordistances
-   spaghetti.Network.NetworkF
-   spaghetti.Network.NetworkG
-   spaghetti.Network.NetworkK
-   spaghetti.Network.segment_edges
-   spaghetti.Network.savenetwork
-   spaghetti.Network.loadnetwork
-
-
-spaghetti.NetworkBase
-+++++++++++++++++++++
-
-.. autosummary::
-   :toctree: generated/
-
-   spaghetti.NetworkBase
-   spaghetti.NetworkBase.computeenvelope
-   spaghetti.NetworkBase.setbounds
-   spaghetti.NetworkBase.validatedistribution
-
-
-spaghetti.NetworkF
-++++++++++++++++++
-
-.. autosummary::
-   :toctree: generated/
-
-   spaghetti.NetworkF
-   spaghetti.NetworkF.computeenvelope
-   spaghetti.NetworkF.setbounds
-   spaghetti.NetworkF.validatedistribution
-   spaghetti.NetworkF.computeobserved
-   spaghetti.NetworkF.computepermutations
-
-spaghetti.NetworkG
-++++++++++++++++++
-
-.. autosummary::
-   :toctree: generated/
-
-   spaghetti.NetworkG
-   spaghetti.NetworkG.computeenvelope
-   spaghetti.NetworkG.setbounds
-   spaghetti.NetworkG.validatedistribution
-   spaghetti.NetworkG.computeobserved
-   spaghetti.NetworkG.computepermutations
-
-spaghetti.NetworkK
-++++++++++++++++++
-
-.. autosummary::
-   :toctree: generated/
-
-   spaghetti.NetworkK
-   spaghetti.NetworkK.computeenvelope
-   spaghetti.NetworkK.setbounds
-   spaghetti.NetworkK.validatedistribution
-   spaghetti.NetworkK.computeobserved
-   spaghetti.NetworkK.computepermutations
 
 spaghetti.PointPattern
 ++++++++++++++++++++++
@@ -687,7 +642,7 @@ spaghetti.PointPattern
    :toctree: generated/
    
    spaghetti.PointPattern
-   
+
 
 spaghetti.SimulatedPointPattern
 +++++++++++++++++++++++++++++++
@@ -695,7 +650,8 @@ spaghetti.SimulatedPointPattern
 .. autosummary::
    :toctree: generated/
    
-   spaghetti.SimulatedPointPattern
+    spaghetti.SimulatedPointPattern
+
 
 spaghetti
 +++++++++
@@ -703,16 +659,7 @@ spaghetti
 .. autosummary::
    :toctree: generated/
    
-   spaghetti.compute_length
-   spaghetti.dijkstra
-   spaghetti.dijkstra_mp
-   spaghetti.generatetree
-   spaghetti.get_neighbor_distances
-   spaghetti.snap_points_on_segments
-   spaghetti.squared_distance_point_segment
-   spaghetti.ffunction
-   spaghetti.gfunction
-   spaghetti.kfunction
+    spaghetti.element_as_gdf
 
 
 .. currentmodule:: pysal.viz
