@@ -487,6 +487,113 @@ Window functions
    pointpats.to_ccf
 
 
+pysal.explore.segregation: Segregation Analysis
+-----------------------------------------------
+
+.. _segregation_api:
+
+Aspatial Indices
++++++++++++++++++++++
+
+.. autosummary::
+   :toctree: generated/
+   
+      segregation.aspatial.Dissim 
+      segregation.aspatial.GiniSeg
+      segregation.aspatial.Entropy
+      segregation.aspatial.Isolation
+      segregation.aspatial.Exposure
+      segregation.aspatial.Atkinson
+      segregation.aspatial.CorrelationR
+      segregation.aspatial.ConProf
+      segregation.aspatial.ModifiedDissim
+      segregation.aspatial.ModifiedGiniSeg
+      segregation.aspatial.BiasCorrectedDissim
+      segregation.aspatial.DensityCorrectedDissim
+
+Spatial Indices
++++++++++++++++++++++
+.. autosummary::
+   :toctree: generated/
+   
+      segregation.spatial.SpatialProxProf
+      segregation.spatial.SpatialDissim
+      segregation.spatial.BoundarySpatialDissim
+      segregation.spatial.PerimeterAreaRatioSpatialDissim
+      segregation.spatial.DistanceDecayIsolation
+      segregation.spatial.DistanceDecayExposure
+      segregation.spatial.SpatialProximity
+      segregation.spatial.AbsoluteClustering
+      segregation.spatial.RelativeClustering
+      segregation.spatial.Delta
+      segregation.spatial.AbsoluteConcentration
+      segregation.spatial.RelativeConcentration
+      segregation.spatial.AbsoluteCentralization
+      segregation.spatial.RelativeCentralization
+	  
+Multigroup Indices
++++++++++++++++++++++
+.. autosummary::
+   :toctree: generated/
+   
+      segregation.aspatial.MultiDissim
+      segregation.aspatial.MultiGiniSeg
+      segregation.aspatial.MultiNormalizedExposure
+      segregation.aspatial.MultiInformationTheory
+      segregation.aspatial.MultiRelativeDiversity
+      segregation.aspatial.MultiSquaredCoefficientVariation
+      segregation.aspatial.MultiDiversity
+      segregation.aspatial.SimpsonsConcentration
+      segregation.aspatial.SimpsonsInteraction
+      segregation.aspatial.MultiDivergence
+	  
+Local Indices
++++++++++++++++++++++
+.. autosummary::
+   :toctree: generated/
+   
+      segregation.local.MultiLocationQuotient
+      segregation.local.MultiLocalDiversity
+      segregation.local.MultiLocalEntropy
+      segregation.local.MultiLocalSimpsonInteraction
+      segregation.local.MultiLocalSimpsonConcentration
+      segregation.local.LocalRelativeCentralization
+	  
+Batch Compute Wrappers
++++++++++++++++++++++
+.. autosummary::
+   :toctree: generated/
+   
+	  segregation.compute_all.ComputeAllAspatialSegregation
+	  segregation.compute_all.ComputeAllSpatialSegregation
+	  segregation.compute_all.ComputeAllSegregation
+	  
+Inference Wrappers
++++++++++++++++++++++
+.. autosummary::
+   :toctree: generated/
+   
+	  segregation.inference.SingleValueTest
+	  segregation.inference.TwoValueTest
+	  
+Decomposition
++++++++++++++++++++++
+.. autosummary::
+   :toctree: generated/
+  
+      segregation.decomposition.DecomposeSegregation
+
+Network
++++++++++++++++++++++
+.. autosummary::
+ :toctree: generated/
+
+      segregation.network.get_osm_network
+      segregation.network.calc_access
+
+
+
+
 pysal.explore.spaghetti: 
 -------------------------
 
@@ -625,21 +732,21 @@ Classifiers
 .. autosummary::
    :toctree: generated/
 
-   mapclassify.Box_Plot
-   mapclassify.Equal_Interval
-   mapclassify.Fisher_Jenks
-   mapclassify.Fisher_Jenks_Sampled
-   mapclassify.HeadTail_Breaks
-   mapclassify.Jenks_Caspall
-   mapclassify.Jenks_Caspall_Forced
-   mapclassify.Jenks_Caspall_Sampled
-   mapclassify.Max_P_Classifier
-   mapclassify.Maximum_Breaks
-   mapclassify.Natural_Breaks
+   mapclassify.BoxPlot
+   mapclassify.EqualInterval
+   mapclassify.FisherJenks
+   mapclassify.FisherJenksSampled
+   mapclassify.HeadTailBreaks
+   mapclassify.JenksCaspall
+   mapclassify.JenksCaspallForced
+   mapclassify.JenksCaspallSampled
+   mapclassify.MaxP
+   mapclassify.MaximumBreaks
+   mapclassify.NaturalBreaks
    mapclassify.Quantiles
    mapclassify.Percentiles
-   mapclassify.Std_Mean
-   mapclassify.User_Defined
+   mapclassify.StdMean
+   mapclassify.UserDefined
 
 Utilities
 +++++++++
