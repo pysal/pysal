@@ -5,3 +5,7 @@ matplotlib
 descartes
 palettable
 scikit-learn
+geopandas
+deprecated
+rtree
+tqdm
