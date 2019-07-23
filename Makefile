@@ -27,6 +27,10 @@ prep:
 	rm -rf pysal/lib
 	mkdir pysal/lib
 
+docs:
+	python convert_docs.py
+	cd doc; make clean; make html
+
 clean: 
 	find . -name "*.pyc" -exec rm '{}' ';'
 	find pysal -name "__pycache__" -exec rm -rf '{}' ';'
