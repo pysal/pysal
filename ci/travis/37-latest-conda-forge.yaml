@@ -19,6 +19,7 @@ dependencies:
   - ipywidgets
   - mapclassify
   - tqdm
+  - zstd
   - pip
   - pip:
     - urbanaccess
