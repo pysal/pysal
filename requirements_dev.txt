@@ -6,5 +6,4 @@ sphinxcontrib-napoleon
 coveralls
 bokeh
 ipywidgets
-geopandas
 statsmodels
