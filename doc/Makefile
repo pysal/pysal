@@ -23,10 +23,11 @@ clean:
 	rm -rf $(BUILDDIR)/*
 	rm -rf auto_examples/
 
-dash:
+dash: html
 	rm -rf PySAL.docset
 	doc2dash --name=PySAL  --icon=_static/images/pysal_favicon.png _build/html 
+
+zeal: dash 
 	rm -rf ~/.local/share/Zeal/Zeal/docsets/PySAL.docset
 	mkdir ~/.local/share/Zeal/Zeal/docsets/PySAL.docset
 	cp -R PySAL.docset/ ~/.local/share/Zeal/Zeal/docsets/
-
