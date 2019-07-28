@@ -24,4 +24,9 @@ clean:
 	rm -rf auto_examples/
 
 dash:
+	rm -rf PySAL.docset
 	doc2dash --name=PySAL  --icon=_static/images/pysal_favicon.png _build/html 
+	rm -rf ~/.local/share/Zeal/Zeal/docsets/PySAL.docset
+	mkdir ~/.local/share/Zeal/Zeal/docsets/PySAL.docset
+	cp -R PySAL.docset/ ~/.local/share/Zeal/Zeal/docsets/
+
