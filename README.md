@@ -50,15 +50,15 @@ Installation
 
 PySAL is available through
 [Anaconda](https://www.continuum.io/downloads) (in the defaults or
-conda-forge channel) and [Enthought
-Canopy](https://www.enthought.com/products/canopy/). We recommend
+conda-forge channel)  We recommend
 installing PySAL from conda-forge:
 
 ``` {.sourceCode .bash}
+conda config --add channels conda-forge
 conda install pysal
 ```
 
-PySAL can be installed using pip:
+PySAL can also be installed using pip:
 
 ``` {.sourceCode .bash}
 pip install pysal
