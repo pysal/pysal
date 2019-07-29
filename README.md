@@ -2,12 +2,12 @@ Python Spatial Analysis Library
 ===============================
 
 [![image](https://travis-ci.org/pysal/pysal.svg)](https://travis-ci.org/pysal)
-
 [![image](https://coveralls.io/repos/pysal/pysal/badge.svg?branch=master)](https://coveralls.io/r/pysal/pysal?branch=master)
-
 [![image](https://badges.gitter.im/pysal/pysal.svg)](https://gitter.im/pysal/pysal)
-
 [![image](https://readthedocs.org/projects/pip/badge/?version=latest)](http://pysal.readthedocs.io/en/latest/index.html)
+[![DOI](https://zenodo.org/badge/8295380.svg)](https://zenodo.org/badge/latestdoi/8295380)
+
+
 
 [![LISA Maps of US County Homicide Rates](https://farm2.staticflickr.com/1699/23937788493_1b9d147b9f_z.jpg)](http://nbviewer.ipython.org/urls/gist.githubusercontent.com/darribas/657e0568df7a63362762/raw/pysal_lisa_maps.ipynb)
 
