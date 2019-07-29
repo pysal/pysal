@@ -57,7 +57,7 @@ PySAL Components
 ================
 
 -   **explore** - modules to conduct exploratory analysis of spatial and spatio-temporal data, including statistical testing on points, networks, and
-    polygonal lattices.  Also includes methods for spatial inequality and distributional dynamics.
+    polygonal lattices.  Also includes methods for spatial inequality,  distributional dynamics, and segregation.
 -   **viz** - visualize patterns in spatial data to detect clusters,
     outliers, and hot-spots.
 -   **model** - model spatial relationships in data with a variety of
