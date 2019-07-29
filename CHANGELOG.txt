@@ -1,3 +1,847 @@
+v<2.1.0>, 2019-07-29
+
+PySAL 2.1.0 represents 6 months of enhancements, bug-fixes, widening of test coverage, and improved documentation. All users are encouraged to upgrade to this version as there are numerous optimizations as well as new features (see below) that have been implemented.
+
+From this version forward, PySAL supports Python 3 only and is tested on Python 3.6 and 3.7. Please make sure that you are operating in a Python 3 environment.
+
+## Major Highlights of PySAL 2.1.0
+
+### Entirely New Packages
+This release we have added the following new package(s) to the PySAL stack:
+
+- `segregation`. **Segregation Analytics with PySAL**.
+
+This is an extensive package that deals with segregation measurements with several frameworks ranging from inference, decomposition, street network based measures, and a multiscalar segregation profiles on urban street networks. With a consistent and well defined api following the pep8 standards, users of `segregation` (v1.1.1) can:
+
+Calculate over 40 segregation measures from simple to state-of-the art, including:
+
+- [aspatial segregation indices](https://github.com/pysal/segregation/blob/master/notebooks/aspatial_examples.ipynb)
+- spatial segregation indices
+  - [using spatial weights matrices, euclidian distances, or topological relationships](https://github.com/pysal/segregation/blob/master/notebooks/spatial_examples.ipynb)
+  - [using street network distances](https://github.com/pysal/segregation/blob/master/notebooks/network_measures.ipynb)
+  - [using multiscalar definitions](https://github.com/pysal/segregation/blob/master/notebooks/multiscalar_segregation_profiles.ipynb)
+- [local segregation indices](https://github.com/pysal/segregation/blob/master/notebooks/local_measures_example.ipynb)
+
+Test whether segregation estimates are statistically significant:
+
+- [single value inference](https://github.com/pysal/segregation/blob/master/notebooks/inference_wrappers_example.ipynb)
+- [comparative inference](https://github.com/pysal/segregation/blob/master/notebooks/inference_wrappers_example.ipynb)
+
+[Decompose](https://github.com/pysal/segregation/blob/master/notebooks/decomposition_wrapper_example.ipynb)
+segregation comparisons into
+
+- differences arising from spatial structure 
+- differences arising from demographic structure  
+
+
+### Significant Enhancements to Existing Packages
+
+* Addition of two rank-based Markov methods to [pysal/giddy](https://github.com/pysal/giddy): Full Rank Markov and Geographic Rank Markov, both of which avoid the potentially arbitrary selection of the discretization scheme when a discrete Markov chain is applied to continuous variables (e.g. incomes). An example notebook applying these two methods to reveal interesting spatiotemporal patterns of income distribution dynamics in the United States 1929-2009 is given [here](https://github.com/pysal/giddy/blob/master/notebooks/Rank_Markov.ipynb).
+* A new function [fdr](https://github.com/pysal/esda/blob/master/esda/util.py#L4) in [pysal/esda](https://github.com/pysal/esda) which account for multiple testing in local statistics by controlling the False Discovery Rate (FDR). The function takes the p-values for all of n local statistics and the significance level as the inputs, and returns the p-value cutoff which would be used for deciding whether to reject the null for each local test.
+* The S-MAUP test was added to `esda`. This test statistic measures the sensitivity of statistical results to re-aggregation. Contributed by Juan Carlos Duque (@JuancaDuque), the statistic is defined in this [PLOS paper](https://journals.plos.org/plosone/article/comments?id=10.1371/journal.pone.0207377).
+* The Lee & Local Lee statistics were added to `esda`. These statistics characterize the structure of local autocorrelation using Pearson's *r*. The statistic is defined in [Lee (2001)](https://link.springer.com/article/10.1007/s101090100064).
+* The [`notebooks`](http://pysal.org/notebooks/intro) project, which provides a centralised online site with example notebooks from all the federated packages has undergone several back-end improvements and (partially) supports now interactive notebooks through Binder. The project is available at [http://pysal.org/notebooks](http://pysal.org/notebooks/)
+* Computational improvements to `mgwr` package includes memory optimization and parallelization. The update allows GWR and Multi-scale GWR model to be calibrated faster and on much larger datasets. Additionally, there are API changes to the kernel functions in `mgwr`. [(#55)](https://github.com/pysal/mgwr/pull/55)
+
+
+
+<a name="changes-by-package"></a>
+## Changes by Package
+
+Overall, there were 992 commits that closed 261 issues, together with 173 pull requests since our last release on 2019-01-30.
+
+
+<a name="libpysal"></a>
+### libpysal
+* [#158:](https://github.com/pysal/libpysal/pull/158) Allow for **kwargs any time there's a weights construction 
+* [#134:](https://github.com/pysal/libpysal/issues/134) Some functions do not support silence_warnings=True 
+* [#159:](https://github.com/pysal/libpysal/pull/159) REL: update changelog 
+* [#157:](https://github.com/pysal/libpysal/pull/157) MAINT: bumping version for a release 
+* [#122:](https://github.com/pysal/libpysal/pull/122) update interactive examples in inline docstrings 
+* [#156:](https://github.com/pysal/libpysal/pull/156) BUG: fix for scipy bump #154 
+* [#155:](https://github.com/pysal/libpysal/pull/155) Revert "bump supported Python versions and correct lat2SW doctest" 
+* [#154:](https://github.com/pysal/libpysal/pull/154) bump supported Python versions and correct lat2SW doctest 
+* [#141:](https://github.com/pysal/libpysal/pull/141) WIP debugging travis failure 
+* [#152:](https://github.com/pysal/libpysal/pull/152) replace deprecated "fromstring" with "frombytes" 
+* [#48:](https://github.com/pysal/libpysal/issues/48) doctests on weights are failing across the board 
+* [#149:](https://github.com/pysal/libpysal/pull/149) Use Unix line-endings for all files. 
+* [#148:](https://github.com/pysal/libpysal/pull/148) Remove unnecessary executable bits. 
+* [#144:](https://github.com/pysal/libpysal/issues/144) `import pysal` in libpysal/io/iohandlers/dat.py 
+* [#143:](https://github.com/pysal/libpysal/issues/143) enforce strict channel in .travis.yml 
+* [#145:](https://github.com/pysal/libpysal/issues/145) continued failing doctests in libpysal.io 
+* [#146:](https://github.com/pysal/libpysal/issues/146) sphinxcontrib-napoleon is no longer necessary 
+* [#142:](https://github.com/pysal/libpysal/pull/142) pysal --> libpysal docs conv & modernizing .travis.yml 
+* [#7:](https://github.com/pysal/libpysal/issues/7) fix README for pypi 
+* [#138:](https://github.com/pysal/libpysal/issues/138) build_lattice_shapefile swapped arguments 
+* [#124:](https://github.com/pysal/libpysal/issues/124) Accidental create of branch 
+* [#127:](https://github.com/pysal/libpysal/issues/127) Travis errors on Python3.6 PYTHON_PLUS=True 
+* [#140:](https://github.com/pysal/libpysal/pull/140) [WIP] solution for Travis CI failures 
+* [#139:](https://github.com/pysal/libpysal/pull/139) Conda travis 
+* [#111:](https://github.com/pysal/libpysal/issues/111) alphashapes & n<4 
+* [#115:](https://github.com/pysal/libpysal/pull/115) [WIP] ensure safe returns for small n alphashapes 
+
+
+<a name="esda"></a>
+### esda
+* [#64:](https://github.com/pysal/esda/pull/64) DOC: style sheet update and adding Smaup to __init__ 
+* [#63:](https://github.com/pysal/esda/pull/63) DOC: correcting Geary documentation 
+* [#62:](https://github.com/pysal/esda/pull/62) 2.1.0 
+* [#52:](https://github.com/pysal/esda/pull/52) (ENH) FDR-based adjustment to account for multiple testing in local statistics 
+* [#58:](https://github.com/pysal/esda/pull/58) [WIP] Contributing Smaup test to `esda` 
+* [#53:](https://github.com/pysal/esda/issues/53) G_Local: EG_sim and seG_sim are scalar 
+* [#55:](https://github.com/pysal/esda/issues/55) docs building failed 
+* [#57:](https://github.com/pysal/esda/pull/57) (bug) fix docs build 
+* [#54:](https://github.com/pysal/esda/pull/54) BUG: EG_Sim and seG_sim were incorrectly given as scalars. #53 
+
+
+<a name="giddy"></a>
+### giddy
+* [#97:](https://github.com/pysal/giddy/pull/97) (docs) change the css to accommodate new versions of sphinx and sphinx bootstrap theme  
+* [#96:](https://github.com/pysal/giddy/pull/96) PyPi page configuration 
+* [#95:](https://github.com/pysal/giddy/pull/95) pip install github master.zip of pysal dependencies 
+* [#93:](https://github.com/pysal/giddy/issues/93) update README.md 
+* [#94:](https://github.com/pysal/giddy/pull/94) Update readme 
+* [#92:](https://github.com/pysal/giddy/pull/92) migrate from readthedocs configuration file v1 to v2 
+* [#91:](https://github.com/pysal/giddy/pull/91) updating supported python versions (3.6 and 3.7) in setup.py 
+* [#90:](https://github.com/pysal/giddy/pull/90) Move testing off of 3.5 and add 3.7 
+* [#89:](https://github.com/pysal/giddy/issues/89) release on conda-forge 
+* [#53:](https://github.com/pysal/giddy/pull/53) allow user specified lag and check shape 
+* [#87:](https://github.com/pysal/giddy/pull/87) Update zenodo doi and pypi badge for version 2.1.0 (new release) 
+* [#86:](https://github.com/pysal/giddy/pull/86) (bug) format readme.rst as long_description for pypi display 
+* [#85:](https://github.com/pysal/giddy/pull/85) Prepare for release 2.1.0 
+
+
+<a name="inequality"></a>
+### inequality
+
+
+<a name="pointpats"></a>
+### pointpats
+* [#31:](https://github.com/pysal/pointpats/pull/31) prepare for release of v2.1.0 
+* [#33:](https://github.com/pysal/pointpats/pull/33) (docs) reference label style 
+* [#32:](https://github.com/pysal/pointpats/pull/32) (docs) change the css to accommodate new versions of sphinx and sphinx bootstrap theme 
+* [#30:](https://github.com/pysal/pointpats/pull/30) (docs) migrate from readthedocs configuration file v1 to v2  
+* [#29:](https://github.com/pysal/pointpats/pull/29) (docs) updating supported python versions (3.6 and 3.7) in setup.py 
+* [#28:](https://github.com/pysal/pointpats/pull/28) doc: edits to notebook 
+* [#27:](https://github.com/pysal/pointpats/pull/27) require libpysal>=4.0.0 
+
+
+<a name="spaghetti"></a>
+### spaghetti
+* [#277:](https://github.com/pysal/spaghetti/issues/277) add `requirements_dev.txt` to `MANIFEST.in` 
+* [#279:](https://github.com/pysal/spaghetti/pull/279) Update changelog 
+* [#278:](https://github.com/pysal/spaghetti/pull/278) version bump to include req_dev in MANIFEST.in 
+* [#276:](https://github.com/pysal/spaghetti/pull/276) v1.2 --> 1.3rc1 (for release candidate) 
+* [#275:](https://github.com/pysal/spaghetti/pull/275) Updating notebooks prior to v1.3 release 
+* [#274:](https://github.com/pysal/spaghetti/pull/274) updating README 
+* [#158:](https://github.com/pysal/spaghetti/issues/158) update notebooks following prior to v1.3 release 
+* [#196:](https://github.com/pysal/spaghetti/issues/196) TypeError: '>' not supported between instances of '_NodeCursor' and '_NodeCursor' 
+* [#273:](https://github.com/pysal/spaghetti/pull/273) Update docsite 
+* [#268:](https://github.com/pysal/spaghetti/issues/268) docs failing with rtree 
+* [#272:](https://github.com/pysal/spaghetti/pull/272) fix docs building 
+* [#269:](https://github.com/pysal/spaghetti/pull/269) 3.5 --> 3.7 readthedocs 
+* [#271:](https://github.com/pysal/spaghetti/pull/271) updating README.md 
+* [#265:](https://github.com/pysal/spaghetti/issues/265) conda-forge recipe 
+* [#270:](https://github.com/pysal/spaghetti/issues/270) Solo owner/maintainer 
+* [#266:](https://github.com/pysal/spaghetti/issues/266) update requirements in README 
+* [#267:](https://github.com/pysal/spaghetti/pull/267) updating requirements in README 
+* [#259:](https://github.com/pysal/spaghetti/pull/259) Switch snapping to Rtree package? 
+* [#262:](https://github.com/pysal/spaghetti/issues/262) update python versions in setup.py 
+* [#263:](https://github.com/pysal/spaghetti/pull/263) updating supported python versions in setup.py 
+* [#260:](https://github.com/pysal/spaghetti/issues/260) Drop 3.5, Add 3.7 testing 
+* [#261:](https://github.com/pysal/spaghetti/pull/261) adding support for python3.7 
+* [#257:](https://github.com/pysal/spaghetti/pull/257) Update Facility_Location.ipynb 
+* [#256:](https://github.com/pysal/spaghetti/issues/256) Further failures in TravisCI builds. (`rake`) 
+* [#255:](https://github.com/pysal/spaghetti/pull/255) bumping down geopandas requirement to 0.3.0 
+* [#254:](https://github.com/pysal/spaghetti/pull/254) bumping geopandas req version to 0.4.1 
+* [#253:](https://github.com/pysal/spaghetti/issues/253) TravisCI build failing with `geopandas` 
+* [#252:](https://github.com/pysal/spaghetti/pull/252) Streamline setup travis 
+* [#250:](https://github.com/pysal/spaghetti/issues/250) Remove redundancies in `requirements_xxx.txt` files 
+* [#251:](https://github.com/pysal/spaghetti/pull/251) Removing redundant requirements 
+* [#240:](https://github.com/pysal/spaghetti/issues/240) pandas.core error leading to Travis CI failure 
+* [#248:](https://github.com/pysal/spaghetti/issues/248) uniform .travis.yml 
+* [#249:](https://github.com/pysal/spaghetti/pull/249) switching from pip to conda for reqs install resolves .travis error 
+* [#246:](https://github.com/pysal/spaghetti/issues/246) v1.2.rc1? 
+* [#247:](https://github.com/pysal/spaghetti/pull/247) updating GitHub version badge 
+* [#245:](https://github.com/pysal/spaghetti/issues/245) update version badges 
+* [#242:](https://github.com/pysal/spaghetti/issues/242) AttributeError: module 'spaghetti' has no attribute 'element_as_gdf' 
+* [#244:](https://github.com/pysal/spaghetti/pull/244) bump from rc to stable 
+* [#243:](https://github.com/pysal/spaghetti/pull/243) v1.2rc1 bump 
+* [#241:](https://github.com/pysal/spaghetti/pull/241) adding pandas as a requirement 
+
+
+<a name="segregation"></a>
+### segregation
+* [#43:](https://github.com/pysal/segregation/issues/43) absolute concentration values not matching with other open-source options? 
+* [#118:](https://github.com/pysal/segregation/pull/118) Concentration indexes rank fix 
+* [#117:](https://github.com/pysal/segregation/pull/117) remove W from importings in spatial_indexes 
+* [#102:](https://github.com/pysal/segregation/issues/102) consider surface based S 
+* [#116:](https://github.com/pysal/segregation/pull/116) Adds SpatialMinMax index based on Sullivan and Wong (2007) 
+* [#113:](https://github.com/pysal/segregation/pull/113) add robust and informative condition for large magnitude projections (tests only off-diagonal) 
+* [#115:](https://github.com/pysal/segregation/pull/115) MinMaxS 
+* [#114:](https://github.com/pysal/segregation/pull/114) spelling 
+* [#99:](https://github.com/pysal/segregation/issues/99) consider tqdm instead of print statements for simulations 
+* [#32:](https://github.com/pysal/segregation/issues/32) add DOI 
+* [#110:](https://github.com/pysal/segregation/issues/110) Building Error (after tqdm inclusion?) 
+* [#112:](https://github.com/pysal/segregation/pull/112) [WIP] add libcfitsio-dev in travis.yml 
+* [#111:](https://github.com/pysal/segregation/pull/111) enh: add libcfitsio.so.5 in travis.yml following https://github.com/cypress-io/cypress/issues/4069#issuecomment-488816887 
+* [#109:](https://github.com/pysal/segregation/pull/109) inference wrapper tweaks 
+* [#107:](https://github.com/pysal/segregation/pull/107) bug: add descartes in requirements_tests for plotting tests 
+* [#106:](https://github.com/pysal/segregation/pull/106) enh: add plotting tests in the decomposition framework 
+* [#103:](https://github.com/pysal/segregation/pull/103) add spatial divergence index 
+* [#100:](https://github.com/pysal/segregation/pull/100) Generalize also for haversine distance 
+* [#72:](https://github.com/pysal/segregation/issues/72) release checklist 
+* [#101:](https://github.com/pysal/segregation/pull/101) Update README.md 
+* [#98:](https://github.com/pysal/segregation/pull/98) fix the broken link to compute all in readthe docs 
+* [#97:](https://github.com/pysal/segregation/pull/97) coveralls badge fix 
+* [#95:](https://github.com/pysal/segregation/pull/95) remove erroneous reference to geodetaframe in multigroup section 
+* [#93:](https://github.com/pysal/segregation/pull/93) add github tag to coveralls badge 
+* [#94:](https://github.com/pysal/segregation/pull/94) update badge link for update following https://github.com/lemurheavy/coveralls-public/issues/971#issuecomment-338942441 
+* [#92:](https://github.com/pysal/segregation/pull/92) this adds tests for improving coverage 
+* [#91:](https://github.com/pysal/segregation/pull/91) add DOI badge 
+* [#90:](https://github.com/pysal/segregation/pull/90) changelog 
+* [#89:](https://github.com/pysal/segregation/pull/89) update version in init 
+* [#88:](https://github.com/pysal/segregation/pull/88) Renan final tweak release 
+* [#87:](https://github.com/pysal/segregation/pull/87) include coverage option 
+* [#85:](https://github.com/pysal/segregation/pull/85) mention center argument in centralization index in spatial notebook 
+* [#84:](https://github.com/pysal/segregation/pull/84) release prep 
+* [#56:](https://github.com/pysal/segregation/issues/56) improve readme with network examples 
+* [#83:](https://github.com/pysal/segregation/pull/83) small tweak MultiDissim on readme 
+* [#82:](https://github.com/pysal/segregation/pull/82) small tweak on SpatialDissim on readme 
+* [#81:](https://github.com/pysal/segregation/pull/81) Change API (Deprecated classes) in favor of CamelLikeNames 
+* [#80:](https://github.com/pysal/segregation/pull/80) BUG: add compute_seg_profile to spatial __all__ 
+* [#77:](https://github.com/pysal/segregation/pull/77) Add local segregation measures 
+* [#78:](https://github.com/pysal/segregation/pull/78) drop heavy deps 
+* [#19:](https://github.com/pysal/segregation/issues/19) function to calculate segregation profiles 
+* [#75:](https://github.com/pysal/segregation/pull/75) reimplement more flexible  SpatialInformationTheory index 
+* [#76:](https://github.com/pysal/segregation/pull/76) add xtol to Ddc in readmme table 
+* [#52:](https://github.com/pysal/segregation/issues/52) generate counterfactual distributions on comparative segregation using util `_generate_counterfactual` function 
+* [#39:](https://github.com/pysal/segregation/issues/39) improve nomenclature of distance-decay isolation/exposure 
+* [#73:](https://github.com/pysal/segregation/pull/73) release Renan's checklist 
+* [#71:](https://github.com/pysal/segregation/pull/71) installation .rst tweaks 
+* [#70:](https://github.com/pysal/segregation/pull/70) remove sphinx of requirements and point rtd to _docs requirements for organization 
+* [#58:](https://github.com/pysal/segregation/issues/58) api docs not rendering fully 
+* [#69:](https://github.com/pysal/segregation/pull/69) move numpy doc from mock to requirements 
+* [#68:](https://github.com/pysal/segregation/pull/68) moving sphinxcontrib.bibtex from mock to requirements 
+* [#67:](https://github.com/pysal/segregation/pull/67) create mocks for c dependency libraries 
+* [#57:](https://github.com/pysal/segregation/issues/57) change the current API of network notebook 
+* [#66:](https://github.com/pysal/segregation/pull/66) getting back with old conf, putting all depencies back to requirement… 
+* [#65:](https://github.com/pysal/segregation/pull/65) remove recent dependencies included to see if rtd will be build 
+* [#64:](https://github.com/pysal/segregation/pull/64) commenting sphinx_bootstrap_theme (trying to follow https://github.co… 
+* [#63:](https://github.com/pysal/segregation/pull/63) add tests and docs in setup_package 
+* [#62:](https://github.com/pysal/segregation/pull/62) add napoleon and gallery for rtd 
+* [#61:](https://github.com/pysal/segregation/pull/61) fix typo value -> values 
+* [#59:](https://github.com/pysal/segregation/pull/59) July release readthedocs tweaks 
+* [#60:](https://github.com/pysal/segregation/pull/60) Notebooks updates (decomposition and networks) 
+* [#2:](https://github.com/pysal/segregation/issues/2) add spatial information theory index 
+* [#17:](https://github.com/pysal/segregation/issues/17) consider multi-group segregation indexes 
+* [#55:](https://github.com/pysal/segregation/pull/55) adds Multigroup Divergence Index of Roberto (2018) 
+* [#54:](https://github.com/pysal/segregation/pull/54) (bug) dual testing aganist pypi and github versions of libpysal 
+* [#50:](https://github.com/pysal/segregation/pull/50) Tweaks for july release 
+* [#51:](https://github.com/pysal/segregation/pull/51) update nbsit notebook 
+* [#38:](https://github.com/pysal/segregation/issues/38) include bootstrap approach for single-value inference (and also for comparative) 
+* [#49:](https://github.com/pysal/segregation/pull/49) Adds many Multigroup segregation measures 
+* [#48:](https://github.com/pysal/segregation/pull/48) update network notebook 
+* [#46:](https://github.com/pysal/segregation/pull/46) Remove sit and tweaks refactoring 
+* [#47:](https://github.com/pysal/segregation/pull/47) [WIP] add network-based spatial information theory index 
+* [#45:](https://github.com/pysal/segregation/pull/45) reorganize library into modules 
+* [#37:](https://github.com/pysal/segregation/pull/37) fixed docstrings and decomposition notebook (LTDB links) 
+* [#42:](https://github.com/pysal/segregation/pull/42) change denominator of spatial interaction term of Perimeter_Area_Ratio_Spatial_Dissim (and also add some tweak for concentration indexes) 
+* [#40:](https://github.com/pysal/segregation/pull/40) add bootstrap (for unit levels) for single value segregation 
+* [#44:](https://github.com/pysal/segregation/pull/44) add Absolute Clustering (ACL) segregation measure 
+* [#9:](https://github.com/pysal/segregation/issues/9) add multigroup counterfactual approach 
+* [#8:](https://github.com/pysal/segregation/issues/8) add "city share" counterfactual approach 
+* [#41:](https://github.com/pysal/segregation/pull/41) add conda-forge option in intalling readme 
+* [#25:](https://github.com/pysal/segregation/pull/25) OK: Create additional argument for the center in Centralization indexes 
+* [#34:](https://github.com/pysal/segregation/pull/34) fix missing the year in the image title of Readme 
+* [#33:](https://github.com/pysal/segregation/pull/33) updating README.md 
+* [#31:](https://github.com/pysal/segregation/pull/31) add license file 
+* [#30:](https://github.com/pysal/segregation/pull/30) Release 106 
+* [#29:](https://github.com/pysal/segregation/pull/29) plan for Release 106 
+* [#28:](https://github.com/pysal/segregation/pull/28) update changelog and run gitcount 
+* [#27:](https://github.com/pysal/segregation/pull/27) tweaks for 1.0.5 release in setup.py 
+* [#26:](https://github.com/pysal/segregation/pull/26) update readme with decompose framework for 1.0.5 release 
+* [#23:](https://github.com/pysal/segregation/pull/23) create additional argument for the center in Centralization indexes 
+* [#24:](https://github.com/pysal/segregation/pull/24) ENH: bump version number for bf release 
+* [#16:](https://github.com/pysal/segregation/pull/16)  second step in building a Shapley's decomposition framework (also address many tweaks, typos, etc.) 
+* [#22:](https://github.com/pysal/segregation/pull/22) BUG: adding MANIFEST.in so requirements.txt gets included in sdist 
+* [#21:](https://github.com/pysal/segregation/pull/21) create changelog and gitcount 
+* [#20:](https://github.com/pysal/segregation/pull/20) Create Tools for Github release 
+* [#15:](https://github.com/pysal/segregation/issues/15) error when installing using pip 
+* [#14:](https://github.com/pysal/segregation/pull/14) add RTD yaml 
+* [#13:](https://github.com/pysal/segregation/pull/13) add docs reqs 
+* [#12:](https://github.com/pysal/segregation/pull/12) begin docs 
+* [#5:](https://github.com/pysal/segregation/issues/5) Order of connectivity may be incorrect in Spatial_Prox_Prof 
+* [#10:](https://github.com/pysal/segregation/pull/10) add lorenz 
+* [#7:](https://github.com/pysal/segregation/pull/7) add working decomposition func and CDF plotting func 
+* [#6:](https://github.com/pysal/segregation/pull/6) start counterfactual 
+* [#3:](https://github.com/pysal/segregation/pull/3) directly specifiy Miniconda3 
+* [#1:](https://github.com/pysal/segregation/pull/1) add second install option to README.md 
+
+
+<a name="mapclassify"></a>
+### mapclassify
+* [#39:](https://github.com/pysal/mapclassify/pull/39) Release 2.1.0 
+* [#38:](https://github.com/pysal/mapclassify/pull/38) ENH: dropping 3.5 support and adding 3.7 
+* [#36:](https://github.com/pysal/mapclassify/pull/36) ENH: plot method added to Mapclassify 
+* [#35:](https://github.com/pysal/mapclassify/pull/35) ENH: keeping init keyword argument to avoid API breakage. 
+* [#16:](https://github.com/pysal/mapclassify/issues/16) mapclassify.Natural_Break() does not return the specified k classes 
+* [#32:](https://github.com/pysal/mapclassify/pull/32) Fix for #16 
+* [#33:](https://github.com/pysal/mapclassify/issues/33) Mixed usage of brewer2mpl and palettable.colorbrewer in color.py 
+* [#34:](https://github.com/pysal/mapclassify/pull/34) Chorobrewer 
+* [#14:](https://github.com/pysal/mapclassify/issues/14) conda-forge recipe needs some love 
+* [#31:](https://github.com/pysal/mapclassify/pull/31) generating images for color selector 
+* [#30:](https://github.com/pysal/mapclassify/pull/30) doc: bump version and dev setup docs 
+* [#29:](https://github.com/pysal/mapclassify/pull/29) environment.yml 
+* [#28:](https://github.com/pysal/mapclassify/pull/28) add color import and chorobrewer notebook 
+* [#26:](https://github.com/pysal/mapclassify/pull/26) Chorobrewer 
+* [#25:](https://github.com/pysal/mapclassify/pull/25) chorobrewer init 
+
+
+<a name="splot"></a>
+### splot
+* [#76:](https://github.com/pysal/splot/pull/76) [ENH] read long_description from README.md 
+* [#74:](https://github.com/pysal/splot/pull/74) Rel1.1.0 
+* [#72:](https://github.com/pysal/splot/issues/72) LISA cluster map colours mixed when cluster value not present 
+* [#73:](https://github.com/pysal/splot/pull/73) [ENH] select colour by presence of value in list in `mask_local_auto` 
+* [#51:](https://github.com/pysal/splot/issues/51) Moran Scatterplots with equal bounds on X and Y axes? 
+* [#70:](https://github.com/pysal/splot/pull/70) Add aspect_equal argument to Moran functionality 
+* [#69:](https://github.com/pysal/splot/pull/69) set up dual travis tests for pysal dependencies (pip and github)  
+* [#65:](https://github.com/pysal/splot/issues/65) API changes of mapclassify propagate to splot 
+* [#68:](https://github.com/pysal/splot/pull/68) [DOC] include rtree and descartes in `requirements_dev.txt` 
+* [#67:](https://github.com/pysal/splot/pull/67) Readme update 
+* [#64:](https://github.com/pysal/splot/pull/64) docs building using readthedocs.yml version 2 
+* [#57:](https://github.com/pysal/splot/issues/57) [DOC] add test for missing code cove % 
+* [#61:](https://github.com/pysal/splot/pull/61) Add tests for warnings and ValueErrors 
+* [#1:](https://github.com/pysal/splot/issues/1) Update travis for testing 
+* [#63:](https://github.com/pysal/splot/pull/63) travis ci testing: migrate from 3.5 and 3.6 to 3.6 and 3.7 
+* [#58:](https://github.com/pysal/splot/pull/58) create paper directory 
+* [#56:](https://github.com/pysal/splot/pull/56) clean and rerun notebooks 
+* [#45:](https://github.com/pysal/splot/issues/45) `vba_choropleth` API 
+* [#52:](https://github.com/pysal/splot/pull/52) allow string (default) in vba_choropleth function of tests 
+* [#54:](https://github.com/pysal/splot/pull/54) migrating to readthedocs II 
+* [#53:](https://github.com/pysal/splot/pull/53) migration to readthedocs 
+* [#46:](https://github.com/pysal/splot/pull/46) Make docs 
+* [#47:](https://github.com/pysal/splot/issues/47) Segmentation fault in running tests on TravisCI 
+* [#48:](https://github.com/pysal/splot/pull/48) code 139 memory segmentation fault: RESOLVED 
+* [#41:](https://github.com/pysal/splot/issues/41) pip install on linux fails on pyproj 
+
+
+<a name="spreg"></a>
+### spreg
+* [#23:](https://github.com/pysal/spreg/issues/23) GM_Lag throws Singular Matrix error with high-dimension design matrix 
+* [#21:](https://github.com/pysal/spreg/pull/21) MAINT: Fix for upcoming bump in scipy 
+* [#22:](https://github.com/pysal/spreg/pull/22) xxxx 
+
+
+<a name="spglm"></a>
+### spglm
+* [#22:](https://github.com/pysal/spglm/pull/22)  (docs) change to readthedocs v2 
+* [#23:](https://github.com/pysal/spglm/pull/23) debug travis testing 
+* [#21:](https://github.com/pysal/spglm/pull/21) transition to python 3.6 and 3.7 
+
+
+<a name="spint"></a>
+### spint
+
+
+<a name="mgwr"></a>
+### mgwr
+* [#66:](https://github.com/pysal/mgwr/issues/66) Large-scale data cause the server down 
+* [#67:](https://github.com/pysal/mgwr/pull/67) update req to add spreg 
+* [#64:](https://github.com/pysal/mgwr/pull/64) transition to readthedocs v2 
+* [#63:](https://github.com/pysal/mgwr/pull/63) transition to python3.6 and 3.7 
+* [#58:](https://github.com/pysal/mgwr/issues/58) GWR poisson: local variable 'aicc' referenced before assignment 
+* [#59:](https://github.com/pysal/mgwr/issues/59) (bug, doc) `family` parameter for Poisson GWR/MGWR 
+* [#62:](https://github.com/pysal/mgwr/pull/62) inline docs: proper citation 
+* [#61:](https://github.com/pysal/mgwr/pull/61) correct docstrings for family parameter in Sel_BW 
+* [#56:](https://github.com/pysal/mgwr/pull/56) Adding a univariate example for Poisson MGWR 
+* [#57:](https://github.com/pysal/mgwr/pull/57) Multi bw changes 
+* [#55:](https://github.com/pysal/mgwr/pull/55) (docs) reflect api (kernels) change in the docs 
+* [#54:](https://github.com/pysal/mgwr/issues/54) can set of independent variables contain zero's (bool)? 
+* [#49:](https://github.com/pysal/mgwr/issues/49) Distance matrix calculation is not vectorized for lat, lon (spherical) coordinates 
+* [#52:](https://github.com/pysal/mgwr/pull/52) Memory optimization and optional parallelization for GWR/MGWR 
+* [#41:](https://github.com/pysal/mgwr/pull/41) Memory optimization 
+
+
+<a name="spvcm"></a>
+### spvcm
+
+<a name="summary-statistics"></a>
+## Summary Statistics
+
+<a name="package-activity"></a>
+### Package Activity
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>package</th>
+      <th>commits</th>
+      <th>total issues</th>
+      <th>pulls</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>segregation</td>
+      <td>456</td>
+      <td>105</td>
+      <td>78</td>
+    </tr>
+    <tr>
+      <td>spaghetti</td>
+      <td>120</td>
+      <td>40</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <td>splot</td>
+      <td>95</td>
+      <td>25</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <td>libpysal</td>
+      <td>80</td>
+      <td>26</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <td>esda</td>
+      <td>67</td>
+      <td>9</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>mgwr</td>
+      <td>44</td>
+      <td>15</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>mapclassify</td>
+      <td>43</td>
+      <td>15</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <td>giddy</td>
+      <td>32</td>
+      <td>13</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>pointpats</td>
+      <td>25</td>
+      <td>7</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>spreg</td>
+      <td>16</td>
+      <td>3</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>spglm</td>
+      <td>14</td>
+      <td>3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>inequality</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>spint</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>spvcm</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+
+<a name="contributor-activity"></a>
+### Contributor Activity
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>commits</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Antti Härkönen</th>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>Dani Arribas-Bel</th>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>Eli Knaap</th>
+      <td>94</td>
+    </tr>
+    <tr>
+      <th>Elliott Sales De Andrade</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Filipe Fernandes</th>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>James Gaboardi</th>
+      <td>175</td>
+    </tr>
+    <tr>
+      <th>Juan C Duque</th>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>Levi John Wolf</th>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>Martin Fleischmann</th>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>Renan Xavier Cortes</th>
+      <td>357</td>
+    </tr>
+    <tr>
+      <th>Serge Rey</th>
+      <td>86</td>
+    </tr>
+    <tr>
+      <th>Stefanie Lumnitz</th>
+      <td>63</td>
+    </tr>
+    <tr>
+      <th>Taylor Oshan</th>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>Tom Gertin</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Wei Kang</th>
+      <td>135</td>
+    </tr>
+    <tr>
+      <th>Ziqi Li</th>
+      <td>24</td>
+    </tr>
+  </tbody>
+</table>
+
+<a name="contributor-by-package-activity"></a>
+### Contributor by Package Activity
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Antti Härkönen</th>
+      <th>Dani Arribas-Bel</th>
+      <th>Eli Knaap</th>
+      <th>Elliott Sales De Andrade</th>
+      <th>Filipe Fernandes</th>
+      <th>James Gaboardi</th>
+      <th>Juan C Duque</th>
+      <th>Levi John Wolf</th>
+      <th>Martin Fleischmann</th>
+      <th>Renan Xavier Cortes</th>
+      <th>Serge Rey</th>
+      <th>Stefanie Lumnitz</th>
+      <th>Taylor Oshan</th>
+      <th>Tom Gertin</th>
+      <th>Wei Kang</th>
+      <th>Ziqi Li</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>lib.libpysal</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>54</td>
+      <td>0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>0</td>
+      <td>14</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>6</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>explore.esda</th>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>3</td>
+      <td>8</td>
+      <td>14</td>
+      <td>0</td>
+      <td>0</td>
+      <td>18</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>16</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>explore.giddy</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>27</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>explore.inequality</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>explore.pointpats</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>18</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>explore.spaghetti</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>97</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>21</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>explore.segregation</th>
+      <td>4</td>
+      <td>0</td>
+      <td>94</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>349</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>viz.mapclassify</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>41</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>viz.splot</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>9</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>8</td>
+      <td>1</td>
+      <td>63</td>
+      <td>0</td>
+      <td>0</td>
+      <td>13</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>model.spreg</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>model.spglm</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>9</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>model.spint</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>model.mgwr</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>16</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>model.spvcm</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
 v<2.0.0>, 2019-01-30
 
 
