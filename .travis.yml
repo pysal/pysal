@@ -1,13 +1,18 @@
-language: python
+language: minimal
 
 sudo: false
 
 matrix:
+  fast_finish: true
   include:
-    - env: ENV_FILE="ci/travis/36-latest-conda-forge.yaml"
-    - env: ENV_FILE="ci/travis/37-latest-conda-forge.yaml"
+    - name: "python-3.6"
+      env: PY=3.6
+    - name: "python-3.7"
+      env: PY=3.7
+    - name: "tarball"
+      env: PY=3.7
 
-install:
+before_install:
   # Install miniconda and create TEST env.
   - |
     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
@@ -18,17 +23,22 @@ install:
     conda config --add channels conda-forge --force
     conda config --set channel_priority strict
     conda config --set safety_checks disabled
+    conda create --name TEST python=$PY --file requirements.txt --file requirements_dev.txt --file requirements_docs.txt --file requirements_plus.txt
+    source activate TEST
+    conda info --all
 
-  # Install dependencies
-  - conda env create --file="${ENV_FILE}"
-  - source activate test
-  - conda list
-  - conda info --all
+install:
+  - pip install -e . --no-deps --force-reinstall
 
 script:
-  - python setup.py sdist >/dev/null
-  - python setup.py install
-  - travis_wait 45 nosetests --verbose --with-coverage --cover-package=pysal;
+  - if [[ $TRAVIS_JOB_NAME == python-* ]]; then
+      travis_wait 45 nosetests --verbose --with-coverage --cover-package=pysal ;
+    fi
+
+  - if [[ $TRAVIS_JOB_NAME == 'tarball' ]]; then
+      pip wheel . -w dist --no-deps ;
+      twine check dist/* ;
+    fi
 
 notifications:
     email:
