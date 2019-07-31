@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# giddy documentation build configuration file, created by
+# pysal documentation build configuration file, created by
 # sphinx-quickstart on Wed Jun  6 15:54:22 2018.
 #
 # This file is execfile()d with the current directory set to its

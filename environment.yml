@@ -1,0 +1,29 @@
+name: docs
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7
+  - pip
+  - bokeh
+  - coverage
+  - coveralls
+  - descartes
+  - folium
+  - geojson
+  - geopandas
+  - ipywidgets
+  - matplotlib
+  - mplleaflet
+  - numexpr
+  - numba
+  - sphinxcontrib-bibtex
+  - sphinx_bootstrap_theme
+  - numpydoc
+  - scikit-learn
+  - scipy
+  - pandas
+  - rtree
+  - palettable
+  - seaborn
+  - sphinx
+  - statsmodels
