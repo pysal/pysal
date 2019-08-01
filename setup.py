@@ -6,7 +6,7 @@ from distutils.command.build_py import build_py
 
 import os
 
-with open('README.rst') as file:
+with open('README.md') as file:
     long_description = file.read()
 
 with open('pysal/__init__.py', 'r') as f:
@@ -60,7 +60,7 @@ def setup_package():
         version=__version__,
         description="A library of spatial analysis functions.",
         long_description=long_description,
-        long_description_content_type="text/x-rst",
+        long_description_content_type="text/markdown",
         maintainer="PySAL Developers",
         maintainer_email='pysal-dev@googlegroups.com',
         url='http://pysal.org',
