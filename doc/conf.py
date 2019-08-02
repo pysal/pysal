@@ -19,6 +19,22 @@
 import sys, os
 import sphinx_bootstrap_theme
 
+###############################################################################################################
+# Snippet to avoid this issue with pip: https://github.com/pysal/segregation/issues/58#issuecomment-502983859 #
+###############################################################################################################
+
+# Inspired in https://docs.readthedocs.io/en/stable/faq.html#i-get-import-errors-on-libraries-that-depend-on-c-modules
+
+import sys
+from unittest.mock import MagicMock
+
+class Mock(MagicMock):
+    @classmethod
+    def __getattr__(cls, name):
+        return MagicMock()
+
+MOCK_MODULES = ['rtree']
+sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 sys.path.insert(0, os.path.abspath("../"))
 
